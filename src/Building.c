@@ -12,6 +12,7 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "city/warning.h"
+#include "figure/formation_legion.h"
 #include "figuretype/migrant.h"
 #include "figuretype/missile.h"
 #include "figuretype/wall.h"
@@ -78,7 +79,7 @@ static void Building_deleteData(building *b)
 		Data_CityInfo.buildingDistributionCenterPlaced = 0;
 	}
 	if (b->type == BUILDING_FORT) {
-		Formation_deleteFortAndBanner(b->formationId);
+		formation_legion_delete_for_fort(b);
 	}
 	if (b->type == BUILDING_HIPPODROME) {
 		Data_CityInfo.buildingHippodromePlaced = 0;

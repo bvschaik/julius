@@ -4,8 +4,6 @@
 
 #include <string.h>
 
-#define MAX_FORMATIONS 50
-
 static formation formations[MAX_FORMATIONS];
 
 static struct {
@@ -41,30 +39,30 @@ static int get_free_formation(int start_index)
     return 0;
 }
 
-int formation_create_legion(int building_id, int x, int y, figure_type figure_type)
+formation *formation_create_legion(int building_id, int x, int y, figure_type type)
 {
     int formation_id = get_free_formation(1);
     if (!formation_id) {
-        return 0;
+        return &formations[0];
     }
-    formation *f = &formations[formation_id];
-    f->faction_id = 1;
-    f->in_use = 1;
-    f->is_legion = 1;
-    f->figure_type = figure_type;
-    f->building_id = building_id;
-    f->layout = FORMATION_DOUBLE_LINE_1;
-    f->morale = 50;
-    f->is_at_fort = 1;
-    f->legion_id = formation_id - 1;
-    f->x = f->standard_x = f->x_home = x + 3;
-    f->y = f->standard_y = f->y_home = y - 1;
-    
+    formation *m = &formations[formation_id];
+    m->faction_id = 1;
+    m->in_use = 1;
+    m->is_legion = 1;
+    m->figure_type = type;
+    m->building_id = building_id;
+    m->layout = FORMATION_DOUBLE_LINE_1;
+    m->morale = 50;
+    m->is_at_fort = 1;
+    m->legion_id = formation_id - 1;
+    m->x = m->standard_x = m->x_home = x + 3;
+    m->y = m->standard_y = m->y_home = y - 1;
+
     data.num_legions++;
     if (formation_id > data.id_last_in_use) {
         data.id_last_in_use = formation_id;
     }
-    return formation_id;
+    return m;
 }
 
 static int formation_create(int figure_type, int layout, int orientation, int x, int y)
@@ -131,22 +129,6 @@ formation *formation_get(int formation_id)
 formation_state *formation_get_state(int formation_id)
 {
     return &formations[formation_id].enemy_state;
-}
-
-
-void formation_set_standard(int formation_id, int standard_figure_id)
-{
-    formations[formation_id].standard_figure_id = standard_figure_id;
-}
-
-void formation_set_figure_type(int formation_id, figure_type type)
-{
-    formations[formation_id].figure_type = type;
-}
-
-void formation_set_recruit_type(int formation_id, int recruit_type)
-{
-    formations[formation_id].legion_recruit_type = recruit_type;
 }
 
 void formation_set_halted(int formation_id, int halted)

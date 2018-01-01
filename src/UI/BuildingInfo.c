@@ -20,7 +20,7 @@
 #include "city/resource.h"
 #include "core/calc.h"
 #include "figure/figure.h"
-#include "figure/formation.h"
+#include "figure/formation_legion.h"
 #include "figure/phrase.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
@@ -204,7 +204,7 @@ void UI_BuildingInfo_init()
 				context.buildingId = building_main(b)->id;
 				break;
 			case BUILDING_BARRACKS:
-				context.barracksSoldiersRequested = Formation_anyLegionNeedsSoldiers();
+				context.barracksSoldiersRequested = formation_legion_recruits_needed();
 				context.barracksSoldiersRequested += Data_Buildings_Extra.barracksTowerSentryRequested;
 				break;
 			default:

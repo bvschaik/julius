@@ -6,6 +6,77 @@
 #include "map/grid.h"
 #include "map/routing.h"
 
+#include "../Formation.h"
+
+int formation_legion_create_for_fort(building *fort)
+{
+    Formation_calculateLegionTotals();
+
+    formation *m = formation_create_legion(fort->id, fort->x, fort->y, fort->subtype.fortFigureType);
+    if (!m->id) {
+        return 0;
+    }
+    figure *standard = figure_create(FIGURE_FORT_STANDARD, 0, 0, DIR_0_TOP);
+    standard->buildingId = fort->id;
+    standard->formationId = m->id;
+    m->standard_figure_id = standard->id;
+
+    return m->id;
+}
+
+void formation_legion_delete_for_fort(building *fort)
+{
+    if (fort->formationId > 0) {
+        formation *m = formation_get(fort->formationId);
+        if (m->in_use) {
+            if (m->standard_figure_id) {
+                figure_delete(figure_get(m->standard_figure_id));
+            }
+            formation_clear(fort->formationId);
+            Formation_calculateLegionTotals();
+        }
+    }
+}
+
+int formation_legion_recruits_needed()
+{
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use && m->is_legion && m->legion_recruit_type != LEGION_RECRUIT_NONE) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void formation_legion_update_recruit_status(building *fort)
+{
+    formation *m = formation_get(fort->formationId);
+    m->legion_recruit_type = LEGION_RECRUIT_NONE;
+    if (!m->is_at_fort || m->cursed_by_mars || m->num_figures == m->max_figures) {
+        return;
+    }
+    if (m->num_figures < m->max_figures) {
+        int type = fort->subtype.fortFigureType;
+        if (type == FIGURE_FORT_LEGIONARY) {
+            m->legion_recruit_type = LEGION_RECRUIT_LEGIONARY;
+        } else if (type == FIGURE_FORT_JAVELIN) {
+            m->legion_recruit_type = LEGION_RECRUIT_JAVELIN;
+        } else if (type == FIGURE_FORT_MOUNTED) {
+            m->legion_recruit_type = LEGION_RECRUIT_MOUNTED;
+        }
+    } else { // too many figures
+        int tooMany = m->num_figures - m->max_figures;
+        for (int i = MAX_FORMATION_FIGURES - 1; i >= 0 && tooMany > 0; i--) {
+            if (m->figures[i]) {
+                figure_get(m->figures[i])->actionState = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
+                tooMany--;
+            }
+        }
+        Formation_calculateFigures();
+    }
+}
+
 static int prepare_to_move(formation *m)
 {
     if (m->months_very_low_morale || m->months_low_morale > 1) {

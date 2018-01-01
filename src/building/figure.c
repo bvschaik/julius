@@ -1,7 +1,5 @@
 #include "building/figure.h"
 
-#include "Formation.h"
-
 #include "Data/CityInfo.h"
 
 #include "building/barracks.h"
@@ -13,6 +11,7 @@
 #include "city/message.h"
 #include "core/calc.h"
 #include "figure/figure.h"
+#include "figure/formation_legion.h"
 #include "figure/movement.h"
 #include "graphics/image.h"
 #include "game/resource.h"
@@ -1284,7 +1283,7 @@ void building_figure_generate()
                     update_native_crop_progress(b);
                     break;
                 case BUILDING_FORT:
-                    Formation_setNewSoldierRequest(b);
+                    formation_legion_update_recruit_status(b);
                     break;
                 case BUILDING_BARRACKS:
                     spawn_figure_barracks(b);

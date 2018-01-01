@@ -3,14 +3,10 @@
 
 #include "building/building.h"
 
-int Formation_createLegion(building *fort);
-
 void Formation_deleteFortAndBanner(int formationId);
 
 void Formation_calculateLegionTotals();
-int Formation_anyLegionNeedsSoldiers();
 int Formation_getClosestMilitaryAcademy(int formationId);
-void Formation_setNewSoldierRequest(building *fort);
 
 void Formation_updateAfterDeath(int formationId);
 

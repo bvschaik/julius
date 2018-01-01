@@ -49,7 +49,7 @@ struct fort_state {
 static void get_closest_fort_needing_soldiers(const formation *formation, void *data)
 {
     struct fort_state *state = (struct fort_state*) data;
-    if (formation->in_distant_battle || !formation->legion_recruit_type) {
+    if (formation->in_distant_battle || formation->legion_recruit_type == LEGION_RECRUIT_NONE) {
         return;
     }
     if (formation->legion_recruit_type == LEGION_RECRUIT_LEGIONARY && !state->has_weapons) {

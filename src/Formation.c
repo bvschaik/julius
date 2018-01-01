@@ -18,36 +18,6 @@
 
 #include <string.h>
 
-int Formation_createLegion(building *fort)
-{
-	Formation_calculateLegionTotals();
-
-    int formation_id = formation_create_legion(fort->id, fort->x, fort->y, fort->subtype.fortFigureType);
-    if (!formation_id) {
-        return 0;
-    }
-	figure *standard = figure_create(FIGURE_FORT_STANDARD, 0, 0, 0);
-	standard->buildingId = fort->id;
-	standard->formationId = formation_id;
-    formation_set_standard(formation_id, standard->id);
-
-	return formation_id;
-}
-
-void Formation_deleteFortAndBanner(int formationId)
-{
-    if (formationId > 0) {
-        const formation *m = formation_get(formationId);
-        if (m->in_use) {
-            if (m->standard_figure_id) {
-                figure_delete(figure_get(m->standard_figure_id));
-            }
-            formation_clear(formationId);
-            Formation_calculateLegionTotals();
-        }
-    }
-}
-
 static int is_legion(figure *f)
 {
     if (FigureIsLegion(f->type) || f->type == FIGURE_FORT_STANDARD) {
@@ -95,19 +65,6 @@ void Formation_calculateLegionTotals()
     formation_foreach(update_totals);
 }
 
-static void are_legions_needing_recruits(const formation *m, void *data)
-{
-    if (m->legion_recruit_type != LEGION_RECRUIT_NONE) {
-        *(int*) data = 1;
-    }
-}
-int Formation_anyLegionNeedsSoldiers()
-{
-    int yes = 0;
-    formation_foreach_legion(are_legions_needing_recruits, &yes);
-    return yes;
-}
-
 int Formation_getClosestMilitaryAcademy(int formationId)
 {
 	building *fort = building_get(formation_get(formationId)->building_id);
@@ -125,34 +82,6 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 		}
 	}
 	return minBuildingId;
-}
-
-void Formation_setNewSoldierRequest(building *fort)
-{
-    const formation *m = formation_get(fort->formationId);
-	formation_set_recruit_type(m->id, LEGION_RECRUIT_NONE);
-	if (!m->is_at_fort || m->cursed_by_mars || m->num_figures == m->max_figures) {
-		return;
-	}
-	if (m->num_figures < m->max_figures) {
-		int type = fort->subtype.fortFigureType;
-		if (type == FIGURE_FORT_LEGIONARY) {
-			formation_set_recruit_type(m->id, LEGION_RECRUIT_LEGIONARY);
-		} else if (type == FIGURE_FORT_JAVELIN) {
-			formation_set_recruit_type(m->id, LEGION_RECRUIT_JAVELIN);
-		} else if (type == FIGURE_FORT_MOUNTED) {
-			formation_set_recruit_type(m->id, LEGION_RECRUIT_MOUNTED);
-		}
-	} else { // too many figures
-		int tooMany = m->num_figures - m->max_figures;
-		for (int i = MAX_FORMATION_FIGURES - 1; i >= 0 && tooMany > 0; i--) {
-			if (m->figures[i]) {
-				figure_get(m->figures[i])->actionState = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
-				tooMany--;
-			}
-		}
-		Formation_calculateFigures();
-	}
 }
 
 static void update_legion_enemy_totals(const formation *m, void *data)

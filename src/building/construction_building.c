@@ -10,7 +10,7 @@
 #include "building/storage.h"
 #include "city/warning.h"
 #include "core/random.h"
-#include "figure/formation.h"
+#include "figure/formation_legion.h"
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "map/building_tiles.h"
@@ -25,31 +25,27 @@
 #include "../Terrain.h"
 #include "../TerrainGraphics.h"
 
-static void add_fort(int type, building *b)
+static void add_fort(int type, building *fort)
 {
-    b->prevPartBuildingId = 0;
-    map_building_tiles_add(b->id, b->x, b->y, b->size, image_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
-    b->formationId = Formation_createLegion(b);
+    fort->prevPartBuildingId = 0;
+    map_building_tiles_add(fort->id, fort->x, fort->y, fort->size, image_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
     if (type == BUILDING_FORT_LEGIONARIES) {
-        b->subtype.fortFigureType = FIGURE_FORT_LEGIONARY;
-        formation_set_figure_type(b->formationId, FIGURE_FORT_LEGIONARY);
+        fort->subtype.fortFigureType = FIGURE_FORT_LEGIONARY;
+    } else if (type == BUILDING_FORT_JAVELIN) {
+        fort->subtype.fortFigureType = FIGURE_FORT_JAVELIN;
+    } else if (type == BUILDING_FORT_MOUNTED) {
+        fort->subtype.fortFigureType = FIGURE_FORT_MOUNTED;
     }
-    if (type == BUILDING_FORT_JAVELIN) {
-        b->subtype.fortFigureType = FIGURE_FORT_JAVELIN;
-        formation_set_figure_type(b->formationId, FIGURE_FORT_JAVELIN);
-    }
-    if (type == BUILDING_FORT_MOUNTED) {
-        b->subtype.fortFigureType = FIGURE_FORT_MOUNTED;
-        formation_set_figure_type(b->formationId, FIGURE_FORT_MOUNTED);
-    }
+
+    fort->formationId = formation_legion_create_for_fort(fort);
     // create parade ground
-    building *ground = building_create(BUILDING_FORT_GROUND, b->x + 3, b->y - 1);
+    building *ground = building_create(BUILDING_FORT_GROUND, fort->x + 3, fort->y - 1);
     game_undo_add_building(ground);
-    ground->formationId = b->formationId;
-    ground->prevPartBuildingId = b->id;
-    b->nextPartBuildingId = ground->id;
+    ground->formationId = fort->formationId;
+    ground->prevPartBuildingId = fort->id;
+    fort->nextPartBuildingId = ground->id;
     ground->nextPartBuildingId = 0;
-    map_building_tiles_add(ground->id, b->x + 3, b->y - 1, 4,
+    map_building_tiles_add(ground->id, fort->x + 3, fort->y - 1, 4,
         image_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 }
 
