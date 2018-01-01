@@ -37,13 +37,14 @@ static void tickDecreaseLegionDamage()
 	}
 }
 
-static void update_direction(const formation *m, void *data)
-{
-    formation_update_direction(m->id, figure_get(m->figures[0])->direction);
-}
 static void tickUpdateDirection()
 {
-    formation_foreach_non_herd(update_direction, 0);
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use && !m->is_herd) {
+            formation_update_direction(m->id, figure_get(m->figures[0])->direction);
+        }
+    }
 }
 
 static void tickUpdateLegions()
@@ -53,13 +54,13 @@ static void tickUpdateLegions()
 		if (m->in_use != 1 || !m->is_legion) {
 			continue;
 		}
-		formation_decrease_monthly_counters(m->id);
+		formation_decrease_monthly_counters(m);
 		if (Data_CityInfo.numEnemiesInCity <= 0) {
-			formation_clear_monthly_counters(m->id);
+			formation_clear_monthly_counters(m);
 		}
 		for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
 			if (figure_get(m->figures[n])->actionState == FIGURE_ACTION_150_ATTACK) {
-                formation_record_fight(m->id);
+                formation_record_fight(m);
 			}
 		}
 		if (formation_has_low_morale(m->id)) {
@@ -164,7 +165,7 @@ static void moveAnimals(const formation *m, int attackingAnimals)
 	}
 }
 
-static void update_herd_formation(const formation *m)
+static void update_herd_formation(formation *m)
 {
     if (formation_can_spawn_wolf(m->id)) {
         // spawn new wolf
@@ -188,7 +189,7 @@ static void update_herd_formation(const formation *m)
     if (m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FigureState_Alive) {
-            formation_set_home(m->id, f->x, f->y);
+            formation_set_home(m, f->x, f->y);
         }
     }
     int roamDistance;
@@ -219,14 +220,14 @@ static void update_herd_formation(const formation *m)
     if (m->wait_ticks > roamDelay || attackingAnimals) {
         formation_reset_wait_ticks(m->id);
         if (attackingAnimals) {
-            formation_set_destination(m->id, m->x_home, m->y_home);
+            formation_set_destination(m, m->x_home, m->y_home);
             moveAnimals(m, attackingAnimals);
         } else {
             int xTile, yTile;
             if (getHerdRoamingDestination(m->id, allowNegativeDesirability, m->x_home, m->y_home, roamDistance, m->herd_direction, &xTile, &yTile)) {
                 formation_herd_clear_direction(m->id);
                 if (formation_enemy_move_formation_to(m, xTile, yTile, &xTile, &yTile)) {
-                    formation_set_destination(m->id, xTile, yTile);
+                    formation_set_destination(m, xTile, yTile);
                     if (m->figure_type == FIGURE_WOLF) {
                         Data_CityInfo.soundMarchWolf--;
                         if (Data_CityInfo.soundMarchWolf <= 0) {
@@ -245,7 +246,12 @@ static void tickUpdateHerds()
 	if (Data_CityInfo.numAnimalsInCity <= 0) {
 		return;
 	}
-	formation_foreach_herd(update_herd_formation);
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use && m->is_herd && !m->is_legion && m->num_figures > 0) {
+            update_herd_formation(m);
+        }
+    }
 }
 
 void Formation_Tick_updateAll(int secondTime)

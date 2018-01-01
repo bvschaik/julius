@@ -133,26 +133,21 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
                            int enemy_type, int attack_type, int invasion_id, int invasion_sequence);
 
 formation *formation_get(int formation_id);
-formation_state *formation_get_state(int formation_id);
 
 void formation_set_halted(int formation_id, int halted);
 void formation_set_cursed(int formation_id);
 
 void formation_toggle_empire_service(int formation_id);
 
-void formation_record_missile_fired(int formation_id);
-void formation_record_missile_attack(int formation_id, int from_formation_id);
-void formation_record_fight(int formation_id);
+void formation_record_missile_fired(formation *m);
+void formation_record_missile_attack(formation *m, int from_formation_id);
+void formation_record_fight(formation *m);
 
 int formation_for_invasion(int invasion_sequence);
 
 void formation_caesar_pause();
 
 void formation_caesar_retreat();
-
-void formation_foreach(void (*callback)(const formation*));
-void formation_foreach_herd(void (*callback)(const formation*));
-void formation_foreach_non_herd(void (*callback)(const formation*, void*), void *data);
 
 void formation_legion_set_max_figures();
 
@@ -169,12 +164,12 @@ int formation_has_low_morale(int formation_id);
 
 void formation_update_monthly_morale_deployed();
 void formation_update_monthly_morale_at_rest();
-void formation_decrease_monthly_counters(int formation_id);
-void formation_clear_monthly_counters(int formation_id);
+void formation_decrease_monthly_counters(formation *m);
+void formation_clear_monthly_counters(formation *m);
 
-void formation_set_destination(int formation_id, int x, int y);
+void formation_set_destination(formation *m, int x, int y);
 void formation_set_destination_building(formation *m, int x, int y, int building_id);
-void formation_set_home(int formation_id, int x, int y);
+void formation_set_home(formation *m, int x, int y);
 
 void formation_clear_figures();
 int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage);

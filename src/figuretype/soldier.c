@@ -97,7 +97,7 @@ static void javelin_launch_missile(figure *f)
     if (f->attackGraphicOffset) {
         if (f->attackGraphicOffset == 1) {
             figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_JAVELIN);
-            formation_record_missile_fired(f->formationId);
+            formation_record_missile_fired(formation_get(f->formationId));
         }
         f->attackGraphicOffset++;
         if (f->attackGraphicOffset > 100) {

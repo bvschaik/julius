@@ -263,7 +263,7 @@ static void set_native_target_building(formation *m)
     }
 }
 
-static void approach_target(const formation *m)
+static void approach_target(formation *m)
 {
     if (map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home,
             m->destination_x, m->destination_y, m->destination_building_id, 400) ||
@@ -272,7 +272,7 @@ static void approach_target(const formation *m)
         int xTile, yTile;
         if (map_routing_get_closest_tile_within_range(m->x_home, m->y_home,
                 m->destination_x, m->destination_y, 8, 20, &xTile, &yTile)) {
-            formation_set_destination(m->id, xTile, yTile);
+            formation_set_destination(m, xTile, yTile);
         }
     }
 }
@@ -365,10 +365,10 @@ static void mars_kill_enemies()
     city_message_post(1, MESSAGE_SPIRIT_OF_MARS, 0, gridOffset);
 }
 
-static void update_enemy_movement(const formation *m, int roman_distance)
+static void update_enemy_movement(formation *m, int roman_distance)
 {
     const enemy_army *army = enemy_army_get(m->invasion_id);
-    formation_state *state = formation_get_state(m->id);
+    formation_state *state = &m->enemy_state;
     int regroup = 0;
     int halt = 0;
     int pursue_target = 0;
@@ -464,15 +464,15 @@ static void update_enemy_movement(const formation *m, int roman_distance)
         mars_kill_enemies();
     }
     if (halt) {
-        formation_set_destination(m->id, m->x_home, m->y_home);
+        formation_set_destination(m, m->x_home, m->y_home);
     } else if (pursue_target) {
         if (target_formation_id > 0) {
             const formation *target = formation_get(target_formation_id);
             if (target->num_figures > 0) {
-                formation_set_destination(m->id, target->x_home, target->y_home);
+                formation_set_destination(m, target->x_home, target->y_home);
             }
         } else {
-            formation_set_destination(m->id, army->destination_x, army->destination_y);
+            formation_set_destination(m, army->destination_x, army->destination_y);
         }
     } else if (regroup) {
         int layout = army->layout;
@@ -482,7 +482,7 @@ static void update_enemy_movement(const formation *m, int roman_distance)
             army->home_y;
         int x_tile, y_tile;
         if (formation_enemy_move_formation_to(m, x_offset, y_offset, &x_tile, &y_tile)) {
-            formation_set_destination(m->id, x_tile, y_tile);
+            formation_set_destination(m, x_tile, y_tile);
         }
     } else if (advance) {
         int layout = army->layout;
@@ -492,7 +492,7 @@ static void update_enemy_movement(const formation *m, int roman_distance)
             army->destination_y;
         int x_tile, y_tile;
         if (formation_enemy_move_formation_to(m, x_offset, y_offset, &x_tile, &y_tile)) {
-            formation_set_destination(m->id, x_tile, y_tile);
+            formation_set_destination(m, x_tile, y_tile);
         }
     }
 }
@@ -505,16 +505,16 @@ static void update_enemy_formation(formation *m, int *roman_distance)
             army->ignore_roman_soldiers = 1;
         }
     }
-    formation_decrease_monthly_counters(m->id);
+    formation_decrease_monthly_counters(m);
     if (Data_CityInfo.numSoldiersInCity <= 0) {
-        formation_clear_monthly_counters(m->id);
+        formation_clear_monthly_counters(m);
     }
     for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
         figure *f = figure_get(m->figures[n]);
         if (f->actionState == FIGURE_ACTION_150_ATTACK) {
             figure *opponent = figure_get(f->opponentId);
             if (!figure_is_dead(opponent) && FigureIsLegion(opponent->type)) {
-                formation_record_fight(m->id);
+                formation_record_fight(m);
             }
         }
     }
@@ -533,7 +533,7 @@ static void update_enemy_formation(formation *m, int *roman_distance)
     if (m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FigureState_Alive) {
-            formation_set_home(m->id, f->x, f->y);
+            formation_set_home(m, f->x, f->y);
         }
     }
     if (!army->formation_id) {

@@ -127,11 +127,6 @@ formation *formation_get(int formation_id)
     return &formations[formation_id];
 }
 
-formation_state *formation_get_state(int formation_id)
-{
-    return &formations[formation_id].enemy_state;
-}
-
 void formation_set_halted(int formation_id, int halted)
 {
     formations[formation_id].is_halted = halted;
@@ -147,20 +142,20 @@ void formation_toggle_empire_service(int formation_id)
     formations[formation_id].empire_service = formations[formation_id].empire_service ? 0 : 1;
 }
 
-void formation_record_missile_fired(int formation_id)
+void formation_record_missile_fired(formation *m)
 {
-    formations[formation_id].missile_fired = 6;
+    m->missile_fired = 6;
 }
 
-void formation_record_missile_attack(int formation_id, int from_formation_id)
+void formation_record_missile_attack(formation *m, int from_formation_id)
 {
-    formations[formation_id].missile_attack_timeout = 6;
-    formations[formation_id].missile_attack_formation_id = from_formation_id;
+    m->missile_attack_timeout = 6;
+    m->missile_attack_formation_id = from_formation_id;
 }
 
-void formation_record_fight(int formation_id)
+void formation_record_fight(formation *m)
 {
-    formations[formation_id].recent_fight = 6;
+    m->recent_fight = 6;
 }
 
 int formation_for_invasion(int invasion_sequence)
@@ -188,34 +183,6 @@ void formation_caesar_retreat()
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         if (formations[i].in_use == 1 && formations[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
             formations[i].months_low_morale = 1;
-        }
-    }
-}
-
-void formation_foreach(void (*callback)(const formation *))
-{
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use) {
-            callback(&formations[i]);
-        }
-    }
-}
-
-void formation_foreach_herd(void (*callback)(const formation *))
-{
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *m = &formations[i];
-        if (m->in_use && m->is_herd && !m->is_legion && m->num_figures > 0) {
-            callback(&formations[i]);
-        }
-    }
-}
-
-void formation_foreach_non_herd(void (*callback)(const formation *, void *), void *data)
-{
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use && !formations[i].is_herd) {
-            callback(&formations[i], data);
         }
     }
 }
@@ -380,36 +347,33 @@ void formation_update_monthly_morale_at_rest()
     }
 }
 
-void formation_decrease_monthly_counters(int formation_id)
+void formation_decrease_monthly_counters(formation *m)
 {
-    formation *f = &formations[formation_id];
-    if (f->is_legion) {
-        if (f->cursed_by_mars) {
-            f->cursed_by_mars--;
+    if (m->is_legion) {
+        if (m->cursed_by_mars) {
+            m->cursed_by_mars--;
         }
     }
-    if (f->missile_fired) {
-        f->missile_fired--;
+    if (m->missile_fired) {
+        m->missile_fired--;
     }
-    if (f->missile_attack_timeout) {
-        f->missile_attack_timeout--;
+    if (m->missile_attack_timeout) {
+        m->missile_attack_timeout--;
     }
-    if (f->recent_fight) {
-        f->recent_fight--;
+    if (m->recent_fight) {
+        m->recent_fight--;
     }
 }
 
-void formation_clear_monthly_counters(int formation_id)
+void formation_clear_monthly_counters(formation *m)
 {
-    formation *m = &formations[formation_id];
     m->missile_fired = 0;
     m->missile_attack_timeout = 0;
     m->recent_fight = 0;
 }
 
-void formation_set_destination(int formation_id, int x, int y)
+void formation_set_destination(formation *m, int x, int y)
 {
-    formation *m = &formations[formation_id];
     m->destination_x = x;
     m->destination_y = y;
 }
@@ -421,9 +385,8 @@ void formation_set_destination_building(formation *m, int x, int y, int building
     m->destination_building_id = building_id;
 }
 
-void formation_set_home(int formation_id, int x, int y)
+void formation_set_home(formation *m, int x, int y)
 {
-    formation *m = &formations[formation_id];
     m->x_home = x;
     m->y_home = y;
 }

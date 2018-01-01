@@ -43,7 +43,7 @@ int Formation_getFormationForBuilding(int gridOffset)
 	return 0;
 }
 
-static void update_totals(const formation *m)
+static void update_totals(formation *m)
 {
     if (m->is_legion) {
         formation_totals_add_legion(m->id);
@@ -54,15 +54,21 @@ static void update_totals(const formation *m)
     if (m->missile_attack_timeout <= 0 && m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FigureState_Alive) {
-            formation_set_home(m->id, f->x, f->y);
+            formation_set_home(m, f->x, f->y);
         }
     }
 }
+
 void Formation_calculateLegionTotals()
 {
     formation_totals_clear_legions();
     Data_CityInfo.militaryLegionaryLegions = 0;
-    formation_foreach(update_totals);
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use) {
+            update_totals(m);
+        }
+    }
 }
 
 int Formation_getClosestMilitaryAcademy(int formationId)
@@ -84,7 +90,7 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 	return minBuildingId;
 }
 
-static void update_legion_enemy_totals(const formation *m, void *data)
+static void update_legion_enemy_totals(const formation *m)
 {
     if (m->is_legion) {
         if (m->num_figures > 0) {
@@ -139,7 +145,12 @@ void Formation_calculateFigures()
 	}
 
     enemy_army_totals_clear();
-    formation_foreach_non_herd(update_legion_enemy_totals, 0);
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use && !m->is_herd) {
+            update_legion_enemy_totals(m);
+        }
+    }
 
     Data_CityInfo.militaryTotalLegionsEmpireService = 0;
     Data_CityInfo.militaryTotalSoldiers = 0;

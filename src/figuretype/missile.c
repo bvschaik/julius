@@ -128,7 +128,7 @@ static void missile_hit_target(figure *f, int target_id, figure_type legionary_t
     int damage_inflicted =
         figure_properties_for_type(f->type)->missile_attack_value -
         target_props->missile_defense_value;
-    const formation *m = formation_get(target->formationId);
+    formation *m = formation_get(target->formationId);
     if (damage_inflicted < 0) {
         damage_inflicted = 0;
     }
@@ -148,7 +148,7 @@ static void missile_hit_target(figure *f, int target_id, figure_type legionary_t
     f->state = FigureState_Dead;
     // for missiles: building_id contains the figure who shot it
     int missile_formation = figure_get(f->buildingId)->formationId;
-    formation_record_missile_attack(m->id, missile_formation);
+    formation_record_missile_attack(m, missile_formation);
 }
 
 void figure_arrow_action(figure *f)
