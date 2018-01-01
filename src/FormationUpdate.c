@@ -47,53 +47,6 @@ static void tickUpdateDirection()
     }
 }
 
-static void tickUpdateLegions()
-{
-	for (int i = 1; i <= MAX_LEGIONS; i++) {
-		formation *m = formation_get(i);
-		if (m->in_use != 1 || !m->is_legion) {
-			continue;
-		}
-		formation_decrease_monthly_counters(m);
-		if (Data_CityInfo.numEnemiesInCity <= 0) {
-			formation_clear_monthly_counters(m);
-		}
-		for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-			if (figure_get(m->figures[n])->actionState == FIGURE_ACTION_150_ATTACK) {
-                formation_record_fight(m);
-			}
-		}
-		if (formation_has_low_morale(m->id)) {
-			// flee back to fort
-			for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-				figure *f = figure_get(m->figures[n]);
-				if (f->actionState != FIGURE_ACTION_150_ATTACK &&
-					f->actionState != FIGURE_ACTION_149_CORPSE &&
-					f->actionState != FIGURE_ACTION_148_FLEEING) {
-					f->actionState = FIGURE_ACTION_148_FLEEING;
-					figure_route_remove(f);
-				}
-			}
-		} else if (m->layout == FORMATION_MOP_UP) {
-			if (enemy_army_total_enemy_formations() +
-				Data_CityInfo.numRiotersInCity +
-				Data_CityInfo.numAttackingNativesInCity > 0) {
-				for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-                    if (m->figures[n] != 0) {
-                        figure *f = figure_get(m->figures[n]);
-                        if (f->actionState != FIGURE_ACTION_150_ATTACK &&
-                            f->actionState != FIGURE_ACTION_149_CORPSE) {
-                            f->actionState = FIGURE_ACTION_86_SOLDIER_MOPPING_UP;
-                        }
-                    }
-				}
-			} else {
-				formation_legion_restore_layout(m);
-			}
-		}
-	}
-}
-
 static int getHerdRoamingDestination(int formationId, int allowNegativeDesirability,
 	int x, int y, int distance, int direction, int *xTile, int *yTile)
 {
@@ -216,16 +169,16 @@ static void update_herd_formation(formation *m)
         default:
             return;
     }
-    formation_increase_wait_ticks(m->id);
+    m->wait_ticks++;
     if (m->wait_ticks > roamDelay || attackingAnimals) {
-        formation_reset_wait_ticks(m->id);
+        m->wait_ticks = 0;
         if (attackingAnimals) {
             formation_set_destination(m, m->x_home, m->y_home);
             moveAnimals(m, attackingAnimals);
         } else {
             int xTile, yTile;
             if (getHerdRoamingDestination(m->id, allowNegativeDesirability, m->x_home, m->y_home, roamDistance, m->herd_direction, &xTile, &yTile)) {
-                formation_herd_clear_direction(m->id);
+                m->herd_direction = 0;
                 if (formation_enemy_move_formation_to(m, xTile, yTile, &xTile, &yTile)) {
                     formation_set_destination(m, xTile, yTile);
                     if (m->figure_type == FIGURE_WOLF) {
@@ -256,7 +209,7 @@ static void tickUpdateHerds()
 
 void Formation_Tick_updateAll(int secondTime)
 {
-	Formation_calculateLegionTotals();
+	formation_calculate_legion_totals();
 	Formation_calculateFigures();
 	tickUpdateDirection();
 	tickDecreaseLegionDamage();
@@ -264,7 +217,7 @@ void Formation_Tick_updateAll(int secondTime)
 		formation_update_monthly_morale_deployed();
 	}
 	formation_legion_set_max_figures();
-	tickUpdateLegions();
+	formation_legion_update();
 	formation_enemy_update();
 	tickUpdateHerds();
 }

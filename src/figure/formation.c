@@ -1,8 +1,11 @@
 #include "formation.h"
 
 #include "core/calc.h"
+#include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "map/grid.h"
+
+#include "Data/CityInfo.h"
 
 #include <string.h>
 
@@ -128,11 +131,6 @@ formation *formation_get(int formation_id)
     return &formations[formation_id];
 }
 
-void formation_set_halted(int formation_id, int halted)
-{
-    formations[formation_id].is_halted = halted;
-}
-
 void formation_toggle_empire_service(int formation_id)
 {
     formations[formation_id].empire_service = formations[formation_id].empire_service ? 0 : 1;
@@ -187,10 +185,9 @@ void formation_caesar_retreat()
     }
 }
 
-int formation_has_low_morale(int formation_id)
+int formation_has_low_morale(formation *m)
 {
-    return formations[formation_id].months_low_morale ||
-           formations[formation_id].months_very_low_morale;
+    return m->months_low_morale || m->months_very_low_morale;
 }
 
 void formation_legion_set_max_figures()
@@ -207,16 +204,29 @@ int formation_totals_get_num_legions()
     return data.num_legions;
 }
 
-void formation_totals_clear_legions()
+void formation_calculate_legion_totals()
 {
     data.id_last_legion = 0;
     data.num_legions = 0;
-}
-
-void formation_totals_add_legion(int formation_id)
-{
-    data.id_last_legion = formation_id;
-    data.num_legions++;
+    Data_CityInfo.militaryLegionaryLegions = 0;
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use) {
+            if (m->is_legion) {
+                data.id_last_legion = i;
+                data.num_legions++;
+                if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+                    Data_CityInfo.militaryLegionaryLegions++;
+                }
+            }
+            if (m->missile_attack_timeout <= 0 && m->figures[0]) {
+                figure *f = figure_get(m->figures[0]);
+                if (f->state == FigureState_Alive) {
+                    formation_set_home(m, f->x, f->y);
+                }
+            }
+        }
+    }
 }
 
 int formation_get_num_legions()
@@ -243,18 +253,17 @@ int formation_for_legion(int legion_index)
     return 0;
 }
 
-void formation_change_morale(int formation_id, int amount)
+void formation_change_morale(formation *m, int amount)
 {
-    formation *f = &formations[formation_id];
     int max_morale;
-    if (f->figure_type == FIGURE_FORT_LEGIONARY) {
-        max_morale = f->has_military_training ? 100 : 80;
-    } else if (f->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
+    if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+        max_morale = m->has_military_training ? 100 : 80;
+    } else if (m->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
         max_morale = 100;
-    } else if (f->figure_type == FIGURE_FORT_JAVELIN || f->figure_type == FIGURE_FORT_MOUNTED) {
-        max_morale = f->has_military_training ? 80 : 60;
+    } else if (m->figure_type == FIGURE_FORT_JAVELIN || m->figure_type == FIGURE_FORT_MOUNTED) {
+        max_morale = m->has_military_training ? 80 : 60;
     } else {
-        switch (f->enemy_type) {
+        switch (m->enemy_type) {
             case ENEMY_0_BARBARIAN:
             case ENEMY_1_NUMIDIAN:
             case ENEMY_2_GAUL:
@@ -271,17 +280,18 @@ void formation_change_morale(int formation_id, int amount)
                 break;
         }
     }
-    f->morale = calc_bound(f->morale + amount, 0, max_morale);
+    m->morale = calc_bound(m->morale + amount, 0, max_morale);
 }
 
 static void change_all_morale(int legion, int enemy)
 {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use && !formations[i].is_herd) {
-            if (formations[i].is_legion) {
-                formation_change_morale(i, legion);
+        formation *m = &formations[i];
+        if (m->in_use && !m->is_herd) {
+            if (m->is_legion) {
+                formation_change_morale(m, legion);
             } else {
-                formation_change_morale(i, enemy);
+                formation_change_morale(m, enemy);
             }
         }
     }
@@ -321,28 +331,28 @@ void formation_update_monthly_morale_deployed()
 void formation_update_monthly_morale_at_rest()
 {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *f = &formations[i];
-        if (f->in_use != 1 || f->is_herd) {
+        formation *m = &formations[i];
+        if (m->in_use != 1 || m->is_herd) {
             continue;
         }
-        if (f->is_legion) {
-            if (f->is_at_fort) {
-                f->months_from_home = 0;
-                f->months_very_low_morale = 0;
-                f->months_low_morale = 0;
-                formation_change_morale(i, 5);
-                formation_legion_restore_layout(f);
-            } else if (!f->recent_fight) {
-                f->months_from_home++;
-                if (f->months_from_home > 3) {
-                    if (f->months_from_home > 100) {
-                        f->months_from_home = 100;
+        if (m->is_legion) {
+            if (m->is_at_fort) {
+                m->months_from_home = 0;
+                m->months_very_low_morale = 0;
+                m->months_low_morale = 0;
+                formation_change_morale(m, 5);
+                formation_legion_restore_layout(m);
+            } else if (!m->recent_fight) {
+                m->months_from_home++;
+                if (m->months_from_home > 3) {
+                    if (m->months_from_home > 100) {
+                        m->months_from_home = 100;
                     }
-                    formation_change_morale(i, -5);
+                    formation_change_morale(m, -5);
                 }
             }
         } else {
-            formation_change_morale(i, 0);
+            formation_change_morale(m, 0);
         }
     }
 }
@@ -488,26 +498,6 @@ void formation_update_direction(int formation_id, int first_figure_direction)
     }
     f->prev.x_home = f->x_home;
     f->prev.y_home = f->y_home;
-}
-
-void formation_herd_clear_direction(int formation_id)
-{
-    formations[formation_id].herd_direction = 0;
-}
-
-void formation_increase_wait_ticks(int formation_id)
-{
-    formations[formation_id].wait_ticks++;
-}
-
-void formation_reset_wait_ticks(int formation_id)
-{
-    formations[formation_id].wait_ticks = 0;
-}
-
-void formation_set_enemy_legion(int formation_id, int enemy_legion_index)
-{
-    formations[formation_id].enemy_legion_index = enemy_legion_index;
 }
 
 

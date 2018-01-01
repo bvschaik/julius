@@ -134,8 +134,6 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
 
 formation *formation_get(int formation_id);
 
-void formation_set_halted(int formation_id, int halted);
-
 void formation_toggle_empire_service(int formation_id);
 
 void formation_record_missile_fired(formation *m);
@@ -151,15 +149,14 @@ void formation_caesar_retreat();
 void formation_legion_set_max_figures();
 
 int formation_totals_get_num_legions();
-void formation_totals_clear_legions();
-void formation_totals_add_legion(int formation_id);
+void formation_calculate_legion_totals();
 
 int formation_get_num_legions();
 
 int formation_for_legion(int legion_index);
 
-void formation_change_morale(int formation_id, int amount);
-int formation_has_low_morale(int formation_id);
+void formation_change_morale(formation *m, int amount);
+int formation_has_low_morale(formation *m);
 
 void formation_update_monthly_morale_deployed();
 void formation_update_monthly_morale_at_rest();
@@ -175,12 +172,6 @@ int formation_add_figure(int formation_id, int figure_id, int deployed, int dama
 
 void formation_move_herds_away(int x, int y);
 int formation_can_spawn_wolf(int formation_id);
-void formation_herd_clear_direction(int formation_id);
-
-void formation_increase_wait_ticks(int formation_id);
-void formation_reset_wait_ticks(int formation_id);
-
-void formation_set_enemy_legion(int formation_id, int enemy_legion_index);
 
 void formation_update_direction(int formation_id, int first_figure_direction);
 

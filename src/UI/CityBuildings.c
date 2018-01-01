@@ -5,7 +5,6 @@
 
 #include "../Building.h"
 #include "../CityView.h"
-#include "../Formation.h"
 #include "../Widget.h"
 
 #include "building/animation.h"
@@ -14,7 +13,6 @@
 #include "city/finance.h"
 #include "city/warning.h"
 #include "figure/figure.h"
-#include "figure/formation.h"
 #include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "game/settings.h"
@@ -651,7 +649,7 @@ static int handleRightClickAllowBuildingInfo()
 static int isLegionClick()
 {
 	if (Data_State.map.current.gridOffset) {
-		int formationId = Formation_getLegionFormationAtGridOffset(
+		int formationId = formation_legion_at_grid_offset(
 			map_grid_offset(Data_State.map.current.x, Data_State.map.current.y));
 		if (formationId > 0 && !formation_get(formationId)->in_distant_battle) {
 			Data_State.selectedLegionFormationId = formationId;
@@ -1049,7 +1047,7 @@ static void militaryMapClick()
 	if (m->in_distant_battle || m->cursed_by_mars) {
 		return;
 	}
-	int otherFormationId = Formation_getFormationForBuilding(
+	int otherFormationId = formation_legion_at_building(
 		map_grid_offset(Data_State.map.current.x, Data_State.map.current.y));
 	if (otherFormationId && otherFormationId == formationId) {
 		formation_legion_return_home(m);

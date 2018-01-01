@@ -2,8 +2,11 @@
 
 #include "city/warning.h"
 #include "core/calc.h"
+#include "figure/enemy_army.h"
 #include "figure/figure.h"
 #include "figure/route.h"
+#include "map/building.h"
+#include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"
 #include "scenario/distant_battle.h"
@@ -13,7 +16,7 @@
 
 int formation_legion_create_for_fort(building *fort)
 {
-    Formation_calculateLegionTotals();
+    formation_calculate_legion_totals();
 
     formation *m = formation_create_legion(fort->id, fort->x, fort->y, fort->subtype.fortFigureType);
     if (!m->id) {
@@ -36,7 +39,7 @@ void formation_legion_delete_for_fort(building *fort)
                 figure_delete(figure_get(m->standard_figure_id));
             }
             formation_clear(fort->formationId);
-            Formation_calculateLegionTotals();
+            formation_calculate_legion_totals();
         }
     }
 }
@@ -101,7 +104,7 @@ static int prepare_to_move(formation *m)
         return 0;
     }
     if (m->months_low_morale == 1) {
-        formation_change_morale(m->id, 10); // yay, we can move!
+        formation_change_morale(m, 10); // yay, we can move!
     }
     return 1;
 }
@@ -202,7 +205,7 @@ void formation_legions_dispatch_to_distant_battle()
 
 static void kill_soldiers(formation *m, int kill_percentage)
 {
-    formation_change_morale(m->id, -75);
+    formation_change_morale(m, -75);
     int soldiers_total = 0;
     for (int fig = 0; fig < m->num_figures; fig++) {
         if (m->figures[fig] > 0) {
@@ -292,4 +295,76 @@ int formation_legion_curse()
     best_legion->cursed_by_mars = 96;
     Formation_calculateFigures();
     return 1;
+}
+
+static int is_legion(figure *f)
+{
+    if (FigureIsLegion(f->type) || f->type == FIGURE_FORT_STANDARD) {
+        return f->formationId;
+    }
+    return 0;
+}
+
+int formation_legion_at_grid_offset(int grid_offset)
+{
+    return map_figure_foreach_until(grid_offset, is_legion);
+}
+
+int formation_legion_at_building(int grid_offset)
+{
+    int building_id = map_building_at(grid_offset);
+    if (building_id > 0) {
+        building *b = building_get(building_id);
+        if (BuildingIsInUse(b) && (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND)) {
+            return b->formationId;
+        }
+    }
+    return 0;
+}
+
+void formation_legion_update()
+{
+    for (int i = 1; i <= MAX_LEGIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use != 1 || !m->is_legion) {
+            continue;
+        }
+        formation_decrease_monthly_counters(m);
+        if (Data_CityInfo.numEnemiesInCity <= 0) {
+            formation_clear_monthly_counters(m);
+        }
+        for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
+            if (figure_get(m->figures[n])->actionState == FIGURE_ACTION_150_ATTACK) {
+                formation_record_fight(m);
+            }
+        }
+        if (formation_has_low_morale(m)) {
+            // flee back to fort
+            for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
+                figure *f = figure_get(m->figures[n]);
+                if (f->actionState != FIGURE_ACTION_150_ATTACK &&
+                    f->actionState != FIGURE_ACTION_149_CORPSE &&
+                    f->actionState != FIGURE_ACTION_148_FLEEING) {
+                    f->actionState = FIGURE_ACTION_148_FLEEING;
+                    figure_route_remove(f);
+                }
+            }
+        } else if (m->layout == FORMATION_MOP_UP) {
+            if (enemy_army_total_enemy_formations() +
+                Data_CityInfo.numRiotersInCity +
+                Data_CityInfo.numAttackingNativesInCity > 0) {
+                for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
+                    if (m->figures[n] != 0) {
+                        figure *f = figure_get(m->figures[n]);
+                        if (f->actionState != FIGURE_ACTION_150_ATTACK &&
+                            f->actionState != FIGURE_ACTION_149_CORPSE) {
+                            f->actionState = FIGURE_ACTION_86_SOLDIER_MOPPING_UP;
+                        }
+                    }
+                }
+            } else {
+                formation_legion_restore_layout(m);
+            }
+        }
+    }
 }

@@ -1,6 +1,7 @@
 #include "barracks.h"
 
 #include "building/count.h"
+#include "building/model.h"
 #include "core/calc.h"
 #include "figure/action.h"
 #include "figure/figure.h"
@@ -66,6 +67,24 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
     return min_formation_id;
 }
 
+static int get_closest_military_academy(const building *fort)
+{
+    int min_building_id = 0;
+    int min_distance = 10000;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (BuildingIsInUse(b) && b->type == BUILDING_MILITARY_ACADEMY &&
+            b->numWorkers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
+            int dist = calc_maximum_distance(fort->x, fort->y, b->x, b->y);
+            if (dist < min_distance) {
+                min_distance = dist;
+                min_building_id = i;
+            }
+        }
+    }
+    return min_building_id;
+}
+
 int building_barracks_create_soldier(building *barracks, int x, int y)
 {
     int formation_id = get_closest_legion_needing_soldiers(barracks);
@@ -79,7 +98,7 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
                 barracks->loadsStored--;
             }
         }
-        int academy_id = Formation_getClosestMilitaryAcademy(formation_id);
+        int academy_id = get_closest_military_academy(building_get(m->building_id));
         if (academy_id) {
             int x_road, y_road;
             building *academy = building_get(academy_id);

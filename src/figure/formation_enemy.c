@@ -518,7 +518,7 @@ static void update_enemy_formation(formation *m, int *roman_distance)
             }
         }
     }
-    if (formation_has_low_morale(m->id)) {
+    if (formation_has_low_morale(m)) {
         for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
             figure *f = figure_get(m->figures[n]);
             if (f->actionState != FIGURE_ACTION_150_ATTACK &&
@@ -566,7 +566,7 @@ static void update_enemy_formation(formation *m, int *roman_distance)
         }
     }
     m->enemy_legion_index = army->num_legions++;
-    formation_increase_wait_ticks(m->id);
+    m->wait_ticks++;
     formation_set_destination_building(m,
         army->destination_x, army->destination_y, army->destination_building_id
     );

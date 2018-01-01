@@ -28,4 +28,10 @@ void formation_legions_return_from_distant_battle();
 
 int formation_legion_curse();
 
+int formation_legion_at_grid_offset(int grid_offset);
+
+int formation_legion_at_building(int grid_offset);
+
+void formation_legion_update();
+
 #endif // FIGURE_FORMATION_LEGION_H

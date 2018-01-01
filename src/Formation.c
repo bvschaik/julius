@@ -18,88 +18,16 @@
 
 #include <string.h>
 
-static int is_legion(figure *f)
-{
-    if (FigureIsLegion(f->type) || f->type == FIGURE_FORT_STANDARD) {
-        return f->formationId;
-    }
-    return 0;
-}
-
-int Formation_getLegionFormationAtGridOffset(int gridOffset)
-{
-    return map_figure_foreach_until(gridOffset, is_legion);
-}
-
-int Formation_getFormationForBuilding(int gridOffset)
-{
-	int buildingId = map_building_at(gridOffset);
-	if (buildingId > 0) {
-		building *b = building_get(buildingId);
-		if (BuildingIsInUse(b) && (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND)) {
-			return b->formationId;
-		}
-	}
-	return 0;
-}
-
-static void update_totals(formation *m)
-{
-    if (m->is_legion) {
-        formation_totals_add_legion(m->id);
-        if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-            Data_CityInfo.militaryLegionaryLegions++;
-        }
-    }
-    if (m->missile_attack_timeout <= 0 && m->figures[0]) {
-        figure *f = figure_get(m->figures[0]);
-        if (f->state == FigureState_Alive) {
-            formation_set_home(m, f->x, f->y);
-        }
-    }
-}
-
-void Formation_calculateLegionTotals()
-{
-    formation_totals_clear_legions();
-    Data_CityInfo.militaryLegionaryLegions = 0;
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *m = formation_get(i);
-        if (m->in_use) {
-            update_totals(m);
-        }
-    }
-}
-
-int Formation_getClosestMilitaryAcademy(int formationId)
-{
-	building *fort = building_get(formation_get(formationId)->building_id);
-	int minBuildingId = 0;
-	int minDistance = 10000;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-		if (BuildingIsInUse(b) && b->type == BUILDING_MILITARY_ACADEMY &&
-			b->numWorkers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
-			int dist = calc_maximum_distance(fort->x, fort->y, b->x, b->y);
-			if (dist < minDistance) {
-				minDistance = dist;
-				minBuildingId = i;
-			}
-		}
-	}
-	return minBuildingId;
-}
-
-static void update_legion_enemy_totals(const formation *m)
+static void update_legion_enemy_totals(formation *m)
 {
     if (m->is_legion) {
         if (m->num_figures > 0) {
             int wasHalted = m->is_halted;
-            formation_set_halted(m->id, 1);
+            m->is_halted = 1;
             for (int fig = 0; fig < m->num_figures; fig++) {
                 int figureId = m->figures[fig];
                 if (figureId && figure_get(figureId)->direction != DIR_8_NONE) {
-                    formation_set_halted(m->id, 0);
+                    m->is_halted = 0;
                 }
             }
             int total_strength = m->num_figures;
@@ -170,7 +98,8 @@ void Formation_calculateFigures()
 void Formation_updateAfterDeath(int formationId)
 {
 	Formation_calculateFigures();
-	int pctDead = calc_percentage(1, formation_get(formationId)->num_figures);
+    formation *m = formation_get(formationId);
+	int pctDead = calc_percentage(1, m->num_figures);
 	int morale;
 	if (pctDead < 8) {
 		morale = -5;
@@ -185,5 +114,5 @@ void Formation_updateAfterDeath(int formationId)
 	} else {
 		morale = -20;
 	}
-	formation_change_morale(formationId, morale);
+	formation_change_morale(m, morale);
 }
