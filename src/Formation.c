@@ -18,11 +18,6 @@
 
 #include <string.h>
 
-void Formation_clearInvasionInfo()
-{
-    enemy_armies_clear();
-}
-
 int Formation_createLegion(building *fort)
 {
 	Formation_calculateLegionTotals();
@@ -76,62 +71,6 @@ int Formation_getFormationForBuilding(int gridOffset)
 		}
 	}
 	return 0;
-}
-
-void Formation_legionMoveTo(int formationId, int x, int y)
-{
-	const formation *m = formation_get(formationId);
-	map_routing_calculate_distances(m->x_home, m->y_home);
-	if (map_routing_distance(map_grid_offset(x, y)) <= 0) {
-		return; // unable to route there
-	}
-	if (x == m->x_home && y == m->y_home) {
-		return; // use legionReturnHome
-	}
-	if (m->cursed_by_mars) {
-		return;
-	}
-	formation_move_standard(m->id, x, y);
-	if (m->morale <= 20) {
-		city_warning_show(WARNING_LEGION_MORALE_TOO_LOW);
-	}
-	for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
-		figure *f = figure_get(m->figures[i]);
-		if (f->actionState == FIGURE_ACTION_149_CORPSE ||
-			f->actionState == FIGURE_ACTION_150_ATTACK) {
-			continue;
-		}
-        if (formation_legion_prepare_to_move(m->id)) {
-            f->alternativeLocationIndex = 0;
-            f->actionState = FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD;
-            figure_route_remove(f);
-        }
-	}
-}
-
-void Formation_legionReturnHome(int formationId)
-{
-	const formation *m = formation_get(formationId);
-	map_routing_calculate_distances(m->x_home, m->y_home);
-	if (map_routing_distance(map_grid_offset(m->x, m->y)) <= 0) {
-		return; // unable to route home
-	}
-	if (m->cursed_by_mars) {
-		return;
-	}
-	formation_set_at_fort(m->id, 1);
-    formation_restore_layout(m->id);
-	for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
-		figure *f = figure_get(m->figures[i]);
-		if (f->actionState == FIGURE_ACTION_149_CORPSE ||
-			f->actionState == FIGURE_ACTION_150_ATTACK) {
-			continue;
-		}
-        if (formation_legion_prepare_to_move(m->id)) {
-            f->actionState = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
-            figure_route_remove(f);
-        }
-	}
 }
 
 static void update_totals(const formation *m)

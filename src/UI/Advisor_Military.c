@@ -4,7 +4,7 @@
 #include "../CityView.h"
 #include "../Formation.h"
 
-#include "figure/formation.h"
+#include "figure/formation_legion.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"
 
@@ -181,9 +181,9 @@ static void buttonGoToLegion(int legionId, int param2)
 
 static void buttonReturnToFort(int legionId, int param2)
 {
-	int formationId = formation_for_legion(legionId);
-	if (!formation_get(formationId)->in_distant_battle) {
-		Formation_legionReturnHome(formationId);
+	formation *m = formation_get(formation_for_legion(legionId));
+	if (!m->in_distant_battle) {
+		formation_legion_return_home(m);
 		UI_Window_requestRefresh();
 	}
 }

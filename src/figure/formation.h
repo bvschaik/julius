@@ -131,9 +131,8 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
                            int enemy_type, int attack_type, int invasion_id, int invasion_sequence);
 
 void formation_set_standard(int formation_id, int standard_figure_id);
-void formation_move_standard(int formation_id, int x, int y);
 
-const formation *formation_get(int formation_id);
+formation *formation_get(int formation_id);
 formation_state *formation_get_state(int formation_id);
 
 void formation_set_figure_type(int formation_id, figure_type type);
@@ -146,7 +145,7 @@ void formation_set_cursed(int formation_id);
 
 void formation_change_layout(int formation_id, int new_layout);
 
-void formation_restore_layout(int formation_id);
+void formation_restore_layout(formation *m);
 
 void formation_toggle_empire_service(int formation_id);
 
@@ -167,7 +166,6 @@ void formation_foreach_legion(void (*callback)(const formation*, void*), void *d
 
 void formation_legion_set_trained(int formation_id);
 void formation_legion_set_max_figures();
-int formation_legion_prepare_to_move(int formation_id);
 
 int formation_totals_get_num_legions();
 void formation_totals_clear_legions();

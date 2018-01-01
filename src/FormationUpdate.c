@@ -164,7 +164,7 @@ static void tickUpdateDirection()
 static void tickUpdateLegions()
 {
 	for (int i = 1; i <= MAX_LEGIONS; i++) {
-		const formation *m = formation_get(i);
+		formation *m = formation_get(i);
 		if (m->in_use != 1 || !m->is_legion) {
 			continue;
 		}
@@ -202,7 +202,7 @@ static void tickUpdateLegions()
                     }
 				}
 			} else {
-				formation_restore_layout(m->id);
+				formation_restore_layout(m);
 			}
 		}
 	}

@@ -15,6 +15,7 @@
 #include "city/warning.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
+#include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -1044,17 +1045,16 @@ static void militaryMapClick()
 		return;
 	}
 	int formationId = Data_State.selectedLegionFormationId;
-    const formation *m = formation_get(formationId);
+    formation *m = formation_get(formationId);
 	if (m->in_distant_battle || m->cursed_by_mars) {
 		return;
 	}
 	int otherFormationId = Formation_getFormationForBuilding(
 		map_grid_offset(Data_State.map.current.x, Data_State.map.current.y));
 	if (otherFormationId && otherFormationId == formationId) {
-		Formation_legionReturnHome(formationId);
+		formation_legion_return_home(m);
 	} else {
-		Formation_legionMoveTo(formationId,
-			Data_State.map.current.x, Data_State.map.current.y);
+		formation_legion_move_to(m, Data_State.map.current.x, Data_State.map.current.y);
 		sound_speech_play_file("wavs/cohort5.wav");
 	}
 	UI_Window_goTo(Window_City);

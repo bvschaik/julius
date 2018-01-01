@@ -10,7 +10,7 @@
 #include "building/count.h"
 #include "core/calc.h"
 #include "core/debug.h"
-#include "figure/formation.h"
+#include "figure/formation_legion.h"
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int index, int param2);
@@ -458,10 +458,9 @@ int UI_BuildingInfo_getTooltipLegionInfo(BuildingInfoContext *c)
 
 static void buttonReturnToFort(int param1, int param2)
 {
-	int formationId = contextForCallback->formationId;
-    const formation *m = formation_get(formationId);
+    formation *m = formation_get(contextForCallback->formationId);
 	if (!m->in_distant_battle && m->is_at_fort != 1) {
-		Formation_legionReturnHome(formationId);
+		formation_legion_return_home(m);
 		UI_Window_goTo(Window_City);
 	}
 }

@@ -123,7 +123,7 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
     return formation_id;
 }
 
-const formation *formation_get(int formation_id)
+formation *formation_get(int formation_id)
 {
     return &formations[formation_id];
 }
@@ -137,13 +137,6 @@ formation_state *formation_get_state(int formation_id)
 void formation_set_standard(int formation_id, int standard_figure_id)
 {
     formations[formation_id].standard_figure_id = standard_figure_id;
-}
-
-void formation_move_standard(int formation_id, int x, int y)
-{
-    formations[formation_id].standard_x = x;
-    formations[formation_id].standard_y = y;
-    formations[formation_id].is_at_fort = 0;
 }
 
 void formation_set_figure_type(int formation_id, figure_type type)
@@ -185,11 +178,10 @@ void formation_change_layout(int formation_id, int new_layout)
     f->layout = new_layout;
 }
 
-void formation_restore_layout(int formation_id)
+void formation_restore_layout(formation *m)
 {
-    formation *f = &formations[formation_id];
-    if (f->layout == FORMATION_MOP_UP) {
-        f->layout = f->prev.layout;
+    if (m->layout == FORMATION_MOP_UP) {
+        m->layout = m->prev.layout;
     }
 }
 
@@ -372,18 +364,6 @@ void formation_change_morale(int formation_id, int amount)
     f->morale = calc_bound(f->morale + amount, 0, max_morale);
 }
 
-int formation_legion_prepare_to_move(int formation_id)
-{
-    formation *f = &formations[formation_id];
-    if (f->months_very_low_morale || f->months_low_morale > 1) {
-        return 0;
-    }
-    if (f->months_low_morale == 1) {
-        formation_change_morale(formation_id, 10); // yay, we can move!
-    }
-    return 1;
-}
-
 static void change_all_morale(int legion, int enemy)
 {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
@@ -441,7 +421,7 @@ void formation_update_monthly_morale_at_rest()
                 f->months_very_low_morale = 0;
                 f->months_low_morale = 0;
                 formation_change_morale(i, 5);
-                formation_restore_layout(i);
+                formation_restore_layout(f);
             } else if (!f->recent_fight) {
                 f->months_from_home++;
                 if (f->months_from_home > 3) {

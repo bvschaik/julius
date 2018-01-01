@@ -3,14 +3,9 @@
 
 #include "building/building.h"
 
-void Formation_clearInvasionInfo();
-
 int Formation_createLegion(building *fort);
 
 void Formation_deleteFortAndBanner(int formationId);
-
-void Formation_legionReturnHome(int formationId);
-void Formation_legionMoveTo(int formationId, int x, int y);
 
 void Formation_calculateLegionTotals();
 int Formation_anyLegionNeedsSoldiers();
