@@ -34,7 +34,7 @@ void enemy_army_totals_add_legion_formation(int strength);
 
 void enemy_army_totals_add_enemy_formation(int strength);
 
-int enemy_army_totals_should_calculate_roman_influence();
+void enemy_army_calculate_roman_influence();
 
 int enemy_army_is_stronger_than_legions();
 

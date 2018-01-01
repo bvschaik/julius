@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/formation.h"
+#include "figure/formation_enemy.h"
 #include "figure/formation_layout.h"
 #include "figure/image.h"
 #include "figure/movement.h"
@@ -16,7 +17,6 @@
 #include "sound/speech.h"
 
 #include "Data/CityInfo.h"
-#include "../Formation.h"
 
 static void enemy_initial(figure *f, const formation *m)
 {
@@ -593,7 +593,7 @@ void figure_enemy_gladiator_action(figure *f)
                 f->waitTicks = 0;
                 f->actionState = FIGURE_ACTION_159_NATIVE_ATTACKING;
                 int x_tile, y_tile;
-                int building_id = Formation_Rioter_getTargetBuilding(&x_tile, &y_tile);
+                int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
                 if (building_id) {
                     f->destinationX = x_tile;
                     f->destinationY = y_tile;

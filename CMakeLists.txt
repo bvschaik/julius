@@ -93,6 +93,7 @@ set(FIGURE_FILES
     ${PROJECT_SOURCE_DIR}/src/figure/enemy_army.c
     ${PROJECT_SOURCE_DIR}/src/figure/figure.c
     ${PROJECT_SOURCE_DIR}/src/figure/formation.c
+    ${PROJECT_SOURCE_DIR}/src/figure/formation_enemy.c
     ${PROJECT_SOURCE_DIR}/src/figure/formation_layout.c
     ${PROJECT_SOURCE_DIR}/src/figure/formation_legion.c
     ${PROJECT_SOURCE_DIR}/src/figure/image.c

@@ -414,9 +414,8 @@ void formation_set_destination(int formation_id, int x, int y)
     m->destination_y = y;
 }
 
-void formation_set_destination_building(int formation_id, int x, int y, int building_id)
+void formation_set_destination_building(formation *m, int x, int y, int building_id)
 {
-    formation *m = &formations[formation_id];
     m->destination_x = x;
     m->destination_y = y;
     m->destination_building_id = building_id;

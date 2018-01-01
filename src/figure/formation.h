@@ -173,7 +173,7 @@ void formation_decrease_monthly_counters(int formation_id);
 void formation_clear_monthly_counters(int formation_id);
 
 void formation_set_destination(int formation_id, int x, int y);
-void formation_set_destination_building(int formation_id, int x, int y, int building_id);
+void formation_set_destination_building(formation *m, int x, int y, int building_id);
 void formation_set_home(int formation_id, int x, int y);
 
 void formation_clear_figures();

@@ -6,6 +6,7 @@
 #include "city/sentiment.h"
 #include "core/random.h"
 #include "figure/combat.h"
+#include "figure/formation_enemy.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
@@ -46,7 +47,7 @@ static void generate_rioter(building *b)
         people_in_mob = 6;
     }
     int x_target, y_target;
-    int target_building_id = Formation_Rioter_getTargetBuilding(&x_target, &y_target);
+    int target_building_id = formation_rioter_get_target_building(&x_target, &y_target);
     for (int i = 0; i < people_in_mob; i++) {
         figure *f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
         f->actionState = FIGURE_ACTION_120_RIOTER_CREATED;
@@ -214,12 +215,12 @@ void figure_rioter_action(figure *f)
             f->waitTicks++;
             if (f->waitTicks >= 160) {
                 f->actionState = FIGURE_ACTION_121_RIOTER_MOVING;
-                int xTile, yTile;
-                int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
-                if (buildingId) {
-                    f->destinationX = xTile;
-                    f->destinationY = yTile;
-                    f->destinationBuildingId = buildingId;
+                int x_tile, y_tile;
+                int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
+                if (building_id) {
+                    f->destinationX = x_tile;
+                    f->destinationY = y_tile;
+                    f->destinationBuildingId = building_id;
                     figure_route_remove(f);
                 } else {
                     f->state = FigureState_Dead;
@@ -230,12 +231,12 @@ void figure_rioter_action(figure *f)
             figure_image_increase_offset(f, 12);
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                int xTile, yTile;
-                int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
-                if (buildingId) {
-                    f->destinationX = xTile;
-                    f->destinationY = yTile;
-                    f->destinationBuildingId = buildingId;
+                int x_tile, y_tile;
+                int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
+                if (building_id) {
+                    f->destinationX = x_tile;
+                    f->destinationY = y_tile;
+                    f->destinationBuildingId = building_id;
                     figure_route_remove(f);
                 } else {
                     f->state = FigureState_Dead;
