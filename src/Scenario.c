@@ -232,9 +232,9 @@ static void readScenarioAndInitGraphics(const char *scenarioName)
 	Terrain_updateEntryExitFlags(0);
 	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateRegionMeadow(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
-	TerrainGraphics_updateAllRoads();
+	map_tiles_update_all_roads();
 	map_tiles_update_all_plazas();
-	TerrainGraphics_updateAllWalls();
+	map_tiles_update_all_walls();
 	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 
 	map_natives_init();

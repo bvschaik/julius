@@ -16,6 +16,7 @@
 #include "map/image_context.h"
 #include "map/road_aqueduct.h"
 #include "map/terrain.h"
+#include "map/tiles.h"
 #include "map/water.h"
 
 static void drawBuildingGhostDraggableReservoir();
@@ -435,7 +436,7 @@ static void drawBuildingGhostAqueduct()
 					groupOffset = 2;
 				}
 			}
-			if (TerrainGraphics_isPavedRoadTile(gridOffset)) {
+			if (map_tiles_is_paved_road(gridOffset)) {
 				graphicId += groupOffset + 13;
 			} else {
 				graphicId += groupOffset + 21;

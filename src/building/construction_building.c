@@ -416,7 +416,7 @@ static void add_to_map(int type, building *b, int size,
             map_terrain_remove_with_radius(b->x, b->y, 2, 0, TERRAIN_WALL);
             map_building_tiles_add(b->id, b->x, b->y, size, image_group(GROUP_BUILDING_TOWER),
                 TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
-            TerrainGraphics_updateAreaWalls(b->x, b->y, 5);
+            map_tiles_update_area_walls(b->x, b->y, 5);
             break;
         case BUILDING_GATEHOUSE:
             map_building_tiles_add(b->id, b->x, b->y, size,
@@ -424,16 +424,16 @@ static void add_to_map(int type, building *b, int size,
             b->subtype.orientation = orientation;
             Building_determineGraphicIdsForOrientedBuildings();
             Terrain_addRoadsForGatehouse(b->x, b->y, orientation);
-            TerrainGraphics_updateAreaRoads(b->x, b->y, 5);
+            map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
-            TerrainGraphics_updateAreaWalls(b->x, b->y, 5);
+            map_tiles_update_area_walls(b->x, b->y, 5);
             break;
         case BUILDING_TRIUMPHAL_ARCH:
             add_building(b, image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
             b->subtype.orientation = orientation;
             Building_determineGraphicIdsForOrientedBuildings();
             Terrain_addRoadsForTriumphalArch(b->x, b->y, orientation);
-            TerrainGraphics_updateAreaRoads(b->x, b->y, 5);
+            map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
             Data_CityInfo.triumphalArchesPlaced++;
             building_menu_update();

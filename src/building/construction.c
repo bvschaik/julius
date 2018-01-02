@@ -127,10 +127,10 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
         switch (type) {
             default:
             case ROUTED_BUILDING_ROAD:
-                *items += TerrainGraphics_setTileRoad(x_end, y_end);
+                *items += map_tiles_set_road(x_end, y_end);
                 break;
             case ROUTED_BUILDING_WALL:
-                *items += TerrainGraphics_setTileWall(x_end, y_end);
+                *items += map_tiles_set_wall(x_end, y_end);
                 break;
             case ROUTED_BUILDING_AQUEDUCT:
                 *items += TerrainGraphics_setTileAqueductTerrain(x_end, y_end);

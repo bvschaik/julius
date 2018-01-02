@@ -28,6 +28,7 @@
 #include "map/routing.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
+#include "map/tiles.h"
 #include "map/water.h"
 #include "sound/effect.h"
 
@@ -119,7 +120,7 @@ void Building_GameTick_updateState()
 		}
 	}
 	if (wallRecalc) {
-		TerrainGraphics_updateAllWalls();
+		map_tiles_update_all_walls();
 	}
 	if (landRecalc) {
 		map_routing_update_land();
@@ -319,7 +320,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 		map_building_tiles_set_rubble(0, x, y, 1);
 	}
 	figure_tower_sentry_reroute();
-	TerrainGraphics_updateAreaWalls(x, y, 3);
+	map_tiles_update_area_walls(x, y, 3);
 	TerrainGraphics_updateRegionAqueduct(x - 3, y - 3, x + 3, y + 3, 0);
 	map_routing_update_land();
 	map_routing_update_walls();
@@ -572,7 +573,7 @@ void Building_GameTick_checkAccessToRome()
 				Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
 			map_routing_calculate_distances(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 
-			TerrainGraphics_updateAllWalls();
+			map_tiles_update_all_walls();
 			TerrainGraphics_updateRegionAqueduct(0, 0,
 				Data_State.map.width - 1, Data_State.map.height - 1, 0);
 			TerrainGraphics_updateRegionEmptyLand(0, 0,

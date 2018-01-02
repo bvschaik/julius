@@ -44,6 +44,7 @@
 #include "map/natives.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
+#include "map/tiles.h"
 #include "map/water_supply.h"
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
@@ -159,7 +160,7 @@ static void advanceMonth()
 	formation_update_monthly_morale_at_rest();
 	city_message_decrease_delays();
 
-	TerrainGraphics_updateAllRoads();
+	map_tiles_update_all_roads();
 	TerrainGraphics_updateAllWater();
 	map_routing_update_land_citizen();
 	city_message_sort_and_compact();
