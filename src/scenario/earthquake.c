@@ -10,6 +10,7 @@
 #include "map/grid.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
+#include "map/tiles.h"
 #include "scenario/data.h"
 #include "sound/effect.h"
 
@@ -89,9 +90,9 @@ static void advance_earthquake_to_tile(int x, int y)
     }
     map_terrain_set(gridOffset, 0);
     TerrainGraphics_setTileEarthquake(x, y);
-    TerrainGraphics_updateAllGardens();
+    map_tiles_update_all_gardens();
     TerrainGraphics_updateAllRoads();
-    TerrainGraphics_updateAllPlazas();
+    map_tiles_update_all_plazas();
     
     map_routing_update_land();
     map_routing_update_walls();

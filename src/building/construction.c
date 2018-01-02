@@ -30,6 +30,7 @@
 #include "map/routing.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
+#include "map/tiles.h"
 #include "map/water.h"
 
 struct reservoir_info {
@@ -238,7 +239,7 @@ static int place_plaza(int measure_only, int x_start, int y_start, int x_end, in
             }
         }
     }
-    TerrainGraphics_updateAllPlazas();
+    map_tiles_update_all_plazas();
     return items_placed;
 }
 
@@ -259,7 +260,7 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end)
             }
         }
     }
-    TerrainGraphics_updateAllGardens();
+    map_tiles_update_all_gardens();
     return items_placed;
 }
 

@@ -10,6 +10,7 @@
 #include "map/grid.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
+#include "map/tiles.h"
 
 #include "Data/State.h"
 #include "../TerrainGraphics.h"
@@ -115,9 +116,9 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
     TerrainGraphics_updateRegionEmptyLand(x_min, y_min, x_max, y_max);
     TerrainGraphics_updateRegionMeadow(x_min, y_min, x_max, y_max);
     TerrainGraphics_updateRegionRubble(x_min, y_min, x_max, y_max);
-    TerrainGraphics_updateAllGardens();
+    map_tiles_update_all_gardens();
     TerrainGraphics_updateAreaRoads(x_min, y_min, radius);
-    TerrainGraphics_updateAllPlazas();
+    map_tiles_update_all_plazas();
     TerrainGraphics_updateAreaWalls(x_min, y_min, radius);
     if (!measureOnly) {
         map_routing_update_land();

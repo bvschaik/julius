@@ -51,6 +51,7 @@
 #include "map/soldier_strength.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
+#include "map/tiles.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
@@ -227,12 +228,12 @@ static void readScenarioAndInitGraphics(const char *scenarioName)
 	TerrainGraphics_updateRegionElevation(0, 0, Data_State.map.width - 2, Data_State.map.height - 2);
 	TerrainGraphics_updateAllWater();
 	TerrainGraphics_updateAllEarthquake();
-	TerrainGraphics_updateAllRocks();
+	map_tiles_update_all_rocks();
 	Terrain_updateEntryExitFlags(0);
 	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateRegionMeadow(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAllRoads();
-	TerrainGraphics_updateAllPlazas();
+	map_tiles_update_all_plazas();
 	TerrainGraphics_updateAllWalls();
 	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 

@@ -3,6 +3,7 @@
 #include "building/house.h"
 #include "building/model.h"
 #include "game/resource.h"
+#include "map/tiles.h"
 
 #include "Data/CityInfo.h"
 #include "TerrainGraphics.h"
@@ -316,7 +317,7 @@ static int evolve_medium_insula(building *house)
             if (building_house_can_expand(house, 4)) {
                 house->houseIsMerged = 0;
                 building_house_expand_to_large_insula(house);
-                TerrainGraphics_updateAllGardens();
+                map_tiles_update_all_gardens();
                 return 1;
             }
         } else if (status == DEVOLVE) {
@@ -372,7 +373,7 @@ static int evolve_medium_villa(building *house)
         if (status == EVOLVE) {
             if (building_house_can_expand(house, 9)) {
                 building_house_expand_to_large_villa(house);
-                TerrainGraphics_updateAllGardens();
+                map_tiles_update_all_gardens();
                 return 1;
             }
         } else if (status == DEVOLVE) {
@@ -428,7 +429,7 @@ static int evolve_medium_palace(building *house)
         if (status == EVOLVE) {
             if (building_house_can_expand(house, 16)) {
                 building_house_expand_to_large_palace(house);
-                TerrainGraphics_updateAllGardens();
+                map_tiles_update_all_gardens();
                 return 1;
             }
         } else if (status == DEVOLVE) {

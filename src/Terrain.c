@@ -25,6 +25,7 @@
 #include "map/routing_terrain.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
+#include "map/tiles.h"
 #include "scenario/map.h"
 
 static void add_road(int grid_offset)
@@ -372,8 +373,8 @@ void Terrain_rotateMap(int ccw)
 	TerrainGraphics_updateRegionElevation(0, 0, Data_State.map.width - 2, Data_State.map.height - 2);
 	TerrainGraphics_updateAllWater();
 	TerrainGraphics_updateAllEarthquake();
-	TerrainGraphics_updateAllRocks();
-	TerrainGraphics_updateAllGardens();
+	map_tiles_update_all_rocks();
+	map_tiles_update_all_gardens();
 
 	Terrain_updateEntryExitFlags(0);
 
@@ -381,7 +382,7 @@ void Terrain_rotateMap(int ccw)
 	TerrainGraphics_updateRegionMeadow(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateRegionRubble(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAllRoads();
-	TerrainGraphics_updateAllPlazas();
+	map_tiles_update_all_plazas();
 	TerrainGraphics_updateAllWalls();
 	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 

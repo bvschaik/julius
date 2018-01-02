@@ -43,25 +43,6 @@ static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int grap
 static void setWallGraphic(int gridOffset);
 static void setRoadGraphic(int gridOffset);
 
-static int isAllTerrainInArea(int x, int y, int size, int terrain)
-{
-	if (!map_grid_is_inside(x, y, size)) {
-		return 0;
-	}
-	for (int dy = 0; dy < size; dy++) {
-		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = map_grid_offset(x + dx, y + dy);
-			if ((map_terrain_get(gridOffset) & TERRAIN_NOT_CLEAR) != terrain) {
-				return 0;
-			}
-			if (map_image_at(gridOffset) != 0) {
-				return 0;
-			}
-		}
-	}
-	return 1;
-}
-
 int TerrainGraphics_isPavedRoadTile(int gridOffset)
 {
 	int desirability = map_desirability_get(gridOffset);
@@ -147,88 +128,6 @@ static void setTileAqueduct(int gridOffset, int waterOffset, int includeConstruc
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
 	map_aqueduct_set(gridOffset, image->aqueduct_offset);
-}
-
-void TerrainGraphics_updateAllRocks()
-{
-	FOREACH_ALL({
-		if (map_terrain_is(gridOffset, TERRAIN_ROCK) && !map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
-			map_image_set(gridOffset, 0);
-			map_property_set_multi_tile_size(gridOffset, 1);
-			map_property_mark_draw_tile(gridOffset);
-		}
-	});
-	int graphicIdRock = image_group(GROUP_TERRAIN_ROCK);
-	int graphicIdElevation = image_group(GROUP_TERRAIN_ELEVATION_ROCK);
-	FOREACH_ALL({
-		if (map_terrain_is(gridOffset, TERRAIN_ROCK) && !map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
-			if (!map_image_at(gridOffset)) {
-				if (isAllTerrainInArea(x, y, 3, TERRAIN_ROCK)) {
-					int graphicId = 12 + (map_random_get(gridOffset) & 1);
-					if (map_terrain_exists_tile_in_radius_with_type(x, y, 3, 4, TERRAIN_ELEVATION)) {
-						graphicId += graphicIdElevation;
-					} else {
-						graphicId += graphicIdRock;
-					}
-					map_building_tiles_add(0, x, y, 3, graphicId, TERRAIN_ROCK);
-				} else if (isAllTerrainInArea(x, y, 2, TERRAIN_ROCK)) {
-					int graphicId = 8 + (map_random_get(gridOffset) & 3);
-					if (map_terrain_exists_tile_in_radius_with_type(x, y, 2, 4, TERRAIN_ELEVATION)) {
-						graphicId += graphicIdElevation;
-					} else {
-						graphicId += graphicIdRock;
-					}
-					map_building_tiles_add(0, x, y, 2, graphicId, TERRAIN_ROCK);
-				} else {
-					int graphicId = map_random_get(gridOffset) & 7;
-					if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 4, TERRAIN_ELEVATION)) {
-						graphicId += graphicIdElevation;
-					} else {
-						graphicId += graphicIdRock;
-					}
-					map_image_set(gridOffset, graphicId);
-				}
-			}
-		}
-	});
-}
-
-void TerrainGraphics_updateAllGardens()
-{
-	FOREACH_ALL({
-		if (map_terrain_is(gridOffset, TERRAIN_GARDEN) && !map_terrain_is(gridOffset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
-			map_image_set(gridOffset, 0);
-			map_property_set_multi_tile_size(gridOffset, 1);
-			map_property_mark_draw_tile(gridOffset);
-		}
-	});
-	FOREACH_ALL({
-		if (map_terrain_is(gridOffset, TERRAIN_GARDEN) && !map_terrain_is(gridOffset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
-			if (!map_image_at(gridOffset)) {
-				int graphicId = image_group(GROUP_TERRAIN_GARDEN);
-				if (isAllTerrainInArea(x, y, 2, TERRAIN_GARDEN)) {
-					switch (map_random_get(gridOffset) & 3) {
-						case 0: case 1: graphicId += 6; break;
-						case 2: graphicId += 5; break;
-						case 3: graphicId += 4; break;
-					}
-					map_building_tiles_add(0, x, y, 2, graphicId, TERRAIN_GARDEN);
-				} else {
-					if (y & 1) {
-						switch (x & 3) {
-							case 0: case 2: graphicId += 2; break;
-							case 1: case 3: graphicId += 3; break;
-						}
-					} else {
-						switch (x & 3) {
-							case 1: case 3: graphicId += 1; break;
-						}
-					}
-					map_image_set(gridOffset, graphicId);
-				}
-			}
-		}
-	});
 }
 
 void TerrainGraphics_determineGardensFromGraphicIds()
@@ -373,68 +272,6 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 				map_property_set_multi_tile_xy(gridOffset, 0, 0, 1);
 				map_terrain_add(gridOffset, TERRAIN_ELEVATION);
 				map_image_set(gridOffset, image_group(GROUP_TERRAIN_ELEVATION) + image->group_offset + image->item_offset);
-			}
-		}
-	});
-}
-
-static int isTilePlaza(int gridOffset)
-{
-	if (map_terrain_is(gridOffset, TERRAIN_ROAD) &&
-		map_property_is_plaza_or_earthquake(gridOffset) &&
-		!map_terrain_is(gridOffset, TERRAIN_WATER | TERRAIN_BUILDING) &&
-		!map_image_at(gridOffset)) {
-		return 1;
-	}
-	return 0;
-}
-static int isTwoTileSquarePlaza(int gridOffset)
-{
-	return
-		isTilePlaza(gridOffset + map_grid_delta(1, 0)) &&
-		isTilePlaza(gridOffset + map_grid_delta(0, 1)) &&
-		isTilePlaza(gridOffset + map_grid_delta(1, 1));
-}
-
-void TerrainGraphics_updateAllPlazas()
-{
-	// remove plazas below buildings
-	FOREACH_ALL({
-		if (map_terrain_is(gridOffset, TERRAIN_ROAD) &&
-			map_property_is_plaza_or_earthquake(gridOffset)) {
-			if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-				map_property_clear_plaza_or_earthquake(gridOffset);
-			}
-		}
-	});
-	// convert plazas to single tile and remove graphic ids
-	FOREACH_ALL({
-		if (map_terrain_is(gridOffset, TERRAIN_ROAD) &&
-			map_property_is_plaza_or_earthquake(gridOffset)) {
-			map_image_set(gridOffset, 0);
-			map_property_set_multi_tile_size(gridOffset, 1);
-			map_property_mark_draw_tile(gridOffset);
-		}
-	});
-	FOREACH_ALL({
-		if (map_terrain_is(gridOffset, TERRAIN_ROAD) &&
-			map_property_is_plaza_or_earthquake(gridOffset) &&
-			!map_image_at(gridOffset)) {
-			int graphicId = image_group(GROUP_TERRAIN_PLAZA);
-			if (isTwoTileSquarePlaza(gridOffset)) {
-				if (map_random_get(gridOffset) & 1) {
-					graphicId += 7;
-				} else {
-					graphicId += 6;
-				}
-				map_building_tiles_add(0, x, y, 2, graphicId, TERRAIN_ROAD);
-			} else {
-				// single tile plaza
-				switch ((x & 1) + (y & 1)) {
-					case 2: graphicId += 1; break;
-					case 1: graphicId += 2; break;
-				}
-				map_image_set(gridOffset, graphicId);
 			}
 		}
 	});

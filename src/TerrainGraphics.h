@@ -3,13 +3,10 @@
 
 #include "building/building.h"
 
-void TerrainGraphics_updateAllRocks();
-void TerrainGraphics_updateAllGardens();
 void TerrainGraphics_determineGardensFromGraphicIds();
 void TerrainGraphics_updateAllRoads();
 void TerrainGraphics_updateAllWalls();
 void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMax);
-void TerrainGraphics_updateAllPlazas();
 void TerrainGraphics_updateAllWater();
 void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax, int includeConstruction);
 void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMax);
