@@ -9,12 +9,12 @@ void TerrainGraphics_determineGardensFromGraphicIds();
 void TerrainGraphics_updateAllRoads();
 void TerrainGraphics_updateAllWalls();
 void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMax);
-void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax);
-void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax);
-void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax, int includeOverlay);
+void TerrainGraphics_updateAllPlazas();
+void TerrainGraphics_updateAllWater();
+void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax, int includeConstruction);
 void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMax);
 void TerrainGraphics_updateRegionMeadow(int xMin, int yMin, int xMax, int yMax);
-void TerrainGraphics_updateRegionEarthquake(int xMin, int yMin, int xMax, int yMax);
+void TerrainGraphics_updateAllEarthquake();
 void TerrainGraphics_updateRegionRubble(int xMin, int yMin, int xMax, int yMax);
 
 void TerrainGraphics_updateAreaWalls(int x, int y, int size);

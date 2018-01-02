@@ -370,8 +370,8 @@ void Terrain_rotateMap(int ccw)
 	determineLeftmostTile();
 
 	TerrainGraphics_updateRegionElevation(0, 0, Data_State.map.width - 2, Data_State.map.height - 2);
-	TerrainGraphics_updateRegionWater(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
-	TerrainGraphics_updateRegionEarthquake(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	TerrainGraphics_updateAllWater();
+	TerrainGraphics_updateAllEarthquake();
 	TerrainGraphics_updateAllRocks();
 	TerrainGraphics_updateAllGardens();
 
@@ -381,7 +381,7 @@ void Terrain_rotateMap(int ccw)
 	TerrainGraphics_updateRegionMeadow(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateRegionRubble(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAllRoads();
-	TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	TerrainGraphics_updateAllPlazas();
 	TerrainGraphics_updateAllWalls();
 	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 

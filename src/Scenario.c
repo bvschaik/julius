@@ -225,14 +225,14 @@ static void readScenarioAndInitGraphics(const char *scenarioName)
 
 	CityView_calculateLookup();
 	TerrainGraphics_updateRegionElevation(0, 0, Data_State.map.width - 2, Data_State.map.height - 2);
-	TerrainGraphics_updateRegionWater(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
-	TerrainGraphics_updateRegionEarthquake(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	TerrainGraphics_updateAllWater();
+	TerrainGraphics_updateAllEarthquake();
 	TerrainGraphics_updateAllRocks();
 	Terrain_updateEntryExitFlags(0);
 	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateRegionMeadow(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAllRoads();
-	TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	TerrainGraphics_updateAllPlazas();
 	TerrainGraphics_updateAllWalls();
 	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 

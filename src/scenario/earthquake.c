@@ -91,7 +91,7 @@ static void advance_earthquake_to_tile(int x, int y)
     TerrainGraphics_setTileEarthquake(x, y);
     TerrainGraphics_updateAllGardens();
     TerrainGraphics_updateAllRoads();
-    TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+    TerrainGraphics_updateAllPlazas();
     
     map_routing_update_land();
     map_routing_update_walls();

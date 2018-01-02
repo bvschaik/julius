@@ -238,8 +238,7 @@ static int place_plaza(int measure_only, int x_start, int y_start, int x_end, in
             }
         }
     }
-    TerrainGraphics_updateRegionPlazas(0, 0,
-        Data_State.map.width - 1, Data_State.map.height - 1);
+    TerrainGraphics_updateAllPlazas();
     return items_placed;
 }
 

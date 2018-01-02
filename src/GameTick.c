@@ -59,6 +59,7 @@
 
 #include <stdio.h>
 
+static void advanceTick();
 static void advanceDay();
 static void advanceMonth();
 static void advanceYear();
@@ -70,7 +71,7 @@ void GameTick_doTick()
     }
 	random_generate_next();
 	game_undo_reduce_time_available();
-	GameTick_advance();
+	advanceTick();
 	figure_action_handle();
 	scenario_earthquake_process();
 	scenario_gladiator_revolt_process();
@@ -78,7 +79,7 @@ void GameTick_doTick()
 	city_victory_check();
 }
 
-void GameTick_advance()
+static void advanceTick()
 {
 	// NB: these ticks are noop:
 	// 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
@@ -159,7 +160,7 @@ static void advanceMonth()
 	city_message_decrease_delays();
 
 	TerrainGraphics_updateAllRoads();
-	TerrainGraphics_updateRegionWater(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	TerrainGraphics_updateAllWater();
 	map_routing_update_land_citizen();
 	city_message_sort_and_compact();
 

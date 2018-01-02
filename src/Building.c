@@ -320,7 +320,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 	}
 	figure_tower_sentry_reroute();
 	TerrainGraphics_updateAreaWalls(x, y, 3);
-	TerrainGraphics_updateRegionAqueduct(x - 2, y - 2, x + 2, y + 2, 0);
+	TerrainGraphics_updateRegionAqueduct(x - 3, y - 3, x + 3, y + 3, 0);
 	map_routing_update_land();
 	map_routing_update_walls();
 }

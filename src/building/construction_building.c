@@ -424,7 +424,7 @@ static void add_to_map(int type, building *b, int size,
             Building_determineGraphicIdsForOrientedBuildings();
             Terrain_addRoadsForGatehouse(b->x, b->y, orientation);
             TerrainGraphics_updateAreaRoads(b->x, b->y, 5);
-            TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+            TerrainGraphics_updateAllPlazas();
             TerrainGraphics_updateAreaWalls(b->x, b->y, 5);
             break;
         case BUILDING_TRIUMPHAL_ARCH:
@@ -433,7 +433,7 @@ static void add_to_map(int type, building *b, int size,
             Building_determineGraphicIdsForOrientedBuildings();
             Terrain_addRoadsForTriumphalArch(b->x, b->y, orientation);
             TerrainGraphics_updateAreaRoads(b->x, b->y, 5);
-            TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+            TerrainGraphics_updateAllPlazas();
             Data_CityInfo.triumphalArchesPlaced++;
             building_menu_update();
             building_construction_clear_type();

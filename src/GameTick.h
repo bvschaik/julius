@@ -3,6 +3,4 @@
 
 void GameTick_doTick();
 
-void GameTick_advance();
-
 #endif

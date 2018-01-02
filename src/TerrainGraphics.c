@@ -123,9 +123,9 @@ static void setRoadGraphic(int gridOffset)
 	map_property_mark_draw_tile(gridOffset);
 }
 
-static void setTileAqueduct(int gridOffset, int waterOffset, int includeOverlay)
+static void setTileAqueduct(int gridOffset, int waterOffset, int includeConstruction)
 {
-	const terrain_image *image = map_image_context_get_aqueduct(gridOffset, includeOverlay);
+	const terrain_image *image = map_image_context_get_aqueduct(gridOffset, includeConstruction);
 	int groupOffset = image->group_offset;
 	if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 		map_property_clear_plaza_or_earthquake(gridOffset);
@@ -396,9 +396,8 @@ static int isTwoTileSquarePlaza(int gridOffset)
 		isTilePlaza(gridOffset + map_grid_delta(1, 1));
 }
 
-void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
+void TerrainGraphics_updateAllPlazas()
 {
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	// remove plazas below buildings
 	FOREACH_ALL({
 		if (map_terrain_is(gridOffset, TERRAIN_ROAD) &&
@@ -417,7 +416,7 @@ void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 			map_property_mark_draw_tile(gridOffset);
 		}
 	});
-	FOREACH_REGION({
+	FOREACH_ALL({
 		if (map_terrain_is(gridOffset, TERRAIN_ROAD) &&
 			map_property_is_plaza_or_earthquake(gridOffset) &&
 			!map_image_at(gridOffset)) {
@@ -428,10 +427,10 @@ void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 				} else {
 					graphicId += 6;
 				}
-				map_building_tiles_add(0, xx, yy, 2, graphicId, TERRAIN_ROAD);
+				map_building_tiles_add(0, x, y, 2, graphicId, TERRAIN_ROAD);
 			} else {
 				// single tile plaza
-				switch ((xx & 1) + (yy & 1)) {
+				switch ((x & 1) + (y & 1)) {
 					case 2: graphicId += 1; break;
 					case 1: graphicId += 2; break;
 				}
@@ -441,22 +440,17 @@ void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 	});
 }
 
-void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax)
+void TerrainGraphics_updateAllWater()
 {
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
-	FOREACH_REGION({
+	FOREACH_ALL({
 		if (map_terrain_is(gridOffset, TERRAIN_WATER) && !map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-			TerrainGraphics_setTileWater(xx, yy);
+			TerrainGraphics_setTileWater(x, y);
 		}
 	});
 }
 
-void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax, int includeOverlay)
+void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax, int includeConstruction)
 {
-	xMin--;
-	xMax++;
-	yMin--;
-	yMax++;
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT) && map_aqueduct_at(gridOffset) <= 15) {
@@ -466,7 +460,7 @@ void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax
 			} else {
 				waterOffset = 15;
 			}
-			setTileAqueduct(gridOffset, waterOffset, includeOverlay);
+			setTileAqueduct(gridOffset, waterOffset, includeConstruction);
 		}
 	});
 }
@@ -532,13 +526,12 @@ void TerrainGraphics_updateRegionMeadow(int xMin, int yMin, int xMax, int yMax)
 	});
 }
 
-void TerrainGraphics_updateRegionEarthquake(int xMin, int yMin, int xMax, int yMax)
+void TerrainGraphics_updateAllEarthquake()
 {
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
-	FOREACH_REGION({
+	FOREACH_ALL({
 		if (map_terrain_is(gridOffset, TERRAIN_ROCK) &&
 			map_property_is_plaza_or_earthquake(gridOffset)) {
-			TerrainGraphics_setTileEarthquake(xx, yy);
+			TerrainGraphics_setTileEarthquake(x, y);
 		}
 	});
 }

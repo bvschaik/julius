@@ -117,7 +117,7 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
     TerrainGraphics_updateRegionRubble(x_min, y_min, x_max, y_max);
     TerrainGraphics_updateAllGardens();
     TerrainGraphics_updateAreaRoads(x_min, y_min, radius);
-    TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+    TerrainGraphics_updateAllPlazas();
     TerrainGraphics_updateAreaWalls(x_min, y_min, radius);
     if (!measureOnly) {
         map_routing_update_land();
