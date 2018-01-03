@@ -1,6 +1,7 @@
 #include "movement.h"
 
 #include "building/building.h"
+#include "building/destruction.h"
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/route.h"
@@ -15,8 +16,6 @@
 #include "map/road_access.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
-
-#include "../Building.h"
 
 static void advance_tick(figure *f)
 {
@@ -188,7 +187,7 @@ static void advance_route_tile(figure *f, int roaming_enabled)
                 f->attackDirection = f->direction;
                 f->direction = DIR_FIGURE_ATTACK;
                 if (!(game_time_tick() & 3)) {
-                    Building_increaseDamageByEnemy(target_grid_offset, max_damage);
+                    building_destroy_increase_enemy_damage(target_grid_offset, max_damage);
                 }
             }
         }

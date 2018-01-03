@@ -18,7 +18,6 @@
 #include "sound/effect.h"
 
 #include "Data/CityInfo.h"
-#include "../Building.h"
 
 static int fire_spread_direction = 0;
 
@@ -72,22 +71,19 @@ void building_maintenance_update_burning_ruins()
         int grid_offset = b->gridOffset;
         int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(fire_spread_direction));
         if (next_building_id && !building_get(next_building_id)->fireProof) {
-            Building_collapseOnFire(next_building_id, 0);
-            Building_collapseLinked(next_building_id, 1);
+            building_destroy_by_fire(building_get(next_building_id));
             sound_effect_play(SOUND_EFFECT_EXPLOSION);
             recalculate_terrain = 1;
         } else {
             next_building_id = map_building_at(grid_offset + map_grid_direction_delta(dir1));
             if (next_building_id && !building_get(next_building_id)->fireProof) {
-                Building_collapseOnFire(next_building_id, 0);
-                Building_collapseLinked(next_building_id, 1);
+                building_destroy_by_fire(building_get(next_building_id));
                 sound_effect_play(SOUND_EFFECT_EXPLOSION);
                 recalculate_terrain = 1;
             } else {
                 next_building_id = map_building_at(grid_offset + map_grid_direction_delta(dir2));
                 if (next_building_id && !building_get(next_building_id)->fireProof) {
-                    Building_collapseOnFire(next_building_id, 0);
-                    Building_collapseLinked(next_building_id, 1);
+                    building_destroy_by_fire(building_get(next_building_id));
                     sound_effect_play(SOUND_EFFECT_EXPLOSION);
                     recalculate_terrain = 1;
                 }
@@ -138,7 +134,7 @@ static void collapse_building(building *b)
     }
     
     game_undo_disable();
-    building_destroy_collapse(b);
+    building_destroy_by_collapse(b);
 }
 
 static void fire_building(building *b)
@@ -148,8 +144,7 @@ static void fire_building(building *b)
         city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->gridOffset);
     }
     
-    Building_collapseOnFire(b->id, 0);
-    Building_collapseLinked(b->id, 1);
+    building_destroy_by_fire(b);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 

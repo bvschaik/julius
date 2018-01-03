@@ -1,5 +1,6 @@
 #include "granary.h"
 
+#include "building/destruction.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
@@ -10,7 +11,6 @@
 #include "sound/effect.h"
 
 #include "Data/CityInfo.h"
-#include "../Building.h"
 
 #define MAX_GRANARIES 100
 
@@ -435,8 +435,7 @@ void building_granary_warehouse_curse(int big)
     if (big) {
         city_message_disable_sound_for_next_message();
         city_message_post(0, MESSAGE_FIRE, max_building->type, max_building->gridOffset);
-        Building_collapseOnFire(max_building->id, 0);
-        Building_collapseLinked(max_building->id, 1);
+        building_destroy_by_fire(max_building);
         sound_effect_play(SOUND_EFFECT_EXPLOSION);
         map_routing_update_land();
     } else {

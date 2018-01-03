@@ -1,5 +1,6 @@
 #include "invasion.h"
 
+#include "building/destruction.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -18,7 +19,6 @@
 #include <string.h>
 
 #include "Data/CityInfo.h"
-#include "../Building.h"
 
 #define MAX_INVASION_WARNINGS 101
 
@@ -261,7 +261,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
             return -1;
         }
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING | TERRAIN_AQUEDUCT | TERRAIN_GATEHOUSE | TERRAIN_WALL)) {
-        Building_destroyByEnemy(x, y, grid_offset);
+        building_destroy_by_enemy(x, y, grid_offset);
     }
     // spawn the lot!
     int seq = 0;

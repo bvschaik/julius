@@ -1,6 +1,7 @@
 #include "earthquake.h"
 
 #include "building/building.h"
+#include "building/destruction.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -15,8 +16,6 @@
 #include "sound/effect.h"
 
 #include "Data/State.h"
-
-#include "../Building.h"
 
 enum {
     EARTHQUAKE_NONE = 0,
@@ -82,10 +81,10 @@ static void advance_earthquake_to_tile(int x, int y)
     int gridOffset = map_grid_offset(x, y);
     int building_id = map_building_at(gridOffset);
     if (building_id) {
-        Building_collapseOnFire(building_id, 0);
-        Building_collapseLinked(building_id, 1);
+        building *b = building_get(building_id);
+        building_destroy_by_fire(b);
         sound_effect_play(SOUND_EFFECT_EXPLOSION);
-        building_get(building_id)->state = BuildingState_DeletedByGame;
+        b->state = BuildingState_DeletedByGame;
     }
     map_terrain_set(gridOffset, 0);
     map_tiles_set_earthquake(x, y);

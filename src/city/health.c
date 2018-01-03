@@ -1,6 +1,7 @@
 #include "health.h"
 
 #include "building/building.h"
+#include "building/destruction.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -8,7 +9,6 @@
 #include "scenario/property.h"
 
 #include "Data/CityInfo.h"
-#include "Building.h"
 
 void city_health_change(int amount)
 {
@@ -52,7 +52,7 @@ static void cause_disease(int total_people)
         if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
             if (!b->data.house.clinic) {
                 people_to_kill -= b->housePopulation;
-                Building_collapseOnFire(i, 1);
+                building_destroy_by_plague(b);
                 if (people_to_kill <= 0) {
                     return;
                 }
@@ -65,7 +65,7 @@ static void cause_disease(int total_people)
         if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
             if (b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
                 people_to_kill -= b->housePopulation;
-                Building_collapseOnFire(i, 1);
+                building_destroy_by_plague(b);
                 if (people_to_kill <= 0) {
                     return;
                 }
@@ -77,7 +77,7 @@ static void cause_disease(int total_people)
         building *b = building_get(i);
         if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
             people_to_kill -= b->housePopulation;
-            Building_collapseOnFire(i, 1);
+            building_destroy_by_plague(b);
             if (people_to_kill <= 0) {
                 return;
             }

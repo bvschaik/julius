@@ -8,7 +8,8 @@
 
 #include "Data/CityInfo.h"
 
-#define MIN_TREASURY (-5000)
+#define MAX_HOUSE_LEVELS 20
+#define MIN_TREASURY -5000
 
 int city_finance_treasury()
 {

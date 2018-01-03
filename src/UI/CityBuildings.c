@@ -3,7 +3,6 @@
 #include "Minimap.h"
 #include "Window.h"
 
-#include "../Building.h"
 #include "../CityView.h"
 #include "../Widget.h"
 

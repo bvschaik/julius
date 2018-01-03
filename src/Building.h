@@ -9,13 +9,6 @@ void Building_clearList();
 
 void Building_GameTick_updateState();
 
-void Building_collapseLastPlaced();
-void Building_collapseOnFire(int buildingId, int hasPlague);
-void Building_collapseLinked(int buildingId, int onFire);
-
-void Building_increaseDamageByEnemy(int gridOffset, int maxDamage);
-void Building_destroyByEnemy(int x, int y, int gridOffset);
-
 void Building_setDesirability();
 void Building_decayHousesCovered();
 

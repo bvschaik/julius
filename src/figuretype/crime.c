@@ -1,6 +1,7 @@
 #include "crime.h"
 
 #include "building/building.h"
+#include "building/destruction.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/sentiment.h"
@@ -18,7 +19,6 @@
 #include "scenario/property.h"
 
 #include "Data/CityInfo.h"
-#include "../Building.h"
 
 static const int CRIMINAL_OFFSETS[] = {
     0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
@@ -60,7 +60,7 @@ static void generate_rioter(building *b)
             f->state = FigureState_Dead;
         }
     }
-    Building_collapseOnFire(b->id, 0);
+    building_destroy_by_rioter(b);
     Data_CityInfo.ratingPeaceNumRiotersThisYear++;
     Data_CityInfo.riotCause = Data_CityInfo.populationEmigrationCause;
     city_sentiment_change_happiness(20);
@@ -293,7 +293,7 @@ int figure_rioter_collapse_building(figure *f)
         city_message_apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
         city_message_post(0, MESSAGE_DESTROYED_BUILDING, b->type, f->gridOffset);
         city_message_increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
-        Building_collapseOnFire(b->id, 0);
+        building_destroy_by_rioter(b);
         f->actionState = FIGURE_ACTION_120_RIOTER_CREATED;
         f->waitTicks = 0;
         f->direction = dir;

@@ -3,8 +3,6 @@
 
 #include "building/type.h"
 
-#define MAX_HOUSE_LEVELS 20
-
 enum {
 	BuildingState_Unused = 0,
 	BuildingState_InUse = 1,
