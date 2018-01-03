@@ -336,7 +336,7 @@ void UI_BuildingInfo_drawBackground()
 		UI_BuildingInfo_drawTerrain(&context);
 	} else if (context.type == BuildingInfoType_Building) {
 		int btype = building_get(context.buildingId)->type;
-		if (BuildingIsHouse(btype)) {
+		if (building_is_house(btype)) {
 			UI_BuildingInfo_drawHouse(&context);
 		} else if (btype == BUILDING_WHEAT_FARM) {
 			UI_BuildingInfo_drawWheatFarm(&context);

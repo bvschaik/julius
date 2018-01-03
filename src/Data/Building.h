@@ -13,8 +13,6 @@ enum {
 	BuildingState_DeletedByPlayer = 6
 };
 
-#define BuildingIsHouse(type) ((type) >= BUILDING_HOUSE_VACANT_LOT && (type) <= BUILDING_HOUSE_LUXURY_PALACE)
-
 #define BuildingIsInUse(b) ((b)->state == BuildingState_InUse)
 
 extern struct _Data_Buildings_Extra {

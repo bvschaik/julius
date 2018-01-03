@@ -194,6 +194,8 @@ void building_clear_related_data(building *b);
 
 void building_clear_all();
 
+int building_is_house(building_type type);
+
 void building_save_state(buffer *buf);
 
 void building_load_state(buffer *buf);

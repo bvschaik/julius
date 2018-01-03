@@ -276,7 +276,7 @@ void figure_homeless_action(figure *f)
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 f->state = FigureState_Dead;
                 building *b = building_get(f->immigrantBuildingId);
-                if (f->immigrantBuildingId && BuildingIsHouse(b->type)) {
+                if (f->immigrantBuildingId && building_is_house(b->type)) {
                     int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
                     if (b->houseIsMerged) {
                         maxPeople *= 4;

@@ -75,7 +75,7 @@ building *building_create(building_type type, int x, int y)
     }
     
     // subtype
-    if (BuildingIsHouse(type)) {
+    if (building_is_house(type)) {
         b->subtype.houseLevel = type - 10;
     } else {
         b->subtype.houseLevel = 0;
@@ -201,6 +201,11 @@ void building_clear_all()
         memset(&Data_Buildings[i], 0, sizeof(building));
         Data_Buildings[i].id = i;
     }
+}
+
+int building_is_house(building_type type)
+{
+    return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
 }
 
 static void building_save(building *b, buffer *buf)
