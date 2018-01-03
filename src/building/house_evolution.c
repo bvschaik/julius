@@ -6,7 +6,6 @@
 #include "map/tiles.h"
 
 #include "Data/CityInfo.h"
-#include "TerrainGraphics.h"
 
 typedef enum {
     EVOLVE = 1,

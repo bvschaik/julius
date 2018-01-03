@@ -3,7 +3,6 @@
 #include "Building.h"
 #include "GameFile.h"
 #include "HouseEvolution.h"
-#include "TerrainGraphics.h"
 #include "UI/Sidebar.h"
 
 #include "Data/CityInfo.h"

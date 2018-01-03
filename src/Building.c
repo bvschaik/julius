@@ -2,7 +2,6 @@
 
 #include "CityView.h"
 #include "Terrain.h"
-#include "TerrainGraphics.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -321,7 +320,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 	}
 	figure_tower_sentry_reroute();
 	map_tiles_update_area_walls(x, y, 3);
-	TerrainGraphics_updateRegionAqueduct(x - 3, y - 3, x + 3, y + 3, 0);
+	map_tiles_update_region_aqueducts(x - 3, y - 3, x + 3, y + 3);
 	map_routing_update_land();
 	map_routing_update_walls();
 }
@@ -574,8 +573,7 @@ void Building_GameTick_checkAccessToRome()
 			map_routing_calculate_distances(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 
 			map_tiles_update_all_walls();
-			TerrainGraphics_updateRegionAqueduct(0, 0,
-				Data_State.map.width - 1, Data_State.map.height - 1, 0);
+			map_tiles_update_all_aqueducts(0);
 			map_tiles_update_all_empty_land();
 			map_tiles_update_all_meadow();
 			

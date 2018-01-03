@@ -1,7 +1,6 @@
 #include "Terrain.h"
 
 #include "Building.h"
-#include "TerrainGraphics.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -370,9 +369,9 @@ void Terrain_rotateMap(int ccw)
 	game_undo_disable();
 	determineLeftmostTile();
 
-	TerrainGraphics_updateRegionElevation(0, 0, Data_State.map.width - 2, Data_State.map.height - 2);
+	map_tiles_update_all_elevation();
 	map_tiles_update_all_water();
-	TerrainGraphics_updateAllEarthquake();
+	map_tiles_update_all_earthquake();
 	map_tiles_update_all_rocks();
 	map_tiles_update_all_gardens();
 
@@ -380,11 +379,11 @@ void Terrain_rotateMap(int ccw)
 
 	map_tiles_update_all_empty_land();
 	map_tiles_update_all_meadow();
-	TerrainGraphics_updateRegionRubble(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	map_tiles_update_all_rubble();
 	map_tiles_update_all_roads();
 	map_tiles_update_all_plazas();
 	map_tiles_update_all_walls();
-	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
+	map_tiles_update_all_aqueducts(0);
 
 	Building_determineGraphicIdsForOrientedBuildings();
 	map_bridge_update_after_rotate(ccw);

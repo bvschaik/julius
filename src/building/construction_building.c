@@ -23,7 +23,6 @@
 #include "Data/CityInfo.h"
 #include "../Building.h"
 #include "../Terrain.h"
-#include "../TerrainGraphics.h"
 
 static void add_fort(int type, building *fort)
 {

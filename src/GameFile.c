@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "CityView.h"
-#include "TerrainGraphics.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -23,6 +22,7 @@
 #include "graphics/image.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
+#include "map/tiles.h"
 #include "scenario/distant_battle.h"
 #include "scenario/empire.h"
 #include "scenario/map.h"
@@ -145,7 +145,7 @@ static void setupFromSavedGame()
     image_load_climate(scenario_property_climate());
     image_load_enemy(scenario_property_enemy());
 	empire_determine_distant_battle_city();
-	TerrainGraphics_determineGardensFromGraphicIds();
+	map_tiles_determine_gardens();
 
     UI_PlayerMessageList_resetScroll();
 

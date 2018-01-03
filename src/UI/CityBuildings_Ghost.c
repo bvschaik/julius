@@ -1,7 +1,6 @@
 #include "CityBuildings_private.h"
 
 #include "../Terrain.h"
-#include "../TerrainGraphics.h"
 
 #include "building/construction.h"
 #include "building/count.h"

@@ -214,7 +214,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Scenario.c
 	${PROJECT_SOURCE_DIR}/src/Screen.c
 	${PROJECT_SOURCE_DIR}/src/Terrain.c
-	${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
 	${PROJECT_SOURCE_DIR}/src/Video.c
 	${PROJECT_SOURCE_DIR}/src/Widget_Button.c
 	${PROJECT_SOURCE_DIR}/src/Widget_Menu.c

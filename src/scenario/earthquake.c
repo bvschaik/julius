@@ -17,7 +17,6 @@
 #include "Data/State.h"
 
 #include "../Building.h"
-#include "TerrainGraphics.h"
 
 enum {
     EARTHQUAKE_NONE = 0,
@@ -89,7 +88,7 @@ static void advance_earthquake_to_tile(int x, int y)
         building_get(building_id)->state = BuildingState_DeletedByGame;
     }
     map_terrain_set(gridOffset, 0);
-    TerrainGraphics_setTileEarthquake(x, y);
+    map_tiles_set_earthquake(x, y);
     map_tiles_update_all_gardens();
     map_tiles_update_all_roads();
     map_tiles_update_all_plazas();

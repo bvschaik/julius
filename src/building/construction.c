@@ -1,7 +1,6 @@
 #include "construction.h"
 
 #include "Terrain.h"
-#include "TerrainGraphics.h"
 #include "UI/Window.h"
 
 #include "Data/CityInfo.h"
@@ -133,7 +132,7 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
                 *items += map_tiles_set_wall(x_end, y_end);
                 break;
             case ROUTED_BUILDING_AQUEDUCT:
-                *items += TerrainGraphics_setTileAqueductTerrain(x_end, y_end);
+                *items += map_building_tiles_add_aqueduct(x_end, y_end);
                 break;
             case ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC:
                 *items += 1;
@@ -482,12 +481,12 @@ void building_construction_update(int x, int y)
         if (length > 1) current_cost *= length;
     } else if (type == BUILDING_AQUEDUCT) {
         place_aqueduct(1, data.x_start, data.y_start, x, y, &current_cost);
-        TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
+        map_tiles_update_all_aqueducts(0);
     } else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
         struct reservoir_info info;
         place_reservoir_and_aqueducts(1, data.x_start, data.y_start, x, y, &info);
         current_cost = info.cost;
-        TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 1);
+        map_tiles_update_all_aqueducts(1);
         Data_State.selectedBuilding.drawAsConstructing = 0;
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         int items_placed = place_houses(1, data.x_start, data.y_start, x, y);
@@ -646,7 +645,7 @@ void building_construction_place(int orientation)
             return;
         }
         placement_cost = cost;
-        TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
+        map_tiles_update_all_aqueducts(0);
         map_routing_update_land();
     } else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
         struct reservoir_info info;
@@ -670,7 +669,7 @@ void building_construction_place(int orientation)
             }
         }
         placement_cost = info.cost;
-        TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
+        map_tiles_update_all_aqueducts(0);
         map_routing_update_land();
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);

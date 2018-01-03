@@ -13,7 +13,6 @@
 #include "map/tiles.h"
 
 #include "Data/State.h"
-#include "../TerrainGraphics.h"
 #include "UI/PopupDialog.h"
 #include "UI/Window.h"
 
@@ -115,7 +114,7 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
     }
     map_tiles_update_region_empty_land(x_min, y_min, x_max, y_max);
     map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
-    TerrainGraphics_updateRegionRubble(x_min, y_min, x_max, y_max);
+    map_tiles_update_region_rubble(x_min, y_min, x_max, y_max);
     map_tiles_update_all_gardens();
     map_tiles_update_area_roads(x_min, y_min, radius);
     map_tiles_update_all_plazas();

@@ -4,7 +4,6 @@
 #include "CityView.h"
 #include "GameFile.h"
 #include "Terrain.h"
-#include "TerrainGraphics.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -225,9 +224,9 @@ static void readScenarioAndInitGraphics(const char *scenarioName)
 	scenario_map_init();
 
 	CityView_calculateLookup();
-	TerrainGraphics_updateRegionElevation(0, 0, Data_State.map.width - 2, Data_State.map.height - 2);
+	map_tiles_update_all_elevation();
 	map_tiles_update_all_water();
-	TerrainGraphics_updateAllEarthquake();
+	map_tiles_update_all_earthquake();
 	map_tiles_update_all_rocks();
 	Terrain_updateEntryExitFlags(0);
 	map_tiles_update_all_empty_land();
@@ -235,7 +234,7 @@ static void readScenarioAndInitGraphics(const char *scenarioName)
 	map_tiles_update_all_roads();
 	map_tiles_update_all_plazas();
 	map_tiles_update_all_walls();
-	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
+	map_tiles_update_all_aqueducts(0);
 
 	map_natives_init();
 

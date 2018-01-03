@@ -16,7 +16,6 @@
 #include "map/tiles.h"
 
 #include "Data/State.h"
-#include "../TerrainGraphics.h"
 
 void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain)
 {
@@ -141,6 +140,14 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_i
     set_crop_tile(building_id, x, y, 2, 0, crop_image_id, growth);
 }
 
+int map_building_tiles_add_aqueduct(int x, int y)
+{
+    int grid_offset = map_grid_offset(x,y);
+    map_terrain_add(grid_offset, TERRAIN_AQUEDUCT);
+    map_property_clear_constructing(grid_offset);
+    return 1;
+}
+
 static int north_tile_grid_offset(int x, int y, int *size)
 {
     int grid_offset = map_grid_offset(x, y);
@@ -200,7 +207,7 @@ void map_building_tiles_remove(int building_id, int x, int y)
     }
     map_tiles_update_region_empty_land(x, y, x + size, y + size);
     map_tiles_update_region_meadow(x, y, x + size, y + size);
-    TerrainGraphics_updateRegionRubble(x, y, x + size, y + size);
+    map_tiles_update_region_rubble(x, y, x + size, y + size);
 }
 
 void map_building_tiles_set_rubble(int building_id, int x, int y, int size)

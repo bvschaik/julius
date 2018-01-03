@@ -5,6 +5,8 @@ void map_building_tiles_add(int building_id, int x, int y, int size, int image_i
 
 void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_id, int progress);
 
+int map_building_tiles_add_aqueduct(int x, int y);
+
 void map_building_tiles_remove(int building_id, int x, int y);
 
 void map_building_tiles_set_rubble(int building_id, int x, int y, int size);
