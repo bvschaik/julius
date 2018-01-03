@@ -65,10 +65,10 @@ int house_population_calculate_people_per_type()
     int total = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BuildingState_Unused ||
-            b->state == BuildingState_Undo ||
-            b->state == BuildingState_DeletedByGame ||
-            b->state == BuildingState_DeletedByPlayer) {
+        if (b->state == BUILDING_STATE_UNUSED ||
+            b->state == BUILDING_STATE_UNDO ||
+            b->state == BUILDING_STATE_DELETED_BY_GAME ||
+            b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
             continue;
         }
         if (b->houseSize) {
@@ -316,7 +316,7 @@ void house_population_evict_overcrowded()
                 b->housePopulation -= num_people_to_evict;
             } else {
                 // house has been removed
-                b->state = BuildingState_Undo;
+                b->state = BUILDING_STATE_UNDO;
             }
         }
     }

@@ -3,17 +3,7 @@
 
 #include "building/type.h"
 
-enum {
-	BuildingState_Unused = 0,
-	BuildingState_InUse = 1,
-	BuildingState_Undo = 2,
-	BuildingState_Created = 3,
-	BuildingState_Rubble = 4,
-	BuildingState_DeletedByGame = 5, // used for earthquakes, fires, house mergers
-	BuildingState_DeletedByPlayer = 6
-};
-
-#define BuildingIsInUse(b) ((b)->state == BuildingState_InUse)
+#define BuildingIsInUse(b) ((b)->state == BUILDING_STATE_IN_USE)
 
 extern struct _Data_Buildings_Extra {
 	int highestBuildingIdInUse;

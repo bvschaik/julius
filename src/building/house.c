@@ -109,7 +109,7 @@ static void prepare_for_merge(int buildingId, int num_tiles)
                 for (int i = 0; i < INVENTORY_MAX; i++) {
                     merge_data.inventory[i] += house->data.house.inventory[i];
                     house->housePopulation = 0;
-                    house->state = BuildingState_DeletedByGame;
+                    house->state = BUILDING_STATE_DELETED_BY_GAME;
                 }
             }
         }
@@ -516,6 +516,6 @@ void building_house_check_for_corruption(building *house)
             }
         }
         ++Data_Buildings_Extra.unfixableHousePositions;
-        house->state = BuildingState_Rubble;
+        house->state = BUILDING_STATE_RUBBLE;
     }
 }

@@ -41,7 +41,7 @@ building *building_create(building_type type, int x, int y)
 {
     building *b = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (Data_Buildings[i].state == BuildingState_Unused && !game_undo_contains_building(i)) {
+        if (Data_Buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
             b = &Data_Buildings[i];
             break;
         }
@@ -53,7 +53,7 @@ building *building_create(building_type type, int x, int y)
     
     const building_properties *props = building_properties_for_type(type);
     
-    b->state = BuildingState_Created;
+    b->state = BUILDING_STATE_CREATED;
     b->ciid = 1;
     b->__unknown_02 = Data_CityInfo.__unknown_00a5; // TODO ??
     b->type = type;

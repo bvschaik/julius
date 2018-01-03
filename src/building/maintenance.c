@@ -42,7 +42,7 @@ void building_maintenance_update_burning_ruins()
         b->fireDuration++;
         if (b->fireDuration > 32) {
             game_undo_disable();
-            b->state = BuildingState_Rubble;
+            b->state = BUILDING_STATE_RUBBLE;
             map_building_tiles_set_rubble(i, b->x, b->y, b->size);
             recalculate_terrain = 1;
             continue;

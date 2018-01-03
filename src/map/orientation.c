@@ -238,7 +238,7 @@ void map_orientation_update_buildings()
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP || map_orientation == DIR_4_BOTTOM;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BuildingState_Unused) {
+        if (b->state == BUILDING_STATE_UNUSED) {
             continue;
         }
         int image_id;

@@ -117,7 +117,7 @@ void map_natives_init()
             }
             building *b = building_create(buildingType, x, y);
             map_building_set(gridOffset, b->id);
-            b->state = BuildingState_InUse;
+            b->state = BUILDING_STATE_IN_USE;
             switch (buildingType) {
                 case BUILDING_NATIVE_CROPS:
                     b->data.industry.progress = randomBit;

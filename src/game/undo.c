@@ -103,11 +103,11 @@ int game_undo_start_build(building_type type)
     clear_buildings();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BuildingState_Undo) {
+        if (b->state == BUILDING_STATE_UNDO) {
             data.available = 0;
             return 0;
         }
-        if (b->state == BuildingState_DeletedByPlayer) {
+        if (b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
             data.available = 0;
         }
     }
@@ -126,8 +126,8 @@ void game_undo_restore_building_state()
     for (int i = 0; i < data.num_buildings; i++) {
         if (data.buildings[i].id) {
             building *b = building_get(data.buildings[i].id);
-            if (b->state == BuildingState_DeletedByPlayer) {
-                b->state = BuildingState_InUse;
+            if (b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+                b->state = BUILDING_STATE_IN_USE;
             }
             b->isDeleted = 0;
         }
@@ -190,7 +190,7 @@ static void add_building_to_terrain(building *b)
             b->data.other.boatFigureId = 0;
         }
     }
-    b->state = BuildingState_InUse;
+    b->state = BUILDING_STATE_IN_USE;
 }
 
 void game_undo_perform()
@@ -240,7 +240,7 @@ void game_undo_perform()
                 if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
                     building_warehouses_add_resource(RESOURCE_MARBLE, 2);
                 }
-                b->state = BuildingState_Undo;
+                b->state = BUILDING_STATE_UNDO;
             }
         }
     }
@@ -291,9 +291,9 @@ void game_undo_reduce_time_available()
     for (int i = 0; i < data.num_buildings; i++) {
         if (data.buildings[i].id) {
             building *b = building_get(data.buildings[i].id);
-            if (b->state == BuildingState_Undo ||
-                b->state == BuildingState_Rubble ||
-                b->state == BuildingState_DeletedByGame) {
+            if (b->state == BUILDING_STATE_UNDO ||
+                b->state == BUILDING_STATE_RUBBLE ||
+                b->state == BUILDING_STATE_DELETED_BY_GAME) {
                 data.available = 0;
                 UI_Window_requestRefresh();
                 return;

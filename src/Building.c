@@ -35,7 +35,7 @@ void Building_updateHighestIds()
 {
 	Data_Buildings_Extra.highestBuildingIdInUse = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (building_get(i)->state != BuildingState_Unused) {
+		if (building_get(i)->state != BUILDING_STATE_UNUSED) {
 			Data_Buildings_Extra.highestBuildingIdInUse = i;
 		}
 	}
@@ -57,23 +57,23 @@ void Building_GameTick_updateState()
 	int wallRecalc = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (b->state == BuildingState_Created) {
-			b->state = BuildingState_InUse;
+		if (b->state == BUILDING_STATE_CREATED) {
+			b->state = BUILDING_STATE_IN_USE;
 		}
-		if (b->state != BuildingState_InUse || !b->houseSize) {
-			if (b->state == BuildingState_Undo || b->state == BuildingState_DeletedByPlayer) {
+		if (b->state != BUILDING_STATE_IN_USE || !b->houseSize) {
+			if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
 				if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
 					wallRecalc = 1;
 				}
 				map_building_tiles_remove(i, b->x, b->y);
 				landRecalc = 1;
 				building_delete(b);
-			} else if (b->state == BuildingState_Rubble) {
+			} else if (b->state == BUILDING_STATE_RUBBLE) {
 				if (b->houseSize) {
 					city_population_remove_home_removed(b->housePopulation);
 				}
 				building_delete(b);
-			} else if (b->state == BuildingState_DeletedByGame) {
+			} else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
 				building_delete(b);
 			}
 		}
@@ -112,7 +112,7 @@ void Building_decayHousesCovered()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (b->state != BuildingState_Unused && b->type != BUILDING_TOWER) {
+		if (b->state != BUILDING_STATE_UNUSED && b->type != BUILDING_TOWER) {
 			if (b->housesCovered <= 1) {
 				b->housesCovered = 0;
 			} else {
@@ -143,7 +143,7 @@ void Building_GameTick_checkAccessToRome()
 						b->housePopulation = 0;
 						b->houseUnreachableTicks = 0;
 					}
-					b->state = BuildingState_Undo;
+					b->state = BUILDING_STATE_UNDO;
 				}
 			} else if (map_routing_distance(map_grid_offset(xRoad, yRoad))) {
 				// reachable from rome
@@ -161,7 +161,7 @@ void Building_GameTick_checkAccessToRome()
 				if (b->houseUnreachableTicks > 8) {
 					b->distanceFromEntry = 0;
 					b->houseUnreachableTicks = 0;
-					b->state = BuildingState_Undo;
+					b->state = BUILDING_STATE_UNDO;
 				}
 			}
 		} else if (b->type == BUILDING_WAREHOUSE) {

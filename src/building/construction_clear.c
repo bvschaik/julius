@@ -50,7 +50,7 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
                     b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
                     continue;
                 }
-                if (b->state == BuildingState_DeletedByPlayer) {
+                if (b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
                     continue;
                 }
                 if (b->type == BUILDING_FORT_GROUND || b->type == BUILDING_FORT) {
@@ -65,11 +65,11 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
                     figure_create_homeless(b->x, b->y, b->housePopulation);
                     b->housePopulation = 0;
                 }
-                if (b->state != BuildingState_DeletedByPlayer) {
+                if (b->state != BUILDING_STATE_DELETED_BY_PLAYER) {
                     items_placed++;
                     game_undo_add_building(b);
                 }
-                b->state = BuildingState_DeletedByPlayer;
+                b->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 b->isDeleted = 1;
                 building *space = b;
                 for (int i = 0; i < 9; i++) {
@@ -78,7 +78,7 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
                     }
                     space = building_get(space->prevPartBuildingId);
                     game_undo_add_building(space);
-                    space->state = BuildingState_DeletedByPlayer;
+                    space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
                 space = b;
                 for (int i = 0; i < 9; i++) {
@@ -87,7 +87,7 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
                         break;
                     }
                     game_undo_add_building(space);
-                    space->state = BuildingState_DeletedByPlayer;
+                    space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
             } else if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
                 map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);

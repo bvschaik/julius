@@ -29,7 +29,7 @@ void building_storage_reset_building_ids()
     
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BuildingState_Unused) {
+        if (b->state == BUILDING_STATE_UNUSED) {
             continue;
         }
         if (b->type == BUILDING_GRANARY || b->type == BUILDING_WAREHOUSE) {

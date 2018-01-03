@@ -203,7 +203,7 @@ void sound_city_set_volume(int percentage)
 
 void sound_city_mark_building_view(building *b, int direction)
 {
-    if (b->state == BuildingState_Unused) {
+    if (b->state == BUILDING_STATE_UNUSED) {
         return;
     }
     int type = b->type;
