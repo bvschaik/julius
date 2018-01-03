@@ -55,7 +55,7 @@ static void determine_meeting_center()
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->type == BUILDING_NATIVE_MEETING) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_NATIVE_MEETING) {
             building_list_small_add(i);
         }
     }
@@ -67,7 +67,7 @@ static void determine_meeting_center()
     // determine closest meeting center for hut
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->type == BUILDING_NATIVE_HUT) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_NATIVE_HUT) {
             int minDist = 1000;
             int minMeetingId = 0;
             for (int n = 0; n < total_meetings; n++) {
@@ -153,7 +153,7 @@ void map_natives_check_land()
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b)) {
+        if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
         int size, radius;

@@ -153,7 +153,7 @@ void building_house_merge(building *house)
             building *other_house = building_get(map_building_at(tile_offset));
             if (other_house->id == house->id) {
                 num_house_tiles++;
-            } else if (BuildingIsInUse(other_house) && other_house->houseSize &&
+            } else if (other_house->state == BUILDING_STATE_IN_USE && other_house->houseSize &&
                     other_house->subtype.houseLevel == house->subtype.houseLevel &&
                     !other_house->houseIsMerged) {
                 num_house_tiles++;
@@ -179,7 +179,7 @@ int building_house_can_expand(building *house, int num_tiles)
                 building *other_house = building_get(map_building_at(tile_offset));
                 if (other_house->id == house->id) {
                     ok_tiles++;
-                } else if (BuildingIsInUse(other_house) && other_house->houseSize) {
+                } else if (other_house->state == BUILDING_STATE_IN_USE && other_house->houseSize) {
                     if (other_house->subtype.houseLevel <= house->subtype.houseLevel) {
                         ok_tiles++;
                     }
@@ -204,7 +204,7 @@ int building_house_can_expand(building *house, int num_tiles)
                 building *other_house = building_get(map_building_at(tile_offset));
                 if (other_house->id == house->id) {
                     ok_tiles++;
-                } else if (BuildingIsInUse(other_house) && other_house->houseSize) {
+                } else if (other_house->state == BUILDING_STATE_IN_USE && other_house->houseSize) {
                     if (other_house->subtype.houseLevel <= house->subtype.houseLevel) {
                         ok_tiles++;
                     }
@@ -229,7 +229,7 @@ int building_house_can_expand(building *house, int num_tiles)
                 building *other_house = building_get(map_building_at(tile_offset));
                 if (other_house->id == house->id) {
                     ok_tiles++;
-                } else if (BuildingIsInUse(other_house) && other_house->houseSize) {
+                } else if (other_house->state == BUILDING_STATE_IN_USE && other_house->houseSize) {
                     if (other_house->subtype.houseLevel <= house->subtype.houseLevel) {
                         ok_tiles++;
                     }

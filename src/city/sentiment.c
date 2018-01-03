@@ -21,7 +21,7 @@ void city_sentiment_change_happiness(int amount)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->houseSize) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
             b->sentiment.houseHappiness += amount;
             b->sentiment.houseHappiness = calc_bound(b->sentiment.houseHappiness, 0, 100);
         }
@@ -32,7 +32,7 @@ void city_sentiment_set_max_happiness(int max)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->houseSize) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
             if (b->sentiment.houseHappiness > max) {
                 b->sentiment.houseHappiness = max;
             }
@@ -145,7 +145,7 @@ void city_sentiment_update()
     int default_sentiment = difficulty_sentiment();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || !b->houseSize) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->houseSize) {
             continue;
         }
         if (!b->housePopulation) {
@@ -214,7 +214,7 @@ void city_sentiment_update()
     int total_houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->housePopulation) {
             total_houses++;
             total_sentiment += b->sentiment.houseHappiness;
         }

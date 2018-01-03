@@ -255,7 +255,7 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
             continue;
         }
         if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -378,7 +378,7 @@ void figure_trade_caravan_action(figure *f)
                     f->isGhost = 1;
                     break;
             }
-            if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
+            if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
                 f->state = FigureState_Dead;
             }
             break;
@@ -489,7 +489,7 @@ void figure_native_trader_action(figure *f)
                 f->state = FigureState_Dead;
                 f->isGhost = 1;
             }
-            if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
+            if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
                 f->state = FigureState_Dead;
             }
             break;
@@ -564,7 +564,7 @@ void figure_native_trader_action(figure *f)
 int figure_trade_ship_is_trading(figure *ship)
 {
     building *b = building_get(ship->destinationBuildingId);
-    if (!BuildingIsInUse(b) || b->type != BUILDING_DOCK) {
+    if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_DOCK) {
         return TRADE_SHIP_BUYING;
     }
     for (int i = 0; i < 3; i++) {
@@ -591,7 +591,7 @@ int figure_trade_ship_is_trading(figure *ship)
 static int trade_ship_lost_queue(const figure *f)
 {
     building *b = building_get(f->destinationBuildingId);
-    if (BuildingIsInUse(b) && b->type == BUILDING_DOCK &&
+    if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_DOCK &&
         b->numWorkers > 0 && b->data.other.boatFigureId == f->id) {
         return 0;
     }
@@ -601,7 +601,7 @@ static int trade_ship_lost_queue(const figure *f)
 static int trade_ship_done_trading(figure *f)
 {
     building *b = building_get(f->destinationBuildingId);
-    if (BuildingIsInUse(b) && b->type == BUILDING_DOCK && b->numWorkers > 0) {
+    if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_DOCK && b->numWorkers > 0) {
         for (int i = 0; i < 3; i++) {
             if (b->data.other.dockFigureIds[i]) {
                 figure *docker = figure_get(b->data.other.dockFigureIds[i]);
@@ -671,7 +671,7 @@ void figure_trade_ship_action(figure *f)
                     city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
                 }
             }
-            if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
+            if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
                 f->actionState = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
                 f->waitTicks = 0;
                 map_point river_exit = scenario_map_river_exit();

@@ -72,7 +72,7 @@ static int get_closest_military_academy(const building *fort)
     int min_distance = 10000;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->type == BUILDING_MILITARY_ACADEMY &&
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MILITARY_ACADEMY &&
             b->numWorkers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
             int dist = calc_maximum_distance(fort->x, fort->y, b->x, b->y);
             if (dist < min_distance) {
@@ -125,7 +125,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
     building *tower = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->type == BUILDING_TOWER && b->numWorkers > 0 &&
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_TOWER && b->numWorkers > 0 &&
             !b->figureId && b->roadNetworkId == barracks->roadNetworkId) {
             tower = b;
             break;

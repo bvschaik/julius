@@ -106,7 +106,7 @@ void figure_market_buyer_action(figure *f)
     f->maxRoamLength = 800;
     
     building *b = building_get(f->buildingId);
-    if (!BuildingIsInUse(b) || b->figureId2 != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId2 != f->id) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);

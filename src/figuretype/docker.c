@@ -99,7 +99,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
     int resource = Data_CityInfo.tradeNextImportResourceDocker;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
             continue;
         }
         if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -172,7 +172,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
     
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
             continue;
         }
         if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -293,7 +293,7 @@ void figure_docker_action(figure *f)
     building *b = building_get(f->buildingId);
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
-    if (!BuildingIsInUse(b)) {
+    if (b->state != BUILDING_STATE_IN_USE) {
         f->state = FigureState_Dead;
     }
     if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF) {
@@ -396,7 +396,7 @@ void figure_docker_action(figure *f)
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
             }
-            if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
+            if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
                 f->state = FigureState_Dead;
             }
             break;
@@ -410,7 +410,7 @@ void figure_docker_action(figure *f)
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
             }
-            if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
+            if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
                 f->state = FigureState_Dead;
             }
             break;
@@ -425,7 +425,7 @@ void figure_docker_action(figure *f)
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
             }
-            if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
+            if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
                 f->state = FigureState_Dead;
             }
             break;

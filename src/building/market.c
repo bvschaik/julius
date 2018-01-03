@@ -74,7 +74,7 @@ int building_market_get_storage_destination(building *market)
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b)) {
+        if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
         if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE) {

@@ -176,7 +176,7 @@ void building_granaries_calculate_stocks()
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
         }
         if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -225,7 +225,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
         }
         if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != road_network_id) {
@@ -274,7 +274,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
         }
         if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != road_network_id) {
@@ -374,7 +374,7 @@ void building_granary_bless()
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
         }
         int total_stored = 0;
@@ -408,7 +408,7 @@ void building_granary_warehouse_curse(int big)
     building *max_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b)) {
+        if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
         int total_stored = 0;

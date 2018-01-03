@@ -169,7 +169,7 @@ void figure_shipwreck_action(figure *f)
 void figure_fishing_boat_action(figure *f)
 {
     building *b = building_get(f->buildingId);
-    if (!BuildingIsInUse(b)) {
+    if (b->state != BUILDING_STATE_IN_USE) {
         f->state = FigureState_Dead;
     }
     if (f->actionState != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.other.boatFigureId != f->id) {

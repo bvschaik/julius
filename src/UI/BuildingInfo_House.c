@@ -187,7 +187,7 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 				continue;
 			}
 			building *b = building_get(buildingId);
-			if (!BuildingIsInUse(b) || buildingId == c->buildingId) {
+			if (b->state != BUILDING_STATE_IN_USE || buildingId == c->buildingId) {
 				continue;
 			}
 			if (!b->houseSize || b->type < cb->type) {

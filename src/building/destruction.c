@@ -149,7 +149,7 @@ int building_destroy_first_of_type(building_type type)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->type == type) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == type) {
             int grid_offset = b->gridOffset;
             game_undo_disable();
             b->state = BUILDING_STATE_RUBBLE;
@@ -196,7 +196,7 @@ void building_destroy_by_enemy(int x, int y, int grid_offset)
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building *b = building_get(building_id);
-        if (BuildingIsInUse(b)) {
+        if (b->state == BUILDING_STATE_IN_USE) {
             switch (b->type) {
                 case BUILDING_HOUSE_SMALL_TENT:
                 case BUILDING_HOUSE_LARGE_TENT:

@@ -111,7 +111,7 @@ void figure_generate_criminals()
     int min_happiness = 50;
     for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->houseSize) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
             if (b->sentiment.houseHappiness >= 50) {
                 b->houseCriminalActive = 0;
             } else if (b->sentiment.houseHappiness < min_happiness) {

@@ -168,7 +168,7 @@ void figure_cartpusher_action(figure *f)
             if (!map_routing_citizen_is_passable(f->gridOffset)) {
                 f->state = FigureState_Dead;
             }
-            if (!BuildingIsInUse(b) || b->figureId != f->id) {
+            if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
                 f->state = FigureState_Dead;
             }
             f->waitTicks++;
@@ -187,7 +187,7 @@ void figure_cartpusher_action(figure *f)
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
             }
-            if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
+            if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
                 f->state = FigureState_Dead;
             }
             break;
@@ -202,7 +202,7 @@ void figure_cartpusher_action(figure *f)
                 f->actionState = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
                 f->waitTicks = 0;
             }
-            if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
+            if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
                 f->state = FigureState_Dead;
             }
             break;
@@ -420,7 +420,7 @@ void figure_warehouseman_action(figure *f)
             break;
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
             building *b = building_get(f->buildingId);
-            if (!BuildingIsInUse(b) || b->figureId != f->id) {
+            if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
                 f->state = FigureState_Dead;
             }
             f->waitTicks++;

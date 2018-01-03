@@ -38,7 +38,7 @@ void building_industry_update_production()
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || !b->outputResourceId) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->outputResourceId) {
             continue;
         }
         b->data.industry.hasFullResource = 0;
@@ -80,7 +80,7 @@ void building_industry_update_wheat_production()
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || !b->outputResourceId) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->outputResourceId) {
             continue;
         }
         if (b->housesCovered <= 0 || b->numWorkers <= 0) {
@@ -124,7 +124,7 @@ void building_bless_farms()
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->outputResourceId && building_is_farm(b->type)) {
+        if (b->state == BUILDING_STATE_IN_USE && b->outputResourceId && building_is_farm(b->type)) {
             b->data.industry.progress = 200;
             b->data.industry.curseDaysLeft = 0;
             b->data.industry.blessingDaysLeft = 16;
@@ -137,7 +137,7 @@ void building_curse_farms(int big_curse)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->outputResourceId && building_is_farm(b->type)) {
+        if (b->state == BUILDING_STATE_IN_USE && b->outputResourceId && building_is_farm(b->type)) {
             b->data.industry.progress = 0;
             b->data.industry.blessingDaysLeft = 0;
             b->data.industry.curseDaysLeft = big_curse ? 48 : 4;
@@ -154,7 +154,7 @@ void building_calculate_workshop_stocks()
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || !building_is_workshop(b->type)) {
+        if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
             continue;
         }
         b->hasRoadAccess = 0;
@@ -198,7 +198,7 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || !building_is_workshop(b->type)) {
+        if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
             continue;
         }
         if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -243,7 +243,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource,
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || !building_is_workshop(b->type)) {
+        if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
             continue;
         }
         if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {

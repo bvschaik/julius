@@ -49,7 +49,7 @@ static void cause_disease(int total_people)
     // kill people who don't have access to a doctor
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->housePopulation) {
             if (!b->data.house.clinic) {
                 people_to_kill -= b->housePopulation;
                 building_destroy_by_plague(b);
@@ -62,7 +62,7 @@ static void cause_disease(int total_people)
     // kill people in tents
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->housePopulation) {
             if (b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
                 people_to_kill -= b->housePopulation;
                 building_destroy_by_plague(b);
@@ -75,7 +75,7 @@ static void cause_disease(int total_people)
     // kill anyone
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->housePopulation) {
             people_to_kill -= b->housePopulation;
             building_destroy_by_plague(b);
             if (people_to_kill <= 0) {
@@ -96,7 +96,7 @@ void city_health_update()
     int healthy_population = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || !b->houseSize || !b->housePopulation) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->houseSize || !b->housePopulation) {
             continue;
         }
         total_population += b->housePopulation;

@@ -53,7 +53,7 @@ static void culture_action(figure *f, int group)
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);
-    if (!BuildingIsInUse(b) || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);
@@ -72,7 +72,7 @@ void figure_school_child_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 96;
     building *b = building_get(f->buildingId);
-    if (!BuildingIsInUse(b) || b->type != BUILDING_SCHOOL) {
+    if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_SCHOOL) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);
@@ -126,7 +126,7 @@ void figure_missionary_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 192;
     building *b = building_get(f->buildingId);
-    if (!BuildingIsInUse(b) || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);
@@ -139,7 +139,7 @@ void figure_patrician_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Roads;
     f->useCrossCountry = 0;
     f->maxRoamLength = 128;
-    if (!BuildingIsInUse(building_get(f->buildingId))) {
+    if (building_get(f->buildingId)->state != BUILDING_STATE_IN_USE) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);
@@ -153,7 +153,7 @@ void figure_labor_seeker_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);
-    if (!BuildingIsInUse(b) || b->figureId2 != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId2 != f->id) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);
@@ -167,7 +167,7 @@ void figure_market_trader_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *market = building_get(f->buildingId);
-    if (!BuildingIsInUse(market) || market->figureId != f->id) {
+    if (market->state != BUILDING_STATE_IN_USE || market->figureId != f->id) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);
@@ -190,7 +190,7 @@ void figure_tax_collector_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Roads;
     f->useCrossCountry = 0;
     f->maxRoamLength = 512;
-    if (!BuildingIsInUse(b) || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);

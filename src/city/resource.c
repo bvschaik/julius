@@ -51,7 +51,7 @@ static void calculate_available_food()
     Data_CityInfo.foodInfoGranariesNotOperatingWithFood = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
         }
         b->hasRoadAccess = 0;
@@ -109,7 +109,7 @@ void city_resource_calculate_food_stocks_and_supply_wheat()
     if (scenario_property_rome_supplies_wheat()) {
         for (int i = 1; i < MAX_BUILDINGS; i++) {
             building *b = building_get(i);
-            if (BuildingIsInUse(b) && b->type == BUILDING_MARKET) {
+            if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MARKET) {
                 b->data.market.inventory[INVENTORY_WHEAT] = 200;
             }
         }
@@ -124,7 +124,7 @@ void city_resource_consume_food()
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->houseSize) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
             int num_types = model_get_house(b->subtype.houseLevel)->food_types;
             int amount_per_type = calc_adjust_with_percentage(b->housePopulation, 50);
             if (num_types > 1) {

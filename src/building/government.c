@@ -24,7 +24,7 @@ void building_government_distribute_treasury()
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->houseSize) {
+        if (b->state != BUILDING_STATE_IN_USE || b->houseSize) {
             continue;
         }
         b->taxIncomeOrStorage = 0;

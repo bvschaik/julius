@@ -19,7 +19,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 	int hasExpanded = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (BuildingIsInUse(b) && building_is_house(b->type)) {
+		if (b->state == BUILDING_STATE_IN_USE && building_is_house(b->type)) {
 			building_house_check_for_corruption(b);
 			hasExpanded |= building_house_process_evolve(b);
 			if (game_time_day() == 0 || game_time_day() == 7) {

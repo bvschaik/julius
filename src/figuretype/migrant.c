@@ -64,7 +64,7 @@ static int closest_house_with_room(int x, int y)
     int min_building_id = 0;
     for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
             if (!b->immigrantFigureId) {
                 int dist = calc_maximum_distance(x, y, b->x, b->y);
                 if (dist < min_dist) {
@@ -84,7 +84,7 @@ void figure_immigrant_action(figure *f)
     
     f->terrainUsage = FigureTerrainUsage_Any;
     f->cartGraphicId = 0;
-    if (!BuildingIsInUse(b) || b->immigrantFigureId != f->id || !b->houseSize) {
+    if (b->state != BUILDING_STATE_IN_USE || b->immigrantFigureId != f->id || !b->houseSize) {
         f->state = FigureState_Dead;
         return;
     }

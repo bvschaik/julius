@@ -23,7 +23,7 @@ void figure_engineer_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Roads;
     f->useCrossCountry = 0;
     f->maxRoamLength = 640;
-    if (!BuildingIsInUse(b) || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);
@@ -201,7 +201,7 @@ static void extinguish_fire(figure *f)
 {
     building *burn = building_get(f->destinationBuildingId);
     int distance = calc_maximum_distance(f->x, f->y, burn->x, burn->y);
-    if (BuildingIsInUse(burn) && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
+    if (burn->state == BUILDING_STATE_IN_USE && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
         burn->fireDuration = 32;
         sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
     } else {
@@ -248,7 +248,7 @@ void figure_prefect_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Roads;
     f->useCrossCountry = 0;
     f->maxRoamLength = 640;
-    if (!BuildingIsInUse(b) || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);
@@ -404,7 +404,7 @@ void figure_worker_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);
-    if (!BuildingIsInUse(b) || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
         f->state = FigureState_Dead;
     }
 }

@@ -20,7 +20,7 @@ int house_population_add_to_city(int num_people)
             building_id = 1;
         }
         building *b = building_get(building_id);
-        if (BuildingIsInUse(b) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0) {
             Data_CityInfo.populationLastTargetHouseAdd = building_id;
             int max_people = model_get_house(b->subtype.houseLevel)->max_people;
             if (b->houseIsMerged) {
@@ -45,7 +45,7 @@ int house_population_remove_from_city(int num_people)
             building_id = 1;
         }
         building *b = building_get(building_id);
-        if (BuildingIsInUse(b) && b->houseSize) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
             Data_CityInfo.populationLastTargetHouseRemove = building_id;
             if (b->housePopulation > 0) {
                 ++removed;
@@ -96,7 +96,7 @@ static void fill_building_list_with_houses()
     building_list_large_clear(0);
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->houseSize) {
+        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
             building_list_large_add(i);
         }
     }

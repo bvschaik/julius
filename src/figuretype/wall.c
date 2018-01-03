@@ -49,7 +49,7 @@ void figure_ballista_action(figure *f)
     f->heightAdjustedTicks = 10;
     f->currentHeight = 45;
     
-    if (!BuildingIsInUse(b) || b->figureId4 != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId4 != f->id) {
         f->state = FigureState_Dead;
     }
     if (b->numWorkers <= 0 || b->figureId <= 0) {
@@ -174,7 +174,7 @@ void figure_tower_sentry_action(figure *f)
     f->isGhost = 1;
     f->heightAdjustedTicks = 10;
     f->maxRoamLength = 800;
-    if (!BuildingIsInUse(b) || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);

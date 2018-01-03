@@ -3,8 +3,6 @@
 
 #include "building/type.h"
 
-#define BuildingIsInUse(b) ((b)->state == BUILDING_STATE_IN_USE)
-
 extern struct _Data_Buildings_Extra {
 	int highestBuildingIdInUse;
 	int highestBuildingIdEver;

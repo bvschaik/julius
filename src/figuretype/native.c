@@ -16,7 +16,7 @@ void figure_indigenous_native_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Any;
     f->useCrossCountry = 0;
     f->maxRoamLength = 800;
-    if (!BuildingIsInUse(b) || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
         f->state = FigureState_Dead;
     }
     figure_image_increase_offset(f, 12);

@@ -213,7 +213,7 @@ void building_warehouses_add_resource(int resource, int amount)
             building_id = 1;
         }
         building *b = building_get(building_id);
-        if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
             Data_CityInfo.resourceLastTargetWarehouse = building_id;
             while (amount && building_warehouse_add_resource(b, resource)) {
                 amount--;
@@ -233,7 +233,7 @@ int building_warehouses_remove_resource(int resource, int amount)
             building_id = 1;
         }
         building *b = building_get(building_id);
-        if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
             if (building_storage_get(b->storage_id)->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING) {
                 Data_CityInfo.resourceLastTargetWarehouse = building_id;
                 amount_left = building_warehouse_remove_resource(b, resource, amount_left);
@@ -247,7 +247,7 @@ int building_warehouses_remove_resource(int resource, int amount)
             building_id = 1;
         }
         building *b = building_get(building_id);
-        if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
             Data_CityInfo.resourceLastTargetWarehouse = building_id;
             amount_left = building_warehouse_remove_resource(b, resource, amount_left);
         }
@@ -263,7 +263,7 @@ void building_warehouses_calculate_stocks()
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
             b->hasRoadAccess = 0;
             if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
                 b->hasRoadAccess = 1;
@@ -274,7 +274,7 @@ void building_warehouses_calculate_stocks()
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE_SPACE) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE_SPACE) {
             continue;
         }
         building *warehouse = building_main(b);
@@ -300,7 +300,7 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE_SPACE) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE_SPACE) {
             continue;
         }
         if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != road_network_id) {
@@ -350,7 +350,7 @@ int building_warehouse_for_getting(building *src, int resource, int *x_dst, int 
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
             continue;
         }
         if (i == src->id) {
@@ -415,7 +415,7 @@ static int determine_granary_accept_foods(int resources[RESOURCE_MAX_FOOD])
     int can_accept = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY || !b->hasRoadAccess) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY || !b->hasRoadAccess) {
             continue;
         }
         int pct_workers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
@@ -445,7 +445,7 @@ static int determine_granary_get_foods(int resources[RESOURCE_MAX_FOOD])
     int can_get = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY || !b->hasRoadAccess) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY || !b->hasRoadAccess) {
             continue;
         }
         int pct_workers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);

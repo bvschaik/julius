@@ -104,7 +104,7 @@ static void calculate_workers_needed_per_category()
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b)) {
+        if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
         int category = CATEGORY_FOR_BUILDING_TYPE[b->type];
@@ -217,7 +217,7 @@ static void set_building_worker_weight()
     int waterPer10kPerBuilding = calc_percentage(100, Data_CityInfo.laborCategory[LABOR_CATEGORY_WATER].buildings);
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b)) {
+        if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
         int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
@@ -259,7 +259,7 @@ static void allocate_workers_to_water()
             building_id = 1;
         }
         building *b = building_get(building_id);
-        if (!BuildingIsInUse(b) || CATEGORY_FOR_BUILDING_TYPE[b->type] != LABOR_CATEGORY_WATER) {
+        if (b->state != BUILDING_STATE_IN_USE || CATEGORY_FOR_BUILDING_TYPE[b->type] != LABOR_CATEGORY_WATER) {
             continue;
         }
         b->numWorkers = 0;
@@ -296,7 +296,7 @@ static void allocate_workers_to_non_water_buildings()
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b)) {
+        if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
         int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
@@ -337,7 +337,7 @@ static void allocate_workers_to_non_water_buildings()
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(b)) {
+        if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
         int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];

@@ -90,7 +90,7 @@ void Building_setDesirability()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(b)) {
+		if (b->state != BUILDING_STATE_IN_USE) {
 			continue;
 		}
 		b->desirability = map_desirability_get_max(b->x, b->y, b->size);
@@ -128,7 +128,7 @@ void Building_GameTick_checkAccessToRome()
 	int problemGridOffset = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(b)) {
+		if (b->state != BUILDING_STATE_IN_USE) {
 			continue;
 		}
 		int xRoad, yRoad;
