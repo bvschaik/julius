@@ -14,6 +14,7 @@
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "map/building_tiles.h"
+#include "map/orientation.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
@@ -421,7 +422,7 @@ static void add_to_map(int type, building *b, int size,
             map_building_tiles_add(b->id, b->x, b->y, size,
                 image_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
             b->subtype.orientation = orientation;
-            Building_determineGraphicIdsForOrientedBuildings();
+            map_orientation_update_buildings();
             Terrain_addRoadsForGatehouse(b->x, b->y, orientation);
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
@@ -430,7 +431,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_TRIUMPHAL_ARCH:
             add_building(b, image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
             b->subtype.orientation = orientation;
-            Building_determineGraphicIdsForOrientedBuildings();
+            map_orientation_update_buildings();
             Terrain_addRoadsForTriumphalArch(b->x, b->y, orientation);
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
@@ -507,9 +508,9 @@ int building_construction_place_building(building_type type, int x, int y)
     }
     int building_orientation = 0;
     if (type == BUILDING_GATEHOUSE) {
-        building_orientation = Terrain_getOrientationGatehouse(x, y);
+        building_orientation = map_orientation_for_gatehouse(x, y);
     } else if (type == BUILDING_TRIUMPHAL_ARCH) {
-        building_orientation = Terrain_getOrientationTriumphalArch(x, y);
+        building_orientation = map_orientation_for_triumphal_arch(x, y);
     }
     switch (Data_State.map.orientation) {
         case DIR_2_RIGHT: x = x - size + 1; break;
@@ -518,7 +519,7 @@ int building_construction_place_building(building_type type, int x, int y)
     }
     // extra checks
     if (type == BUILDING_GATEHOUSE) {
-        if (!Terrain_isClear(x, y, size, terrain_mask, 0)) {
+        if (!map_tiles_are_clear(x, y, size, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }
@@ -531,7 +532,7 @@ int building_construction_place_building(building_type type, int x, int y)
         }
     }
     if (type == BUILDING_TRIUMPHAL_ARCH) {
-        if (!Terrain_isClear(x, y, size, terrain_mask, 0)) {
+        if (!map_tiles_are_clear(x, y, size, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }
@@ -561,7 +562,7 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
     } else {
-        if (!Terrain_isClear(x, y, size, terrain_mask, 0)) {
+        if (!map_tiles_are_clear(x, y, size, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }
@@ -593,7 +594,7 @@ int building_construction_place_building(building_type type, int x, int y)
         }
     }
     if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
-        if (!Terrain_isClear(x + 3, y - 1, 4, terrain_mask, 0)) {
+        if (!map_tiles_are_clear(x + 3, y - 1, 4, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }
@@ -607,8 +608,8 @@ int building_construction_place_building(building_type type, int x, int y)
             city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
             return 0;
         }
-        if (!Terrain_isClear(x + 5, y, 5, terrain_mask, 0) ||
-            !Terrain_isClear(x + 10, y, 5, terrain_mask, 0)) {
+        if (!map_tiles_are_clear(x + 5, y, 5, terrain_mask) ||
+            !map_tiles_are_clear(x + 10, y, 5, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }

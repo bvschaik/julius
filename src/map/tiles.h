@@ -37,4 +37,6 @@ void map_tiles_update_region_rubble(int x_min, int y_min, int x_max, int y_max);
 
 void map_tiles_update_all_elevation();
 
+int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain);
+
 #endif // MAP_TILES_H

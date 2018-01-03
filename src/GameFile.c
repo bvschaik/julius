@@ -20,6 +20,7 @@
 #include "game/state.h"
 #include "game/undo.h"
 #include "graphics/image.h"
+#include "map/orientation.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
 #include "map/tiles.h"
@@ -124,7 +125,7 @@ static void setupFromSavedGame()
 
 	map_routing_update_all();
 
-	Building_determineGraphicIdsForOrientedBuildings();
+	map_orientation_update_buildings();
 	figure_route_clean();
 	map_road_network_update();
 	Building_GameTick_checkAccessToRome();

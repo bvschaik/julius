@@ -1,7 +1,5 @@
 #include "CityBuildings_private.h"
 
-#include "../Terrain.h"
-
 #include "building/construction.h"
 #include "building/count.h"
 #include "building/industry.h"
@@ -13,6 +11,7 @@
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/image_context.h"
+#include "map/orientation.h"
 #include "map/road_aqueduct.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
@@ -192,7 +191,7 @@ static void drawBuildingGhostDefault()
 			placementObstructed = 1;
 		}
 	} else if (type == BUILDING_GATEHOUSE) {
-		int orientation = Terrain_getOrientationGatehouse(
+		int orientation = map_orientation_for_gatehouse(
 			Data_State.map.current.x, Data_State.map.current.y);
 		int graphicOffset;
 		if (orientation == 2) {
@@ -208,7 +207,7 @@ static void drawBuildingGhostDefault()
 		}
 		graphicId += graphicOffset;
 	} else if (type == BUILDING_TRIUMPHAL_ARCH) {
-		int orientation = Terrain_getOrientationTriumphalArch(
+		int orientation = map_orientation_for_triumphal_arch(
 			Data_State.map.current.x, Data_State.map.current.y);
 		int graphicOffset;
 		if (orientation == 2) {
@@ -352,9 +351,9 @@ static void drawBuildingGhostDraggableReservoir()
 	} else {
 		if (map_building_is_reservoir(Data_State.map.current.x - 1, Data_State.map.current.y - 1)) {
 			placementObstructed = 0;
-		} else if (!Terrain_isClear(
+		} else if (!map_tiles_are_clear(
 				Data_State.map.current.x - 1, Data_State.map.current.y - 1,
-				3, TERRAIN_ALL, 0)) {
+				3, TERRAIN_ALL)) {
 			placementObstructed = 1;
 		}
 	}

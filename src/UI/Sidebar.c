@@ -7,7 +7,6 @@
 
 #include "../CityView.h"
 #include "../Graphics.h"
-#include "../Terrain.h"
 #include "../Widget.h"
 
 #include "../Data/Screen.h"
@@ -21,6 +20,7 @@
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "input/scroll.h"
+#include "map/orientation.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
 
@@ -394,15 +394,15 @@ static void buttonRotateNorth(int param1, int param2)
 			return;
 		case DIR_2_RIGHT:
 			CityView_rotateRight();
-			Terrain_rotateMap(1);
+			map_orientation_change(1);
 			break;
 		case DIR_4_BOTTOM:
 			CityView_rotateLeft();
-			Terrain_rotateMap(0);
+			map_orientation_change(0);
 			// fallthrough
 		case DIR_6_LEFT:
 			CityView_rotateLeft();
-			Terrain_rotateMap(0);
+			map_orientation_change(0);
 			break;
 	}
 	CityView_checkCameraBoundaries();
@@ -417,7 +417,7 @@ static void buttonRotate(int clockWise, int param2)
 	} else {
 		CityView_rotateLeft();
 	}
-	Terrain_rotateMap(clockWise);
+	map_orientation_change(clockWise);
 	CityView_checkCameraBoundaries();
 	city_warning_show(WARNING_ORIENTATION);
 	UI_Window_requestRefresh();

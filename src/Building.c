@@ -1,7 +1,6 @@
 #include "Building.h"
 
 #include "CityView.h"
-#include "Terrain.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -357,124 +356,6 @@ void Building_decayHousesCovered()
 			} else {
 				b->housesCovered--;
 			}
-		}
-	}
-}
-
-void Building_determineGraphicIdsForOrientedBuildings()
-{
-	int mapOrientation = Data_State.map.orientation;
-	int mapOrientationIsTopOrBottom = mapOrientation == DIR_0_TOP || mapOrientation == DIR_4_BOTTOM;
-	int graphicOffset;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		building *b = building_get(i);
-		if (b->state == BuildingState_Unused) {
-			continue;
-		}
-		int image_id;
-		switch (b->type) {
-			case BUILDING_GATEHOUSE:
-				if (b->subtype.orientation == 1) {
-					if (mapOrientationIsTopOrBottom) {
-						image_id = image_group(GROUP_BUILDING_TOWER) + 1;
-					} else {
-						image_id = image_group(GROUP_BUILDING_TOWER) + 2;
-					}
-				} else {
-					if (mapOrientationIsTopOrBottom) {
-						image_id = image_group(GROUP_BUILDING_TOWER) + 2;
-					} else {
-						image_id = image_group(GROUP_BUILDING_TOWER) + 1;
-					}
-				}
-				map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
-				Terrain_addRoadsForGatehouse(b->x, b->y, b->subtype.orientation);
-				break;
-			case BUILDING_TRIUMPHAL_ARCH:
-				if (b->subtype.orientation == 1) {
-					if (mapOrientationIsTopOrBottom) {
-						image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
-					} else {
-						image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
-					}
-				} else {
-					if (mapOrientationIsTopOrBottom) {
-						image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
-					} else {
-						image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
-					}
-				}
-				map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
-				Terrain_addRoadsForTriumphalArch(b->x, b->y, b->subtype.orientation);
-				break;
-			case BUILDING_HIPPODROME:
-				if (mapOrientation == DIR_0_TOP) {
-					image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
-					switch (b->subtype.orientation) {
-						case 0: case 3: 
-                    image_id += 0; break;
-						case 1: case 4: 
-                    image_id += 2; break;
-						case 2: case 5: 
-                    image_id += 4; break;
-					}
-				} else if (mapOrientation == DIR_4_BOTTOM) {
-					image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
-					switch (b->subtype.orientation) {
-						case 0: case 3: 
-                    image_id += 4; break;
-						case 1: case 4: 
-                    image_id += 2; break;
-						case 2: case 5: 
-                    image_id += 0; break;
-					}
-				} else if (mapOrientation == DIR_6_LEFT) {
-					image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
-					switch (b->subtype.orientation) {
-						case 0: case 3: 
-                    image_id += 0; break;
-						case 1: case 4: 
-                    image_id += 2; break;
-						case 2: case 5: 
-                    image_id += 4; break;
-					}
-				} else { // DIR_2_RIGHT
-					image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
-					switch (b->subtype.orientation) {
-						case 0: case 3: 
-                    image_id += 4; break;
-						case 1: case 4: 
-                    image_id += 2; break;
-						case 2: case 5: 
-                    image_id += 0; break;
-					}
-				}
-				map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
-				break;
-			case BUILDING_SHIPYARD:
-				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
-				image_id = image_group(GROUP_BUILDING_SHIPYARD) + graphicOffset;
-				map_water_add_building(i, b->x, b->y, 2, image_id);
-				break;
-			case BUILDING_WHARF:
-				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
-				image_id = image_group(GROUP_BUILDING_WHARF) + graphicOffset;
-				map_water_add_building(i, b->x, b->y, 2, image_id);
-				break;
-			case BUILDING_DOCK:
-				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
-				switch (graphicOffset) {
-					case 0: 
-                image_id = image_group(GROUP_BUILDING_DOCK_1); break;
-					case 1: 
-                image_id = image_group(GROUP_BUILDING_DOCK_2); break;
-					case 2: 
-                image_id = image_group(GROUP_BUILDING_DOCK_3); break;
-					default: 
-                image_id = image_group(GROUP_BUILDING_DOCK_4); break;
-				}
-				map_water_add_building(i, b->x, b->y, 3, image_id);
-				break;
 		}
 	}
 }

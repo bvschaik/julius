@@ -7,6 +7,7 @@
 #include "map/building_tiles.h"
 #include "map/desirability.h"
 #include "map/elevation.h"
+#include "map/figure.h"
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/image_context.h"
@@ -15,7 +16,6 @@
 #include "map/terrain.h"
 
 #include "Data/State.h"
-#include "../Terrain.h"
 
 #define FORBIDDEN_TERRAIN_MEADOW (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |\
             TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
@@ -24,6 +24,31 @@
             TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 
 static int aqueduct_include_construction = 0;
+
+static int is_clear(int x, int y, int size, int disallowed_terrain, int check_image)
+{
+    if (!map_grid_is_inside(x, y, size)) {
+        return 0;
+    }
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            int gridOffset = map_grid_offset(x + dx, y + dy);
+            if (map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR & disallowed_terrain)) {
+                return 0;
+            } else if (map_has_figure_at(gridOffset)) {
+                return 0;
+            } else if (check_image && map_image_at(gridOffset)) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain)
+{
+    return is_clear(x, y, size, disallowed_terrain, 0);
+}
 
 static void foreach_map_tile(void (*callback)(int x, int y, int grid_offset))
 {
@@ -706,11 +731,11 @@ static void set_empty_land_pass2(int x, int y, int grid_offset)
         } else {
             image_id = image_group(GROUP_TERRAIN_GRASS_1);
         }
-        if (Terrain_isClear(x, y, 4, TERRAIN_ALL, 1)) {
+        if (is_clear(x, y, 4, TERRAIN_ALL, 1)) {
             set_empty_land_image(x, y, 4, image_id + 42);
-        } else if (Terrain_isClear(x, y, 3, TERRAIN_ALL, 1)) {
+        } else if (is_clear(x, y, 3, TERRAIN_ALL, 1)) {
             set_empty_land_image(x, y, 3, image_id + 24 + 9 * (map_random_get(grid_offset) & 1));
-        } else if (Terrain_isClear(x, y, 2, TERRAIN_ALL, 1)) {
+        } else if (is_clear(x, y, 2, TERRAIN_ALL, 1)) {
             set_empty_land_image(x, y, 2, image_id + 8 + 4 * (map_random_get(grid_offset) & 3));
         } else {
             set_empty_land_image(x, y, 1, image_id + (map_random_get(grid_offset) & 7));
