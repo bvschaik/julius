@@ -9,7 +9,6 @@ void Building_clearList();
 
 void Building_GameTick_updateState();
 
-int Building_collapseFirstOfType(int buildingType);
 void Building_collapseLastPlaced();
 void Building_collapseOnFire(int buildingId, int hasPlague);
 void Building_collapseLinked(int buildingId, int onFire);

@@ -4,7 +4,6 @@
 #include "Advisors.h"
 #include "MessageDialog.h"
 
-#include "../Building.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 

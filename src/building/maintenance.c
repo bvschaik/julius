@@ -1,6 +1,7 @@
 #include "maintenance.h"
 
 #include "building/building.h"
+#include "building/destruction.h"
 #include "building/list.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -129,7 +130,7 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
     return min_free_building_id;
 }
 
-static void collapse_building(int building_id, building *b)
+static void collapse_building(building *b)
 {
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
     if (!tutorial_handle_collapse()) {
@@ -137,21 +138,18 @@ static void collapse_building(int building_id, building *b)
     }
     
     game_undo_disable();
-    b->state = BuildingState_Rubble;
-    map_building_tiles_set_rubble(building_id, b->x, b->y, b->size);
-    figure_create_explosion_cloud(b->x, b->y, b->size);
-    Building_collapseLinked(building_id, 0);
+    building_destroy_collapse(b);
 }
 
-static void fire_building(int building_id, building *b)
+static void fire_building(building *b)
 {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
     if (!tutorial_handle_fire()) {
         city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->gridOffset);
     }
     
-    Building_collapseOnFire(building_id, 0);
-    Building_collapseLinked(building_id, 1);
+    Building_collapseOnFire(b->id, 0);
+    Building_collapseLinked(b->id, 1);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
@@ -181,7 +179,7 @@ void building_maintenance_check_fire_collapse()
             b->damageRisk = 0;
         }
         if (b->damageRisk > 200) {
-            collapse_building(i, b);
+            collapse_building(b);
             recalculate_terrain = 1;
             continue;
         }
@@ -208,7 +206,7 @@ void building_maintenance_check_fire_collapse()
             }
         }
         if (b->fireRisk > 100) {
-            fire_building(i, b);
+            fire_building(b);
             recalculate_terrain = 1;
         }
     }

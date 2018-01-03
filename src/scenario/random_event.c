@@ -1,6 +1,6 @@
 #include "random_event.h"
 
-#include "building/type.h"
+#include "building/destruction.h"
 #include "city/health.h"
 #include "city/message.h"
 #include "core/random.h"
@@ -99,7 +99,7 @@ static void contaminate_water()
 static void destroy_iron_mine()
 {
     if (scenario.random_events.iron_mine_collapse) {
-        int grid_offset = Building_collapseFirstOfType(BUILDING_IRON_MINE);
+        int grid_offset = building_destroy_first_of_type(BUILDING_IRON_MINE);
         if (grid_offset) {
             city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
         }
@@ -109,7 +109,7 @@ static void destroy_iron_mine()
 static void destroy_clay_pit()
 {
     if (scenario.random_events.clay_pit_flooded) {
-        int grid_offset = Building_collapseFirstOfType(BUILDING_CLAY_PIT);
+        int grid_offset = building_destroy_first_of_type(BUILDING_CLAY_PIT);
         if (grid_offset) {
             city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, grid_offset);
         }

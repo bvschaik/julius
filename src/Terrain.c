@@ -1,7 +1,5 @@
 #include "Terrain.h"
 
-#include "Building.h"
-
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 

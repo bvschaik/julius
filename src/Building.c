@@ -5,6 +5,7 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/destruction.h"
 #include "building/storage.h"
 #include "city/message.h"
 #include "city/population.h"
@@ -50,46 +51,6 @@ void Building_clearList()
 	Data_Buildings_Extra.createdSequence = 0;
 }
 
-static void Building_deleteData(building *b)
-{
-	if (b->storage_id) {
-		building_storage_delete(b->storage_id);
-	}
-	if (b->type == BUILDING_SENATE_UPGRADED && b->gridOffset == Data_CityInfo.buildingSenateGridOffset) {
-		Data_CityInfo.buildingSenateGridOffset = 0;
-		Data_CityInfo.buildingSenateX = 0;
-		Data_CityInfo.buildingSenateY = 0;
-		Data_CityInfo.buildingSenatePlaced = 0;
-	}
-	if (b->type == BUILDING_DOCK) {
-		--Data_CityInfo.numWorkingDocks;
-	}
-	if (b->type == BUILDING_BARRACKS && b->gridOffset == Data_CityInfo.buildingBarracksGridOffset) {
-		Data_CityInfo.buildingBarracksGridOffset = 0;
-		Data_CityInfo.buildingBarracksX = 0;
-		Data_CityInfo.buildingBarracksY = 0;
-		Data_CityInfo.buildingBarracksPlaced = 0;
-	}
-	if (b->type == BUILDING_DISTRIBUTION_CENTER_UNUSED && b->gridOffset == Data_CityInfo.buildingDistributionCenterGridOffset) {
-		Data_CityInfo.buildingDistributionCenterGridOffset = 0;
-		Data_CityInfo.buildingDistributionCenterX = 0;
-		Data_CityInfo.buildingDistributionCenterY = 0;
-		Data_CityInfo.buildingDistributionCenterPlaced = 0;
-	}
-	if (b->type == BUILDING_FORT) {
-		formation_legion_delete_for_fort(b);
-	}
-	if (b->type == BUILDING_HIPPODROME) {
-		Data_CityInfo.buildingHippodromePlaced = 0;
-	}
-}
-
-static void Building_delete(building *b)
-{
-    Building_deleteData(b);
-    building_delete(b);
-}
-
 void Building_GameTick_updateState()
 {
 	int landRecalc = 0;
@@ -106,14 +67,14 @@ void Building_GameTick_updateState()
 				}
 				map_building_tiles_remove(i, b->x, b->y);
 				landRecalc = 1;
-				Building_delete(b);
+				building_delete(b);
 			} else if (b->state == BuildingState_Rubble) {
 				if (b->houseSize) {
 					city_population_remove_home_removed(b->housePopulation);
 				}
-				Building_delete(b);
+				building_delete(b);
 			} else if (b->state == BuildingState_DeletedByGame) {
-				Building_delete(b);
+				building_delete(b);
 			}
 		}
 	}
@@ -140,7 +101,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	b->houseSize = 0;
 	b->outputResourceId = 0;
 	b->distanceFromEntry = 0;
-	Building_deleteData(b);
+	building_clear_related_data(b);
 
 	int watersideBuilding = 0;
 	if (b->type == BUILDING_DOCK || b->type == BUILDING_WHARF || b->type == BUILDING_SHIPYARD) {
@@ -248,30 +209,9 @@ void Building_collapseLastPlaced()
         building *b = building_get(buildingId);
 		city_message_post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, b->gridOffset);
 		game_undo_disable();
-		b->state = BuildingState_Rubble;
-		map_building_tiles_set_rubble(buildingId, b->x, b->y, b->size);
-		figure_create_explosion_cloud(b->x, b->y, b->size);
-		Building_collapseLinked(buildingId, 0);
+		building_destroy_collapse(b);
 		map_routing_update_land();
 	}
-}
-
-int Building_collapseFirstOfType(int buildingType)
-{
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-		if (BuildingIsInUse(b) && b->type == buildingType) {
-			int gridOffset = b->gridOffset;
-			game_undo_disable();
-			b->state = BuildingState_Rubble;
-			
-			map_building_tiles_set_rubble(i, b->x, b->y, b->size);
-			sound_effect_play(SOUND_EFFECT_EXPLOSION);
-			map_routing_update_land();
-			return gridOffset;
-		}
-	}
-	return 0;
 }
 
 void Building_increaseDamageByEnemy(int gridOffset, int maxDamage)
@@ -287,7 +227,6 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 	int buildingId = map_building_at(gridOffset);
 	if (buildingId > 0) {
 		building *b = building_get(buildingId);
-		map_building_tiles_set_rubble(buildingId, b->x, b->y, b->size);
 		if (BuildingIsInUse(b)) {
 			switch (b->type) {
 				case BUILDING_HOUSE_SMALL_TENT:
@@ -307,9 +246,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 			if (Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear >= 12) {
 				Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 12;
 			}
-			b->state = BuildingState_Rubble;
-			figure_create_explosion_cloud(b->x, b->y, b->size);
-			Building_collapseLinked(buildingId, 0);
+			building_destroy_collapse(b);
 		}
 	} else {
 		if (map_terrain_is(gridOffset, TERRAIN_WALL)) {

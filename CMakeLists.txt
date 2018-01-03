@@ -46,6 +46,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/construction_clear.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_warning.c
     ${PROJECT_SOURCE_DIR}/src/building/count.c
+    ${PROJECT_SOURCE_DIR}/src/building/destruction.c
     ${PROJECT_SOURCE_DIR}/src/building/dock.c
     ${PROJECT_SOURCE_DIR}/src/building/figure.c
     ${PROJECT_SOURCE_DIR}/src/building/government.c

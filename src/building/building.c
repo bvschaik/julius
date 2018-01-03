@@ -1,7 +1,9 @@
 #include "building.h"
 
 #include "building/properties.h"
+#include "building/storage.h"
 #include "city/warning.h"
+#include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "game/undo.h"
 #include "map/grid.h"
@@ -153,9 +155,44 @@ building *building_create(building_type type, int x, int y)
 
 void building_delete(building *b)
 {
+    building_clear_related_data(b);
     int id = b->id;
     memset(b, 0, sizeof(building));
     b->id = id;
+}
+
+void building_clear_related_data(building *b)
+{
+    if (b->storage_id) {
+        building_storage_delete(b->storage_id);
+    }
+    if (b->type == BUILDING_SENATE_UPGRADED && b->gridOffset == Data_CityInfo.buildingSenateGridOffset) {
+        Data_CityInfo.buildingSenateGridOffset = 0;
+        Data_CityInfo.buildingSenateX = 0;
+        Data_CityInfo.buildingSenateY = 0;
+        Data_CityInfo.buildingSenatePlaced = 0;
+    }
+    if (b->type == BUILDING_DOCK) {
+        --Data_CityInfo.numWorkingDocks;
+    }
+    if (b->type == BUILDING_BARRACKS && b->gridOffset == Data_CityInfo.buildingBarracksGridOffset) {
+        Data_CityInfo.buildingBarracksGridOffset = 0;
+        Data_CityInfo.buildingBarracksX = 0;
+        Data_CityInfo.buildingBarracksY = 0;
+        Data_CityInfo.buildingBarracksPlaced = 0;
+    }
+    if (b->type == BUILDING_DISTRIBUTION_CENTER_UNUSED && b->gridOffset == Data_CityInfo.buildingDistributionCenterGridOffset) {
+        Data_CityInfo.buildingDistributionCenterGridOffset = 0;
+        Data_CityInfo.buildingDistributionCenterX = 0;
+        Data_CityInfo.buildingDistributionCenterY = 0;
+        Data_CityInfo.buildingDistributionCenterPlaced = 0;
+    }
+    if (b->type == BUILDING_FORT) {
+        formation_legion_delete_for_fort(b);
+    }
+    if (b->type == BUILDING_HIPPODROME) {
+        Data_CityInfo.buildingHippodromePlaced = 0;
+    }
 }
 
 void building_clear_all()

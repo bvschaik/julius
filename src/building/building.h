@@ -190,6 +190,8 @@ building *building_create(building_type type, int x, int y);
 
 void building_delete(building *b);
 
+void building_clear_related_data(building *b);
+
 void building_clear_all();
 
 void building_save_state(buffer *buf);
