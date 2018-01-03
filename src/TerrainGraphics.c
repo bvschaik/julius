@@ -39,8 +39,6 @@
     }}
 
 static void TerrainGraphics_setTileRubble(int x, int y);
-static void TerrainGraphics_updateTileMeadow(int x, int y);
-static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int graphicId);
 
 static void setTileAqueduct(int gridOffset, int waterOffset, int includeConstruction)
 {
@@ -197,15 +195,6 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 	});
 }
 
-void TerrainGraphics_updateAllWater()
-{
-	FOREACH_ALL({
-		if (map_terrain_is(gridOffset, TERRAIN_WATER) && !map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-			TerrainGraphics_setTileWater(x, y);
-		}
-	});
-}
-
 void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax, int includeConstruction)
 {
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
@@ -218,67 +207,6 @@ void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax
 				waterOffset = 15;
 			}
 			setTileAqueduct(gridOffset, waterOffset, includeConstruction);
-		}
-	});
-}
-
-void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMax)
-{
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
-	FOREACH_REGION({
-		if (!map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
-			map_image_set(gridOffset, 0);
-			map_property_set_multi_tile_size(gridOffset, 1);
-			map_property_mark_draw_tile(gridOffset);
-		}
-	});
-	FOREACH_REGION({
-		if (!map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR) &&
-			!map_image_at(gridOffset) &&
-			!(map_random_get(gridOffset) & 0xf0)) {
-			int graphicId;
-			if (map_property_is_alternate_terrain(gridOffset)) {
-				graphicId = image_group(GROUP_TERRAIN_GRASS_2);
-			} else {
-				graphicId = image_group(GROUP_TERRAIN_GRASS_1);
-			}
-			TerrainGraphics_updateAreaEmptyLand(xx, yy, 1,
-				graphicId + (map_random_get(gridOffset) & 7));
-		}
-	});
-	FOREACH_REGION({
-		if (!map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR) &&
-			!map_image_at(gridOffset)) {
-			int graphicId;
-			if (map_property_is_alternate_terrain(gridOffset)) {
-				graphicId = image_group(GROUP_TERRAIN_GRASS_2);
-			} else {
-				graphicId = image_group(GROUP_TERRAIN_GRASS_1);
-			}
-			if (Terrain_isClear(xx, yy, 4, TERRAIN_ALL, 1)) {
-				TerrainGraphics_updateAreaEmptyLand(xx, yy, 4, graphicId + 42);
-			} else if (Terrain_isClear(xx, yy, 3, TERRAIN_ALL, 1)) {
-				TerrainGraphics_updateAreaEmptyLand(xx, yy, 3,
-					graphicId + 24 + 9 * (map_random_get(gridOffset) & 1));
-			} else if (Terrain_isClear(xx, yy, 2, TERRAIN_ALL, 1)) {
-				TerrainGraphics_updateAreaEmptyLand(xx, yy, 2,
-					graphicId + 8 + 4 * (map_random_get(gridOffset) & 3));
-			} else {
-				TerrainGraphics_updateAreaEmptyLand(xx, yy, 1,
-					graphicId + (map_random_get(gridOffset) & 7));
-			}
-		}
-	});
-}
-
-void TerrainGraphics_updateRegionMeadow(int xMin, int yMin, int xMax, int yMax)
-{
-	int forbiddenTerrain = TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |
-            TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN;
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
-	FOREACH_REGION({
-		if (map_terrain_is(gridOffset, TERRAIN_MEADOW) && !map_terrain_is(gridOffset, forbiddenTerrain)) {
-			TerrainGraphics_updateTileMeadow(xx, yy);
 		}
 	});
 }
@@ -301,43 +229,6 @@ void TerrainGraphics_updateRegionRubble(int xMin, int yMin, int xMax, int yMax)
 	FOREACH_REGION({
 		if (map_terrain_is(gridOffset, TERRAIN_RUBBLE) && !map_terrain_is(gridOffset, forbiddenTerrain)) {
 			TerrainGraphics_setTileRubble(xx, yy);
-		}
-	});
-}
-
-void TerrainGraphics_setTileWater(int x, int y)
-{
-	map_terrain_add(map_grid_offset(x, y), TERRAIN_WATER);
-	int xMin = x - 1;
-	int xMax = x + 1;
-	int yMin = y - 1;
-	int yMax = y + 1;
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
-	FOREACH_REGION({
-		if ((map_terrain_get(gridOffset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
-			const terrain_image *image = map_image_context_get_shore(gridOffset);
-			int graphicId = image_group(GROUP_TERRAIN_WATER) + image->group_offset + image->item_offset;
-			if (map_terrain_exists_tile_in_radius_with_type(xx, yy, 1, 2, TERRAIN_BUILDING)) {
-				// fortified shore
-				int base = image_group(GROUP_TERRAIN_WATER_SHORE);
-				switch (image->group_offset) {
-					case 8: graphicId = base + 10; break;
-					case 12: graphicId = base + 11; break;
-					case 16: graphicId = base + 9; break;
-					case 20: graphicId = base + 8; break;
-					case 24: graphicId = base + 18; break;
-					case 28: graphicId = base + 16; break;
-					case 32: graphicId = base + 19; break;
-					case 36: graphicId = base + 17; break;
-					case 50: graphicId = base + 12; break;
-					case 51: graphicId = base + 14; break;
-					case 52: graphicId = base + 13; break;
-					case 53: graphicId = base + 15; break;
-				}
-			}
-			map_image_set(gridOffset, graphicId);
-			map_property_set_multi_tile_size(gridOffset, 1);
-			map_property_mark_draw_tile(gridOffset);
 		}
 	});
 }
@@ -406,52 +297,4 @@ static void TerrainGraphics_setTileRubble(int x, int y)
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
 	map_aqueduct_set(gridOffset, 0);
-}
-
-static void TerrainGraphics_updateTileMeadow(int x, int y)
-{
-	int forbiddenTerrain = TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |
-            TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN;
-
-	int xMin = x - 1;
-	int yMin = y - 1;
-	int xMax = x + 1;
-	int yMax = y + 1;
-	int graphicId = image_group(GROUP_TERRAIN_MEADOW);
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
-	FOREACH_REGION({
-		if (map_terrain_is(gridOffset, TERRAIN_MEADOW) && !map_terrain_is(gridOffset, forbiddenTerrain)) {
-			int random = map_random_get(gridOffset) & 3;
-			if (map_terrain_has_only_meadow_in_ring(xx, yy, 2)) {
-				map_image_set(gridOffset, graphicId + random + 8);
-			} else if (map_terrain_has_only_meadow_in_ring(xx, yy, 1)) {
-				map_image_set(gridOffset, graphicId + random + 4);
-			} else {
-				map_image_set(gridOffset, graphicId + random);
-			}
-			map_property_set_multi_tile_size(gridOffset, 1);
-			map_property_mark_draw_tile(gridOffset);
-			map_aqueduct_set(gridOffset, 0);
-		}
-	});
-}
-
-static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int graphicId)
-{
-	if (!map_grid_is_inside(x, y, size)) {
-		return;
-	}
-	int index = 0;
-	for (int dy = 0; dy < size; dy++) {
-		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = map_grid_offset(x + dx, y + dy);
-			map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
-			map_building_set(gridOffset, 0);
-			map_property_clear_constructing(gridOffset);
-			map_property_set_multi_tile_size(gridOffset, 1);
-			map_property_mark_draw_tile(gridOffset);
-			map_image_set(gridOffset, graphicId + index);
-			index++;
-		}
-	}
 }

@@ -161,7 +161,7 @@ static void advanceMonth()
 	city_message_decrease_delays();
 
 	map_tiles_update_all_roads();
-	TerrainGraphics_updateAllWater();
+	map_tiles_update_all_water();
 	map_routing_update_land_citizen();
 	city_message_sort_and_compact();
 

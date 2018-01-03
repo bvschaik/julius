@@ -576,10 +576,8 @@ void Building_GameTick_checkAccessToRome()
 			map_tiles_update_all_walls();
 			TerrainGraphics_updateRegionAqueduct(0, 0,
 				Data_State.map.width - 1, Data_State.map.height - 1, 0);
-			TerrainGraphics_updateRegionEmptyLand(0, 0,
-				Data_State.map.width - 1, Data_State.map.height - 1);
-			TerrainGraphics_updateRegionMeadow(0, 0,
-				Data_State.map.width - 1, Data_State.map.height - 1);
+			map_tiles_update_all_empty_land();
+			map_tiles_update_all_meadow();
 			
 			map_routing_update_land();
 			map_routing_update_walls();

@@ -13,6 +13,7 @@
 #include "map/random.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
+#include "map/tiles.h"
 
 #include "Data/State.h"
 #include "../TerrainGraphics.h"
@@ -188,7 +189,7 @@ void map_building_tiles_remove(int building_id, int x, int y)
             map_sprite_clear_tile(gridOffset);
             if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
                 map_terrain_set(gridOffset, TERRAIN_WATER); // clear other flags
-                TerrainGraphics_setTileWater(x + dx, y + dy);
+                map_tiles_set_water(x + dx, y + dy);
             } else {
                 map_image_set(gridOffset,
                     image_group(GROUP_TERRAIN_UGLY_GRASS) +
@@ -197,8 +198,8 @@ void map_building_tiles_remove(int building_id, int x, int y)
             }
         }
     }
-    TerrainGraphics_updateRegionEmptyLand(x, y, x + size, y + size);
-    TerrainGraphics_updateRegionMeadow(x, y, x + size, y + size);
+    map_tiles_update_region_empty_land(x, y, x + size, y + size);
+    map_tiles_update_region_meadow(x, y, x + size, y + size);
     TerrainGraphics_updateRegionRubble(x, y, x + size, y + size);
 }
 
@@ -226,7 +227,7 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size)
             map_property_set_multi_tile_xy(grid_offset, 0, 0, 1);
             if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_terrain_set(grid_offset, TERRAIN_WATER); // clear other flags
-                TerrainGraphics_setTileWater(x + dx, y + dy);
+                map_tiles_set_water(x + dx, y + dy);
             } else {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 map_terrain_add(grid_offset, TERRAIN_RUBBLE);
