@@ -92,7 +92,7 @@ static void advanceTick()
 		case 6: map_natives_check_land(); break;
 		case 7: map_road_network_update(); break;
 		case 8: building_granaries_calculate_stocks(); break;
-		case 10: Building_updateHighestIds(); break;
+		case 10: building_update_highest_id(); break;
 		case 12: Building_decayHousesCovered(); break;
 		case 16: building_warehouses_calculate_stocks(); break;
 		case 17: city_resource_calculate_food_stocks_and_supply_wheat(); break;

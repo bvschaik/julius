@@ -156,7 +156,8 @@ void building_maintenance_check_fire_collapse()
     scenario_climate climate = scenario_property_climate();
     int recalculate_terrain = 0;
     int random_global = random_byte() & 7;
-    for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
+    int max_id = building_get_highest_id();
+    for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->fireProof) {
             continue;

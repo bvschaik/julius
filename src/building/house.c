@@ -503,7 +503,6 @@ void building_house_check_for_corruption(building *house)
     int calc_grid_offset = map_grid_offset(house->x, house->y);
     house->data.house.noSpaceToExpand = 0;
     if (house->gridOffset != calc_grid_offset || map_building_at(house->gridOffset) != house->id) {
-        ++Data_Buildings_Extra.incorrectHousePositions;
         for (int y = 0; y < Data_State.map.height; y++) {
             for (int x = 0; x < Data_State.map.width; x++) {
                 int gridOffset = map_grid_offset(x, y);
@@ -511,11 +510,12 @@ void building_house_check_for_corruption(building *house)
                     house->gridOffset = gridOffset;
                     house->x = map_grid_offset_to_x(gridOffset);
                     house->y = map_grid_offset_to_y(gridOffset);
+                    building_totals_add_corrupted_house(0);
                     return;
                 }
             }
         }
-        ++Data_Buildings_Extra.unfixableHousePositions;
+        building_totals_add_corrupted_house(1);
         house->state = BUILDING_STATE_RUBBLE;
     }
 }

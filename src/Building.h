@@ -3,10 +3,6 @@
 
 #include "building/building.h"
 
-void Building_updateHighestIds();
-
-void Building_clearList();
-
 void Building_GameTick_updateState();
 
 void Building_setDesirability();

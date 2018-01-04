@@ -105,8 +105,7 @@ typedef struct {
     buffer *buildings;
     buffer *Data_Settings_Map_orientation;
     buffer *game_time;
-    buffer *Data_Buildings_Extra_highestBuildingIdEver;
-    buffer *Data_Debug_maxConnectsEver;
+    buffer *building_extra_highest_id_ever;
     buffer *random_iv;
     buffer *Data_Settings_Map_camera_x;
     buffer *Data_Settings_Map_camera_y;
@@ -135,7 +134,7 @@ typedef struct {
     buffer *invasion_warnings;
     buffer *scenario_is_custom;
     buffer *city_sounds;
-    buffer *Data_Buildings_Extra_highestBuildingIdInUse;
+    buffer *building_extra_highest_id;
     buffer *figure_traders;
     buffer *building_list_burning;
     buffer *building_list_small;
@@ -160,8 +159,7 @@ typedef struct {
     buffer *Data_CityInfo_Extra_exitPointFlag_x;
     buffer *Data_CityInfo_Extra_exitPointFlag_y;
     buffer *last_invasion_id;
-    buffer *Data_Debug_incorrectHousePositions;
-    buffer *Data_Debug_unfixableHousePositions;
+    buffer *building_extra_corrupt_houses;
     buffer *scenario_name;
     buffer *bookmarks;
     buffer *tutorial_part3;
@@ -254,8 +252,7 @@ static void init_savegame_data()
     state->buildings = create_savegame_piece(256000, 1);
     state->Data_Settings_Map_orientation = create_savegame_piece(4, 0);
     state->game_time = create_savegame_piece(20, 0);
-    state->Data_Buildings_Extra_highestBuildingIdEver = create_savegame_piece(4, 0);
-    state->Data_Debug_maxConnectsEver = create_savegame_piece(4, 0);
+    state->building_extra_highest_id_ever = create_savegame_piece(8, 0);
     state->random_iv = create_savegame_piece(8, 0);
     state->Data_Settings_Map_camera_x = create_savegame_piece(4, 0);
     state->Data_Settings_Map_camera_y = create_savegame_piece(4, 0);
@@ -284,7 +281,7 @@ static void init_savegame_data()
     state->invasion_warnings = create_savegame_piece(3232, 1);
     state->scenario_is_custom = create_savegame_piece(4, 0);
     state->city_sounds = create_savegame_piece(8960, 0);
-    state->Data_Buildings_Extra_highestBuildingIdInUse = create_savegame_piece(4, 0);
+    state->building_extra_highest_id = create_savegame_piece(4, 0);
     state->figure_traders = create_savegame_piece(4804, 0);
     state->building_list_burning = create_savegame_piece(1000, 1);
     state->building_list_small = create_savegame_piece(1000, 1);
@@ -309,8 +306,7 @@ static void init_savegame_data()
     state->Data_CityInfo_Extra_exitPointFlag_x = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_exitPointFlag_y = create_savegame_piece(4, 0);
     state->last_invasion_id = create_savegame_piece(2, 0);
-    state->Data_Debug_incorrectHousePositions = create_savegame_piece(4, 0);
-    state->Data_Debug_unfixableHousePositions = create_savegame_piece(4, 0);
+    state->building_extra_corrupt_houses = create_savegame_piece(8, 0);
     state->scenario_name = create_savegame_piece(65, 0);
     state->bookmarks = create_savegame_piece(32, 0);
     state->tutorial_part3 = create_savegame_piece(4, 0);
@@ -386,15 +382,14 @@ static void savegame_load_from_state(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
     read_all_from_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
 
-    building_load_state(state->buildings);
+    building_load_state(state->buildings,
+                        state->building_extra_highest_id,
+                        state->building_extra_highest_id_ever,
+                        state->building_extra_corrupt_houses);
 
     read_all_from_buffer(state->Data_Settings_Map_orientation, &Data_State.map.orientation);
     
     game_time_load_state(state->game_time);
-    
-    read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
-    read_all_from_buffer(state->Data_Debug_maxConnectsEver, &Data_Buildings_Extra.maxConnectsEver);
-    
     random_load_state(state->random_iv);
 
     read_all_from_buffer(state->Data_Settings_Map_camera_x, &Data_State.map.camera.x);
@@ -425,9 +420,6 @@ static void savegame_load_from_state(savegame_state *state)
                             state->message_counts, state->message_delays,
                             state->population_messages);
     sound_city_load_state(state->city_sounds);
-
-    read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdInUse, &Data_Buildings_Extra.highestBuildingIdInUse);
-    
     traders_load_state(state->figure_traders);
     
     building_list_load_state(state->building_list_small, state->building_list_large,
@@ -451,10 +443,6 @@ static void savegame_load_from_state(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
 
     scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
-
-    read_all_from_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
-    read_all_from_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
-
     map_bookmark_load_state(state->bookmarks);
 
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
@@ -502,15 +490,14 @@ static void savegame_save_to_state(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
     write_all_to_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
 
-    building_save_state(state->buildings);
+    building_save_state(state->buildings,
+                        state->building_extra_highest_id,
+                        state->building_extra_highest_id_ever,
+                        state->building_extra_corrupt_houses);
 
     write_all_to_buffer(state->Data_Settings_Map_orientation, &Data_State.map.orientation);
     
     game_time_save_state(state->game_time);
-
-    write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
-    write_all_to_buffer(state->Data_Debug_maxConnectsEver, &Data_Buildings_Extra.maxConnectsEver);
-    
     random_save_state(state->random_iv);
 
     write_all_to_buffer(state->Data_Settings_Map_camera_x, &Data_State.map.camera.x);
@@ -541,9 +528,6 @@ static void savegame_save_to_state(savegame_state *state)
                             state->message_counts, state->message_delays,
                             state->population_messages);
     sound_city_save_state(state->city_sounds);
-
-    write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdInUse, &Data_Buildings_Extra.highestBuildingIdInUse);
-
     traders_save_state(state->figure_traders);
 
     building_list_save_state(state->building_list_small, state->building_list_large,
@@ -567,10 +551,6 @@ static void savegame_save_to_state(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
 
     scenario_invasion_save_state(state->last_invasion_id, state->invasion_warnings);
-
-    write_all_to_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
-    write_all_to_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
-
     map_bookmark_save_state(state->bookmarks);
 
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);

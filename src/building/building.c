@@ -16,6 +16,13 @@
 
 static building Data_Buildings[MAX_BUILDINGS];
 
+static struct {
+    int highest_id_in_use;
+    int highest_id_ever;
+    int incorrect_houses;
+    int unfixable_houses;
+} extra = {0, 0, 0, 0};
+
 building *building_get(int id)
 {
     return &Data_Buildings[id];
@@ -201,11 +208,42 @@ void building_clear_all()
         memset(&Data_Buildings[i], 0, sizeof(building));
         Data_Buildings[i].id = i;
     }
+    extra.highest_id_in_use = 0;
+    extra.highest_id_ever = 0;
+    Data_Buildings_Extra.createdSequence = 0;
+    extra.incorrect_houses = 0;
+    extra.unfixable_houses = 0;
 }
 
 int building_is_house(building_type type)
 {
     return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
+}
+
+int building_get_highest_id()
+{
+    return extra.highest_id_in_use;
+}
+
+void building_update_highest_id()
+{
+    extra.highest_id_in_use = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        if (Data_Buildings[i].state != BUILDING_STATE_UNUSED) {
+            extra.highest_id_in_use = i;
+        }
+    }
+    if (extra.highest_id_in_use > extra.highest_id_ever) {
+        extra.highest_id_ever = extra.highest_id_in_use;
+    }
+}
+
+void building_totals_add_corrupted_house(int unfixable)
+{
+    extra.incorrect_houses++;
+    if (unfixable) {
+        extra.unfixable_houses++;
+    }
 }
 
 static void building_save(building *b, buffer *buf)
@@ -218,17 +256,31 @@ static void building_load(building *b, buffer *buf)
     buffer_read_raw(buf, b, 128);
 }
 
-void building_save_state(buffer *buf)
+void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
+                         buffer *corrupt_houses)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         building_save(&Data_Buildings[i], buf);
     }
+    buffer_write_i32(highest_id, extra.highest_id_in_use);
+    buffer_write_i32(highest_id_ever, extra.highest_id_ever);
+    buffer_skip(highest_id_ever, 4);
+    
+    buffer_write_i32(corrupt_houses, extra.incorrect_houses);
+    buffer_write_i32(corrupt_houses, extra.unfixable_houses);
 }
 
-void building_load_state(buffer *buf)
+void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
+                         buffer *corrupt_houses)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         building_load(&Data_Buildings[i], buf);
         Data_Buildings[i].id = i;
     }
+    extra.highest_id_in_use = buffer_read_i32(highest_id);
+    extra.highest_id_ever = buffer_read_i32(highest_id_ever);
+    buffer_skip(highest_id_ever, 4);
+
+    extra.incorrect_houses = buffer_read_i32(corrupt_houses);
+    extra.unfixable_houses = buffer_read_i32(corrupt_houses);
 }

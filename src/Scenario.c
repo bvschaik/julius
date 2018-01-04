@@ -142,7 +142,7 @@ static void initCustomScenario(const char *scenarioName)
 	sound_city_init();
 	sound_music_reset();
 	building_menu_enable_all();
-	Building_clearList();
+	building_clear_all();
 	building_storage_clear_all();
 	figure_init_scenario();
 	enemy_armies_clear();
@@ -151,9 +151,6 @@ static void initCustomScenario(const char *scenarioName)
 	figure_route_clear_all();
 
     game_time_init(2098);
-    Data_Buildings_Extra.incorrectHousePositions = 0;
-    Data_Buildings_Extra.unfixableHousePositions = 0;
-    Data_Buildings_Extra.highestBuildingIdEver = 0;
 
 	loadScenario(scenarioName);
 

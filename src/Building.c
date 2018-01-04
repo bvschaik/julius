@@ -31,26 +31,6 @@
 #include "map/water.h"
 #include "sound/effect.h"
 
-void Building_updateHighestIds()
-{
-	Data_Buildings_Extra.highestBuildingIdInUse = 0;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (building_get(i)->state != BUILDING_STATE_UNUSED) {
-			Data_Buildings_Extra.highestBuildingIdInUse = i;
-		}
-	}
-	if (Data_Buildings_Extra.highestBuildingIdInUse > Data_Buildings_Extra.highestBuildingIdEver) {
-		Data_Buildings_Extra.highestBuildingIdEver = Data_Buildings_Extra.highestBuildingIdInUse;
-	}
-}
-
-void Building_clearList()
-{
-    building_clear_all();
-	Data_Buildings_Extra.highestBuildingIdEver = 0;
-	Data_Buildings_Extra.createdSequence = 0;
-}
-
 void Building_GameTick_updateState()
 {
 	int landRecalc = 0;
