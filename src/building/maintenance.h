@@ -6,4 +6,6 @@ void building_maintenance_update_burning_ruins();
 void building_maintenance_check_fire_collapse();
 int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance);
 
+void building_maintenance_check_rome_access();
+
 #endif // BUILDING_MAINTENANCE_H

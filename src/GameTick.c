@@ -1,6 +1,5 @@
 #include "GameTick.h"
 
-#include "Building.h"
 #include "GameFile.h"
 #include "HouseEvolution.h"
 #include "UI/Sidebar.h"
@@ -93,13 +92,13 @@ static void advanceTick()
 		case 7: map_road_network_update(); break;
 		case 8: building_granaries_calculate_stocks(); break;
 		case 10: building_update_highest_id(); break;
-		case 12: Building_decayHousesCovered(); break;
+		case 12: house_service_decay_houses_covered(); break;
 		case 16: building_warehouses_calculate_stocks(); break;
 		case 17: city_resource_calculate_food_stocks_and_supply_wheat(); break;
 		case 18: building_calculate_workshop_stocks(); break;
 		case 19: building_dock_update_open_water_access(); break;
 		case 20: building_industry_update_production(); break;
-		case 21: Building_GameTick_checkAccessToRome(); break;
+		case 21: building_maintenance_check_rome_access(); break;
 		case 22: house_population_update_room(); break;
 		case 23: house_population_update_migration(); break;
 		case 24: house_population_evict_overcrowded(); break;
@@ -115,9 +114,9 @@ static void advanceTick()
 		case 35: house_service_decay_culture(); break;
 		case 36: house_service_calculate_culture_aggregates(); break;
 		case 37: map_desirability_update(); break;
-		case 38: Building_setDesirability(); break;
+		case 38: building_update_desirability(); break;
 		case 39: HouseEvolution_Tick_evolveAndConsumeResources(); break;
-		case 40: Building_GameTick_updateState(); break;
+		case 40: building_update_state(); break;
 		case 43: building_maintenance_update_burning_ruins(); break;
 		case 44: building_maintenance_check_fire_collapse(); break;
 		case 45: figure_generate_criminals(); break;

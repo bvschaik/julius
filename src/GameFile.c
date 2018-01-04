@@ -1,6 +1,5 @@
 #include "GameFile.h"
 
-#include "Building.h"
 #include "CityView.h"
 
 #include "Data/CityInfo.h"
@@ -8,6 +7,7 @@
 #include "UI/AllWindows.h" // TODO: try to eliminate this
 
 #include "building/granary.h"
+#include "building/maintenance.h"
 #include "building/menu.h"
 #include "building/storage.h"
 #include "city/message.h"
@@ -128,7 +128,7 @@ static void setupFromSavedGame()
 	map_orientation_update_buildings();
 	figure_route_clean();
 	map_road_network_update();
-	Building_GameTick_checkAccessToRome();
+	building_maintenance_check_rome_access();
 	building_granaries_calculate_stocks();
 	building_menu_update();
 	city_message_init_problem_areas();

@@ -1,6 +1,5 @@
 #include "Scenario.h"
 
-#include "Building.h"
 #include "CityView.h"
 #include "GameFile.h"
 #include "Terrain.h"

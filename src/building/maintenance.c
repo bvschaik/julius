@@ -4,8 +4,10 @@
 #include "building/destruction.h"
 #include "building/list.h"
 #include "city/message.h"
+#include "city/warning.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "figuretype/migrant.h"
 #include "figuretype/missile.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
@@ -13,11 +15,16 @@
 #include "map/building_tiles.h"
 #include "map/grid.h"
 #include "map/random.h"
+#include "map/road_access.h"
+#include "map/road_network.h"
+#include "map/routing.h"
 #include "map/routing_terrain.h"
+#include "map/tiles.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
 
 #include "Data/CityInfo.h"
+#include "../CityView.h"
 
 static int fire_spread_direction = 0;
 
@@ -209,5 +216,121 @@ void building_maintenance_check_fire_collapse()
 
     if (recalculate_terrain) {
         map_routing_update_land();
+    }
+}
+
+void building_maintenance_check_rome_access()
+{
+    map_routing_calculate_distances(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+    int problemGridOffset = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+        int xRoad, yRoad;
+        if (b->houseSize) {
+            if (!map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+                // no road: eject people
+                b->distanceFromEntry = 0;
+                b->houseUnreachableTicks++;
+                if (b->houseUnreachableTicks > 4) {
+                    if (b->housePopulation) {
+                        figure_create_homeless(b->x, b->y, b->housePopulation);
+                        b->housePopulation = 0;
+                        b->houseUnreachableTicks = 0;
+                    }
+                    b->state = BUILDING_STATE_UNDO;
+                }
+            } else if (map_routing_distance(map_grid_offset(xRoad, yRoad))) {
+                // reachable from rome
+                b->distanceFromEntry = map_routing_distance(map_grid_offset(xRoad, yRoad));
+                b->houseUnreachableTicks = 0;
+            } else if (map_closest_reachable_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+                b->distanceFromEntry = map_routing_distance(map_grid_offset(xRoad, yRoad));
+                b->houseUnreachableTicks = 0;
+            } else {
+                // no reachable road in radius
+                if (!b->houseUnreachableTicks) {
+                    problemGridOffset = b->gridOffset;
+                }
+                b->houseUnreachableTicks++;
+                if (b->houseUnreachableTicks > 8) {
+                    b->distanceFromEntry = 0;
+                    b->houseUnreachableTicks = 0;
+                    b->state = BUILDING_STATE_UNDO;
+                }
+            }
+        } else if (b->type == BUILDING_WAREHOUSE) {
+            if (!Data_CityInfo.buildingTradeCenterBuildingId) {
+                Data_CityInfo.buildingTradeCenterBuildingId = i;
+            }
+            b->distanceFromEntry = 0;
+            int roadGridOffset = map_road_to_largest_network(b->x, b->y, 3, &xRoad, &yRoad);
+            if (roadGridOffset >= 0) {
+                b->roadNetworkId = map_road_network_get(roadGridOffset);
+                b->distanceFromEntry = map_routing_distance(roadGridOffset);
+                b->roadAccessX = xRoad;
+                b->roadAccessY = yRoad;
+            }
+        } else if (b->type == BUILDING_WAREHOUSE_SPACE) {
+            b->distanceFromEntry = 0;
+            building *mainBuilding = building_main(b);
+            b->roadNetworkId = mainBuilding->roadNetworkId;
+            b->distanceFromEntry = mainBuilding->distanceFromEntry;
+            b->roadAccessX = mainBuilding->roadAccessX;
+            b->roadAccessY = mainBuilding->roadAccessY;
+        } else if (b->type == BUILDING_HIPPODROME) {
+            b->distanceFromEntry = 0;
+            int roadGridOffset = map_road_to_largest_network_hippodrome(b->x, b->y, &xRoad, &yRoad);
+            if (roadGridOffset >= 0) {
+                b->roadNetworkId = map_road_network_get(roadGridOffset);
+                b->distanceFromEntry = map_routing_distance(roadGridOffset);
+                b->roadAccessX = xRoad;
+                b->roadAccessY = yRoad;
+            }
+        } else { // other building
+            b->distanceFromEntry = 0;
+            int roadGridOffset = map_road_to_largest_network(b->x, b->y, b->size, &xRoad, &yRoad);
+            if (roadGridOffset >= 0) {
+                b->roadNetworkId = map_road_network_get(roadGridOffset);
+                b->distanceFromEntry = map_routing_distance(roadGridOffset);
+                b->roadAccessX = xRoad;
+                b->roadAccessY = yRoad;
+            }
+        }
+    }
+    if (!map_routing_distance(Data_CityInfo.exitPointGridOffset)) {
+        // no route through city
+        if (Data_CityInfo.population <= 0) {
+            return;
+        }
+        for (int i = 0; i < 15; i++) {
+            map_routing_delete_first_wall_or_aqueduct(
+                Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+            map_routing_delete_first_wall_or_aqueduct(
+                Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
+            map_routing_calculate_distances(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+
+            map_tiles_update_all_walls();
+            map_tiles_update_all_aqueducts(0);
+            map_tiles_update_all_empty_land();
+            map_tiles_update_all_meadow();
+            
+            map_routing_update_land();
+            map_routing_update_walls();
+            
+            if (map_routing_distance(Data_CityInfo.exitPointGridOffset)) {
+                city_message_post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
+                game_undo_disable();
+                return;
+            }
+        }
+        building_destroy_last_placed();
+    } else if (problemGridOffset) {
+        // parts of city disconnected
+        city_warning_show(WARNING_CITY_BOXED_IN);
+        city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH);
+        CityView_goToGridOffset(problemGridOffset);
     }
 }

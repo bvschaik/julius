@@ -2,13 +2,19 @@
 
 #include "building/properties.h"
 #include "building/storage.h"
+#include "city/population.h"
 #include "city/warning.h"
 #include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "game/undo.h"
+#include "map/building_tiles.h"
+#include "map/desirability.h"
+#include "map/elevation.h"
 #include "map/grid.h"
 #include "map/random.h"
+#include "map/routing_terrain.h"
 #include "map/terrain.h"
+#include "map/tiles.h"
 
 #include "Data/CityInfo.h"
 
@@ -161,7 +167,7 @@ building *building_create(building_type type, int x, int y)
     return b;
 }
 
-void building_delete(building *b)
+static void building_delete(building *b)
 {
     building_clear_related_data(b);
     int id = b->id;
@@ -203,17 +209,61 @@ void building_clear_related_data(building *b)
     }
 }
 
-void building_clear_all()
+void building_update_state()
 {
-    for (int i = 0; i < MAX_BUILDINGS; i++) {
-        memset(&Data_Buildings[i], 0, sizeof(building));
-        Data_Buildings[i].id = i;
+    int land_recalc = 0;
+    int wall_recalc = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = &Data_Buildings[i];
+        if (b->state == BUILDING_STATE_CREATED) {
+            b->state = BUILDING_STATE_IN_USE;
+        }
+        if (b->state != BUILDING_STATE_IN_USE || !b->houseSize) {
+            if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+                if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
+                    wall_recalc = 1;
+                }
+                map_building_tiles_remove(i, b->x, b->y);
+                land_recalc = 1;
+                building_delete(b);
+            } else if (b->state == BUILDING_STATE_RUBBLE) {
+                if (b->houseSize) {
+                    city_population_remove_home_removed(b->housePopulation);
+                }
+                building_delete(b);
+            } else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
+                building_delete(b);
+            }
+        }
     }
-    extra.highest_id_in_use = 0;
-    extra.highest_id_ever = 0;
-    extra.created_sequence = 0;
-    extra.incorrect_houses = 0;
-    extra.unfixable_houses = 0;
+    if (wall_recalc) {
+        map_tiles_update_all_walls();
+    }
+    if (land_recalc) {
+        map_routing_update_land();
+    }
+}
+
+void building_update_desirability()
+{
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = &Data_Buildings[i];
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+        b->desirability = map_desirability_get_max(b->x, b->y, b->size);
+        if (b->isAdjacentToWater) {
+            b->desirability += 10;
+        }
+        switch (map_elevation_at(b->gridOffset)) {
+            case 0: break;
+            case 1: b->desirability += 10; break;
+            case 2: b->desirability += 12; break;
+            case 3: b->desirability += 14; break;
+            case 4: b->desirability += 16; break;
+            default: b->desirability += 18; break;
+        }
+    }
 }
 
 int building_is_house(building_type type)
@@ -245,6 +295,19 @@ void building_totals_add_corrupted_house(int unfixable)
     if (unfixable) {
         extra.unfixable_houses++;
     }
+}
+
+void building_clear_all()
+{
+    for (int i = 0; i < MAX_BUILDINGS; i++) {
+        memset(&Data_Buildings[i], 0, sizeof(building));
+        Data_Buildings[i].id = i;
+    }
+    extra.highest_id_in_use = 0;
+    extra.highest_id_ever = 0;
+    extra.created_sequence = 0;
+    extra.incorrect_houses = 0;
+    extra.unfixable_houses = 0;
 }
 
 static void building_save(building *b, buffer *buf)

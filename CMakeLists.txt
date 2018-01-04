@@ -205,7 +205,6 @@ set(SOUND_FILES
 )
 add_executable(julius
 	${PLATFORM_FILES}
-	${PROJECT_SOURCE_DIR}/src/Building.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c
 	${PROJECT_SOURCE_DIR}/src/Game.c
 	${PROJECT_SOURCE_DIR}/src/GameFile.c

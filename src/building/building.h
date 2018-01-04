@@ -187,11 +187,11 @@ building *building_next(building *b);
 
 building *building_create(building_type type, int x, int y);
 
-void building_delete(building *b);
-
 void building_clear_related_data(building *b);
 
-void building_clear_all();
+void building_update_state();
+
+void building_update_desirability();
 
 int building_is_house(building_type type);
 
@@ -200,6 +200,8 @@ int building_get_highest_id();
 void building_update_highest_id();
 
 void building_totals_add_corrupted_house(int unfixable);
+
+void building_clear_all();
 
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
                          buffer *sequence, buffer *corrupt_houses);

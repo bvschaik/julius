@@ -50,6 +50,20 @@ void house_service_decay_tax_collector()
     }
 }
 
+void house_service_decay_houses_covered()
+{
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (b->state != BUILDING_STATE_UNUSED && b->type != BUILDING_TOWER) {
+            if (b->housesCovered <= 1) {
+                b->housesCovered = 0;
+            } else {
+                b->housesCovered--;
+            }
+        }
+    }
+}
+
 void house_service_calculate_culture_aggregates()
 {
     int baseEntertainment = city_culture_coverage_average_entertainment() / 5;
