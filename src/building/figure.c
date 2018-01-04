@@ -195,7 +195,7 @@ static void spawn_figure_tower(building *b)
         }
         has_figure_of_type(b, FIGURE_TOWER_SENTRY);
         if (b->figureId <= 0) {
-            Data_Buildings_Extra.barracksTowerSentryRequested = 2;
+            building_barracks_request_tower_sentry();
         }
     }
 }
@@ -1174,9 +1174,7 @@ static void update_native_crop_progress(building *b)
 void building_figure_generate()
 {
     int patrician_generated = 0;
-    if (Data_Buildings_Extra.barracksTowerSentryRequested > 0) {
-        Data_Buildings_Extra.barracksTowerSentryRequested--;
-    }
+    building_barracks_decay_tower_sentry_request();
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);

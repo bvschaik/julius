@@ -12,6 +12,7 @@
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
+#include "building/barracks.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
 #include "building/warehouse.h"
@@ -203,7 +204,7 @@ void UI_BuildingInfo_init()
 				break;
 			case BUILDING_BARRACKS:
 				context.barracksSoldiersRequested = formation_legion_recruits_needed();
-				context.barracksSoldiersRequested += Data_Buildings_Extra.barracksTowerSentryRequested;
+				context.barracksSoldiersRequested += building_barracks_has_tower_sentry_request();
 				break;
 			default:
 				if (b->houseSize) {

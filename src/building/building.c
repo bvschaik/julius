@@ -19,6 +19,7 @@ static building Data_Buildings[MAX_BUILDINGS];
 static struct {
     int highest_id_in_use;
     int highest_id_ever;
+    int created_sequence;
     int incorrect_houses;
     int unfixable_houses;
 } extra = {0, 0, 0, 0};
@@ -65,7 +66,7 @@ building *building_create(building_type type, int x, int y)
     b->__unknown_02 = Data_CityInfo.__unknown_00a5; // TODO ??
     b->type = type;
     b->size = props->size;
-    b->createdSequence = Data_Buildings_Extra.createdSequence++;
+    b->createdSequence = extra.created_sequence++;
     b->sentiment.houseHappiness = 50;
     b->distanceFromEntry = 0;
     
@@ -210,7 +211,7 @@ void building_clear_all()
     }
     extra.highest_id_in_use = 0;
     extra.highest_id_ever = 0;
-    Data_Buildings_Extra.createdSequence = 0;
+    extra.created_sequence = 0;
     extra.incorrect_houses = 0;
     extra.unfixable_houses = 0;
 }
@@ -257,7 +258,7 @@ static void building_load(building *b, buffer *buf)
 }
 
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *corrupt_houses)
+                         buffer *sequence, buffer *corrupt_houses)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         building_save(&Data_Buildings[i], buf);
@@ -265,13 +266,14 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     buffer_write_i32(highest_id, extra.highest_id_in_use);
     buffer_write_i32(highest_id_ever, extra.highest_id_ever);
     buffer_skip(highest_id_ever, 4);
+    buffer_write_i32(sequence, extra.created_sequence);
     
     buffer_write_i32(corrupt_houses, extra.incorrect_houses);
     buffer_write_i32(corrupt_houses, extra.unfixable_houses);
 }
 
 void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *corrupt_houses)
+                         buffer *sequence, buffer *corrupt_houses)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         building_load(&Data_Buildings[i], buf);
@@ -280,6 +282,7 @@ void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     extra.highest_id_in_use = buffer_read_i32(highest_id);
     extra.highest_id_ever = buffer_read_i32(highest_id_ever);
     buffer_skip(highest_id_ever, 4);
+    extra.created_sequence = buffer_read_i32(sequence);
 
     extra.incorrect_houses = buffer_read_i32(corrupt_houses);
     extra.unfixable_houses = buffer_read_i32(corrupt_houses);

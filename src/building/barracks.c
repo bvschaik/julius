@@ -11,6 +11,8 @@
 
 #include "Data/CityInfo.h"
 
+static int tower_sentry_request = 0;
+
 int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_dst, int *y_dst)
 {
     if (resource != RESOURCE_WEAPONS) {
@@ -119,7 +121,7 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
 
 int building_barracks_create_tower_sentry(building *barracks, int x, int y)
 {
-    if (Data_Buildings_Extra.barracksTowerSentryRequested <= 0) {
+    if (tower_sentry_request <= 0) {
         return 0;
     }
     building *tower = 0;
@@ -146,4 +148,31 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
     tower->figureId = f->id;
     f->buildingId = tower->id;
     return 1;
+}
+
+void building_barracks_request_tower_sentry()
+{
+    tower_sentry_request = 2;
+}
+
+void building_barracks_decay_tower_sentry_request()
+{
+    if (tower_sentry_request > 0) {
+        tower_sentry_request--;
+    }
+}
+
+int building_barracks_has_tower_sentry_request()
+{
+    return tower_sentry_request;
+}
+
+void building_barracks_save_state(buffer *buf)
+{
+    buffer_write_i32(buf, tower_sentry_request);
+}
+
+void building_barracks_load_state(buffer *buf)
+{
+    tower_sentry_request = buffer_read_i32(buf);
 }

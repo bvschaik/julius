@@ -4,8 +4,6 @@
 #include "building/type.h"
 #include "core/buffer.h"
 
-#include "Data/Building.h"
-
 #define MAX_BUILDINGS 2000
 
 typedef struct {
@@ -204,9 +202,9 @@ void building_update_highest_id();
 void building_totals_add_corrupted_house(int unfixable);
 
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *corrupt_houses);
+                         buffer *sequence, buffer *corrupt_houses);
 
 void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *corrupt_houses);
+                         buffer *sequence, buffer *corrupt_houses);
 
 #endif // BUILDING_BUILDING_H

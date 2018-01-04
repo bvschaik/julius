@@ -3,6 +3,7 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/barracks.h"
 #include "building/count.h"
 #include "building/list.h"
 #include "building/storage.h"
@@ -149,8 +150,8 @@ typedef struct {
     buffer *gladiator_revolt;
     buffer *trade_route_limit;
     buffer *trade_route_traded;
-    buffer *Data_Buildings_Extra_barracksTowerSentryRequested;
-    buffer *Data_Buildings_Extra_createdSequence;
+    buffer *building_barracks_tower_sentry;
+    buffer *building_extra_sequence;
     buffer *routing_counters;
     buffer *building_count_culture3;
     buffer *enemy_armies;
@@ -296,8 +297,8 @@ static void init_savegame_data()
     state->gladiator_revolt = create_savegame_piece(16, 0);
     state->trade_route_limit = create_savegame_piece(1280, 1);
     state->trade_route_traded = create_savegame_piece(1280, 1);
-    state->Data_Buildings_Extra_barracksTowerSentryRequested = create_savegame_piece(4, 0);
-    state->Data_Buildings_Extra_createdSequence = create_savegame_piece(4, 0);
+    state->building_barracks_tower_sentry = create_savegame_piece(4, 0);
+    state->building_extra_sequence = create_savegame_piece(4, 0);
     state->routing_counters = create_savegame_piece(16, 0);
     state->building_count_culture3 = create_savegame_piece(40, 0);
     state->enemy_armies = create_savegame_piece(900, 0);
@@ -385,7 +386,9 @@ static void savegame_load_from_state(savegame_state *state)
     building_load_state(state->buildings,
                         state->building_extra_highest_id,
                         state->building_extra_highest_id_ever,
+                        state->building_extra_sequence,
                         state->building_extra_corrupt_houses);
+    building_barracks_load_state(state->building_barracks_tower_sentry);
 
     read_all_from_buffer(state->Data_Settings_Map_orientation, &Data_State.map.orientation);
     
@@ -430,10 +433,6 @@ static void savegame_load_from_state(savegame_state *state)
     building_storage_load_state(state->building_storages);
     scenario_gladiator_revolt_load_state(state->gladiator_revolt);
     trade_routes_load_state(state->trade_route_limit, state->trade_route_traded);
-    
-    read_all_from_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
-    read_all_from_buffer(state->Data_Buildings_Extra_createdSequence, &Data_Buildings_Extra.createdSequence);
-
     map_routing_load_state(state->routing_counters);
     enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
 
@@ -493,7 +492,9 @@ static void savegame_save_to_state(savegame_state *state)
     building_save_state(state->buildings,
                         state->building_extra_highest_id,
                         state->building_extra_highest_id_ever,
+                        state->building_extra_sequence,
                         state->building_extra_corrupt_houses);
+    building_barracks_save_state(state->building_barracks_tower_sentry);
 
     write_all_to_buffer(state->Data_Settings_Map_orientation, &Data_State.map.orientation);
     
@@ -538,10 +539,6 @@ static void savegame_save_to_state(savegame_state *state)
     building_storage_save_state(state->building_storages);
     scenario_gladiator_revolt_save_state(state->gladiator_revolt);
     trade_routes_save_state(state->trade_route_limit, state->trade_route_traded);
-
-    write_all_to_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
-    write_all_to_buffer(state->Data_Buildings_Extra_createdSequence, &Data_Buildings_Extra.createdSequence);
-
     map_routing_save_state(state->routing_counters);
     enemy_armies_save_state(state->enemy_armies, state->enemy_army_totals);
 

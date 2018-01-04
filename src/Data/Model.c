@@ -1,7 +1,6 @@
 #include "Screen.h"
 #include "CityInfo.h"
 #include "State.h"
-#include "Building.h"
 #include "CityView.h"
 #include "Constants.h"
 
@@ -12,8 +11,6 @@ struct _Data_CityInfo_Extra Data_CityInfo_Extra;
 struct _Data_CityInfo_Resource Data_CityInfo_Resource;
 
 struct _Data_State Data_State;
-
-struct _Data_Buildings_Extra Data_Buildings_Extra;
 
 struct Data_CityView Data_CityView;
 
