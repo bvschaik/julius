@@ -12,6 +12,7 @@
 #include "city/data.h"
 #include "city/emperor.h"
 #include "city/message.h"
+#include "city/victory.h"
 #include "city/view.h"
 #include "core/calc.h"
 #include "core/file.h"
@@ -130,8 +131,7 @@ static int mapFileExists(const char *scenarioName)
 
 static void initCustomScenario(const char *scenarioName)
 {
-	Data_State.winState = WinState_None;
-	Data_State.forceWinCheat = 0;
+	city_victory_reset();
 	building_construction_clear_type();
 	city_data_init();
 	Data_CityInfo_Extra.ciid = 1;

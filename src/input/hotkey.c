@@ -14,6 +14,7 @@
 
 #include "building/type.h"
 #include "city/finance.h"
+#include "city/victory.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "figure/formation.h"
@@ -137,7 +138,7 @@ static void cheat_init_or_invasion()
 static void cheat_victory()
 {
     if (data.is_cheating) {
-        Data_State.forceWinCheat = 1;
+        city_victory_force_win();
     }
 }
 

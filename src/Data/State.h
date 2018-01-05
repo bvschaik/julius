@@ -3,12 +3,6 @@
 
 #include "core/time.h"
 
-enum {
-	WinState_Lose = -1,
-	WinState_None = 0,
-	WinState_Win = 1
-};
-
 extern struct _Data_State {
 	struct {
 		int gridOffsetStart;
@@ -25,8 +19,6 @@ extern struct _Data_State {
 		int reservoirOffsetY;
 	} selectedBuilding;
 	int selectedLegionFormationId;
-	int winState;
-	int forceWinCheat;
 	int missionBriefingShown;
     struct {
         struct {

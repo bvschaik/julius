@@ -9,6 +9,7 @@
 #include "../Data/State.h"
 
 #include "city/finance.h"
+#include "city/victory.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/undo.h"
@@ -42,7 +43,7 @@ void UI_MissionEnd_drawBackground()
 {
 	int xOffset = Data_Screen.offset640x480.x + 48;
 	int yOffset = Data_Screen.offset640x480.y + 128;
-	if (Data_State.winState != WinState_Win) {
+	if (city_victory_state() != VICTORY_STATE_WON) {
 		// lost mission
 		Widget_Panel_drawOuterPanel(xOffset, yOffset - 112, 34, 16);
 		Widget_GameText_drawCentered(62, 1, xOffset, yOffset - 96, 544, FONT_LARGE_BLACK);
@@ -89,7 +90,7 @@ void UI_MissionEnd_drawBackground()
 
 void UI_MissionEnd_drawForeground()
 {
-	if (Data_State.winState != WinState_Win) {
+	if (city_victory_state() != VICTORY_STATE_WON) {
 		UI_VictoryDialog_drawForeground();
 	}
 }
@@ -122,7 +123,7 @@ static void advanceToNextMission()
 
 void UI_MissionEnd_handleMouse(const mouse *m)
 {
-	if (Data_State.winState == WinState_Win) {
+	if (city_victory_state() == VICTORY_STATE_WON) {
 		if (m->right.went_up) {
 			sound_music_stop();
 			sound_speech_stop();
@@ -158,7 +159,7 @@ void UI_VictoryDialog_drawForeground()
 	int xOffset = Data_Screen.offset640x480.x + 48;
 	int yOffset = Data_Screen.offset640x480.y + 128;
 
-	if (Data_State.winState == WinState_Win) {
+	if (city_victory_state() == VICTORY_STATE_WON) {
 		Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 112, 30, focusButtonId == 1);
 		if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
 			Widget_GameText_drawCentered(62, 3,
@@ -218,8 +219,7 @@ static void victoryContinueGoverning(int duration, int param2)
 		city_finance_update_salary();
 	}
 	UI_Window_goTo(Window_City);
-	Data_State.winState = WinState_None;
-	Data_State.forceWinCheat = 0;
+	city_victory_reset();
 	sound_music_reset();
 	sound_music_update();
 }

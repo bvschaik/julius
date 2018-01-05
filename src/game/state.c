@@ -1,5 +1,6 @@
 #include "state.h"
 
+#include "city/victory.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/random.h"
@@ -15,7 +16,7 @@ static struct {
 
 void game_state_init()
 {
-    Data_State.winState = WinState_None;
+    city_victory_reset();
     map_ring_init();
 
     city_view_reset_orientation();
