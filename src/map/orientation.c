@@ -23,16 +23,17 @@ static void determine_leftmost_tile()
     int orientation = city_view_orientation();
     for (int y = 0; y < Data_State.map.height; y++) {
         for (int x = 0; x < Data_State.map.width; x++) {
-            int gridOffset = map_grid_offset(x, y);
-            int size = map_property_multi_tile_size(gridOffset);
+            int grid_offset = map_grid_offset(x, y);
+            int size = map_property_multi_tile_size(grid_offset);
             if (size == 1) {
-                map_property_mark_draw_tile(gridOffset);
+                map_property_mark_draw_tile(grid_offset);
                 continue;
             }
+            map_property_clear_draw_tile(grid_offset);
             int dx = orientation == DIR_4_BOTTOM || orientation == DIR_6_LEFT ? size - 1 : 0;
             int dy = orientation == DIR_0_TOP || orientation == DIR_6_LEFT ? size - 1 : 0;
-            if (map_property_is_multi_tile_xy(gridOffset, dx, dy)) {
-                map_property_mark_draw_tile(gridOffset);
+            if (map_property_is_multi_tile_xy(grid_offset, dx, dy)) {
+                map_property_mark_draw_tile(grid_offset);
             }
         }
     }
