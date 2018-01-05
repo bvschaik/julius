@@ -3,6 +3,8 @@
 #include "building/house.h"
 #include "building/model.h"
 #include "game/resource.h"
+#include "game/time.h"
+#include "map/routing_terrain.h"
 #include "map/tiles.h"
 
 #include "Data/CityInfo.h"
@@ -12,6 +14,31 @@ typedef enum {
     NONE = 0,
     DEVOLVE = -1
 } evolve_status;
+
+static void reset_service_required_counters()
+{
+    Data_CityInfo.housesRequiringFountainToEvolve = 0;
+    Data_CityInfo.housesRequiringWellToEvolve = 0;
+    Data_CityInfo.housesRequiringEntertainmentToEvolve = 0;
+    Data_CityInfo.housesRequiringMoreEntertainmentToEvolve = 0;
+    Data_CityInfo.housesRequiringEducationToEvolve = 0;
+    Data_CityInfo.housesRequiringMoreEducationToEvolve = 0;
+    Data_CityInfo.housesRequiringReligionToEvolve = 0;
+    Data_CityInfo.housesRequiringMoreReligionToEvolve = 0;
+    Data_CityInfo.housesRequiringEvenMoreReligionToEvolve = 0;
+    Data_CityInfo.housesRequiringBarberToEvolve = 0;
+    Data_CityInfo.housesRequiringBathhouseToEvolve = 0;
+    Data_CityInfo.housesRequiringClinicToEvolve = 0;
+    Data_CityInfo.housesRequiringHospitalToEvolve = 0;
+    Data_CityInfo.housesRequiringFoodToEvolve = 0;
+
+    Data_CityInfo.housesRequiringSchool = 0;
+    Data_CityInfo.housesRequiringLibrary = 0;
+    Data_CityInfo.housesRequiringBarber = 0;
+    Data_CityInfo.housesRequiringBathhouse = 0;
+    Data_CityInfo.housesRequiringClinic = 0;
+    Data_CityInfo.housesRequiringReligion = 0;
+}
 
 static int check_evolve_desirability(building *house)
 {
@@ -463,6 +490,26 @@ static int evolve_luxury_palace(building *house)
     return 0;
 }
 
+static void consume_resource(building *b, int inventory, int amount)
+{
+    if (amount > 0) {
+        if (amount > b->data.house.inventory[inventory]) {
+            b->data.house.inventory[inventory] = 0;
+        } else {
+            b->data.house.inventory[inventory] -= amount;
+        }
+    }
+}
+
+static void consume_resources(building *b)
+{
+    const model_house *model = model_get_house(b->subtype.houseLevel);
+    consume_resource(b, INVENTORY_POTTERY, model->pottery);
+    consume_resource(b, INVENTORY_FURNITURE, model->furniture);
+    consume_resource(b, INVENTORY_OIL, model->oil);
+    consume_resource(b, INVENTORY_WINE, model->wine);
+}
+
 static int (*evolve_callback[])(building *) = {
     evolve_small_tent, evolve_large_tent, evolve_small_shack, evolve_large_shack,
     evolve_small_hovel, evolve_large_hovel, evolve_small_casa, evolve_large_casa,
@@ -471,9 +518,23 @@ static int (*evolve_callback[])(building *) = {
     evolve_small_palace, evolve_medium_palace, evolve_large_palace, evolve_luxury_palace
 };
 
-int building_house_process_evolve(building *house)
+void building_house_process_evolve_and_consume_goods()
 {
-    return evolve_callback[house->type - BUILDING_HOUSE_VACANT_LOT](house);
+    reset_service_required_counters();
+    int has_expanded = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (b->state == BUILDING_STATE_IN_USE && building_is_house(b->type)) {
+            building_house_check_for_corruption(b);
+            has_expanded |= evolve_callback[b->type - BUILDING_HOUSE_VACANT_LOT](b);
+            if (game_time_day() == 0 || game_time_day() == 7) {
+                consume_resources(b);
+            }
+        }
+    }
+    if (has_expanded) {
+        map_routing_update_land();
+    }
 }
 
 void building_house_determine_evolve_text(building *house, int worst_desirability_building)

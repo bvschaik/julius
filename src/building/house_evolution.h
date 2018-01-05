@@ -4,11 +4,9 @@
 #include "building/building.h"
 
 /**
- * Evolves/devolves a house if appropriate
- * @param house House to process
- * @return True if the house has expanded, false otherwise
+ * Evolves/devolves houses if appropriate, and consumes pottery/furniture/oil/wine
  */
-int building_house_process_evolve(building *house);
+void building_house_process_evolve_and_consume_goods();
 
 /**
  * Determine the text to show for evolution of a house, stored in house->evolveTextId

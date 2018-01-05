@@ -1,7 +1,6 @@
 #include "GameTick.h"
 
 #include "GameFile.h"
-#include "HouseEvolution.h"
 #include "UI/Sidebar.h"
 
 #include "Data/CityInfo.h"
@@ -11,6 +10,7 @@
 #include "building/figure.h"
 #include "building/government.h"
 #include "building/granary.h"
+#include "building/house_evolution.h"
 #include "building/house_population.h"
 #include "building/house_service.h"
 #include "building/industry.h"
@@ -114,7 +114,7 @@ static void advanceTick()
 		case 36: house_service_calculate_culture_aggregates(); break;
 		case 37: map_desirability_update(); break;
 		case 38: building_update_desirability(); break;
-		case 39: HouseEvolution_Tick_evolveAndConsumeResources(); break;
+		case 39: building_house_process_evolve_and_consume_goods(); break;
 		case 40: building_update_state(); break;
 		case 43: building_maintenance_update_burning_ruins(); break;
 		case 44: building_maintenance_check_fire_collapse(); break;

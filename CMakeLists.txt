@@ -211,7 +211,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/GameTick.c
 	${PROJECT_SOURCE_DIR}/src/Graphics.c
 	${PROJECT_SOURCE_DIR}/src/Graphics_Footprint.c
-	${PROJECT_SOURCE_DIR}/src/HouseEvolution.c
 	${PROJECT_SOURCE_DIR}/src/Scenario.c
 	${PROJECT_SOURCE_DIR}/src/Screen.c
 	${PROJECT_SOURCE_DIR}/src/Terrain.c

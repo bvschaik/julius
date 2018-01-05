@@ -29,9 +29,3 @@ void Screen_setResolution(int width, int height)
 	memset(Data_Screen.drawBuffer, 0, width * height * sizeof(color_t));
 	setSize(width, height);
 }
-
-void Screen_setResolutionWithPixels(int width, int height, void *pixels)
-{
-	Data_Screen.drawBuffer = (color_t*) pixels;
-	setSize(width, height);
-}
