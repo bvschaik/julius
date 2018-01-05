@@ -1,6 +1,5 @@
 #include "hotkey.h"
 
-#include "CityView.h"
 #include "Graphics.h"
 #include "System.h"
 #include "Video.h"
@@ -15,6 +14,7 @@
 
 #include "building/type.h"
 #include "city/finance.h"
+#include "city/view.h"
 #include "city/warning.h"
 #include "figure/formation.h"
 #include "game/settings.h"
@@ -116,7 +116,7 @@ static void cycle_legion()
         }
         if (currentLegionId > 0) {
             const formation *m = formation_get(currentLegionId);
-            CityView_goToGridOffset(map_grid_offset(m->x_home, m->y_home));
+            city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
             UI_Window_requestRefresh();
         }
     }
@@ -287,7 +287,6 @@ void hotkey_esc()
 static void go_to_bookmark(int number)
 {
     if (map_bookmark_go_to(number)) {
-        CityView_checkCameraBoundaries();
         UI_Window_requestRefresh();
     }
 }

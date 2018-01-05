@@ -14,6 +14,7 @@
 
 #include "building/menu.h"
 #include "city/message.h"
+#include "city/view.h"
 #include "city/warning.h"
 #include "core/direction.h"
 #include "game/state.h"
@@ -325,7 +326,7 @@ static void buttonCollapseExpand(int param1, int param2)
 	data.slideStart = time_get_millis();
 	UI_Window_goTo(Window_SlidingSidebar);
 	CityView_setViewportWithoutSidebar();
-	CityView_checkCameraBoundaries();
+	city_view_check_camera_boundaries();
 	sound_effect_play(SOUND_EFFECT_SIDEBAR);
 }
 
@@ -354,7 +355,7 @@ static void buttonGoToProblem(int param1, int param2)
 {
     int gridOffset = city_message_next_problem_area_grid_offset();
     if (gridOffset) {
-        CityView_goToGridOffset(gridOffset);
+        city_view_go_to_grid_offset(gridOffset);
         UI_Window_goTo(Window_City);
     } else {
         UI_Window_requestRefresh();
@@ -393,19 +394,19 @@ static void buttonRotateNorth(int param1, int param2)
 		case DIR_0_TOP: // already north
 			return;
 		case DIR_2_RIGHT:
-			CityView_rotateRight();
+			city_view_rotate_right();
 			map_orientation_change(1);
 			break;
 		case DIR_4_BOTTOM:
-			CityView_rotateLeft();
+			city_view_rotate_left();
 			map_orientation_change(0);
 			// fallthrough
 		case DIR_6_LEFT:
-			CityView_rotateLeft();
+			city_view_rotate_left();
 			map_orientation_change(0);
 			break;
 	}
-	CityView_checkCameraBoundaries();
+	city_view_check_camera_boundaries();
 	city_warning_show(WARNING_ORIENTATION);
 	UI_Window_requestRefresh();
 }
@@ -413,12 +414,12 @@ static void buttonRotateNorth(int param1, int param2)
 static void buttonRotate(int clockWise, int param2)
 {
 	if (clockWise) {
-		CityView_rotateRight();
+		city_view_rotate_right();
 	} else {
-		CityView_rotateLeft();
+		city_view_rotate_left();
 	}
 	map_orientation_change(clockWise);
-	CityView_checkCameraBoundaries();
+	city_view_check_camera_boundaries();
 	city_warning_show(WARNING_ORIENTATION);
 	UI_Window_requestRefresh();
 }
@@ -452,7 +453,7 @@ void UI_SlidingSidebar_drawForeground()
 			Data_State.sidebarCollapsed = 1;
 			CityView_setViewportWithoutSidebar();
 		}
-		CityView_checkCameraBoundaries();
+		city_view_check_camera_boundaries();
 		UI_Window_goTo(Window_City);
 		UI_Window_refresh(1);
 		return;

@@ -2,13 +2,13 @@
 
 #include "CityBuildings.h"
 #include "Window.h"
-#include "../CityView.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 
 #include "../Data/State.h"
 
 #include "building/building.h"
+#include "city/view.h"
 #include "empire/city.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
@@ -390,10 +390,10 @@ static void drawFigureInCity(int figureId, struct UI_CityPixelCoordinate *coord)
 
 	int gridOffset = figure_get(figureId)->gridOffset;
 	int x, y;
-	CityView_gridOffsetToXYCoords(gridOffset, &x, &y);
+	city_view_grid_offset_to_xy_view(gridOffset, &x, &y);
 	Data_State.map.camera.x = x - 2;
 	Data_State.map.camera.y = y - 6;
-	CityView_checkCameraBoundaries();
+	city_view_check_camera_boundaries();
 	UI_CityBuildings_drawForegroundForFigure(
 		Data_State.map.camera.x, Data_State.map.camera.y,
 		figureId, coord);

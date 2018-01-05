@@ -1,5 +1,6 @@
 #include "bookmark.h"
 
+#include "city/view.h"
 #include "map/grid.h"
 #include "map/point.h"
 
@@ -33,6 +34,7 @@ int map_bookmark_go_to(int number)
         if (x > -1 && map_grid_offset(x, y) > -1) {
             Data_State.map.camera.x = x;
             Data_State.map.camera.y = y;
+            city_view_check_camera_boundaries();
             return 1;
         }
     }

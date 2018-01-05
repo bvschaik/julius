@@ -5,6 +5,22 @@
 
 int city_view_orientation();
 
+void city_view_check_camera_boundaries();
+
+void city_view_calculate_lookup();
+
+int city_view_to_grid_offset(int x_view, int y_view);
+
+void city_view_grid_offset_to_xy_view(int grid_offset, int *x_view, int *y_view);
+
+int city_view_pixels_to_grid_offset(int x_pixels, int y_pixels);
+
+void city_view_go_to_grid_offset(int grid_offset);
+
+void city_view_rotate_left();
+
+void city_view_rotate_right();
+
 void city_view_save_state(buffer *orientation, buffer *camera);
 
 void city_view_load_state(buffer *orientation, buffer *camera);

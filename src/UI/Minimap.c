@@ -6,6 +6,7 @@
 #include "../Data/State.h"
 
 #include "building/building.h"
+#include "city/view.h"
 #include "figure/figure.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -260,7 +261,7 @@ int UI_Minimap_handleClick(const mouse *m)
 		if (m->left.went_down || m->right.went_down) {
 			int gridOffset = getMouseGridOffset(m, minimapLeft, minimapTop, 73, 111);
 			if (gridOffset > 0) {
-				CityView_goToGridOffset(gridOffset);
+				city_view_go_to_grid_offset(gridOffset);
 				UI_Sidebar_requestMinimapRefresh();
 				return 1;
 			}

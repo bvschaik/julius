@@ -4,6 +4,7 @@
 #include "Graphics.h"
 #include "Data/Screen.h"
 
+#include "city/view.h"
 #include "city/warning.h"
 
 #include <stdlib.h>
@@ -17,7 +18,7 @@ static void setSize(int width, int height)
 	Data_Screen.offset640x480.y = (Data_Screen.height - 480) / 2;
 	Graphics_setClipRectangle(0, 0, width, height);
 	CityView_setViewport();
-	CityView_checkCameraBoundaries();
+	city_view_check_camera_boundaries();
 	city_warning_clear_all();
 }
 

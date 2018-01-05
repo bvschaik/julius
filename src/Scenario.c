@@ -1,6 +1,5 @@
 #include "Scenario.h"
 
-#include "CityView.h"
 #include "GameFile.h"
 #include "Terrain.h"
 
@@ -13,6 +12,7 @@
 #include "city/data.h"
 #include "city/emperor.h"
 #include "city/message.h"
+#include "city/view.h"
 #include "core/calc.h"
 #include "core/file.h"
 #include "core/string.h"
@@ -219,7 +219,7 @@ static void readScenarioAndInitGraphics(const char *scenarioName)
 	scenario_set_name(string_from_ascii(filename));
 	scenario_map_init();
 
-	CityView_calculateLookup();
+	city_view_calculate_lookup();
 	map_tiles_update_all_elevation();
 	map_tiles_update_all_water();
 	map_tiles_update_all_earthquake();
@@ -234,7 +234,7 @@ static void readScenarioAndInitGraphics(const char *scenarioName)
 
 	map_natives_init();
 
-	CityView_checkCameraBoundaries();
+	city_view_check_camera_boundaries();
 
 	map_routing_update_all();
 }

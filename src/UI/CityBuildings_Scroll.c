@@ -1,9 +1,8 @@
 #include "CityBuildings.h"
 
-#include "../CityView.h"
-
 #include "../Data/State.h"
 
+#include "city/view.h"
 #include "core/direction.h"
 #include "sound/city.h"
 
@@ -45,5 +44,5 @@ void UI_CityBuildings_scrollMap(int direction)
 			break;
 	}
 	sound_city_decay_views();
-	CityView_checkCameraBoundaries();
+	city_view_check_camera_boundaries();
 }

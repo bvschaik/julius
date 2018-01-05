@@ -1,8 +1,7 @@
 #include "Advisors_private.h"
 #include "Window.h"
 
-#include "../CityView.h"
-
+#include "city/view.h"
 #include "figure/formation_legion.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"
@@ -174,7 +173,7 @@ void UI_Advisor_Military_handleMouse()
 static void buttonGoToLegion(int legionId, int param2)
 {
 	const formation *m = formation_get(formation_for_legion(legionId));
-	CityView_goToGridOffset(map_grid_offset(m->x_home, m->y_home));
+	city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
 	UI_Window_goTo(Window_City);
 }
 

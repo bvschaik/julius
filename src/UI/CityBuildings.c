@@ -10,6 +10,7 @@
 #include "building/construction.h"
 #include "building/dock.h"
 #include "city/finance.h"
+#include "city/view.h"
 #include "city/warning.h"
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
@@ -616,7 +617,7 @@ static void updateCityViewCoords(const mouse *m)
 {
 	Data_State.map.current.x = Data_State.map.current.y = 0;
 	int gridOffset = Data_State.map.current.gridOffset =
-		CityView_pixelCoordsToGridOffset(m->x, m->y);
+		city_view_pixels_to_grid_offset(m->x, m->y);
 	if (gridOffset) {
 		Data_State.map.current.x = (gridOffset - Data_State.map.gridStartOffset) % 162;
 		Data_State.map.current.y = (gridOffset - Data_State.map.gridStartOffset) / 162;

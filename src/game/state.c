@@ -1,11 +1,12 @@
 #include "state.h"
 
+#include "city/view.h"
 #include "city/warning.h"
 #include "core/random.h"
 #include "map/ring.h"
 
-#include "../CityView.h"
 #include "Data/State.h"
+#include "../CityView.h"
 
 static struct {
     int paused;
@@ -19,7 +20,7 @@ void game_state_init()
     map_ring_init();
 
     Data_State.map.orientation = 0;
-    CityView_calculateLookup();
+    city_view_calculate_lookup();
     if (Data_State.sidebarCollapsed) {
         CityView_setViewportWithoutSidebar();
     } else {
@@ -27,7 +28,7 @@ void game_state_init()
     }
     Data_State.map.camera.x = 76;
     Data_State.map.camera.y = 152;
-    CityView_checkCameraBoundaries();
+    city_view_check_camera_boundaries();
 
     random_generate_pool();
 

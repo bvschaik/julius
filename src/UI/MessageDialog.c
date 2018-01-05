@@ -3,7 +3,6 @@
 #include "AllWindows.h"
 #include "Advisors.h"
 
-#include "../CityView.h"
 #include "../Graphics.h"
 #include "../Video.h"
 #include "../Widget.h"
@@ -12,6 +11,7 @@
 #include "../Data/Screen.h"
 
 #include "city/message.h"
+#include "city/view.h"
 #include "core/lang.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -553,7 +553,7 @@ static void buttonGoToProblem(int param1, int param2)
 		}
 	}
 	if (gridOffset > 0 && gridOffset < 26244) {
-		CityView_goToGridOffset(gridOffset);
+		city_view_go_to_grid_offset(gridOffset);
 	}
 	UI_Window_goTo(Window_City);
 }

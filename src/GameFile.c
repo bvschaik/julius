@@ -1,7 +1,5 @@
 #include "GameFile.h"
 
-#include "CityView.h"
-
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 #include "UI/AllWindows.h" // TODO: try to eliminate this
@@ -11,6 +9,7 @@
 #include "building/menu.h"
 #include "building/storage.h"
 #include "city/message.h"
+#include "city/view.h"
 #include "core/file.h"
 #include "core/io.h"
 #include "empire/empire.h"
@@ -120,8 +119,8 @@ static void setupFromSavedGame()
 		Data_State.map.orientation = 0;
 	}
 
-	CityView_calculateLookup();
-	CityView_checkCameraBoundaries();
+	city_view_calculate_lookup();
+	city_view_check_camera_boundaries();
 
 	map_routing_update_all();
 

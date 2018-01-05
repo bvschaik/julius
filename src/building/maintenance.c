@@ -4,6 +4,7 @@
 #include "building/destruction.h"
 #include "building/list.h"
 #include "city/message.h"
+#include "city/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -24,7 +25,6 @@
 #include "sound/effect.h"
 
 #include "Data/CityInfo.h"
-#include "../CityView.h"
 
 static int fire_spread_direction = 0;
 
@@ -331,6 +331,6 @@ void building_maintenance_check_rome_access()
         // parts of city disconnected
         city_warning_show(WARNING_CITY_BOXED_IN);
         city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH);
-        CityView_goToGridOffset(problemGridOffset);
+        city_view_go_to_grid_offset(problemGridOffset);
     }
 }
