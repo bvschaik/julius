@@ -9,6 +9,7 @@
 #include "../Data/State.h"
 
 #include "city/message.h"
+#include "city/view.h"
 #include "game/state.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
@@ -42,8 +43,9 @@ void UI_City_drawForegroundMilitary()
 
 void UI_City_drawCity()
 {
-	UI_CityBuildings_drawForeground(
-		Data_State.map.camera.x, Data_State.map.camera.y);
+    int x, y;
+    city_view_get_camera(&x, &y);
+	UI_CityBuildings_drawForeground(x, y);
 }
 
 void UI_City_drawPausedAndTimeLeft()

@@ -400,7 +400,6 @@ static void buttonRotateNorth(int param1, int param2)
 			map_orientation_change(0);
 			break;
 	}
-	city_view_check_camera_boundaries();
 	city_warning_show(WARNING_ORIENTATION);
 	UI_Window_requestRefresh();
 }
@@ -413,7 +412,6 @@ static void buttonRotate(int clockWise, int param2)
 		city_view_rotate_left();
 	}
 	map_orientation_change(clockWise);
-	city_view_check_camera_boundaries();
 	city_warning_show(WARNING_ORIENTATION);
 	UI_Window_requestRefresh();
 }

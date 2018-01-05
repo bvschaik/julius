@@ -21,8 +21,7 @@ void map_bookmarks_clear()
 void map_bookmark_save(int number)
 {
     if (number >= 0 && number < MAX_BOOKMARKS) {
-        bookmarks[number].x = Data_State.map.camera.x;
-        bookmarks[number].y = Data_State.map.camera.y;
+        city_view_get_camera(&bookmarks[number].x, &bookmarks[number].y);
     }
 }
 
@@ -32,9 +31,7 @@ int map_bookmark_go_to(int number)
         int x = bookmarks[number].x;
         int y = bookmarks[number].y;
         if (x > -1 && map_grid_offset(x, y) > -1) {
-            Data_State.map.camera.x = x;
-            Data_State.map.camera.y = y;
-            city_view_check_camera_boundaries();
+            city_view_set_camera(x, y);
             return 1;
         }
     }

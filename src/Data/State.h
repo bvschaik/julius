@@ -30,10 +30,6 @@ extern struct _Data_State {
 	int missionBriefingShown;
     struct {
         struct {
-            int x;
-            int y;
-        } camera;
-        struct {
             int gridOffset;
             int x;
             int y;
@@ -42,7 +38,6 @@ extern struct _Data_State {
         int height;
         int gridStartOffset;
         int gridBorderSize;
-        int orientation;
     } map;
 } Data_State;
 

@@ -18,11 +18,8 @@ void game_state_init()
     Data_State.winState = WinState_None;
     map_ring_init();
 
-    Data_State.map.orientation = 0;
-    city_view_calculate_lookup();
-    Data_State.map.camera.x = 76;
-    Data_State.map.camera.y = 152;
-    city_view_check_camera_boundaries();
+    city_view_reset_orientation();
+    city_view_set_camera(76, 152);
 
     random_generate_pool();
 

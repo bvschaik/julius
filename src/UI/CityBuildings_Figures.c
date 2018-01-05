@@ -2,6 +2,7 @@
 #include "CityBuildings_private.h"
 
 #include "building/building.h"
+#include "city/view.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "game/resource.h"
@@ -108,7 +109,7 @@ static void drawFigureWithCart(figure *f, int xOffset, int yOffset)
 static void drawHippodromeHorses(figure *f, int xOffset, int yOffset)
 {
 	int val = f->waitTicksMissile;
-	switch (Data_State.map.orientation) {
+	switch (city_view_orientation()) {
 		case DIR_0_TOP:
 			xOffset += 10;
 			if (val <= 10) {
@@ -189,7 +190,7 @@ static void drawHippodromeHorses(figure *f, int xOffset, int yOffset)
 
 static int tileOffsetToPixelOffsetX(int x, int y)
 {
-	int dir = Data_State.map.orientation;
+	int dir = city_view_orientation();
 	if (dir == DIR_0_TOP || dir == DIR_4_BOTTOM) {
 		int base = 2 * x - 2 * y;
 		return dir == DIR_0_TOP ? base : -base;
@@ -201,7 +202,7 @@ static int tileOffsetToPixelOffsetX(int x, int y)
 
 static int tileOffsetToPixelOffsetY(int x, int y)
 {
-	int dir = Data_State.map.orientation;
+	int dir = city_view_orientation();
 	if (dir == DIR_0_TOP || dir == DIR_4_BOTTOM) {
 		int base = x + y;
 		return dir == DIR_0_TOP ? base : -base;
@@ -257,7 +258,7 @@ void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int sel
 		yTileOffset = tileOffsetToPixelOffsetY(f->crossCountryX % 15, f->crossCountryY % 15);
 		yTileOffset -= f->missileDamage;
 	} else {
-		int direction = (8 + f->direction - Data_State.map.orientation) % 8;
+		int direction = (8 + f->direction - city_view_orientation()) % 8;
 		xTileOffset = tileProgressToPixelOffsetX(direction, f->progressOnTile);
 		yTileOffset = tileProgressToPixelOffsetY(direction, f->progressOnTile);
 		yTileOffset -= f->currentHeight;

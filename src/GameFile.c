@@ -112,15 +112,7 @@ static void setupFromSavedGame()
 
 	scenario_map_init();
 
-	if (Data_State.map.orientation >= 0 && Data_State.map.orientation <= 6) {
-		// ensure even number
-		Data_State.map.orientation = 2 * (Data_State.map.orientation / 2);
-	} else {
-		Data_State.map.orientation = 0;
-	}
-
-	city_view_calculate_lookup();
-	city_view_check_camera_boundaries();
+	city_view_init();
 
 	map_routing_update_all();
 

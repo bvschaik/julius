@@ -3,11 +3,17 @@
 
 #include "core/buffer.h"
 
+void city_view_init();
+
 int city_view_orientation();
 
-void city_view_check_camera_boundaries();
+void city_view_reset_orientation();
 
-void city_view_calculate_lookup();
+void city_view_get_camera(int *x, int *y);
+
+void city_view_set_camera(int x, int y);
+
+int city_view_scroll(int direction);
 
 int city_view_to_grid_offset(int x_view, int y_view);
 

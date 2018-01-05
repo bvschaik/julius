@@ -17,7 +17,6 @@ static void setSize(int width, int height)
 	Data_Screen.offset640x480.y = (Data_Screen.height - 480) / 2;
 	Graphics_setClipRectangle(0, 0, width, height);
 	city_view_set_viewport(width, height);
-	city_view_check_camera_boundaries();
 	city_warning_clear_all();
 }
 
