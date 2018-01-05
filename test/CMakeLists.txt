@@ -50,7 +50,6 @@ add_executable(autopilot
     ${SOUND_FILES}
     ${PROJECT_SOURCE_DIR}/src/Game.c
     ${PROJECT_SOURCE_DIR}/src/GameFile.c
-    ${PROJECT_SOURCE_DIR}/src/GameTick.c
     ${PROJECT_SOURCE_DIR}/src/Terrain.c
     ${PROJECT_SOURCE_DIR}/src/Data/Model.c
 )

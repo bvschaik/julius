@@ -1,7 +1,6 @@
 #include "Game.h"
 
 #include "GameFile.h"
-#include "GameTick.h"
 #include "System.h"
 #include "Video.h"
 
@@ -18,6 +17,7 @@
 #include "game/animation.h"
 #include "game/settings.h"
 #include "game/state.h"
+#include "game/tick.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
 #include "scenario/property.h"
@@ -126,7 +126,7 @@ void Game_run()
     game_animation_update();
     int numTicks = getElapsedTicks();
     for (int i = 0; i < numTicks; i++) {
-        GameTick_doTick();
+        game_tick_run();
         GameFile_writeMissionSavedGameIfNeeded();
     }
 }

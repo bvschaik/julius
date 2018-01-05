@@ -135,6 +135,7 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/resource.c
     ${PROJECT_SOURCE_DIR}/src/game/settings.c
     ${PROJECT_SOURCE_DIR}/src/game/state.c
+    ${PROJECT_SOURCE_DIR}/src/game/tick.c
     ${PROJECT_SOURCE_DIR}/src/game/time.c
     ${PROJECT_SOURCE_DIR}/src/game/tutorial.c
     ${PROJECT_SOURCE_DIR}/src/game/undo.c
@@ -208,7 +209,6 @@ add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Game.c
 	${PROJECT_SOURCE_DIR}/src/GameFile.c
-	${PROJECT_SOURCE_DIR}/src/GameTick.c
 	${PROJECT_SOURCE_DIR}/src/Graphics.c
 	${PROJECT_SOURCE_DIR}/src/Graphics_Footprint.c
 	${PROJECT_SOURCE_DIR}/src/Scenario.c
