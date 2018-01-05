@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/industry.h"
+#include "city/view.h"
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
@@ -23,7 +24,7 @@ void map_building_tiles_add(int building_id, int x, int y, int size, int image_i
         return;
     }
     int x_leftmost, y_leftmost;
-    switch (Data_State.map.orientation) {
+    switch (city_view_orientation()) {
         case DIR_0_TOP:
             x_leftmost = 0;
             y_leftmost = size - 1;
@@ -74,7 +75,7 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_i
     }
     // farmhouse
     int x_leftmost, y_leftmost;
-    switch (Data_State.map.orientation) {
+    switch (city_view_orientation()) {
         case DIR_0_TOP:
             x_leftmost = 0;
             y_leftmost = 1;
@@ -246,7 +247,7 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size)
 
 static void adjust_to_absolute_xy(int *x, int *y, int size)
 {
-    switch (Data_State.map.orientation) {
+    switch (city_view_orientation()) {
         case DIR_2_RIGHT:
             *x = *x - size + 1;
             break;

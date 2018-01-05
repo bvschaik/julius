@@ -1,6 +1,7 @@
 #include "water.h"
 
 #include "building/building.h"
+#include "city/view.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -9,15 +10,13 @@
 #include "map/property.h"
 #include "map/terrain.h"
 
-#include "Data/State.h"
-
 void map_water_add_building(int building_id, int x, int y, int size, int image_id)
 {
     if (!map_grid_is_inside(x, y, size)) {
         return;
     }
     map_point leftmost;
-    switch (Data_State.map.orientation) {
+    switch (city_view_orientation()) {
         case DIR_0_TOP:
             leftmost.x = 0;
             leftmost.y = size - 1;
@@ -65,7 +64,7 @@ int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
                                           int *orientation_absolute, int *orientation_relative)
 {
     if (adjust_xy == 1) {
-        switch (Data_State.map.orientation) {
+        switch (city_view_orientation()) {
             case DIR_0_TOP: break;
             case DIR_2_RIGHT: x--; break;
             case DIR_6_LEFT: y--; break;
@@ -121,7 +120,7 @@ int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
                 *orientation_absolute = dir;
             }
             if (orientation_relative) {
-                *orientation_relative = (4 + dir - Data_State.map.orientation / 2) % 4;
+                *orientation_relative = (4 + dir - city_view_orientation() / 2) % 4;
             }
             return blocked_tiles;
         }
@@ -133,7 +132,7 @@ int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
                                           int *orientation_absolute, int *orientation_relative)
 {
     if (adjust_xy == 1) {
-        switch (Data_State.map.orientation) {
+        switch (city_view_orientation()) {
             case DIR_0_TOP: break;
             case DIR_2_RIGHT: x -= 2; break;
             case DIR_6_LEFT: y -= 2; break;
@@ -189,7 +188,7 @@ int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
                 *orientation_absolute = dir;
             }
             if (orientation_relative) {
-                *orientation_relative = (4 + dir - Data_State.map.orientation / 2) % 4;
+                *orientation_relative = (4 + dir - city_view_orientation() / 2) % 4;
             }
             return blocked_tiles;
         }

@@ -1,7 +1,6 @@
 #include "file_io.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 #include "building/barracks.h"
 #include "building/count.h"
@@ -9,6 +8,7 @@
 #include "building/storage.h"
 #include "city/culture.h"
 #include "city/message.h"
+#include "city/view.h"
 #include "core/random.h"
 #include "core/zip.h"
 #include "empire/city.h"
@@ -104,12 +104,11 @@ typedef struct {
     buffer *player_name;
     buffer *Data_CityInfo_Extra_ciid;
     buffer *buildings;
-    buffer *Data_Settings_Map_orientation;
+    buffer *city_view_orientation;
     buffer *game_time;
     buffer *building_extra_highest_id_ever;
     buffer *random_iv;
-    buffer *Data_Settings_Map_camera_x;
-    buffer *Data_Settings_Map_camera_y;
+    buffer *city_view_camera;
     buffer *building_count_culture1;
     buffer *Data_CityInfo_Extra_populationGraphOrder;
     buffer *Data_CityInfo_Extra_unknownOrder;
@@ -251,12 +250,11 @@ static void init_savegame_data()
     state->player_name = create_savegame_piece(64, 0);
     state->Data_CityInfo_Extra_ciid = create_savegame_piece(4, 0);
     state->buildings = create_savegame_piece(256000, 1);
-    state->Data_Settings_Map_orientation = create_savegame_piece(4, 0);
+    state->city_view_orientation = create_savegame_piece(4, 0);
     state->game_time = create_savegame_piece(20, 0);
     state->building_extra_highest_id_ever = create_savegame_piece(8, 0);
     state->random_iv = create_savegame_piece(8, 0);
-    state->Data_Settings_Map_camera_x = create_savegame_piece(4, 0);
-    state->Data_Settings_Map_camera_y = create_savegame_piece(4, 0);
+    state->city_view_camera = create_savegame_piece(8, 0);
     state->building_count_culture1 = create_savegame_piece(132, 0);
     state->Data_CityInfo_Extra_populationGraphOrder = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_unknownOrder = create_savegame_piece(4, 0);
@@ -335,9 +333,7 @@ static void scenario_load_from_state(scenario_state *file)
     map_property_load_state(file->bitfields, file->edge);
     map_random_load_state(file->random);
     map_elevation_load_state(file->elevation);
-    
-    Data_State.map.camera.x = buffer_read_i32(file->camera);
-    Data_State.map.camera.y = buffer_read_i32(file->camera);
+    city_view_load_scenario_state(file->camera);
     
     random_load_state(file->random_iv);
 
@@ -389,15 +385,9 @@ static void savegame_load_from_state(savegame_state *state)
                         state->building_extra_sequence,
                         state->building_extra_corrupt_houses);
     building_barracks_load_state(state->building_barracks_tower_sentry);
-
-    read_all_from_buffer(state->Data_Settings_Map_orientation, &Data_State.map.orientation);
-    
+    city_view_load_state(state->city_view_orientation, state->city_view_camera);
     game_time_load_state(state->game_time);
     random_load_state(state->random_iv);
-
-    read_all_from_buffer(state->Data_Settings_Map_camera_x, &Data_State.map.camera.x);
-    read_all_from_buffer(state->Data_Settings_Map_camera_y, &Data_State.map.camera.y);
-    
     building_count_load_state(state->building_count_industry,
                               state->building_count_culture1,
                               state->building_count_culture2,
@@ -495,15 +485,9 @@ static void savegame_save_to_state(savegame_state *state)
                         state->building_extra_sequence,
                         state->building_extra_corrupt_houses);
     building_barracks_save_state(state->building_barracks_tower_sentry);
-
-    write_all_to_buffer(state->Data_Settings_Map_orientation, &Data_State.map.orientation);
-    
+    city_view_save_state(state->city_view_orientation, state->city_view_camera);
     game_time_save_state(state->game_time);
     random_save_state(state->random_iv);
-
-    write_all_to_buffer(state->Data_Settings_Map_camera_x, &Data_State.map.camera.x);
-    write_all_to_buffer(state->Data_Settings_Map_camera_y, &Data_State.map.camera.y);
-
     building_count_save_state(state->building_count_industry,
                               state->building_count_culture1,
                               state->building_count_culture2,

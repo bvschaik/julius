@@ -1,5 +1,6 @@
 #include "orientation.h"
 
+#include "city/view.h"
 #include "core/direction.h"
 #include "figuretype/animal.h"
 #include "figuretype/wall.h"
@@ -19,6 +20,7 @@
 
 static void determine_leftmost_tile()
 {
+    int orientation = city_view_orientation();
     for (int y = 0; y < Data_State.map.height; y++) {
         for (int x = 0; x < Data_State.map.width; x++) {
             int gridOffset = map_grid_offset(x, y);
@@ -27,8 +29,6 @@ static void determine_leftmost_tile()
                 map_property_mark_draw_tile(gridOffset);
                 continue;
             }
-            map_property_clear_draw_tile(gridOffset);
-            int orientation = Data_State.map.orientation;
             int dx = orientation == DIR_4_BOTTOM || orientation == DIR_6_LEFT ? size - 1 : 0;
             int dy = orientation == DIR_0_TOP || orientation == DIR_6_LEFT ? size - 1 : 0;
             if (map_property_is_multi_tile_xy(gridOffset, dx, dy)) {
@@ -70,7 +70,7 @@ void map_orientation_change(int counter_clockwise)
 
 int map_orientation_for_gatehouse(int x, int y)
 {
-    switch (Data_State.map.orientation) {
+    switch (city_view_orientation()) {
         case DIR_2_RIGHT: x--; break;
         case DIR_4_BOTTOM: x--; y--; break;
         case DIR_6_LEFT: y--; break;
@@ -160,7 +160,7 @@ int map_orientation_for_gatehouse(int x, int y)
 
 int map_orientation_for_triumphal_arch(int x, int y)
 {
-    switch (Data_State.map.orientation) {
+    switch (city_view_orientation()) {
         case DIR_2_RIGHT: x -= 2; break;
         case DIR_4_BOTTOM: x -= 2; y -= 2; break;
         case DIR_6_LEFT: y -= 2; break;
@@ -234,7 +234,7 @@ int map_orientation_for_triumphal_arch(int x, int y)
 
 void map_orientation_update_buildings()
 {
-    int map_orientation = Data_State.map.orientation;
+    int map_orientation = city_view_orientation();
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP || map_orientation == DIR_4_BOTTOM;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);

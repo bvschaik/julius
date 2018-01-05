@@ -1,6 +1,7 @@
 #include "routing_terrain.h"
 
 #include "building/building.h"
+#include "city/view.h"
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/building.h"
@@ -246,7 +247,7 @@ static int is_wall_tile(int grid_offset)
 static int count_adjacent_wall_tiles(int grid_offset)
 {
     int adjacent = 0;
-    switch (Data_State.map.orientation) {
+    switch (city_view_orientation()) {
         case DIR_0_TOP:
             adjacent += is_wall_tile(grid_offset + map_grid_delta(0, 1));
             adjacent += is_wall_tile(grid_offset + map_grid_delta(1, 1));

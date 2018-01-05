@@ -1,5 +1,6 @@
 #include "missile.h"
 
+#include "city/view.h"
 #include "figure/formation.h"
 #include "figure/movement.h"
 #include "figure/properties.h"
@@ -8,8 +9,6 @@
 #include "map/figure.h"
 #include "map/point.h"
 #include "sound/effect.h"
-
-#include "Data/State.h"
 
 static const int CLOUD_TILE_OFFSETS[] = {0, 0, 0, 1, 1, 2};
 
@@ -165,7 +164,7 @@ void figure_arrow_action(figure *f)
     } else if (should_die) {
         f->state = FigureState_Dead;
     }
-    int dir = (16 + f->direction - 2 * Data_State.map.orientation) % 16;
+    int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
     f->graphicId = image_group(GROUP_FIGURE_MISSILE) + 16 + dir;
 }
 
@@ -184,7 +183,7 @@ void figure_spear_action(figure *f)
     } else if (should_die) {
         f->state = FigureState_Dead;
     }
-    int dir = (16 + f->direction - 2 * Data_State.map.orientation) % 16;
+    int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
     f->graphicId = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
@@ -203,7 +202,7 @@ void figure_javelin_action(figure *f)
     } else if (should_die) {
         f->state = FigureState_Dead;
     }
-    int dir = (16 + f->direction - 2 * Data_State.map.orientation) % 16;
+    int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
     f->graphicId = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
@@ -242,6 +241,6 @@ void figure_bolt_action(figure *f)
         f->state = FigureState_Dead;
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_GROUND);
     }
-    int dir = (16 + f->direction - 2 * Data_State.map.orientation) % 16;
+    int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
     f->graphicId = image_group(GROUP_FIGURE_MISSILE) + 32 + dir;
 }

@@ -1,5 +1,6 @@
 #include "bridge.h"
 
+#include "city/view.h"
 #include "core/direction.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -97,7 +98,7 @@ int map_bridge_add(int x, int y, int is_ship_bridge)
     }
 
     int pillar_distance = 0;
-    bridge.direction -= Data_State.map.orientation;
+    bridge.direction -= city_view_orientation();
     if (bridge.direction < 0) bridge.direction += 8;
     if (is_ship_bridge) {
         switch (bridge.length) {

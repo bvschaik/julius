@@ -1,12 +1,11 @@
 #include "image_context.h"
 
 #include "building/building.h"
+#include "city/view.h"
 #include "map/building.h"
 #include "map/elevation.h"
 #include "map/property.h"
 #include "map/terrain.h"
-
-#include "Data/State.h"
 
 #define MAX_TILES 8
 
@@ -332,7 +331,7 @@ static const terrain_image *get_image(int group, int tiles[MAX_TILES])
                 context[i].current_item_offset = 0;
             }
             result.is_valid = 1;
-            result.group_offset = context[i].offset_for_orientation[Data_State.map.orientation / 2];
+            result.group_offset = context[i].offset_for_orientation[city_view_orientation() / 2];
             result.item_offset = context[i].current_item_offset;
             result.aqueduct_offset = context[i].aqueduct_offset;
             break;

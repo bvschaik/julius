@@ -12,7 +12,6 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 
-#include "Data/State.h"
 #include "UI/PopupDialog.h"
 #include "UI/Window.h"
 

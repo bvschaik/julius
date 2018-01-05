@@ -1,5 +1,6 @@
 #include "tiles.h"
 
+#include "city/view.h"
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
@@ -442,7 +443,8 @@ static void set_wall_gatehouse_image_manually(int grid_offset)
     int gatehouse_down = get_gatehouse_building_id(grid_offset + map_grid_delta(0, 1));
     int gatehouse_right = get_gatehouse_building_id(grid_offset + map_grid_delta(1, 0));
     int image_offset = 0;
-    if (Data_State.map.orientation == DIR_0_TOP) {
+    int map_orientation = city_view_orientation();
+    if (map_orientation == DIR_0_TOP) {
         if (gatehouse_up && !gatehouse_left) {
             int pos = get_gatehouse_position(grid_offset, DIR_0_TOP, gatehouse_up);
             if (pos > 0) {
@@ -466,7 +468,7 @@ static void set_wall_gatehouse_image_manually(int grid_offset)
                 }
             }
         }
-    } else if (Data_State.map.orientation == DIR_2_RIGHT) {
+    } else if (map_orientation == DIR_2_RIGHT) {
         if (gatehouse_up && !gatehouse_right) {
             int pos = get_gatehouse_position(grid_offset, DIR_0_TOP, gatehouse_up);
             if (pos > 0) {
@@ -490,7 +492,7 @@ static void set_wall_gatehouse_image_manually(int grid_offset)
                 }
             }
         }
-    } else if (Data_State.map.orientation == DIR_4_BOTTOM) {
+    } else if (map_orientation == DIR_4_BOTTOM) {
         if (gatehouse_down && !gatehouse_right) {
             int pos = get_gatehouse_position(grid_offset, DIR_4_BOTTOM, gatehouse_down);
             if (pos > 0) {
@@ -514,7 +516,7 @@ static void set_wall_gatehouse_image_manually(int grid_offset)
                 }
             }
         }
-    } else if (Data_State.map.orientation == DIR_6_LEFT) {
+    } else if (map_orientation == DIR_6_LEFT) {
         if (gatehouse_down && !gatehouse_left) {
             int pos = get_gatehouse_position(grid_offset, DIR_4_BOTTOM, gatehouse_down);
             if (pos > 0) {
@@ -1003,7 +1005,7 @@ static int get_access_ramp_image_offset(int x, int y)
     if (image_offset < 0) {
         return -1;
     }
-    switch (Data_State.map.orientation) {
+    switch (city_view_orientation()) {
         case DIR_0_TOP: break;
         case DIR_6_LEFT: image_offset += 1; break;
         case DIR_4_BOTTOM: image_offset += 2; break;

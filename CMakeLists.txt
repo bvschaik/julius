@@ -80,6 +80,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/sentiment.c
     ${PROJECT_SOURCE_DIR}/src/city/trade.c
     ${PROJECT_SOURCE_DIR}/src/city/victory.c
+    ${PROJECT_SOURCE_DIR}/src/city/view.c
     ${PROJECT_SOURCE_DIR}/src/city/warning.c
 )
 set(EMPIRE_FILES

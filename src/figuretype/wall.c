@@ -1,6 +1,7 @@
 #include "wall.h"
 
 #include "building/building.h"
+#include "city/view.h"
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/enemy_army.h"
@@ -15,8 +16,6 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 #include "sound/effect.h"
-
-#include "Data/State.h"
 
 static const int BALLISTA_FIRING_OFFSETS[] = {
     0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -56,7 +55,7 @@ void figure_ballista_action(figure *f)
         f->state = FigureState_Dead;
     }
     map_figure_delete(f);
-    switch (Data_State.map.orientation) {
+    switch (city_view_orientation()) {
         case DIR_0_TOP: f->x = b->x; f->y = b->y; break;
         case DIR_2_RIGHT: f->x = b->x + 1; f->y = b->y; break;
         case DIR_4_BOTTOM: f->x = b->x + 1; f->y = b->y + 1; break;

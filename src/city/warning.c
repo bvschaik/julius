@@ -1,11 +1,10 @@
 #include "warning.h"
 
+#include "city/view.h"
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
 #include "game/settings.h"
-
-#include "Data/State.h"
 
 #define MAX_WARNINGS 5
 #define MAX_TEXT 100
@@ -41,7 +40,7 @@ void city_warning_show(warning_type type)
     w->in_use = 1;
     const uint8_t *text;
     if (type == WARNING_ORIENTATION) {
-        text = lang_get_string(17, Data_State.map.orientation);
+        text = lang_get_string(17, city_view_orientation());
     } else {
         text = lang_get_string(19, type - 2);
     }

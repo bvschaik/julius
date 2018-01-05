@@ -1,6 +1,6 @@
 #include "image.h"
 
-#include "Data/State.h"
+#include "city/view.h"
 
 static const int CORPSE_IMAGE_OFFSETS[128] = {
     0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -62,7 +62,7 @@ int figure_image_missile_launcher_offset(figure *f)
 
 int figure_image_direction(figure *f)
 {
-    int dir = f->direction - Data_State.map.orientation;
+    int dir = f->direction - city_view_orientation();
     if (dir < 0) {
         dir += 8;
     }
@@ -71,5 +71,5 @@ int figure_image_direction(figure *f)
 
 int figure_image_normalize_direction(int direction)
 {
-    return (8 + direction - Data_State.map.orientation) % 8;
+    return (8 + direction - city_view_orientation()) % 8;
 }

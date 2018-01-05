@@ -13,6 +13,7 @@
 #include "building/properties.h"
 #include "building/warehouse.h"
 #include "city/finance.h"
+#include "city/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "figure/formation.h"
@@ -500,7 +501,7 @@ void building_construction_update(int x, int y)
         if (formation_get_num_legions_cached() < 6) {
             const int offsets_x[] = {3, 4, 4, 3};
             const int offsets_y[] = {-1, -1, 0, 0};
-            int orient_index = Data_State.map.orientation / 2;
+            int orient_index = city_view_orientation() / 2;
             int x_offset = offsets_x[orient_index];
             int y_offset = offsets_y[orient_index];
             if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) &&

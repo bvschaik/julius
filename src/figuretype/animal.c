@@ -1,6 +1,7 @@
 #include "animal.h"
 
 #include "building/building.h"
+#include "city/view.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/combat.h"
@@ -17,7 +18,6 @@
 #include "scenario/property.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 static const map_point SEAGULL_OFFSETS[] = {
     {0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}
@@ -303,9 +303,10 @@ void figure_zebra_action(figure *f)
 static void set_horse_destination(figure *f, int state)
 {
     building *b = building_get(f->buildingId);
+    int orientation = city_view_orientation();
     if (state == HORSE_CREATED) {
         map_figure_delete(f);
-        if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
+        if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
             f->destinationX = b->x + HORSE_DESTINATION_1[f->waitTicksMissile].x;
             f->destinationY = b->y + HORSE_DESTINATION_1[f->waitTicksMissile].y;
         } else {
@@ -322,7 +323,7 @@ static void set_horse_destination(figure *f, int state)
         f->gridOffset = map_grid_offset(f->x, f->y);
         map_figure_add(f);
     } else if (state == HORSE_RACING) {
-        if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
+        if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
             f->destinationX = b->x + HORSE_DESTINATION_1[f->waitTicksMissile].x;
             f->destinationY = b->y + HORSE_DESTINATION_1[f->waitTicksMissile].y;
         } else {
@@ -330,7 +331,7 @@ static void set_horse_destination(figure *f, int state)
             f->destinationY = b->y + HORSE_DESTINATION_2[f->waitTicksMissile].y;
         }
     } else if (state == HORSE_FINISHED) {
-        if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
+        if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
             if (f->resourceId) {
                 f->destinationX = b->x + 1;
                 f->destinationY = b->y + 2;

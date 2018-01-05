@@ -8,6 +8,7 @@
 #include "building/menu.h"
 #include "building/properties.h"
 #include "building/storage.h"
+#include "city/view.h"
 #include "city/warning.h"
 #include "core/random.h"
 #include "figure/formation_legion.h"
@@ -54,26 +55,36 @@ static void add_hippodrome(building *b)
     int image2 = image_group(GROUP_BUILDING_HIPPODROME_2);
     Data_CityInfo.buildingHippodromePlaced = 1;
 
+    int orientation = city_view_orientation();
     building *part1 = b;
-    if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
+    if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
         part1->subtype.orientation = 0;
     } else {
         part1->subtype.orientation = 3;
     }
     part1->prevPartBuildingId = 0;
     int image_id;
-    switch (Data_State.map.orientation) {
-        case DIR_0_TOP:    image_id = image2; break;
-        case DIR_2_RIGHT:  image_id = image1 + 4; break;
-        case DIR_4_BOTTOM: image_id = image2 + 4; break;
-        case DIR_6_LEFT:   image_id = image1; break;
-        default: return;
+    switch (orientation) {
+        case DIR_0_TOP:
+            image_id = image2;
+            break;
+        case DIR_2_RIGHT:
+            image_id = image1 + 4;
+            break;
+        case DIR_4_BOTTOM:
+            image_id = image2 + 4;
+            break;
+        case DIR_6_LEFT:
+            image_id = image1;
+            break;
+        default:
+            return;
     }
     map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
 
     building *part2 = building_create(BUILDING_HIPPODROME, b->x + 5, b->y);
     game_undo_add_building(part2);
-    if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
+    if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
         part2->subtype.orientation = 1;
     } else {
         part2->subtype.orientation = 4;
@@ -81,17 +92,21 @@ static void add_hippodrome(building *b)
     part2->prevPartBuildingId = part1->id;
     part1->nextPartBuildingId = part2->id;
     part2->nextPartBuildingId = 0;
-    switch (Data_State.map.orientation) {
-        case DIR_0_TOP: case DIR_4_BOTTOM:
-        image_id = image2 + 2; break;
-        case DIR_2_RIGHT: case DIR_6_LEFT:
-        image_id = image1 + 2; break;
+    switch (orientation) {
+        case DIR_0_TOP:
+        case DIR_4_BOTTOM:
+            image_id = image2 + 2;
+            break;
+        case DIR_2_RIGHT:
+        case DIR_6_LEFT:
+            image_id = image1 + 2;
+            break;
     }
     map_building_tiles_add(part2->id, b->x + 5, b->y, b->size, image_id, TERRAIN_BUILDING);
 
     building *part3 = building_create(BUILDING_HIPPODROME, b->x + 10, b->y);
     game_undo_add_building(part3);
-    if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
+    if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
         part3->subtype.orientation = 2;
     } else {
         part3->subtype.orientation = 5;
@@ -99,15 +114,19 @@ static void add_hippodrome(building *b)
     part3->prevPartBuildingId = part2->id;
     part2->nextPartBuildingId = part3->id;
     part3->nextPartBuildingId = 0;
-    switch (Data_State.map.orientation) {
+    switch (orientation) {
         case DIR_0_TOP:
-        image_id = image2 + 4; break;
+            image_id = image2 + 4;
+            break;
         case DIR_2_RIGHT:
-        image_id = image1; break;
+            image_id = image1;
+            break;
         case DIR_4_BOTTOM:
-        image_id = image2; break;
+            image_id = image2;
+            break;
         case DIR_6_LEFT:
-        image_id = image1 + 4; break;
+            image_id = image1 + 4;
+            break;
     }
     map_building_tiles_add(part3->id, b->x + 10, b->y, b->size, image_id, TERRAIN_BUILDING);
 }
@@ -511,7 +530,7 @@ int building_construction_place_building(building_type type, int x, int y)
     } else if (type == BUILDING_TRIUMPHAL_ARCH) {
         building_orientation = map_orientation_for_triumphal_arch(x, y);
     }
-    switch (Data_State.map.orientation) {
+    switch (city_view_orientation()) {
         case DIR_2_RIGHT: x = x - size + 1; break;
         case DIR_4_BOTTOM: x = x - size + 1; y = y - size + 1; break;
         case DIR_6_LEFT: y = y - size + 1; break;
