@@ -1,6 +1,5 @@
 #include "Screen.h"
 
-#include "CityView.h"
 #include "Graphics.h"
 #include "Data/Screen.h"
 
@@ -17,7 +16,7 @@ static void setSize(int width, int height)
 	Data_Screen.offset640x480.x = (Data_Screen.width - 640) / 2;
 	Data_Screen.offset640x480.y = (Data_Screen.height - 480) / 2;
 	Graphics_setClipRectangle(0, 0, width, height);
-	CityView_setViewport();
+	city_view_set_viewport(width, height);
 	city_view_check_camera_boundaries();
 	city_warning_clear_all();
 }

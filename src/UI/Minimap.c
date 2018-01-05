@@ -1,6 +1,5 @@
 #include "Minimap.h"
 #include "Sidebar.h"
-#include "../CityView.h"
 #include "../Graphics.h"
 #include "../Data/CityView.h"
 #include "../Data/State.h"

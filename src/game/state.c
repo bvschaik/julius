@@ -6,7 +6,6 @@
 #include "map/ring.h"
 
 #include "Data/State.h"
-#include "../CityView.h"
 
 static struct {
     int paused;
@@ -21,11 +20,6 @@ void game_state_init()
 
     Data_State.map.orientation = 0;
     city_view_calculate_lookup();
-    if (Data_State.sidebarCollapsed) {
-        CityView_setViewportWithoutSidebar();
-    } else {
-        CityView_setViewportWithSidebar();
-    }
     Data_State.map.camera.x = 76;
     Data_State.map.camera.y = 152;
     city_view_check_camera_boundaries();

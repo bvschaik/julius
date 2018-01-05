@@ -7,6 +7,13 @@
 #include "Data/CityView.h"
 #include "Data/State.h"
 
+#define MENUBAR_HEIGHT 24
+
+static struct {
+    int screen_width;
+    int screen_height;
+} data;
+
 int city_view_orientation()
 {
     return Data_State.map.orientation;
@@ -222,6 +229,64 @@ void city_view_rotate_right()
             Data_State.map.camera.y += 2;
         }
     }
+}
+
+static void set_viewport(int x_offset, int y_offset, int width, int height)
+{
+    int width_tiles = width / 60;
+    int height_tiles = height / 15;
+    Data_CityView.xOffsetInPixels = x_offset;
+    Data_CityView.yOffsetInPixels = y_offset;
+    Data_CityView.widthInPixels = width_tiles * 60 - 2;
+    Data_CityView.heightInPixels = height_tiles * 15;
+    Data_CityView.widthInTiles = width_tiles;
+    Data_CityView.heightInTiles = height_tiles;
+    Data_CityView.xInTiles = GRID_SIZE / 2;
+    Data_CityView.yInTiles = GRID_SIZE;
+}
+
+static void set_viewport_with_sidebar()
+{
+    set_viewport(0, MENUBAR_HEIGHT, data.screen_width - 160, data.screen_height - MENUBAR_HEIGHT);
+}
+
+static void set_viewport_without_sidebar()
+{
+    set_viewport(0, MENUBAR_HEIGHT, data.screen_width - 40, data.screen_height - MENUBAR_HEIGHT);
+}
+
+void city_view_set_viewport(int screen_width, int screen_height)
+{
+    data.screen_width = screen_width;
+    data.screen_height = screen_height;
+    if (Data_State.sidebarCollapsed) {
+        set_viewport_without_sidebar();
+    } else {
+        set_viewport_with_sidebar();
+    }
+}
+
+int city_view_is_sidebar_collapsed()
+{
+    return Data_State.sidebarCollapsed;
+}
+
+void city_view_start_sidebar_toggle()
+{
+    set_viewport_without_sidebar();
+    city_view_check_camera_boundaries();
+}
+
+void city_view_toggle_sidebar()
+{
+    if (Data_State.sidebarCollapsed) {
+        Data_State.sidebarCollapsed = 0;
+        set_viewport_with_sidebar();
+    } else {
+        Data_State.sidebarCollapsed = 1;
+        set_viewport_without_sidebar();
+    }
+    city_view_check_camera_boundaries();
 }
 
 void city_view_save_state(buffer *orientation, buffer *camera)

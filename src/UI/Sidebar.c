@@ -5,7 +5,6 @@
 #include "MessageDialog.h"
 #include "Minimap.h"
 
-#include "../CityView.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 
@@ -325,8 +324,7 @@ static void buttonCollapseExpand(int param1, int param2)
 	data.progress = 0;
 	data.slideStart = time_get_millis();
 	UI_Window_goTo(Window_SlidingSidebar);
-	CityView_setViewportWithoutSidebar();
-	city_view_check_camera_boundaries();
+	city_view_start_sidebar_toggle();
 	sound_effect_play(SOUND_EFFECT_SIDEBAR);
 }
 
@@ -446,14 +444,7 @@ void UI_SlidingSidebar_drawForeground()
 	UI_Window_requestRefresh();
 	updateProgress();
 	if (data.progress >= 47) {
-		if (Data_State.sidebarCollapsed) {
-			Data_State.sidebarCollapsed = 0;
-			CityView_setViewportWithSidebar();
-		} else {
-			Data_State.sidebarCollapsed = 1;
-			CityView_setViewportWithoutSidebar();
-		}
-		city_view_check_camera_boundaries();
+		city_view_toggle_sidebar();
 		UI_Window_goTo(Window_City);
 		UI_Window_refresh(1);
 		return;

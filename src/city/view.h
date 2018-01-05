@@ -21,6 +21,14 @@ void city_view_rotate_left();
 
 void city_view_rotate_right();
 
+void city_view_set_viewport(int screen_width, int screen_height);
+
+int city_view_is_sidebar_collapsed();
+
+void city_view_start_sidebar_toggle();
+
+void city_view_toggle_sidebar();
+
 void city_view_save_state(buffer *orientation, buffer *camera);
 
 void city_view_load_state(buffer *orientation, buffer *camera);
