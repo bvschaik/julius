@@ -7,6 +7,7 @@
 #include "../Data/State.h"
 
 #include "building/count.h"
+#include "city/view.h"
 #include "core/calc.h"
 #include "core/debug.h"
 #include "figure/formation_legion.h"
@@ -276,8 +277,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		};
 		const int *offsets;
 		int index = 0;
-		if (Data_State.map.orientation == DIR_6_LEFT ||
-			Data_State.map.orientation == DIR_2_RIGHT) {
+		if (city_view_orientation() == DIR_6_LEFT || city_view_orientation() == DIR_2_RIGHT) {
 			index = 1;
 		}
 		if (m->figure_type == FIGURE_FORT_LEGIONARY) {

@@ -3,6 +3,7 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "city/view.h"
 #include "core/calc.h"
 #include "figuretype/animal.h"
 #include "figuretype/wall.h"
@@ -133,7 +134,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_CityInfo_Extra.entryPointFlag.y = yTile;
 		Data_CityInfo_Extra.entryPointFlag.gridOffset = gridOffsetFlag;
 		map_terrain_add(gridOffsetFlag, TERRAIN_ROCK);
-		int orientation = (Data_State.map.orientation + entryOrientation) % 8;
+		int orientation = (city_view_orientation() + entryOrientation) % 8;
 		map_image_set(gridOffsetFlag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + orientation / 2);
 	}
 	if (exitOrientation >= 0) {
@@ -151,7 +152,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_CityInfo_Extra.exitPointFlag.y = yTile;
 		Data_CityInfo_Extra.exitPointFlag.gridOffset = gridOffsetFlag;
 		map_terrain_add(gridOffsetFlag, TERRAIN_ROCK);
-		int orientation = (Data_State.map.orientation + exitOrientation) % 8;
+		int orientation = (city_view_orientation() + exitOrientation) % 8;
 		map_image_set(gridOffsetFlag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2);
 	}
 }

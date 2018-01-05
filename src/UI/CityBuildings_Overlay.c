@@ -2,6 +2,7 @@
 
 #include "building/animation.h"
 #include "building/industry.h"
+#include "city/view.h"
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "game/state.h"
@@ -666,7 +667,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		// farms have multiple drawable tiles: the farmhouse and 5 fields
 		if (drawOrig) {
 			if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
-				if (is_drawable_farmhouse(gridOffset, Data_State.map.orientation)) {
+				if (is_drawable_farmhouse(gridOffset, city_view_orientation())) {
 					DRAWFOOT_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 				} else if (map_property_is_draw_tile(gridOffset)) {
 					DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
@@ -677,7 +678,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		} else {
 			int draw = 1;
 			if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
-			    draw = is_drawable_farm_corner(gridOffset, Data_State.map.orientation);
+			    draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
 			}
 			if (draw) {
 				int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
@@ -886,7 +887,7 @@ static void drawBuildingTopForFireOverlay(int gridOffset, building *b, int xOffs
 	} else if (b->fireRisk > 0) {
 		int draw = 1;
 		if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
-			draw = is_drawable_farm_corner(gridOffset, Data_State.map.orientation);
+			draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
 		}
 		if (draw) {
 			drawOverlayColumn(b->fireRisk / 10, xOffset, yOffset, 1);
@@ -901,7 +902,7 @@ static void drawBuildingTopForDamageOverlay(int gridOffset, building *b, int xOf
 	} else if (b->damageRisk > 0) {
 		int draw = 1;
 		if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
-			draw = is_drawable_farm_corner(gridOffset, Data_State.map.orientation);
+			draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
 		}
 		if (draw) {
 			drawOverlayColumn(b->damageRisk / 10, xOffset, yOffset, 1);
@@ -1219,7 +1220,7 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, building *b, int x
 	}
 
 	if (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM) {
-		if (is_drawable_farmhouse(gridOffset, Data_State.map.orientation)) {
+		if (is_drawable_farmhouse(gridOffset, city_view_orientation())) {
 			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 		} else if (map_property_is_draw_tile(gridOffset)) {
             DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);

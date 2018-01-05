@@ -5,6 +5,7 @@
 #include "building/industry.h"
 #include "building/properties.h"
 #include "city/finance.h"
+#include "city/view.h"
 #include "figure/formation.h"
 #include "map/bridge.h"
 #include "map/building.h"
@@ -128,6 +129,7 @@ void UI_CityBuildings_drawSelectedBuildingGhost()
 
 static void drawBuildingGhostDefault()
 {
+    int map_orientation = city_view_orientation();
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
 	if (Data_State.selectedBuilding.roadRequired > 0) {
@@ -146,7 +148,7 @@ static void drawBuildingGhostDefault()
 	}
 	int xStart = 0, yStart = 0;
 	// determine x and y offset
-	switch (Data_State.map.orientation) {
+	switch (map_orientation) {
 		case DIR_0_TOP:
 			xStart = Data_State.map.current.x;
 			yStart = Data_State.map.current.y;
@@ -201,8 +203,7 @@ static void drawBuildingGhostDefault()
 		} else {
 			graphicOffset = Data_State.selectedBuilding.roadRequired == 2 ? 1 : 0;
 		}
-		if (Data_State.map.orientation == DIR_6_LEFT ||
-			Data_State.map.orientation == DIR_2_RIGHT) {
+		if (map_orientation == DIR_6_LEFT || map_orientation == DIR_2_RIGHT) {
 			graphicOffset = 1 - graphicOffset;
 		}
 		graphicId += graphicOffset;
@@ -217,8 +218,7 @@ static void drawBuildingGhostDefault()
 		} else {
 			graphicOffset = Data_State.selectedBuilding.roadRequired == 2 ? 2 : 0;
 		}
-		if (Data_State.map.orientation == DIR_6_LEFT ||
-			Data_State.map.orientation == DIR_2_RIGHT) {
+		if (map_orientation == DIR_6_LEFT || map_orientation == DIR_2_RIGHT) {
 			graphicOffset = 2 - graphicOffset;
 		}
 		graphicId += graphicOffset;
@@ -233,7 +233,7 @@ static void drawBuildingGhostDefault()
 	}
 
 	int numTiles = buildingSize * buildingSize;
-	int orientationIndex = Data_State.map.orientation / 2;
+	int orientationIndex = map_orientation / 2;
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
 		int terrain = map_terrain_get(tileOffset) & TERRAIN_NOT_CLEAR;
@@ -473,7 +473,7 @@ static void drawBuildingGhostBathhouse()
 	int placementObstructed = 0;
 	int gridOffset = Data_State.map.current.gridOffset;
 	int numTiles = 4;
-	int orientationIndex = Data_State.map.orientation / 2;
+	int orientationIndex = city_view_orientation() / 2;
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
 		if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
@@ -533,7 +533,7 @@ static void drawBuildingGhostBridge(building_type type)
 		type == BUILDING_LOW_BRIDGE ? 0 : 1,
 		&length, &direction);
 
-	int dir = direction - Data_State.map.orientation;
+	int dir = direction - city_view_orientation();
 	if (dir < 0) {
 		dir += 8;
 	}
@@ -779,7 +779,7 @@ static void drawBuildingGhostFort()
 	int numTilesGround = building_properties_for_type(BUILDING_FORT_GROUND)->size;
 	numTilesGround *= numTilesGround;
 
-	int orientationIndex = Data_State.map.orientation / 2;
+	int orientationIndex = city_view_orientation() / 2;
 	int gridOffsetFort = Data_State.map.current.gridOffset;
 	int gridOffsetGround = gridOffsetFort + fortGroundGridOffsets[orientationIndex];
 
@@ -859,7 +859,7 @@ static void drawBuildingGhostHippodrome()
 		placementObstructed = 1;
 	}
 	int numTiles = 25;
-	int orientationIndex = Data_State.map.orientation / 2;
+	int orientationIndex = city_view_orientation() / 2;
 	int gridOffset1 = Data_State.map.current.gridOffset;
 	int gridOffset2 = gridOffset1 + map_grid_delta(5, 0);
 	int gridOffset3 = gridOffset1 + map_grid_delta(10, 0);
