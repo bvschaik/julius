@@ -9,7 +9,6 @@
 #include "../Widget.h"
 
 #include "../Data/Screen.h"
-#include "../Data/State.h"
 
 #include "building/menu.h"
 #include "city/message.h"
@@ -145,7 +144,7 @@ void UI_Sidebar_drawForeground()
         enableBuildingButtons();
     }
 	int xOffsetPanel = Data_Screen.width - SIDEBAR_BORDER;
-	if (Data_State.sidebarCollapsed) {
+	if (city_view_is_sidebar_collapsed()) {
 		xOffsetPanel -= 42;
 	} else {
 		xOffsetPanel -= 162;
@@ -158,7 +157,7 @@ void UI_Sidebar_drawForeground()
 
 static void drawNumberOfMessages()
 {
-	if (UI_Window_getId() == Window_City && !Data_State.sidebarCollapsed) {
+	if (UI_Window_getId() == Window_City && !city_view_is_sidebar_collapsed()) {
         int messages = city_message_count();
 		buttonBuildExpanded[12].enabled = game_can_undo();
 		buttonBuildExpanded[13].enabled = messages > 0;
@@ -176,7 +175,7 @@ static void drawSidebar()
 {
 	int graphicBase = image_group(GROUP_SIDE_PANEL);
 	int xOffsetPanel = Data_Screen.width - SIDEBAR_BORDER;
-	if (Data_State.sidebarCollapsed) {
+	if (city_view_is_sidebar_collapsed()) {
 		xOffsetPanel -= 42;
 		Graphics_drawImage(graphicBase, xOffsetPanel, 24);
 	} else {
@@ -193,10 +192,10 @@ static void drawSidebar()
 	int yMax = Data_Screen.height - BOTTOM_BORDER;
 	while (yOffset < yMax) {
 		if (yMax - yOffset <= 120) {
-			Graphics_drawImage(graphicBase + 2 + Data_State.sidebarCollapsed, xOffsetPanel, yOffset);
+			Graphics_drawImage(graphicBase + 2 + city_view_is_sidebar_collapsed(), xOffsetPanel, yOffset);
 			yOffset += 120;
 		} else {
-			Graphics_drawImage(graphicBase + 4 + Data_State.sidebarCollapsed, xOffsetPanel, yOffset);
+			Graphics_drawImage(graphicBase + 4 + city_view_is_sidebar_collapsed(), xOffsetPanel, yOffset);
 			yOffset += 285;
 		}
 	}
@@ -224,7 +223,7 @@ static void drawFillerBorders()
 static void drawButtons()
 {
 	buttonBuildExpanded[12].enabled = game_can_undo();
-	if (Data_State.sidebarCollapsed) {
+	if (city_view_is_sidebar_collapsed()) {
 		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
 		Widget_Button_drawImageButtons(xOffset, 24, buttonExpandSidebar, 1);
 		Widget_Button_drawImageButtons(xOffset, 24, buttonBuildCollapsed, 12);
@@ -238,7 +237,7 @@ static void drawButtons()
 
 static void drawOverlayText(int xOffset)
 {
-	if (!Data_State.sidebarCollapsed) {
+	if (!city_view_is_sidebar_collapsed()) {
 		if (game_state_overlay()) {
 			Widget_GameText_drawCentered(14, game_state_overlay(), xOffset, 32, 117, FONT_NORMAL_GREEN);
 		} else {
@@ -249,7 +248,7 @@ static void drawOverlayText(int xOffset)
 
 void UI_Sidebar_drawMinimap(int force)
 {
-	if (!Data_State.sidebarCollapsed) {
+	if (!city_view_is_sidebar_collapsed()) {
 		if (minimapRedrawRequested || scroll_in_progress() || force) {
 			int xOffset = XOFFSET_EXPANDED;
 			UI_Minimap_draw(xOffset + 8, 59, 73, 111);
@@ -264,7 +263,7 @@ int UI_Sidebar_handleMouse(const mouse *m)
 {
 	int buttonId;
 	data.focusButtonForTooltip = 0;
-	if (Data_State.sidebarCollapsed) {
+	if (city_view_is_sidebar_collapsed()) {
 		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
 		Widget_Button_handleImageButtons(xOffset, 24, buttonExpandSidebar, 1, &buttonId);
 		if (buttonId) {
@@ -297,7 +296,7 @@ int UI_Sidebar_handleMouse(const mouse *m)
 
 void UI_Sidebar_handleMouseBuildButtons(const mouse *m)
 {
-	if (Data_State.sidebarCollapsed) {
+	if (city_view_is_sidebar_collapsed()) {
 		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
 		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12, 0);
 	} else {
@@ -308,9 +307,6 @@ void UI_Sidebar_handleMouseBuildButtons(const mouse *m)
 
 int UI_Sidebar_getTooltipText()
 {
-	if (Data_State.sidebarCollapsed && Data_State.sidebarCollapsed != 1) {
-		return 0;
-	}
 	return data.focusButtonForTooltip;
 }
 
@@ -388,7 +384,7 @@ static void buttonMissionBriefing(int param1, int param2)
 
 static void buttonRotateNorth(int param1, int param2)
 {
-	switch (Data_State.map.orientation) {
+	switch (city_view_orientation()) {
 		case DIR_0_TOP: // already north
 			return;
 		case DIR_2_RIGHT:
@@ -463,7 +459,7 @@ void UI_SlidingSidebar_drawForeground()
 
 	// draw expanded sidebar on top of it
 	int xOffsetExpanded = XOFFSET_EXPANDED;
-	if (Data_State.sidebarCollapsed) {
+	if (city_view_is_sidebar_collapsed()) {
 		xOffsetExpanded += progressToOffset[47 - data.progress];
 	} else {
 		xOffsetExpanded += progressToOffset[data.progress];

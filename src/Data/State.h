@@ -10,7 +10,6 @@ enum {
 };
 
 extern struct _Data_State {
-	int sidebarCollapsed;
 	struct {
 		int gridOffsetStart;
 		int gridOffsetEnd;

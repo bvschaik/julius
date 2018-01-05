@@ -12,7 +12,8 @@
 static struct {
     int screen_width;
     int screen_height;
-} data;
+    int sidebar_collapsed;
+} data = {0, 0, 0};
 
 int city_view_orientation()
 {
@@ -259,7 +260,7 @@ void city_view_set_viewport(int screen_width, int screen_height)
 {
     data.screen_width = screen_width;
     data.screen_height = screen_height;
-    if (Data_State.sidebarCollapsed) {
+    if (data.sidebar_collapsed) {
         set_viewport_without_sidebar();
     } else {
         set_viewport_with_sidebar();
@@ -268,7 +269,7 @@ void city_view_set_viewport(int screen_width, int screen_height)
 
 int city_view_is_sidebar_collapsed()
 {
-    return Data_State.sidebarCollapsed;
+    return data.sidebar_collapsed;
 }
 
 void city_view_start_sidebar_toggle()
@@ -279,11 +280,11 @@ void city_view_start_sidebar_toggle()
 
 void city_view_toggle_sidebar()
 {
-    if (Data_State.sidebarCollapsed) {
-        Data_State.sidebarCollapsed = 0;
+    if (data.sidebar_collapsed) {
+        data.sidebar_collapsed = 0;
         set_viewport_with_sidebar();
     } else {
-        Data_State.sidebarCollapsed = 1;
+        data.sidebar_collapsed = 1;
         set_viewport_without_sidebar();
     }
     city_view_check_camera_boundaries();

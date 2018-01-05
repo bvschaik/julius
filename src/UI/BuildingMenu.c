@@ -10,6 +10,7 @@
 #include "building/construction.h"
 #include "building/menu.h"
 #include "building/model.h"
+#include "city/view.h"
 #include "scenario/property.h"
 
 static void drawMenuButtons();
@@ -79,7 +80,7 @@ void UI_BuildingMenu_init(int submenu)
 
 void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
 {
-	if (Data_State.sidebarCollapsed && !forceDraw) {
+	if (city_view_is_sidebar_collapsed() && !forceDraw) {
 		return;
 	}
 	if (building_construction_type() == BUILDING_NONE) {

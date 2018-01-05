@@ -5,7 +5,6 @@
 #include "UI/Sidebar.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 #include "building/count.h"
 #include "building/dock.h"

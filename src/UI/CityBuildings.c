@@ -1060,7 +1060,7 @@ static void militaryMapClick()
 void UI_CityBuildings_handleMouseMilitary(const mouse *m)
 {
 	updateCityViewCoords(m);
-	if (!Data_State.sidebarCollapsed && UI_Minimap_handleClick(m)) {
+	if (!city_view_is_sidebar_collapsed() && UI_Minimap_handleClick(m)) {
 		return;
 	}
 	UI_CityBuildings_scrollMap(scroll_get_direction(m));
