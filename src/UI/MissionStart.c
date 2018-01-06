@@ -5,13 +5,13 @@
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Constants.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
 #include "core/lang.h"
 #include "core/string.h"
 #include "game/file.h"
+#include "game/mission.h"
 #include "game/tutorial.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
@@ -164,13 +164,13 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
 	}
 	if (m->left.went_up) {
 		if (isMouseHit(m, xPeaceful, yPeaceful, 44)) {
-			scenario_set_campaign_mission(Constant_MissionIds[rank].peaceful);
+			scenario_set_campaign_mission(game_mission_peaceful());
 			data.choice = 1;
 			UI_Window_requestRefresh();
 			sound_speech_play_file("wavs/fanfare_nu1.wav");
 		}
 		if (isMouseHit(m, xMilitary, yMilitary, 44)) {
-			scenario_set_campaign_mission(Constant_MissionIds[rank].military);
+			scenario_set_campaign_mission(game_mission_military());
 			data.choice = 2;
 			UI_Window_requestRefresh();
 			sound_speech_play_file("wavs/fanfare_nu5.wav");

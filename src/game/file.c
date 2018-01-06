@@ -288,6 +288,7 @@ static int load_campaign_mission(int mission_id)
     }
 
     initialize_saved_game();
+    Data_CityInfo.treasury = difficulty_adjust_money(Data_CityInfo.treasury);
     return 1;
 }
 
@@ -304,7 +305,6 @@ int game_file_start_scenario(const uint8_t *scenario_name)
         if (!load_campaign_mission(mission)) {
             return 0;
         }
-        Data_CityInfo.treasury = difficulty_adjust_money(Data_CityInfo.treasury);
     }
     scenario_set_campaign_mission(mission);
     scenario_set_campaign_rank(rank);

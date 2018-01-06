@@ -4,12 +4,12 @@
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Constants.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
 #include "city/finance.h"
 #include "city/victory.h"
+#include "game/mission.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/undo.h"
@@ -116,7 +116,7 @@ static void advanceToNextMission()
             scenario_set_campaign_rank(2);
 		}
 	} else {
-		scenario_set_campaign_mission(Constant_MissionIds[scenario_campaign_rank()].peaceful);
+		scenario_set_campaign_mission(game_mission_peaceful());
 		UI_MissionStart_show();
 	}
 }
