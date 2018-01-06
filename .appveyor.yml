@@ -1,6 +1,7 @@
 environment:
   CTEST_OUTPUT_ON_FAILURE: 1
-  SDL2_VERSION: 2.0.5
+  SDL2_VERSION: 2.0.7
+  SDL2_MIXER_VERSION: 2.0.2
   MINGW_PATH: C:\MinGW
   SDLDIR: C:\MinGW
 
@@ -8,12 +9,12 @@ platform:
   - x86
 
 install:
-  - appveyor DownloadFile http://libsdl.org/release/SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
+  - IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-%SDL2_VERSION%-mingw.tar.gz appveyor DownloadFile http://libsdl.org/release/SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
   - 7z x SDL2-devel-%SDL2_VERSION%-mingw.tar.gz -so | 7z x -si -ttar -oC:\
   - echo y | xcopy C:\SDL2-%SDL2_VERSION%\i686-w64-mingw32\* %MINGW_PATH%\ /S
-  - appveyor DownloadFile https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.2-mingw.tar.gz
-  - 7z x SDL2_mixer-devel-2.0.2-mingw.tar.gz -so | 7z x -si -ttar -oC:\
-  - echo y | xcopy C:\SDL2_mixer-2.0.2\i686-w64-mingw32\* %MINGW_PATH%\ /S
+  - IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz appveyor DownloadFile https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz
+  - 7z x SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz -so | 7z x -si -ttar -oC:\
+  - echo y | xcopy C:\SDL2_mixer-%SDL2_MIXER_VERSION%\i686-w64-mingw32\* %MINGW_PATH%\ /S
 
 before_build:
   - set Path=%MINGW_PATH%\bin;%Path%
@@ -27,6 +28,10 @@ build_script:
 after_build:
   - mingw32-make test
   - dir
+
+cache:
+  - SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
+  - SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz
 
 artifacts:
   - path: build\julius.exe
