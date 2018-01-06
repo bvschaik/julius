@@ -4,7 +4,6 @@
 #include "Advisors.h"
 
 #include "../Graphics.h"
-#include "../Video.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -15,6 +14,7 @@
 #include "core/lang.h"
 #include "empire/city.h"
 #include "figure/formation.h"
+#include "graphics/video.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 
@@ -120,7 +120,7 @@ void UI_MessageDialog_show(int textId, int backgroundIsProvided)
     const lang_message *msg = lang_get_message(textId);
 	if (playerMessage.usePopup != 1) {
 		data.showVideo = 0;
-	} else if (msg->video.text && Video_start((char*)msg->video.text)) {
+	} else if (msg->video.text && video_start((char*)msg->video.text)) {
 		data.showVideo = 1;
 	} else {
 		data.showVideo = 0;
@@ -132,7 +132,7 @@ void UI_MessageDialog_show(int textId, int backgroundIsProvided)
 void UI_MessageDialog_init()
 {
 	if (data.showVideo) {
-		Video_init();
+		video_init();
 	}
 }
 
@@ -400,7 +400,7 @@ static ImageButton *getAdvisorButton()
 
 static void drawForegroundVideo()
 {
-	Video_draw(data.x + 8, data.y + 8);
+	video_draw(data.x + 8, data.y + 8);
 	Widget_Button_drawImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1);
 	Widget_Button_drawImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1);
 }
@@ -511,7 +511,7 @@ static void buttonBack(int param1, int param2)
 static void cleanup()
 {
 	if (data.showVideo) {
-		Video_stop();
+		video_stop();
 	}
 	data.showVideo = 0;
 	playerMessage.messageAdvisor = 0;

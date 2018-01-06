@@ -2,7 +2,6 @@
 
 #include "Graphics.h"
 #include "System.h"
-#include "Video.h"
 
 #include "UI/Advisors.h"
 #include "UI/BuildingInfo.h"
@@ -20,6 +19,7 @@
 #include "figure/formation.h"
 #include "game/settings.h"
 #include "game/state.h"
+#include "graphics/video.h"
 #include "input/scroll.h"
 #include "map/bookmark.h"
 #include "map/grid.h"
@@ -281,7 +281,7 @@ static void confirm_exit(int accepted)
 
 void hotkey_esc()
 {
-    Video_stop();
+    video_stop();
     UI_PopupDialog_show(PopupDialog_Quit, confirm_exit, 1);
 }
 

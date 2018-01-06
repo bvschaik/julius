@@ -1,7 +1,6 @@
 #include "Game.h"
 
 #include "System.h"
-#include "Video.h"
 
 #include "UI/Window.h"
 #include "UI/TopMenu.h"
@@ -19,6 +18,7 @@
 #include "game/state.h"
 #include "game/tick.h"
 #include "graphics/image.h"
+#include "graphics/video.h"
 #include "input/scroll.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
@@ -139,7 +139,7 @@ void Game_draw()
 
 void Game_exit()
 {
-    Video_shutdown();
+    video_shutdown();
     settings_save();
     sound_system_shutdown();
 }
