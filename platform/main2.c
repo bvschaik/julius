@@ -1,28 +1,18 @@
 #include "SDL.h"
-#include <stdio.h>
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-
-#include "../src/UI/Window.h"
-#include "../src/core/time.h"
 #include "../src/Screen.h"
-#include "../src/input/cursor.h"
-#include "../src/input/hotkey.h"
-#include "../src/input/keyboard.h"
-#include "../src/Widget.h" // debug
-#include "../src/Graphics.h" // debug
-
-// debug data:
-#include "../src/Data/CityInfo.h"
-#include "../src/Data/Screen.h"
+#include "../src/Widget.h" // debug for fps counter
+#include "../src/Graphics.h" // debug for fps counter
+#include "../src/Data/Screen.h" // debug for fps counter
 
 #include "core/lang.h"
+#include "core/time.h"
 #include "game/settings.h"
-#include "game/file.h"
 #include "game/game.h"
 #include "game/system.h"
+#include "input/cursor.h"
+#include "input/hotkey.h"
+#include "input/keyboard.h"
 #include "input/mouse.h"
 
 #ifndef __MINGW32__
@@ -30,6 +20,7 @@
 #endif
 
 #include <signal.h>
+#include <unistd.h>
 
 static struct {
 	int width;
@@ -40,11 +31,8 @@ static struct {
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	SDL_Texture *texture;
+	SDL_Cursor *cursors[CURSOR_MAX];
 } SDL;
-
-static int autopilot = 0;
-
-static SDL_Cursor *Cursors[CURSOR_MAX];
 
 enum {
 	UserEventRefresh = 0,
@@ -65,8 +53,8 @@ void handler(int sig) {
 	// print out all the frames to stderr
 	fprintf(stderr, "Error: signal %d:\n", sig);
 	backtrace_symbols_fd(array, size, STDERR_FILENO);
-	exit(1);
 #endif
+	exit(1);
 }
 
 void system_exit()
@@ -105,11 +93,10 @@ void system_toggle_fullscreen()
 
 void system_set_cursor(int cursor_id)
 {
-	if (autopilot) return;
-	SDL_SetCursor(Cursors[cursor_id]);
+	SDL_SetCursor(SDL.cursors[cursor_id]);
 }
 
-static SDL_Cursor *initCursor(const cursor *c)
+static SDL_Cursor *init_cursor(const cursor *c)
 {
 	Uint8 data[4*32];
 	Uint8 mask[4*32];
@@ -125,8 +112,7 @@ static SDL_Cursor *initCursor(const cursor *c)
 		switch (c->data[i]) {
 			case 'X':
 				data[b] |= 0x01;
-				mask[b] |= 0x01;
-				break;
+				// fallthrough
 			case '.':
 				mask[b] |= 0x01;
 				break;
@@ -137,52 +123,10 @@ static SDL_Cursor *initCursor(const cursor *c)
 
 void system_init_cursors()
 {
-	if (autopilot) return;
 	for (int i = 0; i < CURSOR_MAX; i++) {
-		Cursors[i] = initCursor(input_cursor_data(i));
+		SDL.cursors[i] = init_cursor(input_cursor_data(i));
 	}
 	system_set_cursor(CURSOR_ARROW);
-}
-
-static void runTicks(int ticks)
-{
-	int originalSpeed = setting_game_speed();
-	setting_reset_speeds(100, setting_scroll_speed());
-	time_set_millis(0);
-	for (int i = 1; i <= ticks; i++) {
-		UI_Window_goTo(Window_City);
-		time_set_millis(2 * i);
-		game_run();
-	}
-	setting_reset_speeds(originalSpeed, setting_scroll_speed());
-}
-
-static int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int ticksToRun)
-{
-	autopilot = 1;
-	printf("Running autopilot: %s --> %s in %d ticks\n", savedGameToLoad, savedGameToWrite, ticksToRun);
-	signal(SIGSEGV, handler);
-	
-	// C3 setup
-	chdir("../data");
-	
-	if (!game_pre_init()) {
-		return 1;
-	}
-	
-	if (!game_init()) {
-		return 2;
-	}
-	
-	game_file_load_saved_game(savedGameToLoad);
-	runTicks(ticksToRun);
-	printf("Saving game to %s\n", savedGameToWrite);
-	game_file_write_saved_game(savedGameToWrite);
-	printf("Done\n");
-	
-	game_exit();
-
-	return 0;
 }
 
 static Uint32 last;
@@ -541,9 +485,6 @@ static void initSdl()
 
 int main(int argc, char **argv)
 {
-	if (argc == 4) {
-		return runAutopilot(argv[1], argv[2], atoi(argv[3]));{}
-	}
 	signal(SIGSEGV, handler);
 	
 	initSdl();
