@@ -4,20 +4,20 @@ project(julius)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
 if (CMAKE_COMPILER_IS_GNUCC)
-
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
 
     if (CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.9.0)
-        set (CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion ${CMAKE_C_FLAGS}")
+        set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion ${CMAKE_C_FLAGS}")
     else ()
-        set (CMAKE_C_STANDARD 99) # -std=gnu99
-        message(WARNING "WARNING: Old version GCC. Continue...")
-    endif ()
-endif ()
+        set(CMAKE_C_STANDARD 99) # -std=gnu99
+    endif()
+endif()
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
-set(SMK_FILES src/Video/smacker.c src/Video/smk_bitstream.c src/Video/smk_hufftree.c)
+set(SMK_FILES
+    ext/libsmacker/smacker.c
+    ext/libsmacker/smk_bitstream.c
+    ext/libsmacker/smk_hufftree.c
+)
 set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/buffer.c
     ${PROJECT_SOURCE_DIR}/src/core/calc.c
@@ -296,21 +296,16 @@ add_executable(julius
 	${SMK_FILES}
 )
 
-#include(FindPkgConfig)
-#pkg_search_module(SDL2 REQUIRED sdl2)
-#pkg_search_module(SDL2_MIXER REQUIRED SDL2_mixer)
-
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
-#set(LIBS ${LIBS} ${SDL_LIBRARY})
-#link_libraries(${LIBS})
-target_link_libraries (julius ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
-
+include_directories(ext)
 include_directories(src)
+
+target_link_libraries (julius ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
 
 install(TARGETS julius RUNTIME DESTINATION bin)
 

@@ -1,6 +1,6 @@
 #include "Video.h"
 
-#include "Video/smacker.h"
+#include "libsmacker/smacker.h"
 
 #include "Data/Screen.h"
 
