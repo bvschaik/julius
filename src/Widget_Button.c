@@ -7,7 +7,7 @@
 #define PRESSED_REPEAT_INITIAL_MILLIS 300
 #define PRESSED_REPEAT_MILLIS 50
 
-static int getArrowButton(const mouse *m, int xOffset, int yOffset, ArrowButton *buttons, int numButtons);
+static int getArrowButton(const mouse *m, ArrowButton *buttons, int numButtons);
 static int getCustomButton(const mouse *m, int xOffset, int yOffset, CustomButton *buttons, int numButtons);
 
 
@@ -28,7 +28,7 @@ void Widget_Button_drawArrowButtons(int xOffset, int yOffset, ArrowButton *butto
 	}
 }
 
-int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
+int Widget_Button_handleArrowButtons(const mouse *m, ArrowButton *buttons, int numButtons)
 {
 	static int lastTime = 0;
 
@@ -49,8 +49,7 @@ int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *butt
 			btn->repeats = 0;
 		}
 	}
-	const mouse *m = mouse_get();
-	int buttonId = getArrowButton(m, xOffset, yOffset, buttons, numButtons);
+	int buttonId = getArrowButton(m, buttons, numButtons);
 	if (!buttonId) {
 		return 0;
 	}
@@ -83,13 +82,13 @@ int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *butt
 	return buttonId;
 }
 
-static int getArrowButton(const mouse *m, int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
+static int getArrowButton(const mouse *m, ArrowButton *buttons, int numButtons)
 {
 	for (int i = 0; i < numButtons; i++) {
-		if (xOffset + buttons[i].xOffset <= m->x &&
-			xOffset + buttons[i].xOffset + buttons[i].size > m->x &&
-			yOffset + buttons[i].yOffset <= m->y &&
-			yOffset + buttons[i].yOffset + buttons[i].size > m->y) {
+		if (buttons[i].xOffset <= m->x &&
+			buttons[i].xOffset + buttons[i].size > m->x &&
+			buttons[i].yOffset <= m->y &&
+			buttons[i].yOffset + buttons[i].size > m->y) {
 			return i + 1;
 		}
 	}

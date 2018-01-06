@@ -208,7 +208,7 @@ void UI_Advisor_Ratings_drawForeground()
 		110, 66, focusButtonId == 4);
 }
 
-void UI_Advisor_Ratings_handleMouse()
+void UI_Advisor_Ratings_handleMouse(const mouse *m)
 {
 	Widget_Button_handleCustomButtons(
 		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,

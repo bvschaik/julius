@@ -102,7 +102,7 @@ void UI_SpeedOptions_handleMouse(const mouse *m)
 		if (!Widget_Button_handleCustomButtons(
 				baseOffsetX, baseOffsetY, buttons, 2, &focusButtonId)) {
 			Widget_Button_handleArrowButtons(
-				baseOffsetX + 128, baseOffsetY + 40, arrowButtons, 4);
+				mouse_translate(mouse_in_dialog(m), 128, 40), arrowButtons, 4);
 		}
 	}
 }

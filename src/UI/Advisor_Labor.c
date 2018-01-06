@@ -141,12 +141,12 @@ void UI_Advisor_Labor_drawForeground()
 	}
 }
 
-void UI_Advisor_Labor_handleMouse()
+void UI_Advisor_Labor_handleMouse(const mouse *m)
 {
 	int offsetX = Data_Screen.offset640x480.x;
 	int offsetY = Data_Screen.offset640x480.y;
 	if (!Widget_Button_handleCustomButtons(offsetX, offsetY, categoryButtons, 9, &focusButtonId)) {
-		arrowButtonFocus = Widget_Button_handleArrowButtons(offsetX, offsetY, wageButtons, 2);
+		arrowButtonFocus = Widget_Button_handleArrowButtons(mouse_in_dialog(m), wageButtons, 2);
 	}
 }
 

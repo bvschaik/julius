@@ -81,7 +81,7 @@ void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBloc
 
 void Widget_Button_drawArrowButtons(int xOffset, int yOffset, ArrowButton *buttons, int numButtons);
 
-int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *buttons, int numButtons);
+int Widget_Button_handleArrowButtons(const mouse *m, ArrowButton *buttons, int numButtons);
 
 void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons);
 

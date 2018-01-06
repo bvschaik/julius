@@ -123,7 +123,7 @@ void UI_Advisor_Trade_drawForeground()
 	Widget_GameText_drawCentered(54, 30, baseOffsetX + 100, baseOffsetY + 402, 200, FONT_NORMAL_BLACK);
 }
 
-void UI_Advisor_Trade_handleMouse()
+void UI_Advisor_Trade_handleMouse(const mouse *m)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
@@ -356,7 +356,7 @@ void UI_ResourceSettingsDialog_handleMouse(const mouse *m)
 	} else if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, resourceImageButtons, 2, 0)) {
 		return;
 	} else if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TRADE_STATUS_EXPORT &&
-			Widget_Button_handleArrowButtons(baseOffsetX, baseOffsetY, resourceArrowButtons, 2)) {
+			Widget_Button_handleArrowButtons(mouse_in_dialog(m), resourceArrowButtons, 2)) {
 		return;
 	} else {
 		Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY,

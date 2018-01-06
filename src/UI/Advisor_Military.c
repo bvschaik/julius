@@ -162,7 +162,7 @@ void UI_Advisor_Military_drawForeground()
 	}
 }
 
-void UI_Advisor_Military_handleMouse()
+void UI_Advisor_Military_handleMouse(const mouse *m)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;

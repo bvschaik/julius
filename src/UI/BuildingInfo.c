@@ -309,7 +309,7 @@ void UI_BuildingInfo_init()
 	}
 	// dialog placement
 	if (Data_Screen.height >= 600) {
-		if (mouse_get()->y <= (Data_Screen.height - 24) / 2 + 24) {
+		if (mouse_get()->y <= (Data_Screen.height - 24) / 2 + 24) { // TODO rather check city buildings instead of mouse
 			context.yOffset = Data_Screen.height - 16 * context.heightBlocks - 16;
 		} else {
 			context.yOffset = 32;

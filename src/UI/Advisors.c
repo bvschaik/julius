@@ -40,7 +40,7 @@ static CustomButton advisorButtons[] = {
 static struct {
     void (*draw_background)(int *height);
     void (*draw_foreground)();
-    void (*handle_mouse)();
+    void (*handle_mouse)(const mouse *m);
     int (*get_tooltip)();
 } windows[] = {
     {0, 0, 0, 0},
@@ -180,7 +180,7 @@ void UI_Advisors_handleMouse(const mouse *m)
 	}
 
     if (windows[currentAdvisor].handle_mouse) {
-        windows[currentAdvisor].handle_mouse();
+        windows[currentAdvisor].handle_mouse(m);
     }
 }
 

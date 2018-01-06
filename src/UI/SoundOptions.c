@@ -169,7 +169,7 @@ void UI_SoundOptions_handleMouse(const mouse *m)
 		if (!Widget_Button_handleCustomButtons(
 				baseOffsetX, baseOffsetY, buttons, 6, &focusButtonId)) {
 			Widget_Button_handleArrowButtons(
-				baseOffsetX + 208, baseOffsetY + 60, arrowButtons, 8);
+				mouse_translate(mouse_in_dialog(m), 208, 60), arrowButtons, 8);
 		}
 	}
 }

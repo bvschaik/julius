@@ -106,11 +106,9 @@ void UI_Advisor_Financial_drawForeground()
 	Widget_Button_drawArrowButtons(baseOffsetX, baseOffsetY, arrowButtonsTaxes, 2);
 }
 
-void UI_Advisor_Financial_handleMouse()
+void UI_Advisor_Financial_handleMouse(const mouse *m)
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
-	arrowButtonFocus = Widget_Button_handleArrowButtons(baseOffsetX, baseOffsetY, arrowButtonsTaxes, 2);
+	arrowButtonFocus = Widget_Button_handleArrowButtons(mouse_in_dialog(m), arrowButtonsTaxes, 2);
 }
 
 static void buttonChangeTaxes(int isDown, int param2)

@@ -94,7 +94,7 @@ void UI_DonateToCityDialog_handleMouse(const mouse *m)
 		int offsetX = Data_Screen.offset640x480.x;
 		int offsetY = Data_Screen.offset640x480.y;
 		if (!Widget_Button_handleCustomButtons(offsetX, offsetY, buttons, 7, &focusButtonId)) {
-			arrowButtonFocus = Widget_Button_handleArrowButtons(offsetX, offsetY, arrowButtons, 2);
+			arrowButtonFocus = Widget_Button_handleArrowButtons(mouse_in_dialog(m), arrowButtons, 2);
 		}
 	}
 }

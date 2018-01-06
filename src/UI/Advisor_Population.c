@@ -192,7 +192,7 @@ void UI_Advisor_Population_drawForeground()
 	}
 }
 
-void UI_Advisor_Population_handleMouse()
+void UI_Advisor_Population_handleMouse(const mouse *m)
 {
 	Widget_Button_handleCustomButtons(
 		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,

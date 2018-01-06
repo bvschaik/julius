@@ -221,7 +221,7 @@ static int getRequestStatus(int index)
     return 0;
 }
 
-void UI_Advisor_Imperial_handleMouse()
+void UI_Advisor_Imperial_handleMouse(const mouse *m)
 {
 	int offsetX = Data_Screen.offset640x480.x;
 	int offsetY = Data_Screen.offset640x480.y;

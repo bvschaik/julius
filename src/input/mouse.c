@@ -1,6 +1,12 @@
 #include "input/mouse.h"
 
+#include "core/debug.h"
+
+#include "Data/Screen.h"
+
 static mouse data;
+static mouse dialog;
+static mouse translated;
 
 const mouse *mouse_get()
 {
@@ -62,4 +68,26 @@ void mouse_reset_up_state()
     data.right.went_up = 0;
 }
 
+const mouse *mouse_translate(const mouse *m, int x, int y)
+{
+    translated.left = m->left;
+    translated.right = m->right;
+    translated.scrolled = m->scrolled;
+    translated.is_inside_window = m->is_inside_window;
 
+    translated.x = m->x - x;
+    translated.y = m->y - y;
+    return &translated;
+}
+
+const mouse *mouse_in_dialog(const mouse *m)
+{
+    dialog.left = m->left;
+    dialog.right = m->right;
+    dialog.scrolled = m->scrolled;
+    dialog.is_inside_window = m->is_inside_window;
+
+    dialog.x = m->x - Data_Screen.offset640x480.x;
+    dialog.y = m->y - Data_Screen.offset640x480.y;
+    return &dialog;
+}
