@@ -1,6 +1,5 @@
 #include "Game.h"
 
-#include "GameFile.h"
 #include "System.h"
 #include "Video.h"
 
@@ -15,6 +14,7 @@
 #include "core/time.h"
 #include "figure/type.h"
 #include "game/animation.h"
+#include "game/file.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/tick.h"
@@ -127,7 +127,7 @@ void Game_run()
     int numTicks = getElapsedTicks();
     for (int i = 0; i < numTicks; i++) {
         game_tick_run();
-        GameFile_writeMissionSavedGameIfNeeded();
+        game_file_write_mission_saved_game();
     }
 }
 

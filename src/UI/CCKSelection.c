@@ -4,15 +4,14 @@
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/string.h"
+#include "game/file.h"
 #include "scenario/criteria.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/speech.h"
 
-#include "../GameFile.h"
 #include "../Graphics.h"
-#include "../Scenario.h"
 #include "../Widget.h"
 
 #include "../Data/Screen.h"
@@ -272,7 +271,7 @@ static void buttonSelectItem(int index, int param2)
 	}
 	selectedItem = scrollPosition + index;
 	strcpy(selectedScenario, scenarios->files[selectedItem]);
-	GameFile_loadScenario(selectedScenario);
+	game_file_load_scenario_data(selectedScenario);
 	file_remove_extension(selectedScenario);
 	UI_Window_requestRefresh();
 }
@@ -297,6 +296,6 @@ static void buttonScroll(int isDown, int numLines)
 static void buttonStartScenario(int param1, int param2)
 {
 	sound_speech_stop();
-	Scenario_initialize(selectedScenario);
+	game_file_start_scenario(string_from_ascii(selectedScenario));
 	UI_Window_goTo(Window_City);
 }

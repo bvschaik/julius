@@ -2,7 +2,6 @@
 #include "AllWindows.h"
 
 #include "../Graphics.h"
-#include "../Scenario.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -12,6 +11,7 @@
 
 #include "core/lang.h"
 #include "core/string.h"
+#include "game/file.h"
 #include "game/tutorial.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
@@ -187,7 +187,7 @@ void UI_MissionStart_Briefing_drawBackground()
 {
 	if (!Data_State.missionBriefingShown) {
 		Data_State.missionBriefingShown = 1;
-		if (!Scenario_initialize(string_to_ascii(scenario_name()))) {
+		if (!game_file_start_scenario(scenario_name())) {
             UI_Window_goTo(Window_City);
             return;
 		}

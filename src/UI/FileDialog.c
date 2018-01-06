@@ -7,9 +7,9 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
+#include "game/file.h"
 #include "input/keyboard.h"
 
-#include "../GameFile.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 
@@ -202,15 +202,15 @@ static void buttonOkCancel(int isOk, int param2)
 		return;
 	}
 	if (dialogType == FileDialogType_Load) {
-		GameFile_loadSavedGame(saved_game);
+		game_file_load_saved_game(saved_game);
         keyboard_stop_capture();
 		UI_Window_goTo(Window_City);
 	} else if (dialogType == FileDialogType_Save) {
-		GameFile_writeSavedGame(saved_game);
+		game_file_write_saved_game(saved_game);
         keyboard_stop_capture();
 		UI_Window_goTo(Window_City);
 	} else if (dialogType == FileDialogType_Delete) {
-		if (GameFile_deleteSavedGame(saved_game)) {
+		if (game_file_delete_saved_game(saved_game)) {
 			dir_find_files_with_extension("sav");
 			if (scrollPosition + 12 >= savedGames->num_files) {
 				--scrollPosition;

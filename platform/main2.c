@@ -22,6 +22,7 @@
 
 #include "core/lang.h"
 #include "game/settings.h"
+#include "game/file.h"
 #include "input/mouse.h"
 
 #ifndef __MINGW32__
@@ -143,8 +144,6 @@ void System_initCursors()
 	System_setCursor(CURSOR_ARROW);
 }
 
-#include "../src/GameFile.h"
-
 static void runTicks(int ticks)
 {
 	int originalSpeed = setting_game_speed();
@@ -175,10 +174,10 @@ static int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrit
 		return 2;
 	}
 	
-	GameFile_loadSavedGame(savedGameToLoad);
+	game_file_load_saved_game(savedGameToLoad);
 	runTicks(ticksToRun);
 	printf("Saving game to %s\n", savedGameToWrite);
-	GameFile_writeSavedGame(savedGameToWrite);
+	game_file_write_saved_game(savedGameToWrite);
 	printf("Done\n");
 	
 	Game_exit();

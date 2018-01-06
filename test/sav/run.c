@@ -1,8 +1,8 @@
 #include "core/time.h"
+#include "game/file.h"
 #include "game/settings.h"
 
 #include "Game.h"
-#include "GameFile.h"
 
 #ifndef __MINGW32__
 #include <execinfo.h>
@@ -57,7 +57,7 @@ static int run_autopilot(const char *input_saved_game, const char *output_saved_
         return 2;
     }
     
-    if (!GameFile_loadSavedGame(input_saved_game)) {
+    if (!game_file_load_saved_game(input_saved_game)) {
         char wd[500];
         getcwd(wd, 500);
         printf("Unable to load saved game from %s\n", wd);
@@ -65,7 +65,7 @@ static int run_autopilot(const char *input_saved_game, const char *output_saved_
     }
     run_ticks(ticks_to_run);
     printf("Saving game to %s\n", output_saved_game);
-    GameFile_writeSavedGame(output_saved_game);
+    game_file_write_saved_game(output_saved_game);
     printf("Done\n");
     
     Game_exit();

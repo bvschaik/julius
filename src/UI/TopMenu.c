@@ -6,7 +6,6 @@
 #include "MessageDialog.h"
 #include "PopupDialog.h"
 #include "../Graphics.h"
-#include "../Scenario.h"
 #include "../System.h"
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
@@ -15,6 +14,7 @@
 #include "building/construction.h"
 #include "core/string.h"
 #include "city/finance.h"
+#include "game/file.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/time.h"
@@ -330,7 +330,7 @@ static void menuFile_replayMap(int param)
 	clearState();
 	building_construction_clear_type();
 	if (scenario_is_custom()) {
-		Scenario_initialize(string_to_ascii(scenario_name()));
+		game_file_start_scenario(scenario_name());
 		UI_Window_goTo(Window_City);
 	} else {
 		UI_Window_goTo(Window_MissionSelection);

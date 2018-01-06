@@ -28,6 +28,7 @@
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "figuretype/crime.h"
+#include "game/file.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
@@ -50,7 +51,6 @@
 #include "scenario/request.h"
 #include "sound/music.h"
 
-#include "GameFile.h"
 #include "UI/Sidebar.h" // TODO eliminate?
 
 #include "Data/CityInfo.h"
@@ -101,7 +101,7 @@ static void advance_month()
     city_gods_check_festival();
     tutorial_on_month_tick();
     if (setting_monthly_autosave()) {
-        GameFile_writeSavedGame("last.sav");
+        game_file_write_saved_game("last.sav");
     }
 }
 

@@ -1,0 +1,386 @@
+#include "file.h"
+
+#include "building/construction.h"
+#include "building/granary.h"
+#include "building/maintenance.h"
+#include "building/menu.h"
+#include "building/storage.h"
+#include "city/data.h"
+#include "city/emperor.h"
+#include "city/message.h"
+#include "city/victory.h"
+#include "city/view.h"
+#include "core/file.h"
+#include "core/io.h"
+#include "core/string.h"
+#include "empire/empire.h"
+#include "empire/trade_prices.h"
+#include "figure/enemy_army.h"
+#include "figure/formation.h"
+#include "figure/name.h"
+#include "figure/route.h"
+#include "figure/trader.h"
+#include "figuretype/animal.h"
+#include "figuretype/water.h"
+#include "game/animation.h"
+#include "game/difficulty.h"
+#include "game/file_io.h"
+#include "game/settings.h"
+#include "game/state.h"
+#include "game/time.h"
+#include "game/tutorial.h"
+#include "game/undo.h"
+#include "graphics/image.h"
+#include "map/aqueduct.h"
+#include "map/bookmark.h"
+#include "map/building.h"
+#include "map/desirability.h"
+#include "map/elevation.h"
+#include "map/figure.h"
+#include "map/grid.h"
+#include "map/image.h"
+#include "map/image_context.h"
+#include "map/natives.h"
+#include "map/orientation.h"
+#include "map/property.h"
+#include "map/random.h"
+#include "map/road_network.h"
+#include "map/routing_terrain.h"
+#include "map/soldier_strength.h"
+#include "map/sprite.h"
+#include "map/terrain.h"
+#include "map/tiles.h"
+#include "scenario/criteria.h"
+#include "scenario/demand_change.h"
+#include "scenario/distant_battle.h"
+#include "scenario/earthquake.h"
+#include "scenario/emperor_change.h"
+#include "scenario/empire.h"
+#include "scenario/gladiator_revolt.h"
+#include "scenario/invasion.h"
+#include "scenario/map.h"
+#include "scenario/price_change.h"
+#include "scenario/property.h"
+#include "scenario/request.h"
+#include "scenario/scenario.h"
+#include "sound/city.h"
+#include "sound/music.h"
+
+#include "Data/CityInfo.h"
+#include "Data/State.h"
+#include "UI/AllWindows.h"
+
+#include <string.h>
+
+static const char MISSION_PACK_FILE[] = "mission1.pak";
+
+static const char MISSION_SAVED_GAMES[][32] = {
+    "Citizen.sav",
+    "Clerk.sav",
+    "Engineer.sav",
+    "Architect.sav",
+    "Quaestor.sav",
+    "Procurator.sav",
+    "Aedile.sav",
+    "Praetor.sav",
+    "Consul.sav",
+    "Proconsul.sav",
+    "Caesar.sav",
+    "Caesar2.sav"
+};
+
+const char *get_scenario_filename(const uint8_t *scenario_name)
+{
+    static char filename[FILE_NAME_MAX];
+    strncpy(filename, string_to_ascii(scenario_name), FILE_NAME_MAX);
+    file_remove_extension(filename);
+    file_append_extension(filename, "map");
+    return filename;
+}
+
+static void clear_scenario_data()
+{
+    // clear data
+    city_victory_reset();
+    building_construction_clear_type();
+    city_data_init();
+    city_message_init_scenario();
+    game_state_init();
+    game_animation_init();
+    sound_city_init();
+    sound_music_reset();
+    building_menu_enable_all();
+    building_clear_all();
+    building_storage_clear_all();
+    figure_init_scenario();
+    enemy_armies_clear();
+    figure_name_init();
+    formations_clear();
+    figure_route_clear_all();
+
+    game_time_init(2098);
+
+    // clear grids
+    map_image_clear();
+    map_building_clear();
+    map_terrain_clear();
+    map_aqueduct_clear();
+    map_figure_clear();
+    map_property_clear();
+    map_sprite_clear();
+    map_random_clear();
+    map_desirability_clear();
+    map_elevation_clear();
+    map_soldier_strength_clear();
+    map_road_network_clear();
+
+    map_image_context_init();
+    map_random_init();
+}
+
+static void initialize_scenario_data(const uint8_t *scenario_name)
+{
+    scenario_set_name(scenario_name);
+    scenario_map_init();
+
+    // initialize grids
+    map_tiles_update_all_elevation();
+    map_tiles_update_all_water();
+    map_tiles_update_all_earthquake();
+    map_tiles_update_all_rocks();
+    map_tiles_add_entry_exit_flags();
+    map_tiles_update_all_empty_land();
+    map_tiles_update_all_meadow();
+    map_tiles_update_all_roads();
+    map_tiles_update_all_plazas();
+    map_tiles_update_all_walls();
+    map_tiles_update_all_aqueducts(0);
+
+    map_natives_init();
+    map_routing_update_all();
+
+    city_view_init();
+
+    figure_create_fishing_points();
+    figure_create_herds();
+    figure_create_flotsam();
+
+    map_routing_update_land();
+    map_routing_update_water();
+    map_routing_update_walls();
+
+    scenario_map_init_entry_exit();
+
+    map_point entry = scenario_map_entry();
+    map_point exit = scenario_map_exit();
+
+    Data_CityInfo.entryPointX = entry.x;
+    Data_CityInfo.entryPointY = entry.y;
+    Data_CityInfo.entryPointGridOffset = map_grid_offset(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+
+    Data_CityInfo.exitPointX = exit.x;
+    Data_CityInfo.exitPointY = exit.y;
+    Data_CityInfo.exitPointGridOffset = map_grid_offset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
+
+    Data_CityInfo.treasury = difficulty_adjust_money(scenario_initial_funds());
+    Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
+    game_time_init(scenario_property_start_year());
+
+    // set up events
+    scenario_earthquake_init();
+    scenario_gladiator_revolt_init();
+    scenario_emperor_change_init();
+    scenario_criteria_init_max_year();
+
+    empire_init_scenario();
+    traders_clear();
+    scenario_invasion_init();
+    empire_determine_distant_battle_city();
+    scenario_request_init();
+    scenario_demand_change_init();
+    scenario_price_change_init();
+    building_menu_update();
+    image_load_climate(scenario_property_climate());
+    image_load_enemy(scenario_property_enemy());
+
+    Data_CityInfo_Extra.ciid = 1;
+    Data_CityInfo.__unknown_00a2 = 1;
+    Data_CityInfo.__unknown_00a3 = 1;
+}
+
+static int load_custom_scenario(const uint8_t *scenario_name)
+{
+    const char *scenario_file = get_scenario_filename(scenario_name);
+    if (!file_exists(scenario_file)) {
+        return 0;
+    }
+
+    clear_scenario_data();
+    game_file_load_scenario_data(scenario_file);
+    initialize_scenario_data(scenario_name);
+    return 1;
+}
+
+static void load_empire_data(int is_custom_scenario, int empire_id)
+{
+    empire_load(is_custom_scenario, empire_id);
+    scenario_distant_battle_set_roman_travel_months();
+    scenario_distant_battle_set_enemy_travel_months();
+}
+
+static void initialize_saved_game()
+{
+    load_empire_data(scenario_is_custom(), scenario_empire_id());
+
+    scenario_map_init();
+
+    city_view_init();
+
+    map_routing_update_all();
+
+    map_orientation_update_buildings();
+    figure_route_clean();
+    map_road_network_update();
+    building_maintenance_check_rome_access();
+    building_granaries_calculate_stocks();
+    building_menu_update();
+    city_message_init_problem_areas();
+
+    sound_city_init();
+    sound_music_reset();
+
+    game_undo_disable();
+    game_state_reset_overlay();
+    Data_State.missionBriefingShown = 1;
+
+    Data_CityInfo.tutorial1FireMessageShown = 1;
+    Data_CityInfo.tutorial3DiseaseMessageShown = 1;
+
+    image_load_climate(scenario_property_climate());
+    image_load_enemy(scenario_property_enemy());
+    empire_determine_distant_battle_city();
+    map_tiles_determine_gardens();
+
+    UI_PlayerMessageList_resetScroll(); // TODO move scroll data out of UI
+
+    game_state_unpause();
+}
+
+static int get_campaign_mission_offset(int mission_id)
+{
+    uint8_t offset_data[4];
+    buffer buf;
+    buffer_init(&buf, offset_data, 4);
+    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, offset_data, 4, 4 * mission_id)) {
+        return 0;
+    }
+    return buffer_read_i32(&buf);
+}
+
+static int load_campaign_mission(int mission_id)
+{
+    int offset = get_campaign_mission_offset(mission_id);
+    if (offset <= 0) {
+        return 0;
+    }
+    if (!game_file_io_read_saved_game(MISSION_PACK_FILE, offset)) {
+        return 0;
+    }
+
+    initialize_saved_game();
+    return 1;
+}
+
+int game_file_start_scenario(const uint8_t *scenario_name)
+{
+    int mission = scenario_campaign_mission();
+    int rank = scenario_campaign_rank();
+    map_bookmarks_clear();
+    if (scenario_is_custom()) {
+        if (!load_custom_scenario(scenario_name)) {
+            return 0;
+        }
+    } else {
+        if (!load_campaign_mission(mission)) {
+            return 0;
+        }
+        Data_CityInfo.treasury = difficulty_adjust_money(Data_CityInfo.treasury);
+    }
+    scenario_set_campaign_mission(mission);
+    scenario_set_campaign_rank(rank);
+
+    if (scenario_is_tutorial_1()) {
+        setting_set_personal_savings_for_mission(0, 0);
+    }
+
+    scenario_settings_init_mission();
+
+    Data_CityInfo.ratingFavor = scenario_starting_favor();
+    Data_CityInfo.personalSavings = scenario_starting_personal_savings();
+    Data_CityInfo.playerRank = rank;
+    int salary_rank = rank;
+    if (scenario_is_custom()) {
+        Data_CityInfo.personalSavings = 0;
+        Data_CityInfo.playerRank = scenario_property_player_rank();
+        salary_rank = scenario_property_player_rank();
+    }
+    if (salary_rank > 10) {
+        salary_rank = 10;
+    }
+    city_emperor_set_salary_rank(salary_rank);
+
+    tutorial_init();
+
+    building_menu_update();
+    city_message_init_scenario();
+    return 1;
+}
+
+int game_file_load_scenario_data(const char *scenario_file)
+{
+    if (!game_file_io_read_scenario(scenario_file)) {
+        return 0;
+    }
+
+    trade_prices_reset();
+    load_empire_data(1, scenario_empire_id());
+    return 1;
+}
+
+int game_file_load_saved_game(const char *filename)
+{
+    if (!game_file_io_read_saved_game(filename, 0)) {
+        return 0;
+    }
+    sound_music_stop();
+    
+    initialize_saved_game();
+    building_storage_reset_building_ids();
+    return 1;
+}
+
+int game_file_write_saved_game(const char *filename)
+{
+    return game_file_io_write_saved_game(filename);
+}
+
+int game_file_delete_saved_game(const char *filename)
+{
+    return game_file_io_delete_saved_game(filename);
+}
+
+void game_file_write_mission_saved_game()
+{
+    int rank = scenario_campaign_rank();
+    if (rank < 0) {
+        rank = 0;
+    } else if (rank > 11) {
+        rank = 11;
+    }
+    if (!Data_CityInfo.missionSavedGameWritten) {
+        Data_CityInfo.missionSavedGameWritten = 1;
+        if (!file_exists(MISSION_SAVED_GAMES[rank])) {
+            game_file_io_write_saved_game(MISSION_SAVED_GAMES[rank]);
+        }
+    }
+}
