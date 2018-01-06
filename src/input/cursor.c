@@ -1,8 +1,7 @@
 #include "cursor.h"
 
-#include "System.h"
-
 #include "building/construction.h"
+#include "game/system.h"
 
 static const cursor ARROW = {
     0, 0,
@@ -125,10 +124,10 @@ const cursor *input_cursor_data(cursor_shape cursor_id)
 void input_cursor_update(WindowId window)
 {
     if (window == Window_CityMilitary) {
-        System_setCursor(CURSOR_SWORD);
+        system_set_cursor(CURSOR_SWORD);
     } else if (window == Window_City && building_construction_type() == BUILDING_CLEAR_LAND) {
-        System_setCursor(CURSOR_SHOVEL);
+        system_set_cursor(CURSOR_SHOVEL);
     } else {
-        System_setCursor(CURSOR_ARROW);
+        system_set_cursor(CURSOR_ARROW);
     }
 }

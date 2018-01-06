@@ -13,7 +13,6 @@
 #include "../src/input/keyboard.h"
 #include "../src/Widget.h" // debug
 #include "../src/Graphics.h" // debug
-#include "../src/System.h"
 #include "../src/Game.h"
 
 // debug data:
@@ -23,6 +22,7 @@
 #include "core/lang.h"
 #include "game/settings.h"
 #include "game/file.h"
+#include "game/system.h"
 #include "input/mouse.h"
 
 #ifndef __MINGW32__
@@ -69,7 +69,7 @@ void handler(int sig) {
 #endif
 }
 
-void System_exit()
+void system_exit()
 {
 	SDL_Event event;
 	event.user.type = SDL_USEREVENT;
@@ -77,7 +77,7 @@ void System_exit()
 	SDL_PushEvent(&event);
 }
 
-void System_resize(int width, int height)
+void system_resize(int width, int height)
 {
 	static int sWidth;
 	static int sHeight;
@@ -91,7 +91,7 @@ void System_resize(int width, int height)
 	SDL_PushEvent(&event);
 }
 
-void System_toggleFullscreen()
+void system_toggle_fullscreen()
 {
 	SDL_Event event;
 	event.user.type = SDL_USEREVENT;
@@ -103,10 +103,10 @@ void System_toggleFullscreen()
 	SDL_PushEvent(&event);
 }
 
-void System_setCursor(int cursorId)
+void system_set_cursor(int cursor_id)
 {
 	if (autopilot) return;
-	SDL_SetCursor(Cursors[cursorId]);
+	SDL_SetCursor(Cursors[cursor_id]);
 }
 
 static SDL_Cursor *initCursor(const cursor *c)
@@ -135,13 +135,13 @@ static SDL_Cursor *initCursor(const cursor *c)
 	return SDL_CreateCursor(data, mask, 32, 32, c->hotspotX, c->hotspotY);
 }
 
-void System_initCursors()
+void system_init_cursors()
 {
 	if (autopilot) return;
 	for (int i = 0; i < CURSOR_MAX; i++) {
 		Cursors[i] = initCursor(input_cursor_data(i));
 	}
-	System_setCursor(CURSOR_ARROW);
+	system_set_cursor(CURSOR_ARROW);
 }
 
 static void runTicks(int ticks)

@@ -4,8 +4,9 @@
 
 #include "../Widget.h"
 #include "../Graphics.h"
-#include "../System.h"
 #include "../Data/Screen.h"
+
+#include "game/system.h"
 
 static void buttonClick(int param1, int param2);
 
@@ -77,7 +78,7 @@ void UI_MainMenu_handleMouse(const mouse *m)
 static void confirmExit(int accepted)
 {
 	if (accepted) {
-		System_exit();
+		system_exit();
 	}
 }
 

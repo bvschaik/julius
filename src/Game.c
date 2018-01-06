@@ -1,7 +1,5 @@
 #include "Game.h"
 
-#include "System.h"
-
 #include "UI/Window.h"
 #include "UI/TopMenu.h"
 
@@ -16,6 +14,7 @@
 #include "game/file.h"
 #include "game/settings.h"
 #include "game/state.h"
+#include "game/system.h"
 #include "game/tick.h"
 #include "graphics/image.h"
 #include "graphics/video.h"
@@ -54,7 +53,7 @@ int Game_preInit()
 
 int Game_init()
 {
-	System_initCursors();
+	system_init_cursors();
 	if (!image_init()) {
 		errlog("ERR: unable to init graphics");
 		return 0;

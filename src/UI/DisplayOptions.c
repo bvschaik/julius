@@ -1,11 +1,11 @@
 #include "Window.h"
 
-#include "../System.h"
 #include "../Widget.h"
 
 #include "../Data/Screen.h"
 
 #include "game/settings.h"
+#include "game/system.h"
 
 static void buttonFullscreen(int param1, int param2);
 static void buttonSetResolution(int id, int param2);
@@ -95,16 +95,16 @@ void UI_DisplayOptions_handleMouse(const mouse *m)
 
 static void buttonFullscreen(int param1, int param2)
 {
-	System_toggleFullscreen();
+	system_toggle_fullscreen();
 	UI_Window_goTo(Window_City);
 }
 
 static void buttonSetResolution(int id, int param2)
 {
 	switch (id) {
-		case 1: System_resize(640, 480); break;
-		case 2: System_resize(800, 600); break;
-		case 3: System_resize(1024, 768); break;
+		case 1: system_resize(640, 480); break;
+		case 2: system_resize(800, 600); break;
+		case 3: system_resize(1024, 768); break;
 	}
 	UI_Window_goTo(Window_City);
 }

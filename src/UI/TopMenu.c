@@ -6,7 +6,6 @@
 #include "MessageDialog.h"
 #include "PopupDialog.h"
 #include "../Graphics.h"
-#include "../System.h"
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
@@ -17,6 +16,7 @@
 #include "game/file.h"
 #include "game/settings.h"
 #include "game/state.h"
+#include "game/system.h"
 #include "game/time.h"
 #include "game/undo.h"
 #include "scenario/property.h"
@@ -363,7 +363,7 @@ static void menuFile_deleteGame(int param)
 static void menuFile_confirmExit(int accepted)
 {
 	if (accepted) {
-		System_exit();
+		system_exit();
 	} else {
 		UI_Window_goTo(Window_City);
 	}

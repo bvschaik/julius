@@ -1,7 +1,6 @@
 #include "hotkey.h"
 
 #include "Graphics.h"
-#include "System.h"
 
 #include "UI/Advisors.h"
 #include "UI/BuildingInfo.h"
@@ -19,6 +18,7 @@
 #include "figure/formation.h"
 #include "game/settings.h"
 #include "game/state.h"
+#include "game/system.h"
 #include "graphics/video.h"
 #include "input/scroll.h"
 #include "map/bookmark.h"
@@ -275,7 +275,7 @@ void hotkey_end()
 static void confirm_exit(int accepted)
 {
     if (accepted) {
-        System_exit();
+        system_exit();
     }
 }
 
@@ -319,10 +319,10 @@ void hotkey_func(int f_number)
             handle_bookmark(f_number - 1);
             break;
         case 5: /* center window not implemented */; break;
-        case 6: System_toggleFullscreen(); break;
-        case 7: System_resize(640, 480); break;
-        case 8: System_resize(800, 600); break;
-        case 9: System_resize(1024, 768); break;
+        case 6: system_toggle_fullscreen(); break;
+        case 7: system_resize(640, 480); break;
+        case 8: system_resize(800, 600); break;
+        case 9: system_resize(1024, 768); break;
         case 12: take_screenshot(); break;
     }
 }

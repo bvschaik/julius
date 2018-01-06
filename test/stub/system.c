@@ -1,16 +1,16 @@
-#include "System.h"
+#include "game/system.h"
 
-void System_resize(int width, int height)
+void system_resize(int width, int height)
 {}
 
-void System_toggleFullscreen()
+void system_toggle_fullscreen()
 {}
 
-void System_initCursors()
+void system_init_cursors()
 {}
 
-void System_setCursor(int cursorId)
+void system_set_cursor(int cursor_id)
 {}
 
-void System_exit()
+void system_exit()
 {}
