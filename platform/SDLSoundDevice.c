@@ -4,10 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#ifdef __MINGW32__
-#include <mem.h>
-#endif
+#include <string.h>
 
 #define AUDIO_RATE 22050
 #define AUDIO_FORMAT AUDIO_S16MSB
