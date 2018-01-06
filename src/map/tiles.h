@@ -39,4 +39,7 @@ void map_tiles_update_all_elevation();
 
 int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain);
 
+void map_tiles_add_entry_exit_flags();
+void map_tiles_remove_entry_exit_flags();
+
 #endif // MAP_TILES_H

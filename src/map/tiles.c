@@ -15,7 +15,9 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
+#include "scenario/map.h"
 
+#include "Data/CityInfo.h"
 #include "Data/State.h"
 
 #define FORBIDDEN_TERRAIN_MEADOW (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |\
@@ -1080,4 +1082,76 @@ void map_tiles_update_all_elevation()
     int height = Data_State.map.height - 2;
     foreach_region_tile(0, 0, width, height, clear_access_ramp_image);
     foreach_region_tile(0, 0, width, height, set_elevation_image);
+}
+
+void map_tiles_add_entry_exit_flags()
+{
+    int entry_orientation;
+    map_point entry_point = scenario_map_entry();
+    if (entry_point.x == 0) {
+        entry_orientation = DIR_2_RIGHT;
+    } else if (entry_point.x == Data_State.map.width - 1) {
+        entry_orientation = DIR_6_LEFT;
+    } else if (entry_point.y == 0) {
+        entry_orientation = DIR_0_TOP;
+    } else if (entry_point.y == Data_State.map.height - 1) {
+        entry_orientation = DIR_4_BOTTOM;
+    } else {
+        entry_orientation = -1;
+    }
+    int exit_orientation;
+    map_point exit_point = scenario_map_exit();
+    if (exit_point.x == 0) {
+        exit_orientation = DIR_2_RIGHT;
+    } else if (exit_point.x == Data_State.map.width - 1) {
+        exit_orientation = DIR_6_LEFT;
+    } else if (exit_point.y == 0) {
+        exit_orientation = DIR_0_TOP;
+    } else if (exit_point.y == Data_State.map.height - 1) {
+        exit_orientation = DIR_4_BOTTOM;
+    } else {
+        exit_orientation = -1;
+    }
+    if (entry_orientation >= 0) {
+        int gridOffset = map_grid_offset(entry_point.x, entry_point.y);
+        int xTile, yTile;
+        for (int i = 1; i < 10; i++) {
+            if (map_terrain_exists_clear_tile_in_radius(entry_point.x, entry_point.y,
+                    1, i, gridOffset, &xTile, &yTile)) {
+                break;
+            }
+        }
+        int gridOffsetFlag = map_grid_offset(xTile, yTile);
+        Data_CityInfo_Extra.entryPointFlag.x = xTile;
+        Data_CityInfo_Extra.entryPointFlag.y = yTile;
+        Data_CityInfo_Extra.entryPointFlag.gridOffset = gridOffsetFlag;
+        map_terrain_add(gridOffsetFlag, TERRAIN_ROCK);
+        int orientation = (city_view_orientation() + entry_orientation) % 8;
+        map_image_set(gridOffsetFlag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + orientation / 2);
+    }
+    if (exit_orientation >= 0) {
+        int gridOffset = map_grid_offset(exit_point.x, exit_point.y);
+        int xTile, yTile;
+        for (int i = 1; i < 10; i++) {
+            if (map_terrain_exists_clear_tile_in_radius(exit_point.x, exit_point.y,
+                    1, i, gridOffset, &xTile, &yTile)) {
+                break;
+            }
+        }
+        int gridOffsetFlag = map_grid_offset(xTile, yTile);
+        Data_CityInfo_Extra.exitPointFlag.x = xTile;
+        Data_CityInfo_Extra.exitPointFlag.y = yTile;
+        Data_CityInfo_Extra.exitPointFlag.gridOffset = gridOffsetFlag;
+        map_terrain_add(gridOffsetFlag, TERRAIN_ROCK);
+        int orientation = (city_view_orientation() + exit_orientation) % 8;
+        map_image_set(gridOffsetFlag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2);
+    }
+}
+
+void map_tiles_remove_entry_exit_flags()
+{
+    int grid_offset_entry = map_grid_offset(Data_CityInfo_Extra.entryPointFlag.x, Data_CityInfo_Extra.entryPointFlag.y);
+    map_terrain_remove(grid_offset_entry, TERRAIN_ROCK);
+    int grid_offset_exit = map_grid_offset(Data_CityInfo_Extra.exitPointFlag.x, Data_CityInfo_Extra.exitPointFlag.y);
+    map_terrain_remove(grid_offset_exit, TERRAIN_ROCK);
 }

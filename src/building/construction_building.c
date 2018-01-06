@@ -23,7 +23,6 @@
 
 #include "Data/State.h"
 #include "Data/CityInfo.h"
-#include "../Terrain.h"
 
 static void add_fort(int type, building *fort)
 {
@@ -441,7 +440,7 @@ static void add_to_map(int type, building *b, int size,
                 image_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
             b->subtype.orientation = orientation;
             map_orientation_update_buildings();
-            Terrain_addRoadsForGatehouse(b->x, b->y, orientation);
+            map_terrain_add_gatehouse_roads(b->x, b->y, orientation);
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
             map_tiles_update_area_walls(b->x, b->y, 5);
@@ -450,7 +449,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
             b->subtype.orientation = orientation;
             map_orientation_update_buildings();
-            Terrain_addRoadsForTriumphalArch(b->x, b->y, orientation);
+            map_terrain_add_triumphal_arch_roads(b->x, b->y, orientation);
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
             Data_CityInfo.triumphalArchesPlaced++;

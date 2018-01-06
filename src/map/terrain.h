@@ -73,6 +73,8 @@ int map_terrain_is_adjacent_to_open_water(int x, int y, int size);
 
 int map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int *x_tile, int *y_tile);
 
+void map_terrain_add_gatehouse_roads(int x, int y, int orientation);
+void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation);
 
 void map_terrain_backup();
 

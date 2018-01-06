@@ -1,7 +1,6 @@
 #include "Scenario.h"
 
 #include "GameFile.h"
-#include "Terrain.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -223,7 +222,7 @@ static void readScenarioAndInitGraphics(const char *scenarioName)
 	map_tiles_update_all_water();
 	map_tiles_update_all_earthquake();
 	map_tiles_update_all_rocks();
-	Terrain_updateEntryExitFlags(0);
+	map_tiles_add_entry_exit_flags();
 	map_tiles_update_all_empty_land();
 	map_tiles_update_all_meadow();
 	map_tiles_update_all_roads();

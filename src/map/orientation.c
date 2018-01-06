@@ -41,7 +41,7 @@ static void determine_leftmost_tile()
 
 void map_orientation_change(int counter_clockwise)
 {
-    Terrain_updateEntryExitFlags(1);
+    map_tiles_remove_entry_exit_flags();
     game_undo_disable();
     determine_leftmost_tile();
 
@@ -51,7 +51,7 @@ void map_orientation_change(int counter_clockwise)
     map_tiles_update_all_rocks();
     map_tiles_update_all_gardens();
 
-    Terrain_updateEntryExitFlags(0);
+    map_tiles_add_entry_exit_flags();
 
     map_tiles_update_all_empty_land();
     map_tiles_update_all_meadow();
@@ -260,7 +260,7 @@ void map_orientation_update_buildings()
                     }
                 }
                 map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
-                Terrain_addRoadsForGatehouse(b->x, b->y, b->subtype.orientation);
+                map_terrain_add_gatehouse_roads(b->x, b->y, b->subtype.orientation);
                 break;
             case BUILDING_TRIUMPHAL_ARCH:
                 if (b->subtype.orientation == 1) {
@@ -277,7 +277,7 @@ void map_orientation_update_buildings()
                     }
                 }
                 map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
-                Terrain_addRoadsForTriumphalArch(b->x, b->y, b->subtype.orientation);
+                map_terrain_add_triumphal_arch_roads(b->x, b->y, b->subtype.orientation);
                 break;
             case BUILDING_HIPPODROME:
                 if (map_orientation == DIR_0_TOP) {
