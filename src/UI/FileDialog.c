@@ -153,10 +153,9 @@ void UI_FileDialog_handleMouse(const mouse *m)
 		UI_Window_goBack();
 		return;
 	}
-	int xOffset = Data_Screen.offset640x480.x;
-	int yOffset = Data_Screen.offset640x480.y;
-	if (!Widget_Button_handleCustomButtons(mouse_in_dialog(m), customButtons, 12, &focusButtonId)) {
-		if (!Widget_Button_handleImageButtons(xOffset, yOffset, imageButtons, 4, 0)) {
+	const mouse *m_dialog = mouse_in_dialog(m);
+	if (!Widget_Button_handleCustomButtons(m_dialog, customButtons, 12, &focusButtonId)) {
+		if (!Widget_Button_handleImageButtons(m_dialog, imageButtons, 4, 0)) {
 			handleScrollbarClick(m);
 		}
 	}

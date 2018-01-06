@@ -56,9 +56,7 @@ void UI_NewCareerDialog_handleMouse(const mouse *m)
 		UI_Window_goTo(Window_MainMenu);
 	}
 
-	int xOffset = Data_Screen.offset640x480.x;
-	int yOffset = Data_Screen.offset640x480.y;
-	if (Widget_Button_handleImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1, 0)) {
+	if (Widget_Button_handleImageButtons(mouse_translate(mouse_in_dialog(m), 464, 249), &imageButtonStartMission, 1, 0)) {
 		return;
 	}
 	if (keyboard_input_is_accepted()) {

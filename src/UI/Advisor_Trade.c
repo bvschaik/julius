@@ -346,12 +346,9 @@ void UI_ResourceSettingsDialog_drawForeground()
 void UI_ResourceSettingsDialog_handleMouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
-
 	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
-	} else if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, resourceImageButtons, 2, 0)) {
+	} else if (Widget_Button_handleImageButtons(m_dialog, resourceImageButtons, 2, 0)) {
 		return;
 	} else if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TRADE_STATUS_EXPORT &&
 			Widget_Button_handleArrowButtons(m_dialog, resourceArrowButtons, 2)) {

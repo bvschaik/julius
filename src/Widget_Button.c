@@ -188,9 +188,8 @@ void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *butto
 	}
 }
 
-int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons, int *focusButtonId)
+int Widget_Button_handleImageButtons(const mouse *m, ImageButton *buttons, int numButtons, int *focusButtonId)
 {
-    const mouse *m = mouse_get();
 	imageButtonFadePressedEffect(buttons, numButtons);
 	imageButtonRemovePressedEffectBuild(buttons, numButtons);
 	ImageButton *hitButton = 0;
@@ -202,10 +201,10 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 		if (btn->focused) {
 			btn->focused--;
 		}
-		if (xOffset + btn->xOffset <= m->x &&
-			xOffset + btn->xOffset + btn->width > m->x &&
-			yOffset + btn->yOffset <= m->y &&
-			yOffset + btn->yOffset + btn->height > m->y) {
+		if (btn->xOffset <= m->x &&
+			btn->xOffset + btn->width > m->x &&
+			btn->yOffset <= m->y &&
+			btn->yOffset + btn->height > m->y) {
 			if (focusButtonId) {
 				*focusButtonId = i + 1;
 			}

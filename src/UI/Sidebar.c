@@ -264,12 +264,12 @@ int UI_Sidebar_handleMouse(const mouse *m)
 	int buttonId;
 	data.focusButtonForTooltip = 0;
 	if (city_view_is_sidebar_collapsed()) {
-		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
-		Widget_Button_handleImageButtons(xOffset, 24, buttonExpandSidebar, 1, &buttonId);
+        const mouse *m_translated = mouse_translate(m, Data_Screen.width - SIDEBAR_BORDER - 42, 24);
+		Widget_Button_handleImageButtons(m_translated, buttonExpandSidebar, 1, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = 12;
 		}
-		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12, &buttonId);
+		Widget_Button_handleImageButtons(m_translated, buttonBuildCollapsed, 12, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 19;
 		}
@@ -277,16 +277,16 @@ int UI_Sidebar_handleMouse(const mouse *m)
 		if (UI_Minimap_handleClick(m)) {
 			return 1;
 		}
-		int xOffset = XOFFSET_EXPANDED;
-		Widget_Button_handleImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2, &buttonId);
+        const mouse *m_translated = mouse_translate(m, XOFFSET_EXPANDED, 24);
+		Widget_Button_handleImageButtons(m_translated, buttonOverlaysCollapseSidebar, 2, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 9;
 		}
-		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15, &buttonId);
+		Widget_Button_handleImageButtons(m_translated, buttonBuildExpanded, 15, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 19;
 		}
-		Widget_Button_handleImageButtons(xOffset, 24, buttonTopExpanded, 6, &buttonId);
+		Widget_Button_handleImageButtons(m_translated, buttonTopExpanded, 6, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 39;
 		}
@@ -297,11 +297,11 @@ int UI_Sidebar_handleMouse(const mouse *m)
 void UI_Sidebar_handleMouseBuildButtons(const mouse *m)
 {
 	if (city_view_is_sidebar_collapsed()) {
-		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
-		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12, 0);
+        const mouse *m_translated = mouse_translate(m, Data_Screen.width - SIDEBAR_BORDER - 42, 24);
+		Widget_Button_handleImageButtons(m_translated, buttonBuildCollapsed, 12, 0);
 	} else {
-		int xOffset = XOFFSET_EXPANDED;
-		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15, 0);
+        const mouse *m_translated = mouse_translate(m, XOFFSET_EXPANDED, 24);
+		Widget_Button_handleImageButtons(m_translated, buttonBuildExpanded, 15, 0);
 	}
 }
 

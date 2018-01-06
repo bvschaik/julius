@@ -522,16 +522,16 @@ void UI_BuildingInfo_handleMouse(const mouse *m)
 	}
 	// general buttons
 	if (context.storageShowSpecialOrders) {
-		Widget_Button_handleImageButtons(context.xOffset, 432,
+		Widget_Button_handleImageButtons(mouse_translate(m, context.xOffset, 432),
 			imageButtonsHelpExit, 2, &focusImageButtonId);
 	} else {
 		Widget_Button_handleImageButtons(
-			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
+			mouse_translate(m, context.xOffset, context.yOffset + 16 * context.heightBlocks - 40),
 			imageButtonsHelpExit, 2, &focusImageButtonId);
 	}
 	if (context.advisor) {
 		Widget_Button_handleImageButtons(
-			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
+			mouse_translate(m, context.xOffset, context.yOffset + 16 * context.heightBlocks - 40),
 			imageButtonsAdvisor, 1, 0);
 	}
 	// building-specific buttons

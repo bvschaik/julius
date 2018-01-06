@@ -449,10 +449,10 @@ void UI_MessageDialog_handleMouse(const mouse *m)
 		Widget_RichText_scroll(0, 3);
 	}
 	if (data.showVideo) {
-		if (Widget_Button_handleImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1, 0)) {
+		if (Widget_Button_handleImageButtons(mouse_translate(m, data.x + 16, data.y + 408), getAdvisorButton(), 1, 0)) {
 			return;
 		}
-		if (Widget_Button_handleImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1, 0)) {
+		if (Widget_Button_handleImageButtons(mouse_translate(m, data.x + 372, data.y + 410), &imageButtonClose, 1, 0)) {
 			return;
 		}
 		return;
@@ -461,24 +461,24 @@ void UI_MessageDialog_handleMouse(const mouse *m)
 	const lang_message *msg = lang_get_message(data.textId);
 
 	if (msg->type == TYPE_MANUAL && Widget_Button_handleImageButtons(
-		data.x + 16, data.y + 16 * msg->height_blocks - 36, &imageButtonBack, 1, 0)) {
+		mouse_translate(m, data.x + 16, data.y + 16 * msg->height_blocks - 36), &imageButtonBack, 1, 0)) {
 		return;
 	}
 	if (msg->type == TYPE_MESSAGE) {
-		if (Widget_Button_handleImageButtons(data.x + 16, data.y + 16 * msg->height_blocks - 40,
+		if (Widget_Button_handleImageButtons(mouse_translate(m, data.x + 16, data.y + 16 * msg->height_blocks - 40),
 			getAdvisorButton(), 1, 0)) {
 			return;
 		}
 		if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
-			if (Widget_Button_handleImageButtons(data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1, 0)) {
+			if (Widget_Button_handleImageButtons(mouse_translate(m, data.x + 64, data.yText + 36), &imageButtonGoToProblem, 1, 0)) {
 				return;
 			}
 		}
 	}
 
-	if (Widget_Button_handleImageButtons(
+	if (Widget_Button_handleImageButtons(mouse_translate(m,
 		data.x + 16 * msg->width_blocks - 38,
-		data.y + 16 * msg->height_blocks - 36,
+		data.y + 16 * msg->height_blocks - 36),
 		&imageButtonClose, 1, 0)) {
 		return;
 	}

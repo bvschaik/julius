@@ -158,7 +158,7 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
 		UI_MissionStart_show();
 	}
 	if (data.choice > 0) {
-		if (Widget_Button_handleImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1, 0)) {
+		if (Widget_Button_handleImageButtons(mouse_translate(mouse_in_dialog(m), 580, 410), &imageButtonStartMission, 1, 0)) {
 			return;
 		}
 	}
@@ -298,14 +298,13 @@ void UI_MissionStart_BriefingReview_drawForeground()
 
 void UI_MissionStart_BriefingInitial_handleMouse(const mouse *m)
 {
-	int xOffset = Data_Screen.offset640x480.x + 16;
-	int yOffset = Data_Screen.offset640x480.y + 32;
+    const mouse *m_dialog = mouse_in_dialog(m);
 
-	if (Widget_Button_handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1, 0)) {
+	if (Widget_Button_handleImageButtons(mouse_translate(m_dialog, 516, 426), &imageButtonStartMission, 1, 0)) {
 		return;
 	}
 	if (campaignHasChoice[scenario_campaign_rank()]) {
-		if (Widget_Button_handleImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1, 0)) {
+		if (Widget_Button_handleImageButtons(mouse_translate(m_dialog, 26, 428), &imageButtonBackToSelection, 1, 0)) {
 			return;
 		}
 	}
@@ -314,10 +313,9 @@ void UI_MissionStart_BriefingInitial_handleMouse(const mouse *m)
 
 void UI_MissionStart_BriefingReview_handleMouse(const mouse *m)
 {
-	int xOffset = Data_Screen.offset640x480.x + 16;
-	int yOffset = Data_Screen.offset640x480.y + 32;
+    const mouse *m_dialog = mouse_in_dialog(m);
 
-	if (Widget_Button_handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1, 0)) {
+	if (Widget_Button_handleImageButtons(mouse_translate(m_dialog, 516, 426), &imageButtonStartMission, 1, 0)) {
 		return;
 	}
 	Widget_RichText_handleScrollbar(m);

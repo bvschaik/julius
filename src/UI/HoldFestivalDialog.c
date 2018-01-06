@@ -126,11 +126,10 @@ void UI_HoldFestivalDialog_handleMouse(const mouse *m)
 		return;
 	}
 
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+	const mouse *m_dialog = mouse_in_dialog(m);
 
-	Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, imageButtonsBottom, 4, &focusImageButtonId);
-	Widget_Button_handleCustomButtons(mouse_in_dialog(m), buttonsGodsSize, 8, &focusButtonId);
+	Widget_Button_handleImageButtons(m_dialog, imageButtonsBottom, 4, &focusImageButtonId);
+	Widget_Button_handleCustomButtons(m_dialog, buttonsGodsSize, 8, &focusButtonId);
 	if (focusImageButtonId) {
 		focusButtonId = 0;
 	}

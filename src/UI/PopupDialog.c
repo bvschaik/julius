@@ -59,10 +59,8 @@ void UI_PopupDialog_drawForeground()
 
 void UI_PopupDialog_handleMouse(const mouse *m)
 {
-	int xOffset = Data_Screen.offset640x480.x + 80;
-	int yOffset = Data_Screen.offset640x480.y + 80;
 	if (data.hasButtons) {
-		Widget_Button_handleImageButtons(xOffset, yOffset, buttons, 2, 0);
+		Widget_Button_handleImageButtons(mouse_translate(mouse_in_dialog(m), 80, 80), buttons, 2, 0);
 	} else if (m->right.went_up) {
 		data.closeFunc(0);
 		UI_Window_goBack();

@@ -486,15 +486,15 @@ void UI_Empire_handleMouse(const mouse *m)
 	empire_scroll_map(scroll_get_direction(m));
 	data.focusButtonId = 0;
 	int buttonId;
-	Widget_Button_handleImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1, &buttonId);
+	Widget_Button_handleImageButtons(mouse_translate(m, data.xMin + 20, data.yMax - 44), imageButtonHelp, 1, &buttonId);
 	if (buttonId) {
 		data.focusButtonId = 1;
 	}
-	Widget_Button_handleImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1, &buttonId);
+	Widget_Button_handleImageButtons(mouse_translate(m, data.xMax - 44, data.yMax - 44), imageButtonReturnToCity, 1, &buttonId);
 	if (buttonId) {
 		data.focusButtonId = 2;
 	}
-	Widget_Button_handleImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1, &buttonId);
+	Widget_Button_handleImageButtons(mouse_translate(m, data.xMax - 44, data.yMax - 100), imageButtonAdvisor, 1, &buttonId);
 	if (buttonId) {
 		data.focusButtonId = 3;
 	}
@@ -653,7 +653,5 @@ void UI_TradeOpenedDialog_drawForeground()
 
 void UI_TradeOpenedDialog_handleMouse(const mouse *m)
 {
-	Widget_Button_handleImageButtons(
-		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
-		imageButtonsTradeOpened, 2, 0);
+	Widget_Button_handleImageButtons(mouse_in_dialog(m), imageButtonsTradeOpened, 2, 0);
 }
