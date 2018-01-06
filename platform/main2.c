@@ -13,7 +13,6 @@
 #include "../src/input/keyboard.h"
 #include "../src/Widget.h" // debug
 #include "../src/Graphics.h" // debug
-#include "../src/Game.h"
 
 // debug data:
 #include "../src/Data/CityInfo.h"
@@ -22,6 +21,7 @@
 #include "core/lang.h"
 #include "game/settings.h"
 #include "game/file.h"
+#include "game/game.h"
 #include "game/system.h"
 #include "input/mouse.h"
 
@@ -152,7 +152,7 @@ static void runTicks(int ticks)
 	for (int i = 1; i <= ticks; i++) {
 		UI_Window_goTo(Window_City);
 		time_set_millis(2 * i);
-		Game_run();
+		game_run();
 	}
 	setting_reset_speeds(originalSpeed, setting_scroll_speed());
 }
@@ -166,11 +166,11 @@ static int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrit
 	// C3 setup
 	chdir("../data");
 	
-	if (!Game_preInit()) {
+	if (!game_pre_init()) {
 		return 1;
 	}
 	
-	if (!Game_init()) {
+	if (!game_init()) {
 		return 2;
 	}
 	
@@ -180,7 +180,7 @@ static int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrit
 	game_file_write_saved_game(savedGameToWrite);
 	printf("Done\n");
 	
-	Game_exit();
+	game_exit();
 
 	return 0;
 }
@@ -195,12 +195,12 @@ static void refresh()
 	
 	Uint32 now = SDL_GetTicks();
 	time_set_millis(now);
-	Game_run();
+	game_run();
 	
 	// debug
 	Uint32 then = SDL_GetTicks();
 	
-	Game_draw();
+	game_draw();
 	numFrames++;
 	Uint32 then2 = SDL_GetTicks();
 	if (then2 - lastFpsTime > 1000) {
@@ -556,7 +556,7 @@ int main(int argc, char **argv)
 		printf("data directory not found!!\n");
 	}
 
-	if (!Game_preInit()) {
+	if (!game_pre_init()) {
 		return 1;
 	}
 	
@@ -569,7 +569,7 @@ int main(int argc, char **argv)
 		createSurface(width, height, 0);
 	}
 	
-	if (!Game_init()) {
+	if (!game_init()) {
 		return 2;
 	}
 
@@ -577,7 +577,7 @@ int main(int argc, char **argv)
 	
 	printf("Quiting SDL.\n");
 	
-	Game_exit();
+	game_exit();
 
 	// Shutdown all subsystems
 	SDL_Quit();

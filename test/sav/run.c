@@ -1,8 +1,7 @@
 #include "core/time.h"
 #include "game/file.h"
+#include "game/game.h"
 #include "game/settings.h"
-
-#include "Game.h"
 
 #ifndef __MINGW32__
 #include <execinfo.h>
@@ -37,7 +36,7 @@ static void run_ticks(int ticks)
     time_set_millis(0);
     for (int i = 1; i <= ticks; i++) {
         time_set_millis(2 * i);
-        Game_run();
+        game_run();
     }
 }
 
@@ -47,12 +46,12 @@ static int run_autopilot(const char *input_saved_game, const char *output_saved_
     signal(SIGSEGV, handler);
     
     chdir("data/sav");
-    if (!Game_preInit()) {
+    if (!game_pre_init()) {
         printf("Unable to run Game_preInit\n");
         return 1;
     }
     
-    if (!Game_init()) {
+    if (!game_init()) {
         printf("Unable to run Game_init\n");
         return 2;
     }
@@ -68,7 +67,7 @@ static int run_autopilot(const char *input_saved_game, const char *output_saved_
     game_file_write_saved_game(output_saved_game);
     printf("Done\n");
     
-    Game_exit();
+    game_exit();
 
     return 0;
 }

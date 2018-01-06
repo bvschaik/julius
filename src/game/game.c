@@ -1,7 +1,4 @@
-#include "Game.h"
-
-#include "UI/Window.h"
-#include "UI/TopMenu.h"
+#include "game.h"
 
 #include "building/construction.h"
 #include "building/model.h"
@@ -24,75 +21,78 @@
 #include "sound/city.h"
 #include "sound/system.h"
 
+#include "UI/Window.h"
+#include "UI/TopMenu.h"
+
 static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
     0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
 };
 
-static time_millis lastUpdate;
+static time_millis last_update;
 
 static void errlog(const char *msg)
 {
     debug_log(msg, 0, 0);
 }
 
-int Game_preInit()
+int game_pre_init()
 {
     settings_load();
     scenario_settings_init();
     game_state_unpause();
     UI_TopMenu_initFromSettings(); // TODO eliminate need for this
 
-	if (!lang_load("c3.eng", "c3_mm.eng")) {
-		errlog("ERR: 'c3.eng' or 'c3_mm.eng' files not found or too large.");
-		return 0;
-	}
-	scenario_set_player_name(lang_get_string(9, 5));
-	random_init();
-	return 1;
+    if (!lang_load("c3.eng", "c3_mm.eng")) {
+        errlog("ERR: 'c3.eng' or 'c3_mm.eng' files not found or too large.");
+        return 0;
+    }
+    scenario_set_player_name(lang_get_string(9, 5));
+    random_init();
+    return 1;
 }
 
-int Game_init()
+int game_init()
 {
-	system_init_cursors();
-	if (!image_init()) {
-		errlog("ERR: unable to init graphics");
-		return 0;
-	}
-	
-	if (!image_load_climate(CLIMATE_CENTRAL)) {
-		errlog("ERR: unable to load main graphics");
-		return 0;
-	}
-	if (!image_load_enemy(ENEMY_0_BARBARIAN)) {
-		errlog("ERR: unable to load enemy graphics");
-		return 0;
-	}
+    system_init_cursors();
+    if (!image_init()) {
+        errlog("ERR: unable to init graphics");
+        return 0;
+    }
+    
+    if (!image_load_climate(CLIMATE_CENTRAL)) {
+        errlog("ERR: unable to load main graphics");
+        return 0;
+    }
+    if (!image_load_enemy(ENEMY_0_BARBARIAN)) {
+        errlog("ERR: unable to load enemy graphics");
+        return 0;
+    }
 
-	if (!model_load()) {
-		errlog("ERR: unable to load c3_model.txt");
-		return 0;
-	}
+    if (!model_load()) {
+        errlog("ERR: unable to load c3_model.txt");
+        return 0;
+    }
 
-	sound_system_init();
-	game_state_init();
-	UI_Window_goTo(Window_Logo);
-	return 1;
+    sound_system_init();
+    game_state_init();
+    UI_Window_goTo(Window_Logo);
+    return 1;
 }
 
-static int getElapsedTicks()
+static int get_elapsed_ticks()
 {
     time_millis now = time_get_millis();
-    time_millis diff = now - lastUpdate;
-    if (now < lastUpdate) {
+    time_millis diff = now - last_update;
+    if (now < last_update) {
         diff = 10000;
     }
-    int gameSpeedIndex = (100 - setting_game_speed()) / 10;
+    int game_speed_index = (100 - setting_game_speed()) / 10;
     int ticks_per_frame = 1;
-    if (gameSpeedIndex >= 10) {
+    if (game_speed_index >= 10) {
         return 0;
-    } else if (gameSpeedIndex < 0) {
+    } else if (game_speed_index < 0) {
         ticks_per_frame = setting_game_speed() / 100;
-        gameSpeedIndex = 0;
+        game_speed_index = 0;
     }
 
     if (game_state_is_paused()) {
@@ -113,30 +113,30 @@ static int getElapsedTicks()
     if (scroll_in_progress()) {
         return 0;
     }
-    if (diff < MILLIS_PER_TICK_PER_SPEED[gameSpeedIndex] + 2) {
+    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
         return 0;
     }
-    lastUpdate = now;
+    last_update = now;
     return ticks_per_frame;
 }
 
-void Game_run()
+void game_run()
 {
     game_animation_update();
-    int numTicks = getElapsedTicks();
-    for (int i = 0; i < numTicks; i++) {
+    int num_ticks = get_elapsed_ticks();
+    for (int i = 0; i < num_ticks; i++) {
         game_tick_run();
         game_file_write_mission_saved_game();
     }
 }
 
-void Game_draw()
+void game_draw()
 {
     UI_Window_refresh(0);
     sound_city_play();
 }
 
-void Game_exit()
+void game_exit()
 {
     video_shutdown();
     settings_save();
