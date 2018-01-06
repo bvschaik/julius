@@ -22,19 +22,40 @@ static ImageButton helpButton = {
 };
 
 static CustomButton advisorButtons[] = {
-	{12, 1, 52, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 1, 0},
-	{60, 1, 100, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 2, 0},
-	{108, 1, 148, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 3, 0},
-	{156, 1, 196, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 4, 0},
-	{204, 1, 244, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 5, 0},
-	{252, 1, 292, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 6, 0},
-	{300, 1, 340, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 7, 0},
-	{348, 1, 388, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 8, 0},
-	{396, 1, 436, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 9, 0},
-	{444, 1, 484, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 10, 0},
-	{492, 1, 532, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 11, 0},
-	{540, 1, 580, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 12, 0},
+	{12, 1, 52, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_LABOR, 0},
+	{60, 1, 100, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_MILITARY, 0},
+	{108, 1, 148, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_IMPERIAL, 0},
+	{156, 1, 196, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_RATINGS, 0},
+	{204, 1, 244, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_TRADE, 0},
+	{252, 1, 292, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_POPULATION, 0},
+	{300, 1, 340, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_HEALTH, 0},
+	{348, 1, 388, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_EDUCATION, 0},
+	{396, 1, 436, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_ENTERTAINMENT, 0},
+	{444, 1, 484, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_RELIGION, 0},
+	{492, 1, 532, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_FINANCIAL, 0},
+	{540, 1, 580, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_CHIEF, 0},
 	{588, 1, 624, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 0, 0},
+};
+
+static struct {
+    void (*draw_background)(int *height);
+    void (*draw_foreground)();
+    void (*handle_mouse)();
+    int (*get_tooltip)();
+} windows[] = {
+    {0, 0, 0, 0},
+    {UI_Advisor_Labor_drawBackground, UI_Advisor_Labor_drawForeground, UI_Advisor_Labor_handleMouse, UI_Advisor_Labor_getTooltip},
+    {UI_Advisor_Military_drawBackground, UI_Advisor_Military_drawForeground, UI_Advisor_Military_handleMouse, 0},
+    {UI_Advisor_Imperial_drawBackground, UI_Advisor_Imperial_drawForeground, UI_Advisor_Imperial_handleMouse, UI_Advisor_Imperial_getTooltip},
+    {UI_Advisor_Ratings_drawBackground, UI_Advisor_Ratings_drawForeground, UI_Advisor_Ratings_handleMouse, UI_Advisor_Ratings_getTooltip},
+    {UI_Advisor_Trade_drawBackground, UI_Advisor_Trade_drawForeground, UI_Advisor_Trade_handleMouse, UI_Advisor_Trade_getTooltip},
+    {UI_Advisor_Population_drawBackground, UI_Advisor_Population_drawForeground, UI_Advisor_Population_handleMouse, UI_Advisor_Population_getTooltip},
+    {UI_Advisor_Health_drawBackground, 0, 0, 0},
+    {UI_Advisor_Education_drawBackground, 0, 0, 0},
+    {UI_Advisor_Entertainment_drawBackground, UI_Advisor_Entertainment_drawForeground, UI_Advisor_Entertainment_handleMouse, UI_Advisor_Entertainment_getTooltip},
+    {UI_Advisor_Religion_drawBackground, 0, 0, 0},
+    {UI_Advisor_Financial_drawBackground, UI_Advisor_Financial_drawForeground, UI_Advisor_Financial_handleMouse, UI_Advisor_Financial_getTooltip},
+    {UI_Advisor_Chief_drawBackground, 0, 0, 0},
 };
 
 static const int advisorToMessageTextId[] = {
@@ -106,46 +127,7 @@ void UI_Advisors_init()
 void UI_Advisors_drawBackground()
 {
 	UI_Advisor_drawGeneralBackground();
-	switch (currentAdvisor) {
-		case ADVISOR_LABOR:
-			UI_Advisor_Labor_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_MILITARY:
-			UI_Advisor_Military_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_IMPERIAL:
-			UI_Advisor_Imperial_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_RATINGS:
-			UI_Advisor_Ratings_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_TRADE:
-			UI_Advisor_Trade_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_POPULATION:
-			UI_Advisor_Population_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_HEALTH:
-			UI_Advisor_Health_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_EDUCATION:
-			UI_Advisor_Education_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_ENTERTAINMENT:
-			UI_Advisor_Entertainment_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_RELIGION:
-			UI_Advisor_Religion_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_FINANCIAL:
-			UI_Advisor_Financial_drawBackground(&advisorHeight);
-			break;
-		case ADVISOR_CHIEF:
-			UI_Advisor_Chief_drawBackground(&advisorHeight);
-			break;
-        default:
-            break;
-	}
+	windows[currentAdvisor].draw_background(&advisorHeight);
 }
 
 void UI_Advisors_drawForeground()
@@ -154,34 +136,9 @@ void UI_Advisors_drawForeground()
 		Data_Screen.offset640x480.y + 16 * (advisorHeight - 2),
 		&helpButton, 1);
 
-	switch (currentAdvisor) {
-		case ADVISOR_LABOR:
-			UI_Advisor_Labor_drawForeground();
-			break;
-		case ADVISOR_MILITARY:
-			UI_Advisor_Military_drawForeground();
-			break;
-		case ADVISOR_IMPERIAL:
-			UI_Advisor_Imperial_drawForeground();
-			break;
-		case ADVISOR_RATINGS:
-			UI_Advisor_Ratings_drawForeground();
-			break;
-		case ADVISOR_TRADE:
-			UI_Advisor_Trade_drawForeground();
-			break;
-		case ADVISOR_POPULATION:
-			UI_Advisor_Population_drawForeground();
-			break;
-		case ADVISOR_ENTERTAINMENT:
-			UI_Advisor_Entertainment_drawForeground();
-			break;
-		case ADVISOR_FINANCIAL:
-			UI_Advisor_Financial_drawForeground();
-			break;
-        default:
-            break;
-	}
+    if (windows[currentAdvisor].draw_foreground) {
+        windows[currentAdvisor].draw_foreground();
+    }
 }
 
 void UI_Advisor_drawGeneralBackground()
@@ -222,34 +179,9 @@ void UI_Advisors_handleMouse(const mouse *m)
 		return;
 	}
 
-	switch (currentAdvisor) {
-		case ADVISOR_LABOR:
-			UI_Advisor_Labor_handleMouse();
-			break;
-		case ADVISOR_MILITARY:
-			UI_Advisor_Military_handleMouse();
-			break;
-		case ADVISOR_IMPERIAL:
-			UI_Advisor_Imperial_handleMouse();
-			break;
-		case ADVISOR_RATINGS:
-			UI_Advisor_Ratings_handleMouse();
-			break;
-		case ADVISOR_TRADE:
-			UI_Advisor_Trade_handleMouse();
-			break;
-		case ADVISOR_POPULATION:
-			UI_Advisor_Population_handleMouse();
-			break;
-		case ADVISOR_ENTERTAINMENT:
-			UI_Advisor_Entertainment_handleMouse();
-			break;
-		case ADVISOR_FINANCIAL:
-			UI_Advisor_Financial_handleMouse();
-			break;
-        default:
-            break;
-	}
+    if (windows[currentAdvisor].handle_mouse) {
+        windows[currentAdvisor].handle_mouse();
+    }
 }
 
 static void buttonChangeAdvisor(int param1, int param2)
@@ -282,31 +214,9 @@ void UI_Advisors_getTooltip(struct TooltipContext *c)
 		return;
 	}
 	int textId = 0;
-	switch (currentAdvisor) {
-		case ADVISOR_LABOR:
-			textId = UI_Advisor_Labor_getTooltip();
-			break;
-		case ADVISOR_IMPERIAL:
-			textId = UI_Advisor_Imperial_getTooltip();
-			break;
-		case ADVISOR_RATINGS:
-			textId = UI_Advisor_Ratings_getTooltip();
-			break;
-		case ADVISOR_TRADE:
-			textId = UI_Advisor_Trade_getTooltip();
-			break;
-		case ADVISOR_POPULATION:
-			textId = UI_Advisor_Population_getTooltip();
-			break;
-		case ADVISOR_ENTERTAINMENT:
-			textId = UI_Advisor_Entertainment_getTooltip();
-			break;
-		case ADVISOR_FINANCIAL:
-			textId = UI_Advisor_Financial_getTooltip();
-			break;
-        default:
-            break;
-	}
+    if (windows[currentAdvisor].get_tooltip) {
+        textId = windows[currentAdvisor].get_tooltip();
+    }
 	if (textId) {
 		c->textId = textId;
 		c->type = TooltipType_Button;
