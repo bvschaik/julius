@@ -186,7 +186,7 @@ void setting_set_display(int fullscreen, int width, int height)
     if (!fullscreen) {
         data.window_width = width;
         data.window_height = height;
-	}
+    }
 }
 
 static set_sound *get_sound(set_sound_type type)

@@ -21,9 +21,9 @@ static struct {
 } stats = {0, 0};
 
 static struct {
-	int head;
-	int tail;
-	int items[MAX_QUEUE];
+    int head;
+    int tail;
+    int items[MAX_QUEUE];
 } queue;
 
 static grid_u8 water_drag;

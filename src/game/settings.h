@@ -17,10 +17,10 @@ typedef enum {
 } set_difficulty;
 
 typedef enum {
-	SOUND_MUSIC = 1,
-	SOUND_SPEECH = 2,
-	SOUND_EFFECTS = 3,
-	SOUND_CITY = 4,
+    SOUND_MUSIC = 1,
+    SOUND_SPEECH = 2,
+    SOUND_EFFECTS = 3,
+    SOUND_CITY = 4,
 } set_sound_type;
 
 typedef struct {

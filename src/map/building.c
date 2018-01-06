@@ -62,16 +62,16 @@ int map_building_is_reservoir(int x, int y)
         return 0;
     }
     int grid_offset = map_grid_offset(x, y);
-	int building_id = map_building_at(grid_offset);
-	if (!building_id || building_get(building_id)->type != BUILDING_RESERVOIR) {
-		return 0;
-	}
-	for (int dy = 0; dy < 3; dy++) {
-		for (int dx = 0; dx < 3; dx++) {
-			if (building_id != map_building_at(grid_offset + map_grid_delta(dx, dy))) {
-				return 0;
-			}
-		}
-	}
-	return 1;
+    int building_id = map_building_at(grid_offset);
+    if (!building_id || building_get(building_id)->type != BUILDING_RESERVOIR) {
+        return 0;
+    }
+    for (int dy = 0; dy < 3; dy++) {
+        for (int dx = 0; dx < 3; dx++) {
+            if (building_id != map_building_at(grid_offset + map_grid_delta(dx, dy))) {
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
