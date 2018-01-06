@@ -16,7 +16,6 @@
 #include "map/water.h"
 
 #include "Data/State.h"
-#include "../Terrain.h"
 
 static void determine_leftmost_tile()
 {
