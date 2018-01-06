@@ -125,10 +125,7 @@ void UI_Advisor_Trade_drawForeground()
 
 void UI_Advisor_Trade_handleMouse(const mouse *m)
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
-
-	Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY,
+	Widget_Button_handleCustomButtons(mouse_in_dialog(m),
 		resourceButtons, Data_CityInfo_Resource.numAvailableResources + 2, &focusButtonId);
 }
 
@@ -348,6 +345,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 
 void UI_ResourceSettingsDialog_handleMouse(const mouse *m)
 {
+    const mouse *m_dialog = mouse_in_dialog(m);
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
@@ -356,11 +354,10 @@ void UI_ResourceSettingsDialog_handleMouse(const mouse *m)
 	} else if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, resourceImageButtons, 2, 0)) {
 		return;
 	} else if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TRADE_STATUS_EXPORT &&
-			Widget_Button_handleArrowButtons(mouse_in_dialog(m), resourceArrowButtons, 2)) {
+			Widget_Button_handleArrowButtons(m_dialog, resourceArrowButtons, 2)) {
 		return;
 	} else {
-		Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY,
-			resourceCustomButtons, 3, &resourceFocusButtonId);
+		Widget_Button_handleCustomButtons(m_dialog, resourceCustomButtons, 3, &resourceFocusButtonId);
 	}
 }
 

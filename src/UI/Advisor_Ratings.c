@@ -210,9 +210,7 @@ void UI_Advisor_Ratings_drawForeground()
 
 void UI_Advisor_Ratings_handleMouse(const mouse *m)
 {
-	Widget_Button_handleCustomButtons(
-		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
-		ratingButtons, 4, &focusButtonId);
+	Widget_Button_handleCustomButtons(mouse_in_dialog(m), ratingButtons, 4, &focusButtonId);
 }
 
 static void buttonRating(int param1, int param2)

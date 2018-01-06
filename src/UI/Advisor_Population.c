@@ -194,9 +194,7 @@ void UI_Advisor_Population_drawForeground()
 
 void UI_Advisor_Population_handleMouse(const mouse *m)
 {
-	Widget_Button_handleCustomButtons(
-		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
-		graphButtons, 2, &focusButtonId);
+	Widget_Button_handleCustomButtons(mouse_in_dialog(m), graphButtons, 2, &focusButtonId);
 }
 
 static void drawHistoryGraph(int fullSize, int x, int y)

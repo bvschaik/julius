@@ -214,8 +214,8 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
 		return;
 	}
 	int oldFocusButtonId = focusButtonId;
-	if (Widget_Button_handleCustomButtons(
-		data.xText, data.yText + 4, customButtonsMessages, 10, &focusButtonId)) {
+	if (Widget_Button_handleCustomButtons(mouse_translate(m, data.xText, data.yText + 4),
+		customButtonsMessages, 10, &focusButtonId)) {
 		if (oldFocusButtonId != focusButtonId) {
 			UI_Window_requestRefresh();
 		}

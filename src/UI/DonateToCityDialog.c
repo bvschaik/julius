@@ -91,10 +91,9 @@ void UI_DonateToCityDialog_handleMouse(const mouse *m)
 	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
-		int offsetX = Data_Screen.offset640x480.x;
-		int offsetY = Data_Screen.offset640x480.y;
-		if (!Widget_Button_handleCustomButtons(offsetX, offsetY, buttons, 7, &focusButtonId)) {
-			arrowButtonFocus = Widget_Button_handleArrowButtons(mouse_in_dialog(m), arrowButtons, 2);
+		const mouse *m_dialog = mouse_in_dialog(m);
+		if (!Widget_Button_handleCustomButtons(m_dialog, buttons, 7, &focusButtonId)) {
+			arrowButtonFocus = Widget_Button_handleArrowButtons(m_dialog, arrowButtons, 2);
 		}
 	}
 }

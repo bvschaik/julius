@@ -223,10 +223,7 @@ static int getRequestStatus(int index)
 
 void UI_Advisor_Imperial_handleMouse(const mouse *m)
 {
-	int offsetX = Data_Screen.offset640x480.x;
-	int offsetY = Data_Screen.offset640x480.y;
-	Widget_Button_handleCustomButtons(offsetX, offsetY,
-		imperialButtons, 8, &focusButtonId);
+	Widget_Button_handleCustomButtons(mouse_in_dialog(m), imperialButtons, 8, &focusButtonId);
 }
 
 static void buttonDonateToCity(int param1, int param2)

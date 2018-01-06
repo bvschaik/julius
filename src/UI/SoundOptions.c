@@ -164,12 +164,9 @@ void UI_SoundOptions_handleMouse(const mouse *m)
 		// cancel dialog
 		UI_Window_goTo(Window_City);
 	} else {
-		int baseOffsetX = Data_Screen.offset640x480.x;
-		int baseOffsetY = Data_Screen.offset640x480.y;
-		if (!Widget_Button_handleCustomButtons(
-				baseOffsetX, baseOffsetY, buttons, 6, &focusButtonId)) {
-			Widget_Button_handleArrowButtons(
-				mouse_translate(mouse_in_dialog(m), 208, 60), arrowButtons, 8);
+		const mouse *m_dialog = mouse_in_dialog(m);
+		if (!Widget_Button_handleCustomButtons(m_dialog, buttons, 6, &focusButtonId)) {
+			Widget_Button_handleArrowButtons(mouse_translate(m_dialog, 208, 60), arrowButtons, 8);
 		}
 	}
 }

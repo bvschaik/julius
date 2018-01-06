@@ -74,9 +74,7 @@ void UI_SetSalaryDialog_handleMouse(const mouse *m)
 	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
-		int offsetX = Data_Screen.offset640x480.x;
-		int offsetY = Data_Screen.offset640x480.y;
-		Widget_Button_handleCustomButtons(offsetX, offsetY,
+		Widget_Button_handleCustomButtons(mouse_in_dialog(m),
 			buttons, 12, &focusButtonId);
 	}
 }

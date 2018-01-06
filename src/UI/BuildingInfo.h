@@ -67,7 +67,7 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset);
 void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c);
 void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c);
 void UI_BuildingInfo_playFigurePhrase(BuildingInfoContext *c);
-void UI_BuildingInfo_handleMouseFigureList(BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseFigureList(const mouse *m, BuildingInfoContext *c);
 
 void UI_BuildingInfo_showStorageOrders(int param1, int param2);
 
@@ -104,10 +104,10 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c);
 void UI_BuildingInfo_drawWarehouseForeground(BuildingInfoContext *c);
 void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c);
 
-void UI_BuildingInfo_handleMouseGranary(BuildingInfoContext *c);
-void UI_BuildingInfo_handleMouseGranaryOrders(BuildingInfoContext *c);
-void UI_BuildingInfo_handleMouseWarehouse(BuildingInfoContext *c);
-void UI_BuildingInfo_handleMouseWarehouseOrders(BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseGranary(const mouse *m, BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseGranaryOrders(const mouse *m, BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseWarehouse(const mouse *m, BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseWarehouseOrders(const mouse *m, BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c);
 void UI_BuildingInfo_drawTheater(BuildingInfoContext *c);
@@ -160,7 +160,7 @@ void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c);
 void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c);
 void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c);
 void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c);
-void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseLegionInfo(const mouse *m, BuildingInfoContext *c);
 int UI_BuildingInfo_getTooltipLegionInfo(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawGarden(BuildingInfoContext *c);

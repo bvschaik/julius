@@ -14,7 +14,7 @@
 #include "scenario/property.h"
 
 static void drawMenuButtons();
-static int handleBuildSubmenu();
+static int handleBuildSubmenu(const mouse *m);
 
 static void buttonMenuIndex(int param1, int param2);
 static void buttonMenuItem(int item);
@@ -191,15 +191,15 @@ void UI_BuildingMenu_handleMouse(const mouse *m)
 		return;
 	}
 
-	if (!handleBuildSubmenu()) {
+	if (!handleBuildSubmenu(m)) {
 		UI_Sidebar_handleMouseBuildButtons(m);
 	}
 }
 
-static int handleBuildSubmenu()
+static int handleBuildSubmenu(const mouse *m)
 {
 	return Widget_Button_handleCustomButtons(
-		Data_CityView.widthInPixels - 258, menu.yOffset + 110,
+		mouse_translate(m, Data_CityView.widthInPixels - 258, menu.yOffset + 110),
 		buildMenuCustomButtons, menu.numItems, &buildMenuFocusButtonId);
 }
 

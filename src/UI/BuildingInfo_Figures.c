@@ -422,10 +422,10 @@ void UI_BuildingInfo_playFigurePhrase(BuildingInfoContext *c)
 	c->figure.phraseId = f->phraseId;
 }
 
-void UI_BuildingInfo_handleMouseFigureList(BuildingInfoContext *c)
+void UI_BuildingInfo_handleMouseFigureList(const mouse *m, BuildingInfoContext *c)
 {
 	contextForCallback = c;
-	Widget_Button_handleCustomButtons(c->xOffset, c->yOffset,
+	Widget_Button_handleCustomButtons(mouse_translate(m, c->xOffset, c->yOffset),
 		figureButtons, c->figure.count, &focusButtonId);
 	contextForCallback = 0;
 }

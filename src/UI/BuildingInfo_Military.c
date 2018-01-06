@@ -431,11 +431,11 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 	}
 }
 
-void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
+void UI_BuildingInfo_handleMouseLegionInfo(const mouse *m, BuildingInfoContext *c)
 {
 	contextForCallback = c;
     int handled = Widget_Button_handleCustomButtons(
-			c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId);
+			mouse_translate(m, c->xOffset, c->yOffset), layoutButtons, 5, &focusButtonId);
     if (formation_get(c->formationId)->figure_type == FIGURE_FORT_LEGIONARY) {
         if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
             focusButtonId = 0;
@@ -443,8 +443,8 @@ void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
     }
 	if (!handled) {
 		Widget_Button_handleCustomButtons(
-			c->xOffset + 16 * (c->widthBlocks - 18) / 2,
-			c->yOffset + 16 * c->heightBlocks - 48,
+			mouse_translate(m, c->xOffset + 16 * (c->widthBlocks - 18) / 2,
+			c->yOffset + 16 * c->heightBlocks - 48),
 			returnButtons, 1, &returnButtonId);
 	}
 	contextForCallback = 0;

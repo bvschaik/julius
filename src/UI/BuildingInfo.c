@@ -539,22 +539,22 @@ void UI_BuildingInfo_handleMouse(const mouse *m)
 		return;
 	}
 	if (context.type == BuildingInfoType_Legion) {
-		UI_BuildingInfo_handleMouseLegionInfo(&context);
+		UI_BuildingInfo_handleMouseLegionInfo(m, &context);
 	} else if (context.figure.drawn) {
-		UI_BuildingInfo_handleMouseFigureList(&context);
+		UI_BuildingInfo_handleMouseFigureList(m, &context);
 	} else if (context.type == BuildingInfoType_Building) {
 		int btype = building_get(context.buildingId)->type;
 		if (btype == BUILDING_GRANARY) {
 			if (context.storageShowSpecialOrders) {
-				UI_BuildingInfo_handleMouseGranaryOrders(&context);
+				UI_BuildingInfo_handleMouseGranaryOrders(m, &context);
 			} else {
-				UI_BuildingInfo_handleMouseGranary(&context);
+				UI_BuildingInfo_handleMouseGranary(m, &context);
 			}
 		} else if (btype == BUILDING_WAREHOUSE) {
 			if (context.storageShowSpecialOrders) {
-				UI_BuildingInfo_handleMouseWarehouseOrders(&context);
+				UI_BuildingInfo_handleMouseWarehouseOrders(m, &context);
 			} else {
-				UI_BuildingInfo_handleMouseWarehouse(&context);
+				UI_BuildingInfo_handleMouseWarehouse(m, &context);
 			}
 		}
 	}

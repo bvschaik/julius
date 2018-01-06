@@ -164,10 +164,7 @@ void UI_Advisor_Military_drawForeground()
 
 void UI_Advisor_Military_handleMouse(const mouse *m)
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
-
-	Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY, fortCustomButtons, 3 * numLegions, &focusButtonId);
+	Widget_Button_handleCustomButtons(mouse_in_dialog(m), fortCustomButtons, 3 * numLegions, &focusButtonId);
 }
 
 static void buttonGoToLegion(int legionId, int param2)

@@ -143,10 +143,9 @@ void UI_Advisor_Labor_drawForeground()
 
 void UI_Advisor_Labor_handleMouse(const mouse *m)
 {
-	int offsetX = Data_Screen.offset640x480.x;
-	int offsetY = Data_Screen.offset640x480.y;
-	if (!Widget_Button_handleCustomButtons(offsetX, offsetY, categoryButtons, 9, &focusButtonId)) {
-		arrowButtonFocus = Widget_Button_handleArrowButtons(mouse_in_dialog(m), wageButtons, 2);
+    const mouse *m_dialog = mouse_in_dialog(m);
+	if (!Widget_Button_handleCustomButtons(m_dialog, categoryButtons, 9, &focusButtonId)) {
+		arrowButtonFocus = Widget_Button_handleArrowButtons(m_dialog, wageButtons, 2);
 	}
 }
 
@@ -230,9 +229,7 @@ void UI_LaborPriorityDialog_handleMouse(const mouse *m)
 	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
-		int offsetX = Data_Screen.offset640x480.x;
-		int offsetY = Data_Screen.offset640x480.y;
-		Widget_Button_handleCustomButtons(offsetX, offsetY, priorityButtons, 1 + priorityMaxItems, &priorityFocusButtonId);
+		Widget_Button_handleCustomButtons(mouse_in_dialog(m), priorityButtons, 1 + priorityMaxItems, &priorityFocusButtonId);
 	}
 }
 

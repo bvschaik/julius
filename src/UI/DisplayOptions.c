@@ -86,10 +86,7 @@ void UI_DisplayOptions_handleMouse(const mouse *m)
 		// cancel dialog
 		UI_Window_goTo(Window_City);
 	} else {
-		int baseOffsetX = Data_Screen.offset640x480.x;
-		int baseOffsetY = Data_Screen.offset640x480.y;
-		Widget_Button_handleCustomButtons(
-			baseOffsetX, baseOffsetY, buttons, 5, &focusButtonId);
+		Widget_Button_handleCustomButtons(mouse_in_dialog(m), buttons, 5, &focusButtonId);
 	}
 }
 

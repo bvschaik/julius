@@ -512,7 +512,9 @@ void UI_Empire_handleMouse(const mouse *m)
 			data.selectedCity = empire_city_get_for_object(selectedObject-1);
 			const empire_city *city = empire_city_get(data.selectedCity);
 			if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
-				Widget_Button_handleCustomButtons((data.xMin + data.xMax - 500) / 2, data.yMax - 105, customButtonOpenTrade, 1, &data.selectedButton);
+				Widget_Button_handleCustomButtons(
+                    mouse_translate(m, (data.xMin + data.xMax - 500) / 2, data.yMax - 105),
+                        customButtonOpenTrade, 1, &data.selectedButton);
 			}
 		}
 	}

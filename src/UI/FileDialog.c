@@ -155,7 +155,7 @@ void UI_FileDialog_handleMouse(const mouse *m)
 	}
 	int xOffset = Data_Screen.offset640x480.x;
 	int yOffset = Data_Screen.offset640x480.y;
-	if (!Widget_Button_handleCustomButtons(xOffset, yOffset, customButtons, 12, &focusButtonId)) {
+	if (!Widget_Button_handleCustomButtons(mouse_in_dialog(m), customButtons, 12, &focusButtonId)) {
 		if (!Widget_Button_handleImageButtons(xOffset, yOffset, imageButtons, 4, 0)) {
 			handleScrollbarClick(m);
 		}

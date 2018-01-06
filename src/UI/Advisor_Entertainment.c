@@ -208,9 +208,7 @@ void UI_Advisor_Entertainment_drawForeground()
 
 void UI_Advisor_Entertainment_handleMouse(const mouse *m)
 {
-	Widget_Button_handleCustomButtons(
-		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
-		holdFestivalButtons, 1, &focusButtonId);
+	Widget_Button_handleCustomButtons(mouse_in_dialog(m), holdFestivalButtons, 1, &focusButtonId);
 }
 
 void buttonHoldFestival(int param1, int param2)

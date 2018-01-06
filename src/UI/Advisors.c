@@ -163,9 +163,10 @@ void UI_Advisor_drawGeneralBackground()
 
 void UI_Advisors_handleMouse(const mouse *m)
 {
+    const mouse *m_dialog = mouse_in_dialog(m);
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
-	if (Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY + 440, advisorButtons, 13, &focusButtonId)) {
+	if (Widget_Button_handleCustomButtons(mouse_translate(m_dialog, 0, 440), advisorButtons, 13, &focusButtonId)) {
 		return;
 	}
 	int buttonId;

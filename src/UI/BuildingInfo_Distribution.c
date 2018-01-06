@@ -189,10 +189,10 @@ void UI_BuildingInfo_drawGranaryForeground(BuildingInfoContext *c)
 		16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 }
 
-void UI_BuildingInfo_handleMouseGranary(BuildingInfoContext *c)
+void UI_BuildingInfo_handleMouseGranary(const mouse *m, BuildingInfoContext *c)
 {
 	Widget_Button_handleCustomButtons(
-		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
+		mouse_translate(m, c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34),
 		gotoOrdersButtons, 1, &focusButtonId);
 }
 
@@ -245,15 +245,15 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 	}
 }
 
-void UI_BuildingInfo_handleMouseGranaryOrders(BuildingInfoContext *c)
+void UI_BuildingInfo_handleMouseGranaryOrders(const mouse *m, BuildingInfoContext *c)
 {
 	buildingId = c->buildingId;
-	if (Widget_Button_handleCustomButtons(c->xOffset + 180, 78,
+	if (Widget_Button_handleCustomButtons(mouse_translate(m, c->xOffset + 180, 78),
 		ordersResourceButtons, Data_CityInfo_Resource.numAvailableFoods,
 		&resourceFocusButtonId)) {
 		return;
 	}
-	Widget_Button_handleCustomButtons(c->xOffset + 80, 436,
+	Widget_Button_handleCustomButtons(mouse_translate(m, c->xOffset + 80, 436),
 		granaryOrderButtons, 1, &ordersFocusButtonId);
 }
 
@@ -329,10 +329,10 @@ void UI_BuildingInfo_drawWarehouseForeground(BuildingInfoContext *c)
 		16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 }
 
-void UI_BuildingInfo_handleMouseWarehouse(BuildingInfoContext *c)
+void UI_BuildingInfo_handleMouseWarehouse(const mouse *m, BuildingInfoContext *c)
 {
 	Widget_Button_handleCustomButtons(
-		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
+		mouse_translate(m, c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34),
 		gotoOrdersButtons, 1, &focusButtonId);
 }
 
@@ -393,15 +393,15 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 	}
 }
 
-void UI_BuildingInfo_handleMouseWarehouseOrders(BuildingInfoContext *c)
+void UI_BuildingInfo_handleMouseWarehouseOrders(const mouse *m, BuildingInfoContext *c)
 {
 	buildingId = c->buildingId;
-	if (Widget_Button_handleCustomButtons(c->xOffset + 180, 78,
+	if (Widget_Button_handleCustomButtons(mouse_translate(m, c->xOffset + 180, 78),
 		ordersResourceButtons, Data_CityInfo_Resource.numAvailableResources,
 		&resourceFocusButtonId)) {
 		return;
 	}
-	Widget_Button_handleCustomButtons(c->xOffset + 80, 436,
+	Widget_Button_handleCustomButtons(mouse_translate(m, c->xOffset + 80, 436),
 		warehouseOrderButtons, 2, &ordersFocusButtonId);
 }
 

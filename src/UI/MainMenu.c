@@ -70,9 +70,7 @@ void UI_MainMenu_drawForeground()
 
 void UI_MainMenu_handleMouse(const mouse *m)
 {
-	Widget_Button_handleCustomButtons(
-		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
-		buttons, 4, &focusButtonId);
+	Widget_Button_handleCustomButtons(mouse_in_dialog(m), buttons, 4, &focusButtonId);
 }
 
 static void confirmExit(int accepted)

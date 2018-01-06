@@ -130,10 +130,7 @@ void UI_MissionEnd_handleMouse(const mouse *m)
 			advanceToNextMission();
 		}
 	} else {
-		int xOffset = Data_Screen.offset640x480.x + 48;
-		int yOffset = Data_Screen.offset640x480.y + 128;
-
-		Widget_Button_handleCustomButtons(xOffset, yOffset - 112,
+		Widget_Button_handleCustomButtons(mouse_translate(mouse_in_dialog(m), 48, 16),
 			firedButtons, 1, &focusButtonId);
 	}
 }
@@ -185,16 +182,13 @@ void UI_VictoryDialog_drawForeground()
 
 void UI_VictoryDialog_handleMouse(const mouse *m)
 {
-	int xOffset = Data_Screen.offset640x480.x + 48;
-	int yOffset = Data_Screen.offset640x480.y + 128;
-
 	int numButtons;
 	if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
 		numButtons = 3;
 	} else {
 		numButtons = 1;
 	}
-	Widget_Button_handleCustomButtons(xOffset, yOffset, victoryButtons, numButtons, &focusButtonId);
+	Widget_Button_handleCustomButtons(mouse_translate(mouse_in_dialog(m), 48, 128), victoryButtons, numButtons, &focusButtonId);
 }
 
 static void victoryAccept(int param1, int param2)

@@ -97,13 +97,13 @@ void UI_OverlayMenu_handleMouse(const mouse *m)
 		UI_Window_goTo(Window_City);
 		return;
 	}
-	Widget_Button_handleCustomButtons(Data_CityView.widthInPixels - 170, 72,
+	Widget_Button_handleCustomButtons(mouse_translate(m, Data_CityView.widthInPixels - 170, 72),
 			menuCustomButtons, 8, &menuFocusButtonId);
 
 	handleSubmenu();
 	if (selectedSubmenu) {
 		Widget_Button_handleCustomButtons(
-			Data_CityView.widthInPixels - 348, 72 + 24 * selectedMenu,
+			mouse_translate(m, Data_CityView.widthInPixels - 348, 72 + 24 * selectedMenu),
 			submenuCustomButtons, numSubmenuItems, &submenuFocusButtonId);
 	}
 }

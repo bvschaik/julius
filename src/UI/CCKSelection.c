@@ -235,9 +235,7 @@ void UI_CCKSelection_handleMouse(const mouse *m)
 		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y, imageButtons, 3, 0)) {
 		return;
 	}
-	Widget_Button_handleCustomButtons(
-		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
-		customButtons, 15, &focusButtonId);
+	Widget_Button_handleCustomButtons(mouse_in_dialog(m), customButtons, 15, &focusButtonId);
 }
 
 static int handleScrollbarClick(const mouse *m)
