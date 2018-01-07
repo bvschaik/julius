@@ -1,7 +1,4 @@
 #include "AllWindows.h"
-#include "../Widget.h"
-
-#include "../Data/Screen.h"
 
 #include "core/calc.h"
 #include "game/settings.h"
@@ -9,6 +6,7 @@
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "sound/music.h"

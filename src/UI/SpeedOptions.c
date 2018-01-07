@@ -1,14 +1,11 @@
 #include "AllWindows.h"
 
-#include "../Widget.h"
-
-#include "../Data/Screen.h"
-
 #include "game/settings.h"
 #include "graphics/arrow_button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void buttonOk(int param1, int param2);
 static void buttonCancel(int param1, int param2);

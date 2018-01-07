@@ -8,6 +8,7 @@
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "scenario/criteria.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
@@ -15,7 +16,6 @@
 #include "sound/speech.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/Screen.h"
 

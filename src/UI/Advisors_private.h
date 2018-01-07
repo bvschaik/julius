@@ -1,13 +1,13 @@
 #ifndef UI_ADVISORS_PRIVATE_H
 #define UI_ADVISORS_PRIVATE_H
 
-#include "../Widget.h"
 #include "../Graphics.h"
 
 #include "../Data/Screen.h"
 #include "../Data/CityInfo.h"
 
 #include "graphics/image.h"
+#include "input/mouse.h"
 
 void UI_Advisor_drawGeneralBackground();
 

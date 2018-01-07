@@ -5,6 +5,7 @@
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 

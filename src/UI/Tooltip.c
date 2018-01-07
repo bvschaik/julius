@@ -4,7 +4,6 @@
 #include "Window.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
@@ -14,6 +13,7 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/rich_text.h"
+#include "graphics/text.h"
 
 static int shouldDrawTooltip(struct TooltipContext *c);
 static void resetTooltip(struct TooltipContext *c);

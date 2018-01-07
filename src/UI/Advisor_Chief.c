@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "graphics/graphics.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "scenario/invasion.h"
 #include "scenario/property.h"
 

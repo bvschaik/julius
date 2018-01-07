@@ -1,9 +1,8 @@
 #include "BuildingInfo.h"
 
-#include "../Widget.h"
-
 #include "figure/figure.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
 {

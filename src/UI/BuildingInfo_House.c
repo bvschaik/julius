@@ -2,7 +2,6 @@
 
 #include "core/calc.h"
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/CityInfo.h"
 
@@ -10,6 +9,7 @@
 #include "building/model.h"
 #include "game/resource.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/road_access.h"

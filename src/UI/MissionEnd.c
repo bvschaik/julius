@@ -1,7 +1,6 @@
 #include "AllWindows.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
@@ -15,6 +14,7 @@
 #include "game/undo.h"
 #include "graphics/generic_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"

@@ -10,6 +10,7 @@
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void arrowButtonWages(int isDown, int param2);
 static void buttonPriority(int category, int param2);

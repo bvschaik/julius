@@ -2,7 +2,6 @@
 
 #include "Sidebar.h"
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/CityView.h"
 #include "../Data/State.h"
@@ -13,6 +12,7 @@
 #include "city/view.h"
 #include "graphics/generic_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "scenario/property.h"
 
 static void drawMenuButtons();

@@ -1,7 +1,6 @@
 #include "AllWindows.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/CityView.h"
 
@@ -9,6 +8,7 @@
 #include "game/state.h"
 #include "graphics/generic_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void handleSubmenu();
 

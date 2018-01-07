@@ -1,9 +1,9 @@
 #include "BuildingInfo.h"
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "building/building.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void drawInfo(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId)
 {

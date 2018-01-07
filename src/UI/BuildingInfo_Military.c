@@ -1,7 +1,6 @@
 #include "BuildingInfo.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 #include "../UI/Window.h"
 
 #include "../Data/State.h"
@@ -13,6 +12,7 @@
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int index, int param2);

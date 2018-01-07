@@ -6,6 +6,7 @@
 #include "city/gods.h"
 #include "graphics/generic_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void drawFestivalBackground();
 

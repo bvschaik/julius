@@ -1,8 +1,7 @@
 #include "keyboard.h"
 
 #include "core/string.h"
-
-#include "Widget.h"
+#include "graphics/text.h"
 
 static struct {
     int insert;

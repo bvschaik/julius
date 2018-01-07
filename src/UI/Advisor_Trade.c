@@ -13,6 +13,7 @@
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "scenario/building.h"
 
 static void buttonPrices(int param1, int param2);

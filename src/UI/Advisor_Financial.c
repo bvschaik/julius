@@ -6,6 +6,7 @@
 #include "graphics/arrow_button.h"
 #include "graphics/graphics.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void buttonChangeTaxes(int isDown, int param2);
 

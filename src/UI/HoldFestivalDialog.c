@@ -1,6 +1,5 @@
 #include "AllWindows.h"
 #include "MessageDialog.h"
-#include "../Widget.h"
 #include "../Graphics.h"
 #include "Advisors_private.h"
 
@@ -11,6 +10,7 @@
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void drawButtons();
 static void buttonGod(int god, int param2);

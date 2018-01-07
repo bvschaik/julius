@@ -6,7 +6,6 @@
 #include "MessageDialog.h"
 #include "PopupDialog.h"
 #include "../Graphics.h"
-#include "../Widget.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
 
@@ -20,6 +19,7 @@
 #include "game/time.h"
 #include "game/undo.h"
 #include "graphics/menu.h"
+#include "graphics/text.h"
 #include "scenario/property.h"
 
 static void refreshSidebarButtons();

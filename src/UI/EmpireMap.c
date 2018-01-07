@@ -5,7 +5,6 @@
 #include "MessageDialog.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
@@ -20,6 +19,7 @@
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"

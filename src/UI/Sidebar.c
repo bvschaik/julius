@@ -6,7 +6,6 @@
 #include "Minimap.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/Screen.h"
 
@@ -19,6 +18,7 @@
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "graphics/image_button.h"
+#include "graphics/text.h"
 #include "input/scroll.h"
 #include "map/orientation.h"
 #include "scenario/property.h"

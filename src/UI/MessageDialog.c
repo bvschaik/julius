@@ -4,7 +4,6 @@
 #include "Advisors.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
@@ -17,6 +16,7 @@
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
 #include "graphics/rich_text.h"
+#include "graphics/text.h"
 #include "graphics/video.h"
 #include "scenario/property.h"
 #include "scenario/request.h"

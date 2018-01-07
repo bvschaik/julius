@@ -1,7 +1,6 @@
 #include "SDL.h"
 
 #include "../src/Screen.h"
-#include "../src/Widget.h" // debug for fps counter
 #include "../src/Graphics.h" // debug for fps counter
 #include "../src/Data/Screen.h" // debug for fps counter
 
@@ -10,6 +9,7 @@
 #include "game/settings.h"
 #include "game/game.h"
 #include "game/system.h"
+#include "graphics/text.h" // debug for fps counter
 #include "input/cursor.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"

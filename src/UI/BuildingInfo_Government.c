@@ -1,11 +1,11 @@
 #include "BuildingInfo.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "building/building.h"
 #include "game/resource.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 void UI_BuildingInfo_drawForum(BuildingInfoContext *c)
 {

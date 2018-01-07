@@ -4,11 +4,11 @@
 #include "../Data/Screen.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "city/warning.h"
 #include "game/state.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
 

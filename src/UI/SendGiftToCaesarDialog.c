@@ -1,11 +1,11 @@
 #include "AllWindows.h"
-#include "../Widget.h"
 #include "../Graphics.h"
 #include "Advisors_private.h"
 
 #include "city/emperor.h"
 #include "graphics/generic_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void buttonSetGift(int param1, int param2);
 static void buttonSendGift(int param1, int param2);

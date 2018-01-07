@@ -1,10 +1,10 @@
 #include "AllWindows.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/Screen.h"
 
+#include "graphics/text.h"
 #include "sound/music.h"
 
 void UI_Logo_init()

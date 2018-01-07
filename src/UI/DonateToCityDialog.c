@@ -1,5 +1,4 @@
 #include "AllWindows.h"
-#include "../Widget.h"
 #include "../Graphics.h"
 #include "Advisors_private.h"
 
@@ -10,6 +9,7 @@
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void buttonSetAmount(int param1, int param2);
 static void buttonDonate(int param1, int param2);

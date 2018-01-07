@@ -5,7 +5,6 @@
 #include "MessageDialog.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
@@ -22,6 +21,7 @@
 #include "figure/formation_legion.h"
 #include "figure/phrase.h"
 #include "graphics/image_button.h"
+#include "graphics/text.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/figure.h"

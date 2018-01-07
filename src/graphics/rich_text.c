@@ -6,7 +6,6 @@
 #include "graphics/image_button.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 #include "UI/Window.h"
 
 #define MAX_LINKS 50

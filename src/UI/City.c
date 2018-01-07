@@ -3,8 +3,6 @@
 #include "Sidebar.h"
 #include "TopMenu.h"
 
-#include "../Widget.h"
-
 #include "../Data/CityView.h"
 #include "../Data/State.h"
 
@@ -13,6 +11,7 @@
 #include "game/state.h"
 #include "game/time.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "scenario/criteria.h"
 
 void UI_City_drawBackground()

@@ -1,6 +1,5 @@
 #include "Window.h"
 #include "AllWindows.h"
-#include "../Widget.h"
 #include "../Graphics.h"
 
 #include "../Data/Screen.h"
@@ -9,6 +8,7 @@
 #include "game/settings.h"
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "input/keyboard.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"

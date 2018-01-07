@@ -4,6 +4,7 @@
 #include "game/time.h"
 #include "graphics/generic_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "scenario/property.h"
 
 static void drawHistoryGraph(int fullSize, int x, int y);

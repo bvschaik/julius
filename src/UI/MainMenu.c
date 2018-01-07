@@ -2,13 +2,13 @@
 #include "FileDialog.h"
 #include "PopupDialog.h"
 
-#include "../Widget.h"
 #include "../Graphics.h"
 #include "../Data/Screen.h"
 
 #include "game/system.h"
 #include "graphics/generic_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void buttonClick(int param1, int param2);
 

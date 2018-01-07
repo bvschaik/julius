@@ -3,8 +3,6 @@
 #include "Minimap.h"
 #include "Window.h"
 
-#include "../Widget.h"
-
 #include "building/animation.h"
 #include "building/construction.h"
 #include "building/dock.h"
@@ -16,6 +14,7 @@
 #include "game/resource.h"
 #include "game/settings.h"
 #include "game/state.h"
+#include "graphics/text.h"
 #include "input/scroll.h"
 #include "map/building.h"
 #include "map/desirability.h"

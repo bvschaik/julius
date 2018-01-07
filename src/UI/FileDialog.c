@@ -11,10 +11,10 @@
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "input/keyboard.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/Screen.h"
 

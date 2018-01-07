@@ -1,9 +1,9 @@
 #include "BuildingInfo.h"
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "building/building.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "map/water_supply.h"
 
 void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c)

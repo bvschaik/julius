@@ -1,9 +1,9 @@
 #include "menu.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 void menu_bar_draw(menu_bar_item *items, int num_items)
 {

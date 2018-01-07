@@ -2,7 +2,6 @@
 #include "MessageDialog.h"
 #include "core/calc.h"
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/Screen.h"
 
@@ -11,6 +10,7 @@
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);

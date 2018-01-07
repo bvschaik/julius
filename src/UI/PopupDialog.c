@@ -1,10 +1,10 @@
 #include "PopupDialog.h"
 #include "Window.h"
-#include "../Widget.h"
 #include "../Data/Screen.h"
 
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 #define GROUP 5
 

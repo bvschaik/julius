@@ -3,7 +3,6 @@
 #include "Window.h"
 
 #include "../Graphics.h"
-#include "../Widget.h"
 
 #include "../Data/CityInfo.h"
 
@@ -13,6 +12,7 @@
 #include "figure/figure.h"
 #include "graphics/generic_button.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "scenario/property.h"
 
 static void toggleResourceState(int index, int param2);
