@@ -3,8 +3,7 @@
 #include "core/direction.h"
 #include "core/time.h"
 #include "game/settings.h"
-
-#include "Data/Screen.h"
+#include "graphics/screen.h"
 
 #define SCROLL_BORDER 5
 
@@ -59,7 +58,7 @@ int scroll_get_direction(const mouse *m)
         left = 1;
         data.is_scrolling = 1;
     }
-    if (m->x >= Data_Screen.width - SCROLL_BORDER) {
+    if (m->x >= screen_width() - SCROLL_BORDER) {
         right = 1;
         data.is_scrolling = 1;
     }
@@ -67,7 +66,7 @@ int scroll_get_direction(const mouse *m)
         top = 1;
         data.is_scrolling = 1;
     }
-    if (m->y >= Data_Screen.height - SCROLL_BORDER) {
+    if (m->y >= screen_height() - SCROLL_BORDER) {
         bottom = 1;
         data.is_scrolling = 1;
     }

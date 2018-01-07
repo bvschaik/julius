@@ -16,9 +16,6 @@ endfunction(except_file)
 # Replace some source files with stubs
 except_file(TEST_CORE_FILES "core/lang.c" ${CORE_FILES})
 except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
-except_file(TEST_INPUT_FILES "input/keyboard.c" ${INPUT_FILES})
-except_file(TEST_INPUT_FILES "input/cursor.c" ${TEST_INPUT_FILES})
-except_file(TEST_INPUT_FILES "input/hotkey.c" ${TEST_INPUT_FILES})
 
 add_executable(compare
     sav/compare.c
@@ -31,6 +28,7 @@ add_executable(autopilot
     sav/sav_compare.c
     sav/run.c
     stub/image.c
+    stub/input.c
     stub/lang.c
     stub/model.c
     stub/sound_device.c
@@ -44,7 +42,6 @@ add_executable(autopilot
     ${FIGURE_FILES}
     ${FIGURETYPE_FILES}
     ${GAME_FILES}
-    ${TEST_INPUT_FILES}
     ${MAP_FILES}
     ${SCENARIO_FILES}
     ${SOUND_FILES}
