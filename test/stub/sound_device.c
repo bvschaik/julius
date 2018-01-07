@@ -42,9 +42,3 @@ void sound_device_stop_music()
 
 void sound_device_stop_channel(int channel)
 {}
-
-void sound_device_use_custom_music_player(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *outLen))
-{}
-
-void sound_device_use_default_music_player()
-{}
