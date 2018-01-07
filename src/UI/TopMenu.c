@@ -19,6 +19,7 @@
 #include "game/system.h"
 #include "game/time.h"
 #include "game/undo.h"
+#include "graphics/menu.h"
 #include "scenario/property.h"
 
 static void refreshSidebarButtons();
@@ -42,7 +43,7 @@ static void menuHelp_about(int param);
 
 static void menuAdvisors_goTo(int advisor);
 
-static MenuItem menuFile[] = {
+static menu_item menuFile[] = {
 	{0, 1, menuFile_newGame, 0},
 	{20, 2, menuFile_replayMap, 0},
 	{40, 3, menuFile_loadGame, 0},
@@ -51,21 +52,21 @@ static MenuItem menuFile[] = {
 	{100, 5, menuFile_exitGame, 0},
 };
 
-static MenuItem menuOptions[] = {
+static menu_item menuOptions[] = {
 	{0, 1, menuOptions_display, 0},
 	{20, 2, menuOptions_sound, 0},
 	{40, 3, menuOptions_speed, 0},
 	{60, 6, menuOptions_difficulty, 0},
 };
 
-static MenuItem menuHelp[] = {
+static menu_item menuHelp[] = {
 	{0, 1, menuHelp_help, 0},
 	{20, 2, menuHelp_mouseHelp, 0},
 	{40, 5, menuHelp_warnings, 0},
 	{60, 7, menuHelp_about, 0},
 };
 
-static MenuItem menuAdvisors[] = {
+static menu_item menuAdvisors[] = {
 	{0, 1, menuAdvisors_goTo, 1},
 	{20, 2, menuAdvisors_goTo, 2},
 	{40, 3, menuAdvisors_goTo, 3},
@@ -80,7 +81,7 @@ static MenuItem menuAdvisors[] = {
 	{220, 12, menuAdvisors_goTo, 12},
 };
 
-static MenuBarItem menu[] = {
+static menu_bar_item menu[] = {
 	{10, 0, 6, 1, menuFile, 6},
 	{10, 0, 6, 2, menuOptions, 4},
 	{10, 0, 6, 3, menuHelp, 4},
@@ -104,15 +105,15 @@ static struct {
 static void set_text_for_tooltips()
 {
     switch (setting_tooltips()) {
-    case TOOLTIPS_NONE: menuHelp[1].textNumber = 2; break;
-    case TOOLTIPS_SOME: menuHelp[1].textNumber = 3; break;
-    case TOOLTIPS_FULL: menuHelp[1].textNumber = 4; break;
+    case TOOLTIPS_NONE: menuHelp[1].text_number = 2; break;
+    case TOOLTIPS_SOME: menuHelp[1].text_number = 3; break;
+    case TOOLTIPS_FULL: menuHelp[1].text_number = 4; break;
     }
 }
 
 static void set_text_for_warnings()
 {
-    menuHelp[2].textNumber = setting_warnings() ? 6 : 5;
+    menuHelp[2].text_number = setting_warnings() ? 6 : 5;
 }
 
 void UI_TopMenu_initFromSettings()
@@ -124,7 +125,7 @@ void UI_TopMenu_initFromSettings()
 void UI_TopMenu_drawBackground()
 {
 	refreshSidebarButtons();
-	Widget_Menu_drawMenuBar(menu, 4);
+	menu_bar_draw(menu, 4);
 
 	int width;
 	color_t treasureColor = COLOR_WHITE;
@@ -213,7 +214,7 @@ void UI_TopMenu_drawForeground()
 		return;
 	}
 	UI_City_drawCity();
-	Widget_Menu_drawSubMenu(&menu[openSubMenu-1], focusSubMenuId);
+	menu_draw(&menu[openSubMenu-1], focusSubMenuId);
 }
 
 static void clearState()
@@ -230,11 +231,11 @@ static int handleMouseSubmenu(const mouse *m)
 		UI_Window_goBack();
 		return 1;
 	}
-	int menuId = Widget_Menu_handleMenuBar(m, menu, 4, &focusMenuId);
+	int menuId = menu_bar_handle_mouse(m, menu, 4, &focusMenuId);
 	if (menuId && menuId != openSubMenu) {
 		openSubMenu = menuId;
 	}
-	if (!Widget_Menu_handleMenuItem(m, &menu[openSubMenu-1], &focusSubMenuId)) {
+	if (!menu_handle_mouse(m, &menu[openSubMenu-1], &focusSubMenuId)) {
 		if (m->left.went_down) {
 			clearState();
 			UI_Window_goBack();
@@ -278,7 +279,7 @@ static int handleTopMenuRightClick(int type)
 
 static int handleMouseMenu(const mouse *m)
 {
-	int menuId = Widget_Menu_handleMenuBar(m, menu, 4, &focusMenuId);
+	int menuId = menu_bar_handle_mouse(m, menu, 4, &focusMenuId);
 	if (menuId && m->left.went_down) {
 		openSubMenu = menuId;
 		UI_Window_goTo(Window_TopMenu);
