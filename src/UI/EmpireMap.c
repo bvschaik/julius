@@ -17,7 +17,7 @@
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
@@ -51,8 +51,8 @@ static ImageButton imageButtonReturnToCity[] = {
 static ImageButton imageButtonAdvisor[] = {
 	{-4, 0, 24, 24, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, 5, 0, 1}
 };
-static CustomButton customButtonOpenTrade[] = {
-	{50, 68, 450, 91, CustomButton_Immediate, buttonOpenTrade, Widget_Button_doNothing, 0, 0}
+static generic_button customButtonOpenTrade[] = {
+	{50, 68, 450, 91, GB_IMMEDIATE, buttonOpenTrade, Widget_Button_doNothing, 0, 0}
 };
 
 static ImageButton imageButtonsTradeOpened[] = {
@@ -513,8 +513,8 @@ void UI_Empire_handleMouse(const mouse *m)
 			data.selectedCity = empire_city_get_for_object(selectedObject-1);
 			const empire_city *city = empire_city_get(data.selectedCity);
 			if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
-				Widget_Button_handleCustomButtons(
-                    mouse_translate(m, (data.xMin + data.xMax - 500) / 2, data.yMax - 105),
+				generic_buttons_handle_mouse(
+                    m, (data.xMin + data.xMax - 500) / 2, data.yMax - 105,
                         customButtonOpenTrade, 1, &data.selectedButton);
 			}
 		}

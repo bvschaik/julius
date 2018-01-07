@@ -10,7 +10,7 @@
 #include "empire/city.h"
 #include "empire/trade_prices.h"
 #include "graphics/arrow_button.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 #include "scenario/building.h"
 
 static void buttonPrices(int param1, int param2);
@@ -25,24 +25,24 @@ static void resourceSettingsToggleIndustry(int param1, int param2);
 static void resourceSettingsToggleTrade(int param1, int param2);
 static void resourceSettingsToggleStockpile(int param1, int param2);
 
-static CustomButton resourceButtons[] = {
-	{400, 398, 600, 421, CustomButton_Immediate, buttonPrices, Widget_Button_doNothing, 1, 0},
-	{100, 398, 300, 421, CustomButton_Immediate, buttonEmpire, Widget_Button_doNothing, 1, 0},
-	{80, 56, 560, 76, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 0, 0},
-	{80, 78, 560, 98, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 1, 0},
-	{80, 100, 560, 120, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 2, 0},
-	{80, 122, 560, 142, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 3, 0},
-	{80, 144, 560, 164, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 4, 0},
-	{80, 166, 560, 186, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 5, 0},
-	{80, 188, 560, 208, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 6, 0},
-	{80, 210, 560, 230, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 7, 0},
-	{80, 232, 560, 252, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 8, 0},
-	{80, 254, 560, 274, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 9, 0},
-	{80, 276, 560, 296, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 10, 0},
-	{80, 298, 560, 318, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 11, 0},
-	{80, 320, 560, 340, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 12, 0},
-	{80, 342, 560, 362, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 13, 0},
-	{80, 364, 560, 384, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 14, 0}
+static generic_button resourceButtons[] = {
+	{400, 398, 600, 421, GB_IMMEDIATE, buttonPrices, Widget_Button_doNothing, 1, 0},
+	{100, 398, 300, 421, GB_IMMEDIATE, buttonEmpire, Widget_Button_doNothing, 1, 0},
+	{80, 56, 560, 76, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 0, 0},
+	{80, 78, 560, 98, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 1, 0},
+	{80, 100, 560, 120, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 2, 0},
+	{80, 122, 560, 142, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 3, 0},
+	{80, 144, 560, 164, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 4, 0},
+	{80, 166, 560, 186, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 5, 0},
+	{80, 188, 560, 208, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 6, 0},
+	{80, 210, 560, 230, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 7, 0},
+	{80, 232, 560, 252, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 8, 0},
+	{80, 254, 560, 274, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 9, 0},
+	{80, 276, 560, 296, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 10, 0},
+	{80, 298, 560, 318, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 11, 0},
+	{80, 320, 560, 340, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 12, 0},
+	{80, 342, 560, 362, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 13, 0},
+	{80, 364, 560, 384, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 14, 0}
 };
 
 static ImageButton resourceImageButtons[] = {
@@ -55,10 +55,10 @@ static arrow_button resourceArrowButtons[] = {
 	{338, 215, 15, 24, resourceSettingsExportUpDown, 0, 0}
 };
 
-static CustomButton resourceCustomButtons[] = {
-	{98, 250, 530, 280, CustomButton_Immediate, resourceSettingsToggleIndustry, Widget_Button_doNothing, 0, 0},
-	{98, 212, 530, 242, CustomButton_Immediate, resourceSettingsToggleTrade, Widget_Button_doNothing, 0, 0},
-	{98, 288, 530, 338, CustomButton_Immediate, resourceSettingsToggleStockpile, Widget_Button_doNothing, 0, 0},
+static generic_button resourceCustomButtons[] = {
+	{98, 250, 530, 280, GB_IMMEDIATE, resourceSettingsToggleIndustry, Widget_Button_doNothing, 0, 0},
+	{98, 212, 530, 242, GB_IMMEDIATE, resourceSettingsToggleTrade, Widget_Button_doNothing, 0, 0},
+	{98, 288, 530, 338, GB_IMMEDIATE, resourceSettingsToggleStockpile, Widget_Button_doNothing, 0, 0},
 };
 
 static int focusButtonId;
@@ -127,7 +127,7 @@ void UI_Advisor_Trade_drawForeground()
 
 void UI_Advisor_Trade_handleMouse(const mouse *m)
 {
-	Widget_Button_handleCustomButtons(mouse_in_dialog(m),
+	generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0,
 		resourceButtons, Data_CityInfo_Resource.numAvailableResources + 2, &focusButtonId);
 }
 
@@ -356,7 +356,7 @@ void UI_ResourceSettingsDialog_handleMouse(const mouse *m)
 			arrow_buttons_handle_mouse(m_dialog, 0, 0, resourceArrowButtons, 2)) {
 		return;
 	} else {
-		Widget_Button_handleCustomButtons(m_dialog, resourceCustomButtons, 3, &resourceFocusButtonId);
+		generic_buttons_handle_mouse(m_dialog, 0, 0, resourceCustomButtons, 3, &resourceFocusButtonId);
 	}
 }
 

@@ -11,6 +11,7 @@
 #include "building/menu.h"
 #include "building/model.h"
 #include "city/view.h"
+#include "graphics/generic_button.h"
 #include "scenario/property.h"
 
 static void drawMenuButtons();
@@ -19,37 +20,37 @@ static int handleBuildSubmenu(const mouse *m);
 static void buttonMenuIndex(int param1, int param2);
 static void buttonMenuItem(int item);
 
-static CustomButton buildMenuCustomButtons[] = {
-	{0, 0, 256, 20, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 1, 0},
-	{0, 24, 256, 44, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 2, 0},
-	{0, 48, 256, 68, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 3, 0},
-	{0, 72, 256, 92, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 4, 0},
-	{0, 96, 256, 116, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 5, 0},
-	{0, 120, 256, 140, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 6, 0},
-	{0, 144, 256, 164, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 7, 0},
-	{0, 168, 256, 188, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 8, 0},
-	{0, 192, 256, 212, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 9, 0},
-	{0, 216, 256, 236, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 10, 0},
-	{0, 240, 256, 260, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 11, 0},
-	{0, 264, 256, 284, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 12, 0},
-	{0, 288, 256, 308, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 13, 0},
-	{0, 312, 256, 332, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 14, 0},
-	{0, 336, 256, 356, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 15, 0},
-	{0, 360, 256, 380, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 16, 0},
-	{0, 384, 256, 404, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 17, 0},
-	{0, 408, 256, 428, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 18, 0},
-	{0, 432, 256, 452, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 19, 0},
-	{0, 456, 256, 476, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 20, 0},
-	{0, 480, 256, 500, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 21, 0},
-	{0, 504, 256, 524, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 22, 0},
-	{0, 528, 256, 548, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 23, 0},
-	{0, 552, 256, 572, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 24, 0},
-	{0, 576, 256, 596, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 25, 0},
-	{0, 600, 256, 620, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 26, 0},
-	{0, 624, 256, 644, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 27, 0},
-	{0, 648, 256, 668, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 28, 0},
-	{0, 672, 256, 692, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 29, 0},
-	{0, 696, 256, 716, CustomButton_Immediate, buttonMenuIndex, Widget_Button_doNothing, 30, 0},
+static generic_button buildMenuCustomButtons[] = {
+	{0, 0, 256, 20, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 1, 0},
+	{0, 24, 256, 44, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 2, 0},
+	{0, 48, 256, 68, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 3, 0},
+	{0, 72, 256, 92, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 4, 0},
+	{0, 96, 256, 116, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 5, 0},
+	{0, 120, 256, 140, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 6, 0},
+	{0, 144, 256, 164, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 7, 0},
+	{0, 168, 256, 188, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 8, 0},
+	{0, 192, 256, 212, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 9, 0},
+	{0, 216, 256, 236, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 10, 0},
+	{0, 240, 256, 260, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 11, 0},
+	{0, 264, 256, 284, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 12, 0},
+	{0, 288, 256, 308, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 13, 0},
+	{0, 312, 256, 332, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 14, 0},
+	{0, 336, 256, 356, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 15, 0},
+	{0, 360, 256, 380, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 16, 0},
+	{0, 384, 256, 404, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 17, 0},
+	{0, 408, 256, 428, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 18, 0},
+	{0, 432, 256, 452, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 19, 0},
+	{0, 456, 256, 476, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 20, 0},
+	{0, 480, 256, 500, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 21, 0},
+	{0, 504, 256, 524, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 22, 0},
+	{0, 528, 256, 548, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 23, 0},
+	{0, 552, 256, 572, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 24, 0},
+	{0, 576, 256, 596, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 25, 0},
+	{0, 600, 256, 620, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 26, 0},
+	{0, 624, 256, 644, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 27, 0},
+	{0, 648, 256, 668, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 28, 0},
+	{0, 672, 256, 692, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 29, 0},
+	{0, 696, 256, 716, GB_IMMEDIATE, buttonMenuIndex, Widget_Button_doNothing, 30, 0},
 };
 
 static const int yMenuOffsets[24] = {
@@ -198,8 +199,8 @@ void UI_BuildingMenu_handleMouse(const mouse *m)
 
 static int handleBuildSubmenu(const mouse *m)
 {
-	return Widget_Button_handleCustomButtons(
-		mouse_translate(m, Data_CityView.widthInPixels - 258, menu.yOffset + 110),
+	return generic_buttons_handle_mouse(
+		m, Data_CityView.widthInPixels - 258, menu.yOffset + 110,
 		buildMenuCustomButtons, menu.numItems, &buildMenuFocusButtonId);
 }
 

@@ -2,7 +2,7 @@
 #include "Window.h"
 
 #include "game/time.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 #include "scenario/property.h"
 
 static void drawHistoryGraph(int fullSize, int x, int y);
@@ -13,9 +13,9 @@ static int getPopulationAtMonth(int max, int month);
 static void getMinMaxMonthYear(int maxMonths, int *startMonth, int *startYear, int *endMonth, int *endYear);
 static void buttonGraph(int param1, int param2);
 
-static CustomButton graphButtons[] = {
-	{503,  61, 607, 116, CustomButton_Immediate, buttonGraph, Widget_Button_doNothing, 0, 0},
-	{503, 161, 607, 216, CustomButton_Immediate, buttonGraph, Widget_Button_doNothing, 1, 0},
+static generic_button graphButtons[] = {
+	{503,  61, 607, 116, GB_IMMEDIATE, buttonGraph, Widget_Button_doNothing, 0, 0},
+	{503, 161, 607, 216, GB_IMMEDIATE, buttonGraph, Widget_Button_doNothing, 1, 0},
 };
 
 static int focusButtonId;
@@ -195,7 +195,7 @@ void UI_Advisor_Population_drawForeground()
 
 void UI_Advisor_Population_handleMouse(const mouse *m)
 {
-	Widget_Button_handleCustomButtons(mouse_in_dialog(m), graphButtons, 2, &focusButtonId);
+	generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, graphButtons, 2, &focusButtonId);
 }
 
 static void drawHistoryGraph(int fullSize, int x, int y)

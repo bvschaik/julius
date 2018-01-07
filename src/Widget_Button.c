@@ -7,55 +7,8 @@
 #define PRESSED_REPEAT_INITIAL_MILLIS 300
 #define PRESSED_REPEAT_MILLIS 50
 
-static int getCustomButton(const mouse *m, CustomButton *buttons, int numButtons);
-
 void Widget_Button_doNothing(int param1, int param2)
 {
-}
-
-int Widget_Button_handleCustomButtons(const mouse *m, CustomButton *buttons, int numButtons, int *focusButtonId)
-{
-	int buttonId = getCustomButton(m, buttons, numButtons);
-	if (focusButtonId) {
-		*focusButtonId = buttonId;
-	}
-	if (!buttonId) {
-		return 0;
-	}
-	CustomButton *button = &buttons[buttonId-1];
-	if (button->buttonType == CustomButton_Immediate) {
-		if (m->left.went_down) {
-			button->leftClickHandler(button->parameter1, button->parameter2);
-		} else if (m->right.went_down) {
-			button->rightClickHandler(button->parameter1, button->parameter2);
-		} else {
-			return 0;
-		}
-	} else if (button->buttonType == CustomButton_OnMouseUp) {
-		if (m->left.went_up) {
-			button->leftClickHandler(button->parameter1, button->parameter2);
-		} else if (m->right.went_up) {
-			button->rightClickHandler(button->parameter1, button->parameter2);
-		} else {
-			return 0;
-		}
-	}
-	return buttonId;
-}
-
-static int getCustomButton(const mouse *m, CustomButton *buttons, int numButtons)
-{
-	int mouseX = m->x;
-	int mouseY = m->y;
-	for (int i = 0; i < numButtons; i++) {
-		if (buttons[i].xStart <= mouseX &&
-			buttons[i].xEnd > mouseX &&
-			buttons[i].yStart <= mouseY &&
-			buttons[i].yEnd > mouseY) {
-			return i + 1;
-		}
-	}
-	return 0;
 }
 
 static void imageButtonFadePressedEffect(ImageButton *buttons, int numButtons)

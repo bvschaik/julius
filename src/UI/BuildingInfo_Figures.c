@@ -14,7 +14,7 @@
 #include "figure/formation.h"
 #include "figure/phrase.h"
 #include "figure/trader.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 #include "scenario/property.h"
 
 static void selectFigure(int index, int param2);
@@ -37,14 +37,14 @@ static const int figureTypeToBigPeopleGraphicId[] = {
 
 #define BigPeopleGraphic(t) (image_group(GROUP_BIG_PEOPLE) + figureTypeToBigPeopleGraphicId[t] - 1)
 
-static CustomButton figureButtons[] = {
-	{26, 46, 76, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 0, 0},
-	{86, 46, 136, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 1, 0},
-	{146, 46, 196, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 2, 0},
-	{206, 46, 256, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 3, 0},
-	{266, 46, 316, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 4, 0},
-	{326, 46, 376, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 5, 0},
-	{386, 46, 436, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 6, 0},
+static generic_button figureButtons[] = {
+	{26, 46, 76, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 0, 0},
+	{86, 46, 136, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 1, 0},
+	{146, 46, 196, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 2, 0},
+	{206, 46, 256, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 3, 0},
+	{266, 46, 316, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 4, 0},
+	{326, 46, 376, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 5, 0},
+	{386, 46, 436, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 6, 0},
 };
 
 static color_t figureImages[7][48*48];
@@ -426,7 +426,7 @@ void UI_BuildingInfo_playFigurePhrase(BuildingInfoContext *c)
 void UI_BuildingInfo_handleMouseFigureList(const mouse *m, BuildingInfoContext *c)
 {
 	contextForCallback = c;
-	Widget_Button_handleCustomButtons(mouse_translate(m, c->xOffset, c->yOffset),
+	generic_buttons_handle_mouse(m, c->xOffset, c->yOffset,
 		figureButtons, c->figure.count, &focusButtonId);
 	contextForCallback = 0;
 }

@@ -7,16 +7,17 @@
 #include "../Data/Screen.h"
 
 #include "game/system.h"
+#include "graphics/generic_button.h"
 
 static void buttonClick(int param1, int param2);
 
 static int focusButtonId;
 
-static CustomButton buttons[] = {
-	{192, 100, 448, 125, CustomButton_Immediate, buttonClick, Widget_Button_doNothing, 1, 0},
-	{192, 140, 448, 165, CustomButton_Immediate, buttonClick, Widget_Button_doNothing, 2, 0},
-	{192, 180, 448, 205, CustomButton_Immediate, buttonClick, Widget_Button_doNothing, 3, 0},
-	{192, 220, 448, 245, CustomButton_Immediate, buttonClick, Widget_Button_doNothing, 4, 0},
+static generic_button buttons[] = {
+	{192, 100, 448, 125, GB_IMMEDIATE, buttonClick, Widget_Button_doNothing, 1, 0},
+	{192, 140, 448, 165, GB_IMMEDIATE, buttonClick, Widget_Button_doNothing, 2, 0},
+	{192, 180, 448, 205, GB_IMMEDIATE, buttonClick, Widget_Button_doNothing, 3, 0},
+	{192, 220, 448, 245, GB_IMMEDIATE, buttonClick, Widget_Button_doNothing, 4, 0},
 };
 
 void UI_MainMenu_drawBackground()
@@ -70,7 +71,7 @@ void UI_MainMenu_drawForeground()
 
 void UI_MainMenu_handleMouse(const mouse *m)
 {
-	Widget_Button_handleCustomButtons(mouse_in_dialog(m), buttons, 4, &focusButtonId);
+	generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 4, &focusButtonId);
 }
 
 static void confirmExit(int accepted)

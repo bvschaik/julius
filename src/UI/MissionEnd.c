@@ -13,6 +13,7 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/undo.h"
+#include "graphics/generic_button.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"
@@ -22,13 +23,13 @@ static void victoryAccept(int param1, int param2);
 static void victoryContinueGoverning(int duration, int param2);
 static void firedAccept(int param1, int param2);
 
-static CustomButton victoryButtons[] = {
-	{32, 112, 416, 132, CustomButton_OnMouseUp, victoryAccept, Widget_Button_doNothing, 0, 0},
-	{32, 144, 416, 164, CustomButton_Immediate, victoryContinueGoverning, Widget_Button_doNothing, 1, 0},
-	{32, 176, 416, 196, CustomButton_Immediate, victoryContinueGoverning, Widget_Button_doNothing, 2, 0},
+static generic_button victoryButtons[] = {
+	{32, 112, 416, 132, GB_ON_MOUSE_UP, victoryAccept, Widget_Button_doNothing, 0, 0},
+	{32, 144, 416, 164, GB_IMMEDIATE, victoryContinueGoverning, Widget_Button_doNothing, 1, 0},
+	{32, 176, 416, 196, GB_IMMEDIATE, victoryContinueGoverning, Widget_Button_doNothing, 2, 0},
 };
-static CustomButton firedButtons[] = {
-	{64, 208, 384, 228, CustomButton_Immediate, firedAccept, Widget_Button_doNothing, 0, 0},
+static generic_button firedButtons[] = {
+	{64, 208, 384, 228, GB_IMMEDIATE, firedAccept, Widget_Button_doNothing, 0, 0},
 };
 
 static int focusButtonId = 0;
@@ -130,7 +131,7 @@ void UI_MissionEnd_handleMouse(const mouse *m)
 			advanceToNextMission();
 		}
 	} else {
-		Widget_Button_handleCustomButtons(mouse_translate(mouse_in_dialog(m), 48, 16),
+		generic_buttons_handle_mouse(mouse_in_dialog(m), 48, 16,
 			firedButtons, 1, &focusButtonId);
 	}
 }
@@ -188,7 +189,7 @@ void UI_VictoryDialog_handleMouse(const mouse *m)
 	} else {
 		numButtons = 1;
 	}
-	Widget_Button_handleCustomButtons(mouse_translate(mouse_in_dialog(m), 48, 128), victoryButtons, numButtons, &focusButtonId);
+	generic_buttons_handle_mouse(mouse_in_dialog(m), 48, 128, victoryButtons, numButtons, &focusButtonId);
 }
 
 static void victoryAccept(int param1, int param2)

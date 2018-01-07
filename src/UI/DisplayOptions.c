@@ -6,17 +6,18 @@
 
 #include "game/settings.h"
 #include "game/system.h"
+#include "graphics/generic_button.h"
 
 static void buttonFullscreen(int param1, int param2);
 static void buttonSetResolution(int id, int param2);
 static void buttonCancel(int param1, int param2);
 
-static CustomButton buttons[] = {
-	{144, 136, 336, 156, CustomButton_Immediate, buttonFullscreen, Widget_Button_doNothing, 1, 0},
-	{144, 160, 336, 180, CustomButton_Immediate, buttonSetResolution, Widget_Button_doNothing, 1, 0},
-	{144, 184, 336, 204, CustomButton_Immediate, buttonSetResolution, Widget_Button_doNothing, 2, 0},
-	{144, 208, 336, 228, CustomButton_Immediate, buttonSetResolution, Widget_Button_doNothing, 3, 0},
-	{144, 232, 336, 252, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 1, 0},
+static generic_button buttons[] = {
+	{144, 136, 336, 156, GB_IMMEDIATE, buttonFullscreen, Widget_Button_doNothing, 1, 0},
+	{144, 160, 336, 180, GB_IMMEDIATE, buttonSetResolution, Widget_Button_doNothing, 1, 0},
+	{144, 184, 336, 204, GB_IMMEDIATE, buttonSetResolution, Widget_Button_doNothing, 2, 0},
+	{144, 208, 336, 228, GB_IMMEDIATE, buttonSetResolution, Widget_Button_doNothing, 3, 0},
+	{144, 232, 336, 252, GB_IMMEDIATE, buttonCancel, Widget_Button_doNothing, 1, 0},
 };
 
 static int focusButtonId;
@@ -86,7 +87,7 @@ void UI_DisplayOptions_handleMouse(const mouse *m)
 		// cancel dialog
 		UI_Window_goTo(Window_City);
 	} else {
-		Widget_Button_handleCustomButtons(mouse_in_dialog(m), buttons, 5, &focusButtonId);
+		generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &focusButtonId);
 	}
 }
 

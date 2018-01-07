@@ -80,8 +80,6 @@ void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *butto
 
 int Widget_Button_handleImageButtons(const mouse *m, ImageButton *buttons, int numButtons, int *focusButtonId);
 
-int Widget_Button_handleCustomButtons(const mouse *m, CustomButton *buttons, int numButtons, int *focusButtonId);
-
 
 void Widget_Button_doNothing(int param1, int param2);
 

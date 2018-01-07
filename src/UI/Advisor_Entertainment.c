@@ -4,14 +4,14 @@
 #include "building/count.h"
 #include "city/culture.h"
 #include "city/gods.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 
 static void drawFestivalBackground();
 
 static void buttonHoldFestival(int param1, int param2);
 
-static CustomButton holdFestivalButtons[] = {
-	{102, 280, 402, 300, CustomButton_Immediate, buttonHoldFestival, Widget_Button_doNothing, 0, 0},
+static generic_button holdFestivalButtons[] = {
+	{102, 280, 402, 300, GB_IMMEDIATE, buttonHoldFestival, Widget_Button_doNothing, 0, 0},
 };
 
 static int focusButtonId;
@@ -209,7 +209,7 @@ void UI_Advisor_Entertainment_drawForeground()
 
 void UI_Advisor_Entertainment_handleMouse(const mouse *m)
 {
-	Widget_Button_handleCustomButtons(mouse_in_dialog(m), holdFestivalButtons, 1, &focusButtonId);
+	generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, holdFestivalButtons, 1, &focusButtonId);
 }
 
 void buttonHoldFestival(int param1, int param2)

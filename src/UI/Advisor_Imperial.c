@@ -6,7 +6,7 @@
 #include "city/finance.h"
 #include "empire/city.h"
 #include "figure/formation_legion.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 
@@ -21,15 +21,15 @@ static void confirmNothing(int accepted);
 static void confirmSendTroops(int accepted);
 static void confirmSendGoods(int accepted);
 
-static CustomButton imperialButtons[] = {
-	{320, 367, 570, 387, CustomButton_Immediate, buttonDonateToCity, Widget_Button_doNothing, 0, 0},
-	{70, 393, 570, 413, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 0, 0},
-	{320, 341, 570, 361, CustomButton_Immediate, buttonGiftToCaesar, Widget_Button_doNothing, 0, 0},
-	{38, 96, 598, 136, CustomButton_Immediate, buttonRequest, Widget_Button_doNothing, 0, 0},
-	{38, 138, 598, 178, CustomButton_Immediate, buttonRequest, Widget_Button_doNothing, 1, 0},
-	{38, 180, 598, 220, CustomButton_Immediate, buttonRequest, Widget_Button_doNothing, 2, 0},
-	{38, 222, 598, 262, CustomButton_Immediate, buttonRequest, Widget_Button_doNothing, 3, 0},
-	{38, 264, 598, 304, CustomButton_Immediate, buttonRequest, Widget_Button_doNothing, 4, 0},
+static generic_button imperialButtons[] = {
+	{320, 367, 570, 387, GB_IMMEDIATE, buttonDonateToCity, Widget_Button_doNothing, 0, 0},
+	{70, 393, 570, 413, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 0, 0},
+	{320, 341, 570, 361, GB_IMMEDIATE, buttonGiftToCaesar, Widget_Button_doNothing, 0, 0},
+	{38, 96, 598, 136, GB_IMMEDIATE, buttonRequest, Widget_Button_doNothing, 0, 0},
+	{38, 138, 598, 178, GB_IMMEDIATE, buttonRequest, Widget_Button_doNothing, 1, 0},
+	{38, 180, 598, 220, GB_IMMEDIATE, buttonRequest, Widget_Button_doNothing, 2, 0},
+	{38, 222, 598, 262, GB_IMMEDIATE, buttonRequest, Widget_Button_doNothing, 3, 0},
+	{38, 264, 598, 304, GB_IMMEDIATE, buttonRequest, Widget_Button_doNothing, 4, 0},
 };
 
 static int focusButtonId;
@@ -224,7 +224,7 @@ static int getRequestStatus(int index)
 
 void UI_Advisor_Imperial_handleMouse(const mouse *m)
 {
-	Widget_Button_handleCustomButtons(mouse_in_dialog(m), imperialButtons, 8, &focusButtonId);
+	generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, imperialButtons, 8, &focusButtonId);
 }
 
 static void buttonDonateToCity(int param1, int param2)

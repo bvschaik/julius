@@ -8,7 +8,7 @@
 #include "city/constants.h"
 #include "city/finance.h"
 #include "game/resource.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 
 static void drawButtons();
 static void buttonGod(int god, int param2);
@@ -24,15 +24,15 @@ static ImageButton imageButtonsBottom[] = {
 	{400, 317, 34, 34, ImageButton_Normal, 96, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
 };
 
-static CustomButton buttonsGodsSize[] = {
-	{70, 96, 150, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 0, 0},
-	{170, 96, 250, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 1, 0},
-	{270, 96, 350, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 2, 0},
-	{370, 96, 450, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 3, 0},
-	{470, 96, 550, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 4, 0},
-	{102, 216, 532, 242, CustomButton_Immediate, buttonSize, Widget_Button_doNothing, 1, 0},
-	{102, 246, 532, 272, CustomButton_Immediate, buttonSize, Widget_Button_doNothing, 2, 0},
-	{102, 276, 532, 302, CustomButton_Immediate, buttonSize, Widget_Button_doNothing, 3, 0},
+static generic_button buttonsGodsSize[] = {
+	{70, 96, 150, 186, GB_IMMEDIATE, buttonGod, Widget_Button_doNothing, 0, 0},
+	{170, 96, 250, 186, GB_IMMEDIATE, buttonGod, Widget_Button_doNothing, 1, 0},
+	{270, 96, 350, 186, GB_IMMEDIATE, buttonGod, Widget_Button_doNothing, 2, 0},
+	{370, 96, 450, 186, GB_IMMEDIATE, buttonGod, Widget_Button_doNothing, 3, 0},
+	{470, 96, 550, 186, GB_IMMEDIATE, buttonGod, Widget_Button_doNothing, 4, 0},
+	{102, 216, 532, 242, GB_IMMEDIATE, buttonSize, Widget_Button_doNothing, 1, 0},
+	{102, 246, 532, 272, GB_IMMEDIATE, buttonSize, Widget_Button_doNothing, 2, 0},
+	{102, 276, 532, 302, GB_IMMEDIATE, buttonSize, Widget_Button_doNothing, 3, 0},
 };
 
 static int focusButtonId;
@@ -128,9 +128,8 @@ void UI_HoldFestivalDialog_handleMouse(const mouse *m)
 	}
 
 	const mouse *m_dialog = mouse_in_dialog(m);
-
 	Widget_Button_handleImageButtons(m_dialog, imageButtonsBottom, 4, &focusImageButtonId);
-	Widget_Button_handleCustomButtons(m_dialog, buttonsGodsSize, 8, &focusButtonId);
+	generic_buttons_handle_mouse(m_dialog, 0, 0, buttonsGodsSize, 8, &focusButtonId);
 	if (focusImageButtonId) {
 		focusButtonId = 0;
 	}

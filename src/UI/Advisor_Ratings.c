@@ -2,7 +2,7 @@
 
 #include "Window.h"
 
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
@@ -10,11 +10,11 @@
 static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached);
 static void buttonRating(int param1, int param2);
 
-static CustomButton ratingButtons[] = {
-	{ 80, 286, 190, 352, CustomButton_Immediate, buttonRating, Widget_Button_doNothing, 1, 0},
-	{200, 286, 310, 352, CustomButton_Immediate, buttonRating, Widget_Button_doNothing, 2, 0},
-	{320, 286, 430, 352, CustomButton_Immediate, buttonRating, Widget_Button_doNothing, 3, 0},
-	{440, 286, 550, 352, CustomButton_Immediate, buttonRating, Widget_Button_doNothing, 4, 0},
+static generic_button ratingButtons[] = {
+	{ 80, 286, 190, 352, GB_IMMEDIATE, buttonRating, Widget_Button_doNothing, 1, 0},
+	{200, 286, 310, 352, GB_IMMEDIATE, buttonRating, Widget_Button_doNothing, 2, 0},
+	{320, 286, 430, 352, GB_IMMEDIATE, buttonRating, Widget_Button_doNothing, 3, 0},
+	{440, 286, 550, 352, GB_IMMEDIATE, buttonRating, Widget_Button_doNothing, 4, 0},
 };
 
 static int focusButtonId;
@@ -209,7 +209,7 @@ void UI_Advisor_Ratings_drawForeground()
 
 void UI_Advisor_Ratings_handleMouse(const mouse *m)
 {
-	Widget_Button_handleCustomButtons(mouse_in_dialog(m), ratingButtons, 4, &focusButtonId);
+	generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, ratingButtons, 4, &focusButtonId);
 }
 
 static void buttonRating(int param1, int param2)

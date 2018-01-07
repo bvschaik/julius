@@ -4,24 +4,24 @@
 #include "city/emperor.h"
 #include "city/finance.h"
 #include "city/ratings.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 
 static void buttonCancel(int param1, int param2);
 static void buttonSetSalary(int rank, int param2);
 
-static CustomButton buttons[] = {
-	{240, 395, 400, 415, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 0, 0},
-	{144, 85, 432, 105, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 0, 0},
-	{144, 105, 432, 125, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 1, 0},
-	{144, 125, 432, 145, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 2, 0},
-	{144, 145, 432, 165, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 3, 0},
-	{144, 165, 432, 185, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 4, 0},
-	{144, 185, 432, 205, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 5, 0},
-	{144, 205, 432, 225, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 6, 0},
-	{144, 225, 432, 245, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 7, 0},
-	{144, 245, 432, 265, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 8, 0},
-	{144, 265, 432, 285, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 9, 0},
-	{144, 285, 432, 305, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 10, 0},
+static generic_button buttons[] = {
+	{240, 395, 400, 415, GB_IMMEDIATE, buttonCancel, Widget_Button_doNothing, 0, 0},
+	{144, 85, 432, 105, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 0, 0},
+	{144, 105, 432, 125, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 1, 0},
+	{144, 125, 432, 145, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 2, 0},
+	{144, 145, 432, 165, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 3, 0},
+	{144, 165, 432, 185, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 4, 0},
+	{144, 185, 432, 205, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 5, 0},
+	{144, 205, 432, 225, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 6, 0},
+	{144, 225, 432, 245, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 7, 0},
+	{144, 245, 432, 265, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 8, 0},
+	{144, 265, 432, 285, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 9, 0},
+	{144, 285, 432, 305, GB_IMMEDIATE, buttonSetSalary, Widget_Button_doNothing, 10, 0},
 };
 
 static int focusButtonId;
@@ -75,7 +75,7 @@ void UI_SetSalaryDialog_handleMouse(const mouse *m)
 	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
-		Widget_Button_handleCustomButtons(mouse_in_dialog(m),
+		generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0,
 			buttons, 12, &focusButtonId);
 	}
 }

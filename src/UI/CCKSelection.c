@@ -5,6 +5,7 @@
 #include "core/file.h"
 #include "core/string.h"
 #include "game/file.h"
+#include "graphics/generic_button.h"
 #include "scenario/criteria.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
@@ -32,22 +33,22 @@ static ImageButton imageButtons[] = {
 	{600, 440, 27, 27, ImageButton_Normal, 92, 56, buttonStartScenario, Widget_Button_doNothing, 1, 0, 1},
 };
 
-static CustomButton customButtons[] = {
-	{28, 220, 280, 236, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 0, 0},
-	{28, 236, 280, 252, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 1, 0},
-	{28, 252, 280, 268, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 2, 0},
-	{28, 268, 280, 284, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 3, 0},
-	{28, 284, 280, 300, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 4, 0},
-	{28, 300, 280, 316, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 5, 0},
-	{28, 316, 280, 332, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 6, 0},
-	{28, 332, 280, 348, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 7, 0},
-	{28, 348, 280, 364, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 8, 0},
-	{28, 364, 280, 380, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 9, 0},
-	{28, 380, 280, 396, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 10, 0},
-	{28, 396, 280, 412, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 11, 0},
-	{28, 412, 280, 428, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 12, 0},
-	{28, 428, 280, 444, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 13, 0},
-	{28, 444, 280, 460, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 14, 0},
+static generic_button customButtons[] = {
+	{28, 220, 280, 236, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 0, 0},
+	{28, 236, 280, 252, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 1, 0},
+	{28, 252, 280, 268, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 2, 0},
+	{28, 268, 280, 284, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 3, 0},
+	{28, 284, 280, 300, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 4, 0},
+	{28, 300, 280, 316, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 5, 0},
+	{28, 316, 280, 332, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 6, 0},
+	{28, 332, 280, 348, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 7, 0},
+	{28, 348, 280, 364, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 8, 0},
+	{28, 364, 280, 380, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 9, 0},
+	{28, 380, 280, 396, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 10, 0},
+	{28, 396, 280, 412, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 11, 0},
+	{28, 412, 280, 428, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 12, 0},
+	{28, 428, 280, 444, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 13, 0},
+	{28, 444, 280, 460, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 14, 0},
 };
 
 static int scrollPosition;
@@ -235,7 +236,7 @@ void UI_CCKSelection_handleMouse(const mouse *m)
 	if (Widget_Button_handleImageButtons(m_dialog, imageButtons, 3, 0)) {
 		return;
 	}
-	Widget_Button_handleCustomButtons(m_dialog, customButtons, 15, &focusButtonId);
+	generic_buttons_handle_mouse(m_dialog, 0, 0, customButtons, 15, &focusButtonId);
 }
 
 static int handleScrollbarClick(const mouse *m)

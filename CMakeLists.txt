@@ -201,6 +201,7 @@ set(SCENARIO_FILES
 set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/arrow_button.c
     ${PROJECT_SOURCE_DIR}/src/graphics/button.c
+    ${PROJECT_SOURCE_DIR}/src/graphics/custom_button.c
     ${PROJECT_SOURCE_DIR}/src/graphics/graphics.c
     ${PROJECT_SOURCE_DIR}/src/graphics/image.c
     ${PROJECT_SOURCE_DIR}/src/graphics/video.c

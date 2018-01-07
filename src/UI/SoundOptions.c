@@ -6,6 +6,7 @@
 #include "core/calc.h"
 #include "game/settings.h"
 #include "graphics/arrow_button.h"
+#include "graphics/generic_button.h"
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "sound/music.h"
@@ -20,13 +21,13 @@ static void arrowButtonSpeech(int param1, int param2);
 static void arrowButtonEffects(int param1, int param2);
 static void arrowButtonCity(int param1, int param2);
 
-static CustomButton buttons[] = {
-	{64, 162, 288, 182, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_MUSIC, 0},
-	{64, 192, 288, 212, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_SPEECH, 0},
-	{64, 222, 288, 242, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_EFFECTS, 0},
-	{64, 252, 288, 272, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_CITY, 0},
-	{144, 296, 336, 316, CustomButton_Immediate, buttonOk, Widget_Button_doNothing, 1, 0},
-	{144, 296, 336, 346, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 1, 0},
+static generic_button buttons[] = {
+	{64, 162, 288, 182, GB_IMMEDIATE, buttonToggle, Widget_Button_doNothing, SOUND_MUSIC, 0},
+	{64, 192, 288, 212, GB_IMMEDIATE, buttonToggle, Widget_Button_doNothing, SOUND_SPEECH, 0},
+	{64, 222, 288, 242, GB_IMMEDIATE, buttonToggle, Widget_Button_doNothing, SOUND_EFFECTS, 0},
+	{64, 252, 288, 272, GB_IMMEDIATE, buttonToggle, Widget_Button_doNothing, SOUND_CITY, 0},
+	{144, 296, 336, 316, GB_IMMEDIATE, buttonOk, Widget_Button_doNothing, 1, 0},
+	{144, 296, 336, 346, GB_IMMEDIATE, buttonCancel, Widget_Button_doNothing, 1, 0},
 };
 
 static arrow_button arrowButtons[] = {
@@ -166,7 +167,7 @@ void UI_SoundOptions_handleMouse(const mouse *m)
 		UI_Window_goTo(Window_City);
 	} else {
 		const mouse *m_dialog = mouse_in_dialog(m);
-		if (!Widget_Button_handleCustomButtons(m_dialog, buttons, 6, &focusButtonId)) {
+		if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 6, &focusButtonId)) {
 			arrow_buttons_handle_mouse(m_dialog, 208, 60, arrowButtons, 8);
 		}
 	}

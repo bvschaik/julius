@@ -4,18 +4,18 @@
 #include "Advisors_private.h"
 
 #include "city/emperor.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 
 static void buttonSetGift(int param1, int param2);
 static void buttonSendGift(int param1, int param2);
 static void buttonCancel(int param1, int param2);
 
-static CustomButton buttons[] = {
-	{208, 213, 528, 233, CustomButton_Immediate, buttonSetGift, Widget_Button_doNothing, 1, 0},
-	{208, 233, 528, 253, CustomButton_Immediate, buttonSetGift, Widget_Button_doNothing, 2, 0},
-	{208, 253, 528, 273, CustomButton_Immediate, buttonSetGift, Widget_Button_doNothing, 3, 0},
-	{128, 336, 368, 356, CustomButton_Immediate, buttonSendGift, Widget_Button_doNothing, 0, 0},
-	{400, 336, 560, 356, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 0, 0},
+static generic_button buttons[] = {
+	{208, 213, 528, 233, GB_IMMEDIATE, buttonSetGift, Widget_Button_doNothing, 1, 0},
+	{208, 233, 528, 253, GB_IMMEDIATE, buttonSetGift, Widget_Button_doNothing, 2, 0},
+	{208, 253, 528, 273, GB_IMMEDIATE, buttonSetGift, Widget_Button_doNothing, 3, 0},
+	{128, 336, 368, 356, GB_IMMEDIATE, buttonSendGift, Widget_Button_doNothing, 0, 0},
+	{400, 336, 560, 356, GB_IMMEDIATE, buttonCancel, Widget_Button_doNothing, 0, 0},
 };
 
 static int focusButtonId;
@@ -107,7 +107,7 @@ void UI_SendGiftToCaesarDialog_handleMouse(const mouse *m)
 	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
-		Widget_Button_handleCustomButtons(mouse_in_dialog(m), buttons, 5, &focusButtonId);
+		generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &focusButtonId);
 	}
 }
 

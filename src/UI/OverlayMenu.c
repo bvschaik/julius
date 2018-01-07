@@ -6,35 +6,36 @@
 #include "../Data/CityView.h"
 
 #include "game/state.h"
+#include "graphics/generic_button.h"
 
 static void handleSubmenu();
 
 static void buttonMenuItem(int index, int param2);
 static void buttonSubmenuItem(int index, int param2);
 
-static CustomButton menuCustomButtons[] = {
-	{0, 0, 160, 24, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 0, 0},
-	{0, 24, 160, 48, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 1, 0},
-	{0, 48, 160, 72, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 2, 0},
-	{0, 72, 160, 96, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 3, 0},
-	{0, 96, 160, 120, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 4, 0},
-	{0, 120, 160, 144, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 5, 0},
-	{0, 144, 160, 168, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 6, 0},
-	{0, 168, 160, 192, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 7, 0},
-	{0, 192, 160, 216, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 8, 0},
-	{0, 216, 160, 240, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 9, 0},
+static generic_button menuCustomButtons[] = {
+	{0, 0, 160, 24, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 0, 0},
+	{0, 24, 160, 48, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 1, 0},
+	{0, 48, 160, 72, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 2, 0},
+	{0, 72, 160, 96, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 3, 0},
+	{0, 96, 160, 120, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 4, 0},
+	{0, 120, 160, 144, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 5, 0},
+	{0, 144, 160, 168, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 6, 0},
+	{0, 168, 160, 192, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 7, 0},
+	{0, 192, 160, 216, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 8, 0},
+	{0, 216, 160, 240, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 9, 0},
 };
-static CustomButton submenuCustomButtons[] = {
-	{0, 0, 160, 24, CustomButton_Immediate, buttonSubmenuItem, Widget_Button_doNothing, 0, 0},
-	{0, 24, 160, 48, CustomButton_Immediate, buttonSubmenuItem, Widget_Button_doNothing, 1, 0},
-	{0, 48, 160, 72, CustomButton_Immediate, buttonSubmenuItem, Widget_Button_doNothing, 2, 0},
-	{0, 72, 160, 96, CustomButton_Immediate, buttonSubmenuItem, Widget_Button_doNothing, 3, 0},
-	{0, 96, 160, 120, CustomButton_Immediate, buttonSubmenuItem, Widget_Button_doNothing, 4, 0},
-	{0, 120, 160, 144, CustomButton_Immediate, buttonSubmenuItem, Widget_Button_doNothing, 5, 0},
-	{0, 144, 160, 168, CustomButton_Immediate, buttonSubmenuItem, Widget_Button_doNothing, 6, 0},
-	{0, 168, 160, 192, CustomButton_Immediate, buttonSubmenuItem, Widget_Button_doNothing, 7, 0},
-	{0, 192, 160, 216, CustomButton_Immediate, buttonSubmenuItem, Widget_Button_doNothing, 8, 0},
-	{0, 216, 160, 240, CustomButton_Immediate, buttonSubmenuItem, Widget_Button_doNothing, 9, 0},
+static generic_button submenuCustomButtons[] = {
+	{0, 0, 160, 24, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 0, 0},
+	{0, 24, 160, 48, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 1, 0},
+	{0, 48, 160, 72, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 2, 0},
+	{0, 72, 160, 96, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 3, 0},
+	{0, 96, 160, 120, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 4, 0},
+	{0, 120, 160, 144, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 5, 0},
+	{0, 144, 160, 168, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 6, 0},
+	{0, 168, 160, 192, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 7, 0},
+	{0, 192, 160, 216, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 8, 0},
+	{0, 216, 160, 240, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 9, 0},
 };
 
 static int menuIdToOverlayId[8] = {0, 2, 1, 3, 5, 6, 7, 4};
@@ -97,13 +98,13 @@ void UI_OverlayMenu_handleMouse(const mouse *m)
 		UI_Window_goTo(Window_City);
 		return;
 	}
-	Widget_Button_handleCustomButtons(mouse_translate(m, Data_CityView.widthInPixels - 170, 72),
+	generic_buttons_handle_mouse(m, Data_CityView.widthInPixels - 170, 72,
 			menuCustomButtons, 8, &menuFocusButtonId);
 
 	handleSubmenu();
 	if (selectedSubmenu) {
-		Widget_Button_handleCustomButtons(
-			mouse_translate(m, Data_CityView.widthInPixels - 348, 72 + 24 * selectedMenu),
+		generic_buttons_handle_mouse(
+			m, Data_CityView.widthInPixels - 348, 72 + 24 * selectedMenu,
 			submenuCustomButtons, numSubmenuItems, &submenuFocusButtonId);
 	}
 }

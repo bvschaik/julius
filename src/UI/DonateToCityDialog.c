@@ -7,7 +7,7 @@
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/arrow_button.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 
 static void buttonSetAmount(int param1, int param2);
@@ -15,14 +15,14 @@ static void buttonDonate(int param1, int param2);
 static void buttonCancel(int param1, int param2);
 static void arrowButtonAmount(int isDown, int param2);
 
-static CustomButton buttons[] = {
-	{336, 283, 496, 303, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 0, 0},
-	{144, 283, 304, 303, CustomButton_Immediate, buttonDonate, Widget_Button_doNothing, 0, 0},
-	{128, 216, 192, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 0, 0},
-	{208, 216, 272, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 1, 0},
-	{288, 216, 352, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 2, 0},
-	{368, 216, 432, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 3, 0},
-	{448, 216, 512, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 4, 0},
+static generic_button buttons[] = {
+	{336, 283, 496, 303, GB_IMMEDIATE, buttonCancel, Widget_Button_doNothing, 0, 0},
+	{144, 283, 304, 303, GB_IMMEDIATE, buttonDonate, Widget_Button_doNothing, 0, 0},
+	{128, 216, 192, 236, GB_IMMEDIATE, buttonSetAmount, Widget_Button_doNothing, 0, 0},
+	{208, 216, 272, 236, GB_IMMEDIATE, buttonSetAmount, Widget_Button_doNothing, 1, 0},
+	{288, 216, 352, 236, GB_IMMEDIATE, buttonSetAmount, Widget_Button_doNothing, 2, 0},
+	{368, 216, 432, 236, GB_IMMEDIATE, buttonSetAmount, Widget_Button_doNothing, 3, 0},
+	{448, 216, 512, 236, GB_IMMEDIATE, buttonSetAmount, Widget_Button_doNothing, 4, 0},
 };
 
 static arrow_button arrowButtons[] = {
@@ -96,7 +96,7 @@ void UI_DonateToCityDialog_handleMouse(const mouse *m)
 		UI_Window_goTo(Window_Advisors);
 	} else {
 		const mouse *m_dialog = mouse_in_dialog(m);
-		if (!Widget_Button_handleCustomButtons(m_dialog, buttons, 7, &focusButtonId)) {
+		if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 7, &focusButtonId)) {
 			arrowButtonFocus = arrow_buttons_handle_mouse(m_dialog, 0, 0, arrowButtons, 2);
 		}
 	}

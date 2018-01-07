@@ -8,6 +8,7 @@
 
 #include "city/message.h"
 #include "core/lang.h"
+#include "graphics/generic_button.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
@@ -29,17 +30,17 @@ static ImageButton imageButtonScrollUp = {
 static ImageButton imageButtonScrollDown = {
 	0, 0, 39, 26, ImageButton_Scroll, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1
 };
-static CustomButton customButtonsMessages[] = {
-	{0, 0, 412, 18, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 0, 0},
-	{0, 20, 412, 38, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 1, 0},
-	{0, 40, 412, 58, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 2, 0},
-	{0, 60, 412, 78, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 3, 0},
-	{0, 80, 412, 98, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 4, 0},
-	{0, 100, 412, 118, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 5, 0},
-	{0, 120, 412, 138, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 6, 0},
-	{0, 140, 412, 158, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 7, 0},
-	{0, 160, 412, 178, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 8, 0},
-	{0, 180, 412, 198, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 9, 0},
+static generic_button customButtonsMessages[] = {
+	{0, 0, 412, 18, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 0, 0},
+	{0, 20, 412, 38, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 1, 0},
+	{0, 40, 412, 58, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 2, 0},
+	{0, 60, 412, 78, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 3, 0},
+	{0, 80, 412, 98, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 4, 0},
+	{0, 100, 412, 118, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 5, 0},
+	{0, 120, 412, 138, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 6, 0},
+	{0, 140, 412, 158, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 7, 0},
+	{0, 160, 412, 178, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 8, 0},
+	{0, 180, 412, 198, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 9, 0},
 };
 
 static struct {
@@ -214,7 +215,7 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
 		return;
 	}
 	int oldFocusButtonId = focusButtonId;
-	if (Widget_Button_handleCustomButtons(mouse_translate(m, data.xText, data.yText + 4),
+	if (generic_buttons_handle_mouse(m, data.xText, data.yText + 4,
 		customButtonsMessages, 10, &focusButtonId)) {
 		if (oldFocusButtonId != focusButtonId) {
 			UI_Window_requestRefresh();

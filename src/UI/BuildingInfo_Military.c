@@ -11,21 +11,21 @@
 #include "core/calc.h"
 #include "core/debug.h"
 #include "figure/formation_legion.h"
-#include "graphics/custom_button.h"
+#include "graphics/generic_button.h"
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int index, int param2);
 
-static CustomButton layoutButtons[] = {
-	{19, 139, 103, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 0, 0},
-	{104, 139, 188, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 1, 0},
-	{189, 139, 273, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 2, 0},
-	{274, 139, 358, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 3, 0},
-	{359, 139, 443, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 4, 0}
+static generic_button layoutButtons[] = {
+	{19, 139, 103, 223, GB_IMMEDIATE, buttonLayout, Widget_Button_doNothing, 0, 0},
+	{104, 139, 188, 223, GB_IMMEDIATE, buttonLayout, Widget_Button_doNothing, 1, 0},
+	{189, 139, 273, 223, GB_IMMEDIATE, buttonLayout, Widget_Button_doNothing, 2, 0},
+	{274, 139, 358, 223, GB_IMMEDIATE, buttonLayout, Widget_Button_doNothing, 3, 0},
+	{359, 139, 443, 223, GB_IMMEDIATE, buttonLayout, Widget_Button_doNothing, 4, 0}
 };
 
-static CustomButton returnButtons[] = {
-	{0, 0, 288, 32, CustomButton_Immediate, buttonReturnToFort, Widget_Button_doNothing, 0, 0},
+static generic_button returnButtons[] = {
+	{0, 0, 288, 32, GB_IMMEDIATE, buttonReturnToFort, Widget_Button_doNothing, 0, 0},
 };
 
 static int focusButtonId;
@@ -435,17 +435,17 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 void UI_BuildingInfo_handleMouseLegionInfo(const mouse *m, BuildingInfoContext *c)
 {
 	contextForCallback = c;
-    int handled = Widget_Button_handleCustomButtons(
-			mouse_translate(m, c->xOffset, c->yOffset), layoutButtons, 5, &focusButtonId);
+    int handled = generic_buttons_handle_mouse(
+			m, c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId);
     if (formation_get(c->formationId)->figure_type == FIGURE_FORT_LEGIONARY) {
         if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
             focusButtonId = 0;
         }
     }
 	if (!handled) {
-		Widget_Button_handleCustomButtons(
-			mouse_translate(m, c->xOffset + 16 * (c->widthBlocks - 18) / 2,
-			c->yOffset + 16 * c->heightBlocks - 48),
+		generic_buttons_handle_mouse(
+			m, c->xOffset + 16 * (c->widthBlocks - 18) / 2,
+			c->yOffset + 16 * c->heightBlocks - 48,
 			returnButtons, 1, &returnButtonId);
 	}
 	contextForCallback = 0;

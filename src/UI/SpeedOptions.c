@@ -6,6 +6,7 @@
 
 #include "game/settings.h"
 #include "graphics/arrow_button.h"
+#include "graphics/generic_button.h"
 
 static void buttonOk(int param1, int param2);
 static void buttonCancel(int param1, int param2);
@@ -13,9 +14,9 @@ static void buttonCancel(int param1, int param2);
 static void arrowButtonGame(int param1, int param2);
 static void arrowButtonScroll(int param1, int param2);
 
-static CustomButton buttons[] = {
-	{144, 232, 336, 252, CustomButton_Immediate, buttonOk, Widget_Button_doNothing, 1, 0},
-	{144, 262, 336, 282, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 1, 0},
+static generic_button buttons[] = {
+	{144, 232, 336, 252, GB_IMMEDIATE, buttonOk, Widget_Button_doNothing, 1, 0},
+	{144, 262, 336, 282, GB_IMMEDIATE, buttonCancel, Widget_Button_doNothing, 1, 0},
 };
 
 static arrow_button arrowButtons[] = {
@@ -99,7 +100,7 @@ void UI_SpeedOptions_handleMouse(const mouse *m)
 		UI_Window_goTo(Window_City);
 	} else {
 		const mouse *m_dialog = mouse_in_dialog(m);
-		if (!Widget_Button_handleCustomButtons(m_dialog, buttons, 2, &focusButtonId)) {
+		if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 2, &focusButtonId)) {
 			arrow_buttons_handle_mouse(m_dialog, 128, 40, arrowButtons, 4);
 		}
 	}
