@@ -1,6 +1,5 @@
 #include "SDL.h"
 
-#include "../src/Screen.h"
 #include "../src/Graphics.h" // debug for fps counter
 #include "../src/Data/Screen.h" // debug for fps counter
 
@@ -9,6 +8,7 @@
 #include "game/settings.h"
 #include "game/game.h"
 #include "game/system.h"
+#include "graphics/screen.h"
 #include "graphics/text.h" // debug for fps counter
 #include "input/cursor.h"
 #include "input/hotkey.h"
@@ -338,7 +338,7 @@ static void createSurface(int width, int height, int fullscreen)
 			surface->format->Bshift,
 			surface->format->Ashift);
 		*/
-		Screen_setResolution(width, height);
+		screen_set_resolution(width, height);
 	} else {
 		printf("Unable to create texture: %s\n", SDL_GetError());
 	}
