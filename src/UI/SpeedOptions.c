@@ -53,10 +53,10 @@ void UI_SpeedOptions_drawForeground()
 	lang_text_draw_centered(45, 1, 128, 266, 224, FONT_NORMAL_GREEN);
     // game speed
 	lang_text_draw(45, 2, 144, 146, FONT_NORMAL_PLAIN);
-	Widget_Text_drawPercentage(setting_game_speed(), 296, 146, FONT_NORMAL_PLAIN);
+	text_draw_percentage(setting_game_speed(), 296, 146, FONT_NORMAL_PLAIN);
     // scroll speed
 	lang_text_draw(45, 3, 144, 182, FONT_NORMAL_PLAIN);
-	Widget_Text_drawPercentage(setting_scroll_speed(), 296, 182,FONT_NORMAL_PLAIN);
+	text_draw_percentage(setting_scroll_speed(), 296, 182,FONT_NORMAL_PLAIN);
 
 	arrow_buttons_draw(128, 40, arrowButtons, 4);
     graphics_reset_dialog();

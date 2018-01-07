@@ -65,27 +65,27 @@ void UI_MissionEnd_drawBackground()
 		lang_text_draw_multiline(147, scenario_campaign_mission(), xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
 	}
 	int width = lang_text_draw(148, 0, xOffset + 40, yOffset + 180, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumber(Data_CityInfo.ratingCulture, '@', " ",
+	text_draw_number(Data_CityInfo.ratingCulture, '@', " ",
 		xOffset + 40 + width, yOffset + 180, FONT_NORMAL_BLACK);
 
 	width = lang_text_draw(148, 1, xOffset + 300, yOffset + 180, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumber(Data_CityInfo.ratingProsperity, '@', " ",
+	text_draw_number(Data_CityInfo.ratingProsperity, '@', " ",
 		xOffset + 300 + width, yOffset + 180, FONT_NORMAL_BLACK);
 
 	width = lang_text_draw(148, 2, xOffset + 40, yOffset + 200, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumber(Data_CityInfo.ratingPeace, '@', " ",
+	text_draw_number(Data_CityInfo.ratingPeace, '@', " ",
 		xOffset + 40 + width, yOffset + 200, FONT_NORMAL_BLACK);
 
 	width = lang_text_draw(148, 3, xOffset + 300, yOffset + 200, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumber(Data_CityInfo.ratingFavor, '@', " ",
+	text_draw_number(Data_CityInfo.ratingFavor, '@', " ",
 		xOffset + 300 + width, yOffset + 200, FONT_NORMAL_BLACK);
 
 	width = lang_text_draw(148, 4, xOffset + 40, yOffset + 220, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumber(Data_CityInfo.population, '@', " ",
+	text_draw_number(Data_CityInfo.population, '@', " ",
 		xOffset + 40 + width, yOffset + 220, FONT_NORMAL_BLACK);
 
 	width = lang_text_draw(148, 5, xOffset + 300, yOffset + 220, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumber(city_finance_treasury(), '@', " ",
+	text_draw_number(city_finance_treasury(), '@', " ",
 		xOffset + 300 + width, yOffset + 220, FONT_NORMAL_BLACK);
 
 	lang_text_draw_centered(13, 1, xOffset + 16, yOffset + 260, 512, FONT_NORMAL_BLACK);
@@ -149,7 +149,7 @@ void UI_VictoryDialog_drawBackground()
 		lang_text_draw_centered(62, 2, xOffset, yOffset + 47, 544, FONT_NORMAL_BLACK);
 		lang_text_draw_centered(32, Data_CityInfo.playerRank + 1, xOffset, yOffset + 66, 544, FONT_LARGE_BLACK);
 	} else {
-		Widget_Text_drawCentered(scenario_player_name(), xOffset, yOffset + 16, 512, FONT_LARGE_BLACK, 0);
+		text_draw_centered(scenario_player_name(), xOffset, yOffset + 16, 512, FONT_LARGE_BLACK, 0);
 		lang_text_draw_multiline(62, 26, xOffset + 16, yOffset + 47, 480, FONT_NORMAL_BLACK);
 	}
 }

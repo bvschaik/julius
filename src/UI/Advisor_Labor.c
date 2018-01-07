@@ -72,23 +72,23 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 	lang_text_draw(50, 24, 500, 56, FONT_SMALL_PLAIN);
 
 	// xx employed, yy unemployed
-	int width = Widget_Text_drawNumber(Data_CityInfo.workersEmployed, '@', " ", 32, 320, FONT_NORMAL_BLACK);
+	int width = text_draw_number(Data_CityInfo.workersEmployed, '@', " ", 32, 320, FONT_NORMAL_BLACK);
 	width += lang_text_draw(50, 12, 32 + width, 320, FONT_NORMAL_BLACK);
-	width += Widget_Text_drawNumber(Data_CityInfo.workersUnemployed, '@', " ", 50 + width, 320, FONT_NORMAL_BLACK);
+	width += text_draw_number(Data_CityInfo.workersUnemployed, '@', " ", 50 + width, 320, FONT_NORMAL_BLACK);
 	width += lang_text_draw(50, 13, 50 + width, 320, FONT_NORMAL_BLACK);
-	width += Widget_Text_drawNumber(Data_CityInfo.unemploymentPercentage, '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
+	width += text_draw_number(Data_CityInfo.unemploymentPercentage, '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
 
 	// wages panel
 	inner_panel_draw(64, 350, 32, 2);
 	lang_text_draw(50, 14, 70, 359, FONT_NORMAL_WHITE);
-	width = Widget_Text_drawNumber(Data_CityInfo.wages, '@', " ", 230, 359, FONT_NORMAL_WHITE);
+	width = text_draw_number(Data_CityInfo.wages, '@', " ", 230, 359, FONT_NORMAL_WHITE);
 	width += lang_text_draw(50, 15, 230 + width, 359, FONT_NORMAL_WHITE);
 	width += lang_text_draw(50, 18, 230 + width, 359, FONT_NORMAL_WHITE);
-	width += Widget_Text_drawNumber(Data_CityInfo.wagesRome, '@', " )", 230 + width, 359, FONT_NORMAL_WHITE);
+	width += text_draw_number(Data_CityInfo.wagesRome, '@', " )", 230 + width, 359, FONT_NORMAL_WHITE);
 
 	// estimated wages
 	width = lang_text_draw(50, 19, 64, 390, FONT_NORMAL_BLACK);
-	width += Widget_Text_drawMoney(Data_CityInfo.estimatedYearlyWages, 64 + width, 390, FONT_NORMAL_BLACK);
+	width += text_draw_money(Data_CityInfo.estimatedYearlyWages, 64 + width, 390, FONT_NORMAL_BLACK);
     graphics_reset_dialog();
 }
 
@@ -106,17 +106,17 @@ void UI_Advisor_Labor_drawForeground()
 		button_border_draw(40, 77 + 25 * i, 560, 22, focus);
 		if (Data_CityInfo.laborCategory[i].priority) {
 			Graphics_drawImage(image_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2);
-			Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].priority, '@', " ",
+			text_draw_number(Data_CityInfo.laborCategory[i].priority, '@', " ",
 				90, y_offset, FONT_NORMAL_WHITE);
 		}
 		lang_text_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE);
-		Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].workersNeeded, '@', " ",
+		text_draw_number(Data_CityInfo.laborCategory[i].workersNeeded, '@', " ",
 			410, y_offset, FONT_NORMAL_WHITE);
 		font_t font = FONT_NORMAL_WHITE;
 		if (Data_CityInfo.laborCategory[i].workersNeeded != Data_CityInfo.laborCategory[i].workersAllocated) {
 			font = FONT_NORMAL_RED;
 		}
-		Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].workersAllocated, '@', " ",
+		text_draw_number(Data_CityInfo.laborCategory[i].workersAllocated, '@', " ",
 			510, y_offset, font);
 	}
 	graphics_reset_dialog();

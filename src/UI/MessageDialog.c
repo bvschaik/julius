@@ -163,15 +163,15 @@ static void drawDialogNormal()
 	outer_panel_draw(data.x, data.y, msg->width_blocks, msg->height_blocks);
 	// title
 	if (msg->title.x) {
-		Widget_Text_draw(msg->title.text,
+		text_draw(msg->title.text,
 			data.x + msg->title.x, data.y + msg->title.y, FONT_LARGE_BLACK, 0);
 		data.yText = data.y + 32;
 	} else {
 		if (msg->message_type == MESSAGE_TYPE_TUTORIAL) {
-			Widget_Text_drawCentered(msg->title.text,
+			text_draw_centered(msg->title.text,
 				data.x, data.y + msg->title.y, 16 * msg->width_blocks, FONT_LARGE_BLACK, 0);
 		} else {
-			Widget_Text_drawCentered(msg->title.text,
+			text_draw_centered(msg->title.text,
 				data.x, data.y + 14, 16 * msg->width_blocks, FONT_LARGE_BLACK, 0);
 		}
 		data.yText = data.y + 48;
@@ -202,7 +202,7 @@ static void drawDialogNormal()
 	// subtitle
 	if (msg->subtitle.x) {
 		int width = 16 * msg->width_blocks - 16 - msg->subtitle.x;
-		int height = Widget_Text_drawMultiline(msg->subtitle.text,
+		int height = text_draw_multiline(msg->subtitle.text,
 			data.x + msg->subtitle.x, data.y + msg->subtitle.y, width,FONT_NORMAL_BLACK);
 		if (data.y + msg->subtitle.y + height > data.yText) {
 			data.yText = data.y + msg->subtitle.y + height;
@@ -244,7 +244,7 @@ static void drawDialogVideo()
 	rich_text_clear_links();
 	
 	inner_panel_draw(data.x + 8, data.y + 308, 25, 6);
-	Widget_Text_drawCentered(msg->title.text,
+	text_draw_centered(msg->title.text,
 		data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK, 0);
 	
 	int width = lang_text_draw(25, playerMessage.month,
@@ -258,7 +258,7 @@ static void drawDialogVideo()
 			data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
 	} else {
 		width += lang_text_draw(63, 5, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
-		Widget_Text_draw(scenario_player_name(), data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE, 0);
+		text_draw(scenario_player_name(), data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE, 0);
 	}
 	data.textHeightBlocks = msg->height_blocks - 1 - (32 + data.yText - data.y) / 16;
 	data.textWidthBlocks = msg->width_blocks - 4;
@@ -267,7 +267,7 @@ static void drawDialogVideo()
 
 	if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
         const scenario_request *request = scenario_request_get(playerMessage.param1);
-		Widget_Text_drawNumber(request->amount,
+		text_draw_number(request->amount,
 			'@', " ", data.x + 8, data.y + 384, FONT_NORMAL_WHITE);
 		Graphics_drawImage(
 			image_group(GROUP_RESOURCE_ICONS) + request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON),
@@ -303,7 +303,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 		} else {
 			width += lang_text_draw(63, 5,
 				data.xText + width + 80, data.yText + 6, FONT_NORMAL_WHITE);
-			Widget_Text_draw(scenario_player_name(),
+			text_draw(scenario_player_name(),
 				data.xText + width + 80, data.yText + 6, FONT_NORMAL_WHITE, 0);
 		}
 	}
@@ -348,7 +348,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			graphicId = image_group(GROUP_RESOURCE_ICONS) + playerMessage.param2;
 			graphicId += resource_image_offset(playerMessage.param2, RESOURCE_IMAGE_ICON);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
-			Widget_Text_drawMoney(playerMessage.param1,
+			text_draw_money(playerMessage.param1,
 				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
 			rich_text_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
@@ -363,7 +363,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 	if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
         const scenario_request *request = scenario_request_get(playerMessage.param1);
 		int yOffset = data.yText + 86 + lines * 16;
-		Widget_Text_drawNumber(request->amount,
+		text_draw_number(request->amount,
 			'@', " ", data.xText + 8, yOffset, FONT_NORMAL_WHITE);
 		graphicId = image_group(GROUP_RESOURCE_ICONS) + request->resource;
 		graphicId += resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);

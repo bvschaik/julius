@@ -95,7 +95,7 @@ static void drawScenarioList()
 		char file[FILE_NAME_MAX];
 		strcpy(file, scenarios->files[i + scrollPosition]);
 		file_remove_extension(file);
-		Widget_Text_draw(string_from_ascii(file), Data_Screen.offset640x480.x + 24,
+		text_draw(string_from_ascii(file), Data_Screen.offset640x480.x + 24,
 			Data_Screen.offset640x480.y + 220 + 16 * i, font, 0);
 	}
 }
@@ -126,9 +126,9 @@ static void drawScenarioInfo()
 	Graphics_drawImage(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(),
 		Data_Screen.offset640x480.x + 78, Data_Screen.offset640x480.y + 36);
 
-	Widget_Text_drawCentered(string_from_ascii(selectedScenario),
+	text_draw_centered(string_from_ascii(selectedScenario),
 		baseOffsetX + 15, baseOffsetY + 5, 260, FONT_LARGE_BLACK, 0);
-	Widget_Text_drawCentered(scenario_brief_description(),
+	text_draw_centered(scenario_brief_description(),
 		baseOffsetX + 15, baseOffsetY + 40, 260, FONT_NORMAL_WHITE, 0);
 	lang_text_draw_year(scenario_property_start_year(),
 		baseOffsetX + 90, baseOffsetY + 70, FONT_LARGE_BLACK);
@@ -174,43 +174,43 @@ static void drawScenarioInfo()
 			baseOffsetX + 15, baseOffsetY + 242, 260, FONT_NORMAL_BLACK);
 		int width;
 		if (scenario_criteria_culture_enabled()) {
-			width = Widget_Text_drawNumber(scenario_criteria_culture(), '@', " ",
+			width = text_draw_number(scenario_criteria_culture(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 270, FONT_NORMAL_BLACK);
 			lang_text_draw(44, 129,
 				baseOffsetX + 90 + width, baseOffsetY + 270, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_prosperity_enabled()) {
-			width = Widget_Text_drawNumber(scenario_criteria_prosperity(), '@', " ",
+			width = text_draw_number(scenario_criteria_prosperity(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 286, FONT_NORMAL_BLACK);
 			lang_text_draw(44, 130,
 				baseOffsetX + 90 + width, baseOffsetY + 286, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_peace_enabled()) {
-			width = Widget_Text_drawNumber(scenario_criteria_peace(), '@', " ",
+			width = text_draw_number(scenario_criteria_peace(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 302, FONT_NORMAL_BLACK);
 			lang_text_draw(44, 131,
 				baseOffsetX + 90 + width, baseOffsetY + 302, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_favor_enabled()) {
-			width = Widget_Text_drawNumber(scenario_criteria_favor(), '@', " ",
+			width = text_draw_number(scenario_criteria_favor(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 318, FONT_NORMAL_BLACK);
 			lang_text_draw(44, 132,
 				baseOffsetX + 90 + width, baseOffsetY + 318, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_population_enabled()) {
-			width = Widget_Text_drawNumber(scenario_criteria_population(), '@', " ",
+			width = text_draw_number(scenario_criteria_population(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 334, FONT_NORMAL_BLACK);
 			lang_text_draw(44, 133,
 				baseOffsetX + 90 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_time_limit_enabled()) {
-			width = Widget_Text_drawNumber(scenario_criteria_time_limit_years(), '@', " ",
+			width = text_draw_number(scenario_criteria_time_limit_years(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 350, FONT_NORMAL_BLACK);
 			lang_text_draw(44, 134,
 				baseOffsetX + 90 + width, baseOffsetY + 350, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_survival_enabled()) {
-			width = Widget_Text_drawNumber(scenario_criteria_survival_years(), '@', " ",
+			width = text_draw_number(scenario_criteria_survival_years(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 366, FONT_NORMAL_BLACK);
 			lang_text_draw(44, 135,
 				baseOffsetX + 90 + width, baseOffsetY + 366, FONT_NORMAL_BLACK);

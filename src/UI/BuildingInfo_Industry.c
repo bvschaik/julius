@@ -23,7 +23,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
     building *b = building_get(c->buildingId);
 	int pctGrown = calc_percentage(b->data.industry.progress, 200);
 	int width = lang_text_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
-	width += Widget_Text_drawPercentage(pctGrown,
+	width += text_draw_percentage(pctGrown,
 		c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 	lang_text_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 
@@ -98,7 +98,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
     building *b = building_get(c->buildingId);
 	int pctDone = calc_percentage(b->data.industry.progress, 200);
 	int width = lang_text_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
-	width += Widget_Text_drawPercentage(pctDone,
+	width += text_draw_percentage(pctDone,
 		c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 	lang_text_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 
@@ -161,7 +161,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
     building *b = building_get(c->buildingId);
 	int pctDone = calc_percentage(b->data.industry.progress, 400);
 	int width = lang_text_draw(groupId, 2, c->xOffset + 32, c->yOffset + 40, FONT_NORMAL_BLACK);
-	width += Widget_Text_drawPercentage(pctDone,
+	width += text_draw_percentage(pctDone,
 		c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 	lang_text_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 

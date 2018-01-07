@@ -140,10 +140,10 @@ void UI_TopMenu_drawBackground()
 		offsetDate = 547;
 		
 		width = lang_text_draw_colored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasureColor);
-		Widget_Text_drawNumberColored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
+		text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
 
 		width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_GREEN);
-		Widget_Text_drawNumber(Data_CityInfo.population, '@', " ", 450 + width, 5, FONT_NORMAL_GREEN);
+		text_draw_number(Data_CityInfo.population, '@', " ", 450 + width, 5, FONT_NORMAL_GREEN);
 
 		width = lang_text_draw(25, game_time_month(), 552, 5, FONT_NORMAL_GREEN);
 		lang_text_draw_year_condensed(game_time_year(), 541 + width, 5, FONT_NORMAL_GREEN);
@@ -153,10 +153,10 @@ void UI_TopMenu_drawBackground()
 		offsetDate = 652;
 		
 		width = lang_text_draw_colored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasureColor);
-		Widget_Text_drawNumberColored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
+		text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
 
 		width = lang_text_draw_colored(6, 1, 470, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-		Widget_Text_drawNumberColored(Data_CityInfo.population, '@', " ", 466 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
+		text_draw_number_colored(Data_CityInfo.population, '@', " ", 466 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
 
 		width = lang_text_draw_colored(25, game_time_month(), 655, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
 		lang_text_draw_year_colored(game_time_year(), 655 + width, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
@@ -166,10 +166,10 @@ void UI_TopMenu_drawBackground()
 		offsetDate = 852;
 		
 		width = lang_text_draw_colored(6, 0, 495, 5, FONT_NORMAL_PLAIN, treasureColor);
-		Widget_Text_drawNumberColored(treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
+		text_draw_number_colored(treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
 
 		width = lang_text_draw_colored(6, 1, 645, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-		Widget_Text_drawNumberColored(Data_CityInfo.population, '@', " ", 651 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
+		text_draw_number_colored(Data_CityInfo.population, '@', " ", 651 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
 
 		width = lang_text_draw_colored(25, game_time_month(), 850, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
 		lang_text_draw_year_colored(game_time_year(), 850 + width, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);

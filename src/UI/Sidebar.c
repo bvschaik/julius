@@ -165,9 +165,9 @@ static void drawNumberOfMessages()
 		buttonBuildExpanded[13].enabled = messages > 0;
 		buttonBuildExpanded[14].enabled = city_message_problem_area_count();
 		if (messages) {
-			Widget_Text_drawNumberCenteredColored(messages,
+			text_draw_number_centered_colored(messages,
 				XOFFSET_EXPANDED + 74, 452, 32, FONT_SMALL_PLAIN, COLOR_BLACK);
-			Widget_Text_drawNumberCenteredColored(messages,
+			text_draw_number_centered_colored(messages,
 				XOFFSET_EXPANDED + 73, 453, 32, FONT_SMALL_PLAIN, COLOR_WHITE);
 		}
 	}

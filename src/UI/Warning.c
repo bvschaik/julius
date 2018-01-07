@@ -14,7 +14,7 @@ static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
 
 static int determine_width(const uint8_t *text)
 {
-    int width = Widget_Text_getWidth(text, FONT_NORMAL_BLACK);
+    int width = text_get_width(text, FONT_NORMAL_BLACK);
     if (width <= 100) {
         return 200;
     } else if (width <= 200) {
@@ -54,7 +54,7 @@ void UI_Warning_draw()
             Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 15,
                 center + box_width / 2 - 30, top_offset + 2);
         }
-        Widget_Text_drawCentered(text,
+        text_draw_centered(text,
             center - box_width / 2 + 1, top_offset + 4,
             box_width, FONT_NORMAL_WHITE, 0);
     }

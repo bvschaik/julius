@@ -45,15 +45,15 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	// Ceres
 	lang_text_draw(59, 11, baseOffsetX + 40, baseOffsetY + 66, FONT_NORMAL_WHITE);
 	lang_text_draw(59, 16, baseOffsetX + 120, baseOffsetY + 67, FONT_SMALL_PLAIN);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_SMALL_TEMPLE_CERES),
 		baseOffsetX + 230, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_LARGE_TEMPLE_CERES),
 		baseOffsetX + 290, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		Data_CityInfo.godMonthsSinceFestival[GOD_CERES],
 		baseOffsetX + 360, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
 	);
@@ -69,15 +69,15 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	// Neptune
 	lang_text_draw(59, 12, baseOffsetX + 40, baseOffsetY + 86, FONT_NORMAL_WHITE);
 	lang_text_draw(59, 17, baseOffsetX + 120, baseOffsetY + 87, FONT_SMALL_PLAIN);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_SMALL_TEMPLE_NEPTUNE),
 		baseOffsetX + 230, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_LARGE_TEMPLE_NEPTUNE),
 		baseOffsetX + 290, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		Data_CityInfo.godMonthsSinceFestival[GOD_NEPTUNE],
 		baseOffsetX + 360, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
 	);
@@ -93,15 +93,15 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	// Mercury
 	lang_text_draw(59, 13, baseOffsetX + 40, baseOffsetY + 106, FONT_NORMAL_WHITE);
 	lang_text_draw(59, 18, baseOffsetX + 120, baseOffsetY + 107, FONT_SMALL_PLAIN);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_SMALL_TEMPLE_MERCURY),
 		baseOffsetX + 230, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_LARGE_TEMPLE_MERCURY),
 		baseOffsetX + 290, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		Data_CityInfo.godMonthsSinceFestival[GOD_MERCURY],
 		baseOffsetX + 360, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
 	);
@@ -117,15 +117,15 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	// Mars
 	lang_text_draw(59, 14, baseOffsetX + 40, baseOffsetY + 126, FONT_NORMAL_WHITE);
 	lang_text_draw(59, 19, baseOffsetX + 120, baseOffsetY + 127, FONT_SMALL_PLAIN);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_SMALL_TEMPLE_MARS),
 		baseOffsetX + 230, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_LARGE_TEMPLE_MARS),
 		baseOffsetX + 290, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		Data_CityInfo.godMonthsSinceFestival[GOD_MARS],
 		baseOffsetX + 360, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
 	);
@@ -141,15 +141,15 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	// Venus
 	lang_text_draw(59, 15, baseOffsetX + 40, baseOffsetY + 146, FONT_NORMAL_WHITE);
 	lang_text_draw(59, 20, baseOffsetX + 120, baseOffsetY + 147, FONT_SMALL_PLAIN);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_SMALL_TEMPLE_VENUS),
 		baseOffsetX + 230, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_LARGE_TEMPLE_VENUS),
 		baseOffsetX + 290, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		Data_CityInfo.godMonthsSinceFestival[GOD_VENUS],
 		baseOffsetX + 360, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
 	);
@@ -164,7 +164,7 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 
 	// oracles
 	lang_text_draw(59, 8, baseOffsetX + 40, baseOffsetY + 166, FONT_NORMAL_WHITE);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_total(BUILDING_ORACLE),
 		baseOffsetX + 230, baseOffsetY + 166, 50, FONT_NORMAL_WHITE
 	);

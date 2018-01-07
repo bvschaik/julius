@@ -206,23 +206,23 @@ static void drawSenateTooltip(struct TooltipContext *c)
 	
 	// unemployment
 	lang_text_draw_colored(68, 148, x + 5, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-	Widget_Text_drawNumberColored(Data_CityInfo.unemploymentPercentage, '@', "%",
+	text_draw_number_colored(Data_CityInfo.unemploymentPercentage, '@', "%",
 		x + 140, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	
 	// ratings
 	lang_text_draw_colored(68, 149, x + 5, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-	Widget_Text_drawNumberColored(Data_CityInfo.ratingCulture, '@', " ",
+	text_draw_number_colored(Data_CityInfo.ratingCulture, '@', " ",
 		x + 140, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
 	lang_text_draw_colored(68, 150, x + 5, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-	Widget_Text_drawNumberColored(Data_CityInfo.ratingProsperity, '@', " ",
+	text_draw_number_colored(Data_CityInfo.ratingProsperity, '@', " ",
 		x + 140, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
 	lang_text_draw_colored(68, 151, x + 5, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-	Widget_Text_drawNumberColored(Data_CityInfo.ratingPeace, '@', " ",
+	text_draw_number_colored(Data_CityInfo.ratingPeace, '@', " ",
 		x + 140, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
 	lang_text_draw_colored(68, 152, x + 5, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-	Widget_Text_drawNumberColored(Data_CityInfo.ratingFavor, '@', " ",
+	text_draw_number_colored(Data_CityInfo.ratingFavor, '@', " ",
 		x + 140, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 }

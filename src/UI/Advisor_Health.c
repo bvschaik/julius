@@ -39,7 +39,7 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 		building_count_total(BUILDING_BATHHOUSE),
 		baseOffsetX + 40, baseOffsetY + 112, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_active(BUILDING_BATHHOUSE),
 		baseOffsetX + 150, baseOffsetY + 112, 100, FONT_NORMAL_GREEN
 	);
@@ -51,7 +51,7 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 		building_count_total(BUILDING_BARBER),
 		baseOffsetX + 40, baseOffsetY + 132, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_active(BUILDING_BARBER),
 		baseOffsetX + 150, baseOffsetY + 132, 100, FONT_NORMAL_GREEN
 	);
@@ -63,7 +63,7 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 		building_count_total(BUILDING_DOCTOR),
 		baseOffsetX + 40, baseOffsetY + 152, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_active(BUILDING_DOCTOR),
 		baseOffsetX + 150, baseOffsetY + 152, 100, FONT_NORMAL_GREEN
 	);
@@ -75,12 +75,12 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 		building_count_total(BUILDING_HOSPITAL),
 		baseOffsetX + 40, baseOffsetY + 172, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawNumberCentered(
+	text_draw_number_centered(
 		building_count_active(BUILDING_HOSPITAL),
 		baseOffsetX + 150, baseOffsetY + 172, 100, FONT_NORMAL_GREEN
 	);
 
-	int width = Widget_Text_drawNumber(
+	int width = text_draw_number(
 		1000 * building_count_active(BUILDING_HOSPITAL),
 		'@', " ", baseOffsetX + 280, baseOffsetY + 172, FONT_NORMAL_GREEN
 	);

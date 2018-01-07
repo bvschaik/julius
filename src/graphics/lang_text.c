@@ -6,31 +6,31 @@
 int lang_text_get_width(int group, int number, font_t font)
 {
     const uint8_t *str = lang_get_string(group, number);
-    return Widget_Text_getWidth(str, font) + font_definition_for(font)->space_width;
+    return text_get_width(str, font) + font_definition_for(font)->space_width;
 }
 
 int lang_text_draw(int group, int number, int xOffset, int yOffset, font_t font)
 {
     const uint8_t *str = lang_get_string(group, number);
-    return Widget_Text_draw(str, xOffset, yOffset, font, 0);
+    return text_draw(str, xOffset, yOffset, font, 0);
 }
 
 int lang_text_draw_colored(int group, int number, int xOffset, int yOffset, font_t font, color_t color)
 {
     const uint8_t *str = lang_get_string(group, number);
-    return Widget_Text_draw(str, xOffset, yOffset, font, color);
+    return text_draw(str, xOffset, yOffset, font, color);
 }
 
 void lang_text_draw_centered(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font)
 {
     const uint8_t *str = lang_get_string(group, number);
-    Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, 0);
+    text_draw_centered(str, xOffset, yOffset, boxWidth, font, 0);
 }
 
 void lang_text_draw_centered_colored(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font, color_t color)
 {
     const uint8_t *str = lang_get_string(group, number);
-    Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, color);
+    text_draw_centered(str, xOffset, yOffset, boxWidth, font, color);
 }
 
 int lang_text_draw_amount(int group, int number, int amount, int xOffset, int yOffset, font_t font)
@@ -41,10 +41,10 @@ int lang_text_draw_amount(int group, int number, int amount, int xOffset, int yO
     }
     int descOffsetX;
     if (amount >= 0) {
-        descOffsetX = Widget_Text_drawNumber(amount, ' ', " ",
+        descOffsetX = text_draw_number(amount, ' ', " ",
             xOffset, yOffset, font);
     } else {
-        descOffsetX = Widget_Text_drawNumber(-amount, '-', " ",
+        descOffsetX = text_draw_number(-amount, '-', " ",
             xOffset, yOffset, font);
     }
     return descOffsetX + lang_text_draw(group, number + amountOffset,
@@ -56,9 +56,9 @@ int lang_text_draw_year(int year, int xOffset, int yOffset, font_t font)
     int width = 0;
     if (year >= 0) {
         width += lang_text_draw(20, 1, xOffset + width, yOffset, font);
-        width += Widget_Text_drawNumber(year, ' ', " ", xOffset + width, yOffset, font);
+        width += text_draw_number(year, ' ', " ", xOffset + width, yOffset, font);
     } else {
-        width += Widget_Text_drawNumber(-year, ' ', " ", xOffset + width, yOffset, font);
+        width += text_draw_number(-year, ' ', " ", xOffset + width, yOffset, font);
         width += lang_text_draw(20, 0, xOffset + width, yOffset, font);
     }
     return width;
@@ -69,9 +69,9 @@ int lang_text_draw_year_colored(int year, int xOffset, int yOffset, font_t font,
     int width = 0;
     if (year >= 0) {
         width += lang_text_draw_colored(20, 1, xOffset + width, yOffset, font, color);
-        width += Widget_Text_drawNumberColored(year, ' ', " ", xOffset + width, yOffset, font, color);
+        width += text_draw_number_colored(year, ' ', " ", xOffset + width, yOffset, font, color);
     } else {
-        width += Widget_Text_drawNumberColored(-year, ' ', " ", xOffset + width, yOffset, font, color);
+        width += text_draw_number_colored(-year, ' ', " ", xOffset + width, yOffset, font, color);
         width += lang_text_draw_colored(20, 0, xOffset + width, yOffset, font, color);
     }
     return width;
@@ -82,9 +82,9 @@ int lang_text_draw_year_condensed(int year, int xOffset, int yOffset, font_t fon
     int width = 0;
     if (year >= 0) {
         width += lang_text_draw(20, 1, xOffset + width, yOffset, font);
-        width += Widget_Text_drawNumber(year, ' ', " ", xOffset + width, yOffset, font);
+        width += text_draw_number(year, ' ', " ", xOffset + width, yOffset, font);
     } else {
-        width += Widget_Text_drawNumber(-year, ' ', " ", xOffset + width, yOffset, font);
+        width += text_draw_number(-year, ' ', " ", xOffset + width, yOffset, font);
         width += lang_text_draw(20, 0, xOffset + width - 8, yOffset, font);
     }
     return width;
@@ -93,5 +93,5 @@ int lang_text_draw_year_condensed(int year, int xOffset, int yOffset, font_t fon
 int lang_text_draw_multiline(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font)
 {
     const uint8_t *str = lang_get_string(group, number);
-    return Widget_Text_drawMultiline(str, xOffset, yOffset, boxWidth, font);
+    return text_draw_multiline(str, xOffset, yOffset, boxWidth, font);
 }

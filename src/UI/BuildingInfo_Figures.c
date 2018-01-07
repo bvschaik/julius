@@ -128,7 +128,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 		width = lang_text_draw(129, 4, c->xOffset + 40, c->yOffset + 170, FONT_SMALL_BLACK);
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (trader_bought_resources(traderId, r)) {
-				width += Widget_Text_drawNumber(trader_bought_resources(traderId, r),
+				width += text_draw_number(trader_bought_resources(traderId, r),
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 170, FONT_SMALL_BLACK);
 				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
@@ -139,7 +139,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 		width = lang_text_draw(129, 5, c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (trader_sold_resources(traderId, r)) {
-				width += Widget_Text_drawNumber(trader_sold_resources(traderId, r),
+				width += text_draw_number(trader_sold_resources(traderId, r),
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);

@@ -607,14 +607,14 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 	if (textId) {
 		int width = lang_text_draw_amount(8, 12, b->numWorkers,
 			c->xOffset + 60, yOffset + 10, FONT_SMALL_BLACK);
-		width += Widget_Text_drawNumber(model_get_building(b->type)->laborers, '(', "",
+		width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
 			c->xOffset + 70 + width, yOffset + 10, FONT_SMALL_BLACK);
 		lang_text_draw(69, 0, c->xOffset + 70 + width, yOffset + 10, FONT_SMALL_BLACK);
 		lang_text_draw(69, textId, c->xOffset + 70, yOffset + 26, FONT_SMALL_BLACK);
 	} else {
 		int width = lang_text_draw_amount(8, 12, b->numWorkers,
 			c->xOffset + 60, yOffset + 16, FONT_SMALL_BLACK);
-		width += Widget_Text_drawNumber(model_get_building(b->type)->laborers, '(', "",
+		width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
 			c->xOffset + 70 + width, yOffset + 16, FONT_SMALL_BLACK);
 		lang_text_draw(69, 0, c->xOffset + 70 + width, yOffset + 16, FONT_SMALL_BLACK);
 	}

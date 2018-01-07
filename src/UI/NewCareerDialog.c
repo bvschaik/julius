@@ -45,9 +45,9 @@ void UI_NewCareerDialog_drawForeground()
 	lang_text_draw_centered(31, 0, xOffset + 128, yOffset + 172, 384, FONT_LARGE_BLACK);
 	lang_text_draw(13, 5, xOffset + 352, yOffset + 256, FONT_NORMAL_BLACK);
 	inner_panel_draw(xOffset + 160, yOffset + 208, 20, 2);
-	Widget_Text_captureCursor(keyboard_cursor_position());
-	Widget_Text_draw(player_name, xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
-	Widget_Text_drawCursor(xOffset + 176, yOffset + 217, keyboard_is_insert());
+	text_capture_cursor(keyboard_cursor_position());
+	text_draw(player_name, xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
+	text_draw_cursor(xOffset + 176, yOffset + 217, keyboard_is_insert());
 	
 	image_buttons_draw(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
 }

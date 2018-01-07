@@ -90,7 +90,7 @@ static void add_char(uint8_t value)
     if (data.length + 1 == data.max_length) {
         return;
     }
-    if (Widget_Text_getWidth(data.text, data.font) >= data.box_width) {
+    if (text_get_width(data.text, data.font) >= data.box_width) {
         return;
     }
     if (data.insert) {

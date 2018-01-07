@@ -52,7 +52,7 @@ void UI_SetSalaryDialog_drawForeground()
 		font_t font = (focusButtonId == rank + 2) ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
 		int width = lang_text_draw(52, rank + 4,
 			baseOffsetX + 176, baseOffsetY + 90 + 20 * rank, font);
-		Widget_Text_drawMoney(city_emperor_salary_for_rank(rank),
+		text_draw_money(city_emperor_salary_for_rank(rank),
 			baseOffsetX + 176 + width, baseOffsetY + 90 + 20 * rank, font);
 	}
 

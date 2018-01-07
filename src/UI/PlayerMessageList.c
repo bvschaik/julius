@@ -159,7 +159,7 @@ void UI_PlayerMessageList_drawForeground()
 			data.xText + 42, data.yText + 8 + 20 * i, font);
 		lang_text_draw_year(msg->year,
 			data.xText + 42 + width, data.yText + 8 + 20 * i, font);
-		Widget_Text_draw(
+		text_draw(
 			lang_get_message(messageId)->title.text,
 			data.xText + 180, data.yText + 8 + 20 * i, font, 0);
 	}

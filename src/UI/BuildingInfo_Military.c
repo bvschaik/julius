@@ -237,7 +237,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 
 	// number of soldiers
 	lang_text_draw(138, 23, c->xOffset + 100, c->yOffset + 60, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumber(m->num_figures, '@', " ",
+	text_draw_number(m->num_figures, '@', " ",
 		c->xOffset + 294, c->yOffset + 60, FONT_NORMAL_BLACK);
 	// health
 	lang_text_draw(138, 24, c->xOffset + 100, c->yOffset + 80, FONT_NORMAL_BLACK);

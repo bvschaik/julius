@@ -235,11 +235,11 @@ static void drawPanelInfoCity(const empire_object *object)
 			if (tradeNow > tradeMax) {
 				tradeMax = tradeNow;
 			}
-			int textWidth = Widget_Text_drawNumber(tradeNow, '@', "",
+			int textWidth = text_draw_number(tradeNow, '@', "",
 				xOffset + 100 * goodOffset + 150, yOffset + 30, FONT_NORMAL_GREEN);
 			textWidth += lang_text_draw(47, 11,
 				xOffset + 100 * goodOffset + 148 + textWidth, yOffset + 30, FONT_NORMAL_GREEN);
-			Widget_Text_drawNumber(tradeMax, '@', "",
+			text_draw_number(tradeMax, '@', "",
 				xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 30, FONT_NORMAL_GREEN);
 			goodOffset++;
 		}
@@ -273,11 +273,11 @@ static void drawPanelInfoCity(const empire_object *object)
 			if (tradeNow > tradeMax) {
 				tradeMax = tradeNow;
 			}
-			int textWidth = Widget_Text_drawNumber(tradeNow, '@', "",
+			int textWidth = text_draw_number(tradeNow, '@', "",
 				xOffset + 100 * goodOffset + 150, yOffset + 60, FONT_NORMAL_GREEN);
 			textWidth += lang_text_draw(47, 11,
 				xOffset + 100 * goodOffset + 148 + textWidth, yOffset + 60, FONT_NORMAL_GREEN);
-			Widget_Text_drawNumber(tradeMax, '@', "",
+			text_draw_number(tradeMax, '@', "",
 				xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 60, FONT_NORMAL_GREEN);
 			goodOffset++;
 		}

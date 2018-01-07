@@ -115,7 +115,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 			baseOffsetX + 48, baseOffsetY + 82 + 44 * i);
 		lang_text_draw(138, m->legion_id,
 			baseOffsetX + 100, baseOffsetY + 83 + 44 * i, FONT_NORMAL_WHITE);
-		int width = Widget_Text_drawNumber(m->num_figures, '@', " ",
+		int width = text_draw_number(m->num_figures, '@', " ",
 			baseOffsetX + 100, baseOffsetY + 100 + 44 * i, FONT_NORMAL_GREEN);
 		switch (m->figure_type) {
 			case FIGURE_FORT_LEGIONARY:

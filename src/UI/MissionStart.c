@@ -202,8 +202,8 @@ void UI_MissionStart_Briefing_drawBackground()
 	int yOffset = Data_Screen.offset640x480.y + 32;
 	
 	outer_panel_draw(xOffset, yOffset, 38, 27);
-	Widget_Text_draw(lang_get_message(textId)->title.text, xOffset + 16, yOffset + 16, FONT_LARGE_BLACK, 0);
-	Widget_Text_draw(lang_get_message(textId)->subtitle.text, xOffset + 16, yOffset + 46, FONT_NORMAL_BLACK, 0);
+	text_draw(lang_get_message(textId)->title.text, xOffset + 16, yOffset + 16, FONT_LARGE_BLACK, 0);
+	text_draw(lang_get_message(textId)->subtitle.text, xOffset + 16, yOffset + 46, FONT_NORMAL_BLACK, 0);
 
 	lang_text_draw(62, 7, xOffset + 360, yOffset + 401, FONT_NORMAL_BLACK);
 	if (UI_Window_getId() == Window_MissionBriefingInitial && campaignHasChoice[scenario_campaign_rank()]) {
@@ -219,7 +219,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 15, 1);
 		int width = lang_text_draw(62, 11, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(scenario_criteria_population(), '@', " ",
+		text_draw_number(scenario_criteria_population(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	if (scenario_criteria_culture_enabled()) {
@@ -228,7 +228,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 15, 1);
 		int width = lang_text_draw(62, 12, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(scenario_criteria_culture(), '@', " ",
+		text_draw_number(scenario_criteria_culture(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	if (scenario_criteria_prosperity_enabled()) {
@@ -237,7 +237,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 15, 1);
 		int width = lang_text_draw(62, 13, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(scenario_criteria_prosperity(), '@', " ",
+		text_draw_number(scenario_criteria_prosperity(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	if (scenario_criteria_peace_enabled()) {
@@ -246,7 +246,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 15, 1);
 		int width = lang_text_draw(62, 14, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(scenario_criteria_peace(), '@', " ",
+		text_draw_number(scenario_criteria_peace(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	if (scenario_criteria_favor_enabled()) {
@@ -255,7 +255,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 15, 1);
 		int width = lang_text_draw(62, 15, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(scenario_criteria_favor(), '@', " ",
+		text_draw_number(scenario_criteria_favor(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	int immediateGoalText = tutorial_get_immediate_goal_text();

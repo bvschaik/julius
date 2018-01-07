@@ -40,7 +40,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	} else {
 		width += lang_text_draw(53, 6,
 			baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
-		Widget_Text_drawNumber(scenario_criteria_population(), '@', ")",
+		text_draw_number(scenario_criteria_population(), '@', ")",
 			baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
 	}
 
@@ -52,13 +52,13 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		110, 66, focusButtonId == 1);
 	lang_text_draw_centered(53, 1, baseOffsetX + 80, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumberCentered(Data_CityInfo.ratingCulture,
+	text_draw_number_centered(Data_CityInfo.ratingCulture,
 		baseOffsetX + 80, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (scenario_criteria_culture_enabled()) {
-		width = Widget_Text_drawNumber(scenario_criteria_culture(), '@', " ",
+		width = text_draw_number(scenario_criteria_culture(), '@', " ",
 			baseOffsetX + 85, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	} else {
-		width = Widget_Text_drawNumber(0, '@', " ",
+		width = text_draw_number(0, '@', " ",
 			baseOffsetX + 85, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	}
 	lang_text_draw(53, 5, baseOffsetX + 85 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
@@ -72,13 +72,13 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		110, 66, focusButtonId == 2);
 	lang_text_draw_centered(53, 2, baseOffsetX + 200, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumberCentered(Data_CityInfo.ratingProsperity,
+	text_draw_number_centered(Data_CityInfo.ratingProsperity,
 		baseOffsetX + 200, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (scenario_criteria_prosperity_enabled()) {
-		width = Widget_Text_drawNumber(scenario_criteria_prosperity(), '@', " ",
+		width = text_draw_number(scenario_criteria_prosperity(), '@', " ",
 			baseOffsetX + 205, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	} else {
-		width = Widget_Text_drawNumber(0, '@', " ",
+		width = text_draw_number(0, '@', " ",
 			baseOffsetX + 205, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	}
 	lang_text_draw(53, 5, baseOffsetX + 205 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
@@ -92,13 +92,13 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		110, 66, focusButtonId == 3);
 	lang_text_draw_centered(53, 3, baseOffsetX + 320, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumberCentered(Data_CityInfo.ratingPeace,
+	text_draw_number_centered(Data_CityInfo.ratingPeace,
 		baseOffsetX + 320, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (scenario_criteria_peace_enabled()) {
-		width = Widget_Text_drawNumber(scenario_criteria_peace(), '@', " ",
+		width = text_draw_number(scenario_criteria_peace(), '@', " ",
 			baseOffsetX + 325, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	} else {
-		width = Widget_Text_drawNumber(0, '@', " ",
+		width = text_draw_number(0, '@', " ",
 			baseOffsetX + 325, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	}
 	lang_text_draw(53, 5, baseOffsetX + 325 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
@@ -112,13 +112,13 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		110, 66, focusButtonId == 4);
 	lang_text_draw_centered(53, 4, baseOffsetX + 440, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumberCentered(Data_CityInfo.ratingFavor,
+	text_draw_number_centered(Data_CityInfo.ratingFavor,
 		baseOffsetX + 440, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (scenario_criteria_favor_enabled()) {
-		width = Widget_Text_drawNumber(scenario_criteria_favor(), '@', " ",
+		width = text_draw_number(scenario_criteria_favor(), '@', " ",
 			baseOffsetX + 445, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	} else {
-		width = Widget_Text_drawNumber(0, '@', " ",
+		width = text_draw_number(0, '@', " ",
 			baseOffsetX + 445, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	}
 	lang_text_draw(53, 5, baseOffsetX + 445 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);

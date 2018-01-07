@@ -69,7 +69,7 @@ void UI_SendGiftToCaesarDialog_drawForeground()
 		font_t font = focusButtonId == 1 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
 		int width = lang_text_draw(52, 51 + Data_CityInfo.giftId_modest,
 			baseOffsetX + 224, baseOffsetY + 218, font);
-		Widget_Text_drawMoney(Data_CityInfo.giftCost_modest,
+		text_draw_money(Data_CityInfo.giftCost_modest,
 			baseOffsetX + 224 + width, baseOffsetY + 218, font);
 	} else {
 		lang_text_draw_multiline(52, 70,
@@ -81,7 +81,7 @@ void UI_SendGiftToCaesarDialog_drawForeground()
 		font_t font = focusButtonId == 2 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
 		int width = lang_text_draw(52, 55 + Data_CityInfo.giftId_generous,
 			baseOffsetX + 224, baseOffsetY + 238, font);
-		Widget_Text_drawMoney(Data_CityInfo.giftCost_generous,
+		text_draw_money(Data_CityInfo.giftCost_generous,
 			baseOffsetX + 224 + width, baseOffsetY + 238, font);
 	}
 	if (Data_CityInfo.giftCost_lavish <= Data_CityInfo.personalSavings) {
@@ -90,7 +90,7 @@ void UI_SendGiftToCaesarDialog_drawForeground()
 		font_t font = focusButtonId == 3 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
 		int width = lang_text_draw(52, 59 + Data_CityInfo.giftId_lavish,
 			baseOffsetX + 224, baseOffsetY + 258, font);
-		Widget_Text_drawMoney(Data_CityInfo.giftCost_lavish,
+		text_draw_money(Data_CityInfo.giftCost_lavish,
 			baseOffsetX + 224 + width, baseOffsetY + 258, font);
 	}
 	// can give at least one type

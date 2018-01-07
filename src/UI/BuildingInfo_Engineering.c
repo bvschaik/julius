@@ -63,7 +63,7 @@ void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c)
 		int pctDone = calc_percentage(b->data.industry.progress, 160);
 		int width = lang_text_draw(100, 2,
 			c->xOffset + 32, c->yOffset + 56, FONT_NORMAL_BLACK);
-		width += Widget_Text_drawPercentage(pctDone,
+		width += text_draw_percentage(pctDone,
 			c->xOffset + 32 + width, c->yOffset + 56, FONT_NORMAL_BLACK);
 		lang_text_draw(100, 3,
 			c->xOffset + 32 + width, c->yOffset + 56, FONT_NORMAL_BLACK);

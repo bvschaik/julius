@@ -106,7 +106,7 @@ void UI_Advisor_Trade_drawForeground()
 			button_border_draw(baseOffsetX + 80, offsetY + 54, 480, 24, 1);
 		}
 		lang_text_draw(23, resource, baseOffsetX + 88, offsetY + 61, FONT_NORMAL_WHITE);
-		Widget_Text_drawNumberCentered(Data_CityInfo.resourceStored[resource],
+		text_draw_number_centered(Data_CityInfo.resourceStored[resource],
 			baseOffsetX + 180, offsetY + 61, 100, FONT_NORMAL_WHITE);
 		if (Data_CityInfo.resourceIndustryMothballed[resource]) {
 			lang_text_draw(18, 5, baseOffsetX + 300, offsetY + 61, FONT_NORMAL_WHITE);
@@ -117,7 +117,7 @@ void UI_Advisor_Trade_drawForeground()
 			lang_text_draw(54, 5, baseOffsetX + 380, offsetY + 61, FONT_NORMAL_WHITE);
 		} else if (Data_CityInfo.resourceTradeStatus[resource] == TRADE_STATUS_EXPORT) {
 			lang_text_draw(54, 6, baseOffsetX + 380, offsetY + 61, FONT_NORMAL_WHITE);
-			Widget_Text_drawNumber(Data_CityInfo.resourceTradeExportOver[resource], '@', " ",
+			text_draw_number(Data_CityInfo.resourceTradeExportOver[resource], '@', " ",
 				baseOffsetX + 500, offsetY + 61, FONT_NORMAL_WHITE);
 		}
 	}
@@ -179,9 +179,9 @@ void UI_TradePricesDialog_drawBackground()
 		int graphicOffset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
 		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
 			baseOffsetX + 126 + 30 * i, baseOffsetY + 194);
-		Widget_Text_drawNumberCentered(trade_price_buy(i),
+		text_draw_number_centered(trade_price_buy(i),
 			baseOffsetX + 120 + 30 * i, baseOffsetY + 229, 30, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(trade_price_sell(i),
+		text_draw_number_centered(trade_price_sell(i),
 			baseOffsetX + 120 + 30 * i, baseOffsetY + 254, 30, FONT_SMALL_PLAIN);
 	}
 	lang_text_draw_centered(13, 1, baseOffsetX + 16, baseOffsetY + 296, 608, FONT_NORMAL_BLACK);
@@ -245,7 +245,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 		if (building_count_industry_total(selectedResourceId) <= 0) {
 			lang_text_draw(54, 7, baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
 		} else if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId] == 1) {
-			int width = Widget_Text_drawNumber(
+			int width = text_draw_number(
 				totalBuildings, '@', " ",
 				baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			if (totalBuildings == 1) {
@@ -255,7 +255,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 			}
 		} else if (totalBuildings == activeBuildings) {
 			// not mothballed, all working
-			int width = Widget_Text_drawNumber(
+			int width = text_draw_number(
 				totalBuildings, '@', " ",
 				baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			if (totalBuildings == 1) {
@@ -265,11 +265,11 @@ void UI_ResourceSettingsDialog_drawForeground()
 			}
 		} else {
 			// not mothballed, some working
-			int width = Widget_Text_drawNumber(
+			int width = text_draw_number(
 				activeBuildings, '@', " ",
 				baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			width += lang_text_draw(54, 12, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
-			width += Widget_Text_drawNumber(
+			width += text_draw_number(
 				totalBuildings -
 				activeBuildings, '@', " ",
 				baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);

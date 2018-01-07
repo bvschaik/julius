@@ -26,7 +26,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	lang_text_draw(61, 1, 60, 66, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.unemploymentPercentage > 0) {
 		width = lang_text_draw(61, 12, 240, 66, FONT_NORMAL_RED);
-		Widget_Text_drawPercentage(Data_CityInfo.unemploymentPercentage,
+		text_draw_percentage(Data_CityInfo.unemploymentPercentage,
 			240 + width, 66, FONT_NORMAL_RED);
 	} else if (Data_CityInfo.workersNeeded > 0) {
 		width = lang_text_draw(61, 13, 240, 66, FONT_NORMAL_RED);
@@ -42,11 +42,11 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
     int treasury = city_finance_treasury();
 	if (treasury > Data_CityInfo.financeBalanceLastYear) {
 		width = lang_text_draw(61, 15, 240, 86, FONT_NORMAL_GREEN);
-		Widget_Text_drawMoney(treasury - Data_CityInfo.financeBalanceLastYear,
+		text_draw_money(treasury - Data_CityInfo.financeBalanceLastYear,
 			240 + width, 86, FONT_NORMAL_GREEN);
 	} else if (treasury < Data_CityInfo.financeBalanceLastYear) {
 		width = lang_text_draw(61, 16, 240, 86, FONT_NORMAL_RED);
-		Widget_Text_drawMoney(Data_CityInfo.financeBalanceLastYear - treasury,
+		text_draw_money(Data_CityInfo.financeBalanceLastYear - treasury,
 			240 + width, 86, FONT_NORMAL_RED);
 	} else {
 		lang_text_draw(61, 17, 240, 86, FONT_NORMAL_GREEN);

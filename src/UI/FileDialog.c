@@ -112,13 +112,13 @@ void UI_FileDialog_drawForeground()
 		}
 		strcpy(file, savedGames->files[scrollPosition + i]);
 		file_remove_extension(file);
-		Widget_Text_draw(string_from_ascii(file), baseOffsetX + 160, baseOffsetY + 130 + 16 * i, font, 0);
+		text_draw(string_from_ascii(file), baseOffsetX + 160, baseOffsetY + 130 + 16 * i, font, 0);
 	}
 
 	image_buttons_draw(baseOffsetX, baseOffsetY, imageButtons, 4);
-	Widget_Text_captureCursor(keyboard_cursor_position());
-	Widget_Text_draw(string_from_ascii(saved_game), baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
-	Widget_Text_drawCursor(baseOffsetX + 160, baseOffsetY + 91, keyboard_is_insert());
+	text_capture_cursor(keyboard_cursor_position());
+	text_draw(string_from_ascii(saved_game), baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
+	text_draw_cursor(baseOffsetX + 160, baseOffsetY + 91, keyboard_is_insert());
 	drawScrollbarDot();
 }
 

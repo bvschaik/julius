@@ -57,14 +57,14 @@ void UI_DonateToCityDialog_drawBackground()
 
 	inner_panel_draw(baseOffsetX + 112, baseOffsetY + 208, 26, 4);
 
-	Widget_Text_drawNumberCentered(0, baseOffsetX + 124, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
-	Widget_Text_drawNumberCentered(500, baseOffsetX + 204, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
-	Widget_Text_drawNumberCentered(2000, baseOffsetX + 284, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
-	Widget_Text_drawNumberCentered(5000, baseOffsetX + 364, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
+	text_draw_number_centered(0, baseOffsetX + 124, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
+	text_draw_number_centered(500, baseOffsetX + 204, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
+	text_draw_number_centered(2000, baseOffsetX + 284, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
+	text_draw_number_centered(5000, baseOffsetX + 364, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
 	lang_text_draw_centered(52, 19, baseOffsetX + 444, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
 
 	lang_text_draw(52, 17, baseOffsetX + 128, baseOffsetY + 248, FONT_NORMAL_WHITE);
-	Widget_Text_drawNumber(Data_CityInfo.donateAmount, '@', " ",
+	text_draw_number(Data_CityInfo.donateAmount, '@', " ",
 		baseOffsetX + 316, baseOffsetY + 248, FONT_NORMAL_WHITE);
 
 	lang_text_draw_centered(13, 4,

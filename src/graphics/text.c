@@ -19,7 +19,7 @@ static struct {
     int yOffset;
 } inputCursor;
 
-void Widget_Text_captureCursor(int cursor_position)
+void text_capture_cursor(int cursor_position)
 {
     inputCursor.capture = 1;
     inputCursor.seen = 0;
@@ -28,7 +28,7 @@ void Widget_Text_captureCursor(int cursor_position)
     inputCursor.cursor_position = cursor_position;
 }
 
-void Widget_Text_drawCursor(int xOffset, int yOffset, int isInsert)
+void text_draw_cursor(int xOffset, int yOffset, int isInsert)
 {
     inputCursor.capture = 0;
     time_millis curr = time_get_millis();
@@ -62,7 +62,7 @@ void Widget_Text_drawCursor(int xOffset, int yOffset, int isInsert)
     }
 }
 
-int Widget_Text_getWidth(const uint8_t *str, font_t font)
+int text_get_width(const uint8_t *str, font_t font)
 {
     const font_definition *def = font_definition_for(font);
     int maxlen = 10000;
@@ -125,13 +125,13 @@ static int getWordWidth(const uint8_t *str, font_t font, int *outNumChars)
     return width;
 }
 
-void Widget_Text_drawCentered(const uint8_t *str, int x, int y, int boxWidth, font_t font, color_t color)
+void text_draw_centered(const uint8_t *str, int x, int y, int boxWidth, font_t font, color_t color)
 {
-    int offset = (boxWidth - Widget_Text_getWidth(str, font)) / 2;
+    int offset = (boxWidth - text_get_width(str, font)) / 2;
     if (offset < 0) {
         offset = 0;
     }
-    Widget_Text_draw(str, offset + x, y, font, color);
+    text_draw(str, offset + x, y, font, color);
 }
 
 static int drawCharacter(const font_definition *def, unsigned int c, int x, int y, color_t color)
@@ -149,7 +149,7 @@ static int drawCharacter(const font_definition *def, unsigned int c, int x, int 
     return image_get(graphicId)->width;
 }
 
-int Widget_Text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
+int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
 {
     const font_definition *def = font_definition_for(font);
 
@@ -205,49 +205,49 @@ static void numberToString(uint8_t *str, int value, char prefix, const char *pos
     str[offset] = 0;
 }
 
-int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font)
+int text_draw_number(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font)
 {
     uint8_t str[100];
     numberToString(str, value, prefix, postfix);
-    return Widget_Text_draw(str, xOffset, yOffset, font, 0);
+    return text_draw(str, xOffset, yOffset, font, 0);
 }
 
-int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font, color_t color)
+int text_draw_number_colored(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font, color_t color)
 {
     uint8_t str[100];
     numberToString(str, value, prefix, postfix);
-    return Widget_Text_draw(str, xOffset, yOffset, font, color);
+    return text_draw(str, xOffset, yOffset, font, color);
 }
 
-int Widget_Text_drawMoney(int value, int xOffset, int yOffset, font_t font)
+int text_draw_money(int value, int xOffset, int yOffset, font_t font)
 {
     uint8_t str[100];
     numberToString(str, value, '@', " Dn");
-    return Widget_Text_draw(str, xOffset, yOffset, font, 0);
+    return text_draw(str, xOffset, yOffset, font, 0);
 }
 
-int Widget_Text_drawPercentage(int value, int xOffset, int yOffset, font_t font)
+int text_draw_percentage(int value, int xOffset, int yOffset, font_t font)
 {
     uint8_t str[100];
     numberToString(str, value, '@', "%");
-    return Widget_Text_draw(str, xOffset, yOffset, font, 0);
+    return text_draw(str, xOffset, yOffset, font, 0);
 }
 
-void Widget_Text_drawNumberCentered(int value, int xOffset, int yOffset, int boxWidth, font_t font)
+void text_draw_number_centered(int value, int xOffset, int yOffset, int boxWidth, font_t font)
 {
     uint8_t str[100];
     numberToString(str, value, '@', " ");
-    Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, 0);
+    text_draw_centered(str, xOffset, yOffset, boxWidth, font, 0);
 }
 
-void Widget_Text_drawNumberCenteredColored(int value, int xOffset, int yOffset, int boxWidth, font_t font, color_t color)
+void text_draw_number_centered_colored(int value, int xOffset, int yOffset, int boxWidth, font_t font, color_t color)
 {
     uint8_t str[100];
     numberToString(str, value, '@', " ");
-    Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, color);
+    text_draw_centered(str, xOffset, yOffset, boxWidth, font, color);
 }
 
-int Widget_Text_drawMultiline(const uint8_t *str, int xOffset, int yOffset, int boxWidth, font_t font)
+int text_draw_multiline(const uint8_t *str, int xOffset, int yOffset, int boxWidth, font_t font)
 {
     int lineHeight;
     switch (font) {
@@ -299,7 +299,7 @@ int Widget_Text_drawMultiline(const uint8_t *str, int xOffset, int yOffset, int 
                 }
             }
         }
-        Widget_Text_draw(tmp_line, xOffset, y, font, 0);
+        text_draw(tmp_line, xOffset, y, font, 0);
         y += lineHeight + 5;
     }
     return y - yOffset;

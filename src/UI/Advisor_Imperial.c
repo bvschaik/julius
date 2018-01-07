@@ -47,7 +47,7 @@ static void draw_request(int index, const scenario_request *request)
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     button_border_draw(baseOffsetX + 38, baseOffsetY + 96 + 42 * index, 560, 40, 0);
-    Widget_Text_drawNumber(request->amount, '@', " ",
+    text_draw_number(request->amount, '@', " ",
         baseOffsetX + 40, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
     int resourceOffset = request->resource +
         resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
@@ -63,7 +63,7 @@ static void draw_request(int index, const scenario_request *request)
     if (request->resource == RESOURCE_DENARII) {
         // request for money
         int treasury = city_finance_treasury();
-        width = Widget_Text_drawNumber(treasury, '@', " ",
+        width = text_draw_number(treasury, '@', " ",
             baseOffsetX + 40, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
         width += lang_text_draw(52, 44,
             baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
@@ -77,7 +77,7 @@ static void draw_request(int index, const scenario_request *request)
     } else {
         // normal goods request
         int resourceId = request->resource;
-        width = Widget_Text_drawNumber(Data_CityInfo.resourceStored[resourceId], '@', " ",
+        width = text_draw_number(Data_CityInfo.resourceStored[resourceId], '@', " ",
             baseOffsetX + 40, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
         width += lang_text_draw(52, 43,
             baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
@@ -102,10 +102,10 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 2, baseOffsetX + 10, baseOffsetY + 10);
 
-	Widget_Text_draw(scenario_player_name(), baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
+	text_draw(scenario_player_name(), baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
 
 	int width = lang_text_draw(52, 0, baseOffsetX + 60, baseOffsetY + 44, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumber(Data_CityInfo.ratingFavor, '@', " ", baseOffsetX + 60 + width, baseOffsetY + 44, FONT_NORMAL_BLACK);
+	text_draw_number(Data_CityInfo.ratingFavor, '@', " ", baseOffsetX + 60 + width, baseOffsetY + 44, FONT_NORMAL_BLACK);
 
 	lang_text_draw_multiline(52, Data_CityInfo.ratingFavor / 5 + 22,
 		baseOffsetX + 60, baseOffsetY + 60, 544, FONT_NORMAL_BLACK);
@@ -152,7 +152,7 @@ void UI_Advisor_Imperial_drawForeground()
 	
 	int width = lang_text_draw(52, 1,
 		baseOffsetX + 72, baseOffsetY + 372, FONT_NORMAL_WHITE);
-	Widget_Text_drawMoney(Data_CityInfo.personalSavings,
+	text_draw_money(Data_CityInfo.personalSavings,
 		baseOffsetX + 80 + width, baseOffsetY + 372, FONT_NORMAL_WHITE);
 
 	button_border_draw(baseOffsetX + 320, baseOffsetY + 367,
@@ -163,7 +163,7 @@ void UI_Advisor_Imperial_drawForeground()
 		500, 20, focusButtonId == 2);
 	width = lang_text_draw(52, Data_CityInfo.salaryRank + 4,
 		baseOffsetX + 120, baseOffsetY + 398, FONT_NORMAL_WHITE);
-	width += Widget_Text_drawNumber(Data_CityInfo.salaryAmount, '@', " ",
+	width += text_draw_number(Data_CityInfo.salaryAmount, '@', " ",
 		baseOffsetX + 120 + width, baseOffsetY + 398, FONT_NORMAL_WHITE);
 	lang_text_draw(52, 3, baseOffsetX + 120 + width, baseOffsetY + 398, FONT_NORMAL_WHITE);
 

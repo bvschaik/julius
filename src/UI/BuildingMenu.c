@@ -181,7 +181,7 @@ static void drawMenuButtons()
 			cost = 0;
 		}
 		if (cost) {
-			Widget_Text_drawMoney(cost,
+			text_draw_money(cost,
 				xOffset - 82, menu.yOffset + 114 + 24 * i, FONT_NORMAL_GREEN);
 		}
 	}

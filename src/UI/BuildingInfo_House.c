@@ -40,17 +40,17 @@ static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)
 {
 	building *b = building_get(c->buildingId);
 	Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 13, c->xOffset + 34, yOffset + 4);
-	int width = Widget_Text_drawNumber(b->housePopulation, '@', " ",
+	int width = text_draw_number(b->housePopulation, '@', " ",
 		c->xOffset + 50, yOffset + 14, FONT_SMALL_BLACK);
 	width += lang_text_draw(127, 20, c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
 	
 	if (b->housePopulationRoom < 0) {
-		width += Widget_Text_drawNumber(-b->housePopulationRoom, '@', " ",
+		width += text_draw_number(-b->housePopulationRoom, '@', " ",
 			c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
 		lang_text_draw(127, 21, c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
 	} else if (b->housePopulationRoom > 0) {
 		width += lang_text_draw(127, 22, c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
-		Widget_Text_drawNumber(b->housePopulationRoom, '@', " ",
+		text_draw_number(b->housePopulationRoom, '@', " ",
 			c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
 	}
 }
@@ -115,23 +115,23 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 		// wheat
 		Graphics_drawImage(resourceGraphic + RESOURCE_WHEAT,
 			c->xOffset + 32, c->yOffset + 234);
-		Widget_Text_drawNumber(b->data.house.inventory[INVENTORY_WHEAT], '@', " ",
+		text_draw_number(b->data.house.inventory[INVENTORY_WHEAT], '@', " ",
 			c->xOffset + 64, c->yOffset + 238, FONT_SMALL_BLACK);
 		// vegetables
 		Graphics_drawImage(resourceGraphic + RESOURCE_VEGETABLES,
 			c->xOffset + 142, c->yOffset + 234);
-		Widget_Text_drawNumber(b->data.house.inventory[INVENTORY_VEGETABLES], '@', " ",
+		text_draw_number(b->data.house.inventory[INVENTORY_VEGETABLES], '@', " ",
 			c->xOffset + 174, c->yOffset + 238, FONT_SMALL_BLACK);
 		// fruit
 		Graphics_drawImage(resourceGraphic + RESOURCE_FRUIT,
 			c->xOffset + 252, c->yOffset + 234);
-		Widget_Text_drawNumber(b->data.house.inventory[INVENTORY_FRUIT], '@', " ",
+		text_draw_number(b->data.house.inventory[INVENTORY_FRUIT], '@', " ",
 			c->xOffset + 284, c->yOffset + 238, FONT_SMALL_BLACK);
 		// meat/fish
 		Graphics_drawImage(resourceGraphic + RESOURCE_MEAT +
 			resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
 			c->xOffset + 362, c->yOffset + 234);
-		Widget_Text_drawNumber(b->data.house.inventory[INVENTORY_MEAT], '@', " ",
+		text_draw_number(b->data.house.inventory[INVENTORY_MEAT], '@', " ",
 			c->xOffset + 394, c->yOffset + 238, FONT_SMALL_BLACK);
 	} else {
 		// no food necessary
@@ -142,22 +142,22 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 	// pottery
 	Graphics_drawImage(resourceGraphic + RESOURCE_POTTERY,
 		c->xOffset + 32, c->yOffset + 274);
-	Widget_Text_drawNumber(b->data.house.inventory[INVENTORY_POTTERY], '@', " ",
+	text_draw_number(b->data.house.inventory[INVENTORY_POTTERY], '@', " ",
 		c->xOffset + 64, c->yOffset + 278, FONT_SMALL_BLACK);
 	// furniture
 	Graphics_drawImage(resourceGraphic + RESOURCE_FURNITURE,
 		c->xOffset + 142, c->yOffset + 274);
-	Widget_Text_drawNumber(b->data.house.inventory[INVENTORY_FURNITURE], '@', " ",
+	text_draw_number(b->data.house.inventory[INVENTORY_FURNITURE], '@', " ",
 		c->xOffset + 174, c->yOffset + 278, FONT_SMALL_BLACK);
 	// oil
 	Graphics_drawImage(resourceGraphic + RESOURCE_OIL,
 		c->xOffset + 252, c->yOffset + 274);
-	Widget_Text_drawNumber(b->data.house.inventory[INVENTORY_OIL], '@', " ",
+	text_draw_number(b->data.house.inventory[INVENTORY_OIL], '@', " ",
 		c->xOffset + 284, c->yOffset + 278, FONT_SMALL_BLACK);
 	// wine
 	Graphics_drawImage(resourceGraphic + RESOURCE_WINE,
 		c->xOffset + 362, c->yOffset + 274);
-	Widget_Text_drawNumber(b->data.house.inventory[INVENTORY_WINE], '@', " ",
+	text_draw_number(b->data.house.inventory[INVENTORY_WINE], '@', " ",
 		c->xOffset + 394, c->yOffset + 278, FONT_SMALL_BLACK);
 	
 	if (b->data.house.evolveTextId == 62) {
@@ -165,7 +165,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 			c->xOffset + 32, c->yOffset + 60, FONT_NORMAL_BLACK);
 		width += lang_text_draw_colored(41, building_get(c->worstDesirabilityBuildingId)->type,
 			c->xOffset + 32 + width, c->yOffset + 60, FONT_NORMAL_PLAIN, COLOR_RED);
-		Widget_Text_draw((uint8_t*)")", c->xOffset + 32 + width, c->yOffset + 60, FONT_NORMAL_BLACK, 0);
+		text_draw((uint8_t*)")", c->xOffset + 32 + width, c->yOffset + 60, FONT_NORMAL_BLACK, 0);
 		lang_text_draw_multiline(127, 41 + b->data.house.evolveTextId,
 			c->xOffset + 32, c->yOffset + 76, 16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	} else {

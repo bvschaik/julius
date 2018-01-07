@@ -83,19 +83,19 @@ void UI_SoundOptions_drawForeground()
 	
 	const set_sound *music = setting_sound(SOUND_MUSIC);
 	lang_text_draw_centered(46, music->enabled ? 2 : 1, 64, 166, 224, FONT_NORMAL_GREEN);
-	Widget_Text_drawPercentage(music->volume, 374, 166, FONT_NORMAL_PLAIN);
+	text_draw_percentage(music->volume, 374, 166, FONT_NORMAL_PLAIN);
 	
 	const set_sound *speech = setting_sound(SOUND_SPEECH);
 	lang_text_draw_centered(46, speech->enabled ? 4 : 3, 64, 196, 224, FONT_NORMAL_GREEN);
-	Widget_Text_drawPercentage(speech->volume, 374, 196, FONT_NORMAL_PLAIN);
+	text_draw_percentage(speech->volume, 374, 196, FONT_NORMAL_PLAIN);
 	
 	const set_sound *effects = setting_sound(SOUND_EFFECTS);
 	lang_text_draw_centered(46, effects->enabled ? 6 : 5, 64, 226, 224, FONT_NORMAL_GREEN);
-	Widget_Text_drawPercentage(effects->volume, 374, 226, FONT_NORMAL_PLAIN);
+	text_draw_percentage(effects->volume, 374, 226, FONT_NORMAL_PLAIN);
 	
 	const set_sound *city = setting_sound(SOUND_CITY);
 	lang_text_draw_centered(46, city->enabled ? 8 : 7, 64, 256, 224, FONT_NORMAL_GREEN);
-	Widget_Text_drawPercentage(city->volume, 374, 256, FONT_NORMAL_PLAIN);
+	text_draw_percentage(city->volume, 374, 256, FONT_NORMAL_PLAIN);
 
 	arrow_buttons_draw(208, 60, arrowButtons, 8);
 
