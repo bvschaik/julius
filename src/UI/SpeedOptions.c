@@ -15,8 +15,8 @@ static void arrowButtonGame(int param1, int param2);
 static void arrowButtonScroll(int param1, int param2);
 
 static generic_button buttons[] = {
-	{144, 232, 336, 252, GB_IMMEDIATE, buttonOk, Widget_Button_doNothing, 1, 0},
-	{144, 262, 336, 282, GB_IMMEDIATE, buttonCancel, Widget_Button_doNothing, 1, 0},
+	{144, 232, 336, 252, GB_IMMEDIATE, buttonOk, button_none, 1, 0},
+	{144, 262, 336, 282, GB_IMMEDIATE, buttonCancel, button_none, 1, 0},
 };
 
 static arrow_button arrowButtons[] = {

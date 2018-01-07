@@ -14,10 +14,10 @@ static void buttonClick(int param1, int param2);
 static int focusButtonId;
 
 static generic_button buttons[] = {
-	{192, 100, 448, 125, GB_IMMEDIATE, buttonClick, Widget_Button_doNothing, 1, 0},
-	{192, 140, 448, 165, GB_IMMEDIATE, buttonClick, Widget_Button_doNothing, 2, 0},
-	{192, 180, 448, 205, GB_IMMEDIATE, buttonClick, Widget_Button_doNothing, 3, 0},
-	{192, 220, 448, 245, GB_IMMEDIATE, buttonClick, Widget_Button_doNothing, 4, 0},
+	{192, 100, 448, 125, GB_IMMEDIATE, buttonClick, button_none, 1, 0},
+	{192, 140, 448, 165, GB_IMMEDIATE, buttonClick, button_none, 2, 0},
+	{192, 180, 448, 205, GB_IMMEDIATE, buttonClick, button_none, 3, 0},
+	{192, 220, 448, 245, GB_IMMEDIATE, buttonClick, button_none, 4, 0},
 };
 
 void UI_MainMenu_drawBackground()

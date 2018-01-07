@@ -15,28 +15,28 @@ static void buttonMenuItem(int index, int param2);
 static void buttonSubmenuItem(int index, int param2);
 
 static generic_button menuCustomButtons[] = {
-	{0, 0, 160, 24, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 0, 0},
-	{0, 24, 160, 48, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 1, 0},
-	{0, 48, 160, 72, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 2, 0},
-	{0, 72, 160, 96, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 3, 0},
-	{0, 96, 160, 120, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 4, 0},
-	{0, 120, 160, 144, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 5, 0},
-	{0, 144, 160, 168, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 6, 0},
-	{0, 168, 160, 192, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 7, 0},
-	{0, 192, 160, 216, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 8, 0},
-	{0, 216, 160, 240, GB_IMMEDIATE, buttonMenuItem, Widget_Button_doNothing, 9, 0},
+	{0, 0, 160, 24, GB_IMMEDIATE, buttonMenuItem, button_none, 0, 0},
+	{0, 24, 160, 48, GB_IMMEDIATE, buttonMenuItem, button_none, 1, 0},
+	{0, 48, 160, 72, GB_IMMEDIATE, buttonMenuItem, button_none, 2, 0},
+	{0, 72, 160, 96, GB_IMMEDIATE, buttonMenuItem, button_none, 3, 0},
+	{0, 96, 160, 120, GB_IMMEDIATE, buttonMenuItem, button_none, 4, 0},
+	{0, 120, 160, 144, GB_IMMEDIATE, buttonMenuItem, button_none, 5, 0},
+	{0, 144, 160, 168, GB_IMMEDIATE, buttonMenuItem, button_none, 6, 0},
+	{0, 168, 160, 192, GB_IMMEDIATE, buttonMenuItem, button_none, 7, 0},
+	{0, 192, 160, 216, GB_IMMEDIATE, buttonMenuItem, button_none, 8, 0},
+	{0, 216, 160, 240, GB_IMMEDIATE, buttonMenuItem, button_none, 9, 0},
 };
 static generic_button submenuCustomButtons[] = {
-	{0, 0, 160, 24, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 0, 0},
-	{0, 24, 160, 48, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 1, 0},
-	{0, 48, 160, 72, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 2, 0},
-	{0, 72, 160, 96, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 3, 0},
-	{0, 96, 160, 120, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 4, 0},
-	{0, 120, 160, 144, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 5, 0},
-	{0, 144, 160, 168, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 6, 0},
-	{0, 168, 160, 192, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 7, 0},
-	{0, 192, 160, 216, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 8, 0},
-	{0, 216, 160, 240, GB_IMMEDIATE, buttonSubmenuItem, Widget_Button_doNothing, 9, 0},
+	{0, 0, 160, 24, GB_IMMEDIATE, buttonSubmenuItem, button_none, 0, 0},
+	{0, 24, 160, 48, GB_IMMEDIATE, buttonSubmenuItem, button_none, 1, 0},
+	{0, 48, 160, 72, GB_IMMEDIATE, buttonSubmenuItem, button_none, 2, 0},
+	{0, 72, 160, 96, GB_IMMEDIATE, buttonSubmenuItem, button_none, 3, 0},
+	{0, 96, 160, 120, GB_IMMEDIATE, buttonSubmenuItem, button_none, 4, 0},
+	{0, 120, 160, 144, GB_IMMEDIATE, buttonSubmenuItem, button_none, 5, 0},
+	{0, 144, 160, 168, GB_IMMEDIATE, buttonSubmenuItem, button_none, 6, 0},
+	{0, 168, 160, 192, GB_IMMEDIATE, buttonSubmenuItem, button_none, 7, 0},
+	{0, 192, 160, 216, GB_IMMEDIATE, buttonSubmenuItem, button_none, 8, 0},
+	{0, 216, 160, 240, GB_IMMEDIATE, buttonSubmenuItem, button_none, 9, 0},
 };
 
 static int menuIdToOverlayId[8] = {0, 2, 1, 3, 5, 6, 7, 4};

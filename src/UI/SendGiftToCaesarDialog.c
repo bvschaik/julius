@@ -11,11 +11,11 @@ static void buttonSendGift(int param1, int param2);
 static void buttonCancel(int param1, int param2);
 
 static generic_button buttons[] = {
-	{208, 213, 528, 233, GB_IMMEDIATE, buttonSetGift, Widget_Button_doNothing, 1, 0},
-	{208, 233, 528, 253, GB_IMMEDIATE, buttonSetGift, Widget_Button_doNothing, 2, 0},
-	{208, 253, 528, 273, GB_IMMEDIATE, buttonSetGift, Widget_Button_doNothing, 3, 0},
-	{128, 336, 368, 356, GB_IMMEDIATE, buttonSendGift, Widget_Button_doNothing, 0, 0},
-	{400, 336, 560, 356, GB_IMMEDIATE, buttonCancel, Widget_Button_doNothing, 0, 0},
+	{208, 213, 528, 233, GB_IMMEDIATE, buttonSetGift, button_none, 1, 0},
+	{208, 233, 528, 253, GB_IMMEDIATE, buttonSetGift, button_none, 2, 0},
+	{208, 253, 528, 273, GB_IMMEDIATE, buttonSetGift, button_none, 3, 0},
+	{128, 336, 368, 356, GB_IMMEDIATE, buttonSendGift, button_none, 0, 0},
+	{400, 336, 560, 356, GB_IMMEDIATE, buttonCancel, button_none, 0, 0},
 };
 
 static int focusButtonId;

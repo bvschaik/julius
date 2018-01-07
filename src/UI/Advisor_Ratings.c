@@ -11,10 +11,10 @@ static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached
 static void buttonRating(int param1, int param2);
 
 static generic_button ratingButtons[] = {
-	{ 80, 286, 190, 352, GB_IMMEDIATE, buttonRating, Widget_Button_doNothing, 1, 0},
-	{200, 286, 310, 352, GB_IMMEDIATE, buttonRating, Widget_Button_doNothing, 2, 0},
-	{320, 286, 430, 352, GB_IMMEDIATE, buttonRating, Widget_Button_doNothing, 3, 0},
-	{440, 286, 550, 352, GB_IMMEDIATE, buttonRating, Widget_Button_doNothing, 4, 0},
+	{ 80, 286, 190, 352, GB_IMMEDIATE, buttonRating, button_none, 1, 0},
+	{200, 286, 310, 352, GB_IMMEDIATE, buttonRating, button_none, 2, 0},
+	{320, 286, 430, 352, GB_IMMEDIATE, buttonRating, button_none, 3, 0},
+	{440, 286, 550, 352, GB_IMMEDIATE, buttonRating, button_none, 4, 0},
 };
 
 static int focusButtonId;

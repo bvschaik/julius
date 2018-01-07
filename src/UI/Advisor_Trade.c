@@ -27,28 +27,28 @@ static void resourceSettingsToggleTrade(int param1, int param2);
 static void resourceSettingsToggleStockpile(int param1, int param2);
 
 static generic_button resourceButtons[] = {
-	{400, 398, 600, 421, GB_IMMEDIATE, buttonPrices, Widget_Button_doNothing, 1, 0},
-	{100, 398, 300, 421, GB_IMMEDIATE, buttonEmpire, Widget_Button_doNothing, 1, 0},
-	{80, 56, 560, 76, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 0, 0},
-	{80, 78, 560, 98, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 1, 0},
-	{80, 100, 560, 120, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 2, 0},
-	{80, 122, 560, 142, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 3, 0},
-	{80, 144, 560, 164, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 4, 0},
-	{80, 166, 560, 186, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 5, 0},
-	{80, 188, 560, 208, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 6, 0},
-	{80, 210, 560, 230, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 7, 0},
-	{80, 232, 560, 252, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 8, 0},
-	{80, 254, 560, 274, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 9, 0},
-	{80, 276, 560, 296, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 10, 0},
-	{80, 298, 560, 318, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 11, 0},
-	{80, 320, 560, 340, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 12, 0},
-	{80, 342, 560, 362, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 13, 0},
-	{80, 364, 560, 384, GB_IMMEDIATE, buttonResource, Widget_Button_doNothing, 14, 0}
+	{400, 398, 600, 421, GB_IMMEDIATE, buttonPrices, button_none, 1, 0},
+	{100, 398, 300, 421, GB_IMMEDIATE, buttonEmpire, button_none, 1, 0},
+	{80, 56, 560, 76, GB_IMMEDIATE, buttonResource, button_none, 0, 0},
+	{80, 78, 560, 98, GB_IMMEDIATE, buttonResource, button_none, 1, 0},
+	{80, 100, 560, 120, GB_IMMEDIATE, buttonResource, button_none, 2, 0},
+	{80, 122, 560, 142, GB_IMMEDIATE, buttonResource, button_none, 3, 0},
+	{80, 144, 560, 164, GB_IMMEDIATE, buttonResource, button_none, 4, 0},
+	{80, 166, 560, 186, GB_IMMEDIATE, buttonResource, button_none, 5, 0},
+	{80, 188, 560, 208, GB_IMMEDIATE, buttonResource, button_none, 6, 0},
+	{80, 210, 560, 230, GB_IMMEDIATE, buttonResource, button_none, 7, 0},
+	{80, 232, 560, 252, GB_IMMEDIATE, buttonResource, button_none, 8, 0},
+	{80, 254, 560, 274, GB_IMMEDIATE, buttonResource, button_none, 9, 0},
+	{80, 276, 560, 296, GB_IMMEDIATE, buttonResource, button_none, 10, 0},
+	{80, 298, 560, 318, GB_IMMEDIATE, buttonResource, button_none, 11, 0},
+	{80, 320, 560, 340, GB_IMMEDIATE, buttonResource, button_none, 12, 0},
+	{80, 342, 560, 362, GB_IMMEDIATE, buttonResource, button_none, 13, 0},
+	{80, 364, 560, 384, GB_IMMEDIATE, buttonResource, button_none, 14, 0}
 };
 
 static image_button resourceImageButtons[] = {
-	{58, 332, 27, 27, IB_NORMAL, 134, 0, resourceSettingsHelp, Widget_Button_doNothing, 0, 0, 1},
-	{558, 335, 24, 24, IB_NORMAL, 134, 4, resourceSettingsOk, Widget_Button_doNothing, 0, 0, 1}
+	{58, 332, 27, 27, IB_NORMAL, 134, 0, resourceSettingsHelp, button_none, 0, 0, 1},
+	{558, 335, 24, 24, IB_NORMAL, 134, 4, resourceSettingsOk, button_none, 0, 0, 1}
 };
 
 static arrow_button resourceArrowButtons[] = {
@@ -57,9 +57,9 @@ static arrow_button resourceArrowButtons[] = {
 };
 
 static generic_button resourceCustomButtons[] = {
-	{98, 250, 530, 280, GB_IMMEDIATE, resourceSettingsToggleIndustry, Widget_Button_doNothing, 0, 0},
-	{98, 212, 530, 242, GB_IMMEDIATE, resourceSettingsToggleTrade, Widget_Button_doNothing, 0, 0},
-	{98, 288, 530, 338, GB_IMMEDIATE, resourceSettingsToggleStockpile, Widget_Button_doNothing, 0, 0},
+	{98, 250, 530, 280, GB_IMMEDIATE, resourceSettingsToggleIndustry, button_none, 0, 0},
+	{98, 212, 530, 242, GB_IMMEDIATE, resourceSettingsToggleTrade, button_none, 0, 0},
+	{98, 288, 530, 338, GB_IMMEDIATE, resourceSettingsToggleStockpile, button_none, 0, 0},
 };
 
 static int focusButtonId;

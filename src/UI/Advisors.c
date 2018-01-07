@@ -20,23 +20,23 @@ static void buttonChangeAdvisor(int param1, int param2);
 static void buttonHelp(int param1, int param2);
 
 static image_button helpButton = {
-	11, -7, 27, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
+	11, -7, 27, 27, IB_NORMAL, 134, 0, buttonHelp, button_none, 0, 0, 1
 };
 
 static generic_button advisorButtons[] = {
-	{12, 1, 52, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_LABOR, 0},
-	{60, 1, 100, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_MILITARY, 0},
-	{108, 1, 148, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_IMPERIAL, 0},
-	{156, 1, 196, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_RATINGS, 0},
-	{204, 1, 244, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_TRADE, 0},
-	{252, 1, 292, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_POPULATION, 0},
-	{300, 1, 340, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_HEALTH, 0},
-	{348, 1, 388, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_EDUCATION, 0},
-	{396, 1, 436, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_ENTERTAINMENT, 0},
-	{444, 1, 484, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_RELIGION, 0},
-	{492, 1, 532, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_FINANCIAL, 0},
-	{540, 1, 580, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, ADVISOR_CHIEF, 0},
-	{588, 1, 624, 41, GB_IMMEDIATE, buttonChangeAdvisor, Widget_Button_doNothing, 0, 0},
+	{12, 1, 52, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_LABOR, 0},
+	{60, 1, 100, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_MILITARY, 0},
+	{108, 1, 148, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_IMPERIAL, 0},
+	{156, 1, 196, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_RATINGS, 0},
+	{204, 1, 244, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_TRADE, 0},
+	{252, 1, 292, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_POPULATION, 0},
+	{300, 1, 340, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_HEALTH, 0},
+	{348, 1, 388, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_EDUCATION, 0},
+	{396, 1, 436, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_ENTERTAINMENT, 0},
+	{444, 1, 484, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_RELIGION, 0},
+	{492, 1, 532, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_FINANCIAL, 0},
+	{540, 1, 580, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, ADVISOR_CHIEF, 0},
+	{588, 1, 624, 41, GB_IMMEDIATE, buttonChangeAdvisor, button_none, 0, 0},
 };
 
 static struct {

@@ -22,12 +22,12 @@ static void arrowButtonEffects(int param1, int param2);
 static void arrowButtonCity(int param1, int param2);
 
 static generic_button buttons[] = {
-	{64, 162, 288, 182, GB_IMMEDIATE, buttonToggle, Widget_Button_doNothing, SOUND_MUSIC, 0},
-	{64, 192, 288, 212, GB_IMMEDIATE, buttonToggle, Widget_Button_doNothing, SOUND_SPEECH, 0},
-	{64, 222, 288, 242, GB_IMMEDIATE, buttonToggle, Widget_Button_doNothing, SOUND_EFFECTS, 0},
-	{64, 252, 288, 272, GB_IMMEDIATE, buttonToggle, Widget_Button_doNothing, SOUND_CITY, 0},
-	{144, 296, 336, 316, GB_IMMEDIATE, buttonOk, Widget_Button_doNothing, 1, 0},
-	{144, 296, 336, 346, GB_IMMEDIATE, buttonCancel, Widget_Button_doNothing, 1, 0},
+	{64, 162, 288, 182, GB_IMMEDIATE, buttonToggle, button_none, SOUND_MUSIC, 0},
+	{64, 192, 288, 212, GB_IMMEDIATE, buttonToggle, button_none, SOUND_SPEECH, 0},
+	{64, 222, 288, 242, GB_IMMEDIATE, buttonToggle, button_none, SOUND_EFFECTS, 0},
+	{64, 252, 288, 272, GB_IMMEDIATE, buttonToggle, button_none, SOUND_CITY, 0},
+	{144, 296, 336, 316, GB_IMMEDIATE, buttonOk, button_none, 1, 0},
+	{144, 296, 336, 346, GB_IMMEDIATE, buttonCancel, button_none, 1, 0},
 };
 
 static arrow_button arrowButtons[] = {

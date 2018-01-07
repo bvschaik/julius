@@ -29,27 +29,27 @@ static void buttonScroll(int isDown, int numLines);
 static void buttonStartScenario(int param1, int param2);
 
 static image_button imageButtons[] = {
-	{276, 210, 34, 34, IB_NORMAL, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
-	{276, 440, 34, 34, IB_NORMAL, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
-	{600, 440, 27, 27, IB_NORMAL, 92, 56, buttonStartScenario, Widget_Button_doNothing, 1, 0, 1},
+	{276, 210, 34, 34, IB_NORMAL, 96, 8, buttonScroll, button_none, 0, 1, 1},
+	{276, 440, 34, 34, IB_NORMAL, 96, 12, buttonScroll, button_none, 1, 1, 1},
+	{600, 440, 27, 27, IB_NORMAL, 92, 56, buttonStartScenario, button_none, 1, 0, 1},
 };
 
 static generic_button customButtons[] = {
-	{28, 220, 280, 236, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 0, 0},
-	{28, 236, 280, 252, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 1, 0},
-	{28, 252, 280, 268, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 2, 0},
-	{28, 268, 280, 284, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 3, 0},
-	{28, 284, 280, 300, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 4, 0},
-	{28, 300, 280, 316, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 5, 0},
-	{28, 316, 280, 332, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 6, 0},
-	{28, 332, 280, 348, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 7, 0},
-	{28, 348, 280, 364, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 8, 0},
-	{28, 364, 280, 380, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 9, 0},
-	{28, 380, 280, 396, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 10, 0},
-	{28, 396, 280, 412, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 11, 0},
-	{28, 412, 280, 428, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 12, 0},
-	{28, 428, 280, 444, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 13, 0},
-	{28, 444, 280, 460, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 14, 0},
+	{28, 220, 280, 236, GB_IMMEDIATE, buttonSelectItem, button_none, 0, 0},
+	{28, 236, 280, 252, GB_IMMEDIATE, buttonSelectItem, button_none, 1, 0},
+	{28, 252, 280, 268, GB_IMMEDIATE, buttonSelectItem, button_none, 2, 0},
+	{28, 268, 280, 284, GB_IMMEDIATE, buttonSelectItem, button_none, 3, 0},
+	{28, 284, 280, 300, GB_IMMEDIATE, buttonSelectItem, button_none, 4, 0},
+	{28, 300, 280, 316, GB_IMMEDIATE, buttonSelectItem, button_none, 5, 0},
+	{28, 316, 280, 332, GB_IMMEDIATE, buttonSelectItem, button_none, 6, 0},
+	{28, 332, 280, 348, GB_IMMEDIATE, buttonSelectItem, button_none, 7, 0},
+	{28, 348, 280, 364, GB_IMMEDIATE, buttonSelectItem, button_none, 8, 0},
+	{28, 364, 280, 380, GB_IMMEDIATE, buttonSelectItem, button_none, 9, 0},
+	{28, 380, 280, 396, GB_IMMEDIATE, buttonSelectItem, button_none, 10, 0},
+	{28, 396, 280, 412, GB_IMMEDIATE, buttonSelectItem, button_none, 11, 0},
+	{28, 412, 280, 428, GB_IMMEDIATE, buttonSelectItem, button_none, 12, 0},
+	{28, 428, 280, 444, GB_IMMEDIATE, buttonSelectItem, button_none, 13, 0},
+	{28, 444, 280, 460, GB_IMMEDIATE, buttonSelectItem, button_none, 14, 0},
 };
 
 static int scrollPosition;

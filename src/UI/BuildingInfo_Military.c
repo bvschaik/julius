@@ -17,15 +17,15 @@ static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int index, int param2);
 
 static generic_button layoutButtons[] = {
-	{19, 139, 103, 223, GB_IMMEDIATE, buttonLayout, Widget_Button_doNothing, 0, 0},
-	{104, 139, 188, 223, GB_IMMEDIATE, buttonLayout, Widget_Button_doNothing, 1, 0},
-	{189, 139, 273, 223, GB_IMMEDIATE, buttonLayout, Widget_Button_doNothing, 2, 0},
-	{274, 139, 358, 223, GB_IMMEDIATE, buttonLayout, Widget_Button_doNothing, 3, 0},
-	{359, 139, 443, 223, GB_IMMEDIATE, buttonLayout, Widget_Button_doNothing, 4, 0}
+	{19, 139, 103, 223, GB_IMMEDIATE, buttonLayout, button_none, 0, 0},
+	{104, 139, 188, 223, GB_IMMEDIATE, buttonLayout, button_none, 1, 0},
+	{189, 139, 273, 223, GB_IMMEDIATE, buttonLayout, button_none, 2, 0},
+	{274, 139, 358, 223, GB_IMMEDIATE, buttonLayout, button_none, 3, 0},
+	{359, 139, 443, 223, GB_IMMEDIATE, buttonLayout, button_none, 4, 0}
 };
 
 static generic_button returnButtons[] = {
-	{0, 0, 288, 32, GB_IMMEDIATE, buttonReturnToFort, Widget_Button_doNothing, 0, 0},
+	{0, 0, 288, 32, GB_IMMEDIATE, buttonReturnToFort, button_none, 0, 0},
 };
 
 static int focusButtonId;

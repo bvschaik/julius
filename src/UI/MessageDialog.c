@@ -33,37 +33,37 @@ static void buttonAdvisor(int advisor, int param2);
 static void buttonGoToProblem(int param1, int param2);
 
 static image_button imageButtonBack = {
-	0, 0, 31, 20, IB_NORMAL, 90, 8, buttonBack, Widget_Button_doNothing, 0, 0, 1
+	0, 0, 31, 20, IB_NORMAL, 90, 8, buttonBack, button_none, 0, 0, 1
 };
 static image_button imageButtonClose = {
-	0, 0, 24, 24, IB_NORMAL, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1
+	0, 0, 24, 24, IB_NORMAL, 134, 4, buttonClose, button_none, 0, 0, 1
 };
 static image_button imageButtonGoToProblem = {
-	0, 0, 27, 27, IB_NORMAL, 92, 52, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 1
+	0, 0, 27, 27, IB_NORMAL, 92, 52, buttonGoToProblem, button_none, 1, 0, 1
 };
 static image_button imageButtonHelp = {
-	0, 0, 18, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 1
+	0, 0, 18, 27, IB_NORMAL, 134, 0, buttonHelp, button_none, 1, 0, 1
 };
 static image_button imageButtonLabor = {
-	0, 0, 27, 27, IB_NORMAL, 199, 0, buttonAdvisor, Widget_Button_doNothing, ADVISOR_LABOR, 0, 1
+	0, 0, 27, 27, IB_NORMAL, 199, 0, buttonAdvisor, button_none, ADVISOR_LABOR, 0, 1
 };
 static image_button imageButtonTrade = {
-	0, 0, 27, 27, IB_NORMAL, 199, 12, buttonAdvisor, Widget_Button_doNothing, ADVISOR_TRADE, 0, 1
+	0, 0, 27, 27, IB_NORMAL, 199, 12, buttonAdvisor, button_none, ADVISOR_TRADE, 0, 1
 };
 static image_button imageButtonPopulation = {
-	0, 0, 27, 27, IB_NORMAL, 199, 15, buttonAdvisor, Widget_Button_doNothing, ADVISOR_POPULATION, 0, 1
+	0, 0, 27, 27, IB_NORMAL, 199, 15, buttonAdvisor, button_none, ADVISOR_POPULATION, 0, 1
 };
 static image_button imageButtonImperial = {
-	0, 0, 27, 27, IB_NORMAL, 199, 6, buttonAdvisor, Widget_Button_doNothing, ADVISOR_IMPERIAL, 0, 1
+	0, 0, 27, 27, IB_NORMAL, 199, 6, buttonAdvisor, button_none, ADVISOR_IMPERIAL, 0, 1
 };
 static image_button imageButtonMilitary = {
-	0, 0, 27, 27, IB_NORMAL, 199, 3, buttonAdvisor, Widget_Button_doNothing, ADVISOR_MILITARY, 0, 1
+	0, 0, 27, 27, IB_NORMAL, 199, 3, buttonAdvisor, button_none, ADVISOR_MILITARY, 0, 1
 };
 static image_button imageButtonHealth = {
-	0, 0, 27, 27, IB_NORMAL, 199, 18, buttonAdvisor, Widget_Button_doNothing, ADVISOR_HEALTH, 0, 1
+	0, 0, 27, 27, IB_NORMAL, 199, 18, buttonAdvisor, button_none, ADVISOR_HEALTH, 0, 1
 };
 static image_button imageButtonReligion = {
-	0, 0, 27, 27, IB_NORMAL, 199, 27, buttonAdvisor, Widget_Button_doNothing, ADVISOR_RELIGION, 0, 1
+	0, 0, 27, 27, IB_NORMAL, 199, 27, buttonAdvisor, button_none, ADVISOR_RELIGION, 0, 1
 };
 
 static struct {

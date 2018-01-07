@@ -11,7 +11,7 @@ static void drawFestivalBackground();
 static void buttonHoldFestival(int param1, int param2);
 
 static generic_button holdFestivalButtons[] = {
-	{102, 280, 402, 300, GB_IMMEDIATE, buttonHoldFestival, Widget_Button_doNothing, 0, 0},
+	{102, 280, 402, 300, GB_IMMEDIATE, buttonHoldFestival, button_none, 0, 0},
 };
 
 static int focusButtonId;

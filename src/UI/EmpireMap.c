@@ -44,21 +44,21 @@ static void buttonEmpireMap(int param1, int param2);
 static void confirmOpenTrade(int accepted);
 
 static image_button imageButtonHelp[] = {
-	{0, 0, 27, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1}
+	{0, 0, 27, 27, IB_NORMAL, 134, 0, buttonHelp, button_none, 0, 0, 1}
 };
 static image_button imageButtonReturnToCity[] = {
-	{0, 0, 24, 24, IB_NORMAL, 134, 4, buttonReturnToCity, Widget_Button_doNothing, 0, 0, 1}
+	{0, 0, 24, 24, IB_NORMAL, 134, 4, buttonReturnToCity, button_none, 0, 0, 1}
 };
 static image_button imageButtonAdvisor[] = {
-	{-4, 0, 24, 24, IB_NORMAL, 199, 12, buttonAdvisor, Widget_Button_doNothing, 5, 0, 1}
+	{-4, 0, 24, 24, IB_NORMAL, 199, 12, buttonAdvisor, button_none, 5, 0, 1}
 };
 static generic_button customButtonOpenTrade[] = {
-	{50, 68, 450, 91, GB_IMMEDIATE, buttonOpenTrade, Widget_Button_doNothing, 0, 0}
+	{50, 68, 450, 91, GB_IMMEDIATE, buttonOpenTrade, button_none, 0, 0}
 };
 
 static image_button imageButtonsTradeOpened[] = {
-	{92, 248, 28, 28, IB_NORMAL, 199, 12, buttonAdvisor, Widget_Button_doNothing, 5, 0, 1},
-	{522, 252, 24, 24, IB_NORMAL, 134, 4, buttonEmpireMap, Widget_Button_doNothing, 0, 0, 1},
+	{92, 248, 28, 28, IB_NORMAL, 199, 12, buttonAdvisor, button_none, 5, 0, 1},
+	{522, 252, 24, 24, IB_NORMAL, 134, 4, buttonEmpireMap, button_none, 0, 0, 1},
 };
 
 static struct {

@@ -24,12 +24,12 @@ static void victoryContinueGoverning(int duration, int param2);
 static void firedAccept(int param1, int param2);
 
 static generic_button victoryButtons[] = {
-	{32, 112, 416, 132, GB_ON_MOUSE_UP, victoryAccept, Widget_Button_doNothing, 0, 0},
-	{32, 144, 416, 164, GB_IMMEDIATE, victoryContinueGoverning, Widget_Button_doNothing, 1, 0},
-	{32, 176, 416, 196, GB_IMMEDIATE, victoryContinueGoverning, Widget_Button_doNothing, 2, 0},
+	{32, 112, 416, 132, GB_ON_MOUSE_UP, victoryAccept, button_none, 0, 0},
+	{32, 144, 416, 164, GB_IMMEDIATE, victoryContinueGoverning, button_none, 1, 0},
+	{32, 176, 416, 196, GB_IMMEDIATE, victoryContinueGoverning, button_none, 2, 0},
 };
 static generic_button firedButtons[] = {
-	{64, 208, 384, 228, GB_IMMEDIATE, firedAccept, Widget_Button_doNothing, 0, 0},
+	{64, 208, 384, 228, GB_IMMEDIATE, firedAccept, button_none, 0, 0},
 };
 
 static int focusButtonId = 0;

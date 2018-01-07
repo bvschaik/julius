@@ -36,12 +36,12 @@ static void buttonExit(int param1, int param2);
 static void buttonAdvisor(int param1, int param2);
 
 static image_button imageButtonsHelpExit[] = {
-	{14, 0, 27, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1},
-	{424, 3, 24, 24, IB_NORMAL, 134, 4, buttonExit, Widget_Button_doNothing, 0, 0, 1}
+	{14, 0, 27, 27, IB_NORMAL, 134, 0, buttonHelp, button_none, 0, 0, 1},
+	{424, 3, 24, 24, IB_NORMAL, 134, 4, buttonExit, button_none, 0, 0, 1}
 };
 
 static image_button imageButtonsAdvisor[] = {
-	{350, -38, 28, 28, IB_NORMAL, 199, 9, buttonAdvisor, Widget_Button_doNothing, ADVISOR_RATINGS, 0, 1}
+	{350, -38, 28, 28, IB_NORMAL, 199, 9, buttonAdvisor, button_none, ADVISOR_RATINGS, 0, 1}
 };
 
 static BuildingInfoContext context;

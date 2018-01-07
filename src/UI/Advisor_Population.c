@@ -14,8 +14,8 @@ static void getMinMaxMonthYear(int maxMonths, int *startMonth, int *startYear, i
 static void buttonGraph(int param1, int param2);
 
 static generic_button graphButtons[] = {
-	{503,  61, 607, 116, GB_IMMEDIATE, buttonGraph, Widget_Button_doNothing, 0, 0},
-	{503, 161, 607, 216, GB_IMMEDIATE, buttonGraph, Widget_Button_doNothing, 1, 0},
+	{503,  61, 607, 116, GB_IMMEDIATE, buttonGraph, button_none, 0, 0},
+	{503, 161, 607, 216, GB_IMMEDIATE, buttonGraph, button_none, 1, 0},
 };
 
 static int focusButtonId;

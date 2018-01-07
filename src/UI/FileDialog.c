@@ -26,24 +26,24 @@ static void buttonScroll(int isDown, int numLines);
 static void buttonSelectItem(int index, int numLines);
 
 static image_button imageButtons[] = {
-	{344, 335, 34, 34, IB_NORMAL, 96, 0, buttonOkCancel, Widget_Button_doNothing, 1, 0, 1},
-	{392, 335, 34, 34, IB_NORMAL, 96, 4, buttonOkCancel, Widget_Button_doNothing, 0, 0, 1},
-	{464, 120, 34, 34, IB_SCROLL, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
-	{464, 300, 34, 34, IB_SCROLL, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
+	{344, 335, 34, 34, IB_NORMAL, 96, 0, buttonOkCancel, button_none, 1, 0, 1},
+	{392, 335, 34, 34, IB_NORMAL, 96, 4, buttonOkCancel, button_none, 0, 0, 1},
+	{464, 120, 34, 34, IB_SCROLL, 96, 8, buttonScroll, button_none, 0, 1, 1},
+	{464, 300, 34, 34, IB_SCROLL, 96, 12, buttonScroll, button_none, 1, 1, 1},
 };
 static generic_button customButtons[] = {
-	{160, 128, 448, 144, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 0, 0},
-	{160, 144, 448, 160, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 1, 0},
-	{160, 160, 448, 176, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 2, 0},
-	{160, 176, 448, 192, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 3, 0},
-	{160, 192, 448, 208, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 4, 0},
-	{160, 208, 448, 224, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 5, 0},
-	{160, 224, 448, 240, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 6, 0},
-	{160, 240, 448, 256, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 7, 0},
-	{160, 256, 448, 272, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 8, 0},
-	{160, 272, 448, 288, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 9, 0},
-	{160, 288, 448, 304, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 10, 0},
-	{160, 304, 448, 320, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 11, 0},
+	{160, 128, 448, 144, GB_IMMEDIATE, buttonSelectItem, button_none, 0, 0},
+	{160, 144, 448, 160, GB_IMMEDIATE, buttonSelectItem, button_none, 1, 0},
+	{160, 160, 448, 176, GB_IMMEDIATE, buttonSelectItem, button_none, 2, 0},
+	{160, 176, 448, 192, GB_IMMEDIATE, buttonSelectItem, button_none, 3, 0},
+	{160, 192, 448, 208, GB_IMMEDIATE, buttonSelectItem, button_none, 4, 0},
+	{160, 208, 448, 224, GB_IMMEDIATE, buttonSelectItem, button_none, 5, 0},
+	{160, 224, 448, 240, GB_IMMEDIATE, buttonSelectItem, button_none, 6, 0},
+	{160, 240, 448, 256, GB_IMMEDIATE, buttonSelectItem, button_none, 7, 0},
+	{160, 256, 448, 272, GB_IMMEDIATE, buttonSelectItem, button_none, 8, 0},
+	{160, 272, 448, 288, GB_IMMEDIATE, buttonSelectItem, button_none, 9, 0},
+	{160, 288, 448, 304, GB_IMMEDIATE, buttonSelectItem, button_none, 10, 0},
+	{160, 304, 448, 320, GB_IMMEDIATE, buttonSelectItem, button_none, 11, 0},
 };
 
 #define NOT_EXIST_MESSAGE_TIMEOUT 500

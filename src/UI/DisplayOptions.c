@@ -13,11 +13,11 @@ static void buttonSetResolution(int id, int param2);
 static void buttonCancel(int param1, int param2);
 
 static generic_button buttons[] = {
-	{144, 136, 336, 156, GB_IMMEDIATE, buttonFullscreen, Widget_Button_doNothing, 1, 0},
-	{144, 160, 336, 180, GB_IMMEDIATE, buttonSetResolution, Widget_Button_doNothing, 1, 0},
-	{144, 184, 336, 204, GB_IMMEDIATE, buttonSetResolution, Widget_Button_doNothing, 2, 0},
-	{144, 208, 336, 228, GB_IMMEDIATE, buttonSetResolution, Widget_Button_doNothing, 3, 0},
-	{144, 232, 336, 252, GB_IMMEDIATE, buttonCancel, Widget_Button_doNothing, 1, 0},
+	{144, 136, 336, 156, GB_IMMEDIATE, buttonFullscreen, button_none, 1, 0},
+	{144, 160, 336, 180, GB_IMMEDIATE, buttonSetResolution, button_none, 1, 0},
+	{144, 184, 336, 204, GB_IMMEDIATE, buttonSetResolution, button_none, 2, 0},
+	{144, 208, 336, 228, GB_IMMEDIATE, buttonSetResolution, button_none, 3, 0},
+	{144, 232, 336, 252, GB_IMMEDIATE, buttonCancel, button_none, 1, 0},
 };
 
 static int focusButtonId;

@@ -38,13 +38,13 @@ static const int figureTypeToBigPeopleGraphicId[] = {
 #define BigPeopleGraphic(t) (image_group(GROUP_BIG_PEOPLE) + figureTypeToBigPeopleGraphicId[t] - 1)
 
 static generic_button figureButtons[] = {
-	{26, 46, 76, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 0, 0},
-	{86, 46, 136, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 1, 0},
-	{146, 46, 196, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 2, 0},
-	{206, 46, 256, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 3, 0},
-	{266, 46, 316, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 4, 0},
-	{326, 46, 376, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 5, 0},
-	{386, 46, 436, 96, GB_IMMEDIATE, selectFigure, Widget_Button_doNothing, 6, 0},
+	{26, 46, 76, 96, GB_IMMEDIATE, selectFigure, button_none, 0, 0},
+	{86, 46, 136, 96, GB_IMMEDIATE, selectFigure, button_none, 1, 0},
+	{146, 46, 196, 96, GB_IMMEDIATE, selectFigure, button_none, 2, 0},
+	{206, 46, 256, 96, GB_IMMEDIATE, selectFigure, button_none, 3, 0},
+	{266, 46, 316, 96, GB_IMMEDIATE, selectFigure, button_none, 4, 0},
+	{326, 46, 376, 96, GB_IMMEDIATE, selectFigure, button_none, 5, 0},
+	{386, 46, 436, 96, GB_IMMEDIATE, selectFigure, button_none, 6, 0},
 };
 
 static color_t figureImages[7][48*48];

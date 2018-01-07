@@ -19,21 +19,21 @@ static void buttonClose(int param1, int param2);
 static void buttonHoldFestival(int param1, int param2);
 
 static image_button imageButtonsBottom[] = {
-	{58, 316, 27, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1},
-	{558, 319, 24, 24, IB_NORMAL, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
-	{358, 317, 34, 34, IB_NORMAL, 96, 0, buttonHoldFestival, Widget_Button_doNothing, 1, 0, 1},
-	{400, 317, 34, 34, IB_NORMAL, 96, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
+	{58, 316, 27, 27, IB_NORMAL, 134, 0, buttonHelp, button_none, 0, 0, 1},
+	{558, 319, 24, 24, IB_NORMAL, 134, 4, buttonClose, button_none, 0, 0, 1},
+	{358, 317, 34, 34, IB_NORMAL, 96, 0, buttonHoldFestival, button_none, 1, 0, 1},
+	{400, 317, 34, 34, IB_NORMAL, 96, 4, buttonClose, button_none, 0, 0, 1},
 };
 
 static generic_button buttonsGodsSize[] = {
-	{70, 96, 150, 186, GB_IMMEDIATE, buttonGod, Widget_Button_doNothing, 0, 0},
-	{170, 96, 250, 186, GB_IMMEDIATE, buttonGod, Widget_Button_doNothing, 1, 0},
-	{270, 96, 350, 186, GB_IMMEDIATE, buttonGod, Widget_Button_doNothing, 2, 0},
-	{370, 96, 450, 186, GB_IMMEDIATE, buttonGod, Widget_Button_doNothing, 3, 0},
-	{470, 96, 550, 186, GB_IMMEDIATE, buttonGod, Widget_Button_doNothing, 4, 0},
-	{102, 216, 532, 242, GB_IMMEDIATE, buttonSize, Widget_Button_doNothing, 1, 0},
-	{102, 246, 532, 272, GB_IMMEDIATE, buttonSize, Widget_Button_doNothing, 2, 0},
-	{102, 276, 532, 302, GB_IMMEDIATE, buttonSize, Widget_Button_doNothing, 3, 0},
+	{70, 96, 150, 186, GB_IMMEDIATE, buttonGod, button_none, 0, 0},
+	{170, 96, 250, 186, GB_IMMEDIATE, buttonGod, button_none, 1, 0},
+	{270, 96, 350, 186, GB_IMMEDIATE, buttonGod, button_none, 2, 0},
+	{370, 96, 450, 186, GB_IMMEDIATE, buttonGod, button_none, 3, 0},
+	{470, 96, 550, 186, GB_IMMEDIATE, buttonGod, button_none, 4, 0},
+	{102, 216, 532, 242, GB_IMMEDIATE, buttonSize, button_none, 1, 0},
+	{102, 246, 532, 272, GB_IMMEDIATE, buttonSize, button_none, 2, 0},
+	{102, 276, 532, 302, GB_IMMEDIATE, buttonSize, button_none, 3, 0},
 };
 
 static int focusButtonId;

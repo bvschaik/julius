@@ -15,7 +15,7 @@
 static void startMission(int param1, int param2);
 
 static image_button imageButtonStartMission = {
-	0, 0, 27, 27, IB_NORMAL, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 1
+	0, 0, 27, 27, IB_NORMAL, 92, 56, startMission, button_none, 1, 0, 1
 };
 
 static uint8_t player_name[32];

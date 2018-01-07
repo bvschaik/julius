@@ -20,16 +20,16 @@ static void buttonDelete(int param1, int param2);
 static void handleMouseScrollbar(const mouse *m);
 
 static image_button imageButtonHelp = {
-	0, 0, 27, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
+	0, 0, 27, 27, IB_NORMAL, 134, 0, buttonHelp, button_none, 0, 0, 1
 };
 static image_button imageButtonClose = {
-	0, 0, 24, 24, IB_NORMAL, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1
+	0, 0, 24, 24, IB_NORMAL, 134, 4, buttonClose, button_none, 0, 0, 1
 };
 static image_button imageButtonScrollUp = {
-	0, 0, 39, 26, IB_SCROLL, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1
+	0, 0, 39, 26, IB_SCROLL, 96, 8, buttonScroll, button_none, 0, 1, 1
 };
 static image_button imageButtonScrollDown = {
-	0, 0, 39, 26, IB_SCROLL, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1
+	0, 0, 39, 26, IB_SCROLL, 96, 12, buttonScroll, button_none, 1, 1, 1
 };
 static generic_button customButtonsMessages[] = {
 	{0, 0, 412, 18, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 0, 0},

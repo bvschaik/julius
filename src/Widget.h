@@ -76,9 +76,6 @@ void Widget_Panel_drawSmallLabelButton(int xOffset, int yOffset, int widthInBloc
 void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type);
 
 
-
-void Widget_Button_doNothing(int param1, int param2);
-
 void Widget_Menu_drawMenuBar(MenuBarItem *items, int numItems);
 void Widget_Menu_drawSubMenu(MenuBarItem *menu, int focusSubMenu);
 

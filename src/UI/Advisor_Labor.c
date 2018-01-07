@@ -15,15 +15,15 @@ static void buttonPriority(int category, int param2);
 static void buttonSetPriority(int newPriority, int param2);
 
 static generic_button categoryButtons[] = {
-	{40, 77, 600, 99, GB_IMMEDIATE, buttonPriority, Widget_Button_doNothing, 0, 0},
-	{40, 102, 600, 124, GB_IMMEDIATE, buttonPriority, Widget_Button_doNothing, 1, 0},
-	{40, 127, 600, 149, GB_IMMEDIATE, buttonPriority, Widget_Button_doNothing, 2, 0},
-	{40, 152, 600, 174, GB_IMMEDIATE, buttonPriority, Widget_Button_doNothing, 3, 0},
-	{40, 177, 600, 199, GB_IMMEDIATE, buttonPriority, Widget_Button_doNothing, 4, 0},
-	{40, 202, 600, 224, GB_IMMEDIATE, buttonPriority, Widget_Button_doNothing, 5, 0},
-	{40, 227, 600, 249, GB_IMMEDIATE, buttonPriority, Widget_Button_doNothing, 6, 0},
-	{40, 252, 600, 274, GB_IMMEDIATE, buttonPriority, Widget_Button_doNothing, 7, 0},
-	{40, 277, 600, 299, GB_IMMEDIATE, buttonPriority, Widget_Button_doNothing, 8, 0},
+	{40, 77, 600, 99, GB_IMMEDIATE, buttonPriority, button_none, 0, 0},
+	{40, 102, 600, 124, GB_IMMEDIATE, buttonPriority, button_none, 1, 0},
+	{40, 127, 600, 149, GB_IMMEDIATE, buttonPriority, button_none, 2, 0},
+	{40, 152, 600, 174, GB_IMMEDIATE, buttonPriority, button_none, 3, 0},
+	{40, 177, 600, 199, GB_IMMEDIATE, buttonPriority, button_none, 4, 0},
+	{40, 202, 600, 224, GB_IMMEDIATE, buttonPriority, button_none, 5, 0},
+	{40, 227, 600, 249, GB_IMMEDIATE, buttonPriority, button_none, 6, 0},
+	{40, 252, 600, 274, GB_IMMEDIATE, buttonPriority, button_none, 7, 0},
+	{40, 277, 600, 299, GB_IMMEDIATE, buttonPriority, button_none, 8, 0},
 };
 
 static arrow_button wageButtons[] = {
@@ -40,16 +40,16 @@ static int priorityMaxItems;
 static int priorityFocusButtonId;
 
 static generic_button priorityButtons[] = {
-	{180, 256, 460, 281, GB_IMMEDIATE, buttonSetPriority, Widget_Button_doNothing, 0, 0}, // no prio
-	{178, 221, 205, 248, GB_IMMEDIATE, buttonSetPriority, Widget_Button_doNothing, 1, 0},
-	{210, 221, 237, 248, GB_IMMEDIATE, buttonSetPriority, Widget_Button_doNothing, 2, 0},
-	{242, 221, 269, 248, GB_IMMEDIATE, buttonSetPriority, Widget_Button_doNothing, 3, 0},
-	{274, 221, 301, 248, GB_IMMEDIATE, buttonSetPriority, Widget_Button_doNothing, 4, 0},
-	{306, 221, 333, 248, GB_IMMEDIATE, buttonSetPriority, Widget_Button_doNothing, 5, 0},
-	{338, 221, 365, 248, GB_IMMEDIATE, buttonSetPriority, Widget_Button_doNothing, 6, 0},
-	{370, 221, 397, 248, GB_IMMEDIATE, buttonSetPriority, Widget_Button_doNothing, 7, 0},
-	{402, 221, 429, 248, GB_IMMEDIATE, buttonSetPriority, Widget_Button_doNothing, 8, 0},
-	{434, 221, 461, 248, GB_IMMEDIATE, buttonSetPriority, Widget_Button_doNothing, 9, 0},
+	{180, 256, 460, 281, GB_IMMEDIATE, buttonSetPriority, button_none, 0, 0}, // no prio
+	{178, 221, 205, 248, GB_IMMEDIATE, buttonSetPriority, button_none, 1, 0},
+	{210, 221, 237, 248, GB_IMMEDIATE, buttonSetPriority, button_none, 2, 0},
+	{242, 221, 269, 248, GB_IMMEDIATE, buttonSetPriority, button_none, 3, 0},
+	{274, 221, 301, 248, GB_IMMEDIATE, buttonSetPriority, button_none, 4, 0},
+	{306, 221, 333, 248, GB_IMMEDIATE, buttonSetPriority, button_none, 5, 0},
+	{338, 221, 365, 248, GB_IMMEDIATE, buttonSetPriority, button_none, 6, 0},
+	{370, 221, 397, 248, GB_IMMEDIATE, buttonSetPriority, button_none, 7, 0},
+	{402, 221, 429, 248, GB_IMMEDIATE, buttonSetPriority, button_none, 8, 0},
+	{434, 221, 461, 248, GB_IMMEDIATE, buttonSetPriority, button_none, 9, 0},
 };
 
 void UI_Advisor_Labor_drawBackground(int *advisorHeight)
