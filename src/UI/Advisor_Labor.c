@@ -7,6 +7,7 @@
 #include "city/labor.h"
 #include "core/calc.h"
 #include "graphics/arrow_button.h"
+#include "graphics/graphics.h"
 
 static void arrowButtonWages(int isDown, int param2);
 static void buttonPriority(int category, int param2);
@@ -52,93 +53,69 @@ static CustomButton priorityButtons[] = {
 
 void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
 	*advisorHeight = 26;
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS), baseOffsetX + 10, baseOffsetY + 10);
+	Widget_Panel_drawOuterPanel(0, 0, 40, *advisorHeight);
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS), 10, 10);
 	
-	Widget_GameText_draw(50, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+	Widget_GameText_draw(50, 0, 60, 12, FONT_LARGE_BLACK);
 	
 	// table headers
-	Widget_GameText_draw(50, 21, baseOffsetX + 60, baseOffsetY + 56, FONT_SMALL_PLAIN);
-	Widget_GameText_draw(50, 22, baseOffsetX + 170, baseOffsetY + 56, FONT_SMALL_PLAIN);
-	Widget_GameText_draw(50, 23, baseOffsetX + 400, baseOffsetY + 56, FONT_SMALL_PLAIN);
-	Widget_GameText_draw(50, 24, baseOffsetX + 500, baseOffsetY + 56, FONT_SMALL_PLAIN);
-	
-	int width = Widget_Text_drawNumber(Data_CityInfo.workersEmployed, '@', " ",
-		baseOffsetX + 32, baseOffsetY + 320, FONT_NORMAL_BLACK
-	);
-	width += Widget_GameText_draw(50, 12,
-		baseOffsetX + 32 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
-	);
-	width += Widget_Text_drawNumber(Data_CityInfo.workersUnemployed, '@', " ",
-		baseOffsetX + 50 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
-	);
-	width += Widget_GameText_draw(50, 13,
-		baseOffsetX + 50 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
-	);
-	width += Widget_Text_drawNumber(Data_CityInfo.unemploymentPercentage, '@', "%)",
-		baseOffsetX + 50 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
-	);
-	
-	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 350, 32, 2);
-	Widget_GameText_draw(50, 14, baseOffsetX + 70, baseOffsetY + 359, FONT_NORMAL_WHITE);
-	
-	width = Widget_Text_drawNumber(Data_CityInfo.wages, '@', " ",
-		baseOffsetX + 230, baseOffsetY + 359, FONT_NORMAL_WHITE
-	);
-	width += Widget_GameText_draw(50, 15,
-		baseOffsetX + 230 + width, baseOffsetY + 359, FONT_NORMAL_WHITE
-	);
-	width += Widget_GameText_draw(50, 18,
-		baseOffsetX + 230 + width, baseOffsetY + 359, FONT_NORMAL_WHITE
-	);
-	width += Widget_Text_drawNumber(Data_CityInfo.wagesRome, '@', " )",
-		baseOffsetX + 230 + width, baseOffsetY + 359, FONT_NORMAL_WHITE
-	);
-	
-	width = Widget_GameText_draw(50, 19,
-		baseOffsetX + 64, baseOffsetY + 390, FONT_NORMAL_BLACK
-	);
-	width += Widget_Text_drawMoney(Data_CityInfo.estimatedYearlyWages,
-		baseOffsetX + 64 + width, baseOffsetY + 390, FONT_NORMAL_BLACK
-	);
+	Widget_GameText_draw(50, 21, 60, 56, FONT_SMALL_PLAIN);
+	Widget_GameText_draw(50, 22, 170, 56, FONT_SMALL_PLAIN);
+	Widget_GameText_draw(50, 23, 400, 56, FONT_SMALL_PLAIN);
+	Widget_GameText_draw(50, 24, 500, 56, FONT_SMALL_PLAIN);
+
+	// xx employed, yy unemployed
+	int width = Widget_Text_drawNumber(Data_CityInfo.workersEmployed, '@', " ", 32, 320, FONT_NORMAL_BLACK);
+	width += Widget_GameText_draw(50, 12, 32 + width, 320, FONT_NORMAL_BLACK);
+	width += Widget_Text_drawNumber(Data_CityInfo.workersUnemployed, '@', " ", 50 + width, 320, FONT_NORMAL_BLACK);
+	width += Widget_GameText_draw(50, 13, 50 + width, 320, FONT_NORMAL_BLACK);
+	width += Widget_Text_drawNumber(Data_CityInfo.unemploymentPercentage, '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
+
+	// wages panel
+	Widget_Panel_drawInnerPanel(64, 350, 32, 2);
+	Widget_GameText_draw(50, 14, 70, 359, FONT_NORMAL_WHITE);
+	width = Widget_Text_drawNumber(Data_CityInfo.wages, '@', " ", 230, 359, FONT_NORMAL_WHITE);
+	width += Widget_GameText_draw(50, 15, 230 + width, 359, FONT_NORMAL_WHITE);
+	width += Widget_GameText_draw(50, 18, 230 + width, 359, FONT_NORMAL_WHITE);
+	width += Widget_Text_drawNumber(Data_CityInfo.wagesRome, '@', " )", 230 + width, 359, FONT_NORMAL_WHITE);
+
+	// estimated wages
+	width = Widget_GameText_draw(50, 19, 64, 390, FONT_NORMAL_BLACK);
+	width += Widget_Text_drawMoney(Data_CityInfo.estimatedYearlyWages, 64 + width, 390, FONT_NORMAL_BLACK);
+    graphics_reset_dialog();
 }
 
 void UI_Advisor_Labor_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
-	arrow_buttons_draw(baseOffsetX, baseOffsetY, wageButtons, 2);
+    arrow_buttons_draw(0, 0, wageButtons, 2);
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 70, 36, 15);
+	Widget_Panel_drawInnerPanel(32, 70, 36, 15);
 
 	for (int i = 0; i < 9; i++) {
 		int focus = i == focusButtonId - 1;
-		Widget_Panel_drawButtonBorder(
-			baseOffsetX + 40, baseOffsetY + 77 + 25 * i,
-			560, 22, focus
-		);
+        int y_offset = 82 + 25 * i;
+		Widget_Panel_drawButtonBorder(40, 77 + 25 * i, 560, 22, focus);
 		if (Data_CityInfo.laborCategory[i].priority) {
-			Graphics_drawImage(image_group(GROUP_LABOR_PRIORITY_LOCK),
-				baseOffsetX + 70, baseOffsetY + 80 + 25 * i);
+			Graphics_drawImage(image_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2);
 			Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].priority, '@', " ",
-				baseOffsetX + 90, baseOffsetY + 82 + 25 * i, FONT_NORMAL_WHITE);
+				90, y_offset, FONT_NORMAL_WHITE);
 		}
-		Widget_GameText_draw(50, i + 1,
-			baseOffsetX + 170, baseOffsetY + 82 + 25 * i, FONT_NORMAL_WHITE);
+		Widget_GameText_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE);
 		Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].workersNeeded, '@', " ",
-			baseOffsetX + 410, baseOffsetY + 82 + 25 * i, FONT_NORMAL_WHITE);
+			410, y_offset, FONT_NORMAL_WHITE);
 		font_t font = FONT_NORMAL_WHITE;
 		if (Data_CityInfo.laborCategory[i].workersNeeded != Data_CityInfo.laborCategory[i].workersAllocated) {
 			font = FONT_NORMAL_RED;
 		}
 		Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].workersAllocated, '@', " ",
-			baseOffsetX + 510, baseOffsetY + 82 + 25 * i, font);
+			510, y_offset, font);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_Advisor_Labor_handleMouse(const mouse *m)
@@ -183,31 +160,30 @@ int UI_Advisor_Labor_getTooltip()
 void UI_LaborPriorityDialog_drawBackground()
 {
 	int dummy;
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	UI_Advisor_Labor_drawBackground(&dummy);
 	UI_Advisor_Labor_drawForeground();
 
-	Widget_Panel_drawOuterPanel(baseOffsetX + 160, baseOffsetY + 176, 20, 9);
-	Widget_GameText_drawCentered(50, 25, baseOffsetX + 160, baseOffsetY + 185, 320, FONT_LARGE_BLACK);
+    graphics_in_dialog();
+	Widget_Panel_drawOuterPanel(160, 176, 20, 9);
+	Widget_GameText_drawCentered(50, 25, 160, 185, 320, FONT_LARGE_BLACK);
 	for (int i = 0; i < 9; i++) {
-		Graphics_drawRect(baseOffsetX + 178 + 32 * i, baseOffsetY + 221, 27, 27, COLOR_BLACK);
-		Widget_GameText_drawCentered(50, 27 + i, baseOffsetX + 178 + 32 * i, baseOffsetY + 224, 27, FONT_LARGE_BLACK);
+		Graphics_drawRect(178 + 32 * i, 221, 27, 27, COLOR_BLACK);
+		Widget_GameText_drawCentered(50, 27 + i, 178 + 32 * i, 224, 27, FONT_LARGE_BLACK);
 		if (i >= priorityMaxItems) {
-			Graphics_shadeRect(baseOffsetX + 179 + 32 * i, baseOffsetY + 222, 25, 25, 1);
+			Graphics_shadeRect(179 + 32 * i, 222, 25, 25, 1);
 		}
 	}
 
-	Graphics_drawRect(baseOffsetX + 180, baseOffsetY + 256, 280, 25, COLOR_BLACK);
-	Widget_GameText_drawCentered(50, 26, baseOffsetX + 180, baseOffsetY + 263, 280, FONT_NORMAL_BLACK);
-	Widget_GameText_drawCentered(13, 3, baseOffsetX + 160, baseOffsetY + 296, 320, FONT_NORMAL_BLACK);
+	Graphics_drawRect(180, 256, 280, 25, COLOR_BLACK);
+	Widget_GameText_drawCentered(50, 26, 180, 263, 280, FONT_NORMAL_BLACK);
+	Widget_GameText_drawCentered(13, 3, 160, 296, 320, FONT_NORMAL_BLACK);
+    graphics_reset_dialog();
 }
 
 void UI_LaborPriorityDialog_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 	
 	color_t color;
 	for (int i = 0; i < 9; i++) {
@@ -215,13 +191,15 @@ void UI_LaborPriorityDialog_drawForeground()
 		if (i == priorityFocusButtonId - 2) {
 			color = COLOR_RED;
 		}
-		Graphics_drawRect(baseOffsetX + 178 + 32 * i, baseOffsetY + 221, 27, 27, color);
+		Graphics_drawRect(178 + 32 * i, 221, 27, 27, color);
 	}
 	color = COLOR_BLACK;
 	if (priorityFocusButtonId == 1) {
 		color = COLOR_RED;
 	}
-	Graphics_drawRect(baseOffsetX + 180, baseOffsetY + 256, 280, 25, color);
+	Graphics_drawRect(180, 256, 280, 25, color);
+
+    graphics_reset_dialog();
 }
 
 void UI_LaborPriorityDialog_handleMouse(const mouse *m)

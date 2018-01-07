@@ -135,7 +135,7 @@ void Graphics_shadeRect(int x, int y, int width, int height, int darkness)
 {
 	for (int yy = y; yy < y + height; yy++) {
 		for (int xx = x; xx < x + width; xx++) {
-			color_t pixel = ScreenPixel(xx, yy);
+			color_t pixel = TranslatedScreenPixel(xx, yy);
 			int r = (pixel & 0xff0000) >> 16;
 			int g = (pixel & 0xff00) >> 8;
 			int b = (pixel & 0xff);
@@ -564,13 +564,20 @@ void Graphics_setClipRectangle(int x, int y, int width, int height)
 	clipRectangle.xEnd = x + width;
 	clipRectangle.yStart = y;
 	clipRectangle.yEnd = y + height;
-	if (clipRectangle.xEnd > Data_Screen.width) {
+    // fix clip rectangle going over the edges of the screen
+    if (translation.x + clipRectangle.xStart < 0) {
+        clipRectangle.xStart = -translation.x;
+    }
+    if (translation.y + clipRectangle.yStart < 0) {
+        clipRectangle.yStart = -translation.y;
+    }
+	if (translation.x + clipRectangle.xEnd > Data_Screen.width) {
 		printf("ERROR: clip rectangle x end (%d) > screen width\n", clipRectangle.xEnd);
-		clipRectangle.xEnd = Data_Screen.width;
+		clipRectangle.xEnd = Data_Screen.width - translation.x;
 	}
-	if (clipRectangle.yEnd > Data_Screen.height) {
+	if (translation.y + clipRectangle.yEnd > Data_Screen.height) {
 		printf("ERROR: clip rectangle y end (%d) > screen height\n", clipRectangle.yEnd);
-		clipRectangle.yEnd = Data_Screen.height-15;
+		clipRectangle.yEnd = Data_Screen.height-15 - translation.y;
 	}
 }
 
