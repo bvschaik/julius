@@ -6,7 +6,6 @@
 
 static mouse data;
 static mouse dialog;
-static mouse translated;
 
 const mouse *mouse_get()
 {
@@ -66,18 +65,6 @@ void mouse_reset_up_state()
 {
     data.left.went_up = 0;
     data.right.went_up = 0;
-}
-
-const mouse *mouse_translate(const mouse *m, int x, int y)
-{
-    translated.left = m->left;
-    translated.right = m->right;
-    translated.scrolled = m->scrolled;
-    translated.is_inside_window = m->is_inside_window;
-
-    translated.x = m->x - x;
-    translated.y = m->y - y;
-    return &translated;
 }
 
 const mouse *mouse_in_dialog(const mouse *m)

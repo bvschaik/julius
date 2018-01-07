@@ -59,8 +59,6 @@ void mouse_reset_up_state();
 
 void mouse_determine_button_state();
 
-const mouse *mouse_translate(const mouse *m, int x, int y);
-
 const mouse *mouse_in_dialog(const mouse *m);
 
 #endif // GRAPHICS_MOUSE_H
