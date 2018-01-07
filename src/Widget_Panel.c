@@ -129,29 +129,6 @@ void Widget_Panel_drawInnerPanel(int xOffset, int yOffset, int widthInBlocks, in
 	}
 }
 
-void Widget_Panel_drawInnerPanelBottom(int xOffset, int yOffset, int widthInBlocks)
-{
-	int graphicBase = image_group(GROUP_SUNKEN_TEXTBOX_BACKGROUND);
-	int graphicId;
-	int graphicX = 0;
-	for (int x = 0; x < widthInBlocks; x++) {
-		if (x == 0) {
-			graphicId = 42;
-		} else if (x < widthInBlocks - 1) {
-			graphicId = 43 + graphicX++;
-		} else {
-			graphicId = 48;
-		}
-		Graphics_drawImage(
-				graphicBase + graphicId,
-				xOffset + 16 * x,
-				yOffset);
-		if (graphicX >= 5) {
-			graphicX = 0;
-		}
-	}
-}
-
 void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type)
 {
 	int graphicBase = image_group(GROUP_PANEL_BUTTON);

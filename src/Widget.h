@@ -69,8 +69,6 @@ void Widget_Panel_drawUnborderedPanel(int xOffset, int yOffset, int widthInBlock
 
 void Widget_Panel_drawInnerPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks);
 
-void Widget_Panel_drawInnerPanelBottom(int xOffset, int yOffset, int widthInBlocks);
-
 void Widget_Panel_drawSmallLabelButton(int xOffset, int yOffset, int widthInBlocks, int type);
 
 void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type);
