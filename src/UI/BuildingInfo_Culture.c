@@ -10,7 +10,7 @@ static void drawInfo(BuildingInfoContext *c, int helpId, const char *soundFile, 
 	c->helpId = helpId;
 	PLAY_SOUND(soundFile);
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
@@ -38,7 +38,7 @@ void UI_BuildingInfo_drawBathhouse(BuildingInfoContext *c)
 	c->helpId = 64;
 	PLAY_SOUND("wavs/baths.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(83, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(83, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->buildingId);
 	if (!b->hasWaterAccess) {
@@ -79,14 +79,14 @@ static void drawTemple(BuildingInfoContext *c, const char *soundFile, int groupI
 	c->helpId = 67;
 	PLAY_SOUND(soundFile);
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 56, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 62);
 	if (c->hasRoadAccess) {
 		Graphics_drawImage(graphicOffset + image_group(GROUP_PANEL_WINDOWS),
 			c->xOffset + 190, c->yOffset + 16 * c->heightBlocks - 118);
 	} else {
-		Widget_GameText_drawMultiline(69, 25,
+		lang_text_draw_multiline(69, 25,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 128,
 			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	}
@@ -122,11 +122,11 @@ void UI_BuildingInfo_drawOracle(BuildingInfoContext *c)
 	c->helpId = 67;
 	PLAY_SOUND("wavs/oracle.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(110, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	Widget_GameText_drawCentered(13, 1,
+	lang_text_draw_centered(110, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(13, 1,
 		c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
 		16 * c->widthBlocks, FONT_NORMAL_BLACK);
-	Widget_GameText_drawMultiline(110, 1,
+	lang_text_draw_multiline(110, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 143,
 		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 }

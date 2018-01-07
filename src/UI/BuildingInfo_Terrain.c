@@ -7,8 +7,8 @@
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
 {
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(70, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	Widget_GameText_drawCentered(13, 1,
+	lang_text_draw_centered(70, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(13, 1,
 		c->xOffset, c->yOffset + 16 * c->heightBlocks - 22,
 		16 * c->widthBlocks, FONT_NORMAL_BLACK);
 }
@@ -55,11 +55,11 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 		outer_panel_draw(c->xOffset, c->yOffset,
 			c->widthBlocks, c->heightBlocks);
 		if (!c->figure.count) {
-			Widget_GameText_drawCentered(70, c->terrainType + 10,
+			lang_text_draw_centered(70, c->terrainType + 10,
 				c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 		}
 		if (c->terrainType != 6 && c->terrainType != 13) {
-			Widget_GameText_drawMultiline(70, c->terrainType + 25,
+			lang_text_draw_multiline(70, c->terrainType + 25,
 				c->xOffset + 36, c->yOffset + 16 * c->heightBlocks - 113,
 				16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 		}

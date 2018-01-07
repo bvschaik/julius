@@ -10,7 +10,7 @@ void menu_bar_draw(menu_bar_item *items, int num_items)
     short x_offset = items[0].x_start;
     for (int i = 0; i < num_items; i++) {
         items[i].x_start = x_offset;
-        x_offset += Widget_GameText_draw(items[i].text_group, 0, x_offset, items[i].y_start, FONT_NORMAL_GREEN);
+        x_offset += lang_text_draw(items[i].text_group, 0, x_offset, items[i].y_start, FONT_NORMAL_GREEN);
         items[i].x_end = x_offset;
         x_offset += 32; // spacing
     }
@@ -48,11 +48,11 @@ void menu_draw(menu_bar_item *menu, int focus_item_id)
         if (i == focus_item_id - 1) {
             Graphics_fillRect(menu->x_start, yOffset - 2,
                 160, 16, COLOR_BLACK);
-            Widget_GameText_drawColored(menu->text_group, sub->text_number,
+            lang_text_draw_colored(menu->text_group, sub->text_number,
                 menu->x_start + 8, yOffset, FONT_NORMAL_PLAIN, COLOR_ORANGE
             );
         } else {
-            Widget_GameText_draw(menu->text_group, sub->text_number,
+            lang_text_draw(menu->text_group, sub->text_number,
                 menu->x_start + 8, yOffset, FONT_NORMAL_BLACK
             );
         }

@@ -81,14 +81,14 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 {
 	f = get_head_of_caravan(f);
 	const empire_city *city = empire_city_get(f->empireCityId);
-	int width = Widget_GameText_draw(64, f->type,
+	int width = lang_text_draw(64, f->type,
 		c->xOffset + 40, c->yOffset + 110, FONT_SMALL_BLACK);
-	Widget_GameText_draw(21, city->name_id,
+	lang_text_draw(21, city->name_id,
 		c->xOffset + 40 + width, c->yOffset + 110, FONT_SMALL_BLACK);
 	
-	width = Widget_GameText_draw(129, 1,
+	width = lang_text_draw(129, 1,
 		c->xOffset + 40, c->yOffset + 130, FONT_SMALL_BLACK);
-	Widget_GameText_drawNumberWithDescription(8, 10, f->type == FIGURE_TRADE_SHIP ? 12 : 8,
+	lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 12 : 8,
 		c->xOffset + 40 + width, c->yOffset + 130, FONT_SMALL_BLACK);
 	
 	int traderId = f->traderId;
@@ -100,7 +100,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 			case FIGURE_ACTION_115_TRADE_SHIP_LEAVING: textId = 8; break;
 			default: textId = 9; break;
 		}
-		Widget_GameText_draw(129, textId, c->xOffset + 40, c->yOffset + 150, FONT_SMALL_BLACK);
+		lang_text_draw(129, textId, c->xOffset + 40, c->yOffset + 150, FONT_SMALL_BLACK);
 	} else {
 		int textId;
 		switch (f->actionState) {
@@ -121,11 +121,11 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 				textId = 11;
 				break;
 		}
-		Widget_GameText_draw(129, textId, c->xOffset + 40, c->yOffset + 150, FONT_SMALL_BLACK);
+		lang_text_draw(129, textId, c->xOffset + 40, c->yOffset + 150, FONT_SMALL_BLACK);
 	}
 	if (trader_has_traded(traderId)) {
 		// bought
-		width = Widget_GameText_draw(129, 4, c->xOffset + 40, c->yOffset + 170, FONT_SMALL_BLACK);
+		width = lang_text_draw(129, 4, c->xOffset + 40, c->yOffset + 170, FONT_SMALL_BLACK);
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (trader_bought_resources(traderId, r)) {
 				width += Widget_Text_drawNumber(trader_bought_resources(traderId, r),
@@ -136,7 +136,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 			}
 		}
 		// sold
-		width = Widget_GameText_draw(129, 5, c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
+		width = lang_text_draw(129, 5, c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (trader_sold_resources(traderId, r)) {
 				width += Widget_Text_drawNumber(trader_sold_resources(traderId, r),
@@ -148,7 +148,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 		}
 	} else { // nothing sold/bought (yet)
 		// buying
-		width = Widget_GameText_draw(129, 2, c->xOffset + 40, c->yOffset + 170, FONT_SMALL_BLACK);
+		width = lang_text_draw(129, 2, c->xOffset + 40, c->yOffset + 170, FONT_SMALL_BLACK);
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (city->buys_resource[r]) {
 				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
@@ -157,7 +157,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 			}
 		}
 		// selling
-		width = Widget_GameText_draw(129, 3, c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
+		width = lang_text_draw(129, 3, c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (city->sells_resource[r]) {
 				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
@@ -217,9 +217,9 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, figure *f)
 	Graphics_drawImage(image_group(GROUP_BIG_PEOPLE) + graphicId - 1,
 		c->xOffset + 28, c->yOffset + 112);
 	
-	Widget_GameText_draw(65, f->name,
+	lang_text_draw(65, f->name,
 		c->xOffset + 90, c->yOffset + 108, FONT_LARGE_BROWN);
-	Widget_GameText_draw(37, scenario_property_enemy() + 20,
+	lang_text_draw(37, scenario_property_enemy() + 20,
 		c->xOffset + 92, c->yOffset + 149, FONT_SMALL_BLACK);
 }
 
@@ -228,7 +228,7 @@ static void drawFigureInfoBoatAnimal(BuildingInfoContext *c, figure *f)
 	Graphics_drawImage(BigPeopleGraphic(f->type),
 		c->xOffset + 28, c->yOffset + 112);
 	
-	Widget_GameText_draw(64, f->type,
+	lang_text_draw(64, f->type,
 		c->xOffset + 92, c->yOffset + 139, FONT_SMALL_BLACK);
 }
 
@@ -237,9 +237,9 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 	Graphics_drawImage(BigPeopleGraphic(f->type),
 		c->xOffset + 28, c->yOffset + 112);
 	
-	Widget_GameText_draw(65, f->name,
+	lang_text_draw(65, f->name,
 		c->xOffset + 90, c->yOffset + 108, FONT_LARGE_BROWN);
-	int width = Widget_GameText_draw(64, f->type,
+	int width = lang_text_draw(64, f->type,
 		c->xOffset + 92, c->yOffset + 139, FONT_SMALL_BLACK);
 	
 	if (f->actionState != FIGURE_ACTION_132_DOCKER_IDLING && f->resourceId) {
@@ -249,7 +249,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 			c->xOffset + 92 + width, c->yOffset + 135);
 	}
 	
-	Widget_GameText_drawMultiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
+	lang_text_draw_multiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
 		c->xOffset + 90, c->yOffset + 160, 16 * (c->widthBlocks - 9), FONT_SMALL_BLACK);
 	
 	if (!f->buildingId) {
@@ -271,22 +271,22 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 	}
 	if (f->actionState != FIGURE_ACTION_132_DOCKER_IDLING) {
 		if (isReturning) {
-			width = Widget_GameText_draw(129, 16,
+			width = lang_text_draw(129, 16,
 				c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += Widget_GameText_draw(41, sourceBuilding->type,
+			width += lang_text_draw(41, sourceBuilding->type,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += Widget_GameText_draw(129, 14,
+			width += lang_text_draw(129, 14,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += Widget_GameText_draw(41, targetBuilding->type,
+			width += lang_text_draw(41, targetBuilding->type,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 		} else {
-			width = Widget_GameText_draw(129, 15,
+			width = lang_text_draw(129, 15,
 				c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += Widget_GameText_draw(41, targetBuilding->type,
+			width += lang_text_draw(41, targetBuilding->type,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += Widget_GameText_draw(129, 14,
+			width += lang_text_draw(129, 14,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += Widget_GameText_draw(41, sourceBuilding->type,
+			width += lang_text_draw(41, sourceBuilding->type,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 		}
 	}
@@ -297,20 +297,20 @@ static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, figure *f)
 	Graphics_drawImage(BigPeopleGraphic(f->type),
 		c->xOffset + 28, c->yOffset + 112);
 	
-	Widget_GameText_draw(65, f->name,
+	lang_text_draw(65, f->name,
 		c->xOffset + 90, c->yOffset + 108, FONT_LARGE_BROWN);
-	int width = Widget_GameText_draw(64, f->type,
+	int width = lang_text_draw(64, f->type,
 		c->xOffset + 92, c->yOffset + 139, FONT_SMALL_BLACK);
 	
 	if (f->actionState == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-		width += Widget_GameText_draw(129, 17,
+		width += lang_text_draw(129, 17,
 			c->xOffset + 90 + width, c->yOffset + 139, FONT_SMALL_BLACK);
 		int resourceId = collectingItemIdToResourceId(f->collectingItemId);
 		Graphics_drawImage(
 			image_group(GROUP_RESOURCE_ICONS) + resourceId + resource_image_offset(resourceId, RESOURCE_IMAGE_ICON),
 			c->xOffset + 90 + width, c->yOffset + 135);
 	} else if (f->actionState == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
-		width += Widget_GameText_draw(129, 18,
+		width += lang_text_draw(129, 18,
 			c->xOffset + 90 + width, c->yOffset + 139, FONT_SMALL_BLACK);
 		int resourceId = collectingItemIdToResourceId(f->collectingItemId);
 		Graphics_drawImage(
@@ -318,7 +318,7 @@ static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, figure *f)
 			c->xOffset + 90 + width, c->yOffset + 135);
 	}
 	if (c->figure.phraseId >= 0) {
-		Widget_GameText_drawMultiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
+		lang_text_draw_multiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
 			c->xOffset + 90, c->yOffset + 160, 16 * (c->widthBlocks - 9), FONT_SMALL_BLACK);
 	}
 }
@@ -332,13 +332,13 @@ static void drawFigureInfoNormal(BuildingInfoContext *c, figure *f)
 	}
 	Graphics_drawImage(graphicId, c->xOffset + 28, c->yOffset + 112);
 	
-	Widget_GameText_draw(65, f->name,
+	lang_text_draw(65, f->name,
 		c->xOffset + 90, c->yOffset + 108, FONT_LARGE_BROWN);
-	Widget_GameText_draw(64, f->type,
+	lang_text_draw(64, f->type,
 		c->xOffset + 92, c->yOffset + 139, FONT_SMALL_BLACK);
 	
 	if (c->figure.phraseId >= 0) {
-		Widget_GameText_drawMultiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
+		lang_text_draw_multiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
 			c->xOffset + 90, c->yOffset + 160, 16 * (c->widthBlocks - 9), FONT_SMALL_BLACK);
 	}
 }
@@ -370,7 +370,7 @@ void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c)
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 40,
 		c->widthBlocks - 2, 12);
 	if (c->figure.count <= 0) {
-		Widget_GameText_drawCentered(70, 0, c->xOffset, c->yOffset + 120,
+		lang_text_draw_centered(70, 0, c->xOffset, c->yOffset + 120,
 			16 * c->widthBlocks, FONT_SMALL_BLACK);
 	} else {
 		for (int i = 0; i < c->figure.count; i++) {

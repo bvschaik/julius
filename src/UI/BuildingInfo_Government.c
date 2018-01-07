@@ -13,14 +13,14 @@ void UI_BuildingInfo_drawForum(BuildingInfoContext *c)
 	c->helpId = 76;
 	PLAY_SOUND("wavs/forum.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(106, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(106, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
 		c->xOffset + 16, c->yOffset + 36);
 
 	building *b = building_get(c->buildingId);
-	int width = Widget_GameText_draw(106, 2,
+	int width = lang_text_draw(106, 2,
 		c->xOffset + 44, c->yOffset + 43, FONT_NORMAL_BLACK);
-	Widget_GameText_drawNumberWithDescription(8, 0, b->taxIncomeOrStorage,
+	lang_text_draw_amount(8, 0, b->taxIncomeOrStorage,
 		c->xOffset + 44 + width, c->yOffset + 43, FONT_NORMAL_BLACK);
 
 	if (!c->hasRoadAccess) {
@@ -49,14 +49,14 @@ void UI_BuildingInfo_drawSenate(BuildingInfoContext *c)
 	c->helpId = 77;
 	PLAY_SOUND("wavs/senate.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(105, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(105, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
 		c->xOffset + 16, c->yOffset + 36);
 
 	building *b = building_get(c->buildingId);
-	int width = Widget_GameText_draw(105, 2,
+	int width = lang_text_draw(105, 2,
 		c->xOffset + 44, c->yOffset + 43, FONT_NORMAL_BLACK);
-	Widget_GameText_drawNumberWithDescription(8, 0, b->taxIncomeOrStorage,
+	lang_text_draw_amount(8, 0, b->taxIncomeOrStorage,
 		c->xOffset + 44 + width, c->yOffset + 43, FONT_NORMAL_BLACK);
 
 	if (!c->hasRoadAccess) {
@@ -78,7 +78,7 @@ void UI_BuildingInfo_drawSenate(BuildingInfoContext *c)
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 
-	Widget_GameText_draw(105, 3, c->xOffset + 60, c->yOffset + 220, FONT_NORMAL_BLACK);
+	lang_text_draw(105, 3, c->xOffset + 60, c->yOffset + 220, FONT_NORMAL_BLACK);
 }
 
 void UI_BuildingInfo_drawGovernorsHome(BuildingInfoContext *c)
@@ -86,8 +86,8 @@ void UI_BuildingInfo_drawGovernorsHome(BuildingInfoContext *c)
 	c->helpId = 78;
 	PLAY_SOUND("wavs/gov_palace.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(103, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	Widget_GameText_drawMultiline(103, 1,
+	lang_text_draw_centered(103, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_multiline(103, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 143,
 		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 }

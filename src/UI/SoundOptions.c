@@ -73,28 +73,28 @@ void UI_SoundOptions_drawForeground()
 	label_draw(144, 326, 12, focusButtonId == 6 ? 1 : 2);
 	
     // title
-	Widget_GameText_drawCentered(46, 0, 96, 92, 288, FONT_LARGE_BLACK);
+	lang_text_draw_centered(46, 0, 96, 92, 288, FONT_LARGE_BLACK);
 
-	Widget_GameText_drawCentered(46, 12, 128, 300, 224, FONT_NORMAL_GREEN);
-	Widget_GameText_drawCentered(46, 9, 128, 330, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(46, 12, 128, 300, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(46, 9, 128, 330, 224, FONT_NORMAL_GREEN);
 	
-	Widget_GameText_draw(46, 10, 112, 142, FONT_SMALL_PLAIN);
-	Widget_GameText_draw(46, 11, 336, 142, FONT_SMALL_PLAIN);
+	lang_text_draw(46, 10, 112, 142, FONT_SMALL_PLAIN);
+	lang_text_draw(46, 11, 336, 142, FONT_SMALL_PLAIN);
 	
 	const set_sound *music = setting_sound(SOUND_MUSIC);
-	Widget_GameText_drawCentered(46, music->enabled ? 2 : 1, 64, 166, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(46, music->enabled ? 2 : 1, 64, 166, 224, FONT_NORMAL_GREEN);
 	Widget_Text_drawPercentage(music->volume, 374, 166, FONT_NORMAL_PLAIN);
 	
 	const set_sound *speech = setting_sound(SOUND_SPEECH);
-	Widget_GameText_drawCentered(46, speech->enabled ? 4 : 3, 64, 196, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(46, speech->enabled ? 4 : 3, 64, 196, 224, FONT_NORMAL_GREEN);
 	Widget_Text_drawPercentage(speech->volume, 374, 196, FONT_NORMAL_PLAIN);
 	
 	const set_sound *effects = setting_sound(SOUND_EFFECTS);
-	Widget_GameText_drawCentered(46, effects->enabled ? 6 : 5, 64, 226, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(46, effects->enabled ? 6 : 5, 64, 226, 224, FONT_NORMAL_GREEN);
 	Widget_Text_drawPercentage(effects->volume, 374, 226, FONT_NORMAL_PLAIN);
 	
 	const set_sound *city = setting_sound(SOUND_CITY);
-	Widget_GameText_drawCentered(46, city->enabled ? 8 : 7, 64, 256, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(46, city->enabled ? 8 : 7, 64, 256, 224, FONT_NORMAL_GREEN);
 	Widget_Text_drawPercentage(city->volume, 374, 256, FONT_NORMAL_PLAIN);
 
 	arrow_buttons_draw(208, 60, arrowButtons, 8);

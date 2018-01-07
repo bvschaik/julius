@@ -171,7 +171,7 @@ static void drawMenuButtons()
 		label_draw(xOffset - 266, menu.yOffset + 110 + 24 * i,
 			16, buildMenuFocusButtonId == i + 1 ? 1 : 2);
 		int buildingType = building_menu_type(menu.selectedSubmenu, itemIndex);
-		Widget_GameText_drawCentered(28, buildingType,
+		lang_text_draw_centered(28, buildingType,
 			xOffset - 266, menu.yOffset + 113 + 24 * i, 176, FONT_NORMAL_GREEN);
 		if (buildingType == BUILDING_DRAGGABLE_RESERVOIR) {
 			buildingType = BUILDING_RESERVOIR;

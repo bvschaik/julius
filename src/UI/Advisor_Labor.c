@@ -63,31 +63,31 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 	outer_panel_draw(0, 0, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS), 10, 10);
 	
-	Widget_GameText_draw(50, 0, 60, 12, FONT_LARGE_BLACK);
+	lang_text_draw(50, 0, 60, 12, FONT_LARGE_BLACK);
 	
 	// table headers
-	Widget_GameText_draw(50, 21, 60, 56, FONT_SMALL_PLAIN);
-	Widget_GameText_draw(50, 22, 170, 56, FONT_SMALL_PLAIN);
-	Widget_GameText_draw(50, 23, 400, 56, FONT_SMALL_PLAIN);
-	Widget_GameText_draw(50, 24, 500, 56, FONT_SMALL_PLAIN);
+	lang_text_draw(50, 21, 60, 56, FONT_SMALL_PLAIN);
+	lang_text_draw(50, 22, 170, 56, FONT_SMALL_PLAIN);
+	lang_text_draw(50, 23, 400, 56, FONT_SMALL_PLAIN);
+	lang_text_draw(50, 24, 500, 56, FONT_SMALL_PLAIN);
 
 	// xx employed, yy unemployed
 	int width = Widget_Text_drawNumber(Data_CityInfo.workersEmployed, '@', " ", 32, 320, FONT_NORMAL_BLACK);
-	width += Widget_GameText_draw(50, 12, 32 + width, 320, FONT_NORMAL_BLACK);
+	width += lang_text_draw(50, 12, 32 + width, 320, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawNumber(Data_CityInfo.workersUnemployed, '@', " ", 50 + width, 320, FONT_NORMAL_BLACK);
-	width += Widget_GameText_draw(50, 13, 50 + width, 320, FONT_NORMAL_BLACK);
+	width += lang_text_draw(50, 13, 50 + width, 320, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawNumber(Data_CityInfo.unemploymentPercentage, '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
 
 	// wages panel
 	inner_panel_draw(64, 350, 32, 2);
-	Widget_GameText_draw(50, 14, 70, 359, FONT_NORMAL_WHITE);
+	lang_text_draw(50, 14, 70, 359, FONT_NORMAL_WHITE);
 	width = Widget_Text_drawNumber(Data_CityInfo.wages, '@', " ", 230, 359, FONT_NORMAL_WHITE);
-	width += Widget_GameText_draw(50, 15, 230 + width, 359, FONT_NORMAL_WHITE);
-	width += Widget_GameText_draw(50, 18, 230 + width, 359, FONT_NORMAL_WHITE);
+	width += lang_text_draw(50, 15, 230 + width, 359, FONT_NORMAL_WHITE);
+	width += lang_text_draw(50, 18, 230 + width, 359, FONT_NORMAL_WHITE);
 	width += Widget_Text_drawNumber(Data_CityInfo.wagesRome, '@', " )", 230 + width, 359, FONT_NORMAL_WHITE);
 
 	// estimated wages
-	width = Widget_GameText_draw(50, 19, 64, 390, FONT_NORMAL_BLACK);
+	width = lang_text_draw(50, 19, 64, 390, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawMoney(Data_CityInfo.estimatedYearlyWages, 64 + width, 390, FONT_NORMAL_BLACK);
     graphics_reset_dialog();
 }
@@ -109,7 +109,7 @@ void UI_Advisor_Labor_drawForeground()
 			Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].priority, '@', " ",
 				90, y_offset, FONT_NORMAL_WHITE);
 		}
-		Widget_GameText_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE);
+		lang_text_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE);
 		Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].workersNeeded, '@', " ",
 			410, y_offset, FONT_NORMAL_WHITE);
 		font_t font = FONT_NORMAL_WHITE;
@@ -170,18 +170,18 @@ void UI_LaborPriorityDialog_drawBackground()
 
     graphics_in_dialog();
 	outer_panel_draw(160, 176, 20, 9);
-	Widget_GameText_drawCentered(50, 25, 160, 185, 320, FONT_LARGE_BLACK);
+	lang_text_draw_centered(50, 25, 160, 185, 320, FONT_LARGE_BLACK);
 	for (int i = 0; i < 9; i++) {
 		Graphics_drawRect(178 + 32 * i, 221, 27, 27, COLOR_BLACK);
-		Widget_GameText_drawCentered(50, 27 + i, 178 + 32 * i, 224, 27, FONT_LARGE_BLACK);
+		lang_text_draw_centered(50, 27 + i, 178 + 32 * i, 224, 27, FONT_LARGE_BLACK);
 		if (i >= priorityMaxItems) {
 			Graphics_shadeRect(179 + 32 * i, 222, 25, 25, 1);
 		}
 	}
 
 	Graphics_drawRect(180, 256, 280, 25, COLOR_BLACK);
-	Widget_GameText_drawCentered(50, 26, 180, 263, 280, FONT_NORMAL_BLACK);
-	Widget_GameText_drawCentered(13, 3, 160, 296, 320, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(50, 26, 180, 263, 280, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(13, 3, 160, 296, 320, FONT_NORMAL_BLACK);
     graphics_reset_dialog();
 }
 

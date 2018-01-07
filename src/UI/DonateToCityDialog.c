@@ -52,7 +52,7 @@ void UI_DonateToCityDialog_drawBackground()
 	outer_panel_draw(baseOffsetX + 64, baseOffsetY + 160, 32, 10);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
 		baseOffsetX + 96, baseOffsetY + 176);
-	Widget_GameText_drawCentered(52, 16,
+	lang_text_draw_centered(52, 16,
 		baseOffsetX + 80, baseOffsetY + 176, 496, FONT_LARGE_BLACK);
 
 	inner_panel_draw(baseOffsetX + 112, baseOffsetY + 208, 26, 4);
@@ -61,15 +61,15 @@ void UI_DonateToCityDialog_drawBackground()
 	Widget_Text_drawNumberCentered(500, baseOffsetX + 204, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
 	Widget_Text_drawNumberCentered(2000, baseOffsetX + 284, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
 	Widget_Text_drawNumberCentered(5000, baseOffsetX + 364, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
-	Widget_GameText_drawCentered(52, 19, baseOffsetX + 444, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
+	lang_text_draw_centered(52, 19, baseOffsetX + 444, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
 
-	Widget_GameText_draw(52, 17, baseOffsetX + 128, baseOffsetY + 248, FONT_NORMAL_WHITE);
+	lang_text_draw(52, 17, baseOffsetX + 128, baseOffsetY + 248, FONT_NORMAL_WHITE);
 	Widget_Text_drawNumber(Data_CityInfo.donateAmount, '@', " ",
 		baseOffsetX + 316, baseOffsetY + 248, FONT_NORMAL_WHITE);
 
-	Widget_GameText_drawCentered(13, 4,
+	lang_text_draw_centered(13, 4,
 		baseOffsetX + 336, baseOffsetY + 288, 160, FONT_NORMAL_BLACK);
-	Widget_GameText_drawCentered(52, 18,
+	lang_text_draw_centered(52, 18,
 		baseOffsetX + 144, baseOffsetY + 288, 160, FONT_NORMAL_BLACK);
 }
 

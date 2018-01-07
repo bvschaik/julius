@@ -44,15 +44,15 @@ void UI_SendGiftToCaesarDialog_drawBackground()
 	outer_panel_draw(baseOffsetX + 96, baseOffsetY + 144, 30, 15);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + 16,
 		baseOffsetX + 128, baseOffsetY + 160);
-	Widget_GameText_drawCentered(52, 69,
+	lang_text_draw_centered(52, 69,
 		baseOffsetX + 128, baseOffsetY + 160, 432, FONT_LARGE_BLACK);
 
-	int width = Widget_GameText_draw(52, 50,
+	int width = lang_text_draw(52, 50,
 		baseOffsetX + 144, baseOffsetY + 304, FONT_NORMAL_BLACK);
-	Widget_GameText_drawNumberWithDescription(8, 4,
+	lang_text_draw_amount(8, 4,
 		Data_CityInfo.giftMonthsSinceLast,
 		baseOffsetX + 144 + width, baseOffsetY + 304, FONT_NORMAL_BLACK);
-	Widget_GameText_drawCentered(13, 4,
+	lang_text_draw_centered(13, 4,
 		baseOffsetX + 400, baseOffsetY + 341, 160, FONT_NORMAL_BLACK);
 }
 
@@ -64,38 +64,38 @@ void UI_SendGiftToCaesarDialog_drawForeground()
 	inner_panel_draw(baseOffsetX + 112, baseOffsetY + 208, 28, 5); // BUGFIX red/white letters overlapping
 
 	if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
-		Widget_GameText_draw(52, 63,
+		lang_text_draw(52, 63,
 			baseOffsetX + 128, baseOffsetY + 218, FONT_NORMAL_WHITE);
 		font_t font = focusButtonId == 1 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
-		int width = Widget_GameText_draw(52, 51 + Data_CityInfo.giftId_modest,
+		int width = lang_text_draw(52, 51 + Data_CityInfo.giftId_modest,
 			baseOffsetX + 224, baseOffsetY + 218, font);
 		Widget_Text_drawMoney(Data_CityInfo.giftCost_modest,
 			baseOffsetX + 224 + width, baseOffsetY + 218, font);
 	} else {
-		Widget_GameText_drawMultiline(52, 70,
+		lang_text_draw_multiline(52, 70,
 			baseOffsetX + 160, baseOffsetY + 224, 352, FONT_NORMAL_WHITE);
 	}
 	if (Data_CityInfo.giftCost_generous <= Data_CityInfo.personalSavings) {
-		Widget_GameText_draw(52, 64,
+		lang_text_draw(52, 64,
 			baseOffsetX + 128, baseOffsetY + 238, FONT_NORMAL_WHITE);
 		font_t font = focusButtonId == 2 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
-		int width = Widget_GameText_draw(52, 55 + Data_CityInfo.giftId_generous,
+		int width = lang_text_draw(52, 55 + Data_CityInfo.giftId_generous,
 			baseOffsetX + 224, baseOffsetY + 238, font);
 		Widget_Text_drawMoney(Data_CityInfo.giftCost_generous,
 			baseOffsetX + 224 + width, baseOffsetY + 238, font);
 	}
 	if (Data_CityInfo.giftCost_lavish <= Data_CityInfo.personalSavings) {
-		Widget_GameText_draw(52, 65,
+		lang_text_draw(52, 65,
 			baseOffsetX + 128, baseOffsetY + 258, FONT_NORMAL_WHITE);
 		font_t font = focusButtonId == 3 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
-		int width = Widget_GameText_draw(52, 59 + Data_CityInfo.giftId_lavish,
+		int width = lang_text_draw(52, 59 + Data_CityInfo.giftId_lavish,
 			baseOffsetX + 224, baseOffsetY + 258, font);
 		Widget_Text_drawMoney(Data_CityInfo.giftCost_lavish,
 			baseOffsetX + 224 + width, baseOffsetY + 258, font);
 	}
 	// can give at least one type
 	if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
-		Widget_GameText_drawCentered(52, 66 + Data_CityInfo.giftSizeSelected,
+		lang_text_draw_centered(52, 66 + Data_CityInfo.giftSizeSelected,
 			baseOffsetX + 128, baseOffsetY + 341, 240, FONT_NORMAL_BLACK);
 		button_border_draw(
 			baseOffsetX + 128, baseOffsetY + 336, 240, 20, focusButtonId == 4);

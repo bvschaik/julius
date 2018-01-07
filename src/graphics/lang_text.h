@@ -4,22 +4,21 @@
 #include "graphics/font.h"
 #include "graphics/color.h"
 
-int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, font_t font);
-int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, font_t font, color_t color);
+int lang_text_get_width(int group, int number, font_t font);
 
-void Widget_GameText_drawCentered(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font);
-void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font, color_t color);
+int lang_text_draw(int group, int number, int xOffset, int yOffset, font_t font);
+int lang_text_draw_colored(int group, int number, int xOffset, int yOffset, font_t font, color_t color);
 
-int Widget_GameText_drawNumberWithDescription(int group, int number, int amount, int xOffset, int yOffset, font_t font);
+void lang_text_draw_centered(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font);
+void lang_text_draw_centered_colored(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font, color_t color);
 
-int Widget_GameText_drawYear(int year, int xOffset, int yOffset, font_t font);
-int Widget_GameText_drawYearColored(int year, int xOffset, int yOffset, font_t font, color_t color);
+int lang_text_draw_amount(int group, int number, int amount, int xOffset, int yOffset, font_t font);
 
-int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, font_t font);
+int lang_text_draw_year(int year, int xOffset, int yOffset, font_t font);
+int lang_text_draw_year_colored(int year, int xOffset, int yOffset, font_t font, color_t color);
 
-int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font);
+int lang_text_draw_year_condensed(int year, int xOffset, int yOffset, font_t font);
 
-int Widget_GameText_getWidth(int group, int number, font_t font);
-int Widget_GameText_getDrawWidth(int group, int number, font_t font);
+int lang_text_draw_multiline(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font);
 
 #endif // GRAPHICS_LANG_TEXT_H

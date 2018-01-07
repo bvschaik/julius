@@ -241,9 +241,9 @@ static void drawOverlayText(int xOffset)
 {
 	if (!city_view_is_sidebar_collapsed()) {
 		if (game_state_overlay()) {
-			Widget_GameText_drawCentered(14, game_state_overlay(), xOffset, 32, 117, FONT_NORMAL_GREEN);
+			lang_text_draw_centered(14, game_state_overlay(), xOffset, 32, 117, FONT_NORMAL_GREEN);
 		} else {
-			Widget_GameText_drawCentered(6, 4, xOffset, 32, 117, FONT_NORMAL_GREEN);
+			lang_text_draw_centered(6, 4, xOffset, 32, 117, FONT_NORMAL_GREEN);
 		}
 	}
 }

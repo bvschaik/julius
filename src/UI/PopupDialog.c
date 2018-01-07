@@ -41,11 +41,11 @@ void UI_PopupDialog_drawBackground()
 	int xOffset = Data_Screen.offset640x480.x + 80;
 	int yOffset = Data_Screen.offset640x480.y + 80;
 	outer_panel_draw(xOffset, yOffset, 30, 10);
-	Widget_GameText_drawCentered(GROUP, data.msgId, xOffset, yOffset + 20, 480, FONT_LARGE_BLACK);
-	if (Widget_GameText_getWidth(GROUP, data.msgId + 1, FONT_NORMAL_BLACK) >= 420) {
-		Widget_GameText_drawMultiline(GROUP, data.msgId + 1, xOffset + 30, yOffset + 60, 420, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(GROUP, data.msgId, xOffset, yOffset + 20, 480, FONT_LARGE_BLACK);
+	if (lang_text_get_width(GROUP, data.msgId + 1, FONT_NORMAL_BLACK) >= 420) {
+		lang_text_draw_multiline(GROUP, data.msgId + 1, xOffset + 30, yOffset + 60, 420, FONT_NORMAL_BLACK);
 	} else {
-		Widget_GameText_drawCentered(GROUP, data.msgId + 1, xOffset, yOffset + 60, 480, FONT_NORMAL_BLACK);
+		lang_text_draw_centered(GROUP, data.msgId + 1, xOffset, yOffset + 60, 480, FONT_NORMAL_BLACK);
 	}
 }
 
@@ -56,7 +56,7 @@ void UI_PopupDialog_drawForeground()
 	if (data.hasButtons) {
 		image_buttons_draw(xOffset, yOffset, buttons, 2);
 	} else {
-		Widget_GameText_drawCentered(13, 1, xOffset, yOffset + 128, 480, FONT_NORMAL_BLACK);
+		lang_text_draw_centered(13, 1, xOffset, yOffset + 128, 480, FONT_NORMAL_BLACK);
 	}
 }
 

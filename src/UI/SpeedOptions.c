@@ -47,15 +47,15 @@ void UI_SpeedOptions_drawForeground()
 	label_draw(144, 262, 12, focusButtonId == 2 ? 1 : 2);
 	
     // title
-	Widget_GameText_drawCentered(45, 0, 128, 92, 224, FONT_LARGE_BLACK);
+	lang_text_draw_centered(45, 0, 128, 92, 224, FONT_LARGE_BLACK);
     // ok/cancel label texts
-	Widget_GameText_drawCentered(45, 4, 128, 236, 224, FONT_NORMAL_GREEN);
-	Widget_GameText_drawCentered(45, 1, 128, 266, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(45, 4, 128, 236, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(45, 1, 128, 266, 224, FONT_NORMAL_GREEN);
     // game speed
-	Widget_GameText_draw(45, 2, 144, 146, FONT_NORMAL_PLAIN);
+	lang_text_draw(45, 2, 144, 146, FONT_NORMAL_PLAIN);
 	Widget_Text_drawPercentage(setting_game_speed(), 296, 146, FONT_NORMAL_PLAIN);
     // scroll speed
-	Widget_GameText_draw(45, 3, 144, 182, FONT_NORMAL_PLAIN);
+	lang_text_draw(45, 3, 144, 182, FONT_NORMAL_PLAIN);
 	Widget_Text_drawPercentage(setting_scroll_speed(), 296, 182,FONT_NORMAL_PLAIN);
 
 	arrow_buttons_draw(128, 40, arrowButtons, 4);

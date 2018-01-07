@@ -34,11 +34,11 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 
 	// Title: depends on big graph shown
 	if (Data_CityInfo_Extra.populationGraphOrder < 2) {
-		Widget_GameText_draw(55, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+		lang_text_draw(55, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 	} else if (Data_CityInfo_Extra.populationGraphOrder < 4) {
-		Widget_GameText_draw(55, 1, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+		lang_text_draw(55, 1, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 	} else {
-		Widget_GameText_draw(55, 2, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+		lang_text_draw(55, 2, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 	}
 
 	Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 14, baseOffsetX + 56, baseOffsetY + 60);
@@ -98,11 +98,11 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 			botGraph = drawHistoryGraph;
 			break;
 	}
-	Widget_GameText_drawCentered(55, bigText,
+	lang_text_draw_centered(55, bigText,
 		baseOffsetX + 60, baseOffsetY + 295, 400, FONT_NORMAL_BLACK);
-	Widget_GameText_drawCentered(55, topText,
+	lang_text_draw_centered(55, topText,
 		baseOffsetX + 504, baseOffsetY + 120, 100, FONT_NORMAL_BLACK);
-	Widget_GameText_drawCentered(55, botText,
+	lang_text_draw_centered(55, botText,
 		baseOffsetX + 504, baseOffsetY + 220, 100, FONT_NORMAL_BLACK);
 	bigGraph(1, baseOffsetX + 64, baseOffsetY + 64);
 	topGraph(0, baseOffsetX + 505, baseOffsetY + 63);
@@ -119,41 +119,41 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 
 	// food stores
 	if (scenario_property_rome_supplies_wheat()) {
-		Widget_GameText_draw(55, 11, baseOffsetX + 75, baseOffsetY + 342, FONT_NORMAL_WHITE);
+		lang_text_draw(55, 11, baseOffsetX + 75, baseOffsetY + 342, FONT_NORMAL_WHITE);
 	} else {
-		width = Widget_GameText_drawNumberWithDescription(
+		width = lang_text_draw_amount(
 			8, 6, Data_CityInfo.foodInfoGranariesOperating,
 			baseOffsetX + 75, baseOffsetY + 342, FONT_NORMAL_WHITE);
 		if (Data_CityInfo.foodInfoFoodSupplyMonths > 0) {
-			width += Widget_GameText_draw(55, 12, baseOffsetX + 75 + width, baseOffsetY + 342, FONT_NORMAL_WHITE);
-			Widget_GameText_drawNumberWithDescription(
+			width += lang_text_draw(55, 12, baseOffsetX + 75 + width, baseOffsetY + 342, FONT_NORMAL_WHITE);
+			lang_text_draw_amount(
 				8, 4, Data_CityInfo.foodInfoFoodSupplyMonths,
 				baseOffsetX + 75 + width, baseOffsetY + 342, FONT_NORMAL_WHITE);
 		} else if (Data_CityInfo.foodInfoFoodStoredInGranaries > Data_CityInfo.foodInfoFoodNeededPerMonth / 2) {
-			Widget_GameText_draw(55, 13, baseOffsetX + 75 + width, baseOffsetY + 342, FONT_NORMAL_WHITE);
+			lang_text_draw(55, 13, baseOffsetX + 75 + width, baseOffsetY + 342, FONT_NORMAL_WHITE);
 		} else if (Data_CityInfo.foodInfoFoodStoredInGranaries > 0) {
-			Widget_GameText_draw(55, 15, baseOffsetX + 75 + width, baseOffsetY + 342, FONT_NORMAL_WHITE);
+			lang_text_draw(55, 15, baseOffsetX + 75 + width, baseOffsetY + 342, FONT_NORMAL_WHITE);
 		} else {
-			Widget_GameText_draw(55, 14, baseOffsetX + 75 + width, baseOffsetY + 342, FONT_NORMAL_WHITE);
+			lang_text_draw(55, 14, baseOffsetX + 75 + width, baseOffsetY + 342, FONT_NORMAL_WHITE);
 		}
 	}
 
 	// food types eaten
-	width = Widget_GameText_draw(55, 16, baseOffsetX + 75, baseOffsetY + 360, FONT_NORMAL_WHITE);
+	width = lang_text_draw(55, 16, baseOffsetX + 75, baseOffsetY + 360, FONT_NORMAL_WHITE);
 	Widget_Text_drawNumber(Data_CityInfo.foodInfoFoodTypesAvailable, '@', " ",
 		baseOffsetX + 75 + width, baseOffsetY + 360, FONT_NORMAL_WHITE);
 
 	// immigration
 	if (Data_CityInfo.populationNewcomersThisMonth >= 5) {
-		Widget_GameText_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, FONT_NORMAL_WHITE);
+		lang_text_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, FONT_NORMAL_WHITE);
 		width = Widget_Text_drawNumber(Data_CityInfo.populationNewcomersThisMonth, '@', " ",
 			baseOffsetX + 75, baseOffsetY + 396, FONT_NORMAL_WHITE);
-		Widget_GameText_draw(55, 17, baseOffsetX + 75 + width, baseOffsetY + 396, FONT_NORMAL_WHITE);
+		lang_text_draw(55, 17, baseOffsetX + 75 + width, baseOffsetY + 396, FONT_NORMAL_WHITE);
 	} else if (Data_CityInfo.populationRefusedImmigrantsNoRoom || Data_CityInfo.populationRoomInHouses <= 0) {
-		Widget_GameText_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, FONT_NORMAL_WHITE);
-		Widget_GameText_draw(55, 19, baseOffsetX + 75, baseOffsetY + 396, FONT_NORMAL_WHITE);
+		lang_text_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, FONT_NORMAL_WHITE);
+		lang_text_draw(55, 19, baseOffsetX + 75, baseOffsetY + 396, FONT_NORMAL_WHITE);
 	} else if (Data_CityInfo.populationMigrationPercentage < 80) {
-		Widget_GameText_draw(55, 25, baseOffsetX + 75, baseOffsetY + 378, FONT_NORMAL_WHITE);
+		lang_text_draw(55, 25, baseOffsetX + 75, baseOffsetY + 378, FONT_NORMAL_WHITE);
 		int textId;
 		switch (Data_CityInfo.populationEmigrationCauseTextId) {
 			case 0: textId = 20; break;
@@ -165,16 +165,16 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 			default: textId = 0; break;
 		}
 		if (textId) {
-			Widget_GameText_draw(55, textId, baseOffsetX + 75, baseOffsetY + 396, FONT_NORMAL_WHITE);
+			lang_text_draw(55, textId, baseOffsetX + 75, baseOffsetY + 396, FONT_NORMAL_WHITE);
 		}
 	} else {
-		Widget_GameText_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, FONT_NORMAL_WHITE);
+		lang_text_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, FONT_NORMAL_WHITE);
 		width = Widget_Text_drawNumber(Data_CityInfo.populationNewcomersThisMonth, '@', " ",
 			baseOffsetX + 75, baseOffsetY + 396, FONT_NORMAL_WHITE);
 		if (Data_CityInfo.populationNewcomersThisMonth == 1) {
-			Widget_GameText_draw(55, 18, baseOffsetX + 75 + width, baseOffsetY + 396, FONT_NORMAL_WHITE);
+			lang_text_draw(55, 18, baseOffsetX + 75 + width, baseOffsetY + 396, FONT_NORMAL_WHITE);
 		} else {
-			Widget_GameText_draw(55, 17, baseOffsetX + 75 + width, baseOffsetY + 396, FONT_NORMAL_WHITE);
+			lang_text_draw(55, 17, baseOffsetX + 75 + width, baseOffsetY + 396, FONT_NORMAL_WHITE);
 		}
 	}
 }
@@ -244,11 +244,11 @@ static void drawHistoryGraph(int fullSize, int x, int y)
 		int startMonth, startYear, endMonth, endYear;
 		getMinMaxMonthYear(maxMonths, &startMonth, &startYear, &endMonth, &endYear);
 
-		int width = Widget_GameText_draw(25, startMonth, x - 20, y + 210, FONT_SMALL_PLAIN);
-		Widget_GameText_drawYear(startYear, x + width - 20, y + 210, FONT_SMALL_PLAIN);
+		int width = lang_text_draw(25, startMonth, x - 20, y + 210, FONT_SMALL_PLAIN);
+		lang_text_draw_year(startYear, x + width - 20, y + 210, FONT_SMALL_PLAIN);
 
-		width = Widget_GameText_draw(25, endMonth, x + 380, y + 210, FONT_SMALL_PLAIN);
-		Widget_GameText_drawYear(startYear, x + width + 380, y + 210, FONT_SMALL_PLAIN);
+		width = lang_text_draw(25, endMonth, x + 380, y + 210, FONT_SMALL_PLAIN);
+		lang_text_draw_year(startYear, x + width + 380, y + 210, FONT_SMALL_PLAIN);
 	}
 
 	if (fullSize) {
@@ -373,9 +373,9 @@ static void drawSocietyGraph(int fullSize, int x, int y)
 		Widget_Text_drawNumberCentered(0,
 			x - 66, y + 196, 60, FONT_SMALL_PLAIN);
 		// x axis
-		Widget_GameText_drawCentered(55, 9,
+		lang_text_draw_centered(55, 9,
 			x - 80, y + 210, 200, FONT_SMALL_PLAIN);
-		Widget_GameText_drawCentered(55, 10,
+		lang_text_draw_centered(55, 10,
 			x + 280, y + 210, 200, FONT_SMALL_PLAIN);
 	}
 

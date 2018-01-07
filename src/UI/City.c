@@ -60,7 +60,7 @@ void UI_City_drawPausedAndTimeLeft()
 		}
 		int totalMonths = 12 - game_time_month() + 12 * years;
 		label_draw(1, 25, 15, 1);
-		int width = Widget_GameText_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
+		int width = lang_text_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
 		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
 	} else if (scenario_criteria_survival_enabled()) {
 		int years;
@@ -71,13 +71,13 @@ void UI_City_drawPausedAndTimeLeft()
 		}
 		int totalMonths = 12 - game_time_month() + 12 * years;
 		label_draw(1, 25, 15, 1);
-		int width = Widget_GameText_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
+		int width = lang_text_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
 		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
 	}
 	if (game_state_is_paused()) {
 		int width = Data_CityView.widthInPixels;
 		outer_panel_draw((width - 448) / 2, 40, 28, 3);
-		Widget_GameText_drawCentered(13, 2,
+		lang_text_draw_centered(13, 2,
 			(width - 448) / 2, 58, 448, FONT_NORMAL_BLACK);
 	}
 }

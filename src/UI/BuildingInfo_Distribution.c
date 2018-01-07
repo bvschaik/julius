@@ -61,7 +61,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 	c->helpId = 2;
 	PLAY_SOUND("wavs/market.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(97, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(97, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
@@ -90,7 +90,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 			Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
 				c->xOffset + 394, c->yOffset + 70, FONT_NORMAL_BLACK);
 		} else {
-			Widget_GameText_drawMultiline(97, 4,
+			lang_text_draw_multiline(97, 4,
 				c->xOffset + 32, c->yOffset + 48,
 				16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 		}
@@ -121,7 +121,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 	c->helpId = 3;
 	PLAY_SOUND("wavs/granary.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(98, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(98, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC_AT(40, 69, 25);
@@ -132,14 +132,14 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 		for (int i = RESOURCE_WHEAT; i <= RESOURCE_MEAT; i++) {
 			totalStored += b->data.storage.resourceStored[i];
 		}
-		int width = Widget_GameText_draw(98, 2,
+		int width = lang_text_draw(98, 2,
 			c->xOffset + 34, c->yOffset + 40, FONT_NORMAL_BLACK);
-		Widget_GameText_drawNumberWithDescription(8, 16, totalStored,
+		lang_text_draw_amount(8, 16, totalStored,
 			c->xOffset + 34 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 
-		width = Widget_GameText_draw(98, 3,
+		width = lang_text_draw(98, 3,
 			c->xOffset + 220, c->yOffset + 40, FONT_NORMAL_BLACK);
-		Widget_GameText_drawNumberWithDescription(8, 16,
+		lang_text_draw_amount(8, 16,
 			b->data.storage.resourceStored[RESOURCE_NONE],
 			c->xOffset + 220 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 
@@ -150,7 +150,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 		width = Widget_Text_drawNumber(
 			b->data.storage.resourceStored[RESOURCE_WHEAT], '@', " ",
 			c->xOffset + 68, c->yOffset + 75, FONT_NORMAL_BLACK);
-		Widget_GameText_draw(23, RESOURCE_WHEAT,
+		lang_text_draw(23, RESOURCE_WHEAT,
 			c->xOffset + 68 + width, c->yOffset + 75, FONT_NORMAL_BLACK);
 		// vegetables
 		Graphics_drawImage(graphicId + RESOURCE_VEGETABLES,
@@ -158,7 +158,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 		width = Widget_Text_drawNumber(
 			b->data.storage.resourceStored[RESOURCE_VEGETABLES], '@', " ",
 			c->xOffset + 68, c->yOffset + 99, FONT_NORMAL_BLACK);
-		Widget_GameText_draw(23, RESOURCE_VEGETABLES,
+		lang_text_draw(23, RESOURCE_VEGETABLES,
 			c->xOffset + 68 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
 		// fruit
 		Graphics_drawImage(graphicId + RESOURCE_FRUIT,
@@ -166,7 +166,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 		width = Widget_Text_drawNumber(
 			b->data.storage.resourceStored[RESOURCE_FRUIT], '@', " ",
 			c->xOffset + 274, c->yOffset + 75, FONT_NORMAL_BLACK);
-		Widget_GameText_draw(23, RESOURCE_FRUIT,
+		lang_text_draw(23, RESOURCE_FRUIT,
 			c->xOffset + 274 + width, c->yOffset + 75, FONT_NORMAL_BLACK);
 		// meat/fish
 		Graphics_drawImage(graphicId + RESOURCE_MEAT +
@@ -175,7 +175,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 		width = Widget_Text_drawNumber(
 			b->data.storage.resourceStored[RESOURCE_MEAT], '@', " ",
 			c->xOffset + 274, c->yOffset + 99, FONT_NORMAL_BLACK);
-		Widget_GameText_draw(23, RESOURCE_MEAT,
+		lang_text_draw(23, RESOURCE_MEAT,
 			c->xOffset + 274 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
@@ -187,7 +187,7 @@ void UI_BuildingInfo_drawGranaryForeground(BuildingInfoContext *c)
 	button_border_draw(
 		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
 		16 * (c->widthBlocks - 10), 20, focusButtonId == 1 ? 1 : 0);
-	Widget_GameText_drawCentered(98, 5,
+	lang_text_draw_centered(98, 5,
 		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 30,
 		16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 }
@@ -203,7 +203,7 @@ void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c)
 {
 	c->helpId = 3;
 	outer_panel_draw(c->xOffset, 32, 29, 28);
-	Widget_GameText_drawCentered(98, 6,
+	lang_text_draw_centered(98, 6,
 		c->xOffset, 42, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	inner_panel_draw(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
 }
@@ -215,12 +215,12 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 		ordersFocusButtonId == 1 ? 1 : 0);
 	const building_storage *storage = building_storage_get(building_get(c->buildingId)->storage_id);
 	if (storage->empty_all) {
-		Widget_GameText_drawCentered(98, 8, c->xOffset + 80, 440,
+		lang_text_draw_centered(98, 8, c->xOffset + 80, 440,
 			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
-		Widget_GameText_drawCentered(98, 9, c->xOffset + 80, 416,
+		lang_text_draw_centered(98, 9, c->xOffset + 80, 416,
 			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 	} else {
-		Widget_GameText_drawCentered(98, 7, c->xOffset + 80, 440,
+		lang_text_draw_centered(98, 7, c->xOffset + 80, 440,
 			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 	}
 
@@ -230,20 +230,20 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 			resource_image_offset(resourceId, RESOURCE_IMAGE_ICON);
 		Graphics_drawImage(graphicId, c->xOffset + 32, 78 + 22 * i);
 		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
-		Widget_GameText_draw(23, resourceId,
+		lang_text_draw(23, resourceId,
 			c->xOffset + 72, 82 + 22 * i, FONT_NORMAL_WHITE);
 		button_border_draw(c->xOffset + 180, 78 + 22 * i, 210, 22,
 			resourceFocusButtonId == i + 1);
 		
 		int state = storage->resource_state[resourceId];
 		if (state == BUILDING_STORAGE_STATE_ACCEPTING) {
-			Widget_GameText_draw(99, 7, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
+			lang_text_draw(99, 7, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
 		} else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
-			Widget_GameText_draw(99, 8, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_RED);
+			lang_text_draw(99, 8, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_RED);
 		} else if (state == BUILDING_STORAGE_STATE_GETTING) {
 			Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 12,
 				c->xOffset + 186, 81 + 22 * i);
-			Widget_GameText_draw(99, 10, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
+			lang_text_draw(99, 10, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
 		}
 	}
 }
@@ -265,7 +265,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 	c->helpId = 4;
 	PLAY_SOUND("wavs/warehouse.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(99, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(99, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
@@ -288,7 +288,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 			Graphics_drawImage(graphicId, x, y);
 			int width = Widget_Text_drawNumber(amount, '@', " ",
 				x + 24, y + 7, FONT_SMALL_PLAIN);
-			Widget_GameText_draw(23, r,
+			lang_text_draw(23, r,
 				x + 24 + width, y + 7, FONT_SMALL_PLAIN);
 		}
 	}
@@ -301,22 +301,22 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resource +
 			resource_image_offset(resource, RESOURCE_IMAGE_ICON),
 			c->xOffset + 32, c->yOffset + 220);
-		Widget_GameText_drawMultiline(99, 17,
+		lang_text_draw_multiline(99, 17,
 			c->xOffset + 64, c->yOffset + 223,
 			16 * (c->widthBlocks - 6), FONT_SMALL_BLACK);
 	} else if (b->numWorkers) {
 		// cartpusher is waiting for orders
-		Widget_GameText_drawMultiline(99, 15,
+		lang_text_draw_multiline(99, 15,
 			c->xOffset + 32, c->yOffset + 223,
 			16 * (c->widthBlocks - 4), FONT_SMALL_BLACK);
 	}
 
 	if (c->warehouseSpaceText == 1) { // full
-		Widget_GameText_drawMultiline(99, 13,
+		lang_text_draw_multiline(99, 13,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 93,
 			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	} else if (c->warehouseSpaceText == 2) {
-		Widget_GameText_drawMultiline(99, 14,
+		lang_text_draw_multiline(99, 14,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 93,
 			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	}
@@ -327,7 +327,7 @@ void UI_BuildingInfo_drawWarehouseForeground(BuildingInfoContext *c)
 	button_border_draw(
 		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
 		16 * (c->widthBlocks - 10), 20, focusButtonId == 1 ? 1 : 0);
-	Widget_GameText_drawCentered(99, 2,
+	lang_text_draw_centered(99, 2,
 		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 30,
 		16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 }
@@ -343,7 +343,7 @@ void UI_BuildingInfo_drawWarehouseOrders(BuildingInfoContext *c)
 {
 	c->helpId = 4;
 	outer_panel_draw(c->xOffset, 32, 29, 28);
-	Widget_GameText_drawCentered(99, 3,
+	lang_text_draw_centered(99, 3,
 		c->xOffset, 42, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	inner_panel_draw(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
 }
@@ -355,12 +355,12 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 		ordersFocusButtonId == 1 ? 1 : 0);
 	const building_storage *storage = building_storage_get(building_get(c->buildingId)->storage_id);
 	if (storage->empty_all) {
-		Widget_GameText_drawCentered(99, 5, c->xOffset + 80, 440,
+		lang_text_draw_centered(99, 5, c->xOffset + 80, 440,
 			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
-		Widget_GameText_drawCentered(99, 6, c->xOffset + 80, 458,
+		lang_text_draw_centered(99, 6, c->xOffset + 80, 458,
 			16 * (c->widthBlocks - 10), FONT_SMALL_PLAIN);
 	} else {
-		Widget_GameText_drawCentered(99, 4, c->xOffset + 80, 440,
+		lang_text_draw_centered(99, 4, c->xOffset + 80, 440,
 			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 	}
 
@@ -369,7 +369,7 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 		c->xOffset + 80, 414, 16 * (c->widthBlocks - 10), 20,
 		ordersFocusButtonId == 2 ? 1 : 0);
 	int isTradeCenter = c->buildingId == Data_CityInfo.buildingTradeCenterBuildingId;
-	Widget_GameText_drawCentered(99, isTradeCenter ? 11 : 12,
+	lang_text_draw_centered(99, isTradeCenter ? 11 : 12,
 		c->xOffset + 80, 418, 16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 
 	for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++) {
@@ -378,20 +378,20 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 			resource_image_offset(resourceId, RESOURCE_IMAGE_ICON);
 		Graphics_drawImage(graphicId, c->xOffset + 32, 78 + 22 * i);
 		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
-		Widget_GameText_draw(23, resourceId,
+		lang_text_draw(23, resourceId,
 			c->xOffset + 72, 82 + 22 * i, FONT_NORMAL_WHITE);
 		button_border_draw(c->xOffset + 180, 78 + 22 * i, 210, 22,
 			resourceFocusButtonId == i + 1);
 		
 		int state = storage->resource_state[resourceId];
 		if (state == BUILDING_STORAGE_STATE_ACCEPTING) {
-			Widget_GameText_draw(99, 7, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
+			lang_text_draw(99, 7, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
 		} else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
-			Widget_GameText_draw(99, 8, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_RED);
+			lang_text_draw(99, 8, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_RED);
 		} else if (state == BUILDING_STORAGE_STATE_GETTING) {
 			Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 12,
 				c->xOffset + 186, 81 + 22 * i);
-			Widget_GameText_draw(99, 9, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
+			lang_text_draw(99, 9, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
 		}
 	}
 }

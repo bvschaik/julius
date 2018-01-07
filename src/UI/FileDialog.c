@@ -94,16 +94,16 @@ void UI_FileDialog_drawForeground()
 
     // title
 	if (messageNotExistTimeUntil && time_get_millis() < messageNotExistTimeUntil) {
-		Widget_GameText_drawCentered(43, 2,
+		lang_text_draw_centered(43, 2,
 			baseOffsetX + 160, baseOffsetY + 50, 304, FONT_LARGE_BLACK);
 	} else if (dialogType == FileDialogType_Delete) {
-		Widget_GameText_drawCentered(43, 6,
+		lang_text_draw_centered(43, 6,
 			baseOffsetX + 160, baseOffsetY + 50, 304, FONT_LARGE_BLACK);
 	} else {
-		Widget_GameText_drawCentered(43, dialogType,
+		lang_text_draw_centered(43, dialogType,
 			baseOffsetX + 160, baseOffsetY + 50, 304, FONT_LARGE_BLACK);
 	}
-	Widget_GameText_draw(43, 5, baseOffsetX + 224, baseOffsetY + 342, FONT_NORMAL_BLACK);
+	lang_text_draw(43, 5, baseOffsetX + 224, baseOffsetY + 342, FONT_NORMAL_BLACK);
 
 	for (int i = 0; i < 12; i++) {
 		font_t font = FONT_NORMAL_GREEN;

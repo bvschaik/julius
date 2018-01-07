@@ -247,17 +247,17 @@ static void drawDialogVideo()
 	Widget_Text_drawCentered(msg->title.text,
 		data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK, 0);
 	
-	int width = Widget_GameText_draw(25, playerMessage.month,
+	int width = lang_text_draw(25, playerMessage.month,
 		data.x + 16, data.y + 312, FONT_NORMAL_WHITE);
-	width += Widget_GameText_drawYear(playerMessage.year,
+	width += lang_text_draw_year(playerMessage.year,
 		data.x + 18 + width, data.y + 312, FONT_NORMAL_WHITE);
 	
 	if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_DISASTER &&
 		data.textId == 251) {
-		Widget_GameText_drawNumberWithDescription(8, 0, playerMessage.param1,
+		lang_text_draw_amount(8, 0, playerMessage.param1,
 			data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
 	} else {
-		width += Widget_GameText_draw(63, 5, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
+		width += lang_text_draw(63, 5, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
 		Widget_Text_draw(scenario_player_name(), data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE, 0);
 	}
 	data.textHeightBlocks = msg->height_blocks - 1 - (32 + data.yText - data.y) / 16;
@@ -272,11 +272,11 @@ static void drawDialogVideo()
 		Graphics_drawImage(
 			image_group(GROUP_RESOURCE_ICONS) + request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON),
 			data.x + 70, data.y + 379);
-		Widget_GameText_draw(23, request->resource, data.x + 100, data.y + 384, FONT_NORMAL_WHITE);
+		lang_text_draw(23, request->resource, data.x + 100, data.y + 384, FONT_NORMAL_WHITE);
 		if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
-			width = Widget_GameText_drawNumberWithDescription(8, 4, request->months_to_comply,
+			width = lang_text_draw_amount(8, 4, request->months_to_comply,
 				data.x + 200, data.y + 384, FONT_NORMAL_WHITE);
-			Widget_GameText_draw(12, 2, data.x + 200 + width, data.y + 384, FONT_NORMAL_WHITE);
+			lang_text_draw(12, 2, data.x + 200 + width, data.y + 384, FONT_NORMAL_WHITE);
 		}
 	}
 
@@ -286,22 +286,22 @@ static void drawDialogVideo()
 static void drawPlayerMessageContent(const lang_message *msg)
 {
 	if (msg->message_type != MESSAGE_TYPE_TUTORIAL) {
-		int width = Widget_GameText_draw(25, playerMessage.month,
+		int width = lang_text_draw(25, playerMessage.month,
 			data.xText + 10, data.yText + 6, FONT_NORMAL_WHITE);
-		width += Widget_GameText_drawYear(playerMessage.year,
+		width += lang_text_draw_year(playerMessage.year,
 			data.xText + 12 + width, data.yText + 6, FONT_NORMAL_WHITE);
 		if (msg->message_type == MESSAGE_TYPE_DISASTER && playerMessage.param1) {
 			if (data.textId == MessageDialog_Theft) {
 				// param1 = denarii
-				Widget_GameText_drawNumberWithDescription(8, 0, playerMessage.param1,
+				lang_text_draw_amount(8, 0, playerMessage.param1,
 					data.x + 240, data.yText + 6, FONT_NORMAL_WHITE);
 			} else {
 				// param1 = building type
-				Widget_GameText_draw(41, playerMessage.param1,
+				lang_text_draw(41, playerMessage.param1,
 					data.x + 240, data.yText + 6, FONT_NORMAL_WHITE);
 			}
 		} else {
-			width += Widget_GameText_draw(63, 5,
+			width += lang_text_draw(63, 5,
 				data.xText + width + 80, data.yText + 6, FONT_NORMAL_WHITE);
 			Widget_Text_draw(scenario_player_name(),
 				data.xText + width + 80, data.yText + 6, FONT_NORMAL_WHITE, 0);
@@ -312,14 +312,14 @@ static void drawPlayerMessageContent(const lang_message *msg)
 	switch (msg->message_type) {
 		case MESSAGE_TYPE_DISASTER:
 		case MESSAGE_TYPE_INVASION:
-			Widget_GameText_draw(12, 1, data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
+			lang_text_draw(12, 1, data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
 			rich_text_draw(msg->content.text, data.xText + 8, data.yText + 86,
 				16 * data.textWidthBlocks, data.textHeightBlocks - 1, 0);
 			break;
 
 		case MESSAGE_TYPE_EMIGRATION:
 			if (Data_CityInfo.populationEmigrationCause >= 1 && Data_CityInfo.populationEmigrationCause <= 5) {
-				Widget_GameText_draw(12, Data_CityInfo.populationEmigrationCause + 2,
+				lang_text_draw(12, Data_CityInfo.populationEmigrationCause + 2,
 					data.x + 64, data.yText + 44, FONT_NORMAL_WHITE);
 			}
 			rich_text_draw(msg->content.text,
@@ -337,7 +337,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			graphicId = image_group(GROUP_RESOURCE_ICONS) + playerMessage.param2;
 			graphicId += resource_image_offset(playerMessage.param2, RESOURCE_IMAGE_ICON);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
-			Widget_GameText_draw(21, empire_city_get(playerMessage.param1)->name_id,
+			lang_text_draw(21, empire_city_get(playerMessage.param1)->name_id,
 				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
 			rich_text_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
@@ -368,13 +368,13 @@ static void drawPlayerMessageContent(const lang_message *msg)
 		graphicId = image_group(GROUP_RESOURCE_ICONS) + request->resource;
 		graphicId += resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
 		Graphics_drawImage(graphicId, data.xText + 70, yOffset - 5);
-		Widget_GameText_draw(23, request->resource,
+		lang_text_draw(23, request->resource,
 			data.xText + 100, yOffset, FONT_NORMAL_WHITE);
 		if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
-			int width = Widget_GameText_drawNumberWithDescription(8, 4,
+			int width = lang_text_draw_amount(8, 4,
 				request->months_to_comply,
 				data.xText + 200, yOffset, FONT_NORMAL_WHITE);
-			Widget_GameText_draw(12, 2, data.xText + 200 + width, yOffset, FONT_NORMAL_WHITE);
+			lang_text_draw(12, 2, data.xText + 200 + width, yOffset, FONT_NORMAL_WHITE);
 		}
 	}
 }
@@ -416,7 +416,7 @@ static void drawForegroundNoVideo()
 		image_buttons_draw(
 			data.x + 16, data.y + 16 * msg->height_blocks - 36,
 			&imageButtonBack, 1);
-		Widget_GameText_draw(12, 0,
+		lang_text_draw(12, 0,
 			data.x + 52, data.y + 16 * msg->height_blocks - 31, FONT_NORMAL_BLACK);
 	}
 

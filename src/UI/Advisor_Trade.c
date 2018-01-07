@@ -82,9 +82,9 @@ void UI_Advisor_Trade_drawBackground(int *advisorHeight)
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 4,
 		baseOffsetX + 10, baseOffsetY + 10);
 
-	Widget_GameText_draw(54, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+	lang_text_draw(54, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 
-	Widget_GameText_draw(54, 1, baseOffsetX + 400, baseOffsetY + 38, FONT_NORMAL_BLACK);
+	lang_text_draw(54, 1, baseOffsetX + 400, baseOffsetY + 38, FONT_NORMAL_BLACK);
 }
 
 void UI_Advisor_Trade_drawForeground()
@@ -105,28 +105,28 @@ void UI_Advisor_Trade_drawForeground()
 		if (focusButtonId - 3 == i) {
 			button_border_draw(baseOffsetX + 80, offsetY + 54, 480, 24, 1);
 		}
-		Widget_GameText_draw(23, resource, baseOffsetX + 88, offsetY + 61, FONT_NORMAL_WHITE);
+		lang_text_draw(23, resource, baseOffsetX + 88, offsetY + 61, FONT_NORMAL_WHITE);
 		Widget_Text_drawNumberCentered(Data_CityInfo.resourceStored[resource],
 			baseOffsetX + 180, offsetY + 61, 100, FONT_NORMAL_WHITE);
 		if (Data_CityInfo.resourceIndustryMothballed[resource]) {
-			Widget_GameText_draw(18, 5, baseOffsetX + 300, offsetY + 61, FONT_NORMAL_WHITE);
+			lang_text_draw(18, 5, baseOffsetX + 300, offsetY + 61, FONT_NORMAL_WHITE);
 		}
 		if (Data_CityInfo.resourceStockpiled[resource]) {
-			Widget_GameText_draw(54, 3, baseOffsetX + 380, offsetY + 61, FONT_NORMAL_WHITE);
+			lang_text_draw(54, 3, baseOffsetX + 380, offsetY + 61, FONT_NORMAL_WHITE);
 		} else if (Data_CityInfo.resourceTradeStatus[resource] == TRADE_STATUS_IMPORT) {
-			Widget_GameText_draw(54, 5, baseOffsetX + 380, offsetY + 61, FONT_NORMAL_WHITE);
+			lang_text_draw(54, 5, baseOffsetX + 380, offsetY + 61, FONT_NORMAL_WHITE);
 		} else if (Data_CityInfo.resourceTradeStatus[resource] == TRADE_STATUS_EXPORT) {
-			Widget_GameText_draw(54, 6, baseOffsetX + 380, offsetY + 61, FONT_NORMAL_WHITE);
+			lang_text_draw(54, 6, baseOffsetX + 380, offsetY + 61, FONT_NORMAL_WHITE);
 			Widget_Text_drawNumber(Data_CityInfo.resourceTradeExportOver[resource], '@', " ",
 				baseOffsetX + 500, offsetY + 61, FONT_NORMAL_WHITE);
 		}
 	}
 
 	button_border_draw(baseOffsetX + 398, baseOffsetY + 396, 200, 24, focusButtonId == 1);
-	Widget_GameText_drawCentered(54, 2, baseOffsetX + 400, baseOffsetY + 402, 200, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(54, 2, baseOffsetX + 400, baseOffsetY + 402, 200, FONT_NORMAL_BLACK);
 
 	button_border_draw(baseOffsetX + 98, baseOffsetY + 396, 200, 24, focusButtonId == 2);
-	Widget_GameText_drawCentered(54, 30, baseOffsetX + 100, baseOffsetY + 402, 200, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(54, 30, baseOffsetX + 100, baseOffsetY + 402, 200, FONT_NORMAL_BLACK);
 }
 
 void UI_Advisor_Trade_handleMouse(const mouse *m)
@@ -172,9 +172,9 @@ void UI_TradePricesDialog_drawBackground()
 
 	Graphics_shadeRect(baseOffsetX + 33, baseOffsetY + 53, 574, 334, 0);
 	outer_panel_draw(baseOffsetX + 16, baseOffsetY + 144, 38, 11);
-	Widget_GameText_draw(54, 21, baseOffsetX + 26, baseOffsetY + 153, FONT_LARGE_BLACK);
-	Widget_GameText_draw(54, 22, baseOffsetX + 26, baseOffsetY + 228, FONT_NORMAL_BLACK);
-	Widget_GameText_draw(54, 23, baseOffsetX + 26, baseOffsetY + 253, FONT_NORMAL_BLACK);
+	lang_text_draw(54, 21, baseOffsetX + 26, baseOffsetY + 153, FONT_LARGE_BLACK);
+	lang_text_draw(54, 22, baseOffsetX + 26, baseOffsetY + 228, FONT_NORMAL_BLACK);
+	lang_text_draw(54, 23, baseOffsetX + 26, baseOffsetY + 253, FONT_NORMAL_BLACK);
 	for (int i = 1; i < 16; i++) {
 		int graphicOffset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
 		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
@@ -184,7 +184,7 @@ void UI_TradePricesDialog_drawBackground()
 		Widget_Text_drawNumberCentered(trade_price_sell(i),
 			baseOffsetX + 120 + 30 * i, baseOffsetY + 254, 30, FONT_SMALL_PLAIN);
 	}
-	Widget_GameText_drawCentered(13, 1, baseOffsetX + 16, baseOffsetY + 296, 608, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(13, 1, baseOffsetX + 16, baseOffsetY + 296, 608, FONT_NORMAL_BLACK);
 }
 
 void UI_TradePricesDialog_handleMouse(const mouse *m)
@@ -237,21 +237,21 @@ void UI_ResourceSettingsDialog_drawForeground()
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
 			baseOffsetX + 58, baseOffsetY + 136);
 
-	Widget_GameText_draw(23, selectedResourceId, baseOffsetX + 92, baseOffsetY + 137, FONT_LARGE_BLACK);
+	lang_text_draw(23, selectedResourceId, baseOffsetX + 92, baseOffsetY + 137, FONT_LARGE_BLACK);
 
 	if (empire_can_produce_resource(selectedResourceId)) {
         int totalBuildings = building_count_industry_total(selectedResourceId);
         int activeBuildings = building_count_industry_active(selectedResourceId);
 		if (building_count_industry_total(selectedResourceId) <= 0) {
-			Widget_GameText_draw(54, 7, baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
+			lang_text_draw(54, 7, baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
 		} else if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId] == 1) {
 			int width = Widget_Text_drawNumber(
 				totalBuildings, '@', " ",
 				baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			if (totalBuildings == 1) {
-				Widget_GameText_draw(54, 10, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
+				lang_text_draw(54, 10, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			} else {
-				Widget_GameText_draw(54, 11, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
+				lang_text_draw(54, 11, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			}
 		} else if (totalBuildings == activeBuildings) {
 			// not mothballed, all working
@@ -259,35 +259,35 @@ void UI_ResourceSettingsDialog_drawForeground()
 				totalBuildings, '@', " ",
 				baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			if (totalBuildings == 1) {
-				Widget_GameText_draw(54, 8, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
+				lang_text_draw(54, 8, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			} else {
-				Widget_GameText_draw(54, 9, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
+				lang_text_draw(54, 9, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			}
 		} else {
 			// not mothballed, some working
 			int width = Widget_Text_drawNumber(
 				activeBuildings, '@', " ",
 				baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
-			width += Widget_GameText_draw(54, 12, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
+			width += lang_text_draw(54, 12, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			width += Widget_Text_drawNumber(
 				totalBuildings -
 				activeBuildings, '@', " ",
 				baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			if (activeBuildings == 1) {
-				Widget_GameText_draw(54, 13, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
+				lang_text_draw(54, 13, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			} else {
-				Widget_GameText_draw(54, 14, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
+				lang_text_draw(54, 14, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			}
 		}
 	} else if (selectedResourceId != RESOURCE_MEAT || !scenario_building_allowed(BUILDING_WHARF)) {
 		// we cannot produce this good
-		Widget_GameText_draw(54, 25, baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
+		lang_text_draw(54, 25, baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
 	}
 
-	int width = Widget_GameText_drawNumberWithDescription(8, 10,
+	int width = lang_text_draw_amount(8, 10,
 		Data_CityInfo.resourceStored[selectedResourceId],
 		baseOffsetX + 98, baseOffsetY + 192, FONT_NORMAL_BLACK);
-	Widget_GameText_draw(54, 15, baseOffsetX + 98 + width, baseOffsetY + 192, FONT_NORMAL_BLACK);
+	lang_text_draw(54, 15, baseOffsetX + 98 + width, baseOffsetY + 192, FONT_NORMAL_BLACK);
 
 	int tradeFlags = TRADE_STATUS_NONE;
 	if (empire_can_import_resource(selectedResourceId)) {
@@ -297,28 +297,28 @@ void UI_ResourceSettingsDialog_drawForeground()
 		tradeFlags |= TRADE_STATUS_EXPORT;
 	}
 	if (!tradeFlags) {
-		Widget_GameText_draw(54, 24, baseOffsetX + 98, baseOffsetY + 212, FONT_NORMAL_BLACK);
+		lang_text_draw(54, 24, baseOffsetX + 98, baseOffsetY + 212, FONT_NORMAL_BLACK);
 	} else {
 		button_border_draw(baseOffsetX + 98, baseOffsetY + 212, 432, 30,
 			resourceFocusButtonId == 2);
 		switch (Data_CityInfo.resourceTradeStatus[selectedResourceId]) {
 			case TRADE_STATUS_NONE:
-				Widget_GameText_drawCentered(54, 18,
+				lang_text_draw_centered(54, 18,
 					baseOffsetX + 114, baseOffsetY + 221, 400, FONT_NORMAL_BLACK);
 				break;
 			case TRADE_STATUS_IMPORT:
-				Widget_GameText_drawCentered(54, 19,
+				lang_text_draw_centered(54, 19,
 					baseOffsetX + 114, baseOffsetY + 221, 400, FONT_NORMAL_BLACK);
 				break;
 			case TRADE_STATUS_EXPORT:
-				Widget_GameText_drawCentered(54, 20,
+				lang_text_draw_centered(54, 20,
 					baseOffsetX + 114, baseOffsetY + 221, 200, FONT_NORMAL_BLACK);
 				break;
 		}
 	}
 
 	if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TRADE_STATUS_EXPORT) {
-		Widget_GameText_drawNumberWithDescription(8, 10,
+		lang_text_draw_amount(8, 10,
 			Data_CityInfo.resourceTradeExportOver[selectedResourceId],
 			baseOffsetX + 386, baseOffsetY + 221, FONT_NORMAL_BLACK);
 	}
@@ -327,20 +327,20 @@ void UI_ResourceSettingsDialog_drawForeground()
 		button_border_draw(baseOffsetX + 98, baseOffsetY + 250, 432, 30,
 			resourceFocusButtonId == 1);
 		if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId]) {
-			Widget_GameText_drawCentered(54, 17, baseOffsetX + 114, baseOffsetY + 259, 400, FONT_NORMAL_BLACK);
+			lang_text_draw_centered(54, 17, baseOffsetX + 114, baseOffsetY + 259, 400, FONT_NORMAL_BLACK);
 		} else {
-			Widget_GameText_drawCentered(54, 16, baseOffsetX + 114, baseOffsetY + 259, 400, FONT_NORMAL_BLACK);
+			lang_text_draw_centered(54, 16, baseOffsetX + 114, baseOffsetY + 259, 400, FONT_NORMAL_BLACK);
 		}
 	}
 
 	button_border_draw(baseOffsetX + 98, baseOffsetY + 288, 432, 50,
 		resourceFocusButtonId == 3);
 	if (Data_CityInfo.resourceStockpiled[selectedResourceId]) {
-		Widget_GameText_drawCentered(54, 26, baseOffsetX + 114, baseOffsetY + 296, 400, FONT_NORMAL_BLACK);
-		Widget_GameText_drawCentered(54, 27, baseOffsetX + 114, baseOffsetY + 316, 400, FONT_NORMAL_BLACK);
+		lang_text_draw_centered(54, 26, baseOffsetX + 114, baseOffsetY + 296, 400, FONT_NORMAL_BLACK);
+		lang_text_draw_centered(54, 27, baseOffsetX + 114, baseOffsetY + 316, 400, FONT_NORMAL_BLACK);
 	} else {
-		Widget_GameText_drawCentered(54, 28, baseOffsetX + 114, baseOffsetY + 296, 400, FONT_NORMAL_BLACK);
-		Widget_GameText_drawCentered(54, 29, baseOffsetX + 114, baseOffsetY + 316, 400, FONT_NORMAL_BLACK);
+		lang_text_draw_centered(54, 28, baseOffsetX + 114, baseOffsetY + 296, 400, FONT_NORMAL_BLACK);
+		lang_text_draw_centered(54, 29, baseOffsetX + 114, baseOffsetY + 316, 400, FONT_NORMAL_BLACK);
 	}
 
 	image_buttons_draw(baseOffsetX, baseOffsetY, resourceImageButtons, 2);

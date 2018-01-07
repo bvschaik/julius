@@ -105,17 +105,17 @@ void UI_PlayerMessageList_drawBackground()
 	data.textHeightBlocks = data.heightBlocks - 9;
 
 	outer_panel_draw(data.x, data.y, data.widthBlocks, data.heightBlocks);
-	Widget_GameText_drawCentered(63, 0, data.x, data.y + 16, 16 * data.widthBlocks, FONT_LARGE_BLACK);
+	lang_text_draw_centered(63, 0, data.x, data.y + 16, 16 * data.widthBlocks, FONT_LARGE_BLACK);
 	inner_panel_draw(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
 
 	if (city_message_count() > 0) {
-		Widget_GameText_draw(63, 2, data.xText + 42, data.yText - 12, FONT_SMALL_PLAIN);
-		Widget_GameText_draw(63, 3, data.xText + 180, data.yText - 12, FONT_SMALL_PLAIN);
-		Widget_GameText_drawMultiline(63, 4,
+		lang_text_draw(63, 2, data.xText + 42, data.yText - 12, FONT_SMALL_PLAIN);
+		lang_text_draw(63, 3, data.xText + 180, data.yText - 12, FONT_SMALL_PLAIN);
+		lang_text_draw_multiline(63, 4,
 			data.xText + 50, data.yText + 12 + 16 * data.textHeightBlocks,
 			16 * data.textWidthBlocks - 100, FONT_NORMAL_BLACK);
 	} else {
-		Widget_GameText_drawMultiline(63, 1,
+		lang_text_draw_multiline(63, 1,
 			data.xText + 16, data.yText + 80,
 			16 * data.textWidthBlocks - 48, FONT_NORMAL_GREEN);
 	}
@@ -155,9 +155,9 @@ void UI_PlayerMessageList_drawForeground()
 		if (focusButtonId == i + 1) {
 			font = FONT_NORMAL_RED;
 		}
-		int width = Widget_GameText_draw(25, msg->month,
+		int width = lang_text_draw(25, msg->month,
 			data.xText + 42, data.yText + 8 + 20 * i, font);
-		Widget_GameText_drawYear(msg->year,
+		lang_text_draw_year(msg->year,
 			data.xText + 42 + width, data.yText + 8 + 20 * i, font);
 		Widget_Text_draw(
 			lang_get_message(messageId)->title.text,

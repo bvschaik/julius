@@ -16,7 +16,7 @@ void UI_Logo_drawBackground()
 {
 	Graphics_clearScreen();
 	Graphics_drawImage(image_group(GROUP_LOGO), Data_Screen.offset640x480.x, Data_Screen.offset640x480.y);
-	Widget_GameText_drawCenteredColored(13, 7,
+	lang_text_draw_centered_colored(13, 7,
 		(Data_Screen.width - 320) / 2, Data_Screen.offset640x480.y + 462,
 		320, FONT_NORMAL_PLAIN, COLOR_WHITE);
 }

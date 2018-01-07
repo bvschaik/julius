@@ -53,25 +53,25 @@ static void draw_request(int index, const scenario_request *request)
         resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
     Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceOffset,
         baseOffsetX + 110, baseOffsetY + 100 + 42 * index);
-    Widget_GameText_draw(23, request->resource,
+    lang_text_draw(23, request->resource,
         baseOffsetX + 150, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
     
-    int width = Widget_GameText_drawNumberWithDescription(8, 4, request->months_to_comply,
+    int width = lang_text_draw_amount(8, 4, request->months_to_comply,
         baseOffsetX + 310, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
-    Widget_GameText_draw(12, 2, baseOffsetX + 310 + width, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
+    lang_text_draw(12, 2, baseOffsetX + 310 + width, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
 
     if (request->resource == RESOURCE_DENARII) {
         // request for money
         int treasury = city_finance_treasury();
         width = Widget_Text_drawNumber(treasury, '@', " ",
             baseOffsetX + 40, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
-        width += Widget_GameText_draw(52, 44,
+        width += lang_text_draw(52, 44,
             baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
         if (treasury < request->amount) {
-            Widget_GameText_draw(52, 48,
+            lang_text_draw(52, 48,
                 baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
         } else {
-            Widget_GameText_draw(52, 47,
+            lang_text_draw(52, 47,
                 baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
         }
     } else {
@@ -79,13 +79,13 @@ static void draw_request(int index, const scenario_request *request)
         int resourceId = request->resource;
         width = Widget_Text_drawNumber(Data_CityInfo.resourceStored[resourceId], '@', " ",
             baseOffsetX + 40, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
-        width += Widget_GameText_draw(52, 43,
+        width += lang_text_draw(52, 43,
             baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
         if (Data_CityInfo.resourceStored[resourceId] < request->amount) {
-            Widget_GameText_draw(52, 48,
+            lang_text_draw(52, 48,
                 baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
         } else {
-            Widget_GameText_draw(52, 47,
+            lang_text_draw(52, 47,
                 baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
         }
     }
@@ -104,10 +104,10 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 
 	Widget_Text_draw(scenario_player_name(), baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
 
-	int width = Widget_GameText_draw(52, 0, baseOffsetX + 60, baseOffsetY + 44, FONT_NORMAL_BLACK);
+	int width = lang_text_draw(52, 0, baseOffsetX + 60, baseOffsetY + 44, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.ratingFavor, '@', " ", baseOffsetX + 60 + width, baseOffsetY + 44, FONT_NORMAL_BLACK);
 
-	Widget_GameText_drawMultiline(52, Data_CityInfo.ratingFavor / 5 + 22,
+	lang_text_draw_multiline(52, Data_CityInfo.ratingFavor / 5 + 22,
 		baseOffsetX + 60, baseOffsetY + 60, 544, FONT_NORMAL_BLACK);
 
 	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 90, 36, 14);
@@ -118,8 +118,8 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 		button_border_draw(baseOffsetX + 38, baseOffsetY + 96, 560, 40, 0);
 		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS,
 			baseOffsetX + 50, baseOffsetY + 106);
-		width = Widget_GameText_draw(52, 72, baseOffsetX + 80, baseOffsetY + 102, FONT_NORMAL_WHITE);
-		Widget_GameText_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id,
+		width = lang_text_draw(52, 72, baseOffsetX + 80, baseOffsetY + 102, FONT_NORMAL_WHITE);
+		lang_text_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id,
 			baseOffsetX + 50 + width, baseOffsetY + 102, FONT_NORMAL_WHITE);
 		int strengthTextId;
 		if (Data_CityInfo.distantBattleEnemyStrength < 46) {
@@ -129,14 +129,14 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 		} else {
 			strengthTextId = 75;
 		}
-		width = Widget_GameText_draw(52, strengthTextId, baseOffsetX + 80, baseOffsetY + 120, FONT_NORMAL_WHITE);
-		Widget_GameText_drawNumberWithDescription(8, 4, Data_CityInfo.distantBattleMonthsToBattle,
+		width = lang_text_draw(52, strengthTextId, baseOffsetX + 80, baseOffsetY + 120, FONT_NORMAL_WHITE);
+		lang_text_draw_amount(8, 4, Data_CityInfo.distantBattleMonthsToBattle,
 			baseOffsetX + 80 + width, baseOffsetY + 120, FONT_NORMAL_WHITE);
 		numRequests = 1;
 	}
 	numRequests = scenario_request_foreach_visible(numRequests, draw_request);
 	if (!numRequests) {
-		Widget_GameText_drawMultiline(52, 21, baseOffsetX + 64, baseOffsetY + 160, 512, FONT_NORMAL_WHITE);
+		lang_text_draw_multiline(52, 21, baseOffsetX + 64, baseOffsetY + 160, 512, FONT_NORMAL_WHITE);
 	}
 }
 
@@ -147,29 +147,29 @@ void UI_Advisor_Imperial_drawForeground()
 
 	inner_panel_draw(baseOffsetX + 64, baseOffsetY + 324, 32, 6);
 
-	Widget_GameText_draw(32, Data_CityInfo.playerRank,
+	lang_text_draw(32, Data_CityInfo.playerRank,
 		baseOffsetX + 72, baseOffsetY + 338, FONT_LARGE_BROWN);
 	
-	int width = Widget_GameText_draw(52, 1,
+	int width = lang_text_draw(52, 1,
 		baseOffsetX + 72, baseOffsetY + 372, FONT_NORMAL_WHITE);
 	Widget_Text_drawMoney(Data_CityInfo.personalSavings,
 		baseOffsetX + 80 + width, baseOffsetY + 372, FONT_NORMAL_WHITE);
 
 	button_border_draw(baseOffsetX + 320, baseOffsetY + 367,
 		250, 20, focusButtonId == 1);
-	Widget_GameText_drawCentered(52, 2, baseOffsetX + 320, baseOffsetY + 372, 250, FONT_NORMAL_WHITE);
+	lang_text_draw_centered(52, 2, baseOffsetX + 320, baseOffsetY + 372, 250, FONT_NORMAL_WHITE);
 
 	button_border_draw(baseOffsetX + 70, baseOffsetY + 393,
 		500, 20, focusButtonId == 2);
-	width = Widget_GameText_draw(52, Data_CityInfo.salaryRank + 4,
+	width = lang_text_draw(52, Data_CityInfo.salaryRank + 4,
 		baseOffsetX + 120, baseOffsetY + 398, FONT_NORMAL_WHITE);
 	width += Widget_Text_drawNumber(Data_CityInfo.salaryAmount, '@', " ",
 		baseOffsetX + 120 + width, baseOffsetY + 398, FONT_NORMAL_WHITE);
-	Widget_GameText_draw(52, 3, baseOffsetX + 120 + width, baseOffsetY + 398, FONT_NORMAL_WHITE);
+	lang_text_draw(52, 3, baseOffsetX + 120 + width, baseOffsetY + 398, FONT_NORMAL_WHITE);
 
 	button_border_draw(baseOffsetX + 320, baseOffsetY + 341,
 		250, 20, focusButtonId == 3);
-	Widget_GameText_drawCentered(52, 49, baseOffsetX + 320, baseOffsetY + 346, 250, FONT_NORMAL_WHITE);
+	lang_text_draw_centered(52, 49, baseOffsetX + 320, baseOffsetY + 346, 250, FONT_NORMAL_WHITE);
 
 	// Request buttons
 	if (getRequestStatus(0)) {

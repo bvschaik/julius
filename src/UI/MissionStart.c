@@ -96,12 +96,12 @@ void UI_MissionStart_Selection_drawBackground()
 	Graphics_drawImage(image_group(GROUP_SELECT_MISSION) +
 		backgroundGraphicOffset[rank],
 		xOffset, yOffset);
-	Widget_GameText_draw(144, 1 + 3 * rank, xOffset + 20, yOffset + 410, FONT_LARGE_BLACK);
+	lang_text_draw(144, 1 + 3 * rank, xOffset + 20, yOffset + 410, FONT_LARGE_BLACK);
 	if (data.choice) {
-		Widget_GameText_drawMultiline(144, 1 + 3 * rank + data.choice,
+		lang_text_draw_multiline(144, 1 + 3 * rank + data.choice,
 			xOffset + 20, yOffset + 440, 560, FONT_NORMAL_BLACK);
 	} else {
-		Widget_GameText_drawMultiline(144, 0,
+		lang_text_draw_multiline(144, 0,
 			xOffset + 20, yOffset + 440, 560, FONT_NORMAL_BLACK);
 	}
 }
@@ -205,20 +205,20 @@ void UI_MissionStart_Briefing_drawBackground()
 	Widget_Text_draw(lang_get_message(textId)->title.text, xOffset + 16, yOffset + 16, FONT_LARGE_BLACK, 0);
 	Widget_Text_draw(lang_get_message(textId)->subtitle.text, xOffset + 16, yOffset + 46, FONT_NORMAL_BLACK, 0);
 
-	Widget_GameText_draw(62, 7, xOffset + 360, yOffset + 401, FONT_NORMAL_BLACK);
+	lang_text_draw(62, 7, xOffset + 360, yOffset + 401, FONT_NORMAL_BLACK);
 	if (UI_Window_getId() == Window_MissionBriefingInitial && campaignHasChoice[scenario_campaign_rank()]) {
-		Widget_GameText_draw(13, 4, xOffset + 50, yOffset + 403, FONT_NORMAL_BLACK);
+		lang_text_draw(13, 4, xOffset + 50, yOffset + 403, FONT_NORMAL_BLACK);
 	}
 	
 	inner_panel_draw(xOffset + 16, yOffset + 64, 33, 5);
-	Widget_GameText_draw(62, 10, xOffset + 32, yOffset + 72, FONT_NORMAL_WHITE);
+	lang_text_draw(62, 10, xOffset + 32, yOffset + 72, FONT_NORMAL_WHITE);
 	int goalIndex = 0;
 	if (scenario_criteria_population_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 15, 1);
-		int width = Widget_GameText_draw(62, 11, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
+		int width = lang_text_draw(62, 11, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 		Widget_Text_drawNumber(scenario_criteria_population(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
@@ -227,7 +227,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 15, 1);
-		int width = Widget_GameText_draw(62, 12, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
+		int width = lang_text_draw(62, 12, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 		Widget_Text_drawNumber(scenario_criteria_culture(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
@@ -236,7 +236,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 15, 1);
-		int width = Widget_GameText_draw(62, 13, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
+		int width = lang_text_draw(62, 13, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 		Widget_Text_drawNumber(scenario_criteria_prosperity(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
@@ -245,7 +245,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 15, 1);
-		int width = Widget_GameText_draw(62, 14, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
+		int width = lang_text_draw(62, 14, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 		Widget_Text_drawNumber(scenario_criteria_peace(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
@@ -254,7 +254,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 15, 1);
-		int width = Widget_GameText_draw(62, 15, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
+		int width = lang_text_draw(62, 15, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 		Widget_Text_drawNumber(scenario_criteria_favor(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
@@ -264,7 +264,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int y = goalOffsetsY[2];
 		goalIndex++;
 		label_draw(xOffset + x, yOffset + y, 31, 1);
-		Widget_GameText_draw(62, immediateGoalText, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
+		lang_text_draw(62, immediateGoalText, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	
 	inner_panel_draw(xOffset + 16, yOffset + 152, 33, 15);

@@ -52,19 +52,19 @@ void UI_MainMenu_drawForeground()
 		16, focusButtonId == 4 ? 1 : 0
 	);
 
-	Widget_GameText_drawCentered(30, 1,
+	lang_text_draw_centered(30, 1,
 		baseOffsetX + 192, baseOffsetY + 106,
 		256, FONT_NORMAL_GREEN
 	);
-	Widget_GameText_drawCentered(30, 2,
+	lang_text_draw_centered(30, 2,
 		baseOffsetX + 192, baseOffsetY + 146,
 		256, FONT_NORMAL_GREEN
 	);
-	Widget_GameText_drawCentered(30, 3,
+	lang_text_draw_centered(30, 3,
 		baseOffsetX + 192, baseOffsetY + 186,
 		256, FONT_NORMAL_GREEN
 	);
-	Widget_GameText_drawCentered(30, 5,
+	lang_text_draw_centered(30, 5,
 		baseOffsetX + 192, baseOffsetY + 226,
 		256, FONT_NORMAL_GREEN
 	);

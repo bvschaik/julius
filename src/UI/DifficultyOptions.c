@@ -22,12 +22,12 @@ void UI_DifficultyOptions_drawForeground()
 
 	outer_panel_draw(48, 80, 24, 12);
 	
-	Widget_GameText_drawCentered(153, 0, 48, 94, 384, FONT_LARGE_BLACK);
+	lang_text_draw_centered(153, 0, 48, 94, 384, FONT_LARGE_BLACK);
 	
-	Widget_GameText_drawCentered(153, setting_difficulty() + 1, 80, 142, 224, FONT_NORMAL_BLACK);
-	Widget_GameText_drawCentered(153, setting_gods_enabled() ? 7 : 6, 80, 190, 224, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(153, setting_difficulty() + 1, 80, 142, 224, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(153, setting_gods_enabled() ? 7 : 6, 80, 190, 224, FONT_NORMAL_BLACK);
 	arrow_buttons_draw(288, 80, arrowButtons, 3);
-	Widget_GameText_drawCentered(153, 8, 48, 246, 384, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(153, 8, 48, 246, 384, FONT_NORMAL_BLACK);
 
     graphics_reset_dialog();
 }

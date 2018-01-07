@@ -33,14 +33,14 @@ void UI_DisplayOptions_drawForeground()
 	label_draw(128, 208, 14, focusButtonId == 4 ? 1 : 2);
 	label_draw(128, 232, 14, focusButtonId == 5 ? 1 : 2);
 
-	Widget_GameText_drawCentered(42, 0, 128, 94, 224, FONT_LARGE_BLACK);
+	lang_text_draw_centered(42, 0, 128, 94, 224, FONT_LARGE_BLACK);
 
-	Widget_GameText_drawCentered(42, setting_fullscreen() ? 2 : 1, 128, 140, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(42, setting_fullscreen() ? 2 : 1, 128, 140, 224, FONT_NORMAL_GREEN);
 
-	Widget_GameText_drawCentered(42, 3, 128, 164, 224, FONT_NORMAL_GREEN);
-	Widget_GameText_drawCentered(42, 4, 128, 188, 224, FONT_NORMAL_GREEN);
-	Widget_GameText_drawCentered(42, 5, 128, 212, 224, FONT_NORMAL_GREEN);
-	Widget_GameText_drawCentered(42, 6, 128, 236, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(42, 3, 128, 164, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(42, 4, 128, 188, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(42, 5, 128, 212, 224, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(42, 6, 128, 236, 224, FONT_NORMAL_GREEN);
 
     graphics_reset_dialog();
 }

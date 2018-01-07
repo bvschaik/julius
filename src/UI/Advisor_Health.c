@@ -15,27 +15,27 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 6, baseOffsetX + 10, baseOffsetY + 10);
 
-	Widget_GameText_draw(56, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+	lang_text_draw(56, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 	if (Data_CityInfo.population >= 200) {
-		Widget_GameText_drawMultiline(56,
+		lang_text_draw_multiline(56,
 			Data_CityInfo.healthRate / 10 + 16,
 			baseOffsetX + 60, baseOffsetY + 46,
 			512, FONT_NORMAL_BLACK
 		);
 	} else {
-		Widget_GameText_drawMultiline(56, 15,
+		lang_text_draw_multiline(56, 15,
 			baseOffsetX + 60, baseOffsetY + 46,
 			512, FONT_NORMAL_BLACK
 		);
 	}
-	Widget_GameText_draw(56, 3, baseOffsetX + 180, baseOffsetY + 94, FONT_SMALL_PLAIN);
-	Widget_GameText_draw(56, 4, baseOffsetX + 290, baseOffsetY + 94, FONT_SMALL_PLAIN);
-	Widget_GameText_draw(56, 5, baseOffsetX + 478, baseOffsetY + 94, FONT_SMALL_PLAIN);
+	lang_text_draw(56, 3, baseOffsetX + 180, baseOffsetY + 94, FONT_SMALL_PLAIN);
+	lang_text_draw(56, 4, baseOffsetX + 290, baseOffsetY + 94, FONT_SMALL_PLAIN);
+	lang_text_draw(56, 5, baseOffsetX + 478, baseOffsetY + 94, FONT_SMALL_PLAIN);
 
 	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 108, 36, 5);
 
 	// bathhouses
-	Widget_GameText_drawNumberWithDescription(8, 24,
+	lang_text_draw_amount(8, 24,
 		building_count_total(BUILDING_BATHHOUSE),
 		baseOffsetX + 40, baseOffsetY + 112, FONT_NORMAL_GREEN
 	);
@@ -43,11 +43,11 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 		building_count_active(BUILDING_BATHHOUSE),
 		baseOffsetX + 150, baseOffsetY + 112, 100, FONT_NORMAL_GREEN
 	);
-	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 112, FONT_NORMAL_GREEN);
-	Widget_GameText_draw(56, 2, baseOffsetX + 504, baseOffsetY + 112, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, baseOffsetX + 300, baseOffsetY + 112, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, baseOffsetX + 504, baseOffsetY + 112, FONT_NORMAL_GREEN);
 
 	// barbers
-	Widget_GameText_drawNumberWithDescription(8, 26,
+	lang_text_draw_amount(8, 26,
 		building_count_total(BUILDING_BARBER),
 		baseOffsetX + 40, baseOffsetY + 132, FONT_NORMAL_GREEN
 	);
@@ -55,11 +55,11 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 		building_count_active(BUILDING_BARBER),
 		baseOffsetX + 150, baseOffsetY + 132, 100, FONT_NORMAL_GREEN
 	);
-	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 132, FONT_NORMAL_GREEN);
-	Widget_GameText_draw(56, 2, baseOffsetX + 504, baseOffsetY + 132, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, baseOffsetX + 300, baseOffsetY + 132, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, baseOffsetX + 504, baseOffsetY + 132, FONT_NORMAL_GREEN);
 
 	// clinics
-	Widget_GameText_drawNumberWithDescription(8, 28,
+	lang_text_draw_amount(8, 28,
 		building_count_total(BUILDING_DOCTOR),
 		baseOffsetX + 40, baseOffsetY + 152, FONT_NORMAL_GREEN
 	);
@@ -67,11 +67,11 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 		building_count_active(BUILDING_DOCTOR),
 		baseOffsetX + 150, baseOffsetY + 152, 100, FONT_NORMAL_GREEN
 	);
-	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 152, FONT_NORMAL_GREEN);
-	Widget_GameText_draw(56, 2, baseOffsetX + 504, baseOffsetY + 152, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, baseOffsetX + 300, baseOffsetY + 152, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, baseOffsetX + 504, baseOffsetY + 152, FONT_NORMAL_GREEN);
 
 	// hospitals
-	Widget_GameText_drawNumberWithDescription(8, 30,
+	lang_text_draw_amount(8, 30,
 		building_count_total(BUILDING_HOSPITAL),
 		baseOffsetX + 40, baseOffsetY + 172, FONT_NORMAL_GREEN
 	);
@@ -84,19 +84,19 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 		1000 * building_count_active(BUILDING_HOSPITAL),
 		'@', " ", baseOffsetX + 280, baseOffsetY + 172, FONT_NORMAL_GREEN
 	);
-	Widget_GameText_draw(56, 6, baseOffsetX + 280 + width, baseOffsetY + 172, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 6, baseOffsetX + 280 + width, baseOffsetY + 172, FONT_NORMAL_GREEN);
 
 	int pct_hospital = city_culture_coverage_hospital();
 	if (pct_hospital == 0) {
-		Widget_GameText_drawCentered(57, 10,
+		lang_text_draw_centered(57, 10,
 			baseOffsetX + 420, baseOffsetY + 172, 200, FONT_NORMAL_GREEN
 		);
 	} else if (pct_hospital < 100) {
-		Widget_GameText_drawCentered(57, pct_hospital / 10 + 11,
+		lang_text_draw_centered(57, pct_hospital / 10 + 11,
 			baseOffsetX + 420, baseOffsetY + 172, 200, FONT_NORMAL_GREEN
 		);
 	} else {
-		Widget_GameText_drawCentered(57, 21,
+		lang_text_draw_centered(57, 21,
 			baseOffsetX + 420, baseOffsetY + 172, 200, FONT_NORMAL_GREEN
 		);
 	}
@@ -119,7 +119,7 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 			adviceId = 7;
 			break;
 	}
-	Widget_GameText_drawMultiline(56, 7 + adviceId,
+	lang_text_draw_multiline(56, 7 + adviceId,
 		baseOffsetX + 60, baseOffsetY + 194, 512, FONT_NORMAL_BLACK
 	);
 }

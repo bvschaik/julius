@@ -17,15 +17,15 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceId,
 		c->xOffset + 10, c->yOffset + 10);
-	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
+	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->buildingId);
 	int pctGrown = calc_percentage(b->data.industry.progress, 200);
-	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
+	int width = lang_text_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawPercentage(pctGrown,
 		c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
-	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
+	lang_text_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC_AT(70, 69, 25);
@@ -49,7 +49,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
-	Widget_GameText_drawMultiline(groupId, 1,
+	lang_text_draw_multiline(groupId, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
 		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 }
@@ -92,15 +92,15 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceId,
 		c->xOffset + 10, c->yOffset + 10);
-	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
+	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->buildingId);
 	int pctDone = calc_percentage(b->data.industry.progress, 200);
-	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
+	int width = lang_text_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawPercentage(pctDone,
 		c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
-	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
+	lang_text_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC_AT(70, 69, 25);
@@ -122,7 +122,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
-	Widget_GameText_drawMultiline(groupId, 1,
+	lang_text_draw_multiline(groupId, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
 		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 }
@@ -155,24 +155,24 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceId,
 		c->xOffset + 10, c->yOffset + 10);
-	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
+	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->buildingId);
 	int pctDone = calc_percentage(b->data.industry.progress, 400);
-	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 40, FONT_NORMAL_BLACK);
+	int width = lang_text_draw(groupId, 2, c->xOffset + 32, c->yOffset + 40, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawPercentage(pctDone,
 		c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
-	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
+	lang_text_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + inputResourceId,
 		c->xOffset + 32, c->yOffset + 56);
-	width = Widget_GameText_draw(groupId, 12, c->xOffset + 60, c->yOffset + 60, FONT_NORMAL_BLACK);
+	width = lang_text_draw(groupId, 12, c->xOffset + 60, c->yOffset + 60, FONT_NORMAL_BLACK);
 	if (b->loadsStored < 1) {
-		Widget_GameText_drawNumberWithDescription(8, 10, 0,
+		lang_text_draw_amount(8, 10, 0,
 			c->xOffset + 60 + width, c->yOffset + 60, FONT_NORMAL_BLACK);
 	} else {
-		Widget_GameText_drawNumberWithDescription(8, 10, b->loadsStored,
+		lang_text_draw_amount(8, 10, b->loadsStored,
 			c->xOffset + 60 + width, c->yOffset + 60, FONT_NORMAL_BLACK);
 	}
 

@@ -20,7 +20,7 @@ static int arrowButtonFocus;
 
 static void draw_row(int group, int number, int y, int value_last_year, int value_this_year)
 {
-    Widget_GameText_draw(group, number, 80, y, FONT_NORMAL_BLACK);
+    lang_text_draw(group, number, 80, y, FONT_NORMAL_BLACK);
     Widget_Text_drawNumber(value_last_year, '@', " ", 290, y, FONT_NORMAL_BLACK);
     Widget_Text_drawNumber(value_this_year, '@', " ", 430, y, FONT_NORMAL_BLACK);
 }
@@ -33,30 +33,30 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	outer_panel_draw(0, 0, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
 
-	Widget_GameText_draw(60, 0, 60, 12, FONT_LARGE_BLACK);
+	lang_text_draw(60, 0, 60, 12, FONT_LARGE_BLACK);
 	inner_panel_draw(64, 48, 34, 5);
 
 	int width;
     int treasury = city_finance_treasury();
 	if (treasury < 0) {
-		width = Widget_GameText_draw(60, 3, 70, 58, FONT_NORMAL_RED);
-		Widget_GameText_drawNumberWithDescription(8, 0,
+		width = lang_text_draw(60, 3, 70, 58, FONT_NORMAL_RED);
+		lang_text_draw_amount(8, 0,
 			-treasury, 72 + width, 58, FONT_NORMAL_RED
 		);
 	} else {
-		width = Widget_GameText_draw(60, 2, 70, 58, FONT_NORMAL_WHITE);
-		Widget_GameText_drawNumberWithDescription(8, 0,
+		width = lang_text_draw(60, 2, 70, 58, FONT_NORMAL_WHITE);
+		lang_text_draw_amount(8, 0,
 			treasury, 72 + width, 58, FONT_NORMAL_WHITE
 		);
 	}
 
 	// tax percentage and estimated income
-	Widget_GameText_draw(60, 1, 70, 81, FONT_NORMAL_WHITE);
+	lang_text_draw(60, 1, 70, 81, FONT_NORMAL_WHITE);
 	width = Widget_Text_drawPercentage(Data_CityInfo.taxPercentage,
 		240, 81, FONT_NORMAL_WHITE
 	);
-	width += Widget_GameText_draw(60, 4, 240 + width, 81, FONT_NORMAL_WHITE);
-	Widget_GameText_drawNumberWithDescription(8, 0,
+	width += lang_text_draw(60, 4, 240 + width, 81, FONT_NORMAL_WHITE);
+	lang_text_draw_amount(8, 0,
 		Data_CityInfo.estimatedTaxIncome, 240 + width, 81, FONT_NORMAL_WHITE
 	);
 
@@ -64,11 +64,11 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	width = Widget_Text_drawPercentage(Data_CityInfo.percentageTaxedPeople,
 		70, 103, FONT_NORMAL_WHITE
 	);
-	Widget_GameText_draw(60, 5, 70 + width, 103, FONT_NORMAL_WHITE);
+	lang_text_draw(60, 5, 70 + width, 103, FONT_NORMAL_WHITE);
 
 	// table headers
-	Widget_GameText_draw(60, 6, 270, 133, FONT_NORMAL_BLACK);
-	Widget_GameText_draw(60, 7, 400, 133, FONT_NORMAL_BLACK);
+	lang_text_draw(60, 6, 270, 133, FONT_NORMAL_BLACK);
+	lang_text_draw(60, 7, 400, 133, FONT_NORMAL_BLACK);
 
 	// income
 	draw_row(60, 8, 155, Data_CityInfo.financeTaxesLastYear, Data_CityInfo.financeTaxesThisYear);
@@ -86,7 +86,7 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	draw_row(60, 13, 257, Data_CityInfo.financeConstructionLastYear, Data_CityInfo.financeConstructionThisYear);
 
 	// interest (with percentage)
-	width = Widget_GameText_draw(60, 14, 80, 272, FONT_NORMAL_BLACK);
+	width = lang_text_draw(60, 14, 80, 272, FONT_NORMAL_BLACK);
 	Widget_Text_drawPercentage(10, 80 + width, 272, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.financeInterestLastYear, '@', " ", 290, 272, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.financeInterestThisYear, '@', " ", 430, 272, FONT_NORMAL_BLACK);
