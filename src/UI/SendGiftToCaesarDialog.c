@@ -5,6 +5,7 @@
 
 #include "city/emperor.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 
 static void buttonSetGift(int param1, int param2);
 static void buttonSendGift(int param1, int param2);
@@ -39,7 +40,7 @@ void UI_SendGiftToCaesarDialog_drawBackground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX + 96, baseOffsetY + 144, 30, 15);
+	outer_panel_draw(baseOffsetX + 96, baseOffsetY + 144, 30, 15);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + 16,
 		baseOffsetX + 128, baseOffsetY + 160);
 	Widget_GameText_drawCentered(52, 69,
@@ -59,7 +60,7 @@ void UI_SendGiftToCaesarDialog_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 112, baseOffsetY + 208, 28, 5); // BUGFIX red/white letters overlapping
+	inner_panel_draw(baseOffsetX + 112, baseOffsetY + 208, 28, 5); // BUGFIX red/white letters overlapping
 
 	if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
 		Widget_GameText_draw(52, 63,

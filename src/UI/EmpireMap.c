@@ -19,6 +19,7 @@
 #include "empire/type.h"
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
+#include "graphics/panel.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
@@ -635,7 +636,7 @@ void UI_TradeOpenedDialog_drawBackground()
 {
 	int xOffset = Data_Screen.offset640x480.x;
 	int yOffset = Data_Screen.offset640x480.y;
-	Widget_Panel_drawOuterPanel(xOffset + 80, yOffset + 64, 30, 14);
+	outer_panel_draw(xOffset + 80, yOffset + 64, 30, 14);
 	Widget_GameText_drawCentered(142, 0, xOffset + 80, yOffset + 80, 480, FONT_LARGE_BLACK);
 	if (empire_city_get(data.selectedCity)->is_sea_trade) {
 		Widget_GameText_drawMultiline(142, 1, xOffset + 112, yOffset + 120, 416, FONT_NORMAL_BLACK);

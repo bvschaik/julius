@@ -5,6 +5,8 @@
 
 #include "game/settings.h"
 #include "graphics/arrow_button.h"
+#include "graphics/graphics.h"
+#include "graphics/panel.h"
 
 static void arrowButtonDifficulty(int param1, int param2);
 static void arrowButtonGods(int param1, int param2);
@@ -17,36 +19,18 @@ static arrow_button arrowButtons[] = {
 
 void UI_DifficultyOptions_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
+
+	outer_panel_draw(48, 80, 24, 12);
 	
-	Widget_Panel_drawOuterPanel(
-		baseOffsetX + 48, baseOffsetY + 80,
-		24, 12
-	);
+	Widget_GameText_drawCentered(153, 0, 48, 94, 384, FONT_LARGE_BLACK);
 	
-	Widget_GameText_drawCentered(153, 0,
-		baseOffsetX + 48, baseOffsetY + 94,
-		384, FONT_LARGE_BLACK
-	);
-	
-	Widget_GameText_drawCentered(153, setting_difficulty() + 1,
-		baseOffsetX + 80, baseOffsetY + 142,
-		224, FONT_NORMAL_BLACK
-	);
-	Widget_GameText_drawCentered(
-		153, setting_gods_enabled() ? 7 : 6,
-		baseOffsetX + 80, baseOffsetY + 190,
-		224, FONT_NORMAL_BLACK
-	);
-	arrow_buttons_draw(
-		baseOffsetX + 288, baseOffsetY + 80,
-		arrowButtons, 3
-	);
-	Widget_GameText_drawCentered(153, 8,
-		baseOffsetX + 48, baseOffsetY + 246,
-		384, FONT_NORMAL_BLACK
-	);
+	Widget_GameText_drawCentered(153, setting_difficulty() + 1, 80, 142, 224, FONT_NORMAL_BLACK);
+	Widget_GameText_drawCentered(153, setting_gods_enabled() ? 7 : 6, 80, 190, 224, FONT_NORMAL_BLACK);
+	arrow_buttons_draw(288, 80, arrowButtons, 3);
+	Widget_GameText_drawCentered(153, 8, 48, 246, 384, FONT_NORMAL_BLACK);
+
+    graphics_reset_dialog();
 }
 
 void UI_DifficultyOptions_handleMouse(const mouse *m)

@@ -15,6 +15,7 @@
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "graphics/image_button.h"
+#include "graphics/panel.h"
 #include "graphics/video.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
@@ -158,7 +159,7 @@ static void drawDialogNormal()
 	}
 	int someOffset = (msg->type == TYPE_MANUAL) ? 48 : 32;
 	data.xText = data.x + 16;
-	Widget_Panel_drawOuterPanel(data.x, data.y, msg->width_blocks, msg->height_blocks);
+	outer_panel_draw(data.x, data.y, msg->width_blocks, msg->height_blocks);
 	// title
 	if (msg->title.x) {
 		Widget_Text_draw(msg->title.text,
@@ -211,7 +212,7 @@ static void drawDialogNormal()
 		data.xText, data.yText, msg->width_blocks - 4, data.textHeightBlocks, 1);
 
 	// content!
-	Widget_Panel_drawInnerPanel(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
+	inner_panel_draw(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
 	Graphics_setClipRectangle(data.xText + 3, data.yText + 3,
 		16 * data.textWidthBlocks - 6, 16 * data.textHeightBlocks - 6);
 	Widget_RichText_clearLinks();
@@ -237,11 +238,11 @@ static void drawDialogVideo()
 		UI_City_drawBackground();
 		UI_City_drawForeground();
 	}
-	Widget_Panel_drawOuterPanel(data.x, data.y, 26, 28);
+	outer_panel_draw(data.x, data.y, 26, 28);
 	Graphics_drawRect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
 	Widget_RichText_clearLinks();
 	
-	Widget_Panel_drawInnerPanel(data.x + 8, data.y + 308, 25, 6);
+	inner_panel_draw(data.x + 8, data.y + 308, 25, 6);
 	Widget_Text_drawCentered(msg->title.text,
 		data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK, 0);
 	

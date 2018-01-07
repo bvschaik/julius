@@ -5,6 +5,7 @@
 #include "city/finance.h"
 #include "city/ratings.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 
 static void buttonCancel(int param1, int param2);
 static void buttonSetSalary(int rank, int param2);
@@ -37,13 +38,13 @@ void UI_SetSalaryDialog_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 	
-	Widget_Panel_drawOuterPanel(baseOffsetX + 128, baseOffsetY + 32, 24, 25);
+	outer_panel_draw(baseOffsetX + 128, baseOffsetY + 32, 24, 25);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + 16,
 		baseOffsetX + 144, baseOffsetY + 48);
 	Widget_GameText_drawCentered(52, 15,
 		baseOffsetX + 144, baseOffsetY + 48, 368, FONT_LARGE_BLACK);
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 144, baseOffsetY + 80, 22, 15);
+	inner_panel_draw(baseOffsetX + 144, baseOffsetY + 80, 22, 15);
 
 	for (int rank = 0; rank < 11; rank++) {
 		font_t font = (focusButtonId == rank + 2) ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;

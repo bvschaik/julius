@@ -3,6 +3,8 @@
 #include "../Graphics.h"
 #include "../Widget.h"
 
+#include "graphics/panel.h"
+
 void menu_bar_draw(menu_bar_item *items, int num_items)
 {
     short x_offset = items[0].x_start;
@@ -38,7 +40,7 @@ int menu_bar_handle_mouse(const mouse *m, menu_bar_item *items, int num_items, i
 
 void menu_draw(menu_bar_item *menu, int focus_item_id)
 {
-    Widget_Panel_drawUnborderedPanel(menu->x_start, menu->y_start + 18,
+    unbordered_panel_draw(menu->x_start, menu->y_start + 18,
         10, (20 + 20 * menu->num_items) / 16);
     for (int i = 0; i < menu->num_items; i++) {
         menu_item *sub = &menu->items[i];

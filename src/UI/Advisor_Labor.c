@@ -9,6 +9,7 @@
 #include "graphics/arrow_button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
+#include "graphics/panel.h"
 
 static void arrowButtonWages(int isDown, int param2);
 static void buttonPriority(int category, int param2);
@@ -57,7 +58,7 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
     graphics_in_dialog();
 
 	*advisorHeight = 26;
-	Widget_Panel_drawOuterPanel(0, 0, 40, *advisorHeight);
+	outer_panel_draw(0, 0, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS), 10, 10);
 	
 	Widget_GameText_draw(50, 0, 60, 12, FONT_LARGE_BLACK);
@@ -76,7 +77,7 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 	width += Widget_Text_drawNumber(Data_CityInfo.unemploymentPercentage, '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
 
 	// wages panel
-	Widget_Panel_drawInnerPanel(64, 350, 32, 2);
+	inner_panel_draw(64, 350, 32, 2);
 	Widget_GameText_draw(50, 14, 70, 359, FONT_NORMAL_WHITE);
 	width = Widget_Text_drawNumber(Data_CityInfo.wages, '@', " ", 230, 359, FONT_NORMAL_WHITE);
 	width += Widget_GameText_draw(50, 15, 230 + width, 359, FONT_NORMAL_WHITE);
@@ -95,7 +96,7 @@ void UI_Advisor_Labor_drawForeground()
 
     arrow_buttons_draw(0, 0, wageButtons, 2);
 
-	Widget_Panel_drawInnerPanel(32, 70, 36, 15);
+	inner_panel_draw(32, 70, 36, 15);
 
 	for (int i = 0; i < 9; i++) {
 		int focus = i == focusButtonId - 1;
@@ -166,7 +167,7 @@ void UI_LaborPriorityDialog_drawBackground()
 	UI_Advisor_Labor_drawForeground();
 
     graphics_in_dialog();
-	Widget_Panel_drawOuterPanel(160, 176, 20, 9);
+	outer_panel_draw(160, 176, 20, 9);
 	Widget_GameText_drawCentered(50, 25, 160, 185, 320, FONT_LARGE_BLACK);
 	for (int i = 0; i < 9; i++) {
 		Graphics_drawRect(178 + 32 * i, 221, 27, 27, COLOR_BLACK);

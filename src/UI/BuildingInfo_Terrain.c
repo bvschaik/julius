@@ -3,10 +3,11 @@
 #include "../Widget.h"
 
 #include "figure/figure.h"
+#include "graphics/panel.h"
 
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
 {
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(70, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Widget_GameText_drawCentered(13, 1,
 		c->xOffset, c->yOffset + 16 * c->heightBlocks - 22,
@@ -52,7 +53,7 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 		}
 		
 		UI_BuildingInfo_drawFigureImagesLocal(c);
-		Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
+		outer_panel_draw(c->xOffset, c->yOffset,
 			c->widthBlocks, c->heightBlocks);
 		if (!c->figure.count) {
 			Widget_GameText_drawCentered(70, c->terrainType + 10,

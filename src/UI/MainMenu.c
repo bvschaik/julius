@@ -8,6 +8,7 @@
 
 #include "game/system.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 
 static void buttonClick(int param1, int param2);
 
@@ -34,19 +35,19 @@ void UI_MainMenu_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawLargeLabelButton(
+	large_label_draw(
 		baseOffsetX + 192, baseOffsetY + 100,
 		16, focusButtonId == 1 ? 1 : 0
 	);
-	Widget_Panel_drawLargeLabelButton(
+	large_label_draw(
 		baseOffsetX + 192, baseOffsetY + 140,
 		16, focusButtonId == 2 ? 1 : 0
 	);
-	Widget_Panel_drawLargeLabelButton(
+	large_label_draw(
 		baseOffsetX + 192, baseOffsetY + 180,
 		16, focusButtonId == 3 ? 1 : 0
 	);
-	Widget_Panel_drawLargeLabelButton(
+	large_label_draw(
 		baseOffsetX + 192, baseOffsetY + 220,
 		16, focusButtonId == 4 ? 1 : 0
 	);

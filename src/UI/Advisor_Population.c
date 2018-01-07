@@ -3,6 +3,7 @@
 
 #include "game/time.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 #include "scenario/property.h"
 
 static void drawHistoryGraph(int fullSize, int x, int y);
@@ -26,7 +27,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	*advisorHeight = 27;
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 5, baseOffsetX + 10, baseOffsetY + 10);
 
 	// Title: depends on big graph shown
@@ -106,7 +107,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 	botGraph(0, baseOffsetX + 505, baseOffsetY + 163);
 
 	// food/migration info panel
-	Widget_Panel_drawInnerPanel(baseOffsetX + 48, baseOffsetY + 336, 34, 5);
+	inner_panel_draw(baseOffsetX + 48, baseOffsetY + 336, 34, 5);
 	int graphicId = image_group(GROUP_BULLET);
 	int width;
 	Graphics_drawImage(graphicId, baseOffsetX + 56, baseOffsetY + 344);

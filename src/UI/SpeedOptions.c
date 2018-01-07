@@ -7,6 +7,8 @@
 #include "game/settings.h"
 #include "graphics/arrow_button.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
+#include "graphics/panel.h"
 
 static void buttonOk(int param1, int param2);
 static void buttonCancel(int param1, int param2);
@@ -39,58 +41,27 @@ void UI_SpeedOptions_init()
 
 void UI_SpeedOptions_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
-	
-	Widget_Panel_drawOuterPanel(
-		baseOffsetX + 96, baseOffsetY + 80,
-		18, 14
-	);
-	
-	Widget_Panel_drawSmallLabelButton(
-		baseOffsetX + 144, baseOffsetY + 232,
-		12, focusButtonId == 1 ? 1 : 2
-	);
-	Widget_Panel_drawSmallLabelButton(
-		baseOffsetX + 144, baseOffsetY + 262,
-		12, focusButtonId == 2 ? 1 : 2
-	);
-	
-	Widget_GameText_drawCentered(45, 0,
-		baseOffsetX + 128, baseOffsetY + 92,
-		224, FONT_LARGE_BLACK
-	);
-	Widget_GameText_drawCentered(45, 4,
-		baseOffsetX + 128, baseOffsetY + 236,
-		224, FONT_NORMAL_GREEN
-	);
-	Widget_GameText_drawCentered(45, 1,
-		baseOffsetX + 128, baseOffsetY + 266,
-		224, FONT_NORMAL_GREEN
-	);
-	Widget_GameText_draw(45, 2,
-		baseOffsetX + 144, baseOffsetY + 146,
-		FONT_NORMAL_PLAIN
-	);
-	Widget_Text_drawPercentage(
-		setting_game_speed(),
-		baseOffsetX + 296, baseOffsetY + 146,
-		FONT_NORMAL_PLAIN
-	);
-	Widget_GameText_draw(45, 3,
-		baseOffsetX + 144, baseOffsetY + 182,
-		FONT_NORMAL_PLAIN
-	);
-	Widget_Text_drawPercentage(
-		setting_scroll_speed(),
-		baseOffsetX + 296, baseOffsetY + 182,
-		FONT_NORMAL_PLAIN
-	);
+    graphics_in_dialog();
 
-	arrow_buttons_draw(
-		baseOffsetX + 128, baseOffsetY + 40,
-		arrowButtons, 4
-	);
+	outer_panel_draw(96, 80, 18, 14);
+	// ok/cancel labels
+	label_draw(144, 232, 12, focusButtonId == 1 ? 1 : 2);
+	label_draw(144, 262, 12, focusButtonId == 2 ? 1 : 2);
+	
+    // title
+	Widget_GameText_drawCentered(45, 0, 128, 92, 224, FONT_LARGE_BLACK);
+    // ok/cancel label texts
+	Widget_GameText_drawCentered(45, 4, 128, 236, 224, FONT_NORMAL_GREEN);
+	Widget_GameText_drawCentered(45, 1, 128, 266, 224, FONT_NORMAL_GREEN);
+    // game speed
+	Widget_GameText_draw(45, 2, 144, 146, FONT_NORMAL_PLAIN);
+	Widget_Text_drawPercentage(setting_game_speed(), 296, 146, FONT_NORMAL_PLAIN);
+    // scroll speed
+	Widget_GameText_draw(45, 3, 144, 182, FONT_NORMAL_PLAIN);
+	Widget_Text_drawPercentage(setting_scroll_speed(), 296, 182,FONT_NORMAL_PLAIN);
+
+	arrow_buttons_draw(128, 40, arrowButtons, 4);
+    graphics_reset_dialog();
 }
 
 void UI_SpeedOptions_handleMouse(const mouse *m)

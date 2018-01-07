@@ -5,6 +5,7 @@
 #include "core/calc.h"
 #include "graphics/arrow_button.h"
 #include "graphics/graphics.h"
+#include "graphics/panel.h"
 
 static void buttonChangeTaxes(int isDown, int param2);
 
@@ -27,11 +28,11 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
     graphics_in_dialog();
 
 	*advisorHeight = 26;
-	Widget_Panel_drawOuterPanel(0, 0, 40, *advisorHeight);
+	outer_panel_draw(0, 0, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
 
 	Widget_GameText_draw(60, 0, 60, 12, FONT_LARGE_BLACK);
-	Widget_Panel_drawInnerPanel(64, 48, 34, 5);
+	inner_panel_draw(64, 48, 34, 5);
 
 	int width;
     int treasury = city_finance_treasury();

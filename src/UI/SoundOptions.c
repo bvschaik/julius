@@ -7,6 +7,8 @@
 #include "game/settings.h"
 #include "graphics/arrow_button.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
+#include "graphics/panel.h"
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "sound/music.h"
@@ -58,106 +60,47 @@ void UI_SoundOptions_init()
 
 void UI_SoundOptions_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 	
-	Widget_Panel_drawOuterPanel(
-		baseOffsetX + 48, baseOffsetY + 80,
-		24, 18
-	);
+	outer_panel_draw(48, 80, 24, 18);
 	
-	Widget_Panel_drawSmallLabelButton(
-		baseOffsetX + 64, baseOffsetY + 162,
-		14, focusButtonId == 1 ? 1 : 2
-	);
-	Widget_Panel_drawSmallLabelButton(
-		baseOffsetX + 64, baseOffsetY + 192,
-		14, focusButtonId == 2 ? 1 : 2
-	);
-	Widget_Panel_drawSmallLabelButton(
-		baseOffsetX + 64, baseOffsetY + 222,
-		14, focusButtonId == 3 ? 1 : 2
-	);
-	Widget_Panel_drawSmallLabelButton(
-		baseOffsetX + 64, baseOffsetY + 252,
-		14, focusButtonId == 4 ? 1 : 2
-	);
-	Widget_Panel_drawSmallLabelButton(
-		baseOffsetX + 144, baseOffsetY + 296,
-		12, focusButtonId == 5 ? 1 : 2
-	);
-	Widget_Panel_drawSmallLabelButton(
-		baseOffsetX + 144, baseOffsetY + 326,
-		12, focusButtonId == 6 ? 1 : 2
-	);
+    // on/off labels
+	label_draw(64, 162, 14, focusButtonId == 1 ? 1 : 2);
+	label_draw(64, 192, 14, focusButtonId == 2 ? 1 : 2);
+	label_draw(64, 222, 14, focusButtonId == 3 ? 1 : 2);
+	label_draw(64, 252, 14, focusButtonId == 4 ? 1 : 2);
+    // ok/cancel labels
+	label_draw(144, 296, 12, focusButtonId == 5 ? 1 : 2);
+	label_draw(144, 326, 12, focusButtonId == 6 ? 1 : 2);
 	
-	Widget_GameText_drawCentered(46, 0,
-		baseOffsetX + 96, baseOffsetY + 92,
-		288, FONT_LARGE_BLACK
-	);
+    // title
+	Widget_GameText_drawCentered(46, 0, 96, 92, 288, FONT_LARGE_BLACK);
+
+	Widget_GameText_drawCentered(46, 12, 128, 300, 224, FONT_NORMAL_GREEN);
+	Widget_GameText_drawCentered(46, 9, 128, 330, 224, FONT_NORMAL_GREEN);
 	
-	Widget_GameText_drawCentered(46, 12,
-		baseOffsetX + 128, baseOffsetY + 300,
-		224, FONT_NORMAL_GREEN
-	);
-	Widget_GameText_drawCentered(46, 9,
-		baseOffsetX + 128, baseOffsetY + 330,
-		224, FONT_NORMAL_GREEN
-	);
-	
-	Widget_GameText_draw(46, 10,
-		baseOffsetX + 112, baseOffsetY + 142,
-		FONT_SMALL_PLAIN
-	);
-	Widget_GameText_draw(46, 11,
-		baseOffsetX + 336, baseOffsetY + 142,
-		FONT_SMALL_PLAIN
-	);
+	Widget_GameText_draw(46, 10, 112, 142, FONT_SMALL_PLAIN);
+	Widget_GameText_draw(46, 11, 336, 142, FONT_SMALL_PLAIN);
 	
 	const set_sound *music = setting_sound(SOUND_MUSIC);
-	Widget_GameText_drawCentered(46, music->enabled ? 2 : 1,
-		baseOffsetX + 64, baseOffsetY + 166,
-		224, FONT_NORMAL_GREEN
-	);
-	Widget_Text_drawPercentage(music->volume,
-		baseOffsetX + 374, baseOffsetY + 166,
-		FONT_NORMAL_PLAIN
-	);
+	Widget_GameText_drawCentered(46, music->enabled ? 2 : 1, 64, 166, 224, FONT_NORMAL_GREEN);
+	Widget_Text_drawPercentage(music->volume, 374, 166, FONT_NORMAL_PLAIN);
 	
 	const set_sound *speech = setting_sound(SOUND_SPEECH);
-	Widget_GameText_drawCentered(46, speech->enabled ? 4 : 3,
-		baseOffsetX + 64, baseOffsetY + 196,
-		224, FONT_NORMAL_GREEN
-	);
-	Widget_Text_drawPercentage(speech->volume,
-		baseOffsetX + 374, baseOffsetY + 196,
-		FONT_NORMAL_PLAIN
-	);
+	Widget_GameText_drawCentered(46, speech->enabled ? 4 : 3, 64, 196, 224, FONT_NORMAL_GREEN);
+	Widget_Text_drawPercentage(speech->volume, 374, 196, FONT_NORMAL_PLAIN);
 	
 	const set_sound *effects = setting_sound(SOUND_EFFECTS);
-	Widget_GameText_drawCentered(46, effects->enabled ? 6 : 5,
-		baseOffsetX + 64, baseOffsetY + 226,
-		224, FONT_NORMAL_GREEN
-	);
-	Widget_Text_drawPercentage(effects->volume,
-		baseOffsetX + 374, baseOffsetY + 226,
-		FONT_NORMAL_PLAIN
-	);
+	Widget_GameText_drawCentered(46, effects->enabled ? 6 : 5, 64, 226, 224, FONT_NORMAL_GREEN);
+	Widget_Text_drawPercentage(effects->volume, 374, 226, FONT_NORMAL_PLAIN);
 	
 	const set_sound *city = setting_sound(SOUND_CITY);
-	Widget_GameText_drawCentered(46, city->enabled ? 8 : 7,
-		baseOffsetX + 64, baseOffsetY + 256,
-		224, FONT_NORMAL_GREEN
-	);
-	Widget_Text_drawPercentage(city->volume,
-		baseOffsetX + 374, baseOffsetY + 256,
-		FONT_NORMAL_PLAIN
-	);
+	Widget_GameText_drawCentered(46, city->enabled ? 8 : 7, 64, 256, 224, FONT_NORMAL_GREEN);
+	Widget_Text_drawPercentage(city->volume, 374, 256, FONT_NORMAL_PLAIN);
 
-	arrow_buttons_draw(
-		baseOffsetX + 208, baseOffsetY + 60,
-		arrowButtons, 8
-	);
+	arrow_buttons_draw(208, 60, arrowButtons, 8);
+
+    graphics_reset_dialog();
 }
 
 void UI_SoundOptions_handleMouse(const mouse *m)

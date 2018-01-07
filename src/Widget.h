@@ -1,8 +1,6 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include "Data/Buttons.h"
-
 #include "graphics/color.h"
 #include "graphics/font.h"
 #include "input/mouse.h"
@@ -62,16 +60,5 @@ void Widget_RichText_drawScrollbarDot();
 int Widget_RichText_getScrollPosition();
 int Widget_RichText_handleScrollbar(const mouse *m);
 int Widget_RichText_init(const uint8_t *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll);
-
-void Widget_Panel_drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks);
-
-void Widget_Panel_drawUnborderedPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks);
-
-void Widget_Panel_drawInnerPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks);
-
-void Widget_Panel_drawSmallLabelButton(int xOffset, int yOffset, int widthInBlocks, int type);
-
-void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type);
-
 
 #endif

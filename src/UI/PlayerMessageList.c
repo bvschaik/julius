@@ -10,6 +10,7 @@
 #include "core/lang.h"
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
+#include "graphics/panel.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
@@ -102,9 +103,9 @@ void UI_PlayerMessageList_drawBackground()
 	data.textWidthBlocks = data.widthBlocks - 4;
 	data.textHeightBlocks = data.heightBlocks - 9;
 
-	Widget_Panel_drawOuterPanel(data.x, data.y, data.widthBlocks, data.heightBlocks);
+	outer_panel_draw(data.x, data.y, data.widthBlocks, data.heightBlocks);
 	Widget_GameText_drawCentered(63, 0, data.x, data.y + 16, 16 * data.widthBlocks, FONT_LARGE_BLACK);
-	Widget_Panel_drawInnerPanel(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
+	inner_panel_draw(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
 
 	if (city_message_count() > 0) {
 		Widget_GameText_draw(63, 2, data.xText + 42, data.yText - 12, FONT_SMALL_PLAIN);

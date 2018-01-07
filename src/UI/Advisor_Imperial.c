@@ -7,6 +7,7 @@
 #include "empire/city.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 
@@ -96,7 +97,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	*advisorHeight = 27;
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 2, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_Text_draw(scenario_player_name(), baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
@@ -107,7 +108,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 	Widget_GameText_drawMultiline(52, Data_CityInfo.ratingFavor / 5 + 22,
 		baseOffsetX + 60, baseOffsetY + 60, 544, FONT_NORMAL_BLACK);
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 90, 36, 14);
+	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 90, 36, 14);
 	
 	int numRequests = 0;
 	if (Data_CityInfo.distantBattleMonthsToBattle > 0 && Data_CityInfo.distantBattleRomanMonthsToTravel <= 0) {
@@ -142,7 +143,7 @@ void UI_Advisor_Imperial_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 324, 32, 6);
+	inner_panel_draw(baseOffsetX + 64, baseOffsetY + 324, 32, 6);
 
 	Widget_GameText_draw(32, Data_CityInfo.playerRank,
 		baseOffsetX + 72, baseOffsetY + 338, FONT_LARGE_BROWN);

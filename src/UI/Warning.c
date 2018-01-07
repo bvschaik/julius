@@ -8,6 +8,7 @@
 
 #include "city/warning.h"
 #include "game/state.h"
+#include "graphics/panel.h"
 
 static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
 
@@ -43,7 +44,7 @@ void UI_Warning_draw()
             top_offset += 70;
         }
         int box_width = determine_width(text);
-        Widget_Panel_drawSmallLabelButton(
+        label_draw(
             center - box_width / 2 + 1, top_offset,
             box_width / 16 + 1, 1);
         if (box_width < 460) {

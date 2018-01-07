@@ -12,6 +12,7 @@
 #include "core/debug.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int index, int param2);
@@ -37,7 +38,7 @@ void UI_BuildingInfo_drawWall(BuildingInfoContext *c)
 {
 	c->helpId = 85;
 	PLAY_SOUND("wavs/wall.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(139, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Widget_GameText_drawMultiline(139, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 158,
@@ -48,7 +49,7 @@ void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
 {
 	c->helpId = 86;
 	PLAY_SOUND("wavs/prefecture.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(88, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Widget_GameText_drawCentered(13, 1,
 		c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
@@ -78,7 +79,7 @@ void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
 		}
 	}
 
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -86,7 +87,7 @@ void UI_BuildingInfo_drawFort(BuildingInfoContext *c)
 {
 	c->helpId = 87;
 	PLAY_SOUND("wavs/fort.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(89, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	if (formation_get(c->formationId)->cursed_by_mars) {
@@ -104,7 +105,7 @@ void UI_BuildingInfo_drawGatehouse(BuildingInfoContext *c)
 {
 	c->helpId = 85;
 	PLAY_SOUND("wavs/gatehouse.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(90, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	Widget_GameText_drawMultiline(90, 1,
@@ -116,7 +117,7 @@ void UI_BuildingInfo_drawTower(BuildingInfoContext *c)
 {
 	c->helpId = 85;
 	PLAY_SOUND("wavs/tower.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(91, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->buildingId);
@@ -129,7 +130,7 @@ void UI_BuildingInfo_drawTower(BuildingInfoContext *c)
 	} else {
 		DRAW_DESC(91, 4);
 	}
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -137,7 +138,7 @@ void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c)
 {
 	c->helpId = 88;
 	PLAY_SOUND("wavs/mil_acad.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(135, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	building *b = building_get(c->buildingId);
@@ -150,7 +151,7 @@ void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c)
 	} else {
 		DRAW_DESC(135, 3);
 	}
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -158,7 +159,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 {
 	c->helpId = 37;
 	PLAY_SOUND("wavs/barracks.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(136, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS,
 		c->xOffset + 64, c->yOffset + 38);
@@ -193,7 +194,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 			DRAW_DESC_AT(70, 136, 8 + offset);
 		}
 	}
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -202,7 +203,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 	int textId, groupId;
     const formation *m = formation_get(c->formationId);
 	c->helpId = 87;
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
+	outer_panel_draw(c->xOffset, c->yOffset,
 		c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(138, m->legion_id,
 		c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
@@ -346,7 +347,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 		button_border_draw(c->xOffset + 19 + 85 * i,
 			c->yOffset + 139, 84, 84, hasFocus);
 	}
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 230,
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 230,
 		c->widthBlocks - 2, 4);
 
 	int titleId;

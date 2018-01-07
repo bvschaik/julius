@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "game/resource.h"
+#include "graphics/panel.h"
 
 #include "../Graphics.h"
 #include "../Widget.h"
@@ -14,7 +15,7 @@ void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
 {
 	c->helpId = 81;
 	PLAY_SOUND("wavs/eng_post.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(104, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	building *b = building_get(c->buildingId);
@@ -42,7 +43,7 @@ void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
 		}
 	}
 
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -50,7 +51,7 @@ void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c)
 {
 	c->helpId = 82;
 	PLAY_SOUND("wavs/shipyard.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(100, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	building *b = building_get(c->buildingId);
@@ -76,7 +77,7 @@ void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c)
 		}
 	}
 
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -84,7 +85,7 @@ void UI_BuildingInfo_drawDock(BuildingInfoContext *c)
 {
 	c->helpId = 83;
 	PLAY_SOUND("wavs/dock.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(101, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	building *b = building_get(c->buildingId);
@@ -113,7 +114,7 @@ void UI_BuildingInfo_drawDock(BuildingInfoContext *c)
 		}
 	}
 
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -121,7 +122,7 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 {
 	c->helpId = 84;
 	PLAY_SOUND("wavs/wharf.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(102, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
 		resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
@@ -147,7 +148,7 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 		DRAW_DESC(102, textId);
 	}
 
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -155,7 +156,7 @@ void UI_BuildingInfo_drawBurningRuin(BuildingInfoContext *c)
 {
 	c->helpId = 0;
 	PLAY_SOUND("wavs/ruin.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(111, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	Widget_GameText_draw(41, c->rubbleBuildingType,
@@ -169,7 +170,7 @@ void UI_BuildingInfo_drawRubble(BuildingInfoContext *c)
 {
 	c->helpId = 0;
 	PLAY_SOUND("wavs/ruin.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(140, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	Widget_GameText_draw(41, c->rubbleBuildingType,

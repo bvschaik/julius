@@ -10,6 +10,7 @@
 #include "game/resource.h"
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
+#include "graphics/panel.h"
 
 static void drawButtons();
 static void buttonGod(int god, int param2);
@@ -46,7 +47,7 @@ void UI_HoldFestivalDialog_drawBackground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX + 48, baseOffsetY + 48, 34, 20);
+	outer_panel_draw(baseOffsetX + 48, baseOffsetY + 48, 34, 20);
 	Widget_GameText_drawCentered(58, 25 + Data_CityInfo.festivalGod,
 		baseOffsetX + 48, baseOffsetY + 60, 544, FONT_LARGE_BLACK);
 	for (int god = 0; god < 5; god++) {

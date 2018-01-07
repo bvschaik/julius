@@ -14,6 +14,7 @@
 #include "game/state.h"
 #include "game/undo.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"
@@ -46,16 +47,16 @@ void UI_MissionEnd_drawBackground()
 	int yOffset = Data_Screen.offset640x480.y + 128;
 	if (city_victory_state() != VICTORY_STATE_WON) {
 		// lost mission
-		Widget_Panel_drawOuterPanel(xOffset, yOffset - 112, 34, 16);
+		outer_panel_draw(xOffset, yOffset - 112, 34, 16);
 		Widget_GameText_drawCentered(62, 1, xOffset, yOffset - 96, 544, FONT_LARGE_BLACK);
 		Widget_GameText_drawMultiline(62, 16, xOffset + 16, yOffset - 56, 496, FONT_NORMAL_BLACK);
 		return;
 	}
 	// won mission
-	Widget_Panel_drawOuterPanel(xOffset, yOffset, 34, 18);
+	outer_panel_draw(xOffset, yOffset, 34, 18);
 	Widget_GameText_drawCentered(62, 0, xOffset, yOffset + 16, 544, FONT_LARGE_BLACK);
 	
-	Widget_Panel_drawInnerPanel(xOffset + 16, yOffset + 56, 32, 7);
+	inner_panel_draw(xOffset + 16, yOffset + 56, 32, 7);
 
 	if (scenario_is_custom()) {
 		Widget_GameText_drawMultiline(147, 20, xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
@@ -141,7 +142,7 @@ void UI_VictoryDialog_drawBackground()
 	int xOffset = Data_Screen.offset640x480.x + 48;
 	int yOffset = Data_Screen.offset640x480.y + 128;
 
-	Widget_Panel_drawOuterPanel(xOffset, yOffset, 34, 15);
+	outer_panel_draw(xOffset, yOffset, 34, 15);
 	if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
 		Widget_GameText_drawCentered(62, 0, xOffset, yOffset + 16, 544, FONT_LARGE_BLACK);
 		Widget_GameText_drawCentered(62, 2, xOffset, yOffset + 47, 544, FONT_NORMAL_BLACK);
@@ -158,7 +159,7 @@ void UI_VictoryDialog_drawForeground()
 	int yOffset = Data_Screen.offset640x480.y + 128;
 
 	if (city_victory_state() == VICTORY_STATE_WON) {
-		Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 112, 30, focusButtonId == 1);
+		large_label_draw(xOffset + 32, yOffset + 112, 30, focusButtonId == 1);
 		if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
 			Widget_GameText_drawCentered(62, 3,
 				xOffset + 32, yOffset + 118, 480, FONT_NORMAL_GREEN);
@@ -168,15 +169,15 @@ void UI_VictoryDialog_drawForeground()
 		}
 		if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
 			// Continue for 2/5 years
-			Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 144, 30, focusButtonId == 2);
+			large_label_draw(xOffset + 32, yOffset + 144, 30, focusButtonId == 2);
 			Widget_GameText_drawCentered(62, 4, xOffset + 32, yOffset + 150, 480, FONT_NORMAL_GREEN);
 
-			Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 176, 30, focusButtonId == 3);
+			large_label_draw(xOffset + 32, yOffset + 176, 30, focusButtonId == 3);
 			Widget_GameText_drawCentered(62, 5, xOffset + 32, yOffset + 182, 480, FONT_NORMAL_GREEN);
 		}
 	} else {
 		// lost
-		Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 96, 30, focusButtonId == 1);
+		large_label_draw(xOffset + 32, yOffset + 96, 30, focusButtonId == 1);
 		Widget_GameText_drawCentered(62, 6, xOffset + 32, yOffset + 102, 480, FONT_NORMAL_GREEN);
 	}
 }

@@ -7,6 +7,7 @@
 #include "game/file.h"
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
+#include "graphics/panel.h"
 #include "scenario/criteria.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
@@ -71,7 +72,7 @@ void UI_CCKSelection_init()
 void UI_CCKSelection_drawBackground()
 {
 	Graphics_drawFullScreenImage(image_group(GROUP_CCK_BACKGROUND));
-	Widget_Panel_drawInnerPanel(
+	inner_panel_draw(
 		Data_Screen.offset640x480.x + 280,
 		Data_Screen.offset640x480.y + 242, 2, 12);
 	drawScenarioList();
@@ -81,7 +82,7 @@ void UI_CCKSelection_drawBackground()
 
 static void drawScenarioList()
 {
-	Widget_Panel_drawInnerPanel(Data_Screen.offset640x480.x + 16,
+	inner_panel_draw(Data_Screen.offset640x480.x + 16,
 		Data_Screen.offset640x480.y + 210, 16, 16);
 	for (int i = 0; i < 15; i++) {
 		font_t font = FONT_NORMAL_GREEN;

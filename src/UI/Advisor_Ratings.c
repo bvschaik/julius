@@ -4,6 +4,7 @@
 
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
+#include "graphics/panel.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
@@ -26,7 +27,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	int width, hasReached;
 
 	*advisorHeight = 27;
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 3,
 		baseOffsetX + 10, baseOffsetY + 10);
 	width = Widget_GameText_draw(53, 0,
@@ -125,7 +126,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	drawRatingColumn(baseOffsetX + 470, baseOffsetY + 274, Data_CityInfo.ratingFavor, hasReached);
 
 	// bottom info box
-	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 356, 32, 4);
+	inner_panel_draw(baseOffsetX + 64, baseOffsetY + 356, 32, 4);
 	switch (Data_CityInfo.ratingAdvisorSelection) {
 		case 1:
 			Widget_GameText_draw(53, 1,

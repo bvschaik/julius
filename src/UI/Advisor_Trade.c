@@ -12,6 +12,7 @@
 #include "graphics/arrow_button.h"
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
+#include "graphics/panel.h"
 #include "scenario/building.h"
 
 static void buttonPrices(int param1, int param2);
@@ -75,7 +76,7 @@ void UI_Advisor_Trade_drawBackground(int *advisorHeight)
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	*advisorHeight = 27;
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 4,
 		baseOffsetX + 10, baseOffsetY + 10);
 
@@ -89,7 +90,7 @@ void UI_Advisor_Trade_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 52, 36, 21);
+	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 52, 36, 21);
 	for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++) {
 		int offsetY = baseOffsetY + 22 * i;
 		int resource = Data_CityInfo_Resource.availableResources[i];
@@ -168,7 +169,7 @@ void UI_TradePricesDialog_drawBackground()
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	Graphics_shadeRect(baseOffsetX + 33, baseOffsetY + 53, 574, 334, 0);
-	Widget_Panel_drawOuterPanel(baseOffsetX + 16, baseOffsetY + 144, 38, 11);
+	outer_panel_draw(baseOffsetX + 16, baseOffsetY + 144, 38, 11);
 	Widget_GameText_draw(54, 21, baseOffsetX + 26, baseOffsetY + 153, FONT_LARGE_BLACK);
 	Widget_GameText_draw(54, 22, baseOffsetX + 26, baseOffsetY + 228, FONT_NORMAL_BLACK);
 	Widget_GameText_draw(54, 23, baseOffsetX + 26, baseOffsetY + 253, FONT_NORMAL_BLACK);
@@ -229,7 +230,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX + 48, baseOffsetY + 128, 34, 15);
+	outer_panel_draw(baseOffsetX + 48, baseOffsetY + 128, 34, 15);
 	int graphicOffset = selectedResourceId + resource_image_offset(selectedResourceId, RESOURCE_IMAGE_ICON);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
 			baseOffsetX + 58, baseOffsetY + 136);

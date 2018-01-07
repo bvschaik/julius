@@ -15,6 +15,7 @@
 #include "figure/phrase.h"
 #include "figure/trader.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 #include "scenario/property.h"
 
 static void selectFigure(int index, int param2);
@@ -365,7 +366,7 @@ static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 
 void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c)
 {
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 40,
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 40,
 		c->widthBlocks - 2, 12);
 	if (c->figure.count <= 0) {
 		Widget_GameText_drawCentered(70, 0, c->xOffset, c->yOffset + 120,

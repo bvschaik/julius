@@ -206,6 +206,7 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/image.c
     ${PROJECT_SOURCE_DIR}/src/graphics/image_button.c
     ${PROJECT_SOURCE_DIR}/src/graphics/menu.c
+    ${PROJECT_SOURCE_DIR}/src/graphics/panel.c
     ${PROJECT_SOURCE_DIR}/src/graphics/video.c
 )
 set(SOUND_FILES
@@ -220,7 +221,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Graphics.c
 	${PROJECT_SOURCE_DIR}/src/Graphics_Footprint.c
 	${PROJECT_SOURCE_DIR}/src/Screen.c
-	${PROJECT_SOURCE_DIR}/src/Widget_Panel.c
 	${PROJECT_SOURCE_DIR}/src/Widget_Text.c
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Chief.c

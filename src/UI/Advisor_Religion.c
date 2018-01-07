@@ -4,6 +4,7 @@
 #include "city/culture.h"
 #include "city/gods.h"
 #include "game/settings.h"
+#include "graphics/panel.h"
 
 void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 {
@@ -12,10 +13,10 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	
 	if (setting_gods_enabled()) {
 		*advisorHeight = 17;
-		Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+		outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	} else {
 		*advisorHeight = 20;
-		Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+		outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 		Widget_GameText_drawMultiline(59, 43,
 			baseOffsetX + 60, baseOffsetY + 256, 520, FONT_NORMAL_BLACK
 		);
@@ -34,7 +35,7 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 9, baseOffsetX + 370, baseOffsetY + 32, FONT_SMALL_PLAIN);
 	Widget_GameText_draw(59, 7, baseOffsetX + 370, baseOffsetY + 46, FONT_SMALL_PLAIN);
 	
-	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 8);
+	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 60, 36, 8);
 	
 	int graphicIdBolt = image_group(GROUP_GOD_BOLT);
 	int width;

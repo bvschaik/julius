@@ -12,6 +12,7 @@
 #include "building/model.h"
 #include "city/view.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 #include "scenario/property.h"
 
 static void drawMenuButtons();
@@ -166,7 +167,7 @@ static void drawMenuButtons()
 	int itemIndex = -1;
 	for (int i = 0; i < menu.numItems; i++) {
 		itemIndex = building_menu_next_index(menu.selectedSubmenu, itemIndex);
-		Widget_Panel_drawSmallLabelButton(xOffset - 266, menu.yOffset + 110 + 24 * i,
+		label_draw(xOffset - 266, menu.yOffset + 110 + 24 * i,
 			16, buildMenuFocusButtonId == i + 1 ? 1 : 2);
 		int buildingType = building_menu_type(menu.selectedSubmenu, itemIndex);
 		Widget_GameText_drawCentered(28, buildingType,

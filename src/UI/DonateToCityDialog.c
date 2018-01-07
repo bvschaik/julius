@@ -9,6 +9,7 @@
 #include "graphics/arrow_button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
+#include "graphics/panel.h"
 
 static void buttonSetAmount(int param1, int param2);
 static void buttonDonate(int param1, int param2);
@@ -47,13 +48,13 @@ void UI_DonateToCityDialog_drawBackground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX + 64, baseOffsetY + 160, 32, 10);
+	outer_panel_draw(baseOffsetX + 64, baseOffsetY + 160, 32, 10);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
 		baseOffsetX + 96, baseOffsetY + 176);
 	Widget_GameText_drawCentered(52, 16,
 		baseOffsetX + 80, baseOffsetY + 176, 496, FONT_LARGE_BLACK);
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 112, baseOffsetY + 208, 26, 4);
+	inner_panel_draw(baseOffsetX + 112, baseOffsetY + 208, 26, 4);
 
 	Widget_Text_drawNumberCentered(0, baseOffsetX + 124, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
 	Widget_Text_drawNumberCentered(500, baseOffsetX + 204, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);

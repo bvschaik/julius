@@ -12,6 +12,7 @@
 #include "city/view.h"
 #include "game/state.h"
 #include "game/time.h"
+#include "graphics/panel.h"
 #include "scenario/criteria.h"
 
 void UI_City_drawBackground()
@@ -58,7 +59,7 @@ void UI_City_drawPausedAndTimeLeft()
 			years = scenario_criteria_max_year() - game_time_year() - 1;
 		}
 		int totalMonths = 12 - game_time_month() + 12 * years;
-		Widget_Panel_drawSmallLabelButton(1, 25, 15, 1);
+		label_draw(1, 25, 15, 1);
 		int width = Widget_GameText_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
 		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
 	} else if (scenario_criteria_survival_enabled()) {
@@ -69,13 +70,13 @@ void UI_City_drawPausedAndTimeLeft()
 			years = scenario_criteria_max_year() - game_time_year() - 1;
 		}
 		int totalMonths = 12 - game_time_month() + 12 * years;
-		Widget_Panel_drawSmallLabelButton(1, 25, 15, 1);
+		label_draw(1, 25, 15, 1);
 		int width = Widget_GameText_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
 		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
 	}
 	if (game_state_is_paused()) {
 		int width = Data_CityView.widthInPixels;
-		Widget_Panel_drawOuterPanel((width - 448) / 2, 40, 28, 3);
+		outer_panel_draw((width - 448) / 2, 40, 28, 3);
 		Widget_GameText_drawCentered(13, 2,
 			(width - 448) / 2, 58, 448, FONT_NORMAL_BLACK);
 	}

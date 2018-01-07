@@ -2,12 +2,13 @@
 #include "../Widget.h"
 
 #include "building/building.h"
+#include "graphics/panel.h"
 
 void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 {
 	c->helpId = 72;
 	PLAY_SOUND("wavs/amphitheatre.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(71, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
@@ -24,7 +25,7 @@ void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 		DRAW_DESC(71, 5);
 	}
 
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 7);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 7);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = Widget_GameText_draw(71, 8, c->xOffset + 32, c->yOffset + 182, FONT_SMALL_BLACK);
@@ -48,7 +49,7 @@ void UI_BuildingInfo_drawTheater(BuildingInfoContext *c)
 {
 	c->helpId = 71;
 	PLAY_SOUND("wavs/theatre.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(72, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
@@ -61,7 +62,7 @@ void UI_BuildingInfo_drawTheater(BuildingInfoContext *c)
 		DRAW_DESC(72, 3);
 	}
 
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = Widget_GameText_draw(72, 6, c->xOffset + 32, c->yOffset + 182, FONT_SMALL_BLACK);
@@ -78,7 +79,7 @@ void UI_BuildingInfo_drawHippodrome(BuildingInfoContext *c)
 {
 	c->helpId = 74;
 	PLAY_SOUND("wavs/hippodrome.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(73, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
@@ -91,7 +92,7 @@ void UI_BuildingInfo_drawHippodrome(BuildingInfoContext *c)
 		DRAW_DESC(73, 3);
 	}
 
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = Widget_GameText_draw(73, 6, c->xOffset + 32, c->yOffset + 202, FONT_SMALL_BLACK);
@@ -106,7 +107,7 @@ void UI_BuildingInfo_drawColosseum(BuildingInfoContext *c)
 {
 	c->helpId = 73;
 	PLAY_SOUND("wavs/colloseum.wav");
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(74, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
@@ -123,7 +124,7 @@ void UI_BuildingInfo_drawColosseum(BuildingInfoContext *c)
 		DRAW_DESC(74, 4);
 	}
 
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = Widget_GameText_draw(74, 8, c->xOffset + 32, c->yOffset + 182, FONT_SMALL_BLACK);
@@ -146,7 +147,7 @@ static void drawEntertainmentSchool(BuildingInfoContext *c, int groupId, const c
 	c->helpId = 75;
 	PLAY_SOUND(soundFile);
 
-	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
@@ -163,7 +164,7 @@ static void drawEntertainmentSchool(BuildingInfoContext *c, int groupId, const c
 	} else {
 		DRAW_DESC(groupId, 6);
 	}
-	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 

@@ -8,6 +8,7 @@
 #include "core/time.h"
 #include "game/state.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 
 static void handleSubmenu();
 
@@ -75,7 +76,7 @@ void UI_OverlayMenu_drawForeground()
 	UI_City_drawCity();
 	int xOffset = Data_CityView.widthInPixels;
 	for (int i = 0; i < 8; i++) {
-		Widget_Panel_drawSmallLabelButton(xOffset - 170, 74 + 24 * i,
+		label_draw(xOffset - 170, 74 + 24 * i,
 			10, menuFocusButtonId == i + 1 ? 1 : 2);
 		Widget_GameText_drawCentered(14, menuIdToOverlayId[i],
 			xOffset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
@@ -84,7 +85,7 @@ void UI_OverlayMenu_drawForeground()
 		Graphics_drawImage(image_group(GROUP_BULLET),
 			xOffset - 185, 80 + 24 * selectedMenu);
 		for (int i = 0; i < numSubmenuItems; i++) {
-			Widget_Panel_drawSmallLabelButton(
+			label_draw(
 				xOffset - 348, 74 + 24 * (i + selectedMenu),
 				10, submenuFocusButtonId == i + 1 ? 1 : 2);
 			Widget_GameText_drawCentered(14, submenuIdToOverlayId[selectedSubmenu][i],

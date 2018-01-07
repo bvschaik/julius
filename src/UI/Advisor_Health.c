@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "city/culture.h"
+#include "graphics/panel.h"
 
 void UI_Advisor_Health_drawBackground(int *advisorHeight)
 {
@@ -9,7 +10,7 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	*advisorHeight = 18;
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 6, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(56, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
@@ -29,7 +30,7 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(56, 4, baseOffsetX + 290, baseOffsetY + 94, FONT_SMALL_PLAIN);
 	Widget_GameText_draw(56, 5, baseOffsetX + 478, baseOffsetY + 94, FONT_SMALL_PLAIN);
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 108, 36, 5);
+	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 108, 36, 5);
 
 	// bathhouses
 	Widget_GameText_drawNumberWithDescription(8, 24,

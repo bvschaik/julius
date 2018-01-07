@@ -5,6 +5,7 @@
 #include "city/culture.h"
 #include "city/gods.h"
 #include "graphics/generic_button.h"
+#include "graphics/panel.h"
 
 static void drawFestivalBackground();
 
@@ -30,7 +31,7 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	*advisorHeight = 23;
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 8,
 		baseOffsetX + 10, baseOffsetY + 10);
 
@@ -41,7 +42,7 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(58, 3, baseOffsetX + 340, baseOffsetY + 46, FONT_SMALL_PLAIN);
 	Widget_GameText_draw(58, 4, baseOffsetX + 480, baseOffsetY + 46, FONT_SMALL_PLAIN);
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 5);
+	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 60, 36, 5);
 
 	// theaters
 	Widget_GameText_drawNumberWithDescription(8, 34, building_count_total(BUILDING_THEATER),
@@ -157,7 +158,7 @@ static void drawFestivalBackground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 48, baseOffsetY + 252, 34, 6);
+	inner_panel_draw(baseOffsetX + 48, baseOffsetY + 252, 34, 6);
 	Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 15,
 		baseOffsetX + 460, baseOffsetY + 255);
 	Widget_GameText_draw(58, 17, baseOffsetX + 52, baseOffsetY + 224, FONT_LARGE_BLACK);

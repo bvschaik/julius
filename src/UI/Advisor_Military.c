@@ -5,6 +5,7 @@
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
+#include "graphics/panel.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"
 
@@ -42,7 +43,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	*advisorHeight = 26;
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 1, baseOffsetX + 10, baseOffsetY + 10);
 	Widget_GameText_draw(51, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 
@@ -98,7 +99,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 		Widget_GameText_draw(51, distant_battle_text_id, baseOffsetX + 120, baseOffsetY + 388, FONT_NORMAL_BLACK);
 	}
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 70, 36, 17);
+	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 70, 36, 17);
 	if (numLegions <= 0) {
 		Widget_GameText_drawMultiline(51, 16, baseOffsetX + 64, baseOffsetY + 200, 496, FONT_NORMAL_GREEN);
 		return;
