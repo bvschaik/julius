@@ -4,6 +4,7 @@
 #include "city/culture.h"
 #include "city/gods.h"
 #include "game/settings.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 

@@ -7,6 +7,7 @@
 #include "empire/city.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "scenario/property.h"

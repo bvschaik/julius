@@ -13,6 +13,7 @@
 #include "game/state.h"
 #include "game/undo.h"
 #include "graphics/generic_button.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "scenario/property.h"

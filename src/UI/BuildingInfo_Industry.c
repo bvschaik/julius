@@ -5,6 +5,7 @@
 
 #include "building/building.h"
 #include "game/resource.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 

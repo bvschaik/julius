@@ -1,8 +1,8 @@
 #include "BuildingInfo.h"
 
 #include "building/building.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
-#include "graphics/text.h"
 
 void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 {

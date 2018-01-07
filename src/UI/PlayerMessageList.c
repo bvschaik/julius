@@ -9,6 +9,7 @@
 #include "core/lang.h"
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 

@@ -4,13 +4,13 @@
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "game/resource.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 
 #include "../Graphics.h"
 
 #include "../Data/CityInfo.h"
-
-#include "graphics/text.h"
 
 void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
 {

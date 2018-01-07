@@ -21,6 +21,7 @@
 #include "figure/formation_legion.h"
 #include "figure/phrase.h"
 #include "graphics/image_button.h"
+#include "graphics/lang_text.h"
 #include "graphics/text.h"
 #include "map/aqueduct.h"
 #include "map/building.h"

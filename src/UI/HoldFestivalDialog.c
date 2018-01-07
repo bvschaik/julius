@@ -9,8 +9,8 @@
 #include "game/resource.h"
 #include "graphics/generic_button.h"
 #include "graphics/image_button.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
-#include "graphics/text.h"
 
 static void drawButtons();
 static void buttonGod(int god, int param2);

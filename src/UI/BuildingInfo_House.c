@@ -8,6 +8,7 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "game/resource.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "map/building.h"

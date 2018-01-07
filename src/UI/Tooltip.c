@@ -12,6 +12,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "graphics/lang_text.h"
 #include "graphics/rich_text.h"
 #include "graphics/text.h"
 

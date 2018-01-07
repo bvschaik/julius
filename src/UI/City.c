@@ -10,6 +10,7 @@
 #include "city/view.h"
 #include "game/state.h"
 #include "game/time.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "scenario/criteria.h"

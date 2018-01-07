@@ -13,6 +13,7 @@
 #include "game/mission.h"
 #include "game/tutorial.h"
 #include "graphics/image_button.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/rich_text.h"
 #include "graphics/text.h"

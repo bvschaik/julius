@@ -7,8 +7,8 @@
 
 #include "game/system.h"
 #include "graphics/generic_button.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
-#include "graphics/text.h"
 
 static void buttonClick(int param1, int param2);
 
