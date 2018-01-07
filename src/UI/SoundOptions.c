@@ -5,6 +5,7 @@
 
 #include "core/calc.h"
 #include "game/settings.h"
+#include "graphics/arrow_button.h"
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "sound/music.h"
@@ -28,7 +29,7 @@ static CustomButton buttons[] = {
 	{144, 296, 336, 346, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 1, 0},
 };
 
-static ArrowButton arrowButtons[] = {
+static arrow_button arrowButtons[] = {
 	{112, 100, 17, 24, arrowButtonMusic, 1, 0},
 	{136, 100, 15, 24, arrowButtonMusic, 0, 0},
 	{112, 130, 17, 24, arrowButtonSpeech, 1, 0},
@@ -152,7 +153,7 @@ void UI_SoundOptions_drawForeground()
 		FONT_NORMAL_PLAIN
 	);
 
-	Widget_Button_drawArrowButtons(
+	arrow_buttons_draw(
 		baseOffsetX + 208, baseOffsetY + 60,
 		arrowButtons, 8
 	);
@@ -166,7 +167,7 @@ void UI_SoundOptions_handleMouse(const mouse *m)
 	} else {
 		const mouse *m_dialog = mouse_in_dialog(m);
 		if (!Widget_Button_handleCustomButtons(m_dialog, buttons, 6, &focusButtonId)) {
-			Widget_Button_handleArrowButtons(mouse_translate(m_dialog, 208, 60), arrowButtons, 8);
+			arrow_buttons_handle_mouse(m_dialog, 208, 60, arrowButtons, 8);
 		}
 	}
 }

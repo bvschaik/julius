@@ -6,6 +6,7 @@
 #include "city/finance.h"
 #include "city/labor.h"
 #include "core/calc.h"
+#include "graphics/arrow_button.h"
 
 static void arrowButtonWages(int isDown, int param2);
 static void buttonPriority(int category, int param2);
@@ -23,7 +24,7 @@ static CustomButton categoryButtons[] = {
 	{40, 277, 600, 299, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 8, 0},
 };
 
-static ArrowButton wageButtons[] = {
+static arrow_button wageButtons[] = {
 	{158, 354, 17, 24, arrowButtonWages, 1, 0},
 	{182, 354, 15, 24, arrowButtonWages, 0, 0}
 };
@@ -111,8 +112,7 @@ void UI_Advisor_Labor_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Button_drawArrowButtons(
-		baseOffsetX, baseOffsetY, wageButtons, 2);
+	arrow_buttons_draw(baseOffsetX, baseOffsetY, wageButtons, 2);
 
 	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 70, 36, 15);
 
@@ -145,7 +145,7 @@ void UI_Advisor_Labor_handleMouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 	if (!Widget_Button_handleCustomButtons(m_dialog, categoryButtons, 9, &focusButtonId)) {
-		arrowButtonFocus = Widget_Button_handleArrowButtons(m_dialog, wageButtons, 2);
+		arrowButtonFocus = arrow_buttons_handle_mouse(m_dialog, 0, 0, wageButtons, 2);
 	}
 }
 

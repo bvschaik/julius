@@ -7,92 +7,10 @@
 #define PRESSED_REPEAT_INITIAL_MILLIS 300
 #define PRESSED_REPEAT_MILLIS 50
 
-static int getArrowButton(const mouse *m, ArrowButton *buttons, int numButtons);
 static int getCustomButton(const mouse *m, CustomButton *buttons, int numButtons);
-
 
 void Widget_Button_doNothing(int param1, int param2)
 {
-}
-
-void Widget_Button_drawArrowButtons(int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
-{
-	for (int i = 0; i < numButtons; i++) {
-		int graphicId = buttons[i].graphicId;
-		if (buttons[i].pressed) {
-			graphicId += 1;
-		}
-
-		Graphics_drawImage(graphicId,
-			xOffset + buttons[i].xOffset, yOffset + buttons[i].yOffset);
-	}
-}
-
-int Widget_Button_handleArrowButtons(const mouse *m, ArrowButton *buttons, int numButtons)
-{
-	static int lastTime = 0;
-
-	time_millis currTime = time_get_millis();
-	int shouldRepeat = 0;
-	if (currTime - lastTime >= 30) {
-		shouldRepeat = 1;
-		lastTime = currTime;
-	}
-	for (int i = 0; i < numButtons; i++) {
-		ArrowButton *btn = &buttons[i];
-		if (btn->pressed) {
-			btn->pressed--;
-			if (!btn->pressed) {
-				btn->repeats = 0;
-			}
-		} else {
-			btn->repeats = 0;
-		}
-	}
-	int buttonId = getArrowButton(m, buttons, numButtons);
-	if (!buttonId) {
-		return 0;
-	}
-	ArrowButton *btn = &buttons[buttonId-1];
-	if (m->left.went_down) {
-		btn->pressed = 3;
-		btn->repeats = 0;
-		btn->leftClickHandler(btn->parameter1, btn->parameter2);
-		return buttonId;
-	}
-	if (m->left.is_down) {
-		btn->pressed = 3;
-		if (shouldRepeat) {
-			btn->repeats++;
-			if (btn->repeats < 48) {
-				int clickOnRepeat[] = {
-					0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0,
-					0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
-					1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0
-				};
-				if (!clickOnRepeat[(int)btn->repeats]) {
-					return 0;
-				}
-			} else {
-				btn->repeats = 47;
-			}
-			btn->leftClickHandler(btn->parameter1, btn->parameter2);
-		}
-	}
-	return buttonId;
-}
-
-static int getArrowButton(const mouse *m, ArrowButton *buttons, int numButtons)
-{
-	for (int i = 0; i < numButtons; i++) {
-		if (buttons[i].xOffset <= m->x &&
-			buttons[i].xOffset + buttons[i].size > m->x &&
-			buttons[i].yOffset <= m->y &&
-			buttons[i].yOffset + buttons[i].size > m->y) {
-			return i + 1;
-		}
-	}
-	return 0;
 }
 
 int Widget_Button_handleCustomButtons(const mouse *m, CustomButton *buttons, int numButtons, int *focusButtonId)

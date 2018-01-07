@@ -4,11 +4,12 @@
 #include "../Data/Screen.h"
 
 #include "game/settings.h"
+#include "graphics/arrow_button.h"
 
 static void arrowButtonDifficulty(int param1, int param2);
 static void arrowButtonGods(int param1, int param2);
 
-static ArrowButton arrowButtons[] = {
+static arrow_button arrowButtons[] = {
 	{0, 54, 15, 24, arrowButtonDifficulty, 0, 0},
 	{24, 54, 17, 24, arrowButtonDifficulty, 1, 0},
 	{0, 102, 21, 24, arrowButtonGods, 2, 0}
@@ -38,7 +39,7 @@ void UI_DifficultyOptions_drawForeground()
 		baseOffsetX + 80, baseOffsetY + 190,
 		224, FONT_NORMAL_BLACK
 	);
-	Widget_Button_drawArrowButtons(
+	arrow_buttons_draw(
 		baseOffsetX + 288, baseOffsetY + 80,
 		arrowButtons, 3
 	);
@@ -54,8 +55,7 @@ void UI_DifficultyOptions_handleMouse(const mouse *m)
 		// cancel dialog
 		UI_Window_goTo(Window_City);
 	} else {
-		Widget_Button_handleArrowButtons(
-			mouse_translate(mouse_in_dialog(m), 288, 80), arrowButtons, 4);
+		arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrowButtons, 4);
 	}
 }
 

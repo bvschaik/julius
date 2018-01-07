@@ -9,6 +9,7 @@
 #include "core/calc.h"
 #include "empire/city.h"
 #include "empire/trade_prices.h"
+#include "graphics/arrow_button.h"
 #include "scenario/building.h"
 
 static void buttonPrices(int param1, int param2);
@@ -48,7 +49,7 @@ static ImageButton resourceImageButtons[] = {
 	{558, 335, 24, 24, ImageButton_Normal, 134, 4, resourceSettingsOk, Widget_Button_doNothing, 0, 0, 1}
 };
 
-static ArrowButton resourceArrowButtons[] = {
+static arrow_button resourceArrowButtons[] = {
 	{314, 215, 17, 24, resourceSettingsExportUpDown, 1, 0},
 	{338, 215, 15, 24, resourceSettingsExportUpDown, 0, 0}
 };
@@ -339,7 +340,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 
 	Widget_Button_drawImageButtons(baseOffsetX, baseOffsetY, resourceImageButtons, 2);
 	if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TRADE_STATUS_EXPORT) {
-		Widget_Button_drawArrowButtons(baseOffsetX, baseOffsetY, resourceArrowButtons, 2);
+		arrow_buttons_draw(baseOffsetX, baseOffsetY, resourceArrowButtons, 2);
 	}
 }
 
@@ -351,7 +352,7 @@ void UI_ResourceSettingsDialog_handleMouse(const mouse *m)
 	} else if (Widget_Button_handleImageButtons(m_dialog, resourceImageButtons, 2, 0)) {
 		return;
 	} else if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TRADE_STATUS_EXPORT &&
-			Widget_Button_handleArrowButtons(m_dialog, resourceArrowButtons, 2)) {
+			arrow_buttons_handle_mouse(m_dialog, 0, 0, resourceArrowButtons, 2)) {
 		return;
 	} else {
 		Widget_Button_handleCustomButtons(m_dialog, resourceCustomButtons, 3, &resourceFocusButtonId);

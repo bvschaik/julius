@@ -46,19 +46,6 @@ typedef struct {
 } CustomButton;
 
 typedef struct {
-	short xOffset;
-	short yOffset;
-	short graphicId;
-	short size;
-	void (*leftClickHandler)(int param1, int param2);
-	int parameter1;
-	int parameter2;
-	// state
-	char pressed;
-	char repeats;
-} ArrowButton;
-
-typedef struct {
 	short yStart;
 	short textNumber;
 	void (*leftClickHandler)(int param);

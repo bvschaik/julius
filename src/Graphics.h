@@ -35,6 +35,8 @@ void Graphics_drawInsetRect(int x, int y, int width, int height);
 void Graphics_fillRect(int x, int y, int width, int height, color_t color);
 void Graphics_shadeRect(int x, int y, int width, int height, int darkness);
 
+void Graphics_setGlobalTranslation(int x, int y);
+
 void Graphics_setClipRectangle(int x, int y, int width, int height);
 void Graphics_resetClipRectangle();
 

@@ -7,6 +7,8 @@
 #include <stdlib.h> // remove later
 #include <string.h>
 
+#define TranslatedScreenPixel(xx,yy) ScreenPixel(translation.x + (xx), translation.y + (yy))
+
 typedef enum {
 	ColorType_Set,
 	ColorType_And,
@@ -20,6 +22,11 @@ static struct ClipRectangle {
 	int yStart;
 	int yEnd;
 } clipRectangle = {0, 800, 0, 600};
+
+static struct {
+    int x;
+    int y;
+} translation = {0, 0};
 
 static GraphicsClipInfo clipInfo;
 
@@ -41,7 +48,7 @@ static void drawDot(int x, int y, color_t color)
 {
 	if (x >= clipRectangle.xStart && x < clipRectangle.xEnd) {
 		if (y >= clipRectangle.yStart && y < clipRectangle.yEnd) {
-			ScreenPixel(x, y) = color;
+			TranslatedScreenPixel(x, y) = color;
 		}
 	}
 }
@@ -134,7 +141,7 @@ void Graphics_shadeRect(int x, int y, int width, int height, int darkness)
 			int b = (pixel & 0xff);
 			int grey = (r + g + b) / 3 >> darkness;
 			color_t newPixel = (color_t) (grey << 16 | grey << 8 | grey);
-			ScreenPixel(xx, yy) = newPixel;
+			TranslatedScreenPixel(xx, yy) = newPixel;
 		}
 	}
 }
@@ -309,7 +316,7 @@ static void drawImageUncompressed(const image *img, const color_t *data, int xOf
 	data += img->width * clip->clippedPixelsTop;
 	for (int y = clip->clippedPixelsTop; y < img->height - clip->clippedPixelsBottom; y++) {
 		data += clip->clippedPixelsLeft;
-		color_t *dst = &ScreenPixel(xOffset + clip->clippedPixelsLeft, yOffset + y);
+		color_t *dst = &TranslatedScreenPixel(xOffset + clip->clippedPixelsLeft, yOffset + y);
 		int xMax = img->width - clip->clippedPixelsRight;
         if (type == ColorType_None) {
             if (img->draw.type == 0 || img->draw.is_external) { // can be transparent
@@ -375,7 +382,7 @@ static void drawImageCompressed(const image *img, const color_t *data, int xOffs
 				// number of concrete pixels
 				const color_t *pixels = data;
 				data += b;
-				color_t *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				color_t *dst = &TranslatedScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					memcpy(dst, pixels, b * sizeof(color_t));
@@ -420,7 +427,7 @@ static void drawImageCompressedSet(const image *img, const color_t *data, int xO
 				// number of concrete pixels
 				const color_t *pixels = data;
 				data += b;
-				color_t *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				color_t *dst = &TranslatedScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					while (b) {
@@ -470,7 +477,7 @@ static void drawImageCompressedAnd(const image *img, const color_t *data, int xO
 				// number of concrete pixels
 				const color_t *pixels = data;
 				data += b;
-				color_t *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				color_t *dst = &TranslatedScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					while (b) {
@@ -520,7 +527,7 @@ static void drawImageCompressedBlend(const image *img, const color_t *data, int 
 				// number of concrete pixels
 				const color_t *pixels = data;
 				data += b;
-				color_t *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				color_t *dst = &TranslatedScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					while (b) {
@@ -543,6 +550,12 @@ static void drawImageCompressedBlend(const image *img, const color_t *data, int 
 			}
 		}
 	}
+}
+
+void Graphics_setGlobalTranslation(int x, int y)
+{
+    translation.x = x;
+    translation.y = y;
 }
 
 void Graphics_setClipRectangle(int x, int y, int width, int height)
@@ -651,14 +664,14 @@ void Graphics_drawEnemyImage(int graphicId, int xOffset, int yOffset)
 void Graphics_saveToBuffer(int x, int y, int width, int height, color_t *buffer)
 {
 	for (int dy = 0; dy < height; dy++) {
-		memcpy(&buffer[dy * height], &ScreenPixel(x, y + dy), sizeof(color_t) * width);
+		memcpy(&buffer[dy * height], &TranslatedScreenPixel(x, y + dy), sizeof(color_t) * width);
 	}
 }
 
 void Graphics_loadFromBuffer(int x, int y, int width, int height, const color_t *buffer)
 {
 	for (int dy = 0; dy < height; dy++) {
-		memcpy(&ScreenPixel(x, y + dy), &buffer[dy * height], sizeof(color_t) * width);
+		memcpy(&TranslatedScreenPixel(x, y + dy), &buffer[dy * height], sizeof(color_t) * width);
 	}
 }
 

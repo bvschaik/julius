@@ -6,6 +6,7 @@
 #include "city/finance.h"
 #include "core/calc.h"
 #include "game/resource.h"
+#include "graphics/arrow_button.h"
 
 static void buttonSetAmount(int param1, int param2);
 static void buttonDonate(int param1, int param2);
@@ -22,7 +23,7 @@ static CustomButton buttons[] = {
 	{448, 216, 512, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 4, 0},
 };
 
-static ArrowButton arrowButtons[] = {
+static arrow_button arrowButtons[] = {
 	{240, 242, 17, 24, arrowButtonAmount, 1, 0},
 	{264, 242, 15, 24, arrowButtonAmount, 0, 0},
 };
@@ -82,7 +83,7 @@ void UI_DonateToCityDialog_drawForeground()
 	Widget_Panel_drawButtonBorder(baseOffsetX + 336, baseOffsetY + 283, 160, 20, focusButtonId == 1);
 	Widget_Panel_drawButtonBorder(baseOffsetX + 144, baseOffsetY + 283, 160, 20, focusButtonId == 2);
 
-	Widget_Button_drawArrowButtons(baseOffsetX, baseOffsetY, arrowButtons, 2);
+	arrow_buttons_draw(baseOffsetX, baseOffsetY, arrowButtons, 2);
 }
 
 void UI_DonateToCityDialog_handleMouse(const mouse *m)
@@ -93,7 +94,7 @@ void UI_DonateToCityDialog_handleMouse(const mouse *m)
 	} else {
 		const mouse *m_dialog = mouse_in_dialog(m);
 		if (!Widget_Button_handleCustomButtons(m_dialog, buttons, 7, &focusButtonId)) {
-			arrowButtonFocus = Widget_Button_handleArrowButtons(m_dialog, arrowButtons, 2);
+			arrowButtonFocus = arrow_buttons_handle_mouse(m_dialog, 0, 0, arrowButtons, 2);
 		}
 	}
 }

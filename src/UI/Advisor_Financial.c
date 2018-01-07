@@ -3,6 +3,8 @@
 
 #include "city/finance.h"
 #include "core/calc.h"
+#include "graphics/arrow_button.h"
+#include "graphics/graphics.h"
 
 #define VAL(val,x,y) Widget_Text_drawNumber(val, '@', " ", baseOffsetX + (x), baseOffsetY + (y), FONT_NORMAL_BLACK)
 #define ROW(tgr,tid,y,valLy,valTy) \
@@ -12,9 +14,9 @@
 
 static void buttonChangeTaxes(int isDown, int param2);
 
-static ArrowButton arrowButtonsTaxes[] = {
-	{180, 70, 17, 24, buttonChangeTaxes, 1, 0},
-	{204, 70, 15, 24, buttonChangeTaxes, 0, 0}
+static arrow_button arrowButtonsTaxes[] = {
+	{180, 75, 17, 24, buttonChangeTaxes, 1, 0},
+	{204, 75, 15, 24, buttonChangeTaxes, 0, 0}
 };
 
 static int arrowButtonFocus;
@@ -103,12 +105,12 @@ void UI_Advisor_Financial_drawForeground()
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
-	Widget_Button_drawArrowButtons(baseOffsetX, baseOffsetY, arrowButtonsTaxes, 2);
+	arrow_buttons_draw(baseOffsetX, baseOffsetY, arrowButtonsTaxes, 2);
 }
 
 void UI_Advisor_Financial_handleMouse(const mouse *m)
 {
-	arrowButtonFocus = Widget_Button_handleArrowButtons(mouse_in_dialog(m), arrowButtonsTaxes, 2);
+	arrowButtonFocus = arrow_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, arrowButtonsTaxes, 2);
 }
 
 static void buttonChangeTaxes(int isDown, int param2)

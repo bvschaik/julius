@@ -199,6 +199,8 @@ set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/scenario.c
 )
 set(GRAPHICS_FILES
+    ${PROJECT_SOURCE_DIR}/src/graphics/arrow_button.c
+    ${PROJECT_SOURCE_DIR}/src/graphics/graphics.c
     ${PROJECT_SOURCE_DIR}/src/graphics/image.c
     ${PROJECT_SOURCE_DIR}/src/graphics/video.c
 )
