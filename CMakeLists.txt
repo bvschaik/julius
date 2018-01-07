@@ -208,6 +208,7 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/image_button.c
     ${PROJECT_SOURCE_DIR}/src/graphics/menu.c
     ${PROJECT_SOURCE_DIR}/src/graphics/panel.c
+    ${PROJECT_SOURCE_DIR}/src/graphics/rich_text.c
     ${PROJECT_SOURCE_DIR}/src/graphics/video.c
 )
 set(SOUND_FILES

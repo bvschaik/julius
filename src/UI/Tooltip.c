@@ -13,6 +13,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "graphics/rich_text.h"
 
 static int shouldDrawTooltip(struct TooltipContext *c);
 static void resetTooltip(struct TooltipContext *c);
@@ -37,10 +38,10 @@ void UI_Tooltip_handle(const mouse *m, void (*func)(struct TooltipContext *))
 		func(&tooltipContext);
 	}
 	if (shouldDrawTooltip(&tooltipContext)) {
-		Widget_RichText_save();
+		rich_text_save();
 		drawTooltip(&tooltipContext);
 		resetTooltip(&tooltipContext);
-		Widget_RichText_restore();
+		rich_text_restore();
 	}
 }
 
@@ -82,13 +83,13 @@ static void drawTooltip(struct TooltipContext *c)
 static void drawButtonTooltip(struct TooltipContext *c)
 {
 	const uint8_t *text = lang_get_string(c->textGroup, c->textId);
-	Widget_RichText_setFonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
+	rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
 
 	int width = 200;
-	int lines = Widget_RichText_draw(text, 0, 0, width - 5, 30, 1);
+	int lines = rich_text_draw(text, 0, 0, width - 5, 30, 1);
 	if (lines > 2) {
 		width = 300;
-		lines = Widget_RichText_draw(text, 0, 0, width - 5, 30, 1);
+		lines = rich_text_draw(text, 0, 0, width - 5, 30, 1);
 	}
 	int height = 16 * lines + 10;
 
@@ -142,7 +143,7 @@ static void drawButtonTooltip(struct TooltipContext *c)
 
 	Graphics_drawRect(x, y, width, height, COLOR_BLACK);
 	Graphics_fillRect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-	Widget_RichText_drawColored(text, x + 5, y + 7,
+	rich_text_draw_colored(text, x + 5, y + 7,
 		width - 5, lines, COLOR_TOOLTIP);
 }
 
@@ -155,13 +156,13 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 		string_copy(text, &tmpString[offset], 1000);
 		text = tmpString;
 	}
-	Widget_RichText_setFonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
+	rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
 
 	int width = 200;
-	int lines = Widget_RichText_draw(text, 0, 0, width - 5, 30, 1);
+	int lines = rich_text_draw(text, 0, 0, width - 5, 30, 1);
 	if (lines > 2) {
 		width = 300;
-		lines = Widget_RichText_draw(text, 0, 0, width - 5, 30, 1);
+		lines = rich_text_draw(text, 0, 0, width - 5, 30, 1);
 	}
 	int height = 16 * lines + 10;
 
@@ -179,7 +180,7 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 
 	Graphics_drawRect(x, y, width, height, COLOR_BLACK);
 	Graphics_fillRect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-	Widget_RichText_drawColored(text, x + 5, y + 7,
+	rich_text_draw_colored(text, x + 5, y + 7,
 		width - 5, lines, COLOR_TOOLTIP);
 }
 

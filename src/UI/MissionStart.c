@@ -15,6 +15,7 @@
 #include "game/tutorial.h"
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
+#include "graphics/rich_text.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "sound/music.h"
@@ -182,7 +183,7 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
 
 void UI_MissionStart_Briefing_init()
 {
-	Widget_RichText_reset(0);
+	rich_text_reset(0);
 }
 
 void UI_MissionStart_Briefing_drawBackground()
@@ -267,12 +268,12 @@ void UI_MissionStart_Briefing_drawBackground()
 	
 	inner_panel_draw(xOffset + 16, yOffset + 152, 33, 15);
 	
-	Widget_RichText_setFonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
-	Widget_RichText_init(lang_get_message(textId)->content.text,
+	rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
+	rich_text_init(lang_get_message(textId)->content.text,
 		xOffset + 48, yOffset + 152, 31, 15, 0);
 
 	Graphics_setClipRectangle(xOffset + 19, yOffset + 155, 522, 234);
-	Widget_RichText_draw(lang_get_message(textId)->content.text,
+	rich_text_draw(lang_get_message(textId)->content.text,
 		xOffset + 32, yOffset + 164, 496, 14, 0);
 	Graphics_resetClipRectangle();
 }
@@ -282,7 +283,7 @@ void UI_MissionStart_BriefingInitial_drawForeground()
 	int xOffset = Data_Screen.offset640x480.x + 16;
 	int yOffset = Data_Screen.offset640x480.y + 32;
 
-	Widget_RichText_drawScrollbar();
+	rich_text_draw_scrollbar();
 	image_buttons_draw(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
 	if (campaignHasChoice[scenario_campaign_rank()]) {
 		image_buttons_draw(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1);
@@ -294,7 +295,7 @@ void UI_MissionStart_BriefingReview_drawForeground()
 	int xOffset = Data_Screen.offset640x480.x + 16;
 	int yOffset = Data_Screen.offset640x480.y + 32;
 
-	Widget_RichText_drawScrollbar();
+	rich_text_draw_scrollbar();
 	image_buttons_draw(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
 }
 
@@ -310,7 +311,7 @@ void UI_MissionStart_BriefingInitial_handleMouse(const mouse *m)
 			return;
 		}
 	}
-	Widget_RichText_handleScrollbar(m);
+	rich_text_handle_mouse(m);
 }
 
 void UI_MissionStart_BriefingReview_handleMouse(const mouse *m)
@@ -320,7 +321,7 @@ void UI_MissionStart_BriefingReview_handleMouse(const mouse *m)
 	if (image_buttons_handle_mouse(m_dialog, 516, 426, &imageButtonStartMission, 1, 0)) {
 		return;
 	}
-	Widget_RichText_handleScrollbar(m);
+	rich_text_handle_mouse(m);
 }
 
 static void briefingBack(int param1, int param2)

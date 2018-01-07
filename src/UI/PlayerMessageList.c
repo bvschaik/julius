@@ -229,7 +229,7 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
 
 static void handleMouseScrollbar(const mouse *m)
 {
-	if (data.maxScrollPosition <= 0 || !m->left.went_down) {
+	if (data.maxScrollPosition <= 0 || !m->left.is_down) {
 		return;
 	}
 	int scrollbarX = data.xText + 16 * data.textWidthBlocks + 1;

@@ -16,6 +16,7 @@
 #include "figure/formation.h"
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
+#include "graphics/rich_text.h"
 #include "graphics/video.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
@@ -115,7 +116,7 @@ void UI_MessageDialog_show(int textId, int backgroundIsProvided)
 		data.history[i].scrollPosition = 0;
 	}
 	data.numHistory = 0;
-	Widget_RichText_reset(0);
+	rich_text_reset(0);
 	data.dword_7e314c = 0;
 	data.textId = textId;
 	data.backgroundIsProvided = backgroundIsProvided;
@@ -127,7 +128,6 @@ void UI_MessageDialog_show(int textId, int backgroundIsProvided)
 	} else {
 		data.showVideo = 0;
 	}
-	Widget_RichText_clearLinks();
 	UI_Window_goTo(Window_MessageDialog);
 }
 
@@ -149,7 +149,7 @@ void UI_MessageDialog_drawBackground()
 
 static void drawDialogNormal()
 {
-	Widget_RichText_setFonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
+	rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
 	const lang_message *msg = lang_get_message(data.textId);
 	data.x = Data_Screen.offset640x480.x + msg->x;
 	data.y = Data_Screen.offset640x480.y + msg->y;
@@ -208,29 +208,29 @@ static void drawDialogNormal()
 		}
 	}
 	data.textHeightBlocks = msg->height_blocks - 1 - (someOffset + data.yText - data.y) / 16;
-	data.textWidthBlocks = Widget_RichText_init(msg->content.text,
+	data.textWidthBlocks = rich_text_init(msg->content.text,
 		data.xText, data.yText, msg->width_blocks - 4, data.textHeightBlocks, 1);
 
 	// content!
 	inner_panel_draw(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
 	Graphics_setClipRectangle(data.xText + 3, data.yText + 3,
 		16 * data.textWidthBlocks - 6, 16 * data.textHeightBlocks - 6);
-	Widget_RichText_clearLinks();
+	rich_text_clear_links();
 
 	if (msg->type == TYPE_MESSAGE) {
 		drawPlayerMessageContent(msg);
 	} else {
-		Widget_RichText_draw(msg->content.text,
+		rich_text_draw(msg->content.text,
 			data.xText + 8, data.yText + 6, 16 * data.textWidthBlocks - 16,
 			data.textHeightBlocks - 1, 0);
 	}
 	Graphics_resetClipRectangle();
-	Widget_RichText_drawScrollbarDot();
+	rich_text_draw_scrollbar_dot();
 }
 
 static void drawDialogVideo()
 {
-	Widget_RichText_setFonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
+	rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
 	const lang_message *msg = lang_get_message(data.textId);
 	data.x = Data_Screen.offset640x480.x + 32;
 	data.y = Data_Screen.offset640x480.y + 28;
@@ -240,7 +240,7 @@ static void drawDialogVideo()
 	}
 	outer_panel_draw(data.x, data.y, 26, 28);
 	Graphics_drawRect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
-	Widget_RichText_clearLinks();
+	rich_text_clear_links();
 	
 	inner_panel_draw(data.x + 8, data.y + 308, 25, 6);
 	Widget_Text_drawCentered(msg->title.text,
@@ -261,7 +261,7 @@ static void drawDialogVideo()
 	}
 	data.textHeightBlocks = msg->height_blocks - 1 - (32 + data.yText - data.y) / 16;
 	data.textWidthBlocks = msg->width_blocks - 4;
-	Widget_RichText_draw(msg->content.text,
+	rich_text_draw(msg->content.text,
 		data.x + 16, data.y + 332, 384, data.textHeightBlocks - 1, 0);
 
 	if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
@@ -312,7 +312,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 		case MESSAGE_TYPE_DISASTER:
 		case MESSAGE_TYPE_INVASION:
 			Widget_GameText_draw(12, 1, data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
-			Widget_RichText_draw(msg->content.text, data.xText + 8, data.yText + 86,
+			rich_text_draw(msg->content.text, data.xText + 8, data.yText + 86,
 				16 * data.textWidthBlocks, data.textHeightBlocks - 1, 0);
 			break;
 
@@ -321,13 +321,13 @@ static void drawPlayerMessageContent(const lang_message *msg)
 				Widget_GameText_draw(12, Data_CityInfo.populationEmigrationCause + 2,
 					data.x + 64, data.yText + 44, FONT_NORMAL_WHITE);
 			}
-			Widget_RichText_draw(msg->content.text,
+			rich_text_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
 			break;
 
 		case MESSAGE_TYPE_TUTORIAL:
-			Widget_RichText_draw(msg->content.text,
+			rich_text_draw(msg->content.text,
 				data.xText + 8, data.yText + 6, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
 			break;
@@ -338,7 +338,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_GameText_draw(21, empire_city_get(playerMessage.param1)->name_id,
 				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
-			Widget_RichText_draw(msg->content.text,
+			rich_text_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
 			break;
@@ -349,13 +349,13 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_Text_drawMoney(playerMessage.param1,
 				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
-			Widget_RichText_draw(msg->content.text,
+			rich_text_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
 			break;
 
 		default:
-			lines = Widget_RichText_draw(msg->content.text,
+			lines = rich_text_draw(msg->content.text,
 				data.xText + 8, data.yText + 56, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
 	}
@@ -431,7 +431,7 @@ static void drawForegroundNoVideo()
 		data.x + 16 * msg->width_blocks - 38,
 		data.y + 16 * msg->height_blocks - 36,
 		&imageButtonClose, 1);
-	Widget_RichText_drawScrollbar();
+	rich_text_draw_scrollbar();
 }
 
 void UI_MessageDialog_drawForeground()
@@ -446,9 +446,9 @@ void UI_MessageDialog_drawForeground()
 void UI_MessageDialog_handleMouse(const mouse *m)
 {
 	if (m->scrolled == SCROLL_DOWN) {
-		Widget_RichText_scroll(1, 3);
+		rich_text_scroll(1, 3);
 	} else if (m->scrolled == SCROLL_UP) {
-		Widget_RichText_scroll(0, 3);
+		rich_text_scroll(0, 3);
 	}
 	if (data.showVideo) {
 		if (image_buttons_handle_mouse(m, data.x + 16, data.y + 408, getAdvisorButton(), 1, 0)) {
@@ -484,17 +484,16 @@ void UI_MessageDialog_handleMouse(const mouse *m)
 		&imageButtonClose, 1, 0)) {
 		return;
 	}
-	Widget_RichText_handleScrollbar(m);
-	int textId = Widget_RichText_getClickedLink(m);
+	rich_text_handle_mouse(m);
+	int textId = rich_text_get_clicked_link(m);
 	if (textId >= 0) {
 		if (data.numHistory < MAX_HISTORY - 1) {
 			data.history[data.numHistory].textId = data.textId;
-			data.history[data.numHistory].scrollPosition = Widget_RichText_getScrollPosition();
+			data.history[data.numHistory].scrollPosition = rich_text_scroll_position();
 			data.numHistory++;
 		}
 		data.textId = textId;
-		Widget_RichText_reset(0);
-		Widget_RichText_clearLinks();
+		rich_text_reset(0);
 		UI_Window_requestRefresh();
 	}
 }
@@ -504,8 +503,7 @@ static void buttonBack(int param1, int param2)
 	if (data.numHistory > 0) {
 		data.numHistory--;
 		data.textId = data.history[data.numHistory].textId;
-		Widget_RichText_reset(data.history[data.numHistory].scrollPosition);
-		Widget_RichText_clearLinks();
+		rich_text_reset(data.history[data.numHistory].scrollPosition);
 		UI_Window_requestRefresh();
 	}
 }
