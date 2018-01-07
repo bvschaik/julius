@@ -11,6 +11,7 @@
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "figure/figure.h"
+#include "graphics/custom_button.h"
 #include "scenario/property.h"
 
 static void toggleResourceState(int index, int param2);
@@ -181,7 +182,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 
 void UI_BuildingInfo_drawGranaryForeground(BuildingInfoContext *c)
 {
-	Widget_Panel_drawButtonBorder(
+	button_border_draw(
 		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
 		16 * (c->widthBlocks - 10), 20, focusButtonId == 1 ? 1 : 0);
 	Widget_GameText_drawCentered(98, 5,
@@ -207,7 +208,7 @@ void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c)
 
 void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 {
-	Widget_Panel_drawButtonBorder(
+	button_border_draw(
 		c->xOffset + 80, 436, 16 * (c->widthBlocks - 10), 20,
 		ordersFocusButtonId == 1 ? 1 : 0);
 	const building_storage *storage = building_storage_get(building_get(c->buildingId)->storage_id);
@@ -229,7 +230,7 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
 		Widget_GameText_draw(23, resourceId,
 			c->xOffset + 72, 82 + 22 * i, FONT_NORMAL_WHITE);
-		Widget_Panel_drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
+		button_border_draw(c->xOffset + 180, 78 + 22 * i, 210, 22,
 			resourceFocusButtonId == i + 1);
 		
 		int state = storage->resource_state[resourceId];
@@ -321,7 +322,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 
 void UI_BuildingInfo_drawWarehouseForeground(BuildingInfoContext *c)
 {
-	Widget_Panel_drawButtonBorder(
+	button_border_draw(
 		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
 		16 * (c->widthBlocks - 10), 20, focusButtonId == 1 ? 1 : 0);
 	Widget_GameText_drawCentered(99, 2,
@@ -347,7 +348,7 @@ void UI_BuildingInfo_drawWarehouseOrders(BuildingInfoContext *c)
 
 void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 {
-	Widget_Panel_drawButtonBorder(
+	button_border_draw(
 		c->xOffset + 80, 436, 16 * (c->widthBlocks - 10), 20,
 		ordersFocusButtonId == 1 ? 1 : 0);
 	const building_storage *storage = building_storage_get(building_get(c->buildingId)->storage_id);
@@ -362,7 +363,7 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 	}
 
 	// trade center
-	Widget_Panel_drawButtonBorder(
+	button_border_draw(
 		c->xOffset + 80, 414, 16 * (c->widthBlocks - 10), 20,
 		ordersFocusButtonId == 2 ? 1 : 0);
 	int isTradeCenter = c->buildingId == Data_CityInfo.buildingTradeCenterBuildingId;
@@ -377,7 +378,7 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
 		Widget_GameText_draw(23, resourceId,
 			c->xOffset + 72, 82 + 22 * i, FONT_NORMAL_WHITE);
-		Widget_Panel_drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
+		button_border_draw(c->xOffset + 180, 78 + 22 * i, 210, 22,
 			resourceFocusButtonId == i + 1);
 		
 		int state = storage->resource_state[resourceId];

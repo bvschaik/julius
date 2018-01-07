@@ -4,6 +4,7 @@
 #include "building/count.h"
 #include "city/culture.h"
 #include "city/gods.h"
+#include "graphics/custom_button.h"
 
 static void drawFestivalBackground();
 
@@ -200,7 +201,7 @@ static void drawFestivalBackground()
 void UI_Advisor_Entertainment_drawForeground()
 {
 	if (!Data_CityInfo.plannedFestivalSize) {
-		Widget_Panel_drawButtonBorder(
+		button_border_draw(
 			Data_Screen.offset640x480.x + 102, Data_Screen.offset640x480.y + 280,
 			300, 20, focusButtonId == 1);
 	}

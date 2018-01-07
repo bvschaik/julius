@@ -4,6 +4,7 @@
 #include "Advisors_private.h"
 
 #include "city/emperor.h"
+#include "graphics/custom_button.h"
 
 static void buttonSetGift(int param1, int param2);
 static void buttonSendGift(int param1, int param2);
@@ -94,10 +95,10 @@ void UI_SendGiftToCaesarDialog_drawForeground()
 	if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
 		Widget_GameText_drawCentered(52, 66 + Data_CityInfo.giftSizeSelected,
 			baseOffsetX + 128, baseOffsetY + 341, 240, FONT_NORMAL_BLACK);
-		Widget_Panel_drawButtonBorder(
+		button_border_draw(
 			baseOffsetX + 128, baseOffsetY + 336, 240, 20, focusButtonId == 4);
 	}
-	Widget_Panel_drawButtonBorder(
+	button_border_draw(
 		baseOffsetX + 400, baseOffsetY + 336, 160, 20, focusButtonId == 5);
 }
 

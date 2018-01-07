@@ -7,6 +7,7 @@
 #include "city/labor.h"
 #include "core/calc.h"
 #include "graphics/arrow_button.h"
+#include "graphics/custom_button.h"
 #include "graphics/graphics.h"
 
 static void arrowButtonWages(int isDown, int param2);
@@ -99,7 +100,7 @@ void UI_Advisor_Labor_drawForeground()
 	for (int i = 0; i < 9; i++) {
 		int focus = i == focusButtonId - 1;
         int y_offset = 82 + 25 * i;
-		Widget_Panel_drawButtonBorder(40, 77 + 25 * i, 560, 22, focus);
+		button_border_draw(40, 77 + 25 * i, 560, 22, focus);
 		if (Data_CityInfo.laborCategory[i].priority) {
 			Graphics_drawImage(image_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2);
 			Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].priority, '@', " ",

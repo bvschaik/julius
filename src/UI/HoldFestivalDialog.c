@@ -8,6 +8,7 @@
 #include "city/constants.h"
 #include "city/finance.h"
 #include "game/resource.h"
+#include "graphics/custom_button.h"
 
 static void drawButtons();
 static void buttonGod(int god, int param2);
@@ -49,7 +50,7 @@ void UI_HoldFestivalDialog_drawBackground()
 		baseOffsetX + 48, baseOffsetY + 60, 544, FONT_LARGE_BLACK);
 	for (int god = 0; god < 5; god++) {
 		if (god == Data_CityInfo.festivalGod) {
-			Widget_Panel_drawButtonBorder(
+			button_border_draw(
 				baseOffsetX + 100 * god + 66,
 				baseOffsetY + 92, 90, 100, 1);
 			Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + god + 21,
@@ -79,7 +80,7 @@ static void drawButtons()
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	// small festival
-	Widget_Panel_drawButtonBorder(
+	button_border_draw(
 		baseOffsetX + 102, baseOffsetY + 216,
 		430, 26, focusButtonId == 6);
 	width = Widget_GameText_draw(58, 31,
@@ -88,7 +89,7 @@ static void drawButtons()
 		baseOffsetX + 110 + width, baseOffsetY + 224, FONT_NORMAL_BLACK);
 
 	// large festival
-	Widget_Panel_drawButtonBorder(
+	button_border_draw(
 		baseOffsetX + 102, baseOffsetY + 246,
 		430, 26, focusButtonId == 7);
 	width = Widget_GameText_draw(58, 32,
@@ -97,7 +98,7 @@ static void drawButtons()
 		baseOffsetX + 110 + width, baseOffsetY + 254, FONT_NORMAL_BLACK);
 
 	// grand festival
-	Widget_Panel_drawButtonBorder(
+	button_border_draw(
 		baseOffsetX + 102, baseOffsetY + 276,
 		430, 26, focusButtonId == 8);
 	width = Widget_GameText_draw(58, 33,

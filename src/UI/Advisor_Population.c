@@ -2,6 +2,7 @@
 #include "Window.h"
 
 #include "game/time.h"
+#include "graphics/custom_button.h"
 #include "scenario/property.h"
 
 static void drawHistoryGraph(int fullSize, int x, int y);
@@ -181,14 +182,14 @@ void UI_Advisor_Population_drawForeground()
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	if (focusButtonId == 0) {
-		Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 0);
-		Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 0);
+		button_border_draw(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 0);
+		button_border_draw(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 0);
 	} else if (focusButtonId == 1) {
-		Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 1);
-		Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 0);
+		button_border_draw(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 1);
+		button_border_draw(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 0);
 	} else if (focusButtonId == 2) {
-		Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 0);
-		Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 1);
+		button_border_draw(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 0);
+		button_border_draw(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 1);
 	}
 }
 

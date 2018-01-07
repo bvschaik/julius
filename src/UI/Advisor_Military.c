@@ -3,6 +3,8 @@
 
 #include "city/view.h"
 #include "figure/formation_legion.h"
+#include "graphics/custom_button.h"
+#include "graphics/graphics.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"
 
@@ -105,7 +107,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 	for (int i = 0; i < numLegions; i++) {
 		int formationId = formation_for_legion(i + 1);
 		const formation *m = formation_get(formationId);
-		Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 77 + 44 * i, 560, 40, 0);
+		button_border_draw(baseOffsetX + 38, baseOffsetY + 77 + 44 * i, 560, 40, 0);
 		Graphics_drawImage(image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id,
 			baseOffsetX + 48, baseOffsetY + 82 + 44 * i);
 		Widget_GameText_draw(138, m->legion_id,
@@ -127,17 +129,17 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 			baseOffsetX + 240, baseOffsetY + 91 + 44 * i, 150, FONT_NORMAL_GREEN);
 
 		int graphicId = image_group(GROUP_FORT_ICONS);
-		Widget_Panel_drawButtonBorder(baseOffsetX + 400, baseOffsetY + 83 + 44 * i, 30, 30, 0);
+		button_border_draw(baseOffsetX + 400, baseOffsetY + 83 + 44 * i, 30, 30, 0);
 		Graphics_drawImage(graphicId, baseOffsetX + 403, baseOffsetY + 86 + 44 * i);
 
-		Widget_Panel_drawButtonBorder(baseOffsetX + 480, baseOffsetY + 83 + 44 * i, 30, 30, 0);
+		button_border_draw(baseOffsetX + 480, baseOffsetY + 83 + 44 * i, 30, 30, 0);
 		if (m->is_at_fort) {
 			Graphics_drawImage(graphicId + 2, baseOffsetX + 483, baseOffsetY + 86 + 44 * i);
 		} else {
 			Graphics_drawImage(graphicId + 1, baseOffsetX + 483, baseOffsetY + 86 + 44 * i);
 		}
 
-		Widget_Panel_drawButtonBorder(baseOffsetX + 560, baseOffsetY + 83 + 44 * i, 30, 30, 0);
+		button_border_draw(baseOffsetX + 560, baseOffsetY + 83 + 44 * i, 30, 30, 0);
 		if (m->empire_service) {
 			Graphics_drawImage(graphicId + 3, baseOffsetX + 563, baseOffsetY + 86 + 44 * i);
 		} else {
@@ -148,18 +150,15 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 
 void UI_Advisor_Military_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
 	numLegions = formation_get_num_legions();
 	for (int i = 0; i < numLegions; i++) {
-		Widget_Panel_drawButtonBorder(baseOffsetX + 400, baseOffsetY + 83 + 44 * i, 30, 30,
-			focusButtonId == 3 * i + 1);
-		Widget_Panel_drawButtonBorder(baseOffsetX + 480, baseOffsetY + 83 + 44 * i, 30, 30,
-			focusButtonId == 3 * i + 2);
-		Widget_Panel_drawButtonBorder(baseOffsetX + 560, baseOffsetY + 83 + 44 * i, 30, 30,
-			focusButtonId == 3 * i + 3);
+		button_border_draw(400, 83 + 44 * i, 30, 30, focusButtonId == 3 * i + 1);
+		button_border_draw(480, 83 + 44 * i, 30, 30, focusButtonId == 3 * i + 2);
+		button_border_draw(560, 83 + 44 * i, 30, 30, focusButtonId == 3 * i + 3);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_Advisor_Military_handleMouse(const mouse *m)

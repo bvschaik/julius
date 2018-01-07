@@ -11,6 +11,7 @@
 #include "core/calc.h"
 #include "core/debug.h"
 #include "figure/formation_legion.h"
+#include "graphics/custom_button.h"
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int index, int param2);
@@ -342,7 +343,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 				hasFocus = 1;
 			}
 		}
-		Widget_Panel_drawButtonBorder(c->xOffset + 19 + 85 * i,
+		button_border_draw(c->xOffset + 19 + 85 * i,
 			c->yOffset + 139, 84, 84, hasFocus);
 	}
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 230,
@@ -420,7 +421,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 		16 * (c->widthBlocks - 4), FONT_NORMAL_GREEN);
 
 	if (!m->is_at_fort) {
-		Widget_Panel_drawButtonBorder(
+		button_border_draw(
 			c->xOffset + 16 * (c->widthBlocks - 18) / 2,
 			c->yOffset + 16 * c->heightBlocks - 48,
 			288, 32, returnButtonId == 1);

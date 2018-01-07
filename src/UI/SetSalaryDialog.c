@@ -4,6 +4,7 @@
 #include "city/emperor.h"
 #include "city/finance.h"
 #include "city/ratings.h"
+#include "graphics/custom_button.h"
 
 static void buttonCancel(int param1, int param2);
 static void buttonSetSalary(int rank, int param2);
@@ -64,7 +65,7 @@ void UI_SetSalaryDialog_drawForeground()
 		Widget_GameText_drawMultiline(52, 77,
 				baseOffsetX + 152, baseOffsetY + 336, 336, FONT_NORMAL_BLACK);
 	}
-	Widget_Panel_drawButtonBorder(baseOffsetX + 240, baseOffsetY + 395,
+	button_border_draw(baseOffsetX + 240, baseOffsetY + 395,
 		160, 20, focusButtonId == 1);
 	Widget_GameText_drawCentered(13, 4, baseOffsetX + 176, baseOffsetY + 400, 288, FONT_NORMAL_BLACK);
 }

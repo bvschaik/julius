@@ -14,6 +14,7 @@
 #include "figure/formation.h"
 #include "figure/phrase.h"
 #include "figure/trader.h"
+#include "graphics/custom_button.h"
 #include "scenario/property.h"
 
 static void selectFigure(int index, int param2);
@@ -342,7 +343,7 @@ static void drawFigureInfoNormal(BuildingInfoContext *c, figure *f)
 
 static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 {
-	Widget_Panel_drawButtonBorder(c->xOffset + 24, c->yOffset + 102, 16 * (c->widthBlocks - 3), 122, 0);
+	button_border_draw(c->xOffset + 24, c->yOffset + 102, 16 * (c->widthBlocks - 3), 122, 0);
 
     figure *f = figure_get(figureId);
 	int type = f->type;
@@ -371,7 +372,7 @@ void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c)
 			16 * c->widthBlocks, FONT_SMALL_BLACK);
 	} else {
 		for (int i = 0; i < c->figure.count; i++) {
-			Widget_Panel_drawButtonBorder(
+			button_border_draw(
 				c->xOffset + 60 * i + 25, c->yOffset + 45,
 				52, 52, i == c->figure.selectedIndex);
 			Graphics_loadFromBuffer(

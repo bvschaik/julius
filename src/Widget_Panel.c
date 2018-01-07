@@ -152,57 +152,6 @@ void Widget_Panel_drawInnerPanelBottom(int xOffset, int yOffset, int widthInBloc
 	}
 }
 
-void Widget_Panel_drawButtonBorder(int xOffset, int yOffset, int widthInPixels, int heightInPixels, int hasFocus)
-{
-	int widthInBlocks = widthInPixels / 16;
-	if (widthInPixels % 16) {
-		widthInBlocks++;
-	}
-	int heightInBlocks = heightInPixels / 16;
-	if (heightInPixels % 16) {
-		heightInBlocks++;
-	}
-	int lastBlockPixelOffsetX = 16 * widthInBlocks - widthInPixels;
-	int lastBlockPixelOffsetY = 16 * heightInBlocks - heightInPixels;
-
-	int graphicBase = image_group(GROUP_BORDERED_BUTTON);
-	if (hasFocus) {
-		graphicBase += 8;
-	}
-
-	int drawOffsetX;
-	int drawOffsetY;
-	for (int y = 0; y < heightInBlocks; y++) {
-		drawOffsetY = yOffset + 16 * y;
-		for (int x = 0; x < widthInBlocks; x++) {
-			drawOffsetX = xOffset + 16 * x;
-			if (y == 0) {
-				if (x == 0) {
-					Graphics_drawImage(graphicBase, drawOffsetX, drawOffsetY);
-				} else if (x < widthInBlocks - 1) {
-					Graphics_drawImage(graphicBase + 1, drawOffsetX, drawOffsetY);
-				} else {
-					Graphics_drawImage(graphicBase + 2, drawOffsetX - lastBlockPixelOffsetX, drawOffsetY);
-				}
-			} else if (y < heightInBlocks - 1) {
-				if (x == 0) {
-					Graphics_drawImage(graphicBase + 7, drawOffsetX, drawOffsetY);
-				} else if (x >= widthInBlocks - 1) {
-					Graphics_drawImage(graphicBase + 3, drawOffsetX - lastBlockPixelOffsetX, drawOffsetY);
-				}
-			} else {
-				if (x == 0) {
-					Graphics_drawImage(graphicBase + 6, drawOffsetX, drawOffsetY - lastBlockPixelOffsetY);
-				} else if (x < widthInBlocks - 1) {
-					Graphics_drawImage(graphicBase + 5, drawOffsetX, drawOffsetY - lastBlockPixelOffsetY);
-				} else {
-					Graphics_drawImage(graphicBase + 4, drawOffsetX - lastBlockPixelOffsetX, drawOffsetY - lastBlockPixelOffsetY);
-				}
-			}
-		}
-	}
-}
-
 void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type)
 {
 	int graphicBase = image_group(GROUP_PANEL_BUTTON);

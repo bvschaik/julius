@@ -17,6 +17,7 @@
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
+#include "graphics/custom_button.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
@@ -328,7 +329,7 @@ static void drawPanelInfoCity(const empire_object *object)
 			}
 			goodOffset += 32;
 		}
-		Widget_Panel_drawButtonBorder(xOffset + 50, yOffset + 68, 400, 20, data.selectedButton);
+		button_border_draw(xOffset + 50, yOffset + 68, 400, 20, data.selectedButton);
 		goodOffset = Widget_GameText_drawNumberWithDescription(8, 0, city->cost_to_open,
 			xOffset + 60, yOffset + 73, FONT_NORMAL_GREEN);
 		Widget_GameText_draw(47, 6, xOffset + goodOffset + 60, yOffset + 73, FONT_NORMAL_GREEN);
@@ -384,7 +385,7 @@ static void drawPanelButtons(const empire_city *city)
 	Widget_Button_drawImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1);
 	if (city) {
 		if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
-			Widget_Panel_drawButtonBorder((data.xMin + data.xMax - 500) / 2 + 50, data.yMax - 40, 400, 20, data.selectedButton);
+			button_border_draw((data.xMin + data.xMax - 500) / 2 + 50, data.yMax - 40, 400, 20, data.selectedButton);
 		}
 	}
 }

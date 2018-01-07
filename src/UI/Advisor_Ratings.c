@@ -2,6 +2,8 @@
 
 #include "Window.h"
 
+#include "graphics/custom_button.h"
+#include "graphics/graphics.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
@@ -43,7 +45,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		baseOffsetX + 60, baseOffsetY + 48);
 
 	// culture
-	Widget_Panel_drawButtonBorder(baseOffsetX + 80, baseOffsetY + 286,
+	button_border_draw(baseOffsetX + 80, baseOffsetY + 286,
 		110, 66, focusButtonId == 1);
 	Widget_GameText_drawCentered(53, 1, baseOffsetX + 80, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
@@ -63,7 +65,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	drawRatingColumn(baseOffsetX + 110, baseOffsetY + 274, Data_CityInfo.ratingCulture, hasReached);
 
 	// prosperity
-	Widget_Panel_drawButtonBorder(baseOffsetX + 200, baseOffsetY + 286,
+	button_border_draw(baseOffsetX + 200, baseOffsetY + 286,
 		110, 66, focusButtonId == 2);
 	Widget_GameText_drawCentered(53, 2, baseOffsetX + 200, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
@@ -83,7 +85,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	drawRatingColumn(baseOffsetX + 230, baseOffsetY + 274, Data_CityInfo.ratingProsperity, hasReached);
 
 	// peace
-	Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 286,
+	button_border_draw(baseOffsetX + 320, baseOffsetY + 286,
 		110, 66, focusButtonId == 3);
 	Widget_GameText_drawCentered(53, 3, baseOffsetX + 320, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
@@ -103,7 +105,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	drawRatingColumn(baseOffsetX + 350, baseOffsetY + 274, Data_CityInfo.ratingPeace, hasReached);
 
 	// favor
-	Widget_Panel_drawButtonBorder(baseOffsetX + 440, baseOffsetY + 286,
+	button_border_draw(baseOffsetX + 440, baseOffsetY + 286,
 		110, 66, focusButtonId == 4);
 	Widget_GameText_drawCentered(53, 4, baseOffsetX + 440, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
@@ -191,21 +193,18 @@ static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached
 
 void UI_Advisor_Ratings_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
 	// culture
-	Widget_Panel_drawButtonBorder(baseOffsetX + 80, baseOffsetY + 286,
-		110, 66, focusButtonId == 1);
+	button_border_draw(80, 286, 110, 66, focusButtonId == 1);
 	// prosperity
-	Widget_Panel_drawButtonBorder(baseOffsetX + 200, baseOffsetY + 286,
-		110, 66, focusButtonId == 2);
+	button_border_draw(200, 286, 110, 66, focusButtonId == 2);
 	// peace
-	Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 286,
-		110, 66, focusButtonId == 3);
+	button_border_draw(320, 286, 110, 66, focusButtonId == 3);
 	// favor
-	Widget_Panel_drawButtonBorder(baseOffsetX + 440, baseOffsetY + 286,
-		110, 66, focusButtonId == 4);
+	button_border_draw(440, 286, 110, 66, focusButtonId == 4);
+
+    graphics_reset_dialog();
 }
 
 void UI_Advisor_Ratings_handleMouse(const mouse *m)

@@ -10,6 +10,7 @@
 #include "empire/city.h"
 #include "empire/trade_prices.h"
 #include "graphics/arrow_button.h"
+#include "graphics/custom_button.h"
 #include "scenario/building.h"
 
 static void buttonPrices(int param1, int param2);
@@ -98,7 +99,7 @@ void UI_Advisor_Trade_drawForeground()
 			baseOffsetX + 568, offsetY + 54);
 		
 		if (focusButtonId - 3 == i) {
-			Widget_Panel_drawButtonBorder(baseOffsetX + 80, offsetY + 54, 480, 24, 1);
+			button_border_draw(baseOffsetX + 80, offsetY + 54, 480, 24, 1);
 		}
 		Widget_GameText_draw(23, resource, baseOffsetX + 88, offsetY + 61, FONT_NORMAL_WHITE);
 		Widget_Text_drawNumberCentered(Data_CityInfo.resourceStored[resource],
@@ -117,10 +118,10 @@ void UI_Advisor_Trade_drawForeground()
 		}
 	}
 
-	Widget_Panel_drawButtonBorder(baseOffsetX + 398, baseOffsetY + 396, 200, 24, focusButtonId == 1);
+	button_border_draw(baseOffsetX + 398, baseOffsetY + 396, 200, 24, focusButtonId == 1);
 	Widget_GameText_drawCentered(54, 2, baseOffsetX + 400, baseOffsetY + 402, 200, FONT_NORMAL_BLACK);
 
-	Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 396, 200, 24, focusButtonId == 2);
+	button_border_draw(baseOffsetX + 98, baseOffsetY + 396, 200, 24, focusButtonId == 2);
 	Widget_GameText_drawCentered(54, 30, baseOffsetX + 100, baseOffsetY + 402, 200, FONT_NORMAL_BLACK);
 }
 
@@ -294,7 +295,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 	if (!tradeFlags) {
 		Widget_GameText_draw(54, 24, baseOffsetX + 98, baseOffsetY + 212, FONT_NORMAL_BLACK);
 	} else {
-		Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 212, 432, 30,
+		button_border_draw(baseOffsetX + 98, baseOffsetY + 212, 432, 30,
 			resourceFocusButtonId == 2);
 		switch (Data_CityInfo.resourceTradeStatus[selectedResourceId]) {
 			case TRADE_STATUS_NONE:
@@ -319,7 +320,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 	}
 
 	if (building_count_industry_total(selectedResourceId) > 0) {
-		Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 250, 432, 30,
+		button_border_draw(baseOffsetX + 98, baseOffsetY + 250, 432, 30,
 			resourceFocusButtonId == 1);
 		if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId]) {
 			Widget_GameText_drawCentered(54, 17, baseOffsetX + 114, baseOffsetY + 259, 400, FONT_NORMAL_BLACK);
@@ -328,7 +329,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 		}
 	}
 
-	Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 288, 432, 50,
+	button_border_draw(baseOffsetX + 98, baseOffsetY + 288, 432, 50,
 		resourceFocusButtonId == 3);
 	if (Data_CityInfo.resourceStockpiled[selectedResourceId]) {
 		Widget_GameText_drawCentered(54, 26, baseOffsetX + 114, baseOffsetY + 296, 400, FONT_NORMAL_BLACK);

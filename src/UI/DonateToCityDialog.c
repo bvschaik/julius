@@ -7,6 +7,8 @@
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/arrow_button.h"
+#include "graphics/custom_button.h"
+#include "graphics/graphics.h"
 
 static void buttonSetAmount(int param1, int param2);
 static void buttonDonate(int param1, int param2);
@@ -71,19 +73,20 @@ void UI_DonateToCityDialog_drawBackground()
 
 void UI_DonateToCityDialog_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
-	Widget_Panel_drawButtonBorder(baseOffsetX + 128, baseOffsetY + 216, 64, 20, focusButtonId == 3);
-	Widget_Panel_drawButtonBorder(baseOffsetX + 208, baseOffsetY + 216, 64, 20, focusButtonId == 4);
-	Widget_Panel_drawButtonBorder(baseOffsetX + 288, baseOffsetY + 216, 64, 20, focusButtonId == 5);
-	Widget_Panel_drawButtonBorder(baseOffsetX + 368, baseOffsetY + 216, 64, 20, focusButtonId == 6);
-	Widget_Panel_drawButtonBorder(baseOffsetX + 448, baseOffsetY + 216, 64, 20, focusButtonId == 7);
+	button_border_draw(128, 216, 64, 20, focusButtonId == 3);
+	button_border_draw(208, 216, 64, 20, focusButtonId == 4);
+	button_border_draw(288, 216, 64, 20, focusButtonId == 5);
+	button_border_draw(368, 216, 64, 20, focusButtonId == 6);
+	button_border_draw(448, 216, 64, 20, focusButtonId == 7);
 
-	Widget_Panel_drawButtonBorder(baseOffsetX + 336, baseOffsetY + 283, 160, 20, focusButtonId == 1);
-	Widget_Panel_drawButtonBorder(baseOffsetX + 144, baseOffsetY + 283, 160, 20, focusButtonId == 2);
+	button_border_draw(336, 283, 160, 20, focusButtonId == 1);
+	button_border_draw(144, 283, 160, 20, focusButtonId == 2);
 
-	arrow_buttons_draw(baseOffsetX, baseOffsetY, arrowButtons, 2);
+	arrow_buttons_draw(0, 0, arrowButtons, 2);
+
+    graphics_reset_dialog();
 }
 
 void UI_DonateToCityDialog_handleMouse(const mouse *m)
