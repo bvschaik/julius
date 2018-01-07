@@ -1,17 +1,33 @@
 #ifndef GRAPHICS_FONT_H
 #define GRAPHICS_FONT_H
 
+#include <stdint.h>
+
 typedef enum {
-    FONT_NORMAL_PLAIN = 0,
-    FONT_NORMAL_BLACK = 134,
-    FONT_NORMAL_WHITE = 268,
-    FONT_NORMAL_RED = 402,
-    FONT_LARGE_PLAIN = 536,
-    FONT_LARGE_BLACK = 670,
-    FONT_LARGE_BROWN = 804,
-    FONT_SMALL_PLAIN = 938,
-    FONT_NORMAL_GREEN = 1072,
-    FONT_SMALL_BLACK = 1206
+    FONT_NORMAL_PLAIN,
+    FONT_NORMAL_BLACK,
+    FONT_NORMAL_WHITE,
+    FONT_NORMAL_RED,
+    FONT_LARGE_PLAIN,
+    FONT_LARGE_BLACK,
+    FONT_LARGE_BROWN,
+    FONT_SMALL_PLAIN,
+    FONT_NORMAL_GREEN,
+    FONT_SMALL_BLACK
 } font_t;
+
+typedef struct {
+    font_t font;
+    int image_offset;
+    int space_width;
+    int space_width_draw;
+    int letter_spacing;
+    int letter_spacing_draw;
+    int line_height;
+} font_definition;
+
+const font_definition *font_definition_for(font_t font);
+
+int font_image_for(uint8_t c);
 
 #endif // GRAPHICS_FONT_H

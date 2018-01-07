@@ -8,25 +8,6 @@
 #include "core/string.h"
 #include "graphics/image_button.h"
 
-static const int map_charToFontGraphic[] = {
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x01,
-	0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x3F, 0x40, 0x00, 0x00, 0x41, 0x00, 0x4A, 0x43, 0x44, 0x42, 0x46, 0x4E, 0x45, 0x4F, 0x4D,
-	0x3E, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x48, 0x49, 0x00, 0x47, 0x00, 0x4B,
-	0x00, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29,
-	0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34, 0x00, 0x63, 0x00, 0x00, 0x50,
-	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-	0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x65, 0x61, 0x56, 0x54, 0x51, 0x53, 0x01, 0x67, 0x81, 0x55, 0x57, 0x59, 0x6E, 0x5D, 0x69, 0x1B,
-	0x6A, 0x67, 0x6D, 0x60, 0x5D, 0x5F, 0x64, 0x63, 0x19, 0x7B, 0x6B, 0x00, 0x6F, 0x00, 0x00, 0x00,
-	0x52, 0x7F, 0x5E, 0x62, 0x66, 0x6C, 0x01, 0x0F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x82, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
-	0x72, 0x70, 0x71, 0x71, 0x69, 0x83, 0x6D, 0x65, 0x74, 0x6A, 0x73, 0x73, 0x77, 0x75, 0x76, 0x76,
-	0x00, 0x6C, 0x7A, 0x78, 0x79, 0x79, 0x7B, 0x00, 0x84, 0x7E, 0x7C, 0x7D, 0x6B, 0x33, 0x00, 0x68,
-	0x53, 0x52, 0x54, 0x51, 0x51, 0x85, 0x67, 0x65, 0x57, 0x56, 0x58, 0x55, 0x5B, 0x5A, 0x5C, 0x59,
-	0x00, 0x66, 0x5F, 0x5E, 0x60, 0x60, 0x5D, 0x00, 0x86, 0x63, 0x62, 0x64, 0x61, 0x19, 0x00, 0x19,
-};
-
 static uint8_t tmpLine[200];
 
 static struct {
@@ -40,8 +21,6 @@ static struct {
 	int xOffset;
 	int yOffset;
 } inputCursor;
-
-static int drawCharacter(font_t font, unsigned int c, int x, int y, int lineHeight, color_t color);
 
 void Widget_Text_captureCursor(int cursor_position)
 {
@@ -88,34 +67,18 @@ void Widget_Text_drawCursor(int xOffset, int yOffset, int isInsert)
 
 int Widget_Text_getWidth(const uint8_t *str, font_t font)
 {
-	int spaceWidth;
-	int letterSpacing;
-	
-	if (font == FONT_LARGE_PLAIN || font == FONT_LARGE_BLACK || font == FONT_LARGE_BROWN) {
-		spaceWidth = 10;
-		letterSpacing = 1;
-	} else if (font == FONT_SMALL_PLAIN) {
-		spaceWidth = 4;
-		letterSpacing = 1;
-	} else if (font == FONT_NORMAL_PLAIN) {
-		spaceWidth = 6;
-		letterSpacing = 1;
-	} else {
-		spaceWidth = 6;
-		letterSpacing = 0;
-	}
-	
+	const font_definition *def = font_definition_for(font);
 	int maxlen = 10000;
 	int width = 0;
 	int graphicBase = image_group(GROUP_FONT);
 	while (*str && maxlen > 0) {
 		if (*str == ' ') {
-			width += spaceWidth;
+			width += def->space_width;
 		} else {
-			int graphicOffset = map_charToFontGraphic[*str];
+			int graphicOffset = font_image_for(*str);
 			if (graphicOffset) {
-				int graphicId = graphicBase + font + graphicOffset - 1;
-				width += letterSpacing + image_get(graphicId)->width;
+				int graphicId = graphicBase + def->image_offset + graphicOffset - 1;
+				width += def->letter_spacing + image_get(graphicId)->width;
 			}
 		}
 		str++;
@@ -130,46 +93,30 @@ int Widget_GameText_getWidth(int group, int number, font_t font)
 	return Widget_Text_getWidth(str, font);
 }
 
-static int getSpaceWidth(font_t font)
-{
-	if (font == FONT_LARGE_PLAIN || font == FONT_LARGE_BLACK || font == FONT_LARGE_BROWN) {
-		return 10;
-	} else if (font == FONT_SMALL_PLAIN) {
-		return 4;
-	} else {
-		return 6;
-	}
-}
-
 int Widget_GameText_getDrawWidth(int group, int number, font_t font)
 {
 	const uint8_t *str = lang_get_string(group, number);
-	return Widget_Text_getWidth(str, font) + getSpaceWidth(font);
+	return Widget_Text_getWidth(str, font) + font_definition_for(font)->space_width;
 }
 
-static int getCharacterWidth(unsigned char c, font_t font)
+static int getCharacterWidth(uint8_t c, const font_definition *def)
 {
-	if (!c) {
-		return 0;
-	}
-	if (c == ' ') {
-		return 4;
-	}
-	int graphicOffset = map_charToFontGraphic[c];
+	int graphicOffset = font_image_for(c);
 	if (!graphicOffset) {
 		return 0;
 	}
-	int graphicId = image_group(GROUP_FONT) + font + graphicOffset - 1;
+	int graphicId = image_group(GROUP_FONT) + def->image_offset + graphicOffset - 1;
 	return 1 + image_get(graphicId)->width;
 }
 
-static int getWordWidth(const unsigned char *str, font_t font, int *outNumChars)
+static int getWordWidth(const uint8_t *str, font_t font, int *outNumChars)
 {
+    const font_definition *def = font_definition_for(font);
 	int width = 0;
 	int guard = 0;
 	int wordCharSeen = 0;
 	int numChars = 0;
-	for (unsigned char c = *str; c; c = *(++str)) {
+	for (uint8_t c = *str; c; c = *(++str)) {
 		if (++guard >= 200) {
 			break;
 		}
@@ -184,7 +131,7 @@ static int getWordWidth(const unsigned char *str, font_t font, int *outNumChars)
 			}
 		} else if (c > ' ') {
 			// normal char
-			width += getCharacterWidth(c, font);
+			width += getCharacterWidth(c, def);
 			wordCharSeen = 1;
 		}
 		numChars++;
@@ -202,43 +149,24 @@ void Widget_Text_drawCentered(const uint8_t *str, int x, int y, int boxWidth, fo
 	Widget_Text_draw(str, offset + x, y, font, color);
 }
 
+static int drawCharacter(const font_definition *def, unsigned int c, int x, int y, color_t color)
+{
+    int graphicOffset = font_image_for(c);
+    int graphicId = image_group(GROUP_FONT) + def->image_offset + graphicOffset - 1;
+    int height = image_get(graphicId)->height - def->line_height;
+    if (height < 0) {
+        height = 0;
+    }
+    if (c < 128 || c == 231) { // Some exceptions...
+        height = 0;
+    }
+    Graphics_drawLetter(graphicId, x, y - height, color);
+    return image_get(graphicId)->width;
+}
+
 int Widget_Text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
 {
-	int letterSpacing;
-	int lineHeight;
-	int spaceWidth;
-	switch (font) {
-		case FONT_LARGE_PLAIN:
-			spaceWidth = 8;
-			lineHeight = 23;
-			letterSpacing = 1;
-			break;
-		case FONT_LARGE_BLACK:
-			spaceWidth = 8;
-			lineHeight = 23;
-			letterSpacing = 0;
-			break;
-		case FONT_LARGE_BROWN:
-			spaceWidth = 8;
-			lineHeight = 24;
-			letterSpacing = 0;
-			break;
-		case FONT_SMALL_PLAIN:
-			spaceWidth = 4;
-			lineHeight = 9;
-			letterSpacing = 1;
-			break;
-		case FONT_NORMAL_PLAIN:
-			spaceWidth = 6;
-			lineHeight = 11;
-			letterSpacing = 1;
-			break;
-		default:
-			spaceWidth = 6;
-			lineHeight = 11;
-			letterSpacing = 0;
-			break;
-	}
+    const font_definition *def = font_definition_for(font);
 
 	int currentX = x;
 	while (*str) {
@@ -250,11 +178,11 @@ int Widget_Text_draw(const uint8_t *str, int x, int y, font_t font, color_t colo
 
 		if (c >= ' ') {
 			int width = 0;
-			int graphic = map_charToFontGraphic[c];
+			int graphic = font_image_for(c);
 			if (graphic == 0) {
-				width = spaceWidth;
+				width = def->space_width_draw;
 			} else {
-				width = letterSpacing + drawCharacter(font, c, currentX, y, lineHeight, color);
+				width = def->letter_spacing_draw + drawCharacter(def, c, currentX, y, color);
 			}
 			if (inputCursor.capture && inputCursor.position == inputCursor.cursor_position) {
 				if (!inputCursor.seen) {
@@ -274,27 +202,8 @@ int Widget_Text_draw(const uint8_t *str, int x, int y, font_t font, color_t colo
 		inputCursor.xOffset = currentX - x;
 		inputCursor.seen = 1;
 	}
-	currentX += spaceWidth;
+	currentX += def->space_width_draw;
 	return currentX - x;
-}
-
-static int drawCharacter(font_t font, unsigned int c, int x, int y, int lineHeight, color_t color)
-{
-	int graphicOffset = map_charToFontGraphic[c];
-	if (!graphicOffset) {
-		return 0;
-	}
-
-	int graphicId = image_group(GROUP_FONT) + font + graphicOffset - 1;
-	int height = image_get(graphicId)->height - lineHeight;
-	if (height < 0) {
-		height = 0;
-	}
-	if (c < 128 || c == 231) { // Some exceptions...
-		height = 0;
-	}
-	Graphics_drawLetter(graphicId, x, y - height, color);
-	return image_get(graphicId)->width;
 }
 
 static void numberToString(uint8_t *str, int value, char prefix, const char *postfix)
@@ -472,7 +381,7 @@ int Widget_Text_drawMultiline(const uint8_t *str, int xOffset, int yOffset, int 
 		int lineIndex = 0;
 		while (hasMoreCharacters && currentWidth < boxWidth) {
 			int wordNumChars;
-			int wordWidth = getWordWidth((unsigned char*)str, font, &wordNumChars);
+			int wordWidth = getWordWidth(str, font, &wordNumChars);
 			currentWidth += wordWidth;
 			if (currentWidth >= boxWidth) {
 				if (currentWidth == 0) {
@@ -504,9 +413,9 @@ int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffse
 
 #define MAX_LINKS 50
 
-static void drawRichTextLine(const unsigned char *str, int x, int y, color_t color, int measureOnly);
-static int getRichTextWordWidth(const unsigned char *str, int *outNumChars);
-static int drawRichTextCharacter(font_t font, unsigned int c, int x, int y, color_t color, int measureOnly);
+static void drawRichTextLine(const uint8_t *str, int x, int y, color_t color, int measureOnly);
+static int getRichTextWordWidth(const font_definition *def, const uint8_t *str, int *outNumChars);
+static int drawRichTextCharacter(const font_definition *def, unsigned int c, int x, int y, color_t color, int measureOnly);
 
 static image_button imageButtonScrollUp = {
 	0, 0, 39, 26, IB_SCROLL, 96, 8, Widget_RichText_scroll, button_none, 0, 1, 1
@@ -614,6 +523,7 @@ void Widget_RichText_restore()
 static int drawRichText(const uint8_t *str, int xOffset, int yOffset,
 						int boxWidth, int heightLines, color_t color, int measureOnly)
 {
+    const font_definition *def = font_definition_for(richTextNormalFont);
 	int graphicHeightLines = 0;
 	int graphicId = 0;
 	int linesBeforeGraphic = 0;
@@ -646,7 +556,7 @@ static int drawRichText(const uint8_t *str, int xOffset, int yOffset,
 				break;
 			}
 			int wordNumChars;
-			currentWidth += getRichTextWordWidth(str, &wordNumChars);
+			currentWidth += getRichTextWordWidth(def, str, &wordNumChars);
 			if (currentWidth >= boxWidth) {
 				if (currentWidth == 0) {
 					hasMoreCharacters = 0;
@@ -700,7 +610,7 @@ static int drawRichText(const uint8_t *str, int xOffset, int yOffset,
 			}
 		}
 		if (!outsideViewport) {
-			drawRichTextLine((unsigned char*)tmpLine, xLineOffset + xOffset, y, color, measureOnly);
+			drawRichTextLine(tmpLine, xLineOffset + xOffset, y, color, measureOnly);
 		}
 		if (!measureOnly) {
 			if (graphicId) {
@@ -741,41 +651,43 @@ int Widget_RichText_drawColored(const uint8_t *str, int xOffset, int yOffset, in
 	return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, color, 0);
 }
 
-static void drawRichTextLine(const unsigned char *str, int x, int y, color_t color, int measureOnly)
+static void drawRichTextLine(const uint8_t *str, int x, int y, color_t color, int measureOnly)
 {
+    const font_definition *normal_def = font_definition_for(richTextNormalFont);
+    const font_definition *link_def = font_definition_for(richTextLinkFont);
 	int numLinkChars = 0;
-	for (unsigned char c = *str; c; c = *(++str)) {
+	for (uint8_t c = *str; c; c = *(++str)) {
 		if (c == '@') {
 			int messageId = string_to_int(++str);
 			while (*str >= '0' && *str <= '9') {
 				str++;
 			}
-			int width = getRichTextWordWidth(str, &numLinkChars);
+			int width = getRichTextWordWidth(normal_def, str, &numLinkChars);
 			addRichTextLink(messageId, x, x + width, y);
 			c = *str;
 		}
 		if (c >= ' ') {
-			font_t font = richTextNormalFont;
+			const font_definition *def = normal_def;
 			if (numLinkChars > 0) {
-				font = richTextLinkFont;
+				def = link_def;
 				numLinkChars--;
 			}
-			if (map_charToFontGraphic[c] <= 0) {
+			if (font_image_for(c) <= 0) {
 				x += 6;
 			} else {
-				x += drawRichTextCharacter(font, c, x, y, color, measureOnly);
+				x += drawRichTextCharacter(def, c, x, y, color, measureOnly);
 			}
 		}
 	}
 }
 
-static int getRichTextWordWidth(const unsigned char *str, int *outNumChars)
+static int getRichTextWordWidth(const font_definition *def, const uint8_t *str, int *outNumChars)
 {
 	int width = 0;
 	int guard = 0;
 	int wordCharSeen = 0;
 	int numChars = 0;
-	for (unsigned char c = *str; c; c = *(++str)) {
+	for (uint8_t c = *str; c; c = *(++str)) {
 		if (++guard >= 2000) {
 			break;
 		}
@@ -811,7 +723,7 @@ static int getRichTextWordWidth(const unsigned char *str, int *outNumChars)
 			width += 4;
 		} else if (c > ' ') {
 			// normal char
-			width += getCharacterWidth(c, richTextNormalFont);
+			width += getCharacterWidth(c, def);
 			wordCharSeen = 1;
 		}
 		numChars++;
@@ -820,14 +732,14 @@ static int getRichTextWordWidth(const unsigned char *str, int *outNumChars)
 	return width;
 }
 
-static int drawRichTextCharacter(font_t font, unsigned int c, int x, int y, color_t color, int measureOnly)
+static int drawRichTextCharacter(const font_definition *def, unsigned int c, int x, int y, color_t color, int measureOnly)
 {
-	int graphicOffset = map_charToFontGraphic[c];
+	int graphicOffset = font_image_for(c);
 	if (!graphicOffset) {
 		return 0;
 	}
 
-	int graphicId = image_group(GROUP_FONT) + font + graphicOffset - 1;
+	int graphicId = image_group(GROUP_FONT) + def->image_offset + graphicOffset - 1;
 	int height = image_get(graphicId)->height - 11;
 	if (height < 0) {
 		height = 0;
