@@ -2,124 +2,82 @@
 
 #include "building/count.h"
 #include "city/culture.h"
+#include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
+static int get_health_advice()
+{
+    switch (Data_CityInfo.healthDemand) {
+        case 1:
+            return Data_CityInfo.housesRequiringBathhouse ? 1 : 0;
+        case 2:
+            return Data_CityInfo.housesRequiringBarber ? 3 : 2;
+        case 3:
+            return Data_CityInfo.housesRequiringClinic ? 5 : 4;
+        case 4:
+            return 6;
+        default:
+            return 7;
+    }
+}
+
 void UI_Advisor_Health_drawBackground(int *advisorHeight)
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
 	*advisorHeight = 18;
-	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 6, baseOffsetX + 10, baseOffsetY + 10);
+	outer_panel_draw(0, 0, 40, *advisorHeight);
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
 
-	lang_text_draw(56, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+	lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK);
 	if (Data_CityInfo.population >= 200) {
-		lang_text_draw_multiline(56,
-			Data_CityInfo.healthRate / 10 + 16,
-			baseOffsetX + 60, baseOffsetY + 46,
-			512, FONT_NORMAL_BLACK
-		);
+		lang_text_draw_multiline(56, Data_CityInfo.healthRate / 10 + 16, 60, 46, 512, FONT_NORMAL_BLACK);
 	} else {
-		lang_text_draw_multiline(56, 15,
-			baseOffsetX + 60, baseOffsetY + 46,
-			512, FONT_NORMAL_BLACK
-		);
+		lang_text_draw_multiline(56, 15, 60, 46, 512, FONT_NORMAL_BLACK);
 	}
-	lang_text_draw(56, 3, baseOffsetX + 180, baseOffsetY + 94, FONT_SMALL_PLAIN);
-	lang_text_draw(56, 4, baseOffsetX + 290, baseOffsetY + 94, FONT_SMALL_PLAIN);
-	lang_text_draw(56, 5, baseOffsetX + 478, baseOffsetY + 94, FONT_SMALL_PLAIN);
+	lang_text_draw(56, 3, 180, 94, FONT_SMALL_PLAIN);
+	lang_text_draw(56, 4, 290, 94, FONT_SMALL_PLAIN);
+	lang_text_draw(56, 5, 478, 94, FONT_SMALL_PLAIN);
 
-	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 108, 36, 5);
+	inner_panel_draw(32, 108, 36, 5);
 
 	// bathhouses
-	lang_text_draw_amount(8, 24,
-		building_count_total(BUILDING_BATHHOUSE),
-		baseOffsetX + 40, baseOffsetY + 112, FONT_NORMAL_GREEN
-	);
-	text_draw_number_centered(
-		building_count_active(BUILDING_BATHHOUSE),
-		baseOffsetX + 150, baseOffsetY + 112, 100, FONT_NORMAL_GREEN
-	);
-	lang_text_draw(56, 2, baseOffsetX + 300, baseOffsetY + 112, FONT_NORMAL_GREEN);
-	lang_text_draw(56, 2, baseOffsetX + 504, baseOffsetY + 112, FONT_NORMAL_GREEN);
+	lang_text_draw_amount(8, 24, building_count_total(BUILDING_BATHHOUSE), 40, 112, FONT_NORMAL_GREEN);
+	text_draw_number_centered(building_count_active(BUILDING_BATHHOUSE), 150, 112, 100, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, 300, 112, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, 504, 112, FONT_NORMAL_GREEN);
 
 	// barbers
-	lang_text_draw_amount(8, 26,
-		building_count_total(BUILDING_BARBER),
-		baseOffsetX + 40, baseOffsetY + 132, FONT_NORMAL_GREEN
-	);
-	text_draw_number_centered(
-		building_count_active(BUILDING_BARBER),
-		baseOffsetX + 150, baseOffsetY + 132, 100, FONT_NORMAL_GREEN
-	);
-	lang_text_draw(56, 2, baseOffsetX + 300, baseOffsetY + 132, FONT_NORMAL_GREEN);
-	lang_text_draw(56, 2, baseOffsetX + 504, baseOffsetY + 132, FONT_NORMAL_GREEN);
+	lang_text_draw_amount(8, 26, building_count_total(BUILDING_BARBER), 40, 132, FONT_NORMAL_GREEN);
+	text_draw_number_centered(building_count_active(BUILDING_BARBER), 150, 132, 100, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, 300, 132, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, 504, 132, FONT_NORMAL_GREEN);
 
 	// clinics
-	lang_text_draw_amount(8, 28,
-		building_count_total(BUILDING_DOCTOR),
-		baseOffsetX + 40, baseOffsetY + 152, FONT_NORMAL_GREEN
-	);
-	text_draw_number_centered(
-		building_count_active(BUILDING_DOCTOR),
-		baseOffsetX + 150, baseOffsetY + 152, 100, FONT_NORMAL_GREEN
-	);
-	lang_text_draw(56, 2, baseOffsetX + 300, baseOffsetY + 152, FONT_NORMAL_GREEN);
-	lang_text_draw(56, 2, baseOffsetX + 504, baseOffsetY + 152, FONT_NORMAL_GREEN);
+	lang_text_draw_amount(8, 28, building_count_total(BUILDING_DOCTOR), 40, 152, FONT_NORMAL_GREEN);
+	text_draw_number_centered(building_count_active(BUILDING_DOCTOR), 150, 152, 100, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, 300, 152, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 2, 504, 152, FONT_NORMAL_GREEN);
 
 	// hospitals
-	lang_text_draw_amount(8, 30,
-		building_count_total(BUILDING_HOSPITAL),
-		baseOffsetX + 40, baseOffsetY + 172, FONT_NORMAL_GREEN
-	);
-	text_draw_number_centered(
-		building_count_active(BUILDING_HOSPITAL),
-		baseOffsetX + 150, baseOffsetY + 172, 100, FONT_NORMAL_GREEN
-	);
+	lang_text_draw_amount(8, 30, building_count_total(BUILDING_HOSPITAL), 40, 172, FONT_NORMAL_GREEN);
+	text_draw_number_centered(building_count_active(BUILDING_HOSPITAL), 150, 172, 100, FONT_NORMAL_GREEN);
 
-	int width = text_draw_number(
-		1000 * building_count_active(BUILDING_HOSPITAL),
-		'@', " ", baseOffsetX + 280, baseOffsetY + 172, FONT_NORMAL_GREEN
-	);
-	lang_text_draw(56, 6, baseOffsetX + 280 + width, baseOffsetY + 172, FONT_NORMAL_GREEN);
+	int width = text_draw_number(1000 * building_count_active(BUILDING_HOSPITAL), '@', " ", 280, 172, FONT_NORMAL_GREEN);
+	lang_text_draw(56, 6, 280 + width, 172, FONT_NORMAL_GREEN);
 
 	int pct_hospital = city_culture_coverage_hospital();
 	if (pct_hospital == 0) {
-		lang_text_draw_centered(57, 10,
-			baseOffsetX + 420, baseOffsetY + 172, 200, FONT_NORMAL_GREEN
-		);
+		lang_text_draw_centered(57, 10, 420, 172, 200, FONT_NORMAL_GREEN);
 	} else if (pct_hospital < 100) {
-		lang_text_draw_centered(57, pct_hospital / 10 + 11,
-			baseOffsetX + 420, baseOffsetY + 172, 200, FONT_NORMAL_GREEN
-		);
+		lang_text_draw_centered(57, pct_hospital / 10 + 11, 420, 172, 200, FONT_NORMAL_GREEN);
 	} else {
-		lang_text_draw_centered(57, 21,
-			baseOffsetX + 420, baseOffsetY + 172, 200, FONT_NORMAL_GREEN
-		);
+		lang_text_draw_centered(57, 21, 420, 172, 200, FONT_NORMAL_GREEN);
 	}
 
-	int adviceId;
-	switch (Data_CityInfo.healthDemand) {
-		case 1:
-			adviceId = Data_CityInfo.housesRequiringBathhouse ? 1 : 0;
-			break;
-		case 2:
-			adviceId = Data_CityInfo.housesRequiringBarber ? 3 : 2;
-			break;
-		case 3:
-			adviceId = Data_CityInfo.housesRequiringClinic ? 5 : 4;
-			break;
-		case 4:
-			adviceId = 6;
-			break;
-		default:
-			adviceId = 7;
-			break;
-	}
-	lang_text_draw_multiline(56, 7 + adviceId,
-		baseOffsetX + 60, baseOffsetY + 194, 512, FONT_NORMAL_BLACK
-	);
+	lang_text_draw_multiline(56, 7 + get_health_advice(), 60, 194, 512, FONT_NORMAL_BLACK);
+
+    graphics_reset_dialog();
 }

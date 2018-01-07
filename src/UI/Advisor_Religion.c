@@ -4,190 +4,85 @@
 #include "city/culture.h"
 #include "city/gods.h"
 #include "game/settings.h"
+#include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
+static int get_religion_advice()
+{
+    if (Data_CityInfo.godLeastHappy > 0 && Data_CityInfo.godWrathBolts[Data_CityInfo.godLeastHappy - 1] > 4) {
+        return 5 + Data_CityInfo.godLeastHappy;
+    } else if (Data_CityInfo.religionDemand == 1) {
+        return Data_CityInfo.housesRequiringReligion ? 1 : 0;
+    } else if (Data_CityInfo.religionDemand == 2) {
+        return 2;
+    } else if (Data_CityInfo.religionDemand == 3) {
+        return 3;
+    } else if (!Data_CityInfo.housesRequiringReligion) {
+        return 4;
+    } else if (Data_CityInfo.godLeastHappy) {
+        return 5 + Data_CityInfo.godLeastHappy;
+    } else {
+        return 5;
+    }
+}
+
+static void draw_god_row(god_type god, int y_offset, building_type small_temple, building_type large_temple)
+{
+    lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
+    lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
+    text_draw_number_centered(building_count_total(small_temple), 230, y_offset, 50, FONT_NORMAL_WHITE);
+    text_draw_number_centered(building_count_total(large_temple), 290, y_offset, 50, FONT_NORMAL_WHITE);
+    text_draw_number_centered(Data_CityInfo.godMonthsSinceFestival[god], 360, y_offset, 50, FONT_NORMAL_WHITE);
+    int width = lang_text_draw(59, 32 + Data_CityInfo.godHappiness[god] / 10, 460, y_offset, FONT_NORMAL_WHITE);
+    for (int i = 0; i < Data_CityInfo.godWrathBolts[god] / 10; i++) {
+        Graphics_drawImage(image_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
+    }
+}
+
 void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
-	
+    graphics_in_dialog();
+
 	if (setting_gods_enabled()) {
 		*advisorHeight = 17;
-		outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+		outer_panel_draw(0, 0, 40, *advisorHeight);
 	} else {
 		*advisorHeight = 20;
-		outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-		lang_text_draw_multiline(59, 43,
-			baseOffsetX + 60, baseOffsetY + 256, 520, FONT_NORMAL_BLACK
-		);
+		outer_panel_draw(0, 0, 40, *advisorHeight);
+		lang_text_draw_multiline(59, 43, 60, 256, 520, FONT_NORMAL_BLACK);
 	}
 	
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 9, baseOffsetX + 10, baseOffsetY + 10);
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
 	
-	lang_text_draw(59, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+	lang_text_draw(59, 0, 60, 12, FONT_LARGE_BLACK);
 	
 	// table header
-	lang_text_draw(59, 5, baseOffsetX + 270, baseOffsetY + 32, FONT_SMALL_PLAIN);
-	lang_text_draw(59, 1, baseOffsetX + 240, baseOffsetY + 46, FONT_SMALL_PLAIN);
-	lang_text_draw(59, 2, baseOffsetX + 300, baseOffsetY + 46, FONT_SMALL_PLAIN);
-	lang_text_draw(59, 3, baseOffsetX + 450, baseOffsetY + 46, FONT_SMALL_PLAIN);
-	lang_text_draw(59, 6, baseOffsetX + 370, baseOffsetY + 18, FONT_SMALL_PLAIN);
-	lang_text_draw(59, 9, baseOffsetX + 370, baseOffsetY + 32, FONT_SMALL_PLAIN);
-	lang_text_draw(59, 7, baseOffsetX + 370, baseOffsetY + 46, FONT_SMALL_PLAIN);
+	lang_text_draw(59, 5, 270, 32, FONT_SMALL_PLAIN);
+	lang_text_draw(59, 1, 240, 46, FONT_SMALL_PLAIN);
+	lang_text_draw(59, 2, 300, 46, FONT_SMALL_PLAIN);
+	lang_text_draw(59, 3, 450, 46, FONT_SMALL_PLAIN);
+	lang_text_draw(59, 6, 370, 18, FONT_SMALL_PLAIN);
+	lang_text_draw(59, 9, 370, 32, FONT_SMALL_PLAIN);
+	lang_text_draw(59, 7, 370, 46, FONT_SMALL_PLAIN);
 	
-	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 60, 36, 8);
+	inner_panel_draw(32, 60, 36, 8);
 	
-	int graphicIdBolt = image_group(GROUP_GOD_BOLT);
-	int width;
-	
-	// Ceres
-	lang_text_draw(59, 11, baseOffsetX + 40, baseOffsetY + 66, FONT_NORMAL_WHITE);
-	lang_text_draw(59, 16, baseOffsetX + 120, baseOffsetY + 67, FONT_SMALL_PLAIN);
-	text_draw_number_centered(
-		building_count_total(BUILDING_SMALL_TEMPLE_CERES),
-		baseOffsetX + 230, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(
-		building_count_total(BUILDING_LARGE_TEMPLE_CERES),
-		baseOffsetX + 290, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(
-		Data_CityInfo.godMonthsSinceFestival[GOD_CERES],
-		baseOffsetX + 360, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
-	);
-	width = lang_text_draw(59, 32 + Data_CityInfo.godHappiness[GOD_CERES] / 10,
-		baseOffsetX + 460, baseOffsetY + 66, FONT_NORMAL_WHITE
-	);
-	for (int i = 0; i < Data_CityInfo.godWrathBolts[GOD_CERES] / 10; i++) {
-		Graphics_drawImage(graphicIdBolt,
-			10 * i + baseOffsetX + width + 460, baseOffsetY + 62
-		);
-	}
-	
-	// Neptune
-	lang_text_draw(59, 12, baseOffsetX + 40, baseOffsetY + 86, FONT_NORMAL_WHITE);
-	lang_text_draw(59, 17, baseOffsetX + 120, baseOffsetY + 87, FONT_SMALL_PLAIN);
-	text_draw_number_centered(
-		building_count_total(BUILDING_SMALL_TEMPLE_NEPTUNE),
-		baseOffsetX + 230, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(
-		building_count_total(BUILDING_LARGE_TEMPLE_NEPTUNE),
-		baseOffsetX + 290, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(
-		Data_CityInfo.godMonthsSinceFestival[GOD_NEPTUNE],
-		baseOffsetX + 360, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
-	);
-	width = lang_text_draw(59, 32 + Data_CityInfo.godHappiness[GOD_NEPTUNE] / 10,
-		baseOffsetX + 460, baseOffsetY + 86, FONT_NORMAL_WHITE
-	);
-	for (int i = 0; i < Data_CityInfo.godWrathBolts[GOD_NEPTUNE] / 10; i++) {
-		Graphics_drawImage(graphicIdBolt,
-			10 * i + baseOffsetX + width + 460, baseOffsetY + 82
-		);
-	}
-	
-	// Mercury
-	lang_text_draw(59, 13, baseOffsetX + 40, baseOffsetY + 106, FONT_NORMAL_WHITE);
-	lang_text_draw(59, 18, baseOffsetX + 120, baseOffsetY + 107, FONT_SMALL_PLAIN);
-	text_draw_number_centered(
-		building_count_total(BUILDING_SMALL_TEMPLE_MERCURY),
-		baseOffsetX + 230, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(
-		building_count_total(BUILDING_LARGE_TEMPLE_MERCURY),
-		baseOffsetX + 290, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(
-		Data_CityInfo.godMonthsSinceFestival[GOD_MERCURY],
-		baseOffsetX + 360, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
-	);
-	width = lang_text_draw(59, 32 + Data_CityInfo.godHappiness[GOD_MERCURY] / 10,
-		baseOffsetX + 460, baseOffsetY + 106, FONT_NORMAL_WHITE
-	);
-	for (int i = 0; i < Data_CityInfo.godWrathBolts[GOD_MERCURY] / 10; i++) {
-		Graphics_drawImage(graphicIdBolt,
-			10 * i + baseOffsetX + width + 460, baseOffsetY + 102
-		);
-	}
-	
-	// Mars
-	lang_text_draw(59, 14, baseOffsetX + 40, baseOffsetY + 126, FONT_NORMAL_WHITE);
-	lang_text_draw(59, 19, baseOffsetX + 120, baseOffsetY + 127, FONT_SMALL_PLAIN);
-	text_draw_number_centered(
-		building_count_total(BUILDING_SMALL_TEMPLE_MARS),
-		baseOffsetX + 230, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(
-		building_count_total(BUILDING_LARGE_TEMPLE_MARS),
-		baseOffsetX + 290, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(
-		Data_CityInfo.godMonthsSinceFestival[GOD_MARS],
-		baseOffsetX + 360, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
-	);
-	width = lang_text_draw(59, 32 + Data_CityInfo.godHappiness[GOD_MARS] / 10,
-		baseOffsetX + 460, baseOffsetY + 126, FONT_NORMAL_WHITE
-	);
-	for (int i = 0; i < Data_CityInfo.godWrathBolts[GOD_MARS] / 10; i++) {
-		Graphics_drawImage(graphicIdBolt,
-			10 * i + baseOffsetX + width + 460, baseOffsetY + 122
-		);
-	}
-	
-	// Venus
-	lang_text_draw(59, 15, baseOffsetX + 40, baseOffsetY + 146, FONT_NORMAL_WHITE);
-	lang_text_draw(59, 20, baseOffsetX + 120, baseOffsetY + 147, FONT_SMALL_PLAIN);
-	text_draw_number_centered(
-		building_count_total(BUILDING_SMALL_TEMPLE_VENUS),
-		baseOffsetX + 230, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(
-		building_count_total(BUILDING_LARGE_TEMPLE_VENUS),
-		baseOffsetX + 290, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(
-		Data_CityInfo.godMonthsSinceFestival[GOD_VENUS],
-		baseOffsetX + 360, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
-	);
-	width = lang_text_draw(59, 32 + Data_CityInfo.godHappiness[GOD_VENUS] / 10,
-		baseOffsetX + 460, baseOffsetY + 146, FONT_NORMAL_WHITE
-	);
-	for (int i = 0; i < Data_CityInfo.godWrathBolts[GOD_VENUS] / 10; i++) {
-		Graphics_drawImage(graphicIdBolt,
-			10 * i + baseOffsetX + width + 460, baseOffsetY + 142
-		);
-	}
+    // god rows
+    draw_god_row(GOD_CERES, 66, BUILDING_SMALL_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_CERES);
+    draw_god_row(GOD_NEPTUNE, 86, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_NEPTUNE);
+    draw_god_row(GOD_MERCURY, 106, BUILDING_SMALL_TEMPLE_MERCURY, BUILDING_LARGE_TEMPLE_MERCURY);
+    draw_god_row(GOD_MARS, 126, BUILDING_SMALL_TEMPLE_MARS, BUILDING_LARGE_TEMPLE_MARS);
+    draw_god_row(GOD_VENUS, 146, BUILDING_SMALL_TEMPLE_VENUS, BUILDING_LARGE_TEMPLE_VENUS);
 
 	// oracles
-	lang_text_draw(59, 8, baseOffsetX + 40, baseOffsetY + 166, FONT_NORMAL_WHITE);
-	text_draw_number_centered(
-		building_count_total(BUILDING_ORACLE),
-		baseOffsetX + 230, baseOffsetY + 166, 50, FONT_NORMAL_WHITE
-	);
+	lang_text_draw(59, 8, 40, 166, FONT_NORMAL_WHITE);
+	text_draw_number_centered(building_count_total(BUILDING_ORACLE), 230, 166, 50, FONT_NORMAL_WHITE);
 	
 	city_gods_calculate_least_happy();
 
-	int adviceId;
-	if (Data_CityInfo.godLeastHappy > 0 && Data_CityInfo.godWrathBolts[Data_CityInfo.godLeastHappy - 1] > 4) {
-		adviceId = 5 + Data_CityInfo.godLeastHappy;
-	} else if (Data_CityInfo.religionDemand == 1) {
-		adviceId = Data_CityInfo.housesRequiringReligion ? 1 : 0;
-	} else if (Data_CityInfo.religionDemand == 2) {
-		adviceId = 2;
-	} else if (Data_CityInfo.religionDemand == 3) {
-		adviceId = 3;
-	} else if (!Data_CityInfo.housesRequiringReligion) {
-		adviceId = 4;
-	} else if (Data_CityInfo.godLeastHappy) {
-		adviceId = 5 + Data_CityInfo.godLeastHappy;
-	} else {
-		adviceId = 5;
-	}
-	lang_text_draw_multiline(59, 21 + adviceId,
-		baseOffsetX + 60, baseOffsetY + 196, 512, FONT_NORMAL_BLACK);
-}
+	lang_text_draw_multiline(59, 21 + get_religion_advice(), 60, 196, 512, FONT_NORMAL_BLACK);
 
+    graphics_reset_dialog();
+}
