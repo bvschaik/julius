@@ -18,6 +18,7 @@
 #include "game/state.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
+#include "graphics/image_button.h"
 #include "input/scroll.h"
 #include "map/orientation.h"
 #include "scenario/property.h"
@@ -46,55 +47,55 @@ static void buttonMissionBriefing(int param1, int param2);
 static void buttonRotateNorth(int param1, int param2);
 static void buttonRotate(int clockWise, int param2);
 
-static ImageButton buttonOverlaysCollapseSidebar[] = {
-	{127, 5, 31, 20, ImageButton_Normal, 90, 0, buttonCollapseExpand, Widget_Button_doNothing, 0, 0, 1},
-	{4, 3, 117, 31, ImageButton_Normal, 93, 0, buttonOverlay, buttonHelp, 0, 0, 1}
+static image_button buttonOverlaysCollapseSidebar[] = {
+	{127, 5, 31, 20, IB_NORMAL, 90, 0, buttonCollapseExpand, Widget_Button_doNothing, 0, 0, 1},
+	{4, 3, 117, 31, IB_NORMAL, 93, 0, buttonOverlay, buttonHelp, 0, 0, 1}
 };
 
-static ImageButton buttonExpandSidebar[] = {
-	{6, 4, 31, 20, ImageButton_Normal, 90, 4, buttonCollapseExpand, Widget_Button_doNothing, 0, 0, 1}
+static image_button buttonExpandSidebar[] = {
+	{6, 4, 31, 20, IB_NORMAL, 90, 4, buttonCollapseExpand, Widget_Button_doNothing, 0, 0, 1}
 };
 
-static ImageButton buttonBuildCollapsed[] = {
-	{2, 32, 39, 26, ImageButton_Normal, 92, 0, buttonBuild, Widget_Button_doNothing, 0, 0, 1},
-	{2, 67, 39, 26, ImageButton_Normal, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 1},
-	{2, 102, 39, 26, ImageButton_Normal, 92, 12, buttonBuild, Widget_Button_doNothing, 2, 0, 1},
-	{2, 137, 39, 26, ImageButton_Build, 92, 4, buttonBuild, Widget_Button_doNothing, 3, 0, 1},
-	{2, 172, 39, 26, ImageButton_Build, 92, 40, buttonBuild, Widget_Button_doNothing, 4, 0, 1},
-	{2, 207, 39, 26, ImageButton_Build, 92, 28, buttonBuild, Widget_Button_doNothing, 5, 0, 1},
-	{2, 242, 39, 26, ImageButton_Build, 92, 24, buttonBuild, Widget_Button_doNothing, 6, 0, 1},
-	{2, 277, 39, 26, ImageButton_Build, 92, 20, buttonBuild, Widget_Button_doNothing, 7, 0, 1},
-	{2, 312, 39, 26, ImageButton_Build, 92, 16, buttonBuild, Widget_Button_doNothing, 8, 0, 1},
-	{2, 347, 39, 26, ImageButton_Build, 92, 44, buttonBuild, Widget_Button_doNothing, 9, 0, 1},
-	{2, 382, 39, 26, ImageButton_Build, 92, 36, buttonBuild, Widget_Button_doNothing, 10, 0, 1},
-	{2, 417, 39, 26, ImageButton_Build, 92, 32, buttonBuild, Widget_Button_doNothing, 11, 0, 1},
+static image_button buttonBuildCollapsed[] = {
+	{2, 32, 39, 26, IB_NORMAL, 92, 0, buttonBuild, Widget_Button_doNothing, 0, 0, 1},
+	{2, 67, 39, 26, IB_NORMAL, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 1},
+	{2, 102, 39, 26, IB_NORMAL, 92, 12, buttonBuild, Widget_Button_doNothing, 2, 0, 1},
+	{2, 137, 39, 26, IB_BUILD, 92, 4, buttonBuild, Widget_Button_doNothing, 3, 0, 1},
+	{2, 172, 39, 26, IB_BUILD, 92, 40, buttonBuild, Widget_Button_doNothing, 4, 0, 1},
+	{2, 207, 39, 26, IB_BUILD, 92, 28, buttonBuild, Widget_Button_doNothing, 5, 0, 1},
+	{2, 242, 39, 26, IB_BUILD, 92, 24, buttonBuild, Widget_Button_doNothing, 6, 0, 1},
+	{2, 277, 39, 26, IB_BUILD, 92, 20, buttonBuild, Widget_Button_doNothing, 7, 0, 1},
+	{2, 312, 39, 26, IB_BUILD, 92, 16, buttonBuild, Widget_Button_doNothing, 8, 0, 1},
+	{2, 347, 39, 26, IB_BUILD, 92, 44, buttonBuild, Widget_Button_doNothing, 9, 0, 1},
+	{2, 382, 39, 26, IB_BUILD, 92, 36, buttonBuild, Widget_Button_doNothing, 10, 0, 1},
+	{2, 417, 39, 26, IB_BUILD, 92, 32, buttonBuild, Widget_Button_doNothing, 11, 0, 1},
 };
 
-static ImageButton buttonBuildExpanded[] = {
-	{13, 277, 39, 26, ImageButton_Normal, 92, 0, buttonBuild, Widget_Button_doNothing, 0, 0, 1},
-	{63, 277, 39, 26, ImageButton_Normal, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 1},
-	{113, 277, 39, 26, ImageButton_Normal, 92, 12, buttonBuild, Widget_Button_doNothing, 2, 0, 1},
-	{13, 313, 39, 26, ImageButton_Build, 92, 4, buttonBuild, Widget_Button_doNothing, 3, 0, 1},
-	{63, 313, 39, 26, ImageButton_Build, 92, 40, buttonBuild, Widget_Button_doNothing, 4, 0, 1},
-	{113, 313, 39, 26, ImageButton_Build, 92, 28, buttonBuild, Widget_Button_doNothing, 5, 0, 1},
-	{13, 349, 39, 26, ImageButton_Build, 92, 24, buttonBuild, Widget_Button_doNothing, 6, 0, 1},
-	{63, 349, 39, 26, ImageButton_Build, 92, 20, buttonBuild, Widget_Button_doNothing, 7, 0, 1},
-	{113, 349, 39, 26, ImageButton_Build, 92, 16, buttonBuild, Widget_Button_doNothing, 8, 0, 1},
-	{13, 385, 39, 26, ImageButton_Build, 92, 44, buttonBuild, Widget_Button_doNothing, 9, 0, 1},
-	{63, 385, 39, 26, ImageButton_Build, 92, 36, buttonBuild, Widget_Button_doNothing, 10, 0, 1},
-	{113, 385, 39, 26, ImageButton_Build, 92, 32, buttonBuild, Widget_Button_doNothing, 11, 0, 1},
-	{13, 421, 39, 26, ImageButton_Normal, 92, 48, buttonUndo, Widget_Button_doNothing, 0, 0, 1},
-	{63, 421, 39, 26, ImageButton_Normal, 90, 18, buttonMessages, buttonHelp, 0, 0, 1},
-	{113, 421, 39, 26, ImageButton_Build, 90, 22, buttonGoToProblem, Widget_Button_doNothing, 0, 0, 1},
+static image_button buttonBuildExpanded[] = {
+	{13, 277, 39, 26, IB_NORMAL, 92, 0, buttonBuild, Widget_Button_doNothing, 0, 0, 1},
+	{63, 277, 39, 26, IB_NORMAL, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 1},
+	{113, 277, 39, 26, IB_NORMAL, 92, 12, buttonBuild, Widget_Button_doNothing, 2, 0, 1},
+	{13, 313, 39, 26, IB_BUILD, 92, 4, buttonBuild, Widget_Button_doNothing, 3, 0, 1},
+	{63, 313, 39, 26, IB_BUILD, 92, 40, buttonBuild, Widget_Button_doNothing, 4, 0, 1},
+	{113, 313, 39, 26, IB_BUILD, 92, 28, buttonBuild, Widget_Button_doNothing, 5, 0, 1},
+	{13, 349, 39, 26, IB_BUILD, 92, 24, buttonBuild, Widget_Button_doNothing, 6, 0, 1},
+	{63, 349, 39, 26, IB_BUILD, 92, 20, buttonBuild, Widget_Button_doNothing, 7, 0, 1},
+	{113, 349, 39, 26, IB_BUILD, 92, 16, buttonBuild, Widget_Button_doNothing, 8, 0, 1},
+	{13, 385, 39, 26, IB_BUILD, 92, 44, buttonBuild, Widget_Button_doNothing, 9, 0, 1},
+	{63, 385, 39, 26, IB_BUILD, 92, 36, buttonBuild, Widget_Button_doNothing, 10, 0, 1},
+	{113, 385, 39, 26, IB_BUILD, 92, 32, buttonBuild, Widget_Button_doNothing, 11, 0, 1},
+	{13, 421, 39, 26, IB_NORMAL, 92, 48, buttonUndo, Widget_Button_doNothing, 0, 0, 1},
+	{63, 421, 39, 26, IB_NORMAL, 90, 18, buttonMessages, buttonHelp, 0, 0, 1},
+	{113, 421, 39, 26, IB_BUILD, 90, 22, buttonGoToProblem, Widget_Button_doNothing, 0, 0, 1},
 };
 
-static ImageButton buttonTopExpanded[] = {
-	{7, 155, 71, 23, ImageButton_Normal, 13, 0, buttonAdvisors, Widget_Button_doNothing, 0, 0, 1},
-	{84, 155, 71, 23, ImageButton_Normal, 13, 3, buttonEmpire, buttonHelp, 0, 0, 1},
-	{7, 184, 33, 22, ImageButton_Normal, 89, 0, buttonMissionBriefing, Widget_Button_doNothing, 0, 0, 1},
-	{46, 184, 33, 22, ImageButton_Normal, 89, 3, buttonRotateNorth, Widget_Button_doNothing, 0, 0, 1},
-	{84, 184, 33, 22, ImageButton_Normal, 89, 6, buttonRotate, Widget_Button_doNothing, 0, 0, 1},
-	{123, 184, 33, 22, ImageButton_Normal, 89, 9, buttonRotate, Widget_Button_doNothing, 1, 0, 1},
+static image_button buttonTopExpanded[] = {
+	{7, 155, 71, 23, IB_NORMAL, 13, 0, buttonAdvisors, Widget_Button_doNothing, 0, 0, 1},
+	{84, 155, 71, 23, IB_NORMAL, 13, 3, buttonEmpire, buttonHelp, 0, 0, 1},
+	{7, 184, 33, 22, IB_NORMAL, 89, 0, buttonMissionBriefing, Widget_Button_doNothing, 0, 0, 1},
+	{46, 184, 33, 22, IB_NORMAL, 89, 3, buttonRotateNorth, Widget_Button_doNothing, 0, 0, 1},
+	{84, 184, 33, 22, IB_NORMAL, 89, 6, buttonRotate, Widget_Button_doNothing, 0, 0, 1},
+	{123, 184, 33, 22, IB_NORMAL, 89, 9, buttonRotate, Widget_Button_doNothing, 1, 0, 1},
 };
 
 static int minimapRedrawRequested = 0;
@@ -225,13 +226,13 @@ static void drawButtons()
 	buttonBuildExpanded[12].enabled = game_can_undo();
 	if (city_view_is_sidebar_collapsed()) {
 		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
-		Widget_Button_drawImageButtons(xOffset, 24, buttonExpandSidebar, 1);
-		Widget_Button_drawImageButtons(xOffset, 24, buttonBuildCollapsed, 12);
+		image_buttons_draw(xOffset, 24, buttonExpandSidebar, 1);
+		image_buttons_draw(xOffset, 24, buttonBuildCollapsed, 12);
 	} else {
 		int xOffset = XOFFSET_EXPANDED;
-		Widget_Button_drawImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2);
-		Widget_Button_drawImageButtons(xOffset, 24, buttonBuildExpanded, 15);
-		Widget_Button_drawImageButtons(xOffset, 24, buttonTopExpanded, 6);
+		image_buttons_draw(xOffset, 24, buttonOverlaysCollapseSidebar, 2);
+		image_buttons_draw(xOffset, 24, buttonBuildExpanded, 15);
+		image_buttons_draw(xOffset, 24, buttonTopExpanded, 6);
 	}
 }
 
@@ -264,12 +265,12 @@ int UI_Sidebar_handleMouse(const mouse *m)
 	int buttonId;
 	data.focusButtonForTooltip = 0;
 	if (city_view_is_sidebar_collapsed()) {
-        const mouse *m_translated = mouse_translate(m, Data_Screen.width - SIDEBAR_BORDER - 42, 24);
-		Widget_Button_handleImageButtons(m_translated, buttonExpandSidebar, 1, &buttonId);
+        int x_offset = Data_Screen.width - SIDEBAR_BORDER - 42;
+		image_buttons_handle_mouse(m, x_offset, 24, buttonExpandSidebar, 1, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = 12;
 		}
-		Widget_Button_handleImageButtons(m_translated, buttonBuildCollapsed, 12, &buttonId);
+		image_buttons_handle_mouse(m, x_offset, 24, buttonBuildCollapsed, 12, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 19;
 		}
@@ -277,16 +278,16 @@ int UI_Sidebar_handleMouse(const mouse *m)
 		if (UI_Minimap_handleClick(m)) {
 			return 1;
 		}
-        const mouse *m_translated = mouse_translate(m, XOFFSET_EXPANDED, 24);
-		Widget_Button_handleImageButtons(m_translated, buttonOverlaysCollapseSidebar, 2, &buttonId);
+        int x_offset = XOFFSET_EXPANDED;
+		image_buttons_handle_mouse(m, x_offset, 24, buttonOverlaysCollapseSidebar, 2, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 9;
 		}
-		Widget_Button_handleImageButtons(m_translated, buttonBuildExpanded, 15, &buttonId);
+		image_buttons_handle_mouse(m, x_offset, 24, buttonBuildExpanded, 15, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 19;
 		}
-		Widget_Button_handleImageButtons(m_translated, buttonTopExpanded, 6, &buttonId);
+		image_buttons_handle_mouse(m, x_offset, 24, buttonTopExpanded, 6, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 39;
 		}
@@ -297,11 +298,9 @@ int UI_Sidebar_handleMouse(const mouse *m)
 void UI_Sidebar_handleMouseBuildButtons(const mouse *m)
 {
 	if (city_view_is_sidebar_collapsed()) {
-        const mouse *m_translated = mouse_translate(m, Data_Screen.width - SIDEBAR_BORDER - 42, 24);
-		Widget_Button_handleImageButtons(m_translated, buttonBuildCollapsed, 12, 0);
+		image_buttons_handle_mouse(m, Data_Screen.width - SIDEBAR_BORDER - 42, 24, buttonBuildCollapsed, 12, 0);
 	} else {
-        const mouse *m_translated = mouse_translate(m, XOFFSET_EXPANDED, 24);
-		Widget_Button_handleImageButtons(m_translated, buttonBuildExpanded, 15, 0);
+		image_buttons_handle_mouse(m, XOFFSET_EXPANDED, 24, buttonBuildExpanded, 15, 0);
 	}
 }
 
@@ -452,8 +451,8 @@ void UI_SlidingSidebar_drawForeground()
 	// draw collapsed sidebar
 	int xOffsetCollapsed = Data_Screen.width - SIDEBAR_BORDER - 42;
 	Graphics_drawImage(graphicBase, xOffsetCollapsed, 24);
-	Widget_Button_drawImageButtons(xOffsetCollapsed, 24, buttonExpandSidebar, 1);
-	Widget_Button_drawImageButtons(xOffsetCollapsed, 24, buttonBuildCollapsed, 12);
+	image_buttons_draw(xOffsetCollapsed, 24, buttonExpandSidebar, 1);
+	image_buttons_draw(xOffsetCollapsed, 24, buttonBuildCollapsed, 12);
 
 	// draw expanded sidebar on top of it
 	int xOffsetExpanded = XOFFSET_EXPANDED;
@@ -463,9 +462,9 @@ void UI_SlidingSidebar_drawForeground()
 		xOffsetExpanded += progressToOffset[data.progress];
 	}
 	Graphics_drawImage(graphicBase + 1, xOffsetExpanded, 24);
-	Widget_Button_drawImageButtons(xOffsetExpanded, 24, buttonOverlaysCollapseSidebar, 2);
-	Widget_Button_drawImageButtons(xOffsetExpanded, 24, buttonBuildExpanded, 15);
-	Widget_Button_drawImageButtons(xOffsetExpanded, 24, buttonTopExpanded, 6);
+	image_buttons_draw(xOffsetExpanded, 24, buttonOverlaysCollapseSidebar, 2);
+	image_buttons_draw(xOffsetExpanded, 24, buttonBuildExpanded, 15);
+	image_buttons_draw(xOffsetExpanded, 24, buttonTopExpanded, 6);
 
 	// black out minimap
 	Graphics_fillRect(xOffsetExpanded + 8, 59, 145, 111, COLOR_BLACK);

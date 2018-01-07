@@ -14,12 +14,13 @@
 #include "game/settings.h"
 #include "game/tutorial.h"
 #include "graphics/generic_button.h"
+#include "graphics/image_button.h"
 
 static void buttonChangeAdvisor(int param1, int param2);
 static void buttonHelp(int param1, int param2);
 
-static ImageButton helpButton = {
-	11, -7, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
+static image_button helpButton = {
+	11, -7, 27, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
 };
 
 static generic_button advisorButtons[] = {
@@ -133,7 +134,7 @@ void UI_Advisors_drawBackground()
 
 void UI_Advisors_drawForeground()
 {
-	Widget_Button_drawImageButtons(Data_Screen.offset640x480.x,
+	image_buttons_draw(Data_Screen.offset640x480.x,
 		Data_Screen.offset640x480.y + 16 * (advisorHeight - 2),
 		&helpButton, 1);
 
@@ -169,7 +170,7 @@ void UI_Advisors_handleMouse(const mouse *m)
 		return;
 	}
 	int buttonId;
-	Widget_Button_handleImageButtons(mouse_translate(m_dialog, 0, 16 * (advisorHeight - 2)), &helpButton, 1, &buttonId);
+	image_buttons_handle_mouse(m_dialog, 0, 16 * (advisorHeight - 2), &helpButton, 1, &buttonId);
 	if (buttonId) {
 		focusButtonId = -1;
 		return;

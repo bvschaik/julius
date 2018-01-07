@@ -9,6 +9,7 @@
 #include "city/finance.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
+#include "graphics/image_button.h"
 
 static void drawButtons();
 static void buttonGod(int god, int param2);
@@ -17,11 +18,11 @@ static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
 static void buttonHoldFestival(int param1, int param2);
 
-static ImageButton imageButtonsBottom[] = {
-	{58, 316, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1},
-	{558, 319, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
-	{358, 317, 34, 34, ImageButton_Normal, 96, 0, buttonHoldFestival, Widget_Button_doNothing, 1, 0, 1},
-	{400, 317, 34, 34, ImageButton_Normal, 96, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
+static image_button imageButtonsBottom[] = {
+	{58, 316, 27, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1},
+	{558, 319, 24, 24, IB_NORMAL, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
+	{358, 317, 34, 34, IB_NORMAL, 96, 0, buttonHoldFestival, Widget_Button_doNothing, 1, 0, 1},
+	{400, 317, 34, 34, IB_NORMAL, 96, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
 };
 
 static generic_button buttonsGodsSize[] = {
@@ -68,7 +69,7 @@ void UI_HoldFestivalDialog_drawBackground()
 void UI_HoldFestivalDialog_drawForeground()
 {
 	drawButtons();
-	Widget_Button_drawImageButtons(
+	image_buttons_draw(
 		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
 		imageButtonsBottom, 4);
 }
@@ -128,7 +129,7 @@ void UI_HoldFestivalDialog_handleMouse(const mouse *m)
 	}
 
 	const mouse *m_dialog = mouse_in_dialog(m);
-	Widget_Button_handleImageButtons(m_dialog, imageButtonsBottom, 4, &focusImageButtonId);
+	image_buttons_handle_mouse(m_dialog, 0, 0, imageButtonsBottom, 4, &focusImageButtonId);
 	generic_buttons_handle_mouse(m_dialog, 0, 0, buttonsGodsSize, 8, &focusButtonId);
 	if (focusImageButtonId) {
 		focusButtonId = 0;

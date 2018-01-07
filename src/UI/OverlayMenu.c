@@ -5,6 +5,7 @@
 
 #include "../Data/CityView.h"
 
+#include "core/time.h"
 #include "game/state.h"
 #include "graphics/generic_button.h"
 

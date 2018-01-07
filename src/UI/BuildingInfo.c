@@ -21,6 +21,7 @@
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "figure/phrase.h"
+#include "graphics/image_button.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -34,13 +35,13 @@ static void buttonHelp(int param1, int param2);
 static void buttonExit(int param1, int param2);
 static void buttonAdvisor(int param1, int param2);
 
-static ImageButton imageButtonsHelpExit[] = {
-	{14, 0, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1},
-	{424, 3, 24, 24, ImageButton_Normal, 134, 4, buttonExit, Widget_Button_doNothing, 0, 0, 1}
+static image_button imageButtonsHelpExit[] = {
+	{14, 0, 27, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1},
+	{424, 3, 24, 24, IB_NORMAL, 134, 4, buttonExit, Widget_Button_doNothing, 0, 0, 1}
 };
 
-static ImageButton imageButtonsAdvisor[] = {
-	{350, -38, 28, 28, ImageButton_Normal, 199, 9, buttonAdvisor, Widget_Button_doNothing, ADVISOR_RATINGS, 0, 1}
+static image_button imageButtonsAdvisor[] = {
+	{350, -38, 28, 28, IB_NORMAL, 199, 9, buttonAdvisor, Widget_Button_doNothing, ADVISOR_RATINGS, 0, 1}
 };
 
 static BuildingInfoContext context;
@@ -500,15 +501,15 @@ void UI_BuildingInfo_drawForeground()
 	}
 	// general buttons
 	if (context.storageShowSpecialOrders) {
-		Widget_Button_drawImageButtons(context.xOffset, 432,
+		image_buttons_draw(context.xOffset, 432,
 			imageButtonsHelpExit, 2);
 	} else {
-		Widget_Button_drawImageButtons(
+		image_buttons_draw(
 			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
 			imageButtonsHelpExit, 2);
 	}
 	if (context.advisor) {
-		Widget_Button_drawImageButtons(
+		image_buttons_draw(
 			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
 			imageButtonsAdvisor, 1);
 	}
@@ -522,16 +523,16 @@ void UI_BuildingInfo_handleMouse(const mouse *m)
 	}
 	// general buttons
 	if (context.storageShowSpecialOrders) {
-		Widget_Button_handleImageButtons(mouse_translate(m, context.xOffset, 432),
+		image_buttons_handle_mouse(m, context.xOffset, 432,
 			imageButtonsHelpExit, 2, &focusImageButtonId);
 	} else {
-		Widget_Button_handleImageButtons(
-			mouse_translate(m, context.xOffset, context.yOffset + 16 * context.heightBlocks - 40),
+		image_buttons_handle_mouse(
+			m, context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
 			imageButtonsHelpExit, 2, &focusImageButtonId);
 	}
 	if (context.advisor) {
-		Widget_Button_handleImageButtons(
-			mouse_translate(m, context.xOffset, context.yOffset + 16 * context.heightBlocks - 40),
+		image_buttons_handle_mouse(
+			m, context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
 			imageButtonsAdvisor, 1, 0);
 	}
 	// building-specific buttons

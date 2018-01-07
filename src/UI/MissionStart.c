@@ -13,6 +13,7 @@
 #include "game/file.h"
 #include "game/mission.h"
 #include "game/tutorial.h"
+#include "graphics/image_button.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "sound/music.h"
@@ -51,11 +52,11 @@ static const struct CampaignSelection campaignSelection[12] = {
 static const int goalOffsetsX[] = {32, 288, 32, 288, 288, 288};
 static const int goalOffsetsY[] = {95, 95, 117, 117, 73, 135};
 
-static ImageButton imageButtonStartMission = {
-	0, 0, 27, 27, ImageButton_Normal, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 1
+static image_button imageButtonStartMission = {
+	0, 0, 27, 27, IB_NORMAL, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 1
 };
-static ImageButton imageButtonBackToSelection = {
-	0, 0, 31, 20, ImageButton_Normal, 90, 8, briefingBack, Widget_Button_doNothing, 0, 0, 1
+static image_button imageButtonBackToSelection = {
+	0, 0, 31, 20, IB_NORMAL, 90, 8, briefingBack, Widget_Button_doNothing, 0, 0, 1
 };
 
 static int focusButton = 0;
@@ -115,7 +116,7 @@ void UI_MissionStart_Selection_drawForeground()
 	int yOffset = Data_Screen.offset640x480.y;
 
 	if (data.choice > 0) {
-		Widget_Button_drawImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1);
+		image_buttons_draw(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1);
 	}
 
 	int rank = scenario_campaign_rank();
@@ -158,7 +159,7 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
 		UI_MissionStart_show();
 	}
 	if (data.choice > 0) {
-		if (Widget_Button_handleImageButtons(mouse_translate(mouse_in_dialog(m), 580, 410), &imageButtonStartMission, 1, 0)) {
+		if (image_buttons_handle_mouse(mouse_in_dialog(m), 580, 410, &imageButtonStartMission, 1, 0)) {
 			return;
 		}
 	}
@@ -281,9 +282,9 @@ void UI_MissionStart_BriefingInitial_drawForeground()
 	int yOffset = Data_Screen.offset640x480.y + 32;
 
 	Widget_RichText_drawScrollbar();
-	Widget_Button_drawImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
+	image_buttons_draw(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
 	if (campaignHasChoice[scenario_campaign_rank()]) {
-		Widget_Button_drawImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1);
+		image_buttons_draw(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1);
 	}
 }
 
@@ -293,18 +294,18 @@ void UI_MissionStart_BriefingReview_drawForeground()
 	int yOffset = Data_Screen.offset640x480.y + 32;
 
 	Widget_RichText_drawScrollbar();
-	Widget_Button_drawImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
+	image_buttons_draw(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
 }
 
 void UI_MissionStart_BriefingInitial_handleMouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 
-	if (Widget_Button_handleImageButtons(mouse_translate(m_dialog, 516, 426), &imageButtonStartMission, 1, 0)) {
+	if (image_buttons_handle_mouse(m_dialog, 516, 426, &imageButtonStartMission, 1, 0)) {
 		return;
 	}
 	if (campaignHasChoice[scenario_campaign_rank()]) {
-		if (Widget_Button_handleImageButtons(mouse_translate(m_dialog, 26, 428), &imageButtonBackToSelection, 1, 0)) {
+		if (image_buttons_handle_mouse(m_dialog, 26, 428, &imageButtonBackToSelection, 1, 0)) {
 			return;
 		}
 	}
@@ -315,7 +316,7 @@ void UI_MissionStart_BriefingReview_handleMouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 
-	if (Widget_Button_handleImageButtons(mouse_translate(m_dialog, 516, 426), &imageButtonStartMission, 1, 0)) {
+	if (image_buttons_handle_mouse(m_dialog, 516, 426, &imageButtonStartMission, 1, 0)) {
 		return;
 	}
 	Widget_RichText_handleScrollbar(m);

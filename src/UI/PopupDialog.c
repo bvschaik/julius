@@ -3,14 +3,16 @@
 #include "../Widget.h"
 #include "../Data/Screen.h"
 
+#include "graphics/image_button.h"
+
 #define GROUP 5
 
 static void buttonOk(int param1, int param2);
 static void buttonCancel(int param1, int param2);
 
-static ImageButton buttons[] = {
-	{192, 100, 34, 34, ImageButton_Normal, 96, 0, buttonOk, Widget_Button_doNothing, 1, 0, 1},
-	{256, 100, 34, 34, ImageButton_Normal, 96, 4, buttonCancel, Widget_Button_doNothing, 0, 0, 1},
+static image_button buttons[] = {
+	{192, 100, 34, 34, IB_NORMAL, 96, 0, buttonOk, Widget_Button_doNothing, 1, 0, 1},
+	{256, 100, 34, 34, IB_NORMAL, 96, 4, buttonCancel, Widget_Button_doNothing, 0, 0, 1},
 };
 
 static struct {
@@ -51,7 +53,7 @@ void UI_PopupDialog_drawForeground()
 	int xOffset = Data_Screen.offset640x480.x + 80;
 	int yOffset = Data_Screen.offset640x480.y + 80;
 	if (data.hasButtons) {
-		Widget_Button_drawImageButtons(xOffset, yOffset, buttons, 2);
+		image_buttons_draw(xOffset, yOffset, buttons, 2);
 	} else {
 		Widget_GameText_drawCentered(13, 1, xOffset, yOffset + 128, 480, FONT_NORMAL_BLACK);
 	}
@@ -60,7 +62,7 @@ void UI_PopupDialog_drawForeground()
 void UI_PopupDialog_handleMouse(const mouse *m)
 {
 	if (data.hasButtons) {
-		Widget_Button_handleImageButtons(mouse_translate(mouse_in_dialog(m), 80, 80), buttons, 2, 0);
+		image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 2, 0);
 	} else if (m->right.went_up) {
 		data.closeFunc(0);
 		UI_Window_goBack();

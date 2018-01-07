@@ -76,10 +76,6 @@ void Widget_Panel_drawSmallLabelButton(int xOffset, int yOffset, int widthInBloc
 void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type);
 
 
-void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons);
-
-int Widget_Button_handleImageButtons(const mouse *m, ImageButton *buttons, int numButtons, int *focusButtonId);
-
 
 void Widget_Button_doNothing(int param1, int param2);
 

@@ -6,6 +6,7 @@
 #include "core/string.h"
 #include "game/file.h"
 #include "graphics/generic_button.h"
+#include "graphics/image_button.h"
 #include "scenario/criteria.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
@@ -27,10 +28,10 @@ static void buttonSelectItem(int index, int param2);
 static void buttonScroll(int isDown, int numLines);
 static void buttonStartScenario(int param1, int param2);
 
-static ImageButton imageButtons[] = {
-	{276, 210, 34, 34, ImageButton_Normal, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
-	{276, 440, 34, 34, ImageButton_Normal, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
-	{600, 440, 27, 27, ImageButton_Normal, 92, 56, buttonStartScenario, Widget_Button_doNothing, 1, 0, 1},
+static image_button imageButtons[] = {
+	{276, 210, 34, 34, IB_NORMAL, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
+	{276, 440, 34, 34, IB_NORMAL, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
+	{600, 440, 27, 27, IB_NORMAL, 92, 56, buttonStartScenario, Widget_Button_doNothing, 1, 0, 1},
 };
 
 static generic_button customButtons[] = {
@@ -218,7 +219,7 @@ static void drawScenarioInfo()
 
 void UI_CCKSelection_drawForeground()
 {
-	Widget_Button_drawImageButtons(Data_Screen.offset640x480.x, Data_Screen.offset640x480.y, imageButtons, 3);
+	image_buttons_draw(Data_Screen.offset640x480.x, Data_Screen.offset640x480.y, imageButtons, 3);
 	drawScenarioList();
 }
 
@@ -233,7 +234,7 @@ void UI_CCKSelection_handleMouse(const mouse *m)
 		return;
 	}
 	const mouse *m_dialog = mouse_in_dialog(m);
-	if (Widget_Button_handleImageButtons(m_dialog, imageButtons, 3, 0)) {
+	if (image_buttons_handle_mouse(m_dialog, 0, 0, imageButtons, 3, 0)) {
 		return;
 	}
 	generic_buttons_handle_mouse(m_dialog, 0, 0, customButtons, 15, &focusButtonId);

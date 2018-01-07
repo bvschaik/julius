@@ -6,6 +6,7 @@
 
 #include "core/lang.h"
 #include "core/string.h"
+#include "graphics/image_button.h"
 
 static const int map_charToFontGraphic[] = {
 	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x01,
@@ -507,11 +508,11 @@ static void drawRichTextLine(const unsigned char *str, int x, int y, color_t col
 static int getRichTextWordWidth(const unsigned char *str, int *outNumChars);
 static int drawRichTextCharacter(font_t font, unsigned int c, int x, int y, color_t color, int measureOnly);
 
-static ImageButton imageButtonScrollUp = {
-	0, 0, 39, 26, ImageButton_Scroll, 96, 8, Widget_RichText_scroll, Widget_Button_doNothing, 0, 1, 1
+static image_button imageButtonScrollUp = {
+	0, 0, 39, 26, IB_SCROLL, 96, 8, Widget_RichText_scroll, Widget_Button_doNothing, 0, 1, 1
 };
-static ImageButton imageButtonScrollDown = {
-	0, 0, 39, 26, ImageButton_Scroll, 96, 12, Widget_RichText_scroll, Widget_Button_doNothing, 1, 1, 1
+static image_button imageButtonScrollDown = {
+	0, 0, 39, 26, IB_SCROLL, 96, 12, Widget_RichText_scroll, Widget_Button_doNothing, 1, 1, 1
 };
 
 static struct RichTextLink {
@@ -843,11 +844,11 @@ static int drawRichTextCharacter(font_t font, unsigned int c, int x, int y, colo
 void Widget_RichText_drawScrollbar()
 {
 	if (data.maxScrollPosition) {
-		Widget_Button_drawImageButtons(
+		image_buttons_draw(
 			data.xText + 16 * data.textWidthBlocks - 1,
 			data.yText,
 			&imageButtonScrollUp, 1);
-		Widget_Button_drawImageButtons(
+		image_buttons_draw(
 			data.xText + 16 * data.textWidthBlocks - 1,
 			data.yText + 16 * data.textHeightBlocks - 26,
 			&imageButtonScrollDown, 1);
@@ -930,14 +931,14 @@ int Widget_RichText_handleScrollbar(const mouse *m)
 		Widget_RichText_scroll(0, 3);
 	}
 
-	if (Widget_Button_handleImageButtons(
-		mouse_translate(m, data.xText + 16 * data.textWidthBlocks - 1, data.yText),
+	if (image_buttons_handle_mouse(
+		m, data.xText + 16 * data.textWidthBlocks - 1, data.yText,
 		&imageButtonScrollUp, 1, 0)) {
 			return 1;
 	}
-	if (Widget_Button_handleImageButtons(mouse_translate(m,
+	if (image_buttons_handle_mouse(m,
 		data.xText + 16 * data.textWidthBlocks - 1,
-		data.yText + 16 * data.textHeightBlocks - 26),
+		data.yText + 16 * data.textHeightBlocks - 26,
 		&imageButtonScrollDown, 1, 0)) {
 			return 1;
 	}

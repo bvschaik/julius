@@ -14,6 +14,7 @@
 #include "core/lang.h"
 #include "empire/city.h"
 #include "figure/formation.h"
+#include "graphics/image_button.h"
 #include "graphics/video.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
@@ -31,38 +32,38 @@ static void buttonHelp(int param1, int param2);
 static void buttonAdvisor(int advisor, int param2);
 static void buttonGoToProblem(int param1, int param2);
 
-static ImageButton imageButtonBack = {
-	0, 0, 31, 20, ImageButton_Normal, 90, 8, buttonBack, Widget_Button_doNothing, 0, 0, 1
+static image_button imageButtonBack = {
+	0, 0, 31, 20, IB_NORMAL, 90, 8, buttonBack, Widget_Button_doNothing, 0, 0, 1
 };
-static ImageButton imageButtonClose = {
-	0, 0, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1
+static image_button imageButtonClose = {
+	0, 0, 24, 24, IB_NORMAL, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1
 };
-static ImageButton imageButtonGoToProblem = {
-	0, 0, 27, 27, ImageButton_Normal, 92, 52, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 1
+static image_button imageButtonGoToProblem = {
+	0, 0, 27, 27, IB_NORMAL, 92, 52, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 1
 };
-static ImageButton imageButtonHelp = {
-	0, 0, 18, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 1
+static image_button imageButtonHelp = {
+	0, 0, 18, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 1
 };
-static ImageButton imageButtonLabor = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 0, buttonAdvisor, Widget_Button_doNothing, ADVISOR_LABOR, 0, 1
+static image_button imageButtonLabor = {
+	0, 0, 27, 27, IB_NORMAL, 199, 0, buttonAdvisor, Widget_Button_doNothing, ADVISOR_LABOR, 0, 1
 };
-static ImageButton imageButtonTrade = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, ADVISOR_TRADE, 0, 1
+static image_button imageButtonTrade = {
+	0, 0, 27, 27, IB_NORMAL, 199, 12, buttonAdvisor, Widget_Button_doNothing, ADVISOR_TRADE, 0, 1
 };
-static ImageButton imageButtonPopulation = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 15, buttonAdvisor, Widget_Button_doNothing, ADVISOR_POPULATION, 0, 1
+static image_button imageButtonPopulation = {
+	0, 0, 27, 27, IB_NORMAL, 199, 15, buttonAdvisor, Widget_Button_doNothing, ADVISOR_POPULATION, 0, 1
 };
-static ImageButton imageButtonImperial = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 6, buttonAdvisor, Widget_Button_doNothing, ADVISOR_IMPERIAL, 0, 1
+static image_button imageButtonImperial = {
+	0, 0, 27, 27, IB_NORMAL, 199, 6, buttonAdvisor, Widget_Button_doNothing, ADVISOR_IMPERIAL, 0, 1
 };
-static ImageButton imageButtonMilitary = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 3, buttonAdvisor, Widget_Button_doNothing, ADVISOR_MILITARY, 0, 1
+static image_button imageButtonMilitary = {
+	0, 0, 27, 27, IB_NORMAL, 199, 3, buttonAdvisor, Widget_Button_doNothing, ADVISOR_MILITARY, 0, 1
 };
-static ImageButton imageButtonHealth = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 18, buttonAdvisor, Widget_Button_doNothing, ADVISOR_HEALTH, 0, 1
+static image_button imageButtonHealth = {
+	0, 0, 27, 27, IB_NORMAL, 199, 18, buttonAdvisor, Widget_Button_doNothing, ADVISOR_HEALTH, 0, 1
 };
-static ImageButton imageButtonReligion = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 27, buttonAdvisor, Widget_Button_doNothing, ADVISOR_RELIGION, 0, 1
+static image_button imageButtonReligion = {
+	0, 0, 27, 27, IB_NORMAL, 199, 27, buttonAdvisor, Widget_Button_doNothing, ADVISOR_RELIGION, 0, 1
 };
 
 static struct {
@@ -376,7 +377,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 	}
 }
 
-static ImageButton *getAdvisorButton()
+static image_button *getAdvisorButton()
 {
 	switch (playerMessage.messageAdvisor) {
 		case MESSAGE_ADVISOR_LABOR:
@@ -401,8 +402,8 @@ static ImageButton *getAdvisorButton()
 static void drawForegroundVideo()
 {
 	video_draw(data.x + 8, data.y + 8);
-	Widget_Button_drawImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1);
-	Widget_Button_drawImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1);
+	image_buttons_draw(data.x + 16, data.y + 408, getAdvisorButton(), 1);
+	image_buttons_draw(data.x + 372, data.y + 410, &imageButtonClose, 1);
 }
 
 static void drawForegroundNoVideo()
@@ -410,7 +411,7 @@ static void drawForegroundNoVideo()
 	const lang_message *msg = lang_get_message(data.textId);
 	
 	if (msg->type == TYPE_MANUAL && data.numHistory > 0) {
-		Widget_Button_drawImageButtons(
+		image_buttons_draw(
 			data.x + 16, data.y + 16 * msg->height_blocks - 36,
 			&imageButtonBack, 1);
 		Widget_GameText_draw(12, 0,
@@ -418,14 +419,14 @@ static void drawForegroundNoVideo()
 	}
 
 	if (msg->type == TYPE_MESSAGE) {
-		Widget_Button_drawImageButtons(data.x + 16, data.y + 16 * msg->height_blocks - 40,
+		image_buttons_draw(data.x + 16, data.y + 16 * msg->height_blocks - 40,
 			getAdvisorButton(), 1);
 		if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
-			Widget_Button_drawImageButtons(
+			image_buttons_draw(
 				data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1);
 		}
 	}
-	Widget_Button_drawImageButtons(
+	image_buttons_draw(
 		data.x + 16 * msg->width_blocks - 38,
 		data.y + 16 * msg->height_blocks - 36,
 		&imageButtonClose, 1);
@@ -449,10 +450,10 @@ void UI_MessageDialog_handleMouse(const mouse *m)
 		Widget_RichText_scroll(0, 3);
 	}
 	if (data.showVideo) {
-		if (Widget_Button_handleImageButtons(mouse_translate(m, data.x + 16, data.y + 408), getAdvisorButton(), 1, 0)) {
+		if (image_buttons_handle_mouse(m, data.x + 16, data.y + 408, getAdvisorButton(), 1, 0)) {
 			return;
 		}
-		if (Widget_Button_handleImageButtons(mouse_translate(m, data.x + 372, data.y + 410), &imageButtonClose, 1, 0)) {
+		if (image_buttons_handle_mouse(m, data.x + 372, data.y + 410, &imageButtonClose, 1, 0)) {
 			return;
 		}
 		return;
@@ -460,25 +461,25 @@ void UI_MessageDialog_handleMouse(const mouse *m)
 	// no video
 	const lang_message *msg = lang_get_message(data.textId);
 
-	if (msg->type == TYPE_MANUAL && Widget_Button_handleImageButtons(
-		mouse_translate(m, data.x + 16, data.y + 16 * msg->height_blocks - 36), &imageButtonBack, 1, 0)) {
+	if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(
+		m, data.x + 16, data.y + 16 * msg->height_blocks - 36, &imageButtonBack, 1, 0)) {
 		return;
 	}
 	if (msg->type == TYPE_MESSAGE) {
-		if (Widget_Button_handleImageButtons(mouse_translate(m, data.x + 16, data.y + 16 * msg->height_blocks - 40),
+		if (image_buttons_handle_mouse(m, data.x + 16, data.y + 16 * msg->height_blocks - 40,
 			getAdvisorButton(), 1, 0)) {
 			return;
 		}
 		if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
-			if (Widget_Button_handleImageButtons(mouse_translate(m, data.x + 64, data.yText + 36), &imageButtonGoToProblem, 1, 0)) {
+			if (image_buttons_handle_mouse(m, data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1, 0)) {
 				return;
 			}
 		}
 	}
 
-	if (Widget_Button_handleImageButtons(mouse_translate(m,
+	if (image_buttons_handle_mouse(m,
 		data.x + 16 * msg->width_blocks - 38,
-		data.y + 16 * msg->height_blocks - 36),
+		data.y + 16 * msg->height_blocks - 36,
 		&imageButtonClose, 1, 0)) {
 		return;
 	}

@@ -9,6 +9,7 @@
 #include "city/message.h"
 #include "core/lang.h"
 #include "graphics/generic_button.h"
+#include "graphics/image_button.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
@@ -18,17 +19,17 @@ static void buttonDelete(int param1, int param2);
 
 static void handleMouseScrollbar(const mouse *m);
 
-static ImageButton imageButtonHelp = {
-	0, 0, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
+static image_button imageButtonHelp = {
+	0, 0, 27, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
 };
-static ImageButton imageButtonClose = {
-	0, 0, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1
+static image_button imageButtonClose = {
+	0, 0, 24, 24, IB_NORMAL, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1
 };
-static ImageButton imageButtonScrollUp = {
-	0, 0, 39, 26, ImageButton_Scroll, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1
+static image_button imageButtonScrollUp = {
+	0, 0, 39, 26, IB_SCROLL, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1
 };
-static ImageButton imageButtonScrollDown = {
-	0, 0, 39, 26, ImageButton_Scroll, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1
+static image_button imageButtonScrollDown = {
+	0, 0, 39, 26, IB_SCROLL, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1
 };
 static generic_button customButtonsMessages[] = {
 	{0, 0, 412, 18, GB_ON_MOUSE_UP, buttonMessage, buttonDelete, 0, 0},
@@ -120,10 +121,10 @@ void UI_PlayerMessageList_drawBackground()
 
 void UI_PlayerMessageList_drawForeground()
 {
-	Widget_Button_drawImageButtons(
+	image_buttons_draw(
 		data.x + 16, data.y + 16 * data.heightBlocks - 42,
 		&imageButtonHelp, 1);
-	Widget_Button_drawImageButtons(
+	image_buttons_draw(
 		data.x + 16 * data.widthBlocks - 38, data.y + 16 * data.heightBlocks - 36,
 		&imageButtonClose, 1);
 
@@ -161,10 +162,10 @@ void UI_PlayerMessageList_drawForeground()
 			data.xText + 180, data.yText + 8 + 20 * i, font, 0);
 	}
 	if (data.maxScrollPosition > 0) {
-		Widget_Button_drawImageButtons(
+		image_buttons_draw(
 			data.xText + 16 * data.textWidthBlocks, data.yText,
 			&imageButtonScrollUp, 1);
-		Widget_Button_drawImageButtons(
+		image_buttons_draw(
 			data.xText + 16 * data.textWidthBlocks, data.yText + 16 * data.textHeightBlocks - 26,
 			&imageButtonScrollDown, 1);
 		int pctScrolled;
@@ -192,24 +193,24 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
 		buttonScroll(0, 3);
 	}
 	int buttonId;
-	Widget_Button_handleImageButtons(mouse_translate(m, data.x + 16, data.y + 16 * data.heightBlocks - 42), &imageButtonHelp, 1, &buttonId);
+	image_buttons_handle_mouse(m, data.x + 16, data.y + 16 * data.heightBlocks - 42, &imageButtonHelp, 1, &buttonId);
 	if (buttonId) {
 		focusButtonId = 11;
 		return;
 	}
-	Widget_Button_handleImageButtons(mouse_translate(m, data.x + 16 * data.widthBlocks - 38,
-		data.y + 16 * data.heightBlocks - 36), &imageButtonClose, 1, &buttonId);
+	image_buttons_handle_mouse(m, data.x + 16 * data.widthBlocks - 38,
+		data.y + 16 * data.heightBlocks - 36, &imageButtonClose, 1, &buttonId);
 	if (buttonId) {
 		focusButtonId = 12;
 		return;
 	}
-	Widget_Button_handleImageButtons(mouse_translate(m, data.xText + 16 * data.textWidthBlocks, data.yText), &imageButtonScrollUp, 1, &buttonId);
+	image_buttons_handle_mouse(m, data.xText + 16 * data.textWidthBlocks, data.yText, &imageButtonScrollUp, 1, &buttonId);
 	if (buttonId) {
 		focusButtonId = 13;
 		return;
 	}
-	Widget_Button_handleImageButtons(mouse_translate(m, data.xText + 16 * data.textWidthBlocks,
-		data.yText + 16 * data.textHeightBlocks - 26), &imageButtonScrollDown, 1, &buttonId);
+	image_buttons_handle_mouse(m, data.xText + 16 * data.textWidthBlocks,
+		data.yText + 16 * data.textHeightBlocks - 26, &imageButtonScrollDown, 1, &buttonId);
 	if (buttonId) {
 		focusButtonId = 13;
 		return;

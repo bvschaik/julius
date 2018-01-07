@@ -18,6 +18,7 @@
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "graphics/generic_button.h"
+#include "graphics/image_button.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
@@ -42,22 +43,22 @@ static void buttonOpenTrade(int param1, int param2);
 static void buttonEmpireMap(int param1, int param2);
 static void confirmOpenTrade(int accepted);
 
-static ImageButton imageButtonHelp[] = {
-	{0, 0, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1}
+static image_button imageButtonHelp[] = {
+	{0, 0, 27, 27, IB_NORMAL, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1}
 };
-static ImageButton imageButtonReturnToCity[] = {
-	{0, 0, 24, 24, ImageButton_Normal, 134, 4, buttonReturnToCity, Widget_Button_doNothing, 0, 0, 1}
+static image_button imageButtonReturnToCity[] = {
+	{0, 0, 24, 24, IB_NORMAL, 134, 4, buttonReturnToCity, Widget_Button_doNothing, 0, 0, 1}
 };
-static ImageButton imageButtonAdvisor[] = {
-	{-4, 0, 24, 24, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, 5, 0, 1}
+static image_button imageButtonAdvisor[] = {
+	{-4, 0, 24, 24, IB_NORMAL, 199, 12, buttonAdvisor, Widget_Button_doNothing, 5, 0, 1}
 };
 static generic_button customButtonOpenTrade[] = {
 	{50, 68, 450, 91, GB_IMMEDIATE, buttonOpenTrade, Widget_Button_doNothing, 0, 0}
 };
 
-static ImageButton imageButtonsTradeOpened[] = {
-	{92, 248, 28, 28, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, 5, 0, 1},
-	{522, 252, 24, 24, ImageButton_Normal, 134, 4, buttonEmpireMap, Widget_Button_doNothing, 0, 0, 1},
+static image_button imageButtonsTradeOpened[] = {
+	{92, 248, 28, 28, IB_NORMAL, 199, 12, buttonAdvisor, Widget_Button_doNothing, 5, 0, 1},
+	{522, 252, 24, 24, IB_NORMAL, 134, 4, buttonEmpireMap, Widget_Button_doNothing, 0, 0, 1},
 };
 
 static struct {
@@ -380,9 +381,9 @@ static void drawPanelInfoCityName(const empire_city *city)
 
 static void drawPanelButtons(const empire_city *city)
 {
-	Widget_Button_drawImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1);
-	Widget_Button_drawImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1);
-	Widget_Button_drawImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1);
+	image_buttons_draw(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1);
+	image_buttons_draw(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1);
+	image_buttons_draw(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1);
 	if (city) {
 		if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
 			button_border_draw((data.xMin + data.xMax - 500) / 2 + 50, data.yMax - 40, 400, 20, data.selectedButton);
@@ -487,15 +488,15 @@ void UI_Empire_handleMouse(const mouse *m)
 	empire_scroll_map(scroll_get_direction(m));
 	data.focusButtonId = 0;
 	int buttonId;
-	Widget_Button_handleImageButtons(mouse_translate(m, data.xMin + 20, data.yMax - 44), imageButtonHelp, 1, &buttonId);
+	image_buttons_handle_mouse(m, data.xMin + 20, data.yMax - 44, imageButtonHelp, 1, &buttonId);
 	if (buttonId) {
 		data.focusButtonId = 1;
 	}
-	Widget_Button_handleImageButtons(mouse_translate(m, data.xMax - 44, data.yMax - 44), imageButtonReturnToCity, 1, &buttonId);
+	image_buttons_handle_mouse(m, data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1, &buttonId);
 	if (buttonId) {
 		data.focusButtonId = 2;
 	}
-	Widget_Button_handleImageButtons(mouse_translate(m, data.xMax - 44, data.yMax - 100), imageButtonAdvisor, 1, &buttonId);
+	image_buttons_handle_mouse(m, data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1, &buttonId);
 	if (buttonId) {
 		data.focusButtonId = 3;
 	}
@@ -647,12 +648,12 @@ void UI_TradeOpenedDialog_drawBackground()
 
 void UI_TradeOpenedDialog_drawForeground()
 {
-	Widget_Button_drawImageButtons(
+	image_buttons_draw(
 		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
 		imageButtonsTradeOpened, 2);
 }
 
 void UI_TradeOpenedDialog_handleMouse(const mouse *m)
 {
-	Widget_Button_handleImageButtons(mouse_in_dialog(m), imageButtonsTradeOpened, 2, 0);
+	image_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, imageButtonsTradeOpened, 2, 0);
 }

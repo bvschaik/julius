@@ -7,14 +7,15 @@
 
 #include "core/string.h"
 #include "game/settings.h"
+#include "graphics/image_button.h"
 #include "input/keyboard.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 
 static void startMission(int param1, int param2);
 
-static ImageButton imageButtonStartMission = {
-	0, 0, 27, 27, ImageButton_Normal, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 1
+static image_button imageButtonStartMission = {
+	0, 0, 27, 27, IB_NORMAL, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 1
 };
 
 static uint8_t player_name[32];
@@ -46,7 +47,7 @@ void UI_NewCareerDialog_drawForeground()
 	Widget_Text_draw(player_name, xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
 	Widget_Text_drawCursor(xOffset + 176, yOffset + 217, keyboard_is_insert());
 	
-	Widget_Button_drawImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
+	image_buttons_draw(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
 }
 
 void UI_NewCareerDialog_handleMouse(const mouse *m)
@@ -56,7 +57,7 @@ void UI_NewCareerDialog_handleMouse(const mouse *m)
 		UI_Window_goTo(Window_MainMenu);
 	}
 
-	if (Widget_Button_handleImageButtons(mouse_translate(mouse_in_dialog(m), 464, 249), &imageButtonStartMission, 1, 0)) {
+	if (image_buttons_handle_mouse(mouse_in_dialog(m), 464, 249, &imageButtonStartMission, 1, 0)) {
 		return;
 	}
 	if (keyboard_input_is_accepted()) {

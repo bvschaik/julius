@@ -9,6 +9,7 @@
 #include "core/time.h"
 #include "game/file.h"
 #include "graphics/generic_button.h"
+#include "graphics/image_button.h"
 #include "input/keyboard.h"
 
 #include "../Graphics.h"
@@ -24,11 +25,11 @@ static void buttonOkCancel(int isOk, int param2);
 static void buttonScroll(int isDown, int numLines);
 static void buttonSelectItem(int index, int numLines);
 
-static ImageButton imageButtons[] = {
-	{344, 335, 34, 34, ImageButton_Normal, 96, 0, buttonOkCancel, Widget_Button_doNothing, 1, 0, 1},
-	{392, 335, 34, 34, ImageButton_Normal, 96, 4, buttonOkCancel, Widget_Button_doNothing, 0, 0, 1},
-	{464, 120, 34, 34, ImageButton_Scroll, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
-	{464, 300, 34, 34, ImageButton_Scroll, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
+static image_button imageButtons[] = {
+	{344, 335, 34, 34, IB_NORMAL, 96, 0, buttonOkCancel, Widget_Button_doNothing, 1, 0, 1},
+	{392, 335, 34, 34, IB_NORMAL, 96, 4, buttonOkCancel, Widget_Button_doNothing, 0, 0, 1},
+	{464, 120, 34, 34, IB_SCROLL, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
+	{464, 300, 34, 34, IB_SCROLL, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
 };
 static generic_button customButtons[] = {
 	{160, 128, 448, 144, GB_IMMEDIATE, buttonSelectItem, Widget_Button_doNothing, 0, 0},
@@ -112,7 +113,7 @@ void UI_FileDialog_drawForeground()
 		Widget_Text_draw(string_from_ascii(file), baseOffsetX + 160, baseOffsetY + 130 + 16 * i, font, 0);
 	}
 
-	Widget_Button_drawImageButtons(baseOffsetX, baseOffsetY, imageButtons, 4);
+	image_buttons_draw(baseOffsetX, baseOffsetY, imageButtons, 4);
 	Widget_Text_captureCursor(keyboard_cursor_position());
 	Widget_Text_draw(string_from_ascii(saved_game), baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
 	Widget_Text_drawCursor(baseOffsetX + 160, baseOffsetY + 91, keyboard_is_insert());
@@ -156,7 +157,7 @@ void UI_FileDialog_handleMouse(const mouse *m)
 	}
 	const mouse *m_dialog = mouse_in_dialog(m);
 	if (!generic_buttons_handle_mouse(m_dialog, 0, 0, customButtons, 12, &focusButtonId)) {
-		if (!Widget_Button_handleImageButtons(m_dialog, imageButtons, 4, 0)) {
+		if (!image_buttons_handle_mouse(m_dialog, 0, 0, imageButtons, 4, 0)) {
 			handleScrollbarClick(m);
 		}
 	}
