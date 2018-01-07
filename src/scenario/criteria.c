@@ -51,7 +51,7 @@ int scenario_criteria_favor_enabled()
 
 int scenario_criteria_favor()
 {
-    return scenario.win_criteria.favor.enabled;
+    return scenario.win_criteria.favor.goal;
 }
 
 int scenario_criteria_time_limit_enabled()
