@@ -8,6 +8,7 @@
 #include "city/finance.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -44,81 +45,63 @@ void UI_HoldFestivalDialog_drawBackground()
 {
 	UI_Advisor_drawGeneralBackground();
 
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
-	outer_panel_draw(baseOffsetX + 48, baseOffsetY + 48, 34, 20);
-	lang_text_draw_centered(58, 25 + Data_CityInfo.festivalGod,
-		baseOffsetX + 48, baseOffsetY + 60, 544, FONT_LARGE_BLACK);
+	outer_panel_draw(48, 48, 34, 20);
+	lang_text_draw_centered(58, 25 + Data_CityInfo.festivalGod, 48, 60, 544, FONT_LARGE_BLACK);
 	for (int god = 0; god < 5; god++) {
 		if (god == Data_CityInfo.festivalGod) {
-			button_border_draw(
-				baseOffsetX + 100 * god + 66,
-				baseOffsetY + 92, 90, 100, 1);
-			Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + god + 21,
-				baseOffsetX + 100 * god + 70, baseOffsetY + 96);
+			button_border_draw(100 * god + 66, 92, 90, 100, 1);
+			Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + god + 21, 100 * god + 70, 96);
 		} else {
-			Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + god + 16,
-				baseOffsetX + 100 * god + 70, baseOffsetY + 96);
+			Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + god + 16, 100 * god + 70, 96);
 		}
 	}
 	drawButtons();
-	lang_text_draw(58, 30 + Data_CityInfo.festivalSize,
-		baseOffsetX + 180, baseOffsetY + 322, FONT_NORMAL_BLACK);
+	lang_text_draw(58, 30 + Data_CityInfo.festivalSize, 180, 322, FONT_NORMAL_BLACK);
+
+    graphics_reset_dialog();
 }
 
 void UI_HoldFestivalDialog_drawForeground()
 {
-	drawButtons();
-	image_buttons_draw(
-		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
-		imageButtonsBottom, 4);
+    graphics_in_dialog();
+    drawButtons();
+    image_buttons_draw(0, 0, imageButtonsBottom, 4);
+    graphics_reset_dialog();
 }
 
 static void drawButtons()
 {
 	int width;
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	// small festival
-	button_border_draw(
-		baseOffsetX + 102, baseOffsetY + 216,
-		430, 26, focusButtonId == 6);
-	width = lang_text_draw(58, 31,
-		baseOffsetX + 110, baseOffsetY + 224, FONT_NORMAL_BLACK);
-	lang_text_draw_amount(8, 0, Data_CityInfo.festivalCostSmall,
-		baseOffsetX + 110 + width, baseOffsetY + 224, FONT_NORMAL_BLACK);
+	button_border_draw(102, 216, 430, 26, focusButtonId == 6);
+	width = lang_text_draw(58, 31, 110, 224, FONT_NORMAL_BLACK);
+	lang_text_draw_amount(8, 0, Data_CityInfo.festivalCostSmall, 110 + width, 224, FONT_NORMAL_BLACK);
 
 	// large festival
-	button_border_draw(
-		baseOffsetX + 102, baseOffsetY + 246,
-		430, 26, focusButtonId == 7);
-	width = lang_text_draw(58, 32,
-		baseOffsetX + 110, baseOffsetY + 254, FONT_NORMAL_BLACK);
-	lang_text_draw_amount(8, 0, Data_CityInfo.festivalCostLarge,
-		baseOffsetX + 110 + width, baseOffsetY + 254, FONT_NORMAL_BLACK);
+	button_border_draw(102, 246, 430, 26, focusButtonId == 7);
+	width = lang_text_draw(58, 32, 110, 254, FONT_NORMAL_BLACK);
+	lang_text_draw_amount(8, 0, Data_CityInfo.festivalCostLarge, 110 + width, 254, FONT_NORMAL_BLACK);
 
 	// grand festival
-	button_border_draw(
-		baseOffsetX + 102, baseOffsetY + 276,
-		430, 26, focusButtonId == 8);
-	width = lang_text_draw(58, 33,
-		baseOffsetX + 110, baseOffsetY + 284, FONT_NORMAL_BLACK);
+	button_border_draw(102, 276, 430, 26, focusButtonId == 8);
+	width = lang_text_draw(58, 33, 110, 284, FONT_NORMAL_BLACK);
 	width += lang_text_draw_amount(8, 0, Data_CityInfo.festivalCostGrand,
-		baseOffsetX + 110 + width, baseOffsetY + 284, FONT_NORMAL_BLACK);
+		110 + width, 284, FONT_NORMAL_BLACK);
 	width += lang_text_draw_amount(8, 10, Data_CityInfo.festivalWineGrand,
-		baseOffsetX + 120 + width, baseOffsetY + 284, FONT_NORMAL_BLACK);
+		120 + width, 284, FONT_NORMAL_BLACK);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE,
-		baseOffsetX + 120 + width, baseOffsetY + 279);
+		120 + width, 279);
 	
 	// greying out of buttons
 	if (city_finance_out_of_money()) {
-		Graphics_shadeRect(baseOffsetX + 104, baseOffsetY + 218, 426, 22, 0);
-		Graphics_shadeRect(baseOffsetX + 104, baseOffsetY + 248, 426, 22, 0);
-		Graphics_shadeRect(baseOffsetX + 104, baseOffsetY + 278, 426, 22, 0);
+		Graphics_shadeRect(104, 218, 426, 22, 0);
+		Graphics_shadeRect(104, 248, 426, 22, 0);
+		Graphics_shadeRect(104, 278, 426, 22, 0);
 	} else if (Data_CityInfo.festivalNotEnoughWine) {
-		Graphics_shadeRect(baseOffsetX + 104, baseOffsetY + 278, 426, 22, 0);
+		Graphics_shadeRect(104, 278, 426, 22, 0);
 	}
 }
 

@@ -41,21 +41,20 @@ static int numLegions;
 
 void UI_Advisor_Military_drawBackground(int *advisorHeight)
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
 	*advisorHeight = 26;
-	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 1, baseOffsetX + 10, baseOffsetY + 10);
-	lang_text_draw(51, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+	outer_panel_draw(0, 0, 40, *advisorHeight);
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 1, 10, 10);
+	lang_text_draw(51, 0, 60, 12, FONT_LARGE_BLACK);
 
-	lang_text_draw(51, 1, baseOffsetX + 390, baseOffsetY + 43, FONT_SMALL_PLAIN);
-	lang_text_draw(51, 2, baseOffsetX + 390, baseOffsetY + 58, FONT_SMALL_PLAIN);
-	lang_text_draw(51, 3, baseOffsetX + 470, baseOffsetY + 43, FONT_SMALL_PLAIN);
-	lang_text_draw(51, 4, baseOffsetX + 470, baseOffsetY + 58, FONT_SMALL_PLAIN);
-	lang_text_draw(51, 5, baseOffsetX + 550, baseOffsetY + 43, FONT_SMALL_PLAIN);
-	lang_text_draw(51, 6, baseOffsetX + 550, baseOffsetY + 58, FONT_SMALL_PLAIN);
-	lang_text_draw(138, 36, baseOffsetX + 290, baseOffsetY + 58, FONT_SMALL_PLAIN);
+	lang_text_draw(51, 1, 390, 43, FONT_SMALL_PLAIN);
+	lang_text_draw(51, 2, 390, 58, FONT_SMALL_PLAIN);
+	lang_text_draw(51, 3, 470, 43, FONT_SMALL_PLAIN);
+	lang_text_draw(51, 4, 470, 58, FONT_SMALL_PLAIN);
+	lang_text_draw(51, 5, 550, 43, FONT_SMALL_PLAIN);
+	lang_text_draw(51, 6, 550, 58, FONT_SMALL_PLAIN);
+	lang_text_draw(138, 36, 290, 58, FONT_SMALL_PLAIN);
 
 	numLegions = formation_get_num_legions();
 
@@ -80,75 +79,70 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
         distant_battle_text_id = 12;
     }
 	if (numLegions <= 0) {
-		Graphics_drawImage(image_group(GROUP_BULLET), baseOffsetX + 100, baseOffsetY + 359);
-		lang_text_draw(51, enemy_text_id, baseOffsetX + 120, baseOffsetY + 358, FONT_NORMAL_BLACK);
+		Graphics_drawImage(image_group(GROUP_BULLET), 100, 359);
+		lang_text_draw(51, enemy_text_id, 120, 358, FONT_NORMAL_BLACK);
 
-		Graphics_drawImage(image_group(GROUP_BULLET), baseOffsetX + 100, baseOffsetY + 379);
-		lang_text_draw(51, distant_battle_text_id, baseOffsetX + 120, baseOffsetY + 378, FONT_NORMAL_BLACK);
+		Graphics_drawImage(image_group(GROUP_BULLET), 100, 379);
+		lang_text_draw(51, distant_battle_text_id, 120, 378, FONT_NORMAL_BLACK);
 	} else {
 		// has forts
-		Graphics_drawImage(image_group(GROUP_BULLET), baseOffsetX + 100, baseOffsetY + 349);
-		int width = lang_text_draw_amount(8, 46, Data_CityInfo.militaryTotalSoldiers,
-			baseOffsetX + 120, baseOffsetY + 348, FONT_NORMAL_BLACK);
-		width += lang_text_draw(51, 7, baseOffsetX + 120 + width, baseOffsetY + 348, FONT_NORMAL_BLACK);
-		lang_text_draw_amount(8, 48, Data_CityInfo.militaryTotalLegions,
-			baseOffsetX + 120 + width, baseOffsetY + 348, FONT_NORMAL_BLACK);
+		Graphics_drawImage(image_group(GROUP_BULLET), 100, 349);
+		int width = lang_text_draw_amount(8, 46, Data_CityInfo.militaryTotalSoldiers, 120, 348, FONT_NORMAL_BLACK);
+		width += lang_text_draw(51, 7, 120 + width, 348, FONT_NORMAL_BLACK);
+		lang_text_draw_amount(8, 48, Data_CityInfo.militaryTotalLegions, 120 + width, 348, FONT_NORMAL_BLACK);
 
-		Graphics_drawImage(image_group(GROUP_BULLET), baseOffsetX + 100, baseOffsetY + 369);
-		lang_text_draw(51, enemy_text_id, baseOffsetX + 120, baseOffsetY + 368, FONT_NORMAL_BLACK);
+		Graphics_drawImage(image_group(GROUP_BULLET), 100, 369);
+		lang_text_draw(51, enemy_text_id, 120, 368, FONT_NORMAL_BLACK);
 
-		Graphics_drawImage(image_group(GROUP_BULLET), baseOffsetX + 100, baseOffsetY + 389);
-		lang_text_draw(51, distant_battle_text_id, baseOffsetX + 120, baseOffsetY + 388, FONT_NORMAL_BLACK);
+		Graphics_drawImage(image_group(GROUP_BULLET), 100, 389);
+		lang_text_draw(51, distant_battle_text_id, 120, 388, FONT_NORMAL_BLACK);
 	}
 
-	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 70, 36, 17);
+	inner_panel_draw(32, 70, 36, 17);
 	if (numLegions <= 0) {
-		lang_text_draw_multiline(51, 16, baseOffsetX + 64, baseOffsetY + 200, 496, FONT_NORMAL_GREEN);
+		lang_text_draw_multiline(51, 16, 64, 200, 496, FONT_NORMAL_GREEN);
 		return;
 	}
 
 	for (int i = 0; i < numLegions; i++) {
 		int formationId = formation_for_legion(i + 1);
 		const formation *m = formation_get(formationId);
-		button_border_draw(baseOffsetX + 38, baseOffsetY + 77 + 44 * i, 560, 40, 0);
-		Graphics_drawImage(image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id,
-			baseOffsetX + 48, baseOffsetY + 82 + 44 * i);
-		lang_text_draw(138, m->legion_id,
-			baseOffsetX + 100, baseOffsetY + 83 + 44 * i, FONT_NORMAL_WHITE);
-		int width = text_draw_number(m->num_figures, '@', " ",
-			baseOffsetX + 100, baseOffsetY + 100 + 44 * i, FONT_NORMAL_GREEN);
+		button_border_draw(38, 77 + 44 * i, 560, 40, 0);
+		Graphics_drawImage(image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id, 48, 82 + 44 * i);
+		lang_text_draw(138, m->legion_id, 100, 83 + 44 * i, FONT_NORMAL_WHITE);
+		int width = text_draw_number(m->num_figures, '@', " ", 100, 100 + 44 * i, FONT_NORMAL_GREEN);
 		switch (m->figure_type) {
 			case FIGURE_FORT_LEGIONARY:
-				lang_text_draw(138, 33, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, FONT_NORMAL_GREEN);
+				lang_text_draw(138, 33, 100 + width, 100 + 44 * i, FONT_NORMAL_GREEN);
 				break;
 			case FIGURE_FORT_MOUNTED:
-				lang_text_draw(138, 34, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, FONT_NORMAL_GREEN);
+				lang_text_draw(138, 34, 100 + width, 100 + 44 * i, FONT_NORMAL_GREEN);
 				break;
 			case FIGURE_FORT_JAVELIN:
-				lang_text_draw(138, 35, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, FONT_NORMAL_GREEN);
+				lang_text_draw(138, 35, 100 + width, 100 + 44 * i, FONT_NORMAL_GREEN);
 				break;
 		}
-		lang_text_draw_centered(138, 37 + m->morale / 5,
-			baseOffsetX + 240, baseOffsetY + 91 + 44 * i, 150, FONT_NORMAL_GREEN);
+		lang_text_draw_centered(138, 37 + m->morale / 5, 240, 91 + 44 * i, 150, FONT_NORMAL_GREEN);
 
 		int graphicId = image_group(GROUP_FORT_ICONS);
-		button_border_draw(baseOffsetX + 400, baseOffsetY + 83 + 44 * i, 30, 30, 0);
-		Graphics_drawImage(graphicId, baseOffsetX + 403, baseOffsetY + 86 + 44 * i);
+		button_border_draw(400, 83 + 44 * i, 30, 30, 0);
+		Graphics_drawImage(graphicId, 403, 86 + 44 * i);
 
-		button_border_draw(baseOffsetX + 480, baseOffsetY + 83 + 44 * i, 30, 30, 0);
+		button_border_draw(480, 83 + 44 * i, 30, 30, 0);
 		if (m->is_at_fort) {
-			Graphics_drawImage(graphicId + 2, baseOffsetX + 483, baseOffsetY + 86 + 44 * i);
+			Graphics_drawImage(graphicId + 2, 483, 86 + 44 * i);
 		} else {
-			Graphics_drawImage(graphicId + 1, baseOffsetX + 483, baseOffsetY + 86 + 44 * i);
+			Graphics_drawImage(graphicId + 1, 483, 86 + 44 * i);
 		}
 
-		button_border_draw(baseOffsetX + 560, baseOffsetY + 83 + 44 * i, 30, 30, 0);
+		button_border_draw(560, 83 + 44 * i, 30, 30, 0);
 		if (m->empire_service) {
-			Graphics_drawImage(graphicId + 3, baseOffsetX + 563, baseOffsetY + 86 + 44 * i);
+			Graphics_drawImage(graphicId + 3, 563, 86 + 44 * i);
 		} else {
-			Graphics_drawImage(graphicId + 4, baseOffsetX + 563, baseOffsetY + 86 + 44 * i);
+			Graphics_drawImage(graphicId + 4, 563, 86 + 44 * i);
 		}
 	}
+	graphics_reset_dialog();
 }
 
 void UI_Advisor_Military_drawForeground()

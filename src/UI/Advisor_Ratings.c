@@ -24,161 +24,126 @@ static int focusButtonId;
 
 void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 	int width, hasReached;
 
 	*advisorHeight = 27;
-	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 3,
-		baseOffsetX + 10, baseOffsetY + 10);
-	width = lang_text_draw(53, 0,
-		baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+	outer_panel_draw(0, 0, 40, *advisorHeight);
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
+	width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK);
 	if (!scenario_criteria_population_enabled() || scenario_is_open_play()) {
-		lang_text_draw(53, 7,
-			baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
+		lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK);
 	} else {
-		width += lang_text_draw(53, 6,
-			baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
-		text_draw_number(scenario_criteria_population(), '@', ")",
-			baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
+		width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK);
+		text_draw_number(scenario_criteria_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK);
 	}
 
-	Graphics_drawImage(image_group(GROUP_RATINGS_BACKGROUND),
-		baseOffsetX + 60, baseOffsetY + 48);
+	Graphics_drawImage(image_group(GROUP_RATINGS_BACKGROUND), 60, 48);
 
 	// culture
-	button_border_draw(baseOffsetX + 80, baseOffsetY + 286,
-		110, 66, focusButtonId == 1);
-	lang_text_draw_centered(53, 1, baseOffsetX + 80, baseOffsetY + 294,
-		110, FONT_NORMAL_BLACK);
-	text_draw_number_centered(Data_CityInfo.ratingCulture,
-		baseOffsetX + 80, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
+	button_border_draw(80, 286, 110, 66, focusButtonId == 1);
+	lang_text_draw_centered(53, 1, 80, 294, 110, FONT_NORMAL_BLACK);
+	text_draw_number_centered(Data_CityInfo.ratingCulture, 80, 309, 100, FONT_LARGE_BLACK);
 	if (scenario_criteria_culture_enabled()) {
-		width = text_draw_number(scenario_criteria_culture(), '@', " ",
-			baseOffsetX + 85, baseOffsetY + 334, FONT_NORMAL_BLACK);
+		width = text_draw_number(scenario_criteria_culture(), '@', " ", 85, 334, FONT_NORMAL_BLACK);
 	} else {
-		width = text_draw_number(0, '@', " ",
-			baseOffsetX + 85, baseOffsetY + 334, FONT_NORMAL_BLACK);
+		width = text_draw_number(0, '@', " ", 85, 334, FONT_NORMAL_BLACK);
 	}
-	lang_text_draw(53, 5, baseOffsetX + 85 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
+	lang_text_draw(53, 5, 85 + width, 334, FONT_NORMAL_BLACK);
 	hasReached = !scenario_criteria_culture_enabled() ||
 		Data_CityInfo.ratingCulture > scenario_criteria_culture() ||
 		Data_CityInfo.ratingCulture == 100; // FIXED: capital bug fixed
-	drawRatingColumn(baseOffsetX + 110, baseOffsetY + 274, Data_CityInfo.ratingCulture, hasReached);
+	drawRatingColumn(110, 274, Data_CityInfo.ratingCulture, hasReached);
 
 	// prosperity
-	button_border_draw(baseOffsetX + 200, baseOffsetY + 286,
-		110, 66, focusButtonId == 2);
-	lang_text_draw_centered(53, 2, baseOffsetX + 200, baseOffsetY + 294,
-		110, FONT_NORMAL_BLACK);
-	text_draw_number_centered(Data_CityInfo.ratingProsperity,
-		baseOffsetX + 200, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
+	button_border_draw(200, 286, 110, 66, focusButtonId == 2);
+	lang_text_draw_centered(53, 2, 200, 294, 110, FONT_NORMAL_BLACK);
+	text_draw_number_centered(Data_CityInfo.ratingProsperity, 200, 309, 100, FONT_LARGE_BLACK);
 	if (scenario_criteria_prosperity_enabled()) {
-		width = text_draw_number(scenario_criteria_prosperity(), '@', " ",
-			baseOffsetX + 205, baseOffsetY + 334, FONT_NORMAL_BLACK);
+		width = text_draw_number(scenario_criteria_prosperity(), '@', " ", 205, 334, FONT_NORMAL_BLACK);
 	} else {
-		width = text_draw_number(0, '@', " ",
-			baseOffsetX + 205, baseOffsetY + 334, FONT_NORMAL_BLACK);
+		width = text_draw_number(0, '@', " ", 205, 334, FONT_NORMAL_BLACK);
 	}
-	lang_text_draw(53, 5, baseOffsetX + 205 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
+	lang_text_draw(53, 5, 205 + width, 334, FONT_NORMAL_BLACK);
 	hasReached = !scenario_criteria_prosperity_enabled() ||
 		Data_CityInfo.ratingProsperity > scenario_criteria_prosperity() ||
 		Data_CityInfo.ratingProsperity == 100; // FIXED: capital bug fixed
-	drawRatingColumn(baseOffsetX + 230, baseOffsetY + 274, Data_CityInfo.ratingProsperity, hasReached);
+	drawRatingColumn(230, 274, Data_CityInfo.ratingProsperity, hasReached);
 
 	// peace
-	button_border_draw(baseOffsetX + 320, baseOffsetY + 286,
-		110, 66, focusButtonId == 3);
-	lang_text_draw_centered(53, 3, baseOffsetX + 320, baseOffsetY + 294,
-		110, FONT_NORMAL_BLACK);
-	text_draw_number_centered(Data_CityInfo.ratingPeace,
-		baseOffsetX + 320, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
+	button_border_draw(320, 286, 110, 66, focusButtonId == 3);
+	lang_text_draw_centered(53, 3, 320, 294, 110, FONT_NORMAL_BLACK);
+	text_draw_number_centered(Data_CityInfo.ratingPeace, 320, 309, 100, FONT_LARGE_BLACK);
 	if (scenario_criteria_peace_enabled()) {
-		width = text_draw_number(scenario_criteria_peace(), '@', " ",
-			baseOffsetX + 325, baseOffsetY + 334, FONT_NORMAL_BLACK);
+		width = text_draw_number(scenario_criteria_peace(), '@', " ", 325, 334, FONT_NORMAL_BLACK);
 	} else {
-		width = text_draw_number(0, '@', " ",
-			baseOffsetX + 325, baseOffsetY + 334, FONT_NORMAL_BLACK);
+		width = text_draw_number(0, '@', " ", 325, 334, FONT_NORMAL_BLACK);
 	}
-	lang_text_draw(53, 5, baseOffsetX + 325 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
+	lang_text_draw(53, 5, 325 + width, 334, FONT_NORMAL_BLACK);
 	hasReached = !scenario_criteria_peace_enabled() ||
 		Data_CityInfo.ratingPeace > scenario_criteria_peace() ||
 		Data_CityInfo.ratingPeace == 100; // FIXED: capital bug fixed
-	drawRatingColumn(baseOffsetX + 350, baseOffsetY + 274, Data_CityInfo.ratingPeace, hasReached);
+	drawRatingColumn(350, 274, Data_CityInfo.ratingPeace, hasReached);
 
 	// favor
-	button_border_draw(baseOffsetX + 440, baseOffsetY + 286,
-		110, 66, focusButtonId == 4);
-	lang_text_draw_centered(53, 4, baseOffsetX + 440, baseOffsetY + 294,
-		110, FONT_NORMAL_BLACK);
-	text_draw_number_centered(Data_CityInfo.ratingFavor,
-		baseOffsetX + 440, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
+	button_border_draw(440, 286, 110, 66, focusButtonId == 4);
+	lang_text_draw_centered(53, 4, 440, 294, 110, FONT_NORMAL_BLACK);
+	text_draw_number_centered(Data_CityInfo.ratingFavor, 440, 309, 100, FONT_LARGE_BLACK);
 	if (scenario_criteria_favor_enabled()) {
-		width = text_draw_number(scenario_criteria_favor(), '@', " ",
-			baseOffsetX + 445, baseOffsetY + 334, FONT_NORMAL_BLACK);
+		width = text_draw_number(scenario_criteria_favor(), '@', " ", 445, 334, FONT_NORMAL_BLACK);
 	} else {
-		width = text_draw_number(0, '@', " ",
-			baseOffsetX + 445, baseOffsetY + 334, FONT_NORMAL_BLACK);
+		width = text_draw_number(0, '@', " ", 445, 334, FONT_NORMAL_BLACK);
 	}
-	lang_text_draw(53, 5, baseOffsetX + 445 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
+	lang_text_draw(53, 5, 445 + width, 334, FONT_NORMAL_BLACK);
 	hasReached = !scenario_criteria_favor_enabled() ||
 		Data_CityInfo.ratingFavor > scenario_criteria_favor() ||
 		Data_CityInfo.ratingFavor == 100; // FIXED: capital bug fixed
-	drawRatingColumn(baseOffsetX + 470, baseOffsetY + 274, Data_CityInfo.ratingFavor, hasReached);
+	drawRatingColumn(470, 274, Data_CityInfo.ratingFavor, hasReached);
 
 	// bottom info box
-	inner_panel_draw(baseOffsetX + 64, baseOffsetY + 356, 32, 4);
+	inner_panel_draw(64, 356, 32, 4);
 	switch (Data_CityInfo.ratingAdvisorSelection) {
 		case 1:
-			lang_text_draw(53, 1,
-				baseOffsetX + 72, baseOffsetY + 359, FONT_NORMAL_WHITE);
+			lang_text_draw(53, 1, 72, 359, FONT_NORMAL_WHITE);
 			if (Data_CityInfo.ratingCulture <= 90) {
 				lang_text_draw_multiline(53, 9 + Data_CityInfo.ratingAdvisorExplanationCulture,
-					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
+					72, 374, 496, FONT_NORMAL_WHITE);
 			} else {
-				lang_text_draw_multiline(53, 50,
-					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
+				lang_text_draw_multiline(53, 50, 72, 374, 496, FONT_NORMAL_WHITE);
 			}
 			break;
 		case 2:
-			lang_text_draw(53, 2,
-				baseOffsetX + 72, baseOffsetY + 359, FONT_NORMAL_WHITE);
+			lang_text_draw(53, 2, 72, 359, FONT_NORMAL_WHITE);
 			if (Data_CityInfo.ratingProsperity <= 90) {
 				lang_text_draw_multiline(53, 16 + Data_CityInfo.ratingAdvisorExplanationProsperity,
-					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
+					72, 374, 496, FONT_NORMAL_WHITE);
 			} else {
-				lang_text_draw_multiline(53, 51,
-					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
+				lang_text_draw_multiline(53, 51, 72, 374, 496, FONT_NORMAL_WHITE);
 			}
 			break;
 		case 3:
-			lang_text_draw(53, 3,
-				baseOffsetX + 72, baseOffsetY + 359, FONT_NORMAL_WHITE);
+			lang_text_draw(53, 3, 72, 359, FONT_NORMAL_WHITE);
 			if (Data_CityInfo.ratingPeace <= 90) {
 				lang_text_draw_multiline(53, 41 + Data_CityInfo.ratingAdvisorExplanationPeace,
-					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
+					72, 374, 496, FONT_NORMAL_WHITE);
 			} else {
-				lang_text_draw_multiline(53, 52,
-					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
+				lang_text_draw_multiline(53, 52, 72, 374, 496, FONT_NORMAL_WHITE);
 			}
 			break;
 		case 4:
-			lang_text_draw(53, 4,
-				baseOffsetX + 72, baseOffsetY + 359, FONT_NORMAL_WHITE);
+			lang_text_draw(53, 4, 72, 359, FONT_NORMAL_WHITE);
 			if (Data_CityInfo.ratingFavor <= 90) {
 				lang_text_draw_multiline(53, 27 + Data_CityInfo.ratingAdvisorExplanationFavor,
-					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
+					72, 374, 496, FONT_NORMAL_WHITE);
 			} else {
-				lang_text_draw_multiline(53, 53,
-					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
+				lang_text_draw_multiline(53, 53, 72, 374, 496, FONT_NORMAL_WHITE);
 			}
 			break;
 		default:
-			lang_text_draw_centered(53, 8,
-				baseOffsetX + 72, baseOffsetY + 380, 496, FONT_NORMAL_WHITE);
+			lang_text_draw_centered(53, 8, 72, 380, 496, FONT_NORMAL_WHITE);
 			break;
 	}
+	graphics_reset_dialog();
 }
 
 static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached)

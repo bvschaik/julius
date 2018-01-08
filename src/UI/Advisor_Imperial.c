@@ -7,6 +7,7 @@
 #include "empire/city.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
@@ -43,50 +44,35 @@ static void draw_request(int index, const scenario_request *request)
     if (index >= 5) {
         return;
     }
-    int baseOffsetX = Data_Screen.offset640x480.x;
-    int baseOffsetY = Data_Screen.offset640x480.y;
 
-    button_border_draw(baseOffsetX + 38, baseOffsetY + 96 + 42 * index, 560, 40, 0);
-    text_draw_number(request->amount, '@', " ",
-        baseOffsetX + 40, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
-    int resourceOffset = request->resource +
-        resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
-    Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceOffset,
-        baseOffsetX + 110, baseOffsetY + 100 + 42 * index);
-    lang_text_draw(23, request->resource,
-        baseOffsetX + 150, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
+    button_border_draw(38, 96 + 42 * index, 560, 40, 0);
+    text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE);
+    int resourceOffset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
+    Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceOffset, 110, 100 + 42 * index);
+    lang_text_draw(23, request->resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE);
     
-    int width = lang_text_draw_amount(8, 4, request->months_to_comply,
-        baseOffsetX + 310, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
-    lang_text_draw(12, 2, baseOffsetX + 310 + width, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
+    int width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE);
+    lang_text_draw(12, 2, 310 + width, 102 + 42 * index, FONT_NORMAL_WHITE);
 
     if (request->resource == RESOURCE_DENARII) {
         // request for money
         int treasury = city_finance_treasury();
-        width = text_draw_number(treasury, '@', " ",
-            baseOffsetX + 40, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
-        width += lang_text_draw(52, 44,
-            baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+        width = text_draw_number(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
+        width += lang_text_draw(52, 44, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         if (treasury < request->amount) {
-            lang_text_draw(52, 48,
-                baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+            lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         } else {
-            lang_text_draw(52, 47,
-                baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+            lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         }
     } else {
         // normal goods request
         int resourceId = request->resource;
-        width = text_draw_number(Data_CityInfo.resourceStored[resourceId], '@', " ",
-            baseOffsetX + 40, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
-        width += lang_text_draw(52, 43,
-            baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+        width = text_draw_number(Data_CityInfo.resourceStored[resourceId], '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
+        width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         if (Data_CityInfo.resourceStored[resourceId] < request->amount) {
-            lang_text_draw(52, 48,
-                baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+            lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         } else {
-            lang_text_draw(52, 47,
-                baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+            lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         }
     }
 }
@@ -95,32 +81,28 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 {
 	city_emperor_calculate_gift_costs();
 
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
 	*advisorHeight = 27;
-	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 2, baseOffsetX + 10, baseOffsetY + 10);
+	outer_panel_draw(0, 0, 40, *advisorHeight);
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
 
-	text_draw(scenario_player_name(), baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
+	text_draw(scenario_player_name(), 60, 12, FONT_LARGE_BLACK, 0);
 
-	int width = lang_text_draw(52, 0, baseOffsetX + 60, baseOffsetY + 44, FONT_NORMAL_BLACK);
-	text_draw_number(Data_CityInfo.ratingFavor, '@', " ", baseOffsetX + 60 + width, baseOffsetY + 44, FONT_NORMAL_BLACK);
+	int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK);
+	text_draw_number(Data_CityInfo.ratingFavor, '@', " ", 60 + width, 44, FONT_NORMAL_BLACK);
 
-	lang_text_draw_multiline(52, Data_CityInfo.ratingFavor / 5 + 22,
-		baseOffsetX + 60, baseOffsetY + 60, 544, FONT_NORMAL_BLACK);
+	lang_text_draw_multiline(52, Data_CityInfo.ratingFavor / 5 + 22, 60, 60, 544, FONT_NORMAL_BLACK);
 
-	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 90, 36, 14);
+	inner_panel_draw(32, 90, 36, 14);
 	
 	int numRequests = 0;
 	if (Data_CityInfo.distantBattleMonthsToBattle > 0 && Data_CityInfo.distantBattleRomanMonthsToTravel <= 0) {
 		// can send to distant battle
-		button_border_draw(baseOffsetX + 38, baseOffsetY + 96, 560, 40, 0);
-		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS,
-			baseOffsetX + 50, baseOffsetY + 106);
-		width = lang_text_draw(52, 72, baseOffsetX + 80, baseOffsetY + 102, FONT_NORMAL_WHITE);
-		lang_text_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id,
-			baseOffsetX + 50 + width, baseOffsetY + 102, FONT_NORMAL_WHITE);
+		button_border_draw(38, 96, 560, 40, 0);
+		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, 50, 106);
+		width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
+		lang_text_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id, 50 + width, 102, FONT_NORMAL_WHITE);
 		int strengthTextId;
 		if (Data_CityInfo.distantBattleEnemyStrength < 46) {
 			strengthTextId = 73;
@@ -129,69 +111,56 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 		} else {
 			strengthTextId = 75;
 		}
-		width = lang_text_draw(52, strengthTextId, baseOffsetX + 80, baseOffsetY + 120, FONT_NORMAL_WHITE);
-		lang_text_draw_amount(8, 4, Data_CityInfo.distantBattleMonthsToBattle,
-			baseOffsetX + 80 + width, baseOffsetY + 120, FONT_NORMAL_WHITE);
+		width = lang_text_draw(52, strengthTextId, 80, 120, FONT_NORMAL_WHITE);
+		lang_text_draw_amount(8, 4, Data_CityInfo.distantBattleMonthsToBattle, 80 + width, 120, FONT_NORMAL_WHITE);
 		numRequests = 1;
 	}
 	numRequests = scenario_request_foreach_visible(numRequests, draw_request);
 	if (!numRequests) {
-		lang_text_draw_multiline(52, 21, baseOffsetX + 64, baseOffsetY + 160, 512, FONT_NORMAL_WHITE);
+		lang_text_draw_multiline(52, 21, 64, 160, 512, FONT_NORMAL_WHITE);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_Advisor_Imperial_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
-	inner_panel_draw(baseOffsetX + 64, baseOffsetY + 324, 32, 6);
+	inner_panel_draw(64, 324, 32, 6);
 
-	lang_text_draw(32, Data_CityInfo.playerRank,
-		baseOffsetX + 72, baseOffsetY + 338, FONT_LARGE_BROWN);
+	lang_text_draw(32, Data_CityInfo.playerRank, 72, 338, FONT_LARGE_BROWN);
 	
-	int width = lang_text_draw(52, 1,
-		baseOffsetX + 72, baseOffsetY + 372, FONT_NORMAL_WHITE);
-	text_draw_money(Data_CityInfo.personalSavings,
-		baseOffsetX + 80 + width, baseOffsetY + 372, FONT_NORMAL_WHITE);
+	int width = lang_text_draw(52, 1, 72, 372, FONT_NORMAL_WHITE);
+	text_draw_money(Data_CityInfo.personalSavings, 80 + width, 372, FONT_NORMAL_WHITE);
 
-	button_border_draw(baseOffsetX + 320, baseOffsetY + 367,
-		250, 20, focusButtonId == 1);
-	lang_text_draw_centered(52, 2, baseOffsetX + 320, baseOffsetY + 372, 250, FONT_NORMAL_WHITE);
+	button_border_draw(320, 367, 250, 20, focusButtonId == 1);
+	lang_text_draw_centered(52, 2, 320, 372, 250, FONT_NORMAL_WHITE);
 
-	button_border_draw(baseOffsetX + 70, baseOffsetY + 393,
-		500, 20, focusButtonId == 2);
-	width = lang_text_draw(52, Data_CityInfo.salaryRank + 4,
-		baseOffsetX + 120, baseOffsetY + 398, FONT_NORMAL_WHITE);
-	width += text_draw_number(Data_CityInfo.salaryAmount, '@', " ",
-		baseOffsetX + 120 + width, baseOffsetY + 398, FONT_NORMAL_WHITE);
-	lang_text_draw(52, 3, baseOffsetX + 120 + width, baseOffsetY + 398, FONT_NORMAL_WHITE);
+	button_border_draw(70, 393, 500, 20, focusButtonId == 2);
+	width = lang_text_draw(52, Data_CityInfo.salaryRank + 4, 120, 398, FONT_NORMAL_WHITE);
+	width += text_draw_number(Data_CityInfo.salaryAmount, '@', " ", 120 + width, 398, FONT_NORMAL_WHITE);
+	lang_text_draw(52, 3, 120 + width, 398, FONT_NORMAL_WHITE);
 
-	button_border_draw(baseOffsetX + 320, baseOffsetY + 341,
-		250, 20, focusButtonId == 3);
-	lang_text_draw_centered(52, 49, baseOffsetX + 320, baseOffsetY + 346, 250, FONT_NORMAL_WHITE);
+	button_border_draw(320, 341, 250, 20, focusButtonId == 3);
+	lang_text_draw_centered(52, 49, 320, 346, 250, FONT_NORMAL_WHITE);
 
 	// Request buttons
 	if (getRequestStatus(0)) {
-		button_border_draw(baseOffsetX + 38, baseOffsetY + 96,
-			560, 40, focusButtonId == 4);
+		button_border_draw(38, 96, 560, 40, focusButtonId == 4);
 	}
 	if (getRequestStatus(1)) {
-		button_border_draw(baseOffsetX + 38, baseOffsetY + 138,
-			560, 40, focusButtonId == 5);
+		button_border_draw(38, 138, 560, 40, focusButtonId == 5);
 	}
 	if (getRequestStatus(2)) {
-		button_border_draw(baseOffsetX + 38, baseOffsetY + 180,
-			560, 40, focusButtonId == 6);
+		button_border_draw(38, 180, 560, 40, focusButtonId == 6);
 	}
 	if (getRequestStatus(3)) {
-		button_border_draw(baseOffsetX + 38, baseOffsetY + 222,
-			560, 40, focusButtonId == 7);
+		button_border_draw(38, 222, 560, 40, focusButtonId == 7);
 	}
 	if (getRequestStatus(4)) {
-		button_border_draw(baseOffsetX + 38, baseOffsetY + 264,
-			560, 40, focusButtonId == 8);
+		button_border_draw(38, 264, 560, 40, focusButtonId == 8);
 	}
+	graphics_reset_dialog();
 }
 
 static int getRequestStatus(int index)

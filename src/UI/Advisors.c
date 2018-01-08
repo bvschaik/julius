@@ -14,6 +14,7 @@
 #include "game/settings.h"
 #include "game/tutorial.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/image_button.h"
 
 static void buttonChangeAdvisor(int param1, int param2);
@@ -134,9 +135,9 @@ void UI_Advisors_drawBackground()
 
 void UI_Advisors_drawForeground()
 {
-	image_buttons_draw(Data_Screen.offset640x480.x,
-		Data_Screen.offset640x480.y + 16 * (advisorHeight - 2),
-		&helpButton, 1);
+    graphics_in_dialog();
+    image_buttons_draw(0, 16 * (advisorHeight - 2), &helpButton, 1);
+    graphics_reset_dialog();
 
     if (windows[currentAdvisor].draw_foreground) {
         windows[currentAdvisor].draw_foreground();
@@ -146,21 +147,17 @@ void UI_Advisors_drawForeground()
 void UI_Advisor_drawGeneralBackground()
 {
 	Graphics_drawFullScreenImage(image_group(GROUP_ADVISOR_BACKGROUND));
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
-	Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 13,
-		baseOffsetX, baseOffsetY + 432
-	);
+    graphics_in_dialog();
+	Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
 
 	for (int i = 0; i < 13; i++) {
 		int selectedOffset = 0;
 		if (currentAdvisor && i == currentAdvisor - 1) {
 			selectedOffset = 13;
 		}
-		Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + i + selectedOffset,
-			baseOffsetX + 48 * i + 12, baseOffsetY + 441
-		);
+		Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + i + selectedOffset, 48 * i + 12, 441);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_Advisors_handleMouse(const mouse *m)

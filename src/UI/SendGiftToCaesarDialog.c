@@ -4,6 +4,7 @@
 
 #include "city/emperor.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
@@ -38,70 +39,55 @@ void UI_SendGiftToCaesarDialog_drawBackground()
 {
 	UI_Advisor_drawGeneralBackground();
 
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
-	outer_panel_draw(baseOffsetX + 96, baseOffsetY + 144, 30, 15);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + 16,
-		baseOffsetX + 128, baseOffsetY + 160);
-	lang_text_draw_centered(52, 69,
-		baseOffsetX + 128, baseOffsetY + 160, 432, FONT_LARGE_BLACK);
+	outer_panel_draw(96, 144, 30, 15);
+	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + 16, 128, 160);
+	lang_text_draw_centered(52, 69, 128, 160, 432, FONT_LARGE_BLACK);
 
-	int width = lang_text_draw(52, 50,
-		baseOffsetX + 144, baseOffsetY + 304, FONT_NORMAL_BLACK);
-	lang_text_draw_amount(8, 4,
-		Data_CityInfo.giftMonthsSinceLast,
-		baseOffsetX + 144 + width, baseOffsetY + 304, FONT_NORMAL_BLACK);
-	lang_text_draw_centered(13, 4,
-		baseOffsetX + 400, baseOffsetY + 341, 160, FONT_NORMAL_BLACK);
+	int width = lang_text_draw(52, 50, 144, 304, FONT_NORMAL_BLACK);
+	lang_text_draw_amount(8, 4, Data_CityInfo.giftMonthsSinceLast,
+		144 + width, 304, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(13, 4, 400, 341, 160, FONT_NORMAL_BLACK);
+
+    graphics_reset_dialog();
 }
 
 void UI_SendGiftToCaesarDialog_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
-	inner_panel_draw(baseOffsetX + 112, baseOffsetY + 208, 28, 5); // BUGFIX red/white letters overlapping
+	inner_panel_draw(112, 208, 28, 5); // BUGFIX red/white letters overlapping
 
 	if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
-		lang_text_draw(52, 63,
-			baseOffsetX + 128, baseOffsetY + 218, FONT_NORMAL_WHITE);
+		lang_text_draw(52, 63, 128, 218, FONT_NORMAL_WHITE);
 		font_t font = focusButtonId == 1 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
-		int width = lang_text_draw(52, 51 + Data_CityInfo.giftId_modest,
-			baseOffsetX + 224, baseOffsetY + 218, font);
-		text_draw_money(Data_CityInfo.giftCost_modest,
-			baseOffsetX + 224 + width, baseOffsetY + 218, font);
+		int width = lang_text_draw(52, 51 + Data_CityInfo.giftId_modest, 224, 218, font);
+		text_draw_money(Data_CityInfo.giftCost_modest, 224 + width, 218, font);
 	} else {
-		lang_text_draw_multiline(52, 70,
-			baseOffsetX + 160, baseOffsetY + 224, 352, FONT_NORMAL_WHITE);
+		lang_text_draw_multiline(52, 70, 160, 224, 352, FONT_NORMAL_WHITE);
 	}
 	if (Data_CityInfo.giftCost_generous <= Data_CityInfo.personalSavings) {
-		lang_text_draw(52, 64,
-			baseOffsetX + 128, baseOffsetY + 238, FONT_NORMAL_WHITE);
+		lang_text_draw(52, 64, 128, 238, FONT_NORMAL_WHITE);
 		font_t font = focusButtonId == 2 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
-		int width = lang_text_draw(52, 55 + Data_CityInfo.giftId_generous,
-			baseOffsetX + 224, baseOffsetY + 238, font);
-		text_draw_money(Data_CityInfo.giftCost_generous,
-			baseOffsetX + 224 + width, baseOffsetY + 238, font);
+		int width = lang_text_draw(52, 55 + Data_CityInfo.giftId_generous, 224, 238, font);
+		text_draw_money(Data_CityInfo.giftCost_generous, 224 + width, 238, font);
 	}
 	if (Data_CityInfo.giftCost_lavish <= Data_CityInfo.personalSavings) {
-		lang_text_draw(52, 65,
-			baseOffsetX + 128, baseOffsetY + 258, FONT_NORMAL_WHITE);
+		lang_text_draw(52, 65, 128, 258, FONT_NORMAL_WHITE);
 		font_t font = focusButtonId == 3 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
-		int width = lang_text_draw(52, 59 + Data_CityInfo.giftId_lavish,
-			baseOffsetX + 224, baseOffsetY + 258, font);
-		text_draw_money(Data_CityInfo.giftCost_lavish,
-			baseOffsetX + 224 + width, baseOffsetY + 258, font);
+		int width = lang_text_draw(52, 59 + Data_CityInfo.giftId_lavish, 224, 258, font);
+		text_draw_money(Data_CityInfo.giftCost_lavish, 224 + width, 258, font);
 	}
 	// can give at least one type
 	if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
 		lang_text_draw_centered(52, 66 + Data_CityInfo.giftSizeSelected,
-			baseOffsetX + 128, baseOffsetY + 341, 240, FONT_NORMAL_BLACK);
-		button_border_draw(
-			baseOffsetX + 128, baseOffsetY + 336, 240, 20, focusButtonId == 4);
+			128, 341, 240, FONT_NORMAL_BLACK);
+		button_border_draw(128, 336, 240, 20, focusButtonId == 4);
 	}
-	button_border_draw(
-		baseOffsetX + 400, baseOffsetY + 336, 160, 20, focusButtonId == 5);
+	button_border_draw(400, 336, 160, 20, focusButtonId == 5);
+
+    graphics_reset_dialog();
 }
 
 void UI_SendGiftToCaesarDialog_handleMouse(const mouse *m)

@@ -5,11 +5,10 @@
 #include "city/culture.h"
 #include "city/gods.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
-
-static void drawFestivalBackground();
 
 static void buttonHoldFestival(int param1, int param2);
 
@@ -24,190 +23,145 @@ void UI_Advisor_Entertainment_init()
 	focusButtonId = 0;
 }
 
+static int get_entertainment_advice()
+{
+    if (Data_CityInfo.housesRequiringEntertainmentToEvolve > Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
+        return 3;
+    } else if (!Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
+        return Data_CityInfo.citywideAverageEntertainment ? 1 : 0;
+    } else if (Data_CityInfo.entertainmentNeedingShowsMost) {
+        return 3 + Data_CityInfo.entertainmentNeedingShowsMost;
+    } else {
+        return 2;
+    }
+}
+
+static int get_festival_advice()
+{
+    int months_since_festival = Data_CityInfo.monthsSinceFestival;
+    if (months_since_festival <= 1) {
+        return 0;
+    } else if (months_since_festival <= 6) {
+        return 1;
+    } else if (months_since_festival <= 12) {
+        return 2;
+    } else if (months_since_festival <= 18) {
+        return 3;
+    } else if (months_since_festival <= 24) {
+        return 4;
+    } else if (months_since_festival <= 30) {
+        return 5;
+    } else {
+        return 6;
+    }
+}
+
+static void draw_festival_info()
+{
+    inner_panel_draw(48, 252, 34, 6);
+    Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 15, 460, 255);
+    lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK);
+
+    int width = lang_text_draw_amount(8, 4, Data_CityInfo.monthsSinceFestival, 112, 260, FONT_NORMAL_WHITE);
+    lang_text_draw(58, 15, 112 + width, 260, FONT_NORMAL_WHITE);
+    if (Data_CityInfo.plannedFestivalSize) {
+        lang_text_draw_centered(58, 34, 102, 284, 300, FONT_NORMAL_WHITE);
+    } else {
+        lang_text_draw_centered(58, 16, 102, 284, 300, FONT_NORMAL_WHITE);
+    }
+    lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305, 380, FONT_NORMAL_WHITE);
+}
+
 void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 {
 	city_gods_calculate_moods(0);
 	city_culture_calculate_entertainment();
 
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
 	*advisorHeight = 23;
-	outer_panel_draw(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 8,
-		baseOffsetX + 10, baseOffsetY + 10);
+	outer_panel_draw(0, 0, 40, *advisorHeight);
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
 
-	lang_text_draw(58, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
+	lang_text_draw(58, 0, 60, 12, FONT_LARGE_BLACK);
 
-	lang_text_draw(58, 1, baseOffsetX + 180, baseOffsetY + 46, FONT_SMALL_PLAIN);
-	lang_text_draw(58, 2, baseOffsetX + 260, baseOffsetY + 46, FONT_SMALL_PLAIN);
-	lang_text_draw(58, 3, baseOffsetX + 340, baseOffsetY + 46, FONT_SMALL_PLAIN);
-	lang_text_draw(58, 4, baseOffsetX + 480, baseOffsetY + 46, FONT_SMALL_PLAIN);
+	lang_text_draw(58, 1, 180, 46, FONT_SMALL_PLAIN);
+	lang_text_draw(58, 2, 260, 46, FONT_SMALL_PLAIN);
+	lang_text_draw(58, 3, 340, 46, FONT_SMALL_PLAIN);
+	lang_text_draw(58, 4, 480, 46, FONT_SMALL_PLAIN);
 
-	inner_panel_draw(baseOffsetX + 32, baseOffsetY + 60, 36, 5);
+	inner_panel_draw(32, 60, 36, 5);
 
 	// theaters
-	lang_text_draw_amount(8, 34, building_count_total(BUILDING_THEATER),
-		baseOffsetX + 40, baseOffsetY + 64, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(building_count_active(BUILDING_THEATER),
-		baseOffsetX + 150, baseOffsetY + 64, 100, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(Data_CityInfo.entertainmentTheaterShows,
-		baseOffsetX + 230, baseOffsetY + 64, 100, FONT_NORMAL_WHITE
-	);
-	int width = text_draw_number(500 * building_count_active(BUILDING_THEATER), '@', " ",
-		baseOffsetX + 340, baseOffsetY + 64, FONT_NORMAL_WHITE
-	);
-	lang_text_draw(58, 5, baseOffsetX + 340 + width, baseOffsetY + 64, FONT_NORMAL_WHITE);
+	lang_text_draw_amount(8, 34, building_count_total(BUILDING_THEATER), 40, 64, FONT_NORMAL_WHITE);
+	text_draw_number_centered(building_count_active(BUILDING_THEATER), 150, 64, 100, FONT_NORMAL_WHITE);
+	text_draw_number_centered(Data_CityInfo.entertainmentTheaterShows, 230, 64, 100, FONT_NORMAL_WHITE);
+	int width = text_draw_number(500 * building_count_active(BUILDING_THEATER), '@', " ", 340, 64, FONT_NORMAL_WHITE);
+	lang_text_draw(58, 5, 340 + width, 64, FONT_NORMAL_WHITE);
 	int pct_theater = city_culture_coverage_theater();
 	if (pct_theater == 0) {
-		lang_text_draw_centered(57, 10, baseOffsetX + 470, baseOffsetY + 64, 100, FONT_NORMAL_WHITE);
+		lang_text_draw_centered(57, 10, 470, 64, 100, FONT_NORMAL_WHITE);
 	} else if (pct_theater < 100) {
-		lang_text_draw_centered(57, 11 + pct_theater / 10,
-			baseOffsetX + 470, baseOffsetY + 64, 100, FONT_NORMAL_WHITE
-		);
+		lang_text_draw_centered(57, 11 + pct_theater / 10, 470, 64, 100, FONT_NORMAL_WHITE);
 	} else {
-		lang_text_draw_centered(57, 21, baseOffsetX + 470, baseOffsetY + 64, 100, FONT_NORMAL_WHITE);
+		lang_text_draw_centered(57, 21, 470, 64, 100, FONT_NORMAL_WHITE);
 	}
 
 	// amphitheaters
-	lang_text_draw_amount(8, 36, building_count_total(BUILDING_AMPHITHEATER),
-		baseOffsetX + 40, baseOffsetY + 84, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(building_count_active(BUILDING_AMPHITHEATER),
-		baseOffsetX + 150, baseOffsetY + 84, 100, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(Data_CityInfo.entertainmentAmphitheaterShows,
-		baseOffsetX + 230, baseOffsetY + 84, 100, FONT_NORMAL_WHITE
-	);
-	width = text_draw_number(800 * building_count_active(BUILDING_AMPHITHEATER), '@', " ",
-		baseOffsetX + 340, baseOffsetY + 84, FONT_NORMAL_WHITE
-	);
-	lang_text_draw(58, 5, baseOffsetX + 340 + width, baseOffsetY + 84, FONT_NORMAL_WHITE);
+	lang_text_draw_amount(8, 36, building_count_total(BUILDING_AMPHITHEATER), 40, 84, FONT_NORMAL_WHITE);
+	text_draw_number_centered(building_count_active(BUILDING_AMPHITHEATER), 150, 84, 100, FONT_NORMAL_WHITE);
+	text_draw_number_centered(Data_CityInfo.entertainmentAmphitheaterShows, 230, 84, 100, FONT_NORMAL_WHITE);
+	width = text_draw_number(800 * building_count_active(BUILDING_AMPHITHEATER), '@', " ", 340, 84, FONT_NORMAL_WHITE);
+	lang_text_draw(58, 5, 340 + width, 84, FONT_NORMAL_WHITE);
 	int pct_amphitheater = city_culture_coverage_amphitheater();
 	if (pct_amphitheater == 0) {
-		lang_text_draw_centered(57, 10, baseOffsetX + 470, baseOffsetY + 84, 100, FONT_NORMAL_WHITE);
+		lang_text_draw_centered(57, 10, 470, 84, 100, FONT_NORMAL_WHITE);
 	} else if (pct_amphitheater < 100) {
-		lang_text_draw_centered(57, 11 + pct_amphitheater / 10,
-			baseOffsetX + 470, baseOffsetY + 84, 100, FONT_NORMAL_WHITE
-		);
+		lang_text_draw_centered(57, 11 + pct_amphitheater / 10, 470, 84, 100, FONT_NORMAL_WHITE);
 	} else {
-		lang_text_draw_centered(57, 21, baseOffsetX + 470, baseOffsetY + 84, 100, FONT_NORMAL_WHITE);
+		lang_text_draw_centered(57, 21, 470, 84, 100, FONT_NORMAL_WHITE);
 	}
 
 	// colosseums
-	lang_text_draw_amount(8, 38, building_count_total(BUILDING_COLOSSEUM),
-		baseOffsetX + 40, baseOffsetY + 104, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(building_count_active(BUILDING_COLOSSEUM),
-		baseOffsetX + 150, baseOffsetY + 104, 100, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(Data_CityInfo.entertainmentColosseumShows,
-		baseOffsetX + 230, baseOffsetY + 104, 100, FONT_NORMAL_WHITE
-	);
-	width = text_draw_number(1500 * building_count_active(BUILDING_COLOSSEUM), '@', " ",
-		baseOffsetX + 340, baseOffsetY + 104, FONT_NORMAL_WHITE
-	);
-	lang_text_draw(58, 5, baseOffsetX + 340 + width, baseOffsetY + 104, FONT_NORMAL_WHITE);
+	lang_text_draw_amount(8, 38, building_count_total(BUILDING_COLOSSEUM), 40, 104, FONT_NORMAL_WHITE);
+	text_draw_number_centered(building_count_active(BUILDING_COLOSSEUM), 150, 104, 100, FONT_NORMAL_WHITE);
+	text_draw_number_centered(Data_CityInfo.entertainmentColosseumShows, 230, 104, 100, FONT_NORMAL_WHITE);
+	width = text_draw_number(1500 * building_count_active(BUILDING_COLOSSEUM), '@', " ", 340, 104, FONT_NORMAL_WHITE);
+	lang_text_draw(58, 5, 340 + width, 104, FONT_NORMAL_WHITE);
 	int pct_colosseum = city_culture_coverage_colosseum();
 	if (pct_colosseum == 0) {
-		lang_text_draw_centered(57, 10, baseOffsetX + 470, baseOffsetY + 104, 100, FONT_NORMAL_WHITE);
+		lang_text_draw_centered(57, 10, 470, 104, 100, FONT_NORMAL_WHITE);
 	} else if (pct_colosseum < 100) {
-		lang_text_draw_centered(57, 11 + pct_colosseum / 10,
-			baseOffsetX + 470, baseOffsetY + 104, 100, FONT_NORMAL_WHITE
-		);
+		lang_text_draw_centered(57, 11 + pct_colosseum / 10, 470, 104, 100, FONT_NORMAL_WHITE);
 	} else {
-		lang_text_draw_centered(57, 21, baseOffsetX + 470, baseOffsetY + 104, 100, FONT_NORMAL_WHITE);
+		lang_text_draw_centered(57, 21, 470, 104, 100, FONT_NORMAL_WHITE);
 	}
 
 	// hippodromes
-	lang_text_draw_amount(8, 40, building_count_total(BUILDING_HIPPODROME),
-		baseOffsetX + 40, baseOffsetY + 123, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(building_count_active(BUILDING_HIPPODROME),
-		baseOffsetX + 150, baseOffsetY + 123, 100, FONT_NORMAL_WHITE
-	);
-	text_draw_number_centered(Data_CityInfo.entertainmentHippodromeShows,
-		baseOffsetX + 230, baseOffsetY + 123, 100, FONT_NORMAL_WHITE
-	);
-	lang_text_draw(58, 6, baseOffsetX + 360, baseOffsetY + 123, FONT_NORMAL_WHITE);
+	lang_text_draw_amount(8, 40, building_count_total(BUILDING_HIPPODROME), 40, 123, FONT_NORMAL_WHITE);
+	text_draw_number_centered(building_count_active(BUILDING_HIPPODROME), 150, 123, 100, FONT_NORMAL_WHITE);
+	text_draw_number_centered(Data_CityInfo.entertainmentHippodromeShows, 230, 123, 100, FONT_NORMAL_WHITE);
+	lang_text_draw(58, 6, 360, 123, FONT_NORMAL_WHITE);
 	if (city_culture_coverage_hippodrome() == 0) {
-		lang_text_draw_centered(57, 10, baseOffsetX + 470, baseOffsetY + 123, 100, FONT_NORMAL_WHITE);
+		lang_text_draw_centered(57, 10, 470, 123, 100, FONT_NORMAL_WHITE);
 	} else {
-		lang_text_draw_centered(57, 21, baseOffsetX + 470, baseOffsetY + 123, 100, FONT_NORMAL_WHITE);
+		lang_text_draw_centered(57, 21, 470, 123, 100, FONT_NORMAL_WHITE);
 	}
 
-	int adviceId;
+	lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 148, 512, FONT_NORMAL_BLACK);
 
-	if (Data_CityInfo.housesRequiringEntertainmentToEvolve > Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
-		adviceId = 3;
-	} else if (!Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
-		adviceId = Data_CityInfo.citywideAverageEntertainment ? 1 : 0;
-	} else if (Data_CityInfo.entertainmentNeedingShowsMost) {
-		adviceId = 3 + Data_CityInfo.entertainmentNeedingShowsMost;
-	} else {
-		adviceId = 2;
-	}
-	lang_text_draw_multiline(58, 7 + adviceId,
-		baseOffsetX + 60, baseOffsetY + 148, 512, FONT_NORMAL_BLACK);
+	draw_festival_info();
 
-	drawFestivalBackground();
+    graphics_reset_dialog();
 }
-
-static void drawFestivalBackground()
-{
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
-
-	inner_panel_draw(baseOffsetX + 48, baseOffsetY + 252, 34, 6);
-	Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 15,
-		baseOffsetX + 460, baseOffsetY + 255);
-	lang_text_draw(58, 17, baseOffsetX + 52, baseOffsetY + 224, FONT_LARGE_BLACK);
-
-	int width = lang_text_draw_amount(
-		8, 4, Data_CityInfo.monthsSinceFestival,
-		baseOffsetX + 112, baseOffsetY + 260, FONT_NORMAL_WHITE
-	);
-	lang_text_draw(58, 15, baseOffsetX + 112 + width, baseOffsetY + 260, FONT_NORMAL_WHITE);
-	if (Data_CityInfo.plannedFestivalSize) {
-		lang_text_draw_centered(58, 34,
-			baseOffsetX + 102, baseOffsetY + 284,
-			300, FONT_NORMAL_WHITE);
-	} else {
-		lang_text_draw_centered(58, 16,
-			baseOffsetX + 102, baseOffsetY + 284,
-			300, FONT_NORMAL_WHITE);
-	}
-	int adviceId;
-	if (Data_CityInfo.monthsSinceFestival <= 1) {
-		adviceId = 0;
-	} else if (Data_CityInfo.monthsSinceFestival <= 6) {
-		adviceId = 1;
-	} else if (Data_CityInfo.monthsSinceFestival <= 12) {
-		adviceId = 2;
-	} else if (Data_CityInfo.monthsSinceFestival <= 18) {
-		adviceId = 3;
-	} else if (Data_CityInfo.monthsSinceFestival <= 24) {
-		adviceId = 4;
-	} else if (Data_CityInfo.monthsSinceFestival <= 30) {
-		adviceId = 5;
-	} else {
-		adviceId = 6;
-	}
-	lang_text_draw_multiline(58, 18 + adviceId,
-		baseOffsetX + 56, baseOffsetY + 305,
-		380, FONT_NORMAL_WHITE);
-}
-
 
 void UI_Advisor_Entertainment_drawForeground()
 {
+    graphics_in_dialog();
 	if (!Data_CityInfo.plannedFestivalSize) {
-		button_border_draw(
-			Data_Screen.offset640x480.x + 102, Data_Screen.offset640x480.y + 280,
-			300, 20, focusButtonId == 1);
+		button_border_draw(102, 280, 300, 20, focusButtonId == 1);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_Advisor_Entertainment_handleMouse(const mouse *m)
