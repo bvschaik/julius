@@ -27,6 +27,8 @@ typedef struct {
 
 void Graphics_clearScreen();
 
+void Graphics_drawPixel(int x, int y, color_t color);
+
 void Graphics_drawLine(int x1, int y1, int x2, int y2, color_t color);
 
 void Graphics_drawRect(int x, int y, int width, int height, color_t color);

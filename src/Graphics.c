@@ -53,6 +53,11 @@ static void drawDot(int x, int y, color_t color)
 	}
 }
 
+void Graphics_drawPixel(int x, int y, color_t color)
+{
+    drawDot(x, y, color);
+}
+
 void Graphics_drawLine(int x1, int y1, int x2, int y2, color_t color)
 {
 	if (x1 == x2) {

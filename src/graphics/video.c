@@ -10,7 +10,7 @@
 
 #include "libsmacker/smacker.h"
 
-#include "Data/Screen.h"
+#include "../Graphics.h"
 
 static struct {
     int isPlaying;
@@ -229,7 +229,7 @@ void video_draw(int x_offset, int y_offset)
                     (pal[frame[(y * data.video.width) + x] * 3] << 16) |
                     (pal[frame[(y * data.video.width) + x] * 3 + 1] << 8) |
                     (pal[frame[(y * data.video.width) + x] * 3 + 2]);
-                ScreenPixel(x_offset + x, y_offset + y) = color;
+                Graphics_drawPixel(x_offset + x, y_offset + y, color);
             }
         }
     }
