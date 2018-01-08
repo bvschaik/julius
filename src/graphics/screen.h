@@ -7,4 +7,8 @@ int screen_width();
 
 int screen_height();
 
+int screen_dialog_offset_x();
+
+int screen_dialog_offset_y();
+
 #endif // GRAPHICS_SCREEN_H

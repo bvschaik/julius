@@ -3,7 +3,6 @@
 #include "../Graphics.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Screen.h"
 #include "../Data/State.h"
 
 #include "city/finance.h"
@@ -13,6 +12,7 @@
 #include "game/state.h"
 #include "game/undo.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
@@ -42,53 +42,55 @@ void UI_VictoryIntermezzo_init()
 	UI_Intermezzo_show(Intermezzo_Won, Window_MissionEnd, 1000);
 }
 
+static void draw_lost()
+{
+    outer_panel_draw(48, 16, 34, 16);
+    lang_text_draw_centered(62, 1, 48, 32, 544, FONT_LARGE_BLACK);
+    lang_text_draw_multiline(62, 16, 64, 72, 496, FONT_NORMAL_BLACK);
+}
+
+static void draw_won()
+{
+    outer_panel_draw(48, 128, 34, 18);
+    lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
+    
+    inner_panel_draw(64, 184, 32, 7);
+
+    if (scenario_is_custom()) {
+        lang_text_draw_multiline(147, 20, 80, 192, 496, FONT_NORMAL_WHITE);
+    } else {
+        lang_text_draw_multiline(147, scenario_campaign_mission(), 80, 192, 496, FONT_NORMAL_WHITE);
+    }
+    int width = lang_text_draw(148, 0, 88, 308, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.ratingCulture, '@', " ", 88 + width, 308, FONT_NORMAL_BLACK);
+
+    width = lang_text_draw(148, 1, 348, 308, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.ratingProsperity, '@', " ", 348 + width, 308, FONT_NORMAL_BLACK);
+
+    width = lang_text_draw(148, 2, 88, 328, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.ratingPeace, '@', " ", 88 + width, 328, FONT_NORMAL_BLACK);
+
+    width = lang_text_draw(148, 3, 348, 328, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.ratingFavor, '@', " ", 348 + width, 328, FONT_NORMAL_BLACK);
+
+    width = lang_text_draw(148, 4, 88, 348, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.population, '@', " ", 88 + width, 348, FONT_NORMAL_BLACK);
+
+    width = lang_text_draw(148, 5, 348, 348, FONT_NORMAL_BLACK);
+    text_draw_number(city_finance_treasury(), '@', " ", 348 + width, 348, FONT_NORMAL_BLACK);
+
+    lang_text_draw_centered(13, 1, 64, 388, 512, FONT_NORMAL_BLACK);
+}
+
 void UI_MissionEnd_drawBackground()
 {
-	int xOffset = Data_Screen.offset640x480.x + 48;
-	int yOffset = Data_Screen.offset640x480.y + 128;
-	if (city_victory_state() != VICTORY_STATE_WON) {
-		// lost mission
-		outer_panel_draw(xOffset, yOffset - 112, 34, 16);
-		lang_text_draw_centered(62, 1, xOffset, yOffset - 96, 544, FONT_LARGE_BLACK);
-		lang_text_draw_multiline(62, 16, xOffset + 16, yOffset - 56, 496, FONT_NORMAL_BLACK);
-		return;
-	}
-	// won mission
-	outer_panel_draw(xOffset, yOffset, 34, 18);
-	lang_text_draw_centered(62, 0, xOffset, yOffset + 16, 544, FONT_LARGE_BLACK);
-	
-	inner_panel_draw(xOffset + 16, yOffset + 56, 32, 7);
-
-	if (scenario_is_custom()) {
-		lang_text_draw_multiline(147, 20, xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
-	} else {
-		lang_text_draw_multiline(147, scenario_campaign_mission(), xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
-	}
-	int width = lang_text_draw(148, 0, xOffset + 40, yOffset + 180, FONT_NORMAL_BLACK);
-	text_draw_number(Data_CityInfo.ratingCulture, '@', " ",
-		xOffset + 40 + width, yOffset + 180, FONT_NORMAL_BLACK);
-
-	width = lang_text_draw(148, 1, xOffset + 300, yOffset + 180, FONT_NORMAL_BLACK);
-	text_draw_number(Data_CityInfo.ratingProsperity, '@', " ",
-		xOffset + 300 + width, yOffset + 180, FONT_NORMAL_BLACK);
-
-	width = lang_text_draw(148, 2, xOffset + 40, yOffset + 200, FONT_NORMAL_BLACK);
-	text_draw_number(Data_CityInfo.ratingPeace, '@', " ",
-		xOffset + 40 + width, yOffset + 200, FONT_NORMAL_BLACK);
-
-	width = lang_text_draw(148, 3, xOffset + 300, yOffset + 200, FONT_NORMAL_BLACK);
-	text_draw_number(Data_CityInfo.ratingFavor, '@', " ",
-		xOffset + 300 + width, yOffset + 200, FONT_NORMAL_BLACK);
-
-	width = lang_text_draw(148, 4, xOffset + 40, yOffset + 220, FONT_NORMAL_BLACK);
-	text_draw_number(Data_CityInfo.population, '@', " ",
-		xOffset + 40 + width, yOffset + 220, FONT_NORMAL_BLACK);
-
-	width = lang_text_draw(148, 5, xOffset + 300, yOffset + 220, FONT_NORMAL_BLACK);
-	text_draw_number(city_finance_treasury(), '@', " ",
-		xOffset + 300 + width, yOffset + 220, FONT_NORMAL_BLACK);
-
-	lang_text_draw_centered(13, 1, xOffset + 16, yOffset + 260, 512, FONT_NORMAL_BLACK);
+    graphics_in_dialog();
+    if (city_victory_state() == VICTORY_STATE_WON) {
+        draw_won();
+    } else {
+        draw_lost();
+    }
+    graphics_reset_dialog();
 }
 
 void UI_MissionEnd_drawForeground()
@@ -140,47 +142,45 @@ void UI_MissionEnd_handleMouse(const mouse *m)
 
 void UI_VictoryDialog_drawBackground()
 {
-	int xOffset = Data_Screen.offset640x480.x + 48;
-	int yOffset = Data_Screen.offset640x480.y + 128;
+    graphics_in_dialog();
 
-	outer_panel_draw(xOffset, yOffset, 34, 15);
+	outer_panel_draw(48, 128, 34, 15);
 	if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
-		lang_text_draw_centered(62, 0, xOffset, yOffset + 16, 544, FONT_LARGE_BLACK);
-		lang_text_draw_centered(62, 2, xOffset, yOffset + 47, 544, FONT_NORMAL_BLACK);
-		lang_text_draw_centered(32, Data_CityInfo.playerRank + 1, xOffset, yOffset + 66, 544, FONT_LARGE_BLACK);
+		lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
+		lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK);
+		lang_text_draw_centered(32, Data_CityInfo.playerRank + 1, 48, 194, 544, FONT_LARGE_BLACK);
 	} else {
-		text_draw_centered(scenario_player_name(), xOffset, yOffset + 16, 512, FONT_LARGE_BLACK, 0);
-		lang_text_draw_multiline(62, 26, xOffset + 16, yOffset + 47, 480, FONT_NORMAL_BLACK);
+		text_draw_centered(scenario_player_name(), 48, 144, 512, FONT_LARGE_BLACK, 0);
+		lang_text_draw_multiline(62, 26, 64, 175, 480, FONT_NORMAL_BLACK);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_VictoryDialog_drawForeground()
 {
-	int xOffset = Data_Screen.offset640x480.x + 48;
-	int yOffset = Data_Screen.offset640x480.y + 128;
+    graphics_in_dialog();
 
 	if (city_victory_state() == VICTORY_STATE_WON) {
-		large_label_draw(xOffset + 32, yOffset + 112, 30, focusButtonId == 1);
+		large_label_draw(80, 280, 30, focusButtonId == 1);
 		if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
-			lang_text_draw_centered(62, 3,
-				xOffset + 32, yOffset + 118, 480, FONT_NORMAL_GREEN);
+			lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_GREEN);
 		} else {
-			lang_text_draw_centered(62, 27,
-				xOffset + 32, yOffset + 118, 480, FONT_NORMAL_GREEN);
+			lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_GREEN);
 		}
 		if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
 			// Continue for 2/5 years
-			large_label_draw(xOffset + 32, yOffset + 144, 30, focusButtonId == 2);
-			lang_text_draw_centered(62, 4, xOffset + 32, yOffset + 150, 480, FONT_NORMAL_GREEN);
+			large_label_draw(80, 272, 30, focusButtonId == 2);
+			lang_text_draw_centered(62, 4, 80, 278, 480, FONT_NORMAL_GREEN);
 
-			large_label_draw(xOffset + 32, yOffset + 176, 30, focusButtonId == 3);
-			lang_text_draw_centered(62, 5, xOffset + 32, yOffset + 182, 480, FONT_NORMAL_GREEN);
+			large_label_draw(80, 304, 30, focusButtonId == 3);
+			lang_text_draw_centered(62, 5, 80, 310, 480, FONT_NORMAL_GREEN);
 		}
 	} else {
 		// lost
-		large_label_draw(xOffset + 32, yOffset + 96, 30, focusButtonId == 1);
-		lang_text_draw_centered(62, 6, xOffset + 32, yOffset + 102, 480, FONT_NORMAL_GREEN);
+		large_label_draw(80, 224, 30, focusButtonId == 1);
+		lang_text_draw_centered(62, 6, 80, 230, 480, FONT_NORMAL_GREEN);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_VictoryDialog_handleMouse(const mouse *m)

@@ -3,11 +3,10 @@
 #include "core/calc.h"
 #include "../Graphics.h"
 
-#include "../Data/Screen.h"
-
 #include "city/message.h"
 #include "core/lang.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -47,8 +46,6 @@ static generic_button customButtonsMessages[] = {
 };
 
 static struct {
-	int x;
-	int y;
 	int widthBlocks;
 	int heightBlocks;
 	int xText;
@@ -95,17 +92,16 @@ void UI_PlayerMessageList_drawBackground()
 	UI_City_drawBackground();
 	UI_City_drawForeground();
 
-	data.x = Data_Screen.offset640x480.x;
-	data.y = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 	data.widthBlocks = 30;
 	data.heightBlocks = 22;
-	data.xText = data.x + 16;
-	data.yText = data.y + 80;
+	data.xText = 16;
+	data.yText = 112;
 	data.textWidthBlocks = data.widthBlocks - 4;
 	data.textHeightBlocks = data.heightBlocks - 9;
 
-	outer_panel_draw(data.x, data.y, data.widthBlocks, data.heightBlocks);
-	lang_text_draw_centered(63, 0, data.x, data.y + 16, 16 * data.widthBlocks, FONT_LARGE_BLACK);
+	outer_panel_draw(0, 32, data.widthBlocks, data.heightBlocks);
+	lang_text_draw_centered(63, 0, 0, 48, 16 * data.widthBlocks, FONT_LARGE_BLACK);
 	inner_panel_draw(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
 
 	if (city_message_count() > 0) {
@@ -119,16 +115,14 @@ void UI_PlayerMessageList_drawBackground()
 			data.xText + 16, data.yText + 80,
 			16 * data.textWidthBlocks - 48, FONT_NORMAL_GREEN);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_PlayerMessageList_drawForeground()
 {
-	image_buttons_draw(
-		data.x + 16, data.y + 16 * data.heightBlocks - 42,
-		&imageButtonHelp, 1);
-	image_buttons_draw(
-		data.x + 16 * data.widthBlocks - 38, data.y + 16 * data.heightBlocks - 36,
-		&imageButtonClose, 1);
+    graphics_in_dialog();
+	image_buttons_draw(16, 32 + 16 * data.heightBlocks - 42, &imageButtonHelp, 1);
+	image_buttons_draw(16 * data.widthBlocks - 38, 32 + 16 * data.heightBlocks - 36, &imageButtonClose, 1);
 
     int totalMessages = city_message_count();
 	if (totalMessages <= 0) {
@@ -185,47 +179,49 @@ void UI_PlayerMessageList_drawForeground()
 		Graphics_drawImage(image_group(GROUP_PANEL_BUTTON) + 39,
 			data.xText + 9 + 16 * data.textWidthBlocks, data.yText + 26 + dotOffset);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_PlayerMessageList_handleMouse(const mouse *m)
 {
-	if (m->scrolled == SCROLL_DOWN) {
+    const mouse *m_dialog = mouse_in_dialog(m);
+	if (m_dialog->scrolled == SCROLL_DOWN) {
 		buttonScroll(1, 3);
-	} else if (m->scrolled == SCROLL_UP) {
+	} else if (m_dialog->scrolled == SCROLL_UP) {
 		buttonScroll(0, 3);
 	}
 	int buttonId;
-	image_buttons_handle_mouse(m, data.x + 16, data.y + 16 * data.heightBlocks - 42, &imageButtonHelp, 1, &buttonId);
+	image_buttons_handle_mouse(m_dialog, 16, 32 + 16 * data.heightBlocks - 42, &imageButtonHelp, 1, &buttonId);
 	if (buttonId) {
 		focusButtonId = 11;
 		return;
 	}
-	image_buttons_handle_mouse(m, data.x + 16 * data.widthBlocks - 38,
-		data.y + 16 * data.heightBlocks - 36, &imageButtonClose, 1, &buttonId);
+	image_buttons_handle_mouse(m_dialog, 16 * data.widthBlocks - 38,
+		32 + 16 * data.heightBlocks - 36, &imageButtonClose, 1, &buttonId);
 	if (buttonId) {
 		focusButtonId = 12;
 		return;
 	}
-	image_buttons_handle_mouse(m, data.xText + 16 * data.textWidthBlocks, data.yText, &imageButtonScrollUp, 1, &buttonId);
+	image_buttons_handle_mouse(m_dialog, data.xText + 16 * data.textWidthBlocks, data.yText, &imageButtonScrollUp, 1, &buttonId);
 	if (buttonId) {
 		focusButtonId = 13;
 		return;
 	}
-	image_buttons_handle_mouse(m, data.xText + 16 * data.textWidthBlocks,
+	image_buttons_handle_mouse(m_dialog, data.xText + 16 * data.textWidthBlocks,
 		data.yText + 16 * data.textHeightBlocks - 26, &imageButtonScrollDown, 1, &buttonId);
 	if (buttonId) {
 		focusButtonId = 13;
 		return;
 	}
 	int oldFocusButtonId = focusButtonId;
-	if (generic_buttons_handle_mouse(m, data.xText, data.yText + 4,
+	if (generic_buttons_handle_mouse(m_dialog, data.xText, data.yText + 4,
 		customButtonsMessages, 10, &focusButtonId)) {
 		if (oldFocusButtonId != focusButtonId) {
 			UI_Window_requestRefresh();
 		}
 		return;
 	}
-	handleMouseScrollbar(m);
+	handleMouseScrollbar(m_dialog);
 }
 
 static void handleMouseScrollbar(const mouse *m)

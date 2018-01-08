@@ -6,13 +6,13 @@
 #include "../Graphics.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Screen.h"
 
 #include "city/message.h"
 #include "city/view.h"
 #include "core/lang.h"
 #include "empire/city.h"
 #include "figure/formation.h"
+#include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -141,23 +141,25 @@ void UI_MessageDialog_init()
 
 void UI_MessageDialog_drawBackground()
 {
+    if (!data.backgroundIsProvided) {
+        UI_City_drawBackground();
+        UI_City_drawForeground();
+    }
+    graphics_in_dialog();
 	if (data.showVideo) {
 		drawDialogVideo();
 	} else {
 		drawDialogNormal();
 	}
+	graphics_reset_dialog();
 }
 
 static void drawDialogNormal()
 {
 	rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
 	const lang_message *msg = lang_get_message(data.textId);
-	data.x = Data_Screen.offset640x480.x + msg->x;
-	data.y = Data_Screen.offset640x480.y + msg->y;
-	if (!data.backgroundIsProvided) {
-		UI_City_drawBackground();
-		UI_City_drawForeground();
-	}
+	data.x = msg->x;
+	data.y = msg->y;
 	int someOffset = (msg->type == TYPE_MANUAL) ? 48 : 32;
 	data.xText = data.x + 16;
 	outer_panel_draw(data.x, data.y, msg->width_blocks, msg->height_blocks);
@@ -233,12 +235,8 @@ static void drawDialogVideo()
 {
 	rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
 	const lang_message *msg = lang_get_message(data.textId);
-	data.x = Data_Screen.offset640x480.x + 32;
-	data.y = Data_Screen.offset640x480.y + 28;
-	if (!data.backgroundIsProvided) {
-		UI_City_drawBackground();
-		UI_City_drawForeground();
-	}
+	data.x = 32;
+	data.y = 28;
 	outer_panel_draw(data.x, data.y, 26, 28);
 	Graphics_drawRect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
 	rich_text_clear_links();
@@ -437,25 +435,28 @@ static void drawForegroundNoVideo()
 
 void UI_MessageDialog_drawForeground()
 {
+    graphics_in_dialog();
 	if (data.showVideo) {
 		drawForegroundVideo();
 	} else {
 		drawForegroundNoVideo();
 	}
+	graphics_reset_dialog();
 }
 
 void UI_MessageDialog_handleMouse(const mouse *m)
 {
-	if (m->scrolled == SCROLL_DOWN) {
+    const mouse *m_dialog = mouse_in_dialog(m);
+	if (m_dialog->scrolled == SCROLL_DOWN) {
 		rich_text_scroll(1, 3);
-	} else if (m->scrolled == SCROLL_UP) {
+	} else if (m_dialog->scrolled == SCROLL_UP) {
 		rich_text_scroll(0, 3);
 	}
 	if (data.showVideo) {
-		if (image_buttons_handle_mouse(m, data.x + 16, data.y + 408, getAdvisorButton(), 1, 0)) {
+		if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, getAdvisorButton(), 1, 0)) {
 			return;
 		}
-		if (image_buttons_handle_mouse(m, data.x + 372, data.y + 410, &imageButtonClose, 1, 0)) {
+		if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &imageButtonClose, 1, 0)) {
 			return;
 		}
 		return;
@@ -464,29 +465,29 @@ void UI_MessageDialog_handleMouse(const mouse *m)
 	const lang_message *msg = lang_get_message(data.textId);
 
 	if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(
-		m, data.x + 16, data.y + 16 * msg->height_blocks - 36, &imageButtonBack, 1, 0)) {
+		        m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 36, &imageButtonBack, 1, 0)) {
 		return;
 	}
 	if (msg->type == TYPE_MESSAGE) {
-		if (image_buttons_handle_mouse(m, data.x + 16, data.y + 16 * msg->height_blocks - 40,
+		if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 40,
 			getAdvisorButton(), 1, 0)) {
 			return;
 		}
 		if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
-			if (image_buttons_handle_mouse(m, data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1, 0)) {
+			if (image_buttons_handle_mouse(m_dialog, data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1, 0)) {
 				return;
 			}
 		}
 	}
 
-	if (image_buttons_handle_mouse(m,
+	if (image_buttons_handle_mouse(m_dialog,
 		data.x + 16 * msg->width_blocks - 38,
 		data.y + 16 * msg->height_blocks - 36,
 		&imageButtonClose, 1, 0)) {
 		return;
 	}
-	rich_text_handle_mouse(m);
-	int textId = rich_text_get_clicked_link(m);
+	rich_text_handle_mouse(m_dialog);
+	int textId = rich_text_get_clicked_link(m_dialog);
 	if (textId >= 0) {
 		if (data.numHistory < MAX_HISTORY - 1) {
 			data.history[data.numHistory].textId = data.textId;

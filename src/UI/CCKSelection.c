@@ -6,6 +6,7 @@
 #include "core/string.h"
 #include "game/file.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -17,8 +18,6 @@
 #include "sound/speech.h"
 
 #include "../Graphics.h"
-
-#include "../Data/Screen.h"
 
 #include <string.h>
 
@@ -73,18 +72,17 @@ void UI_CCKSelection_init()
 void UI_CCKSelection_drawBackground()
 {
 	Graphics_drawFullScreenImage(image_group(GROUP_CCK_BACKGROUND));
-	inner_panel_draw(
-		Data_Screen.offset640x480.x + 280,
-		Data_Screen.offset640x480.y + 242, 2, 12);
+    graphics_in_dialog();
+	inner_panel_draw(280, 242, 2, 12);
 	drawScenarioList();
 	drawScrollbarDot();
 	drawScenarioInfo();
+    graphics_reset_dialog();
 }
 
 static void drawScenarioList()
 {
-	inner_panel_draw(Data_Screen.offset640x480.x + 16,
-		Data_Screen.offset640x480.y + 210, 16, 16);
+	inner_panel_draw(16, 210, 16, 16);
 	for (int i = 0; i < 15; i++) {
 		font_t font = FONT_NORMAL_GREEN;
 		if (focusButtonId == i + 1) {
@@ -95,8 +93,7 @@ static void drawScenarioList()
 		char file[FILE_NAME_MAX];
 		strcpy(file, scenarios->files[i + scrollPosition]);
 		file_remove_extension(file);
-		text_draw(string_from_ascii(file), Data_Screen.offset640x480.x + 24,
-			Data_Screen.offset640x480.y + 220 + 16 * i, font, 0);
+		text_draw(string_from_ascii(file), 24, 220 + 16 * i, font, 0);
 	}
 }
 
@@ -112,28 +109,18 @@ static void drawScrollbarDot()
 			pct = calc_percentage(scrollPosition, scenarios->num_files - 15);
 		}
 		int yOffset = calc_adjust_with_percentage(164, pct);
-		Graphics_drawImage(image_group(GROUP_PANEL_BUTTON) + 39,
-			Data_Screen.offset640x480.x + 284,
-			Data_Screen.offset640x480.y + 245 + yOffset);
+		Graphics_drawImage(image_group(GROUP_PANEL_BUTTON) + 39, 284, 245 + yOffset);
 	}
 }
 
 static void drawScenarioInfo()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x + 320;
-	int baseOffsetY = Data_Screen.offset640x480.y + 20;
+	Graphics_drawImage(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
 
-	Graphics_drawImage(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(),
-		Data_Screen.offset640x480.x + 78, Data_Screen.offset640x480.y + 36);
-
-	text_draw_centered(string_from_ascii(selectedScenario),
-		baseOffsetX + 15, baseOffsetY + 5, 260, FONT_LARGE_BLACK, 0);
-	text_draw_centered(scenario_brief_description(),
-		baseOffsetX + 15, baseOffsetY + 40, 260, FONT_NORMAL_WHITE, 0);
-	lang_text_draw_year(scenario_property_start_year(),
-		baseOffsetX + 90, baseOffsetY + 70, FONT_LARGE_BLACK);
-	lang_text_draw_centered(44, 77 + scenario_property_climate(),
-		baseOffsetX + 15, baseOffsetY + 130, 260, FONT_NORMAL_BLACK);
+	text_draw_centered(string_from_ascii(selectedScenario), 335, 25, 260, FONT_LARGE_BLACK, 0);
+	text_draw_centered(scenario_brief_description(), 335, 60, 260, FONT_NORMAL_WHITE, 0);
+	lang_text_draw_year(scenario_property_start_year(), 410, 90, FONT_LARGE_BLACK);
+	lang_text_draw_centered(44, 77 + scenario_property_climate(), 335, 150, 260, FONT_NORMAL_BLACK);
 
 	// map size
 	int textId;
@@ -145,8 +132,7 @@ static void drawScenarioInfo()
 		case 120: textId = 125; break;
 		default: textId = 126; break;
 	}
-	lang_text_draw_centered(44, textId,
-		baseOffsetX + 15, baseOffsetY + 150, 260, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(44, textId, 335, 170, 260, FONT_NORMAL_BLACK);
 
 	// military
 	int numInvasions = scenario_invasion_count();
@@ -161,68 +147,52 @@ static void drawScenarioInfo()
 	} else {
 		textId = 116;
 	}
-	lang_text_draw_centered(44, textId,
-		baseOffsetX + 15, baseOffsetY + 170, 260, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(44, textId, 335, 190, 260, FONT_NORMAL_BLACK);
 
-	lang_text_draw_centered(32, 11 + scenario_property_player_rank(),
-		baseOffsetX + 15, baseOffsetY + 190, 260, FONT_NORMAL_BLACK);
+	lang_text_draw_centered(32, 11 + scenario_property_player_rank(), 335, 210, 260, FONT_NORMAL_BLACK);
 	if (scenario_is_open_play()) {
-		lang_text_draw_multiline(145, scenario_open_play_id(),
-			baseOffsetX + 25, baseOffsetY + 250, 260, FONT_NORMAL_BLACK);
+		lang_text_draw_multiline(145, scenario_open_play_id(), 345, 270, 260, FONT_NORMAL_BLACK);
 	} else {
-		lang_text_draw_centered(44, 127,
-			baseOffsetX + 15, baseOffsetY + 242, 260, FONT_NORMAL_BLACK);
+		lang_text_draw_centered(44, 127, 335, 262, 260, FONT_NORMAL_BLACK);
 		int width;
 		if (scenario_criteria_culture_enabled()) {
-			width = text_draw_number(scenario_criteria_culture(), '@', " ",
-				baseOffsetX + 90, baseOffsetY + 270, FONT_NORMAL_BLACK);
-			lang_text_draw(44, 129,
-				baseOffsetX + 90 + width, baseOffsetY + 270, FONT_NORMAL_BLACK);
+			width = text_draw_number(scenario_criteria_culture(), '@', " ", 410, 290, FONT_NORMAL_BLACK);
+			lang_text_draw(44, 129, 410 + width, 290, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_prosperity_enabled()) {
-			width = text_draw_number(scenario_criteria_prosperity(), '@', " ",
-				baseOffsetX + 90, baseOffsetY + 286, FONT_NORMAL_BLACK);
-			lang_text_draw(44, 130,
-				baseOffsetX + 90 + width, baseOffsetY + 286, FONT_NORMAL_BLACK);
+			width = text_draw_number(scenario_criteria_prosperity(), '@', " ", 410, 306, FONT_NORMAL_BLACK);
+			lang_text_draw(44, 130, 410 + width, 306, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_peace_enabled()) {
-			width = text_draw_number(scenario_criteria_peace(), '@', " ",
-				baseOffsetX + 90, baseOffsetY + 302, FONT_NORMAL_BLACK);
-			lang_text_draw(44, 131,
-				baseOffsetX + 90 + width, baseOffsetY + 302, FONT_NORMAL_BLACK);
+			width = text_draw_number(scenario_criteria_peace(), '@', " ", 410, 322, FONT_NORMAL_BLACK);
+			lang_text_draw(44, 131, 410 + width, 322, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_favor_enabled()) {
-			width = text_draw_number(scenario_criteria_favor(), '@', " ",
-				baseOffsetX + 90, baseOffsetY + 318, FONT_NORMAL_BLACK);
-			lang_text_draw(44, 132,
-				baseOffsetX + 90 + width, baseOffsetY + 318, FONT_NORMAL_BLACK);
+			width = text_draw_number(scenario_criteria_favor(), '@', " ", 410, 338, FONT_NORMAL_BLACK);
+			lang_text_draw(44, 132, 410 + width, 338, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_population_enabled()) {
-			width = text_draw_number(scenario_criteria_population(), '@', " ",
-				baseOffsetX + 90, baseOffsetY + 334, FONT_NORMAL_BLACK);
-			lang_text_draw(44, 133,
-				baseOffsetX + 90 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
+			width = text_draw_number(scenario_criteria_population(), '@', " ", 410, 354, FONT_NORMAL_BLACK);
+			lang_text_draw(44, 133, 410 + width, 354, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_time_limit_enabled()) {
-			width = text_draw_number(scenario_criteria_time_limit_years(), '@', " ",
-				baseOffsetX + 90, baseOffsetY + 350, FONT_NORMAL_BLACK);
-			lang_text_draw(44, 134,
-				baseOffsetX + 90 + width, baseOffsetY + 350, FONT_NORMAL_BLACK);
+			width = text_draw_number(scenario_criteria_time_limit_years(), '@', " ", 410, 370, FONT_NORMAL_BLACK);
+			lang_text_draw(44, 134, 410 + width, 370, FONT_NORMAL_BLACK);
 		}
 		if (scenario_criteria_survival_enabled()) {
-			width = text_draw_number(scenario_criteria_survival_years(), '@', " ",
-				baseOffsetX + 90, baseOffsetY + 366, FONT_NORMAL_BLACK);
-			lang_text_draw(44, 135,
-				baseOffsetX + 90 + width, baseOffsetY + 366, FONT_NORMAL_BLACK);
+			width = text_draw_number(scenario_criteria_survival_years(), '@', " ", 410, 386, FONT_NORMAL_BLACK);
+			lang_text_draw(44, 135, 410 + width, 386, FONT_NORMAL_BLACK);
 		}
 	}
-	lang_text_draw(44, 136, baseOffsetX + 100, baseOffsetY + 426, FONT_NORMAL_BLACK);
+	lang_text_draw(44, 136, 420, 446, FONT_NORMAL_BLACK);
 }
 
 void UI_CCKSelection_drawForeground()
 {
-	image_buttons_draw(Data_Screen.offset640x480.x, Data_Screen.offset640x480.y, imageButtons, 3);
+    graphics_in_dialog();
+	image_buttons_draw(0, 0, imageButtons, 3);
 	drawScenarioList();
+    graphics_reset_dialog();
 }
 
 void UI_CCKSelection_handleMouse(const mouse *m)
@@ -244,17 +214,16 @@ void UI_CCKSelection_handleMouse(const mouse *m)
 
 static int handleScrollbarClick(const mouse *m)
 {
+    const mouse *m_dialog = mouse_in_dialog(m);
 	if (scenarios->num_files <= 15) {
 		return 0;
 	}
-	if (!m->left.is_down) {
+	if (!m_dialog->left.is_down) {
 		return 0;
 	}
-	int x = Data_Screen.offset640x480.x;
-	int y = Data_Screen.offset640x480.y;
-	if (m->x >= x + 280 && m->x <= x + 312 &&
-		m->y >= y + 245 && m->y <= y + 434) {
-		int yOffset = m->y - (y + 245);
+	if (m_dialog->x >= 280 && m_dialog->x <= 312 &&
+		    m_dialog->y >= 245 && m_dialog->y <= 434) {
+		int yOffset = m_dialog->y - 245;
 		if (yOffset > 164) {
 			yOffset = 164;
 		}

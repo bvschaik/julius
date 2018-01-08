@@ -6,7 +6,6 @@
 #include "../Graphics.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Screen.h"
 
 #include "core/lang.h"
 #include "core/string.h"
@@ -14,6 +13,7 @@
 #include "game/settings.h"
 #include "graphics/lang_text.h"
 #include "graphics/rich_text.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 
 static int shouldDrawTooltip(struct TooltipContext *c);
@@ -95,7 +95,7 @@ static void drawButtonTooltip(struct TooltipContext *c)
 	int height = 16 * lines + 10;
 
 	int x, y;
-	if (c->mouse_x < Data_Screen.offset640x480.x + width + 100) {
+	if (c->mouse_x < screen_dialog_offset_x() + width + 100) {
 		if (UI_Window_getId() == Window_Advisors) {
 			x = c->mouse_x + 50;
 		} else {
@@ -107,7 +107,7 @@ static void drawButtonTooltip(struct TooltipContext *c)
 	
 	switch (UI_Window_getId()) {
 		case Window_Advisors:
-			if (c->mouse_y < Data_Screen.offset640x480.y + 432) {
+			if (c->mouse_y < screen_dialog_offset_y() + 432) {
 				y = c->mouse_y;
 				switch (UI_Advisors_getId()) {
 					case ADVISOR_LABOR: y -= 74; break;
@@ -116,7 +116,7 @@ static void drawButtonTooltip(struct TooltipContext *c)
 					default: y -= 64; break;
 				}
 			} else {
-				y = Data_Screen.offset640x480.y + 432;
+				y = screen_dialog_offset_y() + 432;
 			}
 			break;
 		case Window_TradePricesDialog: // FIXED used to cause ghosting
@@ -127,14 +127,14 @@ static void drawButtonTooltip(struct TooltipContext *c)
 			break;
 		case Window_LaborPriorityDialog:
 			x = c->mouse_x - width / 2 - 10;
-			if (c->mouse_y < Data_Screen.offset640x480.y + 200) {
+			if (c->mouse_y < screen_dialog_offset_y() + 200) {
 				y = c->mouse_y + 40;
 			} else {
 				y = c->mouse_y - 72;
 			}
 			break;
 		default:
-			if (c->mouse_y < Data_Screen.offset640x480.y + 200) {
+			if (c->mouse_y < screen_dialog_offset_y() + 200) {
 				y = c->mouse_y + 40;
 			} else {
 				y = c->mouse_y - 62;

@@ -15,10 +15,9 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "scenario/building.h"
-
-#include "../Data/Screen.h"
 
 static void buttonPrices(int param1, int param2);
 static void buttonEmpire(int param1, int param2);
@@ -198,8 +197,8 @@ void UI_TradePricesDialog_handleMouse(const mouse *m)
 
 static int getTradePriceTooltipResource(struct TooltipContext *c)
 {
-	int xBase = Data_Screen.offset640x480.x + 124;
-	int y = Data_Screen.offset640x480.y + 192;
+	int xBase = screen_dialog_offset_x() + 124;
+	int y = screen_dialog_offset_y() + 192;
 	int xMouse = c->mouse_x;
 	int yMouse = c->mouse_y;
 	

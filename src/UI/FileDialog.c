@@ -9,6 +9,7 @@
 #include "core/time.h"
 #include "game/file.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -16,8 +17,6 @@
 #include "input/keyboard.h"
 
 #include "../Graphics.h"
-
-#include "../Data/Screen.h"
 
 #include <string.h>
 
@@ -83,27 +82,22 @@ void UI_FileDialog_drawBackground()
 
 void UI_FileDialog_drawForeground()
 {
+    graphics_in_dialog();
 	char file[100];
 
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
-	
-	outer_panel_draw(baseOffsetX + 128, baseOffsetY + 40, 24, 21);
-	inner_panel_draw(baseOffsetX + 144, baseOffsetY + 80, 20, 2);
-	inner_panel_draw(baseOffsetX + 144, baseOffsetY + 120, 20, 13);
+	outer_panel_draw(128, 40, 24, 21);
+	inner_panel_draw(144, 80, 20, 2);
+	inner_panel_draw(144, 120, 20, 13);
 
     // title
 	if (messageNotExistTimeUntil && time_get_millis() < messageNotExistTimeUntil) {
-		lang_text_draw_centered(43, 2,
-			baseOffsetX + 160, baseOffsetY + 50, 304, FONT_LARGE_BLACK);
+		lang_text_draw_centered(43, 2, 160, 50, 304, FONT_LARGE_BLACK);
 	} else if (dialogType == FileDialogType_Delete) {
-		lang_text_draw_centered(43, 6,
-			baseOffsetX + 160, baseOffsetY + 50, 304, FONT_LARGE_BLACK);
+		lang_text_draw_centered(43, 6, 160, 50, 304, FONT_LARGE_BLACK);
 	} else {
-		lang_text_draw_centered(43, dialogType,
-			baseOffsetX + 160, baseOffsetY + 50, 304, FONT_LARGE_BLACK);
+		lang_text_draw_centered(43, dialogType, 160, 50, 304, FONT_LARGE_BLACK);
 	}
-	lang_text_draw(43, 5, baseOffsetX + 224, baseOffsetY + 342, FONT_NORMAL_BLACK);
+	lang_text_draw(43, 5, 224, 342, FONT_NORMAL_BLACK);
 
 	for (int i = 0; i < 12; i++) {
 		font_t font = FONT_NORMAL_GREEN;
@@ -112,14 +106,16 @@ void UI_FileDialog_drawForeground()
 		}
 		strcpy(file, savedGames->files[scrollPosition + i]);
 		file_remove_extension(file);
-		text_draw(string_from_ascii(file), baseOffsetX + 160, baseOffsetY + 130 + 16 * i, font, 0);
+		text_draw(string_from_ascii(file), 160, 130 + 16 * i, font, 0);
 	}
 
-	image_buttons_draw(baseOffsetX, baseOffsetY, imageButtons, 4);
+	image_buttons_draw(0, 0, imageButtons, 4);
 	text_capture_cursor(keyboard_cursor_position());
-	text_draw(string_from_ascii(saved_game), baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
-	text_draw_cursor(baseOffsetX + 160, baseOffsetY + 91, keyboard_is_insert());
+	text_draw(string_from_ascii(saved_game), 160, 90, FONT_NORMAL_WHITE, 0);
+	text_draw_cursor(160, 91, keyboard_is_insert());
 	drawScrollbarDot();
+
+    graphics_reset_dialog();
 }
 
 static void drawScrollbarDot()
@@ -134,9 +130,7 @@ static void drawScrollbarDot()
 			pct = calc_percentage(scrollPosition, savedGames->num_files - 12);
 		}
 		int yOffset = calc_adjust_with_percentage(130, pct);
-		Graphics_drawImage(image_group(GROUP_PANEL_BUTTON) + 39,
-			Data_Screen.offset640x480.x + 472,
-			Data_Screen.offset640x480.y + 145 + yOffset);
+		Graphics_drawImage(image_group(GROUP_PANEL_BUTTON) + 39, 472, 145 + yOffset);
 	}
 }
 
@@ -167,17 +161,15 @@ void UI_FileDialog_handleMouse(const mouse *m)
 
 static int handleScrollbarClick(const mouse *m)
 {
+    const mouse *m_dialog = mouse_in_dialog(m);
 	if (savedGames->num_files <= 12) {
 		return 0;
 	}
-	if (!m->left.is_down) {
+	if (!m_dialog->left.is_down) {
 		return 0;
 	}
-	int x = Data_Screen.offset640x480.x;
-	int y = Data_Screen.offset640x480.y;
-	if (m->x >= x + 464 && m->x <= x + 496 &&
-		m->y >= y + 145 && m->y <= y + 300) {
-		int yOffset = m->y - (y + 145);
+	if (m_dialog->x >= 464 && m_dialog->x <= 496 && m_dialog->y >= 145 && m_dialog->y <= 300) {
+		int yOffset = m_dialog->y - 145;
 		if (yOffset > 130) {
 			yOffset = 130;
 		}

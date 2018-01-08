@@ -1,7 +1,7 @@
 #include "PopupDialog.h"
 #include "Window.h"
-#include "../Data/Screen.h"
 
+#include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -38,26 +38,26 @@ void UI_PopupDialog_show(int msgId, void (*closeFunc)(int accepted), int hasOkCa
 
 void UI_PopupDialog_drawBackground()
 {
-	int xOffset = Data_Screen.offset640x480.x + 80;
-	int yOffset = Data_Screen.offset640x480.y + 80;
-	outer_panel_draw(xOffset, yOffset, 30, 10);
-	lang_text_draw_centered(GROUP, data.msgId, xOffset, yOffset + 20, 480, FONT_LARGE_BLACK);
+    graphics_in_dialog();
+	outer_panel_draw(80, 80, 30, 10);
+	lang_text_draw_centered(GROUP, data.msgId, 80, 100, 480, FONT_LARGE_BLACK);
 	if (lang_text_get_width(GROUP, data.msgId + 1, FONT_NORMAL_BLACK) >= 420) {
-		lang_text_draw_multiline(GROUP, data.msgId + 1, xOffset + 30, yOffset + 60, 420, FONT_NORMAL_BLACK);
+		lang_text_draw_multiline(GROUP, data.msgId + 1, 110, 140, 420, FONT_NORMAL_BLACK);
 	} else {
-		lang_text_draw_centered(GROUP, data.msgId + 1, xOffset, yOffset + 60, 480, FONT_NORMAL_BLACK);
+		lang_text_draw_centered(GROUP, data.msgId + 1, 80, 140, 480, FONT_NORMAL_BLACK);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_PopupDialog_drawForeground()
 {
-	int xOffset = Data_Screen.offset640x480.x + 80;
-	int yOffset = Data_Screen.offset640x480.y + 80;
+    graphics_in_dialog();
 	if (data.hasButtons) {
-		image_buttons_draw(xOffset, yOffset, buttons, 2);
+		image_buttons_draw(80, 80, buttons, 2);
 	} else {
-		lang_text_draw_centered(13, 1, xOffset, yOffset + 128, 480, FONT_NORMAL_BLACK);
+		lang_text_draw_centered(13, 1, 80, 208, 480, FONT_NORMAL_BLACK);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_PopupDialog_handleMouse(const mouse *m)

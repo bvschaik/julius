@@ -4,7 +4,6 @@
 #include "../Graphics.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Screen.h"
 #include "../Data/State.h"
 
 #include "core/lang.h"
@@ -12,6 +11,7 @@
 #include "game/file.h"
 #include "game/mission.h"
 #include "game/tutorial.h"
+#include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -88,22 +88,18 @@ void UI_MissionStart_show()
 
 void UI_MissionStart_Selection_drawBackground()
 {
-	int xOffset = Data_Screen.offset640x480.x;
-	int yOffset = Data_Screen.offset640x480.y;
 	int rank = scenario_campaign_rank();
 	
 	Graphics_drawFullScreenImage(image_group(GROUP_SELECT_MISSION_BACKGROUND));
-	Graphics_drawImage(image_group(GROUP_SELECT_MISSION) +
-		backgroundGraphicOffset[rank],
-		xOffset, yOffset);
-	lang_text_draw(144, 1 + 3 * rank, xOffset + 20, yOffset + 410, FONT_LARGE_BLACK);
+    graphics_in_dialog();
+	Graphics_drawImage(image_group(GROUP_SELECT_MISSION) + backgroundGraphicOffset[rank], 0, 0);
+	lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK);
 	if (data.choice) {
-		lang_text_draw_multiline(144, 1 + 3 * rank + data.choice,
-			xOffset + 20, yOffset + 440, 560, FONT_NORMAL_BLACK);
+		lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK);
 	} else {
-		lang_text_draw_multiline(144, 0,
-			xOffset + 20, yOffset + 440, 560, FONT_NORMAL_BLACK);
+		lang_text_draw_multiline(144, 0, 20, 440, 560, FONT_NORMAL_BLACK);
 	}
+	graphics_reset_dialog();
 }
 
 static int isMouseHit(const mouse *m, int x, int y, int size)
@@ -115,18 +111,17 @@ static int isMouseHit(const mouse *m, int x, int y, int size)
 
 void UI_MissionStart_Selection_drawForeground()
 {
-	int xOffset = Data_Screen.offset640x480.x;
-	int yOffset = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
 	if (data.choice > 0) {
-		image_buttons_draw(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1);
+		image_buttons_draw(580, 410, &imageButtonStartMission, 1);
 	}
 
 	int rank = scenario_campaign_rank();
-	int xPeaceful = xOffset + campaignSelection[rank].xPeaceful - 4;
-	int yPeaceful = yOffset + campaignSelection[rank].yPeaceful - 4;
-	int xMilitary = xOffset + campaignSelection[rank].xMilitary - 4;
-	int yMilitary = yOffset + campaignSelection[rank].yMilitary - 4;
+	int xPeaceful = campaignSelection[rank].xPeaceful - 4;
+	int yPeaceful = campaignSelection[rank].yPeaceful - 4;
+	int xMilitary = campaignSelection[rank].xMilitary - 4;
+	int yMilitary = campaignSelection[rank].yMilitary - 4;
 	int graphicId = image_group(GROUP_SELECT_MISSION_BUTTON);
 	if (data.choice == 0) {
 		Graphics_drawImage(focusButton == 1 ? graphicId + 1 : graphicId, xPeaceful, yPeaceful);
@@ -138,42 +133,42 @@ void UI_MissionStart_Selection_drawForeground()
 		Graphics_drawImage(focusButton == 1 ? graphicId + 1 : graphicId, xPeaceful, yPeaceful);
 		Graphics_drawImage(focusButton == 2 ? graphicId + 1 : graphicId + 2, xMilitary, yMilitary);
 	}
+	graphics_reset_dialog();
 }
 
 void UI_MissionStart_Selection_handleMouse(const mouse *m)
 {
-	int xOffset = Data_Screen.offset640x480.x;
-	int yOffset = Data_Screen.offset640x480.y;
+    const mouse *m_dialog = mouse_in_dialog(m);
 
     int rank = scenario_campaign_rank();
-    int xPeaceful = xOffset + campaignSelection[rank].xPeaceful - 4;
-    int yPeaceful = yOffset + campaignSelection[rank].yPeaceful - 4;
-    int xMilitary = xOffset + campaignSelection[rank].xMilitary - 4;
-    int yMilitary = yOffset + campaignSelection[rank].yMilitary - 4;
+    int xPeaceful = campaignSelection[rank].xPeaceful - 4;
+    int yPeaceful = campaignSelection[rank].yPeaceful - 4;
+    int xMilitary = campaignSelection[rank].xMilitary - 4;
+    int yMilitary = campaignSelection[rank].yMilitary - 4;
     focusButton = 0;
-    if (isMouseHit(m, xPeaceful, yPeaceful, 44)) {
+    if (isMouseHit(m_dialog, xPeaceful, yPeaceful, 44)) {
         focusButton = 1;
     }
-    if (isMouseHit(m, xMilitary, yMilitary, 44)) {
+    if (isMouseHit(m_dialog, xMilitary, yMilitary, 44)) {
         focusButton = 2;
     }
 
-	if (m->right.went_up) {
+	if (m_dialog->right.went_up) {
 		UI_MissionStart_show();
 	}
 	if (data.choice > 0) {
-		if (image_buttons_handle_mouse(mouse_in_dialog(m), 580, 410, &imageButtonStartMission, 1, 0)) {
+		if (image_buttons_handle_mouse(m_dialog, 580, 410, &imageButtonStartMission, 1, 0)) {
 			return;
 		}
 	}
-	if (m->left.went_up) {
-		if (isMouseHit(m, xPeaceful, yPeaceful, 44)) {
+	if (m_dialog->left.went_up) {
+		if (isMouseHit(m_dialog, xPeaceful, yPeaceful, 44)) {
 			scenario_set_campaign_mission(game_mission_peaceful());
 			data.choice = 1;
 			UI_Window_requestRefresh();
 			sound_speech_play_file("wavs/fanfare_nu1.wav");
 		}
-		if (isMouseHit(m, xMilitary, yMilitary, 44)) {
+		if (isMouseHit(m_dialog, xMilitary, yMilitary, 44)) {
 			scenario_set_campaign_mission(game_mission_military());
 			data.choice = 2;
 			UI_Window_requestRefresh();
@@ -197,107 +192,103 @@ void UI_MissionStart_Briefing_drawBackground()
 		}
 	}
 	
+	graphics_in_dialog();
 	int textId = 200 + scenario_campaign_mission();
-	int xOffset = Data_Screen.offset640x480.x + 16;
-	int yOffset = Data_Screen.offset640x480.y + 32;
 	
-	outer_panel_draw(xOffset, yOffset, 38, 27);
-	text_draw(lang_get_message(textId)->title.text, xOffset + 16, yOffset + 16, FONT_LARGE_BLACK, 0);
-	text_draw(lang_get_message(textId)->subtitle.text, xOffset + 16, yOffset + 46, FONT_NORMAL_BLACK, 0);
+	outer_panel_draw(16, 32, 38, 27);
+	text_draw(lang_get_message(textId)->title.text, 32, 48, FONT_LARGE_BLACK, 0);
+	text_draw(lang_get_message(textId)->subtitle.text, 32, 78, FONT_NORMAL_BLACK, 0);
 
-	lang_text_draw(62, 7, xOffset + 360, yOffset + 401, FONT_NORMAL_BLACK);
+	lang_text_draw(62, 7, 376, 433, FONT_NORMAL_BLACK);
 	if (UI_Window_getId() == Window_MissionBriefingInitial && campaignHasChoice[scenario_campaign_rank()]) {
-		lang_text_draw(13, 4, xOffset + 50, yOffset + 403, FONT_NORMAL_BLACK);
+		lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK);
 	}
 	
-	inner_panel_draw(xOffset + 16, yOffset + 64, 33, 5);
-	lang_text_draw(62, 10, xOffset + 32, yOffset + 72, FONT_NORMAL_WHITE);
+	inner_panel_draw(32, 96, 33, 5);
+	lang_text_draw(62, 10, 48, 104, FONT_NORMAL_WHITE);
 	int goalIndex = 0;
 	if (scenario_criteria_population_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
-		label_draw(xOffset + x, yOffset + y, 15, 1);
-		int width = lang_text_draw(62, 11, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		text_draw_number(scenario_criteria_population(), '@', " ",
-			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
+		label_draw(16 + x, 32 + y, 15, 1);
+		int width = lang_text_draw(62, 11, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
+		text_draw_number(scenario_criteria_population(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
 	}
 	if (scenario_criteria_culture_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
-		label_draw(xOffset + x, yOffset + y, 15, 1);
-		int width = lang_text_draw(62, 12, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		text_draw_number(scenario_criteria_culture(), '@', " ",
-			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
+		label_draw(16 + x, 32 + y, 15, 1);
+		int width = lang_text_draw(62, 12, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
+		text_draw_number(scenario_criteria_culture(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
 	}
 	if (scenario_criteria_prosperity_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
-		label_draw(xOffset + x, yOffset + y, 15, 1);
-		int width = lang_text_draw(62, 13, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		text_draw_number(scenario_criteria_prosperity(), '@', " ",
-			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
+		label_draw(16 + x, 32 + y, 15, 1);
+		int width = lang_text_draw(62, 13, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
+		text_draw_number(scenario_criteria_prosperity(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
 	}
 	if (scenario_criteria_peace_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
-		label_draw(xOffset + x, yOffset + y, 15, 1);
-		int width = lang_text_draw(62, 14, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		text_draw_number(scenario_criteria_peace(), '@', " ",
-			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
+		label_draw(16 + x, 32 + y, 15, 1);
+		int width = lang_text_draw(62, 14, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
+		text_draw_number(scenario_criteria_peace(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
 	}
 	if (scenario_criteria_favor_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
-		label_draw(xOffset + x, yOffset + y, 15, 1);
-		int width = lang_text_draw(62, 15, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		text_draw_number(scenario_criteria_favor(), '@', " ",
-			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
+		label_draw(16 + x, 32 + y, 15, 1);
+		int width = lang_text_draw(62, 15, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
+		text_draw_number(scenario_criteria_favor(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
 	}
 	int immediateGoalText = tutorial_get_immediate_goal_text();
 	if (immediateGoalText) {
 		int x = goalOffsetsX[2];
 		int y = goalOffsetsY[2];
 		goalIndex++;
-		label_draw(xOffset + x, yOffset + y, 31, 1);
-		lang_text_draw(62, immediateGoalText, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
+		label_draw(16 + x, 32 + y, 31, 1);
+		lang_text_draw(62, immediateGoalText, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
 	}
 	
-	inner_panel_draw(xOffset + 16, yOffset + 152, 33, 15);
+	inner_panel_draw(32, 184, 33, 15);
 	
 	rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
-	rich_text_init(lang_get_message(textId)->content.text,
-		xOffset + 48, yOffset + 152, 31, 15, 0);
+	rich_text_init(lang_get_message(textId)->content.text, 64, 184, 31, 15, 0);
 
-	Graphics_setClipRectangle(xOffset + 19, yOffset + 155, 522, 234);
-	rich_text_draw(lang_get_message(textId)->content.text,
-		xOffset + 32, yOffset + 164, 496, 14, 0);
+	Graphics_setClipRectangle(35, 187, 522, 234);
+	rich_text_draw(lang_get_message(textId)->content.text, 48, 196, 496, 14, 0);
 	Graphics_resetClipRectangle();
+
+    graphics_reset_dialog();
 }
 
 void UI_MissionStart_BriefingInitial_drawForeground()
 {
-	int xOffset = Data_Screen.offset640x480.x + 16;
-	int yOffset = Data_Screen.offset640x480.y + 32;
+    graphics_in_dialog();
 
 	rich_text_draw_scrollbar();
-	image_buttons_draw(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
+	image_buttons_draw(516, 426, &imageButtonStartMission, 1);
 	if (campaignHasChoice[scenario_campaign_rank()]) {
-		image_buttons_draw(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1);
+		image_buttons_draw(26, 428, &imageButtonBackToSelection, 1);
 	}
+
+	graphics_reset_dialog();
 }
 
 void UI_MissionStart_BriefingReview_drawForeground()
 {
-	int xOffset = Data_Screen.offset640x480.x + 16;
-	int yOffset = Data_Screen.offset640x480.y + 32;
+    graphics_in_dialog();
 
 	rich_text_draw_scrollbar();
-	image_buttons_draw(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
+	image_buttons_draw(516, 426, &imageButtonStartMission, 1);
+
+    graphics_reset_dialog();
 }
 
 void UI_MissionStart_BriefingInitial_handleMouse(const mouse *m)
@@ -312,7 +303,7 @@ void UI_MissionStart_BriefingInitial_handleMouse(const mouse *m)
 			return;
 		}
 	}
-	rich_text_handle_mouse(m);
+	rich_text_handle_mouse(m_dialog);
 }
 
 void UI_MissionStart_BriefingReview_handleMouse(const mouse *m)

@@ -1,8 +1,7 @@
 #include "input/mouse.h"
 
 #include "core/debug.h"
-
-#include "Data/Screen.h"
+#include "graphics/screen.h"
 
 static mouse data;
 static mouse dialog;
@@ -74,7 +73,7 @@ const mouse *mouse_in_dialog(const mouse *m)
     dialog.scrolled = m->scrolled;
     dialog.is_inside_window = m->is_inside_window;
 
-    dialog.x = m->x - Data_Screen.offset640x480.x;
-    dialog.y = m->y - Data_Screen.offset640x480.y;
+    dialog.x = m->x - screen_dialog_offset_x();
+    dialog.y = m->y - screen_dialog_offset_y();
     return &dialog;
 }

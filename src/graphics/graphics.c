@@ -1,11 +1,12 @@
 #include "graphics.h"
 
-#include "Data/Screen.h"
+#include "graphics/screen.h"
+
 #include "../Graphics.h"
 
 void graphics_in_dialog()
 {
-    Graphics_setGlobalTranslation(Data_Screen.offset640x480.x, Data_Screen.offset640x480.y);
+    Graphics_setGlobalTranslation(screen_dialog_offset_x(), screen_dialog_offset_y());
 }
 
 void graphics_reset_dialog()
