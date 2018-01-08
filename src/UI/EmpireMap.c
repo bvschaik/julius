@@ -7,7 +7,6 @@
 #include "../Graphics.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Screen.h"
 
 #include "building/menu.h"
 #include "city/finance.h"
@@ -17,9 +16,11 @@
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
@@ -85,10 +86,12 @@ void UI_Empire_init()
 
 void UI_Empire_drawBackground()
 {
-	data.xMin = Data_Screen.width <= MAX_WIDTH ? 0 : (Data_Screen.width - MAX_WIDTH) / 2;
-	data.xMax = Data_Screen.width <= MAX_WIDTH ? Data_Screen.width : data.xMin + MAX_WIDTH;
-	data.yMin = Data_Screen.height <= MAX_HEIGHT ? 0 : (Data_Screen.height - MAX_HEIGHT) / 2;
-	data.yMax = Data_Screen.height <= MAX_HEIGHT ? Data_Screen.height : data.yMin + MAX_HEIGHT;
+    int s_width = screen_width();
+    int s_height = screen_height();
+	data.xMin = s_width <= MAX_WIDTH ? 0 : (s_width - MAX_WIDTH) / 2;
+	data.xMax = s_width <= MAX_WIDTH ? s_width : data.xMin + MAX_WIDTH;
+	data.yMin = s_height <= MAX_HEIGHT ? 0 : (s_height - MAX_HEIGHT) / 2;
+	data.yMax = s_height <= MAX_HEIGHT ? s_height : data.yMin + MAX_HEIGHT;
 
 	if (data.xMin || data.yMin) {
 		Graphics_clearScreen();
@@ -635,24 +638,26 @@ static void confirmOpenTrade(int accepted)
 
 void UI_TradeOpenedDialog_drawBackground()
 {
-	int xOffset = Data_Screen.offset640x480.x;
-	int yOffset = Data_Screen.offset640x480.y;
-	outer_panel_draw(xOffset + 80, yOffset + 64, 30, 14);
-	lang_text_draw_centered(142, 0, xOffset + 80, yOffset + 80, 480, FONT_LARGE_BLACK);
+    graphics_in_dialog();
+
+    outer_panel_draw(80, 64, 30, 14);
+	lang_text_draw_centered(142, 0, 80, 80, 480, FONT_LARGE_BLACK);
 	if (empire_city_get(data.selectedCity)->is_sea_trade) {
-		lang_text_draw_multiline(142, 1, xOffset + 112, yOffset + 120, 416, FONT_NORMAL_BLACK);
-		lang_text_draw_multiline(142, 3, xOffset + 112, yOffset + 184, 416, FONT_NORMAL_BLACK);
+		lang_text_draw_multiline(142, 1, 112, 120, 416, FONT_NORMAL_BLACK);
+		lang_text_draw_multiline(142, 3, 112, 184, 416, FONT_NORMAL_BLACK);
 	} else {
-		lang_text_draw_multiline(142, 1, xOffset + 112, yOffset + 152, 416, FONT_NORMAL_BLACK);
+		lang_text_draw_multiline(142, 1, 112, 152, 416, FONT_NORMAL_BLACK);
 	}
-	lang_text_draw(142, 2, xOffset + 128, yOffset + 256, FONT_NORMAL_BLACK);
+	lang_text_draw(142, 2, 128, 256, FONT_NORMAL_BLACK);
+
+    graphics_reset_dialog();
 }
 
 void UI_TradeOpenedDialog_drawForeground()
 {
-	image_buttons_draw(
-		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
-		imageButtonsTradeOpened, 2);
+    graphics_in_dialog();
+    image_buttons_draw(0, 0, imageButtonsTradeOpened, 2);
+    graphics_reset_dialog();
 }
 
 void UI_TradeOpenedDialog_handleMouse(const mouse *m)

@@ -2,8 +2,7 @@
 
 #include "../Graphics.h"
 
-#include "../Data/Screen.h"
-
+#include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "sound/music.h"
 
@@ -15,10 +14,11 @@ void UI_Logo_init()
 void UI_Logo_drawBackground()
 {
 	Graphics_clearScreen();
-	Graphics_drawImage(image_group(GROUP_LOGO), Data_Screen.offset640x480.x, Data_Screen.offset640x480.y);
-	lang_text_draw_centered_colored(13, 7,
-		(Data_Screen.width - 320) / 2, Data_Screen.offset640x480.y + 462,
-		320, FONT_NORMAL_PLAIN, COLOR_WHITE);
+
+    graphics_in_dialog();
+	Graphics_drawImage(image_group(GROUP_LOGO), 0, 0);
+	lang_text_draw_centered_colored(13, 7, 160, 462, 320, FONT_NORMAL_PLAIN, COLOR_WHITE);
+    graphics_reset_dialog();
 }
 
 void UI_Logo_handleMouse(const mouse *m)

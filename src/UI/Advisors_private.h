@@ -3,7 +3,6 @@
 
 #include "../Graphics.h"
 
-#include "../Data/Screen.h"
 #include "../Data/CityInfo.h"
 
 #include "graphics/image.h"

@@ -2,10 +2,9 @@
 #include "AllWindows.h"
 #include "../Graphics.h"
 
-#include "../Data/Screen.h"
-
 #include "core/string.h"
 #include "game/settings.h"
+#include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -33,23 +32,25 @@ void UI_NewCareerDialog_init()
 void UI_NewCareerDialog_drawBackground()
 {
 	Graphics_clearScreen();
-	Graphics_drawImage(image_group(GROUP_MAIN_MENU_BACKGROUND),
-		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y);
+    graphics_in_dialog();
+	Graphics_drawImage(image_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
+    graphics_reset_dialog();
 }
 
 void UI_NewCareerDialog_drawForeground()
 {
-	int xOffset = Data_Screen.offset640x480.x;
-	int yOffset = Data_Screen.offset640x480.y;
-	outer_panel_draw(xOffset + 128, yOffset + 160, 24, 8);
-	lang_text_draw_centered(31, 0, xOffset + 128, yOffset + 172, 384, FONT_LARGE_BLACK);
-	lang_text_draw(13, 5, xOffset + 352, yOffset + 256, FONT_NORMAL_BLACK);
-	inner_panel_draw(xOffset + 160, yOffset + 208, 20, 2);
+    graphics_in_dialog();
+	outer_panel_draw(128, 160, 24, 8);
+	lang_text_draw_centered(31, 0, 128, 172, 384, FONT_LARGE_BLACK);
+	lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK);
+	inner_panel_draw(160, 208, 20, 2);
 	text_capture_cursor(keyboard_cursor_position());
-	text_draw(player_name, xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
-	text_draw_cursor(xOffset + 176, yOffset + 217, keyboard_is_insert());
+	text_draw(player_name, 176, 216, FONT_NORMAL_WHITE, 0);
+	text_draw_cursor(176, 217, keyboard_is_insert());
 	
-	image_buttons_draw(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
+	image_buttons_draw(464, 249, &imageButtonStartMission, 1);
+
+    graphics_reset_dialog();
 }
 
 void UI_NewCareerDialog_handleMouse(const mouse *m)

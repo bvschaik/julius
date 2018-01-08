@@ -3,10 +3,10 @@
 #include "PopupDialog.h"
 
 #include "../Graphics.h"
-#include "../Data/Screen.h"
 
 #include "game/system.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 
@@ -23,51 +23,27 @@ static generic_button buttons[] = {
 
 void UI_MainMenu_drawBackground()
 {
-	Graphics_clearScreen();
-	Graphics_drawImage(
-		image_group(GROUP_MAIN_MENU_BACKGROUND),
-		Data_Screen.offset640x480.x,
-		Data_Screen.offset640x480.y);
+    Graphics_clearScreen();
+    graphics_in_dialog();
+    Graphics_drawImage(image_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
+    graphics_reset_dialog();
 }
 
 void UI_MainMenu_drawForeground()
 {
-	int baseOffsetX = Data_Screen.offset640x480.x;
-	int baseOffsetY = Data_Screen.offset640x480.y;
+    graphics_in_dialog();
 
-	large_label_draw(
-		baseOffsetX + 192, baseOffsetY + 100,
-		16, focusButtonId == 1 ? 1 : 0
-	);
-	large_label_draw(
-		baseOffsetX + 192, baseOffsetY + 140,
-		16, focusButtonId == 2 ? 1 : 0
-	);
-	large_label_draw(
-		baseOffsetX + 192, baseOffsetY + 180,
-		16, focusButtonId == 3 ? 1 : 0
-	);
-	large_label_draw(
-		baseOffsetX + 192, baseOffsetY + 220,
-		16, focusButtonId == 4 ? 1 : 0
-	);
+	large_label_draw(192, 100, 16, focusButtonId == 1 ? 1 : 0);
+	large_label_draw(192, 140, 16, focusButtonId == 2 ? 1 : 0);
+	large_label_draw(192, 180, 16, focusButtonId == 3 ? 1 : 0);
+	large_label_draw(192, 220, 16, focusButtonId == 4 ? 1 : 0);
 
-	lang_text_draw_centered(30, 1,
-		baseOffsetX + 192, baseOffsetY + 106,
-		256, FONT_NORMAL_GREEN
-	);
-	lang_text_draw_centered(30, 2,
-		baseOffsetX + 192, baseOffsetY + 146,
-		256, FONT_NORMAL_GREEN
-	);
-	lang_text_draw_centered(30, 3,
-		baseOffsetX + 192, baseOffsetY + 186,
-		256, FONT_NORMAL_GREEN
-	);
-	lang_text_draw_centered(30, 5,
-		baseOffsetX + 192, baseOffsetY + 226,
-		256, FONT_NORMAL_GREEN
-	);
+	lang_text_draw_centered(30, 1, 192, 106, 256, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN);
+	lang_text_draw_centered(30, 5, 192, 226, 256, FONT_NORMAL_GREEN);
+
+    graphics_reset_dialog();
 }
 
 void UI_MainMenu_handleMouse(const mouse *m)
