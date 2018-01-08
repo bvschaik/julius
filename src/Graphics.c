@@ -552,10 +552,21 @@ static void drawImageCompressedBlend(const image *img, const color_t *data, int 
 	}
 }
 
+static void translate_clip(int dx, int dy)
+{
+    clipRectangle.xStart -= dx;
+    clipRectangle.xEnd -= dx;
+    clipRectangle.yStart -= dy;
+    clipRectangle.yEnd -= dy;
+}
+
 void Graphics_setGlobalTranslation(int x, int y)
 {
+    int dx = x - translation.x;
+    int dy = y - translation.y;
     translation.x = x;
     translation.y = y;
+    translate_clip(dx, dy);
 }
 
 void Graphics_setClipRectangle(int x, int y, int width, int height)
@@ -587,6 +598,7 @@ void Graphics_resetClipRectangle()
 	clipRectangle.xEnd = Data_Screen.width;
 	clipRectangle.yStart = 0;
 	clipRectangle.yEnd = Data_Screen.height;
+    translate_clip(translation.x, translation.y);
 }
 
 GraphicsClipInfo *Graphics_getClipInfo(int xOffset, int yOffset, int width, int height)
