@@ -59,8 +59,8 @@ static void check_scroll_boundaries()
     int max_x = EMPIRE_WIDTH - data.viewport_width;
     int max_y = EMPIRE_HEIGHT - data.viewport_height;
 
-    data.scroll_x = calc_bound(data.scroll_x, 0, max_x - 1);
-    data.scroll_y = calc_bound(data.scroll_y, 0, max_y - 1);
+    data.scroll_x = calc_bound(data.scroll_x, 0, max_x);
+    data.scroll_y = calc_bound(data.scroll_y, 0, max_y);
 }
 
 void empire_set_viewport(int width, int height)
