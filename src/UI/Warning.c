@@ -1,13 +1,12 @@
 #include "Warning.h"
 #include "Window.h"
 
-#include "../Data/Screen.h"
-
 #include "../Graphics.h"
 
 #include "city/warning.h"
 #include "game/state.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 
 static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
@@ -33,7 +32,7 @@ void UI_Warning_draw()
         return;
     }
 
-    int center = (Data_Screen.width - 180) / 2;
+    int center = (screen_width() - 180) / 2;
     for (int i = 0; i < 5; i++) {
         const uint8_t *text = city_warning_get(i);
         if (!text) {

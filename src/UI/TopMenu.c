@@ -7,7 +7,6 @@
 #include "PopupDialog.h"
 #include "../Graphics.h"
 #include "../Data/CityInfo.h"
-#include "../Data/Screen.h"
 
 #include "building/construction.h"
 #include "core/string.h"
@@ -20,6 +19,7 @@
 #include "game/undo.h"
 #include "graphics/lang_text.h"
 #include "graphics/menu.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "scenario/property.h"
 
@@ -134,7 +134,8 @@ void UI_TopMenu_drawBackground()
 	if (treasury < 0) {
 		treasureColor = COLOR_RED;
 	}
-	if (Data_Screen.width < 800) {
+	int s_width = screen_width();
+	if (s_width < 800) {
 		offsetFunds = 338;
 		offsetPopulation = 453;
 		offsetDate = 547;
@@ -147,7 +148,7 @@ void UI_TopMenu_drawBackground()
 
 		width = lang_text_draw(25, game_time_month(), 552, 5, FONT_NORMAL_GREEN);
 		lang_text_draw_year_condensed(game_time_year(), 541 + width, 5, FONT_NORMAL_GREEN);
-	} else if (Data_Screen.width < 1024) {
+	} else if (s_width < 1024) {
 		offsetFunds = 338;
 		offsetPopulation = 458;
 		offsetDate = 652;
@@ -192,13 +193,14 @@ static void refreshSidebarButtons()
 {
 	int blockWidth = 24;
 	int graphicBase = image_group(GROUP_TOP_MENU_SIDEBAR);
-	for (int i = 0; i * blockWidth < Data_Screen.width; i++) {
+    int s_width = screen_width();
+	for (int i = 0; i * blockWidth < s_width; i++) {
 		Graphics_drawImage(graphicBase + i % 8, i * blockWidth, 0);
 	}
 	// black panels for funds/pop/time
-	if (Data_Screen.width < 800) {
+	if (s_width < 800) {
 		Graphics_drawImage(graphicBase + 14, 336, 0);
-	} else if (Data_Screen.width < 1024) {
+	} else if (s_width < 1024) {
 		Graphics_drawImage(graphicBase + 14, 336, 0);
 		Graphics_drawImage(graphicBase + 14, 456, 0);
 		Graphics_drawImage(graphicBase + 14, 648, 0);

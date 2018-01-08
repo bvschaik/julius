@@ -8,7 +8,6 @@
 
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
-#include "../Data/Screen.h"
 #include "../Data/State.h"
 
 #include "building/barracks.h"
@@ -22,6 +21,7 @@
 #include "figure/phrase.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
@@ -310,9 +310,10 @@ void UI_BuildingInfo_init()
 		default: context.heightBlocks = 22; break;
 	}
 	// dialog placement
-	if (Data_Screen.height >= 600) {
-		if (mouse_get()->y <= (Data_Screen.height - 24) / 2 + 24) { // TODO rather check city buildings instead of mouse
-			context.yOffset = Data_Screen.height - 16 * context.heightBlocks - 16;
+	int s_height = screen_height();
+	if (s_height >= 600) {
+		if (mouse_get()->y <= (s_height - 24) / 2 + 24) {
+			context.yOffset = s_height - 16 * context.heightBlocks - 16;
 		} else {
 			context.yOffset = 32;
 		}

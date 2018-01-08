@@ -1,8 +1,8 @@
 #include "VideoIntermezzo.h"
 
 #include "../Graphics.h"
-#include "../Data/Screen.h"
 
+#include "graphics/screen.h"
 #include "graphics/video.h"
 
 static struct {
@@ -35,7 +35,7 @@ void UI_VideoIntermezzo_drawBackground()
 
 void UI_VideoIntermezzo_drawForeground()
 {
-	video_draw((Data_Screen.width - data.width) / 2, (Data_Screen.height - data.height) / 2);
+	video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
 }
 
 void UI_VideoIntermezzo_handleMouse(const mouse *m)

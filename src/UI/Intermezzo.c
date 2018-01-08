@@ -2,9 +2,8 @@
 
 #include "../Graphics.h"
 
-#include "../Data/Screen.h"
-
 #include "core/time.h"
+#include "graphics/screen.h"
 #include "scenario/property.h"
 #include "sound/music.h"
 #include "sound/speech.h"
@@ -78,8 +77,8 @@ void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis)
 void UI_Intermezzo_drawBackground()
 {
 	Graphics_clearScreen();
-	int xOffset = (Data_Screen.width - 1024) / 2;
-	int yOffset = (Data_Screen.height - 768) / 2;
+	int xOffset = (screen_width() - 1024) / 2;
+	int yOffset = (screen_height() - 768) / 2;
 
     int mission = scenario_campaign_mission();
 	int graphicBase = image_group(GROUP_INTERMEZZO_BACKGROUND);
