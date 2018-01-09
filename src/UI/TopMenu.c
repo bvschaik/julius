@@ -17,6 +17,7 @@
 #include "game/system.h"
 #include "game/time.h"
 #include "game/undo.h"
+#include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/menu.h"
 #include "graphics/screen.h"

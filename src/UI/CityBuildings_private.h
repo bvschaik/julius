@@ -12,6 +12,7 @@
 
 #include "building/model.h"
 #include "core/image.h"
+#include "graphics/image.h"
 
 #define DRAWFOOT_SIZE1(g,x,y) Graphics_drawIsometricFootprint(g, x, y, 0)
 #define DRAWFOOT_SIZE2(g,x,y) Graphics_drawIsometricFootprint(g, x + 30, y - 15, 0)

@@ -15,6 +15,7 @@
 #include "game/tutorial.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/image_button.h"
 
 static void buttonChangeAdvisor(int param1, int param2);

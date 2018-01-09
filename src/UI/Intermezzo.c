@@ -3,6 +3,7 @@
 #include "../Graphics.h"
 
 #include "core/time.h"
+#include "graphics/image.h"
 #include "graphics/screen.h"
 #include "scenario/property.h"
 #include "sound/music.h"

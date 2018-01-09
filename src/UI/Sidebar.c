@@ -17,6 +17,7 @@
 #include "game/state.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
+#include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/text.h"

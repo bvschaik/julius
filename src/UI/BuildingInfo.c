@@ -19,6 +19,7 @@
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "figure/phrase.h"
+#include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/screen.h"

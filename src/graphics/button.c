@@ -1,6 +1,6 @@
 #include "button.h"
 
-#include "../Graphics.h"
+#include "graphics/image.h"
 
 void button_none(int param1, int param2)
 {

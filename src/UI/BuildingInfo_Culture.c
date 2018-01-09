@@ -2,6 +2,7 @@
 #include "../Graphics.h"
 
 #include "building/building.h"
+#include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 

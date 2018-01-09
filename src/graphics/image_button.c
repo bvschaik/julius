@@ -1,8 +1,7 @@
 #include "image_button.h"
 
+#include "graphics/image.h"
 #include "sound/effect.h"
-
-#include "../Graphics.h"
 
 #define PRESSED_EFFECT_MILLIS 100
 #define PRESSED_REPEAT_INITIAL_MILLIS 300

@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "game/resource.h"
+#include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"

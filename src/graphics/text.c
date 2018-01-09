@@ -2,6 +2,7 @@
 
 #include "core/string.h"
 #include "core/time.h"
+#include "graphics/image.h"
 
 #include "../Graphics.h"
 

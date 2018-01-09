@@ -1,8 +1,7 @@
 #include "arrow_button.h"
 
 #include "core/time.h"
-
-#include "../Graphics.h"
+#include "graphics/image.h"
 
 static const int REPEATS[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0,

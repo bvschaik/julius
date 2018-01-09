@@ -1,6 +1,6 @@
 #include "panel.h"
 
-#include "../Graphics.h"
+#include "graphics/image.h"
 
 void outer_panel_draw(int x, int y, int width_blocks, int height_blocks)
 {

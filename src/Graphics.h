@@ -44,16 +44,6 @@ void Graphics_resetClipRectangle();
 
 GraphicsClipInfo *Graphics_getClipInfo(int xOffset, int yOffset, int width, int height);
 
-void Graphics_drawImage(int graphicId, int xOffset, int yOffset);
-void Graphics_drawImageMasked(int graphicId, int xOffset, int yOffset, color_t colorMask);
-void Graphics_drawImageBlend(int graphicId, int xOffset, int yOffset, color_t color);
-void Graphics_drawFullScreenImage(int graphicId);
-void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, color_t color);
-void Graphics_drawIsometricFootprint(int graphicId, int xOffset, int yOffset, color_t colorMask);
-void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, color_t colorMask);
-
-void Graphics_drawEnemyImage(int graphicId, int xOffset, int yOffset);
-
 void Graphics_saveToBuffer(int x, int y, int width, int height, color_t *buffer);
 void Graphics_loadFromBuffer(int x, int y, int width, int height, const color_t *buffer);
 

@@ -3,6 +3,8 @@
 
 #include "Data/Screen.h"
 
+#include "graphics/image.h"
+
 #include <stdio.h> // remove later
 #include <stdlib.h> // remove later
 #include <string.h>

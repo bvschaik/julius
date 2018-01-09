@@ -13,6 +13,7 @@
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
