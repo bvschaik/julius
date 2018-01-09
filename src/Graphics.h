@@ -25,6 +25,8 @@ typedef struct {
     int isVisible;
 } GraphicsClipInfo;
 
+color_t *Graphics_getDrawPosition(int x, int y);
+
 void Graphics_clearScreen();
 
 void Graphics_drawPixel(int x, int y, color_t color);
