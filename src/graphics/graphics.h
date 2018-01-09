@@ -30,7 +30,7 @@ void graphics_reset_dialog();
 
 void Graphics_setClipRectangle(int x, int y, int width, int height);
 void Graphics_resetClipRectangle();
-GraphicsClipInfo *Graphics_getClipInfo(int xOffset, int yOffset, int width, int height);
+const GraphicsClipInfo *Graphics_getClipInfo(int x, int y, int width, int height);
 
 color_t *Graphics_getDrawPosition(int x, int y);
 

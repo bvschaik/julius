@@ -224,7 +224,6 @@ set(SOUND_FILES
 )
 add_executable(julius
 	${PLATFORM_FILES}
-	${PROJECT_SOURCE_DIR}/src/Graphics.c
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Chief.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Education.c

@@ -18,7 +18,7 @@ typedef enum {
 
 static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, ColorType type)
 {
-    GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, img->height);
+    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, img->height);
     if (!clip->isVisible) {
         return;
     }
@@ -68,7 +68,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
 
 static void draw_compressed(const image *img, const color_t *data, int x_offset, int y_offset, int height)
 {
-    GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, height);
+    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, height);
     if (!clip->isVisible) {
         return;
     }
@@ -112,7 +112,7 @@ static void draw_compressed(const image *img, const color_t *data, int x_offset,
 
 static void draw_compressed_set(const image *img, const color_t *data, int x_offset, int yOffset, int height, color_t color)
 {
-    GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, yOffset, img->width, height);
+    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, yOffset, img->width, height);
     if (!clip->isVisible) {
         return;
     }
@@ -161,7 +161,7 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
 
 static void draw_compressed_and(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
-    GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, height);
+    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, height);
     if (!clip->isVisible) {
         return;
     }
@@ -210,7 +210,7 @@ static void draw_compressed_and(const image *img, const color_t *data, int x_off
 
 static void draw_compressed_blend(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
-    GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, height);
+    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, height);
     if (!clip->isVisible) {
         return;
     }
@@ -296,7 +296,7 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
     if (!color_mask) {
         color_mask = COLOR_NO_MASK;
     }
-    GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, FOOTPRINT_WIDTH, FOOTPRINT_HEIGHT);
+    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, FOOTPRINT_WIDTH, FOOTPRINT_HEIGHT);
     if (!clip->isVisible) {
         return;
     }
