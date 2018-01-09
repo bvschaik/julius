@@ -1,9 +1,8 @@
 #include "BuildingInfo.h"
-#include "core/calc.h"
-#include "../Graphics.h"
 #include "../Data/CityInfo.h"
 
 #include "building/building.h"
+#include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"

@@ -5,8 +5,6 @@
 #include "MessageDialog.h"
 #include "Minimap.h"
 
-#include "../Graphics.h"
-
 #include "../Data/Screen.h"
 
 #include "building/menu.h"
@@ -17,6 +15,7 @@
 #include "game/state.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"

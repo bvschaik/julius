@@ -2,9 +2,8 @@
 
 #include "core/string.h"
 #include "core/time.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
-
-#include "../Graphics.h"
 
 static uint8_t tmp_line[200];
 

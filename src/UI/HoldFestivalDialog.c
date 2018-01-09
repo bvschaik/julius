@@ -1,6 +1,5 @@
 #include "AllWindows.h"
 #include "MessageDialog.h"
-#include "../Graphics.h"
 #include "Advisors_private.h"
 
 #include "building/warehouse.h"

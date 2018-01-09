@@ -1,7 +1,5 @@
 #include "AllWindows.h"
 
-#include "../Graphics.h"
-
 #include "../Data/CityView.h"
 
 #include "core/time.h"

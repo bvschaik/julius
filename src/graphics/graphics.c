@@ -2,8 +2,6 @@
 
 #include "graphics/screen.h"
 
-#include "../Graphics.h"
-
 void graphics_in_dialog()
 {
     Graphics_setGlobalTranslation(screen_dialog_offset_x(), screen_dialog_offset_y());

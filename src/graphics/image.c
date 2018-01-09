@@ -1,8 +1,7 @@
 #include "image.h"
 
+#include "graphics/graphics.h"
 #include "graphics/screen.h"
-
-#include "../Graphics.h"
 
 #include <stdio.h>
 #include <string.h>

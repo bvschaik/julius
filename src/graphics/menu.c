@@ -1,7 +1,6 @@
 #include "menu.h"
 
-#include "../Graphics.h"
-
+#include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 

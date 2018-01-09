@@ -1,9 +1,8 @@
 #include "AllWindows.h"
 #include "MessageDialog.h"
-#include "core/calc.h"
-#include "../Graphics.h"
 
 #include "city/message.h"
+#include "core/calc.h"
 #include "core/lang.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"

@@ -3,8 +3,6 @@
 #include "AllWindows.h"
 #include "Advisors.h"
 
-#include "../Graphics.h"
-
 #include "../Data/CityInfo.h"
 
 #include "city/message.h"

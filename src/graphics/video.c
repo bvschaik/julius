@@ -3,14 +3,12 @@
 #include "core/dir.h"
 #include "core/time.h"
 #include "game/settings.h"
-#include "graphics/color.h"
+#include "graphics/graphics.h"
 #include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 
 #include "libsmacker/smacker.h"
-
-#include "../Graphics.h"
 
 static struct {
     int isPlaying;

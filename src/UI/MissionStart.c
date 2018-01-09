@@ -1,8 +1,6 @@
 
 #include "AllWindows.h"
 
-#include "../Graphics.h"
-
 #include "../Data/CityInfo.h"
 #include "../Data/State.h"
 

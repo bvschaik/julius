@@ -1,8 +1,7 @@
 #include "AllWindows.h"
 
-#include "../Graphics.h"
-
 #include "core/time.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/screen.h"
 #include "scenario/property.h"

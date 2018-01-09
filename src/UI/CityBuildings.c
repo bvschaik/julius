@@ -14,6 +14,7 @@
 #include "game/resource.h"
 #include "game/settings.h"
 #include "game/state.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/text.h"
 #include "input/scroll.h"

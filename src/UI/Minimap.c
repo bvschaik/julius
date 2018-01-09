@@ -1,12 +1,12 @@
 #include "Minimap.h"
 #include "Sidebar.h"
-#include "../Graphics.h"
 #include "../Data/CityView.h"
 #include "../Data/State.h"
 
 #include "building/building.h"
 #include "city/view.h"
 #include "figure/figure.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/figure.h"

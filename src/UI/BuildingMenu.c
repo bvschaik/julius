@@ -1,7 +1,6 @@
 #include "AllWindows.h"
 
 #include "Sidebar.h"
-#include "../Graphics.h"
 
 #include "../Data/CityView.h"
 #include "../Data/State.h"

@@ -4,8 +4,6 @@
 #include "PopupDialog.h"
 #include "MessageDialog.h"
 
-#include "../Graphics.h"
-
 #include "../Data/CityInfo.h"
 
 #include "building/menu.h"

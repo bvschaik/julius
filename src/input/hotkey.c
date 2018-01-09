@@ -1,7 +1,5 @@
 #include "hotkey.h"
 
-#include "Graphics.h"
-
 #include "UI/Advisors.h"
 #include "UI/BuildingInfo.h"
 #include "UI/PopupDialog.h"
@@ -19,6 +17,7 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
+#include "graphics/graphics.h"
 #include "graphics/video.h"
 #include "input/scroll.h"
 #include "map/bookmark.h"

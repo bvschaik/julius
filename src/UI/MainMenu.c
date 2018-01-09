@@ -2,8 +2,6 @@
 #include "FileDialog.h"
 #include "PopupDialog.h"
 
-#include "../Graphics.h"
-
 #include "game/system.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"

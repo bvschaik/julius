@@ -4,8 +4,6 @@
 #include "Advisors.h"
 #include "MessageDialog.h"
 
-#include "../Graphics.h"
-
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/State.h"

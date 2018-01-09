@@ -1,8 +1,6 @@
 #include "Warning.h"
 #include "Window.h"
 
-#include "../Graphics.h"
-
 #include "city/warning.h"
 #include "game/state.h"
 #include "graphics/image.h"

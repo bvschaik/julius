@@ -1,5 +1,4 @@
 #include "BuildingInfo.h"
-#include "../Graphics.h"
 
 #include "building/building.h"
 #include "graphics/image.h"

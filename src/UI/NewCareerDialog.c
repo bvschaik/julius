@@ -1,6 +1,5 @@
 #include "Window.h"
 #include "AllWindows.h"
-#include "../Graphics.h"
 
 #include "core/string.h"
 #include "game/settings.h"

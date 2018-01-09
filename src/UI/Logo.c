@@ -1,7 +1,5 @@
 #include "AllWindows.h"
 
-#include "../Graphics.h"
-
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"

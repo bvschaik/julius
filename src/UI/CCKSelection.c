@@ -18,8 +18,6 @@
 #include "scenario/property.h"
 #include "sound/speech.h"
 
-#include "../Graphics.h"
-
 #include <string.h>
 
 static void drawScenarioList();

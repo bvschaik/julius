@@ -2,8 +2,6 @@
 
 #include "Window.h"
 
-#include "../Graphics.h"
-
 #include "../Data/CityInfo.h"
 
 #include "building/building.h"

@@ -3,14 +3,13 @@
 #include "Advisors.h"
 #include "Window.h"
 
-#include "../Graphics.h"
-
 #include "../Data/CityInfo.h"
 
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/rich_text.h"
 #include "graphics/screen.h"

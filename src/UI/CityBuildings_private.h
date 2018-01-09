@@ -7,10 +7,8 @@
 #include "../Data/CityView.h"
 #include "../Data/State.h"
 
-#include "core/calc.h"
-#include "../Graphics.h"
-
 #include "building/model.h"
+#include "core/calc.h"
 #include "core/image.h"
 #include "graphics/image.h"
 

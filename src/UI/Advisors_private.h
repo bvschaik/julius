@@ -1,8 +1,6 @@
 #ifndef UI_ADVISORS_PRIVATE_H
 #define UI_ADVISORS_PRIVATE_H
 
-#include "../Graphics.h"
-
 #include "../Data/CityInfo.h"
 
 #include "core/image.h"

@@ -1,7 +1,6 @@
 #include "VideoIntermezzo.h"
 
-#include "../Graphics.h"
-
+#include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"
 

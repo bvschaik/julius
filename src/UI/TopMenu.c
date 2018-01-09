@@ -5,7 +5,6 @@
 #include "FileDialog.h"
 #include "MessageDialog.h"
 #include "PopupDialog.h"
-#include "../Graphics.h"
 #include "../Data/CityInfo.h"
 
 #include "building/construction.h"

@@ -1,10 +1,10 @@
 #include "screen.h"
 
-#include "../Graphics.h"
 #include "Data/Screen.h"
 
 #include "city/view.h"
 #include "city/warning.h"
+#include "graphics/graphics.h"
 
 #include <stdlib.h>
 #include <string.h>

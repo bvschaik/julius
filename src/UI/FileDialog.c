@@ -17,8 +17,6 @@
 #include "graphics/text.h"
 #include "input/keyboard.h"
 
-#include "../Graphics.h"
-
 #include <string.h>
 
 static void drawScrollbarDot();

@@ -9,8 +9,6 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
-#include "../Graphics.h"
-
 #include "../Data/CityInfo.h"
 
 void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
