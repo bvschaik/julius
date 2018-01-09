@@ -62,7 +62,7 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 26;
 	outer_panel_draw(0, 0, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS), 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS), 10, 10);
 	
 	lang_text_draw(50, 0, 60, 12, FONT_LARGE_BLACK);
 	
@@ -106,7 +106,7 @@ void UI_Advisor_Labor_drawForeground()
         int y_offset = 82 + 25 * i;
 		button_border_draw(40, 77 + 25 * i, 560, 22, focus);
 		if (Data_CityInfo.laborCategory[i].priority) {
-			Graphics_drawImage(image_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2);
+			image_draw(image_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2);
 			text_draw_number(Data_CityInfo.laborCategory[i].priority, '@', " ",
 				90, y_offset, FONT_NORMAL_WHITE);
 		}

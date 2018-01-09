@@ -30,7 +30,7 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 18;
 	outer_panel_draw(0, 0, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
 
 	lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK);
 	if (Data_CityInfo.population >= 200) {

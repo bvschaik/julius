@@ -487,17 +487,7 @@ static int draw_footprint_size5(int image_id, int x, int y, color_t color_mask)
 }
 
 
-void Graphics_drawFullScreenImage(int image_id)
-{
-    int s_width = screen_width();
-    int s_height = screen_height();
-    if (s_width > 1024 || s_height > 768) {
-        Graphics_clearScreen();
-    }
-    Graphics_drawImage(image_id, (s_width - 1024) / 2, (s_height - 768) / 2);
-}
-
-void Graphics_drawImage(int image_id, int x, int y)
+void image_draw(int image_id, int x, int y)
 {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
@@ -512,7 +502,7 @@ void Graphics_drawImage(int image_id, int x, int y)
     }
 }
 
-void Graphics_drawEnemyImage(int image_id, int x, int y)
+void image_draw_enemy(int image_id, int x, int y)
 {
     if (image_id <= 0 || image_id >= 801) {
         return;
@@ -524,7 +514,7 @@ void Graphics_drawEnemyImage(int image_id, int x, int y)
     }
 }
 
-void Graphics_drawImageMasked(int image_id, int x, int y, color_t color_mask)
+void image_draw_masked(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
@@ -549,7 +539,7 @@ void Graphics_drawImageMasked(int image_id, int x, int y, color_t color_mask)
     }
 }
 
-void Graphics_drawImageBlend(int image_id, int x, int y, color_t color)
+void image_draw_blend(int image_id, int x, int y, color_t color)
 {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
@@ -568,7 +558,7 @@ void Graphics_drawImageBlend(int image_id, int x, int y, color_t color)
     }
 }
 
-void Graphics_drawLetter(int image_id, int x, int y, color_t color)
+void image_draw_letter(int image_id, int x, int y, color_t color)
 {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
@@ -588,7 +578,17 @@ void Graphics_drawLetter(int image_id, int x, int y, color_t color)
     }
 }
 
-void Graphics_drawIsometricFootprint(int image_id, int x, int y, color_t color_mask)
+void image_draw_fullscreen_background(int image_id)
+{
+    int s_width = screen_width();
+    int s_height = screen_height();
+    if (s_width > 1024 || s_height > 768) {
+        Graphics_clearScreen();
+    }
+    image_draw(image_id, (s_width - 1024) / 2, (s_height - 768) / 2);
+}
+
+void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
     if (img->draw.type != 30) { // isometric
@@ -613,7 +613,7 @@ void Graphics_drawIsometricFootprint(int image_id, int x, int y, color_t color_m
     }
 }
 
-void Graphics_drawIsometricTop(int image_id, int x, int y, color_t color_mask)
+void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
     if (img->draw.type != 30) { // isometric

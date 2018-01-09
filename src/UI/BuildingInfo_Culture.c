@@ -84,7 +84,7 @@ static void drawTemple(BuildingInfoContext *c, const char *soundFile, int groupI
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 56, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 62);
 	if (c->hasRoadAccess) {
-		Graphics_drawImage(graphicOffset + image_group(GROUP_PANEL_WINDOWS),
+		image_draw(graphicOffset + image_group(GROUP_PANEL_WINDOWS),
 			c->xOffset + 190, c->yOffset + 16 * c->heightBlocks - 118);
 	} else {
 		lang_text_draw_multiline(69, 25,

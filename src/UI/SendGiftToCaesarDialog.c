@@ -43,7 +43,7 @@ void UI_SendGiftToCaesarDialog_drawBackground()
     graphics_in_dialog();
 
 	outer_panel_draw(96, 144, 30, 15);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + 16, 128, 160);
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + 16, 128, 160);
 	lang_text_draw_centered(52, 69, 128, 160, 432, FONT_LARGE_BLACK);
 
 	int width = lang_text_draw(52, 50, 144, 304, FONT_NORMAL_BLACK);

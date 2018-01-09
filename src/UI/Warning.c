@@ -49,9 +49,9 @@ void UI_Warning_draw()
             box_width / 16 + 1, 1);
         if (box_width < 460) {
             // ornaments at the side
-            Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 15,
+            image_draw(image_group(GROUP_CONTEXT_ICONS) + 15,
                 center - box_width / 2 + 2, top_offset + 2);
-            Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 15,
+            image_draw(image_group(GROUP_CONTEXT_ICONS) + 15,
                 center + box_width / 2 - 30, top_offset + 2);
         }
         text_draw_centered(text,

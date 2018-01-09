@@ -132,7 +132,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 				width += text_draw_number(trader_bought_resources(traderId, r),
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 170, FONT_SMALL_BLACK);
 				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
+				image_draw(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
 				width += 25;
 			}
 		}
@@ -143,7 +143,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 				width += text_draw_number(trader_sold_resources(traderId, r),
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);
+				image_draw(graphicId, c->xOffset + 40 + width, c->yOffset + 197);
 				width += 25;
 			}
 		}
@@ -153,7 +153,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (city->buys_resource[r]) {
 				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
+				image_draw(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
 				width += 25;
 			}
 		}
@@ -162,7 +162,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (city->sells_resource[r]) {
 				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);
+				image_draw(graphicId, c->xOffset + 40 + width, c->yOffset + 197);
 				width += 25;
 			}
 		}
@@ -215,7 +215,7 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, figure *f)
 			}
 			break;
 	}
-	Graphics_drawImage(image_group(GROUP_BIG_PEOPLE) + graphicId - 1,
+	image_draw(image_group(GROUP_BIG_PEOPLE) + graphicId - 1,
 		c->xOffset + 28, c->yOffset + 112);
 	
 	lang_text_draw(65, f->name,
@@ -226,7 +226,7 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, figure *f)
 
 static void drawFigureInfoBoatAnimal(BuildingInfoContext *c, figure *f)
 {
-	Graphics_drawImage(BigPeopleGraphic(f->type),
+	image_draw(BigPeopleGraphic(f->type),
 		c->xOffset + 28, c->yOffset + 112);
 	
 	lang_text_draw(64, f->type,
@@ -235,7 +235,7 @@ static void drawFigureInfoBoatAnimal(BuildingInfoContext *c, figure *f)
 
 static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 {
-	Graphics_drawImage(BigPeopleGraphic(f->type),
+	image_draw(BigPeopleGraphic(f->type),
 		c->xOffset + 28, c->yOffset + 112);
 	
 	lang_text_draw(65, f->name,
@@ -245,7 +245,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 	
 	if (f->actionState != FIGURE_ACTION_132_DOCKER_IDLING && f->resourceId) {
 		int resource = f->resourceId;
-		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) +
+		image_draw(image_group(GROUP_RESOURCE_ICONS) +
 			resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
 			c->xOffset + 92 + width, c->yOffset + 135);
 	}
@@ -295,7 +295,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 
 static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, figure *f)
 {
-	Graphics_drawImage(BigPeopleGraphic(f->type),
+	image_draw(BigPeopleGraphic(f->type),
 		c->xOffset + 28, c->yOffset + 112);
 	
 	lang_text_draw(65, f->name,
@@ -307,14 +307,14 @@ static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, figure *f)
 		width += lang_text_draw(129, 17,
 			c->xOffset + 90 + width, c->yOffset + 139, FONT_SMALL_BLACK);
 		int resourceId = collectingItemIdToResourceId(f->collectingItemId);
-		Graphics_drawImage(
+		image_draw(
 			image_group(GROUP_RESOURCE_ICONS) + resourceId + resource_image_offset(resourceId, RESOURCE_IMAGE_ICON),
 			c->xOffset + 90 + width, c->yOffset + 135);
 	} else if (f->actionState == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
 		width += lang_text_draw(129, 18,
 			c->xOffset + 90 + width, c->yOffset + 139, FONT_SMALL_BLACK);
 		int resourceId = collectingItemIdToResourceId(f->collectingItemId);
-		Graphics_drawImage(
+		image_draw(
 			image_group(GROUP_RESOURCE_ICONS) + resourceId + resource_image_offset(resourceId, RESOURCE_IMAGE_ICON),
 			c->xOffset + 90 + width, c->yOffset + 135);
 	}
@@ -331,7 +331,7 @@ static void drawFigureInfoNormal(BuildingInfoContext *c, figure *f)
 		f->actionState == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
 		graphicId = image_group(GROUP_BIG_PEOPLE) + 18;
 	}
-	Graphics_drawImage(graphicId, c->xOffset + 28, c->yOffset + 112);
+	image_draw(graphicId, c->xOffset + 28, c->yOffset + 112);
 	
 	lang_text_draw(65, f->name,
 		c->xOffset + 90, c->yOffset + 108, FONT_LARGE_BROWN);

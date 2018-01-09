@@ -51,7 +51,7 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons)
         } else {
             image_id += 3;
         }
-        Graphics_drawImage(image_id, x + btn->x_offset, y + btn->y_offset);
+        image_draw(image_id, x + btn->x_offset, y + btn->y_offset);
     }
 }
 

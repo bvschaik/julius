@@ -73,19 +73,19 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 		if (b->data.market.inventory[INVENTORY_WHEAT] || b->data.market.inventory[INVENTORY_VEGETABLES] ||
 			b->data.market.inventory[INVENTORY_FRUIT] || b->data.market.inventory[INVENTORY_MEAT]) {
 			// food stocks
-			Graphics_drawImage(graphicId + RESOURCE_WHEAT,
+			image_draw(graphicId + RESOURCE_WHEAT,
 				c->xOffset + 32, c->yOffset + 64);
 			text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
 				c->xOffset + 64, c->yOffset + 70, FONT_NORMAL_BLACK);
-			Graphics_drawImage(graphicId + RESOURCE_VEGETABLES,
+			image_draw(graphicId + RESOURCE_VEGETABLES,
 				c->xOffset + 142, c->yOffset + 64);
 			text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
 				c->xOffset + 174, c->yOffset + 70, FONT_NORMAL_BLACK);
-			Graphics_drawImage(graphicId + RESOURCE_FRUIT,
+			image_draw(graphicId + RESOURCE_FRUIT,
 				c->xOffset + 252, c->yOffset + 64);
 			text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
 				c->xOffset + 284, c->yOffset + 70, FONT_NORMAL_BLACK);
-			Graphics_drawImage(graphicId + RESOURCE_MEAT +
+			image_draw(graphicId + RESOURCE_MEAT +
 				resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
 				c->xOffset + 362, c->yOffset + 64);
 			text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
@@ -96,19 +96,19 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 				16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 		}
 		// good stocks
-		Graphics_drawImage(graphicId + RESOURCE_POTTERY,
+		image_draw(graphicId + RESOURCE_POTTERY,
 			c->xOffset + 32, c->yOffset + 104);
 		text_draw_number(b->data.market.inventory[INVENTORY_POTTERY], '@', " ",
 			c->xOffset + 64, c->yOffset + 110, FONT_NORMAL_BLACK);
-		Graphics_drawImage(graphicId + RESOURCE_FURNITURE,
+		image_draw(graphicId + RESOURCE_FURNITURE,
 			c->xOffset + 142, c->yOffset + 104);
 		text_draw_number(b->data.market.inventory[INVENTORY_FURNITURE], '@', " ",
 			c->xOffset + 174, c->yOffset + 110, FONT_NORMAL_BLACK);
-		Graphics_drawImage(graphicId + RESOURCE_OIL,
+		image_draw(graphicId + RESOURCE_OIL,
 			c->xOffset + 252, c->yOffset + 104);
 		text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
 			c->xOffset + 284, c->yOffset + 110, FONT_NORMAL_BLACK);
-		Graphics_drawImage(graphicId + RESOURCE_WINE,
+		image_draw(graphicId + RESOURCE_WINE,
 			c->xOffset + 362, c->yOffset + 104);
 		text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
 			c->xOffset + 394, c->yOffset + 110, FONT_NORMAL_BLACK);
@@ -146,7 +146,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 
 		int graphicId = image_group(GROUP_RESOURCE_ICONS);
 		// wheat
-		Graphics_drawImage(graphicId + RESOURCE_WHEAT,
+		image_draw(graphicId + RESOURCE_WHEAT,
 			c->xOffset + 34, c->yOffset + 68);
 		width = text_draw_number(
 			b->data.storage.resourceStored[RESOURCE_WHEAT], '@', " ",
@@ -154,7 +154,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 		lang_text_draw(23, RESOURCE_WHEAT,
 			c->xOffset + 68 + width, c->yOffset + 75, FONT_NORMAL_BLACK);
 		// vegetables
-		Graphics_drawImage(graphicId + RESOURCE_VEGETABLES,
+		image_draw(graphicId + RESOURCE_VEGETABLES,
 			c->xOffset + 34, c->yOffset + 92);
 		width = text_draw_number(
 			b->data.storage.resourceStored[RESOURCE_VEGETABLES], '@', " ",
@@ -162,7 +162,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 		lang_text_draw(23, RESOURCE_VEGETABLES,
 			c->xOffset + 68 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
 		// fruit
-		Graphics_drawImage(graphicId + RESOURCE_FRUIT,
+		image_draw(graphicId + RESOURCE_FRUIT,
 			c->xOffset + 240, c->yOffset + 68);
 		width = text_draw_number(
 			b->data.storage.resourceStored[RESOURCE_FRUIT], '@', " ",
@@ -170,7 +170,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 		lang_text_draw(23, RESOURCE_FRUIT,
 			c->xOffset + 274 + width, c->yOffset + 75, FONT_NORMAL_BLACK);
 		// meat/fish
-		Graphics_drawImage(graphicId + RESOURCE_MEAT +
+		image_draw(graphicId + RESOURCE_MEAT +
 			resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
 			c->xOffset + 240, c->yOffset + 92);
 		width = text_draw_number(
@@ -229,8 +229,8 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 		int resourceId = Data_CityInfo_Resource.availableFoods[i];
 		int graphicId = image_group(GROUP_RESOURCE_ICONS) + resourceId +
 			resource_image_offset(resourceId, RESOURCE_IMAGE_ICON);
-		Graphics_drawImage(graphicId, c->xOffset + 32, 78 + 22 * i);
-		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
+		image_draw(graphicId, c->xOffset + 32, 78 + 22 * i);
+		image_draw(graphicId, c->xOffset + 408, 78 + 22 * i);
 		lang_text_draw(23, resourceId,
 			c->xOffset + 72, 82 + 22 * i, FONT_NORMAL_WHITE);
 		button_border_draw(c->xOffset + 180, 78 + 22 * i, 210, 22,
@@ -242,7 +242,7 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 		} else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
 			lang_text_draw(99, 8, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_RED);
 		} else if (state == BUILDING_STORAGE_STATE_GETTING) {
-			Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 12,
+			image_draw(image_group(GROUP_CONTEXT_ICONS) + 12,
 				c->xOffset + 186, 81 + 22 * i);
 			lang_text_draw(99, 10, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
 		}
@@ -286,7 +286,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 			int amount = building_warehouse_get_amount(b, r);
 			int graphicId = image_group(GROUP_RESOURCE_ICONS) + r +
 				resource_image_offset(r, RESOURCE_IMAGE_ICON);
-			Graphics_drawImage(graphicId, x, y);
+			image_draw(graphicId, x, y);
 			int width = text_draw_number(amount, '@', " ",
 				x + 24, y + 7, FONT_SMALL_PLAIN);
 			lang_text_draw(23, r,
@@ -299,7 +299,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 	int cartpusher = b->figureId;
 	if (cartpusher && figure_get(cartpusher)->state == FigureState_Alive) {
 		int resource = figure_get(cartpusher)->resourceId;
-		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resource +
+		image_draw(image_group(GROUP_RESOURCE_ICONS) + resource +
 			resource_image_offset(resource, RESOURCE_IMAGE_ICON),
 			c->xOffset + 32, c->yOffset + 220);
 		lang_text_draw_multiline(99, 17,
@@ -377,8 +377,8 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 		int resourceId = Data_CityInfo_Resource.availableResources[i];
 		int graphicId = image_group(GROUP_RESOURCE_ICONS) + resourceId +
 			resource_image_offset(resourceId, RESOURCE_IMAGE_ICON);
-		Graphics_drawImage(graphicId, c->xOffset + 32, 78 + 22 * i);
-		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
+		image_draw(graphicId, c->xOffset + 32, 78 + 22 * i);
+		image_draw(graphicId, c->xOffset + 408, 78 + 22 * i);
 		lang_text_draw(23, resourceId,
 			c->xOffset + 72, 82 + 22 * i, FONT_NORMAL_WHITE);
 		button_border_draw(c->xOffset + 180, 78 + 22 * i, 210, 22,
@@ -390,7 +390,7 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 		} else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
 			lang_text_draw(99, 8, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_RED);
 		} else if (state == BUILDING_STORAGE_STATE_GETTING) {
-			Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 12,
+			image_draw(image_group(GROUP_CONTEXT_ICONS) + 12,
 				c->xOffset + 186, 81 + 22 * i);
 			lang_text_draw(99, 9, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
 		}

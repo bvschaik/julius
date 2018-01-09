@@ -32,7 +32,7 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 26;
 	outer_panel_draw(0, 0, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
 
 	lang_text_draw(60, 0, 60, 12, FONT_LARGE_BLACK);
 	inner_panel_draw(64, 48, 34, 5);

@@ -31,7 +31,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 27;
 	outer_panel_draw(0, 0, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
 
 	// Title: depends on big graph shown
 	if (Data_CityInfo_Extra.populationGraphOrder < 2) {
@@ -42,7 +42,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 		lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK);
 	}
 
-	Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
+	image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
 	
 	int bigText, topText, botText;
 	void (*bigGraph)(int, int, int);
@@ -110,10 +110,10 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 	inner_panel_draw(48, 336, 34, 5);
 	int graphicId = image_group(GROUP_BULLET);
 	int width;
-	Graphics_drawImage(graphicId, 56, 344);
-	Graphics_drawImage(graphicId, 56, 362);
-	Graphics_drawImage(graphicId, 56, 380);
-	Graphics_drawImage(graphicId, 56, 398);
+	image_draw(graphicId, 56, 344);
+	image_draw(graphicId, 56, 362);
+	image_draw(graphicId, 56, 380);
+	image_draw(graphicId, 56, 398);
 
 	// food stores
 	if (scenario_property_rome_supplies_wheat()) {
@@ -253,16 +253,16 @@ static void drawHistoryGraph(int fullSize, int x, int y)
 			if (val > 0) {
 				switch (maxMonths) {
 					case 20:
-						Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m, y + 200 - val);
+						image_draw(image_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m, y + 200 - val);
 						break;
 					case 40:
-						Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m, y + 200 - val);
+						image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m, y + 200 - val);
 						break;
 					case 100:
-						Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * m, y + 200 - val);
+						image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * m, y + 200 - val);
 						break;
 					case 200:
-						Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m, y + 200 - val);
+						image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m, y + 200 - val);
 						break;
 					default:
 						Graphics_drawLine(x + m, y + 200 - val, x + m, y + 199, COLOR_RED);
@@ -318,7 +318,7 @@ static void drawCensusGraph(int fullSize, int x, int y)
 				val = pop >> yShift;
 			}
 			if (val > 0) {
-				Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * i, y + 200 - val);
+				image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * i, y + 200 - val);
 			}
 		}
 		Graphics_resetClipRectangle();
@@ -364,7 +364,7 @@ static void drawSocietyGraph(int fullSize, int x, int y)
 				val = pop >> yShift;
 			}
 			if (val > 0) {
-				Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * i, y + 200 - val);
+				image_draw(image_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * i, y + 200 - val);
 			}
 		}
 		Graphics_resetClipRectangle();

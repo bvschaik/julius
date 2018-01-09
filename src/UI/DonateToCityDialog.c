@@ -50,7 +50,7 @@ void UI_DonateToCityDialog_drawBackground()
     graphics_in_dialog();
 
 	outer_panel_draw(64, 160, 32, 10);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, 96, 176);
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, 96, 176);
 	lang_text_draw_centered(52, 16, 80, 176, 496, FONT_LARGE_BLACK);
 
 	inner_panel_draw(112, 208, 26, 4);

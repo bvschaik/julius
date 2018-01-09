@@ -39,7 +39,7 @@ void outer_panel_draw(int x, int y, int width_blocks, int height_blocks)
                 }
                 y_add = 0;
             }
-            Graphics_drawImage(image_base + image_id, x + 16 * xx, y + 16 * yy);
+            image_draw(image_base + image_id, x + 16 * xx, y + 16 * yy);
             if (image_x >= 10) {
                 image_x = 0;
             }
@@ -59,7 +59,7 @@ void unbordered_panel_draw(int x, int y, int width_blocks, int height_blocks)
         int image_x = 0;
         for (int xx = 0; xx < width_blocks; xx++) {
             int image_id = 13 + image_y + image_x++;
-            Graphics_drawImage(image_base + image_id, x + 16 * xx, y + 16 * yy);
+            image_draw(image_base + image_id, x + 16 * xx, y + 16 * yy);
             if (image_x >= 10) {
                 image_x = 0;
             }
@@ -108,7 +108,7 @@ void inner_panel_draw(int x, int y, int width_blocks, int height_blocks)
                 }
                 y_add = 0;
             }
-            Graphics_drawImage(image_base + image_id, x + 16 * xx, y + 16 * yy);
+            image_draw(image_base + image_id, x + 16 * xx, y + 16 * yy);
             if (image_x >= 5) {
                 image_x = 0;
             }
@@ -132,7 +132,7 @@ void label_draw(int x, int y, int width_blocks, int type)
         } else {
             image_id = 3 * type + 42;
         }
-        Graphics_drawImage(image_base + image_id, x + 16 * i, y);
+        image_draw(image_base + image_id, x + 16 * i, y);
     }
 }
 
@@ -148,6 +148,6 @@ void large_label_draw(int x, int y, int width_blocks, int type)
         } else {
             image_id = 3 * type + 2;
         }
-        Graphics_drawImage(image_base + image_id, x + 16 * i, y);
+        image_draw(image_base + image_id, x + 16 * i, y);
     }
 }

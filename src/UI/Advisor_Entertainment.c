@@ -60,7 +60,7 @@ static int get_festival_advice()
 static void draw_festival_info()
 {
     inner_panel_draw(48, 252, 34, 6);
-    Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 15, 460, 255);
+    image_draw(image_group(GROUP_PANEL_WINDOWS) + 15, 460, 255);
     lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK);
 
     int width = lang_text_draw_amount(8, 4, Data_CityInfo.monthsSinceFestival, 112, 260, FONT_NORMAL_WHITE);
@@ -82,7 +82,7 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 23;
 	outer_panel_draw(0, 0, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
 
 	lang_text_draw(58, 0, 60, 12, FONT_LARGE_BLACK);
 

@@ -196,19 +196,19 @@ static void refreshSidebarButtons()
 	int graphicBase = image_group(GROUP_TOP_MENU_SIDEBAR);
     int s_width = screen_width();
 	for (int i = 0; i * blockWidth < s_width; i++) {
-		Graphics_drawImage(graphicBase + i % 8, i * blockWidth, 0);
+		image_draw(graphicBase + i % 8, i * blockWidth, 0);
 	}
 	// black panels for funds/pop/time
 	if (s_width < 800) {
-		Graphics_drawImage(graphicBase + 14, 336, 0);
+		image_draw(graphicBase + 14, 336, 0);
 	} else if (s_width < 1024) {
-		Graphics_drawImage(graphicBase + 14, 336, 0);
-		Graphics_drawImage(graphicBase + 14, 456, 0);
-		Graphics_drawImage(graphicBase + 14, 648, 0);
+		image_draw(graphicBase + 14, 336, 0);
+		image_draw(graphicBase + 14, 456, 0);
+		image_draw(graphicBase + 14, 648, 0);
 	} else {
-		Graphics_drawImage(graphicBase + 14, 480, 0);
-		Graphics_drawImage(graphicBase + 14, 624, 0);
-		Graphics_drawImage(graphicBase + 14, 840, 0);
+		image_draw(graphicBase + 14, 480, 0);
+		image_draw(graphicBase + 14, 624, 0);
+		image_draw(graphicBase + 14, 840, 0);
 	}
 }
 

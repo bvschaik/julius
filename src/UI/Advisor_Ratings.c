@@ -30,7 +30,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 27;
 	outer_panel_draw(0, 0, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
 	width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK);
 	if (!scenario_criteria_population_enabled() || scenario_is_open_play()) {
 		lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK);
@@ -39,7 +39,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		text_draw_number(scenario_criteria_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK);
 	}
 
-	Graphics_drawImage(image_group(GROUP_RATINGS_BACKGROUND), 60, 48);
+	image_draw(image_group(GROUP_RATINGS_BACKGROUND), 60, 48);
 
 	// culture
 	button_border_draw(80, 286, 110, 66, focusButtonId == 1);
@@ -151,12 +151,12 @@ static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached
 {
 	int graphicBase = image_group(GROUP_RATINGS_COLUMN);
 	int y = yOffset - image_get(graphicBase)->height;
-	Graphics_drawImage(graphicBase, xOffset, y);
+	image_draw(graphicBase, xOffset, y);
 	for (int i = 0; i < 2 * value; i++) {
-		Graphics_drawImage(graphicBase + 1, xOffset + 11, --y);
+		image_draw(graphicBase + 1, xOffset + 11, --y);
 	}
 	if (value > 30 && hasReached) {
-		Graphics_drawImage(graphicBase + 2, xOffset - 6, y);
+		image_draw(graphicBase + 2, xOffset - 6, y);
 	}
 }
 

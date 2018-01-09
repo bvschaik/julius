@@ -72,7 +72,7 @@ void UI_CCKSelection_init()
 
 void UI_CCKSelection_drawBackground()
 {
-	Graphics_drawFullScreenImage(image_group(GROUP_CCK_BACKGROUND));
+	image_draw_fullscreen_background(image_group(GROUP_CCK_BACKGROUND));
     graphics_in_dialog();
 	inner_panel_draw(280, 242, 2, 12);
 	drawScenarioList();
@@ -110,13 +110,13 @@ static void drawScrollbarDot()
 			pct = calc_percentage(scrollPosition, scenarios->num_files - 15);
 		}
 		int yOffset = calc_adjust_with_percentage(164, pct);
-		Graphics_drawImage(image_group(GROUP_PANEL_BUTTON) + 39, 284, 245 + yOffset);
+		image_draw(image_group(GROUP_PANEL_BUTTON) + 39, 284, 245 + yOffset);
 	}
 }
 
 static void drawScenarioInfo()
 {
-	Graphics_drawImage(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
+	image_draw(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
 
 	text_draw_centered(string_from_ascii(selectedScenario), 335, 25, 260, FONT_LARGE_BLACK, 0);
 	text_draw_centered(scenario_brief_description(), 335, 60, 260, FONT_NORMAL_WHITE, 0);

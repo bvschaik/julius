@@ -83,7 +83,7 @@ void UI_OverlayMenu_drawForeground()
 			xOffset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
 	}
 	if (selectedSubmenu > 0) {
-		Graphics_drawImage(image_group(GROUP_BULLET),
+		image_draw(image_group(GROUP_BULLET),
 			xOffset - 185, 80 + 24 * selectedMenu);
 		for (int i = 0; i < numSubmenuItems; i++) {
 			label_draw(

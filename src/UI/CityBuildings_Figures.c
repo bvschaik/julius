@@ -98,11 +98,11 @@ static int showOnOverlay(figure *f)
 static void drawFigureWithCart(figure *f, int xOffset, int yOffset)
 {
 	if (f->yOffsetCart >= 0) {
-		Graphics_drawImage(f->graphicId, xOffset, yOffset);
-		Graphics_drawImage(f->cartGraphicId, xOffset + f->xOffsetCart, yOffset + f->yOffsetCart);
+		image_draw(f->graphicId, xOffset, yOffset);
+		image_draw(f->cartGraphicId, xOffset + f->xOffsetCart, yOffset + f->yOffsetCart);
 	} else {
-		Graphics_drawImage(f->cartGraphicId, xOffset + f->xOffsetCart, yOffset + f->yOffsetCart);
-		Graphics_drawImage(f->graphicId, xOffset, yOffset);
+		image_draw(f->cartGraphicId, xOffset + f->xOffsetCart, yOffset + f->yOffsetCart);
+		image_draw(f->graphicId, xOffset, yOffset);
 	}
 }
 
@@ -314,25 +314,25 @@ void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int sel
 			case FIGURE_FORT_STANDARD:
 				if (!formation_get(f->formationId)->in_distant_battle) {
 					// base
-					Graphics_drawImage(f->graphicId, xOffset, yOffset);
+					image_draw(f->graphicId, xOffset, yOffset);
 					// flag
-					Graphics_drawImage(f->cartGraphicId,
+					image_draw(f->cartGraphicId,
 						xOffset, yOffset - image_get(f->cartGraphicId)->height);
 					// top icon
 					int iconGraphicId = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + f->formationId - 1;
-					Graphics_drawImage(iconGraphicId,
+					image_draw(iconGraphicId,
 						xOffset, yOffset - image_get(iconGraphicId)->height - image_get(f->cartGraphicId)->height);
 				}
 				break;
 			default:
-				Graphics_drawImage(f->graphicId, xOffset, yOffset);
+				image_draw(f->graphicId, xOffset, yOffset);
 				break;
 		}
 	} else {
 		if (f->isEnemyGraphic) {
-			Graphics_drawEnemyImage(f->graphicId, xOffset, yOffset);
+			image_draw_enemy(f->graphicId, xOffset, yOffset);
 		} else {
-			Graphics_drawImage(f->graphicId, xOffset, yOffset);
+			image_draw(f->graphicId, xOffset, yOffset);
 		}
 	}
 }

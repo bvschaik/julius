@@ -91,9 +91,9 @@ void UI_MissionStart_Selection_drawBackground()
 {
 	int rank = scenario_campaign_rank();
 	
-	Graphics_drawFullScreenImage(image_group(GROUP_SELECT_MISSION_BACKGROUND));
+	image_draw_fullscreen_background(image_group(GROUP_SELECT_MISSION_BACKGROUND));
     graphics_in_dialog();
-	Graphics_drawImage(image_group(GROUP_SELECT_MISSION) + backgroundGraphicOffset[rank], 0, 0);
+	image_draw(image_group(GROUP_SELECT_MISSION) + backgroundGraphicOffset[rank], 0, 0);
 	lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK);
 	if (data.choice) {
 		lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK);
@@ -125,14 +125,14 @@ void UI_MissionStart_Selection_drawForeground()
 	int yMilitary = campaignSelection[rank].yMilitary - 4;
 	int graphicId = image_group(GROUP_SELECT_MISSION_BUTTON);
 	if (data.choice == 0) {
-		Graphics_drawImage(focusButton == 1 ? graphicId + 1 : graphicId, xPeaceful, yPeaceful);
-		Graphics_drawImage(focusButton == 2 ? graphicId + 1 : graphicId, xMilitary, yMilitary);
+		image_draw(focusButton == 1 ? graphicId + 1 : graphicId, xPeaceful, yPeaceful);
+		image_draw(focusButton == 2 ? graphicId + 1 : graphicId, xMilitary, yMilitary);
 	} else if (data.choice == 1) {
-		Graphics_drawImage(focusButton == 1 ? graphicId + 1 : graphicId + 2, xPeaceful, yPeaceful);
-		Graphics_drawImage(focusButton == 2 ? graphicId + 1 : graphicId, xMilitary, yMilitary);
+		image_draw(focusButton == 1 ? graphicId + 1 : graphicId + 2, xPeaceful, yPeaceful);
+		image_draw(focusButton == 2 ? graphicId + 1 : graphicId, xMilitary, yMilitary);
 	} else {
-		Graphics_drawImage(focusButton == 1 ? graphicId + 1 : graphicId, xPeaceful, yPeaceful);
-		Graphics_drawImage(focusButton == 2 ? graphicId + 1 : graphicId + 2, xMilitary, yMilitary);
+		image_draw(focusButton == 1 ? graphicId + 1 : graphicId, xPeaceful, yPeaceful);
+		image_draw(focusButton == 2 ? graphicId + 1 : graphicId + 2, xMilitary, yMilitary);
 	}
 	graphics_reset_dialog();
 }

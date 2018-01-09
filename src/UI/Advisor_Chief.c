@@ -17,13 +17,13 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 23;
 	outer_panel_draw(0, 0, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 11, 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS) + 11, 10, 10);
 
 	lang_text_draw(61, 0, 60, 12, FONT_LARGE_BLACK);
 	inner_panel_draw(32, 60, 36, 16);
 
 	// workers
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 67);
+	image_draw(image_group(GROUP_BULLET), 40, 67);
 	lang_text_draw(61, 1, 60, 66, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.unemploymentPercentage > 0) {
 		width = lang_text_draw(61, 12, 240, 66, FONT_NORMAL_RED);
@@ -38,7 +38,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// finance
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 87);
+	image_draw(image_group(GROUP_BULLET), 40, 87);
 	lang_text_draw(61, 2, 60, 86, FONT_NORMAL_WHITE);
     int treasury = city_finance_treasury();
 	if (treasury > Data_CityInfo.financeBalanceLastYear) {
@@ -54,7 +54,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// migration
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 107);
+	image_draw(image_group(GROUP_BULLET), 40, 107);
 	lang_text_draw(61, 3, 60, 106, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 3) {
 		lang_text_draw(61, 79, 240, 106, FONT_NORMAL_GREEN);
@@ -81,7 +81,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// food stocks
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 127);
+	image_draw(image_group(GROUP_BULLET), 40, 127);
 	lang_text_draw(61, 4, 60, 126, FONT_NORMAL_WHITE);
 	if (scenario_property_rome_supplies_wheat()) {
 		lang_text_draw(61, 26, 240, 126, FONT_NORMAL_GREEN);
@@ -94,7 +94,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// food consumption
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 147);
+	image_draw(image_group(GROUP_BULLET), 40, 147);
 	lang_text_draw(61, 62, 60, 146, FONT_NORMAL_WHITE);
 	if (scenario_property_rome_supplies_wheat()) {
 		lang_text_draw(61, 26, 240, 146, FONT_NORMAL_GREEN);
@@ -118,7 +118,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// military
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 167);
+	image_draw(image_group(GROUP_BULLET), 40, 167);
 	lang_text_draw(61, 5, 60, 166, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.numImperialSoldiersInCity) {
 		lang_text_draw(61, 76, 240, 166, FONT_NORMAL_RED);
@@ -138,7 +138,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// crime
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 187);
+	image_draw(image_group(GROUP_BULLET), 40, 187);
 	lang_text_draw(61, 6, 60, 186, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.numRiotersInCity) {
 		lang_text_draw(61, 33, 240, 186, FONT_NORMAL_RED);
@@ -153,7 +153,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// health
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 207);
+	image_draw(image_group(GROUP_BULLET), 40, 207);
 	lang_text_draw(61, 7, 60, 206, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.healthRate >= 40) {
 		lang_text_draw(56, Data_CityInfo.healthRate / 10 + 27,
@@ -164,7 +164,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// education
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 227);
+	image_draw(image_group(GROUP_BULLET), 40, 227);
 	lang_text_draw(61, 8, 60, 226, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.educationDemand == 1) {
 		lang_text_draw(61, 39, 240, 226, FONT_NORMAL_RED);
@@ -177,7 +177,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// religion
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 247);
+	image_draw(image_group(GROUP_BULLET), 40, 247);
 	lang_text_draw(61, 9, 60, 246, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.religionDemand == 1) {
 		lang_text_draw(61, 46, 240, 246, FONT_NORMAL_RED);
@@ -190,7 +190,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// entertainment
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 267);
+	image_draw(image_group(GROUP_BULLET), 40, 267);
 	lang_text_draw(61, 10, 60, 266, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.entertainmentDemand == 1) {
 		lang_text_draw(61, 43, 240, 266, FONT_NORMAL_RED);
@@ -201,7 +201,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// sentiment
-	Graphics_drawImage(image_group(GROUP_BULLET), 40, 287);
+	image_draw(image_group(GROUP_BULLET), 40, 287);
 	lang_text_draw(61, 11, 60, 286, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.citySentiment <= 0) {
 		lang_text_draw(61, 50, 240, 286, FONT_NORMAL_RED);

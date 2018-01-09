@@ -42,7 +42,7 @@ void UI_SetSalaryDialog_drawForeground()
     graphics_in_dialog();
 
 	outer_panel_draw(128, 32, 24, 25);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + 16, 144, 48);
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + 16, 144, 48);
 	lang_text_draw_centered(52, 15, 144, 48, 368, FONT_LARGE_BLACK);
 
 	inner_panel_draw(144, 80, 22, 15);

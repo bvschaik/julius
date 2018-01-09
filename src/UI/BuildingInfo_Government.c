@@ -15,7 +15,7 @@ void UI_BuildingInfo_drawForum(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/forum.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(106, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
 		c->xOffset + 16, c->yOffset + 36);
 
 	building *b = building_get(c->buildingId);
@@ -51,7 +51,7 @@ void UI_BuildingInfo_drawSenate(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/senate.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(105, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
 		c->xOffset + 16, c->yOffset + 36);
 
 	building *b = building_get(c->buildingId);

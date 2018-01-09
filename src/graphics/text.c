@@ -146,7 +146,7 @@ static int drawCharacter(const font_definition *def, unsigned int c, int x, int 
     if (c < 128 || c == 231) { // Some exceptions...
         height = 0;
     }
-    Graphics_drawLetter(graphicId, x, y - height, color);
+    image_draw_letter(graphicId, x, y - height, color);
     return image_get(graphicId)->width;
 }
 

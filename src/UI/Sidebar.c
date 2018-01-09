@@ -180,10 +180,10 @@ static void drawSidebar()
 	int xOffsetPanel = Data_Screen.width - SIDEBAR_BORDER;
 	if (city_view_is_sidebar_collapsed()) {
 		xOffsetPanel -= 42;
-		Graphics_drawImage(graphicBase, xOffsetPanel, 24);
+		image_draw(graphicBase, xOffsetPanel, 24);
 	} else {
 		xOffsetPanel -= 162;
-		Graphics_drawImage(graphicBase + 1, xOffsetPanel, 24);
+		image_draw(graphicBase + 1, xOffsetPanel, 24);
 	}
 	drawButtons();
 	drawOverlayText(xOffsetPanel + 4);
@@ -195,10 +195,10 @@ static void drawSidebar()
 	int yMax = Data_Screen.height - BOTTOM_BORDER;
 	while (yOffset < yMax) {
 		if (yMax - yOffset <= 120) {
-			Graphics_drawImage(graphicBase + 2 + city_view_is_sidebar_collapsed(), xOffsetPanel, yOffset);
+			image_draw(graphicBase + 2 + city_view_is_sidebar_collapsed(), xOffsetPanel, yOffset);
 			yOffset += 120;
 		} else {
-			Graphics_drawImage(graphicBase + 4 + city_view_is_sidebar_collapsed(), xOffsetPanel, yOffset);
+			image_draw(graphicBase + 4 + city_view_is_sidebar_collapsed(), xOffsetPanel, yOffset);
 			yOffset += 285;
 		}
 	}
@@ -215,7 +215,7 @@ static void drawFillerBorders()
 		}
 		int xOffset = Data_Screen.width - borderRightWidth;
 		for (int yOffset = 24; yOffset < Data_Screen.height; yOffset += 24) {
-			Graphics_drawImage(graphicId, xOffset, yOffset);
+			image_draw(graphicId, xOffset, yOffset);
 		}
 	}
 
@@ -452,7 +452,7 @@ void UI_SlidingSidebar_drawForeground()
 	int graphicBase = image_group(GROUP_SIDE_PANEL);
 	// draw collapsed sidebar
 	int xOffsetCollapsed = Data_Screen.width - SIDEBAR_BORDER - 42;
-	Graphics_drawImage(graphicBase, xOffsetCollapsed, 24);
+	image_draw(graphicBase, xOffsetCollapsed, 24);
 	image_buttons_draw(xOffsetCollapsed, 24, buttonExpandSidebar, 1);
 	image_buttons_draw(xOffsetCollapsed, 24, buttonBuildCollapsed, 12);
 
@@ -463,7 +463,7 @@ void UI_SlidingSidebar_drawForeground()
 	} else {
 		xOffsetExpanded += progressToOffset[data.progress];
 	}
-	Graphics_drawImage(graphicBase + 1, xOffsetExpanded, 24);
+	image_draw(graphicBase + 1, xOffsetExpanded, 24);
 	image_buttons_draw(xOffsetExpanded, 24, buttonOverlaysCollapseSidebar, 2);
 	image_buttons_draw(xOffsetExpanded, 24, buttonBuildExpanded, 15);
 	image_buttons_draw(xOffsetExpanded, 24, buttonTopExpanded, 6);
@@ -478,12 +478,12 @@ void UI_SlidingSidebar_drawForeground()
 	int yOffset = 474;
 	while (Data_Screen.width - yOffset > 0) {
 		if (Data_Screen.width - yOffset <= 120) {
-			Graphics_drawImage(graphicBase + 3, xOffsetCollapsed, yOffset);
-			Graphics_drawImage(graphicBase + 2, xOffsetExpanded, yOffset);
+			image_draw(graphicBase + 3, xOffsetCollapsed, yOffset);
+			image_draw(graphicBase + 2, xOffsetExpanded, yOffset);
 			yOffset += 120;
 		} else {
-			Graphics_drawImage(graphicBase + 5, xOffsetCollapsed, yOffset);
-			Graphics_drawImage(graphicBase + 4, xOffsetExpanded, yOffset);
+			image_draw(graphicBase + 5, xOffsetCollapsed, yOffset);
+			image_draw(graphicBase + 4, xOffsetExpanded, yOffset);
 			yOffset += 285;
 		}
 	}

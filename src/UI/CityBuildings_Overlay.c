@@ -256,24 +256,24 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 					building *b = building_get(map_building_at(gridOffset));
 					int colorMask = 0;
 					if (b->type == BUILDING_GRANARY) {
-						Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 1,
+						image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 1,
 							xGraphic + img->sprite_offset_x,
 							yGraphic + 60 + img->sprite_offset_y - img->height,
 							colorMask);
 						if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
-							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 2,
+							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 2,
 								xGraphic + 33, yGraphic - 60, colorMask);
 						}
 						if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
-							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 3,
+							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 3,
 								xGraphic + 56, yGraphic - 50, colorMask);
 						}
 						if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
-							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 4,
+							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 4,
 								xGraphic + 91, yGraphic - 50, colorMask);
 						}
 						if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
-							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 5,
+							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 5,
 								xGraphic + 117, yGraphic - 62, colorMask);
 						}
 					} else {
@@ -290,7 +290,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 								case 4: ydiff = 75; break;
 								case 5: ydiff = 90; break;
 							}
-							Graphics_drawImageMasked(graphicId + animationOffset,
+							image_draw_masked(graphicId + animationOffset,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + ydiff + img->sprite_offset_y - img->height,
 								colorMask);
@@ -600,7 +600,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 			int xTileOffset[] = {30, 0, 60, 30};
 			int yTileOffset[] = {-15, 0, 0, 15};
 			for (int i = 0; i < 4; i++) {
-				Graphics_drawIsometricFootprint(graphicBase + i,
+				image_draw_isometric_footprint(graphicBase + i,
 					xOffset + xTileOffset[i], yOffset + yTileOffset[i], 0);
 			}
 		}
@@ -689,7 +689,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 				int xTileOffset[] = {60, 30, 90, 0, 60, 120, 30, 90, 60};
 				int yTileOffset[] = {-30, -15, -15, 0, 0, 0, 15, 15, 30};
 				for (int i = 0; i < 9; i++) {
-					Graphics_drawIsometricFootprint(graphicBase + graphicTileOffset[i],
+					image_draw_isometric_footprint(graphicBase + graphicTileOffset[i],
 						xOffset + xTileOffset[i], yOffset + yTileOffset[i], 0);
 				}
 			}
@@ -719,7 +719,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 			45
 		};
 		for (int i = 0; i < 16; i++) {
-			Graphics_drawIsometricFootprint(graphicBase + graphicTileOffset[i],
+			image_draw_isometric_footprint(graphicBase + graphicTileOffset[i],
 				xOffset + xTileOffset[i], yOffset + yTileOffset[i], 0);
 		}
 	} else if (b->size == 5) {
@@ -783,7 +783,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 				60
 			};
 			for (int i = 0; i < 25; i++) {
-				Graphics_drawIsometricFootprint(graphicBase + graphicTileOffset[i],
+				image_draw_isometric_footprint(graphicBase + graphicTileOffset[i],
 					xOffset + xTileOffset[i], yOffset + yTileOffset[i], 0);
 			}
 		}
@@ -1229,29 +1229,29 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, building *b, int x
 	}
 	if (type == BUILDING_GRANARY) {
 		const image *img = image_get(map_image_at(gridOffset));
-		Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 1,
+		image_draw(image_group(GROUP_BUILDING_GRANARY) + 1,
 			xOffset + img->sprite_offset_x,
 			yOffset + img->sprite_offset_y - 30 -
 			(img->height - 90));
 		if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
-			Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 2,
+			image_draw(image_group(GROUP_BUILDING_GRANARY) + 2,
 				xOffset + 32, yOffset - 61);
 			if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
-				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 3,
+				image_draw(image_group(GROUP_BUILDING_GRANARY) + 3,
 					xOffset + 56, yOffset - 51);
 			}
 			if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
-				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 4,
+				image_draw(image_group(GROUP_BUILDING_GRANARY) + 4,
 					xOffset + 91, yOffset - 51);
 			}
 			if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
-				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 5,
+				image_draw(image_group(GROUP_BUILDING_GRANARY) + 5,
 					xOffset + 118, yOffset - 61);
 			}
 		}
 	}
 	if (type == BUILDING_WAREHOUSE) {
-		Graphics_drawImage(image_group(GROUP_BUILDING_WAREHOUSE) + 17, xOffset - 4, yOffset - 42);
+		image_draw(image_group(GROUP_BUILDING_WAREHOUSE) + 17, xOffset - 4, yOffset - 42);
 	}
 
 	draw_top_with_size(gridOffset, xOffset, yOffset);
@@ -1268,13 +1268,13 @@ static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed)
 	}
 	int capitalHeight = image_get(graphicId)->height;
 	// draw base
-	Graphics_drawImage(graphicId + 2, xOffset + 9, yOffset - 8);
+	image_draw(graphicId + 2, xOffset + 9, yOffset - 8);
 	if (height) {
 		for (int i = 1; i < height; i++) {
-			Graphics_drawImage(graphicId + 1, xOffset + 17, yOffset - 8 - 10 * i + 13);
+			image_draw(graphicId + 1, xOffset + 17, yOffset - 8 - 10 * i + 13);
 		}
 		// top
-		Graphics_drawImage(graphicId,
+		image_draw(graphicId,
 			xOffset + 5, yOffset - 8 - capitalHeight - 10 * (height - 1) + 13);
 	}
 }

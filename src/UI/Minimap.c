@@ -150,7 +150,7 @@ static int drawFigure(int xView, int yView, int gridOffset)
 static void drawTile(int xView, int yView, int gridOffset)
 {
 	if (gridOffset < 0) {
-		Graphics_drawImage(image_group(GROUP_MINIMAP_BLACK), xView, yView);
+		image_draw(image_group(GROUP_MINIMAP_BLACK), xView, yView);
 		return;
 	}
 
@@ -179,15 +179,15 @@ static void drawTile(int xView, int yView, int gridOffset)
 			}
 			switch (map_property_multi_tile_size(gridOffset)) {
 				case 1:
-					Graphics_drawImage(graphicId, xView, yView); break;
+					image_draw(graphicId, xView, yView); break;
 				case 2:
-					Graphics_drawImage(graphicId + 1, xView, yView - 1); break;
+					image_draw(graphicId + 1, xView, yView - 1); break;
 				case 3:
-					Graphics_drawImage(graphicId + 2, xView, yView - 2); break;
+					image_draw(graphicId + 2, xView, yView - 2); break;
 				case 4:
-					Graphics_drawImage(graphicId + 3, xView, yView - 3); break;
+					image_draw(graphicId + 3, xView, yView - 3); break;
 				case 5:
-					Graphics_drawImage(graphicId + 4, xView, yView - 4); break;
+					image_draw(graphicId + 4, xView, yView - 4); break;
 			}
 		}
 	} else {
@@ -214,7 +214,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 		} else {
 			graphicId = image_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
 		}
-		Graphics_drawImage(graphicId, xView, yView);
+		image_draw(graphicId, xView, yView);
 	}
 }
 

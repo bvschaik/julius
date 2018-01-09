@@ -54,7 +54,7 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 16;
 	outer_panel_draw(0, 0, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 7, 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS) + 7, 10, 10);
 	lang_text_draw(57, 0, 60, 12, FONT_LARGE_BLACK);
 
 	// x population, y school age, z academy age

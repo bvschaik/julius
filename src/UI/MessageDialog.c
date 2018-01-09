@@ -190,14 +190,14 @@ static void drawDialogNormal()
 			graphicX = graphicY = 16;
 			graphicId = image_group(GROUP_BIG_PEOPLE);
 		}
-		Graphics_drawImage(graphicId, data.x + graphicX, data.y + graphicY);
+		image_draw(graphicId, data.x + graphicX, data.y + graphicY);
 		if (data.y + graphicY + image_get(graphicId)->height + 8 > data.yText) {
 			data.yText = data.y + graphicY + image_get(graphicId)->height + 8;
 		}
 	}
 	if (msg->image2.id) {
 		int graphicId = image_group(GROUP_MESSAGE_IMAGES) + msg->image2.id - 1;
-		Graphics_drawImage(graphicId, data.x + msg->image2.x, data.y + msg->image2.y);
+		image_draw(graphicId, data.x + msg->image2.x, data.y + msg->image2.y);
 		if (data.y + msg->image2.y + image_get(graphicId)->height + 8 > data.yText) {
 			data.yText = data.y + msg->image2.y + image_get(graphicId)->height + 8;
 		}
@@ -268,7 +268,7 @@ static void drawDialogVideo()
         const scenario_request *request = scenario_request_get(playerMessage.param1);
 		text_draw_number(request->amount,
 			'@', " ", data.x + 8, data.y + 384, FONT_NORMAL_WHITE);
-		Graphics_drawImage(
+		image_draw(
 			image_group(GROUP_RESOURCE_ICONS) + request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON),
 			data.x + 70, data.y + 379);
 		lang_text_draw(23, request->resource, data.x + 100, data.y + 384, FONT_NORMAL_WHITE);
@@ -335,7 +335,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 		case MESSAGE_TYPE_TRADE_CHANGE:
 			graphicId = image_group(GROUP_RESOURCE_ICONS) + playerMessage.param2;
 			graphicId += resource_image_offset(playerMessage.param2, RESOURCE_IMAGE_ICON);
-			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
+			image_draw(graphicId, data.x + 64, data.yText + 40);
 			lang_text_draw(21, empire_city_get(playerMessage.param1)->name_id,
 				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
 			rich_text_draw(msg->content.text,
@@ -346,7 +346,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 		case MESSAGE_TYPE_PRICE_CHANGE:
 			graphicId = image_group(GROUP_RESOURCE_ICONS) + playerMessage.param2;
 			graphicId += resource_image_offset(playerMessage.param2, RESOURCE_IMAGE_ICON);
-			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
+			image_draw(graphicId, data.x + 64, data.yText + 40);
 			text_draw_money(playerMessage.param1,
 				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
 			rich_text_draw(msg->content.text,
@@ -366,7 +366,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			'@', " ", data.xText + 8, yOffset, FONT_NORMAL_WHITE);
 		graphicId = image_group(GROUP_RESOURCE_ICONS) + request->resource;
 		graphicId += resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
-		Graphics_drawImage(graphicId, data.xText + 70, yOffset - 5);
+		image_draw(graphicId, data.xText + 70, yOffset - 5);
 		lang_text_draw(23, request->resource,
 			data.xText + 100, yOffset, FONT_NORMAL_WHITE);
 		if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {

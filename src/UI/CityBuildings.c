@@ -124,7 +124,7 @@ static void drawBuildingFootprints()
 		}
 		if (gridOffset < 0) {
 			// Outside map: draw black tile
-			Graphics_drawIsometricFootprint(image_group(GROUP_TERRAIN_BLACK),
+			image_draw_isometric_footprint(image_group(GROUP_TERRAIN_BLACK),
 				xGraphic, yGraphic, 0);
 		} else if (map_property_is_draw_tile(gridOffset)) {
 			// Valid gridOffset and leftmost tile -> draw
@@ -163,19 +163,19 @@ static void drawBuildingFootprints()
 						}
 						map_image_set(gridOffset, graphicId);
 					}
-					Graphics_drawIsometricFootprint(graphicId, xGraphic, yGraphic, colorMask);
+					image_draw_isometric_footprint(graphicId, xGraphic, yGraphic, colorMask);
 					break;
 				case 2:
-					Graphics_drawIsometricFootprint(graphicId, xGraphic + 30, yGraphic - 15, colorMask);
+					image_draw_isometric_footprint(graphicId, xGraphic + 30, yGraphic - 15, colorMask);
 					break;
 				case 3:
-					Graphics_drawIsometricFootprint(graphicId, xGraphic + 60, yGraphic - 30, colorMask);
+					image_draw_isometric_footprint(graphicId, xGraphic + 60, yGraphic - 30, colorMask);
 					break;
 				case 4:
-					Graphics_drawIsometricFootprint(graphicId, xGraphic + 90, yGraphic - 45, colorMask);
+					image_draw_isometric_footprint(graphicId, xGraphic + 90, yGraphic - 45, colorMask);
 					break;
 				case 5:
-					Graphics_drawIsometricFootprint(graphicId, xGraphic + 120, yGraphic - 60, colorMask);
+					image_draw_isometric_footprint(graphicId, xGraphic + 120, yGraphic - 60, colorMask);
 					break;
 			}
 		}
@@ -206,43 +206,43 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				if (b->type == BUILDING_SENATE_UPGRADED) {
 					// rating flags
 					graphicId = image_group(GROUP_BUILDING_SENATE);
-					Graphics_drawImageMasked(graphicId + 1, xGraphic + 138,
+					image_draw_masked(graphicId + 1, xGraphic + 138,
 						yGraphic + 44 - Data_CityInfo.ratingCulture / 2, colorMask);
-					Graphics_drawImageMasked(graphicId + 2, xGraphic + 168,
+					image_draw_masked(graphicId + 2, xGraphic + 168,
 						yGraphic + 36 - Data_CityInfo.ratingProsperity / 2, colorMask);
-					Graphics_drawImageMasked(graphicId + 3, xGraphic + 198,
+					image_draw_masked(graphicId + 3, xGraphic + 198,
 						yGraphic + 27 - Data_CityInfo.ratingPeace / 2, colorMask);
-					Graphics_drawImageMasked(graphicId + 4, xGraphic + 228,
+					image_draw_masked(graphicId + 4, xGraphic + 228,
 						yGraphic + 19 - Data_CityInfo.ratingFavor / 2, colorMask);
 					// unemployed
 					graphicId = image_group(GROUP_FIGURE_HOMELESS);
 					if (Data_CityInfo.unemploymentPercentageForSenate > 0) {
-						Graphics_drawImageMasked(graphicId + 108,
+						image_draw_masked(graphicId + 108,
 							xGraphic + 80, yGraphic, colorMask);
 					}
 					if (Data_CityInfo.unemploymentPercentageForSenate > 5) {
-						Graphics_drawImageMasked(graphicId + 104,
+						image_draw_masked(graphicId + 104,
 							xGraphic + 230, yGraphic - 30, colorMask);
 					}
 					if (Data_CityInfo.unemploymentPercentageForSenate > 10) {
-						Graphics_drawImageMasked(graphicId + 107,
+						image_draw_masked(graphicId + 107,
 							xGraphic + 100, yGraphic + 20, colorMask);
 					}
 					if (Data_CityInfo.unemploymentPercentageForSenate > 15) {
-						Graphics_drawImageMasked(graphicId + 106,
+						image_draw_masked(graphicId + 106,
 							xGraphic + 235, yGraphic - 10, colorMask);
 					}
 					if (Data_CityInfo.unemploymentPercentageForSenate > 20) {
-						Graphics_drawImageMasked(graphicId + 106,
+						image_draw_masked(graphicId + 106,
 							xGraphic + 66, yGraphic + 20, colorMask);
 					}
 				}
 				if (b->type == BUILDING_AMPHITHEATER && b->numWorkers > 0) {
-					Graphics_drawImageMasked(image_group(GROUP_BUILDING_AMPHITHEATER_SHOW),
+					image_draw_masked(image_group(GROUP_BUILDING_AMPHITHEATER_SHOW),
 						xGraphic + 36, yGraphic - 47, colorMask);
 				}
 				if (b->type == BUILDING_THEATER && b->numWorkers > 0) {
-					Graphics_drawImageMasked(image_group(GROUP_BUILDING_THEATER_SHOW),
+					image_draw_masked(image_group(GROUP_BUILDING_THEATER_SHOW),
 						xGraphic + 34, yGraphic - 22, colorMask);
 				}
 				if (b->type == BUILDING_HIPPODROME && building_main(b)->numWorkers > 0 &&
@@ -251,22 +251,22 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					if ((subtype == 0 || subtype == 3) && Data_CityInfo.population > 2000) {
 						switch (orientation) {
 							case DIR_0_TOP:
-								Graphics_drawImageMasked(
+								image_draw_masked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
 									xGraphic + 147, yGraphic - 72, colorMask);
 								break;
 							case DIR_2_RIGHT:
-								Graphics_drawImageMasked(
+								image_draw_masked(
 									image_group(GROUP_BUILDING_HIPPODROME_1) + 8,
 									xGraphic + 58, yGraphic - 79, colorMask);
 								break;
 							case DIR_4_BOTTOM:
-								Graphics_drawImageMasked(
+								image_draw_masked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
 									xGraphic + 119, yGraphic - 80, colorMask);
 								break;
 							case DIR_6_LEFT:
-								Graphics_drawImageMasked(
+								image_draw_masked(
 									image_group(GROUP_BUILDING_HIPPODROME_1) + 6,
 									xGraphic, yGraphic - 72, colorMask);
 						}
@@ -274,72 +274,72 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						switch (orientation) {
 							case DIR_0_TOP:
 							case DIR_4_BOTTOM:
-								Graphics_drawImageMasked(
+								image_draw_masked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 7,
 									xGraphic + 122, yGraphic - 79, colorMask);
 								break;
 							case DIR_2_RIGHT:
 							case DIR_6_LEFT:
-								Graphics_drawImageMasked(
+								image_draw_masked(
 									image_group(GROUP_BUILDING_HIPPODROME_1) + 7,
 									xGraphic, yGraphic - 80, colorMask);
 						}
 					} else if ((subtype == 2 || subtype == 5) && Data_CityInfo.population > 1000) {
 						switch (orientation) {
 							case DIR_0_TOP:
-								Graphics_drawImageMasked(
+								image_draw_masked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
 									xGraphic + 119, yGraphic - 80, colorMask);
 								break;
 							case DIR_2_RIGHT:
-								Graphics_drawImageMasked(
+								image_draw_masked(
 									image_group(GROUP_BUILDING_HIPPODROME_1) + 6,
 									xGraphic, yGraphic - 72, colorMask);
 								break;
 							case DIR_4_BOTTOM:
-								Graphics_drawImageMasked(
+								image_draw_masked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
 									xGraphic + 147, yGraphic - 72, colorMask);
 								break;
 							case DIR_6_LEFT:
-								Graphics_drawImageMasked(
+								image_draw_masked(
 									image_group(GROUP_BUILDING_HIPPODROME_1) + 8,
 									xGraphic + 58, yGraphic - 79, colorMask);
 						}
 					}
 				}
 				if (b->type == BUILDING_COLOSSEUM && b->numWorkers > 0) {
-					Graphics_drawImageMasked(image_group(GROUP_BUILDING_COLOSSEUM_SHOW),
+					image_draw_masked(image_group(GROUP_BUILDING_COLOSSEUM_SHOW),
 						xGraphic + 70, yGraphic - 90, colorMask);
 				}
 				// workshops
 				if (b->type == BUILDING_WINE_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL),
+						image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL),
 							xGraphic + 45, yGraphic + 23, colorMask);
 					}
 				}
 				if (b->type == BUILDING_OIL_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1,
+						image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1,
 							xGraphic + 35, yGraphic + 15, colorMask);
 					}
 				}
 				if (b->type == BUILDING_WEAPONS_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3,
+						image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3,
 							xGraphic + 46, yGraphic + 24, colorMask);
 					}
 				}
 				if (b->type == BUILDING_FURNITURE_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2,
+						image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2,
 							xGraphic + 48, yGraphic + 19, colorMask);
 					}
 				}
 				if (b->type == BUILDING_POTTERY_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4,
+						image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4,
 							xGraphic + 47, yGraphic + 24, colorMask);
 					}
 				}
@@ -387,44 +387,44 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 							} else if (numDockers == 3) {
 								graphicIdDockers += 2;
 							}
-							Graphics_drawImageMasked(graphicIdDockers,
+							image_draw_masked(graphicIdDockers,
 								xGraphic + image_get(graphicIdDockers)->sprite_offset_x,
 								yGraphic + image_get(graphicIdDockers)->sprite_offset_y,
 								colorMask);
 						}
 					}
 					if (b->type == BUILDING_WAREHOUSE) {
-						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WAREHOUSE) + 17,
+						image_draw_masked(image_group(GROUP_BUILDING_WAREHOUSE) + 17,
 							xGraphic - 4, yGraphic - 42, colorMask);
 						if (b->id == Data_CityInfo.buildingTradeCenterBuildingId) {
-							Graphics_drawImageMasked(image_group(GROUP_BUILDING_TRADE_CENTER_FLAG),
+							image_draw_masked(image_group(GROUP_BUILDING_TRADE_CENTER_FLAG),
 								xGraphic + 19, yGraphic - 56, colorMask);
 						}
 					}
 					if (b->type == BUILDING_GRANARY) {
-						Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 1,
+						image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 1,
 							xGraphic + img->sprite_offset_x,
 							yGraphic + 60 + img->sprite_offset_y - img->height,
 							colorMask);
 						if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
-							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 2,
+							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 2,
 								xGraphic + 33, yGraphic - 60, colorMask);
 						}
 						if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
-							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 3,
+							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 3,
 								xGraphic + 56, yGraphic - 50, colorMask);
 						}
 						if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
-							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 4,
+							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 4,
 								xGraphic + 91, yGraphic - 50, colorMask);
 						}
 						if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
-							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 5,
+							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 5,
 								xGraphic + 117, yGraphic - 62, colorMask);
 						}
 					}
 					if (b->type == BUILDING_BURNING_RUIN && b->ruinHasPlague) {
-						Graphics_drawImageMasked(image_group(GROUP_PLAGUE_SKULL),
+						image_draw_masked(image_group(GROUP_PLAGUE_SKULL),
 							xGraphic + 18, yGraphic - 32, colorMask);
 					}
 					int animationOffset = building_animation_offset(b, graphicId, gridOffset);
@@ -433,7 +433,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 							animationOffset = img->num_animation_sprites;
 						}
 						if (b->type == BUILDING_GRANARY) {
-							Graphics_drawImageMasked(graphicId + animationOffset + 5,
+							image_draw_masked(graphicId + animationOffset + 5,
 								xGraphic + 77, yGraphic - 49, colorMask);
 						} else {
 							int ydiff = 0;
@@ -444,7 +444,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 								case 4: ydiff = 75; break;
 								case 5: ydiff = 90; break;
 							}
-							Graphics_drawImageMasked(graphicId + animationOffset,
+							image_draw_masked(graphicId + animationOffset,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + ydiff + img->sprite_offset_y - img->height,
 								colorMask);
@@ -463,7 +463,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						case FIGURE_FORT_JAVELIN: offset = 2; break;
 					}
 					if (offset) {
-						Graphics_drawImage(image_group(GROUP_BUILDING_FORT) + offset,
+						image_draw(image_group(GROUP_BUILDING_FORT) + offset,
 							xGraphic + 81, yGraphic + 5);
 					}
 				}
@@ -477,15 +477,15 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					int graphicId = image_group(GROUP_BULIDING_GATEHOUSE);
 					if (gate->subtype.orientation == 1) {
 						if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
-							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
+							image_draw(graphicId, xGraphic - 22, yGraphic - 80);
 						} else {
-							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
+							image_draw(graphicId + 1, xGraphic - 18, yGraphic - 81);
 						}
 					} else if (gate->subtype.orientation == 2) {
 						if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
-							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
+							image_draw(graphicId + 1, xGraphic - 18, yGraphic - 81);
 						} else {
-							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
+							image_draw(graphicId, xGraphic - 22, yGraphic - 80);
 						}
 					}
 				}
@@ -510,47 +510,47 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 	int graphicId = image_group(GROUP_BUILDING_BRIDGE);
 	switch (map_sprite_bridge_at(gridOffset)) {
 		case 1:
-			Graphics_drawImageMasked(graphicId + 5, x, y - 20, colorMask);
+			image_draw_masked(graphicId + 5, x, y - 20, colorMask);
 			break;
 		case 2:
-			Graphics_drawImageMasked(graphicId, x - 1, y - 8, colorMask);
+			image_draw_masked(graphicId, x - 1, y - 8, colorMask);
 			break;
 		case 3:
-			Graphics_drawImageMasked(graphicId + 3, x, y - 8, colorMask);
+			image_draw_masked(graphicId + 3, x, y - 8, colorMask);
 			break;
 		case 4:
-			Graphics_drawImageMasked(graphicId + 2, x + 7, y - 20, colorMask);
+			image_draw_masked(graphicId + 2, x + 7, y - 20, colorMask);
 			break;
 		case 5:
-			Graphics_drawImageMasked(graphicId + 4, x , y - 21, colorMask);
+			image_draw_masked(graphicId + 4, x , y - 21, colorMask);
 			break;
 		case 6:
-			Graphics_drawImageMasked(graphicId + 1, x + 5, y - 21, colorMask);
+			image_draw_masked(graphicId + 1, x + 5, y - 21, colorMask);
 			break;
 		case 7:
-			Graphics_drawImageMasked(graphicId + 11, x - 3, y - 50, colorMask);
+			image_draw_masked(graphicId + 11, x - 3, y - 50, colorMask);
 			break;
 		case 8:
-			Graphics_drawImageMasked(graphicId + 6, x - 1, y - 12, colorMask);
+			image_draw_masked(graphicId + 6, x - 1, y - 12, colorMask);
 			break;
 		case 9:
-			Graphics_drawImageMasked(graphicId + 9, x - 30, y - 12, colorMask);
+			image_draw_masked(graphicId + 9, x - 30, y - 12, colorMask);
 			break;
 		case 10:
-			Graphics_drawImageMasked(graphicId + 8, x - 23, y - 53, colorMask);
+			image_draw_masked(graphicId + 8, x - 23, y - 53, colorMask);
 			break;
 		case 11:
-			Graphics_drawImageMasked(graphicId + 10, x, y - 37, colorMask);
+			image_draw_masked(graphicId + 10, x, y - 37, colorMask);
 			break;
 		case 12:
-			Graphics_drawImageMasked(graphicId + 7, x + 7, y - 38, colorMask);
+			image_draw_masked(graphicId + 7, x + 7, y - 38, colorMask);
 			break;
 			// Note: no nr 13
 		case 14:
-			Graphics_drawImageMasked(graphicId + 13, x, y - 38, colorMask);
+			image_draw_masked(graphicId + 13, x, y - 38, colorMask);
 			break;
 		case 15:
-			Graphics_drawImageMasked(graphicId + 12, x + 7, y - 38, colorMask);
+			image_draw_masked(graphicId + 12, x + 7, y - 38, colorMask);
 			break;
 	}
 }
@@ -580,27 +580,27 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 					building_get(map_building_at(gridOffset))->type == BUILDING_HIPPODROME) {
 					switch (map_property_multi_tile_size(gridOffset)) {
 						case 1:
-							Graphics_drawImage(graphicId + 1,
+							image_draw(graphicId + 1,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + img->sprite_offset_y - img->height + 30);
 							break;
 						case 2:
-							Graphics_drawImage(graphicId + 1,
+							image_draw(graphicId + 1,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + img->sprite_offset_y - img->height + 45);
 							break;
 						case 3:
-							Graphics_drawImage(graphicId + 1,
+							image_draw(graphicId + 1,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + img->sprite_offset_y - img->height + 60);
 							break;
 						case 4:
-							Graphics_drawImage(graphicId + 1,
+							image_draw(graphicId + 1,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + img->sprite_offset_y - img->height + 75);
 							break;
 						case 5:
-							Graphics_drawImage(graphicId + 1,
+							image_draw(graphicId + 1,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + img->sprite_offset_y - img->height + 90);
 							break;

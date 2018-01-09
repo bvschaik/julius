@@ -4,14 +4,16 @@
 #include "core/image.h"
 #include "graphics/color.h"
 
-void Graphics_drawImage(int image_id, int x, int y);
-void Graphics_drawImageMasked(int image_id, int x, int y, color_t color_mask);
-void Graphics_drawImageBlend(int image_id, int x, int y, color_t color);
-void Graphics_drawFullScreenImage(int image_id);
-void Graphics_drawLetter(int image_id, int x, int y, color_t color);
-void Graphics_drawIsometricFootprint(int image_id, int x, int y, color_t color_mask);
-void Graphics_drawIsometricTop(int image_id, int x, int y, color_t color_mask);
+void image_draw(int image_id, int x, int y);
+void image_draw_enemy(int image_id, int x, int y);
 
-void Graphics_drawEnemyImage(int image_id, int x, int y);
+void image_draw_masked(int image_id, int x, int y, color_t color_mask);
+void image_draw_blend(int image_id, int x, int y, color_t color);
+void image_draw_letter(int image_id, int x, int y, color_t color);
+
+void image_draw_fullscreen_background(int image_id);
+
+void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask);
+void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask);
 
 #endif // GRAPHICS_IMAGE_H

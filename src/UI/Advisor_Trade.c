@@ -81,7 +81,7 @@ void UI_Advisor_Trade_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 27;
 	outer_panel_draw(0, 0, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
 
 	lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK);
 	lang_text_draw(54, 1, 400, 38, FONT_NORMAL_BLACK);
@@ -98,8 +98,8 @@ void UI_Advisor_Trade_drawForeground()
 		int offsetY = 22 * i;
 		int resource = Data_CityInfo_Resource.availableResources[i];
 		int graphicOffset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset, 48, offsetY + 54);
-		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset, 568, offsetY + 54);
+		image_draw(image_group(GROUP_RESOURCE_ICONS) + graphicOffset, 48, offsetY + 54);
+		image_draw(image_group(GROUP_RESOURCE_ICONS) + graphicOffset, 568, offsetY + 54);
 		
 		if (focusButtonId - 3 == i) {
 			button_border_draw(80, offsetY + 54, 480, 24, 1);
@@ -177,7 +177,7 @@ void UI_TradePricesDialog_drawBackground()
 	lang_text_draw(54, 23, 26, 253, FONT_NORMAL_BLACK);
 	for (int i = 1; i < 16; i++) {
 		int graphicOffset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
-		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
+		image_draw(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
 			126 + 30 * i, 194);
 		text_draw_number_centered(trade_price_buy(i),
 			120 + 30 * i, 229, 30, FONT_SMALL_PLAIN);
@@ -235,7 +235,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 
 	outer_panel_draw(48, 128, 34, 15);
 	int graphicOffset = selectedResourceId + resource_image_offset(selectedResourceId, RESOURCE_IMAGE_ICON);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset, 58, 136);
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + graphicOffset, 58, 136);
 
 	lang_text_draw(23, selectedResourceId, 92, 137, FONT_LARGE_BLACK);
 

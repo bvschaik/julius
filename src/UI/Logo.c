@@ -17,7 +17,7 @@ void UI_Logo_drawBackground()
 	Graphics_clearScreen();
 
     graphics_in_dialog();
-	Graphics_drawImage(image_group(GROUP_LOGO), 0, 0);
+	image_draw(image_group(GROUP_LOGO), 0, 0);
 	lang_text_draw_centered_colored(13, 7, 160, 462, 320, FONT_NORMAL_PLAIN, COLOR_WHITE);
     graphics_reset_dialog();
 }

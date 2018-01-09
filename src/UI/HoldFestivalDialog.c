@@ -53,9 +53,9 @@ void UI_HoldFestivalDialog_drawBackground()
 	for (int god = 0; god < 5; god++) {
 		if (god == Data_CityInfo.festivalGod) {
 			button_border_draw(100 * god + 66, 92, 90, 100, 1);
-			Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + god + 21, 100 * god + 70, 96);
+			image_draw(image_group(GROUP_PANEL_WINDOWS) + god + 21, 100 * god + 70, 96);
 		} else {
-			Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + god + 16, 100 * god + 70, 96);
+			image_draw(image_group(GROUP_PANEL_WINDOWS) + god + 16, 100 * god + 70, 96);
 		}
 	}
 	drawButtons();
@@ -93,7 +93,7 @@ static void drawButtons()
 		110 + width, 284, FONT_NORMAL_BLACK);
 	width += lang_text_draw_amount(8, 10, Data_CityInfo.festivalWineGrand,
 		120 + width, 284, FONT_NORMAL_BLACK);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE,
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE,
 		120 + width, 279);
 	
 	// greying out of buttons

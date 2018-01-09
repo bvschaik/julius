@@ -126,7 +126,7 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/wharf.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(102, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
 		resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
 		c->xOffset + 10, c->yOffset + 10);
 

@@ -16,7 +16,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 	PLAY_SOUND(soundFile);
 
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceId,
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + resourceId,
 		c->xOffset + 10, c->yOffset + 10);
 	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
@@ -91,7 +91,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 	PLAY_SOUND(soundFile);
 
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceId,
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + resourceId,
 		c->xOffset + 10, c->yOffset + 10);
 	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
@@ -154,7 +154,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 	PLAY_SOUND(soundFile);
 
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceId,
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + resourceId,
 		c->xOffset + 10, c->yOffset + 10);
 	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
@@ -166,7 +166,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 		c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 	lang_text_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + inputResourceId,
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + inputResourceId,
 		c->xOffset + 32, c->yOffset + 56);
 	width = lang_text_draw(groupId, 12, c->xOffset + 60, c->yOffset + 60, FONT_NORMAL_BLACK);
 	if (b->loadsStored < 1) {

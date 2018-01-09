@@ -38,7 +38,7 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
     text_draw_number_centered(Data_CityInfo.godMonthsSinceFestival[god], 360, y_offset, 50, FONT_NORMAL_WHITE);
     int width = lang_text_draw(59, 32 + Data_CityInfo.godHappiness[god] / 10, 460, y_offset, FONT_NORMAL_WHITE);
     for (int i = 0; i < Data_CityInfo.godWrathBolts[god] / 10; i++) {
-        Graphics_drawImage(image_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
+        image_draw(image_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
     }
 }
 
@@ -55,7 +55,7 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 		lang_text_draw_multiline(59, 43, 60, 256, 520, FONT_NORMAL_BLACK);
 	}
 	
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
 	
 	lang_text_draw(59, 0, 60, 12, FONT_LARGE_BLACK);
 	

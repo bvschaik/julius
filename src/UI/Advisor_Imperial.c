@@ -49,7 +49,7 @@ static void draw_request(int index, const scenario_request *request)
     button_border_draw(38, 96 + 42 * index, 560, 40, 0);
     text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE);
     int resourceOffset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
-    Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceOffset, 110, 100 + 42 * index);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + resourceOffset, 110, 100 + 42 * index);
     lang_text_draw(23, request->resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE);
     
     int width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE);
@@ -86,7 +86,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 27;
 	outer_panel_draw(0, 0, 40, *advisorHeight);
-	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
+	image_draw(image_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
 
 	text_draw(scenario_player_name(), 60, 12, FONT_LARGE_BLACK, 0);
 
@@ -101,7 +101,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 	if (Data_CityInfo.distantBattleMonthsToBattle > 0 && Data_CityInfo.distantBattleRomanMonthsToTravel <= 0) {
 		// can send to distant battle
 		button_border_draw(38, 96, 560, 40, 0);
-		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, 50, 106);
+		image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, 50, 106);
 		width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
 		lang_text_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id, 50 + width, 102, FONT_NORMAL_WHITE);
 		int strengthTextId;

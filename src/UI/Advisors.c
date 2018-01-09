@@ -147,16 +147,16 @@ void UI_Advisors_drawForeground()
 
 void UI_Advisor_drawGeneralBackground()
 {
-	Graphics_drawFullScreenImage(image_group(GROUP_ADVISOR_BACKGROUND));
+	image_draw_fullscreen_background(image_group(GROUP_ADVISOR_BACKGROUND));
     graphics_in_dialog();
-	Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
+	image_draw(image_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
 
 	for (int i = 0; i < 13; i++) {
 		int selectedOffset = 0;
 		if (currentAdvisor && i == currentAdvisor - 1) {
 			selectedOffset = 13;
 		}
-		Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + i + selectedOffset, 48 * i + 12, 441);
+		image_draw(image_group(GROUP_ADVISOR_ICONS) + i + selectedOffset, 48 * i + 12, 441);
 	}
 	graphics_reset_dialog();
 }

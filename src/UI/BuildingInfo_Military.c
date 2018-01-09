@@ -163,7 +163,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/barracks.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(136, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS,
+	image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS,
 		c->xOffset + 64, c->yOffset + 38);
 
 	building *b = building_get(c->buildingId);
@@ -213,7 +213,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 	// standard icon at the top
 	int graphicId = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
 	int iconHeight = image_get(graphicId)->height;
-	Graphics_drawImage(graphicId,
+	image_draw(graphicId,
 		c->xOffset + 16 + (40 - image_get(graphicId)->width) / 2,
 		c->yOffset + 16);
 	// standard flag
@@ -227,12 +227,12 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		graphicId += 8;
 	}
 	int flagHeight = image_get(graphicId)->height;
-	Graphics_drawImage(graphicId,
+	image_draw(graphicId,
 		c->xOffset + 16 + (40 - image_get(graphicId)->width) / 2,
 		c->yOffset + 16 + iconHeight);
 	// standard pole and morale ball
 	graphicId = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
-	Graphics_drawImage(graphicId,
+	image_draw(graphicId,
 		c->xOffset + 16 + (40 - image_get(graphicId)->width) / 2,
 		c->yOffset + 16 + iconHeight + flagHeight);
 
@@ -290,7 +290,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 			offsets = offsetsOther[index];
 		}
 		for (int i = 5 - c->formationTypes; i < 5; i++) {
-			Graphics_drawImage(image_group(GROUP_FORT_FORMATIONS) + offsets[i],
+			image_draw(image_group(GROUP_FORT_FORMATIONS) + offsets[i],
 				c->xOffset + 21 + 85 * i, c->yOffset + 141);
 		}
 		UI_BuildingInfo_drawLegionInfoForeground(c);

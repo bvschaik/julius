@@ -87,21 +87,21 @@ void UI_Intermezzo_drawBackground()
 		sound_music_stop();
 		sound_speech_stop();
 		if (scenario_is_custom()) {
-			Graphics_drawImage(graphicBase + 1, xOffset, yOffset);
+			image_draw(graphicBase + 1, xOffset, yOffset);
 		} else {
-			Graphics_drawImage(graphicBase + 1 + 2 * mission, xOffset, yOffset);
+			image_draw(graphicBase + 1 + 2 * mission, xOffset, yOffset);
 			sound_speech_play_file(soundFilesBriefing[mission]);
 		}
 		UI_Window_requestRefresh();
 	} else if (data.type == Intermezzo_Fired) {
-		Graphics_drawImage(graphicBase, xOffset, yOffset);
+		image_draw(graphicBase, xOffset, yOffset);
 	} else if (data.type == Intermezzo_Won) {
 		sound_music_stop();
 		sound_speech_stop();
 		if (scenario_is_custom()) {
-			Graphics_drawImage(graphicBase + 2, xOffset, yOffset);
+			image_draw(graphicBase + 2, xOffset, yOffset);
 		} else {
-			Graphics_drawImage(graphicBase + 2 + 2 * mission, xOffset, yOffset);
+			image_draw(graphicBase + 2 + 2 * mission, xOffset, yOffset);
 			sound_speech_play_file(soundFilesWon[mission]);
 		}
 		UI_Window_requestRefresh();

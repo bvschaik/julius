@@ -88,7 +88,7 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
 		return;
 	}
 	if (building_construction_type() == BUILDING_NONE) {
-		Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 12, xOffset, 239);
+		image_draw(image_group(GROUP_PANEL_WINDOWS) + 12, xOffset, 239);
 		return;
 	}
 	int graphicPanelWindows = image_group(GROUP_PANEL_WINDOWS);
@@ -148,7 +148,7 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
 			graphicId = graphicPanelWindows + 9;
 			break;
 	}
-	Graphics_drawImage(graphicId, xOffset, 239);
+	image_draw(graphicId, xOffset, 239);
 }
 
 void UI_BuildingMenu_drawBackground()

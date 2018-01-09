@@ -223,7 +223,7 @@ static int draw_character(const font_definition *def, uint8_t c, int x, int y, c
         height = 0;
     }
     if (!measure_only) {
-        Graphics_drawLetter(image_id, x, y - height, color);
+        image_draw_letter(image_id, x, y - height, color);
     }
     return img->width;
 }
@@ -348,9 +348,9 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                     int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
                     if (line < height_lines + data.scroll_position) {
                         if (line >= data.scroll_position) {
-                            Graphics_drawImage(image_id, image_offset_x, y + 8);
+                            image_draw(image_id, image_offset_x, y + 8);
                         } else {
-                            Graphics_drawImage(image_id, image_offset_x, y + 8 - 16 * (data.scroll_position - line));
+                            image_draw(image_id, image_offset_x, y + 8 - 16 * (data.scroll_position - line));
                         }
                     }
                     image_id = 0;
@@ -406,7 +406,7 @@ void rich_text_draw_scrollbar_dot()
         if (data.is_dragging_scroll) {
             offset = data.scroll_position_drag;
         }
-        Graphics_drawImage(image_group(GROUP_PANEL_BUTTON) + 39,
+        image_draw(image_group(GROUP_PANEL_BUTTON) + 39,
             data.x_text + 16 * data.text_width_blocks + 6, data.y_text + offset + 26);
     }
 }
