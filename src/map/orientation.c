@@ -2,10 +2,10 @@
 
 #include "city/view.h"
 #include "core/direction.h"
+#include "core/image.h"
 #include "figuretype/animal.h"
 #include "figuretype/wall.h"
 #include "game/undo.h"
-#include "graphics/image.h"
 #include "map/bridge.h"
 #include "map/building_tiles.h"
 #include "map/grid.h"

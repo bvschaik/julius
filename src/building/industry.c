@@ -1,8 +1,8 @@
 #include "industry.h"
 
 #include "core/calc.h"
+#include "core/image.h"
 #include "game/resource.h"
-#include "graphics/image.h"
 #include "map/building_tiles.h"
 #include "map/road_access.h"
 #include "scenario/property.h"

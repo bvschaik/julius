@@ -1,6 +1,7 @@
 #include "enemy.h"
 
 #include "core/calc.h"
+#include "core/image.h"
 #include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/formation_enemy.h"
@@ -10,7 +11,6 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/missile.h"
-#include "graphics/image.h"
 #include "map/figure.h"
 #include "scenario/gladiator_revolt.h"
 #include "sound/effect.h"

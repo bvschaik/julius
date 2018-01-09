@@ -5,7 +5,7 @@
 
 #include "../Data/CityInfo.h"
 
-#include "graphics/image.h"
+#include "core/image.h"
 #include "input/mouse.h"
 
 void UI_Advisor_drawGeneralBackground();

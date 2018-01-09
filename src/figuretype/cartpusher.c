@@ -4,12 +4,12 @@
 #include "building/granary.h"
 #include "building/industry.h"
 #include "building/warehouse.h"
+#include "core/image.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/resource.h"
-#include "graphics/image.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
 

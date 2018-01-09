@@ -1,8 +1,8 @@
 #include "rich_text.h"
 
 #include "core/calc.h"
+#include "core/image.h"
 #include "core/string.h"
-#include "graphics/image.h"
 #include "graphics/image_button.h"
 
 #include "../Graphics.h"

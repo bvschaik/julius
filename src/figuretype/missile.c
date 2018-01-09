@@ -1,11 +1,11 @@
 #include "missile.h"
 
 #include "city/view.h"
+#include "core/image.h"
 #include "figure/formation.h"
 #include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/sound.h"
-#include "graphics/image.h"
 #include "map/figure.h"
 #include "map/point.h"
 #include "sound/effect.h"

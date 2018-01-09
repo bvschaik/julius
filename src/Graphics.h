@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include "graphics/image.h"
+#include "core/image.h"
 
 enum ClipCode {
     ClipNone,

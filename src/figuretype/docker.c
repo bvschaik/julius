@@ -4,6 +4,7 @@
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "core/calc.h"
+#include "core/image.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/trade_route.h"
@@ -12,7 +13,6 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "figure/trader.h"
-#include "graphics/image.h"
 #include "map/road_access.h"
 
 #include "Data/CityInfo.h"

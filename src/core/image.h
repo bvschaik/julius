@@ -1,10 +1,10 @@
-#ifndef GRAPHICS_IMAGE_H
-#define GRAPHICS_IMAGE_H
+#ifndef CORE_IMAGE_H
+#define CORE_IMAGE_H
 
 #include <stdint.h>
 
+#include "core/image_group.h"
 #include "graphics/color.h"
-#include "graphics/image_group.h"
 
 /**
  * @file
@@ -88,4 +88,4 @@ const color_t *image_data(int id);
  */
 const color_t *image_data_enemy(int id);
 
-#endif // GRAPHICS_IMAGE_H
+#endif // CORE_IMAGE_H

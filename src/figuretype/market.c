@@ -3,12 +3,12 @@
 #include "building/building.h"
 #include "building/granary.h"
 #include "building/warehouse.h"
+#include "core/image.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/resource.h"
-#include "graphics/image.h"
 
 static int create_delivery_boy(int leader_id, figure *f)
 {

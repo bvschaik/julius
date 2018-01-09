@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "building/list.h"
-#include "graphics/image.h"
+#include "core/image.h"
 #include "map/aqueduct.h"
 #include "map/building_tiles.h"
 #include "map/desirability.h"

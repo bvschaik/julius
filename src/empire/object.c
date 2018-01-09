@@ -1,11 +1,11 @@
 #include "object.h"
 
 #include "core/calc.h"
+#include "core/image.h"
 #include "empire/city.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "game/animation.h"
-#include "graphics/image.h"
 #include "scenario/empire.h"
 
 #define HEADER_SIZE 1280

@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "core/calc.h"
-#include "graphics/image.h"
+#include "core/image.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
 #include "map/grid.h"

@@ -3,8 +3,8 @@
 #include "building/industry.h"
 #include "building/model.h"
 #include "core/calc.h"
+#include "core/image.h"
 #include "game/animation.h"
-#include "graphics/image.h"
 #include "map/sprite.h"
 
 int building_animation_offset(building *b, int image_id, int grid_offset)

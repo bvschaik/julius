@@ -2,10 +2,10 @@
 
 #include "city/message.h"
 #include "city/population.h"
+#include "core/image.h"
 #include "figuretype/missile.h"
 #include "figuretype/wall.h"
 #include "game/undo.h"
-#include "graphics/image.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
 #include "map/grid.h"

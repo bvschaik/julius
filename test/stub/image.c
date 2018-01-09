@@ -1,4 +1,4 @@
-#include "graphics/image.h"
+#include "core/image.h"
 
 static int groups[] = {
     0, 245, 254, 246, 274, 364, 444, 476, 534, 201,

@@ -1,7 +1,7 @@
 #include "house.h"
 
+#include "core/image.h"
 #include "game/resource.h"
-#include "graphics/image.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
 #include "map/grid.h"

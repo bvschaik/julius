@@ -2,11 +2,11 @@
 
 #include "building/building.h"
 #include "building/market.h"
+#include "core/image.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "graphics/image.h"
 #include "map/building.h"
 #include "map/road_access.h"
 

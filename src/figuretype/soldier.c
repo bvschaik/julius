@@ -1,6 +1,7 @@
 #include "soldier.h"
 
 #include "core/calc.h"
+#include "core/image.h"
 #include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
@@ -9,7 +10,6 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/missile.h"
-#include "graphics/image.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/point.h"
