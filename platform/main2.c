@@ -154,7 +154,7 @@ static void refresh()
 		lastFpsTime = then2;
 		numFrames = 0;
 	}
-	Graphics_fillRect(Data_Screen.width - 120, 0, Data_Screen.width, 20, COLOR_WHITE);
+	graphics_fill_rect(Data_Screen.width - 120, 0, Data_Screen.width, 20, COLOR_WHITE);
 	text_draw_number_colored(lastFps, 'f', "", Data_Screen.width - 120, 5, FONT_NORMAL_PLAIN, COLOR_RED);
 	text_draw_number_colored(then - now, 'g', "", Data_Screen.width - 70, 5, FONT_NORMAL_PLAIN, COLOR_RED);
 	text_draw_number_colored(then2 - then, 'd', "", Data_Screen.width - 40, 5, FONT_NORMAL_PLAIN, COLOR_RED);

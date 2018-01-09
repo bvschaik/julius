@@ -93,7 +93,7 @@ void UI_Empire_drawBackground()
 	data.yMax = s_height <= MAX_HEIGHT ? s_height : data.yMin + MAX_HEIGHT;
 
 	if (data.xMin || data.yMin) {
-		Graphics_clearScreen();
+		graphics_clear_screen();
 	}
 	drawPaneling();
 	drawPanelInfo();
@@ -120,7 +120,7 @@ static void drawPaneling()
 {
 	int graphicBase = image_group(GROUP_EMPIRE_PANELS);
 	// bottom panel background
-	Graphics_setClipRectangle(data.xMin, data.yMin, data.xMax - data.xMin, data.yMax - data.yMin);
+	graphics_set_clip_rectangle(data.xMin, data.yMin, data.xMax - data.xMin, data.yMax - data.yMin);
 	for (int x = data.xMin; x < data.xMax; x += 70) {
 		image_draw(graphicBase + 3, x, data.yMax - 120);
 		image_draw(graphicBase + 3, x, data.yMax - 80);
@@ -148,7 +148,7 @@ static void drawPaneling()
 	image_draw(graphicBase + 2, data.xMax - 16, data.yMax - 120);
 	image_draw(graphicBase + 2, data.xMax - 16, data.yMax - 16);
 
-	Graphics_resetClipRectangle();
+	graphics_reset_clip_rectangle();
 }
 
 static void drawPanelInfo()
@@ -214,7 +214,7 @@ static void drawPanelInfoCity(const empire_object *object)
 			if (!empire_object_city_sells_resource(object->id, good)) {
 				continue;
 			}
-			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 21, 26, 26);
+			graphics_draw_inset_rect(xOffset + 100 * goodOffset + 120, yOffset + 21, 26, 26);
 			int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
 			int resourceOffset = resource_image_offset(good, RESOURCE_IMAGE_ICON);
 			image_draw(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 22);
@@ -252,7 +252,7 @@ static void drawPanelInfoCity(const empire_object *object)
 			if (!empire_object_city_buys_resource(object->id, good)) {
 				continue;
 			}
-			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 51, 26, 26);
+			graphics_draw_inset_rect(xOffset + 100 * goodOffset + 120, yOffset + 51, 26, 26);
 			int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
 			int resourceOffset = resource_image_offset(good, RESOURCE_IMAGE_ICON);
 			image_draw(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 52);
@@ -289,7 +289,7 @@ static void drawPanelInfoCity(const empire_object *object)
 			if (!empire_object_city_sells_resource(object->id, good)) {
 				continue;
 			}
-			Graphics_drawInsetRect(xOffset + goodOffset + 60, yOffset + 33, 26, 26);
+			graphics_draw_inset_rect(xOffset + goodOffset + 60, yOffset + 33, 26, 26);
 			int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
 			int resourceOffset = resource_image_offset(good, RESOURCE_IMAGE_ICON);
 			image_draw(graphicId + resourceOffset, xOffset + goodOffset + 61, yOffset + 34);
@@ -314,7 +314,7 @@ static void drawPanelInfoCity(const empire_object *object)
 			if (!empire_object_city_buys_resource(object->id, good)) {
 				continue;
 			}
-			Graphics_drawInsetRect(xOffset + goodOffset + 110, yOffset + 33, 26, 26);
+			graphics_draw_inset_rect(xOffset + goodOffset + 110, yOffset + 33, 26, 26);
 			int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
 			int resourceOffset = resource_image_offset(good, RESOURCE_IMAGE_ICON);
 			image_draw(graphicId + resourceOffset, xOffset + goodOffset + 110, yOffset + 34);
@@ -458,7 +458,7 @@ static void draw_invasion_warning(int x, int y, int image_id)
 
 static void drawEmpireMap()
 {
-	Graphics_setClipRectangle(data.xMin + 16, data.yMin + 16, data.xMax - data.xMin - 32, data.yMax - data.yMin - 136);
+	graphics_set_clip_rectangle(data.xMin + 16, data.yMin + 16, data.xMax - data.xMin - 32, data.yMax - data.yMin - 136);
 
 	empire_set_viewport(data.xMax - data.xMin - 32, data.yMax - data.yMin - 136);
 
@@ -471,7 +471,7 @@ static void drawEmpireMap()
 
 	scenario_invasion_foreach_warning(draw_invasion_warning);
 
-	Graphics_resetClipRectangle();
+	graphics_reset_clip_rectangle();
 }
 
 static void determineSelectedObject(const mouse *m)

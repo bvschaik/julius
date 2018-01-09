@@ -76,7 +76,7 @@ void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis)
 
 void UI_Intermezzo_drawBackground()
 {
-	Graphics_clearScreen();
+	graphics_clear_screen();
 	int xOffset = (screen_width() - 1024) / 2;
 	int yOffset = (screen_height() - 768) / 2;
 

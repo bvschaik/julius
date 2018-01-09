@@ -42,20 +42,20 @@ void text_draw_cursor(int xOffset, int yOffset, int isInsert)
     }
     if (inputCursor.visible) {
         if (isInsert) {
-            Graphics_drawLine(
+            graphics_draw_line(
                 xOffset + inputCursor.xOffset - 3, yOffset + inputCursor.yOffset - 3,
                 xOffset + inputCursor.xOffset + 1, yOffset + inputCursor.yOffset - 3,
                 COLOR_WHITE);
-            Graphics_drawLine(
+            graphics_draw_line(
                 xOffset + inputCursor.xOffset - 1, yOffset + inputCursor.yOffset - 3,
                 xOffset + inputCursor.xOffset - 1, yOffset + inputCursor.yOffset + 13,
                 COLOR_WHITE);
-            Graphics_drawLine(
+            graphics_draw_line(
                 xOffset + inputCursor.xOffset - 3, yOffset + inputCursor.yOffset + 14,
                 xOffset + inputCursor.xOffset + 1, yOffset + inputCursor.yOffset + 14,
                 COLOR_WHITE);
         } else {
-            Graphics_fillRect(
+            graphics_fill_rect(
                 xOffset + inputCursor.xOffset, yOffset + inputCursor.yOffset + 14,
                 inputCursor.width, 2, COLOR_WHITE);
         }

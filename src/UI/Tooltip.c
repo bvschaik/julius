@@ -141,8 +141,8 @@ static void drawButtonTooltip(struct TooltipContext *c)
 			break;
 	}
 
-	Graphics_drawRect(x, y, width, height, COLOR_BLACK);
-	Graphics_fillRect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
+	graphics_draw_rect(x, y, width, height, COLOR_BLACK);
+	graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
 	rich_text_draw_colored(text, x + 5, y + 7,
 		width - 5, lines, COLOR_TOOLTIP);
 }
@@ -178,8 +178,8 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 		y = c->mouse_y - 72;
 	}
 
-	Graphics_drawRect(x, y, width, height, COLOR_BLACK);
-	Graphics_fillRect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
+	graphics_draw_rect(x, y, width, height, COLOR_BLACK);
+	graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
 	rich_text_draw_colored(text, x + 5, y + 7,
 		width - 5, lines, COLOR_TOOLTIP);
 }
@@ -200,8 +200,8 @@ static void drawSenateTooltip(struct TooltipContext *c)
 		y = c->mouse_y - 32;
 	}
 	
-	Graphics_drawRect(x, y, width, height, COLOR_BLACK);
-	Graphics_fillRect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
+	graphics_draw_rect(x, y, width, height, COLOR_BLACK);
+	graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
 	
 	// unemployment
 	lang_text_draw_colored(68, 148, x + 5, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);

@@ -260,9 +260,9 @@ void UI_MissionStart_Briefing_drawBackground()
 	rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
 	rich_text_init(lang_get_message(textId)->content.text, 64, 184, 31, 15, 0);
 
-	Graphics_setClipRectangle(35, 187, 522, 234);
+	graphics_set_clip_rectangle(35, 187, 522, 234);
 	rich_text_draw(lang_get_message(textId)->content.text, 48, 196, 496, 14, 0);
-	Graphics_resetClipRectangle();
+	graphics_reset_clip_rectangle();
 
     graphics_reset_dialog();
 }

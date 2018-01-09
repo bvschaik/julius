@@ -241,7 +241,7 @@ static void drawHistoryGraph(int fullSize, int x, int y)
 	}
 
 	if (fullSize) {
-		Graphics_setClipRectangle(0, 0, 640, y + 200);
+		graphics_set_clip_rectangle(0, 0, 640, y + 200);
 		for (int m = 0; m < maxMonths; m++) {
 			int pop = getPopulationAtMonth(maxMonths, m);
 			int val;
@@ -265,21 +265,21 @@ static void drawHistoryGraph(int fullSize, int x, int y)
 						image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m, y + 200 - val);
 						break;
 					default:
-						Graphics_drawLine(x + m, y + 200 - val, x + m, y + 199, COLOR_RED);
+						graphics_draw_line(x + m, y + 200 - val, x + m, y + 199, COLOR_RED);
 						break;
 				}
 			}
 		}
-		Graphics_resetClipRectangle();
+		graphics_reset_clip_rectangle();
 	} else {
 		yShift += 2;
 		for (int m = 0; m < maxMonths; m++) {
 			int val = getPopulationAtMonth(maxMonths, m) >> yShift;
 			if (val > 0) {
 				if (maxMonths == 20) {
-					Graphics_fillRect(x + m, y + 50 - val, 4, val + 1, COLOR_RED);
+					graphics_fill_rect(x + m, y + 50 - val, 4, val + 1, COLOR_RED);
 				} else {
-					Graphics_drawLine(x + m, y + 50 - val, x + m, y + 50, COLOR_RED);
+					graphics_draw_line(x + m, y + 50 - val, x + m, y + 50, COLOR_RED);
 				}
 			}
 		}
@@ -308,7 +308,7 @@ static void drawCensusGraph(int fullSize, int x, int y)
 	}
 
 	if (fullSize) {
-		Graphics_setClipRectangle(0, 0, 640, y + 200);
+		graphics_set_clip_rectangle(0, 0, 640, y + 200);
 		for (int i = 0; i < 100; i++) {
 			int pop = Data_CityInfo.populationPerAge[i];
 			int val;
@@ -321,13 +321,13 @@ static void drawCensusGraph(int fullSize, int x, int y)
 				image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * i, y + 200 - val);
 			}
 		}
-		Graphics_resetClipRectangle();
+		graphics_reset_clip_rectangle();
 	} else {
 		yShift += 2;
 		for (int i = 0; i < 100; i++) {
 			int val = Data_CityInfo.populationPerAge[i] >> yShift;
 			if (val > 0) {
-				Graphics_drawLine(x + i, y + 50 - val, x + i, y + 50, COLOR_RED);
+				graphics_draw_line(x + i, y + 50 - val, x + i, y + 50, COLOR_RED);
 			}
 		}
 	}
@@ -354,7 +354,7 @@ static void drawSocietyGraph(int fullSize, int x, int y)
 	}
 
 	if (fullSize) {
-		Graphics_setClipRectangle(0, 0, 640, y + 200);
+		graphics_set_clip_rectangle(0, 0, 640, y + 200);
 		for (int i = 0; i < 20; i++) {
 			int pop = Data_CityInfo.populationPerLevel[i];
 			int val;
@@ -367,13 +367,13 @@ static void drawSocietyGraph(int fullSize, int x, int y)
 				image_draw(image_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * i, y + 200 - val);
 			}
 		}
-		Graphics_resetClipRectangle();
+		graphics_reset_clip_rectangle();
 	} else {
 		yShift += 2;
 		for (int i = 0; i < 20; i++) {
 			int val = Data_CityInfo.populationPerLevel[i] >> yShift;
 			if (val > 0) {
-				Graphics_fillRect(x + 5 * i, y + 50 - val, 4, val + 1, COLOR_RED);
+				graphics_fill_rect(x + 5 * i, y + 50 - val, 4, val + 1, COLOR_RED);
 			}
 		}
 	}

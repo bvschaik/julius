@@ -173,14 +173,14 @@ void UI_LaborPriorityDialog_drawBackground()
 	outer_panel_draw(160, 176, 20, 9);
 	lang_text_draw_centered(50, 25, 160, 185, 320, FONT_LARGE_BLACK);
 	for (int i = 0; i < 9; i++) {
-		Graphics_drawRect(178 + 32 * i, 221, 27, 27, COLOR_BLACK);
+		graphics_draw_rect(178 + 32 * i, 221, 27, 27, COLOR_BLACK);
 		lang_text_draw_centered(50, 27 + i, 178 + 32 * i, 224, 27, FONT_LARGE_BLACK);
 		if (i >= priorityMaxItems) {
-			Graphics_shadeRect(179 + 32 * i, 222, 25, 25, 1);
+			graphics_shade_rect(179 + 32 * i, 222, 25, 25, 1);
 		}
 	}
 
-	Graphics_drawRect(180, 256, 280, 25, COLOR_BLACK);
+	graphics_draw_rect(180, 256, 280, 25, COLOR_BLACK);
 	lang_text_draw_centered(50, 26, 180, 263, 280, FONT_NORMAL_BLACK);
 	lang_text_draw_centered(13, 3, 160, 296, 320, FONT_NORMAL_BLACK);
     graphics_reset_dialog();
@@ -196,13 +196,13 @@ void UI_LaborPriorityDialog_drawForeground()
 		if (i == priorityFocusButtonId - 2) {
 			color = COLOR_RED;
 		}
-		Graphics_drawRect(178 + 32 * i, 221, 27, 27, color);
+		graphics_draw_rect(178 + 32 * i, 221, 27, 27, color);
 	}
 	color = COLOR_BLACK;
 	if (priorityFocusButtonId == 1) {
 		color = COLOR_RED;
 	}
-	Graphics_drawRect(180, 256, 280, 25, color);
+	graphics_draw_rect(180, 256, 280, 25, color);
 
     graphics_reset_dialog();
 }

@@ -29,7 +29,7 @@ void UI_VideoIntermezzo_init()
 
 void UI_VideoIntermezzo_drawBackground()
 {
-	Graphics_clearScreen();
+	graphics_clear_screen();
 }
 
 void UI_VideoIntermezzo_drawForeground()

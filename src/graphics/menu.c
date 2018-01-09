@@ -45,7 +45,7 @@ void menu_draw(menu_bar_item *menu, int focus_item_id)
         menu_item *sub = &menu->items[i];
         int yOffset = 30 + menu->y_start + sub->y_start;
         if (i == focus_item_id - 1) {
-            Graphics_fillRect(menu->x_start, yOffset - 2,
+            graphics_fill_rect(menu->x_start, yOffset - 2,
                 160, 16, COLOR_BLACK);
             lang_text_draw_colored(menu->text_group, sub->text_number,
                 menu->x_start + 8, yOffset, FONT_NORMAL_PLAIN, COLOR_ORANGE

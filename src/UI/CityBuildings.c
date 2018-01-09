@@ -41,7 +41,7 @@ void UI_CityBuildings_drawForeground(int x, int y)
 {
 	Data_CityView.xInTiles = x;
 	Data_CityView.yInTiles = y;
-	Graphics_setClipRectangle(
+	graphics_set_clip_rectangle(
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
 
@@ -64,7 +64,7 @@ void UI_CityBuildings_drawForeground(int x, int y)
 		drawHippodromeAndElevatedFigures(0);
 	}
 
-	Graphics_resetClipRectangle();
+	graphics_reset_clip_rectangle();
 }
 
 void UI_CityBuildings_drawBuildingCost()
@@ -79,7 +79,7 @@ void UI_CityBuildings_drawBuildingCost()
 	if (!cost) {
 		return;
 	}
-	Graphics_setClipRectangle(
+	graphics_set_clip_rectangle(
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
 	color_t color;
@@ -94,14 +94,14 @@ void UI_CityBuildings_drawBuildingCost()
 	text_draw_number_colored(cost, '@', " ",
 		Data_CityView.selectedTile.xOffsetInPixels + 58,
 		Data_CityView.selectedTile.yOffsetInPixels, FONT_NORMAL_PLAIN, color);
-	Graphics_resetClipRectangle();
+	graphics_reset_clip_rectangle();
 }
 
 void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, struct UI_CityPixelCoordinate *coord)
 {
 	Data_CityView.xInTiles = x;
 	Data_CityView.yInTiles = y;
-	Graphics_setClipRectangle(
+	graphics_set_clip_rectangle(
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
 
@@ -109,7 +109,7 @@ void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, struct
 	drawBuildingTopsFiguresAnimation(figureId, coord);
 	drawHippodromeAndElevatedFigures(0);
 
-	Graphics_resetClipRectangle();
+	graphics_reset_clip_rectangle();
 }
 
 static void drawBuildingFootprints()

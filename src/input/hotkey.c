@@ -305,7 +305,7 @@ static void handle_bookmark(int number)
 
 static void take_screenshot()
 {
-    Graphics_saveScreenshot("city.bmp");
+    graphics_save_screenshot("city.bmp");
 }
 
 void hotkey_func(int f_number)

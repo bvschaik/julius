@@ -54,7 +54,7 @@ static color_t enemyColor;
 
 void UI_Minimap_draw(int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
-	Graphics_setClipRectangle(xOffset, yOffset, 2 * widthTiles, heightTiles);
+	graphics_set_clip_rectangle(xOffset, yOffset, 2 * widthTiles, heightTiles);
 	
 	soldierColor = COLOR_SOLDIER;
     switch (scenario_property_climate()) {
@@ -67,7 +67,7 @@ void UI_Minimap_draw(int xOffset, int yOffset, int widthTiles, int heightTiles)
 	drawMinimap(xOffset, yOffset, widthTiles, heightTiles);
 	drawViewportRectangle(xOffset, yOffset, widthTiles, heightTiles);
 
-	Graphics_resetClipRectangle();
+	graphics_reset_clip_rectangle();
 }
 
 static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles)
@@ -143,7 +143,7 @@ static int drawFigure(int xView, int yView, int gridOffset)
     } else if (color_type == FIGURE_COLOR_ENEMY) {
         color = enemyColor;
     }
-    Graphics_drawLine(xView, yView, xView+1, yView, color);
+    graphics_draw_line(xView, yView, xView+1, yView, color);
     return 1;
 }
 
@@ -228,7 +228,7 @@ static void drawViewportRectangle(int xView, int yView, int widthTiles, int heig
 		xOffset -= 2;
 	}
 	int yOffset = yView + Data_CityView.yInTiles - minimapAbsoluteY + 2;
-	Graphics_drawRect(xOffset, yOffset,
+	graphics_draw_rect(xOffset, yOffset,
 		Data_CityView.widthInTiles * 2 + 4,
 		Data_CityView.heightInTiles - 4,
 		COLOR_YELLOW);

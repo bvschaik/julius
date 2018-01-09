@@ -227,7 +227,7 @@ void video_draw(int x_offset, int y_offset)
                     (pal[frame[(y * data.video.width) + x] * 3] << 16) |
                     (pal[frame[(y * data.video.width) + x] * 3 + 1] << 8) |
                     (pal[frame[(y * data.video.width) + x] * 3 + 2]);
-                Graphics_drawPixel(x_offset + x, y_offset + y, color);
+                graphics_draw_pixel(x_offset + x, y_offset + y, color);
             }
         }
     }

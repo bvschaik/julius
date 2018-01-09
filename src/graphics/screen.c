@@ -22,7 +22,7 @@ static void set_size(int width, int height)
     Data_Screen.height = height;
     data.dialog_offset.x = (Data_Screen.width - 640) / 2;
     data.dialog_offset.y = (Data_Screen.height - 480) / 2;
-    Graphics_setClipRectangle(0, 0, width, height);
+    graphics_set_clip_rectangle(0, 0, width, height);
     city_view_set_viewport(width, height);
     city_warning_clear_all();
 }

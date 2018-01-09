@@ -97,11 +97,11 @@ static void drawButtons()
 	
 	// greying out of buttons
 	if (city_finance_out_of_money()) {
-		Graphics_shadeRect(104, 218, 426, 22, 0);
-		Graphics_shadeRect(104, 248, 426, 22, 0);
-		Graphics_shadeRect(104, 278, 426, 22, 0);
+		graphics_shade_rect(104, 218, 426, 22, 0);
+		graphics_shade_rect(104, 248, 426, 22, 0);
+		graphics_shade_rect(104, 278, 426, 22, 0);
 	} else if (Data_CityInfo.festivalNotEnoughWine) {
-		Graphics_shadeRect(104, 278, 426, 22, 0);
+		graphics_shade_rect(104, 278, 426, 22, 0);
 	}
 }
 

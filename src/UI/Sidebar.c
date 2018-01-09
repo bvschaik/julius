@@ -219,7 +219,7 @@ static void drawFillerBorders()
 	}
 
 	int borderBottomHeight = BOTTOM_BORDER;
-	Graphics_fillRect(0, Data_Screen.height - borderBottomHeight, Data_Screen.width, borderBottomHeight, COLOR_BLACK);
+	graphics_fill_rect(0, Data_Screen.height - borderBottomHeight, Data_Screen.width, borderBottomHeight, COLOR_BLACK);
 }
 
 static void drawButtons()
@@ -254,9 +254,9 @@ void UI_Sidebar_drawMinimap(int force)
 		if (minimapRedrawRequested || scroll_in_progress() || force) {
 			int xOffset = XOFFSET_EXPANDED;
 			UI_Minimap_draw(xOffset + 8, 59, 73, 111);
-			Graphics_drawLine(xOffset + 7, 58, xOffset + 153, 58, COLOR_MINIMAP_DARK);
-			Graphics_drawLine(xOffset + 7, 59, xOffset + 7, 170, COLOR_MINIMAP_DARK);
-			Graphics_drawLine(xOffset + 153, 59, xOffset + 153, 170, COLOR_MINIMAP_LIGHT);
+			graphics_draw_line(xOffset + 7, 58, xOffset + 153, 58, COLOR_MINIMAP_DARK);
+			graphics_draw_line(xOffset + 7, 59, xOffset + 7, 170, COLOR_MINIMAP_DARK);
+			graphics_draw_line(xOffset + 153, 59, xOffset + 153, 170, COLOR_MINIMAP_LIGHT);
 		}
 	}
 }
@@ -444,7 +444,7 @@ void UI_SlidingSidebar_drawForeground()
 		return;
 	}
 
-	Graphics_setClipRectangle(
+	graphics_set_clip_rectangle(
 		Data_Screen.width - SIDEBAR_BORDER - 162, 24,
 		162, Data_Screen.height - 24 - BOTTOM_BORDER);
 
@@ -468,7 +468,7 @@ void UI_SlidingSidebar_drawForeground()
 	image_buttons_draw(xOffsetExpanded, 24, buttonTopExpanded, 6);
 
 	// black out minimap
-	Graphics_fillRect(xOffsetExpanded + 8, 59, 145, 111, COLOR_BLACK);
+	graphics_fill_rect(xOffsetExpanded + 8, 59, 145, 111, COLOR_BLACK);
 
 	drawOverlayText(xOffsetExpanded + 4);
 	UI_BuildingMenu_drawSidebarImage(xOffsetExpanded + 6, 1);
@@ -486,6 +486,6 @@ void UI_SlidingSidebar_drawForeground()
 			yOffset += 285;
 		}
 	}
-	Graphics_resetClipRectangle();
+	graphics_reset_clip_rectangle();
 }
 

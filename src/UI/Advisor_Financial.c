@@ -76,8 +76,8 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	draw_row(60, 9, 170, Data_CityInfo.financeExportsLastYear, Data_CityInfo.financeExportsThisYear);
 	draw_row(60, 20, 185, Data_CityInfo.financeDonatedLastYear, Data_CityInfo.financeDonatedThisYear);
 
-	Graphics_drawLine(280, 198, 350, 198, COLOR_BLACK);
-	Graphics_drawLine(420, 198, 490, 198, COLOR_BLACK);
+	graphics_draw_line(280, 198, 350, 198, COLOR_BLACK);
+	graphics_draw_line(420, 198, 490, 198, COLOR_BLACK);
 	
 	draw_row(60, 10, 203, Data_CityInfo.financeTotalIncomeLastYear, Data_CityInfo.financeTotalIncomeThisYear);
 
@@ -96,8 +96,8 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	draw_row(60, 16, 302, Data_CityInfo.financeSundriesLastYear, Data_CityInfo.financeSundriesThisYear);
 	draw_row(60, 21, 317, Data_CityInfo.financeTributeLastYear, Data_CityInfo.financeTributeThisYear);
 
-	Graphics_drawLine(280, 330, 350, 330, COLOR_BLACK);
-	Graphics_drawLine(420, 330, 490, 330, COLOR_BLACK);
+	graphics_draw_line(280, 330, 350, 330, COLOR_BLACK);
+	graphics_draw_line(420, 330, 490, 330, COLOR_BLACK);
 	
 	draw_row(60, 17, 335, Data_CityInfo.financeTotalExpensesLastYear, Data_CityInfo.financeTotalExpensesThisYear);
 	draw_row(60, 18, 358, Data_CityInfo.financeNetInOutLastYear, Data_CityInfo.financeNetInOutThisYear);

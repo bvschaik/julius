@@ -378,7 +378,7 @@ void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c)
 			button_border_draw(
 				c->xOffset + 60 * i + 25, c->yOffset + 45,
 				52, 52, i == c->figure.selectedIndex);
-			Graphics_loadFromBuffer(
+			graphics_draw_from_buffer(
 				c->xOffset + 27 + 60 * i, c->yOffset + 47,
 				48, 48, figureImages[i]);
 		}
@@ -410,7 +410,7 @@ void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c)
 		struct UI_CityPixelCoordinate coord = {0, 0};
 		for (int i = 0; i < c->figure.count; i++) {
 			drawFigureInCity(c->figure.figureIds[i], &coord);
-			Graphics_saveToBuffer(coord.x, coord.y, 48, 48, figureImages[i]);
+			graphics_save_to_buffer(coord.x, coord.y, 48, 48, figureImages[i]);
 		}
 		int x, y;
 		city_view_get_camera(&x, &y);

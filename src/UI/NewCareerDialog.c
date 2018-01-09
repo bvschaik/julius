@@ -31,7 +31,7 @@ void UI_NewCareerDialog_init()
 
 void UI_NewCareerDialog_drawBackground()
 {
-	Graphics_clearScreen();
+	graphics_clear_screen();
     graphics_in_dialog();
 	image_draw(image_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
     graphics_reset_dialog();

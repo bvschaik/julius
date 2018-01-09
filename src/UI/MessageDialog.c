@@ -215,7 +215,7 @@ static void drawDialogNormal()
 
 	// content!
 	inner_panel_draw(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
-	Graphics_setClipRectangle(data.xText + 3, data.yText + 3,
+	graphics_set_clip_rectangle(data.xText + 3, data.yText + 3,
 		16 * data.textWidthBlocks - 6, 16 * data.textHeightBlocks - 6);
 	rich_text_clear_links();
 
@@ -226,7 +226,7 @@ static void drawDialogNormal()
 			data.xText + 8, data.yText + 6, 16 * data.textWidthBlocks - 16,
 			data.textHeightBlocks - 1, 0);
 	}
-	Graphics_resetClipRectangle();
+	graphics_reset_clip_rectangle();
 	rich_text_draw_scrollbar_dot();
 }
 
@@ -237,7 +237,7 @@ static void drawDialogVideo()
 	data.x = 32;
 	data.y = 28;
 	outer_panel_draw(data.x, data.y, 26, 28);
-	Graphics_drawRect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
+	graphics_draw_rect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
 	rich_text_clear_links();
 	
 	inner_panel_draw(data.x + 8, data.y + 308, 25, 6);

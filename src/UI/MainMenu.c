@@ -22,7 +22,7 @@ static generic_button buttons[] = {
 
 void UI_MainMenu_drawBackground()
 {
-    Graphics_clearScreen();
+    graphics_clear_screen();
     graphics_in_dialog();
     image_draw(image_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
     graphics_reset_dialog();

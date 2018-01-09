@@ -18,14 +18,14 @@ typedef enum {
 
 static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, ColorType type)
 {
-    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, img->height);
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, img->height);
     if (!clip->isVisible) {
         return;
     }
     data += img->width * clip->clippedPixelsTop;
     for (int y = clip->clippedPixelsTop; y < img->height - clip->clippedPixelsBottom; y++) {
         data += clip->clippedPixelsLeft;
-        color_t *dst = Graphics_getDrawPosition(x_offset + clip->clippedPixelsLeft, y_offset + y);
+        color_t *dst = graphics_get_pixel(x_offset + clip->clippedPixelsLeft, y_offset + y);
         int xMax = img->width - clip->clippedPixelsRight;
         if (type == ColorType_None) {
             if (img->draw.type == 0 || img->draw.is_external) { // can be transparent
@@ -68,11 +68,11 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
 
 static void draw_compressed(const image *img, const color_t *data, int x_offset, int y_offset, int height)
 {
-    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, height);
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->isVisible) {
         return;
     }
-    int unclipped = clip->clipX == ClipNone;
+    int unclipped = clip->clipX == CLIP_NONE;
 
     for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
         int x = 0;
@@ -90,7 +90,7 @@ static void draw_compressed(const image *img, const color_t *data, int x_offset,
                 // number of concrete pixels
                 const color_t *pixels = data;
                 data += b;
-                color_t *dst = Graphics_getDrawPosition(x_offset + x, y_offset + y);
+                color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
                 if (unclipped) {
                     x += b;
                     memcpy(dst, pixels, b * sizeof(color_t));
@@ -112,11 +112,11 @@ static void draw_compressed(const image *img, const color_t *data, int x_offset,
 
 static void draw_compressed_set(const image *img, const color_t *data, int x_offset, int yOffset, int height, color_t color)
 {
-    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, yOffset, img->width, height);
+    const clip_info *clip = graphics_get_clip_info(x_offset, yOffset, img->width, height);
     if (!clip->isVisible) {
         return;
     }
-    int unclipped = clip->clipX == ClipNone;
+    int unclipped = clip->clipX == CLIP_NONE;
 
     for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
         int x = 0;
@@ -134,7 +134,7 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
                 // number of concrete pixels
                 const color_t *pixels = data;
                 data += b;
-                color_t *dst = Graphics_getDrawPosition(x_offset + x, yOffset + y);
+                color_t *dst = graphics_get_pixel(x_offset + x, yOffset + y);
                 if (unclipped) {
                     x += b;
                     while (b) {
@@ -161,11 +161,11 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
 
 static void draw_compressed_and(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
-    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, height);
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->isVisible) {
         return;
     }
-    int unclipped = clip->clipX == ClipNone;
+    int unclipped = clip->clipX == CLIP_NONE;
 
     for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
         int x = 0;
@@ -183,7 +183,7 @@ static void draw_compressed_and(const image *img, const color_t *data, int x_off
                 // number of concrete pixels
                 const color_t *pixels = data;
                 data += b;
-                color_t *dst = Graphics_getDrawPosition(x_offset + x, y_offset + y);
+                color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
                 if (unclipped) {
                     x += b;
                     while (b) {
@@ -210,11 +210,11 @@ static void draw_compressed_and(const image *img, const color_t *data, int x_off
 
 static void draw_compressed_blend(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
-    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, img->width, height);
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->isVisible) {
         return;
     }
-    int unclipped = clip->clipX == ClipNone;
+    int unclipped = clip->clipX == CLIP_NONE;
 
     for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
         int x = 0;
@@ -232,7 +232,7 @@ static void draw_compressed_blend(const image *img, const color_t *data, int x_o
                 // number of concrete pixels
                 const color_t *pixels = data;
                 data += b;
-                color_t *dst = Graphics_getDrawPosition(x_offset + x, y_offset + y);
+                color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
                 if (unclipped) {
                     x += b;
                     while (b) {
@@ -259,36 +259,36 @@ static void draw_compressed_blend(const image *img, const color_t *data, int x_o
 
 static void draw_footprint_simple(const color_t *src, int x, int y)
 {
-    memcpy(Graphics_getDrawPosition(x + 28, y + 0), &src[0], 2 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 26, y + 1), &src[2], 6 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 24, y + 2), &src[8], 10 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 22, y + 3), &src[18], 14 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 20, y + 4), &src[32], 18 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 18, y + 5), &src[50], 22 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 16, y + 6), &src[72], 26 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 14, y + 7), &src[98], 30 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 12, y + 8), &src[128], 34 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 10, y + 9), &src[162], 38 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 8, y + 10), &src[200], 42 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 6, y + 11), &src[242], 46 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 4, y + 12), &src[288], 50 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 2, y + 13), &src[338], 54 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 0, y + 14), &src[392], 58 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 0, y + 15), &src[450], 58 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 2, y + 16), &src[508], 54 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 4, y + 17), &src[562], 50 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 6, y + 18), &src[612], 46 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 8, y + 19), &src[658], 42 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 10, y + 20), &src[700], 38 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 12, y + 21), &src[738], 34 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 14, y + 22), &src[772], 30 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 16, y + 23), &src[802], 26 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 18, y + 24), &src[828], 22 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 20, y + 25), &src[850], 18 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 22, y + 26), &src[868], 14 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 24, y + 27), &src[882], 10 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 26, y + 28), &src[892], 6 * sizeof(color_t));
-    memcpy(Graphics_getDrawPosition(x + 28, y + 29), &src[898], 2 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 28, y + 0), &src[0], 2 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 26, y + 1), &src[2], 6 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 24, y + 2), &src[8], 10 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 22, y + 3), &src[18], 14 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 20, y + 4), &src[32], 18 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 18, y + 5), &src[50], 22 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 16, y + 6), &src[72], 26 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 14, y + 7), &src[98], 30 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 12, y + 8), &src[128], 34 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 10, y + 9), &src[162], 38 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 8, y + 10), &src[200], 42 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 6, y + 11), &src[242], 46 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 4, y + 12), &src[288], 50 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 2, y + 13), &src[338], 54 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 0, y + 14), &src[392], 58 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 0, y + 15), &src[450], 58 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 2, y + 16), &src[508], 54 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 4, y + 17), &src[562], 50 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 6, y + 18), &src[612], 46 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 8, y + 19), &src[658], 42 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 10, y + 20), &src[700], 38 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 12, y + 21), &src[738], 34 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 14, y + 22), &src[772], 30 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 16, y + 23), &src[802], 26 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 18, y + 24), &src[828], 22 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 20, y + 25), &src[850], 18 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 22, y + 26), &src[868], 14 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 24, y + 27), &src[882], 10 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 26, y + 28), &src[892], 6 * sizeof(color_t));
+    memcpy(graphics_get_pixel(x + 28, y + 29), &src[898], 2 * sizeof(color_t));
 }
 
 static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset, color_t color_mask)
@@ -296,18 +296,18 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
     if (!color_mask) {
         color_mask = COLOR_NO_MASK;
     }
-    const GraphicsClipInfo *clip = Graphics_getClipInfo(x_offset, y_offset, FOOTPRINT_WIDTH, FOOTPRINT_HEIGHT);
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, FOOTPRINT_WIDTH, FOOTPRINT_HEIGHT);
     if (!clip->isVisible) {
         return;
     }
     // footprints are ALWAYS clipped in half, if they are clipped
-    if (clip->clipY == ClipNone && clip->clipX == ClipNone && color_mask == COLOR_NO_MASK) {
+    if (clip->clipY == CLIP_NONE && clip->clipX == CLIP_NONE && color_mask == COLOR_NO_MASK) {
         draw_footprint_simple(data, x_offset, y_offset);
         return;
     }
-    int clip_left = clip->clipX == ClipLeft;
-    int clip_right = clip->clipX == ClipRight;
-    if (clip->clipY != ClipTop) {
+    int clip_left = clip->clipX == CLIP_LEFT;
+    int clip_right = clip->clipX == CLIP_RIGHT;
+    if (clip->clipY != CLIP_TOP) {
         const color_t *src = data;
         for (int y = 0; y < 15; y++) {
             int xMax = 4 * y + 2;
@@ -319,7 +319,7 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
                 xStart = 30;
                 src += xMax + 2;
             }
-            color_t *buffer = Graphics_getDrawPosition(x_offset + xStart, y_offset + y);
+            color_t *buffer = graphics_get_pixel(x_offset + xStart, y_offset + y);
             if (color_mask == COLOR_NO_MASK) {
                 memcpy(buffer, src, xMax * sizeof(color_t));
                 src += xMax;
@@ -333,7 +333,7 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
             }
         }
     }
-    if (clip->clipY != ClipBottom) {
+    if (clip->clipY != CLIP_BOTTOM) {
         const color_t *src = &data[900 / 2];
         for (int y = 0; y < 15; y++) {
             int xMax = 4 * (15 - 1 - y) + 2;
@@ -345,7 +345,7 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
                 xStart = 30;
                 src += xMax + 2;
             }
-            color_t *buffer = Graphics_getDrawPosition(x_offset + xStart, 15 + y_offset + y);
+            color_t *buffer = graphics_get_pixel(x_offset + xStart, 15 + y_offset + y);
             if (color_mask == COLOR_NO_MASK) {
                 memcpy(buffer, src, xMax * sizeof(color_t));
                 src += xMax;
@@ -582,7 +582,7 @@ void image_draw_fullscreen_background(int image_id)
     int s_width = screen_width();
     int s_height = screen_height();
     if (s_width > 1024 || s_height > 768) {
-        Graphics_clearScreen();
+        graphics_clear_screen();
     }
     image_draw(image_id, (s_width - 1024) / 2, (s_height - 768) / 2);
 }

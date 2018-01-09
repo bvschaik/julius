@@ -12,7 +12,7 @@ void UI_Logo_init()
 
 void UI_Logo_drawBackground()
 {
-	Graphics_clearScreen();
+	graphics_clear_screen();
 
     graphics_in_dialog();
 	image_draw(image_group(GROUP_LOGO), 0, 0);
