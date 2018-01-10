@@ -5,10 +5,6 @@
 
 #include "graphics/window.h"
 
-void UI_Logo_init();
-void UI_Logo_drawBackground();
-void UI_Logo_handleMouse(const mouse *m);
-
 void UI_MainMenu_drawBackground();
 void UI_MainMenu_drawForeground();
 void UI_MainMenu_handleMouse(const mouse *m);
@@ -17,9 +13,6 @@ void UI_NewCareerDialog_init();
 void UI_NewCareerDialog_drawBackground();
 void UI_NewCareerDialog_drawForeground();
 void UI_NewCareerDialog_handleMouse(const mouse *m);
-
-void UI_DifficultyOptions_drawForeground();
-void UI_DifficultyOptions_handleMouse(const mouse *m);
 
 void UI_Advisors_init();
 void UI_Advisors_drawBackground();

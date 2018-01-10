@@ -13,6 +13,9 @@ void window_invalidate()
 void UI_Tooltip_resetTimer()
 {}
 
+void window_logo_show()
+{}
+
 void UI_Window_goTo(WindowId windowId)
 {}
 

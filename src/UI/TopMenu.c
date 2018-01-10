@@ -21,6 +21,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "scenario/property.h"
+#include "window/difficulty_options.h"
 #include "window/display_options.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
@@ -401,8 +402,8 @@ static void menuOptions_speed(int param)
 
 static void menuOptions_difficulty(int param)
 {
-	clearState();
-	UI_Window_goTo(Window_DifficultyOptions);
+    clearState();
+    window_difficulty_options_show();
 }
 
 static void menuHelp_help(int param)

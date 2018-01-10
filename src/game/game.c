@@ -21,6 +21,7 @@
 #include "scenario/scenario.h"
 #include "sound/city.h"
 #include "sound/system.h"
+#include "window/logo.h"
 
 #include "UI/TopMenu.h"
 
@@ -75,7 +76,7 @@ int game_init()
 
     sound_system_init();
     game_state_init();
-    UI_Window_goTo(Window_Logo);
+    window_logo_show();
     return 1;
 }
 

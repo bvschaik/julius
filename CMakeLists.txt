@@ -225,7 +225,9 @@ set(SOUND_FILES
 )
 set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
+    ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
     ${PROJECT_SOURCE_DIR}/src/window/display_options.c
+    ${PROJECT_SOURCE_DIR}/src/window/logo.c
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
     ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
 )
@@ -266,13 +268,11 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Ghost.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Overlay.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Scroll.c
-	${PROJECT_SOURCE_DIR}/src/UI/DifficultyOptions.c
 	${PROJECT_SOURCE_DIR}/src/UI/DonateToCityDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/EmpireMap.c
 	${PROJECT_SOURCE_DIR}/src/UI/FileDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/HoldFestivalDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Intermezzo.c
-	${PROJECT_SOURCE_DIR}/src/UI/Logo.c
 	${PROJECT_SOURCE_DIR}/src/UI/MainMenu.c
 	${PROJECT_SOURCE_DIR}/src/UI/MessageDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Minimap.c
