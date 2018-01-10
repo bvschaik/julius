@@ -2,7 +2,6 @@
 
 #include "UI/Advisors.h"
 #include "UI/BuildingInfo.h"
-#include "UI/PopupDialog.h"
 #include "UI/Sidebar.h"
 
 #include "Data/State.h"
@@ -23,6 +22,7 @@
 #include "map/bookmark.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"
+#include "window/popup_dialog.h"
 
 static struct {
     int ctrl_down;
@@ -280,7 +280,7 @@ static void confirm_exit(int accepted)
 void hotkey_esc()
 {
     video_stop();
-    UI_PopupDialog_show(PopupDialog_Quit, confirm_exit, 1);
+    window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
 }
 
 static void go_to_bookmark(int number)

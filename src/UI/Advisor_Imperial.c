@@ -1,5 +1,4 @@
 #include "Advisors_private.h"
-#include "PopupDialog.h"
 
 #include "city/emperor.h"
 #include "city/finance.h"
@@ -14,6 +13,7 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
+#include "window/popup_dialog.h"
 
 static void buttonDonateToCity(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);
@@ -222,20 +222,20 @@ static void buttonRequest(int index, int param2)
 		Data_CityInfo.militaryTotalLegionsEmpireService = 0;
 		switch (status) {
 			case -4:
-				UI_PopupDialog_show(PopupDialog_NoLegionsAvailable, confirmNothing, 0);
+				window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_AVAILABLE, confirmNothing, 0);
 				break;
 			case -3:
-				UI_PopupDialog_show(PopupDialog_NoLegionsSelected, confirmNothing, 0);
+				window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_SELECTED, confirmNothing, 0);
 				break;
 			case -2:
-				UI_PopupDialog_show(PopupDialog_RequestSendTroops, confirmSendTroops, 2);
+				window_popup_dialog_show(POPUP_DIALOG_SEND_TROOPS, confirmSendTroops, 2);
 				break;
 			case -1:
-				UI_PopupDialog_show(PopupDialog_RequestNotEnoughGoods, confirmNothing, 0);
+				window_popup_dialog_show(POPUP_DIALOG_NOT_ENOUGH_GOODS, confirmNothing, 0);
 				break;
 			default:
 				selectedRequestId = status - 1;
-				UI_PopupDialog_show(PopupDialog_RequestSendGoods, confirmSendGoods, 2);
+				window_popup_dialog_show(POPUP_DIALOG_SEND_GOODS, confirmSendGoods, 2);
 				break;
 		}
 	}

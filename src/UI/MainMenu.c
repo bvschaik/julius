@@ -1,6 +1,5 @@
 #include "AllWindows.h"
 #include "FileDialog.h"
-#include "PopupDialog.h"
 
 #include "game/system.h"
 #include "graphics/generic_button.h"
@@ -9,6 +8,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "window/cck_selection.h"
+#include "window/popup_dialog.h"
 
 static void buttonClick(int param1, int param2);
 
@@ -67,6 +67,6 @@ static void buttonClick(int param1, int param2)
 	} else if (param1 == 3) {
 		window_cck_selection_show();
 	} else if (param1 == 4) {
-		UI_PopupDialog_show(PopupDialog_Quit, confirmExit, 1);
+		window_popup_dialog_show(POPUP_DIALOG_QUIT, confirmExit, 1);
 	}
 }

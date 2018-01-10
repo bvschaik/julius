@@ -228,6 +228,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
     ${PROJECT_SOURCE_DIR}/src/window/display_options.c
     ${PROJECT_SOURCE_DIR}/src/window/logo.c
+    ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
     ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
 )
@@ -281,7 +282,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/NewCareerDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/OverlayMenu.c
 	${PROJECT_SOURCE_DIR}/src/UI/PlayerMessageList.c
-	${PROJECT_SOURCE_DIR}/src/UI/PopupDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/SendGiftToCaesarDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/SetSalaryDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Sidebar.c

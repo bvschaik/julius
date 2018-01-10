@@ -1,6 +1,5 @@
 #include "AllWindows.h"
 #include "Advisors.h"
-#include "PopupDialog.h"
 #include "MessageDialog.h"
 
 #include "../Data/CityInfo.h"
@@ -24,6 +23,7 @@
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
+#include "window/popup_dialog.h"
 
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
@@ -616,7 +616,7 @@ static void buttonAdvisor(int param1, int param2)
 
 static void buttonOpenTrade(int param1, int param2)
 {
-	UI_PopupDialog_show(PopupDialog_OpenTrade, confirmOpenTrade, 2);
+	window_popup_dialog_show(POPUP_DIALOG_OPEN_TRADE, confirmOpenTrade, 2);
 }
 
 static void buttonEmpireMap(int param1, int param2)

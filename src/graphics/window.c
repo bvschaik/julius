@@ -5,7 +5,6 @@
 #include "UI/AllWindows.h"
 #include "UI/BuildingInfo.h"
 #include "UI/FileDialog.h"
-#include "UI/PopupDialog.h"
 #include "UI/MessageDialog.h"
 #include "UI/Sidebar.h"
 #include "UI/TopMenu.h"
@@ -20,7 +19,7 @@ static window_type windows[] = {
     // 0
     { Window_MainMenu, UI_MainMenu_drawBackground, UI_MainMenu_drawForeground, UI_MainMenu_handleMouse, noop, noop },
     { Window_City, UI_City_drawBackground, UI_City_drawForeground, UI_City_handleMouse, UI_City_getTooltip, noop },
-    { Window_PopupDialog, UI_PopupDialog_drawBackground, UI_PopupDialog_drawForeground, UI_PopupDialog_handleMouse, noop, noop },
+    { Window_PopupDialog },
     { Window_TopMenu, UI_City_drawBackground, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse, noop, noop },
     { Window_DifficultyOptions, noop, noop, noop, noop, noop },
     { Window_Advisors, UI_Advisors_drawBackground, UI_Advisors_drawForeground, UI_Advisors_handleMouse, UI_Advisors_getTooltip, UI_Advisors_init },

@@ -1,4 +1,5 @@
 #include "graphics/window.h"
+#include "window/popup_dialog.h"
 
 #include "UI/MessageDialog.h"
 
@@ -35,7 +36,7 @@ void UI_MessageDialog_setPlayerMessage(int year, int month,
                                        int messageAdvisor, int usePopup)
 {}
 
-void UI_PopupDialog_show(int msgId, void (*okFunc)(int), int hasOkCancelButtons)
+void window_popup_dialog_show(popup_dialog_type type, void (*okFunc)(int), int hasOkCancelButtons)
 {}
 
 void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis)

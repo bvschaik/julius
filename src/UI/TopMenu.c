@@ -3,7 +3,6 @@
 #include "Advisors.h"
 #include "FileDialog.h"
 #include "MessageDialog.h"
-#include "PopupDialog.h"
 #include "../Data/CityInfo.h"
 
 #include "building/construction.h"
@@ -23,6 +22,7 @@
 #include "scenario/property.h"
 #include "window/difficulty_options.h"
 #include "window/display_options.h"
+#include "window/popup_dialog.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
 
@@ -378,8 +378,8 @@ static void menuFile_confirmExit(int accepted)
 
 static void menuFile_exitGame(int param)
 {
-	clearState();
-	UI_PopupDialog_show(PopupDialog_Quit, menuFile_confirmExit, 1);
+    clearState();
+    window_popup_dialog_show(POPUP_DIALOG_QUIT, menuFile_confirmExit, 1);
 }
 
 static void menuOptions_display(int param)
