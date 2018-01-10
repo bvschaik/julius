@@ -223,6 +223,9 @@ set(SOUND_FILES
     ${PROJECT_SOURCE_DIR}/src/sound/speech.c
     ${PROJECT_SOURCE_DIR}/src/sound/system.c
 )
+set(WINDOW_FILES
+    ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
+)
 add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
@@ -281,7 +284,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/SendGiftToCaesarDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/SetSalaryDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Sidebar.c
-	${PROJECT_SOURCE_DIR}/src/UI/SoundOptions.c
 	${PROJECT_SOURCE_DIR}/src/UI/SpeedOptions.c
 	${PROJECT_SOURCE_DIR}/src/UI/Tooltip.c
 	${PROJECT_SOURCE_DIR}/src/UI/TopMenu.c
@@ -299,6 +301,7 @@ add_executable(julius
 	${SCENARIO_FILES}
 	${GRAPHICS_FILES}
 	${SOUND_FILES}
+	${WINDOW_FILES}
 	${SMK_FILES}
 )
 

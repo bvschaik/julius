@@ -30,7 +30,7 @@ static window_type windows[] = {
     { Window_LaborPriorityDialog, UI_LaborPriorityDialog_drawBackground, UI_LaborPriorityDialog_drawForeground, UI_LaborPriorityDialog_handleMouse, UI_LaborPriorityDialog_getTooltip, noop },
     // 10
     { Window_DisplayOptions, noop, UI_DisplayOptions_drawForeground, UI_DisplayOptions_handleMouse, noop },
-    { Window_SoundOptions, noop, UI_SoundOptions_drawForeground, UI_SoundOptions_handleMouse, UI_SoundOptions_init },
+    { Window_SoundOptions, noop, noop, noop, noop },
     { Window_SpeedOptions, noop, UI_SpeedOptions_drawForeground, UI_SpeedOptions_handleMouse, UI_SpeedOptions_init },
     { Window_Empire, UI_Empire_drawBackground, UI_Empire_drawForeground, UI_Empire_handleMouse, UI_EmpireMap_getTooltip, UI_Empire_init },
     { Window_TradeOpenedDialog, UI_TradeOpenedDialog_drawBackground, UI_TradeOpenedDialog_drawForeground, UI_TradeOpenedDialog_handleMouse, noop },
@@ -60,8 +60,8 @@ static window_type windows[] = {
     { Window_Logo, UI_Logo_drawBackground, noop, UI_Logo_handleMouse, UI_Logo_init },
 };
 
-static const window_type *previous_window;
-static const window_type *current_window;
+static window_type previous_window;
+static window_type current_window;
 static int refreshRequested;
 
 void window_invalidate()
@@ -76,15 +76,24 @@ int window_is(WindowId id)
 
 WindowId UI_Window_getId()
 {
-    return current_window->id;
+    return current_window.id;
 }
 
 void window_show(const window_type *window)
 {
     previous_window = current_window;
-    current_window = window;
-    if (current_window->init) {
-        current_window->init();
+    current_window = *window;
+    if (current_window.init) {
+        current_window.init();
+    }
+    if (!current_window.draw_background) {
+        current_window.draw_background = noop;
+    }
+    if (!current_window.draw_foreground) {
+        current_window.draw_foreground = noop;
+    }
+    if (!current_window.handle_mouse) {
+        current_window.handle_mouse = noop;
     }
     window_invalidate();
 }
@@ -96,7 +105,7 @@ void UI_Window_goTo(WindowId windowId)
 
 void UI_Window_goBack()
 {
-    window_show(previous_window);
+    window_show(&previous_window);
 }
 
 static void updateMouseBefore()
@@ -107,21 +116,21 @@ static void updateMouseBefore()
 static void updateMouseAfter()
 {
     mouse_set_scroll(SCROLL_NONE);
-    input_cursor_update(current_window->id);
+    input_cursor_update(current_window.id);
 }
 
 void window_draw(int force)
 {
     updateMouseBefore();
     if (force || refreshRequested) {
-        current_window->draw_background();
+        current_window.draw_background();
         refreshRequested = 0;
     }
-    current_window->draw_foreground();
+    current_window.draw_foreground();
 
     const mouse *m = mouse_get();
-    current_window->handle_mouse(m);
-    UI_Tooltip_handle(m, current_window->get_tooltip);
+    current_window.handle_mouse(m);
+    UI_Tooltip_handle(m, current_window.get_tooltip);
     UI_Warning_draw();
     updateMouseAfter();
 }
