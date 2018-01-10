@@ -1,7 +1,6 @@
 #include "TopMenu.h"
 #include "AllWindows.h"
 #include "Advisors.h"
-#include "FileDialog.h"
 #include "MessageDialog.h"
 #include "../Data/CityInfo.h"
 
@@ -22,6 +21,7 @@
 #include "scenario/property.h"
 #include "window/difficulty_options.h"
 #include "window/display_options.h"
+#include "window/file_dialog.h"
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
@@ -351,21 +351,21 @@ static void menuFile_loadGame(int param)
 	clearState();
 	building_construction_clear_type();
 	UI_Window_goTo(Window_City);
-	UI_FileDialog_show(FileDialogType_Load);
+	window_file_dialog_show(FILE_DIALOG_LOAD);
 }
 
 static void menuFile_saveGame(int param)
 {
 	clearState();
 	UI_Window_goTo(Window_City);
-	UI_FileDialog_show(FileDialogType_Save);
+	window_file_dialog_show(FILE_DIALOG_SAVE);
 }
 
 static void menuFile_deleteGame(int param)
 {
 	clearState();
 	UI_Window_goTo(Window_City);
-	UI_FileDialog_show(FileDialogType_Delete);
+	window_file_dialog_show(FILE_DIALOG_DELETE);
 }
 
 static void menuFile_confirmExit(int accepted)

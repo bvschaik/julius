@@ -1,5 +1,4 @@
 #include "AllWindows.h"
-#include "FileDialog.h"
 
 #include "game/system.h"
 #include "graphics/generic_button.h"
@@ -8,6 +7,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "window/cck_selection.h"
+#include "window/file_dialog.h"
 #include "window/popup_dialog.h"
 
 static void buttonClick(int param1, int param2);
@@ -63,7 +63,7 @@ static void buttonClick(int param1, int param2)
 	if (param1 == 1) {
 		UI_Window_goTo(Window_NewCareerDialog);
 	} else if (param1 == 2) {
-		UI_FileDialog_show(FileDialogType_Load);
+		window_file_dialog_show(FILE_DIALOG_LOAD);
 	} else if (param1 == 3) {
 		window_cck_selection_show();
 	} else if (param1 == 4) {

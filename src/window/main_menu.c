@@ -8,9 +8,8 @@
 #include "graphics/panel.h"
 #include "graphics/window.h"
 #include "window/cck_selection.h"
+#include "window/file_dialog.h"
 #include "window/popup_dialog.h"
-
-#include "UI/FileDialog.h"
 
 static void button_click(int type, int param2);
 
@@ -65,7 +64,7 @@ static void button_click(int type, int param2)
     if (type == 1) {
         UI_Window_goTo(Window_NewCareerDialog);
     } else if (type == 2) {
-        UI_FileDialog_show(FileDialogType_Load);
+        window_file_dialog_show(FILE_DIALOG_LOAD);
     } else if (type == 3) {
         window_cck_selection_show();
     } else if (type == 4) {

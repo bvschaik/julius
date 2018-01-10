@@ -4,7 +4,6 @@
 
 #include "UI/AllWindows.h"
 #include "UI/BuildingInfo.h"
-#include "UI/FileDialog.h"
 #include "UI/MessageDialog.h"
 #include "UI/Sidebar.h"
 #include "UI/TopMenu.h"
@@ -40,7 +39,7 @@ static window_type windows[] = {
     { Window_PlayerMessageList, UI_PlayerMessageList_drawBackground, UI_PlayerMessageList_drawForeground, UI_PlayerMessageList_handleMouse, UI_PlayerMessageList_getTooltip, UI_PlayerMessageList_init },
     // 20
     { Window_CCKSelection },
-    { Window_FileDialog, UI_FileDialog_drawBackground, UI_FileDialog_drawForeground, UI_FileDialog_handleMouse, noop, noop },
+    { Window_FileDialog },
     { Window_OverlayMenu, UI_OverlayMenu_drawBackground, UI_OverlayMenu_drawForeground, UI_OverlayMenu_handleMouse, noop, UI_OverlayMenu_init },
     { Window_BuildingMenu, UI_BuildingMenu_drawBackground, UI_BuildingMenu_drawForeground, UI_BuildingMenu_handleMouse, noop, noop },
     { Window_Intermezzo, UI_Intermezzo_drawBackground, noop, UI_Intermezzo_handleMouse, noop, noop },

@@ -227,6 +227,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
     ${PROJECT_SOURCE_DIR}/src/window/display_options.c
+    ${PROJECT_SOURCE_DIR}/src/window/file_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/logo.c
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.c
@@ -272,7 +273,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Scroll.c
 	${PROJECT_SOURCE_DIR}/src/UI/DonateToCityDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/EmpireMap.c
-	${PROJECT_SOURCE_DIR}/src/UI/FileDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/HoldFestivalDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Intermezzo.c
 	${PROJECT_SOURCE_DIR}/src/UI/MainMenu.c
