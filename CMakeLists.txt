@@ -224,6 +224,7 @@ set(SOUND_FILES
     ${PROJECT_SOURCE_DIR}/src/sound/system.c
 )
 set(WINDOW_FILES
+    ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
     ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
 )
@@ -258,7 +259,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Terrain.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Water.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingMenu.c
-	${PROJECT_SOURCE_DIR}/src/UI/CCKSelection.c
 	${PROJECT_SOURCE_DIR}/src/UI/City.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Figures.c

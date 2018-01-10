@@ -8,6 +8,7 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "window/cck_selection.h"
 
 static void buttonClick(int param1, int param2);
 
@@ -64,7 +65,7 @@ static void buttonClick(int param1, int param2)
 	} else if (param1 == 2) {
 		UI_FileDialog_show(FileDialogType_Load);
 	} else if (param1 == 3) {
-		UI_Window_goTo(Window_CCKSelection);
+		window_cck_selection_show();
 	} else if (param1 == 4) {
 		UI_PopupDialog_show(PopupDialog_Quit, confirmExit, 1);
 	}

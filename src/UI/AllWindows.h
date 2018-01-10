@@ -18,11 +18,6 @@ void UI_NewCareerDialog_drawBackground();
 void UI_NewCareerDialog_drawForeground();
 void UI_NewCareerDialog_handleMouse(const mouse *m);
 
-void UI_CCKSelection_init();
-void UI_CCKSelection_drawBackground();
-void UI_CCKSelection_drawForeground();
-void UI_CCKSelection_handleMouse(const mouse *m);
-
 void UI_DifficultyOptions_drawForeground();
 void UI_DifficultyOptions_handleMouse(const mouse *m);
 
