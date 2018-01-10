@@ -60,8 +60,8 @@ static window_type windows[] = {
     { Window_Logo, UI_Logo_init, UI_Logo_drawBackground, noop, UI_Logo_handleMouse },
 };
 
-static WindowId previousWindow;
-static WindowId currentWindow;
+static const window_type *previous_window;
+static const window_type *current_window;
 static int refreshRequested;
 
 void window_invalidate()
@@ -76,20 +76,25 @@ int window_is(WindowId id)
 
 WindowId UI_Window_getId()
 {
-    return currentWindow;
+    return current_window->id;
+}
+
+void window_show(const window_type *window)
+{
+    previous_window = current_window;
+    current_window = window;
+    current_window->init();
+    window_invalidate();
 }
 
 void UI_Window_goTo(WindowId windowId)
 {
-    previousWindow = currentWindow;
-    currentWindow = windowId;
-    windows[currentWindow].init();
-    window_invalidate();
+    window_show(&windows[windowId]);
 }
 
 void UI_Window_goBack()
 {
-    UI_Window_goTo(previousWindow);
+    window_show(previous_window);
 }
 
 static void updateMouseBefore()
@@ -100,21 +105,21 @@ static void updateMouseBefore()
 static void updateMouseAfter()
 {
     mouse_set_scroll(SCROLL_NONE);
-    input_cursor_update(currentWindow);
+    input_cursor_update(current_window->id);
 }
 
 void window_draw(int force)
 {
     updateMouseBefore();
     if (force || refreshRequested) {
-        windows[currentWindow].draw_background();
+        current_window->draw_background();
         refreshRequested = 0;
     }
-    windows[currentWindow].draw_foreground();
+    current_window->draw_foreground();
 
     const mouse *m = mouse_get();
-    windows[currentWindow].handle_mouse(m);
-    UI_Tooltip_handle(m, windows[currentWindow].get_tooltip);
+    current_window->handle_mouse(m);
+    UI_Tooltip_handle(m, current_window->get_tooltip);
     UI_Warning_draw();
     updateMouseAfter();
 }

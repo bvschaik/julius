@@ -60,6 +60,8 @@ void window_draw(int force);
 
 int window_is(WindowId id);
 
+void window_show(const window_type *window);
+
 WindowId UI_Window_getId();
 void UI_Window_goTo(WindowId windowId);
 void UI_Window_goBack();
