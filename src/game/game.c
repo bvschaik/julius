@@ -15,13 +15,13 @@
 #include "game/system.h"
 #include "game/tick.h"
 #include "graphics/video.h"
+#include "graphics/window.h"
 #include "input/scroll.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
 #include "sound/system.h"
 
-#include "UI/Window.h"
 #include "UI/TopMenu.h"
 
 static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
@@ -132,7 +132,7 @@ void game_run()
 
 void game_draw()
 {
-    UI_Window_refresh(0);
+    window_draw(0);
     sound_city_play();
 }
 

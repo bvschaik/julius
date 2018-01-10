@@ -4,7 +4,6 @@
 #include "UI/BuildingInfo.h"
 #include "UI/PopupDialog.h"
 #include "UI/Sidebar.h"
-#include "UI/Window.h"
 
 #include "Data/State.h"
 

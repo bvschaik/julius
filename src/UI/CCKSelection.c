@@ -1,5 +1,3 @@
-#include "Window.h"
-
 #include "core/calc.h"
 #include "core/dir.h"
 #include "core/file.h"

@@ -1,5 +1,4 @@
 #include "PopupDialog.h"
-#include "Window.h"
 
 #include "graphics/graphics.h"
 #include "graphics/image_button.h"

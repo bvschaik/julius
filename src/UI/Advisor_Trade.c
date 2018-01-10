@@ -1,6 +1,5 @@
 #include "Advisors_private.h"
 #include "Tooltip.h"
-#include "Window.h"
 #include "MessageDialog.h"
 
 #include "building/count.h"
@@ -18,6 +17,7 @@
 #include "graphics/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/building.h"
 
 static void buttonPrices(int param1, int param2);

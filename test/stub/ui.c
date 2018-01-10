@@ -1,5 +1,6 @@
+#include "graphics/window.h"
+
 #include "UI/MessageDialog.h"
-#include "UI/Window.h"
 
 int window_is(WindowId id)
 {
@@ -20,7 +21,7 @@ WindowId UI_Window_getId()
     return Window_City;
 }
 
-void UI_Window_refresh(int force)
+void window_draw(int force)
 {}
 
 void UI_MessageDialog_show(int textId, int backgroundIsProvided)

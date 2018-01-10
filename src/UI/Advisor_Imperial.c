@@ -1,6 +1,5 @@
 #include "Advisors_private.h"
 #include "PopupDialog.h"
-#include "Window.h"
 
 #include "city/emperor.h"
 #include "city/finance.h"
@@ -12,6 +11,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 

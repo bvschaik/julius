@@ -2,9 +2,8 @@
 #define UI_ALLWINDOWS_H
 
 #include "Tooltip.h"
-#include "Window.h"
 
-#include "input/mouse.h"
+#include "graphics/window.h"
 
 void UI_Logo_init();
 void UI_Logo_drawBackground();

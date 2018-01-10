@@ -1,5 +1,4 @@
 #include "Advisors_private.h"
-#include "Window.h"
 
 #include "game/time.h"
 #include "graphics/generic_button.h"

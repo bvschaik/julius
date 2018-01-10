@@ -1,7 +1,5 @@
 #include "BuildingInfo.h"
 
-#include "../UI/Window.h"
-
 #include "../Data/State.h"
 
 #include "building/count.h"
@@ -14,6 +12,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int index, int param2);

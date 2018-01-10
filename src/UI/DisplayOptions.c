@@ -1,11 +1,10 @@
-#include "Window.h"
-
 #include "game/settings.h"
 #include "game/system.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/window.h"
 
 static void buttonFullscreen(int param1, int param2);
 static void buttonSetResolution(int id, int param2);

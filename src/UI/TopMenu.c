@@ -1,5 +1,4 @@
 #include "TopMenu.h"
-#include "Window.h"
 #include "AllWindows.h"
 #include "Advisors.h"
 #include "FileDialog.h"

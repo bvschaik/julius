@@ -1,7 +1,5 @@
 #include "construction.h"
 
-#include "UI/Window.h"
-
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 

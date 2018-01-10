@@ -10,7 +10,6 @@
 
 #include "UI/AllWindows.h"
 #include "UI/VideoIntermezzo.h"
-#include "UI/Window.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"

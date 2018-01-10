@@ -1,7 +1,6 @@
 #include "CityBuildings_private.h"
 
 #include "Minimap.h"
-#include "Window.h"
 
 #include "building/animation.h"
 #include "building/construction.h"

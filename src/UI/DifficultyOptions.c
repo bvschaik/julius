@@ -1,6 +1,4 @@
 
-#include "Window.h"
-
 #include "game/settings.h"
 #include "graphics/arrow_button.h"
 #include "graphics/graphics.h"

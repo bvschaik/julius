@@ -1,7 +1,5 @@
 #include "Advisors_private.h"
 
-#include "Window.h"
-
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"

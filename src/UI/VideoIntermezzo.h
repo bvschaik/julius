@@ -1,8 +1,7 @@
 #ifndef VIDEOINTERMEZZO_H
 #define VIDEOINTERMEZZO_H
 
-#include "Window.h"
-
+#include "graphics/window.h"
 #include "input/mouse.h"
 
 void UI_VideoIntermezzo_show(const char* filename, int width, int height, WindowId nextWindowId);

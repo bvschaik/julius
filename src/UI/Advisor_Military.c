@@ -1,5 +1,4 @@
 #include "Advisors_private.h"
-#include "Window.h"
 
 #include "city/view.h"
 #include "figure/formation_legion.h"

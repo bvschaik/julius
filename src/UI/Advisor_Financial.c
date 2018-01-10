@@ -1,5 +1,4 @@
 #include "Advisors_private.h"
-#include "Window.h"
 
 #include "city/finance.h"
 #include "core/calc.h"

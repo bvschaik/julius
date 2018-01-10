@@ -1,4 +1,3 @@
-#include "Window.h"
 #include "AllWindows.h"
 #include "Advisors.h"
 #include "PopupDialog.h"

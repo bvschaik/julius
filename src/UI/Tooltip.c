@@ -1,7 +1,6 @@
 #include "Tooltip.h"
 
 #include "Advisors.h"
-#include "Window.h"
 
 #include "../Data/CityInfo.h"
 

@@ -1,7 +1,6 @@
 #include "BuildingInfo.h"
 
 #include "CityBuildings.h"
-#include "Window.h"
 
 #include "../Data/State.h"
 

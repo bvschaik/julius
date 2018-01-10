@@ -1,4 +1,3 @@
-#include "Window.h"
 #include "Advisors_private.h"
 
 #include "building/count.h"
@@ -10,6 +9,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 
 static void buttonHoldFestival(int param1, int param2);
 

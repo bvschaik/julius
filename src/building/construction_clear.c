@@ -14,7 +14,6 @@
 #include "map/tiles.h"
 
 #include "UI/PopupDialog.h"
-#include "UI/Window.h"
 
 static struct {
     int x_start;

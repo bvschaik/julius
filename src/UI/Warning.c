@@ -1,5 +1,4 @@
 #include "Warning.h"
-#include "Window.h"
 
 #include "city/warning.h"
 #include "game/state.h"

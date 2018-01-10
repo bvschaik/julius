@@ -1,7 +1,7 @@
 #ifndef INPUT_CURSOR_H
 #define INPUT_CURSOR_H
 
-#include "UI/Window.h"
+#include "graphics/window.h"
 
 typedef enum {
     CURSOR_ARROW = 0,

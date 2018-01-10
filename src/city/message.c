@@ -11,7 +11,6 @@
 
 #include "UI/Tooltip.h"
 #include "UI/MessageDialog.h"
-#include "UI/Window.h"
 
 #define MAX_MESSAGES 1000
 #define MAX_QUEUE 20

@@ -441,7 +441,7 @@ void UI_SlidingSidebar_drawForeground()
 	if (data.progress >= 47) {
 		city_view_toggle_sidebar();
 		UI_Window_goTo(Window_City);
-		UI_Window_refresh(1);
+		window_draw(1);
 		return;
 	}
 
