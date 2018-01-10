@@ -225,6 +225,7 @@ set(SOUND_FILES
 )
 set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
+    ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
 )
 add_executable(julius
 	${PLATFORM_FILES}
@@ -284,7 +285,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/SendGiftToCaesarDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/SetSalaryDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Sidebar.c
-	${PROJECT_SOURCE_DIR}/src/UI/SpeedOptions.c
 	${PROJECT_SOURCE_DIR}/src/UI/Tooltip.c
 	${PROJECT_SOURCE_DIR}/src/UI/TopMenu.c
 	${PROJECT_SOURCE_DIR}/src/UI/VideoIntermezzo.c

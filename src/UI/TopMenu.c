@@ -22,6 +22,7 @@
 #include "graphics/text.h"
 #include "scenario/property.h"
 #include "window/sound_options.h"
+#include "window/speed_options.h"
 
 static void refreshSidebarButtons();
 
@@ -393,8 +394,8 @@ static void menuOptions_sound(int param)
 
 static void menuOptions_speed(int param)
 {
-	clearState();
-	UI_Window_goTo(Window_SpeedOptions);
+    clearState();
+    window_speed_options_show();
 }
 
 static void menuOptions_difficulty(int param)

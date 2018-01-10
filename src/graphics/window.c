@@ -31,7 +31,7 @@ static window_type windows[] = {
     // 10
     { Window_DisplayOptions, noop, UI_DisplayOptions_drawForeground, UI_DisplayOptions_handleMouse, noop },
     { Window_SoundOptions, noop, noop, noop, noop },
-    { Window_SpeedOptions, noop, UI_SpeedOptions_drawForeground, UI_SpeedOptions_handleMouse, UI_SpeedOptions_init },
+    { Window_SpeedOptions, noop, noop, noop, noop },
     { Window_Empire, UI_Empire_drawBackground, UI_Empire_drawForeground, UI_Empire_handleMouse, UI_EmpireMap_getTooltip, UI_Empire_init },
     { Window_TradeOpenedDialog, UI_TradeOpenedDialog_drawBackground, UI_TradeOpenedDialog_drawForeground, UI_TradeOpenedDialog_handleMouse, noop },
     { Window_HoldFestivalDialog, UI_HoldFestivalDialog_drawBackground, UI_HoldFestivalDialog_drawForeground, UI_HoldFestivalDialog_handleMouse, UI_HoldFestivalDialog_getTooltip, noop },

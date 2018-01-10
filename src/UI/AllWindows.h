@@ -29,14 +29,6 @@ void UI_DifficultyOptions_handleMouse(const mouse *m);
 void UI_DisplayOptions_drawForeground();
 void UI_DisplayOptions_handleMouse(const mouse *m);
 
-void UI_SoundOptions_init();
-void UI_SoundOptions_drawForeground();
-void UI_SoundOptions_handleMouse(const mouse *m);
-
-void UI_SpeedOptions_init();
-void UI_SpeedOptions_drawForeground();
-void UI_SpeedOptions_handleMouse(const mouse *m);
-
 void UI_Advisors_init();
 void UI_Advisors_drawBackground();
 void UI_Advisors_drawForeground();
