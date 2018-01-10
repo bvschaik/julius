@@ -20,6 +20,7 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "input/scroll.h"
 #include "map/orientation.h"
 #include "scenario/property.h"
@@ -159,7 +160,7 @@ void UI_Sidebar_drawForeground()
 
 static void drawNumberOfMessages()
 {
-	if (UI_Window_getId() == Window_City && !city_view_is_sidebar_collapsed()) {
+	if (window_is(Window_City) && !city_view_is_sidebar_collapsed()) {
         int messages = city_message_count();
 		buttonBuildExpanded[12].enabled = game_can_undo();
 		buttonBuildExpanded[13].enabled = messages > 0;
@@ -332,7 +333,7 @@ static void buttonBuild(int submenu, int param2)
 static void buttonUndo(int param1, int param2)
 {
 	game_undo_perform();
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void buttonMessages(int param1, int param2)
@@ -352,7 +353,7 @@ static void buttonGoToProblem(int param1, int param2)
         city_view_go_to_grid_offset(gridOffset);
         UI_Window_goTo(Window_City);
     } else {
-        UI_Window_requestRefresh();
+        window_invalidate();
     }
 }
 
@@ -401,7 +402,7 @@ static void buttonRotateNorth(int param1, int param2)
 			break;
 	}
 	city_warning_show(WARNING_ORIENTATION);
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void buttonRotate(int clockWise, int param2)
@@ -413,7 +414,7 @@ static void buttonRotate(int clockWise, int param2)
 	}
 	map_orientation_change(clockWise);
 	city_warning_show(WARNING_ORIENTATION);
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 void UI_Sidebar_rotateMap(int clockWise)
@@ -435,7 +436,7 @@ void UI_SlidingSidebar_drawBackground()
 
 void UI_SlidingSidebar_drawForeground()
 {
-	UI_Window_requestRefresh();
+	window_invalidate();
 	updateProgress();
 	if (data.progress >= 47) {
 		city_view_toggle_sidebar();

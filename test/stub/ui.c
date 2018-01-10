@@ -1,6 +1,14 @@
 #include "UI/MessageDialog.h"
 #include "UI/Window.h"
 
+int window_is(WindowId id)
+{
+    return id == Window_City;
+}
+
+void window_invalidate()
+{}
+
 void UI_Tooltip_resetTimer()
 {}
 
@@ -11,9 +19,6 @@ WindowId UI_Window_getId()
 {
     return Window_City;
 }
-
-void UI_Window_requestRefresh()
-{}
 
 void UI_Window_refresh(int force)
 {}

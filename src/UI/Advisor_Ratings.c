@@ -8,6 +8,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
@@ -184,7 +185,7 @@ void UI_Advisor_Ratings_handleMouse(const mouse *m)
 static void buttonRating(int param1, int param2)
 {
 	Data_CityInfo.ratingAdvisorSelection = param1;
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 int UI_Advisor_Ratings_getTooltip()

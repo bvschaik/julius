@@ -6,6 +6,7 @@
 #include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/window.h"
 
 static void arrowButtonDifficulty(int param1, int param2);
 static void arrowButtonGods(int param1, int param2);
@@ -49,12 +50,12 @@ static void arrowButtonDifficulty(int param1, int param2)
     } else {
         setting_increase_difficulty();
     }
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void arrowButtonGods(int param1, int param2)
 {
     setting_toggle_gods_enabled();
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 

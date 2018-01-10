@@ -10,6 +10,7 @@
 #include "graphics/graphics.h" // debug for fps counter
 #include "graphics/screen.h"
 #include "graphics/text.h" // debug for fps counter
+#include "graphics/window.h"
 #include "input/cursor.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"
@@ -372,7 +373,7 @@ static void mainLoop()
 						//case SDL_WINDOWEVENT_RESIZED:
 							printf("System resize to %d x %d\n", event.window.data1, event.window.data2);
 							createSurface(event.window.data1, event.window.data2, setting_fullscreen());
-							UI_Window_requestRefresh();
+							window_invalidate();
 							break;
 					}
 					break;
@@ -428,7 +429,7 @@ static void mainLoop()
 						printf("User resize to %d x %d\n", *(int*)event.user.data1, *(int*)event.user.data2);
 						setting_set_display(0, *(int*)event.user.data1, *(int*)event.user.data2);
 						//createSurface(*(int*)event.user.data1, *(int*)event.user.data2, 0);
-						//UI_Window_requestRefresh();
+						//window_invalidate();
 					} else if (event.user.code == UserEventFullscreen) {
 						printf("User to fullscreen %d x %d\n", Desktop.width, Desktop.height);
 						SDL_SetWindowSize(SDL.window, Desktop.width, Desktop.height);
@@ -439,7 +440,7 @@ static void mainLoop()
 						SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN);
 						setting_set_display(1, Desktop.width, Desktop.height);
 						//createSurface(Desktop.width, Desktop.height, 1);
-						//UI_Window_requestRefresh();
+						//window_invalidate();
 					} else if (event.user.code == UserEventWindowed) {
 					    int width, height;
 					    setting_window(&width, &height);

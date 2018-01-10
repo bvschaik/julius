@@ -4,6 +4,7 @@
 #include "city/warning.h"
 #include "figuretype/migrant.h"
 #include "game/undo.h"
+#include "graphics/window.h"
 #include "map/aqueduct.h"
 #include "map/bridge.h"
 #include "map/building.h"
@@ -122,7 +123,7 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
         map_routing_update_land();
         map_routing_update_walls();
         map_routing_update_water();
-        UI_Window_requestRefresh();
+        window_invalidate();
     }
     return items_placed;
 }

@@ -6,6 +6,7 @@
 #include "core/time.h"
 #include "figure/formation.h"
 #include "game/time.h"
+#include "graphics/window.h"
 #include "sound/effect.h"
 
 #include "UI/Tooltip.h"
@@ -184,9 +185,9 @@ void city_message_post(int use_popup, int message_type, int param1, int param2)
     lang_message_type langMessageType = lang_get_message(text_id)->message_type;
     if (langMessageType == MESSAGE_TYPE_DISASTER || langMessageType == MESSAGE_TYPE_INVASION) {
         data.problem_count = 1;
-        UI_Window_requestRefresh();
+        window_invalidate();
     }
-    if (use_popup && UI_Window_getId() == Window_City) {
+    if (use_popup && window_is(Window_City)) {
         show_message_popup(id);
     } else if (use_popup) {
         // add to queue to be processed when player returns to city

@@ -8,6 +8,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 
 static void buttonSetGift(int param1, int param2);
 static void buttonSendGift(int param1, int param2);
@@ -105,7 +106,7 @@ static void buttonSetGift(int param1, int param2)
 		(param1 == 2 && Data_CityInfo.giftCost_generous <= Data_CityInfo.personalSavings) ||
 		(param1 == 3 && Data_CityInfo.giftCost_lavish <= Data_CityInfo.personalSavings)) {
 		Data_CityInfo.giftSizeSelected = param1 - 1;
-		UI_Window_requestRefresh();
+		window_invalidate();
 	}
 }
 

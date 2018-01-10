@@ -9,6 +9,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"
 
@@ -176,7 +177,7 @@ static void buttonReturnToFort(int legionId, int param2)
 	formation *m = formation_get(formation_for_legion(legionId));
 	if (!m->in_distant_battle) {
 		formation_legion_return_home(m);
-		UI_Window_requestRefresh();
+		window_invalidate();
 	}
 }
 
@@ -185,6 +186,6 @@ static void buttonEmpireService(int legionId, int param2)
 	int formationId = formation_for_legion(legionId);
     formation_toggle_empire_service(formationId);
 	formation_calculate_figures();
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 

@@ -19,6 +19,7 @@
 #include "core/image.h"
 #include "figure/formation.h"
 #include "game/undo.h"
+#include "graphics/window.h"
 #include "map/aqueduct.h"
 #include "map/bridge.h"
 #include "map/building.h"
@@ -94,7 +95,7 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
             city_warning_show(WARNING_HOUSE_TOO_FAR_FROM_ROAD);
         }
         map_routing_update_land();
-        UI_Window_requestRefresh();
+        window_invalidate();
     }
     return items_placed;
 }
@@ -183,7 +184,7 @@ static int place_road(int measure_only, int x_start, int y_start, int x_end, int
             place_routed_building(x_start, y_start, x_end, y_end, ROUTED_BUILDING_ROAD, &items_placed)) {
         if (!measure_only) {
             map_routing_update_land();
-            UI_Window_requestRefresh();
+            window_invalidate();
         }
     }
     return items_placed;
@@ -210,7 +211,7 @@ static int place_wall(int measure_only, int x_start, int y_start, int x_end, int
         if (!measure_only) {
             map_routing_update_land();
             map_routing_update_walls();
-            UI_Window_requestRefresh();
+            window_invalidate();
         }
     }
     return items_placed;

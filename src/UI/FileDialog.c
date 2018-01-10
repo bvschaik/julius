@@ -15,6 +15,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "input/keyboard.h"
 
 #include <string.h>
@@ -174,7 +175,7 @@ static int handleScrollbarClick(const mouse *m)
 		}
 		int pct = calc_percentage(yOffset, 130);
 		scrollPosition = calc_adjust_with_percentage(savedGames->num_files - 12, pct);
-		UI_Window_requestRefresh();
+		window_invalidate();
 		return 1;
 	}
 	return 0;

@@ -13,6 +13,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/property.h"
 
 static void toggleResourceState(int index, int param2);
@@ -417,14 +418,14 @@ static void toggleResourceState(int index, int param2)
 		resourceId = Data_CityInfo_Resource.availableFoods[index-1];
 	}
 	building_storage_cycle_resource_state(b->storage_id, resourceId);
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void granaryOrders(int index, int param2)
 {
 	int storageId = building_get(buildingId)->storage_id;
 	building_storage_toggle_empty_all(storageId);
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void warehouseOrders(int index, int param2)
@@ -435,5 +436,5 @@ static void warehouseOrders(int index, int param2)
 	} else if (index == 1) {
 		Data_CityInfo.buildingTradeCenterBuildingId = buildingId;
 	}
-	UI_Window_requestRefresh();
+	window_invalidate();
 }

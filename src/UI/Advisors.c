@@ -17,6 +17,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
+#include "graphics/window.h"
 
 static void buttonChangeAdvisor(int param1, int param2);
 static void buttonHelp(int param1, int param2);
@@ -80,7 +81,7 @@ void UI_Advisors_goToFromMessage(advisor_type advisor)
 {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
-        if (UI_Window_getId() == Window_MessageDialog) {
+        if (window_is(Window_MessageDialog)) {
             UI_MessageDialog_close();
             UI_Window_goTo(Window_City);
         }
@@ -188,7 +189,7 @@ static void buttonChangeAdvisor(int param1, int param2)
 	if (param1) {
 		currentAdvisor = param1;
 		setting_set_last_advisor(param1);
-		UI_Window_requestRefresh();
+		window_invalidate();
 	} else {
 		UI_Window_goTo(Window_City);
 	}

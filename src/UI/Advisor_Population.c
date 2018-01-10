@@ -8,6 +8,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/property.h"
 
 static void drawHistoryGraph(int fullSize, int x, int y);
@@ -468,7 +469,7 @@ static void buttonGraph(int param1, int param2)
 			break;
 	}
 	Data_CityInfo_Extra.populationGraphOrder = newOrder;
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 int UI_Advisor_Population_getTooltip()

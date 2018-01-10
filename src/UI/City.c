@@ -13,6 +13,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/criteria.h"
 
 void UI_City_drawBackground()
@@ -29,7 +30,7 @@ void UI_City_drawForeground()
 	UI_Sidebar_drawForeground();
 	UI_City_drawPausedAndTimeLeft();
 	UI_CityBuildings_drawBuildingCost();
-    if (UI_Window_getId() == Window_City) {
+    if (window_is(Window_City)) {
         city_message_process_queue();
     }
 }

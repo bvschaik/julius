@@ -13,6 +13,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 
 static void arrowButtonWages(int isDown, int param2);
 static void buttonPriority(int category, int param2);
@@ -141,7 +142,7 @@ static void arrowButtonWages(int isDown, int param2)
 	Data_CityInfo.wages = calc_bound(Data_CityInfo.wages, 0, 100);
 	city_finance_estimate_wages();
 	city_finance_calculate_totals();
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void buttonPriority(int category, int param2)

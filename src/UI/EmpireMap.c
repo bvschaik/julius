@@ -21,6 +21,7 @@
 #include "graphics/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
@@ -484,7 +485,7 @@ static void determineSelectedObject(const mouse *m)
 		return;
 	}
 	empire_select_object(m->x - data.xMin - 16, m->y - data.yMin - 16);
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 void UI_Empire_handleMouse(const mouse *m)
@@ -510,7 +511,7 @@ void UI_Empire_handleMouse(const mouse *m)
 	determineSelectedObject(m);
 	if (m->right.went_down) {
 		empire_clear_selected_object();
-		UI_Window_requestRefresh();
+		window_invalidate();
 	}
 	int selectedObject = empire_selected_object();
 	if (selectedObject) {

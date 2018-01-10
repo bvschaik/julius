@@ -8,6 +8,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "sound/music.h"
@@ -173,7 +174,7 @@ static void arrowButtonMusic(int param1, int param2)
     update_volume(SOUND_MUSIC, param1);
     sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
 
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void arrowButtonSpeech(int param1, int param2)
@@ -181,7 +182,7 @@ static void arrowButtonSpeech(int param1, int param2)
     update_volume(SOUND_SPEECH, param1);
 	sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
 
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void arrowButtonEffects(int param1, int param2)
@@ -189,7 +190,7 @@ static void arrowButtonEffects(int param1, int param2)
     update_volume(SOUND_EFFECTS, param1);
 	sound_effect_set_volume(setting_sound(SOUND_EFFECTS)->volume);
 
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void arrowButtonCity(int param1, int param2)
@@ -197,6 +198,6 @@ static void arrowButtonCity(int param1, int param2)
     update_volume(SOUND_CITY, param1);
     sound_city_set_volume(setting_sound(SOUND_CITY)->volume);
 
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 

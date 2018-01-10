@@ -22,6 +22,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -579,7 +580,7 @@ void UI_BuildingInfo_getTooltip(struct TooltipContext *c)
 void UI_BuildingInfo_showStorageOrders(int param1, int param2)
 {
 	context.storageShowSpecialOrders = 1;
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
@@ -627,14 +628,14 @@ static void buttonHelp(int param1, int param2)
 	} else {
 		UI_MessageDialog_show(10, 0);
 	}
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void buttonExit(int param1, int param2)
 {
 	if (context.storageShowSpecialOrders) {
 		context.storageShowSpecialOrders = 0;
-		UI_Window_requestRefresh();
+		window_invalidate();
 	} else {
 		UI_Window_goTo(Window_City);
 	}

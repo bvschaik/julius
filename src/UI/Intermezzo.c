@@ -4,6 +4,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/screen.h"
+#include "graphics/window.h"
 #include "scenario/property.h"
 #include "sound/music.h"
 #include "sound/speech.h"
@@ -91,7 +92,7 @@ void UI_Intermezzo_drawBackground()
 			image_draw(graphicBase + 1 + 2 * mission, xOffset, yOffset);
 			sound_speech_play_file(soundFilesBriefing[mission]);
 		}
-		UI_Window_requestRefresh();
+		window_invalidate();
 	} else if (data.type == Intermezzo_Fired) {
 		image_draw(graphicBase, xOffset, yOffset);
 	} else if (data.type == Intermezzo_Won) {
@@ -103,7 +104,7 @@ void UI_Intermezzo_drawBackground()
 			image_draw(graphicBase + 2 + 2 * mission, xOffset, yOffset);
 			sound_speech_play_file(soundFilesWon[mission]);
 		}
-		UI_Window_requestRefresh();
+		window_invalidate();
 	}
 }
 

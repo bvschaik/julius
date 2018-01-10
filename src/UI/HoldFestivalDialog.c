@@ -12,6 +12,7 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/window.h"
 
 static void drawButtons();
 static void buttonGod(int god, int param2);
@@ -123,7 +124,7 @@ void UI_HoldFestivalDialog_handleMouse(const mouse *m)
 static void buttonGod(int god, int param2)
 {
 	Data_CityInfo.festivalGod = god;
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void buttonSize(int size, int param2)
@@ -131,7 +132,7 @@ static void buttonSize(int size, int param2)
 	if (!city_finance_out_of_money()) {
 		if (size != FESTIVAL_GRAND || !Data_CityInfo.festivalNotEnoughWine) {
 			Data_CityInfo.festivalSize = size;
-			UI_Window_requestRefresh();
+			window_invalidate();
 		}
 	}
 }

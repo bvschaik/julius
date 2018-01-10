@@ -11,6 +11,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
@@ -217,7 +218,7 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
 	if (generic_buttons_handle_mouse(m_dialog, data.xText, data.yText + 4,
 		customButtonsMessages, 10, &focusButtonId)) {
 		if (oldFocusButtonId != focusButtonId) {
-			UI_Window_requestRefresh();
+			window_invalidate();
 		}
 		return;
 	}
@@ -245,7 +246,7 @@ static void handleMouseScrollbar(const mouse *m)
 		if (data.scrollPositionDrag < 0) {
 			data.scrollPositionDrag = 0;
 		}
-		UI_Window_requestRefresh();
+		window_invalidate();
 	}
 }
 
@@ -263,7 +264,7 @@ static void buttonScroll(int isDown, int numLines)
 		}
 	}
 	data.isDraggingScrollbar = 0;
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void buttonHelp(int param1, int param2)
@@ -296,7 +297,7 @@ static void buttonDelete(int param1, int param2)
 	if (id < city_message_count()) {
 		city_message_delete(id);
 		update_scroll_position();
-		UI_Window_requestRefresh();
+		window_invalidate();
 	}
 }
 

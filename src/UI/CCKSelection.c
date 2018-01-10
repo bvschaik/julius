@@ -12,6 +12,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/criteria.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
@@ -228,7 +229,7 @@ static int handleScrollbarClick(const mouse *m)
 		}
 		int pct = calc_percentage(yOffset, 164);
 		scrollPosition = calc_adjust_with_percentage(scenarios->num_files - 15, pct);
-		UI_Window_requestRefresh();
+		window_invalidate();
 		return 1;
 	}
 	return 0;
@@ -243,7 +244,7 @@ static void buttonSelectItem(int index, int param2)
 	strcpy(selectedScenario, scenarios->files[selectedItem]);
 	game_file_load_scenario_data(selectedScenario);
 	file_remove_extension(selectedScenario);
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void buttonScroll(int isDown, int numLines)

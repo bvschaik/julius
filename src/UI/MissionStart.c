@@ -16,6 +16,7 @@
 #include "graphics/panel.h"
 #include "graphics/rich_text.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "sound/music.h"
@@ -70,7 +71,7 @@ static struct {
 void UI_MissionStart_show()
 {
 	int select = 1;
-	if (UI_Window_getId() == Window_MissionSelection) {
+	if (window_is(Window_MissionSelection)) {
 		select = 0;
 	}
 	if (!campaignHasChoice[scenario_campaign_rank()]) {
@@ -164,13 +165,13 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
 		if (isMouseHit(m_dialog, xPeaceful, yPeaceful, 44)) {
 			scenario_set_campaign_mission(game_mission_peaceful());
 			data.choice = 1;
-			UI_Window_requestRefresh();
+			window_invalidate();
 			sound_speech_play_file("wavs/fanfare_nu1.wav");
 		}
 		if (isMouseHit(m_dialog, xMilitary, yMilitary, 44)) {
 			scenario_set_campaign_mission(game_mission_military());
 			data.choice = 2;
-			UI_Window_requestRefresh();
+			window_invalidate();
 			sound_speech_play_file("wavs/fanfare_nu5.wav");
 		}
 	}
@@ -199,7 +200,7 @@ void UI_MissionStart_Briefing_drawBackground()
 	text_draw(lang_get_message(textId)->subtitle.text, 32, 78, FONT_NORMAL_BLACK, 0);
 
 	lang_text_draw(62, 7, 376, 433, FONT_NORMAL_BLACK);
-	if (UI_Window_getId() == Window_MissionBriefingInitial && campaignHasChoice[scenario_campaign_rank()]) {
+	if (window_is(Window_MissionBriefingInitial) && campaignHasChoice[scenario_campaign_rank()]) {
 		lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK);
 	}
 	
@@ -317,7 +318,7 @@ void UI_MissionStart_BriefingReview_handleMouse(const mouse *m)
 
 static void briefingBack(int param1, int param2)
 {
-	if (UI_Window_getId() == Window_MissionBriefingInitial) {
+	if (window_is(Window_MissionBriefingInitial)) {
 		sound_speech_stop();
 		UI_Window_goTo(Window_MissionSelection);
 	}
@@ -325,17 +326,13 @@ static void briefingBack(int param1, int param2)
 
 static void startMission(int param1, int param2)
 {
-	switch (UI_Window_getId()) {
-		case Window_NewCareerDialog:
-		case Window_MissionSelection:
-			UI_MissionStart_show();
-			break;
-		default:
-			sound_speech_stop();
-			sound_music_reset();
-			UI_Window_goTo(Window_City);
-			Data_CityInfo.missionSavedGameWritten = 0;
-			break;
-	}
-	UI_Window_requestRefresh();
+    if (window_is(Window_NewCareerDialog) || window_is(Window_MissionSelection)) {
+        UI_MissionStart_show();
+    } else {
+        sound_speech_stop();
+        sound_music_reset();
+        UI_Window_goTo(Window_City);
+        Data_CityInfo.missionSavedGameWritten = 0;
+    }
+    window_invalidate();
 }

@@ -6,6 +6,7 @@
 #include "city/finance.h"
 #include "core/image.h"
 #include "game/resource.h"
+#include "graphics/window.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
@@ -18,7 +19,6 @@
 #include "scenario/earthquake.h"
 
 #include "Data/State.h"
-#include "UI/Window.h"
 
 #include <string.h>
 
@@ -162,7 +162,7 @@ void game_undo_finish_build(int cost)
     data.ready = 1;
     data.timeout_ticks = 500;
     data.building_cost = cost;
-    UI_Window_requestRefresh();
+    window_invalidate();
 }
 
 static void add_building_to_terrain(building *b)
@@ -257,7 +257,7 @@ void game_undo_reduce_time_available()
     if (data.timeout_ticks <= 0 || scenario_earthquake_is_in_progress()) {
         data.available = 0;
         clear_buildings();
-        UI_Window_requestRefresh();
+        window_invalidate();
         return;
     }
     data.timeout_ticks--;
@@ -275,7 +275,7 @@ void game_undo_reduce_time_available()
     }
     if (data.num_buildings <= 0) {
         data.available = 0;
-        UI_Window_requestRefresh();
+        window_invalidate();
         return;
     }
     if (data.type == BUILDING_HOUSE_VACANT_LOT) {
@@ -283,7 +283,7 @@ void game_undo_reduce_time_available()
             if (data.buildings[i].id && building_get(data.buildings[i].id)->housePopulation) {
                 // no undo on a new house where people moved in
                 data.available = 0;
-                UI_Window_requestRefresh();
+                window_invalidate();
                 return;
             }
         }
@@ -295,12 +295,12 @@ void game_undo_reduce_time_available()
                 b->state == BUILDING_STATE_RUBBLE ||
                 b->state == BUILDING_STATE_DELETED_BY_GAME) {
                 data.available = 0;
-                UI_Window_requestRefresh();
+                window_invalidate();
                 return;
             }
             if (b->type != data.buildings[i].type || b->gridOffset != data.buildings[i].gridOffset) {
                 data.available = 0;
-                UI_Window_requestRefresh();
+                window_invalidate();
                 return;
             }
         }

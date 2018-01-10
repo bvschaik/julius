@@ -214,6 +214,7 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/screen.c
     ${PROJECT_SOURCE_DIR}/src/graphics/text.c
     ${PROJECT_SOURCE_DIR}/src/graphics/video.c
+    ${PROJECT_SOURCE_DIR}/src/graphics/window.c
 )
 set(SOUND_FILES
     ${PROJECT_SOURCE_DIR}/src/sound/city.c

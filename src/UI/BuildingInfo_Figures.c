@@ -18,6 +18,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/property.h"
 
 static void selectFigure(int index, int param2);
@@ -438,5 +439,5 @@ static void selectFigure(int index, int param2)
 {
 	contextForCallback->figure.selectedIndex = index;
 	UI_BuildingInfo_playFigurePhrase(contextForCallback);
-	UI_Window_requestRefresh();
+	window_invalidate();
 }

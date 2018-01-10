@@ -14,6 +14,7 @@
 #include "graphics/rich_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 
 static int shouldDrawTooltip(struct TooltipContext *c);
 static void resetTooltip(struct TooltipContext *c);
@@ -65,7 +66,7 @@ static void resetTooltip(struct TooltipContext *c)
 {
 	if (c->type != TooltipType_None) {
 		c->type = TooltipType_None;
-		UI_Window_requestRefresh();
+		window_invalidate();
 	}
 }
 
@@ -95,7 +96,7 @@ static void drawButtonTooltip(struct TooltipContext *c)
 
 	int x, y;
 	if (c->mouse_x < screen_dialog_offset_x() + width + 100) {
-		if (UI_Window_getId() == Window_Advisors) {
+		if (window_is(Window_Advisors)) {
 			x = c->mouse_x + 50;
 		} else {
 			x = c->mouse_x + 20;

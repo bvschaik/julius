@@ -5,8 +5,7 @@
 #include "core/string.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
-
-#include "UI/Window.h"
+#include "graphics/window.h"
 
 #define MAX_LINKS 50
 
@@ -74,7 +73,7 @@ int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks
         } else {
             data.max_scroll_position = data.num_lines - data.text_height_lines;
         }
-        UI_Window_requestRefresh();
+        window_invalidate();
     }
     return data.text_width_blocks;
 }
@@ -436,7 +435,7 @@ static int handle_scrollbar_dot(const mouse *m)
     if (data.scroll_position_drag < 0) {
         data.scroll_position_drag = 0;
     }
-    UI_Window_requestRefresh();
+    window_invalidate();
     return 1;
 }
 
@@ -477,7 +476,7 @@ void rich_text_scroll(int is_down, int num_lines)
     }
     rich_text_clear_links();
     data.is_dragging_scroll = 0;
-    UI_Window_requestRefresh();
+    window_invalidate();
 }
 
 int rich_text_scroll_position()

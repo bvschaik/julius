@@ -18,6 +18,7 @@
 #include "graphics/rich_text.h"
 #include "graphics/text.h"
 #include "graphics/video.h"
+#include "graphics/window.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 
@@ -495,7 +496,7 @@ void UI_MessageDialog_handleMouse(const mouse *m)
 		}
 		data.textId = textId;
 		rich_text_reset(0);
-		UI_Window_requestRefresh();
+		window_invalidate();
 	}
 }
 
@@ -505,7 +506,7 @@ static void buttonBack(int param1, int param2)
 		data.numHistory--;
 		data.textId = data.history[data.numHistory].textId;
 		rich_text_reset(data.history[data.numHistory].scrollPosition);
-		UI_Window_requestRefresh();
+		window_invalidate();
 	}
 }
 
@@ -522,7 +523,7 @@ void UI_MessageDialog_close()
 {
 	cleanup();
 	UI_Window_goBack();
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void buttonClose(int param1, int param2)

@@ -9,6 +9,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 
 static void buttonChangeTaxes(int isDown, int param2);
 
@@ -129,7 +130,7 @@ static void buttonChangeTaxes(int isDown, int param2)
 
 	city_finance_estimate_taxes();
 	city_finance_calculate_totals();
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 int UI_Advisor_Financial_getTooltip()

@@ -11,6 +11,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 
 static void buttonSetAmount(int param1, int param2);
 static void buttonDonate(int param1, int param2);
@@ -112,7 +113,7 @@ static void buttonSetAmount(int param1, int param2)
 		default: return;
 	}
 	Data_CityInfo.donateAmount = calc_bound(amount, 0, Data_CityInfo.personalSavings);
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void buttonDonate(int param1, int param2)
@@ -136,7 +137,7 @@ static void arrowButtonAmount(int isDown, int param2)
 		Data_CityInfo.donateAmount -= 10;
 	}
 	Data_CityInfo.donateAmount = calc_bound(Data_CityInfo.donateAmount, 0, Data_CityInfo.personalSavings);
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 void UI_DonateToCityDialog_getTooltip(struct TooltipContext *c)

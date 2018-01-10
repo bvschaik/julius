@@ -7,6 +7,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 
 static void buttonOk(int param1, int param2);
 static void buttonCancel(int param1, int param2);
@@ -93,7 +94,7 @@ static void arrowButtonGame(int param1, int param2)
     } else {
         setting_increase_game_speed();
     }
-	UI_Window_requestRefresh();
+	window_invalidate();
 }
 
 static void arrowButtonScroll(int param1, int param2)
@@ -103,5 +104,5 @@ static void arrowButtonScroll(int param1, int param2)
 	} else {
 	    setting_increase_scroll_speed();
 	}
-	UI_Window_requestRefresh();
+	window_invalidate();
 }

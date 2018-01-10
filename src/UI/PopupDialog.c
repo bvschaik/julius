@@ -5,6 +5,7 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/window.h"
 
 #define GROUP 5
 
@@ -25,7 +26,7 @@ static struct {
 
 void UI_PopupDialog_show(int msgId, void (*closeFunc)(int accepted), int hasOkCancelButtons)
 {
-	if (UI_Window_getId() == Window_PopupDialog) {
+	if (window_is(Window_PopupDialog)) {
 		// don't show popup over popup
 		return;
 	}

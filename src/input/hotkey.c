@@ -19,6 +19,7 @@
 #include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/video.h"
+#include "graphics/window.h"
 #include "input/scroll.h"
 #include "map/bookmark.h"
 #include "map/grid.h"
@@ -33,7 +34,7 @@ static struct {
 
 static void change_game_speed(int is_down)
 {
-    if (UI_Window_getId() == Window_City) {
+    if (window_is(Window_City)) {
         if (is_down) {
             setting_decrease_game_speed();
         } else {
@@ -44,7 +45,7 @@ static void change_game_speed(int is_down)
 
 static void exit_military_command()
 {
-    if (UI_Window_getId() == Window_CityMilitary) {
+    if (window_is(Window_CityMilitary)) {
         UI_Window_goTo(Window_City);
     }
 }
@@ -52,30 +53,29 @@ static void exit_military_command()
 static void toggle_overlay()
 {
     exit_military_command();
-    if (UI_Window_getId() == Window_City) {
+    if (window_is(Window_City)) {
         game_state_toggle_overlay();
-        UI_Window_requestRefresh();
+        window_invalidate();
     }
 }
 
 static void show_overlay(int overlay)
 {
     exit_military_command();
-    WindowId window = UI_Window_getId();
-    if (window == Window_City) {
+    if (window_is(Window_City)) {
         if (game_state_overlay() == overlay) {
             game_state_set_overlay(OVERLAY_NONE);
         } else {
             game_state_set_overlay(overlay);
         }
-        UI_Window_requestRefresh();
+        window_invalidate();
     }
 }
 
 static void toggle_pause()
 {
     exit_military_command();
-    if (UI_Window_getId() == Window_City) {
+    if (window_is(Window_City)) {
         game_state_toggle_paused();
         city_warning_clear_all();
     }
@@ -84,13 +84,13 @@ static void toggle_pause()
 static void show_advisor(advisor_type advisor)
 {
     exit_military_command();
-    if (UI_Window_getId() == Window_Advisors) {
+    if (window_is(Window_Advisors)) {
         if (UI_Advisors_getId() == advisor) {
             UI_Window_goTo(Window_City);
         } else {
             UI_Advisors_goToFromMessage(advisor);
         }
-    } else if (UI_Window_getId() == Window_City) {
+    } else if (window_is(Window_City)) {
         UI_Advisors_goToFromMessage(advisor);
     }
 }
@@ -98,7 +98,7 @@ static void show_advisor(advisor_type advisor)
 static void cycle_legion()
 {
     static int currentLegionId = 1;
-    if (UI_Window_getId() == Window_City) {
+    if (window_is(Window_City)) {
         int legionId = currentLegionId;
         currentLegionId = 0;
         for (int i = 1; i <= MAX_LEGIONS; i++) {
@@ -117,16 +117,16 @@ static void cycle_legion()
         if (currentLegionId > 0) {
             const formation *m = formation_get(currentLegionId);
             city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
-            UI_Window_requestRefresh();
+            window_invalidate();
         }
     }
 }
 
 static void cheat_init_or_invasion()
 {
-    if (UI_Window_getId() == Window_BuildingInfo) {
+    if (window_is(Window_BuildingInfo)) {
         data.is_cheating = UI_BuildingInfo_getBuildingType() == BUILDING_WELL;
-    } else if (data.is_cheating && UI_Window_getId() == Window_MessageDialog) {
+    } else if (data.is_cheating && window_is(Window_MessageDialog)) {
         data.is_cheating = 2;
         scenario_invasion_start_from_cheat();
     } else {
@@ -145,7 +145,7 @@ static void cheat_money()
 {
     if (data.is_cheating) {
         city_finance_process_cheat();
-        UI_Window_requestRefresh();
+        window_invalidate();
     }
 }
 
@@ -259,14 +259,14 @@ void hotkey_down()
 
 void hotkey_home()
 {
-    if (UI_Window_getId() == Window_City) {
+    if (window_is(Window_City)) {
         UI_Sidebar_rotateMap(0);
     }
 }
 
 void hotkey_end()
 {
-    if (UI_Window_getId() == Window_City) {
+    if (window_is(Window_City)) {
         UI_Sidebar_rotateMap(1);
     }
 }
@@ -287,14 +287,14 @@ void hotkey_esc()
 static void go_to_bookmark(int number)
 {
     if (map_bookmark_go_to(number)) {
-        UI_Window_requestRefresh();
+        window_invalidate();
     }
 }
 
 static void handle_bookmark(int number)
 {
     exit_military_command();
-    if (UI_Window_getId() == Window_City) {
+    if (window_is(Window_City)) {
         if (data.ctrl_down || data.shift_down) {
             map_bookmark_save(number);
         } else {

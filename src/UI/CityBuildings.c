@@ -17,6 +17,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "input/scroll.h"
 #include "map/building.h"
 #include "map/desirability.h"
@@ -628,7 +629,7 @@ static void updateCityViewCoords(const mouse *m)
 static int handleRightClickAllowBuildingInfo()
 {
 	int allow = 1;
-	if (UI_Window_getId() != Window_City) {
+	if (!window_is(Window_City)) {
 		allow = 0;
 	}
 	if (building_construction_type()) {
@@ -718,7 +719,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 	if (setting_tooltips() == TOOLTIPS_NONE) {
 		return;
 	}
-	if (UI_Window_getId() != Window_City) {
+	if (!window_is(Window_City)) {
 		return;
 	}
 	if (Data_State.map.current.gridOffset == 0) {
