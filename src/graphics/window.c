@@ -17,7 +17,7 @@ static void noop()
 
 static window_type windows[] = {
     // 0
-    { Window_MainMenu, UI_MainMenu_drawBackground, UI_MainMenu_drawForeground, UI_MainMenu_handleMouse, noop, noop },
+    { Window_MainMenu },
     { Window_City, UI_City_drawBackground, UI_City_drawForeground, UI_City_handleMouse, UI_City_getTooltip, noop },
     { Window_PopupDialog },
     { Window_TopMenu, UI_City_drawBackground, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse, noop, noop },

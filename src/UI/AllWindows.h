@@ -5,10 +5,6 @@
 
 #include "graphics/window.h"
 
-void UI_MainMenu_drawBackground();
-void UI_MainMenu_drawForeground();
-void UI_MainMenu_handleMouse(const mouse *m);
-
 void UI_NewCareerDialog_init();
 void UI_NewCareerDialog_drawBackground();
 void UI_NewCareerDialog_drawForeground();

@@ -22,6 +22,7 @@
 #include "scenario/property.h"
 #include "window/difficulty_options.h"
 #include "window/display_options.h"
+#include "window/main_menu.h"
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
@@ -329,7 +330,7 @@ static void menuFile_newGame(int param)
 	building_construction_clear_type();
 	game_undo_disable();
 	game_state_reset_overlay();
-	UI_Window_goTo(Window_MainMenu);
+	window_main_menu_show();
 }
 
 static void menuFile_replayMap(int param)

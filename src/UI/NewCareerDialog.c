@@ -11,6 +11,7 @@
 #include "input/keyboard.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
+#include "window/main_menu.h"
 
 static void startMission(int param1, int param2);
 
@@ -56,7 +57,7 @@ void UI_NewCareerDialog_handleMouse(const mouse *m)
 {
 	if (m->right.went_up) {
         keyboard_stop_capture();
-		UI_Window_goTo(Window_MainMenu);
+		window_main_menu_show();
 	}
 
 	if (image_buttons_handle_mouse(mouse_in_dialog(m), 464, 249, &imageButtonStartMission, 1, 0)) {

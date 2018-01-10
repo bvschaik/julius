@@ -5,6 +5,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/window.h"
 #include "sound/music.h"
+#include "window/main_menu.h"
 
 static void init()
 {
@@ -24,7 +25,7 @@ static void draw_background()
 static void handle_mouse(const mouse *m)
 {
     if (m->left.went_up || m->right.went_up) {
-        UI_Window_goTo(Window_MainMenu);
+        window_main_menu_show();
     }
 }
 

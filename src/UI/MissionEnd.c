@@ -18,6 +18,7 @@
 #include "scenario/scenario.h"
 #include "sound/music.h"
 #include "sound/speech.h"
+#include "window/main_menu.h"
 
 static void victoryAccept(int param1, int param2);
 static void victoryContinueGoverning(int duration, int param2);
@@ -112,7 +113,7 @@ static void advanceToNextMission()
 	game_state_reset_overlay();
 
 	if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
-		UI_Window_goTo(Window_MainMenu);
+		window_main_menu_show();
 		if (!scenario_is_custom()) {
             setting_clear_personal_savings();
             scenario_settings_init();
@@ -226,7 +227,7 @@ static void firedAccept(int param1, int param2)
 	Data_CityInfo.victoryContinueMonthsChosen = 0;
 	game_undo_disable();
 	if (scenario_is_custom()) {
-		UI_Window_goTo(Window_MainMenu);
+		window_main_menu_show();
 	} else {
 		UI_MissionStart_show();
 	}
