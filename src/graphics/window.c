@@ -29,7 +29,7 @@ static window_type windows[] = {
     { Window_SendGiftToCaesarDialog, UI_SendGiftToCaesarDialog_drawBackground, UI_SendGiftToCaesarDialog_drawForeground, UI_SendGiftToCaesarDialog_handleMouse, noop, UI_SendGiftToCaesarDialog_init },
     { Window_LaborPriorityDialog, UI_LaborPriorityDialog_drawBackground, UI_LaborPriorityDialog_drawForeground, UI_LaborPriorityDialog_handleMouse, UI_LaborPriorityDialog_getTooltip, noop },
     // 10
-    { Window_DisplayOptions, noop, UI_DisplayOptions_drawForeground, UI_DisplayOptions_handleMouse, noop, noop },
+    { Window_DisplayOptions, noop, noop, noop, noop, noop },
     { Window_SoundOptions, noop, noop, noop, noop },
     { Window_SpeedOptions, noop, noop, noop, noop },
     { Window_Empire, UI_Empire_drawBackground, UI_Empire_drawForeground, UI_Empire_handleMouse, UI_EmpireMap_getTooltip, UI_Empire_init },

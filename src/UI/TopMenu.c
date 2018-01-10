@@ -21,6 +21,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "scenario/property.h"
+#include "window/display_options.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
 
@@ -382,8 +383,8 @@ static void menuFile_exitGame(int param)
 
 static void menuOptions_display(int param)
 {
-	clearState();
-	UI_Window_goTo(Window_DisplayOptions);
+    clearState();
+    window_display_options_show();
 }
 
 static void menuOptions_sound(int param)

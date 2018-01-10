@@ -225,6 +225,7 @@ set(SOUND_FILES
 )
 set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
+    ${PROJECT_SOURCE_DIR}/src/window/display_options.c
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
     ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
 )
@@ -266,7 +267,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Overlay.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Scroll.c
 	${PROJECT_SOURCE_DIR}/src/UI/DifficultyOptions.c
-	${PROJECT_SOURCE_DIR}/src/UI/DisplayOptions.c
 	${PROJECT_SOURCE_DIR}/src/UI/DonateToCityDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/EmpireMap.c
 	${PROJECT_SOURCE_DIR}/src/UI/FileDialog.c
