@@ -233,6 +233,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
     ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
+    ${PROJECT_SOURCE_DIR}/src/window/trade_opened.c
 )
 add_executable(julius
 	${PLATFORM_FILES}

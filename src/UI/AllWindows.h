@@ -64,10 +64,6 @@ void UI_Empire_drawForeground();
 void UI_Empire_handleMouse(const mouse *m);
 void UI_EmpireMap_getTooltip(struct TooltipContext *c);
 
-void UI_TradeOpenedDialog_drawBackground();
-void UI_TradeOpenedDialog_drawForeground();
-void UI_TradeOpenedDialog_handleMouse(const mouse *m);
-
 void UI_PlayerMessageList_resetScroll();
 void UI_PlayerMessageList_init();
 void UI_PlayerMessageList_drawBackground();

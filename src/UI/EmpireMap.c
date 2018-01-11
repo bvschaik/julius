@@ -24,6 +24,7 @@
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
 #include "window/popup_dialog.h"
+#include "window/trade_opened.h"
 
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
@@ -42,7 +43,6 @@ static void buttonHelp(int param1, int param2);
 static void buttonReturnToCity(int param1, int param2);
 static void buttonAdvisor(int param1, int param2);
 static void buttonOpenTrade(int param1, int param2);
-static void buttonEmpireMap(int param1, int param2);
 static void confirmOpenTrade(int accepted);
 
 static image_button imageButtonHelp[] = {
@@ -56,11 +56,6 @@ static image_button imageButtonAdvisor[] = {
 };
 static generic_button customButtonOpenTrade[] = {
 	{50, 68, 450, 91, GB_IMMEDIATE, buttonOpenTrade, button_none, 0, 0}
-};
-
-static image_button imageButtonsTradeOpened[] = {
-	{92, 248, 28, 28, IB_NORMAL, 199, 12, buttonAdvisor, button_none, 5, 0, 1},
-	{522, 252, 24, 24, IB_NORMAL, 134, 4, buttonEmpireMap, button_none, 0, 0, 1},
 };
 
 static struct {
@@ -619,11 +614,6 @@ static void buttonOpenTrade(int param1, int param2)
 	window_popup_dialog_show(POPUP_DIALOG_OPEN_TRADE, confirmOpenTrade, 2);
 }
 
-static void buttonEmpireMap(int param1, int param2)
-{
-	UI_Window_goTo(Window_Empire);
-}
-
 static void confirmOpenTrade(int accepted)
 {
 	if (accepted) {
@@ -631,35 +621,6 @@ static void confirmOpenTrade(int accepted)
 		city_finance_process_construction(city->cost_to_open);
 		city->is_open = 1;
 		building_menu_update();
-		UI_Window_goTo(Window_TradeOpenedDialog);
+		window_trade_opened_show(data.selectedCity);
 	}
-}
-
-void UI_TradeOpenedDialog_drawBackground()
-{
-    graphics_in_dialog();
-
-    outer_panel_draw(80, 64, 30, 14);
-	lang_text_draw_centered(142, 0, 80, 80, 480, FONT_LARGE_BLACK);
-	if (empire_city_get(data.selectedCity)->is_sea_trade) {
-		lang_text_draw_multiline(142, 1, 112, 120, 416, FONT_NORMAL_BLACK);
-		lang_text_draw_multiline(142, 3, 112, 184, 416, FONT_NORMAL_BLACK);
-	} else {
-		lang_text_draw_multiline(142, 1, 112, 152, 416, FONT_NORMAL_BLACK);
-	}
-	lang_text_draw(142, 2, 128, 256, FONT_NORMAL_BLACK);
-
-    graphics_reset_dialog();
-}
-
-void UI_TradeOpenedDialog_drawForeground()
-{
-    graphics_in_dialog();
-    image_buttons_draw(0, 0, imageButtonsTradeOpened, 2);
-    graphics_reset_dialog();
-}
-
-void UI_TradeOpenedDialog_handleMouse(const mouse *m)
-{
-	image_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, imageButtonsTradeOpened, 2, 0);
 }
