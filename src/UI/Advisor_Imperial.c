@@ -13,6 +13,7 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
+#include "window/empire.h"
 #include "window/popup_dialog.h"
 
 static void buttonDonateToCity(int param1, int param2);
@@ -250,7 +251,7 @@ static void confirmSendTroops(int accepted)
 {
 	if (accepted) {
 		formation_legions_dispatch_to_distant_battle();
-		UI_Window_goTo(Window_Empire);
+		window_empire_show();
 	}
 }
 

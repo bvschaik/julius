@@ -1,5 +1,6 @@
 #include "city.h"
 
+#include "city/finance.h"
 #include "city/message.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
@@ -316,6 +317,13 @@ static int generate_trader(int cityId, empire_city *city)
         }
     }
     return 0;
+}
+
+void empire_city_open_trade(int city_id)
+{
+    empire_city *city = &cities[city_id];
+    city_finance_process_construction(city->cost_to_open);
+    city->is_open = 1;
 }
 
 void empire_city_generate_trader()

@@ -30,7 +30,7 @@ static window_type windows[] = {
     { Window_DisplayOptions },
     { Window_SoundOptions },
     { Window_SpeedOptions },
-    { Window_Empire, UI_Empire_drawBackground, UI_Empire_drawForeground, UI_Empire_handleMouse, UI_EmpireMap_getTooltip, UI_Empire_init },
+    { Window_Empire },
     { Window_TradeOpenedDialog },
     { Window_HoldFestivalDialog, UI_HoldFestivalDialog_drawBackground, UI_HoldFestivalDialog_drawForeground, UI_HoldFestivalDialog_handleMouse, UI_HoldFestivalDialog_getTooltip, noop },
     { Window_TradePricesDialog, UI_TradePricesDialog_drawBackground, noop, UI_TradePricesDialog_handleMouse, UI_TradePricesDialog_getTooltip, noop },

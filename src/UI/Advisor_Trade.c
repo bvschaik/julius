@@ -19,6 +19,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/building.h"
+#include "window/empire.h"
 
 static void buttonPrices(int param1, int param2);
 static void buttonEmpire(int param1, int param2);
@@ -143,7 +144,7 @@ static void buttonPrices(int param1, int param2)
 
 static void buttonEmpire(int param1, int param2)
 {
-	UI_Window_goTo(Window_Empire);
+	window_empire_show();
 }
 
 static void buttonResource(int resourceIndex, int param2)

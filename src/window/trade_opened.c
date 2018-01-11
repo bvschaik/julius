@@ -6,6 +6,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "window/empire.h"
 
 #include "UI/Advisors.h"
 
@@ -55,7 +56,7 @@ static void button_advisor(int advisor, int param2)
 
 static void button_close(int param1, int param2)
 {
-    UI_Window_goTo(Window_Empire);
+    window_empire_show();
 }
 
 void window_trade_opened_show(int city)

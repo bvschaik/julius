@@ -58,12 +58,6 @@ void UI_City_handleMouse(const mouse *m);
 void UI_City_handleMouseMilitary(const mouse *m);
 void UI_City_getTooltip(struct TooltipContext *c);
 
-void UI_Empire_init();
-void UI_Empire_drawBackground();
-void UI_Empire_drawForeground();
-void UI_Empire_handleMouse(const mouse *m);
-void UI_EmpireMap_getTooltip(struct TooltipContext *c);
-
 void UI_PlayerMessageList_resetScroll();
 void UI_PlayerMessageList_init();
 void UI_PlayerMessageList_drawBackground();

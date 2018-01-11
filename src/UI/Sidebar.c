@@ -25,6 +25,7 @@
 #include "map/orientation.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
+#include "window/empire.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
 #define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
@@ -372,7 +373,7 @@ static void buttonEmpire(int param1, int param2)
             city_warning_show(WARNING_NOT_AVAILABLE_YET);
             break;
         case AVAILABLE:
-            UI_Window_goTo(Window_Empire);
+            window_empire_show();
             break;
     }
 }
