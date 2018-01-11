@@ -1,7 +1,6 @@
 #include "Sidebar.h"
 
 #include "AllWindows.h"
-#include "Advisors.h"
 #include "MessageDialog.h"
 #include "Minimap.h"
 
@@ -25,6 +24,7 @@
 #include "map/orientation.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
+#include "window/advisors.h"
 #include "window/empire.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
@@ -360,7 +360,7 @@ static void buttonGoToProblem(int param1, int param2)
 
 static void buttonAdvisors(int param1, int param2)
 {
-	UI_Advisors_goToFromSidepanel();
+	window_advisors_show_checked();
 }
 
 static void buttonEmpire(int param1, int param2)

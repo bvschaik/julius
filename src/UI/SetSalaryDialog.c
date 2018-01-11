@@ -33,7 +33,7 @@ static int focusButtonId;
 
 void UI_SetSalaryDialog_drawBackground()
 {
-	UI_Advisor_drawGeneralBackground();
+	window_advisors_draw_dialog_background();
 	UI_SetSalaryDialog_drawForeground();
 }
 
@@ -71,7 +71,7 @@ void UI_SetSalaryDialog_drawForeground()
 void UI_SetSalaryDialog_handleMouse(const mouse *m)
 {
 	if (m->right.went_up) {
-		UI_Window_goTo(Window_Advisors);
+		window_advisors_show();
 	} else {
 		generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0,
 			buttons, 12, &focusButtonId);
@@ -80,7 +80,7 @@ void UI_SetSalaryDialog_handleMouse(const mouse *m)
 
 static void buttonCancel(int param1, int param2)
 {
-	UI_Window_goTo(Window_Advisors);
+	window_advisors_show();
 }
 
 static void buttonSetSalary(int rank, int param2)
@@ -89,7 +89,7 @@ static void buttonSetSalary(int rank, int param2)
 		city_emperor_set_salary_rank(rank);
 		city_finance_update_salary();
 		city_ratings_update_favor_explanation();
-		UI_Window_goTo(Window_Advisors);
+		window_advisors_show();
 	}
 }
 

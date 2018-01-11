@@ -17,11 +17,11 @@
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
+#include "window/advisors.h"
 #include "window/popup_dialog.h"
 #include "window/trade_opened.h"
 
 #include "Data/CityInfo.h"
-#include "UI/Advisors.h"
 #include "UI/MessageDialog.h"
 
 #define MAX_WIDTH 2032
@@ -544,7 +544,7 @@ static void button_return_to_city(int param1, int param2)
 
 static void button_advisor(int param1, int param2)
 {
-    UI_Advisors_goToFromMessage(ADVISOR_TRADE);
+    window_advisors_show_advisor(ADVISOR_TRADE);
 }
 
 static void confirmed_open_trade(int accepted)

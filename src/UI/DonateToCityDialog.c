@@ -45,7 +45,7 @@ void UI_DonateToCityDialog_init()
 
 void UI_DonateToCityDialog_drawBackground()
 {
-	UI_Advisor_drawGeneralBackground();
+	window_advisors_draw_dialog_background();
 
     graphics_in_dialog();
 
@@ -92,7 +92,7 @@ void UI_DonateToCityDialog_handleMouse(const mouse *m)
 {
 	arrowButtonFocus = 0;
 	if (m->right.went_up) {
-		UI_Window_goTo(Window_Advisors);
+		window_advisors_show();
 	} else {
 		const mouse *m_dialog = mouse_in_dialog(m);
 		if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 7, &focusButtonId)) {
@@ -121,12 +121,12 @@ static void buttonDonate(int param1, int param2)
     city_finance_process_donation(Data_CityInfo.donateAmount);
     Data_CityInfo.personalSavings -= Data_CityInfo.donateAmount;
 	city_finance_calculate_totals();
-	UI_Window_goTo(Window_Advisors);
+	window_advisors_show();
 }
 
 static void buttonCancel(int param1, int param2)
 {
-	UI_Window_goTo(Window_Advisors);
+	window_advisors_show();
 }
 
 static void arrowButtonAmount(int isDown, int param2)

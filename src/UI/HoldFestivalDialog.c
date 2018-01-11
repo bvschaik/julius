@@ -44,7 +44,7 @@ static int focusImageButtonId;
 
 void UI_HoldFestivalDialog_drawBackground()
 {
-	UI_Advisor_drawGeneralBackground();
+	window_advisors_draw_dialog_background();
 
     graphics_in_dialog();
 
@@ -109,7 +109,7 @@ static void drawButtons()
 void UI_HoldFestivalDialog_handleMouse(const mouse *m)
 {
 	if (m->right.went_up) {
-		UI_Window_goTo(Window_Advisors);
+		window_advisors_show();
 		return;
 	}
 
@@ -144,7 +144,7 @@ static void buttonHelp(int param1, int param2)
 
 static void buttonClose(int param1, int param2)
 {
-	UI_Window_goTo(Window_Advisors);
+	window_advisors_show();
 }
 
 static void buttonHoldFestival(int param1, int param2)
@@ -171,7 +171,7 @@ static void buttonHoldFestival(int param1, int param2)
 	if (Data_CityInfo.festivalSize == FESTIVAL_GRAND) {
 		building_warehouses_remove_resource(RESOURCE_WINE, Data_CityInfo.festivalWineGrand);
 	}
-	UI_Window_goTo(Window_Advisors);
+	window_advisors_show();
 }
 
 void UI_HoldFestivalDialog_getTooltip(struct TooltipContext *c)

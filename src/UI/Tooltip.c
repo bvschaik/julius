@@ -1,7 +1,5 @@
 #include "Tooltip.h"
 
-#include "Advisors.h"
-
 #include "../Data/CityInfo.h"
 
 #include "core/lang.h"
@@ -14,6 +12,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "window/advisors.h"
 
 static int shouldDrawTooltip(struct TooltipContext *c);
 static void resetTooltip(struct TooltipContext *c);
@@ -108,7 +107,7 @@ static void drawButtonTooltip(struct TooltipContext *c)
 		case Window_Advisors:
 			if (c->mouse_y < screen_dialog_offset_y() + 432) {
 				y = c->mouse_y;
-				switch (UI_Advisors_getId()) {
+				switch (window_advisors_get_advisor()) {
 					case ADVISOR_LABOR: y -= 74; break;
 					case ADVISOR_TRADE: y -= 54; break;
 					case ADVISOR_POPULATION: y -= 58; break;

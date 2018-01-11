@@ -1,6 +1,5 @@
 #include "TopMenu.h"
 #include "AllWindows.h"
-#include "Advisors.h"
 #include "MessageDialog.h"
 #include "../Data/CityInfo.h"
 
@@ -19,6 +18,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "scenario/property.h"
+#include "window/advisors.h"
 #include "window/difficulty_options.h"
 #include "window/display_options.h"
 #include "window/file_dialog.h"
@@ -438,5 +438,5 @@ static void menuAdvisors_goTo(int advisor)
 {
 	clearState();
 	UI_Window_goBack();
-	UI_Advisors_goToFromMessage(advisor);
+	window_advisors_show_advisor(advisor);
 }

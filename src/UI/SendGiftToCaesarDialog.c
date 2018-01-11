@@ -38,7 +38,7 @@ void UI_SendGiftToCaesarDialog_init()
 
 void UI_SendGiftToCaesarDialog_drawBackground()
 {
-	UI_Advisor_drawGeneralBackground();
+	window_advisors_draw_dialog_background();
 
     graphics_in_dialog();
 
@@ -94,7 +94,7 @@ void UI_SendGiftToCaesarDialog_drawForeground()
 void UI_SendGiftToCaesarDialog_handleMouse(const mouse *m)
 {
 	if (m->right.went_up) {
-		UI_Window_goTo(Window_Advisors);
+		window_advisors_show();
 	} else {
 		generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &focusButtonId);
 	}
@@ -114,12 +114,12 @@ static void buttonSendGift(int param1, int param2)
 {
 	if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
 		city_emperor_send_gift();
-		UI_Window_goTo(Window_Advisors);
+		window_advisors_show();
 	}
 }
 
 static void buttonCancel(int param1, int param2)
 {
-	UI_Window_goTo(Window_Advisors);
+	window_advisors_show();
 }
 

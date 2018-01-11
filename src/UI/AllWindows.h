@@ -5,12 +5,6 @@
 
 #include "graphics/window.h"
 
-void UI_Advisors_init();
-void UI_Advisors_drawBackground();
-void UI_Advisors_drawForeground();
-void UI_Advisors_handleMouse(const mouse *m);
-void UI_Advisors_getTooltip(struct TooltipContext *c);
-
 void UI_LaborPriorityDialog_drawBackground();
 void UI_LaborPriorityDialog_drawForeground();
 void UI_LaborPriorityDialog_handleMouse(const mouse *m);

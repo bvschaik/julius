@@ -21,7 +21,7 @@ static window_type windows[] = {
     { Window_PopupDialog },
     { Window_TopMenu, UI_City_drawBackground, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse, noop, noop },
     { Window_DifficultyOptions },
-    { Window_Advisors, UI_Advisors_drawBackground, UI_Advisors_drawForeground, UI_Advisors_handleMouse, UI_Advisors_getTooltip, UI_Advisors_init },
+    { Window_Advisors },
     { Window_SetSalaryDialog, UI_SetSalaryDialog_drawBackground, UI_SetSalaryDialog_drawForeground, UI_SetSalaryDialog_handleMouse, noop, noop },
     { Window_DonateToCityDialog, UI_DonateToCityDialog_drawBackground, UI_DonateToCityDialog_drawForeground, UI_DonateToCityDialog_handleMouse, UI_DonateToCityDialog_getTooltip, UI_DonateToCityDialog_init },
     { Window_SendGiftToCaesarDialog, UI_SendGiftToCaesarDialog_drawBackground, UI_SendGiftToCaesarDialog_drawForeground, UI_SendGiftToCaesarDialog_handleMouse, noop, UI_SendGiftToCaesarDialog_init },

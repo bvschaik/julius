@@ -1,7 +1,6 @@
 #include "BuildingInfo.h"
 
 #include "AllWindows.h"
-#include "Advisors.h"
 #include "MessageDialog.h"
 
 #include "../Data/CityInfo.h"
@@ -31,6 +30,7 @@
 #include "map/road_access.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
+#include "window/advisors.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonExit(int param1, int param2);
@@ -643,5 +643,5 @@ static void buttonExit(int param1, int param2)
 
 static void buttonAdvisor(int param1, int param2)
 {
-	UI_Advisors_goToFromMessage(ADVISOR_RATINGS);
+	window_advisors_show_advisor(ADVISOR_RATINGS);
 }

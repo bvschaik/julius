@@ -193,7 +193,7 @@ void UI_TradePricesDialog_drawBackground()
 void UI_TradePricesDialog_handleMouse(const mouse *m)
 {
 	if (m->right.went_up) {
-		UI_Window_goTo(Window_Advisors);
+		window_advisors_show();
 	}
 }
 
@@ -337,7 +337,7 @@ void UI_ResourceSettingsDialog_handleMouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 	if (m->right.went_up) {
-		UI_Window_goTo(Window_Advisors);
+		window_advisors_show();
 	} else if (image_buttons_handle_mouse(m_dialog, 0, 0, resourceImageButtons, 2, 0)) {
 		return;
 	} else if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TRADE_STATUS_EXPORT &&
@@ -355,7 +355,7 @@ static void resourceSettingsHelp(int param1, int param2)
 
 static void resourceSettingsOk(int param1, int param2)
 {
-	UI_Window_goTo(Window_Advisors);
+	window_advisors_show();
 }
 
 static void resourceSettingsExportUpDown(int isDown, int param2)

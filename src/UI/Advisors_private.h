@@ -5,8 +5,7 @@
 
 #include "core/image.h"
 #include "input/mouse.h"
-
-void UI_Advisor_drawGeneralBackground();
+#include "window/advisors.h"
 
 void UI_Advisor_Labor_drawBackground(int *advisorHeight);
 void UI_Advisor_Labor_drawForeground();

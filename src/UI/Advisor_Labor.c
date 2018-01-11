@@ -210,7 +210,7 @@ void UI_LaborPriorityDialog_drawForeground()
 void UI_LaborPriorityDialog_handleMouse(const mouse *m)
 {
 	if (m->right.went_up) {
-		UI_Window_goTo(Window_Advisors);
+		window_advisors_show();
 	} else {
 		generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, priorityButtons, 1 + priorityMaxItems, &priorityFocusButtonId);
 	}
@@ -219,7 +219,7 @@ void UI_LaborPriorityDialog_handleMouse(const mouse *m)
 static void buttonSetPriority(int newPriority, int param2)
 {
     city_labor_set_priority(prioritySelectedCategory, newPriority);
-	UI_Window_goTo(Window_Advisors);
+	window_advisors_show();
 }
 
 void UI_LaborPriorityDialog_getTooltip(struct TooltipContext *c)

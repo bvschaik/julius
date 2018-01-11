@@ -1,6 +1,5 @@
 #include "hotkey.h"
 
-#include "UI/Advisors.h"
 #include "UI/BuildingInfo.h"
 #include "UI/Sidebar.h"
 
@@ -22,6 +21,7 @@
 #include "map/bookmark.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"
+#include "window/advisors.h"
 #include "window/popup_dialog.h"
 
 static struct {
@@ -84,13 +84,13 @@ static void show_advisor(advisor_type advisor)
 {
     exit_military_command();
     if (window_is(Window_Advisors)) {
-        if (UI_Advisors_getId() == advisor) {
+        if (window_advisors_get_advisor() == advisor) {
             UI_Window_goTo(Window_City);
         } else {
-            UI_Advisors_goToFromMessage(advisor);
+            window_advisors_show_advisor(advisor);
         }
     } else if (window_is(Window_City)) {
-        UI_Advisors_goToFromMessage(advisor);
+        window_advisors_show_advisor(advisor);
     }
 }
 

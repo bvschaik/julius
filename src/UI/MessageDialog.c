@@ -1,6 +1,5 @@
 #include "MessageDialog.h"
 #include "AllWindows.h"
-#include "Advisors.h"
 
 #include "../Data/CityInfo.h"
 
@@ -20,6 +19,7 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
+#include "window/advisors.h"
 
 #define MAX_HISTORY 200
 
@@ -539,7 +539,7 @@ static void buttonHelp(int param1, int param2)
 static void buttonAdvisor(int advisor, int param2)
 {
 	cleanup();
-	UI_Advisors_goToFromMessage(advisor);
+	window_advisors_show_advisor(advisor);
 }
 
 static void buttonGoToProblem(int param1, int param2)
