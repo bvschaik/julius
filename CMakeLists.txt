@@ -231,6 +231,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/file_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/logo.c
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
+    ${PROJECT_SOURCE_DIR}/src/window/new_career.c
     ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
     ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
@@ -276,7 +277,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/DonateToCityDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/HoldFestivalDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Intermezzo.c
-	${PROJECT_SOURCE_DIR}/src/UI/MainMenu.c
 	${PROJECT_SOURCE_DIR}/src/UI/MessageDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Minimap.c
 	${PROJECT_SOURCE_DIR}/src/UI/MissionEnd.c

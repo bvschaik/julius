@@ -9,6 +9,7 @@
 #include "graphics/window.h"
 #include "window/cck_selection.h"
 #include "window/file_dialog.h"
+#include "window/new_career.h"
 #include "window/popup_dialog.h"
 
 static void button_click(int type, int param2);
@@ -62,7 +63,7 @@ static void confirm_exit(int accepted)
 static void button_click(int type, int param2)
 {
     if (type == 1) {
-        UI_Window_goTo(Window_NewCareerDialog);
+        window_new_career_show();
     } else if (type == 2) {
         window_file_dialog_show(FILE_DIALOG_LOAD);
     } else if (type == 3) {

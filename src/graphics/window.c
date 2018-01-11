@@ -44,7 +44,7 @@ static window_type windows[] = {
     { Window_BuildingMenu, UI_BuildingMenu_drawBackground, UI_BuildingMenu_drawForeground, UI_BuildingMenu_handleMouse, noop, noop },
     { Window_Intermezzo, UI_Intermezzo_drawBackground, noop, UI_Intermezzo_handleMouse, noop, noop },
     { Window_BuildingInfo, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse, UI_BuildingInfo_getTooltip, UI_BuildingInfo_init },
-    { Window_NewCareerDialog, UI_NewCareerDialog_drawBackground, UI_NewCareerDialog_drawForeground, UI_NewCareerDialog_handleMouse, noop, UI_NewCareerDialog_init },
+    { Window_NewCareerDialog },
     { Window_SlidingSidebar, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop, noop, noop },
     { Window_CityMilitary, UI_City_drawBackground, UI_City_drawForegroundMilitary, UI_City_handleMouseMilitary, UI_City_getTooltip, noop }, // TODO military command
     { Window_MissionSelection, UI_MissionStart_Selection_drawBackground, UI_MissionStart_Selection_drawForeground, UI_MissionStart_Selection_handleMouse, noop, noop },
