@@ -6,6 +6,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "window/city.h"
 
 static void arrow_button_difficulty(int is_down, int param2);
 static void arrow_button_gods(int param1, int param2);
@@ -36,7 +37,7 @@ static void handle_mouse(const mouse *m)
 {
     if (m->right.went_up) {
         // cancel dialog
-        UI_Window_goTo(Window_City);
+        window_city_show();
     } else {
         arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrow_buttons, 4);
     }

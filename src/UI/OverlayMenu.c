@@ -8,6 +8,7 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "window/city.h"
 
 static void handleSubmenu();
 
@@ -67,12 +68,12 @@ void UI_OverlayMenu_init()
 
 void UI_OverlayMenu_drawBackground()
 {
-	UI_City_drawBackground();
+	window_city_draw_panels();
 }
 
 void UI_OverlayMenu_drawForeground()
 {
-	UI_City_drawCity();
+	window_city_draw();
 	int xOffset = Data_CityView.widthInPixels;
 	for (int i = 0; i < 8; i++) {
 		label_draw(xOffset - 170, 74 + 24 * i,
@@ -96,7 +97,7 @@ void UI_OverlayMenu_drawForeground()
 void UI_OverlayMenu_handleMouse(const mouse *m)
 {
 	if (m->right.went_down) {
-		UI_Window_goTo(Window_City);
+		window_city_show();
 		return;
 	}
 	generic_buttons_handle_mouse(m, Data_CityView.widthInPixels - 170, 72,
@@ -140,7 +141,7 @@ static void buttonMenuItem(int index, int param2)
 	if (overlay == OVERLAY_NONE || overlay == OVERLAY_WATER || overlay == OVERLAY_RELIGION) {
 		game_state_set_overlay(overlay);
 	}
-	UI_Window_goTo(Window_City);
+	window_city_show();
 }
 
 static void buttonSubmenuItem(int index, int param2)
@@ -149,5 +150,5 @@ static void buttonSubmenuItem(int index, int param2)
 	if (overlay) {
 		game_state_set_overlay(overlay);
 	}
-	UI_Window_goTo(Window_City);
+	window_city_show();
 }

@@ -18,14 +18,6 @@ void UI_ResourceSettingsDialog_drawBackground();
 void UI_ResourceSettingsDialog_drawForeground();
 void UI_ResourceSettingsDialog_handleMouse(const mouse *m);
 
-void UI_City_drawBackground();
-void UI_City_drawForeground();
-void UI_City_drawForegroundMilitary();
-void UI_City_drawCity();
-void UI_City_handleMouse(const mouse *m);
-void UI_City_handleMouseMilitary(const mouse *m);
-void UI_City_getTooltip(struct TooltipContext *c);
-
 void UI_PlayerMessageList_resetScroll();
 void UI_PlayerMessageList_init();
 void UI_PlayerMessageList_drawBackground();

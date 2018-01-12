@@ -13,6 +13,7 @@
 #include "sound/effect.h"
 #include "sound/music.h"
 #include "sound/speech.h"
+#include "window/city.h"
 
 static void button_toggle(int type, int param2);
 static void button_ok(int param1, int param2);
@@ -108,7 +109,7 @@ static void handle_mouse(const mouse *m)
 {
     if (m->right.went_up) {
         // cancel dialog
-        UI_Window_goTo(Window_City);
+        window_city_show();
     } else {
         const mouse *m_dialog = mouse_in_dialog(m);
         if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 6, &focus_button_id)) {
@@ -136,7 +137,7 @@ static void button_toggle(int type, int param2)
 
 static void button_ok(int param1, int param2)
 {
-    UI_Window_goTo(Window_City);
+    window_city_show();
 }
 
 static void button_cancel(int param1, int param2)
@@ -156,7 +157,7 @@ static void button_cancel(int param1, int param2)
     sound_effect_set_volume(original_effects.volume);
     sound_city_set_volume(original_city.volume);
 
-    UI_Window_goTo(Window_City);
+    window_city_show();
 }
 
 static void update_volume(set_sound_type type, int is_decrease)

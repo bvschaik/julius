@@ -15,6 +15,7 @@
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/window.h"
+#include "window/city.h"
 
 #include "UI/Advisors_private.h"
 #include "UI/MessageDialog.h"
@@ -141,7 +142,7 @@ static void handle_mouse(const mouse *m)
         return;
     }
     if (m->right.went_up) {
-        UI_Window_goTo(Window_City);
+        window_city_show();
         return;
     }
 
@@ -157,7 +158,7 @@ static void button_change_advisor(int advisor, int param2)
         setting_set_last_advisor(advisor);
         window_invalidate();
     } else {
-        UI_Window_goTo(Window_City);
+        window_city_show();
     }
 }
 
@@ -224,7 +225,7 @@ void window_advisors_show_advisor(advisor_type advisor)
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
         if (window_is(Window_MessageDialog)) {
             UI_MessageDialog_close();
-            UI_Window_goTo(Window_City);
+            window_city_show();
         }
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
         return;

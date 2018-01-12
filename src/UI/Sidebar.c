@@ -25,6 +25,7 @@
 #include "scenario/property.h"
 #include "sound/effect.h"
 #include "window/advisors.h"
+#include "window/city.h"
 #include "window/empire.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
@@ -352,7 +353,7 @@ static void buttonGoToProblem(int param1, int param2)
     int gridOffset = city_message_next_problem_area_grid_offset();
     if (gridOffset) {
         city_view_go_to_grid_offset(gridOffset);
-        UI_Window_goTo(Window_City);
+        window_city_show();
     } else {
         window_invalidate();
     }
@@ -432,7 +433,7 @@ static void updateProgress()
 
 void UI_SlidingSidebar_drawBackground()
 {
-	UI_City_drawCity();
+	window_city_draw();
 }
 
 void UI_SlidingSidebar_drawForeground()
@@ -441,7 +442,7 @@ void UI_SlidingSidebar_drawForeground()
 	updateProgress();
 	if (data.progress >= 47) {
 		city_view_toggle_sidebar();
-		UI_Window_goTo(Window_City);
+		window_city_show();
 		window_draw(1);
 		return;
 	}

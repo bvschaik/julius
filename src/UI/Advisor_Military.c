@@ -11,6 +11,7 @@
 #include "graphics/window.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"
+#include "window/city.h"
 
 static void buttonGoToLegion(int legionId, int param2);
 static void buttonReturnToFort(int legionId, int param2);
@@ -168,7 +169,7 @@ static void buttonGoToLegion(int legionId, int param2)
 {
 	const formation *m = formation_get(formation_for_legion(legionId));
 	city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
-	UI_Window_goTo(Window_City);
+	window_city_show();
 }
 
 static void buttonReturnToFort(int legionId, int param2)

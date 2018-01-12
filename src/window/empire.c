@@ -18,6 +18,7 @@
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
 #include "window/advisors.h"
+#include "window/city.h"
 #include "window/popup_dialog.h"
 #include "window/trade_opened.h"
 
@@ -539,7 +540,7 @@ static void button_help(int param1, int param2)
 
 static void button_return_to_city(int param1, int param2)
 {
-    UI_Window_goTo(Window_City);
+    window_city_show();
 }
 
 static void button_advisor(int param1, int param2)

@@ -226,6 +226,7 @@ set(SOUND_FILES
 set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisors.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
+    ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
     ${PROJECT_SOURCE_DIR}/src/window/display_options.c
     ${PROJECT_SOURCE_DIR}/src/window/donate_to_city.c
@@ -272,7 +273,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Terrain.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Water.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingMenu.c
-	${PROJECT_SOURCE_DIR}/src/UI/City.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Figures.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Ghost.c

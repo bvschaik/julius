@@ -12,6 +12,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "window/city.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
@@ -90,8 +91,7 @@ void UI_PlayerMessageList_init()
 
 void UI_PlayerMessageList_drawBackground()
 {
-	UI_City_drawBackground();
-	UI_City_drawForeground();
+	window_city_draw_all();
 
     graphics_in_dialog();
 	data.widthBlocks = 30;
@@ -274,7 +274,7 @@ static void buttonHelp(int param1, int param2)
 
 static void buttonClose(int param1, int param2)
 {
-	UI_Window_goTo(Window_City);
+	window_city_show();
 }
 
 static void buttonMessage(int param1, int param2)

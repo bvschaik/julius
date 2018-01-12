@@ -31,6 +31,7 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 #include "window/advisors.h"
+#include "window/city.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonExit(int param1, int param2);
@@ -332,8 +333,8 @@ int UI_BuildingInfo_getBuildingType()
 
 void UI_BuildingInfo_drawBackground()
 {
-	UI_City_drawBackground();
-	UI_City_drawCity();//?do we want this?
+	window_city_draw_panels();
+	window_city_draw();
 	if (context.type == BuildingInfoType_None) {
 		UI_BuildingInfo_drawNoPeople(&context);
 	} else if (context.type == BuildingInfoType_Terrain) {
@@ -520,7 +521,7 @@ void UI_BuildingInfo_drawForeground()
 void UI_BuildingInfo_handleMouse(const mouse *m)
 {
 	if (m->right.went_up) {
-		UI_Window_goTo(Window_City);
+		window_city_show();
 		return;
 	}
 	// general buttons
@@ -637,7 +638,7 @@ static void buttonExit(int param1, int param2)
 		context.storageShowSpecialOrders = 0;
 		window_invalidate();
 	} else {
-		UI_Window_goTo(Window_City);
+		window_city_show();
 	}
 }
 

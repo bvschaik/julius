@@ -10,6 +10,8 @@
 #include "UI/VideoIntermezzo.h"
 #include "UI/Warning.h"
 
+#include "window/city.h"
+
 static void noop()
 {
 }
@@ -17,9 +19,9 @@ static void noop()
 static window_type windows[] = {
     // 0
     { Window_MainMenu },
-    { Window_City, UI_City_drawBackground, UI_City_drawForeground, UI_City_handleMouse, UI_City_getTooltip, noop },
+    { Window_City },
     { Window_PopupDialog },
-    { Window_TopMenu, UI_City_drawBackground, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse, noop, noop },
+    { Window_TopMenu, window_city_draw_panels, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse, noop, noop },
     { Window_DifficultyOptions },
     { Window_Advisors },
     { Window_SetSalaryDialog },
@@ -46,7 +48,7 @@ static window_type windows[] = {
     { Window_BuildingInfo, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse, UI_BuildingInfo_getTooltip, UI_BuildingInfo_init },
     { Window_NewCareerDialog },
     { Window_SlidingSidebar, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop, noop, noop },
-    { Window_CityMilitary, UI_City_drawBackground, UI_City_drawForegroundMilitary, UI_City_handleMouseMilitary, UI_City_getTooltip, noop }, // TODO military command
+    { Window_CityMilitary },
     { Window_MissionSelection, UI_MissionStart_Selection_drawBackground, UI_MissionStart_Selection_drawForeground, UI_MissionStart_Selection_handleMouse, noop, noop },
     // 30
     { Window_MissionBriefingInitial, UI_MissionStart_Briefing_drawBackground, UI_MissionStart_BriefingInitial_drawForeground, UI_MissionStart_BriefingInitial_handleMouse, noop, UI_MissionStart_Briefing_init },

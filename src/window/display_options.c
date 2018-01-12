@@ -7,6 +7,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "window/city.h"
 
 static void button_fullscreen(int param1, int param2);
 static void button_set_resolution(int id, int param2);
@@ -50,7 +51,7 @@ static void handle_mouse(const mouse *m)
 {
     if (m->right.went_up) {
         // cancel dialog
-        UI_Window_goTo(Window_City);
+        window_city_show();
     } else {
         generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &focus_button_id);
     }
@@ -59,7 +60,7 @@ static void handle_mouse(const mouse *m)
 static void button_fullscreen(int param1, int param2)
 {
     system_toggle_fullscreen();
-    UI_Window_goTo(Window_City);
+    window_city_show();
 }
 
 static void button_set_resolution(int id, int param2)
@@ -69,12 +70,12 @@ static void button_set_resolution(int id, int param2)
         case 2: system_resize(800, 600); break;
         case 3: system_resize(1024, 768); break;
     }
-    UI_Window_goTo(Window_City);
+    window_city_show();
 }
 
 static void button_cancel(int param1, int param2)
 {
-    UI_Window_goTo(Window_City);
+    window_city_show();
 }
 
 void window_display_options_show()

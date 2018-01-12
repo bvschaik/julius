@@ -16,6 +16,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/keyboard.h"
+#include "window/city.h"
 
 #include <string.h>
 
@@ -191,11 +192,11 @@ static void button_ok_cancel(int is_ok, int param2)
     if (data.type == FILE_DIALOG_LOAD) {
         game_file_load_saved_game(data.saved_game);
         keyboard_stop_capture();
-        UI_Window_goTo(Window_City);
+        window_city_show();
     } else if (data.type == FILE_DIALOG_SAVE) {
         game_file_write_saved_game(data.saved_game);
         keyboard_stop_capture();
-        UI_Window_goTo(Window_City);
+        window_city_show();
     } else if (data.type == FILE_DIALOG_DELETE) {
         if (game_file_delete_saved_game(data.saved_game)) {
             dir_find_files_with_extension("sav");

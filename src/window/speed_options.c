@@ -9,6 +9,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "window/city.h"
 
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);
@@ -69,7 +70,7 @@ static void handle_mouse(const mouse *m)
 {
     if (m->right.went_up) {
         // cancel dialog
-        UI_Window_goTo(Window_City);
+        window_city_show();
     } else {
         const mouse *m_dialog = mouse_in_dialog(m);
         if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 2, &focus_button_id)) {
@@ -80,13 +81,13 @@ static void handle_mouse(const mouse *m)
 
 static void button_ok(int param1, int param2)
 {
-    UI_Window_goTo(Window_City);
+    window_city_show();
 }
 
 static void button_cancel(int param1, int param2)
 {
     setting_reset_speeds(original_game_speed, original_scroll_speed);
-    UI_Window_goTo(Window_City);
+    window_city_show();
 }
 
 static void arrow_button_game(int is_down, int param2)

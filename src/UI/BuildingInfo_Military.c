@@ -13,6 +13,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "window/city.h"
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int index, int param2);
@@ -462,7 +463,7 @@ static void buttonReturnToFort(int param1, int param2)
     formation *m = formation_get(contextForCallback->formationId);
 	if (!m->in_distant_battle && m->is_at_fort != 1) {
 		formation_legion_return_home(m);
-		UI_Window_goTo(Window_City);
+		window_city_show();
 	}
 }
 
@@ -506,5 +507,5 @@ static void buttonLayout(int index, int param2)
 		case 4: sound_speech_play_file("wavs/cohort5.wav"); break;
 	}
 	Data_State.selectedLegionFormationId = contextForCallback->formationId;
-	UI_Window_goTo(Window_CityMilitary);
+	window_city_military_show();
 }

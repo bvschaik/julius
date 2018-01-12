@@ -19,6 +19,7 @@
 #include "graphics/text.h"
 #include "scenario/property.h"
 #include "window/advisors.h"
+#include "window/city.h"
 #include "window/difficulty_options.h"
 #include "window/display_options.h"
 #include "window/file_dialog.h"
@@ -220,7 +221,7 @@ void UI_TopMenu_drawForeground()
 	if (!openSubMenu) {
 		return;
 	}
-	UI_City_drawCity();
+	window_city_draw();
 	menu_draw(&menu[openSubMenu-1], focusSubMenuId);
 }
 
@@ -339,7 +340,7 @@ static void menuFile_replayMap(int param)
 	building_construction_clear_type();
 	if (scenario_is_custom()) {
 		game_file_start_scenario(scenario_name());
-		UI_Window_goTo(Window_City);
+		window_city_show();
 	} else {
 		UI_Window_goTo(Window_MissionSelection);
 		UI_MissionStart_show();
@@ -350,21 +351,21 @@ static void menuFile_loadGame(int param)
 {
 	clearState();
 	building_construction_clear_type();
-	UI_Window_goTo(Window_City);
+	window_city_show();
 	window_file_dialog_show(FILE_DIALOG_LOAD);
 }
 
 static void menuFile_saveGame(int param)
 {
 	clearState();
-	UI_Window_goTo(Window_City);
+	window_city_show();
 	window_file_dialog_show(FILE_DIALOG_SAVE);
 }
 
 static void menuFile_deleteGame(int param)
 {
 	clearState();
-	UI_Window_goTo(Window_City);
+	window_city_show();
 	window_file_dialog_show(FILE_DIALOG_DELETE);
 }
 
@@ -373,7 +374,7 @@ static void menuFile_confirmExit(int accepted)
 	if (accepted) {
 		system_exit();
 	} else {
-		UI_Window_goTo(Window_City);
+		window_city_show();
 	}
 }
 

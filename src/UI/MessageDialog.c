@@ -20,6 +20,7 @@
 #include "scenario/property.h"
 #include "scenario/request.h"
 #include "window/advisors.h"
+#include "window/city.h"
 
 #define MAX_HISTORY 200
 
@@ -141,8 +142,7 @@ void UI_MessageDialog_init()
 void UI_MessageDialog_drawBackground()
 {
     if (!data.backgroundIsProvided) {
-        UI_City_drawBackground();
-        UI_City_drawForeground();
+        window_city_draw_all();
     }
     graphics_in_dialog();
 	if (data.showVideo) {
@@ -556,5 +556,5 @@ static void buttonGoToProblem(int param1, int param2)
 	if (gridOffset > 0 && gridOffset < 26244) {
 		city_view_go_to_grid_offset(gridOffset);
 	}
-	UI_Window_goTo(Window_City);
+	window_city_show();
 }

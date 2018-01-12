@@ -15,6 +15,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "scenario/property.h"
+#include "window/city.h"
 
 static void drawMenuButtons();
 static int handleBuildSubmenu(const mouse *m);
@@ -152,13 +153,12 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
 
 void UI_BuildingMenu_drawBackground()
 {
-	UI_City_drawBackground();
-	UI_City_drawCity();
+	window_city_draw_panels();
 }
 
 void UI_BuildingMenu_drawForeground()
 {
-	UI_City_drawCity();
+	window_city_draw();
 	drawMenuButtons();
 }
 
@@ -190,7 +190,7 @@ static void drawMenuButtons()
 void UI_BuildingMenu_handleMouse(const mouse *m)
 {
 	if (m->right.went_up) {
-		UI_Window_goTo(Window_City);
+		window_city_show();
 		return;
 	}
 
@@ -294,6 +294,6 @@ static void buttonMenuItem(int item)
             default:
                 break;
 		}
-		UI_Window_goTo(Window_City);
+		window_city_show();
 	}
 }

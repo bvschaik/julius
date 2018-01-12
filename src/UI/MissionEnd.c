@@ -19,6 +19,7 @@
 #include "sound/music.h"
 #include "sound/speech.h"
 #include "window/main_menu.h"
+#include "window/city.h"
 
 static void victoryAccept(int param1, int param2);
 static void victoryContinueGoverning(int duration, int param2);
@@ -195,7 +196,7 @@ void UI_VictoryDialog_handleMouse(const mouse *m)
 
 static void victoryAccept(int param1, int param2)
 {
-	UI_Window_goTo(Window_City);
+	window_city_show();
 }
 
 static void victoryContinueGoverning(int duration, int param2)
@@ -214,7 +215,7 @@ static void victoryContinueGoverning(int duration, int param2)
 		Data_CityInfo.salaryAmount = 0;
 		city_finance_update_salary();
 	}
-	UI_Window_goTo(Window_City);
+	window_city_show();
 	city_victory_reset();
 	sound_music_reset();
 	sound_music_update();

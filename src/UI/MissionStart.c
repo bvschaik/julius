@@ -21,6 +21,7 @@
 #include "scenario/property.h"
 #include "sound/music.h"
 #include "sound/speech.h"
+#include "window/city.h"
 
 static void startMission(int param1, int param2);
 static void briefingBack(int param1, int param2);
@@ -187,7 +188,7 @@ void UI_MissionStart_Briefing_drawBackground()
 	if (!Data_State.missionBriefingShown) {
 		Data_State.missionBriefingShown = 1;
 		if (!game_file_start_scenario(scenario_name())) {
-            UI_Window_goTo(Window_City);
+            window_city_show();
             return;
 		}
 	}
@@ -331,7 +332,7 @@ static void startMission(int param1, int param2)
     } else {
         sound_speech_stop();
         sound_music_reset();
-        UI_Window_goTo(Window_City);
+        window_city_show();
         Data_CityInfo.missionSavedGameWritten = 0;
     }
     window_invalidate();

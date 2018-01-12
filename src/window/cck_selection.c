@@ -18,6 +18,7 @@
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/speech.h"
+#include "window/city.h"
 
 #include <string.h>
 
@@ -264,7 +265,7 @@ static void button_start_scenario(int param1, int param2)
 {
     sound_speech_stop();
     game_file_start_scenario(string_from_ascii(selectedScenario));
-    UI_Window_goTo(Window_City);
+    window_city_show();
 }
 
 void window_cck_selection_show()

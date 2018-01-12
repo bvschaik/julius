@@ -29,6 +29,7 @@
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
+#include "window/city.h"
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -635,7 +636,7 @@ static int handleRightClickAllowBuildingInfo()
 		allow = 0;
 	}
 	building_construction_reset(BUILDING_NONE);
-	UI_Window_goTo(Window_City);
+	window_city_show();
 
 	if (!Data_State.map.current.gridOffset) {
 		allow = 0;
@@ -654,7 +655,7 @@ static int isLegionClick()
 			map_grid_offset(Data_State.map.current.x, Data_State.map.current.y));
 		if (formationId > 0 && !formation_get(formationId)->in_distant_battle) {
 			Data_State.selectedLegionFormationId = formationId;
-			UI_Window_goTo(Window_CityMilitary);
+			window_city_military_show();
 			return 1;
 		}
 	}
@@ -1040,7 +1041,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 static void militaryMapClick()
 {
 	if (!Data_State.map.current.gridOffset) {
-		UI_Window_goTo(Window_City);
+		window_city_show();
 		return;
 	}
 	int formationId = Data_State.selectedLegionFormationId;
@@ -1056,7 +1057,7 @@ static void militaryMapClick()
 		formation_legion_move_to(m, Data_State.map.current.x, Data_State.map.current.y);
 		sound_speech_play_file("wavs/cohort5.wav");
 	}
-	UI_Window_goTo(Window_City);
+	window_city_show();
 }
 
 void UI_CityBuildings_handleMouseMilitary(const mouse *m)
@@ -1068,7 +1069,7 @@ void UI_CityBuildings_handleMouseMilitary(const mouse *m)
 	UI_CityBuildings_scrollMap(scroll_get_direction(m));
 	if (m->right.went_up) {
 		city_warning_clear_all();
-		UI_Window_goTo(Window_City);
+		window_city_show();
 	} else {
 		updateCityViewCoords(m);
 		if (m->left.went_down) {

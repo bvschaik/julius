@@ -23,6 +23,7 @@
 #include "scenario/invasion.h"
 #include "window/advisors.h"
 #include "window/popup_dialog.h"
+#include "window/city.h"
 
 static struct {
     int ctrl_down;
@@ -45,7 +46,7 @@ static void change_game_speed(int is_down)
 static void exit_military_command()
 {
     if (window_is(Window_CityMilitary)) {
-        UI_Window_goTo(Window_City);
+        window_city_show();
     }
 }
 
@@ -85,7 +86,7 @@ static void show_advisor(advisor_type advisor)
     exit_military_command();
     if (window_is(Window_Advisors)) {
         if (window_advisors_get_advisor() == advisor) {
-            UI_Window_goTo(Window_City);
+            window_city_show();
         } else {
             window_advisors_show_advisor(advisor);
         }
