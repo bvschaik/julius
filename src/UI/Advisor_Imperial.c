@@ -15,6 +15,7 @@
 #include "scenario/request.h"
 #include "window/empire.h"
 #include "window/popup_dialog.h"
+#include "window/set_salary.h"
 
 static void buttonDonateToCity(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);
@@ -208,7 +209,7 @@ static void buttonDonateToCity(int param1, int param2)
 
 static void buttonSetSalary(int param1, int param2)
 {
-	UI_Window_goTo(Window_SetSalaryDialog);
+	window_set_salary_show();
 }
 
 static void buttonGiftToCaesar(int param1, int param2)
