@@ -23,6 +23,39 @@ void UI_City_drawBackground()
 	UI_TopMenu_drawBackground();
 }
 
+static void UI_City_drawPausedAndTimeLeft()
+{
+    if (scenario_criteria_time_limit_enabled()) {
+        int years;
+        if (scenario_criteria_max_year() <= game_time_year() + 1) {
+            years = 0;
+        } else {
+            years = scenario_criteria_max_year() - game_time_year() - 1;
+        }
+        int totalMonths = 12 - game_time_month() + 12 * years;
+        label_draw(1, 25, 15, 1);
+        int width = lang_text_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
+        text_draw_number(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
+    } else if (scenario_criteria_survival_enabled()) {
+        int years;
+        if (scenario_criteria_max_year() <= game_time_year() + 1) {
+            years = 0;
+        } else {
+            years = scenario_criteria_max_year() - game_time_year() - 1;
+        }
+        int totalMonths = 12 - game_time_month() + 12 * years;
+        label_draw(1, 25, 15, 1);
+        int width = lang_text_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
+        text_draw_number(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
+    }
+    if (game_state_is_paused()) {
+        int width = Data_CityView.widthInPixels;
+        outer_panel_draw((width - 448) / 2, 40, 28, 3);
+        lang_text_draw_centered(13, 2,
+            (width - 448) / 2, 58, 448, FONT_NORMAL_BLACK);
+    }
+}
+
 void UI_City_drawForeground()
 {
 	UI_TopMenu_drawBackgroundIfNecessary();
@@ -48,39 +81,6 @@ void UI_City_drawCity()
     int x, y;
     city_view_get_camera(&x, &y);
 	UI_CityBuildings_drawForeground(x, y);
-}
-
-static void UI_City_drawPausedAndTimeLeft()
-{
-	if (scenario_criteria_time_limit_enabled()) {
-		int years;
-		if (scenario_criteria_max_year() <= game_time_year() + 1) {
-			years = 0;
-		} else {
-			years = scenario_criteria_max_year() - game_time_year() - 1;
-		}
-		int totalMonths = 12 - game_time_month() + 12 * years;
-		label_draw(1, 25, 15, 1);
-		int width = lang_text_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
-		text_draw_number(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
-	} else if (scenario_criteria_survival_enabled()) {
-		int years;
-		if (scenario_criteria_max_year() <= game_time_year() + 1) {
-			years = 0;
-		} else {
-			years = scenario_criteria_max_year() - game_time_year() - 1;
-		}
-		int totalMonths = 12 - game_time_month() + 12 * years;
-		label_draw(1, 25, 15, 1);
-		int width = lang_text_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
-		text_draw_number(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
-	}
-	if (game_state_is_paused()) {
-		int width = Data_CityView.widthInPixels;
-		outer_panel_draw((width - 448) / 2, 40, 28, 3);
-		lang_text_draw_centered(13, 2,
-			(width - 448) / 2, 58, 448, FONT_NORMAL_BLACK);
-	}
 }
 
 void UI_City_handleMouse(const mouse *m)
