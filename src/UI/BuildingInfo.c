@@ -211,8 +211,8 @@ void UI_BuildingInfo_init()
 				break;
 			default:
 				if (b->houseSize) {
-					UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(&context);
-					building_house_determine_evolve_text(building_get(context.buildingId), context.worstDesirabilityBuildingId);
+					context.worstDesirabilityBuildingId = building_house_determine_worst_desirability_building(b);
+					building_house_determine_evolve_text(b, context.worstDesirabilityBuildingId);
 				}
 				break;
 		}

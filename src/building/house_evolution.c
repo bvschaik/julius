@@ -2,8 +2,11 @@
 
 #include "building/house.h"
 #include "building/model.h"
+#include "core/calc.h"
 #include "game/resource.h"
 #include "game/time.h"
+#include "map/building.h"
+#include "map/grid.h"
 #include "map/routing_terrain.h"
 #include "map/tiles.h"
 
@@ -822,4 +825,44 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         // house would like to evolve but can't
         house->data.house.evolveTextId = 64;
     }
+}
+
+int building_house_determine_worst_desirability_building(const building *house)
+{
+    int lowest_desirability = 0;
+    int lowest_building_id = 0;
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(house->x, house->y, 1, 6, &x_min, &y_min, &x_max, &y_max);
+
+    for (int y = y_min; y <= y_max; y++) {
+        for (int x = x_min; x <= x_max; x++) {
+            int building_id = map_building_at(map_grid_offset(x, y));
+            if (building_id <= 0) {
+                continue;
+            }
+            building *b = building_get(building_id);
+            if (b->state != BUILDING_STATE_IN_USE || building_id == house->id) {
+                continue;
+            }
+            if (!b->houseSize || b->type < house->type) {
+                int des = model_get_building(b->type)->desirability_value;
+                if (des < 0) {
+                    // simplified desirability calculation
+                    int step_size = model_get_building(b->type)->desirability_step_size;
+                    int range = model_get_building(b->type)->desirability_range;
+                    int dist = calc_maximum_distance(x, y, house->x, house->y);
+                    if (dist <= range) {
+                        while (--dist > 1) {
+                            des += step_size;
+                        }
+                        if (des < lowest_desirability) {
+                            lowest_desirability = des;
+                            lowest_building_id = building_id;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return lowest_building_id;
 }

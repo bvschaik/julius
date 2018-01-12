@@ -71,8 +71,6 @@ void UI_BuildingInfo_handleMouseFigureList(const mouse *m, BuildingInfoContext *
 
 void UI_BuildingInfo_showStorageOrders(int param1, int param2);
 
-void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext *c);
-
 void UI_BuildingInfo_drawHouse(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawWheatFarm(BuildingInfoContext *c);
