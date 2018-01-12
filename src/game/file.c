@@ -89,7 +89,7 @@ static const char MISSION_SAVED_GAMES[][32] = {
     "Caesar2.sav"
 };
 
-const char *get_scenario_filename(const uint8_t *scenario_name)
+static const char *get_scenario_filename(const uint8_t *scenario_name)
 {
     static char filename[FILE_NAME_MAX];
     strncpy(filename, string_to_ascii(scenario_name), FILE_NAME_MAX);

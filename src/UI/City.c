@@ -50,7 +50,7 @@ void UI_City_drawCity()
 	UI_CityBuildings_drawForeground(x, y);
 }
 
-void UI_City_drawPausedAndTimeLeft()
+static void UI_City_drawPausedAndTimeLeft()
 {
 	if (scenario_criteria_time_limit_enabled()) {
 		int years;

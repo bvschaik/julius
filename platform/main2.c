@@ -45,7 +45,7 @@ enum {
 	UserEventWindowed = 4,
 };
 
-void handler(int sig) {
+static void handler(int sig) {
 #ifndef __MINGW32__
 	void *array[100];
 	size_t size;

@@ -91,7 +91,7 @@ static int get_sentiment_penalty_for_tent_dwellers()
     return penalty;
 }
 
-int get_sentiment_contribution_wages()
+static int get_sentiment_contribution_wages()
 {
     Data_CityInfo.populationSentimentWages = Data_CityInfo.wages;
     int contribution = 0;
@@ -113,7 +113,7 @@ int get_sentiment_contribution_wages()
     return contribution;
 }
 
-int get_sentiment_contribution_employment()
+static int get_sentiment_contribution_employment()
 {
     Data_CityInfo.populationSentimentUnemployment = Data_CityInfo.unemploymentPercentage;
     if (Data_CityInfo.unemploymentPercentage > 25) {
