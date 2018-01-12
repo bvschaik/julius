@@ -13,6 +13,7 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
+#include "window/donate_to_city.h"
 #include "window/empire.h"
 #include "window/popup_dialog.h"
 #include "window/set_salary.h"
@@ -204,7 +205,7 @@ void UI_Advisor_Imperial_handleMouse(const mouse *m)
 
 static void buttonDonateToCity(int param1, int param2)
 {
-	UI_Window_goTo(Window_DonateToCityDialog);
+	window_donate_to_city_show();
 }
 
 static void buttonSetSalary(int param1, int param2)
