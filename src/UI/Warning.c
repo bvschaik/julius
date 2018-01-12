@@ -56,4 +56,5 @@ void UI_Warning_draw()
             center - box_width / 2 + 1, top_offset + 4,
             box_width, FONT_NORMAL_WHITE, 0);
     }
+    city_warning_clear_outdated();
 }
