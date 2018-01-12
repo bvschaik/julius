@@ -3,8 +3,10 @@
 #include "building/count.h"
 #include "building/granary.h"
 #include "building/industry.h"
+#include "building/warehouse.h"
 #include "city/constants.h"
 #include "city/culture.h"
+#include "city/finance.h"
 #include "city/health.h"
 #include "city/message.h"
 #include "city/sentiment.h"
@@ -19,7 +21,6 @@
 
 #include "Data/CityInfo.h"
 
-#define MAX_GODS 5
 #define TIE 10
 
 void city_gods_reset()
@@ -356,6 +357,29 @@ int city_gods_calculate_least_happy()
     }
     Data_CityInfo.godLeastHappy = maxGod;
     return maxGod > 0;
+}
+
+void city_gods_schedule_festival()
+{
+    Data_CityInfo.plannedFestivalGod = Data_CityInfo.festivalGod;
+    Data_CityInfo.plannedFestivalSize = Data_CityInfo.festivalSize;
+    int cost;
+    if (Data_CityInfo.festivalSize == FESTIVAL_SMALL) {
+        Data_CityInfo.plannedFestivalMonthsToGo = 2;
+        cost = Data_CityInfo.festivalCostSmall;
+    } else if (Data_CityInfo.festivalSize == FESTIVAL_LARGE) {
+        Data_CityInfo.plannedFestivalMonthsToGo = 3;
+        cost = Data_CityInfo.festivalCostLarge;
+    } else {
+        Data_CityInfo.plannedFestivalMonthsToGo = 4;
+        cost = Data_CityInfo.festivalCostGrand;
+    }
+
+    city_finance_process_sundry(cost);
+
+    if (Data_CityInfo.festivalSize == FESTIVAL_GRAND) {
+        building_warehouses_remove_resource(RESOURCE_WINE, Data_CityInfo.festivalWineGrand);
+    }
 }
 
 void city_gods_check_festival()

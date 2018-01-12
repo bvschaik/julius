@@ -18,11 +18,6 @@ void UI_ResourceSettingsDialog_drawBackground();
 void UI_ResourceSettingsDialog_drawForeground();
 void UI_ResourceSettingsDialog_handleMouse(const mouse *m);
 
-void UI_HoldFestivalDialog_drawBackground();
-void UI_HoldFestivalDialog_drawForeground();
-void UI_HoldFestivalDialog_handleMouse(const mouse *m);
-void UI_HoldFestivalDialog_getTooltip(struct TooltipContext *c);
-
 void UI_City_drawBackground();
 void UI_City_drawForeground();
 void UI_City_drawForegroundMilitary();

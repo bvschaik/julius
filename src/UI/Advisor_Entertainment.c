@@ -10,6 +10,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "window/hold_festival.h"
 
 static void buttonHoldFestival(int param1, int param2);
 
@@ -173,7 +174,7 @@ void UI_Advisor_Entertainment_handleMouse(const mouse *m)
 void buttonHoldFestival(int param1, int param2)
 {
 	if (!Data_CityInfo.plannedFestivalSize) {
-		UI_Window_goTo(Window_HoldFestivalDialog);
+		window_hold_festival_show();
 	}
 }
 
