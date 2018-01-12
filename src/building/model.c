@@ -65,11 +65,11 @@ static const uint8_t *skip_non_digits(const uint8_t *str)
 }
 
 
-static const uint8_t *get_value(const uint8_t *ptr, int filesize, int *value)
+static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int *value)
 {
     ptr = skip_non_digits(ptr);
     *value = string_to_int(ptr);
-    ptr += index_of(ptr, ',', filesize);
+    ptr += index_of(ptr, ',', end_ptr - ptr);
     return ptr;
 }
 
@@ -109,17 +109,18 @@ int model_load()
 
     int dummy;
     ptr = &buffer[index_of_string(buffer, ALL_BUILDINGS, filesize)];
+    const uint8_t *end_ptr = &buffer[filesize];
     for (int i = 0; i < NUM_BUILDINGS; i++) {
         ptr += index_of(ptr, '{', filesize);
 
-        ptr = get_value(ptr, filesize, &buildings[i].cost);
-        ptr = get_value(ptr, filesize, &buildings[i].desirability_value);
-        ptr = get_value(ptr, filesize, &buildings[i].desirability_step);
-        ptr = get_value(ptr, filesize, &buildings[i].desirability_step_size);
-        ptr = get_value(ptr, filesize, &buildings[i].desirability_range);
-        ptr = get_value(ptr, filesize, &buildings[i].laborers);
-        ptr = get_value(ptr, filesize, &dummy);
-        ptr = get_value(ptr, filesize, &dummy);
+        ptr = get_value(ptr, end_ptr, &buildings[i].cost);
+        ptr = get_value(ptr, end_ptr, &buildings[i].desirability_value);
+        ptr = get_value(ptr, end_ptr, &buildings[i].desirability_step);
+        ptr = get_value(ptr, end_ptr, &buildings[i].desirability_step_size);
+        ptr = get_value(ptr, end_ptr, &buildings[i].desirability_range);
+        ptr = get_value(ptr, end_ptr, &buildings[i].laborers);
+        ptr = get_value(ptr, end_ptr, &dummy);
+        ptr = get_value(ptr, end_ptr, &dummy);
     }
 
     ptr = &buffer[index_of_string(buffer, ALL_HOUSES, filesize)];
@@ -127,26 +128,26 @@ int model_load()
     for (int i = 0; i < NUM_HOUSES; i++) {
         ptr += index_of(ptr, '{', filesize);
 
-        ptr = get_value(ptr, filesize, &houses[i].devolve_desirability);
-        ptr = get_value(ptr, filesize, &houses[i].evolve_desirability);
-        ptr = get_value(ptr, filesize, &houses[i].entertainment);
-        ptr = get_value(ptr, filesize, &houses[i].water);
-        ptr = get_value(ptr, filesize, &houses[i].religion);
-        ptr = get_value(ptr, filesize, &houses[i].education);
-        ptr = get_value(ptr, filesize, &houses[i].food);
-        ptr = get_value(ptr, filesize, &houses[i].barber);
-        ptr = get_value(ptr, filesize, &houses[i].bathhouse);
-        ptr = get_value(ptr, filesize, &houses[i].health);
-        ptr = get_value(ptr, filesize, &houses[i].food_types);
-        ptr = get_value(ptr, filesize, &houses[i].pottery);
-        ptr = get_value(ptr, filesize, &houses[i].oil);
-        ptr = get_value(ptr, filesize, &houses[i].furniture);
-        ptr = get_value(ptr, filesize, &houses[i].wine);
-        ptr = get_value(ptr, filesize, &dummy);
-        ptr = get_value(ptr, filesize, &dummy);
-        ptr = get_value(ptr, filesize, &houses[i].prosperity);
-        ptr = get_value(ptr, filesize, &houses[i].max_people);
-        ptr = get_value(ptr, filesize, &houses[i].tax_multiplier);
+        ptr = get_value(ptr, end_ptr, &houses[i].devolve_desirability);
+        ptr = get_value(ptr, end_ptr, &houses[i].evolve_desirability);
+        ptr = get_value(ptr, end_ptr, &houses[i].entertainment);
+        ptr = get_value(ptr, end_ptr, &houses[i].water);
+        ptr = get_value(ptr, end_ptr, &houses[i].religion);
+        ptr = get_value(ptr, end_ptr, &houses[i].education);
+        ptr = get_value(ptr, end_ptr, &houses[i].food);
+        ptr = get_value(ptr, end_ptr, &houses[i].barber);
+        ptr = get_value(ptr, end_ptr, &houses[i].bathhouse);
+        ptr = get_value(ptr, end_ptr, &houses[i].health);
+        ptr = get_value(ptr, end_ptr, &houses[i].food_types);
+        ptr = get_value(ptr, end_ptr, &houses[i].pottery);
+        ptr = get_value(ptr, end_ptr, &houses[i].oil);
+        ptr = get_value(ptr, end_ptr, &houses[i].furniture);
+        ptr = get_value(ptr, end_ptr, &houses[i].wine);
+        ptr = get_value(ptr, end_ptr, &dummy);
+        ptr = get_value(ptr, end_ptr, &dummy);
+        ptr = get_value(ptr, end_ptr, &houses[i].prosperity);
+        ptr = get_value(ptr, end_ptr, &houses[i].max_people);
+        ptr = get_value(ptr, end_ptr, &houses[i].tax_multiplier);
     }
 
     debug_log(" OK: model loaded", 0, 0);
