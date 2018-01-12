@@ -10,11 +10,6 @@ void UI_LaborPriorityDialog_drawForeground();
 void UI_LaborPriorityDialog_handleMouse(const mouse *m);
 void UI_LaborPriorityDialog_getTooltip(struct TooltipContext *c);
 
-void UI_SendGiftToCaesarDialog_init();
-void UI_SendGiftToCaesarDialog_drawBackground();
-void UI_SendGiftToCaesarDialog_drawForeground();
-void UI_SendGiftToCaesarDialog_handleMouse(const mouse *m);
-
 void UI_TradePricesDialog_drawBackground();
 void UI_TradePricesDialog_handleMouse(const mouse *m);
 void UI_TradePricesDialog_getTooltip(struct TooltipContext *c);

@@ -15,12 +15,13 @@
 #include "scenario/request.h"
 #include "window/donate_to_city.h"
 #include "window/empire.h"
+#include "window/gift_to_emperor.h"
 #include "window/popup_dialog.h"
 #include "window/set_salary.h"
 
 static void buttonDonateToCity(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);
-static void buttonGiftToCaesar(int param1, int param2);
+static void buttonGiftToEmperor(int param1, int param2);
 static void buttonRequest(int index, int param2);
 
 static int getRequestStatus(int index);
@@ -32,7 +33,7 @@ static void confirmSendGoods(int accepted);
 static generic_button imperialButtons[] = {
 	{320, 367, 570, 387, GB_IMMEDIATE, buttonDonateToCity, button_none, 0, 0},
 	{70, 393, 570, 413, GB_IMMEDIATE, buttonSetSalary, button_none, 0, 0},
-	{320, 341, 570, 361, GB_IMMEDIATE, buttonGiftToCaesar, button_none, 0, 0},
+	{320, 341, 570, 361, GB_IMMEDIATE, buttonGiftToEmperor, button_none, 0, 0},
 	{38, 96, 598, 136, GB_IMMEDIATE, buttonRequest, button_none, 0, 0},
 	{38, 138, 598, 178, GB_IMMEDIATE, buttonRequest, button_none, 1, 0},
 	{38, 180, 598, 220, GB_IMMEDIATE, buttonRequest, button_none, 2, 0},
@@ -213,9 +214,9 @@ static void buttonSetSalary(int param1, int param2)
 	window_set_salary_show();
 }
 
-static void buttonGiftToCaesar(int param1, int param2)
+static void buttonGiftToEmperor(int param1, int param2)
 {
-	UI_Window_goTo(Window_SendGiftToCaesarDialog);
+	window_gift_to_emperor_show();
 }
 
 static void buttonRequest(int index, int param2)

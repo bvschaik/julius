@@ -231,6 +231,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/donate_to_city.c
     ${PROJECT_SOURCE_DIR}/src/window/empire.c
     ${PROJECT_SOURCE_DIR}/src/window/file_dialog.c
+    ${PROJECT_SOURCE_DIR}/src/window/gift_to_emperor.c
     ${PROJECT_SOURCE_DIR}/src/window/logo.c
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/new_career.c
@@ -284,7 +285,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/MissionStart.c
 	${PROJECT_SOURCE_DIR}/src/UI/OverlayMenu.c
 	${PROJECT_SOURCE_DIR}/src/UI/PlayerMessageList.c
-	${PROJECT_SOURCE_DIR}/src/UI/SendGiftToCaesarDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Sidebar.c
 	${PROJECT_SOURCE_DIR}/src/UI/Tooltip.c
 	${PROJECT_SOURCE_DIR}/src/UI/TopMenu.c
