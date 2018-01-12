@@ -215,6 +215,12 @@ static void drawFillerBorders()
 			// larger border
 			graphicId -= 1;
 		}
+        if (borderRightWidth > 40) {
+            int xOffset = Data_Screen.width - 35;
+            for (int yOffset = 24; yOffset < Data_Screen.height; yOffset += 24) {
+                image_draw(graphicId, xOffset, yOffset);
+            }
+        }
 		int xOffset = Data_Screen.width - borderRightWidth;
 		for (int yOffset = 24; yOffset < Data_Screen.height; yOffset += 24) {
 			image_draw(graphicId, xOffset, yOffset);
