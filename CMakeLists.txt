@@ -234,6 +234,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/file_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/gift_to_emperor.c
     ${PROJECT_SOURCE_DIR}/src/window/hold_festival.c
+    ${PROJECT_SOURCE_DIR}/src/window/intermezzo.c
     ${PROJECT_SOURCE_DIR}/src/window/logo.c
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/new_career.c
