@@ -24,6 +24,7 @@
 #include "window/display_options.h"
 #include "window/file_dialog.h"
 #include "window/main_menu.h"
+#include "window/mission_briefing.h"
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
@@ -342,8 +343,7 @@ static void menuFile_replayMap(int param)
 		game_file_start_scenario(scenario_name());
 		window_city_show();
 	} else {
-		UI_Window_goTo(Window_MissionSelection);
-		UI_MissionStart_show();
+		window_mission_briefing_show();
 	}
 }
 

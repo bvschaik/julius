@@ -237,6 +237,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/intermezzo.c
     ${PROJECT_SOURCE_DIR}/src/window/logo.c
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
+    ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_end.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/new_career.c
@@ -283,10 +284,8 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Ghost.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Overlay.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Scroll.c
-	${PROJECT_SOURCE_DIR}/src/UI/Intermezzo.c
 	${PROJECT_SOURCE_DIR}/src/UI/MessageDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Minimap.c
-	${PROJECT_SOURCE_DIR}/src/UI/MissionStart.c
 	${PROJECT_SOURCE_DIR}/src/UI/OverlayMenu.c
 	${PROJECT_SOURCE_DIR}/src/UI/PlayerMessageList.c
 	${PROJECT_SOURCE_DIR}/src/UI/Sidebar.c

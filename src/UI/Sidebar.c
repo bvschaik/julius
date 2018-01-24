@@ -27,6 +27,7 @@
 #include "window/advisors.h"
 #include "window/city.h"
 #include "window/empire.h"
+#include "window/mission_briefing.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
 #define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
@@ -387,7 +388,7 @@ static void buttonEmpire(int param1, int param2)
 static void buttonMissionBriefing(int param1, int param2)
 {
 	if (!scenario_is_custom()) {
-		UI_Intermezzo_show(Intermezzo_MissionBriefing, Window_MissionBriefingReview, 1000);
+		window_mission_briefing_show_review();
 	}
 }
 

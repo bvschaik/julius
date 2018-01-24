@@ -8,6 +8,7 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "sound/speech.h"
+#include "window/mission_briefing.h"
 
 #include "UI/AllWindows.h"
 
@@ -112,7 +113,8 @@ static void handle_mouse(const mouse *m)
     }
 
     if (m_dialog->right.went_up) {
-        UI_MissionStart_show();
+        data.choice = 0;
+        window_invalidate();
     }
     if (data.choice > 0) {
         if (image_buttons_handle_mouse(m_dialog, 580, 410, &image_button_start_mission, 1, 0)) {
@@ -137,14 +139,13 @@ static void handle_mouse(const mouse *m)
 
 static void button_start(int param1, int param2)
 {
-    UI_MissionStart_show();
-    window_invalidate();
+    window_mission_briefing_show();
 }
 
 void window_mission_selection_show()
 {
     if (!game_mission_has_choice()) {
-        UI_MissionStart_show();
+        window_mission_briefing_show();
         return;
     }
     window_type window = {
