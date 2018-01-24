@@ -23,10 +23,10 @@
 #include "Data/CityInfo.h"
 #include "UI/AllWindows.h"
 
-static void button_accept(int param1, int param2);
+static void button_fired(int param1, int param2);
 
 static generic_button fired_buttons[] = {
-    {64, 208, 384, 228, GB_IMMEDIATE, button_accept, button_none, 0, 0},
+    {64, 208, 384, 228, GB_IMMEDIATE, button_fired, button_none, 0, 0},
 };
 
 static int focus_button_id;
@@ -94,13 +94,10 @@ static void draw_foreground()
 
 static void advance_to_next_mission()
 {
-    // TODO move out of UI code
     setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, Data_CityInfo.personalSavings);
     scenario_set_campaign_rank(scenario_campaign_rank() + 1);
 
-    Data_CityInfo.victoryHasWonScenario = 0;
-    Data_CityInfo.victoryContinueMonths = 0;
-    Data_CityInfo.victoryContinueMonthsChosen = 0;
+    city_victory_stop_governing();
 
     game_undo_disable();
     game_state_reset_overlay();
@@ -132,11 +129,9 @@ static void handle_mouse(const mouse *m)
     }
 }
 
-static void button_accept(int param1, int param2)
+static void button_fired(int param1, int param2)
 {
-    Data_CityInfo.victoryHasWonScenario = 0;
-    Data_CityInfo.victoryContinueMonths = 0;
-    Data_CityInfo.victoryContinueMonthsChosen = 0;
+    city_victory_stop_governing();
     game_undo_disable();
     if (scenario_is_custom()) {
         window_main_menu_show();

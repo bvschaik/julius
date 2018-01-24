@@ -17,4 +17,8 @@ void city_victory_check();
 
 void city_victory_update_months_to_govern();
 
+void city_victory_continue_governing(int months);
+
+void city_victory_stop_governing();
+
 #endif // CITY_VICTORY_H

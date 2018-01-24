@@ -1,6 +1,7 @@
 #include "victory.h"
 
 #include "building/construction.h"
+#include "city/finance.h"
 #include "city/message.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -137,4 +138,21 @@ void city_victory_update_months_to_govern()
     if (Data_CityInfo.victoryHasWonScenario) {
         Data_CityInfo.victoryContinueMonths--;
     }
+}
+
+void city_victory_continue_governing(int months)
+{
+    Data_CityInfo.victoryHasWonScenario = 1;
+    Data_CityInfo.victoryContinueMonths += months;
+    Data_CityInfo.victoryContinueMonthsChosen = months;
+    Data_CityInfo.salaryRank = 0;
+    Data_CityInfo.salaryAmount = 0;
+    city_finance_update_salary();
+}
+
+void city_victory_stop_governing()
+{
+    Data_CityInfo.victoryHasWonScenario = 0;
+    Data_CityInfo.victoryContinueMonths = 0;
+    Data_CityInfo.victoryContinueMonthsChosen = 0;
 }
