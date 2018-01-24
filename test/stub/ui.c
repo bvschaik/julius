@@ -1,5 +1,6 @@
 #include "graphics/window.h"
 #include "window/popup_dialog.h"
+#include "window/mission_end.h"
 
 #include "UI/MessageDialog.h"
 
@@ -15,6 +16,9 @@ void UI_Tooltip_resetTimer()
 {}
 
 void window_logo_show()
+{}
+
+void window_mission_end_show_fired()
 {}
 
 void UI_Window_goTo(WindowId windowId)

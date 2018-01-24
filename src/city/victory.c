@@ -7,6 +7,7 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "sound/music.h"
+#include "window/mission_end.h"
 
 #include "UI/AllWindows.h"
 #include "UI/VideoIntermezzo.h"
@@ -112,7 +113,7 @@ void city_victory_check()
         building_construction_clear_type();
         if (data.state == VICTORY_STATE_LOST) {
             if (Data_CityInfo.messageShownFired) {
-                UI_Intermezzo_show(Intermezzo_Fired, Window_MissionEnd, 1000);
+                window_mission_end_show_fired();
             } else {
                 Data_CityInfo.messageShownFired = 1;
                 city_message_post(1, MESSAGE_FIRED, 0, 0);

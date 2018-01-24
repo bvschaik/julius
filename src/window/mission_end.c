@@ -1,0 +1,171 @@
+#include "mission_end.h"
+
+#include "city/finance.h"
+#include "city/victory.h"
+#include "game/mission.h"
+#include "game/settings.h"
+#include "game/state.h"
+#include "game/undo.h"
+#include "graphics/generic_button.h"
+#include "graphics/graphics.h"
+#include "graphics/lang_text.h"
+#include "graphics/panel.h"
+#include "graphics/text.h"
+#include "scenario/property.h"
+#include "scenario/scenario.h"
+#include "sound/music.h"
+#include "sound/speech.h"
+#include "window/main_menu.h"
+#include "window/intermezzo.h"
+
+#include "Data/CityInfo.h"
+#include "UI/AllWindows.h"
+
+static void button_fired(int param1, int param2);
+
+static generic_button fired_buttons[] = {
+    {64, 208, 384, 228, GB_IMMEDIATE, button_fired, button_none, 0, 0},
+};
+
+static int focus_button_id;
+
+static void draw_lost()
+{
+    outer_panel_draw(48, 16, 34, 16);
+    lang_text_draw_centered(62, 1, 48, 32, 544, FONT_LARGE_BLACK);
+    lang_text_draw_multiline(62, 16, 64, 72, 496, FONT_NORMAL_BLACK);
+}
+
+static void draw_won()
+{
+    outer_panel_draw(48, 128, 34, 18);
+    lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
+   
+    inner_panel_draw(64, 184, 32, 7);
+
+    if (scenario_is_custom()) {
+        lang_text_draw_multiline(147, 20, 80, 192, 496, FONT_NORMAL_WHITE);
+    } else {
+        lang_text_draw_multiline(147, scenario_campaign_mission(), 80, 192, 496, FONT_NORMAL_WHITE);
+    }
+    int width = lang_text_draw(148, 0, 88, 308, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.ratingCulture, '@', " ", 88 + width, 308, FONT_NORMAL_BLACK);
+
+    width = lang_text_draw(148, 1, 348, 308, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.ratingProsperity, '@', " ", 348 + width, 308, FONT_NORMAL_BLACK);
+
+    width = lang_text_draw(148, 2, 88, 328, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.ratingPeace, '@', " ", 88 + width, 328, FONT_NORMAL_BLACK);
+
+    width = lang_text_draw(148, 3, 348, 328, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.ratingFavor, '@', " ", 348 + width, 328, FONT_NORMAL_BLACK);
+
+    width = lang_text_draw(148, 4, 88, 348, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.population, '@', " ", 88 + width, 348, FONT_NORMAL_BLACK);
+
+    width = lang_text_draw(148, 5, 348, 348, FONT_NORMAL_BLACK);
+    text_draw_number(city_finance_treasury(), '@', " ", 348 + width, 348, FONT_NORMAL_BLACK);
+
+    lang_text_draw_centered(13, 1, 64, 388, 512, FONT_NORMAL_BLACK);
+}
+
+static void draw_background()
+{
+    graphics_in_dialog();
+    if (city_victory_state() == VICTORY_STATE_WON) {
+        draw_won();
+    } else {
+        draw_lost();
+    }
+    graphics_reset_dialog();
+}
+
+static void draw_foreground()
+{
+    if (city_victory_state() != VICTORY_STATE_WON) {
+        graphics_in_dialog();
+        large_label_draw(80, 224, 30, focus_button_id == 1);
+        lang_text_draw_centered(62, 6, 80, 230, 480, FONT_NORMAL_GREEN);
+        graphics_reset_dialog();
+    }
+}
+
+static void advance_to_next_mission()
+{
+    // TODO move out of UI code
+    setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, Data_CityInfo.personalSavings);
+    scenario_set_campaign_rank(scenario_campaign_rank() + 1);
+
+    Data_CityInfo.victoryHasWonScenario = 0;
+    Data_CityInfo.victoryContinueMonths = 0;
+    Data_CityInfo.victoryContinueMonthsChosen = 0;
+
+    game_undo_disable();
+    game_state_reset_overlay();
+
+    if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
+        window_main_menu_show();
+        if (!scenario_is_custom()) {
+            setting_clear_personal_savings();
+            scenario_settings_init();
+            scenario_set_campaign_rank(2);
+        }
+    } else {
+        scenario_set_campaign_mission(game_mission_peaceful());
+        UI_MissionStart_show();
+    }
+}
+
+static void handle_mouse(const mouse *m)
+{
+    if (city_victory_state() == VICTORY_STATE_WON) {
+        if (m->right.went_up) {
+            sound_music_stop();
+            sound_speech_stop();
+            advance_to_next_mission();
+        }
+    } else {
+        generic_buttons_handle_mouse(mouse_in_dialog(m), 48, 16,
+                                     fired_buttons, 1, &focus_button_id);
+    }
+}
+
+static void button_fired(int param1, int param2)
+{
+    Data_CityInfo.victoryHasWonScenario = 0;
+    Data_CityInfo.victoryContinueMonths = 0;
+    Data_CityInfo.victoryContinueMonthsChosen = 0;
+    game_undo_disable();
+    if (scenario_is_custom()) {
+        window_main_menu_show();
+    } else {
+        UI_MissionStart_show();
+    }
+}
+
+static void show_end_dialog()
+{
+    window_type window = {
+        Window_MissionEnd,
+        draw_background,
+        draw_foreground,
+        handle_mouse,
+        0
+    };
+    window_show(&window);
+}
+
+static void show_intermezzo()
+{
+    sound_music_reset();
+    window_intermezzo_show(INTERMEZZO_WON, show_end_dialog);
+}
+
+void window_mission_end_show_won()
+{
+}
+
+void window_mission_end_show_fired()
+{
+    window_intermezzo_show(INTERMEZZO_FIRED, show_end_dialog);
+}
