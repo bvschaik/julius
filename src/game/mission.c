@@ -20,6 +20,10 @@ static const struct {
     {20, 21},
 };
 
+static const int RANK_CHOICE[] = {
+	0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+};
+
 int game_mission_peaceful()
 {
     return MISSION_IDS[scenario_campaign_rank()].peaceful;
@@ -28,4 +32,9 @@ int game_mission_peaceful()
 int game_mission_military()
 {
     return MISSION_IDS[scenario_campaign_rank()].military;
+}
+
+int game_mission_has_choice()
+{
+    return RANK_CHOICE[scenario_campaign_rank()];
 }

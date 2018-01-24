@@ -238,6 +238,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/logo.c
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_end.c
+    ${PROJECT_SOURCE_DIR}/src/window/mission_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/new_career.c
     ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/set_salary.c

@@ -15,8 +15,9 @@
 #include "scenario/scenario.h"
 #include "sound/music.h"
 #include "sound/speech.h"
-#include "window/main_menu.h"
 #include "window/intermezzo.h"
+#include "window/main_menu.h"
+#include "window/mission_selection.h"
 #include "window/victory_video.h"
 
 #include "Data/CityInfo.h"
@@ -113,7 +114,7 @@ static void advance_to_next_mission()
         }
     } else {
         scenario_set_campaign_mission(game_mission_peaceful());
-        UI_MissionStart_show();
+        window_mission_selection_show();
     }
 }
 
@@ -140,7 +141,7 @@ static void button_accept(int param1, int param2)
     if (scenario_is_custom()) {
         window_main_menu_show();
     } else {
-        UI_MissionStart_show();
+        window_mission_selection_show();
     }
 }
 

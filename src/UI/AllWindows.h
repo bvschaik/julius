@@ -47,10 +47,6 @@ void UI_Intermezzo_handleMouse(const mouse *m);
 
 void UI_MissionStart_show();
 
-void UI_MissionStart_Selection_drawBackground();
-void UI_MissionStart_Selection_drawForeground();
-void UI_MissionStart_Selection_handleMouse(const mouse *m);
-
 void UI_MissionStart_Briefing_init();
 void UI_MissionStart_Briefing_drawBackground();
 void UI_MissionStart_BriefingInitial_drawForeground();

@@ -12,6 +12,7 @@
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "window/main_menu.h"
+#include "window/mission_selection.h"
 
 #include "UI/AllWindows.h"
 
@@ -74,7 +75,7 @@ static void start_mission(int param1, int param2)
 {
     keyboard_stop_capture();
     scenario_set_player_name(player_name);
-    UI_MissionStart_show();
+    window_mission_selection_show();
 }
 
 void window_new_career_show()

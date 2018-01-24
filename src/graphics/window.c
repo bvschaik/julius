@@ -48,7 +48,7 @@ static window_type windows[] = {
     { Window_NewCareerDialog },
     { Window_SlidingSidebar, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop, noop, noop },
     { Window_CityMilitary },
-    { Window_MissionSelection, UI_MissionStart_Selection_drawBackground, UI_MissionStart_Selection_drawForeground, UI_MissionStart_Selection_handleMouse, noop, noop },
+    { Window_MissionSelection },
     // 30
     { Window_MissionBriefingInitial, UI_MissionStart_Briefing_drawBackground, UI_MissionStart_BriefingInitial_drawForeground, UI_MissionStart_BriefingInitial_handleMouse, noop, UI_MissionStart_Briefing_init },
     { Window_MissionBriefingReview, UI_MissionStart_Briefing_drawBackground, UI_MissionStart_BriefingReview_drawForeground, UI_MissionStart_BriefingReview_handleMouse, noop, UI_MissionStart_Briefing_init },
