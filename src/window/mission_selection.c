@@ -81,16 +81,16 @@ static void draw_foreground()
     int y_peaceful = CAMPAIGN_SELECTION[rank].y_peaceful - 4;
     int x_military = CAMPAIGN_SELECTION[rank].x_military - 4;
     int y_military = CAMPAIGN_SELECTION[rank].y_military - 4;
-    int graphicId = image_group(GROUP_SELECT_MISSION_BUTTON);
+    int image_id = image_group(GROUP_SELECT_MISSION_BUTTON);
     if (data.choice == 0) {
-        image_draw(data.focus_button == 1 ? graphicId + 1 : graphicId, x_peaceful, y_peaceful);
-        image_draw(data.focus_button == 2 ? graphicId + 1 : graphicId, x_military, y_military);
+        image_draw(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
+        image_draw(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
     } else if (data.choice == 1) {
-        image_draw(data.focus_button == 1 ? graphicId + 1 : graphicId + 2, x_peaceful, y_peaceful);
-        image_draw(data.focus_button == 2 ? graphicId + 1 : graphicId, x_military, y_military);
+        image_draw(data.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful);
+        image_draw(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
     } else {
-        image_draw(data.focus_button == 1 ? graphicId + 1 : graphicId, x_peaceful, y_peaceful);
-        image_draw(data.focus_button == 2 ? graphicId + 1 : graphicId + 2, x_military, y_military);
+        image_draw(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
+        image_draw(data.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military);
     }
     graphics_reset_dialog();
 }

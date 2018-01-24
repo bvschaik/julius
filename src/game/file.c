@@ -68,7 +68,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
-#include "UI/AllWindows.h"
 
 #include <string.h>
 
@@ -261,7 +260,7 @@ static void initialize_saved_game()
     empire_determine_distant_battle_city();
     map_tiles_determine_gardens();
 
-    UI_PlayerMessageList_resetScroll(); // TODO move scroll data out of UI
+    city_message_clear_scroll();
 
     game_state_unpause();
 }

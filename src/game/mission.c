@@ -21,7 +21,7 @@ static const struct {
 };
 
 static const int RANK_CHOICE[] = {
-	0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 };
 
 int game_mission_peaceful()

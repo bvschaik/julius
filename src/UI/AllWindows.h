@@ -18,7 +18,6 @@ void UI_ResourceSettingsDialog_drawBackground();
 void UI_ResourceSettingsDialog_drawForeground();
 void UI_ResourceSettingsDialog_handleMouse(const mouse *m);
 
-void UI_PlayerMessageList_resetScroll();
 void UI_PlayerMessageList_init();
 void UI_PlayerMessageList_drawBackground();
 void UI_PlayerMessageList_drawForeground();

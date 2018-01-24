@@ -14,6 +14,8 @@
 #include "graphics/window.h"
 #include "window/city.h"
 
+#define MAX_MESSAGES 10
+
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
 static void buttonScroll(int isDown, int numLines);
@@ -55,38 +57,16 @@ static struct {
 	int textWidthBlocks;
 	int textHeightBlocks;
 
-    int scrollPosition;
-    int maxScrollPosition;
     int isDraggingScrollbar;
     int scrollPositionDrag;
 } data;
 
 static int focusButtonId;
 
-static void update_scroll_position()
-{
-    int totalMessages = city_message_count();
-    if (totalMessages <= 10) {
-        data.scrollPosition = 0;
-        data.maxScrollPosition = 0;
-    } else {
-        data.maxScrollPosition = totalMessages - 10;
-        if (data.scrollPosition >= data.maxScrollPosition) {
-            data.scrollPosition = data.maxScrollPosition;
-        }
-    }
-}
-
-void UI_PlayerMessageList_resetScroll()
-{
-    data.scrollPosition = 0;
-    data.maxScrollPosition = 0;
-}
-
 void UI_PlayerMessageList_init()
 {
     city_message_sort_and_compact();
-    update_scroll_position();
+    city_message_update_scroll(MAX_MESSAGES);
 }
 
 void UI_PlayerMessageList_drawBackground()
@@ -130,8 +110,8 @@ void UI_PlayerMessageList_drawForeground()
 		return;
 	}
 
-	int max = totalMessages < 10 ? totalMessages : 10;
-	int index = data.scrollPosition;
+	int max = totalMessages < MAX_MESSAGES ? totalMessages : MAX_MESSAGES;
+	int index = city_message_scroll_position();
 	for (int i = 0; i < max; i++, index++) {
         const city_message *msg = city_message_get(index);
 		int messageId = city_message_get_text_id(msg->message_type);
@@ -158,21 +138,14 @@ void UI_PlayerMessageList_drawForeground()
 			lang_get_message(messageId)->title.text,
 			data.xText + 180, data.yText + 8 + 20 * i, font, 0);
 	}
-	if (data.maxScrollPosition > 0) {
+	if (city_message_can_scroll()) {
 		image_buttons_draw(
 			data.xText + 16 * data.textWidthBlocks, data.yText,
 			&imageButtonScrollUp, 1);
 		image_buttons_draw(
 			data.xText + 16 * data.textWidthBlocks, data.yText + 16 * data.textHeightBlocks - 26,
 			&imageButtonScrollDown, 1);
-		int pctScrolled;
-		if (data.scrollPosition <= 0) {
-			pctScrolled = 0;
-		} else if (data.scrollPosition >= data.maxScrollPosition) {
-			pctScrolled = 100;
-		} else {
-			pctScrolled = calc_percentage(data.scrollPosition, data.maxScrollPosition);
-		}
+		int pctScrolled = city_message_scroll_percentage();
 		int dotOffset = calc_adjust_with_percentage(16 * data.textHeightBlocks - 77, pctScrolled);
 		if (data.isDraggingScrollbar) {
 			dotOffset = data.scrollPositionDrag;
@@ -216,7 +189,7 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
 	}
 	int oldFocusButtonId = focusButtonId;
 	if (generic_buttons_handle_mouse(m_dialog, data.xText, data.yText + 4,
-		customButtonsMessages, 10, &focusButtonId)) {
+		customButtonsMessages, MAX_MESSAGES, &focusButtonId)) {
 		if (oldFocusButtonId != focusButtonId) {
 			window_invalidate();
 		}
@@ -227,7 +200,7 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
 
 static void handleMouseScrollbar(const mouse *m)
 {
-	if (data.maxScrollPosition <= 0 || !m->left.is_down) {
+	if (!city_message_can_scroll() || !m->left.is_down) {
 		return;
 	}
 	int scrollbarX = data.xText + 16 * data.textWidthBlocks + 1;
@@ -240,7 +213,7 @@ static void handleMouseScrollbar(const mouse *m)
 			dotOffset = scrollbarHeight;
 		}
 		int pctScrolled = calc_percentage(dotOffset, scrollbarHeight);
-		data.scrollPosition = calc_adjust_with_percentage(data.maxScrollPosition, pctScrolled);
+		city_message_set_scroll_percentage(pctScrolled);
 		data.isDraggingScrollbar = 1;
 		data.scrollPositionDrag = dotOffset - 25;
 		if (data.scrollPositionDrag < 0) {
@@ -252,17 +225,7 @@ static void handleMouseScrollbar(const mouse *m)
 
 static void buttonScroll(int isDown, int numLines)
 {
-	if (isDown) {
-		data.scrollPosition += numLines;
-		if (data.scrollPosition > data.maxScrollPosition) {
-			data.scrollPosition = data.maxScrollPosition;
-		}
-	} else {
-		data.scrollPosition -= numLines;
-		if (data.scrollPosition < 0) {
-			data.scrollPosition = 0;
-		}
-	}
+    city_message_scroll(isDown, numLines);
 	data.isDraggingScrollbar = 0;
 	window_invalidate();
 }
@@ -279,7 +242,7 @@ static void buttonClose(int param1, int param2)
 
 static void buttonMessage(int param1, int param2)
 {
-	int id = city_message_set_current(data.scrollPosition + param1);
+	int id = city_message_set_current(city_message_scroll_position() + param1);
 	if (id < city_message_count()) {
         const city_message *msg = city_message_get(id);
 		city_message_mark_read(id);
@@ -293,10 +256,10 @@ static void buttonMessage(int param1, int param2)
 
 static void buttonDelete(int param1, int param2)
 {
-	int id = city_message_set_current(data.scrollPosition + param1);
+	int id = city_message_set_current(city_message_scroll_position() + param1);
 	if (id < city_message_count()) {
 		city_message_delete(id);
-		update_scroll_position();
+		city_message_update_scroll(MAX_MESSAGES);
 		window_invalidate();
 	}
 }
