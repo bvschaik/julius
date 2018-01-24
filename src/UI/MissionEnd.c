@@ -161,7 +161,7 @@ void UI_VictoryDialog_drawForeground()
     graphics_in_dialog();
 
 	if (city_victory_state() == VICTORY_STATE_WON) {
-		large_label_draw(80, 280, 30, focusButtonId == 1);
+		large_label_draw(80, 240, 30, focusButtonId == 1);
 		if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
 			lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_GREEN);
 		} else {
