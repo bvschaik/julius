@@ -17,14 +17,15 @@
 #include "sound/speech.h"
 #include "window/main_menu.h"
 #include "window/intermezzo.h"
+#include "window/victory_video.h"
 
 #include "Data/CityInfo.h"
 #include "UI/AllWindows.h"
 
-static void button_fired(int param1, int param2);
+static void button_accept(int param1, int param2);
 
 static generic_button fired_buttons[] = {
-    {64, 208, 384, 228, GB_IMMEDIATE, button_fired, button_none, 0, 0},
+    {64, 208, 384, 228, GB_IMMEDIATE, button_accept, button_none, 0, 0},
 };
 
 static int focus_button_id;
@@ -130,7 +131,7 @@ static void handle_mouse(const mouse *m)
     }
 }
 
-static void button_fired(int param1, int param2)
+static void button_accept(int param1, int param2)
 {
     Data_CityInfo.victoryHasWonScenario = 0;
     Data_CityInfo.victoryContinueMonths = 0;
@@ -163,6 +164,20 @@ static void show_intermezzo()
 
 void window_mission_end_show_won()
 {
+    mouse_reset_up_state();
+    if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
+        // tutorials: immediately go to next mission
+        show_intermezzo();
+    } else if (!scenario_is_custom() && scenario_campaign_rank() >= 10) {
+        // Won campaign
+        window_victory_video_show("smk/win_game.smk", 400, 292, show_intermezzo);
+    } else {
+        if (setting_victory_video()) {
+            window_victory_video_show("smk/victory_balcony.smk", 400, 292, show_intermezzo);
+        } else {
+            window_victory_video_show("smk/victory_senate.smk", 400, 292, show_intermezzo);
+        }
+    }
 }
 
 void window_mission_end_show_fired()

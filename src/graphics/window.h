@@ -40,7 +40,6 @@ typedef enum {
     Window_MissionBriefingReview,
     Window_VictoryDialog,
     Window_MissionEnd,
-    Window_VictoryIntermezzo,
     Window_VideoIntermezzo,
     Window_Logo,
 } WindowId;

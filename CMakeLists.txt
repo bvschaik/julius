@@ -291,7 +291,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/Sidebar.c
 	${PROJECT_SOURCE_DIR}/src/UI/Tooltip.c
 	${PROJECT_SOURCE_DIR}/src/UI/TopMenu.c
-	${PROJECT_SOURCE_DIR}/src/UI/VideoIntermezzo.c
 	${PROJECT_SOURCE_DIR}/src/UI/Warning.c
 	${CORE_FILES}
 	${BUILDING_FILES}

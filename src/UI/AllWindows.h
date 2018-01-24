@@ -58,12 +58,6 @@ void UI_MissionStart_BriefingReview_drawForeground();
 void UI_MissionStart_BriefingInitial_handleMouse(const mouse *m);
 void UI_MissionStart_BriefingReview_handleMouse(const mouse *m);
 
-void UI_VictoryIntermezzo_init();
-
-void UI_MissionEnd_drawBackground();
-void UI_MissionEnd_drawForeground();
-void UI_MissionEnd_handleMouse(const mouse *m);
-
 void UI_VictoryDialog_drawBackground();
 void UI_VictoryDialog_drawForeground();
 void UI_VictoryDialog_handleMouse(const mouse *m);

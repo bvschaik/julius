@@ -21,6 +21,9 @@ void window_logo_show()
 void window_mission_end_show_fired()
 {}
 
+void window_mission_end_show_won()
+{}
+
 void UI_Window_goTo(WindowId windowId)
 {}
 

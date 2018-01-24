@@ -10,7 +10,6 @@
 #include "window/mission_end.h"
 
 #include "UI/AllWindows.h"
-#include "UI/VideoIntermezzo.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -122,20 +121,7 @@ void city_victory_check()
         } else if (data.state == VICTORY_STATE_WON) {
             sound_music_stop();
             if (Data_CityInfo.messageShownVictory) {
-                mouse_reset_up_state();
-                if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
-                    // tutorials: immediately go to next mission
-                    UI_Window_goTo(Window_VictoryIntermezzo);
-                } else if (!scenario_is_custom() && scenario_campaign_rank() >= 10) {
-                    // Won game
-                    UI_VideoIntermezzo_show("smk/win_game.smk", 400, 292, Window_VictoryIntermezzo);
-                } else {
-                    if (setting_victory_video()) {
-                        UI_VideoIntermezzo_show("smk/victory_balcony.smk", 400, 292, Window_VictoryIntermezzo);
-                    } else {
-                        UI_VideoIntermezzo_show("smk/victory_senate.smk", 400, 292, Window_VictoryIntermezzo);
-                    }
-                }
+                window_mission_end_show_won();
                 data.force_win = 0;
             } else {
                 Data_CityInfo.messageShownVictory = 1;

@@ -7,7 +7,6 @@
 #include "UI/MessageDialog.h"
 #include "UI/Sidebar.h"
 #include "UI/TopMenu.h"
-#include "UI/VideoIntermezzo.h"
 #include "UI/Warning.h"
 
 #include "window/city.h"
@@ -54,9 +53,8 @@ static window_type windows[] = {
     { Window_MissionBriefingInitial, UI_MissionStart_Briefing_drawBackground, UI_MissionStart_BriefingInitial_drawForeground, UI_MissionStart_BriefingInitial_handleMouse, noop, UI_MissionStart_Briefing_init },
     { Window_MissionBriefingReview, UI_MissionStart_Briefing_drawBackground, UI_MissionStart_BriefingReview_drawForeground, UI_MissionStart_BriefingReview_handleMouse, noop, UI_MissionStart_Briefing_init },
     { Window_VictoryDialog, UI_VictoryDialog_drawBackground, UI_VictoryDialog_drawForeground, UI_VictoryDialog_handleMouse, noop, noop },
-    { Window_MissionEnd, UI_MissionEnd_drawBackground, UI_MissionEnd_drawForeground, UI_MissionEnd_handleMouse, noop, noop },
-    { Window_VictoryIntermezzo, noop, noop, noop, noop, UI_VictoryIntermezzo_init },
-    { Window_VideoIntermezzo, UI_VideoIntermezzo_drawBackground, UI_VideoIntermezzo_drawForeground, UI_VideoIntermezzo_handleMouse, noop, UI_VideoIntermezzo_init },
+    { Window_MissionEnd },
+    { Window_VideoIntermezzo },
     { Window_Logo },
 };
 
