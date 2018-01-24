@@ -244,6 +244,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
     ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
     ${PROJECT_SOURCE_DIR}/src/window/trade_opened.c
+    ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.c
 )
 add_executable(julius
@@ -284,7 +285,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/Intermezzo.c
 	${PROJECT_SOURCE_DIR}/src/UI/MessageDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Minimap.c
-	${PROJECT_SOURCE_DIR}/src/UI/MissionEnd.c
 	${PROJECT_SOURCE_DIR}/src/UI/MissionStart.c
 	${PROJECT_SOURCE_DIR}/src/UI/OverlayMenu.c
 	${PROJECT_SOURCE_DIR}/src/UI/PlayerMessageList.c

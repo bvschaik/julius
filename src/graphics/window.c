@@ -52,7 +52,7 @@ static window_type windows[] = {
     // 30
     { Window_MissionBriefingInitial, UI_MissionStart_Briefing_drawBackground, UI_MissionStart_BriefingInitial_drawForeground, UI_MissionStart_BriefingInitial_handleMouse, noop, UI_MissionStart_Briefing_init },
     { Window_MissionBriefingReview, UI_MissionStart_Briefing_drawBackground, UI_MissionStart_BriefingReview_drawForeground, UI_MissionStart_BriefingReview_handleMouse, noop, UI_MissionStart_Briefing_init },
-    { Window_VictoryDialog, UI_VictoryDialog_drawBackground, UI_VictoryDialog_drawForeground, UI_VictoryDialog_handleMouse, noop, noop },
+    { Window_VictoryDialog },
     { Window_MissionEnd },
     { Window_VideoIntermezzo },
     { Window_Logo },

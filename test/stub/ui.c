@@ -1,6 +1,7 @@
 #include "graphics/window.h"
 #include "window/popup_dialog.h"
 #include "window/mission_end.h"
+#include "window/victory_dialog.h"
 
 #include "UI/MessageDialog.h"
 
@@ -24,6 +25,9 @@ void window_mission_end_show_fired()
 void window_mission_end_show_won()
 {}
 
+void window_victory_dialog_show()
+{}
+
 void UI_Window_goTo(WindowId windowId)
 {}
 
@@ -44,12 +48,6 @@ void UI_MessageDialog_setPlayerMessage(int year, int month,
 {}
 
 void window_popup_dialog_show(popup_dialog_type type, void (*okFunc)(int), int hasOkCancelButtons)
-{}
-
-void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis)
-{}
-
-void UI_VideoIntermezzo_show(const char* filename, int width, int height, WindowId nextWindowId)
 {}
 
 void UI_Sidebar_requestMinimapRefresh()

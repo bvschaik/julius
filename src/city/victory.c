@@ -8,6 +8,7 @@
 #include "scenario/property.h"
 #include "sound/music.h"
 #include "window/mission_end.h"
+#include "window/victory_dialog.h"
 
 #include "UI/AllWindows.h"
 
@@ -125,7 +126,7 @@ void city_victory_check()
                 data.force_win = 0;
             } else {
                 Data_CityInfo.messageShownVictory = 1;
-                UI_Window_goTo(Window_VictoryDialog);
+                window_victory_dialog_show();
             }
         }
     }
