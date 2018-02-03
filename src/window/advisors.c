@@ -17,6 +17,7 @@
 #include "graphics/window.h"
 #include "window/city.h"
 #include "window/advisor/chief.h"
+#include "window/advisor/education.h"
 
 #include "UI/Advisors_private.h"
 #include "UI/MessageDialog.h"
@@ -58,7 +59,7 @@ static const struct {
     {UI_Advisor_Trade_drawBackground, UI_Advisor_Trade_drawForeground, UI_Advisor_Trade_handleMouse, UI_Advisor_Trade_getTooltip},
     {UI_Advisor_Population_drawBackground, UI_Advisor_Population_drawForeground, UI_Advisor_Population_handleMouse, UI_Advisor_Population_getTooltip},
     {UI_Advisor_Health_drawBackground, 0, 0, 0},
-    {UI_Advisor_Education_drawBackground, 0, 0, 0},
+    {0, 0, 0, 0},
     {UI_Advisor_Entertainment_drawBackground, UI_Advisor_Entertainment_drawForeground, UI_Advisor_Entertainment_handleMouse, UI_Advisor_Entertainment_getTooltip},
     {UI_Advisor_Religion_drawBackground, 0, 0, 0},
     {UI_Advisor_Financial_drawBackground, UI_Advisor_Financial_drawForeground, UI_Advisor_Financial_handleMouse, UI_Advisor_Financial_getTooltip},
@@ -74,7 +75,7 @@ static const const advisor_window_type *(*sub_advisors[])(void) = {
     0,
     0,
     0,
-    0,
+    window_advisor_education,
     0,
     0,
     0,
