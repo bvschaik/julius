@@ -29,7 +29,6 @@
 #include "window/advisor/religion.h"
 #include "window/advisor/trade.h"
 
-#include "UI/Advisors_private.h"
 #include "UI/MessageDialog.h"
 
 static void button_change_advisor(int advisor, int param2);
@@ -55,27 +54,6 @@ static generic_button advisor_buttons[] = {
     {588, 1, 624, 41, GB_IMMEDIATE, button_change_advisor, button_none, 0, 0},
 };
 
-static const struct {
-    void (*draw_background)(int *height);
-    void (*draw_foreground)();
-    void (*handle_mouse)(const mouse *m);
-    int (*get_tooltip)();
-} sub_windows[] = {
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-};
-
 static const const advisor_window_type *(*sub_advisors[])(void) = {
     0,
     window_advisor_labor,
@@ -92,21 +70,20 @@ static const const advisor_window_type *(*sub_advisors[])(void) = {
     window_advisor_chief
 };
 
-static const int advisorToMessageTextId[] = {
+static const int ADVISOR_TO_MESSAGE_TEXT[] = {
     0, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
 };
 
 static const advisor_window_type *current_advisor_window = 0;
+static advisor_type current_advisor = ADVISOR_NONE;
 
-static advisor_type currentAdvisor = ADVISOR_NONE;
-
-static int focusButtonId;
-static int advisorHeight;
+static int focus_button_id;
+static int advisor_height;
 
 static void set_advisor_window()
 {
-    if (sub_advisors[currentAdvisor]) {
-        current_advisor_window = sub_advisors[currentAdvisor]();
+    if (sub_advisors[current_advisor]) {
+        current_advisor_window = sub_advisors[current_advisor]();
     } else {
         current_advisor_window = 0;
     }
@@ -114,7 +91,7 @@ static void set_advisor_window()
 
 static void set_advisor(int advisor)
 {
-    currentAdvisor = advisor;
+    current_advisor = advisor;
     setting_set_last_advisor(advisor);
     set_advisor_window();
 }
@@ -148,7 +125,7 @@ void window_advisors_draw_dialog_background()
 
     for (int i = 0; i < 13; i++) {
         int selected_offset = 0;
-        if (currentAdvisor && i == currentAdvisor - 1) {
+        if (current_advisor && i == current_advisor - 1) {
             selected_offset = 13;
         }
         image_draw(image_group(GROUP_ADVISOR_ICONS) + i + selected_offset, 48 * i + 12, 441);
@@ -159,42 +136,34 @@ void window_advisors_draw_dialog_background()
 static void draw_background()
 {
     window_advisors_draw_dialog_background();
-    if (current_advisor_window) {
-        graphics_in_dialog();
-        advisorHeight = current_advisor_window->draw_background();
-        graphics_reset_dialog();
-    } else {
-        sub_windows[currentAdvisor].draw_background(&advisorHeight);
-    }
+    graphics_in_dialog();
+    advisor_height = current_advisor_window->draw_background();
+    graphics_reset_dialog();
 }
 
 static void draw_foreground()
 {
     graphics_in_dialog();
-    image_buttons_draw(0, 16 * (advisorHeight - 2), &help_button, 1);
+    image_buttons_draw(0, 16 * (advisor_height - 2), &help_button, 1);
     graphics_reset_dialog();
 
-    if (current_advisor_window) {
-        if (current_advisor_window->draw_foreground) {
-            graphics_in_dialog();
-            current_advisor_window->draw_foreground();
-            graphics_reset_dialog();
-        }
-    } else if (sub_windows[currentAdvisor].draw_foreground) {
-        sub_windows[currentAdvisor].draw_foreground();
+    if (current_advisor_window->draw_foreground) {
+        graphics_in_dialog();
+        current_advisor_window->draw_foreground();
+        graphics_reset_dialog();
     }
 }
 
 static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 13, &focusButtonId)) {
+    if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 13, &focus_button_id)) {
         return;
     }
     int button_id;
-    image_buttons_handle_mouse(m_dialog, 0, 16 * (advisorHeight - 2), &help_button, 1, &button_id);
+    image_buttons_handle_mouse(m_dialog, 0, 16 * (advisor_height - 2), &help_button, 1, &button_id);
     if (button_id) {
-        focusButtonId = -1;
+        focus_button_id = -1;
         return;
     }
     if (m->right.went_up) {
@@ -202,12 +171,8 @@ static void handle_mouse(const mouse *m)
         return;
     }
 
-    if (current_advisor_window) {
-        if (current_advisor_window->handle_mouse) {
-            current_advisor_window->handle_mouse(mouse_in_dialog(m));
-        }
-    } else if (sub_windows[currentAdvisor].handle_mouse) {
-        sub_windows[currentAdvisor].handle_mouse(m);
+    if (current_advisor_window->handle_mouse) {
+        current_advisor_window->handle_mouse(m_dialog);
     }
 }
 
@@ -223,29 +188,25 @@ static void button_change_advisor(int advisor, int param2)
 
 static void button_help(int param1, int param2)
 {
-    if (currentAdvisor > 0 && currentAdvisor < 13) {
-        UI_MessageDialog_show(advisorToMessageTextId[currentAdvisor], 1);
+    if (current_advisor > 0 && current_advisor < 13) {
+        UI_MessageDialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], 1);
     }
 }
 
 static void get_tooltip(struct TooltipContext *c)
 {
-    if (focusButtonId) {
+    if (focus_button_id) {
         c->type = TooltipType_Button;
-        if (focusButtonId == -1) {
+        if (focus_button_id == -1) {
             c->textId = 1; // help button
         } else {
-            c->textId = 69 + focusButtonId;
+            c->textId = 69 + focus_button_id;
         }
         return;
     }
     int text_id = 0;
-    if (current_advisor_window) {
-        if (current_advisor_window->get_tooltip) {
-            text_id = current_advisor_window->get_tooltip();
-        }
-    } else if (sub_windows[currentAdvisor].get_tooltip) {
-        text_id = sub_windows[currentAdvisor].get_tooltip();
+    if (current_advisor_window->get_tooltip_text) {
+        text_id = current_advisor_window->get_tooltip_text();
     }
     if (text_id) {
         c->textId = text_id;
@@ -255,7 +216,7 @@ static void get_tooltip(struct TooltipContext *c)
 
 advisor_type window_advisors_get_advisor()
 {
-    return currentAdvisor;
+    return current_advisor;
 }
 
 void window_advisors_show()
