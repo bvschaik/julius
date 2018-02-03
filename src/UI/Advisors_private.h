@@ -12,10 +12,6 @@ void UI_Advisor_Labor_drawForeground();
 void UI_Advisor_Labor_handleMouse(const mouse *m);
 int UI_Advisor_Labor_getTooltip();
 
-void UI_Advisor_Military_drawBackground(int *advisorHeight);
-void UI_Advisor_Military_drawForeground();
-void UI_Advisor_Military_handleMouse(const mouse *m);
-
 void UI_Advisor_Imperial_drawBackground(int *advisorHeight);
 void UI_Advisor_Imperial_drawForeground();
 void UI_Advisor_Imperial_handleMouse(const mouse *m);
