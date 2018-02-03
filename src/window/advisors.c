@@ -18,6 +18,7 @@
 #include "window/city.h"
 #include "window/advisor/chief.h"
 #include "window/advisor/education.h"
+#include "window/advisor/entertainment.h"
 #include "window/advisor/financial.h"
 #include "window/advisor/health.h"
 #include "window/advisor/imperial.h"
@@ -66,7 +67,7 @@ static const struct {
     {UI_Advisor_Population_drawBackground, UI_Advisor_Population_drawForeground, UI_Advisor_Population_handleMouse, UI_Advisor_Population_getTooltip},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
-    {UI_Advisor_Entertainment_drawBackground, UI_Advisor_Entertainment_drawForeground, UI_Advisor_Entertainment_handleMouse, UI_Advisor_Entertainment_getTooltip},
+    {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
@@ -82,7 +83,7 @@ static const const advisor_window_type *(*sub_advisors[])(void) = {
     0,
     window_advisor_health,
     window_advisor_education,
-    0,
+    window_advisor_entertainment,
     window_advisor_religion,
     window_advisor_financial,
     window_advisor_chief
@@ -99,15 +100,20 @@ static advisor_type currentAdvisor = ADVISOR_NONE;
 static int focusButtonId;
 static int advisorHeight;
 
-static void set_advisor(int advisor)
+static void set_advisor_window()
 {
-    currentAdvisor = advisor;
-    setting_set_last_advisor(advisor);
     if (sub_advisors[currentAdvisor]) {
         current_advisor_window = sub_advisors[currentAdvisor]();
     } else {
         current_advisor_window = 0;
     }
+}
+
+static void set_advisor(int advisor)
+{
+    currentAdvisor = advisor;
+    setting_set_last_advisor(advisor);
+    set_advisor_window();
 }
 
 static void init()
@@ -128,9 +134,7 @@ static void init()
 
     city_ratings_update_explanations();
 
-    if (currentAdvisor == ADVISOR_ENTERTAINMENT) {
-        UI_Advisor_Entertainment_init();
-    }
+    set_advisor_window();
 }
 
 void window_advisors_draw_dialog_background()

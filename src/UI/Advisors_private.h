@@ -22,10 +22,4 @@ void UI_Advisor_Population_drawForeground();
 void UI_Advisor_Population_handleMouse(const mouse *m);
 int UI_Advisor_Population_getTooltip();
 
-void UI_Advisor_Entertainment_init();
-void UI_Advisor_Entertainment_drawBackground(int *advisorHeight);
-void UI_Advisor_Entertainment_drawForeground();
-void UI_Advisor_Entertainment_handleMouse(const mouse *m);
-int UI_Advisor_Entertainment_getTooltip();
-
 #endif
