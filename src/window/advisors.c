@@ -23,6 +23,7 @@
 #include "window/advisor/health.h"
 #include "window/advisor/imperial.h"
 #include "window/advisor/military.h"
+#include "window/advisor/population.h"
 #include "window/advisor/ratings.h"
 #include "window/advisor/religion.h"
 
@@ -64,7 +65,7 @@ static const struct {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {UI_Advisor_Trade_drawBackground, UI_Advisor_Trade_drawForeground, UI_Advisor_Trade_handleMouse, UI_Advisor_Trade_getTooltip},
-    {UI_Advisor_Population_drawBackground, UI_Advisor_Population_drawForeground, UI_Advisor_Population_handleMouse, UI_Advisor_Population_getTooltip},
+    {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
@@ -80,7 +81,7 @@ static const const advisor_window_type *(*sub_advisors[])(void) = {
     window_advisor_imperial,
     window_advisor_ratings,
     0,
-    0,
+    window_advisor_population,
     window_advisor_health,
     window_advisor_education,
     window_advisor_entertainment,

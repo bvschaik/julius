@@ -232,6 +232,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisor/health.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/imperial.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/military.c
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/population.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/ratings.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/religion.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
@@ -262,7 +263,6 @@ add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Labor.c
-	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Population.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Trade.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Culture.c
