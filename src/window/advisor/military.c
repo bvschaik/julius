@@ -3,7 +3,6 @@
 #include "city/view.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
-#include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -104,7 +103,7 @@ static int draw_background()
     inner_panel_draw(32, 70, 36, 17);
     if (num_legions <= 0) {
         lang_text_draw_multiline(51, 16, 64, 200, 496, FONT_NORMAL_GREEN);
-        return;
+        return ADVISOR_HEIGHT;
     }
 
     for (int i = 0; i < num_legions; i++) {

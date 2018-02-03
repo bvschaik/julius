@@ -236,6 +236,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisor/population.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/ratings.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/religion.c
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/trade.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
@@ -254,6 +255,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/mission_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/new_career.c
     ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.c
+    ${PROJECT_SOURCE_DIR}/src/window/resource_settings.c
     ${PROJECT_SOURCE_DIR}/src/window/set_salary.c
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
     ${PROJECT_SOURCE_DIR}/src/window/speed_options.c

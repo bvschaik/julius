@@ -12,9 +12,4 @@ void UI_Advisor_Trade_drawForeground();
 void UI_Advisor_Trade_handleMouse(const mouse *m);
 int UI_Advisor_Trade_getTooltip();
 
-void UI_Advisor_Population_drawBackground(int *advisorHeight);
-void UI_Advisor_Population_drawForeground();
-void UI_Advisor_Population_handleMouse(const mouse *m);
-int UI_Advisor_Population_getTooltip();
-
 #endif

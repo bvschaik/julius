@@ -35,7 +35,7 @@ static window_type windows[] = {
     { Window_TradeOpenedDialog },
     { Window_HoldFestivalDialog },
     { Window_TradePricesDialog, UI_TradePricesDialog_drawBackground, noop, UI_TradePricesDialog_handleMouse, UI_TradePricesDialog_getTooltip, noop },
-    { Window_ResourceSettingsDialog, UI_ResourceSettingsDialog_drawBackground, UI_ResourceSettingsDialog_drawForeground, UI_ResourceSettingsDialog_handleMouse, noop, noop },
+    { Window_ResourceSettingsDialog },
     { Window_MessageDialog, UI_MessageDialog_drawBackground, UI_MessageDialog_drawForeground, UI_MessageDialog_handleMouse, noop, UI_MessageDialog_init },
     { Window_PlayerMessageList, UI_PlayerMessageList_drawBackground, UI_PlayerMessageList_drawForeground, UI_PlayerMessageList_handleMouse, UI_PlayerMessageList_getTooltip, UI_PlayerMessageList_init },
     // 20

@@ -119,5 +119,4 @@ void window_labor_priority_show(int category)
     };
     init(category);
     window_show(&window);
-
 }
