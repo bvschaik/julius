@@ -227,6 +227,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisors.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/chief.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/education.c
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/health.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
@@ -256,7 +257,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Entertainment.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Financial.c
-	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Health.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Imperial.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Labor.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Military.c
