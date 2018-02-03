@@ -5,11 +5,6 @@
 
 #include "graphics/window.h"
 
-void UI_LaborPriorityDialog_drawBackground();
-void UI_LaborPriorityDialog_drawForeground();
-void UI_LaborPriorityDialog_handleMouse(const mouse *m);
-void UI_LaborPriorityDialog_getTooltip(struct TooltipContext *c);
-
 void UI_TradePricesDialog_drawBackground();
 void UI_TradePricesDialog_handleMouse(const mouse *m);
 void UI_TradePricesDialog_getTooltip(struct TooltipContext *c);

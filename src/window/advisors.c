@@ -22,6 +22,7 @@
 #include "window/advisor/financial.h"
 #include "window/advisor/health.h"
 #include "window/advisor/imperial.h"
+#include "window/advisor/labor.h"
 #include "window/advisor/military.h"
 #include "window/advisor/population.h"
 #include "window/advisor/ratings.h"
@@ -60,7 +61,7 @@ static const struct {
     int (*get_tooltip)();
 } sub_windows[] = {
     {0, 0, 0, 0},
-    {UI_Advisor_Labor_drawBackground, UI_Advisor_Labor_drawForeground, UI_Advisor_Labor_handleMouse, UI_Advisor_Labor_getTooltip},
+    {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
@@ -76,7 +77,7 @@ static const struct {
 
 static const const advisor_window_type *(*sub_advisors[])(void) = {
     0,
-    0,
+    window_advisor_labor,
     window_advisor_military,
     window_advisor_imperial,
     window_advisor_ratings,

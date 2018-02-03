@@ -26,7 +26,7 @@ static window_type windows[] = {
     { Window_SetSalaryDialog },
     { Window_DonateToCityDialog },
     { Window_SendGiftToCaesarDialog },
-    { Window_LaborPriorityDialog, UI_LaborPriorityDialog_drawBackground, UI_LaborPriorityDialog_drawForeground, UI_LaborPriorityDialog_handleMouse, UI_LaborPriorityDialog_getTooltip, noop },
+    { Window_LaborPriorityDialog },
     // 10
     { Window_DisplayOptions },
     { Window_SoundOptions },

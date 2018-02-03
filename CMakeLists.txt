@@ -231,6 +231,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisor/financial.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/health.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/imperial.c
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/labor.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/military.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/population.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/ratings.c
@@ -245,6 +246,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/gift_to_emperor.c
     ${PROJECT_SOURCE_DIR}/src/window/hold_festival.c
     ${PROJECT_SOURCE_DIR}/src/window/intermezzo.c
+    ${PROJECT_SOURCE_DIR}/src/window/labor_priority.c
     ${PROJECT_SOURCE_DIR}/src/window/logo.c
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.c
@@ -262,7 +264,6 @@ set(WINDOW_FILES
 add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
-	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Labor.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Trade.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Culture.c
