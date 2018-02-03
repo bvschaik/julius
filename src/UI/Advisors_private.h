@@ -21,11 +21,6 @@ void UI_Advisor_Imperial_drawForeground();
 void UI_Advisor_Imperial_handleMouse(const mouse *m);
 int UI_Advisor_Imperial_getTooltip();
 
-void UI_Advisor_Ratings_drawBackground(int *advisorHeight);
-void UI_Advisor_Ratings_drawForeground();
-void UI_Advisor_Ratings_handleMouse(const mouse *m);
-int UI_Advisor_Ratings_getTooltip();
-
 void UI_Advisor_Trade_drawBackground(int *advisorHeight);
 void UI_Advisor_Trade_drawForeground();
 void UI_Advisor_Trade_handleMouse(const mouse *m);

@@ -19,6 +19,7 @@
 #include "window/advisor/chief.h"
 #include "window/advisor/education.h"
 #include "window/advisor/health.h"
+#include "window/advisor/ratings.h"
 #include "window/advisor/religion.h"
 
 #include "UI/Advisors_private.h"
@@ -57,7 +58,7 @@ static const struct {
     {UI_Advisor_Labor_drawBackground, UI_Advisor_Labor_drawForeground, UI_Advisor_Labor_handleMouse, UI_Advisor_Labor_getTooltip},
     {UI_Advisor_Military_drawBackground, UI_Advisor_Military_drawForeground, UI_Advisor_Military_handleMouse, 0},
     {UI_Advisor_Imperial_drawBackground, UI_Advisor_Imperial_drawForeground, UI_Advisor_Imperial_handleMouse, UI_Advisor_Imperial_getTooltip},
-    {UI_Advisor_Ratings_drawBackground, UI_Advisor_Ratings_drawForeground, UI_Advisor_Ratings_handleMouse, UI_Advisor_Ratings_getTooltip},
+    {0, 0, 0, 0},
     {UI_Advisor_Trade_drawBackground, UI_Advisor_Trade_drawForeground, UI_Advisor_Trade_handleMouse, UI_Advisor_Trade_getTooltip},
     {UI_Advisor_Population_drawBackground, UI_Advisor_Population_drawForeground, UI_Advisor_Population_handleMouse, UI_Advisor_Population_getTooltip},
     {0, 0, 0, 0},
@@ -73,7 +74,7 @@ static const const advisor_window_type *(*sub_advisors[])(void) = {
     0,
     0,
     0,
-    0,
+    window_advisor_ratings,
     0,
     0,
     window_advisor_health,
@@ -148,7 +149,7 @@ void window_advisors_draw_dialog_background()
 static void draw_background()
 {
     window_advisors_draw_dialog_background();
-    if (sub_advisors[currentAdvisor]) {
+    if (current_advisor_window) {
         graphics_in_dialog();
         advisorHeight = current_advisor_window->draw_background();
         graphics_reset_dialog();
@@ -163,7 +164,13 @@ static void draw_foreground()
     image_buttons_draw(0, 16 * (advisorHeight - 2), &help_button, 1);
     graphics_reset_dialog();
 
-    if (sub_windows[currentAdvisor].draw_foreground) {
+    if (current_advisor_window) {
+        if (current_advisor_window->draw_foreground) {
+            graphics_in_dialog();
+            current_advisor_window->draw_foreground();
+            graphics_reset_dialog();
+        }
+    } else if (sub_windows[currentAdvisor].draw_foreground) {
         sub_windows[currentAdvisor].draw_foreground();
     }
 }
@@ -185,7 +192,11 @@ static void handle_mouse(const mouse *m)
         return;
     }
 
-    if (sub_windows[currentAdvisor].handle_mouse) {
+    if (current_advisor_window) {
+        if (current_advisor_window->handle_mouse) {
+            current_advisor_window->handle_mouse(mouse_in_dialog(m));
+        }
+    } else if (sub_windows[currentAdvisor].handle_mouse) {
         sub_windows[currentAdvisor].handle_mouse(m);
     }
 }
@@ -218,12 +229,16 @@ static void get_tooltip(struct TooltipContext *c)
         }
         return;
     }
-    int textId = 0;
-    if (sub_windows[currentAdvisor].get_tooltip) {
-        textId = sub_windows[currentAdvisor].get_tooltip();
+    int text_id = 0;
+    if (current_advisor_window) {
+        if (current_advisor_window->get_tooltip) {
+            text_id = current_advisor_window->get_tooltip();
+        }
+    } else if (sub_windows[currentAdvisor].get_tooltip) {
+        text_id = sub_windows[currentAdvisor].get_tooltip();
     }
-    if (textId) {
-        c->textId = textId;
+    if (text_id) {
+        c->textId = text_id;
         c->type = TooltipType_Button;
     }
 }
