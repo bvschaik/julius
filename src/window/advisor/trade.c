@@ -10,6 +10,7 @@
 #include "graphics/window.h"
 #include "window/empire.h"
 #include "window/resource_settings.h"
+#include "window/trade_prices.h"
 
 #include "Data/CityInfo.h"
 
@@ -99,7 +100,7 @@ static void handle_mouse(const mouse *m)
 
 static void button_prices(int param1, int param2)
 {
-    UI_Window_goTo(Window_TradePricesDialog);
+    window_trade_prices_show();
 }
 
 static void button_empire(int param1, int param2)

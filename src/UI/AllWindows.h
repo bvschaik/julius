@@ -5,10 +5,6 @@
 
 #include "graphics/window.h"
 
-void UI_TradePricesDialog_drawBackground();
-void UI_TradePricesDialog_handleMouse(const mouse *m);
-void UI_TradePricesDialog_getTooltip(struct TooltipContext *c);
-
 void UI_PlayerMessageList_init();
 void UI_PlayerMessageList_drawBackground();
 void UI_PlayerMessageList_drawForeground();

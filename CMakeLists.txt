@@ -260,13 +260,13 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
     ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
     ${PROJECT_SOURCE_DIR}/src/window/trade_opened.c
+    ${PROJECT_SOURCE_DIR}/src/window/trade_prices.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.c
 )
 add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
-	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Trade.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Culture.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Decoration.c
