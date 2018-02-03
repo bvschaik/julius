@@ -225,6 +225,7 @@ set(SOUND_FILES
 )
 set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisors.c
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/chief.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
@@ -252,7 +253,6 @@ set(WINDOW_FILES
 add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
-	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Chief.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Education.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Entertainment.c
 	${PROJECT_SOURCE_DIR}/src/UI/Advisor_Financial.c

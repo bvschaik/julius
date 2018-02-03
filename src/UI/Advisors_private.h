@@ -53,6 +53,4 @@ void UI_Advisor_Financial_drawForeground();
 void UI_Advisor_Financial_handleMouse(const mouse *m);
 int UI_Advisor_Financial_getTooltip();
 
-void UI_Advisor_Chief_drawBackground(int *advisorHeight);
-
 #endif

@@ -16,6 +16,7 @@
 #include "graphics/image_button.h"
 #include "graphics/window.h"
 #include "window/city.h"
+#include "window/advisor/chief.h"
 
 #include "UI/Advisors_private.h"
 #include "UI/MessageDialog.h"
@@ -23,11 +24,11 @@
 static void button_change_advisor(int advisor, int param2);
 static void button_help(int param1, int param2);
 
-static image_button helpButton = {
+static image_button help_button = {
     11, -7, 27, 27, IB_NORMAL, 134, 0, button_help, button_none, 0, 0, 1
 };
 
-static generic_button advisorButtons[] = {
+static generic_button advisor_buttons[] = {
     {12, 1, 52, 41, GB_IMMEDIATE, button_change_advisor, button_none, ADVISOR_LABOR, 0},
     {60, 1, 100, 41, GB_IMMEDIATE, button_change_advisor, button_none, ADVISOR_MILITARY, 0},
     {108, 1, 148, 41, GB_IMMEDIATE, button_change_advisor, button_none, ADVISOR_IMPERIAL, 0},
@@ -43,7 +44,7 @@ static generic_button advisorButtons[] = {
     {588, 1, 624, 41, GB_IMMEDIATE, button_change_advisor, button_none, 0, 0},
 };
 
-static struct {
+static const struct {
     void (*draw_background)(int *height);
     void (*draw_foreground)();
     void (*handle_mouse)(const mouse *m);
@@ -61,17 +62,46 @@ static struct {
     {UI_Advisor_Entertainment_drawBackground, UI_Advisor_Entertainment_drawForeground, UI_Advisor_Entertainment_handleMouse, UI_Advisor_Entertainment_getTooltip},
     {UI_Advisor_Religion_drawBackground, 0, 0, 0},
     {UI_Advisor_Financial_drawBackground, UI_Advisor_Financial_drawForeground, UI_Advisor_Financial_handleMouse, UI_Advisor_Financial_getTooltip},
-    {UI_Advisor_Chief_drawBackground, 0, 0, 0},
+    {0, 0, 0, 0},
+};
+
+static const const advisor_window_type *(*sub_advisors[])(void) = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    window_advisor_chief
 };
 
 static const int advisorToMessageTextId[] = {
     0, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
 };
 
+static const advisor_window_type *current_advisor_window = 0;
+
 static advisor_type currentAdvisor = ADVISOR_NONE;
 
 static int focusButtonId;
 static int advisorHeight;
+
+static void set_advisor(int advisor)
+{
+    currentAdvisor = advisor;
+    setting_set_last_advisor(advisor);
+    if (sub_advisors[currentAdvisor]) {
+        current_advisor_window = sub_advisors[currentAdvisor]();
+    } else {
+        current_advisor_window = 0;
+    }
+}
 
 static void init()
 {
@@ -115,13 +145,19 @@ void window_advisors_draw_dialog_background()
 static void draw_background()
 {
     window_advisors_draw_dialog_background();
-    sub_windows[currentAdvisor].draw_background(&advisorHeight);
+    if (sub_advisors[currentAdvisor]) {
+        graphics_in_dialog();
+        advisorHeight = current_advisor_window->draw_background();
+        graphics_reset_dialog();
+    } else {
+        sub_windows[currentAdvisor].draw_background(&advisorHeight);
+    }
 }
 
 static void draw_foreground()
 {
     graphics_in_dialog();
-    image_buttons_draw(0, 16 * (advisorHeight - 2), &helpButton, 1);
+    image_buttons_draw(0, 16 * (advisorHeight - 2), &help_button, 1);
     graphics_reset_dialog();
 
     if (sub_windows[currentAdvisor].draw_foreground) {
@@ -132,11 +168,11 @@ static void draw_foreground()
 static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisorButtons, 13, &focusButtonId)) {
+    if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 13, &focusButtonId)) {
         return;
     }
     int button_id;
-    image_buttons_handle_mouse(m_dialog, 0, 16 * (advisorHeight - 2), &helpButton, 1, &button_id);
+    image_buttons_handle_mouse(m_dialog, 0, 16 * (advisorHeight - 2), &help_button, 1, &button_id);
     if (button_id) {
         focusButtonId = -1;
         return;
@@ -154,8 +190,7 @@ static void handle_mouse(const mouse *m)
 static void button_change_advisor(int advisor, int param2)
 {
     if (advisor) {
-        currentAdvisor = advisor;
-        setting_set_last_advisor(advisor);
+        set_advisor(advisor);
         window_invalidate();
     } else {
         window_city_show();
@@ -212,7 +247,7 @@ void window_advisors_show_checked()
 {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == AVAILABLE) {
-        currentAdvisor = setting_last_advisor();
+        set_advisor(setting_last_advisor());
         window_advisors_show();
     } else {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
@@ -230,7 +265,6 @@ void window_advisors_show_advisor(advisor_type advisor)
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
         return;
     }
-    currentAdvisor = advisor;
-    setting_set_last_advisor(advisor);
+    set_advisor(advisor);
     window_advisors_show();
 }

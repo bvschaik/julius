@@ -2,6 +2,17 @@
 #define WINDOW_ADVISORS_H
 
 #include "city/constants.h"
+#include "input/mouse.h"
+
+typedef struct {
+    /**
+     * @return height of the advisor in blocks of 16px
+     */
+    int (*draw_background)(void);
+    void (*draw_foreground)(void);
+    void (*handle_mouse)(const mouse *m);
+    int (*get_tooltip)();
+} advisor_window_type;
 
 advisor_type window_advisors_get_advisor();
 
