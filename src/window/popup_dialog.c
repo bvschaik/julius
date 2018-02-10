@@ -23,16 +23,17 @@ static struct {
     int has_buttons;
 } data;
 
-static void init(popup_dialog_type type, void (*close_func)(int accepted), int has_ok_cancel_buttons)
+static int init(popup_dialog_type type, void (*close_func)(int accepted), int has_ok_cancel_buttons)
 {
     if (window_is(Window_PopupDialog)) {
         // don't show popup over popup
-        return;
+        return 0;
     }
     data.type = type;
     data.ok_clicked = 0;
     data.close_func = close_func;
     data.has_buttons = has_ok_cancel_buttons;
+    return 1;
 }
 
 static void draw_background()
@@ -83,12 +84,13 @@ void button_cancel(int param1, int param2)
 
 void window_popup_dialog_show(popup_dialog_type type, void (*close_func)(int accepted), int has_ok_cancel_buttons)
 {
-    window_type window = {
-        Window_PopupDialog,
-        draw_background,
-        draw_foreground,
-        handle_mouse
-    };
-    init(type, close_func, has_ok_cancel_buttons);
-    window_show(&window);
+    if (init(type, close_func, has_ok_cancel_buttons)) {
+        window_type window = {
+            Window_PopupDialog,
+            draw_background,
+            draw_foreground,
+            handle_mouse
+        };
+        window_show(&window);
+    }
 }
