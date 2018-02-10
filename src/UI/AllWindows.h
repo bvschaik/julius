@@ -5,11 +5,6 @@
 
 #include "graphics/window.h"
 
-void UI_OverlayMenu_init();
-void UI_OverlayMenu_drawBackground();
-void UI_OverlayMenu_drawForeground();
-void UI_OverlayMenu_handleMouse(const mouse *m);
-
 void UI_BuildingMenu_init(int submenu);
 void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw);
 void UI_BuildingMenu_drawBackground();

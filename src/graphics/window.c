@@ -40,7 +40,7 @@ static window_type windows[] = {
     // 20
     { Window_CCKSelection },
     { Window_FileDialog },
-    { Window_OverlayMenu, UI_OverlayMenu_drawBackground, UI_OverlayMenu_drawForeground, UI_OverlayMenu_handleMouse, noop, UI_OverlayMenu_init },
+    { Window_OverlayMenu },
     { Window_BuildingMenu, UI_BuildingMenu_drawBackground, UI_BuildingMenu_drawForeground, UI_BuildingMenu_handleMouse, noop, noop },
     { Window_Intermezzo },
     { Window_BuildingInfo, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse, UI_BuildingInfo_getTooltip, UI_BuildingInfo_init },

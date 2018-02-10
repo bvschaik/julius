@@ -29,6 +29,7 @@
 #include "window/empire.h"
 #include "window/message_list.h"
 #include "window/mission_briefing.h"
+#include "window/overlay_menu.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
 #define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
@@ -323,7 +324,7 @@ int UI_Sidebar_getTooltipText()
 
 static void buttonOverlay(int param1, int param2)
 {
-	UI_Window_goTo(Window_OverlayMenu);
+	window_overlay_menu_show();
 }
 
 static void buttonCollapseExpand(int param1, int param2)
