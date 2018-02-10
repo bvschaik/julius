@@ -266,16 +266,16 @@ static void button_delete(int param1, int param2)
     }
 }
 
-static void get_tooltip(struct TooltipContext *c)
+static void get_tooltip(tooltip_context *c)
 {
     if (data.focus_button_id == 11) {
-        c->textId = 1;
+        c->text_id = 1;
     } else if (data.focus_button_id == 12) {
-        c->textId = 2;
+        c->text_id = 2;
     } else {
         return;
     }
-    c->type = TooltipType_Button;
+    c->type = TOOLTIP_BUTTON;
 }
 
 void window_message_list_show()

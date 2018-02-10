@@ -11,8 +11,6 @@
 #include "sound/effect.h"
 #include "window/message_dialog.h"
 
-#include "UI/Tooltip.h"
-
 #define MAX_MESSAGES 1000
 #define MAX_QUEUE 20
 #define MAX_MESSAGE_CATEGORIES 20
@@ -141,7 +139,6 @@ static void show_message_popup(int message_id)
     data.consecutive_message_delay = 5;
     msg->is_read = 1;
     int text_id = city_message_get_text_id(msg->message_type);
-    UI_Tooltip_resetTimer();
     if (!has_video(text_id)) {
         play_sound(text_id);
     }

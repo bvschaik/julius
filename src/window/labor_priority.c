@@ -8,8 +8,6 @@
 #include "graphics/window.h"
 #include "window/advisor/labor.h"
 
-#include "UI/Tooltip.h"
-
 static void button_set_priority(int new_priority, int param2);
 
 static struct {
@@ -95,16 +93,16 @@ static void button_set_priority(int new_priority, int param2)
     window_advisors_show();
 }
 
-static void get_tooltip(struct TooltipContext *c)
+static void get_tooltip(tooltip_context *c)
 {
     if (!data.focus_button_id) {
         return;
     }
-    c->type = TooltipType_Button;
+    c->type = TOOLTIP_BUTTON;
     if (data.focus_button_id == 1) {
-        c->textId = 92;
+        c->text_id = 92;
     } else {
-        c->textId = 93;
+        c->text_id = 93;
     }
 }
 

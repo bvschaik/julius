@@ -40,30 +40,30 @@ static void handle_mouse(const mouse *m)
     }
 }
 
-static int getTradePriceTooltipResource(struct TooltipContext *c)
+static int get_tooltip_resource(tooltip_context *c)
 {
-    int xBase = screen_dialog_offset_x() + 124;
+    int x_base = screen_dialog_offset_x() + 124;
     int y = screen_dialog_offset_y() + 192;
-    int xMouse = c->mouse_x;
-    int yMouse = c->mouse_y;
+    int x_mouse = c->mouse_x;
+    int y_mouse = c->mouse_y;
     
     for (int i = 1; i < 16; i++) {
-        int x = xBase + 30 * i;
-        if (x <= xMouse && x + 24 > xMouse && y <= yMouse && y + 24 > yMouse) {
+        int x = x_base + 30 * i;
+        if (x <= x_mouse && x + 24 > x_mouse && y <= y_mouse && y + 24 > y_mouse) {
             return i;
         }
     }
     return 0;
 }
 
-static void get_tooltip(struct TooltipContext *c)
+static void get_tooltip(tooltip_context *c)
 {
-    int resource = getTradePriceTooltipResource(c);
+    int resource = get_tooltip_resource(c);
     if (!resource) {
         return;
     }
-    c->type = TooltipType_Button;
-    c->textId = 131 + resource;
+    c->type = TOOLTIP_BUTTON;
+    c->text_id = 131 + resource;
 }
 
 void window_trade_prices_show()

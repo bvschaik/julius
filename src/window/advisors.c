@@ -192,14 +192,14 @@ static void button_help(int param1, int param2)
     }
 }
 
-static void get_tooltip(struct TooltipContext *c)
+static void get_tooltip(tooltip_context *c)
 {
     if (focus_button_id) {
-        c->type = TooltipType_Button;
+        c->type = TOOLTIP_BUTTON;
         if (focus_button_id == -1) {
-            c->textId = 1; // help button
+            c->text_id = 1; // help button
         } else {
-            c->textId = 69 + focus_button_id;
+            c->text_id = 69 + focus_button_id;
         }
         return;
     }
@@ -208,8 +208,8 @@ static void get_tooltip(struct TooltipContext *c)
         text_id = current_advisor_window->get_tooltip_text();
     }
     if (text_id) {
-        c->textId = text_id;
-        c->type = TooltipType_Button;
+        c->text_id = text_id;
+        c->type = TOOLTIP_BUTTON;
     }
 }
 

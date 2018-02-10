@@ -460,14 +460,14 @@ static void handle_mouse(const mouse *m)
     }
 }
 
-static int is_mouse_hit(struct TooltipContext *c, int x, int y, int size)
+static int is_mouse_hit(tooltip_context *c, int x, int y, int size)
 {
     int mx = c->mouse_x;
     int my = c->mouse_y;
     return x <= mx && mx < x + size && y <= my && my < y + size;
 }
 
-static int get_tooltip_resource(struct TooltipContext *c)
+static int get_tooltip_resource(tooltip_context *c)
 {
     const empire_city *city = empire_city_get(data.selected_city);
     if (city->type != EMPIRE_CITY_TRADE) {
@@ -517,18 +517,18 @@ static int get_tooltip_resource(struct TooltipContext *c)
     return 0;
 }
 
-static void get_tooltip(struct TooltipContext *c)
+static void get_tooltip(tooltip_context *c)
 {
     int resource = get_tooltip_resource(c);
     if (resource) {
-        c->type = TooltipType_Button;
-        c->textId = 131 + resource;
+        c->type = TOOLTIP_BUTTON;
+        c->text_id = 131 + resource;
     } else if (data.focus_button_id) {
-        c->type = TooltipType_Button;
+        c->type = TOOLTIP_BUTTON;
         switch (data.focus_button_id) {
-            case 1: c->textId = 1; break;
-            case 2: c->textId = 2; break;
-            case 3: c->textId = 69; break;
+            case 1: c->text_id = 1; break;
+            case 2: c->text_id = 2; break;
+            case 3: c->text_id = 69; break;
         }
     }
 }

@@ -309,7 +309,7 @@ int UI_TopMenu_handleMouseWidget(const mouse *m)
 	}
 }
 
-int UI_TopMenu_getTooltipText(struct TooltipContext *c)
+int UI_TopMenu_getTooltipText(tooltip_context *c)
 {
 	if (focusMenuId) {
 		return 49 + focusMenuId;

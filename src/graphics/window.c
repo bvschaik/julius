@@ -123,7 +123,7 @@ void window_draw(int force)
 
     const mouse *m = mouse_get();
     current_window.handle_mouse(m);
-    UI_Tooltip_handle(m, current_window.get_tooltip);
+    tooltip_handle(m, current_window.get_tooltip);
     warning_draw();
     updateMouseAfter();
 }

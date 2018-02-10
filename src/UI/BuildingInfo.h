@@ -1,7 +1,7 @@
 #ifndef UI_BUILDINGINFO_H
 #define UI_BUILDINGINFO_H
 
-#include "Tooltip.h"
+#include "graphics/tooltip.h"
 #include "input/mouse.h"
 #include "sound/speech.h"
 
@@ -59,7 +59,7 @@ void UI_BuildingInfo_show(int gridOffset);
 void UI_BuildingInfo_drawBackground();
 void UI_BuildingInfo_drawForeground();
 void UI_BuildingInfo_handleMouse(const mouse *m);
-void UI_BuildingInfo_getTooltip(struct TooltipContext *c);
+void UI_BuildingInfo_getTooltip(tooltip_context *c);
 
 int UI_BuildingInfo_getBuildingType();
 

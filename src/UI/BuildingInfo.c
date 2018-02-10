@@ -562,7 +562,7 @@ void UI_BuildingInfo_handleMouse(const mouse *m)
 	}
 }
 
-void UI_BuildingInfo_getTooltip(struct TooltipContext *c)
+void UI_BuildingInfo_getTooltip(tooltip_context *c)
 {
 	int textId = 0;
 	if (focusImageButtonId) {
@@ -571,8 +571,8 @@ void UI_BuildingInfo_getTooltip(struct TooltipContext *c)
 		textId = UI_BuildingInfo_getTooltipLegionInfo(&context);
 	}
 	if (textId) {
-		c->type = TooltipType_Button;
-		c->textId = textId;
+		c->type = TOOLTIP_BUTTON;
+		c->text_id = textId;
 	}
 }
 

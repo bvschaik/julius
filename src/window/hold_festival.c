@@ -158,26 +158,26 @@ static void button_hold_festival(int param1, int param2)
     window_advisors_show();
 }
 
-static void get_tooltip(struct TooltipContext *c)
+static void get_tooltip(tooltip_context *c)
 {
     if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5)) {
         return;
     }
-    c->type = TooltipType_Button;
+    c->type = TOOLTIP_BUTTON;
     // image buttons
     switch (focus_image_button_id) {
-        case 1: c->textId = 1; break;
-        case 2: c->textId = 2; break;
-        case 3: c->textId = 113; break;
-        case 4: c->textId = 114; break;
+        case 1: c->text_id = 1; break;
+        case 2: c->text_id = 2; break;
+        case 3: c->text_id = 113; break;
+        case 4: c->text_id = 114; break;
     }
     // gods
     switch (focus_button_id) {
-        case 1: c->textId = 115; break;
-        case 2: c->textId = 116; break;
-        case 3: c->textId = 117; break;
-        case 4: c->textId = 118; break;
-        case 5: c->textId = 119; break;
+        case 1: c->text_id = 115; break;
+        case 2: c->text_id = 116; break;
+        case 3: c->text_id = 117; break;
+        case 4: c->text_id = 118; break;
+        case 5: c->text_id = 119; break;
     }
 }
 

@@ -91,15 +91,15 @@ static void handle_mouse_military(const mouse *m)
     UI_CityBuildings_handleMouseMilitary(m);
 }
 
-static void get_tooltip(struct TooltipContext *c)
+static void get_tooltip(tooltip_context *c)
 {
-    int textId = UI_TopMenu_getTooltipText(c);
-    if (!textId) {
-        textId = UI_Sidebar_getTooltipText();
+    int text_id = UI_TopMenu_getTooltipText(c);
+    if (!text_id) {
+        text_id = UI_Sidebar_getTooltipText();
     }
-    if (textId) {
-        c->type = TooltipType_Button;
-        c->textId = textId;
+    if (text_id) {
+        c->type = TOOLTIP_BUTTON;
+        c->text_id = text_id;
         return;
     }
     UI_CityBuildings_getTooltip(c);

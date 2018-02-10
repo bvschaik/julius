@@ -1,9 +1,8 @@
 #ifndef GRAPHICS_WINDOW_H
 #define GRAPHICS_WINDOW_H
 
+#include "graphics/tooltip.h"
 #include "input/mouse.h"
-
-#include "UI/Tooltip.h"
 
 typedef enum {
     Window_MainMenu,
@@ -49,7 +48,7 @@ typedef struct {
     void (*draw_background)(void);
     void (*draw_foreground)(void);
     void (*handle_mouse)(const mouse *m);
-    void (*get_tooltip)(struct TooltipContext *c);
+    void (*get_tooltip)(tooltip_context *c);
 } window_type;
 
 void window_invalidate();

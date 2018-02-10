@@ -142,20 +142,20 @@ static void arrow_button_amount(int is_down, int param2)
     window_invalidate();
 }
 
-static void get_tooltip(struct TooltipContext *c)
+static void get_tooltip(tooltip_context *c)
 {
     if (!focus_button_id && !focus_arrow_button_id) {
         return;
     }
-    c->type = TooltipType_Button;
+    c->type = TOOLTIP_BUTTON;
     if (focus_button_id == 1) {
-        c->textId = 98;
+        c->text_id = 98;
     } else if (focus_button_id == 2) {
-        c->textId = 99;
+        c->text_id = 99;
     } else if (focus_button_id) {
-        c->textId = 100;
+        c->text_id = 100;
     } else if (focus_arrow_button_id) {
-        c->textId = 101;
+        c->text_id = 101;
     }
 }
 
