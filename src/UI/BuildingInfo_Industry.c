@@ -49,9 +49,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	window_building_draw_employment(c, c->yOffset + 142);
-	lang_text_draw_multiline(groupId, 1,
-		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
-		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+	window_building_draw_description_at(c, 16 * c->heightBlocks - 113, groupId, 1);
 }
 
 void UI_BuildingInfo_drawWheatFarm(BuildingInfoContext *c)
@@ -122,9 +120,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	window_building_draw_employment(c, c->yOffset + 142);
-	lang_text_draw_multiline(groupId, 1,
-		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
-		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+	window_building_draw_description_at(c, 16 * c->heightBlocks - 113, groupId, 1);
 }
 
 void UI_BuildingInfo_drawMarbleQuarry(BuildingInfoContext *c)

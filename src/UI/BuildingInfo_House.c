@@ -30,9 +30,7 @@ static void drawVacantLot(BuildingInfoContext *c)
 	if (map_closest_road_within_radius(b->x, b->y, 1, 2, 0, 0)) {
 		textId = 1;
 	}
-	lang_text_draw_multiline(128, textId,
-		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
-		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+	window_building_draw_description_at(c, 16 * c->heightBlocks - 113, 128, textId);
 }
 
 static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)

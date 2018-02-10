@@ -86,9 +86,7 @@ static void drawTemple(BuildingInfoContext *c, const char *soundFile, int groupI
 		image_draw(graphicOffset + image_group(GROUP_PANEL_WINDOWS),
 			c->xOffset + 190, c->yOffset + 16 * c->heightBlocks - 118);
 	} else {
-		lang_text_draw_multiline(69, 25,
-			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 128,
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+		window_building_draw_description_at(c, 16 * c->heightBlocks - 128, 69, 25);
 	}
 }
 
@@ -126,8 +124,6 @@ void UI_BuildingInfo_drawOracle(BuildingInfoContext *c)
 	lang_text_draw_centered(13, 1,
 		c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
 		16 * c->widthBlocks, FONT_NORMAL_BLACK);
-	lang_text_draw_multiline(110, 1,
-		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 143,
-		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+	window_building_draw_description_at(c, 16 * c->heightBlocks - 143, 110, 1);
 }
 

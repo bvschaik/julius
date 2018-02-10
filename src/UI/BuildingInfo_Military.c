@@ -41,9 +41,7 @@ void UI_BuildingInfo_drawWall(BuildingInfoContext *c)
 	window_building_play_sound(c, "wavs/wall.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(139, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	lang_text_draw_multiline(139, 1,
-		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 158,
-		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+	window_building_draw_description_at(c, 16 * c->heightBlocks - 158, 139, 1);
 }
 
 void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
@@ -91,15 +89,8 @@ void UI_BuildingInfo_drawFort(BuildingInfoContext *c)
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(89, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-	if (formation_get(c->formationId)->cursed_by_mars) {
-		lang_text_draw_multiline(89, 1,
-			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 158,
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
-	} else {
-		lang_text_draw_multiline(89, 2,
-			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 158,
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
-	}
+    int text_id = formation_get(c->formationId)->cursed_by_mars ? 1 : 2;
+    window_building_draw_description_at(c, 16 * c->heightBlocks - 158, 89, text_id);
 }
 
 void UI_BuildingInfo_drawGatehouse(BuildingInfoContext *c)
@@ -109,9 +100,7 @@ void UI_BuildingInfo_drawGatehouse(BuildingInfoContext *c)
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(90, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-	lang_text_draw_multiline(90, 1,
-		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 158,
-		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+    window_building_draw_description_at(c, 16 * c->heightBlocks - 158, 90, 1);
 }
 
 void UI_BuildingInfo_drawTower(BuildingInfoContext *c)
@@ -302,9 +291,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		} else {
 			groupId = 138; textId = 11;
 		}
-		lang_text_draw_multiline(groupId, textId,
-			c->xOffset + 32, c->yOffset + 172,
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+		window_building_draw_description_at(c, 172, groupId, textId);
 	}
 }
 

@@ -11,15 +11,7 @@ void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c)
 	window_building_play_sound(c, "wavs/aquaduct.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(141, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	if (c->aqueductHasWater) {
-		lang_text_draw_multiline(141, 1,
-			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 128,
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
-	} else {
-		lang_text_draw_multiline(141, 2,
-			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 128,
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
-	}
+    window_building_draw_description_at(c, 16 * c->heightBlocks - 128, 141, c->aqueductHasWater ? 1 : 2);
 }
 
 void UI_BuildingInfo_drawReservoir(BuildingInfoContext *c)
@@ -31,15 +23,8 @@ void UI_BuildingInfo_drawReservoir(BuildingInfoContext *c)
 	lang_text_draw_centered(13, 1,
 		c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
 		16 * c->widthBlocks, FONT_NORMAL_BLACK);
-	if (building_get(c->buildingId)->hasWaterAccess) {
-		lang_text_draw_multiline(107, 1,
-			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 173,
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
-	} else {
-		lang_text_draw_multiline(107, 3,
-			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 173,
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
-	}
+    int text_id = building_get(c->buildingId)->hasWaterAccess ? 1 : 3;
+    window_building_draw_description_at(c, 16 * c->heightBlocks - 173, 107, text_id);
 }
 
 void UI_BuildingInfo_drawFountain(BuildingInfoContext *c)
@@ -61,9 +46,7 @@ void UI_BuildingInfo_drawFountain(BuildingInfoContext *c)
 	} else {
 		textId = 3;
 	}
-	lang_text_draw_multiline(108, textId,
-		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 126,
-		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+	window_building_draw_description_at(c, 16 * c->heightBlocks - 126, 108, textId);
 }
 
 void UI_BuildingInfo_drawWell(BuildingInfoContext *c)
@@ -82,8 +65,6 @@ void UI_BuildingInfo_drawWell(BuildingInfoContext *c)
 		textId = 3;
 	}
 	if (textId) {
-		lang_text_draw_multiline(109, textId,
-			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 126,
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+        window_building_draw_description_at(c, 16 * c->heightBlocks - 126, 109, textId);
 	}
 }

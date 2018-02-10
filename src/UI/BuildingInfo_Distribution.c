@@ -89,9 +89,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 			text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
 				c->xOffset + 394, c->yOffset + 70, FONT_NORMAL_BLACK);
 		} else {
-			lang_text_draw_multiline(97, 4,
-				c->xOffset + 32, c->yOffset + 48,
-				16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+			window_building_draw_description_at(c, 48, 97, 4);
 		}
 		// good stocks
 		image_draw(graphicId + RESOURCE_POTTERY,
