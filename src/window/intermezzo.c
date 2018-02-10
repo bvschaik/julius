@@ -102,7 +102,6 @@ static void draw_background()
         } else {
             image_draw(image_base + 1 + 2 * mission, x_offset, y_offset);
         }
-        window_invalidate();
     } else if (data.type == INTERMEZZO_FIRED) {
         image_draw(image_base, x_offset, y_offset);
     } else if (data.type == INTERMEZZO_WON) {
@@ -111,7 +110,6 @@ static void draw_background()
         } else {
             image_draw(image_base + 2 + 2 * mission, x_offset, y_offset);
         }
-        window_invalidate();
     }
 }
 

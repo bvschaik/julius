@@ -97,7 +97,6 @@ static void arrow_button_game(int is_down, int param2)
     } else {
         setting_increase_game_speed();
     }
-    window_invalidate();
 }
 
 static void arrow_button_scroll(int is_down, int param2)
@@ -107,7 +106,6 @@ static void arrow_button_scroll(int is_down, int param2)
     } else {
         setting_increase_scroll_speed();
     }
-    window_invalidate();
 }
 
 void window_speed_options_show()

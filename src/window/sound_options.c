@@ -173,32 +173,24 @@ static void arrow_button_music(int is_down, int param2)
 {
     update_volume(SOUND_MUSIC, is_down);
     sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
-
-    window_invalidate();
 }
 
 static void arrow_button_speech(int is_down, int param2)
 {
     update_volume(SOUND_SPEECH, is_down);
     sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
-
-    window_invalidate();
 }
 
 static void arrow_button_effects(int is_down, int param2)
 {
     update_volume(SOUND_EFFECTS, is_down);
     sound_effect_set_volume(setting_sound(SOUND_EFFECTS)->volume);
-
-    window_invalidate();
 }
 
 static void arrow_button_city(int is_down, int param2)
 {
     update_volume(SOUND_CITY, is_down);
     sound_city_set_volume(setting_sound(SOUND_CITY)->volume);
-
-    window_invalidate();
 }
 
 void window_sound_options_show()

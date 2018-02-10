@@ -50,13 +50,11 @@ static void arrow_button_difficulty(int is_down, int param2)
     } else {
         setting_increase_difficulty();
     }
-    window_invalidate();
 }
 
 static void arrow_button_gods(int param1, int param2)
 {
     setting_toggle_gods_enabled();
-    window_invalidate();
 }
 
 void window_difficulty_options_show()

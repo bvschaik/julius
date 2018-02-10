@@ -143,7 +143,6 @@ static int handle_scrollbar(const mouse *m)
         }
         int pct = calc_percentage(yOffset, 130);
         data.scroll_position = calc_adjust_with_percentage(data.saved_games->num_files - 12, pct);
-        window_invalidate();
         return 1;
     }
     return 0;
