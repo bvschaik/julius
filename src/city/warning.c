@@ -38,6 +38,7 @@ void city_warning_show(warning_type type)
         return;
     }
     w->in_use = 1;
+    w->time = time_get_millis();
     const uint8_t *text;
     if (type == WARNING_ORIENTATION) {
         text = lang_get_string(17, city_view_orientation());
