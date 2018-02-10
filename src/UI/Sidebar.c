@@ -27,6 +27,7 @@
 #include "window/advisors.h"
 #include "window/city.h"
 #include "window/empire.h"
+#include "window/message_list.h"
 #include "window/mission_briefing.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
@@ -347,7 +348,7 @@ static void buttonUndo(int param1, int param2)
 
 static void buttonMessages(int param1, int param2)
 {
-	UI_Window_goTo(Window_PlayerMessageList);
+	window_message_list_show();
 }
 
 static void buttonHelp(int param1, int param2)

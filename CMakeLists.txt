@@ -250,6 +250,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/labor_priority.c
     ${PROJECT_SOURCE_DIR}/src/window/logo.c
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
+    ${PROJECT_SOURCE_DIR}/src/window/message_list.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_end.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_selection.c
@@ -290,7 +291,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/MessageDialog.c
 	${PROJECT_SOURCE_DIR}/src/UI/Minimap.c
 	${PROJECT_SOURCE_DIR}/src/UI/OverlayMenu.c
-	${PROJECT_SOURCE_DIR}/src/UI/PlayerMessageList.c
 	${PROJECT_SOURCE_DIR}/src/UI/Sidebar.c
 	${PROJECT_SOURCE_DIR}/src/UI/Tooltip.c
 	${PROJECT_SOURCE_DIR}/src/UI/TopMenu.c

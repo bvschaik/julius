@@ -9,10 +9,10 @@
 
 #define MAX_LINKS 50
 
-static image_button imageButtonScrollUp = {
+static image_button image_button_scroll_up = {
     0, 0, 39, 26, IB_SCROLL, 96, 8, rich_text_scroll, button_none, 0, 1, 1
 };
-static image_button imageButtonScrollDown = {
+static image_button image_button_scroll_down = {
     0, 0, 39, 26, IB_SCROLL, 96, 12, rich_text_scroll, button_none, 1, 1, 1
 };
 
@@ -57,8 +57,8 @@ int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks
         data.text_height_lines = height_blocks - 1;
         data.text_width_blocks = width_blocks;
         
-        imageButtonScrollUp.enabled = 1;
-        imageButtonScrollDown.enabled = 1;
+        image_button_scroll_up.enabled = 1;
+        image_button_scroll_down.enabled = 1;
 
         data.num_lines = rich_text_draw(text,
             data.x_text + 8, data.y_text + 6,
@@ -68,8 +68,8 @@ int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks
                 data.text_width_blocks += 2;
             }
             data.max_scroll_position = 0;
-            imageButtonScrollUp.enabled = 0;
-            imageButtonScrollDown.enabled = 0;
+            image_button_scroll_up.enabled = 0;
+            image_button_scroll_down.enabled = 0;
         } else {
             data.max_scroll_position = data.num_lines - data.text_height_lines;
         }
@@ -381,11 +381,11 @@ void rich_text_draw_scrollbar()
         image_buttons_draw(
             data.x_text + 16 * data.text_width_blocks - 1,
             data.y_text,
-            &imageButtonScrollUp, 1);
+            &image_button_scroll_up, 1);
         image_buttons_draw(
             data.x_text + 16 * data.text_width_blocks - 1,
             data.y_text + 16 * data.text_height_blocks - 26,
-            &imageButtonScrollDown, 1);
+            &image_button_scroll_down, 1);
         rich_text_draw_scrollbar_dot();
     }
 }
@@ -449,13 +449,13 @@ int rich_text_handle_mouse(const mouse *m)
 
     if (image_buttons_handle_mouse(
         m, data.x_text + 16 * data.text_width_blocks - 1, data.y_text,
-        &imageButtonScrollUp, 1, 0)) {
+        &image_button_scroll_up, 1, 0)) {
             return 1;
     }
     if (image_buttons_handle_mouse(m,
         data.x_text + 16 * data.text_width_blocks - 1,
         data.y_text + 16 * data.text_height_blocks - 26,
-        &imageButtonScrollDown, 1, 0)) {
+        &image_button_scroll_down, 1, 0)) {
             return 1;
     }
     return handle_scrollbar_dot(m);

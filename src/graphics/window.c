@@ -37,7 +37,7 @@ static window_type windows[] = {
     { Window_TradePricesDialog },
     { Window_ResourceSettingsDialog },
     { Window_MessageDialog, UI_MessageDialog_drawBackground, UI_MessageDialog_drawForeground, UI_MessageDialog_handleMouse, noop, UI_MessageDialog_init },
-    { Window_PlayerMessageList, UI_PlayerMessageList_drawBackground, UI_PlayerMessageList_drawForeground, UI_PlayerMessageList_handleMouse, UI_PlayerMessageList_getTooltip, UI_PlayerMessageList_init },
+    { Window_PlayerMessageList },
     // 20
     { Window_CCKSelection },
     { Window_FileDialog },

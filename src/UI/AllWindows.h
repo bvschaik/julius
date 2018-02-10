@@ -5,12 +5,6 @@
 
 #include "graphics/window.h"
 
-void UI_PlayerMessageList_init();
-void UI_PlayerMessageList_drawBackground();
-void UI_PlayerMessageList_drawForeground();
-void UI_PlayerMessageList_handleMouse(const mouse *m);
-void UI_PlayerMessageList_getTooltip(struct TooltipContext *c);
-
 void UI_OverlayMenu_init();
 void UI_OverlayMenu_drawBackground();
 void UI_OverlayMenu_drawForeground();
