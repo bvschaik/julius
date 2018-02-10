@@ -48,7 +48,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 	window_building_draw_description_at(c, 16 * c->heightBlocks - 113, groupId, 1);
 }
 
@@ -119,7 +119,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 	window_building_draw_description_at(c, 16 * c->heightBlocks - 113, groupId, 1);
 }
 
@@ -193,7 +193,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawWineWorkshop(BuildingInfoContext *c)

@@ -79,7 +79,7 @@ void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawFort(BuildingInfoContext *c)
@@ -121,7 +121,7 @@ void UI_BuildingInfo_drawTower(BuildingInfoContext *c)
 		window_building_draw_description(c, 91, 4);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c)
@@ -142,7 +142,7 @@ void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c)
 		window_building_draw_description(c, 135, 3);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
@@ -185,7 +185,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 		}
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)

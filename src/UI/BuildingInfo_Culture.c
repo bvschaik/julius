@@ -20,7 +20,7 @@ static void drawInfo(BuildingInfoContext *c, int helpId, const char *soundFile, 
 		window_building_draw_description(c, groupId, 3);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawClinic(BuildingInfoContext *c)
@@ -51,7 +51,7 @@ void UI_BuildingInfo_drawBathhouse(BuildingInfoContext *c)
 		window_building_draw_description(c, 83, 3);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawBarber(BuildingInfoContext *c)
@@ -81,7 +81,7 @@ static void drawTemple(BuildingInfoContext *c, const char *soundFile, int groupI
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 56, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 62);
+	window_building_draw_employment(c, 62);
 	if (c->hasRoadAccess) {
 		image_draw(graphicOffset + image_group(GROUP_PANEL_WINDOWS),
 			c->xOffset + 190, c->yOffset + 16 * c->heightBlocks - 118);

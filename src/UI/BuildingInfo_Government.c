@@ -39,7 +39,7 @@ void UI_BuildingInfo_drawForum(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawSenate(BuildingInfoContext *c)
@@ -75,7 +75,7 @@ void UI_BuildingInfo_drawSenate(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 
 	lang_text_draw(105, 3, c->xOffset + 60, c->yOffset + 220, FONT_NORMAL_BLACK);
 }

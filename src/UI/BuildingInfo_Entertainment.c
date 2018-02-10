@@ -26,7 +26,7 @@ void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 7);
-	window_building_draw_employment(c, c->yOffset + 138);
+	window_building_draw_employment(c, 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = lang_text_draw(71, 8, c->xOffset + 32, c->yOffset + 182, FONT_SMALL_BLACK);
 		lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
@@ -63,7 +63,7 @@ void UI_BuildingInfo_drawTheater(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
-	window_building_draw_employment(c, c->yOffset + 138);
+	window_building_draw_employment(c, 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = lang_text_draw(72, 6, c->xOffset + 32, c->yOffset + 182, FONT_SMALL_BLACK);
 		lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
@@ -93,7 +93,7 @@ void UI_BuildingInfo_drawHippodrome(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
-	window_building_draw_employment(c, c->yOffset + 138);
+	window_building_draw_employment(c, 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = lang_text_draw(73, 6, c->xOffset + 32, c->yOffset + 202, FONT_SMALL_BLACK);
 		lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
@@ -125,7 +125,7 @@ void UI_BuildingInfo_drawColosseum(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
-	window_building_draw_employment(c, c->yOffset + 138);
+	window_building_draw_employment(c, 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = lang_text_draw(74, 8, c->xOffset + 32, c->yOffset + 182, FONT_SMALL_BLACK);
 		lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
@@ -165,7 +165,7 @@ static void drawEntertainmentSchool(BuildingInfoContext *c, int groupId, const c
 		window_building_draw_description(c, groupId, 6);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawGladiatorSchool(BuildingInfoContext *c)

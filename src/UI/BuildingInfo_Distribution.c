@@ -110,7 +110,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 			c->xOffset + 394, c->yOffset + 110, FONT_NORMAL_BLACK);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
@@ -176,7 +176,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 			c->xOffset + 274 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawGranaryForeground(BuildingInfoContext *c)
@@ -290,7 +290,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 		}
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 168, c->widthBlocks - 2, 5);
-	window_building_draw_employment(c, c->yOffset + 173);
+	window_building_draw_employment(c, 173);
 	// cartpusher state
 	int cartpusher = b->figureId;
 	if (cartpusher && figure_get(cartpusher)->state == FigureState_Alive) {

@@ -29,6 +29,7 @@ void window_building_draw_employment(BuildingInfoContext *c, int y_offset)
     if (!textId && b->housesCovered < 40) {
         textId = 20; // poor access to employees
     }
+    y_offset += c->yOffset;
     image_draw(image_group(GROUP_CONTEXT_ICONS) + 14,
         c->xOffset + 40, y_offset + 6);
     if (textId) {

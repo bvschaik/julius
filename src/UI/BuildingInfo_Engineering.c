@@ -44,7 +44,7 @@ void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c)
@@ -78,7 +78,7 @@ void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawDock(BuildingInfoContext *c)
@@ -115,7 +115,7 @@ void UI_BuildingInfo_drawDock(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
@@ -149,7 +149,7 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, c->yOffset + 142);
+	window_building_draw_employment(c, 142);
 }
 
 void UI_BuildingInfo_drawBurningRuin(BuildingInfoContext *c)
