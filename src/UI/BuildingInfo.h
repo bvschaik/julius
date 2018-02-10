@@ -55,7 +55,7 @@ typedef struct {
 	} figure;
 } BuildingInfoContext;
 
-void UI_BuildingInfo_init();
+void UI_BuildingInfo_show(int gridOffset);
 void UI_BuildingInfo_drawBackground();
 void UI_BuildingInfo_drawForeground();
 void UI_BuildingInfo_handleMouse(const mouse *m);

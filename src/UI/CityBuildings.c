@@ -31,6 +31,8 @@
 #include "sound/effect.h"
 #include "window/city.h"
 
+#include "UI/BuildingInfo.h"
+
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
 static void drawHippodromeAndElevatedFigures(int selectedFigureId);
@@ -709,7 +711,7 @@ void UI_CityBuildings_handleMouse(const mouse *m)
 		buildEnd();
 	} else if (m->right.went_up) {
 		if (handleRightClickAllowBuildingInfo()) {
-			UI_Window_goTo(Window_BuildingInfo);
+			UI_BuildingInfo_show(Data_State.map.current.gridOffset);
 		}
 	}
 }

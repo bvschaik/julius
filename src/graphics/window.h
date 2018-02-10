@@ -50,7 +50,6 @@ typedef struct {
     void (*draw_foreground)(void);
     void (*handle_mouse)(const mouse *m);
     void (*get_tooltip)(struct TooltipContext *c);
-    void (*init)(void); // TODO remove later
 } window_type;
 
 void window_invalidate();

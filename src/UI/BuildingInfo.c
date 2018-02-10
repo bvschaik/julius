@@ -135,9 +135,8 @@ static int getHeightId()
 	return 0;
 }
 
-void UI_BuildingInfo_init()
+void UI_BuildingInfo_show(int gridOffset)
 {
-	int gridOffset = Data_State.map.current.gridOffset;
 	context.canPlaySound = 1;
 	context.storageShowSpecialOrders = 0;
 	context.advisor = 0;
@@ -319,6 +318,7 @@ void UI_BuildingInfo_init()
 	}
 	int border = (Data_CityView.widthInPixels - 16 * context.widthBlocks) / 2;
 	context.xOffset = Data_CityView.xOffsetInPixels + border;
+    UI_Window_goTo(Window_BuildingInfo);
 }
 
 int UI_BuildingInfo_getBuildingType()

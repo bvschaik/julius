@@ -17,7 +17,7 @@ static window_type windows[] = {
     { Window_MainMenu },
     { Window_City },
     { Window_PopupDialog },
-    { Window_TopMenu, window_city_draw_panels, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse, noop, noop },
+    { Window_TopMenu, window_city_draw_panels, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse, noop },
     { Window_DifficultyOptions },
     { Window_Advisors },
     { Window_SetSalaryDialog },
@@ -41,9 +41,9 @@ static window_type windows[] = {
     { Window_OverlayMenu },
     { Window_BuildingMenu },
     { Window_Intermezzo },
-    { Window_BuildingInfo, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse, UI_BuildingInfo_getTooltip, UI_BuildingInfo_init },
+    { Window_BuildingInfo, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse, UI_BuildingInfo_getTooltip },
     { Window_NewCareerDialog },
-    { Window_SlidingSidebar, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop, noop, noop },
+    { Window_SlidingSidebar, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop, noop },
     { Window_CityMilitary },
     { Window_MissionSelection },
     // 30
@@ -78,9 +78,6 @@ void window_show(const window_type *window)
 {
     previous_window = current_window;
     current_window = *window;
-    if (current_window.init) {
-        current_window.init();
-    }
     if (!current_window.draw_background) {
         current_window.draw_background = noop;
     }
