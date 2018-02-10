@@ -1,5 +1,4 @@
 #include "TopMenu.h"
-#include "MessageDialog.h"
 #include "../Data/CityInfo.h"
 
 #include "building/construction.h"
@@ -24,6 +23,7 @@
 #include "window/display_options.h"
 #include "window/file_dialog.h"
 #include "window/main_menu.h"
+#include "window/message_dialog.h"
 #include "window/mission_briefing.h"
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
@@ -277,11 +277,11 @@ static int handleTopMenuRightClick(int type)
 		return 0;
 	}
 	if (type == 1) { // funds
-		UI_MessageDialog_show(15, 0);
+		window_message_dialog_show(15, 0);
 	} else if (type == 2) { // population
-		UI_MessageDialog_show(16, 0);
+		window_message_dialog_show(16, 0);
 	} else if (type == 3) { // date
-		UI_MessageDialog_show(17, 0);
+		window_message_dialog_show(17, 0);
 	}
 	return 1;
 }
@@ -412,7 +412,7 @@ static void menuHelp_help(int param)
 {
 	clearState();
 	UI_Window_goBack();
-	UI_MessageDialog_show(MessageDialog_Help, 0);
+	window_message_dialog_show(MessageDialog_Help, 0);
 }
 
 static void menuHelp_mouseHelp(int param)
@@ -431,7 +431,7 @@ static void menuHelp_about(int param)
 {
 	clearState();
 	UI_Window_goBack();
-	UI_MessageDialog_show(MessageDialog_About, 0);
+	window_message_dialog_show(MessageDialog_About, 0);
 }
 
 

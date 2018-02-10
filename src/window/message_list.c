@@ -12,8 +12,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "window/city.h"
-
-#include "UI/MessageDialog.h"
+#include "window/message_dialog.h"
 
 #define MAX_MESSAGES 10
 
@@ -235,7 +234,7 @@ static void button_scroll(int is_down, int num_lines)
 
 static void button_help(int param1, int param2)
 {
-    UI_MessageDialog_show(MessageDialog_Messages, 0);
+    window_message_dialog_show(MessageDialog_Messages, 0);
 }
 
 static void button_close(int param1, int param2)
@@ -249,11 +248,11 @@ static void button_message(int param1, int param2)
     if (id < city_message_count()) {
         const city_message *msg = city_message_get(id);
         city_message_mark_read(id);
-        UI_MessageDialog_setPlayerMessage(
+        window_message_dialog_show_city_message(
+            city_message_get_text_id(msg->message_type),
             msg->year, msg->month, msg->param1, msg->param2,
             city_message_get_advisor(msg->message_type),
             0);
-        UI_MessageDialog_show(city_message_get_text_id(msg->message_type), 0);
     }
 }
 

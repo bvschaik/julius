@@ -13,9 +13,9 @@
 #include "graphics/panel.h"
 #include "graphics/window.h"
 #include "window/advisors.h"
+#include "window/message_dialog.h"
 
 #include "Data/CityInfo.h"
-#include "UI/MessageDialog.h"
 
 static void button_god(int god, int param2);
 static void button_size(int size, int param2);
@@ -141,7 +141,7 @@ static void button_size(int size, int param2)
 
 static void button_help(int param1, int param2)
 {
-    UI_MessageDialog_show(MessageDialog_EntertainmentAdvisor, 1);
+    window_message_dialog_show(MessageDialog_EntertainmentAdvisor, 1);
 }
 
 static void button_close(int param1, int param2)

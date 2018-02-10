@@ -19,11 +19,11 @@
 #include "scenario/invasion.h"
 #include "window/advisors.h"
 #include "window/city.h"
+#include "window/message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/trade_opened.h"
 
 #include "Data/CityInfo.h"
-#include "UI/MessageDialog.h"
 
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
@@ -535,7 +535,7 @@ static void get_tooltip(struct TooltipContext *c)
 
 static void button_help(int param1, int param2)
 {
-    UI_MessageDialog_show(MessageDialog_EmpireMap, 1);
+    window_message_dialog_show(MessageDialog_EmpireMap, 1);
 }
 
 static void button_return_to_city(int param1, int param2)

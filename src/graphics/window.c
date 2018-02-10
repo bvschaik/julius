@@ -5,7 +5,6 @@
 #include "window/city.h"
 
 #include "UI/BuildingInfo.h"
-#include "UI/MessageDialog.h"
 #include "UI/Sidebar.h"
 #include "UI/TopMenu.h"
 
@@ -34,7 +33,7 @@ static window_type windows[] = {
     { Window_HoldFestivalDialog },
     { Window_TradePricesDialog },
     { Window_ResourceSettingsDialog },
-    { Window_MessageDialog, UI_MessageDialog_drawBackground, UI_MessageDialog_drawForeground, UI_MessageDialog_handleMouse, noop, UI_MessageDialog_init },
+    { Window_MessageDialog },
     { Window_PlayerMessageList },
     // 20
     { Window_CCKSelection },

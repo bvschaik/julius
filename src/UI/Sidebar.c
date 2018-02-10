@@ -1,6 +1,5 @@
 #include "Sidebar.h"
 
-#include "MessageDialog.h"
 #include "Minimap.h"
 
 #include "../Data/Screen.h"
@@ -27,6 +26,7 @@
 #include "window/build_menu.h"
 #include "window/city.h"
 #include "window/empire.h"
+#include "window/message_dialog.h"
 #include "window/message_list.h"
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
@@ -362,7 +362,7 @@ static void buttonMessages(int param1, int param2)
 
 static void buttonHelp(int param1, int param2)
 {
-	UI_MessageDialog_show(param2, 0);
+	window_message_dialog_show(param2, 0);
 }
 
 static void buttonGoToProblem(int param1, int param2)

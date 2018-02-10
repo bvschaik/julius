@@ -14,9 +14,9 @@
 #include "graphics/window.h"
 #include "scenario/building.h"
 #include "window/advisor/trade.h"
+#include "window/message_dialog.h"
 
 #include "Data/CityInfo.h"
-#include "UI/MessageDialog.h"
 
 static void button_help(int param1, int param2);
 static void button_ok(int param1, int param2);
@@ -179,7 +179,7 @@ static void handle_mouse(const mouse *m)
 
 static void button_help(int param1, int param2)
 {
-    UI_MessageDialog_show(MessageDialog_Industry, 1);
+    window_message_dialog_show(MessageDialog_Industry, 1);
 }
 
 static void button_ok(int param1, int param2)

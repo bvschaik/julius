@@ -1,9 +1,8 @@
 #include "graphics/window.h"
+#include "window/message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/mission_end.h"
 #include "window/victory_dialog.h"
-
-#include "UI/MessageDialog.h"
 
 int window_is(WindowId id)
 {
@@ -39,12 +38,8 @@ WindowId UI_Window_getId()
 void window_draw(int force)
 {}
 
-void UI_MessageDialog_show(int textId, int backgroundIsProvided)
-{}
-
-void UI_MessageDialog_setPlayerMessage(int year, int month,
-                                       int param1, int param2,
-                                       int messageAdvisor, int usePopup)
+void window_message_dialog_show_city_message(int text_id, int year, int month,
+                                             int param1, int param2, int message_advisor, int use_popup)
 {}
 
 void window_popup_dialog_show(popup_dialog_type type, void (*okFunc)(int), int hasOkCancelButtons)

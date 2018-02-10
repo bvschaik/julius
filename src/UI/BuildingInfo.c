@@ -1,7 +1,5 @@
 #include "BuildingInfo.h"
 
-#include "MessageDialog.h"
-
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/State.h"
@@ -31,6 +29,7 @@
 #include "map/terrain.h"
 #include "window/advisors.h"
 #include "window/city.h"
+#include "window/message_dialog.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonExit(int param1, int param2);
@@ -624,9 +623,9 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 static void buttonHelp(int param1, int param2)
 {
 	if (context.helpId > 0) {
-		UI_MessageDialog_show(context.helpId, 0);
+		window_message_dialog_show(context.helpId, 0);
 	} else {
-		UI_MessageDialog_show(10, 0);
+		window_message_dialog_show(10, 0);
 	}
 	window_invalidate();
 }

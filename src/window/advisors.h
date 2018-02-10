@@ -22,6 +22,6 @@ void window_advisors_show();
 
 void window_advisors_show_checked();
 
-void window_advisors_show_advisor(advisor_type advisor);
+int window_advisors_show_advisor(advisor_type advisor);
 
 #endif // WINDOW_ADVISORS_H

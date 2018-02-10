@@ -16,6 +16,7 @@
 #include "graphics/image_button.h"
 #include "graphics/window.h"
 #include "window/city.h"
+#include "window/message_dialog.h"
 #include "window/advisor/chief.h"
 #include "window/advisor/education.h"
 #include "window/advisor/entertainment.h"
@@ -28,8 +29,6 @@
 #include "window/advisor/ratings.h"
 #include "window/advisor/religion.h"
 #include "window/advisor/trade.h"
-
-#include "UI/MessageDialog.h"
 
 static void button_change_advisor(int advisor, int param2);
 static void button_help(int param1, int param2);
@@ -189,7 +188,7 @@ static void button_change_advisor(int advisor, int param2)
 static void button_help(int param1, int param2)
 {
     if (current_advisor > 0 && current_advisor < 13) {
-        UI_MessageDialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], 1);
+        window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], 1);
     }
 }
 
@@ -243,17 +242,14 @@ void window_advisors_show_checked()
     }
 }
 
-void window_advisors_show_advisor(advisor_type advisor)
+int window_advisors_show_advisor(advisor_type advisor)
 {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
-        if (window_is(Window_MessageDialog)) {
-            UI_MessageDialog_close();
-            window_city_show();
-        }
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
-        return;
+        return 0;
     }
     set_advisor(advisor);
     window_advisors_show();
+    return 1;
 }

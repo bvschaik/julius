@@ -9,9 +9,9 @@
 #include "game/time.h"
 #include "graphics/window.h"
 #include "sound/effect.h"
+#include "window/message_dialog.h"
 
 #include "UI/Tooltip.h"
-#include "UI/MessageDialog.h"
 
 #define MAX_MESSAGES 1000
 #define MAX_QUEUE 20
@@ -145,10 +145,9 @@ static void show_message_popup(int message_id)
     if (!has_video(text_id)) {
         play_sound(text_id);
     }
-    UI_MessageDialog_setPlayerMessage(
+    window_message_dialog_show_city_message(text_id,
         msg->year, msg->month, msg->param1, msg->param2,
         city_message_get_advisor(msg->message_type), 1);
-    UI_MessageDialog_show(text_id, 0);
 }
 
 void city_message_disable_sound_for_next_message()
