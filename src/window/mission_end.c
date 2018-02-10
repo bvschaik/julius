@@ -11,6 +11,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"
@@ -21,7 +22,6 @@
 #include "window/victory_video.h"
 
 #include "Data/CityInfo.h"
-#include "UI/AllWindows.h"
 
 static void button_fired(int param1, int param2);
 

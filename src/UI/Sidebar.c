@@ -1,6 +1,5 @@
 #include "Sidebar.h"
 
-#include "AllWindows.h"
 #include "MessageDialog.h"
 #include "Minimap.h"
 
@@ -25,6 +24,7 @@
 #include "scenario/property.h"
 #include "sound/effect.h"
 #include "window/advisors.h"
+#include "window/build_menu.h"
 #include "window/city.h"
 #include "window/empire.h"
 #include "window/message_list.h"
@@ -179,6 +179,14 @@ static void drawNumberOfMessages()
 	}
 }
 
+static void drawBuildImage(int x_offset, int force)
+{
+    if (city_view_is_sidebar_collapsed() && !force) {
+        return;
+    }
+    image_draw(window_build_menu_image(), x_offset, 239);
+}
+
 static void drawSidebar()
 {
 	int graphicBase = image_group(GROUP_SIDE_PANEL);
@@ -192,7 +200,7 @@ static void drawSidebar()
 	}
 	drawButtons();
 	drawOverlayText(xOffsetPanel + 4);
-	UI_BuildingMenu_drawSidebarImage(xOffsetPanel + 6, 0);
+	drawBuildImage(xOffsetPanel + 6, 0);
 	UI_Sidebar_drawMinimap(1);
 
 	// relief images below panel
@@ -338,7 +346,7 @@ static void buttonCollapseExpand(int param1, int param2)
 
 static void buttonBuild(int submenu, int param2)
 {
-	UI_BuildingMenu_init(submenu);
+	window_build_menu_show(submenu);
 }
 
 static void buttonUndo(int param1, int param2)
@@ -483,7 +491,7 @@ void UI_SlidingSidebar_drawForeground()
 	graphics_fill_rect(xOffsetExpanded + 8, 59, 145, 111, COLOR_BLACK);
 
 	drawOverlayText(xOffsetExpanded + 4);
-	UI_BuildingMenu_drawSidebarImage(xOffsetExpanded + 6, 1);
+	drawBuildImage(xOffsetExpanded + 6, 1);
 
 	// relief images below buttons
 	int yOffset = 474;

@@ -8,13 +8,12 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "input/keyboard.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "window/main_menu.h"
 #include "window/mission_selection.h"
-
-#include "UI/AllWindows.h"
 
 static void start_mission(int param1, int param2);
 

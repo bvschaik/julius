@@ -4,7 +4,6 @@
 #include "input/cursor.h"
 #include "window/city.h"
 
-#include "UI/AllWindows.h"
 #include "UI/BuildingInfo.h"
 #include "UI/MessageDialog.h"
 #include "UI/Sidebar.h"
@@ -41,7 +40,7 @@ static window_type windows[] = {
     { Window_CCKSelection },
     { Window_FileDialog },
     { Window_OverlayMenu },
-    { Window_BuildingMenu, UI_BuildingMenu_drawBackground, UI_BuildingMenu_drawForeground, UI_BuildingMenu_handleMouse, noop, noop },
+    { Window_BuildingMenu },
     { Window_Intermezzo },
     { Window_BuildingInfo, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse, UI_BuildingInfo_getTooltip, UI_BuildingInfo_init },
     { Window_NewCareerDialog },

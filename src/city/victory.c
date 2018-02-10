@@ -11,8 +11,6 @@
 #include "window/mission_end.h"
 #include "window/victory_dialog.h"
 
-#include "UI/AllWindows.h"
-
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 

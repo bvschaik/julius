@@ -238,6 +238,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisor/ratings.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/religion.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/trade.c
+    ${PROJECT_SOURCE_DIR}/src/window/build_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
@@ -284,7 +285,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Native.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Terrain.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Water.c
-	${PROJECT_SOURCE_DIR}/src/UI/BuildingMenu.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Figures.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Ghost.c

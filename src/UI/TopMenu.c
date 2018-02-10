@@ -1,5 +1,4 @@
 #include "TopMenu.h"
-#include "AllWindows.h"
 #include "MessageDialog.h"
 #include "../Data/CityInfo.h"
 
@@ -17,6 +16,7 @@
 #include "graphics/menu.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "scenario/property.h"
 #include "window/advisors.h"
 #include "window/city.h"

@@ -1,6 +1,5 @@
 #include "BuildingInfo.h"
 
-#include "AllWindows.h"
 #include "MessageDialog.h"
 
 #include "../Data/CityInfo.h"

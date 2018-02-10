@@ -10,8 +10,6 @@
 #include "sound/speech.h"
 #include "window/mission_briefing.h"
 
-#include "UI/AllWindows.h"
-
 static void button_start(int param1, int param2);
 
 static const int BACKGROUND_IMAGE_OFFSET[] = {
