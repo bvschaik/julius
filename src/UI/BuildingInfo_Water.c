@@ -8,7 +8,7 @@
 void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c)
 {
 	c->helpId = 60;
-	PLAY_SOUND("wavs/aquaduct.wav");
+	window_building_play_sound(c, "wavs/aquaduct.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(141, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	if (c->aqueductHasWater) {
@@ -25,7 +25,7 @@ void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c)
 void UI_BuildingInfo_drawReservoir(BuildingInfoContext *c)
 {
 	c->helpId = 59;
-	PLAY_SOUND("wavs/resevoir.wav");
+	window_building_play_sound(c, "wavs/resevoir.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(107, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	lang_text_draw_centered(13, 1,
@@ -45,7 +45,7 @@ void UI_BuildingInfo_drawReservoir(BuildingInfoContext *c)
 void UI_BuildingInfo_drawFountain(BuildingInfoContext *c)
 {
 	c->helpId = 61;
-	PLAY_SOUND("wavs/fountain.wav");
+	window_building_play_sound(c, "wavs/fountain.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(108, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	int textId;
@@ -69,7 +69,7 @@ void UI_BuildingInfo_drawFountain(BuildingInfoContext *c)
 void UI_BuildingInfo_drawWell(BuildingInfoContext *c)
 {
 	c->helpId = 62;
-	PLAY_SOUND("wavs/well.wav");
+	window_building_play_sound(c, "wavs/well.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(109, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	int wellNecessity = map_water_supply_is_well_unnecessary(c->buildingId, 2);

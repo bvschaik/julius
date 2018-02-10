@@ -8,19 +8,19 @@
 static void drawInfo(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId)
 {
 	c->helpId = helpId;
-	PLAY_SOUND(soundFile);
+	window_building_play_sound(c, soundFile);
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (building_get(c->buildingId)->numWorkers <= 0) {
-		DRAW_DESC(groupId, 2);
+		window_building_draw_description(c, groupId, 2);
 	} else {
-		DRAW_DESC(groupId, 3);
+		window_building_draw_description(c, groupId, 3);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawClinic(BuildingInfoContext *c)
@@ -36,22 +36,22 @@ void UI_BuildingInfo_drawHospital(BuildingInfoContext *c)
 void UI_BuildingInfo_drawBathhouse(BuildingInfoContext *c)
 {
 	c->helpId = 64;
-	PLAY_SOUND("wavs/baths.wav");
+	window_building_play_sound(c, "wavs/baths.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(83, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->buildingId);
 	if (!b->hasWaterAccess) {
-		DRAW_DESC(83, 4);
+		window_building_draw_description(c, 83, 4);
 	} else if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC(83, 2);
+		window_building_draw_description(c, 83, 2);
 	} else {
-		DRAW_DESC(83, 3);
+		window_building_draw_description(c, 83, 3);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawBarber(BuildingInfoContext *c)
@@ -77,11 +77,11 @@ void UI_BuildingInfo_drawLibrary(BuildingInfoContext *c)
 static void drawTemple(BuildingInfoContext *c, const char *soundFile, int groupId, int graphicOffset)
 {
 	c->helpId = 67;
-	PLAY_SOUND(soundFile);
+	window_building_play_sound(c, soundFile);
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 56, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 62);
+	window_building_draw_employment(c, c->yOffset + 62);
 	if (c->hasRoadAccess) {
 		image_draw(graphicOffset + image_group(GROUP_PANEL_WINDOWS),
 			c->xOffset + 190, c->yOffset + 16 * c->heightBlocks - 118);
@@ -120,7 +120,7 @@ void UI_BuildingInfo_drawTempleVenus(BuildingInfoContext *c)
 void UI_BuildingInfo_drawOracle(BuildingInfoContext *c)
 {
 	c->helpId = 67;
-	PLAY_SOUND("wavs/oracle.wav");
+	window_building_play_sound(c, "wavs/oracle.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(110, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	lang_text_draw_centered(13, 1,

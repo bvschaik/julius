@@ -241,6 +241,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisor/trade.c
     ${PROJECT_SOURCE_DIR}/src/window/build_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/building_info.c
+    ${PROJECT_SOURCE_DIR}/src/window/building/common.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c

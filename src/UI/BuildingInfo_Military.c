@@ -38,7 +38,7 @@ static BuildingInfoContext *contextForCallback;
 void UI_BuildingInfo_drawWall(BuildingInfoContext *c)
 {
 	c->helpId = 85;
-	PLAY_SOUND("wavs/wall.wav");
+	window_building_play_sound(c, "wavs/wall.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(139, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	lang_text_draw_multiline(139, 1,
@@ -49,7 +49,7 @@ void UI_BuildingInfo_drawWall(BuildingInfoContext *c)
 void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
 {
 	c->helpId = 86;
-	PLAY_SOUND("wavs/prefecture.wav");
+	window_building_play_sound(c, "wavs/prefecture.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(88, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	lang_text_draw_centered(13, 1,
@@ -58,36 +58,36 @@ void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
 
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC(88, 9);
+		window_building_draw_description(c, 88, 9);
 	} else {
 		if (b->figureId) {
-			DRAW_DESC(88, 2);
+			window_building_draw_description(c, 88, 2);
 		} else {
-			DRAW_DESC(88, 3);
+			window_building_draw_description(c, 88, 3);
 		}
 		if (c->workerPercentage >= 100) {
-			DRAW_DESC_AT(72, 88, 4);
+			window_building_draw_description_at(c, 72, 88, 4);
 		} else if (c->workerPercentage >= 75) {
-			DRAW_DESC_AT(72, 88, 5);
+			window_building_draw_description_at(c, 72, 88, 5);
 		} else if (c->workerPercentage >= 50) {
-			DRAW_DESC_AT(72, 88, 6);
+			window_building_draw_description_at(c, 72, 88, 6);
 		} else if (c->workerPercentage >= 25) {
-			DRAW_DESC_AT(72, 88, 7);
+			window_building_draw_description_at(c, 72, 88, 7);
 		} else {
-			DRAW_DESC_AT(72, 88, 8);
+			window_building_draw_description_at(c, 72, 88, 8);
 		}
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawFort(BuildingInfoContext *c)
 {
 	c->helpId = 87;
-	PLAY_SOUND("wavs/fort.wav");
+	window_building_play_sound(c, "wavs/fort.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(89, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
@@ -105,7 +105,7 @@ void UI_BuildingInfo_drawFort(BuildingInfoContext *c)
 void UI_BuildingInfo_drawGatehouse(BuildingInfoContext *c)
 {
 	c->helpId = 85;
-	PLAY_SOUND("wavs/gatehouse.wav");
+	window_building_play_sound(c, "wavs/gatehouse.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(90, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
@@ -117,49 +117,49 @@ void UI_BuildingInfo_drawGatehouse(BuildingInfoContext *c)
 void UI_BuildingInfo_drawTower(BuildingInfoContext *c)
 {
 	c->helpId = 85;
-	PLAY_SOUND("wavs/tower.wav");
+	window_building_play_sound(c, "wavs/tower.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(91, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC(91, 2);
+		window_building_draw_description(c, 91, 2);
 	} else if (b->figureId) {
-		DRAW_DESC(91, 3);
+		window_building_draw_description(c, 91, 3);
 	} else {
-		DRAW_DESC(91, 4);
+		window_building_draw_description(c, 91, 4);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c)
 {
 	c->helpId = 88;
-	PLAY_SOUND("wavs/mil_acad.wav");
+	window_building_play_sound(c, "wavs/mil_acad.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(135, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC(135, 2);
+		window_building_draw_description(c, 135, 2);
 	} else if (c->workerPercentage >= 100) {
-		DRAW_DESC(135, 1);
+		window_building_draw_description(c, 135, 1);
 	} else {
-		DRAW_DESC(135, 3);
+		window_building_draw_description(c, 135, 3);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 {
 	c->helpId = 37;
-	PLAY_SOUND("wavs/barracks.wav");
+	window_building_play_sound(c, "wavs/barracks.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(136, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS,
@@ -175,28 +175,28 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 	}
 
 	if (!c->hasRoadAccess) {
-		DRAW_DESC_AT(70, 69, 25);
+		window_building_draw_description_at(c, 70, 69, 25);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC_AT(70, 136, 3);
+		window_building_draw_description_at(c, 70, 136, 3);
 	} else if (!c->barracksSoldiersRequested) {
-		DRAW_DESC_AT(70, 136, 4);
+		window_building_draw_description_at(c, 70, 136, 4);
 	} else {
 		int offset = 0;
 		if (b->loadsStored > 0) {
 			offset = 4;
 		}
 		if (c->workerPercentage >= 100) {
-			DRAW_DESC_AT(70, 136, 5 + offset);
+			window_building_draw_description_at(c, 70, 136, 5 + offset);
 		} else if (c->workerPercentage >= 66) {
-			DRAW_DESC_AT(70, 136, 6 + offset);
+			window_building_draw_description_at(c, 70, 136, 6 + offset);
 		} else if (c->workerPercentage >= 33) {
-			DRAW_DESC_AT(70, 136, 7 + offset);
+			window_building_draw_description_at(c, 70, 136, 7 + offset);
 		} else {
-			DRAW_DESC_AT(70, 136, 8 + offset);
+			window_building_draw_description_at(c, 70, 136, 8 + offset);
 		}
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)

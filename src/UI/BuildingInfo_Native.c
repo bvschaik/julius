@@ -6,7 +6,7 @@
 static void drawNative(BuildingInfoContext *c, int groupId)
 {
 	c->helpId = 0;
-	PLAY_SOUND("wavs/empty_land.wav");
+	window_building_play_sound(c, "wavs/empty_land.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	lang_text_draw_multiline(groupId, 1,
@@ -32,7 +32,7 @@ void UI_BuildingInfo_drawNativeCrops(BuildingInfoContext *c)
 void UI_BuildingInfo_drawMissionPost(BuildingInfoContext *c)
 {
 	c->helpId = 8;
-	PLAY_SOUND("wavs/mission.wav");
+	window_building_play_sound(c, "wavs/mission.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(134, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	lang_text_draw_multiline(134, 1,

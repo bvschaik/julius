@@ -1,9 +1,5 @@
 #include "building_info.h"
 
-#include "../Data/CityInfo.h"
-#include "../Data/CityView.h"
-#include "../UI/BuildingInfo.h"
-
 #include "building/barracks.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
@@ -30,6 +26,11 @@
 #include "window/advisors.h"
 #include "window/city.h"
 #include "window/message_dialog.h"
+#include "window/building/common.h"
+
+#include "Data/CityInfo.h"
+#include "Data/CityView.h"
+#include "UI/BuildingInfo.h"
 
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
@@ -203,7 +204,8 @@ static void init(int grid_offset)
                 break;
             case BUILDING_WAREHOUSE_SPACE:
             case BUILDING_HIPPODROME:
-                context.buildingId = building_main(b)->id;
+                b = building_main(b);
+                context.buildingId = b->id;
                 break;
             case BUILDING_BARRACKS:
                 context.barracksSoldiersRequested = formation_legion_recruits_needed();
@@ -570,50 +572,6 @@ static void get_tooltip(tooltip_context *c)
     }
 }
 
-void UI_BuildingInfo_showStorageOrders(int param1, int param2)
-{
-    context.storageShowSpecialOrders = 1;
-    window_invalidate();
-}
-
-void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
-{
-    building *b = building_get(c->buildingId);
-    int textId;
-    if (b->numWorkers >= model_get_building(b->type)->laborers) {
-        textId = 0;
-    } else if (Data_CityInfo.population <= 0) {
-        textId = 16; // no people in city
-    } else if (b->housesCovered <= 0) {
-        textId = 17; // no employees nearby
-    } else if (b->housesCovered < 40) {
-        textId = 20; // poor access to employees
-    } else if (Data_CityInfo.laborCategory[b->laborCategory].workersAllocated <= 0) {
-        textId = 18; // no people allocated
-    } else {
-        textId = 19; // too few people allocated
-    }
-    if (!textId && b->housesCovered < 40) {
-        textId = 20; // poor access to employees
-    }
-    image_draw(image_group(GROUP_CONTEXT_ICONS) + 14,
-        c->xOffset + 40, yOffset + 6);
-    if (textId) {
-        int width = lang_text_draw_amount(8, 12, b->numWorkers,
-            c->xOffset + 60, yOffset + 10, FONT_SMALL_BLACK);
-        width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
-            c->xOffset + 70 + width, yOffset + 10, FONT_SMALL_BLACK);
-        lang_text_draw(69, 0, c->xOffset + 70 + width, yOffset + 10, FONT_SMALL_BLACK);
-        lang_text_draw(69, textId, c->xOffset + 70, yOffset + 26, FONT_SMALL_BLACK);
-    } else {
-        int width = lang_text_draw_amount(8, 12, b->numWorkers,
-            c->xOffset + 60, yOffset + 16, FONT_SMALL_BLACK);
-        width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
-            c->xOffset + 70 + width, yOffset + 16, FONT_SMALL_BLACK);
-        lang_text_draw(69, 0, c->xOffset + 70 + width, yOffset + 16, FONT_SMALL_BLACK);
-    }
-}
-
 static void button_help(int param1, int param2)
 {
     if (context.helpId > 0) {
@@ -658,4 +616,10 @@ int window_building_info_get_building_type()
         return building_get(context.buildingId)->type;
     }
     return BUILDING_NONE;
+}
+
+void window_building_info_show_storage_orders()
+{
+    context.storageShowSpecialOrders = 1;
+    window_invalidate();
 }

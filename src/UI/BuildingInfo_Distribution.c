@@ -13,13 +13,14 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
+#include "window/building_info.h"
 
 static void toggleResourceState(int index, int param2);
 static void granaryOrders(int index, int param2);
 static void warehouseOrders(int index, int param2);
 
 static generic_button gotoOrdersButtons[] = {
-	{0, 0, 304, 20, GB_IMMEDIATE, UI_BuildingInfo_showStorageOrders, button_none, 0, 0}
+	{0, 0, 304, 20, GB_IMMEDIATE, window_building_info_show_storage_orders, button_none, 0, 0}
 };
 
 static generic_button ordersResourceButtons[] = {
@@ -57,14 +58,14 @@ static int buildingId;
 void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 {
 	c->helpId = 2;
-	PLAY_SOUND("wavs/market.wav");
+	window_building_play_sound(c, "wavs/market.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(97, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC(97, 2);
+		window_building_draw_description(c, 97, 2);
 	} else {
 		int graphicId = image_group(GROUP_RESOURCE_ICONS);
 		if (b->data.market.inventory[INVENTORY_WHEAT] || b->data.market.inventory[INVENTORY_VEGETABLES] ||
@@ -111,20 +112,20 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 			c->xOffset + 394, c->yOffset + 110, FONT_NORMAL_BLACK);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 {
 	c->helpId = 3;
-	PLAY_SOUND("wavs/granary.wav");
+	window_building_play_sound(c, "wavs/granary.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(98, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC_AT(40, 69, 25);
+		window_building_draw_description_at(c, 40, 69, 25);
 	} else if (scenario_property_rome_supplies_wheat()) {
-		DRAW_DESC_AT(40, 98, 4);
+		window_building_draw_description_at(c, 40, 98, 4);
 	} else {
 		int totalStored = 0;
 		for (int i = RESOURCE_WHEAT; i <= RESOURCE_MEAT; i++) {
@@ -177,7 +178,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 			c->xOffset + 274 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawGranaryForeground(BuildingInfoContext *c)
@@ -261,12 +262,12 @@ void UI_BuildingInfo_handleMouseGranaryOrders(const mouse *m, BuildingInfoContex
 void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 {
 	c->helpId = 4;
-	PLAY_SOUND("wavs/warehouse.wav");
+	window_building_play_sound(c, "wavs/warehouse.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(99, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else {
 		for (int r = 1; r < 16; r++) {
 			int x, y;
@@ -291,7 +292,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 		}
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 168, c->widthBlocks - 2, 5);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 173);
+	window_building_draw_employment(c, c->yOffset + 173);
 	// cartpusher state
 	int cartpusher = b->figureId;
 	if (cartpusher && figure_get(cartpusher)->state == FigureState_Alive) {

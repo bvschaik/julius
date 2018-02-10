@@ -14,50 +14,50 @@
 void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
 {
 	c->helpId = 81;
-	PLAY_SOUND("wavs/eng_post.wav");
+	window_building_play_sound(c, "wavs/eng_post.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(104, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	building *b = building_get(c->buildingId);
 
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (!b->numWorkers) {
-		DRAW_DESC(104, 9);
+		window_building_draw_description(c, 104, 9);
 	} else {
 		if (b->figureId) {
-			DRAW_DESC(104, 2);
+			window_building_draw_description(c, 104, 2);
 		} else {
-			DRAW_DESC(104, 3);
+			window_building_draw_description(c, 104, 3);
 		}
 		if (c->workerPercentage >= 100) {
-			DRAW_DESC_AT(72, 104, 4);
+			window_building_draw_description_at(c, 72, 104, 4);
 		} else if (c->workerPercentage >= 75) {
-			DRAW_DESC_AT(72, 104, 5);
+			window_building_draw_description_at(c, 72, 104, 5);
 		} else if (c->workerPercentage >= 50) {
-			DRAW_DESC_AT(72, 104, 6);
+			window_building_draw_description_at(c, 72, 104, 6);
 		} else if (c->workerPercentage >= 25) {
-			DRAW_DESC_AT(72, 104, 7);
+			window_building_draw_description_at(c, 72, 104, 7);
 		} else {
-			DRAW_DESC_AT(72, 104, 8);
+			window_building_draw_description_at(c, 72, 104, 8);
 		}
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c)
 {
 	c->helpId = 82;
-	PLAY_SOUND("wavs/shipyard.wav");
+	window_building_play_sound(c, "wavs/shipyard.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(100, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	building *b = building_get(c->buildingId);
 
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else {
 		int pctDone = calc_percentage(b->data.industry.progress, 160);
 		int width = lang_text_draw(100, 2,
@@ -78,50 +78,50 @@ void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c)
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawDock(BuildingInfoContext *c)
 {
 	c->helpId = 83;
-	PLAY_SOUND("wavs/dock.wav");
+	window_building_play_sound(c, "wavs/dock.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(101, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	building *b = building_get(c->buildingId);
 
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (b->data.other.boatFigureId) {
 		if (c->workerPercentage <= 0) {
-			DRAW_DESC(101, 2);
+			window_building_draw_description(c, 101, 2);
 		} else if (c->workerPercentage < 50) {
-			DRAW_DESC(101, 3);
+			window_building_draw_description(c, 101, 3);
 		} else if (c->workerPercentage < 75) {
-			DRAW_DESC(101, 4);
+			window_building_draw_description(c, 101, 4);
 		} else {
-			DRAW_DESC(101, 5);
+			window_building_draw_description(c, 101, 5);
 		}
 	} else {
 		if (c->workerPercentage <= 0) {
-			DRAW_DESC(101, 6);
+			window_building_draw_description(c, 101, 6);
 		} else if (c->workerPercentage < 50) {
-			DRAW_DESC(101, 7);
+			window_building_draw_description(c, 101, 7);
 		} else if (c->workerPercentage < 75) {
-			DRAW_DESC(101, 8);
+			window_building_draw_description(c, 101, 8);
 		} else {
-			DRAW_DESC(101, 9);
+			window_building_draw_description(c, 101, 9);
 		}
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 {
 	c->helpId = 84;
-	PLAY_SOUND("wavs/wharf.wav");
+	window_building_play_sound(c, "wavs/wharf.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(102, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
@@ -131,9 +131,9 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 	building *b = building_get(c->buildingId);
 
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (!b->data.other.boatFigureId) {
-		DRAW_DESC(102, 2);
+		window_building_draw_description(c, 102, 2);
 	} else {
 		int boatId = b->data.other.boatFigureId;
 		int textId;
@@ -145,17 +145,17 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 			case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: textId = 7; break;
 			default: textId = 8; break;
 		}
-		DRAW_DESC(102, textId);
+		window_building_draw_description(c, 102, textId);
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawBurningRuin(BuildingInfoContext *c)
 {
 	c->helpId = 0;
-	PLAY_SOUND("wavs/ruin.wav");
+	window_building_play_sound(c, "wavs/ruin.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(111, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
@@ -169,7 +169,7 @@ void UI_BuildingInfo_drawBurningRuin(BuildingInfoContext *c)
 void UI_BuildingInfo_drawRubble(BuildingInfoContext *c)
 {
 	c->helpId = 0;
-	PLAY_SOUND("wavs/ruin.wav");
+	window_building_play_sound(c, "wavs/ruin.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(140, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 

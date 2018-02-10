@@ -7,26 +7,26 @@
 void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 {
 	c->helpId = 72;
-	PLAY_SOUND("wavs/amphitheatre.wav");
+	window_building_play_sound(c, "wavs/amphitheatre.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(71, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC(71, 6);
+		window_building_draw_description(c, 71, 6);
 	} else if (!b->data.entertainment.numShows) {
-		DRAW_DESC(71, 2);
+		window_building_draw_description(c, 71, 2);
 	} else if (b->data.entertainment.numShows == 2) {
-		DRAW_DESC(71, 3);
+		window_building_draw_description(c, 71, 3);
 	} else if (b->data.entertainment.days1) {
-		DRAW_DESC(71, 4);
+		window_building_draw_description(c, 71, 4);
 	} else if (b->data.entertainment.days2) {
-		DRAW_DESC(71, 5);
+		window_building_draw_description(c, 71, 5);
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 7);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
+	window_building_draw_employment(c, c->yOffset + 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = lang_text_draw(71, 8, c->xOffset + 32, c->yOffset + 182, FONT_SMALL_BLACK);
 		lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
@@ -48,22 +48,22 @@ void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 void UI_BuildingInfo_drawTheater(BuildingInfoContext *c)
 {
 	c->helpId = 71;
-	PLAY_SOUND("wavs/theatre.wav");
+	window_building_play_sound(c, "wavs/theatre.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(72, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC(72, 4);
+		window_building_draw_description(c, 72, 4);
 	} else if (!b->data.entertainment.numShows) {
-		DRAW_DESC(72, 2);
+		window_building_draw_description(c, 72, 2);
 	} else if (b->data.entertainment.days1) {
-		DRAW_DESC(72, 3);
+		window_building_draw_description(c, 72, 3);
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
+	window_building_draw_employment(c, c->yOffset + 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = lang_text_draw(72, 6, c->xOffset + 32, c->yOffset + 182, FONT_SMALL_BLACK);
 		lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
@@ -78,22 +78,22 @@ void UI_BuildingInfo_drawTheater(BuildingInfoContext *c)
 void UI_BuildingInfo_drawHippodrome(BuildingInfoContext *c)
 {
 	c->helpId = 74;
-	PLAY_SOUND("wavs/hippodrome.wav");
+	window_building_play_sound(c, "wavs/hippodrome.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(73, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC(73, 4);
+		window_building_draw_description(c, 73, 4);
 	} else if (!b->data.entertainment.numShows) {
-		DRAW_DESC(73, 2);
+		window_building_draw_description(c, 73, 2);
 	} else if (b->data.entertainment.days1) {
-		DRAW_DESC(73, 3);
+		window_building_draw_description(c, 73, 3);
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
+	window_building_draw_employment(c, c->yOffset + 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = lang_text_draw(73, 6, c->xOffset + 32, c->yOffset + 202, FONT_SMALL_BLACK);
 		lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
@@ -106,26 +106,26 @@ void UI_BuildingInfo_drawHippodrome(BuildingInfoContext *c)
 void UI_BuildingInfo_drawColosseum(BuildingInfoContext *c)
 {
 	c->helpId = 73;
-	PLAY_SOUND("wavs/colloseum.wav");
+	window_building_play_sound(c, "wavs/colloseum.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(74, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC(74, 6);
+		window_building_draw_description(c, 74, 6);
 	} else if (!b->data.entertainment.numShows) {
-		DRAW_DESC(74, 2);
+		window_building_draw_description(c, 74, 2);
 	} else if (b->data.entertainment.numShows == 2) {
-		DRAW_DESC(74, 3);
+		window_building_draw_description(c, 74, 3);
 	} else if (b->data.entertainment.days1) {
-		DRAW_DESC(74, 5);
+		window_building_draw_description(c, 74, 5);
 	} else if (b->data.entertainment.days2) {
-		DRAW_DESC(74, 4);
+		window_building_draw_description(c, 74, 4);
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
+	window_building_draw_employment(c, c->yOffset + 138);
 	if (b->data.entertainment.days1 > 0) {
 		int width = lang_text_draw(74, 8, c->xOffset + 32, c->yOffset + 182, FONT_SMALL_BLACK);
 		lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
@@ -145,27 +145,27 @@ void UI_BuildingInfo_drawColosseum(BuildingInfoContext *c)
 static void drawEntertainmentSchool(BuildingInfoContext *c, int groupId, const char *soundFile)
 {
 	c->helpId = 75;
-	PLAY_SOUND(soundFile);
+	window_building_play_sound(c, soundFile);
 
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	if (!c->hasRoadAccess) {
-		DRAW_DESC(69, 25);
+		window_building_draw_description(c, 69, 25);
 	} else if (building_get(c->buildingId)->numWorkers <= 0) {
-		DRAW_DESC(groupId, 7);
+		window_building_draw_description(c, groupId, 7);
 	} else if (c->workerPercentage >= 100) {
-		DRAW_DESC(groupId, 2);
+		window_building_draw_description(c, groupId, 2);
 	} else if (c->workerPercentage >= 75) {
-		DRAW_DESC(groupId, 3);
+		window_building_draw_description(c, groupId, 3);
 	} else if (c->workerPercentage >= 50) {
-		DRAW_DESC(groupId, 4);
+		window_building_draw_description(c, groupId, 4);
 	} else if (c->workerPercentage >= 25) {
-		DRAW_DESC(groupId, 5);
+		window_building_draw_description(c, groupId, 5);
 	} else {
-		DRAW_DESC(groupId, 6);
+		window_building_draw_description(c, groupId, 6);
 	}
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawGladiatorSchool(BuildingInfoContext *c)

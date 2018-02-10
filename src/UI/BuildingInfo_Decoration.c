@@ -6,7 +6,7 @@
 void UI_BuildingInfo_drawGarden(BuildingInfoContext *c)
 {
 	c->helpId = 80;
-	PLAY_SOUND("wavs/park.wav");
+	window_building_play_sound(c, "wavs/park.wav");
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(79, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	lang_text_draw_multiline(79, 1,
@@ -17,7 +17,7 @@ void UI_BuildingInfo_drawGarden(BuildingInfoContext *c)
 void UI_BuildingInfo_drawPlaza(BuildingInfoContext *c)
 {
 	c->helpId = 80;
-	PLAY_SOUND("wavs/plaza.wav");
+	window_building_play_sound(c, "wavs/plaza.wav");
 	UI_BuildingInfo_drawFigureImagesLocal(c);
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(137, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
@@ -30,7 +30,7 @@ void UI_BuildingInfo_drawPlaza(BuildingInfoContext *c)
 void UI_BuildingInfo_drawStatue(BuildingInfoContext *c)
 {
 	c->helpId = 79;
-	PLAY_SOUND("wavs/statue.wav");
+	window_building_play_sound(c, "wavs/statue.wav");
 	UI_BuildingInfo_drawFigureImagesLocal(c);
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(80, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
@@ -42,7 +42,7 @@ void UI_BuildingInfo_drawStatue(BuildingInfoContext *c)
 void UI_BuildingInfo_drawTriumphalArch(BuildingInfoContext *c)
 {
 	c->helpId = 79;
-	PLAY_SOUND("wavs/statue.wav");
+	window_building_play_sound(c, "wavs/statue.wav");
 	UI_BuildingInfo_drawFigureImagesLocal(c);
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	lang_text_draw_centered(80, 2, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);

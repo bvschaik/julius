@@ -12,7 +12,7 @@
 static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId, int resourceId)
 {
 	c->helpId = helpId;
-	PLAY_SOUND(soundFile);
+	window_building_play_sound(c, soundFile);
 
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	image_draw(image_group(GROUP_RESOURCE_ICONS) + resourceId,
@@ -28,27 +28,27 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 	lang_text_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 
 	if (!c->hasRoadAccess) {
-		DRAW_DESC_AT(70, 69, 25);
+		window_building_draw_description_at(c, 70, 69, 25);
 	} else if (Data_CityInfo.resourceIndustryMothballed[resourceId]) {
-		DRAW_DESC_AT(70, groupId, 4);
+		window_building_draw_description_at(c, 70, groupId, 4);
 	} else if (b->data.industry.curseDaysLeft > 4) {
-		DRAW_DESC_AT(70, groupId, 11);
+		window_building_draw_description_at(c, 70, groupId, 11);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC_AT(70, groupId, 5);
+		window_building_draw_description_at(c, 70, groupId, 5);
 	} else if (c->workerPercentage >= 100) {
-		DRAW_DESC_AT(70, groupId, 6);
+		window_building_draw_description_at(c, 70, groupId, 6);
 	} else if (c->workerPercentage >= 75) {
-		DRAW_DESC_AT(70, groupId, 7);
+		window_building_draw_description_at(c, 70, groupId, 7);
 	} else if (c->workerPercentage >= 50) {
-		DRAW_DESC_AT(70, groupId, 8);
+		window_building_draw_description_at(c, 70, groupId, 8);
 	} else if (c->workerPercentage >= 25) {
-		DRAW_DESC_AT(70, groupId, 9);
+		window_building_draw_description_at(c, 70, groupId, 9);
 	} else {
-		DRAW_DESC_AT(70, groupId, 10);
+		window_building_draw_description_at(c, 70, groupId, 10);
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 	lang_text_draw_multiline(groupId, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
 		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
@@ -87,7 +87,7 @@ void UI_BuildingInfo_drawPigFarm(BuildingInfoContext *c)
 static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId, int resourceId)
 {
 	c->helpId = helpId;
-	PLAY_SOUND(soundFile);
+	window_building_play_sound(c, soundFile);
 
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	image_draw(image_group(GROUP_RESOURCE_ICONS) + resourceId,
@@ -103,25 +103,25 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 	lang_text_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 
 	if (!c->hasRoadAccess) {
-		DRAW_DESC_AT(70, 69, 25);
+		window_building_draw_description_at(c, 70, 69, 25);
 	} else if (Data_CityInfo.resourceIndustryMothballed[resourceId]) {
-		DRAW_DESC_AT(70, groupId, 4);
+		window_building_draw_description_at(c, 70, groupId, 4);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC_AT(70, groupId, 5);
+		window_building_draw_description_at(c, 70, groupId, 5);
 	} else if (c->workerPercentage >= 100) {
-		DRAW_DESC_AT(70, groupId, 6);
+		window_building_draw_description_at(c, 70, groupId, 6);
 	} else if (c->workerPercentage >= 75) {
-		DRAW_DESC_AT(70, groupId, 7);
+		window_building_draw_description_at(c, 70, groupId, 7);
 	} else if (c->workerPercentage >= 50) {
-		DRAW_DESC_AT(70, groupId, 8);
+		window_building_draw_description_at(c, 70, groupId, 8);
 	} else if (c->workerPercentage >= 25) {
-		DRAW_DESC_AT(70, groupId, 9);
+		window_building_draw_description_at(c, 70, groupId, 9);
 	} else {
-		DRAW_DESC_AT(70, groupId, 10);
+		window_building_draw_description_at(c, 70, groupId, 10);
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 	lang_text_draw_multiline(groupId, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
 		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
@@ -150,7 +150,7 @@ void UI_BuildingInfo_drawClayPit(BuildingInfoContext *c)
 static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId, int resourceId, int inputResourceId)
 {
 	c->helpId = helpId;
-	PLAY_SOUND(soundFile);
+	window_building_play_sound(c, soundFile);
 
 	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	image_draw(image_group(GROUP_RESOURCE_ICONS) + resourceId,
@@ -177,27 +177,27 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 	}
 
 	if (!c->hasRoadAccess) {
-		DRAW_DESC_AT(86, 69, 25);
+		window_building_draw_description_at(c, 86, 69, 25);
 	} else if (Data_CityInfo.resourceIndustryMothballed[resourceId]) {
-		DRAW_DESC_AT(86, groupId, 4);
+		window_building_draw_description_at(c, 86, groupId, 4);
 	} else if (b->numWorkers <= 0) {
-		DRAW_DESC_AT(86, groupId, 5);
+		window_building_draw_description_at(c, 86, groupId, 5);
 	} else if (b->loadsStored <= 0) {
-		DRAW_DESC_AT(86, groupId, 11);
+		window_building_draw_description_at(c, 86, groupId, 11);
 	} else if (c->workerPercentage >= 100) {
-		DRAW_DESC_AT(86, groupId, 6);
+		window_building_draw_description_at(c, 86, groupId, 6);
 	} else if (c->workerPercentage >= 75) {
-		DRAW_DESC_AT(86, groupId, 7);
+		window_building_draw_description_at(c, 86, groupId, 7);
 	} else if (c->workerPercentage >= 50) {
-		DRAW_DESC_AT(86, groupId, 8);
+		window_building_draw_description_at(c, 86, groupId, 8);
 	} else if (c->workerPercentage >= 25) {
-		DRAW_DESC_AT(86, groupId, 9);
+		window_building_draw_description_at(c, 86, groupId, 9);
 	} else {
-		DRAW_DESC_AT(86, groupId, 10);
+		window_building_draw_description_at(c, 86, groupId, 10);
 	}
 
 	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+	window_building_draw_employment(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawWineWorkshop(BuildingInfoContext *c)

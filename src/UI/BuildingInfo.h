@@ -4,26 +4,12 @@
 #include "graphics/tooltip.h"
 #include "input/mouse.h"
 #include "sound/speech.h"
-#include "window/building_info.h"
+#include "window/building/common.h"
 
-#define PLAY_SOUND(f) \
-	if (c->canPlaySound) {\
-		sound_speech_play_file(f);\
-		c->canPlaySound = 0;\
-	}
-
-#define DRAW_DESC(g,n) lang_text_draw_multiline(g, n, c->xOffset + 32, c->yOffset + 56,\
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
-#define DRAW_DESC_AT(y,g,n) lang_text_draw_multiline(g, n, c->xOffset + 32, c->yOffset + (y),\
-			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
-
-void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset);
 void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c);
 void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c);
 void UI_BuildingInfo_playFigurePhrase(BuildingInfoContext *c);
 void UI_BuildingInfo_handleMouseFigureList(const mouse *m, BuildingInfoContext *c);
-
-void UI_BuildingInfo_showStorageOrders(int param1, int param2);
 
 void UI_BuildingInfo_drawHouse(BuildingInfoContext *c);
 

@@ -93,7 +93,7 @@ static void drawHappinessInfo(BuildingInfoContext *c, int yOffset)
 void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 {
 	c->helpId = 56;
-	PLAY_SOUND("wavs/housing.wav");
+	window_building_play_sound(c, "wavs/housing.wav");
 	building *b = building_get(c->buildingId);
 	if (b->housePopulation <= 0) {
 		drawVacantLot(c);
