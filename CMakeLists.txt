@@ -214,6 +214,7 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/screen.c
     ${PROJECT_SOURCE_DIR}/src/graphics/text.c
     ${PROJECT_SOURCE_DIR}/src/graphics/video.c
+    ${PROJECT_SOURCE_DIR}/src/graphics/warning.c
     ${PROJECT_SOURCE_DIR}/src/graphics/window.c
 )
 set(SOUND_FILES
@@ -294,7 +295,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/Sidebar.c
 	${PROJECT_SOURCE_DIR}/src/UI/Tooltip.c
 	${PROJECT_SOURCE_DIR}/src/UI/TopMenu.c
-	${PROJECT_SOURCE_DIR}/src/UI/Warning.c
 	${CORE_FILES}
 	${BUILDING_FILES}
 	${CITY_FILES}

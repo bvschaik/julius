@@ -1,15 +1,14 @@
 #include "window.h"
 
+#include "graphics/warning.h"
 #include "input/cursor.h"
+#include "window/city.h"
 
 #include "UI/AllWindows.h"
 #include "UI/BuildingInfo.h"
 #include "UI/MessageDialog.h"
 #include "UI/Sidebar.h"
 #include "UI/TopMenu.h"
-#include "UI/Warning.h"
-
-#include "window/city.h"
 
 static void noop()
 {
@@ -130,6 +129,6 @@ void window_draw(int force)
     const mouse *m = mouse_get();
     current_window.handle_mouse(m);
     UI_Tooltip_handle(m, current_window.get_tooltip);
-    UI_Warning_draw();
+    warning_draw();
     updateMouseAfter();
 }
