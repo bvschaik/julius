@@ -30,7 +30,7 @@
 
 static void button_help(int param1, int param2);
 static void button_return_to_city(int param1, int param2);
-static void button_advisor(int param1, int param2);
+static void button_advisor(int advisor, int param2);
 static void button_open_trade(int param1, int param2);
 
 static image_button image_button_help[] = {

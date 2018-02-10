@@ -4,6 +4,7 @@
 #include "graphics/tooltip.h"
 #include "input/mouse.h"
 #include "sound/speech.h"
+#include "window/building_info.h"
 
 #define PLAY_SOUND(f) \
 	if (c->canPlaySound) {\
@@ -15,53 +16,6 @@
 			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 #define DRAW_DESC_AT(y,g,n) lang_text_draw_multiline(g, n, c->xOffset + 32, c->yOffset + (y),\
 			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
-
-enum {
-	BuildingInfoType_None = 0,
-	BuildingInfoType_Terrain = 1,
-	BuildingInfoType_Building = 2,
-	BuildingInfoType_Legion = 4,
-};
-
-typedef struct {
-	int xOffset;
-	int yOffset;
-	int widthBlocks;
-	int heightBlocks;
-	int helpId;
-	int canPlaySound;
-	int buildingId;
-	int hasRoadAccess;
-	int workerPercentage;
-	int hasReservoirPipes;
-	int aqueductHasWater;
-	int formationId;
-	int formationTypes;
-	int barracksSoldiersRequested;
-	int worstDesirabilityBuildingId;
-	int warehouseSpaceText;
-	int type; // see enum above for values
-	int terrainType;
-	int advisor;
-	int rubbleBuildingType;
-	int storageShowSpecialOrders;
-	struct {
-		int soundId;
-		int phraseId;
-		int selectedIndex;
-		int count;
-		int drawn;
-		int figureIds[7];
-	} figure;
-} BuildingInfoContext;
-
-void UI_BuildingInfo_show(int gridOffset);
-void UI_BuildingInfo_drawBackground();
-void UI_BuildingInfo_drawForeground();
-void UI_BuildingInfo_handleMouse(const mouse *m);
-void UI_BuildingInfo_getTooltip(tooltip_context *c);
-
-int UI_BuildingInfo_getBuildingType();
 
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset);
 void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c);

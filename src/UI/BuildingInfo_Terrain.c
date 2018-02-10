@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "window/building_info.h"
 
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
 {
@@ -16,22 +17,22 @@ void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
 void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 {
 	switch (c->terrainType) {
-		case 6: c->helpId = 57; break;
-		case 7: c->helpId = 60; break;
-		case 9: c->helpId = 85; break;
-		case 11: c->helpId = 58; break;
+		case TERRAIN_INFO_ROAD: c->helpId = 57; break;
+		case TERRAIN_INFO_AQUEDUCT: c->helpId = 60; break;
+		case TERRAIN_INFO_WALL: c->helpId = 85; break;
+		case TERRAIN_INFO_BRIDGE: c->helpId = 58; break;
 		default: c->helpId = 0; break;
 	}
 
-	if (c->terrainType == 7) {
+	if (c->terrainType == TERRAIN_INFO_AQUEDUCT) {
 		UI_BuildingInfo_drawAqueduct(c);
-	} else if (c->terrainType == 8) {
+	} else if (c->terrainType == TERRAIN_INFO_RUBBLE) {
 		UI_BuildingInfo_drawRubble(c);
-	} else if (c->terrainType == 9) {
+	} else if (c->terrainType == TERRAIN_INFO_WALL) {
 		UI_BuildingInfo_drawWall(c);
-	} else if (c->terrainType == 12) {
+	} else if (c->terrainType == TERRAIN_INFO_GARDEN) {
 		UI_BuildingInfo_drawGarden(c);
-	} else if (c->terrainType == 13 && c->figure.count <= 0) {
+	} else if (c->terrainType == TERRAIN_INFO_PLAZA && c->figure.count <= 0) {
 		UI_BuildingInfo_drawPlaza(c);
 	} else {
 		if (c->canPlaySound) {
@@ -58,7 +59,7 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 			lang_text_draw_centered(70, c->terrainType + 10,
 				c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 		}
-		if (c->terrainType != 6 && c->terrainType != 13) {
+		if (c->terrainType != TERRAIN_INFO_ROAD && c->terrainType != TERRAIN_INFO_PLAZA) {
 			lang_text_draw_multiline(70, c->terrainType + 25,
 				c->xOffset + 36, c->yOffset + 16 * c->heightBlocks - 113,
 				16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);

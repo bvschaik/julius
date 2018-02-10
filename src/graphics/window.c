@@ -4,7 +4,6 @@
 #include "input/cursor.h"
 #include "window/city.h"
 
-#include "UI/BuildingInfo.h"
 #include "UI/Sidebar.h"
 #include "UI/TopMenu.h"
 
@@ -41,7 +40,7 @@ static window_type windows[] = {
     { Window_OverlayMenu },
     { Window_BuildingMenu },
     { Window_Intermezzo },
-    { Window_BuildingInfo, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse, UI_BuildingInfo_getTooltip },
+    { Window_BuildingInfo },
     { Window_NewCareerDialog },
     { Window_SlidingSidebar, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop, noop },
     { Window_CityMilitary },

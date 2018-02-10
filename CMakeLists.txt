@@ -240,6 +240,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisor/religion.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/trade.c
     ${PROJECT_SOURCE_DIR}/src/window/build_menu.c
+    ${PROJECT_SOURCE_DIR}/src/window/building_info.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
@@ -273,7 +274,6 @@ set(WINDOW_FILES
 add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
-	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Culture.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Decoration.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Distribution.c

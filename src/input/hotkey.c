@@ -1,6 +1,5 @@
 #include "hotkey.h"
 
-#include "UI/BuildingInfo.h"
 #include "UI/Sidebar.h"
 
 #include "Data/State.h"
@@ -22,6 +21,7 @@
 #include "map/grid.h"
 #include "scenario/invasion.h"
 #include "window/advisors.h"
+#include "window/building_info.h"
 #include "window/popup_dialog.h"
 #include "window/city.h"
 
@@ -125,7 +125,7 @@ static void cycle_legion()
 static void cheat_init_or_invasion()
 {
     if (window_is(Window_BuildingInfo)) {
-        data.is_cheating = UI_BuildingInfo_getBuildingType() == BUILDING_WELL;
+        data.is_cheating = window_building_info_get_building_type() == BUILDING_WELL;
     } else if (data.is_cheating && window_is(Window_MessageDialog)) {
         data.is_cheating = 2;
         scenario_invasion_start_from_cheat();
