@@ -65,6 +65,14 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(SDL2_ARCH_64 TRUE)
+  set(SDL2_PROCESSOR_ARCH "x64")
+else()
+  set(SDL2_ARCH_64 FALSE)
+  set(SDL2_PROCESSOR_ARCH "x86")
+endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+
 SET(SDL2_SEARCH_PATHS
 	~/Library/Frameworks
 	/Library/Frameworks
@@ -87,7 +95,7 @@ FIND_LIBRARY(SDL2_LIBRARY_TEMP
 	NAMES SDL2
 	HINTS
 	$ENV{SDL2DIR}
-	PATH_SUFFIXES lib64 lib
+	PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
 	PATHS ${SDL2_SEARCH_PATHS}
 )
 
@@ -101,7 +109,7 @@ IF(NOT SDL2_BUILDING_LIBRARY)
 			NAMES SDL2main
 			HINTS
 			$ENV{SDL2DIR}
-			PATH_SUFFIXES lib64 lib
+			PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
 			PATHS ${SDL2_SEARCH_PATHS}
 		)
 	ENDIF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
