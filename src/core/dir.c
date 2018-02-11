@@ -8,6 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#endif
+
 static dir_listing listing;
 static int listing_initialized = 0;
 

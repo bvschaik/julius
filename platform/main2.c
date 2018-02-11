@@ -14,14 +14,21 @@
 #include "input/keyboard.h"
 #include "input/mouse.h"
 
-#ifndef __MINGW32__
-#include <execinfo.h>
-#endif
-
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef __GNUC__
+#include <execinfo.h>
+#endif
+
+#ifdef _MSC_VER
+#include <direct.h>
+#define chdir _chdir
+#define getcwd _getcwd
+#else
 #include <unistd.h>
+#endif
 
 static struct {
 	int width;
@@ -44,7 +51,7 @@ enum {
 };
 
 static void handler(int sig) {
-#ifndef __MINGW32__
+#ifdef __GNUC__
 	void *array[100];
 	size_t size;
 	
@@ -54,6 +61,8 @@ static void handler(int sig) {
 	// print out all the frames to stderr
 	fprintf(stderr, "Error: signal %d:\n", sig);
 	backtrace_symbols_fd(array, size, STDERR_FILENO);
+#else
+    fprintf(stderr, "Oops, crashed with signal %d :(\n", sig);
 #endif
 	exit(1);
 }
