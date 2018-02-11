@@ -27,6 +27,7 @@
 #include "window/city.h"
 #include "window/message_dialog.h"
 #include "window/building/common.h"
+#include "window/building/government.h"
 
 #include "Data/CityInfo.h"
 #include "Data/CityView.h"
@@ -143,7 +144,7 @@ static void init(int grid_offset)
 {
     context.canPlaySound = 1;
     context.storageShowSpecialOrders = 0;
-    context.advisor = 0;
+    context.can_go_to_advisor = 0;
     context.buildingId = map_building_at(grid_offset);
     context.rubbleBuildingType = map_rubble_building_type(grid_offset);
     context.hasReservoirPipes = map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE);
@@ -424,11 +425,11 @@ static void draw_background()
         } else if (btype == BUILDING_ORACLE) {
             UI_BuildingInfo_drawOracle(&context);
         } else if (btype == BUILDING_GOVERNORS_HOUSE || btype == BUILDING_GOVERNORS_VILLA || btype == BUILDING_GOVERNORS_PALACE) {
-            UI_BuildingInfo_drawGovernorsHome(&context);
+            window_building_draw_governor_home(&context);
         } else if (btype == BUILDING_FORUM || btype == BUILDING_FORUM_UPGRADED) {
-            UI_BuildingInfo_drawForum(&context);
+            window_building_draw_forum(&context);
         } else if (btype == BUILDING_SENATE || btype == BUILDING_SENATE_UPGRADED) {
-            UI_BuildingInfo_drawSenate(&context);
+            window_building_draw_senate(&context);
         } else if (btype == BUILDING_ENGINEERS_POST) {
             UI_BuildingInfo_drawEngineersPost(&context);
         } else if (btype == BUILDING_SHIPYARD) {
@@ -444,9 +445,9 @@ static void draw_background()
         } else if (btype == BUILDING_WELL) {
             UI_BuildingInfo_drawWell(&context);
         } else if (btype == BUILDING_SMALL_STATUE || btype == BUILDING_MEDIUM_STATUE || btype == BUILDING_LARGE_STATUE) {
-            UI_BuildingInfo_drawStatue(&context);
+            window_building_draw_statue(&context);
         } else if (btype == BUILDING_TRIUMPHAL_ARCH) {
-            UI_BuildingInfo_drawTriumphalArch(&context);
+            window_building_draw_triumphal_arch(&context);
         } else if (btype == BUILDING_PREFECTURE) {
             UI_BuildingInfo_drawPrefect(&context);
         } else if (btype == BUILDING_GATEHOUSE) {
@@ -505,7 +506,7 @@ static void draw_foreground()
             context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
             image_buttons_help_close, 2);
     }
-    if (context.advisor) {
+    if (context.can_go_to_advisor) {
         image_buttons_draw(
             context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
             image_buttons_advisor, 1);
@@ -527,7 +528,7 @@ static void handle_mouse(const mouse *m)
             m, context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
             image_buttons_help_close, 2, &focus_image_button_id);
     }
-    if (context.advisor) {
+    if (context.can_go_to_advisor) {
         image_buttons_handle_mouse(
             m, context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
             image_buttons_advisor, 1, 0);

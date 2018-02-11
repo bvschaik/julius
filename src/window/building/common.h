@@ -46,7 +46,7 @@ typedef struct {
     int warehouseSpaceText;
     building_info_type type;
     terrain_info_type terrainType;
-    int advisor;
+    int can_go_to_advisor;
     int rubbleBuildingType;
     int storageShowSpecialOrders;
     struct {

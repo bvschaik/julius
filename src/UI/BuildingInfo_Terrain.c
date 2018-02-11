@@ -4,6 +4,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "window/building_info.h"
+#include "window/building/government.h"
 
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
 {
@@ -31,9 +32,9 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 	} else if (c->terrainType == TERRAIN_INFO_WALL) {
 		UI_BuildingInfo_drawWall(c);
 	} else if (c->terrainType == TERRAIN_INFO_GARDEN) {
-		UI_BuildingInfo_drawGarden(c);
+		window_building_draw_garden(c);
 	} else if (c->terrainType == TERRAIN_INFO_PLAZA && c->figure.count <= 0) {
-		UI_BuildingInfo_drawPlaza(c);
+		window_building_draw_plaza(c);
 	} else {
 		if (c->canPlaySound) {
 			c->canPlaySound = 0;

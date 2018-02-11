@@ -72,10 +72,6 @@ void UI_BuildingInfo_drawTempleMars(BuildingInfoContext *c);
 void UI_BuildingInfo_drawTempleVenus(BuildingInfoContext *c);
 void UI_BuildingInfo_drawOracle(BuildingInfoContext *c);
 
-void UI_BuildingInfo_drawForum(BuildingInfoContext *c);
-void UI_BuildingInfo_drawSenate(BuildingInfoContext *c);
-void UI_BuildingInfo_drawGovernorsHome(BuildingInfoContext *c);
-
 void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c);
 void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c);
 void UI_BuildingInfo_drawDock(BuildingInfoContext *c);
@@ -100,11 +96,6 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c);
 void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c);
 void UI_BuildingInfo_handleMouseLegionInfo(const mouse *m, BuildingInfoContext *c);
 int UI_BuildingInfo_getTooltipLegionInfo(BuildingInfoContext *c);
-
-void UI_BuildingInfo_drawGarden(BuildingInfoContext *c);
-void UI_BuildingInfo_drawPlaza(BuildingInfoContext *c);
-void UI_BuildingInfo_drawStatue(BuildingInfoContext *c);
-void UI_BuildingInfo_drawTriumphalArch(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawNativeHut(BuildingInfoContext *c);
 void UI_BuildingInfo_drawNativeMeeting(BuildingInfoContext *c);

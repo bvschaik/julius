@@ -242,6 +242,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/build_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/building_info.c
     ${PROJECT_SOURCE_DIR}/src/window/building/common.c
+    ${PROJECT_SOURCE_DIR}/src/window/building/government.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
@@ -276,12 +277,10 @@ add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Culture.c
-	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Decoration.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Distribution.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Engineering.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Entertainment.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Figures.c
-	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Government.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_House.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Industry.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Military.c
