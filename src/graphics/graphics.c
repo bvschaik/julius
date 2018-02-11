@@ -3,11 +3,15 @@
 #include "graphics/image.h"
 #include "graphics/screen.h"
 
-#include "Data/Screen.h"
-
 #include <stdio.h> // remove later
-#include <stdlib.h> // remove later
+#include <stdlib.h>
 #include <string.h>
+
+static struct {
+    color_t *pixels;
+    int width;
+    int height;
+} canvas;
 
 static struct {
     int x_start;
@@ -22,6 +26,24 @@ static struct {
 } translation = {0, 0};
 
 static clip_info clip;
+
+void graphics_init_canvas(int width, int height)
+{
+    if (canvas.pixels) {
+        free(canvas.pixels);
+    }
+    canvas.pixels = (color_t *) malloc(width * height * sizeof(color_t));
+    memset(canvas.pixels, 0, width * height * sizeof(color_t));
+    canvas.width = width;
+    canvas.height = height;
+
+    graphics_set_clip_rectangle(0, 0, width, height);
+}
+
+const void *graphics_canvas()
+{
+    return canvas.pixels;
+}
 
 static void translate_clip(int dx, int dy)
 {
@@ -63,20 +85,20 @@ void graphics_set_clip_rectangle(int x, int y, int width, int height)
     if (translation.y + clip_rectangle.y_start < 0) {
         clip_rectangle.y_start = -translation.y;
     }
-    if (translation.x + clip_rectangle.x_end > Data_Screen.width) {
-        clip_rectangle.x_end = Data_Screen.width - translation.x;
+    if (translation.x + clip_rectangle.x_end > canvas.width) {
+        clip_rectangle.x_end = canvas.width - translation.x;
     }
-    if (translation.y + clip_rectangle.y_end > Data_Screen.height) {
-        clip_rectangle.y_end = Data_Screen.height-15 - translation.y;
+    if (translation.y + clip_rectangle.y_end > canvas.height) {
+        clip_rectangle.y_end = canvas.height - translation.y;
     }
 }
 
 void graphics_reset_clip_rectangle()
 {
     clip_rectangle.x_start = 0;
-    clip_rectangle.x_end = Data_Screen.width;
+    clip_rectangle.x_end = canvas.width;
     clip_rectangle.y_start = 0;
-    clip_rectangle.y_end = Data_Screen.height;
+    clip_rectangle.y_end = canvas.height;
     translate_clip(translation.x, translation.y);
 }
 
@@ -163,12 +185,13 @@ void graphics_draw_from_buffer(int x, int y, int width, int height, const color_
 
 color_t *graphics_get_pixel(int x, int y)
 {
-    return &(((color_t*)Data_Screen.drawBuffer)[(translation.y + y) * Data_Screen.width + (translation.x + x)]);
+    //return screen_pixel(translation.x + x, translation.y + y);
+    return &(canvas.pixels[(translation.y + y) * canvas.width + (translation.x + x)]);
 }
 
 void graphics_clear_screen()
 {
-    memset(Data_Screen.drawBuffer, 0, sizeof(color_t) * Data_Screen.width * Data_Screen.height);
+    memset(canvas.pixels, 0, sizeof(color_t) * canvas.width * canvas.height);
 }
 
 void graphics_draw_pixel(int x, int y, color_t color)
@@ -255,6 +278,8 @@ static void pixel(color_t input, unsigned char *r, unsigned char *g, unsigned ch
 
 void graphics_save_screenshot(const char *filename)
 {
+    int width = canvas.width;
+    int height = canvas.height;
     struct {
         char __filler1;
         char __filler2;
@@ -270,18 +295,18 @@ void graphics_save_screenshot(const char *filename)
         short planes;
         short bpp;
     } header = {
-        0, 0, 'B', 'M', 26 + Data_Screen.width * Data_Screen.height * 3, 0, 26,
-        12, (short) Data_Screen.width, (short) Data_Screen.height, 1, 24
+        0, 0, 'B', 'M', 26 + width * height * 3, 0, 26,
+        12, (short) width, (short) height, 1, 24
     };
-    unsigned char *pixels = (unsigned char*) malloc(Data_Screen.width * 3);
+    unsigned char *pixels = (unsigned char*) malloc(width * 3);
     FILE *fp = fopen(filename, "wb");
     fwrite(&header.B, 1, 26, fp);
-    for (int y = Data_Screen.height - 1; y >= 0; y--) {
-        for (int x = 0; x < Data_Screen.width; x++) {
-            pixel(((color_t*)Data_Screen.drawBuffer)[y*Data_Screen.width+x],
+    for (int y = height - 1; y >= 0; y--) {
+        for (int x = 0; x < width; x++) {
+            pixel(canvas.pixels[y * width + x],
                 &pixels[3*x+2], &pixels[3*x+1], &pixels[3*x]);
         }
-        fwrite(pixels, 1, Data_Screen.width * 3, fp);
+        fwrite(pixels, 1, width * 3, fp);
     }
     fclose(fp);
     free(pixels);

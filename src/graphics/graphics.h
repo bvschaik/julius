@@ -25,6 +25,9 @@ typedef struct {
     int isVisible;
 } clip_info;
 
+void graphics_init_canvas(int width, int height);
+const void *graphics_canvas();
+
 void graphics_in_dialog();
 void graphics_reset_dialog();
 

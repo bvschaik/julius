@@ -1,7 +1,5 @@
 #include "SDL.h"
 
-#include "../src/Data/Screen.h" // debug for fps counter
-
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/settings.h"
@@ -155,12 +153,13 @@ static void refresh()
 		lastFpsTime = then2;
 		numFrames = 0;
 	}
-	graphics_fill_rect(Data_Screen.width - 120, 0, Data_Screen.width, 20, COLOR_WHITE);
-	text_draw_number_colored(lastFps, 'f', "", Data_Screen.width - 120, 5, FONT_NORMAL_PLAIN, COLOR_RED);
-	text_draw_number_colored(then - now, 'g', "", Data_Screen.width - 70, 5, FONT_NORMAL_PLAIN, COLOR_RED);
-	text_draw_number_colored(then2 - then, 'd', "", Data_Screen.width - 40, 5, FONT_NORMAL_PLAIN, COLOR_RED);
+	int s_width = screen_width();
+	graphics_fill_rect(s_width - 120, 0, s_width, 20, COLOR_WHITE);
+	text_draw_number_colored(lastFps, 'f', "", s_width - 120, 5, FONT_NORMAL_PLAIN, COLOR_RED);
+	text_draw_number_colored(then - now, 'g', "", s_width - 70, 5, FONT_NORMAL_PLAIN, COLOR_RED);
+	text_draw_number_colored(then2 - then, 'd', "", s_width - 40, 5, FONT_NORMAL_PLAIN, COLOR_RED);
 	
-	SDL_UpdateTexture(SDL.texture, NULL, Data_Screen.drawBuffer, Data_Screen.width * 4);
+	SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), s_width * 4);
 	SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
 	SDL_RenderPresent(SDL.renderer);
 	last = now;

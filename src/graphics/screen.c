@@ -1,50 +1,39 @@
 #include "screen.h"
 
-#include "Data/Screen.h"
-
 #include "city/view.h"
 #include "city/warning.h"
 #include "graphics/graphics.h"
 
-#include <stdlib.h>
-#include <string.h>
-
 static struct {
+    int width;
+    int height;
     struct {
         int x;
         int y;
     } dialog_offset;
 } data;
 
-static void set_size(int width, int height)
+void screen_set_resolution(int width, int height)
 {
-    Data_Screen.width = width;
-    Data_Screen.height = height;
-    data.dialog_offset.x = (Data_Screen.width - 640) / 2;
-    data.dialog_offset.y = (Data_Screen.height - 480) / 2;
-    graphics_set_clip_rectangle(0, 0, width, height);
+    data.width = width;
+    data.height = height;
+    data.dialog_offset.x = (width - 640) / 2;
+    data.dialog_offset.y = (height - 480) / 2;
+
+    graphics_init_canvas(width, height);
+
     city_view_set_viewport(width, height);
     city_warning_clear_all();
 }
 
-void screen_set_resolution(int width, int height)
-{
-    if (Data_Screen.drawBuffer) {
-        free(Data_Screen.drawBuffer);
-    }
-    Data_Screen.drawBuffer = malloc(width * height * sizeof(color_t));
-    memset(Data_Screen.drawBuffer, 0, width * height * sizeof(color_t));
-    set_size(width, height);
-}
-
 int screen_width()
 {
-    return Data_Screen.width;
+    return data.width;
 }
 
 int screen_height()
 {
-    return Data_Screen.height;
+    return data.height;
 }
 
 int screen_dialog_offset_x()

@@ -2,8 +2,6 @@
 
 #include "Minimap.h"
 
-#include "../Data/Screen.h"
-
 #include "building/menu.h"
 #include "city/message.h"
 #include "city/view.h"
@@ -16,6 +14,7 @@
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
@@ -31,9 +30,9 @@
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
 
-#define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
-#define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
-#define XOFFSET_EXPANDED (Data_Screen.width - (Data_Screen.width + 20) % 60 - 162)
+#define SIDEBAR_BORDER ((screen_width() + 20) % 60)
+#define BOTTOM_BORDER ((screen_height() - 24) % 15)
+#define XOFFSET_EXPANDED (screen_width() - (screen_width() + 20) % 60 - 162)
 
 static void drawNumberOfMessages();
 static void drawFillerBorders();
@@ -151,7 +150,7 @@ void UI_Sidebar_drawForeground()
     if (building_menu_has_changed()) {
         enableBuildingButtons();
     }
-	int xOffsetPanel = Data_Screen.width - SIDEBAR_BORDER;
+	int xOffsetPanel = screen_width() - SIDEBAR_BORDER;
 	if (city_view_is_sidebar_collapsed()) {
 		xOffsetPanel -= 42;
 	} else {
@@ -190,7 +189,7 @@ static void drawBuildImage(int x_offset, int force)
 static void drawSidebar()
 {
 	int graphicBase = image_group(GROUP_SIDE_PANEL);
-	int xOffsetPanel = Data_Screen.width - SIDEBAR_BORDER;
+	int xOffsetPanel = screen_width() - SIDEBAR_BORDER;
 	if (city_view_is_sidebar_collapsed()) {
 		xOffsetPanel -= 42;
 		image_draw(graphicBase, xOffsetPanel, 24);
@@ -205,7 +204,7 @@ static void drawSidebar()
 
 	// relief images below panel
 	int yOffset = 474;
-	int yMax = Data_Screen.height - BOTTOM_BORDER;
+	int yMax = screen_height() - BOTTOM_BORDER;
 	while (yOffset < yMax) {
 		if (yMax - yOffset <= 120) {
 			image_draw(graphicBase + 2 + city_view_is_sidebar_collapsed(), xOffsetPanel, yOffset);
@@ -227,26 +226,26 @@ static void drawFillerBorders()
 			graphicId -= 1;
 		}
         if (borderRightWidth > 40) {
-            int xOffset = Data_Screen.width - 35;
-            for (int yOffset = 24; yOffset < Data_Screen.height; yOffset += 24) {
+            int xOffset = screen_width() - 35;
+            for (int yOffset = 24; yOffset < screen_height(); yOffset += 24) {
                 image_draw(graphicId, xOffset, yOffset);
             }
         }
-		int xOffset = Data_Screen.width - borderRightWidth;
-		for (int yOffset = 24; yOffset < Data_Screen.height; yOffset += 24) {
+		int xOffset = screen_width() - borderRightWidth;
+		for (int yOffset = 24; yOffset < screen_height(); yOffset += 24) {
 			image_draw(graphicId, xOffset, yOffset);
 		}
 	}
 
 	int borderBottomHeight = BOTTOM_BORDER;
-	graphics_fill_rect(0, Data_Screen.height - borderBottomHeight, Data_Screen.width, borderBottomHeight, COLOR_BLACK);
+	graphics_fill_rect(0, screen_height() - borderBottomHeight, screen_width(), borderBottomHeight, COLOR_BLACK);
 }
 
 static void drawButtons()
 {
 	buttonBuildExpanded[12].enabled = game_can_undo();
 	if (city_view_is_sidebar_collapsed()) {
-		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
+		int xOffset = screen_width() - SIDEBAR_BORDER - 42;
 		image_buttons_draw(xOffset, 24, buttonExpandSidebar, 1);
 		image_buttons_draw(xOffset, 24, buttonBuildCollapsed, 12);
 	} else {
@@ -286,7 +285,7 @@ int UI_Sidebar_handleMouse(const mouse *m)
 	int buttonId;
 	data.focusButtonForTooltip = 0;
 	if (city_view_is_sidebar_collapsed()) {
-        int x_offset = Data_Screen.width - SIDEBAR_BORDER - 42;
+        int x_offset = screen_width() - SIDEBAR_BORDER - 42;
 		image_buttons_handle_mouse(m, x_offset, 24, buttonExpandSidebar, 1, &buttonId);
 		if (buttonId) {
 			data.focusButtonForTooltip = 12;
@@ -319,7 +318,7 @@ int UI_Sidebar_handleMouse(const mouse *m)
 void UI_Sidebar_handleMouseBuildButtons(const mouse *m)
 {
 	if (city_view_is_sidebar_collapsed()) {
-		image_buttons_handle_mouse(m, Data_Screen.width - SIDEBAR_BORDER - 42, 24, buttonBuildCollapsed, 12, 0);
+		image_buttons_handle_mouse(m, screen_width() - SIDEBAR_BORDER - 42, 24, buttonBuildCollapsed, 12, 0);
 	} else {
 		image_buttons_handle_mouse(m, XOFFSET_EXPANDED, 24, buttonBuildExpanded, 15, 0);
 	}
@@ -465,12 +464,12 @@ void UI_SlidingSidebar_drawForeground()
 	}
 
 	graphics_set_clip_rectangle(
-		Data_Screen.width - SIDEBAR_BORDER - 162, 24,
-		162, Data_Screen.height - 24 - BOTTOM_BORDER);
+		screen_width() - SIDEBAR_BORDER - 162, 24,
+		162, screen_height() - 24 - BOTTOM_BORDER);
 
 	int graphicBase = image_group(GROUP_SIDE_PANEL);
 	// draw collapsed sidebar
-	int xOffsetCollapsed = Data_Screen.width - SIDEBAR_BORDER - 42;
+	int xOffsetCollapsed = screen_width() - SIDEBAR_BORDER - 42;
 	image_draw(graphicBase, xOffsetCollapsed, 24);
 	image_buttons_draw(xOffsetCollapsed, 24, buttonExpandSidebar, 1);
 	image_buttons_draw(xOffsetCollapsed, 24, buttonBuildCollapsed, 12);
@@ -495,8 +494,8 @@ void UI_SlidingSidebar_drawForeground()
 
 	// relief images below buttons
 	int yOffset = 474;
-	while (Data_Screen.width - yOffset > 0) {
-		if (Data_Screen.width - yOffset <= 120) {
+	while (screen_width() - yOffset > 0) {
+		if (screen_width() - yOffset <= 120) {
 			image_draw(graphicBase + 3, xOffsetCollapsed, yOffset);
 			image_draw(graphicBase + 2, xOffsetExpanded, yOffset);
 			yOffset += 120;
