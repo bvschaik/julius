@@ -27,6 +27,7 @@
 #include "window/city.h"
 #include "window/message_dialog.h"
 #include "window/building/common.h"
+#include "window/building/culture.h"
 #include "window/building/government.h"
 
 #include "Data/CityInfo.h"
@@ -383,47 +384,47 @@ static void draw_background()
                 UI_BuildingInfo_drawWarehouse(&context);
             }
         } else if (btype == BUILDING_AMPHITHEATER) {
-            UI_BuildingInfo_drawAmphitheater(&context);
+            window_building_draw_amphitheater(&context);
         } else if (btype == BUILDING_THEATER) {
-            UI_BuildingInfo_drawTheater(&context);
+            window_building_draw_theater(&context);
         } else if (btype == BUILDING_HIPPODROME) {
-            UI_BuildingInfo_drawHippodrome(&context);
+            window_building_draw_hippodrome(&context);
         } else if (btype == BUILDING_COLOSSEUM) {
-            UI_BuildingInfo_drawColosseum(&context);
+            window_building_draw_colosseum(&context);
         } else if (btype == BUILDING_GLADIATOR_SCHOOL) {
-            UI_BuildingInfo_drawGladiatorSchool(&context);
+            window_building_draw_gladiator_school(&context);
         } else if (btype == BUILDING_LION_HOUSE) {
-            UI_BuildingInfo_drawLionHouse(&context);
+            window_building_draw_lion_house(&context);
         } else if (btype == BUILDING_ACTOR_COLONY) {
-            UI_BuildingInfo_drawActorColony(&context);
+            window_building_draw_actor_colony(&context);
         } else if (btype == BUILDING_CHARIOT_MAKER) {
-            UI_BuildingInfo_drawChariotMaker(&context);
+            window_building_draw_chariot_maker(&context);
         } else if (btype == BUILDING_DOCTOR) {
-            UI_BuildingInfo_drawClinic(&context);
+            window_building_draw_clinic(&context);
         } else if (btype == BUILDING_HOSPITAL) {
-            UI_BuildingInfo_drawHospital(&context);
+            window_building_draw_hospital(&context);
         } else if (btype == BUILDING_BATHHOUSE) {
-            UI_BuildingInfo_drawBathhouse(&context);
+            window_building_draw_bathhouse(&context);
         } else if (btype == BUILDING_BARBER) {
-            UI_BuildingInfo_drawBarber(&context);
+            window_building_draw_barber(&context);
         } else if (btype == BUILDING_SCHOOL) {
-            UI_BuildingInfo_drawSchool(&context);
+            window_building_draw_school(&context);
         } else if (btype == BUILDING_ACADEMY) {
-            UI_BuildingInfo_drawAcademy(&context);
+            window_building_draw_academy(&context);
         } else if (btype == BUILDING_LIBRARY) {
-            UI_BuildingInfo_drawLibrary(&context);
+            window_building_draw_library(&context);
         } else if (btype == BUILDING_SMALL_TEMPLE_CERES || btype == BUILDING_LARGE_TEMPLE_CERES) {
-            UI_BuildingInfo_drawTempleCeres(&context);
+            window_building_draw_temple_ceres(&context);
         } else if (btype == BUILDING_SMALL_TEMPLE_NEPTUNE || btype == BUILDING_LARGE_TEMPLE_NEPTUNE) {
-            UI_BuildingInfo_drawTempleNeptune(&context);
+            window_building_draw_temple_neptune(&context);
         } else if (btype == BUILDING_SMALL_TEMPLE_MERCURY || btype == BUILDING_LARGE_TEMPLE_MERCURY) {
-            UI_BuildingInfo_drawTempleMercury(&context);
+            window_building_draw_temple_mercury(&context);
         } else if (btype == BUILDING_SMALL_TEMPLE_MARS || btype == BUILDING_LARGE_TEMPLE_MARS) {
-            UI_BuildingInfo_drawTempleMars(&context);
+            window_building_draw_temple_mars(&context);
         } else if (btype == BUILDING_SMALL_TEMPLE_VENUS || btype == BUILDING_LARGE_TEMPLE_VENUS) {
-            UI_BuildingInfo_drawTempleVenus(&context);
+            window_building_draw_temple_venus(&context);
         } else if (btype == BUILDING_ORACLE) {
-            UI_BuildingInfo_drawOracle(&context);
+            window_building_draw_oracle(&context);
         } else if (btype == BUILDING_GOVERNORS_HOUSE || btype == BUILDING_GOVERNORS_VILLA || btype == BUILDING_GOVERNORS_PALACE) {
             window_building_draw_governor_home(&context);
         } else if (btype == BUILDING_FORUM || btype == BUILDING_FORUM_UPGRADED) {

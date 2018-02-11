@@ -47,31 +47,6 @@ void UI_BuildingInfo_handleMouseGranaryOrders(const mouse *m, BuildingInfoContex
 void UI_BuildingInfo_handleMouseWarehouse(const mouse *m, BuildingInfoContext *c);
 void UI_BuildingInfo_handleMouseWarehouseOrders(const mouse *m, BuildingInfoContext *c);
 
-void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c);
-void UI_BuildingInfo_drawTheater(BuildingInfoContext *c);
-void UI_BuildingInfo_drawHippodrome(BuildingInfoContext *c);
-void UI_BuildingInfo_drawColosseum(BuildingInfoContext *c);
-void UI_BuildingInfo_drawGladiatorSchool(BuildingInfoContext *c);
-void UI_BuildingInfo_drawLionHouse(BuildingInfoContext *c);
-void UI_BuildingInfo_drawActorColony(BuildingInfoContext *c);
-void UI_BuildingInfo_drawChariotMaker(BuildingInfoContext *c);
-
-void UI_BuildingInfo_drawClinic(BuildingInfoContext *c);
-void UI_BuildingInfo_drawHospital(BuildingInfoContext *c);
-void UI_BuildingInfo_drawBathhouse(BuildingInfoContext *c);
-void UI_BuildingInfo_drawBarber(BuildingInfoContext *c);
-
-void UI_BuildingInfo_drawSchool(BuildingInfoContext *c);
-void UI_BuildingInfo_drawAcademy(BuildingInfoContext *c);
-void UI_BuildingInfo_drawLibrary(BuildingInfoContext *c);
-
-void UI_BuildingInfo_drawTempleCeres(BuildingInfoContext *c);
-void UI_BuildingInfo_drawTempleNeptune(BuildingInfoContext *c);
-void UI_BuildingInfo_drawTempleMercury(BuildingInfoContext *c);
-void UI_BuildingInfo_drawTempleMars(BuildingInfoContext *c);
-void UI_BuildingInfo_drawTempleVenus(BuildingInfoContext *c);
-void UI_BuildingInfo_drawOracle(BuildingInfoContext *c);
-
 void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c);
 void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c);
 void UI_BuildingInfo_drawDock(BuildingInfoContext *c);
