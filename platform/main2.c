@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__MINGW32__)
 #include <execinfo.h>
 #endif
 
@@ -51,7 +51,7 @@ enum {
 };
 
 static void handler(int sig) {
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__MINGW32__)
 	void *array[100];
 	size_t size;
 	
