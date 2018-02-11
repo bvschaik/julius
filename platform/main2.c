@@ -501,16 +501,19 @@ int main(int argc, char **argv)
 	initSdl();
 	
 	// C3 setup
-	char cwd[200];
-	getcwd(cwd, 200);
-	printf("current working directory: %s\n", cwd);
-	if (chdir("../data") != 0) {
-		printf("data directory not found!!\n");
-	}
-
-	if (!game_pre_init()) {
-		return 1;
-	}
+    if (!game_pre_init()) {
+        // change to "../data" and try again
+        char cwd[200];
+        getcwd(cwd, 200);
+        printf("Trying again in ../data; current working directory: %s\n", cwd);
+        if (chdir("../data") != 0) {
+            printf("data directory not found!\n");
+            return 1;
+        }
+        if (!game_pre_init()) {
+            return 1;
+        }
+    }
 	
 	int width, height;
 	setting_window(&width, &height);
