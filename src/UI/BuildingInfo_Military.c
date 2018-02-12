@@ -44,44 +44,6 @@ void UI_BuildingInfo_drawWall(BuildingInfoContext *c)
 	window_building_draw_description_at(c, 16 * c->heightBlocks - 158, 139, 1);
 }
 
-void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
-{
-	c->helpId = 86;
-	window_building_play_sound(c, "wavs/prefecture.wav");
-	outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	lang_text_draw_centered(88, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	lang_text_draw_centered(13, 1,
-		c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
-		16 * c->widthBlocks, FONT_NORMAL_BLACK);
-
-	building *b = building_get(c->buildingId);
-	if (!c->hasRoadAccess) {
-		window_building_draw_description(c, 69, 25);
-	} else if (b->numWorkers <= 0) {
-		window_building_draw_description(c, 88, 9);
-	} else {
-		if (b->figureId) {
-			window_building_draw_description(c, 88, 2);
-		} else {
-			window_building_draw_description(c, 88, 3);
-		}
-		if (c->workerPercentage >= 100) {
-			window_building_draw_description_at(c, 72, 88, 4);
-		} else if (c->workerPercentage >= 75) {
-			window_building_draw_description_at(c, 72, 88, 5);
-		} else if (c->workerPercentage >= 50) {
-			window_building_draw_description_at(c, 72, 88, 6);
-		} else if (c->workerPercentage >= 25) {
-			window_building_draw_description_at(c, 72, 88, 7);
-		} else {
-			window_building_draw_description_at(c, 72, 88, 8);
-		}
-	}
-
-	inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
-	window_building_draw_employment(c, 142);
-}
-
 void UI_BuildingInfo_drawFort(BuildingInfoContext *c)
 {
 	c->helpId = 87;

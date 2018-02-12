@@ -27,19 +27,9 @@ void UI_BuildingInfo_handleMouseGranaryOrders(const mouse *m, BuildingInfoContex
 void UI_BuildingInfo_handleMouseWarehouse(const mouse *m, BuildingInfoContext *c);
 void UI_BuildingInfo_handleMouseWarehouseOrders(const mouse *m, BuildingInfoContext *c);
 
-void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c);
 void UI_BuildingInfo_drawDock(BuildingInfoContext *c);
 
-void UI_BuildingInfo_drawBurningRuin(BuildingInfoContext *c);
-void UI_BuildingInfo_drawRubble(BuildingInfoContext *c);
-
-void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c);
-void UI_BuildingInfo_drawReservoir(BuildingInfoContext *c);
-void UI_BuildingInfo_drawFountain(BuildingInfoContext *c);
-void UI_BuildingInfo_drawWell(BuildingInfoContext *c);
-
 void UI_BuildingInfo_drawWall(BuildingInfoContext *c);
-void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c);
 void UI_BuildingInfo_drawFort(BuildingInfoContext *c);
 void UI_BuildingInfo_drawGatehouse(BuildingInfoContext *c);
 void UI_BuildingInfo_drawTower(BuildingInfoContext *c);
@@ -49,11 +39,6 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c);
 void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c);
 void UI_BuildingInfo_handleMouseLegionInfo(const mouse *m, BuildingInfoContext *c);
 int UI_BuildingInfo_getTooltipLegionInfo(BuildingInfoContext *c);
-
-void UI_BuildingInfo_drawNativeHut(BuildingInfoContext *c);
-void UI_BuildingInfo_drawNativeMeeting(BuildingInfoContext *c);
-void UI_BuildingInfo_drawNativeCrops(BuildingInfoContext *c);
-void UI_BuildingInfo_drawMissionPost(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c);
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c);

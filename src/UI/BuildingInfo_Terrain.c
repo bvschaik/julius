@@ -5,6 +5,7 @@
 #include "graphics/panel.h"
 #include "window/building_info.h"
 #include "window/building/government.h"
+#include "window/building/utility.h"
 
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
 {
@@ -26,9 +27,9 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 	}
 
 	if (c->terrainType == TERRAIN_INFO_AQUEDUCT) {
-		UI_BuildingInfo_drawAqueduct(c);
+		window_building_draw_aqueduct(c);
 	} else if (c->terrainType == TERRAIN_INFO_RUBBLE) {
-		UI_BuildingInfo_drawRubble(c);
+		window_building_draw_rubble(c);
 	} else if (c->terrainType == TERRAIN_INFO_WALL) {
 		UI_BuildingInfo_drawWall(c);
 	} else if (c->terrainType == TERRAIN_INFO_GARDEN) {

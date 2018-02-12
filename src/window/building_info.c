@@ -31,6 +31,7 @@
 #include "window/building/government.h"
 #include "window/building/house.h"
 #include "window/building/industry.h"
+#include "window/building/utility.h"
 
 #include "Data/CityInfo.h"
 #include "Data/CityView.h"
@@ -434,7 +435,7 @@ static void draw_background()
         } else if (btype == BUILDING_SENATE || btype == BUILDING_SENATE_UPGRADED) {
             window_building_draw_senate(&context);
         } else if (btype == BUILDING_ENGINEERS_POST) {
-            UI_BuildingInfo_drawEngineersPost(&context);
+            window_building_draw_engineers_post(&context);
         } else if (btype == BUILDING_SHIPYARD) {
             window_building_draw_shipyard(&context);
         } else if (btype == BUILDING_DOCK) {
@@ -442,17 +443,17 @@ static void draw_background()
         } else if (btype == BUILDING_WHARF) {
             window_building_draw_wharf(&context);
         } else if (btype == BUILDING_RESERVOIR) {
-            UI_BuildingInfo_drawReservoir(&context);
+            window_building_draw_reservoir(&context);
         } else if (btype == BUILDING_FOUNTAIN) {
-            UI_BuildingInfo_drawFountain(&context);
+            window_building_draw_fountain(&context);
         } else if (btype == BUILDING_WELL) {
-            UI_BuildingInfo_drawWell(&context);
+            window_building_draw_well(&context);
         } else if (btype == BUILDING_SMALL_STATUE || btype == BUILDING_MEDIUM_STATUE || btype == BUILDING_LARGE_STATUE) {
             window_building_draw_statue(&context);
         } else if (btype == BUILDING_TRIUMPHAL_ARCH) {
             window_building_draw_triumphal_arch(&context);
         } else if (btype == BUILDING_PREFECTURE) {
-            UI_BuildingInfo_drawPrefect(&context);
+            window_building_draw_prefect(&context);
         } else if (btype == BUILDING_GATEHOUSE) {
             UI_BuildingInfo_drawGatehouse(&context);
         } else if (btype == BUILDING_TOWER) {
@@ -464,15 +465,15 @@ static void draw_background()
         } else if (btype == BUILDING_FORT) {
             UI_BuildingInfo_drawFort(&context);
         } else if (btype == BUILDING_BURNING_RUIN) {
-            UI_BuildingInfo_drawBurningRuin(&context);
+            window_building_draw_burning_ruin(&context);
         } else if (btype == BUILDING_NATIVE_HUT) {
-            UI_BuildingInfo_drawNativeHut(&context);
+            window_building_draw_native_hut(&context);
         } else if (btype == BUILDING_NATIVE_MEETING) {
-            UI_BuildingInfo_drawNativeMeeting(&context);
+            window_building_draw_native_meeting(&context);
         } else if (btype == BUILDING_NATIVE_CROPS) {
-            UI_BuildingInfo_drawNativeCrops(&context);
+            window_building_draw_native_crops(&context);
         } else if (btype == BUILDING_MISSION_POST) {
-            UI_BuildingInfo_drawMissionPost(&context);
+            window_building_draw_mission_post(&context);
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         UI_BuildingInfo_drawLegionInfo(&context);

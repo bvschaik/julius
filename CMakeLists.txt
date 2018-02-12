@@ -246,6 +246,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/building/government.c
     ${PROJECT_SOURCE_DIR}/src/window/building/house.c
     ${PROJECT_SOURCE_DIR}/src/window/building/industry.c
+    ${PROJECT_SOURCE_DIR}/src/window/building/utility.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
@@ -283,9 +284,7 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Engineering.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Figures.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Military.c
-	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Native.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Terrain.c
-	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Water.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Figures.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Ghost.c
