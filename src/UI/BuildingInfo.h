@@ -11,26 +11,6 @@ void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c);
 void UI_BuildingInfo_playFigurePhrase(BuildingInfoContext *c);
 void UI_BuildingInfo_handleMouseFigureList(const mouse *m, BuildingInfoContext *c);
 
-void UI_BuildingInfo_drawHouse(BuildingInfoContext *c);
-
-void UI_BuildingInfo_drawWheatFarm(BuildingInfoContext *c);
-void UI_BuildingInfo_drawVegetableFarm(BuildingInfoContext *c);
-void UI_BuildingInfo_drawFruitFarm(BuildingInfoContext *c);
-void UI_BuildingInfo_drawOliveFarm(BuildingInfoContext *c);
-void UI_BuildingInfo_drawVinesFarm(BuildingInfoContext *c);
-void UI_BuildingInfo_drawPigFarm(BuildingInfoContext *c);
-
-void UI_BuildingInfo_drawMarbleQuarry(BuildingInfoContext *c);
-void UI_BuildingInfo_drawIronMine(BuildingInfoContext *c);
-void UI_BuildingInfo_drawTimberYard(BuildingInfoContext *c);
-void UI_BuildingInfo_drawClayPit(BuildingInfoContext *c);
-
-void UI_BuildingInfo_drawWineWorkshop(BuildingInfoContext *c);
-void UI_BuildingInfo_drawOilWorkshop(BuildingInfoContext *c);
-void UI_BuildingInfo_drawWeaponsWorkshop(BuildingInfoContext *c);
-void UI_BuildingInfo_drawFurnitureWorkshop(BuildingInfoContext *c);
-void UI_BuildingInfo_drawPotteryWorkshop(BuildingInfoContext *c);
-
 void UI_BuildingInfo_drawMarket(BuildingInfoContext *c);
 void UI_BuildingInfo_drawGranary(BuildingInfoContext *c);
 void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c);

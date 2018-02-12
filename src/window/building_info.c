@@ -29,6 +29,8 @@
 #include "window/building/common.h"
 #include "window/building/culture.h"
 #include "window/building/government.h"
+#include "window/building/house.h"
+#include "window/building/industry.h"
 
 #include "Data/CityInfo.h"
 #include "Data/CityView.h"
@@ -338,37 +340,37 @@ static void draw_background()
     } else if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.buildingId)->type;
         if (building_is_house(btype)) {
-            UI_BuildingInfo_drawHouse(&context);
+            window_building_draw_house(&context);
         } else if (btype == BUILDING_WHEAT_FARM) {
-            UI_BuildingInfo_drawWheatFarm(&context);
+            window_building_draw_wheat_farm(&context);
         } else if (btype == BUILDING_VEGETABLE_FARM) {
-            UI_BuildingInfo_drawVegetableFarm(&context);
+            window_building_draw_vegetable_farm(&context);
         } else if (btype == BUILDING_FRUIT_FARM) {
-            UI_BuildingInfo_drawFruitFarm(&context);
+            window_building_draw_fruit_farm(&context);
         } else if (btype == BUILDING_OLIVE_FARM) {
-            UI_BuildingInfo_drawOliveFarm(&context);
+            window_building_draw_olive_farm(&context);
         } else if (btype == BUILDING_VINES_FARM) {
-            UI_BuildingInfo_drawVinesFarm(&context);
+            window_building_draw_vines_farm(&context);
         } else if (btype == BUILDING_PIG_FARM) {
-            UI_BuildingInfo_drawPigFarm(&context);
+            window_building_draw_pig_farm(&context);
         } else if (btype == BUILDING_MARBLE_QUARRY) {
-            UI_BuildingInfo_drawMarbleQuarry(&context);
+            window_building_draw_marble_quarry(&context);
         } else if (btype == BUILDING_IRON_MINE) {
-            UI_BuildingInfo_drawIronMine(&context);
+            window_building_draw_iron_mine(&context);
         } else if (btype == BUILDING_TIMBER_YARD) {
-            UI_BuildingInfo_drawTimberYard(&context);
+            window_building_draw_timber_yard(&context);
         } else if (btype == BUILDING_CLAY_PIT) {
-            UI_BuildingInfo_drawClayPit(&context);
+            window_building_draw_clay_pit(&context);
         } else if (btype == BUILDING_WINE_WORKSHOP) {
-            UI_BuildingInfo_drawWineWorkshop(&context);
+            window_building_draw_wine_workshop(&context);
         } else if (btype == BUILDING_OIL_WORKSHOP) {
-            UI_BuildingInfo_drawOilWorkshop(&context);
+            window_building_draw_oil_workshop(&context);
         } else if (btype == BUILDING_WEAPONS_WORKSHOP) {
-            UI_BuildingInfo_drawWeaponsWorkshop(&context);
+            window_building_draw_weapons_workshop(&context);
         } else if (btype == BUILDING_FURNITURE_WORKSHOP) {
-            UI_BuildingInfo_drawFurnitureWorkshop(&context);
+            window_building_draw_furniture_workshop(&context);
         } else if (btype == BUILDING_POTTERY_WORKSHOP) {
-            UI_BuildingInfo_drawPotteryWorkshop(&context);
+            window_building_draw_pottery_workshop(&context);
         } else if (btype == BUILDING_MARKET) {
             UI_BuildingInfo_drawMarket(&context);
         } else if (btype == BUILDING_GRANARY) {
