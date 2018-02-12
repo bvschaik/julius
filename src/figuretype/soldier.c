@@ -83,7 +83,7 @@ void figure_military_standard_action(figure *f)
 
 static void javelin_launch_missile(figure *f)
 {
-    int x_tile, y_tile;
+    int x_tile = 0, y_tile = 0;
     f->waitTicksMissile++;
     if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
         f->waitTicksMissile = 0;

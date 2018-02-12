@@ -103,7 +103,6 @@ void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, 
         *y_max = y_start;
     }
     map_grid_bound_area(x_min, y_min, x_max, y_max);
-
 }
 
 int map_grid_is_inside(int x, int y, int size)

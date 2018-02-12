@@ -49,7 +49,7 @@ static void enemy_initial(figure *f, formation *m)
         f->type == FIGURE_ENEMY51_SPEAR || f->type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
         // missile throwers
         f->waitTicksMissile++;
-        int x_tile, y_tile;
+        int x_tile = 0, y_tile = 0;
         if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
             f->waitTicksMissile = 0;
             if (figure_combat_get_missile_target_for_enemy(f, 10, Data_CityInfo.numSoldiersInCity < 4, &x_tile, &y_tile)) {
