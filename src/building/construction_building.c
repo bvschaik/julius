@@ -561,7 +561,7 @@ int building_construction_place_building(building_type type, int x, int y)
             }
         }
     }
-    int waterside_orientation_abs, waterside_orientation_rel;
+    int waterside_orientation_abs = 0, waterside_orientation_rel = 0;
     if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
         if (map_water_determine_orientation_size2(
                 x, y, 0, &waterside_orientation_abs, &waterside_orientation_rel)) {

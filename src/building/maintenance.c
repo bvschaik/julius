@@ -228,9 +228,9 @@ void building_maintenance_check_rome_access()
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
-        int xRoad, yRoad;
         if (b->houseSize) {
-            if (!map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+            int x_road, y_road;
+            if (!map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                 // no road: eject people
                 b->distanceFromEntry = 0;
                 b->houseUnreachableTicks++;
@@ -242,12 +242,12 @@ void building_maintenance_check_rome_access()
                     }
                     b->state = BUILDING_STATE_UNDO;
                 }
-            } else if (map_routing_distance(map_grid_offset(xRoad, yRoad))) {
+            } else if (map_routing_distance(map_grid_offset(x_road, y_road))) {
                 // reachable from rome
-                b->distanceFromEntry = map_routing_distance(map_grid_offset(xRoad, yRoad));
+                b->distanceFromEntry = map_routing_distance(map_grid_offset(x_road, y_road));
                 b->houseUnreachableTicks = 0;
-            } else if (map_closest_reachable_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-                b->distanceFromEntry = map_routing_distance(map_grid_offset(xRoad, yRoad));
+            } else if (map_closest_reachable_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                b->distanceFromEntry = map_routing_distance(map_grid_offset(x_road, y_road));
                 b->houseUnreachableTicks = 0;
             } else {
                 // no reachable road in radius
@@ -266,12 +266,13 @@ void building_maintenance_check_rome_access()
                 Data_CityInfo.buildingTradeCenterBuildingId = i;
             }
             b->distanceFromEntry = 0;
-            int roadGridOffset = map_road_to_largest_network(b->x, b->y, 3, &xRoad, &yRoad);
-            if (roadGridOffset >= 0) {
-                b->roadNetworkId = map_road_network_get(roadGridOffset);
-                b->distanceFromEntry = map_routing_distance(roadGridOffset);
-                b->roadAccessX = xRoad;
-                b->roadAccessY = yRoad;
+            int x_road, y_road;
+            int road_grid_offset = map_road_to_largest_network(b->x, b->y, 3, &x_road, &y_road);
+            if (road_grid_offset >= 0) {
+                b->roadNetworkId = map_road_network_get(road_grid_offset);
+                b->distanceFromEntry = map_routing_distance(road_grid_offset);
+                b->roadAccessX = x_road;
+                b->roadAccessY = y_road;
             }
         } else if (b->type == BUILDING_WAREHOUSE_SPACE) {
             b->distanceFromEntry = 0;
@@ -282,21 +283,23 @@ void building_maintenance_check_rome_access()
             b->roadAccessY = mainBuilding->roadAccessY;
         } else if (b->type == BUILDING_HIPPODROME) {
             b->distanceFromEntry = 0;
-            int roadGridOffset = map_road_to_largest_network_hippodrome(b->x, b->y, &xRoad, &yRoad);
-            if (roadGridOffset >= 0) {
-                b->roadNetworkId = map_road_network_get(roadGridOffset);
-                b->distanceFromEntry = map_routing_distance(roadGridOffset);
-                b->roadAccessX = xRoad;
-                b->roadAccessY = yRoad;
+            int x_road, y_road;
+            int road_grid_offset = map_road_to_largest_network_hippodrome(b->x, b->y, &x_road, &y_road);
+            if (road_grid_offset >= 0) {
+                b->roadNetworkId = map_road_network_get(road_grid_offset);
+                b->distanceFromEntry = map_routing_distance(road_grid_offset);
+                b->roadAccessX = x_road;
+                b->roadAccessY = y_road;
             }
         } else { // other building
             b->distanceFromEntry = 0;
-            int roadGridOffset = map_road_to_largest_network(b->x, b->y, b->size, &xRoad, &yRoad);
-            if (roadGridOffset >= 0) {
-                b->roadNetworkId = map_road_network_get(roadGridOffset);
-                b->distanceFromEntry = map_routing_distance(roadGridOffset);
-                b->roadAccessX = xRoad;
-                b->roadAccessY = yRoad;
+            int x_road, y_road;
+            int road_grid_offset = map_road_to_largest_network(b->x, b->y, b->size, &x_road, &y_road);
+            if (road_grid_offset >= 0) {
+                b->roadNetworkId = map_road_network_get(road_grid_offset);
+                b->distanceFromEntry = map_routing_distance(road_grid_offset);
+                b->roadAccessX = x_road;
+                b->roadAccessY = y_road;
             }
         }
     }
