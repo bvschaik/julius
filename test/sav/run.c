@@ -3,31 +3,39 @@
 #include "game/game.h"
 #include "game/settings.h"
 
-#ifndef __MINGW32__
+#if defined(__GNUC__) && !defined(__MINGW32__)
 #include <execinfo.h>
+#endif
+
+#ifdef _MSC_VER
+#include <direct.h>
+#define chdir _chdir
+#define getcwd _getcwd
+#else
+#include <unistd.h>
 #endif
 
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
-
 #include "sav_compare.h"
 
 static void handler(int sig)
 {
-#ifndef __MINGW32__
-    void *array[100];
-    size_t size;
+#if defined(__GNUC__) && !defined(__MINGW32__)
+	void *array[100];
+	size_t size;
 
-    // get void*'s for all entries on the stack
-    size = backtrace(array, 100);
+	// get void*'s for all entries on the stack
+	size = backtrace(array, 100);
 
-    // print out all the frames to stderr
-    fprintf(stderr, "Error: signal %d:\n", sig);
-    backtrace_symbols_fd(array, size, STDERR_FILENO);
-    exit(1);
+	// print out all the frames to stderr
+	fprintf(stderr, "Error: signal %d:\n", sig);
+	backtrace_symbols_fd(array, size, STDERR_FILENO);
+#else
+	fprintf(stderr, "Oops, crashed with signal %d :(\n", sig);
 #endif
+	exit(1);
 }
 
 static void run_ticks(int ticks)
