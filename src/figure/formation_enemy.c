@@ -154,7 +154,7 @@ int formation_rioter_get_target_building(int *x_tile, int *y_tile)
             }
         }
     }
-    if (best_building <= 0) {
+    if (!best_building) {
         return 0;
     }
     if (best_building->type == BUILDING_WAREHOUSE) {

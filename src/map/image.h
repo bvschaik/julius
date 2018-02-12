@@ -5,7 +5,7 @@
 
 int map_image_at(int grid_offset);
 
-void map_image_set(int grid_offset, int image);
+void map_image_set(int grid_offset, int image_id);
 
 void map_image_backup();
 

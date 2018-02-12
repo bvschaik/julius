@@ -259,7 +259,6 @@ void city_sentiment_update()
         Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_LOW_WAGES;
     }
     if (sentiment_contribution_tents < worst_sentiment) {
-        worst_sentiment = sentiment_contribution_tents;
         Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_MANY_TENTS;
     }
     Data_CityInfo.citySentimentLastTime = Data_CityInfo.citySentiment;

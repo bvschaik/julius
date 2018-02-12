@@ -205,7 +205,6 @@ int building_market_get_storage_destination(building *market)
     }
     if (resources[INVENTORY_WINE].num_buildings &&
         market->data.market.inventory[INVENTORY_WINE] < min_stock) {
-        min_stock = market->data.market.inventory[INVENTORY_WINE];
         fetch_inventory = INVENTORY_WINE;
     }
 

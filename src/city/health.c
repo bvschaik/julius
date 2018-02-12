@@ -107,12 +107,12 @@ void city_health_update()
                 healthy_population += b->housePopulation / 4;
             }
         } else if (b->data.house.clinic) {
-            if (b->houseDaysWithoutFood <= 0) {
+            if (b->houseDaysWithoutFood == 0) {
                 healthy_population += b->housePopulation;
             } else {
                 healthy_population += b->housePopulation / 4;
             }
-        } else if (b->houseDaysWithoutFood <= 0) {
+        } else if (b->houseDaysWithoutFood == 0) {
             healthy_population += b->housePopulation / 4;
         }
     }

@@ -56,7 +56,6 @@ static void update_culture_explanation()
     }
     int pct_academy = city_culture_coverage_academy();
     if (pct_academy < min_percentage) {
-        min_percentage = pct_academy;
         reason = 3;
     }
     Data_CityInfo.ratingAdvisorExplanationCulture = reason;

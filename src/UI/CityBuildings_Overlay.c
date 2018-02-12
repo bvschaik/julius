@@ -490,10 +490,9 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		return;
 	}
 	building *b = building_get(buildingId);
-	int graphicId;
 	int origGraphicId = map_image_at(gridOffset);
 	if (b->size == 1) {
-		graphicId = image_group(GROUP_TERRAIN_OVERLAY);
+		int graphicId = image_group(GROUP_TERRAIN_OVERLAY);
 		if (b->houseSize) {
 			graphicId += 4;
 		}

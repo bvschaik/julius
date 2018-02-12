@@ -10,9 +10,9 @@ int map_image_at(int grid_offset)
     return images.items[grid_offset];
 }
 
-void map_image_set(int grid_offset, int image)
+void map_image_set(int grid_offset, int image_id)
 {
-    images.items[grid_offset] = image;
+    images.items[grid_offset] = image_id;
 }
 
 void map_image_backup()

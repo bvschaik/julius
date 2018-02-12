@@ -92,8 +92,7 @@ int main(int argc, char **argv)
     int ticks = atoi(argv[4]);
     if (run_autopilot(input, output, ticks) == 0) {
         return compare_files(expected, output);
-    }
-    else {
+    } else {
         return 1;
     }
 }

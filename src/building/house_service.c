@@ -73,11 +73,6 @@ void house_service_calculate_culture_aggregates()
             continue;
         }
 
-        b->data.house.entertainment = 0;
-        b->data.house.education = 0;
-        b->data.house.health = 0;
-        b->data.house.numGods = 0;
-
         // entertainment
         b->data.house.entertainment = baseEntertainment;
         if (b->data.house.theater) {
@@ -102,6 +97,7 @@ void house_service_calculate_culture_aggregates()
         }
 
         // education
+        b->data.house.education = 0;
         if (b->data.house.school || b->data.house.library) {
             b->data.house.education = 1;
             if (b->data.house.school && b->data.house.library) {
@@ -113,6 +109,7 @@ void house_service_calculate_culture_aggregates()
         }
 
         // religion
+        b->data.house.numGods = 0;
         if (b->data.house.templeCeres) {
             ++b->data.house.numGods;
         }
@@ -130,6 +127,7 @@ void house_service_calculate_culture_aggregates()
         }
 
         // health
+        b->data.house.health = 0;
         if (b->data.house.clinic) {
             ++b->data.house.health;
         }

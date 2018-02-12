@@ -94,6 +94,7 @@ const char *dir_get_case_corrected_file(const char *filepath)
     }
 
     strncpy(corrected_filename, filepath, 2 * FILE_NAME_MAX);
+    corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
 
     char *slash = strchr(corrected_filename, '/');
     if (!slash) {

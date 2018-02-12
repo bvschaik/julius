@@ -62,7 +62,6 @@ static const int Y_MENU_OFFSETS[24] = {
 static struct {
     int selected_submenu;
     int num_items;
-    int x_offset;
     int y_offset;
 
     int focus_button_id;

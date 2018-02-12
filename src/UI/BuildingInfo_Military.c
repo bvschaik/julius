@@ -190,7 +190,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 
 void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 {
-	int textId, groupId;
+	int textId;
     const formation *m = formation_get(c->formationId);
 	c->helpId = 87;
 	outer_panel_draw(c->xOffset, c->yOffset,
@@ -284,6 +284,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		UI_BuildingInfo_drawLegionInfoForeground(c);
 	} else {
 		// no soldiers
+        int groupId;
 		if (m->cursed_by_mars) {
 			groupId = 89; textId = 1;
 		} else if (building_count_active(BUILDING_BARRACKS)) {

@@ -224,7 +224,7 @@ static void update_herd_formation(formation *m)
                     formation_set_destination(m, x_tile, y_tile);
                     if (m->figure_type == FIGURE_WOLF) {
                         Data_CityInfo.soundMarchWolf--;
-                        if (Data_CityInfo.soundMarchWolf <= 0) {
+                        if (!Data_CityInfo.soundMarchWolf) {
                             Data_CityInfo.soundMarchWolf = 12;
                             sound_effect_play(SOUND_EFFECT_WOLF_HOWL);
                         }
