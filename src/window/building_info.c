@@ -436,11 +436,11 @@ static void draw_background()
         } else if (btype == BUILDING_ENGINEERS_POST) {
             UI_BuildingInfo_drawEngineersPost(&context);
         } else if (btype == BUILDING_SHIPYARD) {
-            UI_BuildingInfo_drawShipyard(&context);
+            window_building_draw_shipyard(&context);
         } else if (btype == BUILDING_DOCK) {
             UI_BuildingInfo_drawDock(&context);
         } else if (btype == BUILDING_WHARF) {
-            UI_BuildingInfo_drawWharf(&context);
+            window_building_draw_wharf(&context);
         } else if (btype == BUILDING_RESERVOIR) {
             UI_BuildingInfo_drawReservoir(&context);
         } else if (btype == BUILDING_FOUNTAIN) {

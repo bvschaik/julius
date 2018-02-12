@@ -28,9 +28,7 @@ void UI_BuildingInfo_handleMouseWarehouse(const mouse *m, BuildingInfoContext *c
 void UI_BuildingInfo_handleMouseWarehouseOrders(const mouse *m, BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c);
-void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c);
 void UI_BuildingInfo_drawDock(BuildingInfoContext *c);
-void UI_BuildingInfo_drawWharf(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawBurningRuin(BuildingInfoContext *c);
 void UI_BuildingInfo_drawRubble(BuildingInfoContext *c);

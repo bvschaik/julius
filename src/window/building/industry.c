@@ -2,12 +2,12 @@
 
 #include "building/building.h"
 #include "core/calc.h"
+#include "figure/figure.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
-#include "window/building/common.h"
 
 #include "Data/CityInfo.h"
 
@@ -209,4 +209,64 @@ void window_building_draw_furniture_workshop(BuildingInfoContext *c)
 void window_building_draw_pottery_workshop(BuildingInfoContext *c)
 {
     draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, RESOURCE_POTTERY, RESOURCE_CLAY);
+}
+
+void window_building_draw_shipyard(BuildingInfoContext *c)
+{
+    c->helpId = 82;
+    window_building_play_sound(c, "wavs/shipyard.wav");
+    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    lang_text_draw_centered(100, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+
+    building *b = building_get(c->buildingId);
+
+    if (!c->hasRoadAccess) {
+        window_building_draw_description(c, 69, 25);
+    } else {
+        int pct_done = calc_percentage(b->data.industry.progress, 160);
+        int width = lang_text_draw(100, 2, c->xOffset + 32, c->yOffset + 56, FONT_NORMAL_BLACK);
+        width += text_draw_percentage(pct_done, c->xOffset + 32 + width, c->yOffset + 56, FONT_NORMAL_BLACK);
+        lang_text_draw(100, 3, c->xOffset + 32 + width, c->yOffset + 56, FONT_NORMAL_BLACK);
+        if (Data_CityInfo.shipyardBoatsRequested) {
+            lang_text_draw_multiline(100, 5, c->xOffset + 32, c->yOffset + 80, 16 * (c->widthBlocks - 6), FONT_NORMAL_BLACK);
+        } else {
+            lang_text_draw_multiline(100, 4, c->xOffset + 32, c->yOffset + 80, 16 * (c->widthBlocks - 6), FONT_NORMAL_BLACK);
+        }
+    }
+
+    inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    window_building_draw_employment(c, 142);
+}
+
+void window_building_draw_wharf(BuildingInfoContext *c)
+{
+    c->helpId = 84;
+    window_building_play_sound(c, "wavs/wharf.wav");
+    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    lang_text_draw_centered(102, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
+        resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
+        c->xOffset + 10, c->yOffset + 10);
+
+    building *b = building_get(c->buildingId);
+
+    if (!c->hasRoadAccess) {
+        window_building_draw_description(c, 69, 25);
+    } else if (!b->data.other.boatFigureId) {
+        window_building_draw_description(c, 102, 2);
+    } else {
+        int text_id;
+        switch (figure_get(b->data.other.boatFigureId)->actionState) {
+            case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: text_id = 3; break;
+            case FIGURE_ACTION_192_FISHING_BOAT_FISHING: text_id = 4; break;
+            case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF: text_id = 5; break;
+            case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: text_id = 6; break;
+            case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: text_id = 7; break;
+            default: text_id = 8; break;
+        }
+        window_building_draw_description(c, 102, text_id);
+    }
+
+    inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    window_building_draw_employment(c, 142);
 }

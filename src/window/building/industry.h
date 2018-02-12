@@ -21,4 +21,7 @@ void window_building_draw_weapons_workshop(BuildingInfoContext *c);
 void window_building_draw_furniture_workshop(BuildingInfoContext *c);
 void window_building_draw_pottery_workshop(BuildingInfoContext *c);
 
+void window_building_draw_shipyard(BuildingInfoContext *c);
+void window_building_draw_wharf(BuildingInfoContext *c);
+
 #endif // WINDOW_BUILDING_INDUSTRY_H
