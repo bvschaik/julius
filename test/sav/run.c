@@ -23,19 +23,19 @@
 static void handler(int sig)
 {
 #if defined(__GNUC__) && !defined(__MINGW32__)
-	void *array[100];
-	size_t size;
+    void *array[100];
+    size_t size;
 
-	// get void*'s for all entries on the stack
-	size = backtrace(array, 100);
+    // get void*'s for all entries on the stack
+    size = backtrace(array, 100);
 
-	// print out all the frames to stderr
-	fprintf(stderr, "Error: signal %d:\n", sig);
-	backtrace_symbols_fd(array, size, STDERR_FILENO);
+    // print out all the frames to stderr
+    fprintf(stderr, "Error: signal %d:\n", sig);
+    backtrace_symbols_fd(array, size, STDERR_FILENO);
 #else
-	fprintf(stderr, "Oops, crashed with signal %d :(\n", sig);
+    fprintf(stderr, "Oops, crashed with signal %d :(\n", sig);
 #endif
-	exit(1);
+    exit(1);
 }
 
 static void run_ticks(int ticks)
@@ -52,18 +52,18 @@ static int run_autopilot(const char *input_saved_game, const char *output_saved_
 {
     printf("Running autopilot: %s --> %s in %d ticks\n", input_saved_game, output_saved_game, ticks_to_run);
     signal(SIGSEGV, handler);
-    
+
     chdir("data/sav");
     if (!game_pre_init()) {
         printf("Unable to run Game_preInit\n");
         return 1;
     }
-    
+
     if (!game_init()) {
         printf("Unable to run Game_init\n");
         return 2;
     }
-    
+
     if (!game_file_load_saved_game(input_saved_game)) {
         char wd[500];
         getcwd(wd, 500);
@@ -74,7 +74,7 @@ static int run_autopilot(const char *input_saved_game, const char *output_saved_
     printf("Saving game to %s\n", output_saved_game);
     game_file_write_saved_game(output_saved_game);
     printf("Done\n");
-    
+
     game_exit();
 
     return 0;
@@ -92,7 +92,8 @@ int main(int argc, char **argv)
     int ticks = atoi(argv[4]);
     if (run_autopilot(input, output, ticks) == 0) {
         return compare_files(expected, output);
-    } else {
+    }
+    else {
         return 1;
     }
 }
