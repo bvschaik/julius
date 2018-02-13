@@ -2,8 +2,6 @@
 
 #include "UI/Sidebar.h"
 
-#include "Data/State.h"
-
 #include "building/type.h"
 #include "city/finance.h"
 #include "city/victory.h"

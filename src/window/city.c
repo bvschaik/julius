@@ -15,7 +15,6 @@
 #include "UI/TopMenu.h"
 
 #include "Data/CityView.h"
-#include "Data/State.h"
 
 static void draw_background()
 {

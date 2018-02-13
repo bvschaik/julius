@@ -1,8 +1,6 @@
 #ifndef BUILDING_STORAGE_H
 #define BUILDING_STORAGE_H
 
-#include <stdint.h>
-
 #include "core/buffer.h"
 #include "game/resource.h"
 

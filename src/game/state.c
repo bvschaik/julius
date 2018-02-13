@@ -6,8 +6,6 @@
 #include "core/random.h"
 #include "map/ring.h"
 
-#include "Data/State.h"
-
 static struct {
     int paused;
     int current_overlay;

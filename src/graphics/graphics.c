@@ -1,6 +1,5 @@
 #include "graphics.h"
 
-#include "graphics/image.h"
 #include "graphics/screen.h"
 
 #include <stdio.h> // remove later

@@ -3,7 +3,6 @@
 #include "building/construction.h"
 #include "city/finance.h"
 #include "city/message.h"
-#include "game/settings.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
@@ -12,7 +11,6 @@
 #include "window/victory_dialog.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 static struct {
     int state;

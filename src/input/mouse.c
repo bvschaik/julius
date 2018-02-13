@@ -1,6 +1,5 @@
 #include "input/mouse.h"
 
-#include "core/debug.h"
 #include "graphics/screen.h"
 
 static mouse data;

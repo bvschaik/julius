@@ -16,7 +16,6 @@
 
 #include <signal.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
 #include <execinfo.h>

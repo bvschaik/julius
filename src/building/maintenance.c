@@ -9,7 +9,6 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figuretype/migrant.h"
-#include "figuretype/missile.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "map/building.h"

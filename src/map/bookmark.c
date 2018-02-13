@@ -4,8 +4,6 @@
 #include "map/grid.h"
 #include "map/point.h"
 
-#include "Data/State.h"
-
 #define MAX_BOOKMARKS 4
 
 static map_point bookmarks[MAX_BOOKMARKS];

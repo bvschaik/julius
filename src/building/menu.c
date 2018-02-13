@@ -1,7 +1,6 @@
 #include "menu.h"
 
 #include "Data/CityInfo.h"
-#include "UI/Sidebar.h"
 
 #include "empire/city.h"
 #include "game/tutorial.h"

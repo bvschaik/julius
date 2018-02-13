@@ -1,8 +1,6 @@
 #ifndef CORE_IMAGE_H
 #define CORE_IMAGE_H
 
-#include <stdint.h>
-
 #include "core/image_group.h"
 #include "graphics/color.h"
 

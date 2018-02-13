@@ -1,6 +1,5 @@
 #include "sound_options.h"
 
-#include "core/calc.h"
 #include "game/settings.h"
 #include "graphics/arrow_button.h"
 #include "graphics/generic_button.h"
