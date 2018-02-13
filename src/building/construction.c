@@ -607,10 +607,12 @@ void building_construction_place(int orientation)
 
     int placement_cost = model_get_building(type)->cost;
     if (type == BUILDING_CLEAR_LAND) {
-        // BUG: if confirmation has to be asked (bridge/fort), the previous cost is deducted from treasury
-        // and if user chooses 'no', they still pay for removal
+        // BUG in original (keep this behaviour): if confirmation has to be asked (bridge/fort),
+        // the previous cost is deducted from treasury and if user chooses 'no', they still pay for removal.
+        // If we don't do it this way, the user doesn't pay for the removal at all since we don't come back
+        // here when the user says yes.
         int items_placed = building_construction_clear_land(0, x_start, y_start, x_end, y_end);
-        if (items_placed >= 0) {
+        if (items_placed < 0) {
             items_placed = last_items_cleared;
         }
         placement_cost *= items_placed;
