@@ -110,7 +110,7 @@ void empire_scroll_map(int direction)
             data.scroll_x -= 20;
             data.scroll_y -= 20;
             break;
-    };
+    }
     check_scroll_boundaries();
 }
 

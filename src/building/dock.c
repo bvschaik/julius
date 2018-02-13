@@ -55,7 +55,7 @@ int building_dock_get_free_destination(int ship_id, int *x_tile, int *y_tile)
     if (Data_CityInfo.numWorkingDocks <= 0) {
         return 0;
     }
-    int dockId;
+    int dockId = 0;
     for (int i = 0; i < 10; i++) {
         dockId = Data_CityInfo.workingDockBuildingIds[i];
         if (!dockId) continue;

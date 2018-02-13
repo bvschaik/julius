@@ -106,8 +106,8 @@ static void prepare_for_merge(int buildingId, int num_tiles)
             building *house = building_get(map_building_at(house_offset));
             if (house->id != buildingId && house->houseSize) {
                 merge_data.population += house->housePopulation;
-                for (int i = 0; i < INVENTORY_MAX; i++) {
-                    merge_data.inventory[i] += house->data.house.inventory[i];
+                for (int inv = 0; inv < INVENTORY_MAX; inv++) {
+                    merge_data.inventory[inv] += house->data.house.inventory[inv];
                     house->housePopulation = 0;
                     house->state = BUILDING_STATE_DELETED_BY_GAME;
                 }

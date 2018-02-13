@@ -53,7 +53,7 @@ static generic_button advisor_buttons[] = {
     {588, 1, 624, 41, GB_IMMEDIATE, button_change_advisor, button_none, 0, 0},
 };
 
-static const const advisor_window_type *(*sub_advisors[])(void) = {
+static const advisor_window_type *(*sub_advisors[])() = {
     0,
     window_advisor_labor,
     window_advisor_military,

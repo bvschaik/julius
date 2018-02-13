@@ -25,7 +25,7 @@ static struct {
 } customMusic;
 
 
-static int percentageToVolume(int percentage)
+static int percentage_to_volume(int percentage)
 {
 	return percentage * 128 / 100;
 }
@@ -81,13 +81,13 @@ int sound_device_is_channel_playing(int channel)
 
 void sound_device_set_music_volume(int volumePercentage)
 {
-	Mix_VolumeMusic(percentageToVolume(volumePercentage));
+	Mix_VolumeMusic(percentage_to_volume(volumePercentage));
 }
 
 void sound_device_set_channel_volume(int channel, int volumePercentage)
 {
 	if (channels[channel]) {
-		Mix_VolumeChunk(channels[channel], percentageToVolume(volumePercentage));
+		Mix_VolumeChunk(channels[channel], percentage_to_volume(volumePercentage));
 	}
 }
 
@@ -158,7 +158,7 @@ void sound_device_stop_channel(int channel)
 }
 
 
-static int nextAudioFrame()
+static int next_audio_frame()
 {
 	if (customMusic.data) {
 		free(customMusic.data);
@@ -186,7 +186,7 @@ static int nextAudioFrame()
 	return audioLen;
 }
 
-static int copyAudioFromBuffer(Uint8 *stream, int len)
+static int copy_audio_from_buffer(Uint8 *stream, int len)
 {
 	if (!customMusic.data || customMusic.cur >= customMusic.len) {
 		return 0;
@@ -201,21 +201,21 @@ static int copyAudioFromBuffer(Uint8 *stream, int len)
 	return toWrite;
 }
 
-static void customMusicCallback(void *dummy, Uint8 *stream, int len)
+static void custom_music_callback(void *dummy, Uint8 *stream, int len)
 {
-	int canContinue = 1;
+	int can_continue;
 	do {
-		int copied = copyAudioFromBuffer(stream, len);
+		int copied = copy_audio_from_buffer(stream, len);
 		if (copied) {
 			len -= copied;
 			stream += copied;
 		}
 		if (len == 0) {
-			canContinue = 0;
+			can_continue = 0;
 		} else {
-			canContinue = nextAudioFrame();
+			can_continue = next_audio_frame();
 		}
-	} while (canContinue);
+	} while (can_continue);
 	if (len) {
 		// end of stream, write silence
 		memset(stream, 0, len);
@@ -226,7 +226,7 @@ void sound_device_use_custom_music_player(int bitdepth, int channels, int rate, 
 {
 	SDL_BuildAudioCVT(&customMusic.cvt, bitdepth, channels, rate, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE);
 	customMusic.callback = callback;
-	Mix_HookMusic(customMusicCallback, 0);
+	Mix_HookMusic(custom_music_callback, 0);
 }
 
 void sound_device_use_default_music_player()

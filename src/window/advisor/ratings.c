@@ -39,11 +39,9 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
 
 static int draw_background()
 {
-    int width, has_reached;
-
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
-    width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK);
+    int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK);
     if (!scenario_criteria_population_enabled() || scenario_is_open_play()) {
         lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK);
     } else {
@@ -63,7 +61,7 @@ static int draw_background()
         width = text_draw_number(0, '@', " ", 85, 334, FONT_NORMAL_BLACK);
     }
     lang_text_draw(53, 5, 85 + width, 334, FONT_NORMAL_BLACK);
-    has_reached = !scenario_criteria_culture_enabled() ||
+    int has_reached = !scenario_criteria_culture_enabled() ||
         Data_CityInfo.ratingCulture > scenario_criteria_culture() ||
         Data_CityInfo.ratingCulture == 100; // FIXED: capital bug fixed
     draw_rating_column(110, 274, Data_CityInfo.ratingCulture, has_reached);

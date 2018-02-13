@@ -167,14 +167,16 @@ static void handle_mouse(const mouse *m)
     const mouse *m_dialog = mouse_in_dialog(m);
     if (m->right.went_up) {
         window_advisors_show();
-    } else if (image_buttons_handle_mouse(m_dialog, 0, 0, resourceImageButtons, 2, 0)) {
         return;
-    } else if (Data_CityInfo.resourceTradeStatus[data.resource] == TRADE_STATUS_EXPORT &&
+    }
+    if (image_buttons_handle_mouse(m_dialog, 0, 0, resourceImageButtons, 2, 0)) {
+        return;
+    }
+    if (Data_CityInfo.resourceTradeStatus[data.resource] == TRADE_STATUS_EXPORT &&
             arrow_buttons_handle_mouse(m_dialog, 0, 0, resourceArrowButtons, 2)) {
         return;
-    } else {
-        generic_buttons_handle_mouse(m_dialog, 0, 0, resourceCustomButtons, 3, &data.focus_button_id);
     }
+    generic_buttons_handle_mouse(m_dialog, 0, 0, resourceCustomButtons, 3, &data.focus_button_id);
 }
 
 static void button_help(int param1, int param2)

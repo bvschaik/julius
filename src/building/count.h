@@ -30,8 +30,8 @@ int building_count_active(building_type type);
 int building_count_total(building_type type);
 
 /**
- * Returns the active building count for the type
- * @param type Building type
+ * Returns the active building count for the resource type
+ * @param resource Resource type
  * @return Number of active buildings
  */
 int building_count_industry_active(resource_type resource);

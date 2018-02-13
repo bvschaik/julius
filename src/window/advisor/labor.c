@@ -56,7 +56,7 @@ static int draw_background()
     width += lang_text_draw(50, 12, 32 + width, 320, FONT_NORMAL_BLACK);
     width += text_draw_number(Data_CityInfo.workersUnemployed, '@', " ", 50 + width, 320, FONT_NORMAL_BLACK);
     width += lang_text_draw(50, 13, 50 + width, 320, FONT_NORMAL_BLACK);
-    width += text_draw_number(Data_CityInfo.unemploymentPercentage, '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
+    text_draw_number(Data_CityInfo.unemploymentPercentage, '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
 
     // wages panel
     inner_panel_draw(64, 350, 32, 2);
@@ -64,11 +64,11 @@ static int draw_background()
     width = text_draw_number(Data_CityInfo.wages, '@', " ", 230, 359, FONT_NORMAL_WHITE);
     width += lang_text_draw(50, 15, 230 + width, 359, FONT_NORMAL_WHITE);
     width += lang_text_draw(50, 18, 230 + width, 359, FONT_NORMAL_WHITE);
-    width += text_draw_number(Data_CityInfo.wagesRome, '@', " )", 230 + width, 359, FONT_NORMAL_WHITE);
+    text_draw_number(Data_CityInfo.wagesRome, '@', " )", 230 + width, 359, FONT_NORMAL_WHITE);
 
     // estimated wages
     width = lang_text_draw(50, 19, 64, 390, FONT_NORMAL_BLACK);
-    width += text_draw_money(Data_CityInfo.estimatedYearlyWages, 64 + width, 390, FONT_NORMAL_BLACK);
+    text_draw_money(Data_CityInfo.estimatedYearlyWages, 64 + width, 390, FONT_NORMAL_BLACK);
 
     return ADVISOR_HEIGHT;
 }

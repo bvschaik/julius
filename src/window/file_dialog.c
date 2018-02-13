@@ -22,7 +22,7 @@
 
 static void button_ok_cancel(int is_ok, int param2);
 static void button_scroll(int is_down, int num_lines);
-static void button_select_file(int index, int num_lines);
+static void button_select_file(int index, int param2);
 
 static image_button image_buttons[] = {
     {344, 335, 34, 34, IB_NORMAL, 96, 0, button_ok_cancel, button_none, 1, 0, 1},
@@ -230,7 +230,7 @@ static void button_scroll(int is_down, int num_lines)
     }
 }
 
-static void button_select_file(int index, int num_lines)
+static void button_select_file(int index, int param2)
 {
     if (index < data.saved_games->num_files) {
         strncpy(data.saved_game, data.saved_games->files[data.scroll_position + index], FILE_NAME_MAX);

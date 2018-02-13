@@ -70,7 +70,7 @@ void sound_music_update()
     if (!setting_sound(SOUND_MUSIC)->enabled) {
         return;
     }
-    int track = TRACK_NONE;
+    int track;
     if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity >= 32) {
         track = TRACK_COMBAT_LONG;
     } else if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 0) {

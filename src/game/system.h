@@ -24,7 +24,7 @@ void system_toggle_fullscreen();
 void system_init_cursors();
 
 /**
- * Set cursor to the specified cursor in @link input/cursor.h
+ * Set cursor to the specified cursor in @link input/cursor.h @endlink
  * @param cursor_id Cursor to set
  */
 void system_set_cursor(int cursor_id);
