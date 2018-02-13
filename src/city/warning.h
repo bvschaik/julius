@@ -55,7 +55,7 @@ typedef enum {
     WARNING_DATA_LIMIT_REACHED = 65
 } warning_type;
 
-void city_warning_show(warning_type warning);
+void city_warning_show(warning_type type);
 
 int city_has_warnings();
 

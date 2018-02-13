@@ -38,8 +38,8 @@ void enemy_army_calculate_roman_influence();
 
 int enemy_army_is_stronger_than_legions();
 
-void enemy_armies_save_state(buffer *buf, buffer *totals);
+void enemy_armies_save_state(buffer *buf, buffer *totals_buf);
 
-void enemy_armies_load_state(buffer *buf, buffer *totals);
+void enemy_armies_load_state(buffer *buf, buffer *totals_buf);
 
 #endif // FIGURE_ENEMY_ARMY_H

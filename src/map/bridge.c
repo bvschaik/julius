@@ -289,7 +289,7 @@ int map_bridge_count_figures(int grid_offset)
     return figures;
 }
 
-void map_bridge_update_after_rotate(int ccw)
+void map_bridge_update_after_rotate(int counter_clockwise)
 {
     for (int y = 0; y < Data_State.map.height; y++) {
         for (int x = 0; x < Data_State.map.width; x++) {
@@ -297,16 +297,16 @@ void map_bridge_update_after_rotate(int ccw)
             if (map_is_bridge(grid_offset)) {
                 int new_value;
                 switch (map_sprite_bridge_at(grid_offset)) {
-                    case 1: new_value = ccw ? 2 : 4; break;
-                    case 2: new_value = ccw ? 3 : 1; break;
-                    case 3: new_value = ccw ? 4 : 2; break;
-                    case 4: new_value = ccw ? 1 : 3; break;
+                    case 1: new_value = counter_clockwise ? 2 : 4; break;
+                    case 2: new_value = counter_clockwise ? 3 : 1; break;
+                    case 3: new_value = counter_clockwise ? 4 : 2; break;
+                    case 4: new_value = counter_clockwise ? 1 : 3; break;
                     case 5: new_value = 6; break;
                     case 6: new_value = 5; break;
-                    case 7: new_value = ccw ? 8 : 10; break;
-                    case 8: new_value = ccw ? 9 : 7; break;
-                    case 9: new_value = ccw ? 10 : 8; break;
-                    case 10: new_value = ccw ? 7 : 9; break;
+                    case 7: new_value = counter_clockwise ? 8 : 10; break;
+                    case 8: new_value = counter_clockwise ? 9 : 7; break;
+                    case 9: new_value = counter_clockwise ? 10 : 8; break;
+                    case 10: new_value = counter_clockwise ? 7 : 9; break;
                     case 11: new_value = 12; break;
                     case 12: new_value = 11; break;
                     case 13: new_value = 13; break;

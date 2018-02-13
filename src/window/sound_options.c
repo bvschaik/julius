@@ -18,10 +18,10 @@ static void button_toggle(int type, int param2);
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);
 
-static void arrow_button_music(int param1, int param2);
-static void arrow_button_speech(int param1, int param2);
-static void arrow_button_effects(int param1, int param2);
-static void arrow_button_city(int param1, int param2);
+static void arrow_button_music(int is_down, int param2);
+static void arrow_button_speech(int is_down, int param2);
+static void arrow_button_effects(int is_down, int param2);
+static void arrow_button_city(int is_down, int param2);
 
 static generic_button buttons[] = {
     {64, 162, 288, 182, GB_IMMEDIATE, button_toggle, button_none, SOUND_MUSIC, 0},

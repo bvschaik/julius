@@ -40,7 +40,7 @@ static image_button image_button_return_to_city[] = {
     {0, 0, 24, 24, IB_NORMAL, 134, 4, button_return_to_city, button_none, 0, 0, 1}
 };
 static image_button image_button_advisor[] = {
-    {-4, 0, 24, 24, IB_NORMAL, 199, 12, button_advisor, button_none, 5, 0, 1}
+    {-4, 0, 24, 24, IB_NORMAL, 199, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
 };
 static generic_button generic_button_open_trade[] = {
     {50, 68, 450, 91, GB_IMMEDIATE, button_open_trade, button_none, 0, 0}
@@ -543,9 +543,9 @@ static void button_return_to_city(int param1, int param2)
     window_city_show();
 }
 
-static void button_advisor(int param1, int param2)
+static void button_advisor(int advisor, int param2)
 {
-    window_advisors_show_advisor(ADVISOR_TRADE);
+    window_advisors_show_advisor(advisor);
 }
 
 static void confirmed_open_trade(int accepted)
