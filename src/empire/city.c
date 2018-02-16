@@ -115,6 +115,8 @@ int empire_can_produce_resource(int resource)
                 return 1;
             }
             break;
+        default:
+            return 0;
     }
     // check if we can produce the raw materials
     return can_produce_resource(resource);
@@ -154,6 +156,8 @@ int empire_can_produce_resource_potentially(int resource)
                 return 1;
             }
             break;
+        default:
+            return 0;
     }
     // check if we can produce the raw materials
     return can_produce_resource(resource);

@@ -165,6 +165,8 @@ static void drawBuildingGhostDefault()
 			xStart = Data_State.map.current.x;
 			yStart = Data_State.map.current.y - buildingSize + 1;
 			break;
+		default:
+		    return;
 	}
 	// check if we can place building
 	if (Data_State.selectedBuilding.meadowRequired) {

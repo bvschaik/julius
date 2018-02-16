@@ -83,8 +83,9 @@ int scenario_criteria_milestone_year(int percentage)
             return scenario.start_year + scenario.win_criteria.milestone50_year;
         case 75:
             return scenario.start_year + scenario.win_criteria.milestone75_year;
+        default:
+            return 0;
     }
-    return 0;
 }
 
 void scenario_criteria_init_max_year()

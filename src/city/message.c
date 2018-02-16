@@ -364,7 +364,7 @@ void city_message_decrease_delays()
 
 int city_message_mark_population_shown(int population)
 {
-    int *field = 0;
+    int *field;
     switch (population) {
         case 500: field = &data.population_shown.pop500; break;
         case 1000: field = &data.population_shown.pop1000; break;
@@ -375,8 +375,9 @@ int city_message_mark_population_shown(int population)
         case 15000: field = &data.population_shown.pop15000; break;
         case 20000: field = &data.population_shown.pop20000; break;
         case 25000: field = &data.population_shown.pop25000; break;
+        default: return 0;
     }
-    if (field && !*field) {
+    if (!*field) {
         *field = 1;
         return 1;
     }

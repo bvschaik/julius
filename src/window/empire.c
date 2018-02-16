@@ -118,7 +118,6 @@ static void draw_trade_resource(resource_type resource, int trade_max, int x_off
             image_draw(image_group(GROUP_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
             break;
     }
-    
 }
 
 static void draw_city_info(const empire_object *object)
