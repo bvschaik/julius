@@ -2,8 +2,6 @@
 
 #include "CityBuildings.h"
 
-#include "../Data/State.h"
-
 #include "building/building.h"
 #include "city/view.h"
 #include "empire/city.h"
@@ -278,7 +276,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 			width += lang_text_draw(129, 14,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += lang_text_draw(41, targetBuilding->type,
+			lang_text_draw(41, targetBuilding->type,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 		} else {
 			width = lang_text_draw(129, 15,
@@ -287,7 +285,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 			width += lang_text_draw(129, 14,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += lang_text_draw(41, sourceBuilding->type,
+			lang_text_draw(41, sourceBuilding->type,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 		}
 	}

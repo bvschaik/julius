@@ -3,7 +3,7 @@
 #include "figure/figure.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
-#include "window/building_info.h"
+#include "sound/speech.h"
 #include "window/building/government.h"
 #include "window/building/utility.h"
 

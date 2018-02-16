@@ -12,7 +12,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
-#include "graphics/window.h"
+#include "sound/speech.h"
 #include "window/city.h"
 
 static void buttonReturnToFort(int param1, int param2);

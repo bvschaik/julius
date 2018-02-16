@@ -161,12 +161,12 @@ static int get_word_width(const uint8_t *str, int *num_chars)
     int guard = 0;
     int word_char_seen = 0;
     *num_chars = 0;
-    for (uint8_t c = *str; c; c = *(++str)) {
+    for (uint8_t c = *str; c; c = *++str) {
         if (++guard >= 2000) {
             break;
         }
         if (c == '@') {
-            c = *(++str);
+            c = *++str;
             if (!word_char_seen) {
                 if (c == 'P' || c == 'L') {
                     *num_chars += 2;
@@ -176,7 +176,7 @@ static int get_word_width(const uint8_t *str, int *num_chars)
                     // skip graphic
                     *num_chars += 2;
                     while (c >= '0' && c <= '9') {
-                        c = *(++str);
+                        c = *++str;
                         (*num_chars)++;
                     }
                     width = 0;
@@ -184,7 +184,7 @@ static int get_word_width(const uint8_t *str, int *num_chars)
                 } else {
                     (*num_chars)++;
                     while (c >= '0' && c <= '9') {
-                        c = *(++str);
+                        c = *++str;
                         (*num_chars)++;
                     }
                 }
@@ -230,7 +230,7 @@ static int draw_character(const font_definition *def, uint8_t c, int x, int y, c
 static void draw_line(const uint8_t *str, int x, int y, color_t color, int measure_only)
 {
     int num_link_chars = 0;
-    for (uint8_t c = *str; c; c = *(++str)) {
+    for (uint8_t c = *str; c; c = *++str) {
         if (c == '@') {
             int message_id = string_to_int(++str);
             while (*str >= '0' && *str <= '9') {
@@ -288,7 +288,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                 }
             } else {
                 for (int i = 0; i < word_num_chars; i++) {
-                    char c = *(text++);
+                    char c = *text++;
                     if (c == '@') {
                         if (*text == 'P') {
                             paragraph = 1;
@@ -306,9 +306,9 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                             text++; // skip 'G'
                             current_width = box_width;
                             image_id = string_to_int(text);
-                            c = *(text++);
+                            c = *text++;
                             while (c >= '0' && c <= '9') {
-                                c = *(text++);
+                                c = *text++;
                             }
                             image_id += image_group(GROUP_MESSAGE_IMAGES) - 1;
                             image_height_lines = image_get(image_id)->height / 16 + 2;

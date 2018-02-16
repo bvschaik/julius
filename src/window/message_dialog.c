@@ -221,7 +221,7 @@ static void draw_background_normal()
     const lang_message *msg = lang_get_message(data.text_id);
     data.x = msg->x;
     data.y = msg->y;
-    int header_offset = (msg->type == TYPE_MANUAL) ? 48 : 32;
+    int header_offset = msg->type == TYPE_MANUAL ? 48 : 32;
     data.x_text = data.x + 16;
     outer_panel_draw(data.x, data.y, msg->width_blocks, msg->height_blocks);
     // title

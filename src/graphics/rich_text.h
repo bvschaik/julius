@@ -7,7 +7,7 @@
 
 /**
  * Initializes the rich text
- * @param test Text to show
+ * @param text Text to show
  * @param x_text X offset for the text
  * @param y_text Y offset for the text
  * @param width_blocks Width of the text in blocks of 16px

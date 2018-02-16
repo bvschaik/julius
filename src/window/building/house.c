@@ -8,8 +8,6 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
-#include "map/building.h"
-#include "map/grid.h"
 #include "map/road_access.h"
 
 #include "Data/CityInfo.h"

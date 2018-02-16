@@ -28,7 +28,7 @@ void map_bridge_reset_building_length()
     bridge.length = 0;
 }
 
-int map_bridge_calculate_length_direction(int x, int y, int is_ship_bridge, int *length, int *direction)
+int map_bridge_calculate_length_direction(int x, int y, int *length, int *direction)
 {
     int grid_offset = map_grid_offset(x, y);
     bridge.end_grid_offset = 0;

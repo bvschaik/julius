@@ -45,11 +45,9 @@ static int focus_image_button_id;
 
 static void draw_buttons()
 {
-    int width;
-
     // small festival
     button_border_draw(102, 216, 430, 26, focus_button_id == 6);
-    width = lang_text_draw(58, 31, 110, 224, FONT_NORMAL_BLACK);
+    int width = lang_text_draw(58, 31, 110, 224, FONT_NORMAL_BLACK);
     lang_text_draw_amount(8, 0, Data_CityInfo.festivalCostSmall, 110 + width, 224, FONT_NORMAL_BLACK);
 
     // large festival

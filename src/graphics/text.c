@@ -101,7 +101,7 @@ static int getWordWidth(const uint8_t *str, font_t font, int *outNumChars)
     int guard = 0;
     int wordCharSeen = 0;
     int numChars = 0;
-    for (uint8_t c = *str; c; c = *(++str)) {
+    for (uint8_t c = *str; c; c = *++str) {
         if (++guard >= 200) {
             break;
         }
@@ -162,8 +162,8 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
         }
 
         if (c >= ' ') {
-            int width = 0;
             int graphic = font_image_for(c);
+            int width;
             if (graphic == 0) {
                 width = def->space_width_draw;
             } else {
@@ -292,7 +292,7 @@ int text_draw_multiline(const uint8_t *str, int xOffset, int yOffset, int boxWid
                 }
             } else {
                 for (int i = 0; i < wordNumChars; i++) {
-                    tmp_line[lineIndex++] = *(str++);
+                    tmp_line[lineIndex++] = *str++;
                 }
                 if (!*str) {
                     hasMoreCharacters = 0;

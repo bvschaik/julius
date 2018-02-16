@@ -57,11 +57,11 @@ void figure_route_add(figure *f)
     if (f->isBoat) {
         if (f->isBoat == 2) { // flotsam
             map_routing_calculate_distances_water_flotsam(f->x, f->y);
-            path_length = map_routing_get_path_on_water(data.direction_paths[path_id], f->x, f->y,
+            path_length = map_routing_get_path_on_water(data.direction_paths[path_id],
                 f->destinationX, f->destinationY, 1);
         } else {
             map_routing_calculate_distances_water_boat(f->x, f->y);
-            path_length = map_routing_get_path_on_water(data.direction_paths[path_id], f->x, f->y,
+            path_length = map_routing_get_path_on_water(data.direction_paths[path_id],
                 f->destinationX, f->destinationY, 0);
         }
     } else {

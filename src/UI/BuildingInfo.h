@@ -1,9 +1,7 @@
 #ifndef UI_BUILDINGINFO_H
 #define UI_BUILDINGINFO_H
 
-#include "graphics/tooltip.h"
 #include "input/mouse.h"
-#include "sound/speech.h"
 #include "window/building/common.h"
 
 void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c);

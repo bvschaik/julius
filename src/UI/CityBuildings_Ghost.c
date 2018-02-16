@@ -532,7 +532,6 @@ static void drawBuildingGhostBridge(building_type type)
 	int length, direction;
 	int endGridOffset = map_bridge_calculate_length_direction(
 		Data_State.map.current.x, Data_State.map.current.y,
-		type == BUILDING_LOW_BRIDGE ? 0 : 1,
 		&length, &direction);
 
 	int dir = direction - city_view_orientation();

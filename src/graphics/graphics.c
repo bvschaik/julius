@@ -184,8 +184,7 @@ void graphics_draw_from_buffer(int x, int y, int width, int height, const color_
 
 color_t *graphics_get_pixel(int x, int y)
 {
-    //return screen_pixel(translation.x + x, translation.y + y);
-    return &(canvas.pixels[(translation.y + y) * canvas.width + (translation.x + x)]);
+    return &canvas.pixels[(translation.y + y) * canvas.width + (translation.x + x)];
 }
 
 void graphics_clear_screen()

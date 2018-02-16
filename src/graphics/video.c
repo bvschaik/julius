@@ -11,24 +11,24 @@
 #include "libsmacker/smacker.h"
 
 static struct {
-    int isPlaying;
-    int isEnded;
+    int is_playing;
+    int is_ended;
 
     struct {
         smk s;
         int width;
         int height;
-        int microsPerFrame;
-        time_millis startRenderMillis;
-        int currentFrame;
-        int totalFrames;
+        int micros_per_frame;
+        time_millis start_render_millis;
+        int current_frame;
+        int total_frames;
     } video;
     struct {
         smk s;
         int bitdepth;
         int channels;
         int rate;
-        int firstFrame;
+        int first_frame;
     } audio;
 } data;
 
@@ -53,8 +53,8 @@ static const unsigned char *nextAudioFrame(int *outLen)
     if (!data.audio.s) {
         return 0;
     }
-    if (data.audio.firstFrame) {
-        data.audio.firstFrame = 0;
+    if (data.audio.first_frame) {
+        data.audio.first_frame = 0;
         if (smk_first(data.audio.s) < 0) {
             closeSmk(&data.audio.s);
             return 0;
@@ -85,9 +85,9 @@ static int loadSmkVideo(const char *filename)
     
     data.video.width = width;
     data.video.height = height;
-    data.video.currentFrame = 0;
-    data.video.totalFrames = frames;
-    data.video.microsPerFrame = (int) (microsPerFrame);
+    data.video.current_frame = 0;
+    data.video.total_frames = frames;
+    data.video.micros_per_frame = (int) (microsPerFrame);
 
     smk_enable_all(data.video.s,SMK_VIDEO_TRACK);
     if (smk_first(data.video.s) < 0) {
@@ -125,7 +125,7 @@ static int loadSmkAudio(const char *filename)
     data.audio.bitdepth = bitdepths[0];
     data.audio.channels = channels[0];
     data.audio.rate = bitrates[0];
-    data.audio.firstFrame = 1;
+    data.audio.first_frame = 1;
     return 1;
 }
 
@@ -152,13 +152,13 @@ static void endVideo()
 
 int video_start(const char *filename)
 {
-    data.isPlaying = 0;
-    data.isEnded = 0;
+    data.is_playing = 0;
+    data.is_ended = 0;
     
     if (loadSmk(filename)) {
         sound_music_stop();
         sound_speech_stop();
-        data.isPlaying = 1;
+        data.is_playing = 1;
         return 1;
     } else {
         return 0;
@@ -167,23 +167,23 @@ int video_start(const char *filename)
 
 void video_init()
 {
-    data.video.startRenderMillis = time_get_millis();
+    data.video.start_render_millis = time_get_millis();
     sound_device_use_custom_music_player(data.audio.bitdepth, data.audio.channels, data.audio.rate, nextAudioFrame);
 }
 
 int video_is_finished()
 {
-    return data.isEnded;
+    return data.is_ended;
 }
 
 void video_stop()
 {
-    if (data.isPlaying) {
+    if (data.is_playing) {
         if (data.video.s) {
             closeAll();
         }
-        data.isPlaying = 0;
-        if (!data.isEnded) {
+        data.is_playing = 0;
+        if (!data.is_ended) {
             endVideo();
         }
     }
@@ -191,11 +191,11 @@ void video_stop()
 
 void video_shutdown()
 {
-    if (data.isPlaying) {
+    if (data.is_playing) {
         if (data.video.s) {
             closeAll();
         }
-        data.isPlaying = 0;
+        data.is_playing = 0;
     }
 }
 
@@ -206,16 +206,16 @@ void video_draw(int x_offset, int y_offset)
     }
     time_millis nowMillis = time_get_millis();
     
-    int frameNo = (nowMillis - data.video.startRenderMillis) * 1000 / data.video.microsPerFrame;
-    if (frameNo > data.video.currentFrame) {
+    int frameNo = (nowMillis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
+    if (frameNo > data.video.current_frame) {
         if (smk_next(data.video.s) == SMK_DONE) {
             closeSmk(&data.video.s);
-            data.isEnded = 1;
-            data.isPlaying = 0;
+            data.is_ended = 1;
+            data.is_playing = 0;
             endVideo();
             return;
         }
-        data.video.currentFrame++;
+        data.video.current_frame++;
     }
     
     const unsigned char *frame = smk_get_video(data.video.s);
