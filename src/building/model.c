@@ -18,7 +18,7 @@ static const uint8_t ALL_HOUSES[] = {'A', 'L', 'L', ' ', 'H', 'O', 'U', 'S', 'E'
 static model_building buildings[NUM_BUILDINGS];
 static model_house houses[NUM_HOUSES];
 
-static int strings_equal(const uint8_t *a, const uint8_t *b, size_t len)
+static int strings_equal(const uint8_t *a, const uint8_t *b, int len)
 {
     for (int i = 0; i < len; i++, a++, b++) {
         if (*a != *b) {
@@ -30,7 +30,7 @@ static int strings_equal(const uint8_t *a, const uint8_t *b, size_t len)
 
 static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length)
 {
-    size_t needle_length = string_length(needle);
+    int needle_length = string_length(needle);
     for (int i = 0; i < haystack_length; i++) {
         if (haystack[i] == needle[0] && strings_equal(&haystack[i], needle, needle_length)) {
             return i + 1;

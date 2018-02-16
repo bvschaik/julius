@@ -54,7 +54,7 @@ void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, 
 {
     figure *f = figure_create(type, x, y, DIR_0_TOP);
     if (f->id) {
-        f->missileDamage = (type == FIGURE_BOLT) ? 60 : 10;
+        f->missileDamage = type == FIGURE_BOLT ? 60 : 10;
         f->buildingId = building_id;
         f->destinationX = x_dst;
         f->destinationY = y_dst;

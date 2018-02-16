@@ -90,9 +90,9 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
 static void determine_cartpusher_destination_food(figure *f, int road_network_id)
 {
     building *b = building_get(f->buildingId);
-    int x_dst, y_dst, dst_building_id;
+    int x_dst, y_dst;
     // priority 1: accepting granary for food
-    dst_building_id = building_granary_for_storing(f->x, f->y,
+    int dst_building_id = building_granary_for_storing(f->x, f->y,
         b->outputResourceId, b->distanceFromEntry, road_network_id, 0,
         0, &x_dst, &y_dst);
     if (dst_building_id) {

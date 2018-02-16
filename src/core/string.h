@@ -10,7 +10,7 @@
 
 /**
  * Copies a string
- * @param str Source string
+ * @param src Source string
  * @param dst Destination string
  * @param maxlength Maximum length of the destination string
  */

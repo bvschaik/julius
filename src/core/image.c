@@ -190,15 +190,15 @@ static int convert_compressed(buffer *buf, int buf_length, color_t *dst)
         int control = buffer_read_u8(buf);
         if (control == 255) {
             // next byte = transparent pixels to skip
-            *(dst++) = 255;
-            *(dst++) = buffer_read_u8(buf);
+            *dst++ = 255;
+            *dst++ = buffer_read_u8(buf);
             dst_length += 2;
             buf_length -= 2;
         } else {
             // control = number of concrete pixels
-            *(dst++) = control;
+            *dst++ = control;
             for (int i = 0; i < control; i++) {
-                *(dst++) = to_32_bit(buffer_read_u16(buf));
+                *dst++ = to_32_bit(buffer_read_u16(buf));
             }
             dst_length += control + 1;
             buf_length -= control * 2 + 1;

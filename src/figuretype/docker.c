@@ -108,11 +108,11 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
         if (b->roadNetworkId != road_network_id) {
             continue;
         }
-        const building_storage *s = building_storage_get(b->storage_id);
-        if (s->resource_state[resource] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && !s->empty_all) {
+        const building_storage *storage = building_storage_get(b->storage_id);
+        if (storage->resource_state[resource] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && !storage->empty_all) {
             int distance_penalty = 32;
             building *space = b;
-            for (int s= 0; s < 8; s++) {
+            for (int s = 0; s < 8; s++) {
                 space = building_next(space);
                 if (space->id && space->subtype.warehouseResourceId == RESOURCE_NONE) {
                     distance_penalty -= 8;

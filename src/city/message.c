@@ -262,7 +262,6 @@ void city_message_process_queue()
 
 void city_message_sort_and_compact()
 {
-    city_message tmp_message;
     for (int i = 0; i < MAX_MESSAGES; i++) {
         for (int a = 0; a < MAX_MESSAGES - 1; a++) {
             int swap = 0;
@@ -276,7 +275,7 @@ void city_message_sort_and_compact()
                 swap = 1;
             }
             if (swap) {
-                tmp_message = data.messages[a];
+                city_message tmp_message = data.messages[a];
                 data.messages[a] = data.messages[a+1];
                 data.messages[a+1] = tmp_message;
             }

@@ -86,13 +86,13 @@ int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id)
     if (trader->loadsSoldOrCarrying >= 8) {
         return 0;
     }
-    const building_storage *s = building_storage_get(warehouse->storage_id);
-    if (s->empty_all) {
+    const building_storage *storage = building_storage_get(warehouse->storage_id);
+    if (storage->empty_all) {
         return 0;
     }
     int num_importable = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
+        if (storage->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
             if (empire_can_import_resource_from_city(city_id, r)) {
                 num_importable++;
             }
@@ -102,13 +102,13 @@ int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id)
         return 0;
     }
     int can_import = 0;
-    if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
+    if (storage->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
         empire_can_import_resource_from_city(city_id, Data_CityInfo.tradeNextImportResourceCaravan)) {
         can_import = 1;
     } else {
         for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
             advance_next_import_resource_caravan();
-            if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
+            if (storage->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
                     empire_can_import_resource_from_city(city_id, Data_CityInfo.tradeNextImportResourceCaravan)) {
                 can_import = 1;
                 break;

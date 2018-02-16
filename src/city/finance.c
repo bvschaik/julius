@@ -9,7 +9,6 @@
 #include "Data/CityInfo.h"
 
 #define MAX_HOUSE_LEVELS 20
-#define MIN_TREASURY -5000
 
 int city_finance_treasury()
 {
@@ -18,7 +17,7 @@ int city_finance_treasury()
 
 int city_finance_out_of_money()
 {
-    return Data_CityInfo.treasury <= MIN_TREASURY;
+    return Data_CityInfo.treasury <= -5000;
 }
 
 void city_finance_process_import(int price)

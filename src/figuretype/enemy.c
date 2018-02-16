@@ -122,13 +122,13 @@ static void enemy_fighting(figure *f, const formation *m)
         if (f->type == FIGURE_ENEMY48_CHARIOT || f->type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
             Data_CityInfo.soundMarchHorse--;
             if (Data_CityInfo.soundMarchHorse <= 0) {
-                Data_CityInfo.soundMarchHorse = 200;
+                Data_CityInfo.soundMarchHorse = (int8_t) 200;
                 sound_effect_play(SOUND_EFFECT_HORSE_MOVING);
             }
         } else {
             Data_CityInfo.soundMarchEnemy--;
             if (Data_CityInfo.soundMarchEnemy <= 0) {
-                Data_CityInfo.soundMarchEnemy = 200;
+                Data_CityInfo.soundMarchEnemy = (int8_t) 200;
                 sound_effect_play(SOUND_EFFECT_MARCHING);
             }
         }

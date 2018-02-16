@@ -59,7 +59,7 @@ const model_building *model_get_building(building_type type);
 
 /**
  * Gets the model for a house
- * @param house_level House level
+ * @param level House level
  * @return Read-only model
  */
 const model_house *model_get_house(house_level level);

@@ -17,6 +17,6 @@ void building_construction_start(int x, int y);
 
 void building_construction_update(int x, int y);
 
-void building_construction_place(int orientation);
+void building_construction_place();
 
 #endif // BUILDING_CONSTRUCTION_H

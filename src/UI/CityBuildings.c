@@ -690,7 +690,7 @@ static void buildEnd()
 		if (building_construction_type() != BUILDING_NONE) {
 			sound_effect_play(SOUND_EFFECT_BUILD);
 		}
-		building_construction_place(city_view_orientation());
+		building_construction_place();
 	}
 }
 

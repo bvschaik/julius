@@ -173,7 +173,7 @@ void building_maintenance_check_fire_collapse()
         }
         int random_building = (i + map_random_get(b->gridOffset)) & 7;
         // damage
-        b->damageRisk += (random_building == random_global) ? 3 : 1;
+        b->damageRisk += random_building == random_global ? 3 : 1;
         if (tutorial_extra_damage_risk()) {
             b->damageRisk += 5;
         }
