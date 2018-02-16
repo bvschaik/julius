@@ -22,8 +22,7 @@ void map_soldier_strength_add(int x, int y, int radius, int amount)
             int grid_offset = map_grid_offset(xx, yy);
             strength.items[grid_offset] += amount;
             if (map_has_figure_at(grid_offset)) {
-                int type = figure_get(map_figure_at(grid_offset))->type;
-                if (FigureIsLegion(type)) {
+                if (figure_is_legion(figure_get(map_figure_at(grid_offset)))) {
                     strength.items[grid_offset] += 2;
                 }
             }

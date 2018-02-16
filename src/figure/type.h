@@ -6,10 +6,6 @@
  * Figure types.
  */
 
-#define FigureIsEnemy(t) ((t) >= FIGURE_ENEMY43_SPEAR && (t) <= FIGURE_ENEMY_CAESAR_LEGIONARY)
-#define FigureIsLegion(t) ((t) >= FIGURE_FORT_JAVELIN && (t) <= FIGURE_FORT_LEGIONARY)
-#define FigureIsHerd(t) ((t) >= FIGURE_SHEEP && (t) <= FIGURE_ZEBRA)
-
 /**
  * Figure types
  */

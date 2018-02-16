@@ -547,7 +547,7 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
 {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
-        if (f->state != FigureState_Alive || !FigureIsEnemy(f->type)) {
+        if (f->state != FigureState_Alive || !figure_is_enemy(f)) {
             continue;
         }
         int dx = (f->x > x_start) ? (f->x - x_start) : (x_start - f->x);

@@ -85,7 +85,7 @@ static int is_non_citizen(figure *f)
     if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         return 0;
     }
-    if (FigureIsEnemy(f->type)) {
+    if (figure_is_enemy(f)) {
         return f->id;
     }
     if (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING) {
@@ -140,7 +140,7 @@ static void missile_hit_target(figure *f, int target_id, figure_type legionary_t
         target->damage = max_damage + 1;
         target->actionState = FIGURE_ACTION_149_CORPSE;
         target->waitTicks = 0;
-        figure_play_die_sound(target->type);
+        figure_play_die_sound(target);
         formation_update_morale_after_death(m);
     }
     f->state = FigureState_Dead;
@@ -232,7 +232,7 @@ void figure_bolt_action(figure *f)
             target->damage = max_damage + 1;
             target->actionState = FIGURE_ACTION_149_CORPSE;
             target->waitTicks = 0;
-            figure_play_die_sound(target->type);
+            figure_play_die_sound(target);
             formation_update_morale_after_death(formation_get(target->formationId));
         }
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_PERSON);

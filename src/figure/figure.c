@@ -115,9 +115,24 @@ void figure_delete(figure *f)
     f->id = figureId;
 }
 
-int figure_is_dead(figure *f)
+int figure_is_dead(const figure *f)
 {
     return f->state != FigureState_Alive || f->actionState == FIGURE_ACTION_149_CORPSE;
+}
+
+int figure_is_enemy(const figure *f)
+{
+    return f->type >= FIGURE_ENEMY43_SPEAR && f->type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
+}
+
+int figure_is_legion(const figure *f)
+{
+    return f->type >= FIGURE_FORT_JAVELIN && f->type <= FIGURE_FORT_LEGIONARY;
+}
+
+int figure_is_herd(const figure *f)
+{
+    return f->type >= FIGURE_SHEEP && f->type <= FIGURE_ZEBRA;
 }
 
 void figure_init_scenario()

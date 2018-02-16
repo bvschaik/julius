@@ -123,7 +123,13 @@ figure *figure_create(figure_type type, int x, int y, direction dir);
 
 void figure_delete(figure *f);
 
-int figure_is_dead(figure *f);
+int figure_is_dead(const figure *f);
+
+int figure_is_enemy(const figure *f);
+
+int figure_is_legion(const figure *f);
+
+int figure_is_herd(const figure *f);
 
 void figure_init_scenario();
 

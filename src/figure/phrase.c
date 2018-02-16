@@ -406,7 +406,7 @@ static int house_seeker_phrase(figure *f)
     return 7 + f->phraseSequenceExact;
 }
 
-static int emigrant_phrase(figure *f)
+static int emigrant_phrase()
 {
     switch (Data_CityInfo.populationEmigrationCause) {
         case EMIGRATION_CAUSE_NO_JOBS:
@@ -438,7 +438,7 @@ static int tower_sentry_phrase(figure *f)
     }
 }
 
-static int soldier_phrase(figure *f)
+static int soldier_phrase()
 {
     if (Data_CityInfo.numEnemiesInCity >= 40) {
         return 11;
@@ -534,13 +534,13 @@ static int phrase_based_on_figure_state(figure *f)
         case FIGURE_IMMIGRANT:
             return house_seeker_phrase(f);
         case FIGURE_EMIGRANT:
-            return emigrant_phrase(f);
+            return emigrant_phrase();
         case FIGURE_TOWER_SENTRY:
             return tower_sentry_phrase(f);
         case FIGURE_FORT_JAVELIN:
         case FIGURE_FORT_MOUNTED:
         case FIGURE_FORT_LEGIONARY:
-            return soldier_phrase(f);
+            return soldier_phrase();
         case FIGURE_DOCKER:
             return docker_phrase(f);
         case FIGURE_TRADE_CARAVAN:
@@ -612,7 +612,7 @@ void figure_phrase_determine(figure *f)
     }
     f->phraseId = 0;
 
-    if (FigureIsEnemy(f->type) || f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_NATIVE_TRADER) {
+    if (figure_is_enemy(f) || f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_NATIVE_TRADER) {
         f->phraseId = -1;
         return;
     }

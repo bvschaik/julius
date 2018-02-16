@@ -472,7 +472,7 @@ void formation_calculate_figures()
         if (f->state != FigureState_Alive) {
             continue;
         }
-        if (!FigureIsLegion(f->type) && !FigureIsEnemy(f->type) && !FigureIsHerd(f->type)) {
+        if (!figure_is_legion(f) && !figure_is_enemy(f) && !figure_is_herd(f)) {
             continue;
         }
         if (f->type == FIGURE_ENEMY54_GLADIATOR) {
@@ -641,7 +641,7 @@ void formations_save_state(buffer *buf, buffer *totals)
         buffer_write_u8(buf, f->is_legion);
         buffer_skip(buf, 1);
         buffer_write_i16(buf, f->attack_type);
-        buffer_write_i16(buf, f->legion_recruit_type);;
+        buffer_write_i16(buf, f->legion_recruit_type);
         buffer_write_i16(buf, f->has_military_training);
         buffer_write_i16(buf, f->total_damage);
         buffer_write_i16(buf, f->max_total_damage);
@@ -714,7 +714,7 @@ void formations_load_state(buffer *buf, buffer *totals)
         f->is_legion = buffer_read_u8(buf);
         buffer_skip(buf, 1);
         f->attack_type = buffer_read_i16(buf);
-        f->legion_recruit_type = buffer_read_i16(buf);;
+        f->legion_recruit_type = buffer_read_i16(buf);
         f->has_military_training = buffer_read_i16(buf);
         f->total_damage = buffer_read_i16(buf);
         f->max_total_damage = buffer_read_i16(buf);

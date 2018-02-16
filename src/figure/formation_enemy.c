@@ -353,7 +353,7 @@ static void mars_kill_enemies()
         if (f->state != FigureState_Alive) {
             continue;
         }
-        if (FigureIsEnemy(f->type) && f->type != FIGURE_ENEMY54_GLADIATOR) {
+        if (figure_is_enemy(f) && f->type != FIGURE_ENEMY54_GLADIATOR) {
             f->actionState = FIGURE_ACTION_149_CORPSE;
             toKill--;
             if (!gridOffset) {
@@ -513,7 +513,7 @@ static void update_enemy_formation(formation *m, int *roman_distance)
         figure *f = figure_get(m->figures[n]);
         if (f->actionState == FIGURE_ACTION_150_ATTACK) {
             figure *opponent = figure_get(f->opponentId);
-            if (!figure_is_dead(opponent) && FigureIsLegion(opponent->type)) {
+            if (!figure_is_dead(opponent) && figure_is_legion(opponent)) {
                 formation_record_fight(m);
             }
         }

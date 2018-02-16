@@ -5,11 +5,11 @@
 
 #include "Data/CityInfo.h"
 
-void figure_play_die_sound(figure_type type)
+void figure_play_die_sound(const figure *f)
 {
     int is_soldier = 0;
     int is_citizen = 0;
-    switch (type) {
+    switch (f->type) {
         case FIGURE_WOLF:
             sound_effect_play(SOUND_EFFECT_WOLF_DIE);
             break;
@@ -73,11 +73,11 @@ void figure_play_die_sound(figure_type type)
         }
         sound_effect_play(SOUND_EFFECT_CITIZEN_DIE + Data_CityInfo.dieSoundCitizen);
     }
-    if (FigureIsEnemy(type)) {
+    if (figure_is_enemy(f)) {
         if (Data_CityInfo.numEnemiesInCity == 1) {
             sound_speech_play_file("wavs/army_war_cry.wav");
         }
-    } else if (FigureIsLegion(type)) {
+    } else if (figure_is_legion(f)) {
         if (Data_CityInfo.numSoldiersInCity == 1) {
             sound_speech_play_file("wavs/barbarian_war_cry.wav");
         }

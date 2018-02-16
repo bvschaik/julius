@@ -298,7 +298,7 @@ int formation_legion_curse()
 
 static int is_legion(figure *f)
 {
-    if (FigureIsLegion(f->type) || f->type == FIGURE_FORT_STANDARD) {
+    if (figure_is_legion(f) || f->type == FIGURE_FORT_STANDARD) {
         return f->formationId;
     }
     return 0;
@@ -372,7 +372,7 @@ void formation_legion_decrease_damage()
 {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
-        if (f->state == FigureState_Alive && FigureIsLegion(f->type)) {
+        if (f->state == FigureState_Alive && figure_is_legion(f)) {
             if (f->actionState == FIGURE_ACTION_80_SOLDIER_AT_REST) {
                 if (f->damage) {
                     f->damage--;

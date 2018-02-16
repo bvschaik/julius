@@ -10,6 +10,11 @@
 #include "map/figure.h"
 #include "sound/effect.h"
 
+static int is_attacking_native(const figure *f)
+{
+    return f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING;
+}
+
 void figure_combat_handle_corpse(figure *f)
 {
     if (f->waitTicks < 0) {
@@ -103,7 +108,7 @@ static void hit_opponent(figure *f)
     } else {
         opponent->actionState = FIGURE_ACTION_149_CORPSE;
         opponent->waitTicks = 0;
-        figure_play_die_sound(opponent->type);
+        figure_play_die_sound(opponent);
         formation_update_morale_after_death(opponent_formation);
     }
 }
@@ -152,8 +157,7 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance)
         if (figure_is_dead(f)) {
             continue;
         }
-        if (FigureIsEnemy(f->type) || f->type == FIGURE_RIOTER ||
-            (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING)) {
+        if (figure_is_enemy(f) || f->type == FIGURE_RIOTER || is_attacking_native(f)) {
             int distance = calc_maximum_distance(x, y, f->x, f->y);
             if (distance <= max_distance) {
                 if (f->targetedByFigureId) {
@@ -174,8 +178,7 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance)
         if (figure_is_dead(f)) {
             continue;
         }
-        if (FigureIsEnemy(f->type) || f->type == FIGURE_RIOTER ||
-            (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING)) {
+        if (figure_is_enemy(f) || f->type == FIGURE_RIOTER || is_attacking_native(f)) {
             return i;
         }
     }
@@ -209,10 +212,10 @@ int figure_combat_get_target_for_wolf(int x, int y, int max_distance)
             case FIGURE_CREATURE:
                 continue;
         }
-        if (FigureIsEnemy(f->type) || FigureIsHerd(f->type)) {
+        if (figure_is_enemy(f) || figure_is_herd(f)) {
             continue;
         }
-        if (FigureIsLegion(f->type) && f->actionState == FIGURE_ACTION_80_SOLDIER_AT_REST) {
+        if (figure_is_legion(f) && f->actionState == FIGURE_ACTION_80_SOLDIER_AT_REST) {
             continue;
         }
         int distance = calc_maximum_distance(x, y, f->x, f->y);
@@ -239,7 +242,7 @@ int figure_combat_get_target_for_enemy(int x, int y)
         if (figure_is_dead(f)) {
             continue;
         }
-        if (!f->targetedByFigureId && FigureIsLegion(f->type)) {
+        if (!f->targetedByFigureId && figure_is_legion(f)) {
             int distance = calc_maximum_distance(x, y, f->x, f->y);
             if (distance < min_distance) {
                 min_distance = distance;
@@ -256,7 +259,7 @@ int figure_combat_get_target_for_enemy(int x, int y)
         if (figure_is_dead(f)) {
             continue;
         }
-        if (FigureIsLegion(f->type)) {
+        if (figure_is_legion(f)) {
             return i;
         }
     }
@@ -275,8 +278,7 @@ int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distan
         if (figure_is_dead(f)) {
             continue;
         }
-        if (FigureIsEnemy(f->type) || FigureIsHerd(f->type) ||
-            (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING)) {
+        if (figure_is_enemy(f) || figure_is_herd(f) || is_attacking_native(f)) {
             int distance = calc_maximum_distance(x, y, f->x, f->y);
             if (distance < min_distance && figure_movement_can_launch_cross_country_missile(x, y, f->x, f->y)) {
                 min_distance = distance;
@@ -326,7 +328,7 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
                 continue;
         }
         int distance;
-        if (FigureIsLegion(f->type)) {
+        if (figure_is_legion(f)) {
             distance = calc_maximum_distance(x, y, f->x, f->y);
         } else if (attack_citizens && f->isFriendly) {
             distance = calc_maximum_distance(x, y, f->x, f->y) + 5;

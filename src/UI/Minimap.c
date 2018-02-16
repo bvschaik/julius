@@ -115,10 +115,10 @@ enum {
 static int has_figure_color(figure *f)
 {
     int type = f->type;
-    if (FigureIsLegion(f->type)) {
+    if (figure_is_legion(f)) {
         return FIGURE_COLOR_SOLDIER;
     }
-    if (FigureIsEnemy(f->type)) {
+    if (figure_is_enemy(f)) {
         return FIGURE_COLOR_ENEMY;
     }
     if (f->type == FIGURE_INDIGENOUS_NATIVE &&

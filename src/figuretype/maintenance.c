@@ -107,7 +107,7 @@ static int get_nearest_enemy(int x, int y, int *distance)
             dist = calc_maximum_distance(x, y, f->x, f->y);
         } else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING) {
             dist = calc_maximum_distance(x, y, f->x, f->y);
-        } else if (FigureIsEnemy(f->type)) {
+        } else if (figure_is_enemy(f)) {
             dist = 3 * calc_maximum_distance(x, y, f->x, f->y);
         } else if (f->type == FIGURE_WOLF) {
             dist = 4 * calc_maximum_distance(x, y, f->x, f->y);
