@@ -5,16 +5,16 @@
 #include "graphics/panel.h"
 #include "map/water_supply.h"
 
-void window_building_draw_engineers_post(BuildingInfoContext *c)
+void window_building_draw_engineers_post(building_info_context *c)
 {
-    c->helpId = 81;
+    c->help_id = 81;
     window_building_play_sound(c, "wavs/eng_post.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(104, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(104, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
-    building *b = building_get(c->buildingId);
+    building *b = building_get(c->building_id);
 
-    if (!c->hasRoadAccess) {
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (!b->numWorkers) {
         window_building_draw_description(c, 104, 9);
@@ -24,33 +24,33 @@ void window_building_draw_engineers_post(BuildingInfoContext *c)
         } else {
             window_building_draw_description(c, 104, 3);
         }
-        if (c->workerPercentage >= 100) {
+        if (c->worker_percentage >= 100) {
             window_building_draw_description_at(c, 72, 104, 4);
-        } else if (c->workerPercentage >= 75) {
+        } else if (c->worker_percentage >= 75) {
             window_building_draw_description_at(c, 72, 104, 5);
-        } else if (c->workerPercentage >= 50) {
+        } else if (c->worker_percentage >= 50) {
             window_building_draw_description_at(c, 72, 104, 6);
-        } else if (c->workerPercentage >= 25) {
+        } else if (c->worker_percentage >= 25) {
             window_building_draw_description_at(c, 72, 104, 7);
         } else {
             window_building_draw_description_at(c, 72, 104, 8);
         }
     }
 
-    inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_prefect(BuildingInfoContext *c)
+void window_building_draw_prefect(building_info_context *c)
 {
-    c->helpId = 86;
+    c->help_id = 86;
     window_building_play_sound(c, "wavs/prefecture.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(88, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    lang_text_draw_centered(13, 1, c->xOffset, c->yOffset + 16 * c->heightBlocks - 24, 16 * c->widthBlocks, FONT_NORMAL_BLACK);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(88, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(13, 1, c->x_offset, c->y_offset + 16 * c->height_blocks - 24, 16 * c->width_blocks, FONT_NORMAL_BLACK);
 
-    building *b = building_get(c->buildingId);
-    if (!c->hasRoadAccess) {
+    building *b = building_get(c->building_id);
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (b->numWorkers <= 0) {
         window_building_draw_description(c, 88, 9);
@@ -60,94 +60,94 @@ void window_building_draw_prefect(BuildingInfoContext *c)
         } else {
             window_building_draw_description(c, 88, 3);
         }
-        if (c->workerPercentage >= 100) {
+        if (c->worker_percentage >= 100) {
             window_building_draw_description_at(c, 72, 88, 4);
-        } else if (c->workerPercentage >= 75) {
+        } else if (c->worker_percentage >= 75) {
             window_building_draw_description_at(c, 72, 88, 5);
-        } else if (c->workerPercentage >= 50) {
+        } else if (c->worker_percentage >= 50) {
             window_building_draw_description_at(c, 72, 88, 6);
-        } else if (c->workerPercentage >= 25) {
+        } else if (c->worker_percentage >= 25) {
             window_building_draw_description_at(c, 72, 88, 7);
         } else {
             window_building_draw_description_at(c, 72, 88, 8);
         }
     }
 
-    inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_burning_ruin(BuildingInfoContext *c)
+void window_building_draw_burning_ruin(building_info_context *c)
 {
-    c->helpId = 0;
+    c->help_id = 0;
     window_building_play_sound(c, "wavs/ruin.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(111, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(111, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
-    lang_text_draw(41, c->rubbleBuildingType, c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 173, FONT_NORMAL_BLACK);
-    lang_text_draw_multiline(111, 1, c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 143, 16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+    lang_text_draw(41, c->rubble_building_type, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 173, FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(111, 1, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 143, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
 
-void window_building_draw_rubble(BuildingInfoContext *c)
+void window_building_draw_rubble(building_info_context *c)
 {
-    c->helpId = 0;
+    c->help_id = 0;
     window_building_play_sound(c, "wavs/ruin.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(140, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(140, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
-    lang_text_draw(41, c->rubbleBuildingType, c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 173, FONT_NORMAL_BLACK);
-    lang_text_draw_multiline(140, 1, c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 143, 16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+    lang_text_draw(41, c->rubble_building_type, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 173, FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(140, 1, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 143, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
 
-void window_building_draw_reservoir(BuildingInfoContext *c)
+void window_building_draw_reservoir(building_info_context *c)
 {
-    c->helpId = 59;
+    c->help_id = 59;
     window_building_play_sound(c, "wavs/resevoir.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(107, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    lang_text_draw_centered(13, 1, c->xOffset, c->yOffset + 16 * c->heightBlocks - 24, 16 * c->widthBlocks, FONT_NORMAL_BLACK);
-    int text_id = building_get(c->buildingId)->hasWaterAccess ? 1 : 3;
-    window_building_draw_description_at(c, 16 * c->heightBlocks - 173, 107, text_id);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(107, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(13, 1, c->x_offset, c->y_offset + 16 * c->height_blocks - 24, 16 * c->width_blocks, FONT_NORMAL_BLACK);
+    int text_id = building_get(c->building_id)->hasWaterAccess ? 1 : 3;
+    window_building_draw_description_at(c, 16 * c->height_blocks - 173, 107, text_id);
 }
 
-void window_building_draw_aqueduct(BuildingInfoContext *c)
+void window_building_draw_aqueduct(building_info_context *c)
 {
-    c->helpId = 60;
+    c->help_id = 60;
     window_building_play_sound(c, "wavs/aquaduct.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(141, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->heightBlocks - 128, 141, c->aqueductHasWater ? 1 : 2);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(141, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 128, 141, c->aqueduct_has_water ? 1 : 2);
 }
 
-void window_building_draw_fountain(BuildingInfoContext *c)
+void window_building_draw_fountain(building_info_context *c)
 {
-    c->helpId = 61;
+    c->help_id = 61;
     window_building_play_sound(c, "wavs/fountain.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(108, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(108, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     int text_id;
-    building *b = building_get(c->buildingId);
+    building *b = building_get(c->building_id);
     if (b->hasWaterAccess) {
         if (b->numWorkers > 0) {
             text_id = 1;
         } else {
             text_id = 2;
         }
-    } else if (c->hasReservoirPipes) {
+    } else if (c->has_reservoir_pipes) {
         text_id = 2;
     } else {
         text_id = 3;
     }
-    window_building_draw_description_at(c, 16 * c->heightBlocks - 126, 108, text_id);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 126, 108, text_id);
 }
 
-void window_building_draw_well(BuildingInfoContext *c)
+void window_building_draw_well(building_info_context *c)
 {
-    c->helpId = 62;
+    c->help_id = 62;
     window_building_play_sound(c, "wavs/well.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(109, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    int well_necessity = map_water_supply_is_well_unnecessary(c->buildingId, 2);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(109, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    int well_necessity = map_water_supply_is_well_unnecessary(c->building_id, 2);
     int text_id = 0;
     if (well_necessity == WELL_NECESSARY) { // well is OK
         text_id = 1;
@@ -157,39 +157,39 @@ void window_building_draw_well(BuildingInfoContext *c)
         text_id = 3;
     }
     if (text_id) {
-        window_building_draw_description_at(c, 16 * c->heightBlocks - 126, 109, text_id);
+        window_building_draw_description_at(c, 16 * c->height_blocks - 126, 109, text_id);
     }
 }
 
-void window_building_draw_mission_post(BuildingInfoContext *c)
+void window_building_draw_mission_post(building_info_context *c)
 {
-    c->helpId = 8;
+    c->help_id = 8;
     window_building_play_sound(c, "wavs/mission.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(134, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(134, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_description_at(c, 106, 134, 1);
 }
 
-static void draw_native(BuildingInfoContext *c, int group_id)
+static void draw_native(building_info_context *c, int group_id)
 {
-    c->helpId = 0;
+    c->help_id = 0;
     window_building_play_sound(c, "wavs/empty_land.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(group_id, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_description_at(c, 106, group_id, 1);
 }
 
-void window_building_draw_native_hut(BuildingInfoContext *c)
+void window_building_draw_native_hut(building_info_context *c)
 {
     draw_native(c, 131);
 }
 
-void window_building_draw_native_meeting(BuildingInfoContext *c)
+void window_building_draw_native_meeting(building_info_context *c)
 {
     draw_native(c, 132);
 }
 
-void window_building_draw_native_crops(BuildingInfoContext *c)
+void window_building_draw_native_crops(building_info_context *c)
 {
     draw_native(c, 133);
 }

@@ -9,36 +9,36 @@
 #include "graphics/panel.h"
 #include "sound/speech.h"
 #include "window/building/figures.h"
-void window_building_draw_no_people(BuildingInfoContext *c)
+void window_building_draw_no_people(building_info_context *c)
 {
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(70, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    lang_text_draw_centered(13, 1, c->xOffset, c->yOffset + 16 * c->heightBlocks - 22, 16 * c->widthBlocks, FONT_NORMAL_BLACK);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(70, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(13, 1, c->x_offset, c->y_offset + 16 * c->height_blocks - 22, 16 * c->width_blocks, FONT_NORMAL_BLACK);
 }
 
-void window_building_draw_terrain(BuildingInfoContext *c)
+void window_building_draw_terrain(building_info_context *c)
 {
-    switch (c->terrainType) {
-        case TERRAIN_INFO_ROAD: c->helpId = 57; break;
-        case TERRAIN_INFO_AQUEDUCT: c->helpId = 60; break;
-        case TERRAIN_INFO_WALL: c->helpId = 85; break;
-        case TERRAIN_INFO_BRIDGE: c->helpId = 58; break;
-        default: c->helpId = 0; break;
+    switch (c->terrain_type) {
+        case TERRAIN_INFO_ROAD: c->help_id = 57; break;
+        case TERRAIN_INFO_AQUEDUCT: c->help_id = 60; break;
+        case TERRAIN_INFO_WALL: c->help_id = 85; break;
+        case TERRAIN_INFO_BRIDGE: c->help_id = 58; break;
+        default: c->help_id = 0; break;
     }
 
-    if (c->terrainType == TERRAIN_INFO_AQUEDUCT) {
+    if (c->terrain_type == TERRAIN_INFO_AQUEDUCT) {
         window_building_draw_aqueduct(c);
-    } else if (c->terrainType == TERRAIN_INFO_RUBBLE) {
+    } else if (c->terrain_type == TERRAIN_INFO_RUBBLE) {
         window_building_draw_rubble(c);
-    } else if (c->terrainType == TERRAIN_INFO_WALL) {
+    } else if (c->terrain_type == TERRAIN_INFO_WALL) {
         window_building_draw_wall(c);
-    } else if (c->terrainType == TERRAIN_INFO_GARDEN) {
+    } else if (c->terrain_type == TERRAIN_INFO_GARDEN) {
         window_building_draw_garden(c);
-    } else if (c->terrainType == TERRAIN_INFO_PLAZA && c->figure.count <= 0) {
+    } else if (c->terrain_type == TERRAIN_INFO_PLAZA && c->figure.count <= 0) {
         window_building_draw_plaza(c);
     } else {
-        if (c->canPlaySound) {
-            c->canPlaySound = 0;
+        if (c->can_play_sound) {
+            c->can_play_sound = 0;
             if (c->figure.count > 0) {
                 window_building_play_figure_phrase(c);
             } else {
@@ -48,23 +48,23 @@ void window_building_draw_terrain(BuildingInfoContext *c)
         if (c->figure.count > 0 && c->figure.figureIds[c->figure.selectedIndex]) {
             figure *f = figure_get(c->figure.figureIds[c->figure.selectedIndex]);
             if (f->type < FIGURE_SHIPWRECK) {
-                c->helpId = 42;
+                c->help_id = 42;
             } else {
-                c->helpId = 330;
+                c->help_id = 330;
             }
         }
         
         window_building_prepare_figure_list(c);
-        outer_panel_draw(c->xOffset, c->yOffset,
-            c->widthBlocks, c->heightBlocks);
+        outer_panel_draw(c->x_offset, c->y_offset,
+            c->width_blocks, c->height_blocks);
         if (!c->figure.count) {
-            lang_text_draw_centered(70, c->terrainType + 10,
-                c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+            lang_text_draw_centered(70, c->terrain_type + 10,
+                c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
         }
-        if (c->terrainType != TERRAIN_INFO_ROAD && c->terrainType != TERRAIN_INFO_PLAZA) {
-            lang_text_draw_multiline(70, c->terrainType + 25,
-                c->xOffset + 36, c->yOffset + 16 * c->heightBlocks - 113,
-                16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+        if (c->terrain_type != TERRAIN_INFO_ROAD && c->terrain_type != TERRAIN_INFO_PLAZA) {
+            lang_text_draw_multiline(70, c->terrain_type + 25,
+                c->x_offset + 36, c->y_offset + 16 * c->height_blocks - 113,
+                16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
         }
         window_building_draw_figure_list(c);
     }

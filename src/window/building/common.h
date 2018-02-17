@@ -28,27 +28,27 @@ typedef enum {
 } terrain_info_type;
 
 typedef struct {
-    int xOffset;
-    int yOffset;
-    int widthBlocks;
-    int heightBlocks;
-    int helpId;
-    int canPlaySound;
-    int buildingId;
-    int hasRoadAccess;
-    int workerPercentage;
-    int hasReservoirPipes;
-    int aqueductHasWater;
-    int formationId;
-    int formationTypes;
-    int barracksSoldiersRequested;
-    int worstDesirabilityBuildingId;
-    int warehouseSpaceText;
+    int x_offset;
+    int y_offset;
+    int width_blocks;
+    int height_blocks;
+    int help_id;
+    int can_play_sound;
+    int building_id;
+    int has_road_access;
+    int worker_percentage;
+    int has_reservoir_pipes;
+    int aqueduct_has_water;
+    int formation_id;
+    int formation_types;
+    int barracks_soldiers_requested;
+    int worst_desirability_building_id;
+    int warehouse_space_text;
     building_info_type type;
-    terrain_info_type terrainType;
+    terrain_info_type terrain_type;
     int can_go_to_advisor;
-    int rubbleBuildingType;
-    int storageShowSpecialOrders;
+    int rubble_building_type;
+    int storage_show_special_orders;
     struct {
         int soundId;
         int phraseId;
@@ -57,14 +57,14 @@ typedef struct {
         int drawn;
         int figureIds[7];
     } figure;
-} BuildingInfoContext;
+} building_info_context;
 
-void window_building_draw_employment(BuildingInfoContext *c, int y_offset);
+void window_building_draw_employment(building_info_context *c, int y_offset);
 
-void window_building_draw_description(BuildingInfoContext *c, int text_group, int text_id);
+void window_building_draw_description(building_info_context *c, int text_group, int text_id);
 
-void window_building_draw_description_at(BuildingInfoContext *c, int y_offset, int text_group, int text_id);
+void window_building_draw_description_at(building_info_context *c, int y_offset, int text_group, int text_id);
 
-void window_building_play_sound(BuildingInfoContext *c, const char *sound_file);
+void window_building_play_sound(building_info_context *c, const char *sound_file);
 
 #endif // WINDOW_BUILDING_COMMON_H

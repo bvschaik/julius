@@ -9,9 +9,9 @@
 
 #include "Data/CityInfo.h"
 
-void window_building_draw_employment(BuildingInfoContext *c, int y_offset)
+void window_building_draw_employment(building_info_context *c, int y_offset)
 {
-    building *b = building_get(c->buildingId);
+    building *b = building_get(c->building_id);
     int textId;
     if (b->numWorkers >= model_get_building(b->type)->laborers) {
         textId = 0;
@@ -29,41 +29,41 @@ void window_building_draw_employment(BuildingInfoContext *c, int y_offset)
     if (!textId && b->housesCovered < 40) {
         textId = 20; // poor access to employees
     }
-    y_offset += c->yOffset;
+    y_offset += c->y_offset;
     image_draw(image_group(GROUP_CONTEXT_ICONS) + 14,
-        c->xOffset + 40, y_offset + 6);
+        c->x_offset + 40, y_offset + 6);
     if (textId) {
         int width = lang_text_draw_amount(8, 12, b->numWorkers,
-            c->xOffset + 60, y_offset + 10, FONT_SMALL_BLACK);
+            c->x_offset + 60, y_offset + 10, FONT_SMALL_BLACK);
         width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
-            c->xOffset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
-        lang_text_draw(69, 0, c->xOffset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
-        lang_text_draw(69, textId, c->xOffset + 70, y_offset + 26, FONT_SMALL_BLACK);
+            c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
+        lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
+        lang_text_draw(69, textId, c->x_offset + 70, y_offset + 26, FONT_SMALL_BLACK);
     } else {
         int width = lang_text_draw_amount(8, 12, b->numWorkers,
-            c->xOffset + 60, y_offset + 16, FONT_SMALL_BLACK);
+            c->x_offset + 60, y_offset + 16, FONT_SMALL_BLACK);
         width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
-            c->xOffset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
-        lang_text_draw(69, 0, c->xOffset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
+            c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
+        lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
     }
 }
 
-void window_building_draw_description(BuildingInfoContext *c, int text_group, int text_id)
+void window_building_draw_description(building_info_context *c, int text_group, int text_id)
 {
-    lang_text_draw_multiline(text_group, text_id, c->xOffset + 32, c->yOffset + 56,
-        16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + 56,
+        16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
 
-void window_building_draw_description_at(BuildingInfoContext *c, int y_offset, int text_group, int text_id)
+void window_building_draw_description_at(building_info_context *c, int y_offset, int text_group, int text_id)
 {
-    lang_text_draw_multiline(text_group, text_id, c->xOffset + 32, c->yOffset + y_offset,
-        16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + y_offset,
+        16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
 
-void window_building_play_sound(BuildingInfoContext *c, const char *sound_file)
+void window_building_play_sound(building_info_context *c, const char *sound_file)
 {
-    if (c->canPlaySound) {
+    if (c->can_play_sound) {
         sound_speech_play_file(sound_file);
-        c->canPlaySound = 0;
+        c->can_play_sound = 0;
     }
 }

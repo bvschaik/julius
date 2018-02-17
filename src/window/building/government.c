@@ -7,116 +7,116 @@
 #include "graphics/panel.h"
 #include "window/building/figures.h"
 
-void window_building_draw_forum(BuildingInfoContext *c)
+void window_building_draw_forum(building_info_context *c)
 {
-    c->helpId = 76;
+    c->help_id = 76;
     window_building_play_sound(c, "wavs/forum.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(106, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, c->xOffset + 16, c->yOffset + 36);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(106, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, c->x_offset + 16, c->y_offset + 36);
 
-    building *b = building_get(c->buildingId);
-    int width = lang_text_draw(106, 2, c->xOffset + 44, c->yOffset + 43, FONT_NORMAL_BLACK);
-    lang_text_draw_amount(8, 0, b->taxIncomeOrStorage, c->xOffset + 44 + width, c->yOffset + 43, FONT_NORMAL_BLACK);
+    building *b = building_get(c->building_id);
+    int width = lang_text_draw(106, 2, c->x_offset + 44, c->y_offset + 43, FONT_NORMAL_BLACK);
+    lang_text_draw_amount(8, 0, b->taxIncomeOrStorage, c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK);
 
-    if (!c->hasRoadAccess) {
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (b->numWorkers <= 0) {
         window_building_draw_description_at(c, 72, 106, 10);
-    } else if (c->workerPercentage >= 100) {
+    } else if (c->worker_percentage >= 100) {
         window_building_draw_description_at(c, 72, 106, 5);
-    } else if (c->workerPercentage >= 75) {
+    } else if (c->worker_percentage >= 75) {
         window_building_draw_description_at(c, 72, 106, 6);
-    } else if (c->workerPercentage >= 50) {
+    } else if (c->worker_percentage >= 50) {
         window_building_draw_description_at(c, 72, 106, 7);
-    } else if (c->workerPercentage >= 25) {
+    } else if (c->worker_percentage >= 25) {
         window_building_draw_description_at(c, 72, 106, 8);
     } else {
         window_building_draw_description_at(c, 72, 106, 9);
     }
 
-    inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_senate(BuildingInfoContext *c)
+void window_building_draw_senate(building_info_context *c)
 {
     c->can_go_to_advisor = 1;
-    c->helpId = 77;
+    c->help_id = 77;
     window_building_play_sound(c, "wavs/senate.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(105, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, c->xOffset + 16, c->yOffset + 36);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(105, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, c->x_offset + 16, c->y_offset + 36);
 
-    building *b = building_get(c->buildingId);
-    int width = lang_text_draw(105, 2, c->xOffset + 44, c->yOffset + 43, FONT_NORMAL_BLACK);
-    lang_text_draw_amount(8, 0, b->taxIncomeOrStorage, c->xOffset + 44 + width, c->yOffset + 43, FONT_NORMAL_BLACK);
+    building *b = building_get(c->building_id);
+    int width = lang_text_draw(105, 2, c->x_offset + 44, c->y_offset + 43, FONT_NORMAL_BLACK);
+    lang_text_draw_amount(8, 0, b->taxIncomeOrStorage, c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK);
 
-    if (!c->hasRoadAccess) {
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (b->numWorkers <= 0) {
         window_building_draw_description_at(c, 72, 106, 10);
-    } else if (c->workerPercentage >= 100) {
+    } else if (c->worker_percentage >= 100) {
         window_building_draw_description_at(c, 72, 106, 5);
-    } else if (c->workerPercentage >= 75) {
+    } else if (c->worker_percentage >= 75) {
         window_building_draw_description_at(c, 72, 106, 6);
-    } else if (c->workerPercentage >= 50) {
+    } else if (c->worker_percentage >= 50) {
         window_building_draw_description_at(c, 72, 106, 7);
-    } else if (c->workerPercentage >= 25) {
+    } else if (c->worker_percentage >= 25) {
         window_building_draw_description_at(c, 72, 106, 8);
     } else {
         window_building_draw_description_at(c, 72, 106, 9);
     }
 
-    inner_panel_draw(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 
-    lang_text_draw(105, 3, c->xOffset + 60, c->yOffset + 220, FONT_NORMAL_BLACK);
+    lang_text_draw(105, 3, c->x_offset + 60, c->y_offset + 220, FONT_NORMAL_BLACK);
 }
 
-void window_building_draw_governor_home(BuildingInfoContext *c)
+void window_building_draw_governor_home(building_info_context *c)
 {
-    c->helpId = 78;
+    c->help_id = 78;
     window_building_play_sound(c, "wavs/gov_palace.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(103, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->heightBlocks - 143, 103, 1);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(103, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 143, 103, 1);
 }
 
-void window_building_draw_garden(BuildingInfoContext *c)
+void window_building_draw_garden(building_info_context *c)
 {
-    c->helpId = 80;
+    c->help_id = 80;
     window_building_play_sound(c, "wavs/park.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(79, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->heightBlocks - 158, 79, 1);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(79, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 79, 1);
 }
 
-void window_building_draw_plaza(BuildingInfoContext *c)
+void window_building_draw_plaza(building_info_context *c)
 {
-    c->helpId = 80;
+    c->help_id = 80;
     window_building_play_sound(c, "wavs/plaza.wav");
     window_building_prepare_figure_list(c);
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(137, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(137, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_figure_list(c);
-    window_building_draw_description_at(c, 16 * c->heightBlocks - 113, 137, 1);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 113, 137, 1);
 }
 
-void window_building_draw_statue(BuildingInfoContext *c)
+void window_building_draw_statue(building_info_context *c)
 {
-    c->helpId = 79;
+    c->help_id = 79;
     window_building_play_sound(c, "wavs/statue.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(80, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->heightBlocks - 158, 80, 1);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(80, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 80, 1);
 }
 
-void window_building_draw_triumphal_arch(BuildingInfoContext *c)
+void window_building_draw_triumphal_arch(building_info_context *c)
 {
-    c->helpId = 79;
+    c->help_id = 79;
     window_building_play_sound(c, "wavs/statue.wav");
-    outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    lang_text_draw_centered(80, 2, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->heightBlocks - 158, 80, 3);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(80, 2, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 80, 3);
 }

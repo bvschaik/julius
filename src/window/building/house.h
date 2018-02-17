@@ -3,6 +3,6 @@
 
 #include "common.h"
 
-void window_building_draw_house(BuildingInfoContext *c);
+void window_building_draw_house(building_info_context *c);
 
 #endif // WINDOW_BUILDING_HOUSE_H
