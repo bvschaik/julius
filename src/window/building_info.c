@@ -26,6 +26,7 @@
 #include "window/message_dialog.h"
 #include "window/building/common.h"
 #include "window/building/culture.h"
+#include "window/building/distribution.h"
 #include "window/building/government.h"
 #include "window/building/house.h"
 #include "window/building/industry.h"
@@ -370,18 +371,18 @@ static void draw_background()
         } else if (btype == BUILDING_POTTERY_WORKSHOP) {
             window_building_draw_pottery_workshop(&context);
         } else if (btype == BUILDING_MARKET) {
-            UI_BuildingInfo_drawMarket(&context);
+            window_building_draw_market(&context);
         } else if (btype == BUILDING_GRANARY) {
             if (context.storageShowSpecialOrders) {
-                UI_BuildingInfo_drawGranaryOrders(&context);
+                window_building_draw_granary_orders(&context);
             } else {
-                UI_BuildingInfo_drawGranary(&context);
+                window_building_draw_granary(&context);
             }
         } else if (btype == BUILDING_WAREHOUSE) {
             if (context.storageShowSpecialOrders) {
-                UI_BuildingInfo_drawWarehouseOrders(&context);
+                window_building_draw_warehouse_orders(&context);
             } else {
-                UI_BuildingInfo_drawWarehouse(&context);
+                window_building_draw_warehouse(&context);
             }
         } else if (btype == BUILDING_AMPHITHEATER) {
             window_building_draw_amphitheater(&context);
@@ -436,7 +437,7 @@ static void draw_background()
         } else if (btype == BUILDING_SHIPYARD) {
             window_building_draw_shipyard(&context);
         } else if (btype == BUILDING_DOCK) {
-            UI_BuildingInfo_drawDock(&context);
+            window_building_draw_dock(&context);
         } else if (btype == BUILDING_WHARF) {
             window_building_draw_wharf(&context);
         } else if (btype == BUILDING_RESERVOIR) {
@@ -484,15 +485,15 @@ static void draw_foreground()
         int btype = building_get(context.buildingId)->type;
         if (btype == BUILDING_GRANARY) {
             if (context.storageShowSpecialOrders) {
-                UI_BuildingInfo_drawGranaryOrdersForeground(&context);
+                window_building_draw_granary_orders_foreground(&context);
             } else {
-                UI_BuildingInfo_drawGranaryForeground(&context);
+                window_building_draw_granary_foreground(&context);
             }
         } else if (btype == BUILDING_WAREHOUSE) {
             if (context.storageShowSpecialOrders) {
-                UI_BuildingInfo_drawWarehouseOrdersForeground(&context);
+                window_building_draw_warehouse_orders_foreground(&context);
             } else {
-                UI_BuildingInfo_drawWarehouseForeground(&context);
+                window_building_draw_warehouse_foreground(&context);
             }
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
@@ -500,17 +501,12 @@ static void draw_foreground()
     }
     // general buttons
     if (context.storageShowSpecialOrders) {
-        image_buttons_draw(context.xOffset, 432,
-                           image_buttons_help_close, 2);
+        image_buttons_draw(context.xOffset, 432, image_buttons_help_close, 2);
     } else {
-        image_buttons_draw(
-            context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
-            image_buttons_help_close, 2);
+        image_buttons_draw(context.xOffset, context.yOffset + 16 * context.heightBlocks - 40, image_buttons_help_close, 2);
     }
     if (context.can_go_to_advisor) {
-        image_buttons_draw(
-            context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
-            image_buttons_advisor, 1);
+        image_buttons_draw(context.xOffset, context.yOffset + 16 * context.heightBlocks - 40, image_buttons_advisor, 1);
     }
 }
 
@@ -522,8 +518,7 @@ static void handle_mouse(const mouse *m)
     }
     // general buttons
     if (context.storageShowSpecialOrders) {
-        image_buttons_handle_mouse(m, context.xOffset, 432,
-                                   image_buttons_help_close, 2, &focus_image_button_id);
+        image_buttons_handle_mouse(m, context.xOffset, 432, image_buttons_help_close, 2, &focus_image_button_id);
     } else {
         image_buttons_handle_mouse(
             m, context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
@@ -546,15 +541,15 @@ static void handle_mouse(const mouse *m)
         int btype = building_get(context.buildingId)->type;
         if (btype == BUILDING_GRANARY) {
             if (context.storageShowSpecialOrders) {
-                UI_BuildingInfo_handleMouseGranaryOrders(m, &context);
+                window_building_handle_mouse_granary_orders(m, &context);
             } else {
-                UI_BuildingInfo_handleMouseGranary(m, &context);
+                window_building_handle_mouse_granary(m, &context);
             }
         } else if (btype == BUILDING_WAREHOUSE) {
             if (context.storageShowSpecialOrders) {
-                UI_BuildingInfo_handleMouseWarehouseOrders(m, &context);
+                window_building_handle_mouse_warehouse_orders(m, &context);
             } else {
-                UI_BuildingInfo_handleMouseWarehouse(m, &context);
+                window_building_handle_mouse_warehouse(m, &context);
             }
         }
     }

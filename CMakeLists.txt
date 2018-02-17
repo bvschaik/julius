@@ -243,6 +243,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/building_info.c
     ${PROJECT_SOURCE_DIR}/src/window/building/common.c
     ${PROJECT_SOURCE_DIR}/src/window/building/culture.c
+    ${PROJECT_SOURCE_DIR}/src/window/building/distribution.c
     ${PROJECT_SOURCE_DIR}/src/window/building/government.c
     ${PROJECT_SOURCE_DIR}/src/window/building/house.c
     ${PROJECT_SOURCE_DIR}/src/window/building/industry.c
@@ -280,8 +281,6 @@ set(WINDOW_FILES
 add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
-	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Distribution.c
-	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Engineering.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Figures.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Military.c
 	${PROJECT_SOURCE_DIR}/src/UI/BuildingInfo_Terrain.c
