@@ -9,17 +9,17 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "map/road_access.h"
+#include "window/building/figures.h"
 
 #include "Data/CityInfo.h"
-#include "UI/BuildingInfo.h"
 
 static void draw_vacant_lot(BuildingInfoContext *c)
 {
-    UI_BuildingInfo_drawFigureImagesLocal(c);
+    window_building_prepare_figure_list(c);
     outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     lang_text_draw_centered(128, 0, c->xOffset, c->yOffset + 8, 16 * c->widthBlocks, FONT_LARGE_BLACK);
     lang_text_draw_centered(13, 1, c->xOffset, c->yOffset + 16 * c->heightBlocks - 22, 16 * c->widthBlocks, FONT_NORMAL_BLACK);
-    UI_BuildingInfo_drawFigureList(c);
+    window_building_draw_figure_list(c);
 
     int text_id = 2;
     building *b = building_get(c->buildingId);

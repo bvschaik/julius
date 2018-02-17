@@ -27,14 +27,16 @@
 #include "window/building/common.h"
 #include "window/building/culture.h"
 #include "window/building/distribution.h"
+#include "window/building/figures.h"
 #include "window/building/government.h"
 #include "window/building/house.h"
 #include "window/building/industry.h"
+#include "window/building/military.h"
+#include "window/building/terrain.h"
 #include "window/building/utility.h"
 
 #include "Data/CityInfo.h"
 #include "Data/CityView.h"
-#include "UI/BuildingInfo.h"
 
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
@@ -333,9 +335,9 @@ static void draw_background()
     window_city_draw_panels();
     window_city_draw();
     if (context.type == BUILDING_INFO_NONE) {
-        UI_BuildingInfo_drawNoPeople(&context);
+        window_building_draw_no_people(&context);
     } else if (context.type == BUILDING_INFO_TERRAIN) {
-        UI_BuildingInfo_drawTerrain(&context);
+        window_building_draw_terrain(&context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.buildingId)->type;
         if (building_is_house(btype)) {
@@ -453,15 +455,15 @@ static void draw_background()
         } else if (btype == BUILDING_PREFECTURE) {
             window_building_draw_prefect(&context);
         } else if (btype == BUILDING_GATEHOUSE) {
-            UI_BuildingInfo_drawGatehouse(&context);
+            window_building_draw_gatehouse(&context);
         } else if (btype == BUILDING_TOWER) {
-            UI_BuildingInfo_drawTower(&context);
+            window_building_draw_tower(&context);
         } else if (btype == BUILDING_MILITARY_ACADEMY) {
-            UI_BuildingInfo_drawMilitaryAcademy(&context);
+            window_building_draw_military_academy(&context);
         } else if (btype == BUILDING_BARRACKS) {
-            UI_BuildingInfo_drawBarracks(&context);
+            window_building_draw_barracks(&context);
         } else if (btype == BUILDING_FORT) {
-            UI_BuildingInfo_drawFort(&context);
+            window_building_draw_fort(&context);
         } else if (btype == BUILDING_BURNING_RUIN) {
             window_building_draw_burning_ruin(&context);
         } else if (btype == BUILDING_NATIVE_HUT) {
@@ -474,7 +476,7 @@ static void draw_background()
             window_building_draw_mission_post(&context);
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
-        UI_BuildingInfo_drawLegionInfo(&context);
+        window_building_draw_legion_info(&context);
     }
 }
 
@@ -497,7 +499,7 @@ static void draw_foreground()
             }
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
-        UI_BuildingInfo_drawLegionInfoForeground(&context);
+        window_building_draw_legion_info_foreground(&context);
     }
     // general buttons
     if (context.storageShowSpecialOrders) {
@@ -534,9 +536,9 @@ static void handle_mouse(const mouse *m)
         return;
     }
     if (context.type == BUILDING_INFO_LEGION) {
-        UI_BuildingInfo_handleMouseLegionInfo(m, &context);
+        window_building_handle_mouse_legion_info(m, &context);
     } else if (context.figure.drawn) {
-        UI_BuildingInfo_handleMouseFigureList(m, &context);
+        window_building_handle_mouse_figure_list(m, &context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.buildingId)->type;
         if (btype == BUILDING_GRANARY) {
@@ -557,15 +559,15 @@ static void handle_mouse(const mouse *m)
 
 static void get_tooltip(tooltip_context *c)
 {
-    int textId = 0;
+    int text_id = 0;
     if (focus_image_button_id) {
-        textId = focus_image_button_id;
+        text_id = focus_image_button_id;
     } else if (context.type == BUILDING_INFO_LEGION) {
-        textId = UI_BuildingInfo_getTooltipLegionInfo(&context);
+        text_id = window_building_get_legion_info_tooltip_text(&context);
     }
-    if (textId) {
+    if (text_id) {
         c->type = TOOLTIP_BUTTON;
-        c->text_id = textId;
+        c->text_id = text_id;
     }
 }
 

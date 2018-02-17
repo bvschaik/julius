@@ -5,8 +5,7 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
-
-#include "UI/BuildingInfo.h"
+#include "window/building/figures.h"
 
 void window_building_draw_forum(BuildingInfoContext *c)
 {
@@ -97,10 +96,10 @@ void window_building_draw_plaza(BuildingInfoContext *c)
 {
     c->helpId = 80;
     window_building_play_sound(c, "wavs/plaza.wav");
-    UI_BuildingInfo_drawFigureImagesLocal(c);
+    window_building_prepare_figure_list(c);
     outer_panel_draw(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     lang_text_draw_centered(137, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    UI_BuildingInfo_drawFigureList(c);
+    window_building_draw_figure_list(c);
     window_building_draw_description_at(c, 16 * c->heightBlocks - 113, 137, 1);
 }
 
