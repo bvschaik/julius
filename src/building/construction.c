@@ -651,6 +651,7 @@ void building_construction_place()
     } else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
         struct reservoir_info info;
         if (!place_reservoir_and_aqueducts(0, x_start, y_start, x_end, y_end, &info)) {
+            map_property_clear_constructing_and_deleted();
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return;
         }
