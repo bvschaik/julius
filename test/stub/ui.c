@@ -44,6 +44,3 @@ void window_popup_dialog_show(popup_dialog_type type, void (*okFunc)(int), int h
 
 void UI_Sidebar_requestMinimapRefresh()
 {}
-
-void UI_TopMenu_initFromSettings()
-{}

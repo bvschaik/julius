@@ -9,17 +9,17 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/criteria.h"
+#include "widget/top_menu.h"
 
 #include "UI/CityBuildings.h"
 #include "UI/Sidebar.h"
-#include "UI/TopMenu.h"
 
 #include "Data/CityView.h"
 
 static void draw_background()
 {
     UI_Sidebar_drawBackground();
-    UI_TopMenu_drawBackground();
+    widget_top_menu_draw(1);
 }
 
 static void draw_paused_and_time_left()
@@ -56,7 +56,7 @@ static void draw_paused_and_time_left()
 
 static void draw_foreground()
 {
-    UI_TopMenu_drawBackgroundIfNecessary();
+    widget_top_menu_draw(0);
     window_city_draw();
     UI_Sidebar_drawForeground();
     draw_paused_and_time_left();
@@ -68,7 +68,7 @@ static void draw_foreground()
 
 static void draw_foreground_military()
 {
-    UI_TopMenu_drawBackgroundIfNecessary();
+    widget_top_menu_draw(0);
     window_city_draw();
     UI_Sidebar_drawMinimap(0);
     draw_paused_and_time_left();
@@ -76,7 +76,7 @@ static void draw_foreground_military()
 
 static void handle_mouse(const mouse *m)
 {
-    if (UI_TopMenu_handleMouseWidget(m)) {
+    if (widget_top_menu_handle_mouse(m)) {
         return;
     }
     if (UI_Sidebar_handleMouse(m)) {
@@ -92,7 +92,7 @@ static void handle_mouse_military(const mouse *m)
 
 static void get_tooltip(tooltip_context *c)
 {
-    int text_id = UI_TopMenu_getTooltipText(c);
+    int text_id = widget_top_menu_get_tooltip_text(c);
     if (!text_id) {
         text_id = UI_Sidebar_getTooltipText();
     }

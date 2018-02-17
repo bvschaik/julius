@@ -23,8 +23,6 @@
 #include "sound/system.h"
 #include "window/logo.h"
 
-#include "UI/TopMenu.h"
-
 static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
     0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
 };
@@ -41,7 +39,6 @@ int game_pre_init()
     settings_load();
     scenario_settings_init();
     game_state_unpause();
-    UI_TopMenu_initFromSettings(); // TODO eliminate need for this
 
     if (!lang_load("c3.eng", "c3_mm.eng")) {
         errlog("ERR: 'c3.eng' or 'c3_mm.eng' files not found or too large.");

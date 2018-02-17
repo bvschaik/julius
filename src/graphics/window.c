@@ -5,7 +5,6 @@
 #include "window/city.h"
 
 #include "UI/Sidebar.h"
-#include "UI/TopMenu.h"
 
 static void noop()
 {
@@ -16,7 +15,7 @@ static window_type windows[] = {
     { Window_MainMenu },
     { Window_City },
     { Window_PopupDialog },
-    { Window_TopMenu, window_city_draw_panels, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse, noop },
+    { Window_TopMenu },
     { Window_DifficultyOptions },
     { Window_Advisors },
     { Window_SetSalaryDialog },

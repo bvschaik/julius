@@ -225,6 +225,9 @@ set(SOUND_FILES
     ${PROJECT_SOURCE_DIR}/src/sound/speech.c
     ${PROJECT_SOURCE_DIR}/src/sound/system.c
 )
+set(WIDGET_FILES
+    ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
+)
 set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisors.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/chief.c
@@ -291,7 +294,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Scroll.c
 	${PROJECT_SOURCE_DIR}/src/UI/Minimap.c
 	${PROJECT_SOURCE_DIR}/src/UI/Sidebar.c
-	${PROJECT_SOURCE_DIR}/src/UI/TopMenu.c
 	${CORE_FILES}
 	${BUILDING_FILES}
 	${CITY_FILES}
@@ -304,6 +306,7 @@ add_executable(julius
 	${SCENARIO_FILES}
 	${GRAPHICS_FILES}
 	${SOUND_FILES}
+	${WIDGET_FILES}
 	${WINDOW_FILES}
 	${SMK_FILES}
 )
