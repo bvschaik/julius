@@ -323,7 +323,7 @@ if(MSVC)
     include_directories(ext/dirent)
 endif()
 
-target_link_libraries (julius ${SDL2_LIBRARY} ${SDL2MAIN_LIBRARY} ${SDL2_MIXER_LIBRARY})
+target_link_libraries (julius ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
 
 install(TARGETS julius RUNTIME DESTINATION bin)
 
