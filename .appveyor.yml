@@ -4,36 +4,49 @@ environment:
   SDL2_MIXER_VERSION: 2.0.2
   MINGW_PATH: C:\MinGW
   SDLDIR: C:\MinGW
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      COMPILER: mingw
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      COMPILER: msvc
 
 platform:
   - x86
 
 install:
-  - echo %APPVEYOR_BUILD_FOLDER%
   - dir %APPVEYOR_BUILD_FOLDER%
-  - IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2-devel-%SDL2_VERSION%-mingw.tar.gz appveyor DownloadFile http://libsdl.org/release/SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
-  - 7z x SDL2-devel-%SDL2_VERSION%-mingw.tar.gz -so | 7z x -si -ttar -oC:\
-  - echo y | xcopy C:\SDL2-%SDL2_VERSION%\i686-w64-mingw32\* %MINGW_PATH%\ /S
-  - IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz appveyor DownloadFile https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz
-  - 7z x SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz -so | 7z x -si -ttar -oC:\
-  - echo y | xcopy C:\SDL2_mixer-%SDL2_MIXER_VERSION%\i686-w64-mingw32\* %MINGW_PATH%\ /S
+  - IF NOT EXIST SDL2-devel-%SDL2_VERSION%-mingw.tar.gz appveyor DownloadFile http://libsdl.org/release/SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
+  - IF NOT EXIST SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz appveyor DownloadFile https://libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz
+  - IF NOT EXIST SDL2-devel-%SDL2_VERSION%-VC.zip appveyor DownloadFile http://libsdl.org/release/SDL2-devel-%SDL2_VERSION%-VC.zip
+  - IF NOT EXIST SDL2_mixer-devel-%SDL2_MIXER_VERSION%-VC.zip appveyor DownloadFile https://libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-%SDL2_MIXER_VERSION%-VC.zip
+  - if [%COMPILER%] == [mingw] 7z x SDL2-devel-%SDL2_VERSION%-mingw.tar.gz -so | 7z x -si -ttar -oC:\
+  - if [%COMPILER%] == [mingw] echo y | xcopy C:\SDL2-%SDL2_VERSION%\i686-w64-mingw32\* %MINGW_PATH%\ /S
+  - if [%COMPILER%] == [mingw] 7z x SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz -so | 7z x -si -ttar -oC:\
+  - if [%COMPILER%] == [mingw] echo y | xcopy C:\SDL2_mixer-%SDL2_MIXER_VERSION%\i686-w64-mingw32\* %MINGW_PATH%\ /S
+  - if [%COMPILER%] == [msvc] md C:\sdl-msvc
+  - if [%COMPILER%] == [msvc] 7z x SDL2-devel-%SDL2_VERSION%-VC.zip -oC:\sdl-msvc
+  - if [%COMPILER%] == [msvc] 7z x SDL2_mixer-devel-%SDL2_MIXER_VERSION%-VC.zip -oC:\sdl-msvc
 
 before_build:
-  - set Path=%MINGW_PATH%\bin;%Path%
+  - if [%COMPILER%] == [mingw] set Path=%MINGW_PATH%\bin;%Path%
   - md build
   - cd build
-  - cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -D CMAKE_C_COMPILER=mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
+  - if [%COMPILER%] == [mingw] cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -D CMAKE_C_COMPILER=mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
+  - if [%COMPILER%] == [msvc] cmake -G "Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -DCMAKE_PREFIX_PATH=C:/sdl-msvc/SDL2-%SDL2_VERSION%;C:/sdl-msvc/SDL2_mixer-%SDL2_MIXER_VERSION% ..
 
 build_script:
-  - mingw32-make
+  - cmake --build .
 
 after_build:
-  - mingw32-make test
+  - ctest -C debug
+  - if [%COMPILER%] == [msvc] cp debug/julius.exe .
   - dir
 
 cache:
   - SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
   - SDL2_mixer-devel-%SDL2_MIXER_VERSION%-mingw.tar.gz
+  - SDL2-devel-%SDL2_VERSION%-VC.zip
+  - SDL2_mixer-devel-%SDL2_MIXER_VERSION%-VC.zip
 
 artifacts:
   - path: build\julius.exe
