@@ -81,83 +81,41 @@ static int can_produce_resource(int resource)
     return 0;
 }
 
-int empire_can_produce_resource(int resource)
+static int get_raw_resource(int resource)
 {
-    // finished goods: check imports of raw materials
     switch (resource) {
         case RESOURCE_POTTERY:
-            resource = RESOURCE_CLAY;
-            if (empire_can_import_resource(resource)) {
-                return 1;
-            }
-            break;
+            return RESOURCE_CLAY;
         case RESOURCE_FURNITURE:
-            resource = RESOURCE_TIMBER;
-            if (empire_can_import_resource(resource)) {
-                return 1;
-            }
-            break;
+            return RESOURCE_TIMBER;
         case RESOURCE_OIL:
-            resource = RESOURCE_OLIVES;
-            if (empire_can_import_resource(resource)) {
-                return 1;
-            }
-            break;
+            return RESOURCE_OLIVES;
         case RESOURCE_WINE:
-            resource = RESOURCE_VINES;
-            if (empire_can_import_resource(resource)) {
-                return 1;
-            }
-            break;
+            return RESOURCE_VINES;
         case RESOURCE_WEAPONS:
-            resource = RESOURCE_IRON;
-            if (empire_can_import_resource(resource)) {
-                return 1;
-            }
-            break;
+            return RESOURCE_IRON;
         default:
-            return 0;
+            return resource;
+    }
+}
+
+int empire_can_produce_resource(int resource)
+{
+    int raw_resource = get_raw_resource(resource);
+    // finished goods: check imports of raw materials
+    if (raw_resource != resource && empire_can_import_resource(raw_resource)) {
+        return 1;
     }
     // check if we can produce the raw materials
-    return can_produce_resource(resource);
+    return can_produce_resource(raw_resource);
 }
 
 int empire_can_produce_resource_potentially(int resource)
 {
+    int raw_resource = get_raw_resource(resource);
     // finished goods: check imports of raw materials
-    switch (resource) {
-        case RESOURCE_POTTERY:
-            resource = RESOURCE_CLAY;
-            if (empire_can_import_resource_potentially(resource)) {
-                return 1;
-            }
-            break;
-        case RESOURCE_FURNITURE:
-            resource = RESOURCE_TIMBER;
-            if (empire_can_import_resource_potentially(resource)) {
-                return 1;
-            }
-            break;
-        case RESOURCE_OIL:
-            resource = RESOURCE_OLIVES;
-            if (empire_can_import_resource_potentially(resource)) {
-                return 1;
-            }
-            break;
-        case RESOURCE_WINE:
-            resource = RESOURCE_VINES;
-            if (empire_can_import_resource_potentially(resource)) {
-                return 1;
-            }
-            break;
-        case RESOURCE_WEAPONS:
-            resource = RESOURCE_IRON;
-            if (empire_can_import_resource_potentially(resource)) {
-                return 1;
-            }
-            break;
-        default:
-            return 0;
+    if (raw_resource != resource && empire_can_import_resource_potentially(raw_resource)) {
+        return 1;
     }
     // check if we can produce the raw materials
     return can_produce_resource(resource);
