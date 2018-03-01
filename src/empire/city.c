@@ -118,7 +118,7 @@ int empire_can_produce_resource_potentially(int resource)
         return 1;
     }
     // check if we can produce the raw materials
-    return can_produce_resource(resource);
+    return can_produce_resource(raw_resource);
 }
 
 int empire_city_get_for_object(int empire_object_id)
