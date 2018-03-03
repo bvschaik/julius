@@ -4,74 +4,95 @@
 #include "input/cursor.h"
 #include "window/city.h"
 
+#define MAX_QUEUE 3
+
+static window_type window_queue[MAX_QUEUE];
+static int queue_index = 0;
+static window_type *current_window = 0;
+static int refresh_requested;
+
 static void noop()
 {
 }
 
-static window_type previous_window;
-static window_type current_window;
-static int refreshRequested;
+static void increase_queue_index()
+{
+    queue_index++;
+    if (queue_index >= MAX_QUEUE) {
+        queue_index = 0;
+    }
+}
+
+static void decrease_queue_index()
+{
+    queue_index--;
+    if (queue_index < 0) {
+        queue_index = MAX_QUEUE - 1;
+    }
+}
 
 void window_invalidate()
 {
-    refreshRequested = 1;
+    refresh_requested = 1;
 }
 
 int window_is(window_id id)
 {
-    return current_window.id == id;
+    return current_window->id == id;
 }
 
 window_id window_get_id()
 {
-    return current_window.id;
+    return current_window->id;
 }
 
 void window_show(const window_type *window)
 {
-    previous_window = current_window;
-    current_window = *window;
-    if (!current_window.draw_background) {
-        current_window.draw_background = noop;
+    increase_queue_index();
+    window_queue[queue_index] = *window;
+    current_window = &window_queue[queue_index];
+    if (!current_window->draw_background) {
+        current_window->draw_background = noop;
     }
-    if (!current_window.draw_foreground) {
-        current_window.draw_foreground = noop;
+    if (!current_window->draw_foreground) {
+        current_window->draw_foreground = noop;
     }
-    if (!current_window.handle_mouse) {
-        current_window.handle_mouse = noop;
+    if (!current_window->handle_mouse) {
+        current_window->handle_mouse = noop;
     }
     window_invalidate();
 }
 
 void UI_Window_goBack()
 {
-    current_window = previous_window;
+    decrease_queue_index();
+    current_window = &window_queue[queue_index];
     window_invalidate();
 }
 
-static void updateMouseBefore()
+static void update_mouse_before()
 {
     mouse_determine_button_state();
 }
 
-static void updateMouseAfter()
+static void update_mouse_after()
 {
     mouse_set_scroll(SCROLL_NONE);
-    input_cursor_update(current_window.id);
+    input_cursor_update(current_window->id);
 }
 
 void window_draw(int force)
 {
-    updateMouseBefore();
-    if (force || refreshRequested) {
-        current_window.draw_background();
-        refreshRequested = 0;
+    update_mouse_before();
+    if (force || refresh_requested) {
+        current_window->draw_background();
+        refresh_requested = 0;
     }
-    current_window.draw_foreground();
+    current_window->draw_foreground();
 
     const mouse *m = mouse_get();
-    current_window.handle_mouse(m);
-    tooltip_handle(m, current_window.get_tooltip);
+    current_window->handle_mouse(m);
+    tooltip_handle(m, current_window->get_tooltip);
     warning_draw();
-    updateMouseAfter();
+    update_mouse_after();
 }
