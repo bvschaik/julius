@@ -109,15 +109,15 @@ static int draw_background()
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
         lang_text_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id, 50 + width, 102, FONT_NORMAL_WHITE);
-        int strengthTextId;
+        int strength_text_id;
         if (Data_CityInfo.distantBattleEnemyStrength < 46) {
-            strengthTextId = 73;
+            strength_text_id = 73;
         } else if (Data_CityInfo.distantBattleEnemyStrength < 89) {
-            strengthTextId = 74;
+            strength_text_id = 74;
         } else {
-            strengthTextId = 75;
+            strength_text_id = 75;
         }
-        width = lang_text_draw(52, strengthTextId, 80, 120, FONT_NORMAL_WHITE);
+        width = lang_text_draw(52, strength_text_id, 80, 120, FONT_NORMAL_WHITE);
         lang_text_draw_amount(8, 4, Data_CityInfo.distantBattleMonthsToBattle, 80 + width, 120, FONT_NORMAL_WHITE);
         num_requests = 1;
     }

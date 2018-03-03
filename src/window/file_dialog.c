@@ -137,11 +137,11 @@ static int handle_scrollbar(const mouse *m)
         return 0;
     }
     if (m_dialog->x >= 464 && m_dialog->x <= 496 && m_dialog->y >= 145 && m_dialog->y <= 300) {
-        int yOffset = m_dialog->y - 145;
-        if (yOffset > 130) {
-            yOffset = 130;
+        int y_offset = m_dialog->y - 145;
+        if (y_offset > 130) {
+            y_offset = 130;
         }
-        int pct = calc_percentage(yOffset, 130);
+        int pct = calc_percentage(y_offset, 130);
         data.scroll_position = calc_adjust_with_percentage(data.saved_games->num_files - 12, pct);
         return 1;
     }

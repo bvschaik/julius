@@ -22,14 +22,14 @@ static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_hold_festival(int param1, int param2);
 
-static image_button imageButtonsBottom[] = {
+static image_button image_buttons_bottom[] = {
     {58, 316, 27, 27, IB_NORMAL, 134, 0, button_help, button_none, 0, 0, 1},
     {558, 319, 24, 24, IB_NORMAL, 134, 4, button_close, button_none, 0, 0, 1},
     {358, 317, 34, 34, IB_NORMAL, 96, 0, button_hold_festival, button_none, 1, 0, 1},
     {400, 317, 34, 34, IB_NORMAL, 96, 4, button_close, button_none, 0, 0, 1},
 };
 
-static generic_button buttonsGodsSize[] = {
+static generic_button buttons_gods_size[] = {
     {70, 96, 150, 186, GB_IMMEDIATE, button_god, button_none, 0, 0},
     {170, 96, 250, 186, GB_IMMEDIATE, button_god, button_none, 1, 0},
     {270, 96, 350, 186, GB_IMMEDIATE, button_god, button_none, 2, 0},
@@ -101,7 +101,7 @@ static void draw_foreground()
 {
     graphics_in_dialog();
     draw_buttons();
-    image_buttons_draw(0, 0, imageButtonsBottom, 4);
+    image_buttons_draw(0, 0, image_buttons_bottom, 4);
     graphics_reset_dialog();
 }
 
@@ -113,8 +113,8 @@ static void handle_mouse(const mouse *m)
     }
 
     const mouse *m_dialog = mouse_in_dialog(m);
-    image_buttons_handle_mouse(m_dialog, 0, 0, imageButtonsBottom, 4, &focus_image_button_id);
-    generic_buttons_handle_mouse(m_dialog, 0, 0, buttonsGodsSize, 8, &focus_button_id);
+    image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 4, &focus_image_button_id);
+    generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_gods_size, 8, &focus_button_id);
     if (focus_image_button_id) {
         focus_button_id = 0;
     }

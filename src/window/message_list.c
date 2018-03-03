@@ -103,28 +103,27 @@ static void draw_messages(int total_messages)
     int index = city_message_scroll_position();
     for (int i = 0; i < max; i++, index++) {
         const city_message *msg = city_message_get(index);
-        int messageId = city_message_get_text_id(msg->message_type);
-        int graphicOffset = 0;
-        if (lang_get_message(messageId)->message_type == MESSAGE_TYPE_DISASTER) {
-            graphicOffset = 2;
+        int message_id = city_message_get_text_id(msg->message_type);
+        int image_offset = 0;
+        if (lang_get_message(message_id)->message_type == MESSAGE_TYPE_DISASTER) {
+            image_offset = 2;
         }
         if (msg->is_read) {
-            image_draw(image_group(GROUP_MESSAGE_ICON) + 15 + graphicOffset,
+            image_draw(image_group(GROUP_MESSAGE_ICON) + 15 + image_offset,
                 data.x_text + 12, data.y_text + 6 + 20 * i);
         } else {
-            image_draw(image_group(GROUP_MESSAGE_ICON) + 14 + graphicOffset,
+            image_draw(image_group(GROUP_MESSAGE_ICON) + 14 + image_offset,
                 data.x_text + 12, data.y_text + 6 + 20 * i);
         }
         font_t font = FONT_NORMAL_WHITE;
         if (data.focus_button_id == i + 1) {
             font = FONT_NORMAL_RED;
         }
-        int width = lang_text_draw(25, msg->month,
-            data.x_text + 42, data.y_text + 8 + 20 * i, font);
+        int width = lang_text_draw(25, msg->month, data.x_text + 42, data.y_text + 8 + 20 * i, font);
         lang_text_draw_year(msg->year,
             data.x_text + 42 + width, data.y_text + 8 + 20 * i, font);
         text_draw(
-            lang_get_message(messageId)->title.text,
+            lang_get_message(message_id)->title.text,
             data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
     }
     if (city_message_can_scroll()) {
@@ -134,13 +133,13 @@ static void draw_messages(int total_messages)
         image_buttons_draw(
             data.x_text + 16 * data.text_width_blocks, data.y_text + 16 * data.text_height_blocks - 26,
             &image_button_scroll_down, 1);
-        int pctScrolled = city_message_scroll_percentage();
-        int dotOffset = calc_adjust_with_percentage(16 * data.text_height_blocks - 77, pctScrolled);
+        int pct_scrolled = city_message_scroll_percentage();
+        int dot_offset = calc_adjust_with_percentage(16 * data.text_height_blocks - 77, pct_scrolled);
         if (data.is_dragging_scrollbar) {
-            dotOffset = data.scroll_position_drag;
+            dot_offset = data.scroll_position_drag;
         }
         image_draw(image_group(GROUP_PANEL_BUTTON) + 39,
-            data.x_text + 9 + 16 * data.text_width_blocks, data.y_text + 26 + dotOffset);
+            data.x_text + 9 + 16 * data.text_width_blocks, data.y_text + 26 + dot_offset);
     }
 }
 
@@ -165,14 +164,14 @@ static void handle_mouse_scrollbar(const mouse *m)
     }
     int scrollbar_x = data.x_text + 16 * data.text_width_blocks + 1;
     int scrollbar_y = data.y_text + 26;
-    int scrollbarHeight = 16 * data.text_height_blocks - 52;
+    int scrollbar_height = 16 * data.text_height_blocks - 52;
     if (m->x >= scrollbar_x && m->x <= scrollbar_x + 40 &&
-        m->y >= scrollbar_y && m->y <= scrollbar_y + scrollbarHeight) {
+        m->y >= scrollbar_y && m->y <= scrollbar_y + scrollbar_height) {
         int dot_offset = m->y - data.y_text - 11;
-        if (dot_offset > scrollbarHeight) {
-            dot_offset = scrollbarHeight;
+        if (dot_offset > scrollbar_height) {
+            dot_offset = scrollbar_height;
         }
-        int pct_scrolled = calc_percentage(dot_offset, scrollbarHeight);
+        int pct_scrolled = calc_percentage(dot_offset, scrollbar_height);
         city_message_set_scroll_percentage(pct_scrolled);
         data.is_dragging_scrollbar = 1;
         data.scroll_position_drag = dot_offset - 25;

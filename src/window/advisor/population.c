@@ -124,14 +124,14 @@ static void draw_history_graph(int full_size, int x, int y)
         text_draw_number_centered(y_max / 2, x - 66, y + 96, 60, FONT_SMALL_PLAIN);
         text_draw_number_centered(0, x - 66, y + 196, 60, FONT_SMALL_PLAIN);
         // x axis
-        int startMonth, startYear, endMonth, endYear;
-        get_min_max_month_year(max_months, &startMonth, &startYear, &endMonth, &endYear);
+        int start_month, start_year, end_month, end_year;
+        get_min_max_month_year(max_months, &start_month, &start_year, &end_month, &end_year);
 
-        int width = lang_text_draw(25, startMonth, x - 20, y + 210, FONT_SMALL_PLAIN);
-        lang_text_draw_year(startYear, x + width - 20, y + 210, FONT_SMALL_PLAIN);
+        int width = lang_text_draw(25, start_month, x - 20, y + 210, FONT_SMALL_PLAIN);
+        lang_text_draw_year(start_year, x + width - 20, y + 210, FONT_SMALL_PLAIN);
 
-        width = lang_text_draw(25, endMonth, x + 380, y + 210, FONT_SMALL_PLAIN);
-        lang_text_draw_year(startYear, x + width + 380, y + 210, FONT_SMALL_PLAIN);
+        width = lang_text_draw(25, end_month, x + 380, y + 210, FONT_SMALL_PLAIN);
+        lang_text_draw_year(start_year, x + width + 380, y + 210, FONT_SMALL_PLAIN);
     }
 
     if (full_size) {
@@ -391,18 +391,18 @@ static int draw_background()
         lang_text_draw(55, 19, 75, 396, FONT_NORMAL_WHITE);
     } else if (Data_CityInfo.populationMigrationPercentage < 80) {
         lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE);
-        int textId;
+        int text_id;
         switch (Data_CityInfo.populationEmigrationCauseTextId) {
-            case 0: textId = 20; break;
-            case 1: textId = 21; break;
-            case 2: textId = 22; break;
-            case 3: textId = 23; break;
-            case 4: textId = 31; break;
-            case 5: textId = 32; break;
-            default: textId = 0; break;
+            case 0: text_id = 20; break;
+            case 1: text_id = 21; break;
+            case 2: text_id = 22; break;
+            case 3: text_id = 23; break;
+            case 4: text_id = 31; break;
+            case 5: text_id = 32; break;
+            default: text_id = 0; break;
         }
-        if (textId) {
-            lang_text_draw(55, textId, 75, 396, FONT_NORMAL_WHITE);
+        if (text_id) {
+            lang_text_draw(55, text_id, 75, 396, FONT_NORMAL_WHITE);
         }
     } else {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);

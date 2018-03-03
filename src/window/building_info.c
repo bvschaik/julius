@@ -255,11 +255,11 @@ static void init(int grid_offset)
     for (int i = 0; i < 7; i++) {
         context.figure.figureIds[i] = 0;
     }
-    static const int figureOffsets[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
+    static const int FIGURE_OFFSETS[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
     for (int i = 0; i < 9 && context.figure.count < 7; i++) {
-        int figureId = map_figure_at(grid_offset + figureOffsets[i]);
-        while (figureId > 0 && context.figure.count < 7) {
-            figure *figure = figure_get(figureId);
+        int figure_id = map_figure_at(grid_offset + FIGURE_OFFSETS[i]);
+        while (figure_id > 0 && context.figure.count < 7) {
+            figure *figure = figure_get(figure_id);
             if (figure->state != FigureState_Dead &&
                 figure->actionState != FIGURE_ACTION_149_CORPSE) {
                 switch (figure->type) {
@@ -277,21 +277,21 @@ static void init(int grid_offset)
                     case FIGURE_HIPPODROME_HORSES:
                         break;
                     default:
-                        context.figure.figureIds[context.figure.count++] = figureId;
+                        context.figure.figureIds[context.figure.count++] = figure_id;
                         figure_phrase_determine(figure);
                         break;
                 }
             }
-            figureId = figure->nextFigureIdOnSameTile;
+            figure_id = figure->nextFigureIdOnSameTile;
         }
     }
     // check for legion figures
     for (int i = 0; i < 7; i++) {
-        int figureId = context.figure.figureIds[i];
-        if (figureId <= 0) {
+        int figure_id = context.figure.figureIds[i];
+        if (figure_id <= 0) {
             continue;
         }
-        figure *f = figure_get(figureId);
+        figure *f = figure_get(figure_id);
         if (f->type == FIGURE_FORT_STANDARD || figure_is_legion(f)) {
             context.type = BUILDING_INFO_LEGION;
             context.formation_id = f->formationId;

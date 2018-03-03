@@ -138,17 +138,17 @@ static void draw_background()
 static void draw_menu_buttons()
 {
     int x_offset = Data_CityView.widthInPixels;
-    int itemIndex = -1;
+    int item_index = -1;
     for (int i = 0; i < data.num_items; i++) {
-        itemIndex = building_menu_next_index(data.selected_submenu, itemIndex);
+        item_index = building_menu_next_index(data.selected_submenu, item_index);
         label_draw(x_offset - 266, data.y_offset + 110 + 24 * i, 16, data.focus_button_id == i + 1 ? 1 : 2);
-        int buildingType = building_menu_type(data.selected_submenu, itemIndex);
-        lang_text_draw_centered(28, buildingType, x_offset - 266, data.y_offset + 113 + 24 * i, 176, FONT_NORMAL_GREEN);
-        if (buildingType == BUILDING_DRAGGABLE_RESERVOIR) {
-            buildingType = BUILDING_RESERVOIR;
+        int type = building_menu_type(data.selected_submenu, item_index);
+        lang_text_draw_centered(28, type, x_offset - 266, data.y_offset + 113 + 24 * i, 176, FONT_NORMAL_GREEN);
+        if (type == BUILDING_DRAGGABLE_RESERVOIR) {
+            type = BUILDING_RESERVOIR;
         }
-        int cost = model_get_building(buildingType)->cost;
-        if (buildingType == BUILDING_FORT) {
+        int cost = model_get_building(type)->cost;
+        if (type == BUILDING_FORT) {
             cost = 0;
         }
         if (cost) {

@@ -230,18 +230,18 @@ void window_building_draw_legion_info(building_info_context *c)
         window_building_draw_legion_info_foreground(c);
     } else {
         // no soldiers
-        int groupId;
+        int group_id;
         if (m->cursed_by_mars) {
-            groupId = 89; 
+            group_id = 89; 
             text_id = 1;
         } else if (building_count_active(BUILDING_BARRACKS)) {
-            groupId = 138; 
+            group_id = 138; 
             text_id = 10;
         } else {
-            groupId = 138; 
+            group_id = 138; 
             text_id = 11;
         }
-        window_building_draw_description_at(c, 172, groupId, text_id);
+        window_building_draw_description_at(c, 172, group_id, text_id);
     }
 }
 

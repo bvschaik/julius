@@ -32,7 +32,7 @@ static generic_button buttons[] = {
     {144, 285, 432, 305, GB_IMMEDIATE, button_set_salary, button_none, 10, 0},
 };
 
-static int focusButtonId;
+static int focus_button_id;
 
 static void draw_foreground()
 {
@@ -45,7 +45,7 @@ static void draw_foreground()
     inner_panel_draw(144, 80, 22, 15);
 
     for (int rank = 0; rank < 11; rank++) {
-        font_t font = focusButtonId == rank + 2 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
+        font_t font = focus_button_id == rank + 2 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
         int width = lang_text_draw(52, rank + 4, 176, 90 + 20 * rank, font);
         text_draw_money(city_emperor_salary_for_rank(rank), 176 + width, 90 + 20 * rank, font);
     }
@@ -59,7 +59,7 @@ static void draw_foreground()
     } else {
         lang_text_draw_multiline(52, 77, 152, 336, 336, FONT_NORMAL_BLACK);
     }
-    button_border_draw(240, 395, 160, 20, focusButtonId == 1);
+    button_border_draw(240, 395, 160, 20, focus_button_id == 1);
     lang_text_draw_centered(13, 4, 176, 400, 288, FONT_NORMAL_BLACK);
 
     graphics_reset_dialog();
@@ -71,7 +71,7 @@ static void handle_mouse(const mouse *m)
         window_advisors_show();
     } else {
         generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0,
-            buttons, 12, &focusButtonId);
+            buttons, 12, &focus_button_id);
     }
 }
 

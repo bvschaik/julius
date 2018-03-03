@@ -59,29 +59,29 @@ static void draw_foreground()
 {
     inner_panel_draw(32, 52, 36, 21);
     for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++) {
-        int offsetY = 22 * i;
+        int y_offset = 22 * i;
         int resource = Data_CityInfo_Resource.availableResources[i];
-        int graphicOffset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + graphicOffset, 48, offsetY + 54);
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + graphicOffset, 568, offsetY + 54);
+        int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 48, y_offset + 54);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 568, y_offset + 54);
         
         if (focus_button_id - 3 == i) {
-            button_border_draw(80, offsetY + 54, 480, 24, 1);
+            button_border_draw(80, y_offset + 54, 480, 24, 1);
         }
-        lang_text_draw(23, resource, 88, offsetY + 61, FONT_NORMAL_WHITE);
+        lang_text_draw(23, resource, 88, y_offset + 61, FONT_NORMAL_WHITE);
         text_draw_number_centered(Data_CityInfo.resourceStored[resource],
-            180, offsetY + 61, 100, FONT_NORMAL_WHITE);
+            180, y_offset + 61, 100, FONT_NORMAL_WHITE);
         if (Data_CityInfo.resourceIndustryMothballed[resource]) {
-            lang_text_draw(18, 5, 300, offsetY + 61, FONT_NORMAL_WHITE);
+            lang_text_draw(18, 5, 300, y_offset + 61, FONT_NORMAL_WHITE);
         }
         if (Data_CityInfo.resourceStockpiled[resource]) {
-            lang_text_draw(54, 3, 380, offsetY + 61, FONT_NORMAL_WHITE);
+            lang_text_draw(54, 3, 380, y_offset + 61, FONT_NORMAL_WHITE);
         } else if (Data_CityInfo.resourceTradeStatus[resource] == TRADE_STATUS_IMPORT) {
-            lang_text_draw(54, 5, 380, offsetY + 61, FONT_NORMAL_WHITE);
+            lang_text_draw(54, 5, 380, y_offset + 61, FONT_NORMAL_WHITE);
         } else if (Data_CityInfo.resourceTradeStatus[resource] == TRADE_STATUS_EXPORT) {
-            lang_text_draw(54, 6, 380, offsetY + 61, FONT_NORMAL_WHITE);
+            lang_text_draw(54, 6, 380, y_offset + 61, FONT_NORMAL_WHITE);
             text_draw_number(Data_CityInfo.resourceTradeExportOver[resource], '@', " ",
-                500, offsetY + 61, FONT_NORMAL_WHITE);
+                500, y_offset + 61, FONT_NORMAL_WHITE);
         }
     }
 

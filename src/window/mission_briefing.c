@@ -28,10 +28,10 @@ static void button_start_mission(int param1, int param2);
 static const int GOAL_OFFSETS_X[] = {32, 288, 32, 288, 288, 288};
 static const int GOAL_OFFSETS_Y[] = {95, 95, 117, 117, 73, 135};
 
-static image_button imageButtonBackToSelection = {
+static image_button image_button_back = {
     0, 0, 31, 20, IB_NORMAL, 90, 8, button_back, button_none, 0, 0, 1
 };
-static image_button imageButtonStartMission = {
+static image_button image_button_start_mission = {
     0, 0, 27, 27, IB_NORMAL, 92, 56, button_start_mission, button_none, 1, 0, 1
 };
 
@@ -136,9 +136,9 @@ static void draw_foreground()
     graphics_in_dialog();
 
     rich_text_draw_scrollbar();
-    image_buttons_draw(516, 426, &imageButtonStartMission, 1);
+    image_buttons_draw(516, 426, &image_button_start_mission, 1);
     if (!data.is_review && game_mission_has_choice()) {
-        image_buttons_draw(26, 428, &imageButtonBackToSelection, 1);
+        image_buttons_draw(26, 428, &image_button_back, 1);
     }
 
     graphics_reset_dialog();
@@ -148,11 +148,11 @@ static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 
-    if (image_buttons_handle_mouse(m_dialog, 516, 426, &imageButtonStartMission, 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0)) {
         return;
     }
     if (!data.is_review && game_mission_has_choice()) {
-        if (image_buttons_handle_mouse(m_dialog, 26, 428, &imageButtonBackToSelection, 1, 0)) {
+        if (image_buttons_handle_mouse(m_dialog, 26, 428, &image_button_back, 1, 0)) {
             return;
         }
     }

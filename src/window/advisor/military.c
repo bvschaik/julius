@@ -20,7 +20,7 @@ static void button_go_to_legion(int legion_id, int param2);
 static void button_return_to_fort(int legion_id, int param2);
 static void button_empire_service(int legion_id, int param2);
 
-static generic_button fortCustomButtons[] = {
+static generic_button fort_buttons[] = {
     {400, 83, 430, 113, GB_IMMEDIATE, button_go_to_legion, button_none, 1, 0},
     {480, 83, 510, 113, GB_IMMEDIATE, button_return_to_fort, button_none, 1, 0},
     {560, 83, 590, 113, GB_IMMEDIATE, button_empire_service, button_none, 1, 0},
@@ -159,7 +159,7 @@ static void draw_foreground()
 
 static void handle_mouse(const mouse *m)
 {
-    generic_buttons_handle_mouse(m, 0, 0, fortCustomButtons, 3 * num_legions, &focus_button_id);
+    generic_buttons_handle_mouse(m, 0, 0, fort_buttons, 3 * num_legions, &focus_button_id);
 }
 
 static void button_go_to_legion(int legion_id, int param2)

@@ -91,18 +91,18 @@ static struct {
     int param2;
     int message_advisor;
     int use_popup;
-} playerMessage;
+} player_message;
 
 static void set_city_message(int year, int month,
                              int param1, int param2,
                              int message_advisor, int use_popup)
 {
-    playerMessage.year = year;
-    playerMessage.month = month;
-    playerMessage.param1 = param1;
-    playerMessage.param2 = param2;
-    playerMessage.message_advisor = message_advisor;
-    playerMessage.use_popup = use_popup;
+    player_message.year = year;
+    player_message.month = month;
+    player_message.param1 = param1;
+    player_message.param2 = param2;
+    player_message.message_advisor = message_advisor;
+    player_message.use_popup = use_popup;
 }
 
 static void init(int text_id, int background_is_provided)
@@ -116,7 +116,7 @@ static void init(int text_id, int background_is_provided)
     data.text_id = text_id;
     data.background_is_provided = background_is_provided;
     const lang_message *msg = lang_get_message(text_id);
-    if (playerMessage.use_popup != 1) {
+    if (player_message.use_popup != 1) {
         data.show_video = 0;
     } else if (msg->video.text && video_start((char*)msg->video.text)) {
         data.show_video = 1;
@@ -138,15 +138,15 @@ static int resource_image(int resource)
 static void draw_city_message_text(const lang_message *msg)
 {
     if (msg->message_type != MESSAGE_TYPE_TUTORIAL) {
-        int width = lang_text_draw(25, playerMessage.month, data.x_text + 10, data.y_text + 6, FONT_NORMAL_WHITE);
-        width += lang_text_draw_year(playerMessage.year, data.x_text + 12 + width, data.y_text + 6, FONT_NORMAL_WHITE);
-        if (msg->message_type == MESSAGE_TYPE_DISASTER && playerMessage.param1) {
+        int width = lang_text_draw(25, player_message.month, data.x_text + 10, data.y_text + 6, FONT_NORMAL_WHITE);
+        width += lang_text_draw_year(player_message.year, data.x_text + 12 + width, data.y_text + 6, FONT_NORMAL_WHITE);
+        if (msg->message_type == MESSAGE_TYPE_DISASTER && player_message.param1) {
             if (data.text_id == MessageDialog_Theft) {
                 // param1 = denarii
-                lang_text_draw_amount(8, 0, playerMessage.param1, data.x + 240, data.y_text + 6, FONT_NORMAL_WHITE);
+                lang_text_draw_amount(8, 0, player_message.param1, data.x + 240, data.y_text + 6, FONT_NORMAL_WHITE);
             } else {
                 // param1 = building type
-                lang_text_draw(41, playerMessage.param1, data.x + 240, data.y_text + 6, FONT_NORMAL_WHITE);
+                lang_text_draw(41, player_message.param1, data.x + 240, data.y_text + 6, FONT_NORMAL_WHITE);
             }
         } else {
             width += lang_text_draw(63, 5, data.x_text + width + 80, data.y_text + 6, FONT_NORMAL_WHITE);
@@ -178,8 +178,8 @@ static void draw_city_message_text(const lang_message *msg)
             break;
 
         case MESSAGE_TYPE_TRADE_CHANGE:
-            image_draw(resource_image(playerMessage.param2), data.x + 64, data.y_text + 40);
-            lang_text_draw(21, empire_city_get(playerMessage.param1)->name_id,
+            image_draw(resource_image(player_message.param2), data.x + 64, data.y_text + 40);
+            lang_text_draw(21, empire_city_get(player_message.param1)->name_id,
                 data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE);
             rich_text_draw(msg->content.text,
                 data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16,
@@ -187,8 +187,8 @@ static void draw_city_message_text(const lang_message *msg)
             break;
 
         case MESSAGE_TYPE_PRICE_CHANGE:
-            image_draw(resource_image(playerMessage.param2), data.x + 64, data.y_text + 40);
-            text_draw_money(playerMessage.param1, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE);
+            image_draw(resource_image(player_message.param2), data.x + 64, data.y_text + 40);
+            text_draw_money(player_message.param1, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE);
             rich_text_draw(msg->content.text,
                 data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16,
                 data.text_height_blocks - 1, 0);
@@ -199,15 +199,15 @@ static void draw_city_message_text(const lang_message *msg)
                 data.x_text + 8, data.y_text + 56, 16 * data.text_width_blocks - 16,
                 data.text_height_blocks - 1, 0);
             if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
-                const scenario_request *request = scenario_request_get(playerMessage.param1);
-                int yOffset = data.y_text + 86 + lines * 16;
-                text_draw_number(request->amount, '@', " ", data.x_text + 8, yOffset, FONT_NORMAL_WHITE);
-                image_draw(resource_image(request->resource), data.x_text + 70, yOffset - 5);
+                const scenario_request *request = scenario_request_get(player_message.param1);
+                int y_offset = data.y_text + 86 + lines * 16;
+                text_draw_number(request->amount, '@', " ", data.x_text + 8, y_offset, FONT_NORMAL_WHITE);
+                image_draw(resource_image(request->resource), data.x_text + 70, y_offset - 5);
                 lang_text_draw(23, request->resource,
-                    data.x_text + 100, yOffset, FONT_NORMAL_WHITE);
+                    data.x_text + 100, y_offset, FONT_NORMAL_WHITE);
                 if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
-                    int width = lang_text_draw_amount(8, 4, request->months_to_comply, data.x_text + 200, yOffset, FONT_NORMAL_WHITE);
-                    lang_text_draw(12, 2, data.x_text + 200 + width, yOffset, FONT_NORMAL_WHITE);
+                    int width = lang_text_draw_amount(8, 4, request->months_to_comply, data.x_text + 200, y_offset, FONT_NORMAL_WHITE);
+                    lang_text_draw(12, 2, data.x_text + 200 + width, y_offset, FONT_NORMAL_WHITE);
                 }
             }
             break;
@@ -241,25 +241,25 @@ static void draw_background_normal()
     }
     // pictures
     if (msg->image1.id) {
-        int graphicId, graphicX, graphicY;
+        int image_id, image_x, image_y;
         if (data.text_id) {
-            graphicId = image_group(GROUP_MESSAGE_IMAGES) + msg->image1.id - 1;
-            graphicX = msg->image1.x;
-            graphicY = msg->image1.y;
+            image_id = image_group(GROUP_MESSAGE_IMAGES) + msg->image1.id - 1;
+            image_x = msg->image1.x;
+            image_y = msg->image1.y;
         } else { // message id = 0 ==> about, fixed image position
-            graphicX = graphicY = 16;
-            graphicId = image_group(GROUP_BIG_PEOPLE);
+            image_x = image_y = 16;
+            image_id = image_group(GROUP_BIG_PEOPLE);
         }
-        image_draw(graphicId, data.x + graphicX, data.y + graphicY);
-        if (data.y + graphicY + image_get(graphicId)->height + 8 > data.y_text) {
-            data.y_text = data.y + graphicY + image_get(graphicId)->height + 8;
+        image_draw(image_id, data.x + image_x, data.y + image_y);
+        if (data.y + image_y + image_get(image_id)->height + 8 > data.y_text) {
+            data.y_text = data.y + image_y + image_get(image_id)->height + 8;
         }
     }
     if (msg->image2.id) {
-        int graphicId = image_group(GROUP_MESSAGE_IMAGES) + msg->image2.id - 1;
-        image_draw(graphicId, data.x + msg->image2.x, data.y + msg->image2.y);
-        if (data.y + msg->image2.y + image_get(graphicId)->height + 8 > data.y_text) {
-            data.y_text = data.y + msg->image2.y + image_get(graphicId)->height + 8;
+        int image_id = image_group(GROUP_MESSAGE_IMAGES) + msg->image2.id - 1;
+        image_draw(image_id, data.x + msg->image2.x, data.y + msg->image2.y);
+        if (data.y + msg->image2.y + image_get(image_id)->height + 8 > data.y_text) {
+            data.y_text = data.y + msg->image2.y + image_get(image_id)->height + 8;
         }
     }
     // subtitle
@@ -306,12 +306,12 @@ static void draw_background_video()
     text_draw_centered(msg->title.text,
         data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK, 0);
     
-    int width = lang_text_draw(25, playerMessage.month, data.x + 16, data.y + 312, FONT_NORMAL_WHITE);
-    width += lang_text_draw_year(playerMessage.year, data.x + 18 + width, data.y + 312, FONT_NORMAL_WHITE);
+    int width = lang_text_draw(25, player_message.month, data.x + 16, data.y + 312, FONT_NORMAL_WHITE);
+    width += lang_text_draw_year(player_message.year, data.x + 18 + width, data.y + 312, FONT_NORMAL_WHITE);
     
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_DISASTER &&
         data.text_id == 251) {
-        lang_text_draw_amount(8, 0, playerMessage.param1, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
+        lang_text_draw_amount(8, 0, player_message.param1, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
     } else {
         width += lang_text_draw(63, 5, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
         text_draw(scenario_player_name(), data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE, 0);
@@ -321,7 +321,7 @@ static void draw_background_video()
     rich_text_draw(msg->content.text, data.x + 16, data.y + 332, 384, data.text_height_blocks - 1, 0);
 
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
-        const scenario_request *request = scenario_request_get(playerMessage.param1);
+        const scenario_request *request = scenario_request_get(player_message.param1);
         text_draw_number(request->amount, '@', " ", data.x + 8, data.y + 384, FONT_NORMAL_WHITE);
         image_draw(
             image_group(GROUP_RESOURCE_ICONS) + request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON),
@@ -352,7 +352,7 @@ static void draw_background()
 
 static image_button *get_advisor_button()
 {
-    switch (playerMessage.message_advisor) {
+    switch (player_message.message_advisor) {
         case MESSAGE_ADVISOR_LABOR:
             return &image_button_labor;
         case MESSAGE_ADVISOR_TRADE:
@@ -481,7 +481,7 @@ static void cleanup()
         video_stop();
         data.show_video = 0;
     }
-    playerMessage.message_advisor = 0;
+    player_message.message_advisor = 0;
 }
 
 static void button_close(int param1, int param2)
@@ -509,15 +509,15 @@ static void button_go_to_problem(int param1, int param2)
 {
     cleanup();
     const lang_message *msg = lang_get_message(data.text_id);
-    int gridOffset = playerMessage.param2;
+    int grid_offset = player_message.param2;
     if (msg->message_type == MESSAGE_TYPE_INVASION) {
-        int invasionGridOffset = formation_grid_offset_for_invasion(playerMessage.param1);
-        if (invasionGridOffset > 0) {
-            gridOffset = invasionGridOffset;
+        int invasion_grid_offset = formation_grid_offset_for_invasion(player_message.param1);
+        if (invasion_grid_offset > 0) {
+            grid_offset = invasion_grid_offset;
         }
     }
-    if (gridOffset > 0 && gridOffset < 26244) {
-        city_view_go_to_grid_offset(gridOffset);
+    if (grid_offset > 0 && grid_offset < 26244) {
+        city_view_go_to_grid_offset(grid_offset);
     }
     window_city_show();
 }

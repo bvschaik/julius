@@ -66,18 +66,18 @@ static int draw_background()
     } else if (Data_CityInfo.populationMigrationPercentage >= 80) {
         lang_text_draw(61, 25, X_OFFSET, 106, FONT_NORMAL_GREEN);
     } else {
-        int textId;
+        int text_id;
         switch (Data_CityInfo.populationEmigrationCauseTextId) {
-            case 0: textId = 19; break;
-            case 1: textId = 20; break;
-            case 2: textId = 21; break;
-            case 3: textId = 22; break;
-            case 4: textId = 70; break;
-            case 5: textId = 71; break;
-            default: textId = 0; break;
+            case 0: text_id = 19; break;
+            case 1: text_id = 20; break;
+            case 2: text_id = 21; break;
+            case 3: text_id = 22; break;
+            case 4: text_id = 70; break;
+            case 5: text_id = 71; break;
+            default: text_id = 0; break;
         }
-        if (textId) {
-            lang_text_draw(61, textId, X_OFFSET, 106, FONT_NORMAL_GREEN);
+        if (text_id) {
+            lang_text_draw(61, text_id, X_OFFSET, 106, FONT_NORMAL_GREEN);
         }
     }
 

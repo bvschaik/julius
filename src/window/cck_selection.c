@@ -50,19 +50,21 @@ static generic_button file_buttons[] = {
     {28, 444, 280, 460, GB_IMMEDIATE, button_select_item, button_none, 14, 0},
 };
 
-static int scrollPosition;
-static int focusButtonId;
-static int selectedItem;
-static char selectedScenario[FILE_NAME_MAX];
+static struct {
+    int scroll_position;
+    int focus_button_id;
+    int selected_item;
+    char selected_scenario[FILE_NAME_MAX];
 
-static const dir_listing *scenarios;
+    const dir_listing *scenarios;
+} data;
 
 static void init()
 {
     scenario_set_custom(2);
-    scenarios = dir_find_files_with_extension("map");
-    scrollPosition = 0;
-    focusButtonId = 0;
+    data.scenarios = dir_find_files_with_extension("map");
+    data.scroll_position = 0;
+    data.focus_button_id = 0;
     button_select_item(0, 0);
 }
 
@@ -71,13 +73,13 @@ static void draw_scenario_list()
     inner_panel_draw(16, 210, 16, 16);
     for (int i = 0; i < 15; i++) {
         font_t font = FONT_NORMAL_GREEN;
-        if (focusButtonId == i + 1) {
+        if (data.focus_button_id == i + 1) {
             font = FONT_NORMAL_WHITE;
-        } else if (!focusButtonId && selectedItem == i + scrollPosition) {
+        } else if (!data.focus_button_id && data.selected_item == i + data.scroll_position) {
             font = FONT_NORMAL_WHITE;
         }
         char file[FILE_NAME_MAX];
-        strcpy(file, scenarios->files[i + scrollPosition]);
+        strcpy(file, data.scenarios->files[i + data.scroll_position]);
         file_remove_extension(file);
         text_draw(string_from_ascii(file), 24, 220 + 16 * i, font, 0);
     }
@@ -85,14 +87,14 @@ static void draw_scenario_list()
 
 static void draw_scrollbar_dot()
 {
-    if (scenarios->num_files > 15) {
+    if (data.scenarios->num_files > 15) {
         int pct;
-        if (scrollPosition <= 0) {
+        if (data.scroll_position <= 0) {
             pct = 0;
-        } else if (scrollPosition + 15 >= scenarios->num_files) {
+        } else if (data.scroll_position + 15 >= data.scenarios->num_files) {
             pct = 100;
         } else {
-            pct = calc_percentage(scrollPosition, scenarios->num_files - 15);
+            pct = calc_percentage(data.scroll_position, data.scenarios->num_files - 15);
         }
         int y_offset = calc_adjust_with_percentage(164, pct);
         image_draw(image_group(GROUP_PANEL_BUTTON) + 39, 284, 245 + y_offset);
@@ -103,7 +105,7 @@ static void draw_scenario_info()
 {
     image_draw(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
 
-    text_draw_centered(string_from_ascii(selectedScenario), 335, 25, 260, FONT_LARGE_BLACK, 0);
+    text_draw_centered(string_from_ascii(data.selected_scenario), 335, 25, 260, FONT_LARGE_BLACK, 0);
     text_draw_centered(scenario_brief_description(), 335, 60, 260, FONT_NORMAL_WHITE, 0);
     lang_text_draw_year(scenario_property_start_year(), 410, 90, FONT_LARGE_BLACK);
     lang_text_draw_centered(44, 77 + scenario_property_climate(), 335, 150, 260, FONT_NORMAL_BLACK);
@@ -195,7 +197,7 @@ static void draw_foreground()
 static int handle_scrollbar(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (scenarios->num_files <= 15) {
+    if (data.scenarios->num_files <= 15) {
         return 0;
     }
     if (!m_dialog->left.is_down) {
@@ -208,7 +210,7 @@ static int handle_scrollbar(const mouse *m)
             y_offset = 164;
         }
         int pct = calc_percentage(y_offset, 164);
-        scrollPosition = calc_adjust_with_percentage(scenarios->num_files - 15, pct);
+        data.scroll_position = calc_adjust_with_percentage(data.scenarios->num_files - 15, pct);
         window_invalidate();
         return 1;
     }
@@ -229,33 +231,33 @@ static void handle_mouse(const mouse *m)
     if (image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 3, 0)) {
         return;
     }
-    generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 15, &focusButtonId);
+    generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 15, &data.focus_button_id);
 }
 
 static void button_select_item(int index, int param2)
 {
-    if (index >= scenarios->num_files) {
+    if (index >= data.scenarios->num_files) {
         return;
     }
-    selectedItem = scrollPosition + index;
-    strcpy(selectedScenario, scenarios->files[selectedItem]);
-    game_file_load_scenario_data(selectedScenario);
-    file_remove_extension(selectedScenario);
+    data.selected_item = data.scroll_position + index;
+    strcpy(data.selected_scenario, data.scenarios->files[data.selected_item]);
+    game_file_load_scenario_data(data.selected_scenario);
+    file_remove_extension(data.selected_scenario);
     window_invalidate();
 }
 
 static void button_scroll(int is_down, int num_lines)
 {
-    if (scenarios->num_files > 15) {
+    if (data.scenarios->num_files > 15) {
         if (is_down) {
-            scrollPosition += num_lines;
-            if (scrollPosition > scenarios->num_files - 15) {
-                scrollPosition = scenarios->num_files - 15;
+            data.scroll_position += num_lines;
+            if (data.scroll_position > data.scenarios->num_files - 15) {
+                data.scroll_position = data.scenarios->num_files - 15;
             }
         } else {
-            scrollPosition -= num_lines;
-            if (scrollPosition < 0) {
-                scrollPosition = 0;
+            data.scroll_position -= num_lines;
+            if (data.scroll_position < 0) {
+                data.scroll_position = 0;
             }
         }
     }
@@ -264,7 +266,7 @@ static void button_scroll(int is_down, int num_lines)
 static void button_start_scenario(int param1, int param2)
 {
     sound_speech_stop();
-    game_file_start_scenario(string_from_ascii(selectedScenario));
+    game_file_start_scenario(string_from_ascii(data.selected_scenario));
     window_city_show();
 }
 

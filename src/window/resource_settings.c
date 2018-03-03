@@ -26,17 +26,17 @@ static void button_toggle_industry(int param1, int param2);
 static void button_toggle_trade(int param1, int param2);
 static void button_toggle_stockpile(int param1, int param2);
 
-static image_button resourceImageButtons[] = {
+static image_button resource_image_buttons[] = {
     {58, 332, 27, 27, IB_NORMAL, 134, 0, button_help, button_none, 0, 0, 1},
     {558, 335, 24, 24, IB_NORMAL, 134, 4, button_ok, button_none, 0, 0, 1}
 };
 
-static arrow_button resourceArrowButtons[] = {
+static arrow_button resource_arrow_buttons[] = {
     {314, 215, 17, 24, button_export_up_down, 1, 0},
     {338, 215, 15, 24, button_export_up_down, 0, 0}
 };
 
-static generic_button resourceCustomButtons[] = {
+static generic_button resource_generic_buttons[] = {
     {98, 250, 530, 280, GB_IMMEDIATE, button_toggle_industry, button_none, 0, 0},
     {98, 212, 530, 242, GB_IMMEDIATE, button_toggle_trade, button_none, 0, 0},
     {98, 288, 530, 338, GB_IMMEDIATE, button_toggle_stockpile, button_none, 0, 0},
@@ -108,14 +108,14 @@ static void draw_foreground()
     int width = lang_text_draw_amount(8, 10, Data_CityInfo.resourceStored[data.resource], 98, 192, FONT_NORMAL_BLACK);
     lang_text_draw(54, 15, 98 + width, 192, FONT_NORMAL_BLACK);
 
-    int tradeFlags = TRADE_STATUS_NONE;
+    int trade_flags = TRADE_STATUS_NONE;
     if (empire_can_import_resource(data.resource)) {
-        tradeFlags |= TRADE_STATUS_IMPORT;
+        trade_flags |= TRADE_STATUS_IMPORT;
     }
     if (empire_can_export_resource(data.resource)) {
-        tradeFlags |= TRADE_STATUS_EXPORT;
+        trade_flags |= TRADE_STATUS_EXPORT;
     }
-    if (!tradeFlags) {
+    if (!trade_flags) {
         lang_text_draw(54, 24, 98, 212, FONT_NORMAL_BLACK);
     } else {
         button_border_draw(98, 212, 432, 30, data.focus_button_id == 2);
@@ -155,9 +155,9 @@ static void draw_foreground()
         lang_text_draw_centered(54, 29, 114, 316, 400, FONT_NORMAL_BLACK);
     }
 
-    image_buttons_draw(0, 0, resourceImageButtons, 2);
+    image_buttons_draw(0, 0, resource_image_buttons, 2);
     if (Data_CityInfo.resourceTradeStatus[data.resource] == TRADE_STATUS_EXPORT) {
-        arrow_buttons_draw(0, 0, resourceArrowButtons, 2);
+        arrow_buttons_draw(0, 0, resource_arrow_buttons, 2);
     }
     graphics_reset_dialog();
 }
@@ -169,14 +169,14 @@ static void handle_mouse(const mouse *m)
         window_advisors_show();
         return;
     }
-    if (image_buttons_handle_mouse(m_dialog, 0, 0, resourceImageButtons, 2, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0)) {
         return;
     }
     if (Data_CityInfo.resourceTradeStatus[data.resource] == TRADE_STATUS_EXPORT &&
-            arrow_buttons_handle_mouse(m_dialog, 0, 0, resourceArrowButtons, 2)) {
+            arrow_buttons_handle_mouse(m_dialog, 0, 0, resource_arrow_buttons, 2)) {
         return;
     }
-    generic_buttons_handle_mouse(m_dialog, 0, 0, resourceCustomButtons, 3, &data.focus_button_id);
+    generic_buttons_handle_mouse(m_dialog, 0, 0, resource_generic_buttons, 3, &data.focus_button_id);
 }
 
 static void button_help(int param1, int param2)
