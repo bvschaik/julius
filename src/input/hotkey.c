@@ -1,13 +1,12 @@
 #include "hotkey.h"
 
-#include "UI/Sidebar.h"
-
 #include "building/type.h"
 #include "city/finance.h"
 #include "city/victory.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "figure/formation.h"
+#include "game/orientation.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
@@ -258,14 +257,16 @@ void hotkey_down()
 void hotkey_home()
 {
     if (window_is(Window_City)) {
-        UI_Sidebar_rotateMap(0);
+        game_orientation_rotate_left();
+        window_invalidate();
     }
 }
 
 void hotkey_end()
 {
     if (window_is(Window_City)) {
-        UI_Sidebar_rotateMap(1);
+        game_orientation_rotate_right();
+        window_invalidate();
     }
 }
 

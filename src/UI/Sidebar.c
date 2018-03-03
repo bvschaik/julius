@@ -7,6 +7,7 @@
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/direction.h"
+#include "game/orientation.h"
 #include "game/state.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
@@ -403,41 +404,18 @@ static void buttonMissionBriefing(int param1, int param2)
 
 static void buttonRotateNorth(int param1, int param2)
 {
-	switch (city_view_orientation()) {
-		case DIR_0_TOP: // already north
-			return;
-		case DIR_2_RIGHT:
-			city_view_rotate_right();
-			map_orientation_change(1);
-			break;
-		case DIR_4_BOTTOM:
-			city_view_rotate_left();
-			map_orientation_change(0);
-			// fallthrough
-		case DIR_6_LEFT:
-			city_view_rotate_left();
-			map_orientation_change(0);
-			break;
-	}
-	city_warning_show(WARNING_ORIENTATION);
+	game_orientation_rotate_north();
 	window_invalidate();
 }
 
 static void buttonRotate(int clockWise, int param2)
 {
 	if (clockWise) {
-		city_view_rotate_right();
+		game_orientation_rotate_right();
 	} else {
-		city_view_rotate_left();
+		game_orientation_rotate_left();
 	}
-	map_orientation_change(clockWise);
-	city_warning_show(WARNING_ORIENTATION);
 	window_invalidate();
-}
-
-void UI_Sidebar_rotateMap(int clockWise)
-{
-	buttonRotate(clockWise, 0);
 }
 
 static void updateProgress()
