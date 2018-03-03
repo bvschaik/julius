@@ -1,11 +1,13 @@
 #include "empire.h"
 
 #include "building/menu.h"
+#include "city/warning.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
+#include "game/tutorial.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -572,4 +574,14 @@ void window_empire_show()
     };
     init();
     window_show(&window);
+}
+
+void window_empire_show_checked()
+{
+    tutorial_availability avail = tutorial_advisor_empire_availability();
+    if (avail == AVAILABLE) {
+        window_empire_show();
+    } else {
+        city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
+    }
 }

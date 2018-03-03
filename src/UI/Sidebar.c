@@ -9,7 +9,6 @@
 #include "core/direction.h"
 #include "game/orientation.h"
 #include "game/state.h"
-#include "game/tutorial.h"
 #include "game/undo.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -383,18 +382,9 @@ static void buttonAdvisors(int param1, int param2)
 
 static void buttonEmpire(int param1, int param2)
 {
-    switch (tutorial_advisor_empire_availability()) {
-        case NOT_AVAILABLE:
-            city_warning_show(WARNING_NOT_AVAILABLE);
-            break;
-        case NOT_AVAILABLE_YET:
-            city_warning_show(WARNING_NOT_AVAILABLE_YET);
-            break;
-        case AVAILABLE:
-            window_empire_show();
-            break;
-    }
+    window_empire_show_checked();
 }
+
 static void buttonMissionBriefing(int param1, int param2)
 {
 	if (!scenario_is_custom()) {
