@@ -264,7 +264,7 @@ static int handle_mouse_submenu(const mouse *m)
 {
     if (m->right.went_up) {
         clear_state();
-        UI_Window_goBack();
+        window_go_back();
         return 1;
     }
     int menu_id = menu_bar_handle_mouse(m, menu, 4, &data.focus_menu_id);
@@ -274,7 +274,7 @@ static int handle_mouse_submenu(const mouse *m)
     if (!menu_handle_mouse(m, &menu[data.open_sub_menu - 1], &data.focus_sub_menu_id)) {
         if (m->left.went_down) {
             clear_state();
-            UI_Window_goBack();
+            window_go_back();
             return 1;
         }
     }
@@ -433,7 +433,7 @@ static void menu_options_difficulty(int param)
 static void menu_help_help(int param)
 {
     clear_state();
-    UI_Window_goBack();
+    window_go_back();
     window_message_dialog_show(MessageDialog_Help, 0);
 }
 
@@ -452,7 +452,7 @@ static void menu_help_warnings(int param)
 static void menu_help_about(int param)
 {
     clear_state();
-    UI_Window_goBack();
+    window_go_back();
     window_message_dialog_show(MessageDialog_About, 0);
 }
 
@@ -460,6 +460,6 @@ static void menu_help_about(int param)
 static void menu_advisors_go_to(int advisor)
 {
     clear_state();
-    UI_Window_goBack();
+    window_go_back();
     window_advisors_show_advisor(advisor);
 }

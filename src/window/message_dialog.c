@@ -487,7 +487,7 @@ static void cleanup()
 static void button_close(int param1, int param2)
 {
     cleanup();
-    UI_Window_goBack();
+    window_go_back();
     window_invalidate();
 }
 

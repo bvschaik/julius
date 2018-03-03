@@ -63,7 +63,7 @@ void window_show(const window_type *window)
     window_invalidate();
 }
 
-void UI_Window_goBack()
+void window_go_back()
 {
     decrease_queue_index();
     current_window = &window_queue[queue_index];

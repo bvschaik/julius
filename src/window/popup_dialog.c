@@ -66,19 +66,19 @@ static void handle_mouse(const mouse *m)
         image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 2, 0);
     } else if (m->right.went_up) {
         data.close_func(0);
-        UI_Window_goBack();
+        window_go_back();
     }
 }
 
 void button_ok(int param1, int param2)
 {
-    UI_Window_goBack();
+    window_go_back();
     data.close_func(1);
 }
 
 void button_cancel(int param1, int param2)
 {
-    UI_Window_goBack();
+    window_go_back();
     data.close_func(0);
 }
 

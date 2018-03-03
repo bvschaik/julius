@@ -162,7 +162,7 @@ static void handle_mouse(const mouse *m)
     }
 
     if (m->right.went_down) {
-        UI_Window_goBack();
+        window_go_back();
         return;
     }
     const mouse *m_dialog = mouse_in_dialog(m);
@@ -176,7 +176,7 @@ static void handle_mouse(const mouse *m)
 static void button_ok_cancel(int is_ok, int param2)
 {
     if (!is_ok) {
-        UI_Window_goBack();
+        window_go_back();
         return;
     }
 

@@ -61,6 +61,6 @@ void window_show(const window_type *window);
 
 window_id window_get_id();
 
-void UI_Window_goBack();
+void window_go_back();
 
 #endif // GRAPHICS_WINDOW_H
