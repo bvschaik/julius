@@ -96,7 +96,7 @@ static int get_elapsed_ticks()
     if (game_state_is_paused()) {
         return 0;
     }
-    switch (UI_Window_getId()) {
+    switch (window_get_id()) {
         default:
             return 0;
         case Window_City:

@@ -41,10 +41,10 @@ typedef enum {
     Window_MissionEnd,
     Window_VideoIntermezzo,
     Window_Logo,
-} WindowId;
+} window_id;
 
 typedef struct {
-    WindowId id;
+    window_id id;
     void (*draw_background)(void);
     void (*draw_foreground)(void);
     void (*handle_mouse)(const mouse *m);
@@ -55,12 +55,12 @@ void window_invalidate();
 
 void window_draw(int force);
 
-int window_is(WindowId id);
+int window_is(window_id id);
 
 void window_show(const window_type *window);
 
-WindowId UI_Window_getId();
-void UI_Window_goTo(WindowId windowId);
+window_id window_get_id();
+
 void UI_Window_goBack();
 
 #endif // GRAPHICS_WINDOW_H

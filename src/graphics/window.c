@@ -8,49 +8,6 @@ static void noop()
 {
 }
 
-static window_type windows[] = {
-    // 0
-    { Window_MainMenu },
-    { Window_City },
-    { Window_PopupDialog },
-    { Window_TopMenu },
-    { Window_DifficultyOptions },
-    { Window_Advisors },
-    { Window_SetSalaryDialog },
-    { Window_DonateToCityDialog },
-    { Window_SendGiftToCaesarDialog },
-    { Window_LaborPriorityDialog },
-    // 10
-    { Window_DisplayOptions },
-    { Window_SoundOptions },
-    { Window_SpeedOptions },
-    { Window_Empire },
-    { Window_TradeOpenedDialog },
-    { Window_HoldFestivalDialog },
-    { Window_TradePricesDialog },
-    { Window_ResourceSettingsDialog },
-    { Window_MessageDialog },
-    { Window_PlayerMessageList },
-    // 20
-    { Window_CCKSelection },
-    { Window_FileDialog },
-    { Window_OverlayMenu },
-    { Window_BuildingMenu },
-    { Window_Intermezzo },
-    { Window_BuildingInfo },
-    { Window_NewCareerDialog },
-    { Window_SlidingSidebar },
-    { Window_CityMilitary },
-    { Window_MissionSelection },
-    // 30
-    { Window_MissionBriefingInitial },
-    { Window_MissionBriefingReview },
-    { Window_VictoryDialog },
-    { Window_MissionEnd },
-    { Window_VideoIntermezzo },
-    { Window_Logo },
-};
-
 static window_type previous_window;
 static window_type current_window;
 static int refreshRequested;
@@ -60,12 +17,12 @@ void window_invalidate()
     refreshRequested = 1;
 }
 
-int window_is(WindowId id)
+int window_is(window_id id)
 {
-    return UI_Window_getId() == id;
+    return current_window.id == id;
 }
 
-WindowId UI_Window_getId()
+window_id window_get_id()
 {
     return current_window.id;
 }
@@ -84,11 +41,6 @@ void window_show(const window_type *window)
         current_window.handle_mouse = noop;
     }
     window_invalidate();
-}
-
-void UI_Window_goTo(WindowId windowId)
-{
-    window_show(&windows[windowId]);
 }
 
 void UI_Window_goBack()

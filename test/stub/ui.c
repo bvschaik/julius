@@ -4,7 +4,7 @@
 #include "window/mission_end.h"
 #include "window/victory_dialog.h"
 
-int window_is(WindowId id)
+int window_is(window_id id)
 {
     return id == Window_City;
 }
@@ -24,10 +24,7 @@ void window_mission_end_show_won()
 void window_victory_dialog_show()
 {}
 
-void UI_Window_goTo(WindowId windowId)
-{}
-
-WindowId UI_Window_getId()
+window_id window_get_id()
 {
     return Window_City;
 }

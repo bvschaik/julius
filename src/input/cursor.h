@@ -18,6 +18,6 @@ typedef struct {
 
 const cursor *input_cursor_data(cursor_shape cursor_id);
 
-void input_cursor_update(WindowId window);
+void input_cursor_update(window_id window);
 
 #endif // INPUT_CURSOR_H

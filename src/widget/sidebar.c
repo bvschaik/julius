@@ -486,7 +486,6 @@ static void slide_sidebar()
 {
     data.progress = 0;
     data.slide_start = time_get_millis();
-    UI_Window_goTo(Window_SlidingSidebar);
     city_view_start_sidebar_toggle();
     sound_effect_play(SOUND_EFFECT_SIDEBAR);
     
