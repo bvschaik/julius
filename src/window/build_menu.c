@@ -10,11 +10,11 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
+#include "widget/sidebar.h"
 #include "window/city.h"
 
 #include "Data/CityView.h"
 #include "Data/State.h"
-#include "UI/Sidebar.h"
 
 static void button_menu_index(int param1, int param2);
 static void button_menu_item(int item);
@@ -178,7 +178,7 @@ static void handle_mouse(const mouse *m)
     }
 
     if (!handle_build_submenu(m)) {
-        UI_Sidebar_handleMouseBuildButtons(m);
+        widget_sidebar_handle_mouse_build_menu(m);
     }
 }
 

@@ -42,5 +42,5 @@ void window_message_dialog_show_city_message(int text_id, int year, int month,
 void window_popup_dialog_show(popup_dialog_type type, void (*okFunc)(int), int hasOkCancelButtons)
 {}
 
-void UI_Sidebar_requestMinimapRefresh()
+void widget_sidebar_invalidate_minimap()
 {}

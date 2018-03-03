@@ -50,8 +50,7 @@
 #include "scenario/random_event.h"
 #include "scenario/request.h"
 #include "sound/music.h"
-
-#include "UI/Sidebar.h" // TODO eliminate?
+#include "widget/sidebar.h"
 
 #include "Data/CityInfo.h"
 
@@ -123,7 +122,7 @@ static void advance_tick()
     switch (game_time_tick()) {
         case 1: city_gods_calculate_moods(1); break;
         case 2: sound_music_update(); break;
-        case 3: UI_Sidebar_requestMinimapRefresh(); break;
+        case 3: widget_sidebar_invalidate_minimap(); break;
         case 4: city_emperor_update(); break;
         case 5: formation_update_all(0); break;
         case 6: map_natives_check_land(); break;
@@ -144,7 +143,7 @@ static void advance_tick()
         case 27: map_water_supply_update_reservoir_fountain(); break;
         case 28: map_water_supply_update_houses(); break;
         case 29: formation_update_all(1); break;
-        case 30: UI_Sidebar_requestMinimapRefresh(); break;
+        case 30: widget_sidebar_invalidate_minimap(); break;
         case 31: building_figure_generate(); break;
         case 32: city_trade_update(); break;
         case 33: building_count_update(); city_culture_update_coverage(); break;

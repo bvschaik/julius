@@ -9,16 +9,16 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/criteria.h"
+#include "widget/sidebar.h"
 #include "widget/top_menu.h"
 
 #include "UI/CityBuildings.h"
-#include "UI/Sidebar.h"
 
 #include "Data/CityView.h"
 
 static void draw_background()
 {
-    UI_Sidebar_drawBackground();
+    widget_sidebar_draw_background();
     widget_top_menu_draw(1);
 }
 
@@ -58,7 +58,7 @@ static void draw_foreground()
 {
     widget_top_menu_draw(0);
     window_city_draw();
-    UI_Sidebar_drawForeground();
+    widget_sidebar_draw_foreground();
     draw_paused_and_time_left();
     UI_CityBuildings_drawBuildingCost();
     if (window_is(Window_City)) {
@@ -70,7 +70,7 @@ static void draw_foreground_military()
 {
     widget_top_menu_draw(0);
     window_city_draw();
-    UI_Sidebar_drawMinimap(0);
+    widget_sidebar_draw_foreground_military();
     draw_paused_and_time_left();
 }
 
@@ -79,7 +79,7 @@ static void handle_mouse(const mouse *m)
     if (widget_top_menu_handle_mouse(m)) {
         return;
     }
-    if (UI_Sidebar_handleMouse(m)) {
+    if (widget_sidebar_handle_mouse(m)) {
         return;
     }
     UI_CityBuildings_handleMouse(m);
@@ -94,7 +94,7 @@ static void get_tooltip(tooltip_context *c)
 {
     int text_id = widget_top_menu_get_tooltip_text(c);
     if (!text_id) {
-        text_id = UI_Sidebar_getTooltipText();
+        text_id = widget_sidebar_get_tooltip_text();
     }
     if (text_id) {
         c->type = TOOLTIP_BUTTON;

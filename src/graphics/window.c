@@ -4,8 +4,6 @@
 #include "input/cursor.h"
 #include "window/city.h"
 
-#include "UI/Sidebar.h"
-
 static void noop()
 {
 }
@@ -41,7 +39,7 @@ static window_type windows[] = {
     { Window_Intermezzo },
     { Window_BuildingInfo },
     { Window_NewCareerDialog },
-    { Window_SlidingSidebar, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop, noop },
+    { Window_SlidingSidebar },
     { Window_CityMilitary },
     { Window_MissionSelection },
     // 30

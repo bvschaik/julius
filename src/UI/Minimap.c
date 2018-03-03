@@ -1,5 +1,4 @@
 #include "Minimap.h"
-#include "Sidebar.h"
 #include "../Data/CityView.h"
 #include "../Data/State.h"
 
@@ -14,6 +13,7 @@
 #include "map/random.h"
 #include "map/terrain.h"
 #include "scenario/property.h"
+#include "widget/sidebar.h"
 
 #define FOREACH_XY_VIEW(block)\
 	int odd = 0;\
@@ -262,7 +262,7 @@ int UI_Minimap_handleClick(const mouse *m)
 			int gridOffset = getMouseGridOffset(m, minimapLeft, minimapTop, 73, 111);
 			if (gridOffset > 0) {
 				city_view_go_to_grid_offset(gridOffset);
-				UI_Sidebar_requestMinimapRefresh();
+				widget_sidebar_invalidate_minimap();
 				return 1;
 			}
 		}
