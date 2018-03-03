@@ -32,7 +32,7 @@ static void handle_mouse(const mouse *m)
 void window_logo_show()
 {
     window_type window = {
-        Window_Logo,
+        WINDOW_LOGO,
         draw_background,
         0,
         handle_mouse

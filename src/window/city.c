@@ -61,7 +61,7 @@ static void draw_foreground()
     widget_sidebar_draw_foreground();
     draw_paused_and_time_left();
     UI_CityBuildings_drawBuildingCost();
-    if (window_is(Window_City)) {
+    if (window_is(WINDOW_CITY)) {
         city_message_process_queue();
     }
 }
@@ -125,7 +125,7 @@ void window_city_draw()
 void window_city_show()
 {
     window_type window = {
-        Window_City,
+        WINDOW_CITY,
         draw_background,
         draw_foreground,
         handle_mouse,
@@ -137,7 +137,7 @@ void window_city_show()
 void window_city_military_show()
 {
     window_type window = {
-        Window_CityMilitary,
+        WINDOW_CITY_MILITARY,
         draw_background,
         draw_foreground_military,
         handle_mouse_military,

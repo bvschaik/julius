@@ -566,7 +566,7 @@ static void button_open_trade(int param1, int param2)
 void window_empire_show()
 {
     window_type window = {
-        Window_Empire,
+        WINDOW_EMPIRE,
         draw_background,
         draw_foreground,
         handle_mouse,

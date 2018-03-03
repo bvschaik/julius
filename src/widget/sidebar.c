@@ -261,7 +261,7 @@ static void enable_building_buttons()
 
 static void draw_number_of_messages()
 {
-    if (window_is(Window_City) && !city_view_is_sidebar_collapsed()) {
+    if (window_is(WINDOW_CITY) && !city_view_is_sidebar_collapsed()) {
         int messages = city_message_count();
         buttons_build_expanded[12].enabled = game_can_undo();
         buttons_build_expanded[13].enabled = messages > 0;
@@ -490,7 +490,7 @@ static void slide_sidebar()
     sound_effect_play(SOUND_EFFECT_SIDEBAR);
     
     window_type window = {
-        Window_SlidingSidebar,
+        WINDOW_SLIDING_SIDEBAR,
         window_city_draw,
         draw_sliding_foreground,
         0,

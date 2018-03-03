@@ -111,7 +111,7 @@ static void arrow_button_scroll(int is_down, int param2)
 void window_speed_options_show()
 {
     window_type window = {
-        Window_SpeedOptions,
+        WINDOW_SPEED_OPTIONS,
         0,
         draw_foreground,
         handle_mouse

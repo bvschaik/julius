@@ -45,7 +45,7 @@ void window_victory_video_show(const char *filename, int width, int height, void
 {
     if (init(filename, width, height, callback)) {
         window_type window = {
-            Window_VideoIntermezzo,
+            WINDOW_VICTORY_VIDEO,
             draw_background,
             draw_foreground,
             handle_mouse,

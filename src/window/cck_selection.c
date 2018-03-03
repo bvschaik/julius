@@ -271,7 +271,7 @@ static void button_start_scenario(int param1, int param2)
 void window_cck_selection_show()
 {
     window_type window = {
-        Window_CCKSelection,
+        WINDOW_CCK_SELECTION,
         draw_background,
         draw_foreground,
         handle_mouse

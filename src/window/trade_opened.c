@@ -61,7 +61,7 @@ static void button_close(int param1, int param2)
 void window_trade_opened_show(int city)
 {
     window_type window = {
-        Window_TradeOpenedDialog,
+        WINDOW_TRADE_OPENED,
         draw_background,
         draw_foreground,
         handle_mouse

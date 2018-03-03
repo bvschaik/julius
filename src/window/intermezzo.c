@@ -124,7 +124,7 @@ static void handle_mouse(const mouse *m)
 void window_intermezzo_show(intermezzo_type type, void (*callback)(void))
 {
     window_type window = {
-        Window_Intermezzo,
+        WINDOW_INTERMEZZO,
         draw_background,
         0,
         handle_mouse,

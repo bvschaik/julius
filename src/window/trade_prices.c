@@ -69,7 +69,7 @@ static void get_tooltip(tooltip_context *c)
 void window_trade_prices_show()
 {
     window_type window = {
-        Window_TradePricesDialog,
+        WINDOW_TRADE_PRICES,
         draw_background,
         0,
         handle_mouse,

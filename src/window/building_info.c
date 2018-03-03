@@ -599,7 +599,7 @@ static void button_advisor(int advisor, int param2)
 void window_building_info_show(int grid_offset)
 {
     window_type window = {
-        Window_BuildingInfo,
+        WINDOW_BUILDING_INFO,
         draw_background,
         draw_foreground,
         handle_mouse,

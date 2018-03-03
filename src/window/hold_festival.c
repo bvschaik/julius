@@ -181,7 +181,7 @@ static void get_tooltip(tooltip_context *c)
 void window_hold_festival_show()
 {
     window_type window = {
-        Window_HoldFestivalDialog,
+        WINDOW_HOLD_FESTIVAL,
         draw_background,
         draw_foreground,
         handle_mouse,

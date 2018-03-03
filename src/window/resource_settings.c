@@ -243,7 +243,7 @@ static void button_toggle_stockpile(int param1, int param2)
 void window_resource_settings_show(resource_type resource)
 {
     window_type window = {
-        Window_ResourceSettingsDialog,
+        WINDOW_RESOURCE_SETTINGS,
         draw_background,
         draw_foreground,
         handle_mouse,

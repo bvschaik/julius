@@ -80,7 +80,7 @@ static void start_mission(int param1, int param2)
 void window_new_career_show()
 {
     window_type window = {
-        Window_NewCareerDialog,
+        WINDOW_NEW_CAREER,
         draw_background,
         draw_foreground,
         handle_mouse,

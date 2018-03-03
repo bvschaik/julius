@@ -178,7 +178,7 @@ static void button_start_mission(int param1, int param2)
 static void show()
 {
     window_type window = {
-        Window_MissionBriefingInitial,
+        WINDOW_MISSION_BRIEFING,
         draw_background,
         draw_foreground,
         handle_mouse,

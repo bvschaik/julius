@@ -6,7 +6,7 @@
 
 int window_is(window_id id)
 {
-    return id == Window_City;
+    return id == WINDOW_CITY;
 }
 
 void window_invalidate()
@@ -26,7 +26,7 @@ void window_victory_dialog_show()
 
 window_id window_get_id()
 {
-    return Window_City;
+    return WINDOW_CITY;
 }
 
 void window_draw(int force)

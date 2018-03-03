@@ -281,7 +281,7 @@ static void get_tooltip(tooltip_context *c)
 void window_message_list_show()
 {
     window_type window = {
-        Window_PlayerMessageList,
+        WINDOW_MESSAGE_LIST,
         draw_background,
         draw_foreground,
         handle_mouse,

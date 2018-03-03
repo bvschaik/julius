@@ -525,7 +525,7 @@ static void button_go_to_problem(int param1, int param2)
 void window_message_dialog_show(int text_id, int background_is_provided)
 {
     window_type window = {
-        Window_MessageDialog,
+        WINDOW_MESSAGE_DIALOG,
         draw_background,
         draw_foreground,
         handle_mouse,

@@ -151,7 +151,7 @@ static void button_submenu_item(int index, int param2)
 void window_overlay_menu_show()
 {
     window_type window = {
-        Window_OverlayMenu,
+        WINDOW_OVERLAY_MENU,
         draw_background,
         draw_foreground,
         handle_mouse,

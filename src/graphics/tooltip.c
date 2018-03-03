@@ -63,7 +63,7 @@ static void draw_button_tooltip(tooltip_context *c)
 
     int x, y;
     if (c->mouse_x < screen_dialog_offset_x() + width + 100) {
-        if (window_is(Window_Advisors)) {
+        if (window_is(WINDOW_ADVISORS)) {
             x = c->mouse_x + 50;
         } else {
             x = c->mouse_x + 20;
@@ -73,7 +73,7 @@ static void draw_button_tooltip(tooltip_context *c)
     }
     
     switch (window_get_id()) {
-        case Window_Advisors:
+        case WINDOW_ADVISORS:
             if (c->mouse_y < screen_dialog_offset_y() + 432) {
                 y = c->mouse_y;
                 switch (window_advisors_get_advisor()) {
@@ -86,13 +86,13 @@ static void draw_button_tooltip(tooltip_context *c)
                 y = screen_dialog_offset_y() + 432;
             }
             break;
-        case Window_TradePricesDialog: // FIXED used to cause ghosting
+        case WINDOW_TRADE_PRICES: // FIXED used to cause ghosting
             y = c->mouse_y - 42;
             break;
-        case Window_DonateToCityDialog:
+        case WINDOW_DONATE_TO_CITY:
             y = c->mouse_y - 52;
             break;
-        case Window_LaborPriorityDialog:
+        case WINDOW_LABOR_PRIORITY:
             x = c->mouse_x - width / 2 - 10;
             if (c->mouse_y < screen_dialog_offset_y() + 200) {
                 y = c->mouse_y + 40;

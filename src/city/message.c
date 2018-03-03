@@ -186,7 +186,7 @@ void city_message_post(int use_popup, int message_type, int param1, int param2)
         data.problem_count = 1;
         window_invalidate();
     }
-    if (use_popup && window_is(Window_City)) {
+    if (use_popup && window_is(WINDOW_CITY)) {
         show_message_popup(id);
     } else if (use_popup) {
         // add to queue to be processed when player returns to city

@@ -630,7 +630,7 @@ static void updateCityViewCoords(const mouse *m)
 static int handleRightClickAllowBuildingInfo()
 {
 	int allow = 1;
-	if (!window_is(Window_City)) {
+	if (!window_is(WINDOW_CITY)) {
 		allow = 0;
 	}
 	if (building_construction_type()) {
@@ -720,7 +720,7 @@ void UI_CityBuildings_getTooltip(tooltip_context *c)
 	if (setting_tooltips() == TOOLTIPS_NONE) {
 		return;
 	}
-	if (!window_is(Window_City)) {
+	if (!window_is(WINDOW_CITY)) {
 		return;
 	}
 	if (Data_State.map.current.gridOffset == 0) {

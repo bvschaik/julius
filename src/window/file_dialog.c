@@ -243,7 +243,7 @@ static void button_select_file(int index, int param2)
 void window_file_dialog_show(file_dialog_type type)
 {
     window_type window = {
-        Window_FileDialog,
+        WINDOW_FILE_DIALOG,
         0,
         draw_foreground,
         handle_mouse

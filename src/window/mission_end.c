@@ -143,7 +143,7 @@ static void button_fired(int param1, int param2)
 static void show_end_dialog()
 {
     window_type window = {
-        Window_MissionEnd,
+        WINDOW_MISSION_END,
         draw_background,
         draw_foreground,
         handle_mouse,

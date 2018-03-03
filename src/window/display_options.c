@@ -81,7 +81,7 @@ static void button_cancel(int param1, int param2)
 void window_display_options_show()
 {
     window_type window = {
-        Window_DisplayOptions,
+        WINDOW_DISPLAY_OPTIONS,
         0,
         draw_foreground,
         handle_mouse

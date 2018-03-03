@@ -31,7 +31,7 @@ static struct {
 
 static void change_game_speed(int is_down)
 {
-    if (window_is(Window_City)) {
+    if (window_is(WINDOW_CITY)) {
         if (is_down) {
             setting_decrease_game_speed();
         } else {
@@ -42,7 +42,7 @@ static void change_game_speed(int is_down)
 
 static void exit_military_command()
 {
-    if (window_is(Window_CityMilitary)) {
+    if (window_is(WINDOW_CITY_MILITARY)) {
         window_city_show();
     }
 }
@@ -50,7 +50,7 @@ static void exit_military_command()
 static void toggle_overlay()
 {
     exit_military_command();
-    if (window_is(Window_City)) {
+    if (window_is(WINDOW_CITY)) {
         game_state_toggle_overlay();
         window_invalidate();
     }
@@ -59,7 +59,7 @@ static void toggle_overlay()
 static void show_overlay(int overlay)
 {
     exit_military_command();
-    if (window_is(Window_City)) {
+    if (window_is(WINDOW_CITY)) {
         if (game_state_overlay() == overlay) {
             game_state_set_overlay(OVERLAY_NONE);
         } else {
@@ -72,7 +72,7 @@ static void show_overlay(int overlay)
 static void toggle_pause()
 {
     exit_military_command();
-    if (window_is(Window_City)) {
+    if (window_is(WINDOW_CITY)) {
         game_state_toggle_paused();
         city_warning_clear_all();
     }
@@ -81,13 +81,13 @@ static void toggle_pause()
 static void show_advisor(advisor_type advisor)
 {
     exit_military_command();
-    if (window_is(Window_Advisors)) {
+    if (window_is(WINDOW_ADVISORS)) {
         if (window_advisors_get_advisor() == advisor) {
             window_city_show();
         } else {
             window_advisors_show_advisor(advisor);
         }
-    } else if (window_is(Window_City)) {
+    } else if (window_is(WINDOW_CITY)) {
         window_advisors_show_advisor(advisor);
     }
 }
@@ -95,7 +95,7 @@ static void show_advisor(advisor_type advisor)
 static void cycle_legion()
 {
     static int currentLegionId = 1;
-    if (window_is(Window_City)) {
+    if (window_is(WINDOW_CITY)) {
         int legionId = currentLegionId;
         currentLegionId = 0;
         for (int i = 1; i <= MAX_LEGIONS; i++) {
@@ -121,9 +121,9 @@ static void cycle_legion()
 
 static void cheat_init_or_invasion()
 {
-    if (window_is(Window_BuildingInfo)) {
+    if (window_is(WINDOW_BUILDING_INFO)) {
         data.is_cheating = window_building_info_get_building_type() == BUILDING_WELL;
-    } else if (data.is_cheating && window_is(Window_MessageDialog)) {
+    } else if (data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
         data.is_cheating = 2;
         scenario_invasion_start_from_cheat();
     } else {
@@ -256,7 +256,7 @@ void hotkey_down()
 
 void hotkey_home()
 {
-    if (window_is(Window_City)) {
+    if (window_is(WINDOW_CITY)) {
         game_orientation_rotate_left();
         window_invalidate();
     }
@@ -264,7 +264,7 @@ void hotkey_home()
 
 void hotkey_end()
 {
-    if (window_is(Window_City)) {
+    if (window_is(WINDOW_CITY)) {
         game_orientation_rotate_right();
         window_invalidate();
     }
@@ -293,7 +293,7 @@ static void go_to_bookmark(int number)
 static void handle_bookmark(int number)
 {
     exit_military_command();
-    if (window_is(Window_City)) {
+    if (window_is(WINDOW_CITY)) {
         if (data.ctrl_down || data.shift_down) {
             map_bookmark_save(number);
         } else {

@@ -93,7 +93,7 @@ static void button_set_salary(int rank, int param2)
 void window_set_salary_show()
 {
     window_type window = {
-        Window_SetSalaryDialog,
+        WINDOW_SET_SALARY,
         window_advisors_draw_dialog_background,
         draw_foreground,
         handle_mouse,

@@ -26,7 +26,7 @@ static int determine_width(const uint8_t *text)
 
 void warning_draw()
 {
-    if (!window_is(Window_City)) {
+    if (!window_is(WINDOW_CITY)) {
         city_warning_clear_all();
         return;
     }

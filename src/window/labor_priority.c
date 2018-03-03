@@ -109,7 +109,7 @@ static void get_tooltip(tooltip_context *c)
 void window_labor_priority_show(int category)
 {
     window_type window = {
-        Window_LaborPriorityDialog,
+        WINDOW_LABOR_PRIORITY,
         draw_background,
         draw_foreground,
         handle_mouse,

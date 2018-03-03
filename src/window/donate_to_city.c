@@ -162,7 +162,7 @@ static void get_tooltip(tooltip_context *c)
 void window_donate_to_city_show()
 {
     window_type window = {
-        Window_DonateToCityDialog,
+        WINDOW_DONATE_TO_CITY,
         draw_background,
         draw_foreground,
         handle_mouse,

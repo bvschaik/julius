@@ -221,7 +221,7 @@ advisor_type window_advisors_get_advisor()
 void window_advisors_show()
 {
     window_type window = {
-        Window_Advisors,
+        WINDOW_ADVISORS,
         draw_background,
         draw_foreground,
         handle_mouse,

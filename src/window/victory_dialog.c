@@ -93,7 +93,7 @@ static void button_continue_governing(int months, int param2)
 void window_victory_dialog_show()
 {
     window_type window = {
-        Window_VictoryDialog,
+        WINDOW_VICTORY_DIALOG,
         draw_background,
         draw_foreground,
         handle_mouse,

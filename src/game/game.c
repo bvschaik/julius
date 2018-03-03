@@ -99,10 +99,10 @@ static int get_elapsed_ticks()
     switch (window_get_id()) {
         default:
             return 0;
-        case Window_City:
-        case Window_CityMilitary:
-        case Window_SlidingSidebar:
-        case Window_OverlayMenu:
+        case WINDOW_CITY:
+        case WINDOW_CITY_MILITARY:
+        case WINDOW_SLIDING_SIDEBAR:
+        case WINDOW_OVERLAY_MENU:
             break;
     }
     if (building_construction_in_progress()) {

@@ -126,7 +126,7 @@ static void button_cancel(int param1, int param2)
 void window_gift_to_emperor_show()
 {
     window_type window = {
-        Window_SendGiftToCaesarDialog,
+        WINDOW_GIFT_TO_EMPEROR,
         draw_background,
         draw_foreground,
         handle_mouse,

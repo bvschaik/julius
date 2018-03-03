@@ -25,7 +25,7 @@ static struct {
 
 static int init(popup_dialog_type type, void (*close_func)(int accepted), int has_ok_cancel_buttons)
 {
-    if (window_is(Window_PopupDialog)) {
+    if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
         return 0;
     }
@@ -86,7 +86,7 @@ void window_popup_dialog_show(popup_dialog_type type, void (*close_func)(int acc
 {
     if (init(type, close_func, has_ok_cancel_buttons)) {
         window_type window = {
-            Window_PopupDialog,
+            WINDOW_POPUP_DIALOG,
             draw_background,
             draw_foreground,
             handle_mouse

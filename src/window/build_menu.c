@@ -278,7 +278,7 @@ void window_build_menu_show(int submenu)
 {
     if (init(submenu)) {
         window_type window = {
-            Window_BuildingMenu,
+            WINDOW_BUILD_MENU,
             draw_background,
             draw_foreground,
             handle_mouse,

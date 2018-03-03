@@ -147,7 +147,7 @@ void window_mission_selection_show()
         return;
     }
     window_type window = {
-        Window_MissionSelection,
+        WINDOW_MISSION_SELECTION,
         draw_background,
         draw_foreground,
         handle_mouse,

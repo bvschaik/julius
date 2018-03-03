@@ -166,7 +166,7 @@ static void handle_mouse(const mouse *m)
 static void top_menu_window_show()
 {
     window_type window = {
-        Window_TopMenu,
+        WINDOW_TOP_MENU,
         window_city_draw_panels,
         draw_foreground,
         handle_mouse,

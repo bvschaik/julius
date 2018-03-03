@@ -76,7 +76,7 @@ static void button_click(int type, int param2)
 void window_main_menu_show()
 {
     window_type window = {
-        Window_MainMenu,
+        WINDOW_MAIN_MENU,
         draw_background,
         draw_foreground,
         handle_mouse
