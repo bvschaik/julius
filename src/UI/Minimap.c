@@ -16,23 +16,22 @@
 #include "widget/sidebar.h"
 
 static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles);
-static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTiles);
+static void drawMinimap();
 static int drawFigure(int xView, int yView, int gridOffset);
 static void drawTile(int xView, int yView, int gridOffset);
-static void drawViewportRectangle(int xView, int yView, int widthTiles, int heightTiles);
-static int getMouseGridOffset(const mouse *m, int xOffset, int yOffset, int widthTiles, int heightTiles);
-
-static int minimapAbsoluteX;
-static int minimapAbsoluteY;
-static int minimapLeft;
-static int minimapTop;
-static int minimapRight;
-static int minimapBottom;
-static color_t soldierColor;
-static color_t enemyColor;
+static void drawViewportRectangle();
 
 static struct {
+    int absolute_x;
+    int absolute_y;
+    int width_tiles;
+    int height_tiles;
+    int x_offset;
+    int y_offset;
+    int width;
+    int height;
     
+    color_t enemy_color;
     struct {
         int x;
         int y;
@@ -40,23 +39,22 @@ static struct {
     } mouse;
 } data;
 
-void foreach_map_tile(int xOffset, int yOffset, int widthTiles, int heightTiles,
-                      void (*callback)(int xView, int yView, int gridOffset))
+void foreach_map_tile(void (*callback)(int xView, int yView, int gridOffset))
 {
     int odd = 0;
-    int yAbs = minimapAbsoluteY - 4;
-    int yView = yOffset - 4;
-    for (int yRel = -4; yRel < heightTiles + 4; yRel++, yAbs++, yView++) {
+    int yAbs = data.absolute_y - 4;
+    int yView = data.y_offset - 4;
+    for (int yRel = -4; yRel < data.height_tiles + 4; yRel++, yAbs++, yView++) {
         int xView;
         if (odd) {
-            xView = xOffset - 9;
+            xView = data.x_offset - 9;
             odd = 0;
         } else {
-            xView = xOffset - 8;
+            xView = data.x_offset - 8;
             odd = 1;
         }
-        int xAbs = minimapAbsoluteX - 4;
-        for (int xRel = -4; xRel < widthTiles; xRel++, xAbs++, xView += 2) {
+        int xAbs = data.absolute_x - 4;
+        for (int xRel = -4; xRel < data.width_tiles; xRel++, xAbs++, xView += 2) {
             if (xAbs < 0 || xAbs >= VIEW_X_MAX) continue;
             if (yAbs < 0 || yAbs >= VIEW_Y_MAX) continue;
             callback(xView, yView, ViewToGridOffset(xAbs, yAbs));
@@ -68,50 +66,51 @@ void UI_Minimap_draw(int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
 	graphics_set_clip_rectangle(xOffset, yOffset, 2 * widthTiles, heightTiles);
 	
-	soldierColor = COLOR_SOLDIER;
     switch (scenario_property_climate()) {
-        case CLIMATE_CENTRAL: enemyColor = COLOR_ENEMY_CENTRAL; break;
-        case CLIMATE_NORTHERN: enemyColor = COLOR_ENEMY_NORTHERN; break;
-        default: enemyColor = COLOR_ENEMY_DESERT; break;
+        case CLIMATE_CENTRAL: data.enemy_color = COLOR_ENEMY_CENTRAL; break;
+        case CLIMATE_NORTHERN: data.enemy_color = COLOR_ENEMY_NORTHERN; break;
+        default: data.enemy_color = COLOR_ENEMY_DESERT; break;
     }
 
 	setBounds(xOffset, yOffset, widthTiles, heightTiles);
-	drawMinimap(xOffset, yOffset, widthTiles, heightTiles);
-	drawViewportRectangle(xOffset, yOffset, widthTiles, heightTiles);
+	drawMinimap();
+	drawViewportRectangle();
 
 	graphics_reset_clip_rectangle();
 }
 
 static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
-	minimapAbsoluteX = (VIEW_X_MAX - widthTiles) / 2;
-	minimapAbsoluteY = (VIEW_Y_MAX - heightTiles) / 2;
-	minimapLeft = xOffset;
-	minimapTop = yOffset;
-	minimapRight = xOffset + 2 * widthTiles;
-	minimapBottom = yOffset + heightTiles;
+    data.width_tiles = widthTiles;
+    data.height_tiles = heightTiles;
+    data.x_offset = xOffset;
+    data.y_offset = yOffset;
+    data.width = 2 * widthTiles;
+    data.height = data.height_tiles;
+	data.absolute_x = (VIEW_X_MAX - widthTiles) / 2;
+	data.absolute_y = (VIEW_Y_MAX - heightTiles) / 2;
 
 	if ((Data_State.map.width - widthTiles) / 2 > 0) {
-		if (Data_CityView.xInTiles < minimapAbsoluteX) {
-			minimapAbsoluteX = Data_CityView.xInTiles;
-		} else if (Data_CityView.xInTiles > widthTiles + minimapAbsoluteX - Data_CityView.widthInTiles) {
-			minimapAbsoluteX = Data_CityView.widthInTiles + Data_CityView.xInTiles - widthTiles;
+		if (Data_CityView.xInTiles < data.absolute_x) {
+			data.absolute_x = Data_CityView.xInTiles;
+		} else if (Data_CityView.xInTiles > widthTiles + data.absolute_x - Data_CityView.widthInTiles) {
+			data.absolute_x = Data_CityView.widthInTiles + Data_CityView.xInTiles - widthTiles;
 		}
 	}
 	if ((2 * Data_State.map.height - heightTiles) / 2 > 0) {
-		if (Data_CityView.yInTiles < minimapAbsoluteY) {
-			minimapAbsoluteY = Data_CityView.yInTiles;
-		} else if (Data_CityView.yInTiles > heightTiles + minimapAbsoluteY - Data_CityView.heightInTiles) {
-			minimapAbsoluteY = Data_CityView.heightInTiles + Data_CityView.yInTiles - heightTiles;
+		if (Data_CityView.yInTiles < data.absolute_y) {
+			data.absolute_y = Data_CityView.yInTiles;
+		} else if (Data_CityView.yInTiles > heightTiles + data.absolute_y - Data_CityView.heightInTiles) {
+			data.absolute_y = Data_CityView.heightInTiles + Data_CityView.yInTiles - heightTiles;
 		}
 	}
 	// ensure even height
-	minimapAbsoluteY &= ~1;
+	data.absolute_y &= ~1;
 }
 
-static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTiles)
+static void drawMinimap()
 {
-    foreach_map_tile(xOffset, yOffset, widthTiles, heightTiles, drawTile);
+    foreach_map_tile(drawTile);
 }
 
 enum {
@@ -148,9 +147,9 @@ static int drawFigure(int xView, int yView, int gridOffset)
     }
     color_t color = COLOR_BLACK;
     if (color_type == FIGURE_COLOR_SOLDIER) {
-        color = soldierColor;
+        color = COLOR_SOLDIER;
     } else if (color_type == FIGURE_COLOR_ENEMY) {
-        color = enemyColor;
+        color = data.enemy_color;
     }
     graphics_draw_line(xView, yView, xView+1, yView, color);
     return 1;
@@ -227,16 +226,16 @@ static void drawTile(int xView, int yView, int gridOffset)
 	}
 }
 
-static void drawViewportRectangle(int xView, int yView, int widthTiles, int heightTiles)
+static void drawViewportRectangle()
 {
-	int xOffset = xView + 2 * (Data_CityView.xInTiles - minimapAbsoluteX) - 2;
-	if (xOffset < xView) {
-		xOffset = xView;
+	int xOffset = data.x_offset + 2 * (Data_CityView.xInTiles - data.absolute_x) - 2;
+	if (xOffset < data.x_offset) {
+		xOffset = data.x_offset;
 	}
-	if (xOffset + 2 * Data_CityView.widthInTiles + 4 > xView + widthTiles) {
+	if (xOffset + 2 * Data_CityView.widthInTiles + 4 > data.x_offset + data.width_tiles) {
 		xOffset -= 2;
 	}
-	int yOffset = yView + Data_CityView.yInTiles - minimapAbsoluteY + 2;
+	int yOffset = data.y_offset + Data_CityView.yInTiles - data.absolute_y + 2;
 	graphics_draw_rect(xOffset, yOffset,
 		Data_CityView.widthInTiles * 2 + 4,
 		Data_CityView.heightInTiles - 4,
@@ -250,19 +249,19 @@ static void update_mouse_grid_offset(int x_view, int y_view, int grid_offset)
     }
 }
 
-static int getMouseGridOffset(const mouse *m, int xOffset, int yOffset, int widthTiles, int heightTiles)
+static int getMouseGridOffset(const mouse *m)
 {
     data.mouse.x = m->x;
     data.mouse.y = m->y;
     data.mouse.grid_offset = 0;
-    foreach_map_tile(xOffset, yOffset, widthTiles, heightTiles, update_mouse_grid_offset);
+    foreach_map_tile(update_mouse_grid_offset);
     return data.mouse.grid_offset;
 }
 
 static int isMinimapClick(const mouse *m)
 {
-	if (m->x >= minimapLeft && m->x < minimapRight &&
-		m->y >= minimapTop && m->y < minimapBottom) {
+	if (m->x >= data.x_offset && m->x < data.x_offset + data.width &&
+		m->y >= data.y_offset && m->y < data.y_offset + data.height) {
 		return 1;
 	}
 	return 0;
@@ -270,14 +269,12 @@ static int isMinimapClick(const mouse *m)
 
 int UI_Minimap_handleClick(const mouse *m)
 {
-	if (isMinimapClick(m)) {
-		if (m->left.went_down || m->right.went_down) {
-			int gridOffset = getMouseGridOffset(m, minimapLeft, minimapTop, 73, 111);
-			if (gridOffset > 0) {
-				city_view_go_to_grid_offset(gridOffset);
-				widget_sidebar_invalidate_minimap();
-				return 1;
-			}
+	if ((m->left.went_down || m->right.went_down) && isMinimapClick(m)) {
+		int gridOffset = getMouseGridOffset(m);
+		if (gridOffset > 0) {
+			city_view_go_to_grid_offset(gridOffset);
+			widget_sidebar_invalidate_minimap();
+			return 1;
 		}
 	}
 	return 0;
