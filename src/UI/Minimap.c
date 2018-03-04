@@ -15,27 +15,6 @@
 #include "scenario/property.h"
 #include "widget/sidebar.h"
 
-#define FOREACH_XY_VIEW(block)\
-	int odd = 0;\
-	int yAbs = minimapAbsoluteY - 4;\
-	int yView = yOffset - 4;\
-	for (int yRel = -4; yRel < heightTiles + 4; yRel++, yAbs++, yView++) {\
-		int xView;\
-		if (odd) {\
-			xView = xOffset - 9;\
-			odd = 0;\
-		} else {\
-			xView = xOffset - 8;\
-			odd = 1;\
-		}\
-		int xAbs = minimapAbsoluteX - 4;\
-		for (int xRel = -4; xRel < widthTiles; xRel++, xAbs++, xView += 2) {\
-			if (xAbs < 0 || xAbs >= VIEW_X_MAX) continue;\
-			if (yAbs < 0 || yAbs >= VIEW_Y_MAX) continue;\
-			block;\
-		}\
-	}
-
 static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles);
 static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTiles);
 static int drawFigure(int xView, int yView, int gridOffset);
@@ -51,6 +30,39 @@ static int minimapRight;
 static int minimapBottom;
 static color_t soldierColor;
 static color_t enemyColor;
+
+static struct {
+    
+    struct {
+        int x;
+        int y;
+        int grid_offset;
+    } mouse;
+} data;
+
+void foreach_map_tile(int xOffset, int yOffset, int widthTiles, int heightTiles,
+                      void (*callback)(int xView, int yView, int gridOffset))
+{
+    int odd = 0;
+    int yAbs = minimapAbsoluteY - 4;
+    int yView = yOffset - 4;
+    for (int yRel = -4; yRel < heightTiles + 4; yRel++, yAbs++, yView++) {
+        int xView;
+        if (odd) {
+            xView = xOffset - 9;
+            odd = 0;
+        } else {
+            xView = xOffset - 8;
+            odd = 1;
+        }
+        int xAbs = minimapAbsoluteX - 4;
+        for (int xRel = -4; xRel < widthTiles; xRel++, xAbs++, xView += 2) {
+            if (xAbs < 0 || xAbs >= VIEW_X_MAX) continue;
+            if (yAbs < 0 || yAbs >= VIEW_Y_MAX) continue;
+            callback(xView, yView, ViewToGridOffset(xAbs, yAbs));
+        }
+    }    
+}
 
 void UI_Minimap_draw(int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
@@ -99,10 +111,7 @@ static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles)
 
 static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
-	FOREACH_XY_VIEW(
-		int gridOffset = ViewToGridOffset(xAbs, yAbs);
-		drawTile(xView, yView, gridOffset);
-	);
+    foreach_map_tile(xOffset, yOffset, widthTiles, heightTiles, drawTile);
 }
 
 enum {
@@ -234,16 +243,20 @@ static void drawViewportRectangle(int xView, int yView, int widthTiles, int heig
 		COLOR_YELLOW);
 }
 
+static void update_mouse_grid_offset(int x_view, int y_view, int grid_offset)
+{
+    if (data.mouse.y == y_view && (data.mouse.x == x_view || data.mouse.x == x_view + 1)) {
+        data.mouse.grid_offset = grid_offset < 0 ? 0 : grid_offset;
+    }
+}
+
 static int getMouseGridOffset(const mouse *m, int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
-	setBounds(xOffset, yOffset, widthTiles, heightTiles);
-	FOREACH_XY_VIEW(
-		if (m->y == yView && (m->x == xView || m->x == xView + 1)) {
-			int gridOffset = ViewToGridOffset(xAbs, yAbs);
-			return gridOffset < 0 ? 0 : gridOffset;
-		}
-	);
-	return 0;
+    data.mouse.x = m->x;
+    data.mouse.y = m->y;
+    data.mouse.grid_offset = 0;
+    foreach_map_tile(xOffset, yOffset, widthTiles, heightTiles, update_mouse_grid_offset);
+    return data.mouse.grid_offset;
 }
 
 static int isMinimapClick(const mouse *m)
