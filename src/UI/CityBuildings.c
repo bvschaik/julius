@@ -1,7 +1,5 @@
 #include "CityBuildings_private.h"
 
-#include "Minimap.h"
-
 #include "building/animation.h"
 #include "building/construction.h"
 #include "building/dock.h"
@@ -29,6 +27,7 @@
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
+#include "widget/minimap.h"
 #include "window/building_info.h"
 #include "window/city.h"
 
@@ -1063,7 +1062,7 @@ static void militaryMapClick()
 void UI_CityBuildings_handleMouseMilitary(const mouse *m)
 {
 	updateCityViewCoords(m);
-	if (!city_view_is_sidebar_collapsed() && UI_Minimap_handleClick(m)) {
+	if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m)) {
 		return;
 	}
 	UI_CityBuildings_scrollMap(scroll_get_direction(m));

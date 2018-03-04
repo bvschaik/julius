@@ -1,7 +1,5 @@
 #include "sidebar.h"
 
-#include "UI/Minimap.h"
-
 #include "building/menu.h"
 #include "city/message.h"
 #include "city/view.h"
@@ -21,6 +19,7 @@
 #include "map/orientation.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
+#include "widget/minimap.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -138,7 +137,7 @@ static void draw_minimap(int force)
     if (!city_view_is_sidebar_collapsed()) {
         if (data.minimap_redraw_requested || scroll_in_progress() || force) {
             int x_offset = get_x_offset_expanded();
-            UI_Minimap_draw(x_offset + 8, 59, 73, 111);
+            widget_minimap_draw(x_offset + 8, 59, 73, 111);
             graphics_draw_line(x_offset + 7, 58, x_offset + 153, 58, COLOR_MINIMAP_DARK);
             graphics_draw_line(x_offset + 7, 59, x_offset + 7, 170, COLOR_MINIMAP_DARK);
             graphics_draw_line(x_offset + 153, 59, x_offset + 153, 170, COLOR_MINIMAP_LIGHT);
@@ -311,7 +310,7 @@ int widget_sidebar_handle_mouse(const mouse *m)
             data.focus_button_for_tooltip = button_id + 19;
         }
     } else {
-        if (UI_Minimap_handleClick(m)) {
+        if (widget_minimap_handle_mouse(m)) {
             return 1;
         }
         int x_offset = get_x_offset_expanded();
