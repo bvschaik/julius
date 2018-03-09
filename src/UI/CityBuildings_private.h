@@ -10,6 +10,7 @@
 #include "building/model.h"
 #include "core/calc.h"
 #include "core/image.h"
+#include "figure/figure.h"
 #include "graphics/image.h"
 
 #define DRAWFOOT_SIZE1(g,x,y) image_draw_isometric_footprint(g, x, y, 0)
@@ -95,10 +96,14 @@
 void UI_CityBuildings_drawOverlayFootprints();
 void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay);
 
-void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset,
-	int selectedFigureId, struct UI_CityPixelCoordinate *coord);
+void UI_CityBuildings_drawFigure(const figure *f, int xOffset, int yOffset);
+void UI_CityBuildings_drawSelectedFigure(const figure *f, int xOffset, int yOffset,
+    struct UI_CityPixelCoordinate *coord);
+void UI_CityBuildings_drawFigureOnOverlay(const figure *f, int xOffset, int yOffset);
 void UI_CityBuildings_drawBridge(int gridOffset, int x, int y);
 
 void UI_CityBuildings_drawSelectedBuildingGhost();
+
+void UI_CityBuildings_scrollMap(int direction);
 
 #endif

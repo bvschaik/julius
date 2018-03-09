@@ -134,7 +134,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 			while (figureId) {
 			    figure *fig = figure_get(figureId);
 				if (!fig->isGhost) {
-					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, 9999, 0);
+					UI_CityBuildings_drawFigureOnOverlay(fig, xGraphic, yGraphic);
 				}
 				figureId = fig->nextFigureIdOnSameTile;
 			}

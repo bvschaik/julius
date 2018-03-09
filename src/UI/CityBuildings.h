@@ -17,6 +17,4 @@ void UI_CityBuildings_handleMouse(const mouse *m);
 void UI_CityBuildings_handleMouseMilitary(const mouse *m);
 void UI_CityBuildings_getTooltip(tooltip_context *c);
 
-void UI_CityBuildings_scrollMap(int direction);
-
 #endif

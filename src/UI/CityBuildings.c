@@ -33,7 +33,8 @@
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
-static void drawHippodromeAndElevatedFigures(int selectedFigureId);
+static void drawHippodromeAndElevatedFigures(void);
+static void drawOverlayElevatedFigures(void);
 
 static time_millis lastWaterAnimationTime = 0;
 static int advanceWaterAnimation;
@@ -57,12 +58,12 @@ void UI_CityBuildings_drawForeground(int x, int y)
 		UI_CityBuildings_drawOverlayFootprints();
 		UI_CityBuildings_drawOverlayTopsFiguresAnimation(game_state_overlay());
 		UI_CityBuildings_drawSelectedBuildingGhost();
-		drawHippodromeAndElevatedFigures(9999);
+		drawOverlayElevatedFigures();
 	} else {
 		drawBuildingFootprints();
 		drawBuildingTopsFiguresAnimation(0, 0);
 		UI_CityBuildings_drawSelectedBuildingGhost();
-		drawHippodromeAndElevatedFigures(0);
+		drawHippodromeAndElevatedFigures();
 	}
 
 	graphics_reset_clip_rectangle();
@@ -108,7 +109,7 @@ void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, struct
 
 	drawBuildingFootprints();
 	drawBuildingTopsFiguresAnimation(figureId, coord);
-	drawHippodromeAndElevatedFigures(0);
+	drawHippodromeAndElevatedFigures();
 
 	graphics_reset_clip_rectangle();
 }
@@ -352,10 +353,14 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 			int figureId = map_figure_at(gridOffset);
 			while (figureId) {
                 figure *f = figure_get(figureId);
-				if (!f->isGhost) {
-					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, coord);
-				}
-				figureId = f->nextFigureIdOnSameTile;
+                if (!f->isGhost) {
+                    if (!selectedFigureId) {
+                        UI_CityBuildings_drawFigure(f, xGraphic, yGraphic);
+                    } else if (figureId == selectedFigureId) {
+                        UI_CityBuildings_drawSelectedFigure(f, xGraphic, yGraphic, coord);
+                    }
+                }
+                figureId = f->nextFigureIdOnSameTile;
 			}
 		} END_FOREACH_X_VIEW;
 		// draw animation
@@ -557,18 +562,15 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 	}
 }
 
-static void drawHippodromeAndElevatedFigures(int selectedFigureId)
+static void drawHippodromeAndElevatedFigures(void)
 {
 	FOREACH_Y_VIEW {
 		FOREACH_X_VIEW {
             int figureId = map_figure_at(gridOffset);
             while (figureId > 0) {
                 figure *f = figure_get(figureId);
-                if (f->useCrossCountry && !f->isGhost) {
-                    UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, 0);
-                }
-                if (f->heightAdjustedTicks) {
-                    UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, 0);
+                if ((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) {
+                    UI_CityBuildings_drawFigure(f, xGraphic, yGraphic);
                 }
                 figureId = f->nextFigureIdOnSameTile;
             }
@@ -611,6 +613,22 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 			}
 		} END_FOREACH_X_VIEW;
 	} END_FOREACH_Y_VIEW;
+}
+
+static void drawOverlayElevatedFigures(void)
+{
+    FOREACH_Y_VIEW {
+        FOREACH_X_VIEW {
+            int figureId = map_figure_at(gridOffset);
+            while (figureId > 0) {
+                figure *f = figure_get(figureId);
+                if ((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) {
+                    UI_CityBuildings_drawFigureOnOverlay(f, xGraphic, yGraphic);
+                }
+                figureId = f->nextFigureIdOnSameTile;
+            }
+        } END_FOREACH_X_VIEW;
+    } END_FOREACH_Y_VIEW;
 }
 
 // MOUSE HANDLING
