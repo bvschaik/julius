@@ -31,33 +31,6 @@
 #define DRAWTOP_SIZE4_C(g,x,y,c) image_draw_isometric_top(g, x + 90, y - 45, c)
 #define DRAWTOP_SIZE5_C(g,x,y,c) image_draw_isometric_top(g, x + 120, y - 60, c)
 
-#define FOREACH_XY_VIEW \
-	int odd = 0;\
-	int yView = Data_CityView.yInTiles - 8;\
-	int yGraphic = Data_CityView.yOffsetInPixels - 9*15;\
-	for (int y = 0; y < Data_CityView.heightInTiles + 14; y++) {\
-		int xGraphic = -(4*58 + 8);\
-		if (odd) {\
-			xGraphic += Data_CityView.xOffsetInPixels - 30;\
-			odd = 0;\
-		} else {\
-			xGraphic += Data_CityView.xOffsetInPixels;\
-			odd = 1;\
-		}\
-		int xView = Data_CityView.xInTiles - 4;\
-		for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {\
-			if (xView >= 0 && xView < VIEW_X_MAX &&\
-				yView >= 0 && yView < VIEW_Y_MAX) {
-
-#define END_FOREACH_XY_VIEW \
-			}\
-			xGraphic += 60;\
-			xView++;\
-		}\
-		yGraphic += 15;\
-		yView++;\
-	}
-
 #define FOREACH_Y_VIEW \
 	int odd = 0;\
 	int yView = Data_CityView.yInTiles - 8;\

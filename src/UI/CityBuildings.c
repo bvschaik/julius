@@ -119,8 +119,8 @@ static void drawBuildingFootprints()
 	int graphicIdWaterFirst = image_group(GROUP_TERRAIN_WATER);
 	int graphicIdWaterLast = 5 + graphicIdWaterFirst;
 
-	FOREACH_XY_VIEW {
-		int gridOffset = ViewToGridOffset(xView, yView);
+    FOREACH_Y_VIEW {
+    FOREACH_X_VIEW {
 		if (gridOffset == Data_State.selectedBuilding.gridOffsetStart) {
 			Data_State.selectedBuilding.reservoirOffsetX = xGraphic;
 			Data_State.selectedBuilding.reservoirOffsetY = yGraphic;
@@ -182,7 +182,8 @@ static void drawBuildingFootprints()
 					break;
 			}
 		}
-	} END_FOREACH_XY_VIEW;
+    } END_FOREACH_X_VIEW;
+    } END_FOREACH_Y_VIEW;
 }
 
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord)

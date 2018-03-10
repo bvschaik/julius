@@ -92,8 +92,8 @@ static void draw_top_with_size(int grid_offset, int image_x, int image_y)
 void UI_CityBuildings_drawOverlayFootprints()
 {
     int overlay = game_state_overlay();
-	FOREACH_XY_VIEW {
-		int gridOffset = ViewToGridOffset(xView, yView);
+    FOREACH_Y_VIEW {
+    FOREACH_X_VIEW {
 		if (gridOffset == Data_State.selectedBuilding.gridOffsetStart) {
 			Data_State.selectedBuilding.reservoirOffsetX = xGraphic;
 			Data_State.selectedBuilding.reservoirOffsetY = yGraphic;
@@ -123,7 +123,8 @@ void UI_CityBuildings_drawOverlayFootprints()
 				draw_foot_with_size(gridOffset, xGraphic, yGraphic);
 			}
 		}
-	} END_FOREACH_XY_VIEW;
+    } END_FOREACH_X_VIEW;
+    } END_FOREACH_Y_VIEW;
 }
 
 static building *get_entertainment_building(const figure *f)
