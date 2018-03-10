@@ -294,7 +294,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Ghost.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Overlay.c
-	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Scroll.c
 	${CORE_FILES}
 	${BUILDING_FILES}
 	${CITY_FILES}

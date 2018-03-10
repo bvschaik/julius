@@ -694,9 +694,16 @@ static void buildEnd()
 	}
 }
 
+static void scroll_map(int direction)
+{
+    if (city_view_scroll(direction)) {
+        sound_city_decay_views();
+    }
+}
+
 void UI_CityBuildings_handleMouse(const mouse *m)
 {
-	UI_CityBuildings_scrollMap(scroll_get_direction(m));
+	scroll_map(scroll_get_direction(m));
 	updateCityViewCoords(m);
 	Data_State.selectedBuilding.drawAsConstructing = 0;
 	if (m->left.went_down) {
@@ -1066,7 +1073,7 @@ void UI_CityBuildings_handleMouseMilitary(const mouse *m)
 	if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m)) {
 		return;
 	}
-	UI_CityBuildings_scrollMap(scroll_get_direction(m));
+	scroll_map(scroll_get_direction(m));
 	if (m->right.went_up) {
 		city_warning_clear_all();
 		window_city_show();

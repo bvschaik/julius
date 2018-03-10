@@ -1,12 +1,8 @@
 #include "city_figure.h"
 
-#include "building/building.h"
 #include "city/view.h"
-#include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/image.h"
-#include "game/resource.h"
-#include "game/state.h"
 #include "graphics/image.h"
 
 static void draw_figure_with_cart(const figure *f, int x, int y)

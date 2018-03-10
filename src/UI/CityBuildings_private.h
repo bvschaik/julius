@@ -74,6 +74,4 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y);
 
 void UI_CityBuildings_drawSelectedBuildingGhost();
 
-void UI_CityBuildings_scrollMap(int direction);
-
 #endif
