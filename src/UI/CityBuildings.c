@@ -34,7 +34,6 @@
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
 static void drawHippodromeAndElevatedFigures(void);
-static void drawOverlayElevatedFigures(void);
 
 static time_millis lastWaterAnimationTime = 0;
 static int advanceWaterAnimation;
@@ -58,7 +57,7 @@ void UI_CityBuildings_drawForeground(int x, int y)
 		UI_CityBuildings_drawOverlayFootprints();
 		UI_CityBuildings_drawOverlayTopsFiguresAnimation(game_state_overlay());
 		UI_CityBuildings_drawSelectedBuildingGhost();
-		drawOverlayElevatedFigures();
+		UI_CityBuildings_drawOverlayElevatedFigures();
 	} else {
 		drawBuildingFootprints();
 		drawBuildingTopsFiguresAnimation(0, 0);
@@ -576,59 +575,41 @@ static void drawHippodromeAndElevatedFigures(void)
             }
 		} END_FOREACH_X_VIEW;
 		FOREACH_X_VIEW {
-			if (!game_state_overlay()) {
-				int graphicId = map_image_at(gridOffset);
-				const image *img = image_get(graphicId);
-				if (img->num_animation_sprites &&
-					map_property_is_draw_tile(gridOffset) &&
-					building_get(map_building_at(gridOffset))->type == BUILDING_HIPPODROME) {
-					switch (map_property_multi_tile_size(gridOffset)) {
-						case 1:
-							image_draw(graphicId + 1,
-								xGraphic + img->sprite_offset_x,
-								yGraphic + img->sprite_offset_y - img->height + 30);
-							break;
-						case 2:
-							image_draw(graphicId + 1,
-								xGraphic + img->sprite_offset_x,
-								yGraphic + img->sprite_offset_y - img->height + 45);
-							break;
-						case 3:
-							image_draw(graphicId + 1,
-								xGraphic + img->sprite_offset_x,
-								yGraphic + img->sprite_offset_y - img->height + 60);
-							break;
-						case 4:
-							image_draw(graphicId + 1,
-								xGraphic + img->sprite_offset_x,
-								yGraphic + img->sprite_offset_y - img->height + 75);
-							break;
-						case 5:
-							image_draw(graphicId + 1,
-								xGraphic + img->sprite_offset_x,
-								yGraphic + img->sprite_offset_y - img->height + 90);
-							break;
-					}
+			int graphicId = map_image_at(gridOffset);
+			const image *img = image_get(graphicId);
+			if (img->num_animation_sprites &&
+				map_property_is_draw_tile(gridOffset) &&
+				building_get(map_building_at(gridOffset))->type == BUILDING_HIPPODROME) {
+				switch (map_property_multi_tile_size(gridOffset)) {
+					case 1:
+						image_draw(graphicId + 1,
+							xGraphic + img->sprite_offset_x,
+							yGraphic + img->sprite_offset_y - img->height + 30);
+						break;
+					case 2:
+						image_draw(graphicId + 1,
+							xGraphic + img->sprite_offset_x,
+							yGraphic + img->sprite_offset_y - img->height + 45);
+						break;
+					case 3:
+						image_draw(graphicId + 1,
+							xGraphic + img->sprite_offset_x,
+							yGraphic + img->sprite_offset_y - img->height + 60);
+						break;
+					case 4:
+						image_draw(graphicId + 1,
+							xGraphic + img->sprite_offset_x,
+							yGraphic + img->sprite_offset_y - img->height + 75);
+						break;
+					case 5:
+						image_draw(graphicId + 1,
+							xGraphic + img->sprite_offset_x,
+							yGraphic + img->sprite_offset_y - img->height + 90);
+						break;
 				}
 			}
 		} END_FOREACH_X_VIEW;
 	} END_FOREACH_Y_VIEW;
-}
-
-static void drawOverlayElevatedFigures(void)
-{
-    FOREACH_Y_VIEW {
-        FOREACH_X_VIEW {
-            int figureId = map_figure_at(gridOffset);
-            while (figureId > 0) {
-                figure *f = figure_get(figureId);
-                if ((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) {
-                    UI_CityBuildings_drawFigureOnOverlay(f, xGraphic, yGraphic);
-                }
-                figureId = f->nextFigureIdOnSameTile;
-            }
-        } END_FOREACH_X_VIEW;
-    } END_FOREACH_Y_VIEW;
 }
 
 // MOUSE HANDLING

@@ -125,6 +125,93 @@ void UI_CityBuildings_drawOverlayFootprints()
 	} END_FOREACH_XY_VIEW;
 }
 
+static building *get_entertainment_building(const figure *f)
+{
+    if (f->actionState == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
+        f->actionState == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
+        return building_get(f->buildingId);
+    } else {
+        return building_get(f->destinationBuildingId);
+    }
+}
+
+static int showOnOverlay(const figure *f)
+{
+    switch (game_state_overlay()) {
+        case OVERLAY_WATER:
+        case OVERLAY_DESIRABILITY:
+            return 0;
+        case OVERLAY_NATIVE:
+            return f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_MISSIONARY;
+        case OVERLAY_FIRE:
+            return f->type == FIGURE_PREFECT;
+        case OVERLAY_DAMAGE:
+            return f->type == FIGURE_ENGINEER;
+        case OVERLAY_TAX_INCOME:
+            return f->type == FIGURE_TAX_COLLECTOR;
+        case OVERLAY_CRIME:
+            return f->type == FIGURE_PREFECT || f->type == FIGURE_PROTESTER ||
+                f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER;
+        case OVERLAY_ENTERTAINMENT:
+            return f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR ||
+                f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
+        case OVERLAY_EDUCATION:
+            return f->type == FIGURE_SCHOOL_CHILD || f->type == FIGURE_LIBRARIAN ||
+                f->type == FIGURE_TEACHER;
+        case OVERLAY_THEATER:
+            if (f->type == FIGURE_ACTOR) {
+                return get_entertainment_building(f)->type == BUILDING_THEATER;
+            }
+            return 0;
+        case OVERLAY_AMPHITHEATER:
+            if (f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR) {
+                return get_entertainment_building(f)->type == BUILDING_AMPHITHEATER;
+            }
+            return 0;
+        case OVERLAY_COLOSSEUM:
+            if (f->type == FIGURE_GLADIATOR) {
+                return get_entertainment_building(f)->type == BUILDING_COLOSSEUM;
+            } else if (f->type == FIGURE_LION_TAMER) {
+                return 1;
+            }
+            return 0;
+        case OVERLAY_HIPPODROME:
+            return f->type == FIGURE_CHARIOTEER;
+        case OVERLAY_RELIGION:
+            return f->type == FIGURE_PRIEST;
+        case OVERLAY_SCHOOL:
+            return f->type == FIGURE_SCHOOL_CHILD;
+        case OVERLAY_LIBRARY:
+            return f->type == FIGURE_LIBRARIAN;
+        case OVERLAY_ACADEMY:
+            return f->type == FIGURE_TEACHER;
+        case OVERLAY_BARBER:
+            return f->type == FIGURE_BARBER;
+        case OVERLAY_BATHHOUSE:
+            return f->type == FIGURE_BATHHOUSE_WORKER;
+        case OVERLAY_CLINIC:
+            return f->type == FIGURE_DOCTOR;
+        case OVERLAY_HOSPITAL:
+            return f->type == FIGURE_SURGEON;
+        case OVERLAY_FOOD_STOCKS:
+            if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER ||
+                f->type == FIGURE_DELIVERY_BOY || f->type == FIGURE_FISHING_BOAT) {
+                return 1;
+            } else if (f->type == FIGURE_CART_PUSHER) {
+                return resource_is_food(f->resourceId);
+            }
+            return 0;
+        case OVERLAY_PROBLEMS:
+            if (f->type == FIGURE_LABOR_SEEKER) {
+                return building_get(f->buildingId)->showOnProblemOverlay;
+            } else if (f->type == FIGURE_CART_PUSHER) {
+                return f->actionState == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->minMaxSeen;
+            }
+            return 0;
+    }
+    return 1;
+}
+
 void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 {
 	FOREACH_Y_VIEW {
@@ -133,8 +220,8 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 			int figureId = map_figure_at(gridOffset);
 			while (figureId) {
 			    figure *fig = figure_get(figureId);
-				if (!fig->isGhost) {
-					UI_CityBuildings_drawFigureOnOverlay(fig, xGraphic, yGraphic);
+				if (!fig->isGhost && showOnOverlay(fig)) {
+					UI_CityBuildings_drawFigure(fig, xGraphic, yGraphic);
 				}
 				figureId = fig->nextFigureIdOnSameTile;
 			}
@@ -302,6 +389,22 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 			}
 		} END_FOREACH_X_VIEW;
 	} END_FOREACH_Y_VIEW;
+}
+
+void UI_CityBuildings_drawOverlayElevatedFigures(void)
+{
+    FOREACH_Y_VIEW {
+        FOREACH_X_VIEW {
+            int figureId = map_figure_at(gridOffset);
+            while (figureId > 0) {
+                figure *f = figure_get(figureId);
+                if (((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) && showOnOverlay(f)) {
+                    UI_CityBuildings_drawFigure(f, xGraphic, yGraphic);
+                }
+                figureId = f->nextFigureIdOnSameTile;
+            }
+        } END_FOREACH_X_VIEW;
+    } END_FOREACH_Y_VIEW;
 }
 
 static int terrain_on_water_overlay()
