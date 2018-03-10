@@ -227,6 +227,7 @@ set(SOUND_FILES
     ${PROJECT_SOURCE_DIR}/src/sound/system.c
 )
 set(WIDGET_FILES
+    ${PROJECT_SOURCE_DIR}/src/widget/city_figure.c
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
@@ -291,7 +292,6 @@ add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings.c
-	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Figures.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Ghost.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Overlay.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Scroll.c

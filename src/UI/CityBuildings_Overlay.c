@@ -14,6 +14,7 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
+#include "widget/city_figure.h"
 
 static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset);
@@ -221,7 +222,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 			while (figureId) {
 			    figure *fig = figure_get(figureId);
 				if (!fig->isGhost && showOnOverlay(fig)) {
-					UI_CityBuildings_drawFigure(fig, xGraphic, yGraphic);
+					city_draw_figure(fig, xGraphic, yGraphic);
 				}
 				figureId = fig->nextFigureIdOnSameTile;
 			}
@@ -399,7 +400,7 @@ void UI_CityBuildings_drawOverlayElevatedFigures(void)
             while (figureId > 0) {
                 figure *f = figure_get(figureId);
                 if (((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) && showOnOverlay(f)) {
-                    UI_CityBuildings_drawFigure(f, xGraphic, yGraphic);
+                    city_draw_figure(f, xGraphic, yGraphic);
                 }
                 figureId = f->nextFigureIdOnSameTile;
             }

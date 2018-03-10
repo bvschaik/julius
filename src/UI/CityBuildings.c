@@ -27,6 +27,7 @@
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
+#include "widget/city_figure.h"
 #include "widget/minimap.h"
 #include "window/building_info.h"
 #include "window/city.h"
@@ -354,9 +355,9 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                 figure *f = figure_get(figureId);
                 if (!f->isGhost) {
                     if (!selectedFigureId) {
-                        UI_CityBuildings_drawFigure(f, xGraphic, yGraphic);
+                        city_draw_figure(f, xGraphic, yGraphic);
                     } else if (figureId == selectedFigureId) {
-                        UI_CityBuildings_drawSelectedFigure(f, xGraphic, yGraphic, coord);
+                        city_draw_selected_figure(f, xGraphic, yGraphic, coord);
                     }
                 }
                 figureId = f->nextFigureIdOnSameTile;
@@ -569,7 +570,7 @@ static void drawHippodromeAndElevatedFigures(void)
             while (figureId > 0) {
                 figure *f = figure_get(figureId);
                 if ((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) {
-                    UI_CityBuildings_drawFigure(f, xGraphic, yGraphic);
+                    city_draw_figure(f, xGraphic, yGraphic);
                 }
                 figureId = f->nextFigureIdOnSameTile;
             }

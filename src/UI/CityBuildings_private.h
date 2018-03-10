@@ -97,9 +97,6 @@ void UI_CityBuildings_drawOverlayFootprints();
 void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay);
 void UI_CityBuildings_drawOverlayElevatedFigures(void);
 
-void UI_CityBuildings_drawFigure(const figure *f, int xOffset, int yOffset);
-void UI_CityBuildings_drawSelectedFigure(const figure *f, int xOffset, int yOffset,
-    struct UI_CityPixelCoordinate *coord);
 void UI_CityBuildings_drawBridge(int gridOffset, int x, int y);
 
 void UI_CityBuildings_drawSelectedBuildingGhost();
