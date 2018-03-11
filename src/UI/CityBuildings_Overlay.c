@@ -93,7 +93,7 @@ void UI_CityBuildings_drawOverlayFootprints()
 {
     int overlay = game_state_overlay();
     FOREACH_Y_VIEW {
-    FOREACH_X_VIEW {
+    FOREACH_X_VIEW_UNCHECKED {
 		if (gridOffset == Data_State.selectedBuilding.gridOffsetStart) {
 			Data_State.selectedBuilding.reservoirOffsetX = xGraphic;
 			Data_State.selectedBuilding.reservoirOffsetY = yGraphic;
@@ -123,7 +123,7 @@ void UI_CityBuildings_drawOverlayFootprints()
 				draw_foot_with_size(gridOffset, xGraphic, yGraphic);
 			}
 		}
-    } END_FOREACH_X_VIEW;
+    } END_FOREACH_X_VIEW_UNCHECKED;
     } END_FOREACH_Y_VIEW;
 }
 

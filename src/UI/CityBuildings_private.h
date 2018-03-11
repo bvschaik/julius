@@ -66,6 +66,24 @@
 		xView++;\
 	}
 
+#define FOREACH_X_VIEW_UNCHECKED \
+    xGraphic = -(4*58 + 8);\
+    if (odd) {\
+        xGraphic += Data_CityView.xOffsetInPixels - 30;\
+    } else {\
+        xGraphic += Data_CityView.xOffsetInPixels;\
+    }\
+    xView = Data_CityView.xInTiles - 4;\
+    for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {\
+        if (xView >= 0 && xView < VIEW_X_MAX) {\
+            int gridOffset = ViewToGridOffset(xView, yView);
+
+#define END_FOREACH_X_VIEW_UNCHECKED \
+        }\
+        xGraphic += 60;\
+        xView++;\
+    }
+
 void UI_CityBuildings_drawOverlayFootprints();
 void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay);
 void UI_CityBuildings_drawOverlayElevatedFigures(void);
