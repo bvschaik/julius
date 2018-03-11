@@ -35,6 +35,7 @@
 void UI_CityBuildings_drawOverlayFootprints();
 void UI_CityBuildings_drawOverlayTopsFiguresAnimation();
 void UI_CityBuildings_drawOverlayElevatedFigures(void);
+int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int gridOffset);
 
 void UI_CityBuildings_drawBridge(int gridOffset, int x, int y);
 

@@ -6,18 +6,15 @@
 #include "city/finance.h"
 #include "city/view.h"
 #include "city/warning.h"
-#include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "graphics/graphics.h"
-#include "graphics/image.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
 #include "map/building.h"
-#include "map/desirability.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/image.h"
@@ -265,36 +262,31 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
     }
 }
 
-static void draw_workshop_raw_material_storage(const building *b, int xGraphic, int yGraphic, color_t color_mask)
+static void draw_workshop_raw_material_storage(const building *b, int x, int y, color_t color_mask)
 {
     if (b->type == BUILDING_WINE_WORKSHOP) {
         if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL),
-                xGraphic + 45, yGraphic + 23, color_mask);
+            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL), x + 45, y + 23, color_mask);
         }
     }
     if (b->type == BUILDING_OIL_WORKSHOP) {
         if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1,
-                xGraphic + 35, yGraphic + 15, color_mask);
+            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1, x + 35, y + 15, color_mask);
         }
     }
     if (b->type == BUILDING_WEAPONS_WORKSHOP) {
         if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3,
-                xGraphic + 46, yGraphic + 24, color_mask);
+            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3, x + 46, y + 24, color_mask);
         }
     }
     if (b->type == BUILDING_FURNITURE_WORKSHOP) {
         if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2,
-                xGraphic + 48, yGraphic + 19, color_mask);
+            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2, x + 48, y + 19, color_mask);
         }
     }
     if (b->type == BUILDING_POTTERY_WORKSHOP) {
         if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4,
-                xGraphic + 47, yGraphic + 24, color_mask);
+            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4, x + 47, y + 24, color_mask);
         }
     }
 }
@@ -354,17 +346,17 @@ static void draw_top(int x, int y, int grid_offset)
 
 static void draw_figures(int x, int y, int grid_offset)
 {
-    int figureId = map_figure_at(grid_offset);
-    while (figureId) {
-        figure *f = figure_get(figureId);
+    int figure_id = map_figure_at(grid_offset);
+    while (figure_id) {
+        figure *f = figure_get(figure_id);
         if (!f->isGhost) {
             if (!draw_context.selected_figure_id) {
                 city_draw_figure(f, x, y);
-            } else if (figureId == draw_context.selected_figure_id) {
+            } else if (figure_id == draw_context.selected_figure_id) {
                 city_draw_selected_figure(f, x, y, draw_context.selected_figure_coord);
             }
         }
-        figureId = f->nextFigureIdOnSameTile;
+        figure_id = f->nextFigureIdOnSameTile;
     }
 }
 
@@ -737,306 +729,12 @@ void UI_CityBuildings_getTooltip(tooltip_context *c)
 		return;
 	}
 	// overlay tooltips
-	if (overlay != OVERLAY_WATER && overlay != OVERLAY_DESIRABILITY && !buildingId) {
-		return;
-	}
-	int overlayRequiresHouse =
-		overlay != OVERLAY_WATER && overlay != OVERLAY_FIRE &&
-		overlay != OVERLAY_DAMAGE && overlay != OVERLAY_NATIVE;
-	int overlayForbidsHouse = overlay == OVERLAY_NATIVE;
-	building *b = building_get(buildingId);
-	if (overlayRequiresHouse && !b->houseSize) {
-		return;
-	}
-	if (overlayForbidsHouse && b->houseSize) {
-		return;
-	}
 	c->text_group = 66;
-	c->text_id = 0;
-	switch (overlay) {
-		case OVERLAY_WATER:
-			if (map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE)) {
-				if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
-					c->text_id = 2;
-				} else {
-					c->text_id = 1;
-				}
-			} else if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
-				c->text_group = 66;
-				c->text_id = 3;
-			} else {
-				return;
-			}
-			break;
-		case OVERLAY_RELIGION:
-			if (b->data.house.numGods <= 0) {
-				c->text_id = 12;
-			} else if (b->data.house.numGods == 1) {
-				c->text_id = 13;
-			} else if (b->data.house.numGods == 2) {
-				c->text_id = 14;
-			} else if (b->data.house.numGods == 3) {
-				c->text_id = 15;
-			} else if (b->data.house.numGods == 4) {
-				c->text_id = 16;
-			} else if (b->data.house.numGods == 5) {
-				c->text_id = 17;
-			} else {
-				c->text_id = 18; // >5 gods, shouldn't happen...
-			}
-			break;
-		case OVERLAY_FIRE:
-			if (b->fireRisk <= 0) {
-				c->text_id = 46;
-			} else if (b->fireRisk <= 20) {
-				c->text_id = 47;
-			} else if (b->fireRisk <= 40) {
-				c->text_id = 48;
-			} else if (b->fireRisk <= 60) {
-				c->text_id = 49;
-			} else if (b->fireRisk <= 80) {
-				c->text_id = 50;
-			} else {
-				c->text_id = 51;
-			}
-			break;
-		case OVERLAY_DAMAGE:
-			if (b->damageRisk <= 0) {
-				c->text_id = 52;
-			} else if (b->damageRisk <= 40) {
-				c->text_id = 53;
-			} else if (b->damageRisk <= 80) {
-				c->text_id = 54;
-			} else if (b->damageRisk <= 120) {
-				c->text_id = 55;
-			} else if (b->damageRisk <= 160) {
-				c->text_id = 56;
-			} else {
-				c->text_id = 57;
-			}
-			break;
-		case OVERLAY_CRIME:
-			if (b->sentiment.houseHappiness <= 0) {
-				c->text_id = 63;
-			} else if (b->sentiment.houseHappiness <= 10) {
-				c->text_id = 62;
-			} else if (b->sentiment.houseHappiness <= 20) {
-				c->text_id = 61;
-			} else if (b->sentiment.houseHappiness <= 30) {
-				c->text_id = 60;
-			} else if (b->sentiment.houseHappiness < 50) {
-				c->text_id = 59;
-			} else {
-				c->text_id = 58;
-			}
-			break;
-		case OVERLAY_ENTERTAINMENT:
-			if (b->data.house.entertainment <= 0) {
-				c->text_id = 64;
-			} else if (b->data.house.entertainment < 10) {
-				c->text_id = 65;
-			} else if (b->data.house.entertainment < 20) {
-				c->text_id = 66;
-			} else if (b->data.house.entertainment < 30) {
-				c->text_id = 67;
-			} else if (b->data.house.entertainment < 40) {
-				c->text_id = 68;
-			} else if (b->data.house.entertainment < 50) {
-				c->text_id = 69;
-			} else if (b->data.house.entertainment < 60) {
-				c->text_id = 70;
-			} else if (b->data.house.entertainment < 70) {
-				c->text_id = 71;
-			} else if (b->data.house.entertainment < 80) {
-				c->text_id = 72;
-			} else if (b->data.house.entertainment < 90) {
-				c->text_id = 73;
-			} else {
-				c->text_id = 74;
-			}
-			break;
-		case OVERLAY_THEATER:
-			if (b->data.house.theater <= 0) {
-				c->text_id = 75;
-			} else if (b->data.house.theater >= 80) {
-				c->text_id = 76;
-			} else if (b->data.house.theater >= 20) {
-				c->text_id = 77;
-			} else {
-				c->text_id = 78;
-			}
-			break;
-		case OVERLAY_AMPHITHEATER:
-			if (b->data.house.amphitheaterActor <= 0) {
-				c->text_id = 79;
-			} else if (b->data.house.amphitheaterActor >= 80) {
-				c->text_id = 80;
-			} else if (b->data.house.amphitheaterActor >= 20) {
-				c->text_id = 81;
-			} else {
-				c->text_id = 82;
-			}
-			break;
-		case OVERLAY_COLOSSEUM:
-			if (b->data.house.colosseumGladiator <= 0) {
-				c->text_id = 83;
-			} else if (b->data.house.colosseumGladiator >= 80) {
-				c->text_id = 84;
-			} else if (b->data.house.colosseumGladiator >= 20) {
-				c->text_id = 85;
-			} else {
-				c->text_id = 86;
-			}
-			break;
-		case OVERLAY_HIPPODROME:
-			if (b->data.house.hippodrome <= 0) {
-				c->text_id = 87;
-			} else if (b->data.house.hippodrome >= 80) {
-				c->text_id = 88;
-			} else if (b->data.house.hippodrome >= 20) {
-				c->text_id = 89;
-			} else {
-				c->text_id = 90;
-			}
-			break;
-		case OVERLAY_EDUCATION:
-			switch (b->data.house.education) {
-				case 0: c->text_id = 100; break;
-				case 1: c->text_id = 101; break;
-				case 2: c->text_id = 102; break;
-				case 3: c->text_id = 103; break;
-			}
-			break;
-		case OVERLAY_SCHOOL:
-			if (b->data.house.school <= 0) {
-				c->text_id = 19;
-			} else if (b->data.house.school >= 80) {
-				c->text_id = 20;
-			} else if (b->data.house.school >= 20) {
-				c->text_id = 21;
-			} else {
-				c->text_id = 22;
-			}
-			break;
-		case OVERLAY_LIBRARY:
-			if (b->data.house.library <= 0) {
-				c->text_id = 23;
-			} else if (b->data.house.library >= 80) {
-				c->text_id = 24;
-			} else if (b->data.house.library >= 20) {
-				c->text_id = 25;
-			} else {
-				c->text_id = 26;
-			}
-			break;
-		case OVERLAY_ACADEMY:
-			if (b->data.house.academy <= 0) {
-				c->text_id = 27;
-			} else if (b->data.house.academy >= 80) {
-				c->text_id = 28;
-			} else if (b->data.house.academy >= 20) {
-				c->text_id = 29;
-			} else {
-				c->text_id = 30;
-			}
-			break;
-		case OVERLAY_BARBER:
-			if (b->data.house.barber <= 0) {
-				c->text_id = 31;
-			} else if (b->data.house.barber >= 80) {
-				c->text_id = 32;
-			} else if (b->data.house.barber < 20) {
-				c->text_id = 33;
-			} else {
-				c->text_id = 34;
-			}
-			break;
-		case OVERLAY_BATHHOUSE:
-			if (b->data.house.bathhouse <= 0) {
-				c->text_id = 8;
-			} else if (b->data.house.bathhouse >= 80) {
-				c->text_id = 9;
-			} else if (b->data.house.bathhouse >= 20) {
-				c->text_id = 10;
-			} else {
-				c->text_id = 11;
-			}
-			break;
-		case OVERLAY_CLINIC:
-			if (b->data.house.clinic <= 0) {
-				c->text_id = 35;
-			} else if (b->data.house.clinic >= 80) {
-				c->text_id = 36;
-			} else if (b->data.house.clinic >= 20) {
-				c->text_id = 37;
-			} else {
-				c->text_id = 38;
-			}
-			break;
-		case OVERLAY_HOSPITAL:
-			if (b->data.house.hospital <= 0) {
-				c->text_id = 39;
-			} else if (b->data.house.hospital >= 80) {
-				c->text_id = 40;
-			} else if (b->data.house.hospital >= 20) {
-				c->text_id = 41;
-			} else {
-				c->text_id = 42;
-			}
-			break;
-		case OVERLAY_TAX_INCOME: {
-			int denarii = calc_adjust_with_percentage(
-				b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
-			if (denarii > 0) {
-				c->has_numeric_prefix = 1;
-				c->numeric_prefix = denarii;
-				c->text_id = 45;
-			} else if (b->houseTaxCoverage > 0) {
-				c->text_id = 44;
-			} else {
-				c->text_id = 43;
-			}
-			break;
-		}
-		case OVERLAY_FOOD_STOCKS:
-			if (b->housePopulation <= 0) {
-				return;
-			}
-			if (!model_get_house(b->subtype.houseLevel)->food_types) {
-				c->text_id = 104;
-			} else {
-				int stocksPresent = 0;
-				for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-					stocksPresent += b->data.house.inventory[i];
-				}
-				int stocksPerPop = calc_percentage(stocksPresent, b->housePopulation);
-				if (stocksPerPop <= 0) {
-					c->text_id = 4;
-				} else if (stocksPerPop < 100) {
-					c->text_id = 5;
-				} else if (stocksPerPop <= 200) {
-					c->text_id = 6;
-				} else {
-					c->text_id = 7;
-				}
-			}
-			break;
-		case OVERLAY_DESIRABILITY: {
-			int desirability = map_desirability_get(gridOffset);
-			if (desirability < 0) {
-				c->text_id = 91;
-			} else if (desirability == 0) {
-				c->text_id = 92;
-			} else {
-				c->text_id = 93;
-			}
-			break;
-		}
-		default:
-			return;
-	}
-	c->type = TOOLTIP_OVERLAY;
-	c->high_priority = 1;
+	c->text_id = UI_CityBuildings_getOverlayTooltipText(c, gridOffset);
+    if (c->text_id) {
+        c->type = TOOLTIP_OVERLAY;
+        c->high_priority = 1;
+    }
 }
 
 static void militaryMapClick()

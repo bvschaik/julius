@@ -1386,3 +1386,300 @@ static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed)
 			xOffset + 5, yOffset - 8 - capitalHeight - 10 * (height - 1) + 13);
 	}
 }
+
+int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int gridOffset)
+{
+    int overlay = game_state_overlay();
+    int buildingId = map_building_at(gridOffset);
+    if (overlay != OVERLAY_WATER && overlay != OVERLAY_DESIRABILITY && !buildingId) {
+        return 0;
+    }
+    int overlayRequiresHouse =
+        overlay != OVERLAY_WATER && overlay != OVERLAY_FIRE &&
+        overlay != OVERLAY_DAMAGE && overlay != OVERLAY_NATIVE;
+    int overlayForbidsHouse = overlay == OVERLAY_NATIVE;
+    building *b = building_get(buildingId);
+    if (overlayRequiresHouse && !b->houseSize) {
+        return 0;
+    }
+    if (overlayForbidsHouse && b->houseSize) {
+        return 0;
+    }
+    switch (overlay) {
+        case OVERLAY_WATER:
+            if (map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE)) {
+                if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+            } else if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
+                return 3;
+            }
+            break;
+        case OVERLAY_RELIGION:
+            if (b->data.house.numGods <= 0) {
+                return 12;
+            } else if (b->data.house.numGods == 1) {
+                return 13;
+            } else if (b->data.house.numGods == 2) {
+                return 14;
+            } else if (b->data.house.numGods == 3) {
+                return 15;
+            } else if (b->data.house.numGods == 4) {
+                return 16;
+            } else if (b->data.house.numGods == 5) {
+                return 17;
+            } else {
+                return 18; // >5 gods, shouldn't happen...
+            }
+            break;
+        case OVERLAY_FIRE:
+            if (b->fireRisk <= 0) {
+                return 46;
+            } else if (b->fireRisk <= 20) {
+                return 47;
+            } else if (b->fireRisk <= 40) {
+                return 48;
+            } else if (b->fireRisk <= 60) {
+                return 49;
+            } else if (b->fireRisk <= 80) {
+                return 50;
+            } else {
+                return 51;
+            }
+            break;
+        case OVERLAY_DAMAGE:
+            if (b->damageRisk <= 0) {
+                return 52;
+            } else if (b->damageRisk <= 40) {
+                return 53;
+            } else if (b->damageRisk <= 80) {
+                return 54;
+            } else if (b->damageRisk <= 120) {
+                return 55;
+            } else if (b->damageRisk <= 160) {
+                return 56;
+            } else {
+                return 57;
+            }
+            break;
+        case OVERLAY_CRIME:
+            if (b->sentiment.houseHappiness <= 0) {
+                return 63;
+            } else if (b->sentiment.houseHappiness <= 10) {
+                return 62;
+            } else if (b->sentiment.houseHappiness <= 20) {
+                return 61;
+            } else if (b->sentiment.houseHappiness <= 30) {
+                return 60;
+            } else if (b->sentiment.houseHappiness < 50) {
+                return 59;
+            } else {
+                return 58;
+            }
+            break;
+        case OVERLAY_ENTERTAINMENT:
+            if (b->data.house.entertainment <= 0) {
+                return 64;
+            } else if (b->data.house.entertainment < 10) {
+                return 65;
+            } else if (b->data.house.entertainment < 20) {
+                return 66;
+            } else if (b->data.house.entertainment < 30) {
+                return 67;
+            } else if (b->data.house.entertainment < 40) {
+                return 68;
+            } else if (b->data.house.entertainment < 50) {
+                return 69;
+            } else if (b->data.house.entertainment < 60) {
+                return 70;
+            } else if (b->data.house.entertainment < 70) {
+                return 71;
+            } else if (b->data.house.entertainment < 80) {
+                return 72;
+            } else if (b->data.house.entertainment < 90) {
+                return 73;
+            } else {
+                return 74;
+            }
+            break;
+        case OVERLAY_THEATER:
+            if (b->data.house.theater <= 0) {
+                return 75;
+            } else if (b->data.house.theater >= 80) {
+                return 76;
+            } else if (b->data.house.theater >= 20) {
+                return 77;
+            } else {
+                return 78;
+            }
+            break;
+        case OVERLAY_AMPHITHEATER:
+            if (b->data.house.amphitheaterActor <= 0) {
+                return 79;
+            } else if (b->data.house.amphitheaterActor >= 80) {
+                return 80;
+            } else if (b->data.house.amphitheaterActor >= 20) {
+                return 81;
+            } else {
+                return 82;
+            }
+            break;
+        case OVERLAY_COLOSSEUM:
+            if (b->data.house.colosseumGladiator <= 0) {
+                return 83;
+            } else if (b->data.house.colosseumGladiator >= 80) {
+                return 84;
+            } else if (b->data.house.colosseumGladiator >= 20) {
+                return 85;
+            } else {
+                return 86;
+            }
+            break;
+        case OVERLAY_HIPPODROME:
+            if (b->data.house.hippodrome <= 0) {
+                return 87;
+            } else if (b->data.house.hippodrome >= 80) {
+                return 88;
+            } else if (b->data.house.hippodrome >= 20) {
+                return 89;
+            } else {
+                return 90;
+            }
+            break;
+        case OVERLAY_EDUCATION:
+            switch (b->data.house.education) {
+                case 0: return 100;
+                case 1: return 101;
+                case 2: return 102;
+                case 3: return 103;
+            }
+            break;
+        case OVERLAY_SCHOOL:
+            if (b->data.house.school <= 0) {
+                return 19;
+            } else if (b->data.house.school >= 80) {
+                return 20;
+            } else if (b->data.house.school >= 20) {
+                return 21;
+            } else {
+                return 22;
+            }
+            break;
+        case OVERLAY_LIBRARY:
+            if (b->data.house.library <= 0) {
+                return 23;
+            } else if (b->data.house.library >= 80) {
+                return 24;
+            } else if (b->data.house.library >= 20) {
+                return 25;
+            } else {
+                return 26;
+            }
+            break;
+        case OVERLAY_ACADEMY:
+            if (b->data.house.academy <= 0) {
+                return 27;
+            } else if (b->data.house.academy >= 80) {
+                return 28;
+            } else if (b->data.house.academy >= 20) {
+                return 29;
+            } else {
+                return 30;
+            }
+            break;
+        case OVERLAY_BARBER:
+            if (b->data.house.barber <= 0) {
+                return 31;
+            } else if (b->data.house.barber >= 80) {
+                return 32;
+            } else if (b->data.house.barber < 20) {
+                return 33;
+            } else {
+                return 34;
+            }
+            break;
+        case OVERLAY_BATHHOUSE:
+            if (b->data.house.bathhouse <= 0) {
+                return 8;
+            } else if (b->data.house.bathhouse >= 80) {
+                return 9;
+            } else if (b->data.house.bathhouse >= 20) {
+                return 10;
+            } else {
+                return 11;
+            }
+            break;
+        case OVERLAY_CLINIC:
+            if (b->data.house.clinic <= 0) {
+                return 35;
+            } else if (b->data.house.clinic >= 80) {
+                return 36;
+            } else if (b->data.house.clinic >= 20) {
+                return 37;
+            } else {
+                return 38;
+            }
+            break;
+        case OVERLAY_HOSPITAL:
+            if (b->data.house.hospital <= 0) {
+                return 39;
+            } else if (b->data.house.hospital >= 80) {
+                return 40;
+            } else if (b->data.house.hospital >= 20) {
+                return 41;
+            } else {
+                return 42;
+            }
+            break;
+        case OVERLAY_TAX_INCOME: {
+            int denarii = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
+            if (denarii > 0) {
+                c->has_numeric_prefix = 1;
+                c->numeric_prefix = denarii;
+                return 45;
+            } else if (b->houseTaxCoverage > 0) {
+                return 44;
+            } else {
+                return 43;
+            }
+            break;
+        }
+        case OVERLAY_FOOD_STOCKS:
+            if (b->housePopulation <= 0) {
+                return 0;
+            }
+            if (!model_get_house(b->subtype.houseLevel)->food_types) {
+                return 104;
+            } else {
+                int stocksPresent = 0;
+                for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+                    stocksPresent += b->data.house.inventory[i];
+                }
+                int stocksPerPop = calc_percentage(stocksPresent, b->housePopulation);
+                if (stocksPerPop <= 0) {
+                    return 4;
+                } else if (stocksPerPop < 100) {
+                    return 5;
+                } else if (stocksPerPop <= 200) {
+                    return 6;
+                } else {
+                    return 7;
+                }
+            }
+            break;
+        case OVERLAY_DESIRABILITY: {
+            int desirability = map_desirability_get(gridOffset);
+            if (desirability < 0) {
+                return 91;
+            } else if (desirability == 0) {
+                return 92;
+            } else {
+                return 93;
+            }
+            break;
+        }
+    }
+    return 0;
+}
