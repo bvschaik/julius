@@ -29,10 +29,6 @@
 #include "window/building_info.h"
 #include "window/city.h"
 
-static void drawBuildingFootprints();
-static void drawBuildingTopsFiguresAnimation(void);
-static void drawHippodromeAndElevatedFigures(void);
-
 static time_millis lastWaterAnimationTime = 0;
 static int advanceWaterAnimation;
 
@@ -51,83 +47,6 @@ static void init_draw_context(int selected_figure_id, struct UI_CityPixelCoordin
     draw_context.selected_figure_coord = figure_coord;
 }
 
-void UI_CityBuildings_drawForeground(int x, int y)
-{
-	Data_CityView.xInTiles = x;
-	Data_CityView.yInTiles = y;
-	graphics_set_clip_rectangle(
-		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
-		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
-
-	advanceWaterAnimation = 0;
-	time_millis now = time_get_millis();
-	if (now - lastWaterAnimationTime > 60 || now < lastWaterAnimationTime) {
-		lastWaterAnimationTime = now;
-		advanceWaterAnimation = 1;
-	}
-
-	if (game_state_overlay()) {
-		UI_CityBuildings_drawOverlayFootprints();
-		UI_CityBuildings_drawOverlayTopsFiguresAnimation();
-		UI_CityBuildings_drawSelectedBuildingGhost();
-		UI_CityBuildings_drawOverlayElevatedFigures();
-	} else {
-        init_draw_context(0, 0);
-		drawBuildingFootprints();
-		drawBuildingTopsFiguresAnimation();
-		UI_CityBuildings_drawSelectedBuildingGhost();
-		drawHippodromeAndElevatedFigures();
-	}
-
-	graphics_reset_clip_rectangle();
-}
-
-void UI_CityBuildings_drawBuildingCost()
-{
-	if (!building_construction_in_progress()) {
-		return;
-	}
-	if (scroll_in_progress()) {
-		return;
-	}
-	int cost = building_construction_cost();
-	if (!cost) {
-		return;
-	}
-	graphics_set_clip_rectangle(
-		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
-		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
-	color_t color;
-	if (cost <= city_finance_treasury()) {
-		color = COLOR_ORANGE;
-	} else {
-		color = COLOR_RED;
-	}
-	text_draw_number_colored(cost, '@', " ",
-		Data_CityView.selectedTile.xOffsetInPixels + 58 + 1,
-		Data_CityView.selectedTile.yOffsetInPixels + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
-	text_draw_number_colored(cost, '@', " ",
-		Data_CityView.selectedTile.xOffsetInPixels + 58,
-		Data_CityView.selectedTile.yOffsetInPixels, FONT_NORMAL_PLAIN, color);
-	graphics_reset_clip_rectangle();
-}
-
-void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, struct UI_CityPixelCoordinate *coord)
-{
-	Data_CityView.xInTiles = x;
-	Data_CityView.yInTiles = y;
-	graphics_set_clip_rectangle(
-		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
-		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
-
-    init_draw_context(figureId, coord);
-	drawBuildingFootprints();
-	drawBuildingTopsFiguresAnimation();
-	drawHippodromeAndElevatedFigures();
-
-	graphics_reset_clip_rectangle();
-}
-
 static void draw_footprint(int x, int y, int grid_offset)
 {
     if (grid_offset == Data_State.selectedBuilding.gridOffsetStart) {
@@ -139,12 +58,12 @@ static void draw_footprint(int x, int y, int grid_offset)
         image_draw_isometric_footprint(image_group(GROUP_TERRAIN_BLACK), x, y, 0);
     } else if (map_property_is_draw_tile(grid_offset)) {
         // Valid gridOffset and leftmost tile -> draw
-        int buildingId = map_building_at(grid_offset);
-        color_t colorMask = 0;
-        if (buildingId) {
-            building *b = building_get(buildingId);
+        int building_id = map_building_at(grid_offset);
+        color_t color_mask = 0;
+        if (building_id) {
+            building *b = building_get(building_id);
             if (b->isDeleted) {
-                colorMask = COLOR_MASK_RED;
+                color_mask = COLOR_MASK_RED;
             }
             if (x < 4) {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
@@ -174,26 +93,22 @@ static void draw_footprint(int x, int y, int grid_offset)
                     }
                     map_image_set(grid_offset, image_id);
                 }
-                image_draw_isometric_footprint(image_id, x, y, colorMask);
+                image_draw_isometric_footprint(image_id, x, y, color_mask);
                 break;
             case 2:
-                image_draw_isometric_footprint(image_id, x + 30, y - 15, colorMask);
+                image_draw_isometric_footprint(image_id, x + 30, y - 15, color_mask);
                 break;
             case 3:
-                image_draw_isometric_footprint(image_id, x + 60, y - 30, colorMask);
+                image_draw_isometric_footprint(image_id, x + 60, y - 30, color_mask);
                 break;
             case 4:
-                image_draw_isometric_footprint(image_id, x + 90, y - 45, colorMask);
+                image_draw_isometric_footprint(image_id, x + 90, y - 45, color_mask);
                 break;
             case 5:
-                image_draw_isometric_footprint(image_id, x + 120, y - 60, colorMask);
+                image_draw_isometric_footprint(image_id, x + 120, y - 60, color_mask);
                 break;
         }
     }
-}
-static void drawBuildingFootprints()
-{
-    city_view_foreach_map_tile(draw_footprint);
 }
 
 static void draw_hippodrome_spectators(const building *b, int x, int y, color_t color_mask)
@@ -498,13 +413,116 @@ static void draw_animation(int x, int y, int grid_offset)
     }
 }
 
-static void drawBuildingTopsFiguresAnimation()
+static void draw_elevated_figures(int x, int y, int grid_offset)
 {
+    int figure_id = map_figure_at(grid_offset);
+    while (figure_id > 0) {
+        figure *f = figure_get(figure_id);
+        if ((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) {
+            city_draw_figure(f, x, y);
+        }
+        figure_id = f->nextFigureIdOnSameTile;
+    }
+}
+
+static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
+{
+    int image_id = map_image_at(grid_offset);
+    const image *img = image_get(image_id);
+    if (img->num_animation_sprites
+        && map_property_is_draw_tile(grid_offset)
+        && building_get(map_building_at(grid_offset))->type == BUILDING_HIPPODROME) {
+        image_draw(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90);
+    }
+}
+
+static void draw_city(int selected_figure_id, struct UI_CityPixelCoordinate *figure_coord)
+{
+    init_draw_context(selected_figure_id, figure_coord);
+    city_view_foreach_map_tile(draw_footprint);
     city_view_foreach_valid_map_tile(
         draw_top,
         draw_figures,
         draw_animation
     );
+    if (!selected_figure_id) {
+        UI_CityBuildings_drawSelectedBuildingGhost();
+    }
+    city_view_foreach_valid_map_tile(
+        draw_elevated_figures,
+        draw_hippodrome_ornaments,
+        0
+    );
+}
+
+void UI_CityBuildings_drawForeground(int x, int y)
+{
+	Data_CityView.xInTiles = x;
+	Data_CityView.yInTiles = y;
+	graphics_set_clip_rectangle(
+		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
+		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
+
+	advanceWaterAnimation = 0;
+	time_millis now = time_get_millis();
+	if (now - lastWaterAnimationTime > 60 || now < lastWaterAnimationTime) {
+		lastWaterAnimationTime = now;
+		advanceWaterAnimation = 1;
+	}
+
+	if (game_state_overlay()) {
+		UI_CityBuildings_drawOverlayFootprints();
+		UI_CityBuildings_drawOverlayTopsFiguresAnimation();
+		UI_CityBuildings_drawSelectedBuildingGhost();
+		UI_CityBuildings_drawOverlayElevatedFigures();
+	} else {
+        draw_city(0, 0);
+	}
+
+	graphics_reset_clip_rectangle();
+}
+
+void UI_CityBuildings_drawBuildingCost()
+{
+	if (!building_construction_in_progress()) {
+		return;
+	}
+	if (scroll_in_progress()) {
+		return;
+	}
+	int cost = building_construction_cost();
+	if (!cost) {
+		return;
+	}
+	graphics_set_clip_rectangle(
+		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
+		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
+	color_t color;
+	if (cost <= city_finance_treasury()) {
+		color = COLOR_ORANGE;
+	} else {
+		color = COLOR_RED;
+	}
+	text_draw_number_colored(cost, '@', " ",
+		Data_CityView.selectedTile.xOffsetInPixels + 58 + 1,
+		Data_CityView.selectedTile.yOffsetInPixels + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
+	text_draw_number_colored(cost, '@', " ",
+		Data_CityView.selectedTile.xOffsetInPixels + 58,
+		Data_CityView.selectedTile.yOffsetInPixels, FONT_NORMAL_PLAIN, color);
+	graphics_reset_clip_rectangle();
+}
+
+void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, struct UI_CityPixelCoordinate *coord)
+{
+	Data_CityView.xInTiles = x;
+	Data_CityView.yInTiles = y;
+	graphics_set_clip_rectangle(
+		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
+		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
+
+    draw_city(figureId, coord);
+
+	graphics_reset_clip_rectangle();
 }
 
 void UI_CityBuildings_drawBridge(int grid_offset, int x, int y)
@@ -566,38 +584,6 @@ void UI_CityBuildings_drawBridge(int grid_offset, int x, int y)
 			image_draw_masked(image_id + 12, x + 7, y - 38, color_mask);
 			break;
 	}
-}
-
-static void draw_elevated_figures(int x, int y, int grid_offset)
-{
-    int figure_id = map_figure_at(grid_offset);
-    while (figure_id > 0) {
-        figure *f = figure_get(figure_id);
-        if ((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) {
-            city_draw_figure(f, x, y);
-        }
-        figure_id = f->nextFigureIdOnSameTile;
-    }
-}
-
-static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
-{
-    int image_id = map_image_at(grid_offset);
-    const image *img = image_get(image_id);
-    if (img->num_animation_sprites
-        && map_property_is_draw_tile(grid_offset)
-        && building_get(map_building_at(grid_offset))->type == BUILDING_HIPPODROME) {
-        image_draw(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90);
-    }
-}
-
-static void drawHippodromeAndElevatedFigures(void)
-{
-    city_view_foreach_valid_map_tile(
-        draw_elevated_figures,
-        draw_hippodrome_ornaments,
-        0
-    );
 }
 
 // MOUSE HANDLING
