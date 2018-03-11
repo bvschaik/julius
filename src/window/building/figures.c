@@ -15,8 +15,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
-
-#include "UI/CityBuildings.h"
+#include "widget/city.h"
 
 static void select_figure(int index, int param2);
 
@@ -352,7 +351,7 @@ void window_building_draw_figure_list(building_info_context *c)
     c->figure.drawn = 1;
 }
 
-static void draw_figure_in_city(int figure_id, struct UI_CityPixelCoordinate *coord)
+static void draw_figure_in_city(int figure_id, pixel_coordinate *coord)
 {
     int x_cam, y_cam;
     city_view_get_camera(&x_cam, &y_cam);
@@ -364,7 +363,7 @@ static void draw_figure_in_city(int figure_id, struct UI_CityPixelCoordinate *co
     city_view_set_camera(x - 2, y - 6);
     city_view_get_camera(&x, &y); // camera might have shifted because of map boundaries
 
-    UI_CityBuildings_drawForegroundForFigure(x, y, figure_id, coord);
+    widget_city_draw_for_figure(x, y, figure_id, coord);
 
     city_view_set_camera(x_cam, y_cam);
 }
@@ -372,14 +371,14 @@ static void draw_figure_in_city(int figure_id, struct UI_CityPixelCoordinate *co
 void window_building_prepare_figure_list(building_info_context *c)
 {
     if (c->figure.count > 0) {
-        struct UI_CityPixelCoordinate coord = {0, 0};
+        pixel_coordinate coord = {0, 0};
         for (int i = 0; i < c->figure.count; i++) {
             draw_figure_in_city(c->figure.figureIds[i], &coord);
             graphics_save_to_buffer(coord.x, coord.y, 48, 48, data.figure_images[i]);
         }
         int x, y;
         city_view_get_camera(&x, &y);
-        UI_CityBuildings_drawForeground(x, y);
+        widget_city_draw(x, y);
     }
 }
 

@@ -1,17 +1,7 @@
 #ifndef UI_CITYBUILDINGS_PRIVATE_H
 #define UI_CITYBUILDINGS_PRIVATE_H
 
-#include "CityBuildings.h"
-
-#include "../Data/CityInfo.h"
-#include "../Data/CityView.h"
-#include "../Data/State.h"
-
-#include "building/model.h"
-#include "core/calc.h"
-#include "core/image.h"
-#include "figure/figure.h"
-#include "graphics/image.h"
+#include "widget/city.h"
 
 #define DRAWFOOT_SIZE1(g,x,y) image_draw_isometric_footprint(g, x, y, 0)
 #define DRAWFOOT_SIZE2(g,x,y) image_draw_isometric_footprint(g, x + 30, y - 15, 0)
@@ -31,13 +21,10 @@
 #define DRAWTOP_SIZE4_C(g,x,y,c) image_draw_isometric_top(g, x + 90, y - 45, c)
 #define DRAWTOP_SIZE5_C(g,x,y,c) image_draw_isometric_top(g, x + 120, y - 60, c)
 
-
 void UI_CityBuildings_drawOverlayFootprints();
 void UI_CityBuildings_drawOverlayTopsFiguresAnimation();
 void UI_CityBuildings_drawOverlayElevatedFigures(void);
 int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int gridOffset);
-
-void UI_CityBuildings_drawBridge(int gridOffset, int x, int y);
 
 void UI_CityBuildings_drawSelectedBuildingGhost();
 

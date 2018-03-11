@@ -7,6 +7,7 @@
 #include "city/finance.h"
 #include "city/view.h"
 #include "figure/formation.h"
+#include "graphics/image.h"
 #include "map/bridge.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -17,6 +18,10 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
+
+#include "Data/CityInfo.h"
+#include "Data/CityView.h"
+#include "Data/State.h"
 
 static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();

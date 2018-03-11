@@ -2,10 +2,13 @@
 
 #include "building/animation.h"
 #include "building/industry.h"
+#include "building/model.h"
 #include "city/view.h"
+#include "core/calc.h"
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "game/state.h"
+#include "graphics/image.h"
 #include "map/desirability.h"
 #include "map/bridge.h"
 #include "map/building.h"
@@ -15,6 +18,9 @@
 #include "map/random.h"
 #include "map/terrain.h"
 #include "widget/city_figure.h"
+
+#include "Data/CityInfo.h"
+#include "Data/State.h"
 
 static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset);
@@ -384,7 +390,7 @@ static void draw_animation(int x, int y, int grid_offset)
             }
         }
     } else if (map_is_bridge(grid_offset)) {
-        UI_CityBuildings_drawBridge(grid_offset, x, y);
+        widget_city_draw_bridge(x, y, grid_offset);
     }
 }
 void UI_CityBuildings_drawOverlayTopsFiguresAnimation()

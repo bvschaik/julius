@@ -9,10 +9,9 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/criteria.h"
+#include "widget/city.h"
 #include "widget/sidebar.h"
 #include "widget/top_menu.h"
-
-#include "UI/CityBuildings.h"
 
 #include "Data/CityView.h"
 
@@ -60,7 +59,7 @@ static void draw_foreground()
     window_city_draw();
     widget_sidebar_draw_foreground();
     draw_paused_and_time_left();
-    UI_CityBuildings_drawBuildingCost();
+    widget_city_draw_construction_cost();
     if (window_is(WINDOW_CITY)) {
         city_message_process_queue();
     }
@@ -82,12 +81,12 @@ static void handle_mouse(const mouse *m)
     if (widget_sidebar_handle_mouse(m)) {
         return;
     }
-    UI_CityBuildings_handleMouse(m);
+    widget_city_handle_mouse(m);
 }
 
 static void handle_mouse_military(const mouse *m)
 {
-    UI_CityBuildings_handleMouseMilitary(m);
+    widget_city_handle_mouse_military(m);
 }
 
 static void get_tooltip(tooltip_context *c)
@@ -101,7 +100,7 @@ static void get_tooltip(tooltip_context *c)
         c->text_id = text_id;
         return;
     }
-    UI_CityBuildings_getTooltip(c);
+    widget_city_get_tooltip(c);
 }
 
 void window_city_draw_all()
@@ -119,7 +118,7 @@ void window_city_draw()
 {
     int x, y;
     city_view_get_camera(&x, &y);
-    UI_CityBuildings_drawForeground(x, y);
+    widget_city_draw(x, y);
 }
 
 void window_city_show()

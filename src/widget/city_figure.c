@@ -242,7 +242,7 @@ void city_draw_figure(const figure *f, int x, int y)
     draw_figure(f, x, y);
 }
 
-void city_draw_selected_figure(const figure *f, int x, int y, struct UI_CityPixelCoordinate *coord)
+void city_draw_selected_figure(const figure *f, int x, int y, pixel_coordinate *coord)
 {
     adjust_pixel_offset(f, &x, &y);
     draw_figure(f, x, y);
