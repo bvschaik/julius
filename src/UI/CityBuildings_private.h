@@ -1,7 +1,7 @@
 #ifndef UI_CITYBUILDINGS_PRIVATE_H
 #define UI_CITYBUILDINGS_PRIVATE_H
 
-#include "widget/city.h"
+#include "graphics/tooltip.h"
 
 #define DRAWFOOT_SIZE1(g,x,y) image_draw_isometric_footprint(g, x, y, 0)
 #define DRAWFOOT_SIZE2(g,x,y) image_draw_isometric_footprint(g, x + 30, y - 15, 0)

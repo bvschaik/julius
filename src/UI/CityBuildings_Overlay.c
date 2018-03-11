@@ -18,6 +18,7 @@
 #include "map/random.h"
 #include "map/terrain.h"
 #include "widget/city_figure.h"
+#include "widget/city_without_overlay.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -390,7 +391,7 @@ static void draw_animation(int x, int y, int grid_offset)
             }
         }
     } else if (map_is_bridge(grid_offset)) {
-        widget_city_draw_bridge(x, y, grid_offset);
+        city_draw_bridge(x, y, grid_offset);
     }
 }
 void UI_CityBuildings_drawOverlayTopsFiguresAnimation()

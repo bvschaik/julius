@@ -13,7 +13,6 @@ void widget_city_draw(int x, int y);
 void widget_city_draw_for_figure(int x, int y, int figure_id, pixel_coordinate *coord);
 
 void widget_city_draw_construction_cost();
-void widget_city_draw_bridge(int x, int y, int grid_offset); // TODO move out
 
 void widget_city_handle_mouse(const mouse *m);
 void widget_city_handle_mouse_military(const mouse *m);
