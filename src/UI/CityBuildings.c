@@ -114,10 +114,74 @@ void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, struct
 	graphics_reset_clip_rectangle();
 }
 
+static struct {
+    int image_id_water_first;
+    int image_id_water_last;
+} draw_context;
+
+static void draw_footprint(int x, int y, int grid_offset)
+{
+    if (grid_offset < 0) {
+        // Outside map: draw black tile
+        image_draw_isometric_footprint(image_group(GROUP_TERRAIN_BLACK), x, y, 0);
+    } else if (map_property_is_draw_tile(grid_offset)) {
+        // Valid gridOffset and leftmost tile -> draw
+        int buildingId = map_building_at(grid_offset);
+        color_t colorMask = 0;
+        if (buildingId) {
+            building *b = building_get(buildingId);
+            if (b->isDeleted) {
+                colorMask = COLOR_MASK_RED;
+            }
+            if (x < 4) {
+                sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
+            } else if (x > Data_CityView.widthInTiles + 2) {
+                sound_city_mark_building_view(b, SOUND_DIRECTION_RIGHT);
+            } else {
+                sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
+            }
+        }
+        if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
+            building *b = building_get(0); // abuse empty building
+            b->type = BUILDING_GARDENS;
+            sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
+        }
+        int image_id = map_image_at(grid_offset);
+        if (map_property_is_constructing(grid_offset)) {
+            image_id = image_group(GROUP_TERRAIN_OVERLAY);
+        }
+        switch (map_property_multi_tile_size(grid_offset)) {
+            case 1:
+                if (advanceWaterAnimation &&
+                    image_id >= draw_context.image_id_water_first &&
+                    image_id <= draw_context.image_id_water_last) {
+                    image_id++;
+                    if (image_id > draw_context.image_id_water_last) {
+                        image_id = draw_context.image_id_water_first;
+                    }
+                    map_image_set(grid_offset, image_id);
+                }
+                image_draw_isometric_footprint(image_id, x, y, colorMask);
+                break;
+            case 2:
+                image_draw_isometric_footprint(image_id, x + 30, y - 15, colorMask);
+                break;
+            case 3:
+                image_draw_isometric_footprint(image_id, x + 60, y - 30, colorMask);
+                break;
+            case 4:
+                image_draw_isometric_footprint(image_id, x + 90, y - 45, colorMask);
+                break;
+            case 5:
+                image_draw_isometric_footprint(image_id, x + 120, y - 60, colorMask);
+                break;
+        }
+    }
+}
 static void drawBuildingFootprints()
 {
-	int graphicIdWaterFirst = image_group(GROUP_TERRAIN_WATER);
-	int graphicIdWaterLast = 5 + graphicIdWaterFirst;
+	draw_context.image_id_water_first = image_group(GROUP_TERRAIN_WATER);
+	draw_context.image_id_water_last = 5 + draw_context.image_id_water_first;
 
     FOREACH_Y_VIEW {
     FOREACH_X_VIEW_UNCHECKED {
@@ -125,229 +189,169 @@ static void drawBuildingFootprints()
 			Data_State.selectedBuilding.reservoirOffsetX = xGraphic;
 			Data_State.selectedBuilding.reservoirOffsetY = yGraphic;
 		}
-		if (gridOffset < 0) {
-			// Outside map: draw black tile
-			image_draw_isometric_footprint(image_group(GROUP_TERRAIN_BLACK),
-				xGraphic, yGraphic, 0);
-		} else if (map_property_is_draw_tile(gridOffset)) {
-			// Valid gridOffset and leftmost tile -> draw
-			int buildingId = map_building_at(gridOffset);
-			color_t colorMask = 0;
-			if (buildingId) {
-                building *b = building_get(buildingId);
-				if (b->isDeleted) {
-					colorMask = COLOR_MASK_RED;
-				}
-				if (x < 4) {
-					sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
-				} else if (x > Data_CityView.widthInTiles + 2) {
-					sound_city_mark_building_view(b, SOUND_DIRECTION_RIGHT);
-				} else {
-					sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
-				}
-			}
-			if (map_terrain_is(gridOffset, TERRAIN_GARDEN)) {
-                building *b = building_get(0); // abuse empty building
-				b->type = BUILDING_GARDENS;
-				sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
-			}
-			int graphicId = map_image_at(gridOffset);
-			if (map_property_is_constructing(gridOffset)) {
-				graphicId = image_group(GROUP_TERRAIN_OVERLAY);
-			}
-			switch (map_property_multi_tile_size(gridOffset)) {
-				case 1:
-					if (advanceWaterAnimation &&
-						graphicId >= graphicIdWaterFirst &&
-						graphicId <= graphicIdWaterLast) {
-						graphicId++;
-						if (graphicId > graphicIdWaterLast) {
-							graphicId = graphicIdWaterFirst;
-						}
-						map_image_set(gridOffset, graphicId);
-					}
-					image_draw_isometric_footprint(graphicId, xGraphic, yGraphic, colorMask);
-					break;
-				case 2:
-					image_draw_isometric_footprint(graphicId, xGraphic + 30, yGraphic - 15, colorMask);
-					break;
-				case 3:
-					image_draw_isometric_footprint(graphicId, xGraphic + 60, yGraphic - 30, colorMask);
-					break;
-				case 4:
-					image_draw_isometric_footprint(graphicId, xGraphic + 90, yGraphic - 45, colorMask);
-					break;
-				case 5:
-					image_draw_isometric_footprint(graphicId, xGraphic + 120, yGraphic - 60, colorMask);
-					break;
-			}
-		}
+		draw_footprint(xGraphic, yGraphic, gridOffset);
     } END_FOREACH_X_VIEW_UNCHECKED;
     } END_FOREACH_Y_VIEW;
 }
 
+static void draw_hippodrome_spectators(const building *b, int x, int y, color_t color_mask)
+{
+    int subtype = b->subtype.orientation;
+    int orientation = city_view_orientation();
+    if ((subtype == 0 || subtype == 3) && Data_CityInfo.population > 2000) {
+        // first building part
+        switch (orientation) {
+            case DIR_0_TOP:
+                image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72, color_mask);
+                break;
+            case DIR_2_RIGHT:
+                image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
+                break;
+            case DIR_4_BOTTOM:
+                image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80, color_mask);
+                break;
+            case DIR_6_LEFT:
+                image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
+        }
+    } else if ((subtype == 1 || subtype == 4) && Data_CityInfo.population > 100) {
+        // middle building part
+        switch (orientation) {
+            case DIR_0_TOP:
+            case DIR_4_BOTTOM:
+                image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_2) + 7, x + 122, y - 79, color_mask);
+                break;
+            case DIR_2_RIGHT:
+            case DIR_6_LEFT:
+                image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_1) + 7, x, y - 80, color_mask);
+        }
+    } else if ((subtype == 2 || subtype == 5) && Data_CityInfo.population > 1000) {
+        // last building part
+        switch (orientation) {
+            case DIR_0_TOP:
+                image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80, color_mask);
+                break;
+            case DIR_2_RIGHT:
+                image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
+                break;
+            case DIR_4_BOTTOM:
+                image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72, color_mask);
+                break;
+            case DIR_6_LEFT:
+                image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
+                break;
+        }
+    }
+}
+
+static void draw_entertainment_spectators(building *b, int x, int y, color_t color_mask)
+{
+    if (b->type == BUILDING_AMPHITHEATER && b->numWorkers > 0) {
+        image_draw_masked(image_group(GROUP_BUILDING_AMPHITHEATER_SHOW), x + 36, y - 47, color_mask);
+    }
+    if (b->type == BUILDING_THEATER && b->numWorkers > 0) {
+        image_draw_masked(image_group(GROUP_BUILDING_THEATER_SHOW), x + 34, y - 22, color_mask);
+    }
+    if (b->type == BUILDING_COLOSSEUM && b->numWorkers > 0) {
+        image_draw_masked(image_group(GROUP_BUILDING_COLOSSEUM_SHOW), x + 70, y - 90, color_mask);
+    }
+    if (b->type == BUILDING_HIPPODROME && building_main(b)->numWorkers > 0 &&
+        Data_CityInfo.entertainmentHippodromeHasShow) {
+        draw_hippodrome_spectators(b, x, y, color_mask);
+    }
+}
+
+static void draw_workshop_raw_material_storage(const building *b, int xGraphic, int yGraphic, color_t color_mask)
+{
+    if (b->type == BUILDING_WINE_WORKSHOP) {
+        if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
+            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL),
+                xGraphic + 45, yGraphic + 23, color_mask);
+        }
+    }
+    if (b->type == BUILDING_OIL_WORKSHOP) {
+        if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
+            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1,
+                xGraphic + 35, yGraphic + 15, color_mask);
+        }
+    }
+    if (b->type == BUILDING_WEAPONS_WORKSHOP) {
+        if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
+            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3,
+                xGraphic + 46, yGraphic + 24, color_mask);
+        }
+    }
+    if (b->type == BUILDING_FURNITURE_WORKSHOP) {
+        if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
+            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2,
+                xGraphic + 48, yGraphic + 19, color_mask);
+        }
+    }
+    if (b->type == BUILDING_POTTERY_WORKSHOP) {
+        if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
+            image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4,
+                xGraphic + 47, yGraphic + 24, color_mask);
+        }
+    }
+}
+
+static void draw_senate_rating_flags(const building *b, int x, int y, color_t color_mask)
+{
+    if (b->type == BUILDING_SENATE_UPGRADED) {
+        // rating flags
+        int image_id = image_group(GROUP_BUILDING_SENATE);
+        image_draw_masked(image_id + 1, x + 138, y + 44 - Data_CityInfo.ratingCulture / 2, color_mask);
+        image_draw_masked(image_id + 2, x + 168, y + 36 - Data_CityInfo.ratingProsperity / 2, color_mask);
+        image_draw_masked(image_id + 3, x + 198, y + 27 - Data_CityInfo.ratingPeace / 2, color_mask);
+        image_draw_masked(image_id + 4, x + 228, y + 19 - Data_CityInfo.ratingFavor / 2, color_mask);
+        // unemployed
+        image_id = image_group(GROUP_FIGURE_HOMELESS);
+        if (Data_CityInfo.unemploymentPercentageForSenate > 0) {
+            image_draw_masked(image_id + 108, x + 80, y, color_mask);
+        }
+        if (Data_CityInfo.unemploymentPercentageForSenate > 5) {
+            image_draw_masked(image_id + 104, x + 230, y - 30, color_mask);
+        }
+        if (Data_CityInfo.unemploymentPercentageForSenate > 10) {
+            image_draw_masked(image_id + 107, x + 100, y + 20, color_mask);
+        }
+        if (Data_CityInfo.unemploymentPercentageForSenate > 15) {
+            image_draw_masked(image_id + 106, x + 235, y - 10, color_mask);
+        }
+        if (Data_CityInfo.unemploymentPercentageForSenate > 20) {
+            image_draw_masked(image_id + 106, x + 66, y + 20, color_mask);
+        }
+    }
+}
+
+static void draw_top(int x, int y, int grid_offset)
+{
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return;
+    }
+    building *b = building_get(map_building_at(grid_offset));
+    int image_id = map_image_at(grid_offset);
+    color_t color_mask = 0;
+    if (b->id && b->isDeleted) {
+        color_mask = COLOR_MASK_RED;
+    }
+    switch (map_property_multi_tile_size(grid_offset)) {
+        case 1: DRAWTOP_SIZE1_C(image_id, x, y, color_mask); break;
+        case 2: DRAWTOP_SIZE2_C(image_id, x, y, color_mask); break;
+        case 3: DRAWTOP_SIZE3_C(image_id, x, y, color_mask); break;
+        case 4: DRAWTOP_SIZE4_C(image_id, x, y, color_mask); break;
+        case 5: DRAWTOP_SIZE5_C(image_id, x, y, color_mask); break;
+    }
+    // specific buildings
+    draw_senate_rating_flags(b, x, y, color_mask);
+    draw_entertainment_spectators(b, x, y, color_mask);
+    draw_workshop_raw_material_storage(b, x, y, color_mask);
+}
+
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord)
 {
-    int orientation = city_view_orientation();
 	FOREACH_Y_VIEW {
 		FOREACH_X_VIEW {
-			if (map_property_is_draw_tile(gridOffset)) {
-				int buildingId = map_building_at(gridOffset);
-				building *b = building_get(buildingId);
-				int graphicId = map_image_at(gridOffset);
-				color_t colorMask = 0;
-				if (buildingId && b->isDeleted) {
-					colorMask = COLOR_MASK_RED;
-				}
-				switch (map_property_multi_tile_size(gridOffset)) {
-					case 1: DRAWTOP_SIZE1_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case 2: DRAWTOP_SIZE2_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case 3: DRAWTOP_SIZE3_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case 4: DRAWTOP_SIZE4_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case 5: DRAWTOP_SIZE5_C(graphicId, xGraphic, yGraphic, colorMask); break;
-				}
-				// specific buildings
-				if (b->type == BUILDING_SENATE_UPGRADED) {
-					// rating flags
-					graphicId = image_group(GROUP_BUILDING_SENATE);
-					image_draw_masked(graphicId + 1, xGraphic + 138,
-						yGraphic + 44 - Data_CityInfo.ratingCulture / 2, colorMask);
-					image_draw_masked(graphicId + 2, xGraphic + 168,
-						yGraphic + 36 - Data_CityInfo.ratingProsperity / 2, colorMask);
-					image_draw_masked(graphicId + 3, xGraphic + 198,
-						yGraphic + 27 - Data_CityInfo.ratingPeace / 2, colorMask);
-					image_draw_masked(graphicId + 4, xGraphic + 228,
-						yGraphic + 19 - Data_CityInfo.ratingFavor / 2, colorMask);
-					// unemployed
-					graphicId = image_group(GROUP_FIGURE_HOMELESS);
-					if (Data_CityInfo.unemploymentPercentageForSenate > 0) {
-						image_draw_masked(graphicId + 108,
-							xGraphic + 80, yGraphic, colorMask);
-					}
-					if (Data_CityInfo.unemploymentPercentageForSenate > 5) {
-						image_draw_masked(graphicId + 104,
-							xGraphic + 230, yGraphic - 30, colorMask);
-					}
-					if (Data_CityInfo.unemploymentPercentageForSenate > 10) {
-						image_draw_masked(graphicId + 107,
-							xGraphic + 100, yGraphic + 20, colorMask);
-					}
-					if (Data_CityInfo.unemploymentPercentageForSenate > 15) {
-						image_draw_masked(graphicId + 106,
-							xGraphic + 235, yGraphic - 10, colorMask);
-					}
-					if (Data_CityInfo.unemploymentPercentageForSenate > 20) {
-						image_draw_masked(graphicId + 106,
-							xGraphic + 66, yGraphic + 20, colorMask);
-					}
-				}
-				if (b->type == BUILDING_AMPHITHEATER && b->numWorkers > 0) {
-					image_draw_masked(image_group(GROUP_BUILDING_AMPHITHEATER_SHOW),
-						xGraphic + 36, yGraphic - 47, colorMask);
-				}
-				if (b->type == BUILDING_THEATER && b->numWorkers > 0) {
-					image_draw_masked(image_group(GROUP_BUILDING_THEATER_SHOW),
-						xGraphic + 34, yGraphic - 22, colorMask);
-				}
-				if (b->type == BUILDING_HIPPODROME && building_main(b)->numWorkers > 0 &&
-					Data_CityInfo.entertainmentHippodromeHasShow) {
-					int subtype = b->subtype.orientation;
-					if ((subtype == 0 || subtype == 3) && Data_CityInfo.population > 2000) {
-						switch (orientation) {
-							case DIR_0_TOP:
-								image_draw_masked(
-									image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
-									xGraphic + 147, yGraphic - 72, colorMask);
-								break;
-							case DIR_2_RIGHT:
-								image_draw_masked(
-									image_group(GROUP_BUILDING_HIPPODROME_1) + 8,
-									xGraphic + 58, yGraphic - 79, colorMask);
-								break;
-							case DIR_4_BOTTOM:
-								image_draw_masked(
-									image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
-									xGraphic + 119, yGraphic - 80, colorMask);
-								break;
-							case DIR_6_LEFT:
-								image_draw_masked(
-									image_group(GROUP_BUILDING_HIPPODROME_1) + 6,
-									xGraphic, yGraphic - 72, colorMask);
-						}
-					} else if ((subtype == 1 || subtype == 4) && Data_CityInfo.population > 100) {
-						switch (orientation) {
-							case DIR_0_TOP:
-							case DIR_4_BOTTOM:
-								image_draw_masked(
-									image_group(GROUP_BUILDING_HIPPODROME_2) + 7,
-									xGraphic + 122, yGraphic - 79, colorMask);
-								break;
-							case DIR_2_RIGHT:
-							case DIR_6_LEFT:
-								image_draw_masked(
-									image_group(GROUP_BUILDING_HIPPODROME_1) + 7,
-									xGraphic, yGraphic - 80, colorMask);
-						}
-					} else if ((subtype == 2 || subtype == 5) && Data_CityInfo.population > 1000) {
-						switch (orientation) {
-							case DIR_0_TOP:
-								image_draw_masked(
-									image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
-									xGraphic + 119, yGraphic - 80, colorMask);
-								break;
-							case DIR_2_RIGHT:
-								image_draw_masked(
-									image_group(GROUP_BUILDING_HIPPODROME_1) + 6,
-									xGraphic, yGraphic - 72, colorMask);
-								break;
-							case DIR_4_BOTTOM:
-								image_draw_masked(
-									image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
-									xGraphic + 147, yGraphic - 72, colorMask);
-								break;
-							case DIR_6_LEFT:
-								image_draw_masked(
-									image_group(GROUP_BUILDING_HIPPODROME_1) + 8,
-									xGraphic + 58, yGraphic - 79, colorMask);
-						}
-					}
-				}
-				if (b->type == BUILDING_COLOSSEUM && b->numWorkers > 0) {
-					image_draw_masked(image_group(GROUP_BUILDING_COLOSSEUM_SHOW),
-						xGraphic + 70, yGraphic - 90, colorMask);
-				}
-				// workshops
-				if (b->type == BUILDING_WINE_WORKSHOP) {
-					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL),
-							xGraphic + 45, yGraphic + 23, colorMask);
-					}
-				}
-				if (b->type == BUILDING_OIL_WORKSHOP) {
-					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1,
-							xGraphic + 35, yGraphic + 15, colorMask);
-					}
-				}
-				if (b->type == BUILDING_WEAPONS_WORKSHOP) {
-					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3,
-							xGraphic + 46, yGraphic + 24, colorMask);
-					}
-				}
-				if (b->type == BUILDING_FURNITURE_WORKSHOP) {
-					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2,
-							xGraphic + 48, yGraphic + 19, colorMask);
-					}
-				}
-				if (b->type == BUILDING_POTTERY_WORKSHOP) {
-					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4,
-							xGraphic + 47, yGraphic + 24, colorMask);
-					}
-				}
-			}
+            draw_top(xGraphic, yGraphic, gridOffset);
 		} END_FOREACH_X_VIEW;
 		// draw figures
 		FOREACH_X_VIEW {
@@ -477,6 +481,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				}
 			} else if (building_get(map_building_at(gridOffset))->type == BUILDING_GATEHOUSE) {
 				int xy = map_property_multi_tile_xy(gridOffset);
+                int orientation = city_view_orientation();
 				if ((orientation == DIR_0_TOP && xy == Edge_X1Y1) ||
 					(orientation == DIR_2_RIGHT && xy == Edge_X0Y1) ||
 					(orientation == DIR_4_BOTTOM && xy == Edge_X0Y0) ||
@@ -563,55 +568,39 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 	}
 }
 
+static void draw_elevated_figures(int x, int y, int grid_offset)
+{
+    int figure_id = map_figure_at(grid_offset);
+    while (figure_id > 0) {
+        figure *f = figure_get(figure_id);
+        if ((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) {
+            city_draw_figure(f, x, y);
+        }
+        figure_id = f->nextFigureIdOnSameTile;
+    }
+}
+
+static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
+{
+    int image_id = map_image_at(grid_offset);
+    const image *img = image_get(image_id);
+    if (img->num_animation_sprites
+        && map_property_is_draw_tile(grid_offset)
+        && building_get(map_building_at(grid_offset))->type == BUILDING_HIPPODROME) {
+        image_draw(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90);
+    }
+}
+
 static void drawHippodromeAndElevatedFigures(void)
 {
-	FOREACH_Y_VIEW {
-		FOREACH_X_VIEW {
-            int figureId = map_figure_at(gridOffset);
-            while (figureId > 0) {
-                figure *f = figure_get(figureId);
-                if ((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) {
-                    city_draw_figure(f, xGraphic, yGraphic);
-                }
-                figureId = f->nextFigureIdOnSameTile;
-            }
-		} END_FOREACH_X_VIEW;
-		FOREACH_X_VIEW {
-			int graphicId = map_image_at(gridOffset);
-			const image *img = image_get(graphicId);
-			if (img->num_animation_sprites &&
-				map_property_is_draw_tile(gridOffset) &&
-				building_get(map_building_at(gridOffset))->type == BUILDING_HIPPODROME) {
-				switch (map_property_multi_tile_size(gridOffset)) {
-					case 1:
-						image_draw(graphicId + 1,
-							xGraphic + img->sprite_offset_x,
-							yGraphic + img->sprite_offset_y - img->height + 30);
-						break;
-					case 2:
-						image_draw(graphicId + 1,
-							xGraphic + img->sprite_offset_x,
-							yGraphic + img->sprite_offset_y - img->height + 45);
-						break;
-					case 3:
-						image_draw(graphicId + 1,
-							xGraphic + img->sprite_offset_x,
-							yGraphic + img->sprite_offset_y - img->height + 60);
-						break;
-					case 4:
-						image_draw(graphicId + 1,
-							xGraphic + img->sprite_offset_x,
-							yGraphic + img->sprite_offset_y - img->height + 75);
-						break;
-					case 5:
-						image_draw(graphicId + 1,
-							xGraphic + img->sprite_offset_x,
-							yGraphic + img->sprite_offset_y - img->height + 90);
-						break;
-				}
-			}
-		} END_FOREACH_X_VIEW;
-	} END_FOREACH_Y_VIEW;
+    FOREACH_Y_VIEW {
+        FOREACH_X_VIEW {
+            draw_elevated_figures(xGraphic, yGraphic, gridOffset);
+        } END_FOREACH_X_VIEW;
+        FOREACH_X_VIEW {
+            draw_hippodrome_ornaments(xGraphic, yGraphic, gridOffset);
+        } END_FOREACH_X_VIEW;
+    } END_FOREACH_Y_VIEW;
 }
 
 // MOUSE HANDLING
