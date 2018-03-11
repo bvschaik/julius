@@ -21,9 +21,8 @@
 #define DRAWTOP_SIZE4_C(g,x,y,c) image_draw_isometric_top(g, x + 90, y - 45, c)
 #define DRAWTOP_SIZE5_C(g,x,y,c) image_draw_isometric_top(g, x + 120, y - 60, c)
 
-void UI_CityBuildings_drawOverlayFootprints();
-void UI_CityBuildings_drawOverlayTopsFiguresAnimation();
-void UI_CityBuildings_drawOverlayElevatedFigures(void);
+void city_with_overlay_draw();
+
 int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int gridOffset);
 
 void UI_CityBuildings_drawSelectedBuildingGhost();

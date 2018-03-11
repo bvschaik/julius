@@ -34,10 +34,7 @@ void widget_city_draw(int x, int y)
         Data_CityView.widthInPixels, Data_CityView.heightInPixels);
 
     if (game_state_overlay()) {
-        UI_CityBuildings_drawOverlayFootprints();
-        UI_CityBuildings_drawOverlayTopsFiguresAnimation();
-        UI_CityBuildings_drawSelectedBuildingGhost();
-        UI_CityBuildings_drawOverlayElevatedFigures();
+        city_with_overlay_draw();
     } else {
         city_without_overlay_draw(0, 0);
     }

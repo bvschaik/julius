@@ -128,11 +128,6 @@ static void draw_footprint(int x, int y, int grid_offset)
     }
 }
 
-void UI_CityBuildings_drawOverlayFootprints()
-{
-    city_view_foreach_map_tile(draw_footprint);
-}
-
 static building *get_entertainment_building(const figure *f)
 {
     if (f->actionState == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
@@ -394,14 +389,6 @@ static void draw_animation(int x, int y, int grid_offset)
         city_draw_bridge(x, y, grid_offset);
     }
 }
-void UI_CityBuildings_drawOverlayTopsFiguresAnimation()
-{
-    city_view_foreach_valid_map_tile(
-        draw_figures,
-        draw_top,
-        draw_animation
-    );
-}
 
 static void draw_elevated_figures(int x, int y, int grid_offset)
 {
@@ -413,11 +400,6 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
         }
         figure_id = f->nextFigureIdOnSameTile;
     }
-}
-
-void UI_CityBuildings_drawOverlayElevatedFigures(void)
-{
-    city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
 }
 
 static int terrain_on_water_overlay()
@@ -1394,10 +1376,338 @@ static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed)
 	}
 }
 
-int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int gridOffset)
+void city_with_overlay_draw()
+{
+    city_view_foreach_map_tile(draw_footprint);
+    city_view_foreach_valid_map_tile(
+        draw_figures,
+        draw_top,
+        draw_animation
+    );
+    UI_CityBuildings_drawSelectedBuildingGhost();
+    city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
+}
+
+static int get_tooltip_water(tooltip_context *c, int grid_offset)
+{
+    if (map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE)) {
+        if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
+            return 2;
+        } else {
+            return 1;
+        }
+    } else if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
+        return 3;
+    }
+    return 0;
+}
+
+static int get_tooltip_religion(tooltip_context *c, const building *b)
+{
+    if (b->data.house.numGods <= 0) {
+        return 12;
+    } else if (b->data.house.numGods == 1) {
+        return 13;
+    } else if (b->data.house.numGods == 2) {
+        return 14;
+    } else if (b->data.house.numGods == 3) {
+        return 15;
+    } else if (b->data.house.numGods == 4) {
+        return 16;
+    } else if (b->data.house.numGods == 5) {
+        return 17;
+    } else {
+        return 18; // >5 gods, shouldn't happen...
+    }
+}
+
+static int get_tooltip_fire(tooltip_context *c, const building *b)
+{
+    if (b->fireRisk <= 0) {
+        return 46;
+    } else if (b->fireRisk <= 20) {
+        return 47;
+    } else if (b->fireRisk <= 40) {
+        return 48;
+    } else if (b->fireRisk <= 60) {
+        return 49;
+    } else if (b->fireRisk <= 80) {
+        return 50;
+    } else {
+        return 51;
+    }
+}
+
+static int get_tooltip_damage(tooltip_context *c, const building *b)
+{
+    if (b->damageRisk <= 0) {
+        return 52;
+    } else if (b->damageRisk <= 40) {
+        return 53;
+    } else if (b->damageRisk <= 80) {
+        return 54;
+    } else if (b->damageRisk <= 120) {
+        return 55;
+    } else if (b->damageRisk <= 160) {
+        return 56;
+    } else {
+        return 57;
+    }
+}
+
+static int get_tooltip_crime(tooltip_context *c, const building *b)
+{
+    if (b->sentiment.houseHappiness <= 0) {
+        return 63;
+    } else if (b->sentiment.houseHappiness <= 10) {
+        return 62;
+    } else if (b->sentiment.houseHappiness <= 20) {
+        return 61;
+    } else if (b->sentiment.houseHappiness <= 30) {
+        return 60;
+    } else if (b->sentiment.houseHappiness < 50) {
+        return 59;
+    } else {
+        return 58;
+    }
+}
+
+static int get_tooltip_entertainment(tooltip_context *c, const building *b)
+{
+    if (b->data.house.entertainment <= 0) {
+        return 64;
+    } else if (b->data.house.entertainment < 10) {
+        return 65;
+    } else if (b->data.house.entertainment < 20) {
+        return 66;
+    } else if (b->data.house.entertainment < 30) {
+        return 67;
+    } else if (b->data.house.entertainment < 40) {
+        return 68;
+    } else if (b->data.house.entertainment < 50) {
+        return 69;
+    } else if (b->data.house.entertainment < 60) {
+        return 70;
+    } else if (b->data.house.entertainment < 70) {
+        return 71;
+    } else if (b->data.house.entertainment < 80) {
+        return 72;
+    } else if (b->data.house.entertainment < 90) {
+        return 73;
+    } else {
+        return 74;
+    }
+}
+
+static int get_tooltip_theater(tooltip_context *c, const building *b)
+{
+    if (b->data.house.theater <= 0) {
+        return 75;
+    } else if (b->data.house.theater >= 80) {
+        return 76;
+    } else if (b->data.house.theater >= 20) {
+        return 77;
+    } else {
+        return 78;
+    }
+}
+
+static int get_tooltip_amphitheater(tooltip_context *c, const building *b)
+{
+    if (b->data.house.amphitheaterActor <= 0) {
+        return 79;
+    } else if (b->data.house.amphitheaterActor >= 80) {
+        return 80;
+    } else if (b->data.house.amphitheaterActor >= 20) {
+        return 81;
+    } else {
+        return 82;
+    }
+}
+
+static int get_tooltip_colosseum(tooltip_context *c, const building *b)
+{
+    if (b->data.house.colosseumGladiator <= 0) {
+        return 83;
+    } else if (b->data.house.colosseumGladiator >= 80) {
+        return 84;
+    } else if (b->data.house.colosseumGladiator >= 20) {
+        return 85;
+    } else {
+        return 86;
+    }
+}
+
+static int get_tooltip_hippodrome(tooltip_context *c, const building *b)
+{
+    if (b->data.house.hippodrome <= 0) {
+        return 87;
+    } else if (b->data.house.hippodrome >= 80) {
+        return 88;
+    } else if (b->data.house.hippodrome >= 20) {
+        return 89;
+    } else {
+        return 90;
+    }
+}
+
+static int get_tooltip_education(tooltip_context *c, const building *b)
+{
+    switch (b->data.house.education) {
+        case 0: return 100;
+        case 1: return 101;
+        case 2: return 102;
+        case 3: return 103;
+        default: return 0;
+    }
+}
+
+static int get_tooltip_school(tooltip_context *c, const building *b)
+{
+    if (b->data.house.school <= 0) {
+        return 19;
+    } else if (b->data.house.school >= 80) {
+        return 20;
+    } else if (b->data.house.school >= 20) {
+        return 21;
+    } else {
+        return 22;
+    }
+}
+
+static int get_tooltip_library(tooltip_context *c, const building *b)
+{
+    if (b->data.house.library <= 0) {
+        return 23;
+    } else if (b->data.house.library >= 80) {
+        return 24;
+    } else if (b->data.house.library >= 20) {
+        return 25;
+    } else {
+        return 26;
+    }
+}
+
+static int get_tooltip_academy(tooltip_context *c, const building *b)
+{
+    if (b->data.house.academy <= 0) {
+        return 27;
+    } else if (b->data.house.academy >= 80) {
+        return 28;
+    } else if (b->data.house.academy >= 20) {
+        return 29;
+    } else {
+        return 30;
+    }
+}
+
+static int get_tooltip_barber(tooltip_context *c, const building *b)
+{
+    if (b->data.house.barber <= 0) {
+        return 31;
+    } else if (b->data.house.barber >= 80) {
+        return 32;
+    } else if (b->data.house.barber < 20) {
+        return 33;
+    } else {
+        return 34;
+    }
+}
+
+static int get_tooltip_bathhouse(tooltip_context *c, const building *b)
+{
+    if (b->data.house.bathhouse <= 0) {
+        return 8;
+    } else if (b->data.house.bathhouse >= 80) {
+        return 9;
+    } else if (b->data.house.bathhouse >= 20) {
+        return 10;
+    } else {
+        return 11;
+    }
+}
+
+static int get_tooltip_clinic(tooltip_context *c, const building *b)
+{
+    if (b->data.house.clinic <= 0) {
+        return 35;
+    } else if (b->data.house.clinic >= 80) {
+        return 36;
+    } else if (b->data.house.clinic >= 20) {
+        return 37;
+    } else {
+        return 38;
+    }
+}
+
+static int get_tooltip_hospital(tooltip_context *c, const building *b)
+{
+    if (b->data.house.hospital <= 0) {
+        return 39;
+    } else if (b->data.house.hospital >= 80) {
+        return 40;
+    } else if (b->data.house.hospital >= 20) {
+        return 41;
+    } else {
+        return 42;
+    }
+}
+
+static int get_tooltip_tax_income(tooltip_context *c, const building *b)
+{
+    int denarii = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
+    if (denarii > 0) {
+        c->has_numeric_prefix = 1;
+        c->numeric_prefix = denarii;
+        return 45;
+    } else if (b->houseTaxCoverage > 0) {
+        return 44;
+    } else {
+        return 43;
+    }
+}
+
+static int get_tooltip_food_stocks(tooltip_context *c, const building *b)
+{
+    if (b->housePopulation <= 0) {
+        return 0;
+    }
+    if (!model_get_house(b->subtype.houseLevel)->food_types) {
+        return 104;
+    } else {
+        int stocksPresent = 0;
+        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+            stocksPresent += b->data.house.inventory[i];
+        }
+        int stocksPerPop = calc_percentage(stocksPresent, b->housePopulation);
+        if (stocksPerPop <= 0) {
+            return 4;
+        } else if (stocksPerPop < 100) {
+            return 5;
+        } else if (stocksPerPop <= 200) {
+            return 6;
+        } else {
+            return 7;
+        }
+    }
+}
+
+static int get_tooltip_desirability(tooltip_context *c, int grid_offset)
+{
+    int desirability = map_desirability_get(grid_offset);
+    if (desirability < 0) {
+        return 91;
+    } else if (desirability == 0) {
+        return 92;
+    } else {
+        return 93;
+    }
+}
+
+int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int grid_offset)
 {
     int overlay = game_state_overlay();
-    int buildingId = map_building_at(gridOffset);
+    int buildingId = map_building_at(grid_offset);
     if (overlay != OVERLAY_WATER && overlay != OVERLAY_DESIRABILITY && !buildingId) {
         return 0;
     }
@@ -1414,279 +1724,47 @@ int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int gridOffset)
     }
     switch (overlay) {
         case OVERLAY_WATER:
-            if (map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE)) {
-                if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
-                    return 2;
-                } else {
-                    return 1;
-                }
-            } else if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
-                return 3;
-            }
-            break;
+            return get_tooltip_water(c, grid_offset);
+        case OVERLAY_DESIRABILITY:
+            return get_tooltip_desirability(c, grid_offset);
         case OVERLAY_RELIGION:
-            if (b->data.house.numGods <= 0) {
-                return 12;
-            } else if (b->data.house.numGods == 1) {
-                return 13;
-            } else if (b->data.house.numGods == 2) {
-                return 14;
-            } else if (b->data.house.numGods == 3) {
-                return 15;
-            } else if (b->data.house.numGods == 4) {
-                return 16;
-            } else if (b->data.house.numGods == 5) {
-                return 17;
-            } else {
-                return 18; // >5 gods, shouldn't happen...
-            }
-            break;
+            return get_tooltip_religion(c, b);
         case OVERLAY_FIRE:
-            if (b->fireRisk <= 0) {
-                return 46;
-            } else if (b->fireRisk <= 20) {
-                return 47;
-            } else if (b->fireRisk <= 40) {
-                return 48;
-            } else if (b->fireRisk <= 60) {
-                return 49;
-            } else if (b->fireRisk <= 80) {
-                return 50;
-            } else {
-                return 51;
-            }
-            break;
+            return get_tooltip_fire(c, b);
         case OVERLAY_DAMAGE:
-            if (b->damageRisk <= 0) {
-                return 52;
-            } else if (b->damageRisk <= 40) {
-                return 53;
-            } else if (b->damageRisk <= 80) {
-                return 54;
-            } else if (b->damageRisk <= 120) {
-                return 55;
-            } else if (b->damageRisk <= 160) {
-                return 56;
-            } else {
-                return 57;
-            }
-            break;
+            return get_tooltip_damage(c, b);
         case OVERLAY_CRIME:
-            if (b->sentiment.houseHappiness <= 0) {
-                return 63;
-            } else if (b->sentiment.houseHappiness <= 10) {
-                return 62;
-            } else if (b->sentiment.houseHappiness <= 20) {
-                return 61;
-            } else if (b->sentiment.houseHappiness <= 30) {
-                return 60;
-            } else if (b->sentiment.houseHappiness < 50) {
-                return 59;
-            } else {
-                return 58;
-            }
-            break;
+            return get_tooltip_crime(c, b);
         case OVERLAY_ENTERTAINMENT:
-            if (b->data.house.entertainment <= 0) {
-                return 64;
-            } else if (b->data.house.entertainment < 10) {
-                return 65;
-            } else if (b->data.house.entertainment < 20) {
-                return 66;
-            } else if (b->data.house.entertainment < 30) {
-                return 67;
-            } else if (b->data.house.entertainment < 40) {
-                return 68;
-            } else if (b->data.house.entertainment < 50) {
-                return 69;
-            } else if (b->data.house.entertainment < 60) {
-                return 70;
-            } else if (b->data.house.entertainment < 70) {
-                return 71;
-            } else if (b->data.house.entertainment < 80) {
-                return 72;
-            } else if (b->data.house.entertainment < 90) {
-                return 73;
-            } else {
-                return 74;
-            }
-            break;
+            return get_tooltip_entertainment(c, b);
         case OVERLAY_THEATER:
-            if (b->data.house.theater <= 0) {
-                return 75;
-            } else if (b->data.house.theater >= 80) {
-                return 76;
-            } else if (b->data.house.theater >= 20) {
-                return 77;
-            } else {
-                return 78;
-            }
-            break;
+            return get_tooltip_theater(c, b);
         case OVERLAY_AMPHITHEATER:
-            if (b->data.house.amphitheaterActor <= 0) {
-                return 79;
-            } else if (b->data.house.amphitheaterActor >= 80) {
-                return 80;
-            } else if (b->data.house.amphitheaterActor >= 20) {
-                return 81;
-            } else {
-                return 82;
-            }
-            break;
+            return get_tooltip_amphitheater(c, b);
         case OVERLAY_COLOSSEUM:
-            if (b->data.house.colosseumGladiator <= 0) {
-                return 83;
-            } else if (b->data.house.colosseumGladiator >= 80) {
-                return 84;
-            } else if (b->data.house.colosseumGladiator >= 20) {
-                return 85;
-            } else {
-                return 86;
-            }
-            break;
+            return get_tooltip_colosseum(c, b);
         case OVERLAY_HIPPODROME:
-            if (b->data.house.hippodrome <= 0) {
-                return 87;
-            } else if (b->data.house.hippodrome >= 80) {
-                return 88;
-            } else if (b->data.house.hippodrome >= 20) {
-                return 89;
-            } else {
-                return 90;
-            }
-            break;
+            return get_tooltip_hippodrome(c, b);
         case OVERLAY_EDUCATION:
-            switch (b->data.house.education) {
-                case 0: return 100;
-                case 1: return 101;
-                case 2: return 102;
-                case 3: return 103;
-            }
-            break;
+            return get_tooltip_education(c, b);
         case OVERLAY_SCHOOL:
-            if (b->data.house.school <= 0) {
-                return 19;
-            } else if (b->data.house.school >= 80) {
-                return 20;
-            } else if (b->data.house.school >= 20) {
-                return 21;
-            } else {
-                return 22;
-            }
-            break;
+            return get_tooltip_school(c, b);
         case OVERLAY_LIBRARY:
-            if (b->data.house.library <= 0) {
-                return 23;
-            } else if (b->data.house.library >= 80) {
-                return 24;
-            } else if (b->data.house.library >= 20) {
-                return 25;
-            } else {
-                return 26;
-            }
-            break;
+            return get_tooltip_library(c, b);
         case OVERLAY_ACADEMY:
-            if (b->data.house.academy <= 0) {
-                return 27;
-            } else if (b->data.house.academy >= 80) {
-                return 28;
-            } else if (b->data.house.academy >= 20) {
-                return 29;
-            } else {
-                return 30;
-            }
-            break;
+            return get_tooltip_academy(c, b);
         case OVERLAY_BARBER:
-            if (b->data.house.barber <= 0) {
-                return 31;
-            } else if (b->data.house.barber >= 80) {
-                return 32;
-            } else if (b->data.house.barber < 20) {
-                return 33;
-            } else {
-                return 34;
-            }
-            break;
+            return get_tooltip_barber(c, b);
         case OVERLAY_BATHHOUSE:
-            if (b->data.house.bathhouse <= 0) {
-                return 8;
-            } else if (b->data.house.bathhouse >= 80) {
-                return 9;
-            } else if (b->data.house.bathhouse >= 20) {
-                return 10;
-            } else {
-                return 11;
-            }
-            break;
+            return get_tooltip_bathhouse(c, b);
         case OVERLAY_CLINIC:
-            if (b->data.house.clinic <= 0) {
-                return 35;
-            } else if (b->data.house.clinic >= 80) {
-                return 36;
-            } else if (b->data.house.clinic >= 20) {
-                return 37;
-            } else {
-                return 38;
-            }
-            break;
+            return get_tooltip_clinic(c, b);
         case OVERLAY_HOSPITAL:
-            if (b->data.house.hospital <= 0) {
-                return 39;
-            } else if (b->data.house.hospital >= 80) {
-                return 40;
-            } else if (b->data.house.hospital >= 20) {
-                return 41;
-            } else {
-                return 42;
-            }
-            break;
-        case OVERLAY_TAX_INCOME: {
-            int denarii = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
-            if (denarii > 0) {
-                c->has_numeric_prefix = 1;
-                c->numeric_prefix = denarii;
-                return 45;
-            } else if (b->houseTaxCoverage > 0) {
-                return 44;
-            } else {
-                return 43;
-            }
-            break;
-        }
+            return get_tooltip_hospital(c, b);
+        case OVERLAY_TAX_INCOME:
+            return get_tooltip_tax_income(c, b);
         case OVERLAY_FOOD_STOCKS:
-            if (b->housePopulation <= 0) {
-                return 0;
-            }
-            if (!model_get_house(b->subtype.houseLevel)->food_types) {
-                return 104;
-            } else {
-                int stocksPresent = 0;
-                for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-                    stocksPresent += b->data.house.inventory[i];
-                }
-                int stocksPerPop = calc_percentage(stocksPresent, b->housePopulation);
-                if (stocksPerPop <= 0) {
-                    return 4;
-                } else if (stocksPerPop < 100) {
-                    return 5;
-                } else if (stocksPerPop <= 200) {
-                    return 6;
-                } else {
-                    return 7;
-                }
-            }
-            break;
-        case OVERLAY_DESIRABILITY: {
-            int desirability = map_desirability_get(gridOffset);
-            if (desirability < 0) {
-                return 91;
-            } else if (desirability == 0) {
-                return 92;
-            } else {
-                return 93;
-            }
-            break;
-        }
+            return get_tooltip_food_stocks(c, b);
     }
     return 0;
 }
