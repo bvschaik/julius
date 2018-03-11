@@ -89,42 +89,41 @@ static void draw_top_with_size(int grid_offset, int image_x, int image_y)
     }
 }
 
-void UI_CityBuildings_drawOverlayFootprints()
+static void draw_footprint(int x, int y, int grid_offset)
 {
     int overlay = game_state_overlay();
-    FOREACH_Y_VIEW {
-    FOREACH_X_VIEW_UNCHECKED {
-		if (gridOffset == Data_State.selectedBuilding.gridOffsetStart) {
-			Data_State.selectedBuilding.reservoirOffsetX = xGraphic;
-			Data_State.selectedBuilding.reservoirOffsetY = yGraphic;
-		}
-		if (gridOffset < 0) {
-			// Outside map: draw black tile
-			DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_BLACK),
-				xGraphic, yGraphic);
-		} else if (overlay == OVERLAY_DESIRABILITY) {
-			drawBuildingFootprintForDesirabilityOverlay(gridOffset, xGraphic, yGraphic);
-		} else if (map_property_is_draw_tile(gridOffset)) {
-			int terrain = map_terrain_get(gridOffset);
-			if (overlay == OVERLAY_WATER) {
-				drawFootprintForWaterOverlay(gridOffset, xGraphic, yGraphic);
-			} else if (overlay == OVERLAY_NATIVE) {
-				drawFootprintForNativeOverlay(gridOffset, xGraphic, yGraphic);
-			} else if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
-				// display grass
-				int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
-				DRAWFOOT_SIZE1(graphicId, xGraphic, yGraphic);
-			} else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
-				draw_foot_with_size(gridOffset, xGraphic, yGraphic);
-			} else if (terrain & TERRAIN_BUILDING) {
-				drawBuildingFootprintForOverlay(map_building_at(gridOffset),
-					gridOffset, xGraphic, yGraphic, 0);
-			} else {
-				draw_foot_with_size(gridOffset, xGraphic, yGraphic);
-			}
-		}
-    } END_FOREACH_X_VIEW_UNCHECKED;
-    } END_FOREACH_Y_VIEW;
+    if (grid_offset == Data_State.selectedBuilding.gridOffsetStart) {
+        Data_State.selectedBuilding.reservoirOffsetX = x;
+        Data_State.selectedBuilding.reservoirOffsetY = y;
+    }
+    if (grid_offset < 0) {
+        // Outside map: draw black tile
+        DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_BLACK), x, y);
+    } else if (overlay == OVERLAY_DESIRABILITY) {
+        drawBuildingFootprintForDesirabilityOverlay(grid_offset, x, y);
+    } else if (map_property_is_draw_tile(grid_offset)) {
+        int terrain = map_terrain_get(grid_offset);
+        if (overlay == OVERLAY_WATER) {
+            drawFootprintForWaterOverlay(grid_offset, x, y);
+        } else if (overlay == OVERLAY_NATIVE) {
+            drawFootprintForNativeOverlay(grid_offset, x, y);
+        } else if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
+            // display grass
+            int image_id = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
+            DRAWFOOT_SIZE1(image_id, x, y);
+        } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
+            draw_foot_with_size(grid_offset, x, y);
+        } else if (terrain & TERRAIN_BUILDING) {
+            drawBuildingFootprintForOverlay(map_building_at(grid_offset), grid_offset, x, y, 0);
+        } else {
+            draw_foot_with_size(grid_offset, x, y);
+        }
+    }
+}
+
+void UI_CityBuildings_drawOverlayFootprints()
+{
+    city_view_foreach_map_tile(draw_footprint);
 }
 
 static building *get_entertainment_building(const figure *f)
@@ -214,199 +213,204 @@ static int showOnOverlay(const figure *f)
     return 1;
 }
 
-void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
+static void draw_figures(int x, int y, int grid_offset)
 {
-	FOREACH_Y_VIEW {
-		// draw figures
-		FOREACH_X_VIEW {
-			int figureId = map_figure_at(gridOffset);
-			while (figureId) {
-			    figure *fig = figure_get(figureId);
-				if (!fig->isGhost && showOnOverlay(fig)) {
-					city_draw_figure(fig, xGraphic, yGraphic);
-				}
-				figureId = fig->nextFigureIdOnSameTile;
-			}
-		} END_FOREACH_X_VIEW;
-		// draw animation
-		FOREACH_X_VIEW {
-			if (overlay == OVERLAY_DESIRABILITY) {
-				drawBuildingTopForDesirabilityOverlay(gridOffset, xGraphic, yGraphic);
-			} else if (map_property_is_draw_tile(gridOffset)) {
-				if (overlay == OVERLAY_WATER) {
-					drawTopForWaterOverlay(gridOffset, xGraphic, yGraphic);
-				} else if (overlay == OVERLAY_NATIVE) {
-					drawTopForNativeOverlay(gridOffset, xGraphic, yGraphic);
-				} else if (!map_terrain_is(gridOffset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
-					if (map_terrain_is(gridOffset, TERRAIN_BUILDING) && map_building_at(gridOffset)) {
-						building *b = building_get(map_building_at(gridOffset));
-						switch (overlay) {
-							case OVERLAY_FIRE:
-								drawBuildingTopForFireOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_DAMAGE:
-								drawBuildingTopForDamageOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_CRIME:
-								drawBuildingTopForCrimeOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_ENTERTAINMENT:
-								drawBuildingTopForEntertainmentOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_THEATER:
-								drawBuildingTopForTheaterOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_AMPHITHEATER:
-								drawBuildingTopForAmphitheaterOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_COLOSSEUM:
-								drawBuildingTopForColosseumOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_HIPPODROME:
-								drawBuildingTopForHippodromeOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_RELIGION:
-								drawBuildingTopForReligionOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_EDUCATION:
-								drawBuildingTopForEducationOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_SCHOOL:
-								drawBuildingTopForSchoolOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_LIBRARY:
-								drawBuildingTopForLibraryOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_ACADEMY:
-								drawBuildingTopForAcademyOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_BARBER:
-								drawBuildingTopForBarberOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_BATHHOUSE:
-								drawBuildingTopForBathhouseOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_CLINIC:
-								drawBuildingTopForClinicsOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_HOSPITAL:
-								drawBuildingTopForHospitalOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_FOOD_STOCKS:
-								drawBuildingTopForFoodStocksOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_TAX_INCOME:
-								drawBuildingTopForTaxIncomeOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-							case OVERLAY_PROBLEMS:
-								drawBuildingTopForProblemsOverlay(gridOffset, b, xGraphic, yGraphic);
-								break;
-						}
-					} else if (!map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-						// terrain
-						draw_top_with_size(gridOffset, xGraphic, yGraphic);
-					}
-				}
-			}
-		} END_FOREACH_X_VIEW;
-		FOREACH_X_VIEW {
-			int draw = 0;
-			if (map_building_at(gridOffset)) {
-				int btype = building_get(map_building_at(gridOffset))->type;
-				switch (overlay) {
-					case OVERLAY_FIRE:
-					case OVERLAY_CRIME:
-						if (btype == BUILDING_PREFECTURE || btype == BUILDING_BURNING_RUIN) {
-							draw = 1;
-						}
-						break;
-					case OVERLAY_DAMAGE:
-						if (btype == BUILDING_ENGINEERS_POST) {
-							draw = 1;
-						}
-						break;
-					case OVERLAY_WATER:
-						if (btype == BUILDING_RESERVOIR || btype == BUILDING_FOUNTAIN) {
-							draw = 1;
-						}
-						break;
-					case OVERLAY_FOOD_STOCKS:
-						if (btype == BUILDING_MARKET || btype == BUILDING_GRANARY) {
-							draw = 1;
-						}
-						break;
-				}
-			}
+    int figure_id = map_figure_at(grid_offset);
+    while (figure_id) {
+        figure *fig = figure_get(figure_id);
+        if (!fig->isGhost && showOnOverlay(fig)) {
+            city_draw_figure(fig, x, y);
+        }
+        figure_id = fig->nextFigureIdOnSameTile;
+    }
+}
 
-			int graphicId = map_image_at(gridOffset);
-			const image *img = image_get(graphicId);
-			if (img->num_animation_sprites && draw) {
-				if (map_property_is_draw_tile(gridOffset)) {
-					building *b = building_get(map_building_at(gridOffset));
-					int colorMask = 0;
-					if (b->type == BUILDING_GRANARY) {
-						image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 1,
-							xGraphic + img->sprite_offset_x,
-							yGraphic + 60 + img->sprite_offset_y - img->height,
-							colorMask);
-						if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
-							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 2,
-								xGraphic + 33, yGraphic - 60, colorMask);
-						}
-						if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
-							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 3,
-								xGraphic + 56, yGraphic - 50, colorMask);
-						}
-						if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
-							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 4,
-								xGraphic + 91, yGraphic - 50, colorMask);
-						}
-						if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
-							image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 5,
-								xGraphic + 117, yGraphic - 62, colorMask);
-						}
-					} else {
-						int animationOffset = building_animation_offset(b, graphicId, gridOffset);
-						if (animationOffset > 0) {
-							if (animationOffset > img->num_animation_sprites) {
-								animationOffset = img->num_animation_sprites;
-							}
-							int ydiff = 0;
-							switch (map_property_multi_tile_size(gridOffset)) {
-								case 1: ydiff = 30; break;
-								case 2: ydiff = 45; break;
-								case 3: ydiff = 60; break;
-								case 4: ydiff = 75; break;
-								case 5: ydiff = 90; break;
-							}
-							image_draw_masked(graphicId + animationOffset,
-								xGraphic + img->sprite_offset_x,
-								yGraphic + ydiff + img->sprite_offset_y - img->height,
-								colorMask);
-						}
-					}
-				}
-			} else if (map_is_bridge(gridOffset)) {
-				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
-			}
-		} END_FOREACH_X_VIEW;
-	} END_FOREACH_Y_VIEW;
+static void draw_top(int x, int y, int grid_offset)
+{
+    int overlay = game_state_overlay();
+    if (overlay == OVERLAY_DESIRABILITY) {
+        drawBuildingTopForDesirabilityOverlay(grid_offset, x, y);
+    } else if (map_property_is_draw_tile(grid_offset)) {
+        if (overlay == OVERLAY_WATER) {
+            drawTopForWaterOverlay(grid_offset, x, y);
+        } else if (overlay == OVERLAY_NATIVE) {
+            drawTopForNativeOverlay(grid_offset, x, y);
+        } else if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
+            if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset)) {
+                building *b = building_get(map_building_at(grid_offset));
+                switch (overlay) {
+                    case OVERLAY_FIRE:
+                        drawBuildingTopForFireOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_DAMAGE:
+                        drawBuildingTopForDamageOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_CRIME:
+                        drawBuildingTopForCrimeOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_ENTERTAINMENT:
+                        drawBuildingTopForEntertainmentOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_THEATER:
+                        drawBuildingTopForTheaterOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_AMPHITHEATER:
+                        drawBuildingTopForAmphitheaterOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_COLOSSEUM:
+                        drawBuildingTopForColosseumOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_HIPPODROME:
+                        drawBuildingTopForHippodromeOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_RELIGION:
+                        drawBuildingTopForReligionOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_EDUCATION:
+                        drawBuildingTopForEducationOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_SCHOOL:
+                        drawBuildingTopForSchoolOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_LIBRARY:
+                        drawBuildingTopForLibraryOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_ACADEMY:
+                        drawBuildingTopForAcademyOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_BARBER:
+                        drawBuildingTopForBarberOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_BATHHOUSE:
+                        drawBuildingTopForBathhouseOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_CLINIC:
+                        drawBuildingTopForClinicsOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_HOSPITAL:
+                        drawBuildingTopForHospitalOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_FOOD_STOCKS:
+                        drawBuildingTopForFoodStocksOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_TAX_INCOME:
+                        drawBuildingTopForTaxIncomeOverlay(grid_offset, b, x, y);
+                        break;
+                    case OVERLAY_PROBLEMS:
+                        drawBuildingTopForProblemsOverlay(grid_offset, b, x, y);
+                        break;
+                }
+            } else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                // terrain
+                draw_top_with_size(grid_offset, x, y);
+            }
+        }
+    }
+}
+
+static void draw_animation(int x, int y, int grid_offset)
+{
+    int overlay = game_state_overlay();
+    int draw = 0;
+    if (map_building_at(grid_offset)) {
+        int btype = building_get(map_building_at(grid_offset))->type;
+        switch (overlay) {
+            case OVERLAY_FIRE:
+            case OVERLAY_CRIME:
+                if (btype == BUILDING_PREFECTURE || btype == BUILDING_BURNING_RUIN) {
+                    draw = 1;
+                }
+                break;
+            case OVERLAY_DAMAGE:
+                if (btype == BUILDING_ENGINEERS_POST) {
+                    draw = 1;
+                }
+                break;
+            case OVERLAY_WATER:
+                if (btype == BUILDING_RESERVOIR || btype == BUILDING_FOUNTAIN) {
+                    draw = 1;
+                }
+                break;
+            case OVERLAY_FOOD_STOCKS:
+                if (btype == BUILDING_MARKET || btype == BUILDING_GRANARY) {
+                    draw = 1;
+                }
+                break;
+        }
+    }
+
+    int graphicId = map_image_at(grid_offset);
+    const image *img = image_get(graphicId);
+    if (img->num_animation_sprites && draw) {
+        if (map_property_is_draw_tile(grid_offset)) {
+            building *b = building_get(map_building_at(grid_offset));
+            int color_mask = 0;
+            if (b->type == BUILDING_GRANARY) {
+                image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 1,
+                                  x + img->sprite_offset_x,
+                                  y + 60 + img->sprite_offset_y - img->height,
+                                  color_mask);
+                if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
+                    image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask);
+                }
+                if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
+                    image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50, color_mask);
+                }
+                if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
+                    image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask);
+                }
+                if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
+                    image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
+                }
+            } else {
+                int animationOffset = building_animation_offset(b, graphicId, grid_offset);
+                if (animationOffset > 0) {
+                    if (animationOffset > img->num_animation_sprites) {
+                        animationOffset = img->num_animation_sprites;
+                    }
+                    int ydiff = 0;
+                    switch (map_property_multi_tile_size(grid_offset)) {
+                        case 1: ydiff = 30; break;
+                        case 2: ydiff = 45; break;
+                        case 3: ydiff = 60; break;
+                        case 4: ydiff = 75; break;
+                        case 5: ydiff = 90; break;
+                    }
+                    image_draw_masked(graphicId + animationOffset,
+                                      x + img->sprite_offset_x,
+                                      y + ydiff + img->sprite_offset_y - img->height,
+                                      color_mask);
+                }
+            }
+        }
+    } else if (map_is_bridge(grid_offset)) {
+        UI_CityBuildings_drawBridge(grid_offset, x, y);
+    }
+}
+void UI_CityBuildings_drawOverlayTopsFiguresAnimation()
+{
+    city_view_foreach_valid_map_tile(
+        draw_figures,
+        draw_top,
+        draw_animation
+    );
+}
+
+static void draw_elevated_figures(int x, int y, int grid_offset)
+{
+    int figure_id = map_figure_at(grid_offset);
+    while (figure_id > 0) {
+        figure *f = figure_get(figure_id);
+        if (((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) && showOnOverlay(f)) {
+            city_draw_figure(f, x, y);
+        }
+        figure_id = f->nextFigureIdOnSameTile;
+    }
 }
 
 void UI_CityBuildings_drawOverlayElevatedFigures(void)
 {
-    FOREACH_Y_VIEW {
-        FOREACH_X_VIEW {
-            int figureId = map_figure_at(gridOffset);
-            while (figureId > 0) {
-                figure *f = figure_get(figureId);
-                if (((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) && showOnOverlay(f)) {
-                    city_draw_figure(f, xGraphic, yGraphic);
-                }
-                figureId = f->nextFigureIdOnSameTile;
-            }
-        } END_FOREACH_X_VIEW;
-    } END_FOREACH_Y_VIEW;
+    city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
 }
 
 static int terrain_on_water_overlay()

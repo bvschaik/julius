@@ -390,5 +390,106 @@ void city_view_load_scenario_state(buffer *camera)
 {
     data.camera.x = buffer_read_i32(camera);
     data.camera.y = buffer_read_i32(camera);
-    
+}
+
+void city_view_foreach_map_tile(map_callback *callback)
+{
+    int odd = 0;
+    int yView = Data_CityView.yInTiles - 8;
+    int yGraphic = Data_CityView.yOffsetInPixels - 9*15;
+    int xGraphic, xView;
+    for (int y = 0; y < Data_CityView.heightInTiles + 14; y++) {
+        if (yView >= 0 && yView < VIEW_Y_MAX) {
+            xGraphic = -(4*58 + 8);
+            if (odd) {
+                xGraphic += Data_CityView.xOffsetInPixels - 30;
+            } else {
+                xGraphic += Data_CityView.xOffsetInPixels;
+            }
+            xView = Data_CityView.xInTiles - 4;
+            for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {
+                if (xView >= 0 && xView < VIEW_X_MAX) {
+                    int gridOffset = ViewToGridOffset(xView, yView);
+                    callback(xGraphic, yGraphic, gridOffset);
+                }
+                xGraphic += 60;
+                xView++;
+            }
+        }
+        odd = 1 - odd;
+        yGraphic += 15;
+        yView++;
+    }
+}
+
+void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2, map_callback *callback3)
+{
+    int odd = 0;
+    int yView = Data_CityView.yInTiles - 8;
+    int yGraphic = Data_CityView.yOffsetInPixels - 9*15;
+    int xGraphic, xView;
+    for (int y = 0; y < Data_CityView.heightInTiles + 14; y++) {
+        if (yView >= 0 && yView < VIEW_Y_MAX) {
+            if (callback1) {
+                xGraphic = -(4*58 + 8);
+                if (odd) {
+                    xGraphic += Data_CityView.xOffsetInPixels - 30;
+                } else {
+                    xGraphic += Data_CityView.xOffsetInPixels;
+                }
+                xView = Data_CityView.xInTiles - 4;
+                for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {
+                    if (xView >= 0 && xView < VIEW_X_MAX) {
+                        int gridOffset = ViewToGridOffset(xView, yView);
+                        if (gridOffset >= 0) {
+                            callback1(xGraphic, yGraphic, gridOffset);
+                        }
+                    }
+                    xGraphic += 60;
+                    xView++;
+                }
+            }
+            if (callback2) {
+                xGraphic = -(4*58 + 8);
+                if (odd) {
+                    xGraphic += Data_CityView.xOffsetInPixels - 30;
+                } else {
+                    xGraphic += Data_CityView.xOffsetInPixels;
+                }
+                xView = Data_CityView.xInTiles - 4;
+                for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {
+                    if (xView >= 0 && xView < VIEW_X_MAX) {
+                        int gridOffset = ViewToGridOffset(xView, yView);
+                        if (gridOffset >= 0) {
+                            callback2(xGraphic, yGraphic, gridOffset);
+                        }
+                    }
+                    xGraphic += 60;
+                    xView++;
+                }
+            }
+            if (callback3) {
+                xGraphic = -(4*58 + 8);
+                if (odd) {
+                    xGraphic += Data_CityView.xOffsetInPixels - 30;
+                } else {
+                    xGraphic += Data_CityView.xOffsetInPixels;
+                }
+                xView = Data_CityView.xInTiles - 4;
+                for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {
+                    if (xView >= 0 && xView < VIEW_X_MAX) {
+                        int gridOffset = ViewToGridOffset(xView, yView);
+                        if (gridOffset >= 0) {
+                            callback3(xGraphic, yGraphic, gridOffset);
+                        }
+                    }
+                    xGraphic += 60;
+                    xView++;
+                }
+            }
+        }
+        odd = 1 - odd;
+        yGraphic += 15;
+        yView++;
+    }
 }

@@ -8,7 +8,7 @@
 
 #include "Data/CityInfo.h"
 
-int building_dock_count_idle_dockers(building *dock)
+int building_dock_count_idle_dockers(const building *dock)
 {
     int numIdle = 0;
     for (int i = 0; i < 3; i++) {

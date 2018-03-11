@@ -3,6 +3,8 @@
 
 #include "core/buffer.h"
 
+typedef void (map_callback)(int x, int y, int grid_offset);
+
 void city_view_init();
 
 int city_view_orientation();
@@ -40,5 +42,9 @@ void city_view_save_state(buffer *orientation, buffer *camera);
 void city_view_load_state(buffer *orientation, buffer *camera);
 
 void city_view_load_scenario_state(buffer *camera);
+
+void city_view_foreach_map_tile(map_callback *callback);
+
+void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2, map_callback *callback3);
 
 #endif // CITY_VIEW_H

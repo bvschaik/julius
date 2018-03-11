@@ -3,7 +3,7 @@
 
 #include "building/building.h"
 
-int building_dock_count_idle_dockers(building *dock);
+int building_dock_count_idle_dockers(const building *dock);
 
 void building_dock_update_open_water_access();
 

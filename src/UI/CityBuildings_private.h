@@ -31,61 +31,9 @@
 #define DRAWTOP_SIZE4_C(g,x,y,c) image_draw_isometric_top(g, x + 90, y - 45, c)
 #define DRAWTOP_SIZE5_C(g,x,y,c) image_draw_isometric_top(g, x + 120, y - 60, c)
 
-#define FOREACH_Y_VIEW \
-	int odd = 0;\
-	int yView = Data_CityView.yInTiles - 8;\
-	int yGraphic = Data_CityView.yOffsetInPixels - 9*15;\
-	int xGraphic, xView;\
-	for (int y = 0; y < Data_CityView.heightInTiles + 14; y++) {\
-		if (yView >= 0 && yView < VIEW_Y_MAX) {
-
-#define END_FOREACH_Y_VIEW \
-		}\
-		odd = 1 - odd;\
-		yGraphic += 15;\
-		yView++;\
-	}
-
-#define FOREACH_X_VIEW \
-	xGraphic = -(4*58 + 8);\
-	if (odd) {\
-		xGraphic += Data_CityView.xOffsetInPixels - 30;\
-	} else {\
-		xGraphic += Data_CityView.xOffsetInPixels;\
-	}\
-	xView = Data_CityView.xInTiles - 4;\
-	for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {\
-		if (xView >= 0 && xView < VIEW_X_MAX) {\
-			int gridOffset = ViewToGridOffset(xView, yView);\
-			if (gridOffset >= 0) {
-
-#define END_FOREACH_X_VIEW \
-			}\
-		}\
-		xGraphic += 60;\
-		xView++;\
-	}
-
-#define FOREACH_X_VIEW_UNCHECKED \
-    xGraphic = -(4*58 + 8);\
-    if (odd) {\
-        xGraphic += Data_CityView.xOffsetInPixels - 30;\
-    } else {\
-        xGraphic += Data_CityView.xOffsetInPixels;\
-    }\
-    xView = Data_CityView.xInTiles - 4;\
-    for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {\
-        if (xView >= 0 && xView < VIEW_X_MAX) {\
-            int gridOffset = ViewToGridOffset(xView, yView);
-
-#define END_FOREACH_X_VIEW_UNCHECKED \
-        }\
-        xGraphic += 60;\
-        xView++;\
-    }
 
 void UI_CityBuildings_drawOverlayFootprints();
-void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay);
+void UI_CityBuildings_drawOverlayTopsFiguresAnimation();
 void UI_CityBuildings_drawOverlayElevatedFigures(void);
 
 void UI_CityBuildings_drawBridge(int gridOffset, int x, int y);
