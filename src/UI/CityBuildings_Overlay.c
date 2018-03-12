@@ -582,54 +582,126 @@ static int is_drawable_farm_corner(int grid_offset, int map_orientation)
     return 0;
 }
 
+static void draw_overlay_base(const building *b, int x, int y, int image_offset)
+{
+    int image_base = image_group(GROUP_TERRAIN_OVERLAY) + image_offset;
+    if (b->houseSize) {
+        image_base += 4;
+    }
+    if (b->size == 1) {
+        image_draw_isometric_footprint(image_base, x, y, 0);
+    } else if (b->size == 2) {
+        int xTileOffset[] = {30, 0, 60, 30};
+        int yTileOffset[] = {-15, 0, 0, 15};
+        for (int i = 0; i < 4; i++) {
+            image_draw_isometric_footprint(image_base + i, x + xTileOffset[i], y + yTileOffset[i], 0);
+        }
+    } else if (b->size == 3) {
+        int graphicTileOffset[] = {0, 1, 2, 1, 3, 2, 3, 3, 3};
+        int xTileOffset[] = {60, 30, 90, 0, 60, 120, 30, 90, 60};
+        int yTileOffset[] = {-30, -15, -15, 0, 0, 0, 15, 15, 30};
+        for (int i = 0; i < 9; i++) {
+            image_draw_isometric_footprint(image_base + graphicTileOffset[i], x + xTileOffset[i], y + yTileOffset[i], 0);
+        }
+    } else if (b->size == 4) {
+        int graphicTileOffset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 3, 3, 3, 3, 3, 3};
+        int xTileOffset[] = {
+            90,
+            60, 120,
+            30, 90, 150,
+            0, 60, 120, 180,
+            30, 90, 150,
+            60, 120,
+            90
+        };
+        int yTileOffset[] = {
+            -45,
+            -30, -30,
+            -15, -15, -15,
+            0, 0, 0, 0,
+            15, 15, 15,
+            30, 30,
+            45
+        };
+        for (int i = 0; i < 16; i++) {
+            image_draw_isometric_footprint(image_base + graphicTileOffset[i], x + xTileOffset[i], y + yTileOffset[i], 0);
+        }
+    } else if (b->size == 5) {
+        int graphicTileOffset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 1, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
+        int xTileOffset[] = {
+            120,
+            90, 150,
+            60, 120, 180,
+            30, 90, 150, 210,
+            0, 60, 120, 180, 240,
+            30, 90, 150, 210,
+            60, 120, 180,
+            90, 150,
+            120
+        };
+        int yTileOffset[] = {
+            -60,
+            -45, -45,
+            -30, -30, -30,
+            -15, -15, -15, -15,
+            0, 0, 0, 0, 0,
+            15, 15, 15, 15,
+            30, 30, 30,
+            45, 45,
+            60
+        };
+        for (int i = 0; i < 25; i++) {
+            image_draw_isometric_footprint(image_base + graphicTileOffset[i], x + xTileOffset[i], y + yTileOffset[i], 0);
+        }
+    }
+}
+
 static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int xOffset, int yOffset, int graphicOffset)
 {
 	if (!buildingId) {
 		return;
 	}
 	building *b = building_get(buildingId);
-	int origGraphicId = map_image_at(gridOffset);
 	if (b->size == 1) {
-		int graphicId = image_group(GROUP_TERRAIN_OVERLAY);
-		if (b->houseSize) {
-			graphicId += 4;
-		}
+		int drawOrig = 0;
 		switch (game_state_overlay()) {
 			case OVERLAY_DAMAGE:
 				if (b->type == BUILDING_ENGINEERS_POST) {
-					graphicId = origGraphicId;
+					drawOrig = 1;
 				}
 				break;
 			case OVERLAY_BARBER:
 				if (b->type == BUILDING_BARBER) {
-					graphicId = origGraphicId;
+					drawOrig = 1;
 				}
 				break;
 			case OVERLAY_CLINIC:
 				if (b->type == BUILDING_DOCTOR) {
-					graphicId = origGraphicId;
+					drawOrig = 1;
 				}
 				break;
 			case OVERLAY_NATIVE:
 				if (b->type == BUILDING_NATIVE_HUT) {
-					graphicId = origGraphicId;
-					graphicOffset = 0;
+					drawOrig = 1;
 				}
 				break;
 			case OVERLAY_PROBLEMS:
 				if (b->showOnProblemOverlay) {
-					graphicId = origGraphicId;
+					drawOrig = 1;
 				}
 				break;
 			case OVERLAY_FIRE:
 			case OVERLAY_CRIME:
 				if (b->type == BUILDING_PREFECTURE || b->type == BUILDING_BURNING_RUIN) {
-					graphicId = origGraphicId;
+					drawOrig = 1;
 				}
 				break;
 		}
-		graphicId += graphicOffset;
-		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
+		if (drawOrig) {
+			DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
+		} else {
+			draw_overlay_base(b, xOffset, yOffset, graphicOffset);
+		}
 	} else if (b->size == 2) {
 		int drawOrig = 0;
 		switch (game_state_overlay()) {
@@ -690,16 +762,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		if (drawOrig) {
 			DRAWFOOT_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 		} else {
-			int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
-			if (b->houseSize) {
-				graphicBase += 4;
-			}
-			int xTileOffset[] = {30, 0, 60, 30};
-			int yTileOffset[] = {-15, 0, 0, 15};
-			for (int i = 0; i < 4; i++) {
-				image_draw_isometric_footprint(graphicBase + i,
-					xOffset + xTileOffset[i], yOffset + yTileOffset[i], 0);
-			}
+			draw_overlay_base(b, xOffset, yOffset, graphicOffset);
 		}
 	} else if (b->size == 3) {
 		int drawOrig = 0;
@@ -778,47 +841,11 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 			    draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
 			}
 			if (draw) {
-				int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
-				if (b->houseSize) {
-					graphicBase += 4;
-				}
-				int graphicTileOffset[] = {0, 1, 2, 1, 3, 2, 3, 3, 3};
-				int xTileOffset[] = {60, 30, 90, 0, 60, 120, 30, 90, 60};
-				int yTileOffset[] = {-30, -15, -15, 0, 0, 0, 15, 15, 30};
-				for (int i = 0; i < 9; i++) {
-					image_draw_isometric_footprint(graphicBase + graphicTileOffset[i],
-						xOffset + xTileOffset[i], yOffset + yTileOffset[i], 0);
-				}
+				draw_overlay_base(b, xOffset, yOffset, graphicOffset);
 			}
 		}
 	} else if (b->size == 4) {
-		int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
-		if (b->houseSize) {
-			graphicBase += 4;
-		}
-		int graphicTileOffset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 3, 3, 3, 3, 3, 3};
-		int xTileOffset[] = {
-			90,
-			60, 120,
-			30, 90, 150,
-			0, 60, 120, 180,
-			30, 90, 150,
-			60, 120,
-			90
-		};
-		int yTileOffset[] = {
-			-45,
-			-30, -30,
-			-15, -15, -15,
-			0, 0, 0, 0,
-			15, 15, 15,
-			30, 30,
-			45
-		};
-		for (int i = 0; i < 16; i++) {
-			image_draw_isometric_footprint(graphicBase + graphicTileOffset[i],
-				xOffset + xTileOffset[i], yOffset + yTileOffset[i], 0);
-		}
+		draw_overlay_base(b, xOffset, yOffset, graphicOffset);
 	} else if (b->size == 5) {
 		int drawOrig = 0;
 		switch (game_state_overlay()) {
@@ -851,38 +878,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		if (drawOrig) {
 			DRAWFOOT_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
 		} else {
-			int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
-			if (b->houseSize) {
-				graphicBase += 4;
-			}
-			int graphicTileOffset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2,
-				1, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
-			int xTileOffset[] = {
-				120,
-				90, 150,
-				60, 120, 180,
-				30, 90, 150, 210,
-				0, 60, 120, 180, 240,
-				30, 90, 150, 210,
-				60, 120, 180,
-				90, 150,
-				120
-			};
-			int yTileOffset[] = {
-				-60,
-				-45, -45,
-				-30, -30, -30,
-				-15, -15, -15, -15,
-				0, 0, 0, 0, 0,
-				15, 15, 15, 15,
-				30, 30, 30,
-				45, 45,
-				60
-			};
-			for (int i = 0; i < 25; i++) {
-				image_draw_isometric_footprint(graphicBase + graphicTileOffset[i],
-					xOffset + xTileOffset[i], yOffset + yTileOffset[i], 0);
-			}
+			draw_overlay_base(b, xOffset, yOffset, graphicOffset);
 		}
 	}
 }
