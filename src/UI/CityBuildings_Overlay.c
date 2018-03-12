@@ -1067,15 +1067,15 @@ static void draw_building_top(int grid_offset, building *b, int x, int y)
         const image *img = image_get(map_image_at(grid_offset));
         image_draw(image_group(GROUP_BUILDING_GRANARY) + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - 30 - (img->height - 90));
         if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
-            image_draw(image_group(GROUP_BUILDING_GRANARY) + 2, x + 32, y - 61);
+            image_draw(image_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60);
             if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
-                image_draw(image_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 51);
+                image_draw(image_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50);
             }
             if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
-                image_draw(image_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 51);
+                image_draw(image_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50);
             }
             if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
-                image_draw(image_group(GROUP_BUILDING_GRANARY) + 5, x + 118, y - 61);
+                image_draw(image_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62);
             }
         }
     }
