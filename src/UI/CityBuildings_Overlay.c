@@ -763,7 +763,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		}
 		// farms have multiple drawable tiles: the farmhouse and 5 fields
 		if (drawOrig) {
-			if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
+			if (building_is_farm(b->type)) {
 				if (is_drawable_farmhouse(gridOffset, city_view_orientation())) {
 					DRAWFOOT_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 				} else if (map_property_is_draw_tile(gridOffset)) {
@@ -774,7 +774,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 			}
 		} else {
 			int draw = 1;
-			if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
+			if (building_is_farm(b->type)) {
 			    draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
 			}
 			if (draw) {
@@ -983,7 +983,7 @@ static void drawBuildingTopForFireOverlay(int gridOffset, building *b, int xOffs
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->fireRisk > 0) {
 		int draw = 1;
-		if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
+		if (building_is_farm(b->type)) {
 			draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
 		}
 		if (draw) {
@@ -998,7 +998,7 @@ static void drawBuildingTopForDamageOverlay(int gridOffset, building *b, int xOf
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->damageRisk > 0) {
 		int draw = 1;
-		if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
+		if (building_is_farm(b->type)) {
 			draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
 		}
 		if (draw) {
@@ -1316,7 +1316,7 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, building *b, int x
 		return;
 	}
 
-	if (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM) {
+	if (building_is_farm(type)) {
 		if (is_drawable_farmhouse(gridOffset, city_view_orientation())) {
 			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 		} else if (map_property_is_draw_tile(gridOffset)) {
