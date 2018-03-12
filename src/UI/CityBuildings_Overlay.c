@@ -582,7 +582,7 @@ static int is_drawable_farm_corner(int grid_offset, int map_orientation)
     return 0;
 }
 
-static void draw_overlay_base(const building *b, int x, int y, int image_offset)
+static void draw_flattened_overlay_building(const building *b, int x, int y, int image_offset)
 {
     int image_base = image_group(GROUP_TERRAIN_OVERLAY) + image_offset;
     if (b->houseSize) {
@@ -656,231 +656,207 @@ static void draw_overlay_base(const building *b, int x, int y, int image_offset)
     }
 }
 
+static int show_building_damage(building *b)
+{
+    return b->type == BUILDING_ENGINEERS_POST;
+}
+
+static int show_building_fire_crime(building *b)
+{
+    return b->type == BUILDING_PREFECTURE || b->type == BUILDING_BURNING_RUIN;
+}
+
+static int show_building_problems(building *b)
+{
+    return b->showOnProblemOverlay;
+}
+
+static int show_building_native(building *b)
+{
+    return b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING || b->type == BUILDING_MISSION_POST;
+}
+
+static int show_building_entertainment(building *b)
+{
+    return
+        b->type == BUILDING_ACTOR_COLONY || b->type == BUILDING_THEATER ||
+        b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_AMPHITHEATER ||
+        b->type == BUILDING_LION_HOUSE || b->type == BUILDING_COLOSSEUM ||
+        b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME;
+}
+
+static int show_building_theater(building *b)
+{
+    return b->type == BUILDING_ACTOR_COLONY || b->type == BUILDING_THEATER;
+}
+
+static int show_building_amphitheater(building *b)
+{
+    return b->type == BUILDING_ACTOR_COLONY || b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_AMPHITHEATER;
+}
+
+static int show_building_colosseum(building *b)
+{
+    return b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_LION_HOUSE || b->type == BUILDING_COLOSSEUM;
+}
+
+static int show_building_hippodrome(building *b)
+{
+    return b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME;
+}
+
+static int show_building_education(building *b)
+{
+    return b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_ACADEMY;
+}
+
+static int show_building_school(building *b)
+{
+    return b->type == BUILDING_SCHOOL;
+}
+
+static int show_building_library(building *b)
+{
+    return b->type == BUILDING_LIBRARY;
+}
+
+static int show_building_academy(building *b)
+{
+    return b->type == BUILDING_ACADEMY;
+}
+
+static int show_building_barber(building *b)
+{
+    return b->type == BUILDING_BARBER;
+}
+
+static int show_building_bathhouse(building *b)
+{
+    return b->type == BUILDING_BATHHOUSE;
+}
+
+static int show_building_clinic(building *b)
+{
+    return b->type == BUILDING_DOCTOR;
+}
+
+static int show_building_hospital(building *b)
+{
+    return b->type == BUILDING_HOSPITAL;
+}
+
+static int show_building_religion(building *b)
+{
+    return
+        b->type == BUILDING_ORACLE || b->type == BUILDING_SMALL_TEMPLE_CERES ||
+        b->type == BUILDING_SMALL_TEMPLE_NEPTUNE || b->type == BUILDING_SMALL_TEMPLE_MERCURY ||
+        b->type == BUILDING_SMALL_TEMPLE_MARS || b->type == BUILDING_SMALL_TEMPLE_VENUS ||
+        b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_NEPTUNE ||
+        b->type == BUILDING_LARGE_TEMPLE_MERCURY || b->type == BUILDING_LARGE_TEMPLE_MARS ||
+        b->type == BUILDING_LARGE_TEMPLE_VENUS;
+}
+
+static int show_building_food_stocks(building *b)
+{
+    return b->type == BUILDING_MARKET || b->type == BUILDING_WHARF || b->type == BUILDING_GRANARY;
+}
+
+static int show_building_tax_income(building *b)
+{
+    return b->type == BUILDING_FORUM || b->type == BUILDING_SENATE_UPGRADED;
+}
+
+static int should_show_building_on_overlay(building *b)
+{
+    switch (game_state_overlay()) {
+        case OVERLAY_RELIGION:
+            return show_building_religion(b);
+        case OVERLAY_FIRE:
+        case OVERLAY_CRIME:
+            return show_building_fire_crime(b);
+        case OVERLAY_DAMAGE:
+            return show_building_damage(b);
+        case OVERLAY_ENTERTAINMENT:
+            return show_building_entertainment(b);
+        case OVERLAY_THEATER:
+            return show_building_theater(b);
+        case OVERLAY_AMPHITHEATER:
+            return show_building_amphitheater(b);
+        case OVERLAY_COLOSSEUM:
+            return show_building_colosseum(b);
+        case OVERLAY_HIPPODROME:
+            return show_building_hippodrome(b);
+        case OVERLAY_EDUCATION:
+            return show_building_education(b);
+        case OVERLAY_SCHOOL:
+            return show_building_school(b);
+        case OVERLAY_LIBRARY:
+            return show_building_library(b);
+        case OVERLAY_ACADEMY:
+            return show_building_academy(b);
+        case OVERLAY_BARBER:
+            return show_building_barber(b);
+        case OVERLAY_BATHHOUSE:
+            return show_building_bathhouse(b);
+        case OVERLAY_CLINIC:
+            return show_building_clinic(b);
+        case OVERLAY_HOSPITAL:
+            return show_building_hospital(b);
+        case OVERLAY_TAX_INCOME:
+            return show_building_tax_income(b);
+        case OVERLAY_FOOD_STOCKS:
+            return show_building_food_stocks(b);
+        case OVERLAY_NATIVE:
+            return show_building_native(b);
+        case OVERLAY_PROBLEMS:
+            return show_building_problems(b);
+        default:
+            return 0;
+    }
+}
+
 static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int xOffset, int yOffset, int graphicOffset)
 {
-	if (!buildingId) {
-		return;
-	}
-	building *b = building_get(buildingId);
-	if (b->size == 1) {
-		int drawOrig = 0;
-		switch (game_state_overlay()) {
-			case OVERLAY_DAMAGE:
-				if (b->type == BUILDING_ENGINEERS_POST) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_BARBER:
-				if (b->type == BUILDING_BARBER) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_CLINIC:
-				if (b->type == BUILDING_DOCTOR) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_NATIVE:
-				if (b->type == BUILDING_NATIVE_HUT) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_PROBLEMS:
-				if (b->showOnProblemOverlay) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_FIRE:
-			case OVERLAY_CRIME:
-				if (b->type == BUILDING_PREFECTURE || b->type == BUILDING_BURNING_RUIN) {
-					drawOrig = 1;
-				}
-				break;
-		}
-		if (drawOrig) {
-			DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-		} else {
-			draw_overlay_base(b, xOffset, yOffset, graphicOffset);
-		}
-	} else if (b->size == 2) {
-		int drawOrig = 0;
-		switch (game_state_overlay()) {
-			case OVERLAY_ENTERTAINMENT:
-			case OVERLAY_THEATER:
-				if (b->type == BUILDING_THEATER) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_EDUCATION:
-				if (b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_SCHOOL:
-				if (b->type == BUILDING_SCHOOL) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_LIBRARY:
-				if (b->type == BUILDING_LIBRARY) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_BATHHOUSE:
-				if (b->type == BUILDING_BATHHOUSE) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_RELIGION:
-				if (b->type == BUILDING_ORACLE || b->type == BUILDING_SMALL_TEMPLE_CERES ||
-					b->type == BUILDING_SMALL_TEMPLE_NEPTUNE || b->type == BUILDING_SMALL_TEMPLE_MERCURY ||
-					b->type == BUILDING_SMALL_TEMPLE_MARS || b->type == BUILDING_SMALL_TEMPLE_VENUS) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_FOOD_STOCKS:
-				if (b->type == BUILDING_MARKET || b->type == BUILDING_WHARF) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_TAX_INCOME:
-				if (b->type == BUILDING_FORUM) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_NATIVE:
-				if (b->type == BUILDING_NATIVE_MEETING || b->type == BUILDING_MISSION_POST) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_PROBLEMS:
-				if (b->showOnProblemOverlay) {
-					drawOrig = 1;
-				}
-				break;
-		}
-		if (drawOrig) {
-			DRAWFOOT_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-		} else {
-			draw_overlay_base(b, xOffset, yOffset, graphicOffset);
-		}
-	} else if (b->size == 3) {
-		int drawOrig = 0;
-		switch (game_state_overlay()) {
-			case OVERLAY_ENTERTAINMENT:
-				if (b->type == BUILDING_AMPHITHEATER || b->type == BUILDING_GLADIATOR_SCHOOL ||
-					b->type == BUILDING_LION_HOUSE || b->type == BUILDING_ACTOR_COLONY ||
-					b->type == BUILDING_CHARIOT_MAKER) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_THEATER:
-				if (b->type == BUILDING_ACTOR_COLONY) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_AMPHITHEATER:
-				if (b->type == BUILDING_ACTOR_COLONY || b->type == BUILDING_GLADIATOR_SCHOOL ||
-					b->type == BUILDING_AMPHITHEATER) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_COLOSSEUM:
-				if (b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_LION_HOUSE) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_HIPPODROME:
-				if (b->type == BUILDING_CHARIOT_MAKER) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_EDUCATION:
-			case OVERLAY_ACADEMY:
-				if (b->type == BUILDING_ACADEMY) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_HOSPITAL:
-				if (b->type == BUILDING_HOSPITAL) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_RELIGION:
-				if (b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_NEPTUNE ||
-					b->type == BUILDING_LARGE_TEMPLE_MERCURY || b->type == BUILDING_LARGE_TEMPLE_MARS ||
-					b->type == BUILDING_LARGE_TEMPLE_VENUS) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_FOOD_STOCKS:
-				if (b->type == BUILDING_GRANARY) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_PROBLEMS:
-				if (b->showOnProblemOverlay) {
-					drawOrig = 1;
-				}
-				break;
-		}
-		// farms have multiple drawable tiles: the farmhouse and 5 fields
-		if (drawOrig) {
-			if (building_is_farm(b->type)) {
-				if (is_drawable_farmhouse(gridOffset, city_view_orientation())) {
-					DRAWFOOT_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-				} else if (map_property_is_draw_tile(gridOffset)) {
-					DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-				}
-			} else {
-				DRAWFOOT_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-			}
-		} else {
-			int draw = 1;
-			if (building_is_farm(b->type)) {
-			    draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
-			}
-			if (draw) {
-				draw_overlay_base(b, xOffset, yOffset, graphicOffset);
-			}
-		}
-	} else if (b->size == 4) {
-		draw_overlay_base(b, xOffset, yOffset, graphicOffset);
-	} else if (b->size == 5) {
-		int drawOrig = 0;
-		switch (game_state_overlay()) {
-			case OVERLAY_ENTERTAINMENT:
-				if (b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_COLOSSEUM:
-				if (b->type == BUILDING_COLOSSEUM) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_HIPPODROME:
-				if (b->type == BUILDING_HIPPODROME) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_TAX_INCOME:
-				if (b->type == BUILDING_SENATE_UPGRADED) {
-					drawOrig = 1;
-				}
-				break;
-			case OVERLAY_PROBLEMS:
-				if (b->showOnProblemOverlay) {
-					drawOrig = 1;
-				}
-				break;
-		}
-		if (drawOrig) {
-			DRAWFOOT_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
-		} else {
-			draw_overlay_base(b, xOffset, yOffset, graphicOffset);
-		}
-	}
+    if (!buildingId) {
+        return;
+    }
+    building *b = building_get(buildingId);
+    int show_on_overlay = should_show_building_on_overlay(b);
+    if (show_on_overlay) {
+        switch (b->size) {
+            case 1:
+                DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
+                break;
+            case 2:
+                DRAWFOOT_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
+                break;
+            case 3:
+                if (building_is_farm(b->type)) {
+                    if (is_drawable_farmhouse(gridOffset, city_view_orientation())) {
+                        DRAWFOOT_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
+                    } else if (map_property_is_draw_tile(gridOffset)) {
+                        DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
+                    }
+                } else {
+                    DRAWFOOT_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
+                }
+                break;
+            case 4:
+                DRAWFOOT_SIZE4(map_image_at(gridOffset), xOffset, yOffset);
+                break;
+            case 5:
+                DRAWFOOT_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
+                break;
+        }
+    } else {
+        int draw = 1;
+        if (b->size == 3 && building_is_farm(b->type)) {
+            draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
+        }
+        if (draw) {
+            draw_flattened_overlay_building(b, xOffset, yOffset, graphicOffset);
+        }
+    }
 }
 
 static int terrain_on_desirability_overlay()
