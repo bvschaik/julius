@@ -23,33 +23,12 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#define NO_COLUMN -1
+
 static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
-static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawFootprintForNativeOverlay(int gridOffset, int xOffset, int yOffset);
-static void drawTopForNativeOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int xOffset, int yOffset, int graphicOffset);
 static void drawBuildingFootprintForDesirabilityOverlay(int gridOffset, int xOffset, int yOffset);
-static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, int yOffset);
-static void drawBuildingTopForFireOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForDamageOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForCrimeOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForEntertainmentOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForEducationOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForTheaterOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForColosseumOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForHippodromeOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForFoodStocksOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForBathhouseOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForReligionOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForSchoolOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForLibraryOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForAcademyOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForBarberOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForClinicsOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForHospitalOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, building *b, int xOffset, int yOffset);
-static void drawBuildingTopForProblemsOverlay(int gridOffset, building *b, int xOffset, int yOffset);
 static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed);
 
 static void draw_foot_with_size(int grid_offset, int image_x, int image_y)
@@ -224,89 +203,6 @@ static void draw_figures(int x, int y, int grid_offset)
             city_draw_figure(fig, x, y);
         }
         figure_id = fig->nextFigureIdOnSameTile;
-    }
-}
-
-static void draw_top(int x, int y, int grid_offset)
-{
-    int overlay = game_state_overlay();
-    if (overlay == OVERLAY_DESIRABILITY) {
-        drawBuildingTopForDesirabilityOverlay(grid_offset, x, y);
-    } else if (map_property_is_draw_tile(grid_offset)) {
-        if (overlay == OVERLAY_WATER) {
-            drawTopForWaterOverlay(grid_offset, x, y);
-        } else if (overlay == OVERLAY_NATIVE) {
-            drawTopForNativeOverlay(grid_offset, x, y);
-        } else if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
-            if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset)) {
-                building *b = building_get(map_building_at(grid_offset));
-                switch (overlay) {
-                    case OVERLAY_FIRE:
-                        drawBuildingTopForFireOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_DAMAGE:
-                        drawBuildingTopForDamageOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_CRIME:
-                        drawBuildingTopForCrimeOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_ENTERTAINMENT:
-                        drawBuildingTopForEntertainmentOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_THEATER:
-                        drawBuildingTopForTheaterOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_AMPHITHEATER:
-                        drawBuildingTopForAmphitheaterOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_COLOSSEUM:
-                        drawBuildingTopForColosseumOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_HIPPODROME:
-                        drawBuildingTopForHippodromeOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_RELIGION:
-                        drawBuildingTopForReligionOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_EDUCATION:
-                        drawBuildingTopForEducationOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_SCHOOL:
-                        drawBuildingTopForSchoolOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_LIBRARY:
-                        drawBuildingTopForLibraryOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_ACADEMY:
-                        drawBuildingTopForAcademyOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_BARBER:
-                        drawBuildingTopForBarberOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_BATHHOUSE:
-                        drawBuildingTopForBathhouseOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_CLINIC:
-                        drawBuildingTopForClinicsOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_HOSPITAL:
-                        drawBuildingTopForHospitalOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_FOOD_STOCKS:
-                        drawBuildingTopForFoodStocksOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_TAX_INCOME:
-                        drawBuildingTopForTaxIncomeOverlay(grid_offset, b, x, y);
-                        break;
-                    case OVERLAY_PROBLEMS:
-                        drawBuildingTopForProblemsOverlay(grid_offset, b, x, y);
-                        break;
-                }
-            } else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                // terrain
-                draw_top_with_size(grid_offset, x, y);
-            }
-        }
     }
 }
 
@@ -769,8 +665,6 @@ static int show_building_tax_income(building *b)
 static int should_show_building_on_overlay(building *b)
 {
     switch (game_state_overlay()) {
-        case OVERLAY_RELIGION:
-            return show_building_religion(b);
         case OVERLAY_FIRE:
         case OVERLAY_CRIME:
             return show_building_fire_crime(b);
@@ -802,6 +696,8 @@ static int should_show_building_on_overlay(building *b)
             return show_building_clinic(b);
         case OVERLAY_HOSPITAL:
             return show_building_hospital(b);
+        case OVERLAY_RELIGION:
+            return show_building_religion(b);
         case OVERLAY_TAX_INCOME:
             return show_building_tax_income(b);
         case OVERLAY_FOOD_STOCKS:
@@ -947,311 +843,6 @@ static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, i
 	}
 }
 
-static void drawBuildingTopForFireOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_PREFECTURE) {
-		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->type == BUILDING_BURNING_RUIN) {
-		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->fireRisk > 0) {
-		int draw = 1;
-		if (building_is_farm(b->type)) {
-			draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
-		}
-		if (draw) {
-			drawOverlayColumn(b->fireRisk / 10, xOffset, yOffset, 1);
-		}
-	}
-}
-
-static void drawBuildingTopForDamageOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_ENGINEERS_POST) {
-		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->damageRisk > 0) {
-		int draw = 1;
-		if (building_is_farm(b->type)) {
-			draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
-		}
-		if (draw) {
-			drawOverlayColumn(b->damageRisk / 10, xOffset, yOffset, 1);
-		}
-	}
-}
-
-static void drawBuildingTopForCrimeOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_PREFECTURE) {
-		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->type == BUILDING_BURNING_RUIN) {
-		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->houseSize) {
-		int happiness = b->sentiment.houseHappiness;
-		if (happiness < 50) {
-			int colVal;
-			if (happiness <= 0) {
-				colVal = 10;
-			} else if (happiness <= 10) {
-				colVal = 8;
-			} else if (happiness <= 20) {
-				colVal = 6;
-			} else if (happiness <= 30) {
-				colVal = 4;
-			} else if (happiness <= 40) {
-				colVal = 2;
-			} else {
-				colVal = 1;
-			}
-			drawOverlayColumn(colVal, xOffset, yOffset, 1);
-		}
-	}
-}
-
-static void drawBuildingTopForEntertainmentOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	switch (b->type) {
-		case BUILDING_THEATER:
-			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		case BUILDING_ACTOR_COLONY:
-		case BUILDING_GLADIATOR_SCHOOL:
-		case BUILDING_LION_HOUSE:
-		case BUILDING_CHARIOT_MAKER:
-		case BUILDING_AMPHITHEATER:
-			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		case BUILDING_COLOSSEUM:
-		case BUILDING_HIPPODROME:
-			DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		default:
-			if (b->houseSize && b->data.house.entertainment) {
-				drawOverlayColumn(b->data.house.entertainment / 10, xOffset, yOffset, 0);
-			}
-			break;
-	}
-}
-
-static void drawBuildingTopForEducationOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	switch (b->type) {
-		case BUILDING_ACADEMY:
-			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		case BUILDING_LIBRARY:
-		case BUILDING_SCHOOL:
-			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		default:
-			if (b->houseSize && b->data.house.education) {
-				drawOverlayColumn(b->data.house.education * 3 - 1,
-					xOffset, yOffset, 0);
-			}
-			break;
-	}
-}
-
-static void drawBuildingTopForTheaterOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	switch (b->type) {
-		case BUILDING_ACTOR_COLONY:
-			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		case BUILDING_THEATER:
-			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		default:
-			if (b->houseSize && b->data.house.theater) {
-				drawOverlayColumn(b->data.house.theater / 10, xOffset, yOffset, 0);
-			}
-			break;
-	}
-}
-
-static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	switch (b->type) {
-		case BUILDING_ACTOR_COLONY:
-		case BUILDING_GLADIATOR_SCHOOL:
-		case BUILDING_AMPHITHEATER:
-			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		default:
-			if (b->houseSize && b->data.house.amphitheaterActor) {
-				drawOverlayColumn(b->data.house.amphitheaterActor / 10, xOffset, yOffset, 0);
-			}
-			break;
-	}
-}
-
-static void drawBuildingTopForColosseumOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	switch (b->type) {
-		case BUILDING_GLADIATOR_SCHOOL:
-		case BUILDING_LION_HOUSE:
-			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		case BUILDING_COLOSSEUM:
-			DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		default:
-			if (b->houseSize && b->data.house.colosseumGladiator) {
-				drawOverlayColumn(b->data.house.colosseumGladiator / 10, xOffset, yOffset, 0);
-			}
-			break;
-	}
-}
-
-static void drawBuildingTopForHippodromeOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_HIPPODROME) {
-		DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->type == BUILDING_CHARIOT_MAKER) {
-		DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->houseSize && b->data.house.hippodrome) {
-		drawOverlayColumn(b->data.house.hippodrome / 10, xOffset, yOffset, 0);
-	}
-}
-
-static void drawBuildingTopForFoodStocksOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	switch (b->type) {
-		case BUILDING_MARKET:
-		case BUILDING_WHARF:
-			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		case BUILDING_GRANARY:
-			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		default:
-			if (b->houseSize) {
-				if (model_get_house(b->subtype.houseLevel)->food_types) {
-					int pop = b->housePopulation;
-					int stocks = 0;
-					for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-						stocks += b->data.house.inventory[i];
-					}
-					int pctStocks = calc_percentage(stocks, pop);
-					int colVal = 0;
-					if (pctStocks <= 0) {
-						colVal = 10;
-					} else if (pctStocks < 100) {
-						colVal = 5;
-					} else if (pctStocks <= 200) {
-						colVal = 1;
-					}
-					if (colVal) {
-						drawOverlayColumn(colVal, xOffset, yOffset, 1);
-					}
-				}
-			}
-			break;
-	}
-}
-
-static void drawBuildingTopForBathhouseOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_BATHHOUSE) {
-		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->houseSize && b->data.house.bathhouse) {
-		drawOverlayColumn(b->data.house.bathhouse / 10, xOffset, yOffset, 0);
-	}
-}
-
-static void drawBuildingTopForReligionOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	switch (b->type) {
-		case BUILDING_ORACLE:
-		case BUILDING_SMALL_TEMPLE_CERES:
-		case BUILDING_SMALL_TEMPLE_NEPTUNE:
-		case BUILDING_SMALL_TEMPLE_MERCURY:
-		case BUILDING_SMALL_TEMPLE_MARS:
-		case BUILDING_SMALL_TEMPLE_VENUS:
-			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		case BUILDING_LARGE_TEMPLE_CERES:
-		case BUILDING_LARGE_TEMPLE_NEPTUNE:
-		case BUILDING_LARGE_TEMPLE_MERCURY:
-		case BUILDING_LARGE_TEMPLE_MARS:
-		case BUILDING_LARGE_TEMPLE_VENUS:
-			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-			break;
-		default:
-			if (b->houseSize && b->data.house.numGods) {
-				drawOverlayColumn(b->data.house.numGods * 17 / 10, xOffset, yOffset, 0);
-			}
-			break;
-	}
-}
-
-static void drawBuildingTopForSchoolOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_SCHOOL) {
-		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->houseSize && b->data.house.school) {
-		drawOverlayColumn(b->data.house.school / 10, xOffset, yOffset, 0);
-	}
-}
-
-static void drawBuildingTopForLibraryOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_LIBRARY) {
-		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->houseSize && b->data.house.library) {
-		drawOverlayColumn(b->data.house.library / 10,xOffset, yOffset, 0);
-	}
-}
-
-static void drawBuildingTopForAcademyOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_ACADEMY) {
-		DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->houseSize && b->data.house.academy) {
-		drawOverlayColumn(b->data.house.academy / 10, xOffset, yOffset, 0);
-	}
-}
-
-static void drawBuildingTopForBarberOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_BARBER) {
-		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->houseSize && b->data.house.barber) {
-		drawOverlayColumn(b->data.house.barber / 10, xOffset, yOffset, 0);
-	}
-}
-
-static void drawBuildingTopForClinicsOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_DOCTOR) {
-		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->houseSize && b->data.house.clinic) {
-		drawOverlayColumn(b->data.house.clinic / 10, xOffset, yOffset, 0);
-	}
-}
-
-static void drawBuildingTopForHospitalOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_HOSPITAL) {
-		DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->houseSize && b->data.house.hospital) {
-		drawOverlayColumn(b->data.house.hospital / 10, xOffset, yOffset, 0);
-	}
-}
-
-static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, building *b, int xOffset, int yOffset)
-{
-	if (b->type == BUILDING_SENATE_UPGRADED) {
-		DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->type == BUILDING_FORUM) {
-		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-	} else if (b->houseSize) {
-		int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
-		if (pct > 0) {
-			drawOverlayColumn(pct / 25, xOffset, yOffset, 0);
-		}
-	}
-}
-
 static int is_problem_cartpusher(int figure_id)
 {
     if (figure_id) {
@@ -1262,68 +853,283 @@ static int is_problem_cartpusher(int figure_id)
     }
 }
 
-static void drawBuildingTopForProblemsOverlay(int gridOffset, building *b, int xOffset, int yOffset)
+static int get_column_height_fire(building *b)
 {
-	if (b->houseSize) {
-		return;
-	}
-	int type = b->type;
-	if (type == BUILDING_FOUNTAIN || type == BUILDING_BATHHOUSE) {
-		if (!b->hasWaterAccess) {
-			b->showOnProblemOverlay = 1;
-		}
-	} else if (type >= BUILDING_WHEAT_FARM && type <= BUILDING_CLAY_PIT) {
-		if (is_problem_cartpusher(b->figureId)) {
-			b->showOnProblemOverlay = 1;
-		}
-	} else if (building_is_workshop(type)) {
-		if (is_problem_cartpusher(b->figureId)) {
-			b->showOnProblemOverlay = 1;
-		} else if (b->loadsStored <= 0) {
-			b->showOnProblemOverlay = 1;
-		}
-	}
+    return b->fireRisk > 0 ? b->fireRisk / 10 : NO_COLUMN;
+}
 
-	if (b->showOnProblemOverlay <= 0) {
-		return;
-	}
+static int get_column_height_damage(building *b)
+{
+    return b->damageRisk > 0 ? b->damageRisk / 10 : NO_COLUMN;
+}
 
-	if (building_is_farm(type)) {
-		if (is_drawable_farmhouse(gridOffset, city_view_orientation())) {
-			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
-		} else if (map_property_is_draw_tile(gridOffset)) {
-            DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-		}
-		return;
-	}
-	if (type == BUILDING_GRANARY) {
-		const image *img = image_get(map_image_at(gridOffset));
-		image_draw(image_group(GROUP_BUILDING_GRANARY) + 1,
-			xOffset + img->sprite_offset_x,
-			yOffset + img->sprite_offset_y - 30 -
-			(img->height - 90));
-		if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
-			image_draw(image_group(GROUP_BUILDING_GRANARY) + 2,
-				xOffset + 32, yOffset - 61);
-			if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
-				image_draw(image_group(GROUP_BUILDING_GRANARY) + 3,
-					xOffset + 56, yOffset - 51);
-			}
-			if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
-				image_draw(image_group(GROUP_BUILDING_GRANARY) + 4,
-					xOffset + 91, yOffset - 51);
-			}
-			if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
-				image_draw(image_group(GROUP_BUILDING_GRANARY) + 5,
-					xOffset + 118, yOffset - 61);
-			}
-		}
-	}
-	if (type == BUILDING_WAREHOUSE) {
-		image_draw(image_group(GROUP_BUILDING_WAREHOUSE) + 17, xOffset - 4, yOffset - 42);
-	}
+static int get_column_height_crime(building *b)
+{
+    if (b->houseSize) {
+        int happiness = b->sentiment.houseHappiness;
+        if (happiness <= 0) {
+            return 10;
+        } else if (happiness <= 10) {
+            return 8;
+        } else if (happiness <= 20) {
+            return 6;
+        } else if (happiness <= 30) {
+            return 4;
+        } else if (happiness <= 40) {
+            return 2;
+        } else if (happiness < 50) {
+            return 1;
+        }
+    }
+    return NO_COLUMN;
+}
 
-	draw_top_with_size(gridOffset, xOffset, yOffset);
+static int get_column_height_entertainment(building *b)
+{
+    return b->houseSize && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
+}
+
+static int get_column_height_theater(building *b)
+{
+    return b->houseSize && b->data.house.theater ? b->data.house.theater / 10 : NO_COLUMN;
+}
+
+static int get_column_height_amphitheater(building *b)
+{
+    return b->houseSize && b->data.house.amphitheaterActor ? b->data.house.amphitheaterActor / 10 : NO_COLUMN;
+}
+
+static int get_column_height_colosseum(building *b)
+{
+    return b->houseSize && b->data.house.colosseumGladiator ? b->data.house.colosseumGladiator / 10 : NO_COLUMN;
+}
+
+static int get_column_height_hippodrome(building *b)
+{
+    return b->houseSize && b->data.house.hippodrome ? b->data.house.hippodrome / 10 : NO_COLUMN;
+}
+
+static int get_column_height_education(building *b)
+{
+    return b->houseSize && b->data.house.education ? b->data.house.education * 3 - 1 : NO_COLUMN;
+}
+
+static int get_column_height_school(building *b)
+{
+    return b->houseSize && b->data.house.school ? b->data.house.school / 10 : NO_COLUMN;
+}
+
+static int get_column_height_library(building *b)
+{
+    return b->houseSize && b->data.house.library ? b->data.house.library / 10 : NO_COLUMN;
+}
+
+static int get_column_height_academy(building *b)
+{
+    return b->houseSize && b->data.house.academy ? b->data.house.academy / 10 : NO_COLUMN;
+}
+
+static int get_column_height_barber(building *b)
+{
+    return b->houseSize && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
+}
+
+static int get_column_height_bathhouse(building *b)
+{
+    return b->houseSize && b->data.house.bathhouse ? b->data.house.bathhouse / 10 : NO_COLUMN;
+}
+
+static int get_column_height_clinic(building *b)
+{
+    return b->houseSize && b->data.house.clinic ? b->data.house.clinic / 10 : NO_COLUMN;
+}
+
+static int get_column_height_hospital(building *b)
+{
+    return b->houseSize && b->data.house.hospital ? b->data.house.hospital / 10 : NO_COLUMN;
+}
+
+static int get_column_height_religion(building *b)
+{
+    return b->houseSize && b->data.house.numGods ? b->data.house.numGods * 17 / 10 : NO_COLUMN;
+}
+
+static int get_column_height_tax_income(building *b)
+{
+    if (b->houseSize) {
+        int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
+        if (pct > 0) {
+            return pct / 25;
+        }
+    }
+    return NO_COLUMN;
+}
+
+static int get_column_height_food_stocks(building *b)
+{
+    if (b->houseSize && model_get_house(b->subtype.houseLevel)->food_types) {
+        int pop = b->housePopulation;
+        int stocks = 0;
+        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+            stocks += b->data.house.inventory[i];
+        }
+        int pct_stocks = calc_percentage(stocks, pop);
+        if (pct_stocks <= 0) {
+            return 10;
+        } else if (pct_stocks < 100) {
+            return 5;
+        } else if (pct_stocks <= 200) {
+            return 1;
+        }
+    }
+    return NO_COLUMN;
+}
+
+static int get_building_column_height(building *b)
+{
+    switch (game_state_overlay()) {
+        case OVERLAY_FIRE:
+            return get_column_height_fire(b);
+        case OVERLAY_DAMAGE:
+            return get_column_height_damage(b);
+        case OVERLAY_CRIME:
+            return get_column_height_crime(b);
+        case OVERLAY_ENTERTAINMENT:
+            return get_column_height_entertainment(b);
+        case OVERLAY_THEATER:
+            return get_column_height_theater(b);
+        case OVERLAY_AMPHITHEATER:
+            return get_column_height_amphitheater(b);
+        case OVERLAY_COLOSSEUM:
+            return get_column_height_colosseum(b);
+        case OVERLAY_HIPPODROME:
+            return get_column_height_hippodrome(b);
+        case OVERLAY_EDUCATION:
+            return get_column_height_education(b);
+        case OVERLAY_SCHOOL:
+            return get_column_height_school(b);
+        case OVERLAY_LIBRARY:
+            return get_column_height_library(b);
+        case OVERLAY_ACADEMY:
+            return get_column_height_academy(b);
+        case OVERLAY_BARBER:
+            return get_column_height_barber(b);
+        case OVERLAY_BATHHOUSE:
+            return get_column_height_bathhouse(b);
+        case OVERLAY_CLINIC:
+            return get_column_height_clinic(b);
+        case OVERLAY_HOSPITAL:
+            return get_column_height_hospital(b);
+        case OVERLAY_RELIGION:
+            return get_column_height_religion(b);
+        case OVERLAY_TAX_INCOME:
+            return get_column_height_tax_income(b);
+        case OVERLAY_FOOD_STOCKS:
+            return get_column_height_food_stocks(b);
+        default:
+            return NO_COLUMN;
+    }
+}
+
+static void prepare_building_for_problems_overlay(building *b)
+{
+    if (b->houseSize) {
+        return;
+    }
+    if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
+        if (!b->hasWaterAccess) {
+            b->showOnProblemOverlay = 1;
+        }
+    } else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_CLAY_PIT) {
+        if (is_problem_cartpusher(b->figureId)) {
+            b->showOnProblemOverlay = 1;
+        }
+    } else if (building_is_workshop(b->type)) {
+        if (is_problem_cartpusher(b->figureId)) {
+            b->showOnProblemOverlay = 1;
+        } else if (b->loadsStored <= 0) {
+            b->showOnProblemOverlay = 1;
+        }
+    }
+}
+
+static void draw_building_top(int grid_offset, building *b, int x, int y)
+{
+    if (building_is_farm(b->type)) {
+        if (is_drawable_farmhouse(grid_offset, city_view_orientation())) {
+            DRAWTOP_SIZE2(map_image_at(grid_offset), x, y);
+        } else if (map_property_is_draw_tile(grid_offset)) {
+            DRAWTOP_SIZE1(map_image_at(grid_offset), x, y);
+        }
+        return;
+    }
+    if (b->type == BUILDING_GRANARY) {
+        const image *img = image_get(map_image_at(grid_offset));
+        image_draw(image_group(GROUP_BUILDING_GRANARY) + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - 30 - (img->height - 90));
+        if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
+            image_draw(image_group(GROUP_BUILDING_GRANARY) + 2, x + 32, y - 61);
+            if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
+                image_draw(image_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 51);
+            }
+            if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
+                image_draw(image_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 51);
+            }
+            if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
+                image_draw(image_group(GROUP_BUILDING_GRANARY) + 5, x + 118, y - 61);
+            }
+        }
+    }
+    if (b->type == BUILDING_WAREHOUSE) {
+        image_draw(image_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42);
+    }
+
+    draw_top_with_size(grid_offset, x, y);
+}
+
+static void draw_top(int x, int y, int grid_offset)
+{
+    int overlay = game_state_overlay();
+    if (overlay == OVERLAY_DESIRABILITY) {
+        drawBuildingTopForDesirabilityOverlay(grid_offset, x, y);
+    } else if (map_property_is_draw_tile(grid_offset)) {
+        if (overlay == OVERLAY_WATER) {
+            drawTopForWaterOverlay(grid_offset, x, y);
+        } else if (overlay == OVERLAY_NATIVE) {
+            drawTopForNativeOverlay(grid_offset, x, y);
+        } else if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
+            if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset)) {
+                building *b = building_get(map_building_at(grid_offset));
+                if (overlay == OVERLAY_PROBLEMS) {
+                    prepare_building_for_problems_overlay(b);
+                }
+                if (should_show_building_on_overlay(b)) {
+                    draw_building_top(grid_offset, b, x, y);
+                } else {
+                    int column_height = get_building_column_height(b);
+                    if (column_height != NO_COLUMN) {
+                        int is_red = 0;
+                        switch (overlay) {
+                            case OVERLAY_FIRE:
+                            case OVERLAY_DAMAGE:
+                            case OVERLAY_CRIME:
+                            case OVERLAY_FOOD_STOCKS:
+                                is_red = 1;
+                        }
+                        int draw = 1;
+                        if (building_is_farm(b->type)) {
+                            draw = is_drawable_farm_corner(grid_offset, city_view_orientation());
+                        }
+                        if (draw) {
+                            drawOverlayColumn(column_height, x, y, is_red);
+                        }
+                    }
+                }
+            } else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                // terrain
+                draw_top_with_size(grid_offset, x, y);
+            }
+        }
+    }
 }
 
 static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed)
