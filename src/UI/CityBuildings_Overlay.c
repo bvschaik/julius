@@ -25,11 +25,11 @@
 
 #define NO_COLUMN -1
 
-static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
-static void drawFootprintForNativeOverlay(int gridOffset, int xOffset, int yOffset);
-static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int xOffset, int yOffset, int graphicOffset);
+static void drawFootprintForWaterOverlay(int x, int y, int grid_offset);
+static void drawFootprintForNativeOverlay(int x, int y, int grid_offset);
+static void drawBuildingFootprintForOverlay(int gridOffset, int xOffset, int yOffset, int graphicOffset);
 static void drawBuildingTopForOverlay(int grid_offset, int x, int y);
-static void drawFootprintForDesirabilityOverlay(int gridOffset, int xOffset, int yOffset);
+static void drawFootprintForDesirabilityOverlay(int x, int y, int grid_offset);
 
 static void draw_foot_with_size(int grid_offset, int image_x, int image_y)
 {
@@ -86,11 +86,11 @@ static void draw_footprint(int x, int y, int grid_offset)
         // Outside map: draw black tile
         DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_BLACK), x, y);
     } else if (overlay == OVERLAY_DESIRABILITY) {
-        drawFootprintForDesirabilityOverlay(grid_offset, x, y);
+        drawFootprintForDesirabilityOverlay(x, y, grid_offset);
     } else if (overlay == OVERLAY_WATER) {
-        drawFootprintForWaterOverlay(grid_offset, x, y);
+        drawFootprintForWaterOverlay(x, y, grid_offset);
     } else if (overlay == OVERLAY_NATIVE) {
-        drawFootprintForNativeOverlay(grid_offset, x, y);
+        drawFootprintForNativeOverlay(x, y, grid_offset);
     } else if (map_property_is_draw_tile(grid_offset)) {
         int terrain = map_terrain_get(grid_offset);
         if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
@@ -100,7 +100,7 @@ static void draw_footprint(int x, int y, int grid_offset)
         } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
             draw_foot_with_size(grid_offset, x, y);
         } else if (terrain & TERRAIN_BUILDING) {
-            drawBuildingFootprintForOverlay(map_building_at(grid_offset), grid_offset, x, y, 0);
+            drawBuildingFootprintForOverlay(grid_offset, x, y, 0);
         } else {
             draw_foot_with_size(grid_offset, x, y);
         }
@@ -306,24 +306,24 @@ static int terrain_on_water_overlay()
         TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
 
-static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset)
+static void drawFootprintForWaterOverlay(int x, int y, int grid_offset)
 {
-    if (!map_property_is_draw_tile(gridOffset)) {
+    if (!map_property_is_draw_tile(grid_offset)) {
         return;
     }
-	if (map_terrain_is(gridOffset, terrain_on_water_overlay())) {
-		if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-			drawBuildingFootprintForOverlay(map_building_at(gridOffset), gridOffset, xOffset, yOffset, 0);
+	if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
+		if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+			drawBuildingFootprintForOverlay(grid_offset, x, y, 0);
 		} else {
-			draw_foot_with_size(gridOffset, xOffset, yOffset);
+			draw_foot_with_size(grid_offset, x, y);
 		}
-	} else if (map_terrain_is(gridOffset, TERRAIN_WALL)) {
+	} else if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
 		// display grass
-		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
-		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
-	} else if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-        building *b = building_get(map_building_at(gridOffset));
-		int terrain = map_terrain_get(gridOffset);
+		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
+		DRAWFOOT_SIZE1(graphicId, x, y);
+	} else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        building *b = building_get(map_building_at(grid_offset));
+		int terrain = map_terrain_get(grid_offset);
 		if (b->id && b->hasWellAccess == 1) {
 			terrain |= TERRAIN_FOUNTAIN_RANGE;
 		}
@@ -342,10 +342,10 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 				graphicOffset = 0;
 				break;
 		}
-		drawBuildingFootprintForOverlay(b->id, gridOffset, xOffset, yOffset, graphicOffset);
+		drawBuildingFootprintForOverlay(grid_offset, x, y, graphicOffset);
 	} else {
 		int graphicId = image_group(GROUP_TERRAIN_OVERLAY);
-		switch (map_terrain_get(gridOffset) & (TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE)) {
+		switch (map_terrain_get(grid_offset) & (TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE)) {
 			case TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE:
 				graphicId += 27;
 				break;
@@ -356,24 +356,24 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 				graphicId += 19;
 				break;
 			default:
-				graphicId = map_image_at(gridOffset);
+				graphicId = map_image_at(grid_offset);
 				break;
 		}
-		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
+		DRAWFOOT_SIZE1(graphicId, x, y);
 	}
 }
 
-static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset)
+static void drawTopForWaterOverlay(int x, int y, int grid_offset)
 {
-    if (!map_property_is_draw_tile(gridOffset)) {
+    if (!map_property_is_draw_tile(grid_offset)) {
         return;
     }
-	if (map_terrain_is(gridOffset, terrain_on_water_overlay())) {
-		if (!map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-			draw_top_with_size(gridOffset, xOffset, yOffset);
+	if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
+		if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+			draw_top_with_size(grid_offset, x, y);
 		}
-	} else if (map_building_at(gridOffset)) {
-		drawBuildingTopForOverlay(gridOffset, xOffset, yOffset);
+	} else if (map_building_at(grid_offset)) {
+		drawBuildingTopForOverlay(grid_offset, x, y);
 	}
 }
 
@@ -384,43 +384,43 @@ static int terrain_on_native_overlay()
         TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
 
-static void drawFootprintForNativeOverlay(int gridOffset, int xOffset, int yOffset)
+static void drawFootprintForNativeOverlay(int x, int y, int grid_offset)
 {
-    if (!map_property_is_draw_tile(gridOffset)) {
+    if (!map_property_is_draw_tile(grid_offset)) {
         return;
     }
-	if (map_terrain_is(gridOffset, terrain_on_native_overlay())) {
-		if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-			drawBuildingFootprintForOverlay(map_building_at(gridOffset), gridOffset, xOffset, yOffset, 0);
+	if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
+		if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+			drawBuildingFootprintForOverlay(grid_offset, x, y, 0);
 		} else {
-			draw_foot_with_size(gridOffset, xOffset, yOffset);
+			draw_foot_with_size(grid_offset, x, y);
 		}
-	} else if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
+	} else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
 		// display grass
-		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
-		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
-	} else if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-		drawBuildingFootprintForOverlay(map_building_at(gridOffset), gridOffset, xOffset, yOffset, 0);
+		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
+		DRAWFOOT_SIZE1(graphicId, x, y);
+	} else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+		drawBuildingFootprintForOverlay(grid_offset, x, y, 0);
 	} else {
-		if (map_property_is_native_land(gridOffset)) {
-			DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_DESIRABILITY) + 1, xOffset, yOffset);
+		if (map_property_is_native_land(grid_offset)) {
+			DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_DESIRABILITY) + 1, x, y);
 		} else {
-			draw_foot_with_size(gridOffset, xOffset, yOffset);
+			draw_foot_with_size(grid_offset, x, y);
 		}
 	}
 }
 
-static void drawTopForNativeOverlay(int gridOffset, int xOffset, int yOffset)
+static void drawTopForNativeOverlay(int x, int y, int grid_offset)
 {
-    if (!map_property_is_draw_tile(gridOffset)) {
+    if (!map_property_is_draw_tile(grid_offset)) {
         return;
     }
-	if (map_terrain_is(gridOffset, terrain_on_native_overlay())) {
-		if (!map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-			draw_top_with_size(gridOffset, xOffset, yOffset);
+	if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
+		if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+			draw_top_with_size(grid_offset, x, y);
 		}
-	} else if (map_building_at(gridOffset)) {
-		drawBuildingTopForOverlay(gridOffset, xOffset, yOffset);
+	} else if (map_building_at(grid_offset)) {
+		drawBuildingTopForOverlay(grid_offset, x, y);
 	}
 }
 
@@ -457,7 +457,7 @@ static int get_desirability_image_offset(int desirability)
     }
 }
 
-static void drawFootprintForDesirabilityOverlay(int grid_offset, int x, int y)
+static void drawFootprintForDesirabilityOverlay(int x, int y, int grid_offset)
 {
     if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
@@ -476,7 +476,7 @@ static void drawFootprintForDesirabilityOverlay(int grid_offset, int x, int y)
     }
 }
 
-static void drawTopForDesirabilityOverlay(int grid_offset, int x, int y)
+static void drawTopForDesirabilityOverlay(int x, int y, int grid_offset)
 {
     if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
@@ -514,12 +514,13 @@ static int is_drawable_farmhouse(int grid_offset, int map_orientation)
     return 0;
 }
 
-static int is_drawable_farm_corner(int grid_offset, int map_orientation)
+static int is_drawable_farm_corner(int grid_offset)
 {
     if (!map_property_is_draw_tile(grid_offset)) {
         return 0;
     }
 
+    int map_orientation = city_view_orientation();
     int xy = map_property_multi_tile_xy(grid_offset);
     if (map_orientation == DIR_0_TOP && xy == Edge_X0Y2) {
         return 1;
@@ -776,8 +777,9 @@ static int should_show_building_on_overlay(building *b)
     }
 }
 
-static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int xOffset, int yOffset, int graphicOffset)
+static void drawBuildingFootprintForOverlay(int gridOffset, int xOffset, int yOffset, int graphicOffset)
 {
+    int buildingId = map_building_at(gridOffset);
     if (!buildingId) {
         return;
     }
@@ -812,21 +814,11 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
     } else {
         int draw = 1;
         if (b->size == 3 && building_is_farm(b->type)) {
-            draw = is_drawable_farm_corner(gridOffset, city_view_orientation());
+            draw = is_drawable_farm_corner(gridOffset);
         }
         if (draw) {
             draw_flattened_overlay_building(b, xOffset, yOffset, graphicOffset);
         }
-    }
-}
-
-static int is_problem_cartpusher(int figure_id)
-{
-    if (figure_id) {
-        figure *fig = figure_get(figure_id);
-        return fig->actionState == FIGURE_ACTION_20_CARTPUSHER_INITIAL && fig->minMaxSeen;
-    } else {
-        return 0;
     }
 }
 
@@ -1008,6 +1000,16 @@ static int get_building_column_height(building *b)
     }
 }
 
+static int is_problem_cartpusher(int figure_id)
+{
+    if (figure_id) {
+        figure *fig = figure_get(figure_id);
+        return fig->actionState == FIGURE_ACTION_20_CARTPUSHER_INITIAL && fig->minMaxSeen;
+    } else {
+        return 0;
+    }
+}
+
 static void prepare_building_for_problems_overlay(building *b)
 {
     if (b->houseSize) {
@@ -1063,7 +1065,7 @@ static void draw_building_top(int grid_offset, building *b, int x, int y)
     draw_top_with_size(grid_offset, x, y);
 }
 
-static void draw_overlay_column(int height, int x, int y, int is_red)
+static void draw_overlay_column(int x, int y, int height, int is_red)
 {
     int image_id = image_group(GROUP_OVERLAY_COLUMN);
     if (is_red) {
@@ -1107,10 +1109,10 @@ static void drawBuildingTopForOverlay(int grid_offset, int x, int y)
             }
             int draw = 1;
             if (building_is_farm(b->type)) {
-                draw = is_drawable_farm_corner(grid_offset, city_view_orientation());
+                draw = is_drawable_farm_corner(grid_offset);
             }
             if (draw) {
-                draw_overlay_column(column_height, x, y, is_red);
+                draw_overlay_column(x, y, column_height, is_red);
             }
         }
     }
@@ -1120,11 +1122,11 @@ static void draw_top(int x, int y, int grid_offset)
 {
     int overlay = game_state_overlay();
     if (overlay == OVERLAY_DESIRABILITY) {
-        drawTopForDesirabilityOverlay(grid_offset, x, y);
+        drawTopForDesirabilityOverlay(x, y, grid_offset);
     } else if (overlay == OVERLAY_WATER) {
-        drawTopForWaterOverlay(grid_offset, x, y);
+        drawTopForWaterOverlay(x, y, grid_offset);
     } else if (overlay == OVERLAY_NATIVE) {
-        drawTopForNativeOverlay(grid_offset, x, y);
+        drawTopForNativeOverlay(x, y, grid_offset);
     } else if (map_property_is_draw_tile(grid_offset)) {
         if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset)) {
