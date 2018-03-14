@@ -16,12 +16,12 @@
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
+#include "widget/city_with_overlay.h"
 #include "widget/city_without_overlay.h"
 #include "widget/minimap.h"
 #include "window/building_info.h"
 #include "window/city.h"
 
-#include "UI/CityBuildings_private.h"
 #include "Data/State.h"
 #include "Data/CityView.h"
 
@@ -256,7 +256,7 @@ void widget_city_get_tooltip(tooltip_context *c)
     // overlay tooltips
     if (overlay != OVERLAY_NONE) {
         c->text_group = 66;
-        c->text_id = UI_CityBuildings_getOverlayTooltipText(c, gridOffset);
+        c->text_id = city_with_overlay_get_tooltip_text(c, gridOffset);
         if (c->text_id) {
             c->type = TOOLTIP_OVERLAY;
             c->high_priority = 1;

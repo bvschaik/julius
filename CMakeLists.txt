@@ -234,6 +234,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_health.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_other.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_risks.c
+    ${PROJECT_SOURCE_DIR}/src/widget/city_with_overlay.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_without_overlay.c
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar.c
@@ -299,7 +300,6 @@ add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Data/Model.c
 	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Ghost.c
-	${PROJECT_SOURCE_DIR}/src/UI/CityBuildings_Overlay.c
 	${CORE_FILES}
 	${BUILDING_FILES}
 	${CITY_FILES}
