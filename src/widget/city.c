@@ -254,10 +254,12 @@ void widget_city_get_tooltip(tooltip_context *c)
         return;
     }
     // overlay tooltips
-    c->text_group = 66;
-    c->text_id = UI_CityBuildings_getOverlayTooltipText(c, gridOffset);
-    if (c->text_id) {
-        c->type = TOOLTIP_OVERLAY;
-        c->high_priority = 1;
+    if (overlay != OVERLAY_NONE) {
+        c->text_group = 66;
+        c->text_id = UI_CityBuildings_getOverlayTooltipText(c, gridOffset);
+        if (c->text_id) {
+            c->type = TOOLTIP_OVERLAY;
+            c->high_priority = 1;
+        }
     }
 }
