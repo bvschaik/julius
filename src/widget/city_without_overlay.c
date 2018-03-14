@@ -53,7 +53,7 @@ static void draw_footprint(int x, int y, int grid_offset)
     }
     if (grid_offset < 0) {
         // Outside map: draw black tile
-        image_draw_isometric_footprint(image_group(GROUP_TERRAIN_BLACK), x, y, 0);
+        image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_BLACK), x, y, 0);
     } else if (map_property_is_draw_tile(grid_offset)) {
         // Valid gridOffset and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
@@ -80,32 +80,16 @@ static void draw_footprint(int x, int y, int grid_offset)
         if (map_property_is_constructing(grid_offset)) {
             image_id = image_group(GROUP_TERRAIN_OVERLAY);
         }
-        switch (map_property_multi_tile_size(grid_offset)) {
-            case 1:
-                if (draw_context.advance_water_animation &&
-                    image_id >= draw_context.image_id_water_first &&
-                    image_id <= draw_context.image_id_water_last) {
-                    image_id++;
-                    if (image_id > draw_context.image_id_water_last) {
-                        image_id = draw_context.image_id_water_first;
-                    }
-                    map_image_set(grid_offset, image_id);
-                }
-                image_draw_isometric_footprint(image_id, x, y, color_mask);
-                break;
-            case 2:
-                image_draw_isometric_footprint(image_id, x + 30, y - 15, color_mask);
-                break;
-            case 3:
-                image_draw_isometric_footprint(image_id, x + 60, y - 30, color_mask);
-                break;
-            case 4:
-                image_draw_isometric_footprint(image_id, x + 90, y - 45, color_mask);
-                break;
-            case 5:
-                image_draw_isometric_footprint(image_id, x + 120, y - 60, color_mask);
-                break;
+        if (draw_context.advance_water_animation &&
+            image_id >= draw_context.image_id_water_first &&
+            image_id <= draw_context.image_id_water_last) {
+            image_id++;
+            if (image_id > draw_context.image_id_water_last) {
+                image_id = draw_context.image_id_water_first;
+            }
+            map_image_set(grid_offset, image_id);
         }
+        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
     }
 }
 
@@ -244,13 +228,7 @@ static void draw_top(int x, int y, int grid_offset)
     if (b->id && b->isDeleted) {
         color_mask = COLOR_MASK_RED;
     }
-    switch (map_property_multi_tile_size(grid_offset)) {
-        case 1: DRAWTOP_SIZE1_C(image_id, x, y, color_mask); break;
-        case 2: DRAWTOP_SIZE2_C(image_id, x, y, color_mask); break;
-        case 3: DRAWTOP_SIZE3_C(image_id, x, y, color_mask); break;
-        case 4: DRAWTOP_SIZE4_C(image_id, x, y, color_mask); break;
-        case 5: DRAWTOP_SIZE5_C(image_id, x, y, color_mask); break;
-    }
+    image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
     // specific buildings
     draw_senate_rating_flags(b, x, y, color_mask);
     draw_entertainment_spectators(b, x, y, color_mask);

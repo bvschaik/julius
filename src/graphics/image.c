@@ -612,6 +612,31 @@ void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_ma
     }
 }
 
+void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, color_t color_mask)
+{
+    const image *img = image_get(image_id);
+    if (img->draw.type != 30) { // isometric
+        return;
+    }
+    switch (img->width) {
+        case 58:
+            draw_footprint_size1(image_id, x, y, color_mask);
+            break;
+        case 118:
+            draw_footprint_size2(image_id, x + 30, y - 15, color_mask);
+            break;
+        case 178:
+            draw_footprint_size3(image_id, x + 60, y - 30, color_mask);
+            break;
+        case 238:
+            draw_footprint_size4(image_id, x + 90, y - 45, color_mask);
+            break;
+        case 298:
+            draw_footprint_size5(image_id, x + 120, y - 60, color_mask);
+            break;
+    }
+}
+
 void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
@@ -647,6 +672,47 @@ void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask)
         case 298:
             x -= 120;
             y -= img->height - 150;
+            height -= 76;
+            break;
+    }
+    if (!color_mask) {
+        draw_compressed(img, data, x, y, height);
+    } else {
+        draw_compressed_and(img, data, x, y, height, color_mask);
+    }
+}
+
+void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t color_mask)
+{
+    const image *img = image_get(image_id);
+    if (img->draw.type != 30) { // isometric
+        return;
+    }
+    if (!img->draw.has_compressed_part) {
+        return;
+    }
+    const color_t *data = &image_data(image_id)[img->draw.uncompressed_length];
+
+    int height = img->height;
+    switch (img->width) {
+        case 58:
+            y -= img->height - 30;
+            height -= 16;
+            break;
+        case 118:
+            y -= img->height - 45;
+            height -= 31;
+            break;
+        case 178:
+            y -= img->height - 60;
+            height -= 46;
+            break;
+        case 238:
+            y -= img->height - 75;
+            height -= 61;
+            break;
+        case 298:
+            y -= img->height - 90;
             height -= 76;
             break;
     }

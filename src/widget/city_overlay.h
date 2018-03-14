@@ -28,8 +28,4 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
 
 void city_with_overlay_draw_building_top(int x, int y, int grid_offset);
 
-// TODO remove these
-void draw_foot_with_size(int grid_offset, int image_x, int image_y);
-void draw_top_with_size(int grid_offset, int image_x, int image_y);
-
 #endif // WIDGET_CITY_OVERLAY_H

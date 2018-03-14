@@ -264,12 +264,12 @@ static void draw_footprint_water(int x, int y, int grid_offset)
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         } else {
-            draw_foot_with_size(grid_offset, x, y);
+            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
         }
     } else if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
         // display grass
         int image_id = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
-        image_draw_isometric_footprint(image_id, x, y, 0);
+        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0);
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building *b = building_get(map_building_at(grid_offset));
         int terrain = map_terrain_get(grid_offset);
@@ -308,7 +308,7 @@ static void draw_footprint_water(int x, int y, int grid_offset)
                 image_id = map_image_at(grid_offset);
                 break;
         }
-        image_draw_isometric_footprint(image_id, x, y, 0);
+        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0);
     }
 }
 
@@ -319,7 +319,7 @@ static void draw_top_water(int x, int y, int grid_offset)
     }
     if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
         if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            draw_top_with_size(grid_offset, x, y);
+            image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, 0);
         }
     } else if (map_building_at(grid_offset)) {
         city_with_overlay_draw_building_top(x, y, grid_offset);
@@ -380,17 +380,17 @@ static void draw_footprint_desirability(int x, int y, int grid_offset)
     if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset)) {
-            draw_foot_with_size(grid_offset, x, y);
+            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
         }
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // display empty land/grass
         int image_id = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
-        image_draw_isometric_footprint(image_id, x, y, 0);
+        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0);
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        image_draw_isometric_footprint(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, 0);
+        image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, 0);
     } else {
-        image_draw_isometric_footprint(map_image_at(grid_offset), x, y, 0);
+        image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
     }
 }
 
@@ -399,15 +399,15 @@ static void draw_top_desirability(int x, int y, int grid_offset)
     if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset)) {
-            draw_top_with_size(grid_offset, x, y);
+            image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, 0);
         }
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // grass, no top needed
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        image_draw_isometric_top(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, 0);
+        image_draw_isometric_top_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, 0);
     } else {
-        image_draw_isometric_top(map_image_at(grid_offset), x, y, 0);
+        image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, 0);
     }
 }
 
