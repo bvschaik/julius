@@ -22,6 +22,7 @@
 #include "widget/overlay.h"
 #include "widget/overlay_education.h"
 #include "widget/overlay_entertainment.h"
+#include "widget/overlay_health.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -58,13 +59,13 @@ static const city_overlay *get_city_overlay()
         case OVERLAY_ACADEMY:
             return overlay_for_academy();
         case OVERLAY_BARBER:
-            return 0;
+            return overlay_for_barber();
         case OVERLAY_BATHHOUSE:
-            return 0;
+            return overlay_for_bathhouse();
         case OVERLAY_CLINIC:
-            return 0;
+            return overlay_for_clinic();
         case OVERLAY_HOSPITAL:
-            return 0;
+            return overlay_for_hospital();
         case OVERLAY_RELIGION:
             return 0;
         case OVERLAY_TAX_INCOME:
@@ -193,14 +194,6 @@ static int showOnOverlay(const figure *f)
                 f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER;
         case OVERLAY_RELIGION:
             return f->type == FIGURE_PRIEST;
-        case OVERLAY_BARBER:
-            return f->type == FIGURE_BARBER;
-        case OVERLAY_BATHHOUSE:
-            return f->type == FIGURE_BATHHOUSE_WORKER;
-        case OVERLAY_CLINIC:
-            return f->type == FIGURE_DOCTOR;
-        case OVERLAY_HOSPITAL:
-            return f->type == FIGURE_SURGEON;
         case OVERLAY_FOOD_STOCKS:
             if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER ||
                 f->type == FIGURE_DELIVERY_BOY || f->type == FIGURE_FISHING_BOAT) {
@@ -657,26 +650,6 @@ static int show_building_native(building *b)
     return b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING || b->type == BUILDING_MISSION_POST;
 }
 
-static int show_building_barber(building *b)
-{
-    return b->type == BUILDING_BARBER;
-}
-
-static int show_building_bathhouse(building *b)
-{
-    return b->type == BUILDING_BATHHOUSE;
-}
-
-static int show_building_clinic(building *b)
-{
-    return b->type == BUILDING_DOCTOR;
-}
-
-static int show_building_hospital(building *b)
-{
-    return b->type == BUILDING_HOSPITAL;
-}
-
 static int show_building_religion(building *b)
 {
     return
@@ -714,14 +687,6 @@ static int should_show_building_on_overlay(building *b)
             return show_building_fire_crime(b);
         case OVERLAY_DAMAGE:
             return show_building_damage(b);
-        case OVERLAY_BARBER:
-            return show_building_barber(b);
-        case OVERLAY_BATHHOUSE:
-            return show_building_bathhouse(b);
-        case OVERLAY_CLINIC:
-            return show_building_clinic(b);
-        case OVERLAY_HOSPITAL:
-            return show_building_hospital(b);
         case OVERLAY_RELIGION:
             return show_building_religion(b);
         case OVERLAY_TAX_INCOME:
@@ -815,26 +780,6 @@ static int get_column_height_crime(building *b)
     return NO_COLUMN;
 }
 
-static int get_column_height_barber(building *b)
-{
-    return b->houseSize && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
-}
-
-static int get_column_height_bathhouse(building *b)
-{
-    return b->houseSize && b->data.house.bathhouse ? b->data.house.bathhouse / 10 : NO_COLUMN;
-}
-
-static int get_column_height_clinic(building *b)
-{
-    return b->houseSize && b->data.house.clinic ? b->data.house.clinic / 10 : NO_COLUMN;
-}
-
-static int get_column_height_hospital(building *b)
-{
-    return b->houseSize && b->data.house.hospital ? b->data.house.hospital / 10 : NO_COLUMN;
-}
-
 static int get_column_height_religion(building *b)
 {
     return b->houseSize && b->data.house.numGods ? b->data.house.numGods * 17 / 10 : NO_COLUMN;
@@ -883,14 +828,6 @@ static int get_building_column_height(building *b)
             return get_column_height_damage(b);
         case OVERLAY_CRIME:
             return get_column_height_crime(b);
-        case OVERLAY_BARBER:
-            return get_column_height_barber(b);
-        case OVERLAY_BATHHOUSE:
-            return get_column_height_bathhouse(b);
-        case OVERLAY_CLINIC:
-            return get_column_height_clinic(b);
-        case OVERLAY_HOSPITAL:
-            return get_column_height_hospital(b);
         case OVERLAY_RELIGION:
             return get_column_height_religion(b);
         case OVERLAY_TAX_INCOME:
@@ -1139,58 +1076,6 @@ static int get_tooltip_crime(tooltip_context *c, const building *b)
     }
 }
 
-static int get_tooltip_barber(tooltip_context *c, const building *b)
-{
-    if (b->data.house.barber <= 0) {
-        return 31;
-    } else if (b->data.house.barber >= 80) {
-        return 32;
-    } else if (b->data.house.barber < 20) {
-        return 33;
-    } else {
-        return 34;
-    }
-}
-
-static int get_tooltip_bathhouse(tooltip_context *c, const building *b)
-{
-    if (b->data.house.bathhouse <= 0) {
-        return 8;
-    } else if (b->data.house.bathhouse >= 80) {
-        return 9;
-    } else if (b->data.house.bathhouse >= 20) {
-        return 10;
-    } else {
-        return 11;
-    }
-}
-
-static int get_tooltip_clinic(tooltip_context *c, const building *b)
-{
-    if (b->data.house.clinic <= 0) {
-        return 35;
-    } else if (b->data.house.clinic >= 80) {
-        return 36;
-    } else if (b->data.house.clinic >= 20) {
-        return 37;
-    } else {
-        return 38;
-    }
-}
-
-static int get_tooltip_hospital(tooltip_context *c, const building *b)
-{
-    if (b->data.house.hospital <= 0) {
-        return 39;
-    } else if (b->data.house.hospital >= 80) {
-        return 40;
-    } else if (b->data.house.hospital >= 20) {
-        return 41;
-    } else {
-        return 42;
-    }
-}
-
 static int get_tooltip_tax_income(tooltip_context *c, const building *b)
 {
     int denarii = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
@@ -1280,14 +1165,6 @@ int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int grid_offset)
             return get_tooltip_damage(c, b);
         case OVERLAY_CRIME:
             return get_tooltip_crime(c, b);
-        case OVERLAY_BARBER:
-            return get_tooltip_barber(c, b);
-        case OVERLAY_BATHHOUSE:
-            return get_tooltip_bathhouse(c, b);
-        case OVERLAY_CLINIC:
-            return get_tooltip_clinic(c, b);
-        case OVERLAY_HOSPITAL:
-            return get_tooltip_hospital(c, b);
         case OVERLAY_TAX_INCOME:
             return get_tooltip_tax_income(c, b);
         case OVERLAY_FOOD_STOCKS:

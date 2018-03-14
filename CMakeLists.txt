@@ -233,6 +233,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
     ${PROJECT_SOURCE_DIR}/src/widget/overlay_education.c
     ${PROJECT_SOURCE_DIR}/src/widget/overlay_entertainment.c
+    ${PROJECT_SOURCE_DIR}/src/widget/overlay_health.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
 )
