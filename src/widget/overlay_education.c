@@ -162,6 +162,7 @@ const city_overlay *overlay_for_library()
     };
     return &overlay;
 }
+
 const city_overlay *overlay_for_academy()
 {
     static city_overlay overlay = {
