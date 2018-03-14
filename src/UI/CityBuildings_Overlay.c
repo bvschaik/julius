@@ -23,6 +23,7 @@
 #include "widget/overlay_education.h"
 #include "widget/overlay_entertainment.h"
 #include "widget/overlay_health.h"
+#include "widget/overlay_risks.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -35,11 +36,15 @@ static const city_overlay *get_city_overlay()
 {
     switch (game_state_overlay()) {
         case OVERLAY_FIRE:
-            return 0;
+            return overlay_for_fire();
         case OVERLAY_CRIME:
-            return 0;
+            return overlay_for_crime();
         case OVERLAY_DAMAGE:
-            return 0;
+            return overlay_for_damage();
+        case OVERLAY_PROBLEMS:
+            return overlay_for_problems();
+        case OVERLAY_NATIVE:
+            return overlay_for_native();
         case OVERLAY_ENTERTAINMENT:
             return overlay_for_entertainment();
         case OVERLAY_THEATER:
@@ -72,10 +77,6 @@ static const city_overlay *get_city_overlay()
             return 0;
         case OVERLAY_FOOD_STOCKS:
             return 0;
-        case OVERLAY_NATIVE:
-            return 0;
-        case OVERLAY_PROBLEMS:
-            return 0;
         case OVERLAY_WATER:
             return 0;
         default:
@@ -91,12 +92,11 @@ static void select_city_overlay()
 }
 
 static void drawFootprintForWaterOverlay(int x, int y, int grid_offset);
-static void drawFootprintForNativeOverlay(int x, int y, int grid_offset);
 static void drawBuildingFootprintForOverlay(int gridOffset, int xOffset, int yOffset, int graphicOffset);
 static void drawBuildingTopForOverlay(int grid_offset, int x, int y);
 static void drawFootprintForDesirabilityOverlay(int x, int y, int grid_offset);
 
-static void draw_foot_with_size(int grid_offset, int image_x, int image_y)
+void draw_foot_with_size(int grid_offset, int image_x, int image_y)
 {
     int image_id = map_image_at(grid_offset);
     switch (map_property_multi_tile_size(grid_offset)) {
@@ -118,7 +118,7 @@ static void draw_foot_with_size(int grid_offset, int image_x, int image_y)
     }
 }
 
-static void draw_top_with_size(int grid_offset, int image_x, int image_y)
+void draw_top_with_size(int grid_offset, int image_x, int image_y)
 {
     int image_id = map_image_at(grid_offset);
     switch (map_property_multi_tile_size(grid_offset)) {
@@ -142,20 +142,20 @@ static void draw_top_with_size(int grid_offset, int image_x, int image_y)
 
 static void draw_footprint(int x, int y, int grid_offset)
 {
-    int overlay = game_state_overlay();
     if (grid_offset == Data_State.selectedBuilding.gridOffsetStart) {
         Data_State.selectedBuilding.reservoirOffsetX = x;
         Data_State.selectedBuilding.reservoirOffsetY = y;
     }
+    int overlay_type = game_state_overlay();
     if (grid_offset < 0) {
         // Outside map: draw black tile
         DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_BLACK), x, y);
-    } else if (overlay == OVERLAY_DESIRABILITY) {
+    } else if (overlay->draw_custom_footprint) {
+        overlay->draw_custom_footprint(x, y, grid_offset);
+    } else if (overlay_type == OVERLAY_DESIRABILITY) {
         drawFootprintForDesirabilityOverlay(x, y, grid_offset);
-    } else if (overlay == OVERLAY_WATER) {
+    } else if (overlay_type == OVERLAY_WATER) {
         drawFootprintForWaterOverlay(x, y, grid_offset);
-    } else if (overlay == OVERLAY_NATIVE) {
-        drawFootprintForNativeOverlay(x, y, grid_offset);
     } else if (map_property_is_draw_tile(grid_offset)) {
         int terrain = map_terrain_get(grid_offset);
         if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
@@ -181,17 +181,8 @@ static int showOnOverlay(const figure *f)
         case OVERLAY_WATER:
         case OVERLAY_DESIRABILITY:
             return 0;
-        case OVERLAY_NATIVE:
-            return f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_MISSIONARY;
-        case OVERLAY_FIRE:
-            return f->type == FIGURE_PREFECT;
-        case OVERLAY_DAMAGE:
-            return f->type == FIGURE_ENGINEER;
         case OVERLAY_TAX_INCOME:
             return f->type == FIGURE_TAX_COLLECTOR;
-        case OVERLAY_CRIME:
-            return f->type == FIGURE_PREFECT || f->type == FIGURE_PROTESTER ||
-                f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER;
         case OVERLAY_RELIGION:
             return f->type == FIGURE_PRIEST;
         case OVERLAY_FOOD_STOCKS:
@@ -200,13 +191,6 @@ static int showOnOverlay(const figure *f)
                 return 1;
             } else if (f->type == FIGURE_CART_PUSHER) {
                 return resource_is_food(f->resourceId);
-            }
-            return 0;
-        case OVERLAY_PROBLEMS:
-            if (f->type == FIGURE_LABOR_SEEKER) {
-                return building_get(f->buildingId)->showOnProblemOverlay;
-            } else if (f->type == FIGURE_CART_PUSHER) {
-                return f->actionState == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->minMaxSeen;
             }
             return 0;
     }
@@ -388,53 +372,6 @@ static void drawTopForWaterOverlay(int x, int y, int grid_offset)
         return;
     }
 	if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
-		if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-			draw_top_with_size(grid_offset, x, y);
-		}
-	} else if (map_building_at(grid_offset)) {
-		drawBuildingTopForOverlay(grid_offset, x, y);
-	}
-}
-
-static int terrain_on_native_overlay()
-{
-    return
-        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SCRUB |
-        TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
-}
-
-static void drawFootprintForNativeOverlay(int x, int y, int grid_offset)
-{
-    if (!map_property_is_draw_tile(grid_offset)) {
-        return;
-    }
-	if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
-		if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-			drawBuildingFootprintForOverlay(grid_offset, x, y, 0);
-		} else {
-			draw_foot_with_size(grid_offset, x, y);
-		}
-	} else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
-		// display grass
-		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
-		DRAWFOOT_SIZE1(graphicId, x, y);
-	} else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-		drawBuildingFootprintForOverlay(grid_offset, x, y, 0);
-	} else {
-		if (map_property_is_native_land(grid_offset)) {
-			DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_DESIRABILITY) + 1, x, y);
-		} else {
-			draw_foot_with_size(grid_offset, x, y);
-		}
-	}
-}
-
-static void drawTopForNativeOverlay(int x, int y, int grid_offset)
-{
-    if (!map_property_is_draw_tile(grid_offset)) {
-        return;
-    }
-	if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
 		if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
 			draw_top_with_size(grid_offset, x, y);
 		}
@@ -630,25 +567,6 @@ static void draw_flattened_overlay_building(const building *b, int x, int y, int
     }
 }
 
-static int show_building_damage(building *b)
-{
-    return b->type == BUILDING_ENGINEERS_POST;
-}
-
-static int show_building_fire_crime(building *b)
-{
-    return b->type == BUILDING_PREFECTURE || b->type == BUILDING_BURNING_RUIN;
-}
-
-static int show_building_problems(building *b)
-{
-    return b->showOnProblemOverlay;
-}
-
-static int show_building_native(building *b)
-{
-    return b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING || b->type == BUILDING_MISSION_POST;
-}
 
 static int show_building_religion(building *b)
 {
@@ -682,21 +600,12 @@ static int should_show_building_on_overlay(building *b)
         return overlay->show_building(b);
     }
     switch (game_state_overlay()) {
-        case OVERLAY_FIRE:
-        case OVERLAY_CRIME:
-            return show_building_fire_crime(b);
-        case OVERLAY_DAMAGE:
-            return show_building_damage(b);
         case OVERLAY_RELIGION:
             return show_building_religion(b);
         case OVERLAY_TAX_INCOME:
             return show_building_tax_income(b);
         case OVERLAY_FOOD_STOCKS:
             return show_building_food_stocks(b);
-        case OVERLAY_NATIVE:
-            return show_building_native(b);
-        case OVERLAY_PROBLEMS:
-            return show_building_problems(b);
         case OVERLAY_WATER:
             return show_building_water(b);
         default:
@@ -749,37 +658,6 @@ static void drawBuildingFootprintForOverlay(int gridOffset, int xOffset, int yOf
     }
 }
 
-static int get_column_height_fire(building *b)
-{
-    return b->fireRisk > 0 ? b->fireRisk / 10 : NO_COLUMN;
-}
-
-static int get_column_height_damage(building *b)
-{
-    return b->damageRisk > 0 ? b->damageRisk / 10 : NO_COLUMN;
-}
-
-static int get_column_height_crime(building *b)
-{
-    if (b->houseSize) {
-        int happiness = b->sentiment.houseHappiness;
-        if (happiness <= 0) {
-            return 10;
-        } else if (happiness <= 10) {
-            return 8;
-        } else if (happiness <= 20) {
-            return 6;
-        } else if (happiness <= 30) {
-            return 4;
-        } else if (happiness <= 40) {
-            return 2;
-        } else if (happiness < 50) {
-            return 1;
-        }
-    }
-    return NO_COLUMN;
-}
-
 static int get_column_height_religion(building *b)
 {
     return b->houseSize && b->data.house.numGods ? b->data.house.numGods * 17 / 10 : NO_COLUMN;
@@ -822,12 +700,6 @@ static int get_building_column_height(building *b)
         return overlay->get_column_height(b);
     }
     switch (game_state_overlay()) {
-        case OVERLAY_FIRE:
-            return get_column_height_fire(b);
-        case OVERLAY_DAMAGE:
-            return get_column_height_damage(b);
-        case OVERLAY_CRIME:
-            return get_column_height_crime(b);
         case OVERLAY_RELIGION:
             return get_column_height_religion(b);
         case OVERLAY_TAX_INCOME:
@@ -836,38 +708,6 @@ static int get_building_column_height(building *b)
             return get_column_height_food_stocks(b);
         default:
             return NO_COLUMN;
-    }
-}
-
-static int is_problem_cartpusher(int figure_id)
-{
-    if (figure_id) {
-        figure *fig = figure_get(figure_id);
-        return fig->actionState == FIGURE_ACTION_20_CARTPUSHER_INITIAL && fig->minMaxSeen;
-    } else {
-        return 0;
-    }
-}
-
-static void prepare_building_for_problems_overlay(building *b)
-{
-    if (b->houseSize) {
-        return;
-    }
-    if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
-        if (!b->hasWaterAccess) {
-            b->showOnProblemOverlay = 1;
-        }
-    } else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_CLAY_PIT) {
-        if (is_problem_cartpusher(b->figureId)) {
-            b->showOnProblemOverlay = 1;
-        }
-    } else if (building_is_workshop(b->type)) {
-        if (is_problem_cartpusher(b->figureId)) {
-            b->showOnProblemOverlay = 1;
-        } else if (b->loadsStored <= 0) {
-            b->showOnProblemOverlay = 1;
-        }
     }
 }
 
@@ -931,7 +771,7 @@ static void drawBuildingTopForOverlay(int grid_offset, int x, int y)
     int overlay = game_state_overlay();
     building *b = building_get(map_building_at(grid_offset));
     if (overlay == OVERLAY_PROBLEMS) {
-        prepare_building_for_problems_overlay(b);
+        overlay_problems_prepare_building(b);
     }
     if (should_show_building_on_overlay(b)) {
         draw_building_top(grid_offset, b, x, y);
@@ -959,13 +799,15 @@ static void drawBuildingTopForOverlay(int grid_offset, int x, int y)
 
 static void draw_top(int x, int y, int grid_offset)
 {
-    int overlay = game_state_overlay();
-    if (overlay == OVERLAY_DESIRABILITY) {
+    if (overlay->draw_custom_top) {
+        overlay->draw_custom_top(x, y, grid_offset);
+        return;
+    }
+    int overlay_type = game_state_overlay();
+    if (overlay_type == OVERLAY_DESIRABILITY) {
         drawTopForDesirabilityOverlay(x, y, grid_offset);
-    } else if (overlay == OVERLAY_WATER) {
+    } else if (overlay_type == OVERLAY_WATER) {
         drawTopForWaterOverlay(x, y, grid_offset);
-    } else if (overlay == OVERLAY_NATIVE) {
-        drawTopForNativeOverlay(x, y, grid_offset);
     } else if (map_property_is_draw_tile(grid_offset)) {
         if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset)) {
@@ -990,6 +832,16 @@ void city_with_overlay_draw()
     );
     UI_CityBuildings_drawSelectedBuildingGhost();
     city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
+}
+
+void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, int image_offset)
+{
+    drawBuildingFootprintForOverlay(grid_offset, x, y, image_offset);
+}
+
+void city_with_overlay_draw_building_top(int x, int y, int grid_offset)
+{
+    drawBuildingTopForOverlay(grid_offset, x, y);
 }
 
 static int get_tooltip_water(tooltip_context *c, int grid_offset)
@@ -1025,56 +877,6 @@ static int get_tooltip_religion(tooltip_context *c, const building *b)
     }
 }
 
-static int get_tooltip_fire(tooltip_context *c, const building *b)
-{
-    if (b->fireRisk <= 0) {
-        return 46;
-    } else if (b->fireRisk <= 20) {
-        return 47;
-    } else if (b->fireRisk <= 40) {
-        return 48;
-    } else if (b->fireRisk <= 60) {
-        return 49;
-    } else if (b->fireRisk <= 80) {
-        return 50;
-    } else {
-        return 51;
-    }
-}
-
-static int get_tooltip_damage(tooltip_context *c, const building *b)
-{
-    if (b->damageRisk <= 0) {
-        return 52;
-    } else if (b->damageRisk <= 40) {
-        return 53;
-    } else if (b->damageRisk <= 80) {
-        return 54;
-    } else if (b->damageRisk <= 120) {
-        return 55;
-    } else if (b->damageRisk <= 160) {
-        return 56;
-    } else {
-        return 57;
-    }
-}
-
-static int get_tooltip_crime(tooltip_context *c, const building *b)
-{
-    if (b->sentiment.houseHappiness <= 0) {
-        return 63;
-    } else if (b->sentiment.houseHappiness <= 10) {
-        return 62;
-    } else if (b->sentiment.houseHappiness <= 20) {
-        return 61;
-    } else if (b->sentiment.houseHappiness <= 30) {
-        return 60;
-    } else if (b->sentiment.houseHappiness < 50) {
-        return 59;
-    } else {
-        return 58;
-    }
-}
 
 static int get_tooltip_tax_income(tooltip_context *c, const building *b)
 {
@@ -1159,12 +961,6 @@ int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int grid_offset)
             return get_tooltip_desirability(c, grid_offset);
         case OVERLAY_RELIGION:
             return get_tooltip_religion(c, b);
-        case OVERLAY_FIRE:
-            return get_tooltip_fire(c, b);
-        case OVERLAY_DAMAGE:
-            return get_tooltip_damage(c, b);
-        case OVERLAY_CRIME:
-            return get_tooltip_crime(c, b);
         case OVERLAY_TAX_INCOME:
             return get_tooltip_tax_income(c, b);
         case OVERLAY_FOOD_STOCKS:
