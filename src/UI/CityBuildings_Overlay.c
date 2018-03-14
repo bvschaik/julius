@@ -19,11 +19,74 @@
 #include "map/terrain.h"
 #include "widget/city_figure.h"
 #include "widget/city_without_overlay.h"
+#include "widget/overlay.h"
+#include "widget/overlay_education.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
 #define NO_COLUMN -1
+
+static const city_overlay *overlay = 0;
+
+static const city_overlay *get_city_overlay()
+{
+    switch (game_state_overlay()) {
+        case OVERLAY_FIRE:
+            return 0;
+        case OVERLAY_CRIME:
+            return 0;
+        case OVERLAY_DAMAGE:
+            return 0;
+        case OVERLAY_ENTERTAINMENT:
+            return 0;
+        case OVERLAY_THEATER:
+            return 0;
+        case OVERLAY_AMPHITHEATER:
+            return 0;
+        case OVERLAY_COLOSSEUM:
+            return 0;
+        case OVERLAY_HIPPODROME:
+            return 0;
+        case OVERLAY_EDUCATION:
+            return overlay_for_education();
+        case OVERLAY_SCHOOL:
+            return overlay_for_school();
+        case OVERLAY_LIBRARY:
+            return overlay_for_library();
+        case OVERLAY_ACADEMY:
+            return overlay_for_academy();
+        case OVERLAY_BARBER:
+            return 0;
+        case OVERLAY_BATHHOUSE:
+            return 0;
+        case OVERLAY_CLINIC:
+            return 0;
+        case OVERLAY_HOSPITAL:
+            return 0;
+        case OVERLAY_RELIGION:
+            return 0;
+        case OVERLAY_TAX_INCOME:
+            return 0;
+        case OVERLAY_FOOD_STOCKS:
+            return 0;
+        case OVERLAY_NATIVE:
+            return 0;
+        case OVERLAY_PROBLEMS:
+            return 0;
+        case OVERLAY_WATER:
+            return 0;
+        default:
+            return 0;
+    }
+}
+
+static void select_city_overlay()
+{
+    if (!overlay || overlay->type != game_state_overlay()) {
+        overlay = get_city_overlay();
+    }
+}
 
 static void drawFootprintForWaterOverlay(int x, int y, int grid_offset);
 static void drawFootprintForNativeOverlay(int x, int y, int grid_offset);
@@ -119,6 +182,9 @@ static building *get_entertainment_building(const figure *f)
 
 static int showOnOverlay(const figure *f)
 {
+    if (overlay) {
+        return overlay->show_figure(f);
+    }
     switch (game_state_overlay()) {
         case OVERLAY_WATER:
         case OVERLAY_DESIRABILITY:
@@ -137,9 +203,6 @@ static int showOnOverlay(const figure *f)
         case OVERLAY_ENTERTAINMENT:
             return f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR ||
                 f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
-        case OVERLAY_EDUCATION:
-            return f->type == FIGURE_SCHOOL_CHILD || f->type == FIGURE_LIBRARIAN ||
-                f->type == FIGURE_TEACHER;
         case OVERLAY_THEATER:
             if (f->type == FIGURE_ACTOR) {
                 return get_entertainment_building(f)->type == BUILDING_THEATER;
@@ -161,12 +224,6 @@ static int showOnOverlay(const figure *f)
             return f->type == FIGURE_CHARIOTEER;
         case OVERLAY_RELIGION:
             return f->type == FIGURE_PRIEST;
-        case OVERLAY_SCHOOL:
-            return f->type == FIGURE_SCHOOL_CHILD;
-        case OVERLAY_LIBRARY:
-            return f->type == FIGURE_LIBRARIAN;
-        case OVERLAY_ACADEMY:
-            return f->type == FIGURE_TEACHER;
         case OVERLAY_BARBER:
             return f->type == FIGURE_BARBER;
         case OVERLAY_BATHHOUSE:
@@ -660,26 +717,6 @@ static int show_building_hippodrome(building *b)
     return b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME;
 }
 
-static int show_building_education(building *b)
-{
-    return b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_ACADEMY;
-}
-
-static int show_building_school(building *b)
-{
-    return b->type == BUILDING_SCHOOL;
-}
-
-static int show_building_library(building *b)
-{
-    return b->type == BUILDING_LIBRARY;
-}
-
-static int show_building_academy(building *b)
-{
-    return b->type == BUILDING_ACADEMY;
-}
-
 static int show_building_barber(building *b)
 {
     return b->type == BUILDING_BARBER;
@@ -728,6 +765,9 @@ static int show_building_water(building *b)
 
 static int should_show_building_on_overlay(building *b)
 {
+    if (overlay) {
+        return overlay->show_building(b);
+    }
     switch (game_state_overlay()) {
         case OVERLAY_FIRE:
         case OVERLAY_CRIME:
@@ -744,14 +784,6 @@ static int should_show_building_on_overlay(building *b)
             return show_building_colosseum(b);
         case OVERLAY_HIPPODROME:
             return show_building_hippodrome(b);
-        case OVERLAY_EDUCATION:
-            return show_building_education(b);
-        case OVERLAY_SCHOOL:
-            return show_building_school(b);
-        case OVERLAY_LIBRARY:
-            return show_building_library(b);
-        case OVERLAY_ACADEMY:
-            return show_building_academy(b);
         case OVERLAY_BARBER:
             return show_building_barber(b);
         case OVERLAY_BATHHOUSE:
@@ -878,26 +910,6 @@ static int get_column_height_hippodrome(building *b)
     return b->houseSize && b->data.house.hippodrome ? b->data.house.hippodrome / 10 : NO_COLUMN;
 }
 
-static int get_column_height_education(building *b)
-{
-    return b->houseSize && b->data.house.education ? b->data.house.education * 3 - 1 : NO_COLUMN;
-}
-
-static int get_column_height_school(building *b)
-{
-    return b->houseSize && b->data.house.school ? b->data.house.school / 10 : NO_COLUMN;
-}
-
-static int get_column_height_library(building *b)
-{
-    return b->houseSize && b->data.house.library ? b->data.house.library / 10 : NO_COLUMN;
-}
-
-static int get_column_height_academy(building *b)
-{
-    return b->houseSize && b->data.house.academy ? b->data.house.academy / 10 : NO_COLUMN;
-}
-
 static int get_column_height_barber(building *b)
 {
     return b->houseSize && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
@@ -956,6 +968,9 @@ static int get_column_height_food_stocks(building *b)
 
 static int get_building_column_height(building *b)
 {
+    if (overlay) {
+        return overlay->get_column_height(b);
+    }
     switch (game_state_overlay()) {
         case OVERLAY_FIRE:
             return get_column_height_fire(b);
@@ -973,14 +988,6 @@ static int get_building_column_height(building *b)
             return get_column_height_colosseum(b);
         case OVERLAY_HIPPODROME:
             return get_column_height_hippodrome(b);
-        case OVERLAY_EDUCATION:
-            return get_column_height_education(b);
-        case OVERLAY_SCHOOL:
-            return get_column_height_school(b);
-        case OVERLAY_LIBRARY:
-            return get_column_height_library(b);
-        case OVERLAY_ACADEMY:
-            return get_column_height_academy(b);
         case OVERLAY_BARBER:
             return get_column_height_barber(b);
         case OVERLAY_BATHHOUSE:
@@ -1141,6 +1148,8 @@ static void draw_top(int x, int y, int grid_offset)
 
 void city_with_overlay_draw()
 {
+    select_city_overlay();
+
     city_view_foreach_map_tile(draw_footprint);
     city_view_foreach_valid_map_tile(
         draw_figures,
@@ -1314,56 +1323,6 @@ static int get_tooltip_hippodrome(tooltip_context *c, const building *b)
     }
 }
 
-static int get_tooltip_education(tooltip_context *c, const building *b)
-{
-    switch (b->data.house.education) {
-        case 0: return 100;
-        case 1: return 101;
-        case 2: return 102;
-        case 3: return 103;
-        default: return 0;
-    }
-}
-
-static int get_tooltip_school(tooltip_context *c, const building *b)
-{
-    if (b->data.house.school <= 0) {
-        return 19;
-    } else if (b->data.house.school >= 80) {
-        return 20;
-    } else if (b->data.house.school >= 20) {
-        return 21;
-    } else {
-        return 22;
-    }
-}
-
-static int get_tooltip_library(tooltip_context *c, const building *b)
-{
-    if (b->data.house.library <= 0) {
-        return 23;
-    } else if (b->data.house.library >= 80) {
-        return 24;
-    } else if (b->data.house.library >= 20) {
-        return 25;
-    } else {
-        return 26;
-    }
-}
-
-static int get_tooltip_academy(tooltip_context *c, const building *b)
-{
-    if (b->data.house.academy <= 0) {
-        return 27;
-    } else if (b->data.house.academy >= 80) {
-        return 28;
-    } else if (b->data.house.academy >= 20) {
-        return 29;
-    } else {
-        return 30;
-    }
-}
-
 static int get_tooltip_barber(tooltip_context *c, const building *b)
 {
     if (b->data.house.barber <= 0) {
@@ -1469,15 +1428,15 @@ static int get_tooltip_desirability(tooltip_context *c, int grid_offset)
 
 int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int grid_offset)
 {
-    int overlay = game_state_overlay();
+    int overlay_type = game_state_overlay();
     int buildingId = map_building_at(grid_offset);
-    if (overlay != OVERLAY_WATER && overlay != OVERLAY_DESIRABILITY && !buildingId) {
+    if (overlay_type != OVERLAY_WATER && overlay_type != OVERLAY_DESIRABILITY && !buildingId) {
         return 0;
     }
     int overlayRequiresHouse =
-        overlay != OVERLAY_WATER && overlay != OVERLAY_FIRE &&
-        overlay != OVERLAY_DAMAGE && overlay != OVERLAY_NATIVE;
-    int overlayForbidsHouse = overlay == OVERLAY_NATIVE;
+        overlay_type != OVERLAY_WATER && overlay_type != OVERLAY_FIRE &&
+        overlay_type != OVERLAY_DAMAGE && overlay_type != OVERLAY_NATIVE;
+    int overlayForbidsHouse = overlay_type == OVERLAY_NATIVE;
     building *b = building_get(buildingId);
     if (overlayRequiresHouse && !b->houseSize) {
         return 0;
@@ -1485,7 +1444,14 @@ int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int grid_offset)
     if (overlayForbidsHouse && b->houseSize) {
         return 0;
     }
-    switch (overlay) {
+    if (overlay) {
+        if (overlay->get_tooltip_for_building) {
+            return overlay->get_tooltip_for_building(c, b);
+        } else if (overlay->get_tooltip_for_grid_offset) {
+            return overlay->get_tooltip_for_grid_offset(c, grid_offset);
+        }
+    }
+    switch (overlay_type) {
         case OVERLAY_WATER:
             return get_tooltip_water(c, grid_offset);
         case OVERLAY_DESIRABILITY:
@@ -1508,14 +1474,6 @@ int UI_CityBuildings_getOverlayTooltipText(tooltip_context *c, int grid_offset)
             return get_tooltip_colosseum(c, b);
         case OVERLAY_HIPPODROME:
             return get_tooltip_hippodrome(c, b);
-        case OVERLAY_EDUCATION:
-            return get_tooltip_education(c, b);
-        case OVERLAY_SCHOOL:
-            return get_tooltip_school(c, b);
-        case OVERLAY_LIBRARY:
-            return get_tooltip_library(c, b);
-        case OVERLAY_ACADEMY:
-            return get_tooltip_academy(c, b);
         case OVERLAY_BARBER:
             return get_tooltip_barber(c, b);
         case OVERLAY_BATHHOUSE:
