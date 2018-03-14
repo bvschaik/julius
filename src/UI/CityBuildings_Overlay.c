@@ -19,13 +19,13 @@
 #include "map/random.h"
 #include "map/terrain.h"
 #include "widget/city_figure.h"
+#include "widget/city_overlay.h"
+#include "widget/city_overlay_education.h"
+#include "widget/city_overlay_entertainment.h"
+#include "widget/city_overlay_health.h"
+#include "widget/city_overlay_other.h"
+#include "widget/city_overlay_risks.h"
 #include "widget/city_without_overlay.h"
-#include "widget/overlay.h"
-#include "widget/overlay_education.h"
-#include "widget/overlay_entertainment.h"
-#include "widget/overlay_health.h"
-#include "widget/overlay_other.h"
-#include "widget/overlay_risks.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -36,51 +36,51 @@ static const city_overlay *get_city_overlay()
 {
     switch (game_state_overlay()) {
         case OVERLAY_FIRE:
-            return overlay_for_fire();
+            return city_overlay_for_fire();
         case OVERLAY_CRIME:
-            return overlay_for_crime();
+            return city_overlay_for_crime();
         case OVERLAY_DAMAGE:
-            return overlay_for_damage();
+            return city_overlay_for_damage();
         case OVERLAY_PROBLEMS:
-            return overlay_for_problems();
+            return city_overlay_for_problems();
         case OVERLAY_NATIVE:
-            return overlay_for_native();
+            return city_overlay_for_native();
         case OVERLAY_ENTERTAINMENT:
-            return overlay_for_entertainment();
+            return city_overlay_for_entertainment();
         case OVERLAY_THEATER:
-            return overlay_for_theater();
+            return city_overlay_for_theater();
         case OVERLAY_AMPHITHEATER:
-            return overlay_for_amphitheater();
+            return city_overlay_for_amphitheater();
         case OVERLAY_COLOSSEUM:
-            return overlay_for_colosseum();
+            return city_overlay_for_colosseum();
         case OVERLAY_HIPPODROME:
-            return overlay_for_hippodrome();
+            return city_overlay_for_hippodrome();
         case OVERLAY_EDUCATION:
-            return overlay_for_education();
+            return city_overlay_for_education();
         case OVERLAY_SCHOOL:
-            return overlay_for_school();
+            return city_overlay_for_school();
         case OVERLAY_LIBRARY:
-            return overlay_for_library();
+            return city_overlay_for_library();
         case OVERLAY_ACADEMY:
-            return overlay_for_academy();
+            return city_overlay_for_academy();
         case OVERLAY_BARBER:
-            return overlay_for_barber();
+            return city_overlay_for_barber();
         case OVERLAY_BATHHOUSE:
-            return overlay_for_bathhouse();
+            return city_overlay_for_bathhouse();
         case OVERLAY_CLINIC:
-            return overlay_for_clinic();
+            return city_overlay_for_clinic();
         case OVERLAY_HOSPITAL:
-            return overlay_for_hospital();
+            return city_overlay_for_hospital();
         case OVERLAY_RELIGION:
-            return overlay_for_religion();
+            return city_overlay_for_religion();
         case OVERLAY_TAX_INCOME:
-            return overlay_for_tax_income();
+            return city_overlay_for_tax_income();
         case OVERLAY_FOOD_STOCKS:
-            return overlay_for_food_stocks();
+            return city_overlay_for_food_stocks();
         case OVERLAY_WATER:
-            return overlay_for_water();
+            return city_overlay_for_water();
         case OVERLAY_DESIRABILITY:
-            return overlay_for_desirability();
+            return city_overlay_for_desirability();
         default:
             debug_log("Unknown city overlay!", 0, game_state_overlay());
             return 0;

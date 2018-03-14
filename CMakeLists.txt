@@ -229,13 +229,13 @@ set(SOUND_FILES
 set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/city.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_figure.c
+    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_education.c
+    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_entertainment.c
+    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_health.c
+    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_other.c
+    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_risks.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_without_overlay.c
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
-    ${PROJECT_SOURCE_DIR}/src/widget/overlay_education.c
-    ${PROJECT_SOURCE_DIR}/src/widget/overlay_entertainment.c
-    ${PROJECT_SOURCE_DIR}/src/widget/overlay_health.c
-    ${PROJECT_SOURCE_DIR}/src/widget/overlay_other.c
-    ${PROJECT_SOURCE_DIR}/src/widget/overlay_risks.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
 )

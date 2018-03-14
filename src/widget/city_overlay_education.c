@@ -1,4 +1,4 @@
-#include "overlay_education.h"
+#include "city_overlay_education.h"
 
 #include "game/state.h"
 
@@ -115,7 +115,7 @@ static int get_tooltip_academy(tooltip_context *c, const building *b)
     }
 }
 
-const city_overlay *overlay_for_education()
+const city_overlay *city_overlay_for_education()
 {
     static city_overlay overlay = {
         OVERLAY_EDUCATION,
@@ -131,7 +131,7 @@ const city_overlay *overlay_for_education()
     return &overlay;
 }
 
-const city_overlay *overlay_for_school()
+const city_overlay *city_overlay_for_school()
 {
     static city_overlay overlay = {
         OVERLAY_SCHOOL,
@@ -147,7 +147,7 @@ const city_overlay *overlay_for_school()
     return &overlay;
 }
 
-const city_overlay *overlay_for_library()
+const city_overlay *city_overlay_for_library()
 {
     static city_overlay overlay = {
         OVERLAY_LIBRARY,
@@ -163,7 +163,7 @@ const city_overlay *overlay_for_library()
     return &overlay;
 }
 
-const city_overlay *overlay_for_academy()
+const city_overlay *city_overlay_for_academy()
 {
     static city_overlay overlay = {
         OVERLAY_ACADEMY,

@@ -1,4 +1,4 @@
-#include "overlay_risks.h"
+#include "city_overlay_risks.h"
 
 #include "building/industry.h"
 #include "game/state.h"
@@ -182,7 +182,7 @@ static int get_tooltip_crime(tooltip_context *c, const building *b)
     }
 }
 
-const city_overlay *overlay_for_fire()
+const city_overlay *city_overlay_for_fire()
 {
     static city_overlay overlay = {
         OVERLAY_FIRE,
@@ -198,7 +198,7 @@ const city_overlay *overlay_for_fire()
     return &overlay;
 }
 
-const city_overlay *overlay_for_damage()
+const city_overlay *city_overlay_for_damage()
 {
     static city_overlay overlay = {
         OVERLAY_DAMAGE,
@@ -214,7 +214,7 @@ const city_overlay *overlay_for_damage()
     return &overlay;
 }
 
-const city_overlay *overlay_for_crime()
+const city_overlay *city_overlay_for_crime()
 {
     static city_overlay overlay = {
         OVERLAY_CRIME,
@@ -230,7 +230,7 @@ const city_overlay *overlay_for_crime()
     return &overlay;
 }
 
-const city_overlay *overlay_for_problems()
+const city_overlay *city_overlay_for_problems()
 {
     static city_overlay overlay = {
         OVERLAY_PROBLEMS,
@@ -293,7 +293,7 @@ static void draw_top_native(int x, int y, int grid_offset)
     }
 }
 
-const city_overlay *overlay_for_native()
+const city_overlay *city_overlay_for_native()
 {
     static city_overlay overlay = {
         OVERLAY_NATIVE,

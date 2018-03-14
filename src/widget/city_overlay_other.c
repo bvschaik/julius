@@ -1,4 +1,4 @@
-#include "overlay_other.h"
+#include "city_overlay_other.h"
 
 #include "building/model.h"
 #include "core/calc.h"
@@ -199,7 +199,7 @@ static int get_tooltip_desirability(tooltip_context *c, int grid_offset)
     }
 }
 
-const city_overlay *overlay_for_religion()
+const city_overlay *city_overlay_for_religion()
 {
     static city_overlay overlay = {
         OVERLAY_RELIGION,
@@ -215,7 +215,7 @@ const city_overlay *overlay_for_religion()
     return &overlay;
 }
 
-const city_overlay *overlay_for_food_stocks()
+const city_overlay *city_overlay_for_food_stocks()
 {
     static city_overlay overlay = {
         OVERLAY_FOOD_STOCKS,
@@ -231,7 +231,7 @@ const city_overlay *overlay_for_food_stocks()
     return &overlay;
 }
 
-const city_overlay *overlay_for_tax_income()
+const city_overlay *city_overlay_for_tax_income()
 {
     static city_overlay overlay = {
         OVERLAY_TAX_INCOME,
@@ -326,7 +326,7 @@ static void draw_top_water(int x, int y, int grid_offset)
     }
 }
 
-const city_overlay *overlay_for_water()
+const city_overlay *city_overlay_for_water()
 {
     static city_overlay overlay = {
         OVERLAY_WATER,
@@ -411,7 +411,7 @@ static void draw_top_desirability(int x, int y, int grid_offset)
     }
 }
 
-const city_overlay *overlay_for_desirability()
+const city_overlay *city_overlay_for_desirability()
 {
     static city_overlay overlay = {
         OVERLAY_DESIRABILITY,

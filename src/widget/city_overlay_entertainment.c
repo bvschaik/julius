@@ -1,4 +1,4 @@
-#include "overlay_entertainment.h"
+#include "city_overlay_entertainment.h"
 
 #include "game/state.h"
 
@@ -186,7 +186,7 @@ static int get_tooltip_hippodrome(tooltip_context *c, const building *b)
 }
 
 
-const city_overlay *overlay_for_entertainment()
+const city_overlay *city_overlay_for_entertainment()
 {
     static city_overlay overlay = {
         OVERLAY_ENTERTAINMENT,
@@ -202,7 +202,7 @@ const city_overlay *overlay_for_entertainment()
     return &overlay;
 }
 
-const city_overlay *overlay_for_theater()
+const city_overlay *city_overlay_for_theater()
 {
     static city_overlay overlay = {
         OVERLAY_THEATER,
@@ -218,7 +218,7 @@ const city_overlay *overlay_for_theater()
     return &overlay;
 }
 
-const city_overlay *overlay_for_amphitheater()
+const city_overlay *city_overlay_for_amphitheater()
 {
     static city_overlay overlay = {
         OVERLAY_AMPHITHEATER,
@@ -234,7 +234,7 @@ const city_overlay *overlay_for_amphitheater()
     return &overlay;
 }
 
-const city_overlay *overlay_for_colosseum()
+const city_overlay *city_overlay_for_colosseum()
 {
     static city_overlay overlay = {
         OVERLAY_COLOSSEUM,
@@ -250,7 +250,7 @@ const city_overlay *overlay_for_colosseum()
     return &overlay;
 }
 
-const city_overlay *overlay_for_hippodrome()
+const city_overlay *city_overlay_for_hippodrome()
 {
     static city_overlay overlay = {
         OVERLAY_HIPPODROME,

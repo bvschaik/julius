@@ -1,5 +1,5 @@
-#ifndef WIDGET_OVERLAY_H
-#define WIDGET_OVERLAY_H
+#ifndef WIDGET_CITY_OVERLAY_H
+#define WIDGET_CITY_OVERLAY_H
 
 #include "building/building.h"
 #include "figure/figure.h"
@@ -32,4 +32,4 @@ void city_with_overlay_draw_building_top(int x, int y, int grid_offset);
 void draw_foot_with_size(int grid_offset, int image_x, int image_y);
 void draw_top_with_size(int grid_offset, int image_x, int image_y);
 
-#endif // WIDGET_OVERLAY_H
+#endif // WIDGET_CITY_OVERLAY_H
