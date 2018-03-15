@@ -6,12 +6,6 @@
 
 extern struct _Data_CityView {
 	int viewToGridOffsetLookup[VIEW_X_MAX][VIEW_Y_MAX];
-
-	// frequently updated
-	struct {
-		int xOffsetInPixels;
-		int yOffsetInPixels;
-	} selectedTile;
 } Data_CityView;
 
 #define ViewToGridOffset(x,y) (Data_CityView.viewToGridOffsetLookup[x][y])

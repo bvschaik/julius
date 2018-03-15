@@ -24,17 +24,6 @@
 #include "Data/CityView.h"
 #include "Data/State.h"
 
-static void drawBuildingGhostDraggableReservoir();
-static void drawBuildingGhostAqueduct();
-static void drawBuildingGhostFountain();
-static void drawBuildingGhostBathhouse();
-static void drawBuildingGhostBridge(building_type type);
-static void drawBuildingGhostFort();
-static void drawBuildingGhostHippodrome();
-static void drawBuildingGhostShipyardWharf(building_type type);
-static void drawBuildingGhostDock();
-static void drawBuildingGhostRoad();
-static void drawBuildingGhostDefault();
 static void drawFlatTile(int xOffset, int yOffset, color_t mask);
 
 static const int xViewOffsets[25] = {
@@ -83,57 +72,12 @@ static const int fortGroundYViewOffsets[4] = {30, -75, -60, 45};
 static const int hippodromeXViewOffsets[4] = {150, 150, -150, -150};
 static const int hippodromeYViewOffsets[4] = {75, -75, -75, 75};
 
-void UI_CityBuildings_drawSelectedBuildingGhost()
+static void drawFlatTile(int xOffset, int yOffset, color_t mask)
 {
-	if (!Data_State.map.current.gridOffset || scroll_in_progress()) {
-		return;
-	}
-	building_type type = building_construction_type();
-	if (Data_State.selectedBuilding.drawAsConstructing || type == BUILDING_NONE) {
-		return;
-	}
-	switch (type) {
-		case BUILDING_DRAGGABLE_RESERVOIR:
-			drawBuildingGhostDraggableReservoir();
-			break;
-		case BUILDING_AQUEDUCT:
-			drawBuildingGhostAqueduct();
-			break;
-		case BUILDING_FOUNTAIN:
-			drawBuildingGhostFountain();
-			break;
-		case BUILDING_BATHHOUSE:
-			drawBuildingGhostBathhouse();
-			break;
-		case BUILDING_LOW_BRIDGE:
-		case BUILDING_SHIP_BRIDGE:
-			drawBuildingGhostBridge(type);
-			break;
-		case BUILDING_FORT_LEGIONARIES:
-		case BUILDING_FORT_JAVELIN:
-		case BUILDING_FORT_MOUNTED:
-			drawBuildingGhostFort();
-			break;
-		case BUILDING_HIPPODROME:
-			drawBuildingGhostHippodrome();
-			break;
-		case BUILDING_SHIPYARD:
-		case BUILDING_WHARF:
-			drawBuildingGhostShipyardWharf(type);
-			break;
-		case BUILDING_DOCK:
-			drawBuildingGhostDock();
-			break;
-		case BUILDING_ROAD:
-			drawBuildingGhostRoad();
-			break;
-		default:
-			drawBuildingGhostDefault();
-			break;
-	}
+    image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), xOffset, yOffset, mask);
 }
 
-static void drawBuildingGhostDefault()
+static void drawBuildingGhostDefault(int xOffsetBase, int yOffsetBase)
 {
     int map_orientation = city_view_orientation();
 	int fullyObstructed = 0;
@@ -262,8 +206,6 @@ static void drawBuildingGhostDefault()
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
-	int xOffsetBase = Data_CityView.selectedTile.xOffsetInPixels;
-	int yOffsetBase = Data_CityView.selectedTile.yOffsetInPixels;
 	if (placementObstructed) {
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
@@ -336,7 +278,7 @@ static void drawBuildingGhostDefault()
 	}
 }
 
-static void drawBuildingGhostDraggableReservoir()
+static void drawBuildingGhostDraggableReservoir(int xOffsetBase, int yOffsetBase)
 {
 	int placementObstructed = 0;
 	if (building_construction_in_progress()) {
@@ -370,8 +312,7 @@ static void drawBuildingGhostDraggableReservoir()
 			image_draw_isometric_top(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		}
 	}
-	int xOffsetBase = Data_CityView.selectedTile.xOffsetInPixels;
-	int yOffsetBase = Data_CityView.selectedTile.yOffsetInPixels - 30;
+	yOffsetBase -= 30;
 	if (placementObstructed) {
 		for (int i = 0; i < 9; i++) {
 			int xOffset = xOffsetBase + xViewOffsets[i];
@@ -394,7 +335,7 @@ static void drawBuildingGhostDraggableReservoir()
 	}
 }
 
-static void drawBuildingGhostAqueduct()
+static void drawBuildingGhostAqueduct(int xOffset, int yOffset)
 {
 	int placementObstructed = 0;
 	if (building_construction_in_progress()) {
@@ -412,8 +353,6 @@ static void drawBuildingGhostAqueduct()
 	if (city_finance_out_of_money()) {
 		placementObstructed = 1;
 	}
-	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
-	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 	if (placementObstructed) {
 		drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 	} else {
@@ -442,11 +381,9 @@ static void drawBuildingGhostAqueduct()
 	}
 }
 
-static void drawBuildingGhostFountain()
+static void drawBuildingGhostFountain(int xOffset, int yOffset)
 {
 	int gridOffset = Data_State.map.current.gridOffset;
-	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
-	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 
 	int graphicId = image_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
 	if (city_finance_out_of_money()) {
@@ -462,7 +399,7 @@ static void drawBuildingGhostFountain()
 	}
 }
 
-static void drawBuildingGhostBathhouse()
+static void drawBuildingGhostBathhouse(int xOffsetBase, int yOffsetBase)
 {
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
@@ -483,8 +420,6 @@ static void drawBuildingGhostBathhouse()
 		placementObstructed = 1;
 	}
 
-	int xOffsetBase = Data_CityView.selectedTile.xOffsetInPixels;
-	int yOffsetBase = Data_CityView.selectedTile.yOffsetInPixels;
 	if (placementObstructed) {
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
@@ -520,7 +455,7 @@ static void drawBuildingGhostBathhouse()
 	}
 }
 
-static void drawBuildingGhostBridge(building_type type)
+static void drawBuildingGhostBridge(int xOffsetBase, int yOffsetBase, building_type type)
 {
 	int length, direction;
 	int endGridOffset = map_bridge_calculate_length_direction(
@@ -541,8 +476,8 @@ static void drawBuildingGhostBridge(building_type type)
 		obstructed = 1;
 	}
 	if (obstructed) {
-		int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
-		int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
+		int xOffset = xOffsetBase;
+		int yOffset = yOffsetBase;
 		drawFlatTile(xOffset, yOffset, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
 		if (length > 1) {
 			switch (dir) {
@@ -570,8 +505,6 @@ static void drawBuildingGhostBridge(building_type type)
 	}
 
 	// bridge can be built
-	int xOffsetBase = Data_CityView.selectedTile.xOffsetInPixels;
-	int yOffsetBase = Data_CityView.selectedTile.yOffsetInPixels;
 	struct {
 		int graphicId;
 		int xOffset;
@@ -759,7 +692,7 @@ static void drawBuildingGhostBridge(building_type type)
 	}
 }
 
-static void drawBuildingGhostFort()
+static void drawBuildingGhostFort(int xOffsetBase, int yOffsetBase)
 {
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
@@ -790,8 +723,6 @@ static void drawBuildingGhostFort()
 		}
 	}
 
-	int xOffsetBase = Data_CityView.selectedTile.xOffsetInPixels;
-	int yOffsetBase = Data_CityView.selectedTile.yOffsetInPixels;
 	int xOffsetGround = xOffsetBase + fortGroundXViewOffsets[orientationIndex];
 	int yOffsetGround = yOffsetBase + fortGroundYViewOffsets[orientationIndex];
 
@@ -844,7 +775,7 @@ static void drawBuildingGhostFort()
 	}
 }
 
-static void drawBuildingGhostHippodrome()
+static void drawBuildingGhostHippodrome(int xOffsetBase1, int yOffsetBase1)
 {
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
@@ -877,8 +808,6 @@ static void drawBuildingGhostHippodrome()
 		}
 	}
 
-	int xOffsetBase1 = Data_CityView.selectedTile.xOffsetInPixels;
-	int yOffsetBase1 = Data_CityView.selectedTile.yOffsetInPixels;
 	int xOffsetBase2 = xOffsetBase1 + hippodromeXViewOffsets[orientationIndex];
 	int yOffsetBase2 = yOffsetBase1 + hippodromeYViewOffsets[orientationIndex];
 	int xOffsetBase3 = xOffsetBase2 + hippodromeXViewOffsets[orientationIndex];
@@ -975,7 +904,7 @@ static void drawBuildingGhostHippodrome()
 	}
 }
 
-static void drawBuildingGhostShipyardWharf(building_type type)
+static void drawBuildingGhostShipyardWharf(int xOffsetBase, int yOffsetBase, building_type type)
 {
 	int dirAbsolute, dirRelative;
 	int blockedTiles = map_water_determine_orientation_size2(
@@ -986,21 +915,17 @@ static void drawBuildingGhostShipyardWharf(building_type type)
 	}
 	if (blockedTiles) {
 		for (int i = 0; i < 4; i++) {
-			int xOffset = Data_CityView.selectedTile.xOffsetInPixels + xViewOffsets[i];
-			int yOffset = Data_CityView.selectedTile.yOffsetInPixels + yViewOffsets[i];
-			drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
+			drawFlatTile(xOffsetBase + xViewOffsets[i], yOffsetBase + yViewOffsets[i], COLOR_MASK_RED);
 		}
 	} else {
         const building_properties *props = building_properties_for_type(type);
 		int graphicId = image_group(props->image_group) + props->image_offset + dirRelative;
-		int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
-		int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
-		image_draw_isometric_footprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
-		image_draw_isometric_top(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
+		image_draw_isometric_footprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
+		image_draw_isometric_top(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 	}
 }
 
-static void drawBuildingGhostDock()
+static void drawBuildingGhostDock(int xOffsetBase, int yOffsetBase)
 {
 	int dirAbsolute, dirRelative;
 	int blockedTiles = map_water_determine_orientation_size3(
@@ -1011,9 +936,7 @@ static void drawBuildingGhostDock()
 	}
 	if (blockedTiles) {
 		for (int i = 0; i < 9; i++) {
-			int xOffset = Data_CityView.selectedTile.xOffsetInPixels + xViewOffsets[i];
-			int yOffset = Data_CityView.selectedTile.yOffsetInPixels + yViewOffsets[i];
-			drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
+			drawFlatTile(xOffsetBase + xViewOffsets[i], yOffsetBase + yViewOffsets[i], COLOR_MASK_RED);
 		}
 	} else {
 		int graphicId;
@@ -1023,18 +946,14 @@ static void drawBuildingGhostDock()
 			case 2: graphicId = image_group(GROUP_BUILDING_DOCK_3); break;
 			default: graphicId = image_group(GROUP_BUILDING_DOCK_4); break;
 		}
-		int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
-		int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
-		image_draw_isometric_footprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
-		image_draw_isometric_top(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
+		image_draw_isometric_footprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
+		image_draw_isometric_top(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 	}
 }
 
-static void drawBuildingGhostRoad()
+static void drawBuildingGhostRoad(int xOffset, int yOffset)
 {
 	int tileObstructed = 0;
-	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
-	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 	int gridOffset = Data_State.map.current.gridOffset;
 	int graphicId;
 	if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
@@ -1064,7 +983,54 @@ static void drawBuildingGhostRoad()
 	}
 }
 
-static void drawFlatTile(int xOffset, int yOffset, color_t mask)
+void UI_CityBuildings_drawSelectedBuildingGhost()
 {
-	image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), xOffset, yOffset, mask);
+    if (!Data_State.map.current.gridOffset || scroll_in_progress()) {
+        return;
+    }
+    building_type type = building_construction_type();
+    if (Data_State.selectedBuilding.drawAsConstructing || type == BUILDING_NONE) {
+        return;
+    }
+    int x, y;
+    city_view_get_selected_tile_pixels(&x, &y);
+    switch (type) {
+        case BUILDING_DRAGGABLE_RESERVOIR:
+            drawBuildingGhostDraggableReservoir(x, y);
+            break;
+        case BUILDING_AQUEDUCT:
+            drawBuildingGhostAqueduct(x, y);
+            break;
+        case BUILDING_FOUNTAIN:
+            drawBuildingGhostFountain(x, y);
+            break;
+        case BUILDING_BATHHOUSE:
+            drawBuildingGhostBathhouse(x, y);
+            break;
+        case BUILDING_LOW_BRIDGE:
+        case BUILDING_SHIP_BRIDGE:
+            drawBuildingGhostBridge(x, y, type);
+            break;
+        case BUILDING_FORT_LEGIONARIES:
+        case BUILDING_FORT_JAVELIN:
+        case BUILDING_FORT_MOUNTED:
+            drawBuildingGhostFort(x, y);
+            break;
+        case BUILDING_HIPPODROME:
+            drawBuildingGhostHippodrome(x, y);
+            break;
+        case BUILDING_SHIPYARD:
+        case BUILDING_WHARF:
+            drawBuildingGhostShipyardWharf(x, y, type);
+            break;
+        case BUILDING_DOCK:
+            drawBuildingGhostDock(x, y);
+            break;
+        case BUILDING_ROAD:
+            drawBuildingGhostRoad(x, y);
+            break;
+        default:
+            drawBuildingGhostDefault(x, y);
+            break;
+    }
 }

@@ -21,6 +21,8 @@ int city_view_to_grid_offset(int x_view, int y_view);
 
 void city_view_grid_offset_to_xy_view(int grid_offset, int *x_view, int *y_view);
 
+void city_view_get_selected_tile_pixels(int *x_pixels, int *y_pixels);
+
 int city_view_pixels_to_grid_offset(int x_pixels, int y_pixels);
 
 void city_view_go_to_grid_offset(int grid_offset);

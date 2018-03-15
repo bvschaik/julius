@@ -23,7 +23,6 @@
 #include "window/city.h"
 
 #include "Data/State.h"
-#include "Data/CityView.h"
 
 static void set_city_clip_rectangle()
 {
@@ -73,12 +72,10 @@ void widget_city_draw_construction_cost()
     } else {
         color = COLOR_RED;
     }
-    text_draw_number_colored(cost, '@', " ",
-        Data_CityView.selectedTile.xOffsetInPixels + 58 + 1,
-        Data_CityView.selectedTile.yOffsetInPixels + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
-    text_draw_number_colored(cost, '@', " ",
-        Data_CityView.selectedTile.xOffsetInPixels + 58,
-        Data_CityView.selectedTile.yOffsetInPixels, FONT_NORMAL_PLAIN, color);
+    int x, y;
+    city_view_get_selected_tile_pixels(&x, &y);
+    text_draw_number_colored(cost, '@', " ", x + 58 + 1, y + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
+    text_draw_number_colored(cost, '@', " ", x + 58, y, FONT_NORMAL_PLAIN, color);
     graphics_reset_clip_rectangle();
 }
 

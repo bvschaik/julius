@@ -26,7 +26,11 @@ static struct {
         int width_tiles;
         int height_tiles;
     } viewport;
-} data = {0, 0, 0, 0, {0, 0}, {}};
+    struct {
+        int x_pixels;
+        int y_pixels;
+    } selected_tile;
+} data = {0, 0, 0, 0, {0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0}};
 
 
 static void check_camera_boundaries()
@@ -210,6 +214,12 @@ void city_view_grid_offset_to_xy_view(int grid_offset, int *x_view, int *y_view)
     }
 }
 
+void city_view_get_selected_tile_pixels(int *x_pixels, int *y_pixels)
+{
+    *x_pixels = data.selected_tile.x_pixels;
+    *y_pixels = data.selected_tile.y_pixels;
+}
+
 int city_view_pixels_to_grid_offset(int x_pixels, int y_pixels)
 {
     if (x_pixels < data.viewport.x ||
@@ -240,13 +250,11 @@ int city_view_pixels_to_grid_offset(int x_pixels, int y_pixels)
             x_view_offset++;
         }
     }
-    Data_CityView.selectedTile.xOffsetInPixels =
-        data.viewport.x + 60 * x_view_offset;
+    data.selected_tile.x_pixels = data.viewport.x + 60 * x_view_offset;
     if (y_view_offset & 1) {
-        Data_CityView.selectedTile.xOffsetInPixels -= 30;
+        data.selected_tile.x_pixels -= 30;
     }
-    Data_CityView.selectedTile.yOffsetInPixels =
-        data.viewport.y + 15 * y_view_offset - 15; // TODO why -1?
+    data.selected_tile.y_pixels = data.viewport.y + 15 * y_view_offset - 15; // TODO why -1?
     int x_view = data.camera.x + x_view_offset;
     int y_view = data.camera.y + y_view_offset;
     int grid_offset = Data_CityView.viewToGridOffsetLookup[x_view][y_view];
