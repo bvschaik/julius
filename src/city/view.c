@@ -342,6 +342,14 @@ void city_view_set_viewport(int screen_width, int screen_height)
     check_camera_boundaries();
 }
 
+void city_view_get_viewport(int *x, int *y, int *width, int *height)
+{
+    *x = Data_CityView.xOffsetInPixels;
+    *y = Data_CityView.yOffsetInPixels;
+    *width = Data_CityView.widthInPixels;
+    *height = Data_CityView.heightInPixels;
+}
+
 int city_view_is_sidebar_collapsed()
 {
     return data.sidebar_collapsed;

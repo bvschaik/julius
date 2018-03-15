@@ -116,9 +116,7 @@ void window_city_draw_panels()
 
 void window_city_draw()
 {
-    int x, y;
-    city_view_get_camera(&x, &y);
-    widget_city_draw(x, y);
+    widget_city_draw();
 }
 
 void window_city_show()

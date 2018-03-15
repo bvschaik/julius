@@ -9,8 +9,8 @@ typedef struct {
     int y;
 } pixel_coordinate;
 
-void widget_city_draw(int x, int y);
-void widget_city_draw_for_figure(int x, int y, int figure_id, pixel_coordinate *coord);
+void widget_city_draw();
+void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord);
 
 void widget_city_draw_construction_cost();
 

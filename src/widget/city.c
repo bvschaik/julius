@@ -25,13 +25,20 @@
 #include "Data/State.h"
 #include "Data/CityView.h"
 
-void widget_city_draw(int x, int y)
+static void set_city_clip_rectangle()
 {
+    int x, y, width, height;
+    city_view_get_viewport(&x, &y, &width, &height);
+    graphics_set_clip_rectangle(x, y, width, height);
+}
+
+void widget_city_draw()
+{
+    int x, y;
+    city_view_get_camera(&x, &y);
     Data_CityView.xInTiles = x;
     Data_CityView.yInTiles = y;
-    graphics_set_clip_rectangle(
-        Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
-        Data_CityView.widthInPixels, Data_CityView.heightInPixels);
+    set_city_clip_rectangle();
 
     if (game_state_overlay()) {
         city_with_overlay_draw();
@@ -42,13 +49,13 @@ void widget_city_draw(int x, int y)
     graphics_reset_clip_rectangle();
 }
 
-void widget_city_draw_for_figure(int x, int y, int figure_id, pixel_coordinate *coord)
+void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord)
 {
+    int x, y;
+    city_view_get_camera(&x, &y);
     Data_CityView.xInTiles = x;
     Data_CityView.yInTiles = y;
-    graphics_set_clip_rectangle(
-        Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
-        Data_CityView.widthInPixels, Data_CityView.heightInPixels);
+    set_city_clip_rectangle();
 
     city_without_overlay_draw(figure_id, coord);
 
@@ -67,9 +74,7 @@ void widget_city_draw_construction_cost()
     if (!cost) {
         return;
     }
-    graphics_set_clip_rectangle(
-        Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
-        Data_CityView.widthInPixels, Data_CityView.heightInPixels);
+    set_city_clip_rectangle();
     color_t color;
     if (cost <= city_finance_treasury()) {
         color = COLOR_ORANGE;

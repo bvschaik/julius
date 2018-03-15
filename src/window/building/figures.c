@@ -361,9 +361,8 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate *coord)
     city_view_grid_offset_to_xy_view(grid_offset, &x, &y);
 
     city_view_set_camera(x - 2, y - 6);
-    city_view_get_camera(&x, &y); // camera might have shifted because of map boundaries
 
-    widget_city_draw_for_figure(x, y, figure_id, coord);
+    widget_city_draw_for_figure(figure_id, coord);
 
     city_view_set_camera(x_cam, y_cam);
 }
@@ -376,9 +375,7 @@ void window_building_prepare_figure_list(building_info_context *c)
             draw_figure_in_city(c->figure.figureIds[i], &coord);
             graphics_save_to_buffer(coord.x, coord.y, 48, 48, data.figure_images[i]);
         }
-        int x, y;
-        city_view_get_camera(&x, &y);
-        widget_city_draw(x, y);
+        widget_city_draw();
     }
 }
 

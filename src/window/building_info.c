@@ -5,6 +5,7 @@
 #include "building/model.h"
 #include "building/warehouse.h"
 #include "city/resource.h"
+#include "city/view.h"
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
@@ -143,6 +144,13 @@ static int get_height_id()
         }
     }
     return 0;
+}
+
+static int get_city_x_offset()
+{
+    int x, y, width, height;
+    city_view_get_viewport(&x, &y, &width, &height);
+    return x;
 }
 
 static void init(int grid_offset)
@@ -327,7 +335,7 @@ static void init(int grid_offset)
         }
     }
     int border = (Data_CityView.widthInPixels - 16 * context.width_blocks) / 2;
-    context.x_offset = Data_CityView.xOffsetInPixels + border;
+    context.x_offset = get_city_x_offset() + border;
 }
 
 static void draw_background()

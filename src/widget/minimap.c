@@ -74,18 +74,20 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.absolute_x = (VIEW_X_MAX - width_tiles) / 2;
     data.absolute_y = (VIEW_Y_MAX - height_tiles) / 2;
 
+    int camera_x, camera_y;
+    city_view_get_camera(&camera_x, &camera_y);
     if ((Data_State.map.width - width_tiles) / 2 > 0) {
-        if (Data_CityView.xInTiles < data.absolute_x) {
-            data.absolute_x = Data_CityView.xInTiles;
-        } else if (Data_CityView.xInTiles > width_tiles + data.absolute_x - Data_CityView.widthInTiles) {
-            data.absolute_x = Data_CityView.widthInTiles + Data_CityView.xInTiles - width_tiles;
+        if (camera_x < data.absolute_x) {
+            data.absolute_x = camera_x;
+        } else if (camera_x > width_tiles + data.absolute_x - Data_CityView.widthInTiles) {
+            data.absolute_x = Data_CityView.widthInTiles + camera_x - width_tiles;
         }
     }
     if ((2 * Data_State.map.height - height_tiles) / 2 > 0) {
-        if (Data_CityView.yInTiles < data.absolute_y) {
-            data.absolute_y = Data_CityView.yInTiles;
-        } else if (Data_CityView.yInTiles > height_tiles + data.absolute_y - Data_CityView.heightInTiles) {
-            data.absolute_y = Data_CityView.heightInTiles + Data_CityView.yInTiles - height_tiles;
+        if (camera_y < data.absolute_y) {
+            data.absolute_y = camera_y;
+        } else if (camera_y > height_tiles + data.absolute_y - Data_CityView.heightInTiles) {
+            data.absolute_y = Data_CityView.heightInTiles + camera_y - height_tiles;
         }
     }
     // ensure even height
