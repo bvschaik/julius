@@ -3,6 +3,10 @@
 
 #include "core/buffer.h"
 
+// TODO get rid of these
+#define VIEW_X_MAX 165
+#define VIEW_Y_MAX 325
+
 typedef void (map_callback)(int x, int y, int grid_offset);
 
 void city_view_init();
@@ -51,5 +55,7 @@ void city_view_load_scenario_state(buffer *camera);
 void city_view_foreach_map_tile(map_callback *callback);
 
 void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2, map_callback *callback3);
+
+void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, map_callback *callback);
 
 #endif // CITY_VIEW_H

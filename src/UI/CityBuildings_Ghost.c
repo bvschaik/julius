@@ -21,7 +21,6 @@
 #include "map/water.h"
 
 #include "Data/CityInfo.h"
-#include "Data/CityView.h"
 #include "Data/State.h"
 
 static void drawFlatTile(int xOffset, int yOffset, color_t mask);

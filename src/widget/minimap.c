@@ -13,7 +13,6 @@
 #include "scenario/property.h"
 #include "widget/sidebar.h"
 
-#include "Data/CityView.h"
 #include "Data/State.h"
 
 enum {
@@ -40,27 +39,12 @@ static struct {
     } mouse;
 } data;
 
-static void foreach_map_tile(void (*callback)(int x_view, int y_view, int grid_offset))
+static void foreach_map_tile(map_callback *callback)
 {
-    int odd = 0;
-    int y_abs = data.absolute_y - 4;
-    int y_view = data.y_offset - 4;
-    for (int y_rel = -4; y_rel < data.height_tiles + 4; y_rel++, y_abs++, y_view++) {
-        int x_view;
-        if (odd) {
-            x_view = data.x_offset - 9;
-            odd = 0;
-        } else {
-            x_view = data.x_offset - 8;
-            odd = 1;
-        }
-        int x_abs = data.absolute_x - 4;
-        for (int x_rel = -4; x_rel < data.width_tiles; x_rel++, x_abs++, x_view += 2) {
-            if (x_abs >= 0 && x_abs < VIEW_X_MAX && y_abs >= 0 && y_abs < VIEW_Y_MAX) {
-                callback(x_view, y_view, ViewToGridOffset(x_abs, y_abs));
-            }
-        }
-    }    
+    city_view_foreach_minimap_tile(data.x_offset, data.y_offset,
+                                   data.absolute_x, data.absolute_y,
+                                   data.width_tiles, data.height_tiles,
+                                   callback);
 }
 
 static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_tiles)
