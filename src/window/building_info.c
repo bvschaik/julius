@@ -37,7 +37,6 @@
 #include "window/building/utility.h"
 
 #include "Data/CityInfo.h"
-#include "Data/CityView.h"
 
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
@@ -146,11 +145,12 @@ static int get_height_id()
     return 0;
 }
 
-static int get_city_x_offset()
+static int center_in_city(int element_width_pixels)
 {
     int x, y, width, height;
     city_view_get_viewport(&x, &y, &width, &height);
-    return x;
+    int margin = (width - element_width_pixels) / 2;
+    return x + margin;
 }
 
 static void init(int grid_offset)
@@ -334,8 +334,7 @@ static void init(int grid_offset)
             context.y_offset = 32;
         }
     }
-    int border = (Data_CityView.widthInPixels - 16 * context.width_blocks) / 2;
-    context.x_offset = get_city_x_offset() + border;
+    context.x_offset = center_in_city(16 * context.width_blocks);
 }
 
 static void draw_background()

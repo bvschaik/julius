@@ -1,5 +1,6 @@
 #include "overlay_menu.h"
 
+#include "city/view.h"
 #include "core/time.h"
 #include "game/state.h"
 #include "graphics/generic_button.h"
@@ -8,8 +9,6 @@
 #include "graphics/panel.h"
 #include "graphics/window.h"
 #include "window/city.h"
-
-#include "Data/CityView.h"
 
 static void button_menu_item(int index, int param2);
 static void button_submenu_item(int index, int param2);
@@ -72,10 +71,17 @@ static void draw_background()
     window_city_draw_panels();
 }
 
+static int get_sidebar_x_offset()
+{
+    int view_x, view_y, view_width, view_height;
+    city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
+    return view_x + view_width;
+}
+
 static void draw_foreground()
 {
     window_city_draw();
-    int x_offset = Data_CityView.widthInPixels;
+    int x_offset = get_sidebar_x_offset();
     for (int i = 0; i < 8; i++) {
         label_draw(x_offset - 170, 74 + 24 * i, 10, data.menu_focus_button_id == i + 1 ? 1 : 2);
         lang_text_draw_centered(14, MENU_ID_TO_OVERLAY[i], x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
@@ -120,13 +126,13 @@ static void handle_mouse(const mouse *m)
         window_city_show();
         return;
     }
-    generic_buttons_handle_mouse(m, Data_CityView.widthInPixels - 170, 72,
-                                 menu_buttons, 8, &data.menu_focus_button_id);
+    int x_offset = get_sidebar_x_offset();
+    generic_buttons_handle_mouse(m, x_offset - 170, 72, menu_buttons, 8, &data.menu_focus_button_id);
 
     handle_submenu();
     if (data.selected_submenu) {
         generic_buttons_handle_mouse(
-            m, Data_CityView.widthInPixels - 348, 72 + 24 * data.selected_menu,
+            m, x_offset - 348, 72 + 24 * data.selected_menu,
             submenu_buttons, data.num_submenu_items, &data.submenu_focus_button_id);
     }
 }

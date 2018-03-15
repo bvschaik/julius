@@ -5,16 +5,6 @@
 #define VIEW_Y_MAX 325
 
 extern struct _Data_CityView {
-	int xOffsetInPixels;
-	int yOffsetInPixels;
-	int widthInPixels;
-	int heightInPixels;
-
-	int xInTiles;
-	int yInTiles;
-	int widthInTiles;
-	int heightInTiles;
-
 	int viewToGridOffsetLookup[VIEW_X_MAX][VIEW_Y_MAX];
 
 	// frequently updated

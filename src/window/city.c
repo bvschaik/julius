@@ -13,12 +13,18 @@
 #include "widget/sidebar.h"
 #include "widget/top_menu.h"
 
-#include "Data/CityView.h"
-
 static void draw_background()
 {
     widget_sidebar_draw_background();
     widget_top_menu_draw(1);
+}
+
+static int center_in_city(int element_width_pixels)
+{
+    int x, y, width, height;
+    city_view_get_viewport(&x, &y, &width, &height);
+    int margin = (width - element_width_pixels) / 2;
+    return x + margin;
 }
 
 static void draw_paused_and_time_left()
@@ -47,9 +53,9 @@ static void draw_paused_and_time_left()
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
     }
     if (game_state_is_paused()) {
-        int width = Data_CityView.widthInPixels;
-        outer_panel_draw((width - 448) / 2, 40, 28, 3);
-        lang_text_draw_centered(13, 2, (width - 448) / 2, 58, 448, FONT_NORMAL_BLACK);
+        int x_offset = center_in_city(448);
+        outer_panel_draw(x_offset, 40, 28, 3);
+        lang_text_draw_centered(13, 2, x_offset, 58, 448, FONT_NORMAL_BLACK);
     }
 }
 

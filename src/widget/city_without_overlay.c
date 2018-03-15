@@ -17,7 +17,6 @@
 #include "UI/CityBuildings_private.h"
 #include "Data/State.h"
 #include "Data/CityInfo.h"
-#include "Data/CityView.h"
 
 static struct {
     time_millis last_water_animation_time;
@@ -63,9 +62,11 @@ static void draw_footprint(int x, int y, int grid_offset)
             if (b->isDeleted) {
                 color_mask = COLOR_MASK_RED;
             }
-            if (x < 4) {
+            int view_x, view_y, view_width, view_height;
+            city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
+            if (x < view_x + 100) {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
-            } else if (x > Data_CityView.widthInTiles + 2) {
+            } else if (x > view_x + view_width - 100) {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_RIGHT);
             } else {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);

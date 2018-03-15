@@ -32,6 +32,7 @@ void city_view_rotate_right();
 void city_view_set_viewport(int screen_width, int screen_height);
 
 void city_view_get_viewport(int *x, int *y, int *width, int *height);
+void city_view_get_viewport_size_tiles(int *width, int *height);
 
 int city_view_is_sidebar_collapsed();
 

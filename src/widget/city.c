@@ -34,10 +34,6 @@ static void set_city_clip_rectangle()
 
 void widget_city_draw()
 {
-    int x, y;
-    city_view_get_camera(&x, &y);
-    Data_CityView.xInTiles = x;
-    Data_CityView.yInTiles = y;
     set_city_clip_rectangle();
 
     if (game_state_overlay()) {
@@ -51,10 +47,6 @@ void widget_city_draw()
 
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord)
 {
-    int x, y;
-    city_view_get_camera(&x, &y);
-    Data_CityView.xInTiles = x;
-    Data_CityView.yInTiles = y;
     set_city_clip_rectangle();
 
     city_without_overlay_draw(figure_id, coord);

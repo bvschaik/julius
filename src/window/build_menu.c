@@ -3,6 +3,7 @@
 #include "building/construction.h"
 #include "building/menu.h"
 #include "building/model.h"
+#include "city/view.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -13,7 +14,6 @@
 #include "widget/sidebar.h"
 #include "window/city.h"
 
-#include "Data/CityView.h"
 #include "Data/State.h"
 
 static void button_menu_index(int param1, int param2);
@@ -135,9 +135,16 @@ static void draw_background()
     window_city_draw_panels();
 }
 
+static int get_sidebar_x_offset()
+{
+    int view_x, view_y, view_width, view_height;
+    city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
+    return view_x + view_width;
+}
+
 static void draw_menu_buttons()
 {
-    int x_offset = Data_CityView.widthInPixels;
+    int x_offset = get_sidebar_x_offset();
     int item_index = -1;
     for (int i = 0; i < data.num_items; i++) {
         item_index = building_menu_next_index(data.selected_submenu, item_index);
@@ -166,7 +173,7 @@ static void draw_foreground()
 static int handle_build_submenu(const mouse *m)
 {
     return generic_buttons_handle_mouse(
-        m, Data_CityView.widthInPixels - 258, data.y_offset + 110,
+        m, get_sidebar_x_offset() - 258, data.y_offset + 110,
                build_menu_buttons, data.num_items, &data.focus_button_id);
 }
 

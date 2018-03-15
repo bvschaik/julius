@@ -76,18 +76,21 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
 
     int camera_x, camera_y;
     city_view_get_camera(&camera_x, &camera_y);
+    int view_width_tiles, view_height_tiles;
+    city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
+
     if ((Data_State.map.width - width_tiles) / 2 > 0) {
         if (camera_x < data.absolute_x) {
             data.absolute_x = camera_x;
-        } else if (camera_x > width_tiles + data.absolute_x - Data_CityView.widthInTiles) {
-            data.absolute_x = Data_CityView.widthInTiles + camera_x - width_tiles;
+        } else if (camera_x > width_tiles + data.absolute_x - view_width_tiles) {
+            data.absolute_x = view_width_tiles + camera_x - width_tiles;
         }
     }
     if ((2 * Data_State.map.height - height_tiles) / 2 > 0) {
         if (camera_y < data.absolute_y) {
             data.absolute_y = camera_y;
-        } else if (camera_y > height_tiles + data.absolute_y - Data_CityView.heightInTiles) {
-            data.absolute_y = Data_CityView.heightInTiles + camera_y - height_tiles;
+        } else if (camera_y > height_tiles + data.absolute_y - view_height_tiles) {
+            data.absolute_y = view_height_tiles + camera_y - height_tiles;
         }
     }
     // ensure even height
@@ -197,17 +200,22 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
 
 static void draw_viewport_rectangle()
 {
-    int x_offset = data.x_offset + 2 * (Data_CityView.xInTiles - data.absolute_x) - 2;
+    int camera_x, camera_y;
+    city_view_get_camera(&camera_x, &camera_y);
+    int view_width_tiles, view_height_tiles;
+    city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
+
+    int x_offset = data.x_offset + 2 * (camera_x - data.absolute_x) - 2;
     if (x_offset < data.x_offset) {
         x_offset = data.x_offset;
     }
-    if (x_offset + 2 * Data_CityView.widthInTiles + 4 > data.x_offset + data.width_tiles) {
+    if (x_offset + 2 * view_width_tiles + 4 > data.x_offset + data.width_tiles) {
         x_offset -= 2;
     }
-    int y_offset = data.y_offset + Data_CityView.yInTiles - data.absolute_y + 2;
+    int y_offset = data.y_offset + camera_y - data.absolute_y + 2;
     graphics_draw_rect(x_offset, y_offset,
-        Data_CityView.widthInTiles * 2 + 4,
-        Data_CityView.heightInTiles - 4,
+        view_width_tiles * 2 + 4,
+        view_height_tiles - 4,
         COLOR_YELLOW);
 }
 
