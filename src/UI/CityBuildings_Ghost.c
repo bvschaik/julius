@@ -8,6 +8,7 @@
 #include "city/view.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
+#include "input/scroll.h"
 #include "map/bridge.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -84,7 +85,7 @@ static const int hippodromeYViewOffsets[4] = {75, -75, -75, 75};
 
 void UI_CityBuildings_drawSelectedBuildingGhost()
 {
-	if (!Data_State.map.current.gridOffset || Data_CityView.isScrolling) {
+	if (!Data_State.map.current.gridOffset || scroll_in_progress()) {
 		return;
 	}
 	building_type type = building_construction_type();

@@ -8,4 +8,4 @@ struct _Data_CityInfo_Resource Data_CityInfo_Resource;
 
 struct _Data_State Data_State;
 
-struct Data_CityView Data_CityView;
+struct _Data_CityView Data_CityView;

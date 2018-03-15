@@ -4,7 +4,7 @@
 #define VIEW_X_MAX 165
 #define VIEW_Y_MAX 325
 
-extern struct Data_CityView {
+extern struct _Data_CityView {
 	int xOffsetInPixels;
 	int yOffsetInPixels;
 	int widthInPixels;
@@ -22,7 +22,6 @@ extern struct Data_CityView {
 		int xOffsetInPixels;
 		int yOffsetInPixels;
 	} selectedTile;
-	int isScrolling;
 } Data_CityView;
 
 #define ViewToGridOffset(x,y) (Data_CityView.viewToGridOffsetLookup[x][y])
