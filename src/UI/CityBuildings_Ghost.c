@@ -23,7 +23,9 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
-static const int xViewOffsets[25] = {
+#define MAX_TILES 25
+
+static const int xViewOffsets[MAX_TILES] = {
 	0,
 	-30, 30, 0,
 	-60, 60, -30, 30, 0,
@@ -31,7 +33,7 @@ static const int xViewOffsets[25] = {
 	-120, 120, -90, 90, -60, 60, -30, 30, 0
 };
 
-static const int yViewOffsets[25] = {
+static const int yViewOffsets[MAX_TILES] = {
 	0,
 	15, 15, 30,
 	30, 30, 45, 45, 60,
@@ -39,7 +41,7 @@ static const int yViewOffsets[25] = {
 	60, 60, 75, 75, 90, 90, 105, 105, 120
 };
 
-static const int tileGridOffsets[4][25] = {
+static const int tileGridOffsets[4][MAX_TILES] = {
 	{0,
 	162, 1, 163,
 	324, 2, 325, 164, 326,
@@ -72,6 +74,38 @@ static const int hippodromeYViewOffsets[4] = {75, -75, -75, 75};
 static void drawFlatTile(int xOffset, int yOffset, color_t mask)
 {
     image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), xOffset, yOffset, mask);
+}
+
+static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_tiles)
+{
+    int orientation_index = city_view_orientation() / 2;
+    int blocked = 0;
+    for (int i = 0; i < num_tiles; i++) {
+        int tile_offset = grid_offset + tileGridOffsets[orientation_index][i];
+        int tile_blocked = 0;
+        if (map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR)) {
+            tile_blocked = 1;
+        }
+        if (map_has_figure_at(tile_offset)) {
+            tile_blocked = 1;
+        }
+        blocked_tiles[i] = tile_blocked;
+        blocked += tile_blocked;
+    }
+    return blocked;
+}
+
+static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tiles, int *blocked_tiles)
+{
+    for (int i = 0; i < num_tiles; i++) {
+        int x_offset = x + xViewOffsets[i];
+        int y_offset = y + yViewOffsets[i];
+        if (fully_blocked || blocked_tiles[i]) {
+            drawFlatTile(x_offset, y_offset, COLOR_MASK_RED);
+        } else {
+            drawFlatTile(x_offset, y_offset, COLOR_MASK_GREEN);
+        }
+    }
 }
 
 static void draw_building(int image_id, int x, int y)
@@ -393,44 +427,23 @@ static void drawBuildingGhostFountain(int xOffset, int yOffset)
 
 static void drawBuildingGhostBathhouse(int xOffsetBase, int yOffsetBase)
 {
-	int fullyObstructed = 0;
-	int placementObstructed = 0;
-	int gridOffset = Data_State.map.current.gridOffset;
-	int numTiles = 4;
-	int orientationIndex = city_view_orientation() / 2;
-	for (int i = 0; i < numTiles; i++) {
-		int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
-		if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-			placementObstructed = 1;
-		}
-		if (map_has_figure_at(tileOffset)) {
-			placementObstructed = 1;
-		}
-	}
+    int gridOffset = Data_State.map.current.gridOffset;
+    int numTiles = 4;
+    int blocked_tiles[4];
+    int blocked = is_blocked_for_building(gridOffset, numTiles, blocked_tiles);
+    int fully_blocked = 0;
 	if (city_finance_out_of_money()) {
-		fullyObstructed = 1;
-		placementObstructed = 1;
+		fully_blocked = 1;
+		blocked = 1;
 	}
 
-	if (placementObstructed) {
-		for (int i = 0; i < numTiles; i++) {
-			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
-			int tileObstructed = map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR);
-			if (map_has_figure_at(tileOffset)) {
-				tileObstructed = 1;
-			}
-			int xOffset = xOffsetBase + xViewOffsets[i];
-			int yOffset = yOffsetBase + yViewOffsets[i];
-			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
-			} else {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
-			}
-		}
+	if (blocked) {
+        draw_partially_blocked(xOffsetBase, yOffsetBase, fully_blocked, numTiles, blocked_tiles);
 	} else {
 		int graphicId = image_group(building_properties_for_type(BUILDING_BATHHOUSE)->image_group);
 		draw_building(graphicId, xOffsetBase, yOffsetBase);
 		int hasWater = 0;
+        int orientationIndex = city_view_orientation() / 2;
 		for (int i = 0; i < numTiles; i++) { // FIXED: was not accurate on rotated maps
 			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
 			if (map_terrain_is(tileOffset, TERRAIN_RESERVOIR_RANGE)) {
@@ -686,10 +699,10 @@ static void drawBuildingGhostBridge(int xOffsetBase, int yOffsetBase, building_t
 static void drawBuildingGhostFort(int xOffsetBase, int yOffsetBase)
 {
 	int fullyObstructed = 0;
-	int placementObstructed = 0;
+	int blocked = 0;
 	if (formation_get_num_legions_cached() >= 6 || city_finance_out_of_money()) {
 		fullyObstructed = 1;
-		placementObstructed = 1;
+		blocked = 1;
 	}
 
 	int numTilesFort = building_properties_for_type(BUILDING_FORT)->size;
@@ -700,62 +713,28 @@ static void drawBuildingGhostFort(int xOffsetBase, int yOffsetBase)
 	int orientationIndex = city_view_orientation() / 2;
 	int gridOffsetFort = Data_State.map.current.gridOffset;
 	int gridOffsetGround = gridOffsetFort + fortGroundGridOffsets[orientationIndex];
-
-	for (int i = 0; i < numTilesFort; i++) {
-		int tileOffset = gridOffsetFort + tileGridOffsets[orientationIndex][i];
-		if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-			placementObstructed = 1;
-		}
-	}
-	for (int i = 0; i < numTilesGround; i++) {
-		int tileOffset = gridOffsetGround + tileGridOffsets[orientationIndex][i];
-		if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-			placementObstructed = 1;
-		}
-	}
+    int blocked_tiles_fort[MAX_TILES];
+    int blocked_tiles_ground[MAX_TILES];
+    
+    blocked += is_blocked_for_building(gridOffsetFort, numTilesFort, blocked_tiles_fort);
+    blocked += is_blocked_for_building(gridOffsetGround, numTilesGround, blocked_tiles_ground);
 
 	int xOffsetGround = xOffsetBase + fortGroundXViewOffsets[orientationIndex];
 	int yOffsetGround = yOffsetBase + fortGroundYViewOffsets[orientationIndex];
 
-	if (placementObstructed) {
-		for (int i = 0; i < numTilesFort; i++) {
-			int tileOffset = gridOffsetFort + tileGridOffsets[orientationIndex][i];
-			int tileObstructed = 0;
-			if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-				tileObstructed = 1;
-			}
-			int xOffset = xOffsetBase + xViewOffsets[i];
-			int yOffset = yOffsetBase + yViewOffsets[i];
-			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
-			} else {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
-			}
-		}
-		for (int i = 0; i < numTilesGround; i++) {
-			int tileOffset = gridOffsetGround + tileGridOffsets[orientationIndex][i];
-			int tileObstructed = 0;
-			if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-				tileObstructed = 1;
-			}
-			int xOffset = xOffsetGround + xViewOffsets[i];
-			int yOffset = yOffsetGround + yViewOffsets[i];
-			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
-			} else {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
-			}
-		}
+	if (blocked) {
+        draw_partially_blocked(xOffsetBase, yOffsetBase, fullyObstructed, numTilesFort, blocked_tiles_fort);
+        draw_partially_blocked(xOffsetGround, yOffsetGround, fullyObstructed, numTilesGround, blocked_tiles_ground);
 	} else {
-		int graphicId = image_group(GROUP_BUILDING_FORT);
+		int image_id = image_group(GROUP_BUILDING_FORT);
 		if (orientationIndex == 0 || orientationIndex == 3) {
 			// draw fort first, then ground
-			draw_building(graphicId, xOffsetBase, yOffsetBase);
-			draw_building(graphicId + 1, xOffsetGround, yOffsetGround);
+			draw_building(image_id, xOffsetBase, yOffsetBase);
+			draw_building(image_id + 1, xOffsetGround, yOffsetGround);
 		} else {
 			// draw ground first, then fort
-			draw_building(graphicId + 1, xOffsetGround, yOffsetGround);
-			draw_building(graphicId, xOffsetBase, yOffsetBase);
+			draw_building(image_id + 1, xOffsetGround, yOffsetGround);
+			draw_building(image_id, xOffsetBase, yOffsetBase);
 		}
 	}
 }
@@ -773,98 +752,47 @@ static void drawBuildingGhostHippodrome(int xOffsetBase1, int yOffsetBase1)
 	int gridOffset1 = Data_State.map.current.gridOffset;
 	int gridOffset2 = gridOffset1 + map_grid_delta(5, 0);
 	int gridOffset3 = gridOffset1 + map_grid_delta(10, 0);
-
-	for (int i = 0; i < numTiles; i++) {
-		int tileOffset = gridOffset1 + tileGridOffsets[orientationIndex][i];
-		if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-			placementObstructed = 1;
-		}
-	}
-	for (int i = 0; i < numTiles; i++) {
-		int tileOffset = gridOffset2 + tileGridOffsets[orientationIndex][i];
-		if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-			placementObstructed = 1;
-		}
-	}
-	for (int i = 0; i < numTiles; i++) {
-		int tileOffset = gridOffset3 + tileGridOffsets[orientationIndex][i];
-		if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-			placementObstructed = 1;
-		}
-	}
+    
+    int blocked_tiles1[25];
+    int blocked_tiles2[25];
+    int blocked_tiles3[25];
+    placementObstructed += is_blocked_for_building(gridOffset1, numTiles, blocked_tiles1);
+    placementObstructed += is_blocked_for_building(gridOffset2, numTiles, blocked_tiles2);
+    placementObstructed += is_blocked_for_building(gridOffset3, numTiles, blocked_tiles3);
 
 	int xOffsetBase2 = xOffsetBase1 + hippodromeXViewOffsets[orientationIndex];
 	int yOffsetBase2 = yOffsetBase1 + hippodromeYViewOffsets[orientationIndex];
 	int xOffsetBase3 = xOffsetBase2 + hippodromeXViewOffsets[orientationIndex];
 	int yOffsetBase3 = yOffsetBase2 + hippodromeYViewOffsets[orientationIndex];
 	if (placementObstructed) {
-		for (int i = 0; i < numTiles; i++) {
-			int tileOffset = gridOffset1 + tileGridOffsets[orientationIndex][i];
-			int tileObstructed = 0;
-			if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-				tileObstructed = 1;
-			}
-			int xOffset = xOffsetBase1 + xViewOffsets[i];
-			int yOffset = yOffsetBase1 + yViewOffsets[i];
-			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
-			} else {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
-			}
-		}
-		for (int i = 0; i < numTiles; i++) {
-			int tileOffset = gridOffset2 + tileGridOffsets[orientationIndex][i];
-			int tileObstructed = 0;
-			if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-				tileObstructed = 1;
-			}
-			int xOffset = xOffsetBase2 + xViewOffsets[i];
-			int yOffset = yOffsetBase2 + yViewOffsets[i];
-			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
-			} else {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
-			}
-		}
-		for (int i = 0; i < numTiles; i++) {
-			int tileOffset = gridOffset3 + tileGridOffsets[orientationIndex][i];
-			int tileObstructed = 0;
-			if (map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
-				tileObstructed = 1;
-			}
-			int xOffset = xOffsetBase3 + xViewOffsets[i];
-			int yOffset = yOffsetBase3 + yViewOffsets[i];
-			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
-			} else {
-				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
-			}
-		}
+        draw_partially_blocked(xOffsetBase1, yOffsetBase1, fullyObstructed, numTiles, blocked_tiles1);
+        draw_partially_blocked(xOffsetBase2, yOffsetBase2, fullyObstructed, numTiles, blocked_tiles2);
+        draw_partially_blocked(xOffsetBase3, yOffsetBase3, fullyObstructed, numTiles, blocked_tiles3);
 	} else {
 		if (orientationIndex == 0) {
-			int graphicId = image_group(GROUP_BUILDING_HIPPODROME_2);
+			int image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
 			// part 1, 2, 3
-			draw_building(graphicId, xOffsetBase1, yOffsetBase1);
-			draw_building(graphicId + 2, xOffsetBase2, yOffsetBase2);
-			draw_building(graphicId + 4, xOffsetBase3, yOffsetBase3);
+			draw_building(image_id, xOffsetBase1, yOffsetBase1);
+			draw_building(image_id + 2, xOffsetBase2, yOffsetBase2);
+			draw_building(image_id + 4, xOffsetBase3, yOffsetBase3);
 		} else if (orientationIndex == 1) {
-			int graphicId = image_group(GROUP_BUILDING_HIPPODROME_1);
+			int image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
 			// part 3, 2, 1
-			draw_building(graphicId, xOffsetBase3, yOffsetBase3);
-			draw_building(graphicId + 2, xOffsetBase2, yOffsetBase2);
-			draw_building(graphicId + 4, xOffsetBase1, yOffsetBase1);
+			draw_building(image_id, xOffsetBase3, yOffsetBase3);
+			draw_building(image_id + 2, xOffsetBase2, yOffsetBase2);
+			draw_building(image_id + 4, xOffsetBase1, yOffsetBase1);
 		} else if (orientationIndex == 2) {
-			int graphicId = image_group(GROUP_BUILDING_HIPPODROME_2);
+			int image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
 			// part 1, 2, 3
-			draw_building(graphicId + 4, xOffsetBase1, yOffsetBase1);
-			draw_building(graphicId + 2, xOffsetBase2, yOffsetBase2);
-			draw_building(graphicId, xOffsetBase3, yOffsetBase3);
+			draw_building(image_id + 4, xOffsetBase1, yOffsetBase1);
+			draw_building(image_id + 2, xOffsetBase2, yOffsetBase2);
+			draw_building(image_id, xOffsetBase3, yOffsetBase3);
 		} else if (orientationIndex == 3) {
-			int graphicId = image_group(GROUP_BUILDING_HIPPODROME_1);
+			int image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
 			// part 3, 2, 1
-			draw_building(graphicId + 4, xOffsetBase3, yOffsetBase3);
-			draw_building(graphicId + 2, xOffsetBase2, yOffsetBase2);
-			draw_building(graphicId, xOffsetBase1, yOffsetBase1);
+			draw_building(image_id + 4, xOffsetBase3, yOffsetBase3);
+			draw_building(image_id + 2, xOffsetBase2, yOffsetBase2);
+			draw_building(image_id, xOffsetBase1, yOffsetBase1);
 		}
 	}
 }
@@ -884,21 +812,21 @@ static void drawBuildingGhostShipyardWharf(int xOffsetBase, int yOffsetBase, bui
 		}
 	} else {
         const building_properties *props = building_properties_for_type(type);
-		int graphicId = image_group(props->image_group) + props->image_offset + dirRelative;
-		draw_building(graphicId, xOffsetBase, yOffsetBase);
+		int image_id = image_group(props->image_group) + props->image_offset + dirRelative;
+		draw_building(image_id, xOffsetBase, yOffsetBase);
 	}
 }
 
 static void drawBuildingGhostDock(int xOffsetBase, int yOffsetBase)
 {
 	int dirAbsolute, dirRelative;
-	int blockedTiles = map_water_determine_orientation_size3(
+	int blocked = map_water_determine_orientation_size3(
 		Data_State.map.current.x, Data_State.map.current.y, 1,
 		&dirAbsolute, &dirRelative);
 	if (city_finance_out_of_money()) {
-		blockedTiles = 999;
+		blocked = 1;
 	}
-	if (blockedTiles) {
+	if (blocked) {
 		for (int i = 0; i < 9; i++) {
 			drawFlatTile(xOffsetBase + xViewOffsets[i], yOffsetBase + yViewOffsets[i], COLOR_MASK_RED);
 		}
@@ -916,32 +844,32 @@ static void drawBuildingGhostDock(int xOffsetBase, int yOffsetBase)
 
 static void drawBuildingGhostRoad(int xOffset, int yOffset)
 {
-	int tileObstructed = 0;
+	int blocked = 0;
 	int gridOffset = Data_State.map.current.gridOffset;
-	int graphicId;
+	int image_id;
 	if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
-		graphicId = image_group(GROUP_BUILDING_AQUEDUCT);
+		image_id = image_group(GROUP_BUILDING_AQUEDUCT);
 		if (map_can_place_road_under_aqueduct(gridOffset)) {
-			graphicId += map_get_aqueduct_with_road_image(gridOffset);
+			image_id += map_get_aqueduct_with_road_image(gridOffset);
 		} else {
-			tileObstructed = 1;
+			blocked = 1;
 		}
 	} else if (map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
-		tileObstructed = 1;
+		blocked = 1;
 	} else {
-		graphicId = image_group(GROUP_TERRAIN_ROAD);
+		image_id = image_group(GROUP_TERRAIN_ROAD);
 		if (!map_terrain_has_adjacent_x_with_type(gridOffset, TERRAIN_ROAD) &&
 			map_terrain_has_adjacent_y_with_type(gridOffset, TERRAIN_ROAD)) {
-			graphicId++;
+			image_id++;
 		}
 	}
 	if (city_finance_out_of_money()) {
-		tileObstructed = 1;
+		blocked = 1;
 	}
-	if (tileObstructed) {
+	if (blocked) {
 		drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 	} else {
-		draw_building(graphicId, xOffset, yOffset);
+		draw_building(image_id, xOffset, yOffset);
 	}
 }
 
