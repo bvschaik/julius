@@ -14,6 +14,7 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
+#include "widget/city_bridge.h"
 #include "widget/city_figure.h"
 #include "widget/city_overlay.h"
 #include "widget/city_overlay_education.h"
