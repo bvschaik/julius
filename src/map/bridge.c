@@ -89,6 +89,108 @@ int map_bridge_calculate_length_direction(int x, int y, int *length, int *direct
     return 0;
 }
 
+static int get_pillar_distance(int length)
+{
+    switch (bridge.length) {
+        case  9:
+        case 10:
+            return 4;
+        case 11:
+        case 12:
+            return 5;
+        case 13:
+        case 14:
+            return 6;
+        case 15:
+        case 16:
+            return 7;
+        default:
+            return 8;
+    }
+}
+
+int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_bridge)
+{
+    int pillar_distance = get_pillar_distance(length);
+    if (is_ship_bridge) {
+        if (index == 1 || index == length - 2) {
+            // platform after ramp
+            return 0;
+        } else if (index == 0) {
+            // ramp at start
+            switch (direction) {
+                case DIR_0_TOP:
+                    return 7;
+                case DIR_2_RIGHT:
+                    return 8;
+                case DIR_4_BOTTOM:
+                    return 9;
+                case DIR_6_LEFT:
+                    return 10;
+            }
+        } else if (index == length - 1) {
+            // ramp at end
+            switch (direction) {
+                case DIR_0_TOP:
+                    return 9;
+                case DIR_2_RIGHT:
+                    return 10;
+                case DIR_4_BOTTOM:
+                    return 7;
+                case DIR_6_LEFT:
+                    return 8;
+            }
+        } else if (index == pillar_distance) {
+            if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM) {
+                return 14;
+            } else {
+                return 15;
+            }
+        } else {
+            // middle of the bridge
+            if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM) {
+                return 11;
+            } else {
+                return 12;
+            }
+        }
+    } else {
+        if (index == 0) {
+            // ramp at start
+            switch (direction) {
+                case DIR_0_TOP:
+                    return 1;
+                case DIR_2_RIGHT:
+                    return 2;
+                case DIR_4_BOTTOM:
+                    return 3;
+                case DIR_6_LEFT:
+                    return 4;
+            }
+        } else if (index == length - 1) {
+            // ramp at end
+            switch (direction) {
+                case DIR_0_TOP:
+                    return 3;
+                case DIR_2_RIGHT:
+                    return 4;
+                case DIR_4_BOTTOM:
+                    return 1;
+                case DIR_6_LEFT:
+                    return 2;
+            }
+        } else {
+            // middle part
+            if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM) {
+                return 5;
+            } else {
+                return 6;
+            }
+        }
+    }
+    return 0;
+}
+
 int map_bridge_add(int x, int y, int is_ship_bridge)
 {
     int min_length = is_ship_bridge ? 5 : 2;
@@ -97,86 +199,15 @@ int map_bridge_add(int x, int y, int is_ship_bridge)
         return bridge.length;
     }
 
-    int pillar_distance = 0;
     bridge.direction -= city_view_orientation();
-    if (bridge.direction < 0) bridge.direction += 8;
-    if (is_ship_bridge) {
-        switch (bridge.length) {
-            case  9: case 10: pillar_distance = 4; break;
-            case 11: case 12: pillar_distance = 5; break;
-            case 13: case 14: pillar_distance = 6; break;
-            case 15: case 16: pillar_distance = 7; break;
-            default: pillar_distance = 8; break;
-        }
+    if (bridge.direction < 0) {
+        bridge.direction += 8;
     }
 
     int grid_offset = map_grid_offset(x, y);
     for (int i = 0; i < bridge.length; i++) {
         map_terrain_add(grid_offset, TERRAIN_ROAD);
-        int value = 0;
-        if (is_ship_bridge) {
-            if (i == 1 || i == bridge.length - 2) {
-                // platform after ramp
-                value = 13;
-            } else if (i == 0) {
-                // ramp at start
-                switch (bridge.direction) {
-                    case 0: value = 7; break;
-                    case 2: value = 8; break;
-                    case 4: value = 9; break;
-                    case 6: value = 10; break;
-                }
-            } else if (i == bridge.length - 1) {
-                // ramp at end
-                switch (bridge.direction) {
-                    case 0: value = 9; break;
-                    case 2: value = 10; break;
-                    case 4: value = 7; break;
-                    case 6: value = 8; break;
-                }
-            } else if (i == pillar_distance) {
-                switch (bridge.direction) {
-                    case 0: value = 14; break;
-                    case 2: value = 15; break;
-                    case 4: value = 14; break;
-                    case 6: value = 15; break;
-                }
-            } else {
-                // middle of the bridge
-                switch (bridge.direction) {
-                    case 0: value = 11; break;
-                    case 2: value = 12; break;
-                    case 4: value = 11; break;
-                    case 6: value = 12; break;
-                }
-            }
-        } else {
-            if (i == 0) {
-                // ramp at start
-                switch (bridge.direction) {
-                case 0: value = 1; break;
-                case 2: value = 2; break;
-                case 4: value = 3; break;
-                case 6: value = 4; break;
-                }
-            } else if (i == bridge.length - 1) {
-                // ramp at end
-                switch (bridge.direction) {
-                case 0: value = 3; break;
-                case 2: value = 4; break;
-                case 4: value = 1; break;
-                case 6: value = 2; break;
-                }
-            } else {
-                // middle part
-                switch (bridge.direction) {
-                case 0: value = 5; break;
-                case 2: value = 6; break;
-                case 4: value = 5; break;
-                case 6: value = 6; break;
-                }
-            }
-        }
+        int value = map_bridge_get_sprite_id(i, bridge.length, bridge.direction, is_ship_bridge);
         map_sprite_bridge_set(grid_offset, value);
         grid_offset += bridge.direction_grid_delta;
     }
