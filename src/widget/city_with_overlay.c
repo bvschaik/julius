@@ -15,6 +15,7 @@
 #include "map/random.h"
 #include "map/terrain.h"
 #include "widget/city_bridge.h"
+#include "widget/city_building_ghost.h"
 #include "widget/city_figure.h"
 #include "widget/city_overlay.h"
 #include "widget/city_overlay_education.h"
@@ -24,7 +25,6 @@
 #include "widget/city_overlay_risks.h"
 #include "widget/city_without_overlay.h"
 
-#include "UI/CityBuildings_private.h"
 #include "Data/State.h"
 
 static const city_overlay *overlay = 0;
@@ -473,7 +473,7 @@ void city_with_overlay_draw()
         draw_top,
         draw_animation
     );
-    UI_CityBuildings_drawSelectedBuildingGhost();
+    city_building_ghost_draw();
     city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
 }
 

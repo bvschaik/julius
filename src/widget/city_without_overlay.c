@@ -13,9 +13,9 @@
 #include "map/terrain.h"
 #include "sound/city.h"
 #include "widget/city_bridge.h"
+#include "widget/city_building_ghost.h"
 #include "widget/city_figure.h"
 
-#include "UI/CityBuildings_private.h"
 #include "Data/State.h"
 #include "Data/CityInfo.h"
 
@@ -424,7 +424,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         draw_animation
     );
     if (!selected_figure_id) {
-        UI_CityBuildings_drawSelectedBuildingGhost();
+        city_building_ghost_draw();
     }
     city_view_foreach_valid_map_tile(
         draw_elevated_figures,
