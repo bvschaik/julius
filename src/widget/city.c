@@ -117,8 +117,7 @@ static int handle_right_click_allow_building_info()
 static int is_legion_click()
 {
     if (Data_State.map.current.gridOffset) {
-        int formation_id = formation_legion_at_grid_offset(
-            map_grid_offset(Data_State.map.current.x, Data_State.map.current.y));
+        int formation_id = formation_legion_at_grid_offset(Data_State.map.current.gridOffset);
         if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
             Data_State.selectedLegionFormationId = formation_id;
             window_city_military_show();
@@ -138,8 +137,7 @@ static void build_start()
 
 static void build_move()
 {
-    if (!building_construction_in_progress() ||
-        !Data_State.map.current.gridOffset) {
+    if (!building_construction_in_progress() || !Data_State.map.current.gridOffset) {
         return;
     }
     Data_State.selectedBuilding.gridOffsetEnd = Data_State.map.current.gridOffset;
@@ -198,8 +196,7 @@ static void military_map_click()
     if (m->in_distant_battle || m->cursed_by_mars) {
         return;
     }
-    int otherFormationId = formation_legion_at_building(
-        map_grid_offset(Data_State.map.current.x, Data_State.map.current.y));
+    int otherFormationId = formation_legion_at_building(Data_State.map.current.gridOffset);
     if (otherFormationId && otherFormationId == formationId) {
         formation_legion_return_home(m);
     } else {
