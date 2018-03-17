@@ -4,6 +4,7 @@
 #include "building/count.h"
 #include "building/industry.h"
 #include "building/properties.h"
+#include "city/buildings.h"
 #include "city/finance.h"
 #include "city/view.h"
 #include "figure/formation.h"
@@ -21,7 +22,6 @@
 #include "map/water.h"
 #include "widget/city_bridge.h"
 
-#include "Data/CityInfo.h"
 #include "Data/State.h"
 
 #define MAX_TILES 25
@@ -238,7 +238,7 @@ static int is_fully_blocked(building_type type, int building_size, int grid_offs
             return 1;
         }
     }
-    if (type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) {
+    if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
         return 1;
     }
     if (type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS)) {
@@ -543,7 +543,7 @@ static void draw_hippodrome(int x, int y)
 {
     int fully_blocked = 0;
     int blocked = 0;
-    if (Data_CityInfo.buildingHippodromePlaced || city_finance_out_of_money()) {
+    if (city_buildings_has_hippodrome() || city_finance_out_of_money()) {
         fully_blocked = 1;
         blocked = 1;
     }

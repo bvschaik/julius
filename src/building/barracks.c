@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "building/model.h"
+#include "city/buildings.h"
 #include "core/calc.h"
 #include "figure/action.h"
 #include "figure/figure.h"
@@ -24,10 +25,10 @@ int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_d
     if (building_count_active(BUILDING_BARRACKS) <= 0) {
         return 0;
     }
-    building *b = building_get(Data_CityInfo.buildingBarracksBuildingId);
+    building *b = building_get(city_buildings_get_barracks());
     if (b->loadsStored < 5 && Data_CityInfo.militaryLegionaryLegions > 0) {
         if (map_has_road_access(b->x, b->y, b->size, x_dst, y_dst) && b->roadNetworkId == road_network_id) {
-            return Data_CityInfo.buildingBarracksBuildingId;
+            return b->id;
         }
     }
     return 0;

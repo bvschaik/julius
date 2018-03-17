@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
+#include "city/buildings.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "empire/city.h"
@@ -212,6 +213,19 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
     return min_building_id;
 }
 
+static void get_trade_center_location(const figure *f, int *x, int *y)
+{
+    int trade_center_id = city_buildings_get_trade_center();
+    if (trade_center_id) {
+        building *trade_center = building_get(trade_center_id);
+        *x = trade_center->x;
+        *y = trade_center->y;
+    } else {
+        *x = f->x;
+        *y = f->y;
+    }
+}
+
 static int deliver_import_resource(figure *f, building *dock)
 {
     int ship_id = dock->data.other.boatFigureId;
@@ -223,14 +237,7 @@ static int deliver_import_resource(figure *f, building *dock)
         return 0;
     }
     int x, y;
-    if (Data_CityInfo.buildingTradeCenterBuildingId) {
-        building *trade_center = building_get(Data_CityInfo.buildingTradeCenterBuildingId);
-        x = trade_center->x;
-        y = trade_center->y;
-    } else {
-        x = f->x;
-        y = f->y;
-    }
+    get_trade_center_location(f, &x, &y);
     int x_tile, y_tile;
     int warehouse_id = get_closest_warehouse_for_import(x, y, ship->empireCityId,
                       dock->distanceFromEntry, dock->roadNetworkId, &x_tile, &y_tile);
@@ -258,14 +265,7 @@ static int fetch_export_resource(figure *f, building *dock)
         return 0;
     }
     int x, y;
-    if (Data_CityInfo.buildingTradeCenterBuildingId) {
-        building *trade_center = building_get(Data_CityInfo.buildingTradeCenterBuildingId);
-        x = trade_center->x;
-        y = trade_center->y;
-    } else {
-        x = f->x;
-        y = f->y;
-    }
+    get_trade_center_location(f, &x, &y);
     int x_tile, y_tile;
     int warehouse_id = get_closest_warehouse_for_export(x, y, ship->empireCityId,
         dock->distanceFromEntry, dock->roadNetworkId, &x_tile, &y_tile);

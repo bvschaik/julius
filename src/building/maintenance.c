@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/destruction.h"
 #include "building/list.h"
+#include "city/buildings.h"
 #include "city/message.h"
 #include "city/view.h"
 #include "city/warning.h"
@@ -261,8 +262,8 @@ void building_maintenance_check_rome_access()
                 }
             }
         } else if (b->type == BUILDING_WAREHOUSE) {
-            if (!Data_CityInfo.buildingTradeCenterBuildingId) {
-                Data_CityInfo.buildingTradeCenterBuildingId = i;
+            if (!city_buildings_get_trade_center()) {
+                city_buildings_set_trade_center(i);
             }
             b->distanceFromEntry = 0;
             int x_road, y_road;

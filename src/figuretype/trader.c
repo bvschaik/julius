@@ -4,6 +4,7 @@
 #include "building/dock.h"
 #include "building/warehouse.h"
 #include "building/storage.h"
+#include "city/buildings.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -352,8 +353,9 @@ void figure_trade_caravan_action(figure *f)
             if (f->waitTicks > 20) {
                 f->waitTicks = 0;
                 int x_base, y_base;
-                if (Data_CityInfo.buildingTradeCenterBuildingId) {
-                    building *trade_center = building_get(Data_CityInfo.buildingTradeCenterBuildingId);
+                int trade_center_id = city_buildings_get_trade_center();
+                if (trade_center_id) {
+                    building *trade_center = building_get(trade_center_id);
                     x_base = trade_center->x;
                     y_base = trade_center->y;
                 } else {

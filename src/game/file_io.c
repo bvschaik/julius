@@ -1,7 +1,5 @@
 #include "file_io.h"
 
-#include "Data/CityInfo.h"
-
 #include "building/barracks.h"
 #include "building/count.h"
 #include "building/list.h"

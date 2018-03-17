@@ -1,6 +1,7 @@
 #include "count.h"
 
 #include "building/building.h"
+#include "city/buildings.h"
 #include "figure/figure.h"
 
 #include "Data/CityInfo.h"
@@ -78,7 +79,7 @@ void building_count_update()
                 break;
 
             case BUILDING_BARRACKS:
-                Data_CityInfo.buildingBarracksBuildingId = i;
+                city_buildings_set_barracks(i);
                 increase_count(type, b->numWorkers > 0);
                 break;
 

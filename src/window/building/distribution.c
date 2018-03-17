@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
+#include "city/buildings.h"
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
@@ -362,7 +363,7 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
 
     // trade center
     button_border_draw(c->x_offset + 80, 414, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
-    int is_trade_center = c->building_id == Data_CityInfo.buildingTradeCenterBuildingId;
+    int is_trade_center = c->building_id == city_buildings_get_trade_center();
     lang_text_draw_centered(99, is_trade_center ? 11 : 12, c->x_offset + 80, 418, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 
     for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++) {
@@ -427,7 +428,7 @@ static void warehouse_orders(int index, int param2)
         int storage_id = building_get(data.building_id)->storage_id;
         building_storage_toggle_empty_all(storage_id);
     } else if (index == 1) {
-        Data_CityInfo.buildingTradeCenterBuildingId = data.building_id;
+        city_buildings_set_trade_center(data.building_id);
     }
     window_invalidate();
 }

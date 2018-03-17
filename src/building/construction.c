@@ -10,6 +10,7 @@
 #include "building/model.h"
 #include "building/properties.h"
 #include "building/warehouse.h"
+#include "city/buildings.h"
 #include "city/finance.h"
 #include "city/view.h"
 #include "city/warning.h"
@@ -533,9 +534,9 @@ void building_construction_update(int x, int y)
     } else if (Data_State.selectedBuilding.wallRequired) {
         map_terrain_all_tiles_in_radius_are(x, y, 2, 0, TERRAIN_WALL);
     } else {
-        if (!(type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) &&
+        if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
             !(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
-            !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && Data_CityInfo.buildingDistributionCenterPlaced)) {
+            !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center())) {
             int size = building_properties_for_type(type)->size;
             map_building_tiles_mark_construction(x, y, size, TERRAIN_ALL, 0);
         }

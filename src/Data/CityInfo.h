@@ -66,10 +66,6 @@ extern struct _Data_CityInfo {
 	uint8_t exitPointX;
 	uint8_t exitPointY;
 	int16_t exitPointGridOffset;
-	uint8_t buildingSenateX;
-	uint8_t buildingSenateY;
-	int16_t buildingSenateGridOffset;
-	int32_t buildingSenateBuildingId;
 	int16_t __unknown_2828;
 	int16_t resourceSpaceInWarehouses[16];
 	int16_t resourceStored[16];
@@ -178,7 +174,6 @@ extern struct _Data_CityInfo {
 	int32_t housesRequiringBathhouseToEvolve;
 	int32_t housesRequiringFoodToEvolve;
 	int32_t __unknown_4294[2];
-	int32_t buildingHippodromePlaced;
 	int32_t housesRequiringClinicToEvolve;
 	int32_t housesRequiringHospitalToEvolve;
 	int32_t housesRequiringBarber;
@@ -238,7 +233,6 @@ extern struct _Data_CityInfo {
 	int16_t tradeSeaProblemDuration;
 	int16_t tradeLandProblemDuration;
 	int16_t numWorkingDocks;
-	int16_t buildingSenatePlaced;
 	int16_t numWorkingWharfs;
 	int8_t __padding_43b2[2];
 	int16_t financeStolenThisYear;
@@ -248,11 +242,6 @@ extern struct _Data_CityInfo {
 	int32_t debtState;
 	int32_t monthsInDebt;
 	int32_t cheatedMoney;
-	int8_t buildingBarracksX;
-	int8_t buildingBarracksY;
-	int16_t buildingBarracksGridOffset;
-	int32_t buildingBarracksBuildingId;
-	int32_t buildingBarracksPlaced;
 	int32_t __unknown_43d8[5];
 	int32_t populationLostTroopRequest;
 	int32_t __unknown_43f0;
@@ -325,11 +314,6 @@ extern struct _Data_CityInfo {
 	int32_t riotCause;
 	int32_t estimatedTaxIncome;
 	int32_t tutorial1SenateBuilt;
-	int8_t buildingDistributionCenterX;
-	int8_t buildingDistributionCenterY;
-	int16_t buildingDistributionCenterGridOffset;
-	int32_t buildingDistributionCenterBuildingId;
-	int32_t buildingDistributionCenterPlaced;
 	int32_t __unused_4524[11];
 	int32_t shipyardBoatsRequested;
 	int32_t numEnemiesInCity;
@@ -363,7 +347,6 @@ extern struct _Data_CityInfo {
 	uint8_t dieSoundCitizen;
 	uint8_t dieSoundSoldier;
 	int8_t soundShootArrow;
-	int32_t buildingTradeCenterBuildingId;
 	int32_t numSoldiersInCity;
 	int8_t soundHitSoldier;
 	int8_t soundHitSpear;
@@ -401,6 +384,24 @@ extern struct _Data_CityInfo {
 	int32_t tutorial3DiseaseMessageShown;
 	int32_t numAttackingNativesInCity;
 	int8_t __unknown_464c[232];
+
+    int16_t buildingSenatePlaced;
+    uint8_t buildingSenateX;
+    uint8_t buildingSenateY;
+    int16_t buildingSenateGridOffset;
+    int32_t buildingSenateBuildingId;
+    int32_t buildingHippodromePlaced;
+    int8_t buildingBarracksX;
+    int8_t buildingBarracksY;
+    int16_t buildingBarracksGridOffset;
+    int32_t buildingBarracksBuildingId;
+    int32_t buildingBarracksPlaced;
+    int8_t buildingDistributionCenterX;
+    int8_t buildingDistributionCenterY;
+    int16_t buildingDistributionCenterGridOffset;
+    int32_t buildingDistributionCenterBuildingId;
+    int32_t buildingDistributionCenterPlaced;
+    int32_t buildingTradeCenterBuildingId;
 } Data_CityInfo;
 
 extern struct _Data_CityInfo_Extra {

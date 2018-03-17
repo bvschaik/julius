@@ -3,6 +3,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "building/storage.h"
+#include "city/buildings.h"
 #include "city/finance.h"
 #include "core/calc.h"
 #include "core/image.h"
@@ -530,7 +531,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     // deliver weapons to barracks
     if (building_count_active(BUILDING_BARRACKS) > 0 && Data_CityInfo.militaryLegionaryLegions > 0 &&
         !Data_CityInfo.resourceStockpiled[RESOURCE_WEAPONS]) {
-        building *barracks = building_get(Data_CityInfo.buildingBarracksBuildingId);
+        building *barracks = building_get(city_buildings_get_barracks());
         if (barracks->loadsStored < 4 &&
                 warehouse->roadNetworkId == barracks->roadNetworkId) {
             space = warehouse;

@@ -2,6 +2,7 @@
 
 #include "building/properties.h"
 #include "building/storage.h"
+#include "city/buildings.h"
 #include "city/population.h"
 #include "city/warning.h"
 #include "figure/formation_legion.h"
@@ -180,32 +181,23 @@ void building_clear_related_data(building *b)
     if (b->storage_id) {
         building_storage_delete(b->storage_id);
     }
-    if (b->type == BUILDING_SENATE_UPGRADED && b->gridOffset == Data_CityInfo.buildingSenateGridOffset) {
-        Data_CityInfo.buildingSenateGridOffset = 0;
-        Data_CityInfo.buildingSenateX = 0;
-        Data_CityInfo.buildingSenateY = 0;
-        Data_CityInfo.buildingSenatePlaced = 0;
+    if (b->type == BUILDING_SENATE_UPGRADED) {
+        city_buildings_remove_senate(b);
     }
     if (b->type == BUILDING_DOCK) {
         --Data_CityInfo.numWorkingDocks;
     }
-    if (b->type == BUILDING_BARRACKS && b->gridOffset == Data_CityInfo.buildingBarracksGridOffset) {
-        Data_CityInfo.buildingBarracksGridOffset = 0;
-        Data_CityInfo.buildingBarracksX = 0;
-        Data_CityInfo.buildingBarracksY = 0;
-        Data_CityInfo.buildingBarracksPlaced = 0;
+    if (b->type == BUILDING_BARRACKS) {
+        city_buildings_remove_barracks(b);
     }
-    if (b->type == BUILDING_DISTRIBUTION_CENTER_UNUSED && b->gridOffset == Data_CityInfo.buildingDistributionCenterGridOffset) {
-        Data_CityInfo.buildingDistributionCenterGridOffset = 0;
-        Data_CityInfo.buildingDistributionCenterX = 0;
-        Data_CityInfo.buildingDistributionCenterY = 0;
-        Data_CityInfo.buildingDistributionCenterPlaced = 0;
+    if (b->type == BUILDING_DISTRIBUTION_CENTER_UNUSED) {
+        city_buildings_remove_distribution_center(b);
     }
     if (b->type == BUILDING_FORT) {
         formation_legion_delete_for_fort(b);
     }
     if (b->type == BUILDING_HIPPODROME) {
-        Data_CityInfo.buildingHippodromePlaced = 0;
+        city_buildings_remove_hippodrome();
     }
 }
 

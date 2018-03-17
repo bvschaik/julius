@@ -8,6 +8,7 @@
 #include "building/menu.h"
 #include "building/properties.h"
 #include "building/storage.h"
+#include "city/buildings.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/image.h"
@@ -52,7 +53,7 @@ static void add_hippodrome(building *b)
 {
     int image1 = image_group(GROUP_BUILDING_HIPPODROME_1);
     int image2 = image_group(GROUP_BUILDING_HIPPODROME_2);
-    Data_CityInfo.buildingHippodromePlaced = 1;
+    city_buildings_add_hippodrome();
 
     int orientation = city_view_orientation();
     building *part1 = b;
@@ -457,23 +458,12 @@ static void add_to_map(int type, building *b, int size,
             building_construction_clear_type();
             break;
         case BUILDING_SENATE_UPGRADED:
-            Data_CityInfo.buildingSenatePlaced = 1;
             add_building(b, image_group(GROUP_BUILDING_SENATE));
-            if (!Data_CityInfo.buildingSenateGridOffset) {
-                Data_CityInfo.buildingSenateBuildingId = b->id;
-                Data_CityInfo.buildingSenateX = b->x;
-                Data_CityInfo.buildingSenateY = b->y;
-                Data_CityInfo.buildingSenateGridOffset = b->gridOffset;
-            }
+            city_buildings_add_senate(b);
             break;
         case BUILDING_BARRACKS:
             add_building(b, image_group(GROUP_BUILDING_BARRACKS));
-            if (!Data_CityInfo.buildingBarracksGridOffset) {
-                Data_CityInfo.buildingBarracksBuildingId = b->id;
-                Data_CityInfo.buildingBarracksX = b->x;
-                Data_CityInfo.buildingBarracksY = b->y;
-                Data_CityInfo.buildingBarracksGridOffset = b->gridOffset;
-            }
+            city_buildings_add_barracks(b);
             break;
         case BUILDING_WAREHOUSE:
             add_warehouse(b);
@@ -498,13 +488,7 @@ static void add_to_map(int type, building *b, int size,
             break;
         // distribution center (also unused)
         case BUILDING_DISTRIBUTION_CENTER_UNUSED:
-            Data_CityInfo.buildingDistributionCenterPlaced = 1;
-            if (!Data_CityInfo.buildingDistributionCenterGridOffset) {
-                Data_CityInfo.buildingDistributionCenterBuildingId = b->id;
-                Data_CityInfo.buildingDistributionCenterX = b->x;
-                Data_CityInfo.buildingDistributionCenterY = b->y;
-                Data_CityInfo.buildingDistributionCenterGridOffset = b->gridOffset;
-            }
+            city_buildings_add_distribution_center(b);
             break;
     }
     map_routing_update_land();
@@ -621,7 +605,7 @@ int building_construction_place_building(building_type type, int x, int y)
         }
     }
     if (type == BUILDING_HIPPODROME) {
-        if (Data_CityInfo.buildingHippodromePlaced) {
+        if (city_buildings_has_hippodrome()) {
             city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
             return 0;
         }
@@ -631,7 +615,7 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
     }
-    if (type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) {
+    if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }
