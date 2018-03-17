@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "city/finance.h"
+
 extern struct city_data_t {
     struct {
         int16_t senate_placed;
@@ -23,6 +25,11 @@ extern struct city_data_t {
         int32_t distribution_center_placed;
         int32_t trade_center_building_id;
     } building;
+    struct {
+        int32_t treasury;
+        finance_overview last_year;
+        finance_overview this_year;
+    } finance;
     struct {
         int8_t other_player[18068];
         int8_t unknown_00a0;

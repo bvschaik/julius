@@ -38,8 +38,11 @@ static int draw_background()
     lang_text_draw(60, 0, 60, 12, FONT_LARGE_BLACK);
     inner_panel_draw(64, 48, 34, 5);
 
-    int width;
     int treasury = city_finance_treasury();
+    const finance_overview *last_year = city_finance_overview_last_year();
+    const finance_overview *this_year = city_finance_overview_this_year();
+
+    int width;
     if (treasury < 0) {
         width = lang_text_draw(60, 3, 70, 58, FONT_NORMAL_RED);
         lang_text_draw_amount(8, 0, -treasury, 72 + width, 58, FONT_NORMAL_RED);
@@ -63,36 +66,36 @@ static int draw_background()
     lang_text_draw(60, 7, 400, 133, FONT_NORMAL_BLACK);
 
     // income
-    draw_row(60, 8, 155, Data_CityInfo.financeTaxesLastYear, Data_CityInfo.financeTaxesThisYear);
-    draw_row(60, 9, 170, Data_CityInfo.financeExportsLastYear, Data_CityInfo.financeExportsThisYear);
-    draw_row(60, 20, 185, Data_CityInfo.financeDonatedLastYear, Data_CityInfo.financeDonatedThisYear);
+    draw_row(60, 8, 155, last_year->income.taxes, this_year->income.taxes);
+    draw_row(60, 9, 170, last_year->income.exports, this_year->income.exports);
+    draw_row(60, 20, 185, last_year->income.donated, this_year->income.donated);
 
     graphics_draw_line(280, 198, 350, 198, COLOR_BLACK);
     graphics_draw_line(420, 198, 490, 198, COLOR_BLACK);
     
-    draw_row(60, 10, 203, Data_CityInfo.financeTotalIncomeLastYear, Data_CityInfo.financeTotalIncomeThisYear);
+    draw_row(60, 10, 203, last_year->income.total, this_year->income.total);
 
     // expenses
-    draw_row(60, 11, 227, Data_CityInfo.financeImportsLastYear, Data_CityInfo.financeImportsThisYear);
-    draw_row(60, 12, 242, Data_CityInfo.financeWagesLastYear, Data_CityInfo.financeWagesThisYear);
-    draw_row(60, 13, 257, Data_CityInfo.financeConstructionLastYear, Data_CityInfo.financeConstructionThisYear);
+    draw_row(60, 11, 227, last_year->expenses.imports, this_year->expenses.imports);
+    draw_row(60, 12, 242, last_year->expenses.wages, this_year->expenses.wages);
+    draw_row(60, 13, 257, last_year->expenses.construction, this_year->expenses.construction);
 
     // interest (with percentage)
     width = lang_text_draw(60, 14, 80, 272, FONT_NORMAL_BLACK);
     text_draw_percentage(10, 80 + width, 272, FONT_NORMAL_BLACK);
-    text_draw_number(Data_CityInfo.financeInterestLastYear, '@', " ", 290, 272, FONT_NORMAL_BLACK);
-    text_draw_number(Data_CityInfo.financeInterestThisYear, '@', " ", 430, 272, FONT_NORMAL_BLACK);
+    text_draw_number(last_year->expenses.interest, '@', " ", 290, 272, FONT_NORMAL_BLACK);
+    text_draw_number(last_year->expenses.interest, '@', " ", 430, 272, FONT_NORMAL_BLACK);
 
-    draw_row(60, 15, 287, Data_CityInfo.financeSalaryLastYear, Data_CityInfo.financeSalaryThisYear);
-    draw_row(60, 16, 302, Data_CityInfo.financeSundriesLastYear, Data_CityInfo.financeSundriesThisYear);
-    draw_row(60, 21, 317, Data_CityInfo.financeTributeLastYear, Data_CityInfo.financeTributeThisYear);
+    draw_row(60, 15, 287, last_year->expenses.salary, this_year->expenses.salary);
+    draw_row(60, 16, 302, last_year->expenses.sundries, this_year->expenses.sundries);
+    draw_row(60, 21, 317, last_year->expenses.tribute, this_year->expenses.tribute);
 
     graphics_draw_line(280, 330, 350, 330, COLOR_BLACK);
     graphics_draw_line(420, 330, 490, 330, COLOR_BLACK);
     
-    draw_row(60, 17, 335, Data_CityInfo.financeTotalExpensesLastYear, Data_CityInfo.financeTotalExpensesThisYear);
-    draw_row(60, 18, 358, Data_CityInfo.financeNetInOutLastYear, Data_CityInfo.financeNetInOutThisYear);
-    draw_row(60, 19, 381, Data_CityInfo.financeBalanceLastYear, Data_CityInfo.financeBalanceThisYear);
+    draw_row(60, 17, 335, last_year->expenses.total, this_year->expenses.total);
+    draw_row(60, 18, 358, last_year->net_in_out, this_year->net_in_out);
+    draw_row(60, 19, 381, last_year->balance, this_year->balance);
 
     return ADVISOR_HEIGHT;
 }

@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "city/culture.h"
+#include "city/data_private.h"
 #include "core/calc.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
@@ -61,6 +62,12 @@ static void update_culture_explanation()
     Data_CityInfo.ratingAdvisorExplanationCulture = reason;
 }
 
+static int has_made_money()
+{
+    return city_data.finance.last_year.expenses.construction + Data_CityInfo.treasury >
+        Data_CityInfo.ratingProsperityTreasuryLastYear;
+}
+
 static void update_prosperity_explanation()
 {
     int change = 0;
@@ -72,12 +79,11 @@ static void update_prosperity_explanation()
         change -= 1;
     }
     // losing/earning money: -1 for losing, +5 for profit
-    if (Data_CityInfo.financeConstructionLastYear + Data_CityInfo.treasury <=
-        Data_CityInfo.ratingProsperityTreasuryLastYear) {
-        change -= 1;
-    } else {
+    if (has_made_money()) {
         change += 5;
         profit = 1;
+    } else {
+        change -= 1;
     }
     // food types: +1 for multiple foods
     if (Data_CityInfo.foodInfoFoodTypesEaten >= 2) {
@@ -311,11 +317,10 @@ static void update_prosperity_rating()
         change -= 1;
     }
     // losing/earning money: -1 for losing, +5 for profit
-    if (Data_CityInfo.financeConstructionLastYear + Data_CityInfo.treasury <=
-        Data_CityInfo.ratingProsperityTreasuryLastYear) {
-        change -= 1;
-    } else {
+    if (has_made_money()) {
         change += 5;
+    } else {
+        change -= 1;
     }
     Data_CityInfo.ratingProsperityTreasuryLastYear = Data_CityInfo.treasury;
     // food types: +1 for multiple foods

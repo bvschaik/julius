@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "city/data_private.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
 #include "game/time.h"
@@ -23,16 +24,16 @@ int city_finance_out_of_money()
 void city_finance_process_import(int price)
 {
     Data_CityInfo.treasury -= price;
-    Data_CityInfo.financeImportsThisYear += price;
+    city_data.finance.this_year.expenses.imports += price;
 }
 
 void city_finance_process_export(int price)
 {
     Data_CityInfo.treasury += price;
-    Data_CityInfo.financeExportsThisYear += price;
+    city_data.finance.this_year.income.exports += price;
     if (Data_CityInfo.godBlessingNeptuneDoubleTrade) {
         Data_CityInfo.treasury += price;
-        Data_CityInfo.financeExportsThisYear += price;
+        city_data.finance.this_year.income.exports += price;
     }
 }
 
@@ -53,65 +54,61 @@ void city_finance_process_stolen(int stolen)
 void city_finance_process_donation(int amount)
 {
     Data_CityInfo.treasury += amount;
-    Data_CityInfo.financeDonatedThisYear += amount;
+    city_data.finance.this_year.income.donated += amount;
 }
 
 void city_finance_process_sundry(int cost)
 {
     Data_CityInfo.treasury -= cost;
-    Data_CityInfo.financeSundriesThisYear += cost;
+    city_data.finance.this_year.expenses.sundries += cost;
 }
 
 void city_finance_process_construction(int cost)
 {
     Data_CityInfo.treasury -= cost;
-    Data_CityInfo.financeConstructionThisYear += cost;
+    city_data.finance.this_year.expenses.construction += cost;
 }
 
 void city_finance_update_interest()
 {
-    Data_CityInfo.financeInterestThisYear = Data_CityInfo.financeInterestPaidThisYear;
+    city_data.finance.this_year.expenses.interest = Data_CityInfo.financeInterestPaidThisYear;
 }
 
 void city_finance_update_salary()
 {
-    Data_CityInfo.financeSalaryThisYear = Data_CityInfo.financeSalaryPaidThisYear;
+    city_data.finance.this_year.expenses.salary = Data_CityInfo.financeSalaryPaidThisYear;
 }
 
 void city_finance_calculate_totals()
 {
-    Data_CityInfo.financeTotalIncomeThisYear =
-        Data_CityInfo.financeDonatedThisYear +
-        Data_CityInfo.financeTaxesThisYear +
-        Data_CityInfo.financeExportsThisYear;
+    finance_overview *this_year = &city_data.finance.this_year;
+    this_year->income.total =
+        this_year->income.donated +
+        this_year->income.taxes +
+        this_year->income.exports;
 
-    Data_CityInfo.financeTotalExpensesThisYear =
-        Data_CityInfo.financeSundriesThisYear +
-        Data_CityInfo.financeSalaryThisYear +
-        Data_CityInfo.financeInterestThisYear +
-        Data_CityInfo.financeConstructionThisYear +
-        Data_CityInfo.financeWagesThisYear +
-        Data_CityInfo.financeImportsThisYear;
+    this_year->expenses.total =
+        this_year->expenses.sundries +
+        this_year->expenses.salary +
+        this_year->expenses.interest +
+        this_year->expenses.construction +
+        this_year->expenses.wages +
+        this_year->expenses.imports;
 
-    Data_CityInfo.financeNetInOutLastYear =
-        Data_CityInfo.financeTotalIncomeLastYear -
-        Data_CityInfo.financeTotalExpensesLastYear;
-    Data_CityInfo.financeNetInOutThisYear =
-        Data_CityInfo.financeTotalIncomeThisYear -
-        Data_CityInfo.financeTotalExpensesThisYear;
-    Data_CityInfo.financeBalanceThisYear =
-        Data_CityInfo.financeNetInOutThisYear +
-        Data_CityInfo.financeBalanceLastYear;
+    finance_overview *last_year = &city_data.finance.last_year;
+    last_year->net_in_out = last_year->income.total - last_year->expenses.total;
+    this_year->net_in_out = this_year->income.total - this_year->expenses.total;
+    this_year->balance = last_year->balance + this_year->net_in_out;
 
-    Data_CityInfo.financeTributeThisYear = 0;
+    this_year->expenses.tribute = 0;
 }
 
 void city_finance_estimate_wages()
 {
-    int monthlyWages = Data_CityInfo.wages * Data_CityInfo.workersEmployed / 10 / 12;
-    Data_CityInfo.financeWagesThisYear = Data_CityInfo.financeWagesPaidThisYear;
+    int monthly_wages = Data_CityInfo.wages * Data_CityInfo.workersEmployed / 10 / 12;
+    city_data.finance.this_year.expenses.wages = Data_CityInfo.financeWagesPaidThisYear;
     Data_CityInfo.estimatedYearlyWages =
-        (12 - game_time_month()) * monthlyWages +
+        (12 - game_time_month()) * monthly_wages +
         Data_CityInfo.financeWagesPaidThisYear;
 }
 
@@ -140,9 +137,9 @@ void city_finance_estimate_taxes()
         Data_CityInfo.taxPercentage);
     int estimated_rest_of_year = (12 - game_time_month()) * (monthly_patricians + monthly_plebs);
 
-    Data_CityInfo.financeTaxesThisYear =
+    city_data.finance.this_year.income.taxes =
         Data_CityInfo.yearlyCollectedTaxFromPlebs + Data_CityInfo.yearlyCollectedTaxFromPatricians;
-    Data_CityInfo.estimatedTaxIncome = Data_CityInfo.financeTaxesThisYear + estimated_rest_of_year;
+    Data_CityInfo.estimatedTaxIncome = city_data.finance.this_year.income.taxes + estimated_rest_of_year;
 }
 
 static void collect_monthly_taxes()
@@ -256,7 +253,7 @@ void city_finance_handle_month_change()
 
 static void reset_taxes()
 {
-    Data_CityInfo.financeTaxesLastYear =
+    city_data.finance.last_year.income.taxes =
         Data_CityInfo.yearlyCollectedTaxFromPlebs + Data_CityInfo.yearlyCollectedTaxFromPatricians;
     Data_CityInfo.yearlyCollectedTaxFromPlebs = 0;
     Data_CityInfo.yearlyCollectedTaxFromPatricians = 0;
@@ -274,99 +271,103 @@ static void reset_taxes()
 
 static void copy_amounts_to_last_year()
 {
+    finance_overview *last_year = &city_data.finance.last_year;
+    finance_overview *this_year = &city_data.finance.this_year;
+
     // wages
-    Data_CityInfo.financeWagesLastYear = Data_CityInfo.financeWagesPaidThisYear;
+    last_year->expenses.wages = Data_CityInfo.financeWagesPaidThisYear;
     Data_CityInfo.financeWagesPaidThisYear = 0;
     Data_CityInfo.wageRatePaidLastYear = Data_CityInfo.wageRatePaidThisYear;
     Data_CityInfo.wageRatePaidThisYear = 0;
 
     // import/export
-    Data_CityInfo.financeExportsLastYear = Data_CityInfo.financeExportsThisYear;
-    Data_CityInfo.financeExportsThisYear = 0;
-    Data_CityInfo.financeImportsLastYear = Data_CityInfo.financeImportsThisYear;
-    Data_CityInfo.financeImportsThisYear = 0;
+    last_year->income.exports = this_year->income.exports;
+    this_year->income.exports = 0;
+    last_year->expenses.imports = this_year->expenses.imports;
+    this_year->expenses.imports = 0;
 
     // construction
-    Data_CityInfo.financeConstructionLastYear = Data_CityInfo.financeConstructionThisYear;
-    Data_CityInfo.financeConstructionThisYear = 0;
+    last_year->expenses.construction = this_year->expenses.construction;
+    this_year->expenses.construction = 0;
 
     // interest
-    Data_CityInfo.financeInterestLastYear = Data_CityInfo.financeInterestPaidThisYear;
+    last_year->expenses.interest = Data_CityInfo.financeInterestPaidThisYear;
     Data_CityInfo.financeInterestPaidThisYear = 0;
 
     // salary
-    Data_CityInfo.financeSalaryLastYear = Data_CityInfo.financeSalaryPaidThisYear;
+    city_data.finance.last_year.expenses.salary = Data_CityInfo.financeSalaryPaidThisYear;
     Data_CityInfo.financeSalaryPaidThisYear = 0;
 
     // sundries
-    Data_CityInfo.financeSundriesLastYear = Data_CityInfo.financeSundriesThisYear;
-    Data_CityInfo.financeSundriesThisYear = 0;
+    last_year->expenses.sundries = this_year->expenses.sundries;
+    this_year->expenses.sundries = 0;
     Data_CityInfo.financeStolenLastYear = Data_CityInfo.financeStolenThisYear;
     Data_CityInfo.financeStolenThisYear = 0;
 
     // donations
-    Data_CityInfo.financeDonatedLastYear = Data_CityInfo.financeDonatedThisYear;
-    Data_CityInfo.financeDonatedThisYear = 0;
+    last_year->income.donated = this_year->income.donated;
+    this_year->income.donated = 0;
 }
 
 static void pay_tribute()
 {
+    finance_overview *last_year = &city_data.finance.last_year;
     int income =
-        Data_CityInfo.financeDonatedLastYear +
-        Data_CityInfo.financeTaxesLastYear +
-        Data_CityInfo.financeExportsLastYear;
+        last_year->income.donated +
+        last_year->income.taxes +
+        last_year->income.exports;
     int expenses =
-        Data_CityInfo.financeSundriesLastYear +
-        Data_CityInfo.financeSalaryLastYear +
-        Data_CityInfo.financeInterestLastYear +
-        Data_CityInfo.financeConstructionLastYear +
-        Data_CityInfo.financeWagesLastYear +
-        Data_CityInfo.financeImportsLastYear;
+        last_year->expenses.sundries +
+        last_year->expenses.salary +
+        last_year->expenses.interest +
+        last_year->expenses.construction +
+        last_year->expenses.wages +
+        last_year->expenses.imports;
 
     Data_CityInfo.tributeNotPaidLastYear = 0;
     if (Data_CityInfo.treasury <= 0) {
         // city is in debt
         Data_CityInfo.tributeNotPaidLastYear = 1;
         Data_CityInfo.tributeNotPaidTotalYears++;
-        Data_CityInfo.financeTributeLastYear = 0;
+        last_year->expenses.tribute = 0;
     } else if (income <= expenses) {
         // city made a loss: fixed tribute based on population
         Data_CityInfo.tributeNotPaidTotalYears = 0;
         if (Data_CityInfo.population > 2000) {
-            Data_CityInfo.financeTributeLastYear = 200;
+            last_year->expenses.tribute = 200;
         } else if (Data_CityInfo.population > 1000) {
-            Data_CityInfo.financeTributeLastYear = 100;
+            last_year->expenses.tribute = 100;
         } else {
-            Data_CityInfo.financeTributeLastYear = 0;
+            last_year->expenses.tribute = 0;
         }
     } else {
         // city made a profit: tribute is max of: 25% of profit, fixed tribute based on population
         Data_CityInfo.tributeNotPaidTotalYears = 0;
         if (Data_CityInfo.population > 5000) {
-            Data_CityInfo.financeTributeLastYear = 500;
+            last_year->expenses.tribute = 500;
         } else if (Data_CityInfo.population > 3000) {
-            Data_CityInfo.financeTributeLastYear = 400;
+            last_year->expenses.tribute = 400;
         } else if (Data_CityInfo.population > 2000) {
-            Data_CityInfo.financeTributeLastYear = 300;
+            last_year->expenses.tribute = 300;
         } else if (Data_CityInfo.population > 1000) {
-            Data_CityInfo.financeTributeLastYear = 225;
+            last_year->expenses.tribute = 225;
         } else if (Data_CityInfo.population > 500) {
-            Data_CityInfo.financeTributeLastYear = 150;
+            last_year->expenses.tribute = 150;
         } else {
-            Data_CityInfo.financeTributeLastYear = 50;
+            last_year->expenses.tribute = 50;
         }
         int pct_profit = calc_adjust_with_percentage(income - expenses, 25);
-        if (pct_profit > Data_CityInfo.financeTributeLastYear) {
-            Data_CityInfo.financeTributeLastYear = pct_profit;
+        if (pct_profit > last_year->expenses.tribute) {
+            last_year->expenses.tribute = pct_profit;
         }
     }
 
-    Data_CityInfo.treasury -= Data_CityInfo.financeTributeLastYear;
-    Data_CityInfo.financeTributeThisYear = 0;
+    Data_CityInfo.treasury -= last_year->expenses.tribute;
+    city_data.finance.this_year.expenses.tribute = 0;
 
-    Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
-    Data_CityInfo.financeTotalIncomeLastYear = income;
-    Data_CityInfo.financeTotalExpensesLastYear = Data_CityInfo.financeTributeLastYear + expenses;
+    last_year->balance = Data_CityInfo.treasury;
+    last_year->income.total = income;
+    last_year->expenses.total = last_year->expenses.tribute + expenses;
 }
 
 void city_finance_handle_year_change()
@@ -374,4 +375,14 @@ void city_finance_handle_year_change()
     reset_taxes();
     copy_amounts_to_last_year();
     pay_tribute();
+}
+
+const finance_overview *city_finance_overview_last_year()
+{
+    return &city_data.finance.last_year;
+}
+
+const finance_overview *city_finance_overview_this_year()
+{
+    return &city_data.finance.this_year;
 }

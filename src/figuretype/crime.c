@@ -79,8 +79,9 @@ static void generate_mugger(building *b)
             figure *f = figure_create(FIGURE_CRIMINAL, xRoad, yRoad, DIR_4_BOTTOM);
             f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
             Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
-            if (Data_CityInfo.financeTaxesThisYear > 20) {
-                int moneyStolen = Data_CityInfo.financeTaxesThisYear / 4;
+            int taxes_this_year = city_finance_overview_this_year()->income.taxes;
+            if (taxes_this_year > 20) {
+                int moneyStolen = taxes_this_year / 4;
                 if (moneyStolen > 400) {
                     moneyStolen = 400 - random_byte() / 2;
                 }

@@ -181,8 +181,6 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     Data_CityInfo.exitPointY = exit.y;
     Data_CityInfo.exitPointGridOffset = map_grid_offset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
 
-    Data_CityInfo.treasury = difficulty_adjust_money(scenario_initial_funds());
-    Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
     game_time_init(scenario_property_start_year());
 
     // set up events
@@ -202,9 +200,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     image_load_climate(scenario_property_climate());
     image_load_enemy(scenario_property_enemy());
 
-    Data_CityInfo_Extra.ciid = 1;
-    Data_CityInfo.__unknown_00a2 = 1;
-    Data_CityInfo.__unknown_00a3 = 1;
+    city_data_init_scenario();
 }
 
 static int load_custom_scenario(const uint8_t *scenario_name)

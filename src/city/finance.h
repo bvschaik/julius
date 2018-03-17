@@ -33,4 +33,29 @@ void city_finance_handle_month_change();
 
 void city_finance_handle_year_change();
 
+typedef struct {
+    struct {
+        int taxes;
+        int exports;
+        int donated;
+        int total;
+    } income;
+    struct {
+        int imports;
+        int wages;
+        int construction;
+        int interest;
+        int salary;
+        int sundries;
+        int tribute;
+        int total;
+    } expenses;
+    int net_in_out;
+    int balance;
+} finance_overview;
+
+const finance_overview *city_finance_overview_last_year();
+
+const finance_overview *city_finance_overview_this_year();
+
 #endif // CITY_FINANCE_H
