@@ -4,15 +4,9 @@
 #include <stdint.h>
 
 extern struct _Data_CityInfo {
-	int8_t __otherPlayer[18068];
-	int8_t __unknown_00a0;
-	int8_t __unknown_00a1;
 	int8_t __unknown_00a2;
 	int8_t __unknown_00a3;
-	int8_t __unknown_00a4;
 	int8_t __unknown_00a5;
-	int8_t __unknown_00a6;
-	int8_t __unknown_00a7;
 	int32_t taxPercentage;
 	int32_t treasury;
 	int32_t citySentiment;
@@ -52,34 +46,27 @@ extern struct _Data_CityInfo {
 	int32_t populationEmigratedToday;
 	int32_t populationRefusedImmigrantsNoRoom;
 	int32_t populationMigrationPercentage;
-	int32_t __unused_27d0;
 	int32_t populationImmigrationDuration;
 	int32_t populationEmigrationDuration;
 	int32_t populationNewcomersThisMonth;
-	int32_t __unknown_27e0[4];
-	int16_t __unknown_27f0;
 	int16_t resourceLastTargetWarehouse;
-	int16_t __unknown_27f4[18];
 	uint8_t entryPointX;
 	uint8_t entryPointY;
 	int16_t entryPointGridOffset;
 	uint8_t exitPointX;
 	uint8_t exitPointY;
 	int16_t exitPointGridOffset;
-	int16_t __unknown_2828;
 	int16_t resourceSpaceInWarehouses[16];
 	int16_t resourceStored[16];
 	int16_t resourceTradeStatus[16];
 	int16_t resourceTradeExportOver[16];
 	int16_t resourceIndustryMothballed[16];
-	int16_t __unused_28ca;
 	int32_t resourceGranaryFoodStored[7];
 	int32_t resourceWorkshopRawMaterialStored[6];
 	int32_t resourceWorkshopRawMaterialSpace[6];//2900
 	int32_t foodInfoFoodStoredInGranaries;
 	int32_t foodInfoFoodTypesAvailable;
 	int32_t foodInfoFoodTypesEaten;
-	int8_t __unknown_2924[272];
 	int32_t resourceStockpiled[16];
 	int32_t foodInfoFoodSupplyMonths;
 	int32_t foodInfoGranariesOperating;
@@ -100,7 +87,6 @@ extern struct _Data_CityInfo {
 	int32_t workersNeeded;
 	int32_t wages;
 	int32_t wagesRome;
-	int32_t __unknown_2b6c;
 	int32_t financeWagesPaidThisYear;
 	int32_t financeWagesThisYear;
 	int32_t financeWagesLastYear;
@@ -145,15 +131,12 @@ extern struct _Data_CityInfo {
 	int32_t financeNetInOutThisYear;
 	int32_t financeBalanceLastYear;
 	int32_t financeBalanceThisYear;
-	int32_t __unknown_2c20[1400];
-	int32_t __housesRequiringUnknownToEvolve[8];
 	int32_t tradeNextImportResourceCaravan;
 	int32_t tradeNextImportResourceCaravanBackup;
 	int32_t ratingCulture;
 	int32_t ratingProsperity;
 	int32_t ratingPeace;
 	int32_t ratingFavor;
-	int32_t __unknown_4238[4];
 	int32_t ratingProsperityTreasuryLastYear;
 	int32_t ratingCulturePointsTheater;
 	int32_t ratingCulturePointsReligion;
@@ -169,11 +152,9 @@ extern struct _Data_CityInfo {
 	int32_t housesRequiringEducationToEvolve;//4278
 	int32_t housesRequiringSchool;//427c
 	int32_t housesRequiringLibrary;//4280
-	int32_t __unknown_4284;
 	int32_t housesRequiringBarberToEvolve;
 	int32_t housesRequiringBathhouseToEvolve;
 	int32_t housesRequiringFoodToEvolve;
-	int32_t __unknown_4294[2];
 	int32_t housesRequiringClinicToEvolve;
 	int32_t housesRequiringHospitalToEvolve;
 	int32_t housesRequiringBarber;
@@ -205,7 +186,6 @@ extern struct _Data_CityInfo {
 	int8_t godUnused3[5];
 	int32_t godMonthsSinceFestival[5];
 	int32_t godLeastHappy;
-	int32_t __unknown_4334;
 	int32_t populationEmigrationCauseTextId;
 	int32_t numProtestersThisMonth;
 	int32_t numCriminalsThisMonth; // muggers+rioters
@@ -221,12 +201,10 @@ extern struct _Data_CityInfo {
 	int32_t ratingAdvisorExplanationFavor;
 	int32_t playerRank;
 	int32_t personalSavings;
-	int32_t __unknown_4374[2];
 	int32_t financeDonatedLastYear;
 	int32_t financeDonatedThisYear;
 	int32_t donateAmount;
 	int16_t workingDockBuildingIds[10];
-	int16_t __unknown_439c[3];
 	int16_t numAnimalsInCity;
 	int16_t tradeNumOpenSeaRoutes;
 	int16_t tradeNumOpenLandRoutes;
@@ -234,7 +212,6 @@ extern struct _Data_CityInfo {
 	int16_t tradeLandProblemDuration;
 	int16_t numWorkingDocks;
 	int16_t numWorkingWharfs;
-	int8_t __padding_43b2[2];
 	int16_t financeStolenThisYear;
 	int16_t financeStolenLastYear;
 	int32_t tradeNextImportResourceDocker;
@@ -242,9 +219,7 @@ extern struct _Data_CityInfo {
 	int32_t debtState;
 	int32_t monthsInDebt;
 	int32_t cheatedMoney;
-	int32_t __unknown_43d8[5];
 	int32_t populationLostTroopRequest;
-	int32_t __unknown_43f0;
 	int32_t victoryHasWonScenario;
 	int32_t victoryContinueMonths;
 	int32_t victoryContinueMonthsChosen;
@@ -269,17 +244,14 @@ extern struct _Data_CityInfo {
 	int32_t cultureCoverageReligion;
 	int32_t festivalEffectMonthsDelayFirst;
 	int32_t festivalEffectMonthsDelaySecond;
-	int32_t __unused_4454;
 	int32_t populationSentimentUnemployment;
 	int32_t citySentimentLastTime;
 	int32_t citySentimentChangeMessageDelay;
 	int32_t populationEmigrationCause; // 4464
 	int32_t riotersOrAttackingNativesInCity;
-	int32_t __unknown_446c[4];
 	int32_t giftSizeSelected;
 	int32_t giftMonthsSinceLast;
 	int32_t giftOverdosePenalty;
-	int32_t __unused_4488;
 	int32_t giftId_modest;
 	int32_t giftId_generous;
 	int32_t giftId_lavish;
@@ -292,7 +264,6 @@ extern struct _Data_CityInfo {
 	int32_t ratingFavorLastYear;
 	int32_t ratingFavorChange; // 0 = dropping, 1 = stalling, 2 = rising
 	int32_t nativeAttackDuration;
-	int32_t __unused_nativeForceAttack;
 	int32_t nativeMissionPostOperational;
 	int32_t nativeMainMeetingCenterX;
 	int32_t nativeMainMeetingCenterY;
@@ -301,12 +272,9 @@ extern struct _Data_CityInfo {
 	int32_t foodInfoGranariesUnderstaffed;
 	int32_t foodInfoGranariesNotOperating;
 	int32_t foodInfoGranariesNotOperatingWithFood;
-	int32_t __unused_44e0[2];
 	int32_t godCurseVenusActive;
-	int32_t __unused_44ec;
 	int32_t godBlessingNeptuneDoubleTrade;
 	int32_t godBlessingMarsEnemiesToKill;
-	int32_t __unused_44f8;
 	int32_t godAngryMessageDelay;
 	int32_t foodInfoFoodConsumedLastMonth;
 	int32_t foodInfoFoodStoredLastMonth;
@@ -314,7 +282,6 @@ extern struct _Data_CityInfo {
 	int32_t riotCause;
 	int32_t estimatedTaxIncome;
 	int32_t tutorial1SenateBuilt;
-	int32_t __unused_4524[11];
 	int32_t shipyardBoatsRequested;
 	int32_t numEnemiesInCity;
 	int32_t populationSentimentWages;
@@ -341,7 +308,6 @@ extern struct _Data_CityInfo {
 	int8_t distantBattleRomanMonthsTraveled;
 	int8_t militaryTotalLegions;
 	int8_t militaryTotalLegionsEmpireService;
-	int8_t __unknown_458e;
 	int8_t militaryTotalSoldiers;
 	int8_t triumphalArchesPlaced;
 	uint8_t dieSoundCitizen;
@@ -357,7 +323,6 @@ extern struct _Data_CityInfo {
 	int8_t soundHitAxe;
 	int8_t soundHitWolf;
 	uint8_t soundMarchWolf;
-	int8_t __unused_45a5[6];
 	int8_t populationSentimentIncludeTents;
 	int32_t caesarInvasionCount;
 	int32_t caesarInvasionSize;
@@ -383,25 +348,6 @@ extern struct _Data_CityInfo {
 	int32_t tutorial1FireMessageShown;
 	int32_t tutorial3DiseaseMessageShown;
 	int32_t numAttackingNativesInCity;
-	int8_t __unknown_464c[232];
-
-    int16_t buildingSenatePlaced;
-    uint8_t buildingSenateX;
-    uint8_t buildingSenateY;
-    int16_t buildingSenateGridOffset;
-    int32_t buildingSenateBuildingId;
-    int32_t buildingHippodromePlaced;
-    int8_t buildingBarracksX;
-    int8_t buildingBarracksY;
-    int16_t buildingBarracksGridOffset;
-    int32_t buildingBarracksBuildingId;
-    int32_t buildingBarracksPlaced;
-    int8_t buildingDistributionCenterX;
-    int8_t buildingDistributionCenterY;
-    int16_t buildingDistributionCenterGridOffset;
-    int32_t buildingDistributionCenterBuildingId;
-    int32_t buildingDistributionCenterPlaced;
-    int32_t buildingTradeCenterBuildingId;
 } Data_CityInfo;
 
 extern struct _Data_CityInfo_Extra {
