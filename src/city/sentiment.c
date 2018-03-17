@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "city/constants.h"
+#include "city/data_private.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
@@ -133,7 +134,7 @@ void city_sentiment_update()
 {
     city_population_check_consistency();
 
-    int sentiment_contribution_taxes = SENTIMENT_PER_TAX_RATE[Data_CityInfo.taxPercentage];
+    int sentiment_contribution_taxes = SENTIMENT_PER_TAX_RATE[city_data.finance.tax_percentage];
     int sentiment_contribution_wages = get_sentiment_contribution_wages();
     int sentiment_contribution_employment = get_sentiment_contribution_employment();
     int sentiment_penalty_tents = get_sentiment_penalty_for_tent_dwellers();

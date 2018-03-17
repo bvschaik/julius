@@ -53,7 +53,7 @@ static int draw_background()
 
     // tax percentage and estimated income
     lang_text_draw(60, 1, 70, 81, FONT_NORMAL_WHITE);
-    width = text_draw_percentage(Data_CityInfo.taxPercentage, 240, 81, FONT_NORMAL_WHITE);
+    width = text_draw_percentage(city_finance_tax_percentage(), 240, 81, FONT_NORMAL_WHITE);
     width += lang_text_draw(60, 4, 240 + width, 81, FONT_NORMAL_WHITE);
     lang_text_draw_amount(8, 0, Data_CityInfo.estimatedTaxIncome, 240 + width, 81, FONT_NORMAL_WHITE);
 
@@ -112,13 +112,7 @@ static void handle_mouse(const mouse *m)
 
 static void button_change_taxes(int is_down, int param2)
 {
-    if (is_down) {
-        --Data_CityInfo.taxPercentage;
-    } else {
-        ++Data_CityInfo.taxPercentage;
-    }
-    Data_CityInfo.taxPercentage = calc_bound(Data_CityInfo.taxPercentage, 0, 25);
-
+    city_finance_change_tax_percentage(is_down ? -1 : 1);
     city_finance_estimate_taxes();
     city_finance_calculate_totals();
     window_invalidate();

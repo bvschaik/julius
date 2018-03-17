@@ -13,34 +13,44 @@
 
 int city_finance_treasury()
 {
-    return Data_CityInfo.treasury;
+    return city_data.finance.treasury;
 }
 
 int city_finance_out_of_money()
 {
-    return Data_CityInfo.treasury <= -5000;
+    return city_data.finance.treasury <= -5000;
+}
+
+int city_finance_tax_percentage()
+{
+    return city_data.finance.tax_percentage;
+}
+
+void city_finance_change_tax_percentage(int change)
+{
+    city_data.finance.tax_percentage = calc_bound(city_data.finance.tax_percentage + change, 0, 25);
 }
 
 void city_finance_process_import(int price)
 {
-    Data_CityInfo.treasury -= price;
+    city_data.finance.treasury -= price;
     city_data.finance.this_year.expenses.imports += price;
 }
 
 void city_finance_process_export(int price)
 {
-    Data_CityInfo.treasury += price;
+    city_data.finance.treasury += price;
     city_data.finance.this_year.income.exports += price;
     if (Data_CityInfo.godBlessingNeptuneDoubleTrade) {
-        Data_CityInfo.treasury += price;
+        city_data.finance.treasury += price;
         city_data.finance.this_year.income.exports += price;
     }
 }
 
 void city_finance_process_cheat()
 {
-    if (Data_CityInfo.treasury < 5000) {
-        Data_CityInfo.treasury += 1000;
+    if (city_data.finance.treasury < 5000) {
+        city_data.finance.treasury += 1000;
         Data_CityInfo.cheatedMoney += 1000;
     }
 }
@@ -53,19 +63,19 @@ void city_finance_process_stolen(int stolen)
 
 void city_finance_process_donation(int amount)
 {
-    Data_CityInfo.treasury += amount;
+    city_data.finance.treasury += amount;
     city_data.finance.this_year.income.donated += amount;
 }
 
 void city_finance_process_sundry(int cost)
 {
-    Data_CityInfo.treasury -= cost;
+    city_data.finance.treasury -= cost;
     city_data.finance.this_year.expenses.sundries += cost;
 }
 
 void city_finance_process_construction(int cost)
 {
-    Data_CityInfo.treasury -= cost;
+    city_data.finance.treasury -= cost;
     city_data.finance.this_year.expenses.construction += cost;
 }
 
@@ -131,10 +141,10 @@ void city_finance_estimate_taxes()
     }
     int monthly_patricians = calc_adjust_with_percentage(
         Data_CityInfo.monthlyCollectedTaxFromPatricians / 2,
-        Data_CityInfo.taxPercentage);
+        city_data.finance.tax_percentage);
     int monthly_plebs = calc_adjust_with_percentage(
         Data_CityInfo.monthlyCollectedTaxFromPlebs / 2,
-        Data_CityInfo.taxPercentage);
+        city_data.finance.tax_percentage);
     int estimated_rest_of_year = (12 - game_time_month()) * (monthly_patricians + monthly_plebs);
 
     city_data.finance.this_year.income.taxes =
@@ -191,22 +201,22 @@ static void collect_monthly_taxes()
 
     int collected_patricians = calc_adjust_with_percentage(
         Data_CityInfo.monthlyCollectedTaxFromPatricians / 2,
-        Data_CityInfo.taxPercentage);
+        city_data.finance.tax_percentage);
     int collected_plebs = calc_adjust_with_percentage(
         Data_CityInfo.monthlyCollectedTaxFromPlebs / 2,
-        Data_CityInfo.taxPercentage);
+        city_data.finance.tax_percentage);
     int collected_total = collected_patricians + collected_plebs;
 
     Data_CityInfo.yearlyCollectedTaxFromPatricians += collected_patricians;
     Data_CityInfo.yearlyCollectedTaxFromPlebs += collected_plebs;
     Data_CityInfo.yearlyUncollectedTaxFromPatricians += calc_adjust_with_percentage(
         Data_CityInfo.monthlyUncollectedTaxFromPatricians / 2,
-        Data_CityInfo.taxPercentage);
+        city_data.finance.tax_percentage);
     Data_CityInfo.yearlyUncollectedTaxFromPlebs += calc_adjust_with_percentage(
         Data_CityInfo.monthlyUncollectedTaxFromPlebs / 2,
-        Data_CityInfo.taxPercentage);
+        city_data.finance.tax_percentage);
 
-    Data_CityInfo.treasury += collected_total;
+    city_data.finance.treasury += collected_total;
 
     int total_patricians = Data_CityInfo.monthlyTaxedPatricians + Data_CityInfo.monthlyUntaxedPatricians;
     int total_plebs = Data_CityInfo.monthlyTaxedPlebs + Data_CityInfo.monthlyUntaxedPlebs;
@@ -220,16 +230,16 @@ static void collect_monthly_taxes()
 static void pay_monthly_wages()
 {
     int wages = Data_CityInfo.wages * Data_CityInfo.workersEmployed / 10 / 12;
-    Data_CityInfo.treasury -= wages;
+    city_data.finance.treasury -= wages;
     Data_CityInfo.financeWagesPaidThisYear += wages;
     Data_CityInfo.wageRatePaidThisYear += Data_CityInfo.wages;
 }
 
 static void pay_monthly_interest()
 {
-    if (Data_CityInfo.treasury < 0) {
-        int interest = calc_adjust_with_percentage(-Data_CityInfo.treasury, 10) / 12;
-        Data_CityInfo.treasury -= interest;
+    if (city_data.finance.treasury < 0) {
+        int interest = calc_adjust_with_percentage(-city_data.finance.treasury, 10) / 12;
+        city_data.finance.treasury -= interest;
         Data_CityInfo.financeInterestPaidThisYear += interest;
     }
 }
@@ -239,7 +249,7 @@ static void pay_monthly_salary()
     if (!city_finance_out_of_money()) {
         Data_CityInfo.financeSalaryPaidThisYear += Data_CityInfo.salaryAmount;
         Data_CityInfo.personalSavings += Data_CityInfo.salaryAmount;
-        Data_CityInfo.treasury -= Data_CityInfo.salaryAmount;
+        city_data.finance.treasury -= Data_CityInfo.salaryAmount;
     }
 }
 
@@ -325,7 +335,7 @@ static void pay_tribute()
         last_year->expenses.imports;
 
     Data_CityInfo.tributeNotPaidLastYear = 0;
-    if (Data_CityInfo.treasury <= 0) {
+    if (city_data.finance.treasury <= 0) {
         // city is in debt
         Data_CityInfo.tributeNotPaidLastYear = 1;
         Data_CityInfo.tributeNotPaidTotalYears++;
@@ -362,10 +372,10 @@ static void pay_tribute()
         }
     }
 
-    Data_CityInfo.treasury -= last_year->expenses.tribute;
+    city_data.finance.treasury -= last_year->expenses.tribute;
     city_data.finance.this_year.expenses.tribute = 0;
 
-    last_year->balance = Data_CityInfo.treasury;
+    last_year->balance = city_data.finance.treasury;
     last_year->income.total = income;
     last_year->expenses.total = last_year->expenses.tribute + expenses;
 }

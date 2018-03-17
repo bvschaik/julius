@@ -27,6 +27,7 @@ extern struct city_data_t {
     } building;
     struct {
         int32_t treasury;
+        int32_t tax_percentage;
         finance_overview last_year;
         finance_overview this_year;
     } finance;
@@ -34,6 +35,8 @@ extern struct city_data_t {
         int8_t other_player[18068];
         int8_t unknown_00a0;
         int8_t unknown_00a1;
+        int8_t unknown_00a2;
+        int8_t unknown_00a3;
         int8_t unknown_00a4;
         int8_t unknown_00a6;
         int8_t unknown_00a7;

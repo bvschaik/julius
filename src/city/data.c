@@ -23,7 +23,7 @@ void city_data_init()
     Data_CityInfo.__unknown_00c0 = 3;
     Data_CityInfo.wagesRome = 30;
     Data_CityInfo.wages = 30;
-    Data_CityInfo.taxPercentage = 7;
+    city_data.finance.tax_percentage = 7;
     Data_CityInfo.tradeNextImportResourceCaravan = 1;
     Data_CityInfo.tradeNextImportResourceCaravanBackup = 1;
     Data_CityInfo.monthlyPopulationNextIndex = 0;
@@ -40,10 +40,15 @@ void city_data_init()
 void city_data_init_scenario()
 {
     Data_CityInfo_Extra.ciid = 1;
-    Data_CityInfo.__unknown_00a2 = 1;
-    Data_CityInfo.__unknown_00a3 = 1;
-    Data_CityInfo.treasury = difficulty_adjust_money(scenario_initial_funds());
-    city_data.finance.last_year.balance = Data_CityInfo.treasury;
+    city_data.unused.unknown_00a2 = 1;
+    city_data.unused.unknown_00a3 = 1;
+    city_data.finance.treasury = difficulty_adjust_money(scenario_initial_funds());
+    city_data.finance.last_year.balance = city_data.finance.treasury;
+}
+
+void city_data_init_campaign_mission()
+{
+    city_data.finance.treasury = difficulty_adjust_money(city_data.finance.treasury);
 }
 
 static void save_main_data(buffer *main)
@@ -51,14 +56,14 @@ static void save_main_data(buffer *main)
     buffer_write_raw(main, city_data.unused.other_player, 18068);
     buffer_write_i8(main, city_data.unused.unknown_00a0);
     buffer_write_i8(main, city_data.unused.unknown_00a1);
-    buffer_write_i8(main, Data_CityInfo.__unknown_00a2);
-    buffer_write_i8(main, Data_CityInfo.__unknown_00a3);
+    buffer_write_i8(main, city_data.unused.unknown_00a2);
+    buffer_write_i8(main, city_data.unused.unknown_00a3);
     buffer_write_i8(main, city_data.unused.unknown_00a4);
     buffer_write_i8(main, Data_CityInfo.__unknown_00a5);
     buffer_write_i8(main, city_data.unused.unknown_00a6);
     buffer_write_i8(main, city_data.unused.unknown_00a7);
-    buffer_write_i32(main, Data_CityInfo.taxPercentage);
-    buffer_write_i32(main, Data_CityInfo.treasury);
+    buffer_write_i32(main, city_data.finance.tax_percentage);
+    buffer_write_i32(main, city_data.finance.treasury);
     buffer_write_i32(main, Data_CityInfo.citySentiment);
     buffer_write_i32(main, Data_CityInfo.healthRateTarget);
     buffer_write_i32(main, Data_CityInfo.healthRate);
@@ -528,14 +533,14 @@ static void load_main_data(buffer *main)
     buffer_read_raw(main, city_data.unused.other_player, 18068);
     city_data.unused.unknown_00a0 = buffer_read_i8(main);
     city_data.unused.unknown_00a1 = buffer_read_i8(main);
-    Data_CityInfo.__unknown_00a2 = buffer_read_i8(main);
-    Data_CityInfo.__unknown_00a3 = buffer_read_i8(main);
+    city_data.unused.unknown_00a2 = buffer_read_i8(main);
+    city_data.unused.unknown_00a3 = buffer_read_i8(main);
     city_data.unused.unknown_00a4 = buffer_read_i8(main);
     Data_CityInfo.__unknown_00a5 = buffer_read_i8(main);
     city_data.unused.unknown_00a7 = buffer_read_i8(main);
     city_data.unused.unknown_00a6 = buffer_read_i8(main);
-    Data_CityInfo.taxPercentage = buffer_read_i32(main);
-    Data_CityInfo.treasury = buffer_read_i32(main);
+    city_data.finance.tax_percentage = buffer_read_i32(main);
+    city_data.finance.treasury = buffer_read_i32(main);
     Data_CityInfo.citySentiment = buffer_read_i32(main);
     Data_CityInfo.healthRateTarget = buffer_read_i32(main);
     Data_CityInfo.healthRate = buffer_read_i32(main);

@@ -64,7 +64,7 @@ static void update_culture_explanation()
 
 static int has_made_money()
 {
-    return city_data.finance.last_year.expenses.construction + Data_CityInfo.treasury >
+    return city_data.finance.last_year.expenses.construction + city_data.finance.treasury >
         Data_CityInfo.ratingProsperityTreasuryLastYear;
 }
 
@@ -322,7 +322,7 @@ static void update_prosperity_rating()
     } else {
         change -= 1;
     }
-    Data_CityInfo.ratingProsperityTreasuryLastYear = Data_CityInfo.treasury;
+    Data_CityInfo.ratingProsperityTreasuryLastYear = city_data.finance.treasury;
     // food types: +1 for multiple foods
     if (Data_CityInfo.foodInfoFoodTypesEaten >= 2) {
         change += 1;

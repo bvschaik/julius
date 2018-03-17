@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "city/finance.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -10,8 +11,6 @@
 #include "graphics/text.h"
 #include "map/road_access.h"
 #include "window/building/figures.h"
-
-#include "Data/CityInfo.h"
 
 static void draw_vacant_lot(building_info_context *c)
 {
@@ -49,7 +48,7 @@ static void draw_tax_info(building_info_context *c, int y_offset)
 {
     building *b = building_get(c->building_id);
     if (b->houseTaxCoverage) {
-        int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
+        int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, city_finance_tax_percentage());
         int width = lang_text_draw(127, 24, c->x_offset + 36, y_offset, FONT_SMALL_BLACK);
         width += lang_text_draw_amount(8, 0, pct, c->x_offset + 36 + width, y_offset, FONT_SMALL_BLACK);
         lang_text_draw(127, 25, c->x_offset + 36 + width, y_offset, FONT_SMALL_BLACK);

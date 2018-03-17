@@ -4,11 +4,7 @@
 #include <stdint.h>
 
 extern struct _Data_CityInfo {
-	int8_t __unknown_00a2;
-	int8_t __unknown_00a3;
 	int8_t __unknown_00a5;
-	int32_t taxPercentage;
-	int32_t treasury;
 	int32_t citySentiment;
 	int32_t healthRateTarget;
 	int32_t healthRate;

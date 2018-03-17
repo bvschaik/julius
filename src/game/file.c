@@ -283,7 +283,7 @@ static int load_campaign_mission(int mission_id)
     }
 
     initialize_saved_game();
-    Data_CityInfo.treasury = difficulty_adjust_money(Data_CityInfo.treasury);
+    city_data_init_campaign_mission();
     return 1;
 }
 

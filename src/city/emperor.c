@@ -1,5 +1,6 @@
 #include "emperor.h"
 
+#include "city/data_private.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/ratings.h"
@@ -15,7 +16,7 @@ const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
 static void update_debt_state()
 {
-    if (Data_CityInfo.treasury >= 0) {
+    if (city_data.finance.treasury >= 0) {
         Data_CityInfo.monthsInDebt = -1;
         return;
     }

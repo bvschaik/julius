@@ -1,6 +1,7 @@
 #include "city_overlay_other.h"
 
 #include "building/model.h"
+#include "city/finance.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "game/state.h"
@@ -101,7 +102,7 @@ static int get_column_height_food_stocks(const building *b)
 static int get_column_height_tax_income(const building *b)
 {
     if (b->houseSize) {
-        int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
+        int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, city_finance_tax_percentage());
         if (pct > 0) {
             return pct / 25;
         }
@@ -161,7 +162,7 @@ static int get_tooltip_food_stocks(tooltip_context *c, const building *b)
 
 static int get_tooltip_tax_income(tooltip_context *c, const building *b)
 {
-    int denarii = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
+    int denarii = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, city_finance_tax_percentage());
     if (denarii > 0) {
         c->has_numeric_prefix = 1;
         c->numeric_prefix = denarii;
