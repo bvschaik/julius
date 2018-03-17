@@ -7,6 +7,7 @@
 #include "building/list.h"
 #include "building/storage.h"
 #include "city/culture.h"
+#include "city/data.h"
 #include "city/message.h"
 #include "city/view.h"
 #include "core/random.h"
@@ -79,7 +80,7 @@ static struct {
 
 typedef struct {
     buffer *scenario_campaign_mission;
-    buffer *savegameFileVersion;
+    buffer *file_version;
     buffer *image_grid;
     buffer *edge_grid;
     buffer *building_grid;
@@ -99,10 +100,10 @@ typedef struct {
     buffer *route_paths;
     buffer *formations;
     buffer *formation_totals;
-    buffer *Data_CityInfo;
-    buffer *Data_CityInfo_Extra_unknownBytes;
+    buffer *city_data;
+    buffer *city_faction_unknown;
     buffer *player_name;
-    buffer *Data_CityInfo_Extra_ciid;
+    buffer *city_faction;
     buffer *buildings;
     buffer *city_view_orientation;
     buffer *game_time;
@@ -110,8 +111,7 @@ typedef struct {
     buffer *random_iv;
     buffer *city_view_camera;
     buffer *building_count_culture1;
-    buffer *Data_CityInfo_Extra_populationGraphOrder;
-    buffer *Data_CityInfo_Extra_unknownOrder;
+    buffer *city_graph_order;
     buffer *emperor_change_time;
     buffer *empire;
     buffer *empire_cities;
@@ -154,17 +154,13 @@ typedef struct {
     buffer *routing_counters;
     buffer *building_count_culture3;
     buffer *enemy_armies;
-    buffer *Data_CityInfo_Extra_entryPointFlag_x;
-    buffer *Data_CityInfo_Extra_entryPointFlag_y;
-    buffer *Data_CityInfo_Extra_exitPointFlag_x;
-    buffer *Data_CityInfo_Extra_exitPointFlag_y;
+    buffer *city_entry_exit_xy;
     buffer *last_invasion_id;
     buffer *building_extra_corrupt_houses;
     buffer *scenario_name;
     buffer *bookmarks;
     buffer *tutorial_part3;
-    buffer *Data_CityInfo_Extra_entryPointFlag_gridOffset;
-    buffer *Data_CityInfo_Extra_exitPointFlag_gridOffset;
+    buffer *city_entry_exit_grid_offset;
     buffer *endMarker;
 } savegame_state;
 
@@ -225,7 +221,7 @@ static void init_savegame_data()
     }
     savegame_state *state = &savegame_data.state;
     state->scenario_campaign_mission = create_savegame_piece(4, 0);
-    state->savegameFileVersion = create_savegame_piece(4, 0);
+    state->file_version = create_savegame_piece(4, 0);
     state->image_grid = create_savegame_piece(52488, 1);
     state->edge_grid = create_savegame_piece(26244, 1);
     state->building_grid = create_savegame_piece(52488, 1);
@@ -245,10 +241,10 @@ static void init_savegame_data()
     state->route_paths = create_savegame_piece(300000, 1);
     state->formations = create_savegame_piece(6400, 1);
     state->formation_totals = create_savegame_piece(12, 0);
-    state->Data_CityInfo = create_savegame_piece(36136, 1);
-    state->Data_CityInfo_Extra_unknownBytes = create_savegame_piece(2, 0);
+    state->city_data = create_savegame_piece(36136, 1);
+    state->city_faction_unknown = create_savegame_piece(2, 0);
     state->player_name = create_savegame_piece(64, 0);
-    state->Data_CityInfo_Extra_ciid = create_savegame_piece(4, 0);
+    state->city_faction = create_savegame_piece(4, 0);
     state->buildings = create_savegame_piece(256000, 1);
     state->city_view_orientation = create_savegame_piece(4, 0);
     state->game_time = create_savegame_piece(20, 0);
@@ -256,8 +252,7 @@ static void init_savegame_data()
     state->random_iv = create_savegame_piece(8, 0);
     state->city_view_camera = create_savegame_piece(8, 0);
     state->building_count_culture1 = create_savegame_piece(132, 0);
-    state->Data_CityInfo_Extra_populationGraphOrder = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_unknownOrder = create_savegame_piece(4, 0);
+    state->city_graph_order = create_savegame_piece(8, 0);
     state->emperor_change_time = create_savegame_piece(8, 0);
     state->empire = create_savegame_piece(12, 0);
     state->empire_cities = create_savegame_piece(2706, 1);
@@ -300,30 +295,14 @@ static void init_savegame_data()
     state->routing_counters = create_savegame_piece(16, 0);
     state->building_count_culture3 = create_savegame_piece(40, 0);
     state->enemy_armies = create_savegame_piece(900, 0);
-    state->Data_CityInfo_Extra_entryPointFlag_x = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_entryPointFlag_y = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_exitPointFlag_x = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_exitPointFlag_y = create_savegame_piece(4, 0);
+    state->city_entry_exit_xy = create_savegame_piece(16, 0);
     state->last_invasion_id = create_savegame_piece(2, 0);
     state->building_extra_corrupt_houses = create_savegame_piece(8, 0);
     state->scenario_name = create_savegame_piece(65, 0);
     state->bookmarks = create_savegame_piece(32, 0);
     state->tutorial_part3 = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_entryPointFlag_gridOffset = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_exitPointFlag_gridOffset = create_savegame_piece(4, 0);
+    state->city_entry_exit_grid_offset = create_savegame_piece(8, 0);
     state->endMarker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness
-}
-
-// TODO temporary until all data pieces have been migrated
-static void read_all_from_buffer(buffer *buf, void *data)
-{
-    buffer_read_raw(buf, data, buf->size);
-}
-
-// TODO temporary until all data pieces have been migrated
-static void write_all_to_buffer(buffer *buf, void *data)
-{
-    buffer_write_raw(buf, data, buf->size);
 }
 
 static void scenario_load_from_state(scenario_state *file)
@@ -352,13 +331,13 @@ static void scenario_load_from_state(scenario_state *file)
 
 static void savegame_load_from_state(savegame_state *state)
 {
+    savegame_version = buffer_read_i32(state->file_version);
+
     scenario_settings_load_state(state->scenario_campaign_mission,
                                  state->scenario_settings,
                                  state->scenario_is_custom,
                                  state->player_name,
                                  state->scenario_name);
-
-    read_all_from_buffer(state->savegameFileVersion, &savegame_version);
 
     map_image_load_state(state->image_grid);
     map_building_load_state(state->building_grid, state->building_damage_grid);
@@ -374,10 +353,13 @@ static void savegame_load_from_state(savegame_state *state)
     figure_load_state(state->figures, state->figure_sequence);
     figure_route_load_state(state->route_figures, state->route_paths);
     formations_load_state(state->formations, state->formation_totals);
-    
-    read_all_from_buffer(state->Data_CityInfo, &Data_CityInfo);
-    read_all_from_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
-    read_all_from_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
+
+    city_data_load_state(state->city_data,
+                         state->city_faction,
+                         state->city_faction_unknown,
+                         state->city_graph_order,
+                         state->city_entry_exit_xy,
+                         state->city_entry_exit_grid_offset);
 
     building_load_state(state->buildings,
                         state->building_extra_highest_id,
@@ -394,9 +376,6 @@ static void savegame_load_from_state(savegame_state *state)
                               state->building_count_culture3,
                               state->building_count_military,
                               state->building_count_support);
-
-    read_all_from_buffer(state->Data_CityInfo_Extra_populationGraphOrder, &Data_CityInfo_Extra.populationGraphOrder);
-    read_all_from_buffer(state->Data_CityInfo_Extra_unknownOrder, &Data_CityInfo_Extra.unknownOrder);
 
     scenario_emperor_change_load_state(state->emperor_change_time, state->emperor_change_state);
 
@@ -425,17 +404,8 @@ static void savegame_load_from_state(savegame_state *state)
     trade_routes_load_state(state->trade_route_limit, state->trade_route_traded);
     map_routing_load_state(state->routing_counters);
     enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
-
-    read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_x, &Data_CityInfo_Extra.entryPointFlag.x);
-    read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_y, &Data_CityInfo_Extra.entryPointFlag.y);
-    read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
-    read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
-
     scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
     map_bookmark_load_state(state->bookmarks);
-
-    read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
-    read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
 
     buffer_skip(state->endMarker, 284);
 
@@ -452,13 +422,13 @@ static void savegame_load_from_state(savegame_state *state)
 
 static void savegame_save_to_state(savegame_state *state)
 {
+    buffer_write_i32(state->file_version, savegame_version);
+
     scenario_settings_save_state(state->scenario_campaign_mission,
                                  state->scenario_settings,
                                  state->scenario_is_custom,
                                  state->player_name,
                                  state->scenario_name);
-
-    write_all_to_buffer(state->savegameFileVersion, &savegame_version);
 
     map_image_save_state(state->image_grid);
     map_building_save_state(state->building_grid, state->building_damage_grid);
@@ -474,10 +444,13 @@ static void savegame_save_to_state(savegame_state *state)
     figure_save_state(state->figures, state->figure_sequence);
     figure_route_save_state(state->route_figures, state->route_paths);
     formations_save_state(state->formations, state->formation_totals);
-    
-    write_all_to_buffer(state->Data_CityInfo, &Data_CityInfo);
-    write_all_to_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
-    write_all_to_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
+
+    city_data_save_state(state->city_data,
+                         state->city_faction,
+                         state->city_faction_unknown,
+                         state->city_graph_order,
+                         state->city_entry_exit_xy,
+                         state->city_entry_exit_grid_offset);
 
     building_save_state(state->buildings,
                         state->building_extra_highest_id,
@@ -494,9 +467,6 @@ static void savegame_save_to_state(savegame_state *state)
                               state->building_count_culture3,
                               state->building_count_military,
                               state->building_count_support);
-
-    write_all_to_buffer(state->Data_CityInfo_Extra_populationGraphOrder, &Data_CityInfo_Extra.populationGraphOrder);
-    write_all_to_buffer(state->Data_CityInfo_Extra_unknownOrder, &Data_CityInfo_Extra.unknownOrder);
 
     scenario_emperor_change_save_state(state->emperor_change_time, state->emperor_change_state);
     empire_save_state(state->empire);
@@ -525,17 +495,8 @@ static void savegame_save_to_state(savegame_state *state)
     trade_routes_save_state(state->trade_route_limit, state->trade_route_traded);
     map_routing_save_state(state->routing_counters);
     enemy_armies_save_state(state->enemy_armies, state->enemy_army_totals);
-
-    write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_x, &Data_CityInfo_Extra.entryPointFlag.x);
-    write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_y, &Data_CityInfo_Extra.entryPointFlag.y);
-    write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
-    write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
-
     scenario_invasion_save_state(state->last_invasion_id, state->invasion_warnings);
     map_bookmark_save_state(state->bookmarks);
-
-    write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
-    write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
 
     buffer_skip(state->endMarker, 284);
 
