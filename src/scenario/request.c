@@ -56,16 +56,14 @@ void scenario_request_process()
                         city_message_post(1, MESSAGE_REQUEST_REFUSED, i, 0);
                         scenario.requests[i].state = REQUEST_STATE_OVERDUE;
                         scenario.requests[i].months_to_comply = 24;
-                        city_ratings_change_favor(-3);
-                        Data_CityInfo.ratingFavorIgnoredRequestPenalty = 3;
+                        city_ratings_reduce_favor_missed_request(3);
                     }
                 } else if (state == REQUEST_STATE_OVERDUE) {
                     if (scenario.requests[i].months_to_comply <= 0) {
                         city_message_post(1, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
                         scenario.requests[i].state = REQUEST_STATE_IGNORED;
                         scenario.requests[i].visible = 0;
-                        city_ratings_change_favor(-5);
-                        Data_CityInfo.ratingFavorIgnoredRequestPenalty = 5;
+                        city_ratings_reduce_favor_missed_request(5);
                     }
                 }
                 if (!scenario.requests[i].can_comply_dialog_shown &&

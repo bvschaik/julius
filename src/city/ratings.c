@@ -11,6 +11,26 @@
 
 #include "Data/CityInfo.h"
 
+int city_rating_culture()
+{
+    return Data_CityInfo.ratingCulture;
+}
+
+int city_rating_prosperity()
+{
+    return Data_CityInfo.ratingProsperity;
+}
+
+int city_rating_peace()
+{
+    return Data_CityInfo.ratingPeace;
+}
+
+int city_rating_favor()
+{
+    return Data_CityInfo.ratingFavor;
+}
+
 void city_ratings_reduce_prosperity_after_bailout()
 {
     Data_CityInfo.ratingProsperity -= 3;
@@ -20,9 +40,37 @@ void city_ratings_reduce_prosperity_after_bailout()
     Data_CityInfo.ratingAdvisorExplanationProsperity = 8;
 }
 
+void city_ratings_peace_building_destroyed(building_type type)
+{
+    switch (type) {
+        case BUILDING_HOUSE_SMALL_TENT:
+        case BUILDING_HOUSE_LARGE_TENT:
+        case BUILDING_PREFECTURE:
+        case BUILDING_ENGINEERS_POST:
+        case BUILDING_WELL:
+        case BUILDING_FORT:
+        case BUILDING_FORT_GROUND:
+        case BUILDING_GATEHOUSE:
+        case BUILDING_TOWER:
+            break;
+        default:
+            Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear++;
+            break;
+    }
+    if (Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear >= 12) {
+        Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 12;
+    }
+}
+
 void city_ratings_change_favor(int amount)
 {
     Data_CityInfo.ratingFavor = calc_bound(Data_CityInfo.ratingFavor + amount, 0, 100);
+}
+
+void city_ratings_reduce_favor_missed_request(int penalty)
+{
+    city_ratings_change_favor(-penalty);
+    Data_CityInfo.ratingFavorIgnoredRequestPenalty = penalty;
 }
 
 void city_ratings_limit_favor(int max_favor)

@@ -2,6 +2,7 @@
 
 #include "city/emperor.h"
 #include "city/finance.h"
+#include "city/ratings.h"
 #include "empire/city.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
@@ -96,9 +97,9 @@ static int draw_background()
     text_draw(scenario_player_name(), 60, 12, FONT_LARGE_BLACK, 0);
 
     int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK);
-    text_draw_number(Data_CityInfo.ratingFavor, '@', " ", 60 + width, 44, FONT_NORMAL_BLACK);
+    text_draw_number(city_rating_favor(), '@', " ", 60 + width, 44, FONT_NORMAL_BLACK);
 
-    lang_text_draw_multiline(52, Data_CityInfo.ratingFavor / 5 + 22, 60, 60, 544, FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(52, city_rating_favor() / 5 + 22, 60, 60, 544, FONT_NORMAL_BLACK);
 
     inner_panel_draw(32, 90, 36, 14);
     

@@ -1,5 +1,6 @@
 #include "tooltip.h"
 
+#include "city/ratings.h"
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
@@ -175,19 +176,19 @@ static void draw_senate_tooltip(tooltip_context *c)
     
     // ratings
     lang_text_draw_colored(68, 149, x + 5, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(Data_CityInfo.ratingCulture, '@', " ",
+    text_draw_number_colored(city_rating_culture(), '@', " ",
         x + 140, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
     lang_text_draw_colored(68, 150, x + 5, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(Data_CityInfo.ratingProsperity, '@', " ",
+    text_draw_number_colored(city_rating_prosperity(), '@', " ",
         x + 140, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
     lang_text_draw_colored(68, 151, x + 5, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(Data_CityInfo.ratingPeace, '@', " ",
+    text_draw_number_colored(city_rating_peace(), '@', " ",
         x + 140, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
     lang_text_draw_colored(68, 152, x + 5, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(Data_CityInfo.ratingFavor, '@', " ",
+    text_draw_number_colored(city_rating_favor(), '@', " ",
         x + 140, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 }
 

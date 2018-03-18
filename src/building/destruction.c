@@ -2,6 +2,7 @@
 
 #include "city/message.h"
 #include "city/population.h"
+#include "city/ratings.h"
 #include "core/image.h"
 #include "figuretype/missile.h"
 #include "figuretype/wall.h"
@@ -197,24 +198,7 @@ void building_destroy_by_enemy(int x, int y, int grid_offset)
     if (building_id > 0) {
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_IN_USE) {
-            switch (b->type) {
-                case BUILDING_HOUSE_SMALL_TENT:
-                case BUILDING_HOUSE_LARGE_TENT:
-                case BUILDING_PREFECTURE:
-                case BUILDING_ENGINEERS_POST:
-                case BUILDING_WELL:
-                case BUILDING_FORT:
-                case BUILDING_FORT_GROUND:
-                case BUILDING_GATEHOUSE:
-                case BUILDING_TOWER:
-                    break;
-                default:
-                    Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear++;
-                    break;
-            }
-            if (Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear >= 12) {
-                Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 12;
-            }
+            city_ratings_peace_building_destroyed(b->type);
             building_destroy_by_collapse(b);
         }
     } else {

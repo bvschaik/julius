@@ -3,6 +3,7 @@
 #include "building/animation.h"
 #include "building/dock.h"
 #include "city/buildings.h"
+#include "city/ratings.h"
 #include "city/view.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -196,10 +197,10 @@ static void draw_senate_rating_flags(const building *b, int x, int y, color_t co
     if (b->type == BUILDING_SENATE_UPGRADED) {
         // rating flags
         int image_id = image_group(GROUP_BUILDING_SENATE);
-        image_draw_masked(image_id + 1, x + 138, y + 44 - Data_CityInfo.ratingCulture / 2, color_mask);
-        image_draw_masked(image_id + 2, x + 168, y + 36 - Data_CityInfo.ratingProsperity / 2, color_mask);
-        image_draw_masked(image_id + 3, x + 198, y + 27 - Data_CityInfo.ratingPeace / 2, color_mask);
-        image_draw_masked(image_id + 4, x + 228, y + 19 - Data_CityInfo.ratingFavor / 2, color_mask);
+        image_draw_masked(image_id + 1, x + 138, y + 44 - city_rating_culture() / 2, color_mask);
+        image_draw_masked(image_id + 2, x + 168, y + 36 - city_rating_prosperity() / 2, color_mask);
+        image_draw_masked(image_id + 3, x + 198, y + 27 - city_rating_peace() / 2, color_mask);
+        image_draw_masked(image_id + 4, x + 228, y + 19 - city_rating_favor() / 2, color_mask);
         // unemployed
         image_id = image_group(GROUP_FIGURE_HOMELESS);
         if (Data_CityInfo.unemploymentPercentageForSenate > 0) {

@@ -1,6 +1,7 @@
 #include "mission_end.h"
 
 #include "city/finance.h"
+#include "city/ratings.h"
 #include "city/victory.h"
 #include "game/mission.h"
 #include "game/settings.h"
@@ -51,16 +52,16 @@ static void draw_won()
         lang_text_draw_multiline(147, scenario_campaign_mission(), 80, 192, 496, FONT_NORMAL_WHITE);
     }
     int width = lang_text_draw(148, 0, 88, 308, FONT_NORMAL_BLACK);
-    text_draw_number(Data_CityInfo.ratingCulture, '@', " ", 88 + width, 308, FONT_NORMAL_BLACK);
+    text_draw_number(city_rating_culture(), '@', " ", 88 + width, 308, FONT_NORMAL_BLACK);
 
     width = lang_text_draw(148, 1, 348, 308, FONT_NORMAL_BLACK);
-    text_draw_number(Data_CityInfo.ratingProsperity, '@', " ", 348 + width, 308, FONT_NORMAL_BLACK);
+    text_draw_number(city_rating_prosperity(), '@', " ", 348 + width, 308, FONT_NORMAL_BLACK);
 
     width = lang_text_draw(148, 2, 88, 328, FONT_NORMAL_BLACK);
-    text_draw_number(Data_CityInfo.ratingPeace, '@', " ", 88 + width, 328, FONT_NORMAL_BLACK);
+    text_draw_number(city_rating_peace(), '@', " ", 88 + width, 328, FONT_NORMAL_BLACK);
 
     width = lang_text_draw(148, 3, 348, 328, FONT_NORMAL_BLACK);
-    text_draw_number(Data_CityInfo.ratingFavor, '@', " ", 348 + width, 328, FONT_NORMAL_BLACK);
+    text_draw_number(city_rating_favor(), '@', " ", 348 + width, 328, FONT_NORMAL_BLACK);
 
     width = lang_text_draw(148, 4, 88, 348, FONT_NORMAL_BLACK);
     text_draw_number(Data_CityInfo.population, '@', " ", 88 + width, 348, FONT_NORMAL_BLACK);

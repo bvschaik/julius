@@ -1,5 +1,6 @@
 #include "ratings.h"
 
+#include "city/ratings.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -52,9 +53,10 @@ static int draw_background()
     image_draw(image_group(GROUP_RATINGS_BACKGROUND), 60, 48);
 
     // culture
+    int culture = city_rating_culture();
     button_border_draw(80, 286, 110, 66, focus_button_id == 1);
     lang_text_draw_centered(53, 1, 80, 294, 110, FONT_NORMAL_BLACK);
-    text_draw_number_centered(Data_CityInfo.ratingCulture, 80, 309, 100, FONT_LARGE_BLACK);
+    text_draw_number_centered(culture, 80, 309, 100, FONT_LARGE_BLACK);
     if (scenario_criteria_culture_enabled()) {
         width = text_draw_number(scenario_criteria_culture(), '@', " ", 85, 334, FONT_NORMAL_BLACK);
     } else {
@@ -62,14 +64,14 @@ static int draw_background()
     }
     lang_text_draw(53, 5, 85 + width, 334, FONT_NORMAL_BLACK);
     int has_reached = !scenario_criteria_culture_enabled() ||
-        Data_CityInfo.ratingCulture > scenario_criteria_culture() ||
-        Data_CityInfo.ratingCulture == 100; // FIXED: capital bug fixed
-    draw_rating_column(110, 274, Data_CityInfo.ratingCulture, has_reached);
+        culture > scenario_criteria_culture() || culture == 100;
+    draw_rating_column(110, 274, culture, has_reached);
 
     // prosperity
+    int prosperity = city_rating_prosperity();
     button_border_draw(200, 286, 110, 66, focus_button_id == 2);
     lang_text_draw_centered(53, 2, 200, 294, 110, FONT_NORMAL_BLACK);
-    text_draw_number_centered(Data_CityInfo.ratingProsperity, 200, 309, 100, FONT_LARGE_BLACK);
+    text_draw_number_centered(prosperity, 200, 309, 100, FONT_LARGE_BLACK);
     if (scenario_criteria_prosperity_enabled()) {
         width = text_draw_number(scenario_criteria_prosperity(), '@', " ", 205, 334, FONT_NORMAL_BLACK);
     } else {
@@ -77,14 +79,14 @@ static int draw_background()
     }
     lang_text_draw(53, 5, 205 + width, 334, FONT_NORMAL_BLACK);
     has_reached = !scenario_criteria_prosperity_enabled() ||
-        Data_CityInfo.ratingProsperity > scenario_criteria_prosperity() ||
-        Data_CityInfo.ratingProsperity == 100; // FIXED: capital bug fixed
-    draw_rating_column(230, 274, Data_CityInfo.ratingProsperity, has_reached);
+        prosperity > scenario_criteria_prosperity() || prosperity == 100;
+    draw_rating_column(230, 274, prosperity, has_reached);
 
     // peace
+    int peace = city_rating_peace();
     button_border_draw(320, 286, 110, 66, focus_button_id == 3);
     lang_text_draw_centered(53, 3, 320, 294, 110, FONT_NORMAL_BLACK);
-    text_draw_number_centered(Data_CityInfo.ratingPeace, 320, 309, 100, FONT_LARGE_BLACK);
+    text_draw_number_centered(peace, 320, 309, 100, FONT_LARGE_BLACK);
     if (scenario_criteria_peace_enabled()) {
         width = text_draw_number(scenario_criteria_peace(), '@', " ", 325, 334, FONT_NORMAL_BLACK);
     } else {
@@ -92,14 +94,14 @@ static int draw_background()
     }
     lang_text_draw(53, 5, 325 + width, 334, FONT_NORMAL_BLACK);
     has_reached = !scenario_criteria_peace_enabled() ||
-        Data_CityInfo.ratingPeace > scenario_criteria_peace() ||
-        Data_CityInfo.ratingPeace == 100; // FIXED: capital bug fixed
-    draw_rating_column(350, 274, Data_CityInfo.ratingPeace, has_reached);
+        peace > scenario_criteria_peace() || peace == 100;
+    draw_rating_column(350, 274, peace, has_reached);
 
     // favor
+    int favor = city_rating_favor();
     button_border_draw(440, 286, 110, 66, focus_button_id == 4);
     lang_text_draw_centered(53, 4, 440, 294, 110, FONT_NORMAL_BLACK);
-    text_draw_number_centered(Data_CityInfo.ratingFavor, 440, 309, 100, FONT_LARGE_BLACK);
+    text_draw_number_centered(favor, 440, 309, 100, FONT_LARGE_BLACK);
     if (scenario_criteria_favor_enabled()) {
         width = text_draw_number(scenario_criteria_favor(), '@', " ", 445, 334, FONT_NORMAL_BLACK);
     } else {
@@ -107,16 +109,15 @@ static int draw_background()
     }
     lang_text_draw(53, 5, 445 + width, 334, FONT_NORMAL_BLACK);
     has_reached = !scenario_criteria_favor_enabled() ||
-        Data_CityInfo.ratingFavor > scenario_criteria_favor() ||
-        Data_CityInfo.ratingFavor == 100; // FIXED: capital bug fixed
-    draw_rating_column(470, 274, Data_CityInfo.ratingFavor, has_reached);
+        favor > scenario_criteria_favor() || favor == 100;
+    draw_rating_column(470, 274, favor, has_reached);
 
     // bottom info box
     inner_panel_draw(64, 356, 32, 4);
     switch (Data_CityInfo.ratingAdvisorSelection) {
         case 1:
             lang_text_draw(53, 1, 72, 359, FONT_NORMAL_WHITE);
-            if (Data_CityInfo.ratingCulture <= 90) {
+            if (city_rating_culture() <= 90) {
                 lang_text_draw_multiline(53, 9 + Data_CityInfo.ratingAdvisorExplanationCulture,
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
