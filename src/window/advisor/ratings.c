@@ -117,7 +117,7 @@ static int draw_background()
     switch (Data_CityInfo.ratingAdvisorSelection) {
         case 1:
             lang_text_draw(53, 1, 72, 359, FONT_NORMAL_WHITE);
-            if (city_rating_culture() <= 90) {
+            if (culture <= 90) {
                 lang_text_draw_multiline(53, 9 + Data_CityInfo.ratingAdvisorExplanationCulture,
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
@@ -126,7 +126,7 @@ static int draw_background()
             break;
         case 2:
             lang_text_draw(53, 2, 72, 359, FONT_NORMAL_WHITE);
-            if (Data_CityInfo.ratingProsperity <= 90) {
+            if (prosperity <= 90) {
                 lang_text_draw_multiline(53, 16 + Data_CityInfo.ratingAdvisorExplanationProsperity,
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
@@ -135,7 +135,7 @@ static int draw_background()
             break;
         case 3:
             lang_text_draw(53, 3, 72, 359, FONT_NORMAL_WHITE);
-            if (Data_CityInfo.ratingPeace <= 90) {
+            if (peace <= 90) {
                 lang_text_draw_multiline(53, 41 + Data_CityInfo.ratingAdvisorExplanationPeace,
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
@@ -144,7 +144,7 @@ static int draw_background()
             break;
         case 4:
             lang_text_draw(53, 4, 72, 359, FONT_NORMAL_WHITE);
-            if (Data_CityInfo.ratingFavor <= 90) {
+            if (favor <= 90) {
                 lang_text_draw_multiline(53, 27 + Data_CityInfo.ratingAdvisorExplanationFavor,
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {

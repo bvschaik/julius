@@ -32,6 +32,31 @@ extern struct city_data_t {
         finance_overview this_year;
     } finance;
     struct {
+        int32_t culture;
+        int32_t prosperity;
+        int32_t peace;
+        int32_t favor;
+        struct {
+            int32_t theater;
+            int32_t religion;
+            int32_t school;
+            int32_t library;
+            int32_t academy;
+        } culture_points;
+        int32_t prosperity_treasury_last_year;
+        int32_t prosperity_max;
+        int32_t peace_destroyed_buildings;
+        int32_t peace_years_of_peace;
+        int32_t peace_num_criminals;
+        int32_t peace_num_rioters;
+        int32_t peace_riot_cause;
+        int32_t favor_salary_penalty;
+        int32_t favor_milestone_penalty;
+        int32_t favor_ignored_request_penalty;
+        int32_t favor_last_year;
+        int32_t favor_change; // 0 = dropping, 1 = stalling, 2 = rising
+    } ratings;
+    struct {
         int8_t other_player[18068];
         int8_t unknown_00a0;
         int8_t unknown_00a1;

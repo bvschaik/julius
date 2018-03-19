@@ -14,6 +14,23 @@
 
 const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
+void city_emperor_init_scenario(int rank)
+{
+    city_data.ratings.favor = scenario_starting_favor();
+    Data_CityInfo.personalSavings = scenario_starting_personal_savings();
+    Data_CityInfo.playerRank = rank;
+    int salary_rank = rank;
+    if (scenario_is_custom()) {
+        Data_CityInfo.personalSavings = 0;
+        Data_CityInfo.playerRank = scenario_property_player_rank();
+        salary_rank = scenario_property_player_rank();
+    }
+    if (salary_rank > 10) {
+        salary_rank = 10;
+    }
+    city_emperor_set_salary_rank(salary_rank);
+}
+
 static void update_debt_state()
 {
     if (city_data.finance.treasury >= 0) {
@@ -74,9 +91,9 @@ static void process_caesar_invasion()
     if (Data_CityInfo.numImperialSoldiersInCity) {
         // caesar invasion in progress
         Data_CityInfo.caesarInvasionDurationDayCountdown--;
-        if (Data_CityInfo.ratingFavor >= 35 && Data_CityInfo.caesarInvasionDurationDayCountdown < 176) {
+        if (city_data.ratings.favor >= 35 && Data_CityInfo.caesarInvasionDurationDayCountdown < 176) {
             formation_caesar_pause();
-        } else if (Data_CityInfo.ratingFavor >= 22) {
+        } else if (city_data.ratings.favor >= 22) {
             if (Data_CityInfo.caesarInvasionDurationDayCountdown > 0) {
                 formation_caesar_retreat();
                 if (!Data_CityInfo.caesarInvasionRetreatMessageShown) {
@@ -91,7 +108,7 @@ static void process_caesar_invasion()
         // player defeated caesar army
         Data_CityInfo.caesarInvasionSize = 0;
         Data_CityInfo.caesarInvasionSoldiersDied = 0;
-        if (Data_CityInfo.ratingFavor < 35) {
+        if (city_data.ratings.favor < 35) {
             city_ratings_change_favor(10);
             if (Data_CityInfo.caesarInvasionCount < 2) {
                 city_message_post(1, MESSAGE_CAESAR_RESPECT_1, 0, 0);
@@ -102,7 +119,7 @@ static void process_caesar_invasion()
             }
         }
     } else if (Data_CityInfo.caesarInvasionDaysUntilInvasion <= 0) {
-        if (Data_CityInfo.ratingFavor <= 10) {
+        if (city_data.ratings.favor <= 10) {
             // warn player that caesar is angry and will invade in a year
             Data_CityInfo.caesarInvasionWarningsGiven++;
             Data_CityInfo.caesarInvasionDaysUntilInvasion = 192;

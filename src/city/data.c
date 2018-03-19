@@ -236,21 +236,21 @@ static void save_main_data(buffer *main)
     }
     buffer_write_i32(main, Data_CityInfo.tradeNextImportResourceCaravan);
     buffer_write_i32(main, Data_CityInfo.tradeNextImportResourceCaravanBackup);
-    buffer_write_i32(main, Data_CityInfo.ratingCulture);
-    buffer_write_i32(main, Data_CityInfo.ratingProsperity);
-    buffer_write_i32(main, Data_CityInfo.ratingPeace);
-    buffer_write_i32(main, Data_CityInfo.ratingFavor);
+    buffer_write_i32(main, city_data.ratings.culture);
+    buffer_write_i32(main, city_data.ratings.prosperity);
+    buffer_write_i32(main, city_data.ratings.peace);
+    buffer_write_i32(main, city_data.ratings.favor);
     for (int i = 0; i < 4; i++) {
         buffer_write_i32(main, city_data.unused.unknown_4238[i]);
     }
-    buffer_write_i32(main, Data_CityInfo.ratingProsperityTreasuryLastYear);
-    buffer_write_i32(main, Data_CityInfo.ratingCulturePointsTheater);
-    buffer_write_i32(main, Data_CityInfo.ratingCulturePointsReligion);
-    buffer_write_i32(main, Data_CityInfo.ratingCulturePointsSchool);
-    buffer_write_i32(main, Data_CityInfo.ratingCulturePointsLibrary);
-    buffer_write_i32(main, Data_CityInfo.ratingCulturePointsAcademy);
-    buffer_write_i32(main, Data_CityInfo.ratingPeaceNumCriminalsThisYear);
-    buffer_write_i32(main, Data_CityInfo.ratingPeaceNumRiotersThisYear);
+    buffer_write_i32(main, city_data.ratings.prosperity_treasury_last_year);
+    buffer_write_i32(main, city_data.ratings.culture_points.theater);
+    buffer_write_i32(main, city_data.ratings.culture_points.religion);
+    buffer_write_i32(main, city_data.ratings.culture_points.school);
+    buffer_write_i32(main, city_data.ratings.culture_points.library);
+    buffer_write_i32(main, city_data.ratings.culture_points.academy);
+    buffer_write_i32(main, city_data.ratings.peace_num_criminals);
+    buffer_write_i32(main, city_data.ratings.peace_num_rioters);
     buffer_write_i32(main, Data_CityInfo.housesRequiringFountainToEvolve);
     buffer_write_i32(main, Data_CityInfo.housesRequiringWellToEvolve);
     buffer_write_i32(main, Data_CityInfo.housesRequiringMoreEntertainmentToEvolve);
@@ -414,11 +414,11 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.giftCost_modest);
     buffer_write_i32(main, Data_CityInfo.giftCost_generous);
     buffer_write_i32(main, Data_CityInfo.giftCost_lavish);
-    buffer_write_i32(main, Data_CityInfo.ratingFavorSalaryPenalty);
-    buffer_write_i32(main, Data_CityInfo.ratingFavorMilestonePenalty);
-    buffer_write_i32(main, Data_CityInfo.ratingFavorIgnoredRequestPenalty);
-    buffer_write_i32(main, Data_CityInfo.ratingFavorLastYear);
-    buffer_write_i32(main, Data_CityInfo.ratingFavorChange);
+    buffer_write_i32(main, city_data.ratings.favor_salary_penalty);
+    buffer_write_i32(main, city_data.ratings.favor_milestone_penalty);
+    buffer_write_i32(main, city_data.ratings.favor_ignored_request_penalty);
+    buffer_write_i32(main, city_data.ratings.favor_last_year);
+    buffer_write_i32(main, city_data.ratings.favor_change);
     buffer_write_i32(main, Data_CityInfo.nativeAttackDuration);
     buffer_write_i32(main, city_data.unused.unused_nativeForceAttack);
     buffer_write_i32(main, Data_CityInfo.nativeMissionPostOperational);
@@ -441,7 +441,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.foodInfoFoodConsumedLastMonth);
     buffer_write_i32(main, Data_CityInfo.foodInfoFoodStoredLastMonth);
     buffer_write_i32(main, Data_CityInfo.foodInfoFoodStoredSoFarThisMonth);
-    buffer_write_i32(main, Data_CityInfo.riotCause);
+    buffer_write_i32(main, city_data.ratings.peace_riot_cause);
     buffer_write_i32(main, Data_CityInfo.estimatedTaxIncome);
     buffer_write_i32(main, Data_CityInfo.tutorial1SenateBuilt);
     buffer_write_i8(main, city_data.building.distribution_center_x);
@@ -462,8 +462,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.caesarInvasionWarningsGiven);
     buffer_write_i32(main, Data_CityInfo.caesarInvasionDaysUntilInvasion);
     buffer_write_i32(main, Data_CityInfo.caesarInvasionRetreatMessageShown);
-    buffer_write_i32(main, Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear);
-    buffer_write_i32(main, Data_CityInfo.ratingPeaceYearsOfPeace);
+    buffer_write_i32(main, city_data.ratings.peace_destroyed_buildings);
+    buffer_write_i32(main, city_data.ratings.peace_years_of_peace);
     buffer_write_u8(main, Data_CityInfo.distantBattleCityId);
     buffer_write_u8(main, Data_CityInfo.distantBattleEnemyStrength);
     buffer_write_u8(main, Data_CityInfo.distantBattleRomanStrength);
@@ -506,7 +506,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.populationHighestEver);
     buffer_write_i32(main, Data_CityInfo.estimatedYearlyWages);
     buffer_write_i32(main, Data_CityInfo.resourceWineTypesAvailable);
-    buffer_write_i32(main, Data_CityInfo.ratingProsperityMax);
+    buffer_write_i32(main, city_data.ratings.prosperity_max);
     for (int i = 0; i < 10; i++) {
         buffer_write_i32(main, Data_CityInfo.largestRoadNetworks[i].id);
         buffer_write_i32(main, Data_CityInfo.largestRoadNetworks[i].size);
@@ -713,21 +713,21 @@ static void load_main_data(buffer *main)
     }
     Data_CityInfo.tradeNextImportResourceCaravan = buffer_read_i32(main);
     Data_CityInfo.tradeNextImportResourceCaravanBackup = buffer_read_i32(main);
-    Data_CityInfo.ratingCulture = buffer_read_i32(main);
-    Data_CityInfo.ratingProsperity = buffer_read_i32(main);
-    Data_CityInfo.ratingPeace = buffer_read_i32(main);
-    Data_CityInfo.ratingFavor = buffer_read_i32(main);
+    city_data.ratings.culture = buffer_read_i32(main);
+    city_data.ratings.prosperity = buffer_read_i32(main);
+    city_data.ratings.peace = buffer_read_i32(main);
+    city_data.ratings.favor = buffer_read_i32(main);
     for (int i = 0; i < 4; i++) {
         city_data.unused.unknown_4238[i] = buffer_read_i32(main);
     }
-    Data_CityInfo.ratingProsperityTreasuryLastYear = buffer_read_i32(main);
-    Data_CityInfo.ratingCulturePointsTheater = buffer_read_i32(main);
-    Data_CityInfo.ratingCulturePointsReligion = buffer_read_i32(main);
-    Data_CityInfo.ratingCulturePointsSchool = buffer_read_i32(main);
-    Data_CityInfo.ratingCulturePointsLibrary = buffer_read_i32(main);
-    Data_CityInfo.ratingCulturePointsAcademy = buffer_read_i32(main);
-    Data_CityInfo.ratingPeaceNumCriminalsThisYear = buffer_read_i32(main);
-    Data_CityInfo.ratingPeaceNumRiotersThisYear = buffer_read_i32(main);
+    city_data.ratings.prosperity_treasury_last_year = buffer_read_i32(main);
+    city_data.ratings.culture_points.theater = buffer_read_i32(main);
+    city_data.ratings.culture_points.religion = buffer_read_i32(main);
+    city_data.ratings.culture_points.school = buffer_read_i32(main);
+    city_data.ratings.culture_points.library = buffer_read_i32(main);
+    city_data.ratings.culture_points.academy = buffer_read_i32(main);
+    city_data.ratings.peace_num_criminals = buffer_read_i32(main);
+    city_data.ratings.peace_num_rioters = buffer_read_i32(main);
     Data_CityInfo.housesRequiringFountainToEvolve = buffer_read_i32(main);
     Data_CityInfo.housesRequiringWellToEvolve = buffer_read_i32(main);
     Data_CityInfo.housesRequiringMoreEntertainmentToEvolve = buffer_read_i32(main);
@@ -891,11 +891,11 @@ static void load_main_data(buffer *main)
     Data_CityInfo.giftCost_modest = buffer_read_i32(main);
     Data_CityInfo.giftCost_generous = buffer_read_i32(main);
     Data_CityInfo.giftCost_lavish = buffer_read_i32(main);
-    Data_CityInfo.ratingFavorSalaryPenalty = buffer_read_i32(main);
-    Data_CityInfo.ratingFavorMilestonePenalty = buffer_read_i32(main);
-    Data_CityInfo.ratingFavorIgnoredRequestPenalty = buffer_read_i32(main);
-    Data_CityInfo.ratingFavorLastYear = buffer_read_i32(main);
-    Data_CityInfo.ratingFavorChange = buffer_read_i32(main);
+    city_data.ratings.favor_salary_penalty = buffer_read_i32(main);
+    city_data.ratings.favor_milestone_penalty = buffer_read_i32(main);
+    city_data.ratings.favor_ignored_request_penalty = buffer_read_i32(main);
+    city_data.ratings.favor_last_year = buffer_read_i32(main);
+    city_data.ratings.favor_change = buffer_read_i32(main);
     Data_CityInfo.nativeAttackDuration = buffer_read_i32(main);
     city_data.unused.unused_nativeForceAttack = buffer_read_i32(main);
     Data_CityInfo.nativeMissionPostOperational = buffer_read_i32(main);
@@ -918,7 +918,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.foodInfoFoodConsumedLastMonth = buffer_read_i32(main);
     Data_CityInfo.foodInfoFoodStoredLastMonth = buffer_read_i32(main);
     Data_CityInfo.foodInfoFoodStoredSoFarThisMonth = buffer_read_i32(main);
-    Data_CityInfo.riotCause = buffer_read_i32(main);
+    city_data.ratings.peace_riot_cause = buffer_read_i32(main);
     Data_CityInfo.estimatedTaxIncome = buffer_read_i32(main);
     Data_CityInfo.tutorial1SenateBuilt = buffer_read_i32(main);
     city_data.building.distribution_center_x = buffer_read_i8(main);
@@ -939,8 +939,8 @@ static void load_main_data(buffer *main)
     Data_CityInfo.caesarInvasionWarningsGiven = buffer_read_i32(main);
     Data_CityInfo.caesarInvasionDaysUntilInvasion = buffer_read_i32(main);
     Data_CityInfo.caesarInvasionRetreatMessageShown = buffer_read_i32(main);
-    Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = buffer_read_i32(main);
-    Data_CityInfo.ratingPeaceYearsOfPeace = buffer_read_i32(main);
+    city_data.ratings.peace_destroyed_buildings = buffer_read_i32(main);
+    city_data.ratings.peace_years_of_peace = buffer_read_i32(main);
     Data_CityInfo.distantBattleCityId = buffer_read_u8(main);
     Data_CityInfo.distantBattleEnemyStrength = buffer_read_u8(main);
     Data_CityInfo.distantBattleRomanStrength = buffer_read_u8(main);
@@ -983,7 +983,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.populationHighestEver = buffer_read_i32(main);
     Data_CityInfo.estimatedYearlyWages = buffer_read_i32(main);
     Data_CityInfo.resourceWineTypesAvailable = buffer_read_i32(main);
-    Data_CityInfo.ratingProsperityMax = buffer_read_i32(main);
+    city_data.ratings.prosperity_max = buffer_read_i32(main);
     for (int i = 0; i < 10; i++) {
         Data_CityInfo.largestRoadNetworks[i].id = buffer_read_i32(main);
         Data_CityInfo.largestRoadNetworks[i].size = buffer_read_i32(main);

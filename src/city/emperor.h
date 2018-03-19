@@ -1,6 +1,8 @@
 #ifndef CITY_EMPEROR_H
 #define CITY_EMPEROR_H
 
+void city_emperor_init_scenario(int rank);
+
 void city_emperor_update();
 
 void city_emperor_calculate_gift_costs();

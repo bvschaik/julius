@@ -13,29 +13,29 @@
 
 int city_rating_culture()
 {
-    return Data_CityInfo.ratingCulture;
+    return city_data.ratings.culture;
 }
 
 int city_rating_prosperity()
 {
-    return Data_CityInfo.ratingProsperity;
+    return city_data.ratings.prosperity;
 }
 
 int city_rating_peace()
 {
-    return Data_CityInfo.ratingPeace;
+    return city_data.ratings.peace;
 }
 
 int city_rating_favor()
 {
-    return Data_CityInfo.ratingFavor;
+    return city_data.ratings.favor;
 }
 
 void city_ratings_reduce_prosperity_after_bailout()
 {
-    Data_CityInfo.ratingProsperity -= 3;
-    if (Data_CityInfo.ratingProsperity < 0) {
-        Data_CityInfo.ratingProsperity = 0;
+    city_data.ratings.prosperity -= 3;
+    if (city_data.ratings.prosperity < 0) {
+        city_data.ratings.prosperity = 0;
     }
     Data_CityInfo.ratingAdvisorExplanationProsperity = 8;
 }
@@ -54,29 +54,40 @@ void city_ratings_peace_building_destroyed(building_type type)
         case BUILDING_TOWER:
             break;
         default:
-            Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear++;
+            city_data.ratings.peace_destroyed_buildings++;
             break;
     }
-    if (Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear >= 12) {
-        Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 12;
+    if (city_data.ratings.peace_destroyed_buildings >= 12) {
+        city_data.ratings.peace_destroyed_buildings = 12;
     }
+}
+
+void city_ratings_peace_record_criminal()
+{
+    city_data.ratings.peace_num_criminals++;
+}
+
+void city_ratings_peace_record_rioter()
+{
+    city_data.ratings.peace_num_rioters++;
+    city_data.ratings.peace_riot_cause = Data_CityInfo.populationEmigrationCause;
 }
 
 void city_ratings_change_favor(int amount)
 {
-    Data_CityInfo.ratingFavor = calc_bound(Data_CityInfo.ratingFavor + amount, 0, 100);
+    city_data.ratings.favor = calc_bound(city_data.ratings.favor + amount, 0, 100);
 }
 
 void city_ratings_reduce_favor_missed_request(int penalty)
 {
     city_ratings_change_favor(-penalty);
-    Data_CityInfo.ratingFavorIgnoredRequestPenalty = penalty;
+    city_data.ratings.favor_ignored_request_penalty = penalty;
 }
 
 void city_ratings_limit_favor(int max_favor)
 {
-    if (Data_CityInfo.ratingFavor > max_favor) {
-        Data_CityInfo.ratingFavor = max_favor;
+    if (city_data.ratings.favor > max_favor) {
+        city_data.ratings.favor = max_favor;
     }
 }
 
@@ -113,7 +124,7 @@ static void update_culture_explanation()
 static int has_made_money()
 {
     return city_data.finance.last_year.expenses.construction + city_data.finance.treasury >
-        Data_CityInfo.ratingProsperityTreasuryLastYear;
+        city_data.ratings.prosperity_treasury_last_year;
 }
 
 static void update_prosperity_explanation()
@@ -162,9 +173,9 @@ static void update_prosperity_explanation()
     }
 
     int reason;
-    if (Data_CityInfo.ratingProsperity <= 0 && game_time_year() == scenario_property_start_year()) {
+    if (city_data.ratings.prosperity <= 0 && game_time_year() == scenario_property_start_year()) {
         reason = 0;
-    } else if (Data_CityInfo.ratingProsperity >= Data_CityInfo.ratingProsperityMax) {
+    } else if (city_data.ratings.prosperity >= city_data.ratings.prosperity_max) {
         reason = 1;
     } else if (change > 0) {
         reason = 2;
@@ -195,15 +206,15 @@ static void update_peace_explanation()
     } else if (Data_CityInfo.numRiotersInCity) {
         reason = 6;
     } else {
-        if (Data_CityInfo.ratingPeace < 10) {
+        if (city_data.ratings.peace < 10) {
             reason = 0;
-        } else if (Data_CityInfo.ratingPeace < 30) {
+        } else if (city_data.ratings.peace < 30) {
             reason = 1;
-        } else if (Data_CityInfo.ratingPeace < 60) {
+        } else if (city_data.ratings.peace < 60) {
             reason = 2;
-        } else if (Data_CityInfo.ratingPeace < 90) {
+        } else if (city_data.ratings.peace < 90) {
             reason = 3;
-        } else if (Data_CityInfo.ratingPeace < 100) {
+        } else if (city_data.ratings.peace < 100) {
             reason = 4;
         } else { // >= 100
             reason = 5;
@@ -214,41 +225,41 @@ static void update_peace_explanation()
 
 void city_ratings_update_favor_explanation()
 {
-    Data_CityInfo.ratingFavorSalaryPenalty = 0;
+    city_data.ratings.favor_salary_penalty = 0;
     int salary_delta = Data_CityInfo.salaryRank - Data_CityInfo.playerRank;
     if (Data_CityInfo.playerRank != 0) {
         if (salary_delta > 0) {
-            Data_CityInfo.ratingFavorSalaryPenalty = salary_delta + 1;
+            city_data.ratings.favor_salary_penalty = salary_delta + 1;
         }
     } else if (salary_delta > 0) {
-        Data_CityInfo.ratingFavorSalaryPenalty = salary_delta;
+        city_data.ratings.favor_salary_penalty = salary_delta;
     }
 
-    if (Data_CityInfo.ratingFavorSalaryPenalty >= 8) {
+    if (city_data.ratings.favor_salary_penalty >= 8) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 1;
     } else if (Data_CityInfo.tributeNotPaidTotalYears >= 3) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 2;
-    } else if (Data_CityInfo.ratingFavorIgnoredRequestPenalty >= 5) {
+    } else if (city_data.ratings.favor_ignored_request_penalty >= 5) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 3;
-    } else if (Data_CityInfo.ratingFavorSalaryPenalty >= 5) {
+    } else if (city_data.ratings.favor_salary_penalty >= 5) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 4;
     } else if (Data_CityInfo.tributeNotPaidTotalYears >= 2) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 5;
-    } else if (Data_CityInfo.ratingFavorIgnoredRequestPenalty >= 3) {
+    } else if (city_data.ratings.favor_ignored_request_penalty >= 3) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 6;
-    } else if (Data_CityInfo.ratingFavorSalaryPenalty >= 3) {
+    } else if (city_data.ratings.favor_salary_penalty >= 3) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 7;
     } else if (Data_CityInfo.tributeNotPaidLastYear) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 8;
-    } else if (Data_CityInfo.ratingFavorSalaryPenalty >= 2) {
+    } else if (city_data.ratings.favor_salary_penalty >= 2) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 9;
-    } else if (Data_CityInfo.ratingFavorMilestonePenalty) {
+    } else if (city_data.ratings.favor_milestone_penalty) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 10;
-    } else if (Data_CityInfo.ratingFavorSalaryPenalty) {
+    } else if (city_data.ratings.favor_salary_penalty) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 11;
-    } else if (Data_CityInfo.ratingFavorChange == 2) { // rising
+    } else if (city_data.ratings.favor_change == 2) { // rising
         Data_CityInfo.ratingAdvisorExplanationFavor = 12;
-    } else if (Data_CityInfo.ratingFavorChange == 1) { // the same
+    } else if (city_data.ratings.favor_change == 1) { // the same
         Data_CityInfo.ratingAdvisorExplanationFavor = 13;
     } else {
         Data_CityInfo.ratingAdvisorExplanationFavor = 0;
@@ -265,7 +276,7 @@ void city_ratings_update_explanations()
 
 static void update_culture_rating()
 {
-    Data_CityInfo.ratingCulture = 0;
+    city_data.ratings.culture = 0;
     Data_CityInfo.ratingAdvisorExplanationCulture = 0;
     if (Data_CityInfo.population <= 0) {
         return;
@@ -273,85 +284,85 @@ static void update_culture_rating()
 
     int pct_theater = city_culture_coverage_theater();
     if (pct_theater >= 100) {
-        Data_CityInfo.ratingCulturePointsTheater = 25;
+        city_data.ratings.culture_points.theater = 25;
     } else if (pct_theater > 85) {
-        Data_CityInfo.ratingCulturePointsTheater = 18;
+        city_data.ratings.culture_points.theater = 18;
     } else if (pct_theater > 70) {
-        Data_CityInfo.ratingCulturePointsTheater = 12;
+        city_data.ratings.culture_points.theater = 12;
     } else if (pct_theater > 50) {
-        Data_CityInfo.ratingCulturePointsTheater = 8;
+        city_data.ratings.culture_points.theater = 8;
     } else if (pct_theater > 30) {
-        Data_CityInfo.ratingCulturePointsTheater = 3;
+        city_data.ratings.culture_points.theater = 3;
     } else {
-        Data_CityInfo.ratingCulturePointsTheater = 0;
+        city_data.ratings.culture_points.theater = 0;
     }
-    Data_CityInfo.ratingCulture += Data_CityInfo.ratingCulturePointsTheater;
+    city_data.ratings.culture += city_data.ratings.culture_points.theater;
 
     int pct_religion = Data_CityInfo.cultureCoverageReligion;
     if (pct_religion >= 100) {
-        Data_CityInfo.ratingCulturePointsReligion = 30;
+        city_data.ratings.culture_points.religion = 30;
     } else if (pct_religion > 85) {
-        Data_CityInfo.ratingCulturePointsReligion = 22;
+        city_data.ratings.culture_points.religion = 22;
     } else if (pct_religion > 70) {
-        Data_CityInfo.ratingCulturePointsReligion = 14;
+        city_data.ratings.culture_points.religion = 14;
     } else if (pct_religion > 50) {
-        Data_CityInfo.ratingCulturePointsReligion = 9;
+        city_data.ratings.culture_points.religion = 9;
     } else if (pct_religion > 30) {
-        Data_CityInfo.ratingCulturePointsReligion = 3;
+        city_data.ratings.culture_points.religion = 3;
     } else {
-        Data_CityInfo.ratingCulturePointsReligion = 0;
+        city_data.ratings.culture_points.religion = 0;
     }
-    Data_CityInfo.ratingCulture += Data_CityInfo.ratingCulturePointsReligion;
+    city_data.ratings.culture += city_data.ratings.culture_points.religion;
 
     int pct_school = city_culture_coverage_school();
     if (pct_school >= 100) {
-        Data_CityInfo.ratingCulturePointsSchool = 15;
+        city_data.ratings.culture_points.school = 15;
     } else if (pct_school > 85) {
-        Data_CityInfo.ratingCulturePointsSchool = 10;
+        city_data.ratings.culture_points.school = 10;
     } else if (pct_school > 70) {
-        Data_CityInfo.ratingCulturePointsSchool = 6;
+        city_data.ratings.culture_points.school = 6;
     } else if (pct_school > 50) {
-        Data_CityInfo.ratingCulturePointsSchool = 4;
+        city_data.ratings.culture_points.school = 4;
     } else if (pct_school > 30) {
-        Data_CityInfo.ratingCulturePointsSchool = 1;
+        city_data.ratings.culture_points.school = 1;
     } else {
-        Data_CityInfo.ratingCulturePointsSchool = 0;
+        city_data.ratings.culture_points.school = 0;
     }
-    Data_CityInfo.ratingCulture += Data_CityInfo.ratingCulturePointsSchool;
+    city_data.ratings.culture += city_data.ratings.culture_points.school;
 
     int pct_academy = city_culture_coverage_academy();
     if (pct_academy >= 100) {
-        Data_CityInfo.ratingCulturePointsAcademy = 10;
+        city_data.ratings.culture_points.academy = 10;
     } else if (pct_academy > 85) {
-        Data_CityInfo.ratingCulturePointsAcademy = 7;
+        city_data.ratings.culture_points.academy = 7;
     } else if (pct_academy > 70) {
-        Data_CityInfo.ratingCulturePointsAcademy = 4;
+        city_data.ratings.culture_points.academy = 4;
     } else if (pct_academy > 50) {
-        Data_CityInfo.ratingCulturePointsAcademy = 2;
+        city_data.ratings.culture_points.academy = 2;
     } else if (pct_academy > 30) {
-        Data_CityInfo.ratingCulturePointsAcademy = 1;
+        city_data.ratings.culture_points.academy = 1;
     } else {
-        Data_CityInfo.ratingCulturePointsAcademy = 0;
+        city_data.ratings.culture_points.academy = 0;
     }
-    Data_CityInfo.ratingCulture += Data_CityInfo.ratingCulturePointsAcademy;
+    city_data.ratings.culture += city_data.ratings.culture_points.academy;
 
     int pct_library = city_culture_coverage_library();
     if (pct_library >= 100) {
-        Data_CityInfo.ratingCulturePointsLibrary = 20;
+        city_data.ratings.culture_points.library = 20;
     } else if (pct_library > 85) {
-        Data_CityInfo.ratingCulturePointsLibrary = 14;
+        city_data.ratings.culture_points.library = 14;
     } else if (pct_library > 70) {
-        Data_CityInfo.ratingCulturePointsLibrary = 8;
+        city_data.ratings.culture_points.library = 8;
     } else if (pct_library > 50) {
-        Data_CityInfo.ratingCulturePointsLibrary = 4;
+        city_data.ratings.culture_points.library = 4;
     } else if (pct_library > 30) {
-        Data_CityInfo.ratingCulturePointsLibrary = 2;
+        city_data.ratings.culture_points.library = 2;
     } else {
-        Data_CityInfo.ratingCulturePointsLibrary = 0;
+        city_data.ratings.culture_points.library = 0;
     }
-    Data_CityInfo.ratingCulture += Data_CityInfo.ratingCulturePointsLibrary;
+    city_data.ratings.culture += city_data.ratings.culture_points.library;
 
-    Data_CityInfo.ratingCulture = calc_bound(Data_CityInfo.ratingCulture, 0, 100);
+    city_data.ratings.culture = calc_bound(city_data.ratings.culture, 0, 100);
     update_culture_explanation();
 }
 
@@ -370,7 +381,7 @@ static void update_prosperity_rating()
     } else {
         change -= 1;
     }
-    Data_CityInfo.ratingProsperityTreasuryLastYear = city_data.finance.treasury;
+    city_data.ratings.prosperity_treasury_last_year = city_data.finance.treasury;
     // food types: +1 for multiple foods
     if (Data_CityInfo.foodInfoFoodTypesEaten >= 2) {
         change += 1;
@@ -397,11 +408,11 @@ static void update_prosperity_rating()
     if (Data_CityInfo.entertainmentHippodromeShows > 0) {
         change += 1;
     }
-    Data_CityInfo.ratingProsperity += change;
-    if (Data_CityInfo.ratingProsperity > Data_CityInfo.ratingProsperityMax) {
-        Data_CityInfo.ratingProsperity = Data_CityInfo.ratingProsperityMax;
+    city_data.ratings.prosperity += change;
+    if (city_data.ratings.prosperity > city_data.ratings.prosperity_max) {
+        city_data.ratings.prosperity = city_data.ratings.prosperity_max;
     }
-    Data_CityInfo.ratingProsperity = calc_bound(Data_CityInfo.ratingProsperity, 0, 100);
+    city_data.ratings.prosperity = calc_bound(city_data.ratings.prosperity, 0, 100);
 
     update_prosperity_explanation();
 }
@@ -418,46 +429,46 @@ static void calculate_max_prosperity()
         }
     }
     if (houses > 0) {
-        Data_CityInfo.ratingProsperityMax = points / houses;
+        city_data.ratings.prosperity_max = points / houses;
     } else {
-        Data_CityInfo.ratingProsperityMax = 0;
+        city_data.ratings.prosperity_max = 0;
     }
 }
 
 static void update_peace_rating()
 {
     int change = 0;
-    if (Data_CityInfo.ratingPeaceYearsOfPeace < 2) {
+    if (city_data.ratings.peace_years_of_peace < 2) {
         change += 2;
     } else {
         change += 5;
     }
-    if (Data_CityInfo.ratingPeaceNumCriminalsThisYear) {
+    if (city_data.ratings.peace_num_criminals) {
         change -= 1;
     }
-    if (Data_CityInfo.ratingPeaceNumRiotersThisYear) {
+    if (city_data.ratings.peace_num_rioters) {
         change -= 5;
     }
-    if (Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear) {
-        change -= Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear;
+    if (city_data.ratings.peace_destroyed_buildings) {
+        change -= city_data.ratings.peace_destroyed_buildings;
     }
-    if (Data_CityInfo.ratingPeaceNumRiotersThisYear || Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear) {
-        Data_CityInfo.ratingPeaceYearsOfPeace = 0;
+    if (city_data.ratings.peace_num_rioters || city_data.ratings.peace_destroyed_buildings) {
+        city_data.ratings.peace_years_of_peace = 0;
     } else {
-        Data_CityInfo.ratingPeaceYearsOfPeace += 1;
+        city_data.ratings.peace_years_of_peace += 1;
     }
-    Data_CityInfo.ratingPeaceNumCriminalsThisYear = 0;
-    Data_CityInfo.ratingPeaceNumRiotersThisYear = 0;
-    Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 0;
+    city_data.ratings.peace_num_criminals = 0;
+    city_data.ratings.peace_num_rioters = 0;
+    city_data.ratings.peace_destroyed_buildings = 0;
 
-    Data_CityInfo.ratingPeace = calc_bound(Data_CityInfo.ratingPeace + change, 0, 100);
+    city_data.ratings.peace = calc_bound(city_data.ratings.peace + change, 0, 100);
     update_peace_explanation();
 }
 
 static void update_favor_rating(int is_yearly_update)
 {
     if (scenario_is_open_play()) {
-        Data_CityInfo.ratingFavor = 50;
+        city_data.ratings.favor = 50;
         return;
     }
     Data_CityInfo.giftMonthsSinceLast++;
@@ -465,20 +476,20 @@ static void update_favor_rating(int is_yearly_update)
         Data_CityInfo.giftOverdosePenalty = 0;
     }
     if (is_yearly_update) {
-        Data_CityInfo.ratingFavorSalaryPenalty = 0;
-        Data_CityInfo.ratingFavorMilestonePenalty = 0;
-        Data_CityInfo.ratingFavorIgnoredRequestPenalty = 0;
+        city_data.ratings.favor_salary_penalty = 0;
+        city_data.ratings.favor_milestone_penalty = 0;
+        city_data.ratings.favor_ignored_request_penalty = 0;
         if (!scenario_is_tutorial_1() && !scenario_is_tutorial_2()) {
-            Data_CityInfo.ratingFavor -= 2;
+            city_data.ratings.favor -= 2;
         }
         // tribute penalty
         if (Data_CityInfo.tributeNotPaidLastYear) {
             if (Data_CityInfo.tributeNotPaidTotalYears <= 1) {
-                Data_CityInfo.ratingFavor -= 3;
+                city_data.ratings.favor -= 3;
             } else if (Data_CityInfo.tributeNotPaidTotalYears <= 2) {
-                Data_CityInfo.ratingFavor -= 5;
+                city_data.ratings.favor -= 5;
             } else {
-                Data_CityInfo.ratingFavor -= 8;
+                city_data.ratings.favor -= 8;
             }
         }
         // salary
@@ -486,15 +497,15 @@ static void update_favor_rating(int is_yearly_update)
         if (Data_CityInfo.playerRank != 0) {
             if (salary_delta > 0) {
                 // salary too high
-                Data_CityInfo.ratingFavor -= salary_delta;
-                Data_CityInfo.ratingFavorSalaryPenalty = salary_delta + 1;
+                city_data.ratings.favor -= salary_delta;
+                city_data.ratings.favor_salary_penalty = salary_delta + 1;
             } else if (salary_delta < 0) {
                 // salary lower than rank
-                Data_CityInfo.ratingFavor += 1;
+                city_data.ratings.favor += 1;
             }
         } else if (salary_delta > 0) {
-            Data_CityInfo.ratingFavor -= salary_delta;
-            Data_CityInfo.ratingFavorSalaryPenalty = salary_delta;
+            city_data.ratings.favor -= salary_delta;
+            city_data.ratings.favor_salary_penalty = salary_delta;
         }
         // milestone
         int milestone_pct;
@@ -510,22 +521,22 @@ static void update_favor_rating(int is_yearly_update)
         if (milestone_pct) {
             int bonus = 1;
             if (scenario_criteria_culture_enabled() &&
-                Data_CityInfo.ratingCulture < calc_adjust_with_percentage(
+                city_data.ratings.culture < calc_adjust_with_percentage(
                     scenario_criteria_culture(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_prosperity_enabled() &&
-                Data_CityInfo.ratingProsperity < calc_adjust_with_percentage(
+                city_data.ratings.prosperity < calc_adjust_with_percentage(
                     scenario_criteria_prosperity(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_peace_enabled() &&
-                Data_CityInfo.ratingPeace < calc_adjust_with_percentage(
+                city_data.ratings.peace < calc_adjust_with_percentage(
                     scenario_criteria_peace(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_favor_enabled() &&
-                Data_CityInfo.ratingFavor < calc_adjust_with_percentage(
+                city_data.ratings.favor < calc_adjust_with_percentage(
                     scenario_criteria_favor(), milestone_pct)) {
                 bonus = 0;
             }
@@ -535,23 +546,23 @@ static void update_favor_rating(int is_yearly_update)
                 bonus = 0;
             }
             if (bonus) {
-                Data_CityInfo.ratingFavor += 5;
+                city_data.ratings.favor += 5;
             } else {
-                Data_CityInfo.ratingFavor -= 2;
-                Data_CityInfo.ratingFavorMilestonePenalty = 2;
+                city_data.ratings.favor -= 2;
+                city_data.ratings.favor_milestone_penalty = 2;
             }
         }
 
-        if (Data_CityInfo.ratingFavor < Data_CityInfo.ratingFavorLastYear) {
-            Data_CityInfo.ratingFavorChange = 0;
-        } else if (Data_CityInfo.ratingFavor == Data_CityInfo.ratingFavorLastYear) {
-            Data_CityInfo.ratingFavorChange = 1;
+        if (city_data.ratings.favor < city_data.ratings.favor_last_year) {
+            city_data.ratings.favor_change = 0;
+        } else if (city_data.ratings.favor == city_data.ratings.favor_last_year) {
+            city_data.ratings.favor_change = 1;
         } else {
-            Data_CityInfo.ratingFavorChange = 2;
+            city_data.ratings.favor_change = 2;
         }
-        Data_CityInfo.ratingFavorLastYear = Data_CityInfo.ratingFavor;
+        city_data.ratings.favor_last_year = city_data.ratings.favor;
     }
-    Data_CityInfo.ratingFavor = calc_bound(Data_CityInfo.ratingFavor, 0, 100);
+    city_data.ratings.favor = calc_bound(city_data.ratings.favor, 0, 100);
     city_ratings_update_favor_explanation();
 }
 

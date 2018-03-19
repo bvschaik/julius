@@ -4,6 +4,7 @@
 #include "building/destruction.h"
 #include "city/finance.h"
 #include "city/message.h"
+#include "city/ratings.h"
 #include "city/sentiment.h"
 #include "core/image.h"
 #include "core/random.h"
@@ -61,8 +62,7 @@ static void generate_rioter(building *b)
         }
     }
     building_destroy_by_rioter(b);
-    Data_CityInfo.ratingPeaceNumRiotersThisYear++;
-    Data_CityInfo.riotCause = Data_CityInfo.populationEmigrationCause;
+    city_ratings_peace_record_rioter();
     city_sentiment_change_happiness(20);
     tutorial_on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
@@ -78,7 +78,7 @@ static void generate_mugger(building *b)
         if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
             figure *f = figure_create(FIGURE_CRIMINAL, xRoad, yRoad, DIR_4_BOTTOM);
             f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
-            Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
+            city_ratings_peace_record_criminal();
             int taxes_this_year = city_finance_overview_this_year()->income.taxes;
             if (taxes_this_year > 20) {
                 int moneyStolen = taxes_this_year / 4;
@@ -101,7 +101,7 @@ static void generate_protestor(building *b)
         if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
             figure *f = figure_create(FIGURE_PROTESTER, xRoad, yRoad, DIR_4_BOTTOM);
             f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
-            Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
+            city_ratings_peace_record_criminal();
         }
     }
 }

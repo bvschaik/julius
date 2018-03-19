@@ -310,19 +310,7 @@ int game_file_start_scenario(const uint8_t *scenario_name)
 
     scenario_settings_init_mission();
 
-    Data_CityInfo.ratingFavor = scenario_starting_favor();
-    Data_CityInfo.personalSavings = scenario_starting_personal_savings();
-    Data_CityInfo.playerRank = rank;
-    int salary_rank = rank;
-    if (scenario_is_custom()) {
-        Data_CityInfo.personalSavings = 0;
-        Data_CityInfo.playerRank = scenario_property_player_rank();
-        salary_rank = scenario_property_player_rank();
-    }
-    if (salary_rank > 10) {
-        salary_rank = 10;
-    }
-    city_emperor_set_salary_rank(salary_rank);
+    city_emperor_init_scenario(rank);
 
     tutorial_init();
 

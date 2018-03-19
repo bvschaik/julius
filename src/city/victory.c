@@ -1,6 +1,7 @@
 #include "victory.h"
 
 #include "building/construction.h"
+#include "city/data_private.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "game/time.h"
@@ -42,25 +43,25 @@ void city_victory_check()
     data.state = VICTORY_STATE_WON;
     if (scenario_criteria_culture_enabled()) {
         num_criteria++;
-        if (Data_CityInfo.ratingCulture < scenario_criteria_culture()) {
+        if (city_data.ratings.culture < scenario_criteria_culture()) {
             data.state = VICTORY_STATE_NONE;
         }
     }
     if (scenario_criteria_prosperity_enabled()) {
         num_criteria++;
-        if (Data_CityInfo.ratingProsperity < scenario_criteria_prosperity()) {
+        if (city_data.ratings.prosperity < scenario_criteria_prosperity()) {
             data.state = VICTORY_STATE_NONE;
         }
     }
     if (scenario_criteria_peace_enabled()) {
         num_criteria++;
-        if (Data_CityInfo.ratingPeace < scenario_criteria_peace()) {
+        if (city_data.ratings.peace < scenario_criteria_peace()) {
             data.state = VICTORY_STATE_NONE;
         }
     }
     if (scenario_criteria_favor_enabled()) {
         num_criteria++;
-        if (Data_CityInfo.ratingFavor < scenario_criteria_favor()) {
+        if (city_data.ratings.favor < scenario_criteria_favor()) {
             data.state = VICTORY_STATE_NONE;
         }
     }

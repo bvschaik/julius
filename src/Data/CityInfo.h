@@ -105,18 +105,6 @@ extern struct _Data_CityInfo {
 	int32_t financeSalaryPaidThisYear;
 	int32_t tradeNextImportResourceCaravan;
 	int32_t tradeNextImportResourceCaravanBackup;
-	int32_t ratingCulture;
-	int32_t ratingProsperity;
-	int32_t ratingPeace;
-	int32_t ratingFavor;
-	int32_t ratingProsperityTreasuryLastYear;
-	int32_t ratingCulturePointsTheater;
-	int32_t ratingCulturePointsReligion;
-	int32_t ratingCulturePointsSchool;
-	int32_t ratingCulturePointsLibrary;
-	int32_t ratingCulturePointsAcademy;
-	int32_t ratingPeaceNumCriminalsThisYear;
-	int32_t ratingPeaceNumRiotersThisYear;
 	int32_t housesRequiringFountainToEvolve;//4268
 	int32_t housesRequiringWellToEvolve;//426c
 	int32_t housesRequiringMoreEntertainmentToEvolve;//4270
@@ -226,11 +214,6 @@ extern struct _Data_CityInfo {
 	int32_t giftCost_modest;
 	int32_t giftCost_generous;
 	int32_t giftCost_lavish;
-	int32_t ratingFavorSalaryPenalty;
-	int32_t ratingFavorMilestonePenalty;
-	int32_t ratingFavorIgnoredRequestPenalty;
-	int32_t ratingFavorLastYear;
-	int32_t ratingFavorChange; // 0 = dropping, 1 = stalling, 2 = rising
 	int32_t nativeAttackDuration;
 	int32_t nativeMissionPostOperational;
 	int32_t nativeMainMeetingCenterX;
@@ -247,7 +230,6 @@ extern struct _Data_CityInfo {
 	int32_t foodInfoFoodConsumedLastMonth;
 	int32_t foodInfoFoodStoredLastMonth;
 	int32_t foodInfoFoodStoredSoFarThisMonth;
-	int32_t riotCause;
 	int32_t estimatedTaxIncome;
 	int32_t tutorial1SenateBuilt;
 	int32_t shipyardBoatsRequested;
@@ -260,8 +242,6 @@ extern struct _Data_CityInfo {
 	int32_t caesarInvasionWarningsGiven;
 	int32_t caesarInvasionDaysUntilInvasion;
 	int32_t caesarInvasionRetreatMessageShown;
-	int32_t ratingPeaceNumDestroyedBuildingsThisYear;
-	int32_t ratingPeaceYearsOfPeace;
 	uint8_t distantBattleCityId;
 	uint8_t distantBattleEnemyStrength;
 	uint8_t distantBattleRomanStrength;
@@ -299,7 +279,6 @@ extern struct _Data_CityInfo {
 	int32_t populationHighestEver;
 	int32_t estimatedYearlyWages;
 	int32_t resourceWineTypesAvailable;
-	int32_t ratingProsperityMax;
 	struct {
 		int32_t id;
 		int32_t size;
