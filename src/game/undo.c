@@ -187,7 +187,7 @@ static void add_building_to_terrain(building *b)
         int size = building_properties_for_type(b->type)->size;
         map_building_tiles_add(b->id, b->x, b->y, size, 0, 0);
         if (b->type == BUILDING_WHARF) {
-            b->data.other.boatFigureId = 0;
+            b->data.fishing.boat_id = 0;
         }
     }
     b->state = BUILDING_STATE_IN_USE;

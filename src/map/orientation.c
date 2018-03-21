@@ -311,12 +311,12 @@ void map_orientation_update_buildings()
                 map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
                 break;
             case BUILDING_SHIPYARD:
-                image_offset = (4 + b->data.other.dockOrientation - map_orientation / 2) % 4;
+                image_offset = (4 + b->data.fishing.orientation - map_orientation / 2) % 4;
                 image_id = image_group(GROUP_BUILDING_SHIPYARD) + image_offset;
                 map_water_add_building(i, b->x, b->y, 2, image_id);
                 break;
             case BUILDING_WHARF:
-                image_offset = (4 + b->data.other.dockOrientation - map_orientation / 2) % 4;
+                image_offset = (4 + b->data.fishing.orientation - map_orientation / 2) % 4;
                 image_id = image_group(GROUP_BUILDING_WHARF) + image_offset;
                 map_water_add_building(i, b->x, b->y, 2, image_id);
                 break;

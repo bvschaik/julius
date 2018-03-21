@@ -202,7 +202,7 @@ int map_water_get_wharf_for_new_fishing_boat(figure *boat, int *x_tile, int *y_t
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WHARF) {
-            int wharf_boat_id = b->data.other.boatFigureId;
+            int wharf_boat_id = b->data.fishing.boat_id;
             if (!wharf_boat_id || wharf_boat_id == boat->id) {
                 wharf = b;
                 break;
@@ -214,7 +214,7 @@ int map_water_get_wharf_for_new_fishing_boat(figure *boat, int *x_tile, int *y_t
     }
     *x_tile = wharf->x;
     *y_tile = wharf->y;
-    switch (wharf->data.other.dockOrientation) {
+    switch (wharf->data.fishing.orientation) {
         case 0: *x_tile += 1; *y_tile -= 1; break;
         case 1: *x_tile += 2; *y_tile += 1; break;
         case 2: *x_tile += 1; *y_tile += 2; break;

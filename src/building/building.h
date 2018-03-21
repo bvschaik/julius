@@ -67,42 +67,14 @@ typedef struct {
     short formationId;
     union {
         struct {
-            short dockQueuedDockerId; // 4a
-            char __unknown_4c;
-            char __unknown_4d;
-            char __unknown_4e;
-            char __unknown_4f;
-            char __unknown_50;
-            char __unknown_51;
-            char __unknown_52;
-            char __unknown_53;
-            char __unknown_54;
-            char __unknown_55;
-            char __unknown_56;
-            char __unknown_57;
-            char fishingBoatHasFish; // 58
-            char __unknown_59;
-            char __unknown_5a;
-            char __unknown_5b;
-            char __unknown_5c;
-            char __unknown_5d;
-            char __unknown_5e;
-            char __unknown_5f;
-            char __unknown_60;
-            char __unknown_61;
-            char __unknown_62;
-            char __unknown_63;
-            char __unknown_64;
-            unsigned char dockNumShips; // 65 dock number of ships
-            char __unknown_66;
-            char __unknown_67;
-            char dockOrientation; // 68
-            char __unknown_69;
-            char __unknown_6a;
-            char __unknown_6b; // farm cursed
-            short dockFigureIds[3]; // 6c, 6e, 70
-            short boatFigureId; // 72
-        } other;
+            short build_progress; // 4a
+            char __unknown_4c[12];
+            char has_fish; // 58
+            char __unknown_59[15];
+            char orientation; // 68
+            char __unknown_69[9];
+            short boat_id; // 72
+        } fishing;
         struct {
             short queued_docker_id; // 4a
             char __unknown_4c[25];

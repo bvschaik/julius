@@ -172,12 +172,12 @@ void figure_fishing_boat_action(figure *f)
     if (b->state != BUILDING_STATE_IN_USE) {
         f->state = FigureState_Dead;
     }
-    if (f->actionState != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.other.boatFigureId != f->id) {
+    if (f->actionState != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.fishing.boat_id != f->id) {
         int x_tile, y_tile;
         b = building_get(map_water_get_wharf_for_new_fishing_boat(f, &x_tile, &y_tile));
         if (b->id) {
             f->buildingId = b->id;
-            b->data.other.boatFigureId = f->id;
+            b->data.fishing.boat_id = f->id;
             f->actionState = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
             f->destinationX = x_tile;
             f->destinationY = y_tile;
@@ -202,7 +202,7 @@ void figure_fishing_boat_action(figure *f)
                 if (wharf_id) {
                     b->figureId = 0; // remove from original building
                     f->buildingId = wharf_id;
-                    building_get(wharf_id)->data.other.boatFigureId = f->id;
+                    building_get(wharf_id)->data.fishing.boat_id = f->id;
                     f->actionState = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
                     f->destinationX = x_tile;
                     f->destinationY = y_tile;
@@ -260,7 +260,7 @@ void figure_fishing_boat_action(figure *f)
             {
             int pct_workers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
             int max_wait_ticks = 5 * (102 - pct_workers);
-            if (b->data.other.fishingBoatHasFish > 0) {
+            if (b->data.fishing.has_fish > 0) {
                 pct_workers = 0;
             }
             if (pct_workers > 0) {
@@ -285,7 +285,7 @@ void figure_fishing_boat_action(figure *f)
                 f->actionState = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
                 f->waitTicks = 0;
                 b->figureSpawnDelay = 1;
-                b->data.other.fishingBoatHasFish++;
+                b->data.fishing.has_fish++;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
@@ -312,7 +312,7 @@ void figure_sink_all_ships()
         if (f->type == FIGURE_TRADE_SHIP) {
             building_get(f->destinationBuildingId)->data.dock.trade_ship_id = 0;
         } else if (f->type == FIGURE_FISHING_BOAT) {
-            building_get(f->buildingId)->data.other.boatFigureId = 0;
+            building_get(f->buildingId)->data.fishing.boat_id = 0;
         } else {
             continue;
         }

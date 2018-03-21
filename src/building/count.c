@@ -183,7 +183,7 @@ void building_count_update()
             case BUILDING_WHARF:
                 if (b->numWorkers > 0) {
                     ++Data_CityInfo.numWorkingWharfs;
-                    if (!b->data.other.boatFigureId) {
+                    if (!b->data.fishing.boat_id) {
                         ++Data_CityInfo.shipyardBoatsRequested;
                     }
                 }
