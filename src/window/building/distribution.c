@@ -71,7 +71,7 @@ void window_building_draw_dock(building_info_context *c)
 
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->data.other.boatFigureId) {
+    } else if (b->data.dock.trade_ship_id) {
         if (c->worker_percentage <= 0) {
             window_building_draw_description(c, 101, 2);
         } else if (c->worker_percentage < 50) {

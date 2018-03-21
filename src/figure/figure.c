@@ -73,8 +73,8 @@ void figure_delete(figure *f)
             break;
         case FIGURE_DOCKER:
             for (int i = 0; i < 3; i++) {
-                if (b->data.other.dockFigureIds[i] == f->id) {
-                    b->data.other.dockFigureIds[i] = 0;
+                if (b->data.dock.docker_ids[i] == f->id) {
+                    b->data.dock.docker_ids[i] = 0;
                 }
             }
             break;

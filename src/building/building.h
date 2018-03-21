@@ -104,6 +104,16 @@ typedef struct {
             short boatFigureId; // 72
         } other;
         struct {
+            short queued_docker_id; // 4a
+            char __unknown_4c[25];
+            unsigned char num_ships; // 65 dock number of ships
+            char __unknown_66[2];
+            char orientation; // 68
+            char __unknown_69[3];
+            short docker_ids[3]; // 6c, 6e, 70
+            short trade_ship_id; // 72
+        } dock;
+        struct {
             short unknown; //4a
             short inventory[8];
             short potteryDemand; // 5c

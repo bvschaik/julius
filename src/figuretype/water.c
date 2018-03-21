@@ -309,15 +309,13 @@ void figure_sink_all_ships()
         if (f->state != FigureState_Alive) {
             continue;
         }
-        int building_id;
         if (f->type == FIGURE_TRADE_SHIP) {
-            building_id = f->destinationBuildingId;
+            building_get(f->destinationBuildingId)->data.dock.trade_ship_id = 0;
         } else if (f->type == FIGURE_FISHING_BOAT) {
-            building_id = f->buildingId;
+            building_get(f->buildingId)->data.other.boatFigureId = 0;
         } else {
             continue;
         }
-        building_get(building_id)->data.other.boatFigureId = 0;
         f->buildingId = 0;
         f->type = FIGURE_SHIPWRECK;
         f->waitTicks = 0;

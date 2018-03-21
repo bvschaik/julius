@@ -321,7 +321,7 @@ void map_orientation_update_buildings()
                 map_water_add_building(i, b->x, b->y, 2, image_id);
                 break;
             case BUILDING_DOCK:
-                image_offset = (4 + b->data.other.dockOrientation - map_orientation / 2) % 4;
+                image_offset = (4 + b->data.dock.orientation - map_orientation / 2) % 4;
                 switch (image_offset) {
                     case 0: image_id = image_group(GROUP_BUILDING_DOCK_1); break;
                     case 1: image_id = image_group(GROUP_BUILDING_DOCK_2); break;

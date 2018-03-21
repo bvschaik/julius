@@ -228,7 +228,7 @@ static void get_trade_center_location(const figure *f, int *x, int *y)
 
 static int deliver_import_resource(figure *f, building *dock)
 {
-    int ship_id = dock->data.other.boatFigureId;
+    int ship_id = dock->data.dock.trade_ship_id;
     if (!ship_id) {
         return 0;
     }
@@ -256,7 +256,7 @@ static int deliver_import_resource(figure *f, building *dock)
 
 static int fetch_export_resource(figure *f, building *dock)
 {
-    int ship_id = dock->data.other.boatFigureId;
+    int ship_id = dock->data.dock.trade_ship_id;
     if (!ship_id) {
         return 0;
     }
@@ -299,17 +299,17 @@ void figure_docker_action(figure *f)
     if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF) {
         f->state = FigureState_Dead;
     }
-    if (b->data.other.dockNumShips) {
-        b->data.other.dockNumShips--;
+    if (b->data.dock.num_ships) {
+        b->data.dock.num_ships--;
     }
-    if (b->data.other.boatFigureId) {
-        figure *ship = figure_get(b->data.other.boatFigureId);
+    if (b->data.dock.trade_ship_id) {
+        figure *ship = figure_get(b->data.dock.trade_ship_id);
         if (ship->state != FigureState_Alive || ship->type != FIGURE_TRADE_SHIP) {
-            b->data.other.boatFigureId = 0;
+            b->data.dock.trade_ship_id = 0;
         } else if (trader_has_traded_max(ship->traderId)) {
-            b->data.other.boatFigureId = 0;
+            b->data.dock.trade_ship_id = 0;
         } else if (ship->actionState == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
-            b->data.other.boatFigureId = 0;
+            b->data.dock.trade_ship_id = 0;
         }
     }
     f->terrainUsage = FigureTerrainUsage_Roads;
@@ -331,25 +331,25 @@ void figure_docker_action(figure *f)
         case FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE:
             f->cartGraphicId = 0;
             f->graphicOffset = 0;
-            if (b->data.other.dockQueuedDockerId <= 0) {
-                b->data.other.dockQueuedDockerId = f->id;
+            if (b->data.dock.queued_docker_id <= 0) {
+                b->data.dock.queued_docker_id = f->id;
                 f->waitTicks = 0;
             }
-            if (b->data.other.dockQueuedDockerId == f->id) {
-                b->data.other.dockNumShips = 120;
+            if (b->data.dock.queued_docker_id == f->id) {
+                b->data.dock.num_ships = 120;
                 f->waitTicks++;
                 if (f->waitTicks >= 80) {
                     f->actionState = FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE;
                     f->waitTicks = 0;
                     set_cart_graphic(f);
-                    b->data.other.dockQueuedDockerId = 0;
+                    b->data.dock.queued_docker_id = 0;
                 }
             } else {
                 int has_queued_docker = 0;
                 for (int i = 0; i < 3; i++) {
-                    if (b->data.other.dockFigureIds[i]) {
-                        figure *docker = figure_get(b->data.other.dockFigureIds[i]);
-                        if (docker->id == b->data.other.dockQueuedDockerId && docker->state == FigureState_Alive) {
+                    if (b->data.dock.docker_ids[i]) {
+                        figure *docker = figure_get(b->data.dock.docker_ids[i]);
+                        if (docker->id == b->data.dock.queued_docker_id && docker->state == FigureState_Alive) {
                             if (docker->actionState == FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE ||
                                 docker->actionState == FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE) {
                                 has_queued_docker = 1;
@@ -358,25 +358,25 @@ void figure_docker_action(figure *f)
                     }
                 }
                 if (!has_queued_docker) {
-                    b->data.other.dockQueuedDockerId = 0;
+                    b->data.dock.queued_docker_id = 0;
                 }
             }
             break;
         case FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE:
             set_cart_graphic(f);
-            if (b->data.other.dockQueuedDockerId <= 0) {
-                b->data.other.dockQueuedDockerId = f->id;
+            if (b->data.dock.queued_docker_id <= 0) {
+                b->data.dock.queued_docker_id = f->id;
                 f->waitTicks = 0;
             }
-            if (b->data.other.dockQueuedDockerId == f->id) {
-                b->data.other.dockNumShips = 120;
+            if (b->data.dock.queued_docker_id == f->id) {
+                b->data.dock.num_ships = 120;
                 f->waitTicks++;
                 if (f->waitTicks >= 80) {
                     f->actionState = FIGURE_ACTION_132_DOCKER_IDLING;
                     f->waitTicks = 0;
                     f->graphicId = 0;
                     f->cartGraphicId = 0;
-                    b->data.other.dockQueuedDockerId = 0;
+                    b->data.dock.queued_docker_id = 0;
                 }
             }
             f->waitTicks++;
@@ -445,13 +445,13 @@ void figure_docker_action(figure *f)
             f->waitTicks++;
             if (f->waitTicks > 10) {
                 int trade_city_id;
-                if (b->data.other.boatFigureId) {
-                    trade_city_id = figure_get(b->data.other.boatFigureId)->empireCityId;
+                if (b->data.dock.trade_ship_id) {
+                    trade_city_id = figure_get(b->data.dock.trade_ship_id)->empireCityId;
                 } else {
                     trade_city_id = 0;
                 }
                 if (try_import_resource(f->destinationBuildingId, f->resourceId, trade_city_id)) {
-                    int trader_id = figure_get(b->data.other.boatFigureId)->traderId;
+                    int trader_id = figure_get(b->data.dock.trade_ship_id)->traderId;
                     trader_record_sold_resource(trader_id, f->resourceId);
                     f->actionState = FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING;
                     f->waitTicks = 0;
@@ -473,8 +473,8 @@ void figure_docker_action(figure *f)
             f->waitTicks++;
             if (f->waitTicks > 10) {
                 int trade_city_id;
-                if (b->data.other.boatFigureId) {
-                    trade_city_id = figure_get(b->data.other.boatFigureId)->empireCityId;
+                if (b->data.dock.trade_ship_id) {
+                    trade_city_id = figure_get(b->data.dock.trade_ship_id)->empireCityId;
                 } else {
                     trade_city_id = 0;
                 }
@@ -483,7 +483,7 @@ void figure_docker_action(figure *f)
                 f->destinationY = f->sourceY;
                 f->waitTicks = 0;
                 if (try_export_resource(f->destinationBuildingId, f->resourceId, trade_city_id)) {
-                    int trader_id = figure_get(b->data.other.boatFigureId)->traderId;
+                    int trader_id = figure_get(b->data.dock.trade_ship_id)->traderId;
                     trader_record_bought_resource(trader_id, f->resourceId);
                     f->actionState = FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING;
                 } else {

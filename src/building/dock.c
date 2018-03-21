@@ -12,8 +12,8 @@ int building_dock_count_idle_dockers(const building *dock)
 {
     int numIdle = 0;
     for (int i = 0; i < 3; i++) {
-        if (dock->data.other.dockFigureIds[i]) {
-            figure *f = figure_get(dock->data.other.dockFigureIds[i]);
+        if (dock->data.dock.docker_ids[i]) {
+            figure *f = figure_get(dock->data.dock.docker_ids[i]);
             if (f->actionState == FIGURE_ACTION_132_DOCKER_IDLING ||
                 f->actionState == FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE) {
                 numIdle++;
@@ -60,7 +60,7 @@ int building_dock_get_free_destination(int ship_id, int *x_tile, int *y_tile)
         dockId = Data_CityInfo.workingDockBuildingIds[i];
         if (!dockId) continue;
         building *dock = building_get(dockId);
-        if (!dock->data.other.boatFigureId || dock->data.other.boatFigureId == ship_id) {
+        if (!dock->data.dock.trade_ship_id || dock->data.dock.trade_ship_id == ship_id) {
             break;
         }
     }
@@ -71,13 +71,13 @@ int building_dock_get_free_destination(int ship_id, int *x_tile, int *y_tile)
     building *dock = building_get(dockId);
     *x_tile = dock->x;
     *y_tile = dock->y;
-    switch (dock->data.other.dockOrientation) {
+    switch (dock->data.dock.orientation) {
         case 0: *x_tile += 1; *y_tile -= 1; break;
         case 1: *x_tile += 3; *y_tile += 1; break;
         case 2: *x_tile += 1; *y_tile += 3; break;
         default: *x_tile -= 1; *y_tile += 1; break;
     }
-    dock->data.other.boatFigureId = ship_id;
+    dock->data.dock.trade_ship_id = ship_id;
     return dockId;
 }
 
@@ -93,7 +93,7 @@ int building_dock_get_queue_destination(int* x_tile, int* y_tile)
         building *dock = building_get(dockId);
         *x_tile = dock->x;
         *y_tile = dock->y;
-        switch (dock->data.other.dockOrientation) {
+        switch (dock->data.dock.orientation) {
             case 0: *x_tile += 2; *y_tile -= 2; break;
             case 1: *x_tile += 4; *y_tile += 2; break;
             case 2: *x_tile += 2; *y_tile += 4; break;
@@ -110,7 +110,7 @@ int building_dock_get_queue_destination(int* x_tile, int* y_tile)
         building *dock = building_get(dockId);
         *x_tile = dock->x;
         *y_tile = dock->y;
-        switch (dock->data.other.dockOrientation) {
+        switch (dock->data.dock.orientation) {
             case 0: *x_tile += 2; *y_tile -= 3; break;
             case 1: *x_tile += 5; *y_tile += 2; break;
             case 2: *x_tile += 2; *y_tile += 5; break;

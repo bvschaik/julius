@@ -1051,19 +1051,19 @@ static void spawn_figure_dock(building *b)
         // count existing dockers
         int existingDockers = 0;
         for (int i = 0; i < 3; i++) {
-            if (b->data.other.dockFigureIds[i]) {
-                if (figure_get(b->data.other.dockFigureIds[i])->type == FIGURE_DOCKER) {
+            if (b->data.dock.docker_ids[i]) {
+                if (figure_get(b->data.dock.docker_ids[i])->type == FIGURE_DOCKER) {
                     existingDockers++;
                 } else {
-                    b->data.other.dockFigureIds[i] = 0;
+                    b->data.dock.docker_ids[i] = 0;
                 }
             }
         }
         if (existingDockers > maxDockers) {
             // too many dockers, kill one of them
             for (int i = 2; i >= 0; i--) {
-                if (b->data.other.dockFigureIds[i]) {
-                    figure_get(b->data.other.dockFigureIds[i])->state = FigureState_Dead;
+                if (b->data.dock.docker_ids[i]) {
+                    figure_get(b->data.dock.docker_ids[i])->state = FigureState_Dead;
                     break;
                 }
             }
@@ -1072,8 +1072,8 @@ static void spawn_figure_dock(building *b)
             f->actionState = FIGURE_ACTION_132_DOCKER_IDLING;
             f->buildingId = b->id;
             for (int i = 0; i < 3; i++) {
-                if (!b->data.other.dockFigureIds[i]) {
-                    b->data.other.dockFigureIds[i] = f->id;
+                if (!b->data.dock.docker_ids[i]) {
+                    b->data.dock.docker_ids[i] = f->id;
                     break;
                 }
             }

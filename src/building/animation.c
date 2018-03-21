@@ -29,7 +29,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_WAREHOUSE && b->numWorkers < model_get_building(b->type)->laborers) {
         return 0;
     }
-    if (b->type == BUILDING_DOCK && b->data.other.dockNumShips <= 0) {
+    if (b->type == BUILDING_DOCK && b->data.dock.num_ships <= 0) {
         map_sprite_animation_set(grid_offset, 1);
         return 1;
     }

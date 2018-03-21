@@ -417,7 +417,7 @@ static void add_to_map(int type, building *b, int size,
             break;
         case BUILDING_DOCK:
             Data_CityInfo.numWorkingDocks++;
-            b->data.other.dockOrientation = waterside_orientation_abs;
+            b->data.dock.orientation = waterside_orientation_abs;
             {
                 int image_id;
                 switch (waterside_orientation_rel) {

@@ -570,8 +570,8 @@ int figure_trade_ship_is_trading(figure *ship)
         return TRADE_SHIP_BUYING;
     }
     for (int i = 0; i < 3; i++) {
-        figure *f = figure_get(b->data.other.dockFigureIds[i]);
-        if (!b->data.other.dockFigureIds[i] || f->state != FigureState_Alive) {
+        figure *f = figure_get(b->data.dock.docker_ids[i]);
+        if (!b->data.dock.docker_ids[i] || f->state != FigureState_Alive) {
             continue;
         }
         switch (f->actionState) {
@@ -594,7 +594,7 @@ static int trade_ship_lost_queue(const figure *f)
 {
     building *b = building_get(f->destinationBuildingId);
     if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_DOCK &&
-        b->numWorkers > 0 && b->data.other.boatFigureId == f->id) {
+        b->numWorkers > 0 && b->data.dock.trade_ship_id == f->id) {
         return 0;
     }
     return 1;
@@ -605,8 +605,8 @@ static int trade_ship_done_trading(figure *f)
     building *b = building_get(f->destinationBuildingId);
     if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_DOCK && b->numWorkers > 0) {
         for (int i = 0; i < 3; i++) {
-            if (b->data.other.dockFigureIds[i]) {
-                figure *docker = figure_get(b->data.other.dockFigureIds[i]);
+            if (b->data.dock.docker_ids[i]) {
+                figure *docker = figure_get(b->data.dock.docker_ids[i]);
                 if (docker->state == FigureState_Alive && docker->actionState != FIGURE_ACTION_132_DOCKER_IDLING) {
                     return 0;
                 }
@@ -697,10 +697,10 @@ void figure_trade_ship_action(figure *f)
                 f->destinationX = river_entry.x;
                 f->destinationY = river_entry.y;
                 building *dst = building_get(f->destinationBuildingId);
-                dst->data.other.dockQueuedDockerId = 0;
-                dst->data.other.dockNumShips = 0;
+                dst->data.dock.queued_docker_id = 0;
+                dst->data.dock.num_ships = 0;
             }
-            switch (building_get(f->destinationBuildingId)->data.other.dockOrientation) {
+            switch (building_get(f->destinationBuildingId)->data.dock.orientation) {
                 case 0: f->direction = DIR_2_RIGHT; break;
                 case 1: f->direction = DIR_4_BOTTOM; break;
                 case 2: f->direction = DIR_6_LEFT; break;
