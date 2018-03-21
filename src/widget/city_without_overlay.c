@@ -294,16 +294,16 @@ static void draw_granary_stores(const image *img, const building *b, int x, int 
                       x + img->sprite_offset_x,
                       y + 60 + img->sprite_offset_y - img->height,
                       color_mask);
-    if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
+    if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400) {
         image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask);
     }
-    if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
+    if (b->data.granary.resource_stored[RESOURCE_NONE] < 1800) {
         image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50, color_mask);
     }
-    if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
+    if (b->data.granary.resource_stored[RESOURCE_NONE] < 1200) {
         image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask);
     }
-    if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
+    if (b->data.granary.resource_stored[RESOURCE_NONE] < 600) {
         image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
     }
 }

@@ -155,7 +155,7 @@ building *building_create(building_type type, int x, int y)
     }
     
     if (type == BUILDING_GRANARY) {
-        b->data.storage.resourceStored[RESOURCE_NONE] = 2400;
+        b->data.granary.resource_stored[RESOURCE_NONE] = 2400;
     }
     
     b->x = x;

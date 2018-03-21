@@ -53,7 +53,7 @@ static void write_type_data(buffer *buf, const building *b)
     } else if (b->type == BUILDING_GRANARY) {
         buffer_write_i16(buf, 0);
         for (int i = 0; i < RESOURCE_MAX; i++) {
-            buffer_write_i16(buf, b->data.storage.resourceStored[i]);
+            buffer_write_i16(buf, b->data.granary.resource_stored[i]);
         }
         buffer_write_i32(buf, 0);
         buffer_write_i32(buf, 0);
@@ -222,7 +222,7 @@ static void read_type_data(buffer *buf, building *b)
     } else if (b->type == BUILDING_GRANARY) {
         buffer_skip(buf, 2);
         for (int i = 0; i < RESOURCE_MAX; i++) {
-            b->data.storage.resourceStored[i] = buffer_read_i16(buf);
+            b->data.granary.resource_stored[i] = buffer_read_i16(buf);
         }
         buffer_skip(buf, 8);
     } else if (b->type == BUILDING_DOCK) {

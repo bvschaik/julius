@@ -168,37 +168,37 @@ void window_building_draw_granary(building_info_context *c)
     } else {
         int total_stored = 0;
         for (int i = RESOURCE_WHEAT; i <= RESOURCE_MEAT; i++) {
-            total_stored += b->data.storage.resourceStored[i];
+            total_stored += b->data.granary.resource_stored[i];
         }
         int width = lang_text_draw(98, 2, c->x_offset + 34, c->y_offset + 40, FONT_NORMAL_BLACK);
         lang_text_draw_amount(8, 16, total_stored, c->x_offset + 34 + width, c->y_offset + 40, FONT_NORMAL_BLACK);
 
         width = lang_text_draw(98, 3, c->x_offset + 220, c->y_offset + 40, FONT_NORMAL_BLACK);
-        lang_text_draw_amount(8, 16, b->data.storage.resourceStored[RESOURCE_NONE],
+        lang_text_draw_amount(8, 16, b->data.granary.resource_stored[RESOURCE_NONE],
             c->x_offset + 220 + width, c->y_offset + 40, FONT_NORMAL_BLACK);
 
         int image_id = image_group(GROUP_RESOURCE_ICONS);
         // wheat
         image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 34, c->y_offset + 68);
-        width = text_draw_number(b->data.storage.resourceStored[RESOURCE_WHEAT], '@', " ",
+        width = text_draw_number(b->data.granary.resource_stored[RESOURCE_WHEAT], '@', " ",
             c->x_offset + 68, c->y_offset + 75, FONT_NORMAL_BLACK);
         lang_text_draw(23, RESOURCE_WHEAT, c->x_offset + 68 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
 
         // vegetables
         image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 34, c->y_offset + 92);
-        width = text_draw_number(b->data.storage.resourceStored[RESOURCE_VEGETABLES], '@', " ",
+        width = text_draw_number(b->data.granary.resource_stored[RESOURCE_VEGETABLES], '@', " ",
             c->x_offset + 68, c->y_offset + 99, FONT_NORMAL_BLACK);
         lang_text_draw(23, RESOURCE_VEGETABLES, c->x_offset + 68 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
 
         // fruit
         image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 240, c->y_offset + 68);
-        width = text_draw_number(b->data.storage.resourceStored[RESOURCE_FRUIT], '@', " ",
+        width = text_draw_number(b->data.granary.resource_stored[RESOURCE_FRUIT], '@', " ",
             c->x_offset + 274, c->y_offset + 75, FONT_NORMAL_BLACK);
         lang_text_draw(23, RESOURCE_FRUIT, c->x_offset + 274 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
 
         // meat/fish
         image_draw(image_id + RESOURCE_MEAT + resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 240, c->y_offset + 92);
-        width = text_draw_number(b->data.storage.resourceStored[RESOURCE_MEAT], '@', " ",
+        width = text_draw_number(b->data.granary.resource_stored[RESOURCE_MEAT], '@', " ",
             c->x_offset + 274, c->y_offset + 99, FONT_NORMAL_BLACK);
         lang_text_draw(23, RESOURCE_MEAT, c->x_offset + 274 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
     }

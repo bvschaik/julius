@@ -32,7 +32,7 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     building *granary = building_get(granary_id);
     int market_units = building_get(market_id)->data.market.inventory[f->collectingItemId];
     int max_units = (f->collectingItemId == INVENTORY_WHEAT ? 800 : 600) - market_units;
-    int granary_units = granary->data.storage.resourceStored[resource];
+    int granary_units = granary->data.granary.resource_stored[resource];
     int num_loads;
     if (granary_units >= 800) {
         num_loads = 8;

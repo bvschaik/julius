@@ -82,8 +82,8 @@ typedef struct {
             unsigned char fetchInventoryId; // 6a
         } market;
         struct {
-            short resourceStored[16]; //4c and further
-        } storage;
+            short resource_stored[16]; //4c and further
+        } granary;
         struct {
             short progress; //4a+b
             unsigned char blessingDaysLeft; //67

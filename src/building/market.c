@@ -43,7 +43,7 @@ int building_market_get_max_goods_stock(building *market)
 
 static void update_food_resource(struct resource_data *data, resource_type resource, const building *b, int distance)
 {
-    if (b->data.storage.resourceStored[resource]) {
+    if (b->data.granary.resource_stored[resource]) {
         data->num_buildings++;
         if (distance < data->distance) {
             data->distance = distance;

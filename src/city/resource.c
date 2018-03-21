@@ -65,7 +65,7 @@ static void calculate_available_food()
             }
             int amount_stored = 0;
             for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-                amount_stored += b->data.storage.resourceStored[r];
+                amount_stored += b->data.granary.resource_stored[r];
             }
             if (pct_workers < 50) {
                 Data_CityInfo.foodInfoGranariesNotOperating++;
@@ -75,7 +75,7 @@ static void calculate_available_food()
             } else {
                 Data_CityInfo.foodInfoGranariesOperating++;
                 for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
-                    Data_CityInfo.resourceGranaryFoodStored[r] += b->data.storage.resourceStored[r];
+                    Data_CityInfo.resourceGranaryFoodStored[r] += b->data.granary.resource_stored[r];
                 }
                 if (amount_stored > 400) {
                     tutorial_on_filled_granary();
