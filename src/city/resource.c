@@ -4,6 +4,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "city/data_private.h"
 #include "core/calc.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
@@ -120,7 +121,7 @@ void city_resource_consume_food()
 {
     calculate_available_food();
     Data_CityInfo.foodInfoFoodTypesEaten = 0;
-    Data_CityInfo.__unknown_00c0 = 0;
+    city_data.unused.unknown_00c0 = 0;
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);

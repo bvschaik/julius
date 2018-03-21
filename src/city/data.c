@@ -20,7 +20,7 @@ void city_data_init()
     Data_CityInfo.citySentiment = 60;
     Data_CityInfo.healthRateTarget = 50;
     Data_CityInfo.healthRate = 50;
-    Data_CityInfo.__unknown_00c0 = 3;
+    city_data.unused.unknown_00c0 = 3;
     Data_CityInfo.wagesRome = 30;
     Data_CityInfo.wages = 30;
     city_data.finance.tax_percentage = 7;
@@ -68,7 +68,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.healthRateTarget);
     buffer_write_i32(main, Data_CityInfo.healthRate);
     buffer_write_i32(main, Data_CityInfo.numHospitalWorkers);
-    buffer_write_i32(main, Data_CityInfo.__unknown_00c0);
+    buffer_write_i32(main, city_data.unused.unknown_00c0);
     buffer_write_i32(main, Data_CityInfo.population);
     buffer_write_i32(main, Data_CityInfo.populationLastYear);
     buffer_write_i32(main, Data_CityInfo.populationSchoolAge);
@@ -545,7 +545,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.healthRateTarget = buffer_read_i32(main);
     Data_CityInfo.healthRate = buffer_read_i32(main);
     Data_CityInfo.numHospitalWorkers = buffer_read_i32(main);
-    Data_CityInfo.__unknown_00c0 = buffer_read_i32(main);
+    city_data.unused.unknown_00c0 = buffer_read_i32(main);
     Data_CityInfo.population = buffer_read_i32(main);
     Data_CityInfo.populationLastYear = buffer_read_i32(main);
     Data_CityInfo.populationSchoolAge = buffer_read_i32(main);
