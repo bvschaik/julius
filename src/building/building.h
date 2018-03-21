@@ -26,7 +26,6 @@ typedef struct {
         short nativeMeetingCenterId;
     } subtype;
     unsigned char roadNetworkId;
-    unsigned char __unknown_0f;
     unsigned short createdSequence;
     short housesCovered;
     short percentageHousesCovered;
@@ -42,15 +41,11 @@ typedef struct {
     short immigrantFigureId;
     short figureId4; // 28; tower ballista or burning ruin prefect
     unsigned char figureSpawnDelay; // 2a
-    unsigned char __unused_2b;
     unsigned char figureRoamDirection;
     unsigned char hasWaterAccess;
-    unsigned char __unused_2e;
-    unsigned char __unused_2f;
     short prevPartBuildingId;
     short nextPartBuildingId;
     short loadsStored; // 34
-    unsigned char __unused_36;
     unsigned char hasWellAccess;
     short numWorkers;
     unsigned char laborCategory;
@@ -63,7 +58,6 @@ typedef struct {
     unsigned char fireProof; //44 cannot catch fire or collapse
     unsigned char houseGenerationDelay;
     unsigned char houseTaxCoverage;
-    unsigned char __unused_47;
     short formationId;
     union {
         struct {

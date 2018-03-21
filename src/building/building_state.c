@@ -124,7 +124,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_i16(buf, b->type);
     buffer_write_i16(buf, b->subtype.houseLevel); // which union field we use does not matter
     buffer_write_u8(buf, b->roadNetworkId);
-    buffer_write_u8(buf, b->__unknown_0f);
+    buffer_write_u8(buf, 0);
     buffer_write_u16(buf, b->createdSequence);
     buffer_write_i16(buf, b->housesCovered);
     buffer_write_i16(buf, b->percentageHousesCovered);
@@ -140,15 +140,15 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_i16(buf, b->immigrantFigureId);
     buffer_write_i16(buf, b->figureId4); // 28; tower ballista or burning ruin prefect
     buffer_write_u8(buf, b->figureSpawnDelay); // 2a
-    buffer_write_u8(buf, b->__unused_2b);
+    buffer_write_u8(buf, 0);
     buffer_write_u8(buf, b->figureRoamDirection);
     buffer_write_u8(buf, b->hasWaterAccess);
-    buffer_write_u8(buf, b->__unused_2e);
-    buffer_write_u8(buf, b->__unused_2f);
+    buffer_write_u8(buf, 0);
+    buffer_write_u8(buf, 0);
     buffer_write_i16(buf, b->prevPartBuildingId);
     buffer_write_i16(buf, b->nextPartBuildingId);
     buffer_write_i16(buf, b->loadsStored); // 34
-    buffer_write_u8(buf, b->__unused_36);
+    buffer_write_u8(buf, 0);
     buffer_write_u8(buf, b->hasWellAccess);
     buffer_write_i16(buf, b->numWorkers);
     buffer_write_u8(buf, b->laborCategory);
@@ -161,7 +161,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_u8(buf, b->fireProof); //44 cannot catch fire or collapse
     buffer_write_u8(buf, b->houseGenerationDelay);
     buffer_write_u8(buf, b->houseTaxCoverage);
-    buffer_write_u8(buf, b->__unused_47);
+    buffer_write_u8(buf, 0);
     buffer_write_i16(buf, b->formationId);
     write_type_data(buf, b);
     buffer_write_i32(buf, b->taxIncomeOrStorage); // 74
@@ -275,7 +275,7 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->type = buffer_read_i16(buf);
     b->subtype.houseLevel = buffer_read_i16(buf); // which union field we use does not matter
     b->roadNetworkId = buffer_read_u8(buf);
-    b->__unknown_0f = buffer_read_u8(buf);
+    buffer_skip(buf, 1);
     b->createdSequence = buffer_read_u16(buf);
     b->housesCovered = buffer_read_i16(buf);
     b->percentageHousesCovered = buffer_read_i16(buf);
@@ -291,15 +291,15 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->immigrantFigureId = buffer_read_i16(buf);
     b->figureId4 = buffer_read_i16(buf); // 28; tower ballista or burning ruin prefect
     b->figureSpawnDelay = buffer_read_u8(buf); // 2a
-    b->__unused_2b = buffer_read_u8(buf);
+    buffer_skip(buf, 1);
     b->figureRoamDirection = buffer_read_u8(buf);
     b->hasWaterAccess = buffer_read_u8(buf);
-    b->__unused_2e = buffer_read_u8(buf);
-    b->__unused_2f = buffer_read_u8(buf);
+    buffer_skip(buf, 1);
+    buffer_skip(buf, 1);
     b->prevPartBuildingId = buffer_read_i16(buf);
     b->nextPartBuildingId = buffer_read_i16(buf);
     b->loadsStored = buffer_read_i16(buf); // 34
-    b->__unused_36 = buffer_read_u8(buf);
+    buffer_skip(buf, 1);
     b->hasWellAccess = buffer_read_u8(buf);
     b->numWorkers = buffer_read_i16(buf);
     b->laborCategory = buffer_read_u8(buf);
@@ -312,7 +312,7 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->fireProof = buffer_read_u8(buf); //44 cannot catch fire or collapse
     b->houseGenerationDelay = buffer_read_u8(buf);
     b->houseTaxCoverage = buffer_read_u8(buf);
-    b->__unused_47 = buffer_read_u8(buf);
+    buffer_skip(buf, 1);
     b->formationId = buffer_read_i16(buf);
     read_type_data(buf, b);
     b->taxIncomeOrStorage = buffer_read_i32(buf); // 74
