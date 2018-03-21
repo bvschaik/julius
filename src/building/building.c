@@ -1,5 +1,6 @@
 #include "building.h"
 
+#include "building/building_state.h"
 #include "building/properties.h"
 #include "building/storage.h"
 #include "city/buildings.h"
@@ -302,11 +303,6 @@ void building_clear_all()
     extra.unfixable_houses = 0;
 }
 
-static void building_save(building *b, buffer *buf)
-{
-    buffer_write_raw(buf, b, 128);
-}
-
 static void building_load(building *b, buffer *buf)
 {
     buffer_read_raw(buf, b, 128);
@@ -316,7 +312,7 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
                          buffer *sequence, buffer *corrupt_houses)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        building_save(&Data_Buildings[i], buf);
+        building_state_save_to_buffer(buf, &Data_Buildings[i]);
     }
     buffer_write_i32(highest_id, extra.highest_id_in_use);
     buffer_write_i32(highest_id_ever, extra.highest_id_ever);

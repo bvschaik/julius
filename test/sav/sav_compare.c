@@ -349,6 +349,17 @@ static int is_exception_image_grid(int global_offset, int part_offset)
     return 0;
 }
 
+static int is_exception_buildings(int global_offset, int part_offset)
+{
+    int building_offset = (global_offset - part_offset) + 128 * (part_offset / 128);
+    int difference_offset = global_offset - building_offset;
+    int type = to_ushort(&file1_data[building_offset + 10]);
+    if (type == 99 && is_between(difference_offset, 0x4A, 0x73)) { // burning ruin extra data
+        return 1;
+    }
+    return 0;
+}
+
 static int is_exception(int index, int global_offset, int part_offset)
 {
     if (index == 2) { // Data_Grid_graphicIds
@@ -367,6 +378,9 @@ static int is_exception(int index, int global_offset, int part_offset)
     if (index == index_of_part("Data_CityInfo")) {
         return is_exception_cityinfo(global_offset, part_offset);
     }
+    if (index == index_of_part("Data_Buildings")) {
+        return is_exception_buildings(global_offset, part_offset);
+    }
     return 0;
 }
 
@@ -380,6 +394,11 @@ static int compare_part(int index, int offset)
             printf("Part %d [%s] (%d) ", index, save_game_parts[index].name, i);
             if (save_game_parts[index].record_length) {
                 printf("record %d offset 0x%X", i / save_game_parts[index].record_length, i % save_game_parts[index].record_length);
+                if (index == index_of_part("Data_Buildings")) {
+                    int record_length = save_game_parts[index].record_length;
+                    int type_offset = (i / record_length) * record_length + 10;
+                    printf(" (type: %d)", to_ushort(&file1_data[offset + type_offset]));
+                }
             } else {
                 printf("offset %d", i);
             }

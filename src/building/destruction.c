@@ -18,6 +18,8 @@
 
 #include "Data/CityInfo.h"
 
+#include <string.h>
+
 static void destroy_on_fire(building *b, int plagued)
 {
     game_undo_disable();
@@ -54,14 +56,15 @@ static void destroy_on_fire(building *b, int plagued)
         b->fireProof = 1;
         b->size = 1;
         b->ruinHasPlague = plagued;
-        int graphicId;
+        memset(&b->data, 0, 42);
+        int image_id;
         if (was_tent) {
-            graphicId = image_group(GROUP_TERRAIN_RUBBLE_TENT);
+            image_id = image_group(GROUP_TERRAIN_RUBBLE_TENT);
         } else {
             int random = map_random_get(b->gridOffset) & 3;
-            graphicId = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
+            image_id = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         }
-        map_building_tiles_add(b->id, b->x, b->y, 1, graphicId, TERRAIN_BUILDING);
+        map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
     }
     static const int x_tiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0};
     static const int y_tiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5};
@@ -72,14 +75,14 @@ static void destroy_on_fire(building *b, int plagued)
             continue;
         }
         building *ruin = building_create(BUILDING_BURNING_RUIN, x, y);
-        int graphicId;
+        int image_id;
         if (was_tent) {
-            graphicId = image_group(GROUP_TERRAIN_RUBBLE_TENT);
+            image_id = image_group(GROUP_TERRAIN_RUBBLE_TENT);
         } else {
             int random = map_random_get(ruin->gridOffset) & 3;
-            graphicId = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
+            image_id = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         }
-        map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, graphicId, TERRAIN_BUILDING);
+        map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, image_id, TERRAIN_BUILDING);
         ruin->fireDuration = (ruin->houseGenerationDelay & 7) + 1;
         ruin->figureId4 = 0;
         ruin->fireProof = 1;

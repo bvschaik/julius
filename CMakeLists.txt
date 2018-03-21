@@ -42,6 +42,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/animation.c
     ${PROJECT_SOURCE_DIR}/src/building/barracks.c
     ${PROJECT_SOURCE_DIR}/src/building/building.c
+    ${PROJECT_SOURCE_DIR}/src/building/building_state.c
     ${PROJECT_SOURCE_DIR}/src/building/construction.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_building.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_clear.c
