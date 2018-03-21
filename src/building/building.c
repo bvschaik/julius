@@ -303,11 +303,6 @@ void building_clear_all()
     extra.unfixable_houses = 0;
 }
 
-static void building_load(building *b, buffer *buf)
-{
-    buffer_read_raw(buf, b, 128);
-}
-
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
                          buffer *sequence, buffer *corrupt_houses)
 {
@@ -327,7 +322,7 @@ void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
                          buffer *sequence, buffer *corrupt_houses)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        building_load(&Data_Buildings[i], buf);
+        building_state_load_from_buffer(buf, &Data_Buildings[i]);
         Data_Buildings[i].id = i;
     }
     extra.highest_id_in_use = buffer_read_i32(highest_id);
