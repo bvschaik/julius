@@ -971,10 +971,10 @@ static void spawn_figure_industry(building *b)
 static void spawn_figure_wharf(building *b)
 {
     check_labor_problem(b);
-    if (b->data.fishing.boat_id) {
-        figure *f = figure_get(b->data.fishing.boat_id);
+    if (b->data.industry.fishing_boat_id) {
+        figure *f = figure_get(b->data.industry.fishing_boat_id);
         if (f->state != FigureState_Alive || f->type != FIGURE_FISHING_BOAT) {
-            b->data.fishing.boat_id = 0;
+            b->data.industry.fishing_boat_id = 0;
         }
     }
     int x_road, y_road;
@@ -985,7 +985,7 @@ static void spawn_figure_wharf(building *b)
         }
         if (b->figureSpawnDelay) {
             b->figureSpawnDelay = 0;
-            b->data.fishing.has_fish = 0;
+            b->data.industry.has_fish = 0;
             b->outputResourceId = RESOURCE_MEAT;
             figure *f = figure_create(FIGURE_CART_PUSHER, x_road, y_road, DIR_4_BOTTOM);
             f->actionState = FIGURE_ACTION_20_CARTPUSHER_INITIAL;

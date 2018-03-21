@@ -73,33 +73,24 @@ static void write_type_data(buffer *buf, const building *b)
             buffer_write_i16(buf, b->data.dock.docker_ids[i]);
         }
         buffer_write_i16(buf, b->data.dock.trade_ship_id);
-    } else if (b->type == BUILDING_SHIPYARD || b->type == BUILDING_WHARF) {
-        buffer_write_i16(buf, b->data.fishing.build_progress);
+    } else if (b->outputResourceId || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD) {
+        buffer_write_i16(buf, b->data.industry.progress);
         for (int i = 0; i < 12; i++) {
             buffer_write_u8(buf, 0);
         }
-        buffer_write_i8(buf, b->data.fishing.has_fish);
-        for (int i = 0; i < 15; i++) {
-            buffer_write_u8(buf, 0);
-        }
-        buffer_write_i8(buf, b->data.fishing.orientation);
-        for (int i = 0; i < 9; i++) {
-            buffer_write_u8(buf, 0);
-        }
-        buffer_write_i16(buf, b->data.fishing.boat_id);
-    } else if (b->outputResourceId || b->type == BUILDING_NATIVE_CROPS) {
-        // Industry. NB: wharf also has an outputResourceId, keep above this "if"!
-        buffer_write_i16(buf, b->data.industry.progress);
-        for (int i = 0; i < 27; i++) {
+        buffer_write_i8(buf, b->data.industry.has_fish);
+        for (int i = 0; i < 14; i++) {
             buffer_write_u8(buf, 0);
         }
         buffer_write_u8(buf, b->data.industry.blessingDaysLeft);
-        buffer_write_u8(buf, 0);
+        buffer_write_i8(buf, b->data.industry.orientation);
         buffer_write_u8(buf, b->data.industry.hasFullResource);
         buffer_write_u8(buf, 0);
         buffer_write_u8(buf, b->data.industry.curseDaysLeft);
-        buffer_write_i32(buf, 0);
-        buffer_write_i32(buf, 0);
+        for (int i = 0; i < 6; i++) {
+            buffer_write_u8(buf, 0);
+        }
+        buffer_write_i16(buf, b->data.industry.fishing_boat_id);
     } else if (b->type == BUILDING_THEATER || b->type == BUILDING_AMPHITHEATER
             || b->type == BUILDING_COLOSSEUM || b->type == BUILDING_HIPPODROME) {
         for (int i = 0; i < 26; i++) {
@@ -245,24 +236,18 @@ static void read_type_data(buffer *buf, building *b)
             b->data.dock.docker_ids[i] = buffer_read_i16(buf);
         }
         b->data.dock.trade_ship_id = buffer_read_i16(buf);
-    } else if (b->type == BUILDING_SHIPYARD || b->type == BUILDING_WHARF) {
-        b->data.fishing.build_progress = buffer_read_i16(buf);
-        buffer_skip(buf, 12);
-        b->data.fishing.has_fish = buffer_read_i8(buf);
-        buffer_skip(buf, 15);
-        b->data.fishing.orientation = buffer_read_i8(buf);
-        buffer_skip(buf, 9);
-        b->data.fishing.boat_id = buffer_read_i16(buf);
-    } else if (b->outputResourceId || b->type == BUILDING_NATIVE_CROPS) {
-        // Industry. NB: wharf also has an outputResourceId, keep above this "if"!
+    } else if (b->outputResourceId || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD) {
         b->data.industry.progress = buffer_read_i16(buf);
-        buffer_skip(buf, 27);
+        buffer_skip(buf, 12);
+        b->data.industry.has_fish = buffer_read_i8(buf);
+        buffer_skip(buf, 14);
         b->data.industry.blessingDaysLeft = buffer_read_u8(buf);
-        buffer_skip(buf, 1);
+        b->data.industry.orientation = buffer_read_i8(buf);
         b->data.industry.hasFullResource = buffer_read_u8(buf);
         buffer_skip(buf, 1);
         b->data.industry.curseDaysLeft = buffer_read_u8(buf);
-        buffer_skip(buf, 8);
+        buffer_skip(buf, 6);
+        b->data.industry.fishing_boat_id = buffer_read_i16(buf);
     } else if (b->type == BUILDING_THEATER || b->type == BUILDING_AMPHITHEATER
             || b->type == BUILDING_COLOSSEUM || b->type == BUILDING_HIPPODROME) {
         buffer_skip(buf, 26);

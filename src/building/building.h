@@ -67,49 +67,33 @@ typedef struct {
     short formationId;
     union {
         struct {
-            short build_progress; // 4a
-            char __unknown_4c[12];
-            char has_fish; // 58
-            char __unknown_59[15];
-            char orientation; // 68
-            char __unknown_69[9];
-            short boat_id; // 72
-        } fishing;
-        struct {
             short queued_docker_id; // 4a
-            char __unknown_4c[25];
             unsigned char num_ships; // 65 dock number of ships
-            char __unknown_66[2];
             char orientation; // 68
-            char __unknown_69[3];
             short docker_ids[3]; // 6c, 6e, 70
             short trade_ship_id; // 72
         } dock;
         struct {
-            short unknown; //4a
             short inventory[8];
             short potteryDemand; // 5c
             short furnitureDemand; // 5e
             short oilDemand; // 60
             short wineDemand; // 62
-            char __padding[6]; // 64 - 69
             unsigned char fetchInventoryId; // 6a
         } market;
         struct {
-            short unknown; //4a
             short resourceStored[16]; //4c and further
         } storage;
         struct {
             short progress; //4a+b
-            char __padding[27];
             unsigned char blessingDaysLeft; //67
-            char __pad68;
             unsigned char hasFullResource; //69
-            char __pad6a;
             unsigned char curseDaysLeft; //6b
+            char has_fish; // 58
+            char orientation; // 68
+            short fishing_boat_id; // 72
         } industry;
         struct {
-            char __padding[26];
             unsigned char numShows; // 64
             unsigned char days1;
             unsigned char days2;
