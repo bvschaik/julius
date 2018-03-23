@@ -57,7 +57,7 @@ void city_finance_process_cheat()
 
 void city_finance_process_stolen(int stolen)
 {
-    Data_CityInfo.financeStolenThisYear += stolen;
+    city_data.finance.stolen_this_year += stolen;
     city_finance_process_sundry(stolen);
 }
 
@@ -81,12 +81,12 @@ void city_finance_process_construction(int cost)
 
 void city_finance_update_interest()
 {
-    city_data.finance.this_year.expenses.interest = Data_CityInfo.financeInterestPaidThisYear;
+    city_data.finance.this_year.expenses.interest = city_data.finance.interest_so_far;
 }
 
 void city_finance_update_salary()
 {
-    city_data.finance.this_year.expenses.salary = Data_CityInfo.financeSalaryPaidThisYear;
+    city_data.finance.this_year.expenses.salary = city_data.finance.salary_so_far;
 }
 
 void city_finance_calculate_totals()
@@ -116,10 +116,8 @@ void city_finance_calculate_totals()
 void city_finance_estimate_wages()
 {
     int monthly_wages = Data_CityInfo.wages * Data_CityInfo.workersEmployed / 10 / 12;
-    city_data.finance.this_year.expenses.wages = Data_CityInfo.financeWagesPaidThisYear;
-    Data_CityInfo.estimatedYearlyWages =
-        (12 - game_time_month()) * monthly_wages +
-        Data_CityInfo.financeWagesPaidThisYear;
+    city_data.finance.this_year.expenses.wages = city_data.finance.wages_so_far;
+    Data_CityInfo.estimatedYearlyWages = (12 - game_time_month()) * monthly_wages + city_data.finance.wages_so_far;
 }
 
 void city_finance_estimate_taxes()
@@ -231,7 +229,7 @@ static void pay_monthly_wages()
 {
     int wages = Data_CityInfo.wages * Data_CityInfo.workersEmployed / 10 / 12;
     city_data.finance.treasury -= wages;
-    Data_CityInfo.financeWagesPaidThisYear += wages;
+    city_data.finance.wages_so_far += wages;
     Data_CityInfo.wageRatePaidThisYear += Data_CityInfo.wages;
 }
 
@@ -240,14 +238,14 @@ static void pay_monthly_interest()
     if (city_data.finance.treasury < 0) {
         int interest = calc_adjust_with_percentage(-city_data.finance.treasury, 10) / 12;
         city_data.finance.treasury -= interest;
-        Data_CityInfo.financeInterestPaidThisYear += interest;
+        city_data.finance.interest_so_far += interest;
     }
 }
 
 static void pay_monthly_salary()
 {
     if (!city_finance_out_of_money()) {
-        Data_CityInfo.financeSalaryPaidThisYear += Data_CityInfo.salaryAmount;
+        city_data.finance.salary_so_far += Data_CityInfo.salaryAmount;
         Data_CityInfo.personalSavings += Data_CityInfo.salaryAmount;
         city_data.finance.treasury -= Data_CityInfo.salaryAmount;
     }
@@ -285,8 +283,8 @@ static void copy_amounts_to_last_year()
     finance_overview *this_year = &city_data.finance.this_year;
 
     // wages
-    last_year->expenses.wages = Data_CityInfo.financeWagesPaidThisYear;
-    Data_CityInfo.financeWagesPaidThisYear = 0;
+    last_year->expenses.wages = city_data.finance.wages_so_far;
+    city_data.finance.wages_so_far = 0;
     Data_CityInfo.wageRatePaidLastYear = Data_CityInfo.wageRatePaidThisYear;
     Data_CityInfo.wageRatePaidThisYear = 0;
 
@@ -301,18 +299,18 @@ static void copy_amounts_to_last_year()
     this_year->expenses.construction = 0;
 
     // interest
-    last_year->expenses.interest = Data_CityInfo.financeInterestPaidThisYear;
-    Data_CityInfo.financeInterestPaidThisYear = 0;
+    last_year->expenses.interest = city_data.finance.interest_so_far;
+    city_data.finance.interest_so_far = 0;
 
     // salary
-    city_data.finance.last_year.expenses.salary = Data_CityInfo.financeSalaryPaidThisYear;
-    Data_CityInfo.financeSalaryPaidThisYear = 0;
+    city_data.finance.last_year.expenses.salary = city_data.finance.salary_so_far;
+    city_data.finance.salary_so_far = 0;
 
     // sundries
     last_year->expenses.sundries = this_year->expenses.sundries;
     this_year->expenses.sundries = 0;
-    Data_CityInfo.financeStolenLastYear = Data_CityInfo.financeStolenThisYear;
-    Data_CityInfo.financeStolenThisYear = 0;
+    city_data.finance.stolen_last_year = city_data.finance.stolen_this_year;
+    city_data.finance.stolen_this_year = 0;
 
     // donations
     last_year->income.donated = this_year->income.donated;

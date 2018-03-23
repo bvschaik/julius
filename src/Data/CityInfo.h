@@ -82,7 +82,6 @@ extern struct _Data_CityInfo {
 	int32_t workersNeeded;
 	int32_t wages;
 	int32_t wagesRome;
-	int32_t financeWagesPaidThisYear;
 	int32_t monthlyTaxedPlebs;
 	int32_t monthlyTaxedPatricians;
 	int32_t monthlyUntaxedPlebs;
@@ -98,10 +97,8 @@ extern struct _Data_CityInfo {
 	int32_t monthlyUncollectedTaxFromPlebs;
 	int32_t monthlyCollectedTaxFromPatricians;
 	int32_t monthlyUncollectedTaxFromPatricians;
-	int32_t financeInterestPaidThisYear;
 	int32_t salaryAmount;
 	int32_t salaryRank;
-	int32_t financeSalaryPaidThisYear;
 	int32_t tradeNextImportResourceCaravan;
 	int32_t tradeNextImportResourceCaravanBackup;
 	int32_t housesRequiringFountainToEvolve;//4268
@@ -169,8 +166,6 @@ extern struct _Data_CityInfo {
 	int16_t tradeLandProblemDuration;
 	int16_t numWorkingDocks;
 	int16_t numWorkingWharfs;
-	int16_t financeStolenThisYear;
-	int16_t financeStolenLastYear;
 	int32_t tradeNextImportResourceDocker;
 	int32_t tradeNextExportResourceDocker;
 	int32_t debtState;

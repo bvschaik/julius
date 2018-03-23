@@ -184,7 +184,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.wages);
     buffer_write_i32(main, Data_CityInfo.wagesRome);
     buffer_write_i32(main, city_data.unused.unknown_2b6c);
-    buffer_write_i32(main, Data_CityInfo.financeWagesPaidThisYear);
+    buffer_write_i32(main, city_data.finance.wages_so_far);
     buffer_write_i32(main, city_data.finance.this_year.expenses.wages);
     buffer_write_i32(main, city_data.finance.last_year.expenses.wages);
     buffer_write_i32(main, Data_CityInfo.monthlyTaxedPlebs);
@@ -208,7 +208,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.finance.last_year.income.exports);
     buffer_write_i32(main, city_data.finance.this_year.expenses.imports);
     buffer_write_i32(main, city_data.finance.last_year.expenses.imports);
-    buffer_write_i32(main, Data_CityInfo.financeInterestPaidThisYear);
+    buffer_write_i32(main, city_data.finance.interest_so_far);
     buffer_write_i32(main, city_data.finance.last_year.expenses.interest);
     buffer_write_i32(main, city_data.finance.this_year.expenses.interest);
     buffer_write_i32(main, city_data.finance.last_year.expenses.sundries);
@@ -219,7 +219,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.finance.this_year.expenses.salary);
     buffer_write_i32(main, Data_CityInfo.salaryAmount);
     buffer_write_i32(main, Data_CityInfo.salaryRank);
-    buffer_write_i32(main, Data_CityInfo.financeSalaryPaidThisYear);
+    buffer_write_i32(main, city_data.finance.salary_so_far);
     buffer_write_i32(main, city_data.finance.last_year.income.total);
     buffer_write_i32(main, city_data.finance.this_year.income.total);
     buffer_write_i32(main, city_data.finance.last_year.expenses.total);
@@ -354,8 +354,8 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 2; i++) {
         buffer_write_i8(main, city_data.unused.padding_43b2[i]);
     }
-    buffer_write_i16(main, Data_CityInfo.financeStolenThisYear);
-    buffer_write_i16(main, Data_CityInfo.financeStolenLastYear);
+    buffer_write_i16(main, city_data.finance.stolen_this_year);
+    buffer_write_i16(main, city_data.finance.stolen_last_year);
     buffer_write_i32(main, Data_CityInfo.tradeNextImportResourceDocker);
     buffer_write_i32(main, Data_CityInfo.tradeNextExportResourceDocker);
     buffer_write_i32(main, Data_CityInfo.debtState);
@@ -661,7 +661,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.wages = buffer_read_i32(main);
     Data_CityInfo.wagesRome = buffer_read_i32(main);
     city_data.unused.unknown_2b6c = buffer_read_i32(main);
-    Data_CityInfo.financeWagesPaidThisYear = buffer_read_i32(main);
+    city_data.finance.wages_so_far = buffer_read_i32(main);
     city_data.finance.this_year.expenses.wages = buffer_read_i32(main);
     city_data.finance.last_year.expenses.wages = buffer_read_i32(main);
     Data_CityInfo.monthlyTaxedPlebs = buffer_read_i32(main);
@@ -685,7 +685,7 @@ static void load_main_data(buffer *main)
     city_data.finance.last_year.income.exports = buffer_read_i32(main);
     city_data.finance.this_year.expenses.imports = buffer_read_i32(main);
     city_data.finance.last_year.expenses.imports = buffer_read_i32(main);
-    Data_CityInfo.financeInterestPaidThisYear = buffer_read_i32(main);
+    city_data.finance.interest_so_far = buffer_read_i32(main);
     city_data.finance.last_year.expenses.interest = buffer_read_i32(main);
     city_data.finance.this_year.expenses.interest = buffer_read_i32(main);
     city_data.finance.last_year.expenses.sundries = buffer_read_i32(main);
@@ -696,7 +696,7 @@ static void load_main_data(buffer *main)
     city_data.finance.this_year.expenses.salary = buffer_read_i32(main);
     Data_CityInfo.salaryAmount = buffer_read_i32(main);
     Data_CityInfo.salaryRank = buffer_read_i32(main);
-    Data_CityInfo.financeSalaryPaidThisYear = buffer_read_i32(main);
+    city_data.finance.salary_so_far = buffer_read_i32(main);
     city_data.finance.last_year.income.total = buffer_read_i32(main);
     city_data.finance.this_year.income.total = buffer_read_i32(main);
     city_data.finance.last_year.expenses.total = buffer_read_i32(main);
@@ -831,8 +831,8 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 2; i++) {
         city_data.unused.padding_43b2[i] = buffer_read_i8(main);
     }
-    Data_CityInfo.financeStolenThisYear = buffer_read_i16(main);
-    Data_CityInfo.financeStolenLastYear = buffer_read_i16(main);
+    city_data.finance.stolen_this_year = buffer_read_i16(main);
+    city_data.finance.stolen_last_year = buffer_read_i16(main);
     Data_CityInfo.tradeNextImportResourceDocker = buffer_read_i32(main);
     Data_CityInfo.tradeNextExportResourceDocker = buffer_read_i32(main);
     Data_CityInfo.debtState = buffer_read_i32(main);

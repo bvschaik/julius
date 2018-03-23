@@ -30,6 +30,11 @@ extern struct city_data_t {
         int32_t tax_percentage;
         finance_overview last_year;
         finance_overview this_year;
+        int32_t interest_so_far;
+        int32_t salary_so_far;
+        int32_t wages_so_far;
+        int16_t stolen_this_year;
+        int16_t stolen_last_year;
     } finance;
     struct {
         int32_t culture;
