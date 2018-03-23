@@ -627,7 +627,7 @@ static void spawn_figure_market(building *b)
                 f->buildingId = b->id;
                 b->figureId2 = f->id;
                 f->destinationBuildingId = dstBuildingId;
-                f->collectingItemId = b->data.market.fetchInventoryId;
+                f->collectingItemId = b->data.market.fetch_inventory_id;
                 building *bDst = building_get(dstBuildingId);
                 if (map_has_road_access(bDst->x, bDst->y, bDst->size, &x_road, &y_road) ||
                     map_has_road_access(bDst->x, bDst->y, 3, &x_road, &y_road)) {

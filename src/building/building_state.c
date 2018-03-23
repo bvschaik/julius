@@ -39,14 +39,14 @@ static void write_type_data(buffer *buf, const building *b)
         for (int i = 0; i < INVENTORY_MAX; i++) {
             buffer_write_i16(buf, b->data.market.inventory[i]);
         }
-        buffer_write_i16(buf, b->data.market.potteryDemand);
-        buffer_write_i16(buf, b->data.market.furnitureDemand);
-        buffer_write_i16(buf, b->data.market.oilDemand);
-        buffer_write_i16(buf, b->data.market.wineDemand);
+        buffer_write_i16(buf, b->data.market.pottery_demand);
+        buffer_write_i16(buf, b->data.market.furniture_demand);
+        buffer_write_i16(buf, b->data.market.oil_demand);
+        buffer_write_i16(buf, b->data.market.wine_demand);
         for (int i = 0; i < 3; i++) {
             buffer_write_i16(buf, 0);
         }
-        buffer_write_u8(buf, b->data.market.fetchInventoryId);
+        buffer_write_u8(buf, b->data.market.fetch_inventory_id);
         for (int i = 0; i < 9; i++) {
             buffer_write_u8(buf, 0);
         }
@@ -78,15 +78,15 @@ static void write_type_data(buffer *buf, const building *b)
         for (int i = 0; i < 12; i++) {
             buffer_write_u8(buf, 0);
         }
-        buffer_write_i8(buf, b->data.industry.has_fish);
+        buffer_write_u8(buf, b->data.industry.has_fish);
         for (int i = 0; i < 14; i++) {
             buffer_write_u8(buf, 0);
         }
-        buffer_write_u8(buf, b->data.industry.blessingDaysLeft);
-        buffer_write_i8(buf, b->data.industry.orientation);
-        buffer_write_u8(buf, b->data.industry.hasFullResource);
+        buffer_write_u8(buf, b->data.industry.blessing_days_left);
+        buffer_write_u8(buf, b->data.industry.orientation);
+        buffer_write_u8(buf, b->data.industry.has_raw_materials);
         buffer_write_u8(buf, 0);
-        buffer_write_u8(buf, b->data.industry.curseDaysLeft);
+        buffer_write_u8(buf, b->data.industry.curse_days_left);
         for (int i = 0; i < 6; i++) {
             buffer_write_u8(buf, 0);
         }
@@ -96,7 +96,7 @@ static void write_type_data(buffer *buf, const building *b)
         for (int i = 0; i < 26; i++) {
             buffer_write_u8(buf, 0);
         }
-        buffer_write_u8(buf, b->data.entertainment.numShows);
+        buffer_write_u8(buf, b->data.entertainment.num_shows);
         buffer_write_u8(buf, b->data.entertainment.days1);
         buffer_write_u8(buf, b->data.entertainment.days2);
         buffer_write_u8(buf, b->data.entertainment.play);
@@ -212,12 +212,12 @@ static void read_type_data(buffer *buf, building *b)
         for (int i = 0; i < INVENTORY_MAX; i++) {
             b->data.market.inventory[i] = buffer_read_i16(buf);
         }
-        b->data.market.potteryDemand = buffer_read_i16(buf);
-        b->data.market.furnitureDemand = buffer_read_i16(buf);
-        b->data.market.oilDemand = buffer_read_i16(buf);
-        b->data.market.wineDemand = buffer_read_i16(buf);
+        b->data.market.pottery_demand = buffer_read_i16(buf);
+        b->data.market.furniture_demand = buffer_read_i16(buf);
+        b->data.market.oil_demand = buffer_read_i16(buf);
+        b->data.market.wine_demand = buffer_read_i16(buf);
         buffer_skip(buf, 6);
-        b->data.market.fetchInventoryId = buffer_read_u8(buf);
+        b->data.market.fetch_inventory_id = buffer_read_u8(buf);
         buffer_skip(buf, 9);
     } else if (b->type == BUILDING_GRANARY) {
         buffer_skip(buf, 2);
@@ -239,19 +239,19 @@ static void read_type_data(buffer *buf, building *b)
     } else if (b->outputResourceId || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD) {
         b->data.industry.progress = buffer_read_i16(buf);
         buffer_skip(buf, 12);
-        b->data.industry.has_fish = buffer_read_i8(buf);
+        b->data.industry.has_fish = buffer_read_u8(buf);
         buffer_skip(buf, 14);
-        b->data.industry.blessingDaysLeft = buffer_read_u8(buf);
-        b->data.industry.orientation = buffer_read_i8(buf);
-        b->data.industry.hasFullResource = buffer_read_u8(buf);
+        b->data.industry.blessing_days_left = buffer_read_u8(buf);
+        b->data.industry.orientation = buffer_read_u8(buf);
+        b->data.industry.has_raw_materials = buffer_read_u8(buf);
         buffer_skip(buf, 1);
-        b->data.industry.curseDaysLeft = buffer_read_u8(buf);
+        b->data.industry.curse_days_left = buffer_read_u8(buf);
         buffer_skip(buf, 6);
         b->data.industry.fishing_boat_id = buffer_read_i16(buf);
     } else if (b->type == BUILDING_THEATER || b->type == BUILDING_AMPHITHEATER
             || b->type == BUILDING_COLOSSEUM || b->type == BUILDING_HIPPODROME) {
         buffer_skip(buf, 26);
-        b->data.entertainment.numShows = buffer_read_u8(buf);
+        b->data.entertainment.num_shows = buffer_read_u8(buf);
         b->data.entertainment.days1 = buffer_read_u8(buf);
         b->data.entertainment.days2 = buffer_read_u8(buf);
         b->data.entertainment.play = buffer_read_u8(buf);

@@ -106,23 +106,23 @@ int building_market_get_storage_destination(building *market)
     }
 
     // update demands
-    if (market->data.market.potteryDemand) {
-        market->data.market.potteryDemand--;
+    if (market->data.market.pottery_demand) {
+        market->data.market.pottery_demand--;
     } else {
         resources[INVENTORY_POTTERY].num_buildings = 0;
     }
-    if (market->data.market.furnitureDemand) {
-        market->data.market.furnitureDemand--;
+    if (market->data.market.furniture_demand) {
+        market->data.market.furniture_demand--;
     } else {
         resources[INVENTORY_FURNITURE].num_buildings = 0;
     }
-    if (market->data.market.oilDemand) {
-        market->data.market.oilDemand--;
+    if (market->data.market.oil_demand) {
+        market->data.market.oil_demand--;
     } else {
         resources[INVENTORY_OIL].num_buildings = 0;
     }
-    if (market->data.market.wineDemand) {
-        market->data.market.wineDemand--;
+    if (market->data.market.wine_demand) {
+        market->data.market.wine_demand--;
     } else {
         resources[INVENTORY_WINE].num_buildings = 0;
     }
@@ -139,30 +139,30 @@ int building_market_get_storage_destination(building *market)
     }
     // prefer food if we don't have it
     if (!market->data.market.inventory[INVENTORY_WHEAT] && resources[INVENTORY_WHEAT].num_buildings) {
-        market->data.market.fetchInventoryId = INVENTORY_WHEAT;
+        market->data.market.fetch_inventory_id = INVENTORY_WHEAT;
         return resources[INVENTORY_WHEAT].building_id;
     } else if (!market->data.market.inventory[INVENTORY_VEGETABLES] && resources[INVENTORY_VEGETABLES].num_buildings) {
-        market->data.market.fetchInventoryId = INVENTORY_VEGETABLES;
+        market->data.market.fetch_inventory_id = INVENTORY_VEGETABLES;
         return resources[INVENTORY_VEGETABLES].building_id;
     } else if (!market->data.market.inventory[INVENTORY_FRUIT] && resources[INVENTORY_FRUIT].num_buildings) {
-        market->data.market.fetchInventoryId = INVENTORY_FRUIT;
+        market->data.market.fetch_inventory_id = INVENTORY_FRUIT;
         return resources[INVENTORY_FRUIT].building_id;
     } else if (!market->data.market.inventory[INVENTORY_MEAT] && resources[INVENTORY_MEAT].num_buildings) {
-        market->data.market.fetchInventoryId = INVENTORY_MEAT;
+        market->data.market.fetch_inventory_id = INVENTORY_MEAT;
         return resources[INVENTORY_MEAT].building_id;
     }
     // then prefer resource if we don't have it
     if (!market->data.market.inventory[INVENTORY_POTTERY] && resources[INVENTORY_POTTERY].num_buildings) {
-        market->data.market.fetchInventoryId = INVENTORY_POTTERY;
+        market->data.market.fetch_inventory_id = INVENTORY_POTTERY;
         return resources[INVENTORY_POTTERY].building_id;
     } else if (!market->data.market.inventory[INVENTORY_FURNITURE] && resources[INVENTORY_FURNITURE].num_buildings) {
-        market->data.market.fetchInventoryId = INVENTORY_FURNITURE;
+        market->data.market.fetch_inventory_id = INVENTORY_FURNITURE;
         return resources[INVENTORY_FURNITURE].building_id;
     } else if (!market->data.market.inventory[INVENTORY_OIL] && resources[INVENTORY_OIL].num_buildings) {
-        market->data.market.fetchInventoryId = INVENTORY_OIL;
+        market->data.market.fetch_inventory_id = INVENTORY_OIL;
         return resources[INVENTORY_OIL].building_id;
     } else if (!market->data.market.inventory[INVENTORY_WINE] && resources[INVENTORY_WINE].num_buildings) {
-        market->data.market.fetchInventoryId = INVENTORY_WINE;
+        market->data.market.fetch_inventory_id = INVENTORY_WINE;
         return resources[INVENTORY_WINE].building_id;
     }
     // then prefer smallest stock below 50
@@ -230,6 +230,6 @@ int building_market_get_storage_destination(building *market)
     if (fetch_inventory < 0 || fetch_inventory >= INVENTORY_MAX) {
         return 0;
     }
-    market->data.market.fetchInventoryId = fetch_inventory;
+    market->data.market.fetch_inventory_id = fetch_inventory;
     return resources[fetch_inventory].building_id;
 }

@@ -69,26 +69,26 @@ typedef struct {
         } dock;
         struct {
             short inventory[8];
-            short potteryDemand; // 5c
-            short furnitureDemand; // 5e
-            short oilDemand; // 60
-            short wineDemand; // 62
-            unsigned char fetchInventoryId; // 6a
+            short pottery_demand; // 5c
+            short furniture_demand; // 5e
+            short oil_demand; // 60
+            short wine_demand; // 62
+            unsigned char fetch_inventory_id; // 6a
         } market;
         struct {
             short resource_stored[16]; //4c and further
         } granary;
         struct {
             short progress; //4a+b
-            unsigned char blessingDaysLeft; //67
-            unsigned char hasFullResource; //69
-            unsigned char curseDaysLeft; //6b
-            char has_fish; // 58
-            char orientation; // 68
+            unsigned char blessing_days_left; //67
+            unsigned char curse_days_left; //6b
+            unsigned char has_raw_materials; //69
+            unsigned char has_fish; // 58
+            unsigned char orientation; // 68
             short fishing_boat_id; // 72
         } industry;
         struct {
-            unsigned char numShows; // 64
+            unsigned char num_shows; // 64
             unsigned char days1;
             unsigned char days2;
             unsigned char play;

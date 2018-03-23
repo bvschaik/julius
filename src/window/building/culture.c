@@ -138,7 +138,7 @@ void window_building_draw_theater(building_info_context *c)
         window_building_draw_description(c, 69, 25);
     } else if (b->numWorkers <= 0) {
         window_building_draw_description(c, 72, 4);
-    } else if (!b->data.entertainment.numShows) {
+    } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, 72, 2);
     } else if (b->data.entertainment.days1) {
         window_building_draw_description(c, 72, 3);
@@ -168,9 +168,9 @@ void window_building_draw_amphitheater(building_info_context *c)
         window_building_draw_description(c, 69, 25);
     } else if (b->numWorkers <= 0) {
         window_building_draw_description(c, 71, 6);
-    } else if (!b->data.entertainment.numShows) {
+    } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, 71, 2);
-    } else if (b->data.entertainment.numShows == 2) {
+    } else if (b->data.entertainment.num_shows == 2) {
         window_building_draw_description(c, 71, 3);
     } else if (b->data.entertainment.days1) {
         window_building_draw_description(c, 71, 4);
@@ -209,9 +209,9 @@ void window_building_draw_colosseum(building_info_context *c)
         window_building_draw_description(c, 69, 25);
     } else if (b->numWorkers <= 0) {
         window_building_draw_description(c, 74, 6);
-    } else if (!b->data.entertainment.numShows) {
+    } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, 74, 2);
-    } else if (b->data.entertainment.numShows == 2) {
+    } else if (b->data.entertainment.num_shows == 2) {
         window_building_draw_description(c, 74, 3);
     } else if (b->data.entertainment.days1) {
         window_building_draw_description(c, 74, 5);
@@ -248,7 +248,7 @@ void window_building_draw_hippodrome(building_info_context *c)
         window_building_draw_description(c, 69, 25);
     } else if (b->numWorkers <= 0) {
         window_building_draw_description(c, 73, 4);
-    } else if (!b->data.entertainment.numShows) {
+    } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, 73, 2);
     } else if (b->data.entertainment.days1) {
         window_building_draw_description(c, 73, 3);

@@ -256,19 +256,19 @@ static void distribute_market_resources(building *b, building *market)
         }
     }
     if (model->pottery) {
-        market->data.market.potteryDemand = 10;
+        market->data.market.pottery_demand = 10;
         distribute_good(b, market, 8 * model->pottery, INVENTORY_POTTERY);
     }
     if (model->furniture) {
-        market->data.market.furnitureDemand = 10;
+        market->data.market.furniture_demand = 10;
         distribute_good(b, market, 4 * model->furniture, INVENTORY_FURNITURE);
     }
     if (model->oil) {
-        market->data.market.oilDemand = 10;
+        market->data.market.oil_demand = 10;
         distribute_good(b, market, 4 * model->oil, INVENTORY_OIL);
     }
     if (model->wine) {
-        market->data.market.wineDemand = 10;
+        market->data.market.wine_demand = 10;
         distribute_good(b, market, 4 * model->wine, INVENTORY_WINE);
     }
 }

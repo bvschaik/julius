@@ -41,25 +41,25 @@ void building_industry_update_production()
         if (b->state != BUILDING_STATE_IN_USE || !b->outputResourceId) {
             continue;
         }
-        b->data.industry.hasFullResource = 0;
+        b->data.industry.has_raw_materials = 0;
         if (b->housesCovered <= 0 || b->numWorkers <= 0) {
             continue;
         }
         if (b->subtype.workshopType && !b->loadsStored) {
             continue;
         }
-        if (b->data.industry.curseDaysLeft) {
-            b->data.industry.curseDaysLeft--;
+        if (b->data.industry.curse_days_left) {
+            b->data.industry.curse_days_left--;
         } else {
-            if (b->data.industry.blessingDaysLeft) {
-                b->data.industry.blessingDaysLeft--;
+            if (b->data.industry.blessing_days_left) {
+                b->data.industry.blessing_days_left--;
             }
             if (b->type == BUILDING_MARBLE_QUARRY) {
                 b->data.industry.progress += b->numWorkers / 2;
             } else {
                 b->data.industry.progress += b->numWorkers;
             }
-            if (b->data.industry.blessingDaysLeft && building_is_farm(b->type)) {
+            if (b->data.industry.blessing_days_left && building_is_farm(b->type)) {
                 b->data.industry.progress += b->numWorkers;
             }
             int max = max_progress(b);
@@ -86,9 +86,9 @@ void building_industry_update_wheat_production()
         if (b->housesCovered <= 0 || b->numWorkers <= 0) {
             continue;
         }
-        if (b->type == BUILDING_WHEAT_FARM && !b->data.industry.curseDaysLeft) {
+        if (b->type == BUILDING_WHEAT_FARM && !b->data.industry.curse_days_left) {
             b->data.industry.progress += b->numWorkers;
-            if (b->data.industry.blessingDaysLeft) {
+            if (b->data.industry.blessing_days_left) {
                 b->data.industry.progress += b->numWorkers;
             }
             if (b->data.industry.progress > MAX_PROGRESS_RAW) {
@@ -110,7 +110,7 @@ void building_industry_start_new_production(building *b)
     if (b->subtype.workshopType) {
         if (b->loadsStored) {
             if (b->loadsStored > 1) {
-                b->data.industry.hasFullResource = 1;
+                b->data.industry.has_raw_materials = 1;
             }
             b->loadsStored--;
         }
@@ -126,8 +126,8 @@ void building_bless_farms()
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->outputResourceId && building_is_farm(b->type)) {
             b->data.industry.progress = 200;
-            b->data.industry.curseDaysLeft = 0;
-            b->data.industry.blessingDaysLeft = 16;
+            b->data.industry.curse_days_left = 0;
+            b->data.industry.blessing_days_left = 16;
             update_farm_image(b);
         }
     }
@@ -139,8 +139,8 @@ void building_curse_farms(int big_curse)
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->outputResourceId && building_is_farm(b->type)) {
             b->data.industry.progress = 0;
-            b->data.industry.blessingDaysLeft = 0;
-            b->data.industry.curseDaysLeft = big_curse ? 48 : 4;
+            b->data.industry.blessing_days_left = 0;
+            b->data.industry.curse_days_left = big_curse ? 48 : 4;
             update_farm_image(b);
         }
     }

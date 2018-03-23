@@ -166,27 +166,27 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
 static void draw_workshop_raw_material_storage(const building *b, int x, int y, color_t color_mask)
 {
     if (b->type == BUILDING_WINE_WORKSHOP) {
-        if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
+        if (b->loadsStored >= 2 || b->data.industry.has_raw_materials) {
             image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL), x + 45, y + 23, color_mask);
         }
     }
     if (b->type == BUILDING_OIL_WORKSHOP) {
-        if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
+        if (b->loadsStored >= 2 || b->data.industry.has_raw_materials) {
             image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1, x + 35, y + 15, color_mask);
         }
     }
     if (b->type == BUILDING_WEAPONS_WORKSHOP) {
-        if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
+        if (b->loadsStored >= 2 || b->data.industry.has_raw_materials) {
             image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3, x + 46, y + 24, color_mask);
         }
     }
     if (b->type == BUILDING_FURNITURE_WORKSHOP) {
-        if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
+        if (b->loadsStored >= 2 || b->data.industry.has_raw_materials) {
             image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2, x + 48, y + 19, color_mask);
         }
     }
     if (b->type == BUILDING_POTTERY_WORKSHOP) {
-        if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
+        if (b->loadsStored >= 2 || b->data.industry.has_raw_materials) {
             image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4, x + 47, y + 24, color_mask);
         }
     }

@@ -216,7 +216,7 @@ void building_count_update()
                 --b->data.entertainment.days2;
                 ++shows;
             }
-            b->data.entertainment.numShows = shows;
+            b->data.entertainment.num_shows = shows;
         }
     }
     limit_hippodrome();
