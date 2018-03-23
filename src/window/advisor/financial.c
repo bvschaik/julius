@@ -58,7 +58,7 @@ static int draw_background()
     lang_text_draw_amount(8, 0, Data_CityInfo.estimatedTaxIncome, 240 + width, 81, FONT_NORMAL_WHITE);
 
     // percentage taxpayers
-    width = text_draw_percentage(Data_CityInfo.percentageTaxedPeople, 70, 103, FONT_NORMAL_WHITE);
+    width = text_draw_percentage(city_finance_percentage_taxed_people(), 70, 103, FONT_NORMAL_WHITE);
     lang_text_draw(60, 5, 70 + width, 103, FONT_NORMAL_WHITE);
 
     // table headers

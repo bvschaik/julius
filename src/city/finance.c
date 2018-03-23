@@ -31,6 +31,11 @@ void city_finance_change_tax_percentage(int change)
     city_data.finance.tax_percentage = calc_bound(city_data.finance.tax_percentage + change, 0, 25);
 }
 
+int city_finance_percentage_taxed_people()
+{
+    return city_data.taxes.percentage_taxed_people;
+}
+
 void city_finance_process_import(int price)
 {
     city_data.finance.treasury -= price;
@@ -122,8 +127,8 @@ void city_finance_estimate_wages()
 
 void city_finance_estimate_taxes()
 {
-    Data_CityInfo.monthlyCollectedTaxFromPlebs = 0;
-    Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
+    city_data.taxes.monthly.collected_plebs = 0;
+    city_data.taxes.monthly.collected_patricians = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->houseTaxCoverage) {
@@ -131,35 +136,34 @@ void city_finance_estimate_taxes()
             int trm = difficulty_adjust_money(
                 model_get_house(b->subtype.houseLevel)->tax_multiplier);
             if (isPatrician) {
-                Data_CityInfo.monthlyCollectedTaxFromPatricians += b->housePopulation * trm;
+                city_data.taxes.monthly.collected_patricians += b->housePopulation * trm;
             } else {
-                Data_CityInfo.monthlyCollectedTaxFromPlebs += b->housePopulation * trm;
+                city_data.taxes.monthly.collected_plebs += b->housePopulation * trm;
             }
         }
     }
     int monthly_patricians = calc_adjust_with_percentage(
-        Data_CityInfo.monthlyCollectedTaxFromPatricians / 2,
+        city_data.taxes.monthly.collected_patricians / 2,
         city_data.finance.tax_percentage);
     int monthly_plebs = calc_adjust_with_percentage(
-        Data_CityInfo.monthlyCollectedTaxFromPlebs / 2,
+        city_data.taxes.monthly.collected_plebs / 2,
         city_data.finance.tax_percentage);
     int estimated_rest_of_year = (12 - game_time_month()) * (monthly_patricians + monthly_plebs);
 
-    city_data.finance.this_year.income.taxes =
-        Data_CityInfo.yearlyCollectedTaxFromPlebs + Data_CityInfo.yearlyCollectedTaxFromPatricians;
+    city_data.finance.this_year.income.taxes = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
     Data_CityInfo.estimatedTaxIncome = city_data.finance.this_year.income.taxes + estimated_rest_of_year;
 }
 
 static void collect_monthly_taxes()
 {
-    Data_CityInfo.monthlyTaxedPlebs = 0;
-    Data_CityInfo.monthlyTaxedPatricians = 0;
-    Data_CityInfo.monthlyUntaxedPlebs = 0;
-    Data_CityInfo.monthlyUntaxedPatricians = 0;
-    Data_CityInfo.monthlyUncollectedTaxFromPlebs = 0;
-    Data_CityInfo.monthlyCollectedTaxFromPlebs = 0;
-    Data_CityInfo.monthlyUncollectedTaxFromPatricians = 0;
-    Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
+    city_data.taxes.taxed_plebs = 0;
+    city_data.taxes.taxed_patricians = 0;
+    city_data.taxes.untaxed_plebs = 0;
+    city_data.taxes.untaxed_patricians = 0;
+    city_data.taxes.monthly.uncollected_plebs = 0;
+    city_data.taxes.monthly.collected_plebs = 0;
+    city_data.taxes.monthly.uncollected_patricians = 0;
+    city_data.taxes.monthly.collected_patricians = 0;
 
     for (int i = 0; i < MAX_HOUSE_LEVELS; i++) {
         Data_CityInfo.populationPerLevel[i] = 0;
@@ -179,49 +183,49 @@ static void collect_monthly_taxes()
         int tax = population * trm;
         if (b->houseTaxCoverage) {
             if (is_patrician) {
-                Data_CityInfo.monthlyTaxedPatricians += population;
-                Data_CityInfo.monthlyCollectedTaxFromPatricians += tax;
+                city_data.taxes.taxed_patricians += population;
+                city_data.taxes.monthly.collected_patricians += tax;
             } else {
-                Data_CityInfo.monthlyTaxedPlebs += population;
-                Data_CityInfo.monthlyCollectedTaxFromPlebs += tax;
+                city_data.taxes.taxed_plebs += population;
+                city_data.taxes.monthly.collected_plebs += tax;
             }
             b->taxIncomeOrStorage += tax;
         } else {
             if (is_patrician) {
-                Data_CityInfo.monthlyUntaxedPatricians += population;
-                Data_CityInfo.monthlyUncollectedTaxFromPatricians += tax;
+                city_data.taxes.untaxed_patricians += population;
+                city_data.taxes.monthly.uncollected_patricians += tax;
             } else {
-                Data_CityInfo.monthlyUntaxedPlebs += population;
-                Data_CityInfo.monthlyUncollectedTaxFromPlebs += tax;
+                city_data.taxes.untaxed_plebs += population;
+                city_data.taxes.monthly.uncollected_plebs += tax;
             }
         }
     }
 
     int collected_patricians = calc_adjust_with_percentage(
-        Data_CityInfo.monthlyCollectedTaxFromPatricians / 2,
+        city_data.taxes.monthly.collected_patricians / 2,
         city_data.finance.tax_percentage);
     int collected_plebs = calc_adjust_with_percentage(
-        Data_CityInfo.monthlyCollectedTaxFromPlebs / 2,
+        city_data.taxes.monthly.collected_plebs / 2,
         city_data.finance.tax_percentage);
     int collected_total = collected_patricians + collected_plebs;
 
-    Data_CityInfo.yearlyCollectedTaxFromPatricians += collected_patricians;
-    Data_CityInfo.yearlyCollectedTaxFromPlebs += collected_plebs;
-    Data_CityInfo.yearlyUncollectedTaxFromPatricians += calc_adjust_with_percentage(
-        Data_CityInfo.monthlyUncollectedTaxFromPatricians / 2,
+    city_data.taxes.yearly.collected_patricians += collected_patricians;
+    city_data.taxes.yearly.collected_plebs += collected_plebs;
+    city_data.taxes.yearly.uncollected_patricians += calc_adjust_with_percentage(
+        city_data.taxes.monthly.uncollected_patricians / 2,
         city_data.finance.tax_percentage);
-    Data_CityInfo.yearlyUncollectedTaxFromPlebs += calc_adjust_with_percentage(
-        Data_CityInfo.monthlyUncollectedTaxFromPlebs / 2,
+    city_data.taxes.yearly.uncollected_plebs += calc_adjust_with_percentage(
+        city_data.taxes.monthly.uncollected_plebs / 2,
         city_data.finance.tax_percentage);
 
     city_data.finance.treasury += collected_total;
 
-    int total_patricians = Data_CityInfo.monthlyTaxedPatricians + Data_CityInfo.monthlyUntaxedPatricians;
-    int total_plebs = Data_CityInfo.monthlyTaxedPlebs + Data_CityInfo.monthlyUntaxedPlebs;
-    Data_CityInfo.percentageTaxedPatricians = calc_percentage(Data_CityInfo.monthlyTaxedPatricians, total_patricians);
-    Data_CityInfo.percentageTaxedPlebs = calc_percentage(Data_CityInfo.monthlyTaxedPlebs, total_plebs);
-    Data_CityInfo.percentageTaxedPeople = calc_percentage(
-        Data_CityInfo.monthlyTaxedPatricians + Data_CityInfo.monthlyTaxedPlebs,
+    int total_patricians = city_data.taxes.taxed_patricians + city_data.taxes.untaxed_patricians;
+    int total_plebs = city_data.taxes.taxed_plebs + city_data.taxes.untaxed_plebs;
+    city_data.taxes.percentage_taxed_patricians = calc_percentage(city_data.taxes.taxed_patricians, total_patricians);
+    city_data.taxes.percentage_taxed_plebs = calc_percentage(city_data.taxes.taxed_plebs, total_plebs);
+    city_data.taxes.percentage_taxed_people = calc_percentage(
+        city_data.taxes.taxed_patricians + city_data.taxes.taxed_plebs,
         total_patricians + total_plebs);
 }
 
@@ -261,12 +265,11 @@ void city_finance_handle_month_change()
 
 static void reset_taxes()
 {
-    city_data.finance.last_year.income.taxes =
-        Data_CityInfo.yearlyCollectedTaxFromPlebs + Data_CityInfo.yearlyCollectedTaxFromPatricians;
-    Data_CityInfo.yearlyCollectedTaxFromPlebs = 0;
-    Data_CityInfo.yearlyCollectedTaxFromPatricians = 0;
-    Data_CityInfo.yearlyUncollectedTaxFromPlebs = 0;
-    Data_CityInfo.yearlyUncollectedTaxFromPatricians = 0;
+    city_data.finance.last_year.income.taxes = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
+    city_data.taxes.yearly.collected_plebs = 0;
+    city_data.taxes.yearly.collected_patricians = 0;
+    city_data.taxes.yearly.uncollected_plebs = 0;
+    city_data.taxes.yearly.uncollected_patricians = 0;
     
     // reset tax income in building list
     for (int i = 1; i < MAX_BUILDINGS; i++) {

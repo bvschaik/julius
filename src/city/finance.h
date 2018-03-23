@@ -9,6 +9,8 @@ int city_finance_tax_percentage();
 
 void city_finance_change_tax_percentage(int change);
 
+int city_finance_percentage_taxed_people();
+
 void city_finance_process_import(int price);
 
 void city_finance_process_export(int price);

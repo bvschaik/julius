@@ -37,6 +37,27 @@ extern struct city_data_t {
         int16_t stolen_last_year;
     } finance;
     struct {
+        int32_t taxed_plebs;
+        int32_t taxed_patricians;
+        int32_t untaxed_plebs;
+        int32_t untaxed_patricians;
+        int32_t percentage_taxed_plebs;
+        int32_t percentage_taxed_patricians;
+        int32_t percentage_taxed_people;
+        struct {
+            int32_t collected_plebs;
+            int32_t collected_patricians;
+            int32_t uncollected_plebs;
+            int32_t uncollected_patricians;
+        } yearly;
+        struct {
+            int32_t collected_plebs;
+            int32_t collected_patricians;
+            int32_t uncollected_plebs;
+            int32_t uncollected_patricians;
+        } monthly;
+    } taxes;
+    struct {
         int32_t culture;
         int32_t prosperity;
         int32_t peace;
