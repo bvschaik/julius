@@ -122,6 +122,8 @@ extern struct city_data_t {
         int8_t unknown_458e;
         int8_t unused_45a5[6];
         int8_t unknown_464c[232];
+        int32_t unknown_order;
+        uint8_t faction_bytes[2];
     } unused;
 } city_data;
 

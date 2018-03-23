@@ -14,8 +14,8 @@ void city_data_init()
 {
     memset(&Data_CityInfo, 0, sizeof(struct _Data_CityInfo));
 
-    Data_CityInfo_Extra.unknownBytes[0] = 0;
-    Data_CityInfo_Extra.unknownBytes[1] = 0;
+    city_data.unused.faction_bytes[0] = 0;
+    city_data.unused.faction_bytes[1] = 0;
 
     Data_CityInfo.citySentiment = 60;
     Data_CityInfo.healthRateTarget = 50;
@@ -1033,10 +1033,10 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
     save_main_data(main);
     
     buffer_write_i32(faction, Data_CityInfo_Extra.ciid);
-    buffer_write_i8(faction_unknown, Data_CityInfo_Extra.unknownBytes[0]);
-    buffer_write_i8(faction_unknown, Data_CityInfo_Extra.unknownBytes[1]);
+    buffer_write_i8(faction_unknown, city_data.unused.faction_bytes[0]);
+    buffer_write_i8(faction_unknown, city_data.unused.faction_bytes[1]);
     buffer_write_i32(graph_order, Data_CityInfo_Extra.populationGraphOrder);
-    buffer_write_i32(graph_order, Data_CityInfo_Extra.unknownOrder);
+    buffer_write_i32(graph_order, city_data.unused.unknown_order);
 
     save_entry_exit(entry_exit_xy, entry_exit_grid_offset);
 }
@@ -1047,10 +1047,10 @@ void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown
     load_main_data(main);
 
     Data_CityInfo_Extra.ciid = buffer_read_i32(faction);
-    Data_CityInfo_Extra.unknownBytes[0] = buffer_read_i8(faction_unknown);
-    Data_CityInfo_Extra.unknownBytes[1] = buffer_read_i8(faction_unknown);
+    city_data.unused.faction_bytes[0] = buffer_read_i8(faction_unknown);
+    city_data.unused.faction_bytes[1] = buffer_read_i8(faction_unknown);
     Data_CityInfo_Extra.populationGraphOrder = buffer_read_i32(graph_order);
-    Data_CityInfo_Extra.unknownOrder = buffer_read_i32(graph_order);
+    city_data.unused.unknown_order = buffer_read_i32(graph_order);
 
     load_entry_exit(entry_exit_xy, entry_exit_grid_offset);
 }

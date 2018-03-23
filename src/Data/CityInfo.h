@@ -289,9 +289,6 @@ extern struct _Data_CityInfo_Extra {
 		int32_t gridOffset;
 	} exitPointFlag;
 	int32_t ciid;
-	// not referenced, only used in saved game
-	int32_t unknownOrder;
-	uint8_t unknownBytes[2];
 } Data_CityInfo_Extra;
 
 extern struct _Data_CityInfo_Resource {
