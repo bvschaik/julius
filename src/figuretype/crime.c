@@ -4,6 +4,7 @@
 #include "building/destruction.h"
 #include "city/finance.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "city/ratings.h"
 #include "city/sentiment.h"
 #include "core/image.h"
@@ -33,15 +34,16 @@ static void generate_rioter(building *b)
     }
     Data_CityInfo.numCriminalsThisMonth++;
     int people_in_mob;
-    if (Data_CityInfo.population <= 150) {
+    int population = city_population();
+    if (population <= 150) {
         people_in_mob = 1;
-    } else if (Data_CityInfo.population <= 300) {
+    } else if (population <= 300) {
         people_in_mob = 2;
-    } else if (Data_CityInfo.population <= 800) {
+    } else if (population <= 800) {
         people_in_mob = 3;
-    } else if (Data_CityInfo.population <= 1200) {
+    } else if (population <= 1200) {
         people_in_mob = 4;
-    } else if (Data_CityInfo.population <= 2000) {
+    } else if (population <= 2000) {
         people_in_mob = 5;
     } else {
         people_in_mob = 6;

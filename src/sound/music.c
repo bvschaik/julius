@@ -3,6 +3,7 @@
 #include "Data/CityInfo.h"
 
 #include "core/dir.h"
+#include "city/population.h"
 #include "game/settings.h"
 #include "sound/device.h"
 
@@ -71,17 +72,18 @@ void sound_music_update()
         return;
     }
     int track;
+    int population = city_population();
     if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity >= 32) {
         track = TRACK_COMBAT_LONG;
     } else if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 0) {
         track = TRACK_COMBAT_SHORT;
-    } else if (Data_CityInfo.population < 1000) {
+    } else if (population < 1000) {
         track = TRACK_CITY_1;
-    } else if (Data_CityInfo.population < 2000) {
+    } else if (population < 2000) {
         track = TRACK_CITY_2;
-    } else if (Data_CityInfo.population < 5000) {
+    } else if (population < 5000) {
         track = TRACK_CITY_3;
-    } else if (Data_CityInfo.population < 7000) {
+    } else if (population < 7000) {
         track = TRACK_CITY_4;
     } else {
         track = TRACK_CITY_5;

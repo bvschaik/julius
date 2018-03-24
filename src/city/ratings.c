@@ -156,11 +156,11 @@ static void update_prosperity_explanation()
         change -= 1;
     }
     // high percentage poor: -1, high percentage rich: +1
-    int pct_tents = calc_percentage(Data_CityInfo.populationPeopleInTentsShacks, Data_CityInfo.population);
+    int pct_tents = calc_percentage(Data_CityInfo.populationPeopleInTentsShacks, city_data.population.population);
     if (pct_tents > 30) {
         change -= 1;
     }
-    if (calc_percentage(Data_CityInfo.populationPeopleInVillasPalaces, Data_CityInfo.population) > 10) {
+    if (calc_percentage(Data_CityInfo.populationPeopleInVillasPalaces, city_data.population.population) > 10) {
         change += 1;
     }
     // tribute not paid: -1
@@ -278,7 +278,7 @@ static void update_culture_rating()
 {
     city_data.ratings.culture = 0;
     Data_CityInfo.ratingAdvisorExplanationCulture = 0;
-    if (Data_CityInfo.population <= 0) {
+    if (city_data.population.population <= 0) {
         return;
     }
 
@@ -394,10 +394,10 @@ static void update_prosperity_rating()
         change -= 1;
     }
     // high percentage poor: -1, high percentage rich: +1
-    if (calc_percentage(Data_CityInfo.populationPeopleInTentsShacks, Data_CityInfo.population) > 30) {
+    if (calc_percentage(Data_CityInfo.populationPeopleInTentsShacks, city_data.population.population) > 30) {
         change -= 1;
     }
-    if (calc_percentage(Data_CityInfo.populationPeopleInVillasPalaces, Data_CityInfo.population) > 10) {
+    if (calc_percentage(Data_CityInfo.populationPeopleInVillasPalaces, city_data.population.population) > 10) {
         change += 1;
     }
     // tribute not paid: -1
@@ -541,7 +541,7 @@ static void update_favor_rating(int is_yearly_update)
                 bonus = 0;
             }
             if (scenario_criteria_population_enabled() &&
-                Data_CityInfo.population < calc_adjust_with_percentage(
+                city_data.population.population < calc_adjust_with_percentage(
                     scenario_criteria_population(), milestone_pct)) {
                 bonus = 0;
             }

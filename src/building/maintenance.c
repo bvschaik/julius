@@ -5,6 +5,7 @@
 #include "building/list.h"
 #include "city/buildings.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
@@ -305,7 +306,7 @@ void building_maintenance_check_rome_access()
     }
     if (!map_routing_distance(Data_CityInfo.exitPointGridOffset)) {
         // no route through city
-        if (Data_CityInfo.population <= 0) {
+        if (city_population() <= 0) {
             return;
         }
         for (int i = 0; i < 15; i++) {

@@ -53,7 +53,7 @@ static int get_sentiment_penalty_for_tent_dwellers()
     Data_CityInfo.populationSentimentIncludeTents = 0;
 
     int penalty;
-    int pct_tents = calc_percentage(Data_CityInfo.populationPeopleInTents, Data_CityInfo.population);
+    int pct_tents = calc_percentage(Data_CityInfo.populationPeopleInTents, city_data.population.population);
     if (Data_CityInfo.populationPeopleInVillasPalaces > 0) {
         if (pct_tents >= 57) {
             penalty = 0;
@@ -153,14 +153,14 @@ void city_sentiment_update()
             b->sentiment.houseHappiness = 10 + default_sentiment;
             continue;
         }
-        if (Data_CityInfo.population < 300) {
+        if (city_data.population.population < 300) {
             // small town has no complaints
             sentiment_contribution_employment = 0;
             sentiment_contribution_taxes = 0;
             sentiment_contribution_wages = 0;
 
             b->sentiment.houseHappiness = default_sentiment;
-            if (Data_CityInfo.population < 200) {
+            if (city_data.population.population < 200) {
                 b->sentiment.houseHappiness += 10;
             }
             continue;
@@ -287,7 +287,7 @@ void city_sentiment_update_migration_status()
     Data_CityInfo.populationEmigrationAmountPerBatch = 0;
 
     int population_cap = tutorial_get_population_cap(200000);
-    if (Data_CityInfo.population >= population_cap) {
+    if (city_data.population.population >= population_cap) {
         Data_CityInfo.populationMigrationPercentage = 0;
         return;
     }
@@ -310,7 +310,7 @@ void city_sentiment_update_migration_status()
         // emigration
         if (Data_CityInfo.populationImmigrationDuration) {
             Data_CityInfo.populationImmigrationDuration--;
-        } else if (Data_CityInfo.population > 100) {
+        } else if (city_data.population.population > 100) {
             Data_CityInfo.populationEmigrationAmountPerBatch =
                 calc_adjust_with_percentage(12, -Data_CityInfo.populationMigrationPercentage);
             Data_CityInfo.populationEmigrationDuration = 2;

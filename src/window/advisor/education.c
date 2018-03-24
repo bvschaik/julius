@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "city/culture.h"
+#include "city/population.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -58,7 +59,7 @@ static int draw_background()
     lang_text_draw(57, 0, 60, 12, FONT_LARGE_BLACK);
 
     // x population, y school age, z academy age
-    int width = text_draw_number(Data_CityInfo.population, '@', " ", 60, 50, FONT_NORMAL_BLACK);
+    int width = text_draw_number(city_population(), '@', " ", 60, 50, FONT_NORMAL_BLACK);
     width += lang_text_draw(57, 1, 60 + width, 50, FONT_NORMAL_BLACK);
     width += text_draw_number(Data_CityInfo.populationSchoolAge, '@', " ", 60 + width, 50, FONT_NORMAL_BLACK);
     width += lang_text_draw(57, 2, 60 + width, 50, FONT_NORMAL_BLACK);

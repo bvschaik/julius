@@ -1,6 +1,7 @@
 #include "population.h"
 
 #include "building/house_population.h"
+#include "city/data_private.h"
 #include "core/calc.h"
 #include "core/random.h"
 
@@ -24,14 +25,19 @@ static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {
     {0, 0, 0, 0, 0, 0, 0, 2, 5, 10}
 };
 
+int city_population()
+{
+    return city_data.population.population;
+}
+
 static void recalculate_population()
 {
-    Data_CityInfo.population = 0;
+    city_data.population.population = 0;
     for (int i = 0; i < 100; i++) {
-        Data_CityInfo.population += Data_CityInfo.populationPerAge[i];
+        city_data.population.population += Data_CityInfo.populationPerAge[i];
     }
-    if (Data_CityInfo.population > Data_CityInfo.populationHighestEver) {
-        Data_CityInfo.populationHighestEver = Data_CityInfo.population;
+    if (city_data.population.population > Data_CityInfo.populationHighestEver) {
+        Data_CityInfo.populationHighestEver = city_data.population.population;
     }
 }
 
@@ -182,7 +188,7 @@ int city_population_number_of_academy_children()
 
 void city_population_record_monthly()
 {
-    Data_CityInfo.monthlyPopulation[Data_CityInfo.monthlyPopulationNextIndex++] = Data_CityInfo.population;
+    Data_CityInfo.monthlyPopulation[Data_CityInfo.monthlyPopulationNextIndex++] = city_data.population.population;
     if (Data_CityInfo.monthlyPopulationNextIndex >= 2400) {
         Data_CityInfo.monthlyPopulationNextIndex = 0;
     }
@@ -224,11 +230,11 @@ static void yearly_calculate_births()
 static void yearly_recalculate_population()
 {
     Data_CityInfo.populationYearlyUpdatedNeeded = 0;
-    Data_CityInfo.populationLastYear = Data_CityInfo.population;
+    Data_CityInfo.populationLastYear = city_data.population.population;
     recalculate_population();
 
     Data_CityInfo.populationLostInRemoval = 0;
-    Data_CityInfo.populationTotalAllYears += Data_CityInfo.population;
+    Data_CityInfo.populationTotalAllYears += city_data.population.population;
     Data_CityInfo.populationTotalYears++;
     Data_CityInfo.populationAveragePerYear = Data_CityInfo.populationTotalAllYears / Data_CityInfo.populationTotalYears;
 }
@@ -251,7 +257,7 @@ void city_population_yearly_update()
 void city_population_check_consistency()
 {
     int people_in_houses = house_population_calculate_people_per_type();
-    if (people_in_houses < Data_CityInfo.population) {
-        remove_from_census(Data_CityInfo.population - people_in_houses);
+    if (people_in_houses < city_data.population.population) {
+        remove_from_census(city_data.population.population - people_in_houses);
     }
 }

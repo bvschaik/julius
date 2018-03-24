@@ -3,6 +3,7 @@
 #include "building/destruction.h"
 #include "city/health.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "core/random.h"
 #include "scenario/data.h"
 #include "scenario/property.h"
@@ -80,7 +81,7 @@ static void disrupt_sea_trade()
 static void contaminate_water()
 {
     if (scenario.random_events.contaminated_water) {
-        if (Data_CityInfo.population > 200) {
+        if (city_population() > 200) {
             int change;
             if (Data_CityInfo.healthRate > 80) {
                 change = -50;

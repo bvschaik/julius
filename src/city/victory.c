@@ -67,7 +67,7 @@ void city_victory_check()
     }
     if (scenario_criteria_population_enabled()) {
         num_criteria++;
-        if (Data_CityInfo.population < scenario_criteria_population()) {
+        if (city_data.population.population < scenario_criteria_population()) {
             data.state = VICTORY_STATE_NONE;
         }
     }
@@ -89,12 +89,12 @@ void city_victory_check()
         }
     }
     if (Data_CityInfo.numImperialSoldiersInCity + Data_CityInfo.numEnemiesInCity > 2 + Data_CityInfo.numSoldiersInCity) {
-        if (Data_CityInfo.population < Data_CityInfo.populationHighestEver / 4) {
+        if (city_data.population.population < Data_CityInfo.populationHighestEver / 4) {
             data.state = VICTORY_STATE_LOST;
         }
     }
     if (Data_CityInfo.numImperialSoldiersInCity + Data_CityInfo.numEnemiesInCity > 0) {
-        if (Data_CityInfo.population <= 0) {
+        if (city_data.population.population <= 0) {
             data.state = VICTORY_STATE_LOST;
         }
     }

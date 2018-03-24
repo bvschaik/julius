@@ -5,6 +5,7 @@
 #include "building/menu.h"
 #include "city/buildings.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "game/resource.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
@@ -228,21 +229,21 @@ void tutorial_on_day_tick()
         post_message(MESSAGE_TUTORIAL_HEALTH);
     }
     if (data.tutorial2.granary_built) {
-        if (!data.tutorial2.population_250_reached && Data_CityInfo.population >= 250) {
+        if (!data.tutorial2.population_250_reached && city_population() >= 250) {
             data.tutorial2.population_250_reached = 1;
             building_menu_update();
             post_message(MESSAGE_TUTORIAL_GROWING_YOUR_CITY);
         }
     }
     if (data.tutorial2.population_250_reached) {
-        if (!data.tutorial2.population_450_reached && Data_CityInfo.population >= 450) {
+        if (!data.tutorial2.population_450_reached && city_population() >= 450) {
             data.tutorial2.population_450_reached = 1;
             building_menu_update();
             post_message(MESSAGE_TUTORIAL_TAXES_INDUSTRY);
         }
     }
     if (data.tutorial1.fire && !data.tutorial1.senate_built) {
-        int population_almost = Data_CityInfo.population >= scenario_criteria_population() - 20;
+        int population_almost = city_population() >= scenario_criteria_population() - 20;
         if (!game_time_day() || population_almost) {
             if (city_buildings_has_senate()) {
                 Data_CityInfo.tutorial1SenateBuilt++;

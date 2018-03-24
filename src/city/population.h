@@ -1,6 +1,8 @@
 #ifndef CITY_POPULATION_H
 #define CITY_POPULATION_H
 
+int city_population();
+
 /**
  * Add people to the city.
  * @param num_people Number of people to add

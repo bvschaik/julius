@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "city/constants.h"
+#include "city/data_private.h"
 #include "city/population.h"
 #include "core/calc.h"
 
@@ -78,7 +79,7 @@ static int top(int input)
 
 void city_culture_update_coverage()
 {
-    int population = Data_CityInfo.population;
+    int population = city_data.population.population;
 
     // entertainment
     coverage.theater = top(calc_percentage(500 * building_count_active(BUILDING_THEATER), population));
@@ -240,10 +241,10 @@ void city_culture_calculate_entertainment()
         Data_CityInfo.entertainmentNeedingShowsMost = 4;
     }
 
-    Data_CityInfo.festivalCostSmall = Data_CityInfo.population / 20 + 10;
-    Data_CityInfo.festivalCostLarge = Data_CityInfo.population / 10 + 20;
-    Data_CityInfo.festivalCostGrand = Data_CityInfo.population / 5 + 40;
-    Data_CityInfo.festivalWineGrand = Data_CityInfo.population / 500 + 1;
+    Data_CityInfo.festivalCostSmall = city_data.population.population / 20 + 10;
+    Data_CityInfo.festivalCostLarge = city_data.population.population / 10 + 20;
+    Data_CityInfo.festivalCostGrand = city_data.population.population / 5 + 40;
+    Data_CityInfo.festivalWineGrand = city_data.population.population / 500 + 1;
     Data_CityInfo.festivalNotEnoughWine = 0;
     if (Data_CityInfo.resourceStored[RESOURCE_WINE] < Data_CityInfo.festivalWineGrand) {
         Data_CityInfo.festivalNotEnoughWine = 1;

@@ -3,6 +3,7 @@
 #include "building/animation.h"
 #include "building/dock.h"
 #include "city/buildings.h"
+#include "city/population.h"
 #include "city/ratings.h"
 #include "city/view.h"
 #include "game/resource.h"
@@ -101,7 +102,8 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
 {
     int subtype = b->subtype.orientation;
     int orientation = city_view_orientation();
-    if ((subtype == 0 || subtype == 3) && Data_CityInfo.population > 2000) {
+    int population = city_population();
+    if ((subtype == 0 || subtype == 3) && population > 2000) {
         // first building part
         switch (orientation) {
             case DIR_0_TOP:
@@ -116,7 +118,7 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
             case DIR_6_LEFT:
                 image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
         }
-    } else if ((subtype == 1 || subtype == 4) && Data_CityInfo.population > 100) {
+    } else if ((subtype == 1 || subtype == 4) && population > 100) {
         // middle building part
         switch (orientation) {
             case DIR_0_TOP:
@@ -127,7 +129,7 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
             case DIR_6_LEFT:
                 image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_1) + 7, x, y - 80, color_mask);
         }
-    } else if ((subtype == 2 || subtype == 5) && Data_CityInfo.population > 1000) {
+    } else if ((subtype == 2 || subtype == 5) && population > 1000) {
         // last building part
         switch (orientation) {
             case DIR_0_TOP:

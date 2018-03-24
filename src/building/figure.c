@@ -9,6 +9,7 @@
 #include "building/model.h"
 #include "building/warehouse.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "figure/figure.h"
@@ -37,7 +38,7 @@ static void check_labor_problem(building *b)
 
 static void generate_labor_seeker(building *b, int x, int y)
 {
-    if (Data_CityInfo.population <= 0) {
+    if (city_population() <= 0) {
         return;
     }
     if (b->figureId2) {
@@ -936,7 +937,7 @@ static void spawn_figure_mission_post(building *b)
     }
     int x_road, y_road;
     if (map_has_road_access(b->x, b->y, b->size, &x_road, &y_road)) {
-        if (Data_CityInfo.population > 0) {
+        if (city_population() > 0) {
             Data_CityInfo.nativeMissionPostOperational = 1;
             b->figureSpawnDelay++;
             if (b->figureSpawnDelay > 1) {

@@ -13,8 +13,6 @@
 #include "map/random.h"
 #include "map/terrain.h"
 
-#include "Data/CityInfo.h"
-
 static int show_building_religion(const building *b)
 {
     return

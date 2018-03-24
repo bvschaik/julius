@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/destruction.h"
+#include "city/data_private.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -87,7 +88,7 @@ static void cause_disease(int total_people)
 
 void city_health_update()
 {
-    if (Data_CityInfo.population < 200 || scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
+    if (city_data.population.population < 200 || scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
         Data_CityInfo.healthRate = 50;
         Data_CityInfo.healthRateTarget = 50;
         return;

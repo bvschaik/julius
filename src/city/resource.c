@@ -90,7 +90,7 @@ static void calculate_available_food()
         }
     }
     Data_CityInfo.foodInfoFoodNeededPerMonth =
-        calc_adjust_with_percentage(Data_CityInfo.population, 50);
+        calc_adjust_with_percentage(city_data.population.population, 50);
     if (Data_CityInfo.foodInfoFoodNeededPerMonth > 0) {
         Data_CityInfo.foodInfoFoodSupplyMonths =
             Data_CityInfo.foodInfoFoodStoredInGranaries / Data_CityInfo.foodInfoFoodNeededPerMonth;

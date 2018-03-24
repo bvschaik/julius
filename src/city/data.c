@@ -69,7 +69,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.healthRate);
     buffer_write_i32(main, Data_CityInfo.numHospitalWorkers);
     buffer_write_i32(main, city_data.unused.unknown_00c0);
-    buffer_write_i32(main, Data_CityInfo.population);
+    buffer_write_i32(main, city_data.population.population);
     buffer_write_i32(main, Data_CityInfo.populationLastYear);
     buffer_write_i32(main, Data_CityInfo.populationSchoolAge);
     buffer_write_i32(main, Data_CityInfo.populationAcademyAge);
@@ -546,7 +546,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.healthRate = buffer_read_i32(main);
     Data_CityInfo.numHospitalWorkers = buffer_read_i32(main);
     city_data.unused.unknown_00c0 = buffer_read_i32(main);
-    Data_CityInfo.population = buffer_read_i32(main);
+    city_data.population.population = buffer_read_i32(main);
     Data_CityInfo.populationLastYear = buffer_read_i32(main);
     Data_CityInfo.populationSchoolAge = buffer_read_i32(main);
     Data_CityInfo.populationAcademyAge = buffer_read_i32(main);

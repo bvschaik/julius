@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/market.h"
 #include "city/constants.h"
+#include "city/population.h"
 #include "core/calc.h"
 #include "figure/trader.h"
 #include "figuretype/trader.h"
@@ -593,7 +594,7 @@ static int phrase_based_on_city_state(figure *f)
             Data_CityInfo.unemploymentPercentage <= 5 &&
             Data_CityInfo.citywideAverageHealth > 0 &&
             Data_CityInfo.citywideAverageEducation > 0) {
-        if (Data_CityInfo.population < 500) {
+        if (city_population() < 500) {
             return 5;
         } else {
             return 6;

@@ -16,8 +16,6 @@
 #include "map/tiles.h"
 #include "sound/effect.h"
 
-#include "Data/CityInfo.h"
-
 #include <string.h>
 
 static void destroy_on_fire(building *b, int plagued)

@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "city/constants.h"
+#include "city/population.h"
 #include "core/calc.h"
 #include "core/io.h"
 #include "empire/city.h"
@@ -150,6 +151,20 @@ int empire_can_export_resource_to_city(int city_id, int resource)
     }
 }
 
+static int get_max_stock_for_population()
+{
+    int population = city_population();
+    if (population < 2000) {
+        return 10;
+    } else if (population < 4000) {
+        return 20;
+    } else if (population < 6000) {
+        return 30;
+    } else {
+        return 40;
+    }
+}
+
 int empire_can_import_resource_from_city(int city_id, int resource)
 {
     empire_city *city = empire_city_get(city_id);
@@ -176,15 +191,7 @@ int empire_can_import_resource_from_city(int city_id, int resource)
         case RESOURCE_FURNITURE:
         case RESOURCE_OIL:
         case RESOURCE_WINE:
-            if (Data_CityInfo.population < 2000) {
-                max_in_stock = 10;
-            } else if (Data_CityInfo.population < 4000) {
-                max_in_stock = 20;
-            } else if (Data_CityInfo.population < 6000) {
-                max_in_stock = 30;
-            } else {
-                max_in_stock = 40;
-            }
+            max_in_stock = get_max_stock_for_population();
             break;
 
         case RESOURCE_MARBLE:

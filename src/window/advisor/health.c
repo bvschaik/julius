@@ -1,6 +1,7 @@
 #include "health.h"
 #include "building/count.h"
 #include "city/culture.h"
+#include "city/population.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -32,7 +33,7 @@ static int draw_background()
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
 
     lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK);
-    if (Data_CityInfo.population >= 200) {
+    if (city_population() >= 200) {
         lang_text_draw_multiline(56, Data_CityInfo.healthRate / 10 + 16, 60, 46, 512, FONT_NORMAL_BLACK);
     } else {
         lang_text_draw_multiline(56, 15, 60, 46, 512, FONT_NORMAL_BLACK);

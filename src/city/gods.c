@@ -6,6 +6,7 @@
 #include "building/warehouse.h"
 #include "city/constants.h"
 #include "city/culture.h"
+#include "city/data_private.h"
 #include "city/finance.h"
 #include "city/health.h"
 #include "city/message.h"
@@ -313,15 +314,15 @@ void city_gods_calculate_moods(int update_moods)
         Data_CityInfo.godTargetHappiness[min_god] -= 25;
     }
     int min_happiness;
-    if (Data_CityInfo.population < 100) {
+    if (city_data.population.population < 100) {
         min_happiness = 50;
-    } else if (Data_CityInfo.population < 200) {
+    } else if (city_data.population.population < 200) {
         min_happiness = 40;
-    } else if (Data_CityInfo.population < 300) {
+    } else if (city_data.population.population < 300) {
         min_happiness = 30;
-    } else if (Data_CityInfo.population < 400) {
+    } else if (city_data.population.population < 400) {
         min_happiness = 20;
-    } else if (Data_CityInfo.population < 500) {
+    } else if (city_data.population.population < 500) {
         min_happiness = 10;
     } else {
         min_happiness = 0;

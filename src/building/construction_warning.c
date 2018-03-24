@@ -3,6 +3,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "city/constants.h"
+#include "city/population.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "empire/city.h"
@@ -284,7 +285,7 @@ void building_construction_warning_check_all(building_type type, int x, int y, i
 void building_construction_warning_check_food_stocks(building_type type)
 {
     if (!has_warning && type == BUILDING_HOUSE_VACANT_LOT) {
-        if (Data_CityInfo.population >= 200 && !scenario_property_rome_supplies_wheat()) {
+        if (city_population() >= 200 && !scenario_property_rome_supplies_wheat()) {
             if (calc_percentage(Data_CityInfo.foodInfoFoodStoredLastMonth,
                     Data_CityInfo.foodInfoFoodConsumedLastMonth) <= 95) {
                 show(WARNING_MORE_FOOD_NEEDED);

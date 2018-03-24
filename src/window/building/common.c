@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "city/population.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/text.h"
@@ -15,7 +16,7 @@ void window_building_draw_employment(building_info_context *c, int y_offset)
     int text_id;
     if (b->numWorkers >= model_get_building(b->type)->laborers) {
         text_id = 0;
-    } else if (Data_CityInfo.population <= 0) {
+    } else if (city_population() <= 0) {
         text_id = 16; // no people in city
     } else if (b->housesCovered <= 0) {
         text_id = 17; // no employees nearby

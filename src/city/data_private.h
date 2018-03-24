@@ -58,6 +58,9 @@ extern struct city_data_t {
         } monthly;
     } taxes;
     struct {
+        int32_t population;
+    } population;
+    struct {
         int32_t culture;
         int32_t prosperity;
         int32_t peace;
