@@ -30,6 +30,16 @@ int city_population()
     return city_data.population.population;
 }
 
+int city_population_school_age()
+{
+    return city_data.population.school_age;
+}
+
+int city_population_academy_age()
+{
+    return city_data.population.academy_age;
+}
+
 static void recalculate_population()
 {
     city_data.population.population = 0;
@@ -168,22 +178,19 @@ int city_population_people_of_working_age()
         get_people_in_age_decennium(4);
 }
 
-int city_population_number_of_school_children()
+static int get_people_aged_between(int min, int max)
 {
     int pop = 0;
-    for (int i = 0; i < 14; i++) {
+    for (int i = min; i < max; i++) {
         pop += Data_CityInfo.populationPerAge[i];
     }
     return pop;
 }
 
-int city_population_number_of_academy_children()
+void city_population_calculate_educational_age()
 {
-    int pop = 0;
-    for (int i = 14; i < 21; i++) {
-        pop += Data_CityInfo.populationPerAge[i];
-    }
-    return pop;
+    city_data.population.school_age = get_people_aged_between(0, 14);
+    city_data.population.academy_age = get_people_aged_between(14, 21);
 }
 
 void city_population_record_monthly()
@@ -230,7 +237,7 @@ static void yearly_calculate_births()
 static void yearly_recalculate_population()
 {
     Data_CityInfo.populationYearlyUpdatedNeeded = 0;
-    Data_CityInfo.populationLastYear = city_data.population.population;
+    city_data.population.population_last_year = city_data.population.population;
     recalculate_population();
 
     Data_CityInfo.populationLostInRemoval = 0;

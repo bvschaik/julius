@@ -70,9 +70,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.numHospitalWorkers);
     buffer_write_i32(main, city_data.unused.unknown_00c0);
     buffer_write_i32(main, city_data.population.population);
-    buffer_write_i32(main, Data_CityInfo.populationLastYear);
-    buffer_write_i32(main, Data_CityInfo.populationSchoolAge);
-    buffer_write_i32(main, Data_CityInfo.populationAcademyAge);
+    buffer_write_i32(main, city_data.population.population_last_year);
+    buffer_write_i32(main, city_data.population.school_age);
+    buffer_write_i32(main, city_data.population.academy_age);
     buffer_write_i32(main, Data_CityInfo.populationMaxSupported);
     buffer_write_i32(main, Data_CityInfo.populationRoomInHouses);
     for (int i = 0; i < 2400; i++) {
@@ -547,9 +547,9 @@ static void load_main_data(buffer *main)
     Data_CityInfo.numHospitalWorkers = buffer_read_i32(main);
     city_data.unused.unknown_00c0 = buffer_read_i32(main);
     city_data.population.population = buffer_read_i32(main);
-    Data_CityInfo.populationLastYear = buffer_read_i32(main);
-    Data_CityInfo.populationSchoolAge = buffer_read_i32(main);
-    Data_CityInfo.populationAcademyAge = buffer_read_i32(main);
+    city_data.population.population_last_year = buffer_read_i32(main);
+    city_data.population.school_age = buffer_read_i32(main);
+    city_data.population.academy_age = buffer_read_i32(main);
     Data_CityInfo.populationMaxSupported = buffer_read_i32(main);
     Data_CityInfo.populationRoomInHouses = buffer_read_i32(main);
     for (int i = 0; i < 2400; i++) {

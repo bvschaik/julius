@@ -61,9 +61,9 @@ static int draw_background()
     // x population, y school age, z academy age
     int width = text_draw_number(city_population(), '@', " ", 60, 50, FONT_NORMAL_BLACK);
     width += lang_text_draw(57, 1, 60 + width, 50, FONT_NORMAL_BLACK);
-    width += text_draw_number(Data_CityInfo.populationSchoolAge, '@', " ", 60 + width, 50, FONT_NORMAL_BLACK);
+    width += text_draw_number(city_population_school_age(), '@', " ", 60 + width, 50, FONT_NORMAL_BLACK);
     width += lang_text_draw(57, 2, 60 + width, 50, FONT_NORMAL_BLACK);
-    width += text_draw_number(Data_CityInfo.populationAcademyAge, '@', " ", 60 + width, 50, FONT_NORMAL_BLACK);
+    width += text_draw_number(city_population_academy_age(), '@', " ", 60 + width, 50, FONT_NORMAL_BLACK);
     lang_text_draw(57, 3, 60 + width, 50, FONT_NORMAL_BLACK);
 
     // table headers

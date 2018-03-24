@@ -129,15 +129,14 @@ void city_culture_update_coverage()
     Data_CityInfo.cultureCoverageReligion /= 5;
 
     // education
-    Data_CityInfo.populationSchoolAge = city_population_number_of_school_children();
-    Data_CityInfo.populationAcademyAge = city_population_number_of_academy_children();
+    city_population_calculate_educational_age();
 
     coverage.school = top(calc_percentage(
-        75 * building_count_active(BUILDING_SCHOOL), Data_CityInfo.populationSchoolAge));
+        75 * building_count_active(BUILDING_SCHOOL), city_population_school_age()));
     coverage.library = top(calc_percentage(
         800 * building_count_active(BUILDING_LIBRARY), population));
     coverage.academy = top(calc_percentage(
-        100 * building_count_active(BUILDING_ACADEMY), Data_CityInfo.populationAcademyAge));
+        100 * building_count_active(BUILDING_ACADEMY), city_population_academy_age()));
 
     // health
     coverage.hospital = top(calc_percentage(

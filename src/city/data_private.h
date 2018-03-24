@@ -59,6 +59,9 @@ extern struct city_data_t {
     } taxes;
     struct {
         int32_t population;
+        int32_t population_last_year;
+        int32_t school_age;
+        int32_t academy_age;
     } population;
     struct {
         int32_t culture;

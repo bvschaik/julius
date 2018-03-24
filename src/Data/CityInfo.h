@@ -9,9 +9,6 @@ extern struct _Data_CityInfo {
 	int32_t healthRateTarget;
 	int32_t healthRate;
 	int32_t numHospitalWorkers;
-	int32_t populationLastYear;
-	int32_t populationSchoolAge;
-	int32_t populationAcademyAge;
 	int32_t populationMaxSupported;
 	int32_t populationRoomInHouses;
 	int32_t monthlyPopulation[2400];

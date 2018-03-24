@@ -2,6 +2,8 @@
 #define CITY_POPULATION_H
 
 int city_population();
+int city_population_school_age();
+int city_population_academy_age();
 
 /**
  * Add people to the city.
@@ -29,9 +31,7 @@ void city_population_remove_for_troop_request(int num_people);
 
 int city_population_people_of_working_age();
 
-int city_population_number_of_school_children();
-
-int city_population_number_of_academy_children();
+void city_population_calculate_educational_age();
 
 void city_population_record_monthly();
 
