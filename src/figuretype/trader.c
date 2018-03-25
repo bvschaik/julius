@@ -7,6 +7,7 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/message.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "empire/city.h"
@@ -151,8 +152,7 @@ static int trader_get_buy_resource(int warehouse_id, int city_id)
         int resource = space->subtype.warehouseResourceId;
         if (space->loadsStored > 0 && empire_can_export_resource_to_city(city_id, resource)) {
             // update stocks
-            Data_CityInfo.resourceSpaceInWarehouses[resource]++;
-            Data_CityInfo.resourceStored[resource]--;
+            city_resource_remove_from_warehouse(resource, 1);
             space->loadsStored--;
             if (space->loadsStored <= 0) {
                 space->subtype.warehouseResourceId = RESOURCE_NONE;

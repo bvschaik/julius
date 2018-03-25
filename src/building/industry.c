@@ -146,31 +146,6 @@ void building_curse_farms(int big_curse)
     }
 }
 
-void building_calculate_workshop_stocks()
-{
-    for (int i = 0; i < 6; i++) {
-        Data_CityInfo.resourceWorkshopRawMaterialStored[i] = 0;
-        Data_CityInfo.resourceWorkshopRawMaterialSpace[i] = 0;
-    }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
-            continue;
-        }
-        b->hasRoadAccess = 0;
-        if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
-            b->hasRoadAccess = 1;
-            int room = 2 - b->loadsStored;
-            if (room < 0) {
-                room = 0;
-            }
-            int workshop_resource = b->subtype.workshopType;
-            Data_CityInfo.resourceWorkshopRawMaterialSpace[workshop_resource] += room;
-            Data_CityInfo.resourceWorkshopRawMaterialStored[workshop_resource] += b->loadsStored;
-        }
-    }
-}
-
 void building_workshop_add_raw_material(building *b)
 {
     if (b->id > 0 && building_is_workshop(b->type)) {

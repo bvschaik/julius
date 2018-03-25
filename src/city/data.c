@@ -131,10 +131,10 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.building.senate_building_id);
     buffer_write_i16(main, city_data.unused.unknown_2828);
     for (int i = 0; i < 16; i++) {
-        buffer_write_i16(main, Data_CityInfo.resourceSpaceInWarehouses[i]);
+        buffer_write_i16(main, city_data.resource.space_in_warehouses[i]);
     }
     for (int i = 0; i < 16; i++) {
-        buffer_write_i16(main, Data_CityInfo.resourceStored[i]);
+        buffer_write_i16(main, city_data.resource.stored_in_warehouses[i]);
     }
     for (int i = 0; i < 16; i++) {
         buffer_write_i16(main, Data_CityInfo.resourceTradeStatus[i]);
@@ -150,10 +150,10 @@ static void save_main_data(buffer *main)
         buffer_write_i32(main, Data_CityInfo.resourceGranaryFoodStored[i]);
     }
     for (int i = 0; i < 6; i++) {
-        buffer_write_i32(main, Data_CityInfo.resourceWorkshopRawMaterialStored[i]);
+        buffer_write_i32(main, city_data.resource.stored_in_workshops[i]);
     }
     for (int i = 0; i < 6; i++) {
-        buffer_write_i32(main, Data_CityInfo.resourceWorkshopRawMaterialSpace[i]);
+        buffer_write_i32(main, city_data.resource.space_in_workshops[i]);
     }
     buffer_write_i32(main, Data_CityInfo.foodInfoFoodStoredInGranaries);
     buffer_write_i32(main, Data_CityInfo.foodInfoFoodTypesAvailable);
@@ -608,10 +608,10 @@ static void load_main_data(buffer *main)
     city_data.building.senate_building_id = buffer_read_i32(main);
     city_data.unused.unknown_2828 = buffer_read_i16(main);
     for (int i = 0; i < 16; i++) {
-        Data_CityInfo.resourceSpaceInWarehouses[i] = buffer_read_i16(main);
+        city_data.resource.space_in_warehouses[i] = buffer_read_i16(main);
     }
     for (int i = 0; i < 16; i++) {
-        Data_CityInfo.resourceStored[i] = buffer_read_i16(main);
+        city_data.resource.stored_in_warehouses[i] = buffer_read_i16(main);
     }
     for (int i = 0; i < 16; i++) {
         Data_CityInfo.resourceTradeStatus[i] = buffer_read_i16(main);
@@ -627,10 +627,10 @@ static void load_main_data(buffer *main)
         Data_CityInfo.resourceGranaryFoodStored[i] = buffer_read_i32(main);
     }
     for (int i = 0; i < 6; i++) {
-        Data_CityInfo.resourceWorkshopRawMaterialStored[i] = buffer_read_i32(main);
+        city_data.resource.stored_in_workshops[i] = buffer_read_i32(main);
     }
     for (int i = 0; i < 6; i++) {
-        Data_CityInfo.resourceWorkshopRawMaterialSpace[i] = buffer_read_i32(main);
+        city_data.resource.space_in_workshops[i] = buffer_read_i32(main);
     }
     Data_CityInfo.foodInfoFoodStoredInGranaries = buffer_read_i32(main);
     Data_CityInfo.foodInfoFoodTypesAvailable = buffer_read_i32(main);

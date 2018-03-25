@@ -69,7 +69,7 @@ static void draw_foreground()
             button_border_draw(80, y_offset + 54, 480, 24, 1);
         }
         lang_text_draw(23, resource, 88, y_offset + 61, FONT_NORMAL_WHITE);
-        text_draw_number_centered(Data_CityInfo.resourceStored[resource],
+        text_draw_number_centered(city_resource_count(resource),
             180, y_offset + 61, 100, FONT_NORMAL_WHITE);
         if (Data_CityInfo.resourceIndustryMothballed[resource]) {
             lang_text_draw(18, 5, 300, y_offset + 61, FONT_NORMAL_WHITE);

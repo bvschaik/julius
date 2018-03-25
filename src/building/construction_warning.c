@@ -4,6 +4,7 @@
 #include "building/model.h"
 #include "city/constants.h"
 #include "city/population.h"
+#include "city/resource.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "empire/city.h"
@@ -116,7 +117,7 @@ static void checkBarracks(int buildingType)
 static void checkWeaponsAccess(int buildingType)
 {
     if (!has_warning && buildingType == BUILDING_BARRACKS) {
-        if (Data_CityInfo.resourceStored[RESOURCE_WEAPONS] <= 0) {
+        if (city_resource_count(RESOURCE_WEAPONS) <= 0) {
             show(WARNING_WEAPONS_NEEDED);
         }
     }
@@ -171,8 +172,7 @@ static void checkIronAccess(int buildingType)
 {
     if (buildingType == BUILDING_WEAPONS_WORKSHOP &&
         building_count_industry_active(RESOURCE_IRON) <= 0) {
-        if (Data_CityInfo.resourceStored[RESOURCE_WEAPONS] <= 0 &&
-            Data_CityInfo.resourceStored[RESOURCE_IRON] <= 0) {
+        if (city_resource_count(RESOURCE_WEAPONS) <= 0 && city_resource_count(RESOURCE_IRON) <= 0) {
             show(WARNING_IRON_NEEDED);
             if (empire_can_produce_resource(RESOURCE_IRON)) {
                 show(WARNING_BUILD_IRON_MINE);
@@ -189,8 +189,7 @@ static void checkVinesAccess(int buildingType)
 {
     if (buildingType == BUILDING_WINE_WORKSHOP &&
         building_count_industry_active(RESOURCE_VINES) <= 0) {
-        if (Data_CityInfo.resourceStored[RESOURCE_WINE] <= 0 &&
-            Data_CityInfo.resourceStored[RESOURCE_VINES] <= 0) {
+        if (city_resource_count(RESOURCE_WINE) <= 0 && city_resource_count(RESOURCE_VINES) <= 0) {
             show(WARNING_VINES_NEEDED);
             if (empire_can_produce_resource(RESOURCE_VINES)) {
                 show(WARNING_BUILD_VINES_FARM);
@@ -207,8 +206,7 @@ static void checkOlivesAccess(int buildingType)
 {
     if (buildingType == BUILDING_OIL_WORKSHOP &&
         building_count_industry_active(RESOURCE_OLIVES) <= 0) {
-        if (Data_CityInfo.resourceStored[RESOURCE_OIL] <= 0 &&
-            Data_CityInfo.resourceStored[RESOURCE_OLIVES] <= 0) {
+        if (city_resource_count(RESOURCE_OIL) <= 0 && city_resource_count(RESOURCE_OLIVES) <= 0) {
             show(WARNING_OLIVES_NEEDED);
             if (empire_can_produce_resource(RESOURCE_OLIVES)) {
                 show(WARNING_BUILD_OLIVE_FARM);
@@ -225,8 +223,7 @@ static void checkTimberAccess(int buildingType)
 {
     if (buildingType == BUILDING_FURNITURE_WORKSHOP &&
         building_count_industry_active(RESOURCE_TIMBER) <= 0) {
-        if (Data_CityInfo.resourceStored[RESOURCE_FURNITURE] <= 0 &&
-            Data_CityInfo.resourceStored[RESOURCE_TIMBER] <= 0) {
+        if (city_resource_count(RESOURCE_FURNITURE) <= 0 && city_resource_count(RESOURCE_TIMBER) <= 0) {
             show(WARNING_TIMBER_NEEDED);
             if (empire_can_produce_resource(RESOURCE_TIMBER)) {
                 show(WARNING_BUILD_TIMBER_YARD);
@@ -243,8 +240,7 @@ static void checkClayAccess(int buildingType)
 {
     if (buildingType == BUILDING_POTTERY_WORKSHOP &&
         building_count_industry_active(RESOURCE_CLAY) <= 0) {
-        if (Data_CityInfo.resourceStored[RESOURCE_POTTERY] <= 0 &&
-            Data_CityInfo.resourceStored[RESOURCE_CLAY] <= 0) {
+        if (city_resource_count(RESOURCE_POTTERY) <= 0 && city_resource_count(RESOURCE_CLAY) <= 0) {
             show(WARNING_CLAY_NEEDED);
             if (empire_can_produce_resource(RESOURCE_CLAY)) {
                 show(WARNING_BUILD_CLAY_PIT);

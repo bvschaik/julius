@@ -5,13 +5,12 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "city/ratings.h"
+#include "city/resource.h"
 #include "core/random.h"
 #include "game/resource.h"
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "scenario/data.h"
-
-#include "Data/CityInfo.h"
 
 void scenario_request_init()
 {
@@ -67,7 +66,7 @@ void scenario_request_process()
                     }
                 }
                 if (!scenario.requests[i].can_comply_dialog_shown &&
-                    Data_CityInfo.resourceStored[scenario.requests[i].resource] >= scenario.requests[i].amount) {
+                    city_resource_count(scenario.requests[i].resource) >= scenario.requests[i].amount) {
                     scenario.requests[i].can_comply_dialog_shown = 1;
                     city_message_post(1, MESSAGE_REQUEST_CAN_COMPLY, i, 0);
                 }
@@ -80,7 +79,7 @@ void scenario_request_process()
                 if (game_time_year() == year + scenario.requests[i].year &&
                     game_time_month() == scenario.requests[i].month) {
                     scenario.requests[i].visible = 1;
-                    if (Data_CityInfo.resourceStored[scenario.requests[i].resource] >= scenario.requests[i].amount) {
+                    if (city_resource_count(scenario.requests[i].resource) >= scenario.requests[i].amount) {
                         scenario.requests[i].can_comply_dialog_shown = 1;
                     }
                     if (scenario.requests[i].resource == RESOURCE_DENARII) {

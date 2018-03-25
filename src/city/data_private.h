@@ -89,6 +89,12 @@ extern struct city_data_t {
         int32_t favor_change; // 0 = dropping, 1 = stalling, 2 = rising
     } ratings;
     struct {
+        int16_t space_in_warehouses[16];
+        int16_t stored_in_warehouses[16];
+        int32_t space_in_workshops[6];
+        int32_t stored_in_workshops[6];//2900
+    } resource;
+    struct {
         int8_t other_player[18068];
         int8_t unknown_00a0;
         int8_t unknown_00a1;

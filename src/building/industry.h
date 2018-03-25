@@ -15,8 +15,6 @@ void building_industry_start_new_production(building *b);
 void building_bless_farms();
 void building_curse_farms(int big_curse);
 
-void building_calculate_workshop_stocks();
-
 void building_workshop_add_raw_material(building *b);
 
 int building_get_workshop_for_raw_material(int x, int y, int resource, int distance_from_entry, int road_network_id, int *x_dst, int *y_dst);

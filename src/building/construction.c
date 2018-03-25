@@ -1,6 +1,5 @@
 #include "construction.h"
 
-#include "Data/CityInfo.h"
 #include "Data/State.h"
 
 #include "building/construction_building.h"
@@ -12,6 +11,7 @@
 #include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/finance.h"
+#include "city/resource.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
@@ -582,12 +582,12 @@ void building_construction_place()
         city_warning_show(WARNING_OUT_OF_MONEY);
         return;
     }
-    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2) {
+    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && city_resource_count(RESOURCE_MARBLE) < 2) {
         map_property_clear_constructing_and_deleted();
         city_warning_show(WARNING_MARBLE_NEEDED_LARGE_TEMPLE);
         return;
     }
-    if (type == BUILDING_ORACLE && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2) {
+    if (type == BUILDING_ORACLE && city_resource_count(RESOURCE_MARBLE) < 2) {
         map_property_clear_constructing_and_deleted();
         city_warning_show(WARNING_MARBLE_NEEDED_ORACLE);
         return;

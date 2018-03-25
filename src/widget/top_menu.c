@@ -28,8 +28,6 @@
 #include "window/sound_options.h"
 #include "window/speed_options.h"
 
-#include "Data/CityInfo.h"
-
 enum {
     INFO_NONE = 0,
     INFO_FUNDS = 1,

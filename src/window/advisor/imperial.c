@@ -3,6 +3,7 @@
 #include "city/emperor.h"
 #include "city/finance.h"
 #include "city/ratings.h"
+#include "city/resource.h"
 #include "empire/city.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
@@ -76,10 +77,10 @@ static void draw_request(int index, const scenario_request *request)
         }
     } else {
         // normal goods request
-        int resource_id = request->resource;
-        width = text_draw_number(Data_CityInfo.resourceStored[resource_id], '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
+        int amount_stored = city_resource_count(request->resource);
+        width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
         width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
-        if (Data_CityInfo.resourceStored[resource_id] < request->amount) {
+        if (amount_stored < request->amount) {
             lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         } else {
             lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
@@ -152,7 +153,7 @@ static int get_request_status(int index)
                 return STATUS_NOT_ENOUGH_RESOURCES;
             }
         } else {
-            if (Data_CityInfo.resourceStored[request->resource] < request->amount) {
+            if (city_resource_count(request->resource) < request->amount) {
                 return STATUS_NOT_ENOUGH_RESOURCES;
             }
         }

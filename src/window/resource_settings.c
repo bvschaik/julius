@@ -1,6 +1,7 @@
 #include "resource_settings.h"
 
 #include "building/count.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "empire/city.h"
 #include "graphics/arrow_button.h"
@@ -105,7 +106,7 @@ static void draw_foreground()
         lang_text_draw(54, 25, 98, 172, FONT_NORMAL_BLACK);
     }
 
-    int width = lang_text_draw_amount(8, 10, Data_CityInfo.resourceStored[data.resource], 98, 192, FONT_NORMAL_BLACK);
+    int width = lang_text_draw_amount(8, 10, city_resource_count(data.resource), 98, 192, FONT_NORMAL_BLACK);
     lang_text_draw(54, 15, 98 + width, 192, FONT_NORMAL_BLACK);
 
     int trade_flags = TRADE_STATUS_NONE;

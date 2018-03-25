@@ -130,9 +130,9 @@ static void advance_tick()
         case 8: building_granaries_calculate_stocks(); break;
         case 10: building_update_highest_id(); break;
         case 12: house_service_decay_houses_covered(); break;
-        case 16: building_warehouses_calculate_stocks(); break;
+        case 16: city_resource_calculate_warehouse_stocks(); break;
         case 17: city_resource_calculate_food_stocks_and_supply_wheat(); break;
-        case 18: building_calculate_workshop_stocks(); break;
+        case 18: city_resource_calculate_workshop_stocks(); break;
         case 19: building_dock_update_open_water_access(); break;
         case 20: building_industry_update_production(); break;
         case 21: building_maintenance_check_rome_access(); break;

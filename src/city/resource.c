@@ -3,6 +3,7 @@
 #include "Data/CityInfo.h"
 
 #include "building/building.h"
+#include "building/industry.h"
 #include "building/model.h"
 #include "city/data_private.h"
 #include "core/calc.h"
@@ -11,6 +12,65 @@
 #include "map/road_access.h"
 #include "scenario/building.h"
 #include "scenario/property.h"
+
+int city_resource_count(resource_type resource)
+{
+    return city_data.resource.stored_in_warehouses[resource];
+}
+
+int city_resource_has_workshop_with_room(int workshop_type)
+{
+    return city_data.resource.space_in_workshops[workshop_type] > 0;
+}
+
+void city_resource_add_to_warehouse(resource_type resource, int amount)
+{
+    city_data.resource.space_in_warehouses[resource] -= amount;
+    city_data.resource.stored_in_warehouses[resource] += amount;
+}
+
+void city_resource_remove_from_warehouse(resource_type resource, int amount)
+{
+    city_data.resource.space_in_warehouses[resource] += amount;
+    city_data.resource.stored_in_warehouses[resource] -= amount;
+}
+
+void city_resource_calculate_warehouse_stocks()
+{
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        city_data.resource.space_in_warehouses[i] = 0;
+        city_data.resource.stored_in_warehouses[i] = 0;
+    }
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
+            b->hasRoadAccess = 0;
+            if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
+                b->hasRoadAccess = 1;
+            } else if (map_has_road_access(b->x, b->y, 3, 0, 0)) {
+                b->hasRoadAccess = 2;
+            }
+        }
+    }
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE_SPACE) {
+            continue;
+        }
+        building *warehouse = building_main(b);
+        if (warehouse->hasRoadAccess) {
+            b->hasRoadAccess = warehouse->hasRoadAccess;
+            if (b->subtype.warehouseResourceId) {
+                int loads = b->loadsStored;
+                int resource = b->subtype.warehouseResourceId;
+                city_data.resource.stored_in_warehouses[resource] += loads;
+                city_data.resource.space_in_warehouses[resource] += 4 - loads;
+            } else {
+                city_data.resource.space_in_warehouses[RESOURCE_NONE] += 4;
+            }
+        }
+    }
+}
 
 void city_resource_determine_available()
 {
@@ -113,6 +173,31 @@ void city_resource_calculate_food_stocks_and_supply_wheat()
             if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MARKET) {
                 b->data.market.inventory[INVENTORY_WHEAT] = 200;
             }
+        }
+    }
+}
+
+void city_resource_calculate_workshop_stocks()
+{
+    for (int i = 0; i < 6; i++) {
+        city_data.resource.stored_in_workshops[i] = 0;
+        city_data.resource.space_in_workshops[i] = 0;
+    }
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
+            continue;
+        }
+        b->hasRoadAccess = 0;
+        if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
+            b->hasRoadAccess = 1;
+            int room = 2 - b->loadsStored;
+            if (room < 0) {
+                room = 0;
+            }
+            int workshop_resource = b->subtype.workshopType;
+            city_data.resource.space_in_workshops[workshop_resource] += room;
+            city_data.resource.stored_in_workshops[workshop_resource] += b->loadsStored;
         }
     }
 }

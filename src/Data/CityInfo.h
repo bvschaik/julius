@@ -47,14 +47,10 @@ extern struct _Data_CityInfo {
 	uint8_t exitPointX;
 	uint8_t exitPointY;
 	int16_t exitPointGridOffset;
-	int16_t resourceSpaceInWarehouses[16];
-	int16_t resourceStored[16];
 	int16_t resourceTradeStatus[16];
 	int16_t resourceTradeExportOver[16];
 	int16_t resourceIndustryMothballed[16];
 	int32_t resourceGranaryFoodStored[7];
-	int32_t resourceWorkshopRawMaterialStored[6];
-	int32_t resourceWorkshopRawMaterialSpace[6];//2900
 	int32_t foodInfoFoodStoredInGranaries;
 	int32_t foodInfoFoodTypesAvailable;
 	int32_t foodInfoFoodTypesEaten;

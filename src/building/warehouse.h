@@ -35,8 +35,6 @@ void building_warehouses_add_resource(int resource, int amount);
 
 int building_warehouses_remove_resource(int resource, int amount);
 
-void building_warehouses_calculate_stocks();
-
 int building_warehouse_for_storing(int src_building_id, int x, int y, int resource,
                                    int distance_from_entry, int road_network_id, int *understaffed,
                                    int *x_dst, int *y_dst);

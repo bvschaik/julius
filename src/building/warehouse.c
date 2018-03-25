@@ -5,6 +5,7 @@
 #include "building/storage.h"
 #include "city/buildings.h"
 #include "city/finance.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "empire/trade_prices.h"
@@ -90,8 +91,7 @@ int building_warehouse_add_resource(building *b, int resource)
             return 0;
         }
     }
-    Data_CityInfo.resourceSpaceInWarehouses[resource]--;
-    Data_CityInfo.resourceStored[resource]++;
+    city_resource_add_to_warehouse(resource, 1);
     b->subtype.warehouseResourceId = resource;
     b->loadsStored++;
     tutorial_on_add_to_warehouse();
@@ -118,13 +118,11 @@ int building_warehouse_remove_resource(building *warehouse, int resource, int am
             continue;
         }
         if (space->loadsStored > amount) {
-            Data_CityInfo.resourceSpaceInWarehouses[resource] += amount;
-            Data_CityInfo.resourceStored[resource] -= amount;
+            city_resource_remove_from_warehouse(resource, amount);
             space->loadsStored -= amount;
             amount = 0;
         } else {
-            Data_CityInfo.resourceSpaceInWarehouses[resource] += space->loadsStored;
-            Data_CityInfo.resourceStored[resource] -= space->loadsStored;
+            city_resource_remove_from_warehouse(resource, space->loadsStored);
             amount -= space->loadsStored;
             space->loadsStored = 0;
             space->subtype.warehouseResourceId = RESOURCE_NONE;
@@ -147,13 +145,11 @@ void building_warehouse_remove_resource_curse(building *warehouse, int amount)
         }
         int resource = space->subtype.warehouseResourceId;
         if (space->loadsStored > amount) {
-            Data_CityInfo.resourceSpaceInWarehouses[resource] += amount;
-            Data_CityInfo.resourceStored[resource] -= amount;
+            city_resource_remove_from_warehouse(resource, amount);
             space->loadsStored -= amount;
             amount = 0;
         } else {
-            Data_CityInfo.resourceSpaceInWarehouses[resource] += space->loadsStored;
-            Data_CityInfo.resourceStored[resource] -= space->loadsStored;
+            city_resource_remove_from_warehouse(resource, space->loadsStored);
             amount -= space->loadsStored;
             space->loadsStored = 0;
             space->subtype.warehouseResourceId = RESOURCE_NONE;
@@ -177,8 +173,7 @@ void building_warehouse_space_set_image(building *space, int resource)
 
 void building_warehouse_space_add_import(building *space, int resource)
 {
-    Data_CityInfo.resourceSpaceInWarehouses[resource]--;
-    Data_CityInfo.resourceStored[resource]++;
+    city_resource_add_to_warehouse(resource, 1);
     space->loadsStored++;
     space->subtype.warehouseResourceId = resource;
     
@@ -190,8 +185,7 @@ void building_warehouse_space_add_import(building *space, int resource)
 
 void building_warehouse_space_remove_export(building *space, int resource)
 {
-    Data_CityInfo.resourceSpaceInWarehouses[resource]++;
-    Data_CityInfo.resourceStored[resource]--;
+    city_resource_remove_from_warehouse(resource, 1);
     space->loadsStored--;
     if (space->loadsStored <= 0) {
         space->subtype.warehouseResourceId = RESOURCE_NONE;
@@ -254,43 +248,6 @@ int building_warehouses_remove_resource(int resource, int amount)
         }
     }
     return amount - amount_left;
-}
-
-void building_warehouses_calculate_stocks()
-{
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        Data_CityInfo.resourceSpaceInWarehouses[i] = 0;
-        Data_CityInfo.resourceStored[i] = 0;
-    }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
-            b->hasRoadAccess = 0;
-            if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
-                b->hasRoadAccess = 1;
-            } else if (map_has_road_access(b->x, b->y, 3, 0, 0)) {
-                b->hasRoadAccess = 2;
-            }
-        }
-    }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE_SPACE) {
-            continue;
-        }
-        building *warehouse = building_main(b);
-        if (warehouse->hasRoadAccess) {
-            b->hasRoadAccess = warehouse->hasRoadAccess;
-            if (b->subtype.warehouseResourceId) {
-                int loads = b->loadsStored;
-                int resource = b->subtype.warehouseResourceId;
-                Data_CityInfo.resourceStored[resource] += loads;
-                Data_CityInfo.resourceSpaceInWarehouses[resource] += 4 - loads;
-            } else {
-                Data_CityInfo.resourceSpaceInWarehouses[RESOURCE_NONE] += 4;
-            }
-        }
-    }
 }
 
 int building_warehouse_for_storing(int src_building_id, int x, int y, int resource,
@@ -523,7 +480,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
                 }
             }
         }
-        if (room >= 8 && loads_stored <= 4 && Data_CityInfo.resourceStored[r] - loads_stored > 4) {
+        if (room >= 8 && loads_stored <= 4 && city_resource_count(r) - loads_stored > 4) {
             *resource = r;
             return WAREHOUSE_TASK_GETTING;
         }
@@ -552,8 +509,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
         if (space->id > 0 && space->loadsStored > 0) {
             if (!Data_CityInfo.resourceStockpiled[space->subtype.warehouseResourceId]) {
                 int workshop_type = workshop_type_for_resource(space->subtype.warehouseResourceId);
-                if (workshop_type != WORKSHOP_NONE &&
-                        Data_CityInfo.resourceWorkshopRawMaterialSpace[workshop_type] > 0) {
+                if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type)) {
                     *resource = space->subtype.warehouseResourceId;
                     return WAREHOUSE_TASK_DELIVERING;
                 }

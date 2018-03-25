@@ -6,6 +6,7 @@
 #include "city/buildings.h"
 #include "city/message.h"
 #include "city/population.h"
+#include "city/resource.h"
 #include "game/resource.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
@@ -210,8 +211,7 @@ void tutorial_on_filled_granary()
 
 void tutorial_on_add_to_warehouse()
 {
-    if (Data_CityInfo.resourceStored[RESOURCE_POTTERY] >= 1 &&
-            !data.tutorial2.pottery_made) {
+    if (!data.tutorial2.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 1) {
         data.tutorial2.pottery_made = 1;
         data.tutorial2.pottery_made_year = game_time_year();
         building_menu_update();

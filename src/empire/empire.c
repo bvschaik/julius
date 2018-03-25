@@ -3,6 +3,7 @@
 #include "building/count.h"
 #include "city/constants.h"
 #include "city/population.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "core/io.h"
 #include "empire/city.h"
@@ -140,7 +141,7 @@ int empire_can_export_resource_to_city(int city_id, int resource)
         // quota reached
         return 0;
     }
-    if (Data_CityInfo.resourceStored[resource] <= Data_CityInfo.resourceTradeExportOver[resource]) {
+    if (city_resource_count(resource) <= Data_CityInfo.resourceTradeExportOver[resource]) {
         // stocks too low
         return 0;
     }
@@ -178,7 +179,7 @@ int empire_can_import_resource_from_city(int city_id, int resource)
         return 0;
     }
 
-    int in_stock = Data_CityInfo.resourceStored[resource];
+    int in_stock = city_resource_count(resource);
     int max_in_stock = 0;
     int finished_good = RESOURCE_NONE;
     switch (resource) {
