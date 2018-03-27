@@ -229,8 +229,8 @@ extern struct _Data_CityInfo {
 	int8_t militaryTotalLegionsEmpireService;
 	int8_t militaryTotalSoldiers;
 	int8_t triumphalArchesPlaced;
-	uint8_t dieSoundCitizen;
-	uint8_t dieSoundSoldier;
+	int8_t dieSoundCitizen;
+	int8_t dieSoundSoldier;
 	int8_t soundShootArrow;
 	int32_t numSoldiersInCity;
 	int8_t soundHitSoldier;
@@ -241,7 +241,7 @@ extern struct _Data_CityInfo {
 	int8_t soundHitElephant;
 	int8_t soundHitAxe;
 	int8_t soundHitWolf;
-	uint8_t soundMarchWolf;
+	int8_t soundMarchWolf;
 	int8_t populationSentimentIncludeTents;
 	int32_t caesarInvasionCount;
 	int32_t caesarInvasionSize;

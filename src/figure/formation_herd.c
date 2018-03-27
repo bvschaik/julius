@@ -1,5 +1,6 @@
 #include "formation_herd.h"
 
+#include "city/sound.h"
 #include "core/random.h"
 #include "figure/combat.h"
 #include "figure/figure.h"
@@ -222,12 +223,8 @@ static void update_herd_formation(formation *m)
                 m->herd_direction = 0;
                 if (formation_enemy_move_formation_to(m, x_tile, y_tile, &x_tile, &y_tile)) {
                     formation_set_destination(m, x_tile, y_tile);
-                    if (m->figure_type == FIGURE_WOLF) {
-                        Data_CityInfo.soundMarchWolf--;
-                        if (!Data_CityInfo.soundMarchWolf) {
-                            Data_CityInfo.soundMarchWolf = 12;
-                            sound_effect_play(SOUND_EFFECT_WOLF_HOWL);
-                        }
+                    if (m->figure_type == FIGURE_WOLF && city_sound_update_march_wolf()) {
+                        sound_effect_play(SOUND_EFFECT_WOLF_HOWL);
                     }
                     move_animals(m, attacking_animals);
                 }

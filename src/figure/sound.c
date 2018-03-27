@@ -1,5 +1,6 @@
 #include "sound.h"
 
+#include "city/sound.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
 
@@ -61,17 +62,9 @@ void figure_play_die_sound(const figure *f)
             break;
     }
     if (is_soldier) {
-        Data_CityInfo.dieSoundSoldier++;
-        if (Data_CityInfo.dieSoundSoldier >= 4) {
-            Data_CityInfo.dieSoundSoldier = 0;
-        }
-        sound_effect_play(SOUND_EFFECT_SOLDIER_DIE + Data_CityInfo.dieSoundSoldier);
+        sound_effect_play(SOUND_EFFECT_SOLDIER_DIE + city_sound_update_die_soldier());
     } else if (is_citizen) {
-        Data_CityInfo.dieSoundCitizen++;
-        if (Data_CityInfo.dieSoundCitizen >= 4) {
-            Data_CityInfo.dieSoundCitizen = 0;
-        }
-        sound_effect_play(SOUND_EFFECT_CITIZEN_DIE + Data_CityInfo.dieSoundCitizen);
+        sound_effect_play(SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen());
     }
     if (figure_is_enemy(f)) {
         if (Data_CityInfo.numEnemiesInCity == 1) {
@@ -84,21 +77,14 @@ void figure_play_die_sound(const figure *f)
     }
 }
 
-static void play_hit_sound(signed char *counter, int effect_id)
-{
-    (*counter)--;
-    if (*counter <= 0) {
-        *counter = 8;
-        sound_effect_play(effect_id);
-    }
-}
-
 void figure_play_hit_sound(figure_type type)
 {
     switch (type) {
         case FIGURE_FORT_LEGIONARY:
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
-            play_hit_sound(&Data_CityInfo.soundHitSoldier, SOUND_EFFECT_SWORD);
+            if (city_sound_update_hit_soldier()) {
+                sound_effect_play(SOUND_EFFECT_SWORD);
+            }
             break;
         case FIGURE_FORT_MOUNTED:
         case FIGURE_ENEMY45_SWORD:
@@ -106,41 +92,47 @@ void figure_play_hit_sound(figure_type type)
         case FIGURE_ENEMY50_SWORD:
         case FIGURE_ENEMY52_MOUNTED_ARCHER:
         case FIGURE_ENEMY54_GLADIATOR:
-            play_hit_sound(&Data_CityInfo.soundHitSoldier, SOUND_EFFECT_SWORD_SWING);
+            if (city_sound_update_hit_soldier()) {
+                sound_effect_play(SOUND_EFFECT_SWORD_SWING);
+            }
             break;
         case FIGURE_FORT_JAVELIN:
-            play_hit_sound(&Data_CityInfo.soundHitSoldier, SOUND_EFFECT_LIGHT_SWORD);
+            if (city_sound_update_hit_soldier()) {
+                sound_effect_play(SOUND_EFFECT_LIGHT_SWORD);
+            }
             break;
         case FIGURE_ENEMY43_SPEAR:
         case FIGURE_ENEMY51_SPEAR:
-            play_hit_sound(&Data_CityInfo.soundHitSpear, SOUND_EFFECT_SPEAR);
+            if (city_sound_update_hit_spear()) {
+                sound_effect_play(SOUND_EFFECT_SPEAR);
+            }
             break;
         case FIGURE_ENEMY44_SWORD:
         case FIGURE_ENEMY49_FAST_SWORD:
-            play_hit_sound(&Data_CityInfo.soundHitClub, SOUND_EFFECT_CLUB);
+            if (city_sound_update_hit_club()) {
+                sound_effect_play(SOUND_EFFECT_CLUB);
+            }
             break;
         case FIGURE_ENEMY53_AXE:
-            play_hit_sound(&Data_CityInfo.soundHitAxe, SOUND_EFFECT_AXE);
+            if (city_sound_update_hit_axe()) {
+                sound_effect_play(SOUND_EFFECT_AXE);
+            }
             break;
         case FIGURE_ENEMY46_CAMEL:
             sound_effect_play(SOUND_EFFECT_CAMEL);
             break;
         case FIGURE_ENEMY47_ELEPHANT:
-            if (Data_CityInfo.soundHitElephant == 1) {
-                sound_effect_play(SOUND_EFFECT_ELEPHANT_HIT);
-                Data_CityInfo.soundHitElephant = 0;
-            } else {
+            if (city_sound_update_hit_elephant()) {
                 sound_effect_play(SOUND_EFFECT_ELEPHANT);
-                Data_CityInfo.soundHitElephant = 1;
+            } else {
+                sound_effect_play(SOUND_EFFECT_ELEPHANT_HIT);
             }
             break;
         case FIGURE_LION_TAMER:
             sound_effect_play(SOUND_EFFECT_LION_ATTACK);
             break;
         case FIGURE_WOLF:
-            Data_CityInfo.soundHitWolf--;
-            if (Data_CityInfo.soundHitWolf <= 0) {
-                Data_CityInfo.soundHitWolf = 4;
+            if (city_sound_update_hit_wolf()) {
                 sound_effect_play(SOUND_EFFECT_WOLF_ATTACK);
             }
             break;

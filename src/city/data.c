@@ -481,8 +481,8 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, city_data.unused.unknown_458e);
     buffer_write_i8(main, Data_CityInfo.militaryTotalSoldiers);
     buffer_write_i8(main, Data_CityInfo.triumphalArchesPlaced);
-    buffer_write_u8(main, Data_CityInfo.dieSoundCitizen);
-    buffer_write_u8(main, Data_CityInfo.dieSoundSoldier);
+    buffer_write_i8(main, Data_CityInfo.dieSoundCitizen);
+    buffer_write_i8(main, Data_CityInfo.dieSoundSoldier);
     buffer_write_i8(main, Data_CityInfo.soundShootArrow);
     buffer_write_i32(main, city_data.building.trade_center_building_id);
     buffer_write_i32(main, Data_CityInfo.numSoldiersInCity);
@@ -494,7 +494,7 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, Data_CityInfo.soundHitElephant);
     buffer_write_i8(main, Data_CityInfo.soundHitAxe);
     buffer_write_i8(main, Data_CityInfo.soundHitWolf);
-    buffer_write_u8(main, Data_CityInfo.soundMarchWolf);
+    buffer_write_i8(main, Data_CityInfo.soundMarchWolf);
     for (int i = 0; i < 6; i++) {
         buffer_write_i8(main, city_data.unused.unused_45a5[i]);
     }
@@ -958,8 +958,8 @@ static void load_main_data(buffer *main)
     city_data.unused.unknown_458e = buffer_read_i8(main);
     Data_CityInfo.militaryTotalSoldiers = buffer_read_i8(main);
     Data_CityInfo.triumphalArchesPlaced = buffer_read_i8(main);
-    Data_CityInfo.dieSoundCitizen = buffer_read_u8(main);
-    Data_CityInfo.dieSoundSoldier = buffer_read_u8(main);
+    Data_CityInfo.dieSoundCitizen = buffer_read_i8(main);
+    Data_CityInfo.dieSoundSoldier = buffer_read_i8(main);
     Data_CityInfo.soundShootArrow = buffer_read_i8(main);
     city_data.building.trade_center_building_id = buffer_read_i32(main);
     Data_CityInfo.numSoldiersInCity = buffer_read_i32(main);
@@ -971,7 +971,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.soundHitElephant = buffer_read_i8(main);
     Data_CityInfo.soundHitAxe = buffer_read_i8(main);
     Data_CityInfo.soundHitWolf = buffer_read_i8(main);
-    Data_CityInfo.soundMarchWolf = buffer_read_u8(main);
+    Data_CityInfo.soundMarchWolf = buffer_read_i8(main);
     for (int i = 0; i < 6; i++) {
         city_data.unused.unused_45a5[i] = buffer_read_i8(main);
     }

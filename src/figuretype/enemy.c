@@ -1,5 +1,6 @@
 #include "enemy.h"
 
+#include "city/sound.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "figure/combat.h"
@@ -76,12 +77,8 @@ static void enemy_initial(figure *f, formation *m)
                 figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, missile_type);
                 formation_record_missile_fired(m);
             }
-            if (missile_type == FIGURE_ARROW) {
-                Data_CityInfo.soundShootArrow--;
-                if (Data_CityInfo.soundShootArrow <= 0) {
-                    Data_CityInfo.soundShootArrow = 10;
-                    sound_effect_play(SOUND_EFFECT_ARROW);
-                }
+            if (missile_type == FIGURE_ARROW && city_sound_update_shoot_arrow()) {
+                sound_effect_play(SOUND_EFFECT_ARROW);
             }
             f->attackGraphicOffset++;
             if (f->attackGraphicOffset > 100) {
@@ -120,15 +117,11 @@ static void enemy_fighting(figure *f, const formation *m)
     }
     if (f->type != FIGURE_ENEMY46_CAMEL && f->type != FIGURE_ENEMY47_ELEPHANT) {
         if (f->type == FIGURE_ENEMY48_CHARIOT || f->type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
-            Data_CityInfo.soundMarchHorse--;
-            if (Data_CityInfo.soundMarchHorse <= 0) {
-                Data_CityInfo.soundMarchHorse = (int8_t) 200;
+            if (city_sound_update_march_horse()) {
                 sound_effect_play(SOUND_EFFECT_HORSE_MOVING);
             }
         } else {
-            Data_CityInfo.soundMarchEnemy--;
-            if (Data_CityInfo.soundMarchEnemy <= 0) {
-                Data_CityInfo.soundMarchEnemy = (int8_t) 200;
+            if (city_sound_update_march_enemy()) {
                 sound_effect_play(SOUND_EFFECT_MARCHING);
             }
         }
