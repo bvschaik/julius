@@ -96,6 +96,20 @@ extern struct city_data_t {
         int32_t stored_in_workshops[6];//2900
     } resource;
     struct {
+        int8_t march_enemy;
+        int8_t march_horse;
+        int8_t march_wolf;
+        int8_t shoot_arrow;
+        int8_t hit_soldier;
+        int8_t hit_spear;
+        int8_t hit_club;
+        int8_t hit_elephant;
+        int8_t hit_axe;
+        int8_t hit_wolf;
+        int8_t die_citizen;
+        int8_t die_soldier;
+    } sound;
+    struct {
         int8_t other_player[18068];
         int8_t unknown_00a0;
         int8_t unknown_00a1;
