@@ -4,6 +4,7 @@
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
+#include "city/resource.h"
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
@@ -240,8 +241,9 @@ void window_building_draw_granary_orders_foreground(building_info_context *c)
         lang_text_draw_centered(98, 7, c->x_offset + 80, 440, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
     }
 
-    for (int i = 0; i < Data_CityInfo_Resource.numAvailableFoods; i++) {
-        int resource = Data_CityInfo_Resource.availableFoods[i];
+    const resource_list *list = city_resource_get_available_foods();
+    for (int i = 0; i < list->size; i++) {
+        int resource = list->items[i];
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
             resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id, c->x_offset + 32, 78 + 22 * i);
@@ -266,7 +268,7 @@ void window_building_handle_mouse_granary_orders(const mouse *m, building_info_c
 {
     data.building_id = c->building_id;
     if (generic_buttons_handle_mouse(m, c->x_offset + 180, 78,
-        orders_resource_buttons, Data_CityInfo_Resource.numAvailableFoods,
+        orders_resource_buttons, city_resource_get_available_foods()->size,
         &data.resource_focus_button_id)) {
         return;
     }
@@ -366,8 +368,9 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
     int is_trade_center = c->building_id == city_buildings_get_trade_center();
     lang_text_draw_centered(99, is_trade_center ? 11 : 12, c->x_offset + 80, 418, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 
-    for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++) {
-        int resource = Data_CityInfo_Resource.availableResources[i];
+    const resource_list *list = city_resource_get_available();
+    for (int i = 0; i < list->size; i++) {
+        int resource = list->items[i];
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id, c->x_offset + 32, 78 + 22 * i);
         image_draw(image_id, c->x_offset + 408, 78 + 22 * i);
@@ -390,7 +393,7 @@ void window_building_handle_mouse_warehouse_orders(const mouse *m, building_info
 {
     data.building_id = c->building_id;
     if (generic_buttons_handle_mouse(m, c->x_offset + 180, 78,
-        orders_resource_buttons, Data_CityInfo_Resource.numAvailableResources,
+        orders_resource_buttons, city_resource_get_available()->size,
         &data.resource_focus_button_id)) {
         return;
     }
@@ -407,9 +410,9 @@ static void toggle_resource_state(int index, int param2)
     building *b = building_get(data.building_id);
     int resource;
     if (b->type == BUILDING_WAREHOUSE) {
-        resource = Data_CityInfo_Resource.availableResources[index-1];
+        resource = city_resource_get_available()->items[index-1];
     } else {
-        resource = Data_CityInfo_Resource.availableFoods[index-1];
+        resource = city_resource_get_available_foods()->items[index-1];
     }
     building_storage_cycle_resource_state(b->storage_id, resource);
     window_invalidate();

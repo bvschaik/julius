@@ -58,9 +58,10 @@ static int draw_background()
 static void draw_foreground()
 {
     inner_panel_draw(32, 52, 36, 21);
-    for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++) {
+    const resource_list *list = city_resource_get_available();
+    for (int i = 0; i < list->size; i++) {
         int y_offset = 22 * i;
-        int resource = Data_CityInfo_Resource.availableResources[i];
+        int resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 48, y_offset + 54);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 568, y_offset + 54);
@@ -94,8 +95,8 @@ static void draw_foreground()
 
 static void handle_mouse(const mouse *m)
 {
-    generic_buttons_handle_mouse(m, 0, 0,
-                                 resource_buttons, Data_CityInfo_Resource.numAvailableResources + 2, &focus_button_id);
+    int num_resources = city_resource_get_available()->size;
+    generic_buttons_handle_mouse(m, 0, 0, resource_buttons, num_resources + 2, &focus_button_id);
 }
 
 static void button_prices(int param1, int param2)
@@ -110,7 +111,7 @@ static void button_empire(int param1, int param2)
 
 static void button_resource(int resource_index, int param2)
 {
-    window_resource_settings_show(Data_CityInfo_Resource.availableResources[resource_index]);
+    window_resource_settings_show(city_resource_get_available()->items[resource_index]);
 }
 
 static int get_tooltip_text()

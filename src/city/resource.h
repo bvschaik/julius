@@ -3,7 +3,16 @@
 
 #include "game/resource.h"
 
+typedef struct {
+    int size;
+    int items[RESOURCE_MAX];
+} resource_list;
+
 int city_resource_count(resource_type resource);
+
+const resource_list *city_resource_get_available();
+
+const resource_list *city_resource_get_available_foods();
 
 int city_resource_has_workshop_with_room(int workshop_type);
 

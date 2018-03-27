@@ -283,11 +283,4 @@ extern struct _Data_CityInfo_Extra {
 	int32_t ciid;
 } Data_CityInfo_Extra;
 
-extern struct _Data_CityInfo_Resource {
-	int32_t numAvailableResources;
-	int32_t availableResources[16];
-	int32_t numAvailableFoods;
-	int32_t availableFoods[16];
-} Data_CityInfo_Resource;
-
 #endif

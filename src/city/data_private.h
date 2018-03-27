@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "city/finance.h"
+#include "city/resource.h"
 
 extern struct city_data_t {
     struct {

@@ -13,9 +13,24 @@
 #include "scenario/building.h"
 #include "scenario/property.h"
 
+static struct {
+    resource_list resource_list;
+    resource_list food_list;
+} available;
+
 int city_resource_count(resource_type resource)
 {
     return city_data.resource.stored_in_warehouses[resource];
+}
+
+const resource_list *city_resource_get_available()
+{
+    return &available.resource_list;
+}
+
+const resource_list *city_resource_get_available_foods()
+{
+    return &available.food_list;
 }
 
 int city_resource_has_workshop_with_room(int workshop_type)
@@ -75,16 +90,16 @@ void city_resource_calculate_warehouse_stocks()
 void city_resource_determine_available()
 {
     for (int i = 0; i < RESOURCE_MAX; i++) {
-        Data_CityInfo_Resource.availableResources[i] = 0;
-        Data_CityInfo_Resource.availableFoods[i] = 0;
+        available.resource_list.items[i] = 0;
+        available.food_list.items[i] = 0;
     }
-    Data_CityInfo_Resource.numAvailableResources = 0;
-    Data_CityInfo_Resource.numAvailableFoods = 0;
+    available.resource_list.size = 0;
+    available.food_list.size = 0;
 
     for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
         if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
             (i == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF))) {
-            Data_CityInfo_Resource.availableResources[Data_CityInfo_Resource.numAvailableResources++] = i;
+            available.resource_list.items[available.resource_list.size++] = i;
         }
     }
     for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
@@ -93,7 +108,7 @@ void city_resource_determine_available()
         }
         if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
             (i == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF))) {
-            Data_CityInfo_Resource.availableFoods[Data_CityInfo_Resource.numAvailableFoods++] = i;
+            available.food_list.items[available.food_list.size++] = i;
         }
     }
 }
