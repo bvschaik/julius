@@ -1,7 +1,9 @@
 include_directories(.)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+if(!MSVC)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+endif()
 
 function(except_file var excluded_file)
     set(list_var "")
