@@ -205,19 +205,20 @@ static void draw_senate_rating_flags(const building *b, int x, int y, color_t co
         image_draw_masked(image_id + 4, x + 228, y + 19 - city_rating_favor() / 2, color_mask);
         // unemployed
         image_id = image_group(GROUP_FIGURE_HOMELESS);
-        if (Data_CityInfo.unemploymentPercentageForSenate > 0) {
+        int unemployment_pct = Data_CityInfo.unemploymentPercentageForSenate;
+        if (unemployment_pct > 0) {
             image_draw_masked(image_id + 108, x + 80, y, color_mask);
         }
-        if (Data_CityInfo.unemploymentPercentageForSenate > 5) {
+        if (unemployment_pct > 5) {
             image_draw_masked(image_id + 104, x + 230, y - 30, color_mask);
         }
-        if (Data_CityInfo.unemploymentPercentageForSenate > 10) {
+        if (unemployment_pct > 10) {
             image_draw_masked(image_id + 107, x + 100, y + 20, color_mask);
         }
-        if (Data_CityInfo.unemploymentPercentageForSenate > 15) {
+        if (unemployment_pct > 15) {
             image_draw_masked(image_id + 106, x + 235, y - 10, color_mask);
         }
-        if (Data_CityInfo.unemploymentPercentageForSenate > 20) {
+        if (unemployment_pct > 20) {
             image_draw_masked(image_id + 106, x + 66, y + 20, color_mask);
         }
     }

@@ -26,7 +26,7 @@ void city_data_init()
     city_data.finance.tax_percentage = 7;
     Data_CityInfo.tradeNextImportResourceCaravan = 1;
     Data_CityInfo.tradeNextImportResourceCaravanBackup = 1;
-    Data_CityInfo.monthlyPopulationNextIndex = 0;
+    city_data.population.monthly.next_index = 0;
     Data_CityInfo.monthsSinceStart = 0;
     Data_CityInfo.monthsSinceFestival = 1;
     Data_CityInfo.festivalSize = FESTIVAL_SMALL;
@@ -76,9 +76,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.populationMaxSupported);
     buffer_write_i32(main, Data_CityInfo.populationRoomInHouses);
     for (int i = 0; i < 2400; i++) {
-        buffer_write_i32(main, Data_CityInfo.monthlyPopulation[i]);
+        buffer_write_i32(main, city_data.population.monthly.values[i]);
     }
-    buffer_write_i32(main, Data_CityInfo.monthlyPopulationNextIndex);
+    buffer_write_i32(main, city_data.population.monthly.next_index);
     buffer_write_i32(main, Data_CityInfo.monthsSinceStart);
     for (int i = 0; i < 100; i++) {
         buffer_write_i16(main, Data_CityInfo.populationPerAge[i]);
@@ -86,21 +86,21 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 20; i++) {
         buffer_write_i32(main, Data_CityInfo.populationPerLevel[i]);
     }
-    buffer_write_i32(main, Data_CityInfo.populationYearlyBirths);
-    buffer_write_i32(main, Data_CityInfo.populationYearlyDeaths);
-    buffer_write_i32(main, Data_CityInfo.populationLostInRemoval);
+    buffer_write_i32(main, city_data.population.yearly_births);
+    buffer_write_i32(main, city_data.population.yearly_deaths);
+    buffer_write_i32(main, city_data.population.lost_removal);
     buffer_write_i32(main, Data_CityInfo.populationImmigrationAmountPerBatch);
     buffer_write_i32(main, Data_CityInfo.populationEmigrationAmountPerBatch);
     buffer_write_i32(main, Data_CityInfo.populationEmigrationQueueSize);
     buffer_write_i32(main, Data_CityInfo.populationImmigrationQueueSize);
-    buffer_write_i32(main, Data_CityInfo.populationLostHomeless);
-    buffer_write_i32(main, Data_CityInfo.populationLastChange);
-    buffer_write_i32(main, Data_CityInfo.populationAveragePerYear);
-    buffer_write_i32(main, Data_CityInfo.populationTotalAllYears);
+    buffer_write_i32(main, city_data.population.lost_homeless);
+    buffer_write_i32(main, city_data.population.last_change);
+    buffer_write_i32(main, city_data.population.average_per_year);
+    buffer_write_i32(main, city_data.population.total_all_years);
     buffer_write_i32(main, Data_CityInfo.populationPeopleInTentsShacks);
     buffer_write_i32(main, Data_CityInfo.populationPeopleInVillasPalaces);
-    buffer_write_i32(main, Data_CityInfo.populationTotalYears);
-    buffer_write_i32(main, Data_CityInfo.populationYearlyUpdatedNeeded);
+    buffer_write_i32(main, city_data.population.total_years);
+    buffer_write_i32(main, city_data.population.yearly_update_requested);
     buffer_write_i32(main, Data_CityInfo.populationLastTargetHouseAdd);
     buffer_write_i32(main, Data_CityInfo.populationLastTargetHouseRemove);
     buffer_write_i32(main, Data_CityInfo.populationImmigratedToday);
@@ -108,8 +108,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.populationRefusedImmigrantsNoRoom);
     buffer_write_i32(main, Data_CityInfo.populationMigrationPercentage);
     buffer_write_i32(main, city_data.unused.unused_27d0);
-    buffer_write_i32(main, Data_CityInfo.populationImmigrationDuration);
-    buffer_write_i32(main, Data_CityInfo.populationEmigrationDuration);
+    buffer_write_i32(main, city_data.population.immigration_duration);
+    buffer_write_i32(main, city_data.population.emigration_duration);
     buffer_write_i32(main, Data_CityInfo.populationNewcomersThisMonth);
     for (int i = 0; i < 4; i++) {
         buffer_write_i32(main, city_data.unused.unknown_27e0[i]);
@@ -553,9 +553,9 @@ static void load_main_data(buffer *main)
     Data_CityInfo.populationMaxSupported = buffer_read_i32(main);
     Data_CityInfo.populationRoomInHouses = buffer_read_i32(main);
     for (int i = 0; i < 2400; i++) {
-        Data_CityInfo.monthlyPopulation[i] = buffer_read_i32(main);
+        city_data.population.monthly.values[i] = buffer_read_i32(main);
     }
-    Data_CityInfo.monthlyPopulationNextIndex = buffer_read_i32(main);
+    city_data.population.monthly.next_index = buffer_read_i32(main);
     Data_CityInfo.monthsSinceStart = buffer_read_i32(main);
     for (int i = 0; i < 100; i++) {
         Data_CityInfo.populationPerAge[i] = buffer_read_i16(main);
@@ -563,21 +563,21 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 20; i++) {
         Data_CityInfo.populationPerLevel[i] = buffer_read_i32(main);
     }
-    Data_CityInfo.populationYearlyBirths = buffer_read_i32(main);
-    Data_CityInfo.populationYearlyDeaths = buffer_read_i32(main);
-    Data_CityInfo.populationLostInRemoval = buffer_read_i32(main);
+    city_data.population.yearly_births = buffer_read_i32(main);
+    city_data.population.yearly_deaths = buffer_read_i32(main);
+    city_data.population.lost_removal = buffer_read_i32(main);
     Data_CityInfo.populationImmigrationAmountPerBatch = buffer_read_i32(main);
     Data_CityInfo.populationEmigrationAmountPerBatch = buffer_read_i32(main);
     Data_CityInfo.populationEmigrationQueueSize = buffer_read_i32(main);
     Data_CityInfo.populationImmigrationQueueSize = buffer_read_i32(main);
-    Data_CityInfo.populationLostHomeless = buffer_read_i32(main);
-    Data_CityInfo.populationLastChange = buffer_read_i32(main);
-    Data_CityInfo.populationAveragePerYear = buffer_read_i32(main);
-    Data_CityInfo.populationTotalAllYears = buffer_read_i32(main);
+    city_data.population.lost_homeless = buffer_read_i32(main);
+    city_data.population.last_change = buffer_read_i32(main);
+    city_data.population.average_per_year = buffer_read_i32(main);
+    city_data.population.total_all_years = buffer_read_i32(main);
     Data_CityInfo.populationPeopleInTentsShacks = buffer_read_i32(main);
     Data_CityInfo.populationPeopleInVillasPalaces = buffer_read_i32(main);
-    Data_CityInfo.populationTotalYears = buffer_read_i32(main);
-    Data_CityInfo.populationYearlyUpdatedNeeded = buffer_read_i32(main);
+    city_data.population.total_years = buffer_read_i32(main);
+    city_data.population.yearly_update_requested = buffer_read_i32(main);
     Data_CityInfo.populationLastTargetHouseAdd = buffer_read_i32(main);
     Data_CityInfo.populationLastTargetHouseRemove = buffer_read_i32(main);
     Data_CityInfo.populationImmigratedToday = buffer_read_i32(main);
@@ -585,8 +585,8 @@ static void load_main_data(buffer *main)
     Data_CityInfo.populationRefusedImmigrantsNoRoom = buffer_read_i32(main);
     Data_CityInfo.populationMigrationPercentage = buffer_read_i32(main);
     city_data.unused.unused_27d0 = buffer_read_i32(main);
-    Data_CityInfo.populationImmigrationDuration = buffer_read_i32(main);
-    Data_CityInfo.populationEmigrationDuration = buffer_read_i32(main);
+    city_data.population.immigration_duration = buffer_read_i32(main);
+    city_data.population.emigration_duration = buffer_read_i32(main);
     Data_CityInfo.populationNewcomersThisMonth = buffer_read_i32(main);
     for (int i = 0; i < 4; i++) {
         city_data.unused.unknown_27e0[i] = buffer_read_i32(main);

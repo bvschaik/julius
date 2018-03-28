@@ -299,21 +299,21 @@ void city_sentiment_update_migration_status()
     }
     if (Data_CityInfo.populationMigrationPercentage > 0) {
         // immigration
-        if (Data_CityInfo.populationEmigrationDuration) {
-            Data_CityInfo.populationEmigrationDuration--;
+        if (city_data.population.emigration_duration) {
+            city_data.population.emigration_duration--;
         } else {
             Data_CityInfo.populationImmigrationAmountPerBatch =
                 calc_adjust_with_percentage(12, Data_CityInfo.populationMigrationPercentage);
-            Data_CityInfo.populationImmigrationDuration = 2;
+            city_data.population.immigration_duration = 2;
         }
     } else if (Data_CityInfo.populationMigrationPercentage < 0) {
         // emigration
-        if (Data_CityInfo.populationImmigrationDuration) {
-            Data_CityInfo.populationImmigrationDuration--;
+        if (city_data.population.immigration_duration) {
+            city_data.population.immigration_duration--;
         } else if (city_data.population.population > 100) {
             Data_CityInfo.populationEmigrationAmountPerBatch =
                 calc_adjust_with_percentage(12, -Data_CityInfo.populationMigrationPercentage);
-            Data_CityInfo.populationEmigrationDuration = 2;
+            city_data.population.emigration_duration = 2;
         }
     }
 }

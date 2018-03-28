@@ -35,6 +35,8 @@ void city_population_calculate_educational_age();
 
 void city_population_record_monthly();
 
+int city_population_at_month(int max_months, int month);
+
 void city_population_request_yearly_update();
 
 void city_population_yearly_update();

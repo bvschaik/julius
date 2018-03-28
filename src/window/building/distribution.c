@@ -16,8 +16,6 @@
 #include "scenario/property.h"
 #include "window/building_info.h"
 
-#include "Data/CityInfo.h"
-
 static void go_to_orders(int param1, int param2);
 static void toggle_resource_state(int index, int param2);
 static void granary_orders(int param1, int param2);

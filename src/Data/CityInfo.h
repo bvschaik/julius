@@ -11,34 +11,21 @@ extern struct _Data_CityInfo {
 	int32_t numHospitalWorkers;
 	int32_t populationMaxSupported;
 	int32_t populationRoomInHouses;
-	int32_t monthlyPopulation[2400];
-	int32_t monthlyPopulationNextIndex;
 	int32_t monthsSinceStart;
 	int16_t populationPerAge[100];//2664
 	int32_t populationPerLevel[20];//272c
-	int32_t populationYearlyBirths;
-	int32_t populationYearlyDeaths;
-	int32_t populationLostInRemoval;
 	int32_t populationImmigrationAmountPerBatch;
 	int32_t populationEmigrationAmountPerBatch;
 	int32_t populationEmigrationQueueSize;
 	int32_t populationImmigrationQueueSize;
-	int32_t populationLostHomeless;
-	int32_t populationLastChange;
-	int32_t populationAveragePerYear;
-	int32_t populationTotalAllYears;
 	int32_t populationPeopleInTentsShacks;
 	int32_t populationPeopleInVillasPalaces;
-	int32_t populationTotalYears;
-	int32_t populationYearlyUpdatedNeeded;
 	int32_t populationLastTargetHouseAdd;
 	int32_t populationLastTargetHouseRemove;
 	int32_t populationImmigratedToday;
 	int32_t populationEmigratedToday;
 	int32_t populationRefusedImmigrantsNoRoom;
 	int32_t populationMigrationPercentage;
-	int32_t populationImmigrationDuration;
-	int32_t populationEmigrationDuration;
 	int32_t populationNewcomersThisMonth;
 	int16_t resourceLastTargetWarehouse;
 	uint8_t entryPointX;

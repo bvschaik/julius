@@ -1,5 +1,6 @@
 #include "population.h"
 
+#include "city/population.h"
 #include "game/time.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -58,23 +59,12 @@ static void get_y_axis(int max_value, int *y_max, int *y_shift)
     }
 }
 
-static int get_population_at_month(int max, int month)
-{
-    int start_offset = 0;
-    if (Data_CityInfo.monthsSinceStart > max) {
-        start_offset = Data_CityInfo.monthsSinceStart + 2400 - max;
-    }
-    int index = (start_offset + month) % 2400;
-    return Data_CityInfo.monthlyPopulation[index];
-}
-
 static void get_min_max_month_year(int max_months, int *start_month, int *start_year, int *end_month, int *end_year)
 {
     if (Data_CityInfo.monthsSinceStart > max_months) {
         *end_month = game_time_month() - 1;
         *end_year = game_time_year();
         if (*end_month < 0) {
-            *end_month += 12;
             *end_year -= 1;
         }
         *start_month = 11 - (max_months % 12);
@@ -111,7 +101,7 @@ static void draw_history_graph(int full_size, int x, int y)
     // determine max value
     int max_value = 0;
     for (int m = 0; m < max_months; m++) {
-        int value = get_population_at_month(max_months, m);
+        int value = city_population_at_month(max_months, m);
         if (value > max_value) {
             max_value = value;
         }
@@ -137,7 +127,7 @@ static void draw_history_graph(int full_size, int x, int y)
     if (full_size) {
         graphics_set_clip_rectangle(0, 0, 640, y + 200);
         for (int m = 0; m < max_months; m++) {
-            int pop = get_population_at_month(max_months, m);
+            int pop = city_population_at_month(max_months, m);
             int val;
             if (y_shift == -1) {
                 val = 2 * pop;
@@ -168,7 +158,7 @@ static void draw_history_graph(int full_size, int x, int y)
     } else {
         y_shift += 2;
         for (int m = 0; m < max_months; m++) {
-            int val = get_population_at_month(max_months, m) >> y_shift;
+            int val = city_population_at_month(max_months, m) >> y_shift;
             if (val > 0) {
                 if (max_months == 20) {
                     graphics_fill_rect(x + m, y + 50 - val, 4, val + 1, COLOR_RED);

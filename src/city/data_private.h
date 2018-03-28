@@ -70,6 +70,22 @@ extern struct city_data_t {
         int32_t population_last_year;
         int32_t school_age;
         int32_t academy_age;
+        struct {
+            int32_t values[2400];
+            int32_t next_index;
+        } monthly;
+
+        int32_t yearly_update_requested;
+        int32_t yearly_births;
+        int32_t yearly_deaths;
+        int32_t immigration_duration;
+        int32_t emigration_duration;
+        int32_t lost_removal;
+        int32_t lost_homeless;
+        int32_t last_change;
+        int32_t total_all_years;
+        int32_t total_years;
+        int32_t average_per_year;
     } population;
     struct {
         int32_t culture;

@@ -129,35 +129,35 @@ static int get_people_in_age_decennium(int decennium)
 
 void city_population_add(int num_people)
 {
-    Data_CityInfo.populationLastChange = num_people;
+    city_data.population.last_change = num_people;
     add_to_census(num_people);
     recalculate_population();
 }
 
 void city_population_remove(int num_people)
 {
-    Data_CityInfo.populationLastChange = -num_people;
+    city_data.population.last_change = -num_people;
     remove_from_census(num_people);
     recalculate_population();
 }
 
 void city_population_add_homeless(int num_people)
 {
-    Data_CityInfo.populationLostHomeless -= num_people;
+    city_data.population.lost_homeless -= num_people;
     add_to_census(num_people);
     recalculate_population();
 }
 
 void city_population_remove_homeless(int num_people)
 {
-    Data_CityInfo.populationLostHomeless += num_people;
+    city_data.population.lost_homeless += num_people;
     remove_from_census(num_people);
     recalculate_population();
 }
 
 void city_population_remove_home_removed(int num_people)
 {
-    Data_CityInfo.populationLostInRemoval += num_people;
+    city_data.population.lost_removal += num_people;
     remove_from_census(num_people);
     recalculate_population();
 }
@@ -195,11 +195,21 @@ void city_population_calculate_educational_age()
 
 void city_population_record_monthly()
 {
-    Data_CityInfo.monthlyPopulation[Data_CityInfo.monthlyPopulationNextIndex++] = city_data.population.population;
-    if (Data_CityInfo.monthlyPopulationNextIndex >= 2400) {
-        Data_CityInfo.monthlyPopulationNextIndex = 0;
+    city_data.population.monthly.values[city_data.population.monthly.next_index++] = city_data.population.population;
+    if (city_data.population.monthly.next_index >= 2400) {
+        city_data.population.monthly.next_index = 0;
     }
     ++Data_CityInfo.monthsSinceStart;
+}
+
+int city_population_at_month(int max_months, int month)
+{
+    int start_offset = 0;
+    if (Data_CityInfo.monthsSinceStart > max_months) {
+        start_offset = Data_CityInfo.monthsSinceStart + 2400 - max_months;
+    }
+    int index = (start_offset + month) % 2400;
+    return city_data.population.monthly.values[index];
 }
 
 static void yearly_advance_ages_and_calculate_deaths()
@@ -209,7 +219,7 @@ static void yearly_advance_ages_and_calculate_deaths()
         Data_CityInfo.populationPerAge[age] = Data_CityInfo.populationPerAge[age-1];
     }
     Data_CityInfo.populationPerAge[0] = 0;
-    Data_CityInfo.populationYearlyDeaths = 0;
+    city_data.population.yearly_deaths = 0;
     for (int decennium = 9; decennium >= 0; decennium--) {
         int people = get_people_in_age_decennium(decennium);
         int death_percentage = DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[Data_CityInfo.healthRate / 10][decennium];
@@ -217,44 +227,44 @@ static void yearly_advance_ages_and_calculate_deaths()
         int removed = house_population_remove_from_city(deaths + aged100);
         remove_from_census_in_age_decennium(decennium, removed);
         // ^ BUGFIX should be deaths only, now aged100 are removed from census while they weren't *in* the census anymore
-        Data_CityInfo.populationYearlyDeaths += removed;
+        city_data.population.yearly_deaths += removed;
         aged100 = 0;
     }
 }
 
 static void yearly_calculate_births()
 {
-    Data_CityInfo.populationYearlyBirths = 0;
+    city_data.population.yearly_births = 0;
     for (int decennium = 9; decennium >= 0; decennium--) {
         int people = get_people_in_age_decennium(decennium);
         int births = calc_adjust_with_percentage(people, BIRTHS_PER_AGE_DECENNIUM[decennium]);
         int added = house_population_add_to_city(births);
         Data_CityInfo.populationPerAge[0] += added;
-        Data_CityInfo.populationYearlyBirths += added;
+        city_data.population.yearly_births += added;
     }
 }
 
 static void yearly_recalculate_population()
 {
-    Data_CityInfo.populationYearlyUpdatedNeeded = 0;
+    city_data.population.yearly_update_requested = 0;
     city_data.population.population_last_year = city_data.population.population;
     recalculate_population();
 
-    Data_CityInfo.populationLostInRemoval = 0;
-    Data_CityInfo.populationTotalAllYears += city_data.population.population;
-    Data_CityInfo.populationTotalYears++;
-    Data_CityInfo.populationAveragePerYear = Data_CityInfo.populationTotalAllYears / Data_CityInfo.populationTotalYears;
+    city_data.population.lost_removal = 0;
+    city_data.population.total_all_years += city_data.population.population;
+    city_data.population.total_years++;
+    city_data.population.average_per_year = city_data.population.total_all_years / city_data.population.total_years;
 }
 
 void city_population_request_yearly_update()
 {
-    Data_CityInfo.populationYearlyUpdatedNeeded = 1;
+    city_data.population.yearly_update_requested = 1;
     house_population_calculate_people_per_type();
 }
 
 void city_population_yearly_update()
 {
-    if (Data_CityInfo.populationYearlyUpdatedNeeded) {
+    if (city_data.population.yearly_update_requested) {
         yearly_advance_ages_and_calculate_deaths();
         yearly_calculate_births();
         yearly_recalculate_population();
