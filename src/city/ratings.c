@@ -471,9 +471,9 @@ static void update_favor_rating(int is_yearly_update)
         city_data.ratings.favor = 50;
         return;
     }
-    Data_CityInfo.giftMonthsSinceLast++;
-    if (Data_CityInfo.giftMonthsSinceLast >= 12) {
-        Data_CityInfo.giftOverdosePenalty = 0;
+    city_data.emperor.months_since_gift++;
+    if (city_data.emperor.months_since_gift >= 12) {
+        city_data.emperor.gift_overdose_penalty = 0;
     }
     if (is_yearly_update) {
         city_data.ratings.favor_salary_penalty = 0;

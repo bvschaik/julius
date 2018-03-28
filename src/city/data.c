@@ -30,9 +30,9 @@ void city_data_init()
     Data_CityInfo.monthsSinceStart = 0;
     Data_CityInfo.monthsSinceFestival = 1;
     Data_CityInfo.festivalSize = FESTIVAL_SMALL;
-    Data_CityInfo.giftCost_modest = 0;
-    Data_CityInfo.giftCost_generous = 0;
-    Data_CityInfo.giftCost_lavish = 0;
+    city_data.emperor.gifts[GIFT_MODEST].cost = 0;
+    city_data.emperor.gifts[GIFT_GENEROUS].cost = 0;
+    city_data.emperor.gifts[GIFT_LAVISH].cost = 0;
 
     city_gods_reset();
 }
@@ -404,16 +404,16 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 4; i++) {
         buffer_write_i32(main, city_data.unused.unknown_446c[i]);
     }
-    buffer_write_i32(main, Data_CityInfo.giftSizeSelected);
-    buffer_write_i32(main, Data_CityInfo.giftMonthsSinceLast);
-    buffer_write_i32(main, Data_CityInfo.giftOverdosePenalty);
+    buffer_write_i32(main, city_data.emperor.selected_gift_size);
+    buffer_write_i32(main, city_data.emperor.months_since_gift);
+    buffer_write_i32(main, city_data.emperor.gift_overdose_penalty);
     buffer_write_i32(main, city_data.unused.unused_4488);
-    buffer_write_i32(main, Data_CityInfo.giftId_modest);
-    buffer_write_i32(main, Data_CityInfo.giftId_generous);
-    buffer_write_i32(main, Data_CityInfo.giftId_lavish);
-    buffer_write_i32(main, Data_CityInfo.giftCost_modest);
-    buffer_write_i32(main, Data_CityInfo.giftCost_generous);
-    buffer_write_i32(main, Data_CityInfo.giftCost_lavish);
+    buffer_write_i32(main, city_data.emperor.gifts[GIFT_MODEST].id);
+    buffer_write_i32(main, city_data.emperor.gifts[GIFT_GENEROUS].id);
+    buffer_write_i32(main, city_data.emperor.gifts[GIFT_LAVISH].id);
+    buffer_write_i32(main, city_data.emperor.gifts[GIFT_MODEST].cost);
+    buffer_write_i32(main, city_data.emperor.gifts[GIFT_GENEROUS].cost);
+    buffer_write_i32(main, city_data.emperor.gifts[GIFT_LAVISH].cost);
     buffer_write_i32(main, city_data.ratings.favor_salary_penalty);
     buffer_write_i32(main, city_data.ratings.favor_milestone_penalty);
     buffer_write_i32(main, city_data.ratings.favor_ignored_request_penalty);
@@ -881,16 +881,16 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 4; i++) {
         city_data.unused.unknown_446c[i] = buffer_read_i32(main);
     }
-    Data_CityInfo.giftSizeSelected = buffer_read_i32(main);
-    Data_CityInfo.giftMonthsSinceLast = buffer_read_i32(main);
-    Data_CityInfo.giftOverdosePenalty = buffer_read_i32(main);
+    city_data.emperor.selected_gift_size = buffer_read_i32(main);
+    city_data.emperor.months_since_gift = buffer_read_i32(main);
+    city_data.emperor.gift_overdose_penalty = buffer_read_i32(main);
     city_data.unused.unused_4488 = buffer_read_i32(main);
-    Data_CityInfo.giftId_modest = buffer_read_i32(main);
-    Data_CityInfo.giftId_generous = buffer_read_i32(main);
-    Data_CityInfo.giftId_lavish = buffer_read_i32(main);
-    Data_CityInfo.giftCost_modest = buffer_read_i32(main);
-    Data_CityInfo.giftCost_generous = buffer_read_i32(main);
-    Data_CityInfo.giftCost_lavish = buffer_read_i32(main);
+    city_data.emperor.gifts[GIFT_MODEST].id = buffer_read_i32(main);
+    city_data.emperor.gifts[GIFT_GENEROUS].id = buffer_read_i32(main);
+    city_data.emperor.gifts[GIFT_LAVISH].id = buffer_read_i32(main);
+    city_data.emperor.gifts[GIFT_MODEST].cost = buffer_read_i32(main);
+    city_data.emperor.gifts[GIFT_GENEROUS].cost = buffer_read_i32(main);
+    city_data.emperor.gifts[GIFT_LAVISH].cost = buffer_read_i32(main);
     city_data.ratings.favor_salary_penalty = buffer_read_i32(main);
     city_data.ratings.favor_milestone_penalty = buffer_read_i32(main);
     city_data.ratings.favor_ignored_request_penalty = buffer_read_i32(main);

@@ -176,15 +176,6 @@ extern struct _Data_CityInfo {
 	int32_t citySentimentChangeMessageDelay;
 	int32_t populationEmigrationCause; // 4464
 	int32_t riotersOrAttackingNativesInCity;
-	int32_t giftSizeSelected;
-	int32_t giftMonthsSinceLast;
-	int32_t giftOverdosePenalty;
-	int32_t giftId_modest;
-	int32_t giftId_generous;
-	int32_t giftId_lavish;
-	int32_t giftCost_modest;
-	int32_t giftCost_generous;
-	int32_t giftCost_lavish;
 	int32_t nativeAttackDuration;
 	int32_t nativeMissionPostOperational;
 	int32_t nativeMainMeetingCenterX;

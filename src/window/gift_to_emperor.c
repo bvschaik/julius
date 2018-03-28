@@ -10,8 +10,6 @@
 #include "graphics/window.h"
 #include "window/advisors.h"
 
-#include "Data/CityInfo.h"
-
 static void button_set_gift(int gift_id, int param2);
 static void button_send_gift(int param1, int param2);
 static void button_cancel(int param1, int param2);
@@ -28,14 +26,7 @@ static int focus_button_id;
 
 static void init()
 {
-    if (Data_CityInfo.giftSizeSelected == 2 &&
-        Data_CityInfo.giftCost_lavish > Data_CityInfo.personalSavings) {
-        Data_CityInfo.giftSizeSelected = 1;
-    }
-    if (Data_CityInfo.giftSizeSelected == 1 &&
-        Data_CityInfo.giftCost_generous > Data_CityInfo.personalSavings) {
-        Data_CityInfo.giftSizeSelected = 0;
-    }
+    city_emperor_init_selected_gift();
 }
 
 static void draw_background()
@@ -49,7 +40,7 @@ static void draw_background()
     lang_text_draw_centered(52, 69, 128, 160, 432, FONT_LARGE_BLACK);
 
     int width = lang_text_draw(52, 50, 144, 304, FONT_NORMAL_BLACK);
-    lang_text_draw_amount(8, 4, Data_CityInfo.giftMonthsSinceLast, 144 + width, 304, FONT_NORMAL_BLACK);
+    lang_text_draw_amount(8, 4, city_emperor_months_since_gift(), 144 + width, 304, FONT_NORMAL_BLACK);
     lang_text_draw_centered(13, 4, 400, 341, 160, FONT_NORMAL_BLACK);
 
     graphics_reset_dialog();
@@ -61,29 +52,32 @@ static void draw_foreground()
 
     inner_panel_draw(112, 208, 28, 5);
 
-    if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
+    if (city_emperor_can_send_gift(GIFT_MODEST)) {
+        const emperor_gift *gift = city_emperor_get_gift(GIFT_MODEST);
         lang_text_draw(52, 63, 128, 218, FONT_NORMAL_WHITE);
         font_t font = focus_button_id == 1 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
-        int width = lang_text_draw(52, 51 + Data_CityInfo.giftId_modest, 224, 218, font);
-        text_draw_money(Data_CityInfo.giftCost_modest, 224 + width, 218, font);
+        int width = lang_text_draw(52, 51 + gift->id, 224, 218, font);
+        text_draw_money(gift->cost, 224 + width, 218, font);
     } else {
         lang_text_draw_multiline(52, 70, 160, 224, 352, FONT_NORMAL_WHITE);
     }
-    if (Data_CityInfo.giftCost_generous <= Data_CityInfo.personalSavings) {
+    if (city_emperor_can_send_gift(GIFT_GENEROUS)) {
+        const emperor_gift *gift = city_emperor_get_gift(GIFT_GENEROUS);
         lang_text_draw(52, 64, 128, 238, FONT_NORMAL_WHITE);
         font_t font = focus_button_id == 2 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
-        int width = lang_text_draw(52, 55 + Data_CityInfo.giftId_generous, 224, 238, font);
-        text_draw_money(Data_CityInfo.giftCost_generous, 224 + width, 238, font);
+        int width = lang_text_draw(52, 55 + gift->id, 224, 238, font);
+        text_draw_money(gift->cost, 224 + width, 238, font);
     }
-    if (Data_CityInfo.giftCost_lavish <= Data_CityInfo.personalSavings) {
+    if (city_emperor_can_send_gift(GIFT_LAVISH)) {
+        const emperor_gift *gift = city_emperor_get_gift(GIFT_LAVISH);
         lang_text_draw(52, 65, 128, 258, FONT_NORMAL_WHITE);
         font_t font = focus_button_id == 3 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
-        int width = lang_text_draw(52, 59 + Data_CityInfo.giftId_lavish, 224, 258, font);
-        text_draw_money(Data_CityInfo.giftCost_lavish, 224 + width, 258, font);
+        int width = lang_text_draw(52, 59 + gift->id, 224, 258, font);
+        text_draw_money(gift->cost, 224 + width, 258, font);
     }
     // can give at least one type
-    if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
-        lang_text_draw_centered(52, 66 + Data_CityInfo.giftSizeSelected, 128, 341, 240, FONT_NORMAL_BLACK);
+    if (city_emperor_can_send_gift(GIFT_MODEST)) {
+        lang_text_draw_centered(52, 66 + city_emperor_selected_gift_size(), 128, 341, 240, FONT_NORMAL_BLACK);
         button_border_draw(128, 336, 240, 20, focus_button_id == 4);
     }
     button_border_draw(400, 336, 160, 20, focus_button_id == 5);
@@ -102,17 +96,14 @@ static void handle_mouse(const mouse *m)
 
 static void button_set_gift(int gift_id, int param2)
 {
-    if ((gift_id == 1 && Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) ||
-        (gift_id == 2 && Data_CityInfo.giftCost_generous <= Data_CityInfo.personalSavings) ||
-        (gift_id == 3 && Data_CityInfo.giftCost_lavish <= Data_CityInfo.personalSavings)) {
-        Data_CityInfo.giftSizeSelected = gift_id - 1;
+    if (city_emperor_set_gift_size(gift_id - 1)) {
         window_invalidate();
     }
 }
 
 static void button_send_gift(int param1, int param2)
 {
-    if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
+    if (city_emperor_can_send_gift(GIFT_MODEST)) {
         city_emperor_send_gift();
         window_advisors_show();
     }

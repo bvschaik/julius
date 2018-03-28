@@ -158,89 +158,112 @@ void city_emperor_update()
     process_caesar_invasion();
 }
 
+void city_emperor_init_selected_gift()
+{
+    if (city_data.emperor.selected_gift_size == GIFT_LAVISH && !city_emperor_can_send_gift(GIFT_LAVISH)) {
+        city_data.emperor.selected_gift_size = GIFT_GENEROUS;
+    }
+    if (city_data.emperor.selected_gift_size == GIFT_GENEROUS && !city_emperor_can_send_gift(GIFT_GENEROUS)) {
+        city_data.emperor.selected_gift_size = GIFT_MODEST;
+    }
+}
+
+int city_emperor_set_gift_size(int size)
+{
+    if (city_data.emperor.gifts[size].cost <= Data_CityInfo.personalSavings) {
+        city_data.emperor.selected_gift_size = size;
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int city_emperor_selected_gift_size()
+{
+    return city_data.emperor.selected_gift_size;
+}
+
+const emperor_gift *city_emperor_get_gift(int size)
+{
+    return &city_data.emperor.gifts[size];
+}
+
+int city_emperor_can_send_gift(int size)
+{
+    return city_data.emperor.gifts[size].cost <= Data_CityInfo.personalSavings;
+}
+
 void city_emperor_calculate_gift_costs()
 {
     int savings = Data_CityInfo.personalSavings;
-    Data_CityInfo.giftCost_modest = savings / 8 + 20;
-    Data_CityInfo.giftCost_generous = savings / 4 + 50;
-    Data_CityInfo.giftCost_lavish = savings / 2 + 100;
+    city_data.emperor.gifts[GIFT_MODEST].cost = savings / 8 + 20;
+    city_data.emperor.gifts[GIFT_GENEROUS].cost = savings / 4 + 50;
+    city_data.emperor.gifts[GIFT_LAVISH].cost = savings / 2 + 100;
 }
 
 void city_emperor_send_gift()
 {
-    int cost;
-    if (Data_CityInfo.giftSizeSelected == 0) {
-        cost = Data_CityInfo.giftCost_modest;
-    } else if (Data_CityInfo.giftSizeSelected == 1) {
-        cost = Data_CityInfo.giftCost_generous;
-    } else if (Data_CityInfo.giftSizeSelected == 2) {
-        cost = Data_CityInfo.giftCost_lavish;
-    } else {
+    int size = city_data.emperor.selected_gift_size;
+    if (size < GIFT_MODEST || size > GIFT_LAVISH) {
         return;
     }
+    int cost = city_data.emperor.gifts[size].cost;
 
     if (cost > Data_CityInfo.personalSavings) {
         return;
     }
 
-    if (Data_CityInfo.giftOverdosePenalty <= 0) {
-        Data_CityInfo.giftOverdosePenalty = 1;
-        if (Data_CityInfo.giftSizeSelected == 0) {
+    if (city_data.emperor.gift_overdose_penalty <= 0) {
+        city_data.emperor.gift_overdose_penalty = 1;
+        if (size == GIFT_MODEST) {
             city_ratings_change_favor(3);
-        } else if (Data_CityInfo.giftSizeSelected == 1) {
+        } else if (size == GIFT_GENEROUS) {
             city_ratings_change_favor(5);
-        } else if (Data_CityInfo.giftSizeSelected == 2) {
+        } else if (size == GIFT_LAVISH) {
             city_ratings_change_favor(10);
         }
-    } else if (Data_CityInfo.giftOverdosePenalty == 1) {
-        Data_CityInfo.giftOverdosePenalty = 2;
-        if (Data_CityInfo.giftSizeSelected == 0) {
+    } else if (city_data.emperor.gift_overdose_penalty == 1) {
+        city_data.emperor.gift_overdose_penalty = 2;
+        if (size == GIFT_MODEST) {
             city_ratings_change_favor(1);
-        } else if (Data_CityInfo.giftSizeSelected == 1) {
+        } else if (size == GIFT_GENEROUS) {
             city_ratings_change_favor(3);
-        } else if (Data_CityInfo.giftSizeSelected == 2) {
+        } else if (size == GIFT_LAVISH) {
             city_ratings_change_favor(5);
         }
-    } else if (Data_CityInfo.giftOverdosePenalty == 2) {
-        Data_CityInfo.giftOverdosePenalty = 3;
-        if (Data_CityInfo.giftSizeSelected == 0) {
+    } else if (city_data.emperor.gift_overdose_penalty == 2) {
+        city_data.emperor.gift_overdose_penalty = 3;
+        if (size == GIFT_MODEST) {
             city_ratings_change_favor(0);
-        } else if (Data_CityInfo.giftSizeSelected == 1) {
+        } else if (size == GIFT_GENEROUS) {
             city_ratings_change_favor(1);
-        } else if (Data_CityInfo.giftSizeSelected == 2) {
+        } else if (size == GIFT_LAVISH) {
             city_ratings_change_favor(3);
         }
-    } else if (Data_CityInfo.giftOverdosePenalty == 3) {
-        Data_CityInfo.giftOverdosePenalty = 4;
-        if (Data_CityInfo.giftSizeSelected == 0) {
+    } else if (city_data.emperor.gift_overdose_penalty == 3) {
+        city_data.emperor.gift_overdose_penalty = 4;
+        if (size == GIFT_MODEST) {
             city_ratings_change_favor(0);
-        } else if (Data_CityInfo.giftSizeSelected == 1) {
+        } else if (size == GIFT_GENEROUS) {
             city_ratings_change_favor(0);
-        } else if (Data_CityInfo.giftSizeSelected == 2) {
+        } else if (size == GIFT_LAVISH) {
             city_ratings_change_favor(1);
         }
     }
 
-    Data_CityInfo.giftMonthsSinceLast = 0;
+    city_data.emperor.months_since_gift = 0;
     // rotate gift type
-    if (Data_CityInfo.giftSizeSelected == 0) {
-        Data_CityInfo.giftId_modest++;
-    } else if (Data_CityInfo.giftSizeSelected == 1) {
-        Data_CityInfo.giftId_generous++;
-    } else if (Data_CityInfo.giftSizeSelected == 2) {
-        Data_CityInfo.giftId_lavish++;
-    }
-    if (Data_CityInfo.giftId_modest >= 4) {
-        Data_CityInfo.giftId_modest = 0;
-    }
-    if (Data_CityInfo.giftId_generous >= 4) {
-        Data_CityInfo.giftId_generous = 0;
-    }
-    if (Data_CityInfo.giftId_lavish >= 4) {
-        Data_CityInfo.giftId_lavish = 0;
+    city_data.emperor.gifts[size].id++;
+    if (city_data.emperor.gifts[size].id >= 4) {
+        city_data.emperor.gifts[size].id = 0;
     }
 
     Data_CityInfo.personalSavings -= cost;
+}
+
+int city_emperor_months_since_gift()
+{
+    return city_data.emperor.months_since_gift;
 }
 
 int city_emperor_salary_for_rank(int rank)

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+#include "city/emperor.h"
 #include "city/finance.h"
 #include "city/resource.h"
 
@@ -26,6 +27,12 @@ extern struct city_data_t {
         int32_t distribution_center_placed;
         int32_t trade_center_building_id;
     } building;
+    struct {
+        emperor_gift gifts[3];
+        int32_t selected_gift_size;
+        int32_t months_since_gift;
+        int32_t gift_overdose_penalty;
+    } emperor;
     struct {
         int32_t treasury;
         int32_t tax_percentage;
