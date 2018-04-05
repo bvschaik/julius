@@ -18,8 +18,6 @@
 #include "map/terrain.h"
 #include "scenario/earthquake.h"
 
-#include "Data/State.h"
-
 #include <string.h>
 
 #define MAX_UNDO_BUILDINGS 50
@@ -137,8 +135,10 @@ void game_undo_restore_building_state()
 
 static void restore_map_images()
 {
-    for (int y = 0; y < Data_State.map.height; y++) {
-        for (int x = 0; x < Data_State.map.width; x++) {
+    int map_width, map_height;
+    map_grid_size(&map_width, &map_height);
+    for (int y = 0; y < map_height; y++) {
+        for (int x = 0; x < map_width; x++) {
             int grid_offset = map_grid_offset(x, y);
             if (!map_building_at(grid_offset)) {
                 map_image_restore_at(grid_offset);

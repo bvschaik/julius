@@ -1,8 +1,7 @@
 #include "ring.h"
 
+#include "map/data.h"
 #include "map/grid.h"
-
-#include "Data/State.h"
 
 static struct {
     ring_tile tiles[1080];
@@ -65,8 +64,8 @@ int map_ring_end(int size, int distance)
 
 int map_ring_is_inside_map(int x, int y)
 {
-    return x >= -1 && x <= Data_State.map.width &&
-        y >= -1 && y <= Data_State.map.height;
+    return x >= -1 && x <= map_data.width &&
+        y >= -1 && y <= map_data.height;
 }
 
 const ring_tile *map_ring_tile(int index)

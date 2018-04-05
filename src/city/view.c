@@ -4,8 +4,6 @@
 #include "map/grid.h"
 #include "map/image.h"
 
-#include "Data/State.h"
-
 #define MENUBAR_HEIGHT 24
 
 static struct {
@@ -35,8 +33,8 @@ static int view_to_grid_offset_lookup[VIEW_X_MAX][VIEW_Y_MAX];
 
 static void check_camera_boundaries()
 {
-    int x_min = (165 - Data_State.map.width) / 2;
-    int y_min = (323 - 2 * Data_State.map.height) / 2;
+    int x_min = (165 - map_grid_width()) / 2;
+    int y_min = (323 - 2 * map_grid_height()) / 2;
     if (data.camera.x < x_min - 1) {
         data.camera.x = x_min - 1;
     }

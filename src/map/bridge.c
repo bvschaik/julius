@@ -2,14 +2,13 @@
 
 #include "city/view.h"
 #include "core/direction.h"
+#include "map/data.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/routing_terrain.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
-
-#include "Data/State.h"
 
 static struct {
     int end_grid_offset;
@@ -322,9 +321,9 @@ int map_bridge_count_figures(int grid_offset)
 
 void map_bridge_update_after_rotate(int counter_clockwise)
 {
-    for (int y = 0; y < Data_State.map.height; y++) {
-        for (int x = 0; x < Data_State.map.width; x++) {
-            int grid_offset = map_grid_offset(x, y);
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_is_bridge(grid_offset)) {
                 int new_value;
                 switch (map_sprite_bridge_at(grid_offset)) {

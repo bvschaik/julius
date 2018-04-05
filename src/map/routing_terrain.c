@@ -5,14 +5,13 @@
 #include "core/direction.h"
 #include "core/image.h"
 #include "map/building.h"
+#include "map/data.h"
 #include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/routing_data.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
-
-#include "Data/State.h"
 
 static void map_routing_update_land_noncitizen();
 
@@ -110,9 +109,9 @@ static int get_land_type_citizen_aqueduct(int grid_offset)
 void map_routing_update_land_citizen()
 {
     map_grid_init_i8(terrain_land_citizen.items, -1);
-    int grid_offset = Data_State.map.gridStartOffset;
-    for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
-        for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
             int terrain = map_terrain_get(grid_offset);
             if (terrain & TERRAIN_ROAD) {
                 terrain_land_citizen.items[grid_offset] = CITIZEN_0_ROAD;
@@ -175,9 +174,9 @@ static int get_land_type_noncitizen(int grid_offset)
 static void map_routing_update_land_noncitizen()
 {
     map_grid_init_i8(terrain_land_noncitizen.items, -1);
-    int grid_offset = Data_State.map.gridStartOffset;
-    for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
-        for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
             int terrain = map_terrain_get(grid_offset);
             if (terrain & TERRAIN_GATEHOUSE) {
                 terrain_land_noncitizen.items[grid_offset] = NONCITIZEN_4_GATEHOUSE;
@@ -211,12 +210,12 @@ static int is_surrounded_by_water(int grid_offset)
 void map_routing_update_water()
 {
     map_grid_init_i8(terrain_water.items, -1);
-    int grid_offset = Data_State.map.gridStartOffset;
-    for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
-        for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_WATER) && is_surrounded_by_water(grid_offset)) {
-                if (x > 0 && x < Data_State.map.width - 1 &&
-                    y > 0 && y < Data_State.map.height - 1) {
+                if (x > 0 && x < map_data.width - 1 &&
+                    y > 0 && y < map_data.height - 1) {
                     switch (map_sprite_bridge_at(grid_offset)) {
                         case 5:
                         case 6: // low bridge middle section
@@ -275,9 +274,9 @@ static int count_adjacent_wall_tiles(int grid_offset)
 void map_routing_update_walls()
 {
     map_grid_init_i8(terrain_walls.items, -1);
-    int grid_offset = Data_State.map.gridStartOffset;
-    for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
-        for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
                 if (count_adjacent_wall_tiles(grid_offset) == 3) {
                     terrain_walls.items[grid_offset] = WALL_0_PASSABLE;

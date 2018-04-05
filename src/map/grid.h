@@ -25,6 +25,8 @@ typedef struct {
     int16_t items[GRID_SIZE * GRID_SIZE];
 } grid_i16;
 
+void map_grid_init(int width, int height, int start_offset, int border_size);
+
 int map_grid_offset(int x, int y);
 
 int map_grid_offset_to_x(int grid_offset);
@@ -34,6 +36,12 @@ int map_grid_offset_to_y(int grid_offset);
 int map_grid_delta(int x, int y);
 
 int map_grid_direction_delta(int direction);
+
+void map_grid_size(int *width, int *height);
+
+int map_grid_width();
+
+int map_grid_height();
 
 void map_grid_bound(int *x, int *y);
 

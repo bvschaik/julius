@@ -1,11 +1,11 @@
 #include "road_network.h"
 
+#include "map/data.h"
 #include "map/grid.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 #include <string.h>
 
@@ -103,9 +103,9 @@ void map_road_network_update()
     clear_largest_networks();
     map_grid_clear_u8(network.items);
     int network_id = 1;
-    int grid_offset = Data_State.map.gridStartOffset;
-    for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
-        for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_ROAD) && !network.items[grid_offset]) {
                 int size = mark_road_network(grid_offset, network_id);
                 record_in_largest_networks(network_id, size);

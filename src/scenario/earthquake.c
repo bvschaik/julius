@@ -15,8 +15,6 @@
 #include "scenario/data.h"
 #include "sound/effect.h"
 
-#include "Data/State.h"
-
 enum {
     EARTHQUAKE_NONE = 0,
     EARTHQUAKE_SMALL = 1,
@@ -142,8 +140,8 @@ void scenario_earthquake_process()
                 case 15: index = 3; dx = 0; dy = 1; break;
                 default: return;
             }
-            int x = calc_bound(data.expand[index].x + dx, 0, Data_State.map.width - 1);
-            int y = calc_bound(data.expand[index].y + dy, 0, Data_State.map.height - 1);
+            int x = calc_bound(data.expand[index].x + dx, 0, scenario.map.width - 1);
+            int y = calc_bound(data.expand[index].y + dy, 0, scenario.map.height - 1);
             if (can_advance_earthquake_to_tile(x, y)) {
                 data.expand[index].x = x;
                 data.expand[index].y = y;

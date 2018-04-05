@@ -5,6 +5,7 @@
 #include "core/image.h"
 #include "map/aqueduct.h"
 #include "map/building_tiles.h"
+#include "map/data.h"
 #include "map/desirability.h"
 #include "map/building.h"
 #include "map/grid.h"
@@ -12,8 +13,6 @@
 #include "map/property.h"
 #include "map/terrain.h"
 #include "scenario/property.h"
-
-#include "Data/State.h"
 
 #include <string.h>
 
@@ -72,9 +71,9 @@ void map_water_supply_update_houses()
 static void set_all_aqueducts_to_no_water()
 {
     int image_without_water = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
-    for (int y = 0; y < Data_State.map.height; y++) {
-        for (int x = 0; x < Data_State.map.width; x++) {
-            int grid_offset = map_grid_offset(x, y);
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
                 map_aqueduct_set(grid_offset, 0);
                 int image_id = map_image_at(grid_offset);

@@ -6,6 +6,7 @@
 #include "core/image.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
+#include "map/data.h"
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/property.h"
@@ -14,7 +15,6 @@
 #include "scenario/building.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 static void mark_native_land(int x, int y, int size, int radius)
 {
@@ -89,9 +89,9 @@ void map_natives_init()
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
     int nativeGraphic = image_group(GROUP_BUILDING_NATIVE);
-    int gridOffset = Data_State.map.gridStartOffset;
-    for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
-        for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
+    int gridOffset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, gridOffset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, gridOffset++) {
             if (!map_terrain_is(gridOffset, TERRAIN_BUILDING) || map_building_at(gridOffset)) {
                 continue;
             }

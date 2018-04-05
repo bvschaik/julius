@@ -6,6 +6,7 @@
 #include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
+#include "map/data.h"
 #include "map/desirability.h"
 #include "map/elevation.h"
 #include "map/figure.h"
@@ -18,7 +19,6 @@
 #include "scenario/map.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 #define FORBIDDEN_TERRAIN_MEADOW (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |\
             TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
@@ -55,9 +55,9 @@ int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain)
 
 static void foreach_map_tile(void (*callback)(int x, int y, int grid_offset))
 {
-    int grid_offset = Data_State.map.gridStartOffset;
-    for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
-        for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
             callback(x, y, grid_offset);
         }
     }
@@ -1078,8 +1078,8 @@ static void set_elevation_image(int x, int y, int grid_offset)
 
 void map_tiles_update_all_elevation()
 {
-    int width = Data_State.map.width - 2;
-    int height = Data_State.map.height - 2;
+    int width = map_data.width - 2;
+    int height = map_data.height - 2;
     foreach_region_tile(0, 0, width, height, clear_access_ramp_image);
     foreach_region_tile(0, 0, width, height, set_elevation_image);
 }
@@ -1090,11 +1090,11 @@ void map_tiles_add_entry_exit_flags()
     map_point entry_point = scenario_map_entry();
     if (entry_point.x == 0) {
         entry_orientation = DIR_2_RIGHT;
-    } else if (entry_point.x == Data_State.map.width - 1) {
+    } else if (entry_point.x == map_data.width - 1) {
         entry_orientation = DIR_6_LEFT;
     } else if (entry_point.y == 0) {
         entry_orientation = DIR_0_TOP;
-    } else if (entry_point.y == Data_State.map.height - 1) {
+    } else if (entry_point.y == map_data.height - 1) {
         entry_orientation = DIR_4_BOTTOM;
     } else {
         entry_orientation = -1;
@@ -1103,11 +1103,11 @@ void map_tiles_add_entry_exit_flags()
     map_point exit_point = scenario_map_exit();
     if (exit_point.x == 0) {
         exit_orientation = DIR_2_RIGHT;
-    } else if (exit_point.x == Data_State.map.width - 1) {
+    } else if (exit_point.x == map_data.width - 1) {
         exit_orientation = DIR_6_LEFT;
     } else if (exit_point.y == 0) {
         exit_orientation = DIR_0_TOP;
-    } else if (exit_point.y == Data_State.map.height - 1) {
+    } else if (exit_point.y == map_data.height - 1) {
         exit_orientation = DIR_4_BOTTOM;
     } else {
         exit_orientation = -1;

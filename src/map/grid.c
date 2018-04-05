@@ -1,8 +1,10 @@
 #include "grid.h"
 
+#include "map/data.h"
+
 #include <string.h>
 
-#include "Data/State.h"
+struct map_data_t map_data;
 
 static const int DIRECTION_DELTA[] = {-162, -161, 1, 163, 162, 161, -1, -163};
 
@@ -15,19 +17,27 @@ static const int ADJACENT_OFFSETS[][21] = {
     {-162, -161, -160, -159, -158, 5, 167, 329, 491, 653, 814, 813, 812, 811, 810, 647, 485, 323, 161, -1, 0},
 };
 
+void map_grid_init(int width, int height, int start_offset, int border_size)
+{
+    map_data.width = width;
+    map_data.height = height;
+    map_data.start_offset = start_offset;
+    map_data.border_size = border_size;
+}
+
 int map_grid_offset(int x, int y)
 {
-    return Data_State.map.gridStartOffset + x + y * GRID_SIZE;
+    return map_data.start_offset + x + y * GRID_SIZE;
 }
 
 int map_grid_offset_to_x(int grid_offset)
 {
-    return (grid_offset - Data_State.map.gridStartOffset) % GRID_SIZE;
+    return (grid_offset - map_data.start_offset) % GRID_SIZE;
 }
 
 int map_grid_offset_to_y(int grid_offset)
 {
-    return (grid_offset - Data_State.map.gridStartOffset) / GRID_SIZE;
+    return (grid_offset - map_data.start_offset) / GRID_SIZE;
 }
 
 int map_grid_delta(int x, int y)
@@ -44,6 +54,22 @@ int map_grid_direction_delta(int direction)
     }
 }
 
+void map_grid_size(int *width, int *height)
+{
+    *width = map_data.width;
+    *height = map_data.height;
+}
+
+int map_grid_width()
+{
+    return map_data.width;
+}
+
+int map_grid_height()
+{
+    return map_data.height;
+}
+
 void map_grid_bound(int *x, int *y)
 {
     if (*x < 0) {
@@ -52,11 +78,11 @@ void map_grid_bound(int *x, int *y)
     if (*y < 0) {
         *y = 0;
     }
-    if (*x >= Data_State.map.width) {
-        *x = Data_State.map.width - 1;
+    if (*x >= map_data.width) {
+        *x = map_data.width - 1;
     }
-    if (*y >= Data_State.map.height) {
-        *y = Data_State.map.height - 1;
+    if (*y >= map_data.height) {
+        *y = map_data.height - 1;
     }
 }
 
@@ -68,11 +94,11 @@ void map_grid_bound_area(int *x_min, int *y_min, int *x_max, int *y_max)
     if (*y_min < 0) {
         *y_min = 0;
     }
-    if (*x_max >= Data_State.map.width) {
-        *x_max = Data_State.map.width - 1;
+    if (*x_max >= map_data.width) {
+        *x_max = map_data.width - 1;
     }
-    if (*y_max >= Data_State.map.height) {
-        *y_max = Data_State.map.height - 1;
+    if (*y_max >= map_data.height) {
+        *y_max = map_data.height - 1;
     }
 }
 
@@ -107,7 +133,7 @@ void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, 
 
 int map_grid_is_inside(int x, int y, int size)
 {
-    return x >= 0 && x + size <= Data_State.map.width && y >= 0 && y + size <= Data_State.map.height;
+    return x >= 0 && x + size <= map_data.width && y >= 0 && y + size <= map_data.height;
 }
 
 const int *map_grid_adjacent_offsets(int size)

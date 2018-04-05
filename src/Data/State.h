@@ -26,10 +26,6 @@ extern struct _Data_State {
             int x;
             int y;
         } current;
-        int width;
-        int height;
-        int gridStartOffset;
-        int gridBorderSize;
     } map;
 } Data_State;
 

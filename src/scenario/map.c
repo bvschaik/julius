@@ -1,16 +1,13 @@
 #include "map.h"
 
 #include "core/calc.h"
+#include "map/grid.h"
 #include "scenario/data.h"
-
-#include "Data/State.h"
 
 void scenario_map_init()
 {
-    Data_State.map.width = scenario.map.width;
-    Data_State.map.height = scenario.map.height;
-    Data_State.map.gridStartOffset = scenario.map.grid_start;
-    Data_State.map.gridBorderSize = scenario.map.grid_border_size;
+    map_grid_init(scenario.map.width, scenario.map.height,
+                  scenario.map.grid_start, scenario.map.grid_border_size);
 }
 
 int scenario_map_size()

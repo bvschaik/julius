@@ -7,13 +7,12 @@
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/figure.h"
+#include "map/grid.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
 #include "scenario/property.h"
 #include "widget/sidebar.h"
-
-#include "Data/State.h"
 
 enum {
     FIGURE_COLOR_NONE = 0,
@@ -63,14 +62,14 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
-    if ((Data_State.map.width - width_tiles) / 2 > 0) {
+    if ((map_grid_width() - width_tiles) / 2 > 0) {
         if (camera_x < data.absolute_x) {
             data.absolute_x = camera_x;
         } else if (camera_x > width_tiles + data.absolute_x - view_width_tiles) {
             data.absolute_x = view_width_tiles + camera_x - width_tiles;
         }
     }
-    if ((2 * Data_State.map.height - height_tiles) / 2 > 0) {
+    if ((2 * map_grid_height() - height_tiles) / 2 > 0) {
         if (camera_y < data.absolute_y) {
             data.absolute_y = camera_y;
         } else if (camera_y > height_tiles + data.absolute_y - view_height_tiles) {

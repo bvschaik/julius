@@ -9,8 +9,6 @@
 #include "map/random.h"
 #include "map/terrain.h"
 
-#include "Data/State.h"
-
 #define MAX_DIR 4
 
 static const int HOUSE_TILE_OFFSETS[] = {
@@ -503,8 +501,10 @@ void building_house_check_for_corruption(building *house)
     int calc_grid_offset = map_grid_offset(house->x, house->y);
     house->data.house.noSpaceToExpand = 0;
     if (house->gridOffset != calc_grid_offset || map_building_at(house->gridOffset) != house->id) {
-        for (int y = 0; y < Data_State.map.height; y++) {
-            for (int x = 0; x < Data_State.map.width; x++) {
+        int map_width, map_height;
+        map_grid_size(&map_width, &map_height);
+        for (int y = 0; y < map_height; y++) {
+            for (int x = 0; x < map_width; x++) {
                 int gridOffset = map_grid_offset(x, y);
                 if (map_building_at(gridOffset) == house->id) {
                     house->gridOffset = gridOffset;

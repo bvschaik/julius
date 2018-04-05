@@ -3,12 +3,11 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "core/calc.h"
+#include "map/data.h"
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/ring.h"
 #include "map/terrain.h"
-
-#include "Data/State.h"
 
 static grid_i8 desirability_grid;
 
@@ -20,10 +19,10 @@ void map_desirability_clear()
 static void add_desirability_at_distance(int x, int y, int size, int distance, int desirability)
 {
     int partially_outside_map = 0;
-    if (x - distance < -1 || x + distance + size - 1 > Data_State.map.width) {
+    if (x - distance < -1 || x + distance + size - 1 > map_data.width) {
         partially_outside_map = 1;
     }
-    if (y - distance < -1 || y + distance + size - 1 > Data_State.map.height) {
+    if (y - distance < -1 || y + distance + size - 1 > map_data.height) {
         partially_outside_map = 1;
     }
     int base_offset = map_grid_offset(x, y);
@@ -85,9 +84,9 @@ static void update_buildings()
 
 static void update_terrain()
 {
-    int grid_offset = Data_State.map.gridStartOffset;
-    for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
-        for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
             int terrain = map_terrain_get(grid_offset);
             if (map_property_is_plaza_or_earthquake(grid_offset)) {
                 int type;
