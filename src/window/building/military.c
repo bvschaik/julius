@@ -13,8 +13,6 @@
 #include "sound/speech.h"
 #include "window/city.h"
 
-#include "Data/State.h"
-
 static void button_return_to_fort(int param1, int param2);
 static void button_layout(int index, int param2);
 
@@ -431,6 +429,5 @@ static void button_layout(int index, int param2)
         case 3: sound_speech_play_file("wavs/cohort4.wav"); break;
         case 4: sound_speech_play_file("wavs/cohort5.wav"); break;
     }
-    Data_State.selectedLegionFormationId = data.context_for_callback->formation_id;
-    window_city_military_show();
+    window_city_military_show(data.context_for_callback->formation_id);
 }

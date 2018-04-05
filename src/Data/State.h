@@ -18,7 +18,6 @@ extern struct _Data_State {
 		int reservoirOffsetX;
 		int reservoirOffsetY;
 	} selectedBuilding;
-	int selectedLegionFormationId;
 	int missionBriefingShown;
     struct {
         struct {

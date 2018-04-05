@@ -13,6 +13,8 @@
 #include "widget/sidebar.h"
 #include "widget/top_menu.h"
 
+static int selected_legion_formation_id;
+
 static void draw_background()
 {
     widget_sidebar_draw_background();
@@ -92,7 +94,7 @@ static void handle_mouse(const mouse *m)
 
 static void handle_mouse_military(const mouse *m)
 {
-    widget_city_handle_mouse_military(m);
+    widget_city_handle_mouse_military(m, selected_legion_formation_id);
 }
 
 static void get_tooltip(tooltip_context *c)
@@ -137,8 +139,9 @@ void window_city_show()
     window_show(&window);
 }
 
-void window_city_military_show()
+void window_city_military_show(int legion_formation_id)
 {
+    selected_legion_formation_id = legion_formation_id;
     window_type window = {
         WINDOW_CITY_MILITARY,
         draw_background,

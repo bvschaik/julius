@@ -119,8 +119,7 @@ static int is_legion_click()
     if (Data_State.map.current.gridOffset) {
         int formation_id = formation_legion_at_grid_offset(Data_State.map.current.gridOffset);
         if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
-            Data_State.selectedLegionFormationId = formation_id;
-            window_city_military_show();
+            window_city_military_show(formation_id);
             return 1;
         }
     }
@@ -185,19 +184,18 @@ void widget_city_handle_mouse(const mouse *m)
     }
 }
 
-static void military_map_click()
+static void military_map_click(int legion_formation_id)
 {
     if (!Data_State.map.current.gridOffset) {
         window_city_show();
         return;
     }
-    int formationId = Data_State.selectedLegionFormationId;
-    formation *m = formation_get(formationId);
+    formation *m = formation_get(legion_formation_id);
     if (m->in_distant_battle || m->cursed_by_mars) {
         return;
     }
     int otherFormationId = formation_legion_at_building(Data_State.map.current.gridOffset);
-    if (otherFormationId && otherFormationId == formationId) {
+    if (otherFormationId && otherFormationId == legion_formation_id) {
         formation_legion_return_home(m);
     } else {
         formation_legion_move_to(m, Data_State.map.current.x, Data_State.map.current.y);
@@ -206,7 +204,7 @@ static void military_map_click()
     window_city_show();
 }
 
-void widget_city_handle_mouse_military(const mouse *m)
+void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
 {
     update_city_view_coords(m);
     if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m)) {
@@ -219,7 +217,7 @@ void widget_city_handle_mouse_military(const mouse *m)
     } else {
         update_city_view_coords(m);
         if (m->left.went_down) {
-            military_map_click();
+            military_map_click(legion_formation_id);
         }
     }
 }
