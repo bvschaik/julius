@@ -205,19 +205,10 @@ static void button_menu_index(int param1, int param2)
 
 static void button_menu_item(int item)
 {
-    Data_State.selectedBuilding.wallRequired = 0;
-    Data_State.selectedBuilding.waterRequired = 0;
-    Data_State.selectedBuilding.treesRequired = 0;
-    Data_State.selectedBuilding.rockRequired = 0;
-    Data_State.selectedBuilding.meadowRequired = 0;
-    Data_State.selectedBuilding.roadRequired = 0;
-    Data_State.selectedBuilding.roadLastUpdate = time_get_millis();
-    Data_State.selectedBuilding.gridOffsetStart = 0;
-
     Data_State.map.current.gridOffset = 0;
 
     building_type type = building_menu_type(data.selected_submenu, item);
-    building_construction_reset(type);
+    building_construction_set_type(type);
 
     if (type == BUILDING_MENU_FARMS || type == BUILDING_MENU_RAW_MATERIALS ||
         type == BUILDING_MENU_WORKSHOPS || type == BUILDING_FORT ||
@@ -248,35 +239,6 @@ static void button_menu_item(int item)
         data.y_offset = Y_MENU_OFFSETS[data.num_items];
         building_construction_clear_type();
     } else {
-        switch (type) {
-            case BUILDING_WHEAT_FARM:
-            case BUILDING_VEGETABLE_FARM:
-            case BUILDING_FRUIT_FARM:
-            case BUILDING_OLIVE_FARM:
-            case BUILDING_VINES_FARM:
-            case BUILDING_PIG_FARM:
-                Data_State.selectedBuilding.meadowRequired = 1;
-                break;
-            case BUILDING_MARBLE_QUARRY:
-            case BUILDING_IRON_MINE:
-                Data_State.selectedBuilding.rockRequired = 1;
-                break;
-            case BUILDING_TIMBER_YARD:
-                Data_State.selectedBuilding.treesRequired = 1;
-                break;
-            case BUILDING_CLAY_PIT:
-                Data_State.selectedBuilding.waterRequired = 1;
-                break;
-            case BUILDING_GATEHOUSE:
-            case BUILDING_TRIUMPHAL_ARCH:
-                Data_State.selectedBuilding.roadRequired = 1;
-                break;
-            case BUILDING_TOWER:
-                Data_State.selectedBuilding.wallRequired = 1;
-                break;
-            default:
-                break;
-        }
         window_city_show();
     }
 }

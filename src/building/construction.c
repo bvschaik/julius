@@ -391,7 +391,7 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     return 1;
 }
 
-void building_construction_reset(building_type type)
+void building_construction_set_type(building_type type)
 {
     data.type = type;
     data.in_progress = 0;
@@ -399,6 +399,47 @@ void building_construction_reset(building_type type)
     data.y_start = 0;
     data.x_end = 0;
     data.y_end = 0;
+
+    if (type != BUILDING_NONE) {
+        Data_State.selectedBuilding.wallRequired = 0;
+        Data_State.selectedBuilding.waterRequired = 0;
+        Data_State.selectedBuilding.treesRequired = 0;
+        Data_State.selectedBuilding.rockRequired = 0;
+        Data_State.selectedBuilding.meadowRequired = 0;
+        Data_State.selectedBuilding.roadRequired = 0;
+        Data_State.selectedBuilding.roadLastUpdate = time_get_millis();
+        Data_State.selectedBuilding.gridOffsetStart = 0;
+
+        switch (type) {
+            case BUILDING_WHEAT_FARM:
+            case BUILDING_VEGETABLE_FARM:
+            case BUILDING_FRUIT_FARM:
+            case BUILDING_OLIVE_FARM:
+            case BUILDING_VINES_FARM:
+            case BUILDING_PIG_FARM:
+                Data_State.selectedBuilding.meadowRequired = 1;
+                break;
+            case BUILDING_MARBLE_QUARRY:
+            case BUILDING_IRON_MINE:
+                Data_State.selectedBuilding.rockRequired = 1;
+                break;
+            case BUILDING_TIMBER_YARD:
+                Data_State.selectedBuilding.treesRequired = 1;
+                break;
+            case BUILDING_CLAY_PIT:
+                Data_State.selectedBuilding.waterRequired = 1;
+                break;
+            case BUILDING_GATEHOUSE:
+            case BUILDING_TRIUMPHAL_ARCH:
+                Data_State.selectedBuilding.roadRequired = 1;
+                break;
+            case BUILDING_TOWER:
+                Data_State.selectedBuilding.wallRequired = 1;
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 void building_construction_clear_type()
@@ -523,16 +564,12 @@ void building_construction_update(int x, int y)
         if (!map_water_determine_orientation_size3(x, y, 1, 0, 0)) {
             Data_State.selectedBuilding.drawAsConstructing = 1;
         }
-    } else if (Data_State.selectedBuilding.meadowRequired) {
-        map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW);
-    } else if (Data_State.selectedBuilding.rockRequired) {
-        map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK);
-    } else if (Data_State.selectedBuilding.treesRequired) {
-        map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_TREE | TERRAIN_SCRUB);
-    } else if (Data_State.selectedBuilding.waterRequired) {
-        map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER);
-    } else if (Data_State.selectedBuilding.wallRequired) {
-        map_terrain_all_tiles_in_radius_are(x, y, 2, 0, TERRAIN_WALL);
+    } else if (Data_State.selectedBuilding.meadowRequired ||
+            Data_State.selectedBuilding.rockRequired ||
+            Data_State.selectedBuilding.treesRequired ||
+            Data_State.selectedBuilding.waterRequired ||
+            Data_State.selectedBuilding.wallRequired) {
+        // never mark as constructing
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
             !(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
@@ -687,4 +724,42 @@ void building_construction_place()
     if (type != BUILDING_TRIUMPHAL_ARCH) {
         game_undo_finish_build(placement_cost);
     }
+}
+
+static void set_warning(int *warning_id, int warning)
+{
+    if (warning_id) {
+        *warning_id = warning;
+    }
+}
+
+int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
+{
+    if (Data_State.selectedBuilding.meadowRequired) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW)) {
+            set_warning(warning_id, WARNING_MEADOW_NEEDED);
+            return 0;
+        }
+    } else if (Data_State.selectedBuilding.rockRequired) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK)) {
+            set_warning(warning_id, WARNING_ROCK_NEEDED);
+            return 0;
+        }
+    } else if (Data_State.selectedBuilding.treesRequired) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_SCRUB | TERRAIN_TREE)) {
+            set_warning(warning_id, WARNING_TREE_NEEDED);
+            return 0;
+        }
+    } else if (Data_State.selectedBuilding.waterRequired) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER)) {
+            set_warning(warning_id, WARNING_WATER_NEEDED);
+            return 0;
+        }
+    } else if (Data_State.selectedBuilding.wallRequired) {
+        if (!map_terrain_all_tiles_in_radius_are(x, y, 2, 0, TERRAIN_WALL)) {
+            set_warning(warning_id, WARNING_WALL_NEEDED);
+            return 0;
+        }
+    }
+    return 1;
 }

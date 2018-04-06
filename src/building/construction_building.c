@@ -567,31 +567,10 @@ int building_construction_place_building(building_type type, int x, int y)
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }
-        if (Data_State.selectedBuilding.meadowRequired) {
-            if (!map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW)) {
-                city_warning_show(WARNING_MEADOW_NEEDED);
-                return 0;
-            }
-        } else if (Data_State.selectedBuilding.rockRequired) {
-            if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK)) {
-                city_warning_show(WARNING_ROCK_NEEDED);
-                return 0;
-            }
-        } else if (Data_State.selectedBuilding.treesRequired) {
-            if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_SCRUB | TERRAIN_TREE)) {
-                city_warning_show(WARNING_TREE_NEEDED);
-                return 0;
-            }
-        } else if (Data_State.selectedBuilding.waterRequired) {
-            if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER)) {
-                city_warning_show(WARNING_WATER_NEEDED);
-                return 0;
-            }
-        } else if (Data_State.selectedBuilding.wallRequired) {
-            if (!map_terrain_all_tiles_in_radius_are(x, y, 2, 0, TERRAIN_WALL)) {
-                city_warning_show(WARNING_WALL_NEEDED);
-                return 0;
-            }
+        int warning_id;
+        if (!building_construction_can_place_on_terrain(x, y, &warning_id)) {
+            city_warning_show(warning_id);
+            return 0;
         }
     }
     if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {

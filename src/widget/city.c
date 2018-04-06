@@ -101,7 +101,7 @@ static int handle_right_click_allow_building_info()
     if (building_construction_type()) {
         allow = 0;
     }
-    building_construction_reset(BUILDING_NONE);
+    building_construction_set_type(BUILDING_NONE);
     window_city_show();
 
     if (!Data_State.map.current.gridOffset) {

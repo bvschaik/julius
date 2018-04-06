@@ -217,26 +217,8 @@ static int is_fully_blocked(building_type type, int building_size, int grid_offs
     int x = 0, y = 0;
     get_building_base_xy(building_size, &x, &y);
 
-    if (Data_State.selectedBuilding.meadowRequired) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW)) {
-            return 1;
-        }
-    } else if (Data_State.selectedBuilding.rockRequired) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK)) {
-            return 1;
-        }
-    } else if (Data_State.selectedBuilding.treesRequired) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_TREE | TERRAIN_SCRUB)) {
-            return 1;
-        }
-    } else if (Data_State.selectedBuilding.waterRequired) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER)) {
-            return 1;
-        }
-    } else if (Data_State.selectedBuilding.wallRequired) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 0, TERRAIN_WALL)) {
-            return 1;
-        }
+    if (!building_construction_can_place_on_terrain(x, y, 0)) {
+        return 1;
     }
     if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
         return 1;
