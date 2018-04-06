@@ -53,6 +53,13 @@ static struct {
     int x_end;
     int y_end;
     int cost;
+    struct {
+        int meadow;
+        int rock;
+        int tree;
+        int water;
+        int wall;
+    } required_terrain;
 } data;
 
 static int last_items_cleared;
@@ -401,11 +408,11 @@ void building_construction_set_type(building_type type)
     data.y_end = 0;
 
     if (type != BUILDING_NONE) {
-        Data_State.selectedBuilding.wallRequired = 0;
-        Data_State.selectedBuilding.waterRequired = 0;
-        Data_State.selectedBuilding.treesRequired = 0;
-        Data_State.selectedBuilding.rockRequired = 0;
-        Data_State.selectedBuilding.meadowRequired = 0;
+        data.required_terrain.wall = 0;
+        data.required_terrain.water = 0;
+        data.required_terrain.tree = 0;
+        data.required_terrain.rock = 0;
+        data.required_terrain.meadow = 0;
         Data_State.selectedBuilding.roadRequired = 0;
         Data_State.selectedBuilding.roadLastUpdate = time_get_millis();
         Data_State.selectedBuilding.gridOffsetStart = 0;
@@ -417,24 +424,24 @@ void building_construction_set_type(building_type type)
             case BUILDING_OLIVE_FARM:
             case BUILDING_VINES_FARM:
             case BUILDING_PIG_FARM:
-                Data_State.selectedBuilding.meadowRequired = 1;
+                data.required_terrain.meadow = 1;
                 break;
             case BUILDING_MARBLE_QUARRY:
             case BUILDING_IRON_MINE:
-                Data_State.selectedBuilding.rockRequired = 1;
+                data.required_terrain.rock = 1;
                 break;
             case BUILDING_TIMBER_YARD:
-                Data_State.selectedBuilding.treesRequired = 1;
+                data.required_terrain.tree = 1;
                 break;
             case BUILDING_CLAY_PIT:
-                Data_State.selectedBuilding.waterRequired = 1;
+                data.required_terrain.water = 1;
                 break;
             case BUILDING_GATEHOUSE:
             case BUILDING_TRIUMPHAL_ARCH:
                 Data_State.selectedBuilding.roadRequired = 1;
                 break;
             case BUILDING_TOWER:
-                Data_State.selectedBuilding.wallRequired = 1;
+                data.required_terrain.wall = 1;
                 break;
             default:
                 break;
@@ -564,11 +571,8 @@ void building_construction_update(int x, int y)
         if (!map_water_determine_orientation_size3(x, y, 1, 0, 0)) {
             Data_State.selectedBuilding.drawAsConstructing = 1;
         }
-    } else if (Data_State.selectedBuilding.meadowRequired ||
-            Data_State.selectedBuilding.rockRequired ||
-            Data_State.selectedBuilding.treesRequired ||
-            Data_State.selectedBuilding.waterRequired ||
-            Data_State.selectedBuilding.wallRequired) {
+    } else if (data.required_terrain.meadow || data.required_terrain.rock || data.required_terrain.tree ||
+            data.required_terrain.water || data.required_terrain.wall) {
         // never mark as constructing
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
@@ -735,27 +739,27 @@ static void set_warning(int *warning_id, int warning)
 
 int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
 {
-    if (Data_State.selectedBuilding.meadowRequired) {
+    if (data.required_terrain.meadow) {
         if (!map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW)) {
             set_warning(warning_id, WARNING_MEADOW_NEEDED);
             return 0;
         }
-    } else if (Data_State.selectedBuilding.rockRequired) {
+    } else if (data.required_terrain.rock) {
         if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK)) {
             set_warning(warning_id, WARNING_ROCK_NEEDED);
             return 0;
         }
-    } else if (Data_State.selectedBuilding.treesRequired) {
+    } else if (data.required_terrain.tree) {
         if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_SCRUB | TERRAIN_TREE)) {
             set_warning(warning_id, WARNING_TREE_NEEDED);
             return 0;
         }
-    } else if (Data_State.selectedBuilding.waterRequired) {
+    } else if (data.required_terrain.water) {
         if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER)) {
             set_warning(warning_id, WARNING_WATER_NEEDED);
             return 0;
         }
-    } else if (Data_State.selectedBuilding.wallRequired) {
+    } else if (data.required_terrain.wall) {
         if (!map_terrain_all_tiles_in_radius_are(x, y, 2, 0, TERRAIN_WALL)) {
             set_warning(warning_id, WARNING_WALL_NEEDED);
             return 0;

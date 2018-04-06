@@ -7,11 +7,6 @@ extern struct _Data_State {
 	struct {
 		int gridOffsetStart;
 		int gridOffsetEnd;
-		int wallRequired;
-		int waterRequired;
-		int treesRequired;
-		int rockRequired;
-		int meadowRequired;
 		int roadRequired;
 		time_millis roadLastUpdate;
 		int drawAsConstructing;
