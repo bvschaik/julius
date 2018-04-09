@@ -11,8 +11,6 @@ extern struct _Data_State {
 		int roadRequired;
 		time_millis roadLastUpdate;
 		int drawAsConstructing;
-		int reservoirOffsetX;
-		int reservoirOffsetY;
 	} selectedBuilding;
 	int missionBriefingShown;
 } Data_State;

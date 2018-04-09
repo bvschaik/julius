@@ -72,6 +72,19 @@ static const int FORT_GROUND_Y_VIEW_OFFSETS[4] = {30, -75, -60, 45};
 static const int HIPPODROME_X_VIEW_OFFSETS[4] = {150, 150, -150, -150};
 static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
 
+static struct {
+    int start_offset_x_view;
+    int start_offset_y_view;
+} data;
+
+void city_building_ghost_record_view_position(int view_x, int view_y, int grid_offset)
+{
+    if (grid_offset == Data_State.selectedBuilding.gridOffsetStart) {
+        data.start_offset_x_view = view_x;
+        data.start_offset_y_view = view_y;
+    }
+}
+
 static void draw_flat_tile(int x, int y, color_t color_mask)
 {
     image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, color_mask);
@@ -298,8 +311,8 @@ static void draw_draggable_reservoir(const map_location *map, int x, int y)
         blocked = 1;
     }
     if (building_construction_in_progress()) {
-        int x_start = Data_State.selectedBuilding.reservoirOffsetX;
-        int y_start = Data_State.selectedBuilding.reservoirOffsetY - 30;
+        int x_start = data.start_offset_x_view;
+        int y_start = data.start_offset_y_view - 30;
         if (blocked) {
             for (int i = 0; i < 9; i++) {
                 draw_flat_tile(x_start + X_VIEW_OFFSETS[i], y_start + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);

@@ -6,6 +6,7 @@
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/view.h"
+#include "core/time.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "map/building.h"
@@ -19,7 +20,6 @@
 #include "widget/city_building_ghost.h"
 #include "widget/city_figure.h"
 
-#include "Data/State.h"
 #include "Data/CityInfo.h"
 
 static struct {
@@ -50,10 +50,7 @@ static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_c
 
 static void draw_footprint(int x, int y, int grid_offset)
 {
-    if (grid_offset == Data_State.selectedBuilding.gridOffsetStart) {
-        Data_State.selectedBuilding.reservoirOffsetX = x;
-        Data_State.selectedBuilding.reservoirOffsetY = y;
-    }
+    city_building_ghost_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         // Outside map: draw black tile
         image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_BLACK), x, y, 0);

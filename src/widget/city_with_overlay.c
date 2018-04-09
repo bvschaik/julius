@@ -25,8 +25,6 @@
 #include "widget/city_overlay_risks.h"
 #include "widget/city_without_overlay.h"
 
-#include "Data/State.h"
-
 static const city_overlay *overlay = 0;
 
 static const city_overlay *get_city_overlay()
@@ -240,10 +238,7 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
 
 static void draw_footprint(int x, int y, int grid_offset)
 {
-    if (grid_offset == Data_State.selectedBuilding.gridOffsetStart) {
-        Data_State.selectedBuilding.reservoirOffsetX = x;
-        Data_State.selectedBuilding.reservoirOffsetY = y;
-    }
+    city_building_ghost_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         // Outside map: draw black tile
         image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_BLACK), x, y, 0);
