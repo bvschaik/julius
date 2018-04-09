@@ -248,7 +248,7 @@ static void draw_default(int map_x, int map_y, int xOffsetBase, int yOffsetBase,
     int building_size = type == BUILDING_WAREHOUSE ? 3 : props->size;
 
     // check if we can place building
-    int grid_offset = Data_State.map.current.gridOffset;
+    int grid_offset = Data_State.map.current.grid_offset;
     int fully_blocked = is_fully_blocked(map_x, map_y, type, building_size, grid_offset);
     int blocked = fully_blocked;
 
@@ -328,7 +328,7 @@ static void draw_draggable_reservoir(int map_x, int map_y, int x, int y)
 
 static void draw_aqueduct(int x, int y)
 {
-    int grid_offset = Data_State.map.current.gridOffset;
+    int grid_offset = Data_State.map.current.grid_offset;
     int blocked = 0;
     if (building_construction_in_progress()) {
         if (!building_construction_cost()) {
@@ -375,7 +375,7 @@ static void draw_fountain(int x, int y)
     if (city_finance_out_of_money()) {
         draw_flat_tile(x, y, COLOR_MASK_RED);
     } else {
-        int grid_offset = Data_State.map.current.gridOffset;
+        int grid_offset = Data_State.map.current.grid_offset;
         int image_id = image_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
         draw_building(image_id, x, y);
         if (map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE)) {
@@ -387,7 +387,7 @@ static void draw_fountain(int x, int y)
 
 static void draw_bathhouse(int x, int y)
 {
-    int grid_offset = Data_State.map.current.gridOffset;
+    int grid_offset = Data_State.map.current.grid_offset;
     int num_tiles = 4;
     int blocked_tiles[4];
     int blocked = is_blocked_for_building(grid_offset, num_tiles, blocked_tiles);
@@ -491,7 +491,7 @@ static void draw_fort(int x, int y)
     num_tiles_ground *= num_tiles_ground;
 
     int orientation_index = city_view_orientation() / 2;
-    int grid_offset_fort = Data_State.map.current.gridOffset;
+    int grid_offset_fort = Data_State.map.current.grid_offset;
     int grid_offset_ground = grid_offset_fort + FORT_GROUND_GRID_OFFSETS[orientation_index];
     int blocked_tiles_fort[MAX_TILES];
     int blocked_tiles_ground[MAX_TILES];
@@ -529,7 +529,7 @@ static void draw_hippodrome(int x, int y)
     }
     int num_tiles = 25;
     int orientation_index = city_view_orientation() / 2;
-    int grid_offset1 = Data_State.map.current.gridOffset;
+    int grid_offset1 = Data_State.map.current.grid_offset;
     int grid_offset2 = grid_offset1 + map_grid_delta(5, 0);
     int grid_offset3 = grid_offset1 + map_grid_delta(10, 0);
     
@@ -622,7 +622,7 @@ static void draw_dock(int map_x, int map_y, int x, int y)
 
 static void draw_road(int x, int y)
 {
-    int grid_offset = Data_State.map.current.gridOffset;
+    int grid_offset = Data_State.map.current.grid_offset;
     int blocked = 0;
     int image_id = 0;
     if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
@@ -653,7 +653,7 @@ static void draw_road(int x, int y)
 
 void city_building_ghost_draw()
 {
-    if (!Data_State.map.current.gridOffset || scroll_in_progress()) {
+    if (!Data_State.map.current.grid_offset || scroll_in_progress()) {
         return;
     }
     building_type type = building_construction_type();

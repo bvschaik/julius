@@ -2,6 +2,7 @@
 #define DATA_STATE_H
 
 #include "core/time.h"
+#include "map/point.h"
 
 extern struct _Data_State {
 	struct {
@@ -15,11 +16,7 @@ extern struct _Data_State {
 	} selectedBuilding;
 	int missionBriefingShown;
     struct {
-        struct {
-            int gridOffset;
-            int x;
-            int y;
-        } current;
+        map_location current;
     } map;
 } Data_State;
 

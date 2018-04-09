@@ -205,7 +205,7 @@ static void button_menu_index(int param1, int param2)
 
 static void button_menu_item(int item)
 {
-    Data_State.map.current.gridOffset = 0;
+    Data_State.map.current.grid_offset = 0;
 
     building_type type = building_menu_type(data.selected_submenu, item);
     building_construction_set_type(type);

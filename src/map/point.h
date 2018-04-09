@@ -6,4 +6,10 @@ typedef struct {
     int y;
 } map_point;
 
+typedef struct {
+    int x;
+    int y;
+    int grid_offset;
+} map_location;
+
 #endif // MAP_POINT_H
