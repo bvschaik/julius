@@ -15,9 +15,6 @@ extern struct _Data_State {
 		int reservoirOffsetY;
 	} selectedBuilding;
 	int missionBriefingShown;
-    struct {
-        map_location current;
-    } map;
 } Data_State;
 
 #endif

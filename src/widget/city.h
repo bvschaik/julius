@@ -19,4 +19,6 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id);
 
 void widget_city_get_tooltip(tooltip_context *c);
 
+void widget_city_clear_current_tile();
+
 #endif // WIDGET_CITY_H

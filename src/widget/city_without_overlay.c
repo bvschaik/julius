@@ -419,7 +419,7 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
     }
 }
 
-void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord)
+void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_location *map_tile)
 {
     init_draw_context(selected_figure_id, figure_coord);
     city_view_foreach_map_tile(draw_footprint);
@@ -429,7 +429,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         draw_animation
     );
     if (!selected_figure_id) {
-        city_building_ghost_draw(&Data_State.map.current);
+        city_building_ghost_draw(map_tile);
     }
     city_view_foreach_valid_map_tile(
         draw_elevated_figures,

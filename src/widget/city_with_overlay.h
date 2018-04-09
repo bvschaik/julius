@@ -2,8 +2,9 @@
 #define WIDGET_CITY_WITH_OVERLAY_H
 
 #include "graphics/tooltip.h"
+#include "map/point.h"
 
-void city_with_overlay_draw();
+void city_with_overlay_draw(const map_location *map_tile);
 
 int city_with_overlay_get_tooltip_text(tooltip_context *c, int grid_offset);
 

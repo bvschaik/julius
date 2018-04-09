@@ -11,10 +11,9 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
+#include "widget/city.h"
 #include "widget/sidebar.h"
 #include "window/city.h"
-
-#include "Data/State.h"
 
 static void button_menu_index(int param1, int param2);
 static void button_menu_item(int item);
@@ -205,7 +204,7 @@ static void button_menu_index(int param1, int param2)
 
 static void button_menu_item(int item)
 {
-    Data_State.map.current.grid_offset = 0;
+    widget_city_clear_current_tile();
 
     building_type type = building_menu_type(data.selected_submenu, item);
     building_construction_set_type(type);

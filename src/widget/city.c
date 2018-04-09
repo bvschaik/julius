@@ -24,6 +24,10 @@
 
 #include "Data/State.h"
 
+static struct {
+    map_location current_tile;
+} data;
+
 static void set_city_clip_rectangle()
 {
     int x, y, width, height;
@@ -36,9 +40,9 @@ void widget_city_draw()
     set_city_clip_rectangle();
 
     if (game_state_overlay()) {
-        city_with_overlay_draw();
+        city_with_overlay_draw(&data.current_tile);
     } else {
-        city_without_overlay_draw(0, 0);
+        city_without_overlay_draw(0, 0, &data.current_tile);
     }
 
     graphics_reset_clip_rectangle();
@@ -48,7 +52,7 @@ void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord)
 {
     set_city_clip_rectangle();
 
-    city_without_overlay_draw(figure_id, coord);
+    city_without_overlay_draw(figure_id, coord, &data.current_tile);
 
     graphics_reset_clip_rectangle();
 }
@@ -81,18 +85,18 @@ void widget_city_draw_construction_cost()
 
 // MOUSE HANDLING
 
-static void update_city_view_coords(const mouse *m)
+static void update_city_view_coords(const mouse *m, map_location *map)
 {
-    int grid_offset = Data_State.map.current.grid_offset = city_view_pixels_to_grid_offset(m->x, m->y);
-    if (grid_offset) {
-        Data_State.map.current.x = map_grid_offset_to_x(grid_offset);
-        Data_State.map.current.y = map_grid_offset_to_y(grid_offset);
+    map->grid_offset = city_view_pixels_to_grid_offset(m->x, m->y);
+    if (map->grid_offset) {
+        map->x = map_grid_offset_to_x(map->grid_offset);
+        map->y = map_grid_offset_to_y(map->grid_offset);
     } else {
-        Data_State.map.current.x = Data_State.map.current.y = 0;
+        map->x = map->y = 0;
     }
 }
 
-static int handle_right_click_allow_building_info()
+static int handle_right_click_allow_building_info(const map_location *map)
 {
     int allow = 1;
     if (!window_is(WINDOW_CITY)) {
@@ -104,7 +108,7 @@ static int handle_right_click_allow_building_info()
     building_construction_set_type(BUILDING_NONE);
     window_city_show();
 
-    if (!Data_State.map.current.grid_offset) {
+    if (!map->grid_offset) {
         allow = 0;
     }
     if (allow && city_has_warnings()) {
@@ -114,10 +118,10 @@ static int handle_right_click_allow_building_info()
     return allow;
 }
 
-static int is_legion_click()
+static int is_legion_click(const map_location *map)
 {
-    if (Data_State.map.current.grid_offset) {
-        int formation_id = formation_legion_at_grid_offset(Data_State.map.current.grid_offset);
+    if (map->grid_offset) {
+        int formation_id = formation_legion_at_grid_offset(map->grid_offset);
         if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
             window_city_military_show(formation_id);
             return 1;
@@ -126,28 +130,28 @@ static int is_legion_click()
     return 0;
 }
 
-static void build_start()
+static void build_start(const map_location *map)
 {
-    if (Data_State.map.current.grid_offset /*&& !Data_State.gamePaused*/) { // TODO FIXME
-        Data_State.selectedBuilding.gridOffsetStart = Data_State.map.current.grid_offset;
-        building_construction_start(Data_State.map.current.x, Data_State.map.current.y);
+    if (map->grid_offset /*&& !Data_State.gamePaused*/) { // TODO FIXME
+        Data_State.selectedBuilding.gridOffsetStart = map->grid_offset;
+        building_construction_start(map->x, map->y);
     }
 }
 
-static void build_move()
+static void build_move(const map_location *map)
 {
-    if (!building_construction_in_progress() || !Data_State.map.current.grid_offset) {
+    if (!building_construction_in_progress() || !map->grid_offset) {
         return;
     }
-    Data_State.selectedBuilding.gridOffsetEnd = Data_State.map.current.grid_offset;
-    building_construction_update(Data_State.map.current.x, Data_State.map.current.y);
+    Data_State.selectedBuilding.gridOffsetEnd = map->grid_offset;
+    building_construction_update(map->x, map->y);
 }
 
-static void build_end()
+static void build_end(map_location *map)
 {
     if (building_construction_in_progress()) {
-        if (!Data_State.map.current.grid_offset) {
-            Data_State.map.current.grid_offset = Data_State.selectedBuilding.gridOffsetEnd;
+        if (!map->grid_offset) {
+            map->grid_offset = Data_State.selectedBuilding.gridOffsetEnd;
         }
         if (building_construction_type() != BUILDING_NONE) {
             sound_effect_play(SOUND_EFFECT_BUILD);
@@ -165,28 +169,29 @@ static void scroll_map(int direction)
 
 void widget_city_handle_mouse(const mouse *m)
 {
+    map_location *map = &data.current_tile;
     scroll_map(scroll_get_direction(m));
-    update_city_view_coords(m);
+    update_city_view_coords(m, map);
     Data_State.selectedBuilding.drawAsConstructing = 0;
     if (m->left.went_down) {
-        if (!is_legion_click()) {
-            build_start();
-            build_move();
+        if (!is_legion_click(map)) {
+            build_start(map);
+            build_move(map);
         }
     } else if (m->left.is_down) {
-        build_move();
+        build_move(map);
     } else if (m->left.went_up) {
-        build_end();
+        build_end(map);
     } else if (m->right.went_up) {
-        if (handle_right_click_allow_building_info()) {
-            window_building_info_show(Data_State.map.current.grid_offset);
+        if (handle_right_click_allow_building_info(map)) {
+            window_building_info_show(map->grid_offset);
         }
     }
 }
 
-static void military_map_click(int legion_formation_id)
+static void military_map_click(int legion_formation_id, const map_location *map)
 {
-    if (!Data_State.map.current.grid_offset) {
+    if (!map->grid_offset) {
         window_city_show();
         return;
     }
@@ -194,11 +199,11 @@ static void military_map_click(int legion_formation_id)
     if (m->in_distant_battle || m->cursed_by_mars) {
         return;
     }
-    int otherFormationId = formation_legion_at_building(Data_State.map.current.grid_offset);
-    if (otherFormationId && otherFormationId == legion_formation_id) {
+    int other_formation_id = formation_legion_at_building(map->grid_offset);
+    if (other_formation_id && other_formation_id == legion_formation_id) {
         formation_legion_return_home(m);
     } else {
-        formation_legion_move_to(m, Data_State.map.current.x, Data_State.map.current.y);
+        formation_legion_move_to(m, map->x, map->y);
         sound_speech_play_file("wavs/cohort5.wav");
     }
     window_city_show();
@@ -206,7 +211,8 @@ static void military_map_click(int legion_formation_id)
 
 void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
 {
-    update_city_view_coords(m);
+    map_location *map = &data.current_tile;
+    update_city_view_coords(m, map);
     if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m)) {
         return;
     }
@@ -215,9 +221,9 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
         city_warning_clear_all();
         window_city_show();
     } else {
-        update_city_view_coords(m);
+        update_city_view_coords(m, map);
         if (m->left.went_down) {
-            military_map_click(legion_formation_id);
+            military_map_click(legion_formation_id, map);
         }
     }
 }
@@ -230,10 +236,10 @@ void widget_city_get_tooltip(tooltip_context *c)
     if (!window_is(WINDOW_CITY)) {
         return;
     }
-    if (Data_State.map.current.grid_offset == 0) {
+    if (data.current_tile.grid_offset == 0) {
         return;
     }
-    int gridOffset = Data_State.map.current.grid_offset;
+    int gridOffset = data.current_tile.grid_offset;
     int buildingId = map_building_at(gridOffset);
     int overlay = game_state_overlay();
     // regular tooltips
@@ -251,4 +257,9 @@ void widget_city_get_tooltip(tooltip_context *c)
             c->high_priority = 1;
         }
     }
+}
+
+void widget_city_clear_current_tile()
+{
+    data.current_tile.grid_offset = 0;
 }
