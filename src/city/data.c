@@ -27,7 +27,7 @@ void city_data_init()
     Data_CityInfo.tradeNextImportResourceCaravan = 1;
     Data_CityInfo.tradeNextImportResourceCaravanBackup = 1;
     city_data.population.monthly.next_index = 0;
-    Data_CityInfo.monthsSinceStart = 0;
+    city_data.population.monthly.count = 0;
     Data_CityInfo.monthsSinceFestival = 1;
     Data_CityInfo.festivalSize = FESTIVAL_SMALL;
     city_data.emperor.gifts[GIFT_MODEST].cost = 0;
@@ -79,7 +79,7 @@ static void save_main_data(buffer *main)
         buffer_write_i32(main, city_data.population.monthly.values[i]);
     }
     buffer_write_i32(main, city_data.population.monthly.next_index);
-    buffer_write_i32(main, Data_CityInfo.monthsSinceStart);
+    buffer_write_i32(main, city_data.population.monthly.count);
     for (int i = 0; i < 100; i++) {
         buffer_write_i16(main, Data_CityInfo.populationPerAge[i]);
     }
@@ -556,7 +556,7 @@ static void load_main_data(buffer *main)
         city_data.population.monthly.values[i] = buffer_read_i32(main);
     }
     city_data.population.monthly.next_index = buffer_read_i32(main);
-    Data_CityInfo.monthsSinceStart = buffer_read_i32(main);
+    city_data.population.monthly.count = buffer_read_i32(main);
     for (int i = 0; i < 100; i++) {
         Data_CityInfo.populationPerAge[i] = buffer_read_i16(main);
     }

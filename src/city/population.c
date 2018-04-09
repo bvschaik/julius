@@ -199,14 +199,19 @@ void city_population_record_monthly()
     if (city_data.population.monthly.next_index >= 2400) {
         city_data.population.monthly.next_index = 0;
     }
-    ++Data_CityInfo.monthsSinceStart;
+    ++city_data.population.monthly.count;
+}
+
+int city_population_monthly_count()
+{
+    return city_data.population.monthly.count;
 }
 
 int city_population_at_month(int max_months, int month)
 {
     int start_offset = 0;
-    if (Data_CityInfo.monthsSinceStart > max_months) {
-        start_offset = Data_CityInfo.monthsSinceStart + 2400 - max_months;
+    if (city_data.population.monthly.count > max_months) {
+        start_offset = city_data.population.monthly.count + 2400 - max_months;
     }
     int index = (start_offset + month) % 2400;
     return city_data.population.monthly.values[index];

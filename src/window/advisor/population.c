@@ -61,7 +61,7 @@ static void get_y_axis(int max_value, int *y_max, int *y_shift)
 
 static void get_min_max_month_year(int max_months, int *start_month, int *start_year, int *end_month, int *end_year)
 {
-    if (Data_CityInfo.monthsSinceStart > max_months) {
+    if (city_population_monthly_count() > max_months) {
         *end_month = game_time_month() - 1;
         *end_year = game_time_year();
         if (*end_month < 0) {
@@ -80,13 +80,14 @@ static void get_min_max_month_year(int max_months, int *start_month, int *start_
 static void draw_history_graph(int full_size, int x, int y)
 {
     int max_months;
-    if (Data_CityInfo.monthsSinceStart <= 20) {
+    int month_count = city_population_monthly_count();
+    if (month_count <= 20) {
         max_months = 20;
-    } else if (Data_CityInfo.monthsSinceStart <= 40) {
+    } else if (month_count <= 40) {
         max_months = 40;
-    } else if (Data_CityInfo.monthsSinceStart <= 100) {
+    } else if (month_count <= 100) {
         max_months = 100;
-    } else if (Data_CityInfo.monthsSinceStart <= 200) {
+    } else if (month_count <= 200) {
         max_months = 200;
     } else {
         max_months = 400;

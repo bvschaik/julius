@@ -11,7 +11,6 @@ extern struct _Data_CityInfo {
 	int32_t numHospitalWorkers;
 	int32_t populationMaxSupported;
 	int32_t populationRoomInHouses;
-	int32_t monthsSinceStart;
 	int16_t populationPerAge[100];//2664
 	int32_t populationPerLevel[20];//272c
 	int32_t populationImmigrationAmountPerBatch;

@@ -73,6 +73,7 @@ extern struct city_data_t {
         struct {
             int32_t values[2400];
             int32_t next_index;
+            int32_t count;
         } monthly;
 
         int32_t yearly_update_requested;

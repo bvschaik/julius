@@ -149,11 +149,11 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
     }
 }
 
-static int get_building_image_id(building_type type, const building_properties *props)
+static int get_building_image_id(int map_x, int map_y, building_type type, const building_properties *props)
 {
     int image_id = image_group(props->image_group) + props->image_offset;
     if (type == BUILDING_GATEHOUSE) {
-        int orientation = map_orientation_for_gatehouse(Data_State.map.current.x, Data_State.map.current.y);
+        int orientation = map_orientation_for_gatehouse(map_x, map_y);
         int image_offset;
         if (orientation == 2) {
             image_offset = 1;
@@ -168,8 +168,7 @@ static int get_building_image_id(building_type type, const building_properties *
         }
         image_id += image_offset;
     } else if (type == BUILDING_TRIUMPHAL_ARCH) {
-        int orientation = map_orientation_for_triumphal_arch(
-            Data_State.map.current.x, Data_State.map.current.y);
+        int orientation = map_orientation_for_triumphal_arch(map_x, map_y);
         int image_offset;
         if (orientation == 2) {
             image_offset = 2;
@@ -187,35 +186,35 @@ static int get_building_image_id(building_type type, const building_properties *
     return image_id;
 }
 
-static void get_building_base_xy(int building_size, int *x, int *y)
+static void get_building_base_xy(int map_x, int map_y, int building_size, int *x, int *y)
 {
     switch (city_view_orientation()) {
         case DIR_0_TOP:
-            *x = Data_State.map.current.x;
-            *y = Data_State.map.current.y;
+            *x = map_x;
+            *y = map_y;
             break;
         case DIR_2_RIGHT:
-            *x = Data_State.map.current.x - building_size + 1;
-            *y = Data_State.map.current.y;
+            *x = map_x - building_size + 1;
+            *y = map_y;
             break;
         case DIR_4_BOTTOM:
-            *x = Data_State.map.current.x - building_size + 1;
-            *y = Data_State.map.current.y - building_size + 1;
+            *x = map_x - building_size + 1;
+            *y = map_y - building_size + 1;
             break;
         case DIR_6_LEFT:
-            *x = Data_State.map.current.x;
-            *y = Data_State.map.current.y - building_size + 1;
+            *x = map_x;
+            *y = map_y - building_size + 1;
             break;
         default:
             *x = *y = 0;
     }
 }
 
-static int is_fully_blocked(building_type type, int building_size, int grid_offset)
+static int is_fully_blocked(int map_x, int map_y, building_type type, int building_size, int grid_offset)
 {
     // determine x and y offset
     int x = 0, y = 0;
-    get_building_base_xy(building_size, &x, &y);
+    get_building_base_xy(map_x, map_y, building_size, &x, &y);
 
     if (!building_construction_can_place_on_terrain(x, y, 0)) {
         return 1;
@@ -235,7 +234,7 @@ static int is_fully_blocked(building_type type, int building_size, int grid_offs
     return 0;
 }
 
-static void draw_default(int xOffsetBase, int yOffsetBase, building_type type)
+static void draw_default(int map_x, int map_y, int xOffsetBase, int yOffsetBase, building_type type)
 {
     // update road required based on timer
     if (Data_State.selectedBuilding.roadRequired > 0) {
@@ -250,7 +249,7 @@ static void draw_default(int xOffsetBase, int yOffsetBase, building_type type)
 
     // check if we can place building
     int grid_offset = Data_State.map.current.gridOffset;
-    int fully_blocked = is_fully_blocked(type, building_size, grid_offset);
+    int fully_blocked = is_fully_blocked(map_x, map_y, type, building_size, grid_offset);
     int blocked = fully_blocked;
 
     int num_tiles = building_size * building_size;
@@ -274,23 +273,24 @@ static void draw_default(int xOffsetBase, int yOffsetBase, building_type type)
     if (blocked) {
         draw_partially_blocked(xOffsetBase, yOffsetBase, fully_blocked, num_tiles, blocked_tiles);
     } else {
-        draw_regular_building(type, get_building_image_id(type, props), xOffsetBase, yOffsetBase);
+        int image_id = get_building_image_id(map_x, map_y, type, props);
+        draw_regular_building(type, image_id, xOffsetBase, yOffsetBase);
     }
 }
 
-static void draw_draggable_reservoir(int x, int y)
+static void draw_draggable_reservoir(int map_x, int map_y, int x, int y)
 {
-    int x_map = Data_State.map.current.x - 1;
-    int y_map = Data_State.map.current.y - 1;
+    map_x = map_x - 1;
+    map_y = map_y - 1;
     int blocked = 0;
     if (building_construction_in_progress()) {
         if (!building_construction_cost()) {
             blocked = 1;
         }
     } else {
-        if (map_building_is_reservoir(x_map, y_map)) {
+        if (map_building_is_reservoir(map_x, map_y)) {
             blocked = 0;
-        } else if (!map_tiles_are_clear(x_map, y_map, 3, TERRAIN_ALL)) {
+        } else if (!map_tiles_are_clear(map_x, map_y, 3, TERRAIN_ALL)) {
             blocked = 1;
         }
     }
@@ -317,7 +317,7 @@ static void draw_draggable_reservoir(int x, int y)
     } else {
         int image_id = image_group(GROUP_BUILDING_RESERVOIR);
         draw_building(image_id, x, y);
-        if (map_terrain_exists_tile_in_area_with_type(x_map - 1, y_map - 1, 5, TERRAIN_WATER)) {
+        if (map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER)) {
             const image *img = image_get(image_id);
             int x_water = x - 58 + img->sprite_offset_x - 2;
             int y_water = y + img->sprite_offset_y - (img->height - 90);
@@ -417,12 +417,10 @@ static void draw_bathhouse(int x, int y)
     }
 }
 
-static void draw_bridge(int x, int y, building_type type)
+static void draw_bridge(int map_x, int map_y, int x, int y, building_type type)
 {
     int length, direction;
-    int end_grid_offset = map_bridge_calculate_length_direction(
-        Data_State.map.current.x, Data_State.map.current.y,
-        &length, &direction);
+    int end_grid_offset = map_bridge_calculate_length_direction(map_x, map_y, &length, &direction);
 
     int dir = direction - city_view_orientation();
     if (dir < 0) {
@@ -581,12 +579,10 @@ static void draw_hippodrome(int x, int y)
     }
 }
 
-static void draw_shipyard_wharf(int x, int y, building_type type)
+static void draw_shipyard_wharf(int map_x, int map_y, int x, int y, building_type type)
 {
     int dir_absolute, dir_relative;
-    int blocked = map_water_determine_orientation_size2(
-        Data_State.map.current.x, Data_State.map.current.y, 1,
-        &dir_absolute, &dir_relative);
+    int blocked = map_water_determine_orientation_size2(map_x, map_y, 1, &dir_absolute, &dir_relative);
     if (city_finance_out_of_money()) {
         blocked = 999;
     }
@@ -601,12 +597,10 @@ static void draw_shipyard_wharf(int x, int y, building_type type)
     }
 }
 
-static void draw_dock(int x, int y)
+static void draw_dock(int map_x, int map_y, int x, int y)
 {
     int dir_absolute, dir_relative;
-    int blocked = map_water_determine_orientation_size3(
-        Data_State.map.current.x, Data_State.map.current.y, 1,
-        &dir_absolute, &dir_relative);
+    int blocked = map_water_determine_orientation_size3(map_x, map_y, 1, &dir_absolute, &dir_relative);
     if (city_finance_out_of_money()) {
         blocked = 1;
     }
@@ -666,11 +660,13 @@ void city_building_ghost_draw()
     if (Data_State.selectedBuilding.drawAsConstructing || type == BUILDING_NONE) {
         return;
     }
+    int map_x = Data_State.map.current.x;
+    int map_y = Data_State.map.current.y;
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
     switch (type) {
         case BUILDING_DRAGGABLE_RESERVOIR:
-            draw_draggable_reservoir(x, y);
+            draw_draggable_reservoir(map_x, map_y, x, y);
             break;
         case BUILDING_AQUEDUCT:
             draw_aqueduct(x, y);
@@ -683,7 +679,7 @@ void city_building_ghost_draw()
             break;
         case BUILDING_LOW_BRIDGE:
         case BUILDING_SHIP_BRIDGE:
-            draw_bridge(x, y, type);
+            draw_bridge(map_x, map_y, x, y, type);
             break;
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_JAVELIN:
@@ -695,16 +691,16 @@ void city_building_ghost_draw()
             break;
         case BUILDING_SHIPYARD:
         case BUILDING_WHARF:
-            draw_shipyard_wharf(x, y, type);
+            draw_shipyard_wharf(map_x, map_y, x, y, type);
             break;
         case BUILDING_DOCK:
-            draw_dock(x, y);
+            draw_dock(map_x, map_y, x, y);
             break;
         case BUILDING_ROAD:
             draw_road(x, y);
             break;
         default:
-            draw_default(x, y, type);
+            draw_default(map_x, map_y, x, y, type);
             break;
     }
 }
