@@ -473,7 +473,7 @@ void city_with_overlay_draw()
         draw_top,
         draw_animation
     );
-    city_building_ghost_draw();
+    city_building_ghost_draw(&Data_State.map.current);
     city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
 }
 

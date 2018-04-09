@@ -429,7 +429,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         draw_animation
     );
     if (!selected_figure_id) {
-        city_building_ghost_draw();
+        city_building_ghost_draw(&Data_State.map.current);
     }
     city_view_foreach_valid_map_tile(
         draw_elevated_figures,
