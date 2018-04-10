@@ -95,14 +95,10 @@ extern struct _Data_CityInfo {
 	int32_t citywideAverageEntertainment;
 	int32_t housesRequiringEntertainmentToEvolve;
 	int32_t monthsSinceFestival;
-	int8_t godTargetHappiness[5];
 	int8_t godHappiness[5];
 	int8_t godWrathBolts[5];
 	int8_t godBlessingDone[5];
 	int8_t godSmallCurseDone[5];
-	int8_t godUnused1[5];
-	int8_t godUnused2[5];
-	int8_t godUnused3[5];
 	int32_t godMonthsSinceFestival[5];
 	int32_t godLeastHappy;
 	int32_t populationEmigrationCauseTextId;

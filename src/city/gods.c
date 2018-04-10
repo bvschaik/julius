@@ -27,14 +27,15 @@
 void city_gods_reset()
 {
     for (int i = 0; i < MAX_GODS; i++) {
-        Data_CityInfo.godTargetHappiness[i] = 50;
+        god_status *god = &city_data.religion.gods[i];
+        god->target_happiness = 50;
         Data_CityInfo.godHappiness[i] = 50;
         Data_CityInfo.godWrathBolts[i] = 0;
         Data_CityInfo.godBlessingDone[i] = 0;
         Data_CityInfo.godSmallCurseDone[i] = 0;
-        Data_CityInfo.godUnused1[i] = 0;
-        Data_CityInfo.godUnused2[i] = 0;
-        Data_CityInfo.godUnused3[i] = 0;
+        god->unused1 = 0;
+        god->unused2 = 0;
+        god->unused3 = 0;
         Data_CityInfo.godMonthsSinceFestival[i] = 0;
     }
     Data_CityInfo.godAngryMessageDelay = 0;
@@ -150,9 +151,9 @@ static int perform_large_curse(god_type god)
 static void update_god_moods()
 {
     for (int i = 0; i < MAX_GODS; i++) {
-        if (Data_CityInfo.godHappiness[i] < Data_CityInfo.godTargetHappiness[i]) {
+        if (Data_CityInfo.godHappiness[i] < city_data.religion.gods[i].target_happiness) {
             Data_CityInfo.godHappiness[i]++;
-        } else if (Data_CityInfo.godHappiness[i] > Data_CityInfo.godTargetHappiness[i]) {
+        } else if (Data_CityInfo.godHappiness[i] > city_data.religion.gods[i].target_happiness) {
             Data_CityInfo.godHappiness[i]--;
         }
         if (scenario_is_tutorial_1()) {
@@ -251,11 +252,9 @@ static void update_god_moods()
 void city_gods_calculate_moods(int update_moods)
 {
     // base happiness: percentage of houses covered
-    Data_CityInfo.godTargetHappiness[GOD_CERES] = city_culture_coverage_religion(GOD_CERES);
-    Data_CityInfo.godTargetHappiness[GOD_NEPTUNE] = city_culture_coverage_religion(GOD_NEPTUNE);
-    Data_CityInfo.godTargetHappiness[GOD_MERCURY] = city_culture_coverage_religion(GOD_MERCURY);
-    Data_CityInfo.godTargetHappiness[GOD_MARS] = city_culture_coverage_religion(GOD_MARS);
-    Data_CityInfo.godTargetHappiness[GOD_VENUS] = city_culture_coverage_religion(GOD_VENUS);
+    for (int i = 0; i < MAX_GODS; i++) {
+        city_data.religion.gods[i].target_happiness = city_culture_coverage_religion(i);
+    }
 
     int max_temples = 0;
     int max_god = TIE;
@@ -299,19 +298,19 @@ void city_gods_calculate_moods(int update_moods)
         if (festival_penalty > 40) {
             festival_penalty = 40;
         }
-        Data_CityInfo.godTargetHappiness[i] += 12 - festival_penalty;
+        city_data.religion.gods[i].target_happiness += 12 - festival_penalty;
     }
 
     // BUG poor Venus never gets points here!
     if (max_god < 4) {
-        if (Data_CityInfo.godTargetHappiness[max_god] >= 50) {
-            Data_CityInfo.godTargetHappiness[max_god] = 100;
+        if (city_data.religion.gods[max_god].target_happiness >= 50) {
+            city_data.religion.gods[max_god].target_happiness = 100;
         } else {
-            Data_CityInfo.godTargetHappiness[max_god] += 50;
+            city_data.religion.gods[max_god].target_happiness += 50;
         }
     }
     if (min_god < 4) {
-        Data_CityInfo.godTargetHappiness[min_god] -= 25;
+        city_data.religion.gods[min_god].target_happiness -= 25;
     }
     int min_happiness;
     if (city_data.population.population < 100) {
@@ -328,7 +327,7 @@ void city_gods_calculate_moods(int update_moods)
         min_happiness = 0;
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        Data_CityInfo.godTargetHappiness[i] = calc_bound(Data_CityInfo.godTargetHappiness[i], min_happiness, 100);
+        city_data.religion.gods[i].target_happiness = calc_bound(city_data.religion.gods[i].target_happiness, min_happiness, 100);
     }
     if (update_moods) {
         update_god_moods();

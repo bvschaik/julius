@@ -7,6 +7,13 @@
 #include "city/finance.h"
 #include "city/resource.h"
 
+typedef struct {
+    int8_t target_happiness;
+    int8_t unused1;
+    int8_t unused2;
+    int8_t unused3;
+} god_status;
+
 extern struct city_data_t {
     struct {
         int16_t senate_placed;
@@ -113,6 +120,9 @@ extern struct city_data_t {
         int32_t favor_last_year;
         int32_t favor_change; // 0 = dropping, 1 = stalling, 2 = rising
     } ratings;
+    struct {
+        god_status gods[5];
+    } religion;
     struct {
         int16_t space_in_warehouses[16];
         int16_t stored_in_warehouses[16];

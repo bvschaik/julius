@@ -287,31 +287,31 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.citywideAverageEntertainment);
     buffer_write_i32(main, Data_CityInfo.housesRequiringEntertainmentToEvolve);
     buffer_write_i32(main, Data_CityInfo.monthsSinceFestival);
-    for (int i = 0; i < 5; i++) {
-        buffer_write_i8(main, Data_CityInfo.godTargetHappiness[i]);
+    for (int i = 0; i < MAX_GODS; i++) {
+        buffer_write_i8(main, city_data.religion.gods[i].target_happiness);
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i8(main, Data_CityInfo.godHappiness[i]);
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i8(main, Data_CityInfo.godWrathBolts[i]);
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i8(main, Data_CityInfo.godBlessingDone[i]);
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i8(main, Data_CityInfo.godSmallCurseDone[i]);
     }
-    for (int i = 0; i < 5; i++) {
-        buffer_write_i8(main, Data_CityInfo.godUnused1[i]);
+    for (int i = 0; i < MAX_GODS; i++) {
+        buffer_write_i8(main, city_data.religion.gods[i].unused1);
     }
-    for (int i = 0; i < 5; i++) {
-        buffer_write_i8(main, Data_CityInfo.godUnused2[i]);
+    for (int i = 0; i < MAX_GODS; i++) {
+        buffer_write_i8(main, city_data.religion.gods[i].unused2);
     }
-    for (int i = 0; i < 5; i++) {
-        buffer_write_i8(main, Data_CityInfo.godUnused3[i]);
+    for (int i = 0; i < MAX_GODS; i++) {
+        buffer_write_i8(main, city_data.religion.gods[i].unused3);
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i32(main, Data_CityInfo.godMonthsSinceFestival[i]);
     }
     buffer_write_i32(main, Data_CityInfo.godLeastHappy);
@@ -764,31 +764,31 @@ static void load_main_data(buffer *main)
     Data_CityInfo.citywideAverageEntertainment = buffer_read_i32(main);
     Data_CityInfo.housesRequiringEntertainmentToEvolve = buffer_read_i32(main);
     Data_CityInfo.monthsSinceFestival = buffer_read_i32(main);
-    for (int i = 0; i < 5; i++) {
-        Data_CityInfo.godTargetHappiness[i] = buffer_read_i8(main);
+    for (int i = 0; i < MAX_GODS; i++) {
+        city_data.religion.gods[i].target_happiness = buffer_read_i8(main);
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_GODS; i++) {
         Data_CityInfo.godHappiness[i] = buffer_read_i8(main);
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_GODS; i++) {
         Data_CityInfo.godWrathBolts[i] = buffer_read_i8(main);
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_GODS; i++) {
         Data_CityInfo.godBlessingDone[i] = buffer_read_i8(main);
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_GODS; i++) {
         Data_CityInfo.godSmallCurseDone[i] = buffer_read_i8(main);
     }
-    for (int i = 0; i < 5; i++) {
-        Data_CityInfo.godUnused1[i] = buffer_read_i8(main);
+    for (int i = 0; i < MAX_GODS; i++) {
+        city_data.religion.gods[i].unused1 = buffer_read_i8(main);
     }
-    for (int i = 0; i < 5; i++) {
-        Data_CityInfo.godUnused2[i] = buffer_read_i8(main);
+    for (int i = 0; i < MAX_GODS; i++) {
+        city_data.religion.gods[i].unused2 = buffer_read_i8(main);
     }
-    for (int i = 0; i < 5; i++) {
-        Data_CityInfo.godUnused3[i] = buffer_read_i8(main);
+    for (int i = 0; i < MAX_GODS; i++) {
+        city_data.religion.gods[i].unused3 = buffer_read_i8(main);
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_GODS; i++) {
         Data_CityInfo.godMonthsSinceFestival[i] = buffer_read_i32(main);
     }
     Data_CityInfo.godLeastHappy = buffer_read_i32(main);
