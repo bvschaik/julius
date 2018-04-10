@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/market.h"
 #include "city/constants.h"
+#include "city/gods.h"
 #include "city/population.h"
 #include "core/calc.h"
 #include "figure/trader.h"
@@ -555,9 +556,10 @@ static int phrase_based_on_figure_state(figure *f)
 static int city_god_state()
 {
     int least_god_happiness = 100;
-    for (int i = 0; i < 5; i++) {
-        if (Data_CityInfo.godHappiness[i] < least_god_happiness) {
-            least_god_happiness = Data_CityInfo.godHappiness[i];
+    for (int i = 0; i < MAX_GODS; i++) {
+        int happiness = city_god_happiness(i);
+        if (happiness < least_god_happiness) {
+            least_god_happiness = happiness;
         }
     }
     if (least_god_happiness < 20) {

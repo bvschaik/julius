@@ -13,4 +13,6 @@ void city_gods_schedule_festival();
 
 void city_gods_check_festival();
 
+int city_god_happiness(int god_id);
+
 #endif // CITY_GODS_H

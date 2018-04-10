@@ -291,16 +291,16 @@ static void save_main_data(buffer *main)
         buffer_write_i8(main, city_data.religion.gods[i].target_happiness);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        buffer_write_i8(main, Data_CityInfo.godHappiness[i]);
+        buffer_write_i8(main, city_data.religion.gods[i].happiness);
     }
     for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i8(main, Data_CityInfo.godWrathBolts[i]);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        buffer_write_i8(main, Data_CityInfo.godBlessingDone[i]);
+        buffer_write_i8(main, city_data.religion.gods[i].blessing_done);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        buffer_write_i8(main, Data_CityInfo.godSmallCurseDone[i]);
+        buffer_write_i8(main, city_data.religion.gods[i].small_curse_done);
     }
     for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i8(main, city_data.religion.gods[i].unused1);
@@ -768,16 +768,16 @@ static void load_main_data(buffer *main)
         city_data.religion.gods[i].target_happiness = buffer_read_i8(main);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        Data_CityInfo.godHappiness[i] = buffer_read_i8(main);
+        city_data.religion.gods[i].happiness = buffer_read_i8(main);
     }
     for (int i = 0; i < MAX_GODS; i++) {
         Data_CityInfo.godWrathBolts[i] = buffer_read_i8(main);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        Data_CityInfo.godBlessingDone[i] = buffer_read_i8(main);
+        city_data.religion.gods[i].blessing_done = buffer_read_i8(main);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        Data_CityInfo.godSmallCurseDone[i] = buffer_read_i8(main);
+        city_data.religion.gods[i].small_curse_done = buffer_read_i8(main);
     }
     for (int i = 0; i < MAX_GODS; i++) {
         city_data.religion.gods[i].unused1 = buffer_read_i8(main);

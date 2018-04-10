@@ -8,7 +8,10 @@
 #include "city/resource.h"
 
 typedef struct {
+    int8_t happiness;
     int8_t target_happiness;
+    int8_t blessing_done;
+    int8_t small_curse_done;
     int8_t unused1;
     int8_t unused2;
     int8_t unused3;

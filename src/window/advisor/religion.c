@@ -36,7 +36,7 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
     text_draw_number_centered(building_count_total(small_temple), 230, y_offset, 50, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_total(large_temple), 290, y_offset, 50, FONT_NORMAL_WHITE);
     text_draw_number_centered(Data_CityInfo.godMonthsSinceFestival[god], 360, y_offset, 50, FONT_NORMAL_WHITE);
-    int width = lang_text_draw(59, 32 + Data_CityInfo.godHappiness[god] / 10, 460, y_offset, FONT_NORMAL_WHITE);
+    int width = lang_text_draw(59, 32 + city_god_happiness(god) / 10, 460, y_offset, FONT_NORMAL_WHITE);
     for (int i = 0; i < Data_CityInfo.godWrathBolts[god] / 10; i++) {
         image_draw(image_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
     }
