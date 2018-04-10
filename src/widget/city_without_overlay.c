@@ -416,7 +416,7 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
     }
 }
 
-void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_location *map_tile)
+void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *map_tile)
 {
     init_draw_context(selected_figure_id, figure_coord);
     city_view_foreach_map_tile(draw_footprint);

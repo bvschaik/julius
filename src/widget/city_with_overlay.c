@@ -456,7 +456,7 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
     }
 }
 
-void city_with_overlay_draw(const map_location *map_tile)
+void city_with_overlay_draw(const map_tile *map_tile)
 {
     if (!select_city_overlay()) {
         return;
