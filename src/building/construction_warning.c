@@ -178,7 +178,7 @@ static void checkIronAccess(int buildingType)
                 show(WARNING_BUILD_IRON_MINE);
             } else if (!empire_can_import_resource(RESOURCE_IRON)) {
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (Data_CityInfo.resourceTradeStatus[RESOURCE_IRON] != TRADE_STATUS_IMPORT) {
+            } else if (city_resource_trade_status(RESOURCE_IRON) != TRADE_STATUS_IMPORT) {
                 show(WARNING_TRADE_IMPORT_RESOURCE);
             }
         }
@@ -195,7 +195,7 @@ static void checkVinesAccess(int buildingType)
                 show(WARNING_BUILD_VINES_FARM);
             } else if (!empire_can_import_resource(RESOURCE_VINES)) {
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (Data_CityInfo.resourceTradeStatus[RESOURCE_VINES] != TRADE_STATUS_IMPORT) {
+            } else if (city_resource_trade_status(RESOURCE_VINES) != TRADE_STATUS_IMPORT) {
                 show(WARNING_TRADE_IMPORT_RESOURCE);
             }
         }
@@ -212,7 +212,7 @@ static void checkOlivesAccess(int buildingType)
                 show(WARNING_BUILD_OLIVE_FARM);
             } else if (!empire_can_import_resource(RESOURCE_OLIVES)) {
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (Data_CityInfo.resourceTradeStatus[RESOURCE_OLIVES] != TRADE_STATUS_IMPORT) {
+            } else if (city_resource_trade_status(RESOURCE_OLIVES) != TRADE_STATUS_IMPORT) {
                 show(WARNING_TRADE_IMPORT_RESOURCE);
             }
         }
@@ -229,7 +229,7 @@ static void checkTimberAccess(int buildingType)
                 show(WARNING_BUILD_TIMBER_YARD);
             } else if (!empire_can_import_resource(RESOURCE_TIMBER)) {
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (Data_CityInfo.resourceTradeStatus[RESOURCE_TIMBER] != TRADE_STATUS_IMPORT) {
+            } else if (city_resource_trade_status(RESOURCE_TIMBER) != TRADE_STATUS_IMPORT) {
                 show(WARNING_TRADE_IMPORT_RESOURCE);
             }
         }
@@ -246,7 +246,7 @@ static void checkClayAccess(int buildingType)
                 show(WARNING_BUILD_CLAY_PIT);
             } else if (!empire_can_import_resource(RESOURCE_CLAY)) {
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (Data_CityInfo.resourceTradeStatus[RESOURCE_CLAY] != TRADE_STATUS_IMPORT) {
+            } else if (city_resource_trade_status(RESOURCE_CLAY) != TRADE_STATUS_IMPORT) {
                 show(WARNING_TRADE_IMPORT_RESOURCE);
             }
         }

@@ -431,7 +431,7 @@ static int contains_non_stockpiled_food(building *space, const int *resources)
         return 0;
     }
     int resource = space->subtype.warehouseResourceId;
-    if (Data_CityInfo.resourceStockpiled[resource]) {
+    if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
     if (resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
@@ -454,7 +454,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     building *space;
     // get resources
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (s->resource_state[r] != BUILDING_STORAGE_STATE_GETTING || Data_CityInfo.resourceStockpiled[r]) {
+        if (s->resource_state[r] != BUILDING_STORAGE_STATE_GETTING || city_resource_is_stockpiled(r)) {
             continue;
         }
         int loads_stored = 0;
@@ -487,7 +487,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     }
     // deliver weapons to barracks
     if (building_count_active(BUILDING_BARRACKS) > 0 && Data_CityInfo.militaryLegionaryLegions > 0 &&
-        !Data_CityInfo.resourceStockpiled[RESOURCE_WEAPONS]) {
+        !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
         building *barracks = building_get(city_buildings_get_barracks());
         if (barracks->loadsStored < 4 &&
                 warehouse->roadNetworkId == barracks->roadNetworkId) {
@@ -507,7 +507,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
         if (space->id > 0 && space->loadsStored > 0) {
-            if (!Data_CityInfo.resourceStockpiled[space->subtype.warehouseResourceId]) {
+            if (!city_resource_is_stockpiled(space->subtype.warehouseResourceId)) {
                 int workshop_type = workshop_type_for_resource(space->subtype.warehouseResourceId);
                 if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type)) {
                     *resource = space->subtype.warehouseResourceId;

@@ -133,6 +133,8 @@ extern struct city_data_t {
         int16_t stored_in_warehouses[16];
         int32_t space_in_workshops[6];
         int32_t stored_in_workshops[6];//2900
+        int16_t trade_status[16];
+        int32_t stockpiled[16];
     } resource;
     struct {
         int8_t march_enemy;

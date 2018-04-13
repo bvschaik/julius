@@ -33,6 +33,45 @@ const resource_list *city_resource_get_available_foods()
     return &available.food_list;
 }
 
+resource_trade_status city_resource_trade_status(resource_type resource)
+{
+    return city_data.resource.trade_status[resource];
+}
+
+void city_resource_cycle_trade_status(resource_type resource)
+{
+    ++city_data.resource.trade_status[resource];
+    if (city_data.resource.trade_status[resource] > TRADE_STATUS_EXPORT) {
+        city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
+    }
+
+    if (city_data.resource.trade_status[resource] == TRADE_STATUS_IMPORT &&
+        !empire_can_import_resource(resource)) {
+        city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
+    }
+    if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT &&
+        !empire_can_export_resource(resource)) {
+        city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
+    }
+}
+
+int city_resource_is_stockpiled(resource_type resource)
+{
+    return city_data.resource.stockpiled[resource];
+}
+
+void city_resource_toggle_stockpiled(resource_type resource)
+{
+    if (city_data.resource.stockpiled[resource]) {
+        city_data.resource.stockpiled[resource] = 0;
+    } else {
+        city_data.resource.stockpiled[resource] = 1;
+        if (city_data.resource.stockpiled[resource] == TRADE_STATUS_EXPORT) {
+            city_data.resource.stockpiled[resource] = TRADE_STATUS_NONE;
+        }
+    }
+}
+
 int city_resource_has_workshop_with_room(int workshop_type)
 {
     return city_data.resource.space_in_workshops[workshop_type] > 0;

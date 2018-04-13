@@ -3,6 +3,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "city/buildings.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "figure/action.h"
 #include "figure/figure.h"
@@ -19,7 +20,7 @@ int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_d
     if (resource != RESOURCE_WEAPONS) {
         return 0;
     }
-    if (Data_CityInfo.resourceStockpiled[RESOURCE_WEAPONS]) {
+    if (city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
         return 0;
     }
     if (building_count_active(BUILDING_BARRACKS) <= 0) {

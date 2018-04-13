@@ -1,5 +1,6 @@
 #include "industry.h"
 
+#include "city/resource.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "game/resource.h"
@@ -157,7 +158,7 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
                                                      int distance_from_entry, int road_network_id,
                                                      int *x_dst, int *y_dst)
 {
-    if (Data_CityInfo.resourceStockpiled[resource]) {
+    if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
     int outputType;
@@ -202,7 +203,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource,
                                            int distance_from_entry, int road_network_id,
                                            int *x_dst, int *y_dst)
 {
-    if (Data_CityInfo.resourceStockpiled[resource]) {
+    if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
     int outputType;

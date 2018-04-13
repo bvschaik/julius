@@ -75,14 +75,17 @@ static void draw_foreground()
         if (Data_CityInfo.resourceIndustryMothballed[resource]) {
             lang_text_draw(18, 5, 300, y_offset + 61, FONT_NORMAL_WHITE);
         }
-        if (Data_CityInfo.resourceStockpiled[resource]) {
+        if (city_resource_is_stockpiled(resource)) {
             lang_text_draw(54, 3, 380, y_offset + 61, FONT_NORMAL_WHITE);
-        } else if (Data_CityInfo.resourceTradeStatus[resource] == TRADE_STATUS_IMPORT) {
-            lang_text_draw(54, 5, 380, y_offset + 61, FONT_NORMAL_WHITE);
-        } else if (Data_CityInfo.resourceTradeStatus[resource] == TRADE_STATUS_EXPORT) {
-            lang_text_draw(54, 6, 380, y_offset + 61, FONT_NORMAL_WHITE);
-            text_draw_number(Data_CityInfo.resourceTradeExportOver[resource], '@', " ",
-                500, y_offset + 61, FONT_NORMAL_WHITE);
+        } else {
+            resource_trade_status trade_status = city_resource_trade_status(resource);
+            if (trade_status == TRADE_STATUS_IMPORT) {
+                lang_text_draw(54, 5, 380, y_offset + 61, FONT_NORMAL_WHITE);
+            } else if (trade_status == TRADE_STATUS_EXPORT) {
+                lang_text_draw(54, 6, 380, y_offset + 61, FONT_NORMAL_WHITE);
+                text_draw_number(Data_CityInfo.resourceTradeExportOver[resource], '@', " ",
+                    500, y_offset + 61, FONT_NORMAL_WHITE);
+            }
         }
     }
 

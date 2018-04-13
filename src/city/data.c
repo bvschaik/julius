@@ -137,7 +137,7 @@ static void save_main_data(buffer *main)
         buffer_write_i16(main, city_data.resource.stored_in_warehouses[i]);
     }
     for (int i = 0; i < 16; i++) {
-        buffer_write_i16(main, Data_CityInfo.resourceTradeStatus[i]);
+        buffer_write_i16(main, city_data.resource.trade_status[i]);
     }
     for (int i = 0; i < 16; i++) {
         buffer_write_i16(main, Data_CityInfo.resourceTradeExportOver[i]);
@@ -162,7 +162,7 @@ static void save_main_data(buffer *main)
         buffer_write_i8(main, city_data.unused.unknown_2924[i]);
     }
     for (int i = 0; i < 16; i++) {
-        buffer_write_i32(main, Data_CityInfo.resourceStockpiled[i]);
+        buffer_write_i32(main, city_data.resource.stockpiled[i]);
     }
     buffer_write_i32(main, Data_CityInfo.foodInfoFoodSupplyMonths);
     buffer_write_i32(main, Data_CityInfo.foodInfoGranariesOperating);
@@ -614,7 +614,7 @@ static void load_main_data(buffer *main)
         city_data.resource.stored_in_warehouses[i] = buffer_read_i16(main);
     }
     for (int i = 0; i < 16; i++) {
-        Data_CityInfo.resourceTradeStatus[i] = buffer_read_i16(main);
+        city_data.resource.trade_status[i] = buffer_read_i16(main);
     }
     for (int i = 0; i < 16; i++) {
         Data_CityInfo.resourceTradeExportOver[i] = buffer_read_i16(main);
@@ -639,7 +639,7 @@ static void load_main_data(buffer *main)
         city_data.unused.unknown_2924[i] = buffer_read_i8(main);
     }
     for (int i = 0; i < 16; i++) {
-        Data_CityInfo.resourceStockpiled[i] = buffer_read_i32(main);
+        city_data.resource.stockpiled[i] = buffer_read_i32(main);
     }
     Data_CityInfo.foodInfoFoodSupplyMonths = buffer_read_i32(main);
     Data_CityInfo.foodInfoGranariesOperating = buffer_read_i32(main);

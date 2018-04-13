@@ -146,7 +146,7 @@ int empire_can_export_resource_to_city(int city_id, int resource)
         return 0;
     }
     if (city_id == 0 || city->buys_resource[resource]) {
-        return Data_CityInfo.resourceTradeStatus[resource] == TRADE_STATUS_EXPORT;
+        return city_resource_trade_status(resource) == TRADE_STATUS_EXPORT;
     } else {
         return 0;
     }
@@ -172,7 +172,7 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     if (!city->sells_resource[resource]) {
         return 0;
     }
-    if (Data_CityInfo.resourceTradeStatus[resource] != TRADE_STATUS_IMPORT) {
+    if (city_resource_trade_status(resource) != TRADE_STATUS_IMPORT) {
         return 0;
     }
     if (trade_route_limit_reached(city->route_id, resource)) {
