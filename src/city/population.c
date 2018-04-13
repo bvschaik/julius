@@ -44,7 +44,7 @@ static void recalculate_population()
 {
     city_data.population.population = 0;
     for (int i = 0; i < 100; i++) {
-        city_data.population.population += Data_CityInfo.populationPerAge[i];
+        city_data.population.population += city_data.population.at_age[i];
     }
     if (city_data.population.population > Data_CityInfo.populationHighestEver) {
         Data_CityInfo.populationHighestEver = city_data.population.population;
@@ -62,7 +62,7 @@ static void add_to_census(int num_people)
         } else if (age < 10 && odd) {
             age += 20;
         }
-        Data_CityInfo.populationPerAge[age]++;
+        city_data.population.at_age[age]++;
     }
 }
 
@@ -73,10 +73,10 @@ static void remove_from_census(int num_people)
     // remove people randomly up to age 63
     while (num_people > 0 && empty_buckets < 100) {
         int age = random_from_pool(index++) & 0x3f;
-        if (Data_CityInfo.populationPerAge[age] <= 0) {
+        if (city_data.population.at_age[age] <= 0) {
             empty_buckets++;
         } else {
-            Data_CityInfo.populationPerAge[age]--;
+            city_data.population.at_age[age]--;
             num_people--;
             empty_buckets = 0;
         }
@@ -85,10 +85,10 @@ static void remove_from_census(int num_people)
     empty_buckets = 0;
     int age = 10;
     while (num_people > 0 && empty_buckets < 100) {
-        if (Data_CityInfo.populationPerAge[age] <= 0) {
+        if (city_data.population.at_age[age] <= 0) {
             empty_buckets++;
         } else {
-            Data_CityInfo.populationPerAge[age]--;
+            city_data.population.at_age[age]--;
             num_people--;
             empty_buckets = 0;
         }
@@ -104,10 +104,10 @@ static void remove_from_census_in_age_decennium(int decennium, int num_people)
     int empty_buckets = 0;
     int age = 0;
     while (num_people > 0 && empty_buckets < 10) {
-        if (Data_CityInfo.populationPerAge[10 * decennium + age] <= 0) {
+        if (city_data.population.at_age[10 * decennium + age] <= 0) {
             empty_buckets++;
         } else {
-            Data_CityInfo.populationPerAge[10 * decennium + age]--;
+            city_data.population.at_age[10 * decennium + age]--;
             num_people--;
             empty_buckets = 0;
         }
@@ -122,7 +122,7 @@ static int get_people_in_age_decennium(int decennium)
 {
     int pop = 0;
     for (int i = 0; i < 10; i++) {
-        pop += Data_CityInfo.populationPerAge[10 * decennium + i];
+        pop += city_data.population.at_age[10 * decennium + i];
     }
     return pop;
 }
@@ -182,7 +182,7 @@ static int get_people_aged_between(int min, int max)
 {
     int pop = 0;
     for (int i = min; i < max; i++) {
-        pop += Data_CityInfo.populationPerAge[i];
+        pop += city_data.population.at_age[i];
     }
     return pop;
 }
@@ -217,13 +217,23 @@ int city_population_at_month(int max_months, int month)
     return city_data.population.monthly.values[index];
 }
 
+int city_population_at_age(int age)
+{
+    return city_data.population.at_age[age];
+}
+
+int city_population_at_level(int house_level)
+{
+    return city_data.population.at_level[house_level];
+}
+
 static void yearly_advance_ages_and_calculate_deaths()
 {
-    int aged100 = Data_CityInfo.populationPerAge[99];
+    int aged100 = city_data.population.at_age[99];
     for (int age = 99; age > 0; age--) {
-        Data_CityInfo.populationPerAge[age] = Data_CityInfo.populationPerAge[age-1];
+        city_data.population.at_age[age] = city_data.population.at_age[age-1];
     }
-    Data_CityInfo.populationPerAge[0] = 0;
+    city_data.population.at_age[0] = 0;
     city_data.population.yearly_deaths = 0;
     for (int decennium = 9; decennium >= 0; decennium--) {
         int people = get_people_in_age_decennium(decennium);
@@ -244,7 +254,7 @@ static void yearly_calculate_births()
         int people = get_people_in_age_decennium(decennium);
         int births = calc_adjust_with_percentage(people, BIRTHS_PER_AGE_DECENNIUM[decennium]);
         int added = house_population_add_to_city(births);
-        Data_CityInfo.populationPerAge[0] += added;
+        city_data.population.at_age[0] += added;
         city_data.population.yearly_births += added;
     }
 }

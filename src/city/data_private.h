@@ -85,6 +85,8 @@ extern struct city_data_t {
             int32_t next_index;
             int32_t count;
         } monthly;
+        int16_t at_age[100];
+        int32_t at_level[20];
 
         int32_t yearly_update_requested;
         int32_t yearly_births;

@@ -39,6 +39,10 @@ int city_population_monthly_count();
 
 int city_population_at_month(int max_months, int month);
 
+int city_population_at_age(int age);
+
+int city_population_at_level(int house_level);
+
 void city_population_request_yearly_update();
 
 void city_population_yearly_update();

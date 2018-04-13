@@ -166,7 +166,7 @@ static void collect_monthly_taxes()
     city_data.taxes.monthly.collected_patricians = 0;
 
     for (int i = 0; i < MAX_HOUSE_LEVELS; i++) {
-        Data_CityInfo.populationPerLevel[i] = 0;
+        city_data.population.at_level[i] = 0;
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -178,7 +178,7 @@ static void collect_monthly_taxes()
         int population = b->housePopulation;
         int trm = difficulty_adjust_money(
             model_get_house(b->subtype.houseLevel)->tax_multiplier);
-        Data_CityInfo.populationPerLevel[b->subtype.houseLevel] += population;
+        city_data.population.at_level[b->subtype.houseLevel] += population;
 
         int tax = population * trm;
         if (b->houseTaxCoverage) {

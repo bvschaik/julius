@@ -81,10 +81,10 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.population.monthly.next_index);
     buffer_write_i32(main, city_data.population.monthly.count);
     for (int i = 0; i < 100; i++) {
-        buffer_write_i16(main, Data_CityInfo.populationPerAge[i]);
+        buffer_write_i16(main, city_data.population.at_age[i]);
     }
     for (int i = 0; i < 20; i++) {
-        buffer_write_i32(main, Data_CityInfo.populationPerLevel[i]);
+        buffer_write_i32(main, city_data.population.at_level[i]);
     }
     buffer_write_i32(main, city_data.population.yearly_births);
     buffer_write_i32(main, city_data.population.yearly_deaths);
@@ -558,10 +558,10 @@ static void load_main_data(buffer *main)
     city_data.population.monthly.next_index = buffer_read_i32(main);
     city_data.population.monthly.count = buffer_read_i32(main);
     for (int i = 0; i < 100; i++) {
-        Data_CityInfo.populationPerAge[i] = buffer_read_i16(main);
+        city_data.population.at_age[i] = buffer_read_i16(main);
     }
     for (int i = 0; i < 20; i++) {
-        Data_CityInfo.populationPerLevel[i] = buffer_read_i32(main);
+        city_data.population.at_level[i] = buffer_read_i32(main);
     }
     city_data.population.yearly_births = buffer_read_i32(main);
     city_data.population.yearly_deaths = buffer_read_i32(main);

@@ -175,8 +175,9 @@ static void draw_census_graph(int full_size, int x, int y)
 {
     int max_value = 0;
     for (int i = 0; i < 100; i++) {
-        if (Data_CityInfo.populationPerAge[i] > max_value) {
-            max_value = Data_CityInfo.populationPerAge[i];
+        int value = city_population_at_age(i);
+        if (value > max_value) {
+            max_value = value;
         }
     }
     int y_max, y_shift;
@@ -195,7 +196,7 @@ static void draw_census_graph(int full_size, int x, int y)
     if (full_size) {
         graphics_set_clip_rectangle(0, 0, 640, y + 200);
         for (int i = 0; i < 100; i++) {
-            int pop = Data_CityInfo.populationPerAge[i];
+            int pop = city_population_at_age(i);
             int val;
             if (y_shift == -1) {
                 val = 2 * pop;
@@ -210,7 +211,7 @@ static void draw_census_graph(int full_size, int x, int y)
     } else {
         y_shift += 2;
         for (int i = 0; i < 100; i++) {
-            int val = Data_CityInfo.populationPerAge[i] >> y_shift;
+            int val = city_population_at_age(i) >> y_shift;
             if (val > 0) {
                 graphics_draw_line(x + i, y + 50 - val, x + i, y + 50, COLOR_RED);
             }
@@ -222,8 +223,9 @@ static void draw_society_graph(int full_size, int x, int y)
 {
     int max_value = 0;
     for (int i = 0; i < 20; i++) {
-        if (Data_CityInfo.populationPerLevel[i] > max_value) {
-            max_value = Data_CityInfo.populationPerLevel[i];
+        int value = city_population_at_level(i);
+        if (value > max_value) {
+            max_value = value;
         }
     }
     int y_max, y_shift;
@@ -241,7 +243,7 @@ static void draw_society_graph(int full_size, int x, int y)
     if (full_size) {
         graphics_set_clip_rectangle(0, 0, 640, y + 200);
         for (int i = 0; i < 20; i++) {
-            int pop = Data_CityInfo.populationPerLevel[i];
+            int pop = city_population_at_level(i);
             int val;
             if (y_shift == -1) {
                 val = 2 * pop;
@@ -256,7 +258,7 @@ static void draw_society_graph(int full_size, int x, int y)
     } else {
         y_shift += 2;
         for (int i = 0; i < 20; i++) {
-            int val = Data_CityInfo.populationPerLevel[i] >> y_shift;
+            int val = city_population_at_level(i) >> y_shift;
             if (val > 0) {
                 graphics_fill_rect(x + 5 * i, y + 50 - val, 4, val + 1, COLOR_RED);
             }
