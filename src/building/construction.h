@@ -13,7 +13,7 @@ int building_construction_cost();
 
 int building_construction_in_progress();
 
-void building_construction_start(int x, int y);
+void building_construction_start(int x, int y, int grid_offset);
 
 void building_construction_update(int x, int y);
 

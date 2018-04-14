@@ -133,8 +133,7 @@ static int is_legion_click(const map_tile *tile)
 static void build_start(const map_tile *tile)
 {
     if (tile->grid_offset /*&& !Data_State.gamePaused*/) { // TODO FIXME
-        Data_State.selectedBuilding.gridOffsetStart = tile->grid_offset;
-        building_construction_start(tile->x, tile->y);
+        building_construction_start(tile->x, tile->y, tile->grid_offset);
     }
 }
 

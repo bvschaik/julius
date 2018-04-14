@@ -141,7 +141,7 @@ int empire_can_export_resource_to_city(int city_id, int resource)
         // quota reached
         return 0;
     }
-    if (city_resource_count(resource) <= Data_CityInfo.resourceTradeExportOver[resource]) {
+    if (city_resource_count(resource) <= city_resource_export_over(resource)) {
         // stocks too low
         return 0;
     }

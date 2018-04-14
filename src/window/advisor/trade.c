@@ -72,7 +72,7 @@ static void draw_foreground()
         lang_text_draw(23, resource, 88, y_offset + 61, FONT_NORMAL_WHITE);
         text_draw_number_centered(city_resource_count(resource),
             180, y_offset + 61, 100, FONT_NORMAL_WHITE);
-        if (Data_CityInfo.resourceIndustryMothballed[resource]) {
+        if (city_resource_is_mothballed(resource)) {
             lang_text_draw(18, 5, 300, y_offset + 61, FONT_NORMAL_WHITE);
         }
         if (city_resource_is_stockpiled(resource)) {
@@ -83,7 +83,7 @@ static void draw_foreground()
                 lang_text_draw(54, 5, 380, y_offset + 61, FONT_NORMAL_WHITE);
             } else if (trade_status == TRADE_STATUS_EXPORT) {
                 lang_text_draw(54, 6, 380, y_offset + 61, FONT_NORMAL_WHITE);
-                text_draw_number(Data_CityInfo.resourceTradeExportOver[resource], '@', " ",
+                text_draw_number(city_resource_export_over(resource), '@', " ",
                     500, y_offset + 61, FONT_NORMAL_WHITE);
             }
         }

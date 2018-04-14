@@ -55,6 +55,16 @@ void city_resource_cycle_trade_status(resource_type resource)
     }
 }
 
+int city_resource_export_over(resource_type resource)
+{
+    return city_data.resource.export_over[resource];
+}
+
+void city_resource_change_export_over(resource_type resource, int change)
+{
+    city_data.resource.export_over[resource] = calc_bound(city_data.resource.export_over[resource] + change, 0, 100);
+}
+
 int city_resource_is_stockpiled(resource_type resource)
 {
     return city_data.resource.stockpiled[resource];
@@ -70,6 +80,16 @@ void city_resource_toggle_stockpiled(resource_type resource)
             city_data.resource.stockpiled[resource] = TRADE_STATUS_NONE;
         }
     }
+}
+
+int city_resource_is_mothballed(resource_type resource)
+{
+    return city_data.resource.mothballed[resource];
+}
+
+void city_resource_toggle_mothballed(resource_type resource)
+{
+    city_data.resource.mothballed[resource] = city_data.resource.mothballed[resource] ? 0 : 1;
 }
 
 int city_resource_has_workshop_with_room(int workshop_type)

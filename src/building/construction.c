@@ -470,8 +470,9 @@ int building_construction_in_progress()
     return data.in_progress;
 }
 
-void building_construction_start(int x, int y)
+void building_construction_start(int x, int y, int grid_offset)
 {
+    Data_State.selectedBuilding.gridOffsetStart = grid_offset;
     data.x_start = data.x_end = x;
     data.y_start = data.y_end = y;
 

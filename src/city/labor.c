@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "city/data_private.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "game/time.h"
@@ -63,7 +64,7 @@ static int is_industry_disabled(building *b) {
         return 0;
     }
     int resource = b->outputResourceId;
-    if (Data_CityInfo.resourceIndustryMothballed[resource]) {
+    if (city_data.resource.mothballed[resource]) {
         return 1;
     }
     return 0;

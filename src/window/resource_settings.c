@@ -75,7 +75,7 @@ static void draw_foreground()
         int active_buildings = building_count_industry_active(data.resource);
         if (building_count_industry_total(data.resource) <= 0) {
             lang_text_draw(54, 7, 98, 172, FONT_NORMAL_BLACK);
-        } else if (Data_CityInfo.resourceIndustryMothballed[data.resource] == 1) {
+        } else if (city_resource_is_mothballed(data.resource)) {
             int width = text_draw_number(total_buildings, '@', " ", 98, 172, FONT_NORMAL_BLACK);
             if (total_buildings == 1) {
                 lang_text_draw(54, 10, 98 + width, 172, FONT_NORMAL_BLACK);
@@ -135,13 +135,12 @@ static void draw_foreground()
     }
 
     if (trade_status == TRADE_STATUS_EXPORT) {
-        lang_text_draw_amount(8, 10, Data_CityInfo.resourceTradeExportOver[data.resource],
-            386, 221, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 10, city_resource_export_over(data.resource), 386, 221, FONT_NORMAL_BLACK);
     }
 
     if (building_count_industry_total(data.resource) > 0) {
         button_border_draw(98, 250, 432, 30, data.focus_button_id == 1);
-        if (Data_CityInfo.resourceIndustryMothballed[data.resource]) {
+        if (city_resource_is_mothballed(data.resource)) {
             lang_text_draw_centered(54, 17, 114, 259, 400, FONT_NORMAL_BLACK);
         } else {
             lang_text_draw_centered(54, 16, 114, 259, 400, FONT_NORMAL_BLACK);
@@ -193,23 +192,13 @@ static void button_ok(int param1, int param2)
 
 static void button_export_up_down(int is_down, int param2)
 {
-    if (is_down) {
-        --Data_CityInfo.resourceTradeExportOver[data.resource];
-    } else {
-        ++Data_CityInfo.resourceTradeExportOver[data.resource];
-    }
-    Data_CityInfo.resourceTradeExportOver[data.resource] =
-        calc_bound(Data_CityInfo.resourceTradeExportOver[data.resource], 0, 100);
+    city_resource_change_export_over(data.resource, is_down ? -1 : 1);
 }
 
 static void button_toggle_industry(int param1, int param2)
 {
     if (building_count_industry_total(data.resource) > 0) {
-        if (Data_CityInfo.resourceIndustryMothballed[data.resource]) {
-            Data_CityInfo.resourceIndustryMothballed[data.resource] = 0;
-        } else {
-            Data_CityInfo.resourceIndustryMothballed[data.resource] = 1;
-        }
+        city_resource_toggle_mothballed(data.resource);
     }
 }
 

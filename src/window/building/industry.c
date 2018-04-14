@@ -1,6 +1,7 @@
 #include "industry.h"
 
 #include "building/building.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "game/resource.h"
@@ -28,7 +29,7 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
 
     if (!c->has_road_access) {
         window_building_draw_description_at(c, 70, 69, 25);
-    } else if (Data_CityInfo.resourceIndustryMothballed[resource]) {
+    } else if (city_resource_is_mothballed(resource)) {
         window_building_draw_description_at(c, 70, group_id, 4);
     } else if (b->data.industry.curse_days_left > 4) {
         window_building_draw_description_at(c, 70, group_id, 11);
@@ -98,7 +99,7 @@ static void draw_raw_material(building_info_context *c, int help_id, const char 
 
     if (!c->has_road_access) {
         window_building_draw_description_at(c, 70, 69, 25);
-    } else if (Data_CityInfo.resourceIndustryMothballed[resource]) {
+    } else if (city_resource_is_mothballed(resource)) {
         window_building_draw_description_at(c, 70, group_id, 4);
     } else if (b->numWorkers <= 0) {
         window_building_draw_description_at(c, 70, group_id, 5);
@@ -164,7 +165,7 @@ static void draw_workshop(building_info_context *c, int help_id, const char *sou
 
     if (!c->has_road_access) {
         window_building_draw_description_at(c, 86, 69, 25);
-    } else if (Data_CityInfo.resourceIndustryMothballed[resource]) {
+    } else if (city_resource_is_mothballed(resource)) {
         window_building_draw_description_at(c, 86, group_id, 4);
     } else if (b->numWorkers <= 0) {
         window_building_draw_description_at(c, 86, group_id, 5);

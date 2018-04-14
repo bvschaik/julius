@@ -130,20 +130,20 @@ static void save_main_data(buffer *main)
     buffer_write_i16(main, city_data.building.senate_grid_offset);
     buffer_write_i32(main, city_data.building.senate_building_id);
     buffer_write_i16(main, city_data.unused.unknown_2828);
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++) {
         buffer_write_i16(main, city_data.resource.space_in_warehouses[i]);
     }
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++) {
         buffer_write_i16(main, city_data.resource.stored_in_warehouses[i]);
     }
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++) {
         buffer_write_i16(main, city_data.resource.trade_status[i]);
     }
-    for (int i = 0; i < 16; i++) {
-        buffer_write_i16(main, Data_CityInfo.resourceTradeExportOver[i]);
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        buffer_write_i16(main, city_data.resource.export_over[i]);
     }
-    for (int i = 0; i < 16; i++) {
-        buffer_write_i16(main, Data_CityInfo.resourceIndustryMothballed[i]);
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        buffer_write_i16(main, city_data.resource.mothballed[i]);
     }
     buffer_write_i16(main, city_data.unused.unused_28ca);
     for (int i = 0; i < 7; i++) {
@@ -161,7 +161,7 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 272; i++) {
         buffer_write_i8(main, city_data.unused.unknown_2924[i]);
     }
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++) {
         buffer_write_i32(main, city_data.resource.stockpiled[i]);
     }
     buffer_write_i32(main, Data_CityInfo.foodInfoFoodSupplyMonths);
@@ -607,20 +607,20 @@ static void load_main_data(buffer *main)
     city_data.building.senate_grid_offset = buffer_read_i16(main);
     city_data.building.senate_building_id = buffer_read_i32(main);
     city_data.unused.unknown_2828 = buffer_read_i16(main);
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++) {
         city_data.resource.space_in_warehouses[i] = buffer_read_i16(main);
     }
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++) {
         city_data.resource.stored_in_warehouses[i] = buffer_read_i16(main);
     }
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++) {
         city_data.resource.trade_status[i] = buffer_read_i16(main);
     }
-    for (int i = 0; i < 16; i++) {
-        Data_CityInfo.resourceTradeExportOver[i] = buffer_read_i16(main);
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        city_data.resource.export_over[i] = buffer_read_i16(main);
     }
-    for (int i = 0; i < 16; i++) {
-        Data_CityInfo.resourceIndustryMothballed[i] = buffer_read_i16(main);
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        city_data.resource.mothballed[i] = buffer_read_i16(main);
     }
     city_data.unused.unused_28ca = buffer_read_i16(main);
     for (int i = 0; i < 7; i++) {
@@ -638,7 +638,7 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 272; i++) {
         city_data.unused.unknown_2924[i] = buffer_read_i8(main);
     }
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++) {
         city_data.resource.stockpiled[i] = buffer_read_i32(main);
     }
     Data_CityInfo.foodInfoFoodSupplyMonths = buffer_read_i32(main);
