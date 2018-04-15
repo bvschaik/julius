@@ -12,9 +12,9 @@ void city_trade_update()
     Data_CityInfo.tradeNumOpenSeaRoutes = 0;
     Data_CityInfo.tradeNumOpenLandRoutes = 0;
     // Wine types
-    Data_CityInfo.resourceWineTypesAvailable = building_count_industry_total(RESOURCE_WINE) > 0 ? 1 : 0;
+    city_data.resource.wine_types_available = building_count_industry_total(RESOURCE_WINE) > 0 ? 1 : 0;
     if (city_data.resource.trade_status[RESOURCE_WINE] == TRADE_STATUS_IMPORT) {
-        Data_CityInfo.resourceWineTypesAvailable += empire_city_count_wine_sources();
+        city_data.resource.wine_types_available += empire_city_count_wine_sources();
     }
     // Update trade problems
     if (Data_CityInfo.tradeLandProblemDuration > 0) {

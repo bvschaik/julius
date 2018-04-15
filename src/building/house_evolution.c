@@ -2,6 +2,7 @@
 
 #include "building/house.h"
 #include "building/model.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "game/time.h"
@@ -182,7 +183,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade)
     if (wine && house->data.house.inventory[INVENTORY_WINE] <= 0) {
         return 0;
     }
-    if (wine >= 2 && Data_CityInfo.resourceWineTypesAvailable < 2) {
+    if (wine > 1 && !city_resource_multiple_wine_available()) {
         ++Data_CityInfo.housesRequiringSecondWineToEvolve;
         return 0;
     }
@@ -676,7 +677,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         house->data.house.evolveTextId = 29;
         return;
     }
-    if (wine > 1 && Data_CityInfo.resourceWineTypesAvailable < 2) {
+    if (wine > 1 && !city_resource_multiple_wine_available()) {
         house->data.house.evolveTextId = 65;
         return;
     }
@@ -815,7 +816,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         house->data.house.evolveTextId = 59;
         return;
     }
-    if (wine > 1 && Data_CityInfo.resourceWineTypesAvailable < 2) {
+    if (wine > 1 && !city_resource_multiple_wine_available()) {
         house->data.house.evolveTextId = 66;
         return;
     }

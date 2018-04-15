@@ -15,6 +15,8 @@ const resource_list *city_resource_get_available();
 
 const resource_list *city_resource_get_available_foods();
 
+int city_resource_multiple_wine_available();
+
 resource_trade_status city_resource_trade_status(resource_type resource);
 void city_resource_cycle_trade_status(resource_type resource);
 
@@ -28,6 +30,8 @@ int city_resource_is_mothballed(resource_type resource);
 void city_resource_toggle_mothballed(resource_type resource);
 
 int city_resource_has_workshop_with_room(int workshop_type);
+
+void city_resource_remove_from_granary(resource_type food, int amount);
 
 void city_resource_add_to_warehouse(resource_type resource, int amount);
 void city_resource_remove_from_warehouse(resource_type resource, int amount);

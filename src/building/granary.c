@@ -67,20 +67,16 @@ int building_granary_remove_resource(building *granary, int resource, int amount
     if (amount <= 0) {
         return 0;
     }
-    int to_remove;
+    int removed;
     if (granary->data.granary.resource_stored[resource] >= amount) {
-        Data_CityInfo.resourceGranaryFoodStored[resource] -= amount;
-        granary->data.granary.resource_stored[resource] -= amount;
-        granary->data.granary.resource_stored[RESOURCE_NONE] += amount;
-        to_remove = 0;
+        removed = amount;
     } else {
-        int removed = granary->data.granary.resource_stored[resource];
-        Data_CityInfo.resourceGranaryFoodStored[resource] -= removed;
-        granary->data.granary.resource_stored[resource] = 0;
-        granary->data.granary.resource_stored[RESOURCE_NONE] += removed;
-        to_remove = amount - removed;
+        removed = granary->data.granary.resource_stored[resource];
     }
-    return to_remove;
+    city_resource_remove_from_granary(resource, removed);
+    granary->data.granary.resource_stored[resource] -= removed;
+    granary->data.granary.resource_stored[RESOURCE_NONE] += removed;
+    return amount - removed;
 }
 
 int building_granary_remove_for_getting_deliveryman(building *src, building *dst, int *resource)

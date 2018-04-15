@@ -12,8 +12,6 @@
 #include "window/resource_settings.h"
 #include "window/trade_prices.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 27
 
 static void button_prices(int param1, int param2);

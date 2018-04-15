@@ -17,8 +17,6 @@
 #include "window/advisor/trade.h"
 #include "window/message_dialog.h"
 
-#include "Data/CityInfo.h"
-
 static void button_help(int param1, int param2);
 static void button_ok(int param1, int param2);
 static void button_export_up_down(int is_down, int param2);

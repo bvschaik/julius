@@ -33,6 +33,11 @@ const resource_list *city_resource_get_available_foods()
     return &available.food_list;
 }
 
+int city_resource_multiple_wine_available()
+{
+    return city_data.resource.wine_types_available >= 2;
+}
+
 resource_trade_status city_resource_trade_status(resource_type resource)
 {
     return city_data.resource.trade_status[resource];
@@ -95,6 +100,11 @@ void city_resource_toggle_mothballed(resource_type resource)
 int city_resource_has_workshop_with_room(int workshop_type)
 {
     return city_data.resource.space_in_workshops[workshop_type] > 0;
+}
+
+void city_resource_remove_from_granary(resource_type food, int amount)
+{
+    city_data.resource.granary_food_stored[food] -= amount;
 }
 
 void city_resource_add_to_warehouse(resource_type resource, int amount)
@@ -175,7 +185,7 @@ void city_resource_determine_available()
 static void calculate_available_food()
 {
     for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
-        Data_CityInfo.resourceGranaryFoodStored[i] = 0;
+        city_data.resource.granary_food_stored[i] = 0;
     }
     Data_CityInfo.foodInfoFoodStoredInGranaries = 0;
     Data_CityInfo.foodInfoFoodTypesAvailable = 0;
@@ -209,7 +219,7 @@ static void calculate_available_food()
             } else {
                 Data_CityInfo.foodInfoGranariesOperating++;
                 for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
-                    Data_CityInfo.resourceGranaryFoodStored[r] += b->data.granary.resource_stored[r];
+                    city_data.resource.granary_food_stored[r] += b->data.granary.resource_stored[r];
                 }
                 if (amount_stored > 400) {
                     tutorial_on_filled_granary();
@@ -218,8 +228,8 @@ static void calculate_available_food()
         }
     }
     for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
-        if (Data_CityInfo.resourceGranaryFoodStored[i]) {
-            Data_CityInfo.foodInfoFoodStoredInGranaries += Data_CityInfo.resourceGranaryFoodStored[i];
+        if (city_data.resource.granary_food_stored[i]) {
+            Data_CityInfo.foodInfoFoodStoredInGranaries += city_data.resource.granary_food_stored[i];
             Data_CityInfo.foodInfoFoodTypesAvailable++;
         }
     }

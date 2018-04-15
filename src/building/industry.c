@@ -8,8 +8,6 @@
 #include "map/road_access.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 #define MAX_PROGRESS_RAW 200
 #define MAX_PROGRESS_WORKSHOP 400
 

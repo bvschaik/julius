@@ -31,7 +31,6 @@ extern struct _Data_CityInfo {
 	uint8_t exitPointX;
 	uint8_t exitPointY;
 	int16_t exitPointGridOffset;
-	int32_t resourceGranaryFoodStored[7];
 	int32_t foodInfoFoodStoredInGranaries;
 	int32_t foodInfoFoodTypesAvailable;
 	int32_t foodInfoFoodTypesEaten;
@@ -201,7 +200,6 @@ extern struct _Data_CityInfo {
 	int32_t militaryLegionaryLegions;
 	int32_t populationHighestEver;
 	int32_t estimatedYearlyWages;
-	int32_t resourceWineTypesAvailable;
 	struct {
 		int32_t id;
 		int32_t size;
