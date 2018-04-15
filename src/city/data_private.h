@@ -36,6 +36,8 @@ extern struct city_data_t {
         int32_t distribution_center_building_id;
         int32_t distribution_center_placed;
         int32_t trade_center_building_id;
+        int8_t triumphal_arches_available;
+        int8_t triumphal_arches_placed;
     } building;
     struct {
         emperor_gift gifts[3];
@@ -108,6 +110,7 @@ extern struct city_data_t {
         int32_t total_all_years;
         int32_t total_years;
         int32_t average_per_year;
+        int32_t highest_ever;
     } population;
     struct {
         int32_t culture;

@@ -108,3 +108,18 @@ void city_buildings_remove_hippodrome()
 {
     city_data.building.hippodrome_placed = 0;
 }
+
+int city_buildings_triumphal_arch_available()
+{
+    return city_data.building.triumphal_arches_available > city_data.building.triumphal_arches_placed;
+}
+
+void city_buildings_build_triumphal_arch()
+{
+    city_data.building.triumphal_arches_placed++;
+}
+
+void city_buildings_earn_triumphal_arch()
+{
+    city_data.building.triumphal_arches_available++;
+}

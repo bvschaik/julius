@@ -471,7 +471,7 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, Data_CityInfo.distantBattleRomanMonthsToReturn);
     buffer_write_i8(main, Data_CityInfo.distantBattleRomanMonthsToTravel);
     buffer_write_i8(main, Data_CityInfo.distantBattleCityMonthsUntilRoman);
-    buffer_write_i8(main, Data_CityInfo.triumphalArchesAvailable);
+    buffer_write_i8(main, city_data.building.triumphal_arches_available);
     buffer_write_i8(main, Data_CityInfo.distantBattleTotalCount);
     buffer_write_i8(main, Data_CityInfo.distantBattleWonCount);
     buffer_write_i8(main, Data_CityInfo.distantBattleEnemyMonthsTraveled);
@@ -480,7 +480,7 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, Data_CityInfo.militaryTotalLegionsEmpireService);
     buffer_write_i8(main, city_data.unused.unknown_458e);
     buffer_write_i8(main, Data_CityInfo.militaryTotalSoldiers);
-    buffer_write_i8(main, Data_CityInfo.triumphalArchesPlaced);
+    buffer_write_i8(main, city_data.building.triumphal_arches_placed);
     buffer_write_i8(main, city_data.sound.die_citizen);
     buffer_write_i8(main, city_data.sound.die_soldier);
     buffer_write_i8(main, city_data.sound.shoot_arrow);
@@ -503,7 +503,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.emperor.invasion.size);
     buffer_write_i32(main, city_data.emperor.invasion.soldiers_killed);
     buffer_write_i32(main, Data_CityInfo.militaryLegionaryLegions);
-    buffer_write_i32(main, Data_CityInfo.populationHighestEver);
+    buffer_write_i32(main, city_data.population.highest_ever);
     buffer_write_i32(main, Data_CityInfo.estimatedYearlyWages);
     buffer_write_i32(main, city_data.resource.wine_types_available);
     buffer_write_i32(main, city_data.ratings.prosperity_max);
@@ -948,7 +948,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.distantBattleRomanMonthsToReturn = buffer_read_i8(main);
     Data_CityInfo.distantBattleRomanMonthsToTravel = buffer_read_i8(main);
     Data_CityInfo.distantBattleCityMonthsUntilRoman = buffer_read_i8(main);
-    Data_CityInfo.triumphalArchesAvailable = buffer_read_i8(main);
+    city_data.building.triumphal_arches_available = buffer_read_i8(main);
     Data_CityInfo.distantBattleTotalCount = buffer_read_i8(main);
     Data_CityInfo.distantBattleWonCount = buffer_read_i8(main);
     Data_CityInfo.distantBattleEnemyMonthsTraveled = buffer_read_i8(main);
@@ -957,7 +957,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.militaryTotalLegionsEmpireService = buffer_read_i8(main);
     city_data.unused.unknown_458e = buffer_read_i8(main);
     Data_CityInfo.militaryTotalSoldiers = buffer_read_i8(main);
-    Data_CityInfo.triumphalArchesPlaced = buffer_read_i8(main);
+    city_data.building.triumphal_arches_placed = buffer_read_i8(main);
     city_data.sound.die_citizen = buffer_read_i8(main);
     city_data.sound.die_soldier = buffer_read_i8(main);
     city_data.sound.shoot_arrow = buffer_read_i8(main);
@@ -980,7 +980,7 @@ static void load_main_data(buffer *main)
     city_data.emperor.invasion.size = buffer_read_i32(main);
     city_data.emperor.invasion.soldiers_killed = buffer_read_i32(main);
     Data_CityInfo.militaryLegionaryLegions = buffer_read_i32(main);
-    Data_CityInfo.populationHighestEver = buffer_read_i32(main);
+    city_data.population.highest_ever = buffer_read_i32(main);
     Data_CityInfo.estimatedYearlyWages = buffer_read_i32(main);
     city_data.resource.wine_types_available = buffer_read_i32(main);
     city_data.ratings.prosperity_max = buffer_read_i32(main);

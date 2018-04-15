@@ -1,7 +1,6 @@
 #include "menu.h"
 
-#include "Data/CityInfo.h"
-
+#include "city/buildings.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
 #include "scenario/building.h"
@@ -157,7 +156,7 @@ static void enable_normal(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_LOW_BRIDGE);
     enable_if_allowed(enabled, type, BUILDING_SHIP_BRIDGE);
     if (type == BUILDING_TRIUMPHAL_ARCH) {
-        if (Data_CityInfo.triumphalArchesAvailable > Data_CityInfo.triumphalArchesPlaced) {
+        if (city_buildings_triumphal_arch_available()) {
             *enabled = 1;
         }
     }

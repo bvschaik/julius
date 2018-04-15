@@ -89,7 +89,7 @@ void city_victory_check()
         }
     }
     if (Data_CityInfo.numImperialSoldiersInCity + Data_CityInfo.numEnemiesInCity > 2 + Data_CityInfo.numSoldiersInCity) {
-        if (city_data.population.population < Data_CityInfo.populationHighestEver / 4) {
+        if (city_data.population.population < city_data.population.highest_ever / 4) {
             data.state = VICTORY_STATE_LOST;
         }
     }

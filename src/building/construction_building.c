@@ -453,7 +453,7 @@ static void add_to_map(int type, building *b, int size,
             map_terrain_add_triumphal_arch_roads(b->x, b->y, orientation);
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
-            Data_CityInfo.triumphalArchesPlaced++;
+            city_buildings_build_triumphal_arch();
             building_menu_update();
             building_construction_clear_type();
             break;

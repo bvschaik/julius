@@ -1,6 +1,7 @@
 #include "distant_battle.h"
 
 #include "building/menu.h"
+#include "city/buildings.h"
 #include "city/message.h"
 #include "city/ratings.h"
 #include "core/calc.h"
@@ -153,7 +154,7 @@ static void fight_distant_battle()
     } else {
         city_message_post(1, MESSAGE_DISTANT_BATTLE_WON, 0, 0);
         city_ratings_change_favor(25);
-        Data_CityInfo.triumphalArchesAvailable++;
+        city_buildings_earn_triumphal_arch();
         building_menu_update();
         Data_CityInfo.distantBattleWonCount++;
         Data_CityInfo.distantBattleCityMonthsUntilRoman = 0;

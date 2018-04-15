@@ -167,7 +167,6 @@ extern struct _Data_CityInfo {
 	int8_t distantBattleRomanMonthsToReturn;
 	int8_t distantBattleRomanMonthsToTravel;
 	int8_t distantBattleCityMonthsUntilRoman;
-	int8_t triumphalArchesAvailable;
 	int8_t distantBattleTotalCount;
 	int8_t distantBattleWonCount;
 	int8_t distantBattleEnemyMonthsTraveled;
@@ -175,11 +174,9 @@ extern struct _Data_CityInfo {
 	int8_t militaryTotalLegions;
 	int8_t militaryTotalLegionsEmpireService;
 	int8_t militaryTotalSoldiers;
-	int8_t triumphalArchesPlaced;
 	int32_t numSoldiersInCity;
 	int8_t populationSentimentIncludeTents;
 	int32_t militaryLegionaryLegions;
-	int32_t populationHighestEver;
 	int32_t estimatedYearlyWages;
 	struct {
 		int32_t id;

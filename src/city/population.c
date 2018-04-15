@@ -46,8 +46,8 @@ static void recalculate_population()
     for (int i = 0; i < 100; i++) {
         city_data.population.population += city_data.population.at_age[i];
     }
-    if (city_data.population.population > Data_CityInfo.populationHighestEver) {
-        Data_CityInfo.populationHighestEver = city_data.population.population;
+    if (city_data.population.population > city_data.population.highest_ever) {
+        city_data.population.highest_ever = city_data.population.population;
     }
 }
 
