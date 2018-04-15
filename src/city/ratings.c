@@ -145,7 +145,7 @@ static void update_prosperity_explanation()
         change -= 1;
     }
     // food types: +1 for multiple foods
-    if (Data_CityInfo.foodInfoFoodTypesEaten >= 2) {
+    if (city_data.resource.food_types_eaten >= 2) {
         change += 1;
     }
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
@@ -383,7 +383,7 @@ static void update_prosperity_rating()
     }
     city_data.ratings.prosperity_treasury_last_year = city_data.finance.treasury;
     // food types: +1 for multiple foods
-    if (Data_CityInfo.foodInfoFoodTypesEaten >= 2) {
+    if (city_data.resource.food_types_eaten >= 2) {
         change += 1;
     }
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome

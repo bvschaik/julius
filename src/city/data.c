@@ -155,17 +155,17 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 6; i++) {
         buffer_write_i32(main, city_data.resource.space_in_workshops[i]);
     }
-    buffer_write_i32(main, Data_CityInfo.foodInfoFoodStoredInGranaries);
-    buffer_write_i32(main, Data_CityInfo.foodInfoFoodTypesAvailable);
-    buffer_write_i32(main, Data_CityInfo.foodInfoFoodTypesEaten);
+    buffer_write_i32(main, city_data.resource.granary_total_stored);
+    buffer_write_i32(main, city_data.resource.food_types_available);
+    buffer_write_i32(main, city_data.resource.food_types_eaten);
     for (int i = 0; i < 272; i++) {
         buffer_write_i8(main, city_data.unused.unknown_2924[i]);
     }
     for (int i = 0; i < RESOURCE_MAX; i++) {
         buffer_write_i32(main, city_data.resource.stockpiled[i]);
     }
-    buffer_write_i32(main, Data_CityInfo.foodInfoFoodSupplyMonths);
-    buffer_write_i32(main, Data_CityInfo.foodInfoGranariesOperating);
+    buffer_write_i32(main, city_data.resource.food_supply_months);
+    buffer_write_i32(main, city_data.resource.granaries.operating);
     buffer_write_i32(main, Data_CityInfo.populationPercentagePlebs);
     buffer_write_i32(main, Data_CityInfo.populationWorkingAge);
     buffer_write_i32(main, Data_CityInfo.workersAvailable);
@@ -425,10 +425,10 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.nativeMainMeetingCenterX);
     buffer_write_i32(main, Data_CityInfo.nativeMainMeetingCenterY);
     buffer_write_i32(main, Data_CityInfo.wageRatePaidLastYear);
-    buffer_write_i32(main, Data_CityInfo.foodInfoFoodNeededPerMonth);
-    buffer_write_i32(main, Data_CityInfo.foodInfoGranariesUnderstaffed);
-    buffer_write_i32(main, Data_CityInfo.foodInfoGranariesNotOperating);
-    buffer_write_i32(main, Data_CityInfo.foodInfoGranariesNotOperatingWithFood);
+    buffer_write_i32(main, city_data.resource.food_needed_per_month);
+    buffer_write_i32(main, city_data.resource.granaries.understaffed);
+    buffer_write_i32(main, city_data.resource.granaries.not_operating);
+    buffer_write_i32(main, city_data.resource.granaries.not_operating_with_food);
     for (int i = 0; i < 2; i++) {
         buffer_write_i32(main, city_data.unused.unused_44e0[i]);
     }
@@ -438,9 +438,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.godBlessingMarsEnemiesToKill);
     buffer_write_i32(main, city_data.unused.unused_44f8);
     buffer_write_i32(main, Data_CityInfo.godAngryMessageDelay);
-    buffer_write_i32(main, Data_CityInfo.foodInfoFoodConsumedLastMonth);
-    buffer_write_i32(main, Data_CityInfo.foodInfoFoodStoredLastMonth);
-    buffer_write_i32(main, Data_CityInfo.foodInfoFoodStoredSoFarThisMonth);
+    buffer_write_i32(main, city_data.resource.food_consumed_last_month);
+    buffer_write_i32(main, city_data.resource.food_produced_last_month);
+    buffer_write_i32(main, city_data.resource.food_produced_this_month);
     buffer_write_i32(main, city_data.ratings.peace_riot_cause);
     buffer_write_i32(main, Data_CityInfo.estimatedTaxIncome);
     buffer_write_i32(main, Data_CityInfo.tutorial1SenateBuilt);
@@ -632,17 +632,17 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 6; i++) {
         city_data.resource.space_in_workshops[i] = buffer_read_i32(main);
     }
-    Data_CityInfo.foodInfoFoodStoredInGranaries = buffer_read_i32(main);
-    Data_CityInfo.foodInfoFoodTypesAvailable = buffer_read_i32(main);
-    Data_CityInfo.foodInfoFoodTypesEaten = buffer_read_i32(main);
+    city_data.resource.granary_total_stored = buffer_read_i32(main);
+    city_data.resource.food_types_available = buffer_read_i32(main);
+    city_data.resource.food_types_eaten = buffer_read_i32(main);
     for (int i = 0; i < 272; i++) {
         city_data.unused.unknown_2924[i] = buffer_read_i8(main);
     }
     for (int i = 0; i < RESOURCE_MAX; i++) {
         city_data.resource.stockpiled[i] = buffer_read_i32(main);
     }
-    Data_CityInfo.foodInfoFoodSupplyMonths = buffer_read_i32(main);
-    Data_CityInfo.foodInfoGranariesOperating = buffer_read_i32(main);
+    city_data.resource.food_supply_months = buffer_read_i32(main);
+    city_data.resource.granaries.operating = buffer_read_i32(main);
     Data_CityInfo.populationPercentagePlebs = buffer_read_i32(main);
     Data_CityInfo.populationWorkingAge = buffer_read_i32(main);
     Data_CityInfo.workersAvailable = buffer_read_i32(main);
@@ -902,10 +902,10 @@ static void load_main_data(buffer *main)
     Data_CityInfo.nativeMainMeetingCenterX = buffer_read_i32(main);
     Data_CityInfo.nativeMainMeetingCenterY = buffer_read_i32(main);
     Data_CityInfo.wageRatePaidLastYear = buffer_read_i32(main);
-    Data_CityInfo.foodInfoFoodNeededPerMonth = buffer_read_i32(main);
-    Data_CityInfo.foodInfoGranariesUnderstaffed = buffer_read_i32(main);
-    Data_CityInfo.foodInfoGranariesNotOperating = buffer_read_i32(main);
-    Data_CityInfo.foodInfoGranariesNotOperatingWithFood = buffer_read_i32(main);
+    city_data.resource.food_needed_per_month = buffer_read_i32(main);
+    city_data.resource.granaries.understaffed = buffer_read_i32(main);
+    city_data.resource.granaries.not_operating = buffer_read_i32(main);
+    city_data.resource.granaries.not_operating_with_food = buffer_read_i32(main);
     for (int i = 0; i < 2; i++) {
         city_data.unused.unused_44e0[i] = buffer_read_i32(main);
     }
@@ -915,9 +915,9 @@ static void load_main_data(buffer *main)
     Data_CityInfo.godBlessingMarsEnemiesToKill = buffer_read_i32(main);
     city_data.unused.unused_44f8 = buffer_read_i32(main);
     Data_CityInfo.godAngryMessageDelay = buffer_read_i32(main);
-    Data_CityInfo.foodInfoFoodConsumedLastMonth = buffer_read_i32(main);
-    Data_CityInfo.foodInfoFoodStoredLastMonth = buffer_read_i32(main);
-    Data_CityInfo.foodInfoFoodStoredSoFarThisMonth = buffer_read_i32(main);
+    city_data.resource.food_consumed_last_month = buffer_read_i32(main);
+    city_data.resource.food_produced_last_month = buffer_read_i32(main);
+    city_data.resource.food_produced_this_month = buffer_read_i32(main);
     city_data.ratings.peace_riot_cause = buffer_read_i32(main);
     Data_CityInfo.estimatedTaxIncome = buffer_read_i32(main);
     Data_CityInfo.tutorial1SenateBuilt = buffer_read_i32(main);

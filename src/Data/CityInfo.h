@@ -31,11 +31,6 @@ extern struct _Data_CityInfo {
 	uint8_t exitPointX;
 	uint8_t exitPointY;
 	int16_t exitPointGridOffset;
-	int32_t foodInfoFoodStoredInGranaries;
-	int32_t foodInfoFoodTypesAvailable;
-	int32_t foodInfoFoodTypesEaten;
-	int32_t foodInfoFoodSupplyMonths;
-	int32_t foodInfoGranariesOperating;
 	int32_t populationPercentagePlebs;
 	int32_t populationWorkingAge;
 	int32_t workersAvailable;
@@ -153,17 +148,10 @@ extern struct _Data_CityInfo {
 	int32_t nativeMainMeetingCenterX;
 	int32_t nativeMainMeetingCenterY;
 	int32_t wageRatePaidLastYear;
-	int32_t foodInfoFoodNeededPerMonth; //44d0
-	int32_t foodInfoGranariesUnderstaffed;
-	int32_t foodInfoGranariesNotOperating;
-	int32_t foodInfoGranariesNotOperatingWithFood;
 	int32_t godCurseVenusActive;
 	int32_t godBlessingNeptuneDoubleTrade;
 	int32_t godBlessingMarsEnemiesToKill;
 	int32_t godAngryMessageDelay;
-	int32_t foodInfoFoodConsumedLastMonth;
-	int32_t foodInfoFoodStoredLastMonth;
-	int32_t foodInfoFoodStoredSoFarThisMonth;
 	int32_t estimatedTaxIncome;
 	int32_t tutorial1SenateBuilt;
 	int32_t shipyardBoatsRequested;

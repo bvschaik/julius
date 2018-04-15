@@ -138,8 +138,21 @@ extern struct city_data_t {
         int32_t stockpiled[RESOURCE_MAX];
         int16_t mothballed[RESOURCE_MAX];
         int32_t wine_types_available;
+        int32_t food_types_available;
+        int32_t food_types_eaten;
         int32_t granary_food_stored[RESOURCE_MAX_FOOD];
         int32_t granary_total_stored;
+        int32_t food_supply_months;
+        int32_t food_needed_per_month;
+        int32_t food_consumed_last_month;
+        int32_t food_produced_last_month;
+        int32_t food_produced_this_month;
+        struct {
+            int operating;
+            int not_operating;
+            int not_operating_with_food;
+            int understaffed;
+        } granaries;
     } resource;
     struct {
         int8_t march_enemy;

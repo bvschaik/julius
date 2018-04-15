@@ -358,7 +358,7 @@ static int draw_background()
     if (scenario_property_rome_supplies_wheat()) {
         lang_text_draw(55, 11, 75, 342, FONT_NORMAL_WHITE);
     } else {
-        width = lang_text_draw_amount(8, 6, Data_CityInfo.foodInfoGranariesOperating, 75, 342, FONT_NORMAL_WHITE);
+        width = lang_text_draw_amount(8, 6, city_resource_operating_granaries(), 75, 342, FONT_NORMAL_WHITE);
         if (city_resource_food_supply_months() > 0) {
             width += lang_text_draw(55, 12, 75 + width, 342, FONT_NORMAL_WHITE);
             lang_text_draw_amount(8, 4, city_resource_food_supply_months(), 75 + width, 342, FONT_NORMAL_WHITE);

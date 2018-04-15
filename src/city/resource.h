@@ -23,6 +23,8 @@ int city_resource_food_needed();
 int city_resource_food_supply_months();
 int city_resource_food_percentage_produced();
 
+int city_resource_operating_granaries();
+
 resource_trade_status city_resource_trade_status(resource_type resource);
 void city_resource_cycle_trade_status(resource_type resource);
 
