@@ -38,6 +38,31 @@ int city_resource_multiple_wine_available()
     return city_data.resource.wine_types_available >= 2;
 }
 
+int city_resource_food_types_available()
+{
+    return Data_CityInfo.foodInfoFoodTypesAvailable;
+}
+
+int city_resource_food_stored()
+{
+    return Data_CityInfo.foodInfoFoodStoredInGranaries;
+}
+
+int city_resource_food_needed()
+{
+    return Data_CityInfo.foodInfoFoodNeededPerMonth;
+}
+
+int city_resource_food_supply_months()
+{
+    return Data_CityInfo.foodInfoFoodSupplyMonths;
+}
+
+int city_resource_food_percentage_produced()
+{
+    return calc_percentage(Data_CityInfo.foodInfoFoodStoredLastMonth, Data_CityInfo.foodInfoFoodConsumedLastMonth);
+}
+
 resource_trade_status city_resource_trade_status(resource_type resource)
 {
     return city_data.resource.trade_status[resource];
@@ -100,6 +125,11 @@ void city_resource_toggle_mothballed(resource_type resource)
 int city_resource_has_workshop_with_room(int workshop_type)
 {
     return city_data.resource.space_in_workshops[workshop_type] > 0;
+}
+
+void city_resource_add_produced_to_granary(int amount)
+{
+    Data_CityInfo.foodInfoFoodStoredSoFarThisMonth += amount;
 }
 
 void city_resource_remove_from_granary(resource_type food, int amount)

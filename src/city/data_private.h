@@ -132,13 +132,14 @@ extern struct city_data_t {
         int16_t space_in_warehouses[RESOURCE_MAX];
         int16_t stored_in_warehouses[RESOURCE_MAX];
         int32_t space_in_workshops[6];
-        int32_t stored_in_workshops[6];//2900
+        int32_t stored_in_workshops[6];
         int16_t trade_status[RESOURCE_MAX];
         int16_t export_over[RESOURCE_MAX];
         int32_t stockpiled[RESOURCE_MAX];
         int16_t mothballed[RESOURCE_MAX];
-        int32_t granary_food_stored[RESOURCE_MAX_FOOD];
         int32_t wine_types_available;
+        int32_t granary_food_stored[RESOURCE_MAX_FOOD];
+        int32_t granary_total_stored;
     } resource;
     struct {
         int8_t march_enemy;

@@ -1,6 +1,7 @@
 #include "chief.h"
 
 #include "city/finance.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -86,9 +87,9 @@ static int draw_background()
     draw_title(126, 4);
     if (scenario_property_rome_supplies_wheat()) {
         lang_text_draw(61, 26, X_OFFSET, 126, FONT_NORMAL_GREEN);
-    } else if (Data_CityInfo.foodInfoFoodSupplyMonths > 0) {
+    } else if (city_resource_food_supply_months() > 0) {
         width = lang_text_draw(61, 28, X_OFFSET, 126, FONT_NORMAL_GREEN);
-        lang_text_draw_amount(8, 4, Data_CityInfo.foodInfoFoodSupplyMonths, X_OFFSET + width, 126, FONT_NORMAL_GREEN);
+        lang_text_draw_amount(8, 4, city_resource_food_supply_months(), X_OFFSET + width, 126, FONT_NORMAL_GREEN);
     } else {
         lang_text_draw(61, 27, X_OFFSET, 126, FONT_NORMAL_RED);
     }
@@ -98,7 +99,7 @@ static int draw_background()
     if (scenario_property_rome_supplies_wheat()) {
         lang_text_draw(61, 26, X_OFFSET, 146, FONT_NORMAL_GREEN);
     } else {
-        int pct = calc_percentage(Data_CityInfo.foodInfoFoodStoredLastMonth, Data_CityInfo.foodInfoFoodConsumedLastMonth);
+        int pct = city_resource_food_percentage_produced();
         if (pct > 150) {
             lang_text_draw(61, 63, X_OFFSET, 146, FONT_NORMAL_GREEN);
         } else if (pct > 105) {

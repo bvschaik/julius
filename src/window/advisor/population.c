@@ -1,6 +1,7 @@
 #include "population.h"
 
 #include "city/population.h"
+#include "city/resource.h"
 #include "game/time.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -358,12 +359,12 @@ static int draw_background()
         lang_text_draw(55, 11, 75, 342, FONT_NORMAL_WHITE);
     } else {
         width = lang_text_draw_amount(8, 6, Data_CityInfo.foodInfoGranariesOperating, 75, 342, FONT_NORMAL_WHITE);
-        if (Data_CityInfo.foodInfoFoodSupplyMonths > 0) {
+        if (city_resource_food_supply_months() > 0) {
             width += lang_text_draw(55, 12, 75 + width, 342, FONT_NORMAL_WHITE);
-            lang_text_draw_amount(8, 4, Data_CityInfo.foodInfoFoodSupplyMonths, 75 + width, 342, FONT_NORMAL_WHITE);
-        } else if (Data_CityInfo.foodInfoFoodStoredInGranaries > Data_CityInfo.foodInfoFoodNeededPerMonth / 2) {
+            lang_text_draw_amount(8, 4, city_resource_food_supply_months(), 75 + width, 342, FONT_NORMAL_WHITE);
+        } else if (city_resource_food_stored() > city_resource_food_needed() / 2) {
             lang_text_draw(55, 13, 75 + width, 342, FONT_NORMAL_WHITE);
-        } else if (Data_CityInfo.foodInfoFoodStoredInGranaries > 0) {
+        } else if (city_resource_food_stored() > 0) {
             lang_text_draw(55, 15, 75 + width, 342, FONT_NORMAL_WHITE);
         } else {
             lang_text_draw(55, 14, 75 + width, 342, FONT_NORMAL_WHITE);
@@ -372,7 +373,7 @@ static int draw_background()
 
     // food types eaten
     width = lang_text_draw(55, 16, 75, 360, FONT_NORMAL_WHITE);
-    text_draw_number(Data_CityInfo.foodInfoFoodTypesAvailable, '@', " ", 75 + width, 360, FONT_NORMAL_WHITE);
+    text_draw_number(city_resource_food_types_available(), '@', " ", 75 + width, 360, FONT_NORMAL_WHITE);
 
     // immigration
     if (Data_CityInfo.populationNewcomersThisMonth >= 5) {

@@ -50,7 +50,7 @@ int building_granary_add_resource(building *granary, int resource, int is_produc
         return 0; // no space
     }
     if (is_produced) {
-        Data_CityInfo.foodInfoFoodStoredSoFarThisMonth += 100;
+        city_resource_add_produced_to_granary(100);
     }
     if (granary->data.granary.resource_stored[RESOURCE_NONE] <= 100) {
         granary->data.granary.resource_stored[resource] += granary->data.granary.resource_stored[RESOURCE_NONE];
