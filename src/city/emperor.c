@@ -90,63 +90,63 @@ static void process_caesar_invasion()
 {
     if (Data_CityInfo.numImperialSoldiersInCity) {
         // caesar invasion in progress
-        Data_CityInfo.caesarInvasionDurationDayCountdown--;
-        if (city_data.ratings.favor >= 35 && Data_CityInfo.caesarInvasionDurationDayCountdown < 176) {
+        city_data.emperor.invasion.duration_day_countdown--;
+        if (city_data.ratings.favor >= 35 && city_data.emperor.invasion.duration_day_countdown < 176) {
             formation_caesar_pause();
         } else if (city_data.ratings.favor >= 22) {
-            if (Data_CityInfo.caesarInvasionDurationDayCountdown > 0) {
+            if (city_data.emperor.invasion.duration_day_countdown > 0) {
                 formation_caesar_retreat();
-                if (!Data_CityInfo.caesarInvasionRetreatMessageShown) {
-                    Data_CityInfo.caesarInvasionRetreatMessageShown = 1;
+                if (!city_data.emperor.invasion.retreat_message_shown) {
+                    city_data.emperor.invasion.retreat_message_shown = 1;
                     city_message_post(1, MESSAGE_CAESAR_ARMY_RETREAT, 0, 0);
                 }
-            } else if (Data_CityInfo.caesarInvasionDurationDayCountdown == 0) {
+            } else if (city_data.emperor.invasion.duration_day_countdown == 0) {
                 city_message_post(1, MESSAGE_CAESAR_ARMY_CONTINUE, 0, 0); // a year has passed (11 months), siege goes on
             }
         }
-    } else if (Data_CityInfo.caesarInvasionSoldiersDied && Data_CityInfo.caesarInvasionSoldiersDied >= Data_CityInfo.caesarInvasionSize) {
+    } else if (city_data.emperor.invasion.soldiers_killed && city_data.emperor.invasion.soldiers_killed >= city_data.emperor.invasion.size) {
         // player defeated caesar army
-        Data_CityInfo.caesarInvasionSize = 0;
-        Data_CityInfo.caesarInvasionSoldiersDied = 0;
+        city_data.emperor.invasion.size = 0;
+        city_data.emperor.invasion.soldiers_killed = 0;
         if (city_data.ratings.favor < 35) {
             city_ratings_change_favor(10);
-            if (Data_CityInfo.caesarInvasionCount < 2) {
+            if (city_data.emperor.invasion.count < 2) {
                 city_message_post(1, MESSAGE_CAESAR_RESPECT_1, 0, 0);
-            } else if (Data_CityInfo.caesarInvasionCount < 3) {
+            } else if (city_data.emperor.invasion.count < 3) {
                 city_message_post(1, MESSAGE_CAESAR_RESPECT_2, 0, 0);
             } else {
                 city_message_post(1, MESSAGE_CAESAR_RESPECT_3, 0, 0);
             }
         }
-    } else if (Data_CityInfo.caesarInvasionDaysUntilInvasion <= 0) {
+    } else if (city_data.emperor.invasion.days_until_invasion <= 0) {
         if (city_data.ratings.favor <= 10) {
             // warn player that caesar is angry and will invade in a year
-            Data_CityInfo.caesarInvasionWarningsGiven++;
-            Data_CityInfo.caesarInvasionDaysUntilInvasion = 192;
-            if (Data_CityInfo.caesarInvasionWarningsGiven <= 1) {
+            city_data.emperor.invasion.warnings_given++;
+            city_data.emperor.invasion.days_until_invasion = 192;
+            if (city_data.emperor.invasion.warnings_given <= 1) {
                 city_message_post(1, MESSAGE_CAESAR_WRATH, 0, 0);
             }
         }
     } else {
-        Data_CityInfo.caesarInvasionDaysUntilInvasion--;
-        if (Data_CityInfo.caesarInvasionDaysUntilInvasion == 0) {
+        city_data.emperor.invasion.days_until_invasion--;
+        if (city_data.emperor.invasion.days_until_invasion == 0) {
             // invade!
             int size;
-            if (Data_CityInfo.caesarInvasionCount == 0) {
+            if (city_data.emperor.invasion.count == 0) {
                 size = 32;
-            } else if (Data_CityInfo.caesarInvasionCount == 1) {
+            } else if (city_data.emperor.invasion.count == 1) {
                 size = 64;
-            } else if (Data_CityInfo.caesarInvasionCount == 2) {
+            } else if (city_data.emperor.invasion.count == 2) {
                 size = 96;
             } else {
                 size = 144;
             }
             if (scenario_invasion_start_from_caesar(size)) {
-                Data_CityInfo.caesarInvasionCount++;
-                Data_CityInfo.caesarInvasionDurationDayCountdown = 192;
-                Data_CityInfo.caesarInvasionRetreatMessageShown = 0;
-                Data_CityInfo.caesarInvasionSize = size;
-                Data_CityInfo.caesarInvasionSoldiersDied = 0;
+                city_data.emperor.invasion.count++;
+                city_data.emperor.invasion.duration_day_countdown = 192;
+                city_data.emperor.invasion.retreat_message_shown = 0;
+                city_data.emperor.invasion.size = size;
+                city_data.emperor.invasion.soldiers_killed = 0;
             }
         }
     }
@@ -275,4 +275,9 @@ void city_emperor_set_salary_rank(int rank)
 {
     Data_CityInfo.salaryRank = rank;
     Data_CityInfo.salaryAmount = SALARY_FOR_RANK[rank];
+}
+
+void city_emperor_mark_soldier_killed()
+{
+    city_data.emperor.invasion.soldiers_killed++;
 }

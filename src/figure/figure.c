@@ -1,6 +1,7 @@
 #include "figure/figure.h"
 
 #include "building/building.h"
+#include "city/emperor.h"
 #include "core/random.h"
 #include "empire/city.h"
 #include "figure/name.h"
@@ -79,7 +80,7 @@ void figure_delete(figure *f)
             }
             break;
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
-            Data_CityInfo.caesarInvasionSoldiersDied++;
+            city_emperor_mark_soldier_killed();
             break;
         case FIGURE_EXPLOSION:
         case FIGURE_FORT_STANDARD:

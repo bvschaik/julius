@@ -42,6 +42,15 @@ extern struct city_data_t {
         int32_t selected_gift_size;
         int32_t months_since_gift;
         int32_t gift_overdose_penalty;
+        struct {
+            int32_t count;
+            int32_t size;
+            int32_t soldiers_killed;
+            int32_t warnings_given;
+            int32_t days_until_invasion;
+            int32_t duration_day_countdown;
+            int32_t retreat_message_shown;
+        } invasion;
     } emperor;
     struct {
         int32_t treasury;

@@ -160,10 +160,6 @@ extern struct _Data_CityInfo {
 	int32_t populationPeopleInTents;
 	int32_t populationPeopleInLargeInsulaAndAbove;
 	int32_t numImperialSoldiersInCity;
-	int32_t caesarInvasionDurationDayCountdown;
-	int32_t caesarInvasionWarningsGiven;
-	int32_t caesarInvasionDaysUntilInvasion;
-	int32_t caesarInvasionRetreatMessageShown;
 	uint8_t distantBattleCityId;
 	uint8_t distantBattleEnemyStrength;
 	uint8_t distantBattleRomanStrength;
@@ -182,9 +178,6 @@ extern struct _Data_CityInfo {
 	int8_t triumphalArchesPlaced;
 	int32_t numSoldiersInCity;
 	int8_t populationSentimentIncludeTents;
-	int32_t caesarInvasionCount;
-	int32_t caesarInvasionSize;
-	int32_t caesarInvasionSoldiersDied;
 	int32_t militaryLegionaryLegions;
 	int32_t populationHighestEver;
 	int32_t estimatedYearlyWages;

@@ -458,10 +458,10 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.populationPeopleInTents);
     buffer_write_i32(main, Data_CityInfo.populationPeopleInLargeInsulaAndAbove);
     buffer_write_i32(main, Data_CityInfo.numImperialSoldiersInCity);
-    buffer_write_i32(main, Data_CityInfo.caesarInvasionDurationDayCountdown);
-    buffer_write_i32(main, Data_CityInfo.caesarInvasionWarningsGiven);
-    buffer_write_i32(main, Data_CityInfo.caesarInvasionDaysUntilInvasion);
-    buffer_write_i32(main, Data_CityInfo.caesarInvasionRetreatMessageShown);
+    buffer_write_i32(main, city_data.emperor.invasion.duration_day_countdown);
+    buffer_write_i32(main, city_data.emperor.invasion.warnings_given);
+    buffer_write_i32(main, city_data.emperor.invasion.days_until_invasion);
+    buffer_write_i32(main, city_data.emperor.invasion.retreat_message_shown);
     buffer_write_i32(main, city_data.ratings.peace_destroyed_buildings);
     buffer_write_i32(main, city_data.ratings.peace_years_of_peace);
     buffer_write_u8(main, Data_CityInfo.distantBattleCityId);
@@ -499,9 +499,9 @@ static void save_main_data(buffer *main)
         buffer_write_i8(main, city_data.unused.unused_45a5[i]);
     }
     buffer_write_i8(main, Data_CityInfo.populationSentimentIncludeTents);
-    buffer_write_i32(main, Data_CityInfo.caesarInvasionCount);
-    buffer_write_i32(main, Data_CityInfo.caesarInvasionSize);
-    buffer_write_i32(main, Data_CityInfo.caesarInvasionSoldiersDied);
+    buffer_write_i32(main, city_data.emperor.invasion.count);
+    buffer_write_i32(main, city_data.emperor.invasion.size);
+    buffer_write_i32(main, city_data.emperor.invasion.soldiers_killed);
     buffer_write_i32(main, Data_CityInfo.militaryLegionaryLegions);
     buffer_write_i32(main, Data_CityInfo.populationHighestEver);
     buffer_write_i32(main, Data_CityInfo.estimatedYearlyWages);
@@ -935,10 +935,10 @@ static void load_main_data(buffer *main)
     Data_CityInfo.populationPeopleInTents = buffer_read_i32(main);
     Data_CityInfo.populationPeopleInLargeInsulaAndAbove = buffer_read_i32(main);
     Data_CityInfo.numImperialSoldiersInCity = buffer_read_i32(main);
-    Data_CityInfo.caesarInvasionDurationDayCountdown = buffer_read_i32(main);
-    Data_CityInfo.caesarInvasionWarningsGiven = buffer_read_i32(main);
-    Data_CityInfo.caesarInvasionDaysUntilInvasion = buffer_read_i32(main);
-    Data_CityInfo.caesarInvasionRetreatMessageShown = buffer_read_i32(main);
+    city_data.emperor.invasion.duration_day_countdown = buffer_read_i32(main);
+    city_data.emperor.invasion.warnings_given = buffer_read_i32(main);
+    city_data.emperor.invasion.days_until_invasion = buffer_read_i32(main);
+    city_data.emperor.invasion.retreat_message_shown = buffer_read_i32(main);
     city_data.ratings.peace_destroyed_buildings = buffer_read_i32(main);
     city_data.ratings.peace_years_of_peace = buffer_read_i32(main);
     Data_CityInfo.distantBattleCityId = buffer_read_u8(main);
@@ -976,9 +976,9 @@ static void load_main_data(buffer *main)
         city_data.unused.unused_45a5[i] = buffer_read_i8(main);
     }
     Data_CityInfo.populationSentimentIncludeTents = buffer_read_i8(main);
-    Data_CityInfo.caesarInvasionCount = buffer_read_i32(main);
-    Data_CityInfo.caesarInvasionSize = buffer_read_i32(main);
-    Data_CityInfo.caesarInvasionSoldiersDied = buffer_read_i32(main);
+    city_data.emperor.invasion.count = buffer_read_i32(main);
+    city_data.emperor.invasion.size = buffer_read_i32(main);
+    city_data.emperor.invasion.soldiers_killed = buffer_read_i32(main);
     Data_CityInfo.militaryLegionaryLegions = buffer_read_i32(main);
     Data_CityInfo.populationHighestEver = buffer_read_i32(main);
     Data_CityInfo.estimatedYearlyWages = buffer_read_i32(main);
