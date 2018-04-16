@@ -1,5 +1,6 @@
 #include "population.h"
 
+#include "building/building.h"
 #include "building/house_population.h"
 #include "city/data_private.h"
 #include "core/calc.h"
@@ -271,10 +272,45 @@ static void yearly_recalculate_population()
     city_data.population.average_per_year = city_data.population.total_all_years / city_data.population.total_years;
 }
 
+static int calculate_people_per_house_type()
+{
+    city_data.population.people_in_tents_shacks = 0;
+    city_data.population.people_in_villas_palaces = 0;
+    city_data.population.people_in_tents = 0;
+    city_data.population.people_in_large_insula_and_above = 0;
+    int total = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (b->state == BUILDING_STATE_UNUSED ||
+            b->state == BUILDING_STATE_UNDO ||
+            b->state == BUILDING_STATE_DELETED_BY_GAME ||
+            b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+            continue;
+        }
+        if (b->houseSize) {
+            int pop = b->housePopulation;
+            total += pop;
+            if (b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
+                city_data.population.people_in_tents += pop;
+            }
+            if (b->subtype.houseLevel <= HOUSE_LARGE_SHACK) {
+                city_data.population.people_in_tents_shacks += pop;
+            }
+            if (b->subtype.houseLevel >= HOUSE_LARGE_INSULA) {
+                city_data.population.people_in_large_insula_and_above += pop;
+            }
+            if (b->subtype.houseLevel >= HOUSE_SMALL_VILLA) {
+                city_data.population.people_in_villas_palaces += pop;
+            }
+        }
+    }
+    return total;
+}
+
 void city_population_request_yearly_update()
 {
     city_data.population.yearly_update_requested = 1;
-    house_population_calculate_people_per_type();
+    calculate_people_per_house_type();
 }
 
 void city_population_yearly_update()
@@ -288,7 +324,7 @@ void city_population_yearly_update()
 
 void city_population_check_consistency()
 {
-    int people_in_houses = house_population_calculate_people_per_type();
+    int people_in_houses = calculate_people_per_house_type();
     if (people_in_houses < city_data.population.population) {
         remove_from_census(city_data.population.population - people_in_houses);
     }

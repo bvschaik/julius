@@ -97,8 +97,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.population.last_change);
     buffer_write_i32(main, city_data.population.average_per_year);
     buffer_write_i32(main, city_data.population.total_all_years);
-    buffer_write_i32(main, Data_CityInfo.populationPeopleInTentsShacks);
-    buffer_write_i32(main, Data_CityInfo.populationPeopleInVillasPalaces);
+    buffer_write_i32(main, city_data.population.people_in_tents_shacks);
+    buffer_write_i32(main, city_data.population.people_in_villas_palaces);
     buffer_write_i32(main, city_data.population.total_years);
     buffer_write_i32(main, city_data.population.yearly_update_requested);
     buffer_write_i32(main, Data_CityInfo.populationLastTargetHouseAdd);
@@ -455,8 +455,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.shipyardBoatsRequested);
     buffer_write_i32(main, Data_CityInfo.numEnemiesInCity);
     buffer_write_i32(main, Data_CityInfo.populationSentimentWages);
-    buffer_write_i32(main, Data_CityInfo.populationPeopleInTents);
-    buffer_write_i32(main, Data_CityInfo.populationPeopleInLargeInsulaAndAbove);
+    buffer_write_i32(main, city_data.population.people_in_tents);
+    buffer_write_i32(main, city_data.population.people_in_large_insula_and_above);
     buffer_write_i32(main, Data_CityInfo.numImperialSoldiersInCity);
     buffer_write_i32(main, city_data.emperor.invasion.duration_day_countdown);
     buffer_write_i32(main, city_data.emperor.invasion.warnings_given);
@@ -574,8 +574,8 @@ static void load_main_data(buffer *main)
     city_data.population.last_change = buffer_read_i32(main);
     city_data.population.average_per_year = buffer_read_i32(main);
     city_data.population.total_all_years = buffer_read_i32(main);
-    Data_CityInfo.populationPeopleInTentsShacks = buffer_read_i32(main);
-    Data_CityInfo.populationPeopleInVillasPalaces = buffer_read_i32(main);
+    city_data.population.people_in_tents_shacks = buffer_read_i32(main);
+    city_data.population.people_in_villas_palaces = buffer_read_i32(main);
     city_data.population.total_years = buffer_read_i32(main);
     city_data.population.yearly_update_requested = buffer_read_i32(main);
     Data_CityInfo.populationLastTargetHouseAdd = buffer_read_i32(main);
@@ -932,8 +932,8 @@ static void load_main_data(buffer *main)
     Data_CityInfo.shipyardBoatsRequested = buffer_read_i32(main);
     Data_CityInfo.numEnemiesInCity = buffer_read_i32(main);
     Data_CityInfo.populationSentimentWages = buffer_read_i32(main);
-    Data_CityInfo.populationPeopleInTents = buffer_read_i32(main);
-    Data_CityInfo.populationPeopleInLargeInsulaAndAbove = buffer_read_i32(main);
+    city_data.population.people_in_tents = buffer_read_i32(main);
+    city_data.population.people_in_large_insula_and_above = buffer_read_i32(main);
     Data_CityInfo.numImperialSoldiersInCity = buffer_read_i32(main);
     city_data.emperor.invasion.duration_day_countdown = buffer_read_i32(main);
     city_data.emperor.invasion.warnings_given = buffer_read_i32(main);

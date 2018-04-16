@@ -156,11 +156,11 @@ static void update_prosperity_explanation()
         change -= 1;
     }
     // high percentage poor: -1, high percentage rich: +1
-    int pct_tents = calc_percentage(Data_CityInfo.populationPeopleInTentsShacks, city_data.population.population);
+    int pct_tents = calc_percentage(city_data.population.people_in_tents_shacks, city_data.population.population);
     if (pct_tents > 30) {
         change -= 1;
     }
-    if (calc_percentage(Data_CityInfo.populationPeopleInVillasPalaces, city_data.population.population) > 10) {
+    if (calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population) > 10) {
         change += 1;
     }
     // tribute not paid: -1
@@ -394,10 +394,10 @@ static void update_prosperity_rating()
         change -= 1;
     }
     // high percentage poor: -1, high percentage rich: +1
-    if (calc_percentage(Data_CityInfo.populationPeopleInTentsShacks, city_data.population.population) > 30) {
+    if (calc_percentage(city_data.population.people_in_tents_shacks, city_data.population.population) > 30) {
         change -= 1;
     }
-    if (calc_percentage(Data_CityInfo.populationPeopleInVillasPalaces, city_data.population.population) > 10) {
+    if (calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population) > 10) {
         change += 1;
     }
     // tribute not paid: -1

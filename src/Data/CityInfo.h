@@ -15,8 +15,6 @@ extern struct _Data_CityInfo {
 	int32_t populationEmigrationAmountPerBatch;
 	int32_t populationEmigrationQueueSize;
 	int32_t populationImmigrationQueueSize;
-	int32_t populationPeopleInTentsShacks;
-	int32_t populationPeopleInVillasPalaces;
 	int32_t populationLastTargetHouseAdd;
 	int32_t populationLastTargetHouseRemove;
 	int32_t populationImmigratedToday;
@@ -157,8 +155,6 @@ extern struct _Data_CityInfo {
 	int32_t shipyardBoatsRequested;
 	int32_t numEnemiesInCity;
 	int32_t populationSentimentWages;
-	int32_t populationPeopleInTents;
-	int32_t populationPeopleInLargeInsulaAndAbove;
 	int32_t numImperialSoldiersInCity;
 	uint8_t distantBattleCityId;
 	uint8_t distantBattleEnemyStrength;

@@ -16,12 +16,6 @@ int house_population_add_to_city(int num_people);
 int house_population_remove_from_city(int num_people);
 
 /**
- * Calculates aggregates of people per housing type
- * @return Total population
- */
-int house_population_calculate_people_per_type();
-
-/**
  * Update room available in houses
  */
 void house_population_update_room();

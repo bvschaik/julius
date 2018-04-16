@@ -53,8 +53,8 @@ static int get_sentiment_penalty_for_tent_dwellers()
     Data_CityInfo.populationSentimentIncludeTents = 0;
 
     int penalty;
-    int pct_tents = calc_percentage(Data_CityInfo.populationPeopleInTents, city_data.population.population);
-    if (Data_CityInfo.populationPeopleInVillasPalaces > 0) {
+    int pct_tents = calc_percentage(city_data.population.people_in_tents, city_data.population.population);
+    if (city_data.population.people_in_villas_palaces > 0) {
         if (pct_tents >= 57) {
             penalty = 0;
         } else if (pct_tents >= 40) {
@@ -66,7 +66,7 @@ static int get_sentiment_penalty_for_tent_dwellers()
         } else {
             penalty = -6;
         }
-    } else if (Data_CityInfo.populationPeopleInLargeInsulaAndAbove > 0) {
+    } else if (city_data.population.people_in_large_insula_and_above > 0) {
         if (pct_tents >= 57) {
             penalty = 0;
         } else if (pct_tents >= 40) {

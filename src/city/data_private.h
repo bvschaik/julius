@@ -111,6 +111,11 @@ extern struct city_data_t {
         int32_t total_years;
         int32_t average_per_year;
         int32_t highest_ever;
+
+        int32_t people_in_tents;
+        int32_t people_in_tents_shacks;
+        int32_t people_in_large_insula_and_above;
+        int32_t people_in_villas_palaces;
     } population;
     struct {
         int32_t culture;

@@ -56,41 +56,6 @@ int house_population_remove_from_city(int num_people)
     return removed;
 }
 
-int house_population_calculate_people_per_type()
-{
-    Data_CityInfo.populationPeopleInTentsShacks = 0;
-    Data_CityInfo.populationPeopleInVillasPalaces = 0;
-    Data_CityInfo.populationPeopleInTents = 0;
-    Data_CityInfo.populationPeopleInLargeInsulaAndAbove = 0;
-    int total = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED ||
-            b->state == BUILDING_STATE_UNDO ||
-            b->state == BUILDING_STATE_DELETED_BY_GAME ||
-            b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
-            continue;
-        }
-        if (b->houseSize) {
-            int pop = b->housePopulation;
-            total += pop;
-            if (b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
-                Data_CityInfo.populationPeopleInTents += pop;
-            }
-            if (b->subtype.houseLevel <= HOUSE_LARGE_SHACK) {
-                Data_CityInfo.populationPeopleInTentsShacks += pop;
-            }
-            if (b->subtype.houseLevel >= HOUSE_LARGE_INSULA) {
-                Data_CityInfo.populationPeopleInLargeInsulaAndAbove += pop;
-            }
-            if (b->subtype.houseLevel >= HOUSE_SMALL_VILLA) {
-                Data_CityInfo.populationPeopleInVillasPalaces += pop;
-            }
-        }
-    }
-    return total;
-}
-
 static void fill_building_list_with_houses()
 {
     building_list_large_clear(0);
