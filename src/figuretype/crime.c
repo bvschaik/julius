@@ -128,8 +128,9 @@ void figure_generate_criminals()
         if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
             return;
         }
-        if (Data_CityInfo.citySentiment < 30) {
-            if (random_byte() >= Data_CityInfo.citySentiment + 50) {
+        int sentiment = city_sentiment();
+        if (sentiment < 30) {
+            if (random_byte() >= sentiment + 50) {
                 if (min_happiness <= 10) {
                     generate_rioter(min_building);
                 } else if (min_happiness < 30) {
@@ -138,8 +139,8 @@ void figure_generate_criminals()
                     generate_protestor(min_building);
                 }
             }
-        } else if (Data_CityInfo.citySentiment < 60) {
-            if (random_byte() >= Data_CityInfo.citySentiment + 40) {
+        } else if (sentiment < 60) {
+            if (random_byte() >= sentiment + 40) {
                 if (min_happiness < 30) {
                     generate_mugger(min_building);
                 } else if (min_happiness < 50) {
@@ -147,7 +148,7 @@ void figure_generate_criminals()
                 }
             }
         } else {
-            if (random_byte() >= Data_CityInfo.citySentiment + 20) {
+            if (random_byte() >= sentiment + 20) {
                 if (min_happiness < 50) {
                     generate_protestor(min_building);
                 }

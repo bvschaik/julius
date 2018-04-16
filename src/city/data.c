@@ -17,7 +17,7 @@ void city_data_init()
     city_data.unused.faction_bytes[0] = 0;
     city_data.unused.faction_bytes[1] = 0;
 
-    Data_CityInfo.citySentiment = 60;
+    city_data.sentiment.value = 60;
     Data_CityInfo.healthRateTarget = 50;
     Data_CityInfo.healthRate = 50;
     city_data.unused.unknown_00c0 = 3;
@@ -64,7 +64,7 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, city_data.unused.unknown_00a7);
     buffer_write_i32(main, city_data.finance.tax_percentage);
     buffer_write_i32(main, city_data.finance.treasury);
-    buffer_write_i32(main, Data_CityInfo.citySentiment);
+    buffer_write_i32(main, city_data.sentiment.value);
     buffer_write_i32(main, Data_CityInfo.healthRateTarget);
     buffer_write_i32(main, Data_CityInfo.healthRate);
     buffer_write_i32(main, Data_CityInfo.numHospitalWorkers);
@@ -396,9 +396,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.festivalEffectMonthsDelayFirst);
     buffer_write_i32(main, Data_CityInfo.festivalEffectMonthsDelaySecond);
     buffer_write_i32(main, city_data.unused.unused_4454);
-    buffer_write_i32(main, Data_CityInfo.populationSentimentUnemployment);
-    buffer_write_i32(main, Data_CityInfo.citySentimentLastTime);
-    buffer_write_i32(main, Data_CityInfo.citySentimentChangeMessageDelay);
+    buffer_write_i32(main, city_data.sentiment.unemployment);
+    buffer_write_i32(main, city_data.sentiment.previous_value);
+    buffer_write_i32(main, city_data.sentiment.message_delay);
     buffer_write_i32(main, Data_CityInfo.populationEmigrationCause);
     buffer_write_i32(main, Data_CityInfo.riotersOrAttackingNativesInCity);
     for (int i = 0; i < 4; i++) {
@@ -454,7 +454,7 @@ static void save_main_data(buffer *main)
     }
     buffer_write_i32(main, Data_CityInfo.shipyardBoatsRequested);
     buffer_write_i32(main, Data_CityInfo.numEnemiesInCity);
-    buffer_write_i32(main, Data_CityInfo.populationSentimentWages);
+    buffer_write_i32(main, city_data.sentiment.wages);
     buffer_write_i32(main, city_data.population.people_in_tents);
     buffer_write_i32(main, city_data.population.people_in_large_insula_and_above);
     buffer_write_i32(main, Data_CityInfo.numImperialSoldiersInCity);
@@ -498,7 +498,7 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 6; i++) {
         buffer_write_i8(main, city_data.unused.unused_45a5[i]);
     }
-    buffer_write_i8(main, Data_CityInfo.populationSentimentIncludeTents);
+    buffer_write_i8(main, city_data.sentiment.include_tents);
     buffer_write_i32(main, city_data.emperor.invasion.count);
     buffer_write_i32(main, city_data.emperor.invasion.size);
     buffer_write_i32(main, city_data.emperor.invasion.soldiers_killed);
@@ -541,7 +541,7 @@ static void load_main_data(buffer *main)
     city_data.unused.unknown_00a6 = buffer_read_i8(main);
     city_data.finance.tax_percentage = buffer_read_i32(main);
     city_data.finance.treasury = buffer_read_i32(main);
-    Data_CityInfo.citySentiment = buffer_read_i32(main);
+    city_data.sentiment.value = buffer_read_i32(main);
     Data_CityInfo.healthRateTarget = buffer_read_i32(main);
     Data_CityInfo.healthRate = buffer_read_i32(main);
     Data_CityInfo.numHospitalWorkers = buffer_read_i32(main);
@@ -873,9 +873,9 @@ static void load_main_data(buffer *main)
     Data_CityInfo.festivalEffectMonthsDelayFirst = buffer_read_i32(main);
     Data_CityInfo.festivalEffectMonthsDelaySecond = buffer_read_i32(main);
     city_data.unused.unused_4454 = buffer_read_i32(main);
-    Data_CityInfo.populationSentimentUnemployment = buffer_read_i32(main);
-    Data_CityInfo.citySentimentLastTime = buffer_read_i32(main);
-    Data_CityInfo.citySentimentChangeMessageDelay = buffer_read_i32(main);
+    city_data.sentiment.unemployment = buffer_read_i32(main);
+    city_data.sentiment.previous_value = buffer_read_i32(main);
+    city_data.sentiment.message_delay = buffer_read_i32(main);
     Data_CityInfo.populationEmigrationCause = buffer_read_i32(main);
     Data_CityInfo.riotersOrAttackingNativesInCity = buffer_read_i32(main);
     for (int i = 0; i < 4; i++) {
@@ -931,7 +931,7 @@ static void load_main_data(buffer *main)
     }
     Data_CityInfo.shipyardBoatsRequested = buffer_read_i32(main);
     Data_CityInfo.numEnemiesInCity = buffer_read_i32(main);
-    Data_CityInfo.populationSentimentWages = buffer_read_i32(main);
+    city_data.sentiment.wages = buffer_read_i32(main);
     city_data.population.people_in_tents = buffer_read_i32(main);
     city_data.population.people_in_large_insula_and_above = buffer_read_i32(main);
     Data_CityInfo.numImperialSoldiersInCity = buffer_read_i32(main);
@@ -975,7 +975,7 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 6; i++) {
         city_data.unused.unused_45a5[i] = buffer_read_i8(main);
     }
-    Data_CityInfo.populationSentimentIncludeTents = buffer_read_i8(main);
+    city_data.sentiment.include_tents = buffer_read_i8(main);
     city_data.emperor.invasion.count = buffer_read_i32(main);
     city_data.emperor.invasion.size = buffer_read_i32(main);
     city_data.emperor.invasion.soldiers_killed = buffer_read_i32(main);

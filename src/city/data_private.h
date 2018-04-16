@@ -118,6 +118,15 @@ extern struct city_data_t {
         int32_t people_in_villas_palaces;
     } population;
     struct {
+        int32_t value;
+        int32_t previous_value;
+        int32_t message_delay;
+
+        int8_t include_tents;
+        int32_t unemployment;
+        int32_t wages;
+    } sentiment;
+    struct {
         int32_t culture;
         int32_t prosperity;
         int32_t peace;

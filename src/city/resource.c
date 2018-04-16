@@ -1,7 +1,5 @@
 #include "resource.h"
 
-#include "Data/CityInfo.h"
-
 #include "building/building.h"
 #include "building/industry.h"
 #include "building/model.h"

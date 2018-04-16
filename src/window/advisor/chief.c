@@ -2,6 +2,7 @@
 
 #include "city/finance.h"
 #include "city/resource.h"
+#include "city/sentiment.h"
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -194,12 +195,13 @@ static int draw_background()
 
     // sentiment
     draw_title(286, 11);
-    if (Data_CityInfo.citySentiment <= 0) {
+    int sentiment = city_sentiment();
+    if (sentiment <= 0) {
         lang_text_draw(61, 50, X_OFFSET, 286, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.citySentiment >= 100) {
+    } else if (sentiment >= 100) {
         lang_text_draw(61, 61, X_OFFSET, 286, FONT_NORMAL_GREEN);
     } else {
-        lang_text_draw(61, Data_CityInfo.citySentiment / 10 + 51, X_OFFSET, 286, FONT_NORMAL_GREEN);
+        lang_text_draw(61, sentiment / 10 + 51, X_OFFSET, 286, FONT_NORMAL_GREEN);
     }
     
     return ADVISOR_HEIGHT;

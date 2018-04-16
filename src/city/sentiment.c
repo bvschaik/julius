@@ -18,6 +18,11 @@ static const int SENTIMENT_PER_TAX_RATE[26] = {
     -6, -6, -6, -6, -6, -6
 };
 
+int city_sentiment()
+{
+    return city_data.sentiment.value;
+}
+
 void city_sentiment_change_happiness(int amount)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -46,11 +51,11 @@ void city_sentiment_set_max_happiness(int max)
 static int get_sentiment_penalty_for_tent_dwellers()
 {
     // alternate the penalty for every update
-    if (!Data_CityInfo.populationSentimentIncludeTents) {
-        Data_CityInfo.populationSentimentIncludeTents = 1;
+    if (!city_data.sentiment.include_tents) {
+        city_data.sentiment.include_tents = 1;
         return 0;
     }
-    Data_CityInfo.populationSentimentIncludeTents = 0;
+    city_data.sentiment.include_tents = 0;
 
     int penalty;
     int pct_tents = calc_percentage(city_data.population.people_in_tents, city_data.population.population);
@@ -94,7 +99,7 @@ static int get_sentiment_penalty_for_tent_dwellers()
 
 static int get_sentiment_contribution_wages()
 {
-    Data_CityInfo.populationSentimentWages = Data_CityInfo.wages;
+    city_data.sentiment.wages = Data_CityInfo.wages;
     int contribution = 0;
     int wage_diff = Data_CityInfo.wages - Data_CityInfo.wagesRome;
     if (wage_diff < 0) {
@@ -116,14 +121,14 @@ static int get_sentiment_contribution_wages()
 
 static int get_sentiment_contribution_employment()
 {
-    Data_CityInfo.populationSentimentUnemployment = Data_CityInfo.unemploymentPercentage;
-    if (Data_CityInfo.unemploymentPercentage > 25) {
+    int unemployment = city_data.sentiment.unemployment = Data_CityInfo.unemploymentPercentage;
+    if (unemployment > 25) {
         return -3;
-    } else if (Data_CityInfo.unemploymentPercentage > 17) {
+    } else if (unemployment > 17) {
         return -2;
-    } else if (Data_CityInfo.unemploymentPercentage > 10) {
+    } else if (unemployment > 10) {
         return -1;
-    } else if (Data_CityInfo.unemploymentPercentage > 4) {
+    } else if (unemployment > 4) {
         return 0;
     } else {
         return 1;
@@ -221,19 +226,19 @@ void city_sentiment_update()
         }
     }
     if (total_houses) {
-        Data_CityInfo.citySentiment = total_sentiment / total_houses;
+        city_data.sentiment.value = total_sentiment / total_houses;
     } else {
-        Data_CityInfo.citySentiment = 60;
+        city_data.sentiment.value = 60;
     }
-    if (Data_CityInfo.citySentimentChangeMessageDelay) {
-        Data_CityInfo.citySentimentChangeMessageDelay--;
+    if (city_data.sentiment.message_delay) {
+        city_data.sentiment.message_delay--;
     }
-    if (Data_CityInfo.citySentiment < 48 && Data_CityInfo.citySentiment < Data_CityInfo.citySentimentLastTime) {
-        if (Data_CityInfo.citySentimentChangeMessageDelay <= 0) {
-            Data_CityInfo.citySentimentChangeMessageDelay = 3;
-            if (Data_CityInfo.citySentiment < 35) {
+    if (city_data.sentiment.value < 48 && city_data.sentiment.value < city_data.sentiment.previous_value) {
+        if (city_data.sentiment.message_delay <= 0) {
+            city_data.sentiment.message_delay = 3;
+            if (city_data.sentiment.value < 35) {
                 city_message_post(0, MESSAGE_PEOPLE_ANGRY, 0, 0);
-            } else if (Data_CityInfo.citySentiment < 40) {
+            } else if (city_data.sentiment.value < 40) {
                 city_message_post(0, MESSAGE_PEOPLE_UNHAPPY, 0, 0);
             } else {
                 city_message_post(0, MESSAGE_PEOPLE_DISGRUNTLED, 0, 0);
@@ -262,22 +267,22 @@ void city_sentiment_update()
     if (sentiment_contribution_tents < worst_sentiment) {
         Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_MANY_TENTS;
     }
-    Data_CityInfo.citySentimentLastTime = Data_CityInfo.citySentiment;
+    city_data.sentiment.previous_value = city_data.sentiment.value;
 }
 
 void city_sentiment_update_migration_status()
 {
-    if (Data_CityInfo.citySentiment > 70) {
+    if (city_data.sentiment.value > 70) {
         Data_CityInfo.populationMigrationPercentage = 100;
-    } else if (Data_CityInfo.citySentiment > 60) {
+    } else if (city_data.sentiment.value > 60) {
         Data_CityInfo.populationMigrationPercentage = 75;
-    } else if (Data_CityInfo.citySentiment >= 50) {
+    } else if (city_data.sentiment.value >= 50) {
         Data_CityInfo.populationMigrationPercentage = 50;
-    } else if (Data_CityInfo.citySentiment > 40) {
+    } else if (city_data.sentiment.value > 40) {
         Data_CityInfo.populationMigrationPercentage = 0;
-    } else if (Data_CityInfo.citySentiment > 30) {
+    } else if (city_data.sentiment.value > 30) {
         Data_CityInfo.populationMigrationPercentage = -10;
-    } else if (Data_CityInfo.citySentiment > 20) {
+    } else if (city_data.sentiment.value > 20) {
         Data_CityInfo.populationMigrationPercentage = -25;
     } else {
         Data_CityInfo.populationMigrationPercentage = -50;

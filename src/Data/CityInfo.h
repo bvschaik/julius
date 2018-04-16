@@ -5,7 +5,6 @@
 
 extern struct _Data_CityInfo {
 	int8_t __unknown_00a5;
-	int32_t citySentiment;
 	int32_t healthRateTarget;
 	int32_t healthRate;
 	int32_t numHospitalWorkers;
@@ -136,9 +135,6 @@ extern struct _Data_CityInfo {
 	int32_t cultureCoverageReligion;
 	int32_t festivalEffectMonthsDelayFirst;
 	int32_t festivalEffectMonthsDelaySecond;
-	int32_t populationSentimentUnemployment;
-	int32_t citySentimentLastTime;
-	int32_t citySentimentChangeMessageDelay;
 	int32_t populationEmigrationCause; // 4464
 	int32_t riotersOrAttackingNativesInCity;
 	int32_t nativeAttackDuration;
@@ -154,7 +150,6 @@ extern struct _Data_CityInfo {
 	int32_t tutorial1SenateBuilt;
 	int32_t shipyardBoatsRequested;
 	int32_t numEnemiesInCity;
-	int32_t populationSentimentWages;
 	int32_t numImperialSoldiersInCity;
 	uint8_t distantBattleCityId;
 	uint8_t distantBattleEnemyStrength;
@@ -171,7 +166,6 @@ extern struct _Data_CityInfo {
 	int8_t militaryTotalLegionsEmpireService;
 	int8_t militaryTotalSoldiers;
 	int32_t numSoldiersInCity;
-	int8_t populationSentimentIncludeTents;
 	int32_t militaryLegionaryLegions;
 	int32_t estimatedYearlyWages;
 	struct {

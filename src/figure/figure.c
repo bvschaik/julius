@@ -10,8 +10,6 @@
 #include "map/figure.h"
 #include "map/grid.h"
 
-#include "Data/CityInfo.h"
-
 #include <string.h>
 
 static struct {

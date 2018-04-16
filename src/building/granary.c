@@ -11,8 +11,6 @@
 #include "scenario/property.h"
 #include "sound/effect.h"
 
-#include "Data/CityInfo.h"
-
 #define MAX_GRANARIES 100
 
 static struct {
