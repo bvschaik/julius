@@ -10,15 +10,8 @@ extern struct _Data_CityInfo {
 	int32_t numHospitalWorkers;
 	int32_t populationMaxSupported;
 	int32_t populationRoomInHouses;
-	int32_t populationImmigrationAmountPerBatch;
-	int32_t populationEmigrationAmountPerBatch;
-	int32_t populationEmigrationQueueSize;
-	int32_t populationImmigrationQueueSize;
 	int32_t populationLastTargetHouseAdd;
 	int32_t populationLastTargetHouseRemove;
-	int32_t populationImmigratedToday;
-	int32_t populationEmigratedToday;
-	int32_t populationRefusedImmigrantsNoRoom;
 	int32_t populationMigrationPercentage;
 	int32_t populationNewcomersThisMonth;
 	int16_t resourceLastTargetWarehouse;
@@ -135,7 +128,7 @@ extern struct _Data_CityInfo {
 	int32_t cultureCoverageReligion;
 	int32_t festivalEffectMonthsDelayFirst;
 	int32_t festivalEffectMonthsDelaySecond;
-	int32_t populationEmigrationCause; // 4464
+	int32_t populationEmigrationCause;
 	int32_t riotersOrAttackingNativesInCity;
 	int32_t nativeAttackDuration;
 	int32_t nativeMissionPostOperational;

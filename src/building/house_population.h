@@ -30,4 +30,18 @@ void house_population_update_migration();
  */
 void house_population_evict_overcrowded();
 
+/**
+ * Create immigrants
+ * @param num_people Number of people to immigrate
+ * @return Number of people actually immigrated
+ */
+int house_population_create_immigrants(int num_people);
+
+/**
+ * Create emigrants
+ * @param num_people Number of people to emigrate
+ * @return Number of people actually emigrated
+ */
+int house_population_create_emigrants(int num_people);
+
 #endif // BUILDING_HOUSE_POPULATION_H

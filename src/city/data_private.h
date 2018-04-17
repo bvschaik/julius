@@ -118,6 +118,15 @@ extern struct city_data_t {
         int32_t people_in_villas_palaces;
     } population;
     struct {
+        int32_t immigration_amount_per_batch;
+        int32_t emigration_amount_per_batch;
+        int32_t immigration_queue_size;
+        int32_t emigration_queue_size;
+        int32_t immigrated_today;
+        int32_t emigrated_today;
+        int32_t refused_immigrants_today;
+    } migration;
+    struct {
         int32_t value;
         int32_t previous_value;
         int32_t message_delay;

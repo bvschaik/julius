@@ -1,5 +1,6 @@
 #include "population.h"
 
+#include "city/migration.h"
 #include "city/population.h"
 #include "city/resource.h"
 #include "game/time.h"
@@ -380,7 +381,7 @@ static int draw_background()
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
         width = text_draw_number(Data_CityInfo.populationNewcomersThisMonth, '@', " ", 75, 396, FONT_NORMAL_WHITE);
         lang_text_draw(55, 17, 75 + width, 396, FONT_NORMAL_WHITE);
-    } else if (Data_CityInfo.populationRefusedImmigrantsNoRoom || Data_CityInfo.populationRoomInHouses <= 0) {
+    } else if (city_migration_no_room_for_immigrants()) {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
         lang_text_draw(55, 19, 75, 396, FONT_NORMAL_WHITE);
     } else if (Data_CityInfo.populationMigrationPercentage < 80) {

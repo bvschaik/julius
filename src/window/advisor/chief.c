@@ -1,6 +1,7 @@
 #include "chief.h"
 
 #include "city/finance.h"
+#include "city/migration.h"
 #include "city/resource.h"
 #include "city/sentiment.h"
 #include "core/calc.h"
@@ -64,7 +65,7 @@ static int draw_background()
         lang_text_draw(61, 79, X_OFFSET, 106, FONT_NORMAL_GREEN);
     } else if (Data_CityInfo.populationNewcomersThisMonth >= 5) {
         lang_text_draw(61, 25, X_OFFSET, 106, FONT_NORMAL_GREEN);
-    } else if (Data_CityInfo.populationRefusedImmigrantsNoRoom || Data_CityInfo.populationRoomInHouses <= 0) {
+    } else if (city_migration_no_room_for_immigrants()) {
         lang_text_draw(61, 18, X_OFFSET, 106, FONT_NORMAL_RED);
     } else if (Data_CityInfo.populationMigrationPercentage >= 80) {
         lang_text_draw(61, 25, X_OFFSET, 106, FONT_NORMAL_GREEN);

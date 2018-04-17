@@ -4,8 +4,8 @@
 #include "building/list.h"
 #include "building/model.h"
 #include "city/message.h"
+#include "city/migration.h"
 #include "city/population.h"
-#include "city/sentiment.h"
 #include "core/calc.h"
 #include "figuretype/migrant.h"
 
@@ -96,7 +96,7 @@ void house_population_update_room()
     }
 }
 
-static void create_immigrants(int num_people)
+int house_population_create_immigrants(int num_people)
 {
     int total_houses = building_list_large_size();
     const int *houses = building_list_large_items();
@@ -134,14 +134,10 @@ static void create_immigrants(int num_people)
             }
         }
     }
-    Data_CityInfo.populationImmigratedToday += num_people - to_immigrate;
-    Data_CityInfo.populationNewcomersThisMonth += Data_CityInfo.populationImmigratedToday;
-    if (to_immigrate && to_immigrate == num_people) {
-        Data_CityInfo.populationRefusedImmigrantsNoRoom += to_immigrate;
-    }
+    return num_people - to_immigrate;
 }
 
-static void create_emigrants(int num_people)
+int house_population_create_emigrants(int num_people)
 {
     int total_houses = building_list_large_size();
     const int *houses = building_list_large_items();
@@ -166,7 +162,7 @@ static void create_emigrants(int num_people)
             }
         }
     }
-    Data_CityInfo.populationEmigratedToday += num_people - to_emigrate;
+    return num_people - to_emigrate;
 }
 
 static void calculate_working_population()
@@ -194,47 +190,7 @@ static void calculate_working_population()
 
 void house_population_update_migration()
 {
-    city_sentiment_update_migration_status();
-    Data_CityInfo.populationImmigratedToday = 0;
-    Data_CityInfo.populationEmigratedToday = 0;
-    Data_CityInfo.populationRefusedImmigrantsNoRoom = 0;
-
-    if (Data_CityInfo.populationImmigrationAmountPerBatch > 0) {
-        if (Data_CityInfo.populationImmigrationAmountPerBatch >= 4) {
-            create_immigrants(Data_CityInfo.populationImmigrationAmountPerBatch);
-        } else if (Data_CityInfo.populationImmigrationAmountPerBatch +
-                Data_CityInfo.populationImmigrationQueueSize >= 4) {
-            create_immigrants(
-                Data_CityInfo.populationImmigrationAmountPerBatch +
-                Data_CityInfo.populationImmigrationQueueSize);
-            Data_CityInfo.populationImmigrationQueueSize = 0;
-        } else {
-            // queue them for next round
-            Data_CityInfo.populationImmigrationQueueSize +=
-                Data_CityInfo.populationImmigrationAmountPerBatch;
-        }
-    }
-    if (Data_CityInfo.populationEmigrationAmountPerBatch > 0) {
-        if (Data_CityInfo.populationEmigrationAmountPerBatch >= 4) {
-            create_emigrants(Data_CityInfo.populationEmigrationAmountPerBatch);
-        } else if (Data_CityInfo.populationEmigrationAmountPerBatch +
-                Data_CityInfo.populationEmigrationQueueSize >= 4) {
-            create_emigrants(
-                Data_CityInfo.populationEmigrationAmountPerBatch +
-                Data_CityInfo.populationEmigrationQueueSize);
-            Data_CityInfo.populationEmigrationQueueSize = 0;
-            if (!Data_CityInfo.messageShownEmigration) {
-                Data_CityInfo.messageShownEmigration = 1;
-                city_message_post(1, MESSAGE_EMIGRATION, 0, 0);
-            }
-        } else {
-            // queue them for next round
-            Data_CityInfo.populationEmigrationQueueSize +=
-                Data_CityInfo.populationEmigrationAmountPerBatch;
-        }
-    }
-    Data_CityInfo.populationImmigrationAmountPerBatch = 0;
-    Data_CityInfo.populationEmigrationAmountPerBatch = 0;
+    city_migration_update();
 
     city_population_yearly_update();
     calculate_working_population();
