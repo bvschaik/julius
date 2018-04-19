@@ -1,6 +1,7 @@
 #include "chief.h"
 
 #include "city/finance.h"
+#include "city/health.h"
 #include "city/migration.h"
 #include "city/resource.h"
 #include "city/sentiment.h"
@@ -154,10 +155,11 @@ static int draw_background()
 
     // health
     draw_title(206, 7);
-    if (Data_CityInfo.healthRate >= 40) {
-        lang_text_draw(56, Data_CityInfo.healthRate / 10 + 27, X_OFFSET, 206, FONT_NORMAL_GREEN);
+    int health_rate = city_health();
+    if (health_rate >= 40) {
+        lang_text_draw(56, health_rate / 10 + 27, X_OFFSET, 206, FONT_NORMAL_GREEN);
     } else {
-        lang_text_draw(56, Data_CityInfo.healthRate / 10 + 27, X_OFFSET, 206, FONT_NORMAL_RED);
+        lang_text_draw(56, health_rate / 10 + 27, X_OFFSET, 206, FONT_NORMAL_RED);
     }
 
     // education

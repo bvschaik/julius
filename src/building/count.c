@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/buildings.h"
+#include "city/health.h"
 #include "figure/figure.h"
 
 #include "Data/CityInfo.h"
@@ -58,7 +59,7 @@ void building_count_update()
         Data_CityInfo.workingDockBuildingIds[i] = 0;
     }
     Data_CityInfo.numWorkingDocks = 0;
-    Data_CityInfo.numHospitalWorkers = 0;
+    city_health_reset_hospital_workers();
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -85,7 +86,7 @@ void building_count_update()
 
             case BUILDING_HOSPITAL:
                 increase_count(type, b->numWorkers > 0);
-                Data_CityInfo.numHospitalWorkers += b->numWorkers;
+                city_health_add_hospital_workers(b->numWorkers);
                 break;
             
             // water

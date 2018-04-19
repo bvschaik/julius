@@ -134,9 +134,9 @@ static int perform_large_curse(god_type god)
             city_message_post(1, MESSAGE_WRATH_OF_VENUS, 0, 0);
             city_sentiment_set_max_happiness(40);
             city_sentiment_change_happiness(-10);
-            if (Data_CityInfo.healthRate >= 80) {
+            if (city_data.health.value >= 80) {
                 city_health_change(-50);
-            } else if (Data_CityInfo.healthRate >= 60) {
+            } else if (city_data.health.value >= 60) {
                 city_health_change(-40);
             } else {
                 city_health_change(-20);

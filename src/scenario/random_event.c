@@ -83,9 +83,10 @@ static void contaminate_water()
     if (scenario.random_events.contaminated_water) {
         if (city_population() > 200) {
             int change;
-            if (Data_CityInfo.healthRate > 80) {
+            int health_rate = city_health();
+            if (health_rate > 80) {
                 change = -50;
-            } else if (Data_CityInfo.healthRate > 60) {
+            } else if (health_rate > 60) {
                 change = -40;
             } else {
                 change = -25;

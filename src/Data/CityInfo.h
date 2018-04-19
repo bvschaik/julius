@@ -5,9 +5,6 @@
 
 extern struct _Data_CityInfo {
 	int8_t __unknown_00a5;
-	int32_t healthRateTarget;
-	int32_t healthRate;
-	int32_t numHospitalWorkers;
 	int32_t populationMaxSupported;
 	int32_t populationRoomInHouses;
 	int32_t populationLastTargetHouseAdd;

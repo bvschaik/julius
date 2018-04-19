@@ -238,7 +238,7 @@ static void yearly_advance_ages_and_calculate_deaths()
     city_data.population.yearly_deaths = 0;
     for (int decennium = 9; decennium >= 0; decennium--) {
         int people = get_people_in_age_decennium(decennium);
-        int death_percentage = DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[Data_CityInfo.healthRate / 10][decennium];
+        int death_percentage = DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[city_data.health.value / 10][decennium];
         int deaths = calc_adjust_with_percentage(people, death_percentage);
         int removed = house_population_remove_from_city(deaths + aged100);
         remove_from_census_in_age_decennium(decennium, removed);

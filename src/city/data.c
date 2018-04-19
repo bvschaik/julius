@@ -18,8 +18,8 @@ void city_data_init()
     city_data.unused.faction_bytes[1] = 0;
 
     city_data.sentiment.value = 60;
-    Data_CityInfo.healthRateTarget = 50;
-    Data_CityInfo.healthRate = 50;
+    city_data.health.target_value = 50;
+    city_data.health.value = 50;
     city_data.unused.unknown_00c0 = 3;
     Data_CityInfo.wagesRome = 30;
     Data_CityInfo.wages = 30;
@@ -65,9 +65,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.finance.tax_percentage);
     buffer_write_i32(main, city_data.finance.treasury);
     buffer_write_i32(main, city_data.sentiment.value);
-    buffer_write_i32(main, Data_CityInfo.healthRateTarget);
-    buffer_write_i32(main, Data_CityInfo.healthRate);
-    buffer_write_i32(main, Data_CityInfo.numHospitalWorkers);
+    buffer_write_i32(main, city_data.health.target_value);
+    buffer_write_i32(main, city_data.health.value);
+    buffer_write_i32(main, city_data.health.num_hospital_workers);
     buffer_write_i32(main, city_data.unused.unknown_00c0);
     buffer_write_i32(main, city_data.population.population);
     buffer_write_i32(main, city_data.population.population_last_year);
@@ -542,9 +542,9 @@ static void load_main_data(buffer *main)
     city_data.finance.tax_percentage = buffer_read_i32(main);
     city_data.finance.treasury = buffer_read_i32(main);
     city_data.sentiment.value = buffer_read_i32(main);
-    Data_CityInfo.healthRateTarget = buffer_read_i32(main);
-    Data_CityInfo.healthRate = buffer_read_i32(main);
-    Data_CityInfo.numHospitalWorkers = buffer_read_i32(main);
+    city_data.health.target_value = buffer_read_i32(main);
+    city_data.health.value = buffer_read_i32(main);
+    city_data.health.num_hospital_workers = buffer_read_i32(main);
     city_data.unused.unknown_00c0 = buffer_read_i32(main);
     city_data.population.population = buffer_read_i32(main);
     city_data.population.population_last_year = buffer_read_i32(main);

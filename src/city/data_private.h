@@ -136,6 +136,11 @@ extern struct city_data_t {
         int32_t wages;
     } sentiment;
     struct {
+        int32_t num_hospital_workers;
+        int32_t target_value;
+        int32_t value;
+    } health;
+    struct {
         int32_t culture;
         int32_t prosperity;
         int32_t peace;

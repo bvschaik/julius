@@ -11,14 +11,19 @@
 
 #include "Data/CityInfo.h"
 
+int city_health()
+{
+    return city_data.health.value;
+}
+
 void city_health_change(int amount)
 {
-    Data_CityInfo.healthRate = calc_bound(Data_CityInfo.healthRate + amount, 0, 100);
+    city_data.health.value = calc_bound(city_data.health.value + amount, 0, 100);
 }
 
 static void cause_disease(int total_people)
 {
-    if (Data_CityInfo.healthRate >= 40) {
+    if (city_data.health.value >= 40) {
         return;
     }
     int chance_value = random_byte() & 0x3f;
@@ -27,7 +32,7 @@ static void cause_disease(int total_people)
         chance_value = 0;
         Data_CityInfo.godCurseVenusActive = 0;
     }
-    if (chance_value > 40 - Data_CityInfo.healthRate) {
+    if (chance_value > 40 - city_data.health.value) {
         return;
     }
 
@@ -36,12 +41,12 @@ static void cause_disease(int total_people)
         return;
     }
     city_health_change(10);
-    int people_to_kill = sick_people - Data_CityInfo.numHospitalWorkers;
+    int people_to_kill = sick_people - city_data.health.num_hospital_workers;
     if (people_to_kill <= 0) {
         city_message_post(1, MESSAGE_HEALTH_ILLNESS, 0, 0);
         return;
     }
-    if (Data_CityInfo.numHospitalWorkers > 0) {
+    if (city_data.health.num_hospital_workers > 0) {
         city_message_post(1, MESSAGE_HEALTH_DISEASE, 0, 0);
     } else {
         city_message_post(1, MESSAGE_HEALTH_PESTILENCE, 0, 0);
@@ -89,8 +94,8 @@ static void cause_disease(int total_people)
 void city_health_update()
 {
     if (city_data.population.population < 200 || scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
-        Data_CityInfo.healthRate = 50;
-        Data_CityInfo.healthRateTarget = 50;
+        city_data.health.value = 50;
+        city_data.health.target_value = 50;
         return;
     }
     int total_population = 0;
@@ -117,19 +122,29 @@ void city_health_update()
             healthy_population += b->housePopulation / 4;
         }
     }
-    Data_CityInfo.healthRateTarget = calc_percentage(healthy_population, total_population);
-    if (Data_CityInfo.healthRate < Data_CityInfo.healthRateTarget) {
-        Data_CityInfo.healthRate += 2;
-        if (Data_CityInfo.healthRate > Data_CityInfo.healthRateTarget) {
-            Data_CityInfo.healthRate = Data_CityInfo.healthRateTarget;
+    city_data.health.target_value = calc_percentage(healthy_population, total_population);
+    if (city_data.health.value < city_data.health.target_value) {
+        city_data.health.value += 2;
+        if (city_data.health.value > city_data.health.target_value) {
+            city_data.health.value = city_data.health.target_value;
         }
-    } else if (Data_CityInfo.healthRate > Data_CityInfo.healthRateTarget) {
-        Data_CityInfo.healthRate -= 2;
-        if (Data_CityInfo.healthRate < Data_CityInfo.healthRateTarget) {
-            Data_CityInfo.healthRate = Data_CityInfo.healthRateTarget;
+    } else if (city_data.health.value > city_data.health.target_value) {
+        city_data.health.value -= 2;
+        if (city_data.health.value < city_data.health.target_value) {
+            city_data.health.value = city_data.health.target_value;
         }
     }
-    Data_CityInfo.healthRate = calc_bound(Data_CityInfo.healthRate, 0, 100);
+    city_data.health.value = calc_bound(city_data.health.value, 0, 100);
 
     cause_disease(total_population);
+}
+
+void city_health_reset_hospital_workers()
+{
+    city_data.health.num_hospital_workers = 0;
+}
+
+void city_health_add_hospital_workers(int amount)
+{
+    city_data.health.num_hospital_workers += amount;
 }
