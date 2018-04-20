@@ -21,8 +21,8 @@ void city_data_init()
     city_data.health.target_value = 50;
     city_data.health.value = 50;
     city_data.unused.unknown_00c0 = 3;
-    Data_CityInfo.wagesRome = 30;
-    Data_CityInfo.wages = 30;
+    city_data.labor.wages_rome = 30;
+    city_data.labor.wages = 30;
     city_data.finance.tax_percentage = 7;
     Data_CityInfo.tradeNextImportResourceCaravan = 1;
     Data_CityInfo.tradeNextImportResourceCaravanBackup = 1;
@@ -178,11 +178,11 @@ static void save_main_data(buffer *main)
     }
     buffer_write_i32(main, Data_CityInfo.workersEmployed);
     buffer_write_i32(main, Data_CityInfo.workersUnemployed);
-    buffer_write_i32(main, Data_CityInfo.unemploymentPercentage);
-    buffer_write_i32(main, Data_CityInfo.unemploymentPercentageForSenate);
+    buffer_write_i32(main, city_data.labor.unemployment_percentage);
+    buffer_write_i32(main, city_data.labor.unemployment_percentage_for_senate);
     buffer_write_i32(main, Data_CityInfo.workersNeeded);
-    buffer_write_i32(main, Data_CityInfo.wages);
-    buffer_write_i32(main, Data_CityInfo.wagesRome);
+    buffer_write_i32(main, city_data.labor.wages);
+    buffer_write_i32(main, city_data.labor.wages_rome);
     buffer_write_i32(main, city_data.unused.unknown_2b6c);
     buffer_write_i32(main, city_data.finance.wages_so_far);
     buffer_write_i32(main, city_data.finance.this_year.expenses.wages);
@@ -655,11 +655,11 @@ static void load_main_data(buffer *main)
     }
     Data_CityInfo.workersEmployed = buffer_read_i32(main);
     Data_CityInfo.workersUnemployed = buffer_read_i32(main);
-    Data_CityInfo.unemploymentPercentage = buffer_read_i32(main);
-    Data_CityInfo.unemploymentPercentageForSenate = buffer_read_i32(main);
+    city_data.labor.unemployment_percentage = buffer_read_i32(main);
+    city_data.labor.unemployment_percentage_for_senate = buffer_read_i32(main);
     Data_CityInfo.workersNeeded = buffer_read_i32(main);
-    Data_CityInfo.wages = buffer_read_i32(main);
-    Data_CityInfo.wagesRome = buffer_read_i32(main);
+    city_data.labor.wages = buffer_read_i32(main);
+    city_data.labor.wages_rome = buffer_read_i32(main);
     city_data.unused.unknown_2b6c = buffer_read_i32(main);
     city_data.finance.wages_so_far = buffer_read_i32(main);
     city_data.finance.this_year.expenses.wages = buffer_read_i32(main);

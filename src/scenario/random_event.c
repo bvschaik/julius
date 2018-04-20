@@ -2,6 +2,7 @@
 
 #include "building/destruction.h"
 #include "city/health.h"
+#include "city/labor.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "city/trade.h"
@@ -35,11 +36,7 @@ static const int RANDOM_EVENT_PROBABILITY[128] = {
 static void raise_wages()
 {
     if (scenario.random_events.raise_wages) {
-        if (Data_CityInfo.wagesRome < 45) {
-            Data_CityInfo.wagesRome += 1 + (random_byte_alt() & 3);
-            if (Data_CityInfo.wagesRome > 45) {
-                Data_CityInfo.wagesRome = 45;
-            }
+        if (city_labor_raise_wages_rome()) {
             city_message_post(1, MESSAGE_ROME_RAISES_WAGES, 0, 0);
         }
     }
@@ -48,8 +45,7 @@ static void raise_wages()
 static void lower_wages()
 {
     if (scenario.random_events.lower_wages) {
-        if (Data_CityInfo.wagesRome > 5) {
-            Data_CityInfo.wagesRome -= 1 + (random_byte_alt() & 3);
+        if (city_labor_lower_wages_rome()) {
             city_message_post(1, MESSAGE_ROME_LOWERS_WAGES, 0, 0);
         }
     }

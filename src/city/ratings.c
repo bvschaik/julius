@@ -132,9 +132,9 @@ static void update_prosperity_explanation()
     int change = 0;
     int profit = 0;
     // unemployment: -1 for too high, +1 for low
-    if (Data_CityInfo.unemploymentPercentage < 5) {
+    if (city_data.labor.unemployment_percentage < 5) {
         change += 1;
-    } else if (Data_CityInfo.unemploymentPercentage >= 15) {
+    } else if (city_data.labor.unemployment_percentage >= 15) {
         change -= 1;
     }
     // losing/earning money: -1 for losing, +5 for profit
@@ -150,9 +150,9 @@ static void update_prosperity_explanation()
     }
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
     int avg_wage = Data_CityInfo.wageRatePaidLastYear / 12;
-    if (avg_wage >= Data_CityInfo.wagesRome + 2) {
+    if (avg_wage >= city_data.labor.wages_rome + 2) {
         change += 1;
-    } else if (avg_wage < Data_CityInfo.wagesRome) {
+    } else if (avg_wage < city_data.labor.wages_rome) {
         change -= 1;
     }
     // high percentage poor: -1, high percentage rich: +1
@@ -181,9 +181,9 @@ static void update_prosperity_explanation()
         reason = 2;
     } else if (!profit) {
         reason = 3;
-    } else if (Data_CityInfo.unemploymentPercentage >= 15) {
+    } else if (city_data.labor.unemployment_percentage >= 15) {
         reason = 4;
-    } else if (avg_wage < Data_CityInfo.wagesRome) {
+    } else if (avg_wage < city_data.labor.wages_rome) {
         reason = 5;
     } else if (pct_tents > 30) {
         reason = 6;
@@ -370,9 +370,9 @@ static void update_prosperity_rating()
 {
     int change = 0;
     // unemployment: -1 for too high, +1 for low
-    if (Data_CityInfo.unemploymentPercentage < 5) {
+    if (city_data.labor.unemployment_percentage < 5) {
         change += 1;
-    } else if (Data_CityInfo.unemploymentPercentage >= 15) {
+    } else if (city_data.labor.unemployment_percentage >= 15) {
         change -= 1;
     }
     // losing/earning money: -1 for losing, +5 for profit
@@ -388,9 +388,9 @@ static void update_prosperity_rating()
     }
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
     int avg_wage = Data_CityInfo.wageRatePaidLastYear / 12;
-    if (avg_wage >= Data_CityInfo.wagesRome + 2) {
+    if (avg_wage >= city_data.labor.wages_rome + 2) {
         change += 1;
-    } else if (avg_wage < Data_CityInfo.wagesRome) {
+    } else if (avg_wage < city_data.labor.wages_rome) {
         change -= 1;
     }
     // high percentage poor: -1, high percentage rich: +1

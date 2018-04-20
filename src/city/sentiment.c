@@ -99,9 +99,9 @@ static int get_sentiment_penalty_for_tent_dwellers()
 
 static int get_sentiment_contribution_wages()
 {
-    city_data.sentiment.wages = Data_CityInfo.wages;
+    city_data.sentiment.wages = city_data.labor.wages;
     int contribution = 0;
-    int wage_diff = Data_CityInfo.wages - Data_CityInfo.wagesRome;
+    int wage_diff = city_data.labor.wages - city_data.labor.wages_rome;
     if (wage_diff < 0) {
         contribution = wage_diff / 2;
         if (!contribution) {
@@ -121,7 +121,7 @@ static int get_sentiment_contribution_wages()
 
 static int get_sentiment_contribution_employment()
 {
-    int unemployment = city_data.sentiment.unemployment = Data_CityInfo.unemploymentPercentage;
+    int unemployment = city_data.sentiment.unemployment = city_data.labor.unemployment_percentage;
     if (unemployment > 25) {
         return -3;
     } else if (unemployment > 17) {

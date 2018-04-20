@@ -125,7 +125,7 @@ void city_finance_calculate_totals()
 
 void city_finance_estimate_wages()
 {
-    int monthly_wages = Data_CityInfo.wages * Data_CityInfo.workersEmployed / 10 / 12;
+    int monthly_wages = city_data.labor.wages * Data_CityInfo.workersEmployed / 10 / 12;
     city_data.finance.this_year.expenses.wages = city_data.finance.wages_so_far;
     Data_CityInfo.estimatedYearlyWages = (12 - game_time_month()) * monthly_wages + city_data.finance.wages_so_far;
 }
@@ -236,10 +236,10 @@ static void collect_monthly_taxes()
 
 static void pay_monthly_wages()
 {
-    int wages = Data_CityInfo.wages * Data_CityInfo.workersEmployed / 10 / 12;
+    int wages = city_data.labor.wages * Data_CityInfo.workersEmployed / 10 / 12;
     city_data.finance.treasury -= wages;
     city_data.finance.wages_so_far += wages;
-    Data_CityInfo.wageRatePaidThisYear += Data_CityInfo.wages;
+    Data_CityInfo.wageRatePaidThisYear += city_data.labor.wages;
 }
 
 static void pay_monthly_interest()

@@ -5,6 +5,7 @@
 #include "city/data_private.h"
 #include "city/message.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "game/time.h"
 #include "scenario/property.h"
 
@@ -55,9 +56,52 @@ static struct {
     {LABOR_CATEGORY_GOVERNANCE_RELIGION, 1},
 };
 
-// static void setBuildingWorkerWeight();
-// static void allocateWorkersToWater();
-// static void allocateWorkersToBuildings();
+int city_labor_unemployment_percentage()
+{
+    return city_data.labor.unemployment_percentage;
+}
+
+int city_labor_unemployment_percentage_for_senate()
+{
+    return city_data.labor.unemployment_percentage_for_senate;
+}
+
+int city_labor_wages()
+{
+    return city_data.labor.wages;
+}
+
+void city_labor_change_wages(int amount)
+{
+    city_data.labor.wages += amount;
+    city_data.labor.wages = calc_bound(city_data.labor.wages, 0, 100);
+}
+
+int city_labor_wages_rome()
+{
+    return city_data.labor.wages_rome;
+}
+
+int city_labor_raise_wages_rome()
+{
+    if (city_data.labor.wages_rome >= 45) {
+        return 0;
+    }
+    city_data.labor.wages_rome += 1 + (random_byte_alt() & 3);
+    if (city_data.labor.wages_rome > 45) {
+        city_data.labor.wages_rome = 45;
+    }
+    return 1;
+}
+
+int city_labor_lower_wages_rome()
+{
+    if (city_data.labor.wages_rome <= 5) {
+        return 0;
+    }
+    city_data.labor.wages_rome -= 1 + (random_byte_alt() & 3);
+    return 1;
+}
 
 static int is_industry_disabled(building *b) {
     if (b->type < BUILDING_WHEAT_FARM || b->type > BUILDING_POTTERY_WORKSHOP) {
@@ -185,7 +229,7 @@ static void allocate_workers_to_categories()
         }
     }
     Data_CityInfo.workersUnemployed = Data_CityInfo.workersAvailable - Data_CityInfo.workersEmployed;
-    Data_CityInfo.unemploymentPercentage =
+    city_data.labor.unemployment_percentage =
         calc_percentage(Data_CityInfo.workersUnemployed, Data_CityInfo.workersAvailable);
 }
 
@@ -194,15 +238,15 @@ static void check_employment()
     int orig_needed = Data_CityInfo.workersNeeded;
     allocate_workers_to_categories();
     // senate unemployment display is delayed when unemployment is rising
-    if (Data_CityInfo.unemploymentPercentage < Data_CityInfo.unemploymentPercentageForSenate) {
-        Data_CityInfo.unemploymentPercentageForSenate = Data_CityInfo.unemploymentPercentage;
-    } else if (Data_CityInfo.unemploymentPercentage < Data_CityInfo.unemploymentPercentageForSenate + 5) {
-        Data_CityInfo.unemploymentPercentageForSenate = Data_CityInfo.unemploymentPercentage;
+    if (city_data.labor.unemployment_percentage < city_data.labor.unemployment_percentage_for_senate) {
+        city_data.labor.unemployment_percentage_for_senate = city_data.labor.unemployment_percentage;
+    } else if (city_data.labor.unemployment_percentage < city_data.labor.unemployment_percentage_for_senate + 5) {
+        city_data.labor.unemployment_percentage_for_senate = city_data.labor.unemployment_percentage;
     } else {
-        Data_CityInfo.unemploymentPercentageForSenate += 5;
+        city_data.labor.unemployment_percentage_for_senate += 5;
     }
-    if (Data_CityInfo.unemploymentPercentageForSenate > 100) {
-        Data_CityInfo.unemploymentPercentageForSenate = 100;
+    if (city_data.labor.unemployment_percentage_for_senate > 100) {
+        city_data.labor.unemployment_percentage_for_senate = 100;
     }
 
     // workers needed message

@@ -1,6 +1,7 @@
 #include "labor.h"
 
 #include "city/finance.h"
+#include "city/labor.h"
 #include "core/calc.h"
 #include "graphics/arrow_button.h"
 #include "graphics/generic_button.h"
@@ -56,15 +57,15 @@ static int draw_background()
     width += lang_text_draw(50, 12, 32 + width, 320, FONT_NORMAL_BLACK);
     width += text_draw_number(Data_CityInfo.workersUnemployed, '@', " ", 50 + width, 320, FONT_NORMAL_BLACK);
     width += lang_text_draw(50, 13, 50 + width, 320, FONT_NORMAL_BLACK);
-    text_draw_number(Data_CityInfo.unemploymentPercentage, '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
+    text_draw_number(city_labor_unemployment_percentage(), '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
 
     // wages panel
     inner_panel_draw(64, 350, 32, 2);
     lang_text_draw(50, 14, 70, 359, FONT_NORMAL_WHITE);
-    width = text_draw_number(Data_CityInfo.wages, '@', " ", 230, 359, FONT_NORMAL_WHITE);
+    width = text_draw_number(city_labor_wages(), '@', " ", 230, 359, FONT_NORMAL_WHITE);
     width += lang_text_draw(50, 15, 230 + width, 359, FONT_NORMAL_WHITE);
     width += lang_text_draw(50, 18, 230 + width, 359, FONT_NORMAL_WHITE);
-    text_draw_number(Data_CityInfo.wagesRome, '@', " )", 230 + width, 359, FONT_NORMAL_WHITE);
+    text_draw_number(city_labor_wages_rome(), '@', " )", 230 + width, 359, FONT_NORMAL_WHITE);
 
     // estimated wages
     width = lang_text_draw(50, 19, 64, 390, FONT_NORMAL_BLACK);
@@ -109,12 +110,7 @@ static void handle_mouse(const mouse *m)
 
 static void arrow_button_wages(int is_down, int param2)
 {
-    if (is_down == 1) {
-        Data_CityInfo.wages--;
-    } else if (is_down == 0) {
-        Data_CityInfo.wages++;
-    }
-    Data_CityInfo.wages = calc_bound(Data_CityInfo.wages, 0, 100);
+    city_labor_change_wages(is_down ? -1 : 1);
     city_finance_estimate_wages();
     city_finance_calculate_totals();
     window_invalidate();

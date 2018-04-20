@@ -2,6 +2,7 @@
 
 #include "city/finance.h"
 #include "city/health.h"
+#include "city/labor.h"
 #include "city/migration.h"
 #include "city/resource.h"
 #include "city/sentiment.h"
@@ -36,9 +37,9 @@ static int draw_background()
 
     // workers
     draw_title(66, 1);
-    if (Data_CityInfo.unemploymentPercentage > 0) {
+    if (city_labor_unemployment_percentage() > 0) {
         width = lang_text_draw(61, 12, X_OFFSET, 66, FONT_NORMAL_RED);
-        text_draw_percentage(Data_CityInfo.unemploymentPercentage, X_OFFSET + width, 66, FONT_NORMAL_RED);
+        text_draw_percentage(city_labor_unemployment_percentage(), X_OFFSET + width, 66, FONT_NORMAL_RED);
     } else if (Data_CityInfo.workersNeeded > 0) {
         width = lang_text_draw(61, 13, X_OFFSET, 66, FONT_NORMAL_RED);
         lang_text_draw_amount(8, 12, Data_CityInfo.workersNeeded, X_OFFSET + width, 66, FONT_NORMAL_RED);

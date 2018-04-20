@@ -30,11 +30,7 @@ extern struct _Data_CityInfo {
 	} laborCategory[10];
 	int32_t workersEmployed;
 	int32_t workersUnemployed;
-	int32_t unemploymentPercentage;
-	int32_t unemploymentPercentageForSenate;
 	int32_t workersNeeded;
-	int32_t wages;
-	int32_t wagesRome;
 	int32_t salaryAmount;
 	int32_t salaryRank;
 	int32_t tradeNextImportResourceCaravan;

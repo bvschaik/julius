@@ -4,6 +4,7 @@
 #include "building/market.h"
 #include "city/constants.h"
 #include "city/gods.h"
+#include "city/labor.h"
 #include "city/population.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -576,10 +577,11 @@ static int phrase_based_on_city_state(figure *f)
 {
     f->phraseSequenceCity = 0;
     int god_state = city_god_state();
+    int unemployment_pct = city_labor_unemployment_percentage();
 
     if (city_resource_food_supply_months() <= 0) {
         return 0;
-    } else if (Data_CityInfo.unemploymentPercentage >= 17) {
+    } else if (unemployment_pct >= 17) {
         return 1;
     } else if (Data_CityInfo.workersNeeded >= 10) {
         return 2;
@@ -594,7 +596,7 @@ static int phrase_based_on_city_state(figure *f)
     } else if (Data_CityInfo.citywideAverageEntertainment <= 20) {
         return 3;
     } else if (city_resource_food_supply_months() >= 4 &&
-            Data_CityInfo.unemploymentPercentage <= 5 &&
+            unemployment_pct <= 5 &&
             Data_CityInfo.citywideAverageHealth > 0 &&
             Data_CityInfo.citywideAverageEducation > 0) {
         if (city_population() < 500) {
@@ -602,7 +604,7 @@ static int phrase_based_on_city_state(figure *f)
         } else {
             return 6;
         }
-    } else if (Data_CityInfo.unemploymentPercentage >= 10) {
+    } else if (unemployment_pct >= 10) {
         return 1;
     } else {
         return 5;

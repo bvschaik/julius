@@ -124,6 +124,12 @@ extern struct city_data_t {
         int32_t people_in_villas_palaces;
     } population;
     struct {
+        int32_t wages;
+        int32_t wages_rome;
+        int32_t unemployment_percentage;
+        int32_t unemployment_percentage_for_senate;
+    } labor;
+    struct {
         int32_t immigration_amount_per_batch;
         int32_t emigration_amount_per_batch;
         int32_t immigration_queue_size;

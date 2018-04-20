@@ -1,5 +1,6 @@
 #include "tooltip.h"
 
+#include "city/labor.h"
 #include "city/ratings.h"
 #include "core/lang.h"
 #include "core/string.h"
@@ -171,7 +172,7 @@ static void draw_senate_tooltip(tooltip_context *c)
     
     // unemployment
     lang_text_draw_colored(68, 148, x + 5, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(Data_CityInfo.unemploymentPercentage, '@', "%",
+    text_draw_number_colored(city_labor_unemployment_percentage(), '@', "%",
         x + 140, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     
     // ratings
