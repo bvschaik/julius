@@ -27,4 +27,14 @@ int city_buildings_triumphal_arch_available();
 void city_buildings_earn_triumphal_arch();
 void city_buildings_build_triumphal_arch();
 
+void city_buildings_add_dock();
+void city_buildings_remove_dock();
+
+void city_buildings_reset_dock_wharf_counters();
+void city_buildings_add_working_wharf(int needs_fishing_boat);
+void city_buildings_add_working_dock(int building_id);
+int city_buildings_shipyard_boats_requested();
+int city_buildings_has_working_dock();
+int city_buildings_get_working_dock(int index);
+
 #endif // CITY_BUILDINGS_H

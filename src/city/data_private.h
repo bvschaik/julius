@@ -38,6 +38,10 @@ extern struct city_data_t {
         int32_t trade_center_building_id;
         int8_t triumphal_arches_available;
         int8_t triumphal_arches_placed;
+        int16_t working_wharfs;
+        int32_t shipyard_boats_requested;
+        int16_t working_docks;
+        int16_t working_dock_ids[10];
     } building;
     struct {
         emperor_gift gifts[3];

@@ -53,12 +53,7 @@ static void limit_hippodrome()
 void building_count_update()
 {
     clear_counters();
-    Data_CityInfo.numWorkingWharfs = 0;
-    Data_CityInfo.shipyardBoatsRequested = 0;
-    for (int i = 0; i < 8; i++) {
-        Data_CityInfo.workingDockBuildingIds[i] = 0;
-    }
-    Data_CityInfo.numWorkingDocks = 0;
+    city_buildings_reset_dock_wharf_counters();
     city_health_reset_hospital_workers();
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -183,18 +178,12 @@ void building_count_update()
             // water-side
             case BUILDING_WHARF:
                 if (b->numWorkers > 0) {
-                    ++Data_CityInfo.numWorkingWharfs;
-                    if (!b->data.industry.fishing_boat_id) {
-                        ++Data_CityInfo.shipyardBoatsRequested;
-                    }
+                    city_buildings_add_working_wharf(!b->data.industry.fishing_boat_id);
                 }
                 break;
             case BUILDING_DOCK:
                 if (b->numWorkers > 0 && b->hasWaterAccess) {
-                    if (Data_CityInfo.numWorkingDocks < 10) {
-                        Data_CityInfo.workingDockBuildingIds[Data_CityInfo.numWorkingDocks] = i;
-                    }
-                    ++Data_CityInfo.numWorkingDocks;
+                    city_buildings_add_working_dock(i);
                 }
                 break;
             default:

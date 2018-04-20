@@ -1,5 +1,6 @@
 #include "city.h"
 
+#include "city/buildings.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "empire/object.h"
@@ -263,7 +264,7 @@ static int generate_trader(int cityId, empire_city *city)
 
     if (city->is_sea_trade) {
         // generate ship
-        if (Data_CityInfo.numWorkingDocks > 0 && scenario_map_has_river_entry() &&
+        if (city_buildings_has_working_dock() && scenario_map_has_river_entry() &&
             !Data_CityInfo.tradeSeaProblemDuration) {
             map_point river_entry = scenario_map_river_entry();
             city->trader_figure_ids[index] = figure_create_trade_ship(river_entry.x, river_entry.y, cityId);
@@ -295,7 +296,7 @@ void empire_city_generate_trader()
             continue;
         }
         if (cities[i].is_sea_trade) {
-            if (Data_CityInfo.numWorkingDocks <= 0) {
+            if (!city_buildings_has_working_dock()) {
                 // delay of 384 = 1 year
                 city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
                 continue;

@@ -186,7 +186,7 @@ void building_clear_related_data(building *b)
         city_buildings_remove_senate(b);
     }
     if (b->type == BUILDING_DOCK) {
-        --Data_CityInfo.numWorkingDocks;
+        city_buildings_remove_dock();
     }
     if (b->type == BUILDING_BARRACKS) {
         city_buildings_remove_barracks(b);

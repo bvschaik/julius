@@ -2,6 +2,8 @@
 
 #include "city/data_private.h"
 
+#include "Data/CityInfo.h"
+
 int city_buildings_has_senate()
 {
     return city_data.building.senate_placed;
@@ -122,4 +124,55 @@ void city_buildings_build_triumphal_arch()
 void city_buildings_earn_triumphal_arch()
 {
     city_data.building.triumphal_arches_available++;
+}
+
+void city_buildings_add_dock()
+{
+    city_data.building.working_docks++;
+}
+
+void city_buildings_remove_dock()
+{
+    city_data.building.working_docks--;
+}
+
+void city_buildings_reset_dock_wharf_counters()
+{
+    city_data.building.working_wharfs = 0;
+    city_data.building.shipyard_boats_requested = 0;
+    for (int i = 0; i < 8; i++) {
+        city_data.building.working_dock_ids[i] = 0;
+    }
+    city_data.building.working_docks = 0;
+}
+
+void city_buildings_add_working_wharf(int needs_fishing_boat)
+{
+    ++city_data.building.working_wharfs;
+    if (needs_fishing_boat) {
+        ++city_data.building.shipyard_boats_requested;
+    }
+}
+
+void city_buildings_add_working_dock(int building_id)
+{
+    if (city_data.building.working_docks < 10) {
+        city_data.building.working_dock_ids[city_data.building.working_docks] = building_id;
+    }
+    ++city_data.building.working_docks;
+}
+
+int city_buildings_shipyard_boats_requested()
+{
+    return city_data.building.shipyard_boats_requested;
+}
+
+int city_buildings_has_working_dock()
+{
+    return city_data.building.working_docks > 0;
+}
+
+int city_buildings_get_working_dock(int index)
+{
+    return city_data.building.working_dock_ids[index];
 }

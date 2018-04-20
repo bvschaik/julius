@@ -416,7 +416,7 @@ static void add_to_map(int type, building *b, int size,
             map_water_add_building(b->id, b->x, b->y, 2, image_group(GROUP_BUILDING_WHARF) + waterside_orientation_rel);
             break;
         case BUILDING_DOCK:
-            Data_CityInfo.numWorkingDocks++;
+            city_buildings_add_dock();
             b->data.dock.orientation = waterside_orientation_abs;
             {
                 int image_id;

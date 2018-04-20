@@ -1,12 +1,11 @@
 #include "dock.h"
 
+#include "city/buildings.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"
 #include "map/terrain.h"
 #include "scenario/map.h"
-
-#include "Data/CityInfo.h"
 
 int building_dock_count_idle_dockers(const building *dock)
 {
@@ -52,23 +51,23 @@ int building_dock_is_connected_to_open_water(int x, int y)
 
 int building_dock_get_free_destination(int ship_id, int *x_tile, int *y_tile)
 {
-    if (Data_CityInfo.numWorkingDocks <= 0) {
+    if (!city_buildings_has_working_dock()) {
         return 0;
     }
-    int dockId = 0;
+    int dock_id = 0;
     for (int i = 0; i < 10; i++) {
-        dockId = Data_CityInfo.workingDockBuildingIds[i];
-        if (!dockId) continue;
-        building *dock = building_get(dockId);
+        dock_id = city_buildings_get_working_dock(i);
+        if (!dock_id) continue;
+        building *dock = building_get(dock_id);
         if (!dock->data.dock.trade_ship_id || dock->data.dock.trade_ship_id == ship_id) {
             break;
         }
     }
     // BUG: when 10 docks in city, always takes last one... regardless of whether it is free
-    if (dockId <= 0) {
+    if (dock_id <= 0) {
         return 0;
     }
-    building *dock = building_get(dockId);
+    building *dock = building_get(dock_id);
     *x_tile = dock->x;
     *y_tile = dock->y;
     switch (dock->data.dock.orientation) {
@@ -78,19 +77,19 @@ int building_dock_get_free_destination(int ship_id, int *x_tile, int *y_tile)
         default: *x_tile -= 1; *y_tile += 1; break;
     }
     dock->data.dock.trade_ship_id = ship_id;
-    return dockId;
+    return dock_id;
 }
 
 int building_dock_get_queue_destination(int* x_tile, int* y_tile)
 {
-    if (Data_CityInfo.numWorkingDocks <= 0) {
+    if (!city_buildings_has_working_dock()) {
         return 0;
     }
     // first queue position
     for (int i = 0; i < 10; i++) {
-        int dockId = Data_CityInfo.workingDockBuildingIds[i];
-        if (!dockId) continue;
-        building *dock = building_get(dockId);
+        int dock_id = city_buildings_get_working_dock(i);
+        if (!dock_id) continue;
+        building *dock = building_get(dock_id);
         *x_tile = dock->x;
         *y_tile = dock->y;
         switch (dock->data.dock.orientation) {
@@ -100,14 +99,14 @@ int building_dock_get_queue_destination(int* x_tile, int* y_tile)
             default: *x_tile -= 2; *y_tile += 2; break;
         }
         if (!map_has_figure_at(map_grid_offset(*x_tile, *y_tile))) {
-            return dockId;
+            return dock_id;
         }
     }
     // second queue position
     for (int i = 0; i < 10; i++) {
-        int dockId = Data_CityInfo.workingDockBuildingIds[i];
-        if (!dockId) continue;
-        building *dock = building_get(dockId);
+        int dock_id = city_buildings_get_working_dock(i);
+        if (!dock_id) continue;
+        building *dock = building_get(dock_id);
         *x_tile = dock->x;
         *y_tile = dock->y;
         switch (dock->data.dock.orientation) {
@@ -117,7 +116,7 @@ int building_dock_get_queue_destination(int* x_tile, int* y_tile)
             default: *x_tile -= 3; *y_tile += 2; break;
         }
         if (!map_has_figure_at(map_grid_offset(*x_tile, *y_tile))) {
-            return dockId;
+            return dock_id;
         }
     }
     return 0;

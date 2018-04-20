@@ -89,14 +89,11 @@ extern struct _Data_CityInfo {
 	int32_t playerRank;
 	int32_t personalSavings;
 	int32_t donateAmount;
-	int16_t workingDockBuildingIds[10];
 	int16_t numAnimalsInCity;
 	int16_t tradeNumOpenSeaRoutes;
 	int16_t tradeNumOpenLandRoutes;
 	int16_t tradeSeaProblemDuration;
 	int16_t tradeLandProblemDuration;
-	int16_t numWorkingDocks;
-	int16_t numWorkingWharfs;
 	int32_t tradeNextImportResourceDocker;
 	int32_t tradeNextExportResourceDocker;
 	int32_t debtState;
@@ -138,7 +135,6 @@ extern struct _Data_CityInfo {
 	int32_t godAngryMessageDelay;
 	int32_t estimatedTaxIncome;
 	int32_t tutorial1SenateBuilt;
-	int32_t shipyardBoatsRequested;
 	int32_t numEnemiesInCity;
 	int32_t numImperialSoldiersInCity;
 	uint8_t distantBattleCityId;
