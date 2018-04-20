@@ -3,6 +3,7 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/message.h"
+#include "city/trade.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
@@ -264,15 +265,14 @@ static int generate_trader(int cityId, empire_city *city)
 
     if (city->is_sea_trade) {
         // generate ship
-        if (city_buildings_has_working_dock() && scenario_map_has_river_entry() &&
-            !Data_CityInfo.tradeSeaProblemDuration) {
+        if (city_buildings_has_working_dock() && scenario_map_has_river_entry() && !city_trade_has_sea_trade_problems()) {
             map_point river_entry = scenario_map_river_entry();
             city->trader_figure_ids[index] = figure_create_trade_ship(river_entry.x, river_entry.y, cityId);
             return 1;
         }
     } else {
         // generate caravan and donkeys
-        if (!Data_CityInfo.tradeLandProblemDuration) {
+        if (!city_trade_has_land_trade_problems()) {
             // caravan head
             city->trader_figure_ids[index] = figure_create_trade_caravan(
                 Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, cityId);
@@ -304,9 +304,9 @@ void empire_city_generate_trader()
             if (!scenario_map_has_river_entry()) {
                 continue;
             }
-            Data_CityInfo.tradeNumOpenSeaRoutes++;
+            city_trade_add_sea_trade_route();
         } else {
-            Data_CityInfo.tradeNumOpenLandRoutes++;
+            city_trade_add_land_trade_route();
         }
         if (generate_trader(i, &cities[i])) {
             break;

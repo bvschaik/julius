@@ -344,10 +344,10 @@ static void save_main_data(buffer *main)
         buffer_write_i16(main, city_data.unused.unknown_439c[i]);
     }
     buffer_write_i16(main, Data_CityInfo.numAnimalsInCity);
-    buffer_write_i16(main, Data_CityInfo.tradeNumOpenSeaRoutes);
-    buffer_write_i16(main, Data_CityInfo.tradeNumOpenLandRoutes);
-    buffer_write_i16(main, Data_CityInfo.tradeSeaProblemDuration);
-    buffer_write_i16(main, Data_CityInfo.tradeLandProblemDuration);
+    buffer_write_i16(main, city_data.trade.num_sea_routes);
+    buffer_write_i16(main, city_data.trade.num_land_routes);
+    buffer_write_i16(main, city_data.trade.sea_trade_problem_duration);
+    buffer_write_i16(main, city_data.trade.land_trade_problem_duration);
     buffer_write_i16(main, city_data.building.working_docks);
     buffer_write_i16(main, city_data.building.senate_placed);
     buffer_write_i16(main, city_data.building.working_wharfs);
@@ -360,7 +360,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.tradeNextExportResourceDocker);
     buffer_write_i32(main, Data_CityInfo.debtState);
     buffer_write_i32(main, Data_CityInfo.monthsInDebt);
-    buffer_write_i32(main, Data_CityInfo.cheatedMoney);
+    buffer_write_i32(main, city_data.finance.cheated_money);
     buffer_write_i8(main, city_data.building.barracks_x);
     buffer_write_i8(main, city_data.building.barracks_y);
     buffer_write_i16(main, city_data.building.barracks_grid_offset);
@@ -442,7 +442,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.resource.food_produced_last_month);
     buffer_write_i32(main, city_data.resource.food_produced_this_month);
     buffer_write_i32(main, city_data.ratings.peace_riot_cause);
-    buffer_write_i32(main, Data_CityInfo.estimatedTaxIncome);
+    buffer_write_i32(main, city_data.finance.estimated_tax_income);
     buffer_write_i32(main, Data_CityInfo.tutorial1SenateBuilt);
     buffer_write_i8(main, city_data.building.distribution_center_x);
     buffer_write_i8(main, city_data.building.distribution_center_y);
@@ -821,10 +821,10 @@ static void load_main_data(buffer *main)
         city_data.unused.unknown_439c[i] = buffer_read_i16(main);
     }
     Data_CityInfo.numAnimalsInCity = buffer_read_i16(main);
-    Data_CityInfo.tradeNumOpenSeaRoutes = buffer_read_i16(main);
-    Data_CityInfo.tradeNumOpenLandRoutes = buffer_read_i16(main);
-    Data_CityInfo.tradeSeaProblemDuration = buffer_read_i16(main);
-    Data_CityInfo.tradeLandProblemDuration = buffer_read_i16(main);
+    city_data.trade.num_sea_routes = buffer_read_i16(main);
+    city_data.trade.num_land_routes = buffer_read_i16(main);
+    city_data.trade.sea_trade_problem_duration = buffer_read_i16(main);
+    city_data.trade.land_trade_problem_duration = buffer_read_i16(main);
     city_data.building.working_docks = buffer_read_i16(main);
     city_data.building.senate_placed = buffer_read_i16(main);
     city_data.building.working_wharfs = buffer_read_i16(main);
@@ -837,7 +837,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.tradeNextExportResourceDocker = buffer_read_i32(main);
     Data_CityInfo.debtState = buffer_read_i32(main);
     Data_CityInfo.monthsInDebt = buffer_read_i32(main);
-    Data_CityInfo.cheatedMoney = buffer_read_i32(main);
+    city_data.finance.cheated_money = buffer_read_i32(main);
     city_data.building.barracks_x = buffer_read_i8(main);
     city_data.building.barracks_y = buffer_read_i8(main);
     city_data.building.barracks_grid_offset = buffer_read_i16(main);
@@ -919,7 +919,7 @@ static void load_main_data(buffer *main)
     city_data.resource.food_produced_last_month = buffer_read_i32(main);
     city_data.resource.food_produced_this_month = buffer_read_i32(main);
     city_data.ratings.peace_riot_cause = buffer_read_i32(main);
-    Data_CityInfo.estimatedTaxIncome = buffer_read_i32(main);
+    city_data.finance.estimated_tax_income = buffer_read_i32(main);
     Data_CityInfo.tutorial1SenateBuilt = buffer_read_i32(main);
     city_data.building.distribution_center_x = buffer_read_i8(main);
     city_data.building.distribution_center_y = buffer_read_i8(main);

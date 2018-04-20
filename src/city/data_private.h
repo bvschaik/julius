@@ -61,6 +61,7 @@ extern struct city_data_t {
     struct {
         int32_t treasury;
         int32_t tax_percentage;
+        int32_t estimated_tax_income;
         finance_overview last_year;
         finance_overview this_year;
         int32_t interest_so_far;
@@ -68,6 +69,7 @@ extern struct city_data_t {
         int32_t wages_so_far;
         int16_t stolen_this_year;
         int16_t stolen_last_year;
+        int32_t cheated_money;
     } finance;
     struct {
         int32_t taxed_plebs;
@@ -212,6 +214,12 @@ extern struct city_data_t {
         int8_t die_citizen;
         int8_t die_soldier;
     } sound;
+    struct {
+        int16_t num_land_routes;
+        int16_t num_sea_routes;
+        int16_t land_trade_problem_duration;
+        int16_t sea_trade_problem_duration;
+    } trade;
     struct {
         int8_t other_player[18068];
         int8_t unknown_00a0;

@@ -10,8 +10,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 26
 
 static void button_change_taxes(int is_down, int param2);
@@ -55,7 +53,7 @@ static int draw_background()
     lang_text_draw(60, 1, 70, 81, FONT_NORMAL_WHITE);
     width = text_draw_percentage(city_finance_tax_percentage(), 240, 81, FONT_NORMAL_WHITE);
     width += lang_text_draw(60, 4, 240 + width, 81, FONT_NORMAL_WHITE);
-    lang_text_draw_amount(8, 0, Data_CityInfo.estimatedTaxIncome, 240 + width, 81, FONT_NORMAL_WHITE);
+    lang_text_draw_amount(8, 0, city_finance_estimated_tax_income(), 240 + width, 81, FONT_NORMAL_WHITE);
 
     // percentage taxpayers
     width = text_draw_percentage(city_finance_percentage_taxed_people(), 70, 103, FONT_NORMAL_WHITE);

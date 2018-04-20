@@ -11,6 +11,7 @@
 #include "city/health.h"
 #include "city/message.h"
 #include "city/sentiment.h"
+#include "city/trade.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/formation_legion.h"
@@ -108,14 +109,14 @@ static int perform_large_curse(god_type god)
             building_curse_farms(1);
             break;
         case GOD_NEPTUNE:
-            if (Data_CityInfo.tradeNumOpenSeaRoutes <= 0) {
+            if (city_data.trade.num_sea_routes <= 0) {
                 city_message_post(1, MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE, 0, 0);
                 return 0;
             } else {
                 city_message_post(1, MESSAGE_WRATH_OF_NEPTUNE, 0, 0);
                 figure_sink_all_ships();
                 Data_CityInfo.godCurseNeptuneSankShips = 1;
-                Data_CityInfo.tradeSeaProblemDuration = 80;
+                city_trade_start_sea_trade_problems(80);
             }
             break;
         case GOD_MERCURY:

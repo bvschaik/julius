@@ -4,6 +4,7 @@
 #include "city/health.h"
 #include "city/message.h"
 #include "city/population.h"
+#include "city/trade.h"
 #include "core/random.h"
 #include "scenario/data.h"
 #include "scenario/property.h"
@@ -57,8 +58,8 @@ static void lower_wages()
 static void disrupt_land_trade()
 {
     if (scenario.random_events.land_trade_problem) {
-        if (Data_CityInfo.tradeNumOpenLandRoutes > 0) {
-            Data_CityInfo.tradeLandProblemDuration = 48;
+        if (city_trade_has_land_trade_route()) {
+            city_trade_start_land_trade_problems(48);
             if (scenario_property_climate() == CLIMATE_DESERT) {
                 city_message_post(1, MESSAGE_LAND_TRADE_DISRUPTED_SANDSTORMS, 0, 0);
             } else {
@@ -71,8 +72,8 @@ static void disrupt_land_trade()
 static void disrupt_sea_trade()
 {
     if (scenario.random_events.sea_trade_problem) {
-        if (Data_CityInfo.tradeNumOpenSeaRoutes > 0) {
-            Data_CityInfo.tradeSeaProblemDuration = 48;
+        if (city_trade_has_sea_trade_route()) {
+            city_trade_start_sea_trade_problems(48);
             city_message_post(1, MESSAGE_SEA_TRADE_DISRUPTED, 0, 0);
         }
     }

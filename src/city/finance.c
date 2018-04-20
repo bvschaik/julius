@@ -36,6 +36,11 @@ int city_finance_percentage_taxed_people()
     return city_data.taxes.percentage_taxed_people;
 }
 
+int city_finance_estimated_tax_income()
+{
+    return city_data.finance.estimated_tax_income;
+}
+
 void city_finance_process_import(int price)
 {
     city_data.finance.treasury -= price;
@@ -56,7 +61,7 @@ void city_finance_process_cheat()
 {
     if (city_data.finance.treasury < 5000) {
         city_data.finance.treasury += 1000;
-        Data_CityInfo.cheatedMoney += 1000;
+        city_data.finance.cheated_money += 1000;
     }
 }
 
@@ -151,7 +156,7 @@ void city_finance_estimate_taxes()
     int estimated_rest_of_year = (12 - game_time_month()) * (monthly_patricians + monthly_plebs);
 
     city_data.finance.this_year.income.taxes = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
-    Data_CityInfo.estimatedTaxIncome = city_data.finance.this_year.income.taxes + estimated_rest_of_year;
+    city_data.finance.estimated_tax_income = city_data.finance.this_year.income.taxes + estimated_rest_of_year;
 }
 
 static void collect_monthly_taxes()
