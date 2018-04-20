@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "city/labor.h"
 #include "city/population.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -22,7 +23,7 @@ void window_building_draw_employment(building_info_context *c, int y_offset)
         text_id = 17; // no employees nearby
     } else if (b->housesCovered < 40) {
         text_id = 20; // poor access to employees
-    } else if (Data_CityInfo.laborCategory[b->laborCategory].workersAllocated <= 0) {
+    } else if (city_labor_category(b->laborCategory)->workers_allocated <= 0) {
         text_id = 18; // no people allocated
     } else {
         text_id = 19; // too few people allocated

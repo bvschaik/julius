@@ -170,17 +170,17 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.populationWorkingAge);
     buffer_write_i32(main, Data_CityInfo.workersAvailable);
     for (int i = 0; i < 10; i++) {
-        buffer_write_i32(main, Data_CityInfo.laborCategory[i].workersNeeded);
-        buffer_write_i32(main, Data_CityInfo.laborCategory[i].workersAllocated);
-        buffer_write_i32(main, Data_CityInfo.laborCategory[i].totalHousesCovered);
-        buffer_write_i32(main, Data_CityInfo.laborCategory[i].buildings);
-        buffer_write_i32(main, Data_CityInfo.laborCategory[i].priority);
+        buffer_write_i32(main, city_data.labor.categories[i].workers_needed);
+        buffer_write_i32(main, city_data.labor.categories[i].workers_allocated);
+        buffer_write_i32(main, city_data.labor.categories[i].total_houses_covered);
+        buffer_write_i32(main, city_data.labor.categories[i].buildings);
+        buffer_write_i32(main, city_data.labor.categories[i].priority);
     }
-    buffer_write_i32(main, Data_CityInfo.workersEmployed);
-    buffer_write_i32(main, Data_CityInfo.workersUnemployed);
+    buffer_write_i32(main, city_data.labor.workers_employed);
+    buffer_write_i32(main, city_data.labor.workers_unemployed);
     buffer_write_i32(main, city_data.labor.unemployment_percentage);
     buffer_write_i32(main, city_data.labor.unemployment_percentage_for_senate);
-    buffer_write_i32(main, Data_CityInfo.workersNeeded);
+    buffer_write_i32(main, city_data.labor.workers_needed);
     buffer_write_i32(main, city_data.labor.wages);
     buffer_write_i32(main, city_data.labor.wages_rome);
     buffer_write_i32(main, city_data.unused.unknown_2b6c);
@@ -647,17 +647,17 @@ static void load_main_data(buffer *main)
     Data_CityInfo.populationWorkingAge = buffer_read_i32(main);
     Data_CityInfo.workersAvailable = buffer_read_i32(main);
     for (int i = 0; i < 10; i++) {
-        Data_CityInfo.laborCategory[i].workersNeeded = buffer_read_i32(main);
-        Data_CityInfo.laborCategory[i].workersAllocated = buffer_read_i32(main);
-        Data_CityInfo.laborCategory[i].totalHousesCovered = buffer_read_i32(main);
-        Data_CityInfo.laborCategory[i].buildings = buffer_read_i32(main);
-        Data_CityInfo.laborCategory[i].priority = buffer_read_i32(main);
+        city_data.labor.categories[i].workers_needed = buffer_read_i32(main);
+        city_data.labor.categories[i].workers_allocated = buffer_read_i32(main);
+        city_data.labor.categories[i].total_houses_covered = buffer_read_i32(main);
+        city_data.labor.categories[i].buildings = buffer_read_i32(main);
+        city_data.labor.categories[i].priority = buffer_read_i32(main);
     }
-    Data_CityInfo.workersEmployed = buffer_read_i32(main);
-    Data_CityInfo.workersUnemployed = buffer_read_i32(main);
+    city_data.labor.workers_employed = buffer_read_i32(main);
+    city_data.labor.workers_unemployed = buffer_read_i32(main);
     city_data.labor.unemployment_percentage = buffer_read_i32(main);
     city_data.labor.unemployment_percentage_for_senate = buffer_read_i32(main);
-    Data_CityInfo.workersNeeded = buffer_read_i32(main);
+    city_data.labor.workers_needed = buffer_read_i32(main);
     city_data.labor.wages = buffer_read_i32(main);
     city_data.labor.wages_rome = buffer_read_i32(main);
     city_data.unused.unknown_2b6c = buffer_read_i32(main);

@@ -583,7 +583,7 @@ static int phrase_based_on_city_state(figure *f)
         return 0;
     } else if (unemployment_pct >= 17) {
         return 1;
-    } else if (Data_CityInfo.workersNeeded >= 10) {
+    } else if (city_labor_workers_needed() >= 10) {
         return 2;
     } else if (Data_CityInfo.citywideAverageEntertainment == 0) {
         return 3;

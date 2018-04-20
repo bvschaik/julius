@@ -21,16 +21,6 @@ extern struct _Data_CityInfo {
 	int32_t populationPercentagePlebs;
 	int32_t populationWorkingAge;
 	int32_t workersAvailable;
-	struct {
-		int32_t workersNeeded;
-		int32_t workersAllocated;
-		int32_t totalHousesCovered;
-		int32_t buildings;
-		int32_t priority;
-	} laborCategory[10];
-	int32_t workersEmployed;
-	int32_t workersUnemployed;
-	int32_t workersNeeded;
 	int32_t salaryAmount;
 	int32_t salaryRank;
 	int32_t tradeNextImportResourceCaravan;

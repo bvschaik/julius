@@ -5,6 +5,7 @@
 
 #include "city/emperor.h"
 #include "city/finance.h"
+#include "city/labor.h"
 #include "city/resource.h"
 
 typedef struct {
@@ -126,8 +127,12 @@ extern struct city_data_t {
     struct {
         int32_t wages;
         int32_t wages_rome;
+        int32_t workers_employed;
+        int32_t workers_unemployed;
+        int32_t workers_needed;
         int32_t unemployment_percentage;
         int32_t unemployment_percentage_for_senate;
+        labor_category_data categories[10];
     } labor;
     struct {
         int32_t immigration_amount_per_batch;
