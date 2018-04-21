@@ -120,7 +120,7 @@ void figure_flotsam_action(figure *f)
     if (f->resourceId == 0) {
         figure_image_increase_offset(f, 12);
         if (f->minMaxSeen) {
-            f->graphicId = image_group(GROUP_FIGURE_FLOTSAM_Sheep) + FLOTSAM_TYPE_0[f->graphicOffset];
+            f->graphicId = image_group(GROUP_FIGURE_FLOTSAM_SHEEP) + FLOTSAM_TYPE_0[f->graphicOffset];
         } else {
             f->graphicId = image_group(GROUP_FIGURE_FLOTSAM_0) + FLOTSAM_TYPE_0[f->graphicOffset];
         }

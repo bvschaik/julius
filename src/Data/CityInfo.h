@@ -56,9 +56,6 @@ extern struct _Data_CityInfo {
 	int32_t citywideAverageEntertainment;
 	int32_t housesRequiringEntertainmentToEvolve;
 	int32_t monthsSinceFestival;
-	int8_t godWrathBolts[5];
-	int32_t godMonthsSinceFestival[5];
-	int32_t godLeastHappy;
 	int32_t populationEmigrationCauseTextId;
 	int32_t numProtestersThisMonth;
 	int32_t numCriminalsThisMonth; // muggers+rioters
@@ -106,10 +103,7 @@ extern struct _Data_CityInfo {
 	int32_t nativeMissionPostOperational;
 	int32_t nativeMainMeetingCenterX;
 	int32_t nativeMainMeetingCenterY;
-	int32_t godCurseVenusActive;
-	int32_t godBlessingNeptuneDoubleTrade;
 	int32_t godBlessingMarsEnemiesToKill;
-	int32_t godAngryMessageDelay;
 	int32_t tutorial1SenateBuilt;
 	int32_t numEnemiesInCity;
 	int32_t numImperialSoldiersInCity;

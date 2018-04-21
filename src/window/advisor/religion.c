@@ -12,8 +12,9 @@
 
 static int get_religion_advice()
 {
-    if (Data_CityInfo.godLeastHappy > 0 && Data_CityInfo.godWrathBolts[Data_CityInfo.godLeastHappy - 1] > 4) {
-        return 5 + Data_CityInfo.godLeastHappy;
+    int least_happy = city_god_least_happy();
+    if (least_happy >= 0 && city_god_wrath_bolts(least_happy) > 4) {
+        return 6 + least_happy;
     } else if (Data_CityInfo.religionDemand == 1) {
         return Data_CityInfo.housesRequiringReligion ? 1 : 0;
     } else if (Data_CityInfo.religionDemand == 2) {
@@ -22,8 +23,8 @@ static int get_religion_advice()
         return 3;
     } else if (!Data_CityInfo.housesRequiringReligion) {
         return 4;
-    } else if (Data_CityInfo.godLeastHappy) {
-        return 5 + Data_CityInfo.godLeastHappy;
+    } else if (least_happy >= 0) {
+        return 6 + least_happy;
     } else {
         return 5;
     }
@@ -35,9 +36,10 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
     lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
     text_draw_number_centered(building_count_total(small_temple), 230, y_offset, 50, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_total(large_temple), 290, y_offset, 50, FONT_NORMAL_WHITE);
-    text_draw_number_centered(Data_CityInfo.godMonthsSinceFestival[god], 360, y_offset, 50, FONT_NORMAL_WHITE);
+    text_draw_number_centered(city_god_months_since_festival(god), 360, y_offset, 50, FONT_NORMAL_WHITE);
     int width = lang_text_draw(59, 32 + city_god_happiness(god) / 10, 460, y_offset, FONT_NORMAL_WHITE);
-    for (int i = 0; i < Data_CityInfo.godWrathBolts[god] / 10; i++) {
+    int bolts = city_god_wrath_bolts(god);
+    for (int i = 0; i < bolts / 10; i++) {
         image_draw(image_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
     }
 }

@@ -64,7 +64,7 @@ static void advance_year()
     empire_city_reset_yearly_trade_amounts();
     building_maintenance_update_fire_direction();
     city_ratings_update(1);
-    Data_CityInfo.godBlessingNeptuneDoubleTrade = 0;
+    city_gods_reset_neptune_blessing();
 }
 
 static void advance_month()

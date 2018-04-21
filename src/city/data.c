@@ -294,7 +294,7 @@ static void save_main_data(buffer *main)
         buffer_write_i8(main, city_data.religion.gods[i].happiness);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        buffer_write_i8(main, Data_CityInfo.godWrathBolts[i]);
+        buffer_write_i8(main, city_data.religion.gods[i].wrath_bolts);
     }
     for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i8(main, city_data.religion.gods[i].blessing_done);
@@ -312,9 +312,9 @@ static void save_main_data(buffer *main)
         buffer_write_i8(main, city_data.religion.gods[i].unused3);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        buffer_write_i32(main, Data_CityInfo.godMonthsSinceFestival[i]);
+        buffer_write_i32(main, city_data.religion.gods[i].months_since_festival);
     }
-    buffer_write_i32(main, Data_CityInfo.godLeastHappy);
+    buffer_write_i32(main, city_data.religion.least_happy_god);
     buffer_write_i32(main, city_data.unused.unknown_4334);
     buffer_write_i32(main, Data_CityInfo.populationEmigrationCauseTextId);
     buffer_write_i32(main, Data_CityInfo.numProtestersThisMonth);
@@ -432,12 +432,12 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 2; i++) {
         buffer_write_i32(main, city_data.unused.unused_44e0[i]);
     }
-    buffer_write_i32(main, Data_CityInfo.godCurseVenusActive);
+    buffer_write_i32(main, city_data.religion.venus_curse_active);
     buffer_write_i32(main, city_data.unused.unused_44ec);
-    buffer_write_i32(main, Data_CityInfo.godBlessingNeptuneDoubleTrade);
+    buffer_write_i32(main, city_data.religion.neptune_double_trade_active);
     buffer_write_i32(main, Data_CityInfo.godBlessingMarsEnemiesToKill);
     buffer_write_i32(main, city_data.unused.unused_44f8);
-    buffer_write_i32(main, Data_CityInfo.godAngryMessageDelay);
+    buffer_write_i32(main, city_data.religion.angry_message_delay);
     buffer_write_i32(main, city_data.resource.food_consumed_last_month);
     buffer_write_i32(main, city_data.resource.food_produced_last_month);
     buffer_write_i32(main, city_data.resource.food_produced_this_month);
@@ -771,7 +771,7 @@ static void load_main_data(buffer *main)
         city_data.religion.gods[i].happiness = buffer_read_i8(main);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        Data_CityInfo.godWrathBolts[i] = buffer_read_i8(main);
+        city_data.religion.gods[i].wrath_bolts = buffer_read_i8(main);
     }
     for (int i = 0; i < MAX_GODS; i++) {
         city_data.religion.gods[i].blessing_done = buffer_read_i8(main);
@@ -789,9 +789,9 @@ static void load_main_data(buffer *main)
         city_data.religion.gods[i].unused3 = buffer_read_i8(main);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        Data_CityInfo.godMonthsSinceFestival[i] = buffer_read_i32(main);
+        city_data.religion.gods[i].months_since_festival = buffer_read_i32(main);
     }
-    Data_CityInfo.godLeastHappy = buffer_read_i32(main);
+    city_data.religion.least_happy_god = buffer_read_i32(main);
     city_data.unused.unknown_4334 = buffer_read_i32(main);
     Data_CityInfo.populationEmigrationCauseTextId = buffer_read_i32(main);
     Data_CityInfo.numProtestersThisMonth = buffer_read_i32(main);
@@ -909,12 +909,12 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 2; i++) {
         city_data.unused.unused_44e0[i] = buffer_read_i32(main);
     }
-    Data_CityInfo.godCurseVenusActive = buffer_read_i32(main);
+    city_data.religion.venus_curse_active = buffer_read_i32(main);
     city_data.unused.unused_44ec = buffer_read_i32(main);
-    Data_CityInfo.godBlessingNeptuneDoubleTrade = buffer_read_i32(main);
+    city_data.religion.neptune_double_trade_active = buffer_read_i32(main);
     Data_CityInfo.godBlessingMarsEnemiesToKill = buffer_read_i32(main);
     city_data.unused.unused_44f8 = buffer_read_i32(main);
-    Data_CityInfo.godAngryMessageDelay = buffer_read_i32(main);
+    city_data.religion.angry_message_delay = buffer_read_i32(main);
     city_data.resource.food_consumed_last_month = buffer_read_i32(main);
     city_data.resource.food_produced_last_month = buffer_read_i32(main);
     city_data.resource.food_produced_this_month = buffer_read_i32(main);

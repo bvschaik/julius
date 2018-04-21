@@ -11,8 +11,10 @@
 typedef struct {
     int8_t happiness;
     int8_t target_happiness;
+    int8_t wrath_bolts;
     int8_t blessing_done;
     int8_t small_curse_done;
+    int32_t months_since_festival;
     int8_t unused1;
     int8_t unused2;
     int8_t unused3;
@@ -188,6 +190,10 @@ extern struct city_data_t {
     } ratings;
     struct {
         god_status gods[5];
+        int32_t least_happy_god;
+        int32_t angry_message_delay;
+        int32_t venus_curse_active;
+        int32_t neptune_double_trade_active;
     } religion;
     struct {
         int16_t space_in_warehouses[RESOURCE_MAX];
