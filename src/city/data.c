@@ -374,11 +374,11 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.victoryHasWonScenario);
     buffer_write_i32(main, Data_CityInfo.victoryContinueMonths);
     buffer_write_i32(main, Data_CityInfo.victoryContinueMonthsChosen);
-    buffer_write_i32(main, Data_CityInfo.wageRatePaidThisYear);
+    buffer_write_i32(main, city_data.finance.wage_rate_paid_this_year);
     buffer_write_i32(main, city_data.finance.this_year.expenses.tribute);
     buffer_write_i32(main, city_data.finance.last_year.expenses.tribute);
-    buffer_write_i32(main, Data_CityInfo.tributeNotPaidLastYear);
-    buffer_write_i32(main, Data_CityInfo.tributeNotPaidTotalYears);
+    buffer_write_i32(main, city_data.finance.tribute_not_paid_last_year);
+    buffer_write_i32(main, city_data.finance.tribute_not_paid_total_years);
     buffer_write_i32(main, Data_CityInfo.festivalGod);
     buffer_write_i32(main, Data_CityInfo.festivalSize);
     buffer_write_i32(main, Data_CityInfo.plannedFestivalSize);
@@ -424,7 +424,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.nativeMissionPostOperational);
     buffer_write_i32(main, Data_CityInfo.nativeMainMeetingCenterX);
     buffer_write_i32(main, Data_CityInfo.nativeMainMeetingCenterY);
-    buffer_write_i32(main, Data_CityInfo.wageRatePaidLastYear);
+    buffer_write_i32(main, city_data.finance.wage_rate_paid_last_year);
     buffer_write_i32(main, city_data.resource.food_needed_per_month);
     buffer_write_i32(main, city_data.resource.granaries.understaffed);
     buffer_write_i32(main, city_data.resource.granaries.not_operating);
@@ -851,11 +851,11 @@ static void load_main_data(buffer *main)
     Data_CityInfo.victoryHasWonScenario = buffer_read_i32(main);
     Data_CityInfo.victoryContinueMonths = buffer_read_i32(main);
     Data_CityInfo.victoryContinueMonthsChosen = buffer_read_i32(main);
-    Data_CityInfo.wageRatePaidThisYear = buffer_read_i32(main);
+    city_data.finance.wage_rate_paid_this_year = buffer_read_i32(main);
     city_data.finance.this_year.expenses.tribute = buffer_read_i32(main);
     city_data.finance.last_year.expenses.tribute = buffer_read_i32(main);
-    Data_CityInfo.tributeNotPaidLastYear = buffer_read_i32(main);
-    Data_CityInfo.tributeNotPaidTotalYears = buffer_read_i32(main);
+    city_data.finance.tribute_not_paid_last_year = buffer_read_i32(main);
+    city_data.finance.tribute_not_paid_total_years = buffer_read_i32(main);
     Data_CityInfo.festivalGod = buffer_read_i32(main);
     Data_CityInfo.festivalSize = buffer_read_i32(main);
     Data_CityInfo.plannedFestivalSize = buffer_read_i32(main);
@@ -901,7 +901,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.nativeMissionPostOperational = buffer_read_i32(main);
     Data_CityInfo.nativeMainMeetingCenterX = buffer_read_i32(main);
     Data_CityInfo.nativeMainMeetingCenterY = buffer_read_i32(main);
-    Data_CityInfo.wageRatePaidLastYear = buffer_read_i32(main);
+    city_data.finance.wage_rate_paid_last_year = buffer_read_i32(main);
     city_data.resource.food_needed_per_month = buffer_read_i32(main);
     city_data.resource.granaries.understaffed = buffer_read_i32(main);
     city_data.resource.granaries.not_operating = buffer_read_i32(main);

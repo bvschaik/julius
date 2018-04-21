@@ -149,7 +149,7 @@ static void update_prosperity_explanation()
         change += 1;
     }
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
-    int avg_wage = Data_CityInfo.wageRatePaidLastYear / 12;
+    int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;
     if (avg_wage >= city_data.labor.wages_rome + 2) {
         change += 1;
     } else if (avg_wage < city_data.labor.wages_rome) {
@@ -164,7 +164,7 @@ static void update_prosperity_explanation()
         change += 1;
     }
     // tribute not paid: -1
-    if (Data_CityInfo.tributeNotPaidLastYear) {
+    if (city_data.finance.tribute_not_paid_last_year) {
         change -= 1;
     }
     // working hippodrome: +1
@@ -187,7 +187,7 @@ static void update_prosperity_explanation()
         reason = 5;
     } else if (pct_tents > 30) {
         reason = 6;
-    } else if (Data_CityInfo.tributeNotPaidLastYear) {
+    } else if (city_data.finance.tribute_not_paid_last_year) {
         reason = 7;
     } else {
         reason = 9;
@@ -237,19 +237,19 @@ void city_ratings_update_favor_explanation()
 
     if (city_data.ratings.favor_salary_penalty >= 8) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 1;
-    } else if (Data_CityInfo.tributeNotPaidTotalYears >= 3) {
+    } else if (city_data.finance.tribute_not_paid_total_years >= 3) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 2;
     } else if (city_data.ratings.favor_ignored_request_penalty >= 5) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 3;
     } else if (city_data.ratings.favor_salary_penalty >= 5) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 4;
-    } else if (Data_CityInfo.tributeNotPaidTotalYears >= 2) {
+    } else if (city_data.finance.tribute_not_paid_total_years >= 2) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 5;
     } else if (city_data.ratings.favor_ignored_request_penalty >= 3) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 6;
     } else if (city_data.ratings.favor_salary_penalty >= 3) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 7;
-    } else if (Data_CityInfo.tributeNotPaidLastYear) {
+    } else if (city_data.finance.tribute_not_paid_last_year) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 8;
     } else if (city_data.ratings.favor_salary_penalty >= 2) {
         Data_CityInfo.ratingAdvisorExplanationFavor = 9;
@@ -387,7 +387,7 @@ static void update_prosperity_rating()
         change += 1;
     }
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
-    int avg_wage = Data_CityInfo.wageRatePaidLastYear / 12;
+    int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;
     if (avg_wage >= city_data.labor.wages_rome + 2) {
         change += 1;
     } else if (avg_wage < city_data.labor.wages_rome) {
@@ -401,7 +401,7 @@ static void update_prosperity_rating()
         change += 1;
     }
     // tribute not paid: -1
-    if (Data_CityInfo.tributeNotPaidLastYear) {
+    if (city_data.finance.tribute_not_paid_last_year) {
         change -= 1;
     }
     // working hippodrome: +1
@@ -483,10 +483,10 @@ static void update_favor_rating(int is_yearly_update)
             city_data.ratings.favor -= 2;
         }
         // tribute penalty
-        if (Data_CityInfo.tributeNotPaidLastYear) {
-            if (Data_CityInfo.tributeNotPaidTotalYears <= 1) {
+        if (city_data.finance.tribute_not_paid_last_year) {
+            if (city_data.finance.tribute_not_paid_total_years <= 1) {
                 city_data.ratings.favor -= 3;
-            } else if (Data_CityInfo.tributeNotPaidTotalYears <= 2) {
+            } else if (city_data.finance.tribute_not_paid_total_years <= 2) {
                 city_data.ratings.favor -= 5;
             } else {
                 city_data.ratings.favor -= 8;

@@ -84,9 +84,6 @@ extern struct _Data_CityInfo {
 	int32_t victoryHasWonScenario;
 	int32_t victoryContinueMonths;
 	int32_t victoryContinueMonthsChosen;
-	int32_t wageRatePaidThisYear;
-	int32_t tributeNotPaidLastYear;
-	int32_t tributeNotPaidTotalYears;
 	int32_t festivalGod;
 	int32_t festivalSize;
 	int32_t plannedFestivalSize;
@@ -109,7 +106,6 @@ extern struct _Data_CityInfo {
 	int32_t nativeMissionPostOperational;
 	int32_t nativeMainMeetingCenterX;
 	int32_t nativeMainMeetingCenterY;
-	int32_t wageRatePaidLastYear;
 	int32_t godCurseVenusActive;
 	int32_t godBlessingNeptuneDoubleTrade;
 	int32_t godBlessingMarsEnemiesToKill;

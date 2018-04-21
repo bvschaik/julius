@@ -239,7 +239,7 @@ static void pay_monthly_wages()
     int wages = city_data.labor.wages * city_data.labor.workers_employed / 10 / 12;
     city_data.finance.treasury -= wages;
     city_data.finance.wages_so_far += wages;
-    Data_CityInfo.wageRatePaidThisYear += city_data.labor.wages;
+    city_data.finance.wage_rate_paid_this_year += city_data.labor.wages;
 }
 
 static void pay_monthly_interest()
@@ -293,8 +293,8 @@ static void copy_amounts_to_last_year()
     // wages
     last_year->expenses.wages = city_data.finance.wages_so_far;
     city_data.finance.wages_so_far = 0;
-    Data_CityInfo.wageRatePaidLastYear = Data_CityInfo.wageRatePaidThisYear;
-    Data_CityInfo.wageRatePaidThisYear = 0;
+    city_data.finance.wage_rate_paid_last_year = city_data.finance.wage_rate_paid_this_year;
+    city_data.finance.wage_rate_paid_this_year = 0;
 
     // import/export
     last_year->income.exports = this_year->income.exports;
@@ -340,15 +340,15 @@ static void pay_tribute()
         last_year->expenses.wages +
         last_year->expenses.imports;
 
-    Data_CityInfo.tributeNotPaidLastYear = 0;
+    city_data.finance.tribute_not_paid_last_year = 0;
     if (city_data.finance.treasury <= 0) {
         // city is in debt
-        Data_CityInfo.tributeNotPaidLastYear = 1;
-        Data_CityInfo.tributeNotPaidTotalYears++;
+        city_data.finance.tribute_not_paid_last_year = 1;
+        city_data.finance.tribute_not_paid_total_years++;
         last_year->expenses.tribute = 0;
     } else if (income <= expenses) {
         // city made a loss: fixed tribute based on population
-        Data_CityInfo.tributeNotPaidTotalYears = 0;
+        city_data.finance.tribute_not_paid_total_years = 0;
         if (city_data.population.population > 2000) {
             last_year->expenses.tribute = 200;
         } else if (city_data.population.population > 1000) {
@@ -358,7 +358,7 @@ static void pay_tribute()
         }
     } else {
         // city made a profit: tribute is max of: 25% of profit, fixed tribute based on population
-        Data_CityInfo.tributeNotPaidTotalYears = 0;
+        city_data.finance.tribute_not_paid_total_years = 0;
         if (city_data.population.population > 5000) {
             last_year->expenses.tribute = 500;
         } else if (city_data.population.population > 3000) {

@@ -71,6 +71,10 @@ extern struct city_data_t {
         int16_t stolen_this_year;
         int16_t stolen_last_year;
         int32_t cheated_money;
+        int32_t tribute_not_paid_last_year;
+        int32_t tribute_not_paid_total_years;
+        int32_t wage_rate_paid_this_year;
+        int32_t wage_rate_paid_last_year;
     } finance;
     struct {
         int32_t taxed_plebs;
