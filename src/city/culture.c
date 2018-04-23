@@ -4,6 +4,7 @@
 #include "building/count.h"
 #include "city/constants.h"
 #include "city/data_private.h"
+#include "city/festival.h"
 #include "city/population.h"
 #include "core/calc.h"
 
@@ -240,17 +241,7 @@ void city_culture_calculate_entertainment()
         Data_CityInfo.entertainmentNeedingShowsMost = 4;
     }
 
-    Data_CityInfo.festivalCostSmall = city_data.population.population / 20 + 10;
-    Data_CityInfo.festivalCostLarge = city_data.population.population / 10 + 20;
-    Data_CityInfo.festivalCostGrand = city_data.population.population / 5 + 40;
-    Data_CityInfo.festivalWineGrand = city_data.population.population / 500 + 1;
-    Data_CityInfo.festivalNotEnoughWine = 0;
-    if (city_data.resource.stored_in_warehouses[RESOURCE_WINE] < Data_CityInfo.festivalWineGrand) {
-        Data_CityInfo.festivalNotEnoughWine = 1;
-        if (Data_CityInfo.festivalSize == FESTIVAL_GRAND) {
-            Data_CityInfo.festivalSize = FESTIVAL_LARGE;
-        }
-    }
+    city_festival_calculate_costs();
 }
 
 void city_culture_calculate_demands()

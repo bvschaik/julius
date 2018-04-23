@@ -202,6 +202,15 @@ extern struct city_data_t {
             int32_t god;
             int32_t size;
         } planned;
+        struct {
+            int32_t god;
+            int32_t size;
+        } selected;
+        int32_t small_cost;
+        int32_t large_cost;
+        int32_t grand_cost;
+        int32_t grand_wine;
+        int32_t not_enough_wine;
     } festival;
     struct {
         int16_t space_in_warehouses[RESOURCE_MAX];
