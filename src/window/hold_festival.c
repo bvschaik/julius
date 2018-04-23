@@ -1,6 +1,7 @@
 #include "hold_festival.h"
 
 #include "city/constants.h"
+#include "city/festival.h"
 #include "city/finance.h"
 #include "city/gods.h"
 #include "game/resource.h"
@@ -151,7 +152,7 @@ static void button_hold_festival(int param1, int param2)
     if (city_finance_out_of_money()) {
         return;
     }
-    city_gods_schedule_festival();
+    city_festival_schedule();
     window_advisors_show();
 }
 

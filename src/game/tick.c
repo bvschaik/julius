@@ -13,6 +13,7 @@
 #include "building/warehouse.h"
 #include "city/culture.h"
 #include "city/emperor.h"
+#include "city/festival.h"
 #include "city/finance.h"
 #include "city/gods.h"
 #include "city/health.h"
@@ -70,7 +71,6 @@ static void advance_year()
 static void advance_month()
 {
     Data_CityInfo.populationNewcomersThisMonth = 0;
-    Data_CityInfo.monthsSinceFestival++;
 
     city_health_update();
     scenario_random_event_process();
@@ -97,7 +97,7 @@ static void advance_month()
     }
 
     city_population_record_monthly();
-    city_gods_check_festival();
+    city_festival_update();
     tutorial_on_month_tick();
     if (setting_monthly_autosave()) {
         game_file_write_saved_game("last.sav");
