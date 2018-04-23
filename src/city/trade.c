@@ -5,8 +5,6 @@
 #include "city/data_private.h"
 #include "empire/city.h"
 
-#include "Data/CityInfo.h"
-
 void city_trade_update()
 {
     city_data.trade.num_sea_routes = 0;

@@ -11,8 +11,6 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
-#include "Data/CityInfo.h"
-
 static void draw_farm(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource)
 {
     c->help_id = help_id;

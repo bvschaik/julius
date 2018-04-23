@@ -15,8 +15,6 @@
 #include "window/advisors.h"
 #include "window/message_dialog.h"
 
-#include "Data/CityInfo.h"
-
 static void button_god(int god, int param2);
 static void button_size(int size, int param2);
 static void button_help(int param1, int param2);

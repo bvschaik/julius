@@ -12,8 +12,6 @@
 #include "graphics/window.h"
 #include "window/labor_priority.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 26
 
 static void arrow_button_wages(int is_down, int param2);

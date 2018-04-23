@@ -23,7 +23,6 @@
 #include "map/water.h"
 
 #include "Data/State.h"
-#include "Data/CityInfo.h"
 
 static void add_fort(int type, building *fort)
 {

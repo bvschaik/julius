@@ -2,8 +2,6 @@
 
 #include "city/data_private.h"
 
-#include "Data/CityInfo.h"
-
 int city_buildings_has_senate()
 {
     return city_data.building.senate_placed;

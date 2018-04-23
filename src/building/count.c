@@ -5,8 +5,6 @@
 #include "city/health.h"
 #include "figure/figure.h"
 
-#include "Data/CityInfo.h"
-
 #include <string.h>
 
 struct record {

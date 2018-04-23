@@ -9,8 +9,6 @@
 #include "graphics/text.h"
 #include "sound/speech.h"
 
-#include "Data/CityInfo.h"
-
 void window_building_draw_employment(building_info_context *c, int y_offset)
 {
     building *b = building_get(c->building_id);

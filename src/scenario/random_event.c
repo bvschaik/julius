@@ -10,8 +10,6 @@
 #include "scenario/data.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 enum {
     EVENT_ROME_RAISES_WAGES = 1,
     EVENT_ROME_LOWERS_WAGES = 2,

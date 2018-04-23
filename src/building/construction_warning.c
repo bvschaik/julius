@@ -14,8 +14,6 @@
 #include "map/terrain.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 static int has_warning = 0;
 
 void building_construction_warning_reset()

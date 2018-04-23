@@ -9,8 +9,6 @@
 #include "game/tutorial.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 int city_health()
 {
     return city_data.health.value;

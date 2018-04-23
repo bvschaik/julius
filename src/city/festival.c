@@ -7,8 +7,6 @@
 #include "city/message.h"
 #include "city/sentiment.h"
 
-#include "Data/CityInfo.h"
-
 int city_festival_is_planned()
 {
     return city_data.festival.planned.size != FESTIVAL_NONE;
