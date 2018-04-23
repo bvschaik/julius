@@ -2,6 +2,7 @@
 #define CITY_FESTIVAL_H
 
 int city_festival_is_planned();
+int city_festival_months_since_last();
 
 int city_festival_small_cost();
 int city_festival_large_cost();

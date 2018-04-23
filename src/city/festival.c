@@ -14,6 +14,11 @@ int city_festival_is_planned()
     return city_data.festival.planned.size != FESTIVAL_NONE;
 }
 
+int city_festival_months_since_last()
+{
+    return city_data.festival.months_since_festival;
+}
+
 int city_festival_small_cost()
 {
     return city_data.festival.small_cost;
@@ -86,39 +91,24 @@ void city_festival_schedule()
     }
 }
 
-void city_festival_update()
+static void throw_party()
 {
-    Data_CityInfo.monthsSinceFestival++;
-    if (Data_CityInfo.festivalEffectMonthsDelayFirst) {
-        --Data_CityInfo.festivalEffectMonthsDelayFirst;
-    }
-    if (Data_CityInfo.festivalEffectMonthsDelaySecond) {
-        --Data_CityInfo.festivalEffectMonthsDelaySecond;
-    }
-    if (city_data.festival.planned.size <= FESTIVAL_NONE) {
-        return;
-    }
-    city_data.festival.planned.months_to_go--;
-    if (city_data.festival.planned.months_to_go > 0) {
-        return;
-    }
-    // throw a party!
-    if (Data_CityInfo.festivalEffectMonthsDelayFirst <= 0) {
-        Data_CityInfo.festivalEffectMonthsDelayFirst = 12;
+    if (city_data.festival.first_festival_effect_months <= 0) {
+        city_data.festival.first_festival_effect_months = 12;
         switch (city_data.festival.planned.size) {
             case FESTIVAL_SMALL: city_sentiment_change_happiness(7); break;
             case FESTIVAL_LARGE: city_sentiment_change_happiness(9); break;
             case FESTIVAL_GRAND: city_sentiment_change_happiness(12); break;
         }
-    } else if (Data_CityInfo.festivalEffectMonthsDelaySecond <= 0) {
-        Data_CityInfo.festivalEffectMonthsDelaySecond = 12;
+    } else if (city_data.festival.second_festival_effect_months <= 0) {
+        city_data.festival.second_festival_effect_months = 12;
         switch (city_data.festival.planned.size) {
             case FESTIVAL_SMALL: city_sentiment_change_happiness(2); break;
             case FESTIVAL_LARGE: city_sentiment_change_happiness(3); break;
             case FESTIVAL_GRAND: city_sentiment_change_happiness(5); break;
         }
     }
-    Data_CityInfo.monthsSinceFestival = 1;
+    city_data.festival.months_since_festival = 1;
     city_data.religion.gods[city_data.festival.planned.god].months_since_festival = 0;
     switch (city_data.festival.planned.size) {
         case FESTIVAL_SMALL: city_message_post(1, MESSAGE_SMALL_FESTIVAL, 0, 0); break;
@@ -127,6 +117,23 @@ void city_festival_update()
     }
     city_data.festival.planned.size = FESTIVAL_NONE;
     city_data.festival.planned.months_to_go = 0;
+}
+
+void city_festival_update()
+{
+    city_data.festival.months_since_festival++;
+    if (city_data.festival.first_festival_effect_months) {
+        --city_data.festival.first_festival_effect_months;
+    }
+    if (city_data.festival.second_festival_effect_months) {
+        --city_data.festival.second_festival_effect_months;
+    }
+    if (city_festival_is_planned()) {
+        city_data.festival.planned.months_to_go--;
+        if (city_data.festival.planned.months_to_go <= 0) {
+            throw_party();
+        }
+    }
 }
 
 void city_festival_calculate_costs()

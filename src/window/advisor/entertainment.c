@@ -39,7 +39,7 @@ static int get_entertainment_advice()
 
 static int get_festival_advice()
 {
-    int months_since_festival = Data_CityInfo.monthsSinceFestival;
+    int months_since_festival = city_festival_months_since_last();
     if (months_since_festival <= 1) {
         return 0;
     } else if (months_since_festival <= 6) {
@@ -63,7 +63,7 @@ static void draw_festival_info()
     image_draw(image_group(GROUP_PANEL_WINDOWS) + 15, 460, 255);
     lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK);
 
-    int width = lang_text_draw_amount(8, 4, Data_CityInfo.monthsSinceFestival, 112, 260, FONT_NORMAL_WHITE);
+    int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260, FONT_NORMAL_WHITE);
     lang_text_draw(58, 15, 112 + width, 260, FONT_NORMAL_WHITE);
     if (city_festival_is_planned()) {
         lang_text_draw_centered(58, 34, 102, 284, 300, FONT_NORMAL_WHITE);

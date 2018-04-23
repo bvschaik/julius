@@ -211,6 +211,10 @@ extern struct city_data_t {
         int32_t grand_cost;
         int32_t grand_wine;
         int32_t not_enough_wine;
+
+        int32_t months_since_festival;
+        int32_t first_festival_effect_months;
+        int32_t second_festival_effect_months;
     } festival;
     struct {
         int16_t space_in_warehouses[RESOURCE_MAX];

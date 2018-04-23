@@ -28,7 +28,7 @@ void city_data_init()
     Data_CityInfo.tradeNextImportResourceCaravanBackup = 1;
     city_data.population.monthly.next_index = 0;
     city_data.population.monthly.count = 0;
-    Data_CityInfo.monthsSinceFestival = 1;
+    city_data.festival.months_since_festival = 1;
     city_data.festival.selected.size = FESTIVAL_SMALL;
     city_data.emperor.gifts[GIFT_MODEST].cost = 0;
     city_data.emperor.gifts[GIFT_GENEROUS].cost = 0;
@@ -286,7 +286,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.entertainmentNeedingShowsMost);
     buffer_write_i32(main, Data_CityInfo.citywideAverageEntertainment);
     buffer_write_i32(main, Data_CityInfo.housesRequiringEntertainmentToEvolve);
-    buffer_write_i32(main, Data_CityInfo.monthsSinceFestival);
+    buffer_write_i32(main, city_data.festival.months_since_festival);
     for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i8(main, city_data.religion.gods[i].target_happiness);
     }
@@ -393,8 +393,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.citywideAverageEducation);
     buffer_write_i32(main, Data_CityInfo.citywideAverageHealth);
     buffer_write_i32(main, Data_CityInfo.cultureCoverageReligion);
-    buffer_write_i32(main, Data_CityInfo.festivalEffectMonthsDelayFirst);
-    buffer_write_i32(main, Data_CityInfo.festivalEffectMonthsDelaySecond);
+    buffer_write_i32(main, city_data.festival.first_festival_effect_months);
+    buffer_write_i32(main, city_data.festival.second_festival_effect_months);
     buffer_write_i32(main, city_data.unused.unused_4454);
     buffer_write_i32(main, city_data.sentiment.unemployment);
     buffer_write_i32(main, city_data.sentiment.previous_value);
@@ -763,7 +763,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.entertainmentNeedingShowsMost = buffer_read_i32(main);
     Data_CityInfo.citywideAverageEntertainment = buffer_read_i32(main);
     Data_CityInfo.housesRequiringEntertainmentToEvolve = buffer_read_i32(main);
-    Data_CityInfo.monthsSinceFestival = buffer_read_i32(main);
+    city_data.festival.months_since_festival = buffer_read_i32(main);
     for (int i = 0; i < MAX_GODS; i++) {
         city_data.religion.gods[i].target_happiness = buffer_read_i8(main);
     }
@@ -870,8 +870,8 @@ static void load_main_data(buffer *main)
     Data_CityInfo.citywideAverageEducation = buffer_read_i32(main);
     Data_CityInfo.citywideAverageHealth = buffer_read_i32(main);
     Data_CityInfo.cultureCoverageReligion = buffer_read_i32(main);
-    Data_CityInfo.festivalEffectMonthsDelayFirst = buffer_read_i32(main);
-    Data_CityInfo.festivalEffectMonthsDelaySecond = buffer_read_i32(main);
+    city_data.festival.first_festival_effect_months = buffer_read_i32(main);
+    city_data.festival.second_festival_effect_months = buffer_read_i32(main);
     city_data.unused.unused_4454 = buffer_read_i32(main);
     city_data.sentiment.unemployment = buffer_read_i32(main);
     city_data.sentiment.previous_value = buffer_read_i32(main);
