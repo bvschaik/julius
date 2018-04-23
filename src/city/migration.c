@@ -118,6 +118,35 @@ void city_migration_update()
     create_migrants();
 }
 
+void city_migration_determine_no_immigration_cause()
+{
+    switch (city_data.sentiment.low_mood_cause) {
+        case LOW_MOOD_CAUSE_NO_FOOD:
+            city_data.migration.no_immigration_cause = 2;
+            break;
+        case LOW_MOOD_CAUSE_NO_JOBS:
+            city_data.migration.no_immigration_cause = 1;
+            break;
+        case LOW_MOOD_CAUSE_HIGH_TAXES:
+            city_data.migration.no_immigration_cause = 3;
+            break;
+        case LOW_MOOD_CAUSE_LOW_WAGES:
+            city_data.migration.no_immigration_cause = 0;
+            break;
+        case LOW_MOOD_CAUSE_MANY_TENTS:
+            city_data.migration.no_immigration_cause = 4;
+            break;
+        default:
+            city_data.migration.no_immigration_cause = 5;
+            break;
+    }
+}
+
+int city_migration_no_immigation_cause()
+{
+    return city_data.migration.no_immigration_cause;
+}
+
 int city_migration_no_room_for_immigrants()
 {
     return city_data.migration.refused_immigrants_today || Data_CityInfo.populationRoomInHouses <= 0;

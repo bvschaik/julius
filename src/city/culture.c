@@ -246,27 +246,6 @@ void city_culture_calculate_entertainment()
 
 void city_culture_calculate_demands()
 {
-    // emigration
-    switch (Data_CityInfo.populationEmigrationCause) {
-        case EMIGRATION_CAUSE_NO_FOOD:
-            Data_CityInfo.populationEmigrationCauseTextId = 2;
-            break;
-        case EMIGRATION_CAUSE_NO_JOBS:
-            Data_CityInfo.populationEmigrationCauseTextId = 1;
-            break;
-        case EMIGRATION_CAUSE_HIGH_TAXES:
-            Data_CityInfo.populationEmigrationCauseTextId = 3;
-            break;
-        case EMIGRATION_CAUSE_LOW_WAGES:
-            Data_CityInfo.populationEmigrationCauseTextId = 0;
-            break;
-        case EMIGRATION_CAUSE_MANY_TENTS:
-            Data_CityInfo.populationEmigrationCauseTextId = 4;
-            break;
-        default:
-            Data_CityInfo.populationEmigrationCauseTextId = 5;
-            break;
-    }
     // health
     Data_CityInfo.healthDemand = 0;
     int max = 0;

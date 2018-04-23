@@ -19,13 +19,22 @@ typedef enum {
 } advisor_type;
 
 typedef enum {
-    EMIGRATION_CAUSE_NONE = 0,
-    EMIGRATION_CAUSE_NO_FOOD = 1,
-    EMIGRATION_CAUSE_NO_JOBS = 2,
-    EMIGRATION_CAUSE_HIGH_TAXES = 3,
-    EMIGRATION_CAUSE_LOW_WAGES = 4,
-    EMIGRATION_CAUSE_MANY_TENTS = 5,
-} emigration_cause;
+    LOW_MOOD_CAUSE_NONE = 0,
+    LOW_MOOD_CAUSE_NO_FOOD = 1,
+    LOW_MOOD_CAUSE_NO_JOBS = 2,
+    LOW_MOOD_CAUSE_HIGH_TAXES = 3,
+    LOW_MOOD_CAUSE_LOW_WAGES = 4,
+    LOW_MOOD_CAUSE_MANY_TENTS = 5,
+} low_mood_cause;
+
+typedef enum {
+    NO_IMMIGRATION_LOW_WAGES = 0,
+    NO_IMMIGRATION_NO_JOBS = 1,
+    NO_IMMIGRATION_NO_FOOD = 2,
+    NO_IMMIGRATION_HIGH_TAXES = 3,
+    NO_IMMIGRATION_MANY_TENTS = 4,
+    NO_IMMIGRATION_LOW_MOOD = 5
+} no_immigration_cause;
 
 typedef enum {
     FESTIVAL_NONE = 0,

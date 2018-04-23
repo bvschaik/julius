@@ -1,6 +1,7 @@
 #include "message_dialog.h"
 
 #include "city/message.h"
+#include "city/sentiment.h"
 #include "city/view.h"
 #include "core/lang.h"
 #include "empire/city.h"
@@ -18,8 +19,6 @@
 #include "scenario/request.h"
 #include "window/advisors.h"
 #include "window/city.h"
-
-#include "Data/CityInfo.h"
 
 #define MAX_HISTORY 200
 
@@ -161,16 +160,17 @@ static void draw_city_message_text(const lang_message *msg)
                 16 * data.text_width_blocks, data.text_height_blocks - 1, 0);
             break;
 
-        case MESSAGE_TYPE_EMIGRATION:
-            if (Data_CityInfo.populationEmigrationCause >= 1 && Data_CityInfo.populationEmigrationCause <= 5) {
-                lang_text_draw(12, Data_CityInfo.populationEmigrationCause + 2,
+        case MESSAGE_TYPE_EMIGRATION: {
+            int low_mood_cause = city_sentiment_low_mood_cause();
+            if (low_mood_cause >= 1 && low_mood_cause <= 5) {
+                lang_text_draw(12, low_mood_cause + 2,
                     data.x + 64, data.y_text + 44, FONT_NORMAL_WHITE);
             }
             rich_text_draw(msg->content.text,
                 data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16,
                 data.text_height_blocks - 1, 0);
             break;
-
+        }
         case MESSAGE_TYPE_TUTORIAL:
             rich_text_draw(msg->content.text,
                 data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16,

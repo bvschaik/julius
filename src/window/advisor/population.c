@@ -387,13 +387,13 @@ static int draw_background()
     } else if (Data_CityInfo.populationMigrationPercentage < 80) {
         lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE);
         int text_id;
-        switch (Data_CityInfo.populationEmigrationCauseTextId) {
-            case 0: text_id = 20; break;
-            case 1: text_id = 21; break;
-            case 2: text_id = 22; break;
-            case 3: text_id = 23; break;
-            case 4: text_id = 31; break;
-            case 5: text_id = 32; break;
+        switch (city_migration_no_immigation_cause()) {
+            case NO_IMMIGRATION_LOW_WAGES: text_id = 20; break;
+            case NO_IMMIGRATION_NO_JOBS: text_id = 21; break;
+            case NO_IMMIGRATION_NO_FOOD: text_id = 22; break;
+            case NO_IMMIGRATION_HIGH_TAXES: text_id = 23; break;
+            case NO_IMMIGRATION_MANY_TENTS: text_id = 31; break;
+            case NO_IMMIGRATION_LOW_MOOD: text_id = 32; break;
             default: text_id = 0; break;
         }
         if (text_id) {

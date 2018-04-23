@@ -70,7 +70,7 @@ void city_ratings_peace_record_criminal()
 void city_ratings_peace_record_rioter()
 {
     city_data.ratings.peace_num_rioters++;
-    city_data.ratings.peace_riot_cause = Data_CityInfo.populationEmigrationCause;
+    city_data.ratings.peace_riot_cause = city_data.sentiment.low_mood_cause;
 }
 
 void city_ratings_change_favor(int amount)

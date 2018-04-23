@@ -149,6 +149,7 @@ extern struct city_data_t {
         int32_t immigrated_today;
         int32_t emigrated_today;
         int32_t refused_immigrants_today;
+        int32_t no_immigration_cause;
     } migration;
     struct {
         int32_t value;
@@ -158,6 +159,7 @@ extern struct city_data_t {
         int8_t include_tents;
         int32_t unemployment;
         int32_t wages;
+        int32_t low_mood_cause;
     } sentiment;
     struct {
         int32_t num_hospital_workers;

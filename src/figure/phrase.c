@@ -7,6 +7,7 @@
 #include "city/labor.h"
 #include "city/population.h"
 #include "city/resource.h"
+#include "city/sentiment.h"
 #include "core/calc.h"
 #include "figure/trader.h"
 #include "figuretype/trader.h"
@@ -412,14 +413,14 @@ static int house_seeker_phrase(figure *f)
 
 static int emigrant_phrase()
 {
-    switch (Data_CityInfo.populationEmigrationCause) {
-        case EMIGRATION_CAUSE_NO_JOBS:
+    switch (city_sentiment_low_mood_cause()) {
+        case LOW_MOOD_CAUSE_NO_JOBS:
             return 7;
-        case EMIGRATION_CAUSE_NO_FOOD:
+        case LOW_MOOD_CAUSE_NO_FOOD:
             return 8;
-        case EMIGRATION_CAUSE_HIGH_TAXES:
+        case LOW_MOOD_CAUSE_HIGH_TAXES:
             return 9;
-        case EMIGRATION_CAUSE_LOW_WAGES:
+        case LOW_MOOD_CAUSE_LOW_WAGES:
             return 10;
         default:
             return 11;
@@ -431,11 +432,12 @@ static int tower_sentry_phrase(figure *f)
     if (++f->phraseSequenceExact >= 2) {
         f->phraseSequenceExact = 0;
     }
-    if (!Data_CityInfo.numEnemiesInCity) {
+    int enemies = Data_CityInfo.numEnemiesInCity;
+    if (!enemies) {
         return 7 + f->phraseSequenceExact;
-    } else if (Data_CityInfo.numEnemiesInCity <= 10) {
+    } else if (enemies <= 10) {
         return 9;
-    } else if (Data_CityInfo.numEnemiesInCity <= 30) {
+    } else if (enemies <= 30) {
         return 10;
     } else {
         return 11;
@@ -444,11 +446,12 @@ static int tower_sentry_phrase(figure *f)
 
 static int soldier_phrase()
 {
-    if (Data_CityInfo.numEnemiesInCity >= 40) {
+    int enemies = Data_CityInfo.numEnemiesInCity;
+    if (enemies >= 40) {
         return 11;
-    } else if (Data_CityInfo.numEnemiesInCity > 20) {
+    } else if (enemies > 20) {
         return 10;
-    } else if (Data_CityInfo.numEnemiesInCity) {
+    } else if (enemies) {
         return 9;
     }
     return 0;

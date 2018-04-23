@@ -4,6 +4,7 @@
 #include "city/culture.h"
 #include "city/finance.h"
 #include "city/labor.h"
+#include "city/migration.h"
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "city/warning.h"
@@ -104,6 +105,8 @@ static void init()
     city_finance_update_interest();
     city_finance_update_salary();
     city_finance_calculate_totals();
+
+    city_migration_determine_no_immigration_cause();
 
     city_culture_calculate_demands();
     city_culture_update_coverage();

@@ -10,8 +10,6 @@
 #include "game/difficulty.h"
 #include "game/tutorial.h"
 
-#include "Data/CityInfo.h"
-
 static const int SENTIMENT_PER_TAX_RATE[26] = {
     3, 2, 2, 2, 1, 1, 1, 0, 0, -1,
     -2, -2, -3, -3, -3, -5, -5, -5, -5, -6,
@@ -21,6 +19,11 @@ static const int SENTIMENT_PER_TAX_RATE[26] = {
 int city_sentiment()
 {
     return city_data.sentiment.value;
+}
+
+int city_sentiment_low_mood_cause()
+{
+    return city_data.sentiment.low_mood_cause;
 }
 
 void city_sentiment_change_happiness(int amount)
@@ -247,25 +250,25 @@ void city_sentiment_update()
     }
 
     int worst_sentiment = 0;
-    Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_NONE;
+    city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NONE;
     if (sentiment_contribution_food < worst_sentiment) {
         worst_sentiment = sentiment_contribution_food;
-        Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_NO_FOOD;
+        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NO_FOOD;
     }
     if (sentiment_contribution_employment < worst_sentiment) {
         worst_sentiment = sentiment_contribution_employment;
-        Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_NO_JOBS;
+        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NO_JOBS;
     }
     if (sentiment_contribution_taxes < worst_sentiment) {
         worst_sentiment = sentiment_contribution_taxes;
-        Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_HIGH_TAXES;
+        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_HIGH_TAXES;
     }
     if (sentiment_contribution_wages < worst_sentiment) {
         worst_sentiment = sentiment_contribution_wages;
-        Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_LOW_WAGES;
+        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_LOW_WAGES;
     }
     if (sentiment_contribution_tents < worst_sentiment) {
-        Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_MANY_TENTS;
+        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_MANY_TENTS;
     }
     city_data.sentiment.previous_value = city_data.sentiment.value;
 }

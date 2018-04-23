@@ -73,9 +73,10 @@ void sound_music_update()
     }
     int track;
     int population = city_population();
-    if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity >= 32) {
+    int total_enemies = Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity;
+    if (total_enemies >= 32) {
         track = TRACK_COMBAT_LONG;
-    } else if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 0) {
+    } else if (total_enemies > 0) {
         track = TRACK_COMBAT_SHORT;
     } else if (population < 1000) {
         track = TRACK_CITY_1;

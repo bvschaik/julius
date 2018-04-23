@@ -316,7 +316,7 @@ static void save_main_data(buffer *main)
     }
     buffer_write_i32(main, city_data.religion.least_happy_god);
     buffer_write_i32(main, city_data.unused.unknown_4334);
-    buffer_write_i32(main, Data_CityInfo.populationEmigrationCauseTextId);
+    buffer_write_i32(main, city_data.migration.no_immigration_cause);
     buffer_write_i32(main, Data_CityInfo.numProtestersThisMonth);
     buffer_write_i32(main, Data_CityInfo.numCriminalsThisMonth);
     buffer_write_i32(main, Data_CityInfo.healthDemand);
@@ -399,7 +399,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.sentiment.unemployment);
     buffer_write_i32(main, city_data.sentiment.previous_value);
     buffer_write_i32(main, city_data.sentiment.message_delay);
-    buffer_write_i32(main, Data_CityInfo.populationEmigrationCause);
+    buffer_write_i32(main, city_data.sentiment.low_mood_cause);
     buffer_write_i32(main, Data_CityInfo.riotersOrAttackingNativesInCity);
     for (int i = 0; i < 4; i++) {
         buffer_write_i32(main, city_data.unused.unknown_446c[i]);
@@ -793,7 +793,7 @@ static void load_main_data(buffer *main)
     }
     city_data.religion.least_happy_god = buffer_read_i32(main);
     city_data.unused.unknown_4334 = buffer_read_i32(main);
-    Data_CityInfo.populationEmigrationCauseTextId = buffer_read_i32(main);
+    city_data.migration.no_immigration_cause = buffer_read_i32(main);
     Data_CityInfo.numProtestersThisMonth = buffer_read_i32(main);
     Data_CityInfo.numCriminalsThisMonth = buffer_read_i32(main);
     Data_CityInfo.healthDemand = buffer_read_i32(main);
@@ -876,7 +876,7 @@ static void load_main_data(buffer *main)
     city_data.sentiment.unemployment = buffer_read_i32(main);
     city_data.sentiment.previous_value = buffer_read_i32(main);
     city_data.sentiment.message_delay = buffer_read_i32(main);
-    Data_CityInfo.populationEmigrationCause = buffer_read_i32(main);
+    city_data.sentiment.low_mood_cause = buffer_read_i32(main);
     Data_CityInfo.riotersOrAttackingNativesInCity = buffer_read_i32(main);
     for (int i = 0; i < 4; i++) {
         city_data.unused.unknown_446c[i] = buffer_read_i32(main);
