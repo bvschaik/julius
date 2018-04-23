@@ -123,7 +123,6 @@ extern struct _Data_CityInfo {
 	int8_t militaryTotalSoldiers;
 	int32_t numSoldiersInCity;
 	int32_t militaryLegionaryLegions;
-	int32_t estimatedYearlyWages;
 	struct {
 		int32_t id;
 		int32_t size;

@@ -504,7 +504,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.emperor.invasion.soldiers_killed);
     buffer_write_i32(main, Data_CityInfo.militaryLegionaryLegions);
     buffer_write_i32(main, city_data.population.highest_ever);
-    buffer_write_i32(main, Data_CityInfo.estimatedYearlyWages);
+    buffer_write_i32(main, city_data.finance.estimated_wages);
     buffer_write_i32(main, city_data.resource.wine_types_available);
     buffer_write_i32(main, city_data.ratings.prosperity_max);
     for (int i = 0; i < 10; i++) {
@@ -981,7 +981,7 @@ static void load_main_data(buffer *main)
     city_data.emperor.invasion.soldiers_killed = buffer_read_i32(main);
     Data_CityInfo.militaryLegionaryLegions = buffer_read_i32(main);
     city_data.population.highest_ever = buffer_read_i32(main);
-    Data_CityInfo.estimatedYearlyWages = buffer_read_i32(main);
+    city_data.finance.estimated_wages = buffer_read_i32(main);
     city_data.resource.wine_types_available = buffer_read_i32(main);
     city_data.ratings.prosperity_max = buffer_read_i32(main);
     for (int i = 0; i < 10; i++) {

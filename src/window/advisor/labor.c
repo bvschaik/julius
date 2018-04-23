@@ -69,7 +69,7 @@ static int draw_background()
 
     // estimated wages
     width = lang_text_draw(50, 19, 64, 390, FONT_NORMAL_BLACK);
-    text_draw_money(Data_CityInfo.estimatedYearlyWages, 64 + width, 390, FONT_NORMAL_BLACK);
+    text_draw_money(city_finance_estimated_wages(), 64 + width, 390, FONT_NORMAL_BLACK);
 
     return ADVISOR_HEIGHT;
 }

@@ -65,6 +65,7 @@ extern struct city_data_t {
         int32_t treasury;
         int32_t tax_percentage;
         int32_t estimated_tax_income;
+        int32_t estimated_wages;
         finance_overview last_year;
         finance_overview this_year;
         int32_t interest_so_far;

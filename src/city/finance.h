@@ -13,6 +13,8 @@ int city_finance_percentage_taxed_people();
 
 int city_finance_estimated_tax_income();
 
+int city_finance_estimated_wages();
+
 void city_finance_process_import(int price);
 
 void city_finance_process_export(int price);

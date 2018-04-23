@@ -41,6 +41,11 @@ int city_finance_estimated_tax_income()
     return city_data.finance.estimated_tax_income;
 }
 
+int city_finance_estimated_wages()
+{
+    return city_data.finance.estimated_wages;
+}
+
 void city_finance_process_import(int price)
 {
     city_data.finance.treasury -= price;
@@ -127,7 +132,7 @@ void city_finance_estimate_wages()
 {
     int monthly_wages = city_data.labor.wages * city_data.labor.workers_employed / 10 / 12;
     city_data.finance.this_year.expenses.wages = city_data.finance.wages_so_far;
-    Data_CityInfo.estimatedYearlyWages = (12 - game_time_month()) * monthly_wages + city_data.finance.wages_so_far;
+    city_data.finance.estimated_wages = (12 - game_time_month()) * monthly_wages + city_data.finance.wages_so_far;
 }
 
 void city_finance_estimate_taxes()
