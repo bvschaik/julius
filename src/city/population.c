@@ -167,7 +167,7 @@ void city_population_remove_for_troop_request(int num_people)
 {
     int removed = house_population_remove_from_city(num_people);
     remove_from_census(removed);
-    Data_CityInfo.populationLostTroopRequest += num_people;
+    city_data.population.lost_troop_request += num_people;
     recalculate_population();
 }
 

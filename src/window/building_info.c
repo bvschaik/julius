@@ -37,8 +37,6 @@
 #include "window/building/terrain.h"
 #include "window/building/utility.h"
 
-#include "Data/CityInfo.h"
-
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);

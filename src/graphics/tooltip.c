@@ -14,8 +14,6 @@
 #include "graphics/window.h"
 #include "window/advisors.h"
 
-#include "Data/CityInfo.h"
-
 #define DEFAULT_TEXT_GROUP 68
 
 static time_millis last_update = 0;

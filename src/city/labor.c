@@ -4,12 +4,11 @@
 #include "building/model.h"
 #include "city/data_private.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/time.h"
 #include "scenario/property.h"
-
-#include "Data/CityInfo.h"
 
 #define MAX_CATS 10
 
@@ -123,6 +122,14 @@ const labor_category_data *city_labor_category(int category)
     return &city_data.labor.categories[category];
 }
 
+void city_labor_calculate_workers(int num_plebs, int num_patricians)
+{
+    city_data.population.percentage_plebs = calc_percentage(num_plebs, num_plebs + num_patricians);
+    city_data.population.working_age = calc_adjust_with_percentage(city_population_people_of_working_age(), 60);
+    city_data.labor.workers_available = calc_adjust_with_percentage(
+        city_data.population.working_age, city_data.population.percentage_plebs);
+}
+
 static int is_industry_disabled(building *b) {
     if (b->type < BUILDING_WHEAT_FARM || b->type > BUILDING_POTTERY_WORKSHOP) {
         return 0;
@@ -191,14 +198,14 @@ static void allocate_workers_to_categories()
         workers_needed += city_data.labor.categories[i].workers_needed;
     }
     city_data.labor.workers_needed = 0;
-    if (workers_needed <= Data_CityInfo.workersAvailable) {
+    if (workers_needed <= city_data.labor.workers_available) {
         for (int i = 0; i < MAX_CATS; i++) {
             city_data.labor.categories[i].workers_allocated = city_data.labor.categories[i].workers_needed;
         }
         city_data.labor.workers_employed = workers_needed;
     } else {
         // not enough workers
-        int available = Data_CityInfo.workersAvailable;
+        int available = city_data.labor.workers_available;
         // distribute by user-defined priority
         for (int p = 1; p <= 9 && available > 0; p++) {
             for (int c = 0; c < 9; c++) {
@@ -217,7 +224,7 @@ static void allocate_workers_to_categories()
         int guard = 0;
         do {
             guard++;
-            if (guard >= Data_CityInfo.workersAvailable) {
+            if (guard >= city_data.labor.workers_available) {
                 break;
             }
             for (int p = 0; p < 9; p++) {
@@ -242,15 +249,15 @@ static void allocate_workers_to_categories()
             }
         } while (available > 0);
 
-        city_data.labor.workers_employed = Data_CityInfo.workersAvailable;
+        city_data.labor.workers_employed = city_data.labor.workers_available;
         for (int i = 0; i < 9; i++) {
             city_data.labor.workers_needed +=
                 city_data.labor.categories[i].workers_needed - city_data.labor.categories[i].workers_allocated;
         }
     }
-    city_data.labor.workers_unemployed = Data_CityInfo.workersAvailable - city_data.labor.workers_employed;
+    city_data.labor.workers_unemployed = city_data.labor.workers_available - city_data.labor.workers_employed;
     city_data.labor.unemployment_percentage =
-        calc_percentage(city_data.labor.workers_unemployed, Data_CityInfo.workersAvailable);
+        calc_percentage(city_data.labor.workers_unemployed, city_data.labor.workers_available);
 }
 
 static void check_employment()

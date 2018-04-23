@@ -11,8 +11,6 @@
 #include "figuretype/trader.h"
 #include "scenario/map.h"
 
-#include "Data/CityInfo.h"
-
 #include <string.h>
 
 #define MAX_CITIES 41

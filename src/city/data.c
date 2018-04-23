@@ -166,9 +166,9 @@ static void save_main_data(buffer *main)
     }
     buffer_write_i32(main, city_data.resource.food_supply_months);
     buffer_write_i32(main, city_data.resource.granaries.operating);
-    buffer_write_i32(main, Data_CityInfo.populationPercentagePlebs);
-    buffer_write_i32(main, Data_CityInfo.populationWorkingAge);
-    buffer_write_i32(main, Data_CityInfo.workersAvailable);
+    buffer_write_i32(main, city_data.population.percentage_plebs);
+    buffer_write_i32(main, city_data.population.working_age);
+    buffer_write_i32(main, city_data.labor.workers_available);
     for (int i = 0; i < 10; i++) {
         buffer_write_i32(main, city_data.labor.categories[i].workers_needed);
         buffer_write_i32(main, city_data.labor.categories[i].workers_allocated);
@@ -369,7 +369,7 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 5; i++) {
         buffer_write_i32(main, city_data.unused.unknown_43d8[i]);
     }
-    buffer_write_i32(main, Data_CityInfo.populationLostTroopRequest);
+    buffer_write_i32(main, city_data.population.lost_troop_request);
     buffer_write_i32(main, city_data.unused.unknown_43f0);
     buffer_write_i32(main, Data_CityInfo.victoryHasWonScenario);
     buffer_write_i32(main, Data_CityInfo.victoryContinueMonths);
@@ -643,9 +643,9 @@ static void load_main_data(buffer *main)
     }
     city_data.resource.food_supply_months = buffer_read_i32(main);
     city_data.resource.granaries.operating = buffer_read_i32(main);
-    Data_CityInfo.populationPercentagePlebs = buffer_read_i32(main);
-    Data_CityInfo.populationWorkingAge = buffer_read_i32(main);
-    Data_CityInfo.workersAvailable = buffer_read_i32(main);
+    city_data.population.percentage_plebs = buffer_read_i32(main);
+    city_data.population.working_age = buffer_read_i32(main);
+    city_data.labor.workers_available = buffer_read_i32(main);
     for (int i = 0; i < 10; i++) {
         city_data.labor.categories[i].workers_needed = buffer_read_i32(main);
         city_data.labor.categories[i].workers_allocated = buffer_read_i32(main);
@@ -846,7 +846,7 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 5; i++) {
         city_data.unused.unknown_43d8[i] = buffer_read_i32(main);
     }
-    Data_CityInfo.populationLostTroopRequest = buffer_read_i32(main);
+    city_data.population.lost_troop_request = buffer_read_i32(main);
     city_data.unused.unknown_43f0 = buffer_read_i32(main);
     Data_CityInfo.victoryHasWonScenario = buffer_read_i32(main);
     Data_CityInfo.victoryContinueMonths = buffer_read_i32(main);

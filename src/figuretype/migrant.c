@@ -12,8 +12,6 @@
 #include "figure/route.h"
 #include "map/road_access.h"
 
-#include "Data/CityInfo.h"
-
 void figure_create_immigrant(building *house, int num_people)
 {
     const map_tile *entry = city_map_entry_point();

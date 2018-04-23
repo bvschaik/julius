@@ -19,8 +19,6 @@
 #include "map/terrain.h"
 #include "scenario/map.h"
 
-#include "Data/CityInfo.h"
-
 #define FORBIDDEN_TERRAIN_MEADOW (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |\
             TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 

@@ -106,6 +106,7 @@ extern struct city_data_t {
         int32_t population_last_year;
         int32_t school_age;
         int32_t academy_age;
+        int32_t working_age;
         struct {
             int32_t values[2400];
             int32_t next_index;
@@ -121,6 +122,7 @@ extern struct city_data_t {
         int32_t emigration_duration;
         int32_t lost_removal;
         int32_t lost_homeless;
+        int32_t lost_troop_request;
         int32_t last_change;
         int32_t total_all_years;
         int32_t total_years;
@@ -131,10 +133,12 @@ extern struct city_data_t {
         int32_t people_in_tents_shacks;
         int32_t people_in_large_insula_and_above;
         int32_t people_in_villas_palaces;
+        int32_t percentage_plebs;
     } population;
     struct {
         int32_t wages;
         int32_t wages_rome;
+        int32_t workers_available;
         int32_t workers_employed;
         int32_t workers_unemployed;
         int32_t workers_needed;

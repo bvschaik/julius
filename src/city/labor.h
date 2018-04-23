@@ -25,6 +25,8 @@ int city_labor_lower_wages_rome();
 
 const labor_category_data *city_labor_category(int category);
 
+void city_labor_calculate_workers(int num_plebs, int num_patricians);
+
 void city_labor_allocate_workers();
 
 void city_labor_update();

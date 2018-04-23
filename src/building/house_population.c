@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "building/model.h"
+#include "city/labor.h"
 #include "city/message.h"
 #include "city/migration.h"
 #include "city/population.h"
@@ -181,11 +182,7 @@ static void calculate_working_population()
             }
         }
     }
-    Data_CityInfo.populationPercentagePlebs = calc_percentage(num_plebs, num_plebs + num_patricians);
-    int working_age = city_population_people_of_working_age();
-    Data_CityInfo.populationWorkingAge = calc_adjust_with_percentage(working_age, 60);
-    Data_CityInfo.workersAvailable = calc_adjust_with_percentage(
-        Data_CityInfo.populationWorkingAge, Data_CityInfo.populationPercentagePlebs);
+    city_labor_calculate_workers(num_plebs, num_patricians);
 }
 
 void house_population_update_migration()
