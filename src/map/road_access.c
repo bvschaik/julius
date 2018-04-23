@@ -1,6 +1,7 @@
 #include "road_access.h"
 
 #include "building/building.h"
+#include "city/map.h"
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/road_network.h"
@@ -18,13 +19,7 @@ static void find_minimum_road_tile(int x, int y, int size, int *min_value, int *
         if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
             building_get(map_building_at(grid_offset))->type != BUILDING_GATEHOUSE) {
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-                int road_index = 11;
-                for (int n = 0; n < 10; n++) {
-                    if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(grid_offset)) {
-                        road_index = n;
-                        break;
-                    }
-                }
+                int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
                 if (road_index < *min_value) {
                     *min_value = road_index;
                     *min_grid_offset = grid_offset;
@@ -162,13 +157,7 @@ int map_road_to_largest_network(int x, int y, int size, int *x_road, int *y_road
     for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
-            int index = 11;
-            for (int n = 0; n < 10; n++) {
-                if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(grid_offset)) {
-                    index = n;
-                    break;
-                }
-            }
+            int index = city_map_road_network_index(map_road_network_get(grid_offset));
             if (index < min_index) {
                 min_index = index;
                 min_grid_offset = grid_offset;
@@ -204,13 +193,7 @@ static void check_road_to_largest_network_hippodrome(int x, int y, int *min_inde
     for (const int *tile_delta = map_grid_adjacent_offsets(5); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
-            int index = 11;
-            for (int n = 0; n < 10; n++) {
-                if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(grid_offset)) {
-                    index = n;
-                    break;
-                }
-            }
+            int index = city_map_road_network_index(map_road_network_get(grid_offset));
             if (index < *min_index) {
                 *min_index = index;
                 *min_grid_offset = grid_offset;

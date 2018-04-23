@@ -1,5 +1,6 @@
 #include "road_network.h"
 
+#include "city/map.h"
 #include "map/data.h"
 #include "map/grid.h"
 #include "map/routing_terrain.h"
@@ -74,33 +75,9 @@ static int mark_road_network(int grid_offset, uint8_t network_id)
     return size;
 }
 
-static void clear_largest_networks()
-{
-    for (int i = 0; i < 10; i++) {
-        Data_CityInfo.largestRoadNetworks[i].id = 0;
-        Data_CityInfo.largestRoadNetworks[i].size = 0;
-    }
-}
-
-static void record_in_largest_networks(int network_id, int size)
-{
-    for (int n = 0; n < 10; n++) {
-        if (size > Data_CityInfo.largestRoadNetworks[n].size) {
-            // move everyone down
-            for (int m = 9; m > n; m--) {
-                Data_CityInfo.largestRoadNetworks[m].id = Data_CityInfo.largestRoadNetworks[m-1].id;
-                Data_CityInfo.largestRoadNetworks[m].size = Data_CityInfo.largestRoadNetworks[m-1].size;
-            }
-            Data_CityInfo.largestRoadNetworks[n].id = network_id;
-            Data_CityInfo.largestRoadNetworks[n].size = size;
-            break;
-        }
-    }
-}
-
 void map_road_network_update()
 {
-    clear_largest_networks();
+    city_map_clear_largest_road_networks();
     map_grid_clear_u8(network.items);
     int network_id = 1;
     int grid_offset = map_data.start_offset;
@@ -108,7 +85,7 @@ void map_road_network_update()
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_ROAD) && !network.items[grid_offset]) {
                 int size = mark_road_network(grid_offset, network_id);
-                record_in_largest_networks(network_id, size);
+                city_map_add_to_largest_road_networks(network_id, size);
                 network_id++;
             }
         }

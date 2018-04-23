@@ -98,10 +98,6 @@ extern struct _Data_CityInfo {
 	int8_t militaryTotalSoldiers;
 	int32_t numSoldiersInCity;
 	int32_t militaryLegionaryLegions;
-	struct {
-		int32_t id;
-		int32_t size;
-	} largestRoadNetworks[10];
 	int32_t housesRequiringSecondWineToEvolve;
 	int32_t godCurseNeptuneSankShips;
 	int32_t entertainmentHippodromeHasShow;

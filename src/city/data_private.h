@@ -274,6 +274,10 @@ extern struct city_data_t {
         map_tile exit_point;
         map_tile entry_flag;
         map_tile exit_flag;
+        struct {
+            int32_t id;
+            int32_t size;
+        } largest_road_networks[10];
     } map;
     struct {
         int8_t other_player[18068];

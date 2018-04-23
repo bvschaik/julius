@@ -508,8 +508,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.resource.wine_types_available);
     buffer_write_i32(main, city_data.ratings.prosperity_max);
     for (int i = 0; i < 10; i++) {
-        buffer_write_i32(main, Data_CityInfo.largestRoadNetworks[i].id);
-        buffer_write_i32(main, Data_CityInfo.largestRoadNetworks[i].size);
+        buffer_write_i32(main, city_data.map.largest_road_networks[i].id);
+        buffer_write_i32(main, city_data.map.largest_road_networks[i].size);
     }
     buffer_write_i32(main, Data_CityInfo.housesRequiringSecondWineToEvolve);
     buffer_write_i32(main, Data_CityInfo.godCurseNeptuneSankShips);
@@ -985,8 +985,8 @@ static void load_main_data(buffer *main)
     city_data.resource.wine_types_available = buffer_read_i32(main);
     city_data.ratings.prosperity_max = buffer_read_i32(main);
     for (int i = 0; i < 10; i++) {
-        Data_CityInfo.largestRoadNetworks[i].id = buffer_read_i32(main);
-        Data_CityInfo.largestRoadNetworks[i].size = buffer_read_i32(main);
+        city_data.map.largest_road_networks[i].id = buffer_read_i32(main);
+        city_data.map.largest_road_networks[i].size = buffer_read_i32(main);
     }
     Data_CityInfo.housesRequiringSecondWineToEvolve = buffer_read_i32(main);
     Data_CityInfo.godCurseNeptuneSankShips = buffer_read_i32(main);
