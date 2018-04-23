@@ -381,9 +381,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.finance.tribute_not_paid_total_years);
     buffer_write_i32(main, Data_CityInfo.festivalGod);
     buffer_write_i32(main, Data_CityInfo.festivalSize);
-    buffer_write_i32(main, Data_CityInfo.plannedFestivalSize);
-    buffer_write_i32(main, Data_CityInfo.plannedFestivalMonthsToGo);
-    buffer_write_i32(main, Data_CityInfo.plannedFestivalGod);
+    buffer_write_i32(main, city_data.festival.planned.size);
+    buffer_write_i32(main, city_data.festival.planned.months_to_go);
+    buffer_write_i32(main, city_data.festival.planned.god);
     buffer_write_i32(main, Data_CityInfo.festivalCostSmall);
     buffer_write_i32(main, Data_CityInfo.festivalCostLarge);
     buffer_write_i32(main, Data_CityInfo.festivalCostGrand);
@@ -858,9 +858,9 @@ static void load_main_data(buffer *main)
     city_data.finance.tribute_not_paid_total_years = buffer_read_i32(main);
     Data_CityInfo.festivalGod = buffer_read_i32(main);
     Data_CityInfo.festivalSize = buffer_read_i32(main);
-    Data_CityInfo.plannedFestivalSize = buffer_read_i32(main);
-    Data_CityInfo.plannedFestivalMonthsToGo = buffer_read_i32(main);
-    Data_CityInfo.plannedFestivalGod = buffer_read_i32(main);
+    city_data.festival.planned.size = buffer_read_i32(main);
+    city_data.festival.planned.months_to_go = buffer_read_i32(main);
+    city_data.festival.planned.god = buffer_read_i32(main);
     Data_CityInfo.festivalCostSmall = buffer_read_i32(main);
     Data_CityInfo.festivalCostLarge = buffer_read_i32(main);
     Data_CityInfo.festivalCostGrand = buffer_read_i32(main);

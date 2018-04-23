@@ -83,9 +83,6 @@ extern struct _Data_CityInfo {
 	int32_t victoryContinueMonthsChosen;
 	int32_t festivalGod;
 	int32_t festivalSize;
-	int32_t plannedFestivalSize;
-	int32_t plannedFestivalMonthsToGo;
-	int32_t plannedFestivalGod;
 	int32_t festivalCostSmall;
 	int32_t festivalCostLarge;
 	int32_t festivalCostGrand;

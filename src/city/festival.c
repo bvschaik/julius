@@ -9,19 +9,24 @@
 
 #include "Data/CityInfo.h"
 
+int city_festival_is_planned()
+{
+    return city_data.festival.planned.size != FESTIVAL_NONE;
+}
+
 void city_festival_schedule()
 {
-    Data_CityInfo.plannedFestivalGod = Data_CityInfo.festivalGod;
-    Data_CityInfo.plannedFestivalSize = Data_CityInfo.festivalSize;
+    city_data.festival.planned.god = Data_CityInfo.festivalGod;
+    city_data.festival.planned.size = Data_CityInfo.festivalSize;
     int cost;
     if (Data_CityInfo.festivalSize == FESTIVAL_SMALL) {
-        Data_CityInfo.plannedFestivalMonthsToGo = 2;
+        city_data.festival.planned.months_to_go = 2;
         cost = Data_CityInfo.festivalCostSmall;
     } else if (Data_CityInfo.festivalSize == FESTIVAL_LARGE) {
-        Data_CityInfo.plannedFestivalMonthsToGo = 3;
+        city_data.festival.planned.months_to_go = 3;
         cost = Data_CityInfo.festivalCostLarge;
     } else {
-        Data_CityInfo.plannedFestivalMonthsToGo = 4;
+        city_data.festival.planned.months_to_go = 4;
         cost = Data_CityInfo.festivalCostGrand;
     }
 
@@ -41,36 +46,36 @@ void city_festival_update()
     if (Data_CityInfo.festivalEffectMonthsDelaySecond) {
         --Data_CityInfo.festivalEffectMonthsDelaySecond;
     }
-    if (Data_CityInfo.plannedFestivalSize <= FESTIVAL_NONE) {
+    if (city_data.festival.planned.size <= FESTIVAL_NONE) {
         return;
     }
-    Data_CityInfo.plannedFestivalMonthsToGo--;
-    if (Data_CityInfo.plannedFestivalMonthsToGo > 0) {
+    city_data.festival.planned.months_to_go--;
+    if (city_data.festival.planned.months_to_go > 0) {
         return;
     }
     // throw a party!
     if (Data_CityInfo.festivalEffectMonthsDelayFirst <= 0) {
         Data_CityInfo.festivalEffectMonthsDelayFirst = 12;
-        switch (Data_CityInfo.plannedFestivalSize) {
+        switch (city_data.festival.planned.size) {
             case FESTIVAL_SMALL: city_sentiment_change_happiness(7); break;
             case FESTIVAL_LARGE: city_sentiment_change_happiness(9); break;
             case FESTIVAL_GRAND: city_sentiment_change_happiness(12); break;
         }
     } else if (Data_CityInfo.festivalEffectMonthsDelaySecond <= 0) {
         Data_CityInfo.festivalEffectMonthsDelaySecond = 12;
-        switch (Data_CityInfo.plannedFestivalSize) {
+        switch (city_data.festival.planned.size) {
             case FESTIVAL_SMALL: city_sentiment_change_happiness(2); break;
             case FESTIVAL_LARGE: city_sentiment_change_happiness(3); break;
             case FESTIVAL_GRAND: city_sentiment_change_happiness(5); break;
         }
     }
     Data_CityInfo.monthsSinceFestival = 1;
-    city_data.religion.gods[Data_CityInfo.plannedFestivalGod].months_since_festival = 0;
-    switch (Data_CityInfo.plannedFestivalSize) {
+    city_data.religion.gods[city_data.festival.planned.god].months_since_festival = 0;
+    switch (city_data.festival.planned.size) {
         case FESTIVAL_SMALL: city_message_post(1, MESSAGE_SMALL_FESTIVAL, 0, 0); break;
         case FESTIVAL_LARGE: city_message_post(1, MESSAGE_LARGE_FESTIVAL, 0, 0); break;
         case FESTIVAL_GRAND: city_message_post(1, MESSAGE_GRAND_FESTIVAL, 0, 0); break;
     }
-    Data_CityInfo.plannedFestivalSize = FESTIVAL_NONE;
-    Data_CityInfo.plannedFestivalMonthsToGo = 0;
+    city_data.festival.planned.size = FESTIVAL_NONE;
+    city_data.festival.planned.months_to_go = 0;
 }

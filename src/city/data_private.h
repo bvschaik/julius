@@ -197,6 +197,13 @@ extern struct city_data_t {
         int32_t neptune_double_trade_active;
     } religion;
     struct {
+        struct {
+            int32_t months_to_go;
+            int32_t god;
+            int32_t size;
+        } planned;
+    } festival;
+    struct {
         int16_t space_in_warehouses[RESOURCE_MAX];
         int16_t stored_in_warehouses[RESOURCE_MAX];
         int32_t space_in_workshops[6];

@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "city/culture.h"
+#include "city/festival.h"
 #include "city/gods.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -64,7 +65,7 @@ static void draw_festival_info()
 
     int width = lang_text_draw_amount(8, 4, Data_CityInfo.monthsSinceFestival, 112, 260, FONT_NORMAL_WHITE);
     lang_text_draw(58, 15, 112 + width, 260, FONT_NORMAL_WHITE);
-    if (Data_CityInfo.plannedFestivalSize) {
+    if (city_festival_is_planned()) {
         lang_text_draw_centered(58, 34, 102, 284, 300, FONT_NORMAL_WHITE);
     } else {
         lang_text_draw_centered(58, 16, 102, 284, 300, FONT_NORMAL_WHITE);
@@ -154,7 +155,7 @@ static int draw_background()
 
 static void draw_foreground()
 {
-    if (!Data_CityInfo.plannedFestivalSize) {
+    if (!city_festival_is_planned()) {
         button_border_draw(102, 280, 300, 20, focus_button_id == 1);
     }
 }
@@ -166,7 +167,7 @@ static void handle_mouse(const mouse *m)
 
 static void button_hold_festival(int param1, int param2)
 {
-    if (!Data_CityInfo.plannedFestivalSize) {
+    if (!city_festival_is_planned()) {
         window_hold_festival_show();
     }
 }
