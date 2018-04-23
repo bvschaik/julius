@@ -3,8 +3,14 @@
 
 #include "map/point.h"
 
+const map_tile *city_map_entry_point();
+const map_tile *city_map_exit_point();
+
 const map_tile *city_map_entry_flag();
 const map_tile *city_map_exit_flag();
+
+void city_map_set_entry_point(int x, int y);
+void city_map_set_exit_point(int x, int y);
 
 /**
  * Sets entry flag tile

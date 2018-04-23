@@ -266,6 +266,8 @@ extern struct city_data_t {
         int16_t sea_trade_problem_duration;
     } trade;
     struct {
+        map_tile entry_point;
+        map_tile exit_point;
         map_tile entry_flag;
         map_tile exit_flag;
     } map;

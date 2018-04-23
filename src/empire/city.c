@@ -2,6 +2,7 @@
 
 #include "city/buildings.h"
 #include "city/finance.h"
+#include "city/map.h"
 #include "city/message.h"
 #include "city/trade.h"
 #include "empire/object.h"
@@ -274,8 +275,8 @@ static int generate_trader(int cityId, empire_city *city)
         // generate caravan and donkeys
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
-            city->trader_figure_ids[index] = figure_create_trade_caravan(
-                Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, cityId);
+            const map_tile *entry = city_map_entry_point();
+            city->trader_figure_ids[index] = figure_create_trade_caravan(entry->x, entry->y, cityId);
             return 1;
         }
     }

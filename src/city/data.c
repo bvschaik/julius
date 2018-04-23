@@ -119,12 +119,12 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 18; i++) {
         buffer_write_i16(main, city_data.unused.unknown_27f4[i]);
     }
-    buffer_write_u8(main, Data_CityInfo.entryPointX);
-    buffer_write_u8(main, Data_CityInfo.entryPointY);
-    buffer_write_i16(main, Data_CityInfo.entryPointGridOffset);
-    buffer_write_u8(main, Data_CityInfo.exitPointX);
-    buffer_write_u8(main, Data_CityInfo.exitPointY);
-    buffer_write_i16(main, Data_CityInfo.exitPointGridOffset);
+    buffer_write_u8(main, city_data.map.entry_point.x);
+    buffer_write_u8(main, city_data.map.entry_point.y);
+    buffer_write_i16(main, city_data.map.entry_point.grid_offset);
+    buffer_write_u8(main, city_data.map.exit_point.x);
+    buffer_write_u8(main, city_data.map.exit_point.y);
+    buffer_write_i16(main, city_data.map.exit_point.grid_offset);
     buffer_write_u8(main, city_data.building.senate_x);
     buffer_write_u8(main, city_data.building.senate_y);
     buffer_write_i16(main, city_data.building.senate_grid_offset);
@@ -596,12 +596,12 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 18; i++) {
         city_data.unused.unknown_27f4[i] = buffer_read_i16(main);
     }
-    Data_CityInfo.entryPointX = buffer_read_u8(main);
-    Data_CityInfo.entryPointY = buffer_read_u8(main);
-    Data_CityInfo.entryPointGridOffset = buffer_read_i16(main);
-    Data_CityInfo.exitPointX = buffer_read_u8(main);
-    Data_CityInfo.exitPointY = buffer_read_u8(main);
-    Data_CityInfo.exitPointGridOffset = buffer_read_i16(main);
+    city_data.map.entry_point.x = buffer_read_u8(main);
+    city_data.map.entry_point.y = buffer_read_u8(main);
+    city_data.map.entry_point.grid_offset = buffer_read_i16(main);
+    city_data.map.exit_point.x = buffer_read_u8(main);
+    city_data.map.exit_point.y = buffer_read_u8(main);
+    city_data.map.exit_point.grid_offset = buffer_read_i16(main);
     city_data.building.senate_x = buffer_read_u8(main);
     city_data.building.senate_y = buffer_read_u8(main);
     city_data.building.senate_grid_offset = buffer_read_i16(main);

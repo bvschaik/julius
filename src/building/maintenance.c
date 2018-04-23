@@ -4,6 +4,7 @@
 #include "building/destruction.h"
 #include "building/list.h"
 #include "city/buildings.h"
+#include "city/map.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "city/view.h"
@@ -222,7 +223,8 @@ void building_maintenance_check_fire_collapse()
 
 void building_maintenance_check_rome_access()
 {
-    map_routing_calculate_distances(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+    const map_tile *entry_point = city_map_entry_point();
+    map_routing_calculate_distances(entry_point->x, entry_point->y);
     int problemGridOffset = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -304,17 +306,16 @@ void building_maintenance_check_rome_access()
             }
         }
     }
-    if (!map_routing_distance(Data_CityInfo.exitPointGridOffset)) {
+    const map_tile *exit_point = city_map_exit_point();
+    if (!map_routing_distance(exit_point->grid_offset)) {
         // no route through city
         if (city_population() <= 0) {
             return;
         }
         for (int i = 0; i < 15; i++) {
-            map_routing_delete_first_wall_or_aqueduct(
-                Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
-            map_routing_delete_first_wall_or_aqueduct(
-                Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
-            map_routing_calculate_distances(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+            map_routing_delete_first_wall_or_aqueduct(entry_point->x, entry_point->y);
+            map_routing_delete_first_wall_or_aqueduct(exit_point->x, exit_point->y);
+            map_routing_calculate_distances(entry_point->x, entry_point->y);
 
             map_tiles_update_all_walls();
             map_tiles_update_all_aqueducts(0);
@@ -324,7 +325,7 @@ void building_maintenance_check_rome_access()
             map_routing_update_land();
             map_routing_update_walls();
             
-            if (map_routing_distance(Data_CityInfo.exitPointGridOffset)) {
+            if (map_routing_distance(exit_point->grid_offset)) {
                 city_message_post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
                 game_undo_disable();
                 return;

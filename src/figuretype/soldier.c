@@ -1,5 +1,6 @@
 #include "soldier.h"
 
+#include "city/map.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "figure/combat.h"
@@ -362,10 +363,11 @@ void figure_soldier_action(figure *f)
                 }
             }
             break;
-        case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE:
+        case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
+            const map_tile *exit = city_map_exit_point();
             f->formationAtRest = 0;
-            f->destinationX = Data_CityInfo.exitPointX;
-            f->destinationY = Data_CityInfo.exitPointY;
+            f->destinationX = exit->x;
+            f->destinationY = exit->y;
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
@@ -376,6 +378,7 @@ void figure_soldier_action(figure *f)
                 f->state = FigureState_Dead;
             }
             break;
+        }
         case FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
             f->isGhost = 0;
             f->waitTicks = 0;

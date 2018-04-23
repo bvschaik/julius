@@ -2,6 +2,7 @@
 
 #include "building/menu.h"
 #include "city/buildings.h"
+#include "city/map.h"
 #include "city/message.h"
 #include "city/ratings.h"
 #include "core/calc.h"
@@ -82,10 +83,10 @@ static void update_aftermath()
         if (Data_CityInfo.distantBattleRomanMonthsToReturn <= 0) {
             if (Data_CityInfo.distantBattleCityMonthsUntilRoman) {
                 // soldiers return - not in time
-                city_message_post(1, MESSAGE_TROOPS_RETURN_FAILED, 0, Data_CityInfo.exitPointGridOffset);
+                city_message_post(1, MESSAGE_TROOPS_RETURN_FAILED, 0, city_map_exit_point()->grid_offset);
             } else {
                 // victorious
-                city_message_post(1, MESSAGE_TROOPS_RETURN_VICTORIOUS, 0, Data_CityInfo.exitPointGridOffset);
+                city_message_post(1, MESSAGE_TROOPS_RETURN_VICTORIOUS, 0, city_map_exit_point()->grid_offset);
             }
             Data_CityInfo.distantBattleRomanMonthsTraveled = 0;
             formation_legions_return_from_distant_battle();

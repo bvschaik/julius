@@ -6,6 +6,7 @@
 #include "building/storage.h"
 #include "city/buildings.h"
 #include "city/finance.h"
+#include "city/map.h"
 #include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -328,9 +329,10 @@ static void go_to_next_warehouse(figure *f, int x_src, int y_src, int distance_t
         f->destinationX = x_dst;
         f->destinationY = y_dst;
     } else {
+        const map_tile *exit = city_map_exit_point();
         f->actionState = FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING;
-        f->destinationX = Data_CityInfo.exitPointX;
-        f->destinationY = Data_CityInfo.exitPointY;
+        f->destinationX = exit->x;
+        f->destinationY = exit->y;
     }
 }
 

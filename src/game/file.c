@@ -7,6 +7,7 @@
 #include "building/storage.h"
 #include "city/data.h"
 #include "city/emperor.h"
+#include "city/map.h"
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"
@@ -173,13 +174,8 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     map_point entry = scenario_map_entry();
     map_point exit = scenario_map_exit();
 
-    Data_CityInfo.entryPointX = entry.x;
-    Data_CityInfo.entryPointY = entry.y;
-    Data_CityInfo.entryPointGridOffset = map_grid_offset(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
-
-    Data_CityInfo.exitPointX = exit.x;
-    Data_CityInfo.exitPointY = exit.y;
-    Data_CityInfo.exitPointGridOffset = map_grid_offset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
+    city_map_set_entry_point(entry.x, entry.y);
+    city_map_set_exit_point(exit.x, exit.y);
 
     game_time_init(scenario_property_start_year());
 

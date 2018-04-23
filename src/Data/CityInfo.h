@@ -12,12 +12,6 @@ extern struct _Data_CityInfo {
 	int32_t populationMigrationPercentage;
 	int32_t populationNewcomersThisMonth;
 	int16_t resourceLastTargetWarehouse;
-	uint8_t entryPointX;
-	uint8_t entryPointY;
-	int16_t entryPointGridOffset;
-	uint8_t exitPointX;
-	uint8_t exitPointY;
-	int16_t exitPointGridOffset;
 	int32_t populationPercentagePlebs;
 	int32_t populationWorkingAge;
 	int32_t workersAvailable;
