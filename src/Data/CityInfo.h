@@ -114,11 +114,9 @@ extern struct _Data_CityInfo {
 	int32_t tutorial1FireMessageShown;
 	int32_t tutorial3DiseaseMessageShown;
 	int32_t numAttackingNativesInCity;
-} Data_CityInfo;
 
-extern struct _Data_CityInfo_Extra {
 	int32_t populationGraphOrder;
 	int32_t ciid;
-} Data_CityInfo_Extra;
+} Data_CityInfo;
 
 #endif

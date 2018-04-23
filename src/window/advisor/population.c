@@ -274,9 +274,9 @@ static int draw_background()
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
 
     // Title: depends on big graph shown
-    if (Data_CityInfo_Extra.populationGraphOrder < 2) {
+    if (Data_CityInfo.populationGraphOrder < 2) {
         lang_text_draw(55, 0, 60, 12, FONT_LARGE_BLACK);
-    } else if (Data_CityInfo_Extra.populationGraphOrder < 4) {
+    } else if (Data_CityInfo.populationGraphOrder < 4) {
         lang_text_draw(55, 1, 60, 12, FONT_LARGE_BLACK);
     } else {
         lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK);
@@ -288,7 +288,7 @@ static int draw_background()
     void (*big_graph)(int, int, int);
     void (*top_graph)(int, int, int);
     void (*bot_graph)(int, int, int);
-    switch (Data_CityInfo_Extra.populationGraphOrder) {
+    switch (Data_CityInfo.populationGraphOrder) {
         default:
         case 0:
             big_text = 6;
@@ -377,9 +377,10 @@ static int draw_background()
     text_draw_number(city_resource_food_types_available(), '@', " ", 75 + width, 360, FONT_NORMAL_WHITE);
 
     // immigration
-    if (Data_CityInfo.populationNewcomersThisMonth >= 5) {
+    int newcomers = Data_CityInfo.populationNewcomersThisMonth;
+    if (newcomers >= 5) {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
-        width = text_draw_number(Data_CityInfo.populationNewcomersThisMonth, '@', " ", 75, 396, FONT_NORMAL_WHITE);
+        width = text_draw_number(newcomers, '@', " ", 75, 396, FONT_NORMAL_WHITE);
         lang_text_draw(55, 17, 75 + width, 396, FONT_NORMAL_WHITE);
     } else if (city_migration_no_room_for_immigrants()) {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
@@ -401,8 +402,8 @@ static int draw_background()
         }
     } else {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
-        width = text_draw_number(Data_CityInfo.populationNewcomersThisMonth, '@', " ", 75, 396, FONT_NORMAL_WHITE);
-        if (Data_CityInfo.populationNewcomersThisMonth == 1) {
+        width = text_draw_number(newcomers, '@', " ", 75, 396, FONT_NORMAL_WHITE);
+        if (newcomers == 1) {
             lang_text_draw(55, 18, 75 + width, 396, FONT_NORMAL_WHITE);
         } else {
             lang_text_draw(55, 17, 75 + width, 396, FONT_NORMAL_WHITE);
@@ -434,7 +435,7 @@ static void handle_mouse(const mouse *m)
 static void button_graph(int param1, int param2)
 {
     int new_order;
-    switch (Data_CityInfo_Extra.populationGraphOrder) {
+    switch (Data_CityInfo.populationGraphOrder) {
         default:
         case 0:
             new_order = param1 ? 5 : 2;
@@ -455,7 +456,7 @@ static void button_graph(int param1, int param2)
             new_order = param1 ? 0 : 3;
             break;
     }
-    Data_CityInfo_Extra.populationGraphOrder = new_order;
+    Data_CityInfo.populationGraphOrder = new_order;
     window_invalidate();
 }
 

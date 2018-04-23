@@ -39,7 +39,7 @@ void city_data_init()
 
 void city_data_init_scenario()
 {
-    Data_CityInfo_Extra.ciid = 1;
+    Data_CityInfo.ciid = 1;
     city_data.unused.unknown_00a2 = 1;
     city_data.unused.unknown_00a3 = 1;
     city_data.finance.treasury = difficulty_adjust_money(scenario_initial_funds());
@@ -1032,10 +1032,10 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
 {
     save_main_data(main);
     
-    buffer_write_i32(faction, Data_CityInfo_Extra.ciid);
+    buffer_write_i32(faction, Data_CityInfo.ciid);
     buffer_write_i8(faction_unknown, city_data.unused.faction_bytes[0]);
     buffer_write_i8(faction_unknown, city_data.unused.faction_bytes[1]);
-    buffer_write_i32(graph_order, Data_CityInfo_Extra.populationGraphOrder);
+    buffer_write_i32(graph_order, Data_CityInfo.populationGraphOrder);
     buffer_write_i32(graph_order, city_data.unused.unknown_order);
 
     save_entry_exit(entry_exit_xy, entry_exit_grid_offset);
@@ -1046,10 +1046,10 @@ void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown
 {
     load_main_data(main);
 
-    Data_CityInfo_Extra.ciid = buffer_read_i32(faction);
+    Data_CityInfo.ciid = buffer_read_i32(faction);
     city_data.unused.faction_bytes[0] = buffer_read_i8(faction_unknown);
     city_data.unused.faction_bytes[1] = buffer_read_i8(faction_unknown);
-    Data_CityInfo_Extra.populationGraphOrder = buffer_read_i32(graph_order);
+    Data_CityInfo.populationGraphOrder = buffer_read_i32(graph_order);
     city_data.unused.unknown_order = buffer_read_i32(graph_order);
 
     load_entry_exit(entry_exit_xy, entry_exit_grid_offset);
