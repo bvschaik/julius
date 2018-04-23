@@ -108,8 +108,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.migration.refused_immigrants_today);
     buffer_write_i32(main, Data_CityInfo.populationMigrationPercentage);
     buffer_write_i32(main, city_data.unused.unused_27d0);
-    buffer_write_i32(main, city_data.population.immigration_duration);
-    buffer_write_i32(main, city_data.population.emigration_duration);
+    buffer_write_i32(main, city_data.migration.immigration_duration);
+    buffer_write_i32(main, city_data.migration.emigration_duration);
     buffer_write_i32(main, Data_CityInfo.populationNewcomersThisMonth);
     for (int i = 0; i < 4; i++) {
         buffer_write_i32(main, city_data.unused.unknown_27e0[i]);
@@ -585,8 +585,8 @@ static void load_main_data(buffer *main)
     city_data.migration.refused_immigrants_today = buffer_read_i32(main);
     Data_CityInfo.populationMigrationPercentage = buffer_read_i32(main);
     city_data.unused.unused_27d0 = buffer_read_i32(main);
-    city_data.population.immigration_duration = buffer_read_i32(main);
-    city_data.population.emigration_duration = buffer_read_i32(main);
+    city_data.migration.immigration_duration = buffer_read_i32(main);
+    city_data.migration.emigration_duration = buffer_read_i32(main);
     Data_CityInfo.populationNewcomersThisMonth = buffer_read_i32(main);
     for (int i = 0; i < 4; i++) {
         city_data.unused.unknown_27e0[i] = buffer_read_i32(main);

@@ -118,8 +118,6 @@ extern struct city_data_t {
         int32_t yearly_update_requested;
         int32_t yearly_births;
         int32_t yearly_deaths;
-        int32_t immigration_duration;
-        int32_t emigration_duration;
         int32_t lost_removal;
         int32_t lost_homeless;
         int32_t lost_troop_request;
@@ -147,6 +145,8 @@ extern struct city_data_t {
         labor_category_data categories[10];
     } labor;
     struct {
+        int32_t immigration_duration;
+        int32_t emigration_duration;
         int32_t immigration_amount_per_batch;
         int32_t emigration_amount_per_batch;
         int32_t immigration_queue_size;
