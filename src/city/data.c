@@ -1007,24 +1007,24 @@ static void load_main_data(buffer *main)
 
 static void save_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
 {
-    buffer_write_i32(entry_exit_xy, Data_CityInfo_Extra.entryPointFlag.x);
-    buffer_write_i32(entry_exit_xy, Data_CityInfo_Extra.entryPointFlag.y);
-    buffer_write_i32(entry_exit_xy, Data_CityInfo_Extra.exitPointFlag.x);
-    buffer_write_i32(entry_exit_xy, Data_CityInfo_Extra.exitPointFlag.y);
+    buffer_write_i32(entry_exit_xy, city_data.map.entry_flag.x);
+    buffer_write_i32(entry_exit_xy, city_data.map.entry_flag.y);
+    buffer_write_i32(entry_exit_xy, city_data.map.exit_flag.x);
+    buffer_write_i32(entry_exit_xy, city_data.map.exit_flag.y);
     
-    buffer_write_i32(entry_exit_grid_offset, Data_CityInfo_Extra.entryPointFlag.gridOffset);
-    buffer_write_i32(entry_exit_grid_offset, Data_CityInfo_Extra.exitPointFlag.gridOffset);
+    buffer_write_i32(entry_exit_grid_offset, city_data.map.entry_flag.grid_offset);
+    buffer_write_i32(entry_exit_grid_offset, city_data.map.exit_flag.grid_offset);
 }
 
 static void load_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
 {
-    Data_CityInfo_Extra.entryPointFlag.x = buffer_read_i32(entry_exit_xy);
-    Data_CityInfo_Extra.entryPointFlag.y = buffer_read_i32(entry_exit_xy);
-    Data_CityInfo_Extra.exitPointFlag.x = buffer_read_i32(entry_exit_xy);
-    Data_CityInfo_Extra.exitPointFlag.y = buffer_read_i32(entry_exit_xy);
+    city_data.map.entry_flag.x = buffer_read_i32(entry_exit_xy);
+    city_data.map.entry_flag.y = buffer_read_i32(entry_exit_xy);
+    city_data.map.exit_flag.x = buffer_read_i32(entry_exit_xy);
+    city_data.map.exit_flag.y = buffer_read_i32(entry_exit_xy);
     
-    Data_CityInfo_Extra.entryPointFlag.gridOffset = buffer_read_i32(entry_exit_grid_offset);
-    Data_CityInfo_Extra.exitPointFlag.gridOffset = buffer_read_i32(entry_exit_grid_offset);
+    city_data.map.entry_flag.grid_offset = buffer_read_i32(entry_exit_grid_offset);
+    city_data.map.exit_flag.grid_offset = buffer_read_i32(entry_exit_grid_offset);
 }
 
 void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,

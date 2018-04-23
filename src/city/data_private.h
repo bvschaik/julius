@@ -7,6 +7,7 @@
 #include "city/finance.h"
 #include "city/labor.h"
 #include "city/resource.h"
+#include "map/point.h"
 
 typedef struct {
     int8_t happiness;
@@ -264,6 +265,10 @@ extern struct city_data_t {
         int16_t land_trade_problem_duration;
         int16_t sea_trade_problem_duration;
     } trade;
+    struct {
+        map_tile entry_flag;
+        map_tile exit_flag;
+    } map;
     struct {
         int8_t other_player[18068];
         int8_t unknown_00a0;

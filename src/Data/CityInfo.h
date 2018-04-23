@@ -128,16 +128,6 @@ extern struct _Data_CityInfo {
 
 extern struct _Data_CityInfo_Extra {
 	int32_t populationGraphOrder;
-	struct {
-		int32_t x;
-		int32_t y;
-		int32_t gridOffset;
-	} entryPointFlag;
-	struct {
-		int32_t x;
-		int32_t y;
-		int32_t gridOffset;
-	} exitPointFlag;
 	int32_t ciid;
 } Data_CityInfo_Extra;
 

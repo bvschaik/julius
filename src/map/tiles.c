@@ -1,5 +1,6 @@
 #include "tiles.h"
 
+#include "city/map.h"
 #include "city/view.h"
 #include "core/direction.h"
 #include "core/image.h"
@@ -1121,10 +1122,7 @@ void map_tiles_add_entry_exit_flags()
                 break;
             }
         }
-        int gridOffsetFlag = map_grid_offset(xTile, yTile);
-        Data_CityInfo_Extra.entryPointFlag.x = xTile;
-        Data_CityInfo_Extra.entryPointFlag.y = yTile;
-        Data_CityInfo_Extra.entryPointFlag.gridOffset = gridOffsetFlag;
+        int gridOffsetFlag = city_map_set_entry_flag(xTile, yTile);
         map_terrain_add(gridOffsetFlag, TERRAIN_ROCK);
         int orientation = (city_view_orientation() + entry_orientation) % 8;
         map_image_set(gridOffsetFlag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + orientation / 2);
@@ -1138,10 +1136,7 @@ void map_tiles_add_entry_exit_flags()
                 break;
             }
         }
-        int gridOffsetFlag = map_grid_offset(xTile, yTile);
-        Data_CityInfo_Extra.exitPointFlag.x = xTile;
-        Data_CityInfo_Extra.exitPointFlag.y = yTile;
-        Data_CityInfo_Extra.exitPointFlag.gridOffset = gridOffsetFlag;
+        int gridOffsetFlag = city_map_set_exit_flag(xTile, yTile);
         map_terrain_add(gridOffsetFlag, TERRAIN_ROCK);
         int orientation = (city_view_orientation() + exit_orientation) % 8;
         map_image_set(gridOffsetFlag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2);
@@ -1150,8 +1145,6 @@ void map_tiles_add_entry_exit_flags()
 
 void map_tiles_remove_entry_exit_flags()
 {
-    int grid_offset_entry = map_grid_offset(Data_CityInfo_Extra.entryPointFlag.x, Data_CityInfo_Extra.entryPointFlag.y);
-    map_terrain_remove(grid_offset_entry, TERRAIN_ROCK);
-    int grid_offset_exit = map_grid_offset(Data_CityInfo_Extra.exitPointFlag.x, Data_CityInfo_Extra.exitPointFlag.y);
-    map_terrain_remove(grid_offset_exit, TERRAIN_ROCK);
+    map_terrain_remove(city_map_entry_flag()->grid_offset, TERRAIN_ROCK);
+    map_terrain_remove(city_map_exit_flag()->grid_offset, TERRAIN_ROCK);
 }
