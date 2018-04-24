@@ -371,9 +371,9 @@ static void save_main_data(buffer *main)
     }
     buffer_write_i32(main, city_data.population.lost_troop_request);
     buffer_write_i32(main, city_data.unused.unknown_43f0);
-    buffer_write_i32(main, Data_CityInfo.victoryHasWonScenario);
-    buffer_write_i32(main, Data_CityInfo.victoryContinueMonths);
-    buffer_write_i32(main, Data_CityInfo.victoryContinueMonthsChosen);
+    buffer_write_i32(main, city_data.mission.has_won);
+    buffer_write_i32(main, city_data.mission.continue_months_left);
+    buffer_write_i32(main, city_data.mission.continue_months_chosen);
     buffer_write_i32(main, city_data.finance.wage_rate_paid_this_year);
     buffer_write_i32(main, city_data.finance.this_year.expenses.tribute);
     buffer_write_i32(main, city_data.finance.last_year.expenses.tribute);
@@ -848,9 +848,9 @@ static void load_main_data(buffer *main)
     }
     city_data.population.lost_troop_request = buffer_read_i32(main);
     city_data.unused.unknown_43f0 = buffer_read_i32(main);
-    Data_CityInfo.victoryHasWonScenario = buffer_read_i32(main);
-    Data_CityInfo.victoryContinueMonths = buffer_read_i32(main);
-    Data_CityInfo.victoryContinueMonthsChosen = buffer_read_i32(main);
+    city_data.mission.has_won = buffer_read_i32(main);
+    city_data.mission.continue_months_left = buffer_read_i32(main);
+    city_data.mission.continue_months_chosen = buffer_read_i32(main);
     city_data.finance.wage_rate_paid_this_year = buffer_read_i32(main);
     city_data.finance.this_year.expenses.tribute = buffer_read_i32(main);
     city_data.finance.last_year.expenses.tribute = buffer_read_i32(main);

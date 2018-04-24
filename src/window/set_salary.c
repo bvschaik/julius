@@ -3,6 +3,7 @@
 #include "city/emperor.h"
 #include "city/finance.h"
 #include "city/ratings.h"
+#include "city/victory.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -50,7 +51,7 @@ static void draw_foreground()
         text_draw_money(city_emperor_salary_for_rank(rank), 176 + width, 90 + 20 * rank, font);
     }
 
-    if (Data_CityInfo.victoryContinueMonths <= 0) {
+    if (!city_victory_has_won()) {
         if (Data_CityInfo.salaryRank <= Data_CityInfo.playerRank) {
             lang_text_draw_multiline(52, 76, 152, 336, 336, FONT_NORMAL_BLACK);
         } else {
@@ -82,7 +83,7 @@ static void button_cancel(int param1, int param2)
 
 static void button_set_salary(int rank, int param2)
 {
-    if (Data_CityInfo.victoryContinueMonths <= 0) {
+    if (!city_victory_has_won()) {
         city_emperor_set_salary_rank(rank);
         city_finance_update_salary();
         city_ratings_update_favor_explanation();

@@ -286,6 +286,11 @@ extern struct city_data_t {
         } largest_road_networks[10];
     } map;
     struct {
+        int32_t has_won;
+        int32_t continue_months_left;
+        int32_t continue_months_chosen;
+    } mission;
+    struct {
         int8_t other_player[18068];
         int8_t unknown_00a0;
         int8_t unknown_00a1;

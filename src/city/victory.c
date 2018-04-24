@@ -101,8 +101,8 @@ void city_victory_check()
     if (num_criteria <= 0) {
         data.state = VICTORY_STATE_NONE;
     }
-    if (Data_CityInfo.victoryHasWonScenario) {
-        data.state = Data_CityInfo.victoryContinueMonths <= 0 ? VICTORY_STATE_WON : VICTORY_STATE_NONE;
+    if (city_data.mission.has_won) {
+        data.state = city_data.mission.continue_months_left <= 0 ? VICTORY_STATE_WON : VICTORY_STATE_NONE;
     }
     if (data.force_win) {
         data.state = VICTORY_STATE_WON;
@@ -132,16 +132,16 @@ void city_victory_check()
 
 void city_victory_update_months_to_govern()
 {
-    if (Data_CityInfo.victoryHasWonScenario) {
-        Data_CityInfo.victoryContinueMonths--;
+    if (city_data.mission.has_won) {
+        city_data.mission.continue_months_left--;
     }
 }
 
 void city_victory_continue_governing(int months)
 {
-    Data_CityInfo.victoryHasWonScenario = 1;
-    Data_CityInfo.victoryContinueMonths += months;
-    Data_CityInfo.victoryContinueMonthsChosen = months;
+    city_data.mission.has_won = 1;
+    city_data.mission.continue_months_left += months;
+    city_data.mission.continue_months_chosen = months;
     Data_CityInfo.salaryRank = 0;
     Data_CityInfo.salaryAmount = 0;
     city_finance_update_salary();
@@ -149,7 +149,12 @@ void city_victory_continue_governing(int months)
 
 void city_victory_stop_governing()
 {
-    Data_CityInfo.victoryHasWonScenario = 0;
-    Data_CityInfo.victoryContinueMonths = 0;
-    Data_CityInfo.victoryContinueMonthsChosen = 0;
+    city_data.mission.has_won = 0;
+    city_data.mission.continue_months_left = 0;
+    city_data.mission.continue_months_chosen = 0;
+}
+
+int city_victory_has_won()
+{
+    return city_data.mission.has_won;
 }

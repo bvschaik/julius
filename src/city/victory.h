@@ -21,4 +21,6 @@ void city_victory_continue_governing(int months);
 
 void city_victory_stop_governing();
 
+int city_victory_has_won();
+
 #endif // CITY_VICTORY_H

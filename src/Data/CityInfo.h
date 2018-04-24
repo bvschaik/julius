@@ -61,9 +61,6 @@ extern struct _Data_CityInfo {
 	int32_t tradeNextExportResourceDocker;
 	int32_t debtState;
 	int32_t monthsInDebt;
-	int32_t victoryHasWonScenario;
-	int32_t victoryContinueMonths;
-	int32_t victoryContinueMonthsChosen;
 	int32_t citywideAverageReligion;
 	int32_t citywideAverageEducation;
 	int32_t citywideAverageHealth;
