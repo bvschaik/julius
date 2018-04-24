@@ -53,11 +53,6 @@ extern struct _Data_CityInfo {
 	int32_t educationDemand;
 	int32_t entertainmentDemand;
 	int32_t numRiotersInCity;
-	int32_t ratingAdvisorSelection;
-	int32_t ratingAdvisorExplanationCulture;
-	int32_t ratingAdvisorExplanationProsperity;
-	int32_t ratingAdvisorExplanationPeace;
-	int32_t ratingAdvisorExplanationFavor;
 	int32_t playerRank;
 	int32_t personalSavings;
 	int32_t donateAmount;

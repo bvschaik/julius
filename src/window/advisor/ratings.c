@@ -10,17 +10,15 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 27
 
 static void button_rating(int rating, int param2);
 
 static generic_button rating_buttons[] = {
-    { 80, 286, 190, 352, GB_IMMEDIATE, button_rating, button_none, 1, 0},
-    {200, 286, 310, 352, GB_IMMEDIATE, button_rating, button_none, 2, 0},
-    {320, 286, 430, 352, GB_IMMEDIATE, button_rating, button_none, 3, 0},
-    {440, 286, 550, 352, GB_IMMEDIATE, button_rating, button_none, 4, 0},
+    { 80, 286, 190, 352, GB_IMMEDIATE, button_rating, button_none, SELECTED_RATING_CULTURE, 0},
+    {200, 286, 310, 352, GB_IMMEDIATE, button_rating, button_none, SELECTED_RATING_PROSPERITY, 0},
+    {320, 286, 430, 352, GB_IMMEDIATE, button_rating, button_none, SELECTED_RATING_PEACE, 0},
+    {440, 286, 550, 352, GB_IMMEDIATE, button_rating, button_none, SELECTED_RATING_FAVOR, 0},
 };
 
 static int focus_button_id;
@@ -54,7 +52,7 @@ static int draw_background()
 
     // culture
     int culture = city_rating_culture();
-    button_border_draw(80, 286, 110, 66, focus_button_id == 1);
+    button_border_draw(80, 286, 110, 66, focus_button_id == SELECTED_RATING_CULTURE);
     lang_text_draw_centered(53, 1, 80, 294, 110, FONT_NORMAL_BLACK);
     text_draw_number_centered(culture, 80, 309, 100, FONT_LARGE_BLACK);
     if (scenario_criteria_culture_enabled()) {
@@ -69,7 +67,7 @@ static int draw_background()
 
     // prosperity
     int prosperity = city_rating_prosperity();
-    button_border_draw(200, 286, 110, 66, focus_button_id == 2);
+    button_border_draw(200, 286, 110, 66, focus_button_id == SELECTED_RATING_PROSPERITY);
     lang_text_draw_centered(53, 2, 200, 294, 110, FONT_NORMAL_BLACK);
     text_draw_number_centered(prosperity, 200, 309, 100, FONT_LARGE_BLACK);
     if (scenario_criteria_prosperity_enabled()) {
@@ -84,7 +82,7 @@ static int draw_background()
 
     // peace
     int peace = city_rating_peace();
-    button_border_draw(320, 286, 110, 66, focus_button_id == 3);
+    button_border_draw(320, 286, 110, 66, focus_button_id == SELECTED_RATING_PEACE);
     lang_text_draw_centered(53, 3, 320, 294, 110, FONT_NORMAL_BLACK);
     text_draw_number_centered(peace, 320, 309, 100, FONT_LARGE_BLACK);
     if (scenario_criteria_peace_enabled()) {
@@ -99,7 +97,7 @@ static int draw_background()
 
     // favor
     int favor = city_rating_favor();
-    button_border_draw(440, 286, 110, 66, focus_button_id == 4);
+    button_border_draw(440, 286, 110, 66, focus_button_id == SELECTED_RATING_FAVOR);
     lang_text_draw_centered(53, 4, 440, 294, 110, FONT_NORMAL_BLACK);
     text_draw_number_centered(favor, 440, 309, 100, FONT_LARGE_BLACK);
     if (scenario_criteria_favor_enabled()) {
@@ -114,38 +112,38 @@ static int draw_background()
 
     // bottom info box
     inner_panel_draw(64, 356, 32, 4);
-    switch (Data_CityInfo.ratingAdvisorSelection) {
-        case 1:
+    switch (city_rating_selected()) {
+        case SELECTED_RATING_CULTURE:
             lang_text_draw(53, 1, 72, 359, FONT_NORMAL_WHITE);
             if (culture <= 90) {
-                lang_text_draw_multiline(53, 9 + Data_CityInfo.ratingAdvisorExplanationCulture,
+                lang_text_draw_multiline(53, 9 + city_rating_selected_explanation(),
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 50, 72, 374, 496, FONT_NORMAL_WHITE);
             }
             break;
-        case 2:
+        case SELECTED_RATING_PROSPERITY:
             lang_text_draw(53, 2, 72, 359, FONT_NORMAL_WHITE);
             if (prosperity <= 90) {
-                lang_text_draw_multiline(53, 16 + Data_CityInfo.ratingAdvisorExplanationProsperity,
+                lang_text_draw_multiline(53, 16 + city_rating_selected_explanation(),
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 51, 72, 374, 496, FONT_NORMAL_WHITE);
             }
             break;
-        case 3:
+        case SELECTED_RATING_PEACE:
             lang_text_draw(53, 3, 72, 359, FONT_NORMAL_WHITE);
             if (peace <= 90) {
-                lang_text_draw_multiline(53, 41 + Data_CityInfo.ratingAdvisorExplanationPeace,
+                lang_text_draw_multiline(53, 41 + city_rating_selected_explanation(),
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 52, 72, 374, 496, FONT_NORMAL_WHITE);
             }
             break;
-        case 4:
+        case SELECTED_RATING_FAVOR:
             lang_text_draw(53, 4, 72, 359, FONT_NORMAL_WHITE);
             if (favor <= 90) {
-                lang_text_draw_multiline(53, 27 + Data_CityInfo.ratingAdvisorExplanationFavor,
+                lang_text_draw_multiline(53, 27 + city_rating_selected_explanation(),
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 53, 72, 374, 496, FONT_NORMAL_WHITE);
@@ -161,14 +159,10 @@ static int draw_background()
 
 static void draw_foreground()
 {
-    // culture
-    button_border_draw(80, 286, 110, 66, focus_button_id == 1);
-    // prosperity
-    button_border_draw(200, 286, 110, 66, focus_button_id == 2);
-    // peace
-    button_border_draw(320, 286, 110, 66, focus_button_id == 3);
-    // favor
-    button_border_draw(440, 286, 110, 66, focus_button_id == 4);
+    button_border_draw(80, 286, 110, 66, focus_button_id == SELECTED_RATING_CULTURE);
+    button_border_draw(200, 286, 110, 66, focus_button_id == SELECTED_RATING_PROSPERITY);
+    button_border_draw(320, 286, 110, 66, focus_button_id == SELECTED_RATING_PEACE);
+    button_border_draw(440, 286, 110, 66, focus_button_id == SELECTED_RATING_FAVOR);
 }
 
 static void handle_mouse(const mouse *m)
@@ -178,17 +172,17 @@ static void handle_mouse(const mouse *m)
 
 static void button_rating(int rating, int param2)
 {
-    Data_CityInfo.ratingAdvisorSelection = rating;
+    city_rating_select(rating);
     window_invalidate();
 }
 
 static int get_tooltip_text()
 {
     switch (focus_button_id) {
-        case 1: return 102;
-        case 2: return 103;
-        case 3: return 104;
-        case 4: return 105;
+        case SELECTED_RATING_CULTURE: return 102;
+        case SELECTED_RATING_PROSPERITY: return 103;
+        case SELECTED_RATING_PEACE: return 104;
+        case SELECTED_RATING_FAVOR: return 105;
         default: return 0;
     }
 }

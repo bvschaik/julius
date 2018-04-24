@@ -324,11 +324,11 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.educationDemand);
     buffer_write_i32(main, Data_CityInfo.entertainmentDemand);
     buffer_write_i32(main, Data_CityInfo.numRiotersInCity);
-    buffer_write_i32(main, Data_CityInfo.ratingAdvisorSelection);
-    buffer_write_i32(main, Data_CityInfo.ratingAdvisorExplanationCulture);
-    buffer_write_i32(main, Data_CityInfo.ratingAdvisorExplanationProsperity);
-    buffer_write_i32(main, Data_CityInfo.ratingAdvisorExplanationPeace);
-    buffer_write_i32(main, Data_CityInfo.ratingAdvisorExplanationFavor);
+    buffer_write_i32(main, city_data.ratings.selected);
+    buffer_write_i32(main, city_data.ratings.culture_explanation);
+    buffer_write_i32(main, city_data.ratings.prosperity_explanation);
+    buffer_write_i32(main, city_data.ratings.peace_explanation);
+    buffer_write_i32(main, city_data.ratings.favor_explanation);
     buffer_write_i32(main, Data_CityInfo.playerRank);
     buffer_write_i32(main, Data_CityInfo.personalSavings);
     for (int i = 0; i < 2; i++) {
@@ -801,11 +801,11 @@ static void load_main_data(buffer *main)
     Data_CityInfo.educationDemand = buffer_read_i32(main);
     Data_CityInfo.entertainmentDemand = buffer_read_i32(main);
     Data_CityInfo.numRiotersInCity = buffer_read_i32(main);
-    Data_CityInfo.ratingAdvisorSelection = buffer_read_i32(main);
-    Data_CityInfo.ratingAdvisorExplanationCulture = buffer_read_i32(main);
-    Data_CityInfo.ratingAdvisorExplanationProsperity = buffer_read_i32(main);
-    Data_CityInfo.ratingAdvisorExplanationPeace = buffer_read_i32(main);
-    Data_CityInfo.ratingAdvisorExplanationFavor = buffer_read_i32(main);
+    city_data.ratings.selected = buffer_read_i32(main);
+    city_data.ratings.culture_explanation = buffer_read_i32(main);
+    city_data.ratings.prosperity_explanation = buffer_read_i32(main);
+    city_data.ratings.peace_explanation = buffer_read_i32(main);
+    city_data.ratings.favor_explanation = buffer_read_i32(main);
     Data_CityInfo.playerRank = buffer_read_i32(main);
     Data_CityInfo.personalSavings = buffer_read_i32(main);
     for (int i = 0; i < 2; i++) {

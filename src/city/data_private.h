@@ -195,6 +195,12 @@ extern struct city_data_t {
         int32_t favor_ignored_request_penalty;
         int32_t favor_last_year;
         int32_t favor_change; // 0 = dropping, 1 = stalling, 2 = rising
+
+        int32_t selected;
+        int32_t culture_explanation;
+        int32_t prosperity_explanation;
+        int32_t peace_explanation;
+        int32_t favor_explanation;
     } ratings;
     struct {
         god_status gods[5];
