@@ -9,6 +9,7 @@
 #include "city/map.h"
 #include "city/message.h"
 #include "city/resource.h"
+#include "city/trade.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "empire/city.h"
@@ -23,8 +24,6 @@
 #include "map/figure.h"
 #include "map/road_access.h"
 #include "scenario/map.h"
-
-#include "Data/CityInfo.h"
 
 int figure_create_trade_caravan(int x, int y, int city_id)
 {
@@ -50,14 +49,6 @@ int figure_create_trade_ship(int x, int y, int city_id)
     ship->actionState = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
     ship->waitTicks = 10;
     return ship->id;
-}
-
-static void advance_next_import_resource_caravan()
-{
-    Data_CityInfo.tradeNextImportResourceCaravan++;
-    if (Data_CityInfo.tradeNextImportResourceCaravan > 15) {
-        Data_CityInfo.tradeNextImportResourceCaravan = 1;
-    }
 }
 
 int figure_trade_caravan_can_buy(figure *trader, int warehouse_id, int city_id)
@@ -105,14 +96,15 @@ int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id)
         return 0;
     }
     int can_import = 0;
-    if (storage->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
-        empire_can_import_resource_from_city(city_id, Data_CityInfo.tradeNextImportResourceCaravan)) {
+    int resource = city_trade_current_caravan_import_resource();
+    if (storage->resource_state[resource] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
+        empire_can_import_resource_from_city(city_id, resource)) {
         can_import = 1;
     } else {
         for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
-            advance_next_import_resource_caravan();
-            if (storage->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
-                    empire_can_import_resource_from_city(city_id, Data_CityInfo.tradeNextImportResourceCaravan)) {
+            resource = city_trade_next_caravan_import_resource();
+            if (storage->resource_state[resource] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
+                    empire_can_import_resource_from_city(city_id, resource)) {
                 can_import = 1;
                 break;
             }
@@ -175,15 +167,15 @@ static int trader_get_sell_resource(int warehouse_id, int city_id)
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return 0;
     }
-    int imp = 1;
-    while (imp < 16 && !empire_can_import_resource_from_city(city_id, Data_CityInfo.tradeNextImportResourceCaravan)) {
+    int resource_to_import = city_trade_current_caravan_import_resource();
+    int imp = RESOURCE_MIN;
+    while (imp < RESOURCE_MAX && !empire_can_import_resource_from_city(city_id, resource_to_import)) {
         imp++;
-        advance_next_import_resource_caravan();
+        resource_to_import = city_trade_next_caravan_import_resource();
     }
-    if (imp >= 16) {
+    if (imp >= RESOURCE_MAX) {
         return 0;
     }
-    int resource_to_import = Data_CityInfo.tradeNextImportResourceCaravan;
     // add to existing bay with room
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
@@ -191,7 +183,7 @@ static int trader_get_sell_resource(int warehouse_id, int city_id)
         if (space->id > 0 && space->loadsStored > 0 && space->loadsStored < 4 &&
             space->subtype.warehouseResourceId == resource_to_import) {
             building_warehouse_space_add_import(space, resource_to_import);
-            advance_next_import_resource_caravan();
+            city_trade_next_caravan_import_resource();
             return resource_to_import;
         }
     }
@@ -201,17 +193,13 @@ static int trader_get_sell_resource(int warehouse_id, int city_id)
         space = building_next(space);
         if (space->id > 0 && !space->loadsStored) {
             building_warehouse_space_add_import(space, resource_to_import);
-            advance_next_import_resource_caravan();
+            city_trade_next_caravan_import_resource();
             return resource_to_import;
         }
     }
     // find another importable resource that can be added to this warehouse
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        Data_CityInfo.tradeNextImportResourceCaravanBackup++;
-        if (Data_CityInfo.tradeNextImportResourceCaravanBackup > 15) {
-            Data_CityInfo.tradeNextImportResourceCaravanBackup = 1;
-        }
-        resource_to_import = Data_CityInfo.tradeNextImportResourceCaravanBackup;
+        resource_to_import = city_trade_next_caravan_backup_import_resource();
         if (empire_can_import_resource_from_city(city_id, resource_to_import)) {
             space = warehouse;
             for (int i = 0; i < 8; i++) {
@@ -279,20 +267,17 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
             }
             if (num_importable && num_imports_for_warehouse && !s->empty_all) {
                 for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-                    Data_CityInfo.tradeNextImportResourceCaravan++;
-                    if (Data_CityInfo.tradeNextImportResourceCaravan > 15) {
-                        Data_CityInfo.tradeNextImportResourceCaravan = 1;
-                    }
-                    if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
+                    if (s->resource_state[city_trade_next_caravan_import_resource()] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
                         break;
                     }
                 }
-                if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
+                int resource = city_trade_current_caravan_import_resource();
+                if (s->resource_state[resource] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
                     if (space->subtype.warehouseResourceId == RESOURCE_NONE) {
                         distance_penalty -= 16;
                     }
                     if (space->id && importable[space->subtype.warehouseResourceId] && space->loadsStored < 4 &&
-                        space->subtype.warehouseResourceId == Data_CityInfo.tradeNextImportResourceCaravan) {
+                        space->subtype.warehouseResourceId == resource) {
                         distance_penalty -= 8;
                     }
                 }

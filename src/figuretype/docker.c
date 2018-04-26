@@ -4,6 +4,7 @@
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
+#include "city/trade.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "empire/city.h"
@@ -75,29 +76,22 @@ static int try_export_resource(int building_id, int resource, int city_id)
 }
 
 static int get_closest_warehouse_for_import(int x, int y, int city_id, int distance_from_entry, int road_network_id,
-                                            int *x_warehouse, int *y_warehouse)
+                                            int *x_warehouse, int *y_warehouse, int *import_resource)
 {
     int importable[16];
     importable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         importable[r] = empire_can_import_resource_from_city(city_id, r);
     }
-    Data_CityInfo.tradeNextImportResourceDocker++;
-    if (Data_CityInfo.tradeNextImportResourceDocker > 15) {
-        Data_CityInfo.tradeNextImportResourceDocker = 1;
+    int resource = city_trade_next_docker_import_resource();
+    for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !importable[resource]; i++) {
+        resource = city_trade_next_docker_import_resource();
     }
-    for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !importable[Data_CityInfo.tradeNextImportResourceDocker]; i++) {
-        Data_CityInfo.tradeNextImportResourceDocker++;
-        if (Data_CityInfo.tradeNextImportResourceDocker > 15) {
-            Data_CityInfo.tradeNextImportResourceDocker = 1;
-        }
-    }
-    if (!importable[Data_CityInfo.tradeNextImportResourceDocker]) {
+    if (!importable[resource]) {
         return 0;
     }
     int min_distance = 10000;
     int min_building_id = 0;
-    int resource = Data_CityInfo.tradeNextImportResourceDocker;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
@@ -143,34 +137,27 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
     } else if (!map_has_road_access(min->x, min->y, 3, x_warehouse, y_warehouse)) {
         return 0;
     }
+    *import_resource = resource;
     return min_building_id;
 }
 
 static int get_closest_warehouse_for_export(int x, int y, int city_id, int distance_from_entry, int road_network_id,
-                                            int *x_warehouse, int *y_warehouse)
+                                            int *x_warehouse, int *y_warehouse, int *export_resource)
 {
     int exportable[16];
     exportable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         exportable[r] = empire_can_export_resource_to_city(city_id, r);
     }
-    Data_CityInfo.tradeNextExportResourceDocker++;
-    if (Data_CityInfo.tradeNextExportResourceDocker > 15) {
-        Data_CityInfo.tradeNextExportResourceDocker = 1;
+    int resource = city_trade_next_docker_export_resource();
+    for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !exportable[resource]; i++) {
+        resource = city_trade_next_docker_export_resource();
     }
-    for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !exportable[Data_CityInfo.tradeNextExportResourceDocker]; i++) {
-        Data_CityInfo.tradeNextExportResourceDocker++;
-        if (Data_CityInfo.tradeNextExportResourceDocker > 15) {
-            Data_CityInfo.tradeNextExportResourceDocker = 1;
-        }
-    }
-    if (!exportable[Data_CityInfo.tradeNextExportResourceDocker]) {
+    if (!exportable[resource]) {
         return 0;
     }
     int min_distance = 10000;
     int min_building_id = 0;
-    int resource = Data_CityInfo.tradeNextExportResourceDocker;
-    
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
@@ -210,6 +197,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
     } else if (!map_has_road_access(min->x, min->y, 3, x_warehouse, y_warehouse)) {
         return 0;
     }
+    *export_resource = resource;
     return min_building_id;
 }
 
@@ -238,9 +226,9 @@ static int deliver_import_resource(figure *f, building *dock)
     }
     int x, y;
     get_trade_center_location(f, &x, &y);
-    int x_tile, y_tile;
+    int x_tile, y_tile, resource;
     int warehouse_id = get_closest_warehouse_for_import(x, y, ship->empireCityId,
-                      dock->distanceFromEntry, dock->roadNetworkId, &x_tile, &y_tile);
+                      dock->distanceFromEntry, dock->roadNetworkId, &x_tile, &y_tile, &resource);
     if (!warehouse_id) {
         return 0;
     }
@@ -250,7 +238,7 @@ static int deliver_import_resource(figure *f, building *dock)
     f->actionState = FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE;
     f->destinationX = x_tile;
     f->destinationY = y_tile;
-    f->resourceId = Data_CityInfo.tradeNextImportResourceDocker;
+    f->resourceId = resource;
     return 1;
 }
 
@@ -266,9 +254,9 @@ static int fetch_export_resource(figure *f, building *dock)
     }
     int x, y;
     get_trade_center_location(f, &x, &y);
-    int x_tile, y_tile;
+    int x_tile, y_tile, resource;
     int warehouse_id = get_closest_warehouse_for_export(x, y, ship->empireCityId,
-        dock->distanceFromEntry, dock->roadNetworkId, &x_tile, &y_tile);
+        dock->distanceFromEntry, dock->roadNetworkId, &x_tile, &y_tile, &resource);
     if (!warehouse_id) {
         return 0;
     }
@@ -278,7 +266,7 @@ static int fetch_export_resource(figure *f, building *dock)
     f->waitTicks = 0;
     f->destinationX = x_tile;
     f->destinationY = y_tile;
-    f->resourceId = Data_CityInfo.tradeNextExportResourceDocker;
+    f->resourceId = resource;
     return 1;
 }
 

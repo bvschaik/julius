@@ -274,6 +274,10 @@ extern struct city_data_t {
         int16_t num_sea_routes;
         int16_t land_trade_problem_duration;
         int16_t sea_trade_problem_duration;
+        int32_t caravan_import_resource;
+        int32_t caravan_backup_import_resource;
+        int32_t docker_import_resource;
+        int32_t docker_export_resource;
     } trade;
     struct {
         map_tile entry_point;

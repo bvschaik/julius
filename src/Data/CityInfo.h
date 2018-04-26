@@ -14,8 +14,6 @@ extern struct _Data_CityInfo {
 	int16_t resourceLastTargetWarehouse;
 	int32_t salaryAmount;
 	int32_t salaryRank;
-	int32_t tradeNextImportResourceCaravan;
-	int32_t tradeNextImportResourceCaravanBackup;
 	int32_t housesRequiringFountainToEvolve;//4268
 	int32_t housesRequiringWellToEvolve;//426c
 	int32_t housesRequiringMoreEntertainmentToEvolve;//4270
@@ -57,8 +55,6 @@ extern struct _Data_CityInfo {
 	int32_t personalSavings;
 	int32_t donateAmount;
 	int16_t numAnimalsInCity;
-	int32_t tradeNextImportResourceDocker;
-	int32_t tradeNextExportResourceDocker;
 	int32_t debtState;
 	int32_t monthsInDebt;
 	int32_t citywideAverageReligion;

@@ -24,8 +24,8 @@ void city_data_init()
     city_data.labor.wages_rome = 30;
     city_data.labor.wages = 30;
     city_data.finance.tax_percentage = 7;
-    Data_CityInfo.tradeNextImportResourceCaravan = 1;
-    Data_CityInfo.tradeNextImportResourceCaravanBackup = 1;
+    city_data.trade.caravan_import_resource = RESOURCE_MIN;
+    city_data.trade.caravan_backup_import_resource = RESOURCE_MIN;
     city_data.population.monthly.next_index = 0;
     city_data.population.monthly.count = 0;
     city_data.festival.months_since_festival = 1;
@@ -234,8 +234,8 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 8; i++) {
         buffer_write_i32(main, city_data.unused.housesRequiringUnknownToEvolve[i]);
     }
-    buffer_write_i32(main, Data_CityInfo.tradeNextImportResourceCaravan);
-    buffer_write_i32(main, Data_CityInfo.tradeNextImportResourceCaravanBackup);
+    buffer_write_i32(main, city_data.trade.caravan_import_resource);
+    buffer_write_i32(main, city_data.trade.caravan_backup_import_resource);
     buffer_write_i32(main, city_data.ratings.culture);
     buffer_write_i32(main, city_data.ratings.prosperity);
     buffer_write_i32(main, city_data.ratings.peace);
@@ -356,8 +356,8 @@ static void save_main_data(buffer *main)
     }
     buffer_write_i16(main, city_data.finance.stolen_this_year);
     buffer_write_i16(main, city_data.finance.stolen_last_year);
-    buffer_write_i32(main, Data_CityInfo.tradeNextImportResourceDocker);
-    buffer_write_i32(main, Data_CityInfo.tradeNextExportResourceDocker);
+    buffer_write_i32(main, city_data.trade.docker_import_resource);
+    buffer_write_i32(main, city_data.trade.docker_export_resource);
     buffer_write_i32(main, Data_CityInfo.debtState);
     buffer_write_i32(main, Data_CityInfo.monthsInDebt);
     buffer_write_i32(main, city_data.finance.cheated_money);
@@ -711,8 +711,8 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 8; i++) {
         city_data.unused.housesRequiringUnknownToEvolve[i] = buffer_read_i32(main);
     }
-    Data_CityInfo.tradeNextImportResourceCaravan = buffer_read_i32(main);
-    Data_CityInfo.tradeNextImportResourceCaravanBackup = buffer_read_i32(main);
+    city_data.trade.caravan_import_resource = buffer_read_i32(main);
+    city_data.trade.caravan_backup_import_resource = buffer_read_i32(main);
     city_data.ratings.culture = buffer_read_i32(main);
     city_data.ratings.prosperity = buffer_read_i32(main);
     city_data.ratings.peace = buffer_read_i32(main);
@@ -833,8 +833,8 @@ static void load_main_data(buffer *main)
     }
     city_data.finance.stolen_this_year = buffer_read_i16(main);
     city_data.finance.stolen_last_year = buffer_read_i16(main);
-    Data_CityInfo.tradeNextImportResourceDocker = buffer_read_i32(main);
-    Data_CityInfo.tradeNextExportResourceDocker = buffer_read_i32(main);
+    city_data.trade.docker_import_resource = buffer_read_i32(main);
+    city_data.trade.docker_export_resource = buffer_read_i32(main);
     Data_CityInfo.debtState = buffer_read_i32(main);
     Data_CityInfo.monthsInDebt = buffer_read_i32(main);
     city_data.finance.cheated_money = buffer_read_i32(main);
