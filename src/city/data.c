@@ -217,8 +217,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.finance.this_year.expenses.construction);
     buffer_write_i32(main, city_data.finance.last_year.expenses.salary);
     buffer_write_i32(main, city_data.finance.this_year.expenses.salary);
-    buffer_write_i32(main, Data_CityInfo.salaryAmount);
-    buffer_write_i32(main, Data_CityInfo.salaryRank);
+    buffer_write_i32(main, city_data.emperor.salary_amount);
+    buffer_write_i32(main, city_data.emperor.salary_rank);
     buffer_write_i32(main, city_data.finance.salary_so_far);
     buffer_write_i32(main, city_data.finance.last_year.income.total);
     buffer_write_i32(main, city_data.finance.this_year.income.total);
@@ -329,7 +329,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.ratings.prosperity_explanation);
     buffer_write_i32(main, city_data.ratings.peace_explanation);
     buffer_write_i32(main, city_data.ratings.favor_explanation);
-    buffer_write_i32(main, Data_CityInfo.playerRank);
+    buffer_write_i32(main, city_data.emperor.player_rank);
     buffer_write_i32(main, Data_CityInfo.personalSavings);
     for (int i = 0; i < 2; i++) {
         buffer_write_i32(main, city_data.unused.unknown_4374[i]);
@@ -694,8 +694,8 @@ static void load_main_data(buffer *main)
     city_data.finance.this_year.expenses.construction = buffer_read_i32(main);
     city_data.finance.last_year.expenses.salary = buffer_read_i32(main);
     city_data.finance.this_year.expenses.salary = buffer_read_i32(main);
-    Data_CityInfo.salaryAmount = buffer_read_i32(main);
-    Data_CityInfo.salaryRank = buffer_read_i32(main);
+    city_data.emperor.salary_amount = buffer_read_i32(main);
+    city_data.emperor.salary_rank = buffer_read_i32(main);
     city_data.finance.salary_so_far = buffer_read_i32(main);
     city_data.finance.last_year.income.total = buffer_read_i32(main);
     city_data.finance.this_year.income.total = buffer_read_i32(main);
@@ -806,7 +806,7 @@ static void load_main_data(buffer *main)
     city_data.ratings.prosperity_explanation = buffer_read_i32(main);
     city_data.ratings.peace_explanation = buffer_read_i32(main);
     city_data.ratings.favor_explanation = buffer_read_i32(main);
-    Data_CityInfo.playerRank = buffer_read_i32(main);
+    city_data.emperor.player_rank = buffer_read_i32(main);
     Data_CityInfo.personalSavings = buffer_read_i32(main);
     for (int i = 0; i < 2; i++) {
         city_data.unused.unknown_4374[i] = buffer_read_i32(main);

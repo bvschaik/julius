@@ -52,7 +52,7 @@ static void draw_foreground()
     }
 
     if (!city_victory_has_won()) {
-        if (Data_CityInfo.salaryRank <= Data_CityInfo.playerRank) {
+        if (city_emperor_salary_rank() <= city_emperor_rank()) {
             lang_text_draw_multiline(52, 76, 152, 336, 336, FONT_NORMAL_BLACK);
         } else {
             lang_text_draw_multiline(52, 71, 152, 336, 336, FONT_NORMAL_BLACK);

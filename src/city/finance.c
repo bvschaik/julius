@@ -259,9 +259,9 @@ static void pay_monthly_interest()
 static void pay_monthly_salary()
 {
     if (!city_finance_out_of_money()) {
-        city_data.finance.salary_so_far += Data_CityInfo.salaryAmount;
-        Data_CityInfo.personalSavings += Data_CityInfo.salaryAmount;
-        city_data.finance.treasury -= Data_CityInfo.salaryAmount;
+        city_data.finance.salary_so_far += city_data.emperor.salary_amount;
+        Data_CityInfo.personalSavings += city_data.emperor.salary_amount;
+        city_data.finance.treasury -= city_data.emperor.salary_amount;
     }
 }
 

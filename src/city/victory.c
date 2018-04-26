@@ -142,8 +142,8 @@ void city_victory_continue_governing(int months)
     city_data.mission.has_won = 1;
     city_data.mission.continue_months_left += months;
     city_data.mission.continue_months_chosen = months;
-    Data_CityInfo.salaryRank = 0;
-    Data_CityInfo.salaryAmount = 0;
+    city_data.emperor.salary_rank = 0;
+    city_data.emperor.salary_amount = 0;
     city_finance_update_salary();
 }
 

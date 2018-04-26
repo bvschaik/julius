@@ -166,7 +166,7 @@ static void draw_foreground()
 {
     inner_panel_draw(64, 324, 32, 6);
 
-    lang_text_draw(32, Data_CityInfo.playerRank, 72, 338, FONT_LARGE_BROWN);
+    lang_text_draw(32, city_emperor_rank(), 72, 338, FONT_LARGE_BROWN);
     
     int width = lang_text_draw(52, 1, 72, 372, FONT_NORMAL_WHITE);
     text_draw_money(Data_CityInfo.personalSavings, 80 + width, 372, FONT_NORMAL_WHITE);
@@ -175,8 +175,8 @@ static void draw_foreground()
     lang_text_draw_centered(52, 2, 320, 372, 250, FONT_NORMAL_WHITE);
 
     button_border_draw(70, 393, 500, 20, focus_button_id == 2);
-    width = lang_text_draw(52, Data_CityInfo.salaryRank + 4, 120, 398, FONT_NORMAL_WHITE);
-    width += text_draw_number(Data_CityInfo.salaryAmount, '@', " ", 120 + width, 398, FONT_NORMAL_WHITE);
+    width = lang_text_draw(52, city_emperor_salary_rank() + 4, 120, 398, FONT_NORMAL_WHITE);
+    width += text_draw_number(city_emperor_salary_amount(), '@', " ", 120 + width, 398, FONT_NORMAL_WHITE);
     lang_text_draw(52, 3, 120 + width, 398, FONT_NORMAL_WHITE);
 
     button_border_draw(320, 341, 250, 20, focus_button_id == 3);

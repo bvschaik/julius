@@ -252,8 +252,8 @@ static void update_peace_explanation()
 void city_ratings_update_favor_explanation()
 {
     city_data.ratings.favor_salary_penalty = 0;
-    int salary_delta = Data_CityInfo.salaryRank - Data_CityInfo.playerRank;
-    if (Data_CityInfo.playerRank != 0) {
+    int salary_delta = city_data.emperor.salary_rank - city_data.emperor.player_rank;
+    if (city_data.emperor.player_rank != 0) {
         if (salary_delta > 0) {
             city_data.ratings.favor_salary_penalty = salary_delta + 1;
         }
@@ -519,8 +519,8 @@ static void update_favor_rating(int is_yearly_update)
             }
         }
         // salary
-        int salary_delta = Data_CityInfo.salaryRank - Data_CityInfo.playerRank;
-        if (Data_CityInfo.playerRank != 0) {
+        int salary_delta = city_data.emperor.salary_rank - city_data.emperor.player_rank;
+        if (city_data.emperor.player_rank != 0) {
             if (salary_delta > 0) {
                 // salary too high
                 city_data.ratings.favor -= salary_delta;

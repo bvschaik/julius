@@ -18,11 +18,11 @@ void city_emperor_init_scenario(int rank)
 {
     city_data.ratings.favor = scenario_starting_favor();
     Data_CityInfo.personalSavings = scenario_starting_personal_savings();
-    Data_CityInfo.playerRank = rank;
+    city_data.emperor.player_rank = rank;
     int salary_rank = rank;
     if (scenario_is_custom()) {
         Data_CityInfo.personalSavings = 0;
-        Data_CityInfo.playerRank = scenario_property_player_rank();
+        city_data.emperor.player_rank = scenario_property_player_rank();
         salary_rank = scenario_property_player_rank();
     }
     if (salary_rank > 10) {
@@ -273,8 +273,23 @@ int city_emperor_salary_for_rank(int rank)
 
 void city_emperor_set_salary_rank(int rank)
 {
-    Data_CityInfo.salaryRank = rank;
-    Data_CityInfo.salaryAmount = SALARY_FOR_RANK[rank];
+    city_data.emperor.salary_rank = rank;
+    city_data.emperor.salary_amount = SALARY_FOR_RANK[rank];
+}
+
+int city_emperor_salary_rank()
+{
+    return city_data.emperor.salary_rank;
+}
+
+int city_emperor_salary_amount()
+{
+    return city_data.emperor.salary_amount;
+}
+
+int city_emperor_rank()
+{
+    return city_data.emperor.player_rank;
 }
 
 void city_emperor_mark_soldier_killed()
