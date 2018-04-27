@@ -514,8 +514,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.housesRequiringSecondWineToEvolve);
     buffer_write_i32(main, city_data.religion.neptune_sank_ships);
     buffer_write_i32(main, city_data.entertainment.hippodrome_has_race);
-    buffer_write_i32(main, Data_CityInfo.messageShownHippodrome);
-    buffer_write_i32(main, Data_CityInfo.messageShownColosseum);
+    buffer_write_i32(main, city_data.entertainment.hippodrome_message_shown);
+    buffer_write_i32(main, city_data.entertainment.colosseum_message_shown);
     buffer_write_i32(main, city_data.migration.emigration_message_shown);
     buffer_write_i32(main, city_data.mission.fired_message_shown);
     buffer_write_i32(main, city_data.mission.victory_message_shown);
@@ -991,8 +991,8 @@ static void load_main_data(buffer *main)
     Data_CityInfo.housesRequiringSecondWineToEvolve = buffer_read_i32(main);
     city_data.religion.neptune_sank_ships = buffer_read_i32(main);
     city_data.entertainment.hippodrome_has_race = buffer_read_i32(main);
-    Data_CityInfo.messageShownHippodrome = buffer_read_i32(main);
-    Data_CityInfo.messageShownColosseum = buffer_read_i32(main);
+    city_data.entertainment.hippodrome_message_shown = buffer_read_i32(main);
+    city_data.entertainment.colosseum_message_shown = buffer_read_i32(main);
     city_data.migration.emigration_message_shown = buffer_read_i32(main);
     city_data.mission.fired_message_shown = buffer_read_i32(main);
     city_data.mission.victory_message_shown = buffer_read_i32(main);

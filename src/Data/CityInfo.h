@@ -68,8 +68,6 @@ extern struct _Data_CityInfo {
 	int32_t numSoldiersInCity;
 	int32_t militaryLegionaryLegions;
 	int32_t housesRequiringSecondWineToEvolve;
-	int32_t messageShownHippodrome;
-	int32_t messageShownColosseum;
 	int32_t missionSavedGameWritten;
 	int32_t tutorial1FireMessageShown;
 	int32_t tutorial3DiseaseMessageShown;

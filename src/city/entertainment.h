@@ -13,4 +13,8 @@ int city_entertainment_venue_needing_shows();
 
 void city_entertainment_calculate_shows();
 
+int city_entertainment_show_message_colosseum();
+
+int city_entertainment_show_message_hippodrome();
+
 #endif // CITY_ENTERTAINMENT_H

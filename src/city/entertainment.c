@@ -3,6 +3,8 @@
 #include "building/building.h"
 #include "city/data_private.h"
 
+#include "Data/CityInfo.h"
+
 int city_entertainment_theater_shows()
 {
     return city_data.entertainment.theater_shows;
@@ -111,5 +113,25 @@ void city_entertainment_calculate_shows()
     }
     if (city_data.entertainment.hippodrome_no_shows_weighted > worst_shows) {
         city_data.entertainment.venue_needing_shows = 4;
+    }
+}
+
+int city_entertainment_show_message_colosseum()
+{
+    if (!city_data.entertainment.colosseum_message_shown) {
+        city_data.entertainment.colosseum_message_shown = 1;
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int city_entertainment_show_message_hippodrome()
+{
+    if (!city_data.entertainment.hippodrome_message_shown) {
+        city_data.entertainment.hippodrome_message_shown = 1;
+        return 1;
+    } else {
+        return 0;
     }
 }

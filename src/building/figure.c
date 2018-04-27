@@ -509,8 +509,7 @@ static void spawn_figure_hippodrome(building *b)
                 horse2->speedMultiplier = 2;
 
                 if (b->data.entertainment.days1 > 0) {
-                    if (!Data_CityInfo.messageShownHippodrome) {
-                        Data_CityInfo.messageShownHippodrome = 1;
+                    if (city_entertainment_show_message_hippodrome()) {
                         city_message_post(1, MESSAGE_WORKING_HIPPODROME, 0, 0);
                     }
                 }
@@ -560,8 +559,7 @@ static void spawn_figure_colosseum(building *b)
             b->figureId = f->id;
             figure_movement_init_roaming(f);
             if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
-                if (!Data_CityInfo.messageShownColosseum) {
-                    Data_CityInfo.messageShownColosseum = 1;
+                if (city_entertainment_show_message_colosseum()) {
                     city_message_post(1, MESSAGE_WORKING_COLOSSEUM, 0, 0);
                 }
             }
