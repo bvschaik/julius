@@ -147,6 +147,8 @@ extern struct city_data_t {
         int32_t total_years;
         int32_t average_per_year;
         int32_t highest_ever;
+        int32_t total_capacity;
+        int32_t room_in_houses;
 
         int32_t people_in_tents;
         int32_t people_in_tents_shacks;
@@ -391,6 +393,7 @@ extern struct city_data_t {
         int8_t unused_45a5[6];
         int8_t unknown_464c[232];
         int32_t unknown_order;
+        int32_t faction_id;
         uint8_t faction_bytes[2];
     } unused;
 } city_data;

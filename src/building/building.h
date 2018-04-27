@@ -8,7 +8,7 @@
 
 typedef struct {
     unsigned char state;
-    unsigned char ciid;
+    unsigned char faction_id;
     unsigned char __unknown_02;
     unsigned char size;
     unsigned char houseIsMerged;

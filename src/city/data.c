@@ -40,7 +40,7 @@ void city_data_init()
 
 void city_data_init_scenario()
 {
-    Data_CityInfo.ciid = 1;
+    city_data.unused.faction_id = 1;
     city_data.unused.unknown_00a2 = 1;
     city_data.unused.unknown_00a3 = 1;
     city_data.finance.treasury = difficulty_adjust_money(scenario_initial_funds());
@@ -74,8 +74,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.population.population_last_year);
     buffer_write_i32(main, city_data.population.school_age);
     buffer_write_i32(main, city_data.population.academy_age);
-    buffer_write_i32(main, Data_CityInfo.populationMaxSupported);
-    buffer_write_i32(main, Data_CityInfo.populationRoomInHouses);
+    buffer_write_i32(main, city_data.population.total_capacity);
+    buffer_write_i32(main, city_data.population.room_in_houses);
     for (int i = 0; i < 2400; i++) {
         buffer_write_i32(main, city_data.population.monthly.values[i]);
     }
@@ -551,8 +551,8 @@ static void load_main_data(buffer *main)
     city_data.population.population_last_year = buffer_read_i32(main);
     city_data.population.school_age = buffer_read_i32(main);
     city_data.population.academy_age = buffer_read_i32(main);
-    Data_CityInfo.populationMaxSupported = buffer_read_i32(main);
-    Data_CityInfo.populationRoomInHouses = buffer_read_i32(main);
+    city_data.population.total_capacity = buffer_read_i32(main);
+    city_data.population.room_in_houses = buffer_read_i32(main);
     for (int i = 0; i < 2400; i++) {
         city_data.population.monthly.values[i] = buffer_read_i32(main);
     }
@@ -1033,7 +1033,7 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
 {
     save_main_data(main);
     
-    buffer_write_i32(faction, Data_CityInfo.ciid);
+    buffer_write_i32(faction, city_data.unused.faction_id);
     buffer_write_i8(faction_unknown, city_data.unused.faction_bytes[0]);
     buffer_write_i8(faction_unknown, city_data.unused.faction_bytes[1]);
     buffer_write_i32(graph_order, Data_CityInfo.populationGraphOrder);
@@ -1047,7 +1047,7 @@ void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown
 {
     load_main_data(main);
 
-    Data_CityInfo.ciid = buffer_read_i32(faction);
+    city_data.unused.faction_id = buffer_read_i32(faction);
     city_data.unused.faction_bytes[0] = buffer_read_i8(faction_unknown);
     city_data.unused.faction_bytes[1] = buffer_read_i8(faction_unknown);
     Data_CityInfo.populationGraphOrder = buffer_read_i32(graph_order);

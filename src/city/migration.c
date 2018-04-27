@@ -7,8 +7,6 @@
 #include "core/calc.h"
 #include "game/tutorial.h"
 
-#include "Data/CityInfo.h"
-
 static void update_status()
 {
     if (city_data.sentiment.value > 70) {
@@ -150,7 +148,7 @@ int city_migration_no_immigation_cause()
 
 int city_migration_no_room_for_immigrants()
 {
-    return city_data.migration.refused_immigrants_today || Data_CityInfo.populationRoomInHouses <= 0;
+    return city_data.migration.refused_immigrants_today || city_data.population.room_in_houses <= 0;
 }
 
 int city_migration_percentage()

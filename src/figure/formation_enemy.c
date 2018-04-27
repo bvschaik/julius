@@ -19,8 +19,6 @@
 #include "map/soldier_strength.h"
 #include "map/terrain.h"
 
-#include "Data/CityInfo.h"
-
 static const int ENEMY_ATTACK_PRIORITY[4][100] = {
     {
         BUILDING_GRANARY, BUILDING_WAREHOUSE, BUILDING_MARKET,

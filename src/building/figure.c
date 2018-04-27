@@ -1,7 +1,5 @@
 #include "building/figure.h"
 
-#include "Data/CityInfo.h"
-
 #include "building/barracks.h"
 #include "building/granary.h"
 #include "building/industry.h"

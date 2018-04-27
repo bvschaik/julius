@@ -59,6 +59,18 @@ void city_population_set_last_used_house_remove(int building_id)
     city_data.population.last_used_house_remove = building_id;
 }
 
+void city_population_clear_capacity()
+{
+    city_data.population.total_capacity = 0;
+    city_data.population.room_in_houses = 0;
+}
+
+void city_population_add_capacity(int people_in_house, int max_people)
+{
+    city_data.population.total_capacity += max_people;
+    city_data.population.room_in_houses += max_people - people_in_house;
+}
+
 static void recalculate_population()
 {
     city_data.population.population = 0;

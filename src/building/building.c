@@ -70,7 +70,7 @@ building *building_create(building_type type, int x, int y)
     const building_properties *props = building_properties_for_type(type);
     
     b->state = BUILDING_STATE_CREATED;
-    b->ciid = 1;
+    b->faction_id = 1;
     b->__unknown_02 = Data_CityInfo.__unknown_00a5; // TODO ??
     b->type = type;
     b->size = props->size;

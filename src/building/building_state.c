@@ -113,7 +113,7 @@ static void write_type_data(buffer *buf, const building *b)
 void building_state_save_to_buffer(buffer *buf, const building *b)
 {
     buffer_write_u8(buf, b->state);
-    buffer_write_u8(buf, b->ciid);
+    buffer_write_u8(buf, b->faction_id);
     buffer_write_u8(buf, b->__unknown_02);
     buffer_write_u8(buf, b->size);
     buffer_write_u8(buf, b->houseIsMerged);
@@ -264,7 +264,7 @@ static void read_type_data(buffer *buf, building *b)
 void building_state_load_from_buffer(buffer *buf, building *b)
 {
     b->state = buffer_read_u8(buf);
-    b->ciid = buffer_read_u8(buf);
+    b->faction_id = buffer_read_u8(buf);
     b->__unknown_02 = buffer_read_u8(buf);
     b->size = buffer_read_u8(buf);
     b->houseIsMerged = buffer_read_u8(buf);

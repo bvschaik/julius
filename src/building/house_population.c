@@ -10,8 +10,6 @@
 #include "core/calc.h"
 #include "figuretype/migrant.h"
 
-#include "Data/CityInfo.h"
-
 int house_population_add_to_city(int num_people)
 {
     int added = 0;
@@ -70,8 +68,7 @@ static void fill_building_list_with_houses()
 
 void house_population_update_room()
 {
-    Data_CityInfo.populationMaxSupported = 0;
-    Data_CityInfo.populationRoomInHouses = 0;
+    city_population_clear_capacity();
 
     fill_building_list_with_houses();
     int total_houses = building_list_large_size();
@@ -84,8 +81,7 @@ void house_population_update_room()
             if (b->houseIsMerged) {
                 max_pop *= 4;
             }
-            Data_CityInfo.populationMaxSupported += max_pop;
-            Data_CityInfo.populationRoomInHouses += max_pop - b->housePopulation;
+            city_population_add_capacity(b->housePopulation, max_pop);
             b->housePopulationRoom = max_pop - b->housePopulation;
             if (b->housePopulation > b->houseMaxPopulationSeen) {
                 b->houseMaxPopulationSeen = b->housePopulation;
