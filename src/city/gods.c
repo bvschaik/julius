@@ -18,8 +18,6 @@
 #include "scenario/property.h"
 #include "scenario/invasion.h"
 
-#include "Data/CityInfo.h"
-
 #define TIE 10
 
 void city_gods_reset()
@@ -61,7 +59,7 @@ static void perform_blessing(god_type god)
             break;
         case GOD_MARS:
             city_message_post(1, MESSAGE_BLESSING_FROM_MARS, 0, 0);
-            Data_CityInfo.godBlessingMarsEnemiesToKill = 10;
+            city_data.religion.mars_spirit_power = 10;
             break;
         case GOD_VENUS:
             city_message_post(1, MESSAGE_BLESSING_FROM_VENUS, 0, 0);
@@ -80,7 +78,7 @@ static void perform_small_curse(god_type god)
         case GOD_NEPTUNE:
             city_message_post(1, MESSAGE_NEPTUNE_IS_UPSET, 0, 0);
             figure_sink_all_ships();
-            Data_CityInfo.godCurseNeptuneSankShips = 1;
+            city_data.religion.neptune_sank_ships = 1;
             break;
         case GOD_MERCURY:
             city_message_post(1, MESSAGE_MERCURY_IS_UPSET, 0, 0);
@@ -117,7 +115,7 @@ static int perform_large_curse(god_type god)
             } else {
                 city_message_post(1, MESSAGE_WRATH_OF_NEPTUNE, 0, 0);
                 figure_sink_all_ships();
-                Data_CityInfo.godCurseNeptuneSankShips = 1;
+                city_data.religion.neptune_sank_ships = 1;
                 city_trade_start_sea_trade_problems(80);
             }
             break;
@@ -377,4 +375,24 @@ int city_god_months_since_festival(int god_id)
 int city_god_least_happy()
 {
     return city_data.religion.least_happy_god - 1;
+}
+
+int city_god_spirit_of_mars_power()
+{
+    return city_data.religion.mars_spirit_power;
+}
+
+void city_god_spirit_of_mars_mark_used()
+{
+    city_data.religion.mars_spirit_power = 0;
+}
+
+int city_god_neptune_create_shipwreck_flotsam()
+{
+    if (city_data.religion.neptune_sank_ships) {
+        city_data.religion.neptune_sank_ships = 0;
+        return 1;
+    } else {
+        return 0;
+    }
 }

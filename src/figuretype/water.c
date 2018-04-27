@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "city/gods.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/image.h"
@@ -13,8 +14,6 @@
 #include "map/grid.h"
 #include "map/water.h"
 #include "scenario/map.h"
-
-#include "Data/CityInfo.h"
 
 static const int FLOTSAM_RESOURCE_IDS[] = {
     3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1
@@ -69,9 +68,8 @@ void figure_flotsam_action(figure *f)
             if (f->waitTicks <= 0) {
                 f->actionState = FIGURE_ACTION_129_FLOTSAM_FLOATING;
                 f->waitTicks = 0;
-                if (Data_CityInfo.godCurseNeptuneSankShips && !f->resourceId) {
+                if (!f->resourceId && city_god_neptune_create_shipwreck_flotsam()) {
                     f->minMaxSeen = 1;
-                    Data_CityInfo.godCurseNeptuneSankShips = 0;
                 }
                 map_point river_exit = scenario_map_river_exit();
                 f->destinationX = river_exit.x;

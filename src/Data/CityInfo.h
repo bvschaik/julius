@@ -57,7 +57,6 @@ extern struct _Data_CityInfo {
 	int32_t nativeMissionPostOperational;
 	int32_t nativeMainMeetingCenterX;
 	int32_t nativeMainMeetingCenterY;
-	int32_t godBlessingMarsEnemiesToKill;
 	int32_t tutorial1SenateBuilt;
 	int32_t numEnemiesInCity;
 	int32_t numImperialSoldiersInCity;
@@ -78,7 +77,6 @@ extern struct _Data_CityInfo {
 	int32_t numSoldiersInCity;
 	int32_t militaryLegionaryLegions;
 	int32_t housesRequiringSecondWineToEvolve;
-	int32_t godCurseNeptuneSankShips;
 	int32_t entertainmentHippodromeHasShow;
 	int32_t messageShownHippodrome;
 	int32_t messageShownColosseum;

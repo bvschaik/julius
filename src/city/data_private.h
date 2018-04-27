@@ -220,6 +220,8 @@ extern struct city_data_t {
         int32_t angry_message_delay;
         int32_t venus_curse_active;
         int32_t neptune_double_trade_active;
+        int32_t neptune_sank_ships;
+        int32_t mars_spirit_power;
     } religion;
     struct {
         struct {

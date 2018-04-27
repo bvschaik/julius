@@ -21,4 +21,9 @@ int city_god_months_since_festival(int god_id);
  */
 int city_god_least_happy();
 
+int city_god_spirit_of_mars_power();
+void city_god_spirit_of_mars_mark_used();
+
+int city_god_neptune_create_shipwreck_flotsam();
+
 #endif // CITY_GODS_H

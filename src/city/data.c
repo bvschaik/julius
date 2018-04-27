@@ -435,7 +435,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.religion.venus_curse_active);
     buffer_write_i32(main, city_data.unused.unused_44ec);
     buffer_write_i32(main, city_data.religion.neptune_double_trade_active);
-    buffer_write_i32(main, Data_CityInfo.godBlessingMarsEnemiesToKill);
+    buffer_write_i32(main, city_data.religion.mars_spirit_power);
     buffer_write_i32(main, city_data.unused.unused_44f8);
     buffer_write_i32(main, city_data.religion.angry_message_delay);
     buffer_write_i32(main, city_data.resource.food_consumed_last_month);
@@ -512,7 +512,7 @@ static void save_main_data(buffer *main)
         buffer_write_i32(main, city_data.map.largest_road_networks[i].size);
     }
     buffer_write_i32(main, Data_CityInfo.housesRequiringSecondWineToEvolve);
-    buffer_write_i32(main, Data_CityInfo.godCurseNeptuneSankShips);
+    buffer_write_i32(main, city_data.religion.neptune_sank_ships);
     buffer_write_i32(main, Data_CityInfo.entertainmentHippodromeHasShow);
     buffer_write_i32(main, Data_CityInfo.messageShownHippodrome);
     buffer_write_i32(main, Data_CityInfo.messageShownColosseum);
@@ -912,7 +912,7 @@ static void load_main_data(buffer *main)
     city_data.religion.venus_curse_active = buffer_read_i32(main);
     city_data.unused.unused_44ec = buffer_read_i32(main);
     city_data.religion.neptune_double_trade_active = buffer_read_i32(main);
-    Data_CityInfo.godBlessingMarsEnemiesToKill = buffer_read_i32(main);
+    city_data.religion.mars_spirit_power = buffer_read_i32(main);
     city_data.unused.unused_44f8 = buffer_read_i32(main);
     city_data.religion.angry_message_delay = buffer_read_i32(main);
     city_data.resource.food_consumed_last_month = buffer_read_i32(main);
@@ -989,7 +989,7 @@ static void load_main_data(buffer *main)
         city_data.map.largest_road_networks[i].size = buffer_read_i32(main);
     }
     Data_CityInfo.housesRequiringSecondWineToEvolve = buffer_read_i32(main);
-    Data_CityInfo.godCurseNeptuneSankShips = buffer_read_i32(main);
+    city_data.religion.neptune_sank_ships = buffer_read_i32(main);
     Data_CityInfo.entertainmentHippodromeHasShow = buffer_read_i32(main);
     Data_CityInfo.messageShownHippodrome = buffer_read_i32(main);
     Data_CityInfo.messageShownColosseum = buffer_read_i32(main);

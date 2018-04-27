@@ -1,6 +1,7 @@
 #include "formation_enemy.h"
 
 #include "building/building.h"
+#include "city/gods.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -343,26 +344,26 @@ int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_t
 
 static void mars_kill_enemies()
 {
-    if (Data_CityInfo.godBlessingMarsEnemiesToKill <= 0) {
+    int to_kill = city_god_spirit_of_mars_power();
+    if (to_kill <= 0) {
         return;
     }
-    int toKill = Data_CityInfo.godBlessingMarsEnemiesToKill;
-    int gridOffset = 0;
-    for (int i = 1; i < MAX_FIGURES && toKill > 0; i++) {
+    int grid_offset = 0;
+    for (int i = 1; i < MAX_FIGURES && to_kill > 0; i++) {
         figure *f = figure_get(i);
         if (f->state != FigureState_Alive) {
             continue;
         }
         if (figure_is_enemy(f) && f->type != FIGURE_ENEMY54_GLADIATOR) {
             f->actionState = FIGURE_ACTION_149_CORPSE;
-            toKill--;
-            if (!gridOffset) {
-                gridOffset = f->gridOffset;
+            to_kill--;
+            if (!grid_offset) {
+                grid_offset = f->gridOffset;
             }
         }
     }
-    Data_CityInfo.godBlessingMarsEnemiesToKill = 0;
-    city_message_post(1, MESSAGE_SPIRIT_OF_MARS, 0, gridOffset);
+    city_god_spirit_of_mars_mark_used();
+    city_message_post(1, MESSAGE_SPIRIT_OF_MARS, 0, grid_offset);
 }
 
 static void update_enemy_movement(formation *m, int roman_distance)
