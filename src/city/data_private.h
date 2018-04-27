@@ -48,6 +48,14 @@ extern struct city_data_t {
         int16_t working_docks;
         int16_t working_dock_ids[10];
     } building;
+    struct {
+        int16_t animals;
+        int32_t attacking_natives;
+        int32_t enemies;
+        int32_t imperial_soldiers;
+        int32_t rioters;
+        int32_t soldiers;
+    } figure;
     house_demands houses;
     struct {
         emperor_gift gifts[3];

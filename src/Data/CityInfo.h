@@ -10,16 +10,12 @@ extern struct _Data_CityInfo {
 	int32_t populationLastTargetHouseAdd;
 	int32_t populationLastTargetHouseRemove;
 	int16_t resourceLastTargetWarehouse;
-	int32_t numRiotersInCity;
-	int16_t numAnimalsInCity;
 	int32_t riotersOrAttackingNativesInCity;
 	int32_t nativeAttackDuration;
 	int32_t nativeMissionPostOperational;
 	int32_t nativeMainMeetingCenterX;
 	int32_t nativeMainMeetingCenterY;
 	int32_t tutorial1SenateBuilt;
-	int32_t numEnemiesInCity;
-	int32_t numImperialSoldiersInCity;
 	uint8_t distantBattleCityId;
 	uint8_t distantBattleEnemyStrength;
 	uint8_t distantBattleRomanStrength;
@@ -34,12 +30,10 @@ extern struct _Data_CityInfo {
 	int8_t militaryTotalLegions;
 	int8_t militaryTotalLegionsEmpireService;
 	int8_t militaryTotalSoldiers;
-	int32_t numSoldiersInCity;
 	int32_t militaryLegionaryLegions;
 	int32_t missionSavedGameWritten;
 	int32_t tutorial1FireMessageShown;
 	int32_t tutorial3DiseaseMessageShown;
-	int32_t numAttackingNativesInCity;
 
 	int32_t populationGraphOrder;
 	int32_t ciid;

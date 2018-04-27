@@ -6,80 +6,80 @@
 
 void city_figures_reset()
 {
-    Data_CityInfo.numEnemiesInCity = 0;
-    Data_CityInfo.numRiotersInCity = 0;
-    Data_CityInfo.numAttackingNativesInCity = 0;
-    Data_CityInfo.numAnimalsInCity = 0;
-    Data_CityInfo.numImperialSoldiersInCity = 0;
-    Data_CityInfo.numSoldiersInCity = 0;
+    city_data.figure.enemies = 0;
+    city_data.figure.rioters = 0;
+    city_data.figure.attacking_natives = 0;
+    city_data.figure.animals = 0;
+    city_data.figure.imperial_soldiers = 0;
+    city_data.figure.soldiers = 0;
 }
 
 void city_figures_add_animal()
 {
-    Data_CityInfo.numAnimalsInCity++;
+    city_data.figure.animals++;
 }
 
 void city_figures_add_attacking_native()
 {
-    Data_CityInfo.numAttackingNativesInCity++;
+    city_data.figure.attacking_natives++;
 }
 
 void city_figures_add_enemy()
 {
-    Data_CityInfo.numEnemiesInCity++;
+    city_data.figure.enemies++;
 }
 
 void city_figures_add_imperial_soldier()
 {
-    Data_CityInfo.numImperialSoldiersInCity++;
+    city_data.figure.imperial_soldiers++;
 }
 
 void city_figures_add_rioter()
 {
-    Data_CityInfo.numRiotersInCity++;
+    city_data.figure.rioters++;
 }
 
 void city_figures_add_soldier()
 {
-    Data_CityInfo.numSoldiersInCity++;
+    city_data.figure.soldiers++;
 }
 
 void city_figures_set_gladiator_revolt()
 {
-    Data_CityInfo.numAttackingNativesInCity = 10;
+    city_data.figure.attacking_natives = 10;
 }
 
 int city_figures_animals()
 {
-    return Data_CityInfo.numAnimalsInCity;
+    return city_data.figure.animals;
 }
 
 int city_figures_attacking_natives()
 {
-    return Data_CityInfo.numAttackingNativesInCity;
+    return city_data.figure.attacking_natives;
 }
 
 int city_figures_imperial_soldiers()
 {
-    return Data_CityInfo.numImperialSoldiersInCity;
+    return city_data.figure.imperial_soldiers;
 }
 
 int city_figures_enemies()
 {
-    return Data_CityInfo.numEnemiesInCity;
+    return city_data.figure.enemies;
 }
 
 int city_figures_rioters()
 {
-    return Data_CityInfo.numRiotersInCity;
+    return city_data.figure.rioters;
 }
 
 int city_figures_soldiers()
 {
-    return Data_CityInfo.numSoldiersInCity;
+    return city_data.figure.soldiers;
 }
 
 int city_figures_total_invading_enemies()
 {
-    return Data_CityInfo.numImperialSoldiersInCity + Data_CityInfo.numEnemiesInCity;
+    return city_data.figure.imperial_soldiers + city_data.figure.enemies;
 }

@@ -323,7 +323,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.houses.religion);
     buffer_write_i32(main, city_data.houses.education);
     buffer_write_i32(main, city_data.houses.entertainment);
-    buffer_write_i32(main, Data_CityInfo.numRiotersInCity);
+    buffer_write_i32(main, city_data.figure.rioters);
     buffer_write_i32(main, city_data.ratings.selected);
     buffer_write_i32(main, city_data.ratings.culture_explanation);
     buffer_write_i32(main, city_data.ratings.prosperity_explanation);
@@ -343,7 +343,7 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 3; i++) {
         buffer_write_i16(main, city_data.unused.unknown_439c[i]);
     }
-    buffer_write_i16(main, Data_CityInfo.numAnimalsInCity);
+    buffer_write_i16(main, city_data.figure.animals);
     buffer_write_i16(main, city_data.trade.num_sea_routes);
     buffer_write_i16(main, city_data.trade.num_land_routes);
     buffer_write_i16(main, city_data.trade.sea_trade_problem_duration);
@@ -453,11 +453,11 @@ static void save_main_data(buffer *main)
         buffer_write_i32(main, city_data.unused.unused_4524[i]);
     }
     buffer_write_i32(main, city_data.building.shipyard_boats_requested);
-    buffer_write_i32(main, Data_CityInfo.numEnemiesInCity);
+    buffer_write_i32(main, city_data.figure.enemies);
     buffer_write_i32(main, city_data.sentiment.wages);
     buffer_write_i32(main, city_data.population.people_in_tents);
     buffer_write_i32(main, city_data.population.people_in_large_insula_and_above);
-    buffer_write_i32(main, Data_CityInfo.numImperialSoldiersInCity);
+    buffer_write_i32(main, city_data.figure.imperial_soldiers);
     buffer_write_i32(main, city_data.emperor.invasion.duration_day_countdown);
     buffer_write_i32(main, city_data.emperor.invasion.warnings_given);
     buffer_write_i32(main, city_data.emperor.invasion.days_until_invasion);
@@ -485,7 +485,7 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, city_data.sound.die_soldier);
     buffer_write_i8(main, city_data.sound.shoot_arrow);
     buffer_write_i32(main, city_data.building.trade_center_building_id);
-    buffer_write_i32(main, Data_CityInfo.numSoldiersInCity);
+    buffer_write_i32(main, city_data.figure.soldiers);
     buffer_write_i8(main, city_data.sound.hit_soldier);
     buffer_write_i8(main, city_data.sound.hit_spear);
     buffer_write_i8(main, city_data.sound.hit_club);
@@ -522,7 +522,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.missionSavedGameWritten);
     buffer_write_i32(main, Data_CityInfo.tutorial1FireMessageShown);
     buffer_write_i32(main, Data_CityInfo.tutorial3DiseaseMessageShown);
-    buffer_write_i32(main, Data_CityInfo.numAttackingNativesInCity);
+    buffer_write_i32(main, city_data.figure.attacking_natives);
     for (int i = 0; i < 232; i++) {
         buffer_write_i8(main, city_data.unused.unknown_464c[i]);
     }
@@ -800,7 +800,7 @@ static void load_main_data(buffer *main)
     city_data.houses.religion = buffer_read_i32(main);
     city_data.houses.education = buffer_read_i32(main);
     city_data.houses.entertainment = buffer_read_i32(main);
-    Data_CityInfo.numRiotersInCity = buffer_read_i32(main);
+    city_data.figure.rioters = buffer_read_i32(main);
     city_data.ratings.selected = buffer_read_i32(main);
     city_data.ratings.culture_explanation = buffer_read_i32(main);
     city_data.ratings.prosperity_explanation = buffer_read_i32(main);
@@ -820,7 +820,7 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 3; i++) {
         city_data.unused.unknown_439c[i] = buffer_read_i16(main);
     }
-    Data_CityInfo.numAnimalsInCity = buffer_read_i16(main);
+    city_data.figure.animals = buffer_read_i16(main);
     city_data.trade.num_sea_routes = buffer_read_i16(main);
     city_data.trade.num_land_routes = buffer_read_i16(main);
     city_data.trade.sea_trade_problem_duration = buffer_read_i16(main);
@@ -930,11 +930,11 @@ static void load_main_data(buffer *main)
         city_data.unused.unused_4524[i] = buffer_read_i32(main);
     }
     city_data.building.shipyard_boats_requested = buffer_read_i32(main);
-    Data_CityInfo.numEnemiesInCity = buffer_read_i32(main);
+    city_data.figure.enemies = buffer_read_i32(main);
     city_data.sentiment.wages = buffer_read_i32(main);
     city_data.population.people_in_tents = buffer_read_i32(main);
     city_data.population.people_in_large_insula_and_above = buffer_read_i32(main);
-    Data_CityInfo.numImperialSoldiersInCity = buffer_read_i32(main);
+    city_data.figure.imperial_soldiers = buffer_read_i32(main);
     city_data.emperor.invasion.duration_day_countdown = buffer_read_i32(main);
     city_data.emperor.invasion.warnings_given = buffer_read_i32(main);
     city_data.emperor.invasion.days_until_invasion = buffer_read_i32(main);
@@ -962,7 +962,7 @@ static void load_main_data(buffer *main)
     city_data.sound.die_soldier = buffer_read_i8(main);
     city_data.sound.shoot_arrow = buffer_read_i8(main);
     city_data.building.trade_center_building_id = buffer_read_i32(main);
-    Data_CityInfo.numSoldiersInCity = buffer_read_i32(main);
+    city_data.figure.soldiers = buffer_read_i32(main);
     city_data.sound.hit_soldier = buffer_read_i8(main);
     city_data.sound.hit_spear = buffer_read_i8(main);
     city_data.sound.hit_club = buffer_read_i8(main);
@@ -999,7 +999,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.missionSavedGameWritten = buffer_read_i32(main);
     Data_CityInfo.tutorial1FireMessageShown = buffer_read_i32(main);
     Data_CityInfo.tutorial3DiseaseMessageShown = buffer_read_i32(main);
-    Data_CityInfo.numAttackingNativesInCity = buffer_read_i32(main);
+    city_data.figure.attacking_natives = buffer_read_i32(main);
     for (int i = 0; i < 232; i++) {
         city_data.unused.unknown_464c[i] = buffer_read_i8(main);
     }

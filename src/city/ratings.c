@@ -225,11 +225,11 @@ static void update_prosperity_explanation()
 static void update_peace_explanation()
 {
     int reason;
-    if (Data_CityInfo.numImperialSoldiersInCity) {
+    if (city_data.figure.imperial_soldiers) {
         reason = 8; // FIXED: 7+8 interchanged
-    } else if (Data_CityInfo.numEnemiesInCity) {
+    } else if (city_data.figure.enemies) {
         reason = 7;
-    } else if (Data_CityInfo.numRiotersInCity) {
+    } else if (city_data.figure.rioters) {
         reason = 6;
     } else {
         if (city_data.ratings.peace < 10) {

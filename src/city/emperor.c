@@ -64,7 +64,7 @@ static void update_debt_state()
         if (city_data.emperor.months_in_debt >= 12) {
             city_data.emperor.debt_state = 3;
             city_data.emperor.months_in_debt = 0;
-            if (!Data_CityInfo.numImperialSoldiersInCity) {
+            if (!city_data.figure.imperial_soldiers) {
                 city_message_post(1, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
                 city_ratings_change_favor(-10);
             }
@@ -80,7 +80,7 @@ static void update_debt_state()
         if (city_data.emperor.months_in_debt >= 12) {
             city_data.emperor.debt_state = 4;
             city_data.emperor.months_in_debt = 0;
-            if (!Data_CityInfo.numImperialSoldiersInCity) {
+            if (!city_data.figure.imperial_soldiers) {
                 city_ratings_limit_favor(10);
             }
         }
@@ -89,7 +89,7 @@ static void update_debt_state()
 
 static void process_caesar_invasion()
 {
-    if (Data_CityInfo.numImperialSoldiersInCity) {
+    if (city_data.figure.imperial_soldiers) {
         // caesar invasion in progress
         city_data.emperor.invasion.duration_day_countdown--;
         if (city_data.ratings.favor >= 35 && city_data.emperor.invasion.duration_day_countdown < 176) {
