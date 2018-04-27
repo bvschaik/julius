@@ -1,6 +1,7 @@
 #include "formation_enemy.h"
 
 #include "building/building.h"
+#include "city/figures.h"
 #include "city/gods.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -507,7 +508,7 @@ static void update_enemy_formation(formation *m, int *roman_distance)
         }
     }
     formation_decrease_monthly_counters(m);
-    if (Data_CityInfo.numSoldiersInCity <= 0) {
+    if (city_figures_soldiers() <= 0) {
         formation_clear_monthly_counters(m);
     }
     for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {

@@ -1,5 +1,6 @@
 #include "formation_herd.h"
 
+#include "city/figures.h"
 #include "city/sound.h"
 #include "core/random.h"
 #include "figure/combat.h"
@@ -234,7 +235,7 @@ static void update_herd_formation(formation *m)
 
 void formation_herd_update()
 {
-    if (Data_CityInfo.numAnimalsInCity <= 0) {
+    if (city_figures_animals() <= 0) {
         return;
     }
     for (int i = 1; i < MAX_FORMATIONS; i++) {

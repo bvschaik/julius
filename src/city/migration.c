@@ -2,6 +2,7 @@
 
 #include "building/house_population.h"
 #include "city/data_private.h"
+#include "city/figures.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "game/tutorial.h"
@@ -35,7 +36,7 @@ static void update_status()
         return;
     }
     // war scares immigrants away
-    if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 3 &&
+    if (city_figures_total_invading_enemies() > 3 &&
         city_data.migration.percentage > 0) {
         city_data.migration.percentage = 0;
         return;

@@ -1,6 +1,7 @@
 #include "action.h"
 
 #include "city/entertainment.h"
+#include "city/figures.h"
 #include "figure/figure.h"
 #include "figuretype/animal.h"
 #include "figuretype/cartpusher.h"
@@ -110,12 +111,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 
 void figure_action_handle()
 {
-    Data_CityInfo.numEnemiesInCity = 0;
-    Data_CityInfo.numRiotersInCity = 0;
-    Data_CityInfo.numAttackingNativesInCity = 0;
-    Data_CityInfo.numAnimalsInCity = 0;
-    Data_CityInfo.numImperialSoldiersInCity = 0;
-    Data_CityInfo.numSoldiersInCity = 0;
+    city_figures_reset();
     city_entertainment_set_hippodrome_has_race(0);
     if (Data_CityInfo.riotersOrAttackingNativesInCity > 0) {
         Data_CityInfo.riotersOrAttackingNativesInCity--;

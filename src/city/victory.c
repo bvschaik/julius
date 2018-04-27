@@ -2,6 +2,7 @@
 
 #include "building/construction.h"
 #include "city/data_private.h"
+#include "city/figures.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "game/time.h"
@@ -88,12 +89,12 @@ void city_victory_check()
             data.state = VICTORY_STATE_WON;
         }
     }
-    if (Data_CityInfo.numImperialSoldiersInCity + Data_CityInfo.numEnemiesInCity > 2 + Data_CityInfo.numSoldiersInCity) {
+    if (city_figures_total_invading_enemies() > 2 + Data_CityInfo.numSoldiersInCity) {
         if (city_data.population.population < city_data.population.highest_ever / 4) {
             data.state = VICTORY_STATE_LOST;
         }
     }
-    if (Data_CityInfo.numImperialSoldiersInCity + Data_CityInfo.numEnemiesInCity > 0) {
+    if (city_figures_total_invading_enemies() > 0) {
         if (city_data.population.population <= 0) {
             data.state = VICTORY_STATE_LOST;
         }

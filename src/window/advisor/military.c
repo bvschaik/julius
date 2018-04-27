@@ -1,5 +1,6 @@
 #include "military.h"
 
+#include "city/figures.h"
 #include "city/view.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
@@ -61,9 +62,9 @@ static int draw_background()
     num_legions = formation_get_num_legions();
 
     int enemy_text_id;
-    if (Data_CityInfo.numEnemiesInCity) {
+    if (city_figures_enemies()) {
         enemy_text_id = 10;
-    } else if (Data_CityInfo.numImperialSoldiersInCity) {
+    } else if (city_figures_imperial_soldiers()) {
         enemy_text_id = 11;
     } else if (scenario_invasion_exists_upcoming()) {
         enemy_text_id = 9;

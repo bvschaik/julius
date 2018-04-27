@@ -1,5 +1,6 @@
 #include "chief.h"
 
+#include "city/figures.h"
 #include "city/finance.h"
 #include "city/health.h"
 #include "city/houses.h"
@@ -64,7 +65,7 @@ static int draw_background()
 
     // migration
     draw_title(106, 3);
-    if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 3) {
+    if (city_figures_total_invading_enemies() > 3) {
         lang_text_draw(61, 79, X_OFFSET, 106, FONT_NORMAL_GREEN);
     } else if (city_migration_newcomers() >= 5) {
         lang_text_draw(61, 25, X_OFFSET, 106, FONT_NORMAL_GREEN);
@@ -124,9 +125,9 @@ static int draw_background()
 
     // military
     draw_title(166, 5);
-    if (Data_CityInfo.numImperialSoldiersInCity) {
+    if (city_figures_imperial_soldiers()) {
         lang_text_draw(61, 76, X_OFFSET, 166, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.numEnemiesInCity) {
+    } else if (city_figures_enemies()) {
         lang_text_draw(61, 75, X_OFFSET, 166, FONT_NORMAL_RED);
     } else if (scenario_invasion_exists_upcoming()) {
         lang_text_draw(61, 74, X_OFFSET, 166, FONT_NORMAL_RED);
@@ -135,7 +136,7 @@ static int draw_background()
         lang_text_draw(61, 78, X_OFFSET, 166, FONT_NORMAL_GREEN);
     } else if (Data_CityInfo.distantBattleMonthsToBattle > 0) {
         lang_text_draw(61, 77, X_OFFSET, 166, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.numSoldiersInCity > 0) { // FIXED was ">=0" (always true)
+    } else if (city_figures_soldiers() > 0) { // FIXED was ">=0" (always true)
         lang_text_draw(61, 73, X_OFFSET, 166, FONT_NORMAL_GREEN);
     } else {
         lang_text_draw(61, 72, X_OFFSET, 166, FONT_NORMAL_GREEN);
@@ -143,7 +144,7 @@ static int draw_background()
 
     // crime
     draw_title(186, 6);
-    if (Data_CityInfo.numRiotersInCity) {
+    if (city_figures_rioters()) {
         lang_text_draw(61, 33, X_OFFSET, 186, FONT_NORMAL_RED);
     } else if (city_sentiment_criminals() > 10) {
         lang_text_draw(61, 32, X_OFFSET, 186, FONT_NORMAL_RED);

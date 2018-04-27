@@ -1,5 +1,6 @@
 #include "enemy.h"
 
+#include "city/figures.h"
 #include "city/sound.h"
 #include "core/calc.h"
 #include "core/image.h"
@@ -16,8 +17,6 @@
 #include "scenario/gladiator_revolt.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
-
-#include "Data/CityInfo.h"
 
 static void enemy_initial(figure *f, formation *m)
 {
@@ -53,7 +52,7 @@ static void enemy_initial(figure *f, formation *m)
         int x_tile = 0, y_tile = 0;
         if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
             f->waitTicksMissile = 0;
-            if (figure_combat_get_missile_target_for_enemy(f, 10, Data_CityInfo.numSoldiersInCity < 4, &x_tile, &y_tile)) {
+            if (figure_combat_get_missile_target_for_enemy(f, 10, city_figures_soldiers() < 4, &x_tile, &y_tile)) {
                 f->attackGraphicOffset = 1;
                 f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
             } else {
@@ -162,7 +161,7 @@ static void enemy_fighting(figure *f, const formation *m)
 
 static void enemy_action(figure *f, formation *m)
 {
-    Data_CityInfo.numEnemiesInCity++;
+    city_figures_add_enemy();
     f->terrainUsage = FigureTerrainUsage_Enemy;
     f->formationPositionX = formation_layout_position_x(m->layout, f->indexInFormation);
     f->formationPositionY = formation_layout_position_y(m->layout, f->indexInFormation);
@@ -598,7 +597,7 @@ void figure_enemy_gladiator_action(figure *f)
             }
             break;
         case FIGURE_ACTION_159_NATIVE_ATTACKING:
-            Data_CityInfo.numAttackingNativesInCity = 10;
+            city_figures_set_gladiator_revolt();
             f->terrainUsage = FigureTerrainUsage_Enemy;
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
@@ -630,7 +629,7 @@ void figure_enemy_gladiator_action(figure *f)
 void figure_enemy_caesar_legionary_action(figure *f)
 {
     formation *m = formation_get(f->formationId);
-    Data_CityInfo.numImperialSoldiersInCity++;
+    city_figures_add_imperial_soldier();
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 1;

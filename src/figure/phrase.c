@@ -4,6 +4,7 @@
 #include "building/market.h"
 #include "city/constants.h"
 #include "city/culture.h"
+#include "city/figures.h"
 #include "city/gods.h"
 #include "city/labor.h"
 #include "city/population.h"
@@ -433,7 +434,7 @@ static int tower_sentry_phrase(figure *f)
     if (++f->phraseSequenceExact >= 2) {
         f->phraseSequenceExact = 0;
     }
-    int enemies = Data_CityInfo.numEnemiesInCity;
+    int enemies = city_figures_enemies();
     if (!enemies) {
         return 7 + f->phraseSequenceExact;
     } else if (enemies <= 10) {
@@ -447,7 +448,7 @@ static int tower_sentry_phrase(figure *f)
 
 static int soldier_phrase()
 {
-    int enemies = Data_CityInfo.numEnemiesInCity;
+    int enemies = city_figures_enemies();
     if (enemies >= 40) {
         return 11;
     } else if (enemies > 20) {

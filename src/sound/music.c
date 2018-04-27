@@ -1,8 +1,7 @@
 #include "music.h"
 
-#include "Data/CityInfo.h"
-
 #include "core/dir.h"
+#include "city/figures.h"
 #include "city/population.h"
 #include "game/settings.h"
 #include "sound/device.h"
@@ -73,7 +72,7 @@ void sound_music_update()
     }
     int track;
     int population = city_population();
-    int total_enemies = Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity;
+    int total_enemies = city_figures_total_invading_enemies();
     if (total_enemies >= 32) {
         track = TRACK_COMBAT_LONG;
     } else if (total_enemies > 0) {

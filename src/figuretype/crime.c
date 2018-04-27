@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/destruction.h"
+#include "city/figures.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/population.h"
@@ -199,7 +200,7 @@ void figure_criminal_action(figure *f)
 
 void figure_rioter_action(figure *f)
 {
-    Data_CityInfo.numRiotersInCity++;
+    city_figures_add_rioter();
     if (!f->targetedByFigureId) {
         Data_CityInfo.riotersOrAttackingNativesInCity = 10;
     }

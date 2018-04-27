@@ -1,5 +1,6 @@
 #include "soldier.h"
 
+#include "city/figures.h"
 #include "city/map.h"
 #include "core/calc.h"
 #include "core/image.h"
@@ -223,7 +224,7 @@ static void update_image(figure *f, const formation *m)
 void figure_soldier_action(figure *f)
 {
     formation *m = formation_get(f->formationId);
-    Data_CityInfo.numSoldiersInCity++;
+    city_figures_add_soldier();
     f->terrainUsage = FigureTerrainUsage_Any;
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;

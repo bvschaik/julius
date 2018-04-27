@@ -1,10 +1,9 @@
 #include "sound.h"
 
+#include "city/figures.h"
 #include "city/sound.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
-
-#include "Data/CityInfo.h"
 
 void figure_play_die_sound(const figure *f)
 {
@@ -67,11 +66,11 @@ void figure_play_die_sound(const figure *f)
         sound_effect_play(SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen());
     }
     if (figure_is_enemy(f)) {
-        if (Data_CityInfo.numEnemiesInCity == 1) {
+        if (city_figures_enemies() == 1) {
             sound_speech_play_file("wavs/army_war_cry.wav");
         }
     } else if (figure_is_legion(f)) {
-        if (Data_CityInfo.numSoldiersInCity == 1) {
+        if (city_figures_soldiers() == 1) {
             sound_speech_play_file("wavs/barbarian_war_cry.wav");
         }
     }

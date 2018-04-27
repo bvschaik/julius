@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/entertainment.h"
+#include "city/figures.h"
 #include "city/view.h"
 #include "core/calc.h"
 #include "core/image.h"
@@ -132,7 +133,7 @@ void figure_sheep_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Animal;
     f->useCrossCountry = 0;
     f->isGhost = 0;
-    Data_CityInfo.numAnimalsInCity++;
+    city_figures_add_animal();
     figure_image_increase_offset(f, 6);
 
     switch (f->actionState) {
@@ -185,7 +186,7 @@ void figure_wolf_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Animal;
     f->useCrossCountry = 0;
     f->isGhost = 0;
-    Data_CityInfo.numAnimalsInCity++;
+    city_figures_add_animal();
     figure_image_increase_offset(f, 12);
 
     switch (f->actionState) {
@@ -260,7 +261,7 @@ void figure_zebra_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Animal;
     f->useCrossCountry = 0;
     f->isGhost = 0;
-    Data_CityInfo.numAnimalsInCity++;
+    city_figures_add_animal();
     figure_image_increase_offset(f, 12);
 
     switch (f->actionState) {
