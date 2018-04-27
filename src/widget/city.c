@@ -22,8 +22,6 @@
 #include "window/building_info.h"
 #include "window/city.h"
 
-#include "Data/State.h"
-
 static struct {
     map_tile current_tile;
 } data;
@@ -132,7 +130,7 @@ static int is_legion_click(const map_tile *tile)
 
 static void build_start(const map_tile *tile)
 {
-    if (tile->grid_offset /*&& !Data_State.gamePaused*/) { // TODO FIXME
+    if (tile->grid_offset /*&& !game_state_is_paused()*/) { // TODO FIXME
         building_construction_start(tile->x, tile->y, tile->grid_offset);
     }
 }
@@ -167,7 +165,7 @@ void widget_city_handle_mouse(const mouse *m)
     map_tile *tile = &data.current_tile;
     scroll_map(scroll_get_direction(m));
     update_city_view_coords(m, tile);
-    Data_State.selectedBuilding.drawAsConstructing = 0;
+    building_construction_reset_draw_as_constructing();
     if (m->left.went_down) {
         if (!is_legion_click(tile)) {
             build_start(tile);

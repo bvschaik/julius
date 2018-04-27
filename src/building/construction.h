@@ -21,8 +21,13 @@ void building_construction_place();
 
 int building_construction_can_place_on_terrain(int x, int y, int *warning_id);
 
-void building_construction_record_view_position(int view_x, int view_y, int grid_offset);
+void building_construction_update_road_orientation();
+int building_construction_road_orientation();
 
+void building_construction_record_view_position(int view_x, int view_y, int grid_offset);
 void building_construction_get_view_position(int *view_x, int *view_y);
+
+void building_construction_reset_draw_as_constructing();
+int building_construction_draw_as_constructing();
 
 #endif // BUILDING_CONSTRUCTION_H

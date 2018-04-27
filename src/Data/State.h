@@ -5,11 +5,6 @@
 #include "map/point.h"
 
 extern struct _Data_State {
-	struct {
-		int roadRequired;
-		time_millis roadLastUpdate;
-		int drawAsConstructing;
-	} selectedBuilding;
 	int missionBriefingShown;
 } Data_State;
 

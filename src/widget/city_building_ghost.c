@@ -22,8 +22,6 @@
 #include "map/water.h"
 #include "widget/city_bridge.h"
 
-#include "Data/State.h"
-
 #define MAX_TILES 25
 
 static const int X_VIEW_OFFSETS[MAX_TILES] = {
@@ -160,7 +158,7 @@ static int get_building_image_id(int map_x, int map_y, building_type type, const
         } else if (orientation == 1) {
             image_offset = 0;
         } else {
-            image_offset = Data_State.selectedBuilding.roadRequired == 2 ? 1 : 0;
+            image_offset = building_construction_road_orientation() == 2 ? 1 : 0;
         }
         int map_orientation = city_view_orientation();
         if (map_orientation == DIR_6_LEFT || map_orientation == DIR_2_RIGHT) {
@@ -175,7 +173,7 @@ static int get_building_image_id(int map_x, int map_y, building_type type, const
         } else if (orientation == 1) {
             image_offset = 0;
         } else {
-            image_offset = Data_State.selectedBuilding.roadRequired == 2 ? 2 : 0;
+            image_offset = building_construction_road_orientation() == 2 ? 2 : 0;
         }
         int map_orientation = city_view_orientation();
         if (map_orientation == DIR_6_LEFT || map_orientation == DIR_2_RIGHT) {
@@ -237,12 +235,7 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
 static void draw_default(const map_tile *tile, int x_view, int y_view, building_type type)
 {
     // update road required based on timer
-    if (Data_State.selectedBuilding.roadRequired > 0) {
-        if (time_get_millis() > Data_State.selectedBuilding.roadLastUpdate + 1500) {
-            Data_State.selectedBuilding.roadLastUpdate = time_get_millis();
-            Data_State.selectedBuilding.roadRequired = Data_State.selectedBuilding.roadRequired == 1 ? 2 : 1;
-        }
-    }
+    building_construction_update_road_orientation();
 
     const building_properties *props = building_properties_for_type(type);
     int building_size = type == BUILDING_WAREHOUSE ? 3 : props->size;
@@ -657,7 +650,7 @@ void city_building_ghost_draw(const map_tile *tile)
         return;
     }
     building_type type = building_construction_type();
-    if (Data_State.selectedBuilding.drawAsConstructing || type == BUILDING_NONE) {
+    if (building_construction_draw_as_constructing() || type == BUILDING_NONE) {
         return;
     }
     int x, y;

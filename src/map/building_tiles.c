@@ -16,8 +16,6 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 
-#include "Data/State.h"
-
 void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain)
 {
     if (!map_grid_is_inside(x, y, size)) {
@@ -260,30 +258,30 @@ static void adjust_to_absolute_xy(int *x, int *y, int size)
     }
 }
 
-void map_building_tiles_mark_construction(int x, int y, int size, int terrain, int absolute_xy)
+int map_building_tiles_mark_construction(int x, int y, int size, int terrain, int absolute_xy)
 {
     if (!absolute_xy) {
         adjust_to_absolute_xy(&x, &y, size);
     }
     if (!map_grid_is_inside(x, y, size)) {
-        return;
+        return 0;
     }
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
             if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR) || map_has_figure_at(grid_offset)) {
-                return;
+                return 0;
             }
         }
     }
     // mark as being constructed
-    Data_State.selectedBuilding.drawAsConstructing = 1;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
             map_property_mark_constructing(grid_offset);
         }
     }
+    return 1;
 }
 
 int map_building_tiles_are_clear(int x, int y, int size, int terrain)

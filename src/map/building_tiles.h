@@ -11,7 +11,7 @@ void map_building_tiles_remove(int building_id, int x, int y);
 
 void map_building_tiles_set_rubble(int building_id, int x, int y, int size);
 
-void map_building_tiles_mark_construction(int x, int y, int size, int terrain, int absolute_xy);
+int map_building_tiles_mark_construction(int x, int y, int size, int terrain, int absolute_xy);
 
 int map_building_tiles_are_clear(int x, int y, int size, int terrain);
 

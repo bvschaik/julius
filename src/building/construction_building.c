@@ -22,8 +22,6 @@
 #include "map/tiles.h"
 #include "map/water.h"
 
-#include "Data/State.h"
-
 static void add_fort(int type, building *fort)
 {
     fort->prevPartBuildingId = 0;
@@ -524,7 +522,7 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
         if (!building_orientation) {
-            if (Data_State.selectedBuilding.roadRequired == 1) {
+            if (building_construction_road_orientation() == 1) {
                 building_orientation = 1;
             } else {
                 building_orientation = 2;
@@ -537,7 +535,7 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
         if (!building_orientation) {
-            if (Data_State.selectedBuilding.roadRequired == 1) {
+            if (building_construction_road_orientation() == 1) {
                 building_orientation = 1;
             } else {
                 building_orientation = 3;

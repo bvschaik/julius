@@ -1,7 +1,5 @@
 #include "construction.h"
 
-#include "Data/State.h"
-
 #include "building/construction_building.h"
 #include "building/construction_clear.h"
 #include "building/construction_warning.h"
@@ -16,6 +14,7 @@
 #include "city/warning.h"
 #include "core/calc.h"
 #include "core/image.h"
+#include "core/time.h"
 #include "figure/formation.h"
 #include "game/undo.h"
 #include "graphics/window.h"
@@ -25,6 +24,7 @@
 #include "map/building_tiles.h"
 #include "map/grid.h"
 #include "map/image.h"
+#include "map/point.h"
 #include "map/property.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
@@ -58,11 +58,21 @@ static struct {
         int water;
         int wall;
     } required_terrain;
+    int road_orientation;
+    time_millis road_last_update;
+    int draw_as_constructing;
     int start_offset_x_view;
     int start_offset_y_view;
 } data;
 
 static int last_items_cleared;
+
+static void mark_construction(int x, int y, int size, int terrain, int absolute_xy)
+{
+    if (map_building_tiles_mark_construction(x, y, size, terrain, absolute_xy)) {
+        data.draw_as_constructing = 1;
+    }
+}
 
 static int place_houses(int measure_only, int x_start, int y_start, int x_end, int y_end)
 {
@@ -348,11 +358,11 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     }
     if (info->place_reservoir_at_start != PlaceReservoir_No) {
         map_routing_block(x_start - 1, y_start - 1, 3);
-        map_building_tiles_mark_construction(x_start - 1, y_start - 1, 3, TERRAIN_ALL, 1);
+        mark_construction(x_start - 1, y_start - 1, 3, TERRAIN_ALL, 1);
     }
     if (info->place_reservoir_at_end != PlaceReservoir_No) {
         map_routing_block(x_end - 1, y_end - 1, 3);
-        map_building_tiles_mark_construction(x_end - 1, y_end - 1, 3, TERRAIN_ALL, 1);
+        mark_construction(x_end - 1, y_end - 1, 3, TERRAIN_ALL, 1);
     }
     const int aqueduct_offsets_x[] = {0, 2, 0, -2};
     const int aqueduct_offsets_y[] = {-2, 0, 2, 0};
@@ -413,8 +423,8 @@ void building_construction_set_type(building_type type)
         data.required_terrain.tree = 0;
         data.required_terrain.rock = 0;
         data.required_terrain.meadow = 0;
-        Data_State.selectedBuilding.roadRequired = 0;
-        Data_State.selectedBuilding.roadLastUpdate = time_get_millis();
+        data.road_orientation = 0;
+        data.road_last_update = time_get_millis();
         data.start.grid_offset = 0;
 
         switch (type) {
@@ -438,7 +448,7 @@ void building_construction_set_type(building_type type)
                 break;
             case BUILDING_GATEHOUSE:
             case BUILDING_TRIUMPHAL_ARCH:
-                Data_State.selectedBuilding.roadRequired = 1;
+                data.road_orientation = 1;
                 break;
             case BUILDING_TOWER:
                 data.required_terrain.wall = 1;
@@ -534,16 +544,16 @@ void building_construction_update(int x, int y, int grid_offset)
         place_reservoir_and_aqueducts(1, data.start.x, data.start.y, x, y, &info);
         current_cost = info.cost;
         map_tiles_update_all_aqueducts(1);
-        Data_State.selectedBuilding.drawAsConstructing = 0;
+        data.draw_as_constructing = 0;
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         int items_placed = place_houses(1, data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_GATEHOUSE) {
-        map_building_tiles_mark_construction(x, y, 2, ~TERRAIN_ROAD, 0);
+        mark_construction(x, y, 2, ~TERRAIN_ROAD, 0);
     } else if (type == BUILDING_TRIUMPHAL_ARCH) {
-        map_building_tiles_mark_construction(x, y, 3, ~TERRAIN_ROAD, 0);
+        mark_construction(x, y, 3, ~TERRAIN_ROAD, 0);
     } else if (type == BUILDING_WAREHOUSE) {
-        map_building_tiles_mark_construction(x, y, 3, TERRAIN_ALL, 0);
+        mark_construction(x, y, 3, TERRAIN_ALL, 0);
     } else if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
         if (formation_get_num_legions_cached() < 6) {
             const int offsets_x[] = {3, 4, 4, 3};
@@ -553,22 +563,22 @@ void building_construction_update(int x, int y, int grid_offset)
             int y_offset = offsets_y[orient_index];
             if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) &&
                 map_building_tiles_are_clear(x + x_offset, y + y_offset, 4, TERRAIN_ALL)) {
-                map_building_tiles_mark_construction(x, y, 3, TERRAIN_ALL, 0);
+                mark_construction(x, y, 3, TERRAIN_ALL, 0);
             }
         }
     } else if (type == BUILDING_HIPPODROME) {
         if (map_building_tiles_are_clear(x, y, 5, TERRAIN_ALL) &&
             map_building_tiles_are_clear(x + 5, y, 5, TERRAIN_ALL) &&
             map_building_tiles_are_clear(x + 10, y, 5, TERRAIN_ALL)) {
-            map_building_tiles_mark_construction(x, y, 5, TERRAIN_ALL, 0);
+            mark_construction(x, y, 5, TERRAIN_ALL, 0);
         }
     } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
         if (!map_water_determine_orientation_size2(x, y, 1, 0, 0)) {
-            Data_State.selectedBuilding.drawAsConstructing = 1;
+            data.draw_as_constructing = 1;
         }
     } else if (type == BUILDING_DOCK) {
         if (!map_water_determine_orientation_size3(x, y, 1, 0, 0)) {
-            Data_State.selectedBuilding.drawAsConstructing = 1;
+            data.draw_as_constructing = 1;
         }
     } else if (data.required_terrain.meadow || data.required_terrain.rock || data.required_terrain.tree ||
             data.required_terrain.water || data.required_terrain.wall) {
@@ -578,7 +588,7 @@ void building_construction_update(int x, int y, int grid_offset)
             !(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
             !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center())) {
             int size = building_properties_for_type(type)->size;
-            map_building_tiles_mark_construction(x, y, size, TERRAIN_ALL, 0);
+            mark_construction(x, y, size, TERRAIN_ALL, 0);
         }
     }
     data.cost = current_cost;
@@ -767,6 +777,21 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
     return 1;
 }
 
+void building_construction_update_road_orientation()
+{
+    if (data.road_orientation > 0) {
+        if (time_get_millis() > data.road_last_update + 1500) {
+            data.road_last_update = time_get_millis();
+            data.road_orientation = data.road_orientation == 1 ? 2 : 1;
+        }
+    }
+}
+
+int building_construction_road_orientation()
+{
+    return data.road_orientation;
+}
+
 void building_construction_record_view_position(int view_x, int view_y, int grid_offset)
 {
     if (grid_offset == data.start.grid_offset) {
@@ -779,4 +804,14 @@ void building_construction_get_view_position(int *view_x, int *view_y)
 {
     *view_x = data.start_offset_x_view;
     *view_y = data.start_offset_y_view;
+}
+
+void building_construction_reset_draw_as_constructing()
+{
+    data.draw_as_constructing = 0;
+}
+
+int building_construction_draw_as_constructing()
+{
+    return data.draw_as_constructing;
 }
