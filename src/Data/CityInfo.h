@@ -7,9 +7,6 @@ extern struct _Data_CityInfo {
 	int8_t __unknown_00a5;
 	int32_t populationMaxSupported;
 	int32_t populationRoomInHouses;
-	int32_t populationLastTargetHouseAdd;
-	int32_t populationLastTargetHouseRemove;
-	int16_t resourceLastTargetWarehouse;
 	int32_t riotersOrAttackingNativesInCity;
 	int32_t nativeAttackDuration;
 	int32_t nativeMissionPostOperational;

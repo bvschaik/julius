@@ -101,8 +101,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.population.people_in_villas_palaces);
     buffer_write_i32(main, city_data.population.total_years);
     buffer_write_i32(main, city_data.population.yearly_update_requested);
-    buffer_write_i32(main, Data_CityInfo.populationLastTargetHouseAdd);
-    buffer_write_i32(main, Data_CityInfo.populationLastTargetHouseRemove);
+    buffer_write_i32(main, city_data.population.last_used_house_add);
+    buffer_write_i32(main, city_data.population.last_used_house_remove);
     buffer_write_i32(main, city_data.migration.immigrated_today);
     buffer_write_i32(main, city_data.migration.emigrated_today);
     buffer_write_i32(main, city_data.migration.refused_immigrants_today);
@@ -115,7 +115,7 @@ static void save_main_data(buffer *main)
         buffer_write_i32(main, city_data.unused.unknown_27e0[i]);
     }
     buffer_write_i16(main, city_data.unused.unknown_27f0);
-    buffer_write_i16(main, Data_CityInfo.resourceLastTargetWarehouse);
+    buffer_write_i16(main, city_data.resource.last_used_warehouse);
     for (int i = 0; i < 18; i++) {
         buffer_write_i16(main, city_data.unused.unknown_27f4[i]);
     }
@@ -578,8 +578,8 @@ static void load_main_data(buffer *main)
     city_data.population.people_in_villas_palaces = buffer_read_i32(main);
     city_data.population.total_years = buffer_read_i32(main);
     city_data.population.yearly_update_requested = buffer_read_i32(main);
-    Data_CityInfo.populationLastTargetHouseAdd = buffer_read_i32(main);
-    Data_CityInfo.populationLastTargetHouseRemove = buffer_read_i32(main);
+    city_data.population.last_used_house_add = buffer_read_i32(main);
+    city_data.population.last_used_house_remove = buffer_read_i32(main);
     city_data.migration.immigrated_today = buffer_read_i32(main);
     city_data.migration.emigrated_today = buffer_read_i32(main);
     city_data.migration.refused_immigrants_today = buffer_read_i32(main);
@@ -592,7 +592,7 @@ static void load_main_data(buffer *main)
         city_data.unused.unknown_27e0[i] = buffer_read_i32(main);
     }
     city_data.unused.unknown_27f0 = buffer_read_i16(main);
-    Data_CityInfo.resourceLastTargetWarehouse = buffer_read_i16(main);
+    city_data.resource.last_used_warehouse = buffer_read_i16(main);
     for (int i = 0; i < 18; i++) {
         city_data.unused.unknown_27f4[i] = buffer_read_i16(main);
     }

@@ -39,6 +39,26 @@ int city_population_academy_age()
     return city_data.population.academy_age;
 }
 
+int city_population_last_used_house_add()
+{
+    return city_data.population.last_used_house_add;
+}
+
+void city_population_set_last_used_house_add(int building_id)
+{
+    city_data.population.last_used_house_add = building_id;
+}
+
+int city_population_last_used_house_remove()
+{
+    return city_data.population.last_used_house_remove;
+}
+
+void city_population_set_last_used_house_remove(int building_id)
+{
+    city_data.population.last_used_house_remove = building_id;
+}
+
 static void recalculate_population()
 {
     city_data.population.population = 0;

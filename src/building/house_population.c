@@ -15,14 +15,14 @@
 int house_population_add_to_city(int num_people)
 {
     int added = 0;
-    int building_id = Data_CityInfo.populationLastTargetHouseAdd;
+    int building_id = city_population_last_used_house_add();
     for (int i = 1; i < MAX_BUILDINGS && added < num_people; i++) {
         if (++building_id >= MAX_BUILDINGS) {
             building_id = 1;
         }
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0) {
-            Data_CityInfo.populationLastTargetHouseAdd = building_id;
+            city_population_set_last_used_house_add(building_id);
             int max_people = model_get_house(b->subtype.houseLevel)->max_people;
             if (b->houseIsMerged) {
                 max_people *= 4;
@@ -40,14 +40,14 @@ int house_population_add_to_city(int num_people)
 int house_population_remove_from_city(int num_people)
 {
     int removed = 0;
-    int building_id = Data_CityInfo.populationLastTargetHouseRemove;
+    int building_id = city_population_last_used_house_remove();
     for (int i = 1; i < 4 * MAX_BUILDINGS && removed < num_people; i++) {
         if (++building_id >= MAX_BUILDINGS) {
             building_id = 1;
         }
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
-            Data_CityInfo.populationLastTargetHouseRemove = building_id;
+            city_population_set_last_used_house_remove(building_id);
             if (b->housePopulation > 0) {
                 ++removed;
                 --b->housePopulation;

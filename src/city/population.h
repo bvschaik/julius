@@ -5,6 +5,12 @@ int city_population();
 int city_population_school_age();
 int city_population_academy_age();
 
+int city_population_last_used_house_add();
+void city_population_set_last_used_house_add(int building_id);
+
+int city_population_last_used_house_remove();
+void city_population_set_last_used_house_remove(int building_id);
+
 /**
  * Add people to the city.
  * @param num_people Number of people to add

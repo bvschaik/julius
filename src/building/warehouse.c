@@ -201,7 +201,7 @@ void building_warehouse_space_remove_export(building *space, int resource)
 
 void building_warehouses_add_resource(int resource, int amount)
 {
-    int building_id = Data_CityInfo.resourceLastTargetWarehouse;
+    int building_id = city_resource_last_used_warehouse();
     for (int i = 1; i < MAX_BUILDINGS && amount > 0; i++) {
         building_id++;
         if (building_id >= MAX_BUILDINGS) {
@@ -209,7 +209,7 @@ void building_warehouses_add_resource(int resource, int amount)
         }
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
-            Data_CityInfo.resourceLastTargetWarehouse = building_id;
+            city_resource_set_last_used_warehouse(building_id);
             while (amount && building_warehouse_add_resource(b, resource)) {
                 amount--;
             }
@@ -220,7 +220,7 @@ void building_warehouses_add_resource(int resource, int amount)
 int building_warehouses_remove_resource(int resource, int amount)
 {
     int amount_left = amount;
-    int building_id = Data_CityInfo.resourceLastTargetWarehouse;
+    int building_id = city_resource_last_used_warehouse();
     // first go for non-getting warehouses
     for (int i = 1; i < MAX_BUILDINGS && amount_left > 0; i++) {
         building_id++;
@@ -230,7 +230,7 @@ int building_warehouses_remove_resource(int resource, int amount)
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
             if (building_storage_get(b->storage_id)->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING) {
-                Data_CityInfo.resourceLastTargetWarehouse = building_id;
+                city_resource_set_last_used_warehouse(building_id);
                 amount_left = building_warehouse_remove_resource(b, resource, amount_left);
             }
         }
@@ -243,7 +243,7 @@ int building_warehouses_remove_resource(int resource, int amount)
         }
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
-            Data_CityInfo.resourceLastTargetWarehouse = building_id;
+            city_resource_set_last_used_warehouse(building_id);
             amount_left = building_warehouse_remove_resource(b, resource, amount_left);
         }
     }

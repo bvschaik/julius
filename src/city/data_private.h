@@ -151,6 +151,9 @@ extern struct city_data_t {
         int32_t people_in_large_insula_and_above;
         int32_t people_in_villas_palaces;
         int32_t percentage_plebs;
+
+        int32_t last_used_house_add;
+        int32_t last_used_house_remove;
     } population;
     struct {
         int32_t wages;
@@ -302,6 +305,7 @@ extern struct city_data_t {
             int not_operating_with_food;
             int understaffed;
         } granaries;
+        int16_t last_used_warehouse;
     } resource;
     struct {
         int8_t march_enemy;
