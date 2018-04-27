@@ -3,8 +3,6 @@
 #include "city/data_private.h"
 #include "map/grid.h"
 
-#include "Data/CityInfo.h"
-
 const map_tile *city_map_entry_point()
 {
     return &city_data.map.entry_point;

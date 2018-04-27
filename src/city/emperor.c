@@ -4,6 +4,7 @@
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/ratings.h"
+#include "core/calc.h"
 #include "figure/formation.h"
 #include "game/difficulty.h"
 #include "game/time.h"
@@ -17,11 +18,11 @@ const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 void city_emperor_init_scenario(int rank)
 {
     city_data.ratings.favor = scenario_starting_favor();
-    Data_CityInfo.personalSavings = scenario_starting_personal_savings();
+    city_data.emperor.personal_savings = scenario_starting_personal_savings();
     city_data.emperor.player_rank = rank;
     int salary_rank = rank;
     if (scenario_is_custom()) {
-        Data_CityInfo.personalSavings = 0;
+        city_data.emperor.personal_savings = 0;
         city_data.emperor.player_rank = scenario_property_player_rank();
         salary_rank = scenario_property_player_rank();
     }
@@ -170,7 +171,7 @@ void city_emperor_init_selected_gift()
 
 int city_emperor_set_gift_size(int size)
 {
-    if (city_data.emperor.gifts[size].cost <= Data_CityInfo.personalSavings) {
+    if (city_data.emperor.gifts[size].cost <= city_data.emperor.personal_savings) {
         city_data.emperor.selected_gift_size = size;
         return 1;
     } else {
@@ -190,12 +191,12 @@ const emperor_gift *city_emperor_get_gift(int size)
 
 int city_emperor_can_send_gift(int size)
 {
-    return city_data.emperor.gifts[size].cost <= Data_CityInfo.personalSavings;
+    return city_data.emperor.gifts[size].cost <= city_data.emperor.personal_savings;
 }
 
 void city_emperor_calculate_gift_costs()
 {
-    int savings = Data_CityInfo.personalSavings;
+    int savings = city_data.emperor.personal_savings;
     city_data.emperor.gifts[GIFT_MODEST].cost = savings / 8 + 20;
     city_data.emperor.gifts[GIFT_GENEROUS].cost = savings / 4 + 50;
     city_data.emperor.gifts[GIFT_LAVISH].cost = savings / 2 + 100;
@@ -209,7 +210,7 @@ void city_emperor_send_gift()
     }
     int cost = city_data.emperor.gifts[size].cost;
 
-    if (cost > Data_CityInfo.personalSavings) {
+    if (cost > city_data.emperor.personal_savings) {
         return;
     }
 
@@ -258,7 +259,7 @@ void city_emperor_send_gift()
         city_data.emperor.gifts[size].id = 0;
     }
 
-    Data_CityInfo.personalSavings -= cost;
+    city_data.emperor.personal_savings -= cost;
 }
 
 int city_emperor_months_since_gift()
@@ -287,9 +288,43 @@ int city_emperor_salary_amount()
     return city_data.emperor.salary_amount;
 }
 
+int city_emperor_personal_savings()
+{
+    return city_data.emperor.personal_savings;
+}
+
 int city_emperor_rank()
 {
     return city_data.emperor.player_rank;
+}
+
+void city_emperor_init_donation_amount()
+{
+    if (city_data.emperor.donate_amount > city_data.emperor.personal_savings) {
+        city_data.emperor.donate_amount = city_data.emperor.personal_savings;
+    }
+}
+
+void city_emperor_set_donation_amount(int amount)
+{
+    city_data.emperor.donate_amount = calc_bound(amount, 0, city_data.emperor.personal_savings);
+}
+
+void city_emperor_change_donation_amount(int change)
+{
+    city_emperor_set_donation_amount(city_data.emperor.donate_amount + change);
+}
+
+void city_emperor_donate_savings_to_city()
+{
+    city_finance_process_donation(city_data.emperor.donate_amount);
+    city_data.emperor.personal_savings -= city_data.emperor.donate_amount;
+    city_finance_calculate_totals();
+}
+
+int city_emperor_donate_amount()
+{
+    return city_data.emperor.donate_amount;
 }
 
 void city_emperor_mark_soldier_killed()

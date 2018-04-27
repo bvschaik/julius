@@ -17,8 +17,6 @@
 #include "figure/trader.h"
 #include "map/road_access.h"
 
-#include "Data/CityInfo.h"
-
 static int try_import_resource(int building_id, int resource, int city_id)
 {
     building *warehouse = building_get(building_id);

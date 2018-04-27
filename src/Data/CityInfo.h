@@ -49,8 +49,6 @@ extern struct _Data_CityInfo {
 	int32_t educationDemand;
 	int32_t entertainmentDemand;
 	int32_t numRiotersInCity;
-	int32_t personalSavings;
-	int32_t donateAmount;
 	int16_t numAnimalsInCity;
 	int32_t debtState;
 	int32_t monthsInDebt;

@@ -39,6 +39,14 @@ void city_emperor_set_salary_rank(int rank);
 int city_emperor_salary_rank();
 int city_emperor_salary_amount();
 
+int city_emperor_personal_savings();
+
+void city_emperor_init_donation_amount();
+void city_emperor_set_donation_amount(int amount);
+void city_emperor_change_donation_amount(int change);
+void city_emperor_donate_savings_to_city();
+int city_emperor_donate_amount();
+
 int city_emperor_rank();
 
 void city_emperor_mark_soldier_killed();

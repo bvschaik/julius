@@ -7,8 +7,6 @@
 #include "game/difficulty.h"
 #include "game/time.h"
 
-#include "Data/CityInfo.h"
-
 #define MAX_HOUSE_LEVELS 20
 
 int city_finance_treasury()
@@ -260,7 +258,7 @@ static void pay_monthly_salary()
 {
     if (!city_finance_out_of_money()) {
         city_data.finance.salary_so_far += city_data.emperor.salary_amount;
-        Data_CityInfo.personalSavings += city_data.emperor.salary_amount;
+        city_data.emperor.personal_savings += city_data.emperor.salary_amount;
         city_data.finance.treasury -= city_data.emperor.salary_amount;
     }
 }

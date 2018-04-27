@@ -330,13 +330,13 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.ratings.peace_explanation);
     buffer_write_i32(main, city_data.ratings.favor_explanation);
     buffer_write_i32(main, city_data.emperor.player_rank);
-    buffer_write_i32(main, Data_CityInfo.personalSavings);
+    buffer_write_i32(main, city_data.emperor.personal_savings);
     for (int i = 0; i < 2; i++) {
         buffer_write_i32(main, city_data.unused.unknown_4374[i]);
     }
     buffer_write_i32(main, city_data.finance.last_year.income.donated);
     buffer_write_i32(main, city_data.finance.this_year.income.donated);
-    buffer_write_i32(main, Data_CityInfo.donateAmount);
+    buffer_write_i32(main, city_data.emperor.donate_amount);
     for (int i = 0; i < 10; i++) {
         buffer_write_i16(main, city_data.building.working_dock_ids[i]);
     }
@@ -807,13 +807,13 @@ static void load_main_data(buffer *main)
     city_data.ratings.peace_explanation = buffer_read_i32(main);
     city_data.ratings.favor_explanation = buffer_read_i32(main);
     city_data.emperor.player_rank = buffer_read_i32(main);
-    Data_CityInfo.personalSavings = buffer_read_i32(main);
+    city_data.emperor.personal_savings = buffer_read_i32(main);
     for (int i = 0; i < 2; i++) {
         city_data.unused.unknown_4374[i] = buffer_read_i32(main);
     }
     city_data.finance.last_year.income.donated = buffer_read_i32(main);
     city_data.finance.this_year.income.donated = buffer_read_i32(main);
-    Data_CityInfo.donateAmount = buffer_read_i32(main);
+    city_data.emperor.donate_amount = buffer_read_i32(main);
     for (int i = 0; i < 10; i++) {
         city_data.building.working_dock_ids[i] = buffer_read_i16(main);
     }

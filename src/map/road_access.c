@@ -9,8 +9,6 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 
-#include "Data/CityInfo.h"
-
 static void find_minimum_road_tile(int x, int y, int size, int *min_value, int *min_grid_offset)
 {
     int base_offset = map_grid_offset(x, y);

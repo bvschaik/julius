@@ -1,5 +1,6 @@
 #include "mission_end.h"
 
+#include "city/emperor.h"
 #include "city/finance.h"
 #include "city/population.h"
 #include "city/ratings.h"
@@ -22,8 +23,6 @@
 #include "window/main_menu.h"
 #include "window/mission_selection.h"
 #include "window/victory_video.h"
-
-#include "Data/CityInfo.h"
 
 static void button_fired(int param1, int param2);
 
@@ -96,7 +95,7 @@ static void draw_foreground()
 
 static void advance_to_next_mission()
 {
-    setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, Data_CityInfo.personalSavings);
+    setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, city_emperor_personal_savings());
     scenario_set_campaign_rank(scenario_campaign_rank() + 1);
 
     city_victory_stop_governing();

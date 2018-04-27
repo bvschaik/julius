@@ -6,8 +6,6 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 
-#include "Data/CityInfo.h"
-
 #include <string.h>
 
 #define MAX_QUEUE 1000

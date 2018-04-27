@@ -13,8 +13,6 @@
 #include "graphics/window.h"
 #include "window/advisors.h"
 
-#include "Data/CityInfo.h"
-
 static void button_cancel(int param1, int param2);
 static void button_set_salary(int rank, int param2);
 

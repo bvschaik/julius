@@ -1,6 +1,6 @@
 #include "donate_to_city.h"
 
-#include "city/finance.h"
+#include "city/emperor.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/arrow_button.h"
@@ -12,8 +12,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "window/advisors.h"
-
-#include "Data/CityInfo.h"
 
 static void button_set_amount(int amount_id, int param2);
 static void button_donate(int param1, int param2);
@@ -38,13 +36,6 @@ static arrow_button arrow_buttons[] = {
 static int focus_button_id;
 static int focus_arrow_button_id;
 
-static void init()
-{
-    if (Data_CityInfo.donateAmount > Data_CityInfo.personalSavings) {
-        Data_CityInfo.donateAmount = Data_CityInfo.personalSavings;
-    }
-}
-
 static void draw_background()
 {
     window_advisors_draw_dialog_background();
@@ -64,7 +55,7 @@ static void draw_background()
     lang_text_draw_centered(52, 19, 444, 221, 64, FONT_NORMAL_WHITE);
 
     lang_text_draw(52, 17, 128, 248, FONT_NORMAL_WHITE);
-    text_draw_number(Data_CityInfo.donateAmount, '@', " ", 316, 248, FONT_NORMAL_WHITE);
+    text_draw_number(city_emperor_donate_amount(), '@', " ", 316, 248, FONT_NORMAL_WHITE);
 
     lang_text_draw_centered(13, 4, 336, 288, 160, FONT_NORMAL_BLACK);
     lang_text_draw_centered(52, 18, 144, 288, 160, FONT_NORMAL_BLACK);
@@ -114,15 +105,13 @@ static void button_set_amount(int amount_id, int param2)
         case 4: amount = 1000000; break;
         default: return;
     }
-    Data_CityInfo.donateAmount = calc_bound(amount, 0, Data_CityInfo.personalSavings);
+    city_emperor_set_donation_amount(amount);
     window_invalidate();
 }
 
 static void button_donate(int param1, int param2)
 {
-    city_finance_process_donation(Data_CityInfo.donateAmount);
-    Data_CityInfo.personalSavings -= Data_CityInfo.donateAmount;
-    city_finance_calculate_totals();
+    city_emperor_donate_savings_to_city();
     window_advisors_show();
 }
 
@@ -133,12 +122,7 @@ static void button_cancel(int param1, int param2)
 
 static void arrow_button_amount(int is_down, int param2)
 {
-    if (is_down) {
-        Data_CityInfo.donateAmount -= 10;
-    } else {
-        Data_CityInfo.donateAmount += 10;
-    }
-    Data_CityInfo.donateAmount = calc_bound(Data_CityInfo.donateAmount, 0, Data_CityInfo.personalSavings);
+    city_emperor_change_donation_amount(is_down ? -10 : 10);
     window_invalidate();
 }
 
@@ -168,6 +152,6 @@ void window_donate_to_city_show()
         handle_mouse,
         get_tooltip
     };
-    init();
+    city_emperor_init_donation_amount();
     window_show(&window);
 }

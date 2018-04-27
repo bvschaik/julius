@@ -169,7 +169,7 @@ static void draw_foreground()
     lang_text_draw(32, city_emperor_rank(), 72, 338, FONT_LARGE_BROWN);
     
     int width = lang_text_draw(52, 1, 72, 372, FONT_NORMAL_WHITE);
-    text_draw_money(Data_CityInfo.personalSavings, 80 + width, 372, FONT_NORMAL_WHITE);
+    text_draw_money(city_emperor_personal_savings(), 80 + width, 372, FONT_NORMAL_WHITE);
 
     button_border_draw(320, 367, 250, 20, focus_button_id == 1);
     lang_text_draw_centered(52, 2, 320, 372, 250, FONT_NORMAL_WHITE);
