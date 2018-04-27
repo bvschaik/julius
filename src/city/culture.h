@@ -22,8 +22,6 @@ int city_culture_coverage_hospital();
 
 void city_culture_calculate();
 
-void city_culture_calculate_demands();
-
 void city_culture_save_state(buffer *buf);
 
 void city_culture_load_state(buffer *buf);

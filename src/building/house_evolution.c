@@ -12,8 +12,6 @@
 #include "map/routing_terrain.h"
 #include "map/tiles.h"
 
-#include "Data/CityInfo.h"
-
 typedef enum {
     EVOLVE = 1,
     NONE = 0,

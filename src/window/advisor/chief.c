@@ -2,6 +2,7 @@
 
 #include "city/finance.h"
 #include "city/health.h"
+#include "city/houses.h"
 #include "city/labor.h"
 #include "city/migration.h"
 #include "city/resource.h"
@@ -164,12 +165,13 @@ static int draw_background()
     }
 
     // education
+    house_demands *demands = city_houses_demands();
     draw_title(226, 8);
-    if (Data_CityInfo.educationDemand == 1) {
+    if (demands->education == 1) {
         lang_text_draw(61, 39, X_OFFSET, 226, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.educationDemand == 2) {
+    } else if (demands->education == 2) {
         lang_text_draw(61, 40, X_OFFSET, 226, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.educationDemand == 3) {
+    } else if (demands->education == 3) {
         lang_text_draw(61, 41, X_OFFSET, 226, FONT_NORMAL_RED);
     } else {
         lang_text_draw(61, 42, X_OFFSET, 226, FONT_NORMAL_GREEN);
@@ -177,11 +179,11 @@ static int draw_background()
 
     // religion
     draw_title(246, 7);
-    if (Data_CityInfo.religionDemand == 1) {
+    if (demands->religion == 1) {
         lang_text_draw(61, 46, X_OFFSET, 246, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.religionDemand == 2) {
+    } else if (demands->religion == 2) {
         lang_text_draw(61, 47, X_OFFSET, 246, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.religionDemand == 3) {
+    } else if (demands->religion == 3) {
         lang_text_draw(61, 48, X_OFFSET, 246, FONT_NORMAL_RED);
     } else {
         lang_text_draw(61, 49, X_OFFSET, 246, FONT_NORMAL_GREEN);
@@ -189,9 +191,9 @@ static int draw_background()
 
     // entertainment
     draw_title(266, 10);
-    if (Data_CityInfo.entertainmentDemand == 1) {
+    if (demands->entertainment == 1) {
         lang_text_draw(61, 43, X_OFFSET, 266, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.entertainmentDemand == 2) {
+    } else if (demands->entertainment == 2) {
         lang_text_draw(61, 44, X_OFFSET, 266, FONT_NORMAL_RED);
     } else {
         lang_text_draw(61, 45, X_OFFSET, 266, FONT_NORMAL_GREEN);

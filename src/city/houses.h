@@ -27,10 +27,16 @@ typedef struct {
         int clinic;
         int religion;
     } requiring;
+    int health;
+    int religion;
+    int education;
+    int entertainment;
 } house_demands;
 
 void city_houses_reset_demands();
 
 house_demands *city_houses_demands();
+
+void city_houses_calculate_culture_demands();
 
 #endif // CITY_HOUSES_H

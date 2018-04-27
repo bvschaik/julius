@@ -32,3 +32,55 @@ house_demands *city_houses_demands()
 {
     return &city_data.houses;
 }
+
+void city_houses_calculate_culture_demands()
+{
+    // health
+    city_data.houses.health = 0;
+    int max = 0;
+    if (city_data.houses.missing.bathhouse > max) {
+        city_data.houses.health = 1;
+        max = city_data.houses.missing.bathhouse;
+    }
+    if (city_data.houses.missing.barber > max) {
+        city_data.houses.health = 2;
+        max = city_data.houses.missing.barber;
+    }
+    if (city_data.houses.missing.clinic > max) {
+        city_data.houses.health = 3;
+        max = city_data.houses.missing.clinic;
+    }
+    if (city_data.houses.missing.hospital > max) {
+        city_data.houses.health = 4;
+    }
+    // education
+    city_data.houses.education = 0;
+    if (city_data.houses.missing.more_education > city_data.houses.missing.education) {
+        city_data.houses.education = 1; // schools(academies?)
+    } else if (city_data.houses.missing.more_education == city_data.houses.missing.education) {
+        city_data.houses.education = 2; // libraries
+    } else if (city_data.houses.missing.more_education || city_data.houses.missing.education) {
+        city_data.houses.education = 3; // more education
+    }
+    // entertainment
+    city_data.houses.entertainment = 0;
+    if (city_data.houses.missing.entertainment > city_data.houses.missing.more_entertainment) {
+        city_data.houses.entertainment = 1;
+    } else if (city_data.houses.missing.more_entertainment) {
+        city_data.houses.entertainment = 2;
+    }
+    // religion
+    city_data.houses.religion = 0;
+    max = 0;
+    if (city_data.houses.missing.religion > max) {
+        city_data.houses.religion = 1;
+        max = city_data.houses.missing.religion;
+    }
+    if (city_data.houses.missing.second_religion > max) {
+        city_data.houses.religion = 2;
+        max = city_data.houses.missing.second_religion;
+    }
+    if (city_data.houses.missing.third_religion > max) {
+        city_data.houses.religion = 3;
+    }
+}

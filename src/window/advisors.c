@@ -3,6 +3,7 @@
 #include "city/constants.h"
 #include "city/culture.h"
 #include "city/finance.h"
+#include "city/houses.h"
 #include "city/labor.h"
 #include "city/migration.h"
 #include "city/ratings.h"
@@ -108,7 +109,7 @@ static void init()
 
     city_migration_determine_no_immigration_cause();
 
-    city_culture_calculate_demands();
+    city_houses_calculate_culture_demands();
     city_culture_update_coverage();
 
     city_resource_calculate_food_stocks_and_supply_wheat();

@@ -9,18 +9,16 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 16
 
 static int get_education_advice()
 {
     const house_demands *demands = city_houses_demands();
-    if (Data_CityInfo.educationDemand == 1) {
+    if (demands->education == 1) {
         return demands->requiring.school ? 1 : 0;
-    } else if (Data_CityInfo.educationDemand == 2) {
+    } else if (demands->education == 2) {
         return demands->requiring.library ? 3 : 2;
-    } else if (Data_CityInfo.educationDemand == 3) {
+    } else if (demands->education == 3) {
         return 4;
     }
     int advice_id;

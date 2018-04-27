@@ -9,14 +9,12 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 18
 
 static int get_health_advice()
 {
     house_demands *demands = city_houses_demands();
-    switch (Data_CityInfo.healthDemand) {
+    switch (demands->health) {
         case 1:
             return demands->requiring.bathhouse ? 1 : 0;
         case 2:

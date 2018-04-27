@@ -174,58 +174,6 @@ void city_culture_calculate()
     city_festival_calculate_costs();
 }
 
-void city_culture_calculate_demands()
-{
-    // health
-    Data_CityInfo.healthDemand = 0;
-    int max = 0;
-    if (city_data.houses.missing.bathhouse > max) {
-        Data_CityInfo.healthDemand = 1;
-        max = city_data.houses.missing.bathhouse;
-    }
-    if (city_data.houses.missing.barber > max) {
-        Data_CityInfo.healthDemand = 2;
-        max = city_data.houses.missing.barber;
-    }
-    if (city_data.houses.missing.clinic > max) {
-        Data_CityInfo.healthDemand = 3;
-        max = city_data.houses.missing.clinic;
-    }
-    if (city_data.houses.missing.hospital > max) {
-        Data_CityInfo.healthDemand = 4;
-    }
-    // education
-    Data_CityInfo.educationDemand = 0;
-    if (city_data.houses.missing.more_education > city_data.houses.missing.education) {
-        Data_CityInfo.educationDemand = 1; // schools(academies?)
-    } else if (city_data.houses.missing.more_education == city_data.houses.missing.education) {
-        Data_CityInfo.educationDemand = 2; // libraries
-    } else if (city_data.houses.missing.more_education || city_data.houses.missing.education) {
-        Data_CityInfo.educationDemand = 3; // more education
-    }
-    // entertainment
-    Data_CityInfo.entertainmentDemand = 0;
-    if (city_data.houses.missing.entertainment > city_data.houses.missing.more_entertainment) {
-        Data_CityInfo.entertainmentDemand = 1;
-    } else if (city_data.houses.missing.more_entertainment) {
-        Data_CityInfo.entertainmentDemand = 2;
-    }
-    // religion
-    Data_CityInfo.religionDemand = 0;
-    max = 0;
-    if (city_data.houses.missing.religion > max) {
-        Data_CityInfo.religionDemand = 1;
-        max = city_data.houses.missing.religion;
-    }
-    if (city_data.houses.missing.second_religion > max) {
-        Data_CityInfo.religionDemand = 2;
-        max = city_data.houses.missing.second_religion;
-    }
-    if (city_data.houses.missing.third_religion > max) {
-        Data_CityInfo.religionDemand = 3;
-    }
-}
-
 void city_culture_save_state(buffer *buf)
 {
     // Yes, hospital is saved twice
