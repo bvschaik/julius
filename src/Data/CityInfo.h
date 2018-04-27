@@ -10,21 +10,7 @@ extern struct _Data_CityInfo {
 	int32_t populationLastTargetHouseAdd;
 	int32_t populationLastTargetHouseRemove;
 	int16_t resourceLastTargetWarehouse;
-	int32_t housesRequiringFountainToEvolve;//4268
-	int32_t housesRequiringWellToEvolve;//426c
-	int32_t housesRequiringMoreEntertainmentToEvolve;//4270
-	int32_t housesRequiringMoreEducationToEvolve;//4274
-	int32_t housesRequiringEducationToEvolve;//4278
-	int32_t housesRequiringBarberToEvolve;
-	int32_t housesRequiringBathhouseToEvolve;
-	int32_t housesRequiringFoodToEvolve;
-	int32_t housesRequiringClinicToEvolve;
-	int32_t housesRequiringHospitalToEvolve;
-	int32_t housesRequiringReligionToEvolve;
-	int32_t housesRequiringMoreReligionToEvolve;
-	int32_t housesRequiringEvenMoreReligionToEvolve;
 	int32_t citywideAverageEntertainment;
-	int32_t housesRequiringEntertainmentToEvolve;
 	int32_t numProtestersThisMonth;
 	int32_t numCriminalsThisMonth; // muggers+rioters
 	int32_t healthDemand;
@@ -61,7 +47,6 @@ extern struct _Data_CityInfo {
 	int8_t militaryTotalSoldiers;
 	int32_t numSoldiersInCity;
 	int32_t militaryLegionaryLegions;
-	int32_t housesRequiringSecondWineToEvolve;
 	int32_t missionSavedGameWritten;
 	int32_t tutorial1FireMessageShown;
 	int32_t tutorial3DiseaseMessageShown;

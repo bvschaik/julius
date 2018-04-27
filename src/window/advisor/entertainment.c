@@ -5,6 +5,7 @@
 #include "city/entertainment.h"
 #include "city/festival.h"
 #include "city/gods.h"
+#include "city/houses.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -27,9 +28,10 @@ static int focus_button_id;
 
 static int get_entertainment_advice()
 {
-    if (Data_CityInfo.housesRequiringEntertainmentToEvolve > Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
+    const house_demands *demands = city_houses_demands();
+    if (demands->missing.entertainment > demands->missing.more_entertainment) {
         return 3;
-    } else if (!Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
+    } else if (!demands->missing.more_entertainment) {
         return Data_CityInfo.citywideAverageEntertainment ? 1 : 0;
     } else if (city_entertainment_venue_needing_shows()) {
         return 3 + city_entertainment_venue_needing_shows();

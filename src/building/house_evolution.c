@@ -20,26 +20,6 @@ typedef enum {
     DEVOLVE = -1
 } evolve_status;
 
-static void reset_service_required_counters()
-{
-    Data_CityInfo.housesRequiringFountainToEvolve = 0;
-    Data_CityInfo.housesRequiringWellToEvolve = 0;
-    Data_CityInfo.housesRequiringEntertainmentToEvolve = 0;
-    Data_CityInfo.housesRequiringMoreEntertainmentToEvolve = 0;
-    Data_CityInfo.housesRequiringEducationToEvolve = 0;
-    Data_CityInfo.housesRequiringMoreEducationToEvolve = 0;
-    Data_CityInfo.housesRequiringReligionToEvolve = 0;
-    Data_CityInfo.housesRequiringMoreReligionToEvolve = 0;
-    Data_CityInfo.housesRequiringEvenMoreReligionToEvolve = 0;
-    Data_CityInfo.housesRequiringBarberToEvolve = 0;
-    Data_CityInfo.housesRequiringBathhouseToEvolve = 0;
-    Data_CityInfo.housesRequiringClinicToEvolve = 0;
-    Data_CityInfo.housesRequiringHospitalToEvolve = 0;
-    Data_CityInfo.housesRequiringFoodToEvolve = 0;
-
-    city_houses_reset_demands();
-}
-
 static int check_evolve_desirability(building *house)
 {
     int level = house->subtype.houseLevel;
@@ -72,11 +52,11 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
     int water = model->water;
     if (!house->hasWaterAccess) {
         if (water >= 2) {
-            ++Data_CityInfo.housesRequiringFountainToEvolve;
+            ++demands->missing.fountain;
             return 0;
         }
         if (water == 1 && !house->hasWellAccess) {
-            ++Data_CityInfo.housesRequiringWellToEvolve;
+            ++demands->missing.well;
             return 0;
         }
     }
@@ -84,9 +64,9 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
     int entertainment = model->entertainment;
     if (house->data.house.entertainment < entertainment) {
         if (house->data.house.entertainment) {
-            ++Data_CityInfo.housesRequiringMoreEntertainmentToEvolve;
+            ++demands->missing.more_entertainment;
         } else {
-            ++Data_CityInfo.housesRequiringEntertainmentToEvolve;
+            ++demands->missing.entertainment;
         }
         return 0;
     }
@@ -94,9 +74,9 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
     int education = model->education;
     if (house->data.house.education < education) {
         if (house->data.house.education) {
-            ++Data_CityInfo.housesRequiringMoreEducationToEvolve;
+            ++demands->missing.more_education;
         } else {
-            ++Data_CityInfo.housesRequiringEducationToEvolve;
+            ++demands->missing.education;
         }
         return 0;
     }
@@ -110,13 +90,13 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
     int religion = model->religion;
     if (house->data.house.numGods < religion) {
         if (religion == 1) {
-            ++Data_CityInfo.housesRequiringReligionToEvolve;
+            ++demands->missing.religion;
             return 0;
         } else if (religion == 2) {
-            ++Data_CityInfo.housesRequiringMoreReligionToEvolve;
+            ++demands->missing.second_religion;
             return 0;
         } else if (religion == 3) {
-            ++Data_CityInfo.housesRequiringEvenMoreReligionToEvolve;
+            ++demands->missing.third_religion;
             return 0;
         }
     } else if (religion > 0) {
@@ -125,7 +105,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
     // barber
     int barber = model->barber;
     if (house->data.house.barber < barber) {
-        ++Data_CityInfo.housesRequiringBarberToEvolve;
+        ++demands->missing.barber;
         return 0;
     }
     if (barber == 1) {
@@ -134,7 +114,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
     // bathhouse
     int bathhouse = model->bathhouse;
     if (house->data.house.bathhouse < bathhouse) {
-        ++Data_CityInfo.housesRequiringBathhouseToEvolve;
+        ++demands->missing.bathhouse;
         return 0;
     }
     if (bathhouse == 1) {
@@ -144,9 +124,9 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
     int health = model->health;
     if (house->data.house.health < health) {
         if (health < 2) {
-            ++Data_CityInfo.housesRequiringClinicToEvolve;
+            ++demands->missing.clinic;
         } else {
-            ++Data_CityInfo.housesRequiringHospitalToEvolve;
+            ++demands->missing.hospital;
         }
         return 0;
     }
@@ -162,7 +142,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
         }
     }
     if (foodtypes_available < foodtypes_required) {
-        ++Data_CityInfo.housesRequiringFoodToEvolve;
+        ++demands->missing.food;
         return 0;
     }
     // goods
@@ -180,7 +160,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
         return 0;
     }
     if (wine > 1 && !city_resource_multiple_wine_available()) {
-        ++Data_CityInfo.housesRequiringSecondWineToEvolve;
+        ++demands->missing.second_wine;
         return 0;
     }
     return 1;
@@ -520,7 +500,7 @@ static int (*evolve_callback[])(building *, house_demands *) = {
 
 void building_house_process_evolve_and_consume_goods()
 {
-    reset_service_required_counters();
+    city_houses_reset_demands();
     house_demands *demands = city_houses_demands();
     int has_expanded = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {

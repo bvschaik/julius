@@ -179,49 +179,49 @@ void city_culture_calculate_demands()
     // health
     Data_CityInfo.healthDemand = 0;
     int max = 0;
-    if (Data_CityInfo.housesRequiringBathhouseToEvolve > max) {
+    if (city_data.houses.missing.bathhouse > max) {
         Data_CityInfo.healthDemand = 1;
-        max = Data_CityInfo.housesRequiringBathhouseToEvolve;
+        max = city_data.houses.missing.bathhouse;
     }
-    if (Data_CityInfo.housesRequiringBarberToEvolve > max) {
+    if (city_data.houses.missing.barber > max) {
         Data_CityInfo.healthDemand = 2;
-        max = Data_CityInfo.housesRequiringBarberToEvolve;
+        max = city_data.houses.missing.barber;
     }
-    if (Data_CityInfo.housesRequiringClinicToEvolve > max) {
+    if (city_data.houses.missing.clinic > max) {
         Data_CityInfo.healthDemand = 3;
-        max = Data_CityInfo.housesRequiringClinicToEvolve;
+        max = city_data.houses.missing.clinic;
     }
-    if (Data_CityInfo.housesRequiringHospitalToEvolve > max) {
+    if (city_data.houses.missing.hospital > max) {
         Data_CityInfo.healthDemand = 4;
     }
     // education
     Data_CityInfo.educationDemand = 0;
-    if (Data_CityInfo.housesRequiringMoreEducationToEvolve > Data_CityInfo.housesRequiringEducationToEvolve) {
+    if (city_data.houses.missing.more_education > city_data.houses.missing.education) {
         Data_CityInfo.educationDemand = 1; // schools(academies?)
-    } else if (Data_CityInfo.housesRequiringMoreEducationToEvolve == Data_CityInfo.housesRequiringEducationToEvolve) {
+    } else if (city_data.houses.missing.more_education == city_data.houses.missing.education) {
         Data_CityInfo.educationDemand = 2; // libraries
-    } else if (Data_CityInfo.housesRequiringMoreEducationToEvolve || Data_CityInfo.housesRequiringEducationToEvolve) {
+    } else if (city_data.houses.missing.more_education || city_data.houses.missing.education) {
         Data_CityInfo.educationDemand = 3; // more education
     }
     // entertainment
     Data_CityInfo.entertainmentDemand = 0;
-    if (Data_CityInfo.housesRequiringEntertainmentToEvolve > Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
+    if (city_data.houses.missing.entertainment > city_data.houses.missing.more_entertainment) {
         Data_CityInfo.entertainmentDemand = 1;
-    } else if (Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
+    } else if (city_data.houses.missing.more_entertainment) {
         Data_CityInfo.entertainmentDemand = 2;
     }
     // religion
     Data_CityInfo.religionDemand = 0;
     max = 0;
-    if (Data_CityInfo.housesRequiringReligionToEvolve > max) {
+    if (city_data.houses.missing.religion > max) {
         Data_CityInfo.religionDemand = 1;
-        max = Data_CityInfo.housesRequiringReligionToEvolve;
+        max = city_data.houses.missing.religion;
     }
-    if (Data_CityInfo.housesRequiringMoreReligionToEvolve > max) {
+    if (city_data.houses.missing.second_religion > max) {
         Data_CityInfo.religionDemand = 2;
-        max = Data_CityInfo.housesRequiringMoreReligionToEvolve;
+        max = city_data.houses.missing.second_religion;
     }
-    if (Data_CityInfo.housesRequiringEvenMoreReligionToEvolve > max) {
+    if (city_data.houses.missing.third_religion > max) {
         Data_CityInfo.religionDemand = 3;
     }
 }

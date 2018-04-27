@@ -251,29 +251,29 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.ratings.culture_points.academy);
     buffer_write_i32(main, city_data.ratings.peace_num_criminals);
     buffer_write_i32(main, city_data.ratings.peace_num_rioters);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringFountainToEvolve);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringWellToEvolve);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringMoreEntertainmentToEvolve);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringMoreEducationToEvolve);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringEducationToEvolve);
+    buffer_write_i32(main, city_data.houses.missing.fountain);
+    buffer_write_i32(main, city_data.houses.missing.well);
+    buffer_write_i32(main, city_data.houses.missing.more_entertainment);
+    buffer_write_i32(main, city_data.houses.missing.more_education);
+    buffer_write_i32(main, city_data.houses.missing.education);
     buffer_write_i32(main, city_data.houses.requiring.school);
     buffer_write_i32(main, city_data.houses.requiring.library);
     buffer_write_i32(main, city_data.unused.unknown_4284);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringBarberToEvolve);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringBathhouseToEvolve);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringFoodToEvolve);
+    buffer_write_i32(main, city_data.houses.missing.barber);
+    buffer_write_i32(main, city_data.houses.missing.bathhouse);
+    buffer_write_i32(main, city_data.houses.missing.food);
     for (int i = 0; i < 2; i++) {
         buffer_write_i32(main, city_data.unused.unknown_4294[i]);
     }
     buffer_write_i32(main, city_data.building.hippodrome_placed);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringClinicToEvolve);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringHospitalToEvolve);
+    buffer_write_i32(main, city_data.houses.missing.clinic);
+    buffer_write_i32(main, city_data.houses.missing.hospital);
     buffer_write_i32(main, city_data.houses.requiring.barber);
     buffer_write_i32(main, city_data.houses.requiring.bathhouse);
     buffer_write_i32(main, city_data.houses.requiring.clinic);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringReligionToEvolve);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringMoreReligionToEvolve);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringEvenMoreReligionToEvolve);
+    buffer_write_i32(main, city_data.houses.missing.religion);
+    buffer_write_i32(main, city_data.houses.missing.second_religion);
+    buffer_write_i32(main, city_data.houses.missing.third_religion);
     buffer_write_i32(main, city_data.houses.requiring.religion);
     buffer_write_i32(main, city_data.entertainment.theater_shows);
     buffer_write_i32(main, city_data.entertainment.theater_no_shows_weighted);
@@ -285,7 +285,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.entertainment.hippodrome_no_shows_weighted);
     buffer_write_i32(main, city_data.entertainment.venue_needing_shows);
     buffer_write_i32(main, Data_CityInfo.citywideAverageEntertainment);
-    buffer_write_i32(main, Data_CityInfo.housesRequiringEntertainmentToEvolve);
+    buffer_write_i32(main, city_data.houses.missing.entertainment);
     buffer_write_i32(main, city_data.festival.months_since_festival);
     for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i8(main, city_data.religion.gods[i].target_happiness);
@@ -511,7 +511,7 @@ static void save_main_data(buffer *main)
         buffer_write_i32(main, city_data.map.largest_road_networks[i].id);
         buffer_write_i32(main, city_data.map.largest_road_networks[i].size);
     }
-    buffer_write_i32(main, Data_CityInfo.housesRequiringSecondWineToEvolve);
+    buffer_write_i32(main, city_data.houses.missing.second_wine);
     buffer_write_i32(main, city_data.religion.neptune_sank_ships);
     buffer_write_i32(main, city_data.entertainment.hippodrome_has_race);
     buffer_write_i32(main, city_data.entertainment.hippodrome_message_shown);
@@ -728,29 +728,29 @@ static void load_main_data(buffer *main)
     city_data.ratings.culture_points.academy = buffer_read_i32(main);
     city_data.ratings.peace_num_criminals = buffer_read_i32(main);
     city_data.ratings.peace_num_rioters = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringFountainToEvolve = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringWellToEvolve = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringMoreEntertainmentToEvolve = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringMoreEducationToEvolve = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringEducationToEvolve = buffer_read_i32(main);
+    city_data.houses.missing.fountain = buffer_read_i32(main);
+    city_data.houses.missing.well = buffer_read_i32(main);
+    city_data.houses.missing.more_entertainment = buffer_read_i32(main);
+    city_data.houses.missing.more_education = buffer_read_i32(main);
+    city_data.houses.missing.education = buffer_read_i32(main);
     city_data.houses.requiring.school = buffer_read_i32(main);
     city_data.houses.requiring.library = buffer_read_i32(main);
     city_data.unused.unknown_4284 = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringBarberToEvolve = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringBathhouseToEvolve = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringFoodToEvolve = buffer_read_i32(main);
+    city_data.houses.missing.barber = buffer_read_i32(main);
+    city_data.houses.missing.bathhouse = buffer_read_i32(main);
+    city_data.houses.missing.food = buffer_read_i32(main);
     for (int i = 0; i < 2; i++) {
         city_data.unused.unknown_4294[i] = buffer_read_i32(main);
     }
     city_data.building.hippodrome_placed = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringClinicToEvolve = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringHospitalToEvolve = buffer_read_i32(main);
+    city_data.houses.missing.clinic = buffer_read_i32(main);
+    city_data.houses.missing.hospital = buffer_read_i32(main);
     city_data.houses.requiring.barber = buffer_read_i32(main);
     city_data.houses.requiring.bathhouse = buffer_read_i32(main);
     city_data.houses.requiring.clinic = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringReligionToEvolve = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringMoreReligionToEvolve = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringEvenMoreReligionToEvolve = buffer_read_i32(main);
+    city_data.houses.missing.religion = buffer_read_i32(main);
+    city_data.houses.missing.second_religion = buffer_read_i32(main);
+    city_data.houses.missing.third_religion = buffer_read_i32(main);
     city_data.houses.requiring.religion = buffer_read_i32(main);
     city_data.entertainment.theater_shows = buffer_read_i32(main);
     city_data.entertainment.theater_no_shows_weighted = buffer_read_i32(main);
@@ -762,7 +762,7 @@ static void load_main_data(buffer *main)
     city_data.entertainment.hippodrome_no_shows_weighted = buffer_read_i32(main);
     city_data.entertainment.venue_needing_shows = buffer_read_i32(main);
     Data_CityInfo.citywideAverageEntertainment = buffer_read_i32(main);
-    Data_CityInfo.housesRequiringEntertainmentToEvolve = buffer_read_i32(main);
+    city_data.houses.missing.entertainment = buffer_read_i32(main);
     city_data.festival.months_since_festival = buffer_read_i32(main);
     for (int i = 0; i < MAX_GODS; i++) {
         city_data.religion.gods[i].target_happiness = buffer_read_i8(main);
@@ -988,7 +988,7 @@ static void load_main_data(buffer *main)
         city_data.map.largest_road_networks[i].id = buffer_read_i32(main);
         city_data.map.largest_road_networks[i].size = buffer_read_i32(main);
     }
-    Data_CityInfo.housesRequiringSecondWineToEvolve = buffer_read_i32(main);
+    city_data.houses.missing.second_wine = buffer_read_i32(main);
     city_data.religion.neptune_sank_ships = buffer_read_i32(main);
     city_data.entertainment.hippodrome_has_race = buffer_read_i32(main);
     city_data.entertainment.hippodrome_message_shown = buffer_read_i32(main);
