@@ -2,6 +2,7 @@
 #include "building/count.h"
 #include "city/culture.h"
 #include "city/health.h"
+#include "city/houses.h"
 #include "city/population.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -14,13 +15,14 @@
 
 static int get_health_advice()
 {
+    house_demands *demands = city_houses_demands();
     switch (Data_CityInfo.healthDemand) {
         case 1:
-            return Data_CityInfo.housesRequiringBathhouse ? 1 : 0;
+            return demands->requiring.bathhouse ? 1 : 0;
         case 2:
-            return Data_CityInfo.housesRequiringBarber ? 3 : 2;
+            return demands->requiring.barber ? 3 : 2;
         case 3:
-            return Data_CityInfo.housesRequiringClinic ? 5 : 4;
+            return demands->requiring.clinic ? 5 : 4;
         case 4:
             return 6;
         default:

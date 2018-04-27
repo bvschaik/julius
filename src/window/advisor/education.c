@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "city/culture.h"
+#include "city/houses.h"
 #include "city/population.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -14,10 +15,11 @@
 
 static int get_education_advice()
 {
+    const house_demands *demands = city_houses_demands();
     if (Data_CityInfo.educationDemand == 1) {
-        return Data_CityInfo.housesRequiringSchool ? 1 : 0;
+        return demands->requiring.school ? 1 : 0;
     } else if (Data_CityInfo.educationDemand == 2) {
-        return Data_CityInfo.housesRequiringLibrary ? 3 : 2;
+        return demands->requiring.library ? 3 : 2;
     } else if (Data_CityInfo.educationDemand == 3) {
         return 4;
     }
@@ -25,9 +27,9 @@ static int get_education_advice()
     int coverage_school = city_culture_coverage_school();
     int coverage_academy = city_culture_coverage_academy();
     int coverage_library = city_culture_coverage_library();
-    if (!Data_CityInfo.housesRequiringSchool) {
+    if (!demands->requiring.school) {
         advice_id = 5; // no demands yet
-    } else if (!Data_CityInfo.housesRequiringLibrary) {
+    } else if (!demands->requiring.library) {
         if (coverage_school >= 100 && coverage_academy >= 100) {
             advice_id = 6; // education is perfect
         } else if (coverage_school <= coverage_academy) {

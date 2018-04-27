@@ -1,0 +1,36 @@
+#ifndef CITY_HOUSES_H
+#define CITY_HOUSES_H
+
+typedef struct {
+    struct {
+        int well;
+        int fountain;
+        int entertainment;
+        int more_entertainment;
+        int education;
+        int more_education;
+        int religion;
+        int second_religion;
+        int third_religion;
+        int barber;
+        int bathhouse;
+        int clinic;
+        int hospital;
+        int food;
+        int second_wine;
+    } missing;
+    struct {
+        int school;
+        int library;
+        int barber;
+        int bathhouse;
+        int clinic;
+        int religion;
+    } requiring;
+} house_demands;
+
+void city_houses_reset_demands();
+
+house_demands *city_houses_demands();
+
+#endif // CITY_HOUSES_H

@@ -5,6 +5,7 @@
 
 #include "city/emperor.h"
 #include "city/finance.h"
+#include "city/houses.h"
 #include "city/labor.h"
 #include "city/resource.h"
 #include "map/point.h"
@@ -47,6 +48,7 @@ extern struct city_data_t {
         int16_t working_docks;
         int16_t working_dock_ids[10];
     } building;
+    house_demands houses;
     struct {
         emperor_gift gifts[3];
         int32_t selected_gift_size;

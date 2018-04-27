@@ -15,20 +15,14 @@ extern struct _Data_CityInfo {
 	int32_t housesRequiringMoreEntertainmentToEvolve;//4270
 	int32_t housesRequiringMoreEducationToEvolve;//4274
 	int32_t housesRequiringEducationToEvolve;//4278
-	int32_t housesRequiringSchool;//427c
-	int32_t housesRequiringLibrary;//4280
 	int32_t housesRequiringBarberToEvolve;
 	int32_t housesRequiringBathhouseToEvolve;
 	int32_t housesRequiringFoodToEvolve;
 	int32_t housesRequiringClinicToEvolve;
 	int32_t housesRequiringHospitalToEvolve;
-	int32_t housesRequiringBarber;
-	int32_t housesRequiringBathhouse;
-	int32_t housesRequiringClinic;
 	int32_t housesRequiringReligionToEvolve;
 	int32_t housesRequiringMoreReligionToEvolve;
 	int32_t housesRequiringEvenMoreReligionToEvolve;
-	int32_t housesRequiringReligion;
 	int32_t citywideAverageEntertainment;
 	int32_t housesRequiringEntertainmentToEvolve;
 	int32_t numProtestersThisMonth;

@@ -78,6 +78,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/finance.c
     ${PROJECT_SOURCE_DIR}/src/city/gods.c
     ${PROJECT_SOURCE_DIR}/src/city/health.c
+    ${PROJECT_SOURCE_DIR}/src/city/houses.c
     ${PROJECT_SOURCE_DIR}/src/city/labor.c
     ${PROJECT_SOURCE_DIR}/src/city/map.c
     ${PROJECT_SOURCE_DIR}/src/city/message.c
