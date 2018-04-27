@@ -49,6 +49,7 @@ extern struct city_data_t {
         int16_t working_dock_ids[10];
         int32_t mission_post_operational;
         map_point main_native_meeting;
+        int8_t unknown_value;
     } building;
     struct {
         int16_t animals;

@@ -60,7 +60,7 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, city_data.unused.unknown_00a2);
     buffer_write_i8(main, city_data.unused.unknown_00a3);
     buffer_write_i8(main, city_data.unused.unknown_00a4);
-    buffer_write_i8(main, Data_CityInfo.__unknown_00a5);
+    buffer_write_i8(main, city_data.building.unknown_value);
     buffer_write_i8(main, city_data.unused.unknown_00a6);
     buffer_write_i8(main, city_data.unused.unknown_00a7);
     buffer_write_i32(main, city_data.finance.tax_percentage);
@@ -537,7 +537,7 @@ static void load_main_data(buffer *main)
     city_data.unused.unknown_00a2 = buffer_read_i8(main);
     city_data.unused.unknown_00a3 = buffer_read_i8(main);
     city_data.unused.unknown_00a4 = buffer_read_i8(main);
-    Data_CityInfo.__unknown_00a5 = buffer_read_i8(main);
+    city_data.building.unknown_value = buffer_read_i8(main);
     city_data.unused.unknown_00a7 = buffer_read_i8(main);
     city_data.unused.unknown_00a6 = buffer_read_i8(main);
     city_data.finance.tax_percentage = buffer_read_i32(main);

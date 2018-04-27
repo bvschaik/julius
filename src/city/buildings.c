@@ -196,3 +196,8 @@ void city_buildings_set_mission_post_operational()
 {
     city_data.building.mission_post_operational = 1;
 }
+
+int city_buildings_unknown_value()
+{
+    return city_data.building.unknown_value;
+}
