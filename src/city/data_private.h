@@ -224,6 +224,18 @@ extern struct city_data_t {
         int32_t mars_spirit_power;
     } religion;
     struct {
+        int32_t theater_shows;
+        int32_t theater_no_shows_weighted;
+        int32_t amphitheater_shows;
+        int32_t amphitheater_no_shows_weighted;
+        int32_t colosseum_shows;
+        int32_t colosseum_no_shows_weighted;
+        int32_t hippodrome_shows;
+        int32_t hippodrome_no_shows_weighted;
+        int32_t venue_needing_shows;
+        int32_t hippodrome_has_race;
+    } entertainment;
+    struct {
         struct {
             int32_t months_to_go;
             int32_t god;

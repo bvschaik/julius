@@ -29,15 +29,6 @@ extern struct _Data_CityInfo {
 	int32_t housesRequiringMoreReligionToEvolve;
 	int32_t housesRequiringEvenMoreReligionToEvolve;
 	int32_t housesRequiringReligion;
-	int32_t entertainmentTheaterShows;
-	int32_t entertainmentTheaterNoShowsWeighted;
-	int32_t entertainmentAmphitheaterShows;
-	int32_t entertainmentAmphitheaterNoShowsWeighted;
-	int32_t entertainmentColosseumShows;
-	int32_t entertainmentColosseumNoShowsWeighted;
-	int32_t entertainmentHippodromeShows;
-	int32_t entertainmentHippodromeNoShowsWeighted;
-	int32_t entertainmentNeedingShowsMost;
 	int32_t citywideAverageEntertainment;
 	int32_t housesRequiringEntertainmentToEvolve;
 	int32_t numProtestersThisMonth;
@@ -77,7 +68,6 @@ extern struct _Data_CityInfo {
 	int32_t numSoldiersInCity;
 	int32_t militaryLegionaryLegions;
 	int32_t housesRequiringSecondWineToEvolve;
-	int32_t entertainmentHippodromeHasShow;
 	int32_t messageShownHippodrome;
 	int32_t messageShownColosseum;
 	int32_t missionSavedGameWritten;

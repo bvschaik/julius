@@ -354,7 +354,7 @@ static void set_horse_destination(figure *f, int state)
 
 void figure_hippodrome_horse_action(figure *f)
 {
-    city_entertainment_set_hippodrome_has_show(1);
+    city_entertainment_set_hippodrome_has_race(1);
     f->useCrossCountry = 1;
     f->isGhost = 0;
     figure_image_increase_offset(f, 8);
@@ -444,7 +444,7 @@ void figure_hippodrome_horse_action(figure *f)
 
 void figure_hippodrome_horse_reroute()
 {
-    if (!city_entertainment_hippodrome_has_show()) {
+    if (!city_entertainment_hippodrome_has_race()) {
         return;
     }
     for (int i = 1; i < MAX_FIGURES; i++) {

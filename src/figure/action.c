@@ -116,7 +116,7 @@ void figure_action_handle()
     Data_CityInfo.numAnimalsInCity = 0;
     Data_CityInfo.numImperialSoldiersInCity = 0;
     Data_CityInfo.numSoldiersInCity = 0;
-    city_entertainment_set_hippodrome_has_show(0);
+    city_entertainment_set_hippodrome_has_race(0);
     if (Data_CityInfo.riotersOrAttackingNativesInCity > 0) {
         Data_CityInfo.riotersOrAttackingNativesInCity--;
     }

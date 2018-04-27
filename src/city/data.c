@@ -275,15 +275,15 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.housesRequiringMoreReligionToEvolve);
     buffer_write_i32(main, Data_CityInfo.housesRequiringEvenMoreReligionToEvolve);
     buffer_write_i32(main, Data_CityInfo.housesRequiringReligion);
-    buffer_write_i32(main, Data_CityInfo.entertainmentTheaterShows);
-    buffer_write_i32(main, Data_CityInfo.entertainmentTheaterNoShowsWeighted);
-    buffer_write_i32(main, Data_CityInfo.entertainmentAmphitheaterShows);
-    buffer_write_i32(main, Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted);
-    buffer_write_i32(main, Data_CityInfo.entertainmentColosseumShows);
-    buffer_write_i32(main, Data_CityInfo.entertainmentColosseumNoShowsWeighted);
-    buffer_write_i32(main, Data_CityInfo.entertainmentHippodromeShows);
-    buffer_write_i32(main, Data_CityInfo.entertainmentHippodromeNoShowsWeighted);
-    buffer_write_i32(main, Data_CityInfo.entertainmentNeedingShowsMost);
+    buffer_write_i32(main, city_data.entertainment.theater_shows);
+    buffer_write_i32(main, city_data.entertainment.theater_no_shows_weighted);
+    buffer_write_i32(main, city_data.entertainment.amphitheater_shows);
+    buffer_write_i32(main, city_data.entertainment.amphitheater_no_shows_weighted);
+    buffer_write_i32(main, city_data.entertainment.colosseum_shows);
+    buffer_write_i32(main, city_data.entertainment.colosseum_no_shows_weighted);
+    buffer_write_i32(main, city_data.entertainment.hippodrome_shows);
+    buffer_write_i32(main, city_data.entertainment.hippodrome_no_shows_weighted);
+    buffer_write_i32(main, city_data.entertainment.venue_needing_shows);
     buffer_write_i32(main, Data_CityInfo.citywideAverageEntertainment);
     buffer_write_i32(main, Data_CityInfo.housesRequiringEntertainmentToEvolve);
     buffer_write_i32(main, city_data.festival.months_since_festival);
@@ -513,7 +513,7 @@ static void save_main_data(buffer *main)
     }
     buffer_write_i32(main, Data_CityInfo.housesRequiringSecondWineToEvolve);
     buffer_write_i32(main, city_data.religion.neptune_sank_ships);
-    buffer_write_i32(main, Data_CityInfo.entertainmentHippodromeHasShow);
+    buffer_write_i32(main, city_data.entertainment.hippodrome_has_race);
     buffer_write_i32(main, Data_CityInfo.messageShownHippodrome);
     buffer_write_i32(main, Data_CityInfo.messageShownColosseum);
     buffer_write_i32(main, city_data.migration.emigration_message_shown);
@@ -752,15 +752,15 @@ static void load_main_data(buffer *main)
     Data_CityInfo.housesRequiringMoreReligionToEvolve = buffer_read_i32(main);
     Data_CityInfo.housesRequiringEvenMoreReligionToEvolve = buffer_read_i32(main);
     Data_CityInfo.housesRequiringReligion = buffer_read_i32(main);
-    Data_CityInfo.entertainmentTheaterShows = buffer_read_i32(main);
-    Data_CityInfo.entertainmentTheaterNoShowsWeighted = buffer_read_i32(main);
-    Data_CityInfo.entertainmentAmphitheaterShows = buffer_read_i32(main);
-    Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted = buffer_read_i32(main);
-    Data_CityInfo.entertainmentColosseumShows = buffer_read_i32(main);
-    Data_CityInfo.entertainmentColosseumNoShowsWeighted = buffer_read_i32(main);
-    Data_CityInfo.entertainmentHippodromeShows = buffer_read_i32(main);
-    Data_CityInfo.entertainmentHippodromeNoShowsWeighted = buffer_read_i32(main);
-    Data_CityInfo.entertainmentNeedingShowsMost = buffer_read_i32(main);
+    city_data.entertainment.theater_shows = buffer_read_i32(main);
+    city_data.entertainment.theater_no_shows_weighted = buffer_read_i32(main);
+    city_data.entertainment.amphitheater_shows = buffer_read_i32(main);
+    city_data.entertainment.amphitheater_no_shows_weighted = buffer_read_i32(main);
+    city_data.entertainment.colosseum_shows = buffer_read_i32(main);
+    city_data.entertainment.colosseum_no_shows_weighted = buffer_read_i32(main);
+    city_data.entertainment.hippodrome_shows = buffer_read_i32(main);
+    city_data.entertainment.hippodrome_no_shows_weighted = buffer_read_i32(main);
+    city_data.entertainment.venue_needing_shows = buffer_read_i32(main);
     Data_CityInfo.citywideAverageEntertainment = buffer_read_i32(main);
     Data_CityInfo.housesRequiringEntertainmentToEvolve = buffer_read_i32(main);
     city_data.festival.months_since_festival = buffer_read_i32(main);
@@ -990,7 +990,7 @@ static void load_main_data(buffer *main)
     }
     Data_CityInfo.housesRequiringSecondWineToEvolve = buffer_read_i32(main);
     city_data.religion.neptune_sank_ships = buffer_read_i32(main);
-    Data_CityInfo.entertainmentHippodromeHasShow = buffer_read_i32(main);
+    city_data.entertainment.hippodrome_has_race = buffer_read_i32(main);
     Data_CityInfo.messageShownHippodrome = buffer_read_i32(main);
     Data_CityInfo.messageShownColosseum = buffer_read_i32(main);
     city_data.migration.emigration_message_shown = buffer_read_i32(main);

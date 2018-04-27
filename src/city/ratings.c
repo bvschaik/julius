@@ -194,7 +194,7 @@ static void update_prosperity_explanation()
         change -= 1;
     }
     // working hippodrome: +1
-    if (Data_CityInfo.entertainmentHippodromeShows > 0) {
+    if (city_data.entertainment.hippodrome_shows > 0) {
         change += 1;
     }
 
@@ -431,7 +431,7 @@ static void update_prosperity_rating()
         change -= 1;
     }
     // working hippodrome: +1
-    if (Data_CityInfo.entertainmentHippodromeShows > 0) {
+    if (city_data.entertainment.hippodrome_shows > 0) {
         change += 1;
     }
     city_data.ratings.prosperity += change;
