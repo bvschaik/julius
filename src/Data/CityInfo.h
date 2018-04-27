@@ -48,8 +48,6 @@ extern struct _Data_CityInfo {
 	int32_t entertainmentDemand;
 	int32_t numRiotersInCity;
 	int16_t numAnimalsInCity;
-	int32_t debtState;
-	int32_t monthsInDebt;
 	int32_t citywideAverageReligion;
 	int32_t citywideAverageEducation;
 	int32_t citywideAverageHealth;

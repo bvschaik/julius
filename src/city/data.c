@@ -358,8 +358,8 @@ static void save_main_data(buffer *main)
     buffer_write_i16(main, city_data.finance.stolen_last_year);
     buffer_write_i32(main, city_data.trade.docker_import_resource);
     buffer_write_i32(main, city_data.trade.docker_export_resource);
-    buffer_write_i32(main, Data_CityInfo.debtState);
-    buffer_write_i32(main, Data_CityInfo.monthsInDebt);
+    buffer_write_i32(main, city_data.emperor.debt_state);
+    buffer_write_i32(main, city_data.emperor.months_in_debt);
     buffer_write_i32(main, city_data.finance.cheated_money);
     buffer_write_i8(main, city_data.building.barracks_x);
     buffer_write_i8(main, city_data.building.barracks_y);
@@ -835,8 +835,8 @@ static void load_main_data(buffer *main)
     city_data.finance.stolen_last_year = buffer_read_i16(main);
     city_data.trade.docker_import_resource = buffer_read_i32(main);
     city_data.trade.docker_export_resource = buffer_read_i32(main);
-    Data_CityInfo.debtState = buffer_read_i32(main);
-    Data_CityInfo.monthsInDebt = buffer_read_i32(main);
+    city_data.emperor.debt_state = buffer_read_i32(main);
+    city_data.emperor.months_in_debt = buffer_read_i32(main);
     city_data.finance.cheated_money = buffer_read_i32(main);
     city_data.building.barracks_x = buffer_read_i8(main);
     city_data.building.barracks_y = buffer_read_i8(main);

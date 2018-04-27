@@ -52,7 +52,10 @@ extern struct city_data_t {
         int32_t selected_gift_size;
         int32_t months_since_gift;
         int32_t gift_overdose_penalty;
-        
+
+        int32_t debt_state;
+        int32_t months_in_debt;
+
         int32_t player_rank;
         int32_t salary_rank;
         int32_t salary_amount;

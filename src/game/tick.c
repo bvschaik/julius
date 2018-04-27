@@ -54,8 +54,6 @@
 #include "sound/music.h"
 #include "widget/sidebar.h"
 
-#include "Data/CityInfo.h"
-
 static void advance_year()
 {
     scenario_empire_process_expansion();
