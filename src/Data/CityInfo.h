@@ -80,8 +80,6 @@ extern struct _Data_CityInfo {
 	int32_t entertainmentHippodromeHasShow;
 	int32_t messageShownHippodrome;
 	int32_t messageShownColosseum;
-	int32_t messageShownFired;
-	int32_t messageShownVictory;
 	int32_t missionSavedGameWritten;
 	int32_t tutorial1FireMessageShown;
 	int32_t tutorial3DiseaseMessageShown;

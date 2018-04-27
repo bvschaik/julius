@@ -110,20 +110,20 @@ void city_victory_check()
     if (data.state != VICTORY_STATE_NONE) {
         building_construction_clear_type();
         if (data.state == VICTORY_STATE_LOST) {
-            if (Data_CityInfo.messageShownFired) {
+            if (city_data.mission.fired_message_shown) {
                 window_mission_end_show_fired();
             } else {
-                Data_CityInfo.messageShownFired = 1;
+                city_data.mission.fired_message_shown = 1;
                 city_message_post(1, MESSAGE_FIRED, 0, 0);
             }
             data.force_win = 0;
         } else if (data.state == VICTORY_STATE_WON) {
             sound_music_stop();
-            if (Data_CityInfo.messageShownVictory) {
+            if (city_data.mission.victory_message_shown) {
                 window_mission_end_show_won();
                 data.force_win = 0;
             } else {
-                Data_CityInfo.messageShownVictory = 1;
+                city_data.mission.victory_message_shown = 1;
                 window_victory_dialog_show();
             }
         }
