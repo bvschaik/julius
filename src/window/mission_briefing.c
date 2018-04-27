@@ -20,7 +20,6 @@
 #include "window/mission_selection.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 static void button_back(int param1, int param2);
 static void button_start_mission(int param1, int param2);
@@ -38,6 +37,7 @@ static image_button image_button_start_mission = {
 static struct {
     int is_review;
     int focus_button;
+    int campaign_mission_loaded;
 } data;
 
 static void init()
@@ -48,8 +48,8 @@ static void init()
 
 static void draw_background()
 {
-    if (!Data_State.missionBriefingShown) {
-        Data_State.missionBriefingShown = 1;
+    if (!data.campaign_mission_loaded) {
+        data.campaign_mission_loaded = 1;
         if (!game_file_start_scenario(scenario_name())) {
             window_city_show();
             return;
@@ -191,12 +191,13 @@ static void show()
 void window_mission_briefing_show()
 {
     data.is_review = 0;
-    Data_State.missionBriefingShown = 0;
+    data.campaign_mission_loaded = 0;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
 
 void window_mission_briefing_show_review()
 {
     data.is_review = 1;
+    data.campaign_mission_loaded = 1;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }

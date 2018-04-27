@@ -68,7 +68,6 @@
 #include "sound/music.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 #include <string.h>
 
@@ -242,7 +241,6 @@ static void initialize_saved_game()
 
     game_undo_disable();
     game_state_reset_overlay();
-    Data_State.missionBriefingShown = 1;
 
     Data_CityInfo.tutorial1FireMessageShown = 1;
     Data_CityInfo.tutorial3DiseaseMessageShown = 1;
