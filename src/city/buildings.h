@@ -37,4 +37,7 @@ int city_buildings_shipyard_boats_requested();
 int city_buildings_has_working_dock();
 int city_buildings_get_working_dock(int index);
 
+void city_buildings_main_native_meeting_center(int *x, int *y);
+void city_buildings_set_main_native_meeting_center(int x, int y);
+
 #endif // CITY_BUILDINGS_H

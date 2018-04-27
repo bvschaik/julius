@@ -174,3 +174,15 @@ int city_buildings_get_working_dock(int index)
 {
     return city_data.building.working_dock_ids[index];
 }
+
+void city_buildings_main_native_meeting_center(int *x, int *y)
+{
+    *x = city_data.building.main_native_meeting.x;
+    *y = city_data.building.main_native_meeting.y;
+}
+
+void city_buildings_set_main_native_meeting_center(int x, int y)
+{
+    city_data.building.main_native_meeting.x = x;
+    city_data.building.main_native_meeting.y = y;
+}

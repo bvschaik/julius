@@ -15,8 +15,6 @@
 #include "figuretype/trader.h"
 #include "sound/speech.h"
 
-#include "Data/CityInfo.h"
-
 #include <string.h>
 
 #define SOUND_FILENAME_MAX 32

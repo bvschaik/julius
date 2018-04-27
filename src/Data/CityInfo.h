@@ -10,8 +10,6 @@ extern struct _Data_CityInfo {
 	int32_t riotersOrAttackingNativesInCity;
 	int32_t nativeAttackDuration;
 	int32_t nativeMissionPostOperational;
-	int32_t nativeMainMeetingCenterX;
-	int32_t nativeMainMeetingCenterY;
 	int32_t tutorial1SenateBuilt;
 	uint8_t distantBattleCityId;
 	uint8_t distantBattleEnemyStrength;

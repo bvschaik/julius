@@ -9,8 +9,6 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 int city_rating_culture()
 {
     return city_data.ratings.culture;

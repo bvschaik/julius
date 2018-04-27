@@ -6,8 +6,6 @@
 #include "sound/channel.h"
 #include "sound/device.h"
 
-#include "Data/CityInfo.h"
-
 #include <string.h>
 
 #define MAX_CHANNELS 70

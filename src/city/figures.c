@@ -2,8 +2,6 @@
 
 #include "city/data_private.h"
 
-#include "Data/CityInfo.h"
-
 void city_figures_reset()
 {
     city_data.figure.enemies = 0;

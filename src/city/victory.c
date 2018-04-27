@@ -12,8 +12,6 @@
 #include "window/mission_end.h"
 #include "window/victory_dialog.h"
 
-#include "Data/CityInfo.h"
-
 static struct {
     int state;
     int force_win;

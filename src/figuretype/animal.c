@@ -19,8 +19,6 @@
 #include "scenario/map.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 static const map_point SEAGULL_OFFSETS[] = {
     {0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}
 };

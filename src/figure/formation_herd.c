@@ -14,8 +14,6 @@
 #include "map/terrain.h"
 #include "sound/effect.h"
 
-#include "Data/CityInfo.h"
-
 static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_tile, int *y_tile)
 {
     unsigned short disallowed_terrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);

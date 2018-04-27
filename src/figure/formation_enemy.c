@@ -1,6 +1,7 @@
 #include "formation_enemy.h"
 
 #include "building/building.h"
+#include "city/buildings.h"
 #include "city/figures.h"
 #include "city/gods.h"
 #include "city/message.h"
@@ -233,6 +234,8 @@ static void set_enemy_target_building(formation *m)
 
 static void set_native_target_building(formation *m)
 {
+    int meeting_x, meeting_y;
+    city_buildings_main_native_meeting_center(&meeting_x, &meeting_y);
     building *min_building = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -249,10 +252,7 @@ static void set_native_target_building(formation *m)
             case BUILDING_FORT:
                 break;
             default: {
-                int distance = calc_maximum_distance(
-                    Data_CityInfo.nativeMainMeetingCenterX,
-                    Data_CityInfo.nativeMainMeetingCenterY,
-                    b->x, b->y);
+                int distance = calc_maximum_distance(meeting_x, meeting_y, b->x, b->y);
                 if (distance < min_distance) {
                     min_building = b;
                     min_distance = distance;

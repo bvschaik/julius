@@ -422,8 +422,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.nativeAttackDuration);
     buffer_write_i32(main, city_data.unused.unused_nativeForceAttack);
     buffer_write_i32(main, Data_CityInfo.nativeMissionPostOperational);
-    buffer_write_i32(main, Data_CityInfo.nativeMainMeetingCenterX);
-    buffer_write_i32(main, Data_CityInfo.nativeMainMeetingCenterY);
+    buffer_write_i32(main, city_data.building.main_native_meeting.x);
+    buffer_write_i32(main, city_data.building.main_native_meeting.y);
     buffer_write_i32(main, city_data.finance.wage_rate_paid_last_year);
     buffer_write_i32(main, city_data.resource.food_needed_per_month);
     buffer_write_i32(main, city_data.resource.granaries.understaffed);
@@ -899,8 +899,8 @@ static void load_main_data(buffer *main)
     Data_CityInfo.nativeAttackDuration = buffer_read_i32(main);
     city_data.unused.unused_nativeForceAttack = buffer_read_i32(main);
     Data_CityInfo.nativeMissionPostOperational = buffer_read_i32(main);
-    Data_CityInfo.nativeMainMeetingCenterX = buffer_read_i32(main);
-    Data_CityInfo.nativeMainMeetingCenterY = buffer_read_i32(main);
+    city_data.building.main_native_meeting.x = buffer_read_i32(main);
+    city_data.building.main_native_meeting.y = buffer_read_i32(main);
     city_data.finance.wage_rate_paid_last_year = buffer_read_i32(main);
     city_data.resource.food_needed_per_month = buffer_read_i32(main);
     city_data.resource.granaries.understaffed = buffer_read_i32(main);

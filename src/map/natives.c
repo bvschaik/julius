@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/list.h"
+#include "city/buildings.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "map/building.h"
@@ -85,57 +86,57 @@ static void determine_meeting_center()
 
 void map_natives_init()
 {
+    int meeting_center_set = 0;
     int image_hut = scenario_building_image_native_hut();
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
-    int nativeGraphic = image_group(GROUP_BUILDING_NATIVE);
-    int gridOffset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, gridOffset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, gridOffset++) {
-            if (!map_terrain_is(gridOffset, TERRAIN_BUILDING) || map_building_at(gridOffset)) {
+    int native_image = image_group(GROUP_BUILDING_NATIVE);
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+            if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset)) {
                 continue;
             }
             
-            int randomBit = map_random_get(gridOffset) & 1;
-            int buildingType;
-            int image_id = map_image_at(gridOffset);
+            int random_bit = map_random_get(grid_offset) & 1;
+            int type;
+            int image_id = map_image_at(grid_offset);
             if (image_id == image_hut) {
-                buildingType = BUILDING_NATIVE_HUT;
-                map_image_set(gridOffset, nativeGraphic);
+                type = BUILDING_NATIVE_HUT;
+                map_image_set(grid_offset, native_image);
             } else if (image_id == image_hut + 1) {
-                buildingType = BUILDING_NATIVE_HUT;
-                map_image_set(gridOffset, nativeGraphic + 1);
+                type = BUILDING_NATIVE_HUT;
+                map_image_set(grid_offset, native_image + 1);
             } else if (image_id == image_meeting) {
-                buildingType = BUILDING_NATIVE_MEETING;
-                map_image_set(gridOffset, nativeGraphic + 2);
+                type = BUILDING_NATIVE_MEETING;
+                map_image_set(grid_offset, native_image + 2);
             } else if (image_id == image_crops) {
-                buildingType = BUILDING_NATIVE_CROPS;
-                map_image_set(gridOffset, image_group(GROUP_BUILDING_FARM_CROPS) + randomBit);
+                type = BUILDING_NATIVE_CROPS;
+                map_image_set(grid_offset, image_group(GROUP_BUILDING_FARM_CROPS) + random_bit);
             } else { //unknown building
                 map_building_tiles_remove(0, x, y);
                 continue;
             }
-            building *b = building_create(buildingType, x, y);
-            map_building_set(gridOffset, b->id);
+            building *b = building_create(type, x, y);
+            map_building_set(grid_offset, b->id);
             b->state = BUILDING_STATE_IN_USE;
-            switch (buildingType) {
+            switch (type) {
                 case BUILDING_NATIVE_CROPS:
-                    b->data.industry.progress = randomBit;
+                    b->data.industry.progress = random_bit;
                     break;
                 case BUILDING_NATIVE_MEETING:
                     b->sentiment.nativeAnger = 100;
-                    map_building_set(gridOffset + map_grid_delta(1, 0), b->id);
-                    map_building_set(gridOffset + map_grid_delta(0, 1), b->id);
-                    map_building_set(gridOffset + map_grid_delta(1, 1), b->id);
+                    map_building_set(grid_offset + map_grid_delta(1, 0), b->id);
+                    map_building_set(grid_offset + map_grid_delta(0, 1), b->id);
+                    map_building_set(grid_offset + map_grid_delta(1, 1), b->id);
                     mark_native_land(b->x, b->y, 2, 6);
-                    if (!Data_CityInfo.nativeMainMeetingCenterX) {
-                        Data_CityInfo.nativeMainMeetingCenterX = b->x;
-                        Data_CityInfo.nativeMainMeetingCenterY = b->y;
+                    if (!meeting_center_set) {
+                        city_buildings_set_main_native_meeting_center(b->x, b->y);
                     }
                     break;
                 case BUILDING_NATIVE_HUT:
                     b->sentiment.nativeAnger = 100;
-                    b->figureSpawnDelay = randomBit;
+                    b->figureSpawnDelay = random_bit;
                     mark_native_land(b->x, b->y, 1, 3);
                     break;
             }

@@ -11,8 +11,6 @@
 #include "scenario/property.h"
 #include "scenario/invasion.h"
 
-#include "Data/CityInfo.h"
-
 const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
 void city_emperor_init_scenario(int rank)
