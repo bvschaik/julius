@@ -157,7 +157,7 @@ static void advance_tick()
         case 45: figure_generate_criminals(); break;
         case 46: building_industry_update_wheat_production(); break;
         case 48: house_service_decay_tax_collector(); break;
-        case 49: city_culture_calculate_entertainment(); break;
+        case 49: city_culture_calculate(); break;
     }
     if (game_time_advance_tick()) {
         advance_day();

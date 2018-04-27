@@ -3,6 +3,7 @@
 #include "building/animation.h"
 #include "building/dock.h"
 #include "city/buildings.h"
+#include "city/entertainment.h"
 #include "city/labor.h"
 #include "city/population.h"
 #include "city/ratings.h"
@@ -157,8 +158,7 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
     if (b->type == BUILDING_COLOSSEUM && b->numWorkers > 0) {
         image_draw_masked(image_group(GROUP_BUILDING_COLOSSEUM_SHOW), x + 70, y - 90, color_mask);
     }
-    if (b->type == BUILDING_HIPPODROME && building_main(b)->numWorkers > 0 &&
-        Data_CityInfo.entertainmentHippodromeHasShow) {
+    if (b->type == BUILDING_HIPPODROME && building_main(b)->numWorkers > 0 && city_entertainment_hippodrome_has_show()) {
         draw_hippodrome_spectators(b, x, y, color_mask);
     }
 }

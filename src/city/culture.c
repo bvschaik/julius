@@ -4,6 +4,7 @@
 #include "building/count.h"
 #include "city/constants.h"
 #include "city/data_private.h"
+#include "city/entertainment.h"
 #include "city/festival.h"
 #include "city/population.h"
 #include "core/calc.h"
@@ -144,103 +145,32 @@ void city_culture_update_coverage()
         1000 * building_count_active(BUILDING_HOSPITAL), population));
 }
 
-void city_culture_calculate_entertainment()
+void city_culture_calculate()
 {
     Data_CityInfo.citywideAverageEntertainment = 0;
-    Data_CityInfo.entertainmentTheaterShows = 0;
-    Data_CityInfo.entertainmentTheaterNoShowsWeighted = 0;
-    Data_CityInfo.entertainmentAmphitheaterShows = 0;
-    Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted = 0;
-    Data_CityInfo.entertainmentColosseumShows = 0;
-    Data_CityInfo.entertainmentColosseumNoShowsWeighted = 0;
-    Data_CityInfo.entertainmentHippodromeShows = 0;
-    Data_CityInfo.entertainmentHippodromeNoShowsWeighted = 0;
-    Data_CityInfo.entertainmentNeedingShowsMost = 0;
-
     Data_CityInfo.citywideAverageReligion = 0;
     Data_CityInfo.citywideAverageEducation = 0;
     Data_CityInfo.citywideAverageHealth = 0;
 
-    int numHouses = 0;
+    int num_houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
-            numHouses++;
+            num_houses++;
             Data_CityInfo.citywideAverageEntertainment += b->data.house.entertainment;
             Data_CityInfo.citywideAverageReligion += b->data.house.numGods;
             Data_CityInfo.citywideAverageEducation += b->data.house.education;
             Data_CityInfo.citywideAverageHealth += b->data.house.health;
         }
     }
-    if (numHouses) {
-        Data_CityInfo.citywideAverageEntertainment /= numHouses;
-        Data_CityInfo.citywideAverageReligion /= numHouses;
-        Data_CityInfo.citywideAverageEducation /= numHouses;
-        Data_CityInfo.citywideAverageHealth /= numHouses;
-    }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
-            continue;
-        }
-        switch (b->type) {
-            case BUILDING_THEATER:
-                if (b->data.entertainment.days1) {
-                    Data_CityInfo.entertainmentTheaterShows++;
-                } else {
-                    Data_CityInfo.entertainmentTheaterNoShowsWeighted++;
-                }
-                break;
-            case BUILDING_AMPHITHEATER:
-                if (b->data.entertainment.days1) {
-                    Data_CityInfo.entertainmentAmphitheaterShows++;
-                } else {
-                    Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted += 2;
-                }
-                if (b->data.entertainment.days2) {
-                    Data_CityInfo.entertainmentAmphitheaterShows++;
-                } else {
-                    Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted += 2;
-                }
-                break;
-            case BUILDING_COLOSSEUM:
-                if (b->data.entertainment.days1) {
-                    Data_CityInfo.entertainmentColosseumShows++;
-                } else {
-                    Data_CityInfo.entertainmentColosseumNoShowsWeighted += 3;
-                }
-                if (b->data.entertainment.days2) {
-                    Data_CityInfo.entertainmentColosseumShows++;
-                } else {
-                    Data_CityInfo.entertainmentColosseumNoShowsWeighted += 3;
-                }
-                break;
-            case BUILDING_HIPPODROME:
-                if (b->data.entertainment.days1) {
-                    Data_CityInfo.entertainmentHippodromeShows++;
-                } else {
-                    Data_CityInfo.entertainmentHippodromeNoShowsWeighted += 100;
-                }
-                break;
-        }
-    }
-    int worstShows = 0;
-    if (Data_CityInfo.entertainmentTheaterNoShowsWeighted > worstShows) {
-        worstShows = Data_CityInfo.entertainmentTheaterNoShowsWeighted;
-        Data_CityInfo.entertainmentNeedingShowsMost = 1;
-    }
-    if (Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted > worstShows) {
-        worstShows = Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted;
-        Data_CityInfo.entertainmentNeedingShowsMost = 2;
-    }
-    if (Data_CityInfo.entertainmentColosseumNoShowsWeighted > worstShows) {
-        worstShows = Data_CityInfo.entertainmentColosseumNoShowsWeighted;
-        Data_CityInfo.entertainmentNeedingShowsMost = 3;
-    }
-    if (Data_CityInfo.entertainmentHippodromeNoShowsWeighted > worstShows) {
-        Data_CityInfo.entertainmentNeedingShowsMost = 4;
+    if (num_houses) {
+        Data_CityInfo.citywideAverageEntertainment /= num_houses;
+        Data_CityInfo.citywideAverageReligion /= num_houses;
+        Data_CityInfo.citywideAverageEducation /= num_houses;
+        Data_CityInfo.citywideAverageHealth /= num_houses;
     }
 
+    city_entertainment_calculate_shows();
     city_festival_calculate_costs();
 }
 

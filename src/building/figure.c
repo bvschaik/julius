@@ -8,6 +8,7 @@
 #include "building/market.h"
 #include "building/model.h"
 #include "building/warehouse.h"
+#include "city/entertainment.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
@@ -493,7 +494,7 @@ static void spawn_figure_hippodrome(building *b)
             b->figureId = f->id;
             figure_movement_init_roaming(f);
 
-            if (!Data_CityInfo.entertainmentHippodromeHasShow) {
+            if (!city_entertainment_hippodrome_has_show()) {
                 // create mini-horses
                 figure *horse1 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, DIR_2_RIGHT);
                 horse1->actionState = FIGURE_ACTION_200_HIPPODROME_HORSE_CREATED;

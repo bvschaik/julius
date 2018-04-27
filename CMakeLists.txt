@@ -73,6 +73,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/data.c
     ${PROJECT_SOURCE_DIR}/src/city/data_private.c
     ${PROJECT_SOURCE_DIR}/src/city/emperor.c
+    ${PROJECT_SOURCE_DIR}/src/city/entertainment.c
     ${PROJECT_SOURCE_DIR}/src/city/festival.c
     ${PROJECT_SOURCE_DIR}/src/city/finance.c
     ${PROJECT_SOURCE_DIR}/src/city/gods.c

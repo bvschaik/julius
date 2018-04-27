@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "city/culture.h"
+#include "city/entertainment.h"
 #include "city/festival.h"
 #include "city/gods.h"
 #include "graphics/generic_button.h"
@@ -30,8 +31,8 @@ static int get_entertainment_advice()
         return 3;
     } else if (!Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
         return Data_CityInfo.citywideAverageEntertainment ? 1 : 0;
-    } else if (Data_CityInfo.entertainmentNeedingShowsMost) {
-        return 3 + Data_CityInfo.entertainmentNeedingShowsMost;
+    } else if (city_entertainment_venue_needing_shows()) {
+        return 3 + city_entertainment_venue_needing_shows();
     } else {
         return 2;
     }
@@ -76,7 +77,7 @@ static void draw_festival_info()
 static int draw_background()
 {
     city_gods_calculate_moods(0);
-    city_culture_calculate_entertainment();
+    city_culture_calculate();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
@@ -93,7 +94,7 @@ static int draw_background()
     // theaters
     lang_text_draw_amount(8, 34, building_count_total(BUILDING_THEATER), 40, 64, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_THEATER), 150, 64, 100, FONT_NORMAL_WHITE);
-    text_draw_number_centered(Data_CityInfo.entertainmentTheaterShows, 230, 64, 100, FONT_NORMAL_WHITE);
+    text_draw_number_centered(city_entertainment_theater_shows(), 230, 64, 100, FONT_NORMAL_WHITE);
     int width = text_draw_number(500 * building_count_active(BUILDING_THEATER), '@', " ", 340, 64, FONT_NORMAL_WHITE);
     lang_text_draw(58, 5, 340 + width, 64, FONT_NORMAL_WHITE);
     int pct_theater = city_culture_coverage_theater();
@@ -108,7 +109,7 @@ static int draw_background()
     // amphitheaters
     lang_text_draw_amount(8, 36, building_count_total(BUILDING_AMPHITHEATER), 40, 84, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_AMPHITHEATER), 150, 84, 100, FONT_NORMAL_WHITE);
-    text_draw_number_centered(Data_CityInfo.entertainmentAmphitheaterShows, 230, 84, 100, FONT_NORMAL_WHITE);
+    text_draw_number_centered(city_entertainment_amphitheater_shows(), 230, 84, 100, FONT_NORMAL_WHITE);
     width = text_draw_number(800 * building_count_active(BUILDING_AMPHITHEATER), '@', " ", 340, 84, FONT_NORMAL_WHITE);
     lang_text_draw(58, 5, 340 + width, 84, FONT_NORMAL_WHITE);
     int pct_amphitheater = city_culture_coverage_amphitheater();
@@ -123,7 +124,7 @@ static int draw_background()
     // colosseums
     lang_text_draw_amount(8, 38, building_count_total(BUILDING_COLOSSEUM), 40, 104, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_COLOSSEUM), 150, 104, 100, FONT_NORMAL_WHITE);
-    text_draw_number_centered(Data_CityInfo.entertainmentColosseumShows, 230, 104, 100, FONT_NORMAL_WHITE);
+    text_draw_number_centered(city_entertainment_colosseum_shows(), 230, 104, 100, FONT_NORMAL_WHITE);
     width = text_draw_number(1500 * building_count_active(BUILDING_COLOSSEUM), '@', " ", 340, 104, FONT_NORMAL_WHITE);
     lang_text_draw(58, 5, 340 + width, 104, FONT_NORMAL_WHITE);
     int pct_colosseum = city_culture_coverage_colosseum();
@@ -138,7 +139,7 @@ static int draw_background()
     // hippodromes
     lang_text_draw_amount(8, 40, building_count_total(BUILDING_HIPPODROME), 40, 123, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_HIPPODROME), 150, 123, 100, FONT_NORMAL_WHITE);
-    text_draw_number_centered(Data_CityInfo.entertainmentHippodromeShows, 230, 123, 100, FONT_NORMAL_WHITE);
+    text_draw_number_centered(city_entertainment_hippodrome_shows(), 230, 123, 100, FONT_NORMAL_WHITE);
     lang_text_draw(58, 6, 360, 123, FONT_NORMAL_WHITE);
     if (city_culture_coverage_hippodrome() == 0) {
         lang_text_draw_centered(57, 10, 470, 123, 100, FONT_NORMAL_WHITE);
