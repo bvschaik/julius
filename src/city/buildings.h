@@ -40,4 +40,7 @@ int city_buildings_get_working_dock(int index);
 void city_buildings_main_native_meeting_center(int *x, int *y);
 void city_buildings_set_main_native_meeting_center(int x, int y);
 
+int city_buildings_is_mission_post_operational();
+void city_buildings_set_mission_post_operational();
+
 #endif // CITY_BUILDINGS_H

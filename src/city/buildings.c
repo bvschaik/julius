@@ -186,3 +186,13 @@ void city_buildings_set_main_native_meeting_center(int x, int y)
     city_data.building.main_native_meeting.x = x;
     city_data.building.main_native_meeting.y = y;
 }
+
+int city_buildings_is_mission_post_operational()
+{
+    return city_data.building.mission_post_operational > 0;
+}
+
+void city_buildings_set_mission_post_operational()
+{
+    city_data.building.mission_post_operational = 1;
+}

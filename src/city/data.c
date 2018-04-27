@@ -13,6 +13,7 @@
 void city_data_init()
 {
     memset(&Data_CityInfo, 0, sizeof(struct _Data_CityInfo));
+    memset(&city_data, 0, sizeof(struct city_data_t));
 
     city_data.unused.faction_bytes[0] = 0;
     city_data.unused.faction_bytes[1] = 0;
@@ -421,7 +422,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.ratings.favor_change);
     buffer_write_i32(main, Data_CityInfo.nativeAttackDuration);
     buffer_write_i32(main, city_data.unused.unused_nativeForceAttack);
-    buffer_write_i32(main, Data_CityInfo.nativeMissionPostOperational);
+    buffer_write_i32(main, city_data.building.mission_post_operational);
     buffer_write_i32(main, city_data.building.main_native_meeting.x);
     buffer_write_i32(main, city_data.building.main_native_meeting.y);
     buffer_write_i32(main, city_data.finance.wage_rate_paid_last_year);
@@ -898,7 +899,7 @@ static void load_main_data(buffer *main)
     city_data.ratings.favor_change = buffer_read_i32(main);
     Data_CityInfo.nativeAttackDuration = buffer_read_i32(main);
     city_data.unused.unused_nativeForceAttack = buffer_read_i32(main);
-    Data_CityInfo.nativeMissionPostOperational = buffer_read_i32(main);
+    city_data.building.mission_post_operational = buffer_read_i32(main);
     city_data.building.main_native_meeting.x = buffer_read_i32(main);
     city_data.building.main_native_meeting.y = buffer_read_i32(main);
     city_data.finance.wage_rate_paid_last_year = buffer_read_i32(main);

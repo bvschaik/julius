@@ -8,6 +8,7 @@
 #include "building/market.h"
 #include "building/model.h"
 #include "building/warehouse.h"
+#include "city/buildings.h"
 #include "city/entertainment.h"
 #include "city/message.h"
 #include "city/population.h"
@@ -937,7 +938,7 @@ static void spawn_figure_mission_post(building *b)
     int x_road, y_road;
     if (map_has_road_access(b->x, b->y, b->size, &x_road, &y_road)) {
         if (city_population() > 0) {
-            Data_CityInfo.nativeMissionPostOperational = 1;
+            city_buildings_set_mission_post_operational();
             b->figureSpawnDelay++;
             if (b->figureSpawnDelay > 1) {
                 b->figureSpawnDelay = 0;
@@ -1087,12 +1088,12 @@ static void spawn_figure_native_hut(building *b)
     if (has_figure_of_type(b, FIGURE_INDIGENOUS_NATIVE)) {
         return;
     }
-    int xOut, yOut;
-    if (b->subtype.nativeMeetingCenterId > 0 && map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &xOut, &yOut)) {
+    int x_out, y_out;
+    if (b->subtype.nativeMeetingCenterId > 0 && map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &x_out, &y_out)) {
         b->figureSpawnDelay++;
         if (b->figureSpawnDelay > 4) {
             b->figureSpawnDelay = 0;
-            figure *f = figure_create(FIGURE_INDIGENOUS_NATIVE, xOut, yOut, DIR_0_TOP);
+            figure *f = figure_create(FIGURE_INDIGENOUS_NATIVE, x_out, y_out, DIR_0_TOP);
             f->actionState = FIGURE_ACTION_158_NATIVE_CREATED;
             f->buildingId = b->id;
             b->figureId = f->id;
@@ -1104,14 +1105,13 @@ static void spawn_figure_native_meeting(building *b)
 {
     map_building_tiles_add(b->id, b->x, b->y, 2,
         image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
-    if (Data_CityInfo.nativeMissionPostOperational > 0 &&
-        !has_figure_of_type(b, FIGURE_NATIVE_TRADER)) {
-        int xOut, yOut;
-        if (map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &xOut, &yOut)) {
+    if (city_buildings_is_mission_post_operational() && !has_figure_of_type(b, FIGURE_NATIVE_TRADER)) {
+        int x_out, y_out;
+        if (map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &x_out, &y_out)) {
             b->figureSpawnDelay++;
             if (b->figureSpawnDelay > 8) {
                 b->figureSpawnDelay = 0;
-                figure *f = figure_create(FIGURE_NATIVE_TRADER, xOut, yOut, DIR_0_TOP);
+                figure *f = figure_create(FIGURE_NATIVE_TRADER, x_out, y_out, DIR_0_TOP);
                 f->actionState = FIGURE_ACTION_162_NATIVE_TRADER_CREATED;
                 f->buildingId = b->id;
                 b->figureId = f->id;
