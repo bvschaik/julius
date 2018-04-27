@@ -7,6 +7,7 @@
 #include "city/map.h"
 #include "city/message.h"
 #include "city/population.h"
+#include "city/sentiment.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
@@ -25,8 +26,6 @@
 #include "map/tiles.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
-
-#include "Data/CityInfo.h"
 
 static int fire_spread_direction = 0;
 
@@ -159,8 +158,7 @@ static void fire_building(building *b)
 
 void building_maintenance_check_fire_collapse()
 {
-    Data_CityInfo.numProtestersThisMonth = 0;
-    Data_CityInfo.numCriminalsThisMonth = 0;
+    city_sentiment_reset_protesters_criminals();
 
     scenario_climate climate = scenario_property_climate();
     int recalculate_terrain = 0;

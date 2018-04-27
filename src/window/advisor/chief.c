@@ -145,11 +145,11 @@ static int draw_background()
     draw_title(186, 6);
     if (Data_CityInfo.numRiotersInCity) {
         lang_text_draw(61, 33, X_OFFSET, 186, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.numCriminalsThisMonth > 10) {
+    } else if (city_sentiment_criminals() > 10) {
         lang_text_draw(61, 32, X_OFFSET, 186, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.numCriminalsThisMonth) {
+    } else if (city_sentiment_criminals()) {
         lang_text_draw(61, 31, X_OFFSET, 186, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.numProtestersThisMonth) {
+    } else if (city_sentiment_protesters()) {
         lang_text_draw(61, 30, X_OFFSET, 186, FONT_NORMAL_RED);
     } else {
         lang_text_draw(61, 29, X_OFFSET, 186, FONT_NORMAL_GREEN);

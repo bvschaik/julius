@@ -50,6 +50,31 @@ void city_sentiment_set_max_happiness(int max)
     }
 }
 
+void city_sentiment_reset_protesters_criminals()
+{
+    city_data.sentiment.protesters = 0;
+    city_data.sentiment.criminals = 0;
+}
+
+void city_sentiment_add_protester()
+{
+    city_data.sentiment.protesters++;
+}
+
+void city_sentiment_add_criminal()
+{
+    city_data.sentiment.criminals++;
+}
+
+int city_sentiment_protesters()
+{
+    return city_data.sentiment.protesters;
+}
+
+int city_sentiment_criminals()
+{
+    return city_data.sentiment.criminals;
+}
 
 static int get_sentiment_penalty_for_tent_dwellers()
 {

@@ -32,7 +32,7 @@ static void generate_rioter(building *b)
     if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road)) {
         return;
     }
-    Data_CityInfo.numCriminalsThisMonth++;
+    city_sentiment_add_criminal();
     int people_in_mob;
     int population = city_population();
     if (population <= 150) {
@@ -73,7 +73,7 @@ static void generate_rioter(building *b)
 
 static void generate_mugger(building *b)
 {
-    Data_CityInfo.numCriminalsThisMonth++;
+    city_sentiment_add_criminal();
     if (b->houseCriminalActive < 2) {
         b->houseCriminalActive = 2;
         int xRoad, yRoad;
@@ -96,7 +96,7 @@ static void generate_mugger(building *b)
 
 static void generate_protestor(building *b)
 {
-    Data_CityInfo.numProtestersThisMonth++;
+    city_sentiment_add_protester();
     if (b->houseCriminalActive < 1) {
         b->houseCriminalActive = 1;
         int xRoad, yRoad;

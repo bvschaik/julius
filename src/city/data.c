@@ -317,8 +317,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.religion.least_happy_god);
     buffer_write_i32(main, city_data.unused.unknown_4334);
     buffer_write_i32(main, city_data.migration.no_immigration_cause);
-    buffer_write_i32(main, Data_CityInfo.numProtestersThisMonth);
-    buffer_write_i32(main, Data_CityInfo.numCriminalsThisMonth);
+    buffer_write_i32(main, city_data.sentiment.protesters);
+    buffer_write_i32(main, city_data.sentiment.criminals);
     buffer_write_i32(main, city_data.houses.health);
     buffer_write_i32(main, city_data.houses.religion);
     buffer_write_i32(main, city_data.houses.education);
@@ -794,8 +794,8 @@ static void load_main_data(buffer *main)
     city_data.religion.least_happy_god = buffer_read_i32(main);
     city_data.unused.unknown_4334 = buffer_read_i32(main);
     city_data.migration.no_immigration_cause = buffer_read_i32(main);
-    Data_CityInfo.numProtestersThisMonth = buffer_read_i32(main);
-    Data_CityInfo.numCriminalsThisMonth = buffer_read_i32(main);
+    city_data.sentiment.protesters = buffer_read_i32(main);
+    city_data.sentiment.criminals = buffer_read_i32(main);
     city_data.houses.health = buffer_read_i32(main);
     city_data.houses.religion = buffer_read_i32(main);
     city_data.houses.education = buffer_read_i32(main);

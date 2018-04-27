@@ -179,6 +179,9 @@ extern struct city_data_t {
         int32_t unemployment;
         int32_t wages;
         int32_t low_mood_cause;
+
+        int32_t protesters;
+        int32_t criminals; // muggers+rioters
     } sentiment;
     struct {
         int32_t num_hospital_workers;
