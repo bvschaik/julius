@@ -15,10 +15,14 @@ int building_construction_in_progress();
 
 void building_construction_start(int x, int y, int grid_offset);
 
-void building_construction_update(int x, int y);
+void building_construction_update(int x, int y, int grid_offset);
 
 void building_construction_place();
 
 int building_construction_can_place_on_terrain(int x, int y, int *warning_id);
+
+void building_construction_record_view_position(int view_x, int view_y, int grid_offset);
+
+void building_construction_get_view_position(int *view_x, int *view_y);
 
 #endif // BUILDING_CONSTRUCTION_H

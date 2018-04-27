@@ -1,6 +1,7 @@
 #include "city_without_overlay.h"
 
 #include "building/animation.h"
+#include "building/construction.h"
 #include "building/dock.h"
 #include "city/buildings.h"
 #include "city/entertainment.h"
@@ -21,8 +22,6 @@
 #include "widget/city_bridge.h"
 #include "widget/city_building_ghost.h"
 #include "widget/city_figure.h"
-
-#include "Data/CityInfo.h"
 
 static struct {
     time_millis last_water_animation_time;
@@ -52,7 +51,7 @@ static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_c
 
 static void draw_footprint(int x, int y, int grid_offset)
 {
-    city_building_ghost_record_view_position(x, y, grid_offset);
+    building_construction_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         // Outside map: draw black tile
         image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_BLACK), x, y, 0);

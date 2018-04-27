@@ -142,16 +142,12 @@ static void build_move(const map_tile *tile)
     if (!building_construction_in_progress() || !tile->grid_offset) {
         return;
     }
-    Data_State.selectedBuilding.gridOffsetEnd = tile->grid_offset;
-    building_construction_update(tile->x, tile->y);
+    building_construction_update(tile->x, tile->y, tile->grid_offset);
 }
 
-static void build_end(map_tile *tile)
+static void build_end()
 {
     if (building_construction_in_progress()) {
-        if (!tile->grid_offset) {
-            tile->grid_offset = Data_State.selectedBuilding.gridOffsetEnd;
-        }
         if (building_construction_type() != BUILDING_NONE) {
             sound_effect_play(SOUND_EFFECT_BUILD);
         }
@@ -180,7 +176,7 @@ void widget_city_handle_mouse(const mouse *m)
     } else if (m->left.is_down) {
         build_move(tile);
     } else if (m->left.went_up) {
-        build_end(tile);
+        build_end();
     } else if (m->right.went_up) {
         if (handle_right_click_allow_building_info(tile)) {
             window_building_info_show(tile->grid_offset);

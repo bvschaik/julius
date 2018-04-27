@@ -48,10 +48,8 @@ enum {
 static struct {
     building_type type;
     int in_progress;
-    int x_start;
-    int y_start;
-    int x_end;
-    int y_end;
+    map_tile start;
+    map_tile end;
     int cost;
     struct {
         int meadow;
@@ -60,6 +58,8 @@ static struct {
         int water;
         int wall;
     } required_terrain;
+    int start_offset_x_view;
+    int start_offset_y_view;
 } data;
 
 static int last_items_cleared;
@@ -402,10 +402,10 @@ void building_construction_set_type(building_type type)
 {
     data.type = type;
     data.in_progress = 0;
-    data.x_start = 0;
-    data.y_start = 0;
-    data.x_end = 0;
-    data.y_end = 0;
+    data.start.x = 0;
+    data.start.y = 0;
+    data.end.x = 0;
+    data.end.y = 0;
 
     if (type != BUILDING_NONE) {
         data.required_terrain.wall = 0;
@@ -415,7 +415,7 @@ void building_construction_set_type(building_type type)
         data.required_terrain.meadow = 0;
         Data_State.selectedBuilding.roadRequired = 0;
         Data_State.selectedBuilding.roadLastUpdate = time_get_millis();
-        Data_State.selectedBuilding.gridOffsetStart = 0;
+        data.start.grid_offset = 0;
 
         switch (type) {
             case BUILDING_WHEAT_FARM:
@@ -472,25 +472,22 @@ int building_construction_in_progress()
 
 void building_construction_start(int x, int y, int grid_offset)
 {
-    Data_State.selectedBuilding.gridOffsetStart = grid_offset;
-    data.x_start = data.x_end = x;
-    data.y_start = data.y_end = y;
+    data.start.grid_offset = grid_offset;
+    data.start.x = data.end.x = x;
+    data.start.y = data.end.y = y;
 
     if (game_undo_start_build(data.type)) {
         data.in_progress = 1;
         switch (data.type) {
             case BUILDING_ROAD:
-                map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD,
-                    data.x_start, data.y_start);
+                map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, data.start.x, data.start.y);
                 break;
             case BUILDING_AQUEDUCT:
             case BUILDING_DRAGGABLE_RESERVOIR:
-                map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT,
-                    data.x_start, data.y_start);
+                map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, data.start.x, data.start.y);
                 break;
             case BUILDING_WALL:
-                map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL,
-                    data.x_start, data.y_start);
+                map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, data.start.x, data.start.y);
                 break;
             default:
                 break;
@@ -498,11 +495,12 @@ void building_construction_start(int x, int y, int grid_offset)
     }
 }
 
-void building_construction_update(int x, int y)
+void building_construction_update(int x, int y, int grid_offset)
 {
     building_type type = data.type;
-    data.x_end = x;
-    data.y_end = y;
+    data.end.x = x;
+    data.end.y = y;
+    data.end.grid_offset = grid_offset;
     if (!type || city_finance_out_of_money()) {
         data.cost = 0;
         return;
@@ -511,34 +509,34 @@ void building_construction_update(int x, int y)
     int current_cost = model_get_building(type)->cost;
 
     if (type == BUILDING_CLEAR_LAND) {
-        int items_placed = last_items_cleared = building_construction_clear_land(1, data.x_start, data.y_start, x, y);
+        int items_placed = last_items_cleared = building_construction_clear_land(1, data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_WALL) {
-        int items_placed = place_wall(1, data.x_start, data.y_start, x, y);
+        int items_placed = place_wall(1, data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_ROAD) {
-        int items_placed = place_road(1, data.x_start, data.y_start, x, y);
+        int items_placed = place_road(1, data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_PLAZA) {
-        int items_placed = place_plaza(data.x_start, data.y_start, x, y);
+        int items_placed = place_plaza(data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_GARDENS) {
-        int items_placed = place_garden(data.x_start, data.y_start, x, y);
+        int items_placed = place_garden(data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
         int length = map_bridge_building_length();
         if (length > 1) current_cost *= length;
     } else if (type == BUILDING_AQUEDUCT) {
-        place_aqueduct(data.x_start, data.y_start, x, y, &current_cost);
+        place_aqueduct(data.start.x, data.start.y, x, y, &current_cost);
         map_tiles_update_all_aqueducts(0);
     } else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
         struct reservoir_info info;
-        place_reservoir_and_aqueducts(1, data.x_start, data.y_start, x, y, &info);
+        place_reservoir_and_aqueducts(1, data.start.x, data.start.y, x, y, &info);
         current_cost = info.cost;
         map_tiles_update_all_aqueducts(1);
         Data_State.selectedBuilding.drawAsConstructing = 0;
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
-        int items_placed = place_houses(1, data.x_start, data.y_start, x, y);
+        int items_placed = place_houses(1, data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_GATEHOUSE) {
         map_building_tiles_mark_construction(x, y, 2, ~TERRAIN_ROAD, 0);
@@ -610,10 +608,10 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
 void building_construction_place()
 {
     data.in_progress = 0;
-    int x_start = data.x_start;
-    int y_start = data.y_start;
-    int x_end = data.x_end;
-    int y_end = data.y_end;
+    int x_start = data.start.x;
+    int y_start = data.start.y;
+    int x_end = data.end.x;
+    int y_end = data.end.y;
     building_type type = data.type;
     building_construction_warning_reset();
     if (!type) {
@@ -767,4 +765,18 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
         }
     }
     return 1;
+}
+
+void building_construction_record_view_position(int view_x, int view_y, int grid_offset)
+{
+    if (grid_offset == data.start.grid_offset) {
+        data.start_offset_x_view = view_x;
+        data.start_offset_y_view = view_y;
+    }
+}
+
+void building_construction_get_view_position(int *view_x, int *view_y)
+{
+    *view_x = data.start_offset_x_view;
+    *view_y = data.start_offset_y_view;
 }

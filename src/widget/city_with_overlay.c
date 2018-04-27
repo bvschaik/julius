@@ -1,6 +1,7 @@
 #include "city_with_overlay.h"
 
 #include "building/animation.h"
+#include "building/construction.h"
 #include "building/industry.h"
 #include "city/view.h"
 #include "core/debug.h"
@@ -238,7 +239,7 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
 
 static void draw_footprint(int x, int y, int grid_offset)
 {
-    city_building_ghost_record_view_position(x, y, grid_offset);
+    building_construction_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         // Outside map: draw black tile
         image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_BLACK), x, y, 0);
