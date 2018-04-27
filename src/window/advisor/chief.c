@@ -65,11 +65,11 @@ static int draw_background()
     draw_title(106, 3);
     if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 3) {
         lang_text_draw(61, 79, X_OFFSET, 106, FONT_NORMAL_GREEN);
-    } else if (Data_CityInfo.populationNewcomersThisMonth >= 5) {
+    } else if (city_migration_newcomers() >= 5) {
         lang_text_draw(61, 25, X_OFFSET, 106, FONT_NORMAL_GREEN);
     } else if (city_migration_no_room_for_immigrants()) {
         lang_text_draw(61, 18, X_OFFSET, 106, FONT_NORMAL_RED);
-    } else if (Data_CityInfo.populationMigrationPercentage >= 80) {
+    } else if (city_migration_percentage() >= 80) {
         lang_text_draw(61, 25, X_OFFSET, 106, FONT_NORMAL_GREEN);
     } else {
         int text_id;

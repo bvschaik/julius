@@ -377,7 +377,7 @@ static int draw_background()
     text_draw_number(city_resource_food_types_available(), '@', " ", 75 + width, 360, FONT_NORMAL_WHITE);
 
     // immigration
-    int newcomers = Data_CityInfo.populationNewcomersThisMonth;
+    int newcomers = city_migration_newcomers();
     if (newcomers >= 5) {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
         width = text_draw_number(newcomers, '@', " ", 75, 396, FONT_NORMAL_WHITE);
@@ -385,7 +385,7 @@ static int draw_background()
     } else if (city_migration_no_room_for_immigrants()) {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
         lang_text_draw(55, 19, 75, 396, FONT_NORMAL_WHITE);
-    } else if (Data_CityInfo.populationMigrationPercentage < 80) {
+    } else if (city_migration_percentage() < 80) {
         lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE);
         int text_id;
         switch (city_migration_no_immigation_cause()) {

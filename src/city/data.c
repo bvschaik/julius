@@ -106,11 +106,11 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.migration.immigrated_today);
     buffer_write_i32(main, city_data.migration.emigrated_today);
     buffer_write_i32(main, city_data.migration.refused_immigrants_today);
-    buffer_write_i32(main, Data_CityInfo.populationMigrationPercentage);
+    buffer_write_i32(main, city_data.migration.percentage);
     buffer_write_i32(main, city_data.unused.unused_27d0);
     buffer_write_i32(main, city_data.migration.immigration_duration);
     buffer_write_i32(main, city_data.migration.emigration_duration);
-    buffer_write_i32(main, Data_CityInfo.populationNewcomersThisMonth);
+    buffer_write_i32(main, city_data.migration.newcomers);
     for (int i = 0; i < 4; i++) {
         buffer_write_i32(main, city_data.unused.unknown_27e0[i]);
     }
@@ -516,7 +516,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, Data_CityInfo.entertainmentHippodromeHasShow);
     buffer_write_i32(main, Data_CityInfo.messageShownHippodrome);
     buffer_write_i32(main, Data_CityInfo.messageShownColosseum);
-    buffer_write_i32(main, Data_CityInfo.messageShownEmigration);
+    buffer_write_i32(main, city_data.migration.emigration_message_shown);
     buffer_write_i32(main, Data_CityInfo.messageShownFired);
     buffer_write_i32(main, Data_CityInfo.messageShownVictory);
     buffer_write_i32(main, Data_CityInfo.missionSavedGameWritten);
@@ -583,11 +583,11 @@ static void load_main_data(buffer *main)
     city_data.migration.immigrated_today = buffer_read_i32(main);
     city_data.migration.emigrated_today = buffer_read_i32(main);
     city_data.migration.refused_immigrants_today = buffer_read_i32(main);
-    Data_CityInfo.populationMigrationPercentage = buffer_read_i32(main);
+    city_data.migration.percentage = buffer_read_i32(main);
     city_data.unused.unused_27d0 = buffer_read_i32(main);
     city_data.migration.immigration_duration = buffer_read_i32(main);
     city_data.migration.emigration_duration = buffer_read_i32(main);
-    Data_CityInfo.populationNewcomersThisMonth = buffer_read_i32(main);
+    city_data.migration.newcomers = buffer_read_i32(main);
     for (int i = 0; i < 4; i++) {
         city_data.unused.unknown_27e0[i] = buffer_read_i32(main);
     }
@@ -993,7 +993,7 @@ static void load_main_data(buffer *main)
     Data_CityInfo.entertainmentHippodromeHasShow = buffer_read_i32(main);
     Data_CityInfo.messageShownHippodrome = buffer_read_i32(main);
     Data_CityInfo.messageShownColosseum = buffer_read_i32(main);
-    Data_CityInfo.messageShownEmigration = buffer_read_i32(main);
+    city_data.migration.emigration_message_shown = buffer_read_i32(main);
     Data_CityInfo.messageShownFired = buffer_read_i32(main);
     Data_CityInfo.messageShownVictory = buffer_read_i32(main);
     Data_CityInfo.missionSavedGameWritten = buffer_read_i32(main);

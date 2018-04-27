@@ -9,8 +9,6 @@ extern struct _Data_CityInfo {
 	int32_t populationRoomInHouses;
 	int32_t populationLastTargetHouseAdd;
 	int32_t populationLastTargetHouseRemove;
-	int32_t populationMigrationPercentage;
-	int32_t populationNewcomersThisMonth;
 	int16_t resourceLastTargetWarehouse;
 	int32_t housesRequiringFountainToEvolve;//4268
 	int32_t housesRequiringWellToEvolve;//426c
@@ -86,7 +84,6 @@ extern struct _Data_CityInfo {
 	int32_t entertainmentHippodromeHasShow;
 	int32_t messageShownHippodrome;
 	int32_t messageShownColosseum;
-	int32_t messageShownEmigration;
 	int32_t messageShownFired;
 	int32_t messageShownVictory;
 	int32_t missionSavedGameWritten;

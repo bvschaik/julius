@@ -19,6 +19,7 @@
 #include "city/health.h"
 #include "city/labor.h"
 #include "city/message.h"
+#include "city/migration.h"
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/resource.h"
@@ -70,8 +71,7 @@ static void advance_year()
 
 static void advance_month()
 {
-    Data_CityInfo.populationNewcomersThisMonth = 0;
-
+    city_migration_reset_newcomers();
     city_health_update();
     scenario_random_event_process();
     city_finance_handle_month_change();

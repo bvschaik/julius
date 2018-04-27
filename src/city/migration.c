@@ -11,19 +11,19 @@
 static void update_status()
 {
     if (city_data.sentiment.value > 70) {
-        Data_CityInfo.populationMigrationPercentage = 100;
+        city_data.migration.percentage = 100;
     } else if (city_data.sentiment.value > 60) {
-        Data_CityInfo.populationMigrationPercentage = 75;
+        city_data.migration.percentage = 75;
     } else if (city_data.sentiment.value >= 50) {
-        Data_CityInfo.populationMigrationPercentage = 50;
+        city_data.migration.percentage = 50;
     } else if (city_data.sentiment.value > 40) {
-        Data_CityInfo.populationMigrationPercentage = 0;
+        city_data.migration.percentage = 0;
     } else if (city_data.sentiment.value > 30) {
-        Data_CityInfo.populationMigrationPercentage = -10;
+        city_data.migration.percentage = -10;
     } else if (city_data.sentiment.value > 20) {
-        Data_CityInfo.populationMigrationPercentage = -25;
+        city_data.migration.percentage = -25;
     } else {
-        Data_CityInfo.populationMigrationPercentage = -50;
+        city_data.migration.percentage = -50;
     }
 
     city_data.migration.immigration_amount_per_batch = 0;
@@ -31,31 +31,31 @@ static void update_status()
 
     int population_cap = tutorial_get_population_cap(200000);
     if (city_data.population.population >= population_cap) {
-        Data_CityInfo.populationMigrationPercentage = 0;
+        city_data.migration.percentage = 0;
         return;
     }
     // war scares immigrants away
     if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 3 &&
-        Data_CityInfo.populationMigrationPercentage > 0) {
-        Data_CityInfo.populationMigrationPercentage = 0;
+        city_data.migration.percentage > 0) {
+        city_data.migration.percentage = 0;
         return;
     }
-    if (Data_CityInfo.populationMigrationPercentage > 0) {
+    if (city_data.migration.percentage > 0) {
         // immigration
         if (city_data.migration.emigration_duration) {
             city_data.migration.emigration_duration--;
         } else {
             city_data.migration.immigration_amount_per_batch =
-                calc_adjust_with_percentage(12, Data_CityInfo.populationMigrationPercentage);
+                calc_adjust_with_percentage(12, city_data.migration.percentage);
             city_data.migration.immigration_duration = 2;
         }
-    } else if (Data_CityInfo.populationMigrationPercentage < 0) {
+    } else if (city_data.migration.percentage < 0) {
         // emigration
         if (city_data.migration.immigration_duration) {
             city_data.migration.immigration_duration--;
         } else if (city_data.population.population > 100) {
             city_data.migration.emigration_amount_per_batch =
-                calc_adjust_with_percentage(12, -Data_CityInfo.populationMigrationPercentage);
+                calc_adjust_with_percentage(12, -city_data.migration.percentage);
             city_data.migration.emigration_duration = 2;
         }
     }
@@ -65,7 +65,7 @@ static void create_immigrants(int num_people)
 {
     int immigrated = house_population_create_immigrants(num_people);
     city_data.migration.immigrated_today += immigrated;
-    Data_CityInfo.populationNewcomersThisMonth += city_data.migration.immigrated_today;
+    city_data.migration.newcomers += city_data.migration.immigrated_today;
     if (immigrated == 0) {
         city_data.migration.refused_immigrants_today += num_people;
     }
@@ -99,8 +99,8 @@ static void create_migrants()
         } else if (city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size >= 4) {
             create_emigrants(city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size);
             city_data.migration.emigration_queue_size = 0;
-            if (!Data_CityInfo.messageShownEmigration) {
-                Data_CityInfo.messageShownEmigration = 1;
+            if (!city_data.migration.emigration_message_shown) {
+                city_data.migration.emigration_message_shown = 1;
                 city_message_post(1, MESSAGE_EMIGRATION, 0, 0);
             }
         } else {
@@ -150,4 +150,19 @@ int city_migration_no_immigation_cause()
 int city_migration_no_room_for_immigrants()
 {
     return city_data.migration.refused_immigrants_today || Data_CityInfo.populationRoomInHouses <= 0;
+}
+
+int city_migration_percentage()
+{
+    return city_data.migration.percentage;
+}
+
+int city_migration_newcomers()
+{
+    return city_data.migration.newcomers;
+}
+
+void city_migration_reset_newcomers()
+{
+    city_data.migration.newcomers = 0;
 }
