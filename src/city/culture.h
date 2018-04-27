@@ -20,6 +20,10 @@ int city_culture_coverage_academy();
 
 int city_culture_coverage_hospital();
 
+int city_culture_average_education();
+int city_culture_average_entertainment();
+int city_culture_average_health();
+
 void city_culture_calculate();
 
 void city_culture_save_state(buffer *buf);

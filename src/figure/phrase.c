@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/market.h"
 #include "city/constants.h"
+#include "city/culture.h"
 #include "city/gods.h"
 #include "city/labor.h"
 #include "city/population.h"
@@ -588,20 +589,20 @@ static int phrase_based_on_city_state(figure *f)
         return 1;
     } else if (city_labor_workers_needed() >= 10) {
         return 2;
-    } else if (Data_CityInfo.citywideAverageEntertainment == 0) {
+    } else if (city_culture_average_entertainment() == 0) {
         return 3;
     } else if (god_state == GOD_STATE_VERY_ANGRY) {
         return 4;
-    } else if (Data_CityInfo.citywideAverageEntertainment <= 10) {
+    } else if (city_culture_average_entertainment() <= 10) {
         return 3;
     } else if (god_state == GOD_STATE_ANGRY) {
         return 4;
-    } else if (Data_CityInfo.citywideAverageEntertainment <= 20) {
+    } else if (city_culture_average_entertainment() <= 20) {
         return 3;
     } else if (city_resource_food_supply_months() >= 4 &&
             unemployment_pct <= 5 &&
-            Data_CityInfo.citywideAverageHealth > 0 &&
-            Data_CityInfo.citywideAverageEducation > 0) {
+            city_culture_average_health() > 0 &&
+            city_culture_average_education() > 0) {
         if (city_population() < 500) {
             return 5;
         } else {

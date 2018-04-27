@@ -121,8 +121,8 @@ static void update_culture_explanation()
 {
     int min_percentage = 100;
     int reason = 1;
-    if (Data_CityInfo.cultureCoverageReligion < min_percentage) {
-        min_percentage = Data_CityInfo.cultureCoverageReligion;
+    if (city_data.culture.religion_coverage < min_percentage) {
+        min_percentage = city_data.culture.religion_coverage;
         reason = 4;
     }
     int pct_theater = city_culture_coverage_theater();
@@ -324,7 +324,7 @@ static void update_culture_rating()
     }
     city_data.ratings.culture += city_data.ratings.culture_points.theater;
 
-    int pct_religion = Data_CityInfo.cultureCoverageReligion;
+    int pct_religion = city_data.culture.religion_coverage;
     if (pct_religion >= 100) {
         city_data.ratings.culture_points.religion = 30;
     } else if (pct_religion > 85) {

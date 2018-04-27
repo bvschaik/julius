@@ -3,8 +3,6 @@
 #include "building/building.h"
 #include "city/data_private.h"
 
-#include "Data/CityInfo.h"
-
 int city_entertainment_theater_shows()
 {
     return city_data.entertainment.theater_shows;

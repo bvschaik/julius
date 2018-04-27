@@ -284,7 +284,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.entertainment.hippodrome_shows);
     buffer_write_i32(main, city_data.entertainment.hippodrome_no_shows_weighted);
     buffer_write_i32(main, city_data.entertainment.venue_needing_shows);
-    buffer_write_i32(main, Data_CityInfo.citywideAverageEntertainment);
+    buffer_write_i32(main, city_data.culture.average_entertainment);
     buffer_write_i32(main, city_data.houses.missing.entertainment);
     buffer_write_i32(main, city_data.festival.months_since_festival);
     for (int i = 0; i < MAX_GODS; i++) {
@@ -389,10 +389,10 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.festival.grand_cost);
     buffer_write_i32(main, city_data.festival.grand_wine);
     buffer_write_i32(main, city_data.festival.not_enough_wine);
-    buffer_write_i32(main, Data_CityInfo.citywideAverageReligion);
-    buffer_write_i32(main, Data_CityInfo.citywideAverageEducation);
-    buffer_write_i32(main, Data_CityInfo.citywideAverageHealth);
-    buffer_write_i32(main, Data_CityInfo.cultureCoverageReligion);
+    buffer_write_i32(main, city_data.culture.average_religion);
+    buffer_write_i32(main, city_data.culture.average_education);
+    buffer_write_i32(main, city_data.culture.average_health);
+    buffer_write_i32(main, city_data.culture.religion_coverage);
     buffer_write_i32(main, city_data.festival.first_festival_effect_months);
     buffer_write_i32(main, city_data.festival.second_festival_effect_months);
     buffer_write_i32(main, city_data.unused.unused_4454);
@@ -761,7 +761,7 @@ static void load_main_data(buffer *main)
     city_data.entertainment.hippodrome_shows = buffer_read_i32(main);
     city_data.entertainment.hippodrome_no_shows_weighted = buffer_read_i32(main);
     city_data.entertainment.venue_needing_shows = buffer_read_i32(main);
-    Data_CityInfo.citywideAverageEntertainment = buffer_read_i32(main);
+    city_data.culture.average_entertainment = buffer_read_i32(main);
     city_data.houses.missing.entertainment = buffer_read_i32(main);
     city_data.festival.months_since_festival = buffer_read_i32(main);
     for (int i = 0; i < MAX_GODS; i++) {
@@ -866,10 +866,10 @@ static void load_main_data(buffer *main)
     city_data.festival.grand_cost = buffer_read_i32(main);
     city_data.festival.grand_wine = buffer_read_i32(main);
     city_data.festival.not_enough_wine = buffer_read_i32(main);
-    Data_CityInfo.citywideAverageReligion = buffer_read_i32(main);
-    Data_CityInfo.citywideAverageEducation = buffer_read_i32(main);
-    Data_CityInfo.citywideAverageHealth = buffer_read_i32(main);
-    Data_CityInfo.cultureCoverageReligion = buffer_read_i32(main);
+    city_data.culture.average_religion = buffer_read_i32(main);
+    city_data.culture.average_education = buffer_read_i32(main);
+    city_data.culture.average_health = buffer_read_i32(main);
+    city_data.culture.religion_coverage = buffer_read_i32(main);
     city_data.festival.first_festival_effect_months = buffer_read_i32(main);
     city_data.festival.second_festival_effect_months = buffer_read_i32(main);
     city_data.unused.unused_4454 = buffer_read_i32(main);

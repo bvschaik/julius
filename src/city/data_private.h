@@ -217,6 +217,13 @@ extern struct city_data_t {
         int32_t favor_explanation;
     } ratings;
     struct {
+        int32_t average_entertainment;
+        int32_t average_religion;
+        int32_t average_education;
+        int32_t average_health;
+        int32_t religion_coverage;
+    } culture;
+    struct {
         god_status gods[5];
         int32_t least_happy_god;
         int32_t angry_message_delay;

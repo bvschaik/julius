@@ -14,8 +14,6 @@
 #include "graphics/window.h"
 #include "window/hold_festival.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 23
 
 static void button_hold_festival(int param1, int param2);
@@ -32,7 +30,7 @@ static int get_entertainment_advice()
     if (demands->missing.entertainment > demands->missing.more_entertainment) {
         return 3;
     } else if (!demands->missing.more_entertainment) {
-        return Data_CityInfo.citywideAverageEntertainment ? 1 : 0;
+        return city_culture_average_entertainment() ? 1 : 0;
     } else if (city_entertainment_venue_needing_shows()) {
         return 3 + city_entertainment_venue_needing_shows();
     } else {

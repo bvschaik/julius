@@ -9,8 +9,6 @@
 #include "city/population.h"
 #include "core/calc.h"
 
-#include "Data/CityInfo.h"
-
 static struct {
     int theater;
     int amphitheater;
@@ -74,6 +72,21 @@ int city_culture_coverage_hospital()
     return coverage.hospital;
 }
 
+int city_culture_average_education()
+{
+    return city_data.culture.average_education;
+}
+
+int city_culture_average_entertainment()
+{
+    return city_data.culture.average_entertainment;
+}
+
+int city_culture_average_health()
+{
+    return city_data.culture.average_health;
+}
+
 static int top(int input)
 {
     return input > 100 ? 100 : input;
@@ -122,13 +135,13 @@ void city_culture_update_coverage()
         population));
     coverage.oracle = top(calc_percentage(500 * oracles, population));
 
-    Data_CityInfo.cultureCoverageReligion =
+    city_data.culture.religion_coverage =
         coverage.religion[GOD_CERES] +
         coverage.religion[GOD_NEPTUNE] +
         coverage.religion[GOD_MERCURY] +
         coverage.religion[GOD_MARS] +
         coverage.religion[GOD_VENUS];
-    Data_CityInfo.cultureCoverageReligion /= 5;
+    city_data.culture.religion_coverage /= 5;
 
     // education
     city_population_calculate_educational_age();
@@ -147,27 +160,27 @@ void city_culture_update_coverage()
 
 void city_culture_calculate()
 {
-    Data_CityInfo.citywideAverageEntertainment = 0;
-    Data_CityInfo.citywideAverageReligion = 0;
-    Data_CityInfo.citywideAverageEducation = 0;
-    Data_CityInfo.citywideAverageHealth = 0;
+    city_data.culture.average_entertainment = 0;
+    city_data.culture.average_religion = 0;
+    city_data.culture.average_education = 0;
+    city_data.culture.average_health = 0;
 
     int num_houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
             num_houses++;
-            Data_CityInfo.citywideAverageEntertainment += b->data.house.entertainment;
-            Data_CityInfo.citywideAverageReligion += b->data.house.numGods;
-            Data_CityInfo.citywideAverageEducation += b->data.house.education;
-            Data_CityInfo.citywideAverageHealth += b->data.house.health;
+            city_data.culture.average_entertainment += b->data.house.entertainment;
+            city_data.culture.average_religion += b->data.house.numGods;
+            city_data.culture.average_education += b->data.house.education;
+            city_data.culture.average_health += b->data.house.health;
         }
     }
     if (num_houses) {
-        Data_CityInfo.citywideAverageEntertainment /= num_houses;
-        Data_CityInfo.citywideAverageReligion /= num_houses;
-        Data_CityInfo.citywideAverageEducation /= num_houses;
-        Data_CityInfo.citywideAverageHealth /= num_houses;
+        city_data.culture.average_entertainment /= num_houses;
+        city_data.culture.average_religion /= num_houses;
+        city_data.culture.average_education /= num_houses;
+        city_data.culture.average_health /= num_houses;
     }
 
     city_entertainment_calculate_shows();

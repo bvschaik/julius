@@ -10,15 +10,10 @@ extern struct _Data_CityInfo {
 	int32_t populationLastTargetHouseAdd;
 	int32_t populationLastTargetHouseRemove;
 	int16_t resourceLastTargetWarehouse;
-	int32_t citywideAverageEntertainment;
 	int32_t numProtestersThisMonth;
 	int32_t numCriminalsThisMonth; // muggers+rioters
 	int32_t numRiotersInCity;
 	int16_t numAnimalsInCity;
-	int32_t citywideAverageReligion;
-	int32_t citywideAverageEducation;
-	int32_t citywideAverageHealth;
-	int32_t cultureCoverageReligion;
 	int32_t riotersOrAttackingNativesInCity;
 	int32_t nativeAttackDuration;
 	int32_t nativeMissionPostOperational;
