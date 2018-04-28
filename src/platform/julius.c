@@ -286,6 +286,16 @@ static void set_window_size(int width, int height)
     setting_set_display(0, width, height);
 }
 
+static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
+{
+    mouse_set_position(event->x, event->y);
+    if (event->button == SDL_BUTTON_LEFT) {
+        mouse_set_left_down(is_down);
+    } else if (event->button == SDL_BUTTON_RIGHT) {
+        mouse_set_right_down(is_down);
+    }
+}
+
 static void mainLoop()
 {
     SDL_Event event;
@@ -311,10 +321,12 @@ static void mainLoop()
                             active = 0;
                             break;
                         case SDL_WINDOWEVENT_SIZE_CHANGED:
-                        //case SDL_WINDOWEVENT_RESIZED:
-                            printf("System resize to %d x %d\n", event.window.data1, event.window.data2);
+                            printf("Window resized to %d x %d\n", event.window.data1, event.window.data2);
                             createSurface(event.window.data1, event.window.data2, setting_fullscreen());
                             window_invalidate();
+                            break;
+                        case SDL_WINDOWEVENT_RESIZED:
+                            printf("System resize to %d x %d\n", event.window.data1, event.window.data2);
                             break;
                     }
                     break;
@@ -336,21 +348,11 @@ static void mainLoop()
                     break;
                 
                 case SDL_MOUSEBUTTONDOWN:
-                    mouse_set_position(event.motion.x, event.motion.y);
-                    if (event.button.button == SDL_BUTTON_LEFT) {
-                        mouse_set_left_down(1);
-                    } else if (event.button.button == SDL_BUTTON_RIGHT) {
-                        mouse_set_right_down(1);
-                    }
+                    handle_mouse_button(&event.button, 1);
                     break;
                 
                 case SDL_MOUSEBUTTONUP:
-                    mouse_set_position(event.button.x, event.button.y);
-                    if (event.button.button == SDL_BUTTON_LEFT) {
-                        mouse_set_left_down(0);
-                    } else if (event.button.button == SDL_BUTTON_RIGHT) {
-                        mouse_set_right_down(0);
-                    }
+                    handle_mouse_button(&event.button, 0);
                     break;
                 
                 case SDL_MOUSEWHEEL:
