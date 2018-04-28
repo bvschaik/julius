@@ -18,6 +18,12 @@ set(SMK_FILES
     ext/libsmacker/smk_bitstream.c
     ext/libsmacker/smk_hufftree.c
 )
+
+set(PLATFORM_FILES
+    ${PROJECT_SOURCE_DIR}/src/platform/julius.c
+    ${PROJECT_SOURCE_DIR}/src/platform/sdl_sound_device.c
+)
+
 set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/buffer.c
     ${PROJECT_SOURCE_DIR}/src/core/calc.c
@@ -31,11 +37,6 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/string.c
     ${PROJECT_SOURCE_DIR}/src/core/time.c
     ${PROJECT_SOURCE_DIR}/src/core/zip.c
-)
-
-set(PLATFORM_FILES
-    ${PROJECT_SOURCE_DIR}/platform/main2.c
-    ${PROJECT_SOURCE_DIR}/platform/SDLSoundDevice.c
 )
 
 set(BUILDING_FILES
