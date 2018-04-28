@@ -62,16 +62,16 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     int is_reverse = 0;
     if (b->type == BUILDING_WINE_WORKSHOP) {
         // exception for wine...
-        int pctDone = calc_percentage(b->data.industry.progress, 400);
-        if (pctDone <= 0) {
+        int pct_done = calc_percentage(b->data.industry.progress, 400);
+        if (pct_done <= 0) {
             new_sprite = 0;
-        } else if (pctDone < 4) {
+        } else if (pct_done < 4) {
             new_sprite = 1;
-        } else if (pctDone < 8) {
+        } else if (pct_done < 8) {
             new_sprite = 2;
-        } else if (pctDone < 12) {
+        } else if (pct_done < 12) {
             new_sprite = 3;
-        } else if (pctDone < 96) {
+        } else if (pct_done < 96) {
             if (map_sprite_animation_at(grid_offset) < 4) {
                 new_sprite = 4;
             } else {
@@ -95,15 +95,15 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
         if (map_sprite_animation_at(grid_offset) & 0x80) {
             is_reverse = 1;
         }
-        int currentSprite = map_sprite_animation_at(grid_offset) & 0x7f;
+        int current_sprite = map_sprite_animation_at(grid_offset) & 0x7f;
         if (is_reverse) {
-            new_sprite = currentSprite - 1;
+            new_sprite = current_sprite - 1;
             if (new_sprite < 1) {
                 new_sprite = 1;
                 is_reverse = 0;
             }
         } else {
-            new_sprite = currentSprite + 1;
+            new_sprite = current_sprite + 1;
             if (new_sprite > img->num_animation_sprites) {
                 new_sprite = img->num_animation_sprites;
                 is_reverse = 1;

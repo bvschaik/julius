@@ -66,7 +66,7 @@ void house_service_decay_houses_covered()
 
 void house_service_calculate_culture_aggregates()
 {
-    int baseEntertainment = city_culture_coverage_average_entertainment() / 5;
+    int base_entertainment = city_culture_coverage_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !b->houseSize) {
@@ -74,7 +74,7 @@ void house_service_calculate_culture_aggregates()
         }
 
         // entertainment
-        b->data.house.entertainment = baseEntertainment;
+        b->data.house.entertainment = base_entertainment;
         if (b->data.house.theater) {
             b->data.house.entertainment += 10;
         }

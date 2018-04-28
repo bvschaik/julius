@@ -91,7 +91,7 @@ void building_house_change_to_vacant_lot(building *house)
     }
 }
 
-static void prepare_for_merge(int buildingId, int num_tiles)
+static void prepare_for_merge(int building_id, int num_tiles)
 {
     for (int i = 0; i < INVENTORY_MAX; i++) {
         merge_data.inventory[i] = 0;
@@ -102,7 +102,7 @@ static void prepare_for_merge(int buildingId, int num_tiles)
         int house_offset = grid_offset + HOUSE_TILE_OFFSETS[i];
         if (map_terrain_is(house_offset, TERRAIN_BUILDING)) {
             building *house = building_get(map_building_at(house_offset));
-            if (house->id != buildingId && house->houseSize) {
+            if (house->id != building_id && house->houseSize) {
                 merge_data.population += house->housePopulation;
                 for (int inv = 0; inv < INVENTORY_MAX; inv++) {
                     merge_data.inventory[inv] += house->data.house.inventory[inv];
@@ -505,11 +505,11 @@ void building_house_check_for_corruption(building *house)
         map_grid_size(&map_width, &map_height);
         for (int y = 0; y < map_height; y++) {
             for (int x = 0; x < map_width; x++) {
-                int gridOffset = map_grid_offset(x, y);
-                if (map_building_at(gridOffset) == house->id) {
-                    house->gridOffset = gridOffset;
-                    house->x = map_grid_offset_to_x(gridOffset);
-                    house->y = map_grid_offset_to_y(gridOffset);
+                int grid_offset = map_grid_offset(x, y);
+                if (map_building_at(grid_offset) == house->id) {
+                    house->gridOffset = grid_offset;
+                    house->x = map_grid_offset_to_x(grid_offset);
+                    house->y = map_grid_offset_to_y(grid_offset);
                     building_totals_add_corrupted_house(0);
                     return;
                 }

@@ -619,15 +619,15 @@ static void spawn_figure_market(building *b)
             }
         } else {
             map_has_road_access(b->x, b->y, b->size, &x_road, &y_road);
-            int dstBuildingId = building_market_get_storage_destination(b);
-            if (dstBuildingId > 0) {
+            int dst_building_id = building_market_get_storage_destination(b);
+            if (dst_building_id > 0) {
                 figure *f = figure_create(FIGURE_MARKET_BUYER, x_road, y_road, DIR_0_TOP);
                 f->actionState = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
                 f->buildingId = b->id;
                 b->figureId2 = f->id;
-                f->destinationBuildingId = dstBuildingId;
+                f->destinationBuildingId = dst_building_id;
                 f->collectingItemId = b->data.market.fetch_inventory_id;
-                building *bDst = building_get(dstBuildingId);
+                building *bDst = building_get(dst_building_id);
                 if (map_has_road_access(bDst->x, bDst->y, bDst->size, &x_road, &y_road) ||
                     map_has_road_access(bDst->x, bDst->y, 3, &x_road, &y_road)) {
                     f->destinationX = x_road;
@@ -1037,28 +1037,28 @@ static void spawn_figure_dock(building *b)
     if (map_has_road_access(b->x, b->y, b->size, &x_road, &y_road)) {
         spawn_labor_seeker(b, x_road, y_road, 50);
         int pct_workers = worker_percentage(b);
-        int maxDockers;
+        int max_dockers;
         if (pct_workers >= 75) {
-            maxDockers = 3;
+            max_dockers = 3;
         } else if (pct_workers >= 50) {
-            maxDockers = 2;
+            max_dockers = 2;
         } else if (pct_workers > 0) {
-            maxDockers = 1;
+            max_dockers = 1;
         } else {
-            maxDockers = 0;
+            max_dockers = 0;
         }
         // count existing dockers
-        int existingDockers = 0;
+        int existing_dockers = 0;
         for (int i = 0; i < 3; i++) {
             if (b->data.dock.docker_ids[i]) {
                 if (figure_get(b->data.dock.docker_ids[i])->type == FIGURE_DOCKER) {
-                    existingDockers++;
+                    existing_dockers++;
                 } else {
                     b->data.dock.docker_ids[i] = 0;
                 }
             }
         }
-        if (existingDockers > maxDockers) {
+        if (existing_dockers > max_dockers) {
             // too many dockers, kill one of them
             for (int i = 2; i >= 0; i--) {
                 if (b->data.dock.docker_ids[i]) {
@@ -1066,7 +1066,7 @@ static void spawn_figure_dock(building *b)
                     break;
                 }
             }
-        } else if (existingDockers < maxDockers) {
+        } else if (existing_dockers < max_dockers) {
             figure *f = figure_create(FIGURE_DOCKER, x_road, y_road, DIR_4_BOTTOM);
             f->actionState = FIGURE_ACTION_132_DOCKER_IDLING;
             f->buildingId = b->id;

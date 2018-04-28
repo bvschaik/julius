@@ -9,17 +9,17 @@
 
 int building_dock_count_idle_dockers(const building *dock)
 {
-    int numIdle = 0;
+    int num_idle = 0;
     for (int i = 0; i < 3; i++) {
         if (dock->data.dock.docker_ids[i]) {
             figure *f = figure_get(dock->data.dock.docker_ids[i]);
             if (f->actionState == FIGURE_ACTION_132_DOCKER_IDLING ||
                 f->actionState == FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE) {
-                numIdle++;
+                num_idle++;
             }
         }
     }
-    return numIdle;
+    return num_idle;
 }
 
 void building_dock_update_open_water_access()
