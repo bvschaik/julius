@@ -575,7 +575,7 @@ int building_construction_place_building(building_type type, int x, int y)
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }
-        if (formation_get_num_legions_cached() >= 6) {
+        if (formation_get_num_legions_cached() >= MAX_LEGIONS) {
             city_warning_show(WARNING_MAX_LEGIONS_REACHED);
             return 0;
         }
