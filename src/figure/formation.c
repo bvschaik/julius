@@ -1,5 +1,6 @@
 #include "formation.h"
 
+#include "city/military.h"
 #include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
@@ -204,7 +205,7 @@ void formation_calculate_legion_totals()
 {
     data.id_last_legion = 0;
     data.num_legions = 0;
-    Data_CityInfo.militaryLegionaryLegions = 0;
+    city_military_clear_legionary_legions();
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use) {
@@ -212,7 +213,7 @@ void formation_calculate_legion_totals()
                 data.id_last_legion = i;
                 data.num_legions++;
                 if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-                    Data_CityInfo.militaryLegionaryLegions++;
+                    city_military_add_legionary_legion();
                 }
             }
             if (m->missile_attack_timeout <= 0 && m->figures[0]) {
@@ -521,19 +522,7 @@ void formation_calculate_figures()
         }
     }
 
-    Data_CityInfo.militaryTotalLegionsEmpireService = 0;
-    Data_CityInfo.militaryTotalSoldiers = 0;
-    Data_CityInfo.militaryTotalLegions = 0;
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        const formation *m = formation_get(i);
-        if (m->in_use && m->is_legion) {
-            Data_CityInfo.militaryTotalLegions++;
-            Data_CityInfo.militaryTotalSoldiers += m->num_figures;
-            if (m->empire_service && m->num_figures > 0) {
-                Data_CityInfo.militaryTotalLegionsEmpireService++;
-            }
-        }
-    }
+    city_military_update_totals();
 }
 
 static void update_direction(int formation_id, int first_figure_direction)

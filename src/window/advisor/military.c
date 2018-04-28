@@ -1,6 +1,7 @@
 #include "military.h"
 
 #include "city/figures.h"
+#include "city/military.h"
 #include "city/view.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
@@ -90,9 +91,9 @@ static int draw_background()
     } else {
         // has forts
         image_draw(image_group(GROUP_BULLET), 100, 349);
-        int width = lang_text_draw_amount(8, 46, Data_CityInfo.militaryTotalSoldiers, 120, 348, FONT_NORMAL_BLACK);
+        int width = lang_text_draw_amount(8, 46, city_military_total_soldiers(), 120, 348, FONT_NORMAL_BLACK);
         width += lang_text_draw(51, 7, 120 + width, 348, FONT_NORMAL_BLACK);
-        lang_text_draw_amount(8, 48, Data_CityInfo.militaryTotalLegions, 120 + width, 348, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 48, city_military_total_legions(), 120 + width, 348, FONT_NORMAL_BLACK);
 
         image_draw(image_group(GROUP_BULLET), 100, 369);
         lang_text_draw(51, enemy_text_id, 120, 368, FONT_NORMAL_BLACK);

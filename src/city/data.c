@@ -477,10 +477,10 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, Data_CityInfo.distantBattleWonCount);
     buffer_write_i8(main, Data_CityInfo.distantBattleEnemyMonthsTraveled);
     buffer_write_i8(main, Data_CityInfo.distantBattleRomanMonthsTraveled);
-    buffer_write_u8(main, Data_CityInfo.militaryTotalLegions);
-    buffer_write_u8(main, Data_CityInfo.militaryTotalLegionsEmpireService);
+    buffer_write_u8(main, city_data.military.total_legions);
+    buffer_write_u8(main, city_data.military.empire_service_legions);
     buffer_write_u8(main, city_data.unused.unknown_458e);
-    buffer_write_u8(main, Data_CityInfo.militaryTotalSoldiers);
+    buffer_write_u8(main, city_data.military.total_soldiers);
     buffer_write_i8(main, city_data.building.triumphal_arches_placed);
     buffer_write_i8(main, city_data.sound.die_citizen);
     buffer_write_i8(main, city_data.sound.die_soldier);
@@ -503,7 +503,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.emperor.invasion.count);
     buffer_write_i32(main, city_data.emperor.invasion.size);
     buffer_write_i32(main, city_data.emperor.invasion.soldiers_killed);
-    buffer_write_i32(main, Data_CityInfo.militaryLegionaryLegions);
+    buffer_write_i32(main, city_data.military.legionary_legions);
     buffer_write_i32(main, city_data.population.highest_ever);
     buffer_write_i32(main, city_data.finance.estimated_wages);
     buffer_write_i32(main, city_data.resource.wine_types_available);
@@ -954,10 +954,10 @@ static void load_main_data(buffer *main)
     Data_CityInfo.distantBattleWonCount = buffer_read_i8(main);
     Data_CityInfo.distantBattleEnemyMonthsTraveled = buffer_read_i8(main);
     Data_CityInfo.distantBattleRomanMonthsTraveled = buffer_read_i8(main);
-    Data_CityInfo.militaryTotalLegions = buffer_read_u8(main);
-    Data_CityInfo.militaryTotalLegionsEmpireService = buffer_read_u8(main);
+    city_data.military.total_legions = buffer_read_u8(main);
+    city_data.military.empire_service_legions = buffer_read_u8(main);
     city_data.unused.unknown_458e = buffer_read_u8(main);
-    Data_CityInfo.militaryTotalSoldiers = buffer_read_u8(main);
+    city_data.military.total_soldiers = buffer_read_u8(main);
     city_data.building.triumphal_arches_placed = buffer_read_i8(main);
     city_data.sound.die_citizen = buffer_read_i8(main);
     city_data.sound.die_soldier = buffer_read_i8(main);
@@ -980,7 +980,7 @@ static void load_main_data(buffer *main)
     city_data.emperor.invasion.count = buffer_read_i32(main);
     city_data.emperor.invasion.size = buffer_read_i32(main);
     city_data.emperor.invasion.soldiers_killed = buffer_read_i32(main);
-    Data_CityInfo.militaryLegionaryLegions = buffer_read_i32(main);
+    city_data.military.legionary_legions = buffer_read_i32(main);
     city_data.population.highest_ever = buffer_read_i32(main);
     city_data.finance.estimated_wages = buffer_read_i32(main);
     city_data.resource.wine_types_available = buffer_read_i32(main);

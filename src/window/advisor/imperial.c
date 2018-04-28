@@ -2,6 +2,7 @@
 
 #include "city/emperor.h"
 #include "city/finance.h"
+#include "city/military.h"
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "empire/city.h"
@@ -137,9 +138,9 @@ static int get_request_status(int index)
     if (Data_CityInfo.distantBattleMonthsToBattle > 0 && Data_CityInfo.distantBattleRomanMonthsToTravel <= 0) {
         num_requests = 1;
         if (index == 0) {
-            if (Data_CityInfo.militaryTotalLegions <= 0) {
+            if (city_military_total_legions() <= 0) {
                 return STATUS_NO_LEGIONS_AVAILABLE;
-            } else if (Data_CityInfo.militaryTotalLegionsEmpireService <= 0) {
+            } else if (city_military_empire_service_legions() <= 0) {
                 return STATUS_NO_LEGIONS_SELECTED;
             } else {
                 return STATUS_CONFIRM_SEND_LEGIONS;
@@ -243,7 +244,7 @@ static void button_request(int index, int param2)
 {
     int status = get_request_status(index);
     if (status) {
-        Data_CityInfo.militaryTotalLegionsEmpireService = 0;
+        city_military_clear_empire_service_legions();
         switch (status) {
             case STATUS_NO_LEGIONS_AVAILABLE:
                 window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_AVAILABLE, confirm_nothing, 0);

@@ -5,6 +5,7 @@
 #include "building/storage.h"
 #include "city/buildings.h"
 #include "city/finance.h"
+#include "city/military.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/image.h"
@@ -13,8 +14,6 @@
 #include "map/image.h"
 #include "map/road_access.h"
 #include "scenario/property.h"
-
-#include "Data/CityInfo.h"
 
 int building_warehouse_get_space_info(building *warehouse)
 {
@@ -486,7 +485,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
         }
     }
     // deliver weapons to barracks
-    if (building_count_active(BUILDING_BARRACKS) > 0 && Data_CityInfo.militaryLegionaryLegions > 0 &&
+    if (building_count_active(BUILDING_BARRACKS) > 0 && city_military_has_legionary_legions() &&
         !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
         building *barracks = building_get(city_buildings_get_barracks());
         if (barracks->loadsStored < 4 &&

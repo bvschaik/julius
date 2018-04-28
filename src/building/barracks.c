@@ -3,6 +3,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "city/buildings.h"
+#include "city/military.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "figure/action.h"
@@ -10,8 +11,6 @@
 #include "figure/formation.h"
 #include "map/grid.h"
 #include "map/road_access.h"
-
-#include "Data/CityInfo.h"
 
 static int tower_sentry_request = 0;
 
@@ -27,7 +26,7 @@ int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_d
         return 0;
     }
     building *b = building_get(city_buildings_get_barracks());
-    if (b->loadsStored < 5 && Data_CityInfo.militaryLegionaryLegions > 0) {
+    if (b->loadsStored < 5 && city_military_has_legionary_legions()) {
         if (map_has_road_access(b->x, b->y, b->size, x_dst, y_dst) && b->roadNetworkId == road_network_id) {
             return b->id;
         }

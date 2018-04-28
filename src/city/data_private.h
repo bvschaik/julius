@@ -85,6 +85,12 @@ extern struct city_data_t {
         } invasion;
     } emperor;
     struct {
+        uint8_t total_legions;
+        uint8_t total_soldiers;
+        uint8_t empire_service_legions;
+        int32_t legionary_legions;
+    } military;
+    struct {
         int32_t treasury;
         int32_t tax_percentage;
         int32_t estimated_tax_income;
