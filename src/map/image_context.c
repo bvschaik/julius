@@ -264,15 +264,15 @@ static struct terrain_image_context terrainGraphicsAqueduct[16] = {
 };
 
 enum {
-    TerrainGraphicsContext_Water,
-    TerrainGraphicsContext_Wall,
-    TerrainGraphicsContext_WallGatehouse,
-    TerrainGraphicsContext_Elevation,
-    TerrainGraphicsContext_Earthquake,
-    TerrainGraphicsContext_DirtRoad,
-    TerrainGraphicsContext_PavedRoad,
-    TerrainGraphicsContext_Aqueduct,
-    TerrainGraphicsContext_NumItems
+    CONTEXT_WATER,
+    CONTEXT_WALL,
+    CONTEXT_WALL_GATEHOUSE,
+    CONTEXT_ELEVATION,
+    CONTEXT_EARTHQUAKE,
+    CONTEXT_DIRT_ROAD,
+    CONTEXT_PAVED_ROAD,
+    CONTEXT_AQUEDUCT,
+    CONTEXT_MAX_ITEMS
 };
 
 static struct {
@@ -302,7 +302,7 @@ static void clearCurrentOffset(struct terrain_image_context *items, int num_item
 
 void map_image_context_init()
 {
-    for (int i = 0; i < TerrainGraphicsContext_NumItems; i++) {
+    for (int i = 0; i < CONTEXT_MAX_ITEMS; i++) {
         clearCurrentOffset(context_pointers[i].context, context_pointers[i].size);
     }
 }
@@ -346,7 +346,7 @@ const terrain_image *map_image_context_get_elevation(int grid_offset, int elevat
     for (int i = 0; i < MAX_TILES; i++) {
         tiles[i] = map_elevation_at(grid_offset + contextTileOffsets[i]) >= elevation ? 1 : 0;
     }
-    return get_image(TerrainGraphicsContext_Elevation, tiles);
+    return get_image(CONTEXT_ELEVATION, tiles);
 }
 
 const terrain_image *map_image_context_get_earthquake(int grid_offset)
@@ -357,7 +357,7 @@ const terrain_image *map_image_context_get_earthquake(int grid_offset)
         tiles[i] = (map_terrain_is(offset, TERRAIN_ROCK) &&
             map_property_is_plaza_or_earthquake(grid_offset)) ? 1 : 0;
     }
-    return get_image(TerrainGraphicsContext_Earthquake, tiles);
+    return get_image(CONTEXT_EARTHQUAKE, tiles);
 }
 
 static void fill_matches(int gridOffset, int terrain, int match_value, int no_match_value, int tiles[MAX_TILES])
@@ -371,14 +371,14 @@ const terrain_image *map_image_context_get_shore(int grid_offset)
 {
     int tiles[MAX_TILES];
     fill_matches(grid_offset, TERRAIN_WATER, 0, 1, tiles);
-    return get_image(TerrainGraphicsContext_Water, tiles);
+    return get_image(CONTEXT_WATER, tiles);
 }
 
 const terrain_image *map_image_context_get_wall(int grid_offset)
 {
     int tiles[MAX_TILES];
     fill_matches(grid_offset, TERRAIN_WALL, 0, 1, tiles);
-    return get_image(TerrainGraphicsContext_Wall, tiles);
+    return get_image(CONTEXT_WALL, tiles);
 }
 
 const terrain_image *map_image_context_get_wall_gatehouse(int grid_offset)
@@ -387,7 +387,7 @@ const terrain_image *map_image_context_get_wall_gatehouse(int grid_offset)
     for (int i = 0; i < MAX_TILES; i += 2) {
         tiles[i] = map_terrain_is(grid_offset + contextTileOffsets[i], TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
     }
-    return get_image(TerrainGraphicsContext_WallGatehouse, tiles);
+    return get_image(CONTEXT_WALL_GATEHOUSE, tiles);
 }
 
 static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
@@ -409,14 +409,14 @@ const terrain_image *map_image_context_get_dirt_road(int grid_offset)
 {
     int tiles[MAX_TILES];
     set_tiles_road(grid_offset, tiles);
-    return get_image(TerrainGraphicsContext_DirtRoad, tiles);
+    return get_image(CONTEXT_DIRT_ROAD, tiles);
 }
 
 const terrain_image *map_image_context_get_paved_road(int grid_offset)
 {
     int tiles[MAX_TILES];
     set_tiles_road(grid_offset, tiles);
-    return get_image(TerrainGraphicsContext_PavedRoad, tiles);
+    return get_image(CONTEXT_PAVED_ROAD, tiles);
 }
 
 static void set_terrain_reservoir(int grid_offset, int index, int multi_tile_mask, int tiles[MAX_TILES])
@@ -457,5 +457,5 @@ const terrain_image *map_image_context_get_aqueduct(int grid_offset, int include
             }
         }
     }
-    return get_image(TerrainGraphicsContext_Aqueduct, tiles);
+    return get_image(CONTEXT_AQUEDUCT, tiles);
 }
