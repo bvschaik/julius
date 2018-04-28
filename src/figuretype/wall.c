@@ -42,7 +42,7 @@ static const int TOWER_SENTRY_FIRING_OFFSETS[] = {
 void figure_ballista_action(figure *f)
 {
     building *b = building_get(f->buildingId);
-    f->terrainUsage = FigureTerrainUsage_Walls;
+    f->terrainUsage = TERRAIN_USAGE_WALLS;
     f->useCrossCountry = 0;
     f->isGhost = 1;
     f->heightAdjustedTicks = 10;
@@ -168,7 +168,7 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
 void figure_tower_sentry_action(figure *f)
 {
     building *b = building_get(f->buildingId);
-    f->terrainUsage = FigureTerrainUsage_Walls;
+    f->terrainUsage = TERRAIN_USAGE_WALLS;
     f->useCrossCountry = 0;
     f->isGhost = 1;
     f->heightAdjustedTicks = 10;
@@ -237,7 +237,7 @@ void figure_tower_sentry_action(figure *f)
             }
             break;
         case FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER:
-            f->terrainUsage = FigureTerrainUsage_Roads;
+            f->terrainUsage = TERRAIN_USAGE_ROADS;
             f->isGhost = 0;
             f->heightAdjustedTicks = 0;
             figure_movement_move_ticks(f, 1);

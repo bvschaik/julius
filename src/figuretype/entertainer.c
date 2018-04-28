@@ -140,7 +140,7 @@ void figure_entertainer_action(figure *f)
 {
     building *b = building_get(f->buildingId);
     f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART);
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 512;
     figure_image_increase_offset(f, 12);

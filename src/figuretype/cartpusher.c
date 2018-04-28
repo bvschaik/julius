@@ -152,7 +152,7 @@ void figure_cartpusher_action(figure *f)
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     int road_network_id = map_road_network_get(f->gridOffset);
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     building *b = building_get(f->buildingId);
     
     switch (f->actionState) {
@@ -340,7 +340,7 @@ static void determine_warehouseman_destination(figure *f, int road_network_id)
         if (dst_building_id) {
             f->loadsSoldOrCarrying = 0;
             set_destination(f, FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE, dst_building_id, x_dst, y_dst);
-            f->terrainUsage = FigureTerrainUsage_PreferRoads;
+            f->terrainUsage = TERRAIN_USAGE_PREFER_ROADS;
         } else {
             f->state = FIGURE_STATE_DEAD;
         }
@@ -405,7 +405,7 @@ static void determine_warehouseman_destination(figure *f, int road_network_id)
 
 void figure_warehouseman_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     int road_network_id = map_road_network_get(f->gridOffset);
@@ -540,7 +540,7 @@ void figure_warehouseman_action(figure *f)
             }
             break;
         case FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE:
-            f->terrainUsage = FigureTerrainUsage_PreferRoads;
+            f->terrainUsage = TERRAIN_USAGE_PREFER_ROADS;
             f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
@@ -552,7 +552,7 @@ void figure_warehouseman_action(figure *f)
             }
             break;
         case FIGURE_ACTION_58_WAREHOUSEMAN_AT_WAREHOUSE:
-            f->terrainUsage = FigureTerrainUsage_PreferRoads;
+            f->terrainUsage = TERRAIN_USAGE_PREFER_ROADS;
             f->waitTicks++;
             if (f->waitTicks > 4) {
                 f->loadsSoldOrCarrying = 0;
@@ -570,7 +570,7 @@ void figure_warehouseman_action(figure *f)
             f->graphicOffset = 0;
             break;
         case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
-            f->terrainUsage = FigureTerrainUsage_PreferRoads;
+            f->terrainUsage = TERRAIN_USAGE_PREFER_ROADS;
             // update graphic
             if (f->loadsSoldOrCarrying <= 0) {
                 f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty

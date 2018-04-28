@@ -106,12 +106,12 @@ enum {
 };
 
 enum {
-    FigureTerrainUsage_Any = 0,
-    FigureTerrainUsage_Roads = 1,
-    FigureTerrainUsage_Enemy = 2,
-    FigureTerrainUsage_PreferRoads = 3,
-    FigureTerrainUsage_Walls = 4,
-    FigureTerrainUsage_Animal = 5,
+    TERRAIN_USAGE_ANY = 0,
+    TERRAIN_USAGE_ROADS = 1,
+    TERRAIN_USAGE_ENEMY = 2,
+    TERRAIN_USAGE_PREFER_ROADS = 3,
+    TERRAIN_USAGE_WALLS = 4,
+    TERRAIN_USAGE_ANIMAL = 5,
 };
 
 #endif // FIGURE_TYPE_H

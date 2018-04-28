@@ -19,7 +19,7 @@ void figure_engineer_action(figure *f)
 {
     building *b = building_get(f->buildingId);
     
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 640;
     if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
@@ -244,7 +244,7 @@ void figure_prefect_action(figure *f)
 {
     building *b = building_get(f->buildingId);
     
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 640;
     if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
@@ -319,7 +319,7 @@ void figure_prefect_action(figure *f)
             }
             break;
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
-            f->terrainUsage = FigureTerrainUsage_Any;
+            f->terrainUsage = TERRAIN_USAGE_ANY;
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_75_PREFECT_AT_FIRE;
@@ -334,7 +334,7 @@ void figure_prefect_action(figure *f)
             extinguish_fire(f);
             break;
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
-            f->terrainUsage = FigureTerrainUsage_Any;
+            f->terrainUsage = TERRAIN_USAGE_ANY;
             if (!target_is_alive(f)) {
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
@@ -399,7 +399,7 @@ void figure_prefect_action(figure *f)
 
 void figure_worker_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);

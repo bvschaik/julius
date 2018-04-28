@@ -13,7 +13,7 @@
 void figure_indigenous_native_action(figure *f)
 {
     building *b = building_get(f->buildingId);
-    f->terrainUsage = FigureTerrainUsage_Any;
+    f->terrainUsage = TERRAIN_USAGE_ANY;
     f->useCrossCountry = 0;
     f->maxRoamLength = 800;
     if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
@@ -70,7 +70,7 @@ void figure_indigenous_native_action(figure *f)
             break;
         case FIGURE_ACTION_159_NATIVE_ATTACKING:
             city_figures_add_attacking_native();
-            f->terrainUsage = FigureTerrainUsage_Enemy;
+            f->terrainUsage = TERRAIN_USAGE_ENEMY;
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE ||

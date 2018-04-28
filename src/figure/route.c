@@ -68,7 +68,7 @@ void figure_route_add(figure *f)
         // land figure
         int can_travel;
         switch (f->terrainUsage) {
-            case FigureTerrainUsage_Enemy:
+            case TERRAIN_USAGE_ENEMY:
                 can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
                     f->destinationX, f->destinationY, f->destinationBuildingId, 5000);
                 if (!can_travel) {
@@ -80,15 +80,15 @@ void figure_route_add(figure *f)
                     }
                 }
                 break;
-            case FigureTerrainUsage_Walls:
+            case TERRAIN_USAGE_WALLS:
                 can_travel = map_routing_can_travel_over_walls(f->x, f->y,
                     f->destinationX, f->destinationY);
                 break;
-            case FigureTerrainUsage_Animal:
+            case TERRAIN_USAGE_ANIMAL:
                 can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
                     f->destinationX, f->destinationY, -1, 5000);
                 break;
-            case FigureTerrainUsage_PreferRoads:
+            case TERRAIN_USAGE_PREFER_ROADS:
                 can_travel = map_routing_citizen_can_travel_over_road_garden(f->x, f->y,
                     f->destinationX, f->destinationY);
                 if (!can_travel) {
@@ -96,7 +96,7 @@ void figure_route_add(figure *f)
                         f->destinationX, f->destinationY);
                 }
                 break;
-            case FigureTerrainUsage_Roads:
+            case TERRAIN_USAGE_ROADS:
                 can_travel = map_routing_citizen_can_travel_over_road_garden(f->x, f->y,
                     f->destinationX, f->destinationY);
                 break;
@@ -106,7 +106,7 @@ void figure_route_add(figure *f)
                 break;
         }
         if (can_travel) {
-            if (f->terrainUsage == FigureTerrainUsage_Walls) {
+            if (f->terrainUsage == TERRAIN_USAGE_WALLS) {
                 path_length = map_routing_get_path(data.direction_paths[path_id], f->x, f->y,
                     f->destinationX, f->destinationY, 4);
                 if (path_length <= 0) {

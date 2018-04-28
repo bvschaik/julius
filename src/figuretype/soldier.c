@@ -44,7 +44,7 @@ void figure_military_standard_action(figure *f)
 {
     const formation *m = formation_get(f->formationId);
 
-    f->terrainUsage = FigureTerrainUsage_Any;
+    f->terrainUsage = TERRAIN_USAGE_ANY;
     figure_image_increase_offset(f, 16);
     map_figure_delete(f);
     if (m->is_at_fort) {
@@ -223,7 +223,7 @@ void figure_soldier_action(figure *f)
 {
     formation *m = formation_get(f->formationId);
     city_figures_add_soldier();
-    f->terrainUsage = FigureTerrainUsage_Any;
+    f->terrainUsage = TERRAIN_USAGE_ANY;
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     if (m->in_use != 1) {

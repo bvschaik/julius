@@ -159,7 +159,7 @@ static void advance_route_tile(figure *f, int roaming_enabled)
         if (!map_terrain_is(target_grid_offset, TERRAIN_WATER)) {
             f->direction = DIR_FIGURE_REROUTE;
         }
-    } else if (f->terrainUsage == FigureTerrainUsage_Enemy) {
+    } else if (f->terrainUsage == TERRAIN_USAGE_ENEMY) {
         if (!map_routing_noncitizen_is_passable(target_grid_offset)) {
             f->direction = DIR_FIGURE_REROUTE;
         } else if (map_routing_is_destroyable(target_grid_offset)) {
@@ -191,7 +191,7 @@ static void advance_route_tile(figure *f, int roaming_enabled)
                 }
             }
         }
-    } else if (f->terrainUsage == FigureTerrainUsage_Walls) {
+    } else if (f->terrainUsage == TERRAIN_USAGE_WALLS) {
         if (!map_routing_is_wall_passable(target_grid_offset)) {
             f->direction = DIR_FIGURE_REROUTE;
         }

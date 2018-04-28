@@ -83,7 +83,7 @@ void figure_immigrant_action(figure *f)
 {
     building *b = building_get(f->immigrantBuildingId);
     
-    f->terrainUsage = FigureTerrainUsage_Any;
+    f->terrainUsage = TERRAIN_USAGE_ANY;
     f->cartGraphicId = 0;
     if (b->state != BUILDING_STATE_IN_USE || b->immigrantFigureId != f->id || !b->houseSize) {
         f->state = FIGURE_STATE_DEAD;
@@ -167,7 +167,7 @@ void figure_immigrant_action(figure *f)
 
 void figure_emigrant_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Any;
+    f->terrainUsage = TERRAIN_USAGE_ANY;
     f->cartGraphicId = 0;
     
     figure_image_increase_offset(f, 12);
@@ -223,7 +223,7 @@ void figure_emigrant_action(figure *f)
 void figure_homeless_action(figure *f)
 {
     figure_image_increase_offset(f, 12);
-    f->terrainUsage = FigureTerrainUsage_PreferRoads;
+    f->terrainUsage = TERRAIN_USAGE_PREFER_ROADS;
     
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:

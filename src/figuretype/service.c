@@ -49,7 +49,7 @@ static void roamer_action(figure *f, int num_ticks)
 
 static void culture_action(figure *f, int group)
 {
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);
@@ -68,7 +68,7 @@ void figure_priest_action(figure *f)
 
 void figure_school_child_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 96;
     building *b = building_get(f->buildingId);
@@ -122,7 +122,7 @@ void figure_doctor_action(figure *f)
 
 void figure_missionary_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 192;
     building *b = building_get(f->buildingId);
@@ -136,7 +136,7 @@ void figure_missionary_action(figure *f)
 
 void figure_patrician_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 128;
     if (building_get(f->buildingId)->state != BUILDING_STATE_IN_USE) {
@@ -149,7 +149,7 @@ void figure_patrician_action(figure *f)
 
 void figure_labor_seeker_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);
@@ -163,7 +163,7 @@ void figure_labor_seeker_action(figure *f)
 
 void figure_market_trader_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *market = building_get(f->buildingId);
@@ -187,7 +187,7 @@ void figure_tax_collector_action(figure *f)
 {
     building *b = building_get(f->buildingId);
     
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 512;
     if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {

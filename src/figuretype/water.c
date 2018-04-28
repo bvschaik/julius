@@ -60,7 +60,7 @@ void figure_flotsam_action(figure *f)
     }
     f->isGhost = 0;
     f->cartGraphicId = 0;
-    f->terrainUsage = FigureTerrainUsage_Any;
+    f->terrainUsage = TERRAIN_USAGE_ANY;
     switch (f->actionState) {
         case FIGURE_ACTION_128_FLOTSAM_CREATED:
             f->isGhost = 1;

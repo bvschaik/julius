@@ -101,7 +101,7 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
 
 void figure_market_buyer_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 800;
     
@@ -154,7 +154,7 @@ void figure_market_buyer_action(figure *f)
 void figure_delivery_boy_action(figure *f)
 {
     f->isGhost = 0;
-    f->terrainUsage = FigureTerrainUsage_Roads;
+    f->terrainUsage = TERRAIN_USAGE_ROADS;
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     

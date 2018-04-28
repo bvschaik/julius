@@ -162,7 +162,7 @@ static void enemy_fighting(figure *f, const formation *m)
 static void enemy_action(figure *f, formation *m)
 {
     city_figures_add_enemy();
-    f->terrainUsage = FigureTerrainUsage_Enemy;
+    f->terrainUsage = TERRAIN_USAGE_ENEMY;
     f->formationPositionX = formation_layout_position_x(m->layout, f->indexInFormation);
     f->formationPositionY = formation_layout_position_y(m->layout, f->indexInFormation);
 
@@ -559,7 +559,7 @@ void figure_enemy53_axe_action(figure *f)
 
 void figure_enemy_gladiator_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Any;
+    f->terrainUsage = TERRAIN_USAGE_ANY;
     f->useCrossCountry = 0;
     figure_image_increase_offset(f, 12);
     if (scenario_gladiator_revolt_is_finished()) {
@@ -598,7 +598,7 @@ void figure_enemy_gladiator_action(figure *f)
             break;
         case FIGURE_ACTION_159_NATIVE_ATTACKING:
             city_figures_set_gladiator_revolt();
-            f->terrainUsage = FigureTerrainUsage_Enemy;
+            f->terrainUsage = TERRAIN_USAGE_ENEMY;
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE ||

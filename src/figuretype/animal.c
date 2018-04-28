@@ -104,7 +104,7 @@ void figure_create_herds()
 
 void figure_seagulls_action(figure *f)
 {
-    f->terrainUsage = FigureTerrainUsage_Any;
+    f->terrainUsage = TERRAIN_USAGE_ANY;
     f->isGhost = 0;
     f->useCrossCountry = 1;
     if (!(f->graphicOffset & 3) && figure_movement_move_ticks_cross_country(f, 1)) {
@@ -128,7 +128,7 @@ void figure_seagulls_action(figure *f)
 void figure_sheep_action(figure *f)
 {
     const formation *m = formation_get(f->formationId);
-    f->terrainUsage = FigureTerrainUsage_Animal;
+    f->terrainUsage = TERRAIN_USAGE_ANIMAL;
     f->useCrossCountry = 0;
     f->isGhost = 0;
     city_figures_add_animal();
@@ -181,7 +181,7 @@ void figure_sheep_action(figure *f)
 void figure_wolf_action(figure *f)
 {
     const formation *m = formation_get(f->formationId);
-    f->terrainUsage = FigureTerrainUsage_Animal;
+    f->terrainUsage = TERRAIN_USAGE_ANIMAL;
     f->useCrossCountry = 0;
     f->isGhost = 0;
     city_figures_add_animal();
@@ -256,7 +256,7 @@ void figure_wolf_action(figure *f)
 void figure_zebra_action(figure *f)
 {
     const formation *m = formation_get(f->formationId);
-    f->terrainUsage = FigureTerrainUsage_Animal;
+    f->terrainUsage = TERRAIN_USAGE_ANIMAL;
     f->useCrossCountry = 0;
     f->isGhost = 0;
     city_figures_add_animal();

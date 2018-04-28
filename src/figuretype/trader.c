@@ -324,7 +324,7 @@ static void go_to_next_warehouse(figure *f, int x_src, int y_src, int distance_t
 void figure_trade_caravan_action(figure *f)
 {
     f->isGhost = 0;
-    f->terrainUsage = FigureTerrainUsage_PreferRoads;
+    f->terrainUsage = TERRAIN_USAGE_PREFER_ROADS;
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     switch (f->actionState) {
@@ -429,7 +429,7 @@ void figure_trade_caravan_action(figure *f)
 void figure_trade_caravan_donkey_action(figure *f)
 {
     f->isGhost = 0;
-    f->terrainUsage = FigureTerrainUsage_PreferRoads;
+    f->terrainUsage = TERRAIN_USAGE_PREFER_ROADS;
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
 
@@ -458,7 +458,7 @@ void figure_trade_caravan_donkey_action(figure *f)
 void figure_native_trader_action(figure *f)
 {
     f->isGhost = 0;
-    f->terrainUsage = FigureTerrainUsage_Any;
+    f->terrainUsage = TERRAIN_USAGE_ANY;
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     switch (f->actionState) {
