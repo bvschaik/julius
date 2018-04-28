@@ -73,11 +73,11 @@ static int draw_background()
         enemy_text_id = 8;
     }
     int distant_battle_text_id;
-    if (Data_CityInfo.distantBattleRomanMonthsToReturn > 0) {
+    if (city_military_distant_battle_roman_army_is_traveling_back()) {
         distant_battle_text_id = 15;
-    } else if (Data_CityInfo.distantBattleRomanMonthsToTravel > 0) {
+    } else if (city_military_distant_battle_roman_army_is_traveling_forth()) {
         distant_battle_text_id = 14;
-    } else if (Data_CityInfo.distantBattleMonthsToBattle > 0) {
+    } else if (city_military_months_until_distant_battle() > 0) {
         distant_battle_text_id = 13;
     } else {
         distant_battle_text_id = 12;

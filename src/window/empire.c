@@ -226,13 +226,12 @@ static void draw_city_info(const empire_object *object)
 
 static void draw_roman_army_info(const empire_object *object)
 {
-    if (Data_CityInfo.distantBattleRomanMonthsToTravel > 0 ||
-        Data_CityInfo.distantBattleRomanMonthsToReturn > 0) {
+    if (city_military_distant_battle_roman_army_is_traveling()) {
         if (Data_CityInfo.distantBattleRomanMonthsTraveled == object->distant_battle_travel_months) {
             int x_offset = (data.x_min + data.x_max - 240) / 2;
             int y_offset = data.y_max - 88;
             int text_id;
-            if (Data_CityInfo.distantBattleRomanMonthsToTravel) {
+            if (city_military_distant_battle_roman_army_is_traveling_forth()) {
                 text_id = 15;
             } else {
                 text_id = 16;
@@ -244,7 +243,7 @@ static void draw_roman_army_info(const empire_object *object)
 
 static void draw_enemy_army_info(const empire_object *object)
 {
-    if (Data_CityInfo.distantBattleMonthsToBattle > 0) {
+    if (city_military_months_until_distant_battle() > 0) {
         if (Data_CityInfo.distantBattleEnemyMonthsTraveled == object->distant_battle_travel_months) {
             lang_text_draw_multiline(47, 14,
                 (data.x_min + data.x_max - 240) / 2,
@@ -321,7 +320,7 @@ static void draw_empire_object(const empire_object *obj)
         return;
     }
     if (obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
-        if (Data_CityInfo.distantBattleMonthsToBattle <= 0) {
+        if (city_military_months_until_distant_battle() <= 0) {
             return;
         }
         if (Data_CityInfo.distantBattleEnemyMonthsTraveled != obj->distant_battle_travel_months) {
@@ -329,8 +328,7 @@ static void draw_empire_object(const empire_object *obj)
         }
     }
     if (obj->type == EMPIRE_OBJECT_ROMAN_ARMY) {
-        if (Data_CityInfo.distantBattleRomanMonthsToTravel <= 0 &&
-            Data_CityInfo.distantBattleRomanMonthsToReturn <= 0) {
+        if (!city_military_distant_battle_roman_army_is_traveling()) {
             return;
         }
         if (Data_CityInfo.distantBattleRomanMonthsTraveled != obj->distant_battle_travel_months) {

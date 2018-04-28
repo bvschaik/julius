@@ -96,6 +96,9 @@ extern struct city_data_t {
             int8_t won_count;
             uint8_t enemy_strength;
             uint8_t roman_strength;
+            int8_t months_until_battle;
+            int8_t roman_months_to_travel_forth;
+            int8_t roman_months_to_travel_back;
         } distant_battle;
     } military;
     struct {
