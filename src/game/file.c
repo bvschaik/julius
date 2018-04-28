@@ -9,6 +9,7 @@
 #include "city/emperor.h"
 #include "city/map.h"
 #include "city/message.h"
+#include "city/military.h"
 #include "city/mission.h"
 #include "city/victory.h"
 #include "city/view.h"
@@ -186,7 +187,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     empire_init_scenario();
     traders_clear();
     scenario_invasion_init();
-    empire_determine_distant_battle_city();
+    city_military_determine_distant_battle_city();
     scenario_request_init();
     scenario_demand_change_init();
     scenario_price_change_init();
@@ -246,7 +247,7 @@ static void initialize_saved_game()
 
     image_load_climate(scenario_property_climate());
     image_load_enemy(scenario_property_enemy());
-    empire_determine_distant_battle_city();
+    city_military_determine_distant_battle_city();
     map_tiles_determine_gardens();
 
     city_message_clear_scroll();

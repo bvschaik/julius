@@ -12,4 +12,11 @@ void city_military_clear_empire_service_legions();
 
 void city_military_update_totals();
 
+void city_military_determine_distant_battle_city();
+int city_military_distant_battle_city();
+
+void city_military_init_distant_battle(int enemy_strength);
+int city_military_has_distant_battle();
+void city_military_process_distant_battle();
+
 #endif // CITY_MILITARY_H

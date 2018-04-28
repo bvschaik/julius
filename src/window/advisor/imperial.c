@@ -111,7 +111,7 @@ static int draw_background()
         button_border_draw(38, 96, 560, 40, 0);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
-        lang_text_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id, 50 + width, 102, FONT_NORMAL_WHITE);
+        lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 50 + width, 102, FONT_NORMAL_WHITE);
         int strength_text_id;
         if (Data_CityInfo.distantBattleEnemyStrength < 46) {
             strength_text_id = 73;

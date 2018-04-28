@@ -222,11 +222,6 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     return in_stock < max_in_stock ? 1 : 0;
 }
 
-void empire_determine_distant_battle_city()
-{
-    Data_CityInfo.distantBattleCityId = empire_city_get_vulnerable_roman();
-}
-
 void empire_save_state(buffer *buf)
 {
     buffer_write_i32(buf, data.scroll_x);
