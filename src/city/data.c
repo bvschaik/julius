@@ -401,7 +401,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.sentiment.previous_value);
     buffer_write_i32(main, city_data.sentiment.message_delay);
     buffer_write_i32(main, city_data.sentiment.low_mood_cause);
-    buffer_write_i32(main, Data_CityInfo.riotersOrAttackingNativesInCity);
+    buffer_write_i32(main, city_data.figure.security_breach_duration);
     for (int i = 0; i < 4; i++) {
         buffer_write_i32(main, city_data.unused.unknown_446c[i]);
     }
@@ -878,7 +878,7 @@ static void load_main_data(buffer *main)
     city_data.sentiment.previous_value = buffer_read_i32(main);
     city_data.sentiment.message_delay = buffer_read_i32(main);
     city_data.sentiment.low_mood_cause = buffer_read_i32(main);
-    Data_CityInfo.riotersOrAttackingNativesInCity = buffer_read_i32(main);
+    city_data.figure.security_breach_duration = buffer_read_i32(main);
     for (int i = 0; i < 4; i++) {
         city_data.unused.unknown_446c[i] = buffer_read_i32(main);
     }

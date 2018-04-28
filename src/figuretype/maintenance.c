@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "building/maintenance.h"
+#include "city/figures.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "figure/combat.h"
@@ -13,8 +14,6 @@
 #include "map/building.h"
 #include "map/road_access.h"
 #include "sound/effect.h"
-
-#include "Data/CityInfo.h"
 
 void figure_engineer_action(figure *f)
 {
@@ -125,7 +124,7 @@ static int get_nearest_enemy(int x, int y, int *distance)
 
 static int fight_enemy(figure *f)
 {
-    if (Data_CityInfo.riotersOrAttackingNativesInCity <= 0 && enemy_army_total_enemy_formations() <= 0) {
+    if (!city_figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0) {
         return 0;
     }
     switch (f->actionState) {

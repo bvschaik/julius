@@ -10,6 +10,9 @@ void city_figures_reset()
     city_data.figure.animals = 0;
     city_data.figure.imperial_soldiers = 0;
     city_data.figure.soldiers = 0;
+    if (city_data.figure.security_breach_duration > 0) {
+        city_data.figure.security_breach_duration--;
+    }
 }
 
 void city_figures_add_animal()
@@ -19,6 +22,7 @@ void city_figures_add_animal()
 
 void city_figures_add_attacking_native()
 {
+    city_data.figure.security_breach_duration = 10;
     city_data.figure.attacking_natives++;
 }
 
@@ -32,9 +36,12 @@ void city_figures_add_imperial_soldier()
     city_data.figure.imperial_soldiers++;
 }
 
-void city_figures_add_rioter()
+void city_figures_add_rioter(int is_attacking)
 {
     city_data.figure.rioters++;
+    if (is_attacking) {
+        city_data.figure.security_breach_duration = 10;
+    }
 }
 
 void city_figures_add_soldier()
@@ -80,4 +87,9 @@ int city_figures_soldiers()
 int city_figures_total_invading_enemies()
 {
     return city_data.figure.imperial_soldiers + city_data.figure.enemies;
+}
+
+int city_figures_has_security_breach()
+{
+    return city_data.figure.security_breach_duration > 0;
 }

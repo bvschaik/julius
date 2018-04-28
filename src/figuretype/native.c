@@ -10,8 +10,6 @@
 #include "figure/route.h"
 #include "map/terrain.h"
 
-#include "Data/CityInfo.h"
-
 void figure_indigenous_native_action(figure *f)
 {
     building *b = building_get(f->buildingId);
@@ -71,7 +69,6 @@ void figure_indigenous_native_action(figure *f)
             }
             break;
         case FIGURE_ACTION_159_NATIVE_ATTACKING:
-            Data_CityInfo.riotersOrAttackingNativesInCity = 10;
             city_figures_add_attacking_native();
             f->terrainUsage = FigureTerrainUsage_Enemy;
             figure_movement_move_ticks(f, 1);

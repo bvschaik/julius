@@ -21,8 +21,6 @@
 #include "map/road_access.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 static const int CRIMINAL_OFFSETS[] = {
     0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
 };
@@ -200,10 +198,7 @@ void figure_criminal_action(figure *f)
 
 void figure_rioter_action(figure *f)
 {
-    city_figures_add_rioter();
-    if (!f->targetedByFigureId) {
-        Data_CityInfo.riotersOrAttackingNativesInCity = 10;
-    }
+    city_figures_add_rioter(!f->targetedByFigureId);
     f->terrainUsage = FigureTerrainUsage_Enemy;
     f->maxRoamLength = 480;
     f->cartGraphicId = 0;

@@ -20,8 +20,6 @@
 #include "figuretype/wall.h"
 #include "figuretype/water.h"
 
-#include "Data/CityInfo.h"
-
 static void figure_nobody_action(figure *f)
 {
 }
@@ -113,9 +111,6 @@ void figure_action_handle()
 {
     city_figures_reset();
     city_entertainment_set_hippodrome_has_race(0);
-    if (Data_CityInfo.riotersOrAttackingNativesInCity > 0) {
-        Data_CityInfo.riotersOrAttackingNativesInCity--;
-    }
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
         if (f->state) {
