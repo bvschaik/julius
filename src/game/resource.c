@@ -23,3 +23,21 @@ int resource_is_food(resource_type resource)
     return resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
         resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT;
 }
+
+workshop_type resource_to_workshop_type(resource_type resource)
+{
+    switch (resource) {
+        case RESOURCE_OLIVES:
+            return WORKSHOP_OLIVES_TO_OIL;
+        case RESOURCE_VINES:
+            return WORKSHOP_VINES_TO_WINE;
+        case RESOURCE_IRON:
+            return WORKSHOP_IRON_TO_WEAPONS;
+        case RESOURCE_TIMBER:
+            return WORKSHOP_TIMBER_TO_FURNITURE;
+        case RESOURCE_CLAY:
+            return WORKSHOP_CLAY_TO_POTTERY;
+        default:
+            return WORKSHOP_NONE;
+    }
+}

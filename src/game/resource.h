@@ -72,4 +72,6 @@ int resource_image_offset(resource_type resource, resource_image_type type);
 
 int resource_is_food(resource_type resource);
 
+workshop_type resource_to_workshop_type(resource_type resource);
+
 #endif // GAME_RESOURCE_H

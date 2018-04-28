@@ -343,24 +343,6 @@ int building_warehouse_for_getting(building *src, int resource, int *x_dst, int 
     }
 }
 
-static int workshop_type_for_resource(int resource)
-{
-    switch (resource) {
-        case RESOURCE_OLIVES:
-            return WORKSHOP_OLIVES_TO_OIL;
-        case RESOURCE_VINES:
-            return WORKSHOP_VINES_TO_WINE;
-        case RESOURCE_IRON:
-            return WORKSHOP_IRON_TO_WEAPONS;
-        case RESOURCE_TIMBER:
-            return WORKSHOP_TIMBER_TO_FURNITURE;
-        case RESOURCE_CLAY:
-            return WORKSHOP_CLAY_TO_POTTERY;
-        default:
-            return WORKSHOP_NONE;
-    }
-}
-
 static int determine_granary_accept_foods(int resources[RESOURCE_MAX_FOOD])
 {
     if (scenario_property_rome_supplies_wheat()) {
@@ -507,7 +489,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
         space = building_next(space);
         if (space->id > 0 && space->loadsStored > 0) {
             if (!city_resource_is_stockpiled(space->subtype.warehouseResourceId)) {
-                int workshop_type = workshop_type_for_resource(space->subtype.warehouseResourceId);
+                int workshop_type = resource_to_workshop_type(space->subtype.warehouseResourceId);
                 if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type)) {
                     *resource = space->subtype.warehouseResourceId;
                     return WAREHOUSE_TASK_DELIVERING;
