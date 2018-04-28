@@ -122,40 +122,10 @@ static void draw_trade_resource(resource_type resource, int trade_max, int x_off
     }
 }
 
-static void draw_city_info(const empire_object *object)
+static void draw_trade_city_info(const empire_object *object, const empire_city *city)
 {
-    int x_offset = (data.x_min + data.x_max - 240) / 2;
-    int y_offset = data.y_max - 88;
-
-    const empire_city *city = empire_city_get(data.selected_city);
-    if (city->type == EMPIRE_CITY_DISTANT_ROMAN) {
-        lang_text_draw_centered(47, 12, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
-        return;
-    }
-    if (city->type == EMPIRE_CITY_VULNERABLE_ROMAN) {
-        if (Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0) {
-            lang_text_draw_centered(47, 12, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
-        } else {
-            lang_text_draw_centered(47, 13, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
-        }
-        return;
-    }
-    if (city->type == EMPIRE_CITY_FUTURE_TRADE ||
-        city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
-        city->type == EMPIRE_CITY_FUTURE_ROMAN) {
-        lang_text_draw_centered(47, 0, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
-        return;
-    }
-    if (city->type == EMPIRE_CITY_OURS) {
-        lang_text_draw_centered(47, 1, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
-        return;
-    }
-    if (city->type != EMPIRE_CITY_TRADE) {
-        return;
-    }
-    // trade city
-    x_offset = (data.x_min + data.x_max - 500) / 2;
-    y_offset = data.y_max - 108;
+    int x_offset = (data.x_min + data.x_max - 500) / 2;
+    int y_offset = data.y_max - 108;
     if (city->is_open) {
         // city sells
         lang_text_draw(47, 10, x_offset + 40, y_offset + 30, FONT_NORMAL_GREEN);
@@ -219,6 +189,37 @@ static void draw_city_info(const empire_object *object)
         index = lang_text_draw_amount(8, 0, city->cost_to_open,
                                            x_offset + 60, y_offset + 73, FONT_NORMAL_GREEN);
         lang_text_draw(47, 6, x_offset + index + 60, y_offset + 73, FONT_NORMAL_GREEN);
+    }
+}
+
+static void draw_city_info(const empire_object *object)
+{
+    int x_offset = (data.x_min + data.x_max - 240) / 2;
+    int y_offset = data.y_max - 88;
+
+    const empire_city *city = empire_city_get(data.selected_city);
+    switch (city->type) {
+        case EMPIRE_CITY_DISTANT_ROMAN:
+            lang_text_draw_centered(47, 12, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
+            break;
+        case EMPIRE_CITY_VULNERABLE_ROMAN:
+            if (Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0) {
+                lang_text_draw_centered(47, 12, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
+            } else {
+                lang_text_draw_centered(47, 13, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
+            }
+            break;
+        case EMPIRE_CITY_FUTURE_TRADE:
+        case EMPIRE_CITY_DISTANT_FOREIGN:
+        case EMPIRE_CITY_FUTURE_ROMAN:
+            lang_text_draw_centered(47, 0, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
+            break;
+        case EMPIRE_CITY_OURS:
+            lang_text_draw_centered(47, 1, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
+            break;
+        case EMPIRE_CITY_TRADE:
+            draw_trade_city_info(object, city);
+            break;
     }
 }
 
