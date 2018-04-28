@@ -433,7 +433,7 @@ static void menu_help_help(int param)
 {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MessageDialog_Help, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_HELP, 0);
 }
 
 static void menu_help_mouse_help(int param)
@@ -452,7 +452,7 @@ static void menu_help_about(int param)
 {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MessageDialog_About, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_ABOUT, 0);
 }
 
 

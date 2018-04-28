@@ -233,7 +233,7 @@ static void button_scroll(int is_down, int num_lines)
 
 static void button_help(int param1, int param2)
 {
-    window_message_dialog_show(MessageDialog_Messages, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_MESSAGES, 0);
 }
 
 static void button_close(int param1, int param2)

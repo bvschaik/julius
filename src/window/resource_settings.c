@@ -180,7 +180,7 @@ static void handle_mouse(const mouse *m)
 
 static void button_help(int param1, int param2)
 {
-    window_message_dialog_show(MessageDialog_Industry, 1);
+    window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, 1);
 }
 
 static void button_ok(int param1, int param2)

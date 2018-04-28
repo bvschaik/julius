@@ -140,7 +140,7 @@ static void draw_city_message_text(const lang_message *msg)
         int width = lang_text_draw(25, player_message.month, data.x_text + 10, data.y_text + 6, FONT_NORMAL_WHITE);
         width += lang_text_draw_year(player_message.year, data.x_text + 12 + width, data.y_text + 6, FONT_NORMAL_WHITE);
         if (msg->message_type == MESSAGE_TYPE_DISASTER && player_message.param1) {
-            if (data.text_id == MessageDialog_Theft) {
+            if (data.text_id == MESSAGE_DIALOG_THEFT) {
                 // param1 = denarii
                 lang_text_draw_amount(8, 0, player_message.param1, data.x + 240, data.y_text + 6, FONT_NORMAL_WHITE);
             } else {
@@ -494,7 +494,7 @@ static void button_close(int param1, int param2)
 static void button_help(int param1, int param2)
 {
     button_close(0, 0);
-    window_message_dialog_show(MessageDialog_Help, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_HELP, 0);
 }
 
 static void button_advisor(int advisor, int param2)
