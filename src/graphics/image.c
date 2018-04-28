@@ -10,13 +10,13 @@
 #define FOOTPRINT_HEIGHT 30
 
 typedef enum {
-    ColorType_Set,
-    ColorType_And,
-    ColorType_None,
-    ColorType_Blend
-} ColorType;
+    DRAW_TYPE_SET,
+    DRAW_TYPE_AND,
+    DRAW_TYPE_NONE,
+    DRAW_TYPE_BLEND
+} draw_type;
 
-static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, ColorType type)
+static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, draw_type type)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, img->height);
     if (!clip->isVisible) {
@@ -27,7 +27,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
         data += clip->clippedPixelsLeft;
         color_t *dst = graphics_get_pixel(x_offset + clip->clippedPixelsLeft, y_offset + y);
         int xMax = img->width - clip->clippedPixelsRight;
-        if (type == ColorType_None) {
+        if (type == DRAW_TYPE_NONE) {
             if (img->draw.type == 0 || img->draw.is_external) { // can be transparent
                 for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
                     if (*data != COLOR_TRANSPARENT) {
@@ -40,21 +40,21 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
                 memcpy(dst, data, num_pixels * sizeof(color_t));
                 data += num_pixels;
             }
-        } else if (type == ColorType_Set) {
+        } else if (type == DRAW_TYPE_SET) {
             for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
                 if (*data != COLOR_TRANSPARENT) {
                     *dst = color;
                 }
                 data++;
             }
-        } else if (type == ColorType_And) {
+        } else if (type == DRAW_TYPE_AND) {
             for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
                 if (*data != COLOR_TRANSPARENT) {
                     *dst = *data & color;
                 }
                 data++;
             }
-        } else if (type == ColorType_Blend) {
+        } else if (type == DRAW_TYPE_BLEND) {
             for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
                 if (*data != COLOR_TRANSPARENT) {
                     *dst &= color;
@@ -497,7 +497,7 @@ void image_draw(int image_id, int x, int y)
     if (img->draw.is_fully_compressed) {
         draw_compressed(img, data, x, y, img->height);
     } else {
-        draw_uncompressed(img, data, x, y, 0, ColorType_None);
+        draw_uncompressed(img, data, x, y, 0, DRAW_TYPE_NONE);
     }
 }
 
@@ -534,7 +534,7 @@ void image_draw_masked(int image_id, int x, int y, color_t color_mask)
         }
     } else {
         draw_uncompressed(img, data, x, y,
-                              color_mask, color_mask ? ColorType_And : ColorType_None);
+                              color_mask, color_mask ? DRAW_TYPE_AND : DRAW_TYPE_NONE);
     }
 }
 
@@ -553,7 +553,7 @@ void image_draw_blend(int image_id, int x, int y, color_t color)
     if (img->draw.is_fully_compressed) {
         draw_compressed_blend(img, data, x, y, img->height, color);
     } else {
-        draw_uncompressed(img, data, x, y, color, ColorType_Blend);
+        draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND);
     }
 }
 
@@ -573,7 +573,7 @@ void image_draw_letter(int image_id, int x, int y, color_t color)
         }
     } else {
         draw_uncompressed(img, data, x, y,
-            color, color ? ColorType_Set : ColorType_None);
+            color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
     }
 }
 

@@ -1,18 +1,18 @@
 #include "trade_prices.h"
 
-struct TradePrice {
+struct trade_price {
     int32_t buy;
     int32_t sell;
 };
 
-static const struct TradePrice DEFAULT_PRICES[16] = {
+static const struct trade_price DEFAULT_PRICES[16] = {
     {0, 0}, {28, 22}, {38, 30}, {38, 30}, // wheat, vegetables, fruit
     {42, 34}, {44, 36}, {44, 36}, {215, 160}, // olives, vines, meat, wine
     {180, 140}, {60, 40}, {50, 35}, {40, 30}, // oil, iron, timber, clay
     {200, 140}, {250, 180}, {200, 150}, {180, 140} // marble, weapons, furniture, pottery
 };
 
-static struct TradePrice prices[16];
+static struct trade_price prices[16];
 
 void trade_prices_reset()
 {

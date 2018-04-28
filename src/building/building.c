@@ -20,7 +20,7 @@
 
 #include <string.h>
 
-static building Data_Buildings[MAX_BUILDINGS];
+static building all_buildings[MAX_BUILDINGS];
 
 static struct {
     int highest_id_in_use;
@@ -32,7 +32,7 @@ static struct {
 
 building *building_get(int id)
 {
-    return &Data_Buildings[id];
+    return &all_buildings[id];
 }
 
 building *building_main(building *b)
@@ -41,28 +41,28 @@ building *building_main(building *b)
         if (b->prevPartBuildingId <= 0) {
             return b;
         }
-        b = &Data_Buildings[b->prevPartBuildingId];
+        b = &all_buildings[b->prevPartBuildingId];
     }
-    return &Data_Buildings[0];
+    return &all_buildings[0];
 }
 
 building *building_next(building *b)
 {
-    return &Data_Buildings[b->nextPartBuildingId];
+    return &all_buildings[b->nextPartBuildingId];
 }
 
 building *building_create(building_type type, int x, int y)
 {
     building *b = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (Data_Buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
-            b = &Data_Buildings[i];
+        if (all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
+            b = &all_buildings[i];
             break;
         }
     }
     if (!b) {
         city_warning_show(WARNING_DATA_LIMIT_REACHED);
-        return &Data_Buildings[0];
+        return &all_buildings[0];
     }
     
     const building_properties *props = building_properties_for_type(type);
@@ -205,7 +205,7 @@ void building_update_state()
     int land_recalc = 0;
     int wall_recalc = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = &Data_Buildings[i];
+        building *b = &all_buildings[i];
         if (b->state == BUILDING_STATE_CREATED) {
             b->state = BUILDING_STATE_IN_USE;
         }
@@ -238,7 +238,7 @@ void building_update_state()
 void building_update_desirability()
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = &Data_Buildings[i];
+        building *b = &all_buildings[i];
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
@@ -271,7 +271,7 @@ void building_update_highest_id()
 {
     extra.highest_id_in_use = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (Data_Buildings[i].state != BUILDING_STATE_UNUSED) {
+        if (all_buildings[i].state != BUILDING_STATE_UNUSED) {
             extra.highest_id_in_use = i;
         }
     }
@@ -291,8 +291,8 @@ void building_totals_add_corrupted_house(int unfixable)
 void building_clear_all()
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        memset(&Data_Buildings[i], 0, sizeof(building));
-        Data_Buildings[i].id = i;
+        memset(&all_buildings[i], 0, sizeof(building));
+        all_buildings[i].id = i;
     }
     extra.highest_id_in_use = 0;
     extra.highest_id_ever = 0;
@@ -305,7 +305,7 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
                          buffer *sequence, buffer *corrupt_houses)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        building_state_save_to_buffer(buf, &Data_Buildings[i]);
+        building_state_save_to_buffer(buf, &all_buildings[i]);
     }
     buffer_write_i32(highest_id, extra.highest_id_in_use);
     buffer_write_i32(highest_id_ever, extra.highest_id_ever);
@@ -320,8 +320,8 @@ void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
                          buffer *sequence, buffer *corrupt_houses)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        building_state_load_from_buffer(buf, &Data_Buildings[i]);
-        Data_Buildings[i].id = i;
+        building_state_load_from_buffer(buf, &all_buildings[i]);
+        all_buildings[i].id = i;
     }
     extra.highest_id_in_use = buffer_read_i32(highest_id);
     extra.highest_id_ever = buffer_read_i32(highest_id_ever);
