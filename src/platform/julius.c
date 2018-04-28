@@ -10,9 +10,8 @@
 #include "graphics/text.h" // debug for fps counter
 #include "graphics/window.h"
 #include "input/cursor.h"
-#include "input/hotkey.h"
-#include "input/keyboard.h"
 #include "input/mouse.h"
+#include "platform/keyboard_input.h"
 
 #include <signal.h>
 #include <stdio.h>
@@ -31,112 +30,112 @@
 #endif
 
 static struct {
-	int width;
-	int height;
+    int width;
+    int height;
 } Desktop;
 
 static struct {
-	SDL_Window *window;
-	SDL_Renderer *renderer;
-	SDL_Texture *texture;
-	SDL_Cursor *cursors[CURSOR_MAX];
+    SDL_Window *window;
+    SDL_Renderer *renderer;
+    SDL_Texture *texture;
+    SDL_Cursor *cursors[CURSOR_MAX];
 } SDL;
 
 enum {
-	UserEventRefresh = 0,
-	UserEventQuit = 1,
-	UserEventResize = 2,
-	UserEventFullscreen = 3,
-	UserEventWindowed = 4,
+    USER_EVENT_REFRESH = 0,
+    USER_EVENT_QUIT = 1,
+    USER_EVENT_RESIZE = 2,
+    USER_EVENT_FULLSCREEN = 3,
+    USER_EVENT_WINDOWED = 4,
 };
 
 static void handler(int sig) {
 #if defined(__GNUC__) && !defined(__MINGW32__)
-	void *array[100];
-	size_t size;
-	
-	// get void*'s for all entries on the stack
-	size = backtrace(array, 100);
-	
-	// print out all the frames to stderr
-	fprintf(stderr, "Error: signal %d:\n", sig);
-	backtrace_symbols_fd(array, size, STDERR_FILENO);
+    void *array[100];
+    size_t size;
+    
+    // get void*'s for all entries on the stack
+    size = backtrace(array, 100);
+    
+    // print out all the frames to stderr
+    fprintf(stderr, "Error: signal %d:\n", sig);
+    backtrace_symbols_fd(array, size, STDERR_FILENO);
 #else
     fprintf(stderr, "Oops, crashed with signal %d :(\n", sig);
 #endif
-	exit(1);
+    exit(1);
 }
 
 void system_exit()
 {
-	SDL_Event event;
-	event.user.type = SDL_USEREVENT;
-	event.user.code = UserEventQuit;
-	SDL_PushEvent(&event);
+    SDL_Event event;
+    event.user.type = SDL_USEREVENT;
+    event.user.code = USER_EVENT_QUIT;
+    SDL_PushEvent(&event);
 }
 
 void system_resize(int width, int height)
 {
-	static int sWidth;
-	static int sHeight;
-	sWidth = width;
-	sHeight = height;
-	SDL_Event event;
-	event.user.type = SDL_USEREVENT;
-	event.user.code = UserEventResize;
-	event.user.data1 = &sWidth;
-	event.user.data2 = &sHeight;
-	SDL_PushEvent(&event);
+    static int s_width;
+    static int s_height;
+    s_width = width;
+    s_height = height;
+    SDL_Event event;
+    event.user.type = SDL_USEREVENT;
+    event.user.code = USER_EVENT_RESIZE;
+    event.user.data1 = &s_width;
+    event.user.data2 = &s_height;
+    SDL_PushEvent(&event);
 }
 
 void system_toggle_fullscreen()
 {
-	SDL_Event event;
-	event.user.type = SDL_USEREVENT;
-	if (setting_fullscreen()) {
-		event.user.code = UserEventWindowed;
-	} else {
-		event.user.code = UserEventFullscreen;
-	}
-	SDL_PushEvent(&event);
+    SDL_Event event;
+    event.user.type = SDL_USEREVENT;
+    if (setting_fullscreen()) {
+        event.user.code = USER_EVENT_WINDOWED;
+    } else {
+        event.user.code = USER_EVENT_FULLSCREEN;
+    }
+    SDL_PushEvent(&event);
 }
 
 void system_set_cursor(int cursor_id)
 {
-	SDL_SetCursor(SDL.cursors[cursor_id]);
+    SDL_SetCursor(SDL.cursors[cursor_id]);
 }
 
 static SDL_Cursor *init_cursor(const cursor *c)
 {
-	Uint8 data[4*32];
-	Uint8 mask[4*32];
-	int b = -1;
-	for (int i = 0; i < 32 * 32; i++) {
-		if (i % 8 ) {
-			data[b] <<= 1;
-			mask[b] <<= 1;
-		} else {
-			b++;
-			data[b] = mask[b] = 0;
-		}
-		switch (c->data[i]) {
-			case 'X':
-				data[b] |= 0x01;
-				// fallthrough
-			case '.':
-				mask[b] |= 0x01;
-				break;
-		}
-	}
-	return SDL_CreateCursor(data, mask, 32, 32, c->hotspot_x, c->hotspot_y);
+    Uint8 data[4*32];
+    Uint8 mask[4*32];
+    int b = -1;
+    for (int i = 0; i < 32 * 32; i++) {
+        if (i % 8 ) {
+            data[b] <<= 1;
+            mask[b] <<= 1;
+        } else {
+            b++;
+            data[b] = mask[b] = 0;
+        }
+        switch (c->data[i]) {
+            case 'X':
+                data[b] |= 0x01;
+                // fallthrough
+            case '.':
+                mask[b] |= 0x01;
+                break;
+        }
+    }
+    return SDL_CreateCursor(data, mask, 32, 32, c->hotspot_x, c->hotspot_y);
 }
 
 void system_init_cursors()
 {
-	for (int i = 0; i < CURSOR_MAX; i++) {
-		SDL.cursors[i] = init_cursor(input_cursor_data(i));
-	}
-	system_set_cursor(CURSOR_ARROW);
+    for (int i = 0; i < CURSOR_MAX; i++) {
+        SDL.cursors[i] = init_cursor(input_cursor_data(i));
+    }
+    system_set_cursor(CURSOR_ARROW);
 }
 
 static Uint32 last;
@@ -172,108 +171,6 @@ static void refresh()
 	SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
 	SDL_RenderPresent(SDL.renderer);
 	last = now;
-}
-
-static void handleKey(SDL_KeyboardEvent *event)
-{
-	switch (event->keysym.sym) {
-		case SDLK_RETURN:
-		case SDLK_KP_ENTER:
-			keyboard_return();
-			break;
-		case SDLK_BACKSPACE:
-			keyboard_backspace();
-			break;
-		case SDLK_DELETE:
-			keyboard_delete();
-			break;
-		case SDLK_INSERT:
-			keyboard_insert();
-			break;
-		case SDLK_LEFT:
-			keyboard_left();
-			hotkey_left();
-			break;
-		case SDLK_RIGHT:
-			keyboard_right();
-			hotkey_right();
-			break;
-		case SDLK_UP:
-			keyboard_left();
-			hotkey_up();
-			break;
-		case SDLK_DOWN:
-			keyboard_right();
-			hotkey_down();
-			break;
-		case SDLK_HOME:
-			keyboard_home();
-			hotkey_home();
-			break;
-		case SDLK_END:
-			keyboard_end();
-			hotkey_end();
-			break;
-		case SDLK_ESCAPE:
-			hotkey_esc();
-			break;
-		case SDLK_F1: hotkey_func(1); break;
-		case SDLK_F2: hotkey_func(2); break;
-		case SDLK_F3: hotkey_func(3); break;
-		case SDLK_F4: hotkey_func(4); break;
-		case SDLK_F5: hotkey_func(5); break;
-		case SDLK_F6: hotkey_func(6); break;
-		case SDLK_F7: hotkey_func(7); break;
-		case SDLK_F8: hotkey_func(8); break;
-		case SDLK_F9: hotkey_func(9); break;
-		case SDLK_F10: hotkey_func(10); break;
-		case SDLK_F11: hotkey_func(11); break;
-		case SDLK_F12: hotkey_func(12); break;
-		case SDLK_LCTRL:
-		case SDLK_RCTRL:
-			hotkey_ctrl(1);
-			break;
-		case SDLK_LALT:
-		case SDLK_RALT:
-			hotkey_alt(1);
-			break;
-		case SDLK_LSHIFT:
-		case SDLK_RSHIFT:
-			hotkey_shift(1);
-			break;
-		default:
-			if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
-				hotkey_character(event->keysym.sym);
-			}
-			break;
-	}
-}
-
-static void handleKeyUp(SDL_KeyboardEvent *event)
-{
-	switch (event->keysym.sym) {
-		case SDLK_LCTRL:
-		case SDLK_RCTRL:
-			hotkey_ctrl(0);
-			break;
-		case SDLK_LALT:
-		case SDLK_RALT:
-			hotkey_alt(0);
-			break;
-		case SDLK_LSHIFT:
-		case SDLK_RSHIFT:
-			hotkey_shift(0);
-			break;
-		default:
-			break;
-	}
-}
-
-static void handleText(SDL_TextInputEvent *event)
-{
-	if (event->text[0] && !event->text[1]) {
-		keyboard_character(event->text[0]);
-	}
 }
 
 static void createWindowAndRenderer(int fullscreen)
@@ -358,7 +255,7 @@ static void mainLoop()
 	SDL_Event event;
 	SDL_Event refreshEvent;
 	refreshEvent.user.type = SDL_USEREVENT;
-	refreshEvent.user.code = UserEventRefresh;
+	refreshEvent.user.code = USER_EVENT_REFRESH;
 	mouse_set_inside_window(1);
 	
 	refresh();
@@ -387,16 +284,15 @@ static void mainLoop()
 					break;
 				
 				case SDL_KEYDOWN:
-					printf("Key: sym %d\n", event.key.keysym.sym);
-					handleKey(&event.key);
+					platform_handle_key_down(&event.key);
 					break;
 				
 				case SDL_KEYUP:
-					handleKeyUp(&event.key);
+					platform_handle_key_up(&event.key);
 					break;
 				
 				case SDL_TEXTINPUT:
-					handleText(&event.text);
+					platform_handle_text(&event.text);
 					break;
 				
 				case SDL_MOUSEMOTION:
@@ -429,16 +325,16 @@ static void mainLoop()
 					return;
 				
 				case SDL_USEREVENT:
-					if (event.user.code == UserEventQuit) {
+					if (event.user.code == USER_EVENT_QUIT) {
 						return;
-					} else if (event.user.code == UserEventResize) {
+					} else if (event.user.code == USER_EVENT_RESIZE) {
 						SDL_SetWindowSize(SDL.window, *(int*)event.user.data1, *(int*)event.user.data2);
 						SDL_SetWindowFullscreen(SDL.window, 0);
 						printf("User resize to %d x %d\n", *(int*)event.user.data1, *(int*)event.user.data2);
 						setting_set_display(0, *(int*)event.user.data1, *(int*)event.user.data2);
 						//createSurface(*(int*)event.user.data1, *(int*)event.user.data2, 0);
 						//window_invalidate();
-					} else if (event.user.code == UserEventFullscreen) {
+					} else if (event.user.code == USER_EVENT_FULLSCREEN) {
 						printf("User to fullscreen %d x %d\n", Desktop.width, Desktop.height);
 						SDL_SetWindowSize(SDL.window, Desktop.width, Desktop.height);
 						SDL_DisplayMode mode;
@@ -449,7 +345,7 @@ static void mainLoop()
 						setting_set_display(1, Desktop.width, Desktop.height);
 						//createSurface(Desktop.width, Desktop.height, 1);
 						//window_invalidate();
-					} else if (event.user.code == UserEventWindowed) {
+					} else if (event.user.code == USER_EVENT_WINDOWED) {
 					    int width, height;
 					    setting_window(&width, &height);
 						printf("User to windowed %d x %d\n", width, height);
@@ -532,7 +428,6 @@ int main(int argc, char **argv)
 	}
 
 	mainLoop();
-	
 	printf("Quiting SDL.\n");
 	
 	game_exit();
