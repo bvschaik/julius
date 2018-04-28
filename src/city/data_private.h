@@ -89,18 +89,18 @@ extern struct city_data_t {
         uint8_t total_soldiers;
         uint8_t empire_service_legions;
         int32_t legionary_legions;
-        struct {
-            uint8_t city;
-            int8_t city_foreign_months_left;
-            int8_t total_count;
-            int8_t won_count;
-            uint8_t enemy_strength;
-            uint8_t roman_strength;
-            int8_t months_until_battle;
-            int8_t roman_months_to_travel_forth;
-            int8_t roman_months_to_travel_back;
-        } distant_battle;
     } military;
+    struct {
+        uint8_t city;
+        int8_t city_foreign_months_left;
+        int8_t total_count;
+        int8_t won_count;
+        uint8_t enemy_strength;
+        uint8_t roman_strength;
+        int8_t months_until_battle;
+        int8_t roman_months_to_travel_forth;
+        int8_t roman_months_to_travel_back;
+    } distant_battle;
     struct {
         int32_t treasury;
         int32_t tax_percentage;
