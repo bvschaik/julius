@@ -159,6 +159,7 @@ extern struct city_data_t {
 
         int32_t last_used_house_add;
         int32_t last_used_house_remove;
+        int32_t graph_order;
     } population;
     struct {
         int32_t wages;

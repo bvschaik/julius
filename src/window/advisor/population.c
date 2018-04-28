@@ -13,8 +13,6 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 27
 
 static void button_graph(int param1, int param2);
@@ -273,10 +271,11 @@ static int draw_background()
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
 
+    int graph_order = city_population_graph_order();
     // Title: depends on big graph shown
-    if (Data_CityInfo.populationGraphOrder < 2) {
+    if (graph_order < 2) {
         lang_text_draw(55, 0, 60, 12, FONT_LARGE_BLACK);
-    } else if (Data_CityInfo.populationGraphOrder < 4) {
+    } else if (graph_order < 4) {
         lang_text_draw(55, 1, 60, 12, FONT_LARGE_BLACK);
     } else {
         lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK);
@@ -288,7 +287,7 @@ static int draw_background()
     void (*big_graph)(int, int, int);
     void (*top_graph)(int, int, int);
     void (*bot_graph)(int, int, int);
-    switch (Data_CityInfo.populationGraphOrder) {
+    switch (graph_order) {
         default:
         case 0:
             big_text = 6;
@@ -435,7 +434,7 @@ static void handle_mouse(const mouse *m)
 static void button_graph(int param1, int param2)
 {
     int new_order;
-    switch (Data_CityInfo.populationGraphOrder) {
+    switch (city_population_graph_order()) {
         default:
         case 0:
             new_order = param1 ? 5 : 2;
@@ -456,7 +455,7 @@ static void button_graph(int param1, int param2)
             new_order = param1 ? 0 : 3;
             break;
     }
-    Data_CityInfo.populationGraphOrder = new_order;
+    city_population_set_graph_order(new_order);
     window_invalidate();
 }
 

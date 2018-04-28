@@ -1036,7 +1036,7 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
     buffer_write_i32(faction, city_data.unused.faction_id);
     buffer_write_i8(faction_unknown, city_data.unused.faction_bytes[0]);
     buffer_write_i8(faction_unknown, city_data.unused.faction_bytes[1]);
-    buffer_write_i32(graph_order, Data_CityInfo.populationGraphOrder);
+    buffer_write_i32(graph_order, city_data.population.graph_order);
     buffer_write_i32(graph_order, city_data.unused.unknown_order);
 
     save_entry_exit(entry_exit_xy, entry_exit_grid_offset);
@@ -1050,7 +1050,7 @@ void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown
     city_data.unused.faction_id = buffer_read_i32(faction);
     city_data.unused.faction_bytes[0] = buffer_read_i8(faction_unknown);
     city_data.unused.faction_bytes[1] = buffer_read_i8(faction_unknown);
-    Data_CityInfo.populationGraphOrder = buffer_read_i32(graph_order);
+    city_data.population.graph_order = buffer_read_i32(graph_order);
     city_data.unused.unknown_order = buffer_read_i32(graph_order);
 
     load_entry_exit(entry_exit_xy, entry_exit_grid_offset);

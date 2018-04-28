@@ -58,4 +58,7 @@ void city_population_yearly_update();
 
 void city_population_check_consistency();
 
+int city_population_graph_order();
+void city_population_set_graph_order(int order);
+
 #endif // CITY_POPULATION_H

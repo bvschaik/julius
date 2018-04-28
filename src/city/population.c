@@ -359,3 +359,13 @@ void city_population_check_consistency()
         remove_from_census(city_data.population.population - people_in_houses);
     }
 }
+
+int city_population_graph_order()
+{
+    return city_data.population.graph_order;
+}
+
+void city_population_set_graph_order(int order)
+{
+    city_data.population.graph_order = order;
+}

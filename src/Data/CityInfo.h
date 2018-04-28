@@ -21,8 +21,6 @@ extern struct _Data_CityInfo {
 	int8_t militaryTotalLegionsEmpireService;
 	int8_t militaryTotalSoldiers;
 	int32_t militaryLegionaryLegions;
-
-	int32_t populationGraphOrder;
 } Data_CityInfo;
 
 #endif
