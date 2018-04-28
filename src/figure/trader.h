@@ -22,47 +22,47 @@ int trader_create();
 
 /**
  * Record that the trader has bought a resource from the city
- * @param traderId Trader
+ * @param trader_id Trader
  * @param resource Resource bought
  */
-void trader_record_bought_resource(int traderId, resource_type resource);
+void trader_record_bought_resource(int trader_id, resource_type resource);
 
 /**
  * Record that the trader has sold a resource to the city
- * @param traderId Trader
+ * @param trader_id Trader
  * @param resource Resource sold
  */
-void trader_record_sold_resource(int traderId, resource_type resource);
+void trader_record_sold_resource(int trader_id, resource_type resource);
 
 /**
  * Gets the amount bought of the given resource
- * @param traderId Trader
+ * @param trader_id Trader
  * @param resource Resource
  * @return Amount of resource bought by the trader from the city
  */
-int trader_bought_resources(int traderId, resource_type resource);
+int trader_bought_resources(int trader_id, resource_type resource);
 
 /**
  * Gets the amount sold of the given resource
- * @param traderId Trader
+ * @param trader_id Trader
  * @param resource Resource
  * @return Amount of resource sold by the trader to the city
  */
-int trader_sold_resources(int traderId, resource_type resource);
+int trader_sold_resources(int trader_id, resource_type resource);
 
 /**
  * Check whether this trader has bought/sold any items
- * @param traderId Trader
+ * @param trader_id Trader
  * @return True if the trader has bought or sold at least one item
  */
-int trader_has_traded(int traderId);
+int trader_has_traded(int trader_id);
 
 /**
  * Check whether a trade ship has traded the maximum amount
- * @param traderId Trader
+ * @param trader_id Trader
  * @return True if the trader has either bought or sold the max amount (12)
  */
-int trader_has_traded_max(int traderId);
+int trader_has_traded_max(int trader_id);
 
 /**
  * Save state to buffer

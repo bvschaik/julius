@@ -109,9 +109,9 @@ void figure_delete(figure *f)
     figure_route_remove(f);
     map_figure_delete(f);
 
-    int figureId = f->id;
+    int figure_id = f->id;
     memset(f, 0, sizeof(figure));
-    f->id = figureId;
+    f->id = figure_id;
 }
 
 int figure_is_dead(const figure *f)

@@ -79,21 +79,21 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
         default: return 0;
     }
     building *warehouse = building_get(warehouse_id);
-    int numLoads;
+    int num_loads;
     int stored = building_warehouse_get_amount(warehouse, resource);
     if (stored < 2) {
-        numLoads = stored;
+        num_loads = stored;
     } else {
-        numLoads = 2;
+        num_loads = 2;
     }
-    if (numLoads <= 0) {
+    if (num_loads <= 0) {
         return 0;
     }
-    building_warehouse_remove_resource(warehouse, resource, numLoads);
+    building_warehouse_remove_resource(warehouse, resource, num_loads);
     
     // create delivery boys
     int boy1 = create_delivery_boy(f->id, f);
-    if (numLoads > 1) {
+    if (num_loads > 1) {
         create_delivery_boy(boy1, f);
     }
     return 1;

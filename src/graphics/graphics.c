@@ -101,55 +101,55 @@ void graphics_reset_clip_rectangle()
     translate_clip(translation.x, translation.y);
 }
 
-static void setClipX(int xOffset, int width)
+static void set_clip_x(int x_offset, int width)
 {
     clip.clippedPixelsLeft = 0;
     clip.clippedPixelsRight = 0;
     if (width <= 0
-        || xOffset + width <= clip_rectangle.x_start
-        || xOffset >= clip_rectangle.x_end) {
+        || x_offset + width <= clip_rectangle.x_start
+        || x_offset >= clip_rectangle.x_end) {
         clip.clipX = CLIP_INVISIBLE;
         clip.visiblePixelsX = 0;
         return;
     }
-    if (xOffset < clip_rectangle.x_start) {
+    if (x_offset < clip_rectangle.x_start) {
         // clipped on the left
-        clip.clippedPixelsLeft = clip_rectangle.x_start - xOffset;
-        if (xOffset + width <= clip_rectangle.x_end) {
+        clip.clippedPixelsLeft = clip_rectangle.x_start - x_offset;
+        if (x_offset + width <= clip_rectangle.x_end) {
             clip.clipX = CLIP_LEFT;
         } else {
             clip.clipX = CLIP_BOTH;
-            clip.clippedPixelsRight = xOffset + width - clip_rectangle.x_end;
+            clip.clippedPixelsRight = x_offset + width - clip_rectangle.x_end;
         }
-    } else if (xOffset + width > clip_rectangle.x_end) {
+    } else if (x_offset + width > clip_rectangle.x_end) {
         clip.clipX = CLIP_RIGHT;
-        clip.clippedPixelsRight = xOffset + width - clip_rectangle.x_end;
+        clip.clippedPixelsRight = x_offset + width - clip_rectangle.x_end;
     } else {
         clip.clipX = CLIP_NONE;
     }
     clip.visiblePixelsX = width - clip.clippedPixelsLeft - clip.clippedPixelsRight;
 }
 
-static void setClipY(int yOffset, int height)
+static void set_clip_y(int y_offset, int height)
 {
     clip.clippedPixelsTop = 0;
     clip.clippedPixelsBottom = 0;
     if (height <= 0
-        || yOffset + height <= clip_rectangle.y_start
-        || yOffset >= clip_rectangle.y_end) {
+        || y_offset + height <= clip_rectangle.y_start
+        || y_offset >= clip_rectangle.y_end) {
         clip.clipY = CLIP_INVISIBLE;
-    } else if (yOffset < clip_rectangle.y_start) {
+    } else if (y_offset < clip_rectangle.y_start) {
         // clipped on the top
-        clip.clippedPixelsTop = clip_rectangle.y_start - yOffset;
-        if (yOffset + height <= clip_rectangle.y_end) {
+        clip.clippedPixelsTop = clip_rectangle.y_start - y_offset;
+        if (y_offset + height <= clip_rectangle.y_end) {
             clip.clipY = CLIP_TOP;
         } else {
             clip.clipY = CLIP_BOTH;
-            clip.clippedPixelsBottom = yOffset + height - clip_rectangle.y_end;
+            clip.clippedPixelsBottom = y_offset + height - clip_rectangle.y_end;
         }
-    } else if (yOffset + height > clip_rectangle.y_end) {
+    } else if (y_offset + height > clip_rectangle.y_end) {
         clip.clipY = CLIP_BOTTOM;
-        clip.clippedPixelsBottom = yOffset + height - clip_rectangle.y_end;
+        clip.clippedPixelsBottom = y_offset + height - clip_rectangle.y_end;
     } else {
         clip.clipY = CLIP_NONE;
     }
@@ -158,8 +158,8 @@ static void setClipY(int yOffset, int height)
 
 const clip_info *graphics_get_clip_info(int x, int y, int width, int height)
 {
-    setClipX(x, width);
-    setClipY(y, height);
+    set_clip_x(x, width);
+    set_clip_y(y, height);
     if (clip.clipX == CLIP_INVISIBLE || clip.clipY == CLIP_INVISIBLE) {
         clip.isVisible = 0;
     } else {
@@ -204,15 +204,15 @@ void graphics_draw_pixel(int x, int y, color_t color)
 void graphics_draw_line(int x1, int y1, int x2, int y2, color_t color)
 {
     if (x1 == x2) {
-        int yMin = y1 < y2 ? y1 : y2;
-        int yMax = y1 < y2 ? y2 : y1;
-        for (int y = yMin; y <= yMax; y++) {
+        int y_min = y1 < y2 ? y1 : y2;
+        int y_max = y1 < y2 ? y2 : y1;
+        for (int y = y_min; y <= y_max; y++) {
             graphics_draw_pixel(x1, y, color);
         }
     } else if (y1 == y2) {
-        int xMin = x1 < x2 ? x1 : x2;
-        int xMax = x1 < x2 ? x2 : x1;
-        for (int x = xMin; x <= xMax; x++) {
+        int x_min = x1 < x2 ? x1 : x2;
+        int x_max = x1 < x2 ? x2 : x1;
+        for (int x = x_min; x <= x_max; x++) {
             graphics_draw_pixel(x, y1, color);
         }
     } else {
@@ -256,8 +256,8 @@ void graphics_shade_rect(int x, int y, int width, int height, int darkness)
             int g = (*pixel & 0xff00) >> 8;
             int b = (*pixel & 0xff);
             int grey = (r + g + b) / 3 >> darkness;
-            color_t newPixel = (color_t) (grey << 16 | grey << 8 | grey);
-            *pixel = newPixel;
+            color_t new_pixel = (color_t) (grey << 16 | grey << 8 | grey);
+            *pixel = new_pixel;
         }
     }
 }
@@ -285,9 +285,9 @@ void graphics_save_screenshot(const char *filename)
         char M;
         int filesize;
         int reserved;
-        int dataOffset;
+        int data_offset;
 
-        int dibSize;
+        int dib_size;
         short width;
         short height;
         short planes;

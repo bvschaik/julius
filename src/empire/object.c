@@ -107,13 +107,13 @@ void empire_object_load(buffer *buf)
 void empire_object_init_cities()
 {
     empire_city_clear_all();
-    int routeIndex = 1;
+    int route_index = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (!objects[i].in_use || objects[i].obj.type != EMPIRE_OBJECT_CITY) {
             continue;
         }
         full_empire_object *obj = &objects[i];
-        empire_city *city = empire_city_get(routeIndex++);
+        empire_city *city = empire_city_get(route_index++);
         city->in_use = 1;
         city->type = obj->city_type;
         city->name_id = obj->city_name_id;
@@ -143,16 +143,14 @@ void empire_object_init_cities()
             if (empire_object_city_buys_resource(i, resource)) {
                 city->buys_resource[resource] = 1;
             }
-            int amountCode = get_trade_amount_code(i, resource);
-            int routeId = city->route_id;
             int amount;
-            switch (amountCode) {
+            switch (get_trade_amount_code(i, resource)) {
                 case 1: amount = 15; break;
                 case 2: amount = 25; break;
                 case 3: amount = 40; break;
                 default: amount = 0; break;
             }
-            trade_route_init(routeId, resource, amount);
+            trade_route_init(city->route_id, resource, amount);
         }
         city->trader_entry_delay = 4;
         city->trader_figure_ids[0] = 0;
@@ -291,14 +289,14 @@ static int get_trade_amount_code(int index, int resource)
     if (!is_trade_city(index)) {
         return 0;
     }
-    int resourceFlag = 1 << resource;
-    if (objects[index].trade40 & resourceFlag) {
+    int resource_flag = 1 << resource;
+    if (objects[index].trade40 & resource_flag) {
         return 3;
     }
-    if (objects[index].trade25 & resourceFlag) {
+    if (objects[index].trade25 & resource_flag) {
         return 2;
     }
-    if (objects[index].trade15 & resourceFlag) {
+    if (objects[index].trade15 & resource_flag) {
         return 1;
     }
     return 0;

@@ -159,7 +159,7 @@ typedef struct {
     buffer *bookmarks;
     buffer *tutorial_part3;
     buffer *city_entry_exit_grid_offset;
-    buffer *endMarker;
+    buffer *end_marker;
 } savegame_state;
 
 static struct {
@@ -300,7 +300,7 @@ static void init_savegame_data()
     state->bookmarks = create_savegame_piece(32, 0);
     state->tutorial_part3 = create_savegame_piece(4, 0);
     state->city_entry_exit_grid_offset = create_savegame_piece(8, 0);
-    state->endMarker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness
+    state->end_marker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness
 }
 
 static void scenario_load_from_state(scenario_state *file)
@@ -405,7 +405,7 @@ static void savegame_load_from_state(savegame_state *state)
     scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
     map_bookmark_load_state(state->bookmarks);
 
-    buffer_skip(state->endMarker, 284);
+    buffer_skip(state->end_marker, 284);
 
     // check if all buffers are empty
     for (int i = 0; i < savegame_data.num_pieces; i++) {
@@ -496,7 +496,7 @@ static void savegame_save_to_state(savegame_state *state)
     scenario_invasion_save_state(state->last_invasion_id, state->invasion_warnings);
     map_bookmark_save_state(state->bookmarks);
 
-    buffer_skip(state->endMarker, 284);
+    buffer_skip(state->end_marker, 284);
 
     // check if all buffers are empty
     for (int i = 0; i < savegame_data.num_pieces; i++) {
@@ -526,38 +526,38 @@ int game_file_io_read_scenario(const char *filename)
     return 1;
 }
 
-static int read_compressed_chunk(FILE *fp, void *buffer, int bytesToRead)
+static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
 {
-    if (bytesToRead > COMPRESS_BUFFER_SIZE) {
+    if (bytes_to_read > COMPRESS_BUFFER_SIZE) {
         return 0;
     }
-    int inputSize = bytesToRead;
-    fread(&inputSize, 4, 1, fp);
-    if ((unsigned int) inputSize == UNCOMPRESSED) {
-        fread(buffer, 1, bytesToRead, fp);
+    int input_size = bytes_to_read;
+    fread(&input_size, 4, 1, fp);
+    if ((unsigned int) input_size == UNCOMPRESSED) {
+        fread(buffer, 1, bytes_to_read, fp);
     } else {
-        fread(compress_buffer, 1, inputSize, fp);
-        if (!zip_decompress(compress_buffer, inputSize, buffer, &bytesToRead)) {
+        fread(compress_buffer, 1, input_size, fp);
+        if (!zip_decompress(compress_buffer, input_size, buffer, &bytes_to_read)) {
             return 0;
         }
     }
     return 1;
 }
 
-static int write_compressed_chunk(FILE *fp, const void *buffer, int bytesToWrite)
+static int write_compressed_chunk(FILE *fp, const void *buffer, int bytes_to_write)
 {
-    if (bytesToWrite > COMPRESS_BUFFER_SIZE) {
+    if (bytes_to_write > COMPRESS_BUFFER_SIZE) {
         return 0;
     }
-    int outputSize = COMPRESS_BUFFER_SIZE;
-    if (zip_compress(buffer, bytesToWrite, compress_buffer, &outputSize)) {
-        fwrite(&outputSize, 4, 1, fp);
-        fwrite(compress_buffer, 1, outputSize, fp);
+    int output_size = COMPRESS_BUFFER_SIZE;
+    if (zip_compress(buffer, bytes_to_write, compress_buffer, &output_size)) {
+        fwrite(&output_size, 4, 1, fp);
+        fwrite(compress_buffer, 1, output_size, fp);
     } else {
         // unable to compress: write uncompressed
-        outputSize = UNCOMPRESSED;
-        fwrite(&outputSize, 4, 1, fp);
-        fwrite(buffer, 1, bytesToWrite, fp);
+        output_size = UNCOMPRESSED;
+        fwrite(&output_size, 4, 1, fp);
+        fwrite(buffer, 1, bytes_to_write, fp);
     }
     return 1;
 }

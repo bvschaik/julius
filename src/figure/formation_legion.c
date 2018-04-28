@@ -71,11 +71,11 @@ void formation_legion_update_recruit_status(building *fort)
             m->legion_recruit_type = LEGION_RECRUIT_MOUNTED;
         }
     } else { // too many figures
-        int tooMany = m->num_figures - m->max_figures;
-        for (int i = MAX_FORMATION_FIGURES - 1; i >= 0 && tooMany > 0; i--) {
+        int too_many = m->num_figures - m->max_figures;
+        for (int i = MAX_FORMATION_FIGURES - 1; i >= 0 && too_many > 0; i--) {
             if (m->figures[i]) {
                 figure_get(m->figures[i])->actionState = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
-                tooMany--;
+                too_many--;
             }
         }
         formation_calculate_figures();
@@ -115,7 +115,7 @@ void formation_legion_move_to(formation *m, int x, int y)
         return; // unable to route there
     }
     if (x == m->x_home && y == m->y_home) {
-        return; // use legionReturnHome
+        return; // use formation_legion_return_home
     }
     if (m->cursed_by_mars) {
         return;

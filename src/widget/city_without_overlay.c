@@ -56,7 +56,7 @@ static void draw_footprint(int x, int y, int grid_offset)
         // Outside map: draw black tile
         image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_BLACK), x, y, 0);
     } else if (map_property_is_draw_tile(grid_offset)) {
-        // Valid gridOffset and leftmost tile -> draw
+        // Valid grid_offset and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
         color_t color_mask = 0;
         if (building_id) {
@@ -314,10 +314,10 @@ static void draw_animation(int x, int y, int grid_offset)
     const image *img = image_get(image_id);
     if (img->num_animation_sprites) {
         if (map_property_is_draw_tile(grid_offset)) {
-            int buildingId = map_building_at(grid_offset);
-            building *b = building_get(buildingId);
+            int building_id = map_building_at(grid_offset);
+            building *b = building_get(building_id);
             int color_mask = 0;
-            if (buildingId && b->isDeleted) {
+            if (building_id && b->isDeleted) {
                 color_mask = COLOR_MASK_RED;
             }
             if (b->type == BUILDING_DOCK) {

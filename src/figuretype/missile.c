@@ -30,20 +30,20 @@ static const int CLOUD_IMAGE_OFFSETS[] = {
 
 void figure_create_explosion_cloud(int x, int y, int size)
 {
-    int tileOffset = CLOUD_TILE_OFFSETS[size];
-    int ccOffset = CLOUD_CC_OFFSETS[size];
+    int tile_offset = CLOUD_TILE_OFFSETS[size];
+    int cc_offset = CLOUD_CC_OFFSETS[size];
     for (int i = 0; i < 16; i++) {
         figure *f = figure_create(FIGURE_EXPLOSION,
-            x + tileOffset, y + tileOffset, DIR_0_TOP);
+            x + tile_offset, y + tile_offset, DIR_0_TOP);
         if (f->id) {
-            f->crossCountryX += ccOffset;
-            f->crossCountryY += ccOffset;
+            f->crossCountryX += cc_offset;
+            f->crossCountryY += cc_offset;
             f->destinationX += CLOUD_DIRECTION[i].x;
             f->destinationY += CLOUD_DIRECTION[i].y;
             figure_movement_set_cross_country_direction(f,
                 f->crossCountryX, f->crossCountryY,
-                15 * f->destinationX + ccOffset,
-                15 * f->destinationY + ccOffset, 0);
+                15 * f->destinationX + cc_offset,
+                15 * f->destinationY + cc_offset, 0);
             f->speedMultiplier = CLOUD_SPEED[i];
         }
     }

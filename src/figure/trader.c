@@ -28,49 +28,49 @@ void traders_clear()
 
 int trader_create()
 {
-    int traderId = data.next_index++;
+    int trader_id = data.next_index++;
     if (data.next_index >= MAX_TRADERS) {
         data.next_index = 0;
     }
 
-    memset(&data.traders[traderId], 0, sizeof(struct trader));
-    return traderId;
+    memset(&data.traders[trader_id], 0, sizeof(struct trader));
+    return trader_id;
 }
 
-void trader_record_bought_resource(int traderId, resource_type resource)
+void trader_record_bought_resource(int trader_id, resource_type resource)
 {
-    data.traders[traderId].bought_amount++;
-    data.traders[traderId].bought_resources[resource]++;
+    data.traders[trader_id].bought_amount++;
+    data.traders[trader_id].bought_resources[resource]++;
     // BUG: trader buys resource from city, so city sells the resource: should be sell price
-    data.traders[traderId].bought_value += trade_price_buy(resource);
+    data.traders[trader_id].bought_value += trade_price_buy(resource);
 }
 
-void trader_record_sold_resource(int traderId, resource_type resource)
+void trader_record_sold_resource(int trader_id, resource_type resource)
 {
-    data.traders[traderId].sold_amount++;
-    data.traders[traderId].sold_resources[resource]++;
+    data.traders[trader_id].sold_amount++;
+    data.traders[trader_id].sold_resources[resource]++;
     // BUG: trader sells resource to city, so city buys the resource: should be buy price
-    data.traders[traderId].sold_value += trade_price_sell(resource);
+    data.traders[trader_id].sold_value += trade_price_sell(resource);
 }
 
-int trader_bought_resources(int traderId, resource_type resource)
+int trader_bought_resources(int trader_id, resource_type resource)
 {
-    return data.traders[traderId].bought_resources[resource];
+    return data.traders[trader_id].bought_resources[resource];
 }
 
-int trader_sold_resources(int traderId, resource_type resource)
+int trader_sold_resources(int trader_id, resource_type resource)
 {
-    return data.traders[traderId].sold_resources[resource];
+    return data.traders[trader_id].sold_resources[resource];
 }
 
-int trader_has_traded(int traderId)
+int trader_has_traded(int trader_id)
 {
-    return data.traders[traderId].bought_amount || data.traders[traderId].sold_amount;
+    return data.traders[trader_id].bought_amount || data.traders[trader_id].sold_amount;
 }
 
-int trader_has_traded_max(int traderId)
+int trader_has_traded_max(int trader_id)
 {
-    return data.traders[traderId].bought_amount >= 12 || data.traders[traderId].sold_amount >= 12;
+    return data.traders[trader_id].bought_amount >= 12 || data.traders[trader_id].sold_amount >= 12;
 }
 
 void traders_save_state(buffer *buf)

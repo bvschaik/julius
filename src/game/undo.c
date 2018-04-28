@@ -171,18 +171,18 @@ static void add_building_to_terrain(building *b)
         return;
     }
     if (building_is_farm(b->type)) {
-        int graphicOffset;
+        int image_offset;
         switch (b->type) {
             default:
-            case BUILDING_WHEAT_FARM: graphicOffset = 0; break;
-            case BUILDING_VEGETABLE_FARM: graphicOffset = 5; break;
-            case BUILDING_FRUIT_FARM: graphicOffset = 10; break;
-            case BUILDING_OLIVE_FARM: graphicOffset = 15; break;
-            case BUILDING_VINES_FARM: graphicOffset = 20; break;
-            case BUILDING_PIG_FARM: graphicOffset = 25; break;
+            case BUILDING_WHEAT_FARM: image_offset = 0; break;
+            case BUILDING_VEGETABLE_FARM: image_offset = 5; break;
+            case BUILDING_FRUIT_FARM: image_offset = 10; break;
+            case BUILDING_OLIVE_FARM: image_offset = 15; break;
+            case BUILDING_VINES_FARM: image_offset = 20; break;
+            case BUILDING_PIG_FARM: image_offset = 25; break;
         }
         map_building_tiles_add_farm(b->id, b->x, b->y,
-            image_group(GROUP_BUILDING_FARM_CROPS) + graphicOffset, 0);
+            image_group(GROUP_BUILDING_FARM_CROPS) + image_offset, 0);
     } else {
         int size = building_properties_for_type(b->type)->size;
         map_building_tiles_add(b->id, b->x, b->y, size, 0, 0);

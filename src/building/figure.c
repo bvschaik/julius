@@ -627,9 +627,9 @@ static void spawn_figure_market(building *b)
                 b->figureId2 = f->id;
                 f->destinationBuildingId = dst_building_id;
                 f->collectingItemId = b->data.market.fetch_inventory_id;
-                building *bDst = building_get(dst_building_id);
-                if (map_has_road_access(bDst->x, bDst->y, bDst->size, &x_road, &y_road) ||
-                    map_has_road_access(bDst->x, bDst->y, 3, &x_road, &y_road)) {
+                building *b_dst = building_get(dst_building_id);
+                if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &x_road, &y_road) ||
+                    map_has_road_access(b_dst->x, b_dst->y, 3, &x_road, &y_road)) {
                     f->destinationX = x_road;
                     f->destinationY = y_road;
                 } else {
@@ -1019,9 +1019,9 @@ static void spawn_figure_shipyard(building *b)
         }
         if (b->data.industry.progress >= 160) {
             b->data.industry.progress = 0;
-            int xBoat, yBoat;
-            if (map_water_can_spawn_fishing_boat(b->x, b->y, b->size, &xBoat, &yBoat)) {
-                figure *f = figure_create(FIGURE_FISHING_BOAT, xBoat, yBoat, DIR_0_TOP);
+            int x_boat, y_boat;
+            if (map_water_can_spawn_fishing_boat(b->x, b->y, b->size, &x_boat, &y_boat)) {
+                figure *f = figure_create(FIGURE_FISHING_BOAT, x_boat, y_boat, DIR_0_TOP);
                 f->actionState = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
                 f->buildingId = b->id;
                 b->figureId = f->id;

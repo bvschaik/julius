@@ -230,7 +230,7 @@ static void save_main_data(buffer *main)
         buffer_write_i32(main, city_data.unused.unknown_2c20[i]);
     }
     for (int i = 0; i < 8; i++) {
-        buffer_write_i32(main, city_data.unused.housesRequiringUnknownToEvolve[i]);
+        buffer_write_i32(main, city_data.unused.houses_requiring_unknown_to_evolve[i]);
     }
     buffer_write_i32(main, city_data.trade.caravan_import_resource);
     buffer_write_i32(main, city_data.trade.caravan_backup_import_resource);
@@ -707,7 +707,7 @@ static void load_main_data(buffer *main)
         city_data.unused.unknown_2c20[i] = buffer_read_i32(main);
     }
     for (int i = 0; i < 8; i++) {
-        city_data.unused.housesRequiringUnknownToEvolve[i] = buffer_read_i32(main);
+        city_data.unused.houses_requiring_unknown_to_evolve[i] = buffer_read_i32(main);
     }
     city_data.trade.caravan_import_resource = buffer_read_i32(main);
     city_data.trade.caravan_backup_import_resource = buffer_read_i32(main);

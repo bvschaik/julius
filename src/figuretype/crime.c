@@ -75,19 +75,19 @@ static void generate_mugger(building *b)
     city_sentiment_add_criminal();
     if (b->houseCriminalActive < 2) {
         b->houseCriminalActive = 2;
-        int xRoad, yRoad;
-        if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-            figure *f = figure_create(FIGURE_CRIMINAL, xRoad, yRoad, DIR_4_BOTTOM);
+        int x_road, y_road;
+        if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+            figure *f = figure_create(FIGURE_CRIMINAL, x_road, y_road, DIR_4_BOTTOM);
             f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
             city_ratings_peace_record_criminal();
             int taxes_this_year = city_finance_overview_this_year()->income.taxes;
             if (taxes_this_year > 20) {
-                int moneyStolen = taxes_this_year / 4;
-                if (moneyStolen > 400) {
-                    moneyStolen = 400 - random_byte() / 2;
+                int money_stolen = taxes_this_year / 4;
+                if (money_stolen > 400) {
+                    money_stolen = 400 - random_byte() / 2;
                 }
-                city_message_post(1, MESSAGE_THEFT, moneyStolen, f->gridOffset);
-                city_finance_process_stolen(moneyStolen);
+                city_message_post(1, MESSAGE_THEFT, money_stolen, f->gridOffset);
+                city_finance_process_stolen(money_stolen);
             }
         }
     }
@@ -98,9 +98,9 @@ static void generate_protestor(building *b)
     city_sentiment_add_protester();
     if (b->houseCriminalActive < 1) {
         b->houseCriminalActive = 1;
-        int xRoad, yRoad;
-        if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-            figure *f = figure_create(FIGURE_PROTESTER, xRoad, yRoad, DIR_4_BOTTOM);
+        int x_road, y_road;
+        if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+            figure *f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM);
             f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
             city_ratings_peace_record_criminal();
         }
@@ -275,11 +275,11 @@ void figure_rioter_action(figure *f)
 int figure_rioter_collapse_building(figure *f)
 {
     for (int dir = 0; dir < 8; dir += 2) {
-        int gridOffset = f->gridOffset + map_grid_direction_delta(dir);
-        if (!map_building_at(gridOffset)) {
+        int grid_offset = f->gridOffset + map_grid_direction_delta(dir);
+        if (!map_building_at(grid_offset)) {
             continue;
         }
-        building *b = building_get(map_building_at(gridOffset));
+        building *b = building_get(map_building_at(grid_offset));
         switch (b->type) {
             case BUILDING_WAREHOUSE_SPACE:
             case BUILDING_WAREHOUSE:

@@ -490,11 +490,11 @@ void formation_calculate_figures()
         if (m->in_use && !m->is_herd) {
             if (m->is_legion) {
                 if (m->num_figures > 0) {
-                    int wasHalted = m->is_halted;
+                    int was_halted = m->is_halted;
                     m->is_halted = 1;
                     for (int fig = 0; fig < m->num_figures; fig++) {
-                        int figureId = m->figures[fig];
-                        if (figureId && figure_get(figureId)->direction != DIR_8_NONE) {
+                        int figure_id = m->figures[fig];
+                        if (figure_id && figure_get(figure_id)->direction != DIR_8_NONE) {
                             m->is_halted = 0;
                         }
                     }
@@ -504,7 +504,7 @@ void formation_calculate_figures()
                     }
                     enemy_army_totals_add_legion_formation(total_strength);
                     if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-                        if (!wasHalted && m->is_halted) {
+                        if (!was_halted && m->is_halted) {
                             sound_effect_play(SOUND_EFFECT_FORMATION_SHIELD);
                         }
                     }

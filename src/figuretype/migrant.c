@@ -104,11 +104,11 @@ void figure_immigrant_action(figure *f)
             f->graphicOffset = 0;
             f->waitTicks--;
             if (f->waitTicks <= 0) {
-                int xRoad, yRoad;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+                int x_road, y_road;
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_2_IMMIGRANT_ARRIVING;
-                    f->destinationX = xRoad;
-                    f->destinationY = yRoad;
+                    f->destinationX = x_road;
+                    f->destinationY = y_road;
                     f->roamLength = 0;
                 } else {
                     f->state = FIGURE_STATE_DEAD;
@@ -139,11 +139,11 @@ void figure_immigrant_action(figure *f)
             f->isGhost = 1;
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 f->state = FIGURE_STATE_DEAD;
-                int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
+                int max_people = model_get_house(b->subtype.houseLevel)->max_people;
                 if (b->houseIsMerged) {
-                    maxPeople *= 4;
+                    max_people *= 4;
                 }
-                int room = maxPeople - b->housePopulation;
+                int room = max_people - b->housePopulation;
                 if (room < 0) {
                     room = 0;
                 }
@@ -154,7 +154,7 @@ void figure_immigrant_action(figure *f)
                     building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
                 }
                 b->housePopulation += f->migrantNumPeople;
-                b->housePopulationRoom = maxPeople - b->housePopulation;
+                b->housePopulationRoom = max_people - b->housePopulation;
                 city_population_add(f->migrantNumPeople);
                 b->immigrantFigureId = 0;
             }
@@ -184,12 +184,12 @@ void figure_emigrant_action(figure *f)
             f->graphicOffset = 0;
             f->waitTicks++;
             if (f->waitTicks >= 5) {
-                int xRoad, yRoad;
-                if (!map_closest_road_within_radius(f->x, f->y, 1, 5, &xRoad, &yRoad)) {
+                int x_road, y_road;
+                if (!map_closest_road_within_radius(f->x, f->y, 1, 5, &x_road, &y_road)) {
                     f->state = FIGURE_STATE_DEAD;
                 }
                 f->actionState = FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE;
-                figure_movement_set_cross_country_destination(f, xRoad, yRoad);
+                figure_movement_set_cross_country_destination(f, x_road, y_road);
                 f->roamLength = 0;
             }
             break;
@@ -239,13 +239,13 @@ void figure_homeless_action(figure *f)
                 int building_id = closest_house_with_room(f->x, f->y);
                 if (building_id) {
                     building *b = building_get(building_id);
-                    int xRoad, yRoad;
-                    if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+                    int x_road, y_road;
+                    if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                         b->immigrantFigureId = f->id;
                         f->immigrantBuildingId = building_id;
                         f->actionState = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;
-                        f->destinationX = xRoad;
-                        f->destinationY = yRoad;
+                        f->destinationX = x_road;
+                        f->destinationY = y_road;
                         f->roamLength = 0;
                     } else {
                         f->state = FIGURE_STATE_DEAD;
@@ -280,11 +280,11 @@ void figure_homeless_action(figure *f)
                 f->state = FIGURE_STATE_DEAD;
                 building *b = building_get(f->immigrantBuildingId);
                 if (f->immigrantBuildingId && building_is_house(b->type)) {
-                    int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
+                    int max_people = model_get_house(b->subtype.houseLevel)->max_people;
                     if (b->houseIsMerged) {
-                        maxPeople *= 4;
+                        max_people *= 4;
                     }
-                    int room = maxPeople - b->housePopulation;
+                    int room = max_people - b->housePopulation;
                     if (room < 0) {
                         room = 0;
                     }
@@ -295,7 +295,7 @@ void figure_homeless_action(figure *f)
                         building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
                     }
                     b->housePopulation += f->migrantNumPeople;
-                    b->housePopulationRoom = maxPeople - b->housePopulation;
+                    b->housePopulationRoom = max_people - b->housePopulation;
                     city_population_add_homeless(f->migrantNumPeople);
                     b->immigrantFigureId = 0;
                 }
@@ -314,13 +314,13 @@ void figure_homeless_action(figure *f)
                 int building_id = closest_house_with_room(f->x, f->y);
                 if (building_id > 0) {
                     building *b = building_get(building_id);
-                    int xRoad, yRoad;
-                    if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+                    int x_road, y_road;
+                    if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                         b->immigrantFigureId = f->id;
                         f->immigrantBuildingId = building_id;
                         f->actionState = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;
-                        f->destinationX = xRoad;
-                        f->destinationY = yRoad;
+                        f->destinationX = x_road;
+                        f->destinationY = y_road;
                         f->roamLength = 0;
                         figure_route_remove(f);
                     }

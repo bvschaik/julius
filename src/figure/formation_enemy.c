@@ -269,10 +269,10 @@ static void approach_target(formation *m)
             m->destination_x, m->destination_y, m->destination_building_id, 400) ||
         map_routing_noncitizen_can_travel_through_everything(m->x_home, m->y_home,
             m->destination_x, m->destination_y)) {
-        int xTile, yTile;
+        int x_tile, y_tile;
         if (map_routing_get_closest_tile_within_range(m->x_home, m->y_home,
-                m->destination_x, m->destination_y, 8, 20, &xTile, &yTile)) {
-            formation_set_destination(m, xTile, yTile);
+                m->destination_x, m->destination_y, 8, 20, &x_tile, &y_tile)) {
+            formation_set_destination(m, x_tile, y_tile);
         }
     }
 }
@@ -543,10 +543,10 @@ static void update_enemy_formation(formation *m, int *roman_distance)
         army->layout = m->layout;
         *roman_distance = 0;
         map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, -2, -2, 100000, 300);
-        int xTile, yTile;
-        if (map_soldier_strength_get_max(m->x_home, m->y_home, 16, &xTile, &yTile)) {
+        int x_tile, y_tile;
+        if (map_soldier_strength_get_max(m->x_home, m->y_home, 16, &x_tile, &y_tile)) {
             *roman_distance = 1;
-        } else if (map_soldier_strength_get_max(m->x_home, m->y_home, 32, &xTile, &yTile)) {
+        } else if (map_soldier_strength_get_max(m->x_home, m->y_home, 32, &x_tile, &y_tile)) {
             *roman_distance = 2;
         }
         if (army->ignore_roman_soldiers) {
@@ -554,8 +554,8 @@ static void update_enemy_formation(formation *m, int *roman_distance)
         }
         if (*roman_distance == 1) {
             // attack roman legion
-            army->destination_x = xTile;
-            army->destination_y = yTile;
+            army->destination_x = x_tile;
+            army->destination_y = y_tile;
             army->destination_building_id = 0;
         } else {
             set_enemy_target_building(m);
@@ -581,11 +581,11 @@ void formation_enemy_update()
     } else {
         enemy_army_calculate_roman_influence();
         enemy_armies_clear_formations();
-        int romanDistance = 0;
+        int roman_distance = 0;
         for (int i = 1; i < MAX_FORMATIONS; i++) {
             formation *m = formation_get(i);
             if (m->in_use && !m->is_herd && !m->is_legion) {
-                update_enemy_formation(m, &romanDistance);
+                update_enemy_formation(m, &roman_distance);
             }
         }
     }

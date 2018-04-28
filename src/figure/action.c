@@ -24,7 +24,7 @@ static void figure_nobody_action(figure *f)
 {
 }
 
-static void (*figureActionCallbacks[])(figure *f) = {
+static void (*figure_action_callbacks[])(figure *f) = {
     figure_nobody_action, //0
     figure_immigrant_action,
     figure_emigrant_action,
@@ -61,7 +61,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
     figure_doctor_action,
     figure_doctor_action,
     figure_worker_action,
-    figure_nobody_action, // mapFlag: editor only
+    figure_nobody_action, // map_flag: editor only
     figure_flotsam_action,
     figure_docker_action,
     figure_market_buyer_action,
@@ -123,7 +123,7 @@ void figure_action_handle()
                     f->targetedByFigureId = 0;
                 }
             }
-            figureActionCallbacks[f->type](f);
+            figure_action_callbacks[f->type](f);
             if (f->state == FIGURE_STATE_DEAD) {
                 figure_delete(f);
             }

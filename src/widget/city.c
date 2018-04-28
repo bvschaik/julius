@@ -232,11 +232,11 @@ void widget_city_get_tooltip(tooltip_context *c)
     if (data.current_tile.grid_offset == 0) {
         return;
     }
-    int gridOffset = data.current_tile.grid_offset;
-    int buildingId = map_building_at(gridOffset);
+    int grid_offset = data.current_tile.grid_offset;
+    int building_id = map_building_at(grid_offset);
     int overlay = game_state_overlay();
     // regular tooltips
-    if (overlay == OVERLAY_NONE && buildingId && building_get(buildingId)->type == BUILDING_SENATE_UPGRADED) {
+    if (overlay == OVERLAY_NONE && building_id && building_get(building_id)->type == BUILDING_SENATE_UPGRADED) {
         c->type = TOOLTIP_SENATE;
         c->high_priority = 1;
         return;
@@ -244,7 +244,7 @@ void widget_city_get_tooltip(tooltip_context *c)
     // overlay tooltips
     if (overlay != OVERLAY_NONE) {
         c->text_group = 66;
-        c->text_id = city_with_overlay_get_tooltip_text(c, gridOffset);
+        c->text_id = city_with_overlay_get_tooltip_text(c, grid_offset);
         if (c->text_id) {
             c->type = TOOLTIP_OVERLAY;
             c->high_priority = 1;

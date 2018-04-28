@@ -51,12 +51,12 @@ void figure_indigenous_native_action(figure *f)
             if (f->waitTicks > 10 + (f->id & 3)) {
                 f->waitTicks = 0;
                 if (!city_military_is_native_attack_active()) {
-                    int xTile, yTile;
+                    int x_tile, y_tile;
                     building *meeting = building_get(b->subtype.nativeMeetingCenterId);
-                    if (map_terrain_get_adjacent_road_or_clear_land(meeting->x, meeting->y, meeting->size, &xTile, &yTile)) {
+                    if (map_terrain_get_adjacent_road_or_clear_land(meeting->x, meeting->y, meeting->size, &x_tile, &y_tile)) {
                         f->actionState = FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER;
-                        f->destinationX = xTile;
-                        f->destinationY = yTile;
+                        f->destinationX = x_tile;
+                        f->destinationY = y_tile;
                     }
                 } else {
                     const formation *m = formation_get(0);

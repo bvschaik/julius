@@ -421,102 +421,101 @@ void city_view_load_scenario_state(buffer *camera)
 void city_view_foreach_map_tile(map_callback *callback)
 {
     int odd = 0;
-    int yView = data.camera.y - 8;
-    int yGraphic = data.viewport.y - 9*15;
-    int xGraphic, xView;
+    int y_view = data.camera.y - 8;
+    int y_graphic = data.viewport.y - 9*15;
     for (int y = 0; y < data.viewport.height_tiles + 14; y++) {
-        if (yView >= 0 && yView < VIEW_Y_MAX) {
-            xGraphic = -(4*58 + 8);
+        if (y_view >= 0 && y_view < VIEW_Y_MAX) {
+            int x_graphic = -(4*58 + 8);
             if (odd) {
-                xGraphic += data.viewport.x - 30;
+                x_graphic += data.viewport.x - 30;
             } else {
-                xGraphic += data.viewport.x;
+                x_graphic += data.viewport.x;
             }
-            xView = data.camera.x - 4;
+            int x_view = data.camera.x - 4;
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                if (xView >= 0 && xView < VIEW_X_MAX) {
-                    int grid_offset = view_to_grid_offset_lookup[xView][yView];
-                    callback(xGraphic, yGraphic, grid_offset);
+                if (x_view >= 0 && x_view < VIEW_X_MAX) {
+                    int grid_offset = view_to_grid_offset_lookup[x_view][y_view];
+                    callback(x_graphic, y_graphic, grid_offset);
                 }
-                xGraphic += 60;
-                xView++;
+                x_graphic += 60;
+                x_view++;
             }
         }
         odd = 1 - odd;
-        yGraphic += 15;
-        yView++;
+        y_graphic += 15;
+        y_view++;
     }
 }
 
 void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2, map_callback *callback3)
 {
     int odd = 0;
-    int yView = data.camera.y - 8;
-    int yGraphic = data.viewport.y - 9*15;
-    int xGraphic, xView;
+    int y_view = data.camera.y - 8;
+    int y_graphic = data.viewport.y - 9*15;
+    int x_graphic, x_view;
     for (int y = 0; y < data.viewport.height_tiles + 14; y++) {
-        if (yView >= 0 && yView < VIEW_Y_MAX) {
+        if (y_view >= 0 && y_view < VIEW_Y_MAX) {
             if (callback1) {
-                xGraphic = -(4*58 + 8);
+                x_graphic = -(4*58 + 8);
                 if (odd) {
-                    xGraphic += data.viewport.x - 30;
+                    x_graphic += data.viewport.x - 30;
                 } else {
-                    xGraphic += data.viewport.x;
+                    x_graphic += data.viewport.x;
                 }
-                xView = data.camera.x - 4;
+                x_view = data.camera.x - 4;
                 for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                    if (xView >= 0 && xView < VIEW_X_MAX) {
-                        int grid_offset = view_to_grid_offset_lookup[xView][yView];
+                    if (x_view >= 0 && x_view < VIEW_X_MAX) {
+                        int grid_offset = view_to_grid_offset_lookup[x_view][y_view];
                         if (grid_offset >= 0) {
-                            callback1(xGraphic, yGraphic, grid_offset);
+                            callback1(x_graphic, y_graphic, grid_offset);
                         }
                     }
-                    xGraphic += 60;
-                    xView++;
+                    x_graphic += 60;
+                    x_view++;
                 }
             }
             if (callback2) {
-                xGraphic = -(4*58 + 8);
+                x_graphic = -(4*58 + 8);
                 if (odd) {
-                    xGraphic += data.viewport.x - 30;
+                    x_graphic += data.viewport.x - 30;
                 } else {
-                    xGraphic += data.viewport.x;
+                    x_graphic += data.viewport.x;
                 }
-                xView = data.camera.x - 4;
+                x_view = data.camera.x - 4;
                 for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                    if (xView >= 0 && xView < VIEW_X_MAX) {
-                        int grid_offset = view_to_grid_offset_lookup[xView][yView];
+                    if (x_view >= 0 && x_view < VIEW_X_MAX) {
+                        int grid_offset = view_to_grid_offset_lookup[x_view][y_view];
                         if (grid_offset >= 0) {
-                            callback2(xGraphic, yGraphic, grid_offset);
+                            callback2(x_graphic, y_graphic, grid_offset);
                         }
                     }
-                    xGraphic += 60;
-                    xView++;
+                    x_graphic += 60;
+                    x_view++;
                 }
             }
             if (callback3) {
-                xGraphic = -(4*58 + 8);
+                x_graphic = -(4*58 + 8);
                 if (odd) {
-                    xGraphic += data.viewport.x - 30;
+                    x_graphic += data.viewport.x - 30;
                 } else {
-                    xGraphic += data.viewport.x;
+                    x_graphic += data.viewport.x;
                 }
-                xView = data.camera.x - 4;
+                x_view = data.camera.x - 4;
                 for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                    if (xView >= 0 && xView < VIEW_X_MAX) {
-                        int grid_offset = view_to_grid_offset_lookup[xView][yView];
+                    if (x_view >= 0 && x_view < VIEW_X_MAX) {
+                        int grid_offset = view_to_grid_offset_lookup[x_view][y_view];
                         if (grid_offset >= 0) {
-                            callback3(xGraphic, yGraphic, grid_offset);
+                            callback3(x_graphic, y_graphic, grid_offset);
                         }
                     }
-                    xGraphic += 60;
-                    xView++;
+                    x_graphic += 60;
+                    x_view++;
                 }
             }
         }
         odd = 1 - odd;
-        yGraphic += 15;
-        yView++;
+        y_graphic += 15;
+        y_view++;
     }
 }
 

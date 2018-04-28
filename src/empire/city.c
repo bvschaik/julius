@@ -204,39 +204,39 @@ void empire_city_expand_empire()
     }
 }
 
-static int generate_trader(int cityId, empire_city *city)
+static int generate_trader(int city_id, empire_city *city)
 {
-    int maxTradersOnMap = 0;
-    int numResources = 0;
+    int max_traders = 0;
+    int num_resources = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         if (city->buys_resource[r] || city->sells_resource[r]) {
-            ++numResources;
+            ++num_resources;
             switch (trade_route_limit(city->route_id, r)) {
-                case 15: maxTradersOnMap += 1; break;
-                case 25: maxTradersOnMap += 2; break;
-                case 40: maxTradersOnMap += 3; break;
+                case 15: max_traders += 1; break;
+                case 25: max_traders += 2; break;
+                case 40: max_traders += 3; break;
             }
         }
     }
-    if (numResources > 1) {
-        if (maxTradersOnMap % numResources) {
-            maxTradersOnMap = maxTradersOnMap / numResources + 1;
+    if (num_resources > 1) {
+        if (max_traders % num_resources) {
+            max_traders = max_traders / num_resources + 1;
         } else {
-            maxTradersOnMap = maxTradersOnMap / numResources;
+            max_traders = max_traders / num_resources;
         }
     }
-    if (maxTradersOnMap <= 0) {
+    if (max_traders <= 0) {
         return 0;
     }
 
     int index;
-    if (maxTradersOnMap == 1) {
+    if (max_traders == 1) {
         if (!city->trader_figure_ids[0]) {
             index = 0;
         } else {
             return 0;
         }
-    } else if (maxTradersOnMap == 2) {
+    } else if (max_traders == 2) {
         if (!city->trader_figure_ids[0]) {
             index = 0;
         } else if (!city->trader_figure_ids[1]) {
@@ -266,7 +266,7 @@ static int generate_trader(int cityId, empire_city *city)
         // generate ship
         if (city_buildings_has_working_dock() && scenario_map_has_river_entry() && !city_trade_has_sea_trade_problems()) {
             map_point river_entry = scenario_map_river_entry();
-            city->trader_figure_ids[index] = figure_create_trade_ship(river_entry.x, river_entry.y, cityId);
+            city->trader_figure_ids[index] = figure_create_trade_ship(river_entry.x, river_entry.y, city_id);
             return 1;
         }
     } else {
@@ -274,7 +274,7 @@ static int generate_trader(int cityId, empire_city *city)
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
             const map_tile *entry = city_map_entry_point();
-            city->trader_figure_ids[index] = figure_create_trade_caravan(entry->x, entry->y, cityId);
+            city->trader_figure_ids[index] = figure_create_trade_caravan(entry->x, entry->y, city_id);
             return 1;
         }
     }

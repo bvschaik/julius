@@ -34,8 +34,8 @@ int io_read_file_part_into_buffer(const char *filepath, void *buffer, int size, 
     int bytes_read = 0;
     FILE *fp = fopen(cased_file, "rb");
     if (fp) {
-        int seekResult = fseek(fp, offset_in_file, SEEK_SET);
-        if (seekResult == 0) {
+        int seek_result = fseek(fp, offset_in_file, SEEK_SET);
+        if (seek_result == 0) {
             bytes_read = (int) fread(buffer, 1, (size_t) size, fp);
         }
         fclose(fp);

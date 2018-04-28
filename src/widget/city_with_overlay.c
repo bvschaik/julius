@@ -144,21 +144,21 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
     if (b->size == 1) {
         image_draw_isometric_footprint_from_draw_tile(image_base, x, y, 0);
     } else if (b->size == 2) {
-        int xTileOffset[] = {30, 0, 60, 30};
-        int yTileOffset[] = {-15, 0, 0, 15};
+        const int x_tile_offset[] = {30, 0, 60, 30};
+        const int y_tile_offset[] = {-15, 0, 0, 15};
         for (int i = 0; i < 4; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + i, x + xTileOffset[i], y + yTileOffset[i], 0);
+            image_draw_isometric_footprint_from_draw_tile(image_base + i, x + x_tile_offset[i], y + y_tile_offset[i], 0);
         }
     } else if (b->size == 3) {
-        int graphicTileOffset[] = {0, 1, 2, 1, 3, 2, 3, 3, 3};
-        int xTileOffset[] = {60, 30, 90, 0, 60, 120, 30, 90, 60};
-        int yTileOffset[] = {-30, -15, -15, 0, 0, 0, 15, 15, 30};
+        const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 3, 3, 3};
+        const int x_tile_offset[] = {60, 30, 90, 0, 60, 120, 30, 90, 60};
+        const int y_tile_offset[] = {-30, -15, -15, 0, 0, 0, 15, 15, 30};
         for (int i = 0; i < 9; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + graphicTileOffset[i], x + xTileOffset[i], y + yTileOffset[i], 0);
+            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], 0);
         }
     } else if (b->size == 4) {
-        int graphicTileOffset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 3, 3, 3, 3, 3, 3};
-        int xTileOffset[] = {
+        const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 3, 3, 3, 3, 3, 3};
+        const int x_tile_offset[] = {
             90,
             60, 120,
             30, 90, 150,
@@ -167,7 +167,7 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
             60, 120,
             90
         };
-        int yTileOffset[] = {
+        const int y_tile_offset[] = {
             -45,
             -30, -30,
             -15, -15, -15,
@@ -177,11 +177,11 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
             45
         };
         for (int i = 0; i < 16; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + graphicTileOffset[i], x + xTileOffset[i], y + yTileOffset[i], 0);
+            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], 0);
         }
     } else if (b->size == 5) {
-        int graphicTileOffset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 1, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
-        int xTileOffset[] = {
+        const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 1, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
+        const int x_tile_offset[] = {
             120,
             90, 150,
             60, 120, 180,
@@ -192,7 +192,7 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
             90, 150,
             120
         };
-        int yTileOffset[] = {
+        const int y_tile_offset[] = {
             -60,
             -45, -45,
             -30, -30, -30,
@@ -204,7 +204,7 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
             60
         };
         for (int i = 0; i < 25; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + graphicTileOffset[i], x + xTileOffset[i], y + yTileOffset[i], 0);
+            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], 0);
         }
     }
 }
@@ -408,10 +408,10 @@ static void draw_animation(int x, int y, int grid_offset)
                     image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
                 }
             } else {
-                int animationOffset = building_animation_offset(b, image_id, grid_offset);
-                if (animationOffset > 0) {
-                    if (animationOffset > img->num_animation_sprites) {
-                        animationOffset = img->num_animation_sprites;
+                int animation_offset = building_animation_offset(b, image_id, grid_offset);
+                if (animation_offset > 0) {
+                    if (animation_offset > img->num_animation_sprites) {
+                        animation_offset = img->num_animation_sprites;
                     }
                     int ydiff = 0;
                     switch (map_property_multi_tile_size(grid_offset)) {
@@ -421,7 +421,7 @@ static void draw_animation(int x, int y, int grid_offset)
                         case 4: ydiff = 75; break;
                         case 5: ydiff = 90; break;
                     }
-                    image_draw_masked(image_id + animationOffset,
+                    image_draw_masked(image_id + animation_offset,
                                       x + img->sprite_offset_x,
                                       y + ydiff + img->sprite_offset_y - img->height,
                                       color_mask);

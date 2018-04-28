@@ -711,9 +711,9 @@ void figure_trade_ship_action(figure *f)
             f->waitTicks++;
             if (f->waitTicks > 40) {
                 int x_tile, y_tile;
-                int dockId = building_dock_get_free_destination(f->id, &x_tile, &y_tile);
-                if (dockId) {
-                    f->destinationBuildingId = dockId;
+                int dock_id = building_dock_get_free_destination(f->id, &x_tile, &y_tile);
+                if (dock_id) {
+                    f->destinationBuildingId = dock_id;
                     f->actionState = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
                     f->destinationX = x_tile;
                     f->destinationY = y_tile;

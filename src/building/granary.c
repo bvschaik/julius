@@ -254,7 +254,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
 }
 
 int building_getting_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id,
-                                         int *xDst, int *yDst)
+                                         int *x_dst, int *y_dst)
 {
     if (scenario_property_rome_supplies_wheat()) {
         return 0;
@@ -293,8 +293,8 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
         }
     }
     building *min = building_get(min_building_id);
-    *xDst = min->x + 1;
-    *yDst = min->y + 1;
+    *x_dst = min->x + 1;
+    *y_dst = min->y + 1;
     return min_building_id;
 }
 

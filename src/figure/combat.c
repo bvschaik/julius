@@ -32,12 +32,12 @@ static int attack_is_same_direction(int dir1, int dir2)
     if (dir1 == dir2) {
         return 1;
     }
-    int dir2Off = dir2 <= 0 ? 7 : dir2 - 1;
-    if (dir1 == dir2Off) {
+    int dir2_off = dir2 <= 0 ? 7 : dir2 - 1;
+    if (dir1 == dir2_off) {
         return 1;
     }
-    dir2Off = dir2 >= 7 ? 0 : dir2 + 1;
-    if (dir1 == dir2Off) {
+    dir2_off = dir2 >= 7 ? 0 : dir2 + 1;
+    if (dir1 == dir2_off) {
         return 1;
     }
     return 0;

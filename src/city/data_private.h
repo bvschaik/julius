@@ -398,7 +398,7 @@ extern struct city_data_t {
         int8_t unknown_2924[272];
         int32_t unknown_2b6c;
         int32_t unknown_2c20[1400];
-        int32_t housesRequiringUnknownToEvolve[8];
+        int32_t houses_requiring_unknown_to_evolve[8];
         int32_t unknown_4238[4];
         int32_t unknown_4284;
         int32_t unknown_4294[2];
