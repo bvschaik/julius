@@ -6,7 +6,6 @@
 extern struct _Data_CityInfo {
 	int32_t riotersOrAttackingNativesInCity;
 	int32_t nativeAttackDuration;
-	int32_t tutorial1SenateBuilt;
 	uint8_t distantBattleCityId;
 	uint8_t distantBattleEnemyStrength;
 	uint8_t distantBattleRomanStrength;
@@ -22,9 +21,6 @@ extern struct _Data_CityInfo {
 	int8_t militaryTotalLegionsEmpireService;
 	int8_t militaryTotalSoldiers;
 	int32_t militaryLegionaryLegions;
-	int32_t missionSavedGameWritten;
-	int32_t tutorial1FireMessageShown;
-	int32_t tutorial3DiseaseMessageShown;
 
 	int32_t populationGraphOrder;
 } Data_CityInfo;

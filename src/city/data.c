@@ -444,7 +444,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.resource.food_produced_this_month);
     buffer_write_i32(main, city_data.ratings.peace_riot_cause);
     buffer_write_i32(main, city_data.finance.estimated_tax_income);
-    buffer_write_i32(main, Data_CityInfo.tutorial1SenateBuilt);
+    buffer_write_i32(main, city_data.mission.tutorial_senate_built);
     buffer_write_i8(main, city_data.building.distribution_center_x);
     buffer_write_i8(main, city_data.building.distribution_center_y);
     buffer_write_i16(main, city_data.building.distribution_center_grid_offset);
@@ -520,9 +520,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.migration.emigration_message_shown);
     buffer_write_i32(main, city_data.mission.fired_message_shown);
     buffer_write_i32(main, city_data.mission.victory_message_shown);
-    buffer_write_i32(main, Data_CityInfo.missionSavedGameWritten);
-    buffer_write_i32(main, Data_CityInfo.tutorial1FireMessageShown);
-    buffer_write_i32(main, Data_CityInfo.tutorial3DiseaseMessageShown);
+    buffer_write_i32(main, city_data.mission.start_saved_game_written);
+    buffer_write_i32(main, city_data.mission.tutorial_fire_message_shown);
+    buffer_write_i32(main, city_data.mission.tutorial_disease_message_shown);
     buffer_write_i32(main, city_data.figure.attacking_natives);
     for (int i = 0; i < 232; i++) {
         buffer_write_i8(main, city_data.unused.unknown_464c[i]);
@@ -921,7 +921,7 @@ static void load_main_data(buffer *main)
     city_data.resource.food_produced_this_month = buffer_read_i32(main);
     city_data.ratings.peace_riot_cause = buffer_read_i32(main);
     city_data.finance.estimated_tax_income = buffer_read_i32(main);
-    Data_CityInfo.tutorial1SenateBuilt = buffer_read_i32(main);
+    city_data.mission.tutorial_senate_built = buffer_read_i32(main);
     city_data.building.distribution_center_x = buffer_read_i8(main);
     city_data.building.distribution_center_y = buffer_read_i8(main);
     city_data.building.distribution_center_grid_offset = buffer_read_i16(main);
@@ -997,9 +997,9 @@ static void load_main_data(buffer *main)
     city_data.migration.emigration_message_shown = buffer_read_i32(main);
     city_data.mission.fired_message_shown = buffer_read_i32(main);
     city_data.mission.victory_message_shown = buffer_read_i32(main);
-    Data_CityInfo.missionSavedGameWritten = buffer_read_i32(main);
-    Data_CityInfo.tutorial1FireMessageShown = buffer_read_i32(main);
-    Data_CityInfo.tutorial3DiseaseMessageShown = buffer_read_i32(main);
+    city_data.mission.start_saved_game_written = buffer_read_i32(main);
+    city_data.mission.tutorial_fire_message_shown = buffer_read_i32(main);
+    city_data.mission.tutorial_disease_message_shown = buffer_read_i32(main);
     city_data.figure.attacking_natives = buffer_read_i32(main);
     for (int i = 0; i < 232; i++) {
         city_data.unused.unknown_464c[i] = buffer_read_i8(main);

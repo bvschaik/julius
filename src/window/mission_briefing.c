@@ -1,5 +1,6 @@
 #include "mission_briefing.h"
 
+#include "city/mission.h"
 #include "core/lang.h"
 #include "game/file.h"
 #include "game/mission.h"
@@ -18,8 +19,6 @@
 #include "window/city.h"
 #include "window/intermezzo.h"
 #include "window/mission_selection.h"
-
-#include "Data/CityInfo.h"
 
 static void button_back(int param1, int param2);
 static void button_start_mission(int param1, int param2);
@@ -172,7 +171,7 @@ static void button_start_mission(int param1, int param2)
     sound_speech_stop();
     sound_music_reset();
     window_city_show();
-    Data_CityInfo.missionSavedGameWritten = 0;
+    city_mission_reset_save_start();
 }
 
 static void show()

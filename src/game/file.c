@@ -9,6 +9,7 @@
 #include "city/emperor.h"
 #include "city/map.h"
 #include "city/message.h"
+#include "city/mission.h"
 #include "city/victory.h"
 #include "city/view.h"
 #include "core/file.h"
@@ -66,8 +67,6 @@
 #include "scenario/scenario.h"
 #include "sound/city.h"
 #include "sound/music.h"
-
-#include "Data/CityInfo.h"
 
 #include <string.h>
 
@@ -242,8 +241,8 @@ static void initialize_saved_game()
     game_undo_disable();
     game_state_reset_overlay();
 
-    Data_CityInfo.tutorial1FireMessageShown = 1;
-    Data_CityInfo.tutorial3DiseaseMessageShown = 1;
+    city_mission_tutorial_set_fire_message_shown(1);
+    city_mission_tutorial_set_disease_message_shown(1);
 
     image_load_climate(scenario_property_climate());
     image_load_enemy(scenario_property_enemy());
@@ -354,10 +353,7 @@ void game_file_write_mission_saved_game()
     } else if (rank > 11) {
         rank = 11;
     }
-    if (!Data_CityInfo.missionSavedGameWritten) {
-        Data_CityInfo.missionSavedGameWritten = 1;
-        if (!file_exists(MISSION_SAVED_GAMES[rank])) {
-            game_file_io_write_saved_game(MISSION_SAVED_GAMES[rank]);
-        }
+    if (city_mission_should_save_start() && !file_exists(MISSION_SAVED_GAMES[rank])) {
+        game_file_io_write_saved_game(MISSION_SAVED_GAMES[rank]);
     }
 }

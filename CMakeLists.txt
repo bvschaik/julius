@@ -84,6 +84,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/map.c
     ${PROJECT_SOURCE_DIR}/src/city/message.c
     ${PROJECT_SOURCE_DIR}/src/city/migration.c
+    ${PROJECT_SOURCE_DIR}/src/city/mission.c
     ${PROJECT_SOURCE_DIR}/src/city/population.c
     ${PROJECT_SOURCE_DIR}/src/city/ratings.c
     ${PROJECT_SOURCE_DIR}/src/city/resource.c

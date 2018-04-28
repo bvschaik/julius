@@ -18,8 +18,6 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 
-#include "Data/CityInfo.h"
-
 #include <string.h>
 
 static building Data_Buildings[MAX_BUILDINGS];

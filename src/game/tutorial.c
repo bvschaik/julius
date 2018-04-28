@@ -1,10 +1,9 @@
 #include "tutorial.h"
 
-#include "Data/CityInfo.h"
-
 #include "building/menu.h"
 #include "city/buildings.h"
 #include "city/message.h"
+#include "city/mission.h"
 #include "city/population.h"
 #include "city/resource.h"
 #include "game/resource.h"
@@ -46,7 +45,7 @@ void tutorial_init()
     data.tutorial1.crime = tut1;
     data.tutorial1.collapse = tut1;
     data.tutorial1.senate_built = tut1;
-    Data_CityInfo.tutorial1FireMessageShown = tut1;
+    city_mission_tutorial_set_fire_message_shown(tut1);
 
     data.tutorial2.granary_built = tut2;
     data.tutorial2.population_250_reached = tut2;
@@ -55,7 +54,7 @@ void tutorial_init()
     data.tutorial2.pottery_made_year = tut2;
 
     data.tutorial3.disease = tut3;
-    Data_CityInfo.tutorial3DiseaseMessageShown = tut3;
+    city_mission_tutorial_set_disease_message_shown(tut3);
 }
 
 tutorial_availability tutorial_advisor_empire_availability()
@@ -221,11 +220,10 @@ void tutorial_on_add_to_warehouse()
 
 void tutorial_on_day_tick()
 {
-    if (data.tutorial1.fire && !Data_CityInfo.tutorial1FireMessageShown) {
-        Data_CityInfo.tutorial1FireMessageShown = 1;
+    if (data.tutorial1.fire) {
+        city_mission_tutorial_set_fire_message_shown(1);
     }
-    if (data.tutorial3.disease && !Data_CityInfo.tutorial3DiseaseMessageShown) {
-        Data_CityInfo.tutorial3DiseaseMessageShown = 1;
+    if (data.tutorial3.disease && city_mission_tutorial_show_disease_message()) {
         post_message(MESSAGE_TUTORIAL_HEALTH);
     }
     if (data.tutorial2.granary_built) {
@@ -246,9 +244,9 @@ void tutorial_on_day_tick()
         int population_almost = city_population() >= scenario_criteria_population() - 20;
         if (!game_time_day() || population_almost) {
             if (city_buildings_has_senate()) {
-                Data_CityInfo.tutorial1SenateBuilt++;
+                city_mission_tutorial_add_senate();
             }
-            if (Data_CityInfo.tutorial1SenateBuilt > 0 || population_almost) {
+            if (city_mission_tutorial_has_senate() || population_almost) {
                 data.tutorial1.senate_built = 1;
                 building_menu_update();
                 post_message(MESSAGE_TUTORIAL_RELIGION);
