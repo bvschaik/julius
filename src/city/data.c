@@ -6,13 +6,10 @@
 #include "game/difficulty.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 #include <string.h>
 
 void city_data_init()
 {
-    memset(&Data_CityInfo, 0, sizeof(struct _Data_CityInfo));
     memset(&city_data, 0, sizeof(struct city_data_t));
 
     city_data.unused.faction_bytes[0] = 0;

@@ -312,7 +312,6 @@ set(WINDOW_FILES
 )
 add_executable(julius
 	${PLATFORM_FILES}
-	${PROJECT_SOURCE_DIR}/src/Data/Model.c
 	${CORE_FILES}
 	${BUILDING_FILES}
 	${CITY_FILES}
