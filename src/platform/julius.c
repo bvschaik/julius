@@ -35,6 +35,11 @@ static struct {
 } Desktop;
 
 static struct {
+    int x;
+    int y;
+} window_pos;
+
+static struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *texture;
@@ -250,6 +255,37 @@ static void createSurface(int width, int height, int fullscreen)
     }
 }
 
+static void set_fullscreen()
+{
+    SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
+    SDL_DisplayMode mode;
+    SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(SDL.window), &mode);
+    printf("User to fullscreen %d x %d\n", mode.w, mode.h);
+    SDL_SetWindowSize(SDL.window, mode.w, mode.h);
+    SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN);
+    SDL_SetWindowDisplayMode(SDL.window, &mode);
+    setting_set_display(1, mode.w, mode.h);
+}
+
+static void set_windowed()
+{
+    int width, height;
+    setting_window(&width, &height);
+    printf("User to windowed %d x %d\n", width, height);
+    SDL_SetWindowFullscreen(SDL.window, 0);
+    SDL_SetWindowSize(SDL.window, width, height);
+    SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
+    setting_set_display(0, width, height);
+}
+
+static void set_window_size(int width, int height)
+{
+    SDL_SetWindowSize(SDL.window, width, height);
+    SDL_SetWindowFullscreen(SDL.window, 0);
+    printf("User resize to %d x %d\n", width, height);
+    setting_set_display(0, width, height);
+}
+
 static void mainLoop()
 {
     SDL_Event event;
@@ -328,30 +364,11 @@ static void mainLoop()
                     if (event.user.code == USER_EVENT_QUIT) {
                         return;
                     } else if (event.user.code == USER_EVENT_RESIZE) {
-                        SDL_SetWindowSize(SDL.window, *(int*)event.user.data1, *(int*)event.user.data2);
-                        SDL_SetWindowFullscreen(SDL.window, 0);
-                        printf("User resize to %d x %d\n", *(int*)event.user.data1, *(int*)event.user.data2);
-                        setting_set_display(0, *(int*)event.user.data1, *(int*)event.user.data2);
-                        //createSurface(*(int*)event.user.data1, *(int*)event.user.data2, 0);
-                        //window_invalidate();
+                        set_window_size(*(int*)event.user.data1, *(int*)event.user.data2);
                     } else if (event.user.code == USER_EVENT_FULLSCREEN) {
-                        printf("User to fullscreen %d x %d\n", Desktop.width, Desktop.height);
-                        SDL_SetWindowSize(SDL.window, Desktop.width, Desktop.height);
-                        SDL_DisplayMode mode;
-                        mode.w = Desktop.width;
-                        mode.h = Desktop.height;
-                        SDL_SetWindowDisplayMode(SDL.window, &mode);
-                        SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN);
-                        setting_set_display(1, Desktop.width, Desktop.height);
-                        //createSurface(Desktop.width, Desktop.height, 1);
-                        //window_invalidate();
+                        set_fullscreen();
                     } else if (event.user.code == USER_EVENT_WINDOWED) {
-                        int width, height;
-                        setting_window(&width, &height);
-                        printf("User to windowed %d x %d\n", width, height);
-                        SDL_SetWindowSize(SDL.window, width, height);
-                        SDL_SetWindowFullscreen(SDL.window, 0);
-                        setting_set_display(0, width, height);
+                        set_windowed();
                     }
                     break;
                 
