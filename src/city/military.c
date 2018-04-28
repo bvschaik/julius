@@ -67,23 +67,28 @@ void city_military_update_totals()
 
 void city_military_determine_distant_battle_city()
 {
-    Data_CityInfo.distantBattleCityId = empire_city_get_vulnerable_roman();
+    city_data.military.distant_battle.city = empire_city_get_vulnerable_roman();
 }
 
 int city_military_distant_battle_city()
 {
-    return Data_CityInfo.distantBattleCityId;
+    return city_data.military.distant_battle.city;
 }
 
 int city_military_distant_battle_city_is_roman()
 {
-    return Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0;
+    return city_data.military.distant_battle.city_foreign_months_left <= 0;
+}
+
+int city_military_distant_battle_enemy_strength()
+{
+    return city_data.military.distant_battle.enemy_strength;
 }
 
 void city_military_dispatch_to_distant_battle(int roman_strength)
 {
     Data_CityInfo.distantBattleRomanMonthsToTravel = scenario_distant_battle_roman_travel_months();
-    Data_CityInfo.distantBattleRomanStrength = roman_strength;
+    city_data.military.distant_battle.roman_strength = roman_strength;
 }
 
 int city_military_has_distant_battle()
@@ -91,7 +96,7 @@ int city_military_has_distant_battle()
     return Data_CityInfo.distantBattleMonthsToBattle > 0 ||
            Data_CityInfo.distantBattleRomanMonthsToReturn > 0 ||
            Data_CityInfo.distantBattleRomanMonthsToTravel > 0 ||
-           Data_CityInfo.distantBattleCityMonthsUntilRoman > 0;
+           city_data.military.distant_battle.city_foreign_months_left > 0;
 }
 
 void city_military_init_distant_battle(int enemy_strength)
@@ -99,8 +104,8 @@ void city_military_init_distant_battle(int enemy_strength)
     Data_CityInfo.distantBattleEnemyMonthsTraveled = 1;
     Data_CityInfo.distantBattleRomanMonthsTraveled = 1;
     Data_CityInfo.distantBattleMonthsToBattle = 24;
-    Data_CityInfo.distantBattleEnemyStrength = enemy_strength;
-    Data_CityInfo.distantBattleTotalCount++;
+    city_data.military.distant_battle.enemy_strength = enemy_strength;
+    city_data.military.distant_battle.total_count++;
     Data_CityInfo.distantBattleRomanMonthsToReturn = 0;
     Data_CityInfo.distantBattleRomanMonthsToTravel = 0;
 }
@@ -136,31 +141,31 @@ static void update_time_traveled()
 
 static void set_city_vulnerable()
 {
-    if (Data_CityInfo.distantBattleCityId) {
-        empire_city_set_vulnerable(Data_CityInfo.distantBattleCityId);
+    if (city_data.military.distant_battle.city) {
+        empire_city_set_vulnerable(city_data.military.distant_battle.city);
     }
 }
 
 static void set_city_foreign()
 {
-    if (Data_CityInfo.distantBattleCityId) {
-        empire_city_set_foreign(Data_CityInfo.distantBattleCityId);
+    if (city_data.military.distant_battle.city) {
+        empire_city_set_foreign(city_data.military.distant_battle.city);
     }
-    Data_CityInfo.distantBattleCityMonthsUntilRoman = 24;
+    city_data.military.distant_battle.city_foreign_months_left = 24;
 }
 
 static int player_has_won()
 {
     int won;
     int pct_loss;
-    if (Data_CityInfo.distantBattleRomanStrength < Data_CityInfo.distantBattleEnemyStrength) {
+    if (city_data.military.distant_battle.roman_strength < city_data.military.distant_battle.enemy_strength) {
         won = 0;
         pct_loss = 100;
     } else {
         won = 1;
         int pct_advantage = calc_percentage(
-            Data_CityInfo.distantBattleRomanStrength - Data_CityInfo.distantBattleEnemyStrength,
-            Data_CityInfo.distantBattleRomanStrength);
+            city_data.military.distant_battle.roman_strength - city_data.military.distant_battle.enemy_strength,
+            city_data.military.distant_battle.roman_strength);
         if (pct_advantage < 10) {
             pct_loss = 70;
         } else if (pct_advantage < 25) {
@@ -203,8 +208,8 @@ static void fight_distant_battle()
         city_ratings_change_favor(25);
         city_buildings_earn_triumphal_arch();
         building_menu_update();
-        Data_CityInfo.distantBattleWonCount++;
-        Data_CityInfo.distantBattleCityMonthsUntilRoman = 0;
+        city_data.military.distant_battle.won_count++;
+        city_data.military.distant_battle.city_foreign_months_left = 0;
         Data_CityInfo.distantBattleRomanMonthsToReturn = Data_CityInfo.distantBattleRomanMonthsTraveled;
     }
     Data_CityInfo.distantBattleMonthsToBattle = 0;
@@ -218,7 +223,7 @@ static void update_aftermath()
         Data_CityInfo.distantBattleRomanMonthsToReturn--;
         Data_CityInfo.distantBattleRomanMonthsTraveled = Data_CityInfo.distantBattleRomanMonthsToReturn;
         if (Data_CityInfo.distantBattleRomanMonthsToReturn <= 0) {
-            if (Data_CityInfo.distantBattleCityMonthsUntilRoman) {
+            if (city_data.military.distant_battle.city_foreign_months_left) {
                 // soldiers return - not in time
                 city_message_post(1, MESSAGE_TROOPS_RETURN_FAILED, 0, city_data.map.exit_point.grid_offset);
             } else {
@@ -228,9 +233,9 @@ static void update_aftermath()
             Data_CityInfo.distantBattleRomanMonthsTraveled = 0;
             formation_legions_return_from_distant_battle();
         }
-    } else if (Data_CityInfo.distantBattleCityMonthsUntilRoman > 0) {
-        Data_CityInfo.distantBattleCityMonthsUntilRoman--;
-        if (Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0) {
+    } else if (city_data.military.distant_battle.city_foreign_months_left > 0) {
+        city_data.military.distant_battle.city_foreign_months_left--;
+        if (city_data.military.distant_battle.city_foreign_months_left <= 0) {
             city_message_post(1, MESSAGE_DISTANT_BATTLE_CITY_RETAKEN, 0, 0);
             set_city_vulnerable();
         }

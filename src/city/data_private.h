@@ -89,6 +89,14 @@ extern struct city_data_t {
         uint8_t total_soldiers;
         uint8_t empire_service_legions;
         int32_t legionary_legions;
+        struct {
+            uint8_t city;
+            int8_t city_foreign_months_left;
+            int8_t total_count;
+            int8_t won_count;
+            uint8_t enemy_strength;
+            uint8_t roman_strength;
+        } distant_battle;
     } military;
     struct {
         int32_t treasury;

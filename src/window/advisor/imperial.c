@@ -113,9 +113,10 @@ static int draw_background()
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
         lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 50 + width, 102, FONT_NORMAL_WHITE);
         int strength_text_id;
-        if (Data_CityInfo.distantBattleEnemyStrength < 46) {
+        int enemy_strength = city_military_distant_battle_enemy_strength();
+        if (enemy_strength < 46) {
             strength_text_id = 73;
-        } else if (Data_CityInfo.distantBattleEnemyStrength < 89) {
+        } else if (enemy_strength < 89) {
             strength_text_id = 74;
         } else {
             strength_text_id = 75;
