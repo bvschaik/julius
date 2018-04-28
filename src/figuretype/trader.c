@@ -363,12 +363,12 @@ void figure_trade_caravan_action(figure *f)
                     figure_route_remove(f);
                     break;
                 case DIR_FIGURE_LOST:
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                     f->isGhost = 1;
                     break;
             }
             if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING:
@@ -411,13 +411,13 @@ void figure_trade_caravan_action(figure *f)
             switch (f->direction) {
                 case DIR_FIGURE_AT_DESTINATION:
                     f->actionState = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                     break;
                 case DIR_FIGURE_REROUTE:
                     figure_route_remove(f);
                     break;
                 case DIR_FIGURE_LOST:
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                     break;
             }
             break;
@@ -435,14 +435,14 @@ void figure_trade_caravan_donkey_action(figure *f)
 
     figure *leader = figure_get(f->inFrontFigureId);
     if (f->inFrontFigureId <= 0) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     } else {
         if (leader->actionState == FIGURE_ACTION_149_CORPSE) {
-            f->state = FigureState_Dead;
-        } else if (leader->state != FigureState_Alive) {
-            f->state = FigureState_Dead;
+            f->state = FIGURE_STATE_DEAD;
+        } else if (leader->state != FIGURE_STATE_ALIVE) {
+            f->state = FIGURE_STATE_DEAD;
         } else if (leader->type != FIGURE_TRADE_CARAVAN && leader->type != FIGURE_TRADE_CARAVAN_DONKEY) {
-            f->state = FigureState_Dead;
+            f->state = FIGURE_STATE_DEAD;
         } else {
             figure_movement_follow_ticks(f, 1);
         }
@@ -475,17 +475,17 @@ void figure_native_trader_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
                 f->isGhost = 1;
             }
             if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_161_NATIVE_TRADER_RETURNING:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             }
@@ -503,7 +503,7 @@ void figure_native_trader_action(figure *f)
                     f->destinationX = x_tile;
                     f->destinationY = y_tile;
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             f->graphicOffset = 0;
@@ -558,7 +558,7 @@ int figure_trade_ship_is_trading(figure *ship)
     }
     for (int i = 0; i < 3; i++) {
         figure *f = figure_get(b->data.dock.docker_ids[i]);
-        if (!b->data.dock.docker_ids[i] || f->state != FigureState_Alive) {
+        if (!b->data.dock.docker_ids[i] || f->state != FIGURE_STATE_ALIVE) {
             continue;
         }
         switch (f->actionState) {
@@ -594,7 +594,7 @@ static int trade_ship_done_trading(figure *f)
         for (int i = 0; i < 3; i++) {
             if (b->data.dock.docker_ids[i]) {
                 figure *docker = figure_get(b->data.dock.docker_ids[i]);
-                if (docker->state == FigureState_Alive && docker->actionState != FIGURE_ACTION_132_DOCKER_IDLING) {
+                if (docker->state == FIGURE_STATE_ALIVE && docker->actionState != FIGURE_ACTION_132_DOCKER_IDLING) {
                     return 0;
                 }
             }
@@ -641,7 +641,7 @@ void figure_trade_ship_action(figure *f)
                     f->destinationX = x_tile;
                     f->destinationY = y_tile;
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             f->graphicOffset = 0;
@@ -654,7 +654,7 @@ void figure_trade_ship_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
                 if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
                     city_message_post(1, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
                     city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
@@ -704,7 +704,7 @@ void figure_trade_ship_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED:
@@ -732,11 +732,11 @@ void figure_trade_ship_action(figure *f)
             f->heightAdjustedTicks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
     }

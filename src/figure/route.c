@@ -27,7 +27,7 @@ void figure_route_clean()
         int figure_id = data.figure_ids[i];
         if (figure_id > 0 && figure_id < MAX_FIGURES) {
             const figure *f = figure_get(figure_id);
-            if (f->state != FigureState_Alive || f->routingPathId != i) {
+            if (f->state != FIGURE_STATE_ALIVE || f->routingPathId != i) {
                 data.figure_ids[i] = 0;
             }
         }

@@ -422,7 +422,7 @@ void figure_hippodrome_horse_action(figure *f)
             }
             f->waitTicks++;
             if (f->waitTicks > 150) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
     }
@@ -448,7 +448,7 @@ void figure_hippodrome_horse_reroute()
     }
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
-        if (f->state == FigureState_Alive && f->type == FIGURE_HIPPODROME_HORSES) {
+        if (f->state == FIGURE_STATE_ALIVE && f->type == FIGURE_HIPPODROME_HORSES) {
             f->waitTicksMissile = 0;
             set_horse_destination(f, HORSE_CREATED);
         }

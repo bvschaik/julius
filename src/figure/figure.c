@@ -35,7 +35,7 @@ figure *figure_create(figure_type type, int x, int y, direction dir)
         return &data.figures[0];
     }
     figure *f = &data.figures[id];
-    f->state = FigureState_Alive;
+    f->state = FIGURE_STATE_ALIVE;
     f->faction_id = 1;
     f->type = type;
     f->useCrossCountry = 0;
@@ -116,7 +116,7 @@ void figure_delete(figure *f)
 
 int figure_is_dead(const figure *f)
 {
-    return f->state != FigureState_Alive || f->actionState == FIGURE_ACTION_149_CORPSE;
+    return f->state != FIGURE_STATE_ALIVE || f->actionState == FIGURE_ACTION_149_CORPSE;
 }
 
 int figure_is_enemy(const figure *f)

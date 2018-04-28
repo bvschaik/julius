@@ -101,8 +101,8 @@ typedef enum {
 } enemy_type;
 
 enum {
-    FigureState_Alive = 1,
-    FigureState_Dead = 2
+    FIGURE_STATE_ALIVE = 1,
+    FIGURE_STATE_DEAD = 2
 };
 
 enum {

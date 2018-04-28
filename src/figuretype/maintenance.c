@@ -23,7 +23,7 @@ void figure_engineer_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 640;
     if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
     
@@ -45,7 +45,7 @@ void figure_engineer_action(figure *f)
                     figure_movement_set_cross_country_destination(f, x_road, y_road);
                     f->roamLength = 0;
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             break;
@@ -55,7 +55,7 @@ void figure_engineer_action(figure *f)
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 if (map_building_at(f->gridOffset) == f->buildingId) {
                     // returned to own building
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 } else {
                     f->actionState = FIGURE_ACTION_62_ENGINEER_ROAMING;
                     figure_movement_init_roaming(f);
@@ -73,7 +73,7 @@ void figure_engineer_action(figure *f)
                     f->destinationX = x_road;
                     f->destinationY = y_road;
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             figure_movement_roam_ticks(f, 1);
@@ -85,7 +85,7 @@ void figure_engineer_action(figure *f)
                 figure_movement_set_cross_country_destination(f, b->x, b->y);
                 f->roamLength = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
     }
@@ -98,7 +98,7 @@ static int get_nearest_enemy(int x, int y, int *distance)
     int min_dist = 10000;
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
-        if (f->state != FigureState_Alive || f->targetedByFigureId) {
+        if (f->state != FIGURE_STATE_ALIVE || f->targetedByFigureId) {
             continue;
         }
         int dist;
@@ -222,7 +222,7 @@ static void extinguish_fire(figure *f)
                 f->destinationY = y_road;
                 figure_route_remove(f);
             } else {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
         }
     }
@@ -248,7 +248,7 @@ void figure_prefect_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 640;
     if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
     
@@ -274,7 +274,7 @@ void figure_prefect_action(figure *f)
                     figure_movement_set_cross_country_destination(f, x_road, y_road);
                     f->roamLength = 0;
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             break;
@@ -284,7 +284,7 @@ void figure_prefect_action(figure *f)
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 if (map_building_at(f->gridOffset) == f->buildingId) {
                     // returned to own building
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 } else {
                     f->actionState = FIGURE_ACTION_72_PREFECT_ROAMING;
                     figure_movement_init_roaming(f);
@@ -303,7 +303,7 @@ void figure_prefect_action(figure *f)
                     f->destinationY = y_road;
                     figure_route_remove(f);
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             figure_movement_roam_ticks(f, 1);
@@ -315,7 +315,7 @@ void figure_prefect_action(figure *f)
                 figure_movement_set_cross_country_destination(f, b->x, b->y);
                 f->roamLength = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
@@ -327,7 +327,7 @@ void figure_prefect_action(figure *f)
                 f->roamLength = 0;
                 f->waitTicks = 50;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
@@ -344,7 +344,7 @@ void figure_prefect_action(figure *f)
                     figure_route_remove(f);
                     f->roamLength = 0;
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             figure_movement_move_ticks(f, 1);
@@ -354,7 +354,7 @@ void figure_prefect_action(figure *f)
                 f->destinationY = target->y;
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
     }
@@ -404,6 +404,6 @@ void figure_worker_action(figure *f)
     f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);
     if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
 }

@@ -181,7 +181,7 @@ static void update_herd_formation(formation *m)
     }
     if (m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
-        if (f->state == FigureState_Alive) {
+        if (f->state == FIGURE_STATE_ALIVE) {
             formation_set_home(m, f->x, f->y);
         }
     }

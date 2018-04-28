@@ -165,10 +165,10 @@ void figure_cartpusher_action(figure *f)
         case FIGURE_ACTION_20_CARTPUSHER_INITIAL:
             set_cart_graphic(f);
             if (!map_routing_citizen_is_passable(f->gridOffset)) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             f->waitTicks++;
             if (f->waitTicks > 30) {
@@ -184,10 +184,10 @@ void figure_cartpusher_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 reroute_cartpusher(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY:
@@ -202,7 +202,7 @@ void figure_cartpusher_action(figure *f)
                 f->waitTicks = 0;
             }
             if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
@@ -213,7 +213,7 @@ void figure_cartpusher_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 reroute_cartpusher(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE:
@@ -262,11 +262,11 @@ void figure_cartpusher_action(figure *f)
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
     }
@@ -284,7 +284,7 @@ static void determine_granaryman_destination(figure *f, int road_network_id)
             f->loadsSoldOrCarrying = 0;
             set_destination(f, FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD, dst_building_id, x_dst, y_dst);
         } else {
-            f->state = FigureState_Dead;
+            f->state = FIGURE_STATE_DEAD;
         }
         return;
     }
@@ -317,15 +317,15 @@ static void determine_granaryman_destination(figure *f, int road_network_id)
         return;
     }
     // nowhere to go to: kill figure
-    f->state = FigureState_Dead;
+    f->state = FIGURE_STATE_DEAD;
 }
 
 static void remove_resource_from_warehouse(figure *f)
 {
-    if (f->state != FigureState_Dead) {
+    if (f->state != FIGURE_STATE_DEAD) {
         int err = building_warehouse_remove_resource(building_get(f->buildingId), f->resourceId, 1);
         if (err) {
-            f->state = FigureState_Dead;
+            f->state = FIGURE_STATE_DEAD;
         }
     }
 }
@@ -342,7 +342,7 @@ static void determine_warehouseman_destination(figure *f, int road_network_id)
             set_destination(f, FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE, dst_building_id, x_dst, y_dst);
             f->terrainUsage = FigureTerrainUsage_PreferRoads;
         } else {
-            f->state = FigureState_Dead;
+            f->state = FIGURE_STATE_DEAD;
         }
         return;
     }
@@ -384,7 +384,7 @@ static void determine_warehouseman_destination(figure *f, int road_network_id)
         warehouse->distanceFromEntry, road_network_id, 0, &x_dst, &y_dst);
     if (dst_building_id) {
         if (dst_building_id == f->buildingId) {
-            f->state = FigureState_Dead;
+            f->state = FIGURE_STATE_DEAD;
         } else {
             set_destination(f, FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE, dst_building_id, x_dst, y_dst);
             remove_resource_from_warehouse(f);
@@ -400,7 +400,7 @@ static void determine_warehouseman_destination(figure *f, int road_network_id)
         return;
     }
     // no destination: kill figure
-    f->state = FigureState_Dead;
+    f->state = FIGURE_STATE_DEAD;
 }
 
 void figure_warehouseman_action(figure *f)
@@ -420,7 +420,7 @@ void figure_warehouseman_action(figure *f)
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
             building *b = building_get(f->buildingId);
             if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             f->waitTicks++;
             if (f->waitTicks > 2) {
@@ -446,7 +446,7 @@ void figure_warehouseman_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING:
@@ -480,7 +480,7 @@ void figure_warehouseman_action(figure *f)
             f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             }
@@ -493,7 +493,7 @@ void figure_warehouseman_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_55_WAREHOUSEMAN_AT_GRANARY:
@@ -532,11 +532,11 @@ void figure_warehouseman_action(figure *f)
                 for (int i = 0; i < f->loadsSoldOrCarrying; i++) {
                     building_granary_add_resource(building_get(f->buildingId), f->resourceId, 0);
                 }
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE:
@@ -548,7 +548,7 @@ void figure_warehouseman_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_58_WAREHOUSEMAN_AT_WAREHOUSE:
@@ -592,11 +592,11 @@ void figure_warehouseman_action(figure *f)
                 for (int i = 0; i < f->loadsSoldOrCarrying; i++) {
                     building_warehouse_add_resource(building_get(f->buildingId), f->resourceId);
                 }
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
     }

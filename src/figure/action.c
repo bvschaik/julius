@@ -116,7 +116,7 @@ void figure_action_handle()
         if (f->state) {
             if (f->targetedByFigureId) {
                 figure *attacker = figure_get(f->targetedByFigureId);
-                if (attacker->state != FigureState_Alive) {
+                if (attacker->state != FIGURE_STATE_ALIVE) {
                     f->targetedByFigureId = 0;
                 }
                 if (attacker->targetFigureId != i) {
@@ -124,7 +124,7 @@ void figure_action_handle()
                 }
             }
             figureActionCallbacks[f->type](f);
-            if (f->state == FigureState_Dead) {
+            if (f->state == FIGURE_STATE_DEAD) {
                 figure_delete(f);
             }
         }

@@ -86,7 +86,7 @@ void figure_immigrant_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Any;
     f->cartGraphicId = 0;
     if (b->state != BUILDING_STATE_IN_USE || b->immigrantFigureId != f->id || !b->houseSize) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
         return;
     }
     
@@ -111,7 +111,7 @@ void figure_immigrant_action(figure *f)
                     f->destinationY = yRoad;
                     f->roamLength = 0;
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             break;
@@ -130,7 +130,7 @@ void figure_immigrant_action(figure *f)
                 case DIR_FIGURE_LOST:
                     b->immigrantFigureId = 0;
                     b->distanceFromEntry = 0;
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                     break;
             }
             break;
@@ -138,7 +138,7 @@ void figure_immigrant_action(figure *f)
             f->useCrossCountry = 1;
             f->isGhost = 1;
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
                 int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
                 if (b->houseIsMerged) {
                     maxPeople *= 4;
@@ -186,7 +186,7 @@ void figure_emigrant_action(figure *f)
             if (f->waitTicks >= 5) {
                 int xRoad, yRoad;
                 if (!map_closest_road_within_radius(f->x, f->y, 1, 5, &xRoad, &yRoad)) {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
                 f->actionState = FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE;
                 figure_movement_set_cross_country_destination(f, xRoad, yRoad);
@@ -213,7 +213,7 @@ void figure_emigrant_action(figure *f)
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE ||
                 f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
     }
@@ -248,7 +248,7 @@ void figure_homeless_action(figure *f)
                         f->destinationY = yRoad;
                         f->roamLength = 0;
                     } else {
-                        f->state = FigureState_Dead;
+                        f->state = FIGURE_STATE_DEAD;
                     }
                 } else {
                     const map_tile *exit = city_map_exit_point();
@@ -265,7 +265,7 @@ void figure_homeless_action(figure *f)
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 building_get(f->immigrantBuildingId)->immigrantFigureId = 0;
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 building *b = building_get(f->immigrantBuildingId);
                 f->actionState = FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE;
@@ -277,7 +277,7 @@ void figure_homeless_action(figure *f)
             f->useCrossCountry = 1;
             f->isGhost = 1;
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
                 building *b = building_get(f->immigrantBuildingId);
                 if (f->immigrantBuildingId && building_is_house(b->type)) {
                     int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
@@ -304,7 +304,7 @@ void figure_homeless_action(figure *f)
         case FIGURE_ACTION_10_HOMELESS_LEAVING:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             }

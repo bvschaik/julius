@@ -350,7 +350,7 @@ static void mars_kill_enemies()
     int grid_offset = 0;
     for (int i = 1; i < MAX_FIGURES && to_kill > 0; i++) {
         figure *f = figure_get(i);
-        if (f->state != FigureState_Alive) {
+        if (f->state != FIGURE_STATE_ALIVE) {
             continue;
         }
         if (figure_is_enemy(f) && f->type != FIGURE_ENEMY54_GLADIATOR) {
@@ -532,7 +532,7 @@ static void update_enemy_formation(formation *m, int *roman_distance)
     }
     if (m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
-        if (f->state == FigureState_Alive) {
+        if (f->state == FIGURE_STATE_ALIVE) {
             formation_set_home(m, f->x, f->y);
         }
     }

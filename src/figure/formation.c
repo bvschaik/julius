@@ -216,7 +216,7 @@ void formation_calculate_legion_totals()
             }
             if (m->missile_attack_timeout <= 0 && m->figures[0]) {
                 figure *f = figure_get(m->figures[0]);
-                if (f->state == FigureState_Alive) {
+                if (f->state == FIGURE_STATE_ALIVE) {
                     formation_set_home(m, f->x, f->y);
                 }
             }
@@ -468,7 +468,7 @@ void formation_calculate_figures()
     formation_clear_figures();
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
-        if (f->state != FigureState_Alive) {
+        if (f->state != FIGURE_STATE_ALIVE) {
             continue;
         }
         if (!figure_is_legion(f) && !figure_is_enemy(f) && !figure_is_herd(f)) {

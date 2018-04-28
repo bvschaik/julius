@@ -280,17 +280,17 @@ void figure_docker_action(figure *f)
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     if (b->state != BUILDING_STATE_IN_USE) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
     if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
     if (b->data.dock.num_ships) {
         b->data.dock.num_ships--;
     }
     if (b->data.dock.trade_ship_id) {
         figure *ship = figure_get(b->data.dock.trade_ship_id);
-        if (ship->state != FigureState_Alive || ship->type != FIGURE_TRADE_SHIP) {
+        if (ship->state != FIGURE_STATE_ALIVE || ship->type != FIGURE_TRADE_SHIP) {
             b->data.dock.trade_ship_id = 0;
         } else if (trader_has_traded_max(ship->traderId)) {
             b->data.dock.trade_ship_id = 0;
@@ -335,7 +335,7 @@ void figure_docker_action(figure *f)
                 for (int i = 0; i < 3; i++) {
                     if (b->data.dock.docker_ids[i]) {
                         figure *docker = figure_get(b->data.dock.docker_ids[i]);
-                        if (docker->id == b->data.dock.queued_docker_id && docker->state == FigureState_Alive) {
+                        if (docker->id == b->data.dock.queued_docker_id && docker->state == FIGURE_STATE_ALIVE) {
                             if (docker->actionState == FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE ||
                                 docker->actionState == FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE) {
                                 has_queued_docker = 1;
@@ -380,10 +380,10 @@ void figure_docker_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
@@ -394,10 +394,10 @@ void figure_docker_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
@@ -409,10 +409,10 @@ void figure_docker_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             if (building_get(f->destinationBuildingId)->state != BUILDING_STATE_IN_USE) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
@@ -423,7 +423,7 @@ void figure_docker_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:

@@ -23,7 +23,7 @@ void figure_combat_handle_corpse(figure *f)
     f->waitTicks++;
     if (f->waitTicks >= 128) {
         f->waitTicks = 127;
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
 }
 
@@ -369,7 +369,7 @@ void figure_combat_attack_figure_at(figure *f, int grid_offset)
         
         int opponent_category = figure_properties_for_type(opponent->type)->category;
         int attack = 0;
-        if (opponent->state != FigureState_Alive) {
+        if (opponent->state != FIGURE_STATE_ALIVE) {
             attack = 0;
         } else if (opponent->actionState == FIGURE_ACTION_149_CORPSE) {
             attack = 0;

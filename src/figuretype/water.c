@@ -159,7 +159,7 @@ void figure_shipwreck_action(figure *f)
     }
     f->waitTicks++;
     if (f->waitTicks > 2000) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
     f->graphicId = image_group(GROUP_FIGURE_SHIPWRECK) + f->graphicOffset / 16;
 }
@@ -168,7 +168,7 @@ void figure_fishing_boat_action(figure *f)
 {
     building *b = building_get(f->buildingId);
     if (b->state != BUILDING_STATE_IN_USE) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
     if (f->actionState != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.industry.fishing_boat_id != f->id) {
         int x_tile, y_tile;
@@ -183,7 +183,7 @@ void figure_fishing_boat_action(figure *f)
             f->sourceY = y_tile;
             figure_route_remove(f);
         } else {
-            f->state = FigureState_Dead;
+            f->state = FIGURE_STATE_DEAD;
         }
     }
     f->isGhost = 0;
@@ -251,7 +251,7 @@ void figure_fishing_boat_action(figure *f)
             } else if (f->direction == DIR_FIGURE_LOST) {
                 // cannot reach grounds
                 city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF:
@@ -287,7 +287,7 @@ void figure_fishing_boat_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
     }
@@ -304,7 +304,7 @@ void figure_sink_all_ships()
 {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
-        if (f->state != FigureState_Alive) {
+        if (f->state != FIGURE_STATE_ALIVE) {
             continue;
         }
         if (f->type == FIGURE_TRADE_SHIP) {

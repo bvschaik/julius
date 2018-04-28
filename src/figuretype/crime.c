@@ -59,7 +59,7 @@ static void generate_rioter(building *b)
             f->destinationY = y_target;
             f->destinationBuildingId = target_building_id;
         } else {
-            f->state = FigureState_Dead;
+            f->state = FIGURE_STATE_DEAD;
         }
     }
     building_destroy_by_rioter(b);
@@ -162,11 +162,11 @@ void figure_protestor_action(figure *f)
     figure_image_increase_offset(f, 64);
     f->cartGraphicId = 0;
     if (f->actionState == FIGURE_ACTION_149_CORPSE) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
     f->waitTicks++;
     if (f->waitTicks > 200) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
         f->graphicOffset = 0;
     }
     if (f->actionState == FIGURE_ACTION_149_CORPSE) {
@@ -182,11 +182,11 @@ void figure_criminal_action(figure *f)
     figure_image_increase_offset(f, 32);
     f->cartGraphicId = 0;
     if (f->actionState == FIGURE_ACTION_149_CORPSE) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
     f->waitTicks++;
     if (f->waitTicks > 200) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
         f->graphicOffset = 0;
     }
     if (f->actionState == FIGURE_ACTION_149_CORPSE) {
@@ -223,7 +223,7 @@ void figure_rioter_action(figure *f)
                     f->destinationBuildingId = building_id;
                     figure_route_remove(f);
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             break;
@@ -239,7 +239,7 @@ void figure_rioter_action(figure *f)
                     f->destinationBuildingId = building_id;
                     figure_route_remove(f);
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->actionState = FIGURE_ACTION_120_RIOTER_CREATED;

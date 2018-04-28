@@ -180,7 +180,7 @@ void figure_entertainer_action(figure *f)
                     figure_movement_set_cross_country_destination(f, x_road, y_road);
                     f->roamLength = 0;
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             break;
@@ -213,10 +213,10 @@ void figure_entertainer_action(figure *f)
                         f->destinationY = y_road;
                         f->roamLength = 0;
                     } else {
-                        f->state = FigureState_Dead;
+                        f->state = FIGURE_STATE_DEAD;
                     }
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             f->isGhost = 1;
@@ -225,16 +225,16 @@ void figure_entertainer_action(figure *f)
             f->isGhost = 0;
             f->roamLength++;
             if (f->roamLength >= 3200) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 update_shows(f);
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
@@ -247,7 +247,7 @@ void figure_entertainer_action(figure *f)
                     f->destinationX = x_road;
                     f->destinationY = y_road;
                 } else {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
             figure_movement_roam_ticks(f, speed_factor);
@@ -256,7 +256,7 @@ void figure_entertainer_action(figure *f)
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
     }

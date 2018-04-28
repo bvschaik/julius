@@ -107,7 +107,7 @@ void figure_market_buyer_action(figure *f)
     
     building *b = building_get(f->buildingId);
     if (b->state != BUILDING_STATE_IN_USE || b->figureId2 != f->id) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
     switch (f->actionState) {
@@ -122,11 +122,11 @@ void figure_market_buyer_action(figure *f)
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 if (f->collectingItemId > 3) {
                     if (!take_resource_from_warehouse(f, f->destinationBuildingId)) {
-                        f->state = FigureState_Dead;
+                        f->state = FIGURE_STATE_DEAD;
                     }
                 } else {
                     if (!take_food_from_granary(f, f->buildingId, f->destinationBuildingId)) {
-                        f->state = FigureState_Dead;
+                        f->state = FIGURE_STATE_DEAD;
                     }
                 }
                 f->actionState = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
@@ -142,7 +142,7 @@ void figure_market_buyer_action(figure *f)
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             }
@@ -160,17 +160,17 @@ void figure_delivery_boy_action(figure *f)
     
     figure *leader = figure_get(f->inFrontFigureId);
     if (f->inFrontFigureId <= 0 || leader->actionState == FIGURE_ACTION_149_CORPSE) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     } else {
-        if (leader->state == FigureState_Alive) {
+        if (leader->state == FIGURE_STATE_ALIVE) {
             if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY) {
                 figure_movement_follow_ticks(f, 1);
             } else {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
         } else { // leader arrived at market, drop resource at market
             building_get(f->buildingId)->data.market.inventory[f->collectingItemId] += 100;
-            f->state = FigureState_Dead;
+            f->state = FIGURE_STATE_DEAD;
         }
     }
     if (leader->isGhost) {

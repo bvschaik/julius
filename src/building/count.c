@@ -189,7 +189,7 @@ void building_count_update()
         }
         if (b->immigrantFigureId) {
             figure *f = figure_get(b->immigrantFigureId);
-            if (f->state != FigureState_Alive || f->destinationBuildingId != i) {
+            if (f->state != FIGURE_STATE_ALIVE || f->destinationBuildingId != i) {
                 b->immigrantFigureId = 0;
             }
         }

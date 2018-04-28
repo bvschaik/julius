@@ -614,7 +614,7 @@ static void spawn_figure_market(building *b)
         // market buyer or labor seeker
         if (b->figureId2) {
             figure *f = figure_get(b->figureId2);
-            if (f->state != FigureState_Alive || (f->type != FIGURE_MARKET_BUYER && f->type != FIGURE_LABOR_SEEKER)) {
+            if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_MARKET_BUYER && f->type != FIGURE_LABOR_SEEKER)) {
                 b->figureId2 = 0;
             }
         } else {
@@ -972,7 +972,7 @@ static void spawn_figure_wharf(building *b)
     check_labor_problem(b);
     if (b->data.industry.fishing_boat_id) {
         figure *f = figure_get(b->data.industry.fishing_boat_id);
-        if (f->state != FigureState_Alive || f->type != FIGURE_FISHING_BOAT) {
+        if (f->state != FIGURE_STATE_ALIVE || f->type != FIGURE_FISHING_BOAT) {
             b->data.industry.fishing_boat_id = 0;
         }
     }
@@ -1062,7 +1062,7 @@ static void spawn_figure_dock(building *b)
             // too many dockers, kill one of them
             for (int i = 2; i >= 0; i--) {
                 if (b->data.dock.docker_ids[i]) {
-                    figure_get(b->data.dock.docker_ids[i])->state = FigureState_Dead;
+                    figure_get(b->data.dock.docker_ids[i])->state = FIGURE_STATE_DEAD;
                     break;
                 }
             }

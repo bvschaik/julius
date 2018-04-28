@@ -273,7 +273,7 @@ void figure_soldier_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS:
@@ -282,7 +282,7 @@ void figure_soldier_action(figure *f)
             f->destinationY = f->sourceY;
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             }
@@ -305,7 +305,7 @@ void figure_soldier_action(figure *f)
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->alternativeLocationIndex++;
                 if (f->alternativeLocationIndex > 168) {
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
                 f->graphicOffset = 0;
             }
@@ -343,7 +343,7 @@ void figure_soldier_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_86_SOLDIER_MOPPING_UP:
@@ -374,7 +374,7 @@ void figure_soldier_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         }
@@ -391,7 +391,7 @@ void figure_soldier_action(figure *f)
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE:

@@ -17,7 +17,7 @@ void figure_indigenous_native_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 800;
     if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
-        f->state = FigureState_Dead;
+        f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
     switch (f->actionState) {
@@ -34,7 +34,7 @@ void figure_indigenous_native_action(figure *f)
                 f->destinationX = f->sourceX;
                 f->destinationY = f->sourceY;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING:
@@ -42,7 +42,7 @@ void figure_indigenous_native_action(figure *f)
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE ||
                 f->direction == DIR_FIGURE_LOST) {
-                f->state = FigureState_Dead;
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_158_NATIVE_CREATED:

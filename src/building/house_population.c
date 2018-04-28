@@ -101,7 +101,7 @@ int house_population_create_immigrants(int num_people)
     // clean up any dead immigrants
     for (int i = 0; i < total_houses; i++) {
         building *b = building_get(houses[i]);
-        if (b->immigrantFigureId && figure_get(b->immigrantFigureId)->state != FigureState_Alive) {
+        if (b->immigrantFigureId && figure_get(b->immigrantFigureId)->state != FIGURE_STATE_ALIVE) {
             b->immigrantFigureId = 0;
         }
     }

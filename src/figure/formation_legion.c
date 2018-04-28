@@ -225,7 +225,7 @@ static void kill_soldiers(formation *m, int kill_percentage)
             if (!figure_is_dead(f)) {
                 if (soldiers_to_kill) {
                     soldiers_to_kill--;
-                    f->state = FigureState_Dead;
+                    f->state = FIGURE_STATE_DEAD;
                 }
             }
         }
@@ -372,7 +372,7 @@ void formation_legion_decrease_damage()
 {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
-        if (f->state == FigureState_Alive && figure_is_legion(f)) {
+        if (f->state == FIGURE_STATE_ALIVE && figure_is_legion(f)) {
             if (f->actionState == FIGURE_ACTION_80_SOLDIER_AT_REST) {
                 if (f->damage) {
                     f->damage--;

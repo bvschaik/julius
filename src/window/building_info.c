@@ -267,7 +267,7 @@ static void init(int grid_offset)
         int figure_id = map_figure_at(grid_offset + FIGURE_OFFSETS[i]);
         while (figure_id > 0 && context.figure.count < 7) {
             figure *figure = figure_get(figure_id);
-            if (figure->state != FigureState_Dead &&
+            if (figure->state != FIGURE_STATE_DEAD &&
                 figure->actionState != FIGURE_ACTION_149_CORPSE) {
                 switch (figure->type) {
                     case FIGURE_NONE:
