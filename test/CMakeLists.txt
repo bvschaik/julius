@@ -80,3 +80,6 @@ add_integration_test(sav_invasion5 inv0.sav inv5.sav 8563)
 
 # Routing table full kills figures
 add_integration_test(sav_routing_full routing-full.sav routing-full-kill.sav 7)
+
+# God curses
+add_integration_test(sav_curses curses.sav curses-done.sav 13350)
