@@ -63,6 +63,23 @@ void city_military_update_totals()
     }
 }
 
+int city_military_is_native_attack_active()
+{
+    return city_data.military.native_attack_duration > 0;
+}
+
+void city_military_start_native_attack()
+{
+    city_data.military.native_attack_duration = 2;
+}
+
+void city_military_decrease_native_attack_duration()
+{
+    if (city_data.military.native_attack_duration) {
+        city_data.military.native_attack_duration--;
+    }
+}
+
 void city_military_determine_distant_battle_city()
 {
     city_data.distant_battle.city = empire_city_get_vulnerable_roman();

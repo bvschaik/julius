@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "city/buildings.h"
+#include "city/military.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "map/building.h"
@@ -149,9 +150,8 @@ void map_natives_init()
 void map_natives_check_land()
 {
     map_property_clear_all_native_land();
-    if (Data_CityInfo.nativeAttackDuration) {
-        Data_CityInfo.nativeAttackDuration--;
-    }
+    city_military_decrease_native_attack_duration();
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
@@ -170,7 +170,7 @@ void map_natives_check_land()
         if (b->sentiment.nativeAnger >= 100) {
             mark_native_land(b->x, b->y, size, radius);
             if (has_building_on_native_land(b->x, b->y, size, radius)) {
-                Data_CityInfo.nativeAttackDuration = 2;
+                city_military_start_native_attack();
             }
         } else {
             b->sentiment.nativeAnger++;

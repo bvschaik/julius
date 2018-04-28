@@ -89,6 +89,7 @@ extern struct city_data_t {
         uint8_t total_soldiers;
         uint8_t empire_service_legions;
         int32_t legionary_legions;
+        int32_t native_attack_duration;
     } military;
     struct {
         uint8_t city;

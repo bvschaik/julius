@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/figures.h"
+#include "city/military.h"
 #include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/image.h"
@@ -51,7 +52,7 @@ void figure_indigenous_native_action(figure *f)
             f->waitTicks++;
             if (f->waitTicks > 10 + (f->id & 3)) {
                 f->waitTicks = 0;
-                if (Data_CityInfo.nativeAttackDuration == 0) {
+                if (!city_military_is_native_attack_active()) {
                     int xTile, yTile;
                     building *meeting = building_get(b->subtype.nativeMeetingCenterId);
                     if (map_terrain_get_adjacent_road_or_clear_land(meeting->x, meeting->y, meeting->size, &xTile, &yTile)) {
