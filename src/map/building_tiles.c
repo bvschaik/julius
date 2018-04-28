@@ -95,14 +95,14 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_i
     }
     for (int dy = 0; dy < 2; dy++) {
         for (int dx = 0; dx < 2; dx++) {
-            int gridOffset = map_grid_offset(x + dx, y + dy);
-            map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
-            map_terrain_add(gridOffset, TERRAIN_BUILDING);
-            map_building_set(gridOffset, building_id);
-            map_property_clear_constructing(gridOffset);
-            map_property_set_multi_tile_size(gridOffset, 2);
-            map_image_set(gridOffset, image_group(GROUP_BUILDING_FARM_HOUSE));
-            map_property_set_multi_tile_xy(gridOffset, dx, dy,
+            int grid_offset = map_grid_offset(x + dx, y + dy);
+            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
+            map_terrain_add(grid_offset, TERRAIN_BUILDING);
+            map_building_set(grid_offset, building_id);
+            map_property_clear_constructing(grid_offset);
+            map_property_set_multi_tile_size(grid_offset, 2);
+            map_image_set(grid_offset, image_group(GROUP_BUILDING_FARM_HOUSE));
+            map_property_set_multi_tile_xy(grid_offset, dx, dy,
                 dx == x_leftmost && dy == y_leftmost);
         }
     }
@@ -166,10 +166,10 @@ void map_building_tiles_remove(int building_id, int x, int y)
         return;
     }
     int size;
-    int baseGridOffset = north_tile_grid_offset(x, y, &size);
-    x = map_grid_offset_to_x(baseGridOffset);
-    y = map_grid_offset_to_y(baseGridOffset);
-    if (map_terrain_get(baseGridOffset) == TERRAIN_ROCK) {
+    int base_grid_offset = north_tile_grid_offset(x, y, &size);
+    x = map_grid_offset_to_x(base_grid_offset);
+    y = map_grid_offset_to_y(base_grid_offset);
+    if (map_terrain_get(base_grid_offset) == TERRAIN_ROCK) {
         return;
     }
     building *b = building_get(building_id);
@@ -178,29 +178,29 @@ void map_building_tiles_remove(int building_id, int x, int y)
     }
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int gridOffset = map_grid_offset(x + dx, y + dy);
-            if (building_id && map_building_at(gridOffset) != building_id) {
+            int grid_offset = map_grid_offset(x + dx, y + dy);
+            if (building_id && map_building_at(grid_offset) != building_id) {
                 continue;
             }
             if (building_id && b->type != BUILDING_BURNING_RUIN) {
-                map_set_rubble_building_type(gridOffset, b->type);
+                map_set_rubble_building_type(grid_offset, b->type);
             }
-            map_property_clear_constructing(gridOffset);
-            map_property_set_multi_tile_size(gridOffset, 1);
-            map_property_clear_multi_tile_xy(gridOffset);
-            map_property_mark_draw_tile(gridOffset);
-            map_aqueduct_set(gridOffset, 0);
-            map_building_set(gridOffset, 0);
-            map_building_damage_clear(gridOffset);
-            map_sprite_clear_tile(gridOffset);
-            if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
-                map_terrain_set(gridOffset, TERRAIN_WATER); // clear other flags
+            map_property_clear_constructing(grid_offset);
+            map_property_set_multi_tile_size(grid_offset, 1);
+            map_property_clear_multi_tile_xy(grid_offset);
+            map_property_mark_draw_tile(grid_offset);
+            map_aqueduct_set(grid_offset, 0);
+            map_building_set(grid_offset, 0);
+            map_building_damage_clear(grid_offset);
+            map_sprite_clear_tile(grid_offset);
+            if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                map_terrain_set(grid_offset, TERRAIN_WATER); // clear other flags
                 map_tiles_set_water(x + dx, y + dy);
             } else {
-                map_image_set(gridOffset,
+                map_image_set(grid_offset,
                     image_group(GROUP_TERRAIN_UGLY_GRASS) +
-                    (map_random_get(gridOffset) & 7));
-                map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
+                    (map_random_get(grid_offset) & 7));
+                map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
             }
         }
     }

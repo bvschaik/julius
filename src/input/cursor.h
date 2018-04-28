@@ -11,8 +11,8 @@ typedef enum {
 } cursor_shape;
 
 typedef struct {
-    int hotspotX;
-    int hotspotY;
+    int hotspot_x;
+    int hotspot_y;
     char data[32*32+1];
 } cursor;
 

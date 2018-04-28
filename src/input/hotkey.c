@@ -94,25 +94,25 @@ static void show_advisor(advisor_type advisor)
 
 static void cycle_legion()
 {
-    static int currentLegionId = 1;
+    static int current_legion_id = 1;
     if (window_is(WINDOW_CITY)) {
-        int legionId = currentLegionId;
-        currentLegionId = 0;
+        int legion_id = current_legion_id;
+        current_legion_id = 0;
         for (int i = 1; i <= MAX_LEGIONS; i++) {
-            legionId++;
-            if (legionId > MAX_LEGIONS) {
-                legionId = 1;
+            legion_id++;
+            if (legion_id > MAX_LEGIONS) {
+                legion_id = 1;
             }
-            const formation *m = formation_get(legionId);
+            const formation *m = formation_get(legion_id);
             if (m->in_use == 1 && !m->is_herd && m->is_legion) {
-                if (currentLegionId == 0) {
-                    currentLegionId = legionId;
+                if (current_legion_id == 0) {
+                    current_legion_id = legion_id;
                     break;
                 }
             }
         }
-        if (currentLegionId > 0) {
-            const formation *m = formation_get(currentLegionId);
+        if (current_legion_id > 0) {
+            const formation *m = formation_get(current_legion_id);
             city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
             window_invalidate();
         }

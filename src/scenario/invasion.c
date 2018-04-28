@@ -29,24 +29,24 @@ static const int LOCAL_UPRISING_NUM_ENEMIES[20] = {
 };
 
 static const struct {
-    int pctType1;
-    int pctType2;
-    int pctType3;
-    int figureTypes[3];
-    int formationLayout;
+    int pct_type1;
+    int pct_type2;
+    int pct_type3;
+    int figure_types[3];
+    int formation_layout;
 } ENEMY_PROPERTIES[12] = {
-    {100, 0, 0, {FIGURE_ENEMY49_FAST_SWORD, 0, 0}, 8}, // barbarian
-    {40, 60, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY51_SPEAR, 0}, 8}, // numidian
-    {50, 50, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY53_AXE, 0}, 8}, // gaul
-    {80, 20, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY48_CHARIOT, 0}, 8}, // celt
-    {50, 50, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY52_MOUNTED_ARCHER, 0}, 8}, // goth
-    {30, 70, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, 0}, 0}, // pergamum
-    {50, 50, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, 0}, 10}, // seleucid
-    {50, 50, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, 0}, 10}, // etruscan
-    {80, 20, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, 0}, 10}, // greek
-    {80, 20, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY46_CAMEL, 0}, 11}, // egyptian
-    {90, 10, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY47_ELEPHANT, 0}, 11}, // carthaginian
-    {100, 0, 0, {FIGURE_ENEMY_CAESAR_LEGIONARY, 0, 0}, 0} // caesar
+    {100, 0, 0, {FIGURE_ENEMY49_FAST_SWORD, 0, 0}, FORMATION_ENEMY8}, // barbarian
+    {40, 60, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY51_SPEAR, 0}, FORMATION_ENEMY8}, // numidian
+    {50, 50, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY53_AXE, 0}, FORMATION_ENEMY8}, // gaul
+    {80, 20, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY48_CHARIOT, 0}, FORMATION_ENEMY8}, // celt
+    {50, 50, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY52_MOUNTED_ARCHER, 0}, FORMATION_ENEMY8}, // goth
+    {30, 70, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_COLUMN}, // pergamum
+    {50, 50, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_ENEMY10}, // seleucid
+    {50, 50, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_ENEMY10}, // etruscan
+    {80, 20, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_ENEMY10}, // greek
+    {80, 20, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY46_CAMEL, 0}, FORMATION_ENEMY11}, // egyptian
+    {90, 10, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY47_ELEPHANT, 0}, FORMATION_ENEMY11}, // carthaginian
+    {100, 0, 0, {FIGURE_ENEMY_CAESAR_LEGIONARY, 0, 0}, FORMATION_COLUMN} // caesar
 };
 
 typedef struct {
@@ -183,9 +183,9 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         data.last_internal_invasion_id = 1;
     }
     // calculate soldiers per type
-    int num_type1 = calc_adjust_with_percentage(amount, ENEMY_PROPERTIES[enemy_type].pctType1);
-    int num_type2 = calc_adjust_with_percentage(amount, ENEMY_PROPERTIES[enemy_type].pctType2);
-    int num_type3 = calc_adjust_with_percentage(amount, ENEMY_PROPERTIES[enemy_type].pctType3);
+    int num_type1 = calc_adjust_with_percentage(amount, ENEMY_PROPERTIES[enemy_type].pct_type1);
+    int num_type2 = calc_adjust_with_percentage(amount, ENEMY_PROPERTIES[enemy_type].pct_type2);
+    int num_type3 = calc_adjust_with_percentage(amount, ENEMY_PROPERTIES[enemy_type].pct_type3);
     num_type1 += amount - (num_type1 + num_type2 + num_type3); // assign leftovers to type1
 
     for (int t = 0; t < 3; t++) {
@@ -267,10 +267,10 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         if (formations_per_type[type] <= 0) {
             continue;
         }
-        int figure_type = ENEMY_PROPERTIES[enemy_type].figureTypes[type];
+        int figure_type = ENEMY_PROPERTIES[enemy_type].figure_types[type];
         for (int i = 0; i < formations_per_type[type]; i++) {
             int formation_id = formation_create_enemy(
-                figure_type, x, y, ENEMY_PROPERTIES[enemy_type].formationLayout, orientation,
+                figure_type, x, y, ENEMY_PROPERTIES[enemy_type].formation_layout, orientation,
                 enemy_type, attack_type, invasion_id, data.last_internal_invasion_id
             );
             if (formation_id <= 0) {

@@ -411,7 +411,7 @@ extern struct city_data_t {
         int32_t unused_4454;
         int32_t unknown_446c[4];
         int32_t unused_4488;
-        int32_t unused_nativeForceAttack;
+        int32_t unused_native_force_attack;
         int32_t unused_44e0[2];
         int32_t unused_44ec;
         int32_t unused_44f8;

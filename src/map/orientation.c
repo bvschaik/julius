@@ -202,10 +202,10 @@ int map_orientation_for_triumphal_arch(int x, int y)
     } else if (map_terrain_is(left_offset, TERRAIN_NOT_CLEAR)) {
         num_blocked_tiles++;
     }
-    int rightOffset = grid_offset + map_grid_delta(2, 1);
-    if ((map_terrain_get(rightOffset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
+    int right_offset = grid_offset + map_grid_delta(2, 1);
+    if ((map_terrain_get(right_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
         num_road_tiles_left_right++;
-    } else if (map_terrain_is(rightOffset, TERRAIN_NOT_CLEAR)) {
+    } else if (map_terrain_is(right_offset, TERRAIN_NOT_CLEAR)) {
         num_blocked_tiles++;
     }
     // center tile

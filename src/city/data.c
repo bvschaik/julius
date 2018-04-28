@@ -418,7 +418,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.ratings.favor_last_year);
     buffer_write_i32(main, city_data.ratings.favor_change);
     buffer_write_i32(main, city_data.military.native_attack_duration);
-    buffer_write_i32(main, city_data.unused.unused_nativeForceAttack);
+    buffer_write_i32(main, city_data.unused.unused_native_force_attack);
     buffer_write_i32(main, city_data.building.mission_post_operational);
     buffer_write_i32(main, city_data.building.main_native_meeting.x);
     buffer_write_i32(main, city_data.building.main_native_meeting.y);
@@ -895,7 +895,7 @@ static void load_main_data(buffer *main)
     city_data.ratings.favor_last_year = buffer_read_i32(main);
     city_data.ratings.favor_change = buffer_read_i32(main);
     city_data.military.native_attack_duration = buffer_read_i32(main);
-    city_data.unused.unused_nativeForceAttack = buffer_read_i32(main);
+    city_data.unused.unused_native_force_attack = buffer_read_i32(main);
     city_data.building.mission_post_operational = buffer_read_i32(main);
     city_data.building.main_native_meeting.x = buffer_read_i32(main);
     city_data.building.main_native_meeting.y = buffer_read_i32(main);

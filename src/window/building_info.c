@@ -257,10 +257,10 @@ static void init(int grid_offset)
         }
     }
     // figures
-    context.figure.selectedIndex = 0;
+    context.figure.selected_index = 0;
     context.figure.count = 0;
     for (int i = 0; i < 7; i++) {
-        context.figure.figureIds[i] = 0;
+        context.figure.figure_ids[i] = 0;
     }
     static const int FIGURE_OFFSETS[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
     for (int i = 0; i < 9 && context.figure.count < 7; i++) {
@@ -284,7 +284,7 @@ static void init(int grid_offset)
                     case FIGURE_HIPPODROME_HORSES:
                         break;
                     default:
-                        context.figure.figureIds[context.figure.count++] = figure_id;
+                        context.figure.figure_ids[context.figure.count++] = figure_id;
                         figure_phrase_determine(figure);
                         break;
                 }
@@ -294,7 +294,7 @@ static void init(int grid_offset)
     }
     // check for legion figures
     for (int i = 0; i < 7; i++) {
-        int figure_id = context.figure.figureIds[i];
+        int figure_id = context.figure.figure_ids[i];
         if (figure_id <= 0) {
             continue;
         }

@@ -21,7 +21,7 @@ struct terrain_image_context {
 // 1 = match
 // 2 = don't care
 
-static struct terrain_image_context terrainGraphicsWater[48] = {
+static struct terrain_image_context terrain_images_water[48] = {
     {{1, 2, 1, 2, 1, 2, 1, 2}, {79, 79, 79, 79}, 0, 1},
     {{1, 2, 1, 2, 1, 2, 0, 2}, {47, 46, 45, 44}, 0, 1},
     {{0, 2, 1, 2, 1, 2, 1, 2}, {44, 47, 46, 45}, 0, 1},
@@ -72,7 +72,7 @@ static struct terrain_image_context terrainGraphicsWater[48] = {
     {{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0}, 0, 0},
 };
 
-static struct terrain_image_context terrainGraphicsWall[48] = {
+static struct terrain_image_context terrain_images_wall[48] = {
     {{1, 2, 1, 2, 1, 2, 1, 2}, {26, 26, 26, 26}, 0, 1},
     {{1, 2, 1, 2, 1, 2, 0, 2}, {15, 10, 5, 16}, 0, 1},
     {{0, 2, 1, 2, 1, 2, 1, 2}, {16, 15, 10, 5}, 0, 1},
@@ -123,7 +123,7 @@ static struct terrain_image_context terrainGraphicsWall[48] = {
     {{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0}, 0, 0},
 };
 
-static struct terrain_image_context terrainGraphicsWallGatehouse[10] = {
+static struct terrain_image_context terrain_images_wall_gatehouse[10] = {
     {{1, 2, 0, 2, 0, 2, 0, 2}, {16, 15, 10, 5}, 0, 1},
     {{0, 2, 1, 2, 0, 2, 0, 2}, {5, 16, 15, 10}, 0, 1},
     {{0, 2, 0, 2, 1, 2, 0, 2}, {10, 5, 16, 15}, 0, 1},
@@ -136,7 +136,7 @@ static struct terrain_image_context terrainGraphicsWallGatehouse[10] = {
     {{0, 2, 1, 2, 0, 2, 1, 2}, {32, 31, 32, 31}, 0, 1},
 };
 
-static struct terrain_image_context terrainGraphicsElevation[14] = {
+static struct terrain_image_context terrain_images_elevation[14] = {
     {{1, 1, 1, 1, 1, 1, 1, 1}, {44, 44, 44, 44}, 2, 1},
     {{1, 1, 1, 1, 1, 0, 1, 1}, {30, 18, 28, 22}, 4, 2},
     {{1, 1, 1, 1, 1, 1, 1, 0}, {22, 30, 18, 28}, 4, 2},
@@ -153,7 +153,7 @@ static struct terrain_image_context terrainGraphicsElevation[14] = {
     {{2, 2, 2, 2, 2, 2, 2, 2}, {32, 32, 32, 32}, 4, 4},
 };
 
-static struct terrain_image_context terrainGraphicsEarthquake[17] = {
+static struct terrain_image_context terrain_images_earthquake[17] = {
     {{1, 2, 1, 2, 1, 2, 1, 2}, {29, 29, 29, 29}, 0, 1},
     {{1, 2, 1, 2, 1, 2, 0, 2}, {25, 28, 27, 26}, 0, 1},
     {{0, 2, 1, 2, 1, 2, 1, 2}, {26, 25, 28, 27}, 0, 1},
@@ -173,7 +173,7 @@ static struct terrain_image_context terrainGraphicsEarthquake[17] = {
     {{2, 2, 2, 2, 2, 2, 2, 2}, {24, 24, 24, 24}, 0, 1},
 };
 
-static struct terrain_image_context terrainGraphicsDirtRoad[17] = {
+static struct terrain_image_context terrain_images_dirt_road[17] = {
     {{1, 2, 1, 2, 1, 2, 1, 2}, {17, 17, 17, 17}, 0, 1},
     {{1, 2, 1, 2, 1, 2, 0, 2}, {13, 16, 15, 14}, 0, 1},
     {{0, 2, 1, 2, 1, 2, 1, 2}, {14, 13, 16, 15}, 0, 1},
@@ -193,7 +193,7 @@ static struct terrain_image_context terrainGraphicsDirtRoad[17] = {
     {{2, 2, 2, 2, 2, 2, 2, 2}, {12, 12, 12, 12}, 0, 1},
 };
 
-static struct terrain_image_context terrainGraphicsPavedRoad[48] = {
+static struct terrain_image_context terrain_images_paved_road[48] = {
     {{1, 0, 1, 0, 1, 0, 1, 0}, {17, 17, 17, 17}, 0, 1},
     {{1, 0, 1, 0, 1, 2, 0, 2}, {13, 16, 15, 14}, 0, 1},
     {{1, 1, 1, 1, 1, 2, 0, 2}, {18, 21, 20, 19}, 0, 1},
@@ -244,7 +244,7 @@ static struct terrain_image_context terrainGraphicsPavedRoad[48] = {
     {{2, 2, 2, 2, 2, 2, 2, 2}, {12, 12, 12, 12}, 0, 1},
 };
 
-static struct terrain_image_context terrainGraphicsAqueduct[16] = {
+static struct terrain_image_context terrain_images_aqueduct[16] = {
     {{1, 2, 1, 2, 0, 2, 0, 2}, {4, 7, 6, 5}, 7, 1},
     {{0, 2, 1, 2, 1, 2, 0, 2}, {5, 4, 7, 6}, 8, 1},
     {{0, 2, 0, 2, 1, 2, 1, 2}, {6, 5, 4, 7}, 9, 1},
@@ -279,21 +279,21 @@ static struct {
     struct terrain_image_context *context;
     int size;
 } context_pointers[] = {
-    {terrainGraphicsWater, 48},
-    {terrainGraphicsWall, 48},
-    {terrainGraphicsWallGatehouse, 10},
-    {terrainGraphicsElevation, 14},
-    {terrainGraphicsEarthquake, 17},
-    {terrainGraphicsDirtRoad, 17},
-    {terrainGraphicsPavedRoad, 48},
-    {terrainGraphicsAqueduct, 16}
+    {terrain_images_water, 48},
+    {terrain_images_wall, 48},
+    {terrain_images_wall_gatehouse, 10},
+    {terrain_images_elevation, 14},
+    {terrain_images_earthquake, 17},
+    {terrain_images_dirt_road, 17},
+    {terrain_images_paved_road, 48},
+    {terrain_images_aqueduct, 16}
 };
 
-static const int contextTileOffsets[] = {
+static const int CONTEXT_TILE_OFFSETS[] = {
     -162, -161, 1, 163, 162, 161, -1, -163
 };
 
-static void clearCurrentOffset(struct terrain_image_context *items, int num_items)
+static void clear_current_offset(struct terrain_image_context *items, int num_items)
 {
     for (int i = 0; i < num_items; i++) {
         items[i].current_item_offset = 0;
@@ -303,11 +303,11 @@ static void clearCurrentOffset(struct terrain_image_context *items, int num_item
 void map_image_context_init()
 {
     for (int i = 0; i < CONTEXT_MAX_ITEMS; i++) {
-        clearCurrentOffset(context_pointers[i].context, context_pointers[i].size);
+        clear_current_offset(context_pointers[i].context, context_pointers[i].size);
     }
 }
 
-static int contextMatchesTiles(const struct terrain_image_context *context, const int tiles[MAX_TILES])
+static int context_matches_tiles(const struct terrain_image_context *context, const int tiles[MAX_TILES])
 {
     for (int i = 0; i < MAX_TILES; i++) {
         if (context->tiles[i] != 2 && tiles[i] != context->tiles[i]) {
@@ -325,7 +325,7 @@ static const terrain_image *get_image(int group, int tiles[MAX_TILES])
     struct terrain_image_context *context = context_pointers[group].context;
     int size = context_pointers[group].size;
     for (int i = 0; i < size; i++) {
-        if (contextMatchesTiles(&context[i], tiles)) {
+        if (context_matches_tiles(&context[i], tiles)) {
             context[i].current_item_offset++;
             if (context[i].current_item_offset >= context[i].max_item_offset) {
                 context[i].current_item_offset = 0;
@@ -344,7 +344,7 @@ const terrain_image *map_image_context_get_elevation(int grid_offset, int elevat
 {
     int tiles[MAX_TILES];
     for (int i = 0; i < MAX_TILES; i++) {
-        tiles[i] = map_elevation_at(grid_offset + contextTileOffsets[i]) >= elevation ? 1 : 0;
+        tiles[i] = map_elevation_at(grid_offset + CONTEXT_TILE_OFFSETS[i]) >= elevation ? 1 : 0;
     }
     return get_image(CONTEXT_ELEVATION, tiles);
 }
@@ -353,17 +353,17 @@ const terrain_image *map_image_context_get_earthquake(int grid_offset)
 {
     int tiles[MAX_TILES];
     for (int i = 0; i < MAX_TILES; i++) {
-        int offset = grid_offset + contextTileOffsets[i];
+        int offset = grid_offset + CONTEXT_TILE_OFFSETS[i];
         tiles[i] = (map_terrain_is(offset, TERRAIN_ROCK) &&
             map_property_is_plaza_or_earthquake(grid_offset)) ? 1 : 0;
     }
     return get_image(CONTEXT_EARTHQUAKE, tiles);
 }
 
-static void fill_matches(int gridOffset, int terrain, int match_value, int no_match_value, int tiles[MAX_TILES])
+static void fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, int tiles[MAX_TILES])
 {
     for (int i = 0; i < MAX_TILES; i++) {
-        tiles[i] = map_terrain_is(gridOffset + contextTileOffsets[i], terrain) ? match_value : no_match_value;
+        tiles[i] = map_terrain_is(grid_offset + CONTEXT_TILE_OFFSETS[i], terrain) ? match_value : no_match_value;
     }
 }
 
@@ -385,7 +385,7 @@ const terrain_image *map_image_context_get_wall_gatehouse(int grid_offset)
 {
     int tiles[MAX_TILES] = {0,0,0,0,0,0,0,0};
     for (int i = 0; i < MAX_TILES; i += 2) {
-        tiles[i] = map_terrain_is(grid_offset + contextTileOffsets[i], TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
+        tiles[i] = map_terrain_is(grid_offset + CONTEXT_TILE_OFFSETS[i], TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
     }
     return get_image(CONTEXT_WALL_GATEHOUSE, tiles);
 }
@@ -394,7 +394,7 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
 {
     fill_matches(grid_offset, TERRAIN_ROAD, 1, 0, tiles);
     for (int i = 0; i < MAX_TILES; i += 2) {
-        int offset = grid_offset + contextTileOffsets[i];
+        int offset = grid_offset + CONTEXT_TILE_OFFSETS[i];
         if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {
             building *b = building_get(map_building_at(offset));
             if (b->type == BUILDING_GATEHOUSE &&
@@ -421,7 +421,7 @@ const terrain_image *map_image_context_get_paved_road(int grid_offset)
 
 static void set_terrain_reservoir(int grid_offset, int index, int multi_tile_mask, int tiles[MAX_TILES])
 {
-    int offset = grid_offset + contextTileOffsets[index];
+    int offset = grid_offset + CONTEXT_TILE_OFFSETS[index];
     if (map_terrain_is(offset, TERRAIN_BUILDING)) {
         building *b = building_get(map_building_at(offset));
         if (b->type == BUILDING_RESERVOIR && map_property_multi_tile_xy(offset) == multi_tile_mask) {
@@ -433,11 +433,11 @@ static void set_terrain_reservoir(int grid_offset, int index, int multi_tile_mas
 const terrain_image *map_image_context_get_aqueduct(int grid_offset, int include_construction)
 {
     int tiles[MAX_TILES] = {0,0,0,0,0,0,0,0};
-    int hasRoad = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
+    int has_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     for (int i = 0; i < MAX_TILES; i += 2) {
-        int offset = grid_offset + contextTileOffsets[i];
+        int offset = grid_offset + CONTEXT_TILE_OFFSETS[i];
         if (map_terrain_is(offset, TERRAIN_AQUEDUCT)) {
-            if (hasRoad) {
+            if (has_road) {
                 if (!map_terrain_is(offset, TERRAIN_ROAD)) {
                     tiles[i] = 1;
                 }
@@ -452,7 +452,7 @@ const terrain_image *map_image_context_get_aqueduct(int grid_offset, int include
     set_terrain_reservoir(grid_offset, 6, EDGE_X2Y1, tiles);
     if (include_construction) {
         for (int i = 0; i < MAX_TILES; i += 2) {
-            if (map_property_is_constructing(grid_offset + contextTileOffsets[i])) {
+            if (map_property_is_constructing(grid_offset + CONTEXT_TILE_OFFSETS[i])) {
                 tiles[i] = 1;
             }
         }

@@ -45,8 +45,8 @@ void window_building_draw_terrain(building_info_context *c)
                 sound_speech_play_file("wavs/empty_land.wav");
             }
         }
-        if (c->figure.count > 0 && c->figure.figureIds[c->figure.selectedIndex]) {
-            figure *f = figure_get(c->figure.figureIds[c->figure.selectedIndex]);
+        if (c->figure.count > 0 && c->figure.figure_ids[c->figure.selected_index]) {
+            figure *f = figure_get(c->figure.figure_ids[c->figure.selected_index]);
             if (f->type < FIGURE_SHIPWRECK) {
                 c->help_id = 42;
             } else {

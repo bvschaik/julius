@@ -68,17 +68,17 @@ static void determine_meeting_center()
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_NATIVE_HUT) {
-            int minDist = 1000;
-            int minMeetingId = 0;
+            int min_dist = 1000;
+            int min_meeting_id = 0;
             for (int n = 0; n < total_meetings; n++) {
                 building *meeting = building_get(meetings[n]);
                 int dist = calc_maximum_distance(b->x, b->y, meeting->x, meeting->y);
-                if (dist < minDist) {
-                    minDist = dist;
-                    minMeetingId = meetings[n];
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    min_meeting_id = meetings[n];
                 }
             }
-            b->subtype.nativeMeetingCenterId = minMeetingId;
+            b->subtype.nativeMeetingCenterId = min_meeting_id;
         }
     }
 }

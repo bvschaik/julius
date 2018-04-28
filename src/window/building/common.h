@@ -50,12 +50,12 @@ typedef struct {
     int rubble_building_type;
     int storage_show_special_orders;
     struct {
-        int soundId;
-        int phraseId;
-        int selectedIndex;
+        int sound_id;
+        int phrase_id;
+        int selected_index;
         int count;
         int drawn;
-        int figureIds[7];
+        int figure_ids[7];
     } figure;
 } building_info_context;
 

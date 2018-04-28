@@ -43,17 +43,15 @@ void menu_draw(menu_bar_item *menu, int focus_item_id)
         10, (20 + 20 * menu->num_items) / 16);
     for (int i = 0; i < menu->num_items; i++) {
         menu_item *sub = &menu->items[i];
-        int yOffset = 30 + menu->y_start + sub->y_start;
+        int y_offset = 30 + menu->y_start + sub->y_start;
         if (i == focus_item_id - 1) {
-            graphics_fill_rect(menu->x_start, yOffset - 2,
+            graphics_fill_rect(menu->x_start, y_offset - 2,
                 160, 16, COLOR_BLACK);
             lang_text_draw_colored(menu->text_group, sub->text_number,
-                menu->x_start + 8, yOffset, FONT_NORMAL_PLAIN, COLOR_ORANGE
-            );
+                menu->x_start + 8, y_offset, FONT_NORMAL_PLAIN, COLOR_ORANGE);
         } else {
             lang_text_draw(menu->text_group, sub->text_number,
-                menu->x_start + 8, yOffset, FONT_NORMAL_BLACK
-            );
+                menu->x_start + 8, y_offset, FONT_NORMAL_BLACK);
         }
     }
 }

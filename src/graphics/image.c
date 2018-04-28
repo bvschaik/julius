@@ -26,36 +26,36 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
     for (int y = clip->clippedPixelsTop; y < img->height - clip->clippedPixelsBottom; y++) {
         data += clip->clippedPixelsLeft;
         color_t *dst = graphics_get_pixel(x_offset + clip->clippedPixelsLeft, y_offset + y);
-        int xMax = img->width - clip->clippedPixelsRight;
+        int x_max = img->width - clip->clippedPixelsRight;
         if (type == DRAW_TYPE_NONE) {
             if (img->draw.type == 0 || img->draw.is_external) { // can be transparent
-                for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
+                for (int x = clip->clippedPixelsLeft; x < x_max; x++, dst++) {
                     if (*data != COLOR_TRANSPARENT) {
                         *dst = *data;
                     }
                     data++;
                 }
             } else {
-                int num_pixels = xMax - clip->clippedPixelsLeft;
+                int num_pixels = x_max - clip->clippedPixelsLeft;
                 memcpy(dst, data, num_pixels * sizeof(color_t));
                 data += num_pixels;
             }
         } else if (type == DRAW_TYPE_SET) {
-            for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
+            for (int x = clip->clippedPixelsLeft; x < x_max; x++, dst++) {
                 if (*data != COLOR_TRANSPARENT) {
                     *dst = color;
                 }
                 data++;
             }
         } else if (type == DRAW_TYPE_AND) {
-            for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
+            for (int x = clip->clippedPixelsLeft; x < x_max; x++, dst++) {
                 if (*data != COLOR_TRANSPARENT) {
                     *dst = *data & color;
                 }
                 data++;
             }
         } else if (type == DRAW_TYPE_BLEND) {
-            for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
+            for (int x = clip->clippedPixelsLeft; x < x_max; x++, dst++) {
                 if (*data != COLOR_TRANSPARENT) {
                     *dst &= color;
                 }
@@ -110,9 +110,9 @@ static void draw_compressed(const image *img, const color_t *data, int x_offset,
     }
 }
 
-static void draw_compressed_set(const image *img, const color_t *data, int x_offset, int yOffset, int height, color_t color)
+static void draw_compressed_set(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
-    const clip_info *clip = graphics_get_clip_info(x_offset, yOffset, img->width, height);
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->isVisible) {
         return;
     }
@@ -134,7 +134,7 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
                 // number of concrete pixels
                 const color_t *pixels = data;
                 data += b;
-                color_t *dst = graphics_get_pixel(x_offset + x, yOffset + y);
+                color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
                 if (unclipped) {
                     x += b;
                     while (b) {
@@ -310,52 +310,52 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
     if (clip->clipY != CLIP_TOP) {
         const color_t *src = data;
         for (int y = 0; y < 15; y++) {
-            int xMax = 4 * y + 2;
-            int xStart = 29 - 1 - 2 * y;
+            int x_max = 4 * y + 2;
+            int x_start = 29 - 1 - 2 * y;
             if (clip_left || clip_right) {
-                xMax = 2 * y;
+                x_max = 2 * y;
             }
             if (clip_left) {
-                xStart = 30;
-                src += xMax + 2;
+                x_start = 30;
+                src += x_max + 2;
             }
-            color_t *buffer = graphics_get_pixel(x_offset + xStart, y_offset + y);
+            color_t *buffer = graphics_get_pixel(x_offset + x_start, y_offset + y);
             if (color_mask == COLOR_NO_MASK) {
-                memcpy(buffer, src, xMax * sizeof(color_t));
-                src += xMax;
+                memcpy(buffer, src, x_max * sizeof(color_t));
+                src += x_max;
             } else {
-                for (int x = 0; x < xMax; x++, buffer++, src++) {
+                for (int x = 0; x < x_max; x++, buffer++, src++) {
                     *buffer = *src & color_mask;
                 }
             }
             if (clip_right) {
-                src += xMax + 2;
+                src += x_max + 2;
             }
         }
     }
     if (clip->clipY != CLIP_BOTTOM) {
         const color_t *src = &data[900 / 2];
         for (int y = 0; y < 15; y++) {
-            int xMax = 4 * (15 - 1 - y) + 2;
-            int xStart = 2 * y;
+            int x_max = 4 * (15 - 1 - y) + 2;
+            int x_start = 2 * y;
             if (clip_left || clip_right) {
-                xMax = xMax / 2 - 1;
+                x_max = x_max / 2 - 1;
             }
             if (clip_left) {
-                xStart = 30;
-                src += xMax + 2;
+                x_start = 30;
+                src += x_max + 2;
             }
-            color_t *buffer = graphics_get_pixel(x_offset + xStart, 15 + y_offset + y);
+            color_t *buffer = graphics_get_pixel(x_offset + x_start, 15 + y_offset + y);
             if (color_mask == COLOR_NO_MASK) {
-                memcpy(buffer, src, xMax * sizeof(color_t));
-                src += xMax;
+                memcpy(buffer, src, x_max * sizeof(color_t));
+                src += x_max;
             } else {
-                for (int x = 0; x < xMax; x++, buffer++, src++) {
+                for (int x = 0; x < x_max; x++, buffer++, src++) {
                     *buffer = *src & color_mask;
                 }
             }
             if (clip_right) {
-                src += xMax + 2;
+                src += x_max + 2;
             }
         }
     }

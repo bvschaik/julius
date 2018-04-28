@@ -176,9 +176,9 @@ int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
             }
         }
         // check two water tiles at the side
-        int tilesToCheck[4][2] = {{-1, 3}, {-160, 488}, {327, 323}, {-162, 486}};
+        const int tiles_to_check[4][2] = {{-1, 3}, {-160, 488}, {327, 323}, {-162, 486}};
         for (int i = 0; i < 2; i++) {
-            if (!map_terrain_is(base_offset + tilesToCheck[dir][i], TERRAIN_WATER)) {
+            if (!map_terrain_is(base_offset + tiles_to_check[dir][i], TERRAIN_WATER)) {
                 ok_tiles = 0;
             }
         }

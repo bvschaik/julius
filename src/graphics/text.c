@@ -15,49 +15,49 @@ static struct {
     int width;
     int visible;
     time_millis updated;
-    int xOffset;
-    int yOffset;
-} inputCursor;
+    int x_offset;
+    int y_offset;
+} input_cursor;
 
 void text_capture_cursor(int cursor_position)
 {
-    inputCursor.capture = 1;
-    inputCursor.seen = 0;
-    inputCursor.position = 0;
-    inputCursor.width = 0;
-    inputCursor.cursor_position = cursor_position;
+    input_cursor.capture = 1;
+    input_cursor.seen = 0;
+    input_cursor.position = 0;
+    input_cursor.width = 0;
+    input_cursor.cursor_position = cursor_position;
 }
 
-void text_draw_cursor(int xOffset, int yOffset, int isInsert)
+void text_draw_cursor(int x_offset, int y_offset, int is_insert)
 {
-    inputCursor.capture = 0;
+    input_cursor.capture = 0;
     time_millis curr = time_get_millis();
-    time_millis diff = curr - inputCursor.updated;
-    if (!inputCursor.visible && diff >= 200) {
-        inputCursor.visible = 1;
-        inputCursor.updated = curr;
-    } else if (inputCursor.visible && diff >= 400) {
-        inputCursor.visible = 0;
-        inputCursor.updated = curr;
+    time_millis diff = curr - input_cursor.updated;
+    if (!input_cursor.visible && diff >= 200) {
+        input_cursor.visible = 1;
+        input_cursor.updated = curr;
+    } else if (input_cursor.visible && diff >= 400) {
+        input_cursor.visible = 0;
+        input_cursor.updated = curr;
     }
-    if (inputCursor.visible) {
-        if (isInsert) {
+    if (input_cursor.visible) {
+        if (is_insert) {
             graphics_draw_line(
-                xOffset + inputCursor.xOffset - 3, yOffset + inputCursor.yOffset - 3,
-                xOffset + inputCursor.xOffset + 1, yOffset + inputCursor.yOffset - 3,
+                x_offset + input_cursor.x_offset - 3, y_offset + input_cursor.y_offset - 3,
+                x_offset + input_cursor.x_offset + 1, y_offset + input_cursor.y_offset - 3,
                 COLOR_WHITE);
             graphics_draw_line(
-                xOffset + inputCursor.xOffset - 1, yOffset + inputCursor.yOffset - 3,
-                xOffset + inputCursor.xOffset - 1, yOffset + inputCursor.yOffset + 13,
+                x_offset + input_cursor.x_offset - 1, y_offset + input_cursor.y_offset - 3,
+                x_offset + input_cursor.x_offset - 1, y_offset + input_cursor.y_offset + 13,
                 COLOR_WHITE);
             graphics_draw_line(
-                xOffset + inputCursor.xOffset - 3, yOffset + inputCursor.yOffset + 14,
-                xOffset + inputCursor.xOffset + 1, yOffset + inputCursor.yOffset + 14,
+                x_offset + input_cursor.x_offset - 3, y_offset + input_cursor.y_offset + 14,
+                x_offset + input_cursor.x_offset + 1, y_offset + input_cursor.y_offset + 14,
                 COLOR_WHITE);
         } else {
             graphics_fill_rect(
-                xOffset + inputCursor.xOffset, yOffset + inputCursor.yOffset + 14,
-                inputCursor.width, 2, COLOR_WHITE);
+                x_offset + input_cursor.x_offset, y_offset + input_cursor.y_offset + 14,
+                input_cursor.width, 2, COLOR_WHITE);
         }
     }
 }
@@ -67,15 +67,15 @@ int text_get_width(const uint8_t *str, font_t font)
     const font_definition *def = font_definition_for(font);
     int maxlen = 10000;
     int width = 0;
-    int graphicBase = image_group(GROUP_FONT);
+    int image_base = image_group(GROUP_FONT);
     while (*str && maxlen > 0) {
         if (*str == ' ') {
             width += def->space_width;
         } else {
-            int graphicOffset = font_image_for(*str);
-            if (graphicOffset) {
-                int graphicId = graphicBase + def->image_offset + graphicOffset - 1;
-                width += def->letter_spacing + image_get(graphicId)->width;
+            int image_offset = font_image_for(*str);
+            if (image_offset) {
+                int image_id = image_base + def->image_offset + image_offset - 1;
+                width += def->letter_spacing + image_get(image_id)->width;
             }
         }
         str++;
@@ -84,76 +84,76 @@ int text_get_width(const uint8_t *str, font_t font)
     return width;
 }
 
-static int getCharacterWidth(uint8_t c, const font_definition *def)
+static int get_character_width(uint8_t c, const font_definition *def)
 {
-    int graphicOffset = font_image_for(c);
-    if (!graphicOffset) {
+    int image_offset = font_image_for(c);
+    if (!image_offset) {
         return 0;
     }
-    int graphicId = image_group(GROUP_FONT) + def->image_offset + graphicOffset - 1;
-    return 1 + image_get(graphicId)->width;
+    int image_id = image_group(GROUP_FONT) + def->image_offset + image_offset - 1;
+    return 1 + image_get(image_id)->width;
 }
 
-static int getWordWidth(const uint8_t *str, font_t font, int *outNumChars)
+static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
 {
     const font_definition *def = font_definition_for(font);
     int width = 0;
     int guard = 0;
-    int wordCharSeen = 0;
-    int numChars = 0;
+    int word_char_seen = 0;
+    int num_chars = 0;
     for (uint8_t c = *str; c; c = *++str) {
         if (++guard >= 200) {
             break;
         }
         if (c == ' ') {
-            if (wordCharSeen) {
+            if (word_char_seen) {
                 break;
             }
             width += 4;
         } else if (c == '$') {
-            if (wordCharSeen) {
+            if (word_char_seen) {
                 break;
             }
         } else if (c > ' ') {
             // normal char
-            width += getCharacterWidth(c, def);
-            wordCharSeen = 1;
+            width += get_character_width(c, def);
+            word_char_seen = 1;
         }
-        numChars++;
+        num_chars++;
     }
-    *outNumChars = numChars;
+    *out_num_chars = num_chars;
     return width;
 }
 
-void text_draw_centered(const uint8_t *str, int x, int y, int boxWidth, font_t font, color_t color)
+void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color)
 {
-    int offset = (boxWidth - text_get_width(str, font)) / 2;
+    int offset = (box_width - text_get_width(str, font)) / 2;
     if (offset < 0) {
         offset = 0;
     }
     text_draw(str, offset + x, y, font, color);
 }
 
-static int drawCharacter(const font_definition *def, unsigned int c, int x, int y, color_t color)
+static int draw_character(const font_definition *def, unsigned int c, int x, int y, color_t color)
 {
-    int graphicOffset = font_image_for(c);
-    int graphicId = image_group(GROUP_FONT) + def->image_offset + graphicOffset - 1;
-    int height = image_get(graphicId)->height - def->line_height;
+    int image_offset = font_image_for(c);
+    int image_id = image_group(GROUP_FONT) + def->image_offset + image_offset - 1;
+    int height = image_get(image_id)->height - def->line_height;
     if (height < 0) {
         height = 0;
     }
     if (c < 128 || c == 231) { // Some exceptions...
         height = 0;
     }
-    image_draw_letter(graphicId, x, y - height, color);
-    return image_get(graphicId)->width;
+    image_draw_letter(image_id, x, y - height, color);
+    return image_get(image_id)->width;
 }
 
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
 {
     const font_definition *def = font_definition_for(font);
 
-    int currentX = x;
+    int current_x = x;
     while (*str) {
         uint8_t c = *str;
 
@@ -167,31 +167,31 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
             if (graphic == 0) {
                 width = def->space_width_draw;
             } else {
-                width = def->letter_spacing_draw + drawCharacter(def, c, currentX, y, color);
+                width = def->letter_spacing_draw + draw_character(def, c, current_x, y, color);
             }
-            if (inputCursor.capture && inputCursor.position == inputCursor.cursor_position) {
-                if (!inputCursor.seen) {
-                    inputCursor.width = width;
-                    inputCursor.xOffset = currentX - x;
-                    inputCursor.seen = 1;
+            if (input_cursor.capture && input_cursor.position == input_cursor.cursor_position) {
+                if (!input_cursor.seen) {
+                    input_cursor.width = width;
+                    input_cursor.x_offset = current_x - x;
+                    input_cursor.seen = 1;
                 }
             }
-            currentX += width;
+            current_x += width;
         }
 
         str++;
-        inputCursor.position++;
+        input_cursor.position++;
     }
-    if (inputCursor.capture && !inputCursor.seen) {
-        inputCursor.width = 4;
-        inputCursor.xOffset = currentX - x;
-        inputCursor.seen = 1;
+    if (input_cursor.capture && !input_cursor.seen) {
+        input_cursor.width = 4;
+        input_cursor.x_offset = current_x - x;
+        input_cursor.seen = 1;
     }
-    currentX += def->space_width_draw;
-    return currentX - x;
+    current_x += def->space_width_draw;
+    return current_x - x;
 }
 
-static void numberToString(uint8_t *str, int value, char prefix, const char *postfix)
+static void number_to_string(uint8_t *str, int value, char prefix, const char *postfix)
 {
     int offset = 0;
     if (prefix) {
@@ -205,74 +205,74 @@ static void numberToString(uint8_t *str, int value, char prefix, const char *pos
     str[offset] = 0;
 }
 
-int text_draw_number(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font)
+int text_draw_number(int value, char prefix, const char *postfix, int x_offset, int y_offset, font_t font)
 {
     uint8_t str[100];
-    numberToString(str, value, prefix, postfix);
-    return text_draw(str, xOffset, yOffset, font, 0);
+    number_to_string(str, value, prefix, postfix);
+    return text_draw(str, x_offset, y_offset, font, 0);
 }
 
-int text_draw_number_colored(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font, color_t color)
+int text_draw_number_colored(int value, char prefix, const char *postfix, int x_offset, int y_offset, font_t font, color_t color)
 {
     uint8_t str[100];
-    numberToString(str, value, prefix, postfix);
-    return text_draw(str, xOffset, yOffset, font, color);
+    number_to_string(str, value, prefix, postfix);
+    return text_draw(str, x_offset, y_offset, font, color);
 }
 
-int text_draw_money(int value, int xOffset, int yOffset, font_t font)
+int text_draw_money(int value, int x_offset, int y_offset, font_t font)
 {
     uint8_t str[100];
-    numberToString(str, value, '@', " Dn");
-    return text_draw(str, xOffset, yOffset, font, 0);
+    number_to_string(str, value, '@', " Dn");
+    return text_draw(str, x_offset, y_offset, font, 0);
 }
 
-int text_draw_percentage(int value, int xOffset, int yOffset, font_t font)
+int text_draw_percentage(int value, int x_offset, int y_offset, font_t font)
 {
     uint8_t str[100];
-    numberToString(str, value, '@', "%");
-    return text_draw(str, xOffset, yOffset, font, 0);
+    number_to_string(str, value, '@', "%");
+    return text_draw(str, x_offset, y_offset, font, 0);
 }
 
-void text_draw_number_centered(int value, int xOffset, int yOffset, int boxWidth, font_t font)
+void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, font_t font)
 {
     uint8_t str[100];
-    numberToString(str, value, '@', " ");
-    text_draw_centered(str, xOffset, yOffset, boxWidth, font, 0);
+    number_to_string(str, value, '@', " ");
+    text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
-void text_draw_number_centered_colored(int value, int xOffset, int yOffset, int boxWidth, font_t font, color_t color)
+void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, font_t font, color_t color)
 {
     uint8_t str[100];
-    numberToString(str, value, '@', " ");
-    text_draw_centered(str, xOffset, yOffset, boxWidth, font, color);
+    number_to_string(str, value, '@', " ");
+    text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int text_draw_multiline(const uint8_t *str, int xOffset, int yOffset, int boxWidth, font_t font)
+int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_width, font_t font)
 {
-    int lineHeight;
+    int line_height;
     switch (font) {
         case FONT_LARGE_PLAIN:
         case FONT_LARGE_BLACK:
-            lineHeight = 23;
+            line_height = 23;
             break;
         case FONT_LARGE_BROWN:
-            lineHeight = 24;
+            line_height = 24;
             break;
         case FONT_SMALL_PLAIN:
-            lineHeight = 9;
+            line_height = 9;
             break;
         case FONT_NORMAL_PLAIN:
-            lineHeight = 11;
+            line_height = 11;
             break;
         default:
-            lineHeight = 11;
+            line_height = 11;
             break;
     }
 
-    int hasMoreCharacters = 1;
+    int has_more_characters = 1;
     int guard = 0;
-    int y = yOffset;
-    while (hasMoreCharacters) {
+    int y = y_offset;
+    while (has_more_characters) {
         if (++guard >= 100) {
             break;
         }
@@ -280,27 +280,27 @@ int text_draw_multiline(const uint8_t *str, int xOffset, int yOffset, int boxWid
         for (int i = 0; i < 200; i++) {
             tmp_line[i] = 0;
         }
-        int currentWidth = 0;
-        int lineIndex = 0;
-        while (hasMoreCharacters && currentWidth < boxWidth) {
-            int wordNumChars;
-            int wordWidth = getWordWidth(str, font, &wordNumChars);
-            currentWidth += wordWidth;
-            if (currentWidth >= boxWidth) {
-                if (currentWidth == 0) {
-                    hasMoreCharacters = 0;
+        int current_width = 0;
+        int line_index = 0;
+        while (has_more_characters && current_width < box_width) {
+            int word_num_chars;
+            int word_width = get_word_width(str, font, &word_num_chars);
+            current_width += word_width;
+            if (current_width >= box_width) {
+                if (current_width == 0) {
+                    has_more_characters = 0;
                 }
             } else {
-                for (int i = 0; i < wordNumChars; i++) {
-                    tmp_line[lineIndex++] = *str++;
+                for (int i = 0; i < word_num_chars; i++) {
+                    tmp_line[line_index++] = *str++;
                 }
                 if (!*str) {
-                    hasMoreCharacters = 0;
+                    has_more_characters = 0;
                 }
             }
         }
-        text_draw(tmp_line, xOffset, y, font, 0);
-        y += lineHeight + 5;
+        text_draw(tmp_line, x_offset, y, font, 0);
+        y += line_height + 5;
     }
-    return y - yOffset;
+    return y - y_offset;
 }

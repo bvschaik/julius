@@ -431,7 +431,7 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                     came_from_direction = -1;
                 }
                 // 1. continue in the same direction
-                // 2. turn in the direction given by roamTurnDirection
+                // 2. turn in the direction given by roam_turn_direction
                 int dir = 0;
                 do {
                     if (road_tiles[f->direction] && f->direction != came_from_direction) {

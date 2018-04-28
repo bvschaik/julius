@@ -24,7 +24,7 @@ static struct {
     int y_max;
 } links[MAX_LINKS];
 
-static int numLinks;
+static int num_links;
 static const font_definition *normal_font_def;
 static const font_definition *link_font_def;
 
@@ -117,13 +117,13 @@ void rich_text_clear_links()
         links[i].y_min = 0;
         links[i].y_max = 0;
     }
-    numLinks = 0;
+    num_links = 0;
 }
 
 int rich_text_get_clicked_link(const mouse *m)
 {
     if (m->left.went_down) {
-        for (int i = 0; i < numLinks; i++) {
+        for (int i = 0; i < num_links; i++) {
             if (m->x >= links[i].x_min && m->x <= links[i].x_max &&
                 m->y >= links[i].y_min && m->y <= links[i].y_max) {
                 return links[i].message_id;
@@ -135,13 +135,13 @@ int rich_text_get_clicked_link(const mouse *m)
 
 static void add_link(int message_id, int x_start, int x_end, int y)
 {
-    if (numLinks < MAX_LINKS) {
-        links[numLinks].message_id = message_id;
-        links[numLinks].x_min = x_start - 2;
-        links[numLinks].x_max = x_end + 2;
-        links[numLinks].y_min = y - 1;
-        links[numLinks].y_max = y + 13;
-        numLinks++;
+    if (num_links < MAX_LINKS) {
+        links[num_links].message_id = message_id;
+        links[num_links].x_min = x_start - 2;
+        links[num_links].x_max = x_end + 2;
+        links[num_links].y_min = y - 1;
+        links[num_links].y_max = y + 13;
+        num_links++;
     }
 }
 

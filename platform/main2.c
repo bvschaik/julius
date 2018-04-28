@@ -128,7 +128,7 @@ static SDL_Cursor *init_cursor(const cursor *c)
 				break;
 		}
 	}
-	return SDL_CreateCursor(data, mask, 32, 32, c->hotspotX, c->hotspotY);
+	return SDL_CreateCursor(data, mask, 32, 32, c->hotspot_x, c->hotspot_y);
 }
 
 void system_init_cursors()

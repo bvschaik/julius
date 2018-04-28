@@ -246,20 +246,20 @@ static int terrain_is_road_like(int grid_offset)
     return map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP) ? 1 : 0;
 }
 
-static int get_adjacent_road_tile_for_roaming(int gridOffset)
+static int get_adjacent_road_tile_for_roaming(int grid_offset)
 {
-    int isRoad = terrain_is_road_like(gridOffset);
-    if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-        building *b = building_get(map_building_at(gridOffset));
+    int is_road = terrain_is_road_like(grid_offset);
+    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        building *b = building_get(map_building_at(grid_offset));
         if (b->type == BUILDING_GATEHOUSE) {
-            isRoad = 0;
+            is_road = 0;
         } else if (b->type == BUILDING_GRANARY) {
-            if (map_routing_citizen_is_road(gridOffset)) {
-                isRoad = 1;
+            if (map_routing_citizen_is_road(grid_offset)) {
+                is_road = 1;
             }
         }
     }
-    return isRoad;
+    return is_road;
 }
 
 int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles)

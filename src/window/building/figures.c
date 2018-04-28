@@ -238,7 +238,7 @@ static void draw_cartpusher(building_info_context *c, figure *f)
             c->x_offset + 92 + width, c->y_offset + 135);
     }
     
-    lang_text_draw_multiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
+    lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
         c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 9), FONT_SMALL_BLACK);
     
     if (!f->buildingId) {
@@ -291,8 +291,8 @@ static void draw_market_buyer(building_info_context *c, figure *f)
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 90 + width, c->y_offset + 135);
     }
-    if (c->figure.phraseId >= 0) {
-        lang_text_draw_multiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
+    if (c->figure.phrase_id >= 0) {
+        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
             c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 9), FONT_SMALL_BLACK);
     }
 }
@@ -309,8 +309,8 @@ static void draw_normal_figure(building_info_context *c, figure *f)
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK);
     
-    if (c->figure.phraseId >= 0) {
-        lang_text_draw_multiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
+    if (c->figure.phrase_id >= 0) {
+        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
             c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 9), FONT_SMALL_BLACK);
     }
 }
@@ -343,10 +343,10 @@ void window_building_draw_figure_list(building_info_context *c)
         lang_text_draw_centered(70, 0, c->x_offset, c->y_offset + 120, 16 * c->width_blocks, FONT_SMALL_BLACK);
     } else {
         for (int i = 0; i < c->figure.count; i++) {
-            button_border_draw(c->x_offset + 60 * i + 25, c->y_offset + 45, 52, 52, i == c->figure.selectedIndex);
+            button_border_draw(c->x_offset + 60 * i + 25, c->y_offset + 45, 52, 52, i == c->figure.selected_index);
             graphics_draw_from_buffer(c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48, data.figure_images[i]);
         }
-        draw_figure_info(c, c->figure.figureIds[c->figure.selectedIndex]);
+        draw_figure_info(c, c->figure.figure_ids[c->figure.selected_index]);
     }
     c->figure.drawn = 1;
 }
@@ -372,7 +372,7 @@ void window_building_prepare_figure_list(building_info_context *c)
     if (c->figure.count > 0) {
         pixel_coordinate coord = {0, 0};
         for (int i = 0; i < c->figure.count; i++) {
-            draw_figure_in_city(c->figure.figureIds[i], &coord);
+            draw_figure_in_city(c->figure.figure_ids[i], &coord);
             graphics_save_to_buffer(coord.x, coord.y, 48, 48, data.figure_images[i]);
         }
         widget_city_draw();
@@ -388,15 +388,15 @@ void window_building_handle_mouse_figure_list(const mouse *m, building_info_cont
 
 static void select_figure(int index, int param2)
 {
-    data.context_for_callback->figure.selectedIndex = index;
+    data.context_for_callback->figure.selected_index = index;
     window_building_play_figure_phrase(data.context_for_callback);
     window_invalidate();
 }
 
 void window_building_play_figure_phrase(building_info_context *c)
 {
-    int figure_id = c->figure.figureIds[c->figure.selectedIndex];
+    int figure_id = c->figure.figure_ids[c->figure.selected_index];
     figure *f = figure_get(figure_id);
-    c->figure.soundId = figure_phrase_play(f);
-    c->figure.phraseId = f->phraseId;
+    c->figure.sound_id = figure_phrase_play(f);
+    c->figure.phrase_id = f->phraseId;
 }

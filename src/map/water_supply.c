@@ -26,9 +26,9 @@ static struct {
     int tail;
 } queue;
 
-static void mark_well_access(int wellId, int radius)
+static void mark_well_access(int well_id, int radius)
 {
-    building *well = building_get(wellId);
+    building *well = building_get(well_id);
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(well->x, well->y, 1, radius, &x_min, &y_min, &x_max, &y_max);
 
