@@ -140,10 +140,10 @@ void city_finance_estimate_taxes()
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->houseTaxCoverage) {
-            int isPatrician = b->subtype.houseLevel >= HOUSE_SMALL_VILLA;
+            int is_patrician = b->subtype.houseLevel >= HOUSE_SMALL_VILLA;
             int trm = difficulty_adjust_money(
                 model_get_house(b->subtype.houseLevel)->tax_multiplier);
-            if (isPatrician) {
+            if (is_patrician) {
                 city_data.taxes.monthly.collected_patricians += b->housePopulation * trm;
             } else {
                 city_data.taxes.monthly.collected_plebs += b->housePopulation * trm;

@@ -105,9 +105,9 @@ static int new_message_id()
     return -1;
 }
 
-static int has_video(int textId)
+static int has_video(int text_id)
 {
-    const lang_message *msg = lang_get_message(textId);
+    const lang_message *msg = lang_get_message(text_id);
     if (!msg->video.text) {
         return 0;
     }
@@ -181,8 +181,8 @@ void city_message_post(int use_popup, int message_type, int param1, int param2)
     msg->sequence = data.next_message_sequence++;
 
     int text_id = city_message_get_text_id(message_type);
-    lang_message_type langMessageType = lang_get_message(text_id)->message_type;
-    if (langMessageType == MESSAGE_TYPE_DISASTER || langMessageType == MESSAGE_TYPE_INVASION) {
+    lang_message_type lang_msg_type = lang_get_message(text_id)->message_type;
+    if (lang_msg_type == MESSAGE_TYPE_DISASTER || lang_msg_type == MESSAGE_TYPE_INVASION) {
         data.problem_count = 1;
         window_invalidate();
     }
@@ -449,17 +449,17 @@ int city_message_next_problem_area_grid_offset()
         city_message *msg = &data.messages[i];
         if (msg->message_type && msg->year >= current_year - 1) {
             int text_id = city_message_get_text_id(msg->message_type);
-            lang_message_type langMessageType = lang_get_message(text_id)->message_type;
-            if (langMessageType == MESSAGE_TYPE_DISASTER || langMessageType == MESSAGE_TYPE_INVASION) {
-                if (langMessageType != MESSAGE_TYPE_INVASION || formation_grid_offset_for_invasion(msg->param1) > 0) {
+            lang_message_type lang_msg_type = lang_get_message(text_id)->message_type;
+            if (lang_msg_type == MESSAGE_TYPE_DISASTER || lang_msg_type == MESSAGE_TYPE_INVASION) {
+                if (lang_msg_type != MESSAGE_TYPE_INVASION || formation_grid_offset_for_invasion(msg->param1) > 0) {
                     index++;
                     if (data.problem_index < index) {
                         data.problem_index++;
-                        int gridOffset = msg->param2;
-                        if (langMessageType == MESSAGE_TYPE_INVASION) {
-                            gridOffset = formation_grid_offset_for_invasion(msg->param1);
+                        int grid_offset = msg->param2;
+                        if (lang_msg_type == MESSAGE_TYPE_INVASION) {
+                            grid_offset = formation_grid_offset_for_invasion(msg->param1);
                         }
-                        return gridOffset;
+                        return grid_offset;
                     }
                 }
             }

@@ -286,7 +286,7 @@ static void check_employment()
 
 static void set_building_worker_weight()
 {
-    int waterPer10kPerBuilding = calc_percentage(100, city_data.labor.categories[LABOR_CATEGORY_WATER].buildings);
+    int water_per_10k_per_building = calc_percentage(100, city_data.labor.categories[LABOR_CATEGORY_WATER].buildings);
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
@@ -294,7 +294,7 @@ static void set_building_worker_weight()
         }
         int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
         if (cat == LABOR_CATEGORY_WATER) {
-            b->percentageHousesCovered = waterPer10kPerBuilding;
+            b->percentageHousesCovered = water_per_10k_per_building;
         } else if (cat >= 0) {
             b->percentageHousesCovered = 0;
             if (b->housesCovered) {
@@ -370,7 +370,7 @@ static void allocate_workers_to_non_water_buildings()
         }
         int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
         if (cat == LABOR_CATEGORY_WATER || cat < 0) {
-            // water is handled by allocateWorkersToWater()
+            // water is handled by allocate_workers_to_water()
             continue;
         }
         b->numWorkers = 0;
@@ -395,7 +395,7 @@ static void allocate_workers_to_non_water_buildings()
     }
     for (int i = 0; i < MAX_CATS; i++) {
         if (category_workers_needed[i]) {
-            // watch out: categoryWorkersNeeded is now reset to 'unallocated workers available'
+            // watch out: category_workers_needed is now reset to 'unallocated workers available'
             if (category_workers_allocated[i] >= city_data.labor.categories[i].workers_allocated) {
                 category_workers_needed[i] = 0;
                 category_workers_allocated[i] = 0;
@@ -417,9 +417,9 @@ static void allocate_workers_to_non_water_buildings()
             continue;
         }
         if (b->percentageHousesCovered > 0 && category_workers_needed[cat]) {
-            int requiredWorkers = model_get_building(b->type)->laborers;
-            if (b->numWorkers < requiredWorkers) {
-                int needed = requiredWorkers - b->numWorkers;
+            int required_workers = model_get_building(b->type)->laborers;
+            if (b->numWorkers < required_workers) {
+                int needed = required_workers - b->numWorkers;
                 if (needed > category_workers_needed[cat]) {
                     b->numWorkers += category_workers_needed[cat];
                     category_workers_needed[cat] = 0;

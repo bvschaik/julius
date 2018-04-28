@@ -125,14 +125,14 @@ int building_market_get_storage_destination(building *market)
         resources[INVENTORY_WINE].num_buildings = 0;
     }
 
-    int canGo = 0;
+    int can_go = 0;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         if (resources[i].num_buildings) {
-            canGo = 1;
+            can_go = 1;
             break;
         }
     }
-    if (!canGo) {
+    if (!can_go) {
         return 0;
     }
     // prefer food if we don't have it

@@ -223,7 +223,7 @@ void building_maintenance_check_rome_access()
 {
     const map_tile *entry_point = city_map_entry_point();
     map_routing_calculate_distances(entry_point->x, entry_point->y);
-    int problemGridOffset = 0;
+    int problem_grid_offset = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
@@ -253,7 +253,7 @@ void building_maintenance_check_rome_access()
             } else {
                 // no reachable road in radius
                 if (!b->houseUnreachableTicks) {
-                    problemGridOffset = b->gridOffset;
+                    problem_grid_offset = b->gridOffset;
                 }
                 b->houseUnreachableTicks++;
                 if (b->houseUnreachableTicks > 8) {
@@ -277,11 +277,11 @@ void building_maintenance_check_rome_access()
             }
         } else if (b->type == BUILDING_WAREHOUSE_SPACE) {
             b->distanceFromEntry = 0;
-            building *mainBuilding = building_main(b);
-            b->roadNetworkId = mainBuilding->roadNetworkId;
-            b->distanceFromEntry = mainBuilding->distanceFromEntry;
-            b->roadAccessX = mainBuilding->roadAccessX;
-            b->roadAccessY = mainBuilding->roadAccessY;
+            building *main_building = building_main(b);
+            b->roadNetworkId = main_building->roadNetworkId;
+            b->distanceFromEntry = main_building->distanceFromEntry;
+            b->roadAccessX = main_building->roadAccessX;
+            b->roadAccessY = main_building->roadAccessY;
         } else if (b->type == BUILDING_HIPPODROME) {
             b->distanceFromEntry = 0;
             int x_road, y_road;
@@ -330,10 +330,10 @@ void building_maintenance_check_rome_access()
             }
         }
         building_destroy_last_placed();
-    } else if (problemGridOffset) {
+    } else if (problem_grid_offset) {
         // parts of city disconnected
         city_warning_show(WARNING_CITY_BOXED_IN);
         city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH);
-        city_view_go_to_grid_offset(problemGridOffset);
+        city_view_go_to_grid_offset(problem_grid_offset);
     }
 }

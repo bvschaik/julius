@@ -334,27 +334,27 @@ void city_gods_calculate_moods(int update_moods)
 
 int city_gods_calculate_least_happy()
 {
-    int maxGod = 0;
-    int maxWrath = 0;
+    int max_god = 0;
+    int max_wrath = 0;
     for (int i = 0; i < MAX_GODS; i++) {
-        if (city_data.religion.gods[i].wrath_bolts > maxWrath) {
-            maxGod = i + 1;
-            maxWrath = city_data.religion.gods[i].wrath_bolts;
+        if (city_data.religion.gods[i].wrath_bolts > max_wrath) {
+            max_god = i + 1;
+            max_wrath = city_data.religion.gods[i].wrath_bolts;
         }
     }
-    if (maxGod > 0) {
-        city_data.religion.least_happy_god = maxGod;
+    if (max_god > 0) {
+        city_data.religion.least_happy_god = max_god;
         return 1;
     }
-    int minHappiness = 40;
+    int min_happiness = 40;
     for (int i = 0; i < MAX_GODS; i++) {
-        if (city_data.religion.gods[i].happiness < minHappiness) {
-            maxGod = i + 1;
-            minHappiness = city_data.religion.gods[i].happiness;
+        if (city_data.religion.gods[i].happiness < min_happiness) {
+            max_god = i + 1;
+            min_happiness = city_data.religion.gods[i].happiness;
         }
     }
-    city_data.religion.least_happy_god = maxGod;
-    return maxGod > 0;
+    city_data.religion.least_happy_god = max_god;
+    return max_god > 0;
 }
 
 int city_god_happiness(int god_id)

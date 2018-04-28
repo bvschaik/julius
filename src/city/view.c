@@ -435,8 +435,8 @@ void city_view_foreach_map_tile(map_callback *callback)
             xView = data.camera.x - 4;
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                 if (xView >= 0 && xView < VIEW_X_MAX) {
-                    int gridOffset = view_to_grid_offset_lookup[xView][yView];
-                    callback(xGraphic, yGraphic, gridOffset);
+                    int grid_offset = view_to_grid_offset_lookup[xView][yView];
+                    callback(xGraphic, yGraphic, grid_offset);
                 }
                 xGraphic += 60;
                 xView++;
@@ -466,9 +466,9 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
                 xView = data.camera.x - 4;
                 for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                     if (xView >= 0 && xView < VIEW_X_MAX) {
-                        int gridOffset = view_to_grid_offset_lookup[xView][yView];
-                        if (gridOffset >= 0) {
-                            callback1(xGraphic, yGraphic, gridOffset);
+                        int grid_offset = view_to_grid_offset_lookup[xView][yView];
+                        if (grid_offset >= 0) {
+                            callback1(xGraphic, yGraphic, grid_offset);
                         }
                     }
                     xGraphic += 60;
@@ -485,9 +485,9 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
                 xView = data.camera.x - 4;
                 for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                     if (xView >= 0 && xView < VIEW_X_MAX) {
-                        int gridOffset = view_to_grid_offset_lookup[xView][yView];
-                        if (gridOffset >= 0) {
-                            callback2(xGraphic, yGraphic, gridOffset);
+                        int grid_offset = view_to_grid_offset_lookup[xView][yView];
+                        if (grid_offset >= 0) {
+                            callback2(xGraphic, yGraphic, grid_offset);
                         }
                     }
                     xGraphic += 60;
@@ -504,9 +504,9 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
                 xView = data.camera.x - 4;
                 for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                     if (xView >= 0 && xView < VIEW_X_MAX) {
-                        int gridOffset = view_to_grid_offset_lookup[xView][yView];
-                        if (gridOffset >= 0) {
-                            callback3(xGraphic, yGraphic, gridOffset);
+                        int grid_offset = view_to_grid_offset_lookup[xView][yView];
+                        if (grid_offset >= 0) {
+                            callback3(xGraphic, yGraphic, grid_offset);
                         }
                     }
                     xGraphic += 60;
