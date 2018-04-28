@@ -305,20 +305,18 @@ static void mainLoop()
     mouse_set_inside_window(1);
     
     refresh();
+    int active = 1;
     while (1) {
-        int active = 1;
         /* Process event queue */
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_WINDOWEVENT:
                     switch (event.window.event) {
                         case SDL_WINDOWEVENT_ENTER:
-                            active = 1;
                             mouse_set_inside_window(1);
                             break;
                         case SDL_WINDOWEVENT_LEAVE:
                             mouse_set_inside_window(0);
-                            active = 0;
                             break;
                         case SDL_WINDOWEVENT_SIZE_CHANGED:
                             printf("Window resized to %d x %d\n", event.window.data1, event.window.data2);
@@ -327,6 +325,15 @@ static void mainLoop()
                             break;
                         case SDL_WINDOWEVENT_RESIZED:
                             printf("System resize to %d x %d\n", event.window.data1, event.window.data2);
+                            break;
+
+                        case SDL_WINDOWEVENT_SHOWN:
+                            SDL_Log("Window %d shown", event.window.windowID);
+                            active = 1;
+                            break;
+                        case SDL_WINDOWEVENT_HIDDEN:
+                            SDL_Log("Window %d hidden", event.window.windowID);
+                            active = 0;
                             break;
                     }
                     break;
