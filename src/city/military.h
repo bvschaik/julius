@@ -23,6 +23,9 @@ int city_military_distant_battle_roman_army_is_traveling();
 int city_military_distant_battle_roman_army_is_traveling_forth();
 int city_military_distant_battle_roman_army_is_traveling_back();
 
+int city_military_distant_battle_enemy_months_traveled();
+int city_military_distant_battle_roman_months_traveled();
+
 void city_military_init_distant_battle(int enemy_strength);
 int city_military_has_distant_battle();
 int city_military_months_until_distant_battle();

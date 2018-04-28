@@ -17,8 +17,6 @@
 #include "scenario/invasion.h"
 #include "scenario/property.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 23
 #define X_OFFSET 240
 

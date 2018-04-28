@@ -13,8 +13,6 @@
 #include "map/routing.h"
 #include "scenario/distant_battle.h"
 
-#include "Data/CityInfo.h"
-
 int formation_legion_create_for_fort(building *fort)
 {
     formation_calculate_legion_totals();

@@ -14,8 +14,6 @@
 #include "scenario/invasion.h"
 #include "window/city.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 26
 
 static void button_go_to_legion(int legion_id, int param2);

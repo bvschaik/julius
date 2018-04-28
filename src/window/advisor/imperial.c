@@ -21,8 +21,6 @@
 #include "window/popup_dialog.h"
 #include "window/set_salary.h"
 
-#include "Data/CityInfo.h"
-
 #define ADVISOR_HEIGHT 27
 
 enum {

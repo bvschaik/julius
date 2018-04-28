@@ -26,8 +26,6 @@
 #include "window/popup_dialog.h"
 #include "window/trade_opened.h"
 
-#include "Data/CityInfo.h"
-
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
 
@@ -227,7 +225,7 @@ static void draw_city_info(const empire_object *object)
 static void draw_roman_army_info(const empire_object *object)
 {
     if (city_military_distant_battle_roman_army_is_traveling()) {
-        if (Data_CityInfo.distantBattleRomanMonthsTraveled == object->distant_battle_travel_months) {
+        if (city_military_distant_battle_roman_months_traveled() == object->distant_battle_travel_months) {
             int x_offset = (data.x_min + data.x_max - 240) / 2;
             int y_offset = data.y_max - 88;
             int text_id;
@@ -244,7 +242,7 @@ static void draw_roman_army_info(const empire_object *object)
 static void draw_enemy_army_info(const empire_object *object)
 {
     if (city_military_months_until_distant_battle() > 0) {
-        if (Data_CityInfo.distantBattleEnemyMonthsTraveled == object->distant_battle_travel_months) {
+        if (city_military_distant_battle_enemy_months_traveled() == object->distant_battle_travel_months) {
             lang_text_draw_multiline(47, 14,
                 (data.x_min + data.x_max - 240) / 2,
                 data.y_max - 68,
@@ -323,7 +321,7 @@ static void draw_empire_object(const empire_object *obj)
         if (city_military_months_until_distant_battle() <= 0) {
             return;
         }
-        if (Data_CityInfo.distantBattleEnemyMonthsTraveled != obj->distant_battle_travel_months) {
+        if (city_military_distant_battle_enemy_months_traveled() != obj->distant_battle_travel_months) {
             return;
         }
     }
@@ -331,7 +329,7 @@ static void draw_empire_object(const empire_object *obj)
         if (!city_military_distant_battle_roman_army_is_traveling()) {
             return;
         }
-        if (Data_CityInfo.distantBattleRomanMonthsTraveled != obj->distant_battle_travel_months) {
+        if (city_military_distant_battle_roman_months_traveled() != obj->distant_battle_travel_months) {
             return;
         }
     }

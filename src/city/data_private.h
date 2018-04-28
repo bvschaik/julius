@@ -100,6 +100,8 @@ extern struct city_data_t {
         int8_t months_until_battle;
         int8_t roman_months_to_travel_forth;
         int8_t roman_months_to_travel_back;
+        int8_t enemy_months_traveled;
+        int8_t roman_months_traveled;
     } distant_battle;
     struct {
         int32_t treasury;

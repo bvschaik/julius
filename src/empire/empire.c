@@ -10,8 +10,6 @@
 #include "empire/object.h"
 #include "empire/trade_route.h"
 
-#include "Data/CityInfo.h"
-
 enum {
     EMPIRE_WIDTH = 2000,
     EMPIRE_HEIGHT = 1000

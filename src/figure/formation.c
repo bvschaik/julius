@@ -11,8 +11,6 @@
 #include "map/grid.h"
 #include "sound/effect.h"
 
-#include "Data/CityInfo.h"
-
 #include <string.h>
 
 static formation formations[MAX_FORMATIONS];

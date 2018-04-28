@@ -475,8 +475,8 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, city_data.building.triumphal_arches_available);
     buffer_write_i8(main, city_data.distant_battle.total_count);
     buffer_write_i8(main, city_data.distant_battle.won_count);
-    buffer_write_i8(main, Data_CityInfo.distantBattleEnemyMonthsTraveled);
-    buffer_write_i8(main, Data_CityInfo.distantBattleRomanMonthsTraveled);
+    buffer_write_i8(main, city_data.distant_battle.enemy_months_traveled);
+    buffer_write_i8(main, city_data.distant_battle.roman_months_traveled);
     buffer_write_u8(main, city_data.military.total_legions);
     buffer_write_u8(main, city_data.military.empire_service_legions);
     buffer_write_u8(main, city_data.unused.unknown_458e);
@@ -952,8 +952,8 @@ static void load_main_data(buffer *main)
     city_data.building.triumphal_arches_available = buffer_read_i8(main);
     city_data.distant_battle.total_count = buffer_read_i8(main);
     city_data.distant_battle.won_count = buffer_read_i8(main);
-    Data_CityInfo.distantBattleEnemyMonthsTraveled = buffer_read_i8(main);
-    Data_CityInfo.distantBattleRomanMonthsTraveled = buffer_read_i8(main);
+    city_data.distant_battle.enemy_months_traveled = buffer_read_i8(main);
+    city_data.distant_battle.roman_months_traveled = buffer_read_i8(main);
     city_data.military.total_legions = buffer_read_u8(main);
     city_data.military.empire_service_legions = buffer_read_u8(main);
     city_data.unused.unknown_458e = buffer_read_u8(main);
