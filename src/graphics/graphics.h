@@ -14,15 +14,15 @@ typedef enum {
 } clip_code;
 
 typedef struct {
-    clip_code clipX;
-    clip_code clipY;
-    int clippedPixelsLeft;
-    int clippedPixelsRight;
-    int clippedPixelsTop;
-    int clippedPixelsBottom;
-    int visiblePixelsX;
-    int visiblePixelsY;
-    int isVisible;
+    clip_code clip_x;
+    clip_code clip_y;
+    int clipped_pixels_left;
+    int clipped_pixels_right;
+    int clipped_pixels_top;
+    int clipped_pixels_bottom;
+    int visible_pixels_x;
+    int visible_pixels_y;
+    int is_visible;
 } clip_info;
 
 void graphics_init_canvas(int width, int height);

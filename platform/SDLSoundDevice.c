@@ -22,7 +22,7 @@ static struct {
 	unsigned char *data;
 	int cur;
 	int len;
-} customMusic;
+} custom_music;
 
 
 static int percentage_to_volume(int percentage)
@@ -54,14 +54,14 @@ void sound_device_close()
 	}
 }
 
-void sound_device_init_channels(int numChannels, const char filenames[][CHANNEL_FILENAME_MAX])
+void sound_device_init_channels(int num_channels, const char filenames[][CHANNEL_FILENAME_MAX])
 {
 	if (initialized) {
-		if (numChannels > MAX_CHANNELS) {
-			numChannels = MAX_CHANNELS;
+		if (num_channels > MAX_CHANNELS) {
+			num_channels = MAX_CHANNELS;
 		}
-		Mix_AllocateChannels(numChannels);
-		for (int i = 0; i < numChannels; i++) {
+		Mix_AllocateChannels(num_channels);
+		for (int i = 0; i < num_channels; i++) {
 			if (filenames[i][0]) {
 				channels[i] = Mix_LoadWAV(filenames[i]);
 			}
@@ -79,22 +79,22 @@ int sound_device_is_channel_playing(int channel)
 	return Mix_Playing(channel);
 }
 
-void sound_device_set_music_volume(int volumePercentage)
+void sound_device_set_music_volume(int volume_percentage)
 {
-	Mix_VolumeMusic(percentage_to_volume(volumePercentage));
+	Mix_VolumeMusic(percentage_to_volume(volume_percentage));
 }
 
-void sound_device_set_channel_volume(int channel, int volumePercentage)
+void sound_device_set_channel_volume(int channel, int volume_percentage)
 {
 	if (channels[channel]) {
-		Mix_VolumeChunk(channels[channel], percentage_to_volume(volumePercentage));
+		Mix_VolumeChunk(channels[channel], percentage_to_volume(volume_percentage));
 	}
 }
 
-void sound_device_set_channel_panning(int channel, int leftPct, int rightPct)
+void sound_device_set_channel_panning(int channel, int left_pct, int right_pct)
 {
 	if (channels[channel]) {
-		Mix_SetPanning(channel, leftPct * 255 / 100, rightPct * 255 / 100);
+		Mix_SetPanning(channel, left_pct * 255 / 100, right_pct * 255 / 100);
 	}
 }
 
@@ -160,45 +160,45 @@ void sound_device_stop_channel(int channel)
 
 static int next_audio_frame()
 {
-	if (customMusic.data) {
-		free(customMusic.data);
-		customMusic.data = 0;
+	if (custom_music.data) {
+		free(custom_music.data);
+		custom_music.data = 0;
 	}
 	
-	int audioLen;
-	const unsigned char *data = customMusic.callback(&audioLen);
-	if (!data || audioLen <= 0) {
+	int audio_len;
+	const unsigned char *data = custom_music.callback(&audio_len);
+	if (!data || audio_len <= 0) {
 		return 0;
 	}
 	
-	if (audioLen > 0) {
+	if (audio_len > 0) {
 		// convert audio to SDL format
-		customMusic.cvt.buf = (Uint8*) malloc(audioLen * customMusic.cvt.len_mult);
-		customMusic.cvt.len = audioLen;
-		memcpy(customMusic.cvt.buf, data, audioLen);
-		SDL_ConvertAudio(&customMusic.cvt);
-		customMusic.cur = 0;
-		customMusic.len = customMusic.cvt.len_cvt;
-		customMusic.data = customMusic.cvt.buf;
-		customMusic.cvt.buf = 0;
-		customMusic.cvt.len = 0;
+		custom_music.cvt.buf = (Uint8*) malloc(audio_len * custom_music.cvt.len_mult);
+		custom_music.cvt.len = audio_len;
+		memcpy(custom_music.cvt.buf, data, audio_len);
+		SDL_ConvertAudio(&custom_music.cvt);
+		custom_music.cur = 0;
+		custom_music.len = custom_music.cvt.len_cvt;
+		custom_music.data = custom_music.cvt.buf;
+		custom_music.cvt.buf = 0;
+		custom_music.cvt.len = 0;
 	}
-	return audioLen;
+	return audio_len;
 }
 
 static int copy_audio_from_buffer(Uint8 *stream, int len)
 {
-	if (!customMusic.data || customMusic.cur >= customMusic.len) {
+	if (!custom_music.data || custom_music.cur >= custom_music.len) {
 		return 0;
 	}
 	// push existing bytes
-	int toWrite = customMusic.len - customMusic.cur;
-	if (toWrite > len) {
-		toWrite = len;
+	int to_write = custom_music.len - custom_music.cur;
+	if (to_write > len) {
+		to_write = len;
 	}
-	memcpy(stream, &customMusic.data[customMusic.cur], toWrite);
-	customMusic.cur += toWrite;
-	return toWrite;
+	memcpy(stream, &custom_music.data[custom_music.cur], to_write);
+	custom_music.cur += to_write;
+	return to_write;
 }
 
 static void custom_music_callback(void *dummy, Uint8 *stream, int len)
@@ -222,20 +222,20 @@ static void custom_music_callback(void *dummy, Uint8 *stream, int len)
 	}
 }
 
-void sound_device_use_custom_music_player(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *outLen))
+void sound_device_use_custom_music_player(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *out_len))
 {
-	SDL_BuildAudioCVT(&customMusic.cvt, bitdepth, channels, rate, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE);
-	customMusic.callback = callback;
+	SDL_BuildAudioCVT(&custom_music.cvt, bitdepth, channels, rate, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE);
+	custom_music.callback = callback;
 	Mix_HookMusic(custom_music_callback, 0);
 }
 
 void sound_device_use_default_music_player()
 {
-	if (customMusic.data) {
-		free(customMusic.data);
-		customMusic.data = 0;
-		customMusic.len = 0;
-		customMusic.cur = 0;
+	if (custom_music.data) {
+		free(custom_music.data);
+		custom_music.data = 0;
+		custom_music.len = 0;
+		custom_music.cur = 0;
 	}
 	Mix_HookMusic(0, 0);
 }

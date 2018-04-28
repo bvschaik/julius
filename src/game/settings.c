@@ -74,19 +74,19 @@ static void load_settings(buffer *buf)
     buffer_skip(buf, 6);
     data.game_speed = buffer_read_i32(buf);
     data.scroll_speed = buffer_read_i32(buf);
-    buffer_skip(buf, 32); //uint8_t playerName[32];
+    buffer_skip(buf, 32); //uint8_t player_name[32];
     buffer_skip(buf, 16);
     data.last_advisor = buffer_read_i32(buf);
-    buffer_skip(buf, 4); //int saveGameMissionId;
+    buffer_skip(buf, 4); //int save_game_mission_id;
     data.tooltips = buffer_read_i32(buf);
-    buffer_skip(buf, 4); //int startingFavor;
-    buffer_skip(buf, 4); //int personalSavingsLastMission;
-    buffer_skip(buf, 4); //int currentMissionId;
-    buffer_skip(buf, 4); //int isCustomScenario;
+    buffer_skip(buf, 4); //int starting_favor;
+    buffer_skip(buf, 4); //int personal_savings_last_mission;
+    buffer_skip(buf, 4); //int current_mission_id;
+    buffer_skip(buf, 4); //int is_custom_scenario;
     data.sound_city.enabled = buffer_read_u8(buf);
     data.warnings = buffer_read_u8(buf);
     data.monthly_autosave = buffer_read_u8(buf);
-    buffer_skip(buf, 1); //unsigned char autoclearEnabled;
+    buffer_skip(buf, 1); //unsigned char autoclear_enabled;
     data.sound_effects.volume = buffer_read_i32(buf);
     data.sound_music.volume = buffer_read_i32(buf);
     data.sound_speech.volume = buffer_read_i32(buf);
@@ -94,7 +94,7 @@ static void load_settings(buffer *buf)
     buffer_skip(buf, 8); // ram
     data.window_width = buffer_read_i32(buf);
     data.window_height = buffer_read_i32(buf);
-    buffer_skip(buf, 8); //int maxConfirmedResolution;
+    buffer_skip(buf, 8); //int max_confirmed_resolution;
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
         data.personal_savings[i] = buffer_read_i32(buf);
     }
@@ -138,19 +138,19 @@ void settings_save()
     buffer_skip(buf, 6);
     buffer_write_i32(buf, data.game_speed);
     buffer_write_i32(buf, data.scroll_speed);
-    buffer_skip(buf, 32); //uint8_t playerName[32];
+    buffer_skip(buf, 32); //uint8_t player_name[32];
     buffer_skip(buf, 16);
     buffer_write_i32(buf, data.last_advisor);
-    buffer_skip(buf, 4); //int saveGameMissionId;
+    buffer_skip(buf, 4); //int save_game_mission_id;
     buffer_write_i32(buf, data.tooltips);
-    buffer_skip(buf, 4); //int startingFavor;
-    buffer_skip(buf, 4); //int personalSavingsLastMission;
-    buffer_skip(buf, 4); //int currentMissionId;
-    buffer_skip(buf, 4); //int isCustomScenario;
+    buffer_skip(buf, 4); //int starting_favor;
+    buffer_skip(buf, 4); //int personal_savings_last_mission;
+    buffer_skip(buf, 4); //int current_mission_id;
+    buffer_skip(buf, 4); //int is_custom_scenario;
     buffer_write_u8(buf, data.sound_city.enabled);
     buffer_write_u8(buf, data.warnings);
     buffer_write_u8(buf, data.monthly_autosave);
-    buffer_skip(buf, 1); //unsigned char autoclearEnabled;
+    buffer_skip(buf, 1); //unsigned char autoclear_enabled;
     buffer_write_i32(buf, data.sound_effects.volume);
     buffer_write_i32(buf, data.sound_music.volume);
     buffer_write_i32(buf, data.sound_speech.volume);
@@ -158,7 +158,7 @@ void settings_save()
     buffer_skip(buf, 8); // ram
     buffer_write_i32(buf, data.window_width);
     buffer_write_i32(buf, data.window_height);
-    buffer_skip(buf, 8); //int maxConfirmedResolution;
+    buffer_skip(buf, 8); //int max_confirmed_resolution;
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
         buffer_write_i32(buf, data.personal_savings[i]);
     }
