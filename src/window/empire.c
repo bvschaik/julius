@@ -1,6 +1,7 @@
 #include "empire.h"
 
 #include "building/menu.h"
+#include "city/military.h"
 #include "city/warning.h"
 #include "empire/city.h"
 #include "empire/empire.h"
@@ -203,7 +204,7 @@ static void draw_city_info(const empire_object *object)
             lang_text_draw_centered(47, 12, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
             break;
         case EMPIRE_CITY_VULNERABLE_ROMAN:
-            if (Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0) {
+            if (city_military_distant_battle_city_is_roman()) {
                 lang_text_draw_centered(47, 12, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
             } else {
                 lang_text_draw_centered(47, 13, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);

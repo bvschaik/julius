@@ -75,6 +75,17 @@ int city_military_distant_battle_city()
     return Data_CityInfo.distantBattleCityId;
 }
 
+int city_military_distant_battle_city_is_roman()
+{
+    return Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0;
+}
+
+void city_military_dispatch_to_distant_battle(int roman_strength)
+{
+    Data_CityInfo.distantBattleRomanMonthsToTravel = scenario_distant_battle_roman_travel_months();
+    Data_CityInfo.distantBattleRomanStrength = roman_strength;
+}
+
 int city_military_has_distant_battle()
 {
     return Data_CityInfo.distantBattleMonthsToBattle > 0 ||
