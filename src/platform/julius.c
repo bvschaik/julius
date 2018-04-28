@@ -219,7 +219,7 @@ static void createSurface(int width, int height, int fullscreen)
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         width, height);
     if (SDL.texture) {
-        printf("Texture created\n");// with scanline %d\n", surface->pitch);
+        printf("Texture created (%d x %d)\n", width, height);// with scanline %d\n", surface->pitch);
         /*printf("  flags: %d %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n",
         surface->flags,
         surface->flags & SDL_SWSURFACE ? "SDL_SWSURFACE" : "",
@@ -261,7 +261,7 @@ static void set_fullscreen()
     SDL_DisplayMode mode;
     SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(SDL.window), &mode);
     printf("User to fullscreen %d x %d\n", mode.w, mode.h);
-    SDL_SetWindowSize(SDL.window, mode.w, mode.h);
+    SDL_SetWindowSize(SDL.window, mode.w, mode.h); // required for MacOS to ease entering fullscreen
     SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN);
     SDL_SetWindowDisplayMode(SDL.window, &mode);
     setting_set_display(1, mode.w, mode.h);
@@ -280,8 +280,10 @@ static void set_windowed()
 
 static void set_window_size(int width, int height)
 {
+    if (setting_fullscreen()) {
+        SDL_SetWindowFullscreen(SDL.window, 0);
+    }
     SDL_SetWindowSize(SDL.window, width, height);
-    SDL_SetWindowFullscreen(SDL.window, 0);
     printf("User resize to %d x %d\n", width, height);
     setting_set_display(0, width, height);
 }
