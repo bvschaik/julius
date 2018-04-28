@@ -395,7 +395,7 @@ extern struct city_data_t {
         int32_t unused_44ec;
         int32_t unused_44f8;
         int32_t unused_4524[11];
-        int8_t unknown_458e;
+        uint8_t unknown_458e;
         int8_t unused_45a5[6];
         int8_t unknown_464c[232];
         int32_t unknown_order;

@@ -1,0 +1,5 @@
+#ifndef CITY_MILITARY_H
+#define CITY_MILITARY_H
+
+
+#endif // CITY_MILITARY_H
