@@ -5,6 +5,10 @@
 
 void platform_handle_key_down(SDL_KeyboardEvent *event)
 {
+    if (event->repeat > 0) {
+        // ignore multiple presses in SDL >= 2.0.5
+        return;
+    }
     switch (event->keysym.sym) {
         case SDLK_RETURN:
         case SDLK_KP_ENTER:
