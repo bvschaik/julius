@@ -370,10 +370,10 @@ static void draw_animation(int x, int y, int grid_offset)
     } else if (building_get(map_building_at(grid_offset))->type == BUILDING_GATEHOUSE) {
         int xy = map_property_multi_tile_xy(grid_offset);
         int orientation = city_view_orientation();
-        if ((orientation == DIR_0_TOP && xy == Edge_X1Y1) ||
-            (orientation == DIR_2_RIGHT && xy == Edge_X0Y1) ||
-            (orientation == DIR_4_BOTTOM && xy == Edge_X0Y0) ||
-            (orientation == DIR_6_LEFT && xy == Edge_X1Y0)) {
+        if ((orientation == DIR_0_TOP && xy == EDGE_X1Y1) ||
+            (orientation == DIR_2_RIGHT && xy == EDGE_X0Y1) ||
+            (orientation == DIR_4_BOTTOM && xy == EDGE_X0Y0) ||
+            (orientation == DIR_6_LEFT && xy == EDGE_X1Y0)) {
             building *gate = building_get(map_building_at(grid_offset));
             int image_id = image_group(GROUP_BULIDING_GATEHOUSE);
             if (gate->subtype.orientation == 1) {

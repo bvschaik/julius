@@ -97,16 +97,16 @@ static int is_drawable_farmhouse(int grid_offset, int map_orientation)
         return 0;
     }
     int xy = map_property_multi_tile_xy(grid_offset);
-    if (map_orientation == DIR_0_TOP && xy == Edge_X0Y1) {
+    if (map_orientation == DIR_0_TOP && xy == EDGE_X0Y1) {
         return 1;
     }
-    if (map_orientation == DIR_2_RIGHT && xy == Edge_X0Y0) {
+    if (map_orientation == DIR_2_RIGHT && xy == EDGE_X0Y0) {
         return 1;
     }
-    if (map_orientation == DIR_4_BOTTOM && xy == Edge_X1Y0) {
+    if (map_orientation == DIR_4_BOTTOM && xy == EDGE_X1Y0) {
         return 1;
     }
-    if (map_orientation == DIR_2_RIGHT && xy == Edge_X1Y1) {
+    if (map_orientation == DIR_2_RIGHT && xy == EDGE_X1Y1) {
         return 1;
     }
     return 0;
@@ -120,16 +120,16 @@ static int is_drawable_farm_corner(int grid_offset)
 
     int map_orientation = city_view_orientation();
     int xy = map_property_multi_tile_xy(grid_offset);
-    if (map_orientation == DIR_0_TOP && xy == Edge_X0Y2) {
+    if (map_orientation == DIR_0_TOP && xy == EDGE_X0Y2) {
         return 1;
     }
-    if (map_orientation == DIR_2_RIGHT && xy == Edge_X0Y0) {
+    if (map_orientation == DIR_2_RIGHT && xy == EDGE_X0Y0) {
         return 1;
     }
-    if (map_orientation == DIR_4_BOTTOM && xy == Edge_X2Y0) {
+    if (map_orientation == DIR_4_BOTTOM && xy == EDGE_X2Y0) {
         return 1;
     }
-    if (map_orientation == DIR_2_RIGHT && xy == Edge_X2Y2) {
+    if (map_orientation == DIR_2_RIGHT && xy == EDGE_X2Y2) {
         return 1;
     }
     return 0;

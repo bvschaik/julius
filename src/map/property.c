@@ -3,31 +3,29 @@
 #include "map/grid.h"
 
 enum {
-    Bitfield_Size1 = 0x00,
-    Bitfield_Size2 = 0x01,
-    Bitfield_Size3 = 0x02,
-    Bitfield_Size4 = 0x04,
-    Bitfield_Size5 = 0x08,
-    Bitfield_Sizes = 0x0f,
-    Bitfield_NoSizes = 0xf0,
-    Bitfield_Construction = 0x10,
-    Bitfield_NoConstruction = 0xef,
-    Bitfield_AlternateTerrain = 0x20,
-    Bitfield_Deleted = 0x40,
-    Bitfield_NoDeleted = 0xbf,
-    Bitfield_PlazaOrEarthquake = 0x80,
-    Bitfield_NoPlaza = 0x7f,
-    Bitfield_NoConstructionAndDeleted = 0xaf,
-    Edge_MaskX = 0x7,
-    Edge_MaskY = 0x38,
-    Edge_MaskXY = 0x3f,
-    Edge_LeftmostTile = 0x40,
-    Edge_NoLeftmostTile = 0xbf,
-    Edge_NativeLand = 0x80,
-    Edge_NoNativeLand = 0x7f,
+    BIT_SIZE1 = 0x00,
+    BIT_SIZE2 = 0x01,
+    BIT_SIZE3 = 0x02,
+    BIT_SIZE4 = 0x04,
+    BIT_SIZE5 = 0x08,
+    BIT_SIZES = 0x0f,
+    BIT_NO_SIZES = 0xf0,
+    BIT_CONSTRUCTION = 0x10,
+    BIT_NO_CONSTRUCTION = 0xef,
+    BIT_ALTERNATE_TERRAIN = 0x20,
+    BIT_DELETED = 0x40,
+    BIT_NO_DELETED = 0xbf,
+    BIT_PLAZA_OR_EARTHQUAKE = 0x80,
+    BIT_NO_PLAZA = 0x7f,
+    BIT_NO_CONSTRUCTION_AND_DELETED = 0xaf,
+    EDGE_MASK_X = 0x7,
+    EDGE_MASK_Y = 0x38,
+    EDGE_MASK_XY = 0x3f,
+    EDGE_LEFTMOST_TILE = 0x40,
+    EDGE_NO_LEFTMOST_TILE = 0xbf,
+    EDGE_NATIVE_LAND = 0x80,
+    EDGE_NO_NATIVE_LAND = 0x7f,
 };
-
-#define EdgeXY(x,y) (8 * (y) + (x))
 
 static grid_u8 edge_grid;
 static grid_u8 bitfields_grid;
@@ -35,151 +33,156 @@ static grid_u8 bitfields_grid;
 static grid_u8 edge_backup;
 static grid_u8 bitfields_backup;
 
+static int edge_for(int x, int y)
+{
+    return 8 * y + x;
+}
+
 int map_property_is_draw_tile(int grid_offset)
 {
-    return edge_grid.items[grid_offset] & Edge_LeftmostTile;
+    return edge_grid.items[grid_offset] & EDGE_LEFTMOST_TILE;
 }
 
 void map_property_mark_draw_tile(int grid_offset)
 {
-    edge_grid.items[grid_offset] |= Edge_LeftmostTile;
+    edge_grid.items[grid_offset] |= EDGE_LEFTMOST_TILE;
 }
 
 void map_property_clear_draw_tile(int grid_offset)
 {
-    edge_grid.items[grid_offset] &= ~Edge_LeftmostTile;
+    edge_grid.items[grid_offset] &= ~EDGE_LEFTMOST_TILE;
 }
 
 int map_property_is_native_land(int grid_offset)
 {
-    return edge_grid.items[grid_offset] & Edge_NativeLand;
+    return edge_grid.items[grid_offset] & EDGE_NATIVE_LAND;
 }
 
 void map_property_mark_native_land(int grid_offset)
 {
-    edge_grid.items[grid_offset] |= Edge_NativeLand;
+    edge_grid.items[grid_offset] |= EDGE_NATIVE_LAND;
 }
 
 void map_property_clear_all_native_land()
 {
-    map_grid_and_u8(edge_grid.items, Edge_NoNativeLand);
+    map_grid_and_u8(edge_grid.items, EDGE_NO_NATIVE_LAND);
 }
 
 int map_property_multi_tile_xy(int grid_offset)
 {
-    return edge_grid.items[grid_offset] & Edge_MaskXY;
+    return edge_grid.items[grid_offset] & EDGE_MASK_XY;
 }
 
 int map_property_multi_tile_x(int grid_offset)
 {
-    return edge_grid.items[grid_offset] & Edge_MaskX;
+    return edge_grid.items[grid_offset] & EDGE_MASK_X;
 }
 
 int map_property_multi_tile_y(int grid_offset)
 {
-    return edge_grid.items[grid_offset] & Edge_MaskY;
+    return edge_grid.items[grid_offset] & EDGE_MASK_Y;
 }
 
 int map_property_is_multi_tile_xy(int grid_offset, int x, int y)
 {
-    return (edge_grid.items[grid_offset] & Edge_MaskXY) == EdgeXY(x, y);
+    return (edge_grid.items[grid_offset] & EDGE_MASK_XY) == edge_for(x, y);
 }
 
 void map_property_set_multi_tile_xy(int grid_offset, int x, int y, int is_draw_tile)
 {
     if (is_draw_tile) {
-        edge_grid.items[grid_offset] = EdgeXY(x, y) | Edge_LeftmostTile;
+        edge_grid.items[grid_offset] = edge_for(x, y) | EDGE_LEFTMOST_TILE;
     } else {
-        edge_grid.items[grid_offset] = EdgeXY(x, y);
+        edge_grid.items[grid_offset] = edge_for(x, y);
     }
 }
 
 void map_property_clear_multi_tile_xy(int grid_offset)
 {
     // only keep native land marker
-    edge_grid.items[grid_offset] &= Edge_NativeLand;
+    edge_grid.items[grid_offset] &= EDGE_NATIVE_LAND;
 }
 
 int map_property_multi_tile_size(int grid_offset)
 {
-    switch (bitfields_grid.items[grid_offset] & Bitfield_Sizes) {
-        case Bitfield_Size2: return 2;
-        case Bitfield_Size3: return 3;
-        case Bitfield_Size4: return 4;
-        case Bitfield_Size5: return 5;
+    switch (bitfields_grid.items[grid_offset] & BIT_SIZES) {
+        case BIT_SIZE2: return 2;
+        case BIT_SIZE3: return 3;
+        case BIT_SIZE4: return 4;
+        case BIT_SIZE5: return 5;
         default: return 1;
     }
 }
 
 void map_property_set_multi_tile_size(int grid_offset, int size)
 {
-    bitfields_grid.items[grid_offset] &= Bitfield_NoSizes;
+    bitfields_grid.items[grid_offset] &= BIT_NO_SIZES;
     switch (size) {
-        case 2: bitfields_grid.items[grid_offset] |= Bitfield_Size2; break;
-        case 3: bitfields_grid.items[grid_offset] |= Bitfield_Size3; break;
-        case 4: bitfields_grid.items[grid_offset] |= Bitfield_Size4; break;
-        case 5: bitfields_grid.items[grid_offset] |= Bitfield_Size5; break;
+        case 2: bitfields_grid.items[grid_offset] |= BIT_SIZE2; break;
+        case 3: bitfields_grid.items[grid_offset] |= BIT_SIZE3; break;
+        case 4: bitfields_grid.items[grid_offset] |= BIT_SIZE4; break;
+        case 5: bitfields_grid.items[grid_offset] |= BIT_SIZE5; break;
     }
 }
 
 int map_property_is_alternate_terrain(int grid_offset)
 {
-    return bitfields_grid.items[grid_offset] & Bitfield_AlternateTerrain;
+    return bitfields_grid.items[grid_offset] & BIT_ALTERNATE_TERRAIN;
 }
 
 void map_property_set_alternate_terrain(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] |= Bitfield_AlternateTerrain;
+    bitfields_grid.items[grid_offset] |= BIT_ALTERNATE_TERRAIN;
 }
 
 int map_property_is_plaza_or_earthquake(int grid_offset)
 {
-    return bitfields_grid.items[grid_offset] & Bitfield_PlazaOrEarthquake;
+    return bitfields_grid.items[grid_offset] & BIT_PLAZA_OR_EARTHQUAKE;
 }
 
 void map_property_mark_plaza_or_earthquake(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] |= Bitfield_PlazaOrEarthquake;
+    bitfields_grid.items[grid_offset] |= BIT_PLAZA_OR_EARTHQUAKE;
 }
 
 void map_property_clear_plaza_or_earthquake(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] &= Bitfield_NoPlaza;
+    bitfields_grid.items[grid_offset] &= BIT_NO_PLAZA;
 }
 
 int map_property_is_constructing(int grid_offset)
 {
-    return bitfields_grid.items[grid_offset] & Bitfield_Construction;
+    return bitfields_grid.items[grid_offset] & BIT_CONSTRUCTION;
 }
 
 void map_property_mark_constructing(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] |= Bitfield_Construction;
+    bitfields_grid.items[grid_offset] |= BIT_CONSTRUCTION;
 }
 
 void map_property_clear_constructing(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] &= Bitfield_NoConstruction;
+    bitfields_grid.items[grid_offset] &= BIT_NO_CONSTRUCTION;
 }
 
 int map_property_is_deleted(int grid_offset)
 {
-    return bitfields_grid.items[grid_offset] & Bitfield_Deleted;
+    return bitfields_grid.items[grid_offset] & BIT_DELETED;
 }
 
 void map_property_mark_deleted(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] |= Bitfield_Deleted;
+    bitfields_grid.items[grid_offset] |= BIT_DELETED;
 }
 
 void map_property_clear_deleted(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] &= Bitfield_NoDeleted;
+    bitfields_grid.items[grid_offset] &= BIT_NO_DELETED;
 }
 
 void map_property_clear_constructing_and_deleted()
 {
-    map_grid_and_u8(bitfields_grid.items, Bitfield_NoConstructionAndDeleted);
+    map_grid_and_u8(bitfields_grid.items, BIT_NO_CONSTRUCTION_AND_DELETED);
 }
 
 void map_property_clear()

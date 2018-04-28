@@ -110,7 +110,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
             if (b->id && b->type == BUILDING_RESERVOIR) {
                 // check if aqueduct connects to reservoir --> doesn't connect to corner
                 int xy = map_property_multi_tile_xy(new_offset);
-                if (xy != Edge_X0Y0 && xy != Edge_X2Y0 && xy != Edge_X0Y2 && xy != Edge_X2Y2) {
+                if (xy != EDGE_X0Y0 && xy != EDGE_X2Y0 && xy != EDGE_X0Y2 && xy != EDGE_X2Y2) {
                     if (!b->hasWaterAccess) {
                         b->hasWaterAccess = 2;
                     }

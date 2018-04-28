@@ -43,17 +43,17 @@ static int get_land_type_citizen_building(int grid_offset)
         case BUILDING_TRIUMPHAL_ARCH:
             if (b->subtype.orientation == 3) {
                 switch (map_property_multi_tile_xy(grid_offset)) {
-                    case Edge_X0Y1:
-                    case Edge_X1Y1:
-                    case Edge_X2Y1:
+                    case EDGE_X0Y1:
+                    case EDGE_X1Y1:
+                    case EDGE_X2Y1:
                         type = CITIZEN_0_ROAD;
                         break;
                 }
             } else {
                 switch (map_property_multi_tile_xy(grid_offset)) {
-                    case Edge_X1Y0:
-                    case Edge_X1Y1:
-                    case Edge_X1Y2:
+                    case EDGE_X1Y0:
+                    case EDGE_X1Y1:
+                    case EDGE_X1Y2:
                         type = CITIZEN_0_ROAD;
                         break;
                 }
@@ -61,21 +61,21 @@ static int get_land_type_citizen_building(int grid_offset)
             break;
         case BUILDING_GRANARY:
             switch (map_property_multi_tile_xy(grid_offset)) {
-                case Edge_X1Y0:
-                case Edge_X0Y1:
-                case Edge_X1Y1:
-                case Edge_X2Y1:
-                case Edge_X1Y2:
+                case EDGE_X1Y0:
+                case EDGE_X0Y1:
+                case EDGE_X1Y1:
+                case EDGE_X2Y1:
+                case EDGE_X1Y2:
                     type = CITIZEN_0_ROAD;
                     break;
             }
             break;
         case BUILDING_RESERVOIR:
             switch (map_property_multi_tile_xy(grid_offset)) {
-                case Edge_X1Y0:
-                case Edge_X0Y1:
-                case Edge_X2Y1:
-                case Edge_X1Y2:
+                case EDGE_X1Y0:
+                case EDGE_X0Y1:
+                case EDGE_X2Y1:
+                case EDGE_X1Y2:
                     type = CITIZEN_N4_RESERVOIR_CONNECTOR; // aqueduct connect points
                     break;
             }
@@ -158,11 +158,11 @@ static int get_land_type_noncitizen(int grid_offset)
             break;
         case BUILDING_GRANARY:
             switch (map_property_multi_tile_xy(grid_offset)) {
-                case Edge_X1Y0:
-                case Edge_X0Y1:
-                case Edge_X1Y1:
-                case Edge_X2Y1:
-                case Edge_X1Y2:
+                case EDGE_X1Y0:
+                case EDGE_X0Y1:
+                case EDGE_X1Y1:
+                case EDGE_X2Y1:
+                case EDGE_X1Y2:
                     type = NONCITIZEN_0_PASSABLE;
                     break;
             }

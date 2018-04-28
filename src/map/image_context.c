@@ -446,10 +446,10 @@ const terrain_image *map_image_context_get_aqueduct(int grid_offset, int include
             }
         }
     }
-    set_terrain_reservoir(grid_offset, 0, Edge_X1Y2, tiles);
-    set_terrain_reservoir(grid_offset, 2, Edge_X0Y1, tiles);
-    set_terrain_reservoir(grid_offset, 4, Edge_X1Y0, tiles);
-    set_terrain_reservoir(grid_offset, 6, Edge_X2Y1, tiles);
+    set_terrain_reservoir(grid_offset, 0, EDGE_X1Y2, tiles);
+    set_terrain_reservoir(grid_offset, 2, EDGE_X0Y1, tiles);
+    set_terrain_reservoir(grid_offset, 4, EDGE_X1Y0, tiles);
+    set_terrain_reservoir(grid_offset, 6, EDGE_X2Y1, tiles);
     if (include_construction) {
         for (int i = 0; i < MAX_TILES; i += 2) {
             if (map_property_is_constructing(grid_offset + contextTileOffsets[i])) {
