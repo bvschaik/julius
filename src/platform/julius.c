@@ -261,11 +261,14 @@ static void set_fullscreen()
     SDL_DisplayMode mode;
     SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(SDL.window), &mode);
     printf("User to fullscreen %d x %d\n", mode.w, mode.h);
-    SDL_SetWindowSize(SDL.window, mode.w, mode.h); // required for MacOS to ease entering fullscreen
-    SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN);
+    if (0 != SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN_DESKTOP)) {
+        SDL_Log("Unable to enter fullscreen: %s\n", SDL_GetError());
+        return;
+    }
     SDL_SetWindowDisplayMode(SDL.window, &mode);
     setting_set_display(1, mode.w, mode.h);
 }
+
 
 static void set_windowed()
 {
@@ -284,6 +287,7 @@ static void set_window_size(int width, int height)
         SDL_SetWindowFullscreen(SDL.window, 0);
     }
     SDL_SetWindowSize(SDL.window, width, height);
+    SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
     printf("User resize to %d x %d\n", width, height);
     setting_set_display(0, width, height);
 }
