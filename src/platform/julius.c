@@ -30,11 +30,6 @@
 #endif
 
 static struct {
-    int width;
-    int height;
-} Desktop;
-
-static struct {
     int x;
     int y;
 } window_pos;
@@ -178,7 +173,7 @@ static void refresh()
     last = now;
 }
 
-static void createWindowAndRenderer(int fullscreen)
+static void createWindowAndRenderer(int width, int height, int fullscreen)
 {
     printf("Fullscreen? %d\n", fullscreen);
     if (SDL.window) {
@@ -191,18 +186,13 @@ static void createWindowAndRenderer(int fullscreen)
     }
     
     const char *title = (const char*)lang_get_string(9, 0);
+    Uint32 flags = SDL_WINDOW_RESIZABLE;
     if (fullscreen) {
-        SDL.window = SDL_CreateWindow(title,
-            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-            Desktop.width, Desktop.height,
-            SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN);
-    } else {
-        int width, height;
-        setting_window(&width, &height);
-        SDL.window = SDL_CreateWindow(title,
-            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-            width, height, SDL_WINDOW_RESIZABLE);
+        flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
+    SDL.window = SDL_CreateWindow(title,
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        width, height, flags);
     
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
 }
@@ -258,6 +248,8 @@ static void createSurface(int width, int height, int fullscreen)
 static void set_fullscreen()
 {
     SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
+    int orig_w, orig_h;
+    SDL_GetWindowSize(SDL.window, &orig_w, &orig_h);
     SDL_DisplayMode mode;
     SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(SDL.window), &mode);
     printf("User to fullscreen %d x %d\n", mode.w, mode.h);
@@ -413,13 +405,6 @@ static void initSdl()
     }
     
     printf("SDL initialized.\n");
-    
-    SDL_DisplayMode mode;
-    SDL_GetDesktopDisplayMode(0, &mode);
-    
-    printf("Current resolution: %d x %d\n", mode.w, mode.h);
-    Desktop.width = mode.w;
-    Desktop.height = mode.h;
 }
 
 int main(int argc, char **argv)
@@ -446,14 +431,18 @@ int main(int argc, char **argv)
         }
     }
 
-    createWindowAndRenderer(setting_fullscreen());
-    if (setting_fullscreen()) {
-        createSurface(Desktop.width, Desktop.height, 1);
+    int width, height;
+    int fullscreen = setting_fullscreen();
+    if (fullscreen) {
+        SDL_DisplayMode mode;
+        SDL_GetDesktopDisplayMode(0, &mode);
+        width = mode.w;
+        height = mode.h;
     } else {
-        int width, height;
         setting_window(&width, &height);
-        createSurface(width, height, 0);
     }
+    createWindowAndRenderer(width, height, fullscreen);
+    createSurface(width, height, fullscreen);
 
     if (!game_init()) {
         return 2;
