@@ -3,10 +3,16 @@
 #include "input/hotkey.h"
 #include "input/keyboard.h"
 
+static int is_arrow_key(SDL_Keycode code)
+{
+    return code == SDLK_UP || code == SDLK_DOWN || code == SDLK_LEFT || code == SDLK_RIGHT;
+}
+
 void platform_handle_key_down(SDL_KeyboardEvent *event)
 {
-    if (event->repeat > 0) {
-        // ignore multiple presses in SDL >= 2.0.5
+    SDL_Log("Key down %d repeat %d\n", event->keysym.sym, event->repeat);
+    if (event->repeat && !is_arrow_key(event->keysym.sym)) {
+        // ignore multiple presses in SDL >= 2.0.5 for keys other than arrows
         return;
     }
     switch (event->keysym.sym) {
