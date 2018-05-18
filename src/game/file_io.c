@@ -526,13 +526,32 @@ int game_file_io_read_scenario(const char *filename)
     return 1;
 }
 
+static int read_int32(FILE *fp)
+{
+    uint8_t data[4];
+    if (fread(&data, 1, 4, fp) != 4) {
+        return 0;
+    }
+    buffer buf;
+    buffer_init(&buf, data, 4);
+    return buffer_read_i32(&buf);
+}
+
+static void write_int32(FILE *fp, int value)
+{
+    uint8_t data[4];
+    buffer buf;
+    buffer_init(&buf, data, 4);
+    buffer_write_i32(&buf, value);
+    fwrite(&data, 1, 4, fp);
+}
+
 static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
 {
     if (bytes_to_read > COMPRESS_BUFFER_SIZE) {
         return 0;
     }
-    int input_size = bytes_to_read;
-    fread(&input_size, 4, 1, fp);
+    int input_size = read_int32(fp);
     if ((unsigned int) input_size == UNCOMPRESSED) {
         fread(buffer, 1, bytes_to_read, fp);
     } else {
@@ -551,12 +570,11 @@ static int write_compressed_chunk(FILE *fp, const void *buffer, int bytes_to_wri
     }
     int output_size = COMPRESS_BUFFER_SIZE;
     if (zip_compress(buffer, bytes_to_write, compress_buffer, &output_size)) {
-        fwrite(&output_size, 4, 1, fp);
+        write_int32(fp, output_size);
         fwrite(compress_buffer, 1, output_size, fp);
     } else {
         // unable to compress: write uncompressed
-        output_size = UNCOMPRESSED;
-        fwrite(&output_size, 4, 1, fp);
+        write_int32(fp, UNCOMPRESSED);
         fwrite(buffer, 1, bytes_to_write, fp);
     }
     return 1;
