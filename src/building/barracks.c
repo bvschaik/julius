@@ -26,8 +26,8 @@ int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_d
         return 0;
     }
     building *b = building_get(city_buildings_get_barracks());
-    if (b->loadsStored < 5 && city_military_has_legionary_legions()) {
-        if (map_has_road_access(b->x, b->y, b->size, x_dst, y_dst) && b->roadNetworkId == road_network_id) {
+    if (b->loads_stored < 5 && city_military_has_legionary_legions()) {
+        if (map_has_road_access(b->x, b->y, b->size, x_dst, y_dst) && b->road_network_id == road_network_id) {
             return b->id;
         }
     }
@@ -37,7 +37,7 @@ int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_d
 void building_barracks_add_weapon(building *barracks)
 {
     if (barracks->id > 0) {
-        barracks->loadsStored++;
+        barracks->loads_stored++;
     }
 }
 
@@ -54,7 +54,7 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
         if (m->in_distant_battle || m->legion_recruit_type == LEGION_RECRUIT_NONE) {
             continue;
         }
-        if (m->legion_recruit_type == LEGION_RECRUIT_LEGIONARY && barracks->loadsStored <= 0) {
+        if (m->legion_recruit_type == LEGION_RECRUIT_LEGIONARY && barracks->loads_stored <= 0) {
             continue;
         }
         building *fort = building_get(m->building_id);
@@ -76,7 +76,7 @@ static int get_closest_military_academy(const building *fort)
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MILITARY_ACADEMY &&
-            b->numWorkers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
+            b->num_workers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
             int dist = calc_maximum_distance(fort->x, fort->y, b->x, b->y);
             if (dist < min_distance) {
                 min_distance = dist;
@@ -93,11 +93,11 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
     if (formation_id > 0) {
         const formation *m = formation_get(formation_id);
         figure *f = figure_create(m->figure_type, x, y, DIR_0_TOP);
-        f->formationId = formation_id;
+        f->formation_id = formation_id;
         f->formationAtRest = 1;
         if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-            if (barracks->loadsStored > 0) {
-                barracks->loadsStored--;
+            if (barracks->loads_stored > 0) {
+                barracks->loads_stored--;
             }
         }
         int academy_id = get_closest_military_academy(building_get(m->building_id));
@@ -128,8 +128,8 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
     building *tower = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_TOWER && b->numWorkers > 0 &&
-            !b->figureId && b->roadNetworkId == barracks->roadNetworkId) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_TOWER && b->num_workers > 0 &&
+            !b->figure_id && b->road_network_id == barracks->road_network_id) {
             tower = b;
             break;
         }
@@ -146,7 +146,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
     } else {
         f->state = FIGURE_STATE_DEAD;
     }
-    tower->figureId = f->id;
+    tower->figure_id = f->id;
     f->buildingId = tower->id;
     return 1;
 }

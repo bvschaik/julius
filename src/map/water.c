@@ -225,7 +225,7 @@ int map_water_get_wharf_for_new_fishing_boat(figure *boat, int *x_tile, int *y_t
 
 int map_water_find_alternative_fishing_boat_tile(figure *boat, int *x_tile, int *y_tile)
 {
-    if (map_figure_at(boat->gridOffset) == boat->id) {
+    if (map_figure_at(boat->grid_offset) == boat->id) {
         return 0;
     }
     for (int radius = 1; radius <= 5; radius++) {
@@ -248,7 +248,7 @@ int map_water_find_alternative_fishing_boat_tile(figure *boat, int *x_tile, int 
 
 int map_water_find_shipwreck_tile(figure *wreck, int *x_tile, int *y_tile)
 {
-    if (map_terrain_is(wreck->gridOffset, TERRAIN_WATER) && map_figure_at(wreck->gridOffset) == wreck->id) {
+    if (map_terrain_is(wreck->grid_offset, TERRAIN_WATER) && map_figure_at(wreck->grid_offset) == wreck->id) {
         return 0;
     }
     for (int radius = 1; radius <= 5; radius++) {

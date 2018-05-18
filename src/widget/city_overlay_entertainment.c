@@ -82,27 +82,27 @@ static int show_figure_hippodrome(const figure *f)
 
 static int get_column_height_entertainment(const building *b)
 {
-    return b->houseSize && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
 }
 
 static int get_column_height_theater(const building *b)
 {
-    return b->houseSize && b->data.house.theater ? b->data.house.theater / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.theater ? b->data.house.theater / 10 : NO_COLUMN;
 }
 
 static int get_column_height_amphitheater(const building *b)
 {
-    return b->houseSize && b->data.house.amphitheaterActor ? b->data.house.amphitheaterActor / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.amphitheater_actor ? b->data.house.amphitheater_actor / 10 : NO_COLUMN;
 }
 
 static int get_column_height_colosseum(const building *b)
 {
-    return b->houseSize && b->data.house.colosseumGladiator ? b->data.house.colosseumGladiator / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.colosseum_gladiator ? b->data.house.colosseum_gladiator / 10 : NO_COLUMN;
 }
 
 static int get_column_height_hippodrome(const building *b)
 {
-    return b->houseSize && b->data.house.hippodrome ? b->data.house.hippodrome / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.hippodrome ? b->data.house.hippodrome / 10 : NO_COLUMN;
 }
 
 
@@ -148,11 +148,11 @@ static int get_tooltip_theater(tooltip_context *c, const building *b)
 
 static int get_tooltip_amphitheater(tooltip_context *c, const building *b)
 {
-    if (b->data.house.amphitheaterActor <= 0) {
+    if (b->data.house.amphitheater_actor <= 0) {
         return 79;
-    } else if (b->data.house.amphitheaterActor >= 80) {
+    } else if (b->data.house.amphitheater_actor >= 80) {
         return 80;
-    } else if (b->data.house.amphitheaterActor >= 20) {
+    } else if (b->data.house.amphitheater_actor >= 20) {
         return 81;
     } else {
         return 82;
@@ -161,11 +161,11 @@ static int get_tooltip_amphitheater(tooltip_context *c, const building *b)
 
 static int get_tooltip_colosseum(tooltip_context *c, const building *b)
 {
-    if (b->data.house.colosseumGladiator <= 0) {
+    if (b->data.house.colosseum_gladiator <= 0) {
         return 83;
-    } else if (b->data.house.colosseumGladiator >= 80) {
+    } else if (b->data.house.colosseum_gladiator >= 80) {
         return 84;
-    } else if (b->data.house.colosseumGladiator >= 20) {
+    } else if (b->data.house.colosseum_gladiator >= 20) {
         return 85;
     } else {
         return 86;

@@ -477,7 +477,7 @@ void formation_calculate_figures()
         if (f->type == FIGURE_ENEMY54_GLADIATOR) {
             continue;
         }
-        int index = formation_add_figure(f->formationId, i,
+        int index = formation_add_figure(f->formation_id, i,
             f->formationAtRest != 1, f->damage,
             figure_properties_for_type(f->type)->max_damage
         );

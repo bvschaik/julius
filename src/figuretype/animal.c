@@ -91,7 +91,7 @@ static void create_herd(int x, int y)
             random_generate_next();
             figure *f = figure_create(herd_type, x, y, DIR_0_TOP);
             f->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
-            f->formationId = formation_id;
+            f->formation_id = formation_id;
             f->waitTicks = f->id & 0x1f;
         }
     }
@@ -127,7 +127,7 @@ void figure_seagulls_action(figure *f)
 
 void figure_sheep_action(figure *f)
 {
-    const formation *m = formation_get(f->formationId);
+    const formation *m = formation_get(f->formation_id);
     f->terrainUsage = TERRAIN_USAGE_ANIMAL;
     f->useCrossCountry = 0;
     f->isGhost = 0;
@@ -180,7 +180,7 @@ void figure_sheep_action(figure *f)
 
 void figure_wolf_action(figure *f)
 {
-    const formation *m = formation_get(f->formationId);
+    const formation *m = formation_get(f->formation_id);
     f->terrainUsage = TERRAIN_USAGE_ANIMAL;
     f->useCrossCountry = 0;
     f->isGhost = 0;
@@ -224,7 +224,7 @@ void figure_wolf_action(figure *f)
                     f->destinationY = target->y;
                     f->targetFigureId = target_id;
                     target->targetedByFigureId = f->id;
-                    f->targetFigureCreatedSequence = target->createdSequence;
+                    f->targetFigureCreatedSequence = target->created_sequence;
                     figure_route_remove(f);
                 } else {
                     f->direction = f->previousTileDirection;
@@ -255,7 +255,7 @@ void figure_wolf_action(figure *f)
 
 void figure_zebra_action(figure *f)
 {
-    const formation *m = formation_get(f->formationId);
+    const formation *m = formation_get(f->formation_id);
     f->terrainUsage = TERRAIN_USAGE_ANIMAL;
     f->useCrossCountry = 0;
     f->isGhost = 0;
@@ -320,7 +320,7 @@ static void set_horse_destination(figure *f, int state)
         f->y = f->destinationY;
         f->crossCountryX = 15 * f->x;
         f->crossCountryY = 15 * f->y;
-        f->gridOffset = map_grid_offset(f->x, f->y);
+        f->grid_offset = map_grid_offset(f->x, f->y);
         map_figure_add(f);
     } else if (state == HORSE_RACING) {
         if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {

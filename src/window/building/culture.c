@@ -14,7 +14,7 @@ static void draw_culture_info(building_info_context *c, int help_id, const char 
 
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (building_get(c->building_id)->numWorkers <= 0) {
+    } else if (building_get(c->building_id)->num_workers <= 0) {
         window_building_draw_description(c, group_id, 2);
     } else {
         window_building_draw_description(c, group_id, 3);
@@ -41,11 +41,11 @@ void window_building_draw_bathhouse(building_info_context *c)
     lang_text_draw_centered(83, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
-    if (!b->hasWaterAccess) {
+    if (!b->has_water_access) {
         window_building_draw_description(c, 83, 4);
     } else if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->numWorkers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 83, 2);
     } else {
         window_building_draw_description(c, 83, 3);
@@ -136,7 +136,7 @@ void window_building_draw_theater(building_info_context *c)
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->numWorkers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 72, 4);
     } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, 72, 2);
@@ -166,7 +166,7 @@ void window_building_draw_amphitheater(building_info_context *c)
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->numWorkers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 71, 6);
     } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, 71, 2);
@@ -207,7 +207,7 @@ void window_building_draw_colosseum(building_info_context *c)
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->numWorkers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 74, 6);
     } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, 74, 2);
@@ -246,7 +246,7 @@ void window_building_draw_hippodrome(building_info_context *c)
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->numWorkers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 73, 4);
     } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, 73, 2);
@@ -274,7 +274,7 @@ static void draw_entertainment_school(building_info_context *c, const char *soun
     lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (building_get(c->building_id)->numWorkers <= 0) {
+    } else if (building_get(c->building_id)->num_workers <= 0) {
         window_building_draw_description(c, group_id, 7);
     } else if (c->worker_percentage >= 100) {
         window_building_draw_description(c, group_id, 2);

@@ -56,7 +56,7 @@ void building_count_update()
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->houseSize) {
+        if (b->state != BUILDING_STATE_IN_USE || b->house_size) {
             continue;
         }
         int is_entertainment_venue = 0;
@@ -69,23 +69,23 @@ void building_count_update()
             case BUILDING_COLOSSEUM:
             case BUILDING_HIPPODROME:
                 is_entertainment_venue = 1;
-                increase_count(type, b->numWorkers > 0);
+                increase_count(type, b->num_workers > 0);
                 break;
 
             case BUILDING_BARRACKS:
                 city_buildings_set_barracks(i);
-                increase_count(type, b->numWorkers > 0);
+                increase_count(type, b->num_workers > 0);
                 break;
 
             case BUILDING_HOSPITAL:
-                increase_count(type, b->numWorkers > 0);
-                city_health_add_hospital_workers(b->numWorkers);
+                increase_count(type, b->num_workers > 0);
+                city_health_add_hospital_workers(b->num_workers);
                 break;
             
             // water
             case BUILDING_RESERVOIR:
             case BUILDING_FOUNTAIN:
-                increase_count(type, b->hasWaterAccess);
+                increase_count(type, b->has_water_access);
                 break;
 
             // DEFAULT TREATMENT
@@ -123,74 +123,74 @@ void building_count_update()
             case BUILDING_LARGE_TEMPLE_MARS:
             case BUILDING_LARGE_TEMPLE_VENUS:
             case BUILDING_ORACLE:
-                increase_count(type, b->numWorkers > 0);
+                increase_count(type, b->num_workers > 0);
                 break;
 
             // industry
             case BUILDING_WHEAT_FARM:
-                increase_industry_count(RESOURCE_WHEAT, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_WHEAT, b->num_workers > 0);
                 break;
             case BUILDING_VEGETABLE_FARM:
-                increase_industry_count(RESOURCE_VEGETABLES, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_VEGETABLES, b->num_workers > 0);
                 break;
             case BUILDING_FRUIT_FARM:
-                increase_industry_count(RESOURCE_FRUIT, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_FRUIT, b->num_workers > 0);
                 break;
             case BUILDING_OLIVE_FARM:
-                increase_industry_count(RESOURCE_OLIVES, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_OLIVES, b->num_workers > 0);
                 break;
             case BUILDING_VINES_FARM:
-                increase_industry_count(RESOURCE_VINES, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_VINES, b->num_workers > 0);
                 break;
             case BUILDING_PIG_FARM:
-                increase_industry_count(RESOURCE_MEAT, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_MEAT, b->num_workers > 0);
                 break;
             case BUILDING_MARBLE_QUARRY:
-                increase_industry_count(RESOURCE_MARBLE, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_MARBLE, b->num_workers > 0);
                 break;
             case BUILDING_IRON_MINE:
-                increase_industry_count(RESOURCE_IRON, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_IRON, b->num_workers > 0);
                 break;
             case BUILDING_TIMBER_YARD:
-                increase_industry_count(RESOURCE_TIMBER, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_TIMBER, b->num_workers > 0);
                 break;
             case BUILDING_CLAY_PIT:
-                increase_industry_count(RESOURCE_CLAY, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_CLAY, b->num_workers > 0);
                 break;
             case BUILDING_WINE_WORKSHOP:
-                increase_industry_count(RESOURCE_WINE, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_WINE, b->num_workers > 0);
                 break;
             case BUILDING_OIL_WORKSHOP:
-                increase_industry_count(RESOURCE_OIL, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_OIL, b->num_workers > 0);
                 break;
             case BUILDING_WEAPONS_WORKSHOP:
-                increase_industry_count(RESOURCE_WEAPONS, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_WEAPONS, b->num_workers > 0);
                 break;
             case BUILDING_FURNITURE_WORKSHOP:
-                increase_industry_count(RESOURCE_FURNITURE, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_FURNITURE, b->num_workers > 0);
                 break;
             case BUILDING_POTTERY_WORKSHOP:
-                increase_industry_count(RESOURCE_POTTERY, b->numWorkers > 0);
+                increase_industry_count(RESOURCE_POTTERY, b->num_workers > 0);
                 break;
 
             // water-side
             case BUILDING_WHARF:
-                if (b->numWorkers > 0) {
+                if (b->num_workers > 0) {
                     city_buildings_add_working_wharf(!b->data.industry.fishing_boat_id);
                 }
                 break;
             case BUILDING_DOCK:
-                if (b->numWorkers > 0 && b->hasWaterAccess) {
+                if (b->num_workers > 0 && b->has_water_access) {
                     city_buildings_add_working_dock(i);
                 }
                 break;
             default:
                 continue;
         }
-        if (b->immigrantFigureId) {
-            figure *f = figure_get(b->immigrantFigureId);
+        if (b->immigrant_figure_id) {
+            figure *f = figure_get(b->immigrant_figure_id);
             if (f->state != FIGURE_STATE_ALIVE || f->destinationBuildingId != i) {
-                b->immigrantFigureId = 0;
+                b->immigrant_figure_id = 0;
             }
         }
         if (is_entertainment_venue) {

@@ -168,10 +168,10 @@ void city_culture_calculate()
     int num_houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
             num_houses++;
             city_data.culture.average_entertainment += b->data.house.entertainment;
-            city_data.culture.average_religion += b->data.house.numGods;
+            city_data.culture.average_religion += b->data.house.num_gods;
             city_data.culture.average_education += b->data.house.education;
             city_data.culture.average_health += b->data.house.health;
         }

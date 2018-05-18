@@ -21,16 +21,16 @@
 static void destroy_on_fire(building *b, int plagued)
 {
     game_undo_disable();
-    b->fireRisk = 0;
-    b->damageRisk = 0;
-    if (b->houseSize && b->housePopulation) {
-        city_population_remove_home_removed(b->housePopulation);
+    b->fire_risk = 0;
+    b->damage_risk = 0;
+    if (b->house_size && b->house_population) {
+        city_population_remove_home_removed(b->house_population);
     }
-    int was_tent = b->houseSize && b->subtype.houseLevel <= HOUSE_LARGE_TENT;
-    b->housePopulation = 0;
-    b->houseSize = 0;
-    b->outputResourceId = 0;
-    b->distanceFromEntry = 0;
+    int was_tent = b->house_size && b->subtype.house_level <= HOUSE_LARGE_TENT;
+    b->house_population = 0;
+    b->house_size = 0;
+    b->output_resource_id = 0;
+    b->distance_from_entry = 0;
     building_clear_related_data(b);
 
     int waterside_building = 0;
@@ -44,22 +44,22 @@ static void destroy_on_fire(building *b, int plagued)
         num_tiles = 0;
     }
     map_building_tiles_remove(b->id, b->x, b->y);
-    if (map_terrain_is(b->gridOffset, TERRAIN_WATER)) {
+    if (map_terrain_is(b->grid_offset, TERRAIN_WATER)) {
         b->state = BUILDING_STATE_DELETED_BY_GAME;
     } else {
         b->type = BUILDING_BURNING_RUIN;
-        b->figureId4 = 0;
-        b->taxIncomeOrStorage = 0;
-        b->fireDuration = (b->houseGenerationDelay & 7) + 1;
-        b->fireProof = 1;
+        b->figure_id4 = 0;
+        b->tax_income_or_storage = 0;
+        b->fire_duration = (b->house_figure_generation_delay & 7) + 1;
+        b->fire_proof = 1;
         b->size = 1;
-        b->ruinHasPlague = plagued;
+        b->ruin_has_plague = plagued;
         memset(&b->data, 0, 42);
         int image_id;
         if (was_tent) {
             image_id = image_group(GROUP_TERRAIN_RUBBLE_TENT);
         } else {
-            int random = map_random_get(b->gridOffset) & 3;
+            int random = map_random_get(b->grid_offset) & 3;
             image_id = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         }
         map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
@@ -77,14 +77,14 @@ static void destroy_on_fire(building *b, int plagued)
         if (was_tent) {
             image_id = image_group(GROUP_TERRAIN_RUBBLE_TENT);
         } else {
-            int random = map_random_get(ruin->gridOffset) & 3;
+            int random = map_random_get(ruin->grid_offset) & 3;
             image_id = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         }
         map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, image_id, TERRAIN_BUILDING);
-        ruin->fireDuration = (ruin->houseGenerationDelay & 7) + 1;
-        ruin->figureId4 = 0;
-        ruin->fireProof = 1;
-        ruin->ruinHasPlague = plagued;
+        ruin->fire_duration = (ruin->house_figure_generation_delay & 7) + 1;
+        ruin->figure_id4 = 0;
+        ruin->fire_proof = 1;
+        ruin->ruin_has_plague = plagued;
     }
     if (waterside_building) {
         map_routing_update_water();
@@ -95,10 +95,10 @@ static void destroy_linked_parts(building *b, int on_fire)
 {
     building *part = b;
     for (int i = 0; i < 9; i++) {
-        if (part->prevPartBuildingId <= 0) {
+        if (part->prev_part_building_id <= 0) {
             break;
         }
-        int part_id = part->prevPartBuildingId;
+        int part_id = part->prev_part_building_id;
         part = building_get(part_id);
         if (on_fire) {
             destroy_on_fire(part, 0);
@@ -152,7 +152,7 @@ int building_destroy_first_of_type(building_type type)
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == type) {
-            int grid_offset = b->gridOffset;
+            int grid_offset = b->grid_offset;
             game_undo_disable();
             b->state = BUILDING_STATE_RUBBLE;
             map_building_tiles_set_rubble(i, b->x, b->y, b->size);
@@ -171,14 +171,14 @@ void building_destroy_last_placed()
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_CREATED || b->state == BUILDING_STATE_IN_USE) {
-            if (b->createdSequence > highest_sequence) {
-                highest_sequence = b->createdSequence;
+            if (b->created_sequence > highest_sequence) {
+                highest_sequence = b->created_sequence;
                 last_building = b;
             }
         }
     }
     if (last_building) {
-        city_message_post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, last_building->gridOffset);
+        city_message_post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, last_building->grid_offset);
         game_undo_disable();
         building_destroy_by_collapse(last_building);
         map_routing_update_land();

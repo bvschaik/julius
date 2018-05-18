@@ -46,22 +46,22 @@ static int show_figure_academy(const figure *f)
 
 static int get_column_height_education(const building *b)
 {
-    return b->houseSize && b->data.house.education ? b->data.house.education * 3 - 1 : NO_COLUMN;
+    return b->house_size && b->data.house.education ? b->data.house.education * 3 - 1 : NO_COLUMN;
 }
 
 static int get_column_height_school(const building *b)
 {
-    return b->houseSize && b->data.house.school ? b->data.house.school / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.school ? b->data.house.school / 10 : NO_COLUMN;
 }
 
 static int get_column_height_library(const building *b)
 {
-    return b->houseSize && b->data.house.library ? b->data.house.library / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.library ? b->data.house.library / 10 : NO_COLUMN;
 }
 
 static int get_column_height_academy(const building *b)
 {
-    return b->houseSize && b->data.house.academy ? b->data.house.academy / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.academy ? b->data.house.academy / 10 : NO_COLUMN;
 }
 
 

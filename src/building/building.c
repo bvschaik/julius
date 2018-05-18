@@ -38,17 +38,17 @@ building *building_get(int id)
 building *building_main(building *b)
 {
     for (int guard = 0; guard < 9; guard++) {
-        if (b->prevPartBuildingId <= 0) {
+        if (b->prev_part_building_id <= 0) {
             return b;
         }
-        b = &all_buildings[b->prevPartBuildingId];
+        b = &all_buildings[b->prev_part_building_id];
     }
     return &all_buildings[0];
 }
 
 building *building_next(building *b)
 {
-    return &all_buildings[b->nextPartBuildingId];
+    return &all_buildings[b->next_part_building_id];
 }
 
 building *building_create(building_type type, int x, int y)
@@ -69,86 +69,86 @@ building *building_create(building_type type, int x, int y)
     
     b->state = BUILDING_STATE_CREATED;
     b->faction_id = 1;
-    b->__unknown_02 = city_buildings_unknown_value();
+    b->unknown_value = city_buildings_unknown_value();
     b->type = type;
     b->size = props->size;
-    b->createdSequence = extra.created_sequence++;
-    b->sentiment.houseHappiness = 50;
-    b->distanceFromEntry = 0;
+    b->created_sequence = extra.created_sequence++;
+    b->sentiment.house_happiness = 50;
+    b->distance_from_entry = 0;
     
     // house size
-    b->houseSize = 0;
+    b->house_size = 0;
     if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
-        b->houseSize = 1;
+        b->house_size = 1;
     } else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA) {
-        b->houseSize = 2;
+        b->house_size = 2;
     } else if (type >= BUILDING_HOUSE_LARGE_VILLA && type <= BUILDING_HOUSE_MEDIUM_PALACE) {
-        b->houseSize = 3;
+        b->house_size = 3;
     } else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE) {
-        b->houseSize = 4;
+        b->house_size = 4;
     }
     
     // subtype
     if (building_is_house(type)) {
-        b->subtype.houseLevel = type - 10;
+        b->subtype.house_level = type - 10;
     } else {
-        b->subtype.houseLevel = 0;
+        b->subtype.house_level = 0;
     }
     
     // input/output resources
     switch (type) {
         case BUILDING_WHEAT_FARM:
-            b->outputResourceId = RESOURCE_WHEAT;
+            b->output_resource_id = RESOURCE_WHEAT;
             break;
         case BUILDING_VEGETABLE_FARM:
-            b->outputResourceId = RESOURCE_VEGETABLES;
+            b->output_resource_id = RESOURCE_VEGETABLES;
             break;
         case BUILDING_FRUIT_FARM:
-            b->outputResourceId = RESOURCE_FRUIT;
+            b->output_resource_id = RESOURCE_FRUIT;
             break;
         case BUILDING_OLIVE_FARM:
-            b->outputResourceId = RESOURCE_OLIVES;
+            b->output_resource_id = RESOURCE_OLIVES;
             break;
         case BUILDING_VINES_FARM:
-            b->outputResourceId = RESOURCE_VINES;
+            b->output_resource_id = RESOURCE_VINES;
             break;
         case BUILDING_PIG_FARM:
-            b->outputResourceId = RESOURCE_MEAT;
+            b->output_resource_id = RESOURCE_MEAT;
             break;
         case BUILDING_MARBLE_QUARRY:
-            b->outputResourceId = RESOURCE_MARBLE;
+            b->output_resource_id = RESOURCE_MARBLE;
             break;
         case BUILDING_IRON_MINE:
-            b->outputResourceId = RESOURCE_IRON;
+            b->output_resource_id = RESOURCE_IRON;
             break;
         case BUILDING_TIMBER_YARD:
-            b->outputResourceId = RESOURCE_TIMBER;
+            b->output_resource_id = RESOURCE_TIMBER;
             break;
         case BUILDING_CLAY_PIT:
-            b->outputResourceId = RESOURCE_CLAY;
+            b->output_resource_id = RESOURCE_CLAY;
             break;
         case BUILDING_WINE_WORKSHOP:
-            b->outputResourceId = RESOURCE_WINE;
-            b->subtype.workshopType = WORKSHOP_VINES_TO_WINE;
+            b->output_resource_id = RESOURCE_WINE;
+            b->subtype.workshop_type = WORKSHOP_VINES_TO_WINE;
             break;
         case BUILDING_OIL_WORKSHOP:
-            b->outputResourceId = RESOURCE_OIL;
-            b->subtype.workshopType = WORKSHOP_OLIVES_TO_OIL;
+            b->output_resource_id = RESOURCE_OIL;
+            b->subtype.workshop_type = WORKSHOP_OLIVES_TO_OIL;
             break;
         case BUILDING_WEAPONS_WORKSHOP:
-            b->outputResourceId = RESOURCE_WEAPONS;
-            b->subtype.workshopType = WORKSHOP_IRON_TO_WEAPONS;
+            b->output_resource_id = RESOURCE_WEAPONS;
+            b->subtype.workshop_type = WORKSHOP_IRON_TO_WEAPONS;
             break;
         case BUILDING_FURNITURE_WORKSHOP:
-            b->outputResourceId = RESOURCE_FURNITURE;
-            b->subtype.workshopType = WORKSHOP_TIMBER_TO_FURNITURE;
+            b->output_resource_id = RESOURCE_FURNITURE;
+            b->subtype.workshop_type = WORKSHOP_TIMBER_TO_FURNITURE;
             break;
         case BUILDING_POTTERY_WORKSHOP:
-            b->outputResourceId = RESOURCE_POTTERY;
-            b->subtype.workshopType = WORKSHOP_CLAY_TO_POTTERY;
+            b->output_resource_id = RESOURCE_POTTERY;
+            b->subtype.workshop_type = WORKSHOP_CLAY_TO_POTTERY;
             break;
         default:
-            b->outputResourceId = RESOURCE_NONE;
+            b->output_resource_id = RESOURCE_NONE;
             break;
     }
     
@@ -158,11 +158,11 @@ building *building_create(building_type type, int x, int y)
     
     b->x = x;
     b->y = y;
-    b->gridOffset = map_grid_offset(x, y);
-    b->houseGenerationDelay = map_random_get(b->gridOffset) & 0x7f;
-    b->figureRoamDirection = b->houseGenerationDelay & 6;
-    b->fireProof = props->fire_proof;
-    b->isAdjacentToWater = map_terrain_is_adjacent_to_water(x, y, b->size);
+    b->grid_offset = map_grid_offset(x, y);
+    b->house_figure_generation_delay = map_random_get(b->grid_offset) & 0x7f;
+    b->figure_roam_direction = b->house_figure_generation_delay & 6;
+    b->fire_proof = props->fire_proof;
+    b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
 
     return b;
 }
@@ -209,7 +209,7 @@ void building_update_state()
         if (b->state == BUILDING_STATE_CREATED) {
             b->state = BUILDING_STATE_IN_USE;
         }
-        if (b->state != BUILDING_STATE_IN_USE || !b->houseSize) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
                 if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
                     wall_recalc = 1;
@@ -218,8 +218,8 @@ void building_update_state()
                 land_recalc = 1;
                 building_delete(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
-                if (b->houseSize) {
-                    city_population_remove_home_removed(b->housePopulation);
+                if (b->house_size) {
+                    city_population_remove_home_removed(b->house_population);
                 }
                 building_delete(b);
             } else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
@@ -243,10 +243,10 @@ void building_update_desirability()
             continue;
         }
         b->desirability = map_desirability_get_max(b->x, b->y, b->size);
-        if (b->isAdjacentToWater) {
+        if (b->is_adjacent_to_water) {
             b->desirability += 10;
         }
-        switch (map_elevation_at(b->gridOffset)) {
+        switch (map_elevation_at(b->grid_offset)) {
             case 0: break;
             case 1: b->desirability += 10; break;
             case 2: b->desirability += 12; break;

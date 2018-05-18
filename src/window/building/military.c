@@ -62,9 +62,9 @@ void window_building_draw_tower(building_info_context *c)
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->numWorkers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 91, 2);
-    } else if (b->figureId) {
+    } else if (b->figure_id) {
         window_building_draw_description(c, 91, 3);
     } else {
         window_building_draw_description(c, 91, 4);
@@ -82,21 +82,21 @@ void window_building_draw_barracks(building_info_context *c)
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, c->x_offset + 64, c->y_offset + 38);
 
     building *b = building_get(c->building_id);
-    if (b->loadsStored < 1) {
+    if (b->loads_stored < 1) {
         lang_text_draw_amount(8, 10, 0, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
     } else {
-        lang_text_draw_amount(8, 10, b->loadsStored, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
     }
 
     if (!c->has_road_access) {
         window_building_draw_description_at(c, 70, 69, 25);
-    } else if (b->numWorkers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description_at(c, 70, 136, 3);
     } else if (!c->barracks_soldiers_requested) {
         window_building_draw_description_at(c, 70, 136, 4);
     } else {
         int offset = 0;
-        if (b->loadsStored > 0) {
+        if (b->loads_stored > 0) {
             offset = 4;
         }
         if (c->worker_percentage >= 100) {
@@ -123,7 +123,7 @@ void window_building_draw_military_academy(building_info_context *c)
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->numWorkers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 135, 2);
     } else if (c->worker_percentage >= 100) {
         window_building_draw_description(c, 135, 1);

@@ -207,13 +207,13 @@ static void init(int grid_offset)
     } else {
         building *b = building_get(context.building_id);
         context.type = BUILDING_INFO_BUILDING;
-        context.worker_percentage = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+        context.worker_percentage = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
         switch (b->type) {
             case BUILDING_FORT_GROUND:
-                context.building_id = b->prevPartBuildingId;
+                context.building_id = b->prev_part_building_id;
                 // fallthrough
             case BUILDING_FORT:
-                context.formation_id = b->formationId;
+                context.formation_id = b->formation_id;
                 break;
             case BUILDING_WAREHOUSE_SPACE:
             case BUILDING_HIPPODROME:
@@ -225,7 +225,7 @@ static void init(int grid_offset)
                 context.barracks_soldiers_requested += building_barracks_has_tower_sentry_request();
                 break;
             default:
-                if (b->houseSize) {
+                if (b->house_size) {
                     context.worst_desirability_building_id = building_house_determine_worst_desirability_building(b);
                     building_house_determine_evolve_text(b, context.worst_desirability_building_id);
                 }
@@ -301,7 +301,7 @@ static void init(int grid_offset)
         figure *f = figure_get(figure_id);
         if (f->type == FIGURE_FORT_STANDARD || figure_is_legion(f)) {
             context.type = BUILDING_INFO_LEGION;
-            context.formation_id = f->formationId;
+            context.formation_id = f->formation_id;
             const formation *m = formation_get(context.formation_id);
             if (m->figure_type != FIGURE_FORT_LEGIONARY) {
                 context.formation_types = 5;

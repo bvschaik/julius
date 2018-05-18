@@ -110,7 +110,7 @@ void figure_flotsam_action(figure *f)
             map_point river_entry = scenario_map_river_entry();
             f->x = river_entry.x;
             f->y = river_entry.y;
-            f->gridOffset = map_grid_offset(f->x, f->y);
+            f->grid_offset = map_grid_offset(f->x, f->y);
             f->crossCountryX = 15 * f->x;
             f->crossCountryY = 15 * f->y;
             break;
@@ -150,7 +150,7 @@ void figure_shipwreck_action(figure *f)
         if (map_water_find_shipwreck_tile(f, &x_tile, &y_tile)) {
             f->x = x_tile;
             f->y = y_tile;
-            f->gridOffset = map_grid_offset(f->x, f->y);
+            f->grid_offset = map_grid_offset(f->x, f->y);
             f->crossCountryX = 15 * f->x + 7;
             f->crossCountryY = 15 * f->y + 7;
         }
@@ -198,7 +198,7 @@ void figure_fishing_boat_action(figure *f)
                 int x_tile, y_tile;
                 int wharf_id = map_water_get_wharf_for_new_fishing_boat(f, &x_tile, &y_tile);
                 if (wharf_id) {
-                    b->figureId = 0; // remove from original building
+                    b->figure_id = 0; // remove from original building
                     f->buildingId = wharf_id;
                     building_get(wharf_id)->data.industry.fishing_boat_id = f->id;
                     f->actionState = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
@@ -256,7 +256,7 @@ void figure_fishing_boat_action(figure *f)
             break;
         case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF:
             {
-            int pct_workers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
             int max_wait_ticks = 5 * (102 - pct_workers);
             if (b->data.industry.has_fish > 0) {
                 pct_workers = 0;
@@ -282,7 +282,7 @@ void figure_fishing_boat_action(figure *f)
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
                 f->waitTicks = 0;
-                b->figureSpawnDelay = 1;
+                b->figure_spawn_delay = 1;
                 b->data.industry.has_fish++;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);

@@ -74,7 +74,7 @@ static void advance_tick(figure *f)
 static void set_target_height_bridge(figure *f)
 {
     f->heightAdjustedTicks = 18;
-    f->targetHeight = map_bridge_height(f->gridOffset);
+    f->targetHeight = map_bridge_height(f->grid_offset);
 }
 
 static void move_to_next_tile(figure *f)
@@ -87,47 +87,47 @@ static void move_to_next_tile(figure *f)
             return;
         case DIR_0_TOP:
             f->y--;
-            f->gridOffset -= 162;
+            f->grid_offset -= 162;
             break;
         case DIR_1_TOP_RIGHT:
             f->x++; f->y--;
-            f->gridOffset -= 161;
+            f->grid_offset -= 161;
             break;
         case DIR_2_RIGHT:
             f->x++;
-            f->gridOffset += 1;
+            f->grid_offset += 1;
             break;
         case DIR_3_BOTTOM_RIGHT:
             f->x++; f->y++;
-            f->gridOffset += 163;
+            f->grid_offset += 163;
             break;
         case DIR_4_BOTTOM:
             f->y++;
-            f->gridOffset += 162;
+            f->grid_offset += 162;
             break;
         case DIR_5_BOTTOM_LEFT:
             f->x--; f->y++;
-            f->gridOffset += 161;
+            f->grid_offset += 161;
             break;
         case DIR_6_LEFT:
             f->x--;
-            f->gridOffset -= 1;
+            f->grid_offset -= 1;
             break;
         case DIR_7_TOP_LEFT:
             f->x--; f->y--;
-            f->gridOffset -= 163;
+            f->grid_offset -= 163;
             break;
     }
     map_figure_add(f);
-    if (map_terrain_is(f->gridOffset, TERRAIN_ROAD)) {
+    if (map_terrain_is(f->grid_offset, TERRAIN_ROAD)) {
         f->isOnRoad = 1;
-        if (map_terrain_is(f->gridOffset, TERRAIN_WATER)) { // bridge
+        if (map_terrain_is(f->grid_offset, TERRAIN_WATER)) { // bridge
             set_target_height_bridge(f);
         }
     } else {
         f->isOnRoad = 0;
     }
-    figure_combat_attack_figure_at(f, f->gridOffset);
+    figure_combat_attack_figure_at(f, f->grid_offset);
     f->previousTileX = old_x;
     f->previousTileY = old_y;
 }
@@ -154,7 +154,7 @@ static void advance_route_tile(figure *f, int roaming_enabled)
     if (f->direction >= 8) {
         return;
     }
-    int target_grid_offset = f->gridOffset + map_grid_direction_delta(f->direction);
+    int target_grid_offset = f->grid_offset + map_grid_direction_delta(f->direction);
     if (f->isBoat) {
         if (!map_terrain_is(target_grid_offset, TERRAIN_WATER)) {
             f->direction = DIR_FIGURE_REROUTE;
@@ -252,10 +252,10 @@ void figure_movement_init_roaming(figure *f)
     f->roamChooseDestination = 0;
     f->roamTicksUntilNextTurn = -1;
     f->roamTurnDirection = 2;
-    int roam_dir = b->figureRoamDirection;
-    b->figureRoamDirection += 2;
-    if (b->figureRoamDirection > 6) {
-        b->figureRoamDirection = 0;
+    int roam_dir = b->figure_roam_direction;
+    b->figure_roam_direction += 2;
+    if (b->figure_roam_direction > 6) {
+        b->figure_roam_direction = 0;
     }
     int x = b->x;
     int y = b->y;
@@ -389,8 +389,8 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                 return;
             }
             int road_tiles[8];
-            int adjacent_road_tiles = map_get_adjacent_road_tiles_for_roaming(f->gridOffset, road_tiles);
-            if (adjacent_road_tiles == 3 && map_get_diagonal_road_tiles_for_roaming(f->gridOffset, road_tiles) >= 5) {
+            int adjacent_road_tiles = map_get_adjacent_road_tiles_for_roaming(f->grid_offset, road_tiles);
+            if (adjacent_road_tiles == 3 && map_get_diagonal_road_tiles_for_roaming(f->grid_offset, road_tiles) >= 5) {
                 // go in the straight direction of a double-wide road
                 adjacent_road_tiles = 2;
                 if (came_from_direction == DIR_0_TOP || came_from_direction == DIR_4_BOTTOM) {
@@ -407,7 +407,7 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                     }
                 }
             }
-            if (adjacent_road_tiles == 4 && map_get_diagonal_road_tiles_for_roaming(f->gridOffset, road_tiles) >= 8) {
+            if (adjacent_road_tiles == 4 && map_get_diagonal_road_tiles_for_roaming(f->grid_offset, road_tiles) >= 8) {
                 // go straight on when all surrounding tiles are road
                 adjacent_road_tiles = 2;
                 if (came_from_direction == DIR_0_TOP || came_from_direction == DIR_4_BOTTOM) {
@@ -442,7 +442,7 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                     if (f->direction < 0) f->direction = 6;
                 } while (dir++ < 4);
             } else { // > 2 road tiles
-                f->direction = (f->roamRandomCounter + map_random_get(f->gridOffset)) & 6;
+                f->direction = (f->roamRandomCounter + map_random_get(f->grid_offset)) & 6;
                 if (!road_tiles[f->direction] || f->direction == came_from_direction) {
                     f->roamTicksUntilNextTurn--;
                     if (f->roamTicksUntilNextTurn <= 0) {
@@ -598,8 +598,8 @@ int figure_movement_move_ticks_cross_country(figure *f, int num_ticks)
     }
     f->x = f->crossCountryX / 15;
     f->y = f->crossCountryY / 15;
-    f->gridOffset = map_grid_offset(f->x, f->y);
-    if (map_terrain_is(f->gridOffset, TERRAIN_BUILDING)) {
+    f->grid_offset = map_grid_offset(f->x, f->y);
+    if (map_terrain_is(f->grid_offset, TERRAIN_BUILDING)) {
         f->inBuildingWaitTicks = 8;
     } else if (f->inBuildingWaitTicks) {
         f->inBuildingWaitTicks--;

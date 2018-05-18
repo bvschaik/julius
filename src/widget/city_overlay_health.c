@@ -46,22 +46,22 @@ static int show_figure_hospital(const figure *f)
 
 static int get_column_height_barber(const building *b)
 {
-    return b->houseSize && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
 }
 
 static int get_column_height_bathhouse(const building *b)
 {
-    return b->houseSize && b->data.house.bathhouse ? b->data.house.bathhouse / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.bathhouse ? b->data.house.bathhouse / 10 : NO_COLUMN;
 }
 
 static int get_column_height_clinic(const building *b)
 {
-    return b->houseSize && b->data.house.clinic ? b->data.house.clinic / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.clinic ? b->data.house.clinic / 10 : NO_COLUMN;
 }
 
 static int get_column_height_hospital(const building *b)
 {
-    return b->houseSize && b->data.house.hospital ? b->data.house.hospital / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.hospital ? b->data.house.hospital / 10 : NO_COLUMN;
 }
 
 

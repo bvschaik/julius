@@ -134,7 +134,7 @@ static int is_industry_disabled(building *b) {
     if (b->type < BUILDING_WHEAT_FARM || b->type > BUILDING_POTTERY_WORKSHOP) {
         return 0;
     }
-    int resource = b->outputResourceId;
+    int resource = b->output_resource_id;
     if (city_data.resource.mothballed[resource]) {
         return 1;
     }
@@ -148,7 +148,7 @@ static int should_have_workers(building *b, int category, int check_access)
     }
 
     if (category == LABOR_CATEGORY_ENTERTAINMENT) {
-        if (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId) {
+        if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) {
             return 0;
         }
     } else if (category == LABOR_CATEGORY_FOOD_PRODUCTION || category == LABOR_CATEGORY_INDUSTRY_COMMERCE) {
@@ -161,7 +161,7 @@ static int should_have_workers(building *b, int category, int check_access)
         return 1;
     }
     if (check_access) {
-        return b->housesCovered > 0 ? 1 : 0;
+        return b->houses_covered > 0 ? 1 : 0;
     }
     return 1;
 }
@@ -180,12 +180,12 @@ static void calculate_workers_needed_per_category()
             continue;
         }
         int category = CATEGORY_FOR_BUILDING_TYPE[b->type];
-        b->laborCategory = category;
+        b->labor_category = category;
         if (!should_have_workers(b, category, 1)) {
             continue;
         }
         city_data.labor.categories[category].workers_needed += model_get_building(b->type)->laborers;
-        city_data.labor.categories[category].total_houses_covered += b->housesCovered;
+        city_data.labor.categories[category].total_houses_covered += b->houses_covered;
         city_data.labor.categories[category].buildings++;
     }
 }
@@ -294,12 +294,12 @@ static void set_building_worker_weight()
         }
         int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
         if (cat == LABOR_CATEGORY_WATER) {
-            b->percentageHousesCovered = water_per_10k_per_building;
+            b->percentage_houses_covered = water_per_10k_per_building;
         } else if (cat >= 0) {
-            b->percentageHousesCovered = 0;
-            if (b->housesCovered) {
-                b->percentageHousesCovered =
-                    calc_percentage(100 * b->housesCovered,
+            b->percentage_houses_covered = 0;
+            if (b->houses_covered) {
+                b->percentage_houses_covered =
+                    calc_percentage(100 * b->houses_covered,
                         city_data.labor.categories[cat].total_houses_covered);
             }
         }
@@ -331,19 +331,19 @@ static void allocate_workers_to_water()
         if (b->state != BUILDING_STATE_IN_USE || CATEGORY_FOR_BUILDING_TYPE[b->type] != LABOR_CATEGORY_WATER) {
             continue;
         }
-        b->numWorkers = 0;
-        if (b->percentageHousesCovered > 0) {
+        b->num_workers = 0;
+        if (b->percentage_houses_covered > 0) {
             if (percentage_not_filled > 0) {
                 if (buildings_to_skip) {
                     --buildings_to_skip;
                 } else if (start_building_id) {
-                    b->numWorkers = workers_per_building;
+                    b->num_workers = workers_per_building;
                 } else {
                     start_building_id = building_id;
-                    b->numWorkers = workers_per_building;
+                    b->num_workers = workers_per_building;
                 }
             } else {
-                b->numWorkers = model_get_building(b->type)->laborers;
+                b->num_workers = model_get_building(b->type)->laborers;
             }
         }
     }
@@ -373,23 +373,23 @@ static void allocate_workers_to_non_water_buildings()
             // water is handled by allocate_workers_to_water()
             continue;
         }
-        b->numWorkers = 0;
+        b->num_workers = 0;
         if (!should_have_workers(b, cat, 0)) {
             continue;
         }
-        if (b->percentageHousesCovered > 0) {
+        if (b->percentage_houses_covered > 0) {
             int required_workers = model_get_building(b->type)->laborers;
             if (category_workers_needed[cat]) {
                 int num_workers = calc_adjust_with_percentage(
                     city_data.labor.categories[cat].workers_allocated,
-                    b->percentageHousesCovered) / 100;
+                    b->percentage_houses_covered) / 100;
                 if (num_workers > required_workers) {
                     num_workers = required_workers;
                 }
-                b->numWorkers = num_workers;
+                b->num_workers = num_workers;
                 category_workers_allocated[cat] += num_workers;
             } else {
-                b->numWorkers = required_workers;
+                b->num_workers = required_workers;
             }
         }
     }
@@ -416,15 +416,15 @@ static void allocate_workers_to_non_water_buildings()
         if (!should_have_workers(b, cat, 0)) {
             continue;
         }
-        if (b->percentageHousesCovered > 0 && category_workers_needed[cat]) {
+        if (b->percentage_houses_covered > 0 && category_workers_needed[cat]) {
             int required_workers = model_get_building(b->type)->laborers;
-            if (b->numWorkers < required_workers) {
-                int needed = required_workers - b->numWorkers;
+            if (b->num_workers < required_workers) {
+                int needed = required_workers - b->num_workers;
                 if (needed > category_workers_needed[cat]) {
-                    b->numWorkers += category_workers_needed[cat];
+                    b->num_workers += category_workers_needed[cat];
                     category_workers_needed[cat] = 0;
                 } else {
-                    b->numWorkers += needed;
+                    b->num_workers += needed;
                     category_workers_needed[cat] -= needed;
                 }
             }

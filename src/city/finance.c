@@ -139,14 +139,14 @@ void city_finance_estimate_taxes()
     city_data.taxes.monthly.collected_patricians = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->houseTaxCoverage) {
-            int is_patrician = b->subtype.houseLevel >= HOUSE_SMALL_VILLA;
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_tax_coverage) {
+            int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
             int trm = difficulty_adjust_money(
-                model_get_house(b->subtype.houseLevel)->tax_multiplier);
+                model_get_house(b->subtype.house_level)->tax_multiplier);
             if (is_patrician) {
-                city_data.taxes.monthly.collected_patricians += b->housePopulation * trm;
+                city_data.taxes.monthly.collected_patricians += b->house_population * trm;
             } else {
-                city_data.taxes.monthly.collected_plebs += b->housePopulation * trm;
+                city_data.taxes.monthly.collected_plebs += b->house_population * trm;
             }
         }
     }
@@ -178,18 +178,18 @@ static void collect_monthly_taxes()
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->houseSize) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
             continue;
         }
 
-        int is_patrician = b->subtype.houseLevel >= HOUSE_SMALL_VILLA;
-        int population = b->housePopulation;
+        int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
+        int population = b->house_population;
         int trm = difficulty_adjust_money(
-            model_get_house(b->subtype.houseLevel)->tax_multiplier);
-        city_data.population.at_level[b->subtype.houseLevel] += population;
+            model_get_house(b->subtype.house_level)->tax_multiplier);
+        city_data.population.at_level[b->subtype.house_level] += population;
 
         int tax = population * trm;
-        if (b->houseTaxCoverage) {
+        if (b->house_tax_coverage) {
             if (is_patrician) {
                 city_data.taxes.taxed_patricians += population;
                 city_data.taxes.monthly.collected_patricians += tax;
@@ -197,7 +197,7 @@ static void collect_monthly_taxes()
                 city_data.taxes.taxed_plebs += population;
                 city_data.taxes.monthly.collected_plebs += tax;
             }
-            b->taxIncomeOrStorage += tax;
+            b->tax_income_or_storage += tax;
         } else {
             if (is_patrician) {
                 city_data.taxes.untaxed_patricians += population;
@@ -282,8 +282,8 @@ static void reset_taxes()
     // reset tax income in building list
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
-            b->taxIncomeOrStorage = 0;
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+            b->tax_income_or_storage = 0;
         }
     }
 }

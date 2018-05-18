@@ -17,13 +17,13 @@ int formation_legion_create_for_fort(building *fort)
 {
     formation_calculate_legion_totals();
 
-    formation *m = formation_create_legion(fort->id, fort->x, fort->y, fort->subtype.fortFigureType);
+    formation *m = formation_create_legion(fort->id, fort->x, fort->y, fort->subtype.fort_figure_type);
     if (!m->id) {
         return 0;
     }
     figure *standard = figure_create(FIGURE_FORT_STANDARD, 0, 0, DIR_0_TOP);
     standard->buildingId = fort->id;
-    standard->formationId = m->id;
+    standard->formation_id = m->id;
     m->standard_figure_id = standard->id;
 
     return m->id;
@@ -31,13 +31,13 @@ int formation_legion_create_for_fort(building *fort)
 
 void formation_legion_delete_for_fort(building *fort)
 {
-    if (fort->formationId > 0) {
-        formation *m = formation_get(fort->formationId);
+    if (fort->formation_id > 0) {
+        formation *m = formation_get(fort->formation_id);
         if (m->in_use) {
             if (m->standard_figure_id) {
                 figure_delete(figure_get(m->standard_figure_id));
             }
-            formation_clear(fort->formationId);
+            formation_clear(fort->formation_id);
             formation_calculate_legion_totals();
         }
     }
@@ -56,13 +56,13 @@ int formation_legion_recruits_needed()
 
 void formation_legion_update_recruit_status(building *fort)
 {
-    formation *m = formation_get(fort->formationId);
+    formation *m = formation_get(fort->formation_id);
     m->legion_recruit_type = LEGION_RECRUIT_NONE;
     if (!m->is_at_fort || m->cursed_by_mars || m->num_figures == m->max_figures) {
         return;
     }
     if (m->num_figures < m->max_figures) {
-        int type = fort->subtype.fortFigureType;
+        int type = fort->subtype.fort_figure_type;
         if (type == FIGURE_FORT_LEGIONARY) {
             m->legion_recruit_type = LEGION_RECRUIT_LEGIONARY;
         } else if (type == FIGURE_FORT_JAVELIN) {
@@ -299,7 +299,7 @@ int formation_legion_curse()
 static int is_legion(figure *f)
 {
     if (figure_is_legion(f) || f->type == FIGURE_FORT_STANDARD) {
-        return f->formationId;
+        return f->formation_id;
     }
     return 0;
 }
@@ -315,7 +315,7 @@ int formation_legion_at_building(int grid_offset)
     if (building_id > 0) {
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_IN_USE && (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND)) {
-            return b->formationId;
+            return b->formation_id;
         }
     }
     return 0;

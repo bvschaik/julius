@@ -9,47 +9,47 @@
 
 int building_animation_offset(building *b, int image_id, int grid_offset)
 {
-    if (b->type == BUILDING_FOUNTAIN && (b->numWorkers <= 0 || !b->hasWaterAccess)) {
+    if (b->type == BUILDING_FOUNTAIN && (b->num_workers <= 0 || !b->has_water_access)) {
         return 0;
     }
-    if (b->type == BUILDING_RESERVOIR && !b->hasWaterAccess) {
+    if (b->type == BUILDING_RESERVOIR && !b->has_water_access) {
         return 0;
     }
     if (building_is_workshop(b->type)) {
-        if (b->loadsStored <= 0 || b->numWorkers <= 0) {
+        if (b->loads_stored <= 0 || b->num_workers <= 0) {
             return 0;
         }
     }
-    if ((b->type == BUILDING_PREFECTURE || b->type == BUILDING_ENGINEERS_POST) && b->numWorkers <= 0) {
+    if ((b->type == BUILDING_PREFECTURE || b->type == BUILDING_ENGINEERS_POST) && b->num_workers <= 0) {
         return 0;
     }
-    if (b->type == BUILDING_MARKET && b->numWorkers <= 0) {
+    if (b->type == BUILDING_MARKET && b->num_workers <= 0) {
         return 0;
     }
-    if (b->type == BUILDING_WAREHOUSE && b->numWorkers < model_get_building(b->type)->laborers) {
+    if (b->type == BUILDING_WAREHOUSE && b->num_workers < model_get_building(b->type)->laborers) {
         return 0;
     }
     if (b->type == BUILDING_DOCK && b->data.dock.num_ships <= 0) {
         map_sprite_animation_set(grid_offset, 1);
         return 1;
     }
-    if (b->type == BUILDING_MARBLE_QUARRY && b->numWorkers <= 0) {
+    if (b->type == BUILDING_MARBLE_QUARRY && b->num_workers <= 0) {
         map_sprite_animation_set(grid_offset, 1);
         return 1;
     } else if ((b->type == BUILDING_IRON_MINE || b->type == BUILDING_CLAY_PIT ||
-        b->type == BUILDING_TIMBER_YARD) && b->numWorkers <= 0) {
+        b->type == BUILDING_TIMBER_YARD) && b->num_workers <= 0) {
         return 0;
     }
     if (b->type == BUILDING_GLADIATOR_SCHOOL) {
-        if (b->numWorkers <= 0) {
+        if (b->num_workers <= 0) {
             map_sprite_animation_set(grid_offset, 1);
             return 1;
         }
     } else if (b->type >= BUILDING_THEATER && b->type <= BUILDING_CHARIOT_MAKER &&
-        b->type != BUILDING_HIPPODROME && b->numWorkers <= 0) {
+        b->type != BUILDING_HIPPODROME && b->num_workers <= 0) {
         return 0;
     }
-    if (b->type == BUILDING_GRANARY && b->numWorkers < model_get_building(b->type)->laborers) {
+    if (b->type == BUILDING_GRANARY && b->num_workers < model_get_building(b->type)->laborers) {
         return 0;
     }
 

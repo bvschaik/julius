@@ -16,14 +16,14 @@ void house_service_decay_culture()
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->houseSize) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
             continue;
         }
         decay(&b->data.house.theater);
-        decay(&b->data.house.amphitheaterActor);
-        decay(&b->data.house.amphitheaterGladiator);
-        decay(&b->data.house.colosseumGladiator);
-        decay(&b->data.house.colosseumLion);
+        decay(&b->data.house.amphitheater_actor);
+        decay(&b->data.house.amphitheater_gladiator);
+        decay(&b->data.house.colosseum_gladiator);
+        decay(&b->data.house.colosseum_lion);
         decay(&b->data.house.hippodrome);
         decay(&b->data.house.school);
         decay(&b->data.house.library);
@@ -32,11 +32,11 @@ void house_service_decay_culture()
         decay(&b->data.house.clinic);
         decay(&b->data.house.bathhouse);
         decay(&b->data.house.hospital);
-        decay(&b->data.house.templeCeres);
-        decay(&b->data.house.templeNeptune);
-        decay(&b->data.house.templeMercury);
-        decay(&b->data.house.templeMars);
-        decay(&b->data.house.templeVenus);
+        decay(&b->data.house.temple_ceres);
+        decay(&b->data.house.temple_neptune);
+        decay(&b->data.house.temple_mercury);
+        decay(&b->data.house.temple_mars);
+        decay(&b->data.house.temple_venus);
     }
 }
 
@@ -44,8 +44,8 @@ void house_service_decay_tax_collector()
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->houseTaxCoverage) {
-            b->houseTaxCoverage--;
+        if (b->state == BUILDING_STATE_IN_USE && b->house_tax_coverage) {
+            b->house_tax_coverage--;
         }
     }
 }
@@ -55,10 +55,10 @@ void house_service_decay_houses_covered()
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_UNUSED && b->type != BUILDING_TOWER) {
-            if (b->housesCovered <= 1) {
-                b->housesCovered = 0;
+            if (b->houses_covered <= 1) {
+                b->houses_covered = 0;
             } else {
-                b->housesCovered--;
+                b->houses_covered--;
             }
         }
     }
@@ -69,7 +69,7 @@ void house_service_calculate_culture_aggregates()
     int base_entertainment = city_culture_coverage_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->houseSize) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
             continue;
         }
 
@@ -78,15 +78,15 @@ void house_service_calculate_culture_aggregates()
         if (b->data.house.theater) {
             b->data.house.entertainment += 10;
         }
-        if (b->data.house.amphitheaterActor) {
-            if (b->data.house.amphitheaterGladiator) {
+        if (b->data.house.amphitheater_actor) {
+            if (b->data.house.amphitheater_gladiator) {
                 b->data.house.entertainment += 15;
             } else {
                 b->data.house.entertainment += 10;
             }
         }
-        if (b->data.house.colosseumGladiator) {
-            if (b->data.house.colosseumLion) {
+        if (b->data.house.colosseum_gladiator) {
+            if (b->data.house.colosseum_lion) {
                 b->data.house.entertainment += 25;
             } else {
                 b->data.house.entertainment += 15;
@@ -109,21 +109,21 @@ void house_service_calculate_culture_aggregates()
         }
 
         // religion
-        b->data.house.numGods = 0;
-        if (b->data.house.templeCeres) {
-            ++b->data.house.numGods;
+        b->data.house.num_gods = 0;
+        if (b->data.house.temple_ceres) {
+            ++b->data.house.num_gods;
         }
-        if (b->data.house.templeNeptune) {
-            ++b->data.house.numGods;
+        if (b->data.house.temple_neptune) {
+            ++b->data.house.num_gods;
         }
-        if (b->data.house.templeMercury) {
-            ++b->data.house.numGods;
+        if (b->data.house.temple_mercury) {
+            ++b->data.house.num_gods;
         }
-        if (b->data.house.templeMars) {
-            ++b->data.house.numGods;
+        if (b->data.house.temple_mars) {
+            ++b->data.house.num_gods;
         }
-        if (b->data.house.templeVenus) {
-            ++b->data.house.numGods;
+        if (b->data.house.temple_venus) {
+            ++b->data.house.num_gods;
         }
 
         // health

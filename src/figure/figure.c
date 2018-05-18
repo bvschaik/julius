@@ -40,11 +40,11 @@ figure *figure_create(figure_type type, int x, int y, direction dir)
     f->type = type;
     f->useCrossCountry = 0;
     f->isFriendly = 1;
-    f->createdSequence = data.created_sequence++;
+    f->created_sequence = data.created_sequence++;
     f->direction = dir;
     f->sourceX = f->destinationX = f->previousTileX = f->x = x;
     f->sourceY = f->destinationY = f->previousTileY = f->y = y;
-    f->gridOffset = map_grid_offset(x, y);
+    f->grid_offset = map_grid_offset(x, y);
     f->crossCountryX = 15 * x;
     f->crossCountryY = 15 * y;
     f->progressOnTile = 15;
@@ -64,11 +64,11 @@ void figure_delete(figure *f)
         case FIGURE_LABOR_SEEKER:
         case FIGURE_MARKET_BUYER:
             if (f->buildingId) {
-                b->figureId2 = 0;
+                b->figure_id2 = 0;
             }
             break;
         case FIGURE_BALLISTA:
-            b->figureId4 = 0;
+            b->figure_id4 = 0;
             break;
         case FIGURE_DOCKER:
             for (int i = 0; i < 3; i++) {
@@ -96,7 +96,7 @@ void figure_delete(figure *f)
             break;
         default:
             if (f->buildingId) {
-                b->figureId = 0;
+                b->figure_id = 0;
             }
             break;
     }
@@ -104,7 +104,7 @@ void figure_delete(figure *f)
         empire_city_remove_trader(f->empireCityId, f->id);
     }
     if (f->immigrantBuildingId) {
-        b->immigrantFigureId = 0;
+        b->immigrant_figure_id = 0;
     }
     figure_route_remove(f);
     map_figure_delete(f);
@@ -167,7 +167,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_u8(buf, f->previousTileY);
     buffer_write_u8(buf, f->missileDamage);
     buffer_write_u8(buf, f->damage);
-    buffer_write_i16(buf, f->gridOffset);
+    buffer_write_i16(buf, f->grid_offset);
     buffer_write_u8(buf, f->destinationX);
     buffer_write_u8(buf, f->destinationY);
     buffer_write_i16(buf, f->destinationGridOffsetSoldier);
@@ -202,7 +202,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_i16(buf, f->buildingId);
     buffer_write_i16(buf, f->immigrantBuildingId);
     buffer_write_i16(buf, f->destinationBuildingId);
-    buffer_write_i16(buf, f->formationId);
+    buffer_write_i16(buf, f->formation_id);
     buffer_write_u8(buf, f->indexInFormation);
     buffer_write_u8(buf, f->formationAtRest);
     buffer_write_u8(buf, f->migrantNumPeople);
@@ -233,7 +233,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_u8(buf, f->__unused_6f);
     buffer_write_i16(buf, f->targetFigureId);
     buffer_write_i16(buf, f->targetedByFigureId);
-    buffer_write_u16(buf, f->createdSequence);
+    buffer_write_u16(buf, f->created_sequence);
     buffer_write_u16(buf, f->targetFigureCreatedSequence);
     buffer_write_u8(buf, f->numPreviousFiguresOnSameTile);
     buffer_write_u8(buf, f->numAttackers);
@@ -267,7 +267,7 @@ static void figure_load(buffer *buf, figure *f)
     f->previousTileY = buffer_read_u8(buf);
     f->missileDamage = buffer_read_u8(buf);
     f->damage = buffer_read_u8(buf);
-    f->gridOffset = buffer_read_i16(buf);
+    f->grid_offset = buffer_read_i16(buf);
     f->destinationX = buffer_read_u8(buf);
     f->destinationY = buffer_read_u8(buf);
     f->destinationGridOffsetSoldier = buffer_read_i16(buf);
@@ -302,7 +302,7 @@ static void figure_load(buffer *buf, figure *f)
     f->buildingId = buffer_read_i16(buf);
     f->immigrantBuildingId = buffer_read_i16(buf);
     f->destinationBuildingId = buffer_read_i16(buf);
-    f->formationId = buffer_read_i16(buf);
+    f->formation_id = buffer_read_i16(buf);
     f->indexInFormation = buffer_read_u8(buf);
     f->formationAtRest = buffer_read_u8(buf);
     f->migrantNumPeople = buffer_read_u8(buf);
@@ -333,7 +333,7 @@ static void figure_load(buffer *buf, figure *f)
     f->__unused_6f = buffer_read_u8(buf);
     f->targetFigureId = buffer_read_i16(buf);
     f->targetedByFigureId = buffer_read_i16(buf);
-    f->createdSequence = buffer_read_u16(buf);
+    f->created_sequence = buffer_read_u16(buf);
     f->targetFigureCreatedSequence = buffer_read_u16(buf);
     f->numPreviousFiguresOnSameTile = buffer_read_u8(buf);
     f->numAttackers = buffer_read_u8(buf);

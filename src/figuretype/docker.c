@@ -30,7 +30,7 @@ static int try_import_resource(int building_id, int resource, int city_id)
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
         if (space->id > 0) {
-            if (space->loadsStored && space->loadsStored < 4 && space->subtype.warehouseResourceId == resource) {
+            if (space->loads_stored && space->loads_stored < 4 && space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(route_id, resource);
                 building_warehouse_space_add_import(space, resource);
                 return 1;
@@ -42,7 +42,7 @@ static int try_import_resource(int building_id, int resource, int city_id)
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
         if (space->id > 0) {
-            if (space->subtype.warehouseResourceId == RESOURCE_NONE) {
+            if (space->subtype.warehouse_resource_id == RESOURCE_NONE) {
                 trade_route_increase_traded(route_id, resource);
                 building_warehouse_space_add_import(space, resource);
                 return 1;
@@ -63,7 +63,7 @@ static int try_export_resource(int building_id, int resource, int city_id)
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
         if (space->id > 0) {
-            if (space->loadsStored && space->subtype.warehouseResourceId == resource) {
+            if (space->loads_stored && space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(empire_city_get_route_id(city_id), resource);
                 building_warehouse_space_remove_export(space, resource);
                 return 1;
@@ -95,10 +95,10 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
             continue;
         }
-        if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
+        if (!b->has_road_access || b->distance_from_entry <= 0) {
             continue;
         }
-        if (b->roadNetworkId != road_network_id) {
+        if (b->road_network_id != road_network_id) {
             continue;
         }
         const building_storage *storage = building_storage_get(b->storage_id);
@@ -107,15 +107,15 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
             building *space = b;
             for (int s = 0; s < 8; s++) {
                 space = building_next(space);
-                if (space->id && space->subtype.warehouseResourceId == RESOURCE_NONE) {
+                if (space->id && space->subtype.warehouse_resource_id == RESOURCE_NONE) {
                     distance_penalty -= 8;
                 }
-                if (space->id && space->subtype.warehouseResourceId == resource && space->loadsStored < 4) {
+                if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored < 4) {
                     distance_penalty -= 4;
                 }
             }
             if (distance_penalty < 32) {
-                int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distanceFromEntry);
+                int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
                 // prefer emptier warehouse
                 distance += distance_penalty;
                 if (distance < min_distance) {
@@ -129,7 +129,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
         return 0;
     }
     building *min = building_get(min_building_id);
-    if (min->hasRoadAccess == 1) {
+    if (min->has_road_access == 1) {
         *x_warehouse = min->x;
         *y_warehouse = min->y;
     } else if (!map_has_road_access(min->x, min->y, 3, x_warehouse, y_warehouse)) {
@@ -161,22 +161,22 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
             continue;
         }
-        if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
+        if (!b->has_road_access || b->distance_from_entry <= 0) {
             continue;
         }
-        if (b->roadNetworkId != road_network_id) {
+        if (b->road_network_id != road_network_id) {
             continue;
         }
         int distance_penalty = 32;
         building *space = b;
         for (int s = 0; s < 8; s++) {
             space = building_next(space);
-            if (space->id && space->subtype.warehouseResourceId == resource && space->loadsStored > 0) {
+            if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored > 0) {
                 distance_penalty--;
             }
         }
         if (distance_penalty < 32) {
-            int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distanceFromEntry);
+            int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
             // prefer fuller warehouse
             distance += distance_penalty;
             if (distance < min_distance) {
@@ -189,7 +189,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
         return 0;
     }
     building *min = building_get(min_building_id);
-    if (min->hasRoadAccess == 1) {
+    if (min->has_road_access == 1) {
         *x_warehouse = min->x;
         *y_warehouse = min->y;
     } else if (!map_has_road_access(min->x, min->y, 3, x_warehouse, y_warehouse)) {
@@ -226,7 +226,7 @@ static int deliver_import_resource(figure *f, building *dock)
     get_trade_center_location(f, &x, &y);
     int x_tile, y_tile, resource;
     int warehouse_id = get_closest_warehouse_for_import(x, y, ship->empireCityId,
-                      dock->distanceFromEntry, dock->roadNetworkId, &x_tile, &y_tile, &resource);
+                      dock->distance_from_entry, dock->road_network_id, &x_tile, &y_tile, &resource);
     if (!warehouse_id) {
         return 0;
     }
@@ -254,7 +254,7 @@ static int fetch_export_resource(figure *f, building *dock)
     get_trade_center_location(f, &x, &y);
     int x_tile, y_tile, resource;
     int warehouse_id = get_closest_warehouse_for_export(x, y, ship->empireCityId,
-        dock->distanceFromEntry, dock->roadNetworkId, &x_tile, &y_tile, &resource);
+        dock->distance_from_entry, dock->road_network_id, &x_tile, &y_tile, &resource);
     if (!warehouse_id) {
         return 0;
     }

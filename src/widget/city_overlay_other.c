@@ -74,13 +74,13 @@ static int show_figure_none(const figure *f)
 
 static int get_column_height_religion(const building *b)
 {
-    return b->houseSize && b->data.house.numGods ? b->data.house.numGods * 17 / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.num_gods ? b->data.house.num_gods * 17 / 10 : NO_COLUMN;
 }
 
 static int get_column_height_food_stocks(const building *b)
 {
-    if (b->houseSize && model_get_house(b->subtype.houseLevel)->food_types) {
-        int pop = b->housePopulation;
+    if (b->house_size && model_get_house(b->subtype.house_level)->food_types) {
+        int pop = b->house_population;
         int stocks = 0;
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
             stocks += b->data.house.inventory[i];
@@ -99,8 +99,8 @@ static int get_column_height_food_stocks(const building *b)
 
 static int get_column_height_tax_income(const building *b)
 {
-    if (b->houseSize) {
-        int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, city_finance_tax_percentage());
+    if (b->house_size) {
+        int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
         if (pct > 0) {
             return pct / 25;
         }
@@ -116,17 +116,17 @@ static int get_column_height_none(const building *b)
 
 static int get_tooltip_religion(tooltip_context *c, const building *b)
 {
-    if (b->data.house.numGods <= 0) {
+    if (b->data.house.num_gods <= 0) {
         return 12;
-    } else if (b->data.house.numGods == 1) {
+    } else if (b->data.house.num_gods == 1) {
         return 13;
-    } else if (b->data.house.numGods == 2) {
+    } else if (b->data.house.num_gods == 2) {
         return 14;
-    } else if (b->data.house.numGods == 3) {
+    } else if (b->data.house.num_gods == 3) {
         return 15;
-    } else if (b->data.house.numGods == 4) {
+    } else if (b->data.house.num_gods == 4) {
         return 16;
-    } else if (b->data.house.numGods == 5) {
+    } else if (b->data.house.num_gods == 5) {
         return 17;
     } else {
         return 18; // >5 gods, shouldn't happen...
@@ -135,17 +135,17 @@ static int get_tooltip_religion(tooltip_context *c, const building *b)
 
 static int get_tooltip_food_stocks(tooltip_context *c, const building *b)
 {
-    if (b->housePopulation <= 0) {
+    if (b->house_population <= 0) {
         return 0;
     }
-    if (!model_get_house(b->subtype.houseLevel)->food_types) {
+    if (!model_get_house(b->subtype.house_level)->food_types) {
         return 104;
     } else {
         int stocks_present = 0;
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
             stocks_present += b->data.house.inventory[i];
         }
-        int stocks_per_pop = calc_percentage(stocks_present, b->housePopulation);
+        int stocks_per_pop = calc_percentage(stocks_present, b->house_population);
         if (stocks_per_pop <= 0) {
             return 4;
         } else if (stocks_per_pop < 100) {
@@ -160,12 +160,12 @@ static int get_tooltip_food_stocks(tooltip_context *c, const building *b)
 
 static int get_tooltip_tax_income(tooltip_context *c, const building *b)
 {
-    int denarii = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, city_finance_tax_percentage());
+    int denarii = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
     if (denarii > 0) {
         c->has_numeric_prefix = 1;
         c->numeric_prefix = denarii;
         return 45;
-    } else if (b->houseTaxCoverage > 0) {
+    } else if (b->house_tax_coverage > 0) {
         return 44;
     } else {
         return 43;
@@ -272,7 +272,7 @@ static void draw_footprint_water(int x, int y, int grid_offset)
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building *b = building_get(map_building_at(grid_offset));
         int terrain = map_terrain_get(grid_offset);
-        if (b->id && b->hasWellAccess == 1) {
+        if (b->id && b->has_well_access == 1) {
             terrain |= TERRAIN_FOUNTAIN_RANGE;
         }
         int image_offset;

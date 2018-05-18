@@ -127,7 +127,7 @@ void game_undo_restore_building_state()
             if (b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
                 b->state = BUILDING_STATE_IN_USE;
             }
-            b->isDeleted = 0;
+            b->is_deleted = 0;
         }
     }
     clear_buildings();
@@ -280,7 +280,7 @@ void game_undo_reduce_time_available()
     }
     if (data.type == BUILDING_HOUSE_VACANT_LOT) {
         for (int i = 0; i < data.num_buildings; i++) {
-            if (data.buildings[i].id && building_get(data.buildings[i].id)->housePopulation) {
+            if (data.buildings[i].id && building_get(data.buildings[i].id)->house_population) {
                 // no undo on a new house where people moved in
                 data.available = 0;
                 window_invalidate();
@@ -298,7 +298,7 @@ void game_undo_reduce_time_available()
                 window_invalidate();
                 return;
             }
-            if (b->type != data.buildings[i].type || b->gridOffset != data.buildings[i].gridOffset) {
+            if (b->type != data.buildings[i].type || b->grid_offset != data.buildings[i].grid_offset) {
                 data.available = 0;
                 window_invalidate();
                 return;

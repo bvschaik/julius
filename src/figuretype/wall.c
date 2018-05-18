@@ -48,10 +48,10 @@ void figure_ballista_action(figure *f)
     f->heightAdjustedTicks = 10;
     f->currentHeight = 45;
     
-    if (b->state != BUILDING_STATE_IN_USE || b->figureId4 != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id4 != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
-    if (b->numWorkers <= 0 || b->figureId <= 0) {
+    if (b->num_workers <= 0 || b->figure_id <= 0) {
         f->state = FIGURE_STATE_DEAD;
     }
     map_figure_delete(f);
@@ -61,7 +61,7 @@ void figure_ballista_action(figure *f)
         case DIR_4_BOTTOM: f->x = b->x + 1; f->y = b->y + 1; break;
         case DIR_6_LEFT: f->x = b->x; f->y = b->y + 1; break;
     }
-    f->gridOffset = map_grid_offset(f->x, f->y);
+    f->grid_offset = map_grid_offset(f->x, f->y);
     map_figure_add(f);
 
     switch (f->actionState) {
@@ -129,7 +129,7 @@ static void tower_sentry_pick_target(figure *f)
 
 static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
 {
-    int dir = b->figureRoamDirection;
+    int dir = b->figure_roam_direction;
     int x = b->x;
     int y = b->y;
     switch (dir) {
@@ -141,14 +141,14 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
     map_grid_bound(&x, &y);
 
     if (map_routing_wall_tile_in_radius(x, y, 6, x_tile, y_tile)) {
-        b->figureRoamDirection += 2;
-        if (b->figureRoamDirection > 6) b->figureRoamDirection = 0;
+        b->figure_roam_direction += 2;
+        if (b->figure_roam_direction > 6) b->figure_roam_direction = 0;
         return 1;
     }
     for (int i = 0; i < 4; i++) {
-        dir = b->figureRoamDirection;
-        b->figureRoamDirection += 2;
-        if (b->figureRoamDirection > 6) b->figureRoamDirection = 0;
+        dir = b->figure_roam_direction;
+        b->figure_roam_direction += 2;
+        if (b->figure_roam_direction > 6) b->figure_roam_direction = 0;
         x = b->x;
         y = b->y;
         switch (dir) {
@@ -173,7 +173,7 @@ void figure_tower_sentry_action(figure *f)
     f->isGhost = 1;
     f->heightAdjustedTicks = 10;
     f->maxRoamLength = 800;
-    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -245,7 +245,7 @@ void figure_tower_sentry_action(figure *f)
                 map_figure_delete(f);
                 f->sourceX = f->x = b->x;
                 f->sourceY = f->y = b->y;
-                f->gridOffset = map_grid_offset(f->x, f->y);
+                f->grid_offset = map_grid_offset(f->x, f->y);
                 map_figure_add(f);
                 f->actionState = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
                 figure_route_remove(f);
@@ -254,9 +254,9 @@ void figure_tower_sentry_action(figure *f)
             }
             break;
     }
-    if (map_terrain_is(f->gridOffset, TERRAIN_WALL)) {
+    if (map_terrain_is(f->grid_offset, TERRAIN_WALL)) {
         f->currentHeight = 18;
-    } else if (map_terrain_is(f->gridOffset, TERRAIN_GATEHOUSE)) {
+    } else if (map_terrain_is(f->grid_offset, TERRAIN_GATEHOUSE)) {
         f->inBuildingWaitTicks = 24;
     } else if (f->actionState != FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER) {
         f->state = FIGURE_STATE_DEAD;
@@ -282,7 +282,7 @@ void figure_tower_sentry_reroute()
 {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
-        if (f->type != FIGURE_TOWER_SENTRY || map_routing_is_wall_passable(f->gridOffset)) {
+        if (f->type != FIGURE_TOWER_SENTRY || map_routing_is_wall_passable(f->grid_offset)) {
             continue;
         }
         // tower sentry got off wall due to rotation
@@ -295,7 +295,7 @@ void figure_tower_sentry_reroute()
             f->previousTileY = f->y = y_tile;
             f->crossCountryX = 15 * x_tile;
             f->crossCountryY = 15 * y_tile;
-            f->gridOffset = map_grid_offset(x_tile, y_tile);
+            f->grid_offset = map_grid_offset(x_tile, y_tile);
             map_figure_add(f);
             f->actionState = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
             f->destinationX = f->sourceX;
@@ -306,7 +306,7 @@ void figure_tower_sentry_reroute()
             building *b = building_get(f->buildingId);
             f->sourceX = f->x = b->x;
             f->sourceY = f->y = b->y;
-            f->gridOffset = map_grid_offset(f->x, f->y);
+            f->grid_offset = map_grid_offset(f->x, f->y);
             map_figure_add(f);
             f->actionState = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
             figure_route_remove(f);

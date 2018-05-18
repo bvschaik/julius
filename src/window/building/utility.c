@@ -16,10 +16,10 @@ void window_building_draw_engineers_post(building_info_context *c)
 
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (!b->numWorkers) {
+    } else if (!b->num_workers) {
         window_building_draw_description(c, 104, 9);
     } else {
-        if (b->figureId) {
+        if (b->figure_id) {
             window_building_draw_description(c, 104, 2);
         } else {
             window_building_draw_description(c, 104, 3);
@@ -52,10 +52,10 @@ void window_building_draw_prefect(building_info_context *c)
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->numWorkers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 88, 9);
     } else {
-        if (b->figureId) {
+        if (b->figure_id) {
             window_building_draw_description(c, 88, 2);
         } else {
             window_building_draw_description(c, 88, 3);
@@ -106,7 +106,7 @@ void window_building_draw_reservoir(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(107, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     lang_text_draw_centered(13, 1, c->x_offset, c->y_offset + 16 * c->height_blocks - 24, 16 * c->width_blocks, FONT_NORMAL_BLACK);
-    int text_id = building_get(c->building_id)->hasWaterAccess ? 1 : 3;
+    int text_id = building_get(c->building_id)->has_water_access ? 1 : 3;
     window_building_draw_description_at(c, 16 * c->height_blocks - 173, 107, text_id);
 }
 
@@ -127,8 +127,8 @@ void window_building_draw_fountain(building_info_context *c)
     lang_text_draw_centered(108, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     int text_id;
     building *b = building_get(c->building_id);
-    if (b->hasWaterAccess) {
-        if (b->numWorkers > 0) {
+    if (b->has_water_access) {
+        if (b->num_workers > 0) {
             text_id = 1;
         } else {
             text_id = 2;

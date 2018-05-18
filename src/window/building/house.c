@@ -32,23 +32,23 @@ static void draw_population_info(building_info_context *c, int y_offset)
 {
     building *b = building_get(c->building_id);
     image_draw(image_group(GROUP_CONTEXT_ICONS) + 13, c->x_offset + 34, y_offset + 4);
-    int width = text_draw_number(b->housePopulation, '@', " ", c->x_offset + 50, y_offset + 14, FONT_SMALL_BLACK);
+    int width = text_draw_number(b->house_population, '@', " ", c->x_offset + 50, y_offset + 14, FONT_SMALL_BLACK);
     width += lang_text_draw(127, 20, c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
     
-    if (b->housePopulationRoom < 0) {
-        width += text_draw_number(-b->housePopulationRoom, '@', " ", c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
+    if (b->house_population_room < 0) {
+        width += text_draw_number(-b->house_population_room, '@', " ", c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
         lang_text_draw(127, 21, c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
-    } else if (b->housePopulationRoom > 0) {
+    } else if (b->house_population_room > 0) {
         width += lang_text_draw(127, 22, c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
-        text_draw_number(b->housePopulationRoom, '@', " ", c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
+        text_draw_number(b->house_population_room, '@', " ", c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
     }
 }
 
 static void draw_tax_info(building_info_context *c, int y_offset)
 {
     building *b = building_get(c->building_id);
-    if (b->houseTaxCoverage) {
-        int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, city_finance_tax_percentage());
+    if (b->house_tax_coverage) {
+        int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
         int width = lang_text_draw(127, 24, c->x_offset + 36, y_offset, FONT_SMALL_BLACK);
         width += lang_text_draw_amount(8, 0, pct, c->x_offset + 36 + width, y_offset, FONT_SMALL_BLACK);
         lang_text_draw(127, 25, c->x_offset + 36 + width, y_offset, FONT_SMALL_BLACK);
@@ -59,7 +59,7 @@ static void draw_tax_info(building_info_context *c, int y_offset)
 
 static void draw_happiness_info(building_info_context *c, int y_offset)
 {
-    int happiness = building_get(c->building_id)->sentiment.houseHappiness;
+    int happiness = building_get(c->building_id)->sentiment.house_happiness;
     int text_id;
     if (happiness >= 50) {
         text_id = 26;
@@ -84,7 +84,7 @@ void window_building_draw_house(building_info_context *c)
     c->help_id = 56;
     window_building_play_sound(c, "wavs/housing.wav");
     building *b = building_get(c->building_id);
-    if (b->housePopulation <= 0) {
+    if (b->house_population <= 0) {
         draw_vacant_lot(c);
         return;
     }
@@ -99,7 +99,7 @@ void window_building_draw_house(building_info_context *c)
     
     int resource_image = image_group(GROUP_RESOURCE_ICONS);
     // food inventory
-    if (model_get_house(b->subtype.houseLevel)->food_types) {
+    if (model_get_house(b->subtype.house_level)->food_types) {
         // wheat
         image_draw(resource_image + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + 234);
         text_draw_number(b->data.house.inventory[INVENTORY_WHEAT], '@', " ", c->x_offset + 64, c->y_offset + 238, FONT_SMALL_BLACK);
@@ -131,15 +131,15 @@ void window_building_draw_house(building_info_context *c)
     image_draw(resource_image + RESOURCE_WINE, c->x_offset + 362, c->y_offset + 274);
     text_draw_number(b->data.house.inventory[INVENTORY_WINE], '@', " ", c->x_offset + 394, c->y_offset + 278, FONT_SMALL_BLACK);
     
-    if (b->data.house.evolveTextId == 62) {
-        int width = lang_text_draw(127, 40 + b->data.house.evolveTextId, c->x_offset + 32, c->y_offset + 60, FONT_NORMAL_BLACK);
+    if (b->data.house.evolve_text_id == 62) {
+        int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + 60, FONT_NORMAL_BLACK);
         width += lang_text_draw_colored(41, building_get(c->worst_desirability_building_id)->type,
             c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_PLAIN, COLOR_RED);
         text_draw((uint8_t*)")", c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_BLACK, 0);
-        lang_text_draw_multiline(127, 41 + b->data.house.evolveTextId,
+        lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id,
             c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
     } else {
-        lang_text_draw_multiline(127, 40 + b->data.house.evolveTextId,
+        lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id,
             c->x_offset + 32, c->y_offset + 70, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
     }
 }

@@ -126,7 +126,7 @@ static void missile_hit_target(figure *f, int target_id, figure_type legionary_t
     int damage_inflicted =
         figure_properties_for_type(f->type)->missile_attack_value -
         target_props->missile_defense_value;
-    formation *m = formation_get(target->formationId);
+    formation *m = formation_get(target->formation_id);
     if (damage_inflicted < 0) {
         damage_inflicted = 0;
     }
@@ -145,7 +145,7 @@ static void missile_hit_target(figure *f, int target_id, figure_type legionary_t
     }
     f->state = FIGURE_STATE_DEAD;
     // for missiles: building_id contains the figure who shot it
-    int missile_formation = figure_get(f->buildingId)->formationId;
+    int missile_formation = figure_get(f->buildingId)->formation_id;
     formation_record_missile_attack(m, missile_formation);
 }
 
@@ -157,7 +157,7 @@ void figure_arrow_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
-    int target_id = get_citizen_on_tile(f->gridOffset);
+    int target_id = get_citizen_on_tile(f->grid_offset);
     if (target_id) {
         missile_hit_target(f, target_id, FIGURE_FORT_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_ARROW_HIT);
@@ -176,7 +176,7 @@ void figure_spear_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
-    int target_id = get_citizen_on_tile(f->gridOffset);
+    int target_id = get_citizen_on_tile(f->grid_offset);
     if (target_id) {
         missile_hit_target(f, target_id, FIGURE_FORT_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
@@ -195,7 +195,7 @@ void figure_javelin_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
-    int target_id = get_non_citizen_on_tile(f->gridOffset);
+    int target_id = get_non_citizen_on_tile(f->grid_offset);
     if (target_id) {
         missile_hit_target(f, target_id, FIGURE_ENEMY_CAESAR_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
@@ -214,7 +214,7 @@ void figure_bolt_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
-    int target_id = get_non_citizen_on_tile(f->gridOffset);
+    int target_id = get_non_citizen_on_tile(f->grid_offset);
     if (target_id) {
         figure *target = figure_get(target_id);
         const figure_properties *target_props = figure_properties_for_type(target->type);
@@ -233,7 +233,7 @@ void figure_bolt_action(figure *f)
             target->actionState = FIGURE_ACTION_149_CORPSE;
             target->waitTicks = 0;
             figure_play_die_sound(target);
-            formation_update_morale_after_death(formation_get(target->formationId));
+            formation_update_morale_after_death(formation_get(target->formation_id));
         }
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_PERSON);
         f->state = FIGURE_STATE_DEAD;

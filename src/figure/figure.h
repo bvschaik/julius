@@ -34,7 +34,7 @@ typedef struct {
     unsigned char previousTileY;
     unsigned char missileDamage;
     unsigned char damage; //19
-    short gridOffset; // 1a
+    short grid_offset; // 1a
     unsigned char destinationX; // 1c
     unsigned char destinationY;
     short destinationGridOffsetSoldier;
@@ -69,7 +69,7 @@ typedef struct {
     short buildingId;
     short immigrantBuildingId;
     short destinationBuildingId;
-    short formationId; //50
+    short formation_id; //50
     unsigned char indexInFormation; //52
     unsigned char formationAtRest; //53
     unsigned char migrantNumPeople;
@@ -100,7 +100,7 @@ typedef struct {
     unsigned char __unused_6f;
     short targetFigureId; // 70
     short targetedByFigureId; // 72
-    unsigned short createdSequence;
+    unsigned short created_sequence;
     unsigned short targetFigureCreatedSequence;
     unsigned char numPreviousFiguresOnSameTile;
     unsigned char numAttackers;

@@ -42,7 +42,7 @@ static const map_point ALTERNATIVE_POINTS[] = {{-1, -6},
 
 void figure_military_standard_action(figure *f)
 {
-    const formation *m = formation_get(f->formationId);
+    const formation *m = formation_get(f->formation_id);
 
     f->terrainUsage = TERRAIN_USAGE_ANY;
     figure_image_increase_offset(f, 16);
@@ -54,7 +54,7 @@ void figure_military_standard_action(figure *f)
         f->x = m->standard_x;
         f->y = m->standard_y;
     }
-    f->gridOffset = map_grid_offset(f->x, f->y);
+    f->grid_offset = map_grid_offset(f->x, f->y);
     f->crossCountryX = 15 * f->x + 7;
     f->crossCountryY = 15 * f->y + 7;
     map_figure_add(f);
@@ -97,7 +97,7 @@ static void javelin_launch_missile(figure *f)
     if (f->attackGraphicOffset) {
         if (f->attackGraphicOffset == 1) {
             figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_JAVELIN);
-            formation_record_missile_fired(formation_get(f->formationId));
+            formation_record_missile_fired(formation_get(f->formation_id));
         }
         f->attackGraphicOffset++;
         if (f->attackGraphicOffset > 100) {
@@ -109,7 +109,7 @@ static void javelin_launch_missile(figure *f)
 static void legionary_attack_adjacent_enemy(figure *f)
 {
     for (int i = 0; i < 8 && f->actionState != FIGURE_ACTION_150_ATTACK; i++) {
-        figure_combat_attack_figure_at(f, f->gridOffset + map_grid_direction_delta(i));
+        figure_combat_attack_figure_at(f, f->grid_offset + map_grid_direction_delta(i));
     }
 }
 
@@ -128,7 +128,7 @@ static int find_mop_up_target(figure *f)
             f->destinationY = target->y;
             f->targetFigureId = target_id;
             target->targetedByFigureId = f->id;
-            f->targetFigureCreatedSequence = target->createdSequence;
+            f->targetFigureCreatedSequence = target->created_sequence;
         } else {
             f->actionState = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
             f->graphicOffset = 0;
@@ -221,7 +221,7 @@ static void update_image(figure *f, const formation *m)
 
 void figure_soldier_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     city_figures_add_soldier();
     f->terrainUsage = TERRAIN_USAGE_ANY;
     figure_image_increase_offset(f, 12);

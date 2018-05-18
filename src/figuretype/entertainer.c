@@ -27,8 +27,8 @@ static int determine_destination(int x, int y, building_type type1, building_typ
         if (b->type != type1 && b->type != type2) {
             continue;
         }
-        if (b->distanceFromEntry && b->roadNetworkId == road_network) {
-            if (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId) {
+        if (b->distance_from_entry && b->road_network_id == road_network) {
+            if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) {
                 continue;
             }
             building_list_small_add(i);

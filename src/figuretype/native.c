@@ -16,7 +16,7 @@ void figure_indigenous_native_action(figure *f)
     f->terrainUsage = TERRAIN_USAGE_ANY;
     f->useCrossCountry = 0;
     f->maxRoamLength = 800;
-    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -52,7 +52,7 @@ void figure_indigenous_native_action(figure *f)
                 f->waitTicks = 0;
                 if (!city_military_is_native_attack_active()) {
                     int x_tile, y_tile;
-                    building *meeting = building_get(b->subtype.nativeMeetingCenterId);
+                    building *meeting = building_get(b->subtype.native_meeting_center_id);
                     if (map_terrain_get_adjacent_road_or_clear_land(meeting->x, meeting->y, meeting->size, &x_tile, &y_tile)) {
                         f->actionState = FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER;
                         f->destinationX = x_tile;

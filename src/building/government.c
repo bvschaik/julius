@@ -24,35 +24,35 @@ void building_government_distribute_treasury()
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->houseSize) {
+        if (b->state != BUILDING_STATE_IN_USE || b->house_size) {
             continue;
         }
-        b->taxIncomeOrStorage = 0;
-        if (b->numWorkers <= 0) {
+        b->tax_income_or_storage = 0;
+        if (b->num_workers <= 0) {
             continue;
         }
         switch (b->type) {
             // ordered based on importance: most important gets the remainder
             case BUILDING_SENATE_UPGRADED:
-                b->taxIncomeOrStorage = 8 * amount_per_unit + remainder;
+                b->tax_income_or_storage = 8 * amount_per_unit + remainder;
                 remainder = 0;
                 break;
             case BUILDING_SENATE:
                 if (remainder && !building_count_active(BUILDING_SENATE_UPGRADED)) {
-                    b->taxIncomeOrStorage = 5 * amount_per_unit + remainder;
+                    b->tax_income_or_storage = 5 * amount_per_unit + remainder;
                     remainder = 0;
                 } else {
-                    b->taxIncomeOrStorage = 5 * amount_per_unit;
+                    b->tax_income_or_storage = 5 * amount_per_unit;
                 }
                 break;
             case BUILDING_FORUM_UPGRADED:
                 if (remainder && !(
                     building_count_active(BUILDING_SENATE_UPGRADED) ||
                     building_count_active(BUILDING_SENATE))) {
-                    b->taxIncomeOrStorage = 2 * amount_per_unit + remainder;
+                    b->tax_income_or_storage = 2 * amount_per_unit + remainder;
                     remainder = 0;
                 } else {
-                    b->taxIncomeOrStorage = 2 * amount_per_unit;
+                    b->tax_income_or_storage = 2 * amount_per_unit;
                 }
                 break;
             case BUILDING_FORUM:
@@ -60,10 +60,10 @@ void building_government_distribute_treasury()
                     building_count_active(BUILDING_SENATE_UPGRADED) ||
                     building_count_active(BUILDING_SENATE) ||
                     building_count_active(BUILDING_FORUM_UPGRADED))) {
-                    b->taxIncomeOrStorage = amount_per_unit + remainder;
+                    b->tax_income_or_storage = amount_per_unit + remainder;
                     remainder = 0;
                 } else {
-                    b->taxIncomeOrStorage = amount_per_unit;
+                    b->tax_income_or_storage = amount_per_unit;
                 }
                 break;
         }

@@ -138,7 +138,7 @@ static int is_drawable_farm_corner(int grid_offset)
 static void draw_flattened_building_footprint(const building *b, int x, int y, int image_offset)
 {
     int image_base = image_group(GROUP_TERRAIN_OVERLAY) + image_offset;
-    if (b->houseSize) {
+    if (b->house_size) {
         image_base += 4;
     }
     if (b->size == 1) {
@@ -484,7 +484,7 @@ int city_with_overlay_get_tooltip_text(tooltip_context *c, int grid_offset)
         overlay_type != OVERLAY_WATER && overlay_type != OVERLAY_FIRE &&
         overlay_type != OVERLAY_DAMAGE && overlay_type != OVERLAY_NATIVE && overlay_type != OVERLAY_DESIRABILITY;
     building *b = building_get(building_id);
-    if (overlay_requires_house && !b->houseSize) {
+    if (overlay_requires_house && !b->house_size) {
         return 0;
     }
     if (overlay->get_tooltip_for_building) {

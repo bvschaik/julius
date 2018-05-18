@@ -55,9 +55,9 @@ static void resume_activity_after_attack(figure *f)
 
 static void hit_opponent(figure *f)
 {
-    const formation *m = formation_get(f->formationId);
+    const formation *m = formation_get(f->formation_id);
     figure *opponent = figure_get(f->opponentId);
-    formation *opponent_formation = formation_get(opponent->formationId);
+    formation *opponent_formation = formation_get(opponent->formation_id);
     
     const figure_properties *props = figure_properties_for_type(f->type);
     const figure_properties *opponent_props = figure_properties_for_type(opponent->type);

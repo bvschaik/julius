@@ -14,13 +14,13 @@ void city_buildings_add_senate(building *senate)
         city_data.building.senate_building_id = senate->id;
         city_data.building.senate_x = senate->x;
         city_data.building.senate_y = senate->y;
-        city_data.building.senate_grid_offset = senate->gridOffset;
+        city_data.building.senate_grid_offset = senate->grid_offset;
     }
 }
 
 void city_buildings_remove_senate(building *senate)
 {
-    if (senate->gridOffset == city_data.building.senate_grid_offset) {
+    if (senate->grid_offset == city_data.building.senate_grid_offset) {
         city_data.building.senate_grid_offset = 0;
         city_data.building.senate_x = 0;
         city_data.building.senate_y = 0;
@@ -34,13 +34,13 @@ void city_buildings_add_barracks(building *barracks)
         city_data.building.barracks_building_id = barracks->id;
         city_data.building.barracks_x = barracks->x;
         city_data.building.barracks_y = barracks->y;
-        city_data.building.barracks_grid_offset = barracks->gridOffset;
+        city_data.building.barracks_grid_offset = barracks->grid_offset;
     }
 }
 
 void city_buildings_remove_barracks(building *barracks)
 {
-    if (barracks->gridOffset == city_data.building.barracks_grid_offset) {
+    if (barracks->grid_offset == city_data.building.barracks_grid_offset) {
         city_data.building.barracks_grid_offset = 0;
         city_data.building.barracks_x = 0;
         city_data.building.barracks_y = 0;
@@ -70,13 +70,13 @@ void city_buildings_add_distribution_center(building *center)
         city_data.building.distribution_center_building_id = center->id;
         city_data.building.distribution_center_x = center->x;
         city_data.building.distribution_center_y = center->y;
-        city_data.building.distribution_center_grid_offset = center->gridOffset;
+        city_data.building.distribution_center_grid_offset = center->grid_offset;
     }
 }
 
 void city_buildings_remove_distribution_center(building *center)
 {
-    if (center->gridOffset == city_data.building.distribution_center_grid_offset) {
+    if (center->grid_offset == city_data.building.distribution_center_grid_offset) {
         city_data.building.distribution_center_grid_offset = 0;
         city_data.building.distribution_center_x = 0;
         city_data.building.distribution_center_y = 0;

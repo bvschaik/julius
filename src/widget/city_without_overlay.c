@@ -61,7 +61,7 @@ static void draw_footprint(int x, int y, int grid_offset)
         color_t color_mask = 0;
         if (building_id) {
             building *b = building_get(building_id);
-            if (b->isDeleted) {
+            if (b->is_deleted) {
                 color_mask = COLOR_MASK_RED;
             }
             int view_x, view_y, view_width, view_height;
@@ -148,16 +148,16 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
 
 static void draw_entertainment_spectators(building *b, int x, int y, color_t color_mask)
 {
-    if (b->type == BUILDING_AMPHITHEATER && b->numWorkers > 0) {
+    if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0) {
         image_draw_masked(image_group(GROUP_BUILDING_AMPHITHEATER_SHOW), x + 36, y - 47, color_mask);
     }
-    if (b->type == BUILDING_THEATER && b->numWorkers > 0) {
+    if (b->type == BUILDING_THEATER && b->num_workers > 0) {
         image_draw_masked(image_group(GROUP_BUILDING_THEATER_SHOW), x + 34, y - 22, color_mask);
     }
-    if (b->type == BUILDING_COLOSSEUM && b->numWorkers > 0) {
+    if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0) {
         image_draw_masked(image_group(GROUP_BUILDING_COLOSSEUM_SHOW), x + 70, y - 90, color_mask);
     }
-    if (b->type == BUILDING_HIPPODROME && building_main(b)->numWorkers > 0 && city_entertainment_hippodrome_has_race()) {
+    if (b->type == BUILDING_HIPPODROME && building_main(b)->num_workers > 0 && city_entertainment_hippodrome_has_race()) {
         draw_hippodrome_spectators(b, x, y, color_mask);
     }
 }
@@ -165,27 +165,27 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
 static void draw_workshop_raw_material_storage(const building *b, int x, int y, color_t color_mask)
 {
     if (b->type == BUILDING_WINE_WORKSHOP) {
-        if (b->loadsStored >= 2 || b->data.industry.has_raw_materials) {
+        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials) {
             image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL), x + 45, y + 23, color_mask);
         }
     }
     if (b->type == BUILDING_OIL_WORKSHOP) {
-        if (b->loadsStored >= 2 || b->data.industry.has_raw_materials) {
+        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials) {
             image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1, x + 35, y + 15, color_mask);
         }
     }
     if (b->type == BUILDING_WEAPONS_WORKSHOP) {
-        if (b->loadsStored >= 2 || b->data.industry.has_raw_materials) {
+        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials) {
             image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3, x + 46, y + 24, color_mask);
         }
     }
     if (b->type == BUILDING_FURNITURE_WORKSHOP) {
-        if (b->loadsStored >= 2 || b->data.industry.has_raw_materials) {
+        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials) {
             image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2, x + 48, y + 19, color_mask);
         }
     }
     if (b->type == BUILDING_POTTERY_WORKSHOP) {
-        if (b->loadsStored >= 2 || b->data.industry.has_raw_materials) {
+        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials) {
             image_draw_masked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4, x + 47, y + 24, color_mask);
         }
     }
@@ -229,7 +229,7 @@ static void draw_top(int x, int y, int grid_offset)
     building *b = building_get(map_building_at(grid_offset));
     int image_id = map_image_at(grid_offset);
     color_t color_mask = 0;
-    if (b->id && b->isDeleted) {
+    if (b->id && b->is_deleted) {
         color_mask = COLOR_MASK_RED;
     }
     image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
@@ -259,7 +259,7 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
 {
     int num_dockers = building_dock_count_idle_dockers(b);
     if (num_dockers > 0) {
-        int image_dock = map_image_at(b->gridOffset);
+        int image_dock = map_image_at(b->grid_offset);
         int image_dockers = image_group(GROUP_BUILDING_DOCK_DOCKERS);
         if (image_dock == image_group(GROUP_BUILDING_DOCK_1)) {
             image_dockers += 0;
@@ -317,7 +317,7 @@ static void draw_animation(int x, int y, int grid_offset)
             int building_id = map_building_at(grid_offset);
             building *b = building_get(building_id);
             int color_mask = 0;
-            if (building_id && b->isDeleted) {
+            if (building_id && b->is_deleted) {
                 color_mask = COLOR_MASK_RED;
             }
             if (b->type == BUILDING_DOCK) {
@@ -326,7 +326,7 @@ static void draw_animation(int x, int y, int grid_offset)
                 draw_warehouse_ornaments(b, x, y, color_mask);
             } else if (b->type == BUILDING_GRANARY) {
                 draw_granary_stores(img, b, x, y, color_mask);
-            } else if (b->type == BUILDING_BURNING_RUIN && b->ruinHasPlague) {
+            } else if (b->type == BUILDING_BURNING_RUIN && b->ruin_has_plague) {
                 image_draw_masked(image_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
             }
             int animation_offset = building_animation_offset(b, image_id, grid_offset);
@@ -358,7 +358,7 @@ static void draw_animation(int x, int y, int grid_offset)
         if (map_property_is_draw_tile(grid_offset)) {
             building *fort = building_get(map_building_at(grid_offset));
             int offset = 0;
-            switch (fort->subtype.fortFigureType) {
+            switch (fort->subtype.fort_figure_type) {
                 case FIGURE_FORT_LEGIONARY: offset = 4; break;
                 case FIGURE_FORT_MOUNTED: offset = 3; break;
                 case FIGURE_FORT_JAVELIN: offset = 2; break;

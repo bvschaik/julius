@@ -78,7 +78,7 @@ static void determine_meeting_center()
                     min_meeting_id = meetings[n];
                 }
             }
-            b->subtype.nativeMeetingCenterId = min_meeting_id;
+            b->subtype.native_meeting_center_id = min_meeting_id;
         }
     }
 }
@@ -124,7 +124,7 @@ void map_natives_init()
                     b->data.industry.progress = random_bit;
                     break;
                 case BUILDING_NATIVE_MEETING:
-                    b->sentiment.nativeAnger = 100;
+                    b->sentiment.native_anger = 100;
                     map_building_set(grid_offset + map_grid_delta(1, 0), b->id);
                     map_building_set(grid_offset + map_grid_delta(0, 1), b->id);
                     map_building_set(grid_offset + map_grid_delta(1, 1), b->id);
@@ -134,8 +134,8 @@ void map_natives_init()
                     }
                     break;
                 case BUILDING_NATIVE_HUT:
-                    b->sentiment.nativeAnger = 100;
-                    b->figureSpawnDelay = random_bit;
+                    b->sentiment.native_anger = 100;
+                    b->figure_spawn_delay = random_bit;
                     mark_native_land(b->x, b->y, 1, 3);
                     break;
             }
@@ -165,13 +165,13 @@ void map_natives_check_land()
         } else {
             continue;
         }
-        if (b->sentiment.nativeAnger >= 100) {
+        if (b->sentiment.native_anger >= 100) {
             mark_native_land(b->x, b->y, size, radius);
             if (has_building_on_native_land(b->x, b->y, size, radius)) {
                 city_military_start_native_attack();
             }
         } else {
-            b->sentiment.nativeAnger++;
+            b->sentiment.native_anger++;
         }
     }
 }

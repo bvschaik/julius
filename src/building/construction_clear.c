@@ -59,22 +59,22 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                         game_undo_disable();
                     }
                 }
-                if (b->houseSize && b->housePopulation && !measure_only) {
-                    figure_create_homeless(b->x, b->y, b->housePopulation);
-                    b->housePopulation = 0;
+                if (b->house_size && b->house_population && !measure_only) {
+                    figure_create_homeless(b->x, b->y, b->house_population);
+                    b->house_population = 0;
                 }
                 if (b->state != BUILDING_STATE_DELETED_BY_PLAYER) {
                     items_placed++;
                     game_undo_add_building(b);
                 }
                 b->state = BUILDING_STATE_DELETED_BY_PLAYER;
-                b->isDeleted = 1;
+                b->is_deleted = 1;
                 building *space = b;
                 for (int i = 0; i < 9; i++) {
-                    if (space->prevPartBuildingId <= 0) {
+                    if (space->prev_part_building_id <= 0) {
                         break;
                     }
-                    space = building_get(space->prevPartBuildingId);
+                    space = building_get(space->prev_part_building_id);
                     game_undo_add_building(space);
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }

@@ -138,7 +138,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         if (map_property_is_draw_tile(grid_offset)) {
             int image_id;
             building *b = building_get(map_building_at(grid_offset));
-            if (b->houseSize) {
+            if (b->house_size) {
                 image_id = image_group(GROUP_MINIMAP_HOUSE);
             } else if (b->type == BUILDING_RESERVOIR) {
                 image_id = image_group(GROUP_MINIMAP_AQUEDUCT) - 1;

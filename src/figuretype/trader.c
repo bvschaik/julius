@@ -63,8 +63,8 @@ int figure_trade_caravan_can_buy(figure *trader, int warehouse_id, int city_id)
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
-        if (space->id > 0 && space->loadsStored > 0 &&
-            empire_can_export_resource_to_city(city_id, space->subtype.warehouseResourceId)) {
+        if (space->id > 0 && space->loads_stored > 0 &&
+            empire_can_export_resource_to_city(city_id, space->subtype.warehouse_resource_id)) {
             return 1;
         }
     }
@@ -116,12 +116,12 @@ int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id)
         building *space = warehouse;
         for (int s = 0; s < 8; s++) {
             space = building_next(space);
-            if (space->id > 0 && space->loadsStored < 4) {
-                if (!space->loadsStored) {
+            if (space->id > 0 && space->loads_stored < 4) {
+                if (!space->loads_stored) {
                     // empty space
                     return 1;
                 }
-                if (empire_can_import_resource_from_city(city_id, space->subtype.warehouseResourceId)) {
+                if (empire_can_import_resource_from_city(city_id, space->subtype.warehouse_resource_id)) {
                     return 1;
                 }
             }
@@ -142,13 +142,13 @@ static int trader_get_buy_resource(int warehouse_id, int city_id)
         if (space->id <= 0) {
             continue;
         }
-        int resource = space->subtype.warehouseResourceId;
-        if (space->loadsStored > 0 && empire_can_export_resource_to_city(city_id, resource)) {
+        int resource = space->subtype.warehouse_resource_id;
+        if (space->loads_stored > 0 && empire_can_export_resource_to_city(city_id, resource)) {
             // update stocks
             city_resource_remove_from_warehouse(resource, 1);
-            space->loadsStored--;
-            if (space->loadsStored <= 0) {
-                space->subtype.warehouseResourceId = RESOURCE_NONE;
+            space->loads_stored--;
+            if (space->loads_stored <= 0) {
+                space->subtype.warehouse_resource_id = RESOURCE_NONE;
             }
             // update finances
             city_finance_process_export(trade_price_sell(resource));
@@ -180,8 +180,8 @@ static int trader_get_sell_resource(int warehouse_id, int city_id)
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
-        if (space->id > 0 && space->loadsStored > 0 && space->loadsStored < 4 &&
-            space->subtype.warehouseResourceId == resource_to_import) {
+        if (space->id > 0 && space->loads_stored > 0 && space->loads_stored < 4 &&
+            space->subtype.warehouse_resource_id == resource_to_import) {
             building_warehouse_space_add_import(space, resource_to_import);
             city_trade_next_caravan_import_resource();
             return resource_to_import;
@@ -191,7 +191,7 @@ static int trader_get_sell_resource(int warehouse_id, int city_id)
     space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
-        if (space->id > 0 && !space->loadsStored) {
+        if (space->id > 0 && !space->loads_stored) {
             building_warehouse_space_add_import(space, resource_to_import);
             city_trade_next_caravan_import_resource();
             return resource_to_import;
@@ -204,7 +204,7 @@ static int trader_get_sell_resource(int warehouse_id, int city_id)
             space = warehouse;
             for (int i = 0; i < 8; i++) {
                 space = building_next(space);
-                if (space->id > 0 && space->loadsStored < 4 && space->subtype.warehouseResourceId == resource_to_import) {
+                if (space->id > 0 && space->loads_stored < 4 && space->subtype.warehouse_resource_id == resource_to_import) {
                     building_warehouse_space_add_import(space, resource_to_import);
                     return resource_to_import;
                 }
@@ -248,7 +248,7 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
             continue;
         }
-        if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
+        if (!b->has_road_access || b->distance_from_entry <= 0) {
             continue;
         }
         const building_storage *s = building_storage_get(b->storage_id);
@@ -262,7 +262,7 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
         building *space = b;
         for (int space_cnt = 0; space_cnt < 8; space_cnt++) {
             space = building_next(space);
-            if (space->id && exportable[space->subtype.warehouseResourceId]) {
+            if (space->id && exportable[space->subtype.warehouse_resource_id]) {
                 distance_penalty -= 4;
             }
             if (num_importable && num_imports_for_warehouse && !s->empty_all) {
@@ -273,18 +273,18 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
                 }
                 int resource = city_trade_current_caravan_import_resource();
                 if (s->resource_state[resource] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
-                    if (space->subtype.warehouseResourceId == RESOURCE_NONE) {
+                    if (space->subtype.warehouse_resource_id == RESOURCE_NONE) {
                         distance_penalty -= 16;
                     }
-                    if (space->id && importable[space->subtype.warehouseResourceId] && space->loadsStored < 4 &&
-                        space->subtype.warehouseResourceId == resource) {
+                    if (space->id && importable[space->subtype.warehouse_resource_id] && space->loads_stored < 4 &&
+                        space->subtype.warehouse_resource_id == resource) {
                         distance_penalty -= 8;
                     }
                 }
             }
         }
         if (distance_penalty < 32) {
-            int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distanceFromEntry);
+            int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
             distance += distance_penalty;
             if (distance < min_distance) {
                 min_distance = distance;
@@ -295,7 +295,7 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
     if (!min_building) {
         return 0;
     }
-    if (min_building->hasRoadAccess == 1) {
+    if (min_building->has_road_access == 1) {
         *x_warehouse = min_building->x;
         *y_warehouse = min_building->y;
     } else if (!map_has_road_access(min_building->x, min_building->y, 3, x_warehouse, y_warehouse)) {
@@ -581,7 +581,7 @@ static int trade_ship_lost_queue(const figure *f)
 {
     building *b = building_get(f->destinationBuildingId);
     if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_DOCK &&
-        b->numWorkers > 0 && b->data.dock.trade_ship_id == f->id) {
+        b->num_workers > 0 && b->data.dock.trade_ship_id == f->id) {
         return 0;
     }
     return 1;
@@ -590,7 +590,7 @@ static int trade_ship_lost_queue(const figure *f)
 static int trade_ship_done_trading(figure *f)
 {
     building *b = building_get(f->destinationBuildingId);
-    if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_DOCK && b->numWorkers > 0) {
+    if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_DOCK && b->num_workers > 0) {
         for (int i = 0; i < 3; i++) {
             if (b->data.dock.docker_ids[i]) {
                 figure *docker = figure_get(b->data.dock.docker_ids[i]);
@@ -717,7 +717,7 @@ void figure_trade_ship_action(figure *f)
                     f->actionState = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
                     f->destinationX = x_tile;
                     f->destinationY = y_tile;
-                } else if (map_figure_at(f->gridOffset) != f->id &&
+                } else if (map_figure_at(f->grid_offset) != f->id &&
                     building_dock_get_queue_destination(&x_tile, &y_tile)) {
                     f->actionState = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                     f->destinationX = x_tile;

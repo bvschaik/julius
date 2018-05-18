@@ -21,22 +21,22 @@ static int is_problem_cartpusher(int figure_id)
 
 void overlay_problems_prepare_building(building *b)
 {
-    if (b->houseSize) {
+    if (b->house_size) {
         return;
     }
     if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
-        if (!b->hasWaterAccess) {
-            b->showOnProblemOverlay = 1;
+        if (!b->has_water_access) {
+            b->show_on_problem_overlay = 1;
         }
     } else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_CLAY_PIT) {
-        if (is_problem_cartpusher(b->figureId)) {
-            b->showOnProblemOverlay = 1;
+        if (is_problem_cartpusher(b->figure_id)) {
+            b->show_on_problem_overlay = 1;
         }
     } else if (building_is_workshop(b->type)) {
-        if (is_problem_cartpusher(b->figureId)) {
-            b->showOnProblemOverlay = 1;
-        } else if (b->loadsStored <= 0) {
-            b->showOnProblemOverlay = 1;
+        if (is_problem_cartpusher(b->figure_id)) {
+            b->show_on_problem_overlay = 1;
+        } else if (b->loads_stored <= 0) {
+            b->show_on_problem_overlay = 1;
         }
     }
 }
@@ -53,7 +53,7 @@ static int show_building_damage(const building *b)
 
 static int show_building_problems(const building *b)
 {
-    return b->showOnProblemOverlay;
+    return b->show_on_problem_overlay;
 }
 
 static int show_building_native(const building *b)
@@ -81,7 +81,7 @@ static int show_figure_crime(const figure *f)
 static int show_figure_problems(const figure *f)
 {
     if (f->type == FIGURE_LABOR_SEEKER) {
-        return building_get(f->buildingId)->showOnProblemOverlay;
+        return building_get(f->buildingId)->show_on_problem_overlay;
     } else if (f->type == FIGURE_CART_PUSHER) {
         return f->actionState == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->minMaxSeen;
     } else {
@@ -97,18 +97,18 @@ static int show_figure_native(const figure *f)
 
 static int get_column_height_fire(const building *b)
 {
-    return b->fireRisk > 0 ? b->fireRisk / 10 : NO_COLUMN;
+    return b->fire_risk > 0 ? b->fire_risk / 10 : NO_COLUMN;
 }
 
 static int get_column_height_damage(const building *b)
 {
-    return b->damageRisk > 0 ? b->damageRisk / 10 : NO_COLUMN;
+    return b->damage_risk > 0 ? b->damage_risk / 10 : NO_COLUMN;
 }
 
 static int get_column_height_crime(const building *b)
 {
-    if (b->houseSize) {
-        int happiness = b->sentiment.houseHappiness;
+    if (b->house_size) {
+        int happiness = b->sentiment.house_happiness;
         if (happiness <= 0) {
             return 10;
         } else if (happiness <= 10) {
@@ -134,15 +134,15 @@ static int get_column_height_none(const building *b)
 
 static int get_tooltip_fire(tooltip_context *c, const building *b)
 {
-    if (b->fireRisk <= 0) {
+    if (b->fire_risk <= 0) {
         return 46;
-    } else if (b->fireRisk <= 20) {
+    } else if (b->fire_risk <= 20) {
         return 47;
-    } else if (b->fireRisk <= 40) {
+    } else if (b->fire_risk <= 40) {
         return 48;
-    } else if (b->fireRisk <= 60) {
+    } else if (b->fire_risk <= 60) {
         return 49;
-    } else if (b->fireRisk <= 80) {
+    } else if (b->fire_risk <= 80) {
         return 50;
     } else {
         return 51;
@@ -151,15 +151,15 @@ static int get_tooltip_fire(tooltip_context *c, const building *b)
 
 static int get_tooltip_damage(tooltip_context *c, const building *b)
 {
-    if (b->damageRisk <= 0) {
+    if (b->damage_risk <= 0) {
         return 52;
-    } else if (b->damageRisk <= 40) {
+    } else if (b->damage_risk <= 40) {
         return 53;
-    } else if (b->damageRisk <= 80) {
+    } else if (b->damage_risk <= 80) {
         return 54;
-    } else if (b->damageRisk <= 120) {
+    } else if (b->damage_risk <= 120) {
         return 55;
-    } else if (b->damageRisk <= 160) {
+    } else if (b->damage_risk <= 160) {
         return 56;
     } else {
         return 57;
@@ -168,15 +168,15 @@ static int get_tooltip_damage(tooltip_context *c, const building *b)
 
 static int get_tooltip_crime(tooltip_context *c, const building *b)
 {
-    if (b->sentiment.houseHappiness <= 0) {
+    if (b->sentiment.house_happiness <= 0) {
         return 63;
-    } else if (b->sentiment.houseHappiness <= 10) {
+    } else if (b->sentiment.house_happiness <= 10) {
         return 62;
-    } else if (b->sentiment.houseHappiness <= 20) {
+    } else if (b->sentiment.house_happiness <= 20) {
         return 61;
-    } else if (b->sentiment.houseHappiness <= 30) {
+    } else if (b->sentiment.house_happiness <= 30) {
         return 60;
-    } else if (b->sentiment.houseHappiness < 50) {
+    } else if (b->sentiment.house_happiness < 50) {
         return 59;
     } else {
         return 58;

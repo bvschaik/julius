@@ -169,7 +169,7 @@ static void draw_trader(building_info_context *c, figure *f)
 static void draw_enemy(building_info_context *c, figure *f)
 {
     int image_id = 8;
-    int enemy_type = formation_get(f->formationId)->enemy_type;
+    int enemy_type = formation_get(f->formation_id)->enemy_type;
     switch (f->type) {
         case FIGURE_ENEMY43_SPEAR:
             switch (enemy_type) {
@@ -356,7 +356,7 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate *coord)
     int x_cam, y_cam;
     city_view_get_camera(&x_cam, &y_cam);
 
-    int grid_offset = figure_get(figure_id)->gridOffset;
+    int grid_offset = figure_get(figure_id)->grid_offset;
     int x, y;
     city_view_grid_offset_to_xy_view(grid_offset, &x, &y);
 

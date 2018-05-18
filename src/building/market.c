@@ -78,8 +78,8 @@ int building_market_get_storage_destination(building *market)
         if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE) {
             continue;
         }
-        if (!b->hasRoadAccess || b->distanceFromEntry <= 0 ||
-            b->roadNetworkId != market->roadNetworkId) {
+        if (!b->has_road_access || b->distance_from_entry <= 0 ||
+            b->road_network_id != market->road_network_id) {
             continue;
         }
         int distance = calc_maximum_distance(market->x, market->y, b->x, b->y);

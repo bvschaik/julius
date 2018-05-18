@@ -53,7 +53,7 @@ static void culture_action(figure *f, int group)
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);
-    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -126,7 +126,7 @@ void figure_missionary_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 192;
     building *b = building_get(f->buildingId);
-    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -153,7 +153,7 @@ void figure_labor_seeker_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);
-    if (b->state != BUILDING_STATE_IN_USE || b->figureId2 != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -167,7 +167,7 @@ void figure_market_trader_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *market = building_get(f->buildingId);
-    if (market->state != BUILDING_STATE_IN_USE || market->figureId != f->id) {
+    if (market->state != BUILDING_STATE_IN_USE || market->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -190,7 +190,7 @@ void figure_tax_collector_action(figure *f)
     f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 512;
-    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -221,7 +221,7 @@ void figure_tax_collector_action(figure *f)
             f->useCrossCountry = 1;
             f->isGhost = 1;
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
-                if (map_building_at(f->gridOffset) == f->buildingId) {
+                if (map_building_at(f->grid_offset) == f->buildingId) {
                     // returned to own building
                     f->state = FIGURE_STATE_DEAD;
                 } else {

@@ -22,7 +22,7 @@ void figure_engineer_action(figure *f)
     f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 640;
-    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -53,7 +53,7 @@ void figure_engineer_action(figure *f)
             f->useCrossCountry = 1;
             f->isGhost = 1;
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
-                if (map_building_at(f->gridOffset) == f->buildingId) {
+                if (map_building_at(f->grid_offset) == f->buildingId) {
                     // returned to own building
                     f->state = FIGURE_STATE_DEAD;
                 } else {
@@ -153,7 +153,7 @@ static int fight_enemy(figure *f)
         f->destinationY = enemy->y;
         f->targetFigureId = enemy_id;
         enemy->targetedByFigureId = f->id;
-        f->targetFigureCreatedSequence = enemy->createdSequence;
+        f->targetFigureCreatedSequence = enemy->created_sequence;
         figure_route_remove(f);
         return 1;
     }
@@ -186,11 +186,11 @@ static int fight_fire(figure *f)
         building *ruin = building_get(ruin_id);
         f->waitTicksMissile = 0;
         f->actionState = FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE;
-        f->destinationX = ruin->roadAccessX;
-        f->destinationY = ruin->roadAccessY;
+        f->destinationX = ruin->road_access_x;
+        f->destinationY = ruin->road_access_y;
         f->destinationBuildingId = ruin_id;
         figure_route_remove(f);
-        ruin->figureId4 = f->id;
+        ruin->figure_id4 = f->id;
         return 1;
     }
     return 0;
@@ -201,7 +201,7 @@ static void extinguish_fire(figure *f)
     building *burn = building_get(f->destinationBuildingId);
     int distance = calc_maximum_distance(f->x, f->y, burn->x, burn->y);
     if (burn->state == BUILDING_STATE_IN_USE && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
-        burn->fireDuration = 32;
+        burn->fire_duration = 32;
         sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
     } else {
         f->waitTicks = 1;
@@ -234,7 +234,7 @@ static int target_is_alive(figure *f)
         return 0;
     }
     figure *target = figure_get(f->targetFigureId);
-    if (!figure_is_dead(target) && target->createdSequence == f->targetFigureCreatedSequence) {
+    if (!figure_is_dead(target) && target->created_sequence == f->targetFigureCreatedSequence) {
         return 1;
     }
     return 0;
@@ -247,7 +247,7 @@ void figure_prefect_action(figure *f)
     f->terrainUsage = TERRAIN_USAGE_ROADS;
     f->useCrossCountry = 0;
     f->maxRoamLength = 640;
-    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -282,7 +282,7 @@ void figure_prefect_action(figure *f)
             f->useCrossCountry = 1;
             f->isGhost = 1;
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
-                if (map_building_at(f->gridOffset) == f->buildingId) {
+                if (map_building_at(f->grid_offset) == f->buildingId) {
                     // returned to own building
                     f->state = FIGURE_STATE_DEAD;
                 } else {
@@ -403,7 +403,7 @@ void figure_worker_action(figure *f)
     f->useCrossCountry = 0;
     f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);
-    if (b->state != BUILDING_STATE_IN_USE || b->figureId != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
 }

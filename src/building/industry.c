@@ -23,13 +23,13 @@ int building_is_workshop(building_type type)
 
 static int max_progress(const building *b)
 {
-    return b->subtype.workshopType ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
+    return b->subtype.workshop_type ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
 }
 
 static void update_farm_image(const building *b)
 {
     map_building_tiles_add_farm(b->id, b->x, b->y,
-        image_group(GROUP_BUILDING_FARM_CROPS) + 5 * (b->outputResourceId - 1),
+        image_group(GROUP_BUILDING_FARM_CROPS) + 5 * (b->output_resource_id - 1),
         b->data.industry.progress);
 }
 
@@ -37,14 +37,14 @@ void building_industry_update_production()
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->outputResourceId) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id) {
             continue;
         }
         b->data.industry.has_raw_materials = 0;
-        if (b->housesCovered <= 0 || b->numWorkers <= 0) {
+        if (b->houses_covered <= 0 || b->num_workers <= 0) {
             continue;
         }
-        if (b->subtype.workshopType && !b->loadsStored) {
+        if (b->subtype.workshop_type && !b->loads_stored) {
             continue;
         }
         if (b->data.industry.curse_days_left) {
@@ -54,12 +54,12 @@ void building_industry_update_production()
                 b->data.industry.blessing_days_left--;
             }
             if (b->type == BUILDING_MARBLE_QUARRY) {
-                b->data.industry.progress += b->numWorkers / 2;
+                b->data.industry.progress += b->num_workers / 2;
             } else {
-                b->data.industry.progress += b->numWorkers;
+                b->data.industry.progress += b->num_workers;
             }
             if (b->data.industry.blessing_days_left && building_is_farm(b->type)) {
-                b->data.industry.progress += b->numWorkers;
+                b->data.industry.progress += b->num_workers;
             }
             int max = max_progress(b);
             if (b->data.industry.progress > max) {
@@ -79,16 +79,16 @@ void building_industry_update_wheat_production()
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->outputResourceId) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id) {
             continue;
         }
-        if (b->housesCovered <= 0 || b->numWorkers <= 0) {
+        if (b->houses_covered <= 0 || b->num_workers <= 0) {
             continue;
         }
         if (b->type == BUILDING_WHEAT_FARM && !b->data.industry.curse_days_left) {
-            b->data.industry.progress += b->numWorkers;
+            b->data.industry.progress += b->num_workers;
             if (b->data.industry.blessing_days_left) {
-                b->data.industry.progress += b->numWorkers;
+                b->data.industry.progress += b->num_workers;
             }
             if (b->data.industry.progress > MAX_PROGRESS_RAW) {
                 b->data.industry.progress = MAX_PROGRESS_RAW;
@@ -106,12 +106,12 @@ int building_industry_has_produced_resource(building *b)
 void building_industry_start_new_production(building *b)
 {
     b->data.industry.progress = 0;
-    if (b->subtype.workshopType) {
-        if (b->loadsStored) {
-            if (b->loadsStored > 1) {
+    if (b->subtype.workshop_type) {
+        if (b->loads_stored) {
+            if (b->loads_stored > 1) {
                 b->data.industry.has_raw_materials = 1;
             }
-            b->loadsStored--;
+            b->loads_stored--;
         }
     }
     if (building_is_farm(b->type)) {
@@ -123,7 +123,7 @@ void building_bless_farms()
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->outputResourceId && building_is_farm(b->type)) {
+        if (b->state == BUILDING_STATE_IN_USE && b->output_resource_id && building_is_farm(b->type)) {
             b->data.industry.progress = 200;
             b->data.industry.curse_days_left = 0;
             b->data.industry.blessing_days_left = 16;
@@ -136,7 +136,7 @@ void building_curse_farms(int big_curse)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->outputResourceId && building_is_farm(b->type)) {
+        if (b->state == BUILDING_STATE_IN_USE && b->output_resource_id && building_is_farm(b->type)) {
             b->data.industry.progress = 0;
             b->data.industry.blessing_days_left = 0;
             b->data.industry.curse_days_left = big_curse ? 48 : 4;
@@ -148,7 +148,7 @@ void building_curse_farms(int big_curse)
 void building_workshop_add_raw_material(building *b)
 {
     if (b->id > 0 && building_is_workshop(b->type)) {
-        b->loadsStored++; // BUG: any raw material accepted
+        b->loads_stored++; // BUG: any raw material accepted
     }
 }
 
@@ -170,12 +170,12 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
         if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
             continue;
         }
-        if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
+        if (!b->has_road_access || b->distance_from_entry <= 0) {
             continue;
         }
-        if (b->subtype.workshopType == output_type && b->roadNetworkId == road_network_id && b->loadsStored < 2) {
-            int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distanceFromEntry);
-            if (b->loadsStored > 0) {
+        if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id && b->loads_stored < 2) {
+            int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+            if (b->loads_stored > 0) {
                 dist += 20;
             }
             if (dist < min_dist) {
@@ -185,8 +185,8 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
         }
     }
     if (min_building) {
-        *x_dst = min_building->roadAccessX;
-        *y_dst = min_building->roadAccessY;
+        *x_dst = min_building->road_access_x;
+        *y_dst = min_building->road_access_y;
         return min_building->id;
     }
     return 0;
@@ -210,12 +210,12 @@ int building_get_workshop_for_raw_material(int x, int y, int resource,
         if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
             continue;
         }
-        if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
+        if (!b->has_road_access || b->distance_from_entry <= 0) {
             continue;
         }
-        if (b->subtype.workshopType == output_type && b->roadNetworkId == road_network_id) {
-            int dist = 10 * b->loadsStored +
-                calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distanceFromEntry);
+        if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id) {
+            int dist = 10 * b->loads_stored +
+                calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building = b;
@@ -223,8 +223,8 @@ int building_get_workshop_for_raw_material(int x, int y, int resource,
         }
     }
     if (min_building) {
-        *x_dst = min_building->roadAccessX;
-        *y_dst = min_building->roadAccessY;
+        *x_dst = min_building->road_access_x;
+        *y_dst = min_building->road_access_y;
         return min_building->id;
     }
     return 0;

@@ -137,7 +137,7 @@ static void enemy_fighting(figure *f, const formation *m)
             f->destinationX = target->x;
             f->destinationY = target->y;
             f->targetFigureId = target_id;
-            f->targetFigureCreatedSequence = target->createdSequence;
+            f->targetFigureCreatedSequence = target->created_sequence;
             target->targetedByFigureId = f->id;
             figure_route_remove(f);
         }
@@ -226,7 +226,7 @@ static int get_missile_direction(figure *f, const formation *m)
 
 void figure_enemy43_spear_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 1;
@@ -264,7 +264,7 @@ void figure_enemy43_spear_action(figure *f)
 
 void figure_enemy44_sword_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 1;
@@ -299,7 +299,7 @@ void figure_enemy44_sword_action(figure *f)
 
 void figure_enemy45_sword_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 1;
@@ -334,7 +334,7 @@ void figure_enemy45_sword_action(figure *f)
 
 void figure_enemy_camel_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 1;
@@ -362,7 +362,7 @@ void figure_enemy_elephant_action(figure *f)
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 1;
-    enemy_action(f, formation_get(f->formationId));
+    enemy_action(f, formation_get(f->formation_id));
     
     int dir = get_direction(f);
     
@@ -382,7 +382,7 @@ void figure_enemy_chariot_action(figure *f)
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 3;
-    enemy_action(f, formation_get(f->formationId));
+    enemy_action(f, formation_get(f->formation_id));
     
     int dir = get_direction(f);
     
@@ -399,7 +399,7 @@ void figure_enemy_chariot_action(figure *f)
 
 void figure_enemy49_fast_sword_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 2;
@@ -442,7 +442,7 @@ void figure_enemy49_fast_sword_action(figure *f)
 
 void figure_enemy50_sword_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 1;
@@ -472,7 +472,7 @@ void figure_enemy50_sword_action(figure *f)
 
 void figure_enemy51_spear_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 2;
@@ -504,7 +504,7 @@ void figure_enemy51_spear_action(figure *f)
 
 void figure_enemy52_mounted_archer_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 3;
@@ -529,7 +529,7 @@ void figure_enemy52_mounted_archer_action(figure *f)
 
 void figure_enemy53_axe_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     f->speedMultiplier = 1;
@@ -628,7 +628,7 @@ void figure_enemy_gladiator_action(figure *f)
 
 void figure_enemy_caesar_legionary_action(figure *f)
 {
-    formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formation_id);
     city_figures_add_imperial_soldier();
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;

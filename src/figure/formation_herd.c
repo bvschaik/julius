@@ -134,7 +134,7 @@ static void move_animals(const formation *m, int attacking_animals)
                 f->destinationY = target->y;
                 f->targetFigureId = target_id;
                 target->targetedByFigureId = f->id;
-                f->targetFigureCreatedSequence = target->createdSequence;
+                f->targetFigureCreatedSequence = target->created_sequence;
                 figure_route_remove(f);
             } else {
                 f->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
@@ -165,7 +165,7 @@ static void update_herd_formation(formation *m)
         if (!map_terrain_is(map_grid_offset(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
             figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
             wolf->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
-            wolf->formationId = m->id;
+            wolf->formation_id = m->id;
             wolf->waitTicks = wolf->id & 0x1f;
         }
     }

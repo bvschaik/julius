@@ -171,11 +171,11 @@ void city_resource_calculate_warehouse_stocks()
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
-            b->hasRoadAccess = 0;
+            b->has_road_access = 0;
             if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
-                b->hasRoadAccess = 1;
+                b->has_road_access = 1;
             } else if (map_has_road_access(b->x, b->y, 3, 0, 0)) {
-                b->hasRoadAccess = 2;
+                b->has_road_access = 2;
             }
         }
     }
@@ -185,11 +185,11 @@ void city_resource_calculate_warehouse_stocks()
             continue;
         }
         building *warehouse = building_main(b);
-        if (warehouse->hasRoadAccess) {
-            b->hasRoadAccess = warehouse->hasRoadAccess;
-            if (b->subtype.warehouseResourceId) {
-                int loads = b->loadsStored;
-                int resource = b->subtype.warehouseResourceId;
+        if (warehouse->has_road_access) {
+            b->has_road_access = warehouse->has_road_access;
+            if (b->subtype.warehouse_resource_id) {
+                int loads = b->loads_stored;
+                int resource = b->subtype.warehouse_resource_id;
                 city_data.resource.stored_in_warehouses[resource] += loads;
                 city_data.resource.space_in_warehouses[resource] += 4 - loads;
             } else {
@@ -242,11 +242,11 @@ static void calculate_available_food()
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
         }
-        b->hasRoadAccess = 0;
+        b->has_road_access = 0;
         if (map_has_road_access_granary(b->x, b->y, 0, 0)) {
-            b->hasRoadAccess = 1;
+            b->has_road_access = 1;
             int pct_workers = calc_percentage(
-                b->numWorkers, model_get_building(b->type)->laborers);
+                b->num_workers, model_get_building(b->type)->laborers);
             if (pct_workers < 100) {
                 city_data.resource.granaries.understaffed++;
             }
@@ -315,16 +315,16 @@ void city_resource_calculate_workshop_stocks()
         if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
             continue;
         }
-        b->hasRoadAccess = 0;
+        b->has_road_access = 0;
         if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
-            b->hasRoadAccess = 1;
-            int room = 2 - b->loadsStored;
+            b->has_road_access = 1;
+            int room = 2 - b->loads_stored;
             if (room < 0) {
                 room = 0;
             }
-            int workshop_resource = b->subtype.workshopType;
+            int workshop_resource = b->subtype.workshop_type;
             city_data.resource.space_in_workshops[workshop_resource] += room;
-            city_data.resource.stored_in_workshops[workshop_resource] += b->loadsStored;
+            city_data.resource.stored_in_workshops[workshop_resource] += b->loads_stored;
         }
     }
 }
@@ -337,32 +337,32 @@ void city_resource_consume_food()
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
-            int num_types = model_get_house(b->subtype.houseLevel)->food_types;
-            int amount_per_type = calc_adjust_with_percentage(b->housePopulation, 50);
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+            int num_types = model_get_house(b->subtype.house_level)->food_types;
+            int amount_per_type = calc_adjust_with_percentage(b->house_population, 50);
             if (num_types > 1) {
                 amount_per_type /= num_types;
             }
-            b->data.house.numFoods = 0;
+            b->data.house.num_foods = 0;
             if (scenario_property_rome_supplies_wheat()) {
                 city_data.resource.food_types_eaten = 1;
                 city_data.resource.food_types_available = 1;
                 b->data.house.inventory[INVENTORY_WHEAT] = amount_per_type;
-                b->data.house.numFoods = 1;
+                b->data.house.num_foods = 1;
             } else if (num_types > 0) {
-                for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b->data.house.numFoods < num_types; t++) {
+                for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b->data.house.num_foods < num_types; t++) {
                     if (b->data.house.inventory[t] >= amount_per_type) {
                         b->data.house.inventory[t] -= amount_per_type;
-                        b->data.house.numFoods++;
+                        b->data.house.num_foods++;
                         total_consumed += amount_per_type;
                     } else if (b->data.house.inventory[t]) {
                         // has food but not enough
                         b->data.house.inventory[t] = 0;
-                        b->data.house.numFoods++;
+                        b->data.house.num_foods++;
                         total_consumed += amount_per_type;
                     }
-                    if (b->data.house.numFoods > city_data.resource.food_types_eaten) {
-                        city_data.resource.food_types_eaten = b->data.house.numFoods;
+                    if (b->data.house.num_foods > city_data.resource.food_types_eaten) {
+                        city_data.resource.food_types_eaten = b->data.house.num_foods;
                     }
                 }
             }

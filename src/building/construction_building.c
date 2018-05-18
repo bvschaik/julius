@@ -24,24 +24,24 @@
 
 static void add_fort(int type, building *fort)
 {
-    fort->prevPartBuildingId = 0;
+    fort->prev_part_building_id = 0;
     map_building_tiles_add(fort->id, fort->x, fort->y, fort->size, image_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
     if (type == BUILDING_FORT_LEGIONARIES) {
-        fort->subtype.fortFigureType = FIGURE_FORT_LEGIONARY;
+        fort->subtype.fort_figure_type = FIGURE_FORT_LEGIONARY;
     } else if (type == BUILDING_FORT_JAVELIN) {
-        fort->subtype.fortFigureType = FIGURE_FORT_JAVELIN;
+        fort->subtype.fort_figure_type = FIGURE_FORT_JAVELIN;
     } else if (type == BUILDING_FORT_MOUNTED) {
-        fort->subtype.fortFigureType = FIGURE_FORT_MOUNTED;
+        fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
     }
 
-    fort->formationId = formation_legion_create_for_fort(fort);
+    fort->formation_id = formation_legion_create_for_fort(fort);
     // create parade ground
     building *ground = building_create(BUILDING_FORT_GROUND, fort->x + 3, fort->y - 1);
     game_undo_add_building(ground);
-    ground->formationId = fort->formationId;
-    ground->prevPartBuildingId = fort->id;
-    fort->nextPartBuildingId = ground->id;
-    ground->nextPartBuildingId = 0;
+    ground->formation_id = fort->formation_id;
+    ground->prev_part_building_id = fort->id;
+    fort->next_part_building_id = ground->id;
+    ground->next_part_building_id = 0;
     map_building_tiles_add(ground->id, fort->x + 3, fort->y - 1, 4,
         image_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 }
@@ -59,7 +59,7 @@ static void add_hippodrome(building *b)
     } else {
         part1->subtype.orientation = 3;
     }
-    part1->prevPartBuildingId = 0;
+    part1->prev_part_building_id = 0;
     int image_id;
     switch (orientation) {
         case DIR_0_TOP:
@@ -86,9 +86,9 @@ static void add_hippodrome(building *b)
     } else {
         part2->subtype.orientation = 4;
     }
-    part2->prevPartBuildingId = part1->id;
-    part1->nextPartBuildingId = part2->id;
-    part2->nextPartBuildingId = 0;
+    part2->prev_part_building_id = part1->id;
+    part1->next_part_building_id = part2->id;
+    part2->next_part_building_id = 0;
     switch (orientation) {
         case DIR_0_TOP:
         case DIR_4_BOTTOM:
@@ -108,9 +108,9 @@ static void add_hippodrome(building *b)
     } else {
         part3->subtype.orientation = 5;
     }
-    part3->prevPartBuildingId = part2->id;
-    part2->nextPartBuildingId = part3->id;
-    part3->nextPartBuildingId = 0;
+    part3->prev_part_building_id = part2->id;
+    part2->next_part_building_id = part3->id;
+    part3->next_part_building_id = 0;
     switch (orientation) {
         case DIR_0_TOP:
             image_id = image2 + 4;
@@ -132,8 +132,8 @@ static building *add_warehouse_space(int x, int y, building *prev)
 {
     building *b = building_create(BUILDING_WAREHOUSE_SPACE, x, y);
     game_undo_add_building(b);
-    b->prevPartBuildingId = prev->id;
-    prev->nextPartBuildingId = b->id;
+    b->prev_part_building_id = prev->id;
+    prev->next_part_building_id = b->id;
     map_building_tiles_add(b->id, x, y, 1,
         image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY), TERRAIN_BUILDING);
     return b;
@@ -142,7 +142,7 @@ static building *add_warehouse_space(int x, int y, building *prev)
 static void add_warehouse(building *b)
 {
     b->storage_id = building_storage_create();
-    b->prevPartBuildingId = 0;
+    b->prev_part_building_id = 0;
     map_building_tiles_add(b->id, b->x, b->y, 1, image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
 
     building *prev = b;
@@ -154,7 +154,7 @@ static void add_warehouse(building *b)
     prev = add_warehouse_space(b->x, b->y + 2, prev);
     prev = add_warehouse_space(b->x + 1, b->y + 2, prev);
     prev = add_warehouse_space(b->x + 2, b->y + 2, prev);
-    prev->nextPartBuildingId = 0;
+    prev->next_part_building_id = 0;
 }
 
 static void add_building(building *b, int image_id)

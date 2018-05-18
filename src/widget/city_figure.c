@@ -100,14 +100,14 @@ static void draw_hippodrome_horse(const figure *f, int x, int y)
 
 static void draw_fort_standard(const figure *f, int x, int y)
 {
-    if (!formation_get(f->formationId)->in_distant_battle) {
+    if (!formation_get(f->formation_id)->in_distant_battle) {
         // base
         image_draw(f->graphicId, x, y);
         // flag
         int flag_height = image_get(f->cartGraphicId)->height;
         image_draw(f->cartGraphicId, x, y - flag_height);
         // top icon
-        int icon_image_id = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + f->formationId - 1;
+        int icon_image_id = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + f->formation_id - 1;
         image_draw(icon_image_id, x, y - image_get(icon_image_id)->height - flag_height);
     }
 }

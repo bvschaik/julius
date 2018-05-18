@@ -9,10 +9,10 @@ static void write_type_data(buffer *buf, const building *b)
             buffer_write_i16(buf, b->data.house.inventory[i]);
         }
         buffer_write_u8(buf, b->data.house.theater);
-        buffer_write_u8(buf, b->data.house.amphitheaterActor);
-        buffer_write_u8(buf, b->data.house.amphitheaterGladiator);
-        buffer_write_u8(buf, b->data.house.colosseumGladiator);
-        buffer_write_u8(buf, b->data.house.colosseumLion);
+        buffer_write_u8(buf, b->data.house.amphitheater_actor);
+        buffer_write_u8(buf, b->data.house.amphitheater_gladiator);
+        buffer_write_u8(buf, b->data.house.colosseum_gladiator);
+        buffer_write_u8(buf, b->data.house.colosseum_lion);
         buffer_write_u8(buf, b->data.house.hippodrome);
         buffer_write_u8(buf, b->data.house.school);
         buffer_write_u8(buf, b->data.house.library);
@@ -21,19 +21,19 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_u8(buf, b->data.house.clinic);
         buffer_write_u8(buf, b->data.house.bathhouse);
         buffer_write_u8(buf, b->data.house.hospital);
-        buffer_write_u8(buf, b->data.house.templeCeres);
-        buffer_write_u8(buf, b->data.house.templeNeptune);
-        buffer_write_u8(buf, b->data.house.templeMercury);
-        buffer_write_u8(buf, b->data.house.templeMars);
-        buffer_write_u8(buf, b->data.house.templeVenus);
-        buffer_write_u8(buf, b->data.house.noSpaceToExpand);
-        buffer_write_u8(buf, b->data.house.numFoods);
+        buffer_write_u8(buf, b->data.house.temple_ceres);
+        buffer_write_u8(buf, b->data.house.temple_neptune);
+        buffer_write_u8(buf, b->data.house.temple_mercury);
+        buffer_write_u8(buf, b->data.house.temple_mars);
+        buffer_write_u8(buf, b->data.house.temple_venus);
+        buffer_write_u8(buf, b->data.house.no_space_to_expand);
+        buffer_write_u8(buf, b->data.house.num_foods);
         buffer_write_u8(buf, b->data.house.entertainment);
         buffer_write_u8(buf, b->data.house.education);
         buffer_write_u8(buf, b->data.house.health);
-        buffer_write_u8(buf, b->data.house.numGods);
-        buffer_write_u8(buf, b->data.house.devolveDelay);
-        buffer_write_u8(buf, b->data.house.evolveTextId);
+        buffer_write_u8(buf, b->data.house.num_gods);
+        buffer_write_u8(buf, b->data.house.devolve_delay);
+        buffer_write_u8(buf, b->data.house.evolve_text_id);
     } else if (b->type == BUILDING_MARKET) {
         buffer_write_i16(buf, 0);
         for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -73,7 +73,7 @@ static void write_type_data(buffer *buf, const building *b)
             buffer_write_i16(buf, b->data.dock.docker_ids[i]);
         }
         buffer_write_i16(buf, b->data.dock.trade_ship_id);
-    } else if (b->outputResourceId || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD) {
+    } else if (b->output_resource_id || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD) {
         buffer_write_i16(buf, b->data.industry.progress);
         for (int i = 0; i < 12; i++) {
             buffer_write_u8(buf, 0);
@@ -114,65 +114,65 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
 {
     buffer_write_u8(buf, b->state);
     buffer_write_u8(buf, b->faction_id);
-    buffer_write_u8(buf, b->__unknown_02);
+    buffer_write_u8(buf, b->unknown_value);
     buffer_write_u8(buf, b->size);
-    buffer_write_u8(buf, b->houseIsMerged);
-    buffer_write_u8(buf, b->houseSize);
+    buffer_write_u8(buf, b->house_is_merged);
+    buffer_write_u8(buf, b->house_size);
     buffer_write_u8(buf, b->x);
     buffer_write_u8(buf, b->y);
-    buffer_write_i16(buf, b->gridOffset);
+    buffer_write_i16(buf, b->grid_offset);
     buffer_write_i16(buf, b->type);
-    buffer_write_i16(buf, b->subtype.houseLevel); // which union field we use does not matter
-    buffer_write_u8(buf, b->roadNetworkId);
+    buffer_write_i16(buf, b->subtype.house_level); // which union field we use does not matter
+    buffer_write_u8(buf, b->road_network_id);
     buffer_write_u8(buf, 0);
-    buffer_write_u16(buf, b->createdSequence);
-    buffer_write_i16(buf, b->housesCovered);
-    buffer_write_i16(buf, b->percentageHousesCovered);
-    buffer_write_i16(buf, b->housePopulation);
-    buffer_write_i16(buf, b->housePopulationRoom);
-    buffer_write_i16(buf, b->distanceFromEntry);
-    buffer_write_i16(buf, b->houseMaxPopulationSeen);
-    buffer_write_i16(buf, b->houseUnreachableTicks);
-    buffer_write_u8(buf, b->roadAccessX); // 20
-    buffer_write_u8(buf, b->roadAccessY); // 21
-    buffer_write_i16(buf, b->figureId);
-    buffer_write_i16(buf, b->figureId2); // labor seeker or market buyer
-    buffer_write_i16(buf, b->immigrantFigureId);
-    buffer_write_i16(buf, b->figureId4); // 28; tower ballista or burning ruin prefect
-    buffer_write_u8(buf, b->figureSpawnDelay); // 2a
+    buffer_write_u16(buf, b->created_sequence);
+    buffer_write_i16(buf, b->houses_covered);
+    buffer_write_i16(buf, b->percentage_houses_covered);
+    buffer_write_i16(buf, b->house_population);
+    buffer_write_i16(buf, b->house_population_room);
+    buffer_write_i16(buf, b->distance_from_entry);
+    buffer_write_i16(buf, b->house_highest_population);
+    buffer_write_i16(buf, b->house_unreachable_ticks);
+    buffer_write_u8(buf, b->road_access_x);
+    buffer_write_u8(buf, b->road_access_y);
+    buffer_write_i16(buf, b->figure_id);
+    buffer_write_i16(buf, b->figure_id2);
+    buffer_write_i16(buf, b->immigrant_figure_id);
+    buffer_write_i16(buf, b->figure_id4);
+    buffer_write_u8(buf, b->figure_spawn_delay);
     buffer_write_u8(buf, 0);
-    buffer_write_u8(buf, b->figureRoamDirection);
-    buffer_write_u8(buf, b->hasWaterAccess);
+    buffer_write_u8(buf, b->figure_roam_direction);
+    buffer_write_u8(buf, b->has_water_access);
     buffer_write_u8(buf, 0);
     buffer_write_u8(buf, 0);
-    buffer_write_i16(buf, b->prevPartBuildingId);
-    buffer_write_i16(buf, b->nextPartBuildingId);
-    buffer_write_i16(buf, b->loadsStored); // 34
+    buffer_write_i16(buf, b->prev_part_building_id);
+    buffer_write_i16(buf, b->next_part_building_id);
+    buffer_write_i16(buf, b->loads_stored);
     buffer_write_u8(buf, 0);
-    buffer_write_u8(buf, b->hasWellAccess);
-    buffer_write_i16(buf, b->numWorkers);
-    buffer_write_u8(buf, b->laborCategory);
-    buffer_write_u8(buf, b->outputResourceId); //3b
-    buffer_write_u8(buf, b->hasRoadAccess);
-    buffer_write_u8(buf, b->houseCriminalActive);
-    buffer_write_i16(buf, b->damageRisk);
-    buffer_write_i16(buf, b->fireRisk);
-    buffer_write_i16(buf, b->fireDuration); //42
-    buffer_write_u8(buf, b->fireProof); //44 cannot catch fire or collapse
-    buffer_write_u8(buf, b->houseGenerationDelay);
-    buffer_write_u8(buf, b->houseTaxCoverage);
+    buffer_write_u8(buf, b->has_well_access);
+    buffer_write_i16(buf, b->num_workers);
+    buffer_write_u8(buf, b->labor_category);
+    buffer_write_u8(buf, b->output_resource_id);
+    buffer_write_u8(buf, b->has_road_access);
+    buffer_write_u8(buf, b->house_criminal_active);
+    buffer_write_i16(buf, b->damage_risk);
+    buffer_write_i16(buf, b->fire_risk);
+    buffer_write_i16(buf, b->fire_duration);
+    buffer_write_u8(buf, b->fire_proof);
+    buffer_write_u8(buf, b->house_figure_generation_delay);
+    buffer_write_u8(buf, b->house_tax_coverage);
     buffer_write_u8(buf, 0);
-    buffer_write_i16(buf, b->formationId);
+    buffer_write_i16(buf, b->formation_id);
     write_type_data(buf, b);
-    buffer_write_i32(buf, b->taxIncomeOrStorage); // 74
-    buffer_write_u8(buf, b->houseDaysWithoutFood); // 78
-    buffer_write_u8(buf, b->ruinHasPlague);
+    buffer_write_i32(buf, b->tax_income_or_storage);
+    buffer_write_u8(buf, b->house_days_without_food);
+    buffer_write_u8(buf, b->ruin_has_plague);
     buffer_write_i8(buf, b->desirability);
-    buffer_write_u8(buf, b->isDeleted); // 7b
-    buffer_write_u8(buf, b->isAdjacentToWater);
+    buffer_write_u8(buf, b->is_deleted);
+    buffer_write_u8(buf, b->is_adjacent_to_water);
     buffer_write_u8(buf, b->storage_id);
-    buffer_write_i8(buf, b->sentiment.houseHappiness); // which union field we use does not matter
-    buffer_write_u8(buf, b->showOnProblemOverlay);
+    buffer_write_i8(buf, b->sentiment.house_happiness); // which union field we use does not matter
+    buffer_write_u8(buf, b->show_on_problem_overlay);
 }
 
 static void read_type_data(buffer *buf, building *b)
@@ -182,10 +182,10 @@ static void read_type_data(buffer *buf, building *b)
             b->data.house.inventory[i] = buffer_read_i16(buf);
         }
         b->data.house.theater = buffer_read_u8(buf);
-        b->data.house.amphitheaterActor = buffer_read_u8(buf);
-        b->data.house.amphitheaterGladiator = buffer_read_u8(buf);
-        b->data.house.colosseumGladiator = buffer_read_u8(buf);
-        b->data.house.colosseumLion = buffer_read_u8(buf);
+        b->data.house.amphitheater_actor = buffer_read_u8(buf);
+        b->data.house.amphitheater_gladiator = buffer_read_u8(buf);
+        b->data.house.colosseum_gladiator = buffer_read_u8(buf);
+        b->data.house.colosseum_lion = buffer_read_u8(buf);
         b->data.house.hippodrome = buffer_read_u8(buf);
         b->data.house.school = buffer_read_u8(buf);
         b->data.house.library = buffer_read_u8(buf);
@@ -194,19 +194,19 @@ static void read_type_data(buffer *buf, building *b)
         b->data.house.clinic = buffer_read_u8(buf);
         b->data.house.bathhouse = buffer_read_u8(buf);
         b->data.house.hospital = buffer_read_u8(buf);
-        b->data.house.templeCeres = buffer_read_u8(buf);
-        b->data.house.templeNeptune = buffer_read_u8(buf);
-        b->data.house.templeMercury = buffer_read_u8(buf);
-        b->data.house.templeMars = buffer_read_u8(buf);
-        b->data.house.templeVenus = buffer_read_u8(buf);
-        b->data.house.noSpaceToExpand = buffer_read_u8(buf);
-        b->data.house.numFoods = buffer_read_u8(buf);
+        b->data.house.temple_ceres = buffer_read_u8(buf);
+        b->data.house.temple_neptune = buffer_read_u8(buf);
+        b->data.house.temple_mercury = buffer_read_u8(buf);
+        b->data.house.temple_mars = buffer_read_u8(buf);
+        b->data.house.temple_venus = buffer_read_u8(buf);
+        b->data.house.no_space_to_expand = buffer_read_u8(buf);
+        b->data.house.num_foods = buffer_read_u8(buf);
         b->data.house.entertainment = buffer_read_u8(buf);
         b->data.house.education = buffer_read_u8(buf);
         b->data.house.health = buffer_read_u8(buf);
-        b->data.house.numGods = buffer_read_u8(buf);
-        b->data.house.devolveDelay = buffer_read_u8(buf);
-        b->data.house.evolveTextId = buffer_read_u8(buf);
+        b->data.house.num_gods = buffer_read_u8(buf);
+        b->data.house.devolve_delay = buffer_read_u8(buf);
+        b->data.house.evolve_text_id = buffer_read_u8(buf);
     } else if (b->type == BUILDING_MARKET) {
         buffer_skip(buf, 2);
         for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -236,7 +236,7 @@ static void read_type_data(buffer *buf, building *b)
             b->data.dock.docker_ids[i] = buffer_read_i16(buf);
         }
         b->data.dock.trade_ship_id = buffer_read_i16(buf);
-    } else if (b->outputResourceId || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD) {
+    } else if (b->output_resource_id || b->type == BUILDING_NATIVE_CROPS || b->type == BUILDING_SHIPYARD) {
         b->data.industry.progress = buffer_read_i16(buf);
         buffer_skip(buf, 12);
         b->data.industry.has_fish = buffer_read_u8(buf);
@@ -265,63 +265,63 @@ void building_state_load_from_buffer(buffer *buf, building *b)
 {
     b->state = buffer_read_u8(buf);
     b->faction_id = buffer_read_u8(buf);
-    b->__unknown_02 = buffer_read_u8(buf);
+    b->unknown_value = buffer_read_u8(buf);
     b->size = buffer_read_u8(buf);
-    b->houseIsMerged = buffer_read_u8(buf);
-    b->houseSize = buffer_read_u8(buf);
+    b->house_is_merged = buffer_read_u8(buf);
+    b->house_size = buffer_read_u8(buf);
     b->x = buffer_read_u8(buf);
     b->y = buffer_read_u8(buf);
-    b->gridOffset = buffer_read_i16(buf);
+    b->grid_offset = buffer_read_i16(buf);
     b->type = buffer_read_i16(buf);
-    b->subtype.houseLevel = buffer_read_i16(buf); // which union field we use does not matter
-    b->roadNetworkId = buffer_read_u8(buf);
+    b->subtype.house_level = buffer_read_i16(buf); // which union field we use does not matter
+    b->road_network_id = buffer_read_u8(buf);
     buffer_skip(buf, 1);
-    b->createdSequence = buffer_read_u16(buf);
-    b->housesCovered = buffer_read_i16(buf);
-    b->percentageHousesCovered = buffer_read_i16(buf);
-    b->housePopulation = buffer_read_i16(buf);
-    b->housePopulationRoom = buffer_read_i16(buf);
-    b->distanceFromEntry = buffer_read_i16(buf);
-    b->houseMaxPopulationSeen = buffer_read_i16(buf);
-    b->houseUnreachableTicks = buffer_read_i16(buf);
-    b->roadAccessX = buffer_read_u8(buf); // 20
-    b->roadAccessY = buffer_read_u8(buf); // 21
-    b->figureId = buffer_read_i16(buf);
-    b->figureId2 = buffer_read_i16(buf); // labor seeker or market buyer
-    b->immigrantFigureId = buffer_read_i16(buf);
-    b->figureId4 = buffer_read_i16(buf); // 28; tower ballista or burning ruin prefect
-    b->figureSpawnDelay = buffer_read_u8(buf); // 2a
+    b->created_sequence = buffer_read_u16(buf);
+    b->houses_covered = buffer_read_i16(buf);
+    b->percentage_houses_covered = buffer_read_i16(buf);
+    b->house_population = buffer_read_i16(buf);
+    b->house_population_room = buffer_read_i16(buf);
+    b->distance_from_entry = buffer_read_i16(buf);
+    b->house_highest_population = buffer_read_i16(buf);
+    b->house_unreachable_ticks = buffer_read_i16(buf);
+    b->road_access_x = buffer_read_u8(buf);
+    b->road_access_y = buffer_read_u8(buf);
+    b->figure_id = buffer_read_i16(buf);
+    b->figure_id2 = buffer_read_i16(buf);
+    b->immigrant_figure_id = buffer_read_i16(buf);
+    b->figure_id4 = buffer_read_i16(buf);
+    b->figure_spawn_delay = buffer_read_u8(buf);
     buffer_skip(buf, 1);
-    b->figureRoamDirection = buffer_read_u8(buf);
-    b->hasWaterAccess = buffer_read_u8(buf);
+    b->figure_roam_direction = buffer_read_u8(buf);
+    b->has_water_access = buffer_read_u8(buf);
     buffer_skip(buf, 1);
     buffer_skip(buf, 1);
-    b->prevPartBuildingId = buffer_read_i16(buf);
-    b->nextPartBuildingId = buffer_read_i16(buf);
-    b->loadsStored = buffer_read_i16(buf); // 34
+    b->prev_part_building_id = buffer_read_i16(buf);
+    b->next_part_building_id = buffer_read_i16(buf);
+    b->loads_stored = buffer_read_i16(buf);
     buffer_skip(buf, 1);
-    b->hasWellAccess = buffer_read_u8(buf);
-    b->numWorkers = buffer_read_i16(buf);
-    b->laborCategory = buffer_read_u8(buf);
-    b->outputResourceId = buffer_read_u8(buf); //3b
-    b->hasRoadAccess = buffer_read_u8(buf);
-    b->houseCriminalActive = buffer_read_u8(buf);
-    b->damageRisk = buffer_read_i16(buf);
-    b->fireRisk = buffer_read_i16(buf);
-    b->fireDuration = buffer_read_i16(buf); //42
-    b->fireProof = buffer_read_u8(buf); //44 cannot catch fire or collapse
-    b->houseGenerationDelay = buffer_read_u8(buf);
-    b->houseTaxCoverage = buffer_read_u8(buf);
+    b->has_well_access = buffer_read_u8(buf);
+    b->num_workers = buffer_read_i16(buf);
+    b->labor_category = buffer_read_u8(buf);
+    b->output_resource_id = buffer_read_u8(buf);
+    b->has_road_access = buffer_read_u8(buf);
+    b->house_criminal_active = buffer_read_u8(buf);
+    b->damage_risk = buffer_read_i16(buf);
+    b->fire_risk = buffer_read_i16(buf);
+    b->fire_duration = buffer_read_i16(buf);
+    b->fire_proof = buffer_read_u8(buf);
+    b->house_figure_generation_delay = buffer_read_u8(buf);
+    b->house_tax_coverage = buffer_read_u8(buf);
     buffer_skip(buf, 1);
-    b->formationId = buffer_read_i16(buf);
+    b->formation_id = buffer_read_i16(buf);
     read_type_data(buf, b);
-    b->taxIncomeOrStorage = buffer_read_i32(buf); // 74
-    b->houseDaysWithoutFood = buffer_read_u8(buf); // 78
-    b->ruinHasPlague = buffer_read_u8(buf);
+    b->tax_income_or_storage = buffer_read_i32(buf);
+    b->house_days_without_food = buffer_read_u8(buf);
+    b->ruin_has_plague = buffer_read_u8(buf);
     b->desirability = buffer_read_i8(buf);
-    b->isDeleted = buffer_read_u8(buf); // 7b
-    b->isAdjacentToWater = buffer_read_u8(buf);
+    b->is_deleted = buffer_read_u8(buf);
+    b->is_adjacent_to_water = buffer_read_u8(buf);
     b->storage_id = buffer_read_u8(buf);
-    b->sentiment.houseHappiness = buffer_read_i8(buf); // which union field we use does not matter
-    b->showOnProblemOverlay = buffer_read_u8(buf);
+    b->sentiment.house_happiness = buffer_read_i8(buf); // which union field we use does not matter
+    b->show_on_problem_overlay = buffer_read_u8(buf);
 }

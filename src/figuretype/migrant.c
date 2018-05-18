@@ -18,18 +18,18 @@ void figure_create_immigrant(building *house, int num_people)
     figure *f = figure_create(FIGURE_IMMIGRANT, entry->x, entry->y, DIR_0_TOP);
     f->actionState = FIGURE_ACTION_1_IMMIGRANT_CREATED;
     f->immigrantBuildingId = house->id;
-    house->immigrantFigureId = f->id;
-    f->waitTicks = 10 + (house->houseGenerationDelay & 0x7f);
+    house->immigrant_figure_id = f->id;
+    f->waitTicks = 10 + (house->house_figure_generation_delay & 0x7f);
     f->migrantNumPeople = num_people;
 }
 
 void figure_create_emigrant(building *house, int num_people)
 {
     city_population_remove(num_people);
-    if (num_people < house->housePopulation) {
-        house->housePopulation -= num_people;
+    if (num_people < house->house_population) {
+        house->house_population -= num_people;
     } else {
-        house->housePopulation = 0;
+        house->house_population = 0;
         building_house_change_to_vacant_lot(house);
     }
     figure *f = figure_create(FIGURE_EMIGRANT, house->x, house->y, DIR_0_TOP);
@@ -65,8 +65,8 @@ static int closest_house_with_room(int x, int y)
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
-            if (!b->immigrantFigureId) {
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->distance_from_entry > 0 && b->house_population_room > 0) {
+            if (!b->immigrant_figure_id) {
                 int dist = calc_maximum_distance(x, y, b->x, b->y);
                 if (dist < min_dist) {
                     min_dist = dist;
@@ -85,7 +85,7 @@ void figure_immigrant_action(figure *f)
     
     f->terrainUsage = TERRAIN_USAGE_ANY;
     f->cartGraphicId = 0;
-    if (b->state != BUILDING_STATE_IN_USE || b->immigrantFigureId != f->id || !b->houseSize) {
+    if (b->state != BUILDING_STATE_IN_USE || b->immigrant_figure_id != f->id || !b->house_size) {
         f->state = FIGURE_STATE_DEAD;
         return;
     }
@@ -128,8 +128,8 @@ void figure_immigrant_action(figure *f)
                     figure_route_remove(f);
                     break;
                 case DIR_FIGURE_LOST:
-                    b->immigrantFigureId = 0;
-                    b->distanceFromEntry = 0;
+                    b->immigrant_figure_id = 0;
+                    b->distance_from_entry = 0;
                     f->state = FIGURE_STATE_DEAD;
                     break;
             }
@@ -139,24 +139,24 @@ void figure_immigrant_action(figure *f)
             f->isGhost = 1;
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 f->state = FIGURE_STATE_DEAD;
-                int max_people = model_get_house(b->subtype.houseLevel)->max_people;
-                if (b->houseIsMerged) {
+                int max_people = model_get_house(b->subtype.house_level)->max_people;
+                if (b->house_is_merged) {
                     max_people *= 4;
                 }
-                int room = max_people - b->housePopulation;
+                int room = max_people - b->house_population;
                 if (room < 0) {
                     room = 0;
                 }
                 if (room < f->migrantNumPeople) {
                     f->migrantNumPeople = room;
                 }
-                if (!b->housePopulation) {
+                if (!b->house_population) {
                     building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
                 }
-                b->housePopulation += f->migrantNumPeople;
-                b->housePopulationRoom = max_people - b->housePopulation;
+                b->house_population += f->migrantNumPeople;
+                b->house_population_room = max_people - b->house_population;
                 city_population_add(f->migrantNumPeople);
-                b->immigrantFigureId = 0;
+                b->immigrant_figure_id = 0;
             }
             f->isGhost = f->inBuildingWaitTicks ? 1 : 0;
             break;
@@ -241,7 +241,7 @@ void figure_homeless_action(figure *f)
                     building *b = building_get(building_id);
                     int x_road, y_road;
                     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                        b->immigrantFigureId = f->id;
+                        b->immigrant_figure_id = f->id;
                         f->immigrantBuildingId = building_id;
                         f->actionState = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;
                         f->destinationX = x_road;
@@ -264,7 +264,7 @@ void figure_homeless_action(figure *f)
             f->isGhost = 0;
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                building_get(f->immigrantBuildingId)->immigrantFigureId = 0;
+                building_get(f->immigrantBuildingId)->immigrant_figure_id = 0;
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 building *b = building_get(f->immigrantBuildingId);
@@ -280,24 +280,24 @@ void figure_homeless_action(figure *f)
                 f->state = FIGURE_STATE_DEAD;
                 building *b = building_get(f->immigrantBuildingId);
                 if (f->immigrantBuildingId && building_is_house(b->type)) {
-                    int max_people = model_get_house(b->subtype.houseLevel)->max_people;
-                    if (b->houseIsMerged) {
+                    int max_people = model_get_house(b->subtype.house_level)->max_people;
+                    if (b->house_is_merged) {
                         max_people *= 4;
                     }
-                    int room = max_people - b->housePopulation;
+                    int room = max_people - b->house_population;
                     if (room < 0) {
                         room = 0;
                     }
                     if (room < f->migrantNumPeople) {
                         f->migrantNumPeople = room;
                     }
-                    if (!b->housePopulation) {
+                    if (!b->house_population) {
                         building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
                     }
-                    b->housePopulation += f->migrantNumPeople;
-                    b->housePopulationRoom = max_people - b->housePopulation;
+                    b->house_population += f->migrantNumPeople;
+                    b->house_population_room = max_people - b->house_population;
                     city_population_add_homeless(f->migrantNumPeople);
-                    b->immigrantFigureId = 0;
+                    b->immigrant_figure_id = 0;
                 }
             }
             break;
@@ -316,7 +316,7 @@ void figure_homeless_action(figure *f)
                     building *b = building_get(building_id);
                     int x_road, y_road;
                     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                        b->immigrantFigureId = f->id;
+                        b->immigrant_figure_id = f->id;
                         f->immigrantBuildingId = building_id;
                         f->actionState = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;
                         f->destinationX = x_road;

@@ -105,7 +105,7 @@ void window_building_draw_market(building_info_context *c)
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->numWorkers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 97, 2);
     } else {
         int image_id = image_group(GROUP_RESOURCE_ICONS);
@@ -305,7 +305,7 @@ void window_building_draw_warehouse(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 168, c->width_blocks - 2, 5);
     window_building_draw_employment(c, 173);
     // cartpusher state
-    int cartpusher = b->figureId;
+    int cartpusher = b->figure_id;
     if (cartpusher && figure_get(cartpusher)->state == FIGURE_STATE_ALIVE) {
         int resource = figure_get(cartpusher)->resourceId;
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource +
@@ -313,7 +313,7 @@ void window_building_draw_warehouse(building_info_context *c)
             c->x_offset + 32, c->y_offset + 220);
         lang_text_draw_multiline(99, 17, c->x_offset + 64, c->y_offset + 223,
             16 * (c->width_blocks - 6), FONT_SMALL_BLACK);
-    } else if (b->numWorkers) {
+    } else if (b->num_workers) {
         // cartpusher is waiting for orders
         lang_text_draw_multiline(99, 15, c->x_offset + 32, c->y_offset + 223,
             16 * (c->width_blocks - 4), FONT_SMALL_BLACK);

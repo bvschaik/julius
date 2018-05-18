@@ -30,9 +30,9 @@ void city_sentiment_change_happiness(int amount)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
-            b->sentiment.houseHappiness += amount;
-            b->sentiment.houseHappiness = calc_bound(b->sentiment.houseHappiness, 0, 100);
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+            b->sentiment.house_happiness += amount;
+            b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness, 0, 100);
         }
     }
 }
@@ -41,11 +41,11 @@ void city_sentiment_set_max_happiness(int max)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->houseSize) {
-            if (b->sentiment.houseHappiness > max) {
-                b->sentiment.houseHappiness = max;
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+            if (b->sentiment.house_happiness > max) {
+                b->sentiment.house_happiness = max;
             }
-            b->sentiment.houseHappiness = calc_bound(b->sentiment.houseHappiness, 0, 100);
+            b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness, 0, 100);
         }
     }
 }
@@ -179,11 +179,11 @@ void city_sentiment_update()
     int default_sentiment = difficulty_sentiment();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->houseSize) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
             continue;
         }
-        if (!b->housePopulation) {
-            b->sentiment.houseHappiness = 10 + default_sentiment;
+        if (!b->house_population) {
+            b->sentiment.house_happiness = 10 + default_sentiment;
             continue;
         }
         if (city_data.population.population < 300) {
@@ -192,9 +192,9 @@ void city_sentiment_update()
             sentiment_contribution_taxes = 0;
             sentiment_contribution_wages = 0;
 
-            b->sentiment.houseHappiness = default_sentiment;
+            b->sentiment.house_happiness = default_sentiment;
             if (city_data.population.population < 200) {
-                b->sentiment.houseHappiness += 10;
+                b->sentiment.house_happiness += 10;
             }
             continue;
         }
@@ -202,37 +202,37 @@ void city_sentiment_update()
         houses_calculated++;
         int sentiment_contribution_food = 0;
         int sentiment_contribution_tents = 0;
-        if (!model_get_house(b->subtype.houseLevel)->food_types) {
+        if (!model_get_house(b->subtype.house_level)->food_types) {
             // tents
-            b->houseDaysWithoutFood = 0;
+            b->house_days_without_food = 0;
             sentiment_contribution_tents = sentiment_penalty_tents;
             total_sentiment_penalty_tents += sentiment_penalty_tents;
         } else {
             // shack+
             houses_needing_food++;
-            if (b->data.house.numFoods >= 2) {
+            if (b->data.house.num_foods >= 2) {
                 sentiment_contribution_food = 2;
                 total_sentiment_contribution_food += 2;
-                b->houseDaysWithoutFood = 0;
-            } else if (b->data.house.numFoods >= 1) {
+                b->house_days_without_food = 0;
+            } else if (b->data.house.num_foods >= 1) {
                 sentiment_contribution_food = 1;
                 total_sentiment_contribution_food += 1;
-                b->houseDaysWithoutFood = 0;
+                b->house_days_without_food = 0;
             } else {
                 // needs food but has no food
-                if (b->houseDaysWithoutFood < 3) {
-                    b->houseDaysWithoutFood++;
+                if (b->house_days_without_food < 3) {
+                    b->house_days_without_food++;
                 }
-                sentiment_contribution_food = -b->houseDaysWithoutFood;
-                total_sentiment_contribution_food -= b->houseDaysWithoutFood;
+                sentiment_contribution_food = -b->house_days_without_food;
+                total_sentiment_contribution_food -= b->house_days_without_food;
             }
         }
-        b->sentiment.houseHappiness += sentiment_contribution_taxes;
-        b->sentiment.houseHappiness += sentiment_contribution_wages;
-        b->sentiment.houseHappiness += sentiment_contribution_employment;
-        b->sentiment.houseHappiness += sentiment_contribution_food;
-        b->sentiment.houseHappiness += sentiment_contribution_tents;
-        b->sentiment.houseHappiness = calc_bound(b->sentiment.houseHappiness, 0, 100);
+        b->sentiment.house_happiness += sentiment_contribution_taxes;
+        b->sentiment.house_happiness += sentiment_contribution_wages;
+        b->sentiment.house_happiness += sentiment_contribution_employment;
+        b->sentiment.house_happiness += sentiment_contribution_food;
+        b->sentiment.house_happiness += sentiment_contribution_tents;
+        b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness, 0, 100);
     }
 
     int sentiment_contribution_food = 0;
@@ -248,9 +248,9 @@ void city_sentiment_update()
     int total_houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->houseSize && b->housePopulation) {
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
             total_houses++;
-            total_sentiment += b->sentiment.houseHappiness;
+            total_sentiment += b->sentiment.house_happiness;
         }
     }
     if (total_houses) {

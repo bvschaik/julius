@@ -126,7 +126,7 @@ int building_granary_remove_for_getting_deliveryman(building *src, building *dst
 
 int building_granary_determine_worker_task(building *granary)
 {
-    int pct_workers = calc_percentage(granary->numWorkers, model_get_building(granary->type)->laborers);
+    int pct_workers = calc_percentage(granary->num_workers, model_get_building(granary->type)->laborers);
     if (pct_workers < 50) {
         return GRANARY_TASK_NONE;
     }
@@ -174,7 +174,7 @@ void building_granaries_calculate_stocks()
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
         }
-        if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
+        if (!b->has_road_access || b->distance_from_entry <= 0) {
             continue;
         }
         const building_storage *s = building_storage_get(b->storage_id);
@@ -223,10 +223,10 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
         }
-        if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != road_network_id) {
+        if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
             continue;
         }
-        int pct_workers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
         if (pct_workers < 100) {
             if (understaffed) {
                 *understaffed += 1;
@@ -239,7 +239,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
         }
         if (b->data.granary.resource_stored[RESOURCE_NONE] >= 100) {
             // there is room
-            int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry, b->distanceFromEntry);
+            int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = i;
@@ -272,10 +272,10 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
         }
-        if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != road_network_id) {
+        if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
             continue;
         }
-        int pct_workers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
         if (pct_workers < 100) {
             continue;
         }
@@ -285,7 +285,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
         }
         if (b->data.granary.resource_stored[RESOURCE_NONE] > 100) {
             // there is room
-            int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry, b->distanceFromEntry);
+            int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = i;
@@ -322,7 +322,7 @@ int building_granary_for_getting(building *src, int *x_dst, int *y_dst)
     int min_building_id = 0;
     for (int i = 0; i < non_getting_granaries.num_items; i++) {
         building *b = building_get(non_getting_granaries.building_ids[i]);
-        if (b->roadNetworkId != src->roadNetworkId) {
+        if (b->road_network_id != src->road_network_id) {
             continue;
         }
         const building_storage *s = building_storage_get(b->storage_id);
@@ -347,7 +347,7 @@ int building_granary_for_getting(building *src, int *x_dst, int *y_dst)
             int dist = calc_distance_with_penalty(
                 b->x + 1, b->y + 1,
                            src->x + 1, src->y + 1,
-                           src->distanceFromEntry, b->distanceFromEntry);
+                           src->distance_from_entry, b->distance_from_entry);
             if (amount_gettable <= 400) {
                 dist *= 2; // penalty for less food
             }
@@ -429,7 +429,7 @@ void building_granary_warehouse_curse(int big)
     }
     if (big) {
         city_message_disable_sound_for_next_message();
-        city_message_post(0, MESSAGE_FIRE, max_building->type, max_building->gridOffset);
+        city_message_post(0, MESSAGE_FIRE, max_building->type, max_building->grid_offset);
         building_destroy_by_fire(max_building);
         sound_effect_play(SOUND_EFFECT_EXPLOSION);
         map_routing_update_land();

@@ -317,19 +317,19 @@ static int calculate_people_per_house_type()
             b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
             continue;
         }
-        if (b->houseSize) {
-            int pop = b->housePopulation;
+        if (b->house_size) {
+            int pop = b->house_population;
             total += pop;
-            if (b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
+            if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
                 city_data.population.people_in_tents += pop;
             }
-            if (b->subtype.houseLevel <= HOUSE_LARGE_SHACK) {
+            if (b->subtype.house_level <= HOUSE_LARGE_SHACK) {
                 city_data.population.people_in_tents_shacks += pop;
             }
-            if (b->subtype.houseLevel >= HOUSE_LARGE_INSULA) {
+            if (b->subtype.house_level >= HOUSE_LARGE_INSULA) {
                 city_data.population.people_in_large_insula_and_above += pop;
             }
-            if (b->subtype.houseLevel >= HOUSE_SMALL_VILLA) {
+            if (b->subtype.house_level >= HOUSE_SMALL_VILLA) {
                 city_data.population.people_in_villas_palaces += pop;
             }
         }

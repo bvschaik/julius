@@ -20,7 +20,7 @@ typedef enum {
 
 static int check_evolve_desirability(building *house)
 {
-    int level = house->subtype.houseLevel;
+    int level = house->subtype.house_level;
     const model_house *model = model_get_house(level);
     int evolve_des = model->evolve_desirability;
     if (level >= HOUSE_LUXURY_PALACE) {
@@ -35,25 +35,25 @@ static int check_evolve_desirability(building *house)
     } else {
         status = NONE;
     }
-    house->data.house.evolveTextId = status; // BUG? -1 in an unsigned char?
+    house->data.house.evolve_text_id = status; // BUG? -1 in an unsigned char?
     return status;
 }
 
 static int has_required_goods_and_services(building *house, int for_upgrade, house_demands *demands)
 {
-    int level = house->subtype.houseLevel;
+    int level = house->subtype.house_level;
     if (for_upgrade) {
         ++level;
     }
     const model_house *model = model_get_house(level);
     // water
     int water = model->water;
-    if (!house->hasWaterAccess) {
+    if (!house->has_water_access) {
         if (water >= 2) {
             ++demands->missing.fountain;
             return 0;
         }
-        if (water == 1 && !house->hasWellAccess) {
+        if (water == 1 && !house->has_well_access) {
             ++demands->missing.well;
             return 0;
         }
@@ -86,7 +86,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
     }
     // religion
     int religion = model->religion;
-    if (house->data.house.numGods < religion) {
+    if (house->data.house.num_gods < religion) {
         if (religion == 1) {
             ++demands->missing.religion;
             return 0;
@@ -177,18 +177,18 @@ static int check_requirements(building *house, house_demands *demands)
 
 static int has_devolve_delay(building *house, evolve_status status)
 {
-    if (status == DEVOLVE && house->data.house.devolveDelay < 2) {
-        house->data.house.devolveDelay++;
+    if (status == DEVOLVE && house->data.house.devolve_delay < 2) {
+        house->data.house.devolve_delay++;
         return 1;
     } else {
-        house->data.house.devolveDelay = 0;
+        house->data.house.devolve_delay = 0;
         return 0;
     }
 }
 
 static int evolve_small_tent(building *house, house_demands *demands)
 {
-    if (house->housePopulation > 0) {
+    if (house->house_population > 0) {
         building_house_merge(house);
         evolve_status status = check_requirements(house, demands);
         if (status == EVOLVE) {
@@ -200,7 +200,7 @@ static int evolve_small_tent(building *house, house_demands *demands)
 
 static int evolve_large_tent(building *house, house_demands *demands)
 {
-    if (house->housePopulation > 0) {
+    if (house->house_population > 0) {
         building_house_merge(house);
         evolve_status status = check_requirements(house, demands);
         if (!has_devolve_delay(house, status)) {
@@ -319,7 +319,7 @@ static int evolve_medium_insula(building *house, house_demands *demands)
     if (!has_devolve_delay(house, status)) {
         if (status == EVOLVE) {
             if (building_house_can_expand(house, 4)) {
-                house->houseIsMerged = 0;
+                house->house_is_merged = 0;
                 building_house_expand_to_large_insula(house);
                 map_tiles_update_all_gardens();
                 return 1;
@@ -481,7 +481,7 @@ static void consume_resource(building *b, int inventory, int amount)
 
 static void consume_resources(building *b)
 {
-    const model_house *model = model_get_house(b->subtype.houseLevel);
+    const model_house *model = model_get_house(b->subtype.house_level);
     consume_resource(b, INVENTORY_POTTERY, model->pottery);
     consume_resource(b, INVENTORY_FURNITURE, model->furniture);
     consume_resource(b, INVENTORY_OIL, model->oil);
@@ -518,41 +518,41 @@ void building_house_process_evolve_and_consume_goods()
 
 void building_house_determine_evolve_text(building *house, int worst_desirability_building)
 {
-    int level = house->subtype.houseLevel;
+    int level = house->subtype.house_level;
     
     // this house will devolve soon because...
 
     const model_house *model = model_get_house(level);
     // desirability
     if (house->desirability <= model->devolve_desirability) {
-        house->data.house.evolveTextId = 0;
+        house->data.house.evolve_text_id = 0;
         return;
     }
     // water
     int water = model->water;
-    if (water == 1 && !house->hasWaterAccess && !house->hasWellAccess) {
-        house->data.house.evolveTextId = 1;
+    if (water == 1 && !house->has_water_access && !house->has_well_access) {
+        house->data.house.evolve_text_id = 1;
         return;
     }
-    if (water == 2 && !house->hasWaterAccess) {
-        house->data.house.evolveTextId = 2;
+    if (water == 2 && !house->has_water_access) {
+        house->data.house.evolve_text_id = 2;
         return;
     }
     // entertainment
     int entertainment = model->entertainment;
     if (house->data.house.entertainment < entertainment) {
         if (!house->data.house.entertainment) {
-            house->data.house.evolveTextId = 3;
+            house->data.house.evolve_text_id = 3;
         } else if (entertainment < 10) {
-            house->data.house.evolveTextId = 4;
+            house->data.house.evolve_text_id = 4;
         } else if (entertainment < 25) {
-            house->data.house.evolveTextId = 5;
+            house->data.house.evolve_text_id = 5;
         } else if (entertainment < 50) {
-            house->data.house.evolveTextId = 6;
+            house->data.house.evolve_text_id = 6;
         } else if (entertainment < 80) {
-            house->data.house.evolveTextId = 7;
+            house->data.house.evolve_text_id = 7;
         } else {
-            house->data.house.evolveTextId = 8;
+            house->data.house.evolve_text_id = 8;
         }
         return;
     }
@@ -566,13 +566,13 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     }
     if (foodtypes_available < foodtypes_required) {
         if (foodtypes_required == 1) {
-            house->data.house.evolveTextId = 9;
+            house->data.house.evolve_text_id = 9;
             return;
         } else if (foodtypes_required == 2) {
-            house->data.house.evolveTextId = 10;
+            house->data.house.evolve_text_id = 10;
             return;
         } else if (foodtypes_required == 3) {
-            house->data.house.evolveTextId = 11;
+            house->data.house.evolve_text_id = 11;
             return;
         }
     }
@@ -580,84 +580,84 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     int education = model->education;
     if (house->data.house.education < education) {
         if (education == 1) {
-            house->data.house.evolveTextId = 14;
+            house->data.house.evolve_text_id = 14;
             return;
         } else if (education == 2) {
             if (house->data.house.school) {
-                house->data.house.evolveTextId = 15;
+                house->data.house.evolve_text_id = 15;
                 return;
             } else if (house->data.house.library) {
-                house->data.house.evolveTextId = 16;
+                house->data.house.evolve_text_id = 16;
                 return;
             }
         } else if (education == 3) {
-            house->data.house.evolveTextId = 17;
+            house->data.house.evolve_text_id = 17;
             return;
         }
     }
     // bathhouse
     if (house->data.house.bathhouse < model->bathhouse) {
-        house->data.house.evolveTextId = 18;
+        house->data.house.evolve_text_id = 18;
         return;
     }
     // pottery
     if (house->data.house.inventory[INVENTORY_POTTERY] < model->pottery) {
-        house->data.house.evolveTextId = 19;
+        house->data.house.evolve_text_id = 19;
         return;
     }
     // religion
     int religion = model->religion;
-    if (house->data.house.numGods < religion) {
+    if (house->data.house.num_gods < religion) {
         if (religion == 1) {
-            house->data.house.evolveTextId = 20;
+            house->data.house.evolve_text_id = 20;
             return;
         } else if (religion == 2) {
-            house->data.house.evolveTextId = 21;
+            house->data.house.evolve_text_id = 21;
             return;
         } else if (religion == 3) {
-            house->data.house.evolveTextId = 22;
+            house->data.house.evolve_text_id = 22;
             return;
         }
     }
     // barber
     if (house->data.house.barber < model->barber) {
-        house->data.house.evolveTextId = 23;
+        house->data.house.evolve_text_id = 23;
         return;
     }
     // health
     int health = model->health;
     if (house->data.house.health < health) {
         if (health == 1) {
-            house->data.house.evolveTextId = 24;
+            house->data.house.evolve_text_id = 24;
         } else if (house->data.house.clinic) {
-            house->data.house.evolveTextId = 25;
+            house->data.house.evolve_text_id = 25;
         } else {
-            house->data.house.evolveTextId = 26;
+            house->data.house.evolve_text_id = 26;
         }
         return;
     }
     // oil
     if (house->data.house.inventory[INVENTORY_OIL] < model->oil) {
-        house->data.house.evolveTextId = 27;
+        house->data.house.evolve_text_id = 27;
         return;
     }
     // furniture
     if (house->data.house.inventory[INVENTORY_FURNITURE] < model->furniture) {
-        house->data.house.evolveTextId = 28;
+        house->data.house.evolve_text_id = 28;
         return;
     }
     // wine
     int wine = model->wine;
     if (house->data.house.inventory[INVENTORY_WINE] < wine) {
-        house->data.house.evolveTextId = 29;
+        house->data.house.evolve_text_id = 29;
         return;
     }
     if (wine > 1 && !city_resource_multiple_wine_available()) {
-        house->data.house.evolveTextId = 65;
+        house->data.house.evolve_text_id = 65;
         return;
     }
     if (level >= 19) { // max level!
-        house->data.house.evolveTextId = 60;
+        house->data.house.evolve_text_id = 60;
         return;
     }
 
@@ -666,38 +666,38 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     // desirability
     if (house->desirability < model->evolve_desirability) {
         if (worst_desirability_building) {
-            house->data.house.evolveTextId = 62;
+            house->data.house.evolve_text_id = 62;
         } else {
-            house->data.house.evolveTextId = 30;
+            house->data.house.evolve_text_id = 30;
         }
         return;
     }
     model = model_get_house(++level);
     // water
     water = model->water;
-    if (water == 1 && !house->hasWaterAccess && !house->hasWellAccess) {
-        house->data.house.evolveTextId = 31;
+    if (water == 1 && !house->has_water_access && !house->has_well_access) {
+        house->data.house.evolve_text_id = 31;
         return;
     }
-    if (water == 2 && !house->hasWaterAccess) {
-        house->data.house.evolveTextId = 32;
+    if (water == 2 && !house->has_water_access) {
+        house->data.house.evolve_text_id = 32;
         return;
     }
     // entertainment
     entertainment = model->entertainment;
     if (house->data.house.entertainment < entertainment) {
         if (!house->data.house.entertainment) {
-            house->data.house.evolveTextId = 33;
+            house->data.house.evolve_text_id = 33;
         } else if (entertainment < 10) {
-            house->data.house.evolveTextId = 34;
+            house->data.house.evolve_text_id = 34;
         } else if (entertainment < 25) {
-            house->data.house.evolveTextId = 35;
+            house->data.house.evolve_text_id = 35;
         } else if (entertainment < 50) {
-            house->data.house.evolveTextId = 36;
+            house->data.house.evolve_text_id = 36;
         } else if (entertainment < 80) {
-            house->data.house.evolveTextId = 37;
+            house->data.house.evolve_text_id = 37;
         } else {
-            house->data.house.evolveTextId = 38;
+            house->data.house.evolve_text_id = 38;
         }
         return;
     }
@@ -705,13 +705,13 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     foodtypes_required = model->food_types;
     if (foodtypes_available < foodtypes_required) {
         if (foodtypes_required == 1) {
-            house->data.house.evolveTextId = 39;
+            house->data.house.evolve_text_id = 39;
             return;
         } else if (foodtypes_required == 2) {
-            house->data.house.evolveTextId = 40;
+            house->data.house.evolve_text_id = 40;
             return;
         } else if (foodtypes_required == 3) {
-            house->data.house.evolveTextId = 41;
+            house->data.house.evolve_text_id = 41;
             return;
         }
     }
@@ -719,87 +719,87 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     education = model->education;
     if (house->data.house.education < education) {
         if (education == 1) {
-            house->data.house.evolveTextId = 44;
+            house->data.house.evolve_text_id = 44;
             return;
         } else if (education == 2) {
             if (house->data.house.school) {
-                house->data.house.evolveTextId = 45;
+                house->data.house.evolve_text_id = 45;
                 return;
             } else if (house->data.house.library) {
-                house->data.house.evolveTextId = 46;
+                house->data.house.evolve_text_id = 46;
                 return;
             }
         } else if (education == 3) {
-            house->data.house.evolveTextId = 47;
+            house->data.house.evolve_text_id = 47;
             return;
         }
     }
     // bathhouse
     if (house->data.house.bathhouse < model->bathhouse) {
-        house->data.house.evolveTextId = 48;
+        house->data.house.evolve_text_id = 48;
         return;
     }
     // pottery
     if (house->data.house.inventory[INVENTORY_POTTERY] < model->pottery) {
-        house->data.house.evolveTextId = 49;
+        house->data.house.evolve_text_id = 49;
         return;
     }
     // religion
     religion = model->religion;
-    if (house->data.house.numGods < religion) {
+    if (house->data.house.num_gods < religion) {
         if (religion == 1) {
-            house->data.house.evolveTextId = 50;
+            house->data.house.evolve_text_id = 50;
             return;
         } else if (religion == 2) {
-            house->data.house.evolveTextId = 51;
+            house->data.house.evolve_text_id = 51;
             return;
         } else if (religion == 3) {
-            house->data.house.evolveTextId = 52;
+            house->data.house.evolve_text_id = 52;
             return;
         }
     }
     // barber
     if (house->data.house.barber < model->barber) {
-        house->data.house.evolveTextId = 53;
+        house->data.house.evolve_text_id = 53;
         return;
     }
     // health
     health = model->health;
     if (house->data.house.health < health) {
         if (health == 1) {
-            house->data.house.evolveTextId = 54;
+            house->data.house.evolve_text_id = 54;
         } else if (house->data.house.clinic) {
-            house->data.house.evolveTextId = 55;
+            house->data.house.evolve_text_id = 55;
         } else {
-            house->data.house.evolveTextId = 56;
+            house->data.house.evolve_text_id = 56;
         }
         return;
     }
     // oil
     if (house->data.house.inventory[INVENTORY_OIL] < model->oil) {
-        house->data.house.evolveTextId = 57;
+        house->data.house.evolve_text_id = 57;
         return;
     }
     // furniture
     if (house->data.house.inventory[INVENTORY_FURNITURE] < model->furniture) {
-        house->data.house.evolveTextId = 58;
+        house->data.house.evolve_text_id = 58;
         return;
     }
     // wine
     wine = model->wine;
     if (house->data.house.inventory[INVENTORY_WINE] < wine) {
-        house->data.house.evolveTextId = 59;
+        house->data.house.evolve_text_id = 59;
         return;
     }
     if (wine > 1 && !city_resource_multiple_wine_available()) {
-        house->data.house.evolveTextId = 66;
+        house->data.house.evolve_text_id = 66;
         return;
     }
     // house is evolving
-    house->data.house.evolveTextId = 61;
-    if (house->data.house.noSpaceToExpand == 1) {
+    house->data.house.evolve_text_id = 61;
+    if (house->data.house.no_space_to_expand == 1) {
         // house would like to evolve but can't
-        house->data.house.evolveTextId = 64;
+        house->data.house.evolve_text_id = 64;
     }
 }
 
@@ -820,7 +820,7 @@ int building_house_determine_worst_desirability_building(const building *house)
             if (b->state != BUILDING_STATE_IN_USE || building_id == house->id) {
                 continue;
             }
-            if (!b->houseSize || b->type < house->type) {
+            if (!b->house_size || b->type < house->type) {
                 int des = model_get_building(b->type)->desirability_value;
                 if (des < 0) {
                     // simplified desirability calculation

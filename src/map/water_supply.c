@@ -36,7 +36,7 @@ static void mark_well_access(int well_id, int radius)
         for (int xx = x_min; xx <= x_max; xx++) {
             int building_id = map_building_at(map_grid_offset(xx, yy));
             if (building_id) {
-                building_get(building_id)->hasWellAccess = 1;
+                building_get(building_id)->has_well_access = 1;
             }
         }
     }
@@ -52,12 +52,12 @@ void map_water_supply_update_houses()
         }
         if (b->type == BUILDING_WELL) {
             building_list_small_add(i);
-        } else if (b->houseSize) {
-            b->hasWaterAccess = 0;
-            b->hasWellAccess = 0;
+        } else if (b->house_size) {
+            b->has_water_access = 0;
+            b->has_well_access = 0;
             if (map_terrain_exists_tile_in_area_with_type(
                 b->x, b->y, b->size, TERRAIN_FOUNTAIN_RANGE)) {
-                b->hasWaterAccess = 1;
+                b->has_water_access = 1;
             }
         }
     }
@@ -111,8 +111,8 @@ static void fill_aqueducts_from_offset(int grid_offset)
                 // check if aqueduct connects to reservoir --> doesn't connect to corner
                 int xy = map_property_multi_tile_xy(new_offset);
                 if (xy != EDGE_X0Y0 && xy != EDGE_X2Y0 && xy != EDGE_X0Y2 && xy != EDGE_X2Y2) {
-                    if (!b->hasWaterAccess) {
-                        b->hasWaterAccess = 2;
+                    if (!b->has_water_access) {
+                        b->has_water_access = 2;
                     }
                 }
             } else if (map_terrain_is(new_offset, TERRAIN_AQUEDUCT)) {
@@ -153,9 +153,9 @@ void map_water_supply_update_reservoir_fountain()
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_RESERVOIR) {
             building_list_large_add(i);
             if (map_terrain_exists_tile_in_area_with_type(b->x - 1, b->y - 1, 5, TERRAIN_WATER)) {
-                b->hasWaterAccess = 2;
+                b->has_water_access = 2;
             } else {
-                b->hasWaterAccess = 0;
+                b->has_water_access = 0;
             }
         }
     }
@@ -168,11 +168,11 @@ void map_water_supply_update_reservoir_fountain()
         changed = 0;
         for (int i = 0; i < total_reservoirs; i++) {
             building *b = building_get(reservoirs[i]);
-            if (b->hasWaterAccess == 2) {
-                b->hasWaterAccess = 1;
+            if (b->has_water_access == 2) {
+                b->has_water_access = 1;
                 changed = 1;
                 for (int d = 0; d < 4; d++) {
-                    fill_aqueducts_from_offset(b->gridOffset + CONNECTOR_OFFSETS[d]);
+                    fill_aqueducts_from_offset(b->grid_offset + CONNECTOR_OFFSETS[d]);
                 }
             }
         }
@@ -180,7 +180,7 @@ void map_water_supply_update_reservoir_fountain()
     // mark reservoir ranges
     for (int i = 0; i < total_reservoirs; i++) {
         building *b = building_get(reservoirs[i]);
-        if (b->hasWaterAccess) {
+        if (b->has_water_access) {
             map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_RESERVOIR_RANGE);
         }
     }
@@ -190,7 +190,7 @@ void map_water_supply_update_reservoir_fountain()
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_FOUNTAIN) {
             continue;
         }
-        int des = map_desirability_get(b->gridOffset);
+        int des = map_desirability_get(b->grid_offset);
         int image_id;
         if (des > 60) {
             image_id = image_group(GROUP_BUILDING_FOUNTAIN_4);
@@ -202,13 +202,13 @@ void map_water_supply_update_reservoir_fountain()
             image_id = image_group(GROUP_BUILDING_FOUNTAIN_1);
         }
         map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
-        if (map_terrain_is(b->gridOffset, TERRAIN_RESERVOIR_RANGE) && b->numWorkers) {
-            b->hasWaterAccess = 1;
+        if (map_terrain_is(b->grid_offset, TERRAIN_RESERVOIR_RANGE) && b->num_workers) {
+            b->has_water_access = 1;
             map_terrain_add_with_radius(b->x, b->y, 1,
                 scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
                 TERRAIN_FOUNTAIN_RANGE);
         } else {
-            b->hasWaterAccess = 0;
+            b->has_water_access = 0;
         }
     }
 }
@@ -224,7 +224,7 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius)
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = map_grid_offset(xx, yy);
             int building_id = map_building_at(grid_offset);
-            if (building_id && building_get(building_id)->houseSize) {
+            if (building_id && building_get(building_id)->house_size) {
                 num_houses++;
                 if (!map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
                     return WELL_NECESSARY;

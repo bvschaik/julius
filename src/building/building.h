@@ -7,136 +7,136 @@
 #define MAX_BUILDINGS 2000
 
 typedef struct {
+    int id;
+
     unsigned char state;
     unsigned char faction_id;
-    unsigned char __unknown_02;
+    unsigned char unknown_value;
     unsigned char size;
-    unsigned char houseIsMerged;
-    unsigned char houseSize;
+    unsigned char house_is_merged;
+    unsigned char house_size;
     unsigned char x;
     unsigned char y;
-    short gridOffset;
+    short grid_offset;
     short type;
     union {
-        short houseLevel;
-        short warehouseResourceId;
-        short workshopType;
+        short house_level;
+        short warehouse_resource_id;
+        short workshop_type;
         short orientation;
-        short fortFigureType;
-        short nativeMeetingCenterId;
+        short fort_figure_type;
+        short native_meeting_center_id;
     } subtype;
-    unsigned char roadNetworkId;
-    unsigned short createdSequence;
-    short housesCovered;
-    short percentageHousesCovered;
-    short housePopulation;
-    short housePopulationRoom;
-    short distanceFromEntry;
-    short houseMaxPopulationSeen;
-    short houseUnreachableTicks;
-    unsigned char roadAccessX; // 20
-    unsigned char roadAccessY; // 21
-    short figureId;
-    short figureId2; // labor seeker or market buyer
-    short immigrantFigureId;
-    short figureId4; // 28; tower ballista or burning ruin prefect
-    unsigned char figureSpawnDelay; // 2a
-    unsigned char figureRoamDirection;
-    unsigned char hasWaterAccess;
-    short prevPartBuildingId;
-    short nextPartBuildingId;
-    short loadsStored; // 34
-    unsigned char hasWellAccess;
-    short numWorkers;
-    unsigned char laborCategory;
-    unsigned char outputResourceId; //3b
-    unsigned char hasRoadAccess;
-    unsigned char houseCriminalActive;
-    short damageRisk;
-    short fireRisk;
-    short fireDuration; //42
-    unsigned char fireProof; //44 cannot catch fire or collapse
-    unsigned char houseGenerationDelay;
-    unsigned char houseTaxCoverage;
-    short formationId;
+    unsigned char road_network_id;
+    unsigned short created_sequence;
+    short houses_covered;
+    short percentage_houses_covered;
+    short house_population;
+    short house_population_room;
+    short distance_from_entry;
+    short house_highest_population;
+    short house_unreachable_ticks;
+    unsigned char road_access_x;
+    unsigned char road_access_y;
+    short figure_id;
+    short figure_id2; // labor seeker or market buyer
+    short immigrant_figure_id;
+    short figure_id4; // tower ballista or burning ruin prefect
+    unsigned char figure_spawn_delay;
+    unsigned char figure_roam_direction;
+    unsigned char has_water_access;
+    short prev_part_building_id;
+    short next_part_building_id;
+    short loads_stored;
+    unsigned char has_well_access;
+    short num_workers;
+    unsigned char labor_category;
+    unsigned char output_resource_id;
+    unsigned char has_road_access;
+    unsigned char house_criminal_active;
+    short damage_risk;
+    short fire_risk;
+    short fire_duration;
+    unsigned char fire_proof; // cannot catch fire or collapse
+    unsigned char house_figure_generation_delay;
+    unsigned char house_tax_coverage;
+    short formation_id;
     union {
         struct {
-            short queued_docker_id; // 4a
-            unsigned char num_ships; // 65 dock number of ships
-            char orientation; // 68
-            short docker_ids[3]; // 6c, 6e, 70
-            short trade_ship_id; // 72
+            short queued_docker_id;
+            unsigned char num_ships;
+            char orientation;
+            short docker_ids[3];
+            short trade_ship_id;
         } dock;
         struct {
             short inventory[8];
-            short pottery_demand; // 5c
-            short furniture_demand; // 5e
-            short oil_demand; // 60
-            short wine_demand; // 62
-            unsigned char fetch_inventory_id; // 6a
+            short pottery_demand;
+            short furniture_demand;
+            short oil_demand;
+            short wine_demand;
+            unsigned char fetch_inventory_id;
         } market;
         struct {
-            short resource_stored[16]; //4c and further
+            short resource_stored[16];
         } granary;
         struct {
-            short progress; //4a+b
-            unsigned char blessing_days_left; //67
-            unsigned char curse_days_left; //6b
-            unsigned char has_raw_materials; //69
-            unsigned char has_fish; // 58
-            unsigned char orientation; // 68
-            short fishing_boat_id; // 72
+            short progress;
+            unsigned char blessing_days_left;
+            unsigned char curse_days_left;
+            unsigned char has_raw_materials;
+            unsigned char has_fish;
+            unsigned char orientation;
+            short fishing_boat_id;
         } industry;
         struct {
-            unsigned char num_shows; // 64
+            unsigned char num_shows;
             unsigned char days1;
             unsigned char days2;
             unsigned char play;
         } entertainment;
         struct {
-            short inventory[8]; //4a
-            unsigned char theater; //5a
-            unsigned char amphitheaterActor;
-            unsigned char amphitheaterGladiator;
-            unsigned char colosseumGladiator;
-            unsigned char colosseumLion;
+            short inventory[8];
+            unsigned char theater;
+            unsigned char amphitheater_actor;
+            unsigned char amphitheater_gladiator;
+            unsigned char colosseum_gladiator;
+            unsigned char colosseum_lion;
             unsigned char hippodrome;
-            unsigned char school; //60
+            unsigned char school;
             unsigned char library;
             unsigned char academy;
             unsigned char barber;
             unsigned char clinic;
             unsigned char bathhouse;
             unsigned char hospital;
-            unsigned char templeCeres;
-            unsigned char templeNeptune;//68
-            unsigned char templeMercury;
-            unsigned char templeMars;
-            unsigned char templeVenus;
-            unsigned char noSpaceToExpand;
-            unsigned char numFoods;
+            unsigned char temple_ceres;
+            unsigned char temple_neptune;
+            unsigned char temple_mercury;
+            unsigned char temple_mars;
+            unsigned char temple_venus;
+            unsigned char no_space_to_expand;
+            unsigned char num_foods;
             unsigned char entertainment;
             unsigned char education;
-            unsigned char health; //70
-            unsigned char numGods;
-            unsigned char devolveDelay;
-            unsigned char evolveTextId;
+            unsigned char health;
+            unsigned char num_gods;
+            unsigned char devolve_delay;
+            unsigned char evolve_text_id;
         } house;
     } data;
-    int taxIncomeOrStorage; // 74
-    unsigned char houseDaysWithoutFood; // 78
-    unsigned char ruinHasPlague;
+    int tax_income_or_storage;
+    unsigned char house_days_without_food;
+    unsigned char ruin_has_plague;
     signed char desirability;
-    unsigned char isDeleted; // 7b
-    unsigned char isAdjacentToWater;
+    unsigned char is_deleted;
+    unsigned char is_adjacent_to_water;
     unsigned char storage_id;
     union {
-        char houseHappiness;
-        char nativeAnger;
+        char house_happiness;
+        char native_anger;
     } sentiment;
-    unsigned char showOnProblemOverlay;
-
-    int id;
+    unsigned char show_on_problem_overlay;
 } building;
 
 building *building_get(int id);
