@@ -94,7 +94,7 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
         const formation *m = formation_get(formation_id);
         figure *f = figure_create(m->figure_type, x, y, DIR_0_TOP);
         f->formation_id = formation_id;
-        f->formationAtRest = 1;
+        f->formation_at_rest = 1;
         if (m->figure_type == FIGURE_FORT_LEGIONARY) {
             if (barracks->loads_stored > 0) {
                 barracks->loads_stored--;
@@ -105,15 +105,15 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
             int x_road, y_road;
             building *academy = building_get(academy_id);
             if (map_has_road_access(academy->x, academy->y, academy->size, &x_road, &y_road)) {
-                f->actionState = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
-                f->destinationX = x_road;
-                f->destinationY = y_road;
-                f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
+                f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
+                f->destination_x = x_road;
+                f->destination_y = y_road;
+                f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
             } else {
-                f->actionState = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+                f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             }
         } else {
-            f->actionState = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+            f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
         }
     }
     formation_calculate_figures();
@@ -138,16 +138,16 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
         return 0;
     }
     figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP);
-    f->actionState = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
+    f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     int x_road, y_road;
     if (map_has_road_access(tower->x, tower->y, tower->size, &x_road, &y_road)) {
-        f->destinationX = x_road;
-        f->destinationY = y_road;
+        f->destination_x = x_road;
+        f->destination_y = y_road;
     } else {
         f->state = FIGURE_STATE_DEAD;
     }
     tower->figure_id = f->id;
-    f->buildingId = tower->id;
+    f->building_id = tower->id;
     return 1;
 }
 

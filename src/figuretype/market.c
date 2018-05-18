@@ -13,16 +13,16 @@
 static int create_delivery_boy(int leader_id, figure *f)
 {
     figure *boy = figure_create(FIGURE_DELIVERY_BOY, f->x, f->y, 0);
-    boy->inFrontFigureId = leader_id;
-    boy->collectingItemId = f->collectingItemId;
-    boy->buildingId = f->buildingId;
+    boy->leading_figure_id = leader_id;
+    boy->collecting_item_id = f->collecting_item_id;
+    boy->building_id = f->building_id;
     return boy->id;
 }
 
 static int take_food_from_granary(figure *f, int market_id, int granary_id)
 {
     int resource;
-    switch (f->collectingItemId) {
+    switch (f->collecting_item_id) {
         case INVENTORY_WHEAT: resource = RESOURCE_WHEAT; break;
         case INVENTORY_VEGETABLES: resource = RESOURCE_VEGETABLES; break;
         case INVENTORY_FRUIT: resource = RESOURCE_FRUIT; break;
@@ -30,8 +30,8 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
         default: return 0;
     }
     building *granary = building_get(granary_id);
-    int market_units = building_get(market_id)->data.market.inventory[f->collectingItemId];
-    int max_units = (f->collectingItemId == INVENTORY_WHEAT ? 800 : 600) - market_units;
+    int market_units = building_get(market_id)->data.market.inventory[f->collecting_item_id];
+    int max_units = (f->collecting_item_id == INVENTORY_WHEAT ? 800 : 600) - market_units;
     int granary_units = granary->data.granary.resource_stored[resource];
     int num_loads;
     if (granary_units >= 800) {
@@ -71,7 +71,7 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
 static int take_resource_from_warehouse(figure *f, int warehouse_id)
 {
     int resource;
-    switch (f->collectingItemId) {
+    switch (f->collecting_item_id) {
         case INVENTORY_POTTERY: resource = RESOURCE_POTTERY; break;
         case INVENTORY_FURNITURE: resource = RESOURCE_FURNITURE; break;
         case INVENTORY_OIL: resource = RESOURCE_OIL; break;
@@ -101,16 +101,16 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
 
 void figure_market_buyer_action(figure *f)
 {
-    f->terrainUsage = TERRAIN_USAGE_ROADS;
-    f->useCrossCountry = 0;
-    f->maxRoamLength = 800;
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 800;
     
-    building *b = building_get(f->buildingId);
+    building *b = building_get(f->building_id);
     if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
-    switch (f->actionState) {
+    switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
             break;
@@ -120,22 +120,22 @@ void figure_market_buyer_action(figure *f)
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                if (f->collectingItemId > 3) {
-                    if (!take_resource_from_warehouse(f, f->destinationBuildingId)) {
+                if (f->collecting_item_id > 3) {
+                    if (!take_resource_from_warehouse(f, f->destination_building_id)) {
                         f->state = FIGURE_STATE_DEAD;
                     }
                 } else {
-                    if (!take_food_from_granary(f, f->buildingId, f->destinationBuildingId)) {
+                    if (!take_food_from_granary(f, f->building_id, f->destination_building_id)) {
                         f->state = FIGURE_STATE_DEAD;
                     }
                 }
-                f->actionState = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-                f->destinationX = f->sourceX;
-                f->destinationY = f->sourceY;
+                f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
+                f->destination_x = f->source_x;
+                f->destination_y = f->source_y;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                f->actionState = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-                f->destinationX = f->sourceX;
-                f->destinationY = f->sourceY;
+                f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
+                f->destination_x = f->source_x;
+                f->destination_y = f->source_y;
                 figure_route_remove(f);
             }
             break;
@@ -153,13 +153,13 @@ void figure_market_buyer_action(figure *f)
 
 void figure_delivery_boy_action(figure *f)
 {
-    f->isGhost = 0;
-    f->terrainUsage = TERRAIN_USAGE_ROADS;
+    f->is_ghost = 0;
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
     figure_image_increase_offset(f, 12);
-    f->cartGraphicId = 0;
+    f->cart_image_id = 0;
     
-    figure *leader = figure_get(f->inFrontFigureId);
-    if (f->inFrontFigureId <= 0 || leader->actionState == FIGURE_ACTION_149_CORPSE) {
+    figure *leader = figure_get(f->leading_figure_id);
+    if (f->leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE) {
         f->state = FIGURE_STATE_DEAD;
     } else {
         if (leader->state == FIGURE_STATE_ALIVE) {
@@ -169,19 +169,19 @@ void figure_delivery_boy_action(figure *f)
                 f->state = FIGURE_STATE_DEAD;
             }
         } else { // leader arrived at market, drop resource at market
-            building_get(f->buildingId)->data.market.inventory[f->collectingItemId] += 100;
+            building_get(f->building_id)->data.market.inventory[f->collecting_item_id] += 100;
             f->state = FIGURE_STATE_DEAD;
         }
     }
-    if (leader->isGhost) {
-        f->isGhost = 1;
+    if (leader->is_ghost) {
+        f->is_ghost = 1;
     }
-    int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previousTileDirection);
-    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
-        f->graphicId = image_group(GROUP_FIGURE_DELIVERY_BOY) + 96 +
+    int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
+    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = image_group(GROUP_FIGURE_DELIVERY_BOY) + 96 +
             figure_image_corpse_offset(f);
     } else {
-        f->graphicId = image_group(GROUP_FIGURE_DELIVERY_BOY) +
-            dir + 8 * f->graphicOffset;
+        f->image_id = image_group(GROUP_FIGURE_DELIVERY_BOY) +
+            dir + 8 * f->image_offset;
     }
 }

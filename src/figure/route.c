@@ -27,7 +27,7 @@ void figure_route_clean()
         int figure_id = data.figure_ids[i];
         if (figure_id > 0 && figure_id < MAX_FIGURES) {
             const figure *f = figure_get(figure_id);
-            if (f->state != FIGURE_STATE_ALIVE || f->routingPathId != i) {
+            if (f->state != FIGURE_STATE_ALIVE || f->routing_path_id != i) {
                 data.figure_ids[i] = 0;
             }
         }
@@ -46,76 +46,76 @@ static int get_first_available()
 
 void figure_route_add(figure *f)
 {
-    f->routingPathId = 0;
-    f->routingPathCurrentTile = 0;
-    f->routingPathLength = 0;
+    f->routing_path_id = 0;
+    f->routing_path_current_tile = 0;
+    f->routing_path_length = 0;
     int path_id = get_first_available();
     if (!path_id) {
         return;
     }
     int path_length;
-    if (f->isBoat) {
-        if (f->isBoat == 2) { // flotsam
+    if (f->is_boat) {
+        if (f->is_boat == 2) { // flotsam
             map_routing_calculate_distances_water_flotsam(f->x, f->y);
             path_length = map_routing_get_path_on_water(data.direction_paths[path_id],
-                f->destinationX, f->destinationY, 1);
+                f->destination_x, f->destination_y, 1);
         } else {
             map_routing_calculate_distances_water_boat(f->x, f->y);
             path_length = map_routing_get_path_on_water(data.direction_paths[path_id],
-                f->destinationX, f->destinationY, 0);
+                f->destination_x, f->destination_y, 0);
         }
     } else {
         // land figure
         int can_travel;
-        switch (f->terrainUsage) {
+        switch (f->terrain_usage) {
             case TERRAIN_USAGE_ENEMY:
                 can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
-                    f->destinationX, f->destinationY, f->destinationBuildingId, 5000);
+                    f->destination_x, f->destination_y, f->destination_building_id, 5000);
                 if (!can_travel) {
                     can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
-                        f->destinationX, f->destinationY, 0, 25000);
+                        f->destination_x, f->destination_y, 0, 25000);
                     if (!can_travel) {
                         can_travel = map_routing_noncitizen_can_travel_through_everything(
-                            f->x, f->y, f->destinationX, f->destinationY);
+                            f->x, f->y, f->destination_x, f->destination_y);
                     }
                 }
                 break;
             case TERRAIN_USAGE_WALLS:
                 can_travel = map_routing_can_travel_over_walls(f->x, f->y,
-                    f->destinationX, f->destinationY);
+                    f->destination_x, f->destination_y);
                 break;
             case TERRAIN_USAGE_ANIMAL:
                 can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
-                    f->destinationX, f->destinationY, -1, 5000);
+                    f->destination_x, f->destination_y, -1, 5000);
                 break;
             case TERRAIN_USAGE_PREFER_ROADS:
                 can_travel = map_routing_citizen_can_travel_over_road_garden(f->x, f->y,
-                    f->destinationX, f->destinationY);
+                    f->destination_x, f->destination_y);
                 if (!can_travel) {
                     can_travel = map_routing_citizen_can_travel_over_land(f->x, f->y,
-                        f->destinationX, f->destinationY);
+                        f->destination_x, f->destination_y);
                 }
                 break;
             case TERRAIN_USAGE_ROADS:
                 can_travel = map_routing_citizen_can_travel_over_road_garden(f->x, f->y,
-                    f->destinationX, f->destinationY);
+                    f->destination_x, f->destination_y);
                 break;
             default:
                 can_travel = map_routing_citizen_can_travel_over_land(f->x, f->y,
-                    f->destinationX, f->destinationY);
+                    f->destination_x, f->destination_y);
                 break;
         }
         if (can_travel) {
-            if (f->terrainUsage == TERRAIN_USAGE_WALLS) {
+            if (f->terrain_usage == TERRAIN_USAGE_WALLS) {
                 path_length = map_routing_get_path(data.direction_paths[path_id], f->x, f->y,
-                    f->destinationX, f->destinationY, 4);
+                    f->destination_x, f->destination_y, 4);
                 if (path_length <= 0) {
                     path_length = map_routing_get_path(data.direction_paths[path_id], f->x, f->y,
-                        f->destinationX, f->destinationY, 8);
+                        f->destination_x, f->destination_y, 8);
                 }
             } else {
                 path_length = map_routing_get_path(data.direction_paths[path_id], f->x, f->y,
-                    f->destinationX, f->destinationY, 8);
+                    f->destination_x, f->destination_y, 8);
             }
         } else { // cannot travel
             path_length = 0;
@@ -123,18 +123,18 @@ void figure_route_add(figure *f)
     }
     if (path_length) {
         data.figure_ids[path_id] = f->id;
-        f->routingPathId = path_id;
-        f->routingPathLength = path_length;
+        f->routing_path_id = path_id;
+        f->routing_path_length = path_length;
     }
 }
 
 void figure_route_remove(figure *f)
 {
-    if (f->routingPathId > 0) {
-        if (data.figure_ids[f->routingPathId] == f->id) {
-            data.figure_ids[f->routingPathId] = 0;
+    if (f->routing_path_id > 0) {
+        if (data.figure_ids[f->routing_path_id] == f->id) {
+            data.figure_ids[f->routing_path_id] = 0;
         }
-        f->routingPathId = 0;
+        f->routing_path_id = 0;
     }
 }
 

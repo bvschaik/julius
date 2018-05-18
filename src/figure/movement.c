@@ -21,60 +21,60 @@ static void advance_tick(figure *f)
 {
     switch (f->direction) {
         case DIR_0_TOP:
-            f->crossCountryY--;
+            f->cross_country_y--;
             break;
         case DIR_1_TOP_RIGHT:
-            f->crossCountryX++;
-            f->crossCountryY--;
+            f->cross_country_x++;
+            f->cross_country_y--;
             break;
         case DIR_2_RIGHT:
-            f->crossCountryX++;
+            f->cross_country_x++;
             break;
         case DIR_3_BOTTOM_RIGHT:
-            f->crossCountryX++;
-            f->crossCountryY++;
+            f->cross_country_x++;
+            f->cross_country_y++;
             break;
         case DIR_4_BOTTOM:
-            f->crossCountryY++;
+            f->cross_country_y++;
             break;
         case DIR_5_BOTTOM_LEFT:
-            f->crossCountryX--;
-            f->crossCountryY++;
+            f->cross_country_x--;
+            f->cross_country_y++;
             break;
         case DIR_6_LEFT:
-            f->crossCountryX--;
+            f->cross_country_x--;
             break;
         case DIR_7_TOP_LEFT:
-            f->crossCountryX--;
-            f->crossCountryY--;
+            f->cross_country_x--;
+            f->cross_country_y--;
             break;
         default:
             break;
     }
-    if (f->heightAdjustedTicks) {
-        f->heightAdjustedTicks--;
-        if (f->heightAdjustedTicks > 0) {
-            f->isGhost = 1;
-            if (f->currentHeight < f->targetHeight) {
-                f->currentHeight++;
+    if (f->height_adjusted_ticks) {
+        f->height_adjusted_ticks--;
+        if (f->height_adjusted_ticks > 0) {
+            f->is_ghost = 1;
+            if (f->current_height < f->target_height) {
+                f->current_height++;
             }
-            if (f->currentHeight > f->targetHeight) {
-                f->currentHeight--;
+            if (f->current_height > f->target_height) {
+                f->current_height--;
             }
         } else {
-            f->isGhost = 0;
+            f->is_ghost = 0;
         }
     } else {
-        if (f->currentHeight) {
-            f->currentHeight--;
+        if (f->current_height) {
+            f->current_height--;
         }
     }
 }
 
 static void set_target_height_bridge(figure *f)
 {
-    f->heightAdjustedTicks = 18;
-    f->targetHeight = map_bridge_height(f->grid_offset);
+    f->height_adjusted_ticks = 18;
+    f->target_height = map_bridge_height(f->grid_offset);
 }
 
 static void move_to_next_tile(figure *f)
@@ -120,29 +120,29 @@ static void move_to_next_tile(figure *f)
     }
     map_figure_add(f);
     if (map_terrain_is(f->grid_offset, TERRAIN_ROAD)) {
-        f->isOnRoad = 1;
+        f->is_on_road = 1;
         if (map_terrain_is(f->grid_offset, TERRAIN_WATER)) { // bridge
             set_target_height_bridge(f);
         }
     } else {
-        f->isOnRoad = 0;
+        f->is_on_road = 0;
     }
     figure_combat_attack_figure_at(f, f->grid_offset);
-    f->previousTileX = old_x;
-    f->previousTileY = old_y;
+    f->previous_tile_x = old_x;
+    f->previous_tile_y = old_y;
 }
 
 static void set_next_route_tile_direction(figure *f)
 {
-    if (f->routingPathId > 0) {
-        if (f->routingPathCurrentTile < f->routingPathLength) {
-            f->direction = figure_route_get_direction(f->routingPathId, f->routingPathCurrentTile);
+    if (f->routing_path_id > 0) {
+        if (f->routing_path_current_tile < f->routing_path_length) {
+            f->direction = figure_route_get_direction(f->routing_path_id, f->routing_path_current_tile);
         } else {
             figure_route_remove(f);
             f->direction = DIR_FIGURE_AT_DESTINATION;
         }
     } else { // should be at destination
-        f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
+        f->direction = calc_general_direction(f->x, f->y, f->destination_x, f->destination_y);
         if (f->direction != DIR_FIGURE_AT_DESTINATION) {
             f->direction = DIR_FIGURE_LOST;
         }
@@ -155,11 +155,11 @@ static void advance_route_tile(figure *f, int roaming_enabled)
         return;
     }
     int target_grid_offset = f->grid_offset + map_grid_direction_delta(f->direction);
-    if (f->isBoat) {
+    if (f->is_boat) {
         if (!map_terrain_is(target_grid_offset, TERRAIN_WATER)) {
             f->direction = DIR_FIGURE_REROUTE;
         }
-    } else if (f->terrainUsage == TERRAIN_USAGE_ENEMY) {
+    } else if (f->terrain_usage == TERRAIN_USAGE_ENEMY) {
         if (!map_routing_noncitizen_is_passable(target_grid_offset)) {
             f->direction = DIR_FIGURE_REROUTE;
         } else if (map_routing_is_destroyable(target_grid_offset)) {
@@ -184,14 +184,14 @@ static void advance_route_tile(figure *f, int roaming_enabled)
                     break;
             }
             if (cause_damage) {
-                f->attackDirection = f->direction;
+                f->attack_direction = f->direction;
                 f->direction = DIR_FIGURE_ATTACK;
                 if (!(game_time_tick() & 3)) {
                     building_destroy_increase_enemy_damage(target_grid_offset, max_damage);
                 }
             }
         }
-    } else if (f->terrainUsage == TERRAIN_USAGE_WALLS) {
+    } else if (f->terrain_usage == TERRAIN_USAGE_WALLS) {
         if (!map_routing_is_wall_passable(target_grid_offset)) {
             f->direction = DIR_FIGURE_REROUTE;
         }
@@ -222,13 +222,13 @@ static void walk_ticks(figure *f, int num_ticks, int roaming_enabled)
 {
     while (num_ticks > 0) {
         num_ticks--;
-        f->progressOnTile++;
-        if (f->progressOnTile < 15) {
+        f->progress_on_tile++;
+        if (f->progress_on_tile < 15) {
             advance_tick(f);
         } else {
             figure_service_provide_coverage(f);
-            f->progressOnTile = 15;
-            if (f->routingPathId <= 0) {
+            f->progress_on_tile = 15;
+            if (f->routing_path_id <= 0) {
                 figure_route_add(f);
             }
             set_next_route_tile_direction(f);
@@ -236,9 +236,9 @@ static void walk_ticks(figure *f, int num_ticks, int roaming_enabled)
             if (f->direction >= 8) {
                 break;
             }
-            f->routingPathCurrentTile++;
-            f->previousTileDirection = f->direction;
-            f->progressOnTile = 0;
+            f->routing_path_current_tile++;
+            f->previous_tile_direction = f->direction;
+            f->progress_on_tile = 0;
             move_to_next_tile(f);
             advance_tick(f);
         }
@@ -247,11 +247,11 @@ static void walk_ticks(figure *f, int num_ticks, int roaming_enabled)
 
 void figure_movement_init_roaming(figure *f)
 {
-    building *b = building_get(f->buildingId);
-    f->progressOnTile = 15;
-    f->roamChooseDestination = 0;
-    f->roamTicksUntilNextTurn = -1;
-    f->roamTurnDirection = 2;
+    building *b = building_get(f->building_id);
+    f->progress_on_tile = 15;
+    f->roam_choose_destination = 0;
+    f->roam_ticks_until_next_turn = -1;
+    f->roam_turn_direction = 2;
     int roam_dir = b->figure_roam_direction;
     b->figure_roam_direction += 2;
     if (b->figure_roam_direction > 6) {
@@ -268,17 +268,17 @@ void figure_movement_init_roaming(figure *f)
     map_grid_bound(&x, &y);
     int x_road, y_road;
     if (map_closest_road_within_radius(x, y, 1, 6, &x_road, &y_road)) {
-        f->destinationX = x_road;
-        f->destinationY = y_road;
+        f->destination_x = x_road;
+        f->destination_y = y_road;
     } else {
-        f->roamChooseDestination = 1;
+        f->roam_choose_destination = 1;
     }
 }
 
 static void roam_set_direction(figure *f)
 {
     int grid_offset = map_grid_offset(f->x, f->y);
-    int direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
+    int direction = calc_general_direction(f->x, f->y, f->destination_x, f->destination_y);
     if (direction >= 8) {
         direction = 0;
     }
@@ -306,12 +306,12 @@ static void roam_set_direction(figure *f)
     }
     if (road_offset_dir1 <= road_offset_dir2) {
         f->direction = road_dir1;
-        f->roamTurnDirection = 2;
+        f->roam_turn_direction = 2;
     } else {
         f->direction = road_dir2;
-        f->roamTurnDirection = -2;
+        f->roam_turn_direction = -2;
     }
-    f->roamTicksUntilNextTurn = 5;
+    f->roam_ticks_until_next_turn = 5;
 }
 
 void figure_movement_move_ticks(figure *f, int num_ticks)
@@ -323,35 +323,35 @@ void figure_movement_move_ticks_tower_sentry(figure *f, int num_ticks)
 {
     while (num_ticks > 0) {
         num_ticks--;
-        f->progressOnTile++;
-        if (f->progressOnTile < 15) {
+        f->progress_on_tile++;
+        if (f->progress_on_tile < 15) {
             advance_tick(f);
         } else {
-            f->progressOnTile = 15;
+            f->progress_on_tile = 15;
         }
     }
 }
 
 void figure_movement_follow_ticks(figure *f, int num_ticks)
 {
-    const figure *leader = figure_get(f->inFrontFigureId);
-    if (f->x == f->sourceX && f->y == f->sourceY) {
-        f->isGhost = 1;
+    const figure *leader = figure_get(f->leading_figure_id);
+    if (f->x == f->source_x && f->y == f->source_y) {
+        f->is_ghost = 1;
     }
     while (num_ticks > 0) {
         num_ticks--;
-        f->progressOnTile++;
-        if (f->progressOnTile < 15) {
+        f->progress_on_tile++;
+        if (f->progress_on_tile < 15) {
             advance_tick(f);
         } else {
-            f->progressOnTile = 15;
+            f->progress_on_tile = 15;
             f->direction = calc_general_direction(f->x, f->y,
-                leader->previousTileX, leader->previousTileY);
+                leader->previous_tile_x, leader->previous_tile_y);
             if (f->direction >= 8) {
                 break;
             }
-            f->previousTileDirection = f->direction;
-            f->progressOnTile = 0;
+            f->previous_tile_direction = f->direction;
+            f->progress_on_tile = 0;
             move_to_next_tile(f);
             advance_tick(f);
         }
@@ -360,17 +360,17 @@ void figure_movement_follow_ticks(figure *f, int num_ticks)
 
 void figure_movement_roam_ticks(figure *f, int num_ticks)
 {
-    if (f->roamChooseDestination == 0) {
+    if (f->roam_choose_destination == 0) {
         walk_ticks(f, num_ticks, 1);
         if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-            f->roamChooseDestination = 1;
-            f->roamLength = 0;
+            f->roam_choose_destination = 1;
+            f->roam_length = 0;
         } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-            f->roamChooseDestination = 1;
+            f->roam_choose_destination = 1;
         }
-        if (f->roamChooseDestination) {
-            f->roamTicksUntilNextTurn = 100;
-            f->direction = f->previousTileDirection;
+        if (f->roam_choose_destination) {
+            f->roam_ticks_until_next_turn = 100;
+            f->direction = f->previous_tile_direction;
         } else {
             return;
         }
@@ -378,13 +378,13 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
     // no destination: walk to end of tile and pick a direction
     while (num_ticks > 0) {
         num_ticks--;
-        f->progressOnTile++;
-        if (f->progressOnTile < 15) {
+        f->progress_on_tile++;
+        if (f->progress_on_tile < 15) {
             advance_tick(f);
         } else {
-            f->progressOnTile = 15;
-            f->roamRandomCounter++;
-            int came_from_direction = (f->previousTileDirection + 4) % 8;
+            f->progress_on_tile = 15;
+            f->roam_random_counter++;
+            int came_from_direction = (f->previous_tile_direction + 4) % 8;
             if (figure_service_provide_coverage(f)) {
                 return;
             }
@@ -417,7 +417,7 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                 }
             }
             if (adjacent_road_tiles <= 0) {
-                f->roamLength = f->maxRoamLength; // end roaming walk
+                f->roam_length = f->max_roam_length; // end roaming walk
                 return;
             }
             if (adjacent_road_tiles == 1) {
@@ -426,7 +426,7 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                     f->direction = 2 * dir;
                 } while (!road_tiles[f->direction] && dir++ < 4);
             } else if (adjacent_road_tiles == 2) {
-                if (f->roamTicksUntilNextTurn == -1) {
+                if (f->roam_ticks_until_next_turn == -1) {
                     roam_set_direction(f);
                     came_from_direction = -1;
                 }
@@ -437,15 +437,15 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                     if (road_tiles[f->direction] && f->direction != came_from_direction) {
                         break;
                     }
-                    f->direction += f->roamTurnDirection;
+                    f->direction += f->roam_turn_direction;
                     if (f->direction > 6) f->direction = 0;
                     if (f->direction < 0) f->direction = 6;
                 } while (dir++ < 4);
             } else { // > 2 road tiles
-                f->direction = (f->roamRandomCounter + map_random_get(f->grid_offset)) & 6;
+                f->direction = (f->roam_random_counter + map_random_get(f->grid_offset)) & 6;
                 if (!road_tiles[f->direction] || f->direction == came_from_direction) {
-                    f->roamTicksUntilNextTurn--;
-                    if (f->roamTicksUntilNextTurn <= 0) {
+                    f->roam_ticks_until_next_turn--;
+                    if (f->roam_ticks_until_next_turn <= 0) {
                         roam_set_direction(f);
                         came_from_direction = -1;
                     }
@@ -454,15 +454,15 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                         if (road_tiles[f->direction] && f->direction != came_from_direction) {
                             break;
                         }
-                        f->direction += f->roamTurnDirection;
+                        f->direction += f->roam_turn_direction;
                         if (f->direction > 6) f->direction = 0;
                         if (f->direction < 0) f->direction = 6;
                     } while (dir++ < 4);
                 }
             }
-            f->routingPathCurrentTile++;
-            f->previousTileDirection = f->direction;
-            f->progressOnTile = 0;
+            f->routing_path_current_tile++;
+            f->previous_tile_direction = f->direction;
+            f->progress_on_tile = 0;
             move_to_next_tile(f);
             advance_tick(f);
         }
@@ -471,8 +471,8 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
 
 void figure_movement_advance_attack(figure *f)
 {
-    if (f->progressOnTile <= 5) {
-        f->progressOnTile++;
+    if (f->progress_on_tile <= 5) {
+        f->progress_on_tile++;
         advance_tick(f);
     }
 }
@@ -480,100 +480,100 @@ void figure_movement_advance_attack(figure *f)
 void figure_movement_set_cross_country_direction(figure *f, int x_src, int y_src, int x_dst, int y_dst, int is_missile)
 {
     // all x/y are in 1/15th of a tile
-    f->ccDestinationX = x_dst;
-    f->ccDestinationY = y_dst;
-    f->ccDeltaX = (x_src > x_dst) ? (x_src - x_dst) : (x_dst - x_src);
-    f->ccDeltaY = (y_src > y_dst) ? (y_src - y_dst) : (y_dst - y_src);
-    if (f->ccDeltaX < f->ccDeltaY) {
-        f->ccDeltaXY = 2 * f->ccDeltaX - f->ccDeltaY;
-    } else if (f->ccDeltaY < f->ccDeltaX) {
-        f->ccDeltaXY = 2 * f->ccDeltaY - f->ccDeltaX;
+    f->cc_destination_x = x_dst;
+    f->cc_destination_y = y_dst;
+    f->cc_delta_x = (x_src > x_dst) ? (x_src - x_dst) : (x_dst - x_src);
+    f->cc_delta_y = (y_src > y_dst) ? (y_src - y_dst) : (y_dst - y_src);
+    if (f->cc_delta_x < f->cc_delta_y) {
+        f->cc_delta_xy = 2 * f->cc_delta_x - f->cc_delta_y;
+    } else if (f->cc_delta_y < f->cc_delta_x) {
+        f->cc_delta_xy = 2 * f->cc_delta_y - f->cc_delta_x;
     } else { // equal
-        f->ccDeltaXY = 0;
+        f->cc_delta_xy = 0;
     }
     if (is_missile) {
         f->direction = calc_missile_direction(x_src, y_src, x_dst, y_dst);
     } else {
         f->direction = calc_general_direction(x_src, y_src, x_dst, y_dst);
-        if (f->ccDeltaY > 2 * f->ccDeltaX) {
+        if (f->cc_delta_y > 2 * f->cc_delta_x) {
             switch (f->direction) {
                 case DIR_1_TOP_RIGHT: case DIR_7_TOP_LEFT: f->direction = DIR_0_TOP; break;
                 case DIR_3_BOTTOM_RIGHT: case DIR_5_BOTTOM_LEFT: f->direction = DIR_4_BOTTOM; break;
             }
         }
-        if (f->ccDeltaX > 2 * f->ccDeltaY) {
+        if (f->cc_delta_x > 2 * f->cc_delta_y) {
             switch (f->direction) {
                 case DIR_1_TOP_RIGHT: case DIR_3_BOTTOM_RIGHT: f->direction = DIR_2_RIGHT; break;
                 case DIR_5_BOTTOM_LEFT: case DIR_7_TOP_LEFT: f->direction = DIR_6_LEFT; break;
             }
         }
     }
-    if (f->ccDeltaX >= f->ccDeltaY) {
-        f->ccDirection = 1;
+    if (f->cc_delta_x >= f->cc_delta_y) {
+        f->cc_direction = 1;
     } else {
-        f->ccDirection = 2;
+        f->cc_direction = 2;
     }
 }
 
 void figure_movement_set_cross_country_destination(figure *f, int x_dst, int y_dst)
 {
-    f->destinationX = x_dst;
-    f->destinationY = y_dst;
+    f->destination_x = x_dst;
+    f->destination_y = y_dst;
     figure_movement_set_cross_country_direction(
-        f, f->crossCountryX, f->crossCountryY,
+        f, f->cross_country_x, f->cross_country_y,
         15 * x_dst, 15 * y_dst, 0);
 }
 
 static void cross_country_update_delta(figure *f)
 {
-    if (f->ccDirection == 1) { // x
-        if (f->ccDeltaXY >= 0) {
-            f->ccDeltaXY += 2 * (f->ccDeltaY - f->ccDeltaX);
+    if (f->cc_direction == 1) { // x
+        if (f->cc_delta_xy >= 0) {
+            f->cc_delta_xy += 2 * (f->cc_delta_y - f->cc_delta_x);
         } else {
-            f->ccDeltaXY += 2 * f->ccDeltaY;
+            f->cc_delta_xy += 2 * f->cc_delta_y;
         }
-        f->ccDeltaX--;
+        f->cc_delta_x--;
     } else { // y
-        if (f->ccDeltaXY >= 0) {
-            f->ccDeltaXY += 2 * (f->ccDeltaX - f->ccDeltaY);
+        if (f->cc_delta_xy >= 0) {
+            f->cc_delta_xy += 2 * (f->cc_delta_x - f->cc_delta_y);
         } else {
-            f->ccDeltaXY += 2 * f->ccDeltaX;
+            f->cc_delta_xy += 2 * f->cc_delta_x;
         }
-        f->ccDeltaY--;
+        f->cc_delta_y--;
     }
 }
 
 static void cross_country_advance_x(figure *f)
 {
-    if (f->crossCountryX < f->ccDestinationX) {
-        f->crossCountryX++;
-    } else if (f->crossCountryX > f->ccDestinationX) {
-        f->crossCountryX--;
+    if (f->cross_country_x < f->cc_destination_x) {
+        f->cross_country_x++;
+    } else if (f->cross_country_x > f->cc_destination_x) {
+        f->cross_country_x--;
     }
 }
 
 static void cross_country_advance_y(figure *f)
 {
-    if (f->crossCountryY < f->ccDestinationY) {
-        f->crossCountryY++;
-    } else if (f->crossCountryY > f->ccDestinationY) {
-        f->crossCountryY--;
+    if (f->cross_country_y < f->cc_destination_y) {
+        f->cross_country_y++;
+    } else if (f->cross_country_y > f->cc_destination_y) {
+        f->cross_country_y--;
     }
 }
 
 static void cross_country_advance(figure *f)
 {
     cross_country_update_delta(f);
-    if (f->ccDirection == 2) { // y
+    if (f->cc_direction == 2) { // y
         cross_country_advance_y(f);
-        if (f->ccDeltaXY >= 0) {
-            f->ccDeltaX--;
+        if (f->cc_delta_xy >= 0) {
+            f->cc_delta_x--;
             cross_country_advance_x(f);
         }
     } else {
         cross_country_advance_x(f);
-        if (f->ccDeltaXY >= 0) {
-            f->ccDeltaY--;
+        if (f->cc_delta_xy >= 0) {
+            f->cc_delta_y--;
             cross_country_advance_y(f);
         }
     }
@@ -585,24 +585,24 @@ int figure_movement_move_ticks_cross_country(figure *f, int num_ticks)
     int is_at_destination = 0;
     while (num_ticks > 0) {
         num_ticks--;
-        if (f->missileDamage > 0) {
-            f->missileDamage--;
+        if (f->missile_damage > 0) {
+            f->missile_damage--;
         } else {
-            f->missileDamage = 0;
+            f->missile_damage = 0;
         }
-        if (f->ccDeltaX + f->ccDeltaY <= 0) {
+        if (f->cc_delta_x + f->cc_delta_y <= 0) {
             is_at_destination = 1;
             break;
         }
         cross_country_advance(f);
     }
-    f->x = f->crossCountryX / 15;
-    f->y = f->crossCountryY / 15;
+    f->x = f->cross_country_x / 15;
+    f->y = f->cross_country_y / 15;
     f->grid_offset = map_grid_offset(f->x, f->y);
     if (map_terrain_is(f->grid_offset, TERRAIN_BUILDING)) {
-        f->inBuildingWaitTicks = 8;
-    } else if (f->inBuildingWaitTicks) {
-        f->inBuildingWaitTicks--;
+        f->in_building_wait_ticks = 8;
+    } else if (f->in_building_wait_ticks) {
+        f->in_building_wait_ticks--;
     }
     map_figure_add(f);
     return is_at_destination;
@@ -612,8 +612,8 @@ int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x
 {
     int height = 0;
     figure *f = figure_get(0); // abuse unused figure 0 as scratch
-    f->crossCountryX = 15 * x_src;
-    f->crossCountryY = 15 * y_src;
+    f->cross_country_x = 15 * x_src;
+    f->cross_country_y = 15 * y_src;
     if (map_terrain_is(map_grid_offset(x_src, y_src), TERRAIN_WALL_OR_GATEHOUSE)) {
         height = 6;
     }
@@ -621,13 +621,13 @@ int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x
 
     for (int guard = 0; guard < 1000; guard++) {
         for (int i = 0; i < 8; i++) {
-            if (f->ccDeltaX + f->ccDeltaY <= 0) {
+            if (f->cc_delta_x + f->cc_delta_y <= 0) {
                 return 1;
             }
             cross_country_advance(f);
         }
-        f->x = f->crossCountryX / 15;
-        f->y = f->crossCountryY / 15;
+        f->x = f->cross_country_x / 15;
+        f->y = f->cross_country_y / 15;
         if (height) {
             height--;
         } else {

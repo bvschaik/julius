@@ -438,10 +438,10 @@ static void draw_figures(int x, int y, int grid_offset)
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-        if (!f->isGhost && overlay->show_figure(f)) {
+        if (!f->is_ghost && overlay->show_figure(f)) {
             city_draw_figure(f, x, y);
         }
-        figure_id = f->nextFigureIdOnSameTile;
+        figure_id = f->next_figure_id_on_same_tile;
     }
 }
 
@@ -450,10 +450,10 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
     int figure_id = map_figure_at(grid_offset);
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
-        if (((f->useCrossCountry && !f->isGhost) || f->heightAdjustedTicks) && overlay->show_figure(f)) {
+        if (((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks) && overlay->show_figure(f)) {
             city_draw_figure(f, x, y);
         }
-        figure_id = f->nextFigureIdOnSameTile;
+        figure_id = f->next_figure_id_on_same_tile;
     }
 }
 

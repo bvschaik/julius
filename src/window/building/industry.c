@@ -256,7 +256,7 @@ void window_building_draw_wharf(building_info_context *c)
         window_building_draw_description(c, 102, 2);
     } else {
         int text_id;
-        switch (figure_get(b->data.industry.fishing_boat_id)->actionState) {
+        switch (figure_get(b->data.industry.fishing_boat_id)->action_state) {
             case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: text_id = 3; break;
             case FIGURE_ACTION_192_FISHING_BOAT_FISHING: text_id = 4; break;
             case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF: text_id = 5; break;

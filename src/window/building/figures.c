@@ -74,7 +74,7 @@ static int inventory_to_resource_id(int value)
 static figure *get_head_of_caravan(figure *f)
 {
     while (f->type == FIGURE_TRADE_CARAVAN_DONKEY) {
-        f = figure_get(f->inFrontFigureId);
+        f = figure_get(f->leading_figure_id);
     }
     return f;
 }
@@ -82,17 +82,17 @@ static figure *get_head_of_caravan(figure *f)
 static void draw_trader(building_info_context *c, figure *f)
 {
     f = get_head_of_caravan(f);
-    const empire_city *city = empire_city_get(f->empireCityId);
+    const empire_city *city = empire_city_get(f->empire_city_id);
     int width = lang_text_draw(64, f->type, c->x_offset + 40, c->y_offset + 110, FONT_SMALL_BLACK);
     lang_text_draw(21, city->name_id, c->x_offset + 40 + width, c->y_offset + 110, FONT_SMALL_BLACK);
     
     width = lang_text_draw(129, 1, c->x_offset + 40, c->y_offset + 130, FONT_SMALL_BLACK);
     lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 12 : 8, c->x_offset + 40 + width, c->y_offset + 130, FONT_SMALL_BLACK);
     
-    int trader_id = f->traderId;
+    int trader_id = f->trader_id;
     if (f->type == FIGURE_TRADE_SHIP) {
         int text_id;
-        switch (f->actionState) {
+        switch (f->action_state) {
             case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED: text_id = 6; break;
             case FIGURE_ACTION_112_TRADE_SHIP_MOORED: text_id = 7; break;
             case FIGURE_ACTION_115_TRADE_SHIP_LEAVING: text_id = 8; break;
@@ -101,7 +101,7 @@ static void draw_trader(building_info_context *c, figure *f)
         lang_text_draw(129, text_id, c->x_offset + 40, c->y_offset + 150, FONT_SMALL_BLACK);
     } else {
         int text_id;
-        switch (f->actionState) {
+        switch (f->action_state) {
             case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
                 text_id = 12;
                 break;
@@ -231,8 +231,8 @@ static void draw_cartpusher(building_info_context *c, figure *f)
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     int width = lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK);
     
-    if (f->actionState != FIGURE_ACTION_132_DOCKER_IDLING && f->resourceId) {
-        int resource = f->resourceId;
+    if (f->action_state != FIGURE_ACTION_132_DOCKER_IDLING && f->resource_id) {
+        int resource = f->resource_id;
         image_draw(image_group(GROUP_RESOURCE_ICONS) +
             resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 92 + width, c->y_offset + 135);
@@ -241,13 +241,13 @@ static void draw_cartpusher(building_info_context *c, figure *f)
     lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
         c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 9), FONT_SMALL_BLACK);
     
-    if (!f->buildingId) {
+    if (!f->building_id) {
         return;
     }
-    building *source_building = building_get(f->buildingId);
-    building *target_building = building_get(f->destinationBuildingId);
+    building *source_building = building_get(f->building_id);
+    building *target_building = building_get(f->destination_building_id);
     int is_returning = 0;
-    switch (f->actionState) {
+    switch (f->action_state) {
         case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
         case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
         case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
@@ -258,7 +258,7 @@ static void draw_cartpusher(building_info_context *c, figure *f)
             is_returning = 1;
             break;
     }
-    if (f->actionState != FIGURE_ACTION_132_DOCKER_IDLING) {
+    if (f->action_state != FIGURE_ACTION_132_DOCKER_IDLING) {
         if (is_returning) {
             width = lang_text_draw(129, 16, c->x_offset + 40, c->y_offset + 200, FONT_SMALL_BLACK);
             width += lang_text_draw(41, source_building->type, c->x_offset + 40 + width, c->y_offset + 200, FONT_SMALL_BLACK);
@@ -280,14 +280,14 @@ static void draw_market_buyer(building_info_context *c, figure *f)
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     int width = lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK);
     
-    if (f->actionState == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
+    if (f->action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
-        int resource = inventory_to_resource_id(f->collectingItemId);
+        int resource = inventory_to_resource_id(f->collecting_item_id);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 90 + width, c->y_offset + 135);
-    } else if (f->actionState == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
+    } else if (f->action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
         width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
-        int resource = inventory_to_resource_id(f->collectingItemId);
+        int resource = inventory_to_resource_id(f->collecting_item_id);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 90 + width, c->y_offset + 135);
     }
@@ -300,8 +300,8 @@ static void draw_market_buyer(building_info_context *c, figure *f)
 static void draw_normal_figure(building_info_context *c, figure *f)
 {
     int image_id = big_people_image(f->type);
-    if (f->actionState == FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE ||
-        f->actionState == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
+    if (f->action_state == FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE ||
+        f->action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
         image_id = image_group(GROUP_BIG_PEOPLE) + 18;
     }
     image_draw(image_id, c->x_offset + 28, c->y_offset + 112);
@@ -398,5 +398,5 @@ void window_building_play_figure_phrase(building_info_context *c)
     int figure_id = c->figure.figure_ids[c->figure.selected_index];
     figure *f = figure_get(figure_id);
     c->figure.sound_id = figure_phrase_play(f);
-    c->figure.phrase_id = f->phraseId;
+    c->figure.phrase_id = f->phrase_id;
 }

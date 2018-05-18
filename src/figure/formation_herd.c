@@ -120,27 +120,27 @@ static void move_animals(const formation *m, int attacking_animals)
     for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
         if (m->figures[i] <= 0) continue;
         figure *f = figure_get(m->figures[i]);
-        if (f->actionState == FIGURE_ACTION_149_CORPSE ||
-            f->actionState == FIGURE_ACTION_150_ATTACK) {
+        if (f->action_state == FIGURE_ACTION_149_CORPSE ||
+            f->action_state == FIGURE_ACTION_150_ATTACK) {
             continue;
         }
-        f->waitTicks = 401;
+        f->wait_ticks = 401;
         if (attacking_animals) {
             int target_id = figure_combat_get_target_for_wolf(f->x, f->y, 6);
             if (target_id) {
                 figure *target = figure_get(target_id);
-                f->actionState = FIGURE_ACTION_199_WOLF_ATTACKING;
-                f->destinationX = target->x;
-                f->destinationY = target->y;
-                f->targetFigureId = target_id;
-                target->targetedByFigureId = f->id;
-                f->targetFigureCreatedSequence = target->created_sequence;
+                f->action_state = FIGURE_ACTION_199_WOLF_ATTACKING;
+                f->destination_x = target->x;
+                f->destination_y = target->y;
+                f->target_figure_id = target_id;
+                target->targeted_by_figure_id = f->id;
+                f->target_figure_created_sequence = target->created_sequence;
                 figure_route_remove(f);
             } else {
-                f->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+                f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             }
         } else {
-            f->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+            f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
         }
     }
 }
@@ -164,15 +164,15 @@ static void update_herd_formation(formation *m)
         // spawn new wolf
         if (!map_terrain_is(map_grid_offset(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
             figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
-            wolf->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+            wolf->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             wolf->formation_id = m->id;
-            wolf->waitTicks = wolf->id & 0x1f;
+            wolf->wait_ticks = wolf->id & 0x1f;
         }
     }
     int attacking_animals = 0;
     for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
         int figure_id = m->figures[fig];
-        if (figure_id > 0 && figure_get(figure_id)->actionState == FIGURE_ACTION_150_ATTACK) {
+        if (figure_id > 0 && figure_get(figure_id)->action_state == FIGURE_ACTION_150_ATTACK) {
             attacking_animals++;
         }
     }

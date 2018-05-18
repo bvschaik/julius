@@ -12,7 +12,7 @@
 
 static void roamer_action(figure *f, int num_ticks)
 {
-    switch (f->actionState) {
+    switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
             break;
@@ -20,17 +20,17 @@ static void roamer_action(figure *f, int num_ticks)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_125_ROAMING:
-            f->isGhost = 0;
-            f->roamLength++;
-            if (f->roamLength >= f->maxRoamLength) {
+            f->is_ghost = 0;
+            f->roam_length++;
+            if (f->roam_length >= f->max_roam_length) {
                 int x, y;
-                building *b = building_get(f->buildingId);
+                building *b = building_get(f->building_id);
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x, &y)) {
-                    f->actionState = FIGURE_ACTION_126_ROAMER_RETURNING;
-                    f->destinationX = x;
-                    f->destinationY = y;
+                    f->action_state = FIGURE_ACTION_126_ROAMER_RETURNING;
+                    f->destination_x = x;
+                    f->destination_y = y;
                     figure_route_remove(f);
-                    f->roamLength = 0;
+                    f->roam_length = 0;
                 } else {
                     f->state = FIGURE_STATE_DEAD;
                 }
@@ -49,10 +49,10 @@ static void roamer_action(figure *f, int num_ticks)
 
 static void culture_action(figure *f, int group)
 {
-    f->terrainUsage = TERRAIN_USAGE_ROADS;
-    f->useCrossCountry = 0;
-    f->maxRoamLength = 384;
-    building *b = building_get(f->buildingId);
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 384;
+    building *b = building_get(f->building_id);
     if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
@@ -68,15 +68,15 @@ void figure_priest_action(figure *f)
 
 void figure_school_child_action(figure *f)
 {
-    f->terrainUsage = TERRAIN_USAGE_ROADS;
-    f->useCrossCountry = 0;
-    f->maxRoamLength = 96;
-    building *b = building_get(f->buildingId);
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 96;
+    building *b = building_get(f->building_id);
     if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_SCHOOL) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
-    switch (f->actionState) {
+    switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
             break;
@@ -84,9 +84,9 @@ void figure_school_child_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_125_ROAMING:
-            f->isGhost = 0;
-            f->roamLength++;
-            if (f->roamLength >= f->maxRoamLength) {
+            f->is_ghost = 0;
+            f->roam_length++;
+            if (f->roam_length >= f->max_roam_length) {
                 f->state = FIGURE_STATE_DEAD;
             }
             figure_movement_roam_ticks(f, 2);
@@ -122,10 +122,10 @@ void figure_doctor_action(figure *f)
 
 void figure_missionary_action(figure *f)
 {
-    f->terrainUsage = TERRAIN_USAGE_ROADS;
-    f->useCrossCountry = 0;
-    f->maxRoamLength = 192;
-    building *b = building_get(f->buildingId);
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 192;
+    building *b = building_get(f->building_id);
     if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
@@ -136,10 +136,10 @@ void figure_missionary_action(figure *f)
 
 void figure_patrician_action(figure *f)
 {
-    f->terrainUsage = TERRAIN_USAGE_ROADS;
-    f->useCrossCountry = 0;
-    f->maxRoamLength = 128;
-    if (building_get(f->buildingId)->state != BUILDING_STATE_IN_USE) {
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 128;
+    if (building_get(f->building_id)->state != BUILDING_STATE_IN_USE) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -149,10 +149,10 @@ void figure_patrician_action(figure *f)
 
 void figure_labor_seeker_action(figure *f)
 {
-    f->terrainUsage = TERRAIN_USAGE_ROADS;
-    f->useCrossCountry = 0;
-    f->maxRoamLength = 384;
-    building *b = building_get(f->buildingId);
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 384;
+    building *b = building_get(f->building_id);
     if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
@@ -163,20 +163,20 @@ void figure_labor_seeker_action(figure *f)
 
 void figure_market_trader_action(figure *f)
 {
-    f->terrainUsage = TERRAIN_USAGE_ROADS;
-    f->useCrossCountry = 0;
-    f->maxRoamLength = 384;
-    building *market = building_get(f->buildingId);
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 384;
+    building *market = building_get(f->building_id);
     if (market->state != BUILDING_STATE_IN_USE || market->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
-    if (f->actionState == FIGURE_ACTION_125_ROAMING) {
+    if (f->action_state == FIGURE_ACTION_125_ROAMING) {
         // force return on out of stock
         int stock = building_market_get_max_food_stock(market) +
             building_market_get_max_goods_stock(market);
-        if (f->roamLength >= 96 && stock <= 0) {
-            f->roamLength = f->maxRoamLength;
+        if (f->roam_length >= 96 && stock <= 0) {
+            f->roam_length = f->max_roam_length;
         }
     }
     roamer_action(f, 1);
@@ -185,17 +185,17 @@ void figure_market_trader_action(figure *f)
 
 void figure_tax_collector_action(figure *f)
 {
-    building *b = building_get(f->buildingId);
+    building *b = building_get(f->building_id);
     
-    f->terrainUsage = TERRAIN_USAGE_ROADS;
-    f->useCrossCountry = 0;
-    f->maxRoamLength = 512;
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 512;
     if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
     
-    switch (f->actionState) {
+    switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
             break;
@@ -203,43 +203,43 @@ void figure_tax_collector_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_40_TAX_COLLECTOR_CREATED:
-            f->isGhost = 1;
-            f->graphicOffset = 0;
-            f->waitTicks--;
-            if (f->waitTicks <= 0) {
+            f->is_ghost = 1;
+            f->image_offset = 0;
+            f->wait_ticks--;
+            if (f->wait_ticks <= 0) {
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                    f->actionState = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
+                    f->action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
                     figure_movement_set_cross_country_destination(f, x_road, y_road);
-                    f->roamLength = 0;
+                    f->roam_length = 0;
                 } else {
                     f->state = FIGURE_STATE_DEAD;
                 }
             }
             break;
         case FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:
-            f->useCrossCountry = 1;
-            f->isGhost = 1;
+            f->use_cross_country = 1;
+            f->is_ghost = 1;
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
-                if (map_building_at(f->grid_offset) == f->buildingId) {
+                if (map_building_at(f->grid_offset) == f->building_id) {
                     // returned to own building
                     f->state = FIGURE_STATE_DEAD;
                 } else {
-                    f->actionState = FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING;
+                    f->action_state = FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING;
                     figure_movement_init_roaming(f);
-                    f->roamLength = 0;
+                    f->roam_length = 0;
                 }
             }
             break;
         case FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING:
-            f->isGhost = 0;
-            f->roamLength++;
-            if (f->roamLength >= f->maxRoamLength) {
+            f->is_ghost = 0;
+            f->roam_length++;
+            if (f->roam_length >= f->max_roam_length) {
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                    f->actionState = FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING;
-                    f->destinationX = x_road;
-                    f->destinationY = y_road;
+                    f->action_state = FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING;
+                    f->destination_x = x_road;
+                    f->destination_y = y_road;
                 } else {
                     f->state = FIGURE_STATE_DEAD;
                 }
@@ -249,9 +249,9 @@ void figure_tax_collector_action(figure *f)
         case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->actionState = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
+                f->action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
                 figure_movement_set_cross_country_destination(f, b->x, b->y);
-                f->roamLength = 0;
+                f->roam_length = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }

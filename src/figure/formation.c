@@ -478,10 +478,10 @@ void formation_calculate_figures()
             continue;
         }
         int index = formation_add_figure(f->formation_id, i,
-            f->formationAtRest != 1, f->damage,
+            f->formation_at_rest != 1, f->damage,
             figure_properties_for_type(f->type)->max_damage
         );
-        f->indexInFormation = index;
+        f->index_in_formation = index;
     }
 
     enemy_army_totals_clear();

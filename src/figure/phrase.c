@@ -280,33 +280,33 @@ int figure_phrase_play(figure *f)
         return 0;
     }
     int sound_id = FIGURE_TYPE_TO_SOUND_TYPE[f->type];
-    play_sound_file(sound_id, f->phraseId);
+    play_sound_file(sound_id, f->phrase_id);
     return sound_id;
 }
 
 static int lion_tamer_phrase(figure *f)
 {
-    if (f->actionState == FIGURE_ACTION_150_ATTACK) {
-        if (++f->phraseSequenceExact >= 3) {
-            f->phraseSequenceExact = 0;
+    if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        if (++f->phrase_sequence_exact >= 3) {
+            f->phrase_sequence_exact = 0;
         }
-        return 7 + f->phraseSequenceExact;
+        return 7 + f->phrase_sequence_exact;
     }
     return 0;
 }
 
 static int gladiator_phrase(figure *f)
 {
-    return f->actionState == FIGURE_ACTION_150_ATTACK ? 7 : 0;
+    return f->action_state == FIGURE_ACTION_150_ATTACK ? 7 : 0;
 }
 
 static int tax_collector_phrase(figure *f)
 {
-    if (f->minMaxSeen >= HOUSE_LARGE_CASA) {
+    if (f->min_max_seen >= HOUSE_LARGE_CASA) {
         return 7;
-    } else if (f->minMaxSeen >= HOUSE_SMALL_HOVEL) {
+    } else if (f->min_max_seen >= HOUSE_SMALL_HOVEL) {
         return 8;
-    } else if (f->minMaxSeen >= HOUSE_LARGE_TENT) {
+    } else if (f->min_max_seen >= HOUSE_LARGE_TENT) {
         return 9;
     } else {
         return 0;
@@ -315,8 +315,8 @@ static int tax_collector_phrase(figure *f)
 
 static int market_trader_phrase(figure *f)
 {
-    if (f->actionState == FIGURE_ACTION_126_ROAMER_RETURNING) {
-        if (building_market_get_max_food_stock(building_get(f->buildingId)) <= 0) {
+    if (f->action_state == FIGURE_ACTION_126_ROAMER_RETURNING) {
+        if (building_market_get_max_food_stock(building_get(f->building_id)) <= 0) {
             return 9; // run out of goods
         }
     }
@@ -325,9 +325,9 @@ static int market_trader_phrase(figure *f)
 
 static int market_buyer_phrase(figure *f)
 {
-    if (f->actionState == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
+    if (f->action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         return 7;
-    } else if (f->actionState == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
+    } else if (f->action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
         return 8;
     } else {
         return 0;
@@ -336,17 +336,17 @@ static int market_buyer_phrase(figure *f)
 
 static int cart_pusher_phrase(figure *f)
 {
-    if (f->actionState == FIGURE_ACTION_20_CARTPUSHER_INITIAL) {
-        if (f->minMaxSeen == 2) {
+    if (f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL) {
+        if (f->min_max_seen == 2) {
             return 7;
-        } else if (f->minMaxSeen == 1) {
+        } else if (f->min_max_seen == 1) {
             return 8;
         }
-    } else if (f->actionState == FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE ||
-            f->actionState == FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY ||
-            f->actionState == FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP) {
+    } else if (f->action_state == FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE ||
+            f->action_state == FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY ||
+            f->action_state == FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP) {
         if (calc_maximum_distance(
-            f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
+            f->destination_x, f->destination_y, f->source_x, f->source_y) >= 25) {
             return 9; // too far
         }
     }
@@ -355,9 +355,9 @@ static int cart_pusher_phrase(figure *f)
 
 static int warehouseman_phrase(figure *f)
 {
-    if (f->actionState == FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE) {
+    if (f->action_state == FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE) {
         if (calc_maximum_distance(
-            f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
+            f->destination_x, f->destination_y, f->source_x, f->source_y) >= 25) {
             return 9; // too far
         }
     }
@@ -366,18 +366,18 @@ static int warehouseman_phrase(figure *f)
 
 static int prefect_phrase(figure *f)
 {
-    if (++f->phraseSequenceExact >= 4) {
-        f->phraseSequenceExact = 0;
+    if (++f->phrase_sequence_exact >= 4) {
+        f->phrase_sequence_exact = 0;
     }
-    if (f->actionState == FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE) {
+    if (f->action_state == FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE) {
         return 10;
-    } else if (f->actionState == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
-        return 11 + (f->phraseSequenceExact % 2);
-    } else if (f->actionState == FIGURE_ACTION_150_ATTACK) {
-        return 13 + f->phraseSequenceExact;
-    } else if (f->minMaxSeen >= 50) {
+    } else if (f->action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
+        return 11 + (f->phrase_sequence_exact % 2);
+    } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        return 13 + f->phrase_sequence_exact;
+    } else if (f->min_max_seen >= 50) {
         return 7;
-    } else if (f->minMaxSeen >= 10) {
+    } else if (f->min_max_seen >= 10) {
         return 8;
     } else {
         return 9;
@@ -386,9 +386,9 @@ static int prefect_phrase(figure *f)
 
 static int engineer_phrase(figure *f)
 {
-    if (f->minMaxSeen >= 60) {
+    if (f->min_max_seen >= 60) {
         return 7;
-    } else if (f->minMaxSeen >= 10) {
+    } else if (f->min_max_seen >= 10) {
         return 8;
     } else {
         return 0;
@@ -397,18 +397,18 @@ static int engineer_phrase(figure *f)
 
 static int citizen_phrase(figure *f)
 {
-    if (++f->phraseSequenceExact >= 3) {
-        f->phraseSequenceExact = 0;
+    if (++f->phrase_sequence_exact >= 3) {
+        f->phrase_sequence_exact = 0;
     }
-    return 7 + f->phraseSequenceExact;
+    return 7 + f->phrase_sequence_exact;
 }
 
 static int house_seeker_phrase(figure *f)
 {
-    if (++f->phraseSequenceExact >= 2) {
-        f->phraseSequenceExact = 0;
+    if (++f->phrase_sequence_exact >= 2) {
+        f->phrase_sequence_exact = 0;
     }
-    return 7 + f->phraseSequenceExact;
+    return 7 + f->phrase_sequence_exact;
 }
 
 static int emigrant_phrase()
@@ -429,12 +429,12 @@ static int emigrant_phrase()
 
 static int tower_sentry_phrase(figure *f)
 {
-    if (++f->phraseSequenceExact >= 2) {
-        f->phraseSequenceExact = 0;
+    if (++f->phrase_sequence_exact >= 2) {
+        f->phrase_sequence_exact = 0;
     }
     int enemies = city_figures_enemies();
     if (!enemies) {
-        return 7 + f->phraseSequenceExact;
+        return 7 + f->phrase_sequence_exact;
     } else if (enemies <= 10) {
         return 9;
     } else if (enemies <= 30) {
@@ -459,10 +459,10 @@ static int soldier_phrase()
 
 static int docker_phrase(figure *f)
 {
-    if (f->actionState == FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE ||
-        f->actionState == FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE) {
+    if (f->action_state == FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE ||
+        f->action_state == FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE) {
         if (calc_maximum_distance(
-            f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
+            f->destination_x, f->destination_y, f->source_x, f->source_y) >= 25) {
             return 9; // too far
         }
     }
@@ -471,32 +471,32 @@ static int docker_phrase(figure *f)
 
 static int trade_caravan_phrase(figure *f)
 {
-    if (++f->phraseSequenceExact >= 2) {
-        f->phraseSequenceExact = 0;
+    if (++f->phrase_sequence_exact >= 2) {
+        f->phrase_sequence_exact = 0;
     }
-    if (f->actionState == FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING) {
-        if (!trader_has_traded(f->traderId)) {
+    if (f->action_state == FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING) {
+        if (!trader_has_traded(f->trader_id)) {
             return 7; // no trade
         }
-    } else if (f->actionState == FIGURE_ACTION_102_TRADE_CARAVAN_TRADING) {
-        if (figure_trade_caravan_can_buy(f, f->destinationBuildingId, f->empireCityId)) {
+    } else if (f->action_state == FIGURE_ACTION_102_TRADE_CARAVAN_TRADING) {
+        if (figure_trade_caravan_can_buy(f, f->destination_building_id, f->empire_city_id)) {
             return 11; // buying goods
-        } else if (figure_trade_caravan_can_sell(f, f->destinationBuildingId, f->empireCityId)) {
+        } else if (figure_trade_caravan_can_sell(f, f->destination_building_id, f->empire_city_id)) {
             return 10; // selling goods
         }
     }
-    return 8 + f->phraseSequenceExact;
+    return 8 + f->phrase_sequence_exact;
 }
 
 static int trade_ship_phrase(figure *f)
 {
-    if (f->actionState == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
-        if (!trader_has_traded(f->traderId)) {
+    if (f->action_state == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
+        if (!trader_has_traded(f->trader_id)) {
             return 9; // no trade
         } else {
             return 11; // good trade
         }
-    } else if (f->actionState == FIGURE_ACTION_112_TRADE_SHIP_MOORED) {
+    } else if (f->action_state == FIGURE_ACTION_112_TRADE_SHIP_MOORED) {
         int state = figure_trade_ship_is_trading(f);
         if (state == TRADE_SHIP_BUYING) {
             return 8; // buying goods
@@ -578,7 +578,7 @@ static int city_god_state()
 
 static int phrase_based_on_city_state(figure *f)
 {
-    f->phraseSequenceCity = 0;
+    f->phrase_sequence_city = 0;
     int god_state = city_god_state();
     int unemployment_pct = city_labor_unemployment_percentage();
 
@@ -619,17 +619,17 @@ void figure_phrase_determine(figure *f)
     if (f->id <= 0) {
         return;
     }
-    f->phraseId = 0;
+    f->phrase_id = 0;
 
     if (figure_is_enemy(f) || f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_NATIVE_TRADER) {
-        f->phraseId = -1;
+        f->phrase_id = -1;
         return;
     }
 
     int phrase_id = phrase_based_on_figure_state(f);
     if (phrase_id) {
-        f->phraseId = phrase_id;
+        f->phrase_id = phrase_id;
     } else {
-        f->phraseId = phrase_based_on_city_state(f);
+        f->phrase_id = phrase_based_on_city_state(f);
     }
 }

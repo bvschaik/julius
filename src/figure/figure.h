@@ -11,102 +11,103 @@
 typedef struct {
     int id;
 
-    unsigned char alternativeLocationIndex;
-    unsigned char graphicOffset;
-    unsigned char isEnemyGraphic;
-    unsigned char flotsamVisible;
-    short graphicId; // 04
-    short cartGraphicId;
-    short nextFigureIdOnSameTile; // 08
+    short image_id;
+    short cart_image_id;
+    unsigned char image_offset;
+    unsigned char is_enemy_image;
+
+    unsigned char alternative_location_index;
+    unsigned char flotsam_visible;
+    short next_figure_id_on_same_tile;
     unsigned char type;
-    unsigned char resourceId; //0b
-    unsigned char useCrossCountry;
-    unsigned char isFriendly;
+    unsigned char resource_id;
+    unsigned char use_cross_country;
+    unsigned char is_friendly;
     unsigned char state;
-    unsigned char faction_id; // 1 = city, 0 = enemy // 0f
-    unsigned char actionStateBeforeAttack; // 10
+    unsigned char faction_id; // 1 = city, 0 = enemy
+    unsigned char action_state_before_attack;
     signed char direction;
-    signed char previousTileDirection; // 12
-    signed char attackDirection; // 13
+    signed char previous_tile_direction;
+    signed char attack_direction;
     unsigned char x;
     unsigned char y;
-    unsigned char previousTileX;
-    unsigned char previousTileY;
-    unsigned char missileDamage;
-    unsigned char damage; //19
-    short grid_offset; // 1a
-    unsigned char destinationX; // 1c
-    unsigned char destinationY;
-    short destinationGridOffsetSoldier;
-    unsigned char sourceX; // 20
-    unsigned char sourceY;
-    signed char formationPositionX;
-    signed char formationPositionY;
+    unsigned char previous_tile_x;
+    unsigned char previous_tile_y;
+    unsigned char missile_damage;
+    unsigned char damage;
+    short grid_offset;
+    unsigned char destination_x;
+    unsigned char destination_y;
+    short destination_grid_offset; // only used for soldiers
+    unsigned char source_x;
+    unsigned char source_y;
+    signed char formation_position_x;
+    signed char formation_position_y;
     short __unused_24;
-    short waitTicks;
-    unsigned char actionState;
-    unsigned char progressOnTile; // 29
-    short routingPathId;
-    short routingPathCurrentTile;
-    short routingPathLength;
-    unsigned char inBuildingWaitTicks; // 30
-    unsigned char isOnRoad;
-    short maxRoamLength;
-    short roamLength;
-    unsigned char roamChooseDestination;
-    unsigned char roamRandomCounter;
-    signed char roamTurnDirection;
-    signed char roamTicksUntilNextTurn;
-    short crossCountryX; // 3a - position = 15 * x + offset on tile
-    short crossCountryY; // 3c - position = 15 * y + offset on tile
-    short ccDestinationX; // 3e
-    short ccDestinationY; // 40
-    short ccDeltaX; // 42
-    short ccDeltaY; // 44
-    short ccDeltaXY; // 46
-    unsigned char ccDirection; // 48: 1 = x, 2 = y
-    unsigned char speedMultiplier;
-    short buildingId;
-    short immigrantBuildingId;
-    short destinationBuildingId;
-    short formation_id; //50
-    unsigned char indexInFormation; //52
-    unsigned char formationAtRest; //53
-    unsigned char migrantNumPeople;
-    unsigned char isGhost; // 55
-    unsigned char minMaxSeen;
+    short wait_ticks;
+    unsigned char action_state;
+    unsigned char progress_on_tile;
+    short routing_path_id;
+    short routing_path_current_tile;
+    short routing_path_length;
+    unsigned char in_building_wait_ticks;
+    unsigned char is_on_road;
+    short max_roam_length;
+    short roam_length;
+    unsigned char roam_choose_destination;
+    unsigned char roam_random_counter;
+    signed char roam_turn_direction;
+    signed char roam_ticks_until_next_turn;
+    short cross_country_x; // position = 15 * x + offset on tile
+    short cross_country_y; // position = 15 * y + offset on tile
+    short cc_destination_x;
+    short cc_destination_y;
+    short cc_delta_x;
+    short cc_delta_y;
+    short cc_delta_xy;
+    unsigned char cc_direction; // 1 = x, 2 = y
+    unsigned char speed_multiplier;
+    short building_id;
+    short immigrant_building_id;
+    short destination_building_id;
+    short formation_id;
+    unsigned char index_in_formation;
+    unsigned char formation_at_rest;
+    unsigned char migrant_num_people;
+    unsigned char is_ghost;
+    unsigned char min_max_seen;
     unsigned char __unused_57;
-    short inFrontFigureId;
-    unsigned char attackGraphicOffset;
-    unsigned char waitTicksMissile;
-    signed char xOffsetCart; // 5c
-    signed char yOffsetCart; // 5d
-    unsigned char empireCityId; // 5e
-    unsigned char traderAmountBought;
-    short name; // 60
-    unsigned char terrainUsage;
-    unsigned char loadsSoldOrCarrying;
-    unsigned char isBoat; // 64
-    unsigned char heightAdjustedTicks; // 65
-    unsigned char currentHeight;
-    unsigned char targetHeight;
-    unsigned char collectingItemId; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
-    unsigned char tradeShipFailedDockAttempts;
-    unsigned char phraseSequenceExact;
-    signed char phraseId;
-    unsigned char phraseSequenceCity;
-    unsigned char traderId;
-    unsigned char waitTicksNextTarget;
+    short leading_figure_id;
+    unsigned char attack_image_offset;
+    unsigned char wait_ticks_missile;
+    signed char x_offset_cart;
+    signed char y_offset_cart;
+    unsigned char empire_city_id;
+    unsigned char trader_amount_bought;
+    short name;
+    unsigned char terrain_usage;
+    unsigned char loads_sold_or_carrying;
+    unsigned char is_boat; // 1 for boat, 2 for flotsam
+    unsigned char height_adjusted_ticks;
+    unsigned char current_height;
+    unsigned char target_height;
+    unsigned char collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
+    unsigned char trade_ship_failed_dock_attempts;
+    unsigned char phrase_sequence_exact;
+    signed char phrase_id;
+    unsigned char phrase_sequence_city;
+    unsigned char trader_id;
+    unsigned char wait_ticks_next_target;
     unsigned char __unused_6f;
-    short targetFigureId; // 70
-    short targetedByFigureId; // 72
+    short target_figure_id;
+    short targeted_by_figure_id;
     unsigned short created_sequence;
-    unsigned short targetFigureCreatedSequence;
-    unsigned char numPreviousFiguresOnSameTile;
-    unsigned char numAttackers;
-    short attackerId1;
-    short attackerId2;
-    short opponentId; // 7e
+    unsigned short target_figure_created_sequence;
+    unsigned char figures_on_same_tile_index;
+    unsigned char num_attackers;
+    short attacker_id1;
+    short attacker_id2;
+    short opponent_id;
 } figure;
 
 figure *figure_get(int id);

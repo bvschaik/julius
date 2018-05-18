@@ -114,13 +114,13 @@ void figure_action_handle()
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
         if (f->state) {
-            if (f->targetedByFigureId) {
-                figure *attacker = figure_get(f->targetedByFigureId);
+            if (f->targeted_by_figure_id) {
+                figure *attacker = figure_get(f->targeted_by_figure_id);
                 if (attacker->state != FIGURE_STATE_ALIVE) {
-                    f->targetedByFigureId = 0;
+                    f->targeted_by_figure_id = 0;
                 }
-                if (attacker->targetFigureId != i) {
-                    f->targetedByFigureId = 0;
+                if (attacker->target_figure_id != i) {
+                    f->targeted_by_figure_id = 0;
                 }
             }
             figure_action_callbacks[f->type](f);

@@ -268,7 +268,7 @@ static void init(int grid_offset)
         while (figure_id > 0 && context.figure.count < 7) {
             figure *figure = figure_get(figure_id);
             if (figure->state != FIGURE_STATE_DEAD &&
-                figure->actionState != FIGURE_ACTION_149_CORPSE) {
+                figure->action_state != FIGURE_ACTION_149_CORPSE) {
                 switch (figure->type) {
                     case FIGURE_NONE:
                     case FIGURE_EXPLOSION:
@@ -289,7 +289,7 @@ static void init(int grid_offset)
                         break;
                 }
             }
-            figure_id = figure->nextFigureIdOnSameTile;
+            figure_id = figure->next_figure_id_on_same_tile;
         }
     }
     // check for legion figures

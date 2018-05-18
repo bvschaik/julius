@@ -463,12 +463,12 @@ void city_labor_set_priority(int category, int new_priority)
     int from_prio;
     int to_prio;
     if (!old_priority && new_priority) {
-        // shift all bigger than 'newPriority' by one down (+1)
+        // shift all bigger than 'new_priority' by one down (+1)
         shift = 1;
         from_prio = new_priority;
         to_prio = 9;
     } else if (old_priority && !new_priority) {
-        // shift all bigger than 'oldPriority' by one up (-1)
+        // shift all bigger than 'old_priority' by one up (-1)
         shift = -1;
         from_prio = old_priority;
         to_prio = 9;

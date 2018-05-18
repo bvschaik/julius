@@ -360,7 +360,7 @@ void map_routing_delete_first_wall_or_aqueduct(int x, int y)
 
 static int is_fighting_friendly(figure *f)
 {
-    return f->isFriendly && f->actionState == FIGURE_ACTION_150_ATTACK;
+    return f->is_friendly && f->action_state == FIGURE_ACTION_150_ATTACK;
 }
 
 static int has_fighting_friendly(int grid_offset)
@@ -370,7 +370,7 @@ static int has_fighting_friendly(int grid_offset)
 
 static int is_fighting_enemy(figure *f)
 {
-    return !f->isFriendly && f->actionState == FIGURE_ACTION_150_ATTACK;
+    return !f->is_friendly && f->action_state == FIGURE_ACTION_150_ATTACK;
 }
 
 static int has_fighting_enemy(int grid_offset)

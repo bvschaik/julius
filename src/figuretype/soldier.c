@@ -44,7 +44,7 @@ void figure_military_standard_action(figure *f)
 {
     const formation *m = formation_get(f->formation_id);
 
-    f->terrainUsage = TERRAIN_USAGE_ANY;
+    f->terrain_usage = TERRAIN_USAGE_ANY;
     figure_image_increase_offset(f, 16);
     map_figure_delete(f);
     if (m->is_at_fort) {
@@ -55,28 +55,28 @@ void figure_military_standard_action(figure *f)
         f->y = m->standard_y;
     }
     f->grid_offset = map_grid_offset(f->x, f->y);
-    f->crossCountryX = 15 * f->x + 7;
-    f->crossCountryY = 15 * f->y + 7;
+    f->cross_country_x = 15 * f->x + 7;
+    f->cross_country_y = 15 * f->y + 7;
     map_figure_add(f);
 
-    f->graphicId = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
+    f->image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
     if (m->figure_type == FIGURE_FORT_LEGIONARY) {
         if (m->is_halted) {
-            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + 8;
+            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 8;
         } else {
-            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + f->graphicOffset / 2;
+            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + f->image_offset / 2;
         }
     } else if (m->figure_type == FIGURE_FORT_MOUNTED) {
         if (m->is_halted) {
-            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + 26;
+            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 26;
         } else {
-            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + 18 + f->graphicOffset / 2;
+            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 18 + f->image_offset / 2;
         }
     } else {
         if (m->is_halted) {
-            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + 17;
+            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 17;
         } else {
-            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + 9 + f->graphicOffset / 2;
+            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 9 + f->image_offset / 2;
         }
     }
 }
@@ -84,54 +84,54 @@ void figure_military_standard_action(figure *f)
 static void javelin_launch_missile(figure *f)
 {
     int x_tile = 0, y_tile = 0;
-    f->waitTicksMissile++;
-    if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
-        f->waitTicksMissile = 0;
+    f->wait_ticks_missile++;
+    if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
+        f->wait_ticks_missile = 0;
         if (figure_combat_get_missile_target_for_soldier(f, 10, &x_tile, &y_tile)) {
-            f->attackGraphicOffset = 1;
+            f->attack_image_offset = 1;
             f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
         } else {
-            f->attackGraphicOffset = 0;
+            f->attack_image_offset = 0;
         }
     }
-    if (f->attackGraphicOffset) {
-        if (f->attackGraphicOffset == 1) {
+    if (f->attack_image_offset) {
+        if (f->attack_image_offset == 1) {
             figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_JAVELIN);
             formation_record_missile_fired(formation_get(f->formation_id));
         }
-        f->attackGraphicOffset++;
-        if (f->attackGraphicOffset > 100) {
-            f->attackGraphicOffset = 0;
+        f->attack_image_offset++;
+        if (f->attack_image_offset > 100) {
+            f->attack_image_offset = 0;
         }
     }
 }
 
 static void legionary_attack_adjacent_enemy(figure *f)
 {
-    for (int i = 0; i < 8 && f->actionState != FIGURE_ACTION_150_ATTACK; i++) {
+    for (int i = 0; i < 8 && f->action_state != FIGURE_ACTION_150_ATTACK; i++) {
         figure_combat_attack_figure_at(f, f->grid_offset + map_grid_direction_delta(i));
     }
 }
 
 static int find_mop_up_target(figure *f)
 {
-    int target_id = f->targetFigureId;
+    int target_id = f->target_figure_id;
     if (figure_is_dead(figure_get(target_id))) {
-        f->targetFigureId = 0;
+        f->target_figure_id = 0;
         target_id = 0;
     }
     if (target_id <= 0) {
         target_id = figure_combat_get_target_for_soldier(f->x, f->y, 20);
         if (target_id) {
             figure *target = figure_get(target_id);
-            f->destinationX = target->x;
-            f->destinationY = target->y;
-            f->targetFigureId = target_id;
-            target->targetedByFigureId = f->id;
-            f->targetFigureCreatedSequence = target->created_sequence;
+            f->destination_x = target->x;
+            f->destination_y = target->y;
+            f->target_figure_id = target_id;
+            target->targeted_by_figure_id = f->id;
+            f->target_figure_created_sequence = target->created_sequence;
         } else {
-            f->actionState = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
-            f->graphicOffset = 0;
+            f->action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
+            f->image_offset = 0;
         }
         figure_route_remove(f);
     }
@@ -141,73 +141,73 @@ static int find_mop_up_target(figure *f)
 static void update_image_javelin(figure *f, int dir)
 {
     int image_id = image_group(GROUP_BUILDING_FORT_JAVELIN);
-    if (f->actionState == FIGURE_ACTION_150_ATTACK) {
-        if (f->attackGraphicOffset < 12) {
-            f->graphicId = image_id + 96 + dir;
+    if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        if (f->attack_image_offset < 12) {
+            f->image_id = image_id + 96 + dir;
         } else {
-            f->graphicId = image_id + 96 + dir + 8 * ((f->attackGraphicOffset - 12) / 2);
+            f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 12) / 2);
         }
-    } else if (f->actionState == FIGURE_ACTION_149_CORPSE) {
-        f->graphicId = image_id + 144 + figure_image_corpse_offset(f);
-    } else if (f->actionState == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
-        f->graphicId = image_id + 96 + dir +
+    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = image_id + 144 + figure_image_corpse_offset(f);
+    } else if (f->action_state == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
+        f->image_id = image_id + 96 + dir +
             8 * figure_image_missile_launcher_offset(f);
     } else {
-        f->graphicId = image_id + dir + 8 * f->graphicOffset;
+        f->image_id = image_id + dir + 8 * f->image_offset;
     }
 }
 
 static void update_image_mounted(figure *f, int dir)
 {
     int image_id = image_group(GROUP_FIGURE_FORT_MOUNTED);
-    if (f->actionState == FIGURE_ACTION_150_ATTACK) {
-        if (f->attackGraphicOffset < 12) {
-            f->graphicId = image_id + 96 + dir;
+    if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        if (f->attack_image_offset < 12) {
+            f->image_id = image_id + 96 + dir;
         } else {
-            f->graphicId = image_id + 96 + dir + 8 * ((f->attackGraphicOffset - 12) / 2);
+            f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 12) / 2);
         }
-    } else if (f->actionState == FIGURE_ACTION_149_CORPSE) {
-        f->graphicId = image_id + 144 + figure_image_corpse_offset(f);
+    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = image_id + 144 + figure_image_corpse_offset(f);
     } else {
-        f->graphicId = image_id + dir + 8 * f->graphicOffset;
+        f->image_id = image_id + dir + 8 * f->image_offset;
     }
 }
 
 static void update_image_legionary(figure *f, const formation *m, int dir)
 {
     int image_id = image_group(GROUP_BUILDING_FORT_LEGIONARY);
-    if (f->actionState == FIGURE_ACTION_150_ATTACK) {
-        if (f->attackGraphicOffset < 12) {
-            f->graphicId = image_id + 96 + dir;
+    if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        if (f->attack_image_offset < 12) {
+            f->image_id = image_id + 96 + dir;
         } else {
-            f->graphicId = image_id + 96 + dir + 8 * ((f->attackGraphicOffset - 12) / 2);
+            f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 12) / 2);
         }
-    } else if (f->actionState == FIGURE_ACTION_149_CORPSE) {
-        f->graphicId = image_id + 152 + figure_image_corpse_offset(f);
-    } else if (f->actionState == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
+    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = image_id + 152 + figure_image_corpse_offset(f);
+    } else if (f->action_state == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
         if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout) {
-            f->graphicId = image_id + dir + 144;
+            f->image_id = image_id + dir + 144;
         } else {
-            f->graphicId = image_id + dir;
+            f->image_id = image_id + dir;
         }
     } else {
-        f->graphicId = image_id + dir + 8 * f->graphicOffset;
+        f->image_id = image_id + dir + 8 * f->image_offset;
     }
 }
 
 static void update_image(figure *f, const formation *m)
 {
     int dir;
-    if (f->actionState == FIGURE_ACTION_150_ATTACK) {
-        dir = f->attackDirection;
+    if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        dir = f->attack_direction;
     } else if (m->missile_fired) {
         dir = f->direction;
-    } else if (f->actionState == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
+    } else if (f->action_state == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
         dir = m->direction;
     } else if (f->direction < 8) {
         dir = f->direction;
     } else {
-        dir = f->previousTileDirection;
+        dir = f->previous_tile_direction;
     }
     dir = figure_image_normalize_direction(dir);
     if (f->type == FIGURE_FORT_JAVELIN) {
@@ -223,11 +223,11 @@ void figure_soldier_action(figure *f)
 {
     formation *m = formation_get(f->formation_id);
     city_figures_add_soldier();
-    f->terrainUsage = TERRAIN_USAGE_ANY;
+    f->terrain_usage = TERRAIN_USAGE_ANY;
     figure_image_increase_offset(f, 12);
-    f->cartGraphicId = 0;
+    f->cart_image_id = 0;
     if (m->in_use != 1) {
-        f->actionState = FIGURE_ACTION_149_CORPSE;
+        f->action_state = FIGURE_ACTION_149_CORPSE;
     }
     int speed_factor;
     if (f->type == FIGURE_FORT_MOUNTED) {
@@ -238,13 +238,13 @@ void figure_soldier_action(figure *f)
         speed_factor = 1;
     }
     int layout = m->layout;
-    if (f->formationAtRest || f->actionState == FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT) {
+    if (f->formation_at_rest || f->action_state == FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT) {
         layout = FORMATION_AT_REST;
     }
-    f->formationPositionX = m->x + formation_layout_position_x(layout, f->indexInFormation);
-    f->formationPositionY = m->y + formation_layout_position_y(layout, f->indexInFormation);
+    f->formation_position_x = m->x + formation_layout_position_x(layout, f->index_in_formation);
+    f->formation_position_y = m->y + formation_layout_position_y(layout, f->index_in_formation);
     
-    switch (f->actionState) {
+    switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
             break;
@@ -253,23 +253,23 @@ void figure_soldier_action(figure *f)
             break;
         case FIGURE_ACTION_80_SOLDIER_AT_REST:
             map_figure_update(f);
-            f->waitTicks = 0;
-            f->formationAtRest = 1;
-            f->graphicOffset = 0;
-            if (f->x != f->formationPositionX || f->y != f->formationPositionY) {
-                f->actionState = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+            f->wait_ticks = 0;
+            f->formation_at_rest = 1;
+            f->image_offset = 0;
+            if (f->x != f->formation_position_x || f->y != f->formation_position_y) {
+                f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             }
             break;
         case FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT:
         case FIGURE_ACTION_148_FLEEING:
-            f->waitTicks = 0;
-            f->formationAtRest = 1;
-            f->destinationX = f->formationPositionX;
-            f->destinationY = f->formationPositionY;
-            f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
+            f->wait_ticks = 0;
+            f->formation_at_rest = 1;
+            f->destination_x = f->formation_position_x;
+            f->destination_y = f->formation_position_y;
+            f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->actionState = FIGURE_ACTION_80_SOLDIER_AT_REST;
+                f->action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
@@ -277,9 +277,9 @@ void figure_soldier_action(figure *f)
             }
             break;
         case FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS:
-            f->formationAtRest = 1;
-            f->destinationX = f->sourceX;
-            f->destinationY = f->sourceY;
+            f->formation_at_rest = 1;
+            f->destination_x = f->source_x;
+            f->destination_y = f->source_y;
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
@@ -288,45 +288,45 @@ void figure_soldier_action(figure *f)
             }
             break;
         case FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD:
-            f->formationAtRest = 0;
-            f->destinationX = m->standard_x + formation_layout_position_x(m->layout, f->indexInFormation);
-            f->destinationY = m->standard_y + formation_layout_position_y(m->layout, f->indexInFormation);
-            if (f->alternativeLocationIndex) {
-                f->destinationX += ALTERNATIVE_POINTS[f->alternativeLocationIndex].x;
-                f->destinationY += ALTERNATIVE_POINTS[f->alternativeLocationIndex].y;
+            f->formation_at_rest = 0;
+            f->destination_x = m->standard_x + formation_layout_position_x(m->layout, f->index_in_formation);
+            f->destination_y = m->standard_y + formation_layout_position_y(m->layout, f->index_in_formation);
+            if (f->alternative_location_index) {
+                f->destination_x += ALTERNATIVE_POINTS[f->alternative_location_index].x;
+                f->destination_y += ALTERNATIVE_POINTS[f->alternative_location_index].y;
             }
-            f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
+            f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->actionState = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
-                f->graphicOffset = 0;
+                f->action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
+                f->image_offset = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
-                f->alternativeLocationIndex++;
-                if (f->alternativeLocationIndex > 168) {
+                f->alternative_location_index++;
+                if (f->alternative_location_index > 168) {
                     f->state = FIGURE_STATE_DEAD;
                 }
-                f->graphicOffset = 0;
+                f->image_offset = 0;
             }
             break;
         case FIGURE_ACTION_84_SOLDIER_AT_STANDARD:
-            f->formationAtRest = 0;
-            f->graphicOffset = 0;
+            f->formation_at_rest = 0;
+            f->image_offset = 0;
             map_figure_update(f);
-            f->destinationX = m->standard_x + formation_layout_position_x(m->layout, f->indexInFormation);
-            f->destinationY = m->standard_y + formation_layout_position_y(m->layout, f->indexInFormation);
-            if (f->alternativeLocationIndex) {
-                f->destinationX += ALTERNATIVE_POINTS[f->alternativeLocationIndex].x;
-                f->destinationY += ALTERNATIVE_POINTS[f->alternativeLocationIndex].y;
+            f->destination_x = m->standard_x + formation_layout_position_x(m->layout, f->index_in_formation);
+            f->destination_y = m->standard_y + formation_layout_position_y(m->layout, f->index_in_formation);
+            if (f->alternative_location_index) {
+                f->destination_x += ALTERNATIVE_POINTS[f->alternative_location_index].x;
+                f->destination_y += ALTERNATIVE_POINTS[f->alternative_location_index].y;
             }
-            if (f->x != f->destinationX || f->y != f->destinationY) {
+            if (f->x != f->destination_x || f->y != f->destination_y) {
                 if (m->missile_fired <= 0 && m->recent_fight <= 0 && m->missile_attack_timeout <= 0) {
-                    f->actionState = FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD;
-                    f->alternativeLocationIndex = 0;
+                    f->action_state = FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD;
+                    f->alternative_location_index = 0;
                 }
             }
-            if (f->actionState != FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD) {
+            if (f->action_state != FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD) {
                 if (f->type == FIGURE_FORT_JAVELIN) {
                     javelin_launch_missile(f);
                 } else if (f->type == FIGURE_FORT_LEGIONARY) {
@@ -336,10 +336,10 @@ void figure_soldier_action(figure *f)
             break;
         case FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY:
             m->has_military_training = 1;
-            f->formationAtRest = 1;
+            f->formation_at_rest = 1;
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->actionState = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+                f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
@@ -347,29 +347,29 @@ void figure_soldier_action(figure *f)
             }
             break;
         case FIGURE_ACTION_86_SOLDIER_MOPPING_UP:
-            f->formationAtRest = 0;
+            f->formation_at_rest = 0;
             if (find_mop_up_target(f)) {
                 figure_movement_move_ticks(f, speed_factor);
                 if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                    figure *target = figure_get(f->targetFigureId);
-                    f->destinationX = target->x;
-                    f->destinationY = target->y;
+                    figure *target = figure_get(f->target_figure_id);
+                    f->destination_x = target->x;
+                    f->destination_y = target->y;
                     figure_route_remove(f);
                 } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                    f->actionState = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
-                    f->targetFigureId = 0;
-                    f->graphicOffset = 0;
+                    f->action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
+                    f->target_figure_id = 0;
+                    f->image_offset = 0;
                 }
             }
             break;
         case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
             const map_tile *exit = city_map_exit_point();
-            f->formationAtRest = 0;
-            f->destinationX = exit->x;
-            f->destinationY = exit->y;
+            f->formation_at_rest = 0;
+            f->destination_x = exit->x;
+            f->destination_y = exit->y;
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->actionState = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
+                f->action_state = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
@@ -379,15 +379,15 @@ void figure_soldier_action(figure *f)
             break;
         }
         case FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
-            f->isGhost = 0;
-            f->waitTicks = 0;
-            f->formationAtRest = 1;
-            f->destinationX = f->formationPositionX;
-            f->destinationY = f->formationPositionY;
-            f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
+            f->is_ghost = 0;
+            f->wait_ticks = 0;
+            f->formation_at_rest = 1;
+            f->destination_x = f->formation_position_x;
+            f->destination_y = f->formation_position_y;
+            f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->actionState = FIGURE_ACTION_80_SOLDIER_AT_REST;
+                f->action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
@@ -395,8 +395,8 @@ void figure_soldier_action(figure *f)
             }
             break;
         case FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE:
-            f->isGhost = 1;
-            f->formationAtRest = 1;
+            f->is_ghost = 1;
+            f->formation_at_rest = 1;
             break;
     }
 

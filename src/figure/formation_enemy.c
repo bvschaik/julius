@@ -282,10 +282,10 @@ static void set_figures_to_initial(const formation *m)
     for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
         if (m->figures[i] > 0) {
             figure *f = figure_get(m->figures[i]);
-            if (f->actionState != FIGURE_ACTION_149_CORPSE &&
-                f->actionState != FIGURE_ACTION_150_ATTACK) {
-                f->actionState = FIGURE_ACTION_151_ENEMY_INITIAL;
-                f->waitTicks = 0;
+            if (f->action_state != FIGURE_ACTION_149_CORPSE &&
+                f->action_state != FIGURE_ACTION_150_ATTACK) {
+                f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
+                f->wait_ticks = 0;
             }
         }
     }
@@ -354,7 +354,7 @@ static void mars_kill_enemies()
             continue;
         }
         if (figure_is_enemy(f) && f->type != FIGURE_ENEMY54_GLADIATOR) {
-            f->actionState = FIGURE_ACTION_149_CORPSE;
+            f->action_state = FIGURE_ACTION_149_CORPSE;
             to_kill--;
             if (!grid_offset) {
                 grid_offset = f->grid_offset;
@@ -511,8 +511,8 @@ static void update_enemy_formation(formation *m, int *roman_distance)
     }
     for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
         figure *f = figure_get(m->figures[n]);
-        if (f->actionState == FIGURE_ACTION_150_ATTACK) {
-            figure *opponent = figure_get(f->opponentId);
+        if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+            figure *opponent = figure_get(f->opponent_id);
             if (!figure_is_dead(opponent) && figure_is_legion(opponent)) {
                 formation_record_fight(m);
             }
@@ -521,10 +521,10 @@ static void update_enemy_formation(formation *m, int *roman_distance)
     if (formation_has_low_morale(m)) {
         for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
             figure *f = figure_get(m->figures[n]);
-            if (f->actionState != FIGURE_ACTION_150_ATTACK &&
-                f->actionState != FIGURE_ACTION_149_CORPSE &&
-                f->actionState != FIGURE_ACTION_148_FLEEING) {
-                f->actionState = FIGURE_ACTION_148_FLEEING;
+            if (f->action_state != FIGURE_ACTION_150_ATTACK &&
+                f->action_state != FIGURE_ACTION_149_CORPSE &&
+                f->action_state != FIGURE_ACTION_148_FLEEING) {
+                f->action_state = FIGURE_ACTION_148_FLEEING;
                 figure_route_remove(f);
             }
         }

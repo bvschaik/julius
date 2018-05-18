@@ -36,15 +36,15 @@ void figure_create_explosion_cloud(int x, int y, int size)
         figure *f = figure_create(FIGURE_EXPLOSION,
             x + tile_offset, y + tile_offset, DIR_0_TOP);
         if (f->id) {
-            f->crossCountryX += cc_offset;
-            f->crossCountryY += cc_offset;
-            f->destinationX += CLOUD_DIRECTION[i].x;
-            f->destinationY += CLOUD_DIRECTION[i].y;
+            f->cross_country_x += cc_offset;
+            f->cross_country_y += cc_offset;
+            f->destination_x += CLOUD_DIRECTION[i].x;
+            f->destination_y += CLOUD_DIRECTION[i].y;
             figure_movement_set_cross_country_direction(f,
-                f->crossCountryX, f->crossCountryY,
-                15 * f->destinationX + cc_offset,
-                15 * f->destinationY + cc_offset, 0);
-            f->speedMultiplier = CLOUD_SPEED[i];
+                f->cross_country_x, f->cross_country_y,
+                15 * f->destination_x + cc_offset,
+                15 * f->destination_y + cc_offset, 0);
+            f->speed_multiplier = CLOUD_SPEED[i];
         }
     }
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
@@ -54,19 +54,19 @@ void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, 
 {
     figure *f = figure_create(type, x, y, DIR_0_TOP);
     if (f->id) {
-        f->missileDamage = type == FIGURE_BOLT ? 60 : 10;
-        f->buildingId = building_id;
-        f->destinationX = x_dst;
-        f->destinationY = y_dst;
+        f->missile_damage = type == FIGURE_BOLT ? 60 : 10;
+        f->building_id = building_id;
+        f->destination_x = x_dst;
+        f->destination_y = y_dst;
         figure_movement_set_cross_country_direction(
-            f, f->crossCountryX, f->crossCountryY,
+            f, f->cross_country_x, f->cross_country_y,
             15 * x_dst, 15 * y_dst, 1);
     }
 }
 
 static int is_citizen(figure *f)
 {
-    if (f->actionState != FIGURE_ACTION_149_CORPSE) {
+    if (f->action_state != FIGURE_ACTION_149_CORPSE) {
         if (f->type && f->type != FIGURE_EXPLOSION && f->type != FIGURE_FORT_STANDARD &&
             f->type != FIGURE_MAP_FLAG && f->type != FIGURE_FLOTSAM && f->type < FIGURE_INDIGENOUS_NATIVE) {
             return f->id;
@@ -82,13 +82,13 @@ static int get_citizen_on_tile(int grid_offset)
 
 static int is_non_citizen(figure *f)
 {
-    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
+    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
         return 0;
     }
     if (figure_is_enemy(f)) {
         return f->id;
     }
-    if (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+    if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
         return f->id;
     }
     if (f->type == FIGURE_WOLF || f->type == FIGURE_SHEEP || f->type == FIGURE_ZEBRA) {
@@ -104,17 +104,17 @@ static int get_non_citizen_on_tile(int grid_offset)
 
 void figure_explosion_cloud_action(figure *f)
 {
-    f->useCrossCountry = 1;
-    f->progressOnTile++;
-    if (f->progressOnTile > 44) {
+    f->use_cross_country = 1;
+    f->progress_on_tile++;
+    if (f->progress_on_tile > 44) {
         f->state = FIGURE_STATE_DEAD;
     }
-    figure_movement_move_ticks_cross_country(f, f->speedMultiplier);
-    if (f->progressOnTile < 48) {
-        f->graphicId = image_group(GROUP_FIGURE_EXPLOSION) +
-                       CLOUD_IMAGE_OFFSETS[f->progressOnTile / 2];
+    figure_movement_move_ticks_cross_country(f, f->speed_multiplier);
+    if (f->progress_on_tile < 48) {
+        f->image_id = image_group(GROUP_FIGURE_EXPLOSION) +
+                       CLOUD_IMAGE_OFFSETS[f->progress_on_tile / 2];
     } else {
-        f->graphicId = image_group(GROUP_FIGURE_EXPLOSION) + 7;
+        f->image_id = image_group(GROUP_FIGURE_EXPLOSION) + 7;
     }
 }
 
@@ -138,22 +138,22 @@ static void missile_hit_target(figure *f, int target_id, figure_type legionary_t
         target->damage = target_damage;
     } else { // kill target
         target->damage = max_damage + 1;
-        target->actionState = FIGURE_ACTION_149_CORPSE;
-        target->waitTicks = 0;
+        target->action_state = FIGURE_ACTION_149_CORPSE;
+        target->wait_ticks = 0;
         figure_play_die_sound(target);
         formation_update_morale_after_death(m);
     }
     f->state = FIGURE_STATE_DEAD;
     // for missiles: building_id contains the figure who shot it
-    int missile_formation = figure_get(f->buildingId)->formation_id;
+    int missile_formation = figure_get(f->building_id)->formation_id;
     formation_record_missile_attack(m, missile_formation);
 }
 
 void figure_arrow_action(figure *f)
 {
-    f->useCrossCountry = 1;
-    f->progressOnTile++;
-    if (f->progressOnTile > 120) {
+    f->use_cross_country = 1;
+    f->progress_on_tile++;
+    if (f->progress_on_tile > 120) {
         f->state = FIGURE_STATE_DEAD;
     }
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
@@ -165,14 +165,14 @@ void figure_arrow_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
-    f->graphicId = image_group(GROUP_FIGURE_MISSILE) + 16 + dir;
+    f->image_id = image_group(GROUP_FIGURE_MISSILE) + 16 + dir;
 }
 
 void figure_spear_action(figure *f)
 {
-    f->useCrossCountry = 1;
-    f->progressOnTile++;
-    if (f->progressOnTile > 120) {
+    f->use_cross_country = 1;
+    f->progress_on_tile++;
+    if (f->progress_on_tile > 120) {
         f->state = FIGURE_STATE_DEAD;
     }
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
@@ -184,14 +184,14 @@ void figure_spear_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
-    f->graphicId = image_group(GROUP_FIGURE_MISSILE) + dir;
+    f->image_id = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
 void figure_javelin_action(figure *f)
 {
-    f->useCrossCountry = 1;
-    f->progressOnTile++;
-    if (f->progressOnTile > 120) {
+    f->use_cross_country = 1;
+    f->progress_on_tile++;
+    if (f->progress_on_tile > 120) {
         f->state = FIGURE_STATE_DEAD;
     }
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
@@ -203,14 +203,14 @@ void figure_javelin_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
-    f->graphicId = image_group(GROUP_FIGURE_MISSILE) + dir;
+    f->image_id = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
 void figure_bolt_action(figure *f)
 {
-    f->useCrossCountry = 1;
-    f->progressOnTile++;
-    if (f->progressOnTile > 120) {
+    f->use_cross_country = 1;
+    f->progress_on_tile++;
+    if (f->progress_on_tile > 120) {
         f->state = FIGURE_STATE_DEAD;
     }
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
@@ -230,8 +230,8 @@ void figure_bolt_action(figure *f)
             target->damage = target_damage;
         } else { // kill target
             target->damage = max_damage + 1;
-            target->actionState = FIGURE_ACTION_149_CORPSE;
-            target->waitTicks = 0;
+            target->action_state = FIGURE_ACTION_149_CORPSE;
+            target->wait_ticks = 0;
             figure_play_die_sound(target);
             formation_update_morale_after_death(formation_get(target->formation_id));
         }
@@ -242,5 +242,5 @@ void figure_bolt_action(figure *f)
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_GROUND);
     }
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
-    f->graphicId = image_group(GROUP_FIGURE_MISSILE) + 32 + dir;
+    f->image_id = image_group(GROUP_FIGURE_MISSILE) + 32 + dir;
 }

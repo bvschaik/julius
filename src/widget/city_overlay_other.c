@@ -56,7 +56,7 @@ static int show_figure_food_stocks(const figure *f)
         f->type == FIGURE_DELIVERY_BOY || f->type == FIGURE_FISHING_BOAT) {
         return 1;
     } else if (f->type == FIGURE_CART_PUSHER) {
-        return resource_is_food(f->resourceId);
+        return resource_is_food(f->resource_id);
     }
     return 0;
 }

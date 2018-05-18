@@ -43,13 +43,13 @@ static void generate_labor_seeker(building *b, int x, int y)
     }
     if (b->figure_id2) {
         figure *f = figure_get(b->figure_id2);
-        if (!f->state || f->type != FIGURE_LABOR_SEEKER || f->buildingId != b->id) {
+        if (!f->state || f->type != FIGURE_LABOR_SEEKER || f->building_id != b->id) {
             b->figure_id2 = 0;
         }
     } else {
         figure *f = figure_create(FIGURE_LABOR_SEEKER, x, y, DIR_0_TOP);
-        f->actionState = FIGURE_ACTION_125_ROAMING;
-        f->buildingId = b->id;
+        f->action_state = FIGURE_ACTION_125_ROAMING;
+        f->building_id = b->id;
         b->figure_id2 = f->id;
         figure_movement_init_roaming(f);
     }
@@ -68,7 +68,7 @@ static int has_figure_of_types(building *b, figure_type type1, figure_type type2
         return 0;
     }
     figure *f = figure_get(b->figure_id);
-    if (f->state && f->buildingId == b->id && (f->type == type1 || f->type == type2)) {
+    if (f->state && f->building_id == b->id && (f->type == type1 || f->type == type2)) {
         return 1;
     } else {
         b->figure_id = 0;
@@ -102,8 +102,8 @@ static int default_spawn_delay(building *b)
 static void create_roaming_figure(building *b, int x, int y, figure_type type)
 {
     figure *f = figure_create(type, x, y, DIR_0_TOP);
-    f->actionState = FIGURE_ACTION_125_ROAMING;
-    f->buildingId = b->id;
+    f->action_state = FIGURE_ACTION_125_ROAMING;
+    f->building_id = b->id;
     b->figure_id = f->id;
     figure_movement_init_roaming(f);
 }
@@ -116,8 +116,8 @@ static int spawn_patrician(building *b, int spawned)
         if (b->figure_spawn_delay > 40 && !spawned) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_PATRICIAN, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FIGURE_ACTION_125_ROAMING;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_125_ROAMING;
+            f->building_id = b->id;
             figure_movement_init_roaming(f);
             return 1;
         }
@@ -146,15 +146,15 @@ static void spawn_figure_warehouse(building *b)
         int task = building_warehouse_determine_worker_task(b, &resource);
         if (task != WAREHOUSE_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+            f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
             if (task == WAREHOUSE_TASK_GETTING) {
-                f->resourceId = RESOURCE_NONE;
-                f->collectingItemId = resource;
+                f->resource_id = RESOURCE_NONE;
+                f->collecting_item_id = resource;
             } else {
-                f->resourceId = resource;
+                f->resource_id = resource;
             }
             b->figure_id = f->id;
-            f->buildingId = b->id;
+            f->building_id = b->id;
         }
     }
 }
@@ -171,10 +171,10 @@ static void spawn_figure_granary(building *b)
         int task = building_granary_determine_worker_task(b);
         if (task != GRANARY_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
-            f->resourceId = task;
+            f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+            f->resource_id = task;
             b->figure_id = f->id;
-            f->buildingId = b->id;
+            f->building_id = b->id;
         }
     }
 }
@@ -191,8 +191,8 @@ static void spawn_figure_tower(building *b)
         if (!b->figure_id4 && b->figure_id) { // has sentry but no ballista -> create
             figure *f = figure_create(FIGURE_BALLISTA, b->x, b->y, DIR_0_TOP);
             b->figure_id4 = f->id;
-            f->buildingId = b->id;
-            f->actionState = FIGURE_ACTION_180_BALLISTA_CREATED;
+            f->building_id = b->id;
+            f->action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
         }
         has_figure_of_type(b, FIGURE_TOWER_SENTRY);
         if (b->figure_id <= 0) {
@@ -229,8 +229,8 @@ static void spawn_figure_engineers_post(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_ENGINEER, x_road, y_road, DIR_0_TOP);
-            f->actionState = FIGURE_ACTION_60_ENGINEER_CREATED;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_60_ENGINEER_CREATED;
+            f->building_id = b->id;
             b->figure_id = f->id;
         }
     }
@@ -264,8 +264,8 @@ static void spawn_figure_prefecture(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_PREFECT, x_road, y_road, DIR_0_TOP);
-            f->actionState = FIGURE_ACTION_70_PREFECT_CREATED;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_70_PREFECT_CREATED;
+            f->building_id = b->id;
             b->figure_id = f->id;
         }
     }
@@ -285,8 +285,8 @@ static void spawn_figure_actor_colony(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_ACTOR, x_road, y_road, DIR_0_TOP);
-            f->actionState = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
+            f->building_id = b->id;
             b->figure_id = f->id;
         }
     }
@@ -306,8 +306,8 @@ static void spawn_figure_gladiator_school(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_GLADIATOR, x_road, y_road, DIR_0_TOP);
-            f->actionState = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
+            f->building_id = b->id;
             b->figure_id = f->id;
         }
     }
@@ -338,8 +338,8 @@ static void spawn_figure_lion_house(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_LION_TAMER, x_road, y_road, DIR_0_TOP);
-            f->actionState = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
+            f->building_id = b->id;
             b->figure_id = f->id;
         }
     }
@@ -370,8 +370,8 @@ static void spawn_figure_chariot_maker(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_CHARIOTEER, x_road, y_road, DIR_0_TOP);
-            f->actionState = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
+            f->building_id = b->id;
             b->figure_id = f->id;
         }
     }
@@ -413,8 +413,8 @@ static void spawn_figure_amphitheater(building *b)
             } else {
                 f = figure_create(FIGURE_ACTOR, x_road, y_road, DIR_0_TOP);
             }
-            f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
+            f->building_id = b->id;
             b->figure_id = f->id;
             figure_movement_init_roaming(f);
         }
@@ -440,8 +440,8 @@ static void spawn_figure_theater(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_ACTOR, x_road, y_road, DIR_0_TOP);
-            f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
+            f->building_id = b->id;
             b->figure_id = f->id;
             figure_movement_init_roaming(f);
         }
@@ -488,24 +488,24 @@ static void spawn_figure_hippodrome(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_CHARIOTEER, x_road, y_road, DIR_0_TOP);
-            f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
+            f->building_id = b->id;
             b->figure_id = f->id;
             figure_movement_init_roaming(f);
 
             if (!city_entertainment_hippodrome_has_race()) {
                 // create mini-horses
                 figure *horse1 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, DIR_2_RIGHT);
-                horse1->actionState = FIGURE_ACTION_200_HIPPODROME_HORSE_CREATED;
-                horse1->buildingId = b->id;
-                horse1->resourceId = 0;
-                horse1->speedMultiplier = 3;
+                horse1->action_state = FIGURE_ACTION_200_HIPPODROME_HORSE_CREATED;
+                horse1->building_id = b->id;
+                horse1->resource_id = 0;
+                horse1->speed_multiplier = 3;
 
                 figure *horse2 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, DIR_2_RIGHT);
-                horse2->actionState = FIGURE_ACTION_200_HIPPODROME_HORSE_CREATED;
-                horse2->buildingId = b->id;
-                horse2->resourceId = 1;
-                horse2->speedMultiplier = 2;
+                horse2->action_state = FIGURE_ACTION_200_HIPPODROME_HORSE_CREATED;
+                horse2->building_id = b->id;
+                horse2->resource_id = 1;
+                horse2->speed_multiplier = 2;
 
                 if (b->data.entertainment.days1 > 0) {
                     if (city_entertainment_show_message_hippodrome()) {
@@ -553,8 +553,8 @@ static void spawn_figure_colosseum(building *b)
             } else {
                 f = figure_create(FIGURE_GLADIATOR, x_road, y_road, DIR_0_TOP);
             }
-            f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
+            f->building_id = b->id;
             b->figure_id = f->id;
             figure_movement_init_roaming(f);
             if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
@@ -622,20 +622,20 @@ static void spawn_figure_market(building *b)
             int dst_building_id = building_market_get_storage_destination(b);
             if (dst_building_id > 0) {
                 figure *f = figure_create(FIGURE_MARKET_BUYER, x_road, y_road, DIR_0_TOP);
-                f->actionState = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
-                f->buildingId = b->id;
+                f->action_state = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
+                f->building_id = b->id;
                 b->figure_id2 = f->id;
-                f->destinationBuildingId = dst_building_id;
-                f->collectingItemId = b->data.market.fetch_inventory_id;
+                f->destination_building_id = dst_building_id;
+                f->collecting_item_id = b->data.market.fetch_inventory_id;
                 building *b_dst = building_get(dst_building_id);
                 if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &x_road, &y_road) ||
                     map_has_road_access(b_dst->x, b_dst->y, 3, &x_road, &y_road)) {
-                    f->destinationX = x_road;
-                    f->destinationY = y_road;
+                    f->destination_x = x_road;
+                    f->destination_y = y_road;
                 } else {
-                    f->actionState = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-                    f->destinationX = f->x;
-                    f->destinationY = f->y;
+                    f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
+                    f->destination_x = f->x;
+                    f->destination_y = f->y;
                 }
             }
         }
@@ -714,24 +714,24 @@ static void spawn_figure_school(building *b)
             b->figure_spawn_delay = 0;
 
             figure *child1 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
-            child1->actionState = FIGURE_ACTION_125_ROAMING;
-            child1->buildingId = b->id;
+            child1->action_state = FIGURE_ACTION_125_ROAMING;
+            child1->building_id = b->id;
             b->figure_id = child1->id;
             figure_movement_init_roaming(child1);
 
             figure *child2 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
-            child2->actionState = FIGURE_ACTION_125_ROAMING;
-            child2->buildingId = b->id;
+            child2->action_state = FIGURE_ACTION_125_ROAMING;
+            child2->building_id = b->id;
             figure_movement_init_roaming(child2);
 
             figure *child3 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
-            child3->actionState = FIGURE_ACTION_125_ROAMING;
-            child3->buildingId = b->id;
+            child3->action_state = FIGURE_ACTION_125_ROAMING;
+            child3->building_id = b->id;
             figure_movement_init_roaming(child3);
 
             figure *child4 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
-            child4->actionState = FIGURE_ACTION_125_ROAMING;
-            child4->buildingId = b->id;
+            child4->action_state = FIGURE_ACTION_125_ROAMING;
+            child4->building_id = b->id;
             figure_movement_init_roaming(child4);
         }
     }
@@ -921,8 +921,8 @@ static void spawn_figure_senate_forum(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_TAX_COLLECTOR, x_road, y_road, DIR_0_TOP);
-            f->actionState = FIGURE_ACTION_40_TAX_COLLECTOR_CREATED;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_40_TAX_COLLECTOR_CREATED;
+            f->building_id = b->id;
             b->figure_id = f->id;
         }
     }
@@ -958,11 +958,11 @@ static void spawn_figure_industry(building *b)
         if (building_industry_has_produced_resource(b)) {
             building_industry_start_new_production(b);
             figure *f = figure_create(FIGURE_CART_PUSHER, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-            f->resourceId = b->output_resource_id;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
+            f->resource_id = b->output_resource_id;
+            f->building_id = b->id;
             b->figure_id = f->id;
-            f->waitTicks = 30;
+            f->wait_ticks = 30;
         }
     }
 }
@@ -987,11 +987,11 @@ static void spawn_figure_wharf(building *b)
             b->data.industry.has_fish = 0;
             b->output_resource_id = RESOURCE_MEAT;
             figure *f = figure_create(FIGURE_CART_PUSHER, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-            f->resourceId = RESOURCE_MEAT;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
+            f->resource_id = RESOURCE_MEAT;
+            f->building_id = b->id;
             b->figure_id = f->id;
-            f->waitTicks = 30;
+            f->wait_ticks = 30;
         }
     }
 }
@@ -1022,8 +1022,8 @@ static void spawn_figure_shipyard(building *b)
             int x_boat, y_boat;
             if (map_water_can_spawn_fishing_boat(b->x, b->y, b->size, &x_boat, &y_boat)) {
                 figure *f = figure_create(FIGURE_FISHING_BOAT, x_boat, y_boat, DIR_0_TOP);
-                f->actionState = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
-                f->buildingId = b->id;
+                f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
+                f->building_id = b->id;
                 b->figure_id = f->id;
             }
         }
@@ -1068,8 +1068,8 @@ static void spawn_figure_dock(building *b)
             }
         } else if (existing_dockers < max_dockers) {
             figure *f = figure_create(FIGURE_DOCKER, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FIGURE_ACTION_132_DOCKER_IDLING;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_132_DOCKER_IDLING;
+            f->building_id = b->id;
             for (int i = 0; i < 3; i++) {
                 if (!b->data.dock.docker_ids[i]) {
                     b->data.dock.docker_ids[i] = f->id;
@@ -1092,8 +1092,8 @@ static void spawn_figure_native_hut(building *b)
         if (b->figure_spawn_delay > 4) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_INDIGENOUS_NATIVE, x_out, y_out, DIR_0_TOP);
-            f->actionState = FIGURE_ACTION_158_NATIVE_CREATED;
-            f->buildingId = b->id;
+            f->action_state = FIGURE_ACTION_158_NATIVE_CREATED;
+            f->building_id = b->id;
             b->figure_id = f->id;
         }
     }
@@ -1110,8 +1110,8 @@ static void spawn_figure_native_meeting(building *b)
             if (b->figure_spawn_delay > 8) {
                 b->figure_spawn_delay = 0;
                 figure *f = figure_create(FIGURE_NATIVE_TRADER, x_out, y_out, DIR_0_TOP);
-                f->actionState = FIGURE_ACTION_162_NATIVE_TRADER_CREATED;
-                f->buildingId = b->id;
+                f->action_state = FIGURE_ACTION_162_NATIVE_TRADER_CREATED;
+                f->building_id = b->id;
                 b->figure_id = f->id;
             }
         }
