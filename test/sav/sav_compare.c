@@ -276,9 +276,12 @@ static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
     if (bytes_to_read > COMPRESS_BUFFER_SIZE) {
         return 0;
     }
-    int input_size = bytes_to_read;
-    fread(&input_size, 4, 1, fp);
-    if ((unsigned int) input_size == UNCOMPRESSED) {
+    unsigned int input_size = bytes_to_read;
+    unsigned char intbuf[4];
+    if (fread(&intbuf, 1, 4, fp) == 4) {
+        input_size = to_uint(intbuf);
+    }
+    if (input_size == UNCOMPRESSED) {
         fread(buffer, 1, bytes_to_read, fp);
     } else {
         fread(compress_buffer, 1, input_size, fp);
