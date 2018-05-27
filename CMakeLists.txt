@@ -3,13 +3,19 @@ project(julius C)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
+if (CMAKE_VERSION VERSION_LESS 3.1)
+    if (CMAKE_COMPILER_IS_GNUCC)
+        set(CMAKE_C_FLAGS "-std=gnu99 ${CMAKE_C_FLAGS}")
+    endif()
+else()
+    set(CMAKE_C_STANDARD 99)
+endif()
+
 if (CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
 
-    if (CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.9.0)
+    if (CMAKE_C_COMPILER_VERSION VERSION_GREATER 5.0)
         set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion ${CMAKE_C_FLAGS}")
-    else ()
-        set(CMAKE_C_STANDARD 99) # -std=gnu99
     endif()
 endif()
 
