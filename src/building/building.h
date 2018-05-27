@@ -65,7 +65,7 @@ typedef struct {
         struct {
             short queued_docker_id;
             unsigned char num_ships;
-            char orientation;
+            signed char orientation;
             short docker_ids[3];
             short trade_ship_id;
         } dock;
@@ -133,8 +133,8 @@ typedef struct {
     unsigned char is_adjacent_to_water;
     unsigned char storage_id;
     union {
-        char house_happiness;
-        char native_anger;
+        signed char house_happiness;
+        signed char native_anger;
     } sentiment;
     unsigned char show_on_problem_overlay;
 } building;

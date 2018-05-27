@@ -31,8 +31,7 @@ void city_sentiment_change_happiness(int amount)
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
-            b->sentiment.house_happiness += amount;
-            b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness, 0, 100);
+            b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness + amount, 0, 100);
         }
     }
 }
