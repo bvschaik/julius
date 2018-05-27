@@ -8,10 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef _MSC_VER
-#define strcasecmp _stricmp
-#endif
-
 static dir_listing listing;
 static int listing_initialized = 0;
 
@@ -64,7 +60,7 @@ static int correct_case(const char *dir, char *filename)
     }
     struct dirent *entry;
     while ((entry = readdir(d))) {
-        if (strcasecmp(entry->d_name, filename) == 0) {
+        if (string_compare_case_insensitive(entry->d_name, filename) == 0) {
             strcpy(filename, entry->d_name);
             closedir(d);
             return 1;
