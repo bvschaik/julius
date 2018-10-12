@@ -3,16 +3,19 @@
 #include "input/hotkey.h"
 #include "input/keyboard.h"
 
-static int is_arrow_key(SDL_Keycode code)
+static int is_repeatable_key(SDL_Keycode code)
 {
-    return code == SDLK_UP || code == SDLK_DOWN || code == SDLK_LEFT || code == SDLK_RIGHT;
+    return code == SDLK_UP || code == SDLK_DOWN ||
+           code == SDLK_LEFT || code == SDLK_RIGHT ||
+           code == SDLK_BACKSPACE || code == SDLK_DELETE;
 }
 
 void platform_handle_key_down(SDL_KeyboardEvent *event)
 {
     SDL_Log("Key down %d repeat %d\n", event->keysym.sym, event->repeat);
-    if (event->repeat && !is_arrow_key(event->keysym.sym)) {
+    if (event->repeat && !is_repeatable_key(event->keysym.sym)) {
         // ignore multiple presses in SDL >= 2.0.5 for keys other than arrows
+        // and backspace/delete to prevent hotkeys firing more than once
         return;
     }
     switch (event->keysym.sym) {
