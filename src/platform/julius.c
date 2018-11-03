@@ -11,6 +11,7 @@
 #include "graphics/window.h"
 #include "input/mouse.h"
 #include "platform/keyboard_input.h"
+#include "platform/screen.h"
 
 #include <signal.h>
 #include <stdio.h>
@@ -27,17 +28,6 @@
 #else
 #include <unistd.h>
 #endif
-
-static struct {
-    int x;
-    int y;
-} window_pos;
-
-static struct {
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    SDL_Texture *texture;
-} SDL;
 
 enum {
     USER_EVENT_REFRESH = 0,
@@ -74,6 +64,7 @@ void system_exit()
 
 void system_resize(int width, int height)
 {
+    // TODO two resizes at the same time = trouble
     static int s_width;
     static int s_height;
     s_width = width;
@@ -127,121 +118,8 @@ static void refresh()
     text_draw_number_colored(then - now, 'g', "", s_width - 70, 5, FONT_NORMAL_PLAIN, COLOR_RED);
     text_draw_number_colored(then2 - then, 'd', "", s_width - 40, 5, FONT_NORMAL_PLAIN, COLOR_RED);
     
-    SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), s_width * 4);
-    SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
-    SDL_RenderPresent(SDL.renderer);
+    platform_screen_render(graphics_canvas());
     last = now;
-}
-
-static void createWindowAndRenderer(int width, int height, int fullscreen)
-{
-    printf("Fullscreen? %d\n", fullscreen);
-    if (SDL.window) {
-        SDL_DestroyWindow(SDL.window);
-        SDL.window = 0;
-    }
-    if (SDL.renderer) {
-        SDL_DestroyRenderer(SDL.renderer);
-        SDL.renderer = 0;
-    }
-    
-    const char *title = (const char*)lang_get_string(9, 0);
-    Uint32 flags = SDL_WINDOW_RESIZABLE;
-    if (fullscreen) {
-        flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-    }
-    SDL.window = SDL_CreateWindow(title,
-        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        width, height, flags);
-    
-    SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
-}
-
-static void createSurface(int width, int height, int fullscreen)
-{
-    if (SDL.texture) {
-        SDL_DestroyTexture(SDL.texture);
-        SDL.texture = 0;
-    }
-    
-    setting_set_display(fullscreen, width, height);
-    SDL.texture = SDL_CreateTexture(SDL.renderer,
-        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
-        width, height);
-    if (SDL.texture) {
-        printf("Texture created (%d x %d)\n", width, height);// with scanline %d\n", surface->pitch);
-        /*printf("  flags: %d %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n",
-        surface->flags,
-        surface->flags & SDL_SWSURFACE ? "SDL_SWSURFACE" : "",
-        surface->flags & SDL_SWSURFACE ? "SDL_HWSURFACE" : "",
-        surface->flags & SDL_ASYNCBLIT ? "SDL_ASYNCBLIT" : "",
-        surface->flags & SDL_ANYFORMAT ? "SDL_ANYFORMAT" : "",
-        surface->flags & SDL_HWPALETTE ? "SDL_HWPALETTE" : "",
-        surface->flags & SDL_DOUBLEBUF ? "SDL_DOUBLEBUF" : "",
-        surface->flags & SDL_FULLSCREEN ? "SDL_FULLSCREEN" : "",
-        surface->flags & SDL_OPENGL ? "SDL_OPENGL" : "",
-        surface->flags & SDL_OPENGLBLIT ? "SDL_OPENGLBLIT" : "",
-        surface->flags & SDL_RESIZABLE ? "SDL_RESIZABLE" : "",
-        surface->flags & SDL_HWACCEL ? "SDL_HWACCEL" : "",
-        surface->flags & SDL_SRCCOLORKEY ? "SDL_SRCCOLORKEY" : "",
-        surface->flags & SDL_RLEACCEL ? "SDL_RLEACCEL" : "",
-        surface->flags & SDL_SRCALPHA ? "SDL_SRCALPHA" : "",
-        surface->flags & SDL_PREALLOC ? "SDL_PREALLOC" : "");
-        printf("  bpp: %d\n", surface->format->BitsPerPixel);
-        printf("  Rmask %x, Gmask %x, Bmask %x, Amask %x\n",
-            surface->format->Rmask,
-            surface->format->Gmask,
-            surface->format->Bmask,
-            surface->format->Amask);
-        printf("  Rshift %d, Gshift %d, Bshift %d, Ashift %d\n",
-            surface->format->Rshift,
-            surface->format->Gshift,
-            surface->format->Bshift,
-            surface->format->Ashift);
-        */
-        screen_set_resolution(width, height);
-    } else {
-        printf("Unable to create texture: %s\n", SDL_GetError());
-    }
-}
-
-static void set_fullscreen()
-{
-    SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
-    int orig_w, orig_h;
-    SDL_GetWindowSize(SDL.window, &orig_w, &orig_h);
-    SDL_DisplayMode mode;
-    SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(SDL.window), &mode);
-    printf("User to fullscreen %d x %d\n", mode.w, mode.h);
-    if (0 != SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN_DESKTOP)) {
-        SDL_Log("Unable to enter fullscreen: %s\n", SDL_GetError());
-        return;
-    }
-    SDL_SetWindowDisplayMode(SDL.window, &mode);
-    setting_set_display(1, mode.w, mode.h);
-}
-
-
-static void set_windowed()
-{
-    int width, height;
-    setting_window(&width, &height);
-    printf("User to windowed %d x %d\n", width, height);
-    SDL_SetWindowFullscreen(SDL.window, 0);
-    SDL_SetWindowSize(SDL.window, width, height);
-    SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
-    setting_set_display(0, width, height);
-}
-
-static void set_window_size(int width, int height)
-{
-    if (setting_fullscreen()) {
-        SDL_SetWindowFullscreen(SDL.window, 0);
-    }
-    SDL_SetWindowSize(SDL.window, width, height);
-    SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
-    printf("User resize to %d x %d\n", width, height);
-    setting_set_display(0, width, height);
 }
 
 static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
@@ -278,7 +156,7 @@ static void mainLoop()
                             break;
                         case SDL_WINDOWEVENT_SIZE_CHANGED:
                             printf("Window resized to %d x %d\n", event.window.data1, event.window.data2);
-                            createSurface(event.window.data1, event.window.data2, setting_fullscreen());
+                            platform_screen_resize(event.window.data1, event.window.data2, setting_fullscreen());
                             window_invalidate();
                             break;
                         case SDL_WINDOWEVENT_RESIZED:
@@ -331,11 +209,11 @@ static void mainLoop()
                     if (event.user.code == USER_EVENT_QUIT) {
                         return;
                     } else if (event.user.code == USER_EVENT_RESIZE) {
-                        set_window_size(*(int*)event.user.data1, *(int*)event.user.data2);
+                        platform_screen_set_window_size(*(int*)event.user.data1, *(int*)event.user.data2);
                     } else if (event.user.code == USER_EVENT_FULLSCREEN) {
-                        set_fullscreen();
+                        platform_screen_set_fullscreen();
                     } else if (event.user.code == USER_EVENT_WINDOWED) {
-                        set_windowed();
+                        platform_screen_set_windowed();
                     }
                     break;
                 
@@ -401,8 +279,8 @@ int main(int argc, char **argv)
     } else {
         setting_window(&width, &height);
     }
-    createWindowAndRenderer(width, height, fullscreen);
-    createSurface(width, height, fullscreen);
+    const char *title = (const char*)lang_get_string(9, 0);
+    platform_screen_create(title, width, height, fullscreen);
 
     if (!game_init()) {
         return 2;
