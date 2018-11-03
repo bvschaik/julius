@@ -1,7 +1,7 @@
 #include "building/model.h"
 
-#include "core/debug.h"
 #include "core/io.h"
+#include "core/log.h"
 #include "core/string.h"
 
 #include <stdlib.h>

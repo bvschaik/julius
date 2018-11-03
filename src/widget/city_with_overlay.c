@@ -4,7 +4,7 @@
 #include "building/construction.h"
 #include "building/industry.h"
 #include "city/view.h"
-#include "core/debug.h"
+#include "core/log.h"
 #include "game/resource.h"
 #include "game/state.h"
 #include "graphics/image.h"

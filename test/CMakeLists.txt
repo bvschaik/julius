@@ -23,17 +23,17 @@ except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
 add_executable(compare
     sav/compare.c
     sav/sav_compare.c
-    stub/debug.c
+    stub/log.c
     ${PROJECT_SOURCE_DIR}/src/core/zip.c
 )
 
 add_executable(autopilot
     sav/sav_compare.c
     sav/run.c
-    stub/debug.c
     stub/image.c
     stub/input.c
     stub/lang.c
+    stub/log.c
     stub/model.c
     stub/sound_device.c
     stub/system.c

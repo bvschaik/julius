@@ -2,9 +2,9 @@
 
 #include "building/construction.h"
 #include "building/model.h"
-#include "core/debug.h"
 #include "core/image.h"
 #include "core/lang.h"
+#include "core/log.h"
 #include "core/random.h"
 #include "core/time.h"
 #include "figure/type.h"

@@ -6,7 +6,7 @@
 #include "building/storage.h"
 #include "city/culture.h"
 #include "city/data.h"
-#include "core/debug.h"
+#include "core/log.h"
 #include "city/message.h"
 #include "city/view.h"
 #include "core/random.h"

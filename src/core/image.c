@@ -1,9 +1,9 @@
 #include "image.h"
 
-#include "core/debug.h"
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
+#include "core/log.h"
 
 #include <stdlib.h>
 #include <string.h>

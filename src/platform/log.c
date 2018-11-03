@@ -1,4 +1,4 @@
-#include "core/debug.h"
+#include "core/log.h"
 #include "SDL.h"
 
 #include <stdio.h>

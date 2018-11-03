@@ -1,6 +1,6 @@
 #include "image.h"
 
-#include "core/debug.h"
+#include "core/log.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 

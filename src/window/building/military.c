@@ -3,7 +3,7 @@
 #include "building/count.h"
 #include "city/view.h"
 #include "core/calc.h"
-#include "core/debug.h"
+#include "core/log.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "core/debug.h"
+#include "core/log.h"
 
 enum {
     PK_SUCCESS = 0,
