@@ -2,7 +2,6 @@
 #include "SDL.h"
 #include "SDL_mixer.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -37,9 +36,8 @@ void sound_device_open()
         for (int i = 0; i < MAX_CHANNELS; i++) {
             channels[i] = 0;
         }
-        printf("SOUND: OK\n");
     } else {
-        printf("SOUND: not initialized\n");
+        SDL_Log("SOUND: not initialized");
     }
 }
 
@@ -100,12 +98,10 @@ void sound_device_set_channel_panning(int channel, int left_pct, int right_pct)
 
 void sound_device_play_music(const char *filename)
 {
-    printf("SOUND: trying music file: %s\n", filename);
     if (initialized) {
         sound_device_stop_music();
         music = Mix_LoadMUS(filename);
         if (music) {
-            printf("SOUND: playing music file: %s\n", filename);
             Mix_PlayMusic(music, -1);
         }
     }
@@ -119,7 +115,6 @@ void sound_device_play_file_on_channel(const char *filename, int channel)
         }
         channels[channel] = Mix_LoadWAV(filename);
         if (channels[channel]) {
-            printf("SOUND: playing %s on channel %d\n", filename, channel);
             Mix_PlayChannel(channel, channels[channel], 0);
         }
     }
@@ -129,7 +124,6 @@ void sound_device_play_channel(int channel)
 {
     if (initialized) {
         if (channels[channel]) {
-            printf("SOUND: playing channel %d\n", channel);
             Mix_PlayChannel(channel, channels[channel], 0);
         }
     }

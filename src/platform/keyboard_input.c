@@ -12,7 +12,6 @@ static int is_repeatable_key(SDL_Keycode code)
 
 void platform_handle_key_down(SDL_KeyboardEvent *event)
 {
-    SDL_Log("Key down %d repeat %d\n", event->keysym.sym, event->repeat);
     if (event->repeat && !is_repeatable_key(event->keysym.sym)) {
         // ignore multiple presses in SDL >= 2.0.5 for keys other than arrows
         // and backspace/delete to prevent hotkeys firing more than once

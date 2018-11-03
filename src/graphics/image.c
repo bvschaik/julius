@@ -1,9 +1,9 @@
 #include "image.h"
 
+#include "core/debug.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 
-#include <stdio.h>
 #include <string.h>
 
 #define FOOTPRINT_WIDTH 58
@@ -522,7 +522,7 @@ void image_draw_masked(int image_id, int x, int y, color_t color_mask)
     }
 
     if (img->draw.type == 30) { // isometric
-        printf("ERROR: use Graphics_drawIsometricFootprint for isometric!\n");
+        debug_log("ERR: use image_draw_isometric_footprint for isometric!", 0, image_id);
         return;
     }
 

@@ -6,6 +6,7 @@
 #include "building/storage.h"
 #include "city/culture.h"
 #include "city/data.h"
+#include "core/debug.h"
 #include "city/message.h"
 #include "city/view.h"
 #include "core/random.h"
@@ -315,16 +316,6 @@ static void scenario_load_from_state(scenario_state *file)
     random_load_state(file->random_iv);
 
     scenario_load_state(file->scenario);
-    
-    // check if all buffers are empty
-    for (int i = 0; i < scenario_data.num_pieces; i++) {
-        buffer *buf = &scenario_data.pieces[i].buf;
-        if (buf->index != buf->size) {
-            printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
-        } else if (buf->overflow) {
-            printf("ERR: buffer %d overflowed\n", i);
-        }
-    }
 }
 
 static void savegame_load_from_state(savegame_state *state)
@@ -406,16 +397,6 @@ static void savegame_load_from_state(savegame_state *state)
     map_bookmark_load_state(state->bookmarks);
 
     buffer_skip(state->end_marker, 284);
-
-    // check if all buffers are empty
-    for (int i = 0; i < savegame_data.num_pieces; i++) {
-        buffer *buf = &savegame_data.pieces[i].buf;
-        if (buf->index != buf->size) {
-            printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
-        } else if (buf->overflow) {
-            printf("ERR: buffer %d overflowed\n", i);
-        }
-    }
 }
 
 static void savegame_save_to_state(savegame_state *state)
@@ -497,21 +478,11 @@ static void savegame_save_to_state(savegame_state *state)
     map_bookmark_save_state(state->bookmarks);
 
     buffer_skip(state->end_marker, 284);
-
-    // check if all buffers are empty
-    for (int i = 0; i < savegame_data.num_pieces; i++) {
-        buffer *buf = &savegame_data.pieces[i].buf;
-        if (buf->index != buf->size) {
-            printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
-        } else if (buf->overflow) {
-            printf("ERR: buffer %d overflowed\n", i);
-        }
-    }
 }
 
 int game_file_io_read_scenario(const char *filename)
 {
-    printf("Loading scenario: %s\n", filename);
+    debug_log("Loading scenario", filename, 0);
     init_scenario_data();
     FILE *fp = fopen(filename, "rb");
     if (!fp) {
@@ -608,7 +579,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
 {
     init_savegame_data();
 
-    printf("Loading saved game: %s\n", filename);
+    debug_log("Loading saved game", filename, 0);
     FILE *fp = fopen(filename, "rb");
     if (!fp) {
         return 0;
@@ -627,7 +598,7 @@ int game_file_io_write_saved_game(const char *filename)
 {
     init_savegame_data();
 
-    printf("Saving game: %s\n", filename);
+    debug_log("Saving game", filename, 0);
     savegame_version = SAVE_GAME_VERSION;
     savegame_save_to_state(&savegame_data.state);
 
