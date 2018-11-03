@@ -1,3 +1,4 @@
+#include "core/log.h"
 #include "sound/device.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
@@ -37,7 +38,7 @@ void sound_device_open()
             channels[i] = 0;
         }
     } else {
-        SDL_Log("SOUND: not initialized");
+        log_error("SOUND: not initialized", 0, 0);
     }
 }
 

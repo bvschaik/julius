@@ -482,7 +482,7 @@ static void savegame_save_to_state(savegame_state *state)
 
 int game_file_io_read_scenario(const char *filename)
 {
-    debug_log("Loading scenario", filename, 0);
+    log_info("Loading scenario", filename, 0);
     init_scenario_data();
     FILE *fp = fopen(filename, "rb");
     if (!fp) {
@@ -579,7 +579,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
 {
     init_savegame_data();
 
-    debug_log("Loading saved game", filename, 0);
+    log_info("Loading saved game", filename, 0);
     FILE *fp = fopen(filename, "rb");
     if (!fp) {
         return 0;
@@ -598,7 +598,7 @@ int game_file_io_write_saved_game(const char *filename)
 {
     init_savegame_data();
 
-    debug_log("Saving game", filename, 0);
+    log_info("Saving game", filename, 0);
     savegame_version = SAVE_GAME_VERSION;
     savegame_save_to_state(&savegame_data.state);
 

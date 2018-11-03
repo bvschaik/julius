@@ -344,7 +344,7 @@ void window_building_draw_legion_info_foreground(building_info_context *c)
                 default:
                     title_id = 16;
                     text_id = 22;
-                    debug_log("Unknown formation", 0, m->layout);
+                    log_info("Unknown formation", 0, m->layout);
                     break;
             }
             break;

@@ -5,7 +5,7 @@
 
 static char log_buffer[1000];
 
-void debug_log(const char *msg, const char *param_str, int param_int)
+static const char *build_message(const char *msg, const char *param_str, int param_int)
 {
     int index = 0;
     index += sprintf(&log_buffer[index], "%s", msg);
@@ -15,5 +15,15 @@ void debug_log(const char *msg, const char *param_str, int param_int)
     if (param_int) {
         index += sprintf(&log_buffer[index], "  %s", param_str);
     }
-    SDL_Log("%s", log_buffer);
+    return log_buffer;
+}
+
+void log_info(const char *msg, const char *param_str, int param_int)
+{
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "%s", build_message(msg, param_str, param_int));
+}
+
+void log_error(const char *msg, const char *param_str, int param_int)
+{
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", build_message(msg, param_str, param_int));
 }

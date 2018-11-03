@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-void debug_log(const char *msg, const char *param_str, int param_int)
+static void print_message(const char *msg, const char *param_str, int param_int)
 {
     printf("%s", msg);
     if (param_str) {
@@ -12,4 +12,16 @@ void debug_log(const char *msg, const char *param_str, int param_int)
         printf("  %s", param_str);
     }
     printf("\n");
+}
+
+void log_info(const char *msg, const char *param_str, int param_int)
+{
+    printf("INFO: ");
+    print_message(msg, param_str, param_int);
+}
+
+void log_error(const char *msg, const char *param_str, int param_int)
+{
+    printf("ERROR: ");
+    print_message(msg, param_str, param_int);
 }

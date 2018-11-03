@@ -78,7 +78,7 @@ static const city_overlay *get_city_overlay()
         case OVERLAY_DESIRABILITY:
             return city_overlay_for_desirability();
         default:
-            debug_log("Unknown city overlay!", 0, game_state_overlay());
+            log_info("Unknown city overlay!", 0, game_state_overlay());
             return 0;
     }
 }

@@ -3,15 +3,23 @@
 
 /**
  * @file
- * Debug logging
+ * Logging
  */
 
 /**
- * Logs a debug message
+ * Logs an info message
  * @param msg Message
  * @param param_str Extra info (string)
  * @param param_int Extra info (integer)
  */
-void debug_log(const char *msg, const char *param_str, int param_int);
+void log_info(const char *msg, const char *param_str, int param_int);
+
+/**
+ * Logs an error message
+ * @param msg Message
+ * @param param_str Extra info (string)
+ * @param param_int Extra info (integer)
+ */
+void log_error(const char *msg, const char *param_str, int param_int);
 
 #endif // CORE_DEBUG_H

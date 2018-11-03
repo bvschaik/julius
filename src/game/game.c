@@ -31,7 +31,7 @@ static time_millis last_update;
 
 static void errlog(const char *msg)
 {
-    debug_log(msg, 0, 0);
+    log_error(msg, 0, 0);
 }
 
 int game_pre_init()
@@ -41,7 +41,7 @@ int game_pre_init()
     game_state_unpause();
 
     if (!lang_load("c3.eng", "c3_mm.eng")) {
-        errlog("ERR: 'c3.eng' or 'c3_mm.eng' files not found or too large.");
+        errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return 0;
     }
     scenario_set_player_name(lang_get_string(9, 5));
@@ -53,21 +53,21 @@ int game_init()
 {
     system_init_cursors();
     if (!image_init()) {
-        errlog("ERR: unable to init graphics");
+        errlog("unable to init graphics");
         return 0;
     }
     
     if (!image_load_climate(CLIMATE_CENTRAL)) {
-        errlog("ERR: unable to load main graphics");
+        errlog("unable to load main graphics");
         return 0;
     }
     if (!image_load_enemy(ENEMY_0_BARBARIAN)) {
-        errlog("ERR: unable to load enemy graphics");
+        errlog("unable to load enemy graphics");
         return 0;
     }
 
     if (!model_load()) {
-        errlog("ERR: unable to load c3_model.txt");
+        errlog("unable to load c3_model.txt");
         return 0;
     }
 

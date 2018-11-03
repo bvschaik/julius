@@ -235,7 +235,7 @@ static void load_empire()
 {
     int size = io_read_file_into_buffer(empire_555, data.tmp_data, EMPIRE_DATA_SIZE);
     if (size != EMPIRE_DATA_SIZE / 2) {
-        debug_log("ERR: unable to load empire data", empire_555, 0);
+        log_error("unable to load empire data", empire_555, 0);
         return;
     }
     buffer buf;
@@ -313,7 +313,7 @@ static const color_t *load_external_data(int image_id)
             img->draw.data_length, img->draw.offset - 1
         );
         if (!size) {
-            debug_log("ERR: unable to load external image",
+            log_error("unable to load external image",
                       data.bitmaps[img->draw.bitmap_id], image_id);
             return NULL;
         }

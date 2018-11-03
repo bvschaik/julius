@@ -77,13 +77,13 @@ int model_load()
 {
     uint8_t *buffer = (uint8_t *) malloc(TMP_BUFFER_SIZE);
     if (!buffer) {
-        debug_log("ERR:no spare memory for model", 0, 0);
+        log_error("no spare memory for model", 0, 0);
         return 0;
     }
     memset(buffer, 0, TMP_BUFFER_SIZE);
     int filesize = io_read_file_into_buffer("c3_model.txt", buffer, TMP_BUFFER_SIZE);
     if (filesize == 0) {
-        debug_log("ERR:no c3_model.txt file", 0, 0);
+        log_error("no c3_model.txt file", 0, 0);
         free(buffer);
         return 0;
     }
@@ -102,7 +102,7 @@ int model_load()
     } while (brace_index && guard > 0);
 
     if (num_lines != NUM_BUILDINGS + NUM_HOUSES) {
-        debug_log("ERR:model has incorrect no of lines ", 0, num_lines + 1);
+        log_error("model has incorrect no of lines ", 0, num_lines + 1);
         free(buffer);
         return 0;
     }
@@ -150,7 +150,7 @@ int model_load()
         ptr = get_value(ptr, end_ptr, &houses[i].tax_multiplier);
     }
 
-    debug_log(" OK: model loaded", 0, 0);
+    log_info("model loaded", 0, 0);
     free(buffer);
     return 1;
 }
