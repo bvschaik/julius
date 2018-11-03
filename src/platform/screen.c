@@ -16,8 +16,19 @@ static struct {
     int y;
 } window_pos;
 
-void platform_screen_create(const char *title, int width, int height, int fullscreen)
+void platform_screen_create(const char *title)
 {
+    int width, height;
+    int fullscreen = setting_fullscreen();
+    if (fullscreen) {
+        SDL_DisplayMode mode;
+        SDL_GetDesktopDisplayMode(0, &mode);
+        width = mode.w;
+        height = mode.h;
+    } else {
+        setting_window(&width, &height);
+    }
+
     SDL_Log("Creating screen, fullscreen? %d\n", fullscreen);
     if (SDL.window) {
         SDL_DestroyWindow(SDL.window);

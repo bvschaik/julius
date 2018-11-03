@@ -132,7 +132,7 @@ static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
     }
 }
 
-static void mainLoop()
+static void main_loop()
 {
     SDL_Event event;
     SDL_Event refreshEvent;
@@ -232,69 +232,72 @@ static void mainLoop()
     }
 }
 
-static void initSdl()
+static int init_sdl()
 {
-    printf("Initializing SDL.\n");
-    
-    // Initialize defaults, Video and Audio
+    SDL_Log("Initializing SDL");
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
-        printf("Could not initialize SDL: %s.\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
+        return 0;
+    }
+    SDL_Log("SDL initialized");
+    return 1;
+}
+
+static int pre_init(const char *custom_data_dir)
+{
+    if (custom_data_dir) {
+        if (chdir(custom_data_dir) != 0) {
+            SDL_Log("%s: directory not found", custom_data_dir);
+            return 0;
+        }
+        return game_pre_init();
+    }
+    SDL_Log("Loading game from working directory");
+    if (game_pre_init()) {
+        return 1;
+    }
+    if (chdir("../data") != 0) {
+        SDL_Log("../data: directory not found");
+        return 1;
+    }
+    SDL_Log("Loading game from data directory");
+    return game_pre_init();
+}
+
+static void setup(const char *custom_data_dir)
+{
+    signal(SIGSEGV, handler);
+
+    if (!init_sdl()) {
         exit(-1);
     }
-    
-    printf("SDL initialized.\n");
+
+    if (!pre_init(custom_data_dir)) {
+        exit(1);
+    }
+
+    const char *title = (const char*)lang_get_string(9, 0);
+    platform_screen_create(title);
+
+    if (!game_init()) {
+        exit(2);
+    }
+}
+
+static void teardown()
+{
+    SDL_Log("Exiting game");
+    game_exit();
+    SDL_Quit();
 }
 
 int main(int argc, char **argv)
 {
-    signal(SIGSEGV, handler);
-    
-    initSdl();
-    
-    // C3 setup
-    if (!game_pre_init()) {
-        if (argc > 1 && argv[1]) {
-            if (chdir(argv[1]) != 0) {
-                printf("%s: directory not found!\n", argv[1]);
-                return 1;
-            }
-        } else {
-            if (chdir("../data") != 0) {
-                printf("../data: directory not found!\n");
-                return 1;
-            }
-        }
-        if (!game_pre_init()) {
-            return 1;
-        }
-    }
+    const char *custom_data_dir = (argc > 1 && argv[1]) ? argv[1] : NULL;
+    setup(custom_data_dir);
 
-    int width, height;
-    int fullscreen = setting_fullscreen();
-    if (fullscreen) {
-        SDL_DisplayMode mode;
-        SDL_GetDesktopDisplayMode(0, &mode);
-        width = mode.w;
-        height = mode.h;
-    } else {
-        setting_window(&width, &height);
-    }
-    const char *title = (const char*)lang_get_string(9, 0);
-    platform_screen_create(title, width, height, fullscreen);
+    main_loop();
 
-    if (!game_init()) {
-        return 2;
-    }
-
-    mainLoop();
-    printf("Quiting SDL.\n");
-    
-    game_exit();
-
-    // Shutdown all subsystems
-    SDL_Quit();
-    
-    printf("Quiting....\n");
-    
-    exit(0);
+    teardown();
+    return 0;
 }

@@ -3,7 +3,7 @@
 
 #include "SDL.h"
 
-void platform_screen_create(const char *title, int width, int height, int fullscreen);
+void platform_screen_create(const char *title);
 
 void platform_screen_resize(int width, int height, int fullscreen);
 
