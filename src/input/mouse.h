@@ -13,7 +13,7 @@ typedef struct {
     int is_down; /**< Mouse button is down */
     int went_down; /**< Mouse button went down during this cycle */
     int went_up; /**< Mouse button went up during this cycle */
-    int new_is_down;
+    int system_change;
 } mouse_button;
 
 
