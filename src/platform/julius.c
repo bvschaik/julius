@@ -24,6 +24,8 @@
 #include <unistd.h>
 #endif
 
+#define INTPTR(d) (*(int*)(d))
+
 enum {
     USER_EVENT_QUIT,
     USER_EVENT_RESIZE,
@@ -74,15 +76,11 @@ void system_set_fullscreen(int fullscreen)
 {
     SDL_Event event;
     event.user.type = SDL_USEREVENT;
-    if (fullscreen) {
-        event.user.code = USER_EVENT_FULLSCREEN;
-    } else {
-        event.user.code = USER_EVENT_WINDOWED;
-    }
+    event.user.code = fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED;
     SDL_PushEvent(&event);
 }
 
-static void refresh()
+static void run_and_draw()
 {
     time_set_millis(SDL_GetTicks());
 
@@ -102,96 +100,104 @@ static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
     }
 }
 
+static void handle_window_event(SDL_WindowEvent *event, int *window_active)
+{
+    switch (event->event) {
+        case SDL_WINDOWEVENT_ENTER:
+            mouse_set_inside_window(1);
+            break;
+        case SDL_WINDOWEVENT_LEAVE:
+            mouse_set_inside_window(0);
+            break;
+        case SDL_WINDOWEVENT_SIZE_CHANGED:
+            SDL_Log("Window resized to %d x %d\n", event->data1, event->data2);
+            platform_screen_resize(event->data1, event->data2);
+            break;
+        case SDL_WINDOWEVENT_RESIZED:
+            SDL_Log("System resize to %d x %d\n", event->data1, event->data2);
+            break;
+
+        case SDL_WINDOWEVENT_SHOWN:
+            SDL_Log("Window %d shown", event->windowID);
+            *window_active = 1;
+            break;
+        case SDL_WINDOWEVENT_HIDDEN:
+            SDL_Log("Window %d hidden", event->windowID);
+            *window_active = 0;
+            break;
+    }
+}
+
+static void handle_event(SDL_Event *event, int *active, int *quit)
+{
+    switch (event->type) {
+        case SDL_WINDOWEVENT:
+            handle_window_event(&event->window, active);
+            break;
+
+        case SDL_KEYDOWN:
+            platform_handle_key_down(&event->key);
+            break;
+        case SDL_KEYUP:
+            platform_handle_key_up(&event->key);
+            break;
+        case SDL_TEXTINPUT:
+            platform_handle_text(&event->text);
+            break;
+
+        case SDL_MOUSEMOTION:
+            mouse_set_position(event->motion.x, event->motion.y);
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            handle_mouse_button(&event->button, 1);
+            break;
+        case SDL_MOUSEBUTTONUP:
+            handle_mouse_button(&event->button, 0);
+            break;
+        case SDL_MOUSEWHEEL:
+            mouse_set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
+            break;
+
+        case SDL_QUIT:
+            *quit = 1;
+            break;
+
+        case SDL_USEREVENT:
+            if (event->user.code == USER_EVENT_QUIT) {
+                *quit = 1;
+            } else if (event->user.code == USER_EVENT_RESIZE) {
+                platform_screen_set_window_size(INTPTR(event->user.data1), INTPTR(event->user.data2));
+            } else if (event->user.code == USER_EVENT_FULLSCREEN) {
+                platform_screen_set_fullscreen();
+            } else if (event->user.code == USER_EVENT_WINDOWED) {
+                platform_screen_set_windowed();
+            }
+            break;
+
+        default:
+            break;
+    }
+}
+
 static void main_loop()
 {
     SDL_Event event;
     mouse_set_inside_window(1);
     
-    refresh();
+    run_and_draw();
     int active = 1;
-    while (1) {
+    int quit = 0;
+    while (!quit) {
         /* Process event queue */
         while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_WINDOWEVENT:
-                    switch (event.window.event) {
-                        case SDL_WINDOWEVENT_ENTER:
-                            mouse_set_inside_window(1);
-                            break;
-                        case SDL_WINDOWEVENT_LEAVE:
-                            mouse_set_inside_window(0);
-                            break;
-                        case SDL_WINDOWEVENT_SIZE_CHANGED:
-                            SDL_Log("Window resized to %d x %d\n", event.window.data1, event.window.data2);
-                            platform_screen_resize(event.window.data1, event.window.data2);
-                            break;
-                        case SDL_WINDOWEVENT_RESIZED:
-                            SDL_Log("System resize to %d x %d\n", event.window.data1, event.window.data2);
-                            break;
-
-                        case SDL_WINDOWEVENT_SHOWN:
-                            SDL_Log("Window %d shown", event.window.windowID);
-                            active = 1;
-                            break;
-                        case SDL_WINDOWEVENT_HIDDEN:
-                            SDL_Log("Window %d hidden", event.window.windowID);
-                            active = 0;
-                            break;
-                    }
-                    break;
-                
-                case SDL_KEYDOWN:
-                    platform_handle_key_down(&event.key);
-                    break;
-                
-                case SDL_KEYUP:
-                    platform_handle_key_up(&event.key);
-                    break;
-                
-                case SDL_TEXTINPUT:
-                    platform_handle_text(&event.text);
-                    break;
-                
-                case SDL_MOUSEMOTION:
-                    mouse_set_position(event.motion.x, event.motion.y);
-                    break;
-                
-                case SDL_MOUSEBUTTONDOWN:
-                    handle_mouse_button(&event.button, 1);
-                    break;
-                
-                case SDL_MOUSEBUTTONUP:
-                    handle_mouse_button(&event.button, 0);
-                    break;
-                
-                case SDL_MOUSEWHEEL:
-                    mouse_set_scroll(event.wheel.y > 0 ? SCROLL_UP : event.wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
-                    break;
-
-                case SDL_QUIT:
-                    return;
-                
-                case SDL_USEREVENT:
-                    if (event.user.code == USER_EVENT_QUIT) {
-                        return;
-                    } else if (event.user.code == USER_EVENT_RESIZE) {
-                        platform_screen_set_window_size(*(int*)event.user.data1, *(int*)event.user.data2);
-                    } else if (event.user.code == USER_EVENT_FULLSCREEN) {
-                        platform_screen_set_fullscreen();
-                    } else if (event.user.code == USER_EVENT_WINDOWED) {
-                        platform_screen_set_windowed();
-                    }
-                    break;
-                
-                default:
-                    //printf("Unknown event: %d\n", event.type);
-                    break;
-            }
+            handle_event(&event, &active, &quit);
         }
-        if (active) {
-            refresh();
-        } else {
-            SDL_WaitEvent(NULL);
+        if (!quit) {
+            if (active) {
+                run_and_draw();
+            } else {
+                SDL_WaitEvent(NULL);
+            }
         }
     }
 }
@@ -239,8 +245,7 @@ static void setup(const char *custom_data_dir)
         exit(1);
     }
 
-    const char *title = (const char*)lang_get_string(9, 0);
-    platform_screen_create(title);
+    platform_screen_create((const char*)lang_get_string(9, 0));
 
     if (!game_init()) {
         exit(2);
