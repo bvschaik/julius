@@ -38,7 +38,7 @@ static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_c
     draw_context.advance_water_animation = 0;
     if (!selected_figure_id) {
         time_millis now = time_get_millis();
-        if (now - draw_context.last_water_animation_time > 60 || now < draw_context.last_water_animation_time) {
+        if (now - draw_context.last_water_animation_time > 60) {
             draw_context.last_water_animation_time = now;
             draw_context.advance_water_animation = 1;
         }

@@ -25,7 +25,7 @@ void game_animation_update()
     }
     int delay_millis = 0;
     for (int i = 0; i < MAX_ANIM_TIMERS; i++) {
-        if (now_millis >= delay_millis + timers[i].last_update) {
+        if (now_millis - timers[i].last_update >= delay_millis) {
             timers[i].should_update = 1;
             timers[i].last_update = now_millis;
         }

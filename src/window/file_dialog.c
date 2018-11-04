@@ -48,7 +48,7 @@ static generic_button file_buttons[] = {
 #define NOT_EXIST_MESSAGE_TIMEOUT 500
 
 static struct {
-    time_millis message_not_exist_time_until;
+    time_millis message_not_exist_start_time;
     file_dialog_type type;
     int focus_button_id;
     int scroll_position;
@@ -64,7 +64,7 @@ static void init(file_dialog_type type)
         strncpy(data.last_loaded_file, string_to_ascii(lang_get_string(9, 6)), FILE_NAME_MAX);
     }
     data.type = type;
-    data.message_not_exist_time_until = 0;
+    data.message_not_exist_start_time = 0;
     data.scroll_position = 0;
 
     data.saved_games = dir_find_files_with_extension("sav");
@@ -99,7 +99,7 @@ static void draw_foreground()
     inner_panel_draw(144, 120, 20, 13);
 
     // title
-    if (data.message_not_exist_time_until && time_get_millis() < data.message_not_exist_time_until) {
+    if (data.message_not_exist_start_time && time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT) {
         lang_text_draw_centered(43, 2, 160, 50, 304, FONT_LARGE_BLACK);
     } else if (data.type == FILE_DIALOG_DELETE) {
         lang_text_draw_centered(43, 6, 160, 50, 304, FONT_LARGE_BLACK);
@@ -185,7 +185,7 @@ static void button_ok_cancel(int is_ok, int param2)
 
     if (data.type != FILE_DIALOG_SAVE && !file_exists(data.saved_game)) {
         file_remove_extension(data.saved_game);
-        data.message_not_exist_time_until = time_get_millis() + NOT_EXIST_MESSAGE_TIMEOUT;
+        data.message_not_exist_start_time = time_get_millis();
         return;
     }
     if (data.type == FILE_DIALOG_LOAD) {
@@ -226,7 +226,7 @@ static void button_scroll(int is_down, int num_lines)
                 data.scroll_position = 0;
             }
         }
-        data.message_not_exist_time_until = 0;
+        data.message_not_exist_start_time = 0;
     }
 }
 
@@ -236,7 +236,7 @@ static void button_select_file(int index, int param2)
         strncpy(data.saved_game, data.saved_games->files[data.scroll_position + index], FILE_NAME_MAX);
         file_remove_extension(data.saved_game);
         keyboard_refresh();
-        data.message_not_exist_time_until = 0;
+        data.message_not_exist_start_time = 0;
     }
 }
 

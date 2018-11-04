@@ -76,7 +76,7 @@ void city_warning_clear_all()
 void city_warning_clear_outdated()
 {
     for (int i = 0; i < MAX_WARNINGS; i++) {
-        if (warnings[i].in_use && time_get_millis() > warnings[i].time + TIMEOUT_MS) {
+        if (warnings[i].in_use && time_get_millis() - warnings[i].time > TIMEOUT_MS) {
             warnings[i].in_use = 0;
         }
     }

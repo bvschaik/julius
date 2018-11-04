@@ -13,12 +13,10 @@ static void fade_pressed_effect(image_button *buttons, int num_buttons)
     for (int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
         if (btn->pressed) {
-            if (btn->button_type == IB_NORMAL) {
-                if (btn->pressed_since + PRESSED_EFFECT_MILLIS < current_time) {
+            if (current_time - btn->pressed_since > PRESSED_EFFECT_MILLIS) {
+                if (btn->button_type == IB_NORMAL) {
                     btn->pressed = 0;
-                }
-            } else if (btn->button_type == IB_SCROLL) {
-                if (btn->pressed_since + PRESSED_EFFECT_MILLIS < current_time && !mouse_get()->left.is_down) {
+                } else if (btn->button_type == IB_SCROLL && !mouse_get()->left.is_down) {
                     btn->pressed = 0;
                 }
             }
@@ -104,7 +102,7 @@ int image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *butto
         hit_button->right_click_handler(hit_button->parameter1, hit_button->parameter2);
     } else if (hit_button->button_type == IB_SCROLL && m->left.is_down) {
         time_millis delay = hit_button->pressed == 2 ? PRESSED_REPEAT_MILLIS : PRESSED_REPEAT_INITIAL_MILLIS;
-        if (hit_button->pressed_since + delay <= time_get_millis()) {
+        if (time_get_millis() - hit_button->pressed_since >= delay) {
             hit_button->pressed = 2;
             hit_button->pressed_since = time_get_millis();
             hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);

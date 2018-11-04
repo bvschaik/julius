@@ -155,7 +155,7 @@ void city_message_disable_sound_for_next_message()
 void city_message_apply_sound_interval(message_category category)
 {
     time_millis now = time_get_millis();
-    if (now <= 15000 + data.last_sound_time[category]) {
+    if (now - data.last_sound_time[category] <= 15000) {
         city_message_disable_sound_for_next_message();
     } else {
         data.last_sound_time[category] = now;

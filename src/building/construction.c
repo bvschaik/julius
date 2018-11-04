@@ -780,7 +780,7 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
 void building_construction_update_road_orientation()
 {
     if (data.road_orientation > 0) {
-        if (time_get_millis() > data.road_last_update + 1500) {
+        if (time_get_millis() - data.road_last_update > 1500) {
             data.road_last_update = time_get_millis();
             data.road_orientation = data.road_orientation == 1 ? 2 : 1;
         }

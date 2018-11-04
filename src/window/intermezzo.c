@@ -65,7 +65,6 @@ static struct {
     intermezzo_type type;
     void (*callback)(void);
     time_millis start_time;
-    time_millis end_time;
 } data;
 
 static void init(intermezzo_type type, void (*callback)(void))
@@ -73,7 +72,6 @@ static void init(intermezzo_type type, void (*callback)(void))
     data.type = type;
     data.callback = callback;
     data.start_time = time_get_millis();
-    data.end_time = data.start_time + DISPLAY_TIME_MILLIS;
     if (data.type != INTERMEZZO_FIRED) {
         sound_music_stop();
         sound_speech_stop();
@@ -116,7 +114,7 @@ static void draw_background()
 static void handle_mouse(const mouse *m)
 {
     time_millis current_time = time_get_millis();
-    if (m->right.went_up || current_time > data.end_time) {
+    if (m->right.went_up || current_time - data.start_time > DISPLAY_TIME_MILLIS) {
         data.callback();
     }
 }

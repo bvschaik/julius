@@ -29,10 +29,7 @@ static int should_scroll(const mouse *m)
         return 0;
     }
     time_millis current_time = time_get_millis();
-    int diff = current_time - data.last_scroll_time;
-    if (current_time < data.last_scroll_time) {
-        diff = 10000;
-    }
+    time_millis diff = current_time - data.last_scroll_time;
     int scroll_delay = (100 - setting_scroll_speed()) / 10;
     if (scroll_delay < 10) { // 0% = 10 = no scroll at all
         if (diff >= 12 * scroll_delay + 2) {

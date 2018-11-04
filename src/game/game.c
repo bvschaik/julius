@@ -81,9 +81,7 @@ static int get_elapsed_ticks()
 {
     time_millis now = time_get_millis();
     time_millis diff = now - last_update;
-    if (now < last_update) {
-        diff = 10000;
-    }
+
     int game_speed_index = (100 - setting_game_speed()) / 10;
     int ticks_per_frame = 1;
     if (game_speed_index >= 10) {
