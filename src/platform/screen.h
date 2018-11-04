@@ -11,6 +11,7 @@ int platform_screen_resize(int width, int height);
 void platform_screen_set_fullscreen(void);
 void platform_screen_set_windowed(void);
 void platform_screen_set_window_size(int width, int height);
+void platform_screen_center_window(void);
 
 void platform_screen_render(void);
 

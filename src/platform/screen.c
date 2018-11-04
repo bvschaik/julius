@@ -129,6 +129,11 @@ void platform_screen_set_window_size(int width, int height)
     setting_set_display(0, width, height);
 }
 
+void platform_screen_center_window(void)
+{
+    SDL_SetWindowPosition(SDL.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+}
+
 void platform_screen_render(void)
 {
     SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);

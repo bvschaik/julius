@@ -316,7 +316,7 @@ void hotkey_func(int f_number)
         case 4:
             handle_bookmark(f_number - 1);
             break;
-        case 5: /* center window not implemented */; break;
+        case 5: system_center(); break;
         case 6: system_set_fullscreen(!setting_fullscreen()); break;
         case 7: system_resize(640, 480); break;
         case 8: system_resize(800, 600); break;

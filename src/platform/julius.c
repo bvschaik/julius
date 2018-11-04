@@ -31,6 +31,7 @@ enum {
     USER_EVENT_RESIZE,
     USER_EVENT_FULLSCREEN,
     USER_EVENT_WINDOWED,
+    USER_EVENT_CENTER_WINDOW,
 };
 
 static void handler(int sig) {
@@ -50,12 +51,17 @@ static void handler(int sig) {
     exit(1);
 }
 
-void system_exit(void)
+static void post_event(int code)
 {
     SDL_Event event;
     event.user.type = SDL_USEREVENT;
-    event.user.code = USER_EVENT_QUIT;
+    event.user.code = code;
     SDL_PushEvent(&event);
+}
+
+void system_exit(void)
+{
+    post_event(USER_EVENT_QUIT);
 }
 
 void system_resize(int width, int height)
@@ -72,12 +78,14 @@ void system_resize(int width, int height)
     SDL_PushEvent(&event);
 }
 
+void system_center(void)
+{
+    post_event(USER_EVENT_CENTER_WINDOW);
+}
+
 void system_set_fullscreen(int fullscreen)
 {
-    SDL_Event event;
-    event.user.type = SDL_USEREVENT;
-    event.user.code = fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED;
-    SDL_PushEvent(&event);
+    post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
 }
 
 static void run_and_draw(void)
@@ -171,6 +179,8 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
                 platform_screen_set_fullscreen();
             } else if (event->user.code == USER_EVENT_WINDOWED) {
                 platform_screen_set_windowed();
+            } else if (event->user.code == USER_EVENT_CENTER_WINDOW) {
+                platform_screen_center_window();
             }
             break;
 

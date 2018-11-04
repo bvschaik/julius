@@ -14,6 +14,11 @@
 void system_resize(int width, int height);
 
 /**
+ * Center window
+ */
+void system_center(void);
+
+/**
  * Set fullscreen on/off
  */
 void system_set_fullscreen(int fullscreen);
