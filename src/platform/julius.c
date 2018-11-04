@@ -30,11 +30,10 @@
 #endif
 
 enum {
-    USER_EVENT_REFRESH = 0,
-    USER_EVENT_QUIT = 1,
-    USER_EVENT_RESIZE = 2,
-    USER_EVENT_FULLSCREEN = 3,
-    USER_EVENT_WINDOWED = 4,
+    USER_EVENT_QUIT,
+    USER_EVENT_RESIZE,
+    USER_EVENT_FULLSCREEN,
+    USER_EVENT_WINDOWED,
 };
 
 static void handler(int sig) {
@@ -64,7 +63,6 @@ void system_exit()
 
 void system_resize(int width, int height)
 {
-    // TODO two resizes at the same time = trouble
     static int s_width;
     static int s_height;
     s_width = width;
@@ -135,9 +133,6 @@ static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
 static void main_loop()
 {
     SDL_Event event;
-    SDL_Event refreshEvent;
-    refreshEvent.user.type = SDL_USEREVENT;
-    refreshEvent.user.code = USER_EVENT_REFRESH;
     mouse_set_inside_window(1);
     
     refresh();
@@ -223,8 +218,6 @@ static void main_loop()
             }
         }
         if (active) {
-            // Push user refresh event
-            SDL_PushEvent(&refreshEvent);
             refresh();
         } else {
             SDL_WaitEvent(NULL);
