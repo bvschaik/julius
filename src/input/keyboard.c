@@ -49,7 +49,12 @@ void keyboard_stop_capture()
 
 int keyboard_input_is_accepted()
 {
-    return data.accepted;
+    if (data.accepted) {
+        data.accepted = 0;
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 int keyboard_is_insert()
