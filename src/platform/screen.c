@@ -17,7 +17,7 @@ static struct {
     int y;
 } window_pos;
 
-void platform_screen_create(const char *title)
+int platform_screen_create(const char *title)
 {
     int width, height;
     int fullscreen = setting_fullscreen();
@@ -31,15 +31,8 @@ void platform_screen_create(const char *title)
     }
 
     SDL_Log("Creating screen, fullscreen? %d\n", fullscreen);
-    if (SDL.window) {
-        SDL_DestroyWindow(SDL.window);
-        SDL.window = 0;
-    }
-    if (SDL.renderer) {
-        SDL_DestroyRenderer(SDL.renderer);
-        SDL.renderer = 0;
-    }
-    
+    platform_screen_destroy();
+
     Uint32 flags = SDL_WINDOW_RESIZABLE;
     if (fullscreen) {
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -47,19 +40,43 @@ void platform_screen_create(const char *title)
     SDL.window = SDL_CreateWindow(title,
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         width, height, flags);
-    
+    if (!SDL.window) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
+        return 0;
+    }
+
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
-    
-    platform_screen_resize(width, height);
+    if (!SDL.renderer) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create renderer: %s", SDL_GetError());
+        return 0;
+    }
+
+    return platform_screen_resize(width, height);
 }
 
-void platform_screen_resize(int width, int height)
+void platform_screen_destroy()
 {
     if (SDL.texture) {
         SDL_DestroyTexture(SDL.texture);
         SDL.texture = 0;
     }
-    
+    if (SDL.renderer) {
+        SDL_DestroyRenderer(SDL.renderer);
+        SDL.renderer = 0;
+    }
+    if (SDL.window) {
+        SDL_DestroyWindow(SDL.window);
+        SDL.window = 0;
+    }
+}
+
+int platform_screen_resize(int width, int height)
+{
+    if (SDL.texture) {
+        SDL_DestroyTexture(SDL.texture);
+        SDL.texture = 0;
+    }
+
     setting_set_display(setting_fullscreen(), width, height);
     SDL.texture = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
@@ -67,8 +84,10 @@ void platform_screen_resize(int width, int height)
     if (SDL.texture) {
         SDL_Log("Texture created (%d x %d)\n", width, height);
         screen_set_resolution(width, height);
+        return 1;
     } else {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture: %s", SDL_GetError());
+        return 0;
     }
 }
 

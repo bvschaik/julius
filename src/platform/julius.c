@@ -216,6 +216,7 @@ static int init_sdl()
 static int pre_init(const char *custom_data_dir)
 {
     if (custom_data_dir) {
+        SDL_Log("Loading game from %s", custom_data_dir);
         if (chdir(custom_data_dir) != 0) {
             SDL_Log("%s: directory not found", custom_data_dir);
             return 0;
@@ -245,7 +246,9 @@ static void setup(const char *custom_data_dir)
         exit(1);
     }
 
-    platform_screen_create((const char*)lang_get_string(9, 0));
+    if (!platform_screen_create((const char*)lang_get_string(9, 0))) {
+        exit(-2);
+    }
 
     if (!game_init()) {
         exit(2);
@@ -256,6 +259,7 @@ static void teardown()
 {
     SDL_Log("Exiting game");
     game_exit();
+    platform_screen_destroy();
     SDL_Quit();
 }
 
