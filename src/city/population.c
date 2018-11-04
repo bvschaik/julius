@@ -24,22 +24,22 @@ static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {
     {0, 0, 0, 0, 0, 0, 0, 2, 5, 10}
 };
 
-int city_population()
+int city_population(void)
 {
     return city_data.population.population;
 }
 
-int city_population_school_age()
+int city_population_school_age(void)
 {
     return city_data.population.school_age;
 }
 
-int city_population_academy_age()
+int city_population_academy_age(void)
 {
     return city_data.population.academy_age;
 }
 
-int city_population_last_used_house_add()
+int city_population_last_used_house_add(void)
 {
     return city_data.population.last_used_house_add;
 }
@@ -49,7 +49,7 @@ void city_population_set_last_used_house_add(int building_id)
     city_data.population.last_used_house_add = building_id;
 }
 
-int city_population_last_used_house_remove()
+int city_population_last_used_house_remove(void)
 {
     return city_data.population.last_used_house_remove;
 }
@@ -59,7 +59,7 @@ void city_population_set_last_used_house_remove(int building_id)
     city_data.population.last_used_house_remove = building_id;
 }
 
-void city_population_clear_capacity()
+void city_population_clear_capacity(void)
 {
     city_data.population.total_capacity = 0;
     city_data.population.room_in_houses = 0;
@@ -71,7 +71,7 @@ void city_population_add_capacity(int people_in_house, int max_people)
     city_data.population.room_in_houses += max_people - people_in_house;
 }
 
-static void recalculate_population()
+static void recalculate_population(void)
 {
     city_data.population.population = 0;
     for (int i = 0; i < 100; i++) {
@@ -201,7 +201,7 @@ void city_population_remove_for_troop_request(int num_people)
     recalculate_population();
 }
 
-int city_population_people_of_working_age()
+int city_population_people_of_working_age(void)
 {
     return
         get_people_in_age_decennium(2) +
@@ -218,13 +218,13 @@ static int get_people_aged_between(int min, int max)
     return pop;
 }
 
-void city_population_calculate_educational_age()
+void city_population_calculate_educational_age(void)
 {
     city_data.population.school_age = get_people_aged_between(0, 14);
     city_data.population.academy_age = get_people_aged_between(14, 21);
 }
 
-void city_population_record_monthly()
+void city_population_record_monthly(void)
 {
     city_data.population.monthly.values[city_data.population.monthly.next_index++] = city_data.population.population;
     if (city_data.population.monthly.next_index >= 2400) {
@@ -233,7 +233,7 @@ void city_population_record_monthly()
     ++city_data.population.monthly.count;
 }
 
-int city_population_monthly_count()
+int city_population_monthly_count(void)
 {
     return city_data.population.monthly.count;
 }
@@ -258,7 +258,7 @@ int city_population_at_level(int house_level)
     return city_data.population.at_level[house_level];
 }
 
-static void yearly_advance_ages_and_calculate_deaths()
+static void yearly_advance_ages_and_calculate_deaths(void)
 {
     int aged100 = city_data.population.at_age[99];
     for (int age = 99; age > 0; age--) {
@@ -278,7 +278,7 @@ static void yearly_advance_ages_and_calculate_deaths()
     }
 }
 
-static void yearly_calculate_births()
+static void yearly_calculate_births(void)
 {
     city_data.population.yearly_births = 0;
     for (int decennium = 9; decennium >= 0; decennium--) {
@@ -290,7 +290,7 @@ static void yearly_calculate_births()
     }
 }
 
-static void yearly_recalculate_population()
+static void yearly_recalculate_population(void)
 {
     city_data.population.yearly_update_requested = 0;
     city_data.population.population_last_year = city_data.population.population;
@@ -302,7 +302,7 @@ static void yearly_recalculate_population()
     city_data.population.average_per_year = city_data.population.total_all_years / city_data.population.total_years;
 }
 
-static int calculate_people_per_house_type()
+static int calculate_people_per_house_type(void)
 {
     city_data.population.people_in_tents_shacks = 0;
     city_data.population.people_in_villas_palaces = 0;
@@ -337,13 +337,13 @@ static int calculate_people_per_house_type()
     return total;
 }
 
-void city_population_request_yearly_update()
+void city_population_request_yearly_update(void)
 {
     city_data.population.yearly_update_requested = 1;
     calculate_people_per_house_type();
 }
 
-void city_population_yearly_update()
+void city_population_yearly_update(void)
 {
     if (city_data.population.yearly_update_requested) {
         yearly_advance_ages_and_calculate_deaths();
@@ -352,7 +352,7 @@ void city_population_yearly_update()
     }
 }
 
-void city_population_check_consistency()
+void city_population_check_consistency(void)
 {
     int people_in_houses = calculate_people_per_house_type();
     if (people_in_houses < city_data.population.population) {
@@ -360,7 +360,7 @@ void city_population_check_consistency()
     }
 }
 
-int city_population_graph_order()
+int city_population_graph_order(void)
 {
     return city_data.population.graph_order;
 }

@@ -7,7 +7,7 @@
 
 static grid_u8 strength;
 
-void map_soldier_strength_clear()
+void map_soldier_strength_clear(void)
 {
     map_grid_clear_u8(strength.items);
 }

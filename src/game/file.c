@@ -97,7 +97,7 @@ static const char *get_scenario_filename(const uint8_t *scenario_name)
     return filename;
 }
 
-static void clear_scenario_data()
+static void clear_scenario_data(void)
 {
     // clear data
     city_victory_reset();
@@ -218,7 +218,7 @@ static void load_empire_data(int is_custom_scenario, int empire_id)
     scenario_distant_battle_set_enemy_travel_months();
 }
 
-static void initialize_saved_game()
+static void initialize_saved_game(void)
 {
     load_empire_data(scenario_is_custom(), scenario_empire_id());
 
@@ -346,7 +346,7 @@ int game_file_delete_saved_game(const char *filename)
     return game_file_io_delete_saved_game(filename);
 }
 
-void game_file_write_mission_saved_game()
+void game_file_write_mission_saved_game(void)
 {
     int rank = scenario_campaign_rank();
     if (rank < 0) {

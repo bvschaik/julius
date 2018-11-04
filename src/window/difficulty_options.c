@@ -17,7 +17,7 @@ static arrow_button arrow_buttons[] = {
     {0, 102, 21, 24, arrow_button_gods, 2, 0}
 };
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 
@@ -57,7 +57,7 @@ static void arrow_button_gods(int param1, int param2)
     setting_toggle_gods_enabled();
 }
 
-void window_difficulty_options_show()
+void window_difficulty_options_show(void)
 {
     window_type window = {
         WINDOW_DIFFICULTY_OPTIONS,

@@ -95,7 +95,7 @@ static struct {
     uint8_t *tmp_data;
 } data = {.current_climate = -1};
 
-int image_init()
+int image_init(void)
 {
     data.enemy_data = (color_t *) malloc(ENEMY_DATA_SIZE);
     data.main_data = (color_t *) malloc(MAIN_DATA_SIZE);
@@ -231,7 +231,7 @@ static void convert_images(image *images, int size, buffer *buf, color_t *dst)
     }
 }
 
-static void load_empire()
+static void load_empire(void)
 {
     int size = io_read_file_into_buffer(empire_555, data.tmp_data, EMPIRE_DATA_SIZE);
     if (size != EMPIRE_DATA_SIZE / 2) {

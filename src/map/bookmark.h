@@ -3,7 +3,7 @@
 
 #include "core/buffer.h"
 
-void map_bookmarks_clear();
+void map_bookmarks_clear(void);
 
 void map_bookmark_save(int number);
 

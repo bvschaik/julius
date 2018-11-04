@@ -40,14 +40,14 @@ static void change_game_speed(int is_down)
     }
 }
 
-static void exit_military_command()
+static void exit_military_command(void)
 {
     if (window_is(WINDOW_CITY_MILITARY)) {
         window_city_show();
     }
 }
 
-static void toggle_overlay()
+static void toggle_overlay(void)
 {
     exit_military_command();
     if (window_is(WINDOW_CITY)) {
@@ -69,7 +69,7 @@ static void show_overlay(int overlay)
     }
 }
 
-static void toggle_pause()
+static void toggle_pause(void)
 {
     exit_military_command();
     if (window_is(WINDOW_CITY)) {
@@ -92,7 +92,7 @@ static void show_advisor(advisor_type advisor)
     }
 }
 
-static void cycle_legion()
+static void cycle_legion(void)
 {
     static int current_legion_id = 1;
     if (window_is(WINDOW_CITY)) {
@@ -119,7 +119,7 @@ static void cycle_legion()
     }
 }
 
-static void cheat_init_or_invasion()
+static void cheat_init_or_invasion(void)
 {
     if (window_is(WINDOW_BUILDING_INFO)) {
         data.is_cheating = window_building_info_get_building_type() == BUILDING_WELL;
@@ -131,14 +131,14 @@ static void cheat_init_or_invasion()
     }
 }
 
-static void cheat_victory()
+static void cheat_victory(void)
 {
     if (data.is_cheating) {
         city_victory_force_win();
     }
 }
 
-static void cheat_money()
+static void cheat_money(void)
 {
     if (data.is_cheating) {
         city_finance_process_cheat();
@@ -234,27 +234,27 @@ void hotkey_character(int c)
     }
 }
 
-void hotkey_left()
+void hotkey_left(void)
 {
     scroll_arrow_left();
 }
 
-void hotkey_right()
+void hotkey_right(void)
 {
     scroll_arrow_right();
 }
 
-void hotkey_up()
+void hotkey_up(void)
 {
     scroll_arrow_up();
 }
 
-void hotkey_down()
+void hotkey_down(void)
 {
     scroll_arrow_down();
 }
 
-void hotkey_home()
+void hotkey_home(void)
 {
     if (window_is(WINDOW_CITY)) {
         game_orientation_rotate_left();
@@ -262,7 +262,7 @@ void hotkey_home()
     }
 }
 
-void hotkey_end()
+void hotkey_end(void)
 {
     if (window_is(WINDOW_CITY)) {
         game_orientation_rotate_right();
@@ -277,7 +277,7 @@ static void confirm_exit(int accepted)
     }
 }
 
-void hotkey_esc()
+void hotkey_esc(void)
 {
     video_stop();
     window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
@@ -302,7 +302,7 @@ static void handle_bookmark(int number)
     }
 }
 
-static void take_screenshot()
+static void take_screenshot(void)
 {
     graphics_save_screenshot();
 }
@@ -340,7 +340,7 @@ void hotkey_shift(int is_down)
     data.shift_down = is_down;
 }
 
-void hotkey_reset_state()
+void hotkey_reset_state(void)
 {
     data.ctrl_down = 0;
     data.alt_down = 0;

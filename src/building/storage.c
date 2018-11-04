@@ -16,12 +16,12 @@ static struct {
     struct data_storage storages[MAX_STORAGES];
 } data;
 
-void building_storage_clear_all()
+void building_storage_clear_all(void)
 {
     memset(data.storages, 0, MAX_STORAGES * sizeof(struct data_storage));
 }
 
-void building_storage_reset_building_ids()
+void building_storage_reset_building_ids(void)
 {
     for (int i = 1; i < MAX_STORAGES; i++) {
         data.storages[i].building_id = 0;
@@ -45,7 +45,7 @@ void building_storage_reset_building_ids()
     }
 }
 
-int building_storage_create()
+int building_storage_create(void)
 {
     for (int i = 1; i < MAX_STORAGES; i++) {
         if (!data.storages[i].in_use) {

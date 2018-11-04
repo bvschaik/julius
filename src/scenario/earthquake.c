@@ -36,7 +36,7 @@ static struct {
     } expand[4];
 } data;
 
-void scenario_earthquake_init()
+void scenario_earthquake_init(void)
 {
     data.game_year = scenario.start_year + scenario.earthquake.year;
     data.month = 2 + (random_byte() & 7);
@@ -96,7 +96,7 @@ static void advance_earthquake_to_tile(int x, int y)
     figure_create_explosion_cloud(x, y, 1);
 }
 
-void scenario_earthquake_process()
+void scenario_earthquake_process(void)
 {
     if (scenario.earthquake.severity == EARTHQUAKE_NONE ||
         scenario.earthquake_point.x == -1 || scenario.earthquake_point.y == -1) {
@@ -151,7 +151,7 @@ void scenario_earthquake_process()
     }
 }
 
-int scenario_earthquake_is_in_progress()
+int scenario_earthquake_is_in_progress(void)
 {
     return data.state == EVENT_IN_PROGRESS;
 }

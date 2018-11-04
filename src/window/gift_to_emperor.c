@@ -24,12 +24,12 @@ static generic_button buttons[] = {
 
 static int focus_button_id;
 
-static void init()
+static void init(void)
 {
     city_emperor_init_selected_gift();
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     window_advisors_draw_dialog_background();
 
@@ -46,7 +46,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 
@@ -114,7 +114,7 @@ static void button_cancel(int param1, int param2)
     window_advisors_show();
 }
 
-void window_gift_to_emperor_show()
+void window_gift_to_emperor_show(void)
 {
     window_type window = {
         WINDOW_GIFT_TO_EMPEROR,

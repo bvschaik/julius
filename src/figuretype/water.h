@@ -3,7 +3,7 @@
 
 #include "figure/figure.h"
 
-void figure_create_flotsam();
+void figure_create_flotsam(void);
 
 void figure_flotsam_action(figure *f);
 
@@ -11,6 +11,6 @@ void figure_shipwreck_action(figure *f);
 
 void figure_fishing_boat_action(figure *f);
 
-void figure_sink_all_ships();
+void figure_sink_all_ships(void);
 
 #endif // FIGURETYPE_WATER_H

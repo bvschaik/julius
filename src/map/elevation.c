@@ -9,7 +9,7 @@ int map_elevation_at(int grid_offset)
     return elevation.items[grid_offset];
 }
 
-void map_elevation_clear()
+void map_elevation_clear(void)
 {
     map_grid_clear_u8(elevation.items);
 }

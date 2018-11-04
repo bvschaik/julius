@@ -33,13 +33,13 @@ typedef struct {
 /**
  * Clear and reset all building storages
  */
-void building_storage_clear_all();
+void building_storage_clear_all(void);
 
 /**
  * Creates a building storage
  * @return storage id, 0 when creation failed
  */
-int building_storage_create();
+int building_storage_create(void);
 
 /**
  * Deletes a building storage
@@ -70,7 +70,7 @@ void building_storage_toggle_empty_all(int storage_id);
 /**
  * Resets building id's for all storages
  */
-void building_storage_reset_building_ids();
+void building_storage_reset_building_ids(void);
 
 /**
  * Save data

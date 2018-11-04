@@ -49,7 +49,7 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
     return 0;
 }
 
-static void determine_meeting_center()
+static void determine_meeting_center(void)
 {
     // gather list of meeting centers
     building_list_small_clear();
@@ -83,7 +83,7 @@ static void determine_meeting_center()
     }
 }
 
-void map_natives_init()
+void map_natives_init(void)
 {
     int meeting_center_set = 0;
     int image_hut = scenario_building_image_native_hut();
@@ -145,7 +145,7 @@ void map_natives_init()
     determine_meeting_center();
 }
 
-void map_natives_check_land()
+void map_natives_check_land(void)
 {
     map_property_clear_all_native_land();
     city_military_decrease_native_attack_duration();

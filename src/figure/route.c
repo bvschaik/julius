@@ -11,7 +11,7 @@ static struct {
     uint8_t direction_paths[MAX_ROUTES][MAX_PATH_LENGTH];
 } data;
 
-void figure_route_clear_all()
+void figure_route_clear_all(void)
 {
     for (int i = 0; i < MAX_ROUTES; i++) {
         data.figure_ids[i] = 0;
@@ -21,7 +21,7 @@ void figure_route_clear_all()
     }
 }
 
-void figure_route_clean()
+void figure_route_clean(void)
 {
     for (int i = 0; i < MAX_ROUTES; i++) {
         int figure_id = data.figure_ids[i];
@@ -34,7 +34,7 @@ void figure_route_clean()
     }
 }
 
-static int get_first_available()
+static int get_first_available(void)
 {
     for (int i = 1; i < MAX_ROUTES; i++) {
         if (data.figure_ids[i] == 0) {

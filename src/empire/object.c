@@ -32,7 +32,7 @@ static full_empire_object objects[MAX_OBJECTS];
 static int get_trade_amount_code(int index, int resource);
 static int is_sea_trade_route(int route_id);
 
-static void fix_image_ids()
+static void fix_image_ids(void)
 {
     int image_id = 0;
     for (int i = 0; i < MAX_OBJECTS; i++) {
@@ -104,7 +104,7 @@ void empire_object_load(buffer *buf)
     fix_image_ids();
 }
 
-void empire_object_init_cities()
+void empire_object_init_cities(void)
 {
     empire_city_clear_all();
     int route_index = 1;
@@ -201,7 +201,7 @@ const empire_object *empire_object_get_battle_icon(int path_id, int year)
     return 0;
 }
 
-int empire_object_get_max_invasion_path()
+int empire_object_get_max_invasion_path(void)
 {
     int max_path = 0;
     for (int i = 0; i < MAX_OBJECTS; i++) {

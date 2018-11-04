@@ -18,7 +18,7 @@ struct warning {
 
 static struct warning warnings[MAX_WARNINGS];
 
-static struct warning *new_warning()
+static struct warning *new_warning(void)
 {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (!warnings[i].in_use) {
@@ -48,7 +48,7 @@ void city_warning_show(warning_type type)
     string_copy(text, w->text, MAX_TEXT);
 }
 
-int city_has_warnings()
+int city_has_warnings(void)
 {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (warnings[i].in_use) {
@@ -66,14 +66,14 @@ const uint8_t *city_warning_get(int id)
     return 0;
 }
 
-void city_warning_clear_all()
+void city_warning_clear_all(void)
 {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         warnings[i].in_use = 0;
     }
 }
 
-void city_warning_clear_outdated()
+void city_warning_clear_outdated(void)
 {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (warnings[i].in_use && time_get_millis() - warnings[i].time > TIMEOUT_MS) {

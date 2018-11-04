@@ -8,7 +8,7 @@
 
 #include <string.h>
 
-void city_data_init()
+void city_data_init(void)
 {
     memset(&city_data, 0, sizeof(struct city_data_t));
 
@@ -35,7 +35,7 @@ void city_data_init()
     city_gods_reset();
 }
 
-void city_data_init_scenario()
+void city_data_init_scenario(void)
 {
     city_data.unused.faction_id = 1;
     city_data.unused.unknown_00a2 = 1;
@@ -44,7 +44,7 @@ void city_data_init_scenario()
     city_data.finance.last_year.balance = city_data.finance.treasury;
 }
 
-void city_data_init_campaign_mission()
+void city_data_init_campaign_mission(void)
 {
     city_data.finance.treasury = difficulty_adjust_money(city_data.finance.treasury);
 }

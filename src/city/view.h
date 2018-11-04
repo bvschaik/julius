@@ -9,11 +9,11 @@
 
 typedef void (map_callback)(int x, int y, int grid_offset);
 
-void city_view_init();
+void city_view_init(void);
 
-int city_view_orientation();
+int city_view_orientation(void);
 
-void city_view_reset_orientation();
+void city_view_reset_orientation(void);
 
 void city_view_get_camera(int *x, int *y);
 
@@ -31,20 +31,20 @@ int city_view_pixels_to_grid_offset(int x_pixels, int y_pixels);
 
 void city_view_go_to_grid_offset(int grid_offset);
 
-void city_view_rotate_left();
+void city_view_rotate_left(void);
 
-void city_view_rotate_right();
+void city_view_rotate_right(void);
 
 void city_view_set_viewport(int screen_width, int screen_height);
 
 void city_view_get_viewport(int *x, int *y, int *width, int *height);
 void city_view_get_viewport_size_tiles(int *width, int *height);
 
-int city_view_is_sidebar_collapsed();
+int city_view_is_sidebar_collapsed(void);
 
-void city_view_start_sidebar_toggle();
+void city_view_start_sidebar_toggle(void);
 
-void city_view_toggle_sidebar();
+void city_view_toggle_sidebar(void);
 
 void city_view_save_state(buffer *orientation, buffer *camera);
 

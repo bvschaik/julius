@@ -32,17 +32,17 @@ void rich_text_reset(int scroll_position);
 /**
  * Save state (for tooltip)
  */
-void rich_text_save();
+void rich_text_save(void);
 
 /**
  * Restore state (for tooltip)
  */
-void rich_text_restore();
+void rich_text_restore(void);
 
 /**
  * Clear the links table
  */
-void rich_text_clear_links();
+void rich_text_clear_links(void);
 
 /**
  * Get the clicked link, if any
@@ -80,12 +80,12 @@ int rich_text_draw_colored(const uint8_t *text, int x_offset, int y_offset,
 /**
  * Draws the scrollbar
  */
-void rich_text_draw_scrollbar();
+void rich_text_draw_scrollbar(void);
 
 /**
  * Draws the dot in the scrollbar
  */
-void rich_text_draw_scrollbar_dot();
+void rich_text_draw_scrollbar_dot(void);
 
 /**
  * Handles mouse interaction with the scrollbar
@@ -104,6 +104,6 @@ void rich_text_scroll(int is_down, int num_lines);
 /**
  * Gets scroll position in absolute number of lines
  */
-int rich_text_scroll_position();
+int rich_text_scroll_position(void);
 
 #endif // GRAPHICS_RICH_TEXT_H

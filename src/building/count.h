@@ -13,7 +13,7 @@
 /**
  * Updates the building counts and does some extra work on the side
  */
-void building_count_update();
+void building_count_update(void);
 
 /**
  * Returns the active building count for the type

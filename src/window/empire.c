@@ -55,7 +55,7 @@ static struct {
     int focus_button_id;
 } data = {0, 1};
 
-static void init()
+static void init(void)
 {
     data.selected_button = 0;
     int selected_object = empire_selected_object();
@@ -67,7 +67,7 @@ static void init()
     data.focus_button_id = 0;
 }
 
-static void draw_paneling()
+static void draw_paneling(void)
 {
     int image_base = image_group(GROUP_EMPIRE_PANELS);
     // bottom panel background
@@ -251,7 +251,7 @@ static void draw_enemy_army_info(const empire_object *object)
     }
 }
 
-static void draw_object_info()
+static void draw_object_info(void)
 {
     int selected_object = empire_selected_object();
     if (selected_object) {
@@ -272,7 +272,7 @@ static void draw_object_info()
     }
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     int s_width = screen_width();
     int s_height = screen_height();
@@ -348,7 +348,7 @@ static void draw_invasion_warning(int x, int y, int image_id)
     image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
 }
 
-static void draw_map()
+static void draw_map(void)
 {
     graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16, data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
 
@@ -390,7 +390,7 @@ static void draw_panel_buttons(const empire_city *city)
     }
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     draw_map();
 
@@ -561,7 +561,7 @@ static void button_open_trade(int param1, int param2)
     window_popup_dialog_show(POPUP_DIALOG_OPEN_TRADE, confirmed_open_trade, 2);
 }
 
-void window_empire_show()
+void window_empire_show(void)
 {
     window_type window = {
         WINDOW_EMPIRE,
@@ -574,7 +574,7 @@ void window_empire_show()
     window_show(&window);
 }
 
-void window_empire_show_checked()
+void window_empire_show_checked(void)
 {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == AVAILABLE) {

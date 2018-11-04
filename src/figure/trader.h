@@ -12,13 +12,13 @@
 /**
  * Clears all traders
  */
-void traders_clear();
+void traders_clear(void);
 
 /**
  * Creates a trader
  * @return ID of the new trader
  */
-int trader_create();
+int trader_create(void);
 
 /**
  * Record that the trader has bought a resource from the city

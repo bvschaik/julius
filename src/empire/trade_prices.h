@@ -12,7 +12,7 @@
 /**
  * Reset trade prices to the default
  */
-void trade_prices_reset();
+void trade_prices_reset(void);
 
 /**
  * Get the buy price for the resource

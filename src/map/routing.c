@@ -32,7 +32,7 @@ static struct {
     int through_building_id;
 } state;
 
-static void clear_distances()
+static void clear_distances(void)
 {
     map_grid_clear_i16(routing_distance.items);
 }

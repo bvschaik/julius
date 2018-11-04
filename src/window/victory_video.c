@@ -23,12 +23,12 @@ static int init(const char *filename, int width, int height, void (*callback)(vo
     return 0;
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_clear_screen();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
 }

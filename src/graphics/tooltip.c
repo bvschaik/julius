@@ -19,7 +19,7 @@
 static time_millis last_update = 0;
 static uint8_t overlay_string[1000];
 
-static void reset_timer()
+static void reset_timer(void)
 {
     last_update = time_get_millis();
 }

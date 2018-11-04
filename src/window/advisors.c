@@ -55,7 +55,7 @@ static generic_button advisor_buttons[] = {
     {588, 1, 624, 41, GB_IMMEDIATE, button_change_advisor, button_none, 0, 0},
 };
 
-static const advisor_window_type *(*sub_advisors[])() = {
+static const advisor_window_type *(*sub_advisors[])(void) = {
     0,
     window_advisor_labor,
     window_advisor_military,
@@ -81,7 +81,7 @@ static advisor_type current_advisor = ADVISOR_NONE;
 static int focus_button_id;
 static int advisor_height;
 
-static void set_advisor_window()
+static void set_advisor_window(void)
 {
     if (sub_advisors[current_advisor]) {
         current_advisor_window = sub_advisors[current_advisor]();
@@ -97,7 +97,7 @@ static void set_advisor(int advisor)
     set_advisor_window();
 }
 
-static void init()
+static void init(void)
 {
     city_labor_allocate_workers();
 
@@ -120,7 +120,7 @@ static void init()
     set_advisor_window();
 }
 
-void window_advisors_draw_dialog_background()
+void window_advisors_draw_dialog_background(void)
 {
     image_draw_fullscreen_background(image_group(GROUP_ADVISOR_BACKGROUND));
     graphics_in_dialog();
@@ -136,7 +136,7 @@ void window_advisors_draw_dialog_background()
     graphics_reset_dialog();
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     window_advisors_draw_dialog_background();
     graphics_in_dialog();
@@ -144,7 +144,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     image_buttons_draw(0, 16 * (advisor_height - 2), &help_button, 1);
@@ -217,12 +217,12 @@ static void get_tooltip(tooltip_context *c)
     }
 }
 
-advisor_type window_advisors_get_advisor()
+advisor_type window_advisors_get_advisor(void)
 {
     return current_advisor;
 }
 
-void window_advisors_show()
+void window_advisors_show(void)
 {
     window_type window = {
         WINDOW_ADVISORS,
@@ -235,7 +235,7 @@ void window_advisors_show()
     window_show(&window);
 }
 
-void window_advisors_show_checked()
+void window_advisors_show_checked(void)
 {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == AVAILABLE) {

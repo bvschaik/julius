@@ -300,7 +300,7 @@ static void clear_current_offset(struct terrain_image_context *items, int num_it
     }
 }
 
-void map_image_context_init()
+void map_image_context_init(void)
 {
     for (int i = 0; i < CONTEXT_MAX_ITEMS; i++) {
         clear_current_offset(context_pointers[i].context, context_pointers[i].size);

@@ -115,14 +115,14 @@ static struct {
     int month;
 } drawn;
 
-static void clear_state()
+static void clear_state(void)
 {
     data.open_sub_menu = 0;
     data.focus_menu_id = 0;
     data.focus_sub_menu_id = 0;
 }
 
-static void set_text_for_tooltips()
+static void set_text_for_tooltips(void)
 {
     switch (setting_tooltips()) {
         case TOOLTIPS_NONE:
@@ -137,18 +137,18 @@ static void set_text_for_tooltips()
     }
 }
 
-static void set_text_for_warnings()
+static void set_text_for_warnings(void)
 {
     menu_help[2].text_number = setting_warnings() ? 6 : 5;
 }
 
-static void init_from_settings()
+static void init_from_settings(void)
 {
     set_text_for_tooltips();
     set_text_for_warnings();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     if (!data.open_sub_menu) {
         return;
@@ -162,7 +162,7 @@ static void handle_mouse(const mouse *m)
     widget_top_menu_handle_mouse(m);
 }
 
-static void top_menu_window_show()
+static void top_menu_window_show(void)
 {
     window_type window = {
         WINDOW_TOP_MENU,
@@ -175,7 +175,7 @@ static void top_menu_window_show()
     window_show(&window);
 }
 
-static void refresh_background()
+static void refresh_background(void)
 {
     int block_width = 24;
     int image_base = image_group(GROUP_TOP_MENU_SIDEBAR);

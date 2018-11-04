@@ -11,7 +11,7 @@
 
 #define ADVISOR_HEIGHT 16
 
-static int get_education_advice()
+static int get_education_advice(void)
 {
     const house_demands *demands = city_houses_demands();
     if (demands->education == 1) {
@@ -52,7 +52,7 @@ static int get_education_advice()
     return advice_id;
 }
 
-static int draw_background()
+static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 7, 10, 10);
@@ -126,7 +126,7 @@ static int draw_background()
     return ADVISOR_HEIGHT;
 }
 
-const advisor_window_type *window_advisor_education()
+const advisor_window_type *window_advisor_education(void)
 {
     static const advisor_window_type window = {
         draw_background,

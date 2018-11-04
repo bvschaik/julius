@@ -28,11 +28,11 @@ typedef struct {
     int volume;
 } set_sound;
 
-void settings_load();
+void settings_load(void);
 
-void settings_save();
+void settings_save(void);
 
-int setting_fullscreen();
+int setting_fullscreen(void);
 void setting_window(int *width, int *height);
 void setting_set_display(int fullscreen, int width, int height);
 
@@ -43,38 +43,38 @@ void setting_increase_sound_volume(set_sound_type type);
 void setting_decrease_sound_volume(set_sound_type type);
 void setting_reset_sound(set_sound_type type, int enabled, int volume);
 
-int setting_game_speed();
-void setting_increase_game_speed();
-void setting_decrease_game_speed();
+int setting_game_speed(void);
+void setting_increase_game_speed(void);
+void setting_decrease_game_speed(void);
 
-int setting_scroll_speed();
-void setting_increase_scroll_speed();
-void setting_decrease_scroll_speed();
+int setting_scroll_speed(void);
+void setting_increase_scroll_speed(void);
+void setting_decrease_scroll_speed(void);
 void setting_reset_speeds(int game_speed, int scroll_speed);
 
-set_tooltips setting_tooltips();
-void setting_cycle_tooltips();
+set_tooltips setting_tooltips(void);
+void setting_cycle_tooltips(void);
 
-int setting_warnings();
-void setting_toggle_warnings();
+int setting_warnings(void);
+void setting_toggle_warnings(void);
 
-int setting_monthly_autosave();
-void setting_toggle_monthly_autosave();
+int setting_monthly_autosave(void);
+void setting_toggle_monthly_autosave(void);
 
-int setting_gods_enabled();
-void setting_toggle_gods_enabled();
+int setting_gods_enabled(void);
+void setting_toggle_gods_enabled(void);
 
-set_difficulty setting_difficulty();
-void setting_increase_difficulty();
-void setting_decrease_difficulty();
+set_difficulty setting_difficulty(void);
+void setting_increase_difficulty(void);
+void setting_decrease_difficulty(void);
 
-int setting_victory_video();
+int setting_victory_video(void);
 
-int setting_last_advisor();
+int setting_last_advisor(void);
 void setting_set_last_advisor(int advisor);
 
 int setting_personal_savings_for_mission(int mission_id);
 void setting_set_personal_savings_for_mission(int mission_id, int savings);
-void setting_clear_personal_savings();
+void setting_clear_personal_savings(void);
 
 #endif // GAME_SETTINGS_H

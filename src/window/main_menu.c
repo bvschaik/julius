@@ -23,7 +23,7 @@ static generic_button buttons[] = {
     {192, 220, 448, 245, GB_IMMEDIATE, button_click, button_none, 4, 0},
 };
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_clear_screen();
     graphics_in_dialog();
@@ -31,7 +31,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 
@@ -73,7 +73,7 @@ static void button_click(int type, int param2)
     }
 }
 
-void window_main_menu_show()
+void window_main_menu_show(void)
 {
     window_type window = {
         WINDOW_MAIN_MENU,

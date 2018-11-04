@@ -8,7 +8,7 @@ static struct {
     int index[6][7];
 } data;
 
-void map_ring_init()
+void map_ring_init(void)
 {
     int index = 0;
     int x, y;

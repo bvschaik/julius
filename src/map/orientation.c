@@ -16,7 +16,7 @@
 #include "map/tiles.h"
 #include "map/water.h"
 
-static void determine_leftmost_tile()
+static void determine_leftmost_tile(void)
 {
     int orientation = city_view_orientation();
     int grid_offset = map_data.start_offset;
@@ -231,7 +231,7 @@ int map_orientation_for_triumphal_arch(int x, int y)
     return 0;
 }
 
-void map_orientation_update_buildings()
+void map_orientation_update_buildings(void)
 {
     int map_orientation = city_view_orientation();
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP || map_orientation == DIR_4_BOTTOM;

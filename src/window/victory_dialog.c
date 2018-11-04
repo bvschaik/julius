@@ -22,7 +22,7 @@ static generic_button victory_buttons[] = {
 
 static int focus_button_id = 0;
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_in_dialog();
 
@@ -38,7 +38,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 
@@ -90,7 +90,7 @@ static void button_continue_governing(int months, int param2)
     sound_music_update();
 }
 
-void window_victory_dialog_show()
+void window_victory_dialog_show(void)
 {
     window_type window = {
         WINDOW_VICTORY_DIALOG,

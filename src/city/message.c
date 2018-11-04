@@ -52,7 +52,7 @@ static struct {
 
 static int should_play_sound = 1;
 
-void city_message_init_scenario()
+void city_message_init_scenario(void)
 {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         data.messages[i].message_type = 0;
@@ -88,14 +88,14 @@ void city_message_init_scenario()
     city_message_init_problem_areas();
 }
 
-void city_message_init_problem_areas()
+void city_message_init_problem_areas(void)
 {
     data.problem_count = 0;
     data.problem_index = 0;
     data.problem_last_click_time = time_get_millis();
 }
 
-static int new_message_id()
+static int new_message_id(void)
 {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         if (!data.messages[i].message_type) {
@@ -147,7 +147,7 @@ static void show_message_popup(int message_id)
         city_message_get_advisor(msg->message_type), 1);
 }
 
-void city_message_disable_sound_for_next_message()
+void city_message_disable_sound_for_next_message(void)
 {
     should_play_sound = 0;
 }
@@ -227,7 +227,7 @@ void city_message_post_with_message_delay(message_category category, int use_pop
     }
 }
 
-void city_message_process_queue()
+void city_message_process_queue(void)
 {
     if (data.consecutive_message_delay > 0) {
         data.consecutive_message_delay--;
@@ -260,7 +260,7 @@ void city_message_process_queue()
 }
 
 
-void city_message_sort_and_compact()
+void city_message_sort_and_compact(void)
 {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         for (int a = 0; a < MAX_MESSAGES - 1; a++) {
@@ -352,7 +352,7 @@ int city_message_get_category_count(message_category category)
     return data.message_count[category];
 }
 
-void city_message_decrease_delays()
+void city_message_decrease_delays(void)
 {
     for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
         if (data.message_delay[i] > 0) {
@@ -404,17 +404,17 @@ void city_message_delete(int message_id)
     city_message_sort_and_compact();
 }
 
-int city_message_count()
+int city_message_count(void)
 {
     return data.total_messages;
 }
 
-int city_message_problem_area_count()
+int city_message_problem_area_count(void)
 {
     return data.problem_count;
 }
 
-int city_message_next_problem_area_grid_offset()
+int city_message_next_problem_area_grid_offset(void)
 {
     time_millis now = time_get_millis();
     if (now - data.problem_last_click_time > 3000) {
@@ -468,7 +468,7 @@ int city_message_next_problem_area_grid_offset()
     return 0;
 }
 
-void city_message_clear_scroll()
+void city_message_clear_scroll(void)
 {
     data.scroll_position = data.max_scroll_position = 0;
 }
@@ -486,12 +486,12 @@ void city_message_update_scroll(int max_messages)
     }
 }
 
-int city_message_can_scroll()
+int city_message_can_scroll(void)
 {
     return data.max_scroll_position > 0;
 }
 
-int city_message_scroll_position()
+int city_message_scroll_position(void)
 {
     return data.scroll_position;
 }
@@ -511,7 +511,7 @@ void city_message_scroll(int is_down, int amount)
     }
 }
 
-int city_message_scroll_percentage()
+int city_message_scroll_percentage(void)
 {
     if (data.scroll_position <= 0) {
         return 0;

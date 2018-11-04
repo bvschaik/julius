@@ -341,7 +341,7 @@ int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_t
     return 0;
 }
 
-static void mars_kill_enemies()
+static void mars_kill_enemies(void)
 {
     int to_kill = city_god_spirit_of_mars_power();
     if (to_kill <= 0) {
@@ -574,7 +574,7 @@ static void update_enemy_formation(formation *m, int *roman_distance)
     update_enemy_movement(m, *roman_distance);
 }
 
-void formation_enemy_update()
+void formation_enemy_update(void)
 {
     if (enemy_army_total_enemy_formations() <= 0) {
         enemy_armies_clear_ignore_roman_soldiers();

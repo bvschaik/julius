@@ -30,7 +30,7 @@ void city_emperor_init_scenario(int rank)
     city_emperor_set_salary_rank(salary_rank);
 }
 
-static void update_debt_state()
+static void update_debt_state(void)
 {
     if (city_data.finance.treasury >= 0) {
         city_data.emperor.months_in_debt = -1;
@@ -85,7 +85,7 @@ static void update_debt_state()
     }
 }
 
-static void process_caesar_invasion()
+static void process_caesar_invasion(void)
 {
     if (city_data.figure.imperial_soldiers) {
         // caesar invasion in progress
@@ -151,13 +151,13 @@ static void process_caesar_invasion()
     }
 }
 
-void city_emperor_update()
+void city_emperor_update(void)
 {
     update_debt_state();
     process_caesar_invasion();
 }
 
-void city_emperor_init_selected_gift()
+void city_emperor_init_selected_gift(void)
 {
     if (city_data.emperor.selected_gift_size == GIFT_LAVISH && !city_emperor_can_send_gift(GIFT_LAVISH)) {
         city_data.emperor.selected_gift_size = GIFT_GENEROUS;
@@ -177,7 +177,7 @@ int city_emperor_set_gift_size(int size)
     }
 }
 
-int city_emperor_selected_gift_size()
+int city_emperor_selected_gift_size(void)
 {
     return city_data.emperor.selected_gift_size;
 }
@@ -192,7 +192,7 @@ int city_emperor_can_send_gift(int size)
     return city_data.emperor.gifts[size].cost <= city_data.emperor.personal_savings;
 }
 
-void city_emperor_calculate_gift_costs()
+void city_emperor_calculate_gift_costs(void)
 {
     int savings = city_data.emperor.personal_savings;
     city_data.emperor.gifts[GIFT_MODEST].cost = savings / 8 + 20;
@@ -200,7 +200,7 @@ void city_emperor_calculate_gift_costs()
     city_data.emperor.gifts[GIFT_LAVISH].cost = savings / 2 + 100;
 }
 
-void city_emperor_send_gift()
+void city_emperor_send_gift(void)
 {
     int size = city_data.emperor.selected_gift_size;
     if (size < GIFT_MODEST || size > GIFT_LAVISH) {
@@ -260,7 +260,7 @@ void city_emperor_send_gift()
     city_data.emperor.personal_savings -= cost;
 }
 
-int city_emperor_months_since_gift()
+int city_emperor_months_since_gift(void)
 {
     return city_data.emperor.months_since_gift;
 }
@@ -276,27 +276,27 @@ void city_emperor_set_salary_rank(int rank)
     city_data.emperor.salary_amount = SALARY_FOR_RANK[rank];
 }
 
-int city_emperor_salary_rank()
+int city_emperor_salary_rank(void)
 {
     return city_data.emperor.salary_rank;
 }
 
-int city_emperor_salary_amount()
+int city_emperor_salary_amount(void)
 {
     return city_data.emperor.salary_amount;
 }
 
-int city_emperor_personal_savings()
+int city_emperor_personal_savings(void)
 {
     return city_data.emperor.personal_savings;
 }
 
-int city_emperor_rank()
+int city_emperor_rank(void)
 {
     return city_data.emperor.player_rank;
 }
 
-void city_emperor_init_donation_amount()
+void city_emperor_init_donation_amount(void)
 {
     if (city_data.emperor.donate_amount > city_data.emperor.personal_savings) {
         city_data.emperor.donate_amount = city_data.emperor.personal_savings;
@@ -313,19 +313,19 @@ void city_emperor_change_donation_amount(int change)
     city_emperor_set_donation_amount(city_data.emperor.donate_amount + change);
 }
 
-void city_emperor_donate_savings_to_city()
+void city_emperor_donate_savings_to_city(void)
 {
     city_finance_process_donation(city_data.emperor.donate_amount);
     city_data.emperor.personal_savings -= city_data.emperor.donate_amount;
     city_finance_calculate_totals();
 }
 
-int city_emperor_donate_amount()
+int city_emperor_donate_amount(void)
 {
     return city_data.emperor.donate_amount;
 }
 
-void city_emperor_mark_soldier_killed()
+void city_emperor_mark_soldier_killed(void)
 {
     city_data.emperor.invasion.soldiers_killed++;
 }

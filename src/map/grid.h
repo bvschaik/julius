@@ -39,9 +39,9 @@ int map_grid_direction_delta(int direction);
 
 void map_grid_size(int *width, int *height);
 
-int map_grid_width();
+int map_grid_width(void);
 
-int map_grid_height();
+int map_grid_height(void);
 
 void map_grid_bound(int *x, int *y);
 

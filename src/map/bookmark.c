@@ -8,7 +8,7 @@
 
 static map_point bookmarks[MAX_BOOKMARKS];
 
-void map_bookmarks_clear()
+void map_bookmarks_clear(void)
 {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
         bookmarks[i].x = -1;

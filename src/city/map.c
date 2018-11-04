@@ -3,22 +3,22 @@
 #include "city/data_private.h"
 #include "map/grid.h"
 
-const map_tile *city_map_entry_point()
+const map_tile *city_map_entry_point(void)
 {
     return &city_data.map.entry_point;
 }
 
-const map_tile *city_map_exit_point()
+const map_tile *city_map_exit_point(void)
 {
     return &city_data.map.exit_point;
 }
 
-const map_tile *city_map_entry_flag()
+const map_tile *city_map_entry_flag(void)
 {
     return &city_data.map.entry_flag;
 }
 
-const map_tile *city_map_exit_flag()
+const map_tile *city_map_exit_flag(void)
 {
     return &city_data.map.exit_flag;
 }
@@ -62,7 +62,7 @@ int city_map_road_network_index(int network_id)
     return 11;
 }
 
-void city_map_clear_largest_road_networks()
+void city_map_clear_largest_road_networks(void)
 {
     for (int i = 0; i < 10; i++) {
         city_data.map.largest_road_networks[i].id = 0;

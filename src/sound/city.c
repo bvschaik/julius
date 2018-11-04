@@ -114,7 +114,7 @@ static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
 
 static time_millis last_update_time;
 
-void sound_city_init()
+void sound_city_init(void)
 {
     last_update_time = time_get_millis();
     memset(channels, 0, MAX_CHANNELS * sizeof(city_channel));
@@ -223,7 +223,7 @@ void sound_city_mark_building_view(building *b, int direction)
     ++channels[channel].direction_views[direction];
 }
 
-void sound_city_decay_views()
+void sound_city_decay_views(void)
 {
     for (int i = 0; i < MAX_CHANNELS; i++) {
         for (int d = 0; d < 5; d++) {
@@ -264,7 +264,7 @@ static void play_channel(int channel, int direction)
     sound_device_play_channel(channel);
 }
 
-void sound_city_play()
+void sound_city_play(void)
 {
     time_millis now = time_get_millis();
     for (int i = 1; i < MAX_CHANNELS; i++) {

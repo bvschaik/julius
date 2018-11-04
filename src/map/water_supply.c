@@ -42,7 +42,7 @@ static void mark_well_access(int well_id, int radius)
     }
 }
 
-void map_water_supply_update_houses()
+void map_water_supply_update_houses(void)
 {
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -68,7 +68,7 @@ void map_water_supply_update_houses()
     }
 }
 
-static void set_all_aqueducts_to_no_water()
+static void set_all_aqueducts_to_no_water(void)
 {
     int image_without_water = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
     int grid_offset = map_data.start_offset;
@@ -141,7 +141,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
     } while (next_offset > -1);
 }
 
-void map_water_supply_update_reservoir_fountain()
+void map_water_supply_update_reservoir_fountain(void)
 {
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE | TERRAIN_RESERVOIR_RANGE);
     // reservoirs

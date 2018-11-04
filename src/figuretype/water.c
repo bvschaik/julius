@@ -31,7 +31,7 @@ static const int FLOTSAM_TYPE_3[] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 };
 
-void figure_create_flotsam()
+void figure_create_flotsam(void)
 {
     if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam()) {
         return;
@@ -300,7 +300,7 @@ void figure_fishing_boat_action(figure *f)
     }
 }
 
-void figure_sink_all_ships()
+void figure_sink_all_ships(void)
 {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);

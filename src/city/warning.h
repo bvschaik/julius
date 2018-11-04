@@ -57,11 +57,11 @@ typedef enum {
 
 void city_warning_show(warning_type type);
 
-int city_has_warnings();
+int city_has_warnings(void);
 
 const uint8_t *city_warning_get(int id);
 
-void city_warning_clear_all();
-void city_warning_clear_outdated();
+void city_warning_clear_all(void);
+void city_warning_clear_outdated(void);
 
 #endif // CITY_WARNING_H

@@ -55,32 +55,32 @@ static struct {
     {LABOR_CATEGORY_GOVERNANCE_RELIGION, 1},
 };
 
-int city_labor_unemployment_percentage()
+int city_labor_unemployment_percentage(void)
 {
     return city_data.labor.unemployment_percentage;
 }
 
-int city_labor_unemployment_percentage_for_senate()
+int city_labor_unemployment_percentage_for_senate(void)
 {
     return city_data.labor.unemployment_percentage_for_senate;
 }
 
-int city_labor_workers_needed()
+int city_labor_workers_needed(void)
 {
     return city_data.labor.workers_needed;
 }
 
-int city_labor_workers_employed()
+int city_labor_workers_employed(void)
 {
     return city_data.labor.workers_employed;
 }
 
-int city_labor_workers_unemployed()
+int city_labor_workers_unemployed(void)
 {
     return city_data.labor.workers_unemployed;
 }
 
-int city_labor_wages()
+int city_labor_wages(void)
 {
     return city_data.labor.wages;
 }
@@ -91,12 +91,12 @@ void city_labor_change_wages(int amount)
     city_data.labor.wages = calc_bound(city_data.labor.wages, 0, 100);
 }
 
-int city_labor_wages_rome()
+int city_labor_wages_rome(void)
 {
     return city_data.labor.wages_rome;
 }
 
-int city_labor_raise_wages_rome()
+int city_labor_raise_wages_rome(void)
 {
     if (city_data.labor.wages_rome >= 45) {
         return 0;
@@ -108,7 +108,7 @@ int city_labor_raise_wages_rome()
     return 1;
 }
 
-int city_labor_lower_wages_rome()
+int city_labor_lower_wages_rome(void)
 {
     if (city_data.labor.wages_rome <= 5) {
         return 0;
@@ -166,7 +166,7 @@ static int should_have_workers(building *b, int category, int check_access)
     return 1;
 }
 
-static void calculate_workers_needed_per_category()
+static void calculate_workers_needed_per_category(void)
 {
     for (int cat = 0; cat < MAX_CATS; cat++) {
         city_data.labor.categories[cat].buildings = 0;
@@ -190,7 +190,7 @@ static void calculate_workers_needed_per_category()
     }
 }
 
-static void allocate_workers_to_categories()
+static void allocate_workers_to_categories(void)
 {
     int workers_needed = 0;
     for (int i = 0; i < MAX_CATS; i++) {
@@ -260,7 +260,7 @@ static void allocate_workers_to_categories()
         calc_percentage(city_data.labor.workers_unemployed, city_data.labor.workers_available);
 }
 
-static void check_employment()
+static void check_employment(void)
 {
     int orig_needed = city_data.labor.workers_needed;
     allocate_workers_to_categories();
@@ -284,7 +284,7 @@ static void check_employment()
     }
 }
 
-static void set_building_worker_weight()
+static void set_building_worker_weight(void)
 {
     int water_per_10k_per_building = calc_percentage(100, city_data.labor.categories[LABOR_CATEGORY_WATER].buildings);
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -306,7 +306,7 @@ static void set_building_worker_weight()
     }
 }
 
-static void allocate_workers_to_water()
+static void allocate_workers_to_water(void)
 {
     static int start_building_id = 1;
     labor_category_data *water_cat = &city_data.labor.categories[LABOR_CATEGORY_WATER];
@@ -353,7 +353,7 @@ static void allocate_workers_to_water()
     }
 }
 
-static void allocate_workers_to_non_water_buildings()
+static void allocate_workers_to_non_water_buildings(void)
 {
     int category_workers_needed[MAX_CATS];
     int category_workers_allocated[MAX_CATS];
@@ -370,7 +370,7 @@ static void allocate_workers_to_non_water_buildings()
         }
         int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
         if (cat == LABOR_CATEGORY_WATER || cat < 0) {
-            // water is handled by allocate_workers_to_water()
+            // water is handled by allocate_workers_to_water(void)
             continue;
         }
         b->num_workers = 0;
@@ -432,21 +432,21 @@ static void allocate_workers_to_non_water_buildings()
     }
 }
 
-static void allocate_workers_to_buildings()
+static void allocate_workers_to_buildings(void)
 {
     set_building_worker_weight();
     allocate_workers_to_water();
     allocate_workers_to_non_water_buildings();
 }
 
-void city_labor_allocate_workers()
+void city_labor_allocate_workers(void)
 {
     allocate_workers_to_categories();
     allocate_workers_to_buildings();
 }
 
 
-void city_labor_update()
+void city_labor_update(void)
 {
     calculate_workers_needed_per_category();
     check_employment();

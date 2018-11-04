@@ -16,7 +16,7 @@ static struct {
     int days_since_roman_influence_calculation;
 } totals;
 
-void enemy_armies_clear()
+void enemy_armies_clear(void)
 {
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         enemy_armies[i].formation_id = 0;
@@ -45,14 +45,14 @@ enemy_army *enemy_army_get_editable(int invasion_id)
     return &enemy_armies[invasion_id];
 }
 
-void enemy_armies_clear_ignore_roman_soldiers()
+void enemy_armies_clear_ignore_roman_soldiers(void)
 {
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         enemy_armies[i].ignore_roman_soldiers = 0;
     }
 }
 
-void enemy_armies_clear_formations()
+void enemy_armies_clear_formations(void)
 {
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         enemy_armies[i].formation_id = 0;
@@ -60,7 +60,7 @@ void enemy_armies_clear_formations()
     }
 }
 
-void enemy_army_totals_clear()
+void enemy_army_totals_clear(void)
 {
     totals.legion_formations = 0;
     totals.legion_strength = 0;
@@ -80,12 +80,12 @@ void enemy_army_totals_add_enemy_formation(int strength)
     totals.enemy_strength += strength;
 }
 
-int enemy_army_total_enemy_formations()
+int enemy_army_total_enemy_formations(void)
 {
     return totals.enemy_formations;
 }
 
-void enemy_army_calculate_roman_influence()
+void enemy_army_calculate_roman_influence(void)
 {
     totals.days_since_roman_influence_calculation++;
     if (totals.days_since_roman_influence_calculation > 4) {
@@ -120,7 +120,7 @@ void enemy_army_calculate_roman_influence()
     }
 }
 
-int enemy_army_is_stronger_than_legions()
+int enemy_army_is_stronger_than_legions(void)
 {
     return totals.enemy_strength > 2 * totals.legion_strength;
 }

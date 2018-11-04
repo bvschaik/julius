@@ -22,7 +22,7 @@
 
 #define MAX_HISTORY 200
 
-static void draw_foreground_video();
+static void draw_foreground_video(void);
 
 static void button_back(int param1, int param2);
 static void button_close(int param1, int param2);
@@ -215,7 +215,7 @@ static void draw_city_message_text(const lang_message *msg)
     }
 }
 
-static void draw_background_normal()
+static void draw_background_normal(void)
 {
     rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
     const lang_message *msg = lang_get_message(data.text_id);
@@ -292,7 +292,7 @@ static void draw_background_normal()
     rich_text_draw_scrollbar_dot();
 }
 
-static void draw_background_video()
+static void draw_background_video(void)
 {
     rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
     const lang_message *msg = lang_get_message(data.text_id);
@@ -336,7 +336,7 @@ static void draw_background_video()
     draw_foreground_video();
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     if (!data.background_is_provided) {
         window_city_draw_all();
@@ -350,7 +350,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static image_button *get_advisor_button()
+static image_button *get_advisor_button(void)
 {
     switch (player_message.message_advisor) {
         case MESSAGE_ADVISOR_LABOR:
@@ -372,7 +372,7 @@ static image_button *get_advisor_button()
     }
 }
 
-static void draw_foreground_normal()
+static void draw_foreground_normal(void)
 {
     const lang_message *msg = lang_get_message(data.text_id);
     
@@ -394,14 +394,14 @@ static void draw_foreground_normal()
     rich_text_draw_scrollbar();
 }
 
-static void draw_foreground_video()
+static void draw_foreground_video(void)
 {
     video_draw(data.x + 8, data.y + 8);
     image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
     image_buttons_draw(data.x + 372, data.y + 410, &image_button_close, 1);
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     if (data.show_video) {
@@ -475,7 +475,7 @@ static void button_back(int param1, int param2)
     }
 }
 
-static void cleanup()
+static void cleanup(void)
 {
     if (data.show_video) {
         video_stop();

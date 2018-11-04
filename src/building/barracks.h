@@ -11,11 +11,11 @@ int building_barracks_create_soldier(building *barracks, int x, int y);
 
 int building_barracks_create_tower_sentry(building *barracks, int x, int y);
 
-void building_barracks_request_tower_sentry();
+void building_barracks_request_tower_sentry(void);
 
-void building_barracks_decay_tower_sentry_request();
+void building_barracks_decay_tower_sentry_request(void);
 
-int building_barracks_has_tower_sentry_request();
+int building_barracks_has_tower_sentry_request(void);
 
 void building_barracks_save_state(buffer *buf);
 

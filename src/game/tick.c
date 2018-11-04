@@ -54,7 +54,7 @@
 #include "sound/music.h"
 #include "widget/sidebar.h"
 
-static void advance_year()
+static void advance_year(void)
 {
     scenario_empire_process_expansion();
     game_undo_disable();
@@ -67,7 +67,7 @@ static void advance_year()
     city_gods_reset_neptune_blessing();
 }
 
-static void advance_month()
+static void advance_month(void)
 {
     city_migration_reset_newcomers();
     city_health_update();
@@ -102,7 +102,7 @@ static void advance_month()
     }
 }
 
-static void advance_day()
+static void advance_day(void)
 {
     if (game_time_advance_day()) {
         advance_month();
@@ -113,7 +113,7 @@ static void advance_day()
     tutorial_on_day_tick();
 }
 
-static void advance_tick()
+static void advance_tick(void)
 {
     // NB: these ticks are noop:
     // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
@@ -164,7 +164,7 @@ static void advance_tick()
     }
 }
 
-void game_tick_run()
+void game_tick_run(void)
 {
     random_generate_next();
     game_undo_reduce_time_available();

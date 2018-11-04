@@ -55,7 +55,7 @@ int house_population_remove_from_city(int num_people)
     return removed;
 }
 
-static void fill_building_list_with_houses()
+static void fill_building_list_with_houses(void)
 {
     building_list_large_clear(0);
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -66,7 +66,7 @@ static void fill_building_list_with_houses()
     }
 }
 
-void house_population_update_room()
+void house_population_update_room(void)
 {
     city_population_clear_capacity();
 
@@ -162,7 +162,7 @@ int house_population_create_emigrants(int num_people)
     return num_people - to_emigrate;
 }
 
-static void calculate_working_population()
+static void calculate_working_population(void)
 {
     int num_plebs = 0;
     int num_patricians = 0;
@@ -181,7 +181,7 @@ static void calculate_working_population()
     city_labor_calculate_workers(num_plebs, num_patricians);
 }
 
-void house_population_update_migration()
+void house_population_update_migration(void)
 {
     city_migration_update();
 
@@ -218,7 +218,7 @@ void house_population_update_migration()
     }
 }
 
-void house_population_evict_overcrowded()
+void house_population_evict_overcrowded(void)
 {
     int size = building_list_large_size();
     const int *items = building_list_large_items();

@@ -7,7 +7,7 @@
 #include "core/calc.h"
 #include "game/tutorial.h"
 
-static void update_status()
+static void update_status(void)
 {
     if (city_data.sentiment.value > 70) {
         city_data.migration.percentage = 100;
@@ -75,7 +75,7 @@ static void create_emigrants(int num_people)
     city_data.migration.emigrated_today += house_population_create_emigrants(num_people);
 }
 
-static void create_migrants()
+static void create_migrants(void)
 {
     city_data.migration.immigrated_today = 0;
     city_data.migration.emigrated_today = 0;
@@ -111,13 +111,13 @@ static void create_migrants()
     city_data.migration.emigration_amount_per_batch = 0;
 }
 
-void city_migration_update()
+void city_migration_update(void)
 {
     update_status();
     create_migrants();
 }
 
-void city_migration_determine_no_immigration_cause()
+void city_migration_determine_no_immigration_cause(void)
 {
     switch (city_data.sentiment.low_mood_cause) {
         case LOW_MOOD_CAUSE_NO_FOOD:
@@ -141,27 +141,27 @@ void city_migration_determine_no_immigration_cause()
     }
 }
 
-int city_migration_no_immigation_cause()
+int city_migration_no_immigation_cause(void)
 {
     return city_data.migration.no_immigration_cause;
 }
 
-int city_migration_no_room_for_immigrants()
+int city_migration_no_room_for_immigrants(void)
 {
     return city_data.migration.refused_immigrants_today || city_data.population.room_in_houses <= 0;
 }
 
-int city_migration_percentage()
+int city_migration_percentage(void)
 {
     return city_data.migration.percentage;
 }
 
-int city_migration_newcomers()
+int city_migration_newcomers(void)
 {
     return city_data.migration.newcomers;
 }
 
-void city_migration_reset_newcomers()
+void city_migration_reset_newcomers(void)
 {
     city_data.migration.newcomers = 0;
 }

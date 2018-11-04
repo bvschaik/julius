@@ -26,13 +26,13 @@ static struct {
     int32_t enemy_warship;
 } data;
 
-static int32_t init_name()
+static int32_t init_name(void)
 {
     random_generate_next();
     return random_byte() & 0xf;
 }
 
-void figure_name_init()
+void figure_name_init(void)
 {
     data.citizen_male = init_name();
     data.patrician = init_name();

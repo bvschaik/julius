@@ -31,7 +31,7 @@ static struct {
 
 static int view_to_grid_offset_lookup[VIEW_X_MAX][VIEW_Y_MAX];
 
-static void check_camera_boundaries()
+static void check_camera_boundaries(void)
 {
     int x_min = (165 - map_grid_width()) / 2;
     int y_min = (323 - 2 * map_grid_height()) / 2;
@@ -50,7 +50,7 @@ static void check_camera_boundaries()
     data.camera.y &= ~1;
 }
 
-static void reset_lookup()
+static void reset_lookup(void)
 {
     for (int y = 0; y < VIEW_Y_MAX; y++) {
         for (int x = 0; x < VIEW_X_MAX; x++) {
@@ -59,7 +59,7 @@ static void reset_lookup()
     }
 }
 
-static void calculate_lookup()
+static void calculate_lookup(void)
 {
     reset_lookup();
     int y_view_start;
@@ -122,18 +122,18 @@ static void calculate_lookup()
     }
 }
 
-void city_view_init()
+void city_view_init(void)
 {
     calculate_lookup();
     check_camera_boundaries();
 }
 
-int city_view_orientation()
+int city_view_orientation(void)
 {
     return data.orientation;
 }
 
-void city_view_reset_orientation()
+void city_view_reset_orientation(void)
 {
     data.orientation = 0;
     calculate_lookup();
@@ -269,14 +269,14 @@ void city_view_go_to_grid_offset(int grid_offset)
     check_camera_boundaries();
 }
 
-static int get_center_grid_offset()
+static int get_center_grid_offset(void)
 {
     int x_center = data.camera.x + data.viewport.width_tiles / 2;
     int y_center = data.camera.y + data.viewport.height_tiles / 2;
     return view_to_grid_offset_lookup[x_center][y_center];
 }
 
-void city_view_rotate_left()
+void city_view_rotate_left(void)
 {
     int center_grid_offset = get_center_grid_offset();
 
@@ -298,7 +298,7 @@ void city_view_rotate_left()
     check_camera_boundaries();
 }
 
-void city_view_rotate_right()
+void city_view_rotate_right(void)
 {
     int center_grid_offset = get_center_grid_offset();
     
@@ -332,12 +332,12 @@ static void set_viewport(int x_offset, int y_offset, int width, int height)
     data.viewport.height_tiles = height_tiles;
 }
 
-static void set_viewport_with_sidebar()
+static void set_viewport_with_sidebar(void)
 {
     set_viewport(0, MENUBAR_HEIGHT, data.screen_width - 160, data.screen_height - MENUBAR_HEIGHT);
 }
 
-static void set_viewport_without_sidebar()
+static void set_viewport_without_sidebar(void)
 {
     set_viewport(0, MENUBAR_HEIGHT, data.screen_width - 40, data.screen_height - MENUBAR_HEIGHT);
 }
@@ -368,18 +368,18 @@ void city_view_get_viewport_size_tiles(int *width, int *height)
     *height = data.viewport.height_tiles;
 }
 
-int city_view_is_sidebar_collapsed()
+int city_view_is_sidebar_collapsed(void)
 {
     return data.sidebar_collapsed;
 }
 
-void city_view_start_sidebar_toggle()
+void city_view_start_sidebar_toggle(void)
 {
     set_viewport_without_sidebar();
     check_camera_boundaries();
 }
 
-void city_view_toggle_sidebar()
+void city_view_toggle_sidebar(void)
 {
     if (data.sidebar_collapsed) {
         data.sidebar_collapsed = 0;

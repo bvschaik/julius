@@ -9,27 +9,27 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
-int city_rating_culture()
+int city_rating_culture(void)
 {
     return city_data.ratings.culture;
 }
 
-int city_rating_prosperity()
+int city_rating_prosperity(void)
 {
     return city_data.ratings.prosperity;
 }
 
-int city_rating_peace()
+int city_rating_peace(void)
 {
     return city_data.ratings.peace;
 }
 
-int city_rating_favor()
+int city_rating_favor(void)
 {
     return city_data.ratings.favor;
 }
 
-selected_rating city_rating_selected()
+selected_rating city_rating_selected(void)
 {
     return city_data.ratings.selected;
 }
@@ -39,7 +39,7 @@ void city_rating_select(selected_rating rating)
     city_data.ratings.selected = rating;
 }
 
-int city_rating_selected_explanation()
+int city_rating_selected_explanation(void)
 {
     switch (city_data.ratings.selected) {
         case SELECTED_RATING_CULTURE:
@@ -55,7 +55,7 @@ int city_rating_selected_explanation()
     }
 }
 
-void city_ratings_reduce_prosperity_after_bailout()
+void city_ratings_reduce_prosperity_after_bailout(void)
 {
     city_data.ratings.prosperity -= 3;
     if (city_data.ratings.prosperity < 0) {
@@ -86,12 +86,12 @@ void city_ratings_peace_building_destroyed(building_type type)
     }
 }
 
-void city_ratings_peace_record_criminal()
+void city_ratings_peace_record_criminal(void)
 {
     city_data.ratings.peace_num_criminals++;
 }
 
-void city_ratings_peace_record_rioter()
+void city_ratings_peace_record_rioter(void)
 {
     city_data.ratings.peace_num_rioters++;
     city_data.ratings.peace_riot_cause = city_data.sentiment.low_mood_cause;
@@ -115,7 +115,7 @@ void city_ratings_limit_favor(int max_favor)
     }
 }
 
-static void update_culture_explanation()
+static void update_culture_explanation(void)
 {
     int min_percentage = 100;
     int reason = 1;
@@ -145,13 +145,13 @@ static void update_culture_explanation()
     city_data.ratings.culture_explanation = reason;
 }
 
-static int has_made_money()
+static int has_made_money(void)
 {
     return city_data.finance.last_year.expenses.construction + city_data.finance.treasury >
         city_data.ratings.prosperity_treasury_last_year;
 }
 
-static void update_prosperity_explanation()
+static void update_prosperity_explanation(void)
 {
     int change = 0;
     int profit = 0;
@@ -220,7 +220,7 @@ static void update_prosperity_explanation()
     city_data.ratings.prosperity_explanation = reason;
 }
 
-static void update_peace_explanation()
+static void update_peace_explanation(void)
 {
     int reason;
     if (city_data.figure.imperial_soldiers) {
@@ -247,7 +247,7 @@ static void update_peace_explanation()
     city_data.ratings.peace_explanation = reason;
 }
 
-void city_ratings_update_favor_explanation()
+void city_ratings_update_favor_explanation(void)
 {
     city_data.ratings.favor_salary_penalty = 0;
     int salary_delta = city_data.emperor.salary_rank - city_data.emperor.player_rank;
@@ -290,7 +290,7 @@ void city_ratings_update_favor_explanation()
     }
 }
 
-void city_ratings_update_explanations()
+void city_ratings_update_explanations(void)
 {
     update_culture_explanation();
     update_prosperity_explanation();
@@ -298,7 +298,7 @@ void city_ratings_update_explanations()
     city_ratings_update_favor_explanation();
 }
 
-static void update_culture_rating()
+static void update_culture_rating(void)
 {
     city_data.ratings.culture = 0;
     city_data.ratings.culture_explanation = 0;
@@ -390,7 +390,7 @@ static void update_culture_rating()
     update_culture_explanation();
 }
 
-static void update_prosperity_rating()
+static void update_prosperity_rating(void)
 {
     int change = 0;
     // unemployment: -1 for too high, +1 for low
@@ -441,7 +441,7 @@ static void update_prosperity_rating()
     update_prosperity_explanation();
 }
 
-static void calculate_max_prosperity()
+static void calculate_max_prosperity(void)
 {
     int points = 0;
     int houses = 0;
@@ -459,7 +459,7 @@ static void calculate_max_prosperity()
     }
 }
 
-static void update_peace_rating()
+static void update_peace_rating(void)
 {
     int change = 0;
     if (city_data.ratings.peace_years_of_peace < 2) {

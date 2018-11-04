@@ -278,7 +278,7 @@ void figure_tower_sentry_action(figure *f)
     }
 }
 
-void figure_tower_sentry_reroute()
+void figure_tower_sentry_reroute(void)
 {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);

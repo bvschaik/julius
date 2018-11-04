@@ -3,9 +3,9 @@
 
 #include "building/type.h"
 
-void building_menu_enable_all();
+void building_menu_enable_all(void);
 
-void building_menu_update();
+void building_menu_update(void);
 
 int building_menu_count_items(int submenu);
 
@@ -18,6 +18,6 @@ building_type building_menu_type(int submenu, int item);
  * Also marks the change as 'seen'.
  * @return True if the building menu has changed
  */
-int building_menu_has_changed();
+int building_menu_has_changed(void);
 
 #endif // BUILDING_MENU_H

@@ -21,7 +21,7 @@ void system_set_fullscreen(int fullscreen);
 /**
  * Initialize cursors
  */
-void system_init_cursors();
+void system_init_cursors(void);
 
 /**
  * Set cursor to the specified cursor in @link input/cursor.h @endlink
@@ -32,6 +32,6 @@ void system_set_cursor(int cursor_id);
 /**
  * Exit the game
  */
-void system_exit();
+void system_exit(void);
 
 #endif // GAME_SYSTEM_H

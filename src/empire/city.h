@@ -19,7 +19,7 @@ typedef struct {
     int trader_figure_ids[3];
 } empire_city;
 
-void empire_city_clear_all();
+void empire_city_clear_all(void);
 
 empire_city * empire_city_get(int city_id);
 
@@ -41,13 +41,13 @@ int empire_city_get_for_trade_route(int route_id);
 
 int empire_city_is_trade_route_open(int route_id);
 
-void empire_city_reset_yearly_trade_amounts();
+void empire_city_reset_yearly_trade_amounts(void);
 
-int empire_city_count_wine_sources();
+int empire_city_count_wine_sources(void);
 
-int empire_city_get_vulnerable_roman();
+int empire_city_get_vulnerable_roman(void);
 
-void empire_city_expand_empire();
+void empire_city_expand_empire(void);
 
 void empire_city_set_vulnerable(int city_id);
 
@@ -55,7 +55,7 @@ void empire_city_set_foreign(int city_id);
 
 void empire_city_open_trade(int city_id);
 
-void empire_city_generate_trader();
+void empire_city_generate_trader(void);
 
 void empire_city_remove_trader(int city_id, int figure_id);
 

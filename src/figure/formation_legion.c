@@ -43,7 +43,7 @@ void formation_legion_delete_for_fort(building *fort)
     }
 }
 
-int formation_legion_recruits_needed()
+int formation_legion_recruits_needed(void)
 {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
@@ -186,7 +186,7 @@ static int dispatch_soldiers(formation *m)
     return strength_factor * m->num_figures;
 }
 
-void formation_legions_dispatch_to_distant_battle()
+void formation_legions_dispatch_to_distant_battle(void)
 {
     int num_legions = 0;
     int roman_strength = 0;
@@ -256,7 +256,7 @@ static void return_soldiers(formation *m)
     }
 }
 
-void formation_legions_return_from_distant_battle()
+void formation_legions_return_from_distant_battle(void)
 {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
@@ -266,7 +266,7 @@ void formation_legions_return_from_distant_battle()
     }
 }
 
-int formation_legion_curse()
+int formation_legion_curse(void)
 {
     formation *best_legion = 0;
     int best_legion_weight = 0;
@@ -321,7 +321,7 @@ int formation_legion_at_building(int grid_offset)
     return 0;
 }
 
-void formation_legion_update()
+void formation_legion_update(void)
 {
     for (int i = 1; i <= MAX_LEGIONS; i++) {
         formation *m = formation_get(i);
@@ -368,7 +368,7 @@ void formation_legion_update()
     }
 }
 
-void formation_legion_decrease_damage()
+void formation_legion_decrease_damage(void)
 {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);

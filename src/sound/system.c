@@ -164,7 +164,7 @@ static char channel_filenames[SOUND_CHANNEL_MAX][CHANNEL_FILENAME_MAX] = {
     "wavs/mission.wav",
 };
 
-static void correct_channel_filenames()
+static void correct_channel_filenames(void)
 {
     for (int i = 1; i < SOUND_CHANNEL_MAX; i++) {
         if (!channel_filenames[i][0]) {
@@ -181,7 +181,7 @@ static void correct_channel_filenames()
     }
 }
 
-void sound_system_init()
+void sound_system_init(void)
 {
     correct_channel_filenames();
     
@@ -194,7 +194,7 @@ void sound_system_init()
     sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
 }
 
-void sound_system_shutdown()
+void sound_system_shutdown(void)
 {
     sound_device_close();
 }

@@ -11,14 +11,14 @@ static struct {
     int state;
 } data;
 
-void scenario_emperor_change_init()
+void scenario_emperor_change_init(void)
 {
     data.game_year = scenario.start_year + scenario.emperor_change.year;
     data.month = 1 + (random_byte() & 7);
     data.state = 0;
 }
 
-void scenario_emperor_change_process()
+void scenario_emperor_change_process(void)
 {
     if (!scenario.emperor_change.enabled) {
         return;

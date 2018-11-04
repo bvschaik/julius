@@ -12,7 +12,7 @@ static void decay(unsigned char *value)
     }
 }
 
-void house_service_decay_culture()
+void house_service_decay_culture(void)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -40,7 +40,7 @@ void house_service_decay_culture()
     }
 }
 
-void house_service_decay_tax_collector()
+void house_service_decay_tax_collector(void)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -50,7 +50,7 @@ void house_service_decay_tax_collector()
     }
 }
 
-void house_service_decay_houses_covered()
+void house_service_decay_houses_covered(void)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -64,7 +64,7 @@ void house_service_decay_houses_covered()
     }
 }
 
-void house_service_calculate_culture_aggregates()
+void house_service_calculate_culture_aggregates(void)
 {
     int base_entertainment = city_culture_coverage_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS; i++) {

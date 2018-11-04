@@ -303,17 +303,17 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation)
 }
 
 
-void map_terrain_backup()
+void map_terrain_backup(void)
 {
     map_grid_copy_u16(terrain_grid.items, terrain_grid_backup.items);
 }
 
-void map_terrain_restore()
+void map_terrain_restore(void)
 {
     map_grid_copy_u16(terrain_grid_backup.items, terrain_grid.items);
 }
 
-void map_terrain_clear()
+void map_terrain_clear(void)
 {
     map_grid_clear_u16(terrain_grid.items);
 }

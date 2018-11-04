@@ -11,7 +11,7 @@
 
 #define ADVISOR_HEIGHT 18
 
-static int get_health_advice()
+static int get_health_advice(void)
 {
     house_demands *demands = city_houses_demands();
     switch (demands->health) {
@@ -28,7 +28,7 @@ static int get_health_advice()
     }
 }
 
-static int draw_background()
+static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
@@ -84,7 +84,7 @@ static int draw_background()
     return ADVISOR_HEIGHT;
 }
 
-const advisor_window_type *window_advisor_health()
+const advisor_window_type *window_advisor_health(void)
 {
     static const advisor_window_type window = {
         draw_background,

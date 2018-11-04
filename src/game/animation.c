@@ -9,7 +9,7 @@ static struct {
     int should_update;
 } timers[MAX_ANIM_TIMERS];
 
-void game_animation_init()
+void game_animation_init(void)
 {
     for (int i = 0; i < MAX_ANIM_TIMERS; i++) {
         timers[i].last_update = 0;
@@ -17,7 +17,7 @@ void game_animation_init()
     }
 }
 
-void game_animation_update()
+void game_animation_update(void)
 {
     time_millis now_millis = time_get_millis();
     for (int i = 0; i < MAX_ANIM_TIMERS; i++) {

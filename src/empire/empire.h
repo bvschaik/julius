@@ -4,14 +4,14 @@
 #include "core/buffer.h"
 
 void empire_load(int is_custom_scenario, int empire_id);
-void empire_init_scenario();
+void empire_init_scenario(void);
 void empire_scroll_map(int direction);
 void empire_set_viewport(int width, int height);
 void empire_adjust_scroll(int *x_offset, int *y_offset);
 
-int empire_selected_object();
+int empire_selected_object(void);
 
-void empire_clear_selected_object();
+void empire_clear_selected_object(void);
 void empire_select_object(int x, int y);
 
 int empire_can_export_resource_to_city(int city_id, int resource);

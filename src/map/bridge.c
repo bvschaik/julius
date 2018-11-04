@@ -17,12 +17,12 @@ static struct {
     int direction_grid_delta;
 } bridge;
 
-int map_bridge_building_length()
+int map_bridge_building_length(void)
 {
     return bridge.length;
 }
 
-void map_bridge_reset_building_length()
+void map_bridge_reset_building_length(void)
 {
     bridge.length = 0;
 }

@@ -4,7 +4,7 @@
 #include "building/count.h"
 #include "city/finance.h"
 
-void building_government_distribute_treasury()
+void building_government_distribute_treasury(void)
 {
     int units =
         5 * building_count_active(BUILDING_SENATE) +

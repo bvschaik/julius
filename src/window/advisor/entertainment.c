@@ -24,7 +24,7 @@ static generic_button hold_festival_button[] = {
 
 static int focus_button_id;
 
-static int get_entertainment_advice()
+static int get_entertainment_advice(void)
 {
     const house_demands *demands = city_houses_demands();
     if (demands->missing.entertainment > demands->missing.more_entertainment) {
@@ -38,7 +38,7 @@ static int get_entertainment_advice()
     }
 }
 
-static int get_festival_advice()
+static int get_festival_advice(void)
 {
     int months_since_festival = city_festival_months_since_last();
     if (months_since_festival <= 1) {
@@ -58,7 +58,7 @@ static int get_festival_advice()
     }
 }
 
-static void draw_festival_info()
+static void draw_festival_info(void)
 {
     inner_panel_draw(48, 252, 34, 6);
     image_draw(image_group(GROUP_PANEL_WINDOWS) + 15, 460, 255);
@@ -74,7 +74,7 @@ static void draw_festival_info()
     lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305, 380, FONT_NORMAL_WHITE);
 }
 
-static int draw_background()
+static int draw_background(void)
 {
     city_gods_calculate_moods(0);
     city_culture_calculate();
@@ -154,7 +154,7 @@ static int draw_background()
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     if (!city_festival_is_planned()) {
         button_border_draw(102, 280, 300, 20, focus_button_id == 1);
@@ -173,7 +173,7 @@ static void button_hold_festival(int param1, int param2)
     }
 }
 
-static int get_tooltip_text()
+static int get_tooltip_text(void)
 {
     if (focus_button_id) {
         return 112;
@@ -182,7 +182,7 @@ static int get_tooltip_text()
     }
 }
 
-const advisor_window_type *window_advisor_entertainment()
+const advisor_window_type *window_advisor_entertainment(void)
 {
     static const advisor_window_type window = {
         draw_background,

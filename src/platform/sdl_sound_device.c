@@ -30,7 +30,7 @@ static int percentage_to_volume(int percentage)
     return percentage * 128 / 100;
 }
 
-void sound_device_open()
+void sound_device_open(void)
 {
     if (0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
         initialized = 1;
@@ -42,7 +42,7 @@ void sound_device_open()
     }
 }
 
-void sound_device_close()
+void sound_device_close(void)
 {
     if (initialized) {
         for (int i = 0; i < MAX_CHANNELS; i++) {
@@ -130,7 +130,7 @@ void sound_device_play_channel(int channel)
     }
 }
 
-void sound_device_stop_music()
+void sound_device_stop_music(void)
 {
     if (initialized) {
         if (music) {
@@ -153,7 +153,7 @@ void sound_device_stop_channel(int channel)
 }
 
 
-static int next_audio_frame()
+static int next_audio_frame(void)
 {
     if (custom_music.data) {
         free(custom_music.data);
@@ -224,7 +224,7 @@ void sound_device_use_custom_music_player(int bitdepth, int channels, int rate, 
     Mix_HookMusic(custom_music_callback, 0);
 }
 
-void sound_device_use_default_music_player()
+void sound_device_use_default_music_player(void)
 {
     if (custom_music.data) {
         free(custom_music.data);

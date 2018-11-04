@@ -30,17 +30,17 @@ void map_sprite_clear_tile(int grid_offset)
     sprite.items[grid_offset] = 0;
 }
 
-void map_sprite_clear()
+void map_sprite_clear(void)
 {
     map_grid_clear_u8(sprite.items);
 }
 
-void map_sprite_backup()
+void map_sprite_backup(void)
 {
     map_grid_copy_u8(sprite.items, sprite_backup.items);
 }
 
-void map_sprite_restore()
+void map_sprite_restore(void)
 {
     map_grid_copy_u8(sprite_backup.items, sprite.items);
 }

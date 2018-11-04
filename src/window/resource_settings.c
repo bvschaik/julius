@@ -51,14 +51,14 @@ static void init(resource_type resource)
     data.resource = resource;
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_in_dialog();
     window_advisor_trade_draw_dialog_background();
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 

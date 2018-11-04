@@ -18,7 +18,7 @@ int building_granary_remove_for_getting_deliveryman(building *src, building *dst
 
 int building_granary_determine_worker_task(building *granary);
 
-void building_granaries_calculate_stocks();
+void building_granaries_calculate_stocks(void);
 
 int building_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id,
                                  int force_on_stockpile, int *understaffed, int *x_dst, int *y_dst);
@@ -28,7 +28,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
 
 int building_granary_for_getting(building *src, int *x_dst, int *y_dst);
 
-void building_granary_bless();
+void building_granary_bless(void);
 
 void building_granary_warehouse_curse(int big);
 

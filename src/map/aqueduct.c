@@ -38,17 +38,17 @@ void map_aqueduct_remove(int grid_offset)
     }
 }
 
-void map_aqueduct_clear()
+void map_aqueduct_clear(void)
 {
     map_grid_clear_u8(aqueduct.items);
 }
 
-void map_aqueduct_backup()
+void map_aqueduct_backup(void)
 {
     map_grid_copy_u8(aqueduct.items, aqueduct_backup.items);
 }
 
-void map_aqueduct_restore()
+void map_aqueduct_restore(void)
 {
     map_grid_copy_u8(aqueduct_backup.items, aqueduct.items);
 }

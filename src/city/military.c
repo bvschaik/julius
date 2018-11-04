@@ -11,42 +11,42 @@
 #include "figure/formation_legion.h"
 #include "scenario/distant_battle.h"
 
-void city_military_clear_legionary_legions()
+void city_military_clear_legionary_legions(void)
 {
     city_data.military.legionary_legions = 0;
 }
 
-void city_military_add_legionary_legion()
+void city_military_add_legionary_legion(void)
 {
     city_data.military.legionary_legions++;
 }
 
-int city_military_has_legionary_legions()
+int city_military_has_legionary_legions(void)
 {
     return city_data.military.legionary_legions > 0;
 }
 
-int city_military_total_legions()
+int city_military_total_legions(void)
 {
     return city_data.military.total_legions;
 }
 
-int city_military_total_soldiers()
+int city_military_total_soldiers(void)
 {
     return city_data.military.total_soldiers;
 }
 
-int city_military_empire_service_legions()
+int city_military_empire_service_legions(void)
 {
     return city_data.military.empire_service_legions;
 }
 
-void city_military_clear_empire_service_legions()
+void city_military_clear_empire_service_legions(void)
 {
     city_data.military.empire_service_legions = 0;
 }
 
-void city_military_update_totals()
+void city_military_update_totals(void)
 {
     city_data.military.empire_service_legions = 0;
     city_data.military.total_soldiers = 0;
@@ -63,39 +63,39 @@ void city_military_update_totals()
     }
 }
 
-int city_military_is_native_attack_active()
+int city_military_is_native_attack_active(void)
 {
     return city_data.military.native_attack_duration > 0;
 }
 
-void city_military_start_native_attack()
+void city_military_start_native_attack(void)
 {
     city_data.military.native_attack_duration = 2;
 }
 
-void city_military_decrease_native_attack_duration()
+void city_military_decrease_native_attack_duration(void)
 {
     if (city_data.military.native_attack_duration) {
         city_data.military.native_attack_duration--;
     }
 }
 
-void city_military_determine_distant_battle_city()
+void city_military_determine_distant_battle_city(void)
 {
     city_data.distant_battle.city = empire_city_get_vulnerable_roman();
 }
 
-int city_military_distant_battle_city()
+int city_military_distant_battle_city(void)
 {
     return city_data.distant_battle.city;
 }
 
-int city_military_distant_battle_city_is_roman()
+int city_military_distant_battle_city_is_roman(void)
 {
     return city_data.distant_battle.city_foreign_months_left <= 0;
 }
 
-int city_military_distant_battle_enemy_strength()
+int city_military_distant_battle_enemy_strength(void)
 {
     return city_data.distant_battle.enemy_strength;
 }
@@ -106,33 +106,33 @@ void city_military_dispatch_to_distant_battle(int roman_strength)
     city_data.distant_battle.roman_strength = roman_strength;
 }
 
-int city_military_distant_battle_roman_army_is_traveling()
+int city_military_distant_battle_roman_army_is_traveling(void)
 {
     return city_data.distant_battle.roman_months_to_travel_forth > 0 ||
            city_data.distant_battle.roman_months_to_travel_back > 0;
 }
 
-int city_military_distant_battle_roman_army_is_traveling_forth()
+int city_military_distant_battle_roman_army_is_traveling_forth(void)
 {
     return city_data.distant_battle.roman_months_to_travel_forth > 0;
 }
 
-int city_military_distant_battle_roman_army_is_traveling_back()
+int city_military_distant_battle_roman_army_is_traveling_back(void)
 {
     return city_data.distant_battle.roman_months_to_travel_back > 0;
 }
 
-int city_military_distant_battle_enemy_months_traveled()
+int city_military_distant_battle_enemy_months_traveled(void)
 {
     return city_data.distant_battle.enemy_months_traveled;
 }
 
-int city_military_distant_battle_roman_months_traveled()
+int city_military_distant_battle_roman_months_traveled(void)
 {
     return city_data.distant_battle.roman_months_traveled;
 }
 
-int city_military_has_distant_battle()
+int city_military_has_distant_battle(void)
 {
     return city_data.distant_battle.months_until_battle > 0 ||
            city_data.distant_battle.roman_months_to_travel_back > 0 ||
@@ -140,7 +140,7 @@ int city_military_has_distant_battle()
            city_data.distant_battle.city_foreign_months_left > 0;
 }
 
-int city_military_months_until_distant_battle()
+int city_military_months_until_distant_battle(void)
 {
     return city_data.distant_battle.months_until_battle;
 }
@@ -156,7 +156,7 @@ void city_military_init_distant_battle(int enemy_strength)
     city_data.distant_battle.roman_months_to_travel_forth = 0;
 }
 
-static void update_time_traveled()
+static void update_time_traveled(void)
 {
     int roman_travel_months = scenario_distant_battle_roman_travel_months();
     int enemy_travel_months = scenario_distant_battle_enemy_travel_months();
@@ -185,14 +185,14 @@ static void update_time_traveled()
     }
 }
 
-static void set_city_vulnerable()
+static void set_city_vulnerable(void)
 {
     if (city_data.distant_battle.city) {
         empire_city_set_vulnerable(city_data.distant_battle.city);
     }
 }
 
-static void set_city_foreign()
+static void set_city_foreign(void)
 {
     if (city_data.distant_battle.city) {
         empire_city_set_foreign(city_data.distant_battle.city);
@@ -200,7 +200,7 @@ static void set_city_foreign()
     city_data.distant_battle.city_foreign_months_left = 24;
 }
 
-static int player_has_won()
+static int player_has_won(void)
 {
     int won;
     int pct_loss;
@@ -232,7 +232,7 @@ static int player_has_won()
     return won;
 }
 
-static void fight_distant_battle()
+static void fight_distant_battle(void)
 {
     if (city_data.distant_battle.roman_months_to_travel_forth <= 0) {
         city_message_post(1, MESSAGE_DISTANT_BATTLE_LOST_NO_TROOPS, 0, 0);
@@ -263,7 +263,7 @@ static void fight_distant_battle()
     city_data.distant_battle.roman_months_to_travel_forth = 0;
 }
 
-static void update_aftermath()
+static void update_aftermath(void)
 {
     if (city_data.distant_battle.roman_months_to_travel_back > 0) {
         city_data.distant_battle.roman_months_to_travel_back--;
@@ -288,7 +288,7 @@ static void update_aftermath()
     }
 }
 
-void city_military_process_distant_battle()
+void city_military_process_distant_battle(void)
 {
     if (city_data.distant_battle.months_until_battle > 0) {
         --city_data.distant_battle.months_until_battle;

@@ -20,7 +20,7 @@
 
 #define TIE 10
 
-void city_gods_reset()
+void city_gods_reset(void)
 {
     for (int i = 0; i < MAX_GODS; i++) {
         god_status *god = &city_data.religion.gods[i];
@@ -37,7 +37,7 @@ void city_gods_reset()
     city_data.religion.angry_message_delay = 0;
 }
 
-void city_gods_reset_neptune_blessing()
+void city_gods_reset_neptune_blessing(void)
 {
     city_data.religion.neptune_double_trade_active = 0;
 }
@@ -149,7 +149,7 @@ static int perform_large_curse(god_type god)
     return 1;
 }
 
-static void update_god_moods()
+static void update_god_moods(void)
 {
     for (int i = 0; i < MAX_GODS; i++) {
         god_status *god = &city_data.religion.gods[i];
@@ -332,7 +332,7 @@ void city_gods_calculate_moods(int update_moods)
     }
 }
 
-int city_gods_calculate_least_happy()
+int city_gods_calculate_least_happy(void)
 {
     int max_god = 0;
     int max_wrath = 0;
@@ -372,22 +372,22 @@ int city_god_months_since_festival(int god_id)
     return city_data.religion.gods[god_id].months_since_festival;
 }
 
-int city_god_least_happy()
+int city_god_least_happy(void)
 {
     return city_data.religion.least_happy_god - 1;
 }
 
-int city_god_spirit_of_mars_power()
+int city_god_spirit_of_mars_power(void)
 {
     return city_data.religion.mars_spirit_power;
 }
 
-void city_god_spirit_of_mars_mark_used()
+void city_god_spirit_of_mars_mark_used(void)
 {
     city_data.religion.mars_spirit_power = 0;
 }
 
-int city_god_neptune_create_shipwreck_flotsam()
+int city_god_neptune_create_shipwreck_flotsam(void)
 {
     if (city_data.religion.neptune_sank_ships) {
         city_data.religion.neptune_sank_ships = 0;

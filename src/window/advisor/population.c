@@ -266,7 +266,7 @@ static void draw_society_graph(int full_size, int x, int y)
     }
 }
 
-static int draw_background()
+static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
@@ -412,7 +412,7 @@ static int draw_background()
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     if (focus_button_id == 0) {
         button_border_draw(501, 60, 106, 57, 0);
@@ -459,7 +459,7 @@ static void button_graph(int param1, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text()
+static int get_tooltip_text(void)
 {
     if (focus_button_id) {
         return 111;
@@ -468,7 +468,7 @@ static int get_tooltip_text()
     }
 }
 
-const advisor_window_type *window_advisor_population()
+const advisor_window_type *window_advisor_population(void)
 {
     static const advisor_window_type window = {
         draw_background,

@@ -78,7 +78,7 @@ static int init(int submenu)
     }
 }
 
-int window_build_menu_image()
+int window_build_menu_image(void)
 {
     if (building_construction_type() == BUILDING_NONE) {
         return image_group(GROUP_PANEL_WINDOWS) + 12;
@@ -129,19 +129,19 @@ int window_build_menu_image()
     }
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     window_city_draw_panels();
 }
 
-static int get_sidebar_x_offset()
+static int get_sidebar_x_offset(void)
 {
     int view_x, view_y, view_width, view_height;
     city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
     return view_x + view_width;
 }
 
-static void draw_menu_buttons()
+static void draw_menu_buttons(void)
 {
     int x_offset = get_sidebar_x_offset();
     int item_index = -1;
@@ -163,7 +163,7 @@ static void draw_menu_buttons()
     }
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     window_city_draw();
     draw_menu_buttons();

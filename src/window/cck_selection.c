@@ -59,7 +59,7 @@ static struct {
     const dir_listing *scenarios;
 } data;
 
-static void init()
+static void init(void)
 {
     scenario_set_custom(2);
     data.scenarios = dir_find_files_with_extension("map");
@@ -68,7 +68,7 @@ static void init()
     button_select_item(0, 0);
 }
 
-static void draw_scenario_list()
+static void draw_scenario_list(void)
 {
     inner_panel_draw(16, 210, 16, 16);
     for (int i = 0; i < 15; i++) {
@@ -85,7 +85,7 @@ static void draw_scenario_list()
     }
 }
 
-static void draw_scrollbar_dot()
+static void draw_scrollbar_dot(void)
 {
     if (data.scenarios->num_files > 15) {
         int pct;
@@ -101,7 +101,7 @@ static void draw_scrollbar_dot()
     }
 }
 
-static void draw_scenario_info()
+static void draw_scenario_info(void)
 {
     image_draw(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
 
@@ -175,7 +175,7 @@ static void draw_scenario_info()
     lang_text_draw(44, 136, 420, 446, FONT_NORMAL_BLACK);
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     image_draw_fullscreen_background(image_group(GROUP_CCK_BACKGROUND));
     graphics_in_dialog();
@@ -186,7 +186,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     image_buttons_draw(0, 0, image_buttons, 3);
@@ -270,7 +270,7 @@ static void button_start_scenario(int param1, int param2)
     window_city_show();
 }
 
-void window_cck_selection_show()
+void window_cck_selection_show(void)
 {
     window_type window = {
         WINDOW_CCK_SELECTION,

@@ -17,7 +17,7 @@
 
 static empire_city cities[MAX_CITIES];
 
-void empire_city_clear_all()
+void empire_city_clear_all(void)
 {
     memset(cities, 0, sizeof(cities));
 }
@@ -152,7 +152,7 @@ int empire_city_is_trade_route_open(int route_id)
     return 0;
 }
 
-void empire_city_reset_yearly_trade_amounts()
+void empire_city_reset_yearly_trade_amounts(void)
 {
     for (int i = 0; i < MAX_CITIES; i++) {
         if (cities[i].in_use && cities[i].is_open) {
@@ -161,7 +161,7 @@ void empire_city_reset_yearly_trade_amounts()
     }
 }
 
-int empire_city_count_wine_sources()
+int empire_city_count_wine_sources(void)
 {
     int sources = 0;
     for (int i = 1; i < MAX_CITIES; i++) {
@@ -174,7 +174,7 @@ int empire_city_count_wine_sources()
     return sources;
 }
 
-int empire_city_get_vulnerable_roman()
+int empire_city_get_vulnerable_roman(void)
 {
     int city = 0;
     for (int i = 0; i < MAX_CITIES; i++) {
@@ -187,7 +187,7 @@ int empire_city_get_vulnerable_roman()
     return city;
 }
 
-void empire_city_expand_empire()
+void empire_city_expand_empire(void)
 {
     for (int i = 0; i < MAX_CITIES; i++) {
         if (!cities[i].in_use) {
@@ -288,7 +288,7 @@ void empire_city_open_trade(int city_id)
     city->is_open = 1;
 }
 
-void empire_city_generate_trader()
+void empire_city_generate_trader(void)
 {
     for (int i = 1; i < MAX_CITIES; i++) {
         if (!cities[i].in_use || !cities[i].is_open) {

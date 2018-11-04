@@ -29,7 +29,7 @@ int map_figure_foreach_until(int grid_offset, int (*callback)(figure *f));
 /**
  * Clears the map
  */
-void map_figure_clear();
+void map_figure_clear(void);
 
 void map_figure_save_state(buffer *buf);
 

@@ -158,7 +158,7 @@ int building_granary_determine_worker_task(building *granary)
     return GRANARY_TASK_NONE;
 }
 
-void building_granaries_calculate_stocks()
+void building_granaries_calculate_stocks(void)
 {
     non_getting_granaries.num_items = 0;
     for (int i = 0; i < MAX_GRANARIES; i++) {
@@ -363,7 +363,7 @@ int building_granary_for_getting(building *src, int *x_dst, int *y_dst)
     return min_building_id;
 }
 
-void building_granary_bless()
+void building_granary_bless(void)
 {
     int min_stored = 10000;
     building *min_building = 0;

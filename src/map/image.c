@@ -15,12 +15,12 @@ void map_image_set(int grid_offset, int image_id)
     images.items[grid_offset] = image_id;
 }
 
-void map_image_backup()
+void map_image_backup(void)
 {
     map_grid_copy_u16(images.items, images_backup.items);
 }
 
-void map_image_restore()
+void map_image_restore(void)
 {
     map_grid_copy_u16(images_backup.items, images.items);
 }
@@ -30,7 +30,7 @@ void map_image_restore_at(int grid_offset)
     images.items[grid_offset] = images_backup.items[grid_offset];
 }
 
-void map_image_clear()
+void map_image_clear(void)
 {
     map_grid_clear_u16(images.items);
 }

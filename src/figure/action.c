@@ -107,7 +107,7 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_nobody_action
 }; //80
 
-void figure_action_handle()
+void figure_action_handle(void)
 {
     city_figures_reset();
     city_entertainment_set_hippodrome_has_race(0);

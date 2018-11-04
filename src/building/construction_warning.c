@@ -16,7 +16,7 @@
 
 static int has_warning = 0;
 
-void building_construction_warning_reset()
+void building_construction_warning_reset(void)
 {
     has_warning = 0;
 }

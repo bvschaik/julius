@@ -411,7 +411,7 @@ static int house_seeker_phrase(figure *f)
     return 7 + f->phrase_sequence_exact;
 }
 
-static int emigrant_phrase()
+static int emigrant_phrase(void)
 {
     switch (city_sentiment_low_mood_cause()) {
         case LOW_MOOD_CAUSE_NO_JOBS:
@@ -444,7 +444,7 @@ static int tower_sentry_phrase(figure *f)
     }
 }
 
-static int soldier_phrase()
+static int soldier_phrase(void)
 {
     int enemies = city_figures_enemies();
     if (enemies >= 40) {
@@ -558,7 +558,7 @@ static int phrase_based_on_figure_state(figure *f)
     return 0;
 }
 
-static int city_god_state()
+static int city_god_state(void)
 {
     int least_god_happiness = 100;
     for (int i = 0; i < MAX_GODS; i++) {

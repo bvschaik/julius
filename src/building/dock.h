@@ -5,7 +5,7 @@
 
 int building_dock_count_idle_dockers(const building *dock);
 
-void building_dock_update_open_water_access();
+void building_dock_update_open_water_access(void);
 
 int building_dock_is_connected_to_open_water(int x, int y);
 

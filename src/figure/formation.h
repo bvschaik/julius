@@ -124,7 +124,7 @@ typedef struct {
     } prev;
 } formation;
 
-void formations_clear();
+void formations_clear(void);
 
 void formation_clear(int formation_id);
 
@@ -143,14 +143,14 @@ void formation_record_fight(formation *m);
 
 int formation_grid_offset_for_invasion(int invasion_sequence);
 
-void formation_caesar_pause();
+void formation_caesar_pause(void);
 
-void formation_caesar_retreat();
+void formation_caesar_retreat(void);
 
-int formation_get_num_legions_cached();
-void formation_calculate_legion_totals();
+int formation_get_num_legions_cached(void);
+void formation_calculate_legion_totals(void);
 
-int formation_get_num_legions();
+int formation_get_num_legions(void);
 
 int formation_for_legion(int legion_index);
 
@@ -158,8 +158,8 @@ void formation_change_morale(formation *m, int amount);
 int formation_has_low_morale(formation *m);
 void formation_update_morale_after_death(formation *m);
 
-void formation_update_monthly_morale_deployed();
-void formation_update_monthly_morale_at_rest();
+void formation_update_monthly_morale_deployed(void);
+void formation_update_monthly_morale_at_rest(void);
 void formation_decrease_monthly_counters(formation *m);
 void formation_clear_monthly_counters(formation *m);
 
@@ -167,12 +167,12 @@ void formation_set_destination(formation *m, int x, int y);
 void formation_set_destination_building(formation *m, int x, int y, int building_id);
 void formation_set_home(formation *m, int x, int y);
 
-void formation_clear_figures();
+void formation_clear_figures(void);
 int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage);
 
 void formation_move_herds_away(int x, int y);
 
-void formation_calculate_figures();
+void formation_calculate_figures(void);
 
 void formation_update_all(int second_time);
 

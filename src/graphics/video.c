@@ -38,7 +38,7 @@ static void close_smk(smk *s)
     *s = 0;
 }
 
-static void close_all()
+static void close_all(void)
 {
     if (data.video.s) {
         close_smk(&data.video.s);
@@ -143,7 +143,7 @@ static int load_smk(const char *filename)
     }
 }
 
-static void end_video()
+static void end_video(void)
 {
     sound_device_use_default_music_player();
     sound_music_reset();
@@ -165,18 +165,18 @@ int video_start(const char *filename)
     }
 }
 
-void video_init()
+void video_init(void)
 {
     data.video.start_render_millis = time_get_millis();
     sound_device_use_custom_music_player(data.audio.bitdepth, data.audio.channels, data.audio.rate, next_audio_frame);
 }
 
-int video_is_finished()
+int video_is_finished(void)
 {
     return data.is_ended;
 }
 
-void video_stop()
+void video_stop(void)
 {
     if (data.is_playing) {
         if (data.video.s) {
@@ -189,7 +189,7 @@ void video_stop()
     }
 }
 
-void video_shutdown()
+void video_shutdown(void)
 {
     if (data.is_playing) {
         if (data.video.s) {

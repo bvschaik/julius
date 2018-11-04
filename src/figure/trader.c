@@ -21,12 +21,12 @@ static struct {
     int next_index;
 } data;
 
-void traders_clear()
+void traders_clear(void)
 {
     memset(&data, 0, sizeof(data));
 }
 
-int trader_create()
+int trader_create(void)
 {
     int trader_id = data.next_index++;
     if (data.next_index >= MAX_TRADERS) {

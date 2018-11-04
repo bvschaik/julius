@@ -21,46 +21,46 @@ void game_time_init(int year);
  * The current game year
  * 
  */
-int game_time_year();
+int game_time_year(void);
 
 /**
  * The current game month within the year
  */
-int game_time_month();
+int game_time_month(void);
 
 /**
  * The current game day within the month
  */
-int game_time_day();
+int game_time_day(void);
 
 /**
  * The current game tick within the day
  */
-int game_time_tick();
+int game_time_tick(void);
 
 
 /**
  * Increases tick
  * @return True if the tick overflows
  */
-int game_time_advance_tick();
+int game_time_advance_tick(void);
 
 /**
  * Increase day
  * @return True if the day overflows
  */
-int game_time_advance_day();
+int game_time_advance_day(void);
 
 /**
  * Increase month
  * @return True if the month overflows
  */
-int game_time_advance_month();
+int game_time_advance_month(void);
 
 /**
  * Increase year
  */
-void game_time_advance_year();
+void game_time_advance_year(void);
 
 
 /**

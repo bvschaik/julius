@@ -21,7 +21,7 @@ void map_property_clear_draw_tile(int grid_offset);
 
 int map_property_is_native_land(int grid_offset);
 void map_property_mark_native_land(int grid_offset);
-void map_property_clear_all_native_land();
+void map_property_clear_all_native_land(void);
 
 int map_property_multi_tile_xy(int grid_offset);
 int map_property_multi_tile_x(int grid_offset);
@@ -48,12 +48,12 @@ int map_property_is_deleted(int grid_offset);
 void map_property_mark_deleted(int grid_offset);
 void map_property_clear_deleted(int grid_offset);
 
-void map_property_clear_constructing_and_deleted();
+void map_property_clear_constructing_and_deleted(void);
 
-void map_property_clear();
+void map_property_clear(void);
 
-void map_property_backup();
-void map_property_restore();
+void map_property_backup(void);
+void map_property_restore(void);
 
 void map_property_save_state(buffer *bitfields, buffer *edge);
 void map_property_load_state(buffer *bitfields, buffer *edge);

@@ -35,7 +35,7 @@ static void init(int category)
     data.max_items = city_labor_max_selectable_priority(category);
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_in_dialog();
 
@@ -57,7 +57,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     

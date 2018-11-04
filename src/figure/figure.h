@@ -132,7 +132,7 @@ int figure_is_legion(const figure *f);
 
 int figure_is_herd(const figure *f);
 
-void figure_init_scenario();
+void figure_init_scenario(void);
 
 void figure_save_state(buffer *list, buffer *seq);
 

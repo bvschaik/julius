@@ -26,7 +26,7 @@ static void draw_title(int y, int text_id)
     lang_text_draw(61, text_id, 60, y, FONT_NORMAL_WHITE);
 }
 
-static int draw_background()
+static int draw_background(void)
 {
     int width;
 
@@ -212,7 +212,7 @@ static int draw_background()
     return ADVISOR_HEIGHT;
 }
 
-const advisor_window_type *window_advisor_chief()
+const advisor_window_type *window_advisor_chief(void)
 {
     static const advisor_window_type window = {
         draw_background,

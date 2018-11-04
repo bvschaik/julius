@@ -110,17 +110,17 @@ int scenario_building_allowed(int building_type)
     return 1;
 }
 
-int scenario_building_image_native_hut()
+int scenario_building_image_native_hut(void)
 {
     return scenario.native_images.hut;
 }
 
-int scenario_building_image_native_meeting()
+int scenario_building_image_native_meeting(void)
 {
     return scenario.native_images.meeting;
 }
 
-int scenario_building_image_native_crops()
+int scenario_building_image_native_crops(void)
 {
     return scenario.native_images.crops;
 }

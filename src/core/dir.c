@@ -11,7 +11,7 @@
 static dir_listing listing;
 static int listing_initialized = 0;
 
-static void clear_dir_listing()
+static void clear_dir_listing(void)
 {
     if (!listing_initialized) {
         for (int i = 0; i < DIR_MAX_FILES; i++) {

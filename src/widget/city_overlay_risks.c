@@ -183,7 +183,7 @@ static int get_tooltip_crime(tooltip_context *c, const building *b)
     }
 }
 
-const city_overlay *city_overlay_for_fire()
+const city_overlay *city_overlay_for_fire(void)
 {
     static city_overlay overlay = {
         OVERLAY_FIRE,
@@ -199,7 +199,7 @@ const city_overlay *city_overlay_for_fire()
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_damage()
+const city_overlay *city_overlay_for_damage(void)
 {
     static city_overlay overlay = {
         OVERLAY_DAMAGE,
@@ -215,7 +215,7 @@ const city_overlay *city_overlay_for_damage()
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_crime()
+const city_overlay *city_overlay_for_crime(void)
 {
     static city_overlay overlay = {
         OVERLAY_CRIME,
@@ -231,7 +231,7 @@ const city_overlay *city_overlay_for_crime()
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_problems()
+const city_overlay *city_overlay_for_problems(void)
 {
     static city_overlay overlay = {
         OVERLAY_PROBLEMS,
@@ -247,7 +247,7 @@ const city_overlay *city_overlay_for_problems()
     return &overlay;
 }
 
-static int terrain_on_native_overlay()
+static int terrain_on_native_overlay(void)
 {
     return
         TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SCRUB |
@@ -294,7 +294,7 @@ static void draw_top_native(int x, int y, int grid_offset)
     }
 }
 
-const city_overlay *city_overlay_for_native()
+const city_overlay *city_overlay_for_native(void)
 {
     static city_overlay overlay = {
         OVERLAY_NATIVE,

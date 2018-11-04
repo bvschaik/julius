@@ -181,7 +181,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
     }
 }
 
-static void draw_viewport_rectangle()
+static void draw_viewport_rectangle(void)
 {
     int camera_x, camera_y;
     city_view_get_camera(&camera_x, &camera_y);

@@ -9,7 +9,7 @@
 #include "game/tutorial.h"
 #include "scenario/property.h"
 
-int city_health()
+int city_health(void)
 {
     return city_data.health.value;
 }
@@ -89,7 +89,7 @@ static void cause_disease(int total_people)
     }
 }
 
-void city_health_update()
+void city_health_update(void)
 {
     if (city_data.population.population < 200 || scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
         city_data.health.value = 50;
@@ -137,7 +137,7 @@ void city_health_update()
     cause_disease(total_population);
 }
 
-void city_health_reset_hospital_workers()
+void city_health_reset_hospital_workers(void)
 {
     city_data.health.num_hospital_workers = 0;
 }

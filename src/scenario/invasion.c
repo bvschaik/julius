@@ -69,7 +69,7 @@ static struct {
     invasion_warning warnings[MAX_INVASION_WARNINGS];
 } data;
 
-void scenario_invasion_init()
+void scenario_invasion_init(void)
 {
     memset(data.warnings, 0, MAX_INVASION_WARNINGS * sizeof(invasion_warning));
     int path_current = 1;
@@ -115,7 +115,7 @@ void scenario_invasion_init()
     }
 }
 
-int scenario_invasion_exists_upcoming()
+int scenario_invasion_exists_upcoming(void)
 {
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         if (data.warnings[i].in_use && data.warnings[i].handled) {
@@ -134,7 +134,7 @@ void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_
     }
 }
 
-int scenario_invasion_count()
+int scenario_invasion_count(void)
 {
     int num_invasions = 0;
     for (int i = 0; i < MAX_INVASIONS; i++) {
@@ -292,7 +292,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     return grid_offset;
 }
 
-void scenario_invasion_process()
+void scenario_invasion_process(void)
 {
     int enemy_id = scenario.enemy_id;
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
@@ -371,7 +371,7 @@ void scenario_invasion_process()
     }
 }
 
-int scenario_invasion_start_from_mars()
+int scenario_invasion_start_from_mars(void)
 {
     int mission = scenario_campaign_mission();
     if (mission < 0 || mission > 19) {
@@ -398,7 +398,7 @@ int scenario_invasion_start_from_caesar(int size)
     return 0;
 }
 
-void scenario_invasion_start_from_cheat()
+void scenario_invasion_start_from_cheat(void)
 {
     int enemy_id = scenario.enemy_id;
     int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);

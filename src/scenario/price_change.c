@@ -6,7 +6,7 @@
 #include "game/time.h"
 #include "scenario/data.h"
 
-void scenario_price_change_init()
+void scenario_price_change_init(void)
 {
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         random_generate_next();
@@ -16,7 +16,7 @@ void scenario_price_change_init()
     }
 }
 
-void scenario_price_change_process()
+void scenario_price_change_process(void)
 {
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         if (!scenario.price_changes[i].year) {

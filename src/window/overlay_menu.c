@@ -60,25 +60,25 @@ static struct {
     int submenu_focus_button_id;
 } data;
 
-static void init()
+static void init(void)
 {
     data.selected_submenu = 0;
     data.num_submenu_items = 0;
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     window_city_draw_panels();
 }
 
-static int get_sidebar_x_offset()
+static int get_sidebar_x_offset(void)
 {
     int view_x, view_y, view_width, view_height;
     city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
     return view_x + view_width;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     window_city_draw();
     int x_offset = get_sidebar_x_offset();
@@ -105,7 +105,7 @@ static int count_submenu_items(int submenu_id)
     return total;
 }
 
-static void handle_submenu()
+static void handle_submenu(void)
 {
     if (data.menu_focus_button_id || data.submenu_focus_button_id) {
         data.submenu_focus_time = time_get_millis();
@@ -154,7 +154,7 @@ static void button_submenu_item(int index, int param2)
     window_city_show();
 }
 
-void window_overlay_menu_show()
+void window_overlay_menu_show(void)
 {
     window_type window = {
         WINDOW_OVERLAY_MENU,

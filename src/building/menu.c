@@ -53,7 +53,7 @@ static int menu_enabled[MAX_BUILDING_ITEMS][MAX_BUILDING_ITEMS];
 
 static int changed = 1;
 
-void building_menu_enable_all()
+void building_menu_enable_all(void)
 {
     for (int sub = 0; sub < MAX_BUILDING_ITEMS; sub++) {
         for (int item = 0; item < MAX_BUILDING_ITEMS; item++) {
@@ -247,7 +247,7 @@ static void disable_resources(int *enabled, building_type type)
     disable_finished(enabled, type, BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS);
 }
 
-void building_menu_update()
+void building_menu_update(void)
 {
     tutorial_build_buttons tutorial_buttons = tutorial_get_build_buttons();
     for (int sub = 0; sub < MAX_BUILDING_ITEMS; sub++) {
@@ -322,7 +322,7 @@ building_type building_menu_type(int submenu, int item)
     return MENU_BUILDING_TYPE[submenu][item];
 }
 
-int building_menu_has_changed()
+int building_menu_has_changed(void)
 {
     if (changed) {
         changed = 0;

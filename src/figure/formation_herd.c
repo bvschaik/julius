@@ -231,7 +231,7 @@ static void update_herd_formation(formation *m)
     }
 }
 
-void formation_herd_update()
+void formation_herd_update(void)
 {
     if (city_figures_animals() <= 0) {
         return;

@@ -6,7 +6,7 @@
 /**
  * Evolves/devolves houses if appropriate, and consumes pottery/furniture/oil/wine
  */
-void building_house_process_evolve_and_consume_goods();
+void building_house_process_evolve_and_consume_goods(void);
 
 /**
  * Determine the text to show for evolution of a house, stored in house->evolve_text_id

@@ -459,23 +459,23 @@ void building_construction_set_type(building_type type)
     }
 }
 
-void building_construction_clear_type()
+void building_construction_clear_type(void)
 {
     data.cost = 0;
     data.type = BUILDING_NONE;
 }
 
-building_type building_construction_type()
+building_type building_construction_type(void)
 {
     return data.type;
 }
 
-int building_construction_cost()
+int building_construction_cost(void)
 {
     return data.cost;
 }
 
-int building_construction_in_progress()
+int building_construction_in_progress(void)
 {
     return data.in_progress;
 }
@@ -615,7 +615,7 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
     return 0;
 }
 
-void building_construction_place()
+void building_construction_place(void)
 {
     data.in_progress = 0;
     int x_start = data.start.x;
@@ -777,7 +777,7 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
     return 1;
 }
 
-void building_construction_update_road_orientation()
+void building_construction_update_road_orientation(void)
 {
     if (data.road_orientation > 0) {
         if (time_get_millis() - data.road_last_update > 1500) {
@@ -787,7 +787,7 @@ void building_construction_update_road_orientation()
     }
 }
 
-int building_construction_road_orientation()
+int building_construction_road_orientation(void)
 {
     return data.road_orientation;
 }
@@ -806,12 +806,12 @@ void building_construction_get_view_position(int *view_x, int *view_y)
     *view_y = data.start_offset_y_view;
 }
 
-void building_construction_reset_draw_as_constructing()
+void building_construction_reset_draw_as_constructing(void)
 {
     data.draw_as_constructing = 0;
 }
 
-int building_construction_draw_as_constructing()
+int building_construction_draw_as_constructing(void)
 {
     return data.draw_as_constructing;
 }

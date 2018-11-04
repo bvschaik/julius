@@ -44,7 +44,7 @@ static generic_button fort_buttons[] = {
 static int focus_button_id;
 static int num_legions;
 
-static int draw_background()
+static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 1, 10, 10);
@@ -147,7 +147,7 @@ static int draw_background()
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     num_legions = formation_get_num_legions();
     for (int i = 0; i < num_legions; i++) {
@@ -186,7 +186,7 @@ static void button_empire_service(int legion_id, int param2)
     window_invalidate();
 }
 
-const advisor_window_type *window_advisor_military()
+const advisor_window_type *window_advisor_military(void)
 {
     static const advisor_window_type window = {
         draw_background,

@@ -16,12 +16,12 @@ static const struct {
     {75, 120, 40, 40} // very hard
 };
 
-int difficulty_starting_favor()
+int difficulty_starting_favor(void)
 {
     return data[setting_difficulty()].starting_favor;
 }
 
-int difficulty_sentiment()
+int difficulty_sentiment(void)
 {
     return data[setting_difficulty()].sentiment;
 }

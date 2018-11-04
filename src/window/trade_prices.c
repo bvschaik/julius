@@ -10,7 +10,7 @@
 #include "graphics/window.h"
 #include "window/advisors.h"
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_in_dialog();
 
@@ -63,7 +63,7 @@ static void get_tooltip(tooltip_context *c)
     c->text_id = 131 + resource;
 }
 
-void window_trade_prices_show()
+void window_trade_prices_show(void)
 {
     window_type window = {
         WINDOW_TRADE_PRICES,

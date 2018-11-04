@@ -92,7 +92,7 @@ void rich_text_reset(int scroll_position)
     rich_text_clear_links();
 }
 
-void rich_text_save()
+void rich_text_save(void)
 {
     data.backup.num_lines = data.num_lines;
     data.backup.scroll_position = data.scroll_position;
@@ -101,14 +101,14 @@ void rich_text_save()
     data.text_height_lines = 30;
 }
 
-void rich_text_restore()
+void rich_text_restore(void)
 {
     data.num_lines = data.backup.num_lines;
     data.scroll_position = data.backup.scroll_position;
     data.text_height_lines = data.backup.text_height_lines;
 }
 
-void rich_text_clear_links()
+void rich_text_clear_links(void)
 {
     for (int i = 0; i < MAX_LINKS; i++) {
         links[i].message_id = 0;
@@ -375,7 +375,7 @@ int rich_text_draw_colored(const uint8_t *text, int x_offset, int y_offset, int 
     return draw_text(text, x_offset, y_offset, box_width, height_lines, color, 0);
 }
 
-void rich_text_draw_scrollbar()
+void rich_text_draw_scrollbar(void)
 {
     if (data.max_scroll_position) {
         image_buttons_draw(
@@ -390,7 +390,7 @@ void rich_text_draw_scrollbar()
     }
 }
 
-void rich_text_draw_scrollbar_dot()
+void rich_text_draw_scrollbar_dot(void)
 {
     if (data.max_scroll_position) {
         int pct;
@@ -479,7 +479,7 @@ void rich_text_scroll(int is_down, int num_lines)
     window_invalidate();
 }
 
-int rich_text_scroll_position()
+int rich_text_scroll_position(void)
 {
     return data.scroll_position;
 }

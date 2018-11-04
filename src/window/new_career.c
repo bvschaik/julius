@@ -23,7 +23,7 @@ static image_button image_button_start_mission = {
 
 static uint8_t player_name[32];
 
-static void init()
+static void init(void)
 {
     setting_clear_personal_savings();
     scenario_settings_init();
@@ -31,7 +31,7 @@ static void init()
     keyboard_start_capture(player_name, 32, 1, 280, FONT_NORMAL_WHITE);
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_clear_screen();
     graphics_in_dialog();
@@ -39,7 +39,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     outer_panel_draw(128, 160, 24, 8);
@@ -77,7 +77,7 @@ static void start_mission(int param1, int param2)
     window_mission_selection_show();
 }
 
-void window_new_career_show()
+void window_new_career_show(void)
 {
     window_type window = {
         WINDOW_NEW_CAREER,

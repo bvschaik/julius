@@ -36,7 +36,7 @@ static arrow_button arrow_buttons[] = {
 static int focus_button_id;
 static int focus_arrow_button_id;
 
-static void draw_background()
+static void draw_background(void)
 {
     window_advisors_draw_dialog_background();
 
@@ -63,7 +63,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 
@@ -143,7 +143,7 @@ static void get_tooltip(tooltip_context *c)
     }
 }
 
-void window_donate_to_city_show()
+void window_donate_to_city_show(void)
 {
     window_type window = {
         WINDOW_DONATE_TO_CITY,

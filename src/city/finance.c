@@ -9,17 +9,17 @@
 
 #define MAX_HOUSE_LEVELS 20
 
-int city_finance_treasury()
+int city_finance_treasury(void)
 {
     return city_data.finance.treasury;
 }
 
-int city_finance_out_of_money()
+int city_finance_out_of_money(void)
 {
     return city_data.finance.treasury <= -5000;
 }
 
-int city_finance_tax_percentage()
+int city_finance_tax_percentage(void)
 {
     return city_data.finance.tax_percentage;
 }
@@ -29,17 +29,17 @@ void city_finance_change_tax_percentage(int change)
     city_data.finance.tax_percentage = calc_bound(city_data.finance.tax_percentage + change, 0, 25);
 }
 
-int city_finance_percentage_taxed_people()
+int city_finance_percentage_taxed_people(void)
 {
     return city_data.taxes.percentage_taxed_people;
 }
 
-int city_finance_estimated_tax_income()
+int city_finance_estimated_tax_income(void)
 {
     return city_data.finance.estimated_tax_income;
 }
 
-int city_finance_estimated_wages()
+int city_finance_estimated_wages(void)
 {
     return city_data.finance.estimated_wages;
 }
@@ -60,7 +60,7 @@ void city_finance_process_export(int price)
     }
 }
 
-void city_finance_process_cheat()
+void city_finance_process_cheat(void)
 {
     if (city_data.finance.treasury < 5000) {
         city_data.finance.treasury += 1000;
@@ -92,17 +92,17 @@ void city_finance_process_construction(int cost)
     city_data.finance.this_year.expenses.construction += cost;
 }
 
-void city_finance_update_interest()
+void city_finance_update_interest(void)
 {
     city_data.finance.this_year.expenses.interest = city_data.finance.interest_so_far;
 }
 
-void city_finance_update_salary()
+void city_finance_update_salary(void)
 {
     city_data.finance.this_year.expenses.salary = city_data.finance.salary_so_far;
 }
 
-void city_finance_calculate_totals()
+void city_finance_calculate_totals(void)
 {
     finance_overview *this_year = &city_data.finance.this_year;
     this_year->income.total =
@@ -126,14 +126,14 @@ void city_finance_calculate_totals()
     this_year->expenses.tribute = 0;
 }
 
-void city_finance_estimate_wages()
+void city_finance_estimate_wages(void)
 {
     int monthly_wages = city_data.labor.wages * city_data.labor.workers_employed / 10 / 12;
     city_data.finance.this_year.expenses.wages = city_data.finance.wages_so_far;
     city_data.finance.estimated_wages = (12 - game_time_month()) * monthly_wages + city_data.finance.wages_so_far;
 }
 
-void city_finance_estimate_taxes()
+void city_finance_estimate_taxes(void)
 {
     city_data.taxes.monthly.collected_plebs = 0;
     city_data.taxes.monthly.collected_patricians = 0;
@@ -162,7 +162,7 @@ void city_finance_estimate_taxes()
     city_data.finance.estimated_tax_income = city_data.finance.this_year.income.taxes + estimated_rest_of_year;
 }
 
-static void collect_monthly_taxes()
+static void collect_monthly_taxes(void)
 {
     city_data.taxes.taxed_plebs = 0;
     city_data.taxes.taxed_patricians = 0;
@@ -237,7 +237,7 @@ static void collect_monthly_taxes()
         total_patricians + total_plebs);
 }
 
-static void pay_monthly_wages()
+static void pay_monthly_wages(void)
 {
     int wages = city_data.labor.wages * city_data.labor.workers_employed / 10 / 12;
     city_data.finance.treasury -= wages;
@@ -245,7 +245,7 @@ static void pay_monthly_wages()
     city_data.finance.wage_rate_paid_this_year += city_data.labor.wages;
 }
 
-static void pay_monthly_interest()
+static void pay_monthly_interest(void)
 {
     if (city_data.finance.treasury < 0) {
         int interest = calc_adjust_with_percentage(-city_data.finance.treasury, 10) / 12;
@@ -254,7 +254,7 @@ static void pay_monthly_interest()
     }
 }
 
-static void pay_monthly_salary()
+static void pay_monthly_salary(void)
 {
     if (!city_finance_out_of_money()) {
         city_data.finance.salary_so_far += city_data.emperor.salary_amount;
@@ -263,7 +263,7 @@ static void pay_monthly_salary()
     }
 }
 
-void city_finance_handle_month_change()
+void city_finance_handle_month_change(void)
 {
     collect_monthly_taxes();
     pay_monthly_wages();
@@ -271,7 +271,7 @@ void city_finance_handle_month_change()
     pay_monthly_salary();
 }
 
-static void reset_taxes()
+static void reset_taxes(void)
 {
     city_data.finance.last_year.income.taxes = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
     city_data.taxes.yearly.collected_plebs = 0;
@@ -288,7 +288,7 @@ static void reset_taxes()
     }
 }
 
-static void copy_amounts_to_last_year()
+static void copy_amounts_to_last_year(void)
 {
     finance_overview *last_year = &city_data.finance.last_year;
     finance_overview *this_year = &city_data.finance.this_year;
@@ -328,7 +328,7 @@ static void copy_amounts_to_last_year()
     this_year->income.donated = 0;
 }
 
-static void pay_tribute()
+static void pay_tribute(void)
 {
     finance_overview *last_year = &city_data.finance.last_year;
     int income =
@@ -389,19 +389,19 @@ static void pay_tribute()
     last_year->expenses.total = last_year->expenses.tribute + expenses;
 }
 
-void city_finance_handle_year_change()
+void city_finance_handle_year_change(void)
 {
     reset_taxes();
     copy_amounts_to_last_year();
     pay_tribute();
 }
 
-const finance_overview *city_finance_overview_last_year()
+const finance_overview *city_finance_overview_last_year(void)
 {
     return &city_data.finance.last_year;
 }
 
-const finance_overview *city_finance_overview_this_year()
+const finance_overview *city_finance_overview_this_year(void)
 {
     return &city_data.finance.this_year;
 }

@@ -36,7 +36,7 @@ static int init(popup_dialog_type type, void (*close_func)(int accepted), int ha
     return 1;
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_in_dialog();
     outer_panel_draw(80, 80, 30, 10);
@@ -49,7 +49,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     if (data.has_buttons) {

@@ -33,10 +33,10 @@ typedef struct {
     int entertainment;
 } house_demands;
 
-void city_houses_reset_demands();
+void city_houses_reset_demands(void);
 
-house_demands *city_houses_demands();
+house_demands *city_houses_demands(void);
 
-void city_houses_calculate_culture_demands();
+void city_houses_calculate_culture_demands(void);
 
 #endif // CITY_HOUSES_H

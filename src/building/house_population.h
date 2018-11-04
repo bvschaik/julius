@@ -18,17 +18,17 @@ int house_population_remove_from_city(int num_people);
 /**
  * Update room available in houses
  */
-void house_population_update_room();
+void house_population_update_room(void);
 
 /**
  * Update migration statistics and create immigrants/emigrants
  */
-void house_population_update_migration();
+void house_population_update_migration(void);
 
 /**
  * Evict people from overcrowded houses
  */
-void house_population_evict_overcrowded();
+void house_population_evict_overcrowded(void);
 
 /**
  * Create immigrants

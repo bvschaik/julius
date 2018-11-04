@@ -134,7 +134,7 @@ int figure_is_herd(const figure *f)
     return f->type >= FIGURE_SHEEP && f->type <= FIGURE_ZEBRA;
 }
 
-void figure_init_scenario()
+void figure_init_scenario(void)
 {
     for (int i = 0; i < MAX_FIGURES; i++) {
         memset(&data.figures[i], 0, sizeof(figure));

@@ -5,7 +5,7 @@
 #include "city/data_private.h"
 #include "empire/city.h"
 
-void city_trade_update()
+void city_trade_update(void)
 {
     city_data.trade.num_sea_routes = 0;
     city_data.trade.num_land_routes = 0;
@@ -28,22 +28,22 @@ void city_trade_update()
     empire_city_generate_trader();
 }
 
-void city_trade_add_land_trade_route()
+void city_trade_add_land_trade_route(void)
 {
     city_data.trade.num_land_routes++;
 }
 
-void city_trade_add_sea_trade_route()
+void city_trade_add_sea_trade_route(void)
 {
     city_data.trade.num_sea_routes++;
 }
 
-int city_trade_has_land_trade_route()
+int city_trade_has_land_trade_route(void)
 {
     return city_data.trade.num_land_routes > 0;
 }
 
-int city_trade_has_sea_trade_route()
+int city_trade_has_sea_trade_route(void)
 {
     return city_data.trade.num_sea_routes > 0;
 }
@@ -58,22 +58,22 @@ void city_trade_start_sea_trade_problems(int duration)
     city_data.trade.sea_trade_problem_duration = duration;
 }
 
-int city_trade_has_land_trade_problems()
+int city_trade_has_land_trade_problems(void)
 {
     return city_data.trade.land_trade_problem_duration > 0;
 }
 
-int city_trade_has_sea_trade_problems()
+int city_trade_has_sea_trade_problems(void)
 {
     return city_data.trade.sea_trade_problem_duration > 0;
 }
 
-int city_trade_current_caravan_import_resource()
+int city_trade_current_caravan_import_resource(void)
 {
     return city_data.trade.caravan_import_resource;
 }
 
-int city_trade_next_caravan_import_resource()
+int city_trade_next_caravan_import_resource(void)
 {
     city_data.trade.caravan_import_resource++;
     if (city_data.trade.caravan_import_resource >= RESOURCE_MAX) {
@@ -82,7 +82,7 @@ int city_trade_next_caravan_import_resource()
     return city_data.trade.caravan_import_resource;
 }
 
-int city_trade_next_caravan_backup_import_resource()
+int city_trade_next_caravan_backup_import_resource(void)
 {
     city_data.trade.caravan_backup_import_resource++;
     if (city_data.trade.caravan_backup_import_resource >= RESOURCE_MAX) {
@@ -91,7 +91,7 @@ int city_trade_next_caravan_backup_import_resource()
     return city_data.trade.caravan_backup_import_resource;
 }
 
-int city_trade_next_docker_import_resource()
+int city_trade_next_docker_import_resource(void)
 {
     city_data.trade.docker_import_resource++;
     if (city_data.trade.docker_import_resource >= RESOURCE_MAX) {
@@ -100,7 +100,7 @@ int city_trade_next_docker_import_resource()
     return city_data.trade.docker_import_resource;
 }
 
-int city_trade_next_docker_export_resource()
+int city_trade_next_docker_export_resource(void)
 {
     city_data.trade.docker_export_resource++;
     if (city_data.trade.docker_export_resource >= RESOURCE_MAX) {

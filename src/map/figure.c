@@ -88,7 +88,7 @@ int map_figure_foreach_until(int grid_offset, int (*callback)(figure *f))
     return 0;
 }
 
-void map_figure_clear()
+void map_figure_clear(void)
 {
     map_grid_clear_u16(figures.items);
 }

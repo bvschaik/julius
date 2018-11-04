@@ -50,7 +50,7 @@ static set_sound original_city;
 
 static int focus_button_id;
 
-static void init()
+static void init(void)
 {
     original_effects = *setting_sound(SOUND_EFFECTS);
     original_music = *setting_sound(SOUND_MUSIC);
@@ -59,7 +59,7 @@ static void init()
     focus_button_id = 0;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     
@@ -192,7 +192,7 @@ static void arrow_button_city(int is_down, int param2)
     sound_city_set_volume(setting_sound(SOUND_CITY)->volume);
 }
 
-void window_sound_options_show()
+void window_sound_options_show(void)
 {
     window_type window = {
         WINDOW_SOUND_OPTIONS,

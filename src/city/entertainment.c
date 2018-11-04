@@ -3,22 +3,22 @@
 #include "building/building.h"
 #include "city/data_private.h"
 
-int city_entertainment_theater_shows()
+int city_entertainment_theater_shows(void)
 {
     return city_data.entertainment.theater_shows;
 }
 
-int city_entertainment_amphitheater_shows()
+int city_entertainment_amphitheater_shows(void)
 {
     return city_data.entertainment.amphitheater_shows;
 }
 
-int city_entertainment_colosseum_shows()
+int city_entertainment_colosseum_shows(void)
 {
     return city_data.entertainment.colosseum_shows;
 }
 
-int city_entertainment_hippodrome_shows()
+int city_entertainment_hippodrome_shows(void)
 {
     return city_data.entertainment.hippodrome_shows;
 }
@@ -28,17 +28,17 @@ void city_entertainment_set_hippodrome_has_race(int has_race)
     city_data.entertainment.hippodrome_has_race = has_race;
 }
 
-int city_entertainment_hippodrome_has_race()
+int city_entertainment_hippodrome_has_race(void)
 {
     return city_data.entertainment.hippodrome_has_race;
 }
 
-int city_entertainment_venue_needing_shows()
+int city_entertainment_venue_needing_shows(void)
 {
     return city_data.entertainment.venue_needing_shows;
 }
 
-void city_entertainment_calculate_shows()
+void city_entertainment_calculate_shows(void)
 {
     city_data.entertainment.theater_shows = 0;
     city_data.entertainment.theater_no_shows_weighted = 0;
@@ -114,7 +114,7 @@ void city_entertainment_calculate_shows()
     }
 }
 
-int city_entertainment_show_message_colosseum()
+int city_entertainment_show_message_colosseum(void)
 {
     if (!city_data.entertainment.colosseum_message_shown) {
         city_data.entertainment.colosseum_message_shown = 1;
@@ -124,7 +124,7 @@ int city_entertainment_show_message_colosseum()
     }
 }
 
-int city_entertainment_show_message_hippodrome()
+int city_entertainment_show_message_hippodrome(void)
 {
     if (!city_data.entertainment.hippodrome_message_shown) {
         city_data.entertainment.hippodrome_message_shown = 1;

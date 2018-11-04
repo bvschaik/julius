@@ -7,13 +7,13 @@ int map_image_at(int grid_offset);
 
 void map_image_set(int grid_offset, int image_id);
 
-void map_image_backup();
+void map_image_backup(void);
 
-void map_image_restore();
+void map_image_restore(void);
 
 void map_image_restore_at(int grid_offset);
 
-void map_image_clear();
+void map_image_clear(void);
 
 void map_image_save_state(buffer *buf);
 

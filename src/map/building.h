@@ -29,7 +29,7 @@ void map_set_rubble_building_type(int grid_offset, building_type type);
 /**
  * Clears the maps related to buildings
  */
-void map_building_clear();
+void map_building_clear(void);
 
 void map_building_save_state(buffer *buildings, buffer *damage);
 

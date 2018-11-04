@@ -73,7 +73,7 @@ static void init(file_dialog_type type)
     keyboard_start_capture((uint8_t*) data.saved_game, 64, 0, 280, FONT_NORMAL_WHITE);
 }
 
-static void draw_scrollbar_dot()
+static void draw_scrollbar_dot(void)
 {
     if (data.saved_games->num_files > 12) {
         int pct;
@@ -89,7 +89,7 @@ static void draw_scrollbar_dot()
     }
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     char file[100];

@@ -15,7 +15,7 @@ if (CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
 
     if (CMAKE_C_COMPILER_VERSION VERSION_GREATER 5.0)
-        set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion ${CMAKE_C_FLAGS}")
+        set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion -Wstrict-prototypes ${CMAKE_C_FLAGS}")
     endif()
 endif()
 

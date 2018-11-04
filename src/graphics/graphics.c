@@ -38,7 +38,7 @@ void graphics_init_canvas(int width, int height)
     graphics_set_clip_rectangle(0, 0, width, height);
 }
 
-const void *graphics_canvas()
+const void *graphics_canvas(void)
 {
     return canvas.pixels;
 }
@@ -60,12 +60,12 @@ static void set_translation(int x, int y)
     translate_clip(dx, dy);
 }
 
-void graphics_in_dialog()
+void graphics_in_dialog(void)
 {
     set_translation(screen_dialog_offset_x(), screen_dialog_offset_y());
 }
 
-void graphics_reset_dialog()
+void graphics_reset_dialog(void)
 {
     set_translation(0, 0);
 }
@@ -91,7 +91,7 @@ void graphics_set_clip_rectangle(int x, int y, int width, int height)
     }
 }
 
-void graphics_reset_clip_rectangle()
+void graphics_reset_clip_rectangle(void)
 {
     clip_rectangle.x_start = 0;
     clip_rectangle.x_end = canvas.width;
@@ -186,7 +186,7 @@ color_t *graphics_get_pixel(int x, int y)
     return &canvas.pixels[(translation.y + y) * canvas.width + (translation.x + x)];
 }
 
-void graphics_clear_screen()
+void graphics_clear_screen(void)
 {
     memset(canvas.pixels, 0, sizeof(color_t) * canvas.width * canvas.height);
 }

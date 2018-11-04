@@ -86,7 +86,7 @@ static void init(intermezzo_type type, void (*callback)(void))
     }
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_clear_screen();
     int x_offset = (screen_width() - 1024) / 2;

@@ -28,22 +28,22 @@ void screen_set_resolution(int width, int height)
     window_invalidate();
 }
 
-int screen_width()
+int screen_width(void)
 {
     return data.width;
 }
 
-int screen_height()
+int screen_height(void)
 {
     return data.height;
 }
 
-int screen_dialog_offset_x()
+int screen_dialog_offset_x(void)
 {
     return data.dialog_offset.x;
 }
 
-int screen_dialog_offset_y()
+int screen_dialog_offset_y(void)
 {
     return data.dialog_offset.y;
 }

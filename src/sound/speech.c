@@ -25,7 +25,7 @@ void sound_speech_play_file(const char *filename)
     }
 }
 
-void sound_speech_stop()
+void sound_speech_stop(void)
 {
     sound_device_stop_channel(SOUND_CHANNEL_SPEECH);
 }

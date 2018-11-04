@@ -496,7 +496,7 @@ static int (*evolve_callback[])(building *, house_demands *) = {
     evolve_small_palace, evolve_medium_palace, evolve_large_palace, evolve_luxury_palace
 };
 
-void building_house_process_evolve_and_consume_goods()
+void building_house_process_evolve_and_consume_goods(void)
 {
     city_houses_reset_demands();
     house_demands *demands = city_houses_demands();

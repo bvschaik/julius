@@ -137,7 +137,7 @@ static void set_rock_image(int x, int y, int grid_offset)
     }
 }
 
-void map_tiles_update_all_rocks()
+void map_tiles_update_all_rocks(void)
 {
     foreach_map_tile(clear_rock_image);
     foreach_map_tile(set_rock_image);
@@ -257,7 +257,7 @@ static void set_plaza_image(int x, int y, int grid_offset)
     }
 }
 
-void map_tiles_update_all_gardens()
+void map_tiles_update_all_gardens(void)
 {
     foreach_map_tile(clear_garden_image);
     foreach_map_tile(set_garden_image);
@@ -274,12 +274,12 @@ static void determine_garden_tile(int x, int y, int grid_offset)
     }
 }
 
-void map_tiles_determine_gardens()
+void map_tiles_determine_gardens(void)
 {
     foreach_map_tile(determine_garden_tile);
 }
 
-void map_tiles_update_all_plazas()
+void map_tiles_update_all_plazas(void)
 {
     foreach_map_tile(remove_plaza_below_building);
     foreach_map_tile(clear_plaza_image);
@@ -569,7 +569,7 @@ static void set_wall_image(int x, int y, int grid_offset)
     }
 }
 
-void map_tiles_update_all_walls()
+void map_tiles_update_all_walls(void)
 {
     foreach_map_tile(set_wall_image);
 }
@@ -658,7 +658,7 @@ static void set_road_image(int x, int y, int grid_offset)
     map_property_mark_draw_tile(grid_offset);
 }
 
-void map_tiles_update_all_roads()
+void map_tiles_update_all_roads(void)
 {
     foreach_map_tile(set_road_image);
 }
@@ -746,7 +746,7 @@ static void set_empty_land_pass2(int x, int y, int grid_offset)
     }
 }
 
-void map_tiles_update_all_empty_land()
+void map_tiles_update_all_empty_land(void)
 {
     foreach_map_tile(clear_empty_land_image);
     foreach_map_tile(set_empty_land_pass1);
@@ -785,7 +785,7 @@ static void update_meadow_tile(int x, int y, int grid_offset)
     }
 }
 
-void map_tiles_update_all_meadow()
+void map_tiles_update_all_meadow(void)
 {
     foreach_map_tile(update_meadow_tile);
 }
@@ -831,7 +831,7 @@ static void update_water_tile(int x, int y, int grid_offset)
     }
 }
 
-void map_tiles_update_all_water()
+void map_tiles_update_all_water(void)
 {
     foreach_map_tile(update_water_tile);
 }
@@ -918,7 +918,7 @@ static void update_earthquake_tile(int x, int y, int grid_offset)
     }
 }
 
-void map_tiles_update_all_earthquake()
+void map_tiles_update_all_earthquake(void)
 {
     foreach_map_tile(update_earthquake_tile);
 }
@@ -943,7 +943,7 @@ static void set_rubble_image(int x, int y, int grid_offset)
     }
 }
 
-void map_tiles_update_all_rubble()
+void map_tiles_update_all_rubble(void)
 {
     foreach_map_tile(set_rubble_image);
 }
@@ -1075,7 +1075,7 @@ static void set_elevation_image(int x, int y, int grid_offset)
     }
 }
 
-void map_tiles_update_all_elevation()
+void map_tiles_update_all_elevation(void)
 {
     int width = map_data.width - 2;
     int height = map_data.height - 2;
@@ -1083,7 +1083,7 @@ void map_tiles_update_all_elevation()
     foreach_region_tile(0, 0, width, height, set_elevation_image);
 }
 
-void map_tiles_add_entry_exit_flags()
+void map_tiles_add_entry_exit_flags(void)
 {
     int entry_orientation;
     map_point entry_point = scenario_map_entry();
@@ -1147,7 +1147,7 @@ static void remove_entry_exit_flag(const map_tile *tile)
     map_terrain_remove(map_grid_offset(tile->x, tile->y), TERRAIN_ROCK);
 }
 
-void map_tiles_remove_entry_exit_flags()
+void map_tiles_remove_entry_exit_flags(void)
 {
     remove_entry_exit_flag(city_map_entry_flag());
     remove_entry_exit_flag(city_map_exit_flag());

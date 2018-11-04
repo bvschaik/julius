@@ -17,7 +17,7 @@ static struct {
     struct record industry[RESOURCE_MAX];
 } data;
 
-static void clear_counters()
+static void clear_counters(void)
 {
     memset(&data, 0, sizeof(data));
 }
@@ -38,7 +38,7 @@ static void increase_industry_count(resource_type resource, int active)
     }
 }
 
-static void limit_hippodrome()
+static void limit_hippodrome(void)
 {
     if (data.buildings[BUILDING_HIPPODROME].total > 1) {
         data.buildings[BUILDING_HIPPODROME].total = 1;
@@ -48,7 +48,7 @@ static void limit_hippodrome()
     }
 }
 
-void building_count_update()
+void building_count_update(void)
 {
     clear_counters();
     city_buildings_reset_dock_wharf_counters();

@@ -3,6 +3,6 @@
 
 #include "window/advisors.h"
 
-const advisor_window_type *window_advisor_religion();
+const advisor_window_type *window_advisor_religion(void);
 
 #endif // WINDOW_ADVISOR_RELIGION_H

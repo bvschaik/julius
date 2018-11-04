@@ -3,6 +3,6 @@
 
 #include "window/advisors.h"
 
-const advisor_window_type *window_advisor_population();
+const advisor_window_type *window_advisor_population(void);
 
 #endif // WINDOW_ADVISOR_POPULATION_H

@@ -11,22 +11,22 @@ int video_start(const char* filename);
 /**
  * Initializes the video subsystem, necessary just before a video is drawn for the first time
  */
-void video_init();
+void video_init(void);
 
 /**
  * Checks whether the video has finished playing
  */
-int video_is_finished();
+int video_is_finished(void);
 
 /**
  * Stop playing the currently playing video
  */
-void video_stop();
+void video_stop(void);
 
 /**
  * Shut down the video subsystem
  */
-void video_shutdown();
+void video_shutdown(void);
 
 /**
  * Draws a frame of the current video at the specified position

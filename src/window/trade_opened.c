@@ -19,7 +19,7 @@ static image_button image_buttons[] = {
 
 static int selected_city;
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_in_dialog();
 
@@ -36,7 +36,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     image_buttons_draw(0, 0, image_buttons, 2);

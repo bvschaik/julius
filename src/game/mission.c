@@ -24,17 +24,17 @@ static const int RANK_CHOICE[] = {
     0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 };
 
-int game_mission_peaceful()
+int game_mission_peaceful(void)
 {
     return MISSION_IDS[scenario_campaign_rank()].peaceful;
 }
 
-int game_mission_military()
+int game_mission_military(void)
 {
     return MISSION_IDS[scenario_campaign_rank()].military;
 }
 
-int game_mission_has_choice()
+int game_mission_has_choice(void)
 {
     return RANK_CHOICE[scenario_campaign_rank()];
 }

@@ -13,16 +13,16 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 
-static void map_routing_update_land_noncitizen();
+static void map_routing_update_land_noncitizen(void);
 
-void map_routing_update_all()
+void map_routing_update_all(void)
 {
     map_routing_update_land();
     map_routing_update_water();
     map_routing_update_walls();
 }
 
-void map_routing_update_land()
+void map_routing_update_land(void)
 {
     map_routing_update_land_citizen();
     map_routing_update_land_noncitizen();
@@ -106,7 +106,7 @@ static int get_land_type_citizen_aqueduct(int grid_offset)
     }
 }
 
-void map_routing_update_land_citizen()
+void map_routing_update_land_citizen(void)
 {
     map_grid_init_i8(terrain_land_citizen.items, -1);
     int grid_offset = map_data.start_offset;
@@ -171,7 +171,7 @@ static int get_land_type_noncitizen(int grid_offset)
     return type;
 }
 
-static void map_routing_update_land_noncitizen()
+static void map_routing_update_land_noncitizen(void)
 {
     map_grid_init_i8(terrain_land_noncitizen.items, -1);
     int grid_offset = map_data.start_offset;
@@ -207,7 +207,7 @@ static int is_surrounded_by_water(int grid_offset)
         map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_WATER);
 }
 
-void map_routing_update_water()
+void map_routing_update_water(void)
 {
     map_grid_init_i8(terrain_water.items, -1);
     int grid_offset = map_data.start_offset;
@@ -271,7 +271,7 @@ static int count_adjacent_wall_tiles(int grid_offset)
     return adjacent;
 }
 
-void map_routing_update_walls()
+void map_routing_update_walls(void)
 {
     map_grid_init_i8(terrain_walls.items, -1);
     int grid_offset = map_data.start_offset;

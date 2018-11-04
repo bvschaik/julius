@@ -40,7 +40,7 @@ static generic_button resource_buttons[] = {
 
 static int focus_button_id;
 
-static int draw_background()
+static int draw_background(void)
 {
     city_resource_determine_available();
 
@@ -53,7 +53,7 @@ static int draw_background()
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     inner_panel_draw(32, 52, 36, 21);
     const resource_list *list = city_resource_get_available();
@@ -115,7 +115,7 @@ static void button_resource(int resource_index, int param2)
     window_resource_settings_show(city_resource_get_available()->items[resource_index]);
 }
 
-static int get_tooltip_text()
+static int get_tooltip_text(void)
 {
     if (focus_button_id == 1) {
         return 106;
@@ -128,7 +128,7 @@ static int get_tooltip_text()
     }
 }
 
-const advisor_window_type *window_advisor_trade()
+const advisor_window_type *window_advisor_trade(void)
 {
     static const advisor_window_type window = {
         draw_background,
@@ -139,7 +139,7 @@ const advisor_window_type *window_advisor_trade()
     return &window;
 }
 
-void window_advisor_trade_draw_dialog_background()
+void window_advisor_trade_draw_dialog_background(void)
 {
     draw_background();
     draw_foreground();

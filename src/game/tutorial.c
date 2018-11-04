@@ -30,7 +30,7 @@ static struct {
     } tutorial3;
 } data;
 
-void tutorial_init()
+void tutorial_init(void)
 {
     int tut1 = 1, tut2 = 1, tut3 = 1;
     if (scenario_is_tutorial_1()) {
@@ -57,7 +57,7 @@ void tutorial_init()
     city_mission_tutorial_set_disease_message_shown(tut3);
 }
 
-tutorial_availability tutorial_advisor_empire_availability()
+tutorial_availability tutorial_advisor_empire_availability(void)
 {
     if (scenario_is_tutorial_1()) {
         return NOT_AVAILABLE;
@@ -68,7 +68,7 @@ tutorial_availability tutorial_advisor_empire_availability()
     }
 }
 
-tutorial_build_buttons tutorial_get_build_buttons()
+tutorial_build_buttons tutorial_get_build_buttons(void)
 {
     if (scenario_is_tutorial_1()) {
         if (!data.tutorial1.fire && !data.tutorial1.crime) {
@@ -110,7 +110,7 @@ int tutorial_get_population_cap(int current_cap)
     return current_cap;
 }
 
-int tutorial_get_immediate_goal_text()
+int tutorial_get_immediate_goal_text(void)
 {
     if (scenario_is_tutorial_1()) {
         if (!data.tutorial1.fire && !data.tutorial1.crime) {
@@ -149,12 +149,12 @@ int tutorial_adjust_request_year(int *year)
     return 1;
 }
 
-int tutorial_extra_fire_risk()
+int tutorial_extra_fire_risk(void)
 {
     return !data.tutorial1.fire;
 }
 
-int tutorial_extra_damage_risk()
+int tutorial_extra_damage_risk(void)
 {
     return data.tutorial1.fire && !data.tutorial1.collapse;
 }
@@ -164,7 +164,7 @@ static void post_message(int message)
     city_message_post(1, message, 0, 0);
 }
 
-int tutorial_handle_fire()
+int tutorial_handle_fire(void)
 {
     if (data.tutorial1.fire) {
         return 0;
@@ -175,7 +175,7 @@ int tutorial_handle_fire()
     return 1;
 }
 
-int tutorial_handle_collapse()
+int tutorial_handle_collapse(void)
 {
     if (data.tutorial1.collapse) {
         return 0;
@@ -186,7 +186,7 @@ int tutorial_handle_collapse()
     return 1;
 }
 
-void tutorial_on_crime()
+void tutorial_on_crime(void)
 {
     if (!data.tutorial1.crime) {
         data.tutorial1.crime = 1;
@@ -194,12 +194,12 @@ void tutorial_on_crime()
     }
 }
 
-void tutorial_on_disease()
+void tutorial_on_disease(void)
 {
     data.tutorial3.disease = 1;
 }
 
-void tutorial_on_filled_granary()
+void tutorial_on_filled_granary(void)
 {
     if (!data.tutorial2.granary_built) {
         data.tutorial2.granary_built = 1;
@@ -208,7 +208,7 @@ void tutorial_on_filled_granary()
     }
 }
 
-void tutorial_on_add_to_warehouse()
+void tutorial_on_add_to_warehouse(void)
 {
     if (!data.tutorial2.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 1) {
         data.tutorial2.pottery_made = 1;
@@ -218,7 +218,7 @@ void tutorial_on_add_to_warehouse()
     }
 }
 
-void tutorial_on_day_tick()
+void tutorial_on_day_tick(void)
 {
     if (data.tutorial1.fire) {
         city_mission_tutorial_set_fire_message_shown(1);
@@ -255,7 +255,7 @@ void tutorial_on_day_tick()
     }
 }
 
-void tutorial_on_month_tick()
+void tutorial_on_month_tick(void)
 {
     if (scenario_is_tutorial_3()) {
         if (game_time_month() == 5) {

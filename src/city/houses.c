@@ -2,7 +2,7 @@
 
 #include "city/data_private.h"
 
-void city_houses_reset_demands()
+void city_houses_reset_demands(void)
 {
     city_data.houses.missing.fountain = 0;
     city_data.houses.missing.well = 0;
@@ -28,12 +28,12 @@ void city_houses_reset_demands()
     city_data.houses.requiring.religion = 0;
 }
 
-house_demands *city_houses_demands()
+house_demands *city_houses_demands(void)
 {
     return &city_data.houses;
 }
 
-void city_houses_calculate_culture_demands()
+void city_houses_calculate_culture_demands(void)
 {
     // health
     city_data.houses.health = 0;

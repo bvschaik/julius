@@ -164,7 +164,7 @@ int building_destroy_first_of_type(building_type type)
     return 0;
 }
 
-void building_destroy_last_placed()
+void building_destroy_last_placed(void)
 {
     int highest_sequence = 0;
     building *last_building = 0;

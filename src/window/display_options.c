@@ -23,7 +23,7 @@ static generic_button buttons[] = {
 
 static int focus_button_id;
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 
@@ -78,7 +78,7 @@ static void button_cancel(int param1, int param2)
     window_city_show();
 }
 
-void window_display_options_show()
+void window_display_options_show(void)
 {
     window_type window = {
         WINDOW_DISPLAY_OPTIONS,

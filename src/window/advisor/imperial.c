@@ -87,7 +87,7 @@ static void draw_request(int index, const scenario_request *request)
     }
 }
 
-static int draw_background()
+static int draw_background(void)
 {
     city_emperor_calculate_gift_costs();
 
@@ -162,7 +162,7 @@ static int get_request_status(int index)
     return 0;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     inner_panel_draw(64, 324, 32, 6);
 
@@ -265,7 +265,7 @@ static void button_request(int index, int param2)
     }
 }
 
-static int get_tooltip_text()
+static int get_tooltip_text(void)
 {
     if (focus_button_id && focus_button_id <= 2) {
         return 93 + focus_button_id;
@@ -276,7 +276,7 @@ static int get_tooltip_text()
     }
 }
 
-const advisor_window_type *window_advisor_imperial()
+const advisor_window_type *window_advisor_imperial(void)
 {
     static const advisor_window_type window = {
         draw_background,

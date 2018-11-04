@@ -12,7 +12,7 @@
 /**
  * Initializes the figure name generator.
  */
-void figure_name_init();
+void figure_name_init(void);
 
 /**
  * Determines a new name for the figure type

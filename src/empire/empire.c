@@ -44,7 +44,7 @@ void empire_load(int is_custom_scenario, int empire_id)
     empire_object_load(&buf);
 }
 
-void empire_init_scenario()
+void empire_init_scenario(void)
 {
     data.scroll_x = data.initial_scroll_x;
     data.scroll_y = data.initial_scroll_y;
@@ -54,7 +54,7 @@ void empire_init_scenario()
     empire_object_init_cities();
 }
 
-static void check_scroll_boundaries()
+static void check_scroll_boundaries(void)
 {
     int max_x = EMPIRE_WIDTH - data.viewport_width;
     int max_y = EMPIRE_HEIGHT - data.viewport_height;
@@ -114,12 +114,12 @@ void empire_scroll_map(int direction)
     check_scroll_boundaries();
 }
 
-int empire_selected_object()
+int empire_selected_object(void)
 {
     return data.selected_object;
 }
 
-void empire_clear_selected_object()
+void empire_clear_selected_object(void)
 {
     data.selected_object = 0;
 }
@@ -150,7 +150,7 @@ int empire_can_export_resource_to_city(int city_id, int resource)
     }
 }
 
-static int get_max_stock_for_population()
+static int get_max_stock_for_population(void)
 {
     int population = city_population();
     if (population < 2000) {

@@ -9,7 +9,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
-static int get_religion_advice()
+static int get_religion_advice(void)
 {
     int least_happy = city_god_least_happy();
     const house_demands *demands = city_houses_demands();
@@ -44,7 +44,7 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
     }
 }
 
-static int draw_background()
+static int draw_background(void)
 {
     int height_blocks;
     if (setting_gods_enabled()) {
@@ -89,7 +89,7 @@ static int draw_background()
     return height_blocks;
 }
 
-const advisor_window_type *window_advisor_religion()
+const advisor_window_type *window_advisor_religion(void)
 {
     static const advisor_window_type window = {
         draw_background,

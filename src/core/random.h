@@ -13,35 +13,35 @@
 /**
  * Initializes the pseudo-random number generator
  */
-void random_init();
+void random_init(void);
 
 /**
  * Generates the next pseudo-random random_byte
  */
-void random_generate_next();
+void random_generate_next(void);
 
 /**
  * Generates the pool of random bytes
  */
-void random_generate_pool();
+void random_generate_pool(void);
 
 /**
  * Gets the current random 7-bit byte
  * @return Random 7-bit byte
  */
-int8_t random_byte();
+int8_t random_byte(void);
 
 /**
  * Gets the current alternative random 7-bit byte
  * @return Alternative random 7-bits byte
  */
-int8_t random_byte_alt();
+int8_t random_byte_alt(void);
 
 /**
  * Gets the current random 15-bit short
  * @return Random 15-bits short
  */
-int16_t random_short();
+int16_t random_short(void);
 
 /**
  * Gets a random integer from the pool at the specified index

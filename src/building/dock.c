@@ -22,7 +22,7 @@ int building_dock_count_idle_dockers(const building *dock)
     return num_idle;
 }
 
-void building_dock_update_open_water_access()
+void building_dock_update_open_water_access(void)
 {
     map_point river_entry = scenario_map_river_entry();
     map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);

@@ -522,7 +522,7 @@ void scenario_load_state(buffer *buf)
     buffer_skip(buf, 1);
 }
 
-void scenario_settings_init()
+void scenario_settings_init(void)
 {
     scenario.settings.campaign_mission = 0;
     scenario.settings.campaign_rank = 0;
@@ -531,7 +531,7 @@ void scenario_settings_init()
     scenario.settings.starting_personal_savings = 0;
 }
 
-void scenario_settings_init_mission()
+void scenario_settings_init_mission(void)
 {
     scenario.settings.starting_favor = difficulty_starting_favor();
     scenario.settings.starting_personal_savings = setting_personal_savings_for_mission(scenario.settings.campaign_rank);

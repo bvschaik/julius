@@ -3,9 +3,9 @@
 
 #include "core/buffer.h"
 
-void map_random_clear();
+void map_random_clear(void);
 
-void map_random_init();
+void map_random_init(void);
 
 int map_random_get(int grid_offset);
 

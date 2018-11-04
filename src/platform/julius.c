@@ -50,7 +50,7 @@ static void handler(int sig) {
     exit(1);
 }
 
-void system_exit()
+void system_exit(void)
 {
     SDL_Event event;
     event.user.type = SDL_USEREVENT;
@@ -80,7 +80,7 @@ void system_set_fullscreen(int fullscreen)
     SDL_PushEvent(&event);
 }
 
-static void run_and_draw()
+static void run_and_draw(void)
 {
     time_set_millis(SDL_GetTicks());
 
@@ -179,7 +179,7 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
     }
 }
 
-static void main_loop()
+static void main_loop(void)
 {
     SDL_Event event;
     mouse_set_inside_window(1);
@@ -202,7 +202,7 @@ static void main_loop()
     }
 }
 
-static int init_sdl()
+static int init_sdl(void)
 {
     SDL_Log("Initializing SDL");
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
@@ -255,7 +255,7 @@ static void setup(const char *custom_data_dir)
     }
 }
 
-static void teardown()
+static void teardown(void)
 {
     SDL_Log("Exiting game");
     game_exit();

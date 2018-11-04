@@ -7,12 +7,12 @@
 #include "sound/music.h"
 #include "window/main_menu.h"
 
-static void init()
+static void init(void)
 {
     sound_music_play_intro();
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_clear_screen();
 
@@ -29,7 +29,7 @@ static void handle_mouse(const mouse *m)
     }
 }
 
-void window_logo_show()
+void window_logo_show(void)
 {
     window_type window = {
         WINDOW_LOGO,

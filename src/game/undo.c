@@ -32,12 +32,12 @@ static struct {
     building buildings[MAX_UNDO_BUILDINGS];
 } data;
 
-int game_can_undo()
+int game_can_undo(void)
 {
     return data.ready && data.available;
 }
 
-void game_undo_disable()
+void game_undo_disable(void)
 {
     data.available = 0;
 }
@@ -85,7 +85,7 @@ int game_undo_contains_building(int building_id)
     return 0;
 }
 
-static void clear_buildings()
+static void clear_buildings(void)
 {
     data.num_buildings = 0;
     memset(data.buildings, 0, MAX_UNDO_BUILDINGS * sizeof(building));
@@ -119,7 +119,7 @@ int game_undo_start_build(building_type type)
     return 1;
 }
 
-void game_undo_restore_building_state()
+void game_undo_restore_building_state(void)
 {
     for (int i = 0; i < data.num_buildings; i++) {
         if (data.buildings[i].id) {
@@ -133,7 +133,7 @@ void game_undo_restore_building_state()
     clear_buildings();
 }
 
-static void restore_map_images()
+static void restore_map_images(void)
 {
     int map_width, map_height;
     map_grid_size(&map_width, &map_height);
@@ -193,7 +193,7 @@ static void add_building_to_terrain(building *b)
     b->state = BUILDING_STATE_IN_USE;
 }
 
-void game_undo_perform()
+void game_undo_perform(void)
 {
     if (!game_can_undo()) {
         return;
@@ -249,7 +249,7 @@ void game_undo_perform()
     data.num_buildings = 0;
 }
 
-void game_undo_reduce_time_available()
+void game_undo_reduce_time_available(void)
 {
     if (!game_can_undo()) {
         return;

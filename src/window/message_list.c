@@ -61,13 +61,13 @@ static struct {
     int focus_button_id;
 } data;
 
-static void init()
+static void init(void)
 {
     city_message_sort_and_compact();
     city_message_update_scroll(MAX_MESSAGES);
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     window_city_draw_all();
 
@@ -143,7 +143,7 @@ static void draw_messages(int total_messages)
     }
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     image_buttons_draw(16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1);
@@ -277,7 +277,7 @@ static void get_tooltip(tooltip_context *c)
     c->type = TOOLTIP_BUTTON;
 }
 
-void window_message_list_show()
+void window_message_list_show(void)
 {
     window_type window = {
         WINDOW_MESSAGE_LIST,

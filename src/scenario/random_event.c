@@ -31,7 +31,7 @@ static const int RANDOM_EVENT_PROBABILITY[128] = {
     0, 0, 3, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0
 };
 
-static void raise_wages()
+static void raise_wages(void)
 {
     if (scenario.random_events.raise_wages) {
         if (city_labor_raise_wages_rome()) {
@@ -40,7 +40,7 @@ static void raise_wages()
     }
 }
 
-static void lower_wages()
+static void lower_wages(void)
 {
     if (scenario.random_events.lower_wages) {
         if (city_labor_lower_wages_rome()) {
@@ -49,7 +49,7 @@ static void lower_wages()
     }
 }
 
-static void disrupt_land_trade()
+static void disrupt_land_trade(void)
 {
     if (scenario.random_events.land_trade_problem) {
         if (city_trade_has_land_trade_route()) {
@@ -63,7 +63,7 @@ static void disrupt_land_trade()
     }
 }
 
-static void disrupt_sea_trade()
+static void disrupt_sea_trade(void)
 {
     if (scenario.random_events.sea_trade_problem) {
         if (city_trade_has_sea_trade_route()) {
@@ -73,7 +73,7 @@ static void disrupt_sea_trade()
     }
 }
 
-static void contaminate_water()
+static void contaminate_water(void)
 {
     if (scenario.random_events.contaminated_water) {
         if (city_population() > 200) {
@@ -92,7 +92,7 @@ static void contaminate_water()
     }
 }
 
-static void destroy_iron_mine()
+static void destroy_iron_mine(void)
 {
     if (scenario.random_events.iron_mine_collapse) {
         int grid_offset = building_destroy_first_of_type(BUILDING_IRON_MINE);
@@ -102,7 +102,7 @@ static void destroy_iron_mine()
     }
 }
 
-static void destroy_clay_pit()
+static void destroy_clay_pit(void)
 {
     if (scenario.random_events.clay_pit_flooded) {
         int grid_offset = building_destroy_first_of_type(BUILDING_CLAY_PIT);
@@ -112,7 +112,7 @@ static void destroy_clay_pit()
     }
 }
 
-void scenario_random_event_process()
+void scenario_random_event_process(void)
 {
     int event = RANDOM_EVENT_PROBABILITY[random_byte()];
     switch (event) {

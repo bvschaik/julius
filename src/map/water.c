@@ -52,7 +52,7 @@ void map_water_add_building(int building_id, int x, int y, int size, int image_i
     }
 }
 
-static int blocked_land_terrain()
+static int blocked_land_terrain(void)
 {
     return
         TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |

@@ -11,7 +11,7 @@
 
 static grid_i8 desirability_grid;
 
-void map_desirability_clear()
+void map_desirability_clear(void)
 {
     map_grid_clear_i8(desirability_grid.items);
 }
@@ -65,7 +65,7 @@ static void add_to_terrain(int x, int y, int size, int desirability, int step, i
     }
 }
 
-static void update_buildings()
+static void update_buildings(void)
 {
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
@@ -82,7 +82,7 @@ static void update_buildings()
     }
 }
 
-static void update_terrain()
+static void update_terrain(void)
 {
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
@@ -120,7 +120,7 @@ static void update_terrain()
     }
 }
 
-void map_desirability_update()
+void map_desirability_update(void)
 {
     map_desirability_clear();
     update_buildings();

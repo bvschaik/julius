@@ -34,7 +34,7 @@ static void errlog(const char *msg)
     log_error(msg, 0, 0);
 }
 
-int game_pre_init()
+int game_pre_init(void)
 {
     settings_load();
     scenario_settings_init();
@@ -49,7 +49,7 @@ int game_pre_init()
     return 1;
 }
 
-int game_init()
+int game_init(void)
 {
     system_init_cursors();
     if (!image_init()) {
@@ -77,7 +77,7 @@ int game_init()
     return 1;
 }
 
-static int get_elapsed_ticks()
+static int get_elapsed_ticks(void)
 {
     time_millis now = time_get_millis();
     time_millis diff = now - last_update;
@@ -117,7 +117,7 @@ static int get_elapsed_ticks()
     return ticks_per_frame;
 }
 
-void game_run()
+void game_run(void)
 {
     game_animation_update();
     int num_ticks = get_elapsed_ticks();
@@ -127,13 +127,13 @@ void game_run()
     }
 }
 
-void game_draw()
+void game_draw(void)
 {
     window_draw(0);
     sound_city_play();
 }
 
-void game_exit()
+void game_exit(void)
 {
     video_shutdown();
     settings_save();

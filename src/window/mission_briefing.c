@@ -39,13 +39,13 @@ static struct {
     int campaign_mission_loaded;
 } data;
 
-static void init()
+static void init(void)
 {
     data.focus_button = 0;
     rich_text_reset(0);
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     if (!data.campaign_mission_loaded) {
         data.campaign_mission_loaded = 1;
@@ -130,7 +130,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 
@@ -174,7 +174,7 @@ static void button_start_mission(int param1, int param2)
     city_mission_reset_save_start();
 }
 
-static void show()
+static void show(void)
 {
     window_type window = {
         WINDOW_MISSION_BRIEFING,
@@ -187,14 +187,14 @@ static void show()
     window_show(&window);
 }
 
-void window_mission_briefing_show()
+void window_mission_briefing_show(void)
 {
     data.is_review = 0;
     data.campaign_mission_loaded = 0;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
 
-void window_mission_briefing_show_review()
+void window_mission_briefing_show_review(void)
 {
     data.is_review = 1;
     data.campaign_mission_loaded = 1;

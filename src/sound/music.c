@@ -48,20 +48,20 @@ static void play_track(int track)
     data.current_track = track;
 }
 
-void sound_music_play_intro()
+void sound_music_play_intro(void)
 {
     if (setting_sound(SOUND_MUSIC)->enabled) {
         play_track(TRACK_INTRO);
     }
 }
 
-void sound_music_reset()
+void sound_music_reset(void)
 {
     data.current_track = TRACK_NONE;
     data.next_check = 0;
 }
 
-void sound_music_update()
+void sound_music_update(void)
 {
     if (data.next_check) {
         --data.next_check;
@@ -97,7 +97,7 @@ void sound_music_update()
     data.next_check = 10;
 }
 
-void sound_music_stop()
+void sound_music_stop(void)
 {
     sound_device_stop_music();
     data.current_track = TRACK_NONE;

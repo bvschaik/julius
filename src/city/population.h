@@ -1,17 +1,17 @@
 #ifndef CITY_POPULATION_H
 #define CITY_POPULATION_H
 
-int city_population();
-int city_population_school_age();
-int city_population_academy_age();
+int city_population(void);
+int city_population_school_age(void);
+int city_population_academy_age(void);
 
-int city_population_last_used_house_add();
+int city_population_last_used_house_add(void);
 void city_population_set_last_used_house_add(int building_id);
 
-int city_population_last_used_house_remove();
+int city_population_last_used_house_remove(void);
 void city_population_set_last_used_house_remove(int building_id);
 
-void city_population_clear_capacity();
+void city_population_clear_capacity(void);
 void city_population_add_capacity(int people_in_house, int max_people);
 
 /**
@@ -38,13 +38,13 @@ void city_population_remove_home_removed(int num_people);
 
 void city_population_remove_for_troop_request(int num_people);
 
-int city_population_people_of_working_age();
+int city_population_people_of_working_age(void);
 
-void city_population_calculate_educational_age();
+void city_population_calculate_educational_age(void);
 
-void city_population_record_monthly();
+void city_population_record_monthly(void);
 
-int city_population_monthly_count();
+int city_population_monthly_count(void);
 
 int city_population_at_month(int max_months, int month);
 
@@ -52,13 +52,13 @@ int city_population_at_age(int age);
 
 int city_population_at_level(int house_level);
 
-void city_population_request_yearly_update();
+void city_population_request_yearly_update(void);
 
-void city_population_yearly_update();
+void city_population_yearly_update(void);
 
-void city_population_check_consistency();
+void city_population_check_consistency(void);
 
-int city_population_graph_order();
+int city_population_graph_order(void);
 void city_population_set_graph_order(int order);
 
 #endif // CITY_POPULATION_H

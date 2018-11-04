@@ -107,7 +107,7 @@ static void generate_protestor(building *b)
     }
 }
 
-void figure_generate_criminals()
+void figure_generate_criminals(void)
 {
     building *min_building = 0;
     int min_happiness = 50;

@@ -17,27 +17,27 @@ void game_time_init(int year)
     data.year = year;
 }
 
-int game_time_tick()
+int game_time_tick(void)
 {
     return data.tick;
 }
 
-int game_time_day()
+int game_time_day(void)
 {
     return data.day;
 }
 
-int game_time_month()
+int game_time_month(void)
 {
     return data.month;
 }
 
-int game_time_year()
+int game_time_year(void)
 {
     return data.year;
 }
 
-int game_time_advance_tick()
+int game_time_advance_tick(void)
 {
     if (++data.tick >= 50) {
         data.tick = 0;
@@ -46,7 +46,7 @@ int game_time_advance_tick()
     return 0;
 }
 
-int game_time_advance_day()
+int game_time_advance_day(void)
 {
     data.total_days++;
     if (++data.day >= 16) {
@@ -56,7 +56,7 @@ int game_time_advance_day()
     return 0;
 }
 
-int game_time_advance_month()
+int game_time_advance_month(void)
 {
     if (++data.month >= 12) {
         data.month = 0;
@@ -65,7 +65,7 @@ int game_time_advance_month()
     return 0;
 }
 
-void game_time_advance_year()
+void game_time_advance_year(void)
 {
     ++data.year;
 }

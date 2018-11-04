@@ -198,7 +198,7 @@ static int get_tooltip_desirability(tooltip_context *c, int grid_offset)
     }
 }
 
-const city_overlay *city_overlay_for_religion()
+const city_overlay *city_overlay_for_religion(void)
 {
     static city_overlay overlay = {
         OVERLAY_RELIGION,
@@ -214,7 +214,7 @@ const city_overlay *city_overlay_for_religion()
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_food_stocks()
+const city_overlay *city_overlay_for_food_stocks(void)
 {
     static city_overlay overlay = {
         OVERLAY_FOOD_STOCKS,
@@ -230,7 +230,7 @@ const city_overlay *city_overlay_for_food_stocks()
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_tax_income()
+const city_overlay *city_overlay_for_tax_income(void)
 {
     static city_overlay overlay = {
         OVERLAY_TAX_INCOME,
@@ -246,7 +246,7 @@ const city_overlay *city_overlay_for_tax_income()
     return &overlay;
 }
 
-static int terrain_on_water_overlay()
+static int terrain_on_water_overlay(void)
 {
     return
         TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SCRUB |
@@ -325,7 +325,7 @@ static void draw_top_water(int x, int y, int grid_offset)
     }
 }
 
-const city_overlay *city_overlay_for_water()
+const city_overlay *city_overlay_for_water(void)
 {
     static city_overlay overlay = {
         OVERLAY_WATER,
@@ -341,7 +341,7 @@ const city_overlay *city_overlay_for_water()
     return &overlay;
 }
 
-static int terrain_on_desirability_overlay()
+static int terrain_on_desirability_overlay(void)
 {
     return
         TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
@@ -410,7 +410,7 @@ static void draw_top_desirability(int x, int y, int grid_offset)
     }
 }
 
-const city_overlay *city_overlay_for_desirability()
+const city_overlay *city_overlay_for_desirability(void)
 {
     static city_overlay overlay = {
         OVERLAY_DESIRABILITY,

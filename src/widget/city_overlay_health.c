@@ -117,7 +117,7 @@ static int get_tooltip_hospital(tooltip_context *c, const building *b)
     }
 }
 
-const city_overlay *city_overlay_for_barber()
+const city_overlay *city_overlay_for_barber(void)
 {
     static city_overlay overlay = {
         OVERLAY_BARBER,
@@ -133,7 +133,7 @@ const city_overlay *city_overlay_for_barber()
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_bathhouse()
+const city_overlay *city_overlay_for_bathhouse(void)
 {
     static city_overlay overlay = {
         OVERLAY_BATHHOUSE,
@@ -149,7 +149,7 @@ const city_overlay *city_overlay_for_bathhouse()
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_clinic()
+const city_overlay *city_overlay_for_clinic(void)
 {
     static city_overlay overlay = {
         OVERLAY_CLINIC,
@@ -165,7 +165,7 @@ const city_overlay *city_overlay_for_clinic()
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_hospital()
+const city_overlay *city_overlay_for_hospital(void)
 {
     static city_overlay overlay = {
         OVERLAY_HOSPITAL,

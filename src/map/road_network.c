@@ -20,7 +20,7 @@ static struct {
     int tail;
 } queue;
 
-void map_road_network_clear()
+void map_road_network_clear(void)
 {
     map_grid_clear_u8(network.items);
 }
@@ -73,7 +73,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id)
     return size;
 }
 
-void map_road_network_update()
+void map_road_network_update(void)
 {
     city_map_clear_largest_road_networks();
     map_grid_clear_u8(network.items);

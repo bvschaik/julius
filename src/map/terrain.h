@@ -76,11 +76,11 @@ int map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int *x_t
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation);
 void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation);
 
-void map_terrain_backup();
+void map_terrain_backup(void);
 
-void map_terrain_restore();
+void map_terrain_restore(void);
 
-void map_terrain_clear();
+void map_terrain_clear(void);
 
 void map_terrain_save_state(buffer *buf);
 

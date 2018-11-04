@@ -37,7 +37,7 @@ static arrow_button wage_buttons[] = {
 static int focus_button_id;
 static int arrow_button_focus;
 
-static int draw_background()
+static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS), 10, 10);
@@ -72,7 +72,7 @@ static int draw_background()
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     arrow_buttons_draw(0, 0, wage_buttons, 2);
 
@@ -117,7 +117,7 @@ static void button_priority(int category, int param2)
     window_labor_priority_show(category);
 }
 
-static int get_tooltip_text()
+static int get_tooltip_text(void)
 {
     if (focus_button_id) {
         return 90;
@@ -128,7 +128,7 @@ static int get_tooltip_text()
     }
 }
 
-const advisor_window_type *window_advisor_labor()
+const advisor_window_type *window_advisor_labor(void)
 {
     static const advisor_window_type window = {
         draw_background,
@@ -139,7 +139,7 @@ const advisor_window_type *window_advisor_labor()
     return &window;
 }
 
-void window_advisor_labor_draw_dialog_background()
+void window_advisor_labor_draw_dialog_background(void)
 {
     draw_background();
     draw_foreground();

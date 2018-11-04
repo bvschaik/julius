@@ -1,7 +1,7 @@
 #ifndef MAP_SOLDIER_STRENGTH_H
 #define MAP_SOLDIER_STRENGTH_H
 
-void map_soldier_strength_clear();
+void map_soldier_strength_clear(void);
 
 void map_soldier_strength_add(int x, int y, int radius, int amount);
 

@@ -3,9 +3,9 @@
 
 #include "figure/figure.h"
 
-void figure_create_fishing_points();
+void figure_create_fishing_points(void);
 
-void figure_create_herds();
+void figure_create_herds(void);
 
 void figure_seagulls_action(figure *f);
 
@@ -17,6 +17,6 @@ void figure_zebra_action(figure *f);
 
 void figure_hippodrome_horse_action(figure *f);
 
-void figure_hippodrome_horse_reroute();
+void figure_hippodrome_horse_reroute(void);
 
 #endif // FIGURETYPE_ANIMAL_H

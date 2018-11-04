@@ -3,10 +3,10 @@
 
 int scenario_building_allowed(int building_type);
 
-int scenario_building_image_native_hut();
+int scenario_building_image_native_hut(void);
 
-int scenario_building_image_native_meeting();
+int scenario_building_image_native_meeting(void);
 
-int scenario_building_image_native_crops();
+int scenario_building_image_native_crops(void);
 
 #endif // SCENARIO_BUILDING_H

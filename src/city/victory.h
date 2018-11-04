@@ -7,20 +7,20 @@ enum {
     VICTORY_STATE_WON = 1
 };
 
-void city_victory_reset();
+void city_victory_reset(void);
 
-void city_victory_force_win();
+void city_victory_force_win(void);
 
-int city_victory_state();
+int city_victory_state(void);
 
-void city_victory_check();
+void city_victory_check(void);
 
-void city_victory_update_months_to_govern();
+void city_victory_update_months_to_govern(void);
 
 void city_victory_continue_governing(int months);
 
-void city_victory_stop_governing();
+void city_victory_stop_governing(void);
 
-int city_victory_has_won();
+int city_victory_has_won(void);
 
 #endif // CITY_VICTORY_H

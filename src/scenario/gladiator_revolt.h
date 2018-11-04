@@ -3,13 +3,13 @@
 
 #include "core/buffer.h"
 
-void scenario_gladiator_revolt_init();
+void scenario_gladiator_revolt_init(void);
 
-void scenario_gladiator_revolt_process();
+void scenario_gladiator_revolt_process(void);
 
-int scenario_gladiator_revolt_is_in_progress();
+int scenario_gladiator_revolt_is_in_progress(void);
 
-int scenario_gladiator_revolt_is_finished();
+int scenario_gladiator_revolt_is_finished(void);
 
 void scenario_gladiator_revolt_save_state(buffer *buf);
 

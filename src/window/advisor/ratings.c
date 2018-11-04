@@ -36,7 +36,7 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
     }
 }
 
-static int draw_background()
+static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
@@ -157,7 +157,7 @@ static int draw_background()
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     button_border_draw(80, 286, 110, 66, focus_button_id == SELECTED_RATING_CULTURE);
     button_border_draw(200, 286, 110, 66, focus_button_id == SELECTED_RATING_PROSPERITY);
@@ -176,7 +176,7 @@ static void button_rating(int rating, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text()
+static int get_tooltip_text(void)
 {
     switch (focus_button_id) {
         case SELECTED_RATING_CULTURE: return 102;
@@ -187,7 +187,7 @@ static int get_tooltip_text()
     }
 }
 
-const advisor_window_type *window_advisor_ratings()
+const advisor_window_type *window_advisor_ratings(void)
 {
     static const advisor_window_type window = {
         draw_background,

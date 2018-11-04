@@ -55,7 +55,7 @@ typedef struct {
     void (*get_tooltip)(tooltip_context *c);
 } window_type;
 
-void window_invalidate();
+void window_invalidate(void);
 
 void window_draw(int force);
 
@@ -63,8 +63,8 @@ int window_is(window_id id);
 
 void window_show(const window_type *window);
 
-window_id window_get_id();
+window_id window_get_id(void);
 
-void window_go_back();
+void window_go_back(void);
 
 #endif // GRAPHICS_WINDOW_H

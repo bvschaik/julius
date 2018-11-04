@@ -4,18 +4,18 @@
 #include "map/grid.h"
 #include "scenario/data.h"
 
-void scenario_map_init()
+void scenario_map_init(void)
 {
     map_grid_init(scenario.map.width, scenario.map.height,
                   scenario.map.grid_start, scenario.map.grid_border_size);
 }
 
-int scenario_map_size()
+int scenario_map_size(void)
 {
     return scenario.map.width;
 }
 
-void scenario_map_init_entry_exit()
+void scenario_map_init_entry_exit(void)
 {
     if (scenario.entry_point.x == -1 || scenario.entry_point.y == -1) {
         scenario.entry_point.x = scenario.map.width - 1;
@@ -27,35 +27,35 @@ void scenario_map_init_entry_exit()
     }
 }
 
-map_point scenario_map_entry()
+map_point scenario_map_entry(void)
 {
     map_point point = {scenario.entry_point.x, scenario.entry_point.y};
     return point;
 }
 
-map_point scenario_map_exit()
+map_point scenario_map_exit(void)
 {
     map_point point = {scenario.exit_point.x, scenario.exit_point.y};
     return point;
 }
 
-int scenario_map_has_river_entry()
+int scenario_map_has_river_entry(void)
 {
     return scenario.river_entry_point.x != -1 && scenario.river_entry_point.y != -1;
 }
 
-map_point scenario_map_river_entry()
+map_point scenario_map_river_entry(void)
 {
     map_point point = {scenario.river_entry_point.x, scenario.river_entry_point.y};
     return point;
 }
 
-int scenario_map_has_river_exit()
+int scenario_map_has_river_exit(void)
 {
     return scenario.river_exit_point.x != -1 && scenario.river_exit_point.y != -1;
 }
 
-map_point scenario_map_river_exit()
+map_point scenario_map_river_exit(void)
 {
     map_point point = {scenario.river_exit_point.x, scenario.river_exit_point.y};
     return point;
@@ -110,7 +110,7 @@ int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y)
     return 0;
 }
 
-int scenario_map_has_flotsam()
+int scenario_map_has_flotsam(void)
 {
     return scenario.flotsam_enabled;
 }

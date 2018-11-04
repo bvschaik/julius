@@ -5,7 +5,7 @@
 
 int map_elevation_at(int grid_offset);
 
-void map_elevation_clear();
+void map_elevation_clear(void);
 
 void map_elevation_save_state(buffer *buf);
 

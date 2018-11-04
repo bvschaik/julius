@@ -151,19 +151,19 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
     return 1;
 }
 
-void building_barracks_request_tower_sentry()
+void building_barracks_request_tower_sentry(void)
 {
     tower_sentry_request = 2;
 }
 
-void building_barracks_decay_tower_sentry_request()
+void building_barracks_decay_tower_sentry_request(void)
 {
     if (tower_sentry_request > 0) {
         tower_sentry_request--;
     }
 }
 
-int building_barracks_has_tower_sentry_request()
+int building_barracks_has_tower_sentry_request(void)
 {
     return tower_sentry_request;
 }

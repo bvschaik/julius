@@ -1169,7 +1169,7 @@ static void update_native_crop_progress(building *b)
 }
 
 
-void building_figure_generate()
+void building_figure_generate(void)
 {
     int patrician_generated = 0;
     building_barracks_decay_tower_sentry_request();

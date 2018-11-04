@@ -60,7 +60,7 @@ static void create_fishing_point(int x, int y)
         15 * fish->destination_x, 15 * fish->destination_y, 0);
 }
 
-void figure_create_fishing_points()
+void figure_create_fishing_points(void)
 {
     scenario_map_foreach_fishing_point(create_fishing_point);
 }
@@ -97,7 +97,7 @@ static void create_herd(int x, int y)
     }
 }
 
-void figure_create_herds()
+void figure_create_herds(void)
 {
     scenario_map_foreach_herd_point(create_herd);
 }
@@ -441,7 +441,7 @@ void figure_hippodrome_horse_action(figure *f)
     figure_image_set_cart_offset(f, cart_dir);
 }
 
-void figure_hippodrome_horse_reroute()
+void figure_hippodrome_horse_reroute(void)
 {
     if (!city_entertainment_hippodrome_has_race()) {
         return;

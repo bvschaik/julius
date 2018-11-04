@@ -1,9 +1,9 @@
 #ifndef MAP_BRIDGE_H
 #define MAP_BRIDGE_H
 
-int map_bridge_building_length();
+int map_bridge_building_length(void);
 
-void map_bridge_reset_building_length();
+void map_bridge_reset_building_length(void);
 
 int map_bridge_calculate_length_direction(int x, int y, int *length, int *direction);
 

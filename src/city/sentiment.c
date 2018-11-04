@@ -16,12 +16,12 @@ static const int SENTIMENT_PER_TAX_RATE[26] = {
     -6, -6, -6, -6, -6, -6
 };
 
-int city_sentiment()
+int city_sentiment(void)
 {
     return city_data.sentiment.value;
 }
 
-int city_sentiment_low_mood_cause()
+int city_sentiment_low_mood_cause(void)
 {
     return city_data.sentiment.low_mood_cause;
 }
@@ -49,33 +49,33 @@ void city_sentiment_set_max_happiness(int max)
     }
 }
 
-void city_sentiment_reset_protesters_criminals()
+void city_sentiment_reset_protesters_criminals(void)
 {
     city_data.sentiment.protesters = 0;
     city_data.sentiment.criminals = 0;
 }
 
-void city_sentiment_add_protester()
+void city_sentiment_add_protester(void)
 {
     city_data.sentiment.protesters++;
 }
 
-void city_sentiment_add_criminal()
+void city_sentiment_add_criminal(void)
 {
     city_data.sentiment.criminals++;
 }
 
-int city_sentiment_protesters()
+int city_sentiment_protesters(void)
 {
     return city_data.sentiment.protesters;
 }
 
-int city_sentiment_criminals()
+int city_sentiment_criminals(void)
 {
     return city_data.sentiment.criminals;
 }
 
-static int get_sentiment_penalty_for_tent_dwellers()
+static int get_sentiment_penalty_for_tent_dwellers(void)
 {
     // alternate the penalty for every update
     if (!city_data.sentiment.include_tents) {
@@ -124,7 +124,7 @@ static int get_sentiment_penalty_for_tent_dwellers()
     return penalty;
 }
 
-static int get_sentiment_contribution_wages()
+static int get_sentiment_contribution_wages(void)
 {
     city_data.sentiment.wages = city_data.labor.wages;
     int contribution = 0;
@@ -146,7 +146,7 @@ static int get_sentiment_contribution_wages()
     return contribution;
 }
 
-static int get_sentiment_contribution_employment()
+static int get_sentiment_contribution_employment(void)
 {
     int unemployment = city_data.sentiment.unemployment = city_data.labor.unemployment_percentage;
     if (unemployment > 25) {
@@ -162,7 +162,7 @@ static int get_sentiment_contribution_employment()
     }
 }
 
-void city_sentiment_update()
+void city_sentiment_update(void)
 {
     city_population_check_consistency();
 

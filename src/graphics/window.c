@@ -11,11 +11,14 @@ static int queue_index = 0;
 static window_type *current_window = 0;
 static int refresh_requested;
 
-static void noop()
+static void noop(void)
+{
+}
+static void noop_mouse(const mouse *m)
 {
 }
 
-static void increase_queue_index()
+static void increase_queue_index(void)
 {
     queue_index++;
     if (queue_index >= MAX_QUEUE) {
@@ -23,7 +26,7 @@ static void increase_queue_index()
     }
 }
 
-static void decrease_queue_index()
+static void decrease_queue_index(void)
 {
     queue_index--;
     if (queue_index < 0) {
@@ -31,7 +34,7 @@ static void decrease_queue_index()
     }
 }
 
-void window_invalidate()
+void window_invalidate(void)
 {
     refresh_requested = 1;
 }
@@ -41,7 +44,7 @@ int window_is(window_id id)
     return current_window->id == id;
 }
 
-window_id window_get_id()
+window_id window_get_id(void)
 {
     return current_window->id;
 }
@@ -58,24 +61,24 @@ void window_show(const window_type *window)
         current_window->draw_foreground = noop;
     }
     if (!current_window->handle_mouse) {
-        current_window->handle_mouse = noop;
+        current_window->handle_mouse = noop_mouse;
     }
     window_invalidate();
 }
 
-void window_go_back()
+void window_go_back(void)
 {
     decrease_queue_index();
     current_window = &window_queue[queue_index];
     window_invalidate();
 }
 
-static void update_mouse_before()
+static void update_mouse_before(void)
 {
     mouse_determine_button_state();
 }
 
-static void update_mouse_after()
+static void update_mouse_after(void)
 {
     mouse_set_scroll(SCROLL_NONE);
     input_cursor_update(current_window->id);

@@ -20,37 +20,37 @@ typedef enum {
     TUT2_BUILD_AFTER_450
 } tutorial_build_buttons;
 
-void tutorial_init();
+void tutorial_init(void);
 
-tutorial_availability tutorial_advisor_empire_availability();
+tutorial_availability tutorial_advisor_empire_availability(void);
 
-tutorial_build_buttons tutorial_get_build_buttons();
+tutorial_build_buttons tutorial_get_build_buttons(void);
 
 int tutorial_get_population_cap(int current_cap);
 
-int tutorial_get_immediate_goal_text();
+int tutorial_get_immediate_goal_text(void);
 
 int tutorial_adjust_request_year(int *year);
 
-int tutorial_extra_fire_risk();
+int tutorial_extra_fire_risk(void);
 
-int tutorial_extra_damage_risk();
+int tutorial_extra_damage_risk(void);
 
-int tutorial_handle_fire();
+int tutorial_handle_fire(void);
 
-int tutorial_handle_collapse();
+int tutorial_handle_collapse(void);
 
-void tutorial_on_crime();
+void tutorial_on_crime(void);
 
-void tutorial_on_disease();
+void tutorial_on_disease(void);
 
-void tutorial_on_filled_granary();
+void tutorial_on_filled_granary(void);
 
-void tutorial_on_add_to_warehouse();
+void tutorial_on_add_to_warehouse(void);
 
-void tutorial_on_day_tick();
+void tutorial_on_day_tick(void);
 
-void tutorial_on_month_tick();
+void tutorial_on_month_tick(void);
 
 void tutorial_save_state(buffer *buf1, buffer *buf2, buffer *buf3);
 

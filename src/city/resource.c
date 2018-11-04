@@ -21,52 +21,52 @@ int city_resource_count(resource_type resource)
     return city_data.resource.stored_in_warehouses[resource];
 }
 
-const resource_list *city_resource_get_available()
+const resource_list *city_resource_get_available(void)
 {
     return &available.resource_list;
 }
 
-const resource_list *city_resource_get_available_foods()
+const resource_list *city_resource_get_available_foods(void)
 {
     return &available.food_list;
 }
 
-int city_resource_multiple_wine_available()
+int city_resource_multiple_wine_available(void)
 {
     return city_data.resource.wine_types_available >= 2;
 }
 
-int city_resource_food_types_available()
+int city_resource_food_types_available(void)
 {
     return city_data.resource.food_types_available;
 }
 
-int city_resource_food_stored()
+int city_resource_food_stored(void)
 {
     return city_data.resource.granary_total_stored;
 }
 
-int city_resource_food_needed()
+int city_resource_food_needed(void)
 {
     return city_data.resource.food_needed_per_month;
 }
 
-int city_resource_food_supply_months()
+int city_resource_food_supply_months(void)
 {
     return city_data.resource.food_supply_months;
 }
 
-int city_resource_food_percentage_produced()
+int city_resource_food_percentage_produced(void)
 {
     return calc_percentage(city_data.resource.food_produced_last_month, city_data.resource.food_consumed_last_month);
 }
 
-int city_resource_operating_granaries()
+int city_resource_operating_granaries(void)
 {
     return city_data.resource.granaries.operating;
 }
 
-int city_resource_last_used_warehouse()
+int city_resource_last_used_warehouse(void)
 {
     return city_data.resource.last_used_warehouse;
 }
@@ -162,7 +162,7 @@ void city_resource_remove_from_warehouse(resource_type resource, int amount)
     city_data.resource.stored_in_warehouses[resource] -= amount;
 }
 
-void city_resource_calculate_warehouse_stocks()
+void city_resource_calculate_warehouse_stocks(void)
 {
     for (int i = 0; i < RESOURCE_MAX; i++) {
         city_data.resource.space_in_warehouses[i] = 0;
@@ -199,7 +199,7 @@ void city_resource_calculate_warehouse_stocks()
     }
 }
 
-void city_resource_determine_available()
+void city_resource_determine_available(void)
 {
     for (int i = 0; i < RESOURCE_MAX; i++) {
         available.resource_list.items[i] = 0;
@@ -225,7 +225,7 @@ void city_resource_determine_available()
     }
 }
 
-static void calculate_available_food()
+static void calculate_available_food(void)
 {
     for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
         city_data.resource.granary_food_stored[i] = 0;
@@ -291,7 +291,7 @@ static void calculate_available_food()
     }
 }
 
-void city_resource_calculate_food_stocks_and_supply_wheat()
+void city_resource_calculate_food_stocks_and_supply_wheat(void)
 {
     calculate_available_food();
     if (scenario_property_rome_supplies_wheat()) {
@@ -304,7 +304,7 @@ void city_resource_calculate_food_stocks_and_supply_wheat()
     }
 }
 
-void city_resource_calculate_workshop_stocks()
+void city_resource_calculate_workshop_stocks(void)
 {
     for (int i = 0; i < 6; i++) {
         city_data.resource.stored_in_workshops[i] = 0;
@@ -329,7 +329,7 @@ void city_resource_calculate_workshop_stocks()
     }
 }
 
-void city_resource_consume_food()
+void city_resource_consume_food(void)
 {
     calculate_available_food();
     city_data.resource.food_types_eaten = 0;

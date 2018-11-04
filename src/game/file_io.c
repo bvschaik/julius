@@ -190,7 +190,7 @@ static buffer *create_savegame_piece(int size, int compressed)
     return &piece->buf;
 }
 
-static void init_scenario_data()
+static void init_scenario_data(void)
 {
     if (scenario_data.num_pieces > 0) {
         for (int i = 0; i < scenario_data.num_pieces; i++) {
@@ -210,7 +210,7 @@ static void init_scenario_data()
     state->scenario = create_scenario_piece(1720);
 }
 
-static void init_savegame_data()
+static void init_savegame_data(void)
 {
     if (savegame_data.num_pieces > 0) {
         for (int i = 0; i < savegame_data.num_pieces; i++) {

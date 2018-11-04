@@ -18,7 +18,7 @@ static struct {
     } arrow_key;
 } data = {0, 0, {0, 0, 0, 0}};
 
-int scroll_in_progress()
+int scroll_in_progress(void)
 {
     return data.is_scrolling;
 }
@@ -113,22 +113,22 @@ int scroll_get_direction(const mouse *m)
     return DIR_8_NONE;
 }
 
-void scroll_arrow_left()
+void scroll_arrow_left(void)
 {
     data.arrow_key.left = 1;
 }
 
-void scroll_arrow_right()
+void scroll_arrow_right(void)
 {
     data.arrow_key.right = 1;
 }
 
-void scroll_arrow_up()
+void scroll_arrow_up(void)
 {
     data.arrow_key.up = 1;
 }
 
-void scroll_arrow_down()
+void scroll_arrow_down(void)
 {
     data.arrow_key.down = 1;
 }

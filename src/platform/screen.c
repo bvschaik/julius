@@ -54,7 +54,7 @@ int platform_screen_create(const char *title)
     return platform_screen_resize(width, height);
 }
 
-void platform_screen_destroy()
+void platform_screen_destroy(void)
 {
     if (SDL.texture) {
         SDL_DestroyTexture(SDL.texture);
@@ -91,7 +91,7 @@ int platform_screen_resize(int width, int height)
     }
 }
 
-void platform_screen_set_fullscreen()
+void platform_screen_set_fullscreen(void)
 {
     SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
     int orig_w, orig_h;
@@ -107,7 +107,7 @@ void platform_screen_set_fullscreen()
     setting_set_display(1, mode.w, mode.h);
 }
 
-void platform_screen_set_windowed()
+void platform_screen_set_windowed(void)
 {
     int width, height;
     setting_window(&width, &height);
@@ -129,7 +129,7 @@ void platform_screen_set_window_size(int width, int height)
     setting_set_display(0, width, height);
 }
 
-void platform_screen_render()
+void platform_screen_render(void)
 {
     SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
     SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);

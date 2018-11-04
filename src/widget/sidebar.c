@@ -41,7 +41,7 @@ static const int PROGRESS_TO_X_OFFSET[] = {
     119, 125, 130, 135, 139, 143, 146, 149, 152, 154, 156, 158, 160, 162, 165
 };
 
-static void slide_sidebar();
+static void slide_sidebar(void);
 
 static void button_overlay(int param1, int param2);
 static void button_collapse_expand(int param1, int param2);
@@ -114,19 +114,19 @@ static struct {
     int focus_button_for_tooltip;
 } data = {0, 0, 0, 0};
 
-static int get_x_offset_expanded()
+static int get_x_offset_expanded(void)
 {
     int s_width = screen_width();
     return (s_width - (s_width + 20) % 60 - SIDEBAR_EXPANDED_WIDTH);
 }
 
-static int get_x_offset_collapsed()
+static int get_x_offset_collapsed(void)
 {
     int s_width = screen_width();
     return s_width - (s_width + 20) % 60 - SIDEBAR_COLLAPSED_WIDTH;
 }
 
-void widget_sidebar_invalidate_minimap()
+void widget_sidebar_invalidate_minimap(void)
 {
     data.minimap_redraw_requested = 1;
 }
@@ -145,7 +145,7 @@ static void draw_minimap(int force)
     }
 }
 
-static void draw_buttons()
+static void draw_buttons(void)
 {
     buttons_build_expanded[12].enabled = game_can_undo();
     if (city_view_is_sidebar_collapsed()) {
@@ -179,7 +179,7 @@ static void draw_overlay_text(int x_offset)
     }
 }
 
-static void draw_sidebar()
+static void draw_sidebar(void)
 {
     int image_base = image_group(GROUP_SIDE_PANEL);
     int is_collapsed = city_view_is_sidebar_collapsed();
@@ -210,7 +210,7 @@ static void draw_sidebar()
     }
 }
 
-static void draw_filler_borders()
+static void draw_filler_borders(void)
 {
     int border_right_width = SIDEBAR_BORDER;
     if (border_right_width) {
@@ -237,13 +237,13 @@ static void draw_filler_borders()
     graphics_fill_rect(0, screen_height() - border_bottom_height, screen_width(), border_bottom_height, COLOR_BLACK);
 }
 
-void widget_sidebar_draw_background()
+void widget_sidebar_draw_background(void)
 {
     draw_sidebar();
     draw_filler_borders();
 }
 
-static void enable_building_buttons()
+static void enable_building_buttons(void)
 {
     for (int i = 0; i < 12; i++) {
         buttons_build_expanded[i].enabled = 1;
@@ -258,7 +258,7 @@ static void enable_building_buttons()
     }
 }
 
-static void draw_number_of_messages()
+static void draw_number_of_messages(void)
 {
     if (window_is(WINDOW_CITY) && !city_view_is_sidebar_collapsed()) {
         int messages = city_message_count();
@@ -273,7 +273,7 @@ static void draw_number_of_messages()
     }
 }
 
-void widget_sidebar_draw_foreground()
+void widget_sidebar_draw_foreground(void)
 {
     if (building_menu_has_changed()) {
         enable_building_buttons();
@@ -290,7 +290,7 @@ void widget_sidebar_draw_foreground()
     draw_number_of_messages();
 }
 
-void widget_sidebar_draw_foreground_military()
+void widget_sidebar_draw_foreground_military(void)
 {
     draw_minimap(0);
 }
@@ -339,7 +339,7 @@ void widget_sidebar_handle_mouse_build_menu(const mouse *m)
     }
 }
 
-int widget_sidebar_get_tooltip_text()
+int widget_sidebar_get_tooltip_text(void)
 {
     return data.focus_button_for_tooltip;
 }
@@ -419,14 +419,14 @@ static void button_rotate(int clockwise, int param2)
     window_invalidate();
 }
 
-static void update_progress()
+static void update_progress(void)
 {
     time_millis now = time_get_millis();
     time_millis diff = now - data.slide_start;
     data.progress = diff / 10;
 }
 
-static void draw_sliding_foreground()
+static void draw_sliding_foreground(void)
 {
     window_invalidate();
     update_progress();
@@ -481,7 +481,7 @@ static void draw_sliding_foreground()
     graphics_reset_clip_rectangle();
 }
 
-static void slide_sidebar()
+static void slide_sidebar(void)
 {
     data.progress = 0;
     data.slide_start = time_get_millis();

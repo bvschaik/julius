@@ -14,7 +14,7 @@
 
 static const char filename_format[] = "city %Y-%m-%d %H.%M.%S.bmp";
 
-static const char *generate_filename()
+static const char *generate_filename(void)
 {
     static char filename[100];
     time_t curtime = time(NULL);

@@ -53,7 +53,7 @@ static image_button image_buttons_advisor[] = {
 static building_info_context context;
 static int focus_image_button_id;
 
-static int get_height_id()
+static int get_height_id(void)
 {
     if (context.type == BUILDING_INFO_TERRAIN) {
         switch (context.terrain_type) {
@@ -336,7 +336,7 @@ static void init(int grid_offset)
     context.x_offset = center_in_city(16 * context.width_blocks);
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     window_city_draw_panels();
     window_city_draw();
@@ -486,7 +486,7 @@ static void draw_background()
     }
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     // building-specific buttons
     if (context.type == BUILDING_INFO_BUILDING) {
@@ -615,7 +615,7 @@ void window_building_info_show(int grid_offset)
     window_show(&window);
 }
 
-int window_building_info_get_building_type()
+int window_building_info_get_building_type(void)
 {
     if (context.type == BUILDING_INFO_BUILDING) {
         return building_get(context.building_id)->type;
@@ -623,7 +623,7 @@ int window_building_info_get_building_type()
     return BUILDING_NONE;
 }
 
-void window_building_info_show_storage_orders()
+void window_building_info_show_storage_orders(void)
 {
     context.storage_show_special_orders = 1;
     window_invalidate();

@@ -33,7 +33,7 @@ static generic_button buttons[] = {
 
 static int focus_button_id;
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 
@@ -89,7 +89,7 @@ static void button_set_salary(int rank, int param2)
     }
 }
 
-void window_set_salary_show()
+void window_set_salary_show(void)
 {
     window_type window = {
         WINDOW_SET_SALARY,

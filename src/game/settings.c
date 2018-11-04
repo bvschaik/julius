@@ -36,7 +36,7 @@ static struct {
 } data;
 
 
-static void load_default_settings()
+static void load_default_settings(void)
 {
     data.fullscreen = 1;
     data.window_width = 800;
@@ -103,7 +103,7 @@ static void load_settings(buffer *buf)
     data.gods_enabled = buffer_read_i32(buf);
 }
 
-void settings_load()
+void settings_load(void)
 {
     load_default_settings();
     
@@ -123,7 +123,7 @@ void settings_load()
     }
 }
 
-void settings_save()
+void settings_save(void)
 {
     buffer b;
     buffer *buf = &b;
@@ -169,7 +169,7 @@ void settings_save()
     io_write_buffer_to_file("c3.inf", data.inf_file, INF_SIZE);
 }
 
-int setting_fullscreen()
+int setting_fullscreen(void)
 {
     return data.fullscreen;
 }
@@ -230,12 +230,12 @@ void setting_reset_sound(set_sound_type type, int enabled, int volume)
     sound->volume = calc_bound(volume, 0, 100);
 }
 
-int setting_game_speed()
+int setting_game_speed(void)
 {
     return data.game_speed;
 }
 
-void setting_increase_game_speed()
+void setting_increase_game_speed(void)
 {
     if (data.game_speed >= 100) {
         if (data.game_speed < 500) {
@@ -246,7 +246,7 @@ void setting_increase_game_speed()
     }
 }
 
-void setting_decrease_game_speed()
+void setting_decrease_game_speed(void)
 {
     if (data.game_speed > 100) {
         data.game_speed -= 100;
@@ -255,17 +255,17 @@ void setting_decrease_game_speed()
     }
 }
 
-int setting_scroll_speed()
+int setting_scroll_speed(void)
 {
     return data.scroll_speed;
 }
 
-void setting_increase_scroll_speed()
+void setting_increase_scroll_speed(void)
 {
     data.scroll_speed = calc_bound(data.scroll_speed + 10, 0, 100);
 }
 
-void setting_decrease_scroll_speed()
+void setting_decrease_scroll_speed(void)
 {
     data.scroll_speed = calc_bound(data.scroll_speed - 10, 0, 100);
 }
@@ -276,12 +276,12 @@ void setting_reset_speeds(int game_speed, int scroll_speed)
     data.scroll_speed = scroll_speed;
 }
 
-set_tooltips setting_tooltips()
+set_tooltips setting_tooltips(void)
 {
     return data.tooltips;
 }
 
-void setting_cycle_tooltips()
+void setting_cycle_tooltips(void)
 {
     switch (data.tooltips) {
     case TOOLTIPS_NONE: data.tooltips = TOOLTIPS_SOME; break;
@@ -290,42 +290,42 @@ void setting_cycle_tooltips()
     }
 }
 
-int setting_warnings()
+int setting_warnings(void)
 {
     return data.warnings;
 }
 
-void setting_toggle_warnings()
+void setting_toggle_warnings(void)
 {
     data.warnings = data.warnings ? 0 : 1;
 }
 
-int setting_monthly_autosave()
+int setting_monthly_autosave(void)
 {
     return data.monthly_autosave;
 }
 
-void setting_toggle_monthly_autosave()
+void setting_toggle_monthly_autosave(void)
 {
     data.monthly_autosave = data.monthly_autosave ? 0 : 1;
 }
 
-int setting_gods_enabled()
+int setting_gods_enabled(void)
 {
     return data.gods_enabled;
 }
 
-void setting_toggle_gods_enabled()
+void setting_toggle_gods_enabled(void)
 {
     data.gods_enabled = data.gods_enabled ? 0 : 1;
 }
 
-set_difficulty setting_difficulty()
+set_difficulty setting_difficulty(void)
 {
     return data.difficulty;
 }
 
-void setting_increase_difficulty()
+void setting_increase_difficulty(void)
 {
     if (data.difficulty >= DIFFICULTY_VERY_HARD) {
         data.difficulty = DIFFICULTY_VERY_HARD;
@@ -334,7 +334,7 @@ void setting_increase_difficulty()
     }
 }
 
-void setting_decrease_difficulty()
+void setting_decrease_difficulty(void)
 {
     if (data.difficulty <= DIFFICULTY_VERY_EASY) {
         data.difficulty = DIFFICULTY_VERY_EASY;
@@ -343,13 +343,13 @@ void setting_decrease_difficulty()
     }
 }
 
-int setting_victory_video()
+int setting_victory_video(void)
 {
     data.victory_video = data.victory_video ? 0 : 1;
     return data.victory_video;
 }
 
-int setting_last_advisor()
+int setting_last_advisor(void)
 {
     return data.last_advisor;
 }
@@ -369,7 +369,7 @@ void setting_set_personal_savings_for_mission(int mission_id, int savings)
     data.personal_savings[mission_id] = savings;
 }
 
-void setting_clear_personal_savings()
+void setting_clear_personal_savings(void)
 {
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
         data.personal_savings[i] = 0;

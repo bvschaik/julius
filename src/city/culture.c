@@ -22,27 +22,27 @@ static struct {
     int oracle;
 } coverage;
 
-int city_culture_coverage_theater()
+int city_culture_coverage_theater(void)
 {
     return coverage.theater;
 }
 
-int city_culture_coverage_amphitheater()
+int city_culture_coverage_amphitheater(void)
 {
     return coverage.amphitheater;
 }
 
-int city_culture_coverage_colosseum()
+int city_culture_coverage_colosseum(void)
 {
     return coverage.colosseum;
 }
 
-int city_culture_coverage_hippodrome()
+int city_culture_coverage_hippodrome(void)
 {
     return coverage.hippodrome;
 }
 
-int city_culture_coverage_average_entertainment()
+int city_culture_coverage_average_entertainment(void)
 {
     return (coverage.hippodrome + coverage.colosseum + coverage.amphitheater + coverage.theater) / 4;
 }
@@ -52,37 +52,37 @@ int city_culture_coverage_religion(god_type god)
     return coverage.religion[god];
 }
 
-int city_culture_coverage_school()
+int city_culture_coverage_school(void)
 {
     return coverage.school;
 }
 
-int city_culture_coverage_library()
+int city_culture_coverage_library(void)
 {
     return coverage.library;
 }
 
-int city_culture_coverage_academy()
+int city_culture_coverage_academy(void)
 {
     return coverage.academy;
 }
 
-int city_culture_coverage_hospital()
+int city_culture_coverage_hospital(void)
 {
     return coverage.hospital;
 }
 
-int city_culture_average_education()
+int city_culture_average_education(void)
 {
     return city_data.culture.average_education;
 }
 
-int city_culture_average_entertainment()
+int city_culture_average_entertainment(void)
 {
     return city_data.culture.average_entertainment;
 }
 
-int city_culture_average_health()
+int city_culture_average_health(void)
 {
     return city_data.culture.average_health;
 }
@@ -92,7 +92,7 @@ static int top(int input)
     return input > 100 ? 100 : input;
 }
 
-void city_culture_update_coverage()
+void city_culture_update_coverage(void)
 {
     int population = city_data.population.population;
 
@@ -158,7 +158,7 @@ void city_culture_update_coverage()
         1000 * building_count_active(BUILDING_HOSPITAL), population));
 }
 
-void city_culture_calculate()
+void city_culture_calculate(void)
 {
     city_data.culture.average_entertainment = 0;
     city_data.culture.average_religion = 0;

@@ -32,14 +32,14 @@ static generic_button fired_buttons[] = {
 
 static int focus_button_id;
 
-static void draw_lost()
+static void draw_lost(void)
 {
     outer_panel_draw(48, 16, 34, 16);
     lang_text_draw_centered(62, 1, 48, 32, 544, FONT_LARGE_BLACK);
     lang_text_draw_multiline(62, 16, 64, 72, 496, FONT_NORMAL_BLACK);
 }
 
-static void draw_won()
+static void draw_won(void)
 {
     outer_panel_draw(48, 128, 34, 18);
     lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
@@ -72,7 +72,7 @@ static void draw_won()
     lang_text_draw_centered(13, 1, 64, 388, 512, FONT_NORMAL_BLACK);
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     graphics_in_dialog();
     if (city_victory_state() == VICTORY_STATE_WON) {
@@ -83,7 +83,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     if (city_victory_state() != VICTORY_STATE_WON) {
         graphics_in_dialog();
@@ -93,7 +93,7 @@ static void draw_foreground()
     }
 }
 
-static void advance_to_next_mission()
+static void advance_to_next_mission(void)
 {
     setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, city_emperor_personal_savings());
     scenario_set_campaign_rank(scenario_campaign_rank() + 1);
@@ -141,7 +141,7 @@ static void button_fired(int param1, int param2)
     }
 }
 
-static void show_end_dialog()
+static void show_end_dialog(void)
 {
     window_type window = {
         WINDOW_MISSION_END,
@@ -153,13 +153,13 @@ static void show_end_dialog()
     window_show(&window);
 }
 
-static void show_intermezzo()
+static void show_intermezzo(void)
 {
     sound_music_reset();
     window_intermezzo_show(INTERMEZZO_WON, show_end_dialog);
 }
 
-void window_mission_end_show_won()
+void window_mission_end_show_won(void)
 {
     mouse_reset_up_state();
     if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
@@ -177,7 +177,7 @@ void window_mission_end_show_won()
     }
 }
 
-void window_mission_end_show_fired()
+void window_mission_end_show_fired(void)
 {
     window_intermezzo_show(INTERMEZZO_FIRED, show_end_dialog);
 }

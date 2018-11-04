@@ -5,12 +5,12 @@
 
 static grid_u8 random;
 
-void map_random_clear()
+void map_random_clear(void)
 {
     map_grid_clear_u8(random.items);
 }
 
-void map_random_init()
+void map_random_init(void)
 {
     int grid_offset = 0;
     for (int y = 0; y < GRID_SIZE; y++) {

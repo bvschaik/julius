@@ -37,7 +37,7 @@ void map_set_rubble_building_type(int grid_offset, building_type type)
     rubble_type_grid.items[grid_offset] = type;
 }
 
-void map_building_clear()
+void map_building_clear(void)
 {
     map_grid_clear_u16(buildings_grid.items);
     map_grid_clear_u8(damage_grid.items);

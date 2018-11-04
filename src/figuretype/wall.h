@@ -7,7 +7,7 @@ void figure_ballista_action(figure *f);
 
 void figure_tower_sentry_action(figure *f);
 
-void figure_tower_sentry_reroute();
+void figure_tower_sentry_reroute(void);
 
 void figure_kill_tower_sentries_at(int x, int y);
 

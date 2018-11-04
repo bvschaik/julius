@@ -13,11 +13,11 @@ void map_aqueduct_set(int grid_offset, int value);
  */
 void map_aqueduct_remove(int grid_offset);
 
-void map_aqueduct_clear();
+void map_aqueduct_clear(void);
 
-void map_aqueduct_backup();
+void map_aqueduct_backup(void);
 
-void map_aqueduct_restore();
+void map_aqueduct_restore(void);
 
 void map_aqueduct_save_state(buffer *buf, buffer *backup);
 

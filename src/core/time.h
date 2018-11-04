@@ -1,5 +1,6 @@
 #ifndef CORE_TIME_H
 #define CORE_TIME_H
+
 /**
  * @file
  * Time tracking functions.
@@ -14,7 +15,7 @@ typedef unsigned int time_millis;
  * Gets the current time
  * @return Current time in milliseconds
  */
-time_millis time_get_millis();
+time_millis time_get_millis(void);
 
 /**
  * Sets the current time

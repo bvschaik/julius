@@ -73,7 +73,7 @@ static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int 
     return ptr;
 }
 
-int model_load()
+int model_load(void)
 {
     uint8_t *buffer = (uint8_t *) malloc(TMP_BUFFER_SIZE);
     if (!buffer) {

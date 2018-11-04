@@ -35,7 +35,7 @@ typedef struct {
 /**
  * Initializes the image system
  */
-int image_init();
+int image_init(void);
 
 /**
  * Loads the image collection for the specified climate

@@ -7,42 +7,42 @@
 #include "city/message.h"
 #include "city/sentiment.h"
 
-int city_festival_is_planned()
+int city_festival_is_planned(void)
 {
     return city_data.festival.planned.size != FESTIVAL_NONE;
 }
 
-int city_festival_months_since_last()
+int city_festival_months_since_last(void)
 {
     return city_data.festival.months_since_festival;
 }
 
-int city_festival_small_cost()
+int city_festival_small_cost(void)
 {
     return city_data.festival.small_cost;
 }
 
-int city_festival_large_cost()
+int city_festival_large_cost(void)
 {
     return city_data.festival.large_cost;
 }
 
-int city_festival_grand_cost()
+int city_festival_grand_cost(void)
 {
     return city_data.festival.grand_cost;
 }
 
-int city_festival_grand_wine()
+int city_festival_grand_wine(void)
 {
     return city_data.festival.grand_wine;
 }
 
-int city_festival_out_of_wine()
+int city_festival_out_of_wine(void)
 {
     return city_data.festival.not_enough_wine;
 }
 
-int city_festival_selected_god()
+int city_festival_selected_god(void)
 {
     return city_data.festival.selected.god;
 }
@@ -52,7 +52,7 @@ void city_festival_select_god(int god_id)
     city_data.festival.selected.god = god_id;
 }
 
-int city_festival_selected_size()
+int city_festival_selected_size(void)
 {
     return city_data.festival.selected.size;
 }
@@ -66,7 +66,7 @@ int city_festival_select_size(int size)
     return 1;
 }
 
-void city_festival_schedule()
+void city_festival_schedule(void)
 {
     city_data.festival.planned.god = city_data.festival.selected.god;
     city_data.festival.planned.size = city_data.festival.selected.size;
@@ -89,7 +89,7 @@ void city_festival_schedule()
     }
 }
 
-static void throw_party()
+static void throw_party(void)
 {
     if (city_data.festival.first_festival_effect_months <= 0) {
         city_data.festival.first_festival_effect_months = 12;
@@ -117,7 +117,7 @@ static void throw_party()
     city_data.festival.planned.months_to_go = 0;
 }
 
-void city_festival_update()
+void city_festival_update(void)
 {
     city_data.festival.months_since_festival++;
     if (city_data.festival.first_festival_effect_months) {
@@ -134,7 +134,7 @@ void city_festival_update()
     }
 }
 
-void city_festival_calculate_costs()
+void city_festival_calculate_costs(void)
 {
     city_data.festival.small_cost = city_data.population.population / 20 + 10;
     city_data.festival.large_cost = city_data.population.population / 10 + 20;

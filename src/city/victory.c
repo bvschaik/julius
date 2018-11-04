@@ -17,23 +17,23 @@ static struct {
     int force_win;
 } data;
 
-void city_victory_reset()
+void city_victory_reset(void)
 {
     data.state = VICTORY_STATE_NONE;
     data.force_win = 0;
 }
 
-void city_victory_force_win()
+void city_victory_force_win(void)
 {
     data.force_win = 1;
 }
 
-int city_victory_state()
+int city_victory_state(void)
 {
     return data.state;
 }
 
-void city_victory_check()
+void city_victory_check(void)
 {
     if (scenario_is_open_play()) {
         return;
@@ -129,7 +129,7 @@ void city_victory_check()
     }
 }
 
-void city_victory_update_months_to_govern()
+void city_victory_update_months_to_govern(void)
 {
     if (city_data.mission.has_won) {
         city_data.mission.continue_months_left--;
@@ -146,14 +146,14 @@ void city_victory_continue_governing(int months)
     city_finance_update_salary();
 }
 
-void city_victory_stop_governing()
+void city_victory_stop_governing(void)
 {
     city_data.mission.has_won = 0;
     city_data.mission.continue_months_left = 0;
     city_data.mission.continue_months_chosen = 0;
 }
 
-int city_victory_has_won()
+int city_victory_has_won(void)
 {
     return city_data.mission.has_won;
 }

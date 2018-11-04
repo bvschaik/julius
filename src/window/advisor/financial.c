@@ -28,7 +28,7 @@ static void draw_row(int group, int number, int y, int value_last_year, int valu
     text_draw_number(value_this_year, '@', " ", 430, y, FONT_NORMAL_BLACK);
 }
 
-static int draw_background()
+static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
@@ -98,7 +98,7 @@ static int draw_background()
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     arrow_buttons_draw(0, 0, arrow_buttons_taxes, 2);
 }
@@ -116,7 +116,7 @@ static void button_change_taxes(int is_down, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text()
+static int get_tooltip_text(void)
 {
     if (arrow_button_focus) {
         return 120;
@@ -125,7 +125,7 @@ static int get_tooltip_text()
     }
 }
 
-const advisor_window_type *window_advisor_financial()
+const advisor_window_type *window_advisor_financial(void)
 {
     static const advisor_window_type window = {
         draw_background,

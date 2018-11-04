@@ -33,7 +33,7 @@ static void update_farm_image(const building *b)
         b->data.industry.progress);
 }
 
-void building_industry_update_production()
+void building_industry_update_production(void)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -72,7 +72,7 @@ void building_industry_update_production()
     }
 }
 
-void building_industry_update_wheat_production()
+void building_industry_update_wheat_production(void)
 {
     if (scenario_property_climate() == CLIMATE_NORTHERN) {
         return;
@@ -119,7 +119,7 @@ void building_industry_start_new_production(building *b)
     }
 }
 
-void building_bless_farms()
+void building_bless_farms(void)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);

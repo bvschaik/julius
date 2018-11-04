@@ -29,12 +29,12 @@
 
 static int fire_spread_direction = 0;
 
-void building_maintenance_update_fire_direction()
+void building_maintenance_update_fire_direction(void)
 {
     fire_spread_direction = random_byte() & 7;
 }
 
-void building_maintenance_update_burning_ruins()
+void building_maintenance_update_burning_ruins(void)
 {
     scenario_climate climate = scenario_property_climate();
     int recalculate_terrain = 0;
@@ -156,7 +156,7 @@ static void fire_building(building *b)
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
-void building_maintenance_check_fire_collapse()
+void building_maintenance_check_fire_collapse(void)
 {
     city_sentiment_reset_protesters_criminals();
 
@@ -219,7 +219,7 @@ void building_maintenance_check_fire_collapse()
     }
 }
 
-void building_maintenance_check_rome_access()
+void building_maintenance_check_rome_access(void)
 {
     const map_tile *entry_point = city_map_entry_point();
     map_routing_calculate_distances(entry_point->x, entry_point->y);

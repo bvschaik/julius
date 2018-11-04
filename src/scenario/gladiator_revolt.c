@@ -13,7 +13,7 @@ static struct {
     int state;
 } data;
 
-void scenario_gladiator_revolt_init()
+void scenario_gladiator_revolt_init(void)
 {
     data.game_year = scenario.start_year + scenario.gladiator_revolt.year;
     data.month = 3 + (random_byte() & 3);
@@ -21,7 +21,7 @@ void scenario_gladiator_revolt_init()
     data.state = EVENT_NOT_STARTED;
 }
 
-void scenario_gladiator_revolt_process()
+void scenario_gladiator_revolt_process(void)
 {
     if (!scenario.gladiator_revolt.enabled) {
         return;
@@ -43,12 +43,12 @@ void scenario_gladiator_revolt_process()
     }
 }
 
-int scenario_gladiator_revolt_is_in_progress()
+int scenario_gladiator_revolt_is_in_progress(void)
 {
     return data.state == EVENT_IN_PROGRESS;
 }
 
-int scenario_gladiator_revolt_is_finished()
+int scenario_gladiator_revolt_is_finished(void)
 {
     return data.state == EVENT_FINISHED;
 }

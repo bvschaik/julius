@@ -28,7 +28,7 @@
 
 static const city_overlay *overlay = 0;
 
-static const city_overlay *get_city_overlay()
+static const city_overlay *get_city_overlay(void)
 {
     switch (game_state_overlay()) {
         case OVERLAY_FIRE:
@@ -83,7 +83,7 @@ static const city_overlay *get_city_overlay()
     }
 }
 
-static int select_city_overlay()
+static int select_city_overlay(void)
 {
     if (!overlay || overlay->type != game_state_overlay()) {
         overlay = get_city_overlay();

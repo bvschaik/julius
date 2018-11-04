@@ -42,7 +42,7 @@ static generic_button buttons_gods_size[] = {
 static int focus_button_id;
 static int focus_image_button_id;
 
-static void draw_buttons()
+static void draw_buttons(void)
 {
     // small festival
     button_border_draw(102, 216, 430, 26, focus_button_id == 6);
@@ -71,7 +71,7 @@ static void draw_buttons()
     }
 }
 
-static void draw_background()
+static void draw_background(void)
 {
     window_advisors_draw_dialog_background();
 
@@ -93,7 +93,7 @@ static void draw_background()
     graphics_reset_dialog();
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
     draw_buttons();
@@ -173,7 +173,7 @@ static void get_tooltip(tooltip_context *c)
     }
 }
 
-void window_hold_festival_show()
+void window_hold_festival_show(void)
 {
     window_type window = {
         WINDOW_HOLD_FESTIVAL,

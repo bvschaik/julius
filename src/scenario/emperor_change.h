@@ -3,9 +3,9 @@
 
 #include "core/buffer.h"
 
-void scenario_emperor_change_init();
+void scenario_emperor_change_init(void);
 
-void scenario_emperor_change_process();
+void scenario_emperor_change_process(void);
 
 void scenario_emperor_change_save_state(buffer *time, buffer *state);
 

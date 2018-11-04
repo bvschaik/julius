@@ -14,7 +14,7 @@ static const struct trade_price DEFAULT_PRICES[16] = {
 
 static struct trade_price prices[16];
 
-void trade_prices_reset()
+void trade_prices_reset(void)
 {
     for (int i = 0; i < 16; i++) {
         prices[i] = DEFAULT_PRICES[i];

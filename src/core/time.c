@@ -2,7 +2,7 @@
 
 static time_millis current_time;
 
-time_millis time_get_millis()
+time_millis time_get_millis(void)
 {
     return current_time;
 }

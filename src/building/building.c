@@ -200,7 +200,7 @@ void building_clear_related_data(building *b)
     }
 }
 
-void building_update_state()
+void building_update_state(void)
 {
     int land_recalc = 0;
     int wall_recalc = 0;
@@ -235,7 +235,7 @@ void building_update_state()
     }
 }
 
-void building_update_desirability()
+void building_update_desirability(void)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = &all_buildings[i];
@@ -262,12 +262,12 @@ int building_is_house(building_type type)
     return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
 }
 
-int building_get_highest_id()
+int building_get_highest_id(void)
 {
     return extra.highest_id_in_use;
 }
 
-void building_update_highest_id()
+void building_update_highest_id(void)
 {
     extra.highest_id_in_use = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -288,7 +288,7 @@ void building_totals_add_corrupted_house(int unfixable)
     }
 }
 
-void building_clear_all()
+void building_clear_all(void)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         memset(&all_buildings[i], 0, sizeof(building));

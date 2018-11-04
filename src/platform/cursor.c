@@ -30,7 +30,7 @@ static SDL_Cursor *init_cursor(const cursor *c)
     return SDL_CreateCursor(data, mask, 32, 32, c->hotspot_x, c->hotspot_y);
 }
 
-void system_init_cursors()
+void system_init_cursors(void)
 {
     for (int i = 0; i < CURSOR_MAX; i++) {
         cursors[i] = init_cursor(input_cursor_data(i));

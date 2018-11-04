@@ -15,7 +15,7 @@
 
 static int selected_legion_formation_id;
 
-static void draw_background()
+static void draw_background(void)
 {
     widget_sidebar_draw_background();
     widget_top_menu_draw(1);
@@ -29,7 +29,7 @@ static int center_in_city(int element_width_pixels)
     return x + margin;
 }
 
-static void draw_paused_and_time_left()
+static void draw_paused_and_time_left(void)
 {
     if (scenario_criteria_time_limit_enabled()) {
         int years;
@@ -61,7 +61,7 @@ static void draw_paused_and_time_left()
     }
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     widget_top_menu_draw(0);
     window_city_draw();
@@ -73,7 +73,7 @@ static void draw_foreground()
     }
 }
 
-static void draw_foreground_military()
+static void draw_foreground_military(void)
 {
     widget_top_menu_draw(0);
     window_city_draw();
@@ -111,23 +111,23 @@ static void get_tooltip(tooltip_context *c)
     widget_city_get_tooltip(c);
 }
 
-void window_city_draw_all()
+void window_city_draw_all(void)
 {
     draw_background();
     draw_foreground();
 }
 
-void window_city_draw_panels()
+void window_city_draw_panels(void)
 {
     draw_background();
 }
 
-void window_city_draw()
+void window_city_draw(void)
 {
     widget_city_draw();
 }
 
-void window_city_show()
+void window_city_show(void)
 {
     window_type window = {
         WINDOW_CITY,

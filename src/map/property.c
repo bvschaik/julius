@@ -63,7 +63,7 @@ void map_property_mark_native_land(int grid_offset)
     edge_grid.items[grid_offset] |= EDGE_NATIVE_LAND;
 }
 
-void map_property_clear_all_native_land()
+void map_property_clear_all_native_land(void)
 {
     map_grid_and_u8(edge_grid.items, EDGE_NO_NATIVE_LAND);
 }
@@ -180,24 +180,24 @@ void map_property_clear_deleted(int grid_offset)
     bitfields_grid.items[grid_offset] &= BIT_NO_DELETED;
 }
 
-void map_property_clear_constructing_and_deleted()
+void map_property_clear_constructing_and_deleted(void)
 {
     map_grid_and_u8(bitfields_grid.items, BIT_NO_CONSTRUCTION_AND_DELETED);
 }
 
-void map_property_clear()
+void map_property_clear(void)
 {
     map_grid_clear_u8(bitfields_grid.items);
     map_grid_clear_u8(edge_grid.items);
 }
 
-void map_property_backup()
+void map_property_backup(void)
 {
     map_grid_copy_u8(bitfields_grid.items, bitfields_backup.items);
     map_grid_copy_u8(edge_grid.items, edge_backup.items);
 }
 
-void map_property_restore()
+void map_property_restore(void)
 {
     map_grid_copy_u8(bitfields_backup.items, bitfields_grid.items);
     map_grid_copy_u8(edge_backup.items, edge_grid.items);

@@ -7,7 +7,7 @@ typedef struct {
     int grid_offset;
 } ring_tile;
 
-void map_ring_init();
+void map_ring_init(void);
 
 int map_ring_start(int size, int distance);
 

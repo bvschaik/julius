@@ -13,52 +13,52 @@ static int update_field(int8_t *field, int max_value)
     }
 }
 
-int city_sound_update_march_enemy()
+int city_sound_update_march_enemy(void)
 {
     return update_field(&city_data.sound.march_enemy, 200);
 }
 
-int city_sound_update_march_horse()
+int city_sound_update_march_horse(void)
 {
     return update_field(&city_data.sound.march_horse, 200);
 }
 
-int city_sound_update_march_wolf()
+int city_sound_update_march_wolf(void)
 {
     return update_field(&city_data.sound.march_wolf, 12);
 }
 
-int city_sound_update_shoot_arrow()
+int city_sound_update_shoot_arrow(void)
 {
     return update_field(&city_data.sound.shoot_arrow, 10);
 }
 
-int city_sound_update_hit_wolf()
+int city_sound_update_hit_wolf(void)
 {
     return update_field(&city_data.sound.hit_wolf, 4);
 }
 
-int city_sound_update_hit_soldier()
+int city_sound_update_hit_soldier(void)
 {
     return update_field(&city_data.sound.hit_soldier, 8);
 }
 
-int city_sound_update_hit_axe()
+int city_sound_update_hit_axe(void)
 {
     return update_field(&city_data.sound.hit_axe, 8);
 }
 
-int city_sound_update_hit_club()
+int city_sound_update_hit_club(void)
 {
     return update_field(&city_data.sound.hit_club, 8);
 }
 
-int city_sound_update_hit_spear()
+int city_sound_update_hit_spear(void)
 {
     return update_field(&city_data.sound.hit_spear, 8);
 }
 
-int city_sound_update_hit_elephant()
+int city_sound_update_hit_elephant(void)
 {
     if (city_data.sound.hit_elephant == 1) {
         city_data.sound.hit_elephant = 0;
@@ -68,7 +68,7 @@ int city_sound_update_hit_elephant()
     return city_data.sound.hit_elephant;
 }
 
-int city_sound_update_die_citizen()
+int city_sound_update_die_citizen(void)
 {
     city_data.sound.die_citizen++;
     if (city_data.sound.die_citizen >= 4) {
@@ -77,7 +77,7 @@ int city_sound_update_die_citizen()
     return city_data.sound.die_citizen;
 }
 
-int city_sound_update_die_soldier()
+int city_sound_update_die_soldier(void)
 {
     city_data.sound.die_soldier++;
     if (city_data.sound.die_soldier >= 4) {

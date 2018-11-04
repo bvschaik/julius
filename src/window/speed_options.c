@@ -34,14 +34,14 @@ static int original_scroll_speed;
 
 static int focus_button_id;
 
-static void init()
+static void init(void)
 {
     original_game_speed = setting_game_speed();
     original_scroll_speed = setting_scroll_speed();
     focus_button_id = 0;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 
@@ -108,7 +108,7 @@ static void arrow_button_scroll(int is_down, int param2)
     }
 }
 
-void window_speed_options_show()
+void window_speed_options_show(void)
 {
     window_type window = {
         WINDOW_SPEED_OPTIONS,

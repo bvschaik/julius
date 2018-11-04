@@ -11,7 +11,7 @@ enum {
 static mouse data;
 static mouse dialog;
 
-const mouse *mouse_get()
+const mouse *mouse_get(void)
 {
     return &data;
 }
@@ -45,7 +45,7 @@ static void update_button_state(mouse_button *button)
     button->is_down = (button->is_down || button->went_down) && !button->went_up;
 }
 
-void mouse_determine_button_state()
+void mouse_determine_button_state(void)
 {
     update_button_state(&data.left);
     update_button_state(&data.right);
@@ -56,7 +56,7 @@ void mouse_set_scroll(scroll_state state)
     data.scrolled = state;
 }
 
-void mouse_reset_up_state()
+void mouse_reset_up_state(void)
 {
     data.left.went_up = 0;
     data.right.went_up = 0;

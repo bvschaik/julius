@@ -48,7 +48,7 @@ typedef struct {
  * Loads the model from file
  * @return boolean true if model was loaded successfully, false otherwise
  */
-int model_load();
+int model_load(void);
 
 /**
  * Gets the model for a building

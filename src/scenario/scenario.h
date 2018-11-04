@@ -3,9 +3,9 @@
 
 #include "core/buffer.h"
 
-void scenario_settings_init();
+void scenario_settings_init(void);
 
-void scenario_settings_init_mission();
+void scenario_settings_init_mission(void);
 
 void scenario_save_state(buffer *buf);
 

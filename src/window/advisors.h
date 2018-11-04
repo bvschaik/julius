@@ -11,16 +11,16 @@ typedef struct {
     int (*draw_background)(void);
     void (*draw_foreground)(void);
     void (*handle_mouse)(const mouse *m);
-    int (*get_tooltip_text)();
+    int (*get_tooltip_text)(void);
 } advisor_window_type;
 
-advisor_type window_advisors_get_advisor();
+advisor_type window_advisors_get_advisor(void);
 
-void window_advisors_draw_dialog_background();
+void window_advisors_draw_dialog_background(void);
 
-void window_advisors_show();
+void window_advisors_show(void);
 
-void window_advisors_show_checked();
+void window_advisors_show_checked(void);
 
 int window_advisors_show_advisor(advisor_type advisor);
 

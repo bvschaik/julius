@@ -156,11 +156,11 @@ typedef struct {
     int is_read;
 } city_message;
 
-void city_message_init_scenario();
+void city_message_init_scenario(void);
 
-void city_message_init_problem_areas();
+void city_message_init_problem_areas(void);
 
-void city_message_disable_sound_for_next_message();
+void city_message_disable_sound_for_next_message(void);
 
 void city_message_apply_sound_interval(message_category category);
 
@@ -170,9 +170,9 @@ void city_message_post_with_popup_delay(message_category category, int message_t
 
 void city_message_post_with_message_delay(message_category category, int use_popup, int message_type, int delay);
 
-void city_message_process_queue();
+void city_message_process_queue(void);
 
-void city_message_sort_and_compact();
+void city_message_sort_and_compact(void);
 
 int city_message_get_text_id(city_message_type message_type);
 
@@ -184,7 +184,7 @@ void city_message_increase_category_count(message_category category);
 
 int city_message_get_category_count(message_category category);
 
-void city_message_decrease_delays();
+void city_message_decrease_delays(void);
 
 int city_message_mark_population_shown(int population);
 
@@ -196,23 +196,23 @@ void city_message_mark_read(int message_id);
 
 void city_message_delete(int message_id);
 
-int city_message_count();
+int city_message_count(void);
 
-int city_message_problem_area_count();
+int city_message_problem_area_count(void);
 
-int city_message_next_problem_area_grid_offset();
+int city_message_next_problem_area_grid_offset(void);
 
-void city_message_clear_scroll();
+void city_message_clear_scroll(void);
 
 void city_message_update_scroll(int max_messages);
 
-int city_message_can_scroll();
+int city_message_can_scroll(void);
 
-int city_message_scroll_position();
+int city_message_scroll_position(void);
 
 void city_message_scroll(int is_down, int amount);
 
-int city_message_scroll_percentage();
+int city_message_scroll_percentage(void);
 
 void city_message_set_scroll_percentage(int percentage);
 

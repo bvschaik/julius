@@ -26,13 +26,13 @@ typedef struct {
 } clip_info;
 
 void graphics_init_canvas(int width, int height);
-const void *graphics_canvas();
+const void *graphics_canvas(void);
 
-void graphics_in_dialog();
-void graphics_reset_dialog();
+void graphics_in_dialog(void);
+void graphics_reset_dialog(void);
 
 void graphics_set_clip_rectangle(int x, int y, int width, int height);
-void graphics_reset_clip_rectangle();
+void graphics_reset_clip_rectangle(void);
 const clip_info *graphics_get_clip_info(int x, int y, int width, int height);
 
 void graphics_save_to_buffer(int x, int y, int width, int height, color_t *buffer);
@@ -40,7 +40,7 @@ void graphics_draw_from_buffer(int x, int y, int width, int height, const color_
 
 color_t *graphics_get_pixel(int x, int y);
 
-void graphics_clear_screen();
+void graphics_clear_screen(void);
 
 void graphics_draw_pixel(int x, int y, color_t color);
 

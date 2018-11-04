@@ -1,11 +1,11 @@
 #ifndef MAP_ROUTING_TERRAIN_H
 #define MAP_ROUTING_TERRAIN_H
 
-void map_routing_update_all();
-void map_routing_update_land();
-void map_routing_update_land_citizen();
-void map_routing_update_water();
-void map_routing_update_walls();
+void map_routing_update_all(void);
+void map_routing_update_land(void);
+void map_routing_update_land_citizen(void);
+void map_routing_update_water(void);
+void map_routing_update_walls(void);
 
 int map_routing_is_wall_passable(int grid_offset);
 int map_routing_wall_tile_in_radius(int x, int y, int radius, int *x_wall, int *y_wall);

@@ -6,23 +6,23 @@
 #include <stdint.h>
 
 void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation, int box_width, font_t font);
-void keyboard_refresh();
-void keyboard_stop_capture();
+void keyboard_refresh(void);
+void keyboard_stop_capture(void);
 
-int keyboard_input_is_accepted();
-int keyboard_is_insert();
-int keyboard_cursor_position();
+int keyboard_input_is_accepted(void);
+int keyboard_is_insert(void);
+int keyboard_cursor_position(void);
 
-void keyboard_return();
+void keyboard_return(void);
 
-void keyboard_backspace();
-void keyboard_delete();
-void keyboard_insert();
+void keyboard_backspace(void);
+void keyboard_delete(void);
+void keyboard_insert(void);
 
-void keyboard_left();
-void keyboard_right();
-void keyboard_home();
-void keyboard_end();
+void keyboard_left(void);
+void keyboard_right(void);
+void keyboard_home(void);
+void keyboard_end(void);
 
 void keyboard_character(int unicode);
 

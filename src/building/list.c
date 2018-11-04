@@ -22,7 +22,7 @@ static struct {
     } burning;
 } data;
 
-void building_list_small_clear()
+void building_list_small_clear(void)
 {
     data.small.size = 0;
 }
@@ -35,12 +35,12 @@ void building_list_small_add(int building_id)
     }
 }
 
-int building_list_small_size()
+int building_list_small_size(void)
 {
     return data.small.size;
 }
 
-const int *building_list_small_items()
+const int *building_list_small_items(void)
 {
     return data.small.items;
 }
@@ -60,17 +60,17 @@ void building_list_large_add(int building_id)
     }
 }
 
-int building_list_large_size()
+int building_list_large_size(void)
 {
     return data.large.size;
 }
 
-const int *building_list_large_items()
+const int *building_list_large_items(void)
 {
     return data.large.items;
 }
 
-void building_list_burning_clear()
+void building_list_burning_clear(void)
 {
     data.burning.size = 0;
     data.burning.total = 0;
@@ -85,12 +85,12 @@ void building_list_burning_add(int building_id)
     }
 }
 
-int building_list_burning_size()
+int building_list_burning_size(void)
 {
     return data.burning.size;
 }
 
-const int *building_list_burning_items()
+const int *building_list_burning_items(void)
 {
     return data.burning.items;
 }

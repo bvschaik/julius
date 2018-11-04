@@ -45,7 +45,7 @@ static struct {
     int focus_button;
 } data;
 
-static void draw_background()
+static void draw_background(void)
 {
     int rank = scenario_campaign_rank();
     
@@ -66,7 +66,7 @@ static int is_mouse_hit(const mouse *m, int x, int y, int size)
     return x <= m->x && m->x < x + size && y <= m->y && m->y < y + size;
 }
 
-static void draw_foreground()
+static void draw_foreground(void)
 {
     graphics_in_dialog();
 
@@ -140,7 +140,7 @@ static void button_start(int param1, int param2)
     window_mission_briefing_show();
 }
 
-void window_mission_selection_show()
+void window_mission_selection_show(void)
 {
     if (!game_mission_has_choice()) {
         window_mission_briefing_show();

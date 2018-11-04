@@ -26,14 +26,14 @@ static struct {
     map_tile current_tile;
 } data;
 
-static void set_city_clip_rectangle()
+static void set_city_clip_rectangle(void)
 {
     int x, y, width, height;
     city_view_get_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
 }
 
-void widget_city_draw()
+void widget_city_draw(void)
 {
     set_city_clip_rectangle();
 
@@ -55,7 +55,7 @@ void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord)
     graphics_reset_clip_rectangle();
 }
 
-void widget_city_draw_construction_cost()
+void widget_city_draw_construction_cost(void)
 {
     if (!building_construction_in_progress()) {
         return;
@@ -143,7 +143,7 @@ static void build_move(const map_tile *tile)
     building_construction_update(tile->x, tile->y, tile->grid_offset);
 }
 
-static void build_end()
+static void build_end(void)
 {
     if (building_construction_in_progress()) {
         if (building_construction_type() != BUILDING_NONE) {
@@ -252,7 +252,7 @@ void widget_city_get_tooltip(tooltip_context *c)
     }
 }
 
-void widget_city_clear_current_tile()
+void widget_city_clear_current_tile(void)
 {
     data.current_tile.grid_offset = 0;
 }

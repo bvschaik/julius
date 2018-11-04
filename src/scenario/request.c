@@ -12,7 +12,7 @@
 #include "game/tutorial.h"
 #include "scenario/data.h"
 
-void scenario_request_init()
+void scenario_request_init(void)
 {
     for (int i = 0; i < MAX_REQUESTS; i++) {
         random_generate_next();
@@ -23,7 +23,7 @@ void scenario_request_init()
     }
 }
 
-void scenario_request_process()
+void scenario_request_process(void)
 {
     for (int i = 0; i < MAX_REQUESTS; i++) {
         if (!scenario.requests[i].resource || scenario.requests[i].state > REQUEST_STATE_DISPATCHED_LATE) {

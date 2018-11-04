@@ -2,12 +2,12 @@
 
 #include "city/data_private.h"
 
-void city_mission_reset_save_start()
+void city_mission_reset_save_start(void)
 {
     city_data.mission.start_saved_game_written = 0;
 }
 
-int city_mission_should_save_start()
+int city_mission_should_save_start(void)
 {
     if (!city_data.mission.start_saved_game_written) {
         city_data.mission.start_saved_game_written = 1;
@@ -27,7 +27,7 @@ void city_mission_tutorial_set_disease_message_shown(int shown)
     city_data.mission.tutorial_disease_message_shown = shown;
 }
 
-int city_mission_tutorial_show_disease_message()
+int city_mission_tutorial_show_disease_message(void)
 {
     if (!city_data.mission.tutorial_disease_message_shown) {
         city_data.mission.tutorial_disease_message_shown = 1;
@@ -37,12 +37,12 @@ int city_mission_tutorial_show_disease_message()
     }
 }
 
-void city_mission_tutorial_add_senate()
+void city_mission_tutorial_add_senate(void)
 {
     city_data.mission.tutorial_senate_built++;
 }
 
-int city_mission_tutorial_has_senate()
+int city_mission_tutorial_has_senate(void)
 {
     return city_data.mission.tutorial_senate_built > 0;
 }
