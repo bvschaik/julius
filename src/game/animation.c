@@ -23,7 +23,7 @@ void game_animation_update(void)
     for (int i = 0; i < MAX_ANIM_TIMERS; i++) {
         timers[i].should_update = 0;
     }
-    int delay_millis = 0;
+    unsigned int delay_millis = 0;
     for (int i = 0; i < MAX_ANIM_TIMERS; i++) {
         if (now_millis - timers[i].last_update >= delay_millis) {
             timers[i].should_update = 1;

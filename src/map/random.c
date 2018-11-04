@@ -16,7 +16,7 @@ void map_random_init(void)
     for (int y = 0; y < GRID_SIZE; y++) {
         for (int x = 0; x < GRID_SIZE; x++, grid_offset++) {
             random_generate_next();
-            random.items[grid_offset] = random_short();
+            random.items[grid_offset] = (uint8_t) random_short();
         }
     }
 }

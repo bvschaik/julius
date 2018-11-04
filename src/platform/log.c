@@ -3,17 +3,19 @@
 
 #include <stdio.h>
 
-static char log_buffer[1000];
+#define MSG_SIZE 1000
+
+static char log_buffer[MSG_SIZE];
 
 static const char *build_message(const char *msg, const char *param_str, int param_int)
 {
     int index = 0;
-    index += sprintf(&log_buffer[index], "%s", msg);
+    index += snprintf(&log_buffer[index], MSG_SIZE - index, "%s", msg);
     if (param_str) {
-        index += sprintf(&log_buffer[index], "  %s", param_str);
+        index += snprintf(&log_buffer[index], MSG_SIZE - index, "  %s", param_str);
     }
     if (param_int) {
-        index += sprintf(&log_buffer[index], "  %s", param_str);
+        index += snprintf(&log_buffer[index], MSG_SIZE - index, "  %s", param_str);
     }
     return log_buffer;
 }
