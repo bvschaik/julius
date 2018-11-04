@@ -59,7 +59,7 @@ int calc_distance_with_penalty(int x1, int y1, int x2, int y2,
  * @param y_to Destination Y
  * @return Direction
  */
-direction calc_general_direction(int x_from, int y_from, int x_to, int y_to);
+direction_type calc_general_direction(int x_from, int y_from, int x_to, int y_to);
 
 /**
  * Gets the direction for a missile shooter
@@ -69,7 +69,7 @@ direction calc_general_direction(int x_from, int y_from, int x_to, int y_to);
  * @param y_to Destination Y
  * @return Direction
  */
-direction calc_missile_shooter_direction(int x_from, int y_from, int x_to, int y_to);
+direction_type calc_missile_shooter_direction(int x_from, int y_from, int x_to, int y_to);
 
 /**
  * Gets the direction for a missile

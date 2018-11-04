@@ -217,9 +217,9 @@ static void custom_music_callback(void *dummy, Uint8 *stream, int len)
     }
 }
 
-void sound_device_use_custom_music_player(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *out_len))
+void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate, const unsigned char *(*callback)(int *out_len))
 {
-    SDL_BuildAudioCVT(&custom_music.cvt, bitdepth, channels, rate, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE);
+    SDL_BuildAudioCVT(&custom_music.cvt, bitdepth, num_channels, rate, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE);
     custom_music.callback = callback;
     Mix_HookMusic(custom_music_callback, 0);
 }

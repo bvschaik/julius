@@ -428,9 +428,9 @@ int city_message_next_problem_area_grid_offset(void)
         city_message *msg = &data.messages[i];
         if (msg->message_type && msg->year >= game_time_year() - 1) {
             const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_type));
-            lang_message_type lang_message_type = lang_msg->message_type;
-            if (lang_message_type == MESSAGE_TYPE_DISASTER || lang_message_type == MESSAGE_TYPE_INVASION) {
-                if (lang_message_type != MESSAGE_TYPE_INVASION || formation_grid_offset_for_invasion(msg->param1) > 0) {
+            lang_message_type lang_msg_type = lang_msg->message_type;
+            if (lang_msg_type == MESSAGE_TYPE_DISASTER || lang_msg_type == MESSAGE_TYPE_INVASION) {
+                if (lang_msg_type != MESSAGE_TYPE_INVASION || formation_grid_offset_for_invasion(msg->param1) > 0) {
                     data.problem_count++;
                 }
             }

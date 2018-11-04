@@ -68,7 +68,7 @@ int calc_distance_with_penalty(int x1, int y1, int x2, int y2,
     return penalty + calc_maximum_distance(x1, y1, x2, y2);
 }
 
-direction calc_general_direction(int x_from, int y_from, int x_to, int y_to)
+direction_type calc_general_direction(int x_from, int y_from, int x_to, int y_to)
 {
     if (x_from < x_to) {
         if (y_from > y_to) {
@@ -96,7 +96,7 @@ direction calc_general_direction(int x_from, int y_from, int x_to, int y_to)
     return DIR_8_NONE;
 }
 
-direction calc_missile_shooter_direction(int x_from, int y_from, int x_to, int y_to)
+direction_type calc_missile_shooter_direction(int x_from, int y_from, int x_to, int y_to)
 {
     int dx = x_from > x_to ? x_from - x_to : x_to - x_from;
     int dy = y_from > y_to ? y_from - y_to : y_to - y_from;

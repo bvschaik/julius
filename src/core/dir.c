@@ -28,7 +28,7 @@ static void clear_dir_listing(void)
 static int compare_lower(const void *va, const void *vb)
 {
     // arguments are pointers to char*
-    return string_compare_case_insensitive(*(char**)va, *(char**)vb);
+    return string_compare_case_insensitive(*(const char**)va, *(const char**)vb);
 }
 
 const dir_listing *dir_find_files_with_extension(const char *extension)

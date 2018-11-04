@@ -342,10 +342,10 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
         draw_flat_tile(x, y, COLOR_MASK_RED);
     } else {
         int image_id = image_group(GROUP_BUILDING_AQUEDUCT);
-        const terrain_image *image = map_image_context_get_aqueduct(grid_offset, 0);
+        const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 0);
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-            int group_offset = image->group_offset;
-            if (!image->aqueduct_offset) {
+            int group_offset = img->group_offset;
+            if (!img->aqueduct_offset) {
                 if (map_terrain_is(grid_offset - 162, TERRAIN_ROAD)) {
                     group_offset = 3;
                 } else {
@@ -358,7 +358,7 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
                 image_id += group_offset + 21;
             }
         } else {
-            image_id += image->group_offset + 15;
+            image_id += img->group_offset + 15;
         }
         draw_building(image_id, x, y);
     }

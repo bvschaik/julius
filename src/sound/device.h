@@ -20,7 +20,7 @@ void sound_device_play_channel(int channel);
 void sound_device_stop_music(void);
 void sound_device_stop_channel(int channel);
 
-void sound_device_use_custom_music_player(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *out_len));
+void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate, const unsigned char *(*callback)(int *out_len));
 void sound_device_use_default_music_player(void);
 
 #endif // SOUND_DEVICE_H

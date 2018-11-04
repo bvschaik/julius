@@ -457,7 +457,7 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
     }
 }
 
-void city_with_overlay_draw(const map_tile *map_tile)
+void city_with_overlay_draw(const map_tile *tile)
 {
     if (!select_city_overlay()) {
         return;
@@ -469,7 +469,7 @@ void city_with_overlay_draw(const map_tile *map_tile)
         draw_top,
         draw_animation
     );
-    city_building_ghost_draw(map_tile);
+    city_building_ghost_draw(tile);
     city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
 }
 

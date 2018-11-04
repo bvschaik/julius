@@ -266,10 +266,10 @@ static void init(int grid_offset)
     for (int i = 0; i < 9 && context.figure.count < 7; i++) {
         int figure_id = map_figure_at(grid_offset + FIGURE_OFFSETS[i]);
         while (figure_id > 0 && context.figure.count < 7) {
-            figure *figure = figure_get(figure_id);
-            if (figure->state != FIGURE_STATE_DEAD &&
-                figure->action_state != FIGURE_ACTION_149_CORPSE) {
-                switch (figure->type) {
+            figure *f = figure_get(figure_id);
+            if (f->state != FIGURE_STATE_DEAD &&
+                f->action_state != FIGURE_ACTION_149_CORPSE) {
+                switch (f->type) {
                     case FIGURE_NONE:
                     case FIGURE_EXPLOSION:
                     case FIGURE_MAP_FLAG:
@@ -285,11 +285,11 @@ static void init(int grid_offset)
                         break;
                     default:
                         context.figure.figure_ids[context.figure.count++] = figure_id;
-                        figure_phrase_determine(figure);
+                        figure_phrase_determine(f);
                         break;
                 }
             }
-            figure_id = figure->next_figure_id_on_same_tile;
+            figure_id = f->next_figure_id_on_same_tile;
         }
     }
     // check for legion figures
