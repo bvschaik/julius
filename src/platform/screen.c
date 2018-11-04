@@ -3,6 +3,7 @@
 #include "SDL.h"
 
 #include "game/settings.h"
+#include "graphics/graphics.h"
 #include "graphics/screen.h"
 
 static struct {
@@ -49,17 +50,17 @@ void platform_screen_create(const char *title)
     
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     
-    platform_screen_resize(width, height, fullscreen);
+    platform_screen_resize(width, height);
 }
 
-void platform_screen_resize(int width, int height, int fullscreen)
+void platform_screen_resize(int width, int height)
 {
     if (SDL.texture) {
         SDL_DestroyTexture(SDL.texture);
         SDL.texture = 0;
     }
     
-    setting_set_display(fullscreen, width, height);
+    setting_set_display(setting_fullscreen(), width, height);
     SDL.texture = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         width, height);
@@ -109,9 +110,9 @@ void platform_screen_set_window_size(int width, int height)
     setting_set_display(0, width, height);
 }
 
-void platform_screen_render(const void *canvas)
+void platform_screen_render()
 {
-    SDL_UpdateTexture(SDL.texture, NULL, canvas, screen_width() * 4);
+    SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
     SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
     SDL_RenderPresent(SDL.renderer);
 }

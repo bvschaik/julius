@@ -2,12 +2,7 @@
 
 #include "core/lang.h"
 #include "core/time.h"
-#include "game/settings.h"
 #include "game/game.h"
-#include "game/system.h"
-#include "graphics/graphics.h" // debug for fps counter
-#include "graphics/screen.h"
-#include "graphics/text.h" // debug for fps counter
 #include "graphics/window.h"
 #include "input/mouse.h"
 #include "platform/keyboard_input.h"
@@ -75,49 +70,26 @@ void system_resize(int width, int height)
     SDL_PushEvent(&event);
 }
 
-void system_toggle_fullscreen()
+void system_set_fullscreen(int fullscreen)
 {
     SDL_Event event;
     event.user.type = SDL_USEREVENT;
-    if (setting_fullscreen()) {
-        event.user.code = USER_EVENT_WINDOWED;
-    } else {
+    if (fullscreen) {
         event.user.code = USER_EVENT_FULLSCREEN;
+    } else {
+        event.user.code = USER_EVENT_WINDOWED;
     }
     SDL_PushEvent(&event);
 }
 
-static Uint32 last;
-
 static void refresh()
 {
-    static Uint32 lastFpsTime = 0;
-    static int lastFps = 0;
-    static int numFrames = 0;
-    
-    Uint32 now = SDL_GetTicks();
-    time_set_millis(now);
+    time_set_millis(SDL_GetTicks());
+
     game_run();
-    
-    // debug
-    Uint32 then = SDL_GetTicks();
-    
     game_draw();
-    numFrames++;
-    Uint32 then2 = SDL_GetTicks();
-    if (then2 - lastFpsTime > 1000) {
-        lastFps = numFrames;
-        lastFpsTime = then2;
-        numFrames = 0;
-    }
-    int s_width = screen_width();
-    graphics_fill_rect(s_width - 120, 0, s_width, 20, COLOR_WHITE);
-    text_draw_number_colored(lastFps, 'f', "", s_width - 120, 5, FONT_NORMAL_PLAIN, COLOR_RED);
-    text_draw_number_colored(then - now, 'g', "", s_width - 70, 5, FONT_NORMAL_PLAIN, COLOR_RED);
-    text_draw_number_colored(then2 - then, 'd', "", s_width - 40, 5, FONT_NORMAL_PLAIN, COLOR_RED);
-    
-    platform_screen_render(graphics_canvas());
-    last = now;
+
+    platform_screen_render();
 }
 
 static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
@@ -150,12 +122,11 @@ static void main_loop()
                             mouse_set_inside_window(0);
                             break;
                         case SDL_WINDOWEVENT_SIZE_CHANGED:
-                            printf("Window resized to %d x %d\n", event.window.data1, event.window.data2);
-                            platform_screen_resize(event.window.data1, event.window.data2, setting_fullscreen());
-                            window_invalidate();
+                            SDL_Log("Window resized to %d x %d\n", event.window.data1, event.window.data2);
+                            platform_screen_resize(event.window.data1, event.window.data2);
                             break;
                         case SDL_WINDOWEVENT_RESIZED:
-                            printf("System resize to %d x %d\n", event.window.data1, event.window.data2);
+                            SDL_Log("System resize to %d x %d\n", event.window.data1, event.window.data2);
                             break;
 
                         case SDL_WINDOWEVENT_SHOWN:
@@ -250,7 +221,6 @@ static int pre_init(const char *custom_data_dir)
         return 1;
     }
     if (chdir("../data") != 0) {
-        SDL_Log("../data: directory not found");
         return 1;
     }
     SDL_Log("Loading game from data directory");

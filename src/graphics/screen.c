@@ -3,6 +3,7 @@
 #include "city/view.h"
 #include "city/warning.h"
 #include "graphics/graphics.h"
+#include "graphics/window.h"
 
 static struct {
     int width;
@@ -24,6 +25,7 @@ void screen_set_resolution(int width, int height)
 
     city_view_set_viewport(width, height);
     city_warning_clear_all();
+    window_invalidate();
 }
 
 int screen_width()

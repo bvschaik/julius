@@ -14,9 +14,9 @@
 void system_resize(int width, int height);
 
 /**
- * Toggle fullscreen on/off
+ * Set fullscreen on/off
  */
-void system_toggle_fullscreen();
+void system_set_fullscreen(int fullscreen);
 
 /**
  * Initialize cursors

@@ -5,12 +5,12 @@
 
 void platform_screen_create(const char *title);
 
-void platform_screen_resize(int width, int height, int fullscreen);
+void platform_screen_resize(int width, int height);
 
 void platform_screen_set_fullscreen();
 void platform_screen_set_windowed();
 void platform_screen_set_window_size(int width, int height);
 
-void platform_screen_render(const void *canvas);
+void platform_screen_render();
 
 #endif // PLATFORM_SCREEN_H

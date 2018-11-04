@@ -59,7 +59,7 @@ static void handle_mouse(const mouse *m)
 
 static void button_fullscreen(int param1, int param2)
 {
-    system_toggle_fullscreen();
+    system_set_fullscreen(!setting_fullscreen());
     window_city_show();
 }
 
