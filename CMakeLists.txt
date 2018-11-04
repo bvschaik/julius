@@ -321,23 +321,26 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.c
 )
+
 add_executable(julius
-	${PLATFORM_FILES}
-	${CORE_FILES}
-	${BUILDING_FILES}
-	${CITY_FILES}
-	${EMPIRE_FILES}
-	${FIGURE_FILES}
-	${FIGURETYPE_FILES}
-	${GAME_FILES}
-	${INPUT_FILES}
-	${MAP_FILES}
-	${SCENARIO_FILES}
-	${GRAPHICS_FILES}
-	${SOUND_FILES}
-	${WIDGET_FILES}
-	${WINDOW_FILES}
-	${SMK_FILES}
+    WIN32
+    ${PLATFORM_FILES}
+    ${CORE_FILES}
+    ${BUILDING_FILES}
+    ${CITY_FILES}
+    ${EMPIRE_FILES}
+    ${FIGURE_FILES}
+    ${FIGURETYPE_FILES}
+    ${GAME_FILES}
+    ${INPUT_FILES}
+    ${MAP_FILES}
+    ${SCENARIO_FILES}
+    ${GRAPHICS_FILES}
+    ${SOUND_FILES}
+    ${WIDGET_FILES}
+    ${WINDOW_FILES}
+    ${SMK_FILES}
+    ${PROJECT_SOURCE_DIR}/res/julius.rc
 )
 
 find_package(SDL2 REQUIRED)
@@ -359,4 +362,3 @@ install(TARGETS julius RUNTIME DESTINATION bin)
 # Unit tests
 enable_testing()
 add_subdirectory(test)
-
