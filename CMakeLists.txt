@@ -31,7 +31,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
     ${PROJECT_SOURCE_DIR}/src/platform/screen.c
-    ${PROJECT_SOURCE_DIR}/src/platform/sdl_sound_device.c
+    ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
 )
 
 set(CORE_FILES

@@ -6,7 +6,7 @@ void sound_device_open(void)
 void sound_device_close(void)
 {}
 
-void sound_device_init_channels(int numChannels, const char filenames[][CHANNEL_FILENAME_MAX])
+void sound_device_init_channels(int numChannels, char filenames[][CHANNEL_FILENAME_MAX])
 {}
 
 int sound_device_has_channel(int channel)

@@ -53,7 +53,7 @@ void sound_device_close(void)
     }
 }
 
-void sound_device_init_channels(int num_channels, const char filenames[][CHANNEL_FILENAME_MAX])
+void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILENAME_MAX])
 {
     if (initialized) {
         if (num_channels > MAX_CHANNELS) {
