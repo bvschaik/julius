@@ -42,6 +42,7 @@ static void update_button_state(mouse_button *button)
     button->went_down = (button->system_change & SYSTEM_DOWN) == SYSTEM_DOWN;
     button->went_up = (button->system_change & SYSTEM_UP) == SYSTEM_UP;
     button->system_change = SYSTEM_NONE;
+    button->is_down = (button->is_down || button->went_down) && !button->went_up;
 }
 
 void mouse_determine_button_state()
@@ -49,7 +50,6 @@ void mouse_determine_button_state()
     update_button_state(&data.left);
     update_button_state(&data.right);
 }
-
 
 void mouse_set_scroll(scroll_state state)
 {
