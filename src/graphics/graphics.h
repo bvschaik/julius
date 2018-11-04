@@ -52,6 +52,4 @@ void graphics_draw_inset_rect(int x, int y, int width, int height);
 void graphics_fill_rect(int x, int y, int width, int height, color_t color);
 void graphics_shade_rect(int x, int y, int width, int height, int darkness);
 
-void graphics_save_screenshot(const char *filename);
-
 #endif // GRAPHICS_GRAPHICS_H

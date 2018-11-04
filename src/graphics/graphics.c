@@ -2,7 +2,6 @@
 
 #include "graphics/screen.h"
 
-#include <stdio.h> // remove later
 #include <stdlib.h>
 #include <string.h>
 
@@ -260,52 +259,4 @@ void graphics_shade_rect(int x, int y, int width, int height, int darkness)
             *pixel = new_pixel;
         }
     }
-}
-
-/////debug/////
-
-static void pixel(color_t input, unsigned char *r, unsigned char *g, unsigned char *b)
-{
-    int rr = (input & 0xff0000) >> 16;
-    int gg = (input & 0x00ff00) >> 8;
-    int bb = (input & 0x0000ff) >> 0;
-    *r = (unsigned char) rr;
-    *g = (unsigned char) gg;
-    *b = (unsigned char) bb;
-}
-
-void graphics_save_screenshot(const char *filename)
-{
-    int width = canvas.width;
-    int height = canvas.height;
-    struct {
-        char __filler1;
-        char __filler2;
-        char B;
-        char M;
-        int filesize;
-        int reserved;
-        int data_offset;
-
-        int dib_size;
-        short width;
-        short height;
-        short planes;
-        short bpp;
-    } header = {
-        0, 0, 'B', 'M', 26 + width * height * 3, 0, 26,
-        12, (short) width, (short) height, 1, 24
-    };
-    unsigned char *pixels = (unsigned char*) malloc(width * 3);
-    FILE *fp = fopen(filename, "wb");
-    fwrite(&header.B, 1, 26, fp);
-    for (int y = height - 1; y >= 0; y--) {
-        for (int x = 0; x < width; x++) {
-            pixel(canvas.pixels[y * width + x],
-                &pixels[3*x+2], &pixels[3*x+1], &pixels[3*x]);
-        }
-        fwrite(pixels, 1, width * 3, fp);
-    }
-    fclose(fp);
-    free(pixels);
 }

@@ -10,7 +10,7 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
-#include "graphics/graphics.h"
+#include "graphics/screenshot.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
@@ -304,7 +304,7 @@ static void handle_bookmark(int number)
 
 static void take_screenshot()
 {
-    graphics_save_screenshot("city.bmp");
+    graphics_save_screenshot();
 }
 
 void hotkey_func(int f_number)
