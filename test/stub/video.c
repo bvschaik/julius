@@ -1,4 +1,4 @@
 #include "graphics/video.h"
 
-void video_shutdown()
+void video_shutdown(void)
 {}

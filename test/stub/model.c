@@ -155,7 +155,7 @@ static model_house houses[] = {
 {85, 100, 80, 2, 4, 3, 1, 1, 1, 2, 3, 1, 1, 1, 2, 1750, 200, 16},
 };
 
-int model_load()
+int model_load(void)
 {
     return 1;
 }

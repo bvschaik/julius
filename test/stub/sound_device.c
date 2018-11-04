@@ -1,9 +1,9 @@
 #include "sound/device.h"
 
-void sound_device_open()
+void sound_device_open(void)
 {}
 
-void sound_device_close()
+void sound_device_close(void)
 {}
 
 void sound_device_init_channels(int numChannels, const char filenames[][CHANNEL_FILENAME_MAX])
@@ -37,7 +37,7 @@ void sound_device_play_file_on_channel(const char *filename, int channel)
 void sound_device_play_channel(int channel)
 {}
 
-void sound_device_stop_music()
+void sound_device_stop_music(void)
 {}
 
 void sound_device_stop_channel(int channel)

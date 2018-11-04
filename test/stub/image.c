@@ -33,7 +33,7 @@ static int groups[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-int image_init()
+int image_init(void)
 {
     return 1;
 }

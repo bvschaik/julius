@@ -9,22 +9,22 @@ int window_is(window_id id)
     return id == WINDOW_CITY;
 }
 
-void window_invalidate()
+void window_invalidate(void)
 {}
 
-void window_logo_show()
+void window_logo_show(void)
 {}
 
-void window_mission_end_show_fired()
+void window_mission_end_show_fired(void)
 {}
 
-void window_mission_end_show_won()
+void window_mission_end_show_won(void)
 {}
 
-void window_victory_dialog_show()
+void window_victory_dialog_show(void)
 {}
 
-window_id window_get_id()
+window_id window_get_id(void)
 {
     return WINDOW_CITY;
 }
@@ -39,5 +39,5 @@ void window_message_dialog_show_city_message(int text_id, int year, int month,
 void window_popup_dialog_show(popup_dialog_type type, void (*okFunc)(int), int hasOkCancelButtons)
 {}
 
-void widget_sidebar_invalidate_minimap()
+void widget_sidebar_invalidate_minimap(void)
 {}

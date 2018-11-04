@@ -337,7 +337,7 @@ static int is_exception_cityinfo(int global_offset, int part_offset)
     return 0;
 }
 
-static int is_exception_image_grid(int global_offset, int part_offset)
+static int is_exception_image_grid(int global_offset)
 {
     unsigned int v1 = to_ushort(&file1_data[global_offset & ~1]);
     unsigned int v2 = to_ushort(&file2_data[global_offset & ~1]);
@@ -366,7 +366,7 @@ static int is_exception_buildings(int global_offset, int part_offset)
 static int is_exception(int index, int global_offset, int part_offset)
 {
     if (index == 2) { // Data_Grid_graphicIds
-        return is_exception_image_grid(global_offset, part_offset);
+        return is_exception_image_grid(global_offset);
     }
     if (index == 9) { // sprite offsets
         // don't care about sprite + building = animation
@@ -423,7 +423,7 @@ static void print_game_time(unsigned char *data)
     printf("%d.%u.%u.%u (%u)\n", year, month, day, tick, total_days);
 }
 
-static void compare_game_time()
+static void compare_game_time(void)
 {
     int offset_tick = 1200222;
     int offset_days = offset_tick + 16;
@@ -438,7 +438,7 @@ static void compare_game_time()
     }
 }
 
-static int compare()
+static int compare(void)
 {
     compare_game_time();
     int offset = 0;
