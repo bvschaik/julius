@@ -10,7 +10,7 @@ static struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *texture;
-} SDL;
+} SDL = {0, 0, 0};
 
 static struct {
     int x;

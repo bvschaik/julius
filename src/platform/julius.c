@@ -68,6 +68,7 @@ void system_resize(int width, int height)
 {
     static int s_width;
     static int s_height;
+
     s_width = width;
     s_height = height;
     SDL_Event event;
@@ -237,11 +238,14 @@ static int pre_init(const char *custom_data_dir)
     if (game_pre_init()) {
         return 1;
     }
-    if (chdir("../data") != 0) {
-        return 1;
+    if (chdir("../data") == 0) {
+        SDL_Log("Loading game from data directory");
+        return game_pre_init();
     }
-    SDL_Log("Loading game from data directory");
-    return game_pre_init();
+    SDL_Log("Julius requires the original files from Caesar 3 to run.");
+    SDL_Log("Move the Julius executable to the directory containing an existing Caesar 3 installation, or run:");
+    SDL_Log("julius path-to-c3-directory");
+    return 0;
 }
 
 static void setup(const char *custom_data_dir)
