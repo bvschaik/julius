@@ -6,7 +6,7 @@
  * Directory-related functions.
  */
 
-#define DIR_MAX_FILES 100
+#define DIR_MAX_FILES 200
 
 /**
  * Directory listing
