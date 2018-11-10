@@ -30,9 +30,9 @@ int platform_screen_create(const char *title)
         setting_window(&width, &height);
     }
 
-    SDL_Log("Creating screen, fullscreen? %d\n", fullscreen);
     platform_screen_destroy();
 
+    SDL_Log("Creating screen %d x %d, fullscreen? %d\n", width, height, fullscreen);
     Uint32 flags = SDL_WINDOW_RESIZABLE;
     if (fullscreen) {
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -47,8 +47,12 @@ int platform_screen_create(const char *title)
 
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!SDL.renderer) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create renderer: %s", SDL_GetError());
-        return 0;
+        SDL_Log("Unable to create renderer, trying software renderer: %s", SDL_GetError());
+        SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_SOFTWARE);
+        if (!SDL.renderer) {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create renderer: %s", SDL_GetError());
+            return 0;
+        }
     }
 
     return platform_screen_resize(width, height);
@@ -82,7 +86,7 @@ int platform_screen_resize(int width, int height)
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         width, height);
     if (SDL.texture) {
-        SDL_Log("Texture created (%d x %d)\n", width, height);
+        SDL_Log("Texture created (%d x %d)", width, height);
         screen_set_resolution(width, height);
         return 1;
     } else {

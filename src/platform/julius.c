@@ -50,7 +50,7 @@ static void handler(int sig) {
     fprintf(stderr, "Error: signal %d:\n", sig);
     backtrace_symbols_fd(array, size, STDERR_FILENO);
 #else
-    fprintf(stderr, "Oops, crashed with signal %d :(\n", sig);
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Oops, crashed with signal %d :(", sig);
 #endif
     exit(1);
 }
@@ -294,18 +294,22 @@ static void setup(const char *custom_data_dir)
     setup_logging();
 
     if (!init_sdl()) {
+        SDL_Log("Exiting: SDL init failed");
         exit(-1);
     }
 
     if (!pre_init(custom_data_dir)) {
+        SDL_Log("Exiting: game pre-init failed");
         exit(1);
     }
 
     if (!platform_screen_create((const char*)lang_get_string(9, 0))) {
+        SDL_Log("Exiting: SDL create window failed");
         exit(-2);
     }
 
     if (!game_init()) {
+        SDL_Log("Exiting: game init failed");
         exit(2);
     }
 }
