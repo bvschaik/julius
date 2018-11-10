@@ -3,7 +3,7 @@
 #include "game/game.h"
 #include "game/settings.h"
 
-#if defined(__GNUC__) && !defined(__MINGW32__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__)
 #include <execinfo.h>
 #endif
 
@@ -22,7 +22,7 @@
 
 static void handler(int sig)
 {
-#if defined(__GNUC__) && !defined(__MINGW32__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__)
     void *array[100];
     size_t size;
 

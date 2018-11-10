@@ -16,7 +16,7 @@
 #include <string.h>
 #endif
 
-#if defined(__GNUC__) && !defined(__MINGW32__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__)
 #include <execinfo.h>
 #endif
 
@@ -39,7 +39,7 @@ enum {
 };
 
 static void handler(int sig) {
-#if defined(__GNUC__) && !defined(__MINGW32__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__)
     void *array[100];
     size_t size;
     
