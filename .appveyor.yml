@@ -7,6 +7,7 @@ environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       COMPILER: mingw
+      PLATFORMTOOLSET: "v140"
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       COMPILER: msvc
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
@@ -60,5 +61,5 @@ cache:
 artifacts:
   - path: build\julius.exe
     name: julius
-  - path: build\julius.zip
+  - path: julius.zip
     name: julius-dist

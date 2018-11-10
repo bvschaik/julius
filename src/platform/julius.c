@@ -51,6 +51,42 @@ static void handler(int sig) {
     exit(1);
 }
 
+#if defined(_WIN32)
+/* Log to separate file on windows, since we don't have a console there */
+static FILE *log_file = 0;
+
+static void write_log(void *userdata, int category, SDL_LogPriority priority, const char *message)
+{
+    if (log_file) {
+        if (priority == SDL_LOG_PRIORITY_ERROR) {
+            fwrite("ERROR: ", sizeof(char), 7, log_file);
+        } else {
+            fwrite("INFO: ", sizeof(char), 6, log_file);
+        }
+        fwrite(message, sizeof(char), strlen(message), log_file);
+        fwrite("\r\n", sizeof(char), 2, log_file);
+        fflush(log_file);
+    }
+}
+
+static void setup_logging(void)
+{
+    log_file = fopen("julius-log.txt", "w");
+    SDL_LogSetOutputFunction(write_log, NULL);
+}
+
+static void teardown_logging(void)
+{
+    if (log_file) {
+        fclose(log_file);
+    }
+}
+
+#else
+static void setup_logging(void) {}
+static void teardown_logging(void) {}
+#endif
+
 static void post_event(int code)
 {
     SDL_Event event;
@@ -251,6 +287,7 @@ static int pre_init(const char *custom_data_dir)
 static void setup(const char *custom_data_dir)
 {
     signal(SIGSEGV, handler);
+    setup_logging();
 
     if (!init_sdl()) {
         exit(-1);
@@ -275,6 +312,7 @@ static void teardown(void)
     game_exit();
     platform_screen_destroy();
     SDL_Quit();
+    teardown_logging();
 }
 
 int main(int argc, char **argv)
