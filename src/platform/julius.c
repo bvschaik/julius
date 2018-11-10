@@ -12,6 +12,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#if defined(_WIN32)
+#include <string.h>
+#endif
+
 #if defined(__GNUC__) && !defined(__MINGW32__)
 #include <execinfo.h>
 #endif
