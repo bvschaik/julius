@@ -9,6 +9,10 @@ environment:
       COMPILER: mingw
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       COMPILER: msvc
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      COMPILER: mingw
+      CMAKE_BUILD_TYPE: Release
+      PLATFORMTOOLSET: "v140"
 
 platform:
   - x86
@@ -40,7 +44,12 @@ build_script:
 after_build:
   - ctest -C debug
   - if [%COMPILER%] == [msvc] cp debug/julius.exe .
+  - if [%COMPILER%] == [msvc] cp C:\sdl-msvc\SDL2-%SDL2_VERSION%\lib\x86\SDL2.dll .
+  - if [%COMPILER%] == [msvc] cp C:\sdl-msvc\SDL2_mixer-%SDL2_MIXER_VERSION%\lib\x86\SDL2_mixer.dll .
+  - if [%COMPILER%] == [mingw] cp C:\SDL2-%SDL2_VERSION%\i686-w64-mingw32\bin\SDL2.dll .
+  - if [%COMPILER%] == [mingw] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\i686-w64-mingw32\bin\SDL2_mixer.dll .
   - dir
+  - 7z a C:\projects\julius\julius.zip julius.exe SDL2.dll SDL2_mixer.dll
 
 cache:
   - SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
@@ -51,3 +60,5 @@ cache:
 artifacts:
   - path: build\julius.exe
     name: julius
+  - path: build\julius.zip
+    name: julius-dist
