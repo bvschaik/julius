@@ -69,7 +69,7 @@ static void create_vacant_lot(int x, int y, int image_id)
     building *b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
     b->house_population = 0;
     b->distance_from_entry = 0;
-    map_building_tiles_add(b->id, b->x + 1, b->y, 1, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
 }
 
 void building_house_change_to_vacant_lot(building *house)
