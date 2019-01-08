@@ -1,6 +1,9 @@
 #ifndef WINDOW_BUILDING_COMMON_H
 #define WINDOW_BUILDING_COMMON_H
 
+static const int MIN_Y_POSITION = 32;
+static const int MARGIN_POSITION = 16;
+
 typedef enum {
     BUILDING_INFO_NONE = 0,
     BUILDING_INFO_TERRAIN = 1,
@@ -58,6 +61,10 @@ typedef struct {
         int figure_ids[7];
     } figure;
 } building_info_context;
+
+void window_building_set_possible_position(int * x_offset, int * y_offset, int width_blocks, int height_blocks);
+
+int window_building_get_vertical_offset(building_info_context *c, int new_window_height);
 
 void window_building_draw_employment(building_info_context *c, int y_offset);
 

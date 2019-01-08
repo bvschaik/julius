@@ -4,10 +4,54 @@
 #include "building/model.h"
 #include "city/labor.h"
 #include "city/population.h"
+#include "city/view.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "sound/speech.h"
+
+void window_building_set_possible_position(int *x_offset, int *y_offset, int width_blocks, int height_blocks)
+{
+    int dialog_width = 16 * width_blocks;
+    int dialog_height = 16 * height_blocks;
+    int stub;
+    int width;
+    city_view_get_viewport(&stub, &stub, &width, &stub);
+    width -= MARGIN_POSITION;
+
+    if (*y_offset + dialog_height > screen_height() - MARGIN_POSITION) {
+        *y_offset -= dialog_height;
+    }
+
+    *y_offset = (*y_offset < MIN_Y_POSITION) ? MIN_Y_POSITION : *y_offset;
+
+    if (*x_offset + dialog_width > width) {
+        *x_offset = width - dialog_width;
+    }
+}
+
+int window_building_get_vertical_offset(building_info_context *c, int new_window_height)
+{
+    new_window_height = new_window_height * 16;
+    int old_window_height = c->height_blocks * 16;
+    int y_offset = c->y_offset;
+
+    int center = (old_window_height / 2) + y_offset;
+    int new_window_y = center - (new_window_height / 2);
+
+    if (new_window_y < MIN_Y_POSITION) {
+        new_window_y = MIN_Y_POSITION;
+    } else {
+        int height = screen_height() - MARGIN_POSITION;
+
+        if (new_window_y + new_window_height > height) {
+            new_window_y = height - new_window_height;
+        }
+    }
+
+    return new_window_y;
+}
 
 void window_building_draw_employment(building_info_context *c, int y_offset)
 {
