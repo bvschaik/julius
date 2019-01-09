@@ -67,6 +67,8 @@ building *building_create(building_type type, int x, int y)
     
     const building_properties *props = building_properties_for_type(type);
     
+    memset(&(b->data), 0, sizeof(b->data));
+
     b->state = BUILDING_STATE_CREATED;
     b->faction_id = 1;
     b->unknown_value = city_buildings_unknown_value();
