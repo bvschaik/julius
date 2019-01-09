@@ -124,6 +124,10 @@ void game_run(void)
     for (int i = 0; i < num_ticks; i++) {
         game_tick_run();
         game_file_write_mission_saved_game();
+
+        if (window_must_refresh()) {
+            break;
+        }
     }
 }
 
