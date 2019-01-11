@@ -345,9 +345,9 @@ static void split(building *house, int num_tiles)
                 if (other_house->house_is_merged == 1) {
                     split_size2(other_house, other_house->type);
                 } else if (other_house->house_size == 2) {
-                    split_size2(house, BUILDING_HOUSE_MEDIUM_INSULA);
+                    split_size2(other_house, BUILDING_HOUSE_MEDIUM_INSULA);
                 } else if (other_house->house_size == 3) {
-                    split_size3(house);
+                    split_size3(other_house);
                 }
             }
         }
