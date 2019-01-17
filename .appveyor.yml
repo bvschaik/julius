@@ -37,7 +37,7 @@ before_build:
   - md build
   - cd build
   - if [%COMPILER%] == [mingw] cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -D CMAKE_C_COMPILER=mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
-  - if [%COMPILER%] == [msvc] cmake -G "Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -DCMAKE_PREFIX_PATH=C:/sdl-msvc/SDL2-%SDL2_VERSION%;C:/sdl-msvc/SDL2_mixer-%SDL2_MIXER_VERSION% ..
+  - if [%COMPILER%] == [msvc] cmake -G "Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -DCMAKE_PREFIX_PATH=C:/sdl-msvc/SDL2-%SDL2_VERSION%;C:/sdl-msvc/SDL2_mixer-%SDL2_MIXER_VERSION% -DCMAKE_EXE_LINKER_FLAGS="/manifest:no" -DCMAKE_MODULE_LINKER_FLAGS="/manifest:no" -DCMAKE_SHARED_LINKER_FLAGS="/manifest:no" ..
 
 build_script:
   - cmake --build .

@@ -139,6 +139,7 @@ void game_draw(void)
 
 void game_exit(void)
 {
+    system_free_cursors();
     video_shutdown();
     settings_save();
     sound_system_shutdown();

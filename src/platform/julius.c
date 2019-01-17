@@ -3,8 +3,10 @@
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/game.h"
+#include "game/system.h"
 #include "graphics/window.h"
 #include "input/mouse.h"
+#include "platform/dpi.h"
 #include "platform/keyboard_input.h"
 #include "platform/screen.h"
 #include "platform/version.h"
@@ -130,6 +132,13 @@ void system_set_fullscreen(int fullscreen)
     post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
 }
 
+void system_rescale(void)
+{
+    system_free_cursors();
+    system_init_cursors();
+    platform_screen_rescale();
+}
+
 static void run_and_draw(void)
 {
     time_set_millis(SDL_GetTicks());
@@ -140,14 +149,47 @@ static void run_and_draw(void)
     platform_screen_render();
 }
 
+static void handle_mouse_motion(int x, int y)
+{
+    double dpi_scale = platform_dpi_get_scale();
+    if (dpi_scale != 1.0f) {
+        x = (int)(x * dpi_scale);
+        y = (int)(y * dpi_scale);
+    }
+    mouse_set_position(x, y);
+}
+
 static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
 {
-    mouse_set_position(event->x, event->y);
+    handle_mouse_motion(event->x, event->y);
     if (event->button == SDL_BUTTON_LEFT) {
         mouse_set_left_down(is_down);
     } else if (event->button == SDL_BUTTON_RIGHT) {
         mouse_set_right_down(is_down);
     }
+}
+
+static int handle_window_event_threaded(void * userdata, SDL_Event *event)
+{
+    if (event->type != SDL_WINDOWEVENT) {
+        return 1;
+    }
+    switch (event->window.event) {
+        case SDL_WINDOWEVENT_RESIZED:
+            if (platform_screen_resize(event->window.data1, event->window.data2, THREADED_EVENT)) {
+                SDL_Log("Window resized to %d x %d (threaded)\n", event->window.data1, event->window.data2);
+                window_draw(1);
+                platform_screen_render();
+            }
+            break;
+        case SDL_WINDOWEVENT_MOVED:
+            platform_screen_move(event->window.data1, event->window.data2, THREADED_EVENT);
+            SDL_Log("Window move to coordinates x: %d y: %d (threaded)\n", event->window.data1, event->window.data2);
+            window_draw(1);
+            platform_screen_render();
+            break;
+    }
+    return 1;
 }
 
 static void handle_window_event(SDL_WindowEvent *event, int *window_active)
@@ -161,10 +203,14 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
             break;
         case SDL_WINDOWEVENT_SIZE_CHANGED:
             SDL_Log("Window resized to %d x %d\n", event->data1, event->data2);
-            platform_screen_resize(event->data1, event->data2);
+            platform_screen_resize(event->data1, event->data2, NORMAL_EVENT);
             break;
         case SDL_WINDOWEVENT_RESIZED:
             SDL_Log("System resize to %d x %d\n", event->data1, event->data2);
+            break;
+        case SDL_WINDOWEVENT_MOVED:
+            SDL_Log("Window move to coordinates x: %d y: %d\n", event->data1, event->data2);
+            platform_screen_move(event->data1, event->data2, NORMAL_EVENT);
             break;
 
         case SDL_WINDOWEVENT_SHOWN:
@@ -196,7 +242,7 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             break;
 
         case SDL_MOUSEMOTION:
-            mouse_set_position(event->motion.x, event->motion.y);
+            handle_mouse_motion(event->motion.x, event->motion.y);
             break;
         case SDL_MOUSEBUTTONDOWN:
             handle_mouse_button(&event->button, 1);
@@ -234,6 +280,7 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
 static void main_loop(void)
 {
     SDL_Event event;
+    SDL_AddEventWatch(handle_window_event_threaded, NULL);
     mouse_set_inside_window(1);
     
     run_and_draw();
@@ -252,6 +299,8 @@ static void main_loop(void)
             }
         }
     }
+
+    SDL_DelEventWatch(handle_window_event_threaded, NULL);
 }
 
 static int init_sdl(void)

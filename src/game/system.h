@@ -14,6 +14,11 @@
 void system_resize(int width, int height);
 
 /**
+ * Rescale the window on DPI changes
+ */
+void system_rescale(void);
+
+/**
  * Center window
  */
 void system_center(void);
@@ -33,6 +38,11 @@ void system_init_cursors(void);
  * @param cursor_id Cursor to set
  */
 void system_set_cursor(int cursor_id);
+
+/**
+ * Frees cursors from memory
+ */
+void system_free_cursors(void);
 
 /**
  * Exit the game

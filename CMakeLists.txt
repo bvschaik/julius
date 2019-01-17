@@ -44,6 +44,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
+    ${PROJECT_SOURCE_DIR}/src/platform/dpi.c
     ${PROJECT_SOURCE_DIR}/src/platform/screen.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
 )
@@ -362,6 +363,18 @@ find_package(SDL2_mixer REQUIRED)
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+endif()
+
+if (UNIX AND NOT APPLE)
+    find_package(X11)
+    if(X11_FOUND)
+        target_include_directories(julius PRIVATE ${X11_X11_INCLUDE_PATH})
+        target_link_libraries(julius ${CMAKE_DL_LIBS})
+        target_compile_definitions(julius PRIVATE "_USING_X11")
+    endif()
+    if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+        target_link_libraries(julius m)
+    endif()
 endif()
 
 include_directories(${SDL2_INCLUDE_DIR})

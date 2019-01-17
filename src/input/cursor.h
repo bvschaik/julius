@@ -10,13 +10,21 @@ typedef enum {
     CURSOR_MAX,
 } cursor_shape;
 
+typedef enum {
+    CURSOR_SCALE_1 = 0,
+    CURSOR_SCALE_1_5 = 1,
+    CURSOR_SCALE_2 = 2,
+} cursor_scale;
+
 typedef struct {
     int hotspot_x;
     int hotspot_y;
-    char data[32*32+1];
+    int width;
+    int height;
+    const char * data;
 } cursor;
 
-const cursor *input_cursor_data(cursor_shape cursor_id);
+const cursor *input_cursor_data(cursor_shape cursor_id, double scale);
 
 void input_cursor_update(window_id window);
 
