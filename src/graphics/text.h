@@ -11,6 +11,7 @@ void text_capture_cursor(int cursor_position);
 void text_draw_cursor(int x_offset, int y_offset, int is_insert);
 
 int text_get_width(const uint8_t *str, font_t font);
+void text_ellipsize(char *str, font_t font, int requested_width);
 
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color);
 
