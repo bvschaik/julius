@@ -173,9 +173,11 @@ void widget_city_handle_mouse(const mouse *m)
         }
     } else if (m->left.is_down) {
         build_move(tile);
-    } else if (m->left.went_up) {
+    }
+    if (m->left.went_up) {
         build_end();
-    } else if (m->right.went_up) {
+    }
+    if (m->right.went_up) {
         if (handle_right_click_allow_building_info(tile)) {
             window_building_info_show(tile->grid_offset);
         }
