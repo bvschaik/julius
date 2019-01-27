@@ -283,6 +283,16 @@ void hotkey_esc(void)
     window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
 }
 
+void hotkey_page_up(void)
+{
+	change_game_speed(0);
+}
+
+void hotkey_page_down(void)
+{
+	change_game_speed(1);
+}
+
 static void go_to_bookmark(int number)
 {
     if (map_bookmark_go_to(number)) {

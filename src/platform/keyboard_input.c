@@ -55,6 +55,12 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
             keyboard_end();
             hotkey_end();
             break;
+        case SDLK_PAGEUP:
+            hotkey_page_up();
+            break;
+        case SDLK_PAGEDOWN:
+            hotkey_page_down();
+            break;
         case SDLK_ESCAPE:
             hotkey_esc();
             break;
