@@ -4,7 +4,7 @@
 #include "map/routing_path.h"
 
 #define MAX_PATH_LENGTH 500
-#define MAX_ROUTES 600
+#define MAX_ROUTES 2400
 
 static struct {
     int figure_ids[MAX_ROUTES];
