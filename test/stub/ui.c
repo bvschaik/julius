@@ -29,6 +29,11 @@ window_id window_get_id(void)
     return WINDOW_CITY;
 }
 
+int window_must_refresh(void)
+{
+    return 0;
+}
+
 void window_draw(int force)
 {}
 

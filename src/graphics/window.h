@@ -57,6 +57,10 @@ typedef struct {
 
 void window_invalidate(void);
 
+void window_request_refresh_on_draw(void);
+
+int window_must_refresh(void);
+
 void window_draw(int force);
 
 int window_is(window_id id);

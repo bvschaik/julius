@@ -44,7 +44,7 @@ static void reset_tooltip(tooltip_context *c)
 {
     if (c->type != TOOLTIP_NONE) {
         c->type = TOOLTIP_NONE;
-        window_invalidate();
+        window_request_refresh_on_draw();
     }
 }
 

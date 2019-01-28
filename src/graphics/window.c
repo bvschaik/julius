@@ -9,7 +9,8 @@
 static window_type window_queue[MAX_QUEUE];
 static int queue_index = 0;
 static window_type *current_window = 0;
-static int refresh_requested;
+static int refresh_immediate;
+static int refresh_on_draw;
 
 static void noop(void)
 {
@@ -36,7 +37,18 @@ static void decrease_queue_index(void)
 
 void window_invalidate(void)
 {
-    refresh_requested = 1;
+    refresh_immediate = 1;
+    refresh_on_draw = 1;
+}
+
+int window_must_refresh(void)
+{
+    return refresh_immediate;
+}
+
+void window_request_refresh_on_draw(void)
+{
+    refresh_on_draw = 1;
 }
 
 int window_is(window_id id)
@@ -87,9 +99,10 @@ static void update_mouse_after(void)
 void window_draw(int force)
 {
     update_mouse_before();
-    if (force || refresh_requested) {
+    if (force || refresh_on_draw) {
         current_window->draw_background();
-        refresh_requested = 0;
+        refresh_on_draw = 0;
+        refresh_immediate = 0;
     }
     current_window->draw_foreground();
 
