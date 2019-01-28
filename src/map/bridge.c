@@ -114,7 +114,7 @@ int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_b
     if (is_ship_bridge) {
         if (index == 1 || index == length - 2) {
             // platform after ramp
-            return 0;
+            return 13;
         } else if (index == 0) {
             // ramp at start
             switch (direction) {
