@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(julius C)
 
+find_package(Git)
+
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
 if (CMAKE_VERSION VERSION_LESS 3.1)
@@ -24,6 +26,18 @@ set(SMK_FILES
     ext/libsmacker/smk_bitstream.c
     ext/libsmacker/smk_hufftree.c
 )
+if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+  execute_process(
+    COMMAND git describe --long --dirty --abbrev=10 --tags
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+else(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+  set(GIT_COMMIT_HASH "")
+endif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+
+configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
