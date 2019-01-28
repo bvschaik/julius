@@ -55,11 +55,21 @@ typedef struct {
     void (*get_tooltip)(tooltip_context *c);
 } window_type;
 
+/**
+ * Invalidates the window immediately, indicating that the current game state
+ * requires a redraw before continuing
+ */
 void window_invalidate(void);
 
-void window_request_refresh_on_draw(void);
+/**
+ * Request a (soft) refresh of the window; does not invalidate the game state
+ */
+void window_request_refresh(void);
 
-int window_must_refresh(void);
+/**
+ * Returns whether the window has been invalidated using `window_invalidate`
+ */
+int window_is_invalid(void);
 
 void window_draw(int force);
 

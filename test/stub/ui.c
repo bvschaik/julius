@@ -29,7 +29,7 @@ window_id window_get_id(void)
     return WINDOW_CITY;
 }
 
-int window_must_refresh(void)
+int window_is_invalid(void)
 {
     return 0;
 }

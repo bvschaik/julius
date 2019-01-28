@@ -125,7 +125,7 @@ void game_run(void)
         game_tick_run();
         game_file_write_mission_saved_game();
 
-        if (window_must_refresh()) {
+        if (window_is_invalid()) {
             break;
         }
     }

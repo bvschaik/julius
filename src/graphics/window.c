@@ -41,12 +41,12 @@ void window_invalidate(void)
     refresh_on_draw = 1;
 }
 
-int window_must_refresh(void)
+int window_is_invalid(void)
 {
     return refresh_immediate;
 }
 
-void window_request_refresh_on_draw(void)
+void window_request_refresh(void)
 {
     refresh_on_draw = 1;
 }

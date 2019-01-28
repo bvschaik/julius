@@ -428,7 +428,7 @@ static void update_progress(void)
 
 static void draw_sliding_foreground(void)
 {
-    window_request_refresh_on_draw();
+    window_request_refresh();
     update_progress();
     if (data.progress >= 47) {
         city_view_toggle_sidebar();
