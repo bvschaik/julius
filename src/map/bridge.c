@@ -110,8 +110,8 @@ static int get_pillar_distance(int length)
 
 int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_bridge)
 {
-    int pillar_distance = get_pillar_distance(length);
     if (is_ship_bridge) {
+        int pillar_distance = get_pillar_distance(length);
         if (index == 1 || index == length - 2) {
             // platform after ramp
             return 13;
