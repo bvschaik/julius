@@ -18,11 +18,13 @@
 #include "map/building.h"
 #include "map/building_tiles.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/random.h"
 #include "map/road_access.h"
 #include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
+#include "map/terrain.h"
 #include "map/tiles.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -42,6 +44,12 @@ void building_maintenance_update_burning_ruins(void)
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_BURNING_RUIN) {
+            continue;
+        }
+        int grid_offset = b->grid_offset;
+        if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(grid_offset))
+        {
+            b->state = BUILDING_STATE_DELETED_BY_GAME;
             continue;
         }
         if (b->fire_duration < 0) {
@@ -76,7 +84,6 @@ void building_maintenance_update_burning_ruins(void)
         int dir2 = fire_spread_direction + 1;
         if (dir2 > 7) dir2 = 0;
         
-        int grid_offset = b->grid_offset;
         int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(fire_spread_direction));
         if (next_building_id && !building_get(next_building_id)->fire_proof) {
             building_destroy_by_fire(building_get(next_building_id));

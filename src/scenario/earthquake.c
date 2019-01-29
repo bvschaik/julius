@@ -82,7 +82,6 @@ static void advance_earthquake_to_tile(int x, int y)
         building *b = building_get(building_id);
         building_destroy_by_fire(b);
         sound_effect_play(SOUND_EFFECT_EXPLOSION);
-        b->state = BUILDING_STATE_DELETED_BY_GAME;
     }
     map_terrain_set(grid_offset, 0);
     map_tiles_set_earthquake(x, y);
