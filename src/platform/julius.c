@@ -330,7 +330,6 @@ int main(int argc, char **argv)
     
     const char *custom_data_dir = (argc > 1 && argv[1]) ? argv[1] : NULL;
     setup(custom_data_dir);
-    
     main_loop();
 
     teardown();
