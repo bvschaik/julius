@@ -178,8 +178,10 @@ void widget_city_handle_mouse(const mouse *m)
         build_end();
     }
     if (m->right.went_up) {
-        if (handle_right_click_allow_building_info(tile)) {
-            window_building_info_show(tile->grid_offset);
+        if (!building_construction_in_progress()) {
+            if (handle_right_click_allow_building_info(tile)) {
+                window_building_info_show(tile->grid_offset);
+            }
         }
     }
 }
