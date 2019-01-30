@@ -122,14 +122,11 @@ static int is_drawable_farm_corner(int grid_offset)
     int xy = map_property_multi_tile_xy(grid_offset);
     if (map_orientation == DIR_0_TOP && xy == EDGE_X0Y2) {
         return 1;
-    }
-    if (map_orientation == DIR_2_RIGHT && xy == EDGE_X0Y0) {
+    } else if (map_orientation == DIR_2_RIGHT && xy == EDGE_X0Y0) {
         return 1;
-    }
-    if (map_orientation == DIR_4_BOTTOM && xy == EDGE_X2Y0) {
+    } else if (map_orientation == DIR_4_BOTTOM && xy == EDGE_X2Y0) {
         return 1;
-    }
-    if (map_orientation == DIR_2_RIGHT && xy == EDGE_X2Y2) {
+    } else if (map_orientation == DIR_6_LEFT && xy == EDGE_X2Y2) {
         return 1;
     }
     return 0;
