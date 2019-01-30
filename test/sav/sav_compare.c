@@ -375,7 +375,10 @@ static int is_exception(int index, int global_offset, int part_offset)
             return 1;
         }
     }
-    if (index == 15) { // Data_Grid_Undo_spriteOffsets
+    if (index == index_of_part("Data_Grid_Undo_spriteOffsets")) {
+        return 1;
+    }
+    if (index == index_of_part("Data_Settings_Map.camera.x") || index == index_of_part("Data_Settings_Map.camera.y")) {
         return 1;
     }
     if (index == index_of_part("Data_CityInfo")) {
