@@ -1,5 +1,8 @@
 # Julius ![](res/julius_48.png)
 
+Windows: [![Build Status](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) \
+Linux: [![Build Status](https://travis-ci.org/bvschaik/julius.svg?branch=master)](https://travis-ci.org/bvschaik/julius)
+
 Julius is an open source re-implementation of Caesar III.
 
 The aim of this project is to create an open-source version of Caesar 3, with the same logic as the original, but with some UI enhancements, that is able to be played on multiple platforms. The same logic means that the saved games are 100% compatible, and any gameplay bugs present in the original Caesar 3 game will also be present in Julius.
