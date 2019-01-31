@@ -5,3 +5,4 @@ cmake-build-debug
 doc
 *.kdev4
 .vs
+src/platform/version.h
