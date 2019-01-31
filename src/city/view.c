@@ -158,7 +158,7 @@ int city_view_scroll(int direction)
         return 0;
     }
     int dx = 1;
-    int dy = 2;
+    int dy = 4;
     switch (direction) {
         case DIR_0_TOP:
             data.camera.y -= dy;
@@ -301,7 +301,7 @@ void city_view_rotate_left(void)
 void city_view_rotate_right(void)
 {
     int center_grid_offset = get_center_grid_offset();
-    
+
     data.orientation -= 2;
     if (data.orientation < 0) {
         data.orientation = DIR_6_LEFT;
