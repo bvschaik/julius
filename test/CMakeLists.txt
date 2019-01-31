@@ -83,3 +83,11 @@ add_integration_test(sav_routing_full routing-full.sav routing-full-kill.sav 7)
 
 # God curses
 add_integration_test(sav_curses curses.sav curses-done.sav 13350)
+
+# Earthquake destroying buildings
+add_integration_test(sav_earthquake0 earthquake.sav earthquake-start.sav 371)
+add_integration_test(sav_earthquake1 earthquake.sav earthquake-during1.sav 551)
+add_integration_test(sav_earthquake2 earthquake.sav earthquake-during2.sav 1071)
+add_integration_test(sav_earthquake3 earthquake.sav earthquake-during3.sav 1602)
+add_integration_test(sav_earthquake4 earthquake.sav earthquake-during4.sav 2155)
+add_integration_test(sav_earthquake5 earthquake.sav earthquake-after.sav 3748)

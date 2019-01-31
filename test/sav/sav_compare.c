@@ -375,7 +375,10 @@ static int is_exception(int index, int global_offset, int part_offset)
             return 1;
         }
     }
-    if (index == 15) { // Data_Grid_Undo_spriteOffsets
+    if (index == index_of_part("Data_Grid_Undo_spriteOffsets")) {
+        return 1;
+    }
+    if (index == index_of_part("Data_Settings_Map.camera.x") || index == index_of_part("Data_Settings_Map.camera.y")) {
         return 1;
     }
     if (index == index_of_part("Data_CityInfo")) {
@@ -383,6 +386,14 @@ static int is_exception(int index, int global_offset, int part_offset)
     }
     if (index == index_of_part("Data_Buildings")) {
         return is_exception_buildings(global_offset, part_offset);
+    }
+    if (index == index_of_part("Data_BuildingList.burning.index")) {
+        // We use it for burning size in Julius, while C3 writes the index used to loop over the buildings,
+        // which is either 0 (no prefects in the city) or the burning size
+        // So: we ignore this variable if one of them is zero
+        if (to_uint(&file1_data[global_offset - part_offset]) == 0 || to_uint(&file2_data[global_offset - part_offset]) == 0) {
+            return 1;
+        }
     }
     return 0;
 }

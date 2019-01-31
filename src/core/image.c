@@ -102,6 +102,10 @@ int image_init(void)
     data.empire_data = (color_t *) malloc(EMPIRE_DATA_SIZE);
     data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
     if (!data.main_data || !data.empire_data || !data.enemy_data || !data.tmp_data) {
+        free(data.main_data);
+        free(data.empire_data);
+        free(data.enemy_data);
+        free(data.tmp_data);
         return 0;
     }
     return 1;

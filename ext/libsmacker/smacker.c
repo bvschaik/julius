@@ -736,6 +736,8 @@ static char smk_render_palette(struct smk_video_t* s, unsigned char* p, unsigned
 	unsigned short i = 0;
 	/* Helper variables */
 	unsigned short count, src;
+	/* Old palette data */
+	static unsigned char oldPalette[256][3];
 
 	/* Smacker palette map: smk colors are 6-bit, this table expands them to 8. */
 	const unsigned char palmap[64] =
@@ -749,6 +751,9 @@ static char smk_render_palette(struct smk_video_t* s, unsigned char* p, unsigned
 		0xC3, 0xC7, 0xCB, 0xCF, 0xD3, 0xD7, 0xDB, 0xDF,
 		0xE3, 0xE7, 0xEB, 0xEF, 0xF3, 0xF7, 0xFB, 0xFF
 	};
+
+	/* Copy palette to old palette */
+	memcpy(oldPalette, s->palette, 256 * 3);
 
 	/* sanity check */
 	smk_assert(s);
@@ -803,7 +808,7 @@ static char smk_render_palette(struct smk_video_t* s, unsigned char* p, unsigned
 			}
 
 			/* OK!  Copy the color-palette entries. */
-			memmove(&s->palette[i][0],&s->palette[src][0],count * 3);
+			memmove(&s->palette[i][0],&oldPalette[src][0],count * 3);
 
 			i += count;
 		}

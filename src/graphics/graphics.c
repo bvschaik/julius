@@ -9,7 +9,7 @@ static struct {
     color_t *pixels;
     int width;
     int height;
-} canvas;
+} canvas = {NULL, 0, 0};
 
 static struct {
     int x_start;
@@ -27,9 +27,7 @@ static clip_info clip;
 
 void graphics_init_canvas(int width, int height)
 {
-    if (canvas.pixels) {
-        free(canvas.pixels);
-    }
+    free(canvas.pixels);
     canvas.pixels = (color_t *) malloc(width * height * sizeof(color_t));
     memset(canvas.pixels, 0, width * height * sizeof(color_t));
     canvas.width = width;

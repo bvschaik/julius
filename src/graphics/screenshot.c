@@ -65,6 +65,11 @@ void graphics_save_screenshot(void)
     }
     const char *filename = generate_filename();
     FILE *fp = fopen(filename, "wb");
+    if (!fp) {
+        log_error("Unable to write screenshot to:", filename, 0);
+        free(pixels);
+        return;
+    }
 
     write_bmp_header(&buf, width, height);
     fwrite(header, 1, HEADER_SIZE, fp);
