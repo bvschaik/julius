@@ -45,7 +45,8 @@ static generic_button file_buttons[] = {
     {160, 304, 448, 320, GB_IMMEDIATE, button_select_file, button_none, 11, 0},
 };
 
-#define NOT_EXIST_MESSAGE_TIMEOUT 500
+static const int NOT_EXIST_MESSAGE_TIMEOUT = 500;
+static const int MAX_FILE_WINDOW_TEXT_WIDTH = 18 * 16;
 
 static struct {
     time_millis message_not_exist_start_time;
@@ -92,7 +93,7 @@ static void draw_scrollbar_dot(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    char file[100];
+    char file[FILE_NAME_MAX];
 
     outer_panel_draw(128, 40, 24, 21);
     inner_panel_draw(144, 80, 20, 2);
@@ -113,8 +114,9 @@ static void draw_foreground(void)
         if (data.focus_button_id == i + 1) {
             font = FONT_NORMAL_WHITE;
         }
-        strcpy(file, data.saved_games->files[data.scroll_position + i]);
+        strncpy(file, data.saved_games->files[data.scroll_position + i], FILE_NAME_MAX);
         file_remove_extension(file);
+        text_ellipsize(file, font, MAX_FILE_WINDOW_TEXT_WIDTH);
         text_draw(string_from_ascii(file), 160, 130 + 16 * i, font, 0);
     }
 

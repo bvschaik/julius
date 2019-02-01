@@ -5,6 +5,8 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 
+#include <string.h>
+
 static uint8_t tmp_line[200];
 
 static struct {
@@ -18,6 +20,19 @@ static struct {
     int x_offset;
     int y_offset;
 } input_cursor;
+
+static struct {
+    const char * string;
+    int width[FONT_TYPES_MAX];
+} ellipsis = { "...", { 0 } };
+
+static int get_ellipsis_width(font_t font)
+{
+    if (!ellipsis.width[font]) {
+        ellipsis.width[font] = text_get_width(string_to_ascii(ellipsis.string), font);
+    }
+    return ellipsis.width[font];
+}
 
 void text_capture_cursor(int cursor_position)
 {
@@ -82,6 +97,39 @@ int text_get_width(const uint8_t *str, font_t font)
         maxlen--;
     }
     return width;
+}
+
+void text_ellipsize(char *str, font_t font, int requested_width)
+{
+    char *orig_str = str;
+    const font_definition *def = font_definition_for(font);
+    int ellipsis_width = get_ellipsis_width(font);
+    unsigned int maxlen = 10000;
+    int width = 0;
+    int length_with_ellipsis = 0;
+    int image_base = image_group(GROUP_FONT);
+    while (*str && maxlen > 0) {
+        if (*str == ' ') {
+            width += def->space_width;
+        } else {
+            int image_offset = font_image_for(*str);
+            if (image_offset) {
+                int image_id = image_base + def->image_offset + image_offset - 1;
+                width += def->letter_spacing + image_get(image_id)->width;
+            }
+        }
+        if (ellipsis_width + width <= requested_width) {
+            length_with_ellipsis++;
+        }
+        if (width > requested_width) {
+            break;
+        }
+        str++;
+        maxlen--;
+    }
+    if (10000 - maxlen < strlen(orig_str)) {
+        strcpy(orig_str + length_with_ellipsis, ellipsis.string);
+    }
 }
 
 static int get_character_width(uint8_t c, const font_definition *def)
