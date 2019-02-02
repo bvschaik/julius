@@ -1,7 +1,8 @@
 # Julius ![](res/julius_48.png)
 
-Windows: [![Build Status](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) \
-Linux: [![Build Status](https://travis-ci.org/bvschaik/julius.svg?branch=master)](https://travis-ci.org/bvschaik/julius)
+Windows: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) \
+Linux/macOS: [![Travis Build Status](https://travis-ci.org/bvschaik/julius.svg?branch=master)](https://travis-ci.org/bvschaik/julius)
+Chat: [![Gitter](https://badges.gitter.im/julius-game/community.svg)](https://gitter.im/julius-game/community)
 
 Julius is an open source re-implementation of Caesar III.
 
