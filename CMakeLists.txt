@@ -360,6 +360,10 @@ add_executable(julius
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 
+if(MSVC)
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+endif()
+
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
