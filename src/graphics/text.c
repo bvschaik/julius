@@ -24,12 +24,12 @@ static struct {
 static struct {
     const char * string;
     int width[FONT_TYPES_MAX];
-} ellipsis = { "...", { 0 } };
+} ellipsis = { "..." };
 
 static int get_ellipsis_width(font_t font)
 {
     if (!ellipsis.width[font]) {
-        ellipsis.width[font] = text_get_width(string_to_ascii(ellipsis.string), font);
+        ellipsis.width[font] = text_get_width(string_from_ascii(ellipsis.string), font);
     }
     return ellipsis.width[font];
 }
