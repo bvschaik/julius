@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <SDL.h>
 
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET 20680
@@ -98,9 +99,13 @@ static struct {
 int image_init(void)
 {
     data.enemy_data = (color_t *) malloc(ENEMY_DATA_SIZE);
+    SDL_Log("enemy_data: %d", (unsigned int) data.enemy_data);
     data.main_data = (color_t *) malloc(MAIN_DATA_SIZE);
+    SDL_Log("main_data: %d", (unsigned int) data.main_data);
     data.empire_data = (color_t *) malloc(EMPIRE_DATA_SIZE);
+    SDL_Log("empire_data: %d", (unsigned int) data.empire_data);
     data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
+    SDL_Log("tmp_data: %d", (unsigned int) data.tmp_data);
     if (!data.main_data || !data.empire_data || !data.enemy_data || !data.tmp_data) {
         free(data.main_data);
         free(data.empire_data);
@@ -265,7 +270,7 @@ int image_load_climate(int climate_id)
     read_header(&buf);
     buffer_init(&buf, &data.tmp_data[HEADER_SIZE], ENTRY_SIZE * MAIN_ENTRIES);
     read_index(&buf, data.main, MAIN_ENTRIES);
-    
+
     int data_size = io_read_file_into_buffer(filename_bmp, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;

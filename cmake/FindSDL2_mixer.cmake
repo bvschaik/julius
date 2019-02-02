@@ -41,6 +41,7 @@ else()
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 SET(SDL2_SEARCH_PATHS
+  /usr/local/vitasdk/arm-vita-eabi
 	~/Library/Frameworks
 	/Library/Frameworks
 	/usr/local

@@ -7,6 +7,7 @@
 #include "platform/keyboard_input.h"
 #include "platform/screen.h"
 #include "platform/version.h"
+#include "platform/vita.h"
 
 #include <signal.h>
 #include <stdio.h>
@@ -16,7 +17,7 @@
 #include <string.h>
 #endif
 
-#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__)
 #include <execinfo.h>
 #endif
 
@@ -24,7 +25,7 @@
 #include <direct.h>
 #define chdir _chdir
 #define getcwd _getcwd
-#else
+#elif !defined(__vita__)
 #include <unistd.h>
 #endif
 
@@ -45,13 +46,13 @@ enum {
 };
 
 static void handler(int sig) {
-#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__)
     void *array[100];
     size_t size;
-    
+
     // get void*'s for all entries on the stack
     size = backtrace(array, 100);
-    
+
     // print out all the frames to stderr
     fprintf(stderr, "Error: signal %d:\n", sig);
     backtrace_symbols_fd(array, size, STDERR_FILENO);
@@ -61,7 +62,7 @@ static void handler(int sig) {
     exit(1);
 }
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__vita__)
 /* Log to separate file on windows, since we don't have a console there */
 static FILE *log_file = 0;
 
@@ -81,7 +82,7 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
 
 static void setup_logging(void)
 {
-    log_file = fopen("julius-log.txt", "w");
+    log_file = fopen("ux0:/data/julius/julius-log.txt", "w");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
 
@@ -276,7 +277,7 @@ static void main_loop(void)
 {
     SDL_Event event;
     mouse_set_inside_window(1);
-    
+
     run_and_draw();
     int active = 1;
     int quit = 0;

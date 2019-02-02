@@ -11,7 +11,7 @@
 #include <direct.h>
 #define chdir _chdir
 #define getcwd _getcwd
-#else
+#elif !defined(__vita__)
 #include <unistd.h>
 #endif
 

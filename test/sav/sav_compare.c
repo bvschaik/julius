@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "platform/vita.h"
 
 #define SAVEGAME_PARTS 300
 #define COMPRESS_BUFFER_SIZE 600000
@@ -294,6 +295,7 @@ static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
 
 static int unpack(const char *filename, unsigned char *buffer)
 {
+    filename = vita_prepend_path(filename);
     FILE *fp = fopen(filename, "rb");
     if (!fp) {
         printf("Unable to open file %s\n", filename);
@@ -430,7 +432,7 @@ static void print_game_time(unsigned char *data)
     unsigned int month = to_uint(&data[offset_tick + 8]);
     int year = (int) to_uint(&data[offset_tick + 12]);
     unsigned int total_days = to_uint(&data[offset_tick + 16]);
-    
+
     printf("%d.%u.%u.%u (%u)\n", year, month, day, tick, total_days);
 }
 

@@ -10,6 +10,7 @@
 */
 
 #include "smacker.h"
+#include "platform/vita.h"
 
 /* safe malloc and free */
 #include "smk_malloc.h"
@@ -474,6 +475,8 @@ error:
 smk smk_open_file(const char* filename, unsigned char mode)
 {
 	FILE* fp;
+
+	filename = vita_prepend_path(filename);
 
 	smk_assert(filename);
 

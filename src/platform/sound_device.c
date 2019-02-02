@@ -3,6 +3,7 @@
 #include "game/settings.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
+#include "vita.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -63,7 +64,8 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
         Mix_AllocateChannels(num_channels);
         for (int i = 0; i < num_channels; i++) {
             if (filenames[i][0]) {
-                channels[i] = Mix_LoadWAV(filenames[i]);
+                char *filename = vita_prepend_path(filenames[i]);
+                channels[i] = Mix_LoadWAV(filename);
             }
         }
     }
@@ -102,6 +104,7 @@ void sound_device_play_music(const char *filename)
 {
     if (initialized) {
         sound_device_stop_music();
+        filename = vita_prepend_path(filename);
         music = Mix_LoadMUS(filename);
         if (music) {
             Mix_PlayMusic(music, -1);
@@ -115,6 +118,8 @@ void sound_device_play_file_on_channel(const char *filename, int channel)
         if (channels[channel]) {
             sound_device_stop_channel(channel);
         }
+
+        filename = vita_prepend_path(filename);
         channels[channel] = Mix_LoadWAV(filename);
         if (channels[channel]) {
             Mix_PlayChannel(channel, channels[channel], 0);
@@ -160,13 +165,13 @@ static int next_audio_frame(void)
         free(custom_music.data);
         custom_music.data = 0;
     }
-    
+
     int audio_len;
     const unsigned char *data = custom_music.callback(&audio_len);
     if (!data || audio_len <= 0) {
         return 0;
     }
-    
+
     if (audio_len > 0) {
         // convert audio to SDL format
         custom_music.cvt.buf = (Uint8*) malloc(audio_len * custom_music.cvt.len_mult);

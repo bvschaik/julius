@@ -42,6 +42,8 @@
 #include "scenario/scenario.h"
 #include "sound/city.h"
 
+#include "platform/vita.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -312,7 +314,7 @@ static void scenario_load_from_state(scenario_state *file)
     map_random_load_state(file->random);
     map_elevation_load_state(file->elevation);
     city_view_load_scenario_state(file->camera);
-    
+
     random_load_state(file->random_iv);
 
     scenario_load_state(file->scenario);
@@ -382,10 +384,10 @@ static void savegame_load_from_state(savegame_state *state)
                             state->population_messages);
     sound_city_load_state(state->city_sounds);
     traders_load_state(state->figure_traders);
-    
+
     building_list_load_state(state->building_list_small, state->building_list_large,
                              state->building_list_burning, state->building_list_burning_totals);
-    
+
     tutorial_load_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
     building_storage_load_state(state->building_storages);
@@ -484,6 +486,7 @@ int game_file_io_read_scenario(const char *filename)
 {
     log_info("Loading scenario", filename, 0);
     init_scenario_data();
+    filename = vita_prepend_path(filename);
     FILE *fp = fopen(filename, "rb");
     if (!fp) {
         return 0;
@@ -492,7 +495,7 @@ int game_file_io_read_scenario(const char *filename)
         fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
     }
     fclose(fp);
-    
+
     scenario_load_from_state(&scenario_data.state);
     return 1;
 }
@@ -580,6 +583,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     init_savegame_data();
 
     log_info("Loading saved game", filename, 0);
+    filename = vita_prepend_path(filename);
     FILE *fp = fopen(filename, "rb");
     if (!fp) {
         return 0;
@@ -589,7 +593,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     }
     savegame_read_from_file(fp);
     fclose(fp);
-    
+
     savegame_load_from_state(&savegame_data.state);
     return 1;
 }
@@ -601,7 +605,7 @@ int game_file_io_write_saved_game(const char *filename)
     log_info("Saving game", filename, 0);
     savegame_version = SAVE_GAME_VERSION;
     savegame_save_to_state(&savegame_data.state);
-
+    filename = vita_prepend_path(filename);
     FILE *fp = fopen(filename, "wb");
     if (!fp) {
         return 0;

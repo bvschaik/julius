@@ -1,10 +1,19 @@
-if (VITA)
-    include(CMakeLists.vita)
-    return()
+cmake_minimum_required(VERSION 2.6)
+
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+  if(DEFINED ENV{VITASDK})
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
+  else()
+    message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
+  endif()
 endif()
 
-cmake_minimum_required(VERSION 2.6)
-project(julius C)
+set(SHORT_NAME julius)
+project(${SHORT_NAME})
+include("${VITASDK}/share/vita.cmake" REQUIRED)
+set(VITA_APP_NAME "julius")
+set(VITA_TITLEID  "JULIUS001")
+set(VITA_VERSION "00.10")
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -22,55 +31,6 @@ if (CMAKE_COMPILER_IS_GNUCC)
     if (CMAKE_C_COMPILER_VERSION VERSION_GREATER 5.0)
         set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion -Wstrict-prototypes ${CMAKE_C_FLAGS}")
     endif()
-endif()
-
-set(PROJECT_VERSION_MAJOR 1)
-set(PROJECT_VERSION_MINOR 0)
-set(PROJECT_VERSION_PATCH 0)
-set(IS_RELEASE_VERSION FALSE)
-
-if(IS_RELEASE_VERSION)
-  set(PROJECT_VERSION_TWEAK 0)
-  set(VERSION_REVISION "")
-elseif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-  find_package(Git)
-  if(Git_FOUND)
-    execute_process(
-      COMMAND git rev-list --count HEAD ^tags/v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      OUTPUT_VARIABLE PROJECT_VERSION_TWEAK
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    execute_process(
-      COMMAND git rev-parse --short --verify HEAD
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      OUTPUT_VARIABLE VERSION_COMMIT_HASH
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    execute_process(
-      COMMAND git diff-index --quiet HEAD --
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      RESULT_VARIABLE VERSION_COMMIT_DIRTY
-    )
-    if(${VERSION_COMMIT_DIRTY})
-      set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}-dirty")
-    else()
-      set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}")
-    endif()
-  else()
-    set(PROJECT_VERSION_TWEAK 0)
-    set(VERSION_REVISION " unknown development version")
-  endif()
-else()
-  set(PROJECT_VERSION_TWEAK 0)
-  set(VERSION_REVISION " unknown development version")
-endif()
-
-configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
-configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
-
-if(DRAW_FPS)
-  add_definitions(-DDRAW_FPS)
 endif()
 
 set(SMK_FILES
@@ -376,9 +336,14 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.c
 )
 
-add_executable(julius
-    WIN32
+set(PLATFORM_VITA
+${PROJECT_SOURCE_DIR}/src/platform/vita.c
+)
+
+add_executable(${SHORT_NAME}
     ${PLATFORM_FILES}
+    ${PLATFORM_VITA}
+    ${VITA_EXTRA_LIBS}
     ${CORE_FILES}
     ${BUILDING_FILES}
     ${CITY_FILES}
@@ -400,10 +365,6 @@ add_executable(julius
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 
-if(MSVC)
-    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-endif()
-
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
@@ -413,10 +374,42 @@ if(MSVC)
     include_directories(ext/dirent)
 endif()
 
-target_link_libraries (julius ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+set(VITA_EXTRA_LIBS
+    vorbisfile
+    vorbis
+    mikmod
+    modplug
+    mpg123
+    FLAC
+    ogg
+    jpeg
+    png
+    freetype
+    vita2d
+    m
+    z
+    SceAppUtil_stub
+    SceAudio_stub
+    SceCommonDialog_stub
+    SceCtrl_stub
+    SceDisplay_stub
+    SceGxm_stub
+    SceHid_stub
+    SceSysmodule_stub
+    SceTouch_stub
+    ScePower_stub
+)
 
-install(TARGETS julius RUNTIME DESTINATION bin)
+target_link_libraries (julius ${SDL2_MIXER_LIBRARY} ${SDL2_LIBRARY} ${VITA_EXTRA_LIBS})
+
+vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
+vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
+  VERSION ${VITA_VERSION}
+  NAME ${VITA_APP_NAME}
+)
+
+# install(TARGETS julius RUNTIME DESTINATION bin)
 
 # Unit tests
-enable_testing()
-add_subdirectory(test)
+# enable_testing()
+# add_subdirectory(test)

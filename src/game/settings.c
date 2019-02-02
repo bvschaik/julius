@@ -40,9 +40,9 @@ static struct {
 static void load_default_settings(void)
 {
     data.fullscreen = 1;
-    data.window_width = 800;
-    data.window_height = 600;
-    
+    data.window_width = 960;
+    data.window_height = 544;
+
     data.sound_effects.enabled = 1;
     data.sound_effects.volume = 100;
     data.sound_music.enabled = 1;
@@ -51,10 +51,10 @@ static void load_default_settings(void)
     data.sound_speech.volume = 100;
     data.sound_city.enabled = 1;
     data.sound_city.volume = 100;
-    
+
     data.game_speed = 90;
     data.scroll_speed = 70;
-    
+
     data.difficulty = DIFFICULTY_HARD;
     data.tooltips = TOOLTIPS_FULL;
     data.warnings = 1;
@@ -108,16 +108,16 @@ static void load_settings(buffer *buf)
 void settings_load(void)
 {
     load_default_settings();
-    
+
     int size = io_read_file_into_buffer("c3.inf", data.inf_file, INF_SIZE);
     if (!size) {
         return;
     }
-    
+
     buffer buf;
     buffer_init(&buf, data.inf_file, size);
     load_settings(&buf);
-    
+
     if (data.window_width + data.window_height < 500) {
         // most likely migration from Caesar 3
         data.window_width = 800;
@@ -130,7 +130,7 @@ void settings_save(void)
     buffer b;
     buffer *buf = &b;
     buffer_init(buf, data.inf_file, INF_SIZE);
-    
+
     buffer_skip(buf, 4);
     buffer_write_i32(buf, data.fullscreen);
     buffer_skip(buf, 3);

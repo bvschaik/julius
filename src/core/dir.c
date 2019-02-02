@@ -2,6 +2,7 @@
 
 #include "core/file.h"
 #include "core/string.h"
+#include "platform/vita.h"
 
 #include <dirent.h>
 #include <stdio.h>
@@ -34,7 +35,7 @@ static int compare_lower(const void *va, const void *vb)
 const dir_listing *dir_find_files_with_extension(const char *extension)
 {
     clear_dir_listing();
-    DIR *d = opendir(".");
+    DIR *d = opendir(VITA_PATH_PREFIX);
     if (!d) {
         return &listing;
     }
@@ -83,7 +84,9 @@ const char *dir_get_case_corrected_file(const char *filepath)
 {
     static char corrected_filename[2 * FILE_NAME_MAX];
 
-    FILE *fp = fopen(filepath, "rb");
+    char *test_path = vita_prepend_path(filepath);
+
+    FILE *fp = fopen(test_path, "rb");
     if (fp) {
         fclose(fp);
         return filepath;
@@ -98,7 +101,7 @@ const char *dir_get_case_corrected_file(const char *filepath)
     }
     if (slash) {
         *slash = 0;
-        if (correct_case(".", corrected_filename)) {
+        if (correct_case(VITA_PATH_PREFIX, corrected_filename)) {
             char *path = slash + 1;
             if (*path == '\\') {
                 // double backslash: move everything to the left
@@ -110,7 +113,7 @@ const char *dir_get_case_corrected_file(const char *filepath)
             }
         }
     } else {
-        if (correct_case(".", corrected_filename)) {
+        if (correct_case(VITA_PATH_PREFIX, corrected_filename)) {
             return corrected_filename;
         }
     }

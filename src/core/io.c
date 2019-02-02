@@ -1,4 +1,5 @@
 #include "core/io.h"
+#include "platform/vita.h"
 
 #include <stdio.h>
 
@@ -10,6 +11,7 @@ int io_read_file_into_buffer(const char *filepath, void *buffer, int max_size)
     if (!cased_file) {
         return 0;
     }
+    cased_file = vita_prepend_path(cased_file);
     FILE *fp = fopen(cased_file, "rb");
     if (!fp) {
         return 0;
@@ -32,6 +34,7 @@ int io_read_file_part_into_buffer(const char *filepath, void *buffer, int size, 
         return 0;
     }
     int bytes_read = 0;
+    cased_file = vita_prepend_path(cased_file);
     FILE *fp = fopen(cased_file, "rb");
     if (fp) {
         int seek_result = fseek(fp, offset_in_file, SEEK_SET);
@@ -50,6 +53,7 @@ int io_write_buffer_to_file(const char *filepath, const void *buffer, int size)
     if (!cased_file) {
         cased_file = filepath;
     }
+    cased_file = vita_prepend_path(cased_file);
     FILE *fp = fopen(cased_file, "wb");
     if (!fp) {
         return 0;
