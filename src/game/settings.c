@@ -1,5 +1,6 @@
 #include "settings.h"
 
+#include "city/constants.h"
 #include "core/buffer.h"
 #include "core/calc.h"
 #include "core/io.h"
@@ -59,6 +60,7 @@ static void load_default_settings(void)
     data.warnings = 1;
     data.gods_enabled = 1;
     data.victory_video = 0;
+    data.last_advisor = ADVISOR_LABOR;
 
     setting_clear_personal_savings();
 }
