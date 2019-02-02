@@ -1,5 +1,6 @@
 #include "core/log.h"
 #include "sound/device.h"
+#include "game/settings.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
 
@@ -174,7 +175,9 @@ static int next_audio_frame(void)
         SDL_ConvertAudio(&custom_music.cvt);
         custom_music.cur = 0;
         custom_music.len = custom_music.cvt.len_cvt;
-        custom_music.data = custom_music.cvt.buf;
+        custom_music.data = (Uint8*) malloc(custom_music.len);
+        memset(custom_music.data, 0, custom_music.len);
+        SDL_MixAudioFormat(custom_music.data, custom_music.cvt.buf, AUDIO_FORMAT, custom_music.cvt.len_cvt, setting_sound(SOUND_EFFECTS)->volume);
         custom_music.cvt.buf = 0;
         custom_music.cvt.len = 0;
     }
