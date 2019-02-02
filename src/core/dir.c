@@ -12,6 +12,33 @@
 static dir_listing listing;
 static int listing_initialized = 0;
 
+// Current working directory
+char cwd[FILE_NAME_MAX] = {0};
+
+int dir_set_cwd(const char *path) {
+    DIR *d = opendir(path);
+
+    if (d == NULL) {
+        return -1;
+    }
+
+    int path_len = strlen(path);
+    if (path_len > 0 && (path[path_len - 1] == '/' || path[path_len - 1] == '\\')) {
+        // Remove trailing slash
+        strncpy(cwd, path, path_len - 1);
+        cwd[path_len] = '\0';
+        return 0;
+    }
+
+    strncpy(cwd, path, FILE_NAME_MAX);
+
+    return 0;
+}
+
+const char *dir_get_cwd() {
+    return cwd;
+}
+
 static void clear_dir_listing(void)
 {
     if (!listing_initialized) {
@@ -84,11 +111,9 @@ const char *dir_get_case_corrected_file(const char *filepath)
 {
     static char corrected_filename[2 * FILE_NAME_MAX];
 
-    char *test_path = vita_prepend_path(filepath);
-
-    FILE *fp = fopen(test_path, "rb");
+    FILE *fp = file_open(filepath, "rb");
     if (fp) {
-        fclose(fp);
+        file_close(fp);
         return filepath;
     }
 

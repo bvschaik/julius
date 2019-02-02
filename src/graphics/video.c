@@ -1,6 +1,7 @@
 #include "video.h"
 
 #include "core/dir.h"
+#include "core/file.h"
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
@@ -73,16 +74,19 @@ static const unsigned char *next_audio_frame(int *out_len)
 
 static int load_smk_video(const char *filename)
 {
-    data.video.s = smk_open_file(filename, SMK_MODE_DISK);
+    FILE *fp = file_open(filename, "rb");
+    data.video.s = smk_open_filepointer(fp, SMK_MODE_DISK);
     if (!data.video.s) {
+        if (fp != NULL)
+            file_close(fp);
         return 0;
     }
-    
+
     unsigned long width, height, frames;
     double micros_per_frame;
     smk_info_all(data.video.s, 0, &frames, &micros_per_frame);
     smk_info_video(data.video.s, &width, &height, 0);
-    
+
     data.video.width = width;
     data.video.height = height;
     data.video.current_frame = 0;
@@ -103,15 +107,19 @@ static int load_smk_audio(const char *filename)
         // no sound when sound effects are disabled
         return 1;
     }
-    data.audio.s = smk_open_file(filename, SMK_MODE_DISK);
+
+    FILE *fp = file_open(filename, "rb");
+    data.audio.s = smk_open_filepointer(fp, SMK_MODE_DISK);
     if (!data.audio.s) {
+        if (fp != NULL)
+            file_close(fp);
         return 0;
     }
-    
+
     unsigned char tracks, channels[7], bitdepths[7];
     unsigned long bitrates[7];
     smk_info_audio(data.audio.s, &tracks, channels, bitdepths, bitrates);
-    
+
     if (tracks != 1) {
         // Video has alternate audio tracks, not supported
         close_smk(&data.audio.s);
@@ -154,7 +162,7 @@ int video_start(const char *filename)
 {
     data.is_playing = 0;
     data.is_ended = 0;
-    
+
     if (load_smk(filename)) {
         sound_music_stop();
         sound_speech_stop();
@@ -205,7 +213,7 @@ void video_draw(int x_offset, int y_offset)
         return;
     }
     time_millis now_millis = time_get_millis();
-    
+
     int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
     if (frame_no > data.video.current_frame) {
         if (smk_next(data.video.s) == SMK_DONE) {

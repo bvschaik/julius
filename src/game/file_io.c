@@ -6,6 +6,7 @@
 #include "building/storage.h"
 #include "city/culture.h"
 #include "city/data.h"
+#include "core/file.h"
 #include "core/log.h"
 #include "city/message.h"
 #include "city/view.h"
@@ -486,15 +487,14 @@ int game_file_io_read_scenario(const char *filename)
 {
     log_info("Loading scenario", filename, 0);
     init_scenario_data();
-    filename = vita_prepend_path(filename);
-    FILE *fp = fopen(filename, "rb");
+    FILE *fp = file_open(filename, "rb");
     if (!fp) {
         return 0;
     }
     for (int i = 0; i < scenario_data.num_pieces; i++) {
         fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
     }
-    fclose(fp);
+    file_close(fp);
 
     scenario_load_from_state(&scenario_data.state);
     return 1;
@@ -583,8 +583,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     init_savegame_data();
 
     log_info("Loading saved game", filename, 0);
-    filename = vita_prepend_path(filename);
-    FILE *fp = fopen(filename, "rb");
+    FILE *fp = file_open(filename, "rb");
     if (!fp) {
         return 0;
     }
@@ -592,7 +591,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
         fseek(fp, offset, SEEK_SET);
     }
     savegame_read_from_file(fp);
-    fclose(fp);
+    file_close(fp);
 
     savegame_load_from_state(&savegame_data.state);
     return 1;
@@ -605,13 +604,13 @@ int game_file_io_write_saved_game(const char *filename)
     log_info("Saving game", filename, 0);
     savegame_version = SAVE_GAME_VERSION;
     savegame_save_to_state(&savegame_data.state);
-    filename = vita_prepend_path(filename);
-    FILE *fp = fopen(filename, "wb");
+
+    FILE *fp = file_open(filename, "wb");
     if (!fp) {
         return 0;
     }
     savegame_write_to_file(fp);
-    fclose(fp);
+    file_close(fp);
     return 1;
 }
 

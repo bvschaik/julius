@@ -1,5 +1,6 @@
 #include "SDL.h"
 
+#include "core/dir.h"
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/game.h"
@@ -82,14 +83,14 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
 
 static void setup_logging(void)
 {
-    log_file = fopen("ux0:/data/julius/julius-log.txt", "w");
+    log_file = file_open("julius-log.txt", "w");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
 
 static void teardown_logging(void)
 {
     if (log_file) {
-        fclose(log_file);
+        file_close(log_file);
     }
 }
 
@@ -311,7 +312,7 @@ static int pre_init(const char *custom_data_dir)
 {
     if (custom_data_dir) {
         SDL_Log("Loading game from %s", custom_data_dir);
-        if (chdir(custom_data_dir) != 0) {
+        if (dir_set_cwd(custom_data_dir) != 0) {
             SDL_Log("%s: directory not found", custom_data_dir);
             return 0;
         }
@@ -321,10 +322,10 @@ static int pre_init(const char *custom_data_dir)
     if (game_pre_init()) {
         return 1;
     }
-    if (chdir("../data") == 0) {
-        SDL_Log("Loading game from data directory");
-        return game_pre_init();
-    }
+    // if (chdir("../data") == 0) {
+    //     SDL_Log("Loading game from data directory");
+    //     return game_pre_init();
+    // }
     SDL_Log("Julius requires the original files from Caesar 3 to run.");
     SDL_Log("Move the Julius executable to the directory containing an existing Caesar 3 installation, or run:");
     SDL_Log("julius path-to-c3-directory");

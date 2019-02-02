@@ -9,6 +9,19 @@
 #define DIR_MAX_FILES 200
 
 /**
+ * Set current working directory
+ * @param extension Extension of the files to find
+ * @return 0 on success, -1 on failure
+ */
+int dir_set_cwd(const char *path);
+
+/**
+ * Get pointer to current directory.
+ * @return current working directory
+ */
+const char *dir_get_cwd();
+
+/**
  * Directory listing
  */
 typedef struct {

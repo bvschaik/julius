@@ -1,6 +1,8 @@
 #ifndef CORE_FILE_H
 #define CORE_FILE_H
 
+#include <stdio.h>
+
 /**
  * @file
  * File-related functions.
@@ -11,6 +13,30 @@
  */
 
 #define FILE_NAME_MAX 200
+
+/**
+ * Wrapper for fopen converting filename to path in current working directory
+ * @param filename Filename
+ * @param mode Mode to open the file (e.g. "wb").
+ * @return FILE
+ */
+FILE* file_open(const char *filename, const char *mode);
+
+/**
+ * Wrapper to fclose
+ * @param filename Filename
+ * @param mode Mode to open the file (e.g. "wb").
+ * @return See fclose (If the stream is successfully closed, a zero value is returned.
+ *         On failure, EOF is returned.)
+ */
+int file_close(FILE *stream);
+
+/**
+ * Convert filename to path in current working directory
+ * @param filename Filename
+ * @return path to the filename in current directory
+ */
+char *file_resolve_path(const char *filename);
 
 /**
  * Checks whether the file has the given extension
