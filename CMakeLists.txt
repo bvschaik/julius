@@ -1,10 +1,22 @@
-if (VITA)
-    include(CMakeLists.vita)
-    return()
+cmake_minimum_required(VERSION 2.6)
+
+if(VITA AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    if(DEFINED ENV{VITASDK})
+        set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
+    else()
+        message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
+    endif()
 endif()
 
-cmake_minimum_required(VERSION 2.6)
-project(julius C)
+set(SHORT_NAME julius)
+project(${SHORT_NAME} C)
+
+if (VITA)
+    include("${VITASDK}/share/vita.cmake" REQUIRED)
+    set(VITA_APP_NAME "julius")
+    set(VITA_TITLEID  "JULIUS001")
+    set(VITA_VERSION "00.10")
+endif()
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -87,6 +99,13 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/screen.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
 )
+
+if (VITA)
+    set(PLATFORM_FILES
+        ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/vita.c
+    )
+endif()
 
 set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/buffer.c
@@ -413,10 +432,45 @@ if(MSVC)
     include_directories(ext/dirent)
 endif()
 
-target_link_libraries (julius ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+if (VITA)
+    target_link_libraries (${SHORT_NAME}
+        ${SDL2_MIXER_LIBRARY}
+        ${SDL2_LIBRARY}
+        vorbisfile
+        vorbis
+        mikmod
+        modplug
+        mpg123
+        FLAC
+        ogg
+        jpeg
+        png
+        freetype
+        vita2d
+        m
+        z
+        SceAppUtil_stub
+        SceAudio_stub
+        SceCommonDialog_stub
+        SceCtrl_stub
+        SceDisplay_stub
+        SceGxm_stub
+        SceHid_stub
+        SceSysmodule_stub
+        SceTouch_stub
+        ScePower_stub
+    )
 
-install(TARGETS julius RUNTIME DESTINATION bin)
+    vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
+    vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
+            VERSION ${VITA_VERSION}
+            NAME ${VITA_APP_NAME}
+            )
+else()
+    target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+    install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
 
-# Unit tests
-enable_testing()
-add_subdirectory(test)
+    # Unit tests
+    enable_testing()
+    add_subdirectory(test)
+endif()
