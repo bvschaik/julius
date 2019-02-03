@@ -1,3 +1,4 @@
+#include "core/file.h"
 #include "core/log.h"
 #include "sound/device.h"
 #include "game/settings.h"
@@ -64,8 +65,10 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
         Mix_AllocateChannels(num_channels);
         for (int i = 0; i < num_channels; i++) {
             if (filenames[i][0]) {
-                char *filename = vita_prepend_path(filenames[i]);
-                channels[i] = Mix_LoadWAV(filename);
+                FILE *fp = file_open(filenames[i], "rb");
+                SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
+
+                channels[i] = Mix_LoadWAV_RW(sdl_fp, 1);
             }
         }
     }
@@ -104,11 +107,19 @@ void sound_device_play_music(const char *filename)
 {
     if (initialized) {
         sound_device_stop_music();
-        filename = vita_prepend_path(filename);
+
+        #ifdef __vita__
+        filename = vita_prepend_path(filename); // There is no Mix_LoadMUS equivalent for fp
+        #endif
+
         music = Mix_LoadMUS(filename);
         if (music) {
             Mix_PlayMusic(music, -1);
         }
+
+        #ifdef __vita__
+        free(filename);
+        #endif
     }
 }
 
@@ -119,8 +130,10 @@ void sound_device_play_file_on_channel(const char *filename, int channel)
             sound_device_stop_channel(channel);
         }
 
-        filename = vita_prepend_path(filename);
-        channels[channel] = Mix_LoadWAV(filename);
+        FILE *fp = file_open(filename, "rb");
+        SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
+
+        channels[channel] = Mix_LoadWAV_RW(sdl_fp, 1);
         if (channels[channel]) {
             Mix_PlayChannel(channel, channels[channel], 0);
         }

@@ -1,6 +1,7 @@
 #include "SDL.h"
 
 #include "core/dir.h"
+#include "core/file.h"
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/game.h"
@@ -9,6 +10,7 @@
 #include "platform/screen.h"
 #include "platform/version.h"
 #include "platform/vita.h"
+#include "input/hotkey.h"
 
 #include <signal.h>
 #include <stdio.h>
@@ -237,12 +239,22 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
         case SDL_TEXTINPUT:
             platform_handle_text(&event->text);
             break;
-
+        case SDL_FINGERMOTION:
+            mouse_set_position(event->tfinger.x * 960, event->tfinger.y * 544);
+            break;
         case SDL_MOUSEMOTION:
             mouse_set_position(event->motion.x, event->motion.y);
             break;
+        case SDL_FINGERDOWN:
+            mouse_set_position(event->tfinger.x * 960, event->tfinger.y * 544);
+            mouse_set_left_down(1);
+            break;
         case SDL_MOUSEBUTTONDOWN:
             handle_mouse_button(&event->button, 1);
+            break;
+        case SDL_FINGERUP:
+            mouse_set_position(event->tfinger.x * 960, event->tfinger.y * 544);
+            mouse_set_left_down(0);
             break;
         case SDL_MOUSEBUTTONUP:
             handle_mouse_button(&event->button, 0);
@@ -322,10 +334,10 @@ static int pre_init(const char *custom_data_dir)
     if (game_pre_init()) {
         return 1;
     }
-    // if (chdir("../data") == 0) {
-    //     SDL_Log("Loading game from data directory");
-    //     return game_pre_init();
-    // }
+    if (chdir("../data") == 0) {
+        SDL_Log("Loading game from data directory");
+        return game_pre_init();
+    }
     SDL_Log("Julius requires the original files from Caesar 3 to run.");
     SDL_Log("Move the Julius executable to the directory containing an existing Caesar 3 installation, or run:");
     SDL_Log("julius path-to-c3-directory");
@@ -371,7 +383,13 @@ static void teardown(void)
 
 int main(int argc, char **argv)
 {
+    SDL_Log("Built with git commit: %s\n", GIT_COMMIT_HASH);
+
+    #ifdef __vita__
+    const char *custom_data_dir = NULL;
+    #else
     const char *custom_data_dir = (argc > 1 && argv[1]) ? argv[1] : NULL;
+    #endif
     setup(custom_data_dir);
 
     main_loop();

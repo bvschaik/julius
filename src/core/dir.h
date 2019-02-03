@@ -19,7 +19,7 @@ int dir_set_cwd(const char *path);
  * Get pointer to current directory.
  * @return current working directory
  */
-const char *dir_get_cwd();
+const char *dir_get_cwd(void);
 
 /**
  * Directory listing

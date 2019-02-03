@@ -35,7 +35,7 @@ int dir_set_cwd(const char *path) {
     return 0;
 }
 
-const char *dir_get_cwd() {
+const char *dir_get_cwd(void) {
     return cwd;
 }
 

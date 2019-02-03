@@ -32,13 +32,6 @@ FILE* file_open(const char *filename, const char *mode);
 int file_close(FILE *stream);
 
 /**
- * Convert filename to path in current working directory
- * @param filename Filename
- * @return path to the filename in current directory
- */
-char *file_resolve_path(const char *filename);
-
-/**
  * Checks whether the file has the given extension
  * @param filename Filename to check
  * @param extension Extension

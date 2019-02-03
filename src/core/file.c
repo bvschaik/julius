@@ -1,4 +1,5 @@
 #include "core/file.h"
+#include "platform/vita.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,27 +11,20 @@ void SDL_log(const char *fmt, ...);
 
 
 FILE* file_open(const char *filename, const char *mode) {
-    char *resolved_path = file_resolve_path(filename);
-    SDL_log("yo");
-    SDL_log("==> Opening %s, resolved to %s", filename, resolved_path);
-    SDL_log("yoy");
+    #ifdef __vita__
+    char *resolved_path = vita_prepend_path(filename);
+    printf("==> Opening %s, resolved to %s", filename, resolved_path);
+    #else
+    char *resolved_path = filename;
+    #endif
 
     FILE *fd = fopen(resolved_path, mode);
+
+    #ifdef __vita__
     free(resolved_path);
+    #endif
 
     return fd;
-}
-
-char* file_resolve_path(const char *filename) {
-    char *full_path = malloc(FILE_NAME_MAX);
-
-    if (filename[0] == '/' || filename[0] == '\\') {
-        snprintf("%s%s", FILE_NAME_MAX, dir_get_cwd(), full_path);
-    } else {
-        snprintf("%s/%s", FILE_NAME_MAX, dir_get_cwd(), full_path);
-    }
-
-    return full_path;
 }
 
 int file_close(FILE *stream) {

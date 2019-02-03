@@ -295,7 +295,6 @@ static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
 
 static int unpack(const char *filename, unsigned char *buffer)
 {
-    filename = vita_prepend_path(filename);
     FILE *fp = fopen(filename, "rb");
     if (!fp) {
         printf("Unable to open file %s\n", filename);

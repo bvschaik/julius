@@ -476,8 +476,6 @@ smk smk_open_file(const char* filename, unsigned char mode)
 {
 	FILE* fp;
 
-	filename = vita_prepend_path(filename);
-
 	smk_assert(filename);
 
 	if (!(fp = fopen(filename,"rb")))

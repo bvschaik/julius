@@ -5,6 +5,6 @@
 
 int chdir(char *path);
 
-char* vita_prepend_path(char *path);
+char* vita_prepend_path(const char *path);
 
 #endif // PLATFORM_VITA_H
