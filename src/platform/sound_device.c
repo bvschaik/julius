@@ -177,7 +177,10 @@ static int next_audio_frame(void)
         custom_music.len = custom_music.cvt.len_cvt;
         custom_music.data = (Uint8*) malloc(custom_music.len);
         memset(custom_music.data, 0, custom_music.len);
-        SDL_MixAudioFormat(custom_music.data, custom_music.cvt.buf, AUDIO_FORMAT, custom_music.cvt.len_cvt, setting_sound(SOUND_EFFECTS)->volume);
+        SDL_MixAudioFormat(custom_music.data, custom_music.cvt.buf,
+                           AUDIO_FORMAT, custom_music.cvt.len_cvt,
+                           setting_sound(SOUND_EFFECTS)->volume);
+        free(custom_music.cvt.buf);
         custom_music.cvt.buf = 0;
         custom_music.cvt.len = 0;
     }
