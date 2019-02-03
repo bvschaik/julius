@@ -89,7 +89,7 @@ static int formation_create(int figure_type, int layout, int orientation, int x,
     f->figure_type = figure_type;
     f->legion_id = formation_id - 10;
     f->morale = 100;
-    if (layout == FORMATION_ENEMY10) {
+    if (layout == FORMATION_ENEMY_DOUBLE_LINE) {
         if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
             f->layout = FORMATION_DOUBLE_LINE_1;
         } else {

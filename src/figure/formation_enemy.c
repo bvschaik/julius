@@ -388,7 +388,7 @@ static void update_enemy_movement(formation *m, int roman_distance)
         advance = 1;
     } else {
         int halt_duration, advance_duration, regroup_duration;
-        if (army->layout == FORMATION_ENEMY8 || army->layout == FORMATION_ENEMY12) {
+        if (army->layout == FORMATION_ENEMY_MOB || army->layout == FORMATION_ENEMY12) {
             switch (m->enemy_legion_index) {
                 case 0:
                 case 1:
