@@ -109,16 +109,18 @@ void sound_device_play_music(const char *filename)
         sound_device_stop_music();
 
         #ifdef __vita__
-        filename = vita_prepend_path(filename); // There is no Mix_LoadMUS equivalent for fp
+        char *resolved_filename = vita_prepend_path(filename); // There is no Mix_LoadMUS equivalent for fp
+        #else
+        const char *resolved_filename = filename;
         #endif
 
-        music = Mix_LoadMUS(filename);
+        music = Mix_LoadMUS(resolved_filename);
         if (music) {
             Mix_PlayMusic(music, -1);
         }
 
         #ifdef __vita__
-        free(filename);
+        free(resolved_filename);
         #endif
     }
 }

@@ -7,7 +7,7 @@
 
 int _newlib_heap_size_user = 192 * 1024 * 1024;
 
-int chdir(char *path) {
+int chdir(const char *path) {
     return 0;
 }
 

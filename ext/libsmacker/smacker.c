@@ -10,7 +10,6 @@
 */
 
 #include "smacker.h"
-#include "platform/vita.h"
 
 /* safe malloc and free */
 #include "smk_malloc.h"

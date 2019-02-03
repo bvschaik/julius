@@ -9,35 +9,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __vita__
+#define CURRENT_DIR VITA_PATH_PREFIX
+#else
+#define CURRENT_DIR "."
+#endif
+
 static dir_listing listing;
 static int listing_initialized = 0;
-
-// Current working directory
-char cwd[FILE_NAME_MAX] = {0};
-
-int dir_set_cwd(const char *path) {
-    DIR *d = opendir(path);
-
-    if (d == NULL) {
-        return -1;
-    }
-
-    int path_len = strlen(path);
-    if (path_len > 0 && (path[path_len - 1] == '/' || path[path_len - 1] == '\\')) {
-        // Remove trailing slash
-        strncpy(cwd, path, path_len - 1);
-        cwd[path_len] = '\0';
-        return 0;
-    }
-
-    strncpy(cwd, path, FILE_NAME_MAX);
-
-    return 0;
-}
-
-const char *dir_get_cwd(void) {
-    return cwd;
-}
 
 static void clear_dir_listing(void)
 {
@@ -62,7 +41,7 @@ static int compare_lower(const void *va, const void *vb)
 const dir_listing *dir_find_files_with_extension(const char *extension)
 {
     clear_dir_listing();
-    DIR *d = opendir(VITA_PATH_PREFIX);
+    DIR *d = opendir(CURRENT_DIR);
     if (!d) {
         return &listing;
     }
@@ -126,7 +105,7 @@ const char *dir_get_case_corrected_file(const char *filepath)
     }
     if (slash) {
         *slash = 0;
-        if (correct_case(VITA_PATH_PREFIX, corrected_filename)) {
+        if (correct_case(".", corrected_filename)) {
             char *path = slash + 1;
             if (*path == '\\') {
                 // double backslash: move everything to the left
@@ -138,7 +117,7 @@ const char *dir_get_case_corrected_file(const char *filepath)
             }
         }
     } else {
-        if (correct_case(VITA_PATH_PREFIX, corrected_filename)) {
+        if (correct_case(".", corrected_filename)) {
             return corrected_filename;
         }
     }

@@ -1,5 +1,4 @@
 #include "core/io.h"
-#include "platform/vita.h"
 
 #include <stdio.h>
 

@@ -15,7 +15,7 @@ FILE* file_open(const char *filename, const char *mode) {
     char *resolved_path = vita_prepend_path(filename);
     printf("==> Opening %s, resolved to %s", filename, resolved_path);
     #else
-    char *resolved_path = filename;
+    const char *resolved_path = filename;
     #endif
 
     FILE *fd = fopen(resolved_path, mode);
