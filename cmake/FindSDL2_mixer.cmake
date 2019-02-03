@@ -41,7 +41,6 @@ else()
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 SET(SDL2_SEARCH_PATHS
-  /usr/local/vitasdk/arm-vita-eabi
 	~/Library/Frameworks
 	/Library/Frameworks
 	/usr/local
@@ -51,6 +50,10 @@ SET(SDL2_SEARCH_PATHS
 	/opt/csw # Blastwave
 	/opt
 )
+
+if (VITA)
+    SET(SDL2_SEARCH_PATHS $ENV{VITASDK})
+endif()
 
 if(NOT SDL2_MIXER_INCLUDE_DIR AND SDL2MIXER_INCLUDE_DIR)
   set(SDL2_MIXER_INCLUDE_DIR ${SDL2MIXER_INCLUDE_DIR} CACHE PATH "directory cache

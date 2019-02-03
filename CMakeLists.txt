@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
+option(VITA "Build for the PlayStation Vita handheld game console." OFF)
+
 if(VITA AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
         set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
@@ -13,7 +15,6 @@ project(${SHORT_NAME} C)
 
 if (VITA)
     include("${VITASDK}/share/vita.cmake" REQUIRED)
-    set(VITA_APP_NAME "julius")
     set(VITA_TITLEID  "JULIUS001")
     set(VITA_VERSION "00.10")
 endif()
@@ -464,8 +465,8 @@ if (VITA)
     vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
     vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
             VERSION ${VITA_VERSION}
-            NAME ${VITA_APP_NAME}
-            )
+            NAME ${SHORT_NAME}
+    )
 else()
     target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
     install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
