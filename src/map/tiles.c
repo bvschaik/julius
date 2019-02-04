@@ -95,9 +95,16 @@ static int is_all_terrain_in_area(int x, int y, int size, int terrain)
     return 1;
 }
 
+static int is_updatable_rock(int grid_offset)
+{
+    return map_terrain_is(grid_offset, TERRAIN_ROCK) &&
+           !map_property_is_plaza_or_earthquake(grid_offset) &&
+           !map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP);
+}
+
 static void clear_rock_image(int x, int y, int grid_offset)
 {
-    if (map_terrain_is(grid_offset, TERRAIN_ROCK) && !map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
+    if (is_updatable_rock(grid_offset)) {
         map_image_set(grid_offset, 0);
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
@@ -106,7 +113,7 @@ static void clear_rock_image(int x, int y, int grid_offset)
 
 static void set_rock_image(int x, int y, int grid_offset)
 {
-    if (map_terrain_is(grid_offset, TERRAIN_ROCK) && !map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
+    if (is_updatable_rock(grid_offset)) {
         if (!map_image_at(grid_offset)) {
             if (is_all_terrain_in_area(x, y, 3, TERRAIN_ROCK)) {
                 int image_id = 12 + (map_random_get(grid_offset) & 1);
