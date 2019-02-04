@@ -7,13 +7,10 @@
 #include "core/dir.h"
 #include "core/string.h"
 
-void SDL_log(const char *fmt, ...);
-
 
 FILE* file_open(const char *filename, const char *mode) {
     #ifdef __vita__
     char *resolved_path = vita_prepend_path(filename);
-    printf("==> Opening %s, resolved to %s", filename, resolved_path);
     #else
     const char *resolved_path = filename;
     #endif

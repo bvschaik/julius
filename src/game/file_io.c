@@ -43,8 +43,6 @@
 #include "scenario/scenario.h"
 #include "sound/city.h"
 
-#include "platform/vita.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 
