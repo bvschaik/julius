@@ -37,8 +37,7 @@ else(EXISTS "${CMAKE_SOURCE_DIR}/.git")
   set(GIT_COMMIT_HASH "")
 endif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
 
-configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
-
+configure_file(${PROJECT_SOURCE_DIR}/gen/git_version.h.in ${PROJECT_SOURCE_DIR}/src/platform/git_version.h)
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
     ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
