@@ -173,8 +173,8 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_i16(buf, f->destination_grid_offset);
     buffer_write_u8(buf, f->source_x);
     buffer_write_u8(buf, f->source_y);
-    buffer_write_i8(buf, f->formation_position_x);
-    buffer_write_i8(buf, f->formation_position_y);
+    buffer_write_u8(buf, f->formation_position_x.soldier);
+    buffer_write_u8(buf, f->formation_position_y.soldier);
     buffer_write_i16(buf, f->__unused_24);
     buffer_write_i16(buf, f->wait_ticks);
     buffer_write_u8(buf, f->action_state);
@@ -273,8 +273,8 @@ static void figure_load(buffer *buf, figure *f)
     f->destination_grid_offset = buffer_read_i16(buf);
     f->source_x = buffer_read_u8(buf);
     f->source_y = buffer_read_u8(buf);
-    f->formation_position_x = buffer_read_i8(buf);
-    f->formation_position_y = buffer_read_i8(buf);
+    f->formation_position_x.soldier = buffer_read_u8(buf);
+    f->formation_position_y.soldier = buffer_read_u8(buf);
     f->__unused_24 = buffer_read_i16(buf);
     f->wait_ticks = buffer_read_i16(buf);
     f->action_state = buffer_read_u8(buf);

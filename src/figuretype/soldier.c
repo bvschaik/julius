@@ -241,8 +241,8 @@ void figure_soldier_action(figure *f)
     if (f->formation_at_rest || f->action_state == FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT) {
         layout = FORMATION_AT_REST;
     }
-    f->formation_position_x = m->x + formation_layout_position_x(layout, f->index_in_formation);
-    f->formation_position_y = m->y + formation_layout_position_y(layout, f->index_in_formation);
+    f->formation_position_x.soldier = m->x + formation_layout_position_x(layout, f->index_in_formation);
+    f->formation_position_y.soldier = m->y + formation_layout_position_y(layout, f->index_in_formation);
     
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
@@ -256,7 +256,7 @@ void figure_soldier_action(figure *f)
             f->wait_ticks = 0;
             f->formation_at_rest = 1;
             f->image_offset = 0;
-            if (f->x != f->formation_position_x || f->y != f->formation_position_y) {
+            if (f->x != f->formation_position_x.soldier || f->y != f->formation_position_y.soldier) {
                 f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             }
             break;
@@ -264,8 +264,8 @@ void figure_soldier_action(figure *f)
         case FIGURE_ACTION_148_FLEEING:
             f->wait_ticks = 0;
             f->formation_at_rest = 1;
-            f->destination_x = f->formation_position_x;
-            f->destination_y = f->formation_position_y;
+            f->destination_x = f->formation_position_x.soldier;
+            f->destination_y = f->formation_position_y.soldier;
             f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
@@ -382,8 +382,8 @@ void figure_soldier_action(figure *f)
             f->is_ghost = 0;
             f->wait_ticks = 0;
             f->formation_at_rest = 1;
-            f->destination_x = f->formation_position_x;
-            f->destination_y = f->formation_position_y;
+            f->destination_x = f->formation_position_x.soldier;
+            f->destination_y = f->formation_position_y.soldier;
             f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {

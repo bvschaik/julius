@@ -41,8 +41,14 @@ typedef struct {
     short destination_grid_offset; // only used for soldiers
     unsigned char source_x;
     unsigned char source_y;
-    signed char formation_position_x;
-    signed char formation_position_y;
+    union {
+        unsigned char soldier;
+        signed char enemy;
+    } formation_position_x;
+    union {
+        unsigned char soldier;
+        signed char enemy;
+    } formation_position_y;
     short __unused_24;
     short wait_ticks;
     unsigned char action_state;

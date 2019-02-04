@@ -38,8 +38,8 @@ static void enemy_initial(figure *f, formation *m)
         if (m->recent_fight) {
             f->action_state = FIGURE_ACTION_154_ENEMY_FIGHTING;
         } else {
-            f->destination_x = m->destination_x + f->formation_position_x;
-            f->destination_y = m->destination_y + f->formation_position_y;
+            f->destination_x = m->destination_x + f->formation_position_x.enemy;
+            f->destination_y = m->destination_y + f->formation_position_y.enemy;
             if (calc_general_direction(f->x, f->y, f->destination_x, f->destination_y) < 8) {
                 f->action_state = FIGURE_ACTION_153_ENEMY_MARCHING;
             }
@@ -92,8 +92,8 @@ static void enemy_marching(figure *f, const formation *m)
     f->wait_ticks--;
     if (f->wait_ticks <= 0) {
         f->wait_ticks = 50;
-        f->destination_x = m->destination_x + f->formation_position_x;
-        f->destination_y = m->destination_y + f->formation_position_y;
+        f->destination_x = m->destination_x + f->formation_position_x.enemy;
+        f->destination_y = m->destination_y + f->formation_position_y.enemy;
         if (calc_general_direction(f->x, f->y, f->destination_x, f->destination_y) == DIR_FIGURE_AT_DESTINATION) {
             f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
             return;
@@ -163,8 +163,8 @@ static void enemy_action(figure *f, formation *m)
 {
     city_figures_add_enemy();
     f->terrain_usage = TERRAIN_USAGE_ENEMY;
-    f->formation_position_x = formation_layout_position_x(m->layout, f->index_in_formation);
-    f->formation_position_y = formation_layout_position_y(m->layout, f->index_in_formation);
+    f->formation_position_x.enemy = formation_layout_position_x(m->layout, f->index_in_formation);
+    f->formation_position_y.enemy = formation_layout_position_y(m->layout, f->index_in_formation);
 
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
