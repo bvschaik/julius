@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "platform/vita.h"
 
 #define SAVEGAME_PARTS 300
 #define COMPRESS_BUFFER_SIZE 600000
