@@ -29,7 +29,7 @@ struct smk_bit_t
 };
 
 /* BITSTREAM Functions */
-struct smk_bit_t* smk_bs_init(const unsigned char* b, const unsigned long size)
+struct smk_bit_t* smk_bs_init(const unsigned char* b, unsigned long size)
 {
 	struct smk_bit_t* ret = NULL;
 

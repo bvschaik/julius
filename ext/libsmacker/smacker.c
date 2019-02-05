@@ -417,7 +417,7 @@ error:
 }
 
 /* open an smk (from a memory buffer) */
-smk smk_open_memory(const unsigned char* buffer, const unsigned long size)
+smk smk_open_memory(const unsigned char* buffer, unsigned long size)
 {
 	smk s = NULL;
 
@@ -439,7 +439,7 @@ error:
 }
 
 /* open an smk (from a file) */
-smk smk_open_filepointer(FILE* file, const unsigned char mode)
+smk smk_open_filepointer(FILE* file, unsigned char mode)
 {
 	smk s = NULL;
 	union smk_read_t fp;
@@ -471,7 +471,7 @@ error:
 }
 
 /* open an smk (from a file) */
-smk smk_open_file(const char* filename, const unsigned char mode)
+smk smk_open_file(const char* filename, unsigned char mode)
 {
 	FILE* fp;
 
@@ -644,7 +644,7 @@ error:
 }
 
 /* Enable-disable switches */
-char smk_enable_all(smk object, const unsigned char mask)
+char smk_enable_all(smk object, unsigned char mask)
 {
 	unsigned char i;
 
@@ -668,7 +668,7 @@ error:
 	return -1;
 }
 
-char smk_enable_video(smk object, const unsigned char enable)
+char smk_enable_video(smk object, unsigned char enable)
 {
 	/* sanity check */
 	smk_assert(object);
@@ -680,7 +680,7 @@ error:
 	return -1;
 }
 
-char smk_enable_audio(smk object, const unsigned char track, const unsigned char enable)
+char smk_enable_audio(smk object, unsigned char track, unsigned char enable)
 {
 	/* sanity check */
 	smk_assert(object);
@@ -710,7 +710,7 @@ const unsigned char* smk_get_video(const smk object)
 error:
 	return NULL;
 }
-const unsigned char* smk_get_audio(const smk object, const unsigned char t)
+const unsigned char* smk_get_audio(const smk object, unsigned char t)
 {
 	smk_assert(object);
 
@@ -719,7 +719,7 @@ const unsigned char* smk_get_audio(const smk object, const unsigned char t)
 error:
 	return NULL;
 }
-unsigned long smk_get_audio_size(const smk object, const unsigned char t)
+unsigned long smk_get_audio_size(const smk object, unsigned char t)
 {
 	smk_assert(object);
 
