@@ -33,19 +33,19 @@ static int view_to_grid_offset_lookup[VIEW_X_MAX][VIEW_Y_MAX];
 
 static void check_camera_boundaries(void)
 {
-    int x_min = (165 - map_grid_width()) / 2;
-    int y_min = (323 - 2 * map_grid_height()) / 2;
+    int x_min = (VIEW_X_MAX - map_grid_width()) / 2;
+    int y_min = (VIEW_Y_MAX - 2 * map_grid_height()) / 2;
     if (data.camera.x < x_min - 1) {
         data.camera.x = x_min - 1;
     }
-    if (data.camera.x > 165 - x_min - data.viewport.width_tiles) {
-        data.camera.x = 165 - x_min - data.viewport.width_tiles;
+    if (data.camera.x > VIEW_X_MAX - x_min - data.viewport.width_tiles) {
+        data.camera.x = VIEW_X_MAX - x_min - data.viewport.width_tiles;
     }
-    if (data.camera.y < y_min) {
-        data.camera.y = y_min;
+    if (data.camera.y < y_min - 1) {
+        data.camera.y = y_min - 1;
     }
-    if (data.camera.y > 327 - y_min - data.viewport.height_tiles) {
-        data.camera.y = 327 - y_min - data.viewport.height_tiles;
+    if (data.camera.y > VIEW_Y_MAX - y_min - data.viewport.height_tiles) {
+        data.camera.y = VIEW_Y_MAX - y_min - data.viewport.height_tiles;
     }
     data.camera.y &= ~1;
 }
