@@ -99,7 +99,7 @@ static int is_updatable_rock(int grid_offset)
 {
     return map_terrain_is(grid_offset, TERRAIN_ROCK) &&
            !map_property_is_plaza_or_earthquake(grid_offset) &&
-           !map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP);
+           !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP);
 }
 
 static void clear_rock_image(int x, int y, int grid_offset)
