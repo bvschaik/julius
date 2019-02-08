@@ -152,6 +152,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
     ${PROJECT_SOURCE_DIR}/src/platform/prefs.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
+    ${PROJECT_SOURCE_DIR}/src/platform/touch.c
 )
 
 if (VITA_BUILD)
@@ -321,6 +322,7 @@ set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/keyboard.c
     ${PROJECT_SOURCE_DIR}/src/input/mouse.c
     ${PROJECT_SOURCE_DIR}/src/input/scroll.c
+    ${PROJECT_SOURCE_DIR}/src/input/touch.c
 )
 set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/aqueduct.c
@@ -673,6 +675,9 @@ elseif(SWITCH_BUILD)
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
 else()
+    if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
+        target_link_libraries(${SHORT_NAME} m)
+    endif()
     target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
     if(NOT APPLE)
         install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)

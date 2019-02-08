@@ -7,6 +7,11 @@
 #define VIEW_X_MAX 165
 #define VIEW_Y_MAX 325
 
+typedef struct {
+    int x;
+    int y;
+} view_tile;
+
 typedef void (map_callback)(int x, int y, int grid_offset);
 
 void city_view_init(void);
@@ -26,6 +31,8 @@ int city_view_to_grid_offset(int x_view, int y_view);
 void city_view_grid_offset_to_xy_view(int grid_offset, int *x_view, int *y_view);
 
 void city_view_get_selected_tile_pixels(int *x_pixels, int *y_pixels);
+
+int city_view_pixels_to_view_tile(int x_pixels, int y_pixels, view_tile *tile);
 
 int city_view_pixels_to_grid_offset(int x_pixels, int y_pixels);
 

@@ -14,6 +14,7 @@ void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord);
 
 void widget_city_draw_construction_cost(void);
 
+int widget_city_has_input(void);
 void widget_city_handle_mouse(const mouse *m);
 void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id);
 

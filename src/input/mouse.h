@@ -6,6 +6,8 @@
  * Mouse state
  */
 
+#include "input/touch.h"
+
 /**
  * Mouse button state
  */
@@ -32,6 +34,7 @@ typedef struct {
     mouse_button left; /**< Left mouse button */
     mouse_button right; /**< Right mouse button */
     int is_inside_window; /**< Whether the mouse is in the window */
+    int is_touch; /**< Whether the mouse is a translated touch event */
 } mouse;
 
 /**
@@ -55,7 +58,18 @@ void mouse_set_scroll(scroll_state state);
 
 void mouse_set_inside_window(int inside);
 
+/**
+ * Changes the mouse information from touch information
+ * @param first The first touch
+ * @param last The last touch
+ */
+void mouse_set_from_touch(const touch *first, const touch *last);
+
 void mouse_reset_up_state(void);
+
+void mouse_reset_scroll(void);
+
+void mouse_reset_button_state(void);
 
 void mouse_determine_button_state(void);
 

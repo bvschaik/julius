@@ -5,8 +5,10 @@
 
 void empire_load(int is_custom_scenario, int empire_id);
 void empire_init_scenario(void);
-void empire_scroll_map(int direction);
+int empire_scroll_map(int direction);
 void empire_set_viewport(int width, int height);
+void empire_get_scroll(int *x_scroll, int *y_scroll);
+void empire_set_scroll(int x, int y);
 void empire_adjust_scroll(int *x_offset, int *y_offset);
 
 int empire_selected_object(void);

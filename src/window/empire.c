@@ -53,6 +53,8 @@ static struct {
     int x_min, x_max, y_min, y_max;
     int x_draw_offset, y_draw_offset;
     int focus_button_id;
+    int is_scrolling;
+    int finished_scroll;
 } data = {0, 1};
 
 static void init(void)
@@ -407,13 +409,17 @@ static void draw_foreground(void)
     draw_panel_buttons(city);
 }
 
+static int is_outside_map(int x, int y)
+{
+    return (x < data.x_min + 16 || x >= data.x_max - 16 ||
+            y < data.y_min + 16 || y >= data.y_max - 120);
+}
+
 static void determine_selected_object(const mouse *m)
 {
-    if (!m->left.went_down) {
-        return;
-    }
-    if (m->x < data.x_min + 16 || m->x >= data.x_max - 16 ||
-        m->y < data.y_min + 16 || m->y >= data.y_max - 120) {
+    int left_button_pressed = (!m->is_touch && m->left.went_down) || (m->is_touch && m->left.went_up);
+    if (!left_button_pressed || data.finished_scroll || is_outside_map(m->x, m->y)) {
+        data.finished_scroll = 0;
         return;
     }
     empire_select_object(m->x - data.x_min - 16, m->y - data.y_min - 16);
@@ -422,7 +428,34 @@ static void determine_selected_object(const mouse *m)
 
 static void handle_mouse(const mouse *m)
 {
-    empire_scroll_map(scroll_get_direction(m));
+    if (m->is_touch) {
+        const touch *t = get_earliest_touch();
+        if (!is_outside_map(t->current_point.x, t->current_point.y)) {
+            view_tile position;
+            if (t->has_started) {
+                data.is_scrolling = 1;
+                empire_get_scroll(&position.x, &position.y);
+                scroll_start_touch_drag(&position, t->start_point);
+            }
+            if (data.is_scrolling && t->has_moved) {
+                touch_coords original = scroll_get_original_touch_position();
+                if (scroll_move_touch_drag(original.x, original.y, t->current_point.x, t->current_point.y, &position)) {
+                    empire_set_scroll(position.x, position.y);
+                }
+            }
+        }
+        if (t->has_ended) {
+            data.is_scrolling = 0;
+            data.finished_scroll = !touch_was_click(t);
+            scroll_end_touch_drag();
+        }
+    }
+    if (!empire_scroll_map(scroll_get_direction(m))) {
+        view_tile position;
+        if (scroll_decay(&position)) {
+            empire_set_scroll(position.x, position.y);
+        }
+    }
     data.focus_button_id = 0;
     int button_id;
     image_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 44, image_button_help, 1, &button_id);

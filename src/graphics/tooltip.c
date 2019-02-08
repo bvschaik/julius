@@ -16,7 +16,8 @@
 
 #include <stdlib.h>
 
-#define DEFAULT_TEXT_GROUP 68
+static const int DEFAULT_TEXT_GROUP = 68;
+static const time_millis TOOLTIP_DELAY_MILLIS = 150;
 
 static time_millis last_update = 0;
 static uint8_t overlay_string[1000];
@@ -45,7 +46,7 @@ static int should_draw_tooltip(tooltip_context* c)
         reset_timer();
         return 0;
     }
-    if (time_get_millis() - last_update < 150) { // delay drawing by 150 ms
+    if (time_get_millis() - last_update < TOOLTIP_DELAY_MILLIS) { // delay drawing tooltip
         return 0;
     }
     return 1;
@@ -250,6 +251,10 @@ void tooltip_invalidate(void)
 
 void tooltip_handle(const mouse *m, void (*func)(tooltip_context *))
 {
+    if (m->is_touch && !m->left.is_down) {
+        reset_timer();
+        return;
+    }
     tooltip_context context = {m->x, m->y, 0, 0, 0, 0, 0, 0};
     context.text_group = DEFAULT_TEXT_GROUP;
     if (setting_tooltips() && func) {

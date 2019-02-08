@@ -19,6 +19,7 @@
 #include "map/orientation.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
+#include "widget/city.h"
 #include "widget/minimap.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
@@ -302,6 +303,9 @@ void widget_sidebar_draw_foreground_military(void)
 
 int widget_sidebar_handle_mouse(const mouse *m)
 {
+    if (widget_city_has_input()) {
+        return 0;
+    }
     int click = 0;
     int button_id;
     data.focus_button_for_tooltip = 0;

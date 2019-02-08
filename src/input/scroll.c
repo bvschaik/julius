@@ -5,7 +5,12 @@
 #include "game/settings.h"
 #include "graphics/screen.h"
 
-#define SCROLL_BORDER 5
+#include <math.h>
+
+static const int SCROLL_BORDER = 5;
+static const int SCROLL_DECAY_MULTIPLIER = 250;
+static const time_millis SCROLL_DECAY_BASE_TIME = 325;
+static const time_millis SCROLL_DECAY_MAX_TIME = 975; // SCROLL_DECAY_BASE_TIME * 3
 
 static struct {
     int is_scrolling;
@@ -16,21 +21,39 @@ static struct {
         int left;
         int right;
     } arrow_key;
-} data = {0, 0, {0, 0, 0, 0}};
+    struct {
+        view_tile original;
+        view_tile current;
+    } position;
+    struct {
+        int x;
+        int y;
+        time_millis last_time;
+        view_tile last_position;
+        int decaying;
+    } speed;
+    struct {
+        int active;
+        int x;
+        int y;
+        int width;
+        int height;
+        int margin;
+        int multiplier;
+    } limits;
+    touch_coords start_touch;
+} data;
 
 int scroll_in_progress(void)
 {
     return data.is_scrolling;
 }
 
-static int should_scroll(const mouse *m)
+static int should_scroll(int speed_modifier)
 {
-    if (!m->is_inside_window) {
-        return 0;
-    }
     time_millis current_time = time_get_millis();
     time_millis diff = current_time - data.last_scroll_time;
-    unsigned int scroll_delay = (100 - setting_scroll_speed()) / 10;
+    unsigned int scroll_delay = (100 - setting_scroll_speed() + speed_modifier) / 10;
     if (scroll_delay < 10) { // 0% = 10 = no scroll at all
         if (diff >= 12 * scroll_delay + 2) {
             data.last_scroll_time = current_time;
@@ -40,55 +63,16 @@ static int should_scroll(const mouse *m)
     return 0;
 }
 
-int scroll_get_direction(const mouse *m)
+static void reset_arrow_keys(void)
 {
-    if (!should_scroll(m)) {
-        return DIR_8_NONE;
-    }
-    data.is_scrolling = 0;
-    int top = 0;
-    int bottom = 0;
-    int left = 0;
-    int right = 0;
-    // mouse near map edge
-    if (m->x < SCROLL_BORDER) {
-        left = 1;
-        data.is_scrolling = 1;
-    }
-    if (m->x >= screen_width() - SCROLL_BORDER) {
-        right = 1;
-        data.is_scrolling = 1;
-    }
-    if (m->y < SCROLL_BORDER) {
-        top = 1;
-        data.is_scrolling = 1;
-    }
-    if (m->y >= screen_height() - SCROLL_BORDER) {
-        bottom = 1;
-        data.is_scrolling = 1;
-    }
-    // keyboard arrow keys
-    if (data.arrow_key.left) {
-        left = 1;
-        data.is_scrolling = 1;
-    }
-    if (data.arrow_key.right) {
-        right = 1;
-        data.is_scrolling = 1;
-    }
-    if (data.arrow_key.up) {
-        top = 1;
-        data.is_scrolling = 1;
-    }
-    if (data.arrow_key.down) {
-        bottom = 1;
-        data.is_scrolling = 1;
-    }
     data.arrow_key.left = 0;
     data.arrow_key.right = 0;
     data.arrow_key.up = 0;
     data.arrow_key.down = 0;
+}
 
+static int direction_from_sides(int top, int left, int bottom, int right)
+{
     // two sides
     if (left && top) {
         return DIR_7_TOP_LEFT;
@@ -111,6 +95,188 @@ int scroll_get_direction(const mouse *m)
     }
     // none of them
     return DIR_8_NONE;
+}
+
+static void clear_scroll_decay(const view_tile *position)
+{
+    data.speed.x = 0;
+    data.speed.y = 0;
+    data.speed.last_time = time_get_millis();
+    data.speed.last_position = position ? *position : (view_tile) { 0, 0 };
+    data.speed.decaying = 0;
+}
+
+static void find_scroll_speed(const view_tile *position)
+{
+    int current_time = time_get_millis();
+    int time_delta = current_time - data.speed.last_time;
+
+    if (time_delta < 50) {
+        return;
+    }
+
+    int position_delta = (position->x - data.speed.last_position.x) * SCROLL_DECAY_MULTIPLIER;
+    data.speed.x = position_delta / time_delta;
+    position_delta = (position->y - data.speed.last_position.y) * SCROLL_DECAY_MULTIPLIER;
+    data.speed.y = position_delta / time_delta;
+
+    data.speed.last_time = current_time;
+    data.speed.last_position = *position;
+}
+
+void scroll_set_custom_margins(int x, int y, int width, int height)
+{
+    data.limits.active = 1;
+    data.limits.x = x;
+    data.limits.y = y;
+    data.limits.width = width;
+    data.limits.height = height;
+    data.limits.margin = setting_scroll_speed();
+    data.limits.multiplier = (width < 900 || height < 500) ? 2 : 3;
+}
+
+void scroll_restore_margins(void)
+{
+    data.limits.active = 0;
+}
+
+touch_coords scroll_get_original_touch_position(void)
+{
+    return data.start_touch;
+}
+
+void scroll_start_touch_drag(const view_tile *position, touch_coords coords)
+{
+    data.position.original = *position;
+    data.position.current = *position;
+    data.start_touch = coords;
+    data.is_scrolling = 1;
+    clear_scroll_decay(position);
+}
+
+int scroll_move_touch_drag(int original_x, int original_y, int current_x, int current_y, view_tile *position)
+{
+    data.is_scrolling = 1;
+
+    position->x = data.position.original.x - (current_x - original_x);
+    position->y = data.position.original.y - (current_y - original_y);
+
+    find_scroll_speed(position);
+
+    if (position->x != data.position.current.x || position->y != data.position.current.y) {
+        data.position.current.x = position->x;
+        data.position.current.y = position->y;
+        return 1;
+    }
+    return 0;
+}
+
+void scroll_end_touch_drag(void) {
+    data.speed.last_position.x = data.position.current.x + data.speed.x;
+    data.speed.last_position.y = data.position.current.y + data.speed.y;
+    data.speed.last_time = time_get_millis();
+    data.speed.decaying = 1;
+}
+
+int scroll_decay(view_tile *position)
+{
+    if (!data.speed.decaying) {
+        return 0;
+    }
+    time_millis elapsed = time_get_millis() - data.speed.last_time;
+    if (elapsed > SCROLL_DECAY_MAX_TIME) {
+        data.is_scrolling = 0;
+        clear_scroll_decay(position);
+        return 0;
+    }
+    double exponent = exp(-((int)elapsed) / (double)SCROLL_DECAY_BASE_TIME);
+    position->x = data.speed.last_position.x - ((int)(data.speed.x * exponent));
+    position->y = data.speed.last_position.y - ((int)(data.speed.y * exponent));
+    if (position->x == data.speed.last_position.x && position->y == data.speed.last_position.y) {
+        data.is_scrolling = 0;
+        clear_scroll_decay(position);
+    } else {
+        data.is_scrolling = 1;
+    }
+    return 1;
+}
+
+int scroll_get_direction(const mouse *m)
+{
+    if (!m->is_inside_window && !m->is_touch) {
+        return DIR_8_NONE;
+    }
+    if (data.speed.decaying && m->left.went_down) {
+        data.is_scrolling = 0;
+        clear_scroll_decay(0);
+    }
+    int top = 0;
+    int bottom = 0;
+    int left = 0;
+    int right = 0;
+    int speed_modifier = 0;
+    int border = SCROLL_BORDER;
+    int width = screen_width();
+    int height = screen_height();
+    int x = m->x;
+    int y = m->y;
+    if (data.limits.active) {
+        border = data.limits.margin * data.limits.multiplier;
+        speed_modifier = border;
+        width = data.limits.width;
+        height = data.limits.height;
+        x -= data.limits.x;
+        y -= data.limits.y;
+    }
+    // mouse near map edge
+    if ((!m->is_touch || data.limits.active) && ((x >= 0 && x < width) && (y >= 0 && y < height))) {
+        if (x >= 0 && x < border) {
+            left = 1;
+            speed_modifier = (x < speed_modifier) ? x : speed_modifier;
+        }
+        if (x >= (width - border) && x < width) {
+            right = 1;
+            speed_modifier = ((width - x) < speed_modifier) ? (width - x) : speed_modifier;
+        }
+        if (y >= 0 && y < border) {
+            top = 1;
+            speed_modifier = (y < speed_modifier) ? y : speed_modifier;
+        }
+        if (y >= (height - border) && y < height) {
+            bottom = 1;
+            speed_modifier = ((height - y) < speed_modifier) ? (height - y) : speed_modifier;
+        }
+    }
+
+    if (!data.limits.active) {
+        // keyboard arrow keys
+        if (data.arrow_key.left) {
+            left = 1;
+        }
+        if (data.arrow_key.right) {
+            right = 1;
+        }
+        if (data.arrow_key.up) {
+            top = 1;
+        }
+        if (data.arrow_key.down) {
+            bottom = 1;
+        }
+        data.is_scrolling = (top | left | bottom | right);
+    } else {
+        speed_modifier /= data.limits.multiplier;
+    }
+
+    if (should_scroll(speed_modifier)) {
+        reset_arrow_keys();
+        int direction = direction_from_sides(top, left, bottom, right);
+        if (direction != DIR_8_NONE) {
+            clear_scroll_decay(0);
+        }
+        return direction;
+    } else {
+        return DIR_8_NONE;
+    }
 }
 
 void scroll_arrow_left(void)
