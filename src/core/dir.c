@@ -2,7 +2,7 @@
 
 #include "core/file.h"
 #include "core/string.h"
-#include "platform/vita.h"
+#include "platform/vita/vita.h"
 
 #include <dirent.h>
 #include <stdio.h>

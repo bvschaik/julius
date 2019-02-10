@@ -1,8 +1,6 @@
 #ifndef PLATFORM_SCREEN_H
 #define PLATFORM_SCREEN_H
 
-#include "SDL.h"
-
 int platform_screen_create(const char *title);
 void platform_screen_destroy(void);
 

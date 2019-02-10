@@ -9,7 +9,7 @@
 #include "platform/keyboard_input.h"
 #include "platform/screen.h"
 #include "platform/version.h"
-#include "platform/vita.h"
+#include "platform/vita/vita.h"
 #include "input/hotkey.h"
 
 #include <signal.h>
@@ -36,6 +36,11 @@
 #include "graphics/window.h"
 #include "graphics/graphics.h"
 #include "graphics/text.h"
+#endif
+
+#ifdef __vita__
+#include <vita2d.h>
+#include <vitasdk.h>
 #endif
 
 #define INTPTR(d) (*(int*)(d))
@@ -295,15 +300,47 @@ static void main_loop(void)
     int active = 1;
     int quit = 0;
     while (!quit) {
+
+#ifdef __vita__
+        SceTouchData touch = {0};
+        sceTouchPeek(SCE_TOUCH_PORT_FRONT, &touch, 1);
+        
+        SceCtrlData buttons = {0};
+        sceCtrlPeekBufferPositive(0, &buttons, 1);
+        
+        if (buttons.buttons & SCE_CTRL_RTRIGGER) {
+            mouse_set_left_down(1);
+        }
+        
+        if (buttons.buttons & SCE_CTRL_LTRIGGER) {
+            mouse_set_left_down(0);
+        }
+        
+        if (touch.reportNum > 0) {
+#define TOUCH_HEIGHT 1087
+#define TOUCH_WIDTH 1919
+
+#define SCREEN_HEIGHT 544
+#define SCREEN_WIDTH 960
+            
+            int x = touch.report[0].x*SCREEN_WIDTH/TOUCH_WIDTH;
+            int y = touch.report[0].y*SCREEN_HEIGHT/TOUCH_HEIGHT;
+            mouse_set_position(x, y);
+        }
+#else
+        
         /* Process event queue */
         while (SDL_PollEvent(&event)) {
             handle_event(&event, &active, &quit);
         }
+#endif
         if (!quit) {
             if (active) {
                 run_and_draw();
             } else {
+#ifndef __vita__
                 SDL_WaitEvent(NULL);
+#endif
             }
         }
     }
@@ -312,7 +349,7 @@ static void main_loop(void)
 static int init_sdl(void)
 {
     SDL_Log("Initializing SDL");
-    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
+    if (SDL_Init(SDL_INIT_AUDIO) != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }
@@ -355,6 +392,17 @@ static void setup(const char *custom_data_dir)
         SDL_Log("Exiting: SDL init failed");
         exit(-1);
     }
+#ifdef __vita__
+    if (!vita2d_init()) {
+	    SDL_Log("Exiting: vita2d init failed");
+	    exit(-1);
+    }
+    
+    // Black
+	vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
+    sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
+    sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
+#endif
 
     if (!pre_init(custom_data_dir)) {
         SDL_Log("Exiting: game pre-init failed");

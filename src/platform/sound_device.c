@@ -4,7 +4,7 @@
 #include "game/settings.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
-#include "vita.h"
+#include "platform/vita/vita.h"
 
 #include <stdlib.h>
 #include <string.h>

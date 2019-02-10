@@ -1,5 +1,5 @@
 #include "core/file.h"
-#include "platform/vita.h"
+#include "platform/vita/vita.h"
 
 #include <stdio.h>
 #include <stdlib.h>

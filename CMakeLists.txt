@@ -97,14 +97,19 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
-    ${PROJECT_SOURCE_DIR}/src/platform/screen.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
 )
 
 if (VITA)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/vita.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
+    )
+else()
+    set(PLATFORM_FILES
+        ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/screen.c
     )
 endif()
 
