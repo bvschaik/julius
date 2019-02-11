@@ -45,7 +45,7 @@ int platform_screen_create(const char *title)
         return 0;
     }
 
-    SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_SOFTWARE);
+    SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!SDL.renderer) {
         SDL_Log("Unable to create renderer, trying software renderer: %s", SDL_GetError());
         SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_SOFTWARE);
@@ -135,7 +135,7 @@ void platform_screen_set_window_size(int width, int height)
 
 void platform_screen_center_window(void)
 {
-    SDL_SetWindowPosition(SDL.window, 0, 0);
+    SDL_SetWindowPosition(SDL.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 }
 
 void platform_screen_render(void)
@@ -143,5 +143,4 @@ void platform_screen_render(void)
     SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
     SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
     SDL_RenderPresent(SDL.renderer);
-    SDL_Log("Rendering!\n");
 }

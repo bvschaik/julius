@@ -244,22 +244,11 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
         case SDL_TEXTINPUT:
             platform_handle_text(&event->text);
             break;
-        case SDL_FINGERMOTION:
-            mouse_set_position(event->tfinger.x * 960, event->tfinger.y * 544);
-            break;
         case SDL_MOUSEMOTION:
             mouse_set_position(event->motion.x, event->motion.y);
             break;
-        case SDL_FINGERDOWN:
-            mouse_set_position(event->tfinger.x * 960, event->tfinger.y * 544);
-            mouse_set_left_down(1);
-            break;
         case SDL_MOUSEBUTTONDOWN:
             handle_mouse_button(&event->button, 1);
-            break;
-        case SDL_FINGERUP:
-            mouse_set_position(event->tfinger.x * 960, event->tfinger.y * 544);
-            mouse_set_left_down(0);
             break;
         case SDL_MOUSEBUTTONUP:
             handle_mouse_button(&event->button, 0);
@@ -325,7 +314,13 @@ static void main_loop(void)
 static int init_sdl(void)
 {
     SDL_Log("Initializing SDL");
-    if (SDL_Init(SDL_INIT_AUDIO) != 0) {
+    Uint32 SDL_flags = SDL_INIT_AUDIO;
+
+#ifndef __vita__
+    SDL_flags |= SDL_INIT_VIDEO
+#endif
+
+    if (SDL_Init(SDL_flags) != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }
@@ -375,7 +370,7 @@ static void setup(const char *custom_data_dir)
     }
     
     // Black
-	vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
+    vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 #endif
