@@ -291,44 +291,20 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
     }
 }
 
+void vita_handle_input();
+
 static void main_loop(void)
 {
-    SDL_Event event;
     mouse_set_inside_window(1);
 
     run_and_draw();
     int active = 1;
     int quit = 0;
     while (!quit) {
-
 #ifdef __vita__
-        SceTouchData touch = {0};
-        sceTouchPeek(SCE_TOUCH_PORT_FRONT, &touch, 1);
-        
-        SceCtrlData buttons = {0};
-        sceCtrlPeekBufferPositive(0, &buttons, 1);
-        
-        if (buttons.buttons & SCE_CTRL_RTRIGGER) {
-            mouse_set_left_down(1);
-        }
-        
-        if (buttons.buttons & SCE_CTRL_LTRIGGER) {
-            mouse_set_left_down(0);
-        }
-        
-        if (touch.reportNum > 0) {
-#define TOUCH_HEIGHT 1087
-#define TOUCH_WIDTH 1919
-
-#define SCREEN_HEIGHT 544
-#define SCREEN_WIDTH 960
-            
-            int x = touch.report[0].x*SCREEN_WIDTH/TOUCH_WIDTH;
-            int y = touch.report[0].y*SCREEN_HEIGHT/TOUCH_HEIGHT;
-            mouse_set_position(x, y);
-        }
+        vita_handle_input();
 #else
-        
+        SDL_Event event;
         /* Process event queue */
         while (SDL_PollEvent(&event)) {
             handle_event(&event, &active, &quit);

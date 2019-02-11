@@ -103,6 +103,7 @@ if (VITA)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/vita/cursor.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/input.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
     )
