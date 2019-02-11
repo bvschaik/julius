@@ -24,4 +24,11 @@
 			</text>
 		</liveitem>
 	</frame>
+	<frame id="frame4">
+		<liveitem>
+			<text align="left" text-align="left" word-wrap="off" ellipsis="on">
+				<str size="18" color="#ffffff" shadow="on"> </str>
+			</text>
+		</liveitem>
+	</frame>
 </livearea>

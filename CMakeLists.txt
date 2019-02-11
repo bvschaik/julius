@@ -471,8 +471,12 @@ if (VITA)
 
     vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
     vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
-            VERSION ${VITA_VERSION}
-            NAME ${SHORT_NAME}
+        VERSION ${VITA_VERSION}
+        NAME ${SHORT_NAME}
+        FILE res/sce_sys/icon0.png sce_sys/icon0.png
+        FILE res/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
+        FILE res/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
+        FILE res/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
     )
 else()
     target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
