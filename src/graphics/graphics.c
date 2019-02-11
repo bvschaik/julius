@@ -49,13 +49,6 @@ void graphics_init_canvas(int width, int height)
 
 const void *graphics_canvas(void)
 {
-#ifdef __vita__
-    for (int i = 0; i < canvas.height; i++) {
-        for (int j = 0; j < canvas.width; j++) {
-            canvas.pixels[i * canvas.width + j] |= 0xFF << 24;
-        }
-    }
-#endif
     return canvas.pixels;
 }
 
