@@ -58,7 +58,6 @@ extern vita2d_texture *current_cursor;
 
 void platform_screen_render(void)
 {
-    SDL_Log("Rendering!\n");
     vita2d_start_drawing();
     vita2d_draw_texture(tex_buffer, 0, 0);
     const mouse *mouse = mouse_get();
