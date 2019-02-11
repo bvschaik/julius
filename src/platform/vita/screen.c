@@ -54,14 +54,15 @@ void platform_screen_center_window(void)
 {
 }
 
+extern vita2d_texture *current_cursor;
+
 void platform_screen_render(void)
 {
     SDL_Log("Rendering!\n");
     vita2d_start_drawing();
     vita2d_draw_texture(tex_buffer, 0, 0);
     const mouse *mouse = mouse_get();
-    vita2d_draw_rectangle(mouse->x, mouse->y, 3, 3, RGBA8(255, 0, 0, 255));
-    
+    vita2d_draw_texture(current_cursor, mouse->x, mouse->y);
     vita2d_end_drawing();
     vita2d_wait_rendering_done();
     vita2d_swap_buffers();

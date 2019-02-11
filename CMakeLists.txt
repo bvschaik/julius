@@ -94,7 +94,6 @@ set(SMK_FILES
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
-    ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
@@ -103,12 +102,14 @@ set(PLATFORM_FILES
 if (VITA)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/cursor.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
     )
 else()
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
         ${PROJECT_SOURCE_DIR}/src/platform/screen.c
     )
 endif()
