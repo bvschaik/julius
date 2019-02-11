@@ -294,6 +294,8 @@ static void setup(const char *custom_data_dir)
     signal(SIGSEGV, handler);
     setup_logging();
 
+    SDL_Log("Julius version %s%s\n", JULIUS_VERSION, JULIUS_VERSION_SUFFIX);
+
     if (!init_sdl()) {
         SDL_Log("Exiting: SDL init failed");
         exit(-1);
@@ -326,8 +328,6 @@ static void teardown(void)
 
 int main(int argc, char **argv)
 {
-    SDL_Log("Built with git commit: %s\n", GIT_COMMIT_HASH);
-
     const char *custom_data_dir = (argc > 1 && argv[1]) ? argv[1] : NULL;
     setup(custom_data_dir);
 

@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(julius C)
 
-find_package(Git)
-
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
 if (CMAKE_VERSION VERSION_LESS 3.1)
@@ -21,23 +19,56 @@ if (CMAKE_COMPILER_IS_GNUCC)
     endif()
 endif()
 
+set(PROJECT_VERSION_MAJOR 1)
+set(PROJECT_VERSION_MINOR 0)
+set(PROJECT_VERSION_PATCH 0)
+set(IS_RELEASE_VERSION FALSE)
+
+if(IS_RELEASE_VERSION)
+  set(PROJECT_VERSION_TWEAK 0)
+  set(VERSION_REVISION "")
+elseif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+  find_package(Git)
+  if(Git_FOUND)
+    execute_process(
+      COMMAND git rev-list --count HEAD ^tags/v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      OUTPUT_VARIABLE PROJECT_VERSION_TWEAK
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    execute_process(
+      COMMAND git rev-parse --short --verify HEAD
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      OUTPUT_VARIABLE VERSION_COMMIT_HASH
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    execute_process(
+      COMMAND git diff-index --quiet HEAD --
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      RESULT_VARIABLE VERSION_COMMIT_DIRTY
+    )
+    if(${VERSION_COMMIT_DIRTY})
+      set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}-dirty")
+    else()
+      set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}")
+    endif()
+  else()
+    set(PROJECT_VERSION_TWEAK 0)
+    set(VERSION_REVISION " unknown development version")
+  endif()
+else()
+  set(PROJECT_VERSION_TWEAK 0)
+  set(VERSION_REVISION " unknown development version")
+endif()
+
+configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
+configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
+
 set(SMK_FILES
     ext/libsmacker/smacker.c
     ext/libsmacker/smk_bitstream.c
     ext/libsmacker/smk_hufftree.c
 )
-if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-  execute_process(
-    COMMAND git describe --long --dirty --abbrev=10 --tags
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE GIT_COMMIT_HASH
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-else(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-  set(GIT_COMMIT_HASH "")
-endif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-
-configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
