@@ -22,14 +22,18 @@ void vita_handle_input() {
     struct SceCtrlData buttons = {0};
     sceCtrlPeekBufferPositive(0, &buttons, 1);
 
-    if (BUTTON_PRESSED(SCE_CTRL_CROSS) && !BUTTON_OLD_PRESSED(SCE_CTRL_CROSS)) {
-        mouse_set_left_down(1);
+    if (BUTTON_PRESSED(SCE_CTRL_CROSS)) {
+        if (!BUTTON_OLD_PRESSED(SCE_CTRL_CROSS)) {
+            mouse_set_left_down(1);
+        }
     } else if (BUTTON_OLD_PRESSED(SCE_CTRL_CROSS)) {
         mouse_set_left_down(0);
     }
 
-    if (BUTTON_PRESSED(SCE_CTRL_CIRCLE) && !BUTTON_OLD_PRESSED(SCE_CTRL_CIRCLE)) {
-        mouse_set_right_down(1);
+    if (BUTTON_PRESSED(SCE_CTRL_CIRCLE)) {
+        if (!BUTTON_OLD_PRESSED(SCE_CTRL_CIRCLE)) {
+            mouse_set_right_down(1);
+        }
     } else if (BUTTON_OLD_PRESSED(SCE_CTRL_CIRCLE)) {
         mouse_set_right_down(0);
     }
