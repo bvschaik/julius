@@ -68,8 +68,8 @@ static int draw_background(void)
     draw_row(60, 9, 170, last_year->income.exports, this_year->income.exports);
     draw_row(60, 20, 185, last_year->income.donated, this_year->income.donated);
 
-    graphics_draw_line(280, 198, 350, 198, COLOR_BLACK);
-    graphics_draw_line(420, 198, 490, 198, COLOR_BLACK);
+    graphics_draw_horizontal_line(280, 350, 198, COLOR_BLACK);
+    graphics_draw_horizontal_line(420, 490, 198, COLOR_BLACK);
     
     draw_row(60, 10, 203, last_year->income.total, this_year->income.total);
 
@@ -88,8 +88,8 @@ static int draw_background(void)
     draw_row(60, 16, 302, last_year->expenses.sundries, this_year->expenses.sundries);
     draw_row(60, 21, 317, last_year->expenses.tribute, this_year->expenses.tribute);
 
-    graphics_draw_line(280, 330, 350, 330, COLOR_BLACK);
-    graphics_draw_line(420, 330, 490, 330, COLOR_BLACK);
+    graphics_draw_horizontal_line(280, 350, 330, COLOR_BLACK);
+    graphics_draw_horizontal_line(420, 490, 330, COLOR_BLACK);
     
     draw_row(60, 17, 335, last_year->expenses.total, this_year->expenses.total);
     draw_row(60, 18, 358, last_year->net_in_out, this_year->net_in_out);

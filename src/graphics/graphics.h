@@ -42,9 +42,8 @@ color_t *graphics_get_pixel(int x, int y);
 
 void graphics_clear_screen(void);
 
-void graphics_draw_pixel(int x, int y, color_t color);
-
-void graphics_draw_line(int x1, int y1, int x2, int y2, color_t color);
+void graphics_draw_vertical_line(int x, int y1, int y2, color_t color);
+void graphics_draw_horizontal_line(int x1, int x2, int y, color_t color);
 
 void graphics_draw_rect(int x, int y, int width, int height, color_t color);
 void graphics_draw_inset_rect(int x, int y, int width, int height);
