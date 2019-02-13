@@ -56,3 +56,7 @@ before_script:
 script:
   - make
   - make test
+
+# TODO only run this for one of the builds
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

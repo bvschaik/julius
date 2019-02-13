@@ -1,6 +1,7 @@
 include_directories(.)
 
-if(!MSVC)
+# TODO only do this for GCC + clang
+if(NOT MSVC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 endif()
