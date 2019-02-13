@@ -84,26 +84,12 @@ SET(SDL2_SEARCH_PATHS
 	/opt
 )
 
-if(APPLE)
-  # Try to find the include in the SDL2 framework bundle
-  # This fixes CMake finding the header from SDL 1.2 when both 1.2 and 2.0 are installed
-  FIND_PATH(SDL2_INCLUDE_DIR SDL2/SDL.h
+FIND_PATH(SDL2_INCLUDE_DIR SDL_log.h
 	HINTS
 	$ENV{SDL2DIR}
 	PATH_SUFFIXES include/SDL2 include
 	PATHS ${SDL2_SEARCH_PATHS}
-  )
-  set(SDL2_INCLUDE_DIR "${SDL2_INCLUDE_DIR}/Headers")
-endif()
-
-if(NOT APPLE OR NOT EXISTS "${SDL2_INCLUDE_DIR}/SDL.h")
-  FIND_PATH(SDL2_INCLUDE_DIR SDL.h
-	HINTS
-	$ENV{SDL2DIR}
-	PATH_SUFFIXES include/SDL2 include
-	PATHS ${SDL2_SEARCH_PATHS}
-  )
-endif()
+)
 
 FIND_LIBRARY(SDL2_LIBRARY_TEMP
 	NAMES SDL2
