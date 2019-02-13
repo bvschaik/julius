@@ -25,11 +25,11 @@ static const char *generate_filename(void)
     return filename;
 }
 
-static void write_bmp_header(buffer *buf, int width, int height)
+static void write_bmp_header(buffer *buf, int width, int height, int scanline_size)
 {
     buffer_write_i8(buf, 'B');
     buffer_write_i8(buf, 'M');
-    buffer_write_i32(buf, HEADER_SIZE + 3 * width * height); // file size
+    buffer_write_i32(buf, HEADER_SIZE + scanline_size * height); // file size
     buffer_write_i32(buf, 0); // reserved
     buffer_write_i32(buf, HEADER_SIZE); // data offset
     buffer_write_i32(buf, 12); // dib size
@@ -59,10 +59,14 @@ void graphics_save_screenshot(void)
     int height = screen_height();
     const color_t *canvas = graphics_canvas();
 
-    uint8_t *pixels = (uint8_t*) malloc(width * 3);
+    int scanline_padding = 4 - (width * 3) % 4;
+    int scanline_size = width * 3 + scanline_padding;
+    uint8_t *pixels = (uint8_t*) malloc(scanline_size);
     if (!pixels) {
         return;
     }
+    memset(pixels, 0, scanline_size);
+
     const char *filename = generate_filename();
     FILE *fp = fopen(filename, "wb");
     if (!fp) {
@@ -71,14 +75,14 @@ void graphics_save_screenshot(void)
         return;
     }
 
-    write_bmp_header(&buf, width, height);
+    write_bmp_header(&buf, width, height, scanline_size);
     fwrite(header, 1, HEADER_SIZE, fp);
     for (int y = height - 1; y >= 0; y--) {
         for (int x = 0; x < width; x++) {
             pixel(canvas[y * width + x],
                 &pixels[3*x+2], &pixels[3*x+1], &pixels[3*x]);
         }
-        fwrite(pixels, 1, width * 3, fp);
+        fwrite(pixels, 1, scanline_size, fp);
     }
     fclose(fp);
     free(pixels);
