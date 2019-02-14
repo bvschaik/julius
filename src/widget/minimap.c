@@ -111,7 +111,7 @@ static int draw_figure(int x_view, int y_view, int grid_offset)
     } else if (color_type == FIGURE_COLOR_ENEMY) {
         color = data.enemy_color;
     }
-    graphics_draw_line(x_view, y_view, x_view +1, y_view, color);
+    graphics_draw_horizontal_line(x_view, x_view +1, y_view, color);
     return 1;
 }
 
