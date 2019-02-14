@@ -402,8 +402,6 @@ static void teardown(void)
 
 int main(int argc, char **argv)
 {
-    SDL_Log("Built with git commit: %s\n", GIT_COMMIT_HASH);
-
     #ifdef __vita__
     const char *custom_data_dir = NULL;
     #else
