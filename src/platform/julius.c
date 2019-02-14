@@ -317,7 +317,7 @@ static int init_sdl(void)
     Uint32 SDL_flags = SDL_INIT_AUDIO;
 
 #ifndef __vita__
-    SDL_flags |= SDL_INIT_VIDEO
+    SDL_flags |= SDL_INIT_VIDEO;
 #endif
 
     if (SDL_Init(SDL_flags) != 0) {
