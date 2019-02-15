@@ -100,6 +100,7 @@ void window_draw(int force)
 {
     update_mouse_before();
     if (force || refresh_on_draw) {
+        tooltip_invalidate();
         current_window->draw_background();
         refresh_on_draw = 0;
         refresh_immediate = 0;
