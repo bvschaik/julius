@@ -58,10 +58,6 @@ void vita_handle_input() {
         hotkey_down();
     }
 
-    if (BUTTON_PRESSED(SCE_CTRL_TRIANGLE)) {
-        hotkey_esc();
-    }
-
     if (BUTTON_PRESSED(SCE_CTRL_LTRIGGER)) {
         hotkey_page_down();
     }
