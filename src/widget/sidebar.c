@@ -137,7 +137,12 @@ static void draw_minimap(int force)
     if (!city_view_is_sidebar_collapsed()) {
         if (data.minimap_redraw_requested || scroll_in_progress() || force) {
             int x_offset = get_x_offset_expanded();
-            widget_minimap_draw(x_offset + 8, 59, 73, 111);
+            if (data.minimap_redraw_requested) {
+                widget_minimap_draw(x_offset + 8, 59, 73, 111);
+                data.minimap_redraw_requested = 0;
+            } else {
+                widget_minimap_draw_from_cache(x_offset + 8, 59, 73, 111, scroll_in_progress());
+            }
             graphics_draw_horizontal_line(x_offset + 7, x_offset + 153, 58, COLOR_MINIMAP_DARK);
             graphics_draw_vertical_line(x_offset + 7, 59, 170, COLOR_MINIMAP_DARK);
             graphics_draw_vertical_line(x_offset + 153, 59, 170, COLOR_MINIMAP_LIGHT);
