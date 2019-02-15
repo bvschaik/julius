@@ -16,6 +16,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef __vita__
+#include "platform/vita/vita_input.h"
+#include "platform/vita/vita_touch.h"
+#endif
+
 #if defined(_WIN32)
 #include <string.h>
 #endif
@@ -280,8 +285,6 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
     }
 }
 
-void vita_handle_input();
-
 static void main_loop(void)
 {
     mouse_set_inside_window(1);
@@ -290,22 +293,24 @@ static void main_loop(void)
     int active = 1;
     int quit = 0;
     while (!quit) {
-#ifdef __vita__
-        vita_handle_input();
-#else
         SDL_Event event;
         /* Process event queue */
+#ifdef __vita__
+        vita_finish_simulated_mouse_clicks();
+        vita_handle_analog_sticks();
+        vita_handle_virtual_keyboard();
+        vita_handle_repeat_keys();
+        while (vita_poll_event(&event)) {
+#else
         while (SDL_PollEvent(&event)) {
+#endif
             handle_event(&event, &active, &quit);
         }
-#endif
         if (!quit) {
             if (active) {
                 run_and_draw();
             } else {
-#ifndef __vita__
                 SDL_WaitEvent(NULL);
-#endif
             }
         }
     }
@@ -316,8 +321,11 @@ static int init_sdl(void)
     SDL_Log("Initializing SDL");
     Uint32 SDL_flags = SDL_INIT_AUDIO;
 
-#ifndef __vita__
+    // on Vita, need video init only to enable physical kbd/mouse and touch events
     SDL_flags |= SDL_INIT_VIDEO;
+
+#ifdef __vita__
+    SDL_flags |= SDL_INIT_JOYSTICK;
 #endif
 
     if (SDL_Init(SDL_flags) != 0) {
@@ -371,8 +379,6 @@ static void setup(const char *custom_data_dir)
     
     // Black
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
-    sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
-    sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 #endif
 
     if (!pre_init(custom_data_dir)) {

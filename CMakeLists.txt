@@ -103,9 +103,11 @@ if (VITA_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/vita/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/input.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_touch.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
     )
 else()
     set(PLATFORM_FILES
@@ -468,6 +470,8 @@ if (VITA_BUILD)
         SceSysmodule_stub
         SceTouch_stub
         ScePower_stub
+        ScePgf_stub
+        SceAppMgr_stub
     )
 
     vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
