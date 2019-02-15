@@ -64,6 +64,10 @@ endif()
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
 
+if(DRAW_FPS)
+  add_definitions(-DDRAW_FPS)
+endif()
+
 set(SMK_FILES
     ext/libsmacker/smacker.c
     ext/libsmacker/smk_bitstream.c
