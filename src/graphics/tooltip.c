@@ -14,10 +14,21 @@
 #include "graphics/window.h"
 #include "window/advisors.h"
 
+#include <stdlib.h>
+
 #define DEFAULT_TEXT_GROUP 68
 
 static time_millis last_update = 0;
 static uint8_t overlay_string[1000];
+static struct {
+    int is_active;
+    int x;
+    int y;
+    int width;
+    int height;
+    int buffer_size;
+    color_t *buffer;
+} button_tooltip_info;
 
 static void reset_timer(void)
 {
@@ -44,8 +55,36 @@ static void reset_tooltip(tooltip_context *c)
 {
     if (c->type != TOOLTIP_NONE) {
         c->type = TOOLTIP_NONE;
-        window_request_refresh();
     }
+}
+
+static void restore_button_tooltip_window_buffer(void)
+{
+    if (button_tooltip_info.is_active) {
+        graphics_draw_from_buffer(button_tooltip_info.x, button_tooltip_info.y, button_tooltip_info.width, button_tooltip_info.height, button_tooltip_info.buffer);
+    }
+}
+
+static void button_tooltip_buffer_window(int x, int y, int width, int height)
+{
+    if (button_tooltip_info.is_active &&
+        x == button_tooltip_info.x && y == button_tooltip_info.y &&
+        width == button_tooltip_info.width && height == button_tooltip_info.height) {
+        return;
+    }
+    restore_button_tooltip_window_buffer();
+    button_tooltip_info.is_active = 1;
+    button_tooltip_info.x = x;
+    button_tooltip_info.y = y;
+    button_tooltip_info.width = width;
+    button_tooltip_info.height = height;
+    int buffer_size = width * height;
+    if (buffer_size > button_tooltip_info.buffer_size) {
+        button_tooltip_info.buffer_size = buffer_size;
+        free(button_tooltip_info.buffer);
+        button_tooltip_info.buffer = (color_t *)malloc(buffer_size * sizeof(color_t));
+    }
+    graphics_save_to_buffer(x, y, width, height, button_tooltip_info.buffer);
 }
 
 static void draw_button_tooltip(tooltip_context *c)
@@ -108,6 +147,8 @@ static void draw_button_tooltip(tooltip_context *c)
             }
             break;
     }
+
+    button_tooltip_buffer_window(x, y, width, height);
 
     graphics_draw_rect(x, y, width, height, COLOR_BLACK);
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
@@ -202,6 +243,11 @@ static void draw_tooltip(tooltip_context *c)
     }
 }
 
+void tooltip_invalidate(void)
+{
+    button_tooltip_info.is_active = 0;
+}
+
 void tooltip_handle(const mouse *m, void (*func)(tooltip_context *))
 {
     tooltip_context context = {m->x, m->y, 0, 0, 0, 0, 0, 0};
@@ -214,5 +260,8 @@ void tooltip_handle(const mouse *m, void (*func)(tooltip_context *))
         draw_tooltip(&context);
         reset_tooltip(&context);
         rich_text_restore();
+    } else {
+        restore_button_tooltip_window_buffer();
+        button_tooltip_info.is_active = 0;
     }
 }

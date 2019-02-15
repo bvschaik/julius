@@ -21,6 +21,7 @@ typedef struct {
     int numeric_prefix;
 } tooltip_context;
 
+void tooltip_invalidate(void);
 void tooltip_handle(const mouse *m, void (*func)(tooltip_context *));
 
 #endif // GRAPHICS_TOOLTIP_H
