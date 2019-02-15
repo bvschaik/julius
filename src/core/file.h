@@ -16,6 +16,8 @@
 
 /**
  * Wrapper for fopen converting filename to path in current working directory
+ * This exists because some platforms (e.g. PS Vita) don't support chdir() / getcwd()
+ *
  * @param filename Filename
  * @param mode Mode to open the file (e.g. "wb").
  * @return FILE
