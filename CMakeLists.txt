@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 
-option(VITA "Build for the PlayStation Vita handheld game console." OFF)
+option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF)
 
-if(VITA AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
         set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
     else()
@@ -13,7 +13,7 @@ endif()
 set(SHORT_NAME julius)
 project(${SHORT_NAME} C)
 
-if (VITA)
+if (VITA_BUILD)
     include("${VITASDK}/share/vita.cmake" REQUIRED)
     set(VITA_TITLEID  "JULIUS001")
     set(VITA_VERSION "00.10")
@@ -99,7 +99,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
 )
 
-if (VITA)
+if (VITA_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/vita/cursor.c
@@ -440,7 +440,7 @@ if(MSVC)
     include_directories(ext/dirent)
 endif()
 
-if (VITA)
+if (VITA_BUILD)
     target_link_libraries (${SHORT_NAME}
         ${SDL2_MIXER_LIBRARY}
         ${SDL2_LIBRARY}
