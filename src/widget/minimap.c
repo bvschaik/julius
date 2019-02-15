@@ -14,11 +14,19 @@
 #include "scenario/property.h"
 #include "widget/sidebar.h"
 
+#include <stdlib.h>
+
 enum {
     FIGURE_COLOR_NONE = 0,
     FIGURE_COLOR_SOLDIER = 1,
     FIGURE_COLOR_ENEMY = 2,
     FIGURE_COLOR_WOLF = 3
+};
+
+static const color_t ENEMY_COLOR_BY_CLIMATE[] = {
+    COLOR_ENEMY_CENTRAL,
+    COLOR_ENEMY_NORTHERN,
+    COLOR_ENEMY_DESERT
 };
 
 static struct {
@@ -31,6 +39,7 @@ static struct {
     int width;
     int height;
     color_t enemy_color;
+    color_t *cache;
     struct {
         int x;
         int y;
@@ -202,21 +211,57 @@ static void draw_viewport_rectangle(void)
         COLOR_YELLOW);
 }
 
-void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles)
+static void prepare_minimap_cache(int width, int height)
 {
-    graphics_set_clip_rectangle(x_offset, y_offset, 2 * width_tiles, height_tiles);
-    
-    switch (scenario_property_climate()) {
-        case CLIMATE_CENTRAL: data.enemy_color = COLOR_ENEMY_CENTRAL; break;
-        case CLIMATE_NORTHERN: data.enemy_color = COLOR_ENEMY_NORTHERN; break;
-        default: data.enemy_color = COLOR_ENEMY_DESERT; break;
+    if (width != data.width || height != data.height) {
+        free(data.cache);
+        data.cache = (color_t *)malloc(width * height * sizeof(color_t));
+    }
+}
+
+static void cache_minimap(void)
+{
+    graphics_save_to_buffer(data.x_offset, data.y_offset, data.width, data.height, data.cache);
+}
+
+static void draw_minimap(void)
+{
+    graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
+    foreach_map_tile(draw_minimap_tile);
+    cache_minimap();
+    draw_viewport_rectangle();
+    graphics_reset_clip_rectangle();
+}
+
+void widget_minimap_draw_from_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling)
+{
+    if (width_tiles * 2 != data.width || height_tiles != data.height) {
+        widget_minimap_draw(x_offset, y_offset, width_tiles, height_tiles);
+        return;
     }
 
-    set_bounds(x_offset, y_offset, width_tiles, height_tiles);
-    foreach_map_tile(draw_minimap_tile);
-    draw_viewport_rectangle();
+    if (is_scrolling) {
+        int absolute_x = data.absolute_x;
+        int absolute_y = data.absolute_y;
+        set_bounds(x_offset, y_offset, width_tiles, height_tiles);
+        if (data.absolute_x != absolute_x || data.absolute_y != absolute_y) {
+            draw_minimap();
+            return;
+        }
+    }
 
+    graphics_set_clip_rectangle(x_offset, y_offset, 2 * width_tiles, height_tiles);
+    graphics_draw_from_buffer(x_offset, y_offset, data.width, data.height, data.cache);
+    draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
+}
+
+void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles)
+{
+    data.enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
+    prepare_minimap_cache(2 * width_tiles, height_tiles);
+    set_bounds(x_offset, y_offset, width_tiles, height_tiles);
+    draw_minimap();
 }
 
 static void update_mouse_grid_offset(int x_view, int y_view, int grid_offset)

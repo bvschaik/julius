@@ -168,14 +168,14 @@ const clip_info *graphics_get_clip_info(int x, int y, int width, int height)
 void graphics_save_to_buffer(int x, int y, int width, int height, color_t *buffer)
 {
     for (int dy = 0; dy < height; dy++) {
-        memcpy(&buffer[dy * height], graphics_get_pixel(x, y + dy), sizeof(color_t) * width);
+        memcpy(&buffer[dy * width], graphics_get_pixel(x, y + dy), sizeof(color_t) * width);
     }
 }
 
 void graphics_draw_from_buffer(int x, int y, int width, int height, const color_t *buffer)
 {
     for (int dy = 0; dy < height; dy++) {
-        memcpy(graphics_get_pixel(x, y + dy), &buffer[dy * height], sizeof(color_t) * width);
+        memcpy(graphics_get_pixel(x, y + dy), &buffer[dy * width], sizeof(color_t) * width);
     }
 }
 
