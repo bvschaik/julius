@@ -38,7 +38,7 @@ int platform_screen_create(const char *title)
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
     SDL.window = SDL_CreateWindow(title,
-        0, 0,
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         width, height, flags);
     if (!SDL.window) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
