@@ -83,20 +83,23 @@ void figure_military_standard_action(figure *f)
 
 static void javelin_launch_missile(figure *f)
 {
-    int x_tile = 0, y_tile = 0;
+    map_point tile = {-1, -1};
     f->wait_ticks_missile++;
     if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
         f->wait_ticks_missile = 0;
-        if (figure_combat_get_missile_target_for_soldier(f, 10, &x_tile, &y_tile)) {
+        if (figure_combat_get_missile_target_for_soldier(f, 10, &tile)) {
             f->attack_image_offset = 1;
-            f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
+            f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
         } else {
             f->attack_image_offset = 0;
         }
     }
     if (f->attack_image_offset) {
         if (f->attack_image_offset == 1) {
-            figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_JAVELIN);
+            if (tile.x == -1 || tile.y == -1) {
+                map_point_get_last_result(&tile);
+            }
+            figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_JAVELIN);
             formation_record_missile_fired(formation_get(f->formation_id));
         }
         f->attack_image_offset++;

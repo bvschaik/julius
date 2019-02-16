@@ -27,22 +27,21 @@ static void find_minimum_road_tile(int x, int y, int size, int *min_value, int *
     }
 }
 
-int map_has_road_access(int x, int y, int size, int *x_road, int *y_road)
+int map_has_road_access(int x, int y, int size, map_point *road)
 {
     int min_value = 12;
     int min_grid_offset = map_grid_offset(x, y);
     find_minimum_road_tile(x, y, size, &min_value, &min_grid_offset);
     if (min_value < 12) {
-        if (x_road && y_road) {
-            *x_road = map_grid_offset_to_x(min_grid_offset);
-            *y_road = map_grid_offset_to_y(min_grid_offset);
+        if (road) {
+            map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
         }
         return 1;
     }
     return 0;
 }
 
-int map_has_road_access_hippodrome(int x, int y, int *x_road, int *y_road)
+int map_has_road_access_hippodrome(int x, int y, map_point *road)
 {
     int min_value = 12;
     int min_grid_offset = map_grid_offset(x, y);
@@ -50,16 +49,15 @@ int map_has_road_access_hippodrome(int x, int y, int *x_road, int *y_road)
     find_minimum_road_tile(x + 5, y, 5, &min_value, &min_grid_offset);
     find_minimum_road_tile(x + 10, y, 5, &min_value, &min_grid_offset);
     if (min_value < 12) {
-        if (x_road && y_road) {
-            *x_road = map_grid_offset_to_x(min_grid_offset);
-            *y_road = map_grid_offset_to_y(min_grid_offset);
+        if (road) {
+            map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
         }
         return 1;
     }
     return 0;
 }
 
-int map_has_road_access_granary(int x, int y, int *x_road, int *y_road)
+int map_has_road_access_granary(int x, int y, map_point *road)
 {
     int rx = -1, ry = -1;
     if (map_terrain_is(map_grid_offset(x + 1, y - 1), TERRAIN_ROAD)) {
@@ -76,9 +74,8 @@ int map_has_road_access_granary(int x, int y, int *x_road, int *y_road)
         ry = y + 1;
     }
     if (rx >= 0 && ry >= 0) {
-        if (x_road && y_road) {
-            *x_road = rx;
-            *y_road = ry;
+        if (road) {
+            map_point_store_result(rx, ry, road);
         }
         return 1;
     }

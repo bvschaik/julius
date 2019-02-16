@@ -152,9 +152,7 @@ void building_workshop_add_raw_material(building *b)
     }
 }
 
-int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
-                                                     int distance_from_entry, int road_network_id,
-                                                     int *x_dst, int *y_dst)
+int building_get_workshop_for_raw_material_with_room(int x, int y, int resource, int distance_from_entry, int road_network_id, map_point *dst)
 {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
@@ -185,16 +183,13 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
         }
     }
     if (min_building) {
-        *x_dst = min_building->road_access_x;
-        *y_dst = min_building->road_access_y;
+        map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
         return min_building->id;
     }
     return 0;
 }
 
-int building_get_workshop_for_raw_material(int x, int y, int resource,
-                                           int distance_from_entry, int road_network_id,
-                                           int *x_dst, int *y_dst)
+int building_get_workshop_for_raw_material(int x, int y, int resource, int distance_from_entry, int road_network_id, map_point *dst)
 {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
@@ -223,8 +218,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource,
         }
     }
     if (min_building) {
-        *x_dst = min_building->road_access_x;
-        *y_dst = min_building->road_access_y;
+        map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
         return min_building->id;
     }
     return 0;

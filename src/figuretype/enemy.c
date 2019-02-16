@@ -49,12 +49,12 @@ static void enemy_initial(figure *f, formation *m)
         f->type == FIGURE_ENEMY51_SPEAR || f->type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
         // missile throwers
         f->wait_ticks_missile++;
-        int x_tile = 0, y_tile = 0;
+        map_point tile;
         if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
             f->wait_ticks_missile = 0;
-            if (figure_combat_get_missile_target_for_enemy(f, 10, city_figures_soldiers() < 4, &x_tile, &y_tile)) {
+            if (figure_combat_get_missile_target_for_enemy(f, 10, city_figures_soldiers() < 4, &tile)) {
                 f->attack_image_offset = 1;
-                f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
+                f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
             } else {
                 f->attack_image_offset = 0;
             }
@@ -73,7 +73,10 @@ static void enemy_initial(figure *f, formation *m)
                     break;
             }
             if (f->attack_image_offset == 1) {
-                figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, missile_type);
+                if (tile.x == -1 || tile.y == -1) {
+                    map_point_get_last_result(&tile);
+                }
+                figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, missile_type);
                 formation_record_missile_fired(m);
             }
             if (missile_type == FIGURE_ARROW && city_sound_update_shoot_arrow()) {

@@ -72,8 +72,8 @@ void figure_ballista_action(figure *f)
             f->wait_ticks++;
             if (f->wait_ticks > 20) {
                 f->wait_ticks = 0;
-                int x_tile, y_tile;
-                if (figure_combat_get_missile_target_for_soldier(f, 15, &x_tile, &y_tile)) {
+                map_point tile;
+                if (figure_combat_get_missile_target_for_soldier(f, 15, &tile)) {
                     f->action_state = FIGURE_ACTION_181_BALLISTA_FIRING;
                     f->wait_ticks_missile = figure_properties_for_type(f->type)->missile_delay;
                 }
@@ -82,11 +82,11 @@ void figure_ballista_action(figure *f)
         case FIGURE_ACTION_181_BALLISTA_FIRING:
             f->wait_ticks_missile++;
             if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
-                int x_tile, y_tile;
-                if (figure_combat_get_missile_target_for_soldier(f, 15, &x_tile, &y_tile)) {
-                    f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
+                map_point tile;
+                if (figure_combat_get_missile_target_for_soldier(f, 15, &tile)) {
+                    f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
                     f->wait_ticks_missile = 0;
-                    figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_BOLT);
+                    figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_BOLT);
                     sound_effect_play(SOUND_EFFECT_BALLISTA_SHOOT);
                 } else {
                     f->action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
@@ -118,8 +118,8 @@ static void tower_sentry_pick_target(figure *f)
     f->wait_ticks_next_target++;
     if (f->wait_ticks_next_target >= 40) {
         f->wait_ticks_next_target = 0;
-        int x_tile, y_tile;
-        if (figure_combat_get_missile_target_for_soldier(f, 10, &x_tile, &y_tile)) {
+        map_point tile;
+        if (figure_combat_get_missile_target_for_soldier(f, 10, &tile)) {
             f->action_state = FIGURE_ACTION_172_TOWER_SENTRY_FIRING;
             f->destination_x = f->x;
             f->destination_y = f->y;
@@ -215,11 +215,11 @@ void figure_tower_sentry_action(figure *f)
             figure_movement_move_ticks_tower_sentry(f, 1);
             f->wait_ticks_missile++;
             if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
-                int x_tile, y_tile;
-                if (figure_combat_get_missile_target_for_soldier(f, 10, &x_tile, &y_tile)) {
-                    f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
+                map_point tile;
+                if (figure_combat_get_missile_target_for_soldier(f, 10, &tile)) {
+                    f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
                     f->wait_ticks_missile = 0;
-                    figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_JAVELIN);
+                    figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_JAVELIN);
                 } else {
                     f->action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
                     f->destination_x = f->source_x;

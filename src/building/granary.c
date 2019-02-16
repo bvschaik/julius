@@ -205,7 +205,7 @@ void building_granaries_calculate_stocks(void)
 }
 
 int building_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id,
-                                 int force_on_stockpile, int *understaffed, int *x_dst, int *y_dst)
+                                 int force_on_stockpile, int *understaffed, map_point *dst)
 {
     if (scenario_property_rome_supplies_wheat()) {
         return 0;
@@ -248,13 +248,12 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
     }
     // deliver to center of granary
     building *min = building_get(min_building_id);
-    *x_dst = min->x + 1;
-    *y_dst = min->y + 1;
+    map_point_store_result(min->x + 1, min->y + 1, dst);
     return min_building_id;
 }
 
 int building_getting_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id,
-                                         int *x_dst, int *y_dst)
+                                         map_point *dst)
 {
     if (scenario_property_rome_supplies_wheat()) {
         return 0;
@@ -293,12 +292,11 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
         }
     }
     building *min = building_get(min_building_id);
-    *x_dst = min->x + 1;
-    *y_dst = min->y + 1;
+    map_point_store_result(min->x + 1, min->y + 1, dst);
     return min_building_id;
 }
 
-int building_granary_for_getting(building *src, int *x_dst, int *y_dst)
+int building_granary_for_getting(building *src, map_point *dst)
 {
     const building_storage *s_src = building_storage_get(src->storage_id);
     if (s_src->empty_all) {
@@ -358,8 +356,7 @@ int building_granary_for_getting(building *src, int *x_dst, int *y_dst)
         }
     }
     building *min = building_get(min_building_id);
-    *x_dst = min->x + 1;
-    *y_dst = min->y + 1;
+    map_point_store_result(min->x + 1, min->y + 1, dst);
     return min_building_id;
 }
 

@@ -234,23 +234,23 @@ static void init(int grid_offset)
         context.has_road_access = 0;
         switch (b->type) {
             case BUILDING_GRANARY:
-                if (map_has_road_access_granary(b->x, b->y, 0, 0)) {
+                if (map_has_road_access_granary(b->x, b->y, 0)) {
                     context.has_road_access = 1;
                 }
                 break;
             case BUILDING_HIPPODROME:
-                if (map_has_road_access_hippodrome(b->x, b->y, 0, 0)) {
+                if (map_has_road_access_hippodrome(b->x, b->y, 0)) {
                     context.has_road_access = 1;
                 }
                 break;
             case BUILDING_WAREHOUSE:
-                if (map_has_road_access(b->x, b->y, 3, 0, 0)) {
+                if (map_has_road_access(b->x, b->y, 3, 0)) {
                     context.has_road_access = 1;
                 }
                 context.warehouse_space_text = building_warehouse_get_space_info(b);
                 break;
             default:
-                if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
+                if (map_has_road_access(b->x, b->y, b->size, 0)) {
                     context.has_road_access = 1;
                 }
                 break;

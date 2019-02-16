@@ -237,6 +237,7 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/image_context.c
     ${PROJECT_SOURCE_DIR}/src/map/natives.c
     ${PROJECT_SOURCE_DIR}/src/map/orientation.c
+    ${PROJECT_SOURCE_DIR}/src/map/point.c
     ${PROJECT_SOURCE_DIR}/src/map/property.c
     ${PROJECT_SOURCE_DIR}/src/map/random.c
     ${PROJECT_SOURCE_DIR}/src/map/ring.c
