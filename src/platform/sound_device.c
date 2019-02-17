@@ -8,7 +8,7 @@
 #include <string.h>
 
 #define AUDIO_RATE 22050
-#define AUDIO_FORMAT AUDIO_S16MSB
+#define AUDIO_FORMAT AUDIO_S16
 #define AUDIO_CHANNELS 2
 #define AUDIO_BUFFERS 4096
 
@@ -223,11 +223,17 @@ static void custom_music_callback(void *dummy, Uint8 *stream, int len)
     }
 }
 
-void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate, const unsigned char *(*callback)(int *out_len))
+void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate,
+                                          const unsigned char *(*callback)(int *out_len))
 {
-    SDL_BuildAudioCVT(&custom_music.cvt, bitdepth, num_channels, rate, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE);
-    custom_music.callback = callback;
-    Mix_HookMusic(custom_music_callback, 0);
+    int result = SDL_BuildAudioCVT(
+        &custom_music.cvt, bitdepth, num_channels, rate,
+        AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE
+    );
+    if (result >= 0) {
+        custom_music.callback = callback;
+        Mix_HookMusic(custom_music_callback, 0);
+    }
 }
 
 void sound_device_use_default_music_player(void)
