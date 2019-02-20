@@ -14,7 +14,7 @@
 
 static int tower_sentry_request = 0;
 
-int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_dst, int *y_dst)
+int building_get_barracks_for_weapon(int resource, int road_network_id, map_point *dst)
 {
     if (resource != RESOURCE_WEAPONS) {
         return 0;
@@ -27,7 +27,7 @@ int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_d
     }
     building *b = building_get(city_buildings_get_barracks());
     if (b->loads_stored < 5 && city_military_has_legionary_legions()) {
-        if (map_has_road_access(b->x, b->y, b->size, x_dst, y_dst) && b->road_network_id == road_network_id) {
+        if (map_has_road_access(b->x, b->y, b->size, dst) && b->road_network_id == road_network_id) {
             return b->id;
         }
     }
@@ -102,12 +102,12 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
         }
         int academy_id = get_closest_military_academy(building_get(m->building_id));
         if (academy_id) {
-            int x_road, y_road;
+            map_point road;
             building *academy = building_get(academy_id);
-            if (map_has_road_access(academy->x, academy->y, academy->size, &x_road, &y_road)) {
+            if (map_has_road_access(academy->x, academy->y, academy->size, &road)) {
                 f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
-                f->destination_x = x_road;
-                f->destination_y = y_road;
+                f->destination_x = road.x;
+                f->destination_y = road.y;
                 f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
             } else {
                 f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
@@ -139,10 +139,10 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
     }
     figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
-    int x_road, y_road;
-    if (map_has_road_access(tower->x, tower->y, tower->size, &x_road, &y_road)) {
-        f->destination_x = x_road;
-        f->destination_y = y_road;
+    map_point road;
+    if (map_has_road_access(tower->x, tower->y, tower->size, &road)) {
+        f->destination_x = road.x;
+        f->destination_y = road.y;
     } else {
         f->state = FIGURE_STATE_DEAD;
     }

@@ -146,10 +146,10 @@ void figure_shipwreck_action(figure *f)
     figure_image_increase_offset(f, 128);
     if (f->wait_ticks < 1000) {
         map_figure_delete(f);
-        int x_tile, y_tile;
-        if (map_water_find_shipwreck_tile(f, &x_tile, &y_tile)) {
-            f->x = x_tile;
-            f->y = y_tile;
+        map_point tile;
+        if (map_water_find_shipwreck_tile(f, &tile)) {
+            f->x = tile.x;
+            f->y = tile.y;
             f->grid_offset = map_grid_offset(f->x, f->y);
             f->cross_country_x = 15 * f->x + 7;
             f->cross_country_y = 15 * f->y + 7;
@@ -171,16 +171,16 @@ void figure_fishing_boat_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     if (f->action_state != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.industry.fishing_boat_id != f->id) {
-        int x_tile, y_tile;
-        b = building_get(map_water_get_wharf_for_new_fishing_boat(f, &x_tile, &y_tile));
+        map_point tile;
+        b = building_get(map_water_get_wharf_for_new_fishing_boat(f, &tile));
         if (b->id) {
             f->building_id = b->id;
             b->data.industry.fishing_boat_id = f->id;
             f->action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
-            f->destination_x = x_tile;
-            f->destination_y = y_tile;
-            f->source_x = x_tile;
-            f->source_y = y_tile;
+            f->destination_x = tile.x;
+            f->destination_y = tile.y;
+            f->source_x = tile.x;
+            f->source_y = tile.y;
             figure_route_remove(f);
         } else {
             f->state = FIGURE_STATE_DEAD;
@@ -195,17 +195,17 @@ void figure_fishing_boat_action(figure *f)
             f->wait_ticks++;
             if (f->wait_ticks >= 50) {
                 f->wait_ticks = 0;
-                int x_tile, y_tile;
-                int wharf_id = map_water_get_wharf_for_new_fishing_boat(f, &x_tile, &y_tile);
+                map_point tile;
+                int wharf_id = map_water_get_wharf_for_new_fishing_boat(f, &tile);
                 if (wharf_id) {
                     b->figure_id = 0; // remove from original building
                     f->building_id = wharf_id;
                     building_get(wharf_id)->data.industry.fishing_boat_id = f->id;
                     f->action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
-                    f->destination_x = x_tile;
-                    f->destination_y = y_tile;
-                    f->source_x = x_tile;
-                    f->source_y = y_tile;
+                    f->destination_x = tile.x;
+                    f->destination_y = tile.y;
+                    f->source_x = tile.x;
+                    f->source_y = tile.y;
                     figure_route_remove(f);
                 }
             }
@@ -214,11 +214,11 @@ void figure_fishing_boat_action(figure *f)
             figure_movement_move_ticks(f, 1);
             f->height_adjusted_ticks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                int x_tile, y_tile;
-                if (map_water_find_alternative_fishing_boat_tile(f, &x_tile, &y_tile)) {
+                map_point tile;
+                if (map_water_find_alternative_fishing_boat_tile(f, &tile)) {
                     figure_route_remove(f);
-                    f->destination_x = x_tile;
-                    f->destination_y = y_tile;
+                    f->destination_x = tile.x;
+                    f->destination_y = tile.y;
                     f->direction = f->previous_tile_direction;
                 } else {
                     f->action_state = FIGURE_ACTION_192_FISHING_BOAT_FISHING;
@@ -265,11 +265,11 @@ void figure_fishing_boat_action(figure *f)
                 f->wait_ticks++;
                 if (f->wait_ticks >= max_wait_ticks) {
                     f->wait_ticks = 0;
-                    int x_tile, y_tile;
-                    if (scenario_map_closest_fishing_point(f->x, f->y, &x_tile, &y_tile)) {
+                    map_point tile;
+                    if (scenario_map_closest_fishing_point(f->x, f->y, &tile)) {
                         f->action_state = FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH;
-                        f->destination_x = x_tile;
-                        f->destination_y = y_tile;
+                        f->destination_x = tile.x;
+                        f->destination_y = tile.y;
                         figure_route_remove(f);
                     }
                 }

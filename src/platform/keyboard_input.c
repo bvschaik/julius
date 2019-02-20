@@ -21,6 +21,7 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDLK_RETURN:
         case SDLK_KP_ENTER:
             keyboard_return();
+            hotkey_enter();
             break;
         case SDLK_BACKSPACE:
             keyboard_backspace();

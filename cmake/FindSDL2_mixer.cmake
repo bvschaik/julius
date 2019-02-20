@@ -55,13 +55,29 @@ if(NOT SDL2_MIXER_INCLUDE_DIR AND SDL2MIXER_INCLUDE_DIR)
   set(SDL2_MIXER_INCLUDE_DIR ${SDL2MIXER_INCLUDE_DIR} CACHE PATH "directory cache
 entry initialized from old variable name")
 endif()
-find_path(SDL2_MIXER_INCLUDE_DIR SDL_mixer.h
-  HINTS
-    ENV SDL2MIXERDIR
-    ENV SDL2DIR
-  PATH_SUFFIXES include include/SDL2
-  PATHS ${SDL2_SEARCH_PATHS}
-)
+
+if(APPLE)
+  # Try to find the include in the SDL2_mixer framework bundle
+  # This fixes CMake finding the header from SDL_mixer 1.2 when both 1.2 and 2.0 are installed
+  find_path(SDL2_MIXER_INCLUDE_DIR SDL2_mixer/SDL_mixer.h
+    HINTS
+      ENV SDL2MIXERDIR
+      ENV SDL2DIR
+    PATH_SUFFIXES include include/SDL2
+    PATHS ${SDL2_SEARCH_PATHS}
+  )
+  set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INCLUDE_DIR}/Headers")
+endif()
+
+if(NOT APPLE OR NOT EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
+  find_path(SDL2_MIXER_INCLUDE_DIR SDL_mixer.h
+    HINTS
+      ENV SDL2MIXERDIR
+      ENV SDL2DIR
+    PATH_SUFFIXES include include/SDL2
+    PATHS ${SDL2_SEARCH_PATHS}
+  )
+endif()
 
 if(NOT SDL2_MIXER_LIBRARY AND SDL2MIXER_LIBRARY)
   set(SDL2_MIXER_LIBRARY ${SDL2MIXER_LIBRARY} CACHE FILEPATH "file cache entry
@@ -91,6 +107,7 @@ if(SDL2_MIXER_INCLUDE_DIR AND EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
   unset(SDL2_MIXER_VERSION_MINOR)
   unset(SDL2_MIXER_VERSION_PATCH)
 endif()
+
 
 set(SDL2_MIXER_LIBRARIES ${SDL2_MIXER_LIBRARY})
 set(SDL2_MIXER_INCLUDE_DIRS ${SDL2_MIXER_INCLUDE_DIR})

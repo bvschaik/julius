@@ -71,5 +71,9 @@ int figure_image_direction(figure *f)
 
 int figure_image_normalize_direction(int direction)
 {
-    return (8 + direction - city_view_orientation()) % 8;
+    int normalized_direction = direction - city_view_orientation();
+    if (normalized_direction < 0) {
+        normalized_direction += 8;
+    }
+    return normalized_direction;
 }

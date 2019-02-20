@@ -266,7 +266,7 @@ int figure_combat_get_target_for_enemy(int x, int y)
     return 0;
 }
 
-int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distance, int *x_tile, int *y_tile)
+int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distance, map_point *tile)
 {
     int x = shooter->x;
     int y = shooter->y;
@@ -287,15 +287,14 @@ int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distan
         }
     }
     if (min_figure) {
-        *x_tile = min_figure->x;
-        *y_tile = min_figure->y;
+        map_point_store_result(min_figure->x, min_figure->y, tile);
         return min_figure->id;
     }
     return 0;
 }
 
 int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, int attack_citizens,
-                                               int *x_tile, int *y_tile)
+                                               map_point *tile)
 {
     int x = enemy->x;
     int y = enemy->y;
@@ -341,8 +340,7 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
         }
     }
     if (min_figure) {
-        *x_tile = min_figure->x;
-        *y_tile = min_figure->y;
+        map_point_store_result(min_figure->x, min_figure->y, tile);
         return min_figure->id;
     }
     return 0;

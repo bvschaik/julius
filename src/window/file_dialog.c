@@ -45,7 +45,7 @@ static generic_button file_buttons[] = {
     {160, 304, 448, 320, GB_IMMEDIATE, button_select_file, button_none, 11, 0},
 };
 
-static const int NOT_EXIST_MESSAGE_TIMEOUT = 500;
+static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
 static const int MAX_FILE_WINDOW_TEXT_WIDTH = 18 * 16;
 
 static struct {

@@ -234,23 +234,23 @@ static void init(int grid_offset)
         context.has_road_access = 0;
         switch (b->type) {
             case BUILDING_GRANARY:
-                if (map_has_road_access_granary(b->x, b->y, 0, 0)) {
+                if (map_has_road_access_granary(b->x, b->y, 0)) {
                     context.has_road_access = 1;
                 }
                 break;
             case BUILDING_HIPPODROME:
-                if (map_has_road_access_hippodrome(b->x, b->y, 0, 0)) {
+                if (map_has_road_access_hippodrome(b->x, b->y, 0)) {
                     context.has_road_access = 1;
                 }
                 break;
             case BUILDING_WAREHOUSE:
-                if (map_has_road_access(b->x, b->y, 3, 0, 0)) {
+                if (map_has_road_access(b->x, b->y, 3, 0)) {
                     context.has_road_access = 1;
                 }
                 context.warehouse_space_text = building_warehouse_get_space_info(b);
                 break;
             default:
-                if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
+                if (map_has_road_access(b->x, b->y, b->size, 0)) {
                     context.has_road_access = 1;
                 }
                 break;
@@ -314,8 +314,6 @@ static void init(int grid_offset)
         }
     }
     // dialog size
-    context.x_offset = 8;
-    context.y_offset = 32;
     context.width_blocks = 29;
     switch (get_height_id()) {
         case 1: context.height_blocks = 16; break;
@@ -325,15 +323,18 @@ static void init(int grid_offset)
         default: context.height_blocks = 22; break;
     }
     // dialog placement
+    int s_width = screen_width();
     int s_height = screen_height();
-    if (s_height >= 600) {
-        if (mouse_get()->y <= (s_height - 24) / 2 + 24) {
-            context.y_offset = s_height - 16 * context.height_blocks - 16;
-        } else {
-            context.y_offset = 32;
-        }
-    }
     context.x_offset = center_in_city(16 * context.width_blocks);
+    if (s_width >= 1024 && s_height >= 768) {
+        context.x_offset = mouse_get()->x;
+        context.y_offset = mouse_get()->y;
+        window_building_set_possible_position(&context.x_offset, &context.y_offset, context.width_blocks, context.height_blocks);
+    } else if (s_height >= 600 && mouse_get()->y <= (s_height - 24) / 2 + 24) {
+        context.y_offset = s_height - 16 * context.height_blocks - MARGIN_POSITION;
+    } else {
+        context.y_offset = MIN_Y_POSITION;
+    }
 }
 
 static void draw_background(void)
@@ -509,7 +510,8 @@ static void draw_foreground(void)
     }
     // general buttons
     if (context.storage_show_special_orders) {
-        image_buttons_draw(context.x_offset, 432, image_buttons_help_close, 2);
+        int y_offset = window_building_get_vertical_offset(&context, 28);
+        image_buttons_draw(context.x_offset, y_offset + 400, image_buttons_help_close, 2);
     } else {
         image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_help_close, 2);
     }
@@ -526,7 +528,8 @@ static void handle_mouse(const mouse *m)
     }
     // general buttons
     if (context.storage_show_special_orders) {
-        image_buttons_handle_mouse(m, context.x_offset, 432, image_buttons_help_close, 2, &focus_image_button_id);
+        int y_offset = window_building_get_vertical_offset(&context, 28);
+        image_buttons_handle_mouse(m, context.x_offset, y_offset + 400, image_buttons_help_close, 2, &focus_image_button_id);
     } else {
         image_buttons_handle_mouse(
             m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,

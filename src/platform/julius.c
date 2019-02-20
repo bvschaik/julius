@@ -31,6 +31,12 @@
 #include <unistd.h>
 #endif
 
+#ifdef DRAW_FPS
+#include "graphics/window.h"
+#include "graphics/graphics.h"
+#include "graphics/text.h"
+#endif
+
 #define INTPTR(d) (*(int*)(d))
 
 enum {
@@ -139,6 +145,41 @@ void system_rescale(void)
     platform_screen_rescale();
 }
 
+#ifdef DRAW_FPS
+static struct {
+    int frame_count;
+    int last_fps;
+    Uint32 last_update_time;
+} fps = {0, 0, 0};
+
+static void run_and_draw(void)
+{
+    time_millis time_before_run = SDL_GetTicks();
+    time_set_millis(time_before_run);
+
+    game_run();
+    Uint32 time_between_run_and_draw = SDL_GetTicks();
+    game_draw();
+    Uint32 time_after_draw = SDL_GetTicks();
+
+    fps.frame_count++;
+    if (time_after_draw - fps.last_update_time > 1000) {
+        fps.last_fps = fps.frame_count;
+        fps.last_update_time = time_after_draw;
+        fps.frame_count = 0;
+    }
+    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
+        int y_offset = 24;
+        int y_offset_text = y_offset + 5;
+        graphics_fill_rect(0, y_offset, 100, 20, COLOR_WHITE);
+        text_draw_number_colored(fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_PLAIN, COLOR_RED);
+        text_draw_number_colored(time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text, FONT_NORMAL_PLAIN, COLOR_RED);
+        text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_PLAIN, COLOR_RED);
+    }
+
+    platform_screen_render();
+}
+#else
 static void run_and_draw(void)
 {
     time_set_millis(SDL_GetTicks());
@@ -148,6 +189,7 @@ static void run_and_draw(void)
 
     platform_screen_render();
 }
+#endif
 
 static void handle_mouse_motion(int x, int y)
 {
@@ -343,6 +385,8 @@ static void setup(const char *custom_data_dir)
     signal(SIGSEGV, handler);
     setup_logging();
 
+    SDL_Log("Julius version %s%s\n", JULIUS_VERSION, JULIUS_VERSION_SUFFIX);
+
     if (!init_sdl()) {
         SDL_Log("Exiting: SDL init failed");
         exit(-1);
@@ -375,8 +419,6 @@ static void teardown(void)
 
 int main(int argc, char **argv)
 {
-    SDL_Log("Built with git commit: %s\n", GIT_COMMIT_HASH);
-
     const char *custom_data_dir = (argc > 1 && argv[1]) ? argv[1] : NULL;
     setup(custom_data_dir);
 

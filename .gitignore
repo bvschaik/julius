@@ -6,3 +6,5 @@ doc
 *.kdev4
 .vs
 src/platform/version.h
+res/version.rc
+/CMakeSettings.json

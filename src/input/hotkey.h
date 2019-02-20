@@ -12,6 +12,7 @@ void hotkey_end(void);
 void hotkey_esc(void);
 void hotkey_page_up(void);
 void hotkey_page_down(void);
+void hotkey_enter(void);
 
 void hotkey_func(int f_number);
 

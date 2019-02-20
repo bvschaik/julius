@@ -47,11 +47,11 @@ static void check_road_access(int type, int x, int y, int size)
     }
 
     int has_road = 0;
-    if (map_has_road_access(x, y, size, 0, 0)) {
+    if (map_has_road_access(x, y, size, 0)) {
         has_road = 1;
-    } else if (type == BUILDING_WAREHOUSE && map_has_road_access(x, y, size, 0, 0)) {
+    } else if (type == BUILDING_WAREHOUSE && map_has_road_access(x, y, size, 0)) {
         has_road = 1;
-    } else if (type == BUILDING_HIPPODROME && map_has_road_access_hippodrome(x, y, 0, 0)) {
+    } else if (type == BUILDING_HIPPODROME && map_has_road_access_hippodrome(x, y, 0)) {
         has_road = 1;
     }
     if (!has_road) {

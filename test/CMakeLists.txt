@@ -1,6 +1,6 @@
 include_directories(.)
 
-if(!MSVC)
+if(${CMAKE_C_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_C_COMPILER_ID} STREQUAL "Clang")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 endif()
@@ -91,3 +91,9 @@ add_integration_test(sav_earthquake2 earthquake.sav earthquake-during2.sav 1071)
 add_integration_test(sav_earthquake3 earthquake.sav earthquake-during3.sav 1602)
 add_integration_test(sav_earthquake4 earthquake.sav earthquake-during4.sav 2155)
 add_integration_test(sav_earthquake5 earthquake.sav earthquake-after.sav 3748)
+
+# Testing map with tile offsets >127
+add_integration_test(sav_edge1 edge-start.sav edge-battle-before.sav 835)
+add_integration_test(sav_edge2 edge-start.sav edge-battle-start.sav 1278)
+add_integration_test(sav_edge3 edge-start.sav edge-battle-during.sav 1513)
+add_integration_test(sav_edge4 edge-start.sav edge-battle-after.sav 1890)

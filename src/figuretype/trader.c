@@ -215,7 +215,7 @@ static int trader_get_sell_resource(int warehouse_id, int city_id)
 }
 
 static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int distance_from_entry,
-                                 int *x_warehouse, int *y_warehouse)
+                                 map_point *warehouse)
 {
     int exportable[RESOURCE_MAX];
     int importable[RESOURCE_MAX];
@@ -296,9 +296,8 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
         return 0;
     }
     if (min_building->has_road_access == 1) {
-        *x_warehouse = min_building->x;
-        *y_warehouse = min_building->y;
-    } else if (!map_has_road_access(min_building->x, min_building->y, 3, x_warehouse, y_warehouse)) {
+        map_point_store_result(min_building->x, min_building->y, warehouse);
+    } else if (!map_has_road_access(min_building->x, min_building->y, 3, warehouse)) {
         return 0;
     }
     return min_building->id;
@@ -306,13 +305,13 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
 
 static void go_to_next_warehouse(figure *f, int x_src, int y_src, int distance_to_entry)
 {
-    int x_dst, y_dst;
-    int warehouse_id = get_closest_warehouse(f, x_src, y_src, f->empire_city_id, distance_to_entry, &x_dst, &y_dst);
+    map_point dst;
+    int warehouse_id = get_closest_warehouse(f, x_src, y_src, f->empire_city_id, distance_to_entry, &dst);
     if (warehouse_id) {
         f->destination_building_id = warehouse_id;
         f->action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
-        f->destination_x = x_dst;
-        f->destination_y = y_dst;
+        f->destination_x = dst.x;
+        f->destination_y = dst.y;
     } else {
         const map_tile *exit = city_map_exit_point();
         f->action_state = FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING;
@@ -495,13 +494,13 @@ void figure_native_trader_action(figure *f)
             f->wait_ticks++;
             if (f->wait_ticks > 10) {
                 f->wait_ticks = 0;
-                int x_tile, y_tile;
-                int building_id = get_closest_warehouse(f, f->x, f->y, 0, -1, &x_tile, &y_tile);
+                map_point tile;
+                int building_id = get_closest_warehouse(f, f->x, f->y, 0, -1, &tile);
                 if (building_id) {
                     f->action_state = FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE;
                     f->destination_building_id = building_id;
-                    f->destination_x = x_tile;
-                    f->destination_y = y_tile;
+                    f->destination_x = tile.x;
+                    f->destination_y = tile.y;
                 } else {
                     f->state = FIGURE_STATE_DEAD;
                 }
@@ -517,13 +516,13 @@ void figure_native_trader_action(figure *f)
                     trader_record_bought_resource(f->trader_id, resource);
                     f->trader_amount_bought += 3;
                 } else {
-                    int x_tile, y_tile;
-                    int building_id = get_closest_warehouse(f, f->x, f->y, 0, -1, &x_tile, &y_tile);
+                    map_point tile;
+                    int building_id = get_closest_warehouse(f, f->x, f->y, 0, -1, &tile);
                     if (building_id) {
                         f->action_state = FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE;
                         f->destination_building_id = building_id;
-                        f->destination_x = x_tile;
-                        f->destination_y = y_tile;
+                        f->destination_x = tile.x;
+                        f->destination_y = tile.y;
                     } else {
                         f->action_state = FIGURE_ACTION_161_NATIVE_TRADER_RETURNING;
                         f->destination_x = f->source_x;
@@ -629,17 +628,17 @@ void figure_trade_ship_action(figure *f)
             f->wait_ticks++;
             if (f->wait_ticks > 20) {
                 f->wait_ticks = 0;
-                int x_tile, y_tile;
-                int dock_id = building_dock_get_free_destination(f->id, &x_tile, &y_tile);
+                map_point tile;
+                int dock_id = building_dock_get_free_destination(f->id, &tile);
                 if (dock_id) {
                     f->destination_building_id = dock_id;
                     f->action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
-                    f->destination_x = x_tile;
-                    f->destination_y = y_tile;
-                } else if (building_dock_get_queue_destination(&x_tile, &y_tile)) {
+                    f->destination_x = tile.x;
+                    f->destination_y = tile.y;
+                } else if (building_dock_get_queue_destination(&tile)) {
                     f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
-                    f->destination_x = x_tile;
-                    f->destination_y = y_tile;
+                    f->destination_x = tile.x;
+                    f->destination_y = tile.y;
                 } else {
                     f->state = FIGURE_STATE_DEAD;
                 }
@@ -710,18 +709,18 @@ void figure_trade_ship_action(figure *f)
         case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED:
             f->wait_ticks++;
             if (f->wait_ticks > 40) {
-                int x_tile, y_tile;
-                int dock_id = building_dock_get_free_destination(f->id, &x_tile, &y_tile);
+                map_point tile;
+                int dock_id = building_dock_get_free_destination(f->id, &tile);
                 if (dock_id) {
                     f->destination_building_id = dock_id;
                     f->action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
-                    f->destination_x = x_tile;
-                    f->destination_y = y_tile;
+                    f->destination_x = tile.x;
+                    f->destination_y = tile.y;
                 } else if (map_figure_at(f->grid_offset) != f->id &&
-                    building_dock_get_queue_destination(&x_tile, &y_tile)) {
+                    building_dock_get_queue_destination(&tile)) {
                     f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
-                    f->destination_x = x_tile;
-                    f->destination_y = y_tile;
+                    f->destination_x = tile.x;
+                    f->destination_y = tile.y;
                 }
                 f->wait_ticks = 0;
             }

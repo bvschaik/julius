@@ -21,4 +21,4 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots and/or saved games (.sav) to help explain your problem. If you experience a crash, attach the `julius-log.txt` file (Windows) or the console output (other operating systems).
 
 **Additional context**
-Add any other context about the problem here.
+Add any other context about the problem here, for example: operating system, SDL and SDL_mixer versions.

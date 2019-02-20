@@ -150,7 +150,7 @@ static void draw_history_graph(int full_size, int x, int y)
                         image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m, y + 200 - val);
                         break;
                     default:
-                        graphics_draw_line(x + m, y + 200 - val, x + m, y + 199, COLOR_RED);
+                        graphics_draw_vertical_line(x + m, y + 200 - val, y + 199, COLOR_RED);
                         break;
                 }
             }
@@ -164,7 +164,7 @@ static void draw_history_graph(int full_size, int x, int y)
                 if (max_months == 20) {
                     graphics_fill_rect(x + m, y + 50 - val, 4, val + 1, COLOR_RED);
                 } else {
-                    graphics_draw_line(x + m, y + 50 - val, x + m, y + 50, COLOR_RED);
+                    graphics_draw_vertical_line(x + m, y + 50 - val, y + 50, COLOR_RED);
                 }
             }
         }
@@ -213,7 +213,7 @@ static void draw_census_graph(int full_size, int x, int y)
         for (int i = 0; i < 100; i++) {
             int val = city_population_at_age(i) >> y_shift;
             if (val > 0) {
-                graphics_draw_line(x + i, y + 50 - val, x + i, y + 50, COLOR_RED);
+                graphics_draw_vertical_line(x + i, y + 50 - val, y + 50, COLOR_RED);
             }
         }
     }

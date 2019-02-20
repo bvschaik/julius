@@ -251,7 +251,7 @@ int building_warehouses_remove_resource(int resource, int amount)
 
 int building_warehouse_for_storing(int src_building_id, int x, int y, int resource,
                                    int distance_from_entry, int road_network_id, int *understaffed,
-                                   int *x_dst, int *y_dst)
+                                   map_point *dst)
 {
     int min_dist = 10000;
     int min_building_id = 0;
@@ -293,15 +293,14 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
     }
     building *b = building_main(building_get(min_building_id));
     if (b->has_road_access == 1) {
-        *x_dst = b->x;
-        *y_dst = b->y;
-    } else if (!map_has_road_access(b->x, b->y, 3, x_dst, y_dst)) {
+        map_point_store_result(b->x, b->y, dst);
+    } else if (!map_has_road_access(b->x, b->y, 3, dst)) {
         return 0;
     }
     return min_building_id;
 }
 
-int building_warehouse_for_getting(building *src, int resource, int *x_dst, int *y_dst)
+int building_warehouse_for_getting(building *src, int resource, map_point *dst)
 {
     int min_dist = 10000;
     building *min_building = 0;
@@ -335,8 +334,7 @@ int building_warehouse_for_getting(building *src, int resource, int *x_dst, int 
         }
     }
     if (min_building) {
-        *x_dst = min_building->road_access_x;
-        *y_dst = min_building->road_access_y;
+        map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
         return min_building->id;
     } else {
         return 0;

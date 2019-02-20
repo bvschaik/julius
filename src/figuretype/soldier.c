@@ -83,20 +83,23 @@ void figure_military_standard_action(figure *f)
 
 static void javelin_launch_missile(figure *f)
 {
-    int x_tile = 0, y_tile = 0;
+    map_point tile = {-1, -1};
     f->wait_ticks_missile++;
     if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
         f->wait_ticks_missile = 0;
-        if (figure_combat_get_missile_target_for_soldier(f, 10, &x_tile, &y_tile)) {
+        if (figure_combat_get_missile_target_for_soldier(f, 10, &tile)) {
             f->attack_image_offset = 1;
-            f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
+            f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
         } else {
             f->attack_image_offset = 0;
         }
     }
     if (f->attack_image_offset) {
         if (f->attack_image_offset == 1) {
-            figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_JAVELIN);
+            if (tile.x == -1 || tile.y == -1) {
+                map_point_get_last_result(&tile);
+            }
+            figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_JAVELIN);
             formation_record_missile_fired(formation_get(f->formation_id));
         }
         f->attack_image_offset++;
@@ -241,8 +244,8 @@ void figure_soldier_action(figure *f)
     if (f->formation_at_rest || f->action_state == FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT) {
         layout = FORMATION_AT_REST;
     }
-    f->formation_position_x = m->x + formation_layout_position_x(layout, f->index_in_formation);
-    f->formation_position_y = m->y + formation_layout_position_y(layout, f->index_in_formation);
+    f->formation_position_x.soldier = m->x + formation_layout_position_x(layout, f->index_in_formation);
+    f->formation_position_y.soldier = m->y + formation_layout_position_y(layout, f->index_in_formation);
     
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
@@ -256,7 +259,7 @@ void figure_soldier_action(figure *f)
             f->wait_ticks = 0;
             f->formation_at_rest = 1;
             f->image_offset = 0;
-            if (f->x != f->formation_position_x || f->y != f->formation_position_y) {
+            if (f->x != f->formation_position_x.soldier || f->y != f->formation_position_y.soldier) {
                 f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             }
             break;
@@ -264,8 +267,8 @@ void figure_soldier_action(figure *f)
         case FIGURE_ACTION_148_FLEEING:
             f->wait_ticks = 0;
             f->formation_at_rest = 1;
-            f->destination_x = f->formation_position_x;
-            f->destination_y = f->formation_position_y;
+            f->destination_x = f->formation_position_x.soldier;
+            f->destination_y = f->formation_position_y.soldier;
             f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
@@ -382,8 +385,8 @@ void figure_soldier_action(figure *f)
             f->is_ghost = 0;
             f->wait_ticks = 0;
             f->formation_at_rest = 1;
-            f->destination_x = f->formation_position_x;
-            f->destination_y = f->formation_position_y;
+            f->destination_x = f->formation_position_x.soldier;
+            f->destination_y = f->formation_position_y.soldier;
             f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {

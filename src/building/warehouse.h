@@ -2,6 +2,7 @@
 #define BUILDING_WAREHOUSE_H
 
 #include "building/building.h"
+#include "map/point.h"
 
 enum {
     WAREHOUSE_ROOM = 0,
@@ -37,9 +38,9 @@ int building_warehouses_remove_resource(int resource, int amount);
 
 int building_warehouse_for_storing(int src_building_id, int x, int y, int resource,
                                    int distance_from_entry, int road_network_id, int *understaffed,
-                                   int *x_dst, int *y_dst);
+                                   map_point *dst);
 
-int building_warehouse_for_getting(building *src, int resource, int *x_dst, int *y_dst);
+int building_warehouse_for_getting(building *src, int resource, map_point *dst);
 
 int building_warehouse_determine_worker_task(building *warehouse, int *resource);
 

@@ -51,7 +51,6 @@ void window_victory_video_show(const char *filename, int width, int height, void
             handle_mouse,
             0
         };
-        video_init();
         window_show(&window);
     } else {
         callback();

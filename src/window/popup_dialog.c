@@ -72,14 +72,19 @@ static void handle_mouse(const mouse *m)
 
 void button_ok(int param1, int param2)
 {
-    window_go_back();
-    data.close_func(1);
+    window_popup_dialog_confirm();
 }
 
 void button_cancel(int param1, int param2)
 {
     window_go_back();
     data.close_func(0);
+}
+
+void window_popup_dialog_confirm(void)
+{
+    window_go_back();
+    data.close_func(1);
 }
 
 void window_popup_dialog_show(popup_dialog_type type, void (*close_func)(int accepted), int has_ok_cancel_buttons)

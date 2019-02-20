@@ -217,17 +217,22 @@ void video_draw(int x_offset, int y_offset)
         }
         data.video.current_frame++;
     }
-    
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, data.video.width, data.video.height);
+    if (!clip->is_visible) {
+        return;
+    }
     const unsigned char *frame = smk_get_video(data.video.s);
     const unsigned char *pal = smk_get_palette(data.video.s);
     if (frame && pal) {
-        for (int y = 0; y < data.video.height; y++) {
-            for (int x = 0; x < data.video.width; x++) {
-                color_t color = 0xFF000000 |
-                    (pal[frame[(y * data.video.width) + x] * 3] << 16) |
-                    (pal[frame[(y * data.video.width) + x] * 3 + 1] << 8) |
-                    (pal[frame[(y * data.video.width) + x] * 3 + 2]);
-                graphics_draw_pixel(x_offset + x, y_offset + y, color);
+        for (int y = clip->clipped_pixels_top; y < clip->visible_pixels_y; y++) {
+            color_t *pixel = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y + y_offset + clip->clipped_pixels_top);
+            const unsigned char *line = frame + (y * data.video.width);
+            for (int x = clip->clipped_pixels_left; x < clip->visible_pixels_x; x++) {
+                *pixel = 0xFF000000 |
+                    (pal[line[x] * 3] << 16) |
+                    (pal[line[x] * 3 + 1] << 8) |
+                    (pal[line[x] * 3 + 2]);
+                ++pixel;
             }
         }
     }

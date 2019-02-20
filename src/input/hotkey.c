@@ -293,6 +293,13 @@ void hotkey_page_down(void)
 	change_game_speed(1);
 }
 
+void hotkey_enter(void)
+{
+    if (window_is(WINDOW_POPUP_DIALOG)) {
+        window_popup_dialog_confirm();
+    }
+}
+
 static void go_to_bookmark(int number)
 {
     if (map_bookmark_go_to(number)) {

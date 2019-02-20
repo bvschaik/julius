@@ -5,14 +5,19 @@
 #include "city/population.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/log.h"
 #include "core/io.h"
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 
+#include <string.h>
+
 enum {
     EMPIRE_WIDTH = 2000,
-    EMPIRE_HEIGHT = 1000
+    EMPIRE_HEIGHT = 1000,
+    EMPIRE_HEADER_SIZE = 1280,
+    EMPIRE_DATA_SIZE = 12800
 };
 
 static struct {
@@ -27,20 +32,26 @@ static struct {
 
 void empire_load(int is_custom_scenario, int empire_id)
 {
-    char raw_data[12800];
+    char raw_data[EMPIRE_DATA_SIZE];
     const char *filename = is_custom_scenario ? "c32.emp" : "c3.emp";
     
     // read header with scroll positions
-    io_read_file_part_into_buffer(filename, raw_data, 4, 32 * empire_id);
+    if (!io_read_file_part_into_buffer(filename, raw_data, 4, 32 * empire_id)) {
+        memset(raw_data, 0, 4);
+    }
     buffer buf;
     buffer_init(&buf, raw_data, 4);
     data.initial_scroll_x = buffer_read_i16(&buf);
     data.initial_scroll_y = buffer_read_i16(&buf);
 
     // read data section with objects
-    int offset = 1280 + 12800 * empire_id;
-    io_read_file_part_into_buffer(filename, raw_data, 12800, offset);
-    buffer_init(&buf, raw_data, 12800);
+    int offset = EMPIRE_HEADER_SIZE + EMPIRE_DATA_SIZE * empire_id;
+    if (io_read_file_part_into_buffer(filename, raw_data, EMPIRE_DATA_SIZE, offset) != EMPIRE_DATA_SIZE) {
+        // load empty empire when loading fails
+        log_error("Unable to load empire data from file", filename, 0);
+        memset(raw_data, 0, EMPIRE_DATA_SIZE);
+    }
+    buffer_init(&buf, raw_data, EMPIRE_DATA_SIZE);
     empire_object_load(&buf);
 }
 
