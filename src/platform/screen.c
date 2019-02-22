@@ -54,7 +54,11 @@ int platform_screen_create(const char *title)
             return 0;
         }
     }
-
+#if !defined(__APPLE__)
+    if (fullscreen && SDL_GetNumVideoDisplays() > 1) {
+        SDL_SetWindowGrab(SDL.window, SDL_TRUE);
+    }
+#endif
     return platform_screen_resize(width, height);
 }
 
@@ -108,6 +112,12 @@ void platform_screen_set_fullscreen(void)
         return;
     }
     SDL_SetWindowDisplayMode(SDL.window, &mode);
+
+#if !defined(__APPLE__)
+    if (SDL_GetNumVideoDisplays() > 1) {
+        SDL_SetWindowGrab(SDL.window, SDL_TRUE);
+    }
+#endif
     setting_set_display(1, mode.w, mode.h);
 }
 
@@ -119,6 +129,9 @@ void platform_screen_set_windowed(void)
     SDL_SetWindowFullscreen(SDL.window, 0);
     SDL_SetWindowSize(SDL.window, width, height);
     SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
+    if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
+        SDL_SetWindowGrab(SDL.window, SDL_FALSE);
+    }
     setting_set_display(0, width, height);
 }
 
@@ -130,6 +143,9 @@ void platform_screen_set_window_size(int width, int height)
     SDL_SetWindowSize(SDL.window, width, height);
     SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
     SDL_Log("User resize to %d x %d\n", width, height);
+    if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
+        SDL_SetWindowGrab(SDL.window, SDL_FALSE);
+    }
     setting_set_display(0, width, height);
 }
 
