@@ -404,6 +404,11 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.c
 )
 
+set(MACOSX_FILES "")
+if(APPLE)
+    set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/julius.icns)
+endif()
+
 add_executable(julius
     WIN32
     ${PLATFORM_FILES}
@@ -423,6 +428,7 @@ add_executable(julius
     ${WINDOW_FILES}
     ${SMK_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc
+    ${MACOSX_FILES}
 )
 
 find_package(SDL2 REQUIRED)
@@ -430,6 +436,45 @@ find_package(SDL2_mixer REQUIRED)
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+endif()
+
+if(APPLE)
+    # generating a macOS icns file (see https://stackoverflow.com/a/20703594)
+    add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/julius.icns
+        COMMAND mkdir -p julius.iconset
+        COMMAND sips -z 16 16    julius_256.png --out julius.iconset/icon_16x16.png
+        COMMAND sips -z 32 32    julius_256.png --out julius.iconset/icon_16x16@2x.png
+        COMMAND sips -z 32 32    julius_256.png --out julius.iconset/icon_32x32.png
+        COMMAND sips -z 64 64    julius_256.png --out julius.iconset/icon_32x32@2x.png
+        COMMAND sips -z 128 128  julius_256.png --out julius.iconset/icon_128x128.png
+        COMMAND sips -z 256 256  julius_256.png --out julius.iconset/icon_128x128@2x.png
+        COMMAND sips -z 256 256  julius_256.png --out julius.iconset/icon_256x256.png
+        COMMAND iconutil -c icns julius.iconset
+        COMMAND rm -R julius.iconset
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/res)
+    set_source_files_properties(${PROJECT_SOURCE_DIR}/res/julius.icns PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources")
+
+    # setting variables that will populate Info.plist
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.bvschaik.julius")
+    set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OS X deployment version" FORCE)
+    set(MACOSX_BUNDLE_ICON_FILE "julius.icns")
+    set(MACOSX_BUNDLE_BUNDLE_VERSION
+        "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}")
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
+
+    set_target_properties(julius PROPERTIES
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist.in")
+
+    # when installing, "fixup" automatically copies librairies inside the
+    # bundle and links the binary against them
+    install(CODE "
+        include(BundleUtilities)
+        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"\" \"\")
+    ")
 endif()
 
 include_directories(${SDL2_INCLUDE_DIR})

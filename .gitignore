@@ -7,4 +7,5 @@ doc
 .vs
 src/platform/version.h
 res/version.rc
+res/julius.icns
 /CMakeSettings.json
