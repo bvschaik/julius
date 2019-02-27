@@ -92,6 +92,10 @@ set(SMK_FILES
     ext/libsmacker/smk_hufftree.c
 )
 
+set(TINYFD_FILES
+    ext/tinyfiledialogs/tinyfiledialogs.c
+)
+
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
@@ -428,6 +432,7 @@ add_executable(julius
     ${WIDGET_FILES}
     ${WINDOW_FILES}
     ${SMK_FILES}
+	${TINYFD_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc
     ${MACOSX_FILES}
 )
