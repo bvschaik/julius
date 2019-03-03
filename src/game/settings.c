@@ -40,8 +40,8 @@ static struct {
 static void load_default_settings(void)
 {
     data.fullscreen = 1;
-    data.window_width = 960;
-    data.window_height = 544;
+    data.window_width = 800;
+    data.window_height = 600;
 
     data.sound_effects.enabled = 1;
     data.sound_effects.volume = 100;
