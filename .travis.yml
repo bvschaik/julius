@@ -4,7 +4,7 @@ matrix:
   include:
   - os: linux
     compiler: gcc
-    env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4
+    env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4 RUN_CODECOV=1
   - os: linux
     compiler: gcc
     env: SDL_LIB=SDL2-2.0.0 SDL_MIXER_LIB=SDL2_mixer-2.0.0
@@ -57,6 +57,8 @@ script:
   - make
   - make test
 
-# TODO only run this for one of the builds
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - if [ $RUN_CODECOV ];
+    then
+      bash <(curl -s https://codecov.io/bash);
+    fi
