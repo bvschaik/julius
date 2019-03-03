@@ -77,8 +77,9 @@ static int load_smk_video(const char *filename)
     FILE *fp = file_open(filename, "rb");
     data.video.s = smk_open_filepointer(fp, SMK_MODE_DISK);
     if (!data.video.s) {
-        if (fp != NULL)
-            file_close(fp);
+        if (fp != NULL) {
+	        file_close(fp);
+        }
         return 0;
     }
 
@@ -111,8 +112,9 @@ static int load_smk_audio(const char *filename)
     FILE *fp = file_open(filename, "rb");
     data.audio.s = smk_open_filepointer(fp, SMK_MODE_DISK);
     if (!data.audio.s) {
-        if (fp != NULL)
-            file_close(fp);
+        if (fp != NULL) {
+	        file_close(fp);
+        }
         return 0;
     }
 
