@@ -339,10 +339,12 @@ static int pre_init(const char *custom_data_dir)
         return game_pre_init();
     }
 
-    const char *base_path = SDL_GetBasePath();
-    if (base_path) {
-        chdir(base_path);
-        SDL_free((void*) base_path);
+    if (SDL_VERSION_ATLEAST(2, 0, 1)) {
+        const char *base_path = SDL_GetBasePath();
+        if (base_path) {
+            chdir(base_path);
+            SDL_free((void*) base_path);
+        }
     }
 
     SDL_Log("Loading game from working directory");
