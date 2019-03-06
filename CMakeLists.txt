@@ -1,5 +1,23 @@
 cmake_minimum_required(VERSION 2.6)
-project(julius C)
+
+option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF)
+
+if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    if(DEFINED ENV{VITASDK})
+        set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
+    else()
+        message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
+    endif()
+endif()
+
+set(SHORT_NAME julius)
+project(${SHORT_NAME} C)
+
+if (VITA_BUILD)
+    include("${VITASDK}/share/vita.cmake" REQUIRED)
+    set(VITA_TITLEID  "JULIUS001")
+    set(VITA_VERSION "00.10")
+endif()
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -76,12 +94,26 @@ set(SMK_FILES
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
-    ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
-    ${PROJECT_SOURCE_DIR}/src/platform/screen.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
 )
+
+if (VITA_BUILD)
+    set(PLATFORM_FILES
+        ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/cursor.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/input.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
+    )
+else()
+    set(PLATFORM_FILES
+        ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
+        ${PROJECT_SOURCE_DIR}/src/platform/screen.c
+    )
+endif()
 
 set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/buffer.c
@@ -409,10 +441,49 @@ if(MSVC)
     include_directories(ext/dirent)
 endif()
 
-target_link_libraries (julius ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+if (VITA_BUILD)
+    target_link_libraries (${SHORT_NAME}
+        ${SDL2_MIXER_LIBRARY}
+        ${SDL2_LIBRARY}
+        vorbisfile
+        vorbis
+        mikmod
+        modplug
+        mpg123
+        FLAC
+        ogg
+        jpeg
+        png
+        freetype
+        vita2d
+        m
+        z
+        SceAppUtil_stub
+        SceAudio_stub
+        SceCommonDialog_stub
+        SceCtrl_stub
+        SceDisplay_stub
+        SceGxm_stub
+        SceHid_stub
+        SceSysmodule_stub
+        SceTouch_stub
+        ScePower_stub
+    )
 
-install(TARGETS julius RUNTIME DESTINATION bin)
+    vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
+    vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
+        VERSION ${VITA_VERSION}
+        NAME ${SHORT_NAME}
+        FILE res/sce_sys/icon0.png sce_sys/icon0.png
+        FILE res/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
+        FILE res/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
+        FILE res/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
+    )
+else()
+    target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+    install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
 
-# Unit tests
-enable_testing()
-add_subdirectory(test)
+    # Unit tests
+    enable_testing()
+    add_subdirectory(test)
+endif()

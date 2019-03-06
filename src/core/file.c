@@ -1,9 +1,32 @@
 #include "core/file.h"
+#include "platform/vita/vita.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "core/dir.h"
 #include "core/string.h"
+
+
+FILE* file_open(const char *filename, const char *mode) {
+    #ifdef __vita__
+    char *resolved_path = vita_prepend_path(filename);
+    #else
+    const char *resolved_path = filename;
+    #endif
+
+    FILE *fd = fopen(resolved_path, mode);
+
+    #ifdef __vita__
+    free(resolved_path);
+    #endif
+
+    return fd;
+}
+
+int file_close(FILE *stream) {
+    return fclose(stream);
+}
 
 int file_has_extension(const char *filename, const char *extension)
 {

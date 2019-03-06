@@ -51,6 +51,10 @@ SET(SDL2_SEARCH_PATHS
 	/opt
 )
 
+if (VITA)
+    SET(SDL2_SEARCH_PATHS $ENV{VITASDK}/arm-vita-eabi)
+endif()
+
 if(NOT SDL2_MIXER_INCLUDE_DIR AND SDL2MIXER_INCLUDE_DIR)
   set(SDL2_MIXER_INCLUDE_DIR ${SDL2MIXER_INCLUDE_DIR} CACHE PATH "directory cache
 entry initialized from old variable name")

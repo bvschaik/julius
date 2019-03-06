@@ -430,7 +430,7 @@ static void print_game_time(unsigned char *data)
     unsigned int month = to_uint(&data[offset_tick + 8]);
     int year = (int) to_uint(&data[offset_tick + 12]);
     unsigned int total_days = to_uint(&data[offset_tick + 16]);
-    
+
     printf("%d.%u.%u.%u (%u)\n", year, month, day, tick, total_days);
 }
 

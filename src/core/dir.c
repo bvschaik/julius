@@ -2,11 +2,18 @@
 
 #include "core/file.h"
 #include "core/string.h"
+#include "platform/vita/vita.h"
 
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef __vita__
+#define CURRENT_DIR VITA_PATH_PREFIX
+#else
+#define CURRENT_DIR "."
+#endif
 
 static dir_listing listing;
 static int listing_initialized = 0;
@@ -34,7 +41,7 @@ static int compare_lower(const void *va, const void *vb)
 const dir_listing *dir_find_files_with_extension(const char *extension)
 {
     clear_dir_listing();
-    DIR *d = opendir(".");
+    DIR *d = opendir(CURRENT_DIR);
     if (!d) {
         return &listing;
     }
@@ -83,9 +90,9 @@ const char *dir_get_case_corrected_file(const char *filepath)
 {
     static char corrected_filename[2 * FILE_NAME_MAX];
 
-    FILE *fp = fopen(filepath, "rb");
+    FILE *fp = file_open(filepath, "rb");
     if (fp) {
-        fclose(fp);
+        file_close(fp);
         return filepath;
     }
 

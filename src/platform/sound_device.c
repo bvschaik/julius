@@ -1,8 +1,10 @@
+#include "core/file.h"
 #include "core/log.h"
 #include "sound/device.h"
 #include "game/settings.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
+#include "platform/vita/vita.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -63,7 +65,10 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
         Mix_AllocateChannels(num_channels);
         for (int i = 0; i < num_channels; i++) {
             if (filenames[i][0]) {
-                channels[i] = Mix_LoadWAV(filenames[i]);
+                FILE *fp = file_open(filenames[i], "rb");
+                SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
+
+                channels[i] = Mix_LoadWAV_RW(sdl_fp, 1);
             }
         }
     }
@@ -102,10 +107,21 @@ void sound_device_play_music(const char *filename)
 {
     if (initialized) {
         sound_device_stop_music();
-        music = Mix_LoadMUS(filename);
+
+        #ifdef __vita__
+        char *resolved_filename = vita_prepend_path(filename); // There is no Mix_LoadMUS equivalent for fp
+        #else
+        const char *resolved_filename = filename;
+        #endif
+
+        music = Mix_LoadMUS(resolved_filename);
         if (music) {
             Mix_PlayMusic(music, -1);
         }
+
+        #ifdef __vita__
+        free(resolved_filename);
+        #endif
     }
 }
 
@@ -115,7 +131,11 @@ void sound_device_play_file_on_channel(const char *filename, int channel)
         if (channels[channel]) {
             sound_device_stop_channel(channel);
         }
-        channels[channel] = Mix_LoadWAV(filename);
+
+        FILE *fp = file_open(filename, "rb");
+        SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
+
+        channels[channel] = Mix_LoadWAV_RW(sdl_fp, 1);
         if (channels[channel]) {
             Mix_PlayChannel(channel, channels[channel], 0);
         }
@@ -160,13 +180,13 @@ static int next_audio_frame(void)
         free(custom_music.data);
         custom_music.data = 0;
     }
-    
+
     int audio_len;
     const unsigned char *data = custom_music.callback(&audio_len);
     if (!data || audio_len <= 0) {
         return 0;
     }
-    
+
     if (audio_len > 0) {
         // convert audio to SDL format
         custom_music.cvt.buf = (Uint8*) malloc(audio_len * custom_music.cvt.len_mult);

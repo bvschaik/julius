@@ -4,6 +4,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#ifdef __vita__
+#include <vita2d.h>
+#endif
 
 static struct {
     color_t *pixels;
@@ -25,10 +28,18 @@ static struct {
 
 static clip_info clip;
 
+#ifdef __vita__
+extern vita2d_texture *tex_buffer;
+#endif
+
 void graphics_init_canvas(int width, int height)
 {
+#ifdef __vita__
+    canvas.pixels = vita2d_texture_get_datap(tex_buffer);
+#else
     free(canvas.pixels);
     canvas.pixels = (color_t *) malloc(width * height * sizeof(color_t));
+#endif
     memset(canvas.pixels, 0, width * height * sizeof(color_t));
     canvas.width = width;
     canvas.height = height;

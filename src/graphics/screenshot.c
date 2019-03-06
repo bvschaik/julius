@@ -1,6 +1,7 @@
 #include "screenshot.h"
 
 #include "core/buffer.h"
+#include "core/file.h"
 #include "core/log.h"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
@@ -68,7 +69,7 @@ void graphics_save_screenshot(void)
     memset(pixels, 0, scanline_size);
 
     const char *filename = generate_filename();
-    FILE *fp = fopen(filename, "wb");
+    FILE *fp = file_open(filename, "wb");
     if (!fp) {
         log_error("Unable to write screenshot to:", filename, 0);
         free(pixels);
@@ -84,7 +85,7 @@ void graphics_save_screenshot(void)
         }
         fwrite(pixels, 1, scanline_size, fp);
     }
-    fclose(fp);
+    file_close(fp);
     free(pixels);
 
     log_info("Saved screenshot:", filename, 0);

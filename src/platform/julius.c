@@ -1,5 +1,7 @@
 #include "SDL.h"
 
+#include "core/dir.h"
+#include "core/file.h"
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/game.h"
@@ -7,6 +9,8 @@
 #include "platform/keyboard_input.h"
 #include "platform/screen.h"
 #include "platform/version.h"
+#include "platform/vita/vita.h"
+#include "input/hotkey.h"
 
 #include <signal.h>
 #include <stdio.h>
@@ -16,7 +20,7 @@
 #include <string.h>
 #endif
 
-#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__)
 #include <execinfo.h>
 #endif
 
@@ -24,7 +28,7 @@
 #include <direct.h>
 #define chdir _chdir
 #define getcwd _getcwd
-#else
+#elif !defined(__vita__)
 #include <unistd.h>
 #endif
 
@@ -32,6 +36,11 @@
 #include "graphics/window.h"
 #include "graphics/graphics.h"
 #include "graphics/text.h"
+#endif
+
+#ifdef __vita__
+#include <vita2d.h>
+#include <vitasdk.h>
 #endif
 
 #define INTPTR(d) (*(int*)(d))
@@ -45,13 +54,13 @@ enum {
 };
 
 static void handler(int sig) {
-#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__)
     void *array[100];
     size_t size;
-    
+
     // get void*'s for all entries on the stack
     size = backtrace(array, 100);
-    
+
     // print out all the frames to stderr
     fprintf(stderr, "Error: signal %d:\n", sig);
     backtrace_symbols_fd(array, size, STDERR_FILENO);
@@ -61,7 +70,7 @@ static void handler(int sig) {
     exit(1);
 }
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__vita__)
 /* Log to separate file on windows, since we don't have a console there */
 static FILE *log_file = 0;
 
@@ -81,14 +90,14 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
 
 static void setup_logging(void)
 {
-    log_file = fopen("julius-log.txt", "w");
+    log_file = file_open("julius-log.txt", "w");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
 
 static void teardown_logging(void)
 {
     if (log_file) {
-        fclose(log_file);
+        file_close(log_file);
     }
 }
 
@@ -235,7 +244,6 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
         case SDL_TEXTINPUT:
             platform_handle_text(&event->text);
             break;
-
         case SDL_MOUSEMOTION:
             mouse_set_position(event->motion.x, event->motion.y);
             break;
@@ -272,24 +280,32 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
     }
 }
 
+void vita_handle_input();
+
 static void main_loop(void)
 {
-    SDL_Event event;
     mouse_set_inside_window(1);
-    
+
     run_and_draw();
     int active = 1;
     int quit = 0;
     while (!quit) {
+#ifdef __vita__
+        vita_handle_input();
+#else
+        SDL_Event event;
         /* Process event queue */
         while (SDL_PollEvent(&event)) {
             handle_event(&event, &active, &quit);
         }
+#endif
         if (!quit) {
             if (active) {
                 run_and_draw();
             } else {
+#ifndef __vita__
                 SDL_WaitEvent(NULL);
+#endif
             }
         }
     }
@@ -298,7 +314,13 @@ static void main_loop(void)
 static int init_sdl(void)
 {
     SDL_Log("Initializing SDL");
-    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
+    Uint32 SDL_flags = SDL_INIT_AUDIO;
+
+#ifndef __vita__
+    SDL_flags |= SDL_INIT_VIDEO;
+#endif
+
+    if (SDL_Init(SDL_flags) != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }
@@ -341,6 +363,17 @@ static void setup(const char *custom_data_dir)
         SDL_Log("Exiting: SDL init failed");
         exit(-1);
     }
+#ifdef __vita__
+    if (!vita2d_init()) {
+	    SDL_Log("Exiting: vita2d init failed");
+	    exit(-1);
+    }
+    
+    // Black
+    vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
+    sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
+    sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
+#endif
 
     if (!pre_init(custom_data_dir)) {
         SDL_Log("Exiting: game pre-init failed");
@@ -369,7 +402,11 @@ static void teardown(void)
 
 int main(int argc, char **argv)
 {
+    #ifdef __vita__
+    const char *custom_data_dir = NULL;
+    #else
     const char *custom_data_dir = (argc > 1 && argv[1]) ? argv[1] : NULL;
+    #endif
     setup(custom_data_dir);
 
     main_loop();

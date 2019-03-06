@@ -265,7 +265,7 @@ int image_load_climate(int climate_id)
     read_header(&buf);
     buffer_init(&buf, &data.tmp_data[HEADER_SIZE], ENTRY_SIZE * MAIN_ENTRIES);
     read_index(&buf, data.main, MAIN_ENTRIES);
-    
+
     int data_size = io_read_file_into_buffer(filename_bmp, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
