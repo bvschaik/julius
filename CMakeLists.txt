@@ -469,12 +469,20 @@ if(APPLE)
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist.in")
 
+    set(DIRS "")
+
+    # if SDL2_mixer library is a framework, we need to indicate to CMake
+    # the path to its dependencies (Ogg.framework etc):
+    if(EXISTS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
+        set(DIRS "${DIRS};${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
+    endif()
+
     # when installing, "fixup" automatically copies librairies inside the
     # bundle and links the binary against them
     install(CODE "
         include(BundleUtilities)
-        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"\" \"\")
-    ")
+        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"\" \"${DIRS}\")
+    " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
 include_directories(${SDL2_INCLUDE_DIR})
@@ -526,7 +534,9 @@ if (VITA_BUILD)
     )
 else()
     target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
-    install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
+    if(NOT APPLE)
+        install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
+    endif()
 
     # Unit tests
     enable_testing()
