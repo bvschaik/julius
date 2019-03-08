@@ -6,6 +6,7 @@
 #include "core/direction.h"
 #include "core/image.h"
 #include "map/aqueduct.h"
+#include "map/bridge.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -282,6 +283,45 @@ int map_building_tiles_mark_construction(int x, int y, int size, int terrain, in
         }
     }
     return 1;
+}
+
+static void mark_area_as_deleting(int x, int y, int size)
+{
+    for (int dy = 0; dy < size; ++dy) {
+        for (int dx = 0; dx < size; ++dx) {
+            map_property_mark_deleted(map_grid_offset(x + dx, y + dy));
+        }
+    }
+}
+
+void map_building_tiles_mark_deleting(int grid_offset)
+{
+    map_bridge_remove(grid_offset, 1);
+    if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        map_property_mark_deleted(grid_offset);
+        return;
+    }
+    int building_id = map_building_at(grid_offset);
+    if (building_id) {
+        building *b = building_get(building_id);
+        building *space = b;
+        for (int i = 0; i < 9; i++) {
+            if (space->prev_part_building_id <= 0) {
+                break;
+            }
+            space = building_get(space->prev_part_building_id);
+            mark_area_as_deleting(space->x, space->y, space->size);
+        }
+        space = b;
+        for (int i = 0; i < 9; i++) {
+            space = building_next(space);
+            if (space->id <= 0) {
+                break;
+            }
+            mark_area_as_deleting(space->x, space->y, space->size);
+        }
+        mark_area_as_deleting(b->x, b->y, (building_is_farm(b->type)) ? 3 : b->size);
+    }
 }
 
 int map_building_tiles_are_clear(int x, int y, int size, int terrain)

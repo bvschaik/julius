@@ -308,10 +308,8 @@ int map_bridge_count_figures(int grid_offset)
     if (map_has_figure_at(grid_offset)) {
         figures = 1;
     }
-    map_property_clear_deleted(grid_offset);
     while (map_is_bridge(grid_offset + offset_up)) {
         grid_offset += offset_up;
-        map_property_clear_deleted(grid_offset);
         if (map_has_figure_at(grid_offset)) {
             figures++;
         }
