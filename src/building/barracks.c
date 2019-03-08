@@ -12,6 +12,8 @@
 #include "map/grid.h"
 #include "map/road_access.h"
 
+#define INFINITE 10000
+
 static int tower_sentry_request = 0;
 
 int building_get_barracks_for_weapon(int resource, int road_network_id, map_point *dst)
@@ -45,7 +47,7 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
 {
     int recruit_type = LEGION_RECRUIT_NONE;
     int min_formation_id = 0;
-    int min_distance = 10000;
+    int min_distance = INFINITE;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (!m->in_use || !m->is_legion) {
@@ -72,7 +74,7 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
 static int get_closest_military_academy(const building *fort)
 {
     int min_building_id = 0;
-    int min_distance = 10000;
+    int min_distance = INFINITE;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MILITARY_ACADEMY &&

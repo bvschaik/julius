@@ -10,6 +10,7 @@
 
 #define MAX_PROGRESS_RAW 200
 #define MAX_PROGRESS_WORKSHOP 400
+#define INFINITE 10000
 
 int building_is_farm(building_type type)
 {
@@ -124,7 +125,7 @@ void building_bless_farms(void)
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->output_resource_id && building_is_farm(b->type)) {
-            b->data.industry.progress = 200;
+            b->data.industry.progress = MAX_PROGRESS_RAW;
             b->data.industry.curse_days_left = 0;
             b->data.industry.blessing_days_left = 16;
             update_farm_image(b);
@@ -161,7 +162,7 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
     if (output_type == WORKSHOP_NONE) {
         return 0;
     }
-    int min_dist = 10000;
+    int min_dist = INFINITE;
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -198,7 +199,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int dista
     if (output_type == WORKSHOP_NONE) {
         return 0;
     }
-    int min_dist = 10000;
+    int min_dist = INFINITE;
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);

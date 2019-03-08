@@ -92,7 +92,7 @@ building *building_create(building_type type, int x, int y)
     
     // subtype
     if (building_is_house(type)) {
-        b->subtype.house_level = type - 10;
+        b->subtype.house_level = type - BUILDING_HOUSE_VACANT_LOT;
     } else {
         b->subtype.house_level = 0;
     }

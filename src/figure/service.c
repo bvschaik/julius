@@ -7,6 +7,8 @@
 #include "map/building.h"
 #include "map/grid.h"
 
+#define MAX_COVERAGE 96
+
 static int provide_culture(int x, int y, void (*callback)(building *))
 {
     int serviced = 0;
@@ -55,88 +57,88 @@ static void labor_seeker_coverage(building *b)
 
 static void theater_coverage(building *b)
 {
-    b->data.house.theater = 96;
+    b->data.house.theater = MAX_COVERAGE;
 }
 
 static void amphitheater_coverage(building *b, int shows)
 {
-    b->data.house.amphitheater_actor = 96;
+    b->data.house.amphitheater_actor = MAX_COVERAGE;
     if (shows == 2) {
-        b->data.house.amphitheater_gladiator = 96;
+        b->data.house.amphitheater_gladiator = MAX_COVERAGE;
     }
 }
 
 static void colosseum_coverage(building *b, int shows)
 {
-    b->data.house.colosseum_gladiator = 96;
+    b->data.house.colosseum_gladiator = MAX_COVERAGE;
     if (shows == 2) {
-        b->data.house.colosseum_lion = 96;
+        b->data.house.colosseum_lion = MAX_COVERAGE;
     }
 }
 
 static void hippodrome_coverage(building *b)
 {
-    b->data.house.hippodrome = 96;
+    b->data.house.hippodrome = MAX_COVERAGE;
 }
 
 static void bathhouse_coverage(building *b)
 {
-    b->data.house.bathhouse = 96;
+    b->data.house.bathhouse = MAX_COVERAGE;
 }
 
 static void religion_coverage_ceres(building *b)
 {
-    b->data.house.temple_ceres = 96;
+    b->data.house.temple_ceres = MAX_COVERAGE;
 }
 
 static void religion_coverage_neptune(building *b)
 {
-    b->data.house.temple_neptune = 96;
+    b->data.house.temple_neptune = MAX_COVERAGE;
 }
 
 static void religion_coverage_mercury(building *b)
 {
-    b->data.house.temple_mercury = 96;
+    b->data.house.temple_mercury = MAX_COVERAGE;
 }
 
 static void religion_coverage_mars(building *b)
 {
-    b->data.house.temple_mars = 96;
+    b->data.house.temple_mars = MAX_COVERAGE;
 }
 
 static void religion_coverage_venus(building *b)
 {
-    b->data.house.temple_venus = 96;
+    b->data.house.temple_venus = MAX_COVERAGE;
 }
 
 static void school_coverage(building *b)
 {
-    b->data.house.school = 96;
+    b->data.house.school = MAX_COVERAGE;
 }
 
 static void academy_coverage(building *b)
 {
-    b->data.house.academy = 96;
+    b->data.house.academy = MAX_COVERAGE;
 }
 
 static void library_coverage(building *b)
 {
-    b->data.house.library = 96;
+    b->data.house.library = MAX_COVERAGE;
 }
 
 static void barber_coverage(building *b)
 {
-    b->data.house.barber = 96;
+    b->data.house.barber = MAX_COVERAGE;
 }
 
 static void clinic_coverage(building *b)
 {
-    b->data.house.clinic = 96;
+    b->data.house.clinic = MAX_COVERAGE;
 }
 
 static void hospital_coverage(building *b)
 {
-    b->data.house.hospital = 96;
+    b->data.house.hospital = MAX_COVERAGE;
 }
 
 static int provide_missionary_coverage(int x, int y)

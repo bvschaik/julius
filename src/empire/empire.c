@@ -17,7 +17,8 @@ enum {
     EMPIRE_WIDTH = 2000,
     EMPIRE_HEIGHT = 1000,
     EMPIRE_HEADER_SIZE = 1280,
-    EMPIRE_DATA_SIZE = 12800
+    EMPIRE_DATA_SIZE = 12800,
+    SCROLL_AMOUNT = 20
 };
 
 static struct {
@@ -94,32 +95,32 @@ void empire_scroll_map(int direction)
     }
     switch (direction) {
         case DIR_0_TOP:
-            data.scroll_y -= 20;
+            data.scroll_y -= SCROLL_AMOUNT;
             break;
         case DIR_1_TOP_RIGHT:
-            data.scroll_x += 20;
-            data.scroll_y -= 20;
+            data.scroll_x += SCROLL_AMOUNT;
+            data.scroll_y -= SCROLL_AMOUNT;
             break;
         case DIR_2_RIGHT:
-            data.scroll_x += 20;
+            data.scroll_x += SCROLL_AMOUNT;
             break;
         case DIR_3_BOTTOM_RIGHT:
-            data.scroll_x += 20;
-            data.scroll_y += 20;
+            data.scroll_x += SCROLL_AMOUNT;
+            data.scroll_y += SCROLL_AMOUNT;
             break;
         case DIR_4_BOTTOM:
-            data.scroll_y += 20;
+            data.scroll_y += SCROLL_AMOUNT;
             break;
         case DIR_5_BOTTOM_LEFT:
-            data.scroll_x -= 20;
-            data.scroll_y += 20;
+            data.scroll_x -= SCROLL_AMOUNT;
+            data.scroll_y += SCROLL_AMOUNT;
             break;
         case DIR_6_LEFT:
-            data.scroll_x -= 20;
+            data.scroll_x -= SCROLL_AMOUNT;
             break;
         case DIR_7_TOP_LEFT:
-            data.scroll_x -= 20;
-            data.scroll_y -= 20;
+            data.scroll_x -= SCROLL_AMOUNT;
+            data.scroll_y -= SCROLL_AMOUNT;
             break;
     }
     check_scroll_boundaries();
