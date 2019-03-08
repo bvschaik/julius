@@ -14,51 +14,30 @@ matrix:
   - os: osx
     compiler: clang
     env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4
+  - os: linux
+    name: PS Vita
+    env: VITA_BUILD=true
+    services:
+      - docker
 
-install: true
-
+install:
+  - ./.ci_scripts/docker.sh
 cache:
   directories:
   - $SDL_LIB
   - $SDL_MIXER_LIB
 
 before_install:
-- function install_sdl_lib {
-    if [ -d $1/build ];
-    then
-      cp -r $1 $1-final;
-      cd $1-final/build;
-    else
-      if [[ $1 == SDL2-* ]];
-      then
-        SDL_LIB_URL=https://www.libsdl.org/release/$1.tar.gz;
-      else
-        SDL_LIB_URL=${1#*_};
-        SDL_LIB_URL=${SDL_LIB_URL%-*};
-        SDL_LIB_URL=https://www.libsdl.org/projects/SDL_$SDL_LIB_URL/release/$1.tar.gz;
-      fi;
-      travis_retry curl -L $SDL_LIB_URL | tar xz;
-      cd $1;
-      mkdir build;
-      cd build;
-      ../configure;
-    fi;
-    make;
-    sudo make install;
-    cd ../..;
-  }
-- install_sdl_lib $SDL_LIB
-- install_sdl_lib $SDL_MIXER_LIB
+  - ./.ci_scripts/setup.sh
 
 before_script:
-  - mkdir build && cd build && cmake ..
+  - ./.ci_scripts/setup_dir.sh
 
 script:
-  - make
-  - make test
+  - ./.ci_scripts/run.sh
 
 after_success:
   - if [ $RUN_CODECOV ];
     then
       bash <(curl -s https://codecov.io/bash);
-    fi
+    fi;
