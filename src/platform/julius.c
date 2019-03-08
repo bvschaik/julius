@@ -338,6 +338,15 @@ static int pre_init(const char *custom_data_dir)
         }
         return game_pre_init();
     }
+
+    #if SDL_VERSION_ATLEAST(2, 0, 1)
+        const char *base_path = SDL_GetBasePath();
+        if (base_path) {
+            chdir(base_path);
+            SDL_free((void*) base_path);
+        }
+    #endif
+
     SDL_Log("Loading game from working directory");
     if (game_pre_init()) {
         return 1;
@@ -349,6 +358,7 @@ static int pre_init(const char *custom_data_dir)
     SDL_Log("Julius requires the original files from Caesar 3 to run.");
     SDL_Log("Move the Julius executable to the directory containing an existing Caesar 3 installation, or run:");
     SDL_Log("julius path-to-c3-directory");
+
     return 0;
 }
 
@@ -368,7 +378,7 @@ static void setup(const char *custom_data_dir)
 	    SDL_Log("Exiting: vita2d init failed");
 	    exit(-1);
     }
-    
+
     // Black
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
@@ -402,11 +412,19 @@ static void teardown(void)
 
 int main(int argc, char **argv)
 {
-    #ifdef __vita__
     const char *custom_data_dir = NULL;
-    #else
-    const char *custom_data_dir = (argc > 1 && argv[1]) ? argv[1] : NULL;
-    #endif
+    for (int i = 1; i < argc; i++) {
+        // we ignore "-psn" arguments, this is needed to launch the app
+        // from the Finder on macOS.
+        // https://hg.libsdl.org/SDL/file/c005c49beaa9/test/testdropfile.c#l47
+        if (SDL_strncmp(argv[i], "-psn", 4) == 0) {
+            continue;
+        }
+
+        custom_data_dir = argv[i];
+        break;
+    }
+
     setup(custom_data_dir);
 
     main_loop();
