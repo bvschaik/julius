@@ -1,5 +1,5 @@
 .kdev4
-build*
+/build*
 cmake-build-debug
 /data
 doc
