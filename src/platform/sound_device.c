@@ -65,10 +65,14 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
         Mix_AllocateChannels(num_channels);
         for (int i = 0; i < num_channels; i++) {
             if (filenames[i][0]) {
+#ifdef __vita__
                 FILE *fp = file_open(filenames[i], "rb");
                 SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
 
                 channels[i] = Mix_LoadWAV_RW(sdl_fp, 1);
+#else
+                channels[i] = Mix_LoadWAV(filenames[i]);
+#endif
             }
         }
     }
@@ -131,11 +135,14 @@ void sound_device_play_file_on_channel(const char *filename, int channel)
         if (channels[channel]) {
             sound_device_stop_channel(channel);
         }
-
+#ifdef __vita__
         FILE *fp = file_open(filename, "rb");
         SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
 
         channels[channel] = Mix_LoadWAV_RW(sdl_fp, 1);
+#else
+        channels[channel] = Mix_LoadWAV(filename);
+#endif
         if (channels[channel]) {
             Mix_PlayChannel(channel, channels[channel], 0);
         }
