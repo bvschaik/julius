@@ -137,7 +137,7 @@ static void build_start(const map_tile *tile)
 
 static void build_move(const map_tile *tile)
 {
-    if (!building_construction_in_progress() || !tile->grid_offset) {
+    if (!building_construction_in_progress()) {
         return;
     }
     building_construction_update(tile->x, tile->y, tile->grid_offset);

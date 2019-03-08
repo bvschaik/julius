@@ -508,9 +508,15 @@ void building_construction_start(int x, int y, int grid_offset)
 void building_construction_update(int x, int y, int grid_offset)
 {
     building_type type = data.type;
-    data.end.x = x;
-    data.end.y = y;
-    data.end.grid_offset = grid_offset;
+    if (grid_offset) {
+        data.end.x = x;
+        data.end.y = y;
+        data.end.grid_offset = grid_offset;
+    } else {
+        x = data.end.x;
+        y = data.end.y;
+        grid_offset = data.end.grid_offset;
+    }
     if (!type || city_finance_out_of_money()) {
         data.cost = 0;
         return;

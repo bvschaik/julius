@@ -12,6 +12,7 @@
 #include "input/scroll.h"
 #include "map/bridge.h"
 #include "map/building.h"
+#include "map/building_tiles.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/image_context.h"
@@ -70,34 +71,6 @@ static const int FORT_GROUND_Y_VIEW_OFFSETS[4] = {30, -75, -60, 45};
 
 static const int HIPPODROME_X_VIEW_OFFSETS[4] = {150, 150, -150, -150};
 static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
-
-static int deleting_grid_offset = 0;
-
-static void clear_deleting(void)
-{
-    if (deleting_grid_offset) {
-        map_property_clear_deleted(deleting_grid_offset);
-        deleting_grid_offset = 0;
-    }
-}
-
-void city_building_ghost_mark_deleting(const map_tile *tile)
-{
-    clear_deleting();
-    if (!tile->grid_offset || scroll_in_progress()) {
-        return;
-    }
-    building_type type = building_construction_type();
-    if (type != BUILDING_CLEAR_LAND) {
-        return;
-    }
-
-    building *b = building_main(building_get(map_building_at(tile->grid_offset)));
-    if (b) {
-        map_property_mark_deleted(b->grid_offset);
-        deleting_grid_offset = b->grid_offset;
-    }
-}
 
 static void draw_flat_tile(int x, int y, color_t color_mask)
 {
@@ -265,10 +238,6 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
 {
     // update road required based on timer
     building_construction_update_road_orientation();
-    if (type == BUILDING_CLEAR_LAND && !deleting_grid_offset) {
-        draw_partially_blocked(x_view, y_view, 1, 1, 0);
-        return;
-    }
 
     const building_properties *props = building_properties_for_type(type);
     int building_size = type == BUILDING_WAREHOUSE ? 3 : props->size;
@@ -677,13 +646,24 @@ static void draw_road(const map_tile *tile, int x, int y)
     }
 }
 
+int city_building_ghost_mark_deleting(const map_tile *tile)
+{
+    int construction_type = building_construction_type();
+    if (!tile->grid_offset || building_construction_draw_as_constructing() ||
+        scroll_in_progress() || construction_type != BUILDING_CLEAR_LAND) {
+        return (construction_type == BUILDING_CLEAR_LAND);
+    }
+    map_building_tiles_mark_deleting(tile->grid_offset);
+    return 1;
+}
+
 void city_building_ghost_draw(const map_tile *tile)
 {
     if (!tile->grid_offset || scroll_in_progress()) {
         return;
     }
     building_type type = building_construction_type();
-    if (building_construction_draw_as_constructing() || type == BUILDING_NONE) {
+    if (building_construction_draw_as_constructing() || type == BUILDING_NONE || type == BUILDING_CLEAR_LAND) {
         return;
     }
     int x, y;
