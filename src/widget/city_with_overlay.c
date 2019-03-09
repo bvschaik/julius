@@ -460,6 +460,7 @@ void city_with_overlay_draw(const map_tile *tile)
         return;
     }
 
+    city_building_ghost_mark_deleting(tile);
     city_view_foreach_map_tile(draw_footprint);
     city_view_foreach_valid_map_tile(
         draw_figures,
