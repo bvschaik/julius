@@ -1,6 +1,7 @@
 language: c
 
 matrix:
+  # Note: If you add a build here or change the order, you need to update the CI badges in README.md as well!
   include:
   - os: linux
     compiler: gcc
