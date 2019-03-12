@@ -365,6 +365,12 @@ static int pre_init(const char *custom_data_dir)
     SDL_Log("Move the Julius executable to the directory containing an existing Caesar 3 installation, or run:");
     SDL_Log("julius path-to-c3-directory");
 
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+        "Julius requires the original files from Caesar 3 to run",
+        "Move the Julius executable to the directory containing an existing "
+        "Caesar 3 installation, or run: julius path-to-c3-directory",
+        NULL);
+
     return 0;
 }
 
