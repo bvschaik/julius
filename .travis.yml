@@ -20,6 +20,17 @@ matrix:
     env: VITA_BUILD=true
     services:
       - docker
+    before_deploy:
+      - bash ./.ci_scripts/bintray_conf.sh
+    deploy:
+      provider: bintray
+      on:
+        all_branches: true
+      file: bintray-vita.json
+      user: bvschaik
+      skip-cleanup: true
+      key:
+        secure: false # Fill in here your Bintray encrypted API key!
 
 install:
   - ./.ci_scripts/docker.sh
