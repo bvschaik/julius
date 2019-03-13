@@ -189,13 +189,13 @@ int video_is_finished(void)
 void video_stop(void)
 {
     if (data.is_playing) {
+        if (!data.is_ended) {
+            end_video();
+        }
         if (data.video.s) {
             close_all();
         }
         data.is_playing = 0;
-        if (!data.is_ended) {
-            end_video();
-        }
     }
 }
 

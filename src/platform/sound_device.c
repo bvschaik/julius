@@ -265,11 +265,11 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
 
 void sound_device_use_default_music_player(void)
 {
+    Mix_HookMusic(0, 0);
     if (custom_music.data) {
         free(custom_music.data);
         custom_music.data = 0;
         custom_music.len = 0;
         custom_music.cur = 0;
     }
-    Mix_HookMusic(0, 0);
 }
