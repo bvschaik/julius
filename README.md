@@ -1,8 +1,11 @@
 # Julius ![](res/julius_48.png)
 
-Windows: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) \
-Linux/macOS: [![Travis Build Status](https://travis-ci.org/bvschaik/julius.svg?branch=master)](https://travis-ci.org/bvschaik/julius) \
 Chat: [![Gitter](https://badges.gitter.im/julius-game/community.svg)](https://gitter.im/julius-game/community)
+
+|             | Windows | Linux | Mac | PS Vita |
+|-------------|---------|-------------|-------------|-------------|
+| **Status**  | [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/1)](https://travis-ci.org/bvschaik/julius) | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/4)](https://travis-ci.org/bvschaik/julius) | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/5)](https://travis-ci.org/bvschaik/julius) |
+| **Download** | [![Latest unstable](https://img.shields.io/badge/latest_unstable-gray.svg?logo=appveyor&logoColor=silver)](https://ci.appveyor.com/api/projects/bvschaik/julius/artifacts/julius.zip?branch=master&job=Environment%3A%20APPVEYOR_BUILD_WORKER_IMAGE%3DVisual%20Studio%202015%2C%20COMPILER%3Dmingw%2C%20CMAKE_BUILD_TYPE%3DRelease%2C%20PLATFORMTOOLSET%3Dv140) | Not available | Not available | Not available |
 
 Julius is an open source re-implementation of Caesar III.
 
