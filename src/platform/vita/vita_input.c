@@ -1,4 +1,5 @@
 #include "vita_input.h"
+#include "vita_touch.h"
 #include "vita.h"
 #include <math.h>
 
@@ -21,8 +22,9 @@ enum {
     VITA_NUM_BUTTONS    = 12
 };
 
-static int last_mouse_x = 0;
-static int last_mouse_y = 0;
+int last_mouse_x = 0;
+int last_mouse_y = 0;
+int touch_mode = TOUCH_MODE_TOUCHPAD;
 
 static SDL_Joystick *joy = NULL;
 
@@ -73,9 +75,12 @@ int vita_poll_event(SDL_Event *event)
 {
     int ret = SDL_PollEvent(event);
     if (event != NULL) {
+        if (touch_mode != TOUCH_MODE_ORIGINAL) {
+            vita_handle_touch(event);
+        }
         switch (event->type) {
             case SDL_MOUSEMOTION:
-                // update coordinates to be used by joystick mouse
+                // update joystick / touch mouse coords
                 last_mouse_x = event->motion.x;
                 last_mouse_y = event->motion.y;
                 break;
@@ -100,6 +105,10 @@ int vita_poll_event(SDL_Event *event)
                         break;
                     case VITA_PAD_START:
                         vkbd_requested = 1;
+                        break;
+                    case VITA_PAD_SELECT:
+                        touch_mode++;
+                        touch_mode %= NUM_TOUCH_MODES;
                         break;
                     default:
                         break;

@@ -26,6 +26,7 @@
 
 #ifdef __vita__
 #include "platform/vita/vita_input.h"
+#include "platform/vita/vita_touch.h"
 #endif
 
 #if defined(_WIN32)
@@ -305,6 +306,7 @@ static void main_loop(void)
         SDL_Event event;
         /* Process event queue */
 #ifdef __vita__
+        vita_finish_simulated_mouse_clicks();
         vita_handle_analog_sticks();
         vita_handle_virtual_keyboard();
         vita_handle_repeat_keys();
