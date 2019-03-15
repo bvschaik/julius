@@ -1,7 +1,12 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.0.2)
+include(CMakeDependentOption)
+
+if(VITA_BUILD AND SWITCH_BUILD)
+    message(FATAL_ERROR "Cannot build with -DVITA_BUILD=ON and -DSWITCH_BUILD=ON at the same time")
+endif()
 
 option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF)
-option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF)
+cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT VITA_BUILD" OFF)
 
 if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
@@ -26,11 +31,6 @@ project(${SHORT_NAME} C)
 if (VITA_BUILD)
     include("${VITASDK}/share/vita.cmake" REQUIRED)
     set(VITA_TITLEID  "JULIUS001")
-    set(VITA_VERSION "00.10")
-endif()
-
-if (SWITCH_BUILD)
-    set(SWITCH_VERSION "1.02")
 endif()
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
@@ -91,6 +91,14 @@ elseif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
 else()
   set(PROJECT_VERSION_TWEAK 0)
   set(VERSION_REVISION " unknown development version")
+endif()
+
+if (VITA_BUILD)
+    set(VITA_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}")
+endif()
+
+if (SWITCH_BUILD)
+    set(SWITCH_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}")
 endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
@@ -559,7 +567,7 @@ if (VITA_BUILD)
 
     vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
     vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
-        VERSION ${VITA_VERSION}
+        VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}"
         NAME ${SHORT_NAME}
         FILE res/sce_sys/icon0.png sce_sys/icon0.png
         FILE res/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
@@ -567,28 +575,7 @@ if (VITA_BUILD)
         FILE res/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
     )
 elseif(SWITCH_BUILD)
-    add_executable(${SHORT_NAME}.elf
-        WIN32
-        ${PLATFORM_FILES}
-        ${CORE_FILES}
-        ${BUILDING_FILES}
-        ${CITY_FILES}
-        ${EMPIRE_FILES}
-        ${FIGURE_FILES}
-        ${FIGURETYPE_FILES}
-        ${GAME_FILES}
-        ${INPUT_FILES}
-        ${MAP_FILES}
-        ${SCENARIO_FILES}
-        ${GRAPHICS_FILES}
-        ${SOUND_FILES}
-        ${WIDGET_FILES}
-        ${WINDOW_FILES}
-        ${SMK_FILES}
-        ${PROJECT_SOURCE_DIR}/res/julius.rc
-    )
-
-    target_link_libraries (${SHORT_NAME}.elf
+    target_link_libraries (${SHORT_NAME}
         SDL2_mixer
         SDL2
         EGL
@@ -635,20 +622,18 @@ elseif(SWITCH_BUILD)
 
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FLAGS_GENERAL} --verbose")
 
-    target_compile_options(${SHORT_NAME}.elf PRIVATE ${FLAGS})
-    add_custom_target(${SHORT_NAME}.nro
-        DEPENDS ${SHORT_NAME}.elf
-        COMMAND ${DEVKITPRO}/tools/bin/nacptool --create "${SHORT_NAME}" "rsn8887" "${SWITCH_VERSION}" ${SHORT_NAME}.nacp
-        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME}.elf ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switchdata/icon0.jpg --nacp=${SHORT_NAME}.nacp
-    )
-    add_custom_target(${SHORT_NAME}_switch.zip
-        DEPENDS ${SHORT_NAME}.nro
-        COMMAND rm -rf ${CMAKE_BINARY_DIR}/release/${SHORT_NAME}
-        COMMAND mkdir -p ${CMAKE_BINARY_DIR}/release/${SHORT_NAME}
-        COMMAND cp -f ${CMAKE_BINARY_DIR}/${SHORT_NAME}.nro ${CMAKE_BINARY_DIR}/release/${SHORT_NAME}/${SHORT_NAME}.nro
-        COMMAND cd ${CMAKE_BINARY_DIR}/release && zip -r ../${SHORT_NAME}_${SWITCH_VERSION}_switch.zip ${SHORT_NAME} && cd ${CMAKE_BINARY_DIR}
-        COMMAND zip -d ${SHORT_NAME}_${SWITCH_VERSION}_switch.zip *.DS_Store
-        COMMAND zip -d ${SHORT_NAME}_${SWITCH_VERSION}_switch.zip *__MAC*
+    set(SWITCH_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}")
+
+    target_compile_options(${SHORT_NAME} PRIVATE ${FLAGS})
+    add_custom_command(TARGET ${SHORT_NAME}
+        POST_BUILD
+        COMMAND ${DEVKITPRO}/tools/bin/nacptool --create "${SHORT_NAME}" "rsn8887" ${SWITCH_VERSION} ${SHORT_NAME}.nacp
+        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switchdata/icon0.jpg --nacp=${SHORT_NAME}.nacp
+        COMMAND rm -rf release/${SHORT_NAME}
+        COMMAND mkdir -p release/${SHORT_NAME}
+        COMMAND cp -f ${SHORT_NAME}.nro release/${SHORT_NAME}/${SHORT_NAME}.nro
+        COMMAND cd release && zip -r ../${SHORT_NAME}_${SWITCH_VERSION}_switch.zip ${SHORT_NAME} -x "*.DS_Store" -x "*__MAC*"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
 else()
     target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
