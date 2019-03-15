@@ -57,48 +57,66 @@ set(PROJECT_VERSION_PATCH 0)
 set(IS_RELEASE_VERSION FALSE)
 
 if(IS_RELEASE_VERSION)
-  set(PROJECT_VERSION_TWEAK 0)
-  set(VERSION_REVISION "")
-elseif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-  find_package(Git)
-  if(Git_FOUND)
-    execute_process(
-      COMMAND git rev-list --count HEAD ^tags/v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      OUTPUT_VARIABLE PROJECT_VERSION_TWEAK
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    execute_process(
-      COMMAND git rev-parse --short --verify HEAD
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      OUTPUT_VARIABLE VERSION_COMMIT_HASH
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    execute_process(
-      COMMAND git diff-index --quiet HEAD --
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      RESULT_VARIABLE VERSION_COMMIT_DIRTY
-    )
-    if(${VERSION_COMMIT_DIRTY})
-      set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}-dirty")
+    set(PROJECT_VERSION_TWEAK 0)
+    set(VERSION_REVISION "")
+elseif (EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    find_package(Git)
+    if(Git_FOUND)
+        execute_process(
+            COMMAND git rev-list --count HEAD ^tags/v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE PROJECT_VERSION_TWEAK
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        execute_process(
+            COMMAND git rev-parse --short --verify HEAD
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE VERSION_COMMIT_HASH
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        execute_process(
+            COMMAND git diff-index --quiet HEAD --
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            RESULT_VARIABLE VERSION_COMMIT_DIRTY
+        )
+        if(${VERSION_COMMIT_DIRTY})
+            set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}-dirty")
+        else()
+            set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}")
+        endif()
     else()
-      set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}")
+        set(PROJECT_VERSION_TWEAK 0)
+        set(VERSION_REVISION " unknown development version")
     endif()
-  else()
+else()
     set(PROJECT_VERSION_TWEAK 0)
     set(VERSION_REVISION " unknown development version")
-  endif()
-else()
-  set(PROJECT_VERSION_TWEAK 0)
-  set(VERSION_REVISION " unknown development version")
 endif()
 
-if (VITA_BUILD)
-    set(VITA_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}")
+if(VITA_BUILD)
+    string(LENGTH "${PROJECT_VERSION_MAJOR}" NUM_DIGITS)
+    if(NUM_DIGITS LESS 1)
+        set(VITA_VERSION_MAJOR "00")
+    elseif(NUM_DIGITS EQUAL 1)
+        set(VITA_VERSION_MAJOR "0${PROJECT_VERSION_MAJOR}")
+    else()
+        string(SUBSTRING "${PROJECT_VERSION_MAJOR}" 0 2 VITA_VERSION_MAJOR)
+    endif()
+
+    string(LENGTH "${PROJECT_VERSION_MINOR}" NUM_DIGITS)
+    if(NUM_DIGITS LESS 1)
+        set(VITA_VERSION_MINOR "00")
+    elseif(NUM_DIGITS EQUAL 1)
+        set(VITA_VERSION_MINOR "0${PROJECT_VERSION_MINOR}")
+    else()
+        string(SUBSTRING "${PROJECT_VERSION_MINOR}" 0 2 VITA_VERSION_MINOR)
+    endif()
+
+    set(VITA_VERSION "${VITA_VERSION_MAJOR}.${VITA_VERSION_MINOR}")
 endif()
 
 if (SWITCH_BUILD)
-    set(SWITCH_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}")
+    string(SUBSTRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}" 0 15 SWITCH_VERSION)
 endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
@@ -567,7 +585,7 @@ if (VITA_BUILD)
 
     vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
     vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
-        VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}"
+        VERSION ${VITA_VERSION}
         NAME ${SHORT_NAME}
         FILE res/sce_sys/icon0.png sce_sys/icon0.png
         FILE res/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
@@ -606,7 +624,7 @@ elseif(SWITCH_BUILD)
         -mtune=cortex-a57
         -mtp=soft
         -O2
-  #-fPIE is neccessary to prevent crash on startup
+        #-fPIE is neccessary to prevent crash on startup
         -fPIE
         -fno-asynchronous-unwind-tables
         -funroll-loops
@@ -621,8 +639,6 @@ elseif(SWITCH_BUILD)
     endforeach(flag ${FLAGS})
 
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FLAGS_GENERAL} --verbose")
-
-    set(SWITCH_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}")
 
     target_compile_options(${SHORT_NAME} PRIVATE ${FLAGS})
     add_custom_command(TARGET ${SHORT_NAME}
