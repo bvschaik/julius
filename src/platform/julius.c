@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#if defined(__SWITCH__)
+#ifdef __SWITCH__
 #include "platform/switch/switch_input.h"
 #endif
 

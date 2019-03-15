@@ -196,11 +196,13 @@ void switch_handle_analog_sticks(void)
 
     int slowdown = 4096;
 
-	if (fast_mouse)
-		slowdown /= 3;
+    if (fast_mouse) {
+        slowdown /= 3;
+    }
 
-	if (slow_mouse)
-		slowdown *= 8;
+    if (slow_mouse) {
+        slowdown *= 8;
+    }
 
     if (hires_dx != 0 || hires_dy != 0) {
         int xrel = hires_dx / slowdown;
