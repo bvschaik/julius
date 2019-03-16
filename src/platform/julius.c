@@ -7,6 +7,7 @@
 #include "game/game.h"
 #include "input/mouse.h"
 #include "platform/keyboard_input.h"
+#include "platform/prefs.h"
 #include "platform/screen.h"
 #include "platform/version.h"
 #include "platform/vita/vita.h"
@@ -336,6 +337,22 @@ static int init_sdl(void)
     return 1;
 }
 
+#ifdef USE_TINYFILEDIALOGS
+static const char* ask_for_data_dir(int again)
+{
+    if (again) {
+        int result = tinyfd_messageBox("Wrong folder selected.",
+            "The selected folder is not a proper Caesar 3 folder.\n\n"
+            "Press OK to select another folder or Cancel to exit.",
+            "okcancel", "warning", 1);
+        if (!result) {
+            return NULL;
+        }
+    }
+    return tinyfd_selectFolderDialog("Julius requires the original files from Caesar 3 to run.\n\nPlease select your Caesar 3 folder.", NULL);
+}
+#endif
+
 static int pre_init(const char *custom_data_dir)
 {
     if (custom_data_dir) {
@@ -347,22 +364,50 @@ static int pre_init(const char *custom_data_dir)
         return game_pre_init();
     }
 
-    #if SDL_VERSION_ATLEAST(2, 0, 1)
-        const char *base_path = SDL_GetBasePath();
-        if (base_path) {
-            chdir(base_path);
-            SDL_free((void*) base_path);
-        }
-    #endif
-
     SDL_Log("Loading game from working directory");
     if (game_pre_init()) {
         return 1;
     }
-    if (chdir("../data") == 0) {
-        SDL_Log("Loading game from data directory");
-        return game_pre_init();
-    }
+
+    #if SDL_VERSION_ATLEAST(2, 0, 1)
+        char *base_path = SDL_GetBasePath();
+        if (base_path) {
+            if (chdir(base_path) == 0) {
+                SDL_Log("Loading game from base path %s", base_path);
+                if (game_pre_init()) {
+                    SDL_free(base_path);
+                    return 1;
+                }
+            }
+            SDL_free(base_path);
+        }
+    #endif
+
+    #ifdef USE_TINYFILEDIALOGS
+        const char *user_dir = pref_data_dir();
+        if (user_dir) {
+            SDL_Log("Loading game from user pref %s", user_dir);
+            if (chdir(user_dir) == 0 && game_pre_init()) {
+                return 1;
+            }
+        }
+
+        user_dir = ask_for_data_dir(0);
+        while (user_dir) {
+            SDL_Log("Loading game from user-selected dir %s", user_dir);
+            if (chdir(user_dir) == 0 && game_pre_init()) {
+                pref_save_data_dir(user_dir);
+                return 1;
+            }
+            user_dir = ask_for_data_dir(1);
+        }
+    #else
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+            "Julius requires the original files from Caesar 3 to run.\n\n",
+            "Move the Julius executable to the directory containing an existing "
+            "Caesar 3 installation, or run:\njulius path-to-c3-directory",
+            NULL);
+    #endif
 
     return 0;
 }
@@ -389,37 +434,8 @@ static void setup(const char *custom_data_dir)
 #endif
 
     if (!pre_init(custom_data_dir)) {
-        SDL_Log("Julius requires the original files from Caesar 3 to run.");
-        SDL_Log("Move the Julius executable to the directory containing an existing Caesar 3 installation, or run:");
-        SDL_Log("julius path-to-c3-directory");
-#ifdef USE_TINYFILEDIALOGS
-        while (1) {
-            const char *data_dir = tinyfd_selectFolderDialog("Julius requires the original files from Caesar 3 to run.\n\nPlease select your Caesar 3 folder.", NULL);
-            if (!data_dir) {
-                SDL_Log("Exiting: game pre-init failed");
-                exit(1);
-            }
-            if (pre_init(data_dir)) {
-                break;
-            }
-            int result = tinyfd_messageBox("Wrong folder selected.",
-                "The selected folder is not a proper Caesar 3 folder.\n\n"
-                "Pess OK to select another folder or Cancel to exit.",
-                "okcancel", "warning", 1);
-            if (!result) {
-                SDL_Log("Exiting: game pre-init failed");
-                exit(1);
-            }
-        }
-#else
         SDL_Log("Exiting: game pre-init failed");
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-            "Julius requires the original files from Caesar 3 to run.\n\n",
-            "Move the Julius executable to the directory containing an existing "
-            "Caesar 3 installation, or run:\njulius path-to-c3-directory",
-            NULL);
         exit(1);
-#endif
     }
 
     if (!platform_screen_create((const char*)lang_get_string(9, 0))) {
