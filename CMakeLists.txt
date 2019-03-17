@@ -456,6 +456,7 @@ if(APPLE)
         COMMAND sips -z 128 128  julius_256.png --out julius.iconset/icon_128x128.png
         COMMAND sips -z 256 256  julius_256.png --out julius.iconset/icon_128x128@2x.png
         COMMAND sips -z 256 256  julius_256.png --out julius.iconset/icon_256x256.png
+        COMMAND sips -z 512 512  julius_512.png --out julius.iconset/icon_256x256@2x.png
         COMMAND iconutil -c icns julius.iconset
         COMMAND rm -R julius.iconset
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/res)
