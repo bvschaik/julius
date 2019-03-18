@@ -19,6 +19,10 @@ static struct {
     time_millis updated;
     int x_offset;
     int y_offset;
+    int text_offset_start;
+    int text_offset_end;
+    int left_arrow;
+    int right_arrow;
 } input_cursor;
 
 static struct {
@@ -34,17 +38,22 @@ static int get_ellipsis_width(font_t font)
     return ellipsis.width[font];
 }
 
-void text_capture_cursor(int cursor_position)
+void text_capture_cursor(int cursor_position, int offset_start, int offset_end)
 {
     input_cursor.capture = 1;
     input_cursor.seen = 0;
     input_cursor.position = 0;
     input_cursor.width = 0;
     input_cursor.cursor_position = cursor_position;
+    input_cursor.text_offset_start = offset_start;
+    input_cursor.text_offset_end = offset_end;
 }
 
-void text_draw_cursor(int x_offset, int y_offset, int is_insert)
+void text_draw_cursor(int x_offset, int y_offset, int width, int is_insert)
 {
+    if (!input_cursor.capture) {
+        return;
+    }
     input_cursor.capture = 0;
     time_millis curr = time_get_millis();
     time_millis diff = curr - input_cursor.updated;
@@ -72,6 +81,12 @@ void text_draw_cursor(int x_offset, int y_offset, int is_insert)
                 input_cursor.width, 2, COLOR_WHITE);
         }
     }
+    if (input_cursor.left_arrow) {
+        graphics_draw_left_arrow(x_offset - 10, y_offset + 2, 3, COLOR_WHITE);
+    }
+    if (input_cursor.right_arrow) {
+        graphics_draw_right_arrow(x_offset + width, y_offset + 2, 3, COLOR_WHITE);
+    }
 }
 
 int text_get_width(const uint8_t *str, font_t font)
@@ -94,6 +109,37 @@ int text_get_width(const uint8_t *str, font_t font)
         maxlen--;
     }
     return width;
+}
+
+unsigned int text_get_max_length_for_width(const uint8_t *str, int length, font_t font, unsigned int requested_width, int invert)
+{
+    const font_definition *def = font_definition_for(font);
+    length = (!length) ? string_length(str) : length;
+    unsigned int maxlen = length;
+    unsigned int width = 0;
+    int image_base = image_group(GROUP_FONT);
+    int step = 1;
+    if (invert) {
+        str += length - 1;
+        step = -1;
+    }
+    while (maxlen) {
+        if (*str == ' ') {
+            width += def->space_width;
+        } else {
+            int image_offset = font_image_for(*str);
+            if (image_offset) {
+                int image_id = image_base + def->image_offset + image_offset - 1;
+                width += def->letter_spacing + image_get(image_id)->width;
+            }
+        }
+        if (width > requested_width) {
+            break;
+        }
+        str += step;
+        maxlen--;
+    }
+    return length - maxlen;
 }
 
 void text_ellipsize(char *str, font_t font, int requested_width)
@@ -198,8 +244,16 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
 {
     const font_definition *def = font_definition_for(font);
 
+    int length = string_length(str);
+    if (input_cursor.capture) {
+        str += input_cursor.text_offset_start;
+        input_cursor.left_arrow = (input_cursor.text_offset_start != 0);
+        input_cursor.right_arrow = (input_cursor.text_offset_end != length);
+        length = input_cursor.text_offset_end - input_cursor.text_offset_start;
+    }
+
     int current_x = x;
-    while (*str) {
+    for (int i = 0; i < length; ++i) {
         uint8_t c = *str;
 
         if (c == '_') {

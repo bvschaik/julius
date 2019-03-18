@@ -46,9 +46,9 @@ static void draw_foreground(void)
     lang_text_draw_centered(31, 0, 128, 172, 384, FONT_LARGE_BLACK);
     lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK);
     inner_panel_draw(160, 208, 20, 2);
-    text_capture_cursor(keyboard_cursor_position());
+    text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
     text_draw(player_name, 176, 216, FONT_NORMAL_WHITE, 0);
-    text_draw_cursor(176, 217, keyboard_is_insert());
+    text_draw_cursor(176, 217, 280, keyboard_is_insert());
     
     image_buttons_draw(464, 249, &image_button_start_mission, 1);
 

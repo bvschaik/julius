@@ -13,10 +13,46 @@ static struct {
     int length;
     int max_length;
     int allow_punctuation;
+
+    int offset_start;
+    int offset_end;
     
     int box_width;
     font_t font;
 } data = {0};
+
+static void change_start_offset_by(int length)
+{
+    if (length < 0 || data.offset_start == 0) {
+        return;
+    }
+    int max_left = (data.offset_start < length) ? data.offset_start : length;
+    data.offset_start -= max_left;
+    data.offset_end = data.offset_start + text_get_max_length_for_width(data.text + data.offset_start, data.length, data.font, data.box_width, 0);
+}
+
+static void change_end_offset_by(int length)
+{
+    if (length < 0 || data.offset_end == data.length) {
+        return;
+    }
+    int remaining = data.length - data.offset_end;
+    int max_right = (remaining < length) ? remaining : length;
+    data.offset_end += max_right;
+    data.offset_start = data.offset_end - text_get_max_length_for_width(data.text, data.offset_end, data.font, data.box_width, 1);
+}
+
+static void set_offset_to_end(void)
+{
+    data.offset_end = data.length;
+    int maxlen = data.length;
+    if (text_get_width(data.text, data.font) <= data.box_width) {
+        data.offset_start = 0;
+    } else {
+        maxlen = text_get_max_length_for_width(data.text, data.length, data.font, data.box_width, 1);
+        data.offset_start = data.length - maxlen;
+    }
+}
 
 void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation, int box_width, font_t font)
 {
@@ -29,12 +65,14 @@ void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation
     data.accepted = 0;
     data.box_width = box_width;
     data.font = font;
+    set_offset_to_end();
 }
 
 void keyboard_refresh(void)
 {
     data.length = string_length(data.text);
     data.cursor_position = data.length;
+    set_offset_to_end();
 }
 
 void keyboard_stop_capture(void)
@@ -64,7 +102,17 @@ int keyboard_is_insert(void)
 
 int keyboard_cursor_position(void)
 {
-    return data.cursor_position;
+    return data.cursor_position - data.offset_start;
+}
+
+int keyboard_offset_start(void)
+{
+    return data.offset_start;
+}
+
+int keyboard_offset_end(void)
+{
+    return data.offset_end;
 }
 
 void keyboard_return(void)
@@ -92,31 +140,55 @@ static void move_right(const uint8_t *start, uint8_t *end)
 
 static void add_char(uint8_t value)
 {
-    if (data.length + 1 == data.max_length) {
-        return;
-    }
-    if (text_get_width(data.text, data.font) >= data.box_width) {
-        return;
-    }
     if (data.insert) {
+        if (data.length + 1 == data.max_length) {
+            return;
+        }
         move_right(&data.text[data.cursor_position], &data.text[data.length]);
         data.text[data.cursor_position] = value;
         data.cursor_position++;
         data.length++;
+        data.offset_end++;
     } else {
+        if (data.cursor_position == data.length && data.length + 1 == data.max_length) {
+            return;
+        }
         data.text[data.cursor_position] = value;
         data.cursor_position++;
         if (data.cursor_position >= data.length) {
             data.text[data.cursor_position] = 0;
-            data.length++;
+            if (data.cursor_position > data.length) {
+                data.length++;
+                data.offset_end++;
+            }
         }
+    }
+    int maxlen = text_get_max_length_for_width(data.text + data.offset_start, data.length, data.font, data.box_width, 0);
+    if (data.cursor_position < (data.offset_start + maxlen - 2)) {
+        data.offset_end = data.offset_start + maxlen;
+        if (data.offset_end > data.length) {
+            set_offset_to_end();
+        }
+    } else {
+        if (!data.insert && data.offset_end < data.length) {
+            data.offset_end++;
+        }
+        data.offset_start = data.offset_end - text_get_max_length_for_width(data.text, data.offset_end, data.font, data.box_width, 1);
     }
 }
 
 static void remove_current_char(void)
 {
     move_left(&data.text[data.cursor_position], &data.text[data.length]);
+    if (data.offset_end == data.length) {
+        data.offset_end--;
+    }
     data.length--;
+    if (data.offset_end != data.length) {
+        data.offset_end = data.offset_start + text_get_max_length_for_width(data.text + data.offset_start, data.length - data.offset_start, data.font, data.box_width, 0);
+    } else if (data.offset_start) {
+        data.offset_start = data.offset_end - text_get_max_length_for_width(data.text, data.offset_end, data.font, data.box_width, 1);
+    }
 }
 
 void keyboard_backspace(void)
@@ -129,7 +201,7 @@ void keyboard_backspace(void)
 
 void keyboard_delete(void)
 {
-    if (data.capture && data.length > 0) {
+    if (data.capture && data.cursor_position < data.length) {
         remove_current_char();
     }
 }
@@ -144,12 +216,20 @@ void keyboard_left(void)
     if (data.capture && data.cursor_position > 0) {
         data.cursor_position--;
     }
+    if (data.offset_start > 0 && data.cursor_position == (data.offset_start - 1)) {
+        change_start_offset_by(5);
+    }
 }
 
 void keyboard_right(void)
 {
-    if (data.capture && data.cursor_position < data.length) {
-        data.cursor_position++;
+    if (data.capture) {
+        if (data.cursor_position < data.length) {
+            data.cursor_position++;
+        }
+        if (data.offset_end < data.length && data.cursor_position == data.offset_end) {
+            change_end_offset_by(5);
+        }
     }
 }
 
@@ -157,12 +237,21 @@ void keyboard_home(void)
 {
     if (data.capture) {
         data.cursor_position = 0;
+        if (data.offset_start > 0) {
+            data.offset_start = 0;
+            data.offset_end = text_get_max_length_for_width(data.text, data.length, data.font, data.box_width, 0);
+        }
     }
 }
 
 void keyboard_end(void)
 {
-    data.cursor_position = data.length;
+    if (data.capture) {
+        data.cursor_position = data.length;
+        if (data.offset_end < data.length) {
+            set_offset_to_end();
+        }
+    }
 }
 
 static uint8_t unicode_to_cp1252(int c)
