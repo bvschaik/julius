@@ -92,10 +92,15 @@ set(SMK_FILES
     ext/libsmacker/smk_hufftree.c
 )
 
+set(TINYFD_FILES
+    ext/tinyfiledialogs/tinyfiledialogs.c
+)
+
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
+    ${PROJECT_SOURCE_DIR}/src/platform/prefs.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
 )
 
@@ -428,6 +433,7 @@ add_executable(julius
     ${WIDGET_FILES}
     ${WINDOW_FILES}
     ${SMK_FILES}
+    ${TINYFD_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc
     ${MACOSX_FILES}
 )
@@ -450,6 +456,7 @@ if(APPLE)
         COMMAND sips -z 128 128  julius_256.png --out julius.iconset/icon_128x128.png
         COMMAND sips -z 256 256  julius_256.png --out julius.iconset/icon_128x128@2x.png
         COMMAND sips -z 256 256  julius_256.png --out julius.iconset/icon_256x256.png
+        COMMAND sips -z 512 512  julius_512.png --out julius.iconset/icon_256x256@2x.png
         COMMAND iconutil -c icns julius.iconset
         COMMAND rm -R julius.iconset
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/res)
