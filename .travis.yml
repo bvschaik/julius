@@ -20,6 +20,9 @@ matrix:
     env: VITA_BUILD=true
     services:
       - docker
+  - os: linux
+    name: Nintendo Switch
+    env: SWITCH_BUILD=true
 
 install:
   - ./.ci_scripts/docker.sh
