@@ -19,6 +19,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef __SWITCH__
+#include "platform/switch/switch_input.h"
+#endif
+
 #ifdef __vita__
 #include "platform/vita/vita_input.h"
 #endif
@@ -27,7 +31,7 @@
 #include <string.h>
 #endif
 
-#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__) && !defined(__SWITCH__)
 #include <execinfo.h>
 #endif
 
@@ -61,7 +65,7 @@ enum {
 };
 
 static void handler(int sig) {
-#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__) && !defined(__SWITCH__)
     void *array[100];
     size_t size;
 
@@ -77,7 +81,7 @@ static void handler(int sig) {
     exit(1);
 }
 
-#if defined(_WIN32) || defined(__vita__)
+#if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__)
 /* Log to separate file on windows, since we don't have a console there */
 static FILE *log_file = 0;
 
@@ -238,10 +242,11 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
 static void handle_event(SDL_Event *event, int *active, int *quit)
 {
     switch (event->type) {
+#ifndef __SWITCH__
         case SDL_WINDOWEVENT:
             handle_window_event(&event->window, active);
             break;
-
+#endif
         case SDL_KEYDOWN:
             platform_handle_key_down(&event->key);
             break;
@@ -302,6 +307,11 @@ static void main_loop(void)
         vita_handle_virtual_keyboard();
         vita_handle_repeat_keys();
         while (vita_poll_event(&event)) {
+#elif defined(__SWITCH__)
+        switch_handle_analog_sticks();
+        switch_handle_virtual_keyboard();
+        switch_handle_repeat_keys();
+        while (switch_poll_event(&event)) {
 #else
         while (SDL_PollEvent(&event)) {
 #endif
@@ -325,7 +335,7 @@ static int init_sdl(void)
     // on Vita, need video init only to enable physical kbd/mouse and touch events
     SDL_flags |= SDL_INIT_VIDEO;
 
-#ifdef __vita__
+#if defined(__vita__) || defined(__SWITCH__)
     SDL_flags |= SDL_INIT_JOYSTICK;
 #endif
 

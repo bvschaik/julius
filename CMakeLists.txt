@@ -1,6 +1,12 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.0.2)
+include(CMakeDependentOption)
+
+if(VITA_BUILD AND SWITCH_BUILD)
+    message(FATAL_ERROR "Cannot build with -DVITA_BUILD=ON and -DSWITCH_BUILD=ON at the same time")
+endif()
 
 option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF)
+cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT VITA_BUILD" OFF)
 
 if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
@@ -10,13 +16,21 @@ if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     endif()
 endif()
 
+if(SWITCH_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    if(DEFINED ENV{DEVKITPRO})
+        set(DEVKITPRO $ENV{DEVKITPRO})
+        set(CMAKE_TOOLCHAIN_FILE "${DEVKITPRO}/switch.cmake" CACHE PATH "toolchain file")
+    else()
+        message(FATAL_ERROR "Please define DEVKITPRO to point to your SDK path!")
+    endif()
+endif()
+
 set(SHORT_NAME julius)
 project(${SHORT_NAME} C)
 
 if (VITA_BUILD)
     include("${VITASDK}/share/vita.cmake" REQUIRED)
     set(VITA_TITLEID  "JULIUS001")
-    set(VITA_VERSION "00.10")
 endif()
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
@@ -43,40 +57,66 @@ set(PROJECT_VERSION_PATCH 0)
 set(IS_RELEASE_VERSION FALSE)
 
 if(IS_RELEASE_VERSION)
-  set(PROJECT_VERSION_TWEAK 0)
-  set(VERSION_REVISION "")
-elseif(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-  find_package(Git)
-  if(Git_FOUND)
-    execute_process(
-      COMMAND git rev-list --count HEAD ^tags/v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      OUTPUT_VARIABLE PROJECT_VERSION_TWEAK
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    execute_process(
-      COMMAND git rev-parse --short --verify HEAD
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      OUTPUT_VARIABLE VERSION_COMMIT_HASH
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    execute_process(
-      COMMAND git diff-index --quiet HEAD --
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      RESULT_VARIABLE VERSION_COMMIT_DIRTY
-    )
-    if(${VERSION_COMMIT_DIRTY})
-      set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}-dirty")
+    set(PROJECT_VERSION_TWEAK 0)
+    set(VERSION_REVISION "")
+elseif (EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    find_package(Git)
+    if(Git_FOUND)
+        execute_process(
+            COMMAND git rev-list --count HEAD ^tags/v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE PROJECT_VERSION_TWEAK
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        execute_process(
+            COMMAND git rev-parse --short --verify HEAD
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE VERSION_COMMIT_HASH
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        execute_process(
+            COMMAND git diff-index --quiet HEAD --
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            RESULT_VARIABLE VERSION_COMMIT_DIRTY
+        )
+        if(${VERSION_COMMIT_DIRTY})
+            set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}-dirty")
+        else()
+            set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}")
+        endif()
     else()
-      set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}")
+        set(PROJECT_VERSION_TWEAK 0)
+        set(VERSION_REVISION " unknown development version")
     endif()
-  else()
+else()
     set(PROJECT_VERSION_TWEAK 0)
     set(VERSION_REVISION " unknown development version")
-  endif()
-else()
-  set(PROJECT_VERSION_TWEAK 0)
-  set(VERSION_REVISION " unknown development version")
+endif()
+
+if(VITA_BUILD)
+    string(LENGTH "${PROJECT_VERSION_MAJOR}" NUM_DIGITS)
+    if(NUM_DIGITS EQUAL 1)
+        set(VITA_VERSION_MAJOR "0${PROJECT_VERSION_MAJOR}")
+    elseif(NUM_DIGITS EQUAL 2)
+        set(VITA_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+    else()
+        message(FATAL_ERROR "On Vita, major version number can only have one or two digits, found ${NUM_DIGITS} digits instead")
+    endif()
+
+    string(LENGTH "${PROJECT_VERSION_MINOR}" NUM_DIGITS)
+    if(NUM_DIGITS EQUAL 1)
+        set(VITA_VERSION_MINOR "0${PROJECT_VERSION_MINOR}")
+    elseif(NUM_DIGITS EQUAL 2)
+        set(VITA_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+    else()
+        message(FATAL_ERROR "On Vita, minor version number can only have one or two digits, found ${NUM_DIGITS} digits instead")
+    endif()
+
+    set(VITA_VERSION "${VITA_VERSION_MAJOR}.${VITA_VERSION_MINOR}")
+endif()
+
+if (SWITCH_BUILD)
+    string(SUBSTRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}" 0 15 SWITCH_VERSION)
 endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
@@ -112,6 +152,14 @@ if (VITA_BUILD)
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
+    )
+elseif (SWITCH_BUILD)
+    set(PLATFORM_FILES
+        ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/switch/cursor.c
+        ${PROJECT_SOURCE_DIR}/src/platform/switch/screen.c
+        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.c
+        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_keyboard.c
     )
 else()
     set(PLATFORM_FILES
@@ -496,6 +544,15 @@ endif()
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
+if (SWITCH_BUILD)
+    include_directories(
+        ${DEVKITPRO}/portlibs/switch/include/SDL2
+        ${DEVKITPRO}/libnx/include
+        ${DEVKITPRO}/portlibs/switch/include
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+endif()
+
 include_directories(ext)
 include_directories(src)
 if(MSVC)
@@ -541,6 +598,64 @@ if (VITA_BUILD)
         FILE res/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
         FILE res/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
         FILE res/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
+    )
+elseif(SWITCH_BUILD)
+    target_link_libraries (${SHORT_NAME}
+        SDL2_mixer
+        SDL2
+        EGL
+        GLESv2
+        glapi
+        drm_nouveau
+        png
+        jpeg
+        vorbisidec
+        mikmod
+        modplug
+        mpg123
+        FLAC
+        ogg
+        jpeg
+        png
+        freetype
+        m
+        z
+        nx
+        stdc++
+    )
+
+    set(FLAGS
+        -D__SWITCH__
+        -Wno-write-strings
+        -march=armv8-a
+        -mtune=cortex-a57
+        -mtp=soft
+        -O2
+        -fPIE
+        -fno-asynchronous-unwind-tables
+        -funroll-loops
+        -fno-unwind-tables
+        -fno-optimize-sibling-calls
+        -mlittle-endian
+        -ffunction-sections
+    )
+
+    foreach(flag ${FLAGS})
+        set(FLAGS_GENERAL "${FLAGS_GENERAL} ${flag}")
+    endforeach(flag ${FLAGS})
+
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FLAGS_GENERAL} --verbose")
+
+    target_compile_options(${SHORT_NAME} PRIVATE ${FLAGS})
+    add_custom_command(TARGET ${SHORT_NAME}
+        POST_BUILD
+        COMMAND ${DEVKITPRO}/tools/bin/nacptool --create "${SHORT_NAME}" "rsn8887" ${SWITCH_VERSION} ${SHORT_NAME}.nacp
+        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switchdata/icon0.jpg --nacp=${SHORT_NAME}.nacp
+        COMMAND rm -rf release/${SHORT_NAME}
+        COMMAND mkdir -p release/${SHORT_NAME}
+        COMMAND cp -f ${SHORT_NAME}.nro release/${SHORT_NAME}/${SHORT_NAME}.nro
+        COMMAND cd release && zip -r ../${SHORT_NAME}_${SWITCH_VERSION}_switch.zip ${SHORT_NAME} -x "*.DS_Store" -x "*__MAC*"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
 else()
     target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
