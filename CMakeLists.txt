@@ -664,7 +664,7 @@ elseif(SWITCH_BUILD)
         COMMAND rm -rf release/${SHORT_NAME}
         COMMAND mkdir -p release/${SHORT_NAME}
         COMMAND cp -f ${SHORT_NAME}.nro release/${SHORT_NAME}/${SHORT_NAME}.nro
-        COMMAND cd release && zip -r ../${SHORT_NAME}_${SWITCH_VERSION}_switch.zip ${SHORT_NAME} -x "*.DS_Store" -x "*__MAC*"
+        COMMAND cd release && zip -r ../${SHORT_NAME}_switch.zip ${SHORT_NAME} -x "*.DS_Store" -x "*__MAC*"
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
 else()
