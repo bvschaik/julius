@@ -121,6 +121,7 @@ endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
+configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
 
 if(DRAW_FPS)
   add_definitions(-DDRAW_FPS)

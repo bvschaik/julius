@@ -1,32 +1,30 @@
 build_dir="$(pwd)/build"
 
+VERSION=$(cat res/version.txt)
+
 cat > "bintray-vita.json" <<EOF
 {
   "package": {
     "subject": "bvschaik",
     "repo": "julius",
-    "name": "vita",
+    "name": "vita-unstable",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },
 
   "version": {
-    "name": "$TRAVIS_BUILD_NUMBER",
+    "name": "$VERSION",
     "released": "$(date +'%Y-%m-%d')",
-    "desc": "Automated vita build for Travis-CI job: $TRAVIS_JOB_WEB_URL\nClick on the \"Files\" tab in order to download this version."
+    "desc": "Automated vita build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
   },
 
   "files": [
     {
       "includePattern": "${build_dir}/julius.vpk",
-      "uploadPattern": "julius-$(date +'%Y-%m-%d')-$(git rev-parse --short --verify HEAD).vpk",
-      "matrixParams": {
-        "override": 1,
-        "publish": 1
-      }
+      "uploadPattern": "julius-$VERSION.vpk"
     }
   ],
 
-  "publish": true
+  "publish": false
 }
 EOF
