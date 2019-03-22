@@ -27,7 +27,7 @@ cat > "bintray.json" <<EOF
     }
   ],
 
-  "publish": false
+  "publish": true
 }
 EOF
 fi

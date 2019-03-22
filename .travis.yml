@@ -30,7 +30,7 @@ before_deploy:
 deploy:
   provider: bintray
   on:
-    all_branches: true
+    branch: master
     repo: bvschaik/julius
     condition: $DEPLOY
   file: bintray.json
