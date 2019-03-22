@@ -8,6 +8,8 @@ Chat: [![Gitter](https://badges.gitter.im/julius-game/community.svg)](https://gi
 | Linux | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/1)](https://travis-ci.org/bvschaik/julius) |
 | Mac | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/4)](https://travis-ci.org/bvschaik/julius) |
 | PS Vita | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/5)](https://travis-ci.org/bvschaik/julius) |
+| Nintendo Switch | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/6)](https://travis-ci.org/bvschaik/julius) |
+
 
 Julius is an open source re-implementation of Caesar III.
 
