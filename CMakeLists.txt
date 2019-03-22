@@ -65,6 +65,7 @@ elseif (EXISTS "${CMAKE_SOURCE_DIR}/.git")
         execute_process(
             COMMAND git rev-list --count HEAD ^tags/v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            RESULT_VARIABLE TWEAK_RESULT
             OUTPUT_VARIABLE PROJECT_VERSION_TWEAK
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
@@ -79,10 +80,18 @@ elseif (EXISTS "${CMAKE_SOURCE_DIR}/.git")
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             RESULT_VARIABLE VERSION_COMMIT_DIRTY
         )
-        if(${VERSION_COMMIT_DIRTY})
-            set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}-dirty")
+        if(VERSION_COMMIT_DIRTY)
+            set(DIRTY_POSTFIX "-dirty")
         else()
-            set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}")
+            set(DIRTY_POSTFIX "")
+        endif()
+        if(NOT TWEAK_RESULT EQUAL 0)
+            # Happens on a shallow git clone, like Travis does. Append date to version ref.
+            set(PROJECT_VERSION_TWEAK 0)
+            string(TIMESTAMP TODAY "%Y%m%d")
+            set(VERSION_REVISION "-${TODAY}-${VERSION_COMMIT_HASH}${DIRTY_POSTFIX}")
+        else()
+            set(VERSION_REVISION ".${PROJECT_VERSION_TWEAK}-${VERSION_COMMIT_HASH}${DIRTY_POSTFIX}")
         endif()
     else()
         set(PROJECT_VERSION_TWEAK 0)
