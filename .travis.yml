@@ -22,7 +22,7 @@ matrix:
       - docker
   - os: linux
     name: Nintendo Switch
-    env: SWITCH_BUILD=true
+    env: SWITCH_BUILD=true DEPLOY=switch
 
 before_deploy:
   - bash ./.ci_scripts/bintray_conf.sh
