@@ -1,8 +1,10 @@
+#!/usr/bin/env bash
+
 build_dir="$(pwd)/build"
 
 VERSION=$(cat res/version.txt)
 
-if [ $DEPLOY = "vita" ]
+if [ "$DEPLOY" = "vita" ]
 then
 cat > "bintray.json" <<EOF
 {
@@ -30,7 +32,7 @@ cat > "bintray.json" <<EOF
   "publish": true
 }
 EOF
-elif [ $DEPLOY = "switch" ]
+elif [ "$DEPLOY" = "switch" ]
 then
 cat > "bintray.json" <<EOF
 {
