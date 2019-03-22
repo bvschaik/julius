@@ -2,7 +2,9 @@ build_dir="$(pwd)/build"
 
 VERSION=$(cat res/version.txt)
 
-cat > "bintray-vita.json" <<EOF
+if [ $DEPLOY = "vita" ]
+then
+cat > "bintray.json" <<EOF
 {
   "package": {
     "subject": "bvschaik",
@@ -28,3 +30,4 @@ cat > "bintray-vita.json" <<EOF
   "publish": false
 }
 EOF
+fi
