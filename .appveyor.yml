@@ -50,7 +50,8 @@ after_build:
   - if [%COMPILER%] == [mingw] cp C:\SDL2-%SDL2_VERSION%\i686-w64-mingw32\bin\SDL2.dll .
   - if [%COMPILER%] == [mingw] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\i686-w64-mingw32\bin\SDL2_mixer.dll .
   - dir
-  - 7z a C:\projects\julius\julius.zip julius.exe SDL2.dll SDL2_mixer.dll
+  - set /P DEPLOY_VERSION=<C:\projects\julius\res\version.txt
+  - 7z a C:\projects\julius\julius-%DEPLOY_VERSION%.zip julius.exe SDL2.dll SDL2_mixer.dll
 
 cache:
   - SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
@@ -61,5 +62,23 @@ cache:
 artifacts:
   - path: build\julius.exe
     name: julius
-  - path: julius.zip
+  - path: julius-$(DEPLOY_VERSION).zip
     name: julius-dist
+
+before_deploy:
+  - echo Deploying to %DEPLOY_VERSION%
+
+deploy:
+- provider: BinTray
+  username: bvschaik
+  api_key:
+    secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
+  subject: bvschaik
+  repo: julius
+  package: windows-unstable
+  version: $(DEPLOY_VERSION)
+  artifact: julius-dist
+  publish: true
+  on:
+    branch: master
+    CMAKE_BUILD_TYPE: Release
