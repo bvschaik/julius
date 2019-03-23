@@ -65,21 +65,19 @@ function install_sdl_macos {
   fi
   local VOLUME=$(hdiutil attach $LIB/image.dmg | grep -o '/Volumes/.*')
   mkdir -p ~/Library/Frameworks
-  echo "Installing framework:" "/Volumes/SDL2"/*
+  echo "Installing framework:" "/Volumes/SDL2"/*.framework
   cp -rp "$VOLUME"/*.framework ~/Library/Frameworks
   hdiutil detach "$VOLUME"
 }
 
-case "$BUILD_TARGET" in
-"vita|switch")
-  # Docker image already contains SDL
-  ;;
-"mac")
-  install_sdl_macos $SDL_LIB
-  install_sdl_macos $SDL_MIXER_LIB
-  ;;
-*)
-  install_sdl_lib $SDL_LIB
-  install_sdl_lib $SDL_MIXER_LIB
-  ;;
-esac
+if [ ! -z "$SDL_LIB" ] && [ ! -z "$SDL_MIXER_LIB" ]
+then
+  if [ "$BUILD_TARGET" == "mac" ]
+  then
+    install_sdl_macos $SDL_LIB
+    install_sdl_macos $SDL_MIXER_LIB
+  else
+    install_sdl_lib $SDL_LIB
+    install_sdl_lib $SDL_MIXER_LIB
+  fi
+fi
