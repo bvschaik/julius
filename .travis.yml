@@ -29,17 +29,15 @@ cache:
   - $SDL_LIB
   - $SDL_MIXER_LIB
 
-before_install:
-  - ./.ci_scripts/setup.sh
-
 install:
-  - ./.ci_scripts/docker.sh
+  - ./.ci_scripts/start_docker.sh
+  - ./.ci_scripts/install_sdl.sh
 
 before_script:
-  - ./.ci_scripts/setup_dir.sh
+  - ./.ci_scripts/run_cmake.sh
 
 script:
-  - ./.ci_scripts/run.sh
+  - ./.ci_scripts/run_build.sh
 
 after_success:
   - if [ $RUN_CODECOV ];
