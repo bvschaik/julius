@@ -24,6 +24,29 @@ matrix:
     name: Nintendo Switch
     env: BUILD_TARGET=switch DEPLOY=switch
 
+cache:
+  directories:
+  - $SDL_LIB
+  - $SDL_MIXER_LIB
+
+before_install:
+  - ./.ci_scripts/setup.sh
+
+install:
+  - ./.ci_scripts/docker.sh
+
+before_script:
+  - ./.ci_scripts/setup_dir.sh
+
+script:
+  - ./.ci_scripts/run.sh
+
+after_success:
+  - if [ $RUN_CODECOV ];
+    then
+      bash <(curl -s https://codecov.io/bash);
+    fi;
+
 before_deploy:
   - ./.ci_scripts/bintray_conf.sh
 
@@ -41,25 +64,3 @@ deploy:
 
 after_deploy:
   - ./.ci_scripts/bintray_link.sh
-
-install:
-  - ./.ci_scripts/docker.sh
-cache:
-  directories:
-  - $SDL_LIB
-  - $SDL_MIXER_LIB
-
-before_install:
-  - ./.ci_scripts/setup.sh
-
-before_script:
-  - ./.ci_scripts/setup_dir.sh
-
-script:
-  - ./.ci_scripts/run.sh
-
-after_success:
-  - if [ $RUN_CODECOV ];
-    then
-      bash <(curl -s https://codecov.io/bash);
-    fi;
