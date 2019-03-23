@@ -14,7 +14,7 @@ matrix:
     env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4
   - os: osx
     compiler: clang
-    env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac
+    env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
   - os: linux
     name: PS Vita
     env: BUILD_TARGET=vita DEPLOY=vita
