@@ -44,7 +44,7 @@ function install_sdl_lib {
   cd ../..;
 }
 
-if [ ! "$VITA_BUILD" = "true" ] && [ ! "$SWITCH_BUILD" = "true" ];
+if [ ! "$BUILD_TARGET" = "vita" ] && [ ! "$BUILD_TARGET" = "switch" ];
 then
   install_sdl_lib $SDL_LIB
   install_sdl_lib $SDL_MIXER_LIB

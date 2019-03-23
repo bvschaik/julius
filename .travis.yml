@@ -17,12 +17,12 @@ matrix:
     env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4
   - os: linux
     name: PS Vita
-    env: VITA_BUILD=true DEPLOY=vita
+    env: BUILD_TARGET=vita DEPLOY=vita
     services:
       - docker
   - os: linux
     name: Nintendo Switch
-    env: SWITCH_BUILD=true DEPLOY=switch
+    env: BUILD_TARGET=switch DEPLOY=switch
 
 before_deploy:
   - ./.ci_scripts/bintray_conf.sh
