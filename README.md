@@ -10,6 +10,8 @@ Chat: [![Gitter](https://badges.gitter.im/julius-game/community.svg)](https://gi
 | PS Vita | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/5)](https://travis-ci.org/bvschaik/julius) | [![Download](https://api.bintray.com/packages/bvschaik/julius/vita-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/vita-unstable/_latestVersion#files) |
 | Nintendo Switch | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/6)](https://travis-ci.org/bvschaik/julius) | [![Download](https://api.bintray.com/packages/bvschaik/julius/switch-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/switch-unstable/_latestVersion#files) |
 
+![](https://github.com/bvschaik/julius/blob/master/res/sce_sys/livearea/contents/bg.png?raw=true)
+
 Julius is an open source re-implementation of Caesar III.
 
 The aim of this project is to create an open-source version of Caesar 3, with the same logic as the original, but with some UI enhancements, that is able to be played on multiple platforms. The same logic means that the saved games are 100% compatible, and any gameplay bugs present in the original Caesar 3 game will also be present in Julius.
