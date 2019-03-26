@@ -234,24 +234,6 @@ void graphics_draw_horizontal_line(int x1, int x2, int y, color_t color)
     }
 }
 
-void graphics_draw_left_arrow(int x, int y, int size, color_t color)
-{
-    y += size - 1;
-    for (int i = 0; i < size; ++i) {
-        graphics_draw_vertical_line(x + i, y - i, y + i, color);
-    }
-}
-
-void graphics_draw_right_arrow(int x, int y, int size, color_t color)
-{
-    --size;
-    y += size;
-    x += size;
-    for (int i = size; i >= 0; --i) {
-        graphics_draw_vertical_line(x - i, y - i, y + i, color);
-    }
-}
-
 void graphics_draw_rect(int x, int y, int width, int height, color_t color)
 {
     graphics_draw_horizontal_line(x, x + width - 1, y, color);

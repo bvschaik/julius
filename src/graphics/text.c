@@ -21,8 +21,6 @@ static struct {
     int y_offset;
     int text_offset_start;
     int text_offset_end;
-    int left_arrow;
-    int right_arrow;
 } input_cursor;
 
 static struct {
@@ -49,7 +47,7 @@ void text_capture_cursor(int cursor_position, int offset_start, int offset_end)
     input_cursor.text_offset_end = offset_end;
 }
 
-void text_draw_cursor(int x_offset, int y_offset, int width, int is_insert)
+void text_draw_cursor(int x_offset, int y_offset, int is_insert)
 {
     if (!input_cursor.capture) {
         return;
@@ -80,12 +78,6 @@ void text_draw_cursor(int x_offset, int y_offset, int width, int is_insert)
                 x_offset + input_cursor.x_offset, y_offset + input_cursor.y_offset + 14,
                 input_cursor.width, 2, COLOR_WHITE);
         }
-    }
-    if (input_cursor.left_arrow) {
-        graphics_draw_left_arrow(x_offset - 10, y_offset + 2, 3, COLOR_WHITE);
-    }
-    if (input_cursor.right_arrow) {
-        graphics_draw_right_arrow(x_offset + width, y_offset + 2, 3, COLOR_WHITE);
     }
 }
 
@@ -247,8 +239,6 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
     int length = string_length(str);
     if (input_cursor.capture) {
         str += input_cursor.text_offset_start;
-        input_cursor.left_arrow = (input_cursor.text_offset_start != 0);
-        input_cursor.right_arrow = (input_cursor.text_offset_end != length);
         length = input_cursor.text_offset_end - input_cursor.text_offset_start;
     }
 

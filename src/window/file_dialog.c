@@ -123,7 +123,7 @@ static void draw_foreground(void)
     image_buttons_draw(0, 0, image_buttons, 4);
     text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
     text_draw(string_from_ascii(data.saved_game), 160, 90, FONT_NORMAL_WHITE, 0);
-    text_draw_cursor(160, 91, MAX_FILE_WINDOW_TEXT_WIDTH, keyboard_is_insert());
+    text_draw_cursor(160, 91, keyboard_is_insert());
     draw_scrollbar_dot();
 
     graphics_reset_dialog();
