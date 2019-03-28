@@ -1,6 +1,8 @@
 #ifndef GRAPHICS_FONT_H
 #define GRAPHICS_FONT_H
 
+#include "core/lang.h"
+
 #include <stdint.h>
 
 typedef enum {
@@ -27,8 +29,32 @@ typedef struct {
     int line_height;
 } font_definition;
 
+/**
+ * Sets the encoding for font drawing functions
+ * @param encoding Encoding to use
+ */
+void font_set_encoding(encoding_type encoding);
+
+/**
+ * Gets the font definition for the specified font
+ * @param font Font
+ * @return Font definition
+ */
 const font_definition *font_definition_for(font_t font);
 
+/**
+ * Gets the image ID offset for the specified character
+ * @return Image ID offset
+ */
 int font_image_for(uint8_t c);
+
+/**
+ * Returns the height offset for the specified character
+ * @param c Character
+ * @param image_height Height of the letter image
+ * @param line_height Line height for the font
+ * @return Offset to add to y coordinate
+ */
+int font_image_height_offset(uint8_t c, int image_height, int line_height);
 
 #endif // GRAPHICS_FONT_H

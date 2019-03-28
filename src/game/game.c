@@ -14,6 +14,7 @@
 #include "game/state.h"
 #include "game/system.h"
 #include "game/tick.h"
+#include "graphics/font.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
@@ -44,6 +45,7 @@ int game_pre_init(void)
         errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return 0;
     }
+    font_set_encoding(lang_encoding());
     scenario_set_player_name(lang_get_string(9, 5));
     random_init();
     return 1;

@@ -19,3 +19,11 @@ const lang_message *lang_get_message(int id)
     msg.content.text = EMPTY;
     return &msg;
 }
+
+encoding_type lang_encoding(void)
+{
+    return ENCODING_WESTERN_EUROPE;
+}
+
+void font_set_encoding(int encoding)
+{}

@@ -183,15 +183,10 @@ static int draw_character(const font_definition *def, unsigned int c, int x, int
 {
     int image_offset = font_image_for(c);
     int image_id = image_group(GROUP_FONT) + def->image_offset + image_offset - 1;
-    int height = image_get(image_id)->height - def->line_height;
-    if (height < 0) {
-        height = 0;
-    }
-    if (c < 128 || c == 231) { // Some exceptions...
-        height = 0;
-    }
+    const image *img = image_get(image_id);
+    int height = font_image_height_offset(c, img->height, def->line_height);
     image_draw_letter(image_id, x, y - height, color);
-    return image_get(image_id)->width;
+    return img->width;
 }
 
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)

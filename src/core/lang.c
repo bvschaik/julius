@@ -1,9 +1,10 @@
 #include "core/lang.h"
 
-#include <stdlib.h>
-
 #include "core/buffer.h"
 #include "core/io.h"
+
+#include <stdlib.h>
+#include <string.h>
 
 #define MAX_TEXT_ENTRIES 1000
 #define MAX_TEXT_DATA 200000
@@ -26,6 +27,8 @@ static struct {
 
     lang_message message_entries[MAX_MESSAGE_ENTRIES];
     uint8_t message_data[MAX_MESSAGE_DATA];
+
+    encoding_type encoding;
 } data;
 
 static void parse_text(buffer *buf)
@@ -107,15 +110,35 @@ static int load_message(const char *filename, uint8_t *data)
     return 1;
 }
 
+static void determine_encoding(void)
+{
+    // A really dirty way to 'detect' encoding. For now, we are aware of just
+    // one translation using CP-1250 (Central/Eastern Europe) encoding, and
+    // that is Polish. Check if the string for "New game" is Polish -> CP-1250
+    if (strcmp("Nowa gra", lang_get_string(1, 1)) == 0) {
+        data.encoding = ENCODING_EASTERN_EUROPE;
+    } else {
+        data.encoding = ENCODING_WESTERN_EUROPE;
+    }
+}
+
 int lang_load(const char *text_filename, const char *message_filename)
 {
     uint8_t *data = (uint8_t *) malloc(BUFFER_SIZE);
     if (!data) {
         return 0;
     }
-    int result = load_text(text_filename, data) && load_message(message_filename, data);
+    int success = load_text(text_filename, data) && load_message(message_filename, data);
     free(data);
-    return result;
+    if (success) {
+        determine_encoding();
+    }
+    return success;
+}
+
+encoding_type lang_encoding(void)
+{
+    return data.encoding;
 }
 
 const uint8_t *lang_get_string(int group, int index)
@@ -139,4 +162,3 @@ const lang_message *lang_get_message(int id)
 {
     return &data.message_entries[id];
 }
-

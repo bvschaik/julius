@@ -9,6 +9,14 @@
  */
 
 /**
+ * Encoding type
+ */
+typedef enum {
+	ENCODING_WESTERN_EUROPE = 1252,
+	ENCODING_EASTERN_EUROPE = 1250,
+} encoding_type;
+
+/**
  * Type
  */
 typedef enum {
@@ -76,6 +84,12 @@ typedef struct {
  * @return boolean true on success, false on failure
  */
 int lang_load(const char *text_filename, const char *message_filename);
+
+/**
+ * Returns the determined encoding type
+ * @return encoding (best guess)
+ */
+encoding_type lang_encoding(void);
 
 /**
  * Gets a localized string
