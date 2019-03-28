@@ -37,16 +37,34 @@ int menu_bar_handle_mouse(const mouse *m, menu_bar_item *items, int num_items, i
     return menu_id;
 }
 
+static void calculate_menu_width(menu_bar_item *menu)
+{
+    int max_width = 0;
+    for (int i = 0; i < menu->num_items; i++) {
+        menu_item *sub = &menu->items[i];
+        int width_pixels = lang_text_get_width(
+            menu->text_group, sub->text_number, FONT_NORMAL_BLACK);
+        if (width_pixels > max_width) {
+            max_width = width_pixels;
+        }
+    }
+    int blocks = (max_width + 15) / 16 + 1; // 1 block padding
+    menu->calculated_width_blocks = blocks < 10 ? 10 : blocks;
+}
+
 void menu_draw(menu_bar_item *menu, int focus_item_id)
 {
+    if (menu->calculated_width_blocks == 0) {
+        calculate_menu_width(menu);
+    }
     unbordered_panel_draw(menu->x_start, menu->y_start + 18,
-        10, (20 + 20 * menu->num_items) / 16);
+        menu->calculated_width_blocks, (20 + 20 * menu->num_items) / 16);
     for (int i = 0; i < menu->num_items; i++) {
         menu_item *sub = &menu->items[i];
         int y_offset = 30 + menu->y_start + sub->y_start;
         if (i == focus_item_id - 1) {
             graphics_fill_rect(menu->x_start, y_offset - 2,
-                160, 16, COLOR_BLACK);
+                16 * menu->calculated_width_blocks, 16, COLOR_BLACK);
             lang_text_draw_colored(menu->text_group, sub->text_number,
                 menu->x_start + 8, y_offset, FONT_NORMAL_PLAIN, COLOR_ORANGE);
         } else {
@@ -60,7 +78,7 @@ static int get_menu_item(const mouse *m, menu_bar_item *menu)
 {
     for (int i = 0; i < menu->num_items; i++) {
         if (menu->x_start <= m->x &&
-            menu->x_start + 160 > m->x &&
+            menu->x_start + 16 * menu->calculated_width_blocks > m->x &&
             menu->y_start + menu->items[i].y_start + 30 <= m->y &&
             menu->y_start + menu->items[i].y_start + 45 > m->y) {
             return i + 1;
@@ -83,4 +101,17 @@ int menu_handle_mouse(const mouse *m, menu_bar_item *menu, int *focus_item_id)
         item->left_click_handler(item->parameter);
     }
     return item_id;
+}
+
+void menu_update_text(menu_bar_item *menu, int index, int text_number)
+{
+    menu->items[index].text_number = text_number;
+    if (menu->calculated_width_blocks > 0) {
+        int item_width = lang_text_get_width(
+            menu->text_group, text_number, FONT_NORMAL_BLACK);
+        int blocks = (item_width + 15) / 16 + 1;
+        if (blocks > menu->calculated_width_blocks) {
+            menu->calculated_width_blocks = blocks;
+        }
+    }
 }

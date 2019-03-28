@@ -99,6 +99,8 @@ static menu_bar_item menu[] = {
     {10, 0, 6, 4, menu_advisors, 12},
 };
 
+static const int INDEX_HELP = 2;
+
 static struct {
     int offset_funds;
     int offset_population;
@@ -124,22 +126,26 @@ static void clear_state(void)
 
 static void set_text_for_tooltips(void)
 {
+    int new_text;
     switch (setting_tooltips()) {
         case TOOLTIPS_NONE:
-            menu_help[1].text_number = 2;
+            new_text = 2;
             break;
         case TOOLTIPS_SOME:
-            menu_help[1].text_number = 3;
+            new_text = 3;
             break;
         case TOOLTIPS_FULL:
-            menu_help[1].text_number = 4;
+            new_text = 4;
             break;
+        default:
+            return;
     }
+    menu_update_text(&menu[INDEX_HELP], 1, new_text);
 }
 
 static void set_text_for_warnings(void)
 {
-    menu_help[2].text_number = setting_warnings() ? 6 : 5;
+    menu_update_text(&menu[INDEX_HELP], 2, setting_warnings() ? 6 : 5);
 }
 
 static void init_from_settings(void)
