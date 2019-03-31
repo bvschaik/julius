@@ -29,26 +29,26 @@ static struct {
     uint8_t message_data[MAX_MESSAGE_DATA];
 
     encoding_type encoding;
-} lang_data;
+} data;
 
 static void parse_text(buffer *buf)
 {
     buffer_skip(buf, 28); // header
     for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
-        lang_data.text_entries[i].offset = buffer_read_i32(buf);
-        lang_data.text_entries[i].in_use = buffer_read_i32(buf);
+        data.text_entries[i].offset = buffer_read_i32(buf);
+        data.text_entries[i].in_use = buffer_read_i32(buf);
     }
-    buffer_read_raw(buf, lang_data.text_data, MAX_TEXT_DATA);
+    buffer_read_raw(buf, data.text_data, MAX_TEXT_DATA);
 }
 
-static int load_text(const char *filename, uint8_t *data)
+static int load_text(const char *filename, uint8_t *buf_data)
 {
     buffer buf;
-    int filesize = io_read_file_into_buffer(filename, data, BUFFER_SIZE);
+    int filesize = io_read_file_into_buffer(filename, buf_data, BUFFER_SIZE);
     if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
         return 0;
     }
-    buffer_init(&buf, data, filesize);
+    buffer_init(&buf, buf_data, filesize);
     parse_text(&buf);
     return 1;
 }
@@ -58,14 +58,14 @@ static uint8_t *get_message_text(int32_t offset)
     if (!offset) {
         return 0;
     }
-    return &lang_data.message_data[offset];
+    return &data.message_data[offset];
 }
 
 static void parse_message(buffer *buf)
 {
     buffer_skip(buf, 24); // header
     for (int i = 0; i < MAX_MESSAGE_ENTRIES; i++) {
-        lang_message *m = &lang_data.message_entries[i];
+        lang_message *m = &data.message_entries[i];
         m->type = buffer_read_i16(buf);
         m->message_type = buffer_read_i16(buf);
         buffer_skip(buf, 2);
@@ -95,7 +95,7 @@ static void parse_message(buffer *buf)
         m->subtitle.text = get_message_text(buffer_read_i32(buf));
         m->content.text = get_message_text(buffer_read_i32(buf));
     }
-    buffer_read_raw(buf, &lang_data.message_data, MAX_MESSAGE_DATA);
+    buffer_read_raw(buf, &data.message_data, MAX_MESSAGE_DATA);
 }
 
 static int load_message(const char *filename, uint8_t *data)
@@ -116,9 +116,9 @@ static void determine_encoding(void)
     // one translation using CP-1250 (Central/Eastern Europe) encoding, and
     // that is Polish. Check if the string for "New game" is Polish -> CP-1250
     if (strcmp("Nowa gra", lang_get_string(1, 1)) == 0) {
-        lang_data.encoding = ENCODING_EASTERN_EUROPE;
+        data.encoding = ENCODING_EASTERN_EUROPE;
     } else {
-        lang_data.encoding = ENCODING_WESTERN_EUROPE;
+        data.encoding = ENCODING_WESTERN_EUROPE;
     }
 }
 
@@ -138,12 +138,12 @@ int lang_load(const char *text_filename, const char *message_filename)
 
 encoding_type lang_encoding(void)
 {
-    return lang_data.encoding;
+    return data.encoding;
 }
 
 const uint8_t *lang_get_string(int group, int index)
 {
-    const uint8_t *str = &lang_data.text_data[lang_data.text_entries[group].offset];
+    const uint8_t *str = &data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;
     while (index > 0) {
         if (!*str && (prev >= ' ' || prev == 0)) {
@@ -160,5 +160,5 @@ const uint8_t *lang_get_string(int group, int index)
 
 const lang_message *lang_get_message(int id)
 {
-    return &lang_data.message_entries[id];
+    return &data.message_entries[id];
 }
