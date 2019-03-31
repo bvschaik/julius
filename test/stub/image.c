@@ -33,12 +33,17 @@ static int groups[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-int image_init(void)
+int image_init(int with_fonts)
 {
     return 1;
 }
 
 int image_load_climate(int climate_id)
+{
+    return 1;
+}
+
+int image_load_fonts(void)
 {
     return 1;
 }

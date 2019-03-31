@@ -35,7 +35,7 @@ typedef struct {
 /**
  * Initializes the image system
  */
-int image_init(void);
+int image_init(int with_fonts);
 
 /**
  * Loads the image collection for the specified climate
@@ -43,6 +43,12 @@ int image_init(void);
  * @return boolean true on success, false on failure
  */
 int image_load_climate(int climate_id);
+
+/**
+ * Loads external fonts file (Cyrillic)
+ * @return boolean true on success, false on failure
+ */
+int image_load_fonts(void);
 
 /**
  * Loads the image collection for the specified enemy

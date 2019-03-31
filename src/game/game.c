@@ -54,7 +54,7 @@ int game_pre_init(void)
 int game_init(void)
 {
     system_init_cursors();
-    if (!image_init()) {
+    if (!image_init(0)) {
         errlog("unable to init graphics");
         return 0;
     }

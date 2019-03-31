@@ -18,11 +18,16 @@
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET HEADER_SIZE
 #define ENEMY_INDEX_SIZE ENTRY_SIZE * ENEMY_ENTRIES
+#define FONTS_INDEX_OFFSET HEADER_SIZE
+#define FONTS_INDEX_SIZE ENTRY_SIZE * FONTS_ENTRIES
 
 #define MAIN_DATA_SIZE 30000000
 #define EMPIRE_DATA_SIZE (2000*1000*4)
 #define ENEMY_DATA_SIZE 2400000
+#define FONTS_DATA_SIZE 1500000
 #define SCRATCH_DATA_SIZE 12100000
+
+#define FONTS_BASE_OFFSET 201
 
 #define NAME_SIZE 32
 
@@ -37,6 +42,9 @@ static const char MAIN_GRAPHICS_555[][NAME_SIZE] = {
     "c3_south.555"
 };
 static const char EMPIRE_555[NAME_SIZE] = "The_empire.555";
+
+static const char FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
+static const char FONTS_555[NAME_SIZE] = "C3_fonts.555";
 
 static const char ENEMY_GRAPHICS_SG2[][NAME_SIZE] = {
     "goths.sg2",
@@ -90,13 +98,15 @@ static struct {
     char bitmaps[100][200];
     image main[MAIN_ENTRIES];
     image enemy[ENEMY_ENTRIES];
+    image *font;
     color_t *main_data;
     color_t *empire_data;
     color_t *enemy_data;
+    color_t *font_data;
     uint8_t *tmp_data;
 } data = {.current_climate = -1};
 
-int image_init(void)
+int image_init(int with_fonts)
 {
     data.enemy_data = (color_t *) malloc(ENEMY_DATA_SIZE);
     data.main_data = (color_t *) malloc(MAIN_DATA_SIZE);
@@ -108,6 +118,15 @@ int image_init(void)
         free(data.enemy_data);
         free(data.tmp_data);
         return 0;
+    }
+    if (with_fonts) {
+        data.font = (image*) malloc(FONTS_ENTRIES * sizeof(image));
+        data.font_data = (color_t *) malloc(FONTS_DATA_SIZE);
+        if (!data.font || !data.font_data) {
+            free(data.font);
+            free(data.font_data);
+            return 0;
+        }
     }
     return 1;
 }
@@ -279,6 +298,25 @@ int image_load_climate(int climate_id)
     return 1;
 }
 
+int image_load_fonts(void)
+{
+    if (FONTS_INDEX_SIZE != io_read_file_part_into_buffer(FONTS_SG2, data.tmp_data, FONTS_INDEX_SIZE, FONTS_INDEX_OFFSET)) {
+        return 0;
+    }
+
+    buffer buf;
+    buffer_init(&buf, data.tmp_data, FONTS_INDEX_SIZE);
+    read_index(&buf, data.font, FONTS_ENTRIES);
+
+    int data_size = io_read_file_into_buffer(FONTS_555, data.tmp_data, SCRATCH_DATA_SIZE);
+    if (!data_size) {
+        return 0;
+    }
+    buffer_init(&buf, data.tmp_data, data_size);
+    convert_images(data.font, FONTS_ENTRIES, &buf, data.font_data);
+    return 1;
+}
+
 int image_load_enemy(int enemy_id)
 {
     const char *filename_bmp = ENEMY_GRAPHICS_555[enemy_id];
@@ -347,7 +385,11 @@ const image *image_get(int id)
 
 const image *image_letter(int letter_id)
 {
-    return &data.main[data.group_image_ids[GROUP_FONT] + letter_id];
+    if (data.font) {
+        return &data.font[FONTS_BASE_OFFSET + letter_id];
+    } else {
+        return &data.main[data.group_image_ids[GROUP_FONT] + letter_id];
+    }
 }
 
 const image *image_get_enemy(int id)
@@ -368,8 +410,12 @@ const color_t *image_data(int id)
 
 const color_t *image_data_letter(int letter_id)
 {
-    int image_id = data.group_image_ids[GROUP_FONT] + letter_id;
-    return &data.main_data[data.main[image_id].draw.offset];
+    if (data.font) {
+        return &data.font_data[data.font[FONTS_BASE_OFFSET + letter_id].draw.offset];
+    } else {
+        int image_id = data.group_image_ids[GROUP_FONT] + letter_id;
+        return &data.main_data[data.main[image_id].draw.offset];
+    }
 }
 
 const color_t *image_data_enemy(int id)
