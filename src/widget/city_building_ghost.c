@@ -73,7 +73,7 @@ static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
 
 static int deleting_grid_offset = 0;
 
-static void clear_deleting()
+static void clear_deleting(void)
 {
     if (deleting_grid_offset) {
         map_property_clear_deleted(deleting_grid_offset);
