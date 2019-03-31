@@ -139,3 +139,16 @@ int string_compare_case_insensitive(const char *a, const char *b)
     }
     return 0;
 }
+
+int string_equals(const uint8_t *a, const uint8_t *b)
+{
+    while (*a && *b && *a == *b) {
+        ++a;
+        ++b;
+    }
+    if (*a == 0 && *b == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}

@@ -2,9 +2,9 @@
 
 #include "core/buffer.h"
 #include "core/io.h"
+#include "core/string.h"
 
 #include <stdlib.h>
-#include <string.h>
 
 #define MAX_TEXT_ENTRIES 1000
 #define MAX_TEXT_DATA 200000
@@ -17,6 +17,9 @@
 #define MAX_MESSAGE_SIZE (MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA)
 
 #define BUFFER_SIZE 400000
+
+static const uint8_t NEW_GAME_POLISH[] = { 0x4e, 0x6f, 0x77, 0x61, 0x20, 0x67, 0x72, 0x61, 0 };
+static const uint8_t NEW_GAME_RUSSIAN[] = { 0xcd, 0xee, 0xe2, 0xe0, 0xff, 0x20, 0xe8, 0xe3, 0xf0, 0xe0, 0 };
 
 static struct {
     struct {
@@ -112,11 +115,16 @@ static int load_message(const char *filename, uint8_t *data)
 
 static void determine_encoding(void)
 {
-    // A really dirty way to 'detect' encoding. For now, we are aware of just
-    // one translation using CP-1250 (Central/Eastern Europe) encoding, and
-    // that is Polish. Check if the string for "New game" is Polish -> CP-1250
-    if (strcmp("Nowa gra", lang_get_string(1, 1)) == 0) {
+    // A really dirty way to 'detect' encoding:
+    // - Windows-1250 (Central/Eastern Europe) is used in Polish only
+    // - Windows-1251 (Cyrillic) is used in Russian only
+    // - Windows-1252 (Western Europe) is used in all other languages
+    // Check if the string for "New game" is Polish or Russian
+    const uint8_t *new_game_string = lang_get_string(1, 1);
+    if (string_equals(NEW_GAME_POLISH, new_game_string)) {
         data.encoding = ENCODING_EASTERN_EUROPE;
+    } else if (string_equals(NEW_GAME_RUSSIAN, new_game_string)) {
+        data.encoding = ENCODING_CYRILLIC;
     } else {
         data.encoding = ENCODING_WESTERN_EUROPE;
     }

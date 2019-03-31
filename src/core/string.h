@@ -60,4 +60,12 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign);
  */
 int string_compare_case_insensitive(const char *a, const char *b);
 
+/**
+ * Checks if the two strings are equal
+ * @param a String A
+ * @param b String B
+ * @return Boolean true if the strings are equal, false if they differ
+ */
+int string_equals(const uint8_t *a, const uint8_t *b);
+
 #endif // CORE_STRING_H
