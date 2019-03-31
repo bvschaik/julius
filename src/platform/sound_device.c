@@ -194,23 +194,21 @@ static int next_audio_frame(void)
         return 0;
     }
 
-    if (audio_len > 0) {
-        // convert audio to SDL format
-        custom_music.cvt.buf = (Uint8*) malloc(audio_len * custom_music.cvt.len_mult);
-        custom_music.cvt.len = audio_len;
-        memcpy(custom_music.cvt.buf, data, audio_len);
-        SDL_ConvertAudio(&custom_music.cvt);
-        custom_music.cur = 0;
-        custom_music.len = custom_music.cvt.len_cvt;
-        custom_music.data = (Uint8*) malloc(custom_music.len);
-        memset(custom_music.data, 0, custom_music.len);
-        SDL_MixAudioFormat(custom_music.data, custom_music.cvt.buf,
-                           AUDIO_FORMAT, custom_music.cvt.len_cvt,
-                           setting_sound(SOUND_EFFECTS)->volume);
-        free(custom_music.cvt.buf);
-        custom_music.cvt.buf = 0;
-        custom_music.cvt.len = 0;
-    }
+    // convert audio to SDL format
+    custom_music.cvt.buf = (Uint8*) malloc((size_t) (audio_len * custom_music.cvt.len_mult));
+    custom_music.cvt.len = audio_len;
+    memcpy(custom_music.cvt.buf, data, audio_len);
+    SDL_ConvertAudio(&custom_music.cvt);
+    custom_music.cur = 0;
+    custom_music.len = custom_music.cvt.len_cvt;
+    custom_music.data = (Uint8*) malloc(custom_music.len);
+    memset(custom_music.data, 0, custom_music.len);
+    SDL_MixAudioFormat(custom_music.data, custom_music.cvt.buf,
+                       AUDIO_FORMAT, custom_music.cvt.len_cvt,
+                       setting_sound(SOUND_EFFECTS)->volume);
+    free(custom_music.cvt.buf);
+    custom_music.cvt.buf = 0;
+    custom_music.cvt.len = 0;
     return audio_len;
 }
 
