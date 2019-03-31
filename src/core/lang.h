@@ -12,8 +12,8 @@
  * Encoding type
  */
 typedef enum {
-	ENCODING_WESTERN_EUROPE = 1252,
-	ENCODING_EASTERN_EUROPE = 1250,
+    ENCODING_WESTERN_EUROPE = 1252,
+    ENCODING_EASTERN_EUROPE = 1250,
 } encoding_type;
 
 /**

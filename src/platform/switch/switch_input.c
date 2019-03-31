@@ -309,8 +309,8 @@ void switch_handle_virtual_keyboard(void)
 
 void switch_start_text_input(char *initial_text, int multiline)
 {
-	char text[601] = {'\0'};
-	switch_keyboard_get("Enter New Text:", initial_text, 600, multiline, text);
+    char text[601] = {'\0'};
+    switch_keyboard_get("Enter New Text:", initial_text, 600, multiline, text);
     if (text == NULL)  {
         return;
     }

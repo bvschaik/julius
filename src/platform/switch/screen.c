@@ -26,7 +26,7 @@ int platform_screen_create(const char *title)
 {
     int width, height;
     int fullscreen = 1;
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
     if (fullscreen) {
         SDL_DisplayMode mode;

@@ -285,12 +285,12 @@ void hotkey_esc(void)
 
 void hotkey_page_up(void)
 {
-	change_game_speed(0);
+    change_game_speed(0);
 }
 
 void hotkey_page_down(void)
 {
-	change_game_speed(1);
+    change_game_speed(1);
 }
 
 void hotkey_enter(void)

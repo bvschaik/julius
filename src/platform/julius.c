@@ -435,8 +435,8 @@ static void setup(const char *custom_data_dir)
     }
 #ifdef __vita__
     if (!vita2d_init()) {
-	    SDL_Log("Exiting: vita2d init failed");
-	    exit(-1);
+        SDL_Log("Exiting: vita2d init failed");
+        exit(-1);
     }
 
     // Black
