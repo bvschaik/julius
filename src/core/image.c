@@ -8,15 +8,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAIN_INDEX_SIZE 660680
-#define ENEMY_INDEX_OFFSET 20680
-#define ENEMY_INDEX_SIZE 51264
-
 #define HEADER_SIZE 20680
 #define ENTRY_SIZE 64
 
 #define MAIN_ENTRIES 10000
 #define ENEMY_ENTRIES 801
+#define FONTS_ENTRIES 2000
+
+#define MAIN_INDEX_SIZE 660680
+#define ENEMY_INDEX_OFFSET HEADER_SIZE
+#define ENEMY_INDEX_SIZE ENTRY_SIZE * ENEMY_ENTRIES
 
 #define MAIN_DATA_SIZE 30000000
 #define EMPIRE_DATA_SIZE (2000*1000*4)
@@ -25,19 +26,19 @@
 
 #define NAME_SIZE 32
 
-static const char main_graphics_sg2[][NAME_SIZE] = {
+static const char MAIN_GRAPHICS_SG2[][NAME_SIZE] = {
     "c3.sg2",
     "c3_north.sg2",
     "c3_south.sg2"
 };
-static const char main_graphics_555[][NAME_SIZE] = {
+static const char MAIN_GRAPHICS_555[][NAME_SIZE] = {
     "c3.555",
     "c3_north.555",
     "c3_south.555"
 };
-static const char empire_555[NAME_SIZE] = "The_empire.555";
+static const char EMPIRE_555[NAME_SIZE] = "The_empire.555";
 
-static const char enemy_graphics_sg2[][NAME_SIZE] = {
+static const char ENEMY_GRAPHICS_SG2[][NAME_SIZE] = {
     "goths.sg2",
     "Etruscan.sg2",
     "Etruscan.sg2",
@@ -59,7 +60,7 @@ static const char enemy_graphics_sg2[][NAME_SIZE] = {
     "North African.sg2",
     "Phoenician.sg2",
 };
-static const char enemy_graphics_555[][NAME_SIZE] = {
+static const char ENEMY_GRAPHICS_555[][NAME_SIZE] = {
     "goths.555",
     "Etruscan.555",
     "Etruscan.555",
@@ -237,9 +238,9 @@ static void convert_images(image *images, int size, buffer *buf, color_t *dst)
 
 static void load_empire(void)
 {
-    int size = io_read_file_into_buffer(empire_555, data.tmp_data, EMPIRE_DATA_SIZE);
+    int size = io_read_file_into_buffer(EMPIRE_555, data.tmp_data, EMPIRE_DATA_SIZE);
     if (size != EMPIRE_DATA_SIZE / 2) {
-        log_error("unable to load empire data", empire_555, 0);
+        log_error("unable to load empire data", EMPIRE_555, 0);
         return;
     }
     buffer buf;
@@ -253,8 +254,8 @@ int image_load_climate(int climate_id)
         return 1;
     }
 
-    const char *filename_bmp = main_graphics_555[climate_id];
-    const char *filename_idx = main_graphics_sg2[climate_id];
+    const char *filename_bmp = MAIN_GRAPHICS_555[climate_id];
+    const char *filename_idx = MAIN_GRAPHICS_SG2[climate_id];
 
     if (MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, data.tmp_data, MAIN_INDEX_SIZE)) {
         return 0;
@@ -280,15 +281,15 @@ int image_load_climate(int climate_id)
 
 int image_load_enemy(int enemy_id)
 {
-    const char *filename_bmp = enemy_graphics_555[enemy_id];
-    const char *filename_idx = enemy_graphics_sg2[enemy_id];
+    const char *filename_bmp = ENEMY_GRAPHICS_555[enemy_id];
+    const char *filename_idx = ENEMY_GRAPHICS_SG2[enemy_id];
 
     if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(filename_idx, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET)) {
         return 0;
     }
 
     buffer buf;
-    buffer_init(&buf, data.tmp_data, ENTRY_SIZE * ENEMY_ENTRIES);
+    buffer_init(&buf, data.tmp_data, ENEMY_INDEX_SIZE);
     read_index(&buf, data.enemy, ENEMY_ENTRIES);
 
     int data_size = io_read_file_into_buffer(filename_bmp, data.tmp_data, SCRATCH_DATA_SIZE);
@@ -378,4 +379,3 @@ const color_t *image_data_enemy(int id)
     }
     return NULL;
 }
-
