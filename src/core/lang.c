@@ -41,14 +41,14 @@ static void parse_text(buffer *buf)
     buffer_read_raw(buf, data.text_data, MAX_TEXT_DATA);
 }
 
-static int load_text(const char *filename, uint8_t *data)
+static int load_text(const char *filename, uint8_t *buf_data)
 {
     buffer buf;
-    int filesize = io_read_file_into_buffer(filename, data, BUFFER_SIZE);
+    int filesize = io_read_file_into_buffer(filename, buf_data, BUFFER_SIZE);
     if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
         return 0;
     }
-    buffer_init(&buf, data, filesize);
+    buffer_init(&buf, buf_data, filesize);
     parse_text(&buf);
     return 1;
 }

@@ -38,9 +38,9 @@ void graphics_init_canvas(int width, int height)
     canvas.pixels = vita2d_texture_get_datap(tex_buffer);
 #else
     free(canvas.pixels);
-    canvas.pixels = (color_t *) malloc(width * height * sizeof(color_t));
+    canvas.pixels = (color_t *) malloc((size_t) width * height * sizeof(color_t));
 #endif
-    memset(canvas.pixels, 0, width * height * sizeof(color_t));
+    memset(canvas.pixels, 0, (size_t) width * height * sizeof(color_t));
     canvas.width = width;
     canvas.height = height;
 
@@ -259,12 +259,12 @@ void graphics_fill_rect(int x, int y, int width, int height, color_t color)
 
 void graphics_shade_rect(int x, int y, int width, int height, int darkness)
 {
-    const clip_info *clip = graphics_get_clip_info(x, y, width, height);
-    if (!clip->is_visible) {
+    const clip_info *cur_clip = graphics_get_clip_info(x, y, width, height);
+    if (!cur_clip->is_visible) {
         return;
     }
-    for (int yy = y + clip->clipped_pixels_top; yy < y + height - clip->clipped_pixels_bottom; yy++) {
-        for (int xx = x + clip->clipped_pixels_left; xx < x + width - clip->clipped_pixels_right; xx++) {
+    for (int yy = y + cur_clip->clipped_pixels_top; yy < y + height - cur_clip->clipped_pixels_bottom; yy++) {
+        for (int xx = x + cur_clip->clipped_pixels_left; xx < x + width - cur_clip->clipped_pixels_right; xx++) {
             color_t *pixel = graphics_get_pixel(xx, yy);
             int r = (*pixel & 0xff0000) >> 16;
             int g = (*pixel & 0xff00) >> 8;

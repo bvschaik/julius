@@ -263,15 +263,15 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
             continue;
         }
-        building *dst = building_main(b);
-        if (src_building_id == dst->id) {
+        building *building_dst = building_main(b);
+        if (src_building_id == building_dst->id) {
             continue;
         }
-        const building_storage *s = building_storage_get(dst->storage_id);
+        const building_storage *s = building_storage_get(building_dst->storage_id);
         if (s->resource_state[resource] == BUILDING_STORAGE_STATE_NOT_ACCEPTING || s->empty_all) {
             continue;
         }
-        int pct_workers = calc_percentage(dst->num_workers, model_get_building(dst->type)->laborers);
+        int pct_workers = calc_percentage(building_dst->num_workers, model_get_building(building_dst->type)->laborers);
         if (pct_workers < 100) {
             if (understaffed) {
                 *understaffed += 1;
