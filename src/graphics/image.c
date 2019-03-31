@@ -557,10 +557,10 @@ void image_draw_blend(int image_id, int x, int y, color_t color)
     }
 }
 
-void image_draw_letter(int image_id, int x, int y, color_t color)
+void image_draw_letter(int letter_id, int x, int y, color_t color)
 {
-    const image *img = image_get(image_id);
-    const color_t *data = image_data(image_id);
+    const image *img = image_letter(letter_id);
+    const color_t *data = image_data_letter(letter_id);
     if (!data) {
         return;
     }

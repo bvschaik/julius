@@ -79,15 +79,14 @@ int text_get_width(const uint8_t *str, font_t font)
     const font_definition *def = font_definition_for(font);
     int maxlen = 10000;
     int width = 0;
-    int image_base = image_group(GROUP_FONT);
     while (*str && maxlen > 0) {
         if (*str == ' ') {
             width += def->space_width;
         } else {
             int image_offset = font_image_for(*str);
             if (image_offset) {
-                int image_id = image_base + def->image_offset + image_offset - 1;
-                width += def->letter_spacing + image_get(image_id)->width;
+                int image_id = def->image_offset + image_offset - 1;
+                width += def->letter_spacing + image_letter(image_id)->width;
             }
         }
         str++;
@@ -104,15 +103,14 @@ void text_ellipsize(char *str, font_t font, int requested_width)
     unsigned int maxlen = 10000;
     int width = 0;
     int length_with_ellipsis = 0;
-    int image_base = image_group(GROUP_FONT);
     while (*str && maxlen > 0) {
         if (*str == ' ') {
             width += def->space_width;
         } else {
             int image_offset = font_image_for(*str);
             if (image_offset) {
-                int image_id = image_base + def->image_offset + image_offset - 1;
-                width += def->letter_spacing + image_get(image_id)->width;
+                int letter_id = def->image_offset + image_offset - 1;
+                width += def->letter_spacing + image_letter(letter_id)->width;
             }
         }
         if (ellipsis_width + width <= requested_width) {
@@ -135,8 +133,8 @@ static int get_character_width(uint8_t c, const font_definition *def)
     if (!image_offset) {
         return 0;
     }
-    int image_id = image_group(GROUP_FONT) + def->image_offset + image_offset - 1;
-    return 1 + image_get(image_id)->width;
+    int letter_id = def->image_offset + image_offset - 1;
+    return 1 + image_letter(letter_id)->width;
 }
 
 static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
@@ -182,10 +180,10 @@ void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t 
 static int draw_character(const font_definition *def, unsigned int c, int x, int y, color_t color)
 {
     int image_offset = font_image_for(c);
-    int image_id = image_group(GROUP_FONT) + def->image_offset + image_offset - 1;
-    const image *img = image_get(image_id);
+    int letter_id = def->image_offset + image_offset - 1;
+    const image *img = image_letter(letter_id);
     int height = font_image_height_offset(c, img->height, def->line_height);
-    image_draw_letter(image_id, x, y - height, color);
+    image_draw_letter(letter_id, x, y - height, color);
     return img->width;
 }
 

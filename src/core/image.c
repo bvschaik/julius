@@ -344,6 +344,11 @@ const image *image_get(int id)
     return &data.main[id];
 }
 
+const image *image_letter(int letter_id)
+{
+    return &data.main[data.group_image_ids[GROUP_FONT] + letter_id];
+}
+
 const image *image_get_enemy(int id)
 {
     return &data.enemy[id];
@@ -358,6 +363,12 @@ const color_t *image_data(int id)
     } else {
         return load_external_data(id);
     }
+}
+
+const color_t *image_data_letter(int letter_id)
+{
+    int image_id = data.group_image_ids[GROUP_FONT] + letter_id;
+    return &data.main_data[data.main[image_id].draw.offset];
 }
 
 const color_t *image_data_enemy(int id)

@@ -151,8 +151,7 @@ static int get_character_width(uint8_t c, const font_definition *def)
     if (!image_offset) {
         return 0;
     }
-    int image_id = image_group(GROUP_FONT) + def->image_offset + image_offset - 1;
-    return 1 + image_get(image_id)->width;
+    return 1 + image_letter(def->image_offset + image_offset - 1)->width;
 }
 
 static int get_word_width(const uint8_t *str, int *num_chars)
@@ -212,11 +211,11 @@ static int draw_character(const font_definition *def, uint8_t c, int x, int y, c
         return def->space_width_draw;
     }
 
-    int image_id = image_group(GROUP_FONT) + def->image_offset + image_offset - 1;
-    const image *img = image_get(image_id);
+    int letter_id = def->image_offset + image_offset - 1;
+    const image *img = image_letter(letter_id);
     if (!measure_only) {
         int height = font_image_height_offset(c, img->height, 11);
-        image_draw_letter(image_id, x, y - height, color);
+        image_draw_letter(letter_id, x, y - height, color);
     }
     return img->width;
 }

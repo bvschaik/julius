@@ -66,6 +66,13 @@ int image_group(int group);
 const image *image_get(int id);
 
 /**
+ * Gets a letter image by offset within font group
+ * @param letter_id Letter offset
+ * @return Image
+ */
+const image *image_letter(int letter_id);
+
+/**
  * Gets an enemy image by id
  * @param id Enemy image ID
  * @return Enemy image
@@ -78,6 +85,13 @@ const image *image_get_enemy(int id);
  * @return Pointer to data or null, short term use only.
  */
 const color_t *image_data(int id);
+
+/**
+ * Gets letter image pixel data by id
+ * @param letter_id Letter ID
+ * @return Pointer to data or null, short term use only.
+ */
+const color_t *image_data_letter(int letter_id);
 
 /**
  * Gets enemy image pixel data by id
