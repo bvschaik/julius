@@ -3308,6 +3308,11 @@ static int tryCommand( char const * const aCommand )
 
 }
 
+static int copyAndDetectPresence(char *aExecutable, char const * const path)
+{
+    strcpy(aExecutable, path);
+    return detectPresence(aExecutable);
+}
 
 static int isTerminalRunning(void)
 {
@@ -3326,11 +3331,9 @@ static char const * dialogNameOnly(void)
         static char lDialogName[128] = "*" ;
         if ( lDialogName[0] == '*' )
         {
-                if ( isDarwin() && strcpy(lDialogName , "/opt/local/bin/dialog" )
-                        && detectPresence( lDialogName ) )
+                if ( isDarwin() && copyAndDetectPresence(lDialogName , "/opt/local/bin/dialog" ) )
                 {}
-                else if ( strcpy(lDialogName , "dialog" )
-                        && detectPresence( lDialogName ) )
+                else if ( copyAndDetectPresence(lDialogName , "dialog" ) )
                 {}
                 else
                 {
@@ -3413,8 +3416,7 @@ static char const * terminalName(void)
 
                 if ( isDarwin() )
                 {
-                        if ( strcpy(lTerminalName , "/opt/X11/bin/xterm" )
-                      && detectPresence( lTerminalName ) )
+                        if ( copyAndDetectPresence(lTerminalName , "/opt/X11/bin/xterm" ) )
                         {
                                 strcat(lTerminalName , " -fa 'DejaVu Sans Mono' -fs 10 -title tinyfiledialogs -e " ) ;
                                 strcat(lTerminalName , lShellName ) ;
@@ -3424,74 +3426,63 @@ static char const * terminalName(void)
                                 strcpy(lTerminalName , "" ) ;
                         }
                 }
-                else if ( strcpy(lTerminalName,"xterm") /*good (small without parameters)*/
-                        && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"xterm") ) /*good (small without parameters)*/
                 {
                         strcat(lTerminalName , " -fa 'DejaVu Sans Mono' -fs 10 -title tinyfiledialogs -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"terminator") /*good*/
-                          && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"terminator") ) /*good*/
                 {
                         strcat(lTerminalName , " -x " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"lxterminal") /*good*/
-                          && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"lxterminal") ) /*good*/
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"konsole") /*good*/
-                          && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"konsole") ) /*good*/
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"kterm") /*good*/
-                          && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"kterm") ) /*good*/
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"tilix") /*good*/
-                          && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"tilix") ) /*good*/
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"xfce4-terminal") /*good*/
-                          && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"xfce4-terminal") ) /*good*/
                 {
                         strcat(lTerminalName , " -x " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"mate-terminal") /*good*/
-                          && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"mate-terminal") ) /*good*/
                 {
                         strcat(lTerminalName , " -x " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"Eterm") /*good*/
-                          && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"Eterm") ) /*good*/
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"evilvte") /*good*/
-                          && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"evilvte") ) /*good*/
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"pterm") /*good (only letters)*/
-                          && detectPresence(lTerminalName) )
+                else if ( copyAndDetectPresence(lTerminalName,"pterm") ) /*good (only letters)*/
                 {
                         strcat(lTerminalName , " -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
                 }
-                else if ( strcpy(lTerminalName,"gnome-terminal")
-                && detectPresence(lTerminalName) && (lArray = getMajorMinorPatch(lTerminalName))
+                else if ( copyAndDetectPresence(lTerminalName,"gnome-terminal")
+                && (lArray = getMajorMinorPatch(lTerminalName))
 				&& ((lArray[0]<3) || (lArray[0]==3 && lArray[1]<=6)) )
                 {
                         strcat(lTerminalName , " --disable-factory -x " ) ;
