@@ -61,6 +61,9 @@ void graphics_save_screenshot(void)
     const color_t *canvas = graphics_canvas();
 
     int scanline_padding = 4 - (width * 3) % 4;
+    if (scanline_padding == 4) {
+        scanline_padding = 0;
+    }
     int scanline_size = width * 3 + scanline_padding;
     uint8_t *pixels = (uint8_t*) malloc(scanline_size);
     if (!pixels) {
