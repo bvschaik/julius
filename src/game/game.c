@@ -41,10 +41,11 @@ int game_pre_init(void)
     scenario_settings_init();
     game_state_unpause();
 
-    if (!lang_load("c3.eng", "c3_mm.eng")) {
+    if (!lang_load("c3.eng", "c3_mm.eng") && !lang_load("c3.rus", "c3_mm.rus")) {
         errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return 0;
     }
+    log_info("Detected encoding:", 0, lang_encoding());
     font_set_encoding(lang_encoding());
     scenario_set_player_name(lang_get_string(9, 5));
     random_init();
@@ -53,8 +54,9 @@ int game_pre_init(void)
 
 int game_init(void)
 {
+    int with_fonts = lang_encoding() == ENCODING_CYRILLIC;
     system_init_cursors();
-    if (!image_init(0)) {
+    if (!image_init(with_fonts)) {
         errlog("unable to init graphics");
         return 0;
     }
@@ -65,6 +67,10 @@ int game_init(void)
     }
     if (!image_load_enemy(ENEMY_0_BARBARIAN)) {
         errlog("unable to load enemy graphics");
+        return 0;
+    }
+    if (with_fonts && !image_load_fonts()) {
+        errlog("unable to load fonts graphics");
         return 0;
     }
 
