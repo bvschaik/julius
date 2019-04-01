@@ -1,5 +1,14 @@
 #include "font.h"
 
+static int image_y_offset_default(uint8_t c, int image_height, int line_height);
+static int image_y_offset_eastern(uint8_t c, int image_height, int line_height);
+static int image_y_offset_cyrillic_normal_small_plain(uint8_t c, int image_height, int line_height);
+static int image_y_offset_cyrillic_normal_colored(uint8_t c, int image_height, int line_height);
+static int image_y_offset_cyrillic_large_plain(uint8_t c, int image_height, int line_height);
+static int image_y_offset_cyrillic_large_black(uint8_t c, int image_height, int line_height);
+static int image_y_offset_cyrillic_large_brown(uint8_t c, int image_height, int line_height);
+static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int line_height);
+
 static const int CHAR_TO_FONT_IMAGE_DEFAULT[] = {
     0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x01,
     0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -57,60 +66,228 @@ static const int CHAR_TO_FONT_IMAGE_CYRILLIC[] = {
     0x8F, 0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0x9B, 0x9C, 0x9D, 0x9E,
 };
 
-static const font_definition DEFINITIONS_LATIN[] = {
-    {FONT_NORMAL_PLAIN,   0, 6, 6, 1, 1, 11},
-    {FONT_NORMAL_BLACK, 134, 6, 6, 0, 0, 11},
-    {FONT_NORMAL_WHITE, 268, 6, 6, 0, 0, 11},
-    {FONT_NORMAL_RED,   402, 6, 6, 0, 0, 11},
-    {FONT_LARGE_PLAIN, 536, 10, 8, 1, 1, 23},
-    {FONT_LARGE_BLACK, 670, 10, 8, 1, 0, 23},
-    {FONT_LARGE_BROWN, 804, 10, 8, 1, 0, 24},
-    {FONT_SMALL_PLAIN,  938, 4, 4, 1, 1, 9},
-    {FONT_NORMAL_GREEN,1072, 6, 6, 0, 0, 11},
-    {FONT_SMALL_BLACK, 1206, 6, 6, 0, 0, 11}
+static const font_definition DEFINITIONS_DEFAULT[] = {
+    {FONT_NORMAL_PLAIN,   0, 6, 6, 1, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_BLACK, 134, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_WHITE, 268, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_RED,   402, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_LARGE_PLAIN, 536, 10, 8, 1, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BLACK, 670, 10, 8, 1, 0, 23, image_y_offset_default},
+    {FONT_LARGE_BROWN, 804, 10, 8, 1, 0, 24, image_y_offset_default},
+    {FONT_SMALL_PLAIN,  938, 4, 4, 1, 1, 9, image_y_offset_default},
+    {FONT_NORMAL_GREEN,1072, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_SMALL_BLACK, 1206, 6, 6, 0, 0, 11, image_y_offset_default}
+};
+
+static const font_definition DEFINITIONS_EASTERN[] = {
+    {FONT_NORMAL_PLAIN,   0, 6, 6, 1, 1, 11, image_y_offset_eastern},
+    {FONT_NORMAL_BLACK, 134, 6, 6, 0, 0, 11, image_y_offset_eastern},
+    {FONT_NORMAL_WHITE, 268, 6, 6, 0, 0, 11, image_y_offset_eastern},
+    {FONT_NORMAL_RED,   402, 6, 6, 0, 0, 11, image_y_offset_eastern},
+    {FONT_LARGE_PLAIN, 536, 10, 8, 1, 1, 23, image_y_offset_eastern},
+    {FONT_LARGE_BLACK, 670, 10, 8, 1, 0, 23, image_y_offset_eastern},
+    {FONT_LARGE_BROWN, 804, 10, 8, 1, 0, 24, image_y_offset_eastern},
+    {FONT_SMALL_PLAIN,  938, 4, 4, 1, 1, 9, image_y_offset_eastern},
+    {FONT_NORMAL_GREEN,1072, 6, 6, 0, 0, 11, image_y_offset_eastern},
+    {FONT_SMALL_BLACK, 1206, 6, 6, 0, 0, 11, image_y_offset_eastern}
 };
 
 static const font_definition DEFINITIONS_CYRILLIC[] = {
-    {FONT_NORMAL_PLAIN,   0, 6, 6, 1, 1, 11},
-    {FONT_NORMAL_BLACK, 158, 6, 6, 0, 0, 11},
-    {FONT_NORMAL_WHITE, 316, 6, 6, 0, 0, 11},
-    {FONT_NORMAL_RED,   474, 6, 6, 0, 0, 11},
-    {FONT_LARGE_PLAIN, 632, 10, 8, 1, 1, 23},
-    {FONT_LARGE_BLACK, 790, 10, 8, 1, 0, 23},
-    {FONT_LARGE_BROWN, 948, 10, 8, 1, 0, 24},
-    {FONT_SMALL_PLAIN,  1106, 4, 4, 1, 1, 9},
-    {FONT_NORMAL_GREEN, 1264, 6, 6, 0, 0, 11},
-    {FONT_SMALL_BLACK, 1422, 6, 6, 0, 0, 11}
+    {FONT_NORMAL_PLAIN,   0, 6, 6, 1, 1, 11, image_y_offset_cyrillic_normal_small_plain},
+    {FONT_NORMAL_BLACK, 158, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_NORMAL_WHITE, 316, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_NORMAL_RED,   474, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_LARGE_PLAIN, 632, 10, 8, 1, 1, 23, image_y_offset_cyrillic_large_plain},
+    {FONT_LARGE_BLACK, 790, 10, 8, 1, 0, 23, image_y_offset_cyrillic_large_black},
+    {FONT_LARGE_BROWN, 948, 10, 8, 1, 0, 24, image_y_offset_cyrillic_large_brown},
+    {FONT_SMALL_PLAIN,  1106, 4, 4, 1, 1, 9, image_y_offset_cyrillic_normal_small_plain},
+    {FONT_NORMAL_GREEN, 1264, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_SMALL_BLACK, 1422, 6, 6, 0, 0, 11, image_y_offset_cyrillic_small_black}
 };
 
 static const int *font_mapping;
 static const font_definition *font_definitions;
-static int (*is_height_exception)(uint8_t);
 
-static int is_height_exception_default(uint8_t c)
+int image_y_offset_default(uint8_t c, int image_height, int line_height)
 {
-    return c == 0xE7;
+    int offset = image_height - line_height;
+    if (offset < 0) {
+        offset = 0;
+    }
+    if (c < 128 || c == 0xE7) {
+        offset = 0;
+    }
+    return offset;
 }
 
-static int is_height_exception_eastern(uint8_t c)
+int image_y_offset_eastern(uint8_t c, int image_height, int line_height)
 {
-    return c == 0xEA || c == 0xB9 || c == 0xA5 || c == 0xCA;
+    int offset = image_height - line_height;
+    if (offset < 0) {
+        offset = 0;
+    }
+    if (c < 128 || c == 0xEA || c == 0xB9 || c == 0xA5 || c == 0xCA) {
+        offset = 0;
+    }
+    return offset;
+}
+
+static int image_y_offset_cyrillic_normal_small_plain(uint8_t c, int image_height, int line_height)
+{
+    switch (c) {
+        case 36:
+            return 1;
+        case 201:
+            return 3;
+        case 225:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+static int image_y_offset_cyrillic_normal_colored(uint8_t c, int image_height, int line_height)
+{
+    return c == 201 ? 3 : 0;
+}
+
+static int image_y_offset_cyrillic_large_plain(uint8_t c, int image_height, int line_height)
+{
+    switch (c) {
+        case 36:
+            return 2;
+        case 201:
+            return 7;
+        case 35:
+        case 42:
+        case 47:
+        case 64:
+        case 92:
+        case 98:
+        case 100:
+        case 102:
+        case 104:
+        case 105:
+        case 106:
+        case 107:
+        case 108:
+        case 124:
+        case 225:
+        case 244:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+static int image_y_offset_cyrillic_large_black(uint8_t c, int image_height, int line_height)
+{
+    switch (c) {
+        case 36:
+            return 2;
+        case 201:
+            return 7;
+        case 35:
+        case 40:
+        case 41:
+        case 42:
+        case 47:
+        case 64:
+        case 92:
+        case 98:
+        case 100:
+        case 102:
+        case 104:
+        case 105:
+        case 106:
+        case 107:
+        case 108:
+        case 123:
+        case 124:
+        case 125:
+        case 225:
+        case 244:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+static int image_y_offset_cyrillic_large_brown(uint8_t c, int image_height, int line_height)
+{
+    switch (c) {
+        case 36:
+            return 2;
+        case 201:
+            return 7;
+        case 40:
+        case 41:
+        case 42:
+        case 47:
+        case 64:
+        case 92:
+        case 96:
+        case 98:
+        case 100:
+        case 102:
+        case 104:
+        case 105:
+        case 106:
+        case 107:
+        case 108:
+        case 123:
+        case 124:
+        case 125:
+        case 225:
+        case 244:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int line_height)
+{
+    switch (c) {
+        case 36:
+        case 40:
+        case 41:
+        case 42:
+        case 47:
+        case 64:
+        case 92:
+        case 98:
+        case 100:
+        case 102:
+        case 104:
+        case 105:
+        case 106:
+        case 107:
+        case 108:
+        case 123:
+        case 124:
+        case 125:
+        case 225:
+        case 244:
+            return 1;
+        case 201:
+            return 4;
+        default:
+            return 0;
+    }
 }
 
 void font_set_encoding(encoding_type encoding)
 {
     if (encoding == ENCODING_EASTERN_EUROPE) {
         font_mapping = CHAR_TO_FONT_IMAGE_EASTERN;
-        font_definitions = DEFINITIONS_LATIN;
-        is_height_exception = is_height_exception_eastern;
+        font_definitions = DEFINITIONS_EASTERN;
     } else if (encoding == ENCODING_CYRILLIC) {
         font_mapping = CHAR_TO_FONT_IMAGE_CYRILLIC;
         font_definitions = DEFINITIONS_CYRILLIC;
-        is_height_exception = is_height_exception_default; // TODO
     } else {
         font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
-        font_definitions = DEFINITIONS_LATIN;
-        is_height_exception = is_height_exception_default;
+        font_definitions = DEFINITIONS_DEFAULT;
     }
 }
 
@@ -122,16 +299,4 @@ const font_definition *font_definition_for(font_t font)
 int font_image_for(uint8_t c)
 {
     return font_mapping[c];
-}
-
-int font_image_height_offset(uint8_t c, int image_height, int line_height)
-{
-    int offset = image_height - line_height;
-    if (offset < 0) {
-        offset = 0;
-    }
-    if (c < 128 || is_height_exception(c)) {
-        offset = 0;
-    }
-    return offset;
 }

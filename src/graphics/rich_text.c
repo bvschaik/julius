@@ -214,7 +214,7 @@ static int draw_character(const font_definition *def, uint8_t c, int x, int y, c
     int letter_id = def->image_offset + image_offset - 1;
     const image *img = image_letter(letter_id);
     if (!measure_only) {
-        int height = font_image_height_offset(c, img->height, 11);
+        int height = def->image_y_offset(c, img->height, 11);
         image_draw_letter(letter_id, x, y - height, color);
     }
     return img->width;
