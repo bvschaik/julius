@@ -41,6 +41,9 @@ int platform_screen_resize(int width, int height)
     return 1;
 }
 
+void platform_screen_move(int x, int y)
+{}
+
 void platform_screen_set_fullscreen(void)
 {
     SDL_Log("User to fullscreen\n");

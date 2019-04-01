@@ -1,21 +1,27 @@
 #include "platform/screen.h"
 
-#include "SDL.h"
-
 #include "game/settings.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
+
+#include "SDL.h"
 
 static struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *texture;
-} SDL = {0, 0, 0};
+} SDL;
 
 static struct {
     int x;
     int y;
-} window_pos;
+    int centered;
+} window_pos = { 0, 0, 1 };
+
+static struct {
+    const int WIDTH;
+    const int HEIGHT;
+} MINIMUM = { 640, 480 };
 
 int platform_screen_create(const char *title)
 {
@@ -38,8 +44,9 @@ int platform_screen_create(const char *title)
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
     SDL.window = SDL_CreateWindow(title,
-        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         width, height, flags);
+
     if (!SDL.window) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
         return 0;
@@ -59,6 +66,7 @@ int platform_screen_create(const char *title)
         SDL_SetWindowGrab(SDL.window, SDL_TRUE);
     }
 #endif
+    SDL_SetWindowMinimumSize(SDL.window, MINIMUM.WIDTH, MINIMUM.HEIGHT);
     return platform_screen_resize(width, height);
 }
 
@@ -99,11 +107,18 @@ int platform_screen_resize(int width, int height)
     }
 }
 
+void platform_screen_move(int x, int y)
+{
+    if (!setting_fullscreen()) {
+        window_pos.x = x;
+        window_pos.y = y;
+        window_pos.centered = 0;
+    }
+}
+
 void platform_screen_set_fullscreen(void)
 {
     SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
-    int orig_w, orig_h;
-    SDL_GetWindowSize(SDL.window, &orig_w, &orig_h);
     SDL_DisplayMode mode;
     SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(SDL.window), &mode);
     SDL_Log("User to fullscreen %d x %d\n", mode.w, mode.h);
@@ -128,7 +143,9 @@ void platform_screen_set_windowed(void)
     SDL_Log("User to windowed %d x %d\n", width, height);
     SDL_SetWindowFullscreen(SDL.window, 0);
     SDL_SetWindowSize(SDL.window, width, height);
-    SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
+    if (window_pos.centered) {
+        platform_screen_center_window();
+    }
     if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
     }
@@ -142,8 +159,13 @@ void platform_screen_set_window_size(int width, int height)
     } else {
         SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
     }
+    if (SDL_GetWindowFlags(SDL.window) & SDL_WINDOW_MAXIMIZED) {
+        SDL_RestoreWindow(SDL.window);
+    }
     SDL_SetWindowSize(SDL.window, width, height);
-    SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
+    if (window_pos.centered) {
+        platform_screen_center_window();
+    }
     SDL_Log("User resize to %d x %d\n", width, height);
     if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
@@ -153,7 +175,9 @@ void platform_screen_set_window_size(int width, int height)
 
 void platform_screen_center_window(void)
 {
-    SDL_SetWindowPosition(SDL.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    int display = SDL_GetWindowDisplayIndex(SDL.window);
+    SDL_SetWindowPosition(SDL.window, SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
+    window_pos.centered = 1;
 }
 
 void platform_screen_render(void)
