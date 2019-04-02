@@ -8,7 +8,8 @@
 #include "core/string.h"
 
 
-FILE* file_open(const char *filename, const char *mode) {
+FILE* file_open(const char *filename, const char *mode)
+{
     #ifdef __vita__
     char *resolved_path = vita_prepend_path(filename);
     #else
@@ -24,7 +25,8 @@ FILE* file_open(const char *filename, const char *mode) {
     return fd;
 }
 
-int file_close(FILE *stream) {
+int file_close(FILE *stream)
+{
     return fclose(stream);
 }
 

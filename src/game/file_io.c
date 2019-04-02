@@ -10,6 +10,7 @@
 #include "core/log.h"
 #include "city/message.h"
 #include "city/view.h"
+#include "core/dir.h"
 #include "core/random.h"
 #include "core/zip.h"
 #include "empire/city.h"
@@ -485,7 +486,7 @@ int game_file_io_read_scenario(const char *filename)
 {
     log_info("Loading scenario", filename, 0);
     init_scenario_data();
-    FILE *fp = file_open(filename, "rb");
+    FILE *fp = file_open(dir_get_case_corrected_file(filename), "rb");
     if (!fp) {
         return 0;
     }
@@ -581,7 +582,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     init_savegame_data();
 
     log_info("Loading saved game", filename, 0);
-    FILE *fp = file_open(filename, "rb");
+    FILE *fp = file_open(dir_get_case_corrected_file(filename), "rb");
     if (!fp) {
         return 0;
     }
