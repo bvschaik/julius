@@ -18,9 +18,6 @@
 
 #define BUFFER_SIZE 400000
 
-static const uint8_t NEW_GAME_POLISH[] = { 0x4e, 0x6f, 0x77, 0x61, 0x20, 0x67, 0x72, 0x61, 0 };
-static const uint8_t NEW_GAME_RUSSIAN[] = { 0xcd, 0xee, 0xe2, 0xe0, 0xff, 0x20, 0xe8, 0xe3, 0xf0, 0xe0, 0 };
-
 static struct {
     struct {
         int32_t offset;
@@ -30,8 +27,6 @@ static struct {
 
     lang_message message_entries[MAX_MESSAGE_ENTRIES];
     uint8_t message_data[MAX_MESSAGE_DATA];
-
-    encoding_type encoding;
 } data;
 
 static void parse_text(buffer *buf)
@@ -113,23 +108,6 @@ static int load_message(const char *filename, uint8_t *data)
     return 1;
 }
 
-static void determine_encoding(void)
-{
-    // A really dirty way to 'detect' encoding:
-    // - Windows-1250 (Central/Eastern Europe) is used in Polish only
-    // - Windows-1251 (Cyrillic) is used in Russian only
-    // - Windows-1252 (Western Europe) is used in all other languages
-    // Check if the string for "New game" is Polish or Russian
-    const uint8_t *new_game_string = lang_get_string(1, 1);
-    if (string_equals(NEW_GAME_POLISH, new_game_string)) {
-        data.encoding = ENCODING_EASTERN_EUROPE;
-    } else if (string_equals(NEW_GAME_RUSSIAN, new_game_string)) {
-        data.encoding = ENCODING_CYRILLIC;
-    } else {
-        data.encoding = ENCODING_WESTERN_EUROPE;
-    }
-}
-
 int lang_load(const char *text_filename, const char *message_filename)
 {
     uint8_t *data = (uint8_t *) malloc(BUFFER_SIZE);
@@ -138,15 +116,7 @@ int lang_load(const char *text_filename, const char *message_filename)
     }
     int success = load_text(text_filename, data) && load_message(message_filename, data);
     free(data);
-    if (success) {
-        determine_encoding();
-    }
     return success;
-}
-
-encoding_type lang_encoding(void)
-{
-    return data.encoding;
 }
 
 const uint8_t *lang_get_string(int group, int index)

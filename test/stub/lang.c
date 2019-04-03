@@ -1,4 +1,5 @@
 #include "core/lang.h"
+#include "core/encoding.h"
 
 static uint8_t EMPTY[] = {0};
 
@@ -20,10 +21,5 @@ const lang_message *lang_get_message(int id)
     return &msg;
 }
 
-encoding_type lang_encoding(void)
-{
-    return ENCODING_WESTERN_EUROPE;
-}
-
-void font_set_encoding(int encoding)
+void font_set_encoding(encoding_type encoding)
 {}

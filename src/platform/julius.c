@@ -1,6 +1,7 @@
 #include "SDL.h"
 
 #include "core/dir.h"
+#include "core/encoding.h"
 #include "core/file.h"
 #include "core/lang.h"
 #include "core/time.h"
@@ -448,7 +449,9 @@ static void setup(const char *custom_data_dir)
         exit(1);
     }
 
-    if (!platform_screen_create((const char*)lang_get_string(9, 0))) {
+    char title[100];
+    encoding_to_utf8(lang_get_string(9, 0), title, 100);
+    if (!platform_screen_create(title)) {
         SDL_Log("Exiting: SDL create window failed");
         exit(-2);
     }

@@ -45,8 +45,9 @@ int game_pre_init(void)
         errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return 0;
     }
-    log_info("Detected encoding:", 0, lang_encoding());
-    font_set_encoding(lang_encoding());
+    encoding_type encoding = encoding_determine();
+    log_info("Detected encoding:", 0, encoding);
+    font_set_encoding(encoding);
     scenario_set_player_name(lang_get_string(9, 5));
     random_init();
     return 1;
@@ -54,7 +55,7 @@ int game_pre_init(void)
 
 int game_init(void)
 {
-    int with_fonts = lang_encoding() == ENCODING_CYRILLIC;
+    int with_fonts = encoding_get() == ENCODING_CYRILLIC;
     system_init_cursors();
     if (!image_init(with_fonts)) {
         errlog("unable to init graphics");

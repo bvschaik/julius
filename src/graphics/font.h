@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_FONT_H
 #define GRAPHICS_FONT_H
 
-#include "core/lang.h"
+#include "core/encoding.h"
 
 #include <stdint.h>
 
