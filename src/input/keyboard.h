@@ -12,6 +12,8 @@ void keyboard_stop_capture(void);
 int keyboard_input_is_accepted(void);
 int keyboard_is_insert(void);
 int keyboard_cursor_position(void);
+int keyboard_offset_start(void);
+int keyboard_offset_end(void);
 
 void keyboard_return(void);
 

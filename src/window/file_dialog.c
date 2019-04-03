@@ -71,7 +71,7 @@ static void init(file_dialog_type type)
     data.saved_games = dir_find_files_with_extension("sav");
 
     strncpy(data.saved_game, data.last_loaded_file, FILE_NAME_MAX);
-    keyboard_start_capture((uint8_t*) data.saved_game, 64, 0, 280, FONT_NORMAL_WHITE);
+    keyboard_start_capture((uint8_t*) data.saved_game, FILE_NAME_MAX, 0, MAX_FILE_WINDOW_TEXT_WIDTH, FONT_NORMAL_WHITE);
 }
 
 static void draw_scrollbar_dot(void)
@@ -121,7 +121,7 @@ static void draw_foreground(void)
     }
 
     image_buttons_draw(0, 0, image_buttons, 4);
-    text_capture_cursor(keyboard_cursor_position());
+    text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
     text_draw(string_from_ascii(data.saved_game), 160, 90, FONT_NORMAL_WHITE, 0);
     text_draw_cursor(160, 91, keyboard_is_insert());
     draw_scrollbar_dot();
