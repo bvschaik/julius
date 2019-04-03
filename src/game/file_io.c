@@ -606,6 +606,7 @@ int game_file_io_write_saved_game(const char *filename)
 
     FILE *fp = file_open(filename, "wb");
     if (!fp) {
+        log_error("Unable to save game", 0, 0);
         return 0;
     }
     savegame_write_to_file(fp);
