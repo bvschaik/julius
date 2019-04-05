@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "core/dir.h"
+#include "core/encoding.h"
 #include "core/file.h"
 #include "core/string.h"
 #include "game/file.h"
@@ -54,7 +55,8 @@ static struct {
     int scroll_position;
     int focus_button_id;
     int selected_item;
-    char selected_scenario[FILE_NAME_MAX];
+    char selected_scenario_filename[FILE_NAME_MAX];
+    uint8_t selected_scenario_display[FILE_NAME_MAX];
 
     const dir_listing *scenarios;
 } data;
@@ -71,6 +73,8 @@ static void init(void)
 static void draw_scenario_list(void)
 {
     inner_panel_draw(16, 210, 16, 16);
+    char file[FILE_NAME_MAX];
+    uint8_t displayable_file[FILE_NAME_MAX];
     for (int i = 0; i < 15; i++) {
         font_t font = FONT_NORMAL_GREEN;
         if (data.focus_button_id == i + 1) {
@@ -78,10 +82,10 @@ static void draw_scenario_list(void)
         } else if (!data.focus_button_id && data.selected_item == i + data.scroll_position) {
             font = FONT_NORMAL_WHITE;
         }
-        char file[FILE_NAME_MAX];
         strcpy(file, data.scenarios->files[i + data.scroll_position]);
         file_remove_extension(file);
-        text_draw(string_from_ascii(file), 24, 220 + 16 * i, font, 0);
+        encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
+        text_draw(displayable_file, 24, 220 + 16 * i, font, 0);
     }
 }
 
@@ -105,7 +109,7 @@ static void draw_scenario_info(void)
 {
     image_draw(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
 
-    text_draw_centered(string_from_ascii(data.selected_scenario), 335, 25, 260, FONT_LARGE_BLACK, 0);
+    text_draw_centered(data.selected_scenario_display, 335, 25, 260, FONT_LARGE_BLACK, 0);
     text_draw_centered(scenario_brief_description(), 335, 60, 260, FONT_NORMAL_WHITE, 0);
     lang_text_draw_year(scenario_property_start_year(), 410, 90, FONT_LARGE_BLACK);
     lang_text_draw_centered(44, 77 + scenario_property_climate(), 335, 150, 260, FONT_NORMAL_BLACK);
@@ -240,9 +244,11 @@ static void button_select_item(int index, int param2)
         return;
     }
     data.selected_item = data.scroll_position + index;
-    strcpy(data.selected_scenario, data.scenarios->files[data.selected_item]);
-    game_file_load_scenario_data(data.selected_scenario);
-    file_remove_extension(data.selected_scenario);
+    strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item]);
+    game_file_load_scenario_data(data.selected_scenario_filename);
+    file_remove_extension(data.selected_scenario_filename); // TODO stop manipulating filename
+    encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
+    file_append_extension(data.selected_scenario_filename, ".map");
     window_invalidate();
 }
 
@@ -266,7 +272,7 @@ static void button_scroll(int is_down, int num_lines)
 static void button_start_scenario(int param1, int param2)
 {
     sound_speech_stop();
-    game_file_start_scenario(string_from_ascii(data.selected_scenario));
+    game_file_start_scenario(string_from_ascii(data.selected_scenario_filename));
     window_city_show();
 }
 
