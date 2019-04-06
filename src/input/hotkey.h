@@ -1,6 +1,9 @@
 #ifndef INPUT_HOTKEY_H
 #define INPUT_HOTKEY_H
 
+#include "SDL.h"
+#include "SDL_scancode.h"
+
 void hotkey_character(int c);
 
 void hotkey_left(void);

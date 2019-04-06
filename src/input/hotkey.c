@@ -150,85 +150,94 @@ void hotkey_character(int c)
 {
     if (data.alt_down) {
         switch (c) {
-            case 'X': case 'x':
+            case SDLK_x: //'X'
                 hotkey_esc();
                 break;
-            case 'K': case 'k':
+            case SDLK_k: //'K'
                 cheat_init_or_invasion();
-            case 'C': case 'c':
+            case SDLK_c: //'C'
                 cheat_money();
                 break;
-            case 'V': case 'v':
+            case SDLK_v: //'V'
                 cheat_victory();
+                break;
+
+            // Azerty keyboards need alt gr for these keys
+            case SDL_SCANCODE_5: //'['
+                change_game_speed(1);
+                break;
+            case SDL_SCANCODE_MINUS: //']'
+                change_game_speed(0);
                 break;
         }
         return;
     }
+
     switch (c) {
-        case '[':
+        case SDLK_LEFTBRACKET: //'['
             change_game_speed(1);
             break;
-        case ']':
+        case SDLK_RIGHTBRACKET: //']'
             change_game_speed(0);
             break;
-        case ' ':
+        case SDL_SCANCODE_SPACE: //' '
             toggle_overlay();
             break;
-        case 'P': case 'p':
+        case SDLK_p: //'P'
             toggle_pause();
             break;
-        case 'F': case 'f':
+        case SDLK_f: //'F'
             show_overlay(OVERLAY_FIRE);
             break;
-        case 'D': case 'd':
+        case SDLK_d: //'D'
             show_overlay(OVERLAY_DAMAGE);
             break;
-        case 'C': case 'c':
+        case SDLK_c: //'C'
             show_overlay(OVERLAY_CRIME);
             break;
-        case 'T': case 't':
+        case SDLK_t: //'T'
             show_overlay(OVERLAY_PROBLEMS);
             break;
-        case 'W': case 'w':
+        case SDLK_w: //'W'
             show_overlay(OVERLAY_WATER);
             break;
-        case 'L': case 'l':
+        case SDLK_l: //'L'
             cycle_legion();
             break;
-        case '1':
+        case SDL_SCANCODE_1: //'1':
             show_advisor(ADVISOR_LABOR);
             break;
-        case '2':
+        case SDL_SCANCODE_2: //'2':
             show_advisor(ADVISOR_MILITARY);
             break;
-        case '3':
+        case SDL_SCANCODE_3: //'3':
             show_advisor(ADVISOR_IMPERIAL);
             break;
-        case '4':
+        case SDL_SCANCODE_4: //'4':
             show_advisor(ADVISOR_RATINGS);
             break;
-        case '5':
+        case SDL_SCANCODE_5: //'5':
             show_advisor(ADVISOR_TRADE);
             break;
-        case '6':
+        case SDL_SCANCODE_6: //'6':
             show_advisor(ADVISOR_POPULATION);
             break;
-        case '7':
+        case SDL_SCANCODE_7: //'7':
             show_advisor(ADVISOR_HEALTH);
             break;
-        case '8':
+        case SDL_SCANCODE_8: //'8':
             show_advisor(ADVISOR_EDUCATION);
             break;
-        case '9':
+        case SDL_SCANCODE_9: //'9':
             show_advisor(ADVISOR_ENTERTAINMENT);
             break;
-        case '0':
+        case SDL_SCANCODE_0: //'0':
             show_advisor(ADVISOR_RELIGION);
             break;
-        case '-':
+        case SDL_SCANCODE_MINUS: //'-':
             show_advisor(ADVISOR_FINANCIAL);
             break;
-        case '=':
+        case SDL_SCANCODE_EQUALS: // '='
             show_advisor(ADVISOR_CHIEF);
             break;
     }
