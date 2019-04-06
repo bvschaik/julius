@@ -37,8 +37,9 @@ int encoding_can_display(const char *utf8_char);
  * @param input Input to convert, encoded using encoding_get()
  * @param output Output buffer to store the UTF-8 encoded input
  * @param output_length Length of the output buffer
+ * @param decompose Whether the unicode characters should be in decomposed form
  */
-void encoding_to_utf8(const uint8_t *input, char *output, int output_length);
+void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int decompose);
 
 /**
  * Converts the internally-encoded input to UTF-8 output

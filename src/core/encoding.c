@@ -602,7 +602,7 @@ int encoding_can_display(const char *utf8_char)
     return is_ascii(utf8_char) || get_letter_code_for_utf8(utf8_char, NULL, NULL) != NULL;
 }
 
-void encoding_to_utf8(const uint8_t *input, char *output, int output_length)
+void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int decomposed)
 {
     const char *max_output = &output[output_length - 1];
     
@@ -614,12 +614,21 @@ void encoding_to_utf8(const uint8_t *input, char *output, int output_length)
         } else {
             // multi-byte char
             const letter_code *code = get_letter_code_for_internal(c);
-            if (code->bytes) {
-                if (output + code->bytes >= max_output) {
+            int num_bytes;
+            const uint8_t *bytes;
+            if (decomposed && code->bytes_decomposed) {
+                num_bytes = code->bytes_decomposed;
+                bytes = code->utf8_decomposed;
+            } else {
+                num_bytes = code->bytes;
+                bytes = code->utf8_value;
+            }
+            if (num_bytes) {
+                if (output + num_bytes >= max_output) {
                     break;
                 }
-                for (int i = 0; i < code->bytes; i++) {
-                    *output = code->utf8_value[i];
+                for (int i = 0; i < num_bytes; i++) {
+                    *output = bytes[i];
                     ++output;
                 }
             }

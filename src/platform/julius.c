@@ -450,7 +450,7 @@ static void setup(const char *custom_data_dir)
     }
 
     char title[100];
-    encoding_to_utf8(lang_get_string(9, 0), title, 100);
+    encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
     if (!platform_screen_create(title)) {
         SDL_Log("Exiting: SDL create window failed");
         exit(-2);
