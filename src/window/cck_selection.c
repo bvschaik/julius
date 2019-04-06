@@ -248,7 +248,7 @@ static void button_select_item(int index, int param2)
     game_file_load_scenario_data(data.selected_scenario_filename);
     file_remove_extension(data.selected_scenario_filename); // TODO stop manipulating filename
     encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
-    file_append_extension(data.selected_scenario_filename, ".map");
+    file_append_extension(data.selected_scenario_filename, "map");
     window_invalidate();
 }
 
@@ -272,7 +272,7 @@ static void button_scroll(int is_down, int num_lines)
 static void button_start_scenario(int param1, int param2)
 {
     sound_speech_stop();
-    game_file_start_scenario(string_from_ascii(data.selected_scenario_filename));
+    game_file_start_scenario(data.selected_scenario_filename);
     window_city_show();
 }
 

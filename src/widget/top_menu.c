@@ -367,7 +367,7 @@ static void menu_file_replay_map(int param)
     clear_state();
     building_construction_clear_type();
     if (scenario_is_custom()) {
-        game_file_start_scenario(scenario_name());
+        game_file_start_scenario_by_name(scenario_name());
         window_city_show();
     } else {
         window_mission_briefing_show();

@@ -13,6 +13,7 @@
 #include "city/mission.h"
 #include "city/victory.h"
 #include "city/view.h"
+#include "core/encoding.h"
 #include "core/file.h"
 #include "core/image.h"
 #include "core/io.h"
@@ -87,15 +88,6 @@ static const char MISSION_SAVED_GAMES[][32] = {
     "Caesar.sav",
     "Caesar2.sav"
 };
-
-static const char *get_scenario_filename(const uint8_t *scenario_name)
-{
-    static char filename[FILE_NAME_MAX];
-    strncpy(filename, string_to_ascii(scenario_name), FILE_NAME_MAX);
-    file_remove_extension(filename);
-    file_append_extension(filename, "map");
-    return filename;
-}
 
 static void clear_scenario_data(void)
 {
@@ -198,9 +190,8 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     city_data_init_scenario();
 }
 
-static int load_custom_scenario(const uint8_t *scenario_name)
+static int load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file)
 {
-    const char *scenario_file = get_scenario_filename(scenario_name);
     if (!file_exists(scenario_file)) {
         return 0;
     }
@@ -281,13 +272,13 @@ static int load_campaign_mission(int mission_id)
     return 1;
 }
 
-int game_file_start_scenario(const uint8_t *scenario_name)
+static int start_scenario(const uint8_t *scenario_name, const char *scenario_file)
 {
     int mission = scenario_campaign_mission();
     int rank = scenario_campaign_rank();
     map_bookmarks_clear();
     if (scenario_is_custom()) {
-        if (!load_custom_scenario(scenario_name)) {
+        if (!load_custom_scenario(scenario_name, scenario_file)) {
             return 0;
         }
     } else {
@@ -311,6 +302,33 @@ int game_file_start_scenario(const uint8_t *scenario_name)
     building_menu_update();
     city_message_init_scenario();
     return 1;
+}
+
+static const char *get_scenario_filename(const uint8_t *scenario_name, int decomposed)
+{
+    static char filename[FILE_NAME_MAX];
+    encoding_to_utf8(scenario_name, filename, FILE_NAME_MAX, decomposed);
+    if (!file_has_extension(filename, "map")) {
+        file_append_extension(filename, "map");
+    }
+    return filename;
+}
+
+int game_file_start_scenario_by_name(const uint8_t *scenario_name)
+{
+    if (start_scenario(scenario_name, get_scenario_filename(scenario_name, 0))) {
+        return 1;
+    } else {
+        return start_scenario(scenario_name, get_scenario_filename(scenario_name, 1));
+    }
+}
+
+int game_file_start_scenario(const char *scenario_file)
+{
+    uint8_t scenario_name[FILE_NAME_MAX];
+    encoding_from_utf8(scenario_file, scenario_name, FILE_NAME_MAX);
+    file_remove_extension(scenario_name);
+    return start_scenario(scenario_name, scenario_file);
 }
 
 int game_file_load_scenario_data(const char *scenario_file)

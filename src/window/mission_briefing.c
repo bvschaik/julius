@@ -49,7 +49,7 @@ static void draw_background(void)
 {
     if (!data.campaign_mission_loaded) {
         data.campaign_mission_loaded = 1;
-        if (!game_file_start_scenario(scenario_name())) {
+        if (!game_file_start_scenario_by_name(scenario_name())) {
             window_city_show();
             return;
         }
