@@ -1,29 +1,60 @@
 #include "core/file.h"
-#include "platform/vita/vita.h"
-
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "core/dir.h"
 #include "core/string.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 
-FILE* file_open(const char *filename, const char *mode)
+#ifdef __vita__
+#include "platform/vita/vita.h"
+#endif
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#if defined(__vita__)
+
+FILE *file_open(const char *filename, const char *mode)
 {
-    #ifdef __vita__
     char *resolved_path = vita_prepend_path(filename);
-    #else
-    const char *resolved_path = filename;
-    #endif
-
-    FILE *fd = fopen(resolved_path, mode);
-
-    #ifdef __vita__
+    FILE *fp = fopen(resolved_path, mode);
     free(resolved_path);
-    #endif
-
-    return fd;
+    return fp;
 }
+
+#elif defined(_WIN32)
+
+wchar_t *utf8_to_wchar(const char *str)
+{
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
+    wchar_t *result = (wchar_t*) malloc(sizeof(wchar_t) * size_needed);
+    MultiByteToWideChar(CP_UTF8, 0, str, -1, result, size_needed);
+    return result;
+}
+
+FILE *file_open(const char *filename, const char *mode)
+{
+    wchar_t *wfile = utf8_to_wchar(filename);
+    wchar_t *wmode = utf8_to_wchar(mode);
+
+    FILE *fp = _wfopen(wfile, wmode);
+
+    free(wfile);
+    free(wmode);
+
+    return fp;
+}
+
+#else
+
+FILE *file_open(const char *filename, const char *mode)
+{
+    return fopen(filename, mode);
+}
+
+#endif
 
 int file_close(FILE *stream)
 {
