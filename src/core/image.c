@@ -342,7 +342,7 @@ int image_load_enemy(int enemy_id)
 static const color_t *load_external_data(int image_id)
 {
     image *img = &data.main[image_id];
-    char filename[200] = "555/";
+    char filename[FILE_NAME_MAX] = "555/";
     strcpy(&filename[4], data.bitmaps[img->draw.bitmap_id]);
     file_change_extension(filename, "555");
     int size = io_read_file_part_into_buffer(
