@@ -139,6 +139,8 @@ void platform_screen_set_window_size(int width, int height)
 {
     if (setting_fullscreen()) {
         SDL_SetWindowFullscreen(SDL.window, 0);
+    } else {
+        SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
     }
     SDL_SetWindowSize(SDL.window, width, height);
     SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
