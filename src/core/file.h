@@ -1,6 +1,8 @@
 #ifndef CORE_FILE_H
 #define CORE_FILE_H
 
+#include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
 
 /**
@@ -60,7 +62,7 @@ void file_append_extension(char *filename, const char *extension);
  * Removes the extension from the file
  * @param[in,out] filename Filename to change
  */
-void file_remove_extension(char *filename);
+void file_remove_extension(uint8_t *filename);
 
 /**
  * Check if file exists

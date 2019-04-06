@@ -74,9 +74,9 @@ void file_append_extension(char *filename, const char *extension)
 }
 
 
-void file_remove_extension(char *filename)
+void file_remove_extension(uint8_t *filename)
 {
-    char c;
+    uint8_t c;
     do {
         c = *filename;
         filename++;
