@@ -7,6 +7,8 @@
 
 #include <string.h>
 
+#define ELLIPSIS_LENGTH 4
+
 static uint8_t tmp_line[200];
 
 static struct {
@@ -24,14 +26,14 @@ static struct {
 } input_cursor;
 
 static struct {
-    const char * string;
+    const uint8_t string[ELLIPSIS_LENGTH];
     int width[FONT_TYPES_MAX];
-} ellipsis = { "..." };
+} ellipsis = { {'.', '.', '.', 0} };
 
 static int get_ellipsis_width(font_t font)
 {
     if (!ellipsis.width[font]) {
-        ellipsis.width[font] = text_get_width(string_from_ascii(ellipsis.string), font);
+        ellipsis.width[font] = text_get_width(ellipsis.string, font);
     }
     return ellipsis.width[font];
 }
@@ -133,9 +135,9 @@ unsigned int text_get_max_length_for_width(const uint8_t *str, int length, font_
     return length - maxlen;
 }
 
-void text_ellipsize(char *str, font_t font, int requested_width)
+void text_ellipsize(uint8_t *str, font_t font, int requested_width)
 {
-    char *orig_str = str;
+    uint8_t *orig_str = str;
     const font_definition *def = font_definition_for(font);
     int ellipsis_width = get_ellipsis_width(font);
     unsigned int maxlen = 10000;
@@ -160,8 +162,8 @@ void text_ellipsize(char *str, font_t font, int requested_width)
         str++;
         maxlen--;
     }
-    if (10000 - maxlen < strlen(orig_str)) {
-        strcpy(orig_str + length_with_ellipsis, ellipsis.string);
+    if (10000 - maxlen < string_length(orig_str)) {
+        string_copy(ellipsis.string, orig_str + length_with_ellipsis, ELLIPSIS_LENGTH);
     }
 }
 

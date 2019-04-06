@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "core/dir.h"
+#include "core/encoding.h"
 #include "core/file.h"
 #include "core/lang.h"
 #include "core/string.h"
@@ -93,7 +94,7 @@ static void draw_scrollbar_dot(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    char file[FILE_NAME_MAX];
+    uint8_t file[FILE_NAME_MAX];
 
     outer_panel_draw(128, 40, 24, 21);
     inner_panel_draw(144, 80, 20, 2);
@@ -114,7 +115,7 @@ static void draw_foreground(void)
         if (data.focus_button_id == i + 1) {
             font = FONT_NORMAL_WHITE;
         }
-        strncpy(file, data.saved_games->files[data.scroll_position + i], FILE_NAME_MAX);
+        encoding_from_utf8(data.saved_games->files[data.scroll_position + i], file, FILE_NAME_MAX);
         file_remove_extension(file);
         text_ellipsize(file, font, MAX_FILE_WINDOW_TEXT_WIDTH);
         text_draw(string_from_ascii(file), 160, 130 + 16 * i, font, 0);
