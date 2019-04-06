@@ -119,8 +119,5 @@ void platform_handle_key_up(SDL_KeyboardEvent *event)
 
 void platform_handle_text(SDL_TextInputEvent *event)
 {
-    if (event->text[0] && !event->text[1]) {
-        // only accept non-multibyte chars
-        keyboard_character(event->text[0]);
-    }
+    keyboard_character(event->text);
 }

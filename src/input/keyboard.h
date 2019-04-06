@@ -26,7 +26,6 @@ void keyboard_right(void);
 void keyboard_home(void);
 void keyboard_end(void);
 
-void keyboard_character(int unicode);
-
+void keyboard_character(const char *text_utf8);
 
 #endif // INPUT_KEYBOARD_H

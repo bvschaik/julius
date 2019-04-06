@@ -1,5 +1,6 @@
 #include "keyboard.h"
 
+#include "core/encoding.h"
 #include "core/string.h"
 #include "graphics/text.h"
 
@@ -254,27 +255,17 @@ void keyboard_end(void)
     }
 }
 
-static uint8_t unicode_to_cp1252(int c)
-{
-    if (c == 0x152) { // OE
-        return 140;
-    } else if (c == 0x153) { // oe
-        return 156;
-    } else if (c <= 0xff) {
-        // ascii + ISO-8859-1
-        return (uint8_t) c;
-    }
-    return 0;
-}
-
-void keyboard_character(int unicode)
+void keyboard_character(const char *text_utf8)
 {
     if (!data.capture) {
         return;
     }
+
+    uint8_t internal_char[2];
+    encoding_from_utf8(text_utf8, internal_char, 2);
+    uint8_t c = internal_char[0];
+
     int add = 0;
-    uint8_t c = unicode_to_cp1252(unicode);
-    // TODO correct ranges (original ones are from CP437 / dos extended ascii)
     if (c == ' ' || c == '-') {
         add = 1;
     } else if (c >= '0' && c <= '9') {
@@ -283,17 +274,12 @@ void keyboard_character(int unicode)
         add = 1;
     } else if (c >= 'A' && c <= 'Z') {
         add = 1;
-    } else if (c >= 128 && c <= 154) {
+    } else if (c == ',' || c == '.' || c == '?' || c == '!') {
+        add = data.allow_punctuation;
+    } else if (c >= 128) { // do not check non-ascii for valid characters
         add = 1;
-    } else if (c >= 160 && c <= 167) {
-        add = 1;
-    } else if (c == 225) {
-        add = 1;
-    } else if (data.allow_punctuation) {
-        if (c == ',' || c == '.' || c == '?' || c == '!') {
-            add = 1;
-        }
     }
+
     if (add) {
         add_char(c);
     }
