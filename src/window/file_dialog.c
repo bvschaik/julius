@@ -56,14 +56,20 @@ static struct {
     int scroll_position;
     const dir_listing *saved_games;
 
-    char saved_game[FILE_NAME_MAX];
+    uint8_t typed_name[FILE_NAME_MAX];
+    char selected_saved_game[FILE_NAME_MAX];
     char last_loaded_file[FILE_NAME_MAX];
-} data = {0, 0, 0, 0, 0, {0}, {0}};
+} data;
 
 static void init(file_dialog_type type)
 {
     if (strlen(data.last_loaded_file) == 0) {
-        strncpy(data.last_loaded_file, string_to_ascii(lang_get_string(9, 6)), FILE_NAME_MAX);
+        string_copy(lang_get_string(9, 6), data.typed_name, FILE_NAME_MAX);
+        encoding_to_utf8(data.typed_name, data.last_loaded_file, FILE_NAME_MAX, 0);
+        file_append_extension(data.last_loaded_file, "sav");
+    } else {
+        encoding_from_utf8(data.last_loaded_file, data.typed_name, FILE_NAME_MAX);
+        file_remove_extension(data.typed_name);
     }
     data.type = type;
     data.message_not_exist_start_time = 0;
@@ -71,8 +77,8 @@ static void init(file_dialog_type type)
 
     data.saved_games = dir_find_files_with_extension("sav");
 
-    strncpy(data.saved_game, data.last_loaded_file, FILE_NAME_MAX);
-    keyboard_start_capture((uint8_t*) data.saved_game, FILE_NAME_MAX, 0, MAX_FILE_WINDOW_TEXT_WIDTH, FONT_NORMAL_WHITE);
+    strncpy(data.selected_saved_game, data.last_loaded_file, FILE_NAME_MAX);
+    keyboard_start_capture(data.typed_name, FILE_NAME_MAX, 0, MAX_FILE_WINDOW_TEXT_WIDTH, FONT_NORMAL_WHITE);
 }
 
 static void draw_scrollbar_dot(void)
@@ -118,12 +124,12 @@ static void draw_foreground(void)
         encoding_from_utf8(data.saved_games->files[data.scroll_position + i], file, FILE_NAME_MAX);
         file_remove_extension(file);
         text_ellipsize(file, font, MAX_FILE_WINDOW_TEXT_WIDTH);
-        text_draw(string_from_ascii(file), 160, 130 + 16 * i, font, 0);
+        text_draw(file, 160, 130 + 16 * i, font, 0);
     }
 
     image_buttons_draw(0, 0, image_buttons, 4);
     text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
-    text_draw(string_from_ascii(data.saved_game), 160, 90, FONT_NORMAL_WHITE, 0);
+    text_draw(data.typed_name, 160, 90, FONT_NORMAL_WHITE, 0);
     text_draw_cursor(160, 91, keyboard_is_insert());
     draw_scrollbar_dot();
 
@@ -176,6 +182,30 @@ static void handle_mouse(const mouse *m)
     }
 }
 
+static const char *get_chosen_filename(void)
+{
+    // Check if we should work with the selected file
+    uint8_t selected_name[FILE_NAME_MAX];
+    encoding_from_utf8(data.selected_saved_game, selected_name, FILE_NAME_MAX);
+    file_remove_extension(selected_name);
+
+    if (string_equals(selected_name, data.typed_name)) {
+        // user has not modified the string after selecting it: use filename
+        return data.selected_saved_game;
+    }
+
+    // We should use the typed name, which needs to be converted to UTF-8...
+#if _APPLE
+    int use_decomposed = 1;
+#else
+    int use_decomposed = 0;
+#endif
+    static char typed_file[FILE_NAME_MAX];
+    encoding_to_utf8(data.typed_name, typed_file, FILE_NAME_MAX, use_decomposed);
+    file_append_extension(typed_file, "sav");
+    return typed_file;
+}
+
 static void button_ok_cancel(int is_ok, int param2)
 {
     if (!is_ok) {
@@ -183,24 +213,22 @@ static void button_ok_cancel(int is_ok, int param2)
         return;
     }
 
-    file_remove_extension(data.saved_game);
-    file_append_extension(data.saved_game, "sav");
+    const char *filename = get_chosen_filename();
 
-    if (data.type != FILE_DIALOG_SAVE && !file_exists(data.saved_game)) {
-        file_remove_extension(data.saved_game);
+    if (data.type != FILE_DIALOG_SAVE && !file_exists(filename)) {
         data.message_not_exist_start_time = time_get_millis();
         return;
     }
     if (data.type == FILE_DIALOG_LOAD) {
-        game_file_load_saved_game(data.saved_game);
+        game_file_load_saved_game(filename);
         keyboard_stop_capture();
         window_city_show();
     } else if (data.type == FILE_DIALOG_SAVE) {
-        game_file_write_saved_game(data.saved_game);
+        game_file_write_saved_game(filename);
         keyboard_stop_capture();
         window_city_show();
     } else if (data.type == FILE_DIALOG_DELETE) {
-        if (game_file_delete_saved_game(data.saved_game)) {
+        if (game_file_delete_saved_game(filename)) {
             dir_find_files_with_extension("sav");
             if (data.scroll_position + 12 >= data.saved_games->num_files) {
                 --data.scroll_position;
@@ -210,9 +238,8 @@ static void button_ok_cancel(int is_ok, int param2)
             }
         }
     }
-    
-    file_remove_extension(data.saved_game);
-    strncpy(data.last_loaded_file, data.saved_game, FILE_NAME_MAX);
+
+    strncpy(data.last_loaded_file, filename, FILE_NAME_MAX);
 }
 
 static void button_scroll(int is_down, int num_lines)
@@ -236,8 +263,9 @@ static void button_scroll(int is_down, int num_lines)
 static void button_select_file(int index, int param2)
 {
     if (index < data.saved_games->num_files) {
-        strncpy(data.saved_game, data.saved_games->files[data.scroll_position + index], FILE_NAME_MAX);
-        file_remove_extension(data.saved_game);
+        strncpy(data.selected_saved_game, data.saved_games->files[data.scroll_position + index], FILE_NAME_MAX);
+        encoding_from_utf8(data.selected_saved_game, data.typed_name, FILE_NAME_MAX);
+        file_remove_extension(data.typed_name);
         keyboard_refresh();
         data.message_not_exist_start_time = 0;
     }
