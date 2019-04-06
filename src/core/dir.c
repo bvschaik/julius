@@ -9,8 +9,39 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _WIN32
+#include <windows.h>
+
+#define fs_dir_type _WDIR
+#define fs_dir_entry struct _wdirent
+#define fs_dir_open _wopendir
+#define fs_dir_close _wclosedir
+#define fs_dir_read _wreaddir
+#define dir_entry_name(d) filename_to_utf8(d->d_name)
+#define dir_entry_close_name(n) free((void*)n)
+
+static const char *filename_to_utf8(const wchar_t *str)
+{
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
+    char *result = (char*) malloc(sizeof(char) * size_needed);
+    WideCharToMultiByte(CP_UTF8, 0, str, -1, result, size_needed, NULL, NULL);
+    return result;
+}
+
+#else // not _WIN32
+#define fs_dir_type DIR
+#define fs_dir_entry struct dirent
+#define fs_dir_open opendir
+#define fs_dir_close closedir
+#define fs_dir_read readdir
+#define dir_entry_name(d) ((d)->d_name)
+#define dir_entry_close_name(n)
+#endif
+
 #ifdef __vita__
 #define CURRENT_DIR VITA_PATH_PREFIX
+#elif defined(_WIN32)
+#define CURRENT_DIR L"."
 #else
 #define CURRENT_DIR "."
 #endif
@@ -41,19 +72,21 @@ static int compare_lower(const void *va, const void *vb)
 const dir_listing *dir_find_files_with_extension(const char *extension)
 {
     clear_dir_listing();
-    DIR *d = opendir(CURRENT_DIR);
+    fs_dir_type *d = fs_dir_open(CURRENT_DIR);
     if (!d) {
         return &listing;
     }
-    struct dirent *entry;
-    while ((entry = readdir(d)) && listing.num_files < DIR_MAX_FILES) {
-        if (file_has_extension(entry->d_name, extension)) {
-            strncpy(listing.files[listing.num_files], entry->d_name, FILE_NAME_MAX - 1);
+    fs_dir_entry *entry;
+    while ((entry = fs_dir_read(d)) && listing.num_files < DIR_MAX_FILES) {
+        const char *name = dir_entry_name(entry);
+        if (file_has_extension(name, extension)) {
+            strncpy(listing.files[listing.num_files], name, FILE_NAME_MAX - 1);
             listing.files[listing.num_files][FILE_NAME_MAX - 1] = 0;
             ++listing.num_files;
         }
+        dir_entry_close_name(name);
     }
-    closedir(d);
+    fs_dir_close(d);
     qsort(listing.files, listing.num_files, sizeof(char*), compare_lower);
 
     return &listing;
@@ -61,6 +94,8 @@ const dir_listing *dir_find_files_with_extension(const char *extension)
 
 static int correct_case(const char *dir, char *filename)
 {
+    // Note: we do not use the _w* variants for Windows here, because the
+    // Windows filesystem is case insensitive and doesn't need corrections
     DIR *d = opendir(dir);
     if (!d) {
         return 0;

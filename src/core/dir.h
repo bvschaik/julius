@@ -12,7 +12,7 @@
  * Directory listing
  */
 typedef struct {
-    char *files[DIR_MAX_FILES]; /**< Filenames */
+    char *files[DIR_MAX_FILES]; /**< Filenames in UTF-8 encoding */
     int num_files; /**< Number of files in the list */
 } dir_listing;
 
