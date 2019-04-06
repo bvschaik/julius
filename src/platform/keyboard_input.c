@@ -89,10 +89,58 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDLK_RSHIFT:
             hotkey_shift(1);
             break;
+        case SDLK_LEFTBRACKET:
+        case SDLK_RIGHTBRACKET:
+            hotkey_character(event->keysym.sym);
+            break;
         default:
             if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
-                hotkey_character(event->keysym.sym);
+                // Send keycodes only for letters (layout dependent codes)
+                if (event->keysym.sym >= 97 && event->keysym.sym <= 122)
+                    hotkey_character(event->keysym.sym);
             }
+            break;
+    }
+
+    // Send scancodes for non-layout dependent keys
+    switch (event->keysym.scancode) {
+        case SDL_SCANCODE_1:
+            hotkey_character('1');
+            break;
+        case SDL_SCANCODE_2:
+            hotkey_character('2');
+            break;
+        case SDL_SCANCODE_3:
+            hotkey_character('3');
+            break;
+        case SDL_SCANCODE_4:
+            hotkey_character('4');
+            break;
+        case SDL_SCANCODE_5:
+            hotkey_character('5');
+            break;
+        case SDL_SCANCODE_6:
+            hotkey_character('6');
+            break;
+        case SDL_SCANCODE_7:
+            hotkey_character('7');
+            break;
+        case SDL_SCANCODE_8:
+            hotkey_character('8');
+            break;
+        case SDL_SCANCODE_9:
+            hotkey_character('9');
+            break;
+        case SDL_SCANCODE_0:
+            hotkey_character('0');
+            break;
+        case SDL_SCANCODE_MINUS:
+            hotkey_character('-');
+            break;
+        case SDL_SCANCODE_EQUALS:
+            hotkey_character('=');
+            break;
+        default:
             break;
     }
 }

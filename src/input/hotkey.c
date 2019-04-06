@@ -161,9 +161,18 @@ void hotkey_character(int c)
             case 'V': case 'v':
                 cheat_victory();
                 break;
+
+            // Azerty keyboards need alt gr for these keys
+            case '[':
+                change_game_speed(1);
+                break;
+            case ']':
+                change_game_speed(0);
+                break;
         }
         return;
     }
+
     switch (c) {
         case '[':
             change_game_speed(1);
