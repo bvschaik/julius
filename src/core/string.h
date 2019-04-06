@@ -24,20 +24,6 @@ void string_copy(const uint8_t *src, uint8_t *dst, int maxlength);
 int string_length(const uint8_t *str);
 
 /**
- * Converts a string to ascii
- * @param str Source
- * @return 'Ascii' string (the same, but cast to keep the compiler happy)
- */
-const char *string_to_ascii(const uint8_t *str);
-
-/**
- * Converts a string from ascii
- * @param str Ascii
- * @return Internal string (the same, but cast to keep the compiler happy)
- */
-const uint8_t *string_from_ascii(const char *str);
-
-/**
  * Converts the string to integer
  * @return integer
  */

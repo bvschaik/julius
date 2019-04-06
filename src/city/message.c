@@ -1,6 +1,7 @@
 #include "message.h"
 
 #include "core/calc.h"
+#include "core/encoding.h"
 #include "core/file.h"
 #include "core/lang.h"
 #include "core/string.h"
@@ -111,7 +112,9 @@ static int has_video(int text_id)
     if (!msg->video.text) {
         return 0;
     }
-    return file_exists(string_to_ascii(msg->video.text));
+    char video_file[FILE_NAME_MAX];
+    encoding_to_utf8(msg->video.text, video_file, FILE_NAME_MAX, 0);
+    return file_exists(video_file);
 }
 
 static void enqueue_message(int sequence)
