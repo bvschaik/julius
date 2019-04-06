@@ -163,10 +163,10 @@ void hotkey_character(int c)
                 break;
 
             // Azerty keyboards need alt gr for these keys
-            case '[':
+            case '[': case '5':
                 change_game_speed(1);
                 break;
-            case ']':
+            case ']': case '-':
                 change_game_speed(0);
                 break;
         }
