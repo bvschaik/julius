@@ -91,6 +91,7 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
             break;
         case SDLK_LEFTBRACKET:
         case SDLK_RIGHTBRACKET:
+        case SDLK_SPACE:
             hotkey_character(event->keysym.sym);
             break;
         default:
