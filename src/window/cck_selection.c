@@ -176,7 +176,7 @@ static void draw_scenario_info(void)
             lang_text_draw(44, 135, 410 + width, 386, FONT_NORMAL_BLACK);
         }
     }
-    lang_text_draw(44, 136, 420, 446, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(44, 136, 335, 446, 260, FONT_NORMAL_BLACK);
 }
 
 static void draw_background(void)
