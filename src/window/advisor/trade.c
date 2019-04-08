@@ -48,7 +48,8 @@ static int draw_background(void)
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
 
     lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK);
-    lang_text_draw(54, 1, 400, 38, FONT_NORMAL_BLACK);
+    int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK);
+    lang_text_draw(54, 1, 600 - width, 38, FONT_NORMAL_BLACK);
 
     return ADVISOR_HEIGHT;
 }
