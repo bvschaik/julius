@@ -195,7 +195,7 @@ static const char *get_chosen_filename(void)
     }
 
     // We should use the typed name, which needs to be converted to UTF-8...
-#if _APPLE
+#ifdef __APPLE__
     int use_decomposed = 1;
 #else
     int use_decomposed = 0;
