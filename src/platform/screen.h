@@ -5,6 +5,7 @@ int platform_screen_create(const char *title);
 void platform_screen_destroy(void);
 
 int platform_screen_resize(int width, int height);
+void platform_screen_move(int x, int y);
 
 void platform_screen_set_fullscreen(void);
 void platform_screen_set_windowed(void);
