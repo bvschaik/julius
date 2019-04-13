@@ -215,7 +215,7 @@ static void prepare_minimap_cache(int width, int height)
 {
     if (width != data.width || height != data.height) {
         free(data.cache);
-        data.cache = (color_t *)malloc(width * height * sizeof(color_t));
+        data.cache = (color_t *)malloc(sizeof(color_t) * width * height);
     }
 }
 

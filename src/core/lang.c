@@ -96,26 +96,26 @@ static void parse_message(buffer *buf)
     buffer_read_raw(buf, &data.message_data, MAX_MESSAGE_DATA);
 }
 
-static int load_message(const char *filename, uint8_t *data)
+static int load_message(const char *filename, uint8_t *data_buffer)
 {
     buffer buf;
-    int filesize = io_read_file_into_buffer(filename, data, BUFFER_SIZE);
+    int filesize = io_read_file_into_buffer(filename, data_buffer, BUFFER_SIZE);
     if (filesize < MIN_MESSAGE_SIZE || filesize > MAX_MESSAGE_SIZE) {
         return 0;
     }
-    buffer_init(&buf, data, filesize);
+    buffer_init(&buf, data_buffer, filesize);
     parse_message(&buf);
     return 1;
 }
 
 int lang_load(const char *text_filename, const char *message_filename)
 {
-    uint8_t *data = (uint8_t *) malloc(BUFFER_SIZE);
-    if (!data) {
+    uint8_t *buffer = (uint8_t *) malloc(BUFFER_SIZE);
+    if (!buffer) {
         return 0;
     }
-    int success = load_text(text_filename, data) && load_message(message_filename, data);
-    free(data);
+    int success = load_text(text_filename, buffer) && load_message(message_filename, buffer);
+    free(buffer);
     return success;
 }
 

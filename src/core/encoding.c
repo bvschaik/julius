@@ -480,7 +480,7 @@ static const letter_code* get_letter_code_for_internal(uint8_t c)
     return &to_utf8_table[c - 0x80];
 }
 
-static const int get_utf8_code(const char *c, int *num_bytes)
+static int get_utf8_code(const char *c, int *num_bytes)
 {
     const uint8_t *uc = (const uint8_t *) c;
     if (uc[0] < 0x80) {

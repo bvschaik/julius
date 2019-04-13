@@ -225,7 +225,7 @@ int building_market_get_storage_destination(building *market)
             fetch_inventory = INVENTORY_MEAT;
         }
     }
-    if (fetch_inventory < 0 || fetch_inventory >= INVENTORY_MAX) {
+    if (fetch_inventory < 0) {
         return 0;
     }
     market->data.market.fetch_inventory_id = fetch_inventory;
