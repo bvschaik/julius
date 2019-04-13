@@ -155,6 +155,7 @@ void hotkey_character(int c)
                 break;
             case 'K': case 'k':
                 cheat_init_or_invasion();
+                break;
             case 'C': case 'c':
                 cheat_money();
                 break;
