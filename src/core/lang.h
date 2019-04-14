@@ -61,8 +61,7 @@ typedef struct {
     int width_blocks;
     int height_blocks;
     int urgent;
-    struct lang_message_image image1;
-    struct lang_message_image image2;
+    struct lang_message_image image;
     struct lang_message_string title;
     struct lang_message_string subtitle;
     struct lang_message_string video;

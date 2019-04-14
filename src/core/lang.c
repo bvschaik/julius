@@ -71,12 +71,10 @@ static void parse_message(buffer *buf)
         m->y = buffer_read_i16(buf);
         m->width_blocks = buffer_read_i16(buf);
         m->height_blocks = buffer_read_i16(buf);
-        m->image1.id = buffer_read_i16(buf);
-        m->image1.x = buffer_read_i16(buf);
-        m->image1.y = buffer_read_i16(buf);
-        m->image2.id = buffer_read_i16(buf);
-        m->image2.x = buffer_read_i16(buf);
-        m->image2.y = buffer_read_i16(buf);
+        m->image.id = buffer_read_i16(buf);
+        m->image.x = buffer_read_i16(buf);
+        m->image.y = buffer_read_i16(buf);
+        buffer_skip(buf, 6); // unused image2 id, x, y
         m->title.x = buffer_read_i16(buf);
         m->title.y = buffer_read_i16(buf);
         m->subtitle.x = buffer_read_i16(buf);

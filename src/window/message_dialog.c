@@ -239,14 +239,14 @@ static void draw_background_normal(void)
         }
         data.y_text = data.y + 48;
     }
-    // pictures
-    if (msg->image1.id) {
+    // picture
+    if (msg->image.id) {
         int image_id, image_x, image_y;
         if (data.text_id) {
-            image_id = image_group(GROUP_MESSAGE_IMAGES) + msg->image1.id - 1;
-            image_x = msg->image1.x;
-            image_y = msg->image1.y;
-        } else { // message id = 0 ==> about, fixed image position
+            image_id = image_group(GROUP_MESSAGE_IMAGES) + msg->image.id - 1;
+            image_x = msg->image.x;
+            image_y = msg->image.y;
+        } else { // message id = 0 ==> "about": fixed image position
             image_x = image_y = 16;
             image_id = image_group(GROUP_BIG_PEOPLE);
         }
@@ -256,13 +256,6 @@ static void draw_background_normal(void)
             if (data.y + image_y + img->height + 8 > data.y_text) {
                 data.y_text = data.y + image_y + img->height + 8;
             }
-        }
-    }
-    if (msg->image2.id) {
-        int image_id = image_group(GROUP_MESSAGE_IMAGES) + msg->image2.id - 1;
-        image_draw(image_id, data.x + msg->image2.x, data.y + msg->image2.y);
-        if (data.y + msg->image2.y + image_get(image_id)->height + 8 > data.y_text) {
-            data.y_text = data.y + msg->image2.y + image_get(image_id)->height + 8;
         }
     }
     // subtitle
