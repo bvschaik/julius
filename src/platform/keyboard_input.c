@@ -28,6 +28,44 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         // and backspace/delete to prevent hotkeys firing more than once
         return;
     }
+
+    // Send scancodes for non-layout dependent keys
+    switch (event->keysym.scancode) {
+        case SDL_SCANCODE_1:
+        case SDL_SCANCODE_2:
+        case SDL_SCANCODE_3:
+        case SDL_SCANCODE_4:
+        case SDL_SCANCODE_5:
+        case SDL_SCANCODE_6:
+        case SDL_SCANCODE_7:
+        case SDL_SCANCODE_8:
+        case SDL_SCANCODE_9:
+        case SDL_SCANCODE_0:
+        case SDL_SCANCODE_MINUS:
+        case SDL_SCANCODE_EQUALS:
+            hotkey_character(*SDL_GetScancodeName(event->keysym.scancode), is_alt_down(event));
+            return;
+        case SDL_SCANCODE_LEFTBRACKET:
+            hotkey_character('[', is_alt_down(event));
+            return;
+        case SDL_SCANCODE_RIGHTBRACKET:
+            hotkey_character(']', is_alt_down(event));
+            return;
+        default:
+            break;
+    }
+
+    // Send scancodes for letters that are not on the current keyboard layout (e.g. Russian)
+    if (event->keysym.scancode >= SDL_SCANCODE_A && event->keysym.scancode <= SDL_SCANCODE_Z) {
+        SDL_Keycode keycode = SDLK_a + event->keysym.scancode - SDL_SCANCODE_A;
+        if (SDL_GetScancodeFromKey(keycode) == 0) {
+            // There is no key producing the Latin letter, send scancode value
+            char letter = 'a' + event->keysym.scancode - SDL_SCANCODE_A;
+            hotkey_character(letter, is_alt_down(event));
+            return;
+        }
+    }
+
     switch (event->keysym.sym) {
         case SDLK_RETURN:
         case SDLK_KP_ENTER:
@@ -100,26 +138,6 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
                     hotkey_character(event->keysym.sym, is_alt_down(event));
                 }
             }
-            break;
-    }
-
-    // Send scancodes for non-layout dependent keys
-    switch (event->keysym.scancode) {
-        case SDL_SCANCODE_1:
-        case SDL_SCANCODE_2:
-        case SDL_SCANCODE_3:
-        case SDL_SCANCODE_4:
-        case SDL_SCANCODE_5:
-        case SDL_SCANCODE_6:
-        case SDL_SCANCODE_7:
-        case SDL_SCANCODE_8:
-        case SDL_SCANCODE_9:
-        case SDL_SCANCODE_0:
-        case SDL_SCANCODE_MINUS:
-        case SDL_SCANCODE_EQUALS:
-            hotkey_character(*SDL_GetScancodeName(event->keysym.scancode), is_alt_down(event));
-            break;
-        default:
             break;
     }
 }
