@@ -266,6 +266,21 @@ void vita_handle_virtual_keyboard(void)
     }
 }
 
+static int get_utf8_character_bytes(const uint8_t *uc)
+{
+    if (uc[0] < 0x80) {
+        return 1;
+    } else if ((uc[0] & 0xe0) == 0xc0 && (uc[1] & 0xc0) == 0x80) {
+        return 2;
+    } else if ((uc[0] & 0xf0) == 0xe0 && (uc[1] & 0xc0) == 0x80 && (uc[2] & 0xc0) == 0x80) {
+        return 3;
+    } else if ((uc[0] & 0xf8) == 0xf0 && (uc[1] & 0xc0) == 0x80 && (uc[2] & 0xc0) == 0x80 && (uc[3] & 0xc0) == 0x80) {
+        return 4;
+    } else {
+        return 1;
+    }
+}
+
 static void vita_start_text_input(char *initial_text, int multiline)
 {
     char *text = vita_keyboard_get("Enter New Text:", initial_text, 600, multiline);
@@ -280,15 +295,17 @@ static void vita_start_text_input(char *initial_text, int multiline)
         vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_DELETE);
         vita_create_and_push_sdlkey_event(SDL_KEYUP, SDLK_DELETE);
     }
-    for (int i = 0; i < 599; i++) {
-        if (text[i] == 0) {
-            break;
-        }
+    const uint8_t *utf8_text = (uint8_t*) text;
+    for (int i = 0; i < 599; utf8_text[i]) {
+        int bytes_in_char = get_utf8_character_bytes(&utf8_text[i]);
         SDL_Event textinput_event;
         textinput_event.type = SDL_TEXTINPUT;
-        textinput_event.text.text[0] = text[i];
-        textinput_event.text.text[1] = 0;
+        for (int n = 0; n < bytes_in_char; n++) {
+            textinput_event.text.text[n] = text[i + n];
+        }
+        textinput_event.text.text[bytes_in_char] = 0;
         SDL_PushEvent(&textinput_event);
+        i += bytes_in_char;
     }
 }
 
