@@ -215,6 +215,18 @@ static void draw_city_message_text(const lang_message *msg)
     }
 }
 
+static int get_message_image_id(const lang_message *msg)
+{
+    if (!msg->image.id) {
+        return 0;
+    } else if (data.text_id == 0) {
+        // message id = 0 ==> "about": fixed image position
+        return image_group(GROUP_BIG_PEOPLE);
+    } else {
+        return image_group(GROUP_MESSAGE_IMAGES) + msg->image.id - 1;
+    }
+}
+
 static void draw_background_normal(void)
 {
     rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
@@ -224,38 +236,29 @@ static void draw_background_normal(void)
     int header_offset = msg->type == TYPE_MANUAL ? 48 : 32;
     data.x_text = data.x + 16;
     outer_panel_draw(data.x, data.y, msg->width_blocks, msg->height_blocks);
+
+    int image_id = get_message_image_id(msg);
+    const image *img = image_id ? image_get(image_id) : 0;
     // title
-    if (msg->title.x) {
-        text_draw(msg->title.text,
-            data.x + msg->title.x, data.y + msg->title.y, FONT_LARGE_BLACK, 0);
-        data.y_text = data.y + 32;
+    if (msg->message_type == MESSAGE_TYPE_TUTORIAL) {
+        text_draw_centered(msg->title.text,
+            data.x, data.y + msg->title.y, 16 * msg->width_blocks, FONT_LARGE_BLACK, 0);
     } else {
-        if (msg->message_type == MESSAGE_TYPE_TUTORIAL) {
-            text_draw_centered(msg->title.text,
-                data.x, data.y + msg->title.y, 16 * msg->width_blocks, FONT_LARGE_BLACK, 0);
-        } else {
-            text_draw_centered(msg->title.text,
-                data.x, data.y + 14, 16 * msg->width_blocks, FONT_LARGE_BLACK, 0);
-        }
-        data.y_text = data.y + 48;
+        // Center title in the dialog but ensure it does not overlap with the
+        // image: if the title is too long, it will start 8px from the image.
+        int title_x_offset = img ? img->width + msg->image.x + 8 : 0;
+        text_draw_centered(msg->title.text, data.x + title_x_offset, data.y + 14,
+            16 * msg->width_blocks - 2 * title_x_offset, FONT_LARGE_BLACK, 0);
     }
+    data.y_text = data.y + 48;
+
     // picture
-    if (msg->image.id) {
-        int image_id, image_x, image_y;
-        if (data.text_id) {
-            image_id = image_group(GROUP_MESSAGE_IMAGES) + msg->image.id - 1;
-            image_x = msg->image.x;
-            image_y = msg->image.y;
-        } else { // message id = 0 ==> "about": fixed image position
-            image_x = image_y = 16;
-            image_id = image_group(GROUP_BIG_PEOPLE);
-        }
-        const image *img = image_get(image_id);
-        if (img) {
-            image_draw(image_id, data.x + image_x, data.y + image_y);
-            if (data.y + image_y + img->height + 8 > data.y_text) {
-                data.y_text = data.y + image_y + img->height + 8;
-            }
+    if (img) {
+        int image_x = msg->image.x;
+        int image_y = msg->image.y;
+        image_draw(image_id, data.x + image_x, data.y + image_y);
+        if (data.y + image_y + img->height + 8 > data.y_text) {
+            data.y_text = data.y + image_y + img->height + 8;
         }
     }
     // subtitle
