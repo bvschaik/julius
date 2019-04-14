@@ -14,12 +14,10 @@ void hotkey_page_up(void);
 void hotkey_page_down(void);
 void hotkey_enter(void);
 
-void hotkey_func(int f_number);
+void hotkey_func(int f_number, int with_modifier);
 
 void hotkey_ctrl(int is_down);
 void hotkey_alt(int is_down);
 void hotkey_shift(int is_down);
-
-void hotkey_reset_state(void);
 
 #endif // INPUT_HOTKEY_H

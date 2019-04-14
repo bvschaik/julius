@@ -23,11 +23,9 @@
 #include "window/city.h"
 
 static struct {
-    int ctrl_down;
     int alt_down;
-    int shift_down;
     int is_cheating;
-} data = {0, 0, 0, 0};
+} data = {0, 0};
 
 static void change_game_speed(int is_down)
 {
@@ -317,11 +315,11 @@ static void go_to_bookmark(int number)
     }
 }
 
-static void handle_bookmark(int number)
+static void handle_bookmark(int number, int with_modifier)
 {
     exit_military_command();
     if (window_is(WINDOW_CITY)) {
-        if (data.ctrl_down || data.shift_down) {
+        if (with_modifier) {
             map_bookmark_save(number);
         } else {
             go_to_bookmark(number);
@@ -334,14 +332,14 @@ static void take_screenshot(void)
     graphics_save_screenshot();
 }
 
-void hotkey_func(int f_number)
+void hotkey_func(int f_number, int with_modifier)
 {
     switch (f_number) {
         case 1:
         case 2:
         case 3:
         case 4:
-            handle_bookmark(f_number - 1);
+            handle_bookmark(f_number - 1, with_modifier);
             break;
         case 5: system_center(); break;
         case 6: system_set_fullscreen(!setting_fullscreen()); break;
@@ -352,24 +350,7 @@ void hotkey_func(int f_number)
     }
 }
 
-void hotkey_ctrl(int is_down)
-{
-    data.ctrl_down = is_down;
-}
-
 void hotkey_alt(int is_down)
 {
     data.alt_down = is_down;
-}
-
-void hotkey_shift(int is_down)
-{
-    data.shift_down = is_down;
-}
-
-void hotkey_reset_state(void)
-{
-    data.ctrl_down = 0;
-    data.alt_down = 0;
-    data.shift_down = 0;
 }

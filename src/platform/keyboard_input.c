@@ -3,6 +3,12 @@
 #include "input/hotkey.h"
 #include "input/keyboard.h"
 
+static void send_fn(SDL_KeyboardEvent *event, int f_number)
+{
+    int with_modifier = (event->keysym.mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_GUI)) != 0;
+    hotkey_func(f_number, with_modifier);
+}
+
 static int is_repeatable_key(SDL_Keycode code)
 {
     return code == SDLK_UP || code == SDLK_DOWN ||
@@ -65,29 +71,21 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDLK_ESCAPE:
             hotkey_esc();
             break;
-        case SDLK_F1: hotkey_func(1); break;
-        case SDLK_F2: hotkey_func(2); break;
-        case SDLK_F3: hotkey_func(3); break;
-        case SDLK_F4: hotkey_func(4); break;
-        case SDLK_F5: hotkey_func(5); break;
-        case SDLK_F6: hotkey_func(6); break;
-        case SDLK_F7: hotkey_func(7); break;
-        case SDLK_F8: hotkey_func(8); break;
-        case SDLK_F9: hotkey_func(9); break;
-        case SDLK_F10: hotkey_func(10); break;
-        case SDLK_F11: hotkey_func(11); break;
-        case SDLK_F12: hotkey_func(12); break;
-        case SDLK_LCTRL:
-        case SDLK_RCTRL:
-            hotkey_ctrl(1);
-            break;
+        case SDLK_F1: send_fn(event, 1); break;
+        case SDLK_F2: send_fn(event, 2); break;
+        case SDLK_F3: send_fn(event, 3); break;
+        case SDLK_F4: send_fn(event, 4); break;
+        case SDLK_F5: send_fn(event, 5); break;
+        case SDLK_F6: send_fn(event, 6); break;
+        case SDLK_F7: send_fn(event, 7); break;
+        case SDLK_F8: send_fn(event, 8); break;
+        case SDLK_F9: send_fn(event, 9); break;
+        case SDLK_F10: send_fn(event, 10); break;
+        case SDLK_F11: send_fn(event, 11); break;
+        case SDLK_F12: send_fn(event, 12); break;
         case SDLK_LALT:
         case SDLK_RALT:
             hotkey_alt(1);
-            break;
-        case SDLK_LSHIFT:
-        case SDLK_RSHIFT:
-            hotkey_shift(1);
             break;
         case SDLK_LEFTBRACKET:
         case SDLK_RIGHTBRACKET:
@@ -127,17 +125,9 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
 void platform_handle_key_up(SDL_KeyboardEvent *event)
 {
     switch (event->keysym.sym) {
-        case SDLK_LCTRL:
-        case SDLK_RCTRL:
-            hotkey_ctrl(0);
-            break;
         case SDLK_LALT:
         case SDLK_RALT:
             hotkey_alt(0);
-            break;
-        case SDLK_LSHIFT:
-        case SDLK_RSHIFT:
-            hotkey_shift(0);
             break;
         default:
             break;
