@@ -380,7 +380,11 @@ int image_group(int group)
 
 const image *image_get(int id)
 {
-    return &data.main[id];
+    if (id >= 0 && id < MAIN_ENTRIES) {
+        return &data.main[id];
+    } else {
+        return NULL;
+    }
 }
 
 const image *image_letter(int letter_id)
@@ -394,11 +398,18 @@ const image *image_letter(int letter_id)
 
 const image *image_get_enemy(int id)
 {
-    return &data.enemy[id];
+    if (id >= 0 && id < ENEMY_ENTRIES) {
+        return &data.enemy[id];
+    } else {
+        return NULL;
+    }
 }
 
 const color_t *image_data(int id)
 {
+    if (id < 0 || id >= MAIN_ENTRIES) {
+        return NULL;
+    }
     if (!data.main[id].draw.is_external) {
         return &data.main_data[data.main[id].draw.offset];
     } else if (id == image_group(GROUP_EMPIRE_MAP)) {

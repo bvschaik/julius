@@ -250,9 +250,12 @@ static void draw_background_normal(void)
             image_x = image_y = 16;
             image_id = image_group(GROUP_BIG_PEOPLE);
         }
-        image_draw(image_id, data.x + image_x, data.y + image_y);
-        if (data.y + image_y + image_get(image_id)->height + 8 > data.y_text) {
-            data.y_text = data.y + image_y + image_get(image_id)->height + 8;
+        const image *img = image_get(image_id);
+        if (img) {
+            image_draw(image_id, data.x + image_x, data.y + image_y);
+            if (data.y + image_y + img->height + 8 > data.y_text) {
+                data.y_text = data.y + image_y + img->height + 8;
+            }
         }
     }
     if (msg->image2.id) {
@@ -263,7 +266,7 @@ static void draw_background_normal(void)
         }
     }
     // subtitle
-    if (msg->subtitle.x) {
+    if (msg->subtitle.x && msg->subtitle.text) {
         int width = 16 * msg->width_blocks - 16 - msg->subtitle.x;
         int height = text_draw_multiline(msg->subtitle.text,
             data.x + msg->subtitle.x, data.y + msg->subtitle.y, width,FONT_NORMAL_BLACK);
