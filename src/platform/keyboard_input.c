@@ -9,6 +9,11 @@ static void send_fn(SDL_KeyboardEvent *event, int f_number)
     hotkey_func(f_number, with_modifier);
 }
 
+static int is_alt_down(SDL_KeyboardEvent *event)
+{
+    return (event->keysym.mod & KMOD_ALT) != 0;
+}
+
 static int is_repeatable_key(SDL_Keycode code)
 {
     return code == SDLK_UP || code == SDLK_DOWN ||
@@ -83,20 +88,17 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDLK_F10: send_fn(event, 10); break;
         case SDLK_F11: send_fn(event, 11); break;
         case SDLK_F12: send_fn(event, 12); break;
-        case SDLK_LALT:
-        case SDLK_RALT:
-            hotkey_alt(1);
-            break;
         case SDLK_LEFTBRACKET:
         case SDLK_RIGHTBRACKET:
         case SDLK_SPACE:
-            hotkey_character(event->keysym.sym);
+            hotkey_character(event->keysym.sym, is_alt_down(event));
             break;
         default:
             if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
                 // Send keycodes only for letters (layout dependent codes)
-                if (event->keysym.sym >= 97 && event->keysym.sym <= 122)
-                    hotkey_character(event->keysym.sym);
+                if (event->keysym.sym >= SDLK_a && event->keysym.sym <= SDLK_z) {
+                    hotkey_character(event->keysym.sym, is_alt_down(event));
+                }
             }
             break;
     }
@@ -115,19 +117,7 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDL_SCANCODE_0:
         case SDL_SCANCODE_MINUS:
         case SDL_SCANCODE_EQUALS:
-            hotkey_character(*SDL_GetScancodeName(event->keysym.scancode));
-            break;
-        default:
-            break;
-    }
-}
-
-void platform_handle_key_up(SDL_KeyboardEvent *event)
-{
-    switch (event->keysym.sym) {
-        case SDLK_LALT:
-        case SDLK_RALT:
-            hotkey_alt(0);
+            hotkey_character(*SDL_GetScancodeName(event->keysym.scancode), is_alt_down(event));
             break;
         default:
             break;

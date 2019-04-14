@@ -1,7 +1,7 @@
 #ifndef INPUT_HOTKEY_H
 #define INPUT_HOTKEY_H
 
-void hotkey_character(int c);
+void hotkey_character(int c, int with_alt);
 
 void hotkey_left(void);
 void hotkey_right(void);
@@ -15,9 +15,5 @@ void hotkey_page_down(void);
 void hotkey_enter(void);
 
 void hotkey_func(int f_number, int with_modifier);
-
-void hotkey_ctrl(int is_down);
-void hotkey_alt(int is_down);
-void hotkey_shift(int is_down);
 
 #endif // INPUT_HOTKEY_H

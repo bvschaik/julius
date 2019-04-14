@@ -23,9 +23,8 @@
 #include "window/city.h"
 
 static struct {
-    int alt_down;
     int is_cheating;
-} data = {0, 0};
+} data;
 
 static void change_game_speed(int is_down)
 {
@@ -144,9 +143,9 @@ static void cheat_money(void)
     }
 }
 
-void hotkey_character(int c)
+void hotkey_character(int c, int with_alt)
 {
-    if (data.alt_down) {
+    if (with_alt) {
         switch (c) {
             case 'X': case 'x':
                 hotkey_esc();
@@ -348,9 +347,4 @@ void hotkey_func(int f_number, int with_modifier)
         case 9: system_resize(1024, 768); break;
         case 12: take_screenshot(); break;
     }
-}
-
-void hotkey_alt(int is_down)
-{
-    data.alt_down = is_down;
 }

@@ -255,9 +255,6 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
         case SDL_KEYDOWN:
             platform_handle_key_down(&event->key);
             break;
-        case SDL_KEYUP:
-            platform_handle_key_up(&event->key);
-            break;
         case SDL_TEXTINPUT:
             platform_handle_text(&event->text);
             break;
