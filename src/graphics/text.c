@@ -110,7 +110,6 @@ unsigned int text_get_max_length_for_width(const uint8_t *str, int length, font_
     length = (!length) ? string_length(str) : length;
     unsigned int maxlen = length;
     unsigned int width = 0;
-    int image_base = image_group(GROUP_FONT);
     int step = 1;
     if (invert) {
         str += length - 1;
@@ -122,8 +121,8 @@ unsigned int text_get_max_length_for_width(const uint8_t *str, int length, font_
         } else {
             int image_offset = font_image_for(*str);
             if (image_offset) {
-                int image_id = image_base + def->image_offset + image_offset - 1;
-                width += def->letter_spacing + image_get(image_id)->width;
+                int letter_id = def->image_offset + image_offset - 1;
+                width += def->letter_spacing + image_letter(letter_id)->width;
             }
         }
         if (width > requested_width) {
