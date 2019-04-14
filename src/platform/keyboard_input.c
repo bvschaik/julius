@@ -89,10 +89,37 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDLK_RSHIFT:
             hotkey_shift(1);
             break;
+        case SDLK_LEFTBRACKET:
+        case SDLK_RIGHTBRACKET:
+        case SDLK_SPACE:
+            hotkey_character(event->keysym.sym);
+            break;
         default:
             if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
-                hotkey_character(event->keysym.sym);
+                // Send keycodes only for letters (layout dependent codes)
+                if (event->keysym.sym >= 97 && event->keysym.sym <= 122)
+                    hotkey_character(event->keysym.sym);
             }
+            break;
+    }
+
+    // Send scancodes for non-layout dependent keys
+    switch (event->keysym.scancode) {
+        case SDL_SCANCODE_1:
+        case SDL_SCANCODE_2:
+        case SDL_SCANCODE_3:
+        case SDL_SCANCODE_4:
+        case SDL_SCANCODE_5:
+        case SDL_SCANCODE_6:
+        case SDL_SCANCODE_7:
+        case SDL_SCANCODE_8:
+        case SDL_SCANCODE_9:
+        case SDL_SCANCODE_0:
+        case SDL_SCANCODE_MINUS:
+        case SDL_SCANCODE_EQUALS:
+            hotkey_character(*SDL_GetScancodeName(event->keysym.scancode));
+            break;
+        default:
             break;
     }
 }
