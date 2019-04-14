@@ -1,6 +1,7 @@
 #include "gift_to_emperor.h"
 
 #include "city/emperor.h"
+#include "game/resource.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -36,8 +37,8 @@ static void draw_background(void)
     graphics_in_dialog();
 
     outer_panel_draw(96, 144, 30, 15);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + 16, 128, 160);
-    lang_text_draw_centered(52, 69, 128, 160, 432, FONT_LARGE_BLACK);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, 112, 160);
+    lang_text_draw_centered(52, 69, 144, 160, 416, FONT_LARGE_BLACK);
 
     int width = lang_text_draw(52, 50, 144, 304, FONT_NORMAL_BLACK);
     lang_text_draw_amount(8, 4, city_emperor_months_since_gift(), 144 + width, 304, FONT_NORMAL_BLACK);
