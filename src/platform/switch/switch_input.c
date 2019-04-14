@@ -25,19 +25,19 @@ enum {
     SWITCH_NUM_BUTTONS  = 16
 };
 
-int last_mouse_x = 0;
-int last_mouse_y = 0;
+static int last_mouse_x = 0;
+static int last_mouse_y = 0;
 
 static SDL_Joystick *joy = NULL;
 
-static int hires_dx = 0; // sub-pixel-precision counters to allow slow pointer motion of <1 pixel per frame 
+static int hires_dx = 0; // sub-pixel-precision counters to allow slow pointer motion of <1 pixel per frame
 static int hires_dy = 0;
 static int vkbd_requested = 0;
 static int fast_mouse = 0;
 static int slow_mouse = 0;
 static int pressed_buttons[SWITCH_NUM_BUTTONS] = { 0 };
 static SDL_Keycode map_switch_button_to_sdlkey[SWITCH_NUM_BUTTONS] =
-{ 
+{
     NO_MAPPING,     // SWITCH_PAD_A
     NO_MAPPING,     // SWITCH_PAD_B
     SDLK_PAGEUP,    // SWITCH_PAD_X
@@ -78,7 +78,7 @@ static uint8_t map_switch_button_to_sdlmousebutton[SWITCH_NUM_BUTTONS] =
 
 static void switch_start_text_input(char *initial_text, int multiline);
 static void switch_rescale_analog(int *x, int *y, int dead);
-static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t event_type); 
+static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t event_type);
 static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32_t event_type);
 
 static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Keycode key);
@@ -86,7 +86,7 @@ static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Keycode
 int switch_poll_event(SDL_Event *event)
 {
     int ret = SDL_PollEvent(event);
-    if(event != NULL) {
+    if (event != NULL) {
         switch (event->type) {
             case SDL_MOUSEMOTION:
                 // update joystick / touch mouse coords
@@ -254,37 +254,38 @@ void switch_handle_analog_sticks(void)
     int left = 0;
     int right = 0;
 
-    // upper right quadrant
-    if (right_y > 0 && right_x > 0)
-    {
-        if (right_y > slope * right_x)
+    if (right_y > 0 && right_x > 0) {
+        // upper right quadrant
+        if (right_y > slope * right_x) {
             up = 1;
-        if (right_x > slope * right_y)
+        }
+        if (right_x > slope * right_y) {
             right = 1;
-    }
-    // upper left quadrant
-    else if (right_y > 0 && right_x <= 0)
-    {
-        if (right_y > slope * (-right_x))
+        }
+    } else if (right_y > 0 && right_x <= 0) {
+        // upper left quadrant
+        if (right_y > slope * (-right_x)) {
             up = 1;
-        if ((-right_x) > slope * right_y)
+        }
+        if ((-right_x) > slope * right_y) {
             left = 1;
-    }
-    // lower right quadrant
-    else if (right_y <= 0 && right_x > 0)
-    {
-        if ((-right_y) > slope * right_x)
+        }
+    } else if (right_y <= 0 && right_x > 0) {
+        // lower right quadrant
+        if ((-right_y) > slope * right_x) {
             down = 1;
-        if (right_x > slope * (-right_y))
+        }
+        if (right_x > slope * (-right_y)) {
             right = 1;
-    }
-    // lower left quadrant
-    else if (right_y <= 0 && right_x <= 0)
-    {
-        if ((-right_y) > slope * (-right_x))
+        }
+    } else if (right_y <= 0 && right_x <= 0) {
+        // lower left quadrant
+        if ((-right_y) > slope * (-right_x)) {
             down = 1;
-        if ((-right_x) > slope * (-right_y))
+        }
+        if ((-right_x) > slope * (-right_y)) {
             left = 1;
+        }
     }
 
     if (!pressed_buttons[SWITCH_PAD_UP] && up) {
@@ -307,7 +308,7 @@ void switch_handle_virtual_keyboard(void)
     }
 }
 
-void switch_start_text_input(char *initial_text, int multiline)
+static void switch_start_text_input(char *initial_text, int multiline)
 {
     char text[601] = {'\0'};
     switch_keyboard_get("Enter New Text:", initial_text, 600, multiline, text);
@@ -322,7 +323,7 @@ void switch_start_text_input(char *initial_text, int multiline)
         switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_DELETE);
         switch_create_and_push_sdlkey_event(SDL_KEYUP, SDLK_DELETE);
     }
-    for (int i=0; i < 599; i++) {
+    for (int i = 0; i < 599; i++) {
         if (text[i] == 0) {
             break;
         }
@@ -334,7 +335,7 @@ void switch_start_text_input(char *initial_text, int multiline)
     }
 }
 
-void switch_rescale_analog(int *x, int *y, int dead)
+static void switch_rescale_analog(int *x, int *y, int dead)
 {
     //radial and scaled dead_zone
     //http://www.third-helix.com/2013/04/12/doing-thumbstick-dead-zones-right.html
@@ -400,7 +401,7 @@ void switch_rescale_analog(int *x, int *y, int dead)
     }
 }
 
-void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t event_type) 
+static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t event_type)
 {
     event->type = event_type;
     event->key.keysym.sym = map_switch_button_to_sdlkey[switch_button];
@@ -415,7 +416,7 @@ void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t
     }
 }
 
-void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32_t event_type)
+static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32_t event_type)
 {
     event->type = event_type;
     event->button.button = map_switch_button_to_sdlmousebutton[switch_button];
@@ -431,7 +432,7 @@ void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32
     event->button.y = last_mouse_y;
 }
 
-void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Keycode key) 
+static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Keycode key)
 {
     SDL_Event event;
     event.type = event_type;

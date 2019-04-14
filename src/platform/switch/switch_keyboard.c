@@ -4,9 +4,9 @@
 #include <switch.h>
 #include "switch_keyboard.h"
 
-void switch_keyboard_get(char *title, const char *initial_text, int maxLen, int multiline, char *buf)
+void switch_keyboard_get(char *title, const char *initial_text, int max_len, int multiline, char *buf)
 {
-    Result rc=0;
+    Result rc = 0;
 
     SwkbdConfig kbd;
 
@@ -15,7 +15,7 @@ void switch_keyboard_get(char *title, const char *initial_text, int maxLen, int 
     if (R_SUCCEEDED(rc)) {
         swkbdConfigMakePresetDefault(&kbd);
         swkbdConfigSetInitialText(&kbd, initial_text);
-        rc = swkbdShow(&kbd, buf, maxLen);
+        rc = swkbdShow(&kbd, buf, max_len);
         swkbdClose(&kbd);
     }
 }

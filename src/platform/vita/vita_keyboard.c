@@ -28,10 +28,10 @@ static void utf16_to_utf8(uint16_t *src, uint8_t *dst)
     for (i = 0; src[i]; i++) {
         if ((src[i] & 0xFF80) == 0) {
             *(dst++) = src[i] & 0xFF;
-        } else if((src[i] & 0xF800) == 0) {
+        } else if ((src[i] & 0xF800) == 0) {
             *(dst++) = ((src[i] >> 6) & 0xFF) | 0xC0;
             *(dst++) = (src[i] & 0x3F) | 0x80;
-        } else if((src[i] & 0xFC00) == 0xD800 && (src[i + 1] & 0xFC00) == 0xDC00) {
+        } else if ((src[i] & 0xFC00) == 0xD800 && (src[i + 1] & 0xFC00) == 0xDC00) {
             *(dst++) = (((src[i] + 64) >> 8) & 0x3) | 0xF0;
             *(dst++) = (((src[i] >> 2) + 16) & 0x3F) | 0x80;
             *(dst++) = ((src[i] >> 4) & 0x30) | 0x80 | ((src[i + 1] << 2) & 0xF);
@@ -138,7 +138,7 @@ static int update_ime_dialog(void) {
     return status;
 }
 
-char *vita_keyboard_get(char *title, const char *initial_text, int maxLen, int multiline)
+char *vita_keyboard_get(char *title, const char *initial_text, int max_len, int multiline)
 {
     char *name = NULL;
 
@@ -148,9 +148,9 @@ char *vita_keyboard_get(char *title, const char *initial_text, int maxLen, int m
         ime_init_apputils = 1;
     }
     if (multiline) {
-        init_ime_dialog(title, initial_text, maxLen, SCE_IME_TYPE_BASIC_LATIN, SCE_IME_OPTION_MULTILINE);
+        init_ime_dialog(title, initial_text, max_len, SCE_IME_TYPE_BASIC_LATIN, SCE_IME_OPTION_MULTILINE);
     } else {
-        init_ime_dialog(title, initial_text, maxLen, SCE_IME_TYPE_BASIC_LATIN, 0);
+        init_ime_dialog(title, initial_text, max_len, SCE_IME_TYPE_BASIC_LATIN, 0);
     }
     bool done = false;
     while (!done) {
