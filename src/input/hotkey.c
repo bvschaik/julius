@@ -147,16 +147,16 @@ void hotkey_character(int c, int with_alt)
 {
     if (with_alt) {
         switch (c) {
-            case 'X': case 'x':
+            case 'x':
                 hotkey_esc();
                 break;
-            case 'K': case 'k':
+            case 'k':
                 cheat_init_or_invasion();
                 break;
-            case 'C': case 'c':
+            case 'c':
                 cheat_money();
                 break;
-            case 'V': case 'v':
+            case 'v':
                 cheat_victory();
                 break;
 
@@ -181,25 +181,25 @@ void hotkey_character(int c, int with_alt)
         case ' ':
             toggle_overlay();
             break;
-        case 'P': case 'p':
+        case 'p':
             toggle_pause();
             break;
-        case 'F': case 'f':
+        case 'f':
             show_overlay(OVERLAY_FIRE);
             break;
-        case 'D': case 'd':
+        case 'd':
             show_overlay(OVERLAY_DAMAGE);
             break;
-        case 'C': case 'c':
+        case 'c':
             show_overlay(OVERLAY_CRIME);
             break;
-        case 'T': case 't':
+        case 't':
             show_overlay(OVERLAY_PROBLEMS);
             break;
-        case 'W': case 'w':
+        case 'w':
             show_overlay(OVERLAY_WATER);
             break;
-        case 'L': case 'l':
+        case 'l':
             cycle_legion();
             break;
         case '1':
