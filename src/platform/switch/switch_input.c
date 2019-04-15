@@ -339,7 +339,7 @@ static void switch_start_text_input(char *initial_text, int multiline)
         switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
     }
     const uint8_t *utf8_text = (uint8_t*) text;
-    for (int i = 0; i < 599; utf8_text[i]) {
+    for (int i = 0; i < 599 && utf8_text[i];) {
         int bytes_in_char = get_utf8_character_bytes(&utf8_text[i]);
         SDL_Event textinput_event;
         textinput_event.type = SDL_TEXTINPUT;
