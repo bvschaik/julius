@@ -67,7 +67,7 @@ static void vita_rescale_analog(int *x, int *y, int dead);
 static void vita_button_to_sdlkey_event(int vita_button, SDL_Event *event, uint32_t event_type);
 static void vita_button_to_sdlmouse_event(int vita_button, SDL_Event *event, uint32_t event_type);
 
-static void vita_create_and_push_sdlkey_event(uint32_t event_type, SDL_Keycode key);
+static void vita_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 
 int vita_poll_event(SDL_Event *event)
 {
@@ -138,14 +138,14 @@ int vita_poll_event(SDL_Event *event)
 void vita_handle_repeat_keys(void)
 {
     if (pressed_buttons[VITA_PAD_UP]) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_UP);
+        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_UP, SDLK_UP);
     } else if (pressed_buttons[VITA_PAD_DOWN]) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_DOWN);
+        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DOWN, SDLK_DOWN);
     }
     if (pressed_buttons[VITA_PAD_LEFT]) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_LEFT);
+        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_LEFT, SDLK_LEFT);
     } else if (pressed_buttons[VITA_PAD_RIGHT]) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_RIGHT);
+        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
     }
 }
 
@@ -247,14 +247,14 @@ void vita_handle_analog_sticks(void)
     }
 
     if (!pressed_buttons[VITA_PAD_UP] && up) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_UP);
+        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_UP, SDLK_UP);
     } else if (!pressed_buttons[VITA_PAD_DOWN] && down) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_DOWN);
+        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DOWN, SDLK_DOWN);
     }
     if (!pressed_buttons[VITA_PAD_LEFT] && left) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_LEFT);
+        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_LEFT, SDLK_LEFT);
     } else if (!pressed_buttons[VITA_PAD_RIGHT] && right) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_RIGHT);
+        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
     }
 }
 
@@ -288,12 +288,12 @@ static void vita_start_text_input(char *initial_text, int multiline)
         return;
     }
     for (int i = 0; i < 600; i++) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_BACKSPACE);
-        vita_create_and_push_sdlkey_event(SDL_KEYUP, SDLK_BACKSPACE);
+        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
+        vita_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
     }
     for (int i = 0; i < 600; i++) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_DELETE);
-        vita_create_and_push_sdlkey_event(SDL_KEYUP, SDLK_DELETE);
+        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DELETE, SDLK_DELETE);
+        vita_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
     }
     const uint8_t *utf8_text = (uint8_t*) text;
     for (int i = 0; i < 599; utf8_text[i]) {
@@ -406,10 +406,11 @@ static void vita_button_to_sdlmouse_event(int vita_button, SDL_Event *event, uin
     event->button.y = last_mouse_y;
 }
 
-static void vita_create_and_push_sdlkey_event(uint32_t event_type, SDL_Keycode key)
+static void vita_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key)
 {
     SDL_Event event;
     event.type = event_type;
+    event.key.keysym.scancode = scan;
     event.key.keysym.sym = key;
     event.key.keysym.mod = 0;
     SDL_PushEvent(&event);

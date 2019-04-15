@@ -81,7 +81,7 @@ static void switch_rescale_analog(int *x, int *y, int dead);
 static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t event_type);
 static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32_t event_type);
 
-static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Keycode key);
+static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 
 int switch_poll_event(SDL_Event *event)
 {
@@ -172,14 +172,14 @@ int switch_poll_event(SDL_Event *event)
 void switch_handle_repeat_keys(void)
 {
     if (pressed_buttons[SWITCH_PAD_UP]) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_UP);
+        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_UP, SDLK_UP);
     } else if (pressed_buttons[SWITCH_PAD_DOWN]) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_DOWN);
+        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DOWN, SDLK_DOWN);
     }
     if (pressed_buttons[SWITCH_PAD_LEFT]) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_LEFT);
+        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_LEFT, SDLK_LEFT);
     } else if (pressed_buttons[SWITCH_PAD_RIGHT]) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_RIGHT);
+        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
     }
 }
 
@@ -289,14 +289,14 @@ void switch_handle_analog_sticks(void)
     }
 
     if (!pressed_buttons[SWITCH_PAD_UP] && up) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_UP);
+        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_UP, SDLK_UP);
     } else if (!pressed_buttons[SWITCH_PAD_DOWN] && down) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_DOWN);
+        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DOWN, SDLK_DOWN);
     }
     if (!pressed_buttons[SWITCH_PAD_LEFT] && left) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_LEFT);
+        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_LEFT, SDLK_LEFT);
     } else if (!pressed_buttons[SWITCH_PAD_RIGHT] && right) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_RIGHT);
+        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
     }
 }
 
@@ -331,12 +331,12 @@ static void switch_start_text_input(char *initial_text, int multiline)
         return;
     }
     for (int i = 0; i < 600; i++) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_BACKSPACE);
-        switch_create_and_push_sdlkey_event(SDL_KEYUP, SDLK_BACKSPACE);
+        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
+        switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
     }
     for (int i = 0; i < 600; i++) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDLK_DELETE);
-        switch_create_and_push_sdlkey_event(SDL_KEYUP, SDLK_DELETE);
+        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DELETE, SDLK_DELETE);
+        switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
     }
     const uint8_t *utf8_text = (uint8_t*) text;
     for (int i = 0; i < 599; utf8_text[i]) {
@@ -449,10 +449,11 @@ static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event,
     event->button.y = last_mouse_y;
 }
 
-static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Keycode key)
+static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key)
 {
     SDL_Event event;
     event.type = event_type;
+    event.key.keysym.scancode = scan;
     event.key.keysym.sym = key;
     event.key.keysym.mod = 0;
     SDL_PushEvent(&event);
