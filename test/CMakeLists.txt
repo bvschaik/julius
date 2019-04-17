@@ -49,6 +49,7 @@ add_executable(autopilot
     ${MAP_FILES}
     ${SCENARIO_FILES}
     ${SOUND_FILES}
+    ${EDITOR_FILES}
 )
 
 file(COPY data/c3.emp DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

@@ -45,6 +45,8 @@ typedef enum {
     WINDOW_DISPLAY_OPTIONS,
     WINDOW_SOUND_OPTIONS,
     WINDOW_SPEED_OPTIONS,
+    // editor
+    WINDOW_EDITOR_MAP,
 } window_id;
 
 typedef struct {

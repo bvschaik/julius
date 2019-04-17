@@ -38,7 +38,10 @@ int image_init(int with_fonts)
     return 1;
 }
 
-int image_load_climate(int climate_id)
+void image_enable_fonts(int enable)
+{}
+
+int image_load_climate(int climate_id, int is_editor)
 {
     return 1;
 }

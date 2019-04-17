@@ -442,6 +442,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/building/military.c
     ${PROJECT_SOURCE_DIR}/src/window/building/terrain.c
     ${PROJECT_SOURCE_DIR}/src/window/building/utility.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/map.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
@@ -472,6 +473,9 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.c
 )
+set(EDITOR_FILES
+    ${PROJECT_SOURCE_DIR}/src/editor/editor.c
+)
 
 set(MACOSX_FILES "")
 if(APPLE)
@@ -495,6 +499,7 @@ add_executable(julius
     ${SOUND_FILES}
     ${WIDGET_FILES}
     ${WINDOW_FILES}
+    ${EDITOR_FILES}
     ${SMK_FILES}
     ${TINYFD_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc

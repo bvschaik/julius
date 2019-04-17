@@ -38,11 +38,18 @@ typedef struct {
 int image_init(int with_fonts);
 
 /**
+ * Whether external fonts should be enabled
+ * @param enable Enable fonts
+ */
+void image_enable_fonts(int enable);
+
+/**
  * Loads the image collection for the specified climate
  * @param climate_id Climate to load
+ * @param is_editor Whether to load the editor graphics or not
  * @return boolean true on success, false on failure
  */
-int image_load_climate(int climate_id);
+int image_load_climate(int climate_id, int is_editor);
 
 /**
  * Loads external fonts file (Cyrillic)
