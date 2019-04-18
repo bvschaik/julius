@@ -12,7 +12,6 @@ static void preprocess_finger_up(SDL_Event *event);
 static void preprocess_finger_motion(SDL_Event *event);
 static void set_mouse_button_event(SDL_Event *event, uint32_t type, uint8_t button, int32_t x, int32_t y);
 static void set_mouse_motion_event(SDL_Event *event, int32_t x, int32_t y, int32_t xrel, int32_t yrel);
-static Uint32 empty_event_type = 0;
 
 static int vita_rear_touch = 0; // always disable rear_touch for now
 
@@ -59,12 +58,6 @@ static void init_touch(void)
             simulated_click_start_time[port][i] = 0;
         }
     }
-
-    // to prevent touch events leaking through to the main program if this touch handler is enabled
-    // convert them to an empty user event
-    if (empty_event_type == 0) {
-        empty_event_type = SDL_RegisterEvents(1);
-    }
 }
 
 void vita_handle_touch(SDL_Event *event)
@@ -75,7 +68,8 @@ void vita_handle_touch(SDL_Event *event)
     }
     preprocess_events(event);
     if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP || event->type == SDL_FINGERMOTION) {
-        event->type = empty_event_type;
+        event->type = SDL_USEREVENT;
+        event->user.code = -1; // ensure that this event is ignored
     }
 }
 
