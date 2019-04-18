@@ -161,6 +161,7 @@ if (VITA_BUILD)
         ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_touch.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
     )
 elseif (SWITCH_BUILD)
