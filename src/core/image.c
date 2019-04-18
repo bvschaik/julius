@@ -103,6 +103,7 @@ static const char ENEMY_GRAPHICS_555[][NAME_SIZE] = {
 
 static struct {
     int current_climate;
+    int is_editor;
     int fonts_enabled;
 
     uint16_t group_image_ids[300];
@@ -285,7 +286,7 @@ static void load_empire(void)
 
 int image_load_climate(int climate_id, int is_editor)
 {
-    if (climate_id == data.current_climate) {
+    if (climate_id == data.current_climate && is_editor == data.is_editor) {
         return 1;
     }
 
@@ -309,6 +310,7 @@ int image_load_climate(int climate_id, int is_editor)
     buffer_init(&buf, data.tmp_data, data_size);
     convert_images(data.main, MAIN_ENTRIES, &buf, data.main_data);
     data.current_climate = climate_id;
+    data.is_editor = is_editor;
 
     load_empire();
     return 1;
