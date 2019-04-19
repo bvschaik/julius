@@ -19,3 +19,18 @@ void scenario_editor_invasion_get(int index, editor_invasion *invasion)
     invasion->from = scenario.invasions[index].from;
     invasion->attack_type = scenario.invasions[index].attack_type;
 }
+
+void scenario_editor_cycle_image(int forward)
+{
+    if (forward) {
+        scenario.image_id++;
+    } else {
+        scenario.image_id--;
+    }
+    if (scenario.image_id < 0) {
+        scenario.image_id = 15;
+    }
+    if (scenario.image_id > 15) {
+        scenario.image_id = 0;
+    }
+}

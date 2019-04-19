@@ -21,4 +21,6 @@ void scenario_editor_request_get(int index, editor_request *request);
 
 void scenario_editor_invasion_get(int index, editor_invasion *invasion);
 
+void scenario_editor_cycle_image(int forward);
+
 #endif // SCENARIO_EDITOR_H
