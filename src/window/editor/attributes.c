@@ -15,15 +15,17 @@
 #include "scenario/editor.h"
 #include "scenario/property.h"
 #include "window/editor/map.h"
+#include "window/select_list.h"
 
 static void button_click(int, int);
+static void button_enemy(int param1, int param2);
 static void change_image(int forward, int param2);
 
 static generic_button buttons[] = {
     {212, 76, 462, 106, GB_IMMEDIATE, button_click, button_none, 1, 0},
     {212, 116, 462, 146, GB_IMMEDIATE, button_click, button_none, 2, 0},
     {212, 156, 462, 186, GB_IMMEDIATE, button_click, button_none, 3, 0},
-    {212, 196, 462, 226, GB_IMMEDIATE, button_click, button_none, 4, 0},
+    {212, 196, 462, 226, GB_IMMEDIATE, button_enemy, button_none, 4, 0},
     {212, 236, 462, 266, GB_IMMEDIATE, button_click, button_none, 5, 0},
     {212, 276, 462, 306, GB_IMMEDIATE, button_click, button_none, 6, 0},
     {212, 316, 462, 346, GB_IMMEDIATE, button_click, button_none, 7, 0},
@@ -31,16 +33,6 @@ static generic_button buttons[] = {
     {212, 396, 462, 426, GB_IMMEDIATE, button_click, button_none, 9, 0},
     {212, 436, 462, 466, GB_IMMEDIATE, button_click, button_none, 10, 0},
 };
-    short x_offset;
-    short y_offset;
-    short image_id;
-    short size;
-    void (*left_click_handler)(int param1, int param2);
-    int parameter1;
-    int parameter2;
-    // state
-    int pressed;
-    int repeats;
 
 static arrow_button image_arrows[] = {
     {20, 424, 19, 24, change_image, 0, 0},
@@ -50,7 +42,9 @@ static arrow_button image_arrows[] = {
 static int focus_button_id;
 
 static void draw_background(void)
-{}
+{
+    graphics_clear_screen();
+}
 
 static void draw_foreground(void)
 {
@@ -136,6 +130,11 @@ static void handle_mouse(const mouse *m)
 
 static void button_click(int type, int param2)
 {
+}
+
+static void button_enemy(int param1, int param2)
+{
+    window_select_list_show(20, 40, 20, 37, scenario_editor_set_enemy);
 }
 
 void change_image(int forward, int param2)

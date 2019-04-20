@@ -34,3 +34,8 @@ void scenario_editor_cycle_image(int forward)
         scenario.image_id = 0;
     }
 }
+
+void scenario_editor_set_enemy(int enemy_id)
+{
+    scenario.enemy_id = enemy_id;
+}
