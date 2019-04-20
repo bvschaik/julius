@@ -1,6 +1,7 @@
 #include "editor.h"
 
 #include "scenario/data.h"
+#include "scenario/property.h"
 
 void scenario_editor_request_get(int index, editor_request *request)
 {
@@ -32,6 +33,22 @@ void scenario_editor_cycle_image(int forward)
     }
     if (scenario.image_id > 15) {
         scenario.image_id = 0;
+    }
+}
+
+void scenario_editor_cycle_climate(void)
+{
+    switch (scenario.climate) {
+        case CLIMATE_CENTRAL:
+            scenario.climate = CLIMATE_NORTHERN;
+            break;
+        case CLIMATE_NORTHERN:
+            scenario.climate = CLIMATE_DESERT;
+            break;
+        case CLIMATE_DESERT:
+        default:
+            scenario.climate = CLIMATE_CENTRAL;
+            break;
     }
 }
 

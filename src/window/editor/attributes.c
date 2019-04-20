@@ -1,5 +1,6 @@
 #include "attributes.h"
 
+#include "core/image.h"
 #include "core/image_group_editor.h"
 #include "game/resource.h"
 #include "graphics/arrow_button.h"
@@ -19,11 +20,12 @@
 
 static void button_click(int, int);
 static void button_enemy(int param1, int param2);
+static void change_climate(int param1, int param2);
 static void change_image(int forward, int param2);
 
 static generic_button buttons[] = {
     {212, 76, 462, 106, GB_IMMEDIATE, button_click, button_none, 1, 0},
-    {212, 116, 462, 146, GB_IMMEDIATE, button_click, button_none, 2, 0},
+    {212, 116, 462, 146, GB_IMMEDIATE, change_climate, button_none, 2, 0},
     {212, 156, 462, 186, GB_IMMEDIATE, button_click, button_none, 3, 0},
     {212, 196, 462, 226, GB_IMMEDIATE, button_enemy, button_none, 4, 0},
     {212, 236, 462, 266, GB_IMMEDIATE, button_click, button_none, 5, 0},
@@ -137,7 +139,14 @@ static void button_enemy(int param1, int param2)
     window_select_list_show(20, 40, 20, 37, scenario_editor_set_enemy);
 }
 
-void change_image(int forward, int param2)
+static void change_climate(int param1, int param2)
+{
+    scenario_editor_cycle_climate();
+    image_load_climate(scenario_property_climate(), 1);
+    window_request_refresh();
+}
+
+static void change_image(int forward, int param2)
 {
     scenario_editor_cycle_image(forward);
     window_request_refresh();
