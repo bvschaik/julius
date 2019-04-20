@@ -45,6 +45,8 @@ typedef enum {
     WINDOW_DISPLAY_OPTIONS,
     WINDOW_SOUND_OPTIONS,
     WINDOW_SPEED_OPTIONS,
+    // utility windows
+    WINDOW_SELECT_LIST,
     // editor
     WINDOW_EDITOR_MAP,
     WINDOW_EDITOR_ATTRIBUTES,
