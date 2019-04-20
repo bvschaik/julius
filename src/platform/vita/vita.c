@@ -5,7 +5,8 @@
 #include <malloc.h>
 #include "SDL.h"
 
-int _newlib_heap_size_user = 192 * 1024 * 1024;
+// max heap size is approx. 330 MB with -d ATTRIBUTE2=12, otherwise max is 192
+int _newlib_heap_size_user = 300 * 1024 * 1024;
 
 int chdir(const char *path)
 {

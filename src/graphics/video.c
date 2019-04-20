@@ -75,7 +75,13 @@ static const unsigned char *next_audio_frame(int *out_len)
 static int load_smk_video(const char *filename)
 {
     FILE *fp = file_open(filename, "rb");
+#ifdef __vita__
+    // Vita file i/o is too slow to play videos smoothly from disk, so pre-load
+    // the pre-loading causes a short pause before video starts
+    data.video.s = smk_open_filepointer(fp, SMK_MODE_MEMORY);
+#else
     data.video.s = smk_open_filepointer(fp, SMK_MODE_DISK);
+#endif
     if (!data.video.s) {
         // smk_open_filepointer closes the stream on error: no need to close fp
         return 0;
@@ -108,7 +114,13 @@ static int load_smk_audio(const char *filename)
     }
 
     FILE *fp = file_open(filename, "rb");
+#ifdef __vita__
+    // Vita file i/o is too slow to play videos smoothly from disk, so pre-load
+    // the pre-loading causes a short pause before video starts
+    data.audio.s = smk_open_filepointer(fp, SMK_MODE_MEMORY);
+#else
     data.audio.s = smk_open_filepointer(fp, SMK_MODE_DISK);
+#endif
     if (!data.audio.s) {
         // smk_open_filepointer closes the stream on error: no need to close fp
         return 0;
