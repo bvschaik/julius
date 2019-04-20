@@ -601,7 +601,9 @@ if (VITA_BUILD)
         ScePgf_stub
         SceAppMgr_stub
     )
-
+    # this setting enables larger heap memory sizes on Vita, up to ~330 MB
+    # useful for pre-loading videos into memory
+    set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
     vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
     vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
         VERSION ${VITA_VERSION}
