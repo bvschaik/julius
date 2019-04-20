@@ -25,6 +25,7 @@ enum {
 int last_mouse_x = 0;
 int last_mouse_y = 0;
 int touch_mode = TOUCH_MODE_TOUCHPAD;
+static bool can_change_touch_mode = true;
 
 static SDL_Joystick *joy = NULL;
 
@@ -107,8 +108,11 @@ int vita_poll_event(SDL_Event *event)
                         vkbd_requested = 1;
                         break;
                     case VITA_PAD_SELECT:
-                        touch_mode++;
-                        touch_mode %= NUM_TOUCH_MODES;
+                        if (can_change_touch_mode) {
+                            touch_mode++;
+                            touch_mode %= NUM_TOUCH_MODES;
+                            can_change_touch_mode = false;
+                        }
                         break;
                     default:
                         break;
@@ -132,6 +136,9 @@ int vita_poll_event(SDL_Event *event)
                     case VITA_PAD_CIRCLE:
                     case VITA_PAD_L: // intentional fallthrough
                         vita_button_to_sdlmouse_event(event->jbutton.button, event, SDL_MOUSEBUTTONUP);
+                        break;
+                    case VITA_PAD_SELECT:
+                        can_change_touch_mode = true;
                         break;
                     default:
                         break;
