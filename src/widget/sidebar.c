@@ -302,15 +302,16 @@ void widget_sidebar_draw_foreground_military(void)
 
 int widget_sidebar_handle_mouse(const mouse *m)
 {
+    int click = 0;
     int button_id;
     data.focus_button_for_tooltip = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = get_x_offset_collapsed();
-        image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
+        click |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = 12;
         }
-        image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, 12, &button_id);
+        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, 12, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 19;
         }
@@ -319,20 +320,20 @@ int widget_sidebar_handle_mouse(const mouse *m)
             return 1;
         }
         int x_offset = get_x_offset_expanded();
-        image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2, &button_id);
+        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 9;
         }
-        image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, 15, &button_id);
+        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, 15, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 19;
         }
-        image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, 6, &button_id);
+        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, 6, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 39;
         }
     }
-    return button_id != 0;
+    return click;
 }
 
 void widget_sidebar_handle_mouse_build_menu(const mouse *m)
