@@ -443,6 +443,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/building/military.c
     ${PROJECT_SOURCE_DIR}/src/window/building/terrain.c
     ${PROJECT_SOURCE_DIR}/src/window/building/utility.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/allowed_buildings.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/attributes.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/map.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c

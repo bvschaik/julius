@@ -50,6 +50,7 @@ typedef enum {
     // editor
     WINDOW_EDITOR_MAP,
     WINDOW_EDITOR_ATTRIBUTES,
+    WINDOW_EDITOR_ALLOWED_BUILDINGS,
 } window_id;
 
 typedef struct {

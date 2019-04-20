@@ -56,3 +56,13 @@ void scenario_editor_set_enemy(int enemy_id)
 {
     scenario.enemy_id = enemy_id;
 }
+
+int scenario_editor_is_building_allowed(int id)
+{
+    return scenario.allowed_buildings[id];
+}
+
+void scenario_editor_toggle_building_allowed(int id)
+{
+    scenario.allowed_buildings[id] = scenario.allowed_buildings[id] ? 0 : 1;
+}

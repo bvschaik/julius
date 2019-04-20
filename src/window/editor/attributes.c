@@ -15,11 +15,14 @@
 #include "input/keyboard.h"
 #include "scenario/editor.h"
 #include "scenario/property.h"
+#include "window/editor/allowed_buildings.h"
 #include "window/editor/map.h"
 #include "window/select_list.h"
 
-static void button_click(int, int);
+static void button_click(int p1, int p2) {}
+
 static void button_enemy(int param1, int param2);
+static void button_allowed_buildings(int param1, int param2);
 static void change_climate(int param1, int param2);
 static void change_image(int forward, int param2);
 
@@ -29,7 +32,7 @@ static generic_button buttons[] = {
     {212, 156, 462, 186, GB_IMMEDIATE, button_click, button_none, 3, 0},
     {212, 196, 462, 226, GB_IMMEDIATE, button_enemy, button_none, 4, 0},
     {212, 236, 462, 266, GB_IMMEDIATE, button_click, button_none, 5, 0},
-    {212, 276, 462, 306, GB_IMMEDIATE, button_click, button_none, 6, 0},
+    {212, 276, 462, 306, GB_IMMEDIATE, button_allowed_buildings, button_none, 6, 0},
     {212, 316, 462, 346, GB_IMMEDIATE, button_click, button_none, 7, 0},
     {212, 356, 462, 386, GB_IMMEDIATE, button_click, button_none, 8, 0},
     {212, 396, 462, 426, GB_IMMEDIATE, button_click, button_none, 9, 0},
@@ -130,13 +133,14 @@ static void handle_mouse(const mouse *m)
     }
 }
 
-static void button_click(int type, int param2)
-{
-}
-
 static void button_enemy(int param1, int param2)
 {
     window_select_list_show(20, 40, 20, 37, scenario_editor_set_enemy);
+}
+
+static void button_allowed_buildings(int param1, int param2)
+{
+    window_editor_allowed_buildings_show();
 }
 
 static void change_climate(int param1, int param2)

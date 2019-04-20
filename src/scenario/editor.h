@@ -27,4 +27,8 @@ void scenario_editor_cycle_climate(void);
 
 void scenario_editor_set_enemy(int enemy_id);
 
+int scenario_editor_is_building_allowed(int id);
+
+void scenario_editor_toggle_building_allowed(int id);
+
 #endif // SCENARIO_EDITOR_H
