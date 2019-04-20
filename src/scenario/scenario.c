@@ -151,56 +151,9 @@ void scenario_save_state(buffer *buf)
     buffer_write_i32(buf, scenario.rome_supplies_wheat);
     
     // allowed buildings
-    buffer_skip(buf, 2);
-    buffer_write_i16(buf, scenario.allowed_buildings.farms);
-    buffer_write_i16(buf, scenario.allowed_buildings.raw_materials);
-    buffer_write_i16(buf, scenario.allowed_buildings.workshops);
-    buffer_write_i16(buf, scenario.allowed_buildings.road);
-    buffer_write_i16(buf, scenario.allowed_buildings.wall);
-    buffer_write_i16(buf, scenario.allowed_buildings.aqueduct);
-    buffer_skip(buf, 2);
-    buffer_write_i16(buf, scenario.allowed_buildings.amphitheater);
-    buffer_write_i16(buf, scenario.allowed_buildings.theater);
-    buffer_write_i16(buf, scenario.allowed_buildings.hippodrome);
-    buffer_write_i16(buf, scenario.allowed_buildings.colosseum);
-    buffer_write_i16(buf, scenario.allowed_buildings.gladiator_school);
-    buffer_write_i16(buf, scenario.allowed_buildings.lion_house);
-    buffer_write_i16(buf, scenario.allowed_buildings.actor_colony);
-    buffer_write_i16(buf, scenario.allowed_buildings.chariot_maker);
-    buffer_write_i16(buf, scenario.allowed_buildings.gardens);
-    buffer_write_i16(buf, scenario.allowed_buildings.plaza);
-    buffer_write_i16(buf, scenario.allowed_buildings.statues);
-    buffer_write_i16(buf, scenario.allowed_buildings.doctor);
-    buffer_write_i16(buf, scenario.allowed_buildings.hospital);
-    buffer_write_i16(buf, scenario.allowed_buildings.bathhouse);
-    buffer_write_i16(buf, scenario.allowed_buildings.barber);
-    buffer_write_i16(buf, scenario.allowed_buildings.school);
-    buffer_write_i16(buf, scenario.allowed_buildings.academy);
-    buffer_write_i16(buf, scenario.allowed_buildings.library);
-    buffer_write_i16(buf, scenario.allowed_buildings.prefecture);
-    buffer_write_i16(buf, scenario.allowed_buildings.fort);
-    buffer_write_i16(buf, scenario.allowed_buildings.gatehouse);
-    buffer_write_i16(buf, scenario.allowed_buildings.tower);
-    buffer_write_i16(buf, scenario.allowed_buildings.small_temples);
-    buffer_write_i16(buf, scenario.allowed_buildings.large_temples);
-    buffer_write_i16(buf, scenario.allowed_buildings.market);
-    buffer_write_i16(buf, scenario.allowed_buildings.granary);
-    buffer_write_i16(buf, scenario.allowed_buildings.warehouse);
-    buffer_skip(buf, 2);
-    buffer_write_i16(buf, scenario.allowed_buildings.dock);
-    buffer_write_i16(buf, scenario.allowed_buildings.wharf);
-    buffer_write_i16(buf, scenario.allowed_buildings.governor_home);
-    buffer_write_i16(buf, scenario.allowed_buildings.engineers_post);
-    buffer_write_i16(buf, scenario.allowed_buildings.senate);
-    buffer_write_i16(buf, scenario.allowed_buildings.forum);
-    buffer_write_i16(buf, scenario.allowed_buildings.well);
-    buffer_write_i16(buf, scenario.allowed_buildings.oracle);
-    buffer_write_i16(buf, scenario.allowed_buildings.mission_post);
-    buffer_write_i16(buf, scenario.allowed_buildings.bridge);
-    buffer_write_i16(buf, scenario.allowed_buildings.barracks);
-    buffer_write_i16(buf, scenario.allowed_buildings.military_academy);
-    buffer_write_i16(buf, scenario.allowed_buildings.distribution_center);
-    buffer_skip(buf, 2);
+    for (int i = 0; i < 50; i++) {
+        buffer_write_i16(buf, scenario.allowed_buildings[i]);
+    }
     
     // win criteria
     buffer_write_i32(buf, scenario.win_criteria.culture.goal);
@@ -408,56 +361,9 @@ void scenario_load_state(buffer *buf)
     scenario.rome_supplies_wheat = buffer_read_i32(buf);
     
     // allowed buildings
-    buffer_skip(buf, 2);
-    scenario.allowed_buildings.farms = buffer_read_i16(buf);
-    scenario.allowed_buildings.raw_materials = buffer_read_i16(buf);
-    scenario.allowed_buildings.workshops = buffer_read_i16(buf);
-    scenario.allowed_buildings.road = buffer_read_i16(buf);
-    scenario.allowed_buildings.wall = buffer_read_i16(buf);
-    scenario.allowed_buildings.aqueduct = buffer_read_i16(buf);
-    buffer_skip(buf, 2);
-    scenario.allowed_buildings.amphitheater = buffer_read_i16(buf);
-    scenario.allowed_buildings.theater = buffer_read_i16(buf);
-    scenario.allowed_buildings.hippodrome = buffer_read_i16(buf);
-    scenario.allowed_buildings.colosseum = buffer_read_i16(buf);
-    scenario.allowed_buildings.gladiator_school = buffer_read_i16(buf);
-    scenario.allowed_buildings.lion_house = buffer_read_i16(buf);
-    scenario.allowed_buildings.actor_colony = buffer_read_i16(buf);
-    scenario.allowed_buildings.chariot_maker = buffer_read_i16(buf);
-    scenario.allowed_buildings.gardens = buffer_read_i16(buf);
-    scenario.allowed_buildings.plaza = buffer_read_i16(buf);
-    scenario.allowed_buildings.statues = buffer_read_i16(buf);
-    scenario.allowed_buildings.doctor = buffer_read_i16(buf);
-    scenario.allowed_buildings.hospital = buffer_read_i16(buf);
-    scenario.allowed_buildings.bathhouse = buffer_read_i16(buf);
-    scenario.allowed_buildings.barber = buffer_read_i16(buf);
-    scenario.allowed_buildings.school = buffer_read_i16(buf);
-    scenario.allowed_buildings.academy = buffer_read_i16(buf);
-    scenario.allowed_buildings.library = buffer_read_i16(buf);
-    scenario.allowed_buildings.prefecture = buffer_read_i16(buf);
-    scenario.allowed_buildings.fort = buffer_read_i16(buf);
-    scenario.allowed_buildings.gatehouse = buffer_read_i16(buf);
-    scenario.allowed_buildings.tower = buffer_read_i16(buf);
-    scenario.allowed_buildings.small_temples = buffer_read_i16(buf);
-    scenario.allowed_buildings.large_temples = buffer_read_i16(buf);
-    scenario.allowed_buildings.market = buffer_read_i16(buf);
-    scenario.allowed_buildings.granary = buffer_read_i16(buf);
-    scenario.allowed_buildings.warehouse = buffer_read_i16(buf);
-    buffer_skip(buf, 2);
-    scenario.allowed_buildings.dock = buffer_read_i16(buf);
-    scenario.allowed_buildings.wharf = buffer_read_i16(buf);
-    scenario.allowed_buildings.governor_home = buffer_read_i16(buf);
-    scenario.allowed_buildings.engineers_post = buffer_read_i16(buf);
-    scenario.allowed_buildings.senate = buffer_read_i16(buf);
-    scenario.allowed_buildings.forum = buffer_read_i16(buf);
-    scenario.allowed_buildings.well = buffer_read_i16(buf);
-    scenario.allowed_buildings.oracle = buffer_read_i16(buf);
-    scenario.allowed_buildings.mission_post = buffer_read_i16(buf);
-    scenario.allowed_buildings.bridge = buffer_read_i16(buf);
-    scenario.allowed_buildings.barracks = buffer_read_i16(buf);
-    scenario.allowed_buildings.military_academy = buffer_read_i16(buf);
-    scenario.allowed_buildings.distribution_center = buffer_read_i16(buf);
-    buffer_skip(buf, 2);
+    for (int i = 0; i < 50; i++) {
+        scenario.allowed_buildings[i] = buffer_read_i16(buf);
+    }
     
     // win criteria
     scenario.win_criteria.culture.goal = buffer_read_i32(buf);

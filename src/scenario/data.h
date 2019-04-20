@@ -30,6 +30,58 @@ enum {
     INVASION_TYPE_DISTANT_BATTLE = 4,
 };
 
+enum {
+    ALLOWED_BUILDING_NONE = 0,
+    ALLOWED_BUILDING_FARMS = 1,
+    ALLOWED_BUILDING_RAW_MATERIALS = 2,
+    ALLOWED_BUILDING_WORKSHOPS = 3,
+    ALLOWED_BUILDING_ROAD = 4,
+    ALLOWED_BUILDING_WALL = 5,
+    ALLOWED_BUILDING_AQUEDUCT = 6,
+    ALLOWED_BUILDING_HOUSING = 7,
+    ALLOWED_BUILDING_AMPHITHEATER = 8,
+    ALLOWED_BUILDING_THEATER = 9,
+    ALLOWED_BUILDING_HIPPODROME = 10,
+    ALLOWED_BUILDING_COLOSSEUM = 11,
+    ALLOWED_BUILDING_GLADIATOR_SCHOOL = 12,
+    ALLOWED_BUILDING_LION_HOUSE = 13,
+    ALLOWED_BUILDING_ACTOR_COLONY = 14,
+    ALLOWED_BUILDING_CHARIOT_MAKER = 15,
+    ALLOWED_BUILDING_GARDENS = 16,
+    ALLOWED_BUILDING_PLAZA = 17,
+    ALLOWED_BUILDING_STATUES = 18,
+    ALLOWED_BUILDING_DOCTOR = 19,
+    ALLOWED_BUILDING_HOSPITAL = 20,
+    ALLOWED_BUILDING_BATHHOUSE = 21,
+    ALLOWED_BUILDING_BARBER = 22,
+    ALLOWED_BUILDING_SCHOOL = 23,
+    ALLOWED_BUILDING_ACADEMY = 24,
+    ALLOWED_BUILDING_LIBRARY = 25,
+    ALLOWED_BUILDING_PREFECTURE = 26,
+    ALLOWED_BUILDING_FORT = 27,
+    ALLOWED_BUILDING_GATEHOUSE = 28,
+    ALLOWED_BUILDING_TOWER = 29,
+    ALLOWED_BUILDING_SMALL_TEMPLES = 30,
+    ALLOWED_BUILDING_LARGE_TEMPLES = 31,
+    ALLOWED_BUILDING_MARKET = 32,
+    ALLOWED_BUILDING_GRANARY = 33,
+    ALLOWED_BUILDING_WAREHOUSE = 34,
+    ALLOWED_BUILDING_TRIUMPHAL_ARCH = 35,
+    ALLOWED_BUILDING_DOCK = 36,
+    ALLOWED_BUILDING_WHARF = 37,
+    ALLOWED_BUILDING_GOVERNOR_HOME = 38,
+    ALLOWED_BUILDING_ENGINEERS_POST = 39,
+    ALLOWED_BUILDING_SENATE = 40,
+    ALLOWED_BUILDING_FORUM = 41,
+    ALLOWED_BUILDING_WELL = 42,
+    ALLOWED_BUILDING_ORACLE = 43,
+    ALLOWED_BUILDING_MISSION_POST = 44,
+    ALLOWED_BUILDING_BRIDGE = 45,
+    ALLOWED_BUILDING_BARRACKS = 46,
+    ALLOWED_BUILDING_MILITARY_ACADEMY = 47,
+    ALLOWED_BUILDING_DISTRIBUTION_CENTER = 48,
+};
+
 struct win_criteria_t {
     int enabled;
     int goal;
@@ -158,54 +210,7 @@ extern struct scenario_t {
     map_point fishing_points[MAX_FISH_POINTS];
     map_point invasion_points[MAX_INVASION_POINTS];
 
-    struct {
-        short farms;
-        short raw_materials;
-        short workshops;
-        short road;
-        short wall;
-        short aqueduct;
-        short amphitheater;
-        short theater;
-        short hippodrome;
-        short colosseum;
-        short gladiator_school;
-        short lion_house;
-        short actor_colony;
-        short chariot_maker;
-        short gardens;
-        short plaza;
-        short statues;
-        short doctor;
-        short hospital;
-        short bathhouse;
-        short barber;
-        short school;
-        short academy;
-        short library;
-        short prefecture;
-        short fort;
-        short gatehouse;
-        short tower;
-        short small_temples;
-        short large_temples;
-        short market;
-        short granary;
-        short warehouse;
-        short dock;
-        short wharf;
-        short governor_home;
-        short engineers_post;
-        short senate;
-        short forum;
-        short well;
-        short oracle;
-        short mission_post;
-        short bridge;
-        short barracks;
-        short military_academy;
-        short distribution_center;
-    } allowed_buildings;
+    short allowed_buildings[50];
 
     struct {
         int hut;
