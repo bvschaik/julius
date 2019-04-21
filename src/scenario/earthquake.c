@@ -15,13 +15,6 @@
 #include "scenario/data.h"
 #include "sound/effect.h"
 
-enum {
-    EARTHQUAKE_NONE = 0,
-    EARTHQUAKE_SMALL = 1,
-    EARTHQUAKE_MEDIUM = 2,
-    EARTHQUAKE_LARGE = 3
-};
-
 static struct {
     int game_year;
     int month;

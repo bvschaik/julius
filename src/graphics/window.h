@@ -51,6 +51,7 @@ typedef enum {
     WINDOW_EDITOR_MAP,
     WINDOW_EDITOR_ATTRIBUTES,
     WINDOW_EDITOR_ALLOWED_BUILDINGS,
+    WINDOW_EDITOR_SPECIAL_EVENTS,
 } window_id;
 
 typedef struct {
