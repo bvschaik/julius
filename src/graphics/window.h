@@ -47,6 +47,7 @@ typedef enum {
     WINDOW_SPEED_OPTIONS,
     // utility windows
     WINDOW_SELECT_LIST,
+    WINDOW_NUMERIC_INPUT,
     // editor
     WINDOW_EDITOR_MAP,
     WINDOW_EDITOR_ATTRIBUTES,
