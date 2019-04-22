@@ -16,6 +16,7 @@
 #include "scenario/editor.h"
 #include "scenario/property.h"
 #include "window/editor/allowed_buildings.h"
+#include "window/editor/invasions.h"
 #include "window/editor/map.h"
 #include "window/editor/requests.h"
 #include "window/editor/special_events.h"
@@ -25,6 +26,7 @@ static void button_click(int p1, int p2) {}
 
 static void button_requests(int param1, int param2);
 static void button_enemy(int param1, int param2);
+static void button_invasions(int param1, int param2);
 static void button_allowed_buildings(int param1, int param2);
 static void button_special_events(int param1, int param2);
 static void change_climate(int param1, int param2);
@@ -35,7 +37,7 @@ static generic_button buttons[] = {
     {212, 116, 462, 146, GB_IMMEDIATE, change_climate, button_none, 2, 0},
     {212, 156, 462, 186, GB_IMMEDIATE, button_requests, button_none, 3, 0},
     {212, 196, 462, 226, GB_IMMEDIATE, button_enemy, button_none, 4, 0},
-    {212, 236, 462, 266, GB_IMMEDIATE, button_click, button_none, 5, 0},
+    {212, 236, 462, 266, GB_IMMEDIATE, button_invasions, button_none, 5, 0},
     {212, 276, 462, 306, GB_IMMEDIATE, button_allowed_buildings, button_none, 6, 0},
     {212, 316, 462, 346, GB_IMMEDIATE, button_click, button_none, 7, 0},
     {212, 356, 462, 386, GB_IMMEDIATE, button_special_events, button_none, 8, 0},
@@ -145,6 +147,11 @@ static void button_requests(int param1, int param2)
 static void button_enemy(int param1, int param2)
 {
     window_select_list_show(20, 40, 20, 37, scenario_editor_set_enemy);
+}
+
+static void button_invasions(int param1, int param2)
+{
+    window_editor_invasions_show();
 }
 
 static void button_allowed_buildings(int param1, int param2)
