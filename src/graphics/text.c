@@ -323,6 +323,13 @@ void text_draw_number_centered(int value, int x_offset, int y_offset, int box_wi
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
+void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int y_offset, int box_width, font_t font)
+{
+    uint8_t str[100];
+    number_to_string(str, value, prefix, " ");
+    text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
+}
+
 void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, font_t font, color_t color)
 {
     uint8_t str[100];

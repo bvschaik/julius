@@ -13,6 +13,7 @@
 #include "scenario/editor.h"
 #include "scenario/property.h"
 #include "window/editor/attributes.h"
+#include "window/editor/edit_request.h"
 
 static void button_request(int id, int param2);
 
@@ -92,7 +93,7 @@ static void handle_mouse(const mouse *m)
 
 static void button_request(int id, int param2)
 {
-    // TODO open request
+    window_editor_edit_request_show(id);
 }
 
 void window_editor_requests_show(void)

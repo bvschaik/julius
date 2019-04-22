@@ -18,6 +18,8 @@ typedef struct {
 } editor_invasion;
 
 void scenario_editor_request_get(int index, editor_request *request);
+void scenario_editor_request_delete(int index);
+void scenario_editor_request_save(int index, editor_request *request);
 
 void scenario_editor_invasion_get(int index, editor_invasion *invasion);
 

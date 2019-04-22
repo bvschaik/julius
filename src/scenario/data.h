@@ -94,6 +94,19 @@ struct win_criteria_t {
     int goal;
 };
 
+typedef struct {
+    int year;
+    int resource;
+    int amount;
+    int deadline_years;
+    int can_comply_dialog_shown;
+    int favor;
+    int month;
+    int state;
+    int visible;
+    int months_to_comply;
+} request_t;
+
 extern struct scenario_t {
     uint8_t scenario_name[MAX_SCENARIO_NAME];
 
@@ -138,18 +151,7 @@ extern struct scenario_t {
         int distant_battle_enemy_travel_months;
     } empire;
 
-    struct {
-        int year;
-        int resource;
-        int amount;
-        int deadline_years;
-        int can_comply_dialog_shown;
-        int favor;
-        int month;
-        int state;
-        int visible;
-        int months_to_comply;
-    } requests[MAX_REQUESTS];
+    request_t requests[MAX_REQUESTS];
 
     struct {
         int year;
