@@ -17,11 +17,13 @@
 #include "scenario/property.h"
 #include "window/editor/allowed_buildings.h"
 #include "window/editor/map.h"
+#include "window/editor/requests.h"
 #include "window/editor/special_events.h"
 #include "window/select_list.h"
 
 static void button_click(int p1, int p2) {}
 
+static void button_requests(int param1, int param2);
 static void button_enemy(int param1, int param2);
 static void button_allowed_buildings(int param1, int param2);
 static void button_special_events(int param1, int param2);
@@ -31,7 +33,7 @@ static void change_image(int forward, int param2);
 static generic_button buttons[] = {
     {212, 76, 462, 106, GB_IMMEDIATE, button_click, button_none, 1, 0},
     {212, 116, 462, 146, GB_IMMEDIATE, change_climate, button_none, 2, 0},
-    {212, 156, 462, 186, GB_IMMEDIATE, button_click, button_none, 3, 0},
+    {212, 156, 462, 186, GB_IMMEDIATE, button_requests, button_none, 3, 0},
     {212, 196, 462, 226, GB_IMMEDIATE, button_enemy, button_none, 4, 0},
     {212, 236, 462, 266, GB_IMMEDIATE, button_click, button_none, 5, 0},
     {212, 276, 462, 306, GB_IMMEDIATE, button_allowed_buildings, button_none, 6, 0},
@@ -133,6 +135,11 @@ static void handle_mouse(const mouse *m)
     if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 10, &focus_button_id)) {
         arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2);
     }
+}
+
+static void button_requests(int param1, int param2)
+{
+    window_editor_requests_show();
 }
 
 static void button_enemy(int param1, int param2)
