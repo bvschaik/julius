@@ -1,0 +1,167 @@
+#include "edit_invasion.h"
+
+#include "graphics/button.h"
+#include "graphics/generic_button.h"
+#include "graphics/graphics.h"
+#include "graphics/lang_text.h"
+#include "graphics/panel.h"
+#include "graphics/text.h"
+#include "graphics/window.h"
+#include "scenario/editor.h"
+#include "scenario/property.h"
+#include "scenario/types.h"
+#include "window/editor/invasions.h"
+#include "window/numeric_input.h"
+#include "window/select_list.h"
+
+static void button_year(int param1, int param2);
+static void button_amount(int param1, int param2);
+static void button_type(int param1, int param2);
+static void button_from(int param1, int param2);
+static void button_attack(int param1, int param2);
+static void button_delete(int param1, int param2);
+static void button_save(int param1, int param2);
+
+static generic_button buttons[] = {
+    {30, 152, 90, 177, GB_IMMEDIATE, button_year, button_none},
+    {200, 152, 280, 177, GB_IMMEDIATE, button_amount, button_none},
+    {320, 152, 520, 177, GB_IMMEDIATE, button_type, button_none},
+    {130, 190, 320, 215, GB_IMMEDIATE, button_from, button_none},
+    {340, 190, 560, 215, GB_IMMEDIATE, button_attack, button_none},
+    {20, 230, 270, 255, GB_IMMEDIATE, button_delete, button_none},
+    {310, 230, 410, 255, GB_IMMEDIATE, button_save, button_none},
+};
+
+static struct {
+    int id;
+    editor_invasion invasion;
+    int focus_button_id;
+} data;
+
+static void init(int id)
+{
+    data.id = id;
+    scenario_editor_invasion_get(id, &data.invasion);
+}
+
+static void draw_background(void)
+{
+    // TODO draw city map
+}
+
+static void draw_foreground(void)
+{
+    graphics_in_dialog();
+
+    outer_panel_draw(0, 100, 38, 11);
+    lang_text_draw(44, 22, 14, 114, FONT_LARGE_BLACK);
+
+    button_border_draw(30, 152, 60, 25, data.focus_button_id == 1);
+    text_draw_number_centered_prefix(data.invasion.year, '+', 30, 158, 60, FONT_NORMAL_BLACK);
+    lang_text_draw_year(scenario_property_start_year() + data.invasion.year, 100, 158, FONT_NORMAL_BLACK);
+
+    button_border_draw(200, 152, 80, 25, data.focus_button_id == 2);
+    text_draw_number_centered(data.invasion.amount, 200, 158, 80, FONT_NORMAL_BLACK);
+
+    button_border_draw(320, 152, 200, 25, data.focus_button_id == 3);
+    lang_text_draw_centered(34, data.invasion.type, 320, 158, 200, FONT_NORMAL_BLACK);
+
+    if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE) {
+        lang_text_draw(44, 27, 40, 196, FONT_NORMAL_BLACK);
+        button_border_draw(130, 190, 190, 25, data.focus_button_id == 4);
+        lang_text_draw_centered(35, data.invasion.from, 130, 196, 190, FONT_NORMAL_BLACK);
+
+        button_border_draw(340, 190, 220, 25, data.focus_button_id == 5);
+        lang_text_draw_centered(36, data.invasion.attack_type, 340, 196, 220, FONT_NORMAL_BLACK);
+    }
+
+    button_border_draw(310, 230, 100, 25, data.focus_button_id == 7);
+    lang_text_draw_centered(18, 3, 310, 236, 100, FONT_NORMAL_BLACK);
+
+    button_border_draw(20, 230, 250, 25, data.focus_button_id == 6);
+    lang_text_draw_centered(44, 26, 20, 236, 250, FONT_NORMAL_BLACK);
+
+    graphics_reset_dialog();
+}
+
+static void handle_mouse(const mouse *m)
+{
+    if (m->right.went_down) {
+        button_save(0, 0);
+    } else {
+        generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 7, &data.focus_button_id);
+    }
+}
+
+static void set_year(int value)
+{
+    data.invasion.year = value;
+}
+static void button_year(int param1, int param2)
+{
+    window_numeric_input_show(300, 100, 3, 999, set_year);
+}
+
+static void set_amount(int value)
+{
+    data.invasion.amount = value;
+}
+static void button_amount(int param1, int param2)
+{
+    window_numeric_input_show(100, 100, 3, 120, set_amount);
+}
+
+static void set_type(int value)
+{
+    data.invasion.type = value == 3 ? 4 : value;
+}
+static void button_type(int param1, int param2)
+{
+    window_select_list_show(150, 50, 4, 34, set_type);
+}
+
+static void set_from(int value)
+{
+    data.invasion.from = value;
+}
+static void button_from(int param1, int param2)
+{
+    if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE) {
+        window_select_list_show(500, 100, 9, 35, set_from);
+    }
+}
+
+static void set_attack(int value)
+{
+    data.invasion.attack_type = value;
+}
+static void button_attack(int param1, int param2)
+{
+    if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE) {
+        window_select_list_show(200, 150, 5, 36, set_attack);
+    }
+}
+
+static void button_delete(int param1, int param2)
+{
+    //scenario_editor_invasion_delete(data.id);
+    window_editor_invasions_show();
+}
+
+static void button_save(int param1, int param2)
+{
+    //scenario_editor_invasion_save(data.id, &data.invasion);
+    window_editor_invasions_show();
+}
+
+void window_editor_edit_invasion_show(int id)
+{
+    window_type window = {
+        WINDOW_EDITOR_EDIT_INVASION,
+        draw_background,
+        draw_foreground,
+        handle_mouse
+    };
+    init(id);
+    window_show(&window);
+}

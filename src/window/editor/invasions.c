@@ -9,6 +9,7 @@
 #include "scenario/editor.h"
 #include "scenario/property.h"
 #include "window/editor/attributes.h"
+#include "window/editor/edit_invasion.h"
 
 static void button_invasion(int id, int param2);
 
@@ -87,7 +88,7 @@ static void handle_mouse(const mouse *m)
 
 static void button_invasion(int id, int param2)
 {
-    //window_editor_edit_invasion_show(id);
+    window_editor_edit_invasion_show(id);
 }
 
 void window_editor_invasions_show(void)

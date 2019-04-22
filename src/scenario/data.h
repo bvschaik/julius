@@ -2,6 +2,7 @@
 #define SCENARIO_DATA_H
 
 #include "map/point.h"
+#include "scenario/types.h"
 
 #include <stdint.h>
 
@@ -21,20 +22,6 @@ enum {
     EVENT_NOT_STARTED = 0,
     EVENT_IN_PROGRESS = 1,
     EVENT_FINISHED = 2
-};
-
-enum {
-    INVASION_TYPE_LOCAL_UPRISING = 1,
-    INVASION_TYPE_ENEMY_ARMY = 2,
-    INVASION_TYPE_CAESAR = 3,
-    INVASION_TYPE_DISTANT_BATTLE = 4,
-};
-
-enum {
-    EARTHQUAKE_NONE = 0,
-    EARTHQUAKE_SMALL = 1,
-    EARTHQUAKE_MEDIUM = 2,
-    EARTHQUAKE_LARGE = 3
 };
 
 enum {
