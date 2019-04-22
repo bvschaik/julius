@@ -56,6 +56,41 @@ void scenario_editor_invasion_get(int index, editor_invasion *invasion)
     invasion->attack_type = scenario.invasions[index].attack_type;
 }
 
+static void sort_invasions(void)
+{
+    for (int i = 0; i < 20; i++) {
+        for (int j = 19; j > 0; j--) {
+            invasion_t *current = &scenario.invasions[j];
+            invasion_t *prev = &scenario.invasions[j-1];
+            if (current->type && (!prev->type || prev->year > current->year)) {
+                invasion_t tmp = *current;
+                *current = *prev;
+                *prev = tmp;
+            }
+        }
+    }
+}
+
+void scenario_editor_invasion_delete(int index)
+{
+    scenario.invasions[index].year = 0;
+    scenario.invasions[index].amount = 0;
+    scenario.invasions[index].type = 0;
+    scenario.invasions[index].from = 8;
+    scenario.invasions[index].attack_type = 0;
+    sort_invasions();
+}
+
+void scenario_editor_invasion_save(int index, editor_invasion *invasion)
+{
+    scenario.invasions[index].year = invasion->type ? invasion->year : 0;
+    scenario.invasions[index].amount = invasion->type ? invasion->amount : 0;
+    scenario.invasions[index].type = invasion->type;
+    scenario.invasions[index].from = invasion->from;
+    scenario.invasions[index].attack_type = invasion->attack_type;
+    sort_invasions();
+}
+
 void scenario_editor_cycle_image(int forward)
 {
     if (forward) {

@@ -144,13 +144,13 @@ static void button_attack(int param1, int param2)
 
 static void button_delete(int param1, int param2)
 {
-    //scenario_editor_invasion_delete(data.id);
+    scenario_editor_invasion_delete(data.id);
     window_editor_invasions_show();
 }
 
 static void button_save(int param1, int param2)
 {
-    //scenario_editor_invasion_save(data.id, &data.invasion);
+    scenario_editor_invasion_save(data.id, &data.invasion);
     window_editor_invasions_show();
 }
 
