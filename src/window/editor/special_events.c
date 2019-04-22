@@ -10,6 +10,7 @@
 #include "scenario/editor.h"
 #include "scenario/property.h"
 #include "window/editor/attributes.h"
+#include "window/numeric_input.h"
 
 static void button_earthquake_severity(int param1, int param2);
 static void button_earthquake_year(int param1, int param2);
@@ -135,7 +136,7 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.is_down) {
+    if (m->right.went_down) {
         window_editor_attributes_show();
         return;
     }
@@ -152,7 +153,7 @@ static void button_earthquake_severity(int param1, int param2)
 
 static void button_earthquake_year(int param1, int param2)
 {
-    // TODO numeric input
+    window_numeric_input_show(300, 100, 3, 999, scenario_editor_earthquake_set_year);
 }
 
 static void button_gladiator_toggle(int param1, int param2)
@@ -163,7 +164,7 @@ static void button_gladiator_toggle(int param1, int param2)
 
 static void button_gladiator_year(int param1, int param2)
 {
-    // TODO numeric input
+    window_numeric_input_show(300, 100, 3, 999, scenario_editor_gladiator_revolt_set_year);
 }
 
 static void button_emperor_toggle(int param1, int param2)
@@ -174,7 +175,7 @@ static void button_emperor_toggle(int param1, int param2)
 
 static void button_emperor_year(int param1, int param2)
 {
-    // TODO numeric input
+    window_numeric_input_show(300, 100, 3, 999, scenario_editor_emperor_change_set_year);
 }
 
 static void button_sea_trade_toggle(int param1, int param2)
