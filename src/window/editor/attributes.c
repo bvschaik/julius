@@ -18,6 +18,7 @@
 #include "window/editor/allowed_buildings.h"
 #include "window/editor/invasions.h"
 #include "window/editor/map.h"
+#include "window/editor/price_changes.h"
 #include "window/editor/requests.h"
 #include "window/editor/special_events.h"
 #include "window/select_list.h"
@@ -29,6 +30,7 @@ static void button_enemy(int param1, int param2);
 static void button_invasions(int param1, int param2);
 static void button_allowed_buildings(int param1, int param2);
 static void button_special_events(int param1, int param2);
+static void button_price_changes(int param1, int param2);
 static void change_climate(int param1, int param2);
 static void change_image(int forward, int param2);
 
@@ -41,7 +43,7 @@ static generic_button buttons[] = {
     {212, 276, 462, 306, GB_IMMEDIATE, button_allowed_buildings, button_none, 6, 0},
     {212, 316, 462, 346, GB_IMMEDIATE, button_click, button_none, 7, 0},
     {212, 356, 462, 386, GB_IMMEDIATE, button_special_events, button_none, 8, 0},
-    {212, 396, 462, 426, GB_IMMEDIATE, button_click, button_none, 9, 0},
+    {212, 396, 462, 426, GB_IMMEDIATE, button_price_changes, button_none, 9, 0},
     {212, 436, 462, 466, GB_IMMEDIATE, button_click, button_none, 10, 0},
 };
 
@@ -162,6 +164,11 @@ static void button_allowed_buildings(int param1, int param2)
 void button_special_events(int param1, int param2)
 {
     window_editor_special_events_show();
+}
+
+void button_price_changes(int param1, int param2)
+{
+    window_editor_price_changes_show();
 }
 
 static void change_climate(int param1, int param2)

@@ -57,6 +57,7 @@ typedef enum {
     WINDOW_EDITOR_REQUESTS,
     WINDOW_EDITOR_EDIT_REQUEST,
     WINDOW_EDITOR_SPECIAL_EVENTS,
+    WINDOW_EDITOR_PRICE_CHANGES,
 } window_id;
 
 typedef struct {

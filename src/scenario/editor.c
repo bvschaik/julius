@@ -91,6 +91,14 @@ void scenario_editor_invasion_save(int index, editor_invasion *invasion)
     sort_invasions();
 }
 
+void scenario_editor_price_change_get(int index, editor_price_change *price_change)
+{
+    price_change->year = scenario.price_changes[index].year;
+    price_change->resource = scenario.price_changes[index].resource;
+    price_change->amount = scenario.price_changes[index].amount;
+    price_change->is_rise = scenario.price_changes[index].is_rise;
+}
+
 void scenario_editor_cycle_image(int forward)
 {
     if (forward) {
