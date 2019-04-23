@@ -446,6 +446,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/editor/allowed_buildings.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/attributes.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_invasion.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_price_change.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_request.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/invasions.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/map.c

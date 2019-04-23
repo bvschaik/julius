@@ -13,6 +13,7 @@
 #include "scenario/editor.h"
 #include "scenario/property.h"
 #include "window/editor/attributes.h"
+#include "window/editor/edit_price_change.h"
 
 static void button_price_change(int id, int param2);
 
@@ -93,7 +94,7 @@ static void handle_mouse(const mouse *m)
 
 static void button_price_change(int id, int param2)
 {
-    //window_editor_edit_price_change_show(id);
+    window_editor_edit_price_change_show(id);
 }
 
 void window_editor_price_changes_show(void)
