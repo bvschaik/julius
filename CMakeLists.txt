@@ -454,6 +454,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/editor/price_changes.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/requests.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/special_events.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/starting_conditions.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
