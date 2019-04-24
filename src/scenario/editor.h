@@ -55,6 +55,9 @@ void scenario_editor_toggle_rome_supplies_wheat(void);
 
 void scenario_editor_toggle_flotsam(void);
 
+int scenario_editor_milestone_year(int milestone_percentage);
 void scenario_editor_set_milestone_year(int milestone_percentage, int year);
+
+void scenario_editor_set_start_year(int year);
 
 #endif // SCENARIO_EDITOR_H

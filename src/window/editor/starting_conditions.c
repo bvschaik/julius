@@ -8,11 +8,11 @@
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
-#include "scenario/criteria.h"
 #include "scenario/editor.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "window/editor/attributes.h"
+#include "window/editor/start_year.h"
 #include "window/numeric_input.h"
 #include "window/select_list.h"
 
@@ -58,7 +58,7 @@ static void draw_foreground(void)
 
     lang_text_draw(44, 89, 32, 125, FONT_NORMAL_BLACK);
     button_border_draw(262, 116, 200, 30, focus_button_id == 2);
-    lang_text_draw_year(scenario_property_start_year(), 330, 125, FONT_NORMAL_BLACK); // large font??
+    lang_text_draw_year(scenario_property_start_year(), 330, 125, FONT_NORMAL_BLACK);
 
     lang_text_draw(44, 39, 32, 165, FONT_NORMAL_BLACK);
     button_border_draw(262, 156, 200, 30, focus_button_id == 3);
@@ -78,18 +78,18 @@ static void draw_foreground(void)
 
     lang_text_draw(44, 91, 32, 325, FONT_NORMAL_BLACK);
     button_border_draw(262, 316, 200, 30, focus_button_id == 7);
-    int width = text_draw_number(scenario_criteria_milestone_year(25), '+', " ", 297, 327, FONT_NORMAL_BLACK);
-    lang_text_draw_year(scenario_property_start_year() + scenario_criteria_milestone_year(25), 307 + width, 327, FONT_SMALL_PLAIN);
+    int width = text_draw_number(scenario_editor_milestone_year(25), '+', " ", 297, 327, FONT_NORMAL_BLACK);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(25), 307 + width, 327, FONT_SMALL_PLAIN);
 
     lang_text_draw(44, 92, 32, 365, FONT_NORMAL_BLACK);
     button_border_draw(262, 356, 200, 30, focus_button_id == 8);
-    width = text_draw_number(scenario_criteria_milestone_year(50), '+', " ", 297, 367, FONT_NORMAL_BLACK);
-    lang_text_draw_year(scenario_property_start_year() + scenario_criteria_milestone_year(50), 307 + width, 367, FONT_SMALL_PLAIN);
+    width = text_draw_number(scenario_editor_milestone_year(50), '+', " ", 297, 367, FONT_NORMAL_BLACK);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(50), 307 + width, 367, FONT_SMALL_PLAIN);
 
     lang_text_draw(44, 93, 32, 405, FONT_NORMAL_BLACK);
     button_border_draw(262, 396, 200, 30, focus_button_id == 9);
-    width = text_draw_number(scenario_criteria_milestone_year(75), '+', " ", 297, 407, FONT_NORMAL_BLACK);
-    lang_text_draw_year(scenario_property_start_year() + scenario_criteria_milestone_year(75), 307 + width, 407, FONT_SMALL_PLAIN);
+    width = text_draw_number(scenario_editor_milestone_year(75), '+', " ", 297, 407, FONT_NORMAL_BLACK);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(75), 307 + width, 407, FONT_SMALL_PLAIN);
 
     graphics_reset_dialog();
 }
@@ -112,7 +112,7 @@ static void button_rank(int param1, int param2)
 
 static void button_start_year(int param1, int param2)
 {
-    // window_editor_start_year_show();
+    window_editor_start_year_show();
 }
 
 static void button_initial_funds(int param1, int param2)

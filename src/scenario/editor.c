@@ -221,6 +221,20 @@ void scenario_editor_toggle_flotsam(void)
     scenario.flotsam_enabled = !scenario.flotsam_enabled;
 }
 
+int scenario_editor_milestone_year(int milestone_percentage)
+{
+    switch (milestone_percentage) {
+        case 25:
+            return scenario.win_criteria.milestone25_year;
+        case 50:
+            return scenario.win_criteria.milestone50_year;
+        case 75:
+            return scenario.win_criteria.milestone75_year;
+        default:
+            return 0;
+    }
+}
+
 void scenario_editor_set_milestone_year(int milestone_percentage, int year)
 {
     switch (milestone_percentage) {
@@ -236,5 +250,11 @@ void scenario_editor_set_milestone_year(int milestone_percentage, int year)
         default:
             return;
     }
+    scenario.is_saved = 0;
+}
+
+void scenario_editor_set_start_year(int year)
+{
+    scenario.start_year = year;
     scenario.is_saved = 0;
 }
