@@ -6,11 +6,15 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/screen.h"
 #include "graphics/window.h"
 #include "scenario/criteria.h"
+#include "scenario/editor.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "window/editor/attributes.h"
+#include "window/numeric_input.h"
+#include "window/select_list.h"
 
 static void button_rank(int param1, int param2);
 static void button_start_year(int param1, int param2);
@@ -18,7 +22,7 @@ static void button_initial_funds(int param1, int param2);
 static void button_rescue_loan(int param1, int param2);
 static void button_wheat(int param1, int param2);
 static void button_flotsam(int param1, int param2);
-static void button_milestone(int param1, int param2);
+static void button_milestone(int milestone_pct, int param2);
 
 static generic_button buttons[] = {
     {262, 76, 462, 106, GB_IMMEDIATE, button_rank, button_none},
@@ -27,9 +31,9 @@ static generic_button buttons[] = {
     {262, 196, 462, 226, GB_IMMEDIATE, button_rescue_loan,button_none},
     {262, 236, 462, 266, GB_IMMEDIATE, button_wheat,button_none},
     {262, 276, 462, 306, GB_IMMEDIATE, button_flotsam, button_none, 0},
-    {262, 316, 462, 346, GB_IMMEDIATE, button_milestone, button_none, 0},
-    {262, 356, 462, 386, GB_IMMEDIATE, button_milestone, button_none, 1},
-    {262, 396, 462, 426, GB_IMMEDIATE, button_milestone, button_none, 2}
+    {262, 316, 462, 346, GB_IMMEDIATE, button_milestone, button_none, 25},
+    {262, 356, 462, 386, GB_IMMEDIATE, button_milestone, button_none, 50},
+    {262, 396, 462, 426, GB_IMMEDIATE, button_milestone, button_none, 75}
 };
 
 static int focus_button_id;
@@ -97,36 +101,52 @@ static void handle_mouse(const mouse *m)
         return;
     }
 
-    const mouse *m_dialog = mouse_in_dialog(m);
-    generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 9, &focus_button_id);
+    generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 9, &focus_button_id);
 }
 
 static void button_rank(int param1, int param2)
 {
+    window_select_list_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 56,
+                            10, 32, scenario_editor_set_player_rank);
 }
 
 static void button_start_year(int param1, int param2)
 {
+    // window_editor_start_year_show();
 }
 
 static void button_initial_funds(int param1, int param2)
 {
+    window_numeric_input_show(screen_dialog_offset_x() + 140, screen_dialog_offset_y() + 56,
+                              5, 99999, scenario_editor_set_initial_funds);
 }
 
 static void button_rescue_loan(int param1, int param2)
 {
+    window_numeric_input_show(screen_dialog_offset_x() + 140, screen_dialog_offset_y() + 56,
+                              5, 99999, scenario_editor_set_rescue_loan);
 }
 
 static void button_wheat(int param1, int param2)
 {
+    scenario_editor_toggle_rome_supplies_wheat();
 }
 
 static void button_flotsam(int param1, int param2)
 {
+    scenario_editor_toggle_flotsam();
 }
 
-static void button_milestone(int param1, int param2)
+static int dialog_milestone_pct;
+static void set_milestone_year(int value)
 {
+    scenario_editor_set_milestone_year(dialog_milestone_pct, value);
+}
+static void button_milestone(int milestone_pct, int param2)
+{
+    dialog_milestone_pct = milestone_pct;
+    window_numeric_input_show(screen_dialog_offset_x() + 140, screen_dialog_offset_y() + 210,
+                              3, 999, set_milestone_year);
 }
 
 void window_editor_starting_conditions_show(void)

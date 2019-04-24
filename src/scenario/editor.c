@@ -192,3 +192,49 @@ void scenario_editor_toggle_building_allowed(int id)
     scenario.allowed_buildings[id] = scenario.allowed_buildings[id] ? 0 : 1;
     scenario.is_saved = 0;
 }
+
+void scenario_editor_set_player_rank(int rank)
+{
+    scenario.player_rank = rank;
+    scenario.is_saved = 0;
+}
+
+void scenario_editor_set_initial_funds(int amount)
+{
+    scenario.initial_funds = amount;
+    scenario.is_saved = 0;
+}
+
+void scenario_editor_set_rescue_loan(int amount)
+{
+    scenario.rescue_loan = amount;
+    scenario.is_saved = 0;
+}
+
+void scenario_editor_toggle_rome_supplies_wheat(void)
+{
+    scenario.rome_supplies_wheat = !scenario.rome_supplies_wheat;
+}
+
+void scenario_editor_toggle_flotsam(void)
+{
+    scenario.flotsam_enabled = !scenario.flotsam_enabled;
+}
+
+void scenario_editor_set_milestone_year(int milestone_percentage, int year)
+{
+    switch (milestone_percentage) {
+        case 25:
+            scenario.win_criteria.milestone25_year = year;
+            break;
+        case 50:
+            scenario.win_criteria.milestone50_year = year;
+            break;
+        case 75:
+            scenario.win_criteria.milestone75_year = year;
+            break;
+        default:
+            return;
+    }
+    scenario.is_saved = 0;
+}

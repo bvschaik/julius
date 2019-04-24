@@ -46,4 +46,15 @@ int scenario_editor_is_building_allowed(int id);
 
 void scenario_editor_toggle_building_allowed(int id);
 
+void scenario_editor_set_player_rank(int rank);
+
+void scenario_editor_set_initial_funds(int amount);
+void scenario_editor_set_rescue_loan(int amount);
+
+void scenario_editor_toggle_rome_supplies_wheat(void);
+
+void scenario_editor_toggle_flotsam(void);
+
+void scenario_editor_set_milestone_year(int milestone_percentage, int year);
+
 #endif // SCENARIO_EDITOR_H
