@@ -226,6 +226,8 @@ extern struct scenario_t {
         int starting_personal_savings;
         uint8_t player_name[32];
     } settings;
+
+    int is_saved;
 } scenario;
 
 #endif // SCENARIO_DATA_H

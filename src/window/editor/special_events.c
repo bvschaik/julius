@@ -7,7 +7,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "scenario/editor.h"
+#include "scenario/editor_events.h"
 #include "scenario/property.h"
 #include "window/editor/attributes.h"
 #include "window/numeric_input.h"
