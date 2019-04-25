@@ -258,3 +258,87 @@ void scenario_editor_set_start_year(int year)
     scenario.start_year = year;
     scenario.is_saved = 0;
 }
+
+void scenario_editor_toggle_open_play(void)
+{
+    scenario.is_open_play = !scenario.is_open_play;
+    if (scenario.is_open_play) {
+        scenario.open_play_scenario_id = 12; // fix it to 12: first unused entry
+    }
+}
+
+void scenario_editor_toggle_culture(void)
+{
+    scenario.win_criteria.culture.enabled = !scenario.win_criteria.culture.enabled;
+}
+
+void scenario_editor_set_culture(int goal)
+{
+    scenario.win_criteria.culture.goal = goal;
+}
+
+void scenario_editor_toggle_prosperity(void)
+{
+    scenario.win_criteria.prosperity.enabled = !scenario.win_criteria.prosperity.enabled;
+}
+
+void scenario_editor_set_prosperity(int goal)
+{
+    scenario.win_criteria.prosperity.goal = goal;
+}
+
+void scenario_editor_toggle_peace(void)
+{
+    scenario.win_criteria.peace.enabled = !scenario.win_criteria.peace.enabled;
+}
+
+void scenario_editor_set_peace(int goal)
+{
+    scenario.win_criteria.peace.goal = goal;
+}
+
+void scenario_editor_toggle_favor(void)
+{
+    scenario.win_criteria.favor.enabled = !scenario.win_criteria.favor.enabled;
+}
+
+void scenario_editor_set_favor(int goal)
+{
+    scenario.win_criteria.favor.goal = goal;
+}
+
+void scenario_editor_toggle_population(void)
+{
+    scenario.win_criteria.population.enabled = !scenario.win_criteria.population.enabled;
+}
+
+void scenario_editor_set_population(int goal)
+{
+    scenario.win_criteria.population.goal = goal;
+}
+
+void scenario_editor_toggle_time_limit(void)
+{
+    scenario.win_criteria.time_limit.enabled = !scenario.win_criteria.time_limit.enabled;
+    if (scenario.win_criteria.time_limit.enabled) {
+        scenario.win_criteria.survival_time.enabled = 0;
+    }
+}
+
+void scenario_editor_set_time_limit(int years)
+{
+    scenario.win_criteria.time_limit.years = years;
+}
+
+void scenario_editor_toggle_survival_time(void)
+{
+    scenario.win_criteria.survival_time.enabled = !scenario.win_criteria.survival_time.enabled;
+    if (scenario.win_criteria.survival_time.enabled) {
+        scenario.win_criteria.time_limit.enabled = 0;
+    }
+}
+
+void scenario_editor_set_survival_time(int years)
+{
+    scenario.win_criteria.survival_time.years = years;
+}
