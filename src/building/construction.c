@@ -505,6 +505,32 @@ void building_construction_start(int x, int y, int grid_offset)
     }
 }
 
+int building_construction_is_updatable(void)
+{
+    switch (data.type) {
+        case BUILDING_CLEAR_LAND:
+        case BUILDING_ROAD:
+        case BUILDING_AQUEDUCT:
+        case BUILDING_DRAGGABLE_RESERVOIR:
+        case BUILDING_WALL:
+        case BUILDING_PLAZA:
+        case BUILDING_GARDENS:
+        case BUILDING_HOUSE_VACANT_LOT:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+void building_construction_cancel(void)
+{
+    map_property_clear_constructing_and_deleted();
+    if (building_construction_is_updatable()) {
+        game_undo_restore_map(1);
+    }
+    data.in_progress = 0;
+}
+
 void building_construction_update(int x, int y, int grid_offset)
 {
     building_type type = data.type;

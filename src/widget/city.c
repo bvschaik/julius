@@ -11,6 +11,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
+#include "input/touch.h"
 #include "map/building.h"
 #include "map/grid.h"
 #include "sound/city.h"
@@ -24,6 +25,7 @@
 
 static struct {
     map_tile current_tile;
+    int capture_input;
 } data;
 
 static void set_city_clip_rectangle(void)
@@ -81,11 +83,11 @@ void widget_city_draw_construction_cost(void)
     graphics_reset_clip_rectangle();
 }
 
-// MOUSE HANDLING
+// INPUT HANDLING
 
-static void update_city_view_coords(const mouse *m, map_tile *tile)
+static void update_city_view_coords(int x, int y, map_tile *tile)
 {
-    tile->grid_offset = city_view_pixels_to_grid_offset(m->x, m->y);
+    tile->grid_offset = city_view_pixels_to_grid_offset(x, y);
     if (tile->grid_offset) {
         tile->x = map_grid_offset_to_x(tile->grid_offset);
         tile->y = map_grid_offset_to_y(tile->grid_offset);
@@ -157,14 +159,167 @@ static void scroll_map(int direction)
 {
     if (city_view_scroll(direction)) {
         sound_city_decay_views();
+    } else {
+        view_tile position;
+        if (scroll_decay(&position)) {
+            city_view_set_camera(position.x, position.y);
+            sound_city_decay_views();
+        }
     }
+}
+
+static int touch_in_city(const touch *t)
+{
+    int x_offset, y_offset, width, height;
+    city_view_get_viewport(&x_offset, &y_offset, &width, &height);
+
+    touch_coords coords = t->current_point;
+    coords.x -= x_offset;
+    coords.y -= y_offset;
+
+    return (coords.x >= 0 && coords.x < width && coords.y >= 0 && coords.y < height);
+}
+
+static void widget_city_handle_touch_scroll(const touch *t)
+{
+    if (building_construction_type()) {
+        if (t->has_started) {
+            int x_offset, y_offset, width, height;
+            city_view_get_viewport(&x_offset, &y_offset, &width, &height);
+            scroll_set_custom_margins(x_offset, y_offset, width, height);
+        }
+        if (t->has_ended) {
+            scroll_restore_margins();
+        }
+        return;
+    }
+    scroll_restore_margins();
+    view_tile camera_position;
+    
+    if (!data.capture_input) {
+        return;
+    }
+    int was_click = touch_was_click(get_latest_touch());
+    if (t->has_started || was_click) {
+        city_view_get_camera(&camera_position.x, &camera_position.y);
+        scroll_start_touch_drag(&camera_position, (was_click) ? t->current_point : t->start_point);
+        return;
+    }
+
+    if (!touch_not_click(t)) {
+        return;
+    }
+
+    touch_coords position = scroll_get_original_touch_position();
+    view_tile original, current;
+    if (!city_view_pixels_to_view_tile(position.x, position.y, &original)) {
+        return;
+    }
+    if (!city_view_pixels_to_view_tile(t->current_point.x, t->current_point.y, &current)) {
+        return;
+    }
+
+    if (scroll_move_touch_drag(original.x, original.y, current.x, current.y, &camera_position)) {
+        city_view_set_camera(camera_position.x, camera_position.y);
+        sound_city_decay_views();
+    }
+
+    if (t->has_ended) {
+        scroll_end_touch_drag();
+    }
+}
+
+static void widget_city_handle_last_touch(map_tile *tile)
+{
+    const touch *last = get_latest_touch();
+    if (!last->in_use) {
+        return;
+    }
+    if (touch_was_click(last)) {
+        if (building_construction_in_progress()) {
+            building_construction_cancel();
+            return;
+        }
+        if (handle_right_click_allow_building_info(tile)) {
+            scroll_end_touch_drag();
+            data.capture_input = 0;
+            window_building_info_show(tile->grid_offset);
+        }
+    }
+}
+
+static void widget_city_handle_first_touch(map_tile *tile)
+{
+    const touch *first = get_earliest_touch();
+
+    if (touch_was_click(first) && is_legion_click(tile)) {
+        return;
+    }
+
+    widget_city_handle_touch_scroll(first);
+
+    if (building_construction_is_updatable()) {
+        if (first->has_started) {
+            build_start(tile);
+        }
+        if (building_construction_in_progress()) {
+            build_move(tile);
+            if (first->has_ended) {
+                build_end();
+                widget_city_clear_current_tile();
+            }
+        }
+        return;
+    }
+
+    if (first->has_ended && data.capture_input) {
+        build_start(tile);
+        build_move(tile);
+        build_end();
+        widget_city_clear_current_tile();
+    }
+}
+
+static void widget_city_handle_touch(void)
+{
+    const touch *first = get_earliest_touch();
+    if (!first->in_use) {
+        scroll_restore_margins();
+        return;
+    }
+
+    map_tile *tile = &data.current_tile;
+    update_city_view_coords(first->current_point.x, first->current_point.y, tile);
+
+    if (first->has_started && touch_in_city(first)) {
+        data.capture_input = 1;
+        scroll_restore_margins();
+    }
+
+    widget_city_handle_last_touch(tile);
+    widget_city_handle_first_touch(tile);
+
+    if (first->has_ended) {
+        data.capture_input = 0;
+    }
+
+    building_construction_reset_draw_as_constructing();
+}
+
+int widget_city_has_input(void)
+{
+    return data.capture_input;
 }
 
 void widget_city_handle_mouse(const mouse *m)
 {
-    map_tile *tile = &data.current_tile;
     scroll_map(scroll_get_direction(m));
-    update_city_view_coords(m, tile);
+    if (m->is_touch) {
+        widget_city_handle_touch();
+        return;
+    }
+    map_tile *tile = &data.current_tile;
+    update_city_view_coords(m->x, m->y, tile);
     building_construction_reset_draw_as_constructing();
     if (m->left.went_down) {
         if (!is_legion_click(tile)) {
@@ -209,17 +364,28 @@ static void military_map_click(int legion_formation_id, const map_tile *tile)
 void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
 {
     map_tile *tile = &data.current_tile;
-    update_city_view_coords(m, tile);
+    update_city_view_coords(m->x, m->y, tile);
     if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m)) {
         return;
     }
+    if (m->is_touch) {
+        const touch *t = get_earliest_touch();
+        if (t->has_started) {
+            data.capture_input = 1;
+        }
+        widget_city_handle_touch_scroll(t);
+        if (t->has_ended) {
+            data.capture_input = 0;
+        }
+    }
     scroll_map(scroll_get_direction(m));
     if (m->right.went_up) {
+        data.capture_input = 0;
         city_warning_clear_all();
         window_city_show();
     } else {
-        update_city_view_coords(m, tile);
-        if (m->left.went_down) {
+        update_city_view_coords(m->x, m->y, tile);
+        if ((!m->is_touch && m->left.went_down) || (m->is_touch && m->left.went_up && touch_was_click(get_earliest_touch()))) {
             military_map_click(legion_formation_id, tile);
         }
     }

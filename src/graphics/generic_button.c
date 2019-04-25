@@ -24,7 +24,7 @@ int generic_buttons_handle_mouse(const mouse *m, int x, int y, generic_button *b
         return 0;
     }
     generic_button *button = &buttons[button_id -1];
-    if (button->button_type == GB_IMMEDIATE) {
+    if (button->button_type == GB_IMMEDIATE && !m->is_touch) {
         if (m->left.went_down) {
             button->left_click_handler(button->parameter1, button->parameter2);
         } else if (m->right.went_down) {
@@ -32,7 +32,7 @@ int generic_buttons_handle_mouse(const mouse *m, int x, int y, generic_button *b
         } else {
             return 0;
         }
-    } else if (button->button_type == GB_ON_MOUSE_UP) {
+    } else if (button->button_type == GB_ON_MOUSE_UP || m->is_touch) {
         if (m->left.went_up) {
             button->left_click_handler(button->parameter1, button->parameter2);
         } else if (m->right.went_up) {

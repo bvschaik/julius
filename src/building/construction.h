@@ -15,6 +15,10 @@ int building_construction_in_progress(void);
 
 void building_construction_start(int x, int y, int grid_offset);
 
+int building_construction_is_updatable(void);
+
+void building_construction_cancel(void);
+
 void building_construction_update(int x, int y, int grid_offset);
 
 void building_construction_place(void);

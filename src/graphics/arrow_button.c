@@ -9,6 +9,9 @@ static const int REPEATS[] = {
     1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0
 };
 
+static const time_millis REPEAT_MILLIS = 30;
+static const unsigned int BUTTON_PRESSED_FRAMES = 3;
+
 void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons)
 {
     for (int i = 0; i < num_buttons; i++) {
@@ -39,7 +42,7 @@ int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *butto
 
     time_millis curr_time = time_get_millis();
     int should_repeat = 0;
-    if (curr_time - last_time >= 30) {
+    if (curr_time - last_time >= REPEAT_MILLIS) {
         should_repeat = 1;
         last_time = curr_time;
     }
@@ -60,13 +63,13 @@ int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *butto
     }
     arrow_button *btn = &buttons[button_id -1];
     if (m->left.went_down) {
-        btn->pressed = 3;
+        btn->pressed = BUTTON_PRESSED_FRAMES;
         btn->repeats = 0;
         btn->left_click_handler(btn->parameter1, btn->parameter2);
         return button_id;
     }
     if (m->left.is_down) {
-        btn->pressed = 3;
+        btn->pressed = BUTTON_PRESSED_FRAMES;
         if (should_repeat) {
             btn->repeats++;
             if (btn->repeats < 48) {

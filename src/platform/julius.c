@@ -10,6 +10,7 @@
 #include "platform/keyboard_input.h"
 #include "platform/prefs.h"
 #include "platform/screen.h"
+#include "platform/touch.h"
 #include "platform/version.h"
 #include "platform/vita/vita.h"
 #include "input/hotkey.h"
@@ -261,16 +262,34 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             platform_handle_text(&event->text);
             break;
         case SDL_MOUSEMOTION:
-            mouse_set_position(event->motion.x, event->motion.y);
+            if (event->motion.which != SDL_TOUCH_MOUSEID) {
+                mouse_set_position(event->motion.x, event->motion.y);
+            }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            handle_mouse_button(&event->button, 1);
+            if (event->button.which != SDL_TOUCH_MOUSEID) {
+                handle_mouse_button(&event->button, 1);
+            }
             break;
         case SDL_MOUSEBUTTONUP:
-            handle_mouse_button(&event->button, 0);
+            if (event->button.which != SDL_TOUCH_MOUSEID) {
+                handle_mouse_button(&event->button, 0);
+            }
             break;
         case SDL_MOUSEWHEEL:
-            mouse_set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
+            if (event->wheel.which != SDL_TOUCH_MOUSEID) {
+                mouse_set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
+            }
+            break;
+
+        case SDL_FINGERDOWN:
+            platform_touch_start(&event->tfinger);
+            break;
+        case SDL_FINGERMOTION:
+            platform_touch_update(&event->tfinger, 0);
+            break;
+        case SDL_FINGERUP:
+            platform_touch_update(&event->tfinger, 1);
             break;
 
         case SDL_QUIT:
@@ -349,6 +368,9 @@ static int init_sdl(void)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+    SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
+#endif
     SDL_Log("SDL initialized");
     return 1;
 }

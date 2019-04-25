@@ -16,6 +16,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
+#include "widget/city.h"
 #include "window/advisors.h"
 #include "window/city.h"
 #include "window/difficulty_options.h"
@@ -334,6 +335,9 @@ static int handle_mouse_menu(const mouse *m)
 
 int widget_top_menu_handle_mouse(const mouse *m)
 {
+    if (widget_city_has_input()) {
+        return 0;
+    }
     if (data.open_sub_menu) {
         return handle_mouse_submenu(m);
     } else {

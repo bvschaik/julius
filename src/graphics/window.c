@@ -2,6 +2,7 @@
 
 #include "graphics/warning.h"
 #include "input/cursor.h"
+#include "input/touch.h"
 #include "window/city.h"
 
 #define MAX_QUEUE 3
@@ -87,12 +88,15 @@ void window_go_back(void)
 
 static void update_mouse_before(void)
 {
-    mouse_determine_button_state();
+    if (!touch_to_mouse()) {
+        mouse_determine_button_state();  // touch overrides mouse
+    }
 }
 
 static void update_mouse_after(void)
 {
-    mouse_set_scroll(SCROLL_NONE);
+    reset_touches();
+    mouse_reset_scroll();
     input_cursor_update(current_window->id);
 }
 
