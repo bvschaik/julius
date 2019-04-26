@@ -262,11 +262,13 @@ void scenario_editor_set_rescue_loan(int amount)
 void scenario_editor_toggle_rome_supplies_wheat(void)
 {
     scenario.rome_supplies_wheat = !scenario.rome_supplies_wheat;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_toggle_flotsam(void)
 {
     scenario.flotsam_enabled = !scenario.flotsam_enabled;
+    scenario.is_saved = 0;
 }
 
 int scenario_editor_milestone_year(int milestone_percentage)
@@ -313,56 +315,67 @@ void scenario_editor_toggle_open_play(void)
     if (scenario.is_open_play) {
         scenario.open_play_scenario_id = 12; // fix it to 12: first unused entry
     }
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_toggle_culture(void)
 {
     scenario.win_criteria.culture.enabled = !scenario.win_criteria.culture.enabled;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_set_culture(int goal)
 {
     scenario.win_criteria.culture.goal = goal;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_toggle_prosperity(void)
 {
     scenario.win_criteria.prosperity.enabled = !scenario.win_criteria.prosperity.enabled;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_set_prosperity(int goal)
 {
     scenario.win_criteria.prosperity.goal = goal;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_toggle_peace(void)
 {
     scenario.win_criteria.peace.enabled = !scenario.win_criteria.peace.enabled;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_set_peace(int goal)
 {
     scenario.win_criteria.peace.goal = goal;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_toggle_favor(void)
 {
     scenario.win_criteria.favor.enabled = !scenario.win_criteria.favor.enabled;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_set_favor(int goal)
 {
     scenario.win_criteria.favor.goal = goal;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_toggle_population(void)
 {
     scenario.win_criteria.population.enabled = !scenario.win_criteria.population.enabled;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_set_population(int goal)
 {
     scenario.win_criteria.population.goal = goal;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_toggle_time_limit(void)
@@ -371,11 +384,13 @@ void scenario_editor_toggle_time_limit(void)
     if (scenario.win_criteria.time_limit.enabled) {
         scenario.win_criteria.survival_time.enabled = 0;
     }
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_set_time_limit(int years)
 {
     scenario.win_criteria.time_limit.years = years;
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_toggle_survival_time(void)
@@ -384,9 +399,11 @@ void scenario_editor_toggle_survival_time(void)
     if (scenario.win_criteria.survival_time.enabled) {
         scenario.win_criteria.time_limit.enabled = 0;
     }
+    scenario.is_saved = 0;
 }
 
 void scenario_editor_set_survival_time(int years)
 {
     scenario.win_criteria.survival_time.years = years;
+    scenario.is_saved = 0;
 }
