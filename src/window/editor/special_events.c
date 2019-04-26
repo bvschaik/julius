@@ -138,11 +138,9 @@ static void handle_mouse(const mouse *m)
 {
     if (m->right.went_down) {
         window_editor_attributes_show();
-        return;
+    } else {
+        generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 13, &focus_button_id);
     }
-
-    const mouse *m_dialog = mouse_in_dialog(m);
-    generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 13, &focus_button_id);
 }
 
 static void button_earthquake_severity(int param1, int param2)

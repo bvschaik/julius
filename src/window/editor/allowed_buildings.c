@@ -105,11 +105,9 @@ static void handle_mouse(const mouse *m)
 {
     if (m->right.is_down) {
         window_editor_attributes_show();
-        return;
+    } else {
+        generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 47, &focus_button_id);
     }
-
-    const mouse *m_dialog = mouse_in_dialog(m);
-    generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 47, &focus_button_id);
 }
 
 void toggle_building(int id, int param2)

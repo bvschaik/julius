@@ -51,10 +51,9 @@ static void handle_mouse(const mouse *m)
 {
     if (m->right.went_down) {
         window_editor_starting_conditions_show();
-        return;
+    } else {
+        generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 2, &focus_button_id);
     }
-
-    generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 2, &focus_button_id);
 }
 
 static void button_era(int param1, int param2)
