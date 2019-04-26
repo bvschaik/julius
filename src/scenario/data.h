@@ -111,6 +111,14 @@ typedef struct {
     int is_rise;
 } price_change_t;
 
+typedef struct {
+    int year;
+    int month;
+    int resource;
+    int route_id;
+    int is_rise;
+} demand_change_t;
+
 extern struct scenario_t {
     uint8_t scenario_name[MAX_SCENARIO_NAME];
 
@@ -157,13 +165,7 @@ extern struct scenario_t {
 
     request_t requests[MAX_REQUESTS];
 
-    struct {
-        int year;
-        int month;
-        int resource;
-        int route_id;
-        int is_rise;
-    } demand_changes[MAX_DEMAND_CHANGES];
+    demand_change_t demand_changes[MAX_DEMAND_CHANGES];
 
     price_change_t price_changes[MAX_DEMAND_CHANGES];
 

@@ -143,6 +143,14 @@ void scenario_editor_price_change_save(int index, editor_price_change *price_cha
     scenario.is_saved = 0;
 }
 
+void scenario_editor_demand_change_get(int index, editor_demand_change *demand_change)
+{
+    demand_change->year = scenario.demand_changes[index].year;
+    demand_change->resource = scenario.demand_changes[index].resource;
+    demand_change->route_id = scenario.demand_changes[index].route_id;
+    demand_change->is_rise = scenario.demand_changes[index].is_rise;
+}
+
 void scenario_editor_cycle_image(int forward)
 {
     if (forward) {
