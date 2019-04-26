@@ -24,7 +24,11 @@ void empire_city_clear_all(void)
 
 empire_city *empire_city_get(int city_id)
 {
-    return &cities[city_id];
+    if (city_id >= 0 && city_id < MAX_CITIES) {
+        return &cities[city_id];
+    } else {
+        return 0;
+    }
 }
 
 int empire_city_get_route_id(int city_id)
@@ -139,7 +143,7 @@ int empire_city_get_for_trade_route(int route_id)
             return i;
         }
     }
-    return 0;
+    return -1;
 }
 
 int empire_city_is_trade_route_open(int route_id)

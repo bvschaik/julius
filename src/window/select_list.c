@@ -5,9 +5,15 @@
 #include "graphics/generic_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "graphics/window.h"
 
 #define MAX_ITEMS_PER_LIST 20
+
+enum {
+    MODE_TEXT,
+    MODE_GROUP,
+};
 
 static void select_item(int id, int list_id);
 
@@ -60,18 +66,31 @@ static generic_button buttons_list2[MAX_ITEMS_PER_LIST] = {
 static struct {
     int x;
     int y;
-    int num_items;
+    int mode;
     int group;
+    uint8_t **items;
+    int num_items;
     void (*callback)(int);
     int focus_button_id;
 } data;
 
-static void init(int x, int y, int num_items, int group, void (*callback)(int))
+static void init_group(int x, int y, int group, int num_items, void (*callback)(int))
 {
     data.x = x;
     data.y = y;
-    data.num_items = num_items;
+    data.mode = MODE_GROUP;
     data.group = group;
+    data.num_items = num_items;
+    data.callback = callback;
+}
+
+static void init_text(int x, int y, uint8_t **items, int num_items, void (*callback)(int))
+{
+    data.x = x;
+    data.y = y;
+    data.mode = MODE_TEXT;
+    data.items = items;
+    data.num_items = num_items;
     data.callback = callback;
 }
 
@@ -80,33 +99,31 @@ static int items_in_first_list(void)
     return data.num_items / 2 + data.num_items % 2;
 }
 
+static void draw_item(int item_id, int x, int y, int selected)
+{
+    color_t color = selected ? COLOR_BLUE : COLOR_BLACK;
+    if (data.mode == MODE_GROUP) {
+        lang_text_draw_centered_colored(data.group, item_id, data.x + x, data.y + y, 190, FONT_NORMAL_PLAIN, color);
+    } else {
+        text_draw_centered(data.items[item_id], data.x + x, data.y + y, 190, FONT_NORMAL_PLAIN, color);
+    }
+}
+
 static void draw_foreground(void)
 {
     if (data.num_items > MAX_ITEMS_PER_LIST) {
         int max_first = items_in_first_list();
         outer_panel_draw(data.x, data.y, 26, (20 * max_first + 24) / 16);
         for (int i = 0; i < max_first; i++) {
-            color_t color = COLOR_BLACK;
-            if (i + 1 == data.focus_button_id) {
-                color = COLOR_BLUE;
-            }
-            lang_text_draw_centered_colored(data.group, i, data.x + 5, data.y + 11 + 20 * i, 190, FONT_NORMAL_PLAIN, color);
+            draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
         }
         for (int i = 0; i < data.num_items - max_first; i++) {
-            color_t color = COLOR_BLACK;
-            if (max_first + i + 1 == data.focus_button_id) {
-                color = COLOR_BLUE;
-            }
-            lang_text_draw_centered_colored(data.group, i + max_first, data.x + 205, data.y + 11 + 20 * i, 190, FONT_NORMAL_PLAIN, color);
+            draw_item(i + max_first, 205, 11 + 20 * i, max_first + i + 1 == data.focus_button_id);
         }
     } else {
         outer_panel_draw(data.x, data.y, 13, (20 * data.num_items + 24) / 16);
         for (int i = 0; i < data.num_items; i++) {
-            color_t color = COLOR_BLACK;
-            if (i + 1 == data.focus_button_id) {
-                color = COLOR_BLUE;
-            }
-            lang_text_draw_centered_colored(data.group, i, data.x + 5, data.y + 11 + 20 * i, 190, FONT_NORMAL_PLAIN, color);
+            draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
         }
     }
 }
@@ -149,6 +166,19 @@ void window_select_list_show(int x, int y, int num_items, int group, void (*call
         handle_mouse,
         0
     };
-    init(x, y, num_items, group, callback);
+    init_group(x, y, group, num_items, callback);
+    window_show(&window);
+}
+
+void window_select_list_show_text(int x, int y, uint8_t **items, int num_items, void (*callback)(int))
+{
+    window_type window = {
+        WINDOW_SELECT_LIST,
+        0,
+        draw_foreground,
+        handle_mouse,
+        0
+    };
+    init_text(x, y, items, num_items, callback);
     window_show(&window);
 }
