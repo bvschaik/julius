@@ -138,7 +138,7 @@ static void set_resource(int value)
 }
 static void button_resource(int param1, int param2)
 {
-    window_select_list_show(screen_dialog_offset_x() + 320, screen_dialog_offset_y() + 40, 16, 23, set_resource);
+    window_select_list_show(screen_dialog_offset_x() + 320, screen_dialog_offset_y() + 40, 23, 16, set_resource);
 }
 
 static void set_route_id(int value)

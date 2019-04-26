@@ -157,7 +157,7 @@ static void button_requests(int param1, int param2)
 
 static void button_enemy(int param1, int param2)
 {
-    window_select_list_show(20, 40, 20, 37, scenario_editor_set_enemy);
+    window_select_list_show(20, 40, 37, 20, scenario_editor_set_enemy);
 }
 
 static void button_invasions(int param1, int param2)

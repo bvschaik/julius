@@ -157,7 +157,7 @@ void select_item(int id, int list_id)
     }
 }
 
-void window_select_list_show(int x, int y, int num_items, int group, void (*callback)(int))
+void window_select_list_show(int x, int y, int group, int num_items, void (*callback)(int))
 {
     window_type window = {
         WINDOW_SELECT_LIST,

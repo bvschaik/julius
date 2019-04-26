@@ -117,7 +117,7 @@ static void set_type(int value)
 }
 static void button_type(int param1, int param2)
 {
-    window_select_list_show(150, 50, 4, 34, set_type);
+    window_select_list_show(150, 50, 34, 4, set_type);
 }
 
 static void set_from(int value)
@@ -127,7 +127,7 @@ static void set_from(int value)
 static void button_from(int param1, int param2)
 {
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE) {
-        window_select_list_show(500, 100, 9, 35, set_from);
+        window_select_list_show(500, 100, 35, 9, set_from);
     }
 }
 
@@ -138,7 +138,7 @@ static void set_attack(int value)
 static void button_attack(int param1, int param2)
 {
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE) {
-        window_select_list_show(200, 150, 5, 36, set_attack);
+        window_select_list_show(200, 150, 36, 5, set_attack);
     }
 }
 
