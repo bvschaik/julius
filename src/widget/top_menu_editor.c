@@ -205,19 +205,19 @@ static void menu_file_exit_editor(int param)
 static void menu_options_display(int param)
 {
     clear_state();
-    window_display_options_show();
+    window_display_options_show(window_editor_map_show);
 }
 
 static void menu_options_sound(int param)
 {
     clear_state();
-    window_sound_options_show();
+    window_sound_options_show(window_editor_map_show);
 }
 
 static void menu_options_speed(int param)
 {
     clear_state();
-    window_speed_options_show();
+    window_speed_options_show(window_editor_map_show);
 }
 
 static void menu_help_help(int param)
