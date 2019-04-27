@@ -1,5 +1,6 @@
 #include "editor.h"
 
+#include "core/string.h"
 #include "scenario/data.h"
 #include "scenario/property.h"
 
@@ -222,6 +223,14 @@ void scenario_editor_cycle_climate(void)
             break;
     }
     scenario.is_saved = 0;
+}
+
+void scenario_editor_update_brief_description(const uint8_t *new_description)
+{
+    if (!string_equals(scenario.brief_description, new_description)) {
+        string_copy(new_description, scenario.brief_description, 64);
+        scenario.is_saved = 0;
+    }
 }
 
 void scenario_editor_set_enemy(int enemy_id)
