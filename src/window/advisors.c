@@ -192,7 +192,7 @@ static void button_change_advisor(int advisor, int param2)
 static void button_help(int param1, int param2)
 {
     if (current_advisor > 0 && current_advisor < 13) {
-        window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], 1);
+        window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], 0);
     }
 }
 

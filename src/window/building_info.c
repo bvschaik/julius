@@ -583,9 +583,9 @@ static void get_tooltip(tooltip_context *c)
 static void button_help(int param1, int param2)
 {
     if (context.help_id > 0) {
-        window_message_dialog_show(context.help_id, 0);
+        window_message_dialog_show(context.help_id, window_city_draw_all);
     } else {
-        window_message_dialog_show(10, 0);
+        window_message_dialog_show(10, window_city_draw_all);
     }
     window_invalidate();
 }

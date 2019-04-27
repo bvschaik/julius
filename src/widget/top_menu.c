@@ -310,11 +310,11 @@ static int handle_right_click(int type)
         return 0;
     }
     if (type == INFO_FUNDS) {
-        window_message_dialog_show(15, 0);
+        window_message_dialog_show(15, window_city_draw_all);
     } else if (type == INFO_POPULATION) {
-        window_message_dialog_show(16, 0);
+        window_message_dialog_show(16, window_city_draw_all);
     } else if (type == INFO_DATE) {
-        window_message_dialog_show(17, 0);
+        window_message_dialog_show(17, window_city_draw_all);
     }
     return 1;
 }
@@ -443,7 +443,7 @@ static void menu_help_help(int param)
 {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_HELP, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_HELP, window_city_draw_all);
 }
 
 static void menu_help_mouse_help(int param)
@@ -462,7 +462,7 @@ static void menu_help_about(int param)
 {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_ABOUT, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_ABOUT, window_city_draw_all);
 }
 
 

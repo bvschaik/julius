@@ -72,7 +72,7 @@ static struct {
     int num_history;
 
     int text_id;
-    int background_is_provided;
+    void (*background_callback)(void);
     int show_video;
 
     int x;
@@ -104,7 +104,7 @@ static void set_city_message(int year, int month,
     player_message.use_popup = use_popup;
 }
 
-static void init(int text_id, int background_is_provided)
+static void init(int text_id, void (*background_callback)(void))
 {
     for (int i = 0; i < MAX_HISTORY; i++) {
         data.history[i].text_id = 0;
@@ -113,7 +113,7 @@ static void init(int text_id, int background_is_provided)
     data.num_history = 0;
     rich_text_reset(0);
     data.text_id = text_id;
-    data.background_is_provided = background_is_provided;
+    data.background_callback = background_callback;
     const lang_message *msg = lang_get_message(text_id);
     if (player_message.use_popup != 1) {
         data.show_video = 0;
@@ -337,8 +337,8 @@ static void draw_background_video(void)
 
 static void draw_background(void)
 {
-    if (!data.background_is_provided) {
-        window_city_draw_all();
+    if (data.background_callback) {
+        data.background_callback();
     }
     graphics_in_dialog();
     if (data.show_video) {
@@ -493,7 +493,7 @@ static void button_close(int param1, int param2)
 static void button_help(int param1, int param2)
 {
     button_close(0, 0);
-    window_message_dialog_show(MESSAGE_DIALOG_HELP, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_HELP, data.background_callback);
 }
 
 static void button_advisor(int advisor, int param2)
@@ -521,7 +521,7 @@ static void button_go_to_problem(int param1, int param2)
     window_city_show();
 }
 
-void window_message_dialog_show(int text_id, int background_is_provided)
+void window_message_dialog_show(int text_id, void (*background_callback)(void))
 {
     window_type window = {
         WINDOW_MESSAGE_DIALOG,
@@ -530,7 +530,7 @@ void window_message_dialog_show(int text_id, int background_is_provided)
         handle_mouse,
         0
     };
-    init(text_id, background_is_provided);
+    init(text_id, background_callback);
     window_show(&window);
 }
 
@@ -538,5 +538,5 @@ void window_message_dialog_show_city_message(int text_id, int year, int month,
                                              int param1, int param2, int message_advisor, int use_popup)
 {
     set_city_message(year, month, param1, param2, message_advisor, use_popup);
-    window_message_dialog_show(text_id, 0);
+    window_message_dialog_show(text_id, window_city_draw_all);
 }

@@ -382,7 +382,7 @@ static void button_messages(int param1, int param2)
 
 static void button_help(int param1, int param2)
 {
-    window_message_dialog_show(param2, 0);
+    window_message_dialog_show(param2, window_city_draw_all);
 }
 
 static void button_go_to_problem(int param1, int param2)
