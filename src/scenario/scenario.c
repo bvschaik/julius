@@ -17,7 +17,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i16(buf, 0);
     buffer_write_i16(buf, scenario.empire.id);
     buffer_skip(buf, 8);
-    
+
     // requests
     for (int i = 0; i < MAX_REQUESTS; i++) {
         buffer_write_i16(buf, scenario.requests[i].year);
@@ -31,7 +31,7 @@ void scenario_save_state(buffer *buf)
     for (int i = 0; i < MAX_REQUESTS; i++) {
         buffer_write_i16(buf, scenario.requests[i].deadline_years);
     }
-    
+
     // invasions
     for (int i = 0; i < MAX_INVASIONS; i++) {
         buffer_write_i16(buf, scenario.invasions[i].year);
@@ -48,37 +48,37 @@ void scenario_save_state(buffer *buf)
     for (int i = 0; i < MAX_INVASIONS; i++) {
         buffer_write_i16(buf, scenario.invasions[i].attack_type);
     }
-    
+
     buffer_write_i16(buf, 0);
     buffer_write_i32(buf, scenario.initial_funds);
     buffer_write_i16(buf, scenario.enemy_id);
     buffer_write_i16(buf, 0);
     buffer_write_i16(buf, 0);
     buffer_write_i16(buf, 0);
-    
+
     buffer_write_i32(buf, scenario.map.width);
     buffer_write_i32(buf, scenario.map.height);
     buffer_write_i32(buf, scenario.map.grid_start);
     buffer_write_i32(buf, scenario.map.grid_border_size);
-    
+
     buffer_write_raw(buf, scenario.brief_description, 64);
     buffer_skip(buf, 522);
-    
+
     for (int i = 0; i < MAX_REQUESTS; i++) {
         buffer_write_u8(buf, scenario.requests[i].can_comply_dialog_shown);
     }
-    
+
     buffer_write_i16(buf, scenario.image_id);
     buffer_write_i16(buf, scenario.is_open_play);
     buffer_write_i16(buf, scenario.player_rank);
-    
+
     for (int i = 0; i < MAX_HERD_POINTS; i++) {
         buffer_write_i16(buf, scenario.herd_points[i].x);
     }
     for (int i = 0; i < MAX_HERD_POINTS; i++) {
         buffer_write_i16(buf, scenario.herd_points[i].y);
     }
-    
+
     // demand changes
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         buffer_write_i16(buf, scenario.demand_changes[i].year);
@@ -95,7 +95,7 @@ void scenario_save_state(buffer *buf)
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         buffer_write_u8(buf, scenario.demand_changes[i].is_rise);
     }
-    
+
     // price changes
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         buffer_write_i16(buf, scenario.price_changes[i].year);
@@ -112,12 +112,12 @@ void scenario_save_state(buffer *buf)
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         buffer_write_u8(buf, scenario.price_changes[i].is_rise);
     }
-    
+
     buffer_write_i32(buf, scenario.gladiator_revolt.enabled);
     buffer_write_i32(buf, scenario.gladiator_revolt.year);
     buffer_write_i32(buf, scenario.emperor_change.enabled);
     buffer_write_i32(buf, scenario.emperor_change.year);
-    
+
     // random events
     buffer_write_i32(buf, scenario.random_events.sea_trade_problem);
     buffer_write_i32(buf, scenario.random_events.land_trade_problem);
@@ -154,12 +154,12 @@ void scenario_save_state(buffer *buf)
     }
 
     buffer_write_i32(buf, scenario.rome_supplies_wheat);
-    
+
     // allowed buildings
     for (int i = 0; i < 50; i++) {
         buffer_write_i16(buf, scenario.allowed_buildings[i]);
     }
-    
+
     // win criteria
     buffer_write_i32(buf, scenario.win_criteria.culture.goal);
     buffer_write_i32(buf, scenario.win_criteria.prosperity.goal);
@@ -173,7 +173,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i32(buf, scenario.win_criteria.time_limit.years);
     buffer_write_i32(buf, scenario.win_criteria.survival_time.enabled);
     buffer_write_i32(buf, scenario.win_criteria.survival_time.years);
-    
+
     buffer_write_i32(buf, scenario.earthquake.severity);
     buffer_write_i32(buf, scenario.earthquake.year);
 
@@ -211,9 +211,9 @@ void scenario_save_state(buffer *buf)
 
     buffer_write_u8(buf, scenario.climate);
     buffer_write_u8(buf, scenario.flotsam_enabled);
-    
+
     buffer_write_i16(buf, 0);
-    
+
     buffer_write_i32(buf, scenario.empire.is_expanded);
     buffer_write_i32(buf, scenario.empire.expansion_year);
 
@@ -221,6 +221,8 @@ void scenario_save_state(buffer *buf)
     buffer_write_u8(buf, scenario.empire.distant_battle_enemy_travel_months);
     buffer_write_u8(buf, scenario.open_play_scenario_id);
     buffer_write_u8(buf, 0);
+
+    scenario.is_saved = 1;
 }
 
 void scenario_load_state(buffer *buf)
@@ -229,7 +231,7 @@ void scenario_load_state(buffer *buf)
     buffer_skip(buf, 2);
     scenario.empire.id = buffer_read_i16(buf);
     buffer_skip(buf, 8);
-    
+
     // requests
     for (int i = 0; i < MAX_REQUESTS; i++) {
         scenario.requests[i].year = buffer_read_i16(buf);
@@ -243,7 +245,7 @@ void scenario_load_state(buffer *buf)
     for (int i = 0; i < MAX_REQUESTS; i++) {
         scenario.requests[i].deadline_years = buffer_read_i16(buf);
     }
-    
+
     // invasions
     for (int i = 0; i < MAX_INVASIONS; i++) {
         scenario.invasions[i].year = buffer_read_i16(buf);
@@ -260,35 +262,35 @@ void scenario_load_state(buffer *buf)
     for (int i = 0; i < MAX_INVASIONS; i++) {
         scenario.invasions[i].attack_type = buffer_read_i16(buf);
     }
-    
+
     buffer_skip(buf, 2);
     scenario.initial_funds = buffer_read_i32(buf);
     scenario.enemy_id = buffer_read_i16(buf);
     buffer_skip(buf, 6);
-    
+
     scenario.map.width = buffer_read_i32(buf);
     scenario.map.height = buffer_read_i32(buf);
     scenario.map.grid_start = buffer_read_i32(buf);
     scenario.map.grid_border_size = buffer_read_i32(buf);
-    
+
     buffer_read_raw(buf, scenario.brief_description, 64);
     buffer_skip(buf, 522);
-    
+
     for (int i = 0; i < MAX_REQUESTS; i++) {
         scenario.requests[i].can_comply_dialog_shown = buffer_read_u8(buf);
     }
-    
+
     scenario.image_id = buffer_read_i16(buf);
     scenario.is_open_play = buffer_read_i16(buf);
     scenario.player_rank = buffer_read_i16(buf);
-    
+
     for (int i = 0; i < MAX_HERD_POINTS; i++) {
         scenario.herd_points[i].x = buffer_read_i16(buf);
     }
     for (int i = 0; i < MAX_HERD_POINTS; i++) {
         scenario.herd_points[i].y = buffer_read_i16(buf);
     }
-    
+
     // demand changes
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         scenario.demand_changes[i].year = buffer_read_i16(buf);
@@ -305,7 +307,7 @@ void scenario_load_state(buffer *buf)
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         scenario.demand_changes[i].is_rise = buffer_read_u8(buf);
     }
-    
+
     // price changes
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         scenario.price_changes[i].year = buffer_read_i16(buf);
@@ -322,12 +324,12 @@ void scenario_load_state(buffer *buf)
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         scenario.price_changes[i].is_rise = buffer_read_u8(buf);
     }
-    
+
     scenario.gladiator_revolt.enabled = buffer_read_i32(buf);
     scenario.gladiator_revolt.year = buffer_read_i32(buf);
     scenario.emperor_change.enabled = buffer_read_i32(buf);
     scenario.emperor_change.year = buffer_read_i32(buf);
-    
+
     // random events
     scenario.random_events.sea_trade_problem = buffer_read_i32(buf);
     scenario.random_events.land_trade_problem = buffer_read_i32(buf);
@@ -364,12 +366,12 @@ void scenario_load_state(buffer *buf)
     }
 
     scenario.rome_supplies_wheat = buffer_read_i32(buf);
-    
+
     // allowed buildings
     for (int i = 0; i < 50; i++) {
         scenario.allowed_buildings[i] = buffer_read_i16(buf);
     }
-    
+
     // win criteria
     scenario.win_criteria.culture.goal = buffer_read_i32(buf);
     scenario.win_criteria.prosperity.goal = buffer_read_i32(buf);
@@ -383,7 +385,7 @@ void scenario_load_state(buffer *buf)
     scenario.win_criteria.time_limit.years = buffer_read_i32(buf);
     scenario.win_criteria.survival_time.enabled = buffer_read_i32(buf);
     scenario.win_criteria.survival_time.years = buffer_read_i32(buf);
-    
+
     scenario.earthquake.severity = buffer_read_i32(buf);
     scenario.earthquake.year = buffer_read_i32(buf);
 
@@ -421,9 +423,9 @@ void scenario_load_state(buffer *buf)
 
     scenario.climate = buffer_read_u8(buf);
     scenario.flotsam_enabled = buffer_read_u8(buf);
-    
+
     buffer_skip(buf, 2);
-    
+
     scenario.empire.is_expanded = buffer_read_i32(buf);
     scenario.empire.expansion_year = buffer_read_i32(buf);
 
@@ -431,6 +433,8 @@ void scenario_load_state(buffer *buf)
     scenario.empire.distant_battle_enemy_travel_months = buffer_read_u8(buf);
     scenario.open_play_scenario_id = buffer_read_u8(buf);
     buffer_skip(buf, 1);
+
+    scenario.is_saved = 1;
 }
 
 void scenario_settings_init(void)

@@ -79,7 +79,7 @@ static void button_click(int type, int param2)
     if (type == 1) {
         window_new_career_show();
     } else if (type == 2) {
-        window_file_dialog_show(FILE_DIALOG_LOAD);
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
     } else if (type == 3) {
         window_cck_selection_show();
     } else if (editor_button_enabled && type == 4) {

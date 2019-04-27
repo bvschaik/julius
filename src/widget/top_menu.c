@@ -225,7 +225,7 @@ void widget_top_menu_draw(int force)
         data.offset_funds = 338;
         data.offset_population = 453;
         data.offset_date = 547;
-        
+
         int width = lang_text_draw_colored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasure_color);
         text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
@@ -238,7 +238,7 @@ void widget_top_menu_draw(int force)
         data.offset_funds = 338;
         data.offset_population = 458;
         data.offset_date = 652;
-        
+
         int width = lang_text_draw_colored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasure_color);
         text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
@@ -251,7 +251,7 @@ void widget_top_menu_draw(int force)
         data.offset_funds = 493;
         data.offset_population = 637;
         data.offset_date = 852;
-        
+
         int width = lang_text_draw_colored(6, 0, 495, 5, FONT_NORMAL_PLAIN, treasure_color);
         text_draw_number_colored(treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
@@ -383,21 +383,21 @@ static void menu_file_load_game(int param)
     clear_state();
     building_construction_clear_type();
     window_city_show();
-    window_file_dialog_show(FILE_DIALOG_LOAD);
+    window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
 }
 
 static void menu_file_save_game(int param)
 {
     clear_state();
     window_city_show();
-    window_file_dialog_show(FILE_DIALOG_SAVE);
+    window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
 }
 
 static void menu_file_delete_game(int param)
 {
     clear_state();
     window_city_show();
-    window_file_dialog_show(FILE_DIALOG_DELETE);
+    window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_DELETE);
 }
 
 static void menu_file_confirm_exit(int accepted)
