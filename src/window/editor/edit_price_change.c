@@ -5,6 +5,7 @@
 #include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/editor.h"
@@ -90,7 +91,7 @@ static void set_year(int value)
 }
 static void button_year(int param1, int param2)
 {
-    window_numeric_input_show(200, 50, 3, 999, set_year);
+    window_numeric_input_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 50, 3, 999, set_year);
 }
 
 static void set_resource(int value)
@@ -99,7 +100,7 @@ static void set_resource(int value)
 }
 static void button_resource(int param1, int param2)
 {
-    window_select_list_show(50, 40, 23, 16, set_resource);
+    window_select_list_show(screen_dialog_offset_x() + 25, screen_dialog_offset_y() + 40, 23, 16, set_resource);
 }
 
 static void button_toggle_rise(int param1, int param2)
@@ -113,7 +114,7 @@ static void set_amount(int value)
 }
 static void button_amount(int param1, int param2)
 {
-    window_numeric_input_show(500, 50, 2, 99, set_amount);
+    window_numeric_input_show(screen_dialog_offset_x() + 460, screen_dialog_offset_y() + 50, 2, 99, set_amount);
 }
 
 static void button_delete(int param1, int param2)

@@ -5,6 +5,7 @@
 #include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/editor.h"
@@ -98,7 +99,7 @@ static void set_year(int value)
 }
 static void button_year(int param1, int param2)
 {
-    window_numeric_input_show(250, 50, 3, 999, set_year);
+    window_numeric_input_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 50, 3, 999, set_year);
 }
 
 static void set_amount(int value)
@@ -107,7 +108,7 @@ static void set_amount(int value)
 }
 static void button_amount(int param1, int param2)
 {
-    window_numeric_input_show(250, 50, 3, 999, set_amount);
+    window_numeric_input_show(screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 50, 3, 999, set_amount);
 }
 
 static void set_resource(int value)
@@ -116,7 +117,7 @@ static void set_resource(int value)
 }
 static void button_resource(int param1, int param2)
 {
-    window_select_list_show(200, 40, 23, 16, set_resource);
+    window_select_list_show(screen_dialog_offset_x() + 210, screen_dialog_offset_y() + 40, 23, 16, set_resource);
 }
 
 static void set_deadline_years(int value)
@@ -125,7 +126,7 @@ static void set_deadline_years(int value)
 }
 static void button_deadline_years(int param1, int param2)
 {
-    window_numeric_input_show(400, 100, 3, 999, set_deadline_years);
+    window_numeric_input_show(screen_dialog_offset_x() + 220, screen_dialog_offset_y() + 100, 3, 999, set_deadline_years);
 }
 
 static void set_favor(int value)
@@ -134,7 +135,7 @@ static void set_favor(int value)
 }
 static void button_favor(int param1, int param2)
 {
-    window_numeric_input_show(300, 100, 3, 100, set_favor);
+    window_numeric_input_show(screen_dialog_offset_x() + 260, screen_dialog_offset_y() + 100, 3, 100, set_favor);
 }
 
 static void button_delete(int param1, int param2)
