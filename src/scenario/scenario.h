@@ -3,6 +3,8 @@
 
 #include "core/buffer.h"
 
+int scenario_is_saved(void);
+
 void scenario_settings_init(void);
 
 void scenario_settings_init_mission(void);

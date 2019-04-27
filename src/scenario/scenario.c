@@ -6,6 +6,11 @@
 
 struct scenario_t scenario;
 
+int scenario_is_saved(void)
+{
+    return scenario.is_saved;
+}
+
 void scenario_save_state(buffer *buf)
 {
     buffer_write_i16(buf, scenario.start_year);

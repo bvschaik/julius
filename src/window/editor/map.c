@@ -9,6 +9,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "widget/top_menu_editor.h"
 #include "window/popup_dialog.h"
 #include "window/editor/attributes.h"
 
@@ -24,7 +25,7 @@ static generic_button buttons[] = {
 static void draw_background(void)
 {
     graphics_clear_screen();
-    image_draw_fullscreen_background(image_group(GROUP_ADVISOR_BACKGROUND));
+    widget_top_menu_editor_draw();
 }
 
 static void draw_foreground(void)
@@ -35,14 +36,16 @@ static void draw_foreground(void)
     lang_text_draw_centered(7, 4, 192, 106, 256, FONT_NORMAL_GREEN);
 
     large_label_draw(192, 140, 16, focus_button_id == 2 ? 1 : 0);
-    text_draw_centered("attributes", 192, 146, 256, FONT_NORMAL_GREEN, 0);
+    text_draw_centered((const uint8_t*)"attributes", 192, 146, 256, FONT_NORMAL_GREEN, 0);
 
     graphics_reset_dialog();
 }
 
 static void handle_mouse(const mouse *m)
 {
-    generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 2, &focus_button_id);
+    if (!generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 2, &focus_button_id)) {
+        widget_top_menu_editor_handle_mouse(m);
+    }
 }
 
 static void confirm_exit(int accepted)
