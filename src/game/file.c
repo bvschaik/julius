@@ -197,7 +197,7 @@ static int load_custom_scenario(const uint8_t *scenario_name, const char *scenar
     }
 
     clear_scenario_data();
-    game_file_load_scenario_data(scenario_file);
+    game_file_load_scenario(scenario_file);
     initialize_scenario_data(scenario_name);
     return 1;
 }
@@ -331,7 +331,7 @@ int game_file_start_scenario(const char *scenario_file)
     return start_scenario(scenario_name, scenario_file);
 }
 
-int game_file_load_scenario_data(const char *scenario_file)
+int game_file_load_scenario(const char *scenario_file)
 {
     if (!game_file_io_read_scenario(scenario_file)) {
         return 0;
@@ -340,6 +340,11 @@ int game_file_load_scenario_data(const char *scenario_file)
     trade_prices_reset();
     load_empire_data(1, scenario_empire_id());
     return 1;
+}
+
+int game_file_write_scenario(const char *scenario_file)
+{
+    return game_file_io_write_scenario(scenario_file);
 }
 
 int game_file_load_saved_game(const char *filename)

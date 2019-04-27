@@ -245,7 +245,7 @@ static void button_select_item(int index, int param2)
     }
     data.selected_item = data.scroll_position + index;
     strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item]);
-    game_file_load_scenario_data(data.selected_scenario_filename);
+    game_file_load_scenario(data.selected_scenario_filename);
     encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
     file_remove_extension(data.selected_scenario_display);
     window_invalidate();

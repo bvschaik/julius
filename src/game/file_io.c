@@ -499,6 +499,23 @@ int game_file_io_read_scenario(const char *filename)
     return 1;
 }
 
+int game_file_io_write_scenario(const char *filename)
+{
+    log_info("Saving scenario", filename, 0);
+    init_scenario_data();
+
+    FILE *fp = file_open(filename, "wb");
+    if (!fp) {
+        log_error("Unable to save scenario", 0, 0);
+        return 0;
+    }
+    for (int i = 0; i < scenario_data.num_pieces; i++) {
+        fwrite(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
+    }
+    file_close(fp);
+    return 1;
+}
+
 static int read_int32(FILE *fp)
 {
     uint8_t data[4];
