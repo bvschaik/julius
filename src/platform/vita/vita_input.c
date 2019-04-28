@@ -80,6 +80,15 @@ int vita_poll_event(SDL_Event *event)
             vita_handle_touch(event);
         }
         switch (event->type) {
+            case SDL_FINGERDOWN:
+            case SDL_FINGERUP:
+            case SDL_FINGERMOTION: // intentional fallthrough
+                // ignore rear panel touch events
+                if (event->tfinger.touchId != 0) {
+                    event->type = SDL_USEREVENT;
+                    event->user.code = -1; // ensure that this event is ignored
+                }
+                break;
             case SDL_MOUSEMOTION:
                 // update joystick / touch mouse coords
                 last_mouse_x = event->motion.x;
