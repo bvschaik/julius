@@ -59,21 +59,24 @@ static void reset_tooltip(tooltip_context *c)
     }
 }
 
-static void restore_button_tooltip_window_buffer(void)
+static void restore_window_under_tooltip_from_buffer(void)
 {
     if (button_tooltip_info.is_active) {
-        graphics_draw_from_buffer(button_tooltip_info.x, button_tooltip_info.y, button_tooltip_info.width, button_tooltip_info.height, button_tooltip_info.buffer);
+        graphics_draw_from_buffer(
+            button_tooltip_info.x, button_tooltip_info.y,
+            button_tooltip_info.width, button_tooltip_info.height,
+            button_tooltip_info.buffer);
     }
 }
 
-static void button_tooltip_buffer_window(int x, int y, int width, int height)
+static void save_window_under_tooltip_to_buffer(int x, int y, int width, int height)
 {
     if (button_tooltip_info.is_active &&
         x == button_tooltip_info.x && y == button_tooltip_info.y &&
         width == button_tooltip_info.width && height == button_tooltip_info.height) {
         return;
     }
-    restore_button_tooltip_window_buffer();
+    restore_window_under_tooltip_from_buffer();
     button_tooltip_info.is_active = 1;
     button_tooltip_info.x = x;
     button_tooltip_info.y = y;
@@ -149,7 +152,7 @@ static void draw_button_tooltip(tooltip_context *c)
             break;
     }
 
-    button_tooltip_buffer_window(x, y, width, height);
+    save_window_under_tooltip_to_buffer(x, y, width, height);
 
     graphics_draw_rect(x, y, width, height, COLOR_BLACK);
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
@@ -186,6 +189,8 @@ static void draw_overlay_tooltip(tooltip_context *c)
         y = c->mouse_y - 72;
     }
 
+    save_window_under_tooltip_to_buffer(x, y, width, height);
+
     graphics_draw_rect(x, y, width, height, COLOR_BLACK);
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
     rich_text_draw_colored(text, x + 5, y + 7, width - 5, lines, COLOR_TOOLTIP);
@@ -206,15 +211,17 @@ static void draw_senate_tooltip(tooltip_context *c)
     } else {
         y = c->mouse_y - 32;
     }
-    
+
+    save_window_under_tooltip_to_buffer(x, y, width, height);
+
     graphics_draw_rect(x, y, width, height, COLOR_BLACK);
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-    
+
     // unemployment
     lang_text_draw_colored(68, 148, x + 5, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_labor_unemployment_percentage(), '@', "%",
         x + 140, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    
+
     // ratings
     lang_text_draw_colored(68, 149, x + 5, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_culture(), '@', " ",
@@ -266,7 +273,7 @@ void tooltip_handle(const mouse *m, void (*func)(tooltip_context *))
         reset_tooltip(&context);
         rich_text_restore();
     } else {
-        restore_button_tooltip_window_buffer();
+        restore_window_under_tooltip_from_buffer();
         button_tooltip_info.is_active = 0;
     }
 }
