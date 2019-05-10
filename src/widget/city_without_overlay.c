@@ -64,7 +64,7 @@ static void draw_footprint(int x, int y, int grid_offset)
         color_t color_mask = 0;
         if (building_id) {
             building *b = building_get(building_id);
-            if (b->is_deleted) {
+            if (b->is_deleted || map_property_is_deleted(grid_offset)) {
                 color_mask = COLOR_MASK_RED;
             }
             int view_x, view_y, view_width, view_height;
@@ -424,7 +424,7 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
 
 static void process_deleted(int x, int y, int grid_offset)
 {
-    if (map_property_is_deleted(grid_offset)) {
+    if (map_property_is_deleted(grid_offset) && !map_building_at(grid_offset)) {
         image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
     }
     map_property_clear_deleted(grid_offset);
