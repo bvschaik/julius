@@ -36,7 +36,7 @@ static building *get_deletable_building(int grid_offset)
         b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
         return 0;
     }
-    if (b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+    if (b->state == BUILDING_STATE_DELETED_BY_PLAYER || b->is_deleted) {
         return 0;
     }
     return b;
@@ -59,12 +59,17 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                     continue;
                 }
                 map_building_tiles_mark_deleting(grid_offset);
-                if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION) || // keep the "access ramp deletion costs money" bug from C3
-                   (map_terrain_is(grid_offset, TERRAIN_WATER) /**&& !map_is_bridge(grid_offset) **/)) { // keep the "bridge is free" bug from C3
+                if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                    if (get_deletable_building(grid_offset)) {
+                        items_placed++;
+                    }
                     continue;
                 }
-                if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) || map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) ||
-                    (map_terrain_is(grid_offset, TERRAIN_BUILDING) && get_deletable_building(grid_offset))) {
+                if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION) || // keep the "access ramp deletion costs money" bug from C3
+                   (map_terrain_is(grid_offset, TERRAIN_WATER))) { // keep the "bridge is free" bug from C3
+                    continue;
+                }
+                if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) || map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                     items_placed++;
                 }
                 continue;

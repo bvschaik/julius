@@ -232,7 +232,7 @@ static void draw_top(int x, int y, int grid_offset)
     building *b = building_get(map_building_at(grid_offset));
     int image_id = map_image_at(grid_offset);
     color_t color_mask = 0;
-    if ((b->id && b->is_deleted) || (!map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ACCESS_RAMP) && map_property_is_deleted(grid_offset))) {
+    if ((b->id && b->is_deleted) || (!map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN) && map_property_is_deleted(grid_offset))) {
         color_mask = COLOR_MASK_RED;
     }
     image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
