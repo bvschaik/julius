@@ -302,25 +302,18 @@ void map_building_tiles_mark_deleting(int grid_offset)
         return;
     }
     int building_id = map_building_at(grid_offset);
-    if (building_id) {
-        building *b = building_get(building_id);
-        building *space = b;
-        for (int i = 0; i < 9; i++) {
-            if (space->prev_part_building_id <= 0) {
-                break;
-            }
-            space = building_get(space->prev_part_building_id);
-            mark_area_as_deleting(space->x, space->y, space->size);
+    if (!building_id) {
+        return;
+    }
+    building* b = building_main(building_get(building_id));
+    mark_area_as_deleting(b->x, b->y, building_is_farm(b->type) ? 3 : b->size);
+    building * part = b;
+    for (int i = 0; i < 9; i++) {
+        part = building_next(part);
+        if (part->id <= 0) {
+            break;
         }
-        space = b;
-        for (int i = 0; i < 9; i++) {
-            space = building_next(space);
-            if (space->id <= 0) {
-                break;
-            }
-            mark_area_as_deleting(space->x, space->y, space->size);
-        }
-        mark_area_as_deleting(b->x, b->y, (building_is_farm(b->type)) ? 3 : b->size);
+        mark_area_as_deleting(part->x, part->y, part->size);
     }
 }
 
