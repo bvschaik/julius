@@ -51,7 +51,7 @@ after_build:
   - if [%COMPILER%] == [mingw] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\i686-w64-mingw32\bin\SDL2_mixer.dll .
   - dir
   - set /P DEPLOY_VERSION=<C:\projects\julius\res\version.txt
-  - 7z a C:\projects\julius\julius-%DEPLOY_VERSION%.zip julius.exe SDL2.dll SDL2_mixer.dll
+  - 7z a C:\projects\julius\julius-windows-%DEPLOY_VERSION%.zip julius.exe SDL2.dll SDL2_mixer.dll
 
 cache:
   - SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
@@ -62,7 +62,7 @@ cache:
 artifacts:
   - path: build\julius.exe
     name: julius
-  - path: julius-$(DEPLOY_VERSION).zip
+  - path: julius-windows-$(DEPLOY_VERSION).zip
     name: julius-dist
 
 before_deploy:
