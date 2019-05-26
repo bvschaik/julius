@@ -2,13 +2,13 @@
 
 Chat: [![Gitter](https://badges.gitter.im/julius-game/community.svg)](https://gitter.im/julius-game/community)
 
-|             | Status | Latest unstable |
-|-------------|--------|----------|
-| Windows  | [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) | [![Download](https://api.bintray.com/packages/bvschaik/julius/windows-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/windows-unstable/_latestVersion#files) |
+|             | Status | Latest release | Latest unstable |
+|-------------|--------|----------------|-----------------|
+| Windows  | [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) | [![Download](https://api.bintray.com/packages/bvschaik/julius/windows-release/images/download.svg)](https://bintray.com/bvschaik/julius/windows-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/windows-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/windows-unstable/_latestVersion#files) |
 | Linux | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/1)](https://travis-ci.org/bvschaik/julius) |
-| Mac | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/4)](https://travis-ci.org/bvschaik/julius) | [![Download](https://api.bintray.com/packages/bvschaik/julius/mac-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/mac-unstable/_latestVersion#files) |
-| PS Vita | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/5)](https://travis-ci.org/bvschaik/julius) | [![Download](https://api.bintray.com/packages/bvschaik/julius/vita-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/vita-unstable/_latestVersion#files) |
-| Nintendo Switch | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/6)](https://travis-ci.org/bvschaik/julius) | [![Download](https://api.bintray.com/packages/bvschaik/julius/switch-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/switch-unstable/_latestVersion#files) |
+| Mac | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/4)](https://travis-ci.org/bvschaik/julius) | [![Download](https://api.bintray.com/packages/bvschaik/julius/mac-release/images/download.svg)](https://bintray.com/bvschaik/julius/mac-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/mac-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/mac-unstable/_latestVersion#files) |
+| PS Vita | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/5)](https://travis-ci.org/bvschaik/julius) | [![Download](https://api.bintray.com/packages/bvschaik/julius/vita-release/images/download.svg)](https://bintray.com/bvschaik/julius/vita-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/vita-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/vita-unstable/_latestVersion#files) |
+| Nintendo Switch | [![Travis](https://travis-matrix-badges.herokuapp.com/repos/bvschaik/julius/branches/master/6)](https://travis-ci.org/bvschaik/julius) | [![Download](https://api.bintray.com/packages/bvschaik/julius/switch-release/images/download.svg)](https://bintray.com/bvschaik/julius/switch-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/switch-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/switch-unstable/_latestVersion#files) |
 
 ![](https://github.com/bvschaik/julius/blob/master/res/sce_sys/livearea/contents/bg.png?raw=true)
 
