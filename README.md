@@ -37,6 +37,8 @@ After cloning the repo, run the following commands:
 
 This results in a `julius` executable.
 
+To build the Vita or Switch version, use `cmake .. -DVITA_BUILD=ON` or `cmake .. -DSWITCH_BUILD=ON` instead of `cmake ..`.
+
 ## Running the game
 
 After downloading the Windows build or compiling the game yourself, the game data should be in the same directory as in which the binary is run or it can be run as `julius /path/to/game-data`.
@@ -45,4 +47,4 @@ The easiest way to run the game is to copy either the compiled executable (in ca
 
 Note that you must have permission to write in the game data directory as the saves will be stored there.
 
-See [Running](RUNNING.md) for further instructions.
+See [Running](RUNNING.md) for further instructions, including instructions for Linux, Vita, and Switch.
