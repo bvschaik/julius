@@ -42,3 +42,80 @@ Another option is to get the game files by installing Caesar 3 using [WINE](http
 1. Run Julius with the path where the game is installed:
 
         $ julius path-to-c3-directory
+
+## Vita
+
+1. Ensure you have a jailbroken Vita. Detailed jailbreaking instructions can be found on [vita.hacks.guide](https://vita.hacks.guide).
+1. Install the Julius vpk file using Vitashell, like any other homebrew.
+1. Copy all the files from a Caesar 3 install into a folder `ux0:/data/julius/`, so that you have the file `ux0:/data/julius/c3.eng` and more in your folder.
+
+### Controls
+
+| Input                                          | Effect                                                       |
+| ---------------------------------------------- | ------------------------------------------------------------ |
+| Left Analog Stick                              | Move the mouse pointer                                       |
+| Right Analog Stick or Dpad Up/Down/Left/Right  | Scroll the map                                               |
+| R / Cross                                      | Left mouse button                                            |
+| L / Circle                                     | Right mouse button                                           |
+| Triangle                                       | Simulate Page Up keypress (speed up in-game time)            |
+| Square                                         | Simulate Page Down keypress (slow down in-game time)         |
+| Start                                          | Bring up on-screen keyboard, useful to enter player name etc.|
+| Select                                         | Toggle between touch modes                                   |
+
+Touch modes can be toggled with the select button. There are three modes:
+1. Touchpad mode (default)
+    * Single finger drag = move the mouse pointer (indirectly like on a touchpad)
+    * Single short tap = left mouse click  
+    * Single short tap while holding a second finger down = right mouse click
+    * Dual finger drag = drag'n'drop (left mouse button is held down)
+    * Three finger drag = drag'n'drop (right mouse button is held down)
+2. Direct mode
+    * Pointer jumps to finger, nothing else
+3. Julius mode
+    * Pointer jumps to finger
+    * Tap to click
+    * Dragging is context sensitive
+
+For multi-touch gestures, the fingers have to be far enough apart from each other, so that the Vita will not erroneously recognize them as a single finger. Otherwise the pointer will jump around.
+
+Physical Bluetooth mice and keyboards are supported. This was tested with the "Jelly Comb Mini Bluetooth Keyboard With Mouse Touchpad," and with the "Jelly Comb Bluetooth Wireless Mouse." The Vita doesn't pair with all Bluetooth devices.
+
+## Switch
+
+1. Ensure you have a jailbroken Switch. Detailed jailbreaking instructions can be found on [Nintendo Homebrew's Guide](https://nh-server.github.io/switch-guide/) or, alternatively, on [AtlasNX's Guide](https://guide.teamatlasnx.com/).
+1. Extract the contents of julius_switch.zip into the `switch` folder on your SD card, so that you have a folder `/switch/julius` with `julius.nro` inside. 
+1. Copy all the files from a Caesar 3 install into the `/switch/julius/` folder, so that you have the file `/switch/julius/c3.eng` and more.
+
+### Controls
+
+| Input                                          | Effect                                                       |
+| ---------------------------------------------- | ------------------------------------------------------------ |
+| Left Analog Stick                              | Move the mouse pointer                                       |
+| Right Analog Stick or Dpad Up/Down/Left/Right  | Scroll the map                                               |
+| R / A                                          | Left mouse button                                            |
+| L / B                                          | Right mouse button                                           |
+| ZR                                             | Hold to slow down analog stick mouse pointer                 |
+| ZL                                             | Hold to speed up analog stick mouse pointer                  |
+| X                                              | Simulate Page Up keypress (speed up in-game time)            |
+| Y                                              | Simulate Page Down keypress (slow down in-game time)         |
+| Plus                                           | Bring up on-screen keyboard, useful to enter player name etc.|
+| Minus                                          | Toggle between touch modes                                   |
+
+Touch modes can be toggled with the minus button. There are three modes:
+1. Touchpad mode (default)
+    * Single finger drag = move the mouse pointer (indirectly like on a touchpad)
+    * Single short tap = left mouse click  
+    * Single short tap while holding a second finger down = right mouse click
+    * Dual finger drag = drag'n'drop (left mouse button is held down)
+    * Three finger drag = drag'n'drop (right mouse button is held down)
+2. Direct mode
+    * Pointer jumps to finger, nothing else
+3. Julius mode
+    * Pointer jumps to finger
+    * Tap to click
+    * Dragging is context sensitive
+
+For multi-touch gestures, the fingers have to be far enough apart from each other, so that the Switch will not erroneously recognize them as a single finger. Otherwise the pointer will jump around.
+
+Physical USB mice and keyboards are supported. All keyboards seem to work. Not all mice work. A mouse compatibility list is available [here](https://docs.google.com/spreadsheets/d/1Drbo5-QuSX901MwtOytSMuqRGxeIkq2HELM806I9dj0/edit#gid=0)
+
