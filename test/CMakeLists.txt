@@ -97,3 +97,6 @@ add_integration_test(sav_edge1 edge-start.sav edge-battle-before.sav 835)
 add_integration_test(sav_edge2 edge-start.sav edge-battle-start.sav 1278)
 add_integration_test(sav_edge3 edge-start.sav edge-battle-during.sav 1513)
 add_integration_test(sav_edge4 edge-start.sav edge-battle-after.sav 1890)
+
+# Test with bigger cities
+add_integration_test(sav_massilia1 brugle-massilia-start.sav brugle-massilia-1.sav 4)
