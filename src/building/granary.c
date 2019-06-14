@@ -348,8 +348,8 @@ int building_granary_for_getting(building *src, map_point *dst)
         if (amount_gettable > 0) {
             int dist = calc_distance_with_penalty(
                 b->x + 1, b->y + 1,
-                           src->x + 1, src->y + 1,
-                           src->distance_from_entry, b->distance_from_entry);
+                src->x + 1, src->x + 1, // BUG passing src->x twice is a bug in original C3
+                src->distance_from_entry, b->distance_from_entry);
             if (amount_gettable <= 400) {
                 dist *= 2; // penalty for less food
             }
