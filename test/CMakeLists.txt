@@ -82,7 +82,8 @@ add_integration_test(sav_invasion5 inv0.sav inv5.sav 8563)
 add_integration_test(sav_routing_full routing-full.sav routing-full-kill.sav 7)
 
 # God curses
-add_integration_test(sav_curses curses.sav curses-done.sav 13350)
+add_integration_test(sav_curses1 curses.sav curses-done.sav 13350)
+add_integration_test(sav_curses2 mars-wrath.sav mars-wrath-after.sav 1016)
 
 # Earthquake destroying buildings
 add_integration_test(sav_earthquake0 earthquake.sav earthquake-start.sav 371)
