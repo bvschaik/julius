@@ -53,8 +53,7 @@ static struct game_file_part save_game_parts[] = {
     {0, 4, "Data_Debug.maxConnectsEver"},
     {0, 4, "Data_Random.iv1"},
     {0, 4, "Data_Random.iv2"},
-    {0, 4, "Data_Settings_Map.camera.x"},
-    {0, 4, "Data_Settings_Map.camera.y"},
+    {0, 8, "camera"},
     {0, 4, "Data_CityInfo_Buildings.theater.total"},
     {0, 4, "Data_CityInfo_Buildings.theater.working"},
     {0, 4, "Data_CityInfo_Buildings.amphitheater.total"},
@@ -268,6 +267,7 @@ static int index_of_part(const char *part_name)
             return i;
         }
     }
+    printf("WARN: part %s not found\n", part_name);
     return -1;
 }
 
@@ -365,10 +365,10 @@ static int is_exception_buildings(int global_offset, int part_offset)
 
 static int is_exception(int index, int global_offset, int part_offset)
 {
-    if (index == 2) { // Data_Grid_graphicIds
+    if (index == index_of_part("Data_Grid_graphicIds")) {
         return is_exception_image_grid(global_offset);
     }
-    if (index == 9) { // sprite offsets
+    if (index == index_of_part("Data_Grid_spriteOffsets")) {
         // don't care about sprite + building = animation
         int building_offset = global_offset - 8 * 162 * 162 + part_offset;
         if (file1_data[building_offset] || file1_data[building_offset + 1]) {
@@ -378,7 +378,7 @@ static int is_exception(int index, int global_offset, int part_offset)
     if (index == index_of_part("Data_Grid_Undo_spriteOffsets")) {
         return 1;
     }
-    if (index == index_of_part("Data_Settings_Map.camera.x") || index == index_of_part("Data_Settings_Map.camera.y")) {
+    if (index == index_of_part("camera")) {
         return 1;
     }
     if (index == index_of_part("Data_CityInfo")) {
@@ -455,7 +455,7 @@ static int compare(void)
     int offset = 0;
     int different = 0;
     for (int i = 0; save_game_parts[i].length_in_bytes; i++) {
-        if (i != 146) { // skip city sounds
+        if (i != index_of_part("Data_Sound_City")) { // skip city sounds
             different |= compare_part(i, offset);
         }
         offset += save_game_parts[i].length_in_bytes;
