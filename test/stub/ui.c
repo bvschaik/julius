@@ -4,6 +4,8 @@
 #include "window/mission_end.h"
 #include "window/victory_dialog.h"
 
+#include "city/victory.h"
+
 int window_is(window_id id)
 {
     return id == WINDOW_CITY;
@@ -22,7 +24,10 @@ void window_mission_end_show_won(void)
 {}
 
 void window_victory_dialog_show(void)
-{}
+{
+    city_victory_continue_governing(60);
+    city_victory_reset();
+}
 
 window_id window_get_id(void)
 {
