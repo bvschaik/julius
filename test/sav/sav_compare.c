@@ -399,6 +399,10 @@ static int compare_part(int index, int offset)
                     int record_length = save_game_parts[index].record_length;
                     int type_offset = (i / record_length) * record_length + 10;
                     printf(" (type: %d)", to_ushort(&file1_data[offset + type_offset]));
+                } else if (index == index_of_part("figures")) {
+                    int record_length = save_game_parts[index].record_length;
+                    int type_offset = (i / record_length) * record_length + 10;
+                    printf(" (type: %d)", file1_data[offset + type_offset]);
                 }
             } else {
                 printf("offset %d", i);
