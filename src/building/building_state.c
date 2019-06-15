@@ -8,13 +8,6 @@ static int is_industry_type(const building *b)
         || b->type == BUILDING_SHIPYARD || b->type == BUILDING_WHARF;
 }
 
-static int is_culture_type(const building *b)
-{
-    return b->type == BUILDING_THEATER || b->type == BUILDING_AMPHITHEATER
-        || b->type == BUILDING_COLOSSEUM || b->type == BUILDING_HIPPODROME
-        || b->type == BUILDING_ACADEMY || b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY;
-}
-
 static void write_type_data(buffer *buf, const building *b)
 {
     if (building_is_house(b->type)) {
@@ -104,7 +97,7 @@ static void write_type_data(buffer *buf, const building *b)
             buffer_write_u8(buf, 0);
         }
         buffer_write_i16(buf, b->data.industry.fishing_boat_id);
-    } else if (is_culture_type(b)) {
+    } else {
         for (int i = 0; i < 26; i++) {
             buffer_write_u8(buf, 0);
         }
@@ -113,10 +106,6 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_u8(buf, b->data.entertainment.days2);
         buffer_write_u8(buf, b->data.entertainment.play);
         for (int i = 0; i < 12; i++) {
-            buffer_write_u8(buf, 0);
-        }
-    } else {
-        for (int i = 0; i < 42; i++) {
             buffer_write_u8(buf, 0);
         }
     }
@@ -260,15 +249,13 @@ static void read_type_data(buffer *buf, building *b)
         b->data.industry.curse_days_left = buffer_read_u8(buf);
         buffer_skip(buf, 6);
         b->data.industry.fishing_boat_id = buffer_read_i16(buf);
-    } else if (is_culture_type(b)) {
+    } else {
         buffer_skip(buf, 26);
         b->data.entertainment.num_shows = buffer_read_u8(buf);
         b->data.entertainment.days1 = buffer_read_u8(buf);
         b->data.entertainment.days2 = buffer_read_u8(buf);
         b->data.entertainment.play = buffer_read_u8(buf);
         buffer_skip(buf, 12);
-    } else {
-        buffer_skip(buf, 42);
     }
 }
 
