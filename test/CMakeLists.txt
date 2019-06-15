@@ -102,3 +102,9 @@ add_integration_test(sav_edge4 edge-start.sav edge-battle-after.sav 1890)
 add_integration_test(sav_massilia1 brugle-massilia-start.sav brugle-massilia-1.sav 4)
 add_integration_test(sav_massilia2 brugle-massilia-start.sav brugle-massilia-2.sav 57)
 add_integration_test(sav_massilia3 brugle-massilia-start.sav brugle-massilia-3.sav 391)
+
+add_integration_test(sav_valentia1 valentia57.sav valentia57-after.sav 1026)
+add_integration_test(sav_lugdunum1 brugle-lugdunum.sav brugle-lugdunum-after.sav 1176)
+
+add_integration_test(sav_native1 brugle-lugdunum-native.sav brugle-lugdunum-native-after.sav 1678)
+add_integration_test(sav_native2 cicero-lugdunum-trade.sav cicero-lugdunum-trade-after.sav 926)
