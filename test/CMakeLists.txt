@@ -78,6 +78,11 @@ add_integration_test(sav_invasion3 inv0.sav inv3.sav 5105)
 add_integration_test(sav_invasion4 inv0.sav inv4.sav 6777)
 add_integration_test(sav_invasion5 inv0.sav inv5.sav 8563)
 
+# Distant battle
+add_integration_test(sav_distantbattle1 db-fort1.sav db-fort1-done.sav 6328)
+add_integration_test(sav_distantbattle2 db-fort2.sav db-fort2-done.sav 6335)
+add_integration_test(sav_distantbattle3 db-fort2.sav db-fort2-done2.sav 11197)
+
 # Routing table full kills figures
 add_integration_test(sav_routing_full routing-full.sav routing-full-kill.sav 7)
 
