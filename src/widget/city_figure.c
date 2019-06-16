@@ -131,6 +131,9 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
 
 static int tile_progress_to_pixel_offset_x(int direction, int progress)
 {
+    if (progress >= 15) {
+        return 0;
+    }
     switch (direction) {
         case DIR_0_TOP:
         case DIR_2_RIGHT:
@@ -149,6 +152,9 @@ static int tile_progress_to_pixel_offset_x(int direction, int progress)
 
 static int tile_progress_to_pixel_offset_y(int direction, int progress)
 {
+    if (progress >= 15) {
+        return 0;
+    }
     switch (direction) {
         case DIR_0_TOP:
         case DIR_6_LEFT:
