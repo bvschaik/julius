@@ -259,7 +259,7 @@ static void fight_distant_battle(void)
         city_data.distant_battle.roman_months_to_travel_back = city_data.distant_battle.roman_months_traveled;
     }
     city_data.distant_battle.months_until_battle = 0;
-    city_data.distant_battle.roman_months_traveled = 0;
+    city_data.distant_battle.enemy_months_traveled = 0;
     city_data.distant_battle.roman_months_to_travel_forth = 0;
 }
 
