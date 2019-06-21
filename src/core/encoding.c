@@ -517,7 +517,7 @@ static const letter_code* search_utf8_table(const from_utf8_lookup *key, const f
 static const letter_code* get_letter_code_for_utf8(const char *c, int *num_bytes, int *is_accent)
 {
     static letter_code single_char = {0, 1};
-    from_utf8_lookup key;
+    from_utf8_lookup key = {0, NULL};
     if (is_accent) *is_accent = 0;
     const uint8_t *uc = (const uint8_t *) c;
 
