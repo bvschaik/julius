@@ -1,0 +1,10 @@
+# http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.0.html
+[Desktop Entry]
+Type=Application
+Version=1.0
+Exec=julius
+Icon=julius
+Name=Julius
+GenericName=Roman city management game
+Comment=Open Source re-implementation of Caesar 3.
+Categories=Game;Simulation;

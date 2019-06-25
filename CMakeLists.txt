@@ -683,6 +683,13 @@ else()
         install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
     endif()
 
+    if(UNIX AND NOT APPLE)
+        install(FILES "res/julius.desktop" DESTINATION share/applications/)
+        install(FILES "res/julius_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "julius.png")
+        install(FILES "res/julius_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "julius.png")
+        install(FILES "res/julius_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "julius.png")
+    endif()
+
     # Unit tests
     enable_testing()
     add_subdirectory(test)
