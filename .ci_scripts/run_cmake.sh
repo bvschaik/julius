@@ -10,6 +10,9 @@ case "$BUILD_TARGET" in
 "mac")
 	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
 	;;
+"appimage")
+	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
+	;;
 *)
 	mkdir build && cd build && cmake ..
 	;;

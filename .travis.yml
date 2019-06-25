@@ -1,4 +1,7 @@
 language: c
+compiler: gcc
+sudo: require
+dist: xenial # Oldest still-supported LTS right now against which the AppImage is built. Update this to the next LTS when support drops.
 
 matrix:
   # Note: If you add a build here or change the order, you need to update the CI badges in README.md as well!
@@ -12,6 +15,12 @@ matrix:
   - os: linux
     compiler: clang
     env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4
+  - os: linux
+    name: Linux AppImage
+    compiler: gcc
+    env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=appimage DEPLOY=appimage
+    services:
+      - docker
   - os: osx
     compiler: clang
     env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
@@ -31,13 +40,22 @@ cache:
 
 install:
   - ./.ci_scripts/start_docker.sh
-  - ./.ci_scripts/install_sdl.sh
+  - if [ "$BUILD_TARGET" != "appimage" ];
+    then
+      ./.ci_scripts/install_sdl.sh;
+    else
+      sudo apt-get -y install libgl1-mesa-dev libsdl2-dev libsdl2-mixer-dev;
+    fi;
 
 before_script:
   - ./.ci_scripts/run_cmake.sh
 
 script:
   - ./.ci_scripts/run_build.sh
+  - if [ "$BUILD_TARGET" == "appimage" ];
+    then
+      ./.ci_scripts/package_appimage.sh;
+    fi;
 
 after_success:
   - if [ $RUN_CODECOV ];
@@ -56,7 +74,7 @@ deploy:
     condition: $DEPLOY
   file: bintray.json
   user: bvschaik
-  skip-cleanup: true
+  skip_cleanup: true
   key:
     secure: "aOBNdwEeWFDLn5WxkczOvVdT0GgI97sr20wA+uG+RtUPclGczYYIxHWvp4l9ZsAJ32FIB9IzuuzrOHWFcv+vK2/4DaIDmYhilY197fBBSSDYdMNAxNCNSZkMV0t0B4OYaB9GI55QN0UIoycb6CHLxYA+uf4Y7pMZFxaKX9Fv1FXe5/XhsTVgrdZn+EVpMnCwD6LuPTlcwlVNppUgJmRVOX21SKyyW2VGvXjBRbYVssKm7ETBKnbZRqEIcvz6osBgCz7rBoj1V81q+TA3WQfCpaao8VQVQggBRtF/A0F6P4iHyHaCFF3PBzlX/0oqeg/fTrjQZhbItPjg+6lMTcSrxgLtrRwTnnfCUC3S/13HkdW5uK27Xu8xvi0KUw+SRc1z9/zU7ilMwri6I0eHk1yOWfIE9Uweg7DSvrkEovC+g2qsPmmSsz/m+lHjzv+qecdpkPzPOUF0dj3cjN03ktcnmdlj+aZrF+e7D651gwGdlhBg1jd0v8iVuQ5l1FkOMYiQznQpdUpJy9jAeBz4HRbe0G9SApA5NCRt4ZEAPF7TDbpRaPuHkxTN1mxgZQAxSqyCJlLi9baqh4fYdwryLLv0Ewk21E4ramjq+CqtIvpQBvLgyizPdku9qOgFMMtGi2SabJWiCa6nPNT/P6YWRBb8/0eObP6I2pGKNBaTHhY1zYw="
 

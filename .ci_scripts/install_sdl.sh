@@ -51,6 +51,7 @@ function install_sdl_lib {
   fi
   make
   sudo make install
+
   cd ../..
 }
 
