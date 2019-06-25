@@ -22,6 +22,7 @@
 #include "window/numeric_input.h"
 #include "window/popup_dialog.h"
 #include "window/city.h"
+#include "window/editor/empire.h"
 
 static struct {
     int is_cheating;
@@ -144,6 +145,13 @@ static void cheat_money(void)
     }
 }
 
+static void editor_toggle_battle_info(void)
+{
+    if (window_is(WINDOW_EDITOR_EMPIRE)) {
+        window_editor_empire_toggle_battle_info();
+    }
+}
+
 static void input_number(int number)
 {
     if (window_is(WINDOW_NUMERIC_INPUT)) {
@@ -151,8 +159,12 @@ static void input_number(int number)
     }
 }
 
-void hotkey_character(int c, int with_alt)
+void hotkey_character(int c, int with_ctrl, int with_alt)
 {
+    if (with_ctrl && c == 'a') {
+        editor_toggle_battle_info();
+        return;
+    }
     if (with_alt) {
         switch (c) {
             case 'x':

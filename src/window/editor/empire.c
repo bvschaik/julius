@@ -44,6 +44,11 @@ static struct {
     int show_battle_objects;
 } data;
 
+void window_editor_empire_toggle_battle_info(void)
+{
+    data.show_battle_objects = !data.show_battle_objects;
+}
+
 static void init(void)
 {
     data.selected_button = 0;
