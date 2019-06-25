@@ -239,6 +239,17 @@ void scenario_editor_set_enemy(int enemy_id)
     scenario.is_saved = 0;
 }
 
+void scenario_editor_change_empire(int change)
+{
+    scenario.empire.id += change;
+    if (scenario.empire.id < 0) {
+        scenario.empire.id = 39;
+    } else if (scenario.empire.id >= 40) {
+        scenario.empire.id = 0;
+    }
+    scenario.is_saved = 0;
+}
+
 int scenario_editor_is_building_allowed(int id)
 {
     return scenario.allowed_buildings[id];

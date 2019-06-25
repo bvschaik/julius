@@ -14,6 +14,7 @@
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
+#include "window/editor/empire.h"
 #include "window/editor/map.h"
 
 static void menu_file_new_map(int param);
@@ -258,5 +259,7 @@ static void menu_resets_invasions(int param)
 
 static void menu_empire_choose(int param)
 {
-
+    clear_state();
+    window_go_back();
+    window_editor_empire_show();
 }

@@ -178,6 +178,19 @@ const empire_object *empire_object_get(int object_id)
     return &objects[object_id].obj;
 }
 
+const empire_object *empire_object_get_our_city(void)
+{
+    for (int i = 0; i < MAX_OBJECTS; i++) {
+        if (objects[i].in_use) {
+            const empire_object *obj = &objects[i].obj;
+            if (obj->type == EMPIRE_OBJECT_CITY && objects[i].city_type == EMPIRE_CITY_OURS) {
+                return obj;
+            }
+        }
+    }
+    return 0;
+}
+
 void empire_object_foreach(void (*callback)(const empire_object *))
 {
     for (int i = 0; i < MAX_OBJECTS; i++) {

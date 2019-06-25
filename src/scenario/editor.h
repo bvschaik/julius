@@ -57,6 +57,8 @@ void scenario_editor_update_brief_description(const uint8_t *new_description);
 
 void scenario_editor_set_enemy(int enemy_id);
 
+void scenario_editor_change_empire(int change);
+
 int scenario_editor_is_building_allowed(int id);
 
 void scenario_editor_toggle_building_allowed(int id);

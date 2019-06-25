@@ -453,6 +453,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_invasion.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_price_change.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_request.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/empire.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/invasions.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/map.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/price_changes.c
