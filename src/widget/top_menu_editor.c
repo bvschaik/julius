@@ -6,6 +6,7 @@
 #include "graphics/menu.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
+#include "scenario/editor_map.h"
 #include "scenario/scenario.h"
 #include "window/display_options.h"
 #include "window/file_dialog.h"
@@ -236,17 +237,23 @@ static void menu_help_about(int param)
 
 static void menu_resets_herds(int param)
 {
-
+    scenario_editor_clear_herd_points();
+    clear_state();
+    window_go_back();
 }
 
 static void menu_resets_fish(int param)
 {
-
+    scenario_editor_clear_fishing_points();
+    clear_state();
+    window_go_back();
 }
 
 static void menu_resets_invasions(int param)
 {
-
+    scenario_editor_clear_invasion_points();
+    clear_state();
+    window_go_back();
 }
 
 static void menu_empire_choose(int param)
