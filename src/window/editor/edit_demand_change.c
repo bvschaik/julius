@@ -3,6 +3,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "empire/city.h"
+#include "empire/type.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -64,9 +65,9 @@ static void init(int id)
     scenario_editor_demand_change_get(id, &data.demand_change);
 
     data.num_routes = 0;
-    for (int i = 0; i < 20; i++) {
+    for (int i = 1; i < MAX_ROUTES; i++) {
         empire_city *city = empire_city_get(empire_city_get_for_trade_route(i));
-        if (city) {
+        if (city && (city->type == EMPIRE_CITY_TRADE || city->type == EMPIRE_CITY_FUTURE_TRADE)) {
             create_display_name(i, lang_get_string(21, city->name_id));
 
             data.route_ids[data.num_routes] = i;
@@ -141,9 +142,9 @@ static void button_resource(int param1, int param2)
     window_select_list_show(screen_dialog_offset_x() + 320, screen_dialog_offset_y() + 40, 23, 16, set_resource);
 }
 
-static void set_route_id(int value)
+static void set_route_id(int index)
 {
-    data.demand_change.route_id = value;
+    data.demand_change.route_id = data.route_ids[index];
 }
 static void button_route(int param1, int param2)
 {
