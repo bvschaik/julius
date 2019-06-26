@@ -121,24 +121,37 @@ static void draw_background(void)
     draw_paneling();
 }
 
+static void draw_shadowed_number(int value, int x, int y, color_t color)
+{
+    text_draw_number_colored(value, '@', " ", x + 1, y - 1, FONT_SMALL_PLAIN, COLOR_BLACK);
+    text_draw_number_colored(value, '@', " ", x, y, FONT_SMALL_PLAIN, color);
+}
+
 static void draw_empire_object(const empire_object *obj)
 {
     int x = obj->x;
     int y = obj->y;
     int image_id = obj->image_id;
 
+    if (!data.show_battle_objects && (
+        obj->type == EMPIRE_OBJECT_BATTLE_ICON ||
+        obj->type == EMPIRE_OBJECT_ROMAN_ARMY ||
+        obj->type == EMPIRE_OBJECT_ENEMY_ARMY)) {
+        return;
+    }
     if (obj->type == EMPIRE_OBJECT_CITY) {
         const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
         if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
             city->type == EMPIRE_CITY_FUTURE_ROMAN) {
             image_id = image_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
         }
-    }
-    if (!data.show_battle_objects && (
-        obj->type == EMPIRE_OBJECT_BATTLE_ICON ||
-        obj->type == EMPIRE_OBJECT_ROMAN_ARMY ||
-        obj->type == EMPIRE_OBJECT_ENEMY_ARMY)) {
-        return;
+    } else if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
+        draw_shadowed_number(obj->invasion_path_id, data.x_draw_offset + x - 9, data.y_draw_offset + y - 9, COLOR_WHITE);
+        draw_shadowed_number(obj->invasion_years, data.x_draw_offset + x + 15, data.y_draw_offset + y - 9, COLOR_RED);
+    } else if (obj->type == EMPIRE_OBJECT_ROMAN_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
+        draw_shadowed_number(obj->distant_battle_travel_months,
+            data.x_draw_offset + x + 7, data.y_draw_offset + y - 9,
+            obj->type == EMPIRE_OBJECT_ROMAN_ARMY ? COLOR_WHITE : COLOR_RED);
     }
     image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
     const image *img = image_get(image_id);
