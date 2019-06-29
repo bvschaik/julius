@@ -12,6 +12,7 @@
 #include "scenario/editor.h"
 #include "scenario/property.h"
 #include "window/editor/attributes.h"
+#include "window/editor/map.h"
 #include "window/numeric_input.h"
 
 enum {
@@ -53,7 +54,7 @@ static int focus_button_id;
 
 static void draw_background(void)
 {
-    // TODO draw city map
+    window_editor_map_draw_all();
 }
 
 static void draw_foreground(void)

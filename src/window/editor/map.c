@@ -64,6 +64,12 @@ static void button_click(int type, int param2)
     }
 }
 
+void window_editor_map_draw_all(void)
+{
+    draw_background();
+    draw_foreground();
+}
+
 void window_editor_map_show(void)
 {
     window_type window = {

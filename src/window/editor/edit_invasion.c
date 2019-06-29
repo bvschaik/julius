@@ -12,6 +12,7 @@
 #include "scenario/property.h"
 #include "scenario/types.h"
 #include "window/editor/invasions.h"
+#include "window/editor/map.h"
 #include "window/numeric_input.h"
 #include "window/select_list.h"
 
@@ -47,7 +48,7 @@ static void init(int id)
 
 static void draw_background(void)
 {
-    // TODO draw city map
+    window_editor_map_draw_all();
 }
 
 static void draw_foreground(void)

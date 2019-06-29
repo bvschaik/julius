@@ -14,6 +14,7 @@
 #include "scenario/property.h"
 #include "window/editor/attributes.h"
 #include "window/editor/edit_request.h"
+#include "window/editor/map.h"
 
 static void button_request(int id, int param2);
 
@@ -44,7 +45,7 @@ static int focus_button_id;
 
 static void draw_background(void)
 {
-    // TODO draw city map
+    window_editor_map_draw_all();
 }
 
 static void draw_foreground(void)

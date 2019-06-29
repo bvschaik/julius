@@ -91,7 +91,7 @@ static void draw_foreground(void)
     if (!data.open_sub_menu) {
         return;
     }
-    //window_city_draw();
+    //TODO window_city_draw();
     menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
 }
 
@@ -167,7 +167,7 @@ int widget_top_menu_editor_handle_mouse(const mouse *m)
 static void menu_file_new_map(int param)
 {
     clear_state();
-    // TODO
+    // TODO select a map size and init it
     window_go_back();
 }
 
@@ -226,14 +226,14 @@ static void menu_help_help(int param)
 {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_EDITOR_HELP, 0); // TODO
+    window_message_dialog_show(MESSAGE_DIALOG_EDITOR_HELP, window_editor_map_draw_all);
 }
 
 static void menu_help_about(int param)
 {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_EDITOR_ABOUT, 0); // TODO
+    window_message_dialog_show(MESSAGE_DIALOG_EDITOR_ABOUT, window_editor_map_draw_all);
 }
 
 static void menu_resets_herds(int param)

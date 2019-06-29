@@ -89,7 +89,7 @@ static void stop(int paused)
 
 static void draw_background(void)
 {
-    graphics_clear_screen();
+    window_editor_map_draw_all();
 }
 
 static void draw_foreground(void)
