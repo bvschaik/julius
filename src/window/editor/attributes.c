@@ -17,6 +17,7 @@
 #include "input/keyboard.h"
 #include "scenario/editor.h"
 #include "scenario/property.h"
+#include "widget/sidebar_editor.h"
 #include "window/editor/allowed_buildings.h"
 #include "window/editor/demand_changes.h"
 #include "window/editor/invasions.h"
@@ -171,7 +172,9 @@ static void handle_mouse(const mouse *m)
     } else {
         const mouse *m_dialog = mouse_in_dialog(m);
         if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 10, &data.focus_button_id)) {
-            arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2);
+            if (!arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2)) {
+                widget_sidebar_editor_handle_mouse_attributes(m);
+            }
         }
     }
 }
