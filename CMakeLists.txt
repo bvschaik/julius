@@ -409,6 +409,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/city.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_bridge.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_building_ghost.c
+    ${PROJECT_SOURCE_DIR}/src/widget/city_editor.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_figure.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_education.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_entertainment.c
