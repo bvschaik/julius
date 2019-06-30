@@ -96,6 +96,13 @@ void scenario_editor_create(int map_size)
     scenario.is_saved = 1;
 }
 
+void scenario_editor_set_native_images(int image_hut, int image_meeting, int image_crops)
+{
+    scenario.native_images.hut = image_hut;
+    scenario.native_images.meeting = image_meeting;
+    scenario.native_images.crops = image_crops;
+}
+
 void scenario_editor_request_get(int index, editor_request *request)
 {
     request->year = scenario.requests[index].year;

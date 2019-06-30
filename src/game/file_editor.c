@@ -7,6 +7,8 @@
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"
+#include "core/image.h"
+#include "core/image_group_editor.h"
 #include "empire/empire.h"
 #include "empire/object.h"
 #include "figure/enemy_army.h"
@@ -37,6 +39,7 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
+#include "scenario/distant_battle.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
@@ -144,5 +147,13 @@ int game_file_editor_load_scenario(const char *scenario_file)
 
 int game_file_editor_write_scenario(const char *scenario_file)
 {
+    scenario_editor_set_native_images(
+        image_group(GROUP_EDITOR_BUILDING_NATIVE),
+        image_group(GROUP_EDITOR_BUILDING_NATIVE) + 2,
+        image_group(GROUP_EDITOR_BUILDING_CROPS)
+    );
+    scenario_distant_battle_set_roman_travel_months();
+    scenario_distant_battle_set_enemy_travel_months();
+
     return game_file_io_write_scenario(scenario_file);
 }
