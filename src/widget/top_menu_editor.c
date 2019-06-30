@@ -71,8 +71,6 @@ static menu_bar_item menu[] = {
     {10, 0, 6, 149, menu_empire, 1},
 };
 
-static const int INDEX_HELP = 2;
-
 static struct {
     int open_sub_menu;
     int focus_menu_id;
