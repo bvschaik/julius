@@ -240,14 +240,16 @@ void widget_minimap_draw_from_cache(int x_offset, int y_offset, int width_tiles,
         return;
     }
 
-    set_bounds(x_offset, y_offset, width_tiles, height_tiles);
     if (is_scrolling) {
         int absolute_x = data.absolute_x;
         int absolute_y = data.absolute_y;
+        set_bounds(x_offset, y_offset, width_tiles, height_tiles);
         if (data.absolute_x != absolute_x || data.absolute_y != absolute_y) {
             draw_minimap();
             return;
         }
+    } else {
+        set_bounds(x_offset, y_offset, width_tiles, height_tiles);
     }
 
     graphics_set_clip_rectangle(x_offset, y_offset, 2 * width_tiles, height_tiles);
