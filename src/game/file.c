@@ -148,7 +148,6 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     map_tiles_update_all_aqueducts(0);
 
     map_natives_init();
-    map_routing_update_all();
 
     city_view_init();
 
@@ -156,9 +155,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     figure_create_herds();
     figure_create_flotsam();
 
-    map_routing_update_land();
-    map_routing_update_water();
-    map_routing_update_walls();
+    map_routing_update_all();
 
     scenario_map_init_entry_exit();
 
@@ -197,7 +194,7 @@ static int load_custom_scenario(const uint8_t *scenario_name, const char *scenar
     }
 
     clear_scenario_data();
-    game_file_load_scenario(scenario_file);
+    game_file_load_scenario_data(scenario_file);
     initialize_scenario_data(scenario_name);
     return 1;
 }
@@ -331,7 +328,7 @@ int game_file_start_scenario(const char *scenario_file)
     return start_scenario(scenario_name, scenario_file);
 }
 
-int game_file_load_scenario(const char *scenario_file)
+int game_file_load_scenario_data(const char *scenario_file)
 {
     if (!game_file_io_read_scenario(scenario_file)) {
         return 0;
@@ -340,11 +337,6 @@ int game_file_load_scenario(const char *scenario_file)
     trade_prices_reset();
     load_empire_data(1, scenario_empire_id());
     return 1;
-}
-
-int game_file_write_scenario(const char *scenario_file)
-{
-    return game_file_io_write_scenario(scenario_file);
 }
 
 int game_file_load_saved_game(const char *filename)

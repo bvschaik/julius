@@ -82,6 +82,8 @@ void map_terrain_restore(void);
 
 void map_terrain_clear(void);
 
+void map_terrain_init_outside_map(void);
+
 void map_terrain_save_state(buffer *buf);
 
 void map_terrain_load_state(buffer *buf);

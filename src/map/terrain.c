@@ -318,6 +318,22 @@ void map_terrain_clear(void)
     map_grid_clear_u16(terrain_grid.items);
 }
 
+void map_terrain_init_outside_map(void)
+{
+    int map_width, map_height;
+    map_grid_size(&map_width, &map_height);
+    int y_start = (GRID_SIZE - map_height) / 2;
+    int x_start = (GRID_SIZE - map_width) / 2;
+    for (int y = 0; y < GRID_SIZE; y++) {
+        int y_outside_map = y < y_start || y >= y_start + map_height;
+        for (int x = 0; x < GRID_SIZE; x++) {
+            if (y_outside_map || x < x_start || x >= x_start + map_width) {
+                terrain_grid.items[x + GRID_SIZE * y] = TERRAIN_TREE | TERRAIN_WATER;
+            }
+        }
+    }
+}
+
 void map_terrain_save_state(buffer *buf)
 {
     map_grid_save_state_u16(terrain_grid.items, buf);

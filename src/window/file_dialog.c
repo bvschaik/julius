@@ -8,6 +8,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "game/file.h"
+#include "game/file_editor.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -238,7 +239,7 @@ static void button_ok_cancel(int is_ok, int param2)
             game_file_load_saved_game(filename);
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {
-            game_file_load_scenario(filename);
+            game_file_editor_load_scenario(filename);
             window_editor_map_show();
         }
     } else if (data.dialog_type == FILE_DIALOG_SAVE) {
@@ -247,7 +248,7 @@ static void button_ok_cancel(int is_ok, int param2)
             game_file_write_saved_game(filename);
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {
-            game_file_write_scenario(filename);
+            game_file_editor_write_scenario(filename);
             window_editor_map_show();
         }
     } else if (data.dialog_type == FILE_DIALOG_DELETE) {

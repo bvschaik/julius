@@ -287,6 +287,7 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/cartpusher.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/crime.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/docker.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/editor.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/enemy.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/entertainer.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/maintenance.c
@@ -304,6 +305,7 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/animation.c
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
     ${PROJECT_SOURCE_DIR}/src/game/file.c
+    ${PROJECT_SOURCE_DIR}/src/game/file_editor.c
     ${PROJECT_SOURCE_DIR}/src/game/file_io.c
     ${PROJECT_SOURCE_DIR}/src/game/game.c
     ${PROJECT_SOURCE_DIR}/src/game/mission.c
