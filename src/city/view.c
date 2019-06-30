@@ -424,6 +424,12 @@ void city_view_load_state(buffer *orientation, buffer *camera)
     }
 }
 
+void city_view_save_scenario_state(buffer *camera)
+{
+    buffer_write_i32(camera, data.camera.x);
+    buffer_write_i32(camera, data.camera.y);
+}
+
 void city_view_load_scenario_state(buffer *camera)
 {
     data.camera.x = buffer_read_i32(camera);
