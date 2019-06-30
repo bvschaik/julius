@@ -61,8 +61,9 @@ void scenario_save_state(buffer *buf)
     buffer_write_i32(buf, scenario.map.grid_start);
     buffer_write_i32(buf, scenario.map.grid_border_size);
 
-    buffer_write_raw(buf, scenario.brief_description, 64);
-    buffer_skip(buf, 522);
+    buffer_write_raw(buf, scenario.brief_description, MAX_BRIEF_DESCRIPTION);
+    buffer_write_raw(buf, scenario.briefing, MAX_BRIEFING);
+    buffer_skip(buf, 22);
 
     for (int i = 0; i < MAX_REQUESTS; i++) {
         buffer_write_u8(buf, scenario.requests[i].can_comply_dialog_shown);
@@ -156,7 +157,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i32(buf, scenario.rome_supplies_wheat);
 
     // allowed buildings
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++) {
         buffer_write_i16(buf, scenario.allowed_buildings[i]);
     }
 
@@ -273,8 +274,9 @@ void scenario_load_state(buffer *buf)
     scenario.map.grid_start = buffer_read_i32(buf);
     scenario.map.grid_border_size = buffer_read_i32(buf);
 
-    buffer_read_raw(buf, scenario.brief_description, 64);
-    buffer_skip(buf, 522);
+    buffer_read_raw(buf, scenario.brief_description, MAX_BRIEF_DESCRIPTION);
+    buffer_read_raw(buf, scenario.briefing, MAX_BRIEFING);
+    buffer_skip(buf, 22);
 
     for (int i = 0; i < MAX_REQUESTS; i++) {
         scenario.requests[i].can_comply_dialog_shown = buffer_read_u8(buf);
@@ -368,7 +370,7 @@ void scenario_load_state(buffer *buf)
     scenario.rome_supplies_wheat = buffer_read_i32(buf);
 
     // allowed buildings
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++) {
         scenario.allowed_buildings[i] = buffer_read_i16(buf);
     }
 

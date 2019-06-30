@@ -15,8 +15,12 @@
 #define MAX_FISH_POINTS 8
 #define MAX_INVASION_POINTS 8
 
+#define MAX_ALLOWED_BUILDINGS 50
+
 #define MAX_PLAYER_NAME 32
 #define MAX_SCENARIO_NAME 65
+#define MAX_BRIEF_DESCRIPTION 64
+#define MAX_BRIEFING 500
 
 enum {
     EVENT_NOT_STARTED = 0,
@@ -131,7 +135,8 @@ extern struct scenario_t {
 
     int rome_supplies_wheat;
     int image_id;
-    uint8_t brief_description[64];
+    uint8_t brief_description[MAX_BRIEF_DESCRIPTION];
+    uint8_t briefing[MAX_BRIEFING];
     int enemy_id;
     int is_open_play;
     int open_play_scenario_id;
@@ -212,7 +217,7 @@ extern struct scenario_t {
     map_point fishing_points[MAX_FISH_POINTS];
     map_point invasion_points[MAX_INVASION_POINTS];
 
-    short allowed_buildings[50];
+    short allowed_buildings[MAX_ALLOWED_BUILDINGS];
 
     struct {
         int hut;
@@ -226,7 +231,7 @@ extern struct scenario_t {
         int is_custom;
         int starting_favor;
         int starting_personal_savings;
-        uint8_t player_name[32];
+        uint8_t player_name[MAX_PLAYER_NAME];
     } settings;
 
     int is_saved;
