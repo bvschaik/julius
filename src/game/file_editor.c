@@ -40,6 +40,7 @@
 #include "scenario/editor.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
+#include "scenario/map.h"
 #include "sound/city.h"
 #include "sound/music.h"
 
@@ -91,6 +92,7 @@ static void clear_map_data(void)
 static void create_blank_map(int size)
 {
     scenario_editor_create(size);
+    scenario_map_init();
     clear_map_data();
     city_view_set_camera(76, 152);
     city_view_reset_orientation();
@@ -119,6 +121,7 @@ int game_file_editor_load_scenario(const char *scenario_file)
         return 0;
     }
     empire_load(1, scenario_empire_id());
+    scenario_map_init();
 
     figure_init_scenario();
     figure_create_editor_flags();
