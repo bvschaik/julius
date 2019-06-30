@@ -2,6 +2,11 @@
 #define GAME_FILE_EDITOR_H
 
 /**
+ * Clears city/scenario memory not applicable to editing scenarios
+ */
+void game_file_editor_clear_data(void);
+
+/**
  * Create data for a new scenario
  * @param size Size of the map to create
  */

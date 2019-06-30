@@ -69,9 +69,14 @@ static struct {
     invasion_warning warnings[MAX_INVASION_WARNINGS];
 } data;
 
-void scenario_invasion_init(void)
+void scenario_invasion_clear(void)
 {
     memset(data.warnings, 0, MAX_INVASION_WARNINGS * sizeof(invasion_warning));
+}
+
+void scenario_invasion_init(void)
+{
+    scenario_invasion_clear();
     int path_current = 1;
     int path_max = empire_object_get_max_invasion_path();
     if (path_max == 0) {

@@ -10,6 +10,7 @@
 #include "figure/type.h"
 #include "game/animation.h"
 #include "game/file.h"
+#include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
@@ -114,6 +115,8 @@ int game_init_editor(void)
         errlog("unable to load main graphics");
         return 0;
     }
+    game_file_editor_clear_data();
+    game_file_editor_create_scenario(2);
 
     window_editor_map_show();
     return 1;

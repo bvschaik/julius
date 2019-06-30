@@ -33,6 +33,8 @@ typedef struct {
     int is_rise;
 } editor_demand_change;
 
+void scenario_editor_create(int map_size);
+
 void scenario_editor_request_get(int index, editor_request *request);
 void scenario_editor_request_delete(int index);
 void scenario_editor_request_save(int index, editor_request *request);

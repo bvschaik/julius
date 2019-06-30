@@ -1,8 +1,100 @@
 #include "editor.h"
 
+#include "core/lang.h"
 #include "core/string.h"
+#include "map/grid.h"
 #include "scenario/data.h"
 #include "scenario/property.h"
+
+#include <string.h>
+
+static const struct {
+    int width;
+    int height;
+} MAP_SIZES[] = {
+    {40, 40},
+    {60, 60},
+    {80, 80},
+    {100, 100},
+    {120, 120},
+    {160, 160}
+};
+
+static void init_point(map_point *point)
+{
+    point->x = -1;
+    point->y = -1;
+}
+
+void scenario_editor_create(int map_size)
+{
+    memset(&scenario, 0, sizeof(scenario));
+
+    scenario.map.width = MAP_SIZES[map_size].width;
+    scenario.map.height = MAP_SIZES[map_size].height;
+    scenario.map.grid_border_size = GRID_SIZE - scenario.map.width;
+    scenario.map.grid_start = (GRID_SIZE - scenario.map.height) / 2 * GRID_SIZE + (GRID_SIZE - scenario.map.width) / 2;
+
+    string_copy(lang_get_string(44, 37), scenario.brief_description, MAX_BRIEF_DESCRIPTION);
+    string_copy(lang_get_string(44, 38), scenario.briefing, MAX_BRIEFING);
+
+    scenario.initial_funds = 1000;
+    scenario.rescue_loan = 500;
+    scenario.start_year = -500;
+
+    scenario.win_criteria.milestone25_year = 10;
+    scenario.win_criteria.milestone50_year = 20;
+    scenario.win_criteria.milestone75_year = 30;
+
+    for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++) {
+        scenario.allowed_buildings[i] = 1;
+    }
+    scenario.rome_supplies_wheat = 0;
+
+    scenario.win_criteria.culture.goal = 10;
+    scenario.win_criteria.culture.enabled = 1;
+    scenario.win_criteria.prosperity.goal = 10;
+    scenario.win_criteria.prosperity.enabled = 1;
+    scenario.win_criteria.peace.goal = 10;
+    scenario.win_criteria.peace.enabled = 1;
+    scenario.win_criteria.favor.goal = 10;
+    scenario.win_criteria.favor.enabled = 1;
+    scenario.win_criteria.population.goal = 0;
+    scenario.win_criteria.population.enabled = 0;
+
+    scenario.win_criteria.time_limit.years = 0;
+    scenario.win_criteria.time_limit.enabled = 0;
+    scenario.win_criteria.survival_time.years = 0;
+    scenario.win_criteria.survival_time.enabled = 0;
+
+    scenario.earthquake.severity = 0;
+    scenario.earthquake.year = 0;
+
+    init_point(&scenario.earthquake_point);
+    init_point(&scenario.entry_point);
+    init_point(&scenario.exit_point);
+    init_point(&scenario.river_entry_point);
+    init_point(&scenario.river_exit_point);
+    for (int i = 0; i < MAX_INVASION_POINTS; i++) {
+        init_point(&scenario.invasion_points[i]);
+    }
+    for (int i = 0; i < MAX_FISH_POINTS; i++) {
+        init_point(&scenario.fishing_points[i]);
+    }
+    for (int i = 0; i < MAX_HERD_POINTS; i++) {
+        init_point(&scenario.herd_points[i]);
+    }
+
+    for (int i = 0; i < MAX_REQUESTS; i++) {
+        scenario.requests[i].deadline_years = 5;
+        scenario.requests[i].favor = 8;
+    }
+    for (int i = 0; i < MAX_INVASIONS; i++) {
+        scenario.invasions[i].from = 8;
+    }
+
+    scenario.is_saved = 1;
+}
 
 void scenario_editor_request_get(int index, editor_request *request)
 {
@@ -228,7 +320,7 @@ void scenario_editor_cycle_climate(void)
 void scenario_editor_update_brief_description(const uint8_t *new_description)
 {
     if (!string_equals(scenario.brief_description, new_description)) {
-        string_copy(new_description, scenario.brief_description, 64);
+        string_copy(new_description, scenario.brief_description, MAX_BRIEF_DESCRIPTION);
         scenario.is_saved = 0;
     }
 }

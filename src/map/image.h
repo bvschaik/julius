@@ -14,6 +14,7 @@ void map_image_restore(void);
 void map_image_restore_at(int grid_offset);
 
 void map_image_clear(void);
+void map_image_init_edges(void);
 
 void map_image_save_state(buffer *buf);
 
