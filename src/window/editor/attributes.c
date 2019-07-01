@@ -17,6 +17,7 @@
 #include "input/keyboard.h"
 #include "scenario/editor.h"
 #include "scenario/property.h"
+#include "widget/minimap.h"
 #include "widget/sidebar_editor.h"
 #include "window/editor/allowed_buildings.h"
 #include "window/editor/demand_changes.h"
@@ -242,6 +243,7 @@ static void change_climate(int param1, int param2)
 {
     scenario_editor_cycle_climate();
     image_load_climate(scenario_property_climate(), 1);
+    widget_minimap_invalidate();
     window_request_refresh();
 }
 
