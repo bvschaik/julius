@@ -1,5 +1,6 @@
 #include "top_menu_editor.h"
 
+#include "game/file_editor.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "graphics/image.h"
@@ -12,6 +13,7 @@
 #include "window/file_dialog.h"
 #include "window/message_dialog.h"
 #include "window/popup_dialog.h"
+#include "window/select_list.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
 #include "window/editor/empire.h"
@@ -89,7 +91,7 @@ static void draw_foreground(void)
     if (!data.open_sub_menu) {
         return;
     }
-    //TODO window_city_draw();
+    window_editor_map_draw_all();
     menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
 }
 
@@ -162,11 +164,20 @@ int widget_top_menu_editor_handle_mouse(const mouse *m)
     }
 }
 
-static void menu_file_new_map(int param)
+static void map_size_selected(int size)
 {
     clear_state();
-    // TODO select a map size and init it
-    window_go_back();
+    if (size >= 0 && size <= 5) {
+        game_file_editor_create_scenario(size);
+        window_editor_map_show();
+    } else {
+        window_go_back();
+    }
+}
+
+static void menu_file_new_map(int param)
+{
+    window_select_list_show(50, 50, 33, 7, map_size_selected);
 }
 
 static void menu_file_load_map(int param)
