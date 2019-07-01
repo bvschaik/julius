@@ -97,38 +97,20 @@ static void create_blank_map(int size)
     scenario_editor_create(size);
     scenario_map_init();
     clear_map_data();
+    map_image_init_edges();
     city_view_set_camera(76, 152);
     city_view_reset_orientation();
-    city_view_init();
-    map_image_init_edges();
-    map_tiles_update_all_empty_land();
-    map_routing_update_all();
 }
 
-void game_file_editor_create_scenario(int size)
+static void prepare_map_for_editing(void)
 {
-    create_blank_map(size);
-
-    empire_load(1, scenario_empire_id()); // TODO figure something out with empire_load_editor()
+    empire_load(1, scenario_empire_id());
     empire_object_init_cities();
 
     figure_init_scenario();
     figure_create_editor_flags();
     figure_create_flotsam();
-}
 
-int game_file_editor_load_scenario(const char *scenario_file)
-{
-    clear_map_data();
-    if (!game_file_io_read_scenario(scenario_file)) {
-        return 0;
-    }
-    empire_load(1, scenario_empire_id());
-    scenario_map_init();
-
-    figure_init_scenario();
-    figure_create_editor_flags();
-    figure_create_flotsam();
     map_tiles_update_all_elevation();
     map_tiles_update_all_water();
     map_tiles_update_all_earthquake();
@@ -140,8 +122,26 @@ int game_file_editor_load_scenario(const char *scenario_file)
     map_tiles_update_all_walls();
     map_tiles_update_all_aqueducts(0);
     map_natives_init();
-    city_view_init();
     map_routing_update_all();
+
+    city_view_init();
+}
+
+void game_file_editor_create_scenario(int size)
+{
+    create_blank_map(size);
+    prepare_map_for_editing();
+}
+
+int game_file_editor_load_scenario(const char *scenario_file)
+{
+    clear_map_data();
+    if (!game_file_io_read_scenario(scenario_file)) {
+        return 0;
+    }
+    scenario_map_init();
+
+    prepare_map_for_editing();
     return 1;
 }
 
