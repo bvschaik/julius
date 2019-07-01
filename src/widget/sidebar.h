@@ -13,6 +13,4 @@ void widget_sidebar_handle_mouse_build_menu(const mouse *m);
 
 int widget_sidebar_get_tooltip_text(void);
 
-void widget_sidebar_invalidate_minimap(void);
-
 #endif // WIDGET_SIDEBAR_H

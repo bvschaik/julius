@@ -15,7 +15,6 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "input/scroll.h"
 #include "map/orientation.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -109,11 +108,10 @@ static image_button buttons_top_expanded[] = {
 };
 
 static struct {
-    int minimap_redraw_requested;
     time_millis slide_start;
     int progress;
     int focus_button_for_tooltip;
-} data = {0, 0, 0, 0};
+} data;
 
 static int get_x_offset_expanded(void)
 {
@@ -127,27 +125,11 @@ static int get_x_offset_collapsed(void)
     return s_width - (s_width + 20) % 60 - SIDEBAR_COLLAPSED_WIDTH;
 }
 
-void widget_sidebar_invalidate_minimap(void)
-{
-    data.minimap_redraw_requested = 1;
-}
-
-
 static void draw_minimap(int force)
 {
     if (!city_view_is_sidebar_collapsed()) {
-        if (data.minimap_redraw_requested || scroll_in_progress() || force) {
-            int x_offset = get_x_offset_expanded();
-            if (data.minimap_redraw_requested) {
-                widget_minimap_draw(x_offset + 8, 59, 73, 111);
-                data.minimap_redraw_requested = 0;
-            } else {
-                widget_minimap_draw_from_cache(x_offset + 8, 59, 73, 111, scroll_in_progress());
-            }
-            graphics_draw_horizontal_line(x_offset + 7, x_offset + 153, 58, COLOR_MINIMAP_DARK);
-            graphics_draw_vertical_line(x_offset + 7, 59, 170, COLOR_MINIMAP_DARK);
-            graphics_draw_vertical_line(x_offset + 153, 59, 170, COLOR_MINIMAP_LIGHT);
-        }
+        int x_offset = get_x_offset_expanded();
+        widget_minimap_draw(x_offset + 8, 59, 73, 111, force);
     }
 }
 

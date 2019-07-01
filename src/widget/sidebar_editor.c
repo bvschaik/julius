@@ -61,35 +61,15 @@ static image_button buttons_build[] = {
     {113, 411, 39, 26, IB_BUILD, 137, 51, button_build, button_none, 24, 0, 1},
 };
 
-static struct {
-    int minimap_redraw_requested;
-} data;
-
 static int get_x_offset(void)
 {
     int s_width = screen_width();
     return (s_width - (s_width + 20) % 60 - SIDEBAR_WIDTH);
 }
 
-void widget_sidebar_editor_invalidate_minimap(void)
-{
-    data.minimap_redraw_requested = 1;
-}
-
 static void draw_minimap(int force)
 {
-    if (data.minimap_redraw_requested || scroll_in_progress() || force) {
-        int x_offset = get_x_offset();
-        if (data.minimap_redraw_requested) {
-            widget_minimap_draw(x_offset + 8, 30, 73, 111);
-            data.minimap_redraw_requested = 0;
-        } else {
-            widget_minimap_draw_from_cache(x_offset + 8, 30, 73, 111, scroll_in_progress());
-        }
-        graphics_draw_horizontal_line(x_offset + 7, x_offset + 153, 29, COLOR_MINIMAP_DARK);
-        graphics_draw_vertical_line(x_offset + 7, 30, 141, COLOR_MINIMAP_DARK);
-        graphics_draw_vertical_line(x_offset + 153, 30, 141, COLOR_MINIMAP_LIGHT);
-    }
+    widget_minimap_draw(get_x_offset() + 8, 30, 73, 111, force);
 }
 
 static void draw_buttons(void)

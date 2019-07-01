@@ -4,13 +4,13 @@
 #include "city/warning.h"
 #include "core/direction.h"
 #include "map/orientation.h"
-#include "widget/sidebar.h"
+#include "widget/minimap.h"
 
 void game_orientation_rotate_left(void)
 {
     city_view_rotate_left();
     map_orientation_change(0);
-    widget_sidebar_invalidate_minimap();
+    widget_minimap_invalidate();
     city_warning_show(WARNING_ORIENTATION);
 }
 
@@ -18,7 +18,7 @@ void game_orientation_rotate_right(void)
 {
     city_view_rotate_right();
     map_orientation_change(1);
-    widget_sidebar_invalidate_minimap();
+    widget_minimap_invalidate();
     city_warning_show(WARNING_ORIENTATION);
 }
 
@@ -40,6 +40,6 @@ void game_orientation_rotate_north(void)
         default: // already north
             return;
     }
-    widget_sidebar_invalidate_minimap();
+    widget_minimap_invalidate();
     city_warning_show(WARNING_ORIENTATION);
 }
