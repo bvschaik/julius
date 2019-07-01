@@ -44,6 +44,7 @@
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
+#include "scenario/property.h"
 #include "sound/city.h"
 #include "sound/music.h"
 
@@ -104,6 +105,8 @@ static void create_blank_map(int size)
 
 static void prepare_map_for_editing(void)
 {
+    image_load_climate(scenario_property_climate(), 1);
+
     empire_load(1, scenario_empire_id());
     empire_object_init_cities();
 
