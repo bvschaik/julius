@@ -34,6 +34,17 @@ void scenario_editor_set_fishing_point(int id, int x, int y)
     scenario.is_saved = 0;
 }
 
+int scenario_editor_count_invasion_points(void)
+{
+    int points = 0;
+    for (int i = 0; i < MAX_INVASION_POINTS; i++) {
+        if (scenario.invasion_points[i].x != -1) {
+            points++;
+        }
+    }
+    return points;
+}
+
 void scenario_editor_clear_invasion_points(void)
 {
     for (int i = 0; i < MAX_INVASION_POINTS; i++) {
@@ -48,4 +59,9 @@ void scenario_editor_set_invasion_point(int id, int x, int y)
     scenario.invasion_points[id].x = x;
     scenario.invasion_points[id].y = y;
     scenario.is_saved = 0;
+}
+
+map_point scenario_editor_earthquake_point(void)
+{
+    return scenario.earthquake_point;
 }

@@ -13,11 +13,16 @@
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
+#include "graphics/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
 #include "map/orientation.h"
+#include "scenario/editor.h"
+#include "scenario/editor_events.h"
+#include "scenario/editor_map.h"
+#include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
 #include "widget/minimap.h"
@@ -77,6 +82,85 @@ static void draw_buttons(void)
     image_buttons_draw(get_x_offset(), 24, buttons_build, 17);
 }
 
+static void draw_status(void)
+{
+    int x_offset = get_x_offset();
+    inner_panel_draw(x_offset + 1, 175, 10, 7);
+    int text_offset = x_offset + 6;
+
+    // TODO selected tool + brush
+    int selected_tool = 0;
+    int brush_size = 0;
+    lang_text_draw(49, selected_tool, text_offset, 178, FONT_NORMAL_WHITE);
+    switch (selected_tool) {
+        case 0: // grass
+        case 1: // trees
+        case 2: // water
+        case 4: // scrub
+        case 5: // rocks
+        case 6: // meadow
+        case 11: // raise land
+        case 12: // lower land
+            lang_text_draw(48, brush_size, text_offset, 194, FONT_NORMAL_GREEN);
+            break;
+        default:
+            break;
+    }
+
+    map_point entry = scenario_map_entry();
+    map_point exit = scenario_map_exit();
+    int people_text;
+    font_t people_font = FONT_NORMAL_RED;
+    if (entry.x == -1) {
+        if (exit.x == -1) {
+            people_text = 60;
+        } else {
+            people_text = 59;
+        }
+    } else if (exit.x == -1) {
+        people_text = 61;
+    } else {
+        people_text = 62;
+        people_font = FONT_NORMAL_GREEN;
+    }
+    lang_text_draw(44, people_text, text_offset, 224, people_font);
+
+    entry = scenario_map_river_entry();
+    exit = scenario_map_river_exit();
+    if (entry.x != -1 || entry.x != -1) {
+        if (entry.x == -1) {
+            lang_text_draw(44, 137, text_offset, 239, FONT_NORMAL_RED);
+        } else if (exit.x == -1) {
+            lang_text_draw(44, 138, text_offset, 239, FONT_NORMAL_RED);
+        } else {
+            lang_text_draw(44, 67, text_offset, 239, FONT_NORMAL_GREEN);
+        }
+    }
+
+    int invasion_points = scenario_editor_count_invasion_points();
+    if (invasion_points == 1) {
+        lang_text_draw(44, 64, text_offset, 254, FONT_NORMAL_GREEN);
+    } else if (invasion_points > 1) {
+        int width = text_draw_number(invasion_points, '@', " ", text_offset - 2, 254, FONT_NORMAL_GREEN);
+        lang_text_draw(44, 65, text_offset + width - 8, 254, FONT_NORMAL_GREEN);
+    } else {
+        editor_invasion first_invasion;
+        scenario_editor_invasion_get(0, &first_invasion);
+        if (first_invasion.type) {
+            lang_text_draw(44, 63, text_offset, 254, FONT_NORMAL_RED);
+        }
+    }
+
+    if (scenario_editor_earthquake_severity() > 0) {
+        map_point earthquake = scenario_editor_earthquake_point();
+        if (earthquake.x == -1 || earthquake.y == -1) {
+            lang_text_draw(44, 57, text_offset, 269, FONT_NORMAL_RED);
+        } else {
+            lang_text_draw(44, 58, text_offset, 269, FONT_NORMAL_GREEN);
+        }
+    }
+}
+
 static void draw_sidebar(void)
 {
     int image_base = image_group(GROUP_EDITOR_SIDE_PANEL);
@@ -84,6 +168,7 @@ static void draw_sidebar(void)
     image_draw(image_base, x_offset, 24);
     draw_buttons();
     draw_minimap(1);
+    draw_status();
 
     // relief images below panel
     int y_offset = 474;
