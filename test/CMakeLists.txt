@@ -114,3 +114,5 @@ add_integration_test(sav_lugdunum1 brugle-lugdunum.sav brugle-lugdunum-after.sav
 
 add_integration_test(sav_native1 brugle-lugdunum-native.sav brugle-lugdunum-native-after.sav 1678)
 add_integration_test(sav_native2 cicero-lugdunum-trade.sav cicero-lugdunum-trade-after.sav 926)
+
+add_integration_test(sav_palace1 brugle-palacepeaks.sav brugle-palacepeaks-2.sav 2562)

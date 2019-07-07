@@ -197,15 +197,15 @@ static void check_road_to_largest_network_hippodrome(int x, int y, int *min_inde
     }
 }
 
-static void check_min_dist_hippodrome(int x, int y, int *min_dist, int *min_grid_offset)
+static void check_min_dist_hippodrome(int base_offset, int x_offset, int *min_dist, int *min_grid_offset, int *min_x_offset)
 {
-    int base_offset = map_grid_offset(x, y);
     for (const int *tile_delta = map_grid_adjacent_offsets(5); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
         int dist = map_routing_distance(grid_offset);
         if (dist > 0 && dist < *min_dist) {
             *min_dist = dist;
             *min_grid_offset = grid_offset;
+            *min_x_offset = x_offset;
         }
     }
 }
@@ -226,14 +226,15 @@ int map_road_to_largest_network_hippodrome(int x, int y, int *x_road, int *y_roa
 
     int min_dist = 100000;
     min_grid_offset = -1;
-    check_min_dist_hippodrome(x, y, &min_dist, &min_grid_offset);
-    check_min_dist_hippodrome(x + 5, y, &min_dist, &min_grid_offset);
-    check_min_dist_hippodrome(x + 10, y, &min_dist, &min_grid_offset);
+    int min_x_offset = -1;
+    check_min_dist_hippodrome(map_grid_offset(x, y), 0, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_hippodrome(map_grid_offset(x + 5, y), 5, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_hippodrome(map_grid_offset(x + 10, y), 10, &min_dist, &min_grid_offset, &min_x_offset);
 
     if (min_grid_offset >= 0) {
-        *x_road = map_grid_offset_to_x(min_grid_offset);
+        *x_road = map_grid_offset_to_x(min_grid_offset) + min_x_offset;
         *y_road = map_grid_offset_to_y(min_grid_offset);
-        return min_grid_offset;
+        return min_grid_offset + min_x_offset;
     }
     return -1;
 }
