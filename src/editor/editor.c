@@ -16,6 +16,8 @@ static const char EDITOR_FILES[MAX_EDITOR_FILES][32] = {
     "map_panels.555"
 };
 
+static int is_active;
+
 int editor_is_present(void)
 {
     for (int i = 0; i < MAX_EDITOR_FILES; i++) {
@@ -26,3 +28,12 @@ int editor_is_present(void)
     return 1;
 }
 
+void editor_set_active(int active)
+{
+    is_active = active;
+}
+
+int editor_is_active(void)
+{
+    return is_active;
+}

@@ -7,6 +7,7 @@
 #include "core/log.h"
 #include "core/random.h"
 #include "core/time.h"
+#include "editor/editor.h"
 #include "figure/type.h"
 #include "game/animation.h"
 #include "game/file.h"
@@ -118,6 +119,7 @@ int game_init_editor(void)
     game_file_editor_clear_data();
     game_file_editor_create_scenario(2);
 
+    editor_set_active(1);
     window_editor_map_show();
     return 1;
 }
@@ -138,26 +140,17 @@ void game_exit_editor(void)
         return;
     }
 
+    editor_set_active(0);
     window_main_menu_show();
 }
 
 static int get_elapsed_ticks(void)
 {
-    time_millis now = time_get_millis();
-    time_millis diff = now - last_update;
-
-    int game_speed_index = (100 - setting_game_speed()) / 10;
-    int ticks_per_frame = 1;
-    if (game_speed_index >= 10) {
-        return 0;
-    } else if (game_speed_index < 0) {
-        ticks_per_frame = setting_game_speed() / 100;
-        game_speed_index = 0;
-    }
-
     if (game_state_is_paused()) {
         return 0;
     }
+    int game_speed_index = 0;
+    int ticks_per_frame = 1;
     switch (window_get_id()) {
         default:
             return 0;
@@ -166,6 +159,16 @@ static int get_elapsed_ticks(void)
         case WINDOW_SLIDING_SIDEBAR:
         case WINDOW_OVERLAY_MENU:
         case WINDOW_BUILD_MENU:
+            game_speed_index = (100 - setting_game_speed()) / 10;
+            if (game_speed_index >= 10) {
+                return 0;
+            } else if (game_speed_index < 0) {
+                ticks_per_frame = setting_game_speed() / 100;
+                game_speed_index = 0;
+            }
+            break;
+        case WINDOW_EDITOR_MAP:
+            game_speed_index = 3; // 70%, nice speed for flag animations
             break;
     }
     if (building_construction_in_progress()) {
@@ -174,6 +177,9 @@ static int get_elapsed_ticks(void)
     if (scroll_in_progress()) {
         return 0;
     }
+
+    time_millis now = time_get_millis();
+    time_millis diff = now - last_update;
     if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
         return 0;
     }

@@ -27,6 +27,7 @@
 #include "city/trade.h"
 #include "city/victory.h"
 #include "core/random.h"
+#include "editor/editor.h"
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "figuretype/crime.h"
@@ -168,7 +169,9 @@ void game_tick_run(void)
 {
     random_generate_next();
     game_undo_reduce_time_available();
-    advance_tick();
+    if (!editor_is_active()) {
+        advance_tick();
+    }
     figure_action_handle();
     scenario_earthquake_process();
     scenario_gladiator_revolt_process();
