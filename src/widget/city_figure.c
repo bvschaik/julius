@@ -3,7 +3,9 @@
 #include "city/view.h"
 #include "figure/formation.h"
 #include "figure/image.h"
+#include "figuretype/editor.h"
 #include "graphics/image.h"
+#include "graphics/text.h"
 
 static void draw_figure_with_cart(const figure *f, int x, int y)
 {
@@ -109,6 +111,30 @@ static void draw_fort_standard(const figure *f, int x, int y)
         // top icon
         int icon_image_id = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + f->formation_id - 1;
         image_draw(icon_image_id, x, y - image_get(icon_image_id)->height - flag_height);
+    }
+}
+
+static void draw_map_flag(const figure *f, int x, int y)
+{
+    if (f->y < 0 || f->x < 0) {
+        return;
+    }
+    // base
+    image_draw(f->image_id, x, y);
+    // flag
+    image_draw(f->cart_image_id, x, y - image_get(f->cart_image_id)->height);
+    // flag number
+    int number = 0;
+    int id = f->resource_id;
+    if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX) {
+        number = id - MAP_FLAG_INVASION_MIN + 1;
+    } else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX) {
+        number = id - MAP_FLAG_FISHING_MIN + 1;
+    } else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX) {
+        number = id - MAP_FLAG_HERD_MIN + 1;
+    }
+    if (number > 0) {
+        text_draw_number_colored(number, '@', " ", x + 6, y + 7, FONT_NORMAL_PLAIN, COLOR_WHITE);
     }
 }
 
@@ -228,6 +254,9 @@ static void draw_figure(const figure *f, int x, int y)
                 break;
             case FIGURE_FORT_STANDARD:
                 draw_fort_standard(f, x, y);
+                break;
+            case FIGURE_MAP_FLAG:
+                draw_map_flag(f, x, y);
                 break;
             default:
                 image_draw(f->image_id, x, y);

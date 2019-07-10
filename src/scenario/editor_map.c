@@ -11,6 +11,11 @@ void scenario_editor_clear_herd_points(void)
     scenario.is_saved = 0;
 }
 
+map_point scenario_editor_herd_point(int id)
+{
+    return scenario.herd_points[id];
+}
+
 void scenario_editor_set_herd_point(int id, int x, int y)
 {
     scenario.herd_points[id].x = x;
@@ -25,6 +30,11 @@ void scenario_editor_clear_fishing_points(void)
         scenario.fishing_points[i].y = -1;
     }
     scenario.is_saved = 0;
+}
+
+map_point scenario_editor_fishing_point(int id)
+{
+    return scenario.fishing_points[id];
 }
 
 void scenario_editor_set_fishing_point(int id, int x, int y)
@@ -52,6 +62,11 @@ void scenario_editor_clear_invasion_points(void)
         scenario.invasion_points[i].y = -1;
     }
     scenario.is_saved = 0;
+}
+
+map_point scenario_editor_invasion_point(int id)
+{
+    return scenario.invasion_points[id];
 }
 
 void scenario_editor_set_invasion_point(int id, int x, int y)

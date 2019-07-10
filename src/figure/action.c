@@ -7,6 +7,7 @@
 #include "figuretype/cartpusher.h"
 #include "figuretype/crime.h"
 #include "figuretype/docker.h"
+#include "figuretype/editor.h"
 #include "figuretype/enemy.h"
 #include "figuretype/entertainer.h"
 #include "figuretype/maintenance.h"
@@ -61,7 +62,7 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_doctor_action,
     figure_doctor_action,
     figure_worker_action,
-    figure_nobody_action, // map_flag: editor only
+    figure_editor_flag_action,
     figure_flotsam_action,
     figure_docker_action,
     figure_market_buyer_action,

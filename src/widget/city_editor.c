@@ -4,11 +4,13 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
+#include "map/figure.h"
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/point.h"
 #include "map/property.h"
 #include "sound/city.h"
+#include "widget/city_figure.h"
 
 static struct {
     map_tile current_tile;
@@ -66,6 +68,18 @@ static void draw_top(int x, int y, int grid_offset)
     image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
 }
 
+static void draw_flags(int x, int y, int grid_offset)
+{
+    int figure_id = map_figure_at(grid_offset);
+    while (figure_id) {
+        figure *f = figure_get(figure_id);
+        if (!f->is_ghost) {
+            city_draw_figure(f, x, y);
+        }
+        figure_id = f->next_figure_id_on_same_tile;
+    }
+}
+
 static void set_city_clip_rectangle(void)
 {
     int x, y, width, height;
@@ -79,7 +93,7 @@ void widget_city_editor_draw(void)
 
     init_draw_context();
     city_view_foreach_map_tile(draw_footprint);
-    city_view_foreach_valid_map_tile(draw_top, 0, 0);
+    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
 
     graphics_reset_clip_rectangle();
 }
