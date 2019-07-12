@@ -452,6 +452,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/building/utility.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/allowed_buildings.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/attributes.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/build_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/demand_changes.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_demand_change.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_invasion.c

@@ -45,6 +45,16 @@ void window_editor_map_draw_all(void)
     draw_foreground();
 }
 
+void window_editor_map_draw_panels(void)
+{
+    draw_background();
+}
+
+void window_editor_map_draw(void)
+{
+    widget_city_editor_draw();
+}
+
 void window_editor_map_show(void)
 {
     window_type window = {
