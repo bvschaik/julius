@@ -501,6 +501,7 @@ set(WINDOW_FILES
 )
 set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/editor.c
+    ${PROJECT_SOURCE_DIR}/src/editor/tool.c
 )
 
 set(MACOSX_FILES "")

@@ -1,14 +1,7 @@
 #include "sidebar_editor.h"
 
-#include "building/menu.h"
-#include "city/message.h"
-#include "city/view.h"
-#include "city/warning.h"
-#include "core/direction.h"
 #include "core/image_group_editor.h"
-#include "game/orientation.h"
-#include "game/state.h"
-#include "game/undo.h"
+#include "editor/tool.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
@@ -17,53 +10,43 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "input/scroll.h"
-#include "map/orientation.h"
 #include "scenario/editor.h"
 #include "scenario/editor_events.h"
 #include "scenario/editor_map.h"
 #include "scenario/map.h"
-#include "scenario/property.h"
-#include "sound/effect.h"
 #include "widget/minimap.h"
-#include "window/advisors.h"
-#include "window/build_menu.h"
-#include "window/city.h"
-#include "window/empire.h"
-#include "window/message_dialog.h"
-#include "window/message_list.h"
-#include "window/mission_briefing.h"
-#include "window/overlay_menu.h"
 
 #include "window/editor/attributes.h"
+#include "window/editor/build_menu.h"
 #include "window/editor/map.h"
 
 #define SIDEBAR_WIDTH 162
 #define SIDEBAR_BORDER ((screen_width() + 20) % 60)
 #define BOTTOM_BORDER ((screen_height() - 24) % 15)
 
-static void button_build(int submenu, int param2);
+static void button_build_tool(int tool, int param2);
+static void button_build_menu(int submenu, int param2);
 
 static void button_attributes(int show, int param2);
 
 static image_button buttons_build[] = {
     {7, 123, 71, 23, IB_NORMAL, 137, 45, button_attributes, button_none, 0, 0, 1},
     {84, 123, 71, 23, IB_NORMAL, 137, 48, button_attributes, button_none, 1, 0, 1},
-    {13, 267, 39, 26, IB_NORMAL, 137, 0, button_build, button_none, 0, 0, 1},
-    {63, 267, 39, 26, IB_NORMAL, 137, 3, button_build, button_none, 1, 0, 1},
-    {113, 267, 39, 26, IB_NORMAL, 137, 6, button_build, button_none, 2, 0, 1},
-    {13, 303, 39, 26, IB_BUILD, 137, 21, button_build, button_none, 7, 0, 1},
-    {63, 303, 39, 26, IB_NORMAL, 137, 12, button_build, button_none, 4, 0, 1},
-    {113, 303, 39, 26, IB_NORMAL, 137, 15, button_build, button_none, 5, 0, 1},
-    {13, 339, 39, 26, IB_NORMAL, 137, 18, button_build, button_none, 6, 0, 1},
-    {63, 339, 39, 26, IB_NORMAL, 137, 30, button_build, button_none, 10, 0, 1},
-    {113, 339, 39, 26, IB_BUILD, 137, 24, button_build, button_none, 8, 0, 1},
-    {13, 375, 39, 26, IB_NORMAL, 137, 9, button_build, button_none, 3, 0, 1},
-    {63, 375, 39, 26, IB_BUILD, 137, 39, button_build, button_none, 13, 0, 1},
-    {113, 375, 39, 26, IB_BUILD, 137, 42, button_build, button_none, 14, 0, 1},
-    {13, 411, 39, 26, IB_BUILD, 137, 33, button_build, button_none, 17, 0, 1},
-    {63, 411, 39, 26, IB_BUILD, 137, 27, button_build, button_none, 20, 0, 1},
-    {113, 411, 39, 26, IB_BUILD, 137, 51, button_build, button_none, 24, 0, 1},
+    {13, 267, 39, 26, IB_NORMAL, 137, 0, button_build_tool, button_none, TOOL_GRASS, 0, 1},
+    {63, 267, 39, 26, IB_NORMAL, 137, 3, button_build_tool, button_none, TOOL_TREES, 0, 1},
+    {113, 267, 39, 26, IB_NORMAL, 137, 6, button_build_tool, button_none, TOOL_WATER, 0, 1},
+    {13, 303, 39, 26, IB_BUILD, 137, 21, button_build_menu, button_none, MENU_ELEVATION, 0, 1},
+    {63, 303, 39, 26, IB_NORMAL, 137, 12, button_build_tool, button_none, TOOL_SCRUB, 0, 1},
+    {113, 303, 39, 26, IB_NORMAL, 137, 15, button_build_tool, button_none, TOOL_ROCKS, 0, 1},
+    {13, 339, 39, 26, IB_NORMAL, 137, 18, button_build_tool, button_none, TOOL_MEADOW, 0, 1},
+    {63, 339, 39, 26, IB_NORMAL, 137, 30, button_build_tool, button_none, TOOL_ROAD, 0, 1},
+    {113, 339, 39, 26, IB_BUILD, 137, 24, button_build_menu, button_none, MENU_BRUSH_SIZE, 0, 1},
+    {13, 375, 39, 26, IB_NORMAL, 137, 9, button_build_tool, button_none, TOOL_EARTHQUAKE_POINT, 0, 1},
+    {63, 375, 39, 26, IB_BUILD, 137, 39, button_build_menu, button_none, MENU_INVASION_POINTS, 0, 1},
+    {113, 375, 39, 26, IB_BUILD, 137, 42, button_build_menu, button_none, MENU_PEOPLE_POINTS, 0, 1},
+    {13, 411, 39, 26, IB_BUILD, 137, 33, button_build_menu, button_none, MENU_RIVER_POINTS, 0, 1},
+    {63, 411, 39, 26, IB_BUILD, 137, 27, button_build_menu, button_none, MENU_NATIVE_BUILDINGS, 0, 1},
+    {113, 411, 39, 26, IB_BUILD, 137, 51, button_build_menu, button_none, MENU_ANIMAL_POINTS, 0, 1},
 };
 
 static int get_x_offset(void)
@@ -88,19 +71,18 @@ static void draw_status(void)
     inner_panel_draw(x_offset + 1, 175, 10, 7);
     int text_offset = x_offset + 6;
 
-    // TODO selected tool + brush
-    int selected_tool = 0;
-    int brush_size = 0;
+    int selected_tool = editor_tool_type();
+    int brush_size = editor_tool_brush_size();
     lang_text_draw(49, selected_tool, text_offset, 178, FONT_NORMAL_WHITE);
     switch (selected_tool) {
-        case 0: // grass
-        case 1: // trees
-        case 2: // water
-        case 4: // scrub
-        case 5: // rocks
-        case 6: // meadow
-        case 11: // raise land
-        case 12: // lower land
+        case TOOL_GRASS:
+        case TOOL_TREES:
+        case TOOL_WATER:
+        case TOOL_SCRUB:
+        case TOOL_ROCKS:
+        case TOOL_MEADOW:
+        case TOOL_RAISE_LAND:
+        case TOOL_LOWER_LAND:
             lang_text_draw(48, brush_size, text_offset, 194, FONT_NORMAL_GREEN);
             break;
         default:
@@ -254,7 +236,17 @@ static void button_attributes(int show, int param2)
     }
 }
 
-static void button_build(int submenu, int param2)
+static void button_build_tool(int tool, int param2)
 {
-    // TODO implement
+    editor_tool_set_type(tool);
+    if (window_is(WINDOW_EDITOR_BUILD_MENU)) {
+        window_editor_map_show();
+    } else {
+        window_request_refresh();
+    }
+}
+
+static void button_build_menu(int submenu, int param2)
+{
+    window_editor_build_menu_show(submenu);
 }
