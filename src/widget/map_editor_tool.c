@@ -4,7 +4,9 @@
 #include "editor/tool.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
+#include "map/elevation.h"
 #include "map/figure.h"
+#include "map/grid.h"
 #include "map/terrain.h"
 
 #define MAX_TILES 4
@@ -110,10 +112,96 @@ static void draw_land_flag_point(const map_tile *tile, int x, int y)
     draw_flat_tile(x, y, blocked ? COLOR_MASK_RED : COLOR_MASK_GREEN);
 }
 
+static int is_edge(const map_tile *tile)
+{
+    return tile->x == 0 || tile->y == 0 || tile->x == map_grid_width() - 1 || tile->y == map_grid_height() - 1;
+}
+
+static void draw_land_edge_flag_point(const map_tile *tile, int x, int y)
+{
+    int blocked = map_terrain_is(tile->grid_offset, TERRAIN_NOT_CLEAR) || !is_edge(tile);
+    draw_flat_tile(x, y, blocked ? COLOR_MASK_RED : COLOR_MASK_GREEN);
+}
+
 static void draw_water_flag_point(const map_tile *tile, int x, int y)
 {
     int blocked = !map_terrain_is(tile->grid_offset, TERRAIN_WATER);
     draw_flat_tile(x, y, blocked ? COLOR_MASK_RED : COLOR_MASK_GREEN);
+}
+
+static void draw_water_edge_flag_point(const map_tile *tile, int x, int y)
+{
+    int blocked = !map_terrain_is(tile->grid_offset, TERRAIN_WATER) || !is_edge(tile) ||
+        map_terrain_count_directly_adjacent_with_type(tile->grid_offset, TERRAIN_WATER) < 4;
+    draw_flat_tile(x, y, blocked ? COLOR_MASK_RED : COLOR_MASK_GREEN);
+}
+
+// TODO move this code to another file if it's also used by placing the actual access ramp
+static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[4][6] = {
+    {162, 163, 324, 325, 0, 1},
+    {0, 162, -1, 161, 1, 163},
+    {0, 1, -162, -161, 162, 163},
+    {1, 163, 2, 164, 0, 162},
+};
+static int determine_access_ramp_orientation(const map_tile *tile, int *orientation_index)
+{
+    if (!map_grid_is_inside(tile->x, tile->y, 2)) {
+        return 0;
+    }
+    for (int orientation = 0; orientation < 4; orientation++) {
+        int right_tiles = 0;
+        int wrong_tiles = 0;
+        int top_elevation = 0;
+        for (int index = 0; index < 6; index++) {
+            int tile_offset = tile->grid_offset + ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[orientation][index];
+            int elevation = map_elevation_at(tile_offset);
+            if (index < 2) {
+                if (map_terrain_is(tile_offset, TERRAIN_ELEVATION)) {
+                    right_tiles++;
+                } else {
+                    wrong_tiles++;
+                }
+                top_elevation = elevation;
+            } else if (index < 4) {
+                if (map_terrain_is(tile_offset, TERRAIN_ELEVATION)) {
+                    if (elevation == top_elevation) {
+                        wrong_tiles++;
+                    } else {
+                        right_tiles++;
+                    }
+                } else if (elevation >= top_elevation) {
+                    right_tiles++;
+                } else {
+                    wrong_tiles++;
+                }
+            } else {
+                if (map_terrain_is(tile_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
+                    wrong_tiles++;
+                } else if (elevation >= top_elevation) {
+                    wrong_tiles++;
+                } else {
+                    right_tiles++;
+                }
+            }
+        }
+        if (right_tiles == 6) {
+            *orientation_index = orientation;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static void draw_access_ramp(const map_tile *tile, int x, int y)
+{
+    int orientation;
+    if (determine_access_ramp_orientation(tile, &orientation)) {
+        int image_id = image_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation;
+        draw_building_image(image_id, x, y);
+    } else {
+        int blocked[4] = {1, 1, 1, 1};
+        draw_partially_blocked(x, y, 4, blocked);
+    }
 }
 
 void map_editor_tool_draw(const map_tile *tile)
@@ -123,7 +211,6 @@ void map_editor_tool_draw(const map_tile *tile)
     }
 
     tool_type type = editor_tool_type();
-    
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
     switch (type) {
@@ -145,22 +232,22 @@ void map_editor_tool_draw(const map_tile *tile)
         case TOOL_ENTRY_POINT:
         case TOOL_EXIT_POINT:
         case TOOL_INVASION_POINT:
-            // TODO draw_land_edge_flag_point(tile, x, y);
+            draw_land_edge_flag_point(tile, x, y);
             break;
-            
+
         case TOOL_FISHING_POINT:
             draw_water_flag_point(tile, x, y);
             break;
 
         case TOOL_RIVER_ENTRY_POINT:
         case TOOL_RIVER_EXIT_POINT:
-            // TODO draw_water_edge_flag_point(tile, x, y);
+            draw_water_edge_flag_point(tile, x, y);
             break;
 
         case TOOL_ACCESS_RAMP:
-            // TODO draw_access_ramp(tile, x, y);
+            draw_access_ramp(tile, x, y);
             break;
-            
+
         case TOOL_GRASS:
         case TOOL_MEADOW:
         case TOOL_ROCKS:
