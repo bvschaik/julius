@@ -1,6 +1,7 @@
 #include "map_editor.h"
 
 #include "city/view.h"
+#include "editor/tool.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
@@ -11,6 +12,7 @@
 #include "map/property.h"
 #include "sound/city.h"
 #include "widget/city_figure.h"
+#include "widget/map_editor_tool.h"
 
 static struct {
     map_tile current_tile;
@@ -94,6 +96,7 @@ void widget_map_editor_draw(void)
     init_draw_context();
     city_view_foreach_map_tile(draw_footprint);
     city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
+    map_editor_tool_draw(&data.current_tile);
 
     graphics_reset_clip_rectangle();
 }
@@ -121,4 +124,8 @@ void widget_map_editor_handle_mouse(const mouse *m)
     map_tile *tile = &data.current_tile;
     scroll_map(scroll_get_direction(m));
     update_city_view_coords(m, tile);
+
+    if (m->right.went_down) {
+        editor_tool_deactivate();
+    }
 }
