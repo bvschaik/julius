@@ -1,25 +1,36 @@
 #include "tool.h"
 
 static struct {
-    int tool_type;
+    int active;
+    tool_type type;
     int id;
     int brush_size;
-} data;
+} data = { 0, TOOL_GRASS, 0, 3 };
 
-int editor_tool_type(void)
+tool_type editor_tool_type(void)
 {
-    return data.tool_type;
+    return data.type;
 }
 
-void editor_tool_set_type(int tool)
+int editor_tool_is_active(void)
 {
-    data.tool_type = tool;
-    data.id = 0;
+    return data.active;
 }
 
-void editor_tool_set_with_id(int tool, int id)
+void editor_tool_deactivate(void)
 {
-    data.tool_type = tool;
+    data.active = 0;
+}
+
+void editor_tool_set_type(tool_type type)
+{
+    editor_tool_set_with_id(type, 0);
+}
+
+void editor_tool_set_with_id(tool_type type, int id)
+{
+    data.active = 1;
+    data.type = type;
     data.id = id;
 }
 

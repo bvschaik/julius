@@ -72,7 +72,7 @@ static void draw_status(void)
     int text_offset = x_offset + 6;
 
     int selected_tool = editor_tool_type();
-    int brush_size = editor_tool_brush_size();
+    int brush_size = editor_tool_brush_size() - 1;
     lang_text_draw(49, selected_tool, text_offset, 178, FONT_NORMAL_WHITE);
     switch (selected_tool) {
         case TOOL_GRASS:
