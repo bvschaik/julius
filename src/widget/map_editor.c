@@ -1,4 +1,4 @@
-#include "city_editor.h"
+#include "map_editor.h"
 
 #include "city/view.h"
 #include "graphics/graphics.h"
@@ -87,7 +87,7 @@ static void set_city_clip_rectangle(void)
     graphics_set_clip_rectangle(x, y, width, height);
 }
 
-void widget_city_editor_draw(void)
+void widget_map_editor_draw(void)
 {
     set_city_clip_rectangle();
 
@@ -116,7 +116,7 @@ static void scroll_map(int direction)
     }
 }
 
-void widget_city_editor_handle_mouse(const mouse *m)
+void widget_map_editor_handle_mouse(const mouse *m)
 {
     map_tile *tile = &data.current_tile;
     scroll_map(scroll_get_direction(m));

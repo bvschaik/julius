@@ -9,7 +9,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "widget/city_editor.h"
+#include "widget/map_editor.h"
 #include "widget/sidebar_editor.h"
 #include "widget/top_menu_editor.h"
 #include "window/popup_dialog.h"
@@ -25,7 +25,7 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     widget_sidebar_editor_draw_foreground();
-    widget_city_editor_draw();
+    widget_map_editor_draw();
 }
 
 static void handle_mouse(const mouse *m)
@@ -36,7 +36,7 @@ static void handle_mouse(const mouse *m)
     if (widget_sidebar_editor_handle_mouse(m)) {
         return;
     }
-    widget_city_editor_handle_mouse(m);
+    widget_map_editor_handle_mouse(m);
 }
 
 void window_editor_map_draw_all(void)
@@ -52,7 +52,7 @@ void window_editor_map_draw_panels(void)
 
 void window_editor_map_draw(void)
 {
-    widget_city_editor_draw();
+    widget_map_editor_draw();
 }
 
 void window_editor_map_show(void)
