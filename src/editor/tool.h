@@ -1,6 +1,8 @@
 #ifndef EDITOR_TOOL_H
 #define EDITOR_TOOL_H
 
+#include "map/point.h"
+
 typedef enum {
     TOOL_GRASS = 0,
     TOOL_TREES = 1,
@@ -33,5 +35,12 @@ void editor_tool_set_with_id(tool_type tool, int id);
 
 int editor_tool_brush_size(void);
 void editor_tool_set_brush_size(int size);
+void editor_tool_foreach_brush_tile(void (*callback)(const void *data, int dx, int dy), const void *user_data);
+
+void editor_tool_start_use(const map_tile *tile);
+
+void editor_tool_update_use(const map_tile *tile);
+
+void editor_tool_end_use(const map_tile *tile);
 
 #endif // EDITOR_TOOL_H

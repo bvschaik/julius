@@ -2,6 +2,20 @@
 
 #include "scenario/data.h"
 
+void scenario_editor_set_entry_point(int x, int y)
+{
+    scenario.entry_point.x = x;
+    scenario.entry_point.y = y;
+    scenario.is_saved = 0;
+}
+
+void scenario_editor_set_exit_point(int x, int y)
+{
+    scenario.exit_point.x = x;
+    scenario.exit_point.y = y;
+    scenario.is_saved = 0;
+}
+
 void scenario_editor_clear_herd_points(void)
 {
     for (int i = 0; i < MAX_HERD_POINTS; i++) {

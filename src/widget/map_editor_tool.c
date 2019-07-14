@@ -1,6 +1,7 @@
 #include "map_editor_tool.h"
 
 #include "building/properties.h"
+#include "editor/tool.h"
 #include "editor/tool_restriction.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
@@ -79,19 +80,18 @@ static void draw_road(const map_tile *tile, int x, int y)
     }
 }
 
+static void draw_brush_tile(const void *data, int dx, int dy)
+{
+    view_tile *view = (view_tile *) data;
+    int view_dx, view_dy;
+    offset_to_view_offset(dx, dy, &view_dx, &view_dy);
+    draw_flat_tile(view->x + view_dx, view->y + view_dy, COLOR_MASK_GREEN);
+}
+
 static void draw_brush(const map_tile *tile, int x, int y)
 {
-    int brush_size = editor_tool_brush_size();
-    for (int dy = -brush_size + 1; dy < brush_size; dy++) {
-        for (int dx = -brush_size + 1; dx < brush_size; dx++) {
-            int steps = (dx < 0 ? -dx : dx) + (dy < 0 ? -dy : dy);
-            if (steps < brush_size) {
-                int view_dx, view_dy;
-                offset_to_view_offset(dx, dy, &view_dx, &view_dy);
-                draw_flat_tile(x + view_dx, y + view_dy, COLOR_MASK_GREEN);
-            }
-        }
-    }
+    view_tile vt = {x, y};
+    editor_tool_foreach_brush_tile(draw_brush_tile, &vt);
 }
 
 static void draw_access_ramp(const map_tile *tile, int x, int y)

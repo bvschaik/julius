@@ -121,10 +121,19 @@ static void scroll_map(int direction)
 
 void widget_map_editor_handle_mouse(const mouse *m)
 {
-    map_tile *tile = &data.current_tile;
     scroll_map(scroll_get_direction(m));
+    map_tile *tile = &data.current_tile;
     update_city_view_coords(m, tile);
 
+    if (m->left.went_down) {
+        editor_tool_start_use(tile);
+        editor_tool_update_use(tile);
+    } else if (m->left.is_down) {
+        editor_tool_update_use(tile);
+    }
+    if (m->left.went_up) {
+        editor_tool_end_use(tile);
+    }
     if (m->right.went_down) {
         editor_tool_deactivate();
     }
