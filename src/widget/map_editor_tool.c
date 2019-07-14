@@ -53,6 +53,13 @@ static void draw_building(const map_tile *tile, int x_view, int y_view, building
 
     if (blocked) {
         draw_partially_blocked(x_view, y_view, num_tiles, blocked_tiles);
+    } else if (editor_tool_is_in_use()) {
+        int image_id = image_group(GROUP_TERRAIN_OVERLAY);
+        for (int i = 0; i < num_tiles; i++) {
+            int x_offset = x_view + X_VIEW_OFFSETS[i];
+            int y_offset = y_view + Y_VIEW_OFFSETS[i];
+            image_draw_isometric_footprint(image_id, x_offset, y_offset, 0);
+        }
     } else {
         int image_id = image_group(props->image_group) + props->image_offset;
         draw_building_image(image_id, x_view, y_view);

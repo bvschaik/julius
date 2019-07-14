@@ -62,6 +62,11 @@ void editor_tool_foreach_brush_tile(void (*callback)(const void *data, int dx, i
     }
 }
 
+int editor_tool_is_in_use(void)
+{
+    return data.build_in_progress;
+}
+
 void editor_tool_start_use(const map_tile *tile)
 {
     data.build_in_progress = 1;
