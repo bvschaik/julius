@@ -1,5 +1,6 @@
 #include "tool_restriction.h"
 
+#include "city/warning.h"
 #include "map/elevation.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -14,40 +15,61 @@ static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[4][6] = {
     {1, 163, 2, 164, 0, 162},
 };
 
-static int is_clear_terrain(const map_tile *tile)
+static int is_clear_terrain(const map_tile *tile, int *warning)
 {
-    return !map_terrain_is(tile->grid_offset, TERRAIN_NOT_CLEAR ^ TERRAIN_ROAD);
+    int result = !map_terrain_is(tile->grid_offset, TERRAIN_NOT_CLEAR ^ TERRAIN_ROAD);
+    if (!result && warning) {
+        *warning = WARNING_EDITOR_CANNOT_PLACE;
+    }
+    return result;
 }
 
-static int is_edge(const map_tile *tile)
+static int is_edge(const map_tile *tile, int *warning)
 {
-    return tile->x == 0 || tile->y == 0 || tile->x == map_grid_width() - 1 || tile->y == map_grid_height() - 1;
+    int result = tile->x == 0 || tile->y == 0 || tile->x == map_grid_width() - 1 || tile->y == map_grid_height() - 1;
+    if (!result && warning) {
+        *warning = WARNING_EDITOR_NEED_MAP_EDGE;
+    }
+    return result;
 }
 
-static int is_deep_water(const map_tile *tile)
+static int is_water(const map_tile *tile, int *warning)
 {
-    return map_terrain_is(tile->grid_offset, TERRAIN_WATER) &&
+    int result = map_terrain_is(tile->grid_offset, TERRAIN_WATER);
+    if (!result && warning) {
+        *warning = WARNING_EDITOR_NEED_OPEN_WATER;
+    }
+    return result;
+}
+
+static int is_deep_water(const map_tile *tile, int *warning)
+{
+    int result = map_terrain_is(tile->grid_offset, TERRAIN_WATER) &&
         map_terrain_count_directly_adjacent_with_type(tile->grid_offset, TERRAIN_WATER) == 4;
+    if (!result && warning) {
+        *warning = WARNING_EDITOR_NEED_OPEN_WATER;
+    }
+    return result;
 }
 
-int editor_tool_can_place_flag(tool_type type, const map_tile *tile)
+int editor_tool_can_place_flag(tool_type type, const map_tile *tile, int *warning)
 {
     switch (type) {
         case TOOL_ENTRY_POINT:
         case TOOL_EXIT_POINT:
         case TOOL_INVASION_POINT:
-            return is_edge(tile) && is_clear_terrain(tile);
+            return is_clear_terrain(tile, warning) && is_edge(tile, warning);
 
         case TOOL_EARTHQUAKE_POINT:
         case TOOL_HERD_POINT:
-            return is_clear_terrain(tile);
+            return is_clear_terrain(tile, warning);
 
         case TOOL_FISHING_POINT:
-            return map_terrain_is(tile->grid_offset, TERRAIN_WATER);
+            return is_water(tile, warning);
 
         case TOOL_RIVER_ENTRY_POINT:
         case TOOL_RIVER_EXIT_POINT:
-            return is_edge(tile) && is_deep_water(tile);
+            return is_edge(tile, warning) && is_deep_water(tile, warning);
 
         default:
             return 0;

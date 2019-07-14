@@ -139,7 +139,7 @@ void map_editor_tool_draw(const map_tile *tile)
         case TOOL_INVASION_POINT:
         case TOOL_FISHING_POINT:
         case TOOL_HERD_POINT:
-            draw_map_flag(x, y, editor_tool_can_place_flag(type, tile));
+            draw_map_flag(x, y, editor_tool_can_place_flag(type, tile, 0));
             break;
 
         case TOOL_ACCESS_RAMP:

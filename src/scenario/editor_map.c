@@ -16,6 +16,20 @@ void scenario_editor_set_exit_point(int x, int y)
     scenario.is_saved = 0;
 }
 
+void scenario_editor_set_river_entry_point(int x, int y)
+{
+    scenario.river_entry_point.x = x;
+    scenario.river_entry_point.y = y;
+    scenario.is_saved = 0;
+}
+
+void scenario_editor_set_river_exit_point(int x, int y)
+{
+    scenario.river_exit_point.x = x;
+    scenario.river_exit_point.y = y;
+    scenario.is_saved = 0;
+}
+
 void scenario_editor_clear_herd_points(void)
 {
     for (int i = 0; i < MAX_HERD_POINTS; i++) {
@@ -93,4 +107,11 @@ void scenario_editor_set_invasion_point(int id, int x, int y)
 map_point scenario_editor_earthquake_point(void)
 {
     return scenario.earthquake_point;
+}
+
+void scenario_editor_set_earthquake_point(int x, int y)
+{
+    scenario.earthquake_point.x = x;
+    scenario.earthquake_point.y = y;
+    scenario.is_saved = 0;
 }
