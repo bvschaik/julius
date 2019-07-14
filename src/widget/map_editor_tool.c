@@ -1,27 +1,22 @@
 #include "map_editor_tool.h"
 
 #include "building/properties.h"
-#include "editor/tool.h"
+#include "editor/tool_restriction.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
-#include "map/elevation.h"
-#include "map/figure.h"
-#include "map/grid.h"
 #include "map/terrain.h"
 
 #define MAX_TILES 4
 
-static const int X_VIEW_OFFSETS[MAX_TILES] = {
-    0, -30, 30, 0
-};
+static const int X_VIEW_OFFSETS[MAX_TILES] = { 0, -30, 30, 0 };
+static const int Y_VIEW_OFFSETS[MAX_TILES] = { 0, 15, 15, 30 };
 
-static const int Y_VIEW_OFFSETS[MAX_TILES] = {
-    0, 15, 15, 30
-};
-
-static const int TILE_GRID_OFFSETS[MAX_TILES] = {
-    0, 162, 1, 163
-};
+static void offset_to_view_offset(int dx, int dy, int *view_dx, int *view_dy)
+{
+    // we're assuming map is always oriented north
+    *view_dx = (dx - dy) * 30;
+    *view_dy = (dx + dy) * 15;
+}
 
 static void draw_flat_tile(int x, int y, color_t color_mask)
 {
@@ -50,20 +45,11 @@ static void draw_building_image(int image_id, int x, int y)
 static void draw_building(const map_tile *tile, int x_view, int y_view, building_type type)
 {
     const building_properties *props = building_properties_for_type(type);
-    int grid_offset = tile->grid_offset;
 
-    int blocked = 0;
     int num_tiles = props->size * props->size;
     int blocked_tiles[MAX_TILES];
-    for (int i = 0; i < num_tiles; i++) {
-        int tile_offset = grid_offset + TILE_GRID_OFFSETS[i];
-        int forbidden_terrain = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
-        if (forbidden_terrain || map_has_figure_at(tile_offset)) {
-            blocked_tiles[i] = blocked = 1;
-        } else {
-            blocked_tiles[i] = 0;
-        }
-    }
+    int blocked = editor_tool_can_place_building(tile, num_tiles, blocked_tiles);
+
     if (blocked) {
         draw_partially_blocked(x_view, y_view, num_tiles, blocked_tiles);
     } else {
@@ -100,108 +86,29 @@ static void draw_brush(const map_tile *tile, int x, int y)
         for (int dx = -brush_size + 1; dx < brush_size; dx++) {
             int steps = (dx < 0 ? -dx : dx) + (dy < 0 ? -dy : dy);
             if (steps < brush_size) {
-                draw_flat_tile(x + (dx - dy) * 30, y + (dx + dy) * 15, COLOR_MASK_GREEN);
+                int view_dx, view_dy;
+                offset_to_view_offset(dx, dy, &view_dx, &view_dy);
+                draw_flat_tile(x + view_dx, y + view_dy, COLOR_MASK_GREEN);
             }
         }
     }
-}
-
-static void draw_land_flag_point(const map_tile *tile, int x, int y)
-{
-    int blocked = map_terrain_is(tile->grid_offset, TERRAIN_NOT_CLEAR);
-    draw_flat_tile(x, y, blocked ? COLOR_MASK_RED : COLOR_MASK_GREEN);
-}
-
-static int is_edge(const map_tile *tile)
-{
-    return tile->x == 0 || tile->y == 0 || tile->x == map_grid_width() - 1 || tile->y == map_grid_height() - 1;
-}
-
-static void draw_land_edge_flag_point(const map_tile *tile, int x, int y)
-{
-    int blocked = map_terrain_is(tile->grid_offset, TERRAIN_NOT_CLEAR) || !is_edge(tile);
-    draw_flat_tile(x, y, blocked ? COLOR_MASK_RED : COLOR_MASK_GREEN);
-}
-
-static void draw_water_flag_point(const map_tile *tile, int x, int y)
-{
-    int blocked = !map_terrain_is(tile->grid_offset, TERRAIN_WATER);
-    draw_flat_tile(x, y, blocked ? COLOR_MASK_RED : COLOR_MASK_GREEN);
-}
-
-static void draw_water_edge_flag_point(const map_tile *tile, int x, int y)
-{
-    int blocked = !map_terrain_is(tile->grid_offset, TERRAIN_WATER) || !is_edge(tile) ||
-        map_terrain_count_directly_adjacent_with_type(tile->grid_offset, TERRAIN_WATER) < 4;
-    draw_flat_tile(x, y, blocked ? COLOR_MASK_RED : COLOR_MASK_GREEN);
-}
-
-// TODO move this code to another file if it's also used by placing the actual access ramp
-static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[4][6] = {
-    {162, 163, 324, 325, 0, 1},
-    {0, 162, -1, 161, 1, 163},
-    {0, 1, -162, -161, 162, 163},
-    {1, 163, 2, 164, 0, 162},
-};
-static int determine_access_ramp_orientation(const map_tile *tile, int *orientation_index)
-{
-    if (!map_grid_is_inside(tile->x, tile->y, 2)) {
-        return 0;
-    }
-    for (int orientation = 0; orientation < 4; orientation++) {
-        int right_tiles = 0;
-        int wrong_tiles = 0;
-        int top_elevation = 0;
-        for (int index = 0; index < 6; index++) {
-            int tile_offset = tile->grid_offset + ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[orientation][index];
-            int elevation = map_elevation_at(tile_offset);
-            if (index < 2) {
-                if (map_terrain_is(tile_offset, TERRAIN_ELEVATION)) {
-                    right_tiles++;
-                } else {
-                    wrong_tiles++;
-                }
-                top_elevation = elevation;
-            } else if (index < 4) {
-                if (map_terrain_is(tile_offset, TERRAIN_ELEVATION)) {
-                    if (elevation == top_elevation) {
-                        wrong_tiles++;
-                    } else {
-                        right_tiles++;
-                    }
-                } else if (elevation >= top_elevation) {
-                    right_tiles++;
-                } else {
-                    wrong_tiles++;
-                }
-            } else {
-                if (map_terrain_is(tile_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
-                    wrong_tiles++;
-                } else if (elevation >= top_elevation) {
-                    wrong_tiles++;
-                } else {
-                    right_tiles++;
-                }
-            }
-        }
-        if (right_tiles == 6) {
-            *orientation_index = orientation;
-            return 1;
-        }
-    }
-    return 0;
 }
 
 static void draw_access_ramp(const map_tile *tile, int x, int y)
 {
     int orientation;
-    if (determine_access_ramp_orientation(tile, &orientation)) {
+    if (editor_tool_can_place_access_ramp(tile, &orientation)) {
         int image_id = image_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation;
         draw_building_image(image_id, x, y);
     } else {
         int blocked[4] = {1, 1, 1, 1};
         draw_partially_blocked(x, y, 4, blocked);
     }
+}
+
+static void draw_map_flag(int x, int y, int is_ok)
+{
+    draw_flat_tile(x, y, is_ok ? COLOR_MASK_GREEN : COLOR_MASK_RED);
 }
 
 void map_editor_tool_draw(const map_tile *tile)
@@ -225,23 +132,14 @@ void map_editor_tool_draw(const map_tile *tile)
             break;
 
         case TOOL_EARTHQUAKE_POINT:
-        case TOOL_HERD_POINT:
-            draw_land_flag_point(tile, x, y);
-            break;
-
         case TOOL_ENTRY_POINT:
         case TOOL_EXIT_POINT:
-        case TOOL_INVASION_POINT:
-            draw_land_edge_flag_point(tile, x, y);
-            break;
-
-        case TOOL_FISHING_POINT:
-            draw_water_flag_point(tile, x, y);
-            break;
-
         case TOOL_RIVER_ENTRY_POINT:
         case TOOL_RIVER_EXIT_POINT:
-            draw_water_edge_flag_point(tile, x, y);
+        case TOOL_INVASION_POINT:
+        case TOOL_FISHING_POINT:
+        case TOOL_HERD_POINT:
+            draw_map_flag(x, y, editor_tool_can_place_flag(type, tile));
             break;
 
         case TOOL_ACCESS_RAMP:

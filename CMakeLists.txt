@@ -503,6 +503,7 @@ set(WINDOW_FILES
 set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/editor.c
     ${PROJECT_SOURCE_DIR}/src/editor/tool.c
+    ${PROJECT_SOURCE_DIR}/src/editor/tool_restriction.c
 )
 
 set(MACOSX_FILES "")
