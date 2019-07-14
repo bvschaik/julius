@@ -1,6 +1,11 @@
 #include "tool.h"
 
+#include "core/image.h"
+#include "core/image_group_editor.h"
+#include "core/random.h"
 #include "editor/tool_restriction.h"
+#include "map/building_tiles.h"
+#include "map/terrain.h"
 #include "scenario/editor_events.h"
 #include "scenario/editor_map.h"
 #include "city/warning.h"
@@ -110,6 +115,34 @@ static void place_flag_with_id(const map_tile *tile, void (*update)(int id, int 
     }
 }
 
+static void place_building(const map_tile *tile)
+{
+    int image_id;
+    int size;
+    switch (data.type) {
+        case TOOL_NATIVE_HUT:
+            image_id = image_group(GROUP_EDITOR_BUILDING_NATIVE) + (random_byte() & 1);
+            size = 1;
+            break;
+        case TOOL_NATIVE_CENTER:
+            image_id = image_group(GROUP_EDITOR_BUILDING_NATIVE) + 2;
+            size = 2;
+            break;
+        case TOOL_NATIVE_FIELD:
+            image_id = image_group(GROUP_EDITOR_BUILDING_CROPS);
+            size = 1;
+            break;
+        default:
+            return;
+    }
+
+    if (editor_tool_can_place_building(tile, size * size, 0)) {
+        map_building_tiles_add(0, tile->x, tile->y, size, image_id, TERRAIN_BUILDING);
+    } else {
+        city_warning_show(WARNING_EDITOR_CANNOT_PLACE);
+    }
+}
+
 void editor_tool_end_use(const map_tile *tile)
 {
     if (!data.build_in_progress) {
@@ -140,6 +173,11 @@ void editor_tool_end_use(const map_tile *tile)
             break;
         case TOOL_HERD_POINT:
             place_flag_with_id(tile, scenario_editor_set_herd_point);
+            break;
+        case TOOL_NATIVE_CENTER:
+        case TOOL_NATIVE_FIELD:
+        case TOOL_NATIVE_HUT:
+            place_building(tile);
             break;
     }
 }

@@ -50,7 +50,7 @@ static void draw_building(const map_tile *tile, int x_view, int y_view, building
 
     int num_tiles = props->size * props->size;
     int blocked_tiles[MAX_TILES];
-    int blocked = editor_tool_can_place_building(tile, num_tiles, blocked_tiles);
+    int blocked = !editor_tool_can_place_building(tile, num_tiles, blocked_tiles);
 
     if (blocked) {
         draw_partially_blocked(x_view, y_view, num_tiles, blocked_tiles);
