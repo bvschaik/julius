@@ -1,6 +1,7 @@
 #include "map_editor_tool.h"
 
 #include "building/properties.h"
+#include "core/image_group_editor.h"
 #include "editor/tool.h"
 #include "editor/tool_restriction.h"
 #include "graphics/image.h"
@@ -61,7 +62,12 @@ static void draw_building(const map_tile *tile, int x_view, int y_view, building
             image_draw_isometric_footprint(image_id, x_offset, y_offset, 0);
         }
     } else {
-        int image_id = image_group(props->image_group) + props->image_offset;
+        int image_id;
+        if (type == BUILDING_NATIVE_CROPS) {
+            image_id = image_group(GROUP_EDITOR_BUILDING_CROPS);
+        } else {
+            image_id = image_group(props->image_group) + props->image_offset;
+        }
         draw_building_image(image_id, x_view, y_view);
     }
 }
