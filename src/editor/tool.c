@@ -5,12 +5,17 @@
 #include "core/random.h"
 #include "editor/tool_restriction.h"
 #include "map/building_tiles.h"
+#include "map/elevation.h"
 #include "map/grid.h"
+#include "map/image_context.h"
 #include "map/tiles.h"
 #include "map/terrain.h"
 #include "scenario/editor_events.h"
 #include "scenario/editor_map.h"
 #include "city/warning.h"
+
+#define TERRAIN_PAINT_MASK ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING |\
+                            TERRAIN_SCRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW)
 
 static struct {
     int active;
@@ -113,8 +118,20 @@ static void add_terrain(const void *tile_data, int dx, int dy)
     switch (data.type) {
         case TOOL_TREES:
             if (!(terrain & TERRAIN_TREE)) {
+                terrain &= TERRAIN_PAINT_MASK;
                 terrain |= TERRAIN_TREE;
-                terrain &= ~(TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SCRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW);
+            }
+            break;
+        case TOOL_ROCKS:
+            if (!(terrain & TERRAIN_ROCK)) {
+                terrain &= TERRAIN_PAINT_MASK;
+                terrain |= TERRAIN_ROCK;
+            }
+            break;
+        case TOOL_WATER:
+            if (!map_elevation_at(grid_offset) && !(terrain & TERRAIN_WATER)) {
+                terrain &= TERRAIN_PAINT_MASK;
+                terrain |= TERRAIN_WATER;
             }
             break;
     }
@@ -142,10 +159,16 @@ void editor_tool_update_use(const map_tile *tile)
     int y_max = tile->y + data.brush_size;
     switch (data.type) {
         case TOOL_TREES:
-            // terrain_context_clear(water);
+            map_image_context_reset_water();
             map_tiles_update_region_water(x_min, y_min, x_max, y_max);
             map_tiles_update_all_rocks();
             map_tiles_update_region_trees(x_min, y_min, x_max, y_max);
+            break;
+        case TOOL_WATER:
+        case TOOL_ROCKS:
+            map_image_context_reset_water();
+            map_tiles_update_all_rocks();
+            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
             break;
     }
 }
