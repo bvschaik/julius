@@ -1,5 +1,7 @@
 #include "editor_map.h"
 
+#include "figuretype/water.h"
+#include "map/routing_terrain.h"
 #include "scenario/data.h"
 
 void scenario_editor_set_entry_point(int x, int y)
@@ -16,11 +18,18 @@ void scenario_editor_set_exit_point(int x, int y)
     scenario.is_saved = 0;
 }
 
+static void update_river(void)
+{
+    figure_create_flotsam();
+    map_routing_update_water();
+}
+
 void scenario_editor_set_river_entry_point(int x, int y)
 {
     scenario.river_entry_point.x = x;
     scenario.river_entry_point.y = y;
     scenario.is_saved = 0;
+    update_river();
 }
 
 void scenario_editor_set_river_exit_point(int x, int y)
@@ -28,6 +37,7 @@ void scenario_editor_set_river_exit_point(int x, int y)
     scenario.river_exit_point.x = x;
     scenario.river_exit_point.y = y;
     scenario.is_saved = 0;
+    update_river();
 }
 
 void scenario_editor_clear_herd_points(void)
