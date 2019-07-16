@@ -116,6 +116,9 @@ static void add_terrain(const void *tile_data, int dx, int dy)
         terrain = map_terrain_get(grid_offset);
     }
     switch (data.type) {
+        case TOOL_GRASS:
+            terrain &= TERRAIN_PAINT_MASK;
+            break;
         case TOOL_TREES:
             if (!(terrain & TERRAIN_TREE)) {
                 terrain &= TERRAIN_PAINT_MASK;
@@ -138,6 +141,12 @@ static void add_terrain(const void *tile_data, int dx, int dy)
             if (!(terrain & TERRAIN_SHRUB)) {
                 terrain &= TERRAIN_PAINT_MASK;
                 terrain |= TERRAIN_SHRUB;
+            }
+            break;
+        case TOOL_MEADOW:
+            if (!(terrain & TERRAIN_MEADOW)) {
+                terrain &= TERRAIN_PAINT_MASK;
+                terrain |= TERRAIN_MEADOW;
             }
             break;
     }
@@ -164,6 +173,12 @@ void editor_tool_update_use(const map_tile *tile)
     int y_min = tile->y - data.brush_size;
     int y_max = tile->y + data.brush_size;
     switch (data.type) {
+        case TOOL_GRASS:
+            map_image_context_reset_water();
+            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_update_all_rocks();
+            map_tiles_update_region_empty_land(x_min, y_min, x_max, y_max);
+            break;
         case TOOL_TREES:
             map_image_context_reset_water();
             map_tiles_update_region_water(x_min, y_min, x_max, y_max);
@@ -181,6 +196,12 @@ void editor_tool_update_use(const map_tile *tile)
             map_tiles_update_region_water(x_min, y_min, x_max, y_max);
             map_tiles_update_all_rocks();
             map_tiles_update_region_shrub(x_min, y_min, x_max, y_max);
+            break;
+        case TOOL_MEADOW:
+            map_image_context_reset_water();
+            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_update_all_rocks();
+            map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
             break;
     }
 }
