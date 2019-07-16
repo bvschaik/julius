@@ -312,6 +312,11 @@ void map_image_context_reset_water(void)
     clear_current_offset(context_pointers[CONTEXT_WATER].context, context_pointers[CONTEXT_WATER].size);
 }
 
+void map_image_context_reset_elevation(void)
+{
+    clear_current_offset(context_pointers[CONTEXT_ELEVATION].context, context_pointers[CONTEXT_ELEVATION].size);
+}
+
 static int context_matches_tiles(const struct terrain_image_context *context, const int tiles[MAX_TILES])
 {
     for (int i = 0; i < MAX_TILES; i++) {

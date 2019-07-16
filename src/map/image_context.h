@@ -10,6 +10,7 @@ typedef struct {
 
 void map_image_context_init(void);
 void map_image_context_reset_water(void);
+void map_image_context_reset_elevation(void);
 
 const terrain_image *map_image_context_get_elevation(int grid_offset, int elevation);
 const terrain_image *map_image_context_get_earthquake(int grid_offset);

@@ -8,6 +8,7 @@
 #include "map/elevation.h"
 #include "map/grid.h"
 #include "map/image_context.h"
+#include "map/property.h"
 #include "map/tiles.h"
 #include "map/terrain.h"
 #include "scenario/editor_events.h"
@@ -24,6 +25,7 @@ static struct {
     int id;
     int brush_size;
     int build_in_progress;
+    int start_elevation;
 } data = { 0, TOOL_GRASS, 0, 3, 0 };
 
 tool_type editor_tool_type(void)
@@ -63,13 +65,21 @@ void editor_tool_set_brush_size(int size)
     data.brush_size = size;
 }
 
-void editor_tool_foreach_brush_tile(void (*callback)(const void *data, int dx, int dy), const void *user_data)
+void editor_tool_foreach_brush_tile(void (*callback)(const void *user_data, int dx, int dy), const void *user_data)
 {
-    for (int dy = -data.brush_size + 1; dy < data.brush_size; dy++) {
-        for (int dx = -data.brush_size + 1; dx < data.brush_size; dx++) {
-            int steps = (dx < 0 ? -dx : dx) + (dy < 0 ? -dy : dy);
-            if (steps < data.brush_size) {
+    if (data.type == TOOL_RAISE_LAND || data.type == TOOL_LOWER_LAND) {
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
                 callback(user_data, dx, dy);
+            }
+        }
+    } else {
+        for (int dy = -data.brush_size + 1; dy < data.brush_size; dy++) {
+            for (int dx = -data.brush_size + 1; dx < data.brush_size; dx++) {
+                int steps = (dx < 0 ? -dx : dx) + (dy < 0 ? -dy : dy);
+                if (steps < data.brush_size) {
+                    callback(user_data, dx, dy);
+                }
             }
         }
     }
@@ -83,6 +93,7 @@ int editor_tool_is_in_use(void)
 void editor_tool_start_use(const map_tile *tile)
 {
     data.build_in_progress = 1;
+    data.start_elevation = map_elevation_at(tile->grid_offset);
 }
 
 static int is_brush(tool_type type)
@@ -94,12 +105,25 @@ static int is_brush(tool_type type)
         case TOOL_SHRUB:
         case TOOL_ROCKS:
         case TOOL_MEADOW:
-        //case TOOL_RAISE_LAND:
-        //case TOOL_LOWER_LAND:
+        case TOOL_RAISE_LAND:
+        case TOOL_LOWER_LAND:
             return 1;
         default:
             return 0;
     }
+}
+
+static int raise_land_tile(int x, int y, int grid_offset, int terrain)
+{
+    int elevation = map_elevation_at(grid_offset);
+    if (elevation < 5 && elevation == data.start_elevation) {
+        if (!(terrain & (TERRAIN_ACCESS_RAMP | TERRAIN_ELEVATION))) {
+            map_property_set_multi_tile_size(grid_offset, 1);
+            map_elevation_set(grid_offset, elevation + 1);
+            terrain &= ~(TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_GARDEN | TERRAIN_ROAD);
+        }
+    }
+    return terrain;
 }
 
 static void add_terrain(const void *tile_data, int dx, int dy)
@@ -149,6 +173,11 @@ static void add_terrain(const void *tile_data, int dx, int dy)
                 terrain &= TERRAIN_PAINT_MASK;
                 terrain |= TERRAIN_MEADOW;
             }
+            break;
+        case TOOL_RAISE_LAND:
+            terrain = raise_land_tile(x, y, grid_offset, terrain);
+            break;
+        default:
             break;
     }
     map_terrain_set(grid_offset, terrain);
@@ -204,6 +233,20 @@ void editor_tool_update_use(const map_tile *tile)
             map_tiles_update_region_water(x_min, y_min, x_max, y_max);
             map_tiles_update_all_rocks();
             map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
+            break;
+        case TOOL_RAISE_LAND:
+        case TOOL_LOWER_LAND:
+            map_image_context_reset_water();
+            map_image_context_reset_elevation();
+            map_tiles_update_all_elevation();
+            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_update_region_trees(x_min, y_min, x_max, y_max);
+            map_tiles_update_region_shrub(x_min, y_min, x_max, y_max);
+            map_tiles_update_all_rocks();
+            map_tiles_update_region_empty_land(x_min, y_min, x_max, y_max);
+            map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
+            break;
+        default:
             break;
     }
 
