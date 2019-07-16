@@ -9,6 +9,8 @@ void map_elevation_set(int grid_offset, int value);
 
 void map_elevation_clear(void);
 
+void map_elevation_remove_cliffs(void);
+
 void map_elevation_save_state(buffer *buf);
 
 void map_elevation_load_state(buffer *buf);

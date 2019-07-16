@@ -126,6 +126,24 @@ static int raise_land_tile(int x, int y, int grid_offset, int terrain)
     return terrain;
 }
 
+static int lower_land_tile(int x, int y, int grid_offset, int terrain)
+{
+    if (terrain & TERRAIN_ACCESS_RAMP) {
+        terrain |= TERRAIN_ELEVATION;
+        terrain &= ~(TERRAIN_ACCESS_RAMP);
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_set_multi_tile_xy(grid_offset, 0, 0, 1);
+    }
+    int elevation = map_elevation_at(grid_offset);
+    if (elevation <= 0) {
+        terrain &= ~(TERRAIN_ELEVATION);
+    } else if (elevation == data.start_elevation) {
+        terrain &= ~(TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP);
+        map_elevation_set(grid_offset, elevation - 1);
+    }
+    return terrain;
+}
+
 static void add_terrain(const void *tile_data, int dx, int dy)
 {
     const map_tile *tile = (const map_tile *) tile_data;
@@ -176,6 +194,9 @@ static void add_terrain(const void *tile_data, int dx, int dy)
             break;
         case TOOL_RAISE_LAND:
             terrain = raise_land_tile(x, y, grid_offset, terrain);
+            break;
+        case TOOL_LOWER_LAND:
+            terrain = lower_land_tile(x, y, grid_offset, terrain);
             break;
         default:
             break;
@@ -315,6 +336,19 @@ static void place_building(const map_tile *tile)
     }
 }
 
+
+static void update_terrain_after_elevation_changes(void)
+{
+    map_elevation_remove_cliffs();
+
+    map_image_context_reset_water();
+    map_image_context_reset_elevation();
+    map_tiles_update_all_elevation();
+    map_tiles_update_all_rocks();
+    map_tiles_update_all_empty_land();
+    map_tiles_update_all_meadow();
+}
+
 void editor_tool_end_use(const map_tile *tile)
 {
     if (!data.build_in_progress) {
@@ -350,6 +384,10 @@ void editor_tool_end_use(const map_tile *tile)
         case TOOL_NATIVE_FIELD:
         case TOOL_NATIVE_HUT:
             place_building(tile);
+            break;
+        case TOOL_RAISE_LAND:
+        case TOOL_LOWER_LAND:
+            update_terrain_after_elevation_changes();
             break;
         // TODO TOOL_ACCESS_RAMP, TOOL_ROAD
         default:
