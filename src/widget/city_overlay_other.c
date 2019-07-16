@@ -249,7 +249,7 @@ const city_overlay *city_overlay_for_tax_income(void)
 static int terrain_on_water_overlay(void)
 {
     return
-        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SCRUB |
+        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB |
         TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_AQUEDUCT | TERRAIN_ELEVATION |
         TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
@@ -345,7 +345,7 @@ static int terrain_on_desirability_overlay(void)
 {
     return
         TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
-        TERRAIN_SCRUB | TERRAIN_GARDEN | TERRAIN_ROAD |
+        TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD |
         TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
 

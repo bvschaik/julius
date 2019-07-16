@@ -190,8 +190,8 @@ static void init(int grid_offset)
         }
     } else if ((map_terrain_get(grid_offset) & (TERRAIN_WATER|TERRAIN_BUILDING)) == TERRAIN_WATER) {
         context.terrain_type = TERRAIN_INFO_WATER;
-    } else if (map_terrain_is(grid_offset, TERRAIN_SCRUB)) {
-        context.terrain_type = TERRAIN_INFO_SCRUB;
+    } else if (map_terrain_is(grid_offset, TERRAIN_SHRUB)) {
+        context.terrain_type = TERRAIN_INFO_SHRUB;
     } else if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
         context.terrain_type = TERRAIN_INFO_GARDEN;
     } else if ((map_terrain_get(grid_offset) & (TERRAIN_ROAD|TERRAIN_BUILDING)) == TERRAIN_ROAD) {

@@ -36,7 +36,7 @@ static image_button buttons_build[] = {
     {63, 267, 39, 26, IB_NORMAL, 137, 3, button_build_tool, button_none, TOOL_TREES, 0, 1},
     {113, 267, 39, 26, IB_NORMAL, 137, 6, button_build_tool, button_none, TOOL_WATER, 0, 1},
     {13, 303, 39, 26, IB_BUILD, 137, 21, button_build_menu, button_none, MENU_ELEVATION, 0, 1},
-    {63, 303, 39, 26, IB_NORMAL, 137, 12, button_build_tool, button_none, TOOL_SCRUB, 0, 1},
+    {63, 303, 39, 26, IB_NORMAL, 137, 12, button_build_tool, button_none, TOOL_SHRUB, 0, 1},
     {113, 303, 39, 26, IB_NORMAL, 137, 15, button_build_tool, button_none, TOOL_ROCKS, 0, 1},
     {13, 339, 39, 26, IB_NORMAL, 137, 18, button_build_tool, button_none, TOOL_MEADOW, 0, 1},
     {63, 339, 39, 26, IB_NORMAL, 137, 30, button_build_tool, button_none, TOOL_ROAD, 0, 1},
@@ -78,7 +78,7 @@ static void draw_status(void)
         case TOOL_GRASS:
         case TOOL_TREES:
         case TOOL_WATER:
-        case TOOL_SCRUB:
+        case TOOL_SHRUB:
         case TOOL_ROCKS:
         case TOOL_MEADOW:
         case TOOL_RAISE_LAND:

@@ -173,7 +173,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         int image_id;
         if (terrain & TERRAIN_WATER) {
             image_id = image_group(GROUP_MINIMAP_WATER) + (rand & 3);
-        } else if (terrain & TERRAIN_SCRUB) {
+        } else if (terrain & TERRAIN_SHRUB) {
             image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
         } else if (terrain & TERRAIN_TREE) {
             image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);

@@ -15,7 +15,7 @@
 #include "city/warning.h"
 
 #define TERRAIN_PAINT_MASK ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING |\
-                            TERRAIN_SCRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW)
+                            TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW)
 
 static struct {
     int active;
@@ -90,7 +90,7 @@ static int is_brush(tool_type type)
         case TOOL_GRASS:
         case TOOL_TREES:
         case TOOL_WATER:
-        case TOOL_SCRUB:
+        case TOOL_SHRUB:
         case TOOL_ROCKS:
         case TOOL_MEADOW:
         //case TOOL_RAISE_LAND:
@@ -134,10 +134,10 @@ static void add_terrain(const void *tile_data, int dx, int dy)
                 terrain |= TERRAIN_WATER;
             }
             break;
-        case TOOL_SCRUB:
-            if (!(terrain & TERRAIN_SCRUB)) {
+        case TOOL_SHRUB:
+            if (!(terrain & TERRAIN_SHRUB)) {
                 terrain &= TERRAIN_PAINT_MASK;
-                terrain |= TERRAIN_SCRUB;
+                terrain |= TERRAIN_SHRUB;
             }
             break;
     }
@@ -176,7 +176,7 @@ void editor_tool_update_use(const map_tile *tile)
             map_tiles_update_all_rocks();
             map_tiles_update_region_water(x_min, y_min, x_max, y_max);
             break;
-        case TOOL_SCRUB:
+        case TOOL_SHRUB:
             map_image_context_reset_water();
             map_tiles_update_region_water(x_min, y_min, x_max, y_max);
             map_tiles_update_all_rocks();

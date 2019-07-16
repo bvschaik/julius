@@ -166,7 +166,7 @@ void map_tiles_update_region_trees(int x_min, int y_min, int x_max, int y_max)
 
 static void set_shrub_image(int x, int y, int grid_offset)
 {
-    if (map_terrain_is(grid_offset, TERRAIN_SCRUB) &&
+    if (map_terrain_is(grid_offset, TERRAIN_SHRUB) &&
         !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
         map_image_set(grid_offset, image_group(GROUP_TERRAIN_SHRUB) + (map_random_get(grid_offset) & 7));
         map_property_set_multi_tile_size(grid_offset, 1);
@@ -1093,7 +1093,7 @@ static void set_elevation_image(int x, int y, int grid_offset)
             int terrain = map_terrain_get(grid_offset);
             if (!(terrain & TERRAIN_BUILDING)) {
                 map_property_set_multi_tile_xy(grid_offset, 0, 0, 1);
-                if (terrain & TERRAIN_SCRUB) {
+                if (terrain & TERRAIN_SHRUB) {
                     map_image_set(grid_offset, image_group(GROUP_TERRAIN_SHRUB) + (map_random_get(grid_offset) & 7));
                 } else if (terrain & TERRAIN_TREE) {
                     map_image_set(grid_offset, image_group(GROUP_TERRAIN_TREE) + (map_random_get(grid_offset) & 7));

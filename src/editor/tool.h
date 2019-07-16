@@ -8,7 +8,7 @@ typedef enum {
     TOOL_TREES = 1,
     TOOL_WATER = 2,
     TOOL_EARTHQUAKE_POINT = 3,
-    TOOL_SCRUB = 4,
+    TOOL_SHRUB = 4,
     TOOL_ROCKS = 5,
     TOOL_MEADOW = 6,
     TOOL_ACCESS_RAMP = 9,
