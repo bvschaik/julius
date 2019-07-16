@@ -13,6 +13,7 @@
 #include "scenario/editor_events.h"
 #include "scenario/editor_map.h"
 #include "city/warning.h"
+#include "widget/minimap.h"
 
 #define TERRAIN_PAINT_MASK ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING |\
                             TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW)
@@ -204,6 +205,8 @@ void editor_tool_update_use(const map_tile *tile)
             map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
             break;
     }
+
+    widget_minimap_invalidate();
 }
 
 static void place_earthquake_flag(const map_tile *tile)
