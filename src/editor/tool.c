@@ -179,6 +179,7 @@ void editor_tool_update_use(const map_tile *tile)
             map_tiles_update_region_water(x_min, y_min, x_max, y_max);
             map_tiles_update_all_rocks();
             map_tiles_update_region_empty_land(x_min, y_min, x_max, y_max);
+            map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
             break;
         case TOOL_TREES:
             map_image_context_reset_water();
