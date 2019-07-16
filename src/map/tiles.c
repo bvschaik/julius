@@ -150,12 +150,31 @@ void map_tiles_update_all_rocks(void)
     foreach_map_tile(set_rock_image);
 }
 
+static void update_tree_image(int x, int y, int grid_offset)
+{
+    if (map_terrain_is(grid_offset, TERRAIN_TREE) &&
+        !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
+        int image_id = image_group(GROUP_TERRAIN_TREE) + (map_random_get(grid_offset) & 7);
+        if (map_terrain_has_only_rocks_trees_in_ring(x, y, 3)) {
+            map_image_set(grid_offset, image_id + 24);
+        } else if (map_terrain_has_only_rocks_trees_in_ring(x, y, 2)) {
+            map_image_set(grid_offset, image_id + 16);
+        } else if (map_terrain_has_only_rocks_trees_in_ring(x, y, 1)) {
+            map_image_set(grid_offset, image_id + 8);
+        } else {
+            map_image_set(grid_offset, image_id);
+        }
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_mark_draw_tile(grid_offset);
+        map_aqueduct_set(grid_offset, 0);
+    }
+}
+
 static void set_tree_image(int x, int y, int grid_offset)
 {
     if (map_terrain_is(grid_offset, TERRAIN_TREE) &&
         !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
-        // TODO more sophisticated algorithm
-        map_image_set(grid_offset, image_group(GROUP_TERRAIN_TREE));
+        foreach_region_tile(x - 1, y - 1, x + 1, y + 1, update_tree_image);
     }
 }
 

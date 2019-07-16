@@ -178,6 +178,22 @@ int map_terrain_all_tiles_in_radius_are(int x, int y, int size, int radius, int 
     return 1;
 }
 
+int map_terrain_has_only_rocks_trees_in_ring(int x, int y, int distance)
+{
+    int start = map_ring_start(1, distance);
+    int end = map_ring_end(1, distance);
+    int base_offset = map_grid_offset(x, y);
+    for (int i = start; i < end; i++) {
+        const ring_tile *tile = map_ring_tile(i);
+        if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
+            if (!map_terrain_is(base_offset + tile->grid_offset, TERRAIN_ROCK | TERRAIN_TREE)) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
 int map_terrain_has_only_meadow_in_ring(int x, int y, int distance)
 {
     int start = map_ring_start(1, distance);
