@@ -134,6 +134,12 @@ static void add_terrain(const void *tile_data, int dx, int dy)
                 terrain |= TERRAIN_WATER;
             }
             break;
+        case TOOL_SCRUB:
+            if (!(terrain & TERRAIN_SCRUB)) {
+                terrain &= TERRAIN_PAINT_MASK;
+                terrain |= TERRAIN_SCRUB;
+            }
+            break;
     }
     map_terrain_set(grid_offset, terrain);
 }
@@ -169,6 +175,12 @@ void editor_tool_update_use(const map_tile *tile)
             map_image_context_reset_water();
             map_tiles_update_all_rocks();
             map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            break;
+        case TOOL_SCRUB:
+            map_image_context_reset_water();
+            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_update_all_rocks();
+            map_tiles_update_region_shrub(x_min, y_min, x_max, y_max);
             break;
     }
 }
