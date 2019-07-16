@@ -150,6 +150,20 @@ void map_tiles_update_all_rocks(void)
     foreach_map_tile(set_rock_image);
 }
 
+static void set_tree_image(int x, int y, int grid_offset)
+{
+    if (map_terrain_is(grid_offset, TERRAIN_TREE) &&
+        !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
+        // TODO more sophisticated algorithm
+        map_image_set(grid_offset, image_group(GROUP_TERRAIN_TREE));
+    }
+}
+
+void map_tiles_update_region_trees(int x_min, int y_min, int x_max, int y_max)
+{
+    foreach_region_tile(x_min, y_min, x_max, y_max, set_tree_image);
+}
+
 static void clear_garden_image(int x, int y, int grid_offset)
 {
     if (map_terrain_is(grid_offset, TERRAIN_GARDEN) &&
@@ -841,6 +855,11 @@ static void update_water_tile(int x, int y, int grid_offset)
 void map_tiles_update_all_water(void)
 {
     foreach_map_tile(update_water_tile);
+}
+
+void map_tiles_update_region_water(int x_min, int y_min, int x_max, int y_max)
+{
+    foreach_region_tile(x_min, y_min, x_max, y_max, update_water_tile);
 }
 
 void map_tiles_set_water(int x, int y)

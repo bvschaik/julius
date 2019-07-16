@@ -5,6 +5,8 @@
 #include "core/random.h"
 #include "editor/tool_restriction.h"
 #include "map/building_tiles.h"
+#include "map/grid.h"
+#include "map/tiles.h"
 #include "map/terrain.h"
 #include "scenario/editor_events.h"
 #include "scenario/editor_map.h"
@@ -77,8 +79,75 @@ void editor_tool_start_use(const map_tile *tile)
     data.build_in_progress = 1;
 }
 
+static int is_brush(tool_type type)
+{
+    switch (type) {
+        case TOOL_GRASS:
+        case TOOL_TREES:
+        case TOOL_WATER:
+        case TOOL_SCRUB:
+        case TOOL_ROCKS:
+        case TOOL_MEADOW:
+        //case TOOL_RAISE_LAND:
+        //case TOOL_LOWER_LAND:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+static void add_terrain(const void *tile_data, int dx, int dy)
+{
+    const map_tile *tile = (const map_tile *) tile_data;
+    int x = tile->x + dx;
+    int y = tile->y + dy;
+    if (!map_grid_is_inside(x, y, 1)) {
+        return;
+    }
+    int grid_offset = tile->grid_offset + map_grid_delta(dx, dy);
+    int terrain = map_terrain_get(grid_offset);
+    if (terrain & TERRAIN_BUILDING) {
+        map_building_tiles_remove(0, x, y);
+        terrain = map_terrain_get(grid_offset);
+    }
+    switch (data.type) {
+        case TOOL_TREES:
+            if (!(terrain & TERRAIN_TREE)) {
+                terrain |= TERRAIN_TREE;
+                terrain &= ~(TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SCRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW);
+            }
+            break;
+    }
+    map_terrain_set(grid_offset, terrain);
+}
+
 void editor_tool_update_use(const map_tile *tile)
 {
+    if (!data.build_in_progress) {
+        return;
+    }
+    if (data.type == TOOL_ROAD) {
+        // TODO
+        return;
+    }
+    if (!is_brush(data.type)) {
+        return;
+    }
+
+    editor_tool_foreach_brush_tile(add_terrain, tile);
+
+    int x_min = tile->x - data.brush_size;
+    int x_max = tile->x + data.brush_size;
+    int y_min = tile->y - data.brush_size;
+    int y_max = tile->y + data.brush_size;
+    switch (data.type) {
+        case TOOL_TREES:
+            // terrain_context_clear(water);
+            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_update_all_rocks();
+            map_tiles_update_region_trees(x_min, y_min, x_max, y_max);
+            break;
+    }
 }
 
 static void place_earthquake_flag(const map_tile *tile)
@@ -178,6 +247,9 @@ void editor_tool_end_use(const map_tile *tile)
         case TOOL_NATIVE_FIELD:
         case TOOL_NATIVE_HUT:
             place_building(tile);
+            break;
+        // TODO TOOL_ACCESS_RAMP, TOOL_ROAD
+        default:
             break;
     }
 }
