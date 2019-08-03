@@ -25,6 +25,7 @@ static struct {
     unsigned char *data;
     int cur;
     int len;
+    SDL_AudioFormat device_format;
 } custom_music;
 
 
@@ -204,7 +205,7 @@ static int next_audio_frame(void)
     custom_music.data = (Uint8*) malloc(custom_music.len);
     memset(custom_music.data, 0, custom_music.len);
     SDL_MixAudioFormat(custom_music.data, custom_music.cvt.buf,
-                       AUDIO_FORMAT, custom_music.cvt.len_cvt,
+                       custom_music.device_format, custom_music.cvt.len_cvt,
                        setting_sound(SOUND_EFFECTS)->volume);
     free(custom_music.cvt.buf);
     custom_music.cvt.buf = 0;
@@ -260,13 +261,18 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
         log_error("Custom music bitdepth not supported:", 0, bitdepth);
         return;
     }
-    log_info("Playing custom music at rate:", 0, rate);
+    int device_rate;
+    Uint16 device_format;
+    int device_channels;
+    Mix_QuerySpec(&device_rate, &device_format, &device_channels);
+
     int result = SDL_BuildAudioCVT(
         &custom_music.cvt, format, num_channels, rate,
-        AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE
+        device_format, device_channels, device_rate
     );
     if (result >= 0) {
         custom_music.callback = callback;
+        custom_music.device_format = device_format;
         Mix_HookMusic(custom_music_callback, 0);
     }
 }
