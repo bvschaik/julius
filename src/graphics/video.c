@@ -98,7 +98,7 @@ static int load_smk_video(const char *filename)
     data.video.total_frames = frames;
     data.video.micros_per_frame = (int) (micros_per_frame);
 
-    smk_enable_all(data.video.s,SMK_VIDEO_TRACK);
+    smk_enable_video(data.video.s, 1);
     if (smk_first(data.video.s) < 0) {
         close_smk(&data.video.s);
         return 0;
@@ -135,7 +135,7 @@ static int load_smk_audio(const char *filename)
         close_smk(&data.audio.s);
         return 0;
     }
-    smk_enable_all(data.audio.s, tracks);
+    smk_enable_audio(data.audio.s, 0, 1);
     if (smk_first(data.audio.s) < 0) {
         close_smk(&data.audio.s);
         return 0;
