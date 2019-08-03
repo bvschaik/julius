@@ -251,8 +251,18 @@ static void custom_music_callback(void *dummy, Uint8 *stream, int len)
 void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate,
                                           const unsigned char *(*callback)(int *out_len))
 {
+    SDL_AudioFormat format;
+    if (bitdepth == 8) {
+        format = AUDIO_S8;
+    } else if (bitdepth == 16) {
+        format = AUDIO_S16;
+    } else {
+        log_error("Custom music bitdepth not supported:", 0, bitdepth);
+        return;
+    }
+    log_info("Playing custom music at rate:", 0, rate);
     int result = SDL_BuildAudioCVT(
-        &custom_music.cvt, bitdepth, num_channels, rate,
+        &custom_music.cvt, format, num_channels, rate,
         AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE
     );
     if (result >= 0) {
