@@ -631,6 +631,8 @@ elseif(SWITCH_BUILD)
         modplug
         mpg123
         FLAC
+        opusfile
+        opus
         ogg
         jpeg
         png
