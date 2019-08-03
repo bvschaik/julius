@@ -253,7 +253,7 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
 {
     SDL_AudioFormat format;
     if (bitdepth == 8) {
-        format = AUDIO_S8;
+        format = AUDIO_U8;
     } else if (bitdepth == 16) {
         format = AUDIO_S16;
     } else {
