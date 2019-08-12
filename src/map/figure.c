@@ -20,6 +20,7 @@ void map_figure_add(figure *f)
         return;
     }
     f->figures_on_same_tile_index = 0;
+    f->next_figure_id_on_same_tile = 0;
 
     if (figures.items[f->grid_offset]) {
         figure *next = figure_get(figures.items[f->grid_offset]);
@@ -57,6 +58,7 @@ void map_figure_update(figure *f)
 void map_figure_delete(figure *f)
 {
     if (f->grid_offset < 0 || !figures.items[f->grid_offset]) {
+        f->next_figure_id_on_same_tile = 0;
         return;
     }
 
