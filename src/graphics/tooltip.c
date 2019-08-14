@@ -185,6 +185,8 @@ static void draw_overlay_tooltip(tooltip_context *c)
     }
     if (c->mouse_y < 200) {
         y = c->mouse_y + 50;
+    } else if (c->mouse_y + height - 72 > screen_height()) {
+        y = screen_height() - height;
     } else {
         y = c->mouse_y - 72;
     }
@@ -208,6 +210,8 @@ static void draw_senate_tooltip(tooltip_context *c)
     }
     if (c->mouse_y < 200) {
         y = c->mouse_y + 10;
+    } else if (c->mouse_y + height - 32 > screen_height()) {
+        y = screen_height() - height;
     } else {
         y = c->mouse_y - 32;
     }
