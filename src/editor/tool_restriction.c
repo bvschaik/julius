@@ -118,7 +118,9 @@ int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_ind
             }
         }
         if (right_tiles == 6) {
-            *orientation_index = orientation;
+            if (orientation_index) {
+                *orientation_index = orientation;
+            }
             return 1;
         }
     }

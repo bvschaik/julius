@@ -349,6 +349,25 @@ static void update_terrain_after_elevation_changes(void)
     map_tiles_update_all_meadow();
 }
 
+static void place_access_ramp(const map_tile *tile)
+{
+    int orientation = 0;
+    if (editor_tool_can_place_access_ramp(tile, &orientation)) {
+        int terrain_mask = ~(TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_GARDEN | TERRAIN_AQUEDUCT);
+        for (int dy = 0; dy < 2; dy++) {
+            for (int dx = 0; dx < 2; dx++) {
+                int grid_offset = tile->grid_offset + map_grid_delta(dx, dy);
+                map_terrain_set(grid_offset, map_terrain_get(grid_offset) & terrain_mask);
+            }
+        }
+        map_building_tiles_add(0, tile->x, tile->y, 2, image_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation, TERRAIN_ACCESS_RAMP);
+
+        update_terrain_after_elevation_changes();
+    } else {
+        city_warning_show(WARNING_EDITOR_CANNOT_PLACE);
+    }
+}
+
 void editor_tool_end_use(const map_tile *tile)
 {
     if (!data.build_in_progress) {
@@ -389,7 +408,10 @@ void editor_tool_end_use(const map_tile *tile)
         case TOOL_LOWER_LAND:
             update_terrain_after_elevation_changes();
             break;
-        // TODO TOOL_ACCESS_RAMP, TOOL_ROAD
+        case TOOL_ACCESS_RAMP:
+            place_access_ramp(tile);
+            break;
+        // TODO TOOL_ROAD
         default:
             break;
     }
