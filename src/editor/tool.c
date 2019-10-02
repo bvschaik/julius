@@ -1,14 +1,18 @@
 #include "tool.h"
 
+#include "building/construction_routed.h"
 #include "core/image.h"
 #include "core/image_group_editor.h"
 #include "core/random.h"
 #include "editor/tool_restriction.h"
+#include "game/undo.h"
 #include "map/building_tiles.h"
 #include "map/elevation.h"
 #include "map/grid.h"
 #include "map/image_context.h"
 #include "map/property.h"
+#include "map/routing.h"
+#include "map/routing_terrain.h"
 #include "map/tiles.h"
 #include "map/terrain.h"
 #include "scenario/editor_events.h"
@@ -26,6 +30,7 @@ static struct {
     int brush_size;
     int build_in_progress;
     int start_elevation;
+    map_tile start_tile;
 } data = { 0, TOOL_GRASS, 0, 3, 0 };
 
 tool_type editor_tool_type(void)
@@ -94,6 +99,11 @@ void editor_tool_start_use(const map_tile *tile)
 {
     data.build_in_progress = 1;
     data.start_elevation = map_elevation_at(tile->grid_offset);
+    data.start_tile = *tile;
+    if (data.type == TOOL_ROAD) {
+        game_undo_start_build(BUILDING_ROAD);
+        map_routing_update_land();
+    }
 }
 
 static int is_brush(tool_type type)
@@ -210,7 +220,7 @@ void editor_tool_update_use(const map_tile *tile)
         return;
     }
     if (data.type == TOOL_ROAD) {
-        // TODO
+        building_construction_place_road(1, data.start_tile.x, data.start_tile.y, tile->x, tile->y);
         return;
     }
     if (!is_brush(data.type)) {
@@ -368,6 +378,11 @@ static void place_access_ramp(const map_tile *tile)
     }
 }
 
+static void place_road(const map_tile *start_tile, const map_tile *end_tile)
+{
+    building_construction_place_road(0, start_tile->x, start_tile->y, end_tile->x, end_tile->y);
+}
+
 void editor_tool_end_use(const map_tile *tile)
 {
     if (!data.build_in_progress) {
@@ -411,7 +426,9 @@ void editor_tool_end_use(const map_tile *tile)
         case TOOL_ACCESS_RAMP:
             place_access_ramp(tile);
             break;
-        // TODO TOOL_ROAD
+        case TOOL_ROAD:
+            place_road(&data.start_tile, tile);
+            break;
         default:
             break;
     }
