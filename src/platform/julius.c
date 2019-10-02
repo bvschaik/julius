@@ -444,7 +444,7 @@ static int pre_init(const char *custom_data_dir)
         }
     #else
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-            "Julius requires the original files from Caesar 3 to run.\n\n",
+            "Julius requires the original files from Caesar 3 to run.",
             "Move the Julius executable to the directory containing an existing "
             "Caesar 3 installation, or run:\njulius path-to-c3-directory",
             NULL);
@@ -486,9 +486,15 @@ static void setup(const char *custom_data_dir)
         exit(-2);
     }
 
-    if (!game_init()) {
+    int game_init_result = game_init();
+    if (game_init_result == GAME_INIT_ERROR) {
         SDL_Log("Exiting: game init failed");
         exit(2);
+    } else if (game_init_result == GAME_INIT_NO_PATCH) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING,
+            "Your Caesar 3 installation does not have the 1.0.1.0 patch installed.",
+            "Continue at your own risk.",
+            NULL);
     }
 }
 
