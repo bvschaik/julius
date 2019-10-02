@@ -46,6 +46,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define COMPRESS_BUFFER_SIZE 600000
 #define UNCOMPRESSED 0x80000000
@@ -71,11 +72,12 @@ typedef struct {
     buffer *random_iv;
     buffer *camera;
     buffer *scenario;
+    buffer *end_marker;
 } scenario_state;
 
 static struct {
     int num_pieces;
-    file_piece pieces[9];
+    file_piece pieces[10];
     scenario_state state;
 } scenario_data = {0};
 
@@ -175,6 +177,7 @@ static void init_file_piece(file_piece *piece, int size, int compressed)
 {
     piece->compressed = compressed;
     void *data = malloc(size);
+    memset(data, 0, size);
     buffer_init(&piece->buf, data, size);
 }
 
@@ -210,6 +213,7 @@ static void init_scenario_data(void)
     state->random_iv = create_scenario_piece(8);
     state->camera = create_scenario_piece(8);
     state->scenario = create_scenario_piece(1720);
+    state->end_marker = create_scenario_piece(4);
 }
 
 static void init_savegame_data(void)
@@ -318,6 +322,24 @@ static void scenario_load_from_state(scenario_state *file)
     random_load_state(file->random_iv);
 
     scenario_load_state(file->scenario);
+
+    buffer_skip(file->end_marker, 4);
+}
+
+static void scenario_save_to_state(scenario_state *file)
+{
+    map_image_save_state(file->graphic_ids);
+    map_terrain_save_state(file->terrain);
+    map_property_save_state(file->bitfields, file->edge);
+    map_random_save_state(file->random);
+    map_elevation_save_state(file->elevation);
+    city_view_save_scenario_state(file->camera);
+
+    random_save_state(file->random_iv);
+
+    scenario_save_state(file->scenario);
+
+    buffer_skip(file->end_marker, 4);
 }
 
 static void savegame_load_from_state(savegame_state *state)
@@ -496,6 +518,24 @@ int game_file_io_read_scenario(const char *filename)
     file_close(fp);
 
     scenario_load_from_state(&scenario_data.state);
+    return 1;
+}
+
+int game_file_io_write_scenario(const char *filename)
+{
+    log_info("Saving scenario", filename, 0);
+    init_scenario_data();
+    scenario_save_to_state(&scenario_data.state);
+
+    FILE *fp = file_open(filename, "wb");
+    if (!fp) {
+        log_error("Unable to save scenario", 0, 0);
+        return 0;
+    }
+    for (int i = 0; i < scenario_data.num_pieces; i++) {
+        fwrite(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
+    }
+    file_close(fp);
     return 1;
 }
 

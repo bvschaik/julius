@@ -11,6 +11,7 @@ typedef enum {
     POPUP_DIALOG_SEND_TROOPS = 12,
     POPUP_DIALOG_DELETE_FORT = 14,
     POPUP_DIALOG_DELETE_BRIDGE = 18,
+    POPUP_DIALOG_EDITOR_QUIT_WITHOUT_SAVING = 20,
 } popup_dialog_type;
 
 void window_popup_dialog_show(popup_dialog_type type, void (*close_func)(int accepted), int has_ok_cancel_buttons);

@@ -1,6 +1,7 @@
 #include "property.h"
 
 #include "map/grid.h"
+#include "map/random.h"
 
 enum {
     BIT_SIZE1 = 0x00,
@@ -122,6 +123,20 @@ void map_property_set_multi_tile_size(int grid_offset, int size)
         case 3: bitfields_grid.items[grid_offset] |= BIT_SIZE3; break;
         case 4: bitfields_grid.items[grid_offset] |= BIT_SIZE4; break;
         case 5: bitfields_grid.items[grid_offset] |= BIT_SIZE5; break;
+    }
+}
+
+void map_property_init_alternate_terrain(void)
+{
+    int map_width, map_height;
+    map_grid_size(&map_width, &map_height);
+    for (int y = 0; y < map_height; y++) {
+        for (int x = 0; x < map_width; x++) {
+            int grid_offset = map_grid_offset(x, y);
+            if (map_random_get(grid_offset) & 1) {
+                map_property_set_alternate_terrain(grid_offset);
+            }
+        }
     }
 }
 

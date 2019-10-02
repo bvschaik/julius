@@ -205,6 +205,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/construction.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_building.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_clear.c
+    ${PROJECT_SOURCE_DIR}/src/building/construction_routed.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_warning.c
     ${PROJECT_SOURCE_DIR}/src/building/count.c
     ${PROJECT_SOURCE_DIR}/src/building/destruction.c
@@ -287,6 +288,7 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/cartpusher.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/crime.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/docker.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/editor.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/enemy.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/entertainer.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/maintenance.c
@@ -304,6 +306,7 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/animation.c
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
     ${PROJECT_SOURCE_DIR}/src/game/file.c
+    ${PROJECT_SOURCE_DIR}/src/game/file_editor.c
     ${PROJECT_SOURCE_DIR}/src/game/file_io.c
     ${PROJECT_SOURCE_DIR}/src/game/game.c
     ${PROJECT_SOURCE_DIR}/src/game/mission.c
@@ -362,6 +365,9 @@ set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/demand_change.c
     ${PROJECT_SOURCE_DIR}/src/scenario/distant_battle.c
     ${PROJECT_SOURCE_DIR}/src/scenario/earthquake.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/editor.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/editor_events.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/editor_map.c
     ${PROJECT_SOURCE_DIR}/src/scenario/emperor_change.c
     ${PROJECT_SOURCE_DIR}/src/scenario/empire.c
     ${PROJECT_SOURCE_DIR}/src/scenario/gladiator_revolt.c
@@ -412,9 +418,13 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_risks.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_with_overlay.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_without_overlay.c
+    ${PROJECT_SOURCE_DIR}/src/widget/map_editor.c
+    ${PROJECT_SOURCE_DIR}/src/widget/map_editor_tool.c
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar.c
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar_editor.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
+    ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.c
 )
 set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisors.c
@@ -442,6 +452,23 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/building/military.c
     ${PROJECT_SOURCE_DIR}/src/window/building/terrain.c
     ${PROJECT_SOURCE_DIR}/src/window/building/utility.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/allowed_buildings.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/attributes.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/build_menu.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/demand_changes.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_demand_change.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_invasion.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_price_change.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_request.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/empire.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/invasions.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/map.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/price_changes.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/requests.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/special_events.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/start_year.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/starting_conditions.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/win_criteria.c
     ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
@@ -461,9 +488,11 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/mission_end.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/new_career.c
+    ${PROJECT_SOURCE_DIR}/src/window/numeric_input.c
     ${PROJECT_SOURCE_DIR}/src/window/overlay_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/resource_settings.c
+    ${PROJECT_SOURCE_DIR}/src/window/select_list.c
     ${PROJECT_SOURCE_DIR}/src/window/set_salary.c
     ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
     ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
@@ -471,6 +500,11 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/trade_prices.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.c
+)
+set(EDITOR_FILES
+    ${PROJECT_SOURCE_DIR}/src/editor/editor.c
+    ${PROJECT_SOURCE_DIR}/src/editor/tool.c
+    ${PROJECT_SOURCE_DIR}/src/editor/tool_restriction.c
 )
 
 set(MACOSX_FILES "")
@@ -495,6 +529,7 @@ add_executable(julius
     ${SOUND_FILES}
     ${WIDGET_FILES}
     ${WINDOW_FILES}
+    ${EDITOR_FILES}
     ${SMK_FILES}
     ${TINYFD_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc

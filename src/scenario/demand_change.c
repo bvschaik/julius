@@ -30,6 +30,7 @@ void scenario_demand_change_process(void)
         int route = scenario.demand_changes[i].route_id;
         int resource = scenario.demand_changes[i].resource;
         int city_id = empire_city_get_for_trade_route(route);
+        if (city_id < 0) city_id = 0;
         if (scenario.demand_changes[i].is_rise) {
             if (trade_route_increase_limit(route, resource) && empire_city_is_trade_route_open(route)) {
                 city_message_post(1, MESSAGE_INCREASED_TRADING, city_id, resource);

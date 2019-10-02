@@ -190,8 +190,8 @@ static void init(int grid_offset)
         }
     } else if ((map_terrain_get(grid_offset) & (TERRAIN_WATER|TERRAIN_BUILDING)) == TERRAIN_WATER) {
         context.terrain_type = TERRAIN_INFO_WATER;
-    } else if (map_terrain_is(grid_offset, TERRAIN_SCRUB)) {
-        context.terrain_type = TERRAIN_INFO_SCRUB;
+    } else if (map_terrain_is(grid_offset, TERRAIN_SHRUB)) {
+        context.terrain_type = TERRAIN_INFO_SHRUB;
     } else if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
         context.terrain_type = TERRAIN_INFO_GARDEN;
     } else if ((map_terrain_get(grid_offset) & (TERRAIN_ROAD|TERRAIN_BUILDING)) == TERRAIN_ROAD) {
@@ -583,9 +583,9 @@ static void get_tooltip(tooltip_context *c)
 static void button_help(int param1, int param2)
 {
     if (context.help_id > 0) {
-        window_message_dialog_show(context.help_id, 0);
+        window_message_dialog_show(context.help_id, window_city_draw_all);
     } else {
-        window_message_dialog_show(10, 0);
+        window_message_dialog_show(10, window_city_draw_all);
     }
     window_invalidate();
 }

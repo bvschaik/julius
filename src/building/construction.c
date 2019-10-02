@@ -2,6 +2,7 @@
 
 #include "building/construction_building.h"
 #include "building/construction_clear.h"
+#include "building/construction_routed.h"
 #include "building/construction_warning.h"
 #include "building/count.h"
 #include "building/model.h"
@@ -116,123 +117,6 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
     return items_placed;
 }
 
-static int place_routed_building(int x_start, int y_start, int x_end, int y_end, routed_building_type type, int *items)
-{
-    static const int direction_indices[8][4] = {
-        {0, 2, 6, 4},
-        {0, 2, 6, 4},
-        {2, 4, 0, 6},
-        {2, 4, 0, 6},
-        {4, 6, 2, 0},
-        {4, 6, 2, 0},
-        {6, 0, 4, 2},
-        {6, 0, 4, 2}
-    };
-    *items = 0;
-    int grid_offset = map_grid_offset(x_end, y_end);
-    int guard = 0;
-    // reverse routing
-    while (1) {
-        if (++guard >= 400) {
-            return 0;
-        }
-        int distance = map_routing_distance(grid_offset);
-        if (distance <= 0) {
-            return 0;
-        }
-        switch (type) {
-            default:
-            case ROUTED_BUILDING_ROAD:
-                *items += map_tiles_set_road(x_end, y_end);
-                break;
-            case ROUTED_BUILDING_WALL:
-                *items += map_tiles_set_wall(x_end, y_end);
-                break;
-            case ROUTED_BUILDING_AQUEDUCT:
-                *items += map_building_tiles_add_aqueduct(x_end, y_end);
-                break;
-            case ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC:
-                *items += 1;
-                break;
-        }
-        int direction = calc_general_direction(x_end, y_end, x_start, y_start);
-        if (direction == DIR_8_NONE) {
-            return 1; // destination reached
-        }
-        int routed = 0;
-        for (int i = 0; i < 4; i++) {
-            int index = direction_indices[direction][i];
-            int new_grid_offset = grid_offset + map_grid_direction_delta(index);
-            int new_dist = map_routing_distance(new_grid_offset);
-            if (new_dist > 0 && new_dist < distance) {
-                grid_offset = new_grid_offset;
-                x_end = map_grid_offset_to_x(grid_offset);
-                y_end = map_grid_offset_to_y(grid_offset);
-                routed = 1;
-                break;
-            }
-        }
-        if (!routed) {
-            return 0;
-        }
-    }
-}
-
-static int place_road(int measure_only, int x_start, int y_start, int x_end, int y_end)
-{
-    game_undo_restore_map(0);
-
-    int start_offset = map_grid_offset(x_start, y_start);
-    int end_offset = map_grid_offset(x_end, y_end);
-    int forbidden_terrain_mask =
-        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
-        TERRAIN_SCRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION |
-        TERRAIN_RUBBLE | TERRAIN_BUILDING | TERRAIN_WALL;
-    if (map_terrain_is(start_offset, forbidden_terrain_mask)) {
-        return 0;
-    }
-    if (map_terrain_is(end_offset, forbidden_terrain_mask)) {
-        return 0;
-    }
-    
-    int items_placed = 0;
-    if (map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, x_start, y_start) &&
-            place_routed_building(x_start, y_start, x_end, y_end, ROUTED_BUILDING_ROAD, &items_placed)) {
-        if (!measure_only) {
-            map_routing_update_land();
-            window_invalidate();
-        }
-    }
-    return items_placed;
-}
-
-static int place_wall(int measure_only, int x_start, int y_start, int x_end, int y_end)
-{
-    game_undo_restore_map(0);
-
-    int start_offset = map_grid_offset(x_start, y_start);
-    int end_offset = map_grid_offset(x_end, y_end);
-    int forbidden_terrain_mask =
-        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SCRUB |
-        TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION |
-        TERRAIN_RUBBLE | TERRAIN_AQUEDUCT | TERRAIN_ACCESS_RAMP;
-    if (map_terrain_is(start_offset, forbidden_terrain_mask)) {
-        return 0;
-    }
-    if (map_terrain_is(end_offset, forbidden_terrain_mask)) {
-        return 0;
-    }
-    int items_placed = 0;
-    if (place_routed_building(x_start, y_start, x_end, y_end, ROUTED_BUILDING_WALL, &items_placed)) {
-        if (!measure_only) {
-            map_routing_update_land();
-            map_routing_update_walls();
-            window_invalidate();
-        }
-    }
-    return items_placed;
-}
-
 static int place_plaza(int x_start, int y_start, int x_end, int y_end)
 {
     int x_min, y_min, x_max, y_max;
@@ -278,41 +162,6 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end)
     }
     map_tiles_update_all_gardens();
     return items_placed;
-}
-
-static int place_aqueduct(int x_start, int y_start, int x_end, int y_end, int *cost)
-{
-    game_undo_restore_map(0);
-
-    int item_cost = model_get_building(BUILDING_AQUEDUCT)->cost;
-    *cost = 0;
-    int blocked = 0;
-    int grid_offset = map_grid_offset(x_start, y_start);
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-        if (map_property_is_plaza_or_earthquake(grid_offset)) {
-            blocked = 1;
-        }
-    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
-        blocked = 1;
-    }
-    grid_offset = map_grid_offset(x_end, y_end);
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-        if (map_property_is_plaza_or_earthquake(grid_offset)) {
-            blocked = 1;
-        }
-    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
-        blocked = 1;
-    }
-    if (blocked) {
-        return 0;
-    }
-    if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, x_start, y_start)) {
-        return 0;
-    }
-    int num_items;
-    place_routed_building(x_start, y_start, x_end, y_end, ROUTED_BUILDING_AQUEDUCT, &num_items);
-    *cost = item_cost * num_items;
-    return 1;
 }
 
 static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_start, int x_end, int y_end, struct reservoir_info *info)
@@ -375,9 +224,8 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
             int dx_end = aqueduct_offsets_x[dir_end];
             int dy_end = aqueduct_offsets_y[dir_end];
             int dist;
-            if (place_routed_building(
-                    x_start + dx_start, y_start + dy_start, x_end + dx_end, y_end + dy_end,
-                    ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC, &dist)) {
+            if (building_construction_place_aqueduct_for_reservoir(1,
+                    x_start + dx_start, y_start + dy_start, x_end + dx_end, y_end + dy_end, &dist)) {
                 if (dist && dist < min_dist) {
                     min_dist = dist;
                     min_dir_start = dir_start;
@@ -394,8 +242,8 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     int x_aq_end = aqueduct_offsets_x[min_dir_end];
     int y_aq_end = aqueduct_offsets_y[min_dir_end];
     int aq_items;
-    place_routed_building(x_start + x_aq_start, y_start + y_aq_start,
-        x_end + x_aq_end, y_end + y_aq_end, ROUTED_BUILDING_AQUEDUCT, &aq_items);
+    building_construction_place_aqueduct_for_reservoir(0, x_start + x_aq_start, y_start + y_aq_start,
+        x_end + x_aq_end, y_end + y_aq_end, &aq_items);
     if (info->place_reservoir_at_start == PLACE_RESERVOIR_YES) {
         info->cost += model_get_building(BUILDING_RESERVOIR)->cost;
     }
@@ -548,10 +396,10 @@ void building_construction_update(int x, int y, int grid_offset)
         int items_placed = last_items_cleared = building_construction_clear_land(1, data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_WALL) {
-        int items_placed = place_wall(1, data.start.x, data.start.y, x, y);
+        int items_placed = building_construction_place_wall(1, data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_ROAD) {
-        int items_placed = place_road(1, data.start.x, data.start.y, x, y);
+        int items_placed = building_construction_place_road(1, data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_PLAZA) {
         int items_placed = place_plaza(data.start.x, data.start.y, x, y);
@@ -563,7 +411,7 @@ void building_construction_update(int x, int y, int grid_offset)
         int length = map_bridge_building_length();
         if (length > 1) current_cost *= length;
     } else if (type == BUILDING_AQUEDUCT) {
-        place_aqueduct(data.start.x, data.start.y, x, y, &current_cost);
+        building_construction_place_aqueduct(data.start.x, data.start.y, x, y, &current_cost);
         map_tiles_update_all_aqueducts(0);
     } else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
         struct reservoir_info info;
@@ -694,9 +542,9 @@ void building_construction_place(void)
         }
         placement_cost *= items_placed;
     } else if (type == BUILDING_WALL) {
-        placement_cost *= place_wall(0, x_start, y_start, x_end, y_end);
+        placement_cost *= building_construction_place_wall(0, x_start, y_start, x_end, y_end);
     } else if (type == BUILDING_ROAD) {
-        placement_cost *= place_road(0, x_start, y_start, x_end, y_end);
+        placement_cost *= building_construction_place_road(0, x_start, y_start, x_end, y_end);
     } else if (type == BUILDING_PLAZA) {
         placement_cost *= place_plaza(x_start, y_start, x_end, y_end);
     } else if (type == BUILDING_GARDENS) {
@@ -718,7 +566,7 @@ void building_construction_place(void)
         placement_cost *= length;
     } else if (type == BUILDING_AQUEDUCT) {
         int cost;
-        if (!place_aqueduct(x_start, y_start, x_end, y_end, &cost)) {
+        if (!building_construction_place_aqueduct(x_start, y_start, x_end, y_end, &cost)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return;
         }
@@ -785,7 +633,7 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
             return 0;
         }
     } else if (data.required_terrain.tree) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_SCRUB | TERRAIN_TREE)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
             set_warning(warning_id, WARNING_TREE_NEEDED);
             return 0;
         }

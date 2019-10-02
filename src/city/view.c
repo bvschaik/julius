@@ -3,7 +3,7 @@
 #include "core/direction.h"
 #include "map/grid.h"
 #include "map/image.h"
-#include "widget/sidebar.h"
+#include "widget/minimap.h"
 
 #define MENUBAR_HEIGHT 24
 
@@ -127,7 +127,7 @@ void city_view_init(void)
 {
     calculate_lookup();
     check_camera_boundaries();
-    widget_sidebar_invalidate_minimap();
+    widget_minimap_invalidate();
 }
 
 int city_view_orientation(void)
@@ -422,6 +422,12 @@ void city_view_load_state(buffer *orientation, buffer *camera)
     } else {
         data.orientation = 0;
     }
+}
+
+void city_view_save_scenario_state(buffer *camera)
+{
+    buffer_write_i32(camera, data.camera.x);
+    buffer_write_i32(camera, data.camera.y);
 }
 
 void city_view_load_scenario_state(buffer *camera)

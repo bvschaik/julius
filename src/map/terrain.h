@@ -8,7 +8,7 @@ enum {
     TERRAIN_ROCK = 2,
     TERRAIN_WATER = 4,
     TERRAIN_BUILDING = 8,
-    TERRAIN_SCRUB = 0x10,
+    TERRAIN_SHRUB = 0x10,
     TERRAIN_GARDEN = 0x20,
     TERRAIN_ROAD = 0x40,
     TERRAIN_RESERVOIR_RANGE = 0x80,
@@ -63,6 +63,8 @@ int map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, 
 
 int map_terrain_all_tiles_in_radius_are(int x, int y, int size, int radius, int terrain);
 
+int map_terrain_has_only_rocks_trees_in_ring(int x, int y, int distance);
+
 int map_terrain_has_only_meadow_in_ring(int x, int y, int distance);
 
 int map_terrain_is_adjacent_to_wall(int x, int y, int size);
@@ -81,6 +83,8 @@ void map_terrain_backup(void);
 void map_terrain_restore(void);
 
 void map_terrain_clear(void);
+
+void map_terrain_init_outside_map(void);
 
 void map_terrain_save_state(buffer *buf);
 

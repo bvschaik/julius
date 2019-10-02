@@ -56,6 +56,34 @@ void empire_load(int is_custom_scenario, int empire_id)
     empire_object_load(&buf);
 }
 
+static void check_scroll_boundaries(void)
+{
+    int max_x = EMPIRE_WIDTH - data.viewport_width;
+    int max_y = EMPIRE_HEIGHT - data.viewport_height;
+
+    data.scroll_x = calc_bound(data.scroll_x, 0, max_x);
+    data.scroll_y = calc_bound(data.scroll_y, 0, max_y);
+}
+
+void empire_load_editor(int empire_id, int viewport_width, int viewport_height)
+{
+    empire_load(1, empire_id);
+    empire_object_init_cities();
+
+    const empire_object *our_city = empire_object_get_our_city();
+
+    data.viewport_width = viewport_width;
+    data.viewport_height = viewport_height;
+    if (our_city) {
+        data.scroll_x = our_city->x - data.viewport_width / 2;
+        data.scroll_y = our_city->y - data.viewport_height / 2;
+    } else {
+        data.scroll_x = data.initial_scroll_x;
+        data.scroll_y = data.initial_scroll_y;
+    }
+    check_scroll_boundaries();
+}
+
 void empire_init_scenario(void)
 {
     data.scroll_x = data.initial_scroll_x;
@@ -64,15 +92,6 @@ void empire_init_scenario(void)
     data.viewport_height = EMPIRE_HEIGHT;
 
     empire_object_init_cities();
-}
-
-static void check_scroll_boundaries(void)
-{
-    int max_x = EMPIRE_WIDTH - data.viewport_width;
-    int max_y = EMPIRE_HEIGHT - data.viewport_height;
-
-    data.scroll_x = calc_bound(data.scroll_x, 0, max_x);
-    data.scroll_y = calc_bound(data.scroll_y, 0, max_y);
 }
 
 void empire_set_viewport(int width, int height)

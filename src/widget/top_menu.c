@@ -225,7 +225,7 @@ void widget_top_menu_draw(int force)
         data.offset_funds = 338;
         data.offset_population = 453;
         data.offset_date = 547;
-        
+
         int width = lang_text_draw_colored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasure_color);
         text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
@@ -238,7 +238,7 @@ void widget_top_menu_draw(int force)
         data.offset_funds = 338;
         data.offset_population = 458;
         data.offset_date = 652;
-        
+
         int width = lang_text_draw_colored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasure_color);
         text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
@@ -251,7 +251,7 @@ void widget_top_menu_draw(int force)
         data.offset_funds = 493;
         data.offset_population = 637;
         data.offset_date = 852;
-        
+
         int width = lang_text_draw_colored(6, 0, 495, 5, FONT_NORMAL_PLAIN, treasure_color);
         text_draw_number_colored(treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
@@ -310,11 +310,11 @@ static int handle_right_click(int type)
         return 0;
     }
     if (type == INFO_FUNDS) {
-        window_message_dialog_show(15, 0);
+        window_message_dialog_show(15, window_city_draw_all);
     } else if (type == INFO_POPULATION) {
-        window_message_dialog_show(16, 0);
+        window_message_dialog_show(16, window_city_draw_all);
     } else if (type == INFO_DATE) {
-        window_message_dialog_show(17, 0);
+        window_message_dialog_show(17, window_city_draw_all);
     }
     return 1;
 }
@@ -383,21 +383,21 @@ static void menu_file_load_game(int param)
     clear_state();
     building_construction_clear_type();
     window_city_show();
-    window_file_dialog_show(FILE_DIALOG_LOAD);
+    window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
 }
 
 static void menu_file_save_game(int param)
 {
     clear_state();
     window_city_show();
-    window_file_dialog_show(FILE_DIALOG_SAVE);
+    window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
 }
 
 static void menu_file_delete_game(int param)
 {
     clear_state();
     window_city_show();
-    window_file_dialog_show(FILE_DIALOG_DELETE);
+    window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_DELETE);
 }
 
 static void menu_file_confirm_exit(int accepted)
@@ -418,32 +418,32 @@ static void menu_file_exit_game(int param)
 static void menu_options_display(int param)
 {
     clear_state();
-    window_display_options_show();
+    window_display_options_show(window_city_show);
 }
 
 static void menu_options_sound(int param)
 {
     clear_state();
-    window_sound_options_show();
+    window_sound_options_show(window_city_show);
 }
 
 static void menu_options_speed(int param)
 {
     clear_state();
-    window_speed_options_show();
+    window_speed_options_show(window_city_show);
 }
 
 static void menu_options_difficulty(int param)
 {
     clear_state();
-    window_difficulty_options_show();
+    window_difficulty_options_show(window_city_show);
 }
 
 static void menu_help_help(int param)
 {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_HELP, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_HELP, window_city_draw_all);
 }
 
 static void menu_help_mouse_help(int param)
@@ -462,7 +462,7 @@ static void menu_help_about(int param)
 {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_ABOUT, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_ABOUT, window_city_draw_all);
 }
 
 

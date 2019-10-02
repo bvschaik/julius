@@ -3,6 +3,7 @@
 
 #include "core/buffer.h"
 
+void scenario_invasion_clear(void);
 void scenario_invasion_init(void);
 
 int scenario_invasion_exists_upcoming(void);

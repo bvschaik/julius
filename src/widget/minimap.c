@@ -5,6 +5,7 @@
 #include "figure/figure.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "input/scroll.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -12,7 +13,6 @@
 #include "map/random.h"
 #include "map/terrain.h"
 #include "scenario/property.h"
-#include "widget/sidebar.h"
 
 #include <stdlib.h>
 
@@ -45,7 +45,13 @@ static struct {
         int y;
         int grid_offset;
     } mouse;
+    int refresh_requested;
 } data;
+
+void widget_minimap_invalidate(void)
+{
+    data.refresh_requested = 1;
+}
 
 static void foreach_map_tile(map_callback *callback)
 {
@@ -62,7 +68,7 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.x_offset = x_offset;
     data.y_offset = y_offset;
     data.width = 2 * width_tiles;
-    data.height = data.height_tiles;
+    data.height = height_tiles;
     data.absolute_x = (VIEW_X_MAX - width_tiles) / 2;
     data.absolute_y = (VIEW_Y_MAX - height_tiles) / 2;
 
@@ -167,7 +173,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         int image_id;
         if (terrain & TERRAIN_WATER) {
             image_id = image_group(GROUP_MINIMAP_WATER) + (rand & 3);
-        } else if (terrain & TERRAIN_SCRUB) {
+        } else if (terrain & TERRAIN_SHRUB) {
             image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
         } else if (terrain & TERRAIN_TREE) {
             image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
@@ -233,18 +239,26 @@ static void draw_minimap(void)
     graphics_reset_clip_rectangle();
 }
 
-void widget_minimap_draw_from_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling)
+static void draw_uncached(int x_offset, int y_offset, int width_tiles, int height_tiles)
+{
+    data.enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
+    prepare_minimap_cache(2 * width_tiles, height_tiles);
+    set_bounds(x_offset, y_offset, width_tiles, height_tiles);
+    draw_minimap();
+}
+
+void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling)
 {
     if (width_tiles * 2 != data.width || height_tiles != data.height) {
-        widget_minimap_draw(x_offset, y_offset, width_tiles, height_tiles);
+        draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
         return;
     }
 
     if (is_scrolling) {
-        int absolute_x = data.absolute_x;
-        int absolute_y = data.absolute_y;
+        int old_absolute_x = data.absolute_x;
+        int old_absolute_y = data.absolute_y;
         set_bounds(x_offset, y_offset, width_tiles, height_tiles);
-        if (data.absolute_x != absolute_x || data.absolute_y != absolute_y) {
+        if (data.absolute_x != old_absolute_x || data.absolute_y != old_absolute_y) {
             draw_minimap();
             return;
         }
@@ -256,12 +270,19 @@ void widget_minimap_draw_from_cache(int x_offset, int y_offset, int width_tiles,
     graphics_reset_clip_rectangle();
 }
 
-void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles)
+void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force)
 {
-    data.enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
-    prepare_minimap_cache(2 * width_tiles, height_tiles);
-    set_bounds(x_offset, y_offset, width_tiles, height_tiles);
-    draw_minimap();
+    if (data.refresh_requested || scroll_in_progress() || force) {
+        if (data.refresh_requested) {
+            draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
+            data.refresh_requested = 0;
+        } else {
+            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
+        }
+        graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1, COLOR_MINIMAP_DARK);
+        graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
+        graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles, COLOR_MINIMAP_LIGHT);
+    }
 }
 
 static void update_mouse_grid_offset(int x_view, int y_view, int grid_offset)
@@ -295,7 +316,7 @@ int widget_minimap_handle_mouse(const mouse *m)
         int grid_offset = get_mouse_grid_offset(m);
         if (grid_offset > 0) {
             city_view_go_to_grid_offset(grid_offset);
-            widget_sidebar_invalidate_minimap();
+            widget_minimap_invalidate();
             return 1;
         }
     }

@@ -19,8 +19,10 @@
 #include "scenario/invasion.h"
 #include "window/advisors.h"
 #include "window/building_info.h"
+#include "window/numeric_input.h"
 #include "window/popup_dialog.h"
 #include "window/city.h"
+#include "window/editor/empire.h"
 
 static struct {
     int is_cheating;
@@ -143,8 +145,26 @@ static void cheat_money(void)
     }
 }
 
-void hotkey_character(int c, int with_alt)
+static void editor_toggle_battle_info(void)
 {
+    if (window_is(WINDOW_EDITOR_EMPIRE)) {
+        window_editor_empire_toggle_battle_info();
+    }
+}
+
+static void input_number(int number)
+{
+    if (window_is(WINDOW_NUMERIC_INPUT)) {
+        window_numeric_input_number(number);
+    }
+}
+
+void hotkey_character(int c, int with_ctrl, int with_alt)
+{
+    if (with_ctrl && c == 'a') {
+        editor_toggle_battle_info();
+        return;
+    }
     if (with_alt) {
         switch (c) {
             case 'x':
@@ -204,33 +224,43 @@ void hotkey_character(int c, int with_alt)
             break;
         case '1':
             show_advisor(ADVISOR_LABOR);
+            input_number(1);
             break;
         case '2':
             show_advisor(ADVISOR_MILITARY);
+            input_number(2);
             break;
         case '3':
             show_advisor(ADVISOR_IMPERIAL);
+            input_number(3);
             break;
         case '4':
             show_advisor(ADVISOR_RATINGS);
+            input_number(4);
             break;
         case '5':
             show_advisor(ADVISOR_TRADE);
+            input_number(5);
             break;
         case '6':
             show_advisor(ADVISOR_POPULATION);
+            input_number(6);
             break;
         case '7':
             show_advisor(ADVISOR_HEALTH);
+            input_number(7);
             break;
         case '8':
             show_advisor(ADVISOR_EDUCATION);
+            input_number(8);
             break;
         case '9':
             show_advisor(ADVISOR_ENTERTAINMENT);
+            input_number(9);
             break;
         case '0':
             show_advisor(ADVISOR_RELIGION);
+            input_number(0);
             break;
         case '-':
             show_advisor(ADVISOR_FINANCIAL);
@@ -304,6 +334,8 @@ void hotkey_enter(void)
 {
     if (window_is(WINDOW_POPUP_DIALOG)) {
         window_popup_dialog_confirm();
+    } else if (window_is(WINDOW_NUMERIC_INPUT)) {
+        window_numeric_input_accept();
     }
 }
 

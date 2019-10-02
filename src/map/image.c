@@ -35,6 +35,21 @@ void map_image_clear(void)
     map_grid_clear_u16(images.items);
 }
 
+void map_image_init_edges(void)
+{
+    int width, height;
+    map_grid_size(&width, &height);
+    for (int x = 1; x < width; x++) {
+        images.items[map_grid_offset(x, height)] = 1;
+    }
+    for (int y = 1; y < height; y++) {
+        images.items[map_grid_offset(width, y)] = 2;
+    }
+    images.items[map_grid_offset(0, height)] = 3;
+    images.items[map_grid_offset(width, 0)] = 4;
+    images.items[map_grid_offset(width, height)] = 5;
+}
+
 void map_image_save_state(buffer *buf)
 {
     map_grid_save_state_u16(images.items, buf);

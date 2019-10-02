@@ -7,9 +7,11 @@
 #include "core/log.h"
 #include "core/random.h"
 #include "core/time.h"
+#include "editor/editor.h"
 #include "figure/type.h"
 #include "game/animation.h"
 #include "game/file.h"
+#include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
@@ -22,7 +24,9 @@
 #include "scenario/scenario.h"
 #include "sound/city.h"
 #include "sound/system.h"
+#include "window/editor/map.h"
 #include "window/logo.h"
+#include "window/main_menu.h"
 
 static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
     0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
@@ -71,7 +75,7 @@ int game_init(void)
         return GAME_INIT_ERROR;
     }
     
-    if (!image_load_climate(CLIMATE_CENTRAL)) {
+    if (!image_load_climate(CLIMATE_CENTRAL, 0)) {
         errlog("unable to load main graphics");
         return GAME_INIT_ERROR;
     }
@@ -83,6 +87,7 @@ int game_init(void)
         errlog("unable to load fonts graphics");
         return GAME_INIT_ERROR;
     }
+    image_enable_fonts(with_fonts);
 
     if (!model_load()) {
         errlog("unable to load c3_model.txt");
@@ -96,23 +101,56 @@ int game_init(void)
     return has_patch() ? GAME_INIT_OK : GAME_INIT_NO_PATCH;
 }
 
-static int get_elapsed_ticks(void)
+int game_init_editor(void)
 {
-    time_millis now = time_get_millis();
-    time_millis diff = now - last_update;
-
-    int game_speed_index = (100 - setting_game_speed()) / 10;
-    int ticks_per_frame = 1;
-    if (game_speed_index >= 10) {
+    if (!lang_load("c3_map.eng", "c3_map_mm.eng")) {
+        errlog("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
         return 0;
-    } else if (game_speed_index < 0) {
-        ticks_per_frame = setting_game_speed() / 100;
-        game_speed_index = 0;
+    }
+    encoding_type encoding = encoding_determine();
+    log_info("Detected encoding:", 0, encoding);
+    font_set_encoding(encoding);
+    image_enable_fonts(encoding == ENCODING_CYRILLIC);
+
+    if (!image_load_climate(CLIMATE_CENTRAL, 1)) {
+        errlog("unable to load main graphics");
+        return 0;
+    }
+    game_file_editor_clear_data();
+    game_file_editor_create_scenario(2);
+
+    editor_set_active(1);
+    window_editor_map_show();
+    return 1;
+}
+
+void game_exit_editor(void)
+{
+    if (!lang_load("c3.eng", "c3_mm.eng") && !lang_load("c3.rus", "c3_mm.rus")) {
+        errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
+        return;
+    }
+    encoding_type encoding = encoding_determine();
+    log_info("Detected encoding:", 0, encoding);
+    font_set_encoding(encoding);
+    image_enable_fonts(encoding == ENCODING_CYRILLIC);
+
+    if (!image_load_climate(CLIMATE_CENTRAL, 0)) {
+        errlog("unable to load main graphics");
+        return;
     }
 
+    editor_set_active(0);
+    window_main_menu_show();
+}
+
+static int get_elapsed_ticks(void)
+{
     if (game_state_is_paused()) {
         return 0;
     }
+    int game_speed_index = 0;
+    int ticks_per_frame = 1;
     switch (window_get_id()) {
         default:
             return 0;
@@ -121,6 +159,16 @@ static int get_elapsed_ticks(void)
         case WINDOW_SLIDING_SIDEBAR:
         case WINDOW_OVERLAY_MENU:
         case WINDOW_BUILD_MENU:
+            game_speed_index = (100 - setting_game_speed()) / 10;
+            if (game_speed_index >= 10) {
+                return 0;
+            } else if (game_speed_index < 0) {
+                ticks_per_frame = setting_game_speed() / 100;
+                game_speed_index = 0;
+            }
+            break;
+        case WINDOW_EDITOR_MAP:
+            game_speed_index = 3; // 70%, nice speed for flag animations
             break;
     }
     if (building_construction_in_progress()) {
@@ -129,6 +177,9 @@ static int get_elapsed_ticks(void)
     if (scroll_in_progress()) {
         return 0;
     }
+
+    time_millis now = time_get_millis();
+    time_millis diff = now - last_update;
     if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
         return 0;
     }

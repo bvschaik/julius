@@ -76,6 +76,16 @@ void keyboard_refresh(void)
     set_offset_to_end();
 }
 
+void keyboard_resume_capture(void)
+{
+    data.capture = 1;
+}
+
+void keyboard_pause_capture(void)
+{
+    data.capture = 0;
+}
+
 void keyboard_stop_capture(void)
 {
     data.capture = 0;

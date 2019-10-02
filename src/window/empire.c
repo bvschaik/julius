@@ -567,7 +567,7 @@ static void get_tooltip(tooltip_context *c)
 
 static void button_help(int param1, int param2)
 {
-    window_message_dialog_show(MESSAGE_DIALOG_EMPIRE_MAP, 1);
+    window_message_dialog_show(MESSAGE_DIALOG_EMPIRE_MAP, 0);
 }
 
 static void button_return_to_city(int param1, int param2)

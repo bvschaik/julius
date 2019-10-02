@@ -6,7 +6,6 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
-#include "window/city.h"
 
 static void arrow_button_difficulty(int is_down, int param2);
 static void arrow_button_gods(int param1, int param2);
@@ -17,14 +16,18 @@ static arrow_button arrow_buttons[] = {
     {0, 102, 21, 24, arrow_button_gods, 2, 0}
 };
 
+static struct {
+    void (*close_callback)(void);
+} data;
+
 static void draw_foreground(void)
 {
     graphics_in_dialog();
 
     outer_panel_draw(48, 80, 24, 12);
-    
+
     lang_text_draw_centered(153, 0, 48, 94, 384, FONT_LARGE_BLACK);
-    
+
     lang_text_draw_centered(153, setting_difficulty() + 1, 80, 142, 224, FONT_NORMAL_BLACK);
     lang_text_draw_centered(153, setting_gods_enabled() ? 7 : 6, 80, 190, 224, FONT_NORMAL_BLACK);
     arrow_buttons_draw(288, 80, arrow_buttons, 3);
@@ -36,8 +39,7 @@ static void draw_foreground(void)
 static void handle_mouse(const mouse *m)
 {
     if (m->right.went_up) {
-        // cancel dialog
-        window_city_show();
+        data.close_callback();
     } else {
         arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrow_buttons, 4);
     }
@@ -57,7 +59,7 @@ static void arrow_button_gods(int param1, int param2)
     setting_toggle_gods_enabled();
 }
 
-void window_difficulty_options_show(void)
+void window_difficulty_options_show(void (*close_callback)(void))
 {
     window_type window = {
         WINDOW_DIFFICULTY_OPTIONS,
@@ -65,5 +67,6 @@ void window_difficulty_options_show(void)
         draw_foreground,
         handle_mouse
     };
+    data.close_callback = close_callback;
     window_show(&window);
 }

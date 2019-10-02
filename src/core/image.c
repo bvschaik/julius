@@ -41,6 +41,16 @@ static const char MAIN_GRAPHICS_555[][NAME_SIZE] = {
     "c3_north.555",
     "c3_south.555"
 };
+static const char EDITOR_GRAPHICS_SG2[][NAME_SIZE] = {
+    "c3map.sg2",
+    "c3map_north.sg2",
+    "c3map_south.sg2"
+};
+static const char EDITOR_GRAPHICS_555[][NAME_SIZE] = {
+    "c3map.555",
+    "c3map_north.555",
+    "c3map_south.555"
+};
 static const char EMPIRE_555[NAME_SIZE] = "The_empire.555";
 
 static const char FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
@@ -93,6 +103,8 @@ static const char ENEMY_GRAPHICS_555[][NAME_SIZE] = {
 
 static struct {
     int current_climate;
+    int is_editor;
+    int fonts_enabled;
 
     uint16_t group_image_ids[300];
     char bitmaps[100][200];
@@ -129,6 +141,11 @@ int image_init(int with_fonts)
         }
     }
     return 1;
+}
+
+void image_enable_fonts(int enable)
+{
+    data.fonts_enabled = enable;
 }
 
 static void prepare_index(image *images, int size)
@@ -267,14 +284,14 @@ static void load_empire(void)
     convert_uncompressed(&buf, size, data.empire_data);
 }
 
-int image_load_climate(int climate_id)
+int image_load_climate(int climate_id, int is_editor)
 {
-    if (climate_id == data.current_climate) {
+    if (climate_id == data.current_climate && is_editor == data.is_editor) {
         return 1;
     }
 
-    const char *filename_bmp = MAIN_GRAPHICS_555[climate_id];
-    const char *filename_idx = MAIN_GRAPHICS_SG2[climate_id];
+    const char *filename_bmp = is_editor ? EDITOR_GRAPHICS_555[climate_id] : MAIN_GRAPHICS_555[climate_id];
+    const char *filename_idx = is_editor ? EDITOR_GRAPHICS_SG2[climate_id] : MAIN_GRAPHICS_SG2[climate_id];
 
     if (MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, data.tmp_data, MAIN_INDEX_SIZE)) {
         return 0;
@@ -293,6 +310,7 @@ int image_load_climate(int climate_id)
     buffer_init(&buf, data.tmp_data, data_size);
     convert_images(data.main, MAIN_ENTRIES, &buf, data.main_data);
     data.current_climate = climate_id;
+    data.is_editor = is_editor;
 
     load_empire();
     return 1;
@@ -389,7 +407,7 @@ const image *image_get(int id)
 
 const image *image_letter(int letter_id)
 {
-    if (data.font) {
+    if (data.fonts_enabled) {
         return &data.font[FONTS_BASE_OFFSET + letter_id];
     } else {
         return &data.main[data.group_image_ids[GROUP_FONT] + letter_id];
@@ -421,7 +439,7 @@ const color_t *image_data(int id)
 
 const color_t *image_data_letter(int letter_id)
 {
-    if (data.font) {
+    if (data.fonts_enabled) {
         return &data.font_data[data.font[FONTS_BASE_OFFSET + letter_id].draw.offset];
     } else {
         int image_id = data.group_image_ids[GROUP_FONT] + letter_id;
