@@ -169,3 +169,8 @@ void buffer_skip(buffer *buf, int size)
 {
     buf->index += size;
 }
+
+int buffer_at_end(buffer *buf)
+{
+    return buf->index >= buf->size;
+}

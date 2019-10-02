@@ -148,4 +148,11 @@ int buffer_read_raw(buffer *buffer, void *value, int max_size);
  */
 void buffer_skip(buffer *buffer, int size);
 
+/**
+ * Returns whether the pointer of this buffer is at the end of the buffer
+ * @param buffer Buffer
+ * @return True if pointer is at end of buffer, false otherwise
+ */
+int buffer_at_end(buffer *buffer);
+
 #endif // CORE_BUFFER_H

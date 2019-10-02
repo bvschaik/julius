@@ -101,8 +101,15 @@ static void load_settings(buffer *buf)
         data.personal_savings[i] = buffer_read_i32(buf);
     }
     data.victory_video = buffer_read_i32(buf);
-    data.difficulty = buffer_read_i32(buf);
-    data.gods_enabled = buffer_read_i32(buf);
+
+    if (buffer_at_end(buf)) {
+        // Settings file is from unpatched C3, use default values
+        data.difficulty = DIFFICULTY_HARD;
+        data.gods_enabled = 1;
+    } else {
+        data.difficulty = buffer_read_i32(buf);
+        data.gods_enabled = buffer_read_i32(buf);
+    }
 }
 
 void settings_load(void)
