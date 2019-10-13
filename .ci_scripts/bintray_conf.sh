@@ -25,7 +25,8 @@ cat > "bintray.json" <<EOF
   "files": [
     {
       "includePattern": "${build_dir}/julius.dmg",
-      "uploadPattern": "julius-$VERSION-mac.dmg"
+      "uploadPattern": "julius-$VERSION-mac.dmg",
+      "listInDownloads": true
     }
   ],
 
@@ -53,7 +54,8 @@ cat > "bintray.json" <<EOF
   "files": [
     {
       "includePattern": "${build_dir}/julius.vpk",
-      "uploadPattern": "julius-$VERSION-vita.vpk"
+      "uploadPattern": "julius-$VERSION-vita.vpk",
+      "listInDownloads": true
     }
   ],
 
@@ -81,7 +83,8 @@ cat > "bintray.json" <<EOF
   "files": [
     {
       "includePattern": "${build_dir}/julius_switch.zip",
-      "uploadPattern": "julius-$VERSION-switch.zip"
+      "uploadPattern": "julius-$VERSION-switch.zip",
+      "listInDownloads": true
     }
   ],
 
