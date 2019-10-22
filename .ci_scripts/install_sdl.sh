@@ -77,12 +77,11 @@ then
 elif [ ! -z "$SDL_LIB" ] && [ ! -z "$SDL_MIXER_LIB" ]
 then
   if [ "$BUILD_TARGET" == "mac" ]
-    then
-      install_sdl_macos $SDL_LIB
-      install_sdl_macos $SDL_MIXER_LIB
-    else
-      install_sdl_lib $SDL_LIB
-      install_sdl_lib $SDL_MIXER_LIB
-    fi
+  then
+    install_sdl_macos $SDL_LIB
+    install_sdl_macos $SDL_MIXER_LIB
+  else
+    install_sdl_lib $SDL_LIB
+    install_sdl_lib $SDL_MIXER_LIB
   fi
 fi
