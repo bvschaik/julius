@@ -13,16 +13,14 @@ case "$BUILD_TARGET" in
 	hdiutil create -volname Julius -srcfolder julius.app -ov -format UDZO julius.dmg
 	cd ..
 	;;
+"appimage")
+	cd build && make && make test
+	make DESTDIR=AppDir install
+	cd ..
+	./.ci_scripts/package_appimage.sh
 *)
 	cd build && make && make test
-	if [ "$BUILD_TARGET" == "appimage" ];
-	then
-		make DESTDIR=AppDir install;
-	else
-		make install;
-	fi;
-
+	make install
 	cd ..
-	./.ci_scripts/package_appimage.sh;
 	;;
 esac
