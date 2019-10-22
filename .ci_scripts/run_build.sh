@@ -18,6 +18,7 @@ case "$BUILD_TARGET" in
 	make DESTDIR=AppDir install
 	cd ..
 	./.ci_scripts/package_appimage.sh
+	;;
 *)
 	cd build && make && make test
 	make install
