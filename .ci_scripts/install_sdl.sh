@@ -71,14 +71,18 @@ function install_sdl_macos {
   hdiutil detach "$VOLUME"
 }
 
-if [ ! -z "$SDL_LIB" ] && [ ! -z "$SDL_MIXER_LIB" ]
+if [ "$BUILD_TARGET" == "appimage" ]
+then
+  sudo apt-get -y install libgl1-mesa-dev libsdl2-dev libsdl2-mixer-dev
+elif [ ! -z "$SDL_LIB" ] && [ ! -z "$SDL_MIXER_LIB" ]
 then
   if [ "$BUILD_TARGET" == "mac" ]
-  then
-    install_sdl_macos $SDL_LIB
-    install_sdl_macos $SDL_MIXER_LIB
-  else
-    install_sdl_lib $SDL_LIB
-    install_sdl_lib $SDL_MIXER_LIB
+    then
+      install_sdl_macos $SDL_LIB
+      install_sdl_macos $SDL_MIXER_LIB
+    else
+      install_sdl_lib $SDL_LIB
+      install_sdl_lib $SDL_MIXER_LIB
+    fi
   fi
 fi

@@ -18,7 +18,7 @@ matrix:
   - os: linux
     name: Linux AppImage
     compiler: gcc
-    env: SDL_LIB=SDL2-2.0.9 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=appimage DEPLOY=appimage
+    env: BUILD_TARGET=appimage DEPLOY=appimage
     services:
       - docker
   - os: osx
