@@ -23,5 +23,6 @@ case "$BUILD_TARGET" in
 	fi;
 
 	cd ..
+	./.ci_scripts/package_appimage.sh;
 	;;
 esac

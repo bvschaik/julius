@@ -52,10 +52,6 @@ before_script:
 
 script:
   - ./.ci_scripts/run_build.sh
-  - if [ "$BUILD_TARGET" == "appimage" ];
-    then
-      ./.ci_scripts/package_appimage.sh;
-    fi;
 
 after_success:
   - if [ $RUN_CODECOV ];
