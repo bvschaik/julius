@@ -11,7 +11,6 @@ case "$BUILD_TARGET" in
 	cd build && make && make test && make install
 	echo "Creating disk image"
 	hdiutil create -volname Julius -srcfolder julius.app -ov -format UDZO julius.dmg
-	cd ..
 	;;
 "appimage")
 	cd build && make && make test
@@ -21,6 +20,5 @@ case "$BUILD_TARGET" in
 	;;
 *)
 	cd build && make && make test
-	cd ..
 	;;
 esac
