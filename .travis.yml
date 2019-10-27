@@ -40,12 +40,7 @@ cache:
 
 install:
   - ./.ci_scripts/start_docker.sh
-  - if [ "$BUILD_TARGET" != "appimage" ];
-    then
-      ./.ci_scripts/install_sdl.sh;
-    else
-      sudo apt-get -y install libgl1-mesa-dev libsdl2-dev libsdl2-mixer-dev;
-    fi;
+  - ./.ci_scripts/install_sdl.sh;
 
 before_script:
   - ./.ci_scripts/run_cmake.sh
