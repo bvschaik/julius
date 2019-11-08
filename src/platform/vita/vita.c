@@ -1,7 +1,6 @@
 #include "vita.h"
 #include "core/file.h"
 #include <string.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <malloc.h>
 #include "SDL.h"
@@ -12,11 +11,6 @@ int _newlib_heap_size_user = 300 * 1024 * 1024;
 int chdir(const char *path)
 {
     return 0;
-}
-
-char *getcwd(char *buf, size_t size)
-{
-    return NULL;
 }
 
 char* vita_prepend_path(const char *path)

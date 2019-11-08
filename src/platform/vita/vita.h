@@ -3,8 +3,6 @@
 
 #ifdef __vita__
 
-#include <stddef.h>
-
 #define VITA_PATH_PREFIX "ux0:/data/julius/"
 #define VITA_DISPLAY_WIDTH 960
 #define VITA_DISPLAY_HEIGHT 544
@@ -21,7 +19,6 @@ extern int last_mouse_y; // defined in vita_input.c
 extern int touch_mode; // defined in vita_input.c
 
 int chdir(const char *path);
-char *getcwd(char *buf, size_t size);
 
 char* vita_prepend_path(const char *path);
 

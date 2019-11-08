@@ -406,21 +406,6 @@ static int pre_init(const char *custom_data_dir)
         return game_pre_init();
     }
 
-
-    char *prev = NULL;
-    prev = getcwd(prev, 0);
-
-    // AppImage support
-    if (chdir("../share/julius") == 0) {
-      SDL_Log("Loading AppImage game from %s/../share/julius", prev);
-      if (game_pre_init()) {
-        free(prev);
-        return 1;
-      }
-      chdir(prev);
-    }
-    free(prev);
-
     SDL_Log("Loading game from working directory");
     if (game_pre_init()) {
         return 1;
