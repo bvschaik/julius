@@ -73,7 +73,7 @@ function install_sdl_macos {
 
 if [ "$BUILD_TARGET" == "appimage" ]
 then
-  sudo apt-get -y install libgl1-mesa-dev libsdl2-dev libsdl2-mixer-dev
+  sudo apt-get update && sudo apt-get -y install libgl1-mesa-dev libsdl2-dev libsdl2-mixer-dev
 elif [ ! -z "$SDL_LIB" ] && [ ! -z "$SDL_MIXER_LIB" ]
 then
   if [ "$BUILD_TARGET" == "mac" ]
