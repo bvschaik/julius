@@ -4,7 +4,36 @@ build_dir="$(pwd)/build"
 
 VERSION=$(cat res/version.txt)
 
-if [ "$DEPLOY" = "mac" ]
+# Linux portable binary: https://appimage.org/
+if [ "$DEPLOY" = "appimage" ]
+then
+cat > "bintray.json" <<EOF
+{
+  "package": {
+    "subject": "bvschaik",
+    "repo": "julius",
+    "name": "linux-unstable",
+    "licenses": ["AGPL-V3"],
+    "vcs_url": "https://github.com/bvschaik/julius.git"
+  },
+
+  "version": {
+    "name": "$VERSION",
+    "released": "$(date +'%Y-%m-%d')",
+    "desc": "Automated Linux AppImage build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
+  },
+
+  "files": [
+    {
+      "includePattern": "${build_dir}/julius.AppImage",
+      "uploadPattern": "julius-$VERSION-linux.AppImage"
+    }
+  ],
+
+  "publish": true
+}
+EOF
+elif [ "$DEPLOY" = "mac" ]
 then
 cat > "bintray.json" <<EOF
 {
