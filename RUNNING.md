@@ -14,7 +14,15 @@ Julius supports Windows XP and higher.
 
 ## Linux/BSD
 
-OpenBSD and FreeBSD provide Julius as [package](http://ports.su/games/julius). On Linux you'll have to build Julius from source.
+OpenBSD and FreeBSD provide Julius as [package](http://ports.su/games/julius).
+
+On Linux you can use the provided [AppImage](https://appimage.org/):
+
+1. Obtain the game data files of Caesar 3 by checking one of the two next sections.
+1. Download the [latest AppImage release](https://github.com/bvschaik/julius/releases) of Julius.
+1. Make the downloaded AppImage executable by going into the file properties or running `chmod +x julius-*.AppImage` in the same folder as the AppImage.
+1. You can then run it just like any Linux executable.
+1. (Optional) You can install [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher#readme) in order to integrate the AppImage in your OS. You'll then be able to launch it easily from the menu just like other apps.
 
 ### GOG version with InnoExtract
 If you bought the GOG edition, you can download the offline installer exe, and use
