@@ -203,7 +203,16 @@ int scroll_decay(view_tile *position)
 
 int scroll_get_direction(const mouse *m)
 {
-    if (!m->is_inside_window && !m->is_touch) {
+    int is_inside_window = m->is_inside_window;
+    int width = screen_width();
+    int height = screen_height();
+    if (setting_fullscreen() && m->x < width && m->y < height)
+    {
+        // For Windows 10, in fullscreen mode, on HiDPI screens, this is needed
+        // to get scrolling to work
+        is_inside_window = 1;
+    }
+    if (!is_inside_window && !m->is_touch) {
         return DIR_8_NONE;
     }
     if (data.speed.decaying && m->left.went_down) {
@@ -216,8 +225,6 @@ int scroll_get_direction(const mouse *m)
     int right = 0;
     int speed_modifier = 0;
     int border = SCROLL_BORDER;
-    int width = screen_width();
-    int height = screen_height();
     int x = m->x;
     int y = m->y;
     if (data.limits.active) {
