@@ -2,6 +2,7 @@
 #include "game/file.h"
 #include "game/game.h"
 #include "game/settings.h"
+#include "input/cursor.h"
 
 #if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__)
 #include <execinfo.h>
@@ -59,7 +60,7 @@ static int run_autopilot(const char *input_saved_game, const char *output_saved_
         return 1;
     }
 
-    if (!game_init()) {
+    if (!game_init(CURSOR_SCALE_1)) {
         printf("Unable to run Game_init\n");
         return 2;
     }
