@@ -514,7 +514,6 @@ int main(int argc, char **argv)
     cursor_scale scale = CURSOR_SCALE_1;
     for (int i = 1; i < argc;) {
         int consumed = 0;
-        SDL_Log(argv[i]);
         // we ignore "-psn" arguments, this is needed to launch the app
         // from the Finder on macOS.
         // https://hg.libsdl.org/SDL/file/c005c49beaa9/test/testdropfile.c#l47
