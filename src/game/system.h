@@ -1,6 +1,8 @@
 #ifndef GAME_SYSTEM_H
 #define GAME_SYSTEM_H
 
+#include "input/cursor.h"
+
 /**
  * @file
  * Functions that should implemented by the underlying system
@@ -26,7 +28,7 @@ void system_set_fullscreen(int fullscreen);
 /**
  * Initialize cursors
  */
-void system_init_cursors(void);
+void system_init_cursors(cursor_scale cur_scale);
 
 /**
  * Set cursor to the specified cursor in @link input/cursor.h @endlink

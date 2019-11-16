@@ -15,6 +15,7 @@
 #include "platform/version.h"
 #include "platform/vita/vita.h"
 #include "input/hotkey.h"
+#include "input/cursor.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.h"
 
