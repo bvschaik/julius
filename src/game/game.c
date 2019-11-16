@@ -20,7 +20,6 @@
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
-#include "input/cursor.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"

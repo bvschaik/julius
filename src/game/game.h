@@ -1,6 +1,8 @@
 #ifndef GAME_GAME_H
 #define GAME_GAME_H
 
+#include "input/cursor.h"
+
 enum {
     GAME_INIT_ERROR = 0,
     GAME_INIT_OK = 1,
@@ -9,7 +11,7 @@ enum {
 
 int game_pre_init(void);
 
-int game_init(void);
+int game_init(cursor_scale cur_scale);
 
 int game_init_editor(void);
 
