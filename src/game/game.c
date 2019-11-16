@@ -20,6 +20,7 @@
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
+#include "input/cursor.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
@@ -66,10 +67,10 @@ static int has_patch()
     return difficulty_option != help_menu;
 }
 
-int game_init(void)
+int game_init(cursor_scale cur_scale)
 {
     int with_fonts = encoding_get() == ENCODING_CYRILLIC;
-    system_init_cursors();
+    system_init_cursors(cur_scale);
     if (!image_init(with_fonts)) {
         errlog("unable to init graphics");
         return GAME_INIT_ERROR;

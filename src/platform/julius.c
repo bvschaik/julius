@@ -14,6 +14,7 @@
 #include "platform/version.h"
 #include "platform/vita/vita.h"
 #include "input/hotkey.h"
+#include "input/cursor.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.h"
 
@@ -453,7 +454,7 @@ static int pre_init(const char *custom_data_dir)
     return 0;
 }
 
-static void setup(const char *custom_data_dir)
+static void setup(const char *custom_data_dir, cursor_scale cur_scale)
 {
     signal(SIGSEGV, handler);
     setup_logging();
@@ -486,7 +487,7 @@ static void setup(const char *custom_data_dir)
         exit(-2);
     }
 
-    int game_init_result = game_init();
+    int game_init_result = game_init(cur_scale);
     if (game_init_result == GAME_INIT_ERROR) {
         SDL_Log("Exiting: game init failed");
         exit(2);
@@ -510,19 +511,53 @@ static void teardown(void)
 int main(int argc, char **argv)
 {
     const char *custom_data_dir = NULL;
-    for (int i = 1; i < argc; i++) {
+    cursor_scale scale = CURSOR_SCALE_1;
+    for (int i = 1; i < argc;) {
+        int consumed = 0;
+        SDL_Log(argv[i]);
         // we ignore "-psn" arguments, this is needed to launch the app
         // from the Finder on macOS.
         // https://hg.libsdl.org/SDL/file/c005c49beaa9/test/testdropfile.c#l47
         if (SDL_strncmp(argv[i], "-psn", 4) == 0) {
-            continue;
+            consumed = 1;
+        }
+        else if (SDL_strncmp(argv[i], "--cursor_scale", 4) == 0) {
+            if (i+1>=argc) {
+                printf("option --cursor_scale should be followed by \"1\", \"1.5\" or \"2\"\n");
+                return -1;
+            }
+            else if (SDL_strncmp(argv[i+1], "1", 1) == 0) {
+                scale = CURSOR_SCALE_1;
+                consumed = 2;
+            }
+            else if (SDL_strncmp(argv[i+1], "1.5", 3) == 0) {
+                scale = CURSOR_SCALE_1_5;
+                consumed = 2;
+            }
+            else if (SDL_strncmp(argv[i+1], "1,5", 3) == 0) {
+                scale = CURSOR_SCALE_1_5;
+                consumed = 2;
+            }
+            else if (SDL_strncmp(argv[i+1], "2", 1) == 0) {
+                scale = CURSOR_SCALE_2;
+                consumed = 2;
+            }
+            else {
+                printf("option --cursor_scale should be followed by \"1\", \"1.5\" or \"2\"\n");
+                return -1;
+            }
+        }
+        else
+        {
+            // custom data dir is our only positional input argument
+            custom_data_dir = argv[i];
+            consumed = 1;
         }
 
-        custom_data_dir = argv[i];
-        break;
+        i += consumed;
     }
 
-    setup(custom_data_dir);
+    setup(custom_data_dir,scale);
 
     main_loop();
 
