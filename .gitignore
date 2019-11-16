@@ -10,3 +10,4 @@ res/version.rc
 res/version.txt
 res/julius.icns
 /CMakeSettings.json
+out/
