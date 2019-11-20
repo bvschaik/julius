@@ -23,10 +23,12 @@ static int is_key_currently_down(SDL_Scancode key)
 {
     int numkeys = 0;
     Uint8* key_state = SDL_GetKeyboardState(&numkeys);
-    if (key > numkeys - 1)
+    if (key > numkeys - 1) {
         return 0;
-    else
+    }
+    else {
         return key_state[key];
+    }
 }
 
 static int is_repeatable_key(SDL_Keycode code)
@@ -100,37 +102,45 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
             keyboard_left();
             hotkey_left();
             // check if another key still down as well (only last-pressed repeats)
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_UP))
+            if (event->repeat && is_key_currently_down(SDL_SCANCODE_UP)) {
                 hotkey_up();
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_DOWN))
+            }
+            if (event->repeat && is_key_currently_down(SDL_SCANCODE_DOWN)) {
                 hotkey_down();
+            }
             break;
         case SDLK_RIGHT:
             keyboard_right();
             hotkey_right();
             // check if another key still down as well (only last-pressed repeats)
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_UP))
+            if (event->repeat && is_key_currently_down(SDL_SCANCODE_UP)) {
                 hotkey_up();
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_DOWN))
+            }
+            if (event->repeat && is_key_currently_down(SDL_SCANCODE_DOWN)) {
                 hotkey_down();
+            }
             break;
         case SDLK_UP:
             keyboard_left();
             hotkey_up();
             // check if another key still down as well (only last-pressed repeats)
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_LEFT))
+            if (event->repeat && is_key_currently_down(SDL_SCANCODE_LEFT)) {
                 hotkey_left();
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_RIGHT))
+            }
+            if (event->repeat && is_key_currently_down(SDL_SCANCODE_RIGHT)) {
                 hotkey_right();
+            }
             break;
         case SDLK_DOWN:
             keyboard_right();
             hotkey_down();
             // check if another key still down as well (only last-pressed repeats)
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_LEFT))
+            if (event->repeat && is_key_currently_down(SDL_SCANCODE_LEFT)) {
                 hotkey_left();
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_RIGHT))
+            }
+            if (event->repeat && is_key_currently_down(SDL_SCANCODE_RIGHT)) {
                 hotkey_right();
+            }
             break;
         case SDLK_HOME:
             keyboard_home();
