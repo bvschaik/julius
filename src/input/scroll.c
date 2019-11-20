@@ -206,8 +206,7 @@ int scroll_get_direction(const mouse *m)
     int is_inside_window = m->is_inside_window;
     int width = screen_width();
     int height = screen_height();
-    if (setting_fullscreen() && m->x < width && m->y < height)
-    {
+    if (setting_fullscreen() && m->x < width && m->y < height) {
         // For Windows 10, in fullscreen mode, on HiDPI screens, this is needed
         // to get scrolling to work
         is_inside_window = 1;

@@ -218,7 +218,7 @@ static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
 static void handle_window_event(SDL_WindowEvent *event, int *window_active)
 {
     switch (event->event) {
-    case SDL_WINDOWEVENT_ENTER:
+        case SDL_WINDOWEVENT_ENTER:
             mouse_set_inside_window(1);
             break;
         case SDL_WINDOWEVENT_LEAVE:
