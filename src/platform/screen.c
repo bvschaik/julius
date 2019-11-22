@@ -35,8 +35,10 @@ static int scale_pixels_to_logical(int pixel_value)
     return pixel_value * 100 / scale_percentage;
 }
 
-int platform_screen_create(const char *title)
+int platform_screen_create(const char *title, int display_scale_percentage)
 {
+    scale_percentage = display_scale_percentage;
+
     int width, height;
     int fullscreen = setting_fullscreen();
     if (fullscreen) {

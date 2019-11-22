@@ -22,7 +22,7 @@ static struct {
     int y;
 } window_pos;
 
-int platform_screen_create(const char *title)
+int platform_screen_create(const char *title, int display_scale_percentage)
 {
     int width, height;
     int fullscreen = 1;
