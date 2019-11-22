@@ -28,8 +28,10 @@ void sound_device_set_channel_volume(int channel, int volumePercentage)
 void sound_device_set_channel_panning(int channel, int leftPct, int rightPct)
 {}
 
-void sound_device_play_music(const char *filename)
-{}
+int sound_device_play_music(const char *filename)
+{
+    return 0;
+}
 
 void sound_device_play_file_on_channel(const char *filename, int channel)
 {}

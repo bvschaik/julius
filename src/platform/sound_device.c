@@ -108,7 +108,7 @@ void sound_device_set_channel_panning(int channel, int left_pct, int right_pct)
     }
 }
 
-void sound_device_play_music(const char *filename)
+int sound_device_play_music(const char *filename)
 {
     if (initialized) {
         sound_device_stop_music();
@@ -127,7 +127,10 @@ void sound_device_play_music(const char *filename)
         #ifdef __vita__
         free(resolved_filename);
         #endif
+
+        return (music) ? 1 : 0;
     }
+    return 0;
 }
 
 void sound_device_play_file_on_channel(const char *filename, int channel)
