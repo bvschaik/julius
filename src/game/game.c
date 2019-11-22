@@ -57,7 +57,7 @@ int game_pre_init(void)
     return 1;
 }
 
-static int has_patch()
+static int has_patch(void)
 {
     const uint8_t *difficulty_option = lang_get_string(2, 6);
     const uint8_t *help_menu = lang_get_string(3, 0);

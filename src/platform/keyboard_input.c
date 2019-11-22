@@ -22,11 +22,10 @@ static int is_alt_down(SDL_KeyboardEvent *event)
 static int is_key_currently_down(SDL_Scancode key)
 {
     int numkeys = 0;
-    Uint8* key_state = SDL_GetKeyboardState(&numkeys);
+    const Uint8* key_state = SDL_GetKeyboardState(&numkeys);
     if (key > numkeys - 1) {
         return 0;
-    }
-    else {
+    } else {
         return key_state[key];
     }
 }
