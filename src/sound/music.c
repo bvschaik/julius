@@ -61,8 +61,7 @@ static void play_track(int track)
     }
     const char* mp3_track = dir_get_case_corrected_file(mp3_tracks[track]);
 
-    if (!mp3_track || !sound_device_play_music(mp3_track))
-    {
+    if (!mp3_track || !sound_device_play_music(mp3_track)) {
         sound_device_play_music(dir_get_case_corrected_file(tracks[track]));
     }
     sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
