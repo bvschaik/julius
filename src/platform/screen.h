@@ -1,7 +1,7 @@
 #ifndef PLATFORM_SCREEN_H
 #define PLATFORM_SCREEN_H
 
-int platform_screen_create(const char *title);
+int platform_screen_create(const char *title, int dispay_scale_percentage);
 void platform_screen_destroy(void);
 
 int platform_screen_resize(int pixel_width, int pixel_height);
