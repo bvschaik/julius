@@ -11,17 +11,17 @@ vita2d_texture *current_cursor;
 
 static vita2d_texture *init_cursor(const cursor *c)
 {
-    vita2d_texture *tex = vita2d_create_empty_texture_format(32, 32, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ARGB);
+    vita2d_texture *tex = vita2d_create_empty_texture_format(c->width, c->height, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ARGB);
     color_t *cursor_buf = vita2d_texture_get_datap(tex);
 
-    for (int i = 0; i < 32; i++) {
-        for (int j = 0; j < 32; j++) {
-            switch (c->data[i * 32 + j]) {
-                case 'X':
-                    cursor_buf[i * 32 + j] = COLOR_BLACK | 0xFFu << 24;
+    for (int i = 0; i < c->height; i++) {
+        for (int j = 0; j < c->width; j++) {
+            switch (c->data[i * c->width + j]) {
+                case '#':
+                    cursor_buf[i * c->width + j] = COLOR_BLACK | 0xFFu << 24;
                     break;
-                case '.':
-                    cursor_buf[i * 32 + j] = COLOR_WHITE | 0xFFu << 24;
+                case '\'':
+                    cursor_buf[i * c->width + j] = COLOR_WHITE | 0xFFu << 24;
                     break;
                 case ' ':
                     break; // Transparent is 0x00000000 which is the default value of the buffer
