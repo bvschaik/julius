@@ -2,6 +2,9 @@
 
 #include "SDL.h"
 
+#define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
+#define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
+
 static int parse_decimal_as_percentage(const char *str)
 {
     const char *start = str;
@@ -37,7 +40,6 @@ static int parse_decimal_as_percentage(const char *str)
         SDL_Log("Invalid decimal: %s\n", str);
         return -1;
     }
-    SDL_Log("Percentage: %d", percentage);
     return percentage;
 }
 
@@ -47,6 +49,7 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
 
     // Set sensible defaults
     output_args->data_directory = 0;
+    output_args->display_scale_percentage = 100;
     output_args->display_scale_percentage = 100;
 
     for (int i = 1; i < argc; i++) {
@@ -61,13 +64,27 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 i++;
                 if (percentage < 50 || percentage > 500) {
-                    SDL_Log("Option --display-scale must be followed by a scale value between 0.5 and 5");
+                    SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 } else {
                     output_args->display_scale_percentage = percentage;
                 }
             } else {
-                SDL_Log("Option --display-scale must be followed by a scale value between 0.5 and 5");
+                    SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
+                ok = 0;
+            }
+        } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
+            if (i + 1 < argc) {
+                int percentage = parse_decimal_as_percentage(argv[i + 1]);
+                i++;
+                if (percentage == 100 || percentage == 150 || percentage == 200) {
+                    output_args->cursor_scale_percentage = percentage;
+                } else {
+                    SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
+                    ok = 0;
+                }
+            } else {
+                SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else {
