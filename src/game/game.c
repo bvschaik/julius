@@ -14,7 +14,6 @@
 #include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"
-#include "game/system.h"
 #include "game/tick.h"
 #include "graphics/font.h"
 #include "graphics/video.h"
@@ -67,10 +66,9 @@ static int has_patch(void)
     return difficulty_option != help_menu;
 }
 
-int game_init(cursor_scale cur_scale)
+int game_init(void)
 {
     int with_fonts = encoding_get() == ENCODING_CYRILLIC;
-    system_init_cursors(cur_scale);
     if (!image_init(with_fonts)) {
         errlog("unable to init graphics");
         return GAME_INIT_ERROR;

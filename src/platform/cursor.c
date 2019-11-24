@@ -28,8 +28,20 @@ static SDL_Surface* generate_cursor_surface(const char* data, int width, int hei
     return cursor_surface;
 }
 
-void system_init_cursors(cursor_scale cur_scale)
+cursor_scale get_cursor_scale(int scale_percentage)
 {
+    if (scale_percentage <= 100) {
+        return CURSOR_SCALE_1;
+    } else if (scale_percentage <= 150) {
+        return CURSOR_SCALE_1_5;
+    } else {
+        return CURSOR_SCALE_2;
+    }
+}
+
+void platform_init_cursors(int scale_percentage)
+{
+    cursor_scale cur_scale = get_cursor_scale(scale_percentage);
     for (int i = 0; i < CURSOR_MAX; i++) {
         const cursor* c = input_cursor_data(i, cur_scale);
         cursor_surfaces[i] = generate_cursor_surface(c->data, c->width, c->height);
@@ -42,12 +54,4 @@ void system_set_cursor(int cursor_id)
 {
     current_cursor_id = cursor_id;
     SDL_SetCursor(cursors[cursor_id]);
-}
-
-void system_free_cursors(void)
-{
-    for (int i = 0; i < CURSOR_MAX; i++) {
-        SDL_FreeCursor(cursors[i]);
-        SDL_FreeSurface(cursor_surfaces[i]);
-    }
 }

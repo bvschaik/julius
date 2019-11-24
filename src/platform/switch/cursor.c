@@ -1,6 +1,7 @@
 #include "graphics/color.h"
 #include "game/system.h"
 #include "input/cursor.h"
+#include "platform/cursor.h"
 
 #include "SDL.h"
 
@@ -15,8 +16,7 @@ extern struct {
 
 static SDL_Texture *init_cursor(const cursor *c)
 {
-
-    SDL_Texture *tex = SDL_CreateTexture(SDL.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, 32, 32);
+    SDL_Texture *tex = SDL_CreateTexture(SDL.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, 32, 32);
 
     uint32_t pixels[32 * 32];
 
@@ -42,10 +42,10 @@ static SDL_Texture *init_cursor(const cursor *c)
     return tex;
 }
 
-void system_init_cursors(void)
+void platform_init_cursors(int scale_percentage)
 {
     for (int i = 0; i < CURSOR_MAX; i++) {
-        cursors[i] = init_cursor(input_cursor_data(i));
+        cursors[i] = init_cursor(input_cursor_data(i, CURSOR_SCALE_1));
     }
     system_set_cursor(CURSOR_ARROW);
 }
