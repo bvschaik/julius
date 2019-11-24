@@ -117,9 +117,8 @@ int platform_screen_resize(int pixel_width, int pixel_height)
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         logical_width, logical_height);
     if (scale_percentage != 100) {
-        if (scale_percentage % 100 != 0) {
-            SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-        }
+        // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
         SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
     }
     if (SDL.texture) {
