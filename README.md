@@ -39,6 +39,10 @@ This results in a `julius` executable.
 
 To build the Vita or Switch version, use `cmake .. -DVITA_BUILD=ON` or `cmake .. -DSWITCH_BUILD=ON` instead of `cmake ..`.
 
+For more detailed instructions on how to build Julius, please check the following documents:
+- [Building for Windows](doc/building_windows.md);
+- [Building for Linux](doc/building_linux.md).
+
 ## Running the game
 
 After downloading the Windows build or compiling the game yourself, the game data should be in the same directory as in which the binary is run or it can be run as `julius /path/to/game-data`.
