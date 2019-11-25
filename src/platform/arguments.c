@@ -2,10 +2,9 @@
 
 #include "SDL.h"
 
-#include <stdio.h>
-
-#define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2\n\n"
-#define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5\n\n"
+#define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
+#define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
+#define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
 
 static int parse_decimal_as_percentage(const char *str)
 {
@@ -39,7 +38,7 @@ static int parse_decimal_as_percentage(const char *str)
     }
     if (*end) {
         // still some characters left, print out warning
-        SDL_Log("Invalid decimal: %s\n", str);
+        SDL_Log("Invalid decimal: %s", str);
         return -1;
     }
     return percentage;
@@ -66,13 +65,13 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 i++;
                 if (percentage < 50 || percentage > 500) {
-                    printf(DISPLAY_SCALE_ERROR_MESSAGE);
+                    SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 } else {
                     output_args->display_scale_percentage = percentage;
                 }
             } else {
-                    printf(DISPLAY_SCALE_ERROR_MESSAGE);
+                    SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
@@ -82,14 +81,17 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
                 if (percentage == 100 || percentage == 150 || percentage == 200) {
                     output_args->cursor_scale_percentage = percentage;
                 } else {
-                    printf(CURSOR_SCALE_ERROR_MESSAGE);
+                    SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 }
             } else {
-                printf(CURSOR_SCALE_ERROR_MESSAGE);
+                SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--help") == 0) {
+            ok = 0;
+        } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
+            SDL_Log(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
             ok = 0;
         } else {
             output_args->data_directory = argv[i];
@@ -97,13 +99,13 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
     }
 
     if (!ok) {
-        printf("Usage: julius [ARGS] [DATA_DIR]\n\n");
-        printf("ARGS may be:\n\n");
-        printf("--display-scale NUMBER\n");
-        printf("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5\n\n");
-        printf("--cursor-scale NUMBER\n");
-        printf("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2\n\n");
-        printf("The last argument, if present, is interpreted as data directory for the Caesar 3 installation\n\n");
+        SDL_Log("Usage: julius [ARGS] [DATA_DIR]");
+        SDL_Log("ARGS may be:");
+        SDL_Log("--display-scale NUMBER");
+        SDL_Log("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
+        SDL_Log("--cursor-scale NUMBER");
+        SDL_Log("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
+        SDL_Log("The last argument, if present, is interpreted as data directory for the Caesar 3 installation");
     }
     return ok;
 }
