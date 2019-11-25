@@ -178,15 +178,29 @@ const clip_info *graphics_get_clip_info(int x, int y, int width, int height)
 
 void graphics_save_to_buffer(int x, int y, int width, int height, color_t *buffer)
 {
-    for (int dy = 0; dy < height; dy++) {
-        memcpy(&buffer[dy * width], graphics_get_pixel(x, y + dy), sizeof(color_t) * width);
+    const clip_info *clip = graphics_get_clip_info(x, y, width, height);
+    if (!clip->is_visible) {
+        return;
+    }
+    int min_x = x + clip->clipped_pixels_left;
+    int min_dy = clip->clipped_pixels_top;
+    int max_dy = height - clip->clipped_pixels_bottom;
+    for (int dy = min_dy; dy < max_dy; dy++) {
+        memcpy(&buffer[dy * width], graphics_get_pixel(min_x, y + dy), sizeof(color_t) * clip->visible_pixels_x);
     }
 }
 
 void graphics_draw_from_buffer(int x, int y, int width, int height, const color_t *buffer)
 {
-    for (int dy = 0; dy < height; dy++) {
-        memcpy(graphics_get_pixel(x, y + dy), &buffer[dy * width], sizeof(color_t) * width);
+    const clip_info *clip = graphics_get_clip_info(x, y, width, height);
+    if (!clip->is_visible) {
+        return;
+    }
+    int min_x = x + clip->clipped_pixels_left;
+    int min_dy = clip->clipped_pixels_top;
+    int max_dy = height - clip->clipped_pixels_bottom;
+    for (int dy = min_dy; dy < max_dy; dy++) {
+        memcpy(graphics_get_pixel(min_x, y + dy), &buffer[dy * width], sizeof(color_t) * clip->visible_pixels_x);
     }
 }
 
@@ -208,9 +222,9 @@ void graphics_draw_vertical_line(int x, int y1, int y2, color_t color)
     int y_min = y1 < y2 ? y1 : y2;
     int y_max = y1 < y2 ? y2 : y1;
     y_min = y_min < clip_rectangle.y_start ? clip_rectangle.y_start : y_min;
-    y_max = y_max > clip_rectangle.y_end ? clip_rectangle.y_end : y_max;
+    y_max = y_max >= clip_rectangle.y_end ? clip_rectangle.y_end - 1 : y_max;
     color_t *pixel = graphics_get_pixel(x, y_min);
-    color_t *end_pixel = pixel + ((y_max - y_min)  * canvas.width);
+    color_t *end_pixel = pixel + ((y_max - y_min) * canvas.width);
     while (pixel <= end_pixel) {
         *pixel = color;
         pixel += canvas.width;
@@ -225,7 +239,7 @@ void graphics_draw_horizontal_line(int x1, int x2, int y, color_t color)
     int x_min = x1 < x2 ? x1 : x2;
     int x_max = x1 < x2 ? x2 : x1;
     x_min = x_min < clip_rectangle.x_start ? clip_rectangle.x_start : x_min;
-    x_max = x_max > clip_rectangle.x_end ? clip_rectangle.x_end : x_max;
+    x_max = x_max >= clip_rectangle.x_end ? clip_rectangle.x_end - 1 : x_max;
     color_t *pixel = graphics_get_pixel(x_min, y);
     color_t *end_pixel = pixel + (x_max - x_min);
     while (pixel <= end_pixel) {
