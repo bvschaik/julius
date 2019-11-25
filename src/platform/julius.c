@@ -514,9 +514,7 @@ static void teardown(void)
 int main(int argc, char **argv)
 {
     julius_args args;
-    if (!platform_parse_arguments(argc, argv, &args)) {
-        return 1;
-    }
+    platform_parse_arguments(argc, argv, &args);
 
     setup(&args);
 
