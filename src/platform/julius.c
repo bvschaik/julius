@@ -215,6 +215,7 @@ static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
     }
 }
 
+#ifndef __SWITCH__
 static void handle_window_event(SDL_WindowEvent *event, int *window_active)
 {
     switch (event->event) {
@@ -225,27 +226,28 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
             mouse_set_inside_window(0);
             break;
         case SDL_WINDOWEVENT_SIZE_CHANGED:
-            SDL_Log("Window resized to %d x %d", event->data1, event->data2);
+            SDL_Log("Window resized to %d x %d", (int) event->data1, (int) event->data2);
             platform_screen_resize(event->data1, event->data2);
             break;
         case SDL_WINDOWEVENT_RESIZED:
-            SDL_Log("System resize to %d x %d", event->data1, event->data2);
+            SDL_Log("System resize to %d x %d", (int) event->data1, (int) event->data2);
             break;
         case SDL_WINDOWEVENT_MOVED:
-            SDL_Log("Window move to coordinates x: %d y: %d\n", event->data1, event->data2);
+            SDL_Log("Window move to coordinates x: %d y: %d\n", (int) event->data1, (int) event->data2);
             platform_screen_move(event->data1, event->data2);
             break;
 
         case SDL_WINDOWEVENT_SHOWN:
-            SDL_Log("Window %d shown", event->windowID);
+            SDL_Log("Window %d shown", (unsigned int) event->windowID);
             *window_active = 1;
             break;
         case SDL_WINDOWEVENT_HIDDEN:
-            SDL_Log("Window %d hidden", event->windowID);
+            SDL_Log("Window %d hidden", (unsigned int) event->windowID);
             *window_active = 0;
             break;
     }
 }
+#endif
 
 static void handle_event(SDL_Event *event, int *active, int *quit)
 {

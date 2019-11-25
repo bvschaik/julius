@@ -269,10 +269,11 @@ static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
         input_size = to_uint(intbuf);
     }
     if (input_size == UNCOMPRESSED) {
-        fread(buffer, 1, bytes_to_read, fp);
+        if (fread(buffer, 1, bytes_to_read, fp) != bytes_to_read) {
+            return 0;
+        }
     } else {
-        fread(compress_buffer, 1, input_size, fp);
-        if (!zip_decompress(compress_buffer, input_size, buffer, &bytes_to_read)) {
+        if (fread(compress_buffer, 1, input_size, fp) != input_size || !zip_decompress(compress_buffer, input_size, buffer, &bytes_to_read)) {
             return 0;
         }
     }
@@ -288,12 +289,18 @@ static int unpack(const char *filename, unsigned char *buffer)
     }
     int offset = 0;
     for (int i = 0; save_game_parts[i].length_in_bytes; i++) {
+        int result = 0;
         if (save_game_parts[i].compressed) {
-            read_compressed_chunk(fp, &buffer[offset], save_game_parts[i].length_in_bytes);
+            result = read_compressed_chunk(fp, &buffer[offset], save_game_parts[i].length_in_bytes);
         } else {
-            fread(&buffer[offset], 1, save_game_parts[i].length_in_bytes, fp);
+            result = (fread(&buffer[offset], 1, save_game_parts[i].length_in_bytes, fp) == save_game_parts[i].length_in_bytes);
         }
         offset += save_game_parts[i].length_in_bytes;
+        if (!result) {
+            printf("Error while loading file %s\n", filename);
+            fclose(fp);
+            return 0;
+        }
     }
     fclose(fp);
     return offset;

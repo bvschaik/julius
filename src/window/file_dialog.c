@@ -287,7 +287,7 @@ static void button_scroll(int is_down, int num_lines)
 static void button_select_file(int index, int param2)
 {
     if (index < data.file_list->num_files) {
-        strncpy(data.selected_file, data.file_list->files[data.scroll_position + index], FILE_NAME_MAX);
+        strncpy(data.selected_file, data.file_list->files[data.scroll_position + index], FILE_NAME_MAX - 1);
         encoding_from_utf8(data.selected_file, data.typed_name, FILE_NAME_MAX);
         file_remove_extension(data.typed_name);
         keyboard_refresh();
