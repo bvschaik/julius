@@ -3,6 +3,8 @@
 Julius requires the original Caesar 3 files to run. This can be an old CD-ROM version, or a digital copy
 from either [GOG](https://www.gog.com/game/caesar_3) or [Steam](https://store.steampowered.com/app/517790/Caesar_3/).
 
+Note that there are [command line options](#command-line-options) which are available to all platforms.
+
 ## Windows
 
 Julius supports Windows XP and higher.
@@ -127,3 +129,30 @@ For multi-touch gestures, the fingers have to be far enough apart from each othe
 
 Physical USB mice and keyboards are supported. All keyboards seem to work. Not all mice work. A mouse compatibility list is available [here](https://docs.google.com/spreadsheets/d/1Drbo5-QuSX901MwtOytSMuqRGxeIkq2HELM806I9dj0/edit#gid=0)
 
+## Command line options
+
+Julius supports some command-line options. Its usage is:
+
+    $ julius [ARGUMENTS] [DATA_DIR]
+
+`[ARGUMENTS]` can be the following:
+
+* `--display-scale NUMBER`
+
+    Optional. Scales the entire Julius application by a factor of `NUMBER`. Useful for high-dpi systems.
+
+    `NUMBER`can be any number between `0.5` and `5`. The default is `1`.
+
+* `--cursor-scale NUMBER`
+
+    Optional. Scales the mouse cursor by a factor of `NUMBER`. Cursor scaling is independent of display scaling.
+
+    `NUMBER` can only be set to `1`, `1.5`or `2`. The default is `1`.
+
+`[DATA_DIR]` Is the location of the Caesar 3 asset files.
+
+If `[DATA_DIR]` is not provided, Julius will try to load the asset files from the directory where it is installed.
+
+If the files are not found, it will check if a previous valid directory was stored in the internal preferences and load the asset files from that directory.
+
+If Julius still fails to load the assets, it will ask you to point to a valid directory.
