@@ -139,7 +139,7 @@ void text_ellipsize(uint8_t *str, font_t font, int requested_width)
     uint8_t *orig_str = str;
     const font_definition *def = font_definition_for(font);
     int ellipsis_width = get_ellipsis_width(font);
-    unsigned int maxlen = 10000;
+    int maxlen = 10000;
     int width = 0;
     int length_with_ellipsis = 0;
     while (*str && maxlen > 0) {
