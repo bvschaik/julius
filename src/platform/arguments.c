@@ -26,7 +26,7 @@ static int parse_decimal_as_percentage(const char *str)
                 percentage += fraction;
                 break;
             default: {
-                int fraction_digits = end - start;
+                int fraction_digits = (int) (end - start);
                 while (fraction_digits > 2) {
                     fraction = fraction / 10;
                     fraction_digits--;
@@ -71,7 +71,7 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
                     output_args->display_scale_percentage = percentage;
                 }
             } else {
-                    SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
+                SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
