@@ -1,6 +1,5 @@
 #include "SDL.h"
 
-#include "core/dir.h"
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/lang.h"
@@ -14,9 +13,6 @@
 #include "platform/screen.h"
 #include "platform/touch.h"
 #include "platform/version.h"
-#include "platform/vita/vita.h"
-#include "input/hotkey.h"
-#include "input/cursor.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.h"
 
@@ -30,6 +26,7 @@
 #endif
 
 #ifdef __vita__
+#include "platform/vita/vita.h"
 #include "platform/vita/vita_input.h"
 #include "platform/vita/vita_touch.h"
 #endif
