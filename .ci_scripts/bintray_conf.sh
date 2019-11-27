@@ -3,6 +3,10 @@
 build_dir="$(pwd)/build"
 
 VERSION=$(cat res/version.txt)
+if [[ "$TRAVIS_BRANCH" =~ feature/.* ]]
+then
+  VERSION=$VERSION-${TRAVIS_BRANCH##feature/}
+fi
 
 # Linux portable binary: https://appimage.org/
 if [ "$DEPLOY" = "appimage" ]
