@@ -59,9 +59,7 @@ before_deploy:
 deploy:
   provider: bintray
   on:
-    branch:
-    - master
-    - feature/.*
+    all_branches: true
     repo: bvschaik/julius
     condition: $DEPLOY
   file: bintray.json
