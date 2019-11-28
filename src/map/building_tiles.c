@@ -285,36 +285,15 @@ int map_building_tiles_mark_construction(int x, int y, int size, int terrain, in
     return 1;
 }
 
-static void mark_area_as_deleting(int x, int y, int size)
-{
-    for (int dy = 0; dy < size; ++dy) {
-        for (int dx = 0; dx < size; ++dx) {
-            map_property_mark_deleted(map_grid_offset(x + dx, y + dy));
-        }
-    }
-}
-
 void map_building_tiles_mark_deleting(int grid_offset)
 {
-    map_bridge_remove(grid_offset, 1);
-    if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        map_property_mark_deleted(grid_offset);
-        return;
-    }
     int building_id = map_building_at(grid_offset);
     if (!building_id) {
-        return;
+        map_bridge_remove(grid_offset, 1);
+    } else {
+        grid_offset = building_main(building_get(building_id))->grid_offset;
     }
-    building* b = building_main(building_get(building_id));
-    mark_area_as_deleting(b->x, b->y, building_is_farm(b->type) ? 3 : b->size);
-    building * part = b;
-    for (int i = 0; i < 9; i++) {
-        part = building_next(part);
-        if (part->id <= 0) {
-            break;
-        }
-        mark_area_as_deleting(part->x, part->y, part->size);
-    }
+    map_property_mark_deleted(grid_offset);
 }
 
 int map_building_tiles_are_clear(int x, int y, int size, int terrain)
