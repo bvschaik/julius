@@ -16,7 +16,7 @@ enum {
     TRACK_COMBAT_SHORT = 6,
     TRACK_COMBAT_LONG = 7,
     TRACK_INTRO = 8,
-    TRACK_TOTAL = 9
+    TRACK_MAX = 9
 };
 
 static struct {
@@ -56,7 +56,7 @@ void sound_music_set_volume(int percentage)
 static void play_track(int track)
 {
     sound_device_stop_music();
-    if (track <= TRACK_NONE || track >= TRACK_TOTAL) {
+    if (track <= TRACK_NONE || track >= TRACK_MAX) {
         return;
     }
     const char* mp3_track = dir_get_case_corrected_file(mp3_tracks[track]);

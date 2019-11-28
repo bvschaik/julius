@@ -128,7 +128,7 @@ int sound_device_play_music(const char *filename)
         free(resolved_filename);
         #endif
 
-        return (music) ? 1 : 0;
+        return music ? 1 : 0;
     }
     return 0;
 }

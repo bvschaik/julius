@@ -53,13 +53,16 @@ after_build:
   - if [%COMPILER%] == [msvc] cp debug/julius.exe .
   - if [%COMPILER%] == [msvc] cp C:\sdl-msvc\SDL2-%SDL2_VERSION%\lib\x86\SDL2.dll .
   - if [%COMPILER%] == [msvc] cp C:\sdl-msvc\SDL2_mixer-%SDL2_MIXER_VERSION%\lib\x86\SDL2_mixer.dll .
+  - if [%COMPILER%] == [msvc] cp C:\sdl-msvc\SDL2_mixer-%SDL2_MIXER_VERSION%\lib\x86\libmpg123-0.dll .
   - if [%COMPILER%] == [mingw] cp C:\SDL2-%SDL2_VERSION%\i686-w64-mingw32\bin\SDL2.dll .
   - if [%COMPILER%] == [mingw] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\i686-w64-mingw32\bin\SDL2_mixer.dll .
+  - if [%COMPILER%] == [mingw] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\i686-w64-mingw32\bin\libmpg123-0.dll .
   - if [%COMPILER%] == [mingw-w64] cp C:\SDL2-%SDL2_VERSION%\x86_64-w64-mingw32\bin\SDL2.dll .
   - if [%COMPILER%] == [mingw-w64] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\x86_64-w64-mingw32\bin\SDL2_mixer.dll .
+  - if [%COMPILER%] == [mingw-w64] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\x86_64-w64-mingw32\bin\libmpg123-0.dll .
   - dir
   - set /P DEPLOY_VERSION=<C:\projects\julius\res\version.txt
-  - 7z a C:\projects\julius\julius-%DEPLOY_VERSION%-windows.zip julius.exe SDL2.dll SDL2_mixer.dll
+  - 7z a C:\projects\julius\julius-%DEPLOY_VERSION%-windows.zip julius.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
 
 cache:
   - SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
