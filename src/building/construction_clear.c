@@ -31,7 +31,7 @@ static building *get_deletable_building(int grid_offset)
     if (!building_id) {
         return 0;
     }
-    building *b = building_get(building_id);
+    building *b = building_main(building_get(building_id));
     if (b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_NATIVE_CROPS ||
         b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
         return 0;
@@ -107,7 +107,6 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                     }
                     space = building_get(space->prev_part_building_id);
                     game_undo_add_building(space);
-                    space->is_deleted = 1;
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
                 space = b;
@@ -117,7 +116,6 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                         break;
                     }
                     game_undo_add_building(space);
-                    space->is_deleted = 1;
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
             } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
