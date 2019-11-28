@@ -14,12 +14,12 @@
 #include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"
-#include "game/system.h"
 #include "game/tick.h"
 #include "graphics/font.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
+#include "input/cursor.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
@@ -57,7 +57,7 @@ int game_pre_init(void)
     return 1;
 }
 
-static int has_patch()
+static int has_patch(void)
 {
     const uint8_t *difficulty_option = lang_get_string(2, 6);
     const uint8_t *help_menu = lang_get_string(3, 0);
@@ -69,7 +69,6 @@ static int has_patch()
 int game_init(void)
 {
     int with_fonts = encoding_get() == ENCODING_CYRILLIC;
-    system_init_cursors();
     if (!image_init(with_fonts)) {
         errlog("unable to init graphics");
         return GAME_INIT_ERROR;

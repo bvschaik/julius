@@ -1,19 +1,18 @@
 #include "SDL.h"
 
-#include "core/dir.h"
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/game.h"
 #include "input/mouse.h"
+#include "platform/arguments.h"
+#include "platform/cursor.h"
 #include "platform/keyboard_input.h"
 #include "platform/prefs.h"
 #include "platform/screen.h"
 #include "platform/touch.h"
 #include "platform/version.h"
-#include "platform/vita/vita.h"
-#include "input/hotkey.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.h"
 
@@ -27,6 +26,7 @@
 #endif
 
 #ifdef __vita__
+#include "platform/vita/vita.h"
 #include "platform/vita/vita_input.h"
 #include "platform/vita/vita_touch.h"
 #endif
@@ -453,12 +453,12 @@ static int pre_init(const char *custom_data_dir)
     return 0;
 }
 
-static void setup(const char *custom_data_dir)
+static void setup(const julius_args *args)
 {
     signal(SIGSEGV, handler);
     setup_logging();
 
-    SDL_Log("Julius version %s%s\n", JULIUS_VERSION, JULIUS_VERSION_SUFFIX);
+    SDL_Log("Julius version %s%s", JULIUS_VERSION, JULIUS_VERSION_SUFFIX);
 
     if (!init_sdl()) {
         SDL_Log("Exiting: SDL init failed");
@@ -474,17 +474,19 @@ static void setup(const char *custom_data_dir)
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
 #endif
 
-    if (!pre_init(custom_data_dir)) {
+    if (!pre_init(args->data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
         exit(1);
     }
 
     char title[100];
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
-    if (!platform_screen_create(title)) {
+    if (!platform_screen_create(title, args->display_scale_percentage)) {
         SDL_Log("Exiting: SDL create window failed");
         exit(-2);
     }
+    // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
+    platform_init_cursors(args->cursor_scale_percentage);
 
     int game_init_result = game_init();
     if (game_init_result == GAME_INIT_ERROR) {
@@ -509,20 +511,10 @@ static void teardown(void)
 
 int main(int argc, char **argv)
 {
-    const char *custom_data_dir = NULL;
-    for (int i = 1; i < argc; i++) {
-        // we ignore "-psn" arguments, this is needed to launch the app
-        // from the Finder on macOS.
-        // https://hg.libsdl.org/SDL/file/c005c49beaa9/test/testdropfile.c#l47
-        if (SDL_strncmp(argv[i], "-psn", 4) == 0) {
-            continue;
-        }
+    julius_args args;
+    platform_parse_arguments(argc, argv, &args);
 
-        custom_data_dir = argv[i];
-        break;
-    }
-
-    setup(custom_data_dir);
+    setup(&args);
 
     main_loop();
 

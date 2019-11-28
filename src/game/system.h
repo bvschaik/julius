@@ -24,11 +24,6 @@ void system_center(void);
 void system_set_fullscreen(int fullscreen);
 
 /**
- * Initialize cursors
- */
-void system_init_cursors(void);
-
-/**
  * Set cursor to the specified cursor in @link input/cursor.h @endlink
  * @param cursor_id Cursor to set
  */

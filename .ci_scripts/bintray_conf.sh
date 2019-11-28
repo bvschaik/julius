@@ -3,6 +3,15 @@
 build_dir="$(pwd)/build"
 
 VERSION=$(cat res/version.txt)
+if [[ "$TRAVIS_BRANCH" == "master" ]]
+then
+  REPO=julius
+  NAME_SUFFIX=-unstable
+else
+  REPO=julius-branches
+  NAME_SUFFIX=
+  VERSION=${TRAVIS_BRANCH##feature/}-$VERSION
+fi
 
 # Linux portable binary: https://appimage.org/
 if [ "$DEPLOY" = "appimage" ]
@@ -11,8 +20,8 @@ cat > "bintray.json" <<EOF
 {
   "package": {
     "subject": "bvschaik",
-    "repo": "julius",
-    "name": "linux-unstable",
+    "repo": "$REPO",
+    "name": "linux$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },
@@ -39,8 +48,8 @@ cat > "bintray.json" <<EOF
 {
   "package": {
     "subject": "bvschaik",
-    "repo": "julius",
-    "name": "mac-unstable",
+    "repo": "$REPO",
+    "name": "mac$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },
@@ -68,8 +77,8 @@ cat > "bintray.json" <<EOF
 {
   "package": {
     "subject": "bvschaik",
-    "repo": "julius",
-    "name": "vita-unstable",
+    "repo": "$REPO",
+    "name": "vita$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },
@@ -97,8 +106,8 @@ cat > "bintray.json" <<EOF
 {
   "package": {
     "subject": "bvschaik",
-    "repo": "julius",
-    "name": "switch-unstable",
+    "repo": "$REPO",
+    "name": "switch$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },

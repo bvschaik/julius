@@ -14,7 +14,7 @@ static SDL_Window *my_window;
 
 vita2d_texture *tex_buffer = NULL;
 
-int platform_screen_create(const char *title)
+int platform_screen_create(const char *title, int display_scale_percentage)
 {
     if (!my_window)
         my_window = SDL_CreateWindow("Dummy window used only as event listener", 0, 0, VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT, 0);

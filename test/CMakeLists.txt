@@ -36,7 +36,6 @@ add_executable(autopilot
     stub/log.c
     stub/model.c
     stub/sound_device.c
-    stub/system.c
     stub/ui.c
     stub/video.c
     ${TEST_CORE_FILES}

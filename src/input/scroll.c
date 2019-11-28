@@ -235,20 +235,20 @@ int scroll_get_direction(const mouse *m)
         y -= data.limits.y;
     }
     // mouse near map edge
-    if ((!m->is_touch || data.limits.active) && ((x >= 0 && x < width) && (y >= 0 && y < height))) {
-        if (x >= 0 && x < border) {
+    if ((!m->is_touch || data.limits.active) && (x >= 0 && x < width && y >= 0 && y < height)) {
+        if (x < border) {
             left = 1;
             speed_modifier = (x < speed_modifier) ? x : speed_modifier;
         }
-        if (x >= (width - border) && x < width) {
+        if (x >= width - border) {
             right = 1;
             speed_modifier = ((width - x) < speed_modifier) ? (width - x) : speed_modifier;
         }
-        if (y >= 0 && y < border) {
+        if (y < border) {
             top = 1;
             speed_modifier = (y < speed_modifier) ? y : speed_modifier;
         }
-        if (y >= (height - border) && y < height) {
+        if (y >= height - border) {
             bottom = 1;
             speed_modifier = ((height - y) < speed_modifier) ? (height - y) : speed_modifier;
         }

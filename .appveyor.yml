@@ -62,6 +62,7 @@ after_build:
   - if [%COMPILER%] == [mingw-w64] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\x86_64-w64-mingw32\bin\libmpg123-0.dll .
   - dir
   - set /P DEPLOY_VERSION=<C:\projects\julius\res\version.txt
+  - if [%APPVEYOR_REPO_BRANCH:~0,8%] == [feature/] set DEPLOY_VERSION=%APPVEYOR_REPO_BRANCH:feature/=%-%DEPLOY_VERSION%
   - 7z a C:\projects\julius\julius-%DEPLOY_VERSION%-windows.zip julius.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
 
 cache:
@@ -92,4 +93,17 @@ deploy:
   publish: true
   on:
     branch: master
+    CMAKE_BUILD_TYPE: Release
+- provider: BinTray
+  username: bvschaik
+  api_key:
+    secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
+  subject: bvschaik
+  repo: julius-branches
+  package: windows
+  version: $(DEPLOY_VERSION)
+  artifact: julius-dist
+  publish: true
+  on:
+    branch: /feature\/.*/
     CMAKE_BUILD_TYPE: Release
