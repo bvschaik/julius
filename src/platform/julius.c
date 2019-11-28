@@ -481,11 +481,12 @@ static void setup(const julius_args *args)
 
     char title[100];
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
-    platform_init_cursors(args->cursor_scale_percentage);
     if (!platform_screen_create(title, args->display_scale_percentage)) {
         SDL_Log("Exiting: SDL create window failed");
         exit(-2);
     }
+    // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
+    platform_init_cursors(args->cursor_scale_percentage);
 
     int game_init_result = game_init();
     if (game_init_result == GAME_INIT_ERROR) {
