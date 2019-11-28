@@ -50,7 +50,7 @@ static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_c
     draw_context.selected_figure_coord = figure_coord;
 }
 
-static int draw_building_as_deleted(building* b)
+static int draw_building_as_deleted(building *b)
 {
     b = building_main(b);
     return (b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset)));
@@ -71,7 +71,6 @@ static void draw_footprint(int x, int y, int grid_offset)
         // Valid grid_offset and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
         color_t color_mask = 0;
-
         if (building_id) {
             building *b = building_get(building_id);
             if (draw_building_as_deleted(b)) {
@@ -461,10 +460,8 @@ static void clear_deleted(int x, int y, int grid_offset)
 void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile)
 {
     init_draw_context(selected_figure_id, figure_coord);
-
     int should_mark_deleting = city_building_ghost_mark_deleting(tile);
     city_view_foreach_map_tile(draw_footprint);
-
     if (!should_mark_deleting) {
         city_view_foreach_valid_map_tile(
             draw_top,
