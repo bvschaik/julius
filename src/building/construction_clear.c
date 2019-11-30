@@ -55,12 +55,13 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = map_grid_offset(x,y);
             if (measure_only) {
-                if (map_property_is_deleted(grid_offset)) {
+                building* b = get_deletable_building(grid_offset);
+                if (map_property_is_deleted(grid_offset) || (b && map_property_is_deleted(b->grid_offset))) {
                     continue;
                 }
                 map_building_tiles_mark_deleting(grid_offset);
                 if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                    if (get_deletable_building(grid_offset)) {
+                    if (b) {
                         items_placed++;
                     }
                     continue;
