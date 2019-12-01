@@ -5,6 +5,10 @@ from either [GOG](https://www.gog.com/game/caesar_3) or [Steam](https://store.st
 
 Note that there are [command line options](#command-line-options) which are available to all platforms.
 
+If you have the high-quality MP3 music files that were once available for download from the Sierra Website, the game supports playing them.
+
+Please check [MP3 support](doc/mp3_support.md) for details.
+
 ## Windows
 
 Julius supports Windows XP and higher.
@@ -147,7 +151,7 @@ Julius supports some command-line options. Its usage is:
 
     Optional. Scales the mouse cursor by a factor of `NUMBER`. Cursor scaling is independent of display scaling.
 
-    `NUMBER` can only be set to `1`, `1.5`or `2`. The default is `1`.
+    `NUMBER` can only be set to `1`, `1.5` or `2`. The default is `1`.
 
 `[DATA_DIR]` Is the location of the Caesar 3 asset files.
 
