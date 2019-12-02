@@ -145,15 +145,6 @@ static void add_link(int message_id, int x_start, int x_end, int y)
     }
 }
 
-static int get_character_width(uint8_t c, const font_definition *def)
-{
-    int image_offset = font_image_for(c);
-    if (!image_offset) {
-        return 0;
-    }
-    return 1 + image_letter(def->image_offset + image_offset - 1)->width;
-}
-
 static int get_word_width(const uint8_t *str, int *num_chars)
 {
     int width = 0;
@@ -196,7 +187,10 @@ static int get_word_width(const uint8_t *str, int *num_chars)
             width += 4;
         } else if (c > ' ') {
             // normal char
-            width += get_character_width(c, normal_font_def);
+            int letter_id = font_letter_id(normal_font_def, c);
+            if (letter_id >= 0) {
+                width += 1 + image_letter(letter_id)->width;
+            }
             word_char_seen = 1;
         }
         (*num_chars)++;
@@ -206,12 +200,11 @@ static int get_word_width(const uint8_t *str, int *num_chars)
 
 static int draw_character(const font_definition *def, uint8_t c, int x, int y, color_t color, int measure_only)
 {
-    int image_offset = font_image_for(c);
-    if (!image_offset) {
+    int letter_id = font_letter_id(def, c);
+    if (letter_id < 0) {
         return def->space_width_draw;
     }
 
-    int letter_id = def->image_offset + image_offset - 1;
     const image *img = image_letter(letter_id);
     if (!measure_only) {
         int height = def->image_y_offset(c, img->height, 11);

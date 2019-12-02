@@ -92,10 +92,9 @@ int text_get_width(const uint8_t *str, font_t font)
         if (*str == ' ') {
             width += def->space_width;
         } else {
-            int image_offset = font_image_for(*str);
-            if (image_offset) {
-                int image_id = def->image_offset + image_offset - 1;
-                width += def->letter_spacing + image_letter(image_id)->width;
+            int letter_id = font_letter_id(def, *str);
+            if (letter_id >= 0) {
+                width += def->letter_spacing + image_letter(letter_id)->width;
             }
         }
         str++;
@@ -119,9 +118,8 @@ unsigned int text_get_max_length_for_width(const uint8_t *str, int length, font_
         if (*str == ' ') {
             width += def->space_width;
         } else {
-            int image_offset = font_image_for(*str);
-            if (image_offset) {
-                int letter_id = def->image_offset + image_offset - 1;
+            int letter_id = font_letter_id(def, *str);
+            if (letter_id >= 0) {
                 width += def->letter_spacing + image_letter(letter_id)->width;
             }
         }
@@ -146,9 +144,8 @@ void text_ellipsize(uint8_t *str, font_t font, int requested_width)
         if (*str == ' ') {
             width += def->space_width;
         } else {
-            int image_offset = font_image_for(*str);
-            if (image_offset) {
-                int letter_id = def->image_offset + image_offset - 1;
+            int letter_id = font_letter_id(def, *str);
+            if (letter_id >= 0) {
                 width += def->letter_spacing + image_letter(letter_id)->width;
             }
         }
@@ -164,16 +161,6 @@ void text_ellipsize(uint8_t *str, font_t font, int requested_width)
     if (10000 - maxlen < string_length(orig_str)) {
         string_copy(ellipsis.string, orig_str + length_with_ellipsis, ELLIPSIS_LENGTH);
     }
-}
-
-static int get_character_width(uint8_t c, const font_definition *def)
-{
-    int image_offset = font_image_for(c);
-    if (!image_offset) {
-        return 0;
-    }
-    int letter_id = def->image_offset + image_offset - 1;
-    return 1 + image_letter(letter_id)->width;
 }
 
 static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
@@ -198,7 +185,10 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
             }
         } else if (c > ' ') {
             // normal char
-            width += get_character_width(c, def);
+            int letter_id = font_letter_id(def, c);
+            if (letter_id >= 0) {
+                width += 1 + image_letter(letter_id)->width;
+            }
             word_char_seen = 1;
         }
         num_chars++;
@@ -218,8 +208,7 @@ void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t 
 
 static int draw_character(const font_definition *def, unsigned int c, int x, int y, color_t color)
 {
-    int image_offset = font_image_for(c);
-    int letter_id = def->image_offset + image_offset - 1;
+    int letter_id = font_letter_id(def, c);
     const image *img = image_letter(letter_id);
     int height = def->image_y_offset(c, img->height, def->line_height);
     image_draw_letter(letter_id, x, y - height, color);
@@ -245,9 +234,8 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
         }
 
         if (c >= ' ') {
-            int graphic = font_image_for(c);
             int width;
-            if (graphic == 0) {
+            if (font_letter_id(def, c) < 0) {
                 width = def->space_width_draw;
             } else {
                 width = def->letter_spacing_draw + draw_character(def, c, current_x, y, color);

@@ -296,7 +296,10 @@ const font_definition *font_definition_for(font_t font)
     return &font_definitions[font];
 }
 
-int font_image_for(uint8_t c)
+int font_letter_id(const font_definition *def, uint8_t c)
 {
-    return font_mapping[c];
+    if (!font_mapping[c]) {
+        return -1;
+    }
+    return font_mapping[c] + def->image_offset - 1;
 }

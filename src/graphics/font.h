@@ -52,9 +52,11 @@ void font_set_encoding(encoding_type encoding);
 const font_definition *font_definition_for(font_t font);
 
 /**
- * Gets the image ID offset for the specified character
- * @return Image ID offset
+ * Gets the letter ID for the specified character and font
+ * @param def Font definition
+ * @param c Character
+ * @return Letter ID to feed into image_letter(), or -1 if c is no letter
  */
-int font_image_for(uint8_t c);
+int font_letter_id(const font_definition *def, uint8_t c);
 
 #endif // GRAPHICS_FONT_H
