@@ -105,8 +105,11 @@ static const font_definition DEFINITIONS_CYRILLIC[] = {
     {FONT_SMALL_BLACK, 1422, 6, 6, 0, 0, 11, image_y_offset_cyrillic_small_black}
 };
 
-static const int *font_mapping;
-static const font_definition *font_definitions;
+static struct {
+    const int *font_mapping;
+    const font_definition *font_definitions;
+    const int multibyte;
+} data;
 
 int image_y_offset_default(uint8_t c, int image_height, int line_height)
 {
@@ -280,26 +283,32 @@ static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int 
 void font_set_encoding(encoding_type encoding)
 {
     if (encoding == ENCODING_EASTERN_EUROPE) {
-        font_mapping = CHAR_TO_FONT_IMAGE_EASTERN;
-        font_definitions = DEFINITIONS_EASTERN;
+        data.font_mapping = CHAR_TO_FONT_IMAGE_EASTERN;
+        data.font_definitions = DEFINITIONS_EASTERN;
     } else if (encoding == ENCODING_CYRILLIC) {
-        font_mapping = CHAR_TO_FONT_IMAGE_CYRILLIC;
-        font_definitions = DEFINITIONS_CYRILLIC;
+        data.font_mapping = CHAR_TO_FONT_IMAGE_CYRILLIC;
+        data.font_definitions = DEFINITIONS_CYRILLIC;
     } else {
-        font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
-        font_definitions = DEFINITIONS_DEFAULT;
+        data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
+        data.font_definitions = DEFINITIONS_DEFAULT;
     }
 }
 
 const font_definition *font_definition_for(font_t font)
 {
-    return &font_definitions[font];
+    return &data.font_definitions[font];
 }
 
-int font_letter_id(const font_definition *def, uint8_t c)
+int font_letter_id(const font_definition *def, const uint8_t *str, int *num_bytes)
 {
-    if (!font_mapping[c]) {
+    *num_bytes = 1;
+    if (data.multibyte) {
+        // TODO implement
         return -1;
+    } else {
+        if (!data.font_mapping[*str]) {
+            return -1;
+        }
+        return data.font_mapping[*str] + def->image_offset - 1;
     }
-    return font_mapping[c] + def->image_offset - 1;
 }

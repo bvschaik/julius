@@ -54,9 +54,10 @@ const font_definition *font_definition_for(font_t font);
 /**
  * Gets the letter ID for the specified character and font
  * @param def Font definition
- * @param c Character
+ * @param str Character string
+ * @param num_bytes Out: number of bytes consumed by letter
  * @return Letter ID to feed into image_letter(), or -1 if c is no letter
  */
-int font_letter_id(const font_definition *def, uint8_t c);
+int font_letter_id(const font_definition *def, const uint8_t *str, int *num_bytes);
 
 #endif // GRAPHICS_FONT_H

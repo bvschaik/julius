@@ -151,88 +151,85 @@ static int get_word_width(const uint8_t *str, int *num_chars)
     int guard = 0;
     int word_char_seen = 0;
     *num_chars = 0;
-    for (uint8_t c = *str; c; c = *++str) {
-        if (++guard >= 2000) {
-            break;
-        }
-        if (c == '@') {
-            c = *++str;
+    while (*str && ++guard < 2000) {
+        if (*str == '@') {
             if (!word_char_seen) {
-                if (c == 'P' || c == 'L') {
+                if (*str == 'P' || *str == 'L') {
                     *num_chars += 2;
                     width = 0;
                     break;
-                } else if (c == 'G') {
+                } else if (*str == 'G') {
                     // skip graphic
                     *num_chars += 2;
-                    while (c >= '0' && c <= '9') {
-                        c = *++str;
+                    while (*str >= '0' && *str <= '9') {
+                        str++;
                         (*num_chars)++;
                     }
                     width = 0;
                     break;
                 } else {
                     (*num_chars)++;
-                    while (c >= '0' && c <= '9') {
-                        c = *++str;
+                    while (*str >= '0' && *str <= '9') {
+                        str++;
                         (*num_chars)++;
                     }
                 }
             }
         }
-        if (c == ' ') {
+        int num_bytes = 1;
+        if (*str == ' ') {
             if (word_char_seen) {
                 break;
             }
             width += 4;
-        } else if (c > ' ') {
+        } else if (*str > ' ') {
             // normal char
-            int letter_id = font_letter_id(normal_font_def, c);
+            int letter_id = font_letter_id(normal_font_def, str, &num_bytes);
             if (letter_id >= 0) {
                 width += 1 + image_letter(letter_id)->width;
             }
             word_char_seen = 1;
         }
-        (*num_chars)++;
+        str += num_bytes;
+        *num_chars += num_bytes;
     }
     return width;
-}
-
-static int draw_character(const font_definition *def, uint8_t c, int x, int y, color_t color, int measure_only)
-{
-    int letter_id = font_letter_id(def, c);
-    if (letter_id < 0) {
-        return def->space_width_draw;
-    }
-
-    const image *img = image_letter(letter_id);
-    if (!measure_only) {
-        int height = def->image_y_offset(c, img->height, 11);
-        image_draw_letter(letter_id, x, y - height, color);
-    }
-    return img->width;
 }
 
 static void draw_line(const uint8_t *str, int x, int y, color_t color, int measure_only)
 {
     int num_link_chars = 0;
-    for (uint8_t c = *str; c; c = *++str) {
-        if (c == '@') {
+    while (*str) {
+        if (*str == '@') {
             int message_id = string_to_int(++str);
             while (*str >= '0' && *str <= '9') {
                 str++;
             }
             int width = get_word_width(str, &num_link_chars);
             add_link(message_id, x, x + width, y);
-            c = *str;
         }
-        if (c >= ' ') {
+        if (*str >= ' ') {
             const font_definition *def = normal_font_def;
             if (num_link_chars > 0) {
                 def = link_font_def;
                 num_link_chars--;
             }
-            x += draw_character(def, c, x, y, color, measure_only);
+
+            int num_bytes = 1;
+            int letter_id = font_letter_id(def, str, &num_bytes);
+            if (letter_id < 0) {
+                x += def->space_width_draw;
+            } else {
+                const image *img = image_letter(letter_id);
+                if (!measure_only) {
+                    int height = def->image_y_offset(*str, img->height, 11);
+                    image_draw_letter(letter_id, x, y - height, color);
+                }
+                x += img->width;
+            }
+            str += num_bytes;
+        } else {
+            str++;
         }
     }
 }
