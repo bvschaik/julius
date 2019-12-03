@@ -1,6 +1,7 @@
 #ifndef CORE_IMAGE_H
 #define CORE_IMAGE_H
 
+#include "core/encoding.h"
 #include "core/image_group.h"
 #include "graphics/color.h"
 
@@ -35,13 +36,7 @@ typedef struct {
 /**
  * Initializes the image system
  */
-int image_init(int with_fonts);
-
-/**
- * Whether external fonts should be enabled
- * @param enable Enable fonts
- */
-void image_enable_fonts(int enable);
+int image_init(void);
 
 /**
  * Loads the image collection for the specified climate
@@ -52,10 +47,10 @@ void image_enable_fonts(int enable);
 int image_load_climate(int climate_id, int is_editor);
 
 /**
- * Loads external fonts file (Cyrillic)
+ * Loads external fonts file (Cyrillic and Traditional Chinese)
  * @return boolean true on success, false on failure
  */
-int image_load_fonts(void);
+int image_load_fonts(encoding_type encoding);
 
 /**
  * Loads the image collection for the specified enemy
