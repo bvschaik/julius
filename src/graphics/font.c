@@ -67,48 +67,61 @@ static const int CHAR_TO_FONT_IMAGE_CYRILLIC[] = {
 };
 
 static const font_definition DEFINITIONS_DEFAULT[] = {
-    {FONT_NORMAL_PLAIN,   0, 6, 6, 1, 1, 11, image_y_offset_default},
-    {FONT_NORMAL_BLACK, 134, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_NORMAL_WHITE, 268, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_NORMAL_RED,   402, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_LARGE_PLAIN, 536, 10, 8, 1, 1, 23, image_y_offset_default},
-    {FONT_LARGE_BLACK, 670, 10, 8, 1, 0, 23, image_y_offset_default},
-    {FONT_LARGE_BROWN, 804, 10, 8, 1, 0, 24, image_y_offset_default},
-    {FONT_SMALL_PLAIN,  938, 4, 4, 1, 1, 9, image_y_offset_default},
-    {FONT_NORMAL_GREEN,1072, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_SMALL_BLACK, 1206, 6, 6, 0, 0, 11, image_y_offset_default}
+    {FONT_NORMAL_PLAIN,   0, 0, 6, 6, 1, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_BLACK, 134, 0, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_WHITE, 268, 0, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_RED,   402, 0, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_LARGE_PLAIN, 536, 0, 10, 8, 1, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BLACK, 670, 0, 10, 8, 1, 0, 23, image_y_offset_default},
+    {FONT_LARGE_BROWN, 804, 0, 10, 8, 1, 0, 24, image_y_offset_default},
+    {FONT_SMALL_PLAIN,  938, 0, 4, 4, 1, 1, 9, image_y_offset_default},
+    {FONT_NORMAL_GREEN,1072, 0, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 0, 0, 11, image_y_offset_default}
 };
 
 static const font_definition DEFINITIONS_EASTERN[] = {
-    {FONT_NORMAL_PLAIN,   0, 6, 6, 1, 1, 11, image_y_offset_eastern},
-    {FONT_NORMAL_BLACK, 134, 6, 6, 0, 0, 11, image_y_offset_eastern},
-    {FONT_NORMAL_WHITE, 268, 6, 6, 0, 0, 11, image_y_offset_eastern},
-    {FONT_NORMAL_RED,   402, 6, 6, 0, 0, 11, image_y_offset_eastern},
-    {FONT_LARGE_PLAIN, 536, 10, 8, 1, 1, 23, image_y_offset_eastern},
-    {FONT_LARGE_BLACK, 670, 10, 8, 1, 0, 23, image_y_offset_eastern},
-    {FONT_LARGE_BROWN, 804, 10, 8, 1, 0, 24, image_y_offset_eastern},
-    {FONT_SMALL_PLAIN,  938, 4, 4, 1, 1, 9, image_y_offset_eastern},
-    {FONT_NORMAL_GREEN,1072, 6, 6, 0, 0, 11, image_y_offset_eastern},
-    {FONT_SMALL_BLACK, 1206, 6, 6, 0, 0, 11, image_y_offset_eastern}
+    {FONT_NORMAL_PLAIN,   0, 0, 6, 6, 1, 1, 11, image_y_offset_eastern},
+    {FONT_NORMAL_BLACK, 134, 0, 6, 6, 0, 0, 11, image_y_offset_eastern},
+    {FONT_NORMAL_WHITE, 268, 0, 6, 6, 0, 0, 11, image_y_offset_eastern},
+    {FONT_NORMAL_RED,   402, 0, 6, 6, 0, 0, 11, image_y_offset_eastern},
+    {FONT_LARGE_PLAIN, 536, 0, 10, 8, 1, 1, 23, image_y_offset_eastern},
+    {FONT_LARGE_BLACK, 670, 0, 10, 8, 1, 0, 23, image_y_offset_eastern},
+    {FONT_LARGE_BROWN, 804, 0, 10, 8, 1, 0, 24, image_y_offset_eastern},
+    {FONT_SMALL_PLAIN,  938, 0, 4, 4, 1, 1, 9, image_y_offset_eastern},
+    {FONT_NORMAL_GREEN,1072, 0, 6, 6, 0, 0, 11, image_y_offset_eastern},
+    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 0, 0, 11, image_y_offset_eastern}
 };
 
 static const font_definition DEFINITIONS_CYRILLIC[] = {
-    {FONT_NORMAL_PLAIN,   0, 6, 6, 1, 1, 11, image_y_offset_cyrillic_normal_small_plain},
-    {FONT_NORMAL_BLACK, 158, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
-    {FONT_NORMAL_WHITE, 316, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
-    {FONT_NORMAL_RED,   474, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
-    {FONT_LARGE_PLAIN, 632, 10, 8, 1, 1, 23, image_y_offset_cyrillic_large_plain},
-    {FONT_LARGE_BLACK, 790, 10, 8, 1, 0, 23, image_y_offset_cyrillic_large_black},
-    {FONT_LARGE_BROWN, 948, 10, 8, 1, 0, 24, image_y_offset_cyrillic_large_brown},
-    {FONT_SMALL_PLAIN,  1106, 4, 4, 1, 1, 9, image_y_offset_cyrillic_normal_small_plain},
-    {FONT_NORMAL_GREEN, 1264, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
-    {FONT_SMALL_BLACK, 1422, 6, 6, 0, 0, 11, image_y_offset_cyrillic_small_black}
+    {FONT_NORMAL_PLAIN,   0, 0, 6, 6, 1, 1, 11, image_y_offset_cyrillic_normal_small_plain},
+    {FONT_NORMAL_BLACK, 158, 0, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_NORMAL_WHITE, 316, 0, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_NORMAL_RED,   474, 0, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_LARGE_PLAIN, 632, 0, 10, 8, 1, 1, 23, image_y_offset_cyrillic_large_plain},
+    {FONT_LARGE_BLACK, 790, 0, 10, 8, 1, 0, 23, image_y_offset_cyrillic_large_black},
+    {FONT_LARGE_BROWN, 948, 0, 10, 8, 1, 0, 24, image_y_offset_cyrillic_large_brown},
+    {FONT_SMALL_PLAIN,  1106, 0, 4, 4, 1, 1, 9, image_y_offset_cyrillic_normal_small_plain},
+    {FONT_NORMAL_GREEN, 1264, 0, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_SMALL_BLACK, 1422, 0, 6, 6, 0, 0, 11, image_y_offset_cyrillic_small_black}
+};
+
+static const font_definition DEFINITIONS_TRADITIONAL_CHINESE[] = {
+    {FONT_NORMAL_PLAIN, 0, 2188, 6, 6, 1, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_BLACK, 134, 0, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_WHITE, 268, 0, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_RED, 402, 0, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_LARGE_PLAIN, 536, 4376, 10, 8, 1, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BLACK, 670, 4376, 10, 8, 1, 0, 23, image_y_offset_default},
+    {FONT_LARGE_BROWN, 804, 4376, 10, 8, 1, 0, 24, image_y_offset_default},
+    {FONT_SMALL_PLAIN, 938, 0, 4, 4, 1, 1, 9, image_y_offset_default},
+    {FONT_NORMAL_GREEN, 1072, 0, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 0, 0, 11, image_y_offset_default}
 };
 
 static struct {
     const int *font_mapping;
     const font_definition *font_definitions;
-    const int multibyte;
+    int multibyte;
 } data;
 
 int image_y_offset_default(uint8_t c, int image_height, int line_height)
@@ -282,12 +295,17 @@ static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int 
 
 void font_set_encoding(encoding_type encoding)
 {
+    data.multibyte = 0;
     if (encoding == ENCODING_EASTERN_EUROPE) {
         data.font_mapping = CHAR_TO_FONT_IMAGE_EASTERN;
         data.font_definitions = DEFINITIONS_EASTERN;
     } else if (encoding == ENCODING_CYRILLIC) {
         data.font_mapping = CHAR_TO_FONT_IMAGE_CYRILLIC;
         data.font_definitions = DEFINITIONS_CYRILLIC;
+    } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
+        data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
+        data.font_definitions = DEFINITIONS_TRADITIONAL_CHINESE;
+        data.multibyte = 1;
     } else {
         data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
         data.font_definitions = DEFINITIONS_DEFAULT;
@@ -301,11 +319,12 @@ const font_definition *font_definition_for(font_t font)
 
 int font_letter_id(const font_definition *def, const uint8_t *str, int *num_bytes)
 {
-    *num_bytes = 1;
-    if (data.multibyte) {
-        // TODO implement
-        return -1;
+    if (data.multibyte && *str >= 0x80) {
+        *num_bytes = 2;
+        int char_id = (str[0] & 0x7f) + ((str[1] & 0x7f) << 7);
+        return 10000 + def->multibyte_image_offset + char_id;
     } else {
+        *num_bytes = 1;
         if (!data.font_mapping[*str]) {
             return -1;
         }

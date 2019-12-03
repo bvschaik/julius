@@ -34,6 +34,12 @@
 
 #define NAME_SIZE 32
 
+enum {
+    NO_EXTRA_FONT = 0,
+    FULL_CHARSET_IN_FONT = 1,
+    MULTIBYTE_IN_FONT = 2
+};
+
 static const char MAIN_GRAPHICS_SG2[][NAME_SIZE] = {
     "c3.sg2",
     "c3_north.sg2",
@@ -318,7 +324,7 @@ static void free_font_memory(void)
     free(data.font_data);
     data.font = 0;
     data.font_data = 0;
-    data.fonts_enabled = 0;
+    data.fonts_enabled = NO_EXTRA_FONT;
 }
 
 static int alloc_font_memory(int font_entries, int font_data_size)
@@ -355,7 +361,7 @@ static int load_cyrillic_fonts(void)
     buffer_init(&buf, data.tmp_data, data_size);
     convert_images(data.font, CYRILLIC_FONT_ENTRIES, &buf, data.font_data);
 
-    data.fonts_enabled = 1;
+    data.fonts_enabled = FULL_CHARSET_IN_FONT;
     data.font_base_offset = CYRILLIC_FONT_BASE_OFFSET;
     return 1;
 }
@@ -368,7 +374,7 @@ static void parse_chinese_font(buffer *input, buffer *pixels, int char_size, int
         img->width = char_size;
         img->height = char_size - 1;
         img->draw.bitmap_id = 0;
-        img->draw.offset = pixels->index;
+        img->draw.offset = pixels->index / sizeof(color_t);
         img->draw.uncompressed_length = img->draw.data_length = char_size * (char_size - 1);
         for (int row = 0; row < char_size - 1; row++) {
             unsigned int bits = buffer_read_u16(input);
@@ -408,7 +414,7 @@ static int load_traditional_chinese_fonts(void)
     parse_chinese_font(&input, &pixels, 16, TRAD_CHINESE_FONT_CHARACTERS);
     parse_chinese_font(&input, &pixels, 20, TRAD_CHINESE_FONT_CHARACTERS * 2);
 
-    data.fonts_enabled = 1;
+    data.fonts_enabled = MULTIBYTE_IN_FONT;
     data.font_base_offset = 0;
     return 1;
 }
@@ -497,8 +503,10 @@ const image *image_get(int id)
 
 const image *image_letter(int letter_id)
 {
-    if (data.fonts_enabled) {
+    if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
         return &data.font[data.font_base_offset + letter_id];
+    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= 10000) {
+        return &data.font[data.font_base_offset + letter_id - 10000];
     } else {
         return &data.main[data.group_image_ids[GROUP_FONT] + letter_id];
     }
@@ -529,8 +537,10 @@ const color_t *image_data(int id)
 
 const color_t *image_data_letter(int letter_id)
 {
-    if (data.fonts_enabled) {
+    if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
         return &data.font_data[data.font[data.font_base_offset + letter_id].draw.offset];
+    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= 10000) {
+        return &data.font_data[data.font[data.font_base_offset + letter_id - 10000].draw.offset];
     } else {
         int image_id = data.group_image_ids[GROUP_FONT] + letter_id;
         return &data.main_data[data.main[image_id].draw.offset];
