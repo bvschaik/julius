@@ -22,6 +22,7 @@ typedef struct {
 
 static const uint8_t NEW_GAME_POLISH[] = { 0x4e, 0x6f, 0x77, 0x61, 0x20, 0x67, 0x72, 0x61, 0 };
 static const uint8_t NEW_GAME_RUSSIAN[] = { 0xcd, 0xee, 0xe2, 0xe0, 0xff, 0x20, 0xe8, 0xe3, 0xf0, 0xe0, 0 };
+static const uint8_t NEW_GAME_TRADITIONAL_CHINESE[] = { 0x83, 0x80, 0x20, 0x84, 0x80, 0x20, 0x85, 0x80, 0 };
 
 static const letter_code HIGH_TO_UTF8_DEFAULT[HIGH_CHAR_COUNT] = {
     {0x80, 3, {0xe2, 0x82, 0xac}},
@@ -569,8 +570,9 @@ encoding_type encoding_determine(void)
     // A really dirty way to 'detect' encoding:
     // - Windows-1250 (Central/Eastern Europe) is used in Polish only
     // - Windows-1251 (Cyrillic) is used in Russian only
+    // - Windows-950 (Big5) is used in Traditional Chinese only
     // - Windows-1252 (Western Europe) is used in all other languages
-    // Check if the string for "New game" is Polish or Russian
+    // Check if the string for "New game" is Polish, Russian or Chinese
     const uint8_t *new_game_string = lang_get_string(1, 1);
     if (string_equals(NEW_GAME_POLISH, new_game_string)) {
         to_utf8_table = HIGH_TO_UTF8_EASTERN;
@@ -578,6 +580,9 @@ encoding_type encoding_determine(void)
     } else if (string_equals(NEW_GAME_RUSSIAN, new_game_string)) {
         to_utf8_table = HIGH_TO_UTF8_CYRILLIC;
         encoding = ENCODING_CYRILLIC;
+    } else if (string_equals(NEW_GAME_TRADITIONAL_CHINESE, new_game_string)) {
+        to_utf8_table = HIGH_TO_UTF8_DEFAULT;
+        encoding = ENCODING_TRADITIONAL_CHINESE;
     } else {
         to_utf8_table = HIGH_TO_UTF8_DEFAULT;
         encoding = ENCODING_WESTERN_EUROPE;

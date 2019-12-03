@@ -331,6 +331,7 @@ static int alloc_font_memory(int font_entries, int font_data_size)
         free(data.font_data);
         return 0;
     }
+    memset(data.font, 0, font_entries * sizeof(image));
     return 1;
 }
 
@@ -359,10 +360,65 @@ static int load_cyrillic_fonts(void)
     return 1;
 }
 
+static void parse_chinese_font(buffer *input, buffer *pixels, int char_size, int index_offset)
+{
+    int bytes_per_row = char_size <= 16 ? 2 : 3;
+    for (int i = 0; i < TRAD_CHINESE_FONT_CHARACTERS; i++) {
+        image *img = &data.font[index_offset + i];
+        img->width = char_size;
+        img->height = char_size - 1;
+        img->draw.bitmap_id = 0;
+        img->draw.offset = pixels->index;
+        img->draw.uncompressed_length = img->draw.data_length = char_size * (char_size - 1);
+        for (int row = 0; row < char_size - 1; row++) {
+            unsigned int bits = buffer_read_u16(input);
+            if (bytes_per_row == 3) {
+                bits += buffer_read_u8(input) << 16;
+            }
+            int previous_set = 0;
+            for (int col = 0; col < char_size; col++) {
+                int bit = bits & 1;
+                if (previous_set || bit) {
+                    buffer_write_u32(pixels, COLOR_BLACK);
+                } else {
+                    buffer_write_u32(pixels, COLOR_TRANSPARENT);
+                }
+                previous_set = bit;
+                bits >>= 1;
+            }
+        }
+    }
+}
+
+static int load_traditional_chinese_fonts(void)
+{
+    if (!alloc_font_memory(TRAD_CHINESE_FONT_ENTRIES, TRAD_CHINESE_FONT_DATA_SIZE)) {
+        return 0;
+    }
+
+    int data_size = io_read_file_into_buffer(TRAD_CHINESE_FONTS_555, data.tmp_data, SCRATCH_DATA_SIZE);
+    if (!data_size) {
+        return 0;
+    }
+    buffer input, pixels;
+    buffer_init(&input, data.tmp_data, data_size);
+    buffer_init(&pixels, data.font_data, TRAD_CHINESE_FONT_DATA_SIZE);
+
+    parse_chinese_font(&input, &pixels, 12, 0);
+    parse_chinese_font(&input, &pixels, 16, TRAD_CHINESE_FONT_CHARACTERS);
+    parse_chinese_font(&input, &pixels, 20, TRAD_CHINESE_FONT_CHARACTERS * 2);
+
+    data.fonts_enabled = 1;
+    data.font_base_offset = 0;
+    return 1;
+}
+
 int image_load_fonts(encoding_type encoding)
 {
     if (encoding == ENCODING_CYRILLIC) {
         return load_cyrillic_fonts();
+    } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
+        return load_traditional_chinese_fonts();
     } else {
         free_font_memory();
         return 1;
