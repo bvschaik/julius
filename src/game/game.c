@@ -68,12 +68,10 @@ static int has_patch(void)
 
 int game_init(void)
 {
-    int with_fonts = encoding_get() == ENCODING_CYRILLIC;
-    if (!image_init(with_fonts)) {
+    if (!image_init()) {
         errlog("unable to init graphics");
         return GAME_INIT_ERROR;
     }
-    
     if (!image_load_climate(CLIMATE_CENTRAL, 0)) {
         errlog("unable to load main graphics");
         return GAME_INIT_ERROR;
@@ -82,11 +80,10 @@ int game_init(void)
         errlog("unable to load enemy graphics");
         return GAME_INIT_ERROR;
     }
-    if (with_fonts && !image_load_fonts()) {
-        errlog("unable to load fonts graphics");
+    if (!image_load_fonts(encoding_get())) {
+        errlog("unable to load font graphics");
         return GAME_INIT_ERROR;
     }
-    image_enable_fonts(with_fonts);
 
     if (!model_load()) {
         errlog("unable to load c3_model.txt");
@@ -109,8 +106,11 @@ int game_init_editor(void)
     encoding_type encoding = encoding_determine();
     log_info("Detected encoding:", 0, encoding);
     font_set_encoding(encoding);
-    image_enable_fonts(encoding == ENCODING_CYRILLIC);
 
+    if (!image_load_fonts(encoding)) {
+        errlog("unable to load font graphics");
+        return 0;
+    }
     if (!image_load_climate(CLIMATE_CENTRAL, 1)) {
         errlog("unable to load main graphics");
         return 0;
@@ -132,8 +132,11 @@ void game_exit_editor(void)
     encoding_type encoding = encoding_determine();
     log_info("Detected encoding:", 0, encoding);
     font_set_encoding(encoding);
-    image_enable_fonts(encoding == ENCODING_CYRILLIC);
 
+    if (!image_load_fonts(encoding)) {
+        errlog("unable to load font graphics");
+        return;
+    }
     if (!image_load_climate(CLIMATE_CENTRAL, 0)) {
         errlog("unable to load main graphics");
         return;

@@ -13,21 +13,24 @@
 
 #define MAIN_ENTRIES 10000
 #define ENEMY_ENTRIES 801
-#define FONTS_ENTRIES 2000
+#define CYRILLIC_FONT_ENTRIES 2000
+#define TRAD_CHINESE_FONT_CHARACTERS 2188
+#define TRAD_CHINESE_FONT_ENTRIES (3 * TRAD_CHINESE_FONT_CHARACTERS)
 
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET HEADER_SIZE
 #define ENEMY_INDEX_SIZE ENTRY_SIZE * ENEMY_ENTRIES
-#define FONTS_INDEX_OFFSET HEADER_SIZE
-#define FONTS_INDEX_SIZE ENTRY_SIZE * FONTS_ENTRIES
+#define CYRILLIC_FONT_INDEX_OFFSET HEADER_SIZE
+#define CYRILLIC_FONT_INDEX_SIZE ENTRY_SIZE * CYRILLIC_FONT_ENTRIES
 
 #define MAIN_DATA_SIZE 30000000
 #define EMPIRE_DATA_SIZE (2000*1000*4)
 #define ENEMY_DATA_SIZE 2400000
-#define FONTS_DATA_SIZE 1500000
+#define CYRILLIC_FONT_DATA_SIZE 1500000
+#define TRAD_CHINESE_FONT_DATA_SIZE 7000000
 #define SCRATCH_DATA_SIZE 12100000
 
-#define FONTS_BASE_OFFSET 201
+#define CYRILLIC_FONT_BASE_OFFSET 201
 
 #define NAME_SIZE 32
 
@@ -53,8 +56,9 @@ static const char EDITOR_GRAPHICS_555[][NAME_SIZE] = {
 };
 static const char EMPIRE_555[NAME_SIZE] = "The_empire.555";
 
-static const char FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
-static const char FONTS_555[NAME_SIZE] = "C3_fonts.555";
+static const char CYRILLIC_FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
+static const char CYRILLIC_FONTS_555[NAME_SIZE] = "C3_fonts.555";
+static const char TRAD_CHINESE_FONTS_555[NAME_SIZE] = "rome.555";
 
 static const char ENEMY_GRAPHICS_SG2[][NAME_SIZE] = {
     "goths.sg2",
@@ -105,6 +109,7 @@ static struct {
     int current_climate;
     int is_editor;
     int fonts_enabled;
+    int font_base_offset;
 
     uint16_t group_image_ids[300];
     char bitmaps[100][200];
@@ -118,7 +123,7 @@ static struct {
     uint8_t *tmp_data;
 } data = {.current_climate = -1};
 
-int image_init(int with_fonts)
+int image_init(void)
 {
     data.enemy_data = (color_t *) malloc(ENEMY_DATA_SIZE);
     data.main_data = (color_t *) malloc(MAIN_DATA_SIZE);
@@ -130,15 +135,6 @@ int image_init(int with_fonts)
         free(data.enemy_data);
         free(data.tmp_data);
         return 0;
-    }
-    if (with_fonts) {
-        data.font = (image*) malloc(FONTS_ENTRIES * sizeof(image));
-        data.font_data = (color_t *) malloc(FONTS_DATA_SIZE);
-        if (!data.font || !data.font_data) {
-            free(data.font);
-            free(data.font_data);
-            return 0;
-        }
     }
     return 1;
 }
@@ -316,23 +312,61 @@ int image_load_climate(int climate_id, int is_editor)
     return 1;
 }
 
-int image_load_fonts(void)
+static void free_font_memory(void)
 {
-    if (FONTS_INDEX_SIZE != io_read_file_part_into_buffer(FONTS_SG2, data.tmp_data, FONTS_INDEX_SIZE, FONTS_INDEX_OFFSET)) {
+    free(data.font);
+    free(data.font_data);
+    data.font = 0;
+    data.font_data = 0;
+    data.fonts_enabled = 0;
+}
+
+static int alloc_font_memory(int font_entries, int font_data_size)
+{
+    free_font_memory();
+    data.font = (image*) malloc(font_entries * sizeof(image));
+    data.font_data = (color_t *) malloc(font_data_size);
+    if (!data.font || !data.font_data) {
+        free(data.font);
+        free(data.font_data);
         return 0;
     }
+    return 1;
+}
 
+static int load_cyrillic_fonts(void)
+{
+    if (!alloc_font_memory(CYRILLIC_FONT_ENTRIES, CYRILLIC_FONT_DATA_SIZE)) {
+        return 0;
+    }
+    if (CYRILLIC_FONT_INDEX_SIZE != io_read_file_part_into_buffer(CYRILLIC_FONTS_SG2, data.tmp_data,
+        CYRILLIC_FONT_INDEX_SIZE, CYRILLIC_FONT_INDEX_OFFSET)) {
+        return 0;
+    }
     buffer buf;
-    buffer_init(&buf, data.tmp_data, FONTS_INDEX_SIZE);
-    read_index(&buf, data.font, FONTS_ENTRIES);
+    buffer_init(&buf, data.tmp_data, CYRILLIC_FONT_INDEX_SIZE);
+    read_index(&buf, data.font, CYRILLIC_FONT_ENTRIES);
 
-    int data_size = io_read_file_into_buffer(FONTS_555, data.tmp_data, SCRATCH_DATA_SIZE);
+    int data_size = io_read_file_into_buffer(CYRILLIC_FONTS_555, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
     buffer_init(&buf, data.tmp_data, data_size);
-    convert_images(data.font, FONTS_ENTRIES, &buf, data.font_data);
+    convert_images(data.font, CYRILLIC_FONT_ENTRIES, &buf, data.font_data);
+
+    data.fonts_enabled = 1;
+    data.font_base_offset = CYRILLIC_FONT_BASE_OFFSET;
     return 1;
+}
+
+int image_load_fonts(encoding_type encoding)
+{
+    if (encoding == ENCODING_CYRILLIC) {
+        return load_cyrillic_fonts();
+    } else {
+        free_font_memory();
+        return 1;
+    }
 }
 
 int image_load_enemy(int enemy_id)
@@ -408,7 +442,7 @@ const image *image_get(int id)
 const image *image_letter(int letter_id)
 {
     if (data.fonts_enabled) {
-        return &data.font[FONTS_BASE_OFFSET + letter_id];
+        return &data.font[data.font_base_offset + letter_id];
     } else {
         return &data.main[data.group_image_ids[GROUP_FONT] + letter_id];
     }
@@ -440,7 +474,7 @@ const color_t *image_data(int id)
 const color_t *image_data_letter(int letter_id)
 {
     if (data.fonts_enabled) {
-        return &data.font_data[data.font[FONTS_BASE_OFFSET + letter_id].draw.offset];
+        return &data.font_data[data.font[data.font_base_offset + letter_id].draw.offset];
     } else {
         int image_id = data.group_image_ids[GROUP_FONT] + letter_id;
         return &data.main_data[data.main[image_id].draw.offset];
