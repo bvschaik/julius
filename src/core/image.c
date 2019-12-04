@@ -505,8 +505,8 @@ const image *image_letter(int letter_id)
 {
     if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
         return &data.font[data.font_base_offset + letter_id];
-    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= 10000) {
-        return &data.font[data.font_base_offset + letter_id - 10000];
+    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
+        return &data.font[data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET];
     } else {
         return &data.main[data.group_image_ids[GROUP_FONT] + letter_id];
     }
@@ -539,8 +539,8 @@ const color_t *image_data_letter(int letter_id)
 {
     if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
         return &data.font_data[data.font[data.font_base_offset + letter_id].draw.offset];
-    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= 10000) {
-        return &data.font_data[data.font[data.font_base_offset + letter_id - 10000].draw.offset];
+    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
+        return &data.font_data[data.font[data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET].draw.offset];
     } else {
         int image_id = data.group_image_ids[GROUP_FONT] + letter_id;
         return &data.main_data[data.main[image_id].draw.offset];

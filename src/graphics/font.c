@@ -1,5 +1,7 @@
 #include "font.h"
 
+#include "core/image.h"
+
 static int image_y_offset_default(uint8_t c, int image_height, int line_height);
 static int image_y_offset_eastern(uint8_t c, int image_height, int line_height);
 static int image_y_offset_cyrillic_normal_small_plain(uint8_t c, int image_height, int line_height);
@@ -322,7 +324,10 @@ int font_letter_id(const font_definition *def, const uint8_t *str, int *num_byte
     if (data.multibyte && *str >= 0x80) {
         *num_bytes = 2;
         int char_id = (str[0] & 0x7f) + ((str[1] & 0x7f) << 7);
-        return 10000 + def->multibyte_image_offset + char_id;
+        if (char_id >= 2188) {
+            return -1;
+        }
+        return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
     } else {
         *num_bytes = 1;
         if (!data.font_mapping[*str]) {
