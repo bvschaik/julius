@@ -5,6 +5,8 @@
 #include "core/image_group.h"
 #include "graphics/color.h"
 
+#define IMAGE_FONT_MULTIBYTE_OFFSET 10000
+
 /**
  * @file
  * Image functions
