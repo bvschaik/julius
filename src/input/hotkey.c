@@ -159,7 +159,7 @@ static void input_number(int number)
     }
 }
 
-void hotkey_character(int c, int with_ctrl, int with_alt)
+void hotkey_character(int c, int with_ctrl, int with_alt, int with_shift)
 {
     if (with_ctrl && c == 'a') {
         editor_toggle_battle_info();

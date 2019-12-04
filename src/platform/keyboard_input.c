@@ -19,6 +19,11 @@ static int is_alt_down(SDL_KeyboardEvent *event)
     return (event->keysym.mod & KMOD_ALT) != 0;
 }
 
+static int is_shift_down(SDL_KeyboardEvent *event)
+{
+    return (event->keysym.mod & KMOD_SHIFT) != 0;
+}
+
 static int is_key_currently_down(SDL_Scancode key)
 {
     int numkeys = 0;
@@ -59,13 +64,13 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDL_SCANCODE_0:
         case SDL_SCANCODE_MINUS:
         case SDL_SCANCODE_EQUALS:
-            hotkey_character(*SDL_GetScancodeName(event->keysym.scancode), is_ctrl_down(event), is_alt_down(event));
+            hotkey_character(*SDL_GetScancodeName(event->keysym.scancode), is_ctrl_down(event), is_alt_down(event), 0);
             return;
         case SDL_SCANCODE_LEFTBRACKET:
-            hotkey_character('[', is_ctrl_down(event), is_alt_down(event));
+            hotkey_character('[', is_ctrl_down(event), is_alt_down(event), 0);
             return;
         case SDL_SCANCODE_RIGHTBRACKET:
-            hotkey_character(']', is_ctrl_down(event), is_alt_down(event));
+            hotkey_character(']', is_ctrl_down(event), is_alt_down(event), 0);
             return;
         default:
             break;
@@ -77,7 +82,7 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         if (SDL_GetScancodeFromKey(keycode) == 0) {
             // There is no key producing the Latin letter, send scancode value
             char letter = 'a' + event->keysym.scancode - SDL_SCANCODE_A;
-            hotkey_character(letter, is_ctrl_down(event), is_alt_down(event));
+            hotkey_character(letter, is_ctrl_down(event), is_alt_down(event), is_shift_down(event));
             return;
         }
     }
@@ -173,13 +178,13 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDLK_LEFTBRACKET:
         case SDLK_RIGHTBRACKET:
         case SDLK_SPACE:
-            hotkey_character(event->keysym.sym, is_ctrl_down(event), is_alt_down(event));
+            hotkey_character(event->keysym.sym, is_ctrl_down(event), is_alt_down(event), is_shift_down(event));
             break;
         default:
             if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
                 // Send keycodes only for letters (layout dependent codes)
                 if (event->keysym.sym >= SDLK_a && event->keysym.sym <= SDLK_z) {
-                    hotkey_character(event->keysym.sym, is_ctrl_down(event), is_alt_down(event));
+                    hotkey_character(event->keysym.sym, is_ctrl_down(event), is_alt_down(event), is_shift_down(event));
                 }
             }
             break;
