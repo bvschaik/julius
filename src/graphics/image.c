@@ -557,11 +557,37 @@ void image_draw_blend(int image_id, int x, int y, color_t color)
     }
 }
 
-void image_draw_letter(int letter_id, int x, int y, color_t color)
+static void draw_multibyte_letter(font_t font, const image *img, const color_t *data, int x, int y, color_t color)
+{
+    switch (font) {
+        case FONT_NORMAL_WHITE:
+            draw_uncompressed(img, data, x + 1, y + 1, 0x311c10, DRAW_TYPE_SET);
+            draw_uncompressed(img, data, x, y, COLOR_WHITE, DRAW_TYPE_SET);
+            break;
+        case FONT_NORMAL_RED:
+            draw_uncompressed(img, data, x + 1, y + 1, 0xe7cfad, DRAW_TYPE_SET);
+            draw_uncompressed(img, data, x, y, 0x731408, DRAW_TYPE_SET);
+            break;
+        case FONT_NORMAL_GREEN:
+            draw_uncompressed(img, data, x + 1, y + 1, 0xe7cfad, DRAW_TYPE_SET);
+            draw_uncompressed(img, data, x, y, 0x311c10, DRAW_TYPE_SET);
+            break;
+
+        default:
+            draw_uncompressed(img, data, x, y,
+                color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
+    }
+}
+
+void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color)
 {
     const image *img = image_letter(letter_id);
     const color_t *data = image_data_letter(letter_id);
     if (!data) {
+        return;
+    }
+    if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
+        draw_multibyte_letter(font, img, data, x, y, color);
         return;
     }
 

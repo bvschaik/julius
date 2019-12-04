@@ -227,7 +227,7 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
                 const image *img = image_letter(letter_id);
                 if (!measure_only) {
                     int height = def->image_y_offset(*str, img->height, 11);
-                    image_draw_letter(letter_id, x, y - height, color);
+                    image_draw_letter(def->font, letter_id, x, y - height, color);
                 }
                 x += img->width;
             }
