@@ -192,6 +192,10 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
                 width += 1 + image_letter(letter_id)->width;
             }
             word_char_seen = 1;
+            if (num_bytes > 1) {
+                num_chars += num_bytes;
+                break;
+            }
         }
         str += num_bytes;
         num_chars += num_bytes;
