@@ -41,7 +41,8 @@ To build the Vita or Switch version, use `cmake .. -DVITA_BUILD=ON` or `cmake ..
 
 For more detailed instructions on how to build Julius, please check the following documents:
 - [Building for Windows](doc/building_windows.md);
-- [Building for Linux](doc/building_linux.md).
+- [Building for Linux](doc/building_linux.md);
+- [Building for Mac](doc/building_macos.md).
 
 ## Running the game
 

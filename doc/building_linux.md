@@ -36,6 +36,20 @@ Also note that you need superuser (`root`) permissions to install the dependenci
 
         $ cd julius
 
+    **Optional:** If you have already downloaded the Julius repository and only wish to update it (in order to build a newer version), instead of the previous three steps, do the following in a terminal window:
+
+    a. Move to the `julius` directory where the repository was installed.
+
+    b. Type:
+
+            $ git pull origin master
+
+    c. Delete the `build` directory:
+
+            $ rm -rf build
+
+    d. Proceed to step 6.
+
 6. Create a `build` directory and move to it:
 
         $ mkdir build && cd build
