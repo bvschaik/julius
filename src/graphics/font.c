@@ -109,15 +109,15 @@ static const font_definition DEFINITIONS_CYRILLIC[] = {
 
 static const font_definition DEFINITIONS_TRADITIONAL_CHINESE[] = {
     {FONT_NORMAL_PLAIN, 0, 2188, 6, 6, 1, 1, 11, image_y_offset_default},
-    {FONT_NORMAL_BLACK, 134, 0, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_NORMAL_WHITE, 268, 0, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_NORMAL_RED, 402, 0, 6, 6, 0, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_BLACK, 134, 0, 6, 6, 1, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_WHITE, 268, 0, 6, 6, 1, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_RED, 402, 0, 6, 6, 1, 1, 11, image_y_offset_default},
     {FONT_LARGE_PLAIN, 536, 4376, 10, 8, 1, 1, 23, image_y_offset_default},
-    {FONT_LARGE_BLACK, 670, 4376, 10, 8, 1, 0, 23, image_y_offset_default},
-    {FONT_LARGE_BROWN, 804, 4376, 10, 8, 1, 0, 24, image_y_offset_default},
+    {FONT_LARGE_BLACK, 670, 4376, 10, 8, 1, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BROWN, 804, 4376, 10, 8, 1, 1, 24, image_y_offset_default},
     {FONT_SMALL_PLAIN, 938, 0, 4, 4, 1, 1, 9, image_y_offset_default},
-    {FONT_NORMAL_GREEN, 1072, 0, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 0, 0, 11, image_y_offset_default}
+    {FONT_NORMAL_GREEN, 1072, 0, 6, 6, 1, 1, 11, image_y_offset_default},
+    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 1, 1, 11, image_y_offset_default}
 };
 
 static struct {
