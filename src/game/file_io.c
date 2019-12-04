@@ -606,7 +606,7 @@ static void savegame_read_from_file(FILE *fp)
         if (piece->compressed) {
             result = read_compressed_chunk(fp, piece->buf.data, piece->buf.size);
         } else {
-            result = (fread(piece->buf.data, 1, piece->buf.size, fp) == piece->buf.size);
+            result = fread(piece->buf.data, 1, piece->buf.size, fp) == piece->buf.size;
         }
         if (!result) {
             return;

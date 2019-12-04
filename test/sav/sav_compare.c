@@ -293,7 +293,7 @@ static int unpack(const char *filename, unsigned char *buffer)
         if (save_game_parts[i].compressed) {
             result = read_compressed_chunk(fp, &buffer[offset], save_game_parts[i].length_in_bytes);
         } else {
-            result = (fread(&buffer[offset], 1, save_game_parts[i].length_in_bytes, fp) == save_game_parts[i].length_in_bytes);
+            result = fread(&buffer[offset], 1, save_game_parts[i].length_in_bytes, fp) == save_game_parts[i].length_in_bytes;
         }
         offset += save_game_parts[i].length_in_bytes;
         if (!result) {
