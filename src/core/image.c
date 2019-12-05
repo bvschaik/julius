@@ -14,8 +14,7 @@
 #define MAIN_ENTRIES 10000
 #define ENEMY_ENTRIES 801
 #define CYRILLIC_FONT_ENTRIES 2000
-#define TRAD_CHINESE_FONT_CHARACTERS 2188
-#define TRAD_CHINESE_FONT_ENTRIES (3 * TRAD_CHINESE_FONT_CHARACTERS)
+#define TRAD_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_MAX_CHARS)
 
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET HEADER_SIZE
@@ -369,7 +368,7 @@ static int load_cyrillic_fonts(void)
 static void parse_chinese_font(buffer *input, buffer *pixels, int char_size, int index_offset)
 {
     int bytes_per_row = char_size <= 16 ? 2 : 3;
-    for (int i = 0; i < TRAD_CHINESE_FONT_CHARACTERS; i++) {
+    for (int i = 0; i < IMAGE_FONT_MULTIBYTE_MAX_CHARS; i++) {
         image *img = &data.font[index_offset + i];
         img->width = char_size;
         img->height = char_size - 1;
@@ -404,8 +403,8 @@ static int load_traditional_chinese_fonts(void)
     buffer_init(&pixels, data.font_data, TRAD_CHINESE_FONT_DATA_SIZE);
 
     parse_chinese_font(&input, &pixels, 12, 0);
-    parse_chinese_font(&input, &pixels, 16, TRAD_CHINESE_FONT_CHARACTERS);
-    parse_chinese_font(&input, &pixels, 20, TRAD_CHINESE_FONT_CHARACTERS * 2);
+    parse_chinese_font(&input, &pixels, 16, IMAGE_FONT_MULTIBYTE_MAX_CHARS);
+    parse_chinese_font(&input, &pixels, 20, IMAGE_FONT_MULTIBYTE_MAX_CHARS * 2);
 
     data.fonts_enabled = MULTIBYTE_IN_FONT;
     data.font_base_offset = 0;
