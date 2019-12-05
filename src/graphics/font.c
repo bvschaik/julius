@@ -1,5 +1,6 @@
 #include "font.h"
 
+#include "core/encoding_multibyte.h"
 #include "core/image.h"
 
 static int image_y_offset_default(uint8_t c, int image_height, int line_height);
@@ -323,9 +324,14 @@ int font_letter_id(const font_definition *def, const uint8_t *str, int *num_byte
 {
     if (data.multibyte && *str >= 0x80) {
         *num_bytes = 2;
-        int char_id = (str[0] & 0x7f) + ((str[1] & 0x7f) << 7);
+        int char_id = (str[0] & 0x7f) | ((str[1] & 0x7f) << 7);
         if (char_id >= IMAGE_FONT_MULTIBYTE_MAX_CHARS) {
-            return -1;
+            // lookup in table
+            int big5_encoded = str[0] << 8 | str[1];
+            char_id = encoding_multibyte_big5_to_image_id(big5_encoded);
+            if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_MAX_CHARS) {
+                return -1;
+            }
         }
         return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
     } else {
