@@ -60,7 +60,7 @@ Another option is to get the game files by installing Caesar 3 using [WINE](http
 ## Vita
 
 1. Ensure you have a jailbroken Vita. Detailed jailbreaking instructions can be found on [vita.hacks.guide](https://vita.hacks.guide).
-1. Install the Julius vpk file using Vitashell, like any other homebrew.
+1. Install the `julius.vpk` file using Vitashell, like any other homebrew.
 1. Copy all the files from a Caesar 3 install into a folder `ux0:/data/julius/`, so that you have the file `ux0:/data/julius/c3.eng` and more in your folder.
 
 ### Controls
@@ -97,7 +97,7 @@ Physical Bluetooth mice and keyboards are supported. This was tested with the "J
 ## Switch
 
 1. Ensure you have a jailbroken Switch. Detailed jailbreaking instructions can be found on [Nintendo Homebrew's Guide](https://nh-server.github.io/switch-guide/) or, alternatively, on [AtlasNX's Guide](https://guide.teamatlasnx.com/).
-1. Extract the contents of julius_switch.zip into the `switch` folder on your SD card, so that you have a folder `/switch/julius` with `julius.nro` inside. 
+1. Extract the contents of `julius_switch.zip` into the `switch` folder on your SD card, so that you have a folder `/switch/julius` with `julius.nro` inside. 
 1. Copy all the files from a Caesar 3 install into the `/switch/julius/` folder, so that you have the file `/switch/julius/c3.eng` and more.
 
 ### Controls
