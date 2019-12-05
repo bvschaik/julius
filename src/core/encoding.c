@@ -1,5 +1,6 @@
 #include "core/encoding.h"
 
+#include "core/encoding_multibyte.h"
 #include "core/lang.h"
 #include "core/string.h"
 
@@ -421,6 +422,7 @@ static encoding_type encoding;
 static const letter_code *to_utf8_table;
 static from_utf8_lookup from_utf8_table[HIGH_CHAR_COUNT];
 static from_utf8_lookup from_utf8_decomposed_table[HIGH_CHAR_COUNT];
+static int utf8_table_size;
 static int decomposed_table_size;
 
 static uint32_t calculate_utf8_value(const uint8_t *bytes, int length)
@@ -450,16 +452,25 @@ static int compare_utf8_lookup(const void *a, const void *b)
 
 static void build_reverse_lookup_table(void)
 {
+    if (!to_utf8_table) {
+        utf8_table_size = 0;
+        return;
+    }
     for (int i = 0; i < HIGH_CHAR_COUNT; i++) {
         const letter_code *code = &to_utf8_table[i];
         from_utf8_table[i].code = code;
         from_utf8_table[i].utf8 = calculate_utf8_value(code->utf8_value, code->bytes);
     }
-    qsort(from_utf8_table, HIGH_CHAR_COUNT, sizeof(from_utf8_lookup), compare_utf8_lookup);
+    utf8_table_size = HIGH_CHAR_COUNT;
+    qsort(from_utf8_table, utf8_table_size, sizeof(from_utf8_lookup), compare_utf8_lookup);
 }
 
 static void build_decomposed_lookup_table(void)
 {
+    if (!to_utf8_table) {
+        decomposed_table_size = 0;
+        return;
+    }
     int index = 0;
     for (int i = 0; i < HIGH_CHAR_COUNT; i++) {
         const letter_code *code = &to_utf8_table[i];
@@ -475,7 +486,7 @@ static void build_decomposed_lookup_table(void)
 
 static const letter_code* get_letter_code_for_internal(uint8_t c)
 {
-    if (c < 0x80) {
+    if (c < 0x80 || !to_utf8_table) {
         return NULL;
     }
     return &to_utf8_table[c - 0x80];
@@ -545,7 +556,7 @@ static const letter_code* get_letter_code_for_utf8(const char *c, int *num_bytes
     if (key.utf8 == 0) {
         return NULL;
     }
-    return search_utf8_table(&key, from_utf8_table, HIGH_CHAR_COUNT);
+    return search_utf8_table(&key, from_utf8_table, utf8_table_size);
 }
 
 static const letter_code* get_letter_code_for_combining_utf8(const char *prev_char, const char *combining_char)
@@ -581,7 +592,7 @@ encoding_type encoding_determine(void)
         to_utf8_table = HIGH_TO_UTF8_CYRILLIC;
         encoding = ENCODING_CYRILLIC;
     } else if (string_equals(NEW_GAME_TRADITIONAL_CHINESE, new_game_string)) {
-        to_utf8_table = HIGH_TO_UTF8_DEFAULT;
+        to_utf8_table = NULL;
         encoding = ENCODING_TRADITIONAL_CHINESE;
     } else {
         to_utf8_table = HIGH_TO_UTF8_DEFAULT;
@@ -609,6 +620,10 @@ int encoding_can_display(const char *utf8_char)
 
 void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int decomposed)
 {
+    if (!to_utf8_table) {
+        encoding_multibyte_to_utf8(input, output, output_length);
+        return;
+    }
     const char *max_output = &output[output_length - 1];
     
     while (*input && output < max_output) {
