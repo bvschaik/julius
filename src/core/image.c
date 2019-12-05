@@ -381,15 +381,8 @@ static void parse_chinese_font(buffer *input, buffer *pixels, int char_size, int
             if (bytes_per_row == 3) {
                 bits += buffer_read_u8(input) << 16;
             }
-            int previous_set = 0;
             for (int col = 0; col < char_size; col++) {
-                int bit = bits & 1;
-                if (previous_set || bit) {
-                    buffer_write_u32(pixels, COLOR_BLACK);
-                } else {
-                    buffer_write_u32(pixels, COLOR_TRANSPARENT);
-                }
-                previous_set = bit;
+                buffer_write_u32(pixels, (bits & 1) ? COLOR_BLACK : COLOR_TRANSPARENT);
                 bits >>= 1;
             }
         }
