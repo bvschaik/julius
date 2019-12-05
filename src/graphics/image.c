@@ -572,6 +572,10 @@ static void draw_multibyte_letter(font_t font, const image *img, const color_t *
             draw_uncompressed(img, data, x + 1, y + 1, 0xe7cfad, DRAW_TYPE_SET);
             draw_uncompressed(img, data, x, y, 0x311c10, DRAW_TYPE_SET);
             break;
+        case FONT_NORMAL_PLAIN:
+            draw_uncompressed(img, data, x, y + 2,
+                color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
+            break;
 
         default:
             draw_uncompressed(img, data, x, y,
