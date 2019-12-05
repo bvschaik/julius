@@ -494,7 +494,9 @@ static void setup(const julius_args *args)
         exit(2);
     } else if (game_init_result == GAME_INIT_NO_PATCH) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING,
-            "Your Caesar 3 installation does not have the 1.0.1.0 patch installed.",
+            "Patch 1.0.1.0 not installed",
+            "Your Caesar 3 installation does not have the 1.0.1.0 patch installed.\n"
+            "Julius requires a patched version of Caesar 3.\n\n"
             "Continue at your own risk.",
             NULL);
     }
