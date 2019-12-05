@@ -46,8 +46,6 @@ static const char *filename_to_utf8(const wchar_t *str)
 #define CURRENT_DIR "."
 #endif
 
-#define MAX_FILE_NAME_BUFFER (FILE_NAME_MAX * 2)
-
 static dir_listing listing;
 static int listing_initialized = 0;
 
@@ -55,7 +53,7 @@ static void clear_dir_listing(void)
 {
     if (!listing_initialized) {
         for (int i = 0; i < DIR_MAX_FILES; i++) {
-            listing.files[i] = malloc(MAX_FILE_NAME_BUFFER * sizeof(char));
+            listing.files[i] = malloc(FILE_NAME_MAX * sizeof(char));
         }
         listing_initialized = 1;
     }
@@ -82,7 +80,7 @@ const dir_listing *dir_find_files_with_extension(const char *extension)
     while ((entry = fs_dir_read(d)) && listing.num_files < DIR_MAX_FILES) {
         const char *name = dir_entry_name(entry);
         if (file_has_extension(name, extension)) {
-            strncpy(listing.files[listing.num_files], name, MAX_FILE_NAME_BUFFER);
+            strncpy(listing.files[listing.num_files], name, FILE_NAME_MAX);
             listing.files[listing.num_files][FILE_NAME_MAX - 1] = 0;
             ++listing.num_files;
         }

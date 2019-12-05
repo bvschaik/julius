@@ -14,7 +14,7 @@
  * @li Extension parameters are expected to be 3 chars, without leading dot
  */
 
-#define FILE_NAME_MAX 200
+#define FILE_NAME_MAX 300
 
 /**
  * Wrapper for fopen converting filename to path in current working directory
