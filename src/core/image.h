@@ -6,6 +6,7 @@
 #include "graphics/color.h"
 
 #define IMAGE_FONT_MULTIBYTE_OFFSET 10000
+#define IMAGE_FONT_MULTIBYTE_MAX_CHARS 2188
 
 /**
  * @file
