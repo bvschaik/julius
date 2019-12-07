@@ -80,7 +80,7 @@ const dir_listing *dir_find_files_with_extension(const char *extension)
     while ((entry = fs_dir_read(d)) && listing.num_files < DIR_MAX_FILES) {
         const char *name = dir_entry_name(entry);
         if (file_has_extension(name, extension)) {
-            strncpy(listing.files[listing.num_files], name, FILE_NAME_MAX - 1);
+            strncpy(listing.files[listing.num_files], name, FILE_NAME_MAX);
             listing.files[listing.num_files][FILE_NAME_MAX - 1] = 0;
             ++listing.num_files;
         }
