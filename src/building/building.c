@@ -206,6 +206,7 @@ void building_update_state(void)
 {
     int land_recalc = 0;
     int wall_recalc = 0;
+    int aqueduct_recalc = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = &all_buildings[i];
         if (b->state == BUILDING_STATE_CREATED) {
@@ -215,6 +216,8 @@ void building_update_state(void)
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
                 if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
                     wall_recalc = 1;
+                } else if (b->type == BUILDING_RESERVOIR) {
+                    aqueduct_recalc = 1;
                 }
                 map_building_tiles_remove(i, b->x, b->y);
                 land_recalc = 1;
@@ -231,6 +234,9 @@ void building_update_state(void)
     }
     if (wall_recalc) {
         map_tiles_update_all_walls();
+    }
+    if (aqueduct_recalc) {
+        map_tiles_update_all_aqueducts(0);
     }
     if (land_recalc) {
         map_routing_update_land();
