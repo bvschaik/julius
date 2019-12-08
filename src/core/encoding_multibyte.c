@@ -32,11 +32,12 @@ static multibyte_entry entries[] = {
     { 297, 0xa1d0, 0xff0d },
     { 782, 0xb751, 0x60f3 },
     { 1439, 0xa2bb, 0x2162 },
+    { 0, 0, 0 }
 };
 
 int encoding_multibyte_big5_to_image_id(int big5)
 {
-    for (int i = 0; i < IMAGE_FONT_MULTIBYTE_MAX_CHARS; i++) {
+    for (int i = 0; entries[i].image_id; i++) {
         if (entries[i].big5 == big5) {
             return entries[i].image_id;
         }
@@ -48,7 +49,7 @@ static uint16_t to_unicode(const uint8_t byte1, const uint8_t byte2)
 {
     int image_id = (byte1 & 0x7f) | ((byte2 & 0x7f) << 7);
     if (image_id < IMAGE_FONT_MULTIBYTE_MAX_CHARS) {
-        for (int i = 0; i < IMAGE_FONT_MULTIBYTE_MAX_CHARS; i++) {
+        for (int i = 0; entries[i].image_id; i++) {
             if (entries[i].image_id == image_id) {
                 return entries[i].unicode;
             }
@@ -56,7 +57,7 @@ static uint16_t to_unicode(const uint8_t byte1, const uint8_t byte2)
     } else {
         // Input is not image ID but Big5 encoding: look up in table
         int big5 = byte1 << 8 | byte2;
-        for (int i = 0; i < IMAGE_FONT_MULTIBYTE_MAX_CHARS; i++) {
+        for (int i = 0; entries[i].image_id; i++) {
             if (entries[i].image_id == big5) {
                 return entries[i].unicode;
             }
