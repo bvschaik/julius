@@ -365,7 +365,7 @@ static int load_cyrillic_fonts(void)
     return 1;
 }
 
-static void parse_chinese_font(buffer *input, buffer *pixels, int char_size, int index_offset)
+static int parse_chinese_font(buffer *input, color_t *pixels, int pixel_offset, int char_size, int index_offset)
 {
     int bytes_per_row = char_size <= 16 ? 2 : 3;
     for (int i = 0; i < IMAGE_FONT_MULTIBYTE_MAX_CHARS; i++) {
@@ -373,19 +373,25 @@ static void parse_chinese_font(buffer *input, buffer *pixels, int char_size, int
         img->width = char_size;
         img->height = char_size - 1;
         img->draw.bitmap_id = 0;
-        img->draw.offset = pixels->index / sizeof(color_t);
+        img->draw.offset = pixel_offset;
         img->draw.uncompressed_length = img->draw.data_length = char_size * (char_size - 1);
         for (int row = 0; row < char_size - 1; row++) {
             unsigned int bits = buffer_read_u16(input);
             if (bytes_per_row == 3) {
                 bits += buffer_read_u8(input) << 16;
             }
+            int prev_set = 0;
             for (int col = 0; col < char_size; col++) {
-                buffer_write_u32(pixels, (bits & 1) ? COLOR_BLACK : COLOR_TRANSPARENT);
+                int set = bits & 1;
+                *pixels = (set || prev_set) ? COLOR_BLACK : COLOR_TRANSPARENT;
+                pixels++;
+                pixel_offset++;
                 bits >>= 1;
+                prev_set = set;
             }
         }
     }
+    return pixel_offset;
 }
 
 static int load_traditional_chinese_fonts(void)
@@ -398,13 +404,16 @@ static int load_traditional_chinese_fonts(void)
     if (!data_size) {
         return 0;
     }
-    buffer input, pixels;
+    buffer input;
     buffer_init(&input, data.tmp_data, data_size);
-    buffer_init(&pixels, data.font_data, TRAD_CHINESE_FONT_DATA_SIZE);
+    color_t *pixels = data.font_data;
+    int pixel_offset = 0;
 
-    parse_chinese_font(&input, &pixels, 12, 0);
-    parse_chinese_font(&input, &pixels, 16, IMAGE_FONT_MULTIBYTE_MAX_CHARS);
-    parse_chinese_font(&input, &pixels, 20, IMAGE_FONT_MULTIBYTE_MAX_CHARS * 2);
+    log_info("Parsing chinese font", 0, 0);
+    pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 12, 0);
+    pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 16, IMAGE_FONT_MULTIBYTE_MAX_CHARS);
+    pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 20, IMAGE_FONT_MULTIBYTE_MAX_CHARS * 2);
+    log_info("Done parsing chinese font", 0, 0);
 
     data.fonts_enabled = MULTIBYTE_IN_FONT;
     data.font_base_offset = 0;
