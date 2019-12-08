@@ -5,9 +5,14 @@ if(VITA_BUILD AND SWITCH_BUILD)
     message(FATAL_ERROR "Cannot build with -DVITA_BUILD=ON and -DSWITCH_BUILD=ON at the same time")
 endif()
 
+if((VITA_BUILD OR SWITCH_BUILD) AND ANDROID_BUILD)
+    message(FATAL_ERROR "Cannot build with -DVITA_BUILD=ON or -DSWITCH_BUILD=ON and -DANDROID_BUILD=ON at the same time")
+endif()
+
 option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
 cmake_dependent_option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF "NOT MSVC" OFF)
 cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT MSVC; NOT VITA_BUILD" OFF)
+cmake_dependent_option(ANDROID_BUILD "Build for the Android environment." OFF "NOT VITA_BUILD; NOT SWITCH_BUILD" OFF)
 
 if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
@@ -516,8 +521,7 @@ if(APPLE)
     set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/julius.icns)
 endif()
 
-add_executable(julius
-    WIN32
+set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${CORE_FILES}
     ${BUILDING_FILES}
@@ -539,6 +543,7 @@ add_executable(julius
     ${MACOSX_FILES}
 )
 
+<<<<<<< HEAD
 function(GET_SDL_EXT_DIR result module)
     if(NOT module STREQUAL "")
         set(module "_${module}")
@@ -563,6 +568,33 @@ endfunction()
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
+=======
+if(ANDROID_BUILD)
+    string(TOLOWER ${CMAKE_BUILD_TYPE} ANDROID_BUILD_DIR)
+    set(DISTRIBUTION_DIR ${CMAKE_SOURCE_DIR}/android/distribution/android/SDL2/intermediates/ndkBuild)
+    set(SDL_LOCATION ${CMAKE_SOURCE_DIR}/ext/SDL2)
+
+    set(SDL2_LIBRARY SDL2)
+    set(SDL2_MIXER_LIBRARY SDL2_mixer)
+
+    add_library(${SDL2_LIBRARY} SHARED IMPORTED)
+    add_library(${SDL2_MIXER_LIBRARY} SHARED IMPORTED)
+    set_target_properties(${SDL2_LIBRARY} PROPERTIES IMPORTED_LOCATION
+    ${DISTRIBUTION_DIR}/${ANDROID_BUILD_DIR}/obj/local/${ANDROID_ABI}/libSDL2.so)
+    set_target_properties(${SDL2_MIXER_LIBRARY} PROPERTIES IMPORTED_LOCATION
+    ${DISTRIBUTION_DIR}/${ANDROID_BUILD_DIR}/obj/local/${ANDROID_ABI}/libSDL2_mixer.so)
+
+    set(SDL2_INCLUDE_DIR ${SDL_LOCATION}/SDL2/include)
+    set(SDL2_MIXER_INCLUDE_DIR ${SDL_LOCATION}/SDL2_mixer)
+
+    add_library(${SHORT_NAME} SHARED ${SDL_LOCATION}/SDL2/src/main/android/SDL_android_main.c ${SOURCE_FILES})
+else()
+    add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
+
+    find_package(SDL2 REQUIRED)
+    find_package(SDL2_mixer REQUIRED)
+endif()
+>>>>>>> Android build: first steps (builds, but the .apk is untested and will probably crash).
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
@@ -741,7 +773,7 @@ else()
         target_link_libraries(${SHORT_NAME} m)
     endif()
     target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
-    if(NOT APPLE)
+    if(NOT APPLE AND NOT ANDROID_BUILD)
         install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
     endif()
 

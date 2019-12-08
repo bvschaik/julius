@@ -1,0 +1,4 @@
+include ':julius'
+// Uncomment this line to build SDL2
+// Uncomment the dependency line in app/build.gradle as well
+include ':SDL2'
