@@ -9,11 +9,15 @@
 #define FOOTPRINT_WIDTH 58
 #define FOOTPRINT_HEIGHT 30
 
+#define COMPONENT(c, shift) ((c >> shift) & 0xff)
+#define MIX(src, dst, alpha, shift) ((((COMPONENT(src, shift) * alpha + COMPONENT(dst, shift) * (256 - alpha)) >> 8) & 0xff) << shift)
+
 typedef enum {
     DRAW_TYPE_SET,
     DRAW_TYPE_AND,
     DRAW_TYPE_NONE,
-    DRAW_TYPE_BLEND
+    DRAW_TYPE_BLEND,
+    DRAW_TYPE_BLEND_ALPHA
 } draw_type;
 
 static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, draw_type type)
@@ -58,6 +62,20 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
                 if (*data != COLOR_TRANSPARENT) {
                     *dst &= color;
+                }
+                data++;
+            }
+        } else if (type == DRAW_TYPE_BLEND_ALPHA) {
+            for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
+                if (*data != COLOR_TRANSPARENT) {
+                    color_t alpha = COMPONENT(*data, 24);
+                    if (alpha == 255) {
+                        *dst = color;
+                    } else {
+                        color_t s = color;
+                        color_t d = *dst;
+                        *dst = MIX(s, d, alpha, 0) | MIX(s, d, alpha, 8) | MIX(s, d, alpha, 16);
+                    }
                 }
                 data++;
             }
@@ -561,25 +579,23 @@ static void draw_multibyte_letter(font_t font, const image *img, const color_t *
 {
     switch (font) {
         case FONT_NORMAL_WHITE:
-            draw_uncompressed(img, data, x + 1, y + 1, 0x311c10, DRAW_TYPE_SET);
-            draw_uncompressed(img, data, x, y, COLOR_WHITE, DRAW_TYPE_SET);
+            draw_uncompressed(img, data, x + 1, y + 1, 0x311c10, DRAW_TYPE_BLEND_ALPHA);
+            draw_uncompressed(img, data, x, y, COLOR_WHITE, DRAW_TYPE_BLEND_ALPHA);
             break;
         case FONT_NORMAL_RED:
-            draw_uncompressed(img, data, x + 1, y + 1, 0xe7cfad, DRAW_TYPE_SET);
-            draw_uncompressed(img, data, x, y, 0x731408, DRAW_TYPE_SET);
+            draw_uncompressed(img, data, x + 1, y + 1, 0xe7cfad, DRAW_TYPE_BLEND_ALPHA);
+            draw_uncompressed(img, data, x, y, 0x731408, DRAW_TYPE_BLEND_ALPHA);
             break;
         case FONT_NORMAL_GREEN:
-            draw_uncompressed(img, data, x + 1, y + 1, 0xe7cfad, DRAW_TYPE_SET);
-            draw_uncompressed(img, data, x, y, 0x311c10, DRAW_TYPE_SET);
+            draw_uncompressed(img, data, x + 1, y + 1, 0xe7cfad, DRAW_TYPE_BLEND_ALPHA);
+            draw_uncompressed(img, data, x, y, 0x311c10, DRAW_TYPE_BLEND_ALPHA);
             break;
         case FONT_NORMAL_PLAIN:
-            draw_uncompressed(img, data, x, y + 2,
-                color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
+            draw_uncompressed(img, data, x, y + 2, color, DRAW_TYPE_BLEND_ALPHA);
             break;
-
         default:
-            draw_uncompressed(img, data, x, y,
-                color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
+            draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
+            break;
     }
 }
 
