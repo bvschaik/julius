@@ -79,6 +79,10 @@ static Mix_Chunk *load_chunk(const char *filename)
         FILE *fp = file_open(filename, "rb");
         SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
         return Mix_LoadWAV_RW(sdl_fp, 1);
+#elif ANDROID
+        char resolved_filename[FILE_NAME_MAX];
+        sprintf(resolved_filename, "%s/%s", "/storage/self/primary/Download", filenames[i]);
+        return Mix_LoadWAV(resolved_filename);
 #else
         return Mix_LoadWAV(filename);
 #endif
@@ -134,6 +138,9 @@ int sound_device_play_music(const char *filename, int volume_pct)
 
         #ifdef __vita__
         char *resolved_filename = vita_prepend_path(filename); // There is no Mix_LoadMUS equivalent for fp
+        #elif ANDROID
+        char resolved_filename[FILE_NAME_MAX];
+        sprintf(resolved_filename, "%s/%s", "/storage/self/primary/Download", filename);
         #else
         const char *resolved_filename = filename;
         #endif
@@ -148,6 +155,9 @@ int sound_device_play_music(const char *filename, int volume_pct)
             } else {
                 sound_device_set_music_volume(volume_pct);
             }
+        }
+        else {
+            SDL_Log("Error: %s", Mix_GetError());
         }
 
         #ifdef __vita__

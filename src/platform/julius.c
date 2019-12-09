@@ -388,6 +388,10 @@ static const char* ask_for_data_dir(int again)
 
 static int pre_init(const char *custom_data_dir)
 {
+#ifdef ANDROID
+    custom_data_dir = "/storage/self/primary/Download";
+#endif
+
     if (custom_data_dir) {
         SDL_Log("Loading game from %s", custom_data_dir);
         if (chdir(custom_data_dir) != 0) {
@@ -397,7 +401,12 @@ static int pre_init(const char *custom_data_dir)
         return game_pre_init();
     }
 
-    SDL_Log("Loading game from working directory");
+    char wd[500];
+    if (getcwd(wd, 500)) {
+        SDL_Log("Loading game from working directory - %s", wd);
+    } else {
+        SDL_Log("Loading game from working directory");
+    }
     if (game_pre_init()) {
         return 1;
     }

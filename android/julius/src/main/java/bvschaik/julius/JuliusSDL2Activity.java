@@ -18,7 +18,7 @@ public class JuliusSDL2Activity extends SDLActivity
         return new String[]{
                 "SDL2",
                 "SDL2_mixer",
-                "main"
+                "julius"
         };
     }
 }
