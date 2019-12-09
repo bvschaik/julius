@@ -33,6 +33,9 @@
 
 #define NAME_SIZE 32
 
+#define COLOR_OPAQUE 0xff000000
+#define COLOR_SEMI_TRANSPARENT 0x99000000
+
 enum {
     NO_EXTRA_FONT = 0,
     FULL_CHARSET_IN_FONT = 1,
@@ -383,7 +386,13 @@ static int parse_chinese_font(buffer *input, color_t *pixels, int pixel_offset, 
             int prev_set = 0;
             for (int col = 0; col < char_size; col++) {
                 int set = bits & 1;
-                *pixels = (set || prev_set) ? COLOR_BLACK : COLOR_TRANSPARENT;
+                if (set) {
+                    *pixels = COLOR_OPAQUE;
+                } else if (prev_set) {
+                    *pixels = COLOR_SEMI_TRANSPARENT;
+                } else {
+                    *pixels = COLOR_TRANSPARENT;
+                }
                 pixels++;
                 pixel_offset++;
                 bits >>= 1;
