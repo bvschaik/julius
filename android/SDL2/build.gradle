@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 
+buildDir = file("../distribution/${rootProject.name}/${project.name}")
+
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
@@ -11,11 +13,14 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-	ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        ndk {
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
     }
     buildTypes {
+        debug {
+            ext.alwaysUpdateBuildId = false
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -26,6 +31,11 @@ android {
             path '../../ext/SDL2/Android.mk'
         }
     }
+}
+
+repositories {
+    google()
+    jcenter()
 }
 
 dependencies {

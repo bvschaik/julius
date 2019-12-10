@@ -74,6 +74,17 @@ function install_sdl_macos {
   hdiutil detach "$VOLUME"
 }
 
+function download_sdl_android {
+  local LIB=$1
+  if [ ! "$(ls -A $LIB)" ]
+  then
+    get_sdl_lib_url $LIB "tar.gz"
+    travis_retry curl -L $SDL_LIB_URL | tar xz
+  fi
+  local SDL_FOLDER_NAME=${LIB%-*}
+  cp -r $LIB "ext/SDL2/$SDL_FOLDER_NAME"
+}
+
 if [ "$BUILD_TARGET" == "appimage" ]
 then
   sudo apt-get update && sudo apt-get -y install libgl1-mesa-dev libsdl2-dev libsdl2-mixer-dev
@@ -83,6 +94,10 @@ then
   then
     install_sdl_macos $SDL_LIB
     install_sdl_macos $SDL_MIXER_LIB
+  elif [ "$BUILD_TARGET" == "android" ]
+  then
+    download_sdl_android $SDL_LIB
+    download_sdl_android $SDL_MIXER_LIB
   else
     install_sdl_lib $SDL_LIB
     install_sdl_lib $SDL_MIXER_LIB

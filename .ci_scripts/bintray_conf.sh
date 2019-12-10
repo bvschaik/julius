@@ -137,4 +137,33 @@ cat > "bintray.json" <<EOF
   "publish": true
 }
 EOF
+elif [ "$DEPLOY" = "android" ]
+then
+cat > "bintray.json" <<EOF
+{
+  "package": {
+    "subject": "bvschaik",
+    "repo": "$REPO",
+    "name": "android$NAME_SUFFIX",
+    "licenses": ["AGPL-V3"],
+    "vcs_url": "https://github.com/bvschaik/julius.git"
+  },
+
+  "version": {
+    "name": "$VERSION",
+    "released": "$(date +'%Y-%m-%d')",
+    "desc": "Automated Android build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
+  },
+
+  "files": [
+    {
+      "includePattern": "${build_dir}/julius.apk",
+      "uploadPattern": "julius-$VERSION-android.apk",
+      "listInDownloads": true
+    }
+  ],
+
+  "publish": true
+}
+EOF
 fi

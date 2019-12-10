@@ -18,6 +18,10 @@ case "$BUILD_TARGET" in
 	cd .. && \
 	./.ci_scripts/package_appimage.sh
 	;;
+"android")
+	cd android && TERM=dumb ./gradlew assembleDebug && \
+	cd .. && cp android/distribution/android/julius/outputs/apk/debug/julius-debug.apk build/julius.apk
+	;;
 *)
 	cd build && make && make test
 	;;

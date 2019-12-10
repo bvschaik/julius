@@ -31,6 +31,16 @@ matrix:
   - os: linux
     name: Nintendo Switch
     env: BUILD_TARGET=switch DEPLOY=switch
+  - os: linux
+    dist: trusty
+    language: android
+    jdk: oraclejdk8
+    android:
+      components:
+      - build-tools-28.0.3
+      - android-28
+    name: Android
+    env: SDL_LIB=SDL2-2.0.10 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=android DEPLOY=android
 
 cache:
   directories:
@@ -39,7 +49,7 @@ cache:
 
 install:
   - ./.ci_scripts/start_docker.sh
-  - ./.ci_scripts/install_sdl.sh;
+  - ./.ci_scripts/install_sdl.sh
 
 before_script:
   - ./.ci_scripts/run_cmake.sh

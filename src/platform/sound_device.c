@@ -2,9 +2,10 @@
 #include "core/log.h"
 #include "sound/device.h"
 #include "game/settings.h"
+#include "platform/android/android.h"
+#include "platform/vita/vita.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
-#include "platform/vita/vita.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -81,7 +82,7 @@ static Mix_Chunk *load_chunk(const char *filename)
         return Mix_LoadWAV_RW(sdl_fp, 1);
 #elif ANDROID
         char resolved_filename[FILE_NAME_MAX];
-        sprintf(resolved_filename, "%s/%s", "/storage/self/primary/Download", filenames[i]);
+        sprintf(resolved_filename, "%s/%s", android_get_c3_path(), filenames[i]);
         return Mix_LoadWAV(resolved_filename);
 #else
         return Mix_LoadWAV(filename);
@@ -138,9 +139,9 @@ int sound_device_play_music(const char *filename, int volume_pct)
 
         #ifdef __vita__
         char *resolved_filename = vita_prepend_path(filename); // There is no Mix_LoadMUS equivalent for fp
-        #elif ANDROID
+        #elif __ANDROID__
         char resolved_filename[FILE_NAME_MAX];
-        sprintf(resolved_filename, "%s/%s", "/storage/self/primary/Download", filename);
+        sprintf(resolved_filename, "%s/%s", android_get_c3_path(), filename);
         #else
         const char *resolved_filename = filename;
         #endif
@@ -155,9 +156,6 @@ int sound_device_play_music(const char *filename, int volume_pct)
             } else {
                 sound_device_set_music_volume(volume_pct);
             }
-        }
-        else {
-            SDL_Log("Error: %s", Mix_GetError());
         }
 
         #ifdef __vita__

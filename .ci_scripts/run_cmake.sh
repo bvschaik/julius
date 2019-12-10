@@ -13,6 +13,9 @@ case "$BUILD_TARGET" in
 "appimage")
 	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
 	;;
+"android")
+	./.ci_scripts/prepare_android_build.sh
+	;;
 *)
 	mkdir build && cd build && cmake ..
 	;;
