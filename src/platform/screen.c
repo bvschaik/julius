@@ -41,6 +41,10 @@ int platform_screen_create(const char *title, int display_scale_percentage)
 
     int width, height;
     int fullscreen = setting_fullscreen();
+#ifdef __ANDROID__
+    fullscreen = 1;
+    scale_percentage = 200;
+#endif
     if (fullscreen) {
         SDL_DisplayMode mode;
         SDL_GetDesktopDisplayMode(0, &mode);

@@ -32,6 +32,10 @@
 #include "platform/vita/vita_touch.h"
 #endif
 
+#ifdef __ANDROID__
+#include "platform/android/android.h"
+#endif
+
 #if defined(_WIN32)
 #include <string.h>
 #endif
@@ -388,10 +392,6 @@ static const char* ask_for_data_dir(int again)
 
 static int pre_init(const char *custom_data_dir)
 {
-#ifdef ANDROID
-    custom_data_dir = "/storage/self/primary/Download";
-#endif
-
     if (custom_data_dir) {
         SDL_Log("Loading game from %s", custom_data_dir);
         if (chdir(custom_data_dir) != 0) {
@@ -401,12 +401,7 @@ static int pre_init(const char *custom_data_dir)
         return game_pre_init();
     }
 
-    char wd[500];
-    if (getcwd(wd, 500)) {
-        SDL_Log("Loading game from working directory - %s", wd);
-    } else {
-        SDL_Log("Loading game from working directory");
-    }
+    SDL_Log("Loading game from working directory");
     if (game_pre_init()) {
         return 1;
     }
@@ -475,9 +470,31 @@ static void setup(const julius_args *args)
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
 #endif
 
+#ifdef __ANDROID__
+    // TODO this will get out of here
+    if (!android_check_rw_permissions()) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+            "Permissions not set",
+            "Julius needs permissions to read and write to the SD Card in order to load the original C3 assets.\n\n"
+            "Please add permissions to read and write in Settings -> Applications.",
+            NULL);
+        // Check again before leaving
+        if (!android_check_rw_permissions()) {
+            SDL_Log("Exiting: no permissions to read or write to the SD Card.");
+            exit(1);
+        } else {
+            android_toast_message("Permission to read and write files granted.");
+        }
+    }
+    android_toast_message("Please select the location of the Caesar 3 files.");
+    android_show_c3_path_dialog();
+    julius_args *hackish_args = (julius_args*)args;
+    hackish_args->data_directory = android_get_c3_path();
+#endif
+
     if (!pre_init(args->data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
-        exit(1);
+        exit(2);
     }
 
     char title[100];
@@ -493,7 +510,14 @@ static void setup(const julius_args *args)
 
     if (!game_init()) {
         SDL_Log("Exiting: game init failed");
-        exit(2);
+        exit(3);
+    } else if (game_init_result == GAME_INIT_NO_PATCH) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING,
+            "Patch 1.0.1.0 not installed",
+            "Your Caesar 3 installation does not have the 1.0.1.0 patch installed.\n"
+            "Julius requires a patched version of Caesar 3.\n\n"
+            "Continue at your own risk.",
+            NULL);
     }
 }
 

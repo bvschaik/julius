@@ -183,6 +183,13 @@ else()
     )
 endif()
 
+if (ANDROID_BUILD)
+    set(PLATFORM_FILES
+        ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/android/android.c
+    )
+endif()
+
 set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/backtrace.c
     ${PROJECT_SOURCE_DIR}/src/core/buffer.c
