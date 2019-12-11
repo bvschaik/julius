@@ -474,7 +474,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_valid_map_tile(
             draw_elevated_figures,
             draw_hippodrome_ornaments,
-            0
+            clear_deleted
         );
     } else {
         city_view_foreach_map_tile(deletion_draw_terrain_top);
