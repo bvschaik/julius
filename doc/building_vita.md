@@ -6,11 +6,11 @@
 
 1. Installing `git`:
 
-    a. For a Debian-based Linux distribution, open a `Terminal` window and type `sudo apt install git`;
+    a. For a Debian-based Linux distribution, open a `Terminal` window and type `sudo apt install git`
 
-    b. For Mac OS, follow [installing the command line developer tools](building_macos.md#installing-the-command-line-developer-tools) in the Mac OS section;
+    b. For Mac OS, follow [installing the command line developer tools](building_macos.md#installing-the-command-line-developer-tools) in the Mac OS section
 
-    c. For Windows, follow [installing Git for Windows](building_windows.md#installing-git-for-windows-optional) in the Windows section.
+    c. For Windows, follow [installing Git for Windows](building_windows.md#installing-git-for-windows-optional) in the Windows section
 
 2. To install `docker`, check [installing `docker`](installing_docker.md).
 

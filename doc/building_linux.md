@@ -44,11 +44,7 @@ Also note that you need superuser (`root`) permissions to install the dependenci
 
             $ git pull origin master
 
-    c. Delete the `build` directory:
-
-            $ rm -rf build
-
-    d. Proceed to step 6.
+    c. Proceed to step 6.
 
 6. Create a `build` directory and move to it:
 
