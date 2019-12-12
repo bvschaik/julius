@@ -20,18 +20,18 @@ These instructions assume you are using Visual Studio 2019.
 
 4. Open Microsoft Visual Studio. Select `Clone or check out code`.
  
- 	![](images/building_windows_msvc_1.jpg)
+ 	![](images/building_windows_msvc_1.png)
 
 5. In the `Repository location` option, type `https://github.com/bvschaik/julius.git`.
    In the `Local path` option, select in which folder you wish the source to be downloaded to. This will be your `work folder`:
 
-    ![](images/building_windows_msvc_2.jpg)
+    ![](images/building_windows_msvc_2.png)
 
     Alternatively, you can obtain the source code without using Visual Studio's built in Git integration. Check [obtaining the source files for Julius](#obtaining-the-source-files-for-julius) for details.
 
 6. The first time you open the project, Visual Studio will throw an error complaining it can't find SDL:
 
-	![](images/building_windows_msvc_3.jpg)
+	![](images/building_windows_msvc_3.png)
 
 7. You will need to tell Visual Studio where the SDL libraries you downloaded can be found. To do that, click up top where it says `x64-Debug` and select `Manage Configurations`.
 
@@ -82,7 +82,7 @@ In order to properly install MinGW, do the following:
 
 2. When the installation is finished, click `Continue` to start the package manager:
 
-    ![](images/building_windows_mingw_1.jpg)
+    ![](images/building_windows_mingw_1.png)
 
 3. Install the required MinGW packages:
 
@@ -96,14 +96,14 @@ In order to properly install MinGW, do the following:
 
 4. This will take a while. After the packages have installed, you can click `Close` to exit the installer:
 
-    ![](images/building_windows_mingw_3.jpg)
+    ![](images/building_windows_mingw_3.png)
 
 5. The only thing left to do is to add the MinGW binaries to the `path`:
 
     * In the start menu, type `environment variables` and select `Edit the system environment variables`.
     * In the new window that appears, select `Environment Variables`:
 
-        ![](images/building_windows_mingw_4.jpg)
+        ![](images/building_windows_mingw_4.png)
 
     * On the new window that appears, at the top list, select the `Path` variable and click `Edit`.
     * On the new window that appears, select `New` and type `C:\MinGW\bin`.
@@ -122,7 +122,7 @@ Open the [download page for CMake](https://cmake.org/download/) and select the f
 
 During install, check the option `Add CMake to the system PATH for the current user`:
 
-![](images/building_windows_mingw_6.jpg)
+![](images/building_windows_mingw_6.png)
 
 
 #### Installing Git for Windows (optional)

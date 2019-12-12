@@ -6,11 +6,11 @@ In order to be able to build Julius, you need to install the dependencies first.
 
 The dependencies are:
 
-* The command line developer tools;
-* Homebrew;
-* CMake;
-* The `SDL` library;
-* The `SDL_mixer` library.
+* The command line developer tools
+* Homebrew
+* CMake
+* The `SDL` library
+* The `SDL_mixer` library
 
 If you already have all of them installed, you can proceed to [build Julius](#building-julius).
 
@@ -21,15 +21,9 @@ To install the command line developer tools, open a terminal window and type:
 
     $ xcode-select --install
 
-The following window should appear:
-
-![](images/building_macos_1.png)
-
-Click `Install` and then accept the license agreement.
+A window should appear requesting you to install the command line tools. Click `Install` and then accept the license agreement.
 
 The developer tools will download and install.
-
-![](images/building_macos_2.png)
 
 
 ### Installing the remaining dependencies
@@ -75,11 +69,7 @@ After the required dependencies have been installed, you can proceed to build ju
 
             $ git pull origin master
 
-    c. Delete the `build` directory:
-
-            $ rm -rf build
-
-    d. Proceed to step 4.
+    c. Proceed to step 4.
 
 4. Create a `build` directory and move to it:
 
@@ -99,4 +89,4 @@ After the required dependencies have been installed, you can proceed to build ju
 
         $ make test
 
-**Success!** Julius should have been built without any errors. You can now move it to the `Applications` folder to execute it.
+**Success!** Julius should have been built without any errors. You can now move `julius.app` to the `Applications` folder to execute it.

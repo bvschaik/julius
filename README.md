@@ -40,11 +40,11 @@ This results in a `julius` executable.
 To build the Vita or Switch version, use `cmake .. -DVITA_BUILD=ON` or `cmake .. -DSWITCH_BUILD=ON` instead of `cmake ..`.
 
 For more detailed instructions on how to build Julius, please check the following documents:
-- [Building for Windows](doc/building_windows.md);
-- [Building for Linux](doc/building_linux.md);
-- [Building for Mac](doc/building_macos.md);
-- [Building for Playstation Vita](doc/building_vita.md);
-- [Building for Nintendo Switch](doc/building_switch.md).
+- [Building for Windows](doc/building_windows.md)
+- [Building for Linux](doc/building_linux.md)
+- [Building for Mac](doc/building_macos.md)
+- [Building for Playstation Vita](doc/building_vita.md)
+- [Building for Nintendo Switch](doc/building_switch.md)
 
 ## Running the game
 
