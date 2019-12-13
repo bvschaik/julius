@@ -19,39 +19,18 @@ The aim of this project is to create an open-source version of Caesar 3, with th
 UI enhancements include:
 - Support for widescreen resolutions
 - Windowed mode support for 32-bit desktops
+- Several small in-game quality of life improvements
 
-Julius requires the original assets (graphics, sounds, etc) from Caesar 3 to run.
-
-## Building from source
-
-Requirements:
-- cmake
-- SDL2
-- SDL2_mixer
-
-After cloning the repo, run the following commands:
-
-	$ mkdir build && cd build
-	$ cmake ..
-	$ make
-
-This results in a `julius` executable.
-
-To build the Vita or Switch version, use `cmake .. -DVITA_BUILD=ON` or `cmake .. -DSWITCH_BUILD=ON` instead of `cmake ..`.
-
-For more detailed instructions on how to build Julius, please check the following documents:
-- [Building for Windows](doc/building_windows.md)
-- [Building for Linux](doc/building_linux.md)
-- [Building for Mac](doc/building_macos.md)
-- [Building for Playstation Vita](doc/building_vita.md)
-- [Building for Nintendo Switch](doc/building_switch.md)
+Julius requires the original assets (graphics, sounds, etc) from Caesar 3 to run. It optionally [supports the high-quality MP3 files](doc/mp3_support.md) once provided on the Sierra website.
 
 ## Running the game
 
-After downloading the Windows build or compiling the game yourself, the game data should be in the same directory as in which the binary is run or it can be run as `julius /path/to/game-data`.
+First, download the game for your platform from the list above.
 
-The easiest way to run the game is to copy either the compiled executable (in case you built it from source) or the contents of the downloaded zip file to your Caesar 3 installation folder. Then run the `julius` executable as any other program.
+Alternatively, you can build Julius yourself. Check [Building Julius](doc/BUILDING.md) for details.
+
+Then you can either copy the game to the Caesar 3 folder, or run the game from an independent folder, in which case the game will ask you to point to the Caesar 3 folder.
 
 Note that you must have permission to write in the game data directory as the saves will be stored there.
 
-See [Running](RUNNING.md) for further instructions, including instructions for Linux, Vita, and Switch.
+See [Running](doc/RUNNING.md) for further instructions and startup options.
