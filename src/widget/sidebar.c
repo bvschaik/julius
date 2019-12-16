@@ -458,9 +458,9 @@ static void draw_sliding_foreground(void)
 
     // relief images below buttons
     int y_offset = 474;
-    int s_width = screen_width();
-    while (s_width - y_offset > 0) {
-        if (s_width - y_offset <= 120) {
+    int s_height = screen_height();
+    while (s_height - y_offset > 0) {
+        if (s_height - y_offset <= 120) {
             image_draw(image_base + 3, x_offset_collapsed, y_offset);
             image_draw(image_base + 2, x_offset_expanded, y_offset);
             y_offset += 120;
