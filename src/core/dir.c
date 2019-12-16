@@ -2,7 +2,7 @@
 
 #include "core/file.h"
 #include "core/string.h"
-#include "platform/vita/vita.h"
+#include "platform/file.h"
 
 #include <dirent.h>
 #include <stdio.h>
@@ -81,7 +81,7 @@ static int compare_lower(const void *va, const void *vb)
 const dir_listing *dir_find_files_with_extension(const char *extension)
 {
     clear_dir_listing();
-    fs_dir_type *d = fs_dir_open(CURRENT_DIR);
+    fs_dir_type *d = fs_dir_open(FS_BASE_DIR);
     if (!d) {
         return &listing;
     }
@@ -137,40 +137,44 @@ static void move_left(char *str)
     *str = 0;
 }
 
-const char *dir_get_case_corrected_file(const char *filepath)
+static int case_correct_file(char *filepath)
 {
-    static char corrected_filename[2 * FILE_NAME_MAX];
-
-    FILE *fp = file_open(filepath, "rb");
-    if (fp) {
-        file_close(fp);
-        return filepath;
-    }
-
-    strncpy(corrected_filename, filepath, 2 * FILE_NAME_MAX);
-    corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
-
-    char *slash = strchr(corrected_filename, '/');
+    char *slash = strchr(filepath, '/');
     if (!slash) {
-        slash = strchr(corrected_filename, '\\');
+        slash = strchr(filepath, '\\');
     }
     if (slash) {
         *slash = 0;
-        if (correct_case(".", corrected_filename)) {
+        if (correct_case(".", filepath)) {
             char *path = slash + 1;
             if (*path == '\\') {
                 // double backslash: move everything to the left
                 move_left(path);
             }
-            if (correct_case(corrected_filename, path)) {
+            if (correct_case(filepath, path)) {
                 *slash = '/';
-                return corrected_filename;
+                return 1;
             }
         }
     } else {
-        if (correct_case(".", corrected_filename)) {
-            return corrected_filename;
+        if (correct_case(".", filepath)) {
+            return 1;
         }
     }
     return 0;
+}
+
+char *dir_get_file(const char* filepath)
+{
+    platform_check_file_access_permissions();
+
+    static char full_path[3 * FILE_NAME_MAX];
+    int base_path_size = platform_generate_full_file_path(full_path, filepath);
+
+    FILE* fp = file_open(full_path, "rb");
+    if (fp) {
+        file_close(fp);
+        return full_path;
+    }
+    return case_correct_file(full_path + base_path_size) ? full_path : NULL;
 }

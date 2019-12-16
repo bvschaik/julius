@@ -9,6 +9,7 @@
 #include "input/mouse.h"
 #include "platform/arguments.h"
 #include "platform/cursor.h"
+#include "platform/file.h"
 #include "platform/keyboard_input.h"
 #include "platform/prefs.h"
 #include "platform/screen.h"
@@ -40,12 +41,8 @@
 #include <string.h>
 #endif
 
-#ifdef _MSC_VER
-#include <direct.h>
-#define chdir _chdir
-#define getcwd _getcwd
-#elif !defined(__vita__)
-#include <unistd.h>
+#if defined(USE_TINYFILEDIALOGS) || defined(__ANDROID__)
+#define SHOW_FOLDER_SELECT_DIALOG
 #endif
 
 #ifdef DRAW_FPS
@@ -374,11 +371,36 @@ static int init_sdl(void)
     return 1;
 }
 
-#ifdef USE_TINYFILEDIALOGS
+#ifdef SHOW_FOLDER_SELECT_DIALOG
 static const char* ask_for_data_dir(int again)
 {
+#ifdef __ANDROID__
     if (again) {
-        int result = tinyfd_messageBox("Wrong folder selected.",
+        const SDL_MessageBoxButtonData buttons[] = {
+           { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK" },
+           { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel" }
+        };
+        const SDL_MessageBoxData messageboxdata = {
+            SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
+            "The selected folder is not a proper Caesar 3 folder.\n\n"
+            "Please select a path directly from either the internal storage "
+            "or the SD card, otherwise the path will not be recognised.\n\n"
+            "Press OK to select another folder or Cancel to exit.",
+            SDL_arraysize(buttons), buttons, NULL
+        };
+        int result;
+        SDL_ShowMessageBox(&messageboxdata, &result);
+        if (!result) {
+            return NULL;
+        }
+    } else {
+        android_toast_message("Please select the location of the Caesar 3 files.");
+    }
+    android_show_c3_path_dialog();
+    return android_get_c3_path();
+#else
+    if (again) {
+        int result = tinyfd_messageBox("Wrong folder selected",
             "The selected folder is not a proper Caesar 3 folder.\n\n"
             "Press OK to select another folder or Cancel to exit.",
             "okcancel", "warning", 1);
@@ -387,6 +409,7 @@ static const char* ask_for_data_dir(int again)
         }
     }
     return tinyfd_selectFolderDialog("Julius requires the original files from Caesar 3 to run.\n\nPlease select your Caesar 3 folder.", NULL);
+#endif
 }
 #endif
 
@@ -394,7 +417,7 @@ static int pre_init(const char *custom_data_dir)
 {
     if (custom_data_dir) {
         SDL_Log("Loading game from %s", custom_data_dir);
-        if (chdir(custom_data_dir) != 0) {
+        if (!platform_set_base_path(custom_data_dir)) {
             SDL_Log("%s: directory not found", custom_data_dir);
             return 0;
         }
@@ -409,7 +432,7 @@ static int pre_init(const char *custom_data_dir)
     #if SDL_VERSION_ATLEAST(2, 0, 1)
         char *base_path = SDL_GetBasePath();
         if (base_path) {
-            if (chdir(base_path) == 0) {
+            if (platform_set_base_path(base_path)) {
                 SDL_Log("Loading game from base path %s", base_path);
                 if (game_pre_init()) {
                     SDL_free(base_path);
@@ -420,11 +443,11 @@ static int pre_init(const char *custom_data_dir)
         }
     #endif
 
-    #ifdef USE_TINYFILEDIALOGS
+    #ifdef SHOW_FOLDER_SELECT_DIALOG
         const char *user_dir = pref_data_dir();
         if (user_dir) {
             SDL_Log("Loading game from user pref %s", user_dir);
-            if (chdir(user_dir) == 0 && game_pre_init()) {
+            if (platform_set_base_path(user_dir) && game_pre_init()) {
                 return 1;
             }
         }
@@ -432,8 +455,11 @@ static int pre_init(const char *custom_data_dir)
         user_dir = ask_for_data_dir(0);
         while (user_dir) {
             SDL_Log("Loading game from user-selected dir %s", user_dir);
-            if (chdir(user_dir) == 0 && game_pre_init()) {
+            if (platform_set_base_path(user_dir) && game_pre_init()) {
                 pref_save_data_dir(user_dir);
+    #ifdef __ANDROID__
+                android_toast_message("C3 files found. Path saved.");
+    #endif
                 return 1;
             }
             user_dir = ask_for_data_dir(1);
@@ -468,28 +494,6 @@ static void setup(const julius_args *args)
 
     // Black
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
-#endif
-
-#ifdef __ANDROID__
-    // TODO this will get out of here
-    if (!android_check_rw_permissions()) {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-            "Permissions not set",
-            "Julius needs permissions to read and write to the SD Card in order to load the original C3 assets.\n\n"
-            "Please add permissions to read and write in Settings -> Applications.",
-            NULL);
-        // Check again before leaving
-        if (!android_check_rw_permissions()) {
-            SDL_Log("Exiting: no permissions to read or write to the SD Card.");
-            exit(1);
-        } else {
-            android_toast_message("Permission to read and write files granted.");
-        }
-    }
-    android_toast_message("Please select the location of the Caesar 3 files.");
-    android_show_c3_path_dialog();
-    julius_args *hackish_args = (julius_args*)args;
-    hackish_args->data_directory = android_get_c3_path();
 #endif
 
     if (!pre_init(args->data_directory)) {

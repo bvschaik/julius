@@ -1,6 +1,5 @@
 package bvschaik.julius;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,22 +10,22 @@ import org.libsdl.app.SDLActivity;
 
 public class JuliusSDL2Activity extends SDLActivity
 {
-    public static JuliusSDL2Activity m_activity;
-    public static Context m_context;
-    private static Uri C3Path = Uri.EMPTY;
+    private Uri C3Path = Uri.EMPTY;
     private static final int GET_FOLDER_RESULT = 500;
+    public boolean paused = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        informCurrentRWPermissions(PermissionsManager.HasWriteAccess(this));
+    }
 
-        m_activity = this;
-        m_context = getApplicationContext();
-        if (savedInstanceState == null) {
-            PermissionsManager.CheckPermissions(this);
-        }
-        setJavaVMForJNI();
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        paused = false;
     }
 
     @Override
@@ -38,13 +37,27 @@ public class JuliusSDL2Activity extends SDLActivity
         };
     }
 
-    public void showDirectoryIntent()
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        paused = true;
+    }
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        paused = false;
+    }
+
+    private void showDirectoryIntent()
     {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         startActivityForResult(intent, GET_FOLDER_RESULT);
+        paused = true;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         switch(requestCode) {
             case GET_FOLDER_RESULT:
@@ -53,32 +66,44 @@ public class JuliusSDL2Activity extends SDLActivity
         }
     }
 
-    static public void ToastMessage(final String message)
+    public void toastMessage(final String message)
     {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable()
         {
             public void run()
             {
-                Toast.makeText(m_context, message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    static public void ShowDirectorySelection()
+    public void showDirectorySelection()
     {
         // Wait before showing window
         Sleep(1000);
-        m_activity.showDirectoryIntent();
+        showDirectoryIntent();
     }
 
-    static public String GetC3Path()
+    public void requestPermissions()
+    {
+        if(PermissionsManager.RequestPermissions(this)) {
+            paused = true;
+        }
+    }
+
+    public String getC3Path()
     {
         // Halt startup until directory is selected
-        while(C3Path == Uri.EMPTY) {
+        waitOnPause();
+        return DirectoryHelper.GetPathFromUri(C3Path);
+    }
+
+    public void waitOnPause()
+    {
+        while(paused) {
             Sleep(1000);
         }
-        return DirectoryHelper.GetPathFromUri(m_context, C3Path);
     }
 
     static private void Sleep(int ms)
@@ -88,5 +113,5 @@ public class JuliusSDL2Activity extends SDLActivity
         } catch(InterruptedException e) {}
     }
 
-    public native void setJavaVMForJNI();
+    public native void informCurrentRWPermissions(boolean hasWriteAccess);
 }

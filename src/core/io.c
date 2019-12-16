@@ -7,7 +7,7 @@
 
 int io_read_file_into_buffer(const char *filepath, void *buffer, int max_size)
 {
-    const char *cased_file = dir_get_case_corrected_file(filepath);
+    const char *cased_file = dir_get_file(filepath);
     if (!cased_file) {
         return 0;
     }
@@ -28,7 +28,7 @@ int io_read_file_into_buffer(const char *filepath, void *buffer, int max_size)
 
 int io_read_file_part_into_buffer(const char *filepath, void *buffer, int size, int offset_in_file)
 {
-    const char *cased_file = dir_get_case_corrected_file(filepath);
+    const char *cased_file = dir_get_file(filepath);
     if (!cased_file) {
         return 0;
     }
@@ -47,7 +47,7 @@ int io_read_file_part_into_buffer(const char *filepath, void *buffer, int size, 
 int io_write_buffer_to_file(const char *filepath, const void *buffer, int size)
 {
     // Find existing file to overwrite
-    const char *cased_file = dir_get_case_corrected_file(filepath);
+    const char *cased_file = dir_get_file(filepath);
     if (!cased_file) {
         cased_file = filepath;
     }

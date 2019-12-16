@@ -166,19 +166,24 @@ static char channel_filenames[SOUND_CHANNEL_MAX][CHANNEL_FILENAME_MAX] = {
 
 static void correct_channel_filenames(void)
 {
+    static int already_loaded = 0;
+    if (already_loaded) {
+        return;
+    }
     for (int i = 1; i < SOUND_CHANNEL_MAX; i++) {
         if (!channel_filenames[i][0]) {
             continue;
         }
 
         char *original = channel_filenames[i];
-        const char *corrected = dir_get_case_corrected_file(original);
+        const char *corrected = dir_get_file(original);
         if (!corrected) {
             channel_filenames[i][0] = 0;
         } else if (corrected != original) {
             strncpy(original, corrected, CHANNEL_FILENAME_MAX);
         }
     }
+    already_loaded = 1;
 }
 
 void sound_system_init(void)

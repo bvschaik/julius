@@ -1,9 +1,8 @@
+#include "core/dir.h"
 #include "core/file.h"
 #include "core/log.h"
 #include "sound/device.h"
 #include "game/settings.h"
-#include "platform/android/android.h"
-#include "platform/vita/vita.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
 

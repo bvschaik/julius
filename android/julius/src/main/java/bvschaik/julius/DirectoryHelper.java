@@ -7,7 +7,7 @@ import android.os.Environment;
 
 public class DirectoryHelper
 {    
-    public static String GetPathFromUri(final Context context, final Uri uri)
+    public static String GetPathFromUri(final Uri uri)
     {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return "";
@@ -24,7 +24,7 @@ public class DirectoryHelper
                     return Environment.getExternalStorageDirectory() + "/";
                 }
             } else {
-                return "/storage" + "/" + docId.replace(":", "/");
+                return "/storage" + "/" + docId.replace(":", "/") + "/";
             }
         }
         return "";

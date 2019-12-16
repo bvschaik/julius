@@ -28,6 +28,6 @@ const dir_listing *dir_find_files_with_extension(const char *extension);
  * @param filepath File path to match to a case-sensitive file on the filesystem
  * @return Case-corrected file, or NULL if the file was not found
  */
-const char *dir_get_case_corrected_file(const char *filepath);
+char *dir_get_file(const char *filepath);
 
 #endif // CORE_DIR_H

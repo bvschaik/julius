@@ -133,6 +133,7 @@ static struct {
 
 int image_init(void)
 {
+    data.current_climate = -1;
     data.enemy_data = (color_t *) malloc(ENEMY_DATA_SIZE);
     data.main_data = (color_t *) malloc(MAIN_DATA_SIZE);
     data.empire_data = (color_t *) malloc(EMPIRE_DATA_SIZE);

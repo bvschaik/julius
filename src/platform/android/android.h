@@ -6,8 +6,9 @@
 #include <jni.h>
 
 int android_check_rw_permissions(void);
+void android_request_rw_permissions(void);
 void android_toast_message(const char *messge);
-void Java_bvschaik_julius_JuliusSDL2Activity_setJavaVMForJNI(JNIEnv *env, jobject obj, jint depth);
+void Java_bvschaik_julius_JuliusSDL2Activity_informCurrentRWPermissions(JNIEnv* env, jobject obj, jboolean hasWriteAccess);
 void android_show_c3_path_dialog(void);
 const char* android_get_c3_path(void);
 

@@ -1,47 +1,38 @@
 #include "android.h"
+#include "platform/file.h"
 #include "SDL.h"
-
-static JavaVM *java_vm = NULL;
 
 typedef struct
 {
-    JavaVM *vm;
     JNIEnv *env;
     jclass class;
+    jobject activity;
     jmethodID method;
-    int env_stat;
 } java_function_handler;
 
-static void invalidate_java_function_handler(java_function_handler *handler)
+static int startup_java_function_handler(const char *class_name, java_function_handler *handler)
 {
-    handler->vm = NULL;
-    handler->env = NULL;
-    handler->class = NULL;
-    handler->method = NULL;
-    handler->env_stat = JNI_EINVAL;
-}
-
-static int request_java_static_function_handler(const char *class_name, const char *method_name, const char *method_signature, java_function_handler *handler)
-{
-    if (!java_vm) {
-        SDL_Log("Problem configuring Java virtual machine.");
-        return 0;
-    }
-    handler->vm = java_vm;
-    handler->env_stat = (*handler->vm)->GetEnv(handler->vm, (void**)&handler->env, JNI_VERSION_1_6);
-    if (handler->env_stat == JNI_EDETACHED) {
-        if ((*handler->vm)->AttachCurrentThread(handler->vm, &handler->env, NULL) != 0) {
-            handler->env_stat = JNI_EINVAL;
-            SDL_Log("Problem configuring Java virtual machine.");
-            return 0;
-        }
-    } else if (handler->env_stat == JNI_EVERSION) {
-        SDL_Log("Incompatible Java version.");
+    handler->env = SDL_AndroidGetJNIEnv();
+    if (handler->env == NULL) {
+        SDL_Log("Problem setting up JNI environment");
         return 0;
     }
     handler->class = (*handler->env)->FindClass(handler->env, class_name);
     if (handler->class == NULL) {
         SDL_Log("Problem loading class '%s'.", class_name);
+        return 0;
+    }
+    handler->activity = (jobject)SDL_AndroidGetActivity();
+    if (handler->activity == NULL) {
+        SDL_Log("Problem loading the activity.");
+        return 0;
+    }
+    return 1;
+}
+
+static int request_java_static_function_handler(const char *class_name, const char *method_name, const char *method_signature, java_function_handler *handler)
+{
+    if(!startup_java_function_handler(class_name, handler)) {
         return 0;
     }
     handler->method = (*handler->env)->GetStaticMethodID(handler->env, handler->class, method_name, method_signature);
@@ -52,31 +43,67 @@ static int request_java_static_function_handler(const char *class_name, const ch
     return 1;
 }
 
-static void destroy_java_function_handler(java_function_handler *handler)
+static int request_java_class_function_handler(const char *class_name, const char *method_name, const char *method_signature, java_function_handler *handler)
 {
-    if (handler->vm && handler->env_stat == JNI_EDETACHED) {
-        (*handler->vm)->DetachCurrentThread(handler->vm);
+    if(!startup_java_function_handler(class_name, handler)) {
+        return 0;
     }
-    invalidate_java_function_handler(handler);
+    handler->method = (*handler->env)->GetMethodID(handler->env, handler->class, method_name, method_signature);
+    if (handler->method == NULL) {
+        SDL_Log("Problem loading method '%s' from class '%s'.", method_name, class_name);
+        return 0;
+    }
+    return 1;
+}
+
+static void destroy_java_function_handler(java_function_handler* handler)
+{
+    if(handler->env && handler->activity) {
+        (*handler->env)->DeleteLocalRef(handler->env, handler->activity);
+    }
+    handler->env = NULL;
+    handler->class = NULL;
+    handler->activity = NULL;
+    handler->method = NULL;
+}
+
+static void wait_on_pause(void)
+{
+    java_function_handler handler;
+    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "waitOnPause", "()V", &handler)) {
+        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method);
+    }
+    destroy_java_function_handler(&handler);
 }
 
 int android_check_rw_permissions(void)
 {
     java_function_handler handler;
     int result = 0;
-    if (request_java_static_function_handler("bvschaik/julius/PermissionsManager", "HasWriteAccess", "()Z", &handler)) {
-        result = (*handler.env)->CallStaticBooleanMethod(handler.env, handler.class, handler.method);
+    if (request_java_static_function_handler("bvschaik/julius/PermissionsManager", "HasWriteAccess", "(Lbvschaik/julius/JuliusSDL2Activity;)Z", &handler)) {
+        result = (*handler.env)->CallStaticBooleanMethod(handler.env, handler.class, handler.method, handler.activity);
     }
     destroy_java_function_handler(&handler);
     return result;
 }
 
+void android_request_rw_permissions(void)
+{
+    java_function_handler handler;
+    int result = 0;
+    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "requestPermissions", "()V", &handler)) {
+        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method);
+    }
+    destroy_java_function_handler(&handler);
+    wait_on_pause();
+}
+
 void android_toast_message(const char *message)
 {
     java_function_handler handler;
-    if (request_java_static_function_handler("bvschaik/julius/JuliusSDL2Activity", "ToastMessage", "(Ljava/lang/String;)V", &handler)) {
+    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "toastMessage", "(Ljava/lang/String;)V", &handler)) {
         jstring jmessage = (*handler.env)->NewStringUTF(handler.env, message);
-        (*handler.env)->CallStaticVoidMethod(handler.env, handler.class, handler.method, jmessage);
+        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method, jmessage);
     }
     destroy_java_function_handler(&handler);
 }
@@ -84,8 +111,8 @@ void android_toast_message(const char *message)
 void android_show_c3_path_dialog(void)
 {
     java_function_handler handler;
-    if (request_java_static_function_handler("bvschaik/julius/JuliusSDL2Activity", "ShowDirectorySelection", "()V", &handler)) {
-        (*handler.env)->CallStaticVoidMethod(handler.env, handler.class, handler.method);
+    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "showDirectorySelection", "()V", &handler)) {
+        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method);
     }
     destroy_java_function_handler(&handler);
 }
@@ -93,23 +120,19 @@ void android_show_c3_path_dialog(void)
 const char* android_get_c3_path(void)
 {
     java_function_handler handler;
-    if (!request_java_static_function_handler("bvschaik/julius/JuliusSDL2Activity", "GetC3Path", "()Ljava/lang/String;", &handler)) {
+    if (!request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "getC3Path", "()Ljava/lang/String;", &handler)) {
         destroy_java_function_handler(&handler);
         return NULL;
     }
 
-    jobject result = (*handler.env)->CallStaticObjectMethod(handler.env, handler.class, handler.method);
+    jobject result = (*handler.env)->CallObjectMethod(handler.env, handler.activity, handler.method);
     const char *path = (*handler.env)->GetStringUTFChars(handler.env, (jstring)result, NULL);
     destroy_java_function_handler(&handler);
 
     return path;
 }
 
-JNIEXPORT void JNICALL Java_bvschaik_julius_JuliusSDL2Activity_setJavaVMForJNI(JNIEnv* env, jobject obj, jint depth)
+JNIEXPORT void JNICALL Java_bvschaik_julius_JuliusSDL2Activity_informCurrentRWPermissions(JNIEnv* env, jobject obj, jboolean hasWriteAccess)
 {
-    if ((*env)->GetJavaVM(env, &java_vm) != JNI_OK)
-    {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Could not get the Java interface.\n\nJulius will not be able to run.", NULL);
-        return;
-    }
+    platform_set_file_access_permissions((int)hasWriteAccess);
 }

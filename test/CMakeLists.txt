@@ -30,6 +30,7 @@ add_executable(compare
 add_executable(autopilot
     sav/sav_compare.c
     sav/run.c
+    stub/file.c
     stub/image.c
     stub/input.c
     stub/lang.c
