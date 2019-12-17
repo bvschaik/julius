@@ -258,6 +258,19 @@ static int index_of_part(const char *part_name)
     return -1;
 }
 
+static int offset_of_part(const char *part_name)
+{
+    int total_offset = 0;
+    for (int i = 0; save_game_parts[i].length_in_bytes; i++) {
+        if (strcmp(part_name, save_game_parts[i].name) == 0) {
+            return total_offset;
+        }
+        total_offset += save_game_parts[i].length_in_bytes;
+    }
+    printf("WARN: part %s not found\n", part_name);
+    return -1;
+}
+
 static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
 {
     if (bytes_to_read > COMPRESS_BUFFER_SIZE) {
@@ -357,8 +370,38 @@ static int is_exception_buildings(int global_offset, int part_offset)
     return 0;
 }
 
+static int is_exception_building_grid(int global_offset, int part_offset)
+{
+    int grid_offset = part_offset / 2;
+    // Exception for earthquake tiles: Caesar 3 does not clear the building ID when
+    // a building gets destroyed by an earthquake, resulting in visual artifacts;
+    // Julius does clear the building ID from the grid.
+    // Earthquake tile is defined as:
+    // - 0x80 bit is set in bitfields_grid
+    // - 0x0002 bit is set in terrain_grid
+    int is_earthquake = (file1_data[offset_of_part("bitfields_grid") + grid_offset] & 0x80) &&
+            (file1_data[offset_of_part("terrain_grid") + 2 * grid_offset] & 0x02);
+    if (is_earthquake) {
+        unsigned int v1 = to_ushort(&file1_data[global_offset & ~1]);
+        unsigned int v2 = to_ushort(&file2_data[global_offset & ~1]);
+        if (v1 == 0 || v2 == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 static int is_exception(int index, int global_offset, int part_offset)
 {
+    if (index == index_of_part("city_sounds")) {
+        return 1;
+    }
+    if (index == index_of_part("sprite_backup_grid")) {
+        return 1;
+    }
+    if (index == index_of_part("camera")) {
+        return 1;
+    }
     if (index == index_of_part("image_grid")) {
         return is_exception_image_grid(global_offset);
     }
@@ -369,17 +412,14 @@ static int is_exception(int index, int global_offset, int part_offset)
             return 1;
         }
     }
-    if (index == index_of_part("sprite_backup_grid")) {
-        return 1;
-    }
-    if (index == index_of_part("camera")) {
-        return 1;
-    }
     if (index == index_of_part("city_data")) {
         return is_exception_cityinfo(global_offset, part_offset);
     }
     if (index == index_of_part("buildings")) {
         return is_exception_buildings(global_offset, part_offset);
+    }
+    if (index == index_of_part("building_grid")) {
+        return is_exception_building_grid(global_offset, part_offset);
     }
     if (index == index_of_part("building_list_burning_totals.size")) {
         // We use it for burning size in Julius, while C3 writes the index used to loop over the buildings,
@@ -453,9 +493,7 @@ static int compare(void)
     int offset = 0;
     int different = 0;
     for (int i = 0; save_game_parts[i].length_in_bytes; i++) {
-        if (i != index_of_part("city_sounds")) { // skip city sounds
-            different |= compare_part(i, offset);
-        }
+        different |= compare_part(i, offset);
         offset += save_game_parts[i].length_in_bytes;
     }
     return different;
