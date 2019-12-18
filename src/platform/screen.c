@@ -43,7 +43,6 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     int fullscreen = setting_fullscreen();
 #ifdef __ANDROID__
     fullscreen = 1;
-    scale_percentage = 200;
 #endif
     if (fullscreen) {
         SDL_DisplayMode mode;
@@ -71,7 +70,21 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
         return 0;
     }
-
+#ifdef __ANDROID__
+    float dpi = 0;
+    const int ANDROID_DEFAULT_DPI = 160;
+    if(SDL_GetDisplayDPI(SDL_GetWindowDisplayIndex(SDL.window), NULL, &dpi, NULL)) {
+        scale_percentage = 200;
+    } else {
+        int scale = dpi / ANDROID_DEFAULT_DPI;
+        scale = SDL_max(1, scale);
+        scale = SDL_min(scale, 5);
+        scale_percentage = scale * 100;
+        if(scale > 1) {
+            SDL_Log("High DPI Android device found, setting scale to %d", scale_percentage);
+        }
+    }
+#endif
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!SDL.renderer) {
         SDL_Log("Unable to create renderer, trying software renderer: %s", SDL_GetError());

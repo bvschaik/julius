@@ -3,6 +3,7 @@
 #include "core/encoding.h"
 #include "core/string.h"
 #include "graphics/text.h"
+#include "platform/keyboard_input.h"
 
 static struct {
     int insert;
@@ -67,6 +68,7 @@ void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation
     data.box_width = box_width;
     data.font = font;
     set_offset_to_end();
+    platform_start_text_input();
 }
 
 void keyboard_refresh(void)
@@ -79,11 +81,13 @@ void keyboard_refresh(void)
 void keyboard_resume_capture(void)
 {
     data.capture = 1;
+    platform_start_text_input();
 }
 
 void keyboard_pause_capture(void)
 {
     data.capture = 0;
+    platform_stop_text_input();
 }
 
 void keyboard_stop_capture(void)
@@ -94,6 +98,7 @@ void keyboard_stop_capture(void)
     data.length = 0;
     data.max_length = 0;
     data.accepted = 0;
+    platform_stop_text_input();
 }
 
 int keyboard_input_is_accepted(void)

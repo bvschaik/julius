@@ -579,8 +579,7 @@ find_package(SDL2_mixer REQUIRED)
 =======
 if(ANDROID_BUILD)
     string(TOLOWER ${CMAKE_BUILD_TYPE} ANDROID_BUILD_DIR)
-    set(DISTRIBUTION_DIR ${CMAKE_SOURCE_DIR}/android/distribution/android/SDL2/intermediates/ndkBuild)
-    set(SDL_LOCATION ${CMAKE_SOURCE_DIR}/ext/SDL2)
+    set(DISTRIBUTION_DIR ${PROJECT_SOURCE_DIR}/android/distribution/android/SDL2/intermediates/ndkBuild)
 
     set(SDL2_LIBRARY SDL2)
     set(SDL2_MIXER_LIBRARY SDL2_mixer)
@@ -592,10 +591,41 @@ if(ANDROID_BUILD)
     set_target_properties(${SDL2_MIXER_LIBRARY} PROPERTIES IMPORTED_LOCATION
     ${DISTRIBUTION_DIR}/${ANDROID_BUILD_DIR}/obj/local/${ANDROID_ABI}/libSDL2_mixer.so)
 
-    set(SDL2_INCLUDE_DIR ${SDL_LOCATION}/SDL2/include)
-    set(SDL2_MIXER_INCLUDE_DIR ${SDL_LOCATION}/SDL2_mixer)
+    function(GET_SDL_DIR result module)
 
-    add_library(${SHORT_NAME} SHARED ${SDL_LOCATION}/SDL2/src/main/android/SDL_android_main.c ${SOURCE_FILES})
+        if(NOT module STREQUAL "")
+            set(module "_${module}")
+        endif()
+
+        set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
+        file(GLOB children
+            RELATIVE ${SDL_LOCATION}
+            CONFIGURE_DEPENDS
+            ${SDL_LOCATION}/SDL${module}
+            ${SDL_LOCATION}/SDL2${module}
+            ${SDL_LOCATION}/SDL${module}-*
+            ${SDL_LOCATION}/SDL2${module}-*
+        )
+
+        foreach(child ${children})
+            if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
+                set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
+                break()
+            endif()
+        endforeach()
+
+    endfunction()
+
+    GET_SDL_DIR(SDL_DIR "")
+    GET_SDL_DIR(SDL_MIXER_DIR "mixer")
+
+    message("SDL source folder is: ${SDL_DIR}")
+    message("SDL_mixer source folder is: ${SDL_MIXER_DIR}")
+
+    set(SDL2_INCLUDE_DIR ${SDL_DIR}/include)
+    set(SDL2_MIXER_INCLUDE_DIR ${SDL_MIXER_DIR} ${SDL_MIXER_DIR}/include)
+
+    add_library(${SHORT_NAME} SHARED ${SDL_DIR}/src/main/android/SDL_android_main.c ${SOURCE_FILES})
 else()
     add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
 
@@ -794,6 +824,8 @@ else()
     endif()
 
     # Unit tests
-    enable_testing()
-    add_subdirectory(test)
+    if(NOT VITA_BUILD AND NOT SWITCH_BUILD AND NOT ANDROID_BUILD)
+        enable_testing()
+        add_subdirectory(test)
+    endif()
 endif()

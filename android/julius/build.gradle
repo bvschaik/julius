@@ -15,12 +15,19 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cFlags ""
                 arguments "-DANDROID_BUILD=ON"
             }
         }
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+        sourceSets {
+            main {
+                java {
+                    srcDir 'src/main/java'
+                    srcDir '../../ext/SDL2'
+                }
+            }
         }
     }
     buildTypes {

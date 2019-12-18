@@ -59,7 +59,7 @@ static void play_track(int track)
     if (track <= TRACK_NONE || track >= TRACK_MAX) {
         return;
     }
-    const char* mp3_track = dir_get_file(mp3_tracks[track]);
+    const char *mp3_track = dir_get_file(mp3_tracks[track]);
 
     int volume = setting_sound(SOUND_MUSIC)->volume;
     if (!mp3_track || !sound_device_play_music(mp3_track, volume)) {

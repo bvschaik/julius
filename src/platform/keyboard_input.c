@@ -169,3 +169,13 @@ void platform_handle_text(SDL_TextInputEvent *event)
 {
     keyboard_character(event->text);
 }
+
+void platform_start_text_input(void)
+{
+    SDL_StartTextInput();
+}
+
+void platform_stop_text_input(void)
+{
+    SDL_StopTextInput();
+}
