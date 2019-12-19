@@ -4,6 +4,7 @@
 #include "core/string.h"
 #include "graphics/text.h"
 #include "platform/keyboard_input.h"
+#include "platform/virtual_keyboard.h"
 
 static struct {
     int insert;
@@ -56,7 +57,7 @@ static void set_offset_to_end(void)
     }
 }
 
-void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation, int box_width, font_t font)
+void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation, const input_box *capture_box, font_t font)
 {
     data.capture = 1;
     data.text = text;
@@ -65,10 +66,10 @@ void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation
     data.max_length = max_length;
     data.allow_punctuation = allow_punctuation;
     data.accepted = 0;
-    data.box_width = box_width;
+    data.box_width = (capture_box->w - 1) * INPUT_BOX_BLOCK_SIZE;
     data.font = font;
     set_offset_to_end();
-    platform_start_text_input();
+    platform_start_virtual_keyboard(capture_box);
 }
 
 void keyboard_refresh(void)
@@ -81,13 +82,13 @@ void keyboard_refresh(void)
 void keyboard_resume_capture(void)
 {
     data.capture = 1;
-    platform_start_text_input();
+    platform_resume_virtual_keyboard();
 }
 
 void keyboard_pause_capture(void)
 {
     data.capture = 0;
-    platform_stop_text_input();
+    platform_stop_virtual_keyboard();
 }
 
 void keyboard_stop_capture(void)
@@ -98,7 +99,7 @@ void keyboard_stop_capture(void)
     data.length = 0;
     data.max_length = 0;
     data.accepted = 0;
-    platform_stop_text_input();
+    platform_stop_virtual_keyboard();
 }
 
 int keyboard_input_is_accepted(void)

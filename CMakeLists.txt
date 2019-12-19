@@ -155,6 +155,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/prefs.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
     ${PROJECT_SOURCE_DIR}/src/platform/touch.c
+    ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.c
 )
 
 if (VITA_BUILD)
@@ -495,6 +496,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/hold_festival.c
     ${PROJECT_SOURCE_DIR}/src/window/intermezzo.c
     ${PROJECT_SOURCE_DIR}/src/window/intro_video.c
+    ${PROJECT_SOURCE_DIR}/src/window/input_box.c
     ${PROJECT_SOURCE_DIR}/src/window/labor_priority.c
     ${PROJECT_SOURCE_DIR}/src/window/logo.c
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
@@ -551,32 +553,6 @@ set(SOURCE_FILES
     ${MACOSX_FILES}
 )
 
-<<<<<<< HEAD
-function(GET_SDL_EXT_DIR result module)
-    if(NOT module STREQUAL "")
-        set(module "_${module}")
-    endif()
-    set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
-    file(GLOB children
-        RELATIVE ${SDL_LOCATION}
-        CONFIGURE_DEPENDS
-        ${SDL_LOCATION}/SDL${module}
-        ${SDL_LOCATION}/SDL2${module}
-        ${SDL_LOCATION}/SDL${module}-*
-        ${SDL_LOCATION}/SDL2${module}-*
-    )
-    foreach(child ${children})
-        if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
-            set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
-            set(internal_result "${SDL_LOCATION}/${child}")
-            break()
-        endif()
-    endforeach()
-endfunction()
-
-find_package(SDL2 REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-=======
 if(ANDROID_BUILD)
     string(TOLOWER ${CMAKE_BUILD_TYPE} ANDROID_BUILD_DIR)
     set(DISTRIBUTION_DIR ${PROJECT_SOURCE_DIR}/android/distribution/android/SDL2/intermediates/ndkBuild)
@@ -591,7 +567,7 @@ if(ANDROID_BUILD)
     set_target_properties(${SDL2_MIXER_LIBRARY} PROPERTIES IMPORTED_LOCATION
     ${DISTRIBUTION_DIR}/${ANDROID_BUILD_DIR}/obj/local/${ANDROID_ABI}/libSDL2_mixer.so)
 
-    function(GET_SDL_DIR result module)
+    function(GET_SDL_SOURCE_DIR result module)
 
         if(NOT module STREQUAL "")
             set(module "_${module}")
@@ -610,17 +586,21 @@ if(ANDROID_BUILD)
         foreach(child ${children})
             if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
                 set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
+                set(internal_result "${SDL_LOCATION}/${child}")
                 break()
             endif()
         endforeach()
 
+        if(NOT DEFINED internal_result)
+            message(FATAL_ERROR "SDL${module} source folder not found.")
+        endif()
+
+        message("SDL${module} source folder is: ${internal_result}")
+
     endfunction()
 
-    GET_SDL_DIR(SDL_DIR "")
-    GET_SDL_DIR(SDL_MIXER_DIR "mixer")
-
-    message("SDL source folder is: ${SDL_DIR}")
-    message("SDL_mixer source folder is: ${SDL_MIXER_DIR}")
+    GET_SDL_SOURCE_DIR(SDL_DIR "")
+    GET_SDL_SOURCE_DIR(SDL_MIXER_DIR "mixer")
 
     set(SDL2_INCLUDE_DIR ${SDL_DIR}/include)
     set(SDL2_MIXER_INCLUDE_DIR ${SDL_MIXER_DIR} ${SDL_MIXER_DIR}/include)
@@ -632,7 +612,6 @@ else()
     find_package(SDL2 REQUIRED)
     find_package(SDL2_mixer REQUIRED)
 endif()
->>>>>>> Android build: first steps (builds, but the .apk is untested and will probably crash).
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)

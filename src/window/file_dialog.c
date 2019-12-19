@@ -19,6 +19,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/keyboard.h"
+#include "platform/virtual_keyboard.h"
 #include "window/city.h"
 #include "window/editor/map.h"
 
@@ -50,7 +51,8 @@ static generic_button file_buttons[] = {
 };
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
-static const int MAX_FILE_WINDOW_TEXT_WIDTH = 18 * 16;
+static const int MAX_FILE_WINDOW_TEXT_WIDTH = 18 * INPUT_BOX_BLOCK_SIZE;
+static input_box file_name_input = { 144, 80, 20, 2 };
 
 typedef struct {
     char extension[4];
@@ -92,7 +94,7 @@ static void init(file_type type, file_dialog_type dialog_type)
     data.file_list = dir_find_files_with_extension(data.file_data->extension);
 
     strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
-    keyboard_start_capture(data.typed_name, FILE_NAME_MAX, 0, MAX_FILE_WINDOW_TEXT_WIDTH, FONT_NORMAL_WHITE);
+    keyboard_start_capture(data.typed_name, FILE_NAME_MAX, 0, &file_name_input, FONT_NORMAL_WHITE);
 }
 
 static void draw_scrollbar_dot(void)
@@ -117,7 +119,7 @@ static void draw_foreground(void)
     uint8_t file[FILE_NAME_MAX];
 
     outer_panel_draw(128, 40, 24, 21);
-    inner_panel_draw(144, 80, 20, 2);
+    input_box_draw(&file_name_input);
     inner_panel_draw(144, 120, 20, 13);
 
     // title
@@ -190,6 +192,7 @@ static void handle_mouse(const mouse *m)
         return;
     }
     const mouse *m_dialog = mouse_in_dialog(m);
+    virtual_keyboard_handle_mouse(m_dialog);
     if (!generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 12, &data.focus_button_id)) {
         if (!image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 4, 0)) {
             handle_scrollbar(m);
