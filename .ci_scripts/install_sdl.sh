@@ -76,13 +76,17 @@ function install_sdl_macos {
 
 function download_sdl_android {
   local LIB=$1
+  local LIB_NAME=${LIB%-*}
+  local REV=${LIB#*-}
   if [ ! "$(ls -A $LIB)" ]
   then
-    get_sdl_lib_url $LIB "tar.gz"
-    travis_retry curl -L $SDL_LIB_URL | tar xz
+    travis_retry curl -L https://hg.libsdl.org/$LIB_NAME/archive/$REV.tar.gz | tar xz
   fi
-  local SDL_FOLDER_NAME=${LIB%-*}
-  cp -r $LIB "ext/SDL2/$SDL_FOLDER_NAME"
+  if [ $REV == "tip" ]
+  then
+    LIB=`find . -maxdepth 1 -name "$LIB_NAME-*" -printf "%T@ %p" | sort -nr | head -1 | cut -c25-`
+  fi
+  ln -s "$(pwd)/$LIB" "$(pwd)/ext/SDL2/"
 }
 
 if [ "$BUILD_TARGET" == "appimage" ]

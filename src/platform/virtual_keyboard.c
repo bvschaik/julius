@@ -21,7 +21,7 @@ static int is_input_location_valid(void)
 
 void virtual_keyboard_handle_mouse(const mouse *m)
 {
-    if (!data.is_active || !m->left.went_down) {
+    if (!data.is_active || !m->left.went_up) {
         return;
     }
     if (!SDL_IsTextInputActive() && is_mouse_inside_input(m)) {

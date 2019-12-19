@@ -188,6 +188,7 @@ static void handle_mouse(const mouse *m)
     }
 
     if (m->right.went_up) {
+        keyboard_stop_capture();
         window_go_back();
         return;
     }
@@ -227,6 +228,7 @@ static const char *get_chosen_filename(void)
 static void button_ok_cancel(int is_ok, int param2)
 {
     if (!is_ok) {
+        keyboard_stop_capture();
         window_go_back();
         return;
     }
