@@ -13,14 +13,14 @@
 
 	<application
         android:allowBackup="true"
-        android:label="@string/app_name"
+        android:label="Julius"
         android:icon="@mipmap/julius"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
 		android:hardwareAccelerated="true">
 
         <activity
             android:name=".JuliusSDL2Activity"
-            android:label="@string/app_name"
+            android:label="Julius"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance"
             android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation">
