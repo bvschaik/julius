@@ -73,6 +73,8 @@ else()
   set(SDL2_PROCESSOR_ARCH "x86")
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
+GET_SDL_EXT_DIR(SDL_EXT_DIR "")
+
 SET(SDL2_SEARCH_PATHS
 	~/Library/Frameworks
 	/Library/Frameworks
@@ -82,6 +84,7 @@ SET(SDL2_SEARCH_PATHS
 	/opt/local # DarwinPorts
 	/opt/csw # Blastwave
 	/opt
+	${SDL_EXT_DIR}
 )
 
 if (VITA)
