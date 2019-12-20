@@ -26,6 +26,7 @@ android {
                 java {
                     srcDir 'src/main/java'
                     srcDir '../../ext/SDL2'
+                    exclude '**/android-project-ant/**'
                 }
                 res {
                     srcDir '../../res/android'

@@ -3,6 +3,7 @@
 #include "game/settings.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
+#include "platform/definitions.h"
 
 #include "SDL.h"
 
@@ -40,10 +41,9 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     scale_percentage = display_scale_percentage;
 
     int width, height;
-    int fullscreen = setting_fullscreen();
-#ifdef __ANDROID__
-    fullscreen = 1;
-#endif
+
+    int fullscreen = FORCE_FULLSCREEN ? 1 : setting_fullscreen();
+
     if (fullscreen) {
         SDL_DisplayMode mode;
         SDL_GetDesktopDisplayMode(0, &mode);
@@ -70,18 +70,17 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
         return 0;
     }
-#ifdef __ANDROID__
+#if defined(USE_AUTO_SCALE) && SDL_VERSION_ATLEAST(2,0,4)
     float dpi = 0;
-    const int ANDROID_DEFAULT_DPI = 160;
     if(SDL_GetDisplayDPI(SDL_GetWindowDisplayIndex(SDL.window), NULL, &dpi, NULL)) {
         scale_percentage = 200;
     } else {
-        int scale = dpi / ANDROID_DEFAULT_DPI;
+        int scale = (int) dpi / DEFAULT_DPI;
         scale = SDL_max(1, scale);
         scale = SDL_min(scale, 5);
         scale_percentage = scale * 100;
         if(scale > 1) {
-            SDL_Log("High DPI Android device found, setting scale to %d", scale_percentage);
+            SDL_Log("Autoscale enabled, setting scale to %d", scale_percentage);
         }
     }
 #endif

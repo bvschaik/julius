@@ -15,6 +15,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "platform/definitions.h"
 #include "scenario/property.h"
 #include "widget/city.h"
 #include "window/advisors.h"
@@ -66,7 +67,7 @@ static menu_item menu_file[] = {
 };
 
 static menu_item menu_options[] = {
-    {0, 2, 1, menu_options_display, 0},
+    {0, 2, 1, menu_options_display, 0, FORCE_FULLSCREEN},
     {20, 2, 2, menu_options_sound, 0},
     {40, 2, 3, menu_options_speed, 0},
     {60, 2, 6, menu_options_difficulty, 0},

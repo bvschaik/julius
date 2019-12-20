@@ -62,7 +62,10 @@ void menu_draw(menu_bar_item *menu, int focus_item_id)
     for (int i = 0; i < menu->num_items; i++) {
         menu_item *sub = &menu->items[i];
         int y_offset = 30 + menu->y_start + sub->y_start;
-        if (i == focus_item_id - 1) {
+        if (sub->disabled) {
+            lang_text_draw_colored(menu->text_group, sub->text_number,
+                menu->x_start + 8, y_offset, FONT_NORMAL_PLAIN, COLOR_INSET_DARK);
+        } else if (i == focus_item_id - 1) {
             graphics_fill_rect(menu->x_start, y_offset - 2,
                 16 * menu->calculated_width_blocks, 16, COLOR_BLACK);
             lang_text_draw_colored(sub->text_group, sub->text_number,
@@ -98,7 +101,9 @@ int menu_handle_mouse(const mouse *m, menu_bar_item *menu, int *focus_item_id)
     }
     if (m->left.went_up) {
         menu_item *item = &menu->items[item_id -1];
-        item->left_click_handler(item->parameter);
+        if (!item->disabled) {
+            item->left_click_handler(item->parameter);
+        }
     }
     return item_id;
 }

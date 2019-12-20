@@ -40,7 +40,7 @@ matrix:
       - build-tools-28.0.3
       - android-28
     name: Android
-    env: SDL_LIB=SDL2-2.0.10 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=android DEPLOY=android
+    env: SDL_LIB=SDL-381ddcd3957c SDL_MIXER_LIB=SDL_mixer-a3c637d1a698 BUILD_TARGET=android DEPLOY=android
 
 cache:
   directories:
