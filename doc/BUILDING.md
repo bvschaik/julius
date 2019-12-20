@@ -18,14 +18,15 @@ After cloning the repo (URL: `https://github.com/bvschaik/julius.git`), run the 
 
 This results in a `julius` executable.
 
-To build the Vita or Switch versions, use `cmake .. -DVITA_BUILD=ON` or `cmake .. -DSWITCH_BUILD=ON` instead of `cmake ..`.
+To build the Vita or Switch versions, use `cmake .. -DVITA_BUILD=ON` or `cmake .. -DSWITCH_BUILD=ON`
+instead of `cmake ..`.
 
 You'll obviously need the Vita or Switch SDK's. Docker images for the SDK's are available:
 
 - Vita: `gnuton/vitasdk-docker:20190626`
 - Switch: `rsn8887/switchdev`
 
-See [Running Julius](../RUNNING.md) for instructions on how to configure Julius for your platform.
+See [Running Julius](RUNNING.md) for instructions on how to configure Julius for your platform.
 
 --------------------------------------------------
 

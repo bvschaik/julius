@@ -2,11 +2,18 @@
 
 Julius currently supports the playback of MP3 files instead of the original, low-quality wav files.
 
-If you have the high-quality MP3 files that were once available from the [Sierra Website](http://web.archive.org/web/20000303064239/www.caesar3.com/downloads.shtml), you can play them instead of the original files. Alternatively, you can play any MP3 file you like instead of the original music.
+If you have the high-quality MP3 files that were once available from the
+[Sierra Website](http://web.archive.org/web/20000303064239/www.caesar3.com/downloads.shtml),
+you can play them instead of the original files. Alternatively, you can play any MP3 file you like instead
+of the original music.
 
-In order to play the files, you must have the library `libmpg123-0` installed. For Windows, if you download [`SDL2_mixer`](https://www.libsdl.org/projects/SDL_mixer/), the library should be available as a DLL (`libmpg123-0.dll`) with the download. Simply copy it to the same directory from where you run Julius.
+In order to play the files, you must have the library `libmpg123-0` installed. For Windows, if you download
+[`SDL2_mixer`](https://www.libsdl.org/projects/SDL_mixer/), the library should be available as a DLL (`libmpg123-0.dll`)
+with the download. Simply copy it to the same directory from where you run Julius.
 
-For Linux and Apple, it's probably already been installed with `SDL2_mixer`, so nothing should be required.
+For Apple, if you installed Julius using the provided `dmg` file, `libmpg123-0` is already installed.
+
+For Linux, `libmpg123-0` is usually installed with `SDL_mixer`. If not, you can install it using a package manager.
 
 You can then place some or all of the following files in the main folder where your Caesar 3 data files are:
 
