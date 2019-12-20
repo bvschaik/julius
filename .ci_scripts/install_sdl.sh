@@ -37,22 +37,25 @@ function get_sdl_lib_url {
 
 function install_sdl_lib {
   local LIB=$1
-  if [ -d $LIB/build ]
+  if [ ! "$(ls -A $LIB)" ]
   then
-    cp -r $LIB $LIB-final
-    cd $LIB-final/build
-  else
     get_sdl_lib_url $LIB "tar.gz"
     travis_retry curl -L $SDL_LIB_URL | tar xz
     cd $LIB
     mkdir build
     cd build
-    ../configure
+    SDL2_CONFIG="${SDL2_CONFIG}" ../configure --prefix=$(pwd)/..
+    make
+    SDL2_CONFIG="$(pwd)/sdl2-config"
+    cp -r build/.libs ../lib
+    cd ..
+    mv include SDL2 2>/dev/null
+    mkdir include
+    mv SDL2 include/ 2>/dev/null
+    cp SDL_mixer.h include/ 2>/dev/null
+    cd ..
   fi
-  make
-  sudo make install
-
-  cd ../..
+  ln -s "$(pwd)/$LIB" "$(pwd)/ext/SDL2/"
 }
 
 function install_sdl_macos {

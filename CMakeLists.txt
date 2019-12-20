@@ -5,8 +5,9 @@ if(VITA_BUILD AND SWITCH_BUILD)
     message(FATAL_ERROR "Cannot build with -DVITA_BUILD=ON and -DSWITCH_BUILD=ON at the same time")
 endif()
 
-option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF)
-cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT VITA_BUILD" OFF)
+option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
+cmake_dependent_option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF "NOT MSVC" OFF)
+cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT MSVC; NOT VITA_BUILD" OFF)
 
 if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
@@ -537,6 +538,28 @@ add_executable(julius
     ${PROJECT_SOURCE_DIR}/res/julius.rc
     ${MACOSX_FILES}
 )
+
+function(GET_SDL_EXT_DIR result module)
+    if(NOT module STREQUAL "")
+        set(module "_${module}")
+    endif()
+    set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
+    file(GLOB children
+        RELATIVE ${SDL_LOCATION}
+        CONFIGURE_DEPENDS
+        ${SDL_LOCATION}/SDL${module}
+        ${SDL_LOCATION}/SDL2${module}
+        ${SDL_LOCATION}/SDL${module}-*
+        ${SDL_LOCATION}/SDL2${module}-*
+    )
+    foreach(child ${children})
+        if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
+            set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
+            set(internal_result "${SDL_LOCATION}/${child}")
+            break()
+        endif()
+    endforeach()
+endfunction()
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
