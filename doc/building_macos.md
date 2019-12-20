@@ -21,16 +21,19 @@ To install the command line developer tools, open a terminal window and type:
 
     $ xcode-select --install
 
-A window should appear requesting you to install the command line tools. Click `Install` and then accept the license agreement.
+A window should appear requesting you to install the command line tools. Click `Install` and then
+accept the license agreement.
 
 The developer tools will download and install.
 
 
 ### Installing the remaining dependencies
 
-In order to install the remaining dependencies (CMake, SDL and SDL_mixer), you must first install [Homebrew](https://brew.sh).
+In order to install the remaining dependencies (CMake, SDL and SDL_mixer), you must first install
+[Homebrew](https://brew.sh).
 
-Homebrew is a package manager for Mac OS (and also for Linux) which makes it easier to download and install many components such as libraries and developer tools.
+Homebrew is a package manager for Mac OS (and also for Linux) which makes it easier to download and
+install many components such as libraries and developer tools.
 
 In order to install Homebrew, open a Terminal window and type the following:
 
@@ -49,7 +52,8 @@ After the required dependencies have been installed, you can proceed to build ju
 
 ## Building Julius
 
-1. Navigate to the directory where you want the repository folder to be installed. As an example, we're using the `home` folder:
+1. Navigate to the directory where you want the repository folder to be installed. As an example,
+   we're using the `home` folder:
 
         $ cd ~
 
@@ -61,7 +65,9 @@ After the required dependencies have been installed, you can proceed to build ju
 
         $ cd julius
 
-    **Optional:** If you have already downloaded the Julius repository and only wish to update it (in order to build a newer version), instead of the previous three steps, do the following in a terminal window:
+    **Optional:** If you have already downloaded the Julius repository and only wish to update it
+    (in order to build a newer version), instead of the previous three steps, do the following in
+    a terminal window:
 
     a. Move to the `julius` directory where the repository was installed.
 
@@ -89,4 +95,5 @@ After the required dependencies have been installed, you can proceed to build ju
 
         $ make test
 
-**Success!** Julius should have been built without any errors. You can now move `julius.app` to the `Applications` folder to execute it.
+**Success!** Julius should have been built without any errors. You can now move `julius.app` to the
+`Applications` folder to execute it.
