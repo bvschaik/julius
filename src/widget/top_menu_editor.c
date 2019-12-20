@@ -7,6 +7,7 @@
 #include "graphics/menu.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
+#include "platform/definitions.h"
 #include "scenario/editor_map.h"
 #include "scenario/scenario.h"
 #include "window/display_options.h"
@@ -45,7 +46,7 @@ static menu_item menu_file[] = {
 };
 
 static menu_item menu_options[] = {
-    {0, 2, 1, menu_options_display, 0},
+    {0, 2, 1, menu_options_display, 0, FORCE_FULLSCREEN},
     {20, 2, 2, menu_options_sound, 0},
     {40, 2, 3, menu_options_speed, 0},
 };

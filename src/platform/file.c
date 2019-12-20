@@ -6,6 +6,7 @@
 
 #include "SDL.h"
 #include <dirent.h>
+#include <string.h>
 
 #ifdef _MSC_VER
 #include <direct.h>
