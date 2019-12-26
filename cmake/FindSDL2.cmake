@@ -75,6 +75,14 @@ endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 GET_SDL_EXT_DIR(SDL_EXT_DIR "")
 
+if(MINGW AND DEFINED SDL_EXT_DIR)
+    if(SDL2_ARCH_64)
+	  set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/x86_64-w64-mingw32")
+    else()
+	  set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/i686-w64-mingw32")
+	endif()
+endif()
+
 SET(SDL2_SEARCH_PATHS
 	~/Library/Frameworks
 	/Library/Frameworks
@@ -85,6 +93,7 @@ SET(SDL2_SEARCH_PATHS
 	/opt/csw # Blastwave
 	/opt
 	${SDL_EXT_DIR}
+	${SDL_MINGW_EXT_DIR}
 )
 
 if (VITA)
