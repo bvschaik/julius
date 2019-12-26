@@ -72,9 +72,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     }
 #if defined(USE_AUTO_SCALE) && SDL_VERSION_ATLEAST(2,0,4)
     float dpi = 0;
-    if(SDL_GetDisplayDPI(SDL_GetWindowDisplayIndex(SDL.window), NULL, &dpi, NULL)) {
-        scale_percentage = 200;
-    } else {
+    if(SDL_GetDisplayDPI(SDL_GetWindowDisplayIndex(SDL.window), NULL, &dpi, NULL) == 0) {
         int scale = (int) dpi / DEFAULT_DPI;
         scale = SDL_max(1, scale);
         scale = SDL_min(scale, 5);
