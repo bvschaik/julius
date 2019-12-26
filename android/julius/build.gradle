@@ -10,8 +10,13 @@ android {
         applicationId "bvschaik.julius"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+
+        def longVersionName = "git describe --tags --dirty".execute().text.trim().replace('v', '')
+        def (fullVersionTag) = longVersionName.tokenize('-')
+        def (versionMajor, versionMinor, versionPatch) = fullVersionTag.tokenize('.')
+        versionName longVersionName
+        versionCode versionMajor.toInteger() * 10000 + versionMinor.toInteger() * 100 + versionPatch.toInteger()
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
