@@ -97,6 +97,7 @@ static void advance_to_next_mission(void)
 {
     setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, city_emperor_personal_savings());
     scenario_set_campaign_rank(scenario_campaign_rank() + 1);
+    scenario_save_campaign_player_name();
 
     city_victory_stop_governing();
 

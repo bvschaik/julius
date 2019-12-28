@@ -1,5 +1,6 @@
 #include "new_career.h"
 
+#include "core/lang.h"
 #include "core/string.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
@@ -27,7 +28,7 @@ static void init(void)
 {
     setting_clear_personal_savings();
     scenario_settings_init();
-    string_copy(scenario_player_name(), player_name, 32);
+    string_copy(lang_get_string(9, 5), player_name, 32);
     keyboard_start_capture(player_name, 32, 1, 280, FONT_NORMAL_WHITE);
 }
 
@@ -73,7 +74,7 @@ static void handle_mouse(const mouse *m)
 static void start_mission(int param1, int param2)
 {
     keyboard_stop_capture();
-    scenario_set_player_name(player_name);
+    setting_set_player_name(player_name);
     window_mission_selection_show();
 }
 

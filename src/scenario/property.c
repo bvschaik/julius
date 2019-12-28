@@ -78,6 +78,16 @@ void scenario_set_player_name(const uint8_t *name)
     string_copy(name, scenario.settings.player_name, MAX_PLAYER_NAME);
 }
 
+void scenario_save_campaign_player_name(void)
+{
+    string_copy(scenario.settings.player_name, scenario.settings.campaign_player_name, MAX_PLAYER_NAME);
+}
+
+void scenario_restore_campaign_player_name(void)
+{
+    string_copy(scenario.settings.campaign_player_name, scenario.settings.player_name, MAX_PLAYER_NAME);
+}
+
 int scenario_is_open_play(void)
 {
     return scenario.is_open_play;

@@ -264,6 +264,11 @@ static int load_campaign_mission(int mission_id)
         return 0;
     }
 
+    if (mission_id == 0) {
+        scenario_set_player_name(setting_player_name());
+    } else {
+        scenario_restore_campaign_player_name();
+    }
     initialize_saved_game();
     city_data_init_campaign_mission();
     return 1;
@@ -278,6 +283,7 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
         if (!load_custom_scenario(scenario_name, scenario_file)) {
             return 0;
         }
+        scenario_set_player_name(setting_player_name());
     } else {
         if (!load_campaign_mission(mission)) {
             return 0;

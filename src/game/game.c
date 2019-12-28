@@ -52,7 +52,6 @@ int game_pre_init(void)
     encoding_type encoding = encoding_determine();
     log_info("Detected encoding:", 0, encoding);
     font_set_encoding(encoding);
-    scenario_set_player_name(lang_get_string(9, 5));
     random_init();
     return 1;
 }

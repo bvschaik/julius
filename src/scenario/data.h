@@ -232,6 +232,7 @@ extern struct scenario_t {
         int starting_favor;
         int starting_personal_savings;
         uint8_t player_name[MAX_PLAYER_NAME];
+        uint8_t campaign_player_name[MAX_PLAYER_NAME]; /**< Temp storage for carrying over player name to next campaign mission */
     } settings;
 
     int is_saved;
