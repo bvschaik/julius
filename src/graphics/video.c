@@ -15,8 +15,8 @@ static struct {
     int is_playing;
     int is_ended;
 
+    smk s;
     struct {
-        smk s;
         int width;
         int height;
         int micros_per_frame;
@@ -25,126 +25,18 @@ static struct {
         int total_frames;
     } video;
     struct {
-        smk s;
         int bitdepth;
         int channels;
         int rate;
-        int first_frame;
     } audio;
 } data;
 
-static void close_smk(smk *s)
+static void close_smk(void)
 {
-    smk_close(*s);
-    *s = 0;
-}
-
-static void close_all(void)
-{
-    if (data.video.s) {
-        close_smk(&data.video.s);
+    if (data.s) {
+        smk_close(data.s);
+        data.s = 0;
     }
-    if (data.audio.s) {
-        close_smk(&data.audio.s);
-    }
-}
-
-static const unsigned char *next_audio_frame(int *out_len)
-{
-    if (!data.audio.s) {
-        return 0;
-    }
-    if (data.audio.first_frame) {
-        data.audio.first_frame = 0;
-        if (smk_first(data.audio.s) < 0) {
-            close_smk(&data.audio.s);
-            return 0;
-        }
-    } else if (!smk_next(data.audio.s)) {
-        close_smk(&data.audio.s);
-        return 0;
-    }
-    int audio_len = smk_get_audio_size(data.audio.s, 0);
-    if (audio_len > 0) {
-        *out_len = audio_len;
-        return smk_get_audio(data.audio.s, 0);
-    }
-    return 0;
-}
-
-static int load_smk_video(const char *filename)
-{
-    FILE *fp = file_open(filename, "rb");
-#ifdef __vita__
-    // Vita file i/o is too slow to play videos smoothly from disk, so pre-load
-    // the pre-loading causes a short pause before video starts
-    data.video.s = smk_open_filepointer(fp, SMK_MODE_MEMORY);
-#else
-    data.video.s = smk_open_filepointer(fp, SMK_MODE_DISK);
-#endif
-    if (!data.video.s) {
-        // smk_open_filepointer closes the stream on error: no need to close fp
-        return 0;
-    }
-
-    unsigned long width, height, frames;
-    double micros_per_frame;
-    smk_info_all(data.video.s, 0, &frames, &micros_per_frame);
-    smk_info_video(data.video.s, &width, &height, 0);
-
-    data.video.width = width;
-    data.video.height = height;
-    data.video.current_frame = 0;
-    data.video.total_frames = frames;
-    data.video.micros_per_frame = (int) (micros_per_frame);
-
-    smk_enable_video(data.video.s, 1);
-    if (smk_first(data.video.s) < 0) {
-        close_smk(&data.video.s);
-        return 0;
-    }
-    return 1;
-}
-
-static int load_smk_audio(const char *filename)
-{
-    if (!setting_sound(SOUND_EFFECTS)->enabled) {
-        // no sound when sound effects are disabled
-        return 1;
-    }
-
-    FILE *fp = file_open(filename, "rb");
-#ifdef __vita__
-    // Vita file i/o is too slow to play videos smoothly from disk, so pre-load
-    // the pre-loading causes a short pause before video starts
-    data.audio.s = smk_open_filepointer(fp, SMK_MODE_MEMORY);
-#else
-    data.audio.s = smk_open_filepointer(fp, SMK_MODE_DISK);
-#endif
-    if (!data.audio.s) {
-        // smk_open_filepointer closes the stream on error: no need to close fp
-        return 0;
-    }
-
-    unsigned char tracks, channels[7], bitdepths[7];
-    unsigned long bitrates[7];
-    smk_info_audio(data.audio.s, &tracks, channels, bitdepths, bitrates);
-
-    if (tracks != 1) {
-        // Video has alternate audio tracks, not supported
-        close_smk(&data.audio.s);
-        return 0;
-    }
-    smk_enable_audio(data.audio.s, 0, 1);
-    if (smk_first(data.audio.s) < 0) {
-        close_smk(&data.audio.s);
-        return 0;
-    }
-    data.audio.bitdepth = bitdepths[0];
-    data.audio.channels = channels[0];
-    data.audio.rate = bitrates[0];
-    data.audio.first_frame = 1;
-    return 1;
 }
 
 static int load_smk(const char *filename)
@@ -153,12 +45,49 @@ static int load_smk(const char *filename)
     if (!path) {
         return 0;
     }
-    if (load_smk_video(path) && load_smk_audio(path)) {
-        return 1;
-    } else {
-        close_all();
+    FILE *fp = file_open(path, "rb");
+#ifdef __vita__
+    // Vita file i/o is too slow to play videos smoothly from disk, so pre-load
+    // the pre-loading causes a short pause before video starts
+    data.s = smk_open_filepointer(fp, SMK_MODE_MEMORY);
+#else
+    data.s = smk_open_filepointer(fp, SMK_MODE_DISK);
+#endif
+    if (!data.s) {
+        // smk_open_filepointer closes the stream on error: no need to close fp
         return 0;
     }
+
+    unsigned long width, height, frames;
+    double micros_per_frame;
+    unsigned char tracks, channels[7], bitdepths[7];
+    unsigned long bitrates[7];
+    smk_info_all(data.s, 0, &frames, &micros_per_frame);
+    smk_info_video(data.s, &width, &height, 0);
+    smk_info_audio(data.s, &tracks, channels, bitdepths, bitrates);
+
+    data.video.width = width;
+    data.video.height = height;
+    data.video.current_frame = 0;
+    data.video.total_frames = frames;
+    data.video.micros_per_frame = (int) (micros_per_frame);
+
+    smk_enable_video(data.s, 1);
+
+    if (setting_sound(SOUND_EFFECTS)->enabled && tracks == 1) {
+        // only play sound when sound effects are enabled and there is only one audio track
+        smk_enable_audio(data.s, 0, 1);
+
+        data.audio.bitdepth = bitdepths[0];
+        data.audio.channels = channels[0];
+        data.audio.rate = bitrates[0];
+    }
+
+    if (smk_first(data.s) < 0) {
+        close_smk();
+        return 0;
+    }
+    return 1;
 }
 
 static void end_video(void)
@@ -186,7 +115,14 @@ int video_start(const char *filename)
 void video_init(void)
 {
     data.video.start_render_millis = time_get_millis();
-    sound_device_use_custom_music_player(data.audio.bitdepth, data.audio.channels, data.audio.rate, next_audio_frame);
+
+    int audio_len = smk_get_audio_size(data.s, 0);
+    if (audio_len > 0) {
+        sound_device_use_custom_music_player(
+            data.audio.bitdepth, data.audio.channels, data.audio.rate,
+            smk_get_audio(data.s, 0), audio_len
+        );
+    }
 }
 
 int video_is_finished(void)
@@ -200,9 +136,7 @@ void video_stop(void)
         if (!data.is_ended) {
             end_video();
         }
-        if (data.video.s) {
-            close_all();
-        }
+        close_smk();
         data.is_playing = 0;
     }
 }
@@ -210,37 +144,40 @@ void video_stop(void)
 void video_shutdown(void)
 {
     if (data.is_playing) {
-        if (data.video.s) {
-            close_all();
-        }
+        close_smk();
         data.is_playing = 0;
     }
 }
 
 void video_draw(int x_offset, int y_offset)
 {
-    if (!data.video.s) {
+    if (!data.s) {
         return;
     }
     time_millis now_millis = time_get_millis();
 
     int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
     if (frame_no > data.video.current_frame) {
-        if (smk_next(data.video.s) == SMK_DONE) {
-            close_smk(&data.video.s);
+        if (smk_next(data.s) == SMK_DONE) {
+            close_smk();
             data.is_ended = 1;
             data.is_playing = 0;
             end_video();
             return;
         }
         data.video.current_frame++;
+
+        int audio_len = smk_get_audio_size(data.s, 0);
+        if (audio_len > 0) {
+            sound_device_write_custom_music_data(smk_get_audio(data.s, 0), audio_len);
+        }
     }
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, data.video.width, data.video.height);
     if (!clip->is_visible) {
         return;
     }
-    const unsigned char *frame = smk_get_video(data.video.s);
-    const unsigned char *pal = smk_get_palette(data.video.s);
+    const unsigned char *frame = smk_get_video(data.s);
+    const unsigned char *pal = smk_get_palette(data.s);
     if (frame && pal) {
         for (int y = clip->clipped_pixels_top; y < clip->visible_pixels_y; y++) {
             color_t *pixel = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y + y_offset + clip->clipped_pixels_top);
