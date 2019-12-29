@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define AUDIO_RATE 22050
+#define AUDIO_RATE 44100
 #define AUDIO_FORMAT AUDIO_S16
 #define AUDIO_CHANNELS 2
 #define AUDIO_BUFFERS 1024
@@ -233,6 +233,7 @@ static int copy_audio_from_buffer(Uint8 *stream, int len)
 
 static void custom_music_callback(void *dummy, Uint8 *stream, int len)
 {
+    SDL_Log("Sound device: requesting %d bytes of sound", len);
     int can_continue;
     do {
         int copied = copy_audio_from_buffer(stream, len);
