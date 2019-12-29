@@ -124,7 +124,7 @@ static void prepare_map_for_editing(void)
     map_tiles_update_all_plazas();
     map_tiles_update_all_walls();
     map_tiles_update_all_aqueducts(0);
-    map_natives_init();
+    map_natives_init_editor();
     map_routing_update_all();
 
     city_view_init();
