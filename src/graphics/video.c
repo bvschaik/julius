@@ -19,10 +19,10 @@ static struct {
     struct {
         int width;
         int height;
+        int y_scale;
         int micros_per_frame;
         time_millis start_render_millis;
         int current_frame;
-        int total_frames;
     } video;
     struct {
         int bitdepth;
@@ -58,18 +58,19 @@ static int load_smk(const char *filename)
         return 0;
     }
 
-    unsigned long width, height, frames;
+    unsigned long width, height;
+    unsigned char y_scale;
     double micros_per_frame;
     unsigned char track_masks, channels[7], bitdepths[7];
     unsigned long bitrates[7];
-    smk_info_all(data.s, 0, &frames, &micros_per_frame);
-    smk_info_video(data.s, &width, &height, 0);
+    smk_info_all(data.s, 0, 0, &micros_per_frame);
+    smk_info_video(data.s, &width, &height, &y_scale);
     smk_info_audio(data.s, &track_masks, channels, bitdepths, bitrates);
 
     data.video.width = width;
-    data.video.height = height;
+    data.video.height = y_scale == SMK_FLAG_Y_NONE ? height : height * 2;
+    data.video.y_scale = y_scale;
     data.video.current_frame = 0;
-    data.video.total_frames = frames;
     data.video.micros_per_frame = (int) (micros_per_frame);
 
     smk_enable_video(data.s, 1);
@@ -181,7 +182,8 @@ void video_draw(int x_offset, int y_offset)
     if (frame && pal) {
         for (int y = clip->clipped_pixels_top; y < clip->visible_pixels_y; y++) {
             color_t *pixel = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y + y_offset + clip->clipped_pixels_top);
-            const unsigned char *line = frame + (y * data.video.width);
+            int video_y = data.video.y_scale == SMK_FLAG_Y_NONE ? y : y / 2;
+            const unsigned char *line = frame + (video_y * data.video.width);
             for (int x = clip->clipped_pixels_left; x < clip->visible_pixels_x; x++) {
                 *pixel = 0xFF000000 |
                     (pal[line[x] * 3] << 16) |
