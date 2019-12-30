@@ -60,11 +60,11 @@ static int load_smk(const char *filename)
 
     unsigned long width, height, frames;
     double micros_per_frame;
-    unsigned char tracks, channels[7], bitdepths[7];
+    unsigned char track_masks, channels[7], bitdepths[7];
     unsigned long bitrates[7];
     smk_info_all(data.s, 0, &frames, &micros_per_frame);
     smk_info_video(data.s, &width, &height, 0);
-    smk_info_audio(data.s, &tracks, channels, bitdepths, bitrates);
+    smk_info_audio(data.s, &track_masks, channels, bitdepths, bitrates);
 
     data.video.width = width;
     data.video.height = height;
@@ -74,8 +74,8 @@ static int load_smk(const char *filename)
 
     smk_enable_video(data.s, 1);
 
-    if (setting_sound(SOUND_EFFECTS)->enabled && tracks == 1) {
-        // only play sound when sound effects are enabled and there is only one audio track
+    if (setting_sound(SOUND_EFFECTS)->enabled && track_masks & 1) {
+        // only play sound when sound effects are enabled and track 0 is available
         smk_enable_audio(data.s, 0, 1);
 
         data.audio.bitdepth = bitdepths[0];
