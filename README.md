@@ -42,3 +42,7 @@ Note that you must have permission to write in the game data directory as the sa
 stored there.
 
 See [Running](doc/RUNNING.md) for further instructions and startup options.
+
+## Bugs
+
+Julius recreates many bugs that you can find in original Caesar 3 game, to preserve 100% saves compatibility. See the list of [Bugs & idiosyncrasies](doc/bugs.md) to find out more.
