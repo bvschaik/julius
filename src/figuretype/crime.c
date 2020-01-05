@@ -264,7 +264,7 @@ void figure_rioter_action(figure *f)
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
         f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + 96 + figure_image_corpse_offset(f);
     } else if (f->direction == DIR_FIGURE_ATTACK) {
-        f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->image_offset];
+        f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->image_offset % 16];
     } else if (f->action_state == FIGURE_ACTION_121_RIOTER_MOVING) {
         f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + dir + 8 * f->image_offset;
     } else {
