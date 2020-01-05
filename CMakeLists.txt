@@ -195,6 +195,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/io.c
     ${PROJECT_SOURCE_DIR}/src/core/lang.c
     ${PROJECT_SOURCE_DIR}/src/core/random.c
+    ${PROJECT_SOURCE_DIR}/src/core/smack.c
     ${PROJECT_SOURCE_DIR}/src/core/string.c
     ${PROJECT_SOURCE_DIR}/src/core/time.c
     ${PROJECT_SOURCE_DIR}/src/core/zip.c
@@ -534,7 +535,6 @@ add_executable(julius
     ${WIDGET_FILES}
     ${WINDOW_FILES}
     ${EDITOR_FILES}
-    ${SMK_FILES}
     ${TINYFD_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc
     ${MACOSX_FILES}
