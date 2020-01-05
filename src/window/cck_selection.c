@@ -231,6 +231,10 @@ static void handle_mouse(const mouse *m)
     if (handle_scrollbar(m)) {
         return;
     }
+    if (m->right.went_up) {
+        window_go_back();
+        return;
+    }
     const mouse *m_dialog = mouse_in_dialog(m);
     if (image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 3, 0)) {
         return;
