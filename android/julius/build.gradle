@@ -2,6 +2,73 @@ apply plugin: 'com.android.application'
 
 buildDir = file("../distribution/${rootProject.name}/${project.name}")
 
+task getVersion {
+    def project_version_major = 1
+    def project_version_minor = 1
+    def project_version_patch = 0
+    def is_release_version = false
+
+    def versionNumber = "${project_version_major}.${project_version_minor}.${project_version_patch}"
+    def versionDetail = " unknown development version"
+    ext.versionCode = project_version_major * 10000 + project_version_minor * 100 + project_version_patch
+
+    try {
+        def stdout = new ByteArrayOutputStream()
+        def stderr = new ByteArrayOutputStream()
+        def tweak_result
+        def dirty_postfix = ""
+
+        if (is_release_version) {
+            versionDetail = ""
+            throw new StopExecutionException()
+        }
+        tweak_result = exec {
+            ignoreExitValue = true
+            commandLine "git", "rev-list", "--count", "HEAD", "^tags/v${project_version_major}.${project_version_minor}.${project_version_patch}"
+            standardOutput = stdout
+            errorOutput = stderr
+            workingDir = "../.."
+        }.exitValue
+
+        def project_version_tweak = stdout.toString().trim()
+        stdout.reset()
+
+        def not_repository_clone = exec {
+            commandLine "git", "rev-parse", "--short", "--verify", "HEAD"
+            workingDir "../.."
+            standardOutput = stdout
+            errorOutput = stderr
+            ignoreExitValue = true
+        }.exitValue
+
+        if (not_repository_clone) {
+            throw new StopExecutionException()
+        }
+
+        def version_commit_hash = stdout.toString().trim()
+        def version_commit_dirty = exec {
+            commandLine "git", "diff-index", "--quiet", "HEAD", "--"
+            workingDir "../.."
+            ignoreExitValue = true
+        }.exitValue
+
+        if (version_commit_dirty) {
+            dirty_postfix = "-dirty"
+        }
+
+        // Happens on a shallow git clone, like Travis does. Append date to version ref.
+        if (tweak_result) {
+            def today = new Date().format("yyyyMMdd")
+            versionDetail = "-${today}-${version_commit_hash}${dirty_postfix}"
+        } else {
+            versionDetail = ".${project_version_tweak}-${version_commit_hash}${dirty_postfix}"
+        }
+        ext.versionName = "${versionNumber}${versionDetail}"
+    } catch(Exception) {
+        ext.versionName = "${versionNumber}${versionDetail}"
+    }
+}
+
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
@@ -11,11 +78,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
 
-        def longVersionName = "git describe --tags --dirty".execute().text.trim().replace('v', '')
-        def (fullVersionTag) = longVersionName.tokenize('-')
-        def (versionMajor, versionMinor, versionPatch) = fullVersionTag.tokenize('.')
-        versionName longVersionName
-        versionCode versionMajor.toInteger() * 10000 + versionMinor.toInteger() * 100 + versionPatch.toInteger()
+        versionName getVersion.versionName
+        versionCode getVersion.versionCode
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {

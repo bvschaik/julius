@@ -70,7 +70,7 @@ function install_sdl_lib {
     cp SDL_mixer.h include/ 2>/dev/null
     cd ..
   fi
-  ln -s "$(pwd)/$LIB" "$(pwd)/ext/SDL2/"
+  ln -s "$(pwd)/$SDL_LIB_FULL" "$(pwd)/ext/SDL2/"
 }
 
 function install_sdl_macos {
@@ -78,7 +78,7 @@ function install_sdl_macos {
   if [ ! -f $SDL_LIB_FULL/image.dmg ]
   then
     mkdir -p $SDL_LIB_FULL
-    get_sdl_lib_url $SDL_LIB_FULL "dmg"
+    get_sdl_lib_url "dmg"
     travis_retry curl -o $SDL_LIB_FULL/image.dmg $SDL_LIB_URL
   fi
   local VOLUME=$(hdiutil attach $SDL_LIB_FULL/image.dmg | grep -o '/Volumes/.*')

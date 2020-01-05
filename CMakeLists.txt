@@ -553,6 +553,28 @@ set(SOURCE_FILES
     ${MACOSX_FILES}
 )
 
+function(GET_SDL_EXT_DIR result module)
+    if(NOT module STREQUAL "")
+        set(module "_${module}")
+    endif()
+    set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
+    file(GLOB children
+        RELATIVE ${SDL_LOCATION}
+        CONFIGURE_DEPENDS
+        ${SDL_LOCATION}/SDL${module}
+        ${SDL_LOCATION}/SDL2${module}
+        ${SDL_LOCATION}/SDL${module}-*
+        ${SDL_LOCATION}/SDL2${module}-*
+    )
+    foreach(child ${children})
+        if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
+            set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
+            set(internal_result "${SDL_LOCATION}/${child}")
+            break()
+        endif()
+    endforeach()
+endfunction()
+
 if(ANDROID_BUILD)
     string(TOLOWER ${CMAKE_BUILD_TYPE} ANDROID_BUILD_DIR)
     set(DISTRIBUTION_DIR ${PROJECT_SOURCE_DIR}/android/distribution/android/SDL2/intermediates/ndkBuild)
@@ -567,40 +589,8 @@ if(ANDROID_BUILD)
     set_target_properties(${SDL2_MIXER_LIBRARY} PROPERTIES IMPORTED_LOCATION
     ${DISTRIBUTION_DIR}/${ANDROID_BUILD_DIR}/obj/local/${ANDROID_ABI}/libSDL2_mixer.so)
 
-    function(GET_SDL_SOURCE_DIR result module)
-
-        if(NOT module STREQUAL "")
-            set(module "_${module}")
-        endif()
-
-        set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
-        file(GLOB children
-            RELATIVE ${SDL_LOCATION}
-            CONFIGURE_DEPENDS
-            ${SDL_LOCATION}/SDL${module}
-            ${SDL_LOCATION}/SDL2${module}
-            ${SDL_LOCATION}/SDL${module}-*
-            ${SDL_LOCATION}/SDL2${module}-*
-        )
-
-        foreach(child ${children})
-            if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
-                set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
-                set(internal_result "${SDL_LOCATION}/${child}")
-                break()
-            endif()
-        endforeach()
-
-        if(NOT DEFINED internal_result)
-            message(FATAL_ERROR "SDL${module} source folder not found.")
-        endif()
-
-        message("SDL${module} source folder is: ${internal_result}")
-
-    endfunction()
-
-    GET_SDL_SOURCE_DIR(SDL_DIR "")
-    GET_SDL_SOURCE_DIR(SDL_MIXER_DIR "mixer")
+    GET_SDL_EXT_DIR(SDL_DIR "")
+    GET_SDL_EXT_DIR(SDL_MIXER_DIR "mixer")
 
     set(SDL2_INCLUDE_DIR ${SDL_DIR}/include)
     set(SDL2_MIXER_INCLUDE_DIR ${SDL_MIXER_DIR} ${SDL_MIXER_DIR}/include)
