@@ -9,7 +9,7 @@
 #include "sound/music.h"
 #include "sound/speech.h"
 
-#include "libsmacker/smacker.h"
+#include "core/smack.h"
 
 static struct {
     int is_playing;
@@ -58,33 +58,32 @@ static int load_smk(const char *filename)
         return 0;
     }
 
-    unsigned long width, height;
-    unsigned char y_scale;
-    double micros_per_frame;
-    unsigned char track_masks, channels[7], bitdepths[7];
-    unsigned long bitrates[7];
-    smk_info_all(data.s, 0, 0, &micros_per_frame);
+    int width, height, y_scale, micros_per_frame;
+    smk_info_frames(data.s, 0, &micros_per_frame);
     smk_info_video(data.s, &width, &height, &y_scale);
-    smk_info_audio(data.s, &track_masks, channels, bitdepths, bitrates);
 
     data.video.width = width;
-    data.video.height = y_scale == SMK_FLAG_Y_NONE ? height : height * 2;
+    data.video.height = y_scale == SMK_Y_SCALE_NONE ? height : height * 2;
     data.video.y_scale = y_scale;
     data.video.current_frame = 0;
     data.video.micros_per_frame = (int) (micros_per_frame);
 
-    smk_enable_video(data.s, 1);
+    //smk_enable_video(data.s, 1);
 
-    if (setting_sound(SOUND_EFFECTS)->enabled && track_masks & 1) {
-        // only play sound when sound effects are enabled and track 0 is available
-        smk_enable_audio(data.s, 0, 1);
+    if (setting_sound(SOUND_EFFECTS)->enabled) {
+        int has_track, channels, bitdepth, rate;
+        smk_info_audio(data.s, 0, &has_track, &channels, &bitdepth, &rate);
+        if (has_track) {
+            // only play sound when sound effects are enabled and track 0 is available
+            //smk_enable_audio(data.s, 0, 1);
 
-        data.audio.bitdepth = bitdepths[0];
-        data.audio.channels = channels[0];
-        data.audio.rate = bitrates[0];
+            data.audio.bitdepth = bitdepth;
+            data.audio.channels = channels;
+            data.audio.rate = rate;
+        }
     }
 
-    if (smk_first(data.s) < 0) {
+    if (smk_first(data.s) != SMK_FRAME_OK) {
         close_smk();
         return 0;
     }
@@ -159,7 +158,7 @@ void video_draw(int x_offset, int y_offset)
 
     int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
     if (frame_no > data.video.current_frame) {
-        if (smk_next(data.s) == SMK_DONE) {
+        if (smk_next(data.s) != SMK_FRAME_OK) {
             close_smk();
             data.is_ended = 1;
             data.is_playing = 0;
@@ -178,17 +177,14 @@ void video_draw(int x_offset, int y_offset)
         return;
     }
     const unsigned char *frame = smk_get_video(data.s);
-    const unsigned char *pal = smk_get_palette(data.s);
+    const uint32_t *pal = smk_get_palette(data.s);
     if (frame && pal) {
         for (int y = clip->clipped_pixels_top; y < clip->visible_pixels_y; y++) {
             color_t *pixel = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y + y_offset + clip->clipped_pixels_top);
-            int video_y = data.video.y_scale == SMK_FLAG_Y_NONE ? y : y / 2;
+            int video_y = data.video.y_scale == SMK_Y_SCALE_NONE ? y : y / 2;
             const unsigned char *line = frame + (video_y * data.video.width);
             for (int x = clip->clipped_pixels_left; x < clip->visible_pixels_x; x++) {
-                *pixel = 0xFF000000 |
-                    (pal[line[x] * 3] << 16) |
-                    (pal[line[x] * 3 + 1] << 8) |
-                    (pal[line[x] * 3 + 2]);
+                *pixel = pal[line[x]];
                 ++pixel;
             }
         }
