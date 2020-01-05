@@ -144,11 +144,6 @@ static int32_t read_i32(uint8_t *data)
     return (int32_t) (data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24));
 }
 
-static int32_t read_u32(uint8_t *data)
-{
-    return (uint32_t) (data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24));
-}
-
 // Bitstream functions
 
 static bitstream *bitstream_init(bitstream *bs, const uint8_t *data, int len)
