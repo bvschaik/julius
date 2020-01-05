@@ -137,12 +137,6 @@ if(DRAW_FPS)
   add_definitions(-DDRAW_FPS)
 endif()
 
-set(SMK_FILES
-    ext/libsmacker/smacker.c
-    ext/libsmacker/smk_bitstream.c
-    ext/libsmacker/smk_hufftree.c
-)
-
 set(TINYFD_FILES
     ext/tinyfiledialogs/tinyfiledialogs.c
 )
