@@ -82,17 +82,16 @@ int image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *butto
     if (!hit_button) {
         return 0;
     }
-    int left_button_pressed = (!m->is_touch && m->left.went_down) || (m->is_touch && m->left.went_up);
     if (hit_button->button_type == IB_SCROLL) {
         if (!m->left.went_down && !m->left.is_down) {
             return 0;
         }
     } else if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_NORMAL) {
-        if (!left_button_pressed && !m->right.went_down) {
+        if (!m->left.went_up && !m->right.went_up) {
             return 0;
         }
     }
-    if (left_button_pressed) {
+    if (m->left.went_up) {
         sound_effect_play(SOUND_EFFECT_ICON);
         hit_button->pressed = 1;
         hit_button->pressed_since = time_get_millis();
