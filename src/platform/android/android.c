@@ -132,6 +132,17 @@ const char* android_get_c3_path(void)
     return path;
 }
 
+float android_get_screen_scale(void)
+{
+    java_function_handler handler;
+    float result = 100.0f;
+    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "getScreenScale", "()F", &handler)) {
+        result = (float) (*handler.env)->CallFloatMethod(handler.env, handler.activity, handler.method);
+    }
+    destroy_java_function_handler(&handler);
+    return result;
+}
+
 JNIEXPORT void JNICALL Java_bvschaik_julius_JuliusSDL2Activity_informCurrentRWPermissions(JNIEnv* env, jobject obj, jboolean hasWriteAccess)
 {
     platform_set_file_access_permissions((int)hasWriteAccess);

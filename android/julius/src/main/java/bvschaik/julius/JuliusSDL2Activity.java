@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 import org.libsdl.app.SDLActivity;
 
@@ -104,6 +105,11 @@ public class JuliusSDL2Activity extends SDLActivity
         while(paused) {
             Sleep(1000);
         }
+    }
+
+    public float getScreenScale()
+    {
+        return this.getResources().getDisplayMetrics().density;
     }
 
     static private void Sleep(int ms)

@@ -3,6 +3,7 @@
 #include "game/settings.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
+#include "platform/android/android.h"
 #include "platform/definitions.h"
 
 #include "SDL.h"
@@ -70,17 +71,9 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
         return 0;
     }
-#if defined(USE_AUTO_SCALE) && SDL_VERSION_ATLEAST(2,0,4)
-    float dpi = 0;
-    if(SDL_GetDisplayDPI(SDL_GetWindowDisplayIndex(SDL.window), NULL, &dpi, NULL) == 0) {
-        int scale = (int) dpi / DEFAULT_DPI;
-        scale = SDL_max(1, scale);
-        scale = SDL_min(scale, 5);
-        scale_percentage = scale * 100;
-        if(scale > 1) {
-            SDL_Log("Autoscale enabled, setting scale to %d", scale_percentage);
-        }
-    }
+#ifdef __ANDROID__
+    float scale = android_get_screen_scale();
+    scale_percentage = scale * 100;
 #endif
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!SDL.renderer) {
