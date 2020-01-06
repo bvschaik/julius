@@ -176,7 +176,7 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
     int num_chars = 0;
     while (*str && ++guard < 200) {
         int num_bytes = 1;
-        if (*str == ' ') {
+        if (*str == ' ' || *str == '\n') {
             if (word_char_seen) {
                 break;
             }
@@ -377,6 +377,9 @@ int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_
                 }
                 if (!*str) {
                     has_more_characters = 0;
+                } else if (*str == '\n') {
+                    str++;
+                    break;
                 }
             }
         }
