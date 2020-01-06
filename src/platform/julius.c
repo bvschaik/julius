@@ -490,17 +490,9 @@ static void setup(const julius_args *args)
     // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
     platform_init_cursors(args->cursor_scale_percentage);
 
-    int game_init_result = game_init();
-    if (game_init_result == GAME_INIT_ERROR) {
+    if (!game_init()) {
         SDL_Log("Exiting: game init failed");
         exit(2);
-    } else if (game_init_result == GAME_INIT_NO_PATCH) {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING,
-            "Patch 1.0.1.0 not installed",
-            "Your Caesar 3 installation does not have the 1.0.1.0 patch installed.\n"
-            "Julius requires a patched version of Caesar 3.\n\n"
-            "Continue at your own risk.",
-            NULL);
     }
 }
 

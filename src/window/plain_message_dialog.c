@@ -8,7 +8,7 @@
 #include "graphics/window.h"
 
 #define MAX_TITLE 50
-#define MAX_MESSAGE 200
+#define MAX_MESSAGE 250
 
 static void button_ok(int param1, int param2);
 

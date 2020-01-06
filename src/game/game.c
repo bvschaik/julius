@@ -56,44 +56,44 @@ int game_pre_init(void)
     return 1;
 }
 
-static int has_patch(void)
+static int is_unpatched(void)
 {
     const uint8_t *difficulty_option = lang_get_string(2, 6);
     const uint8_t *help_menu = lang_get_string(3, 0);
     // Without patch, the difficulty option string does not exist and
     // getting it "falls through" to the next text group
-    return difficulty_option != help_menu;
+    return difficulty_option == help_menu;
 }
 
 int game_init(void)
 {
     if (!image_init()) {
         errlog("unable to init graphics");
-        return GAME_INIT_ERROR;
+        return 0;
     }
     if (!image_load_climate(CLIMATE_CENTRAL, 0)) {
         errlog("unable to load main graphics");
-        return GAME_INIT_ERROR;
+        return 0;
     }
     if (!image_load_enemy(ENEMY_0_BARBARIAN)) {
         errlog("unable to load enemy graphics");
-        return GAME_INIT_ERROR;
+        return 0;
     }
     if (!image_load_fonts(encoding_get())) {
         errlog("unable to load font graphics");
-        return GAME_INIT_ERROR;
+        return 0;
     }
 
     if (!model_load()) {
         errlog("unable to load c3_model.txt");
-        return GAME_INIT_ERROR;
+        return 0;
     }
 
     sound_system_init();
     game_state_init();
-    window_logo_show();
+    window_logo_show(is_unpatched());
 
-    return has_patch() ? GAME_INIT_OK : GAME_INIT_NO_PATCH;
+    return 1;
 }
 
 int game_init_editor(void)
