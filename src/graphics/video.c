@@ -25,6 +25,7 @@ static struct {
         int current_frame;
     } video;
     struct {
+        int has_audio;
         int bitdepth;
         int channels;
         int rate;
@@ -49,12 +50,12 @@ static int load_smk(const char *filename)
 #ifdef __vita__
     // Vita file i/o is too slow to play videos smoothly from disk, so pre-load
     // the pre-loading causes a short pause before video starts
-    data.s = smk_open_filepointer(fp, SMK_MODE_MEMORY);
+    data.s = smk_open(fp, SMK_MODE_MEMORY);
 #else
-    data.s = smk_open_filepointer(fp, SMK_MODE_DISK);
+    data.s = smk_open(fp, SMK_MODE_DISK);
 #endif
     if (!data.s) {
-        // smk_open_filepointer closes the stream on error: no need to close fp
+        // smk_open() closes the stream on error: no need to close fp
         return 0;
     }
 
@@ -66,17 +67,14 @@ static int load_smk(const char *filename)
     data.video.height = y_scale == SMK_Y_SCALE_NONE ? height : height * 2;
     data.video.y_scale = y_scale;
     data.video.current_frame = 0;
-    data.video.micros_per_frame = (int) (micros_per_frame);
+    data.video.micros_per_frame = micros_per_frame;
 
-    //smk_enable_video(data.s, 1);
-
+    data.audio.has_audio = 0;
     if (setting_sound(SOUND_EFFECTS)->enabled) {
         int has_track, channels, bitdepth, rate;
         smk_info_audio(data.s, 0, &has_track, &channels, &bitdepth, &rate);
         if (has_track) {
-            // only play sound when sound effects are enabled and track 0 is available
-            //smk_enable_audio(data.s, 0, 1);
-
+            data.audio.has_audio = 1;
             data.audio.bitdepth = bitdepth;
             data.audio.channels = channels;
             data.audio.rate = rate;
@@ -116,12 +114,14 @@ void video_init(void)
 {
     data.video.start_render_millis = time_get_millis();
 
-    int audio_len = smk_get_audio_size(data.s, 0);
-    if (audio_len > 0) {
-        sound_device_use_custom_music_player(
-            data.audio.bitdepth, data.audio.channels, data.audio.rate,
-            smk_get_audio(data.s, 0), audio_len
-        );
+    if (data.audio.has_audio) {
+        int audio_len = smk_get_audio_size(data.s, 0);
+        if (audio_len > 0) {
+            sound_device_use_custom_music_player(
+                data.audio.bitdepth, data.audio.channels, data.audio.rate,
+                smk_get_audio(data.s, 0), audio_len
+            );
+        }
     }
 }
 
@@ -167,9 +167,11 @@ void video_draw(int x_offset, int y_offset)
         }
         data.video.current_frame++;
 
-        int audio_len = smk_get_audio_size(data.s, 0);
-        if (audio_len > 0) {
-            sound_device_write_custom_music_data(smk_get_audio(data.s, 0), audio_len);
+        if (data.audio.has_audio) {
+            int audio_len = smk_get_audio_size(data.s, 0);
+            if (audio_len > 0) {
+                sound_device_write_custom_music_data(smk_get_audio(data.s, 0), audio_len);
+            }
         }
     }
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, data.video.width, data.video.height);

@@ -531,17 +531,12 @@ static int read_frame_data_in_memory(smk s)
     return 1;
 }
 
-smk smk_open_file(const char *filename, smk_file_mode mode)
+smk smk_open(FILE *fp, smk_file_mode mode)
 {
-    FILE *fp = fopen(filename, "rb");
     if (!fp) {
+        log_error("SMK: file does not exist", 0, 0);
         return NULL;
     }
-    return smk_open_filepointer(fp, mode);
-}
-
-smk smk_open_filepointer(FILE *fp, smk_file_mode mode)
-{
     if (mode != SMK_MODE_DISK && mode != SMK_MODE_MEMORY) {
         log_error("SMK: invalid open mode", 0, mode);
         return NULL;
