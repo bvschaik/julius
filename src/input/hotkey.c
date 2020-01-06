@@ -20,6 +20,7 @@
 #include "window/advisors.h"
 #include "window/building_info.h"
 #include "window/numeric_input.h"
+#include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/city.h"
 #include "window/editor/empire.h"
@@ -334,6 +335,8 @@ void hotkey_enter(void)
 {
     if (window_is(WINDOW_POPUP_DIALOG)) {
         window_popup_dialog_confirm();
+    } else if (window_is(WINDOW_PLAIN_MESSAGE_DIALOG)) {
+        window_plain_message_dialog_accept();
     } else if (window_is(WINDOW_NUMERIC_INPUT)) {
         window_numeric_input_accept();
     }
