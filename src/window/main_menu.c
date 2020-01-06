@@ -83,6 +83,8 @@ static void button_click(int type, int param2)
                 "You can download them from:\n"
                 "https://bintray.com/bvschaik/caesar3-editor"
             );
+        } else {
+            sound_music_play_editor();
         }
     } else if (type == 5) {
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);

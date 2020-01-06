@@ -75,6 +75,13 @@ void sound_music_play_intro(void)
     }
 }
 
+void sound_music_play_editor(void)
+{
+    if (setting_sound(SOUND_MUSIC)->enabled) {
+        play_track(TRACK_CITY_1);
+    }
+}
+
 void sound_music_reset(void)
 {
     data.current_track = TRACK_NONE;
