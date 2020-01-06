@@ -24,8 +24,8 @@ static void button_hold_festival(int param1, int param2);
 static image_button image_buttons_bottom[] = {
     {58, 316, 27, 27, IB_NORMAL, 134, 0, button_help, button_none, 0, 0, 1},
     {558, 319, 24, 24, IB_NORMAL, 134, 4, button_close, button_none, 0, 0, 1},
-    {358, 317, 34, 34, IB_NORMAL, 96, 0, button_hold_festival, button_none, 1, 0, 1},
-    {400, 317, 34, 34, IB_NORMAL, 96, 4, button_close, button_none, 0, 0, 1},
+    {358, 317, 39, 26, IB_NORMAL, 96, 0, button_hold_festival, button_none, 1, 0, 1},
+    {400, 317, 39, 26, IB_NORMAL, 96, 4, button_close, button_none, 0, 0, 1},
 };
 
 static generic_button buttons_gods_size[] = {

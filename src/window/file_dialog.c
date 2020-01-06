@@ -28,10 +28,10 @@ static void button_scroll(int is_down, int num_lines);
 static void button_select_file(int index, int param2);
 
 static image_button image_buttons[] = {
-    {344, 335, 34, 34, IB_NORMAL, 96, 0, button_ok_cancel, button_none, 1, 0, 1},
-    {392, 335, 34, 34, IB_NORMAL, 96, 4, button_ok_cancel, button_none, 0, 0, 1},
-    {464, 120, 34, 34, IB_SCROLL, 96, 8, button_scroll, button_none, 0, 1, 1},
-    {464, 300, 34, 34, IB_SCROLL, 96, 12, button_scroll, button_none, 1, 1, 1},
+    {344, 335, 39, 26, IB_NORMAL, 96, 0, button_ok_cancel, button_none, 1, 0, 1},
+    {392, 335, 39, 26, IB_NORMAL, 96, 4, button_ok_cancel, button_none, 0, 0, 1},
+    {464, 120, 39, 26, IB_SCROLL, 96, 8, button_scroll, button_none, 0, 1, 1},
+    {464, 300, 39, 26, IB_SCROLL, 96, 12, button_scroll, button_none, 1, 1, 1},
 };
 static generic_button file_buttons[] = {
     {160, 128, 448, 144, GB_IMMEDIATE, button_select_file, button_none, 0, 0},

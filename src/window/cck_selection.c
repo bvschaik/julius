@@ -28,8 +28,8 @@ static void button_scroll(int is_down, int num_lines);
 static void button_start_scenario(int param1, int param2);
 
 static image_button image_buttons[] = {
-    {276, 210, 34, 34, IB_NORMAL, 96, 8, button_scroll, button_none, 0, 1, 1},
-    {276, 440, 34, 34, IB_NORMAL, 96, 12, button_scroll, button_none, 1, 1, 1},
+    {276, 210, 39, 26, IB_NORMAL, 96, 8, button_scroll, button_none, 0, 1, 1},
+    {276, 440, 39, 26, IB_NORMAL, 96, 12, button_scroll, button_none, 1, 1, 1},
     {600, 440, 27, 27, IB_NORMAL, 92, 56, button_start_scenario, button_none, 1, 0, 1},
 };
 
