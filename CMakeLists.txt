@@ -569,38 +569,18 @@ function(GET_SDL_EXT_DIR result module)
     foreach(child ${children})
         if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
             set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
-            set(internal_result "${SDL_LOCATION}/${child}")
             break()
         endif()
     endforeach()
 endfunction()
 
+find_package(SDL2 REQUIRED)
+find_package(SDL2_mixer REQUIRED)
+
 if(ANDROID_BUILD)
-    string(TOLOWER ${CMAKE_BUILD_TYPE} ANDROID_BUILD_DIR)
-    set(DISTRIBUTION_DIR ${PROJECT_SOURCE_DIR}/android/distribution/android/SDL2/intermediates/ndkBuild)
-
-    set(SDL2_LIBRARY SDL2)
-    set(SDL2_MIXER_LIBRARY SDL2_mixer)
-
-    add_library(${SDL2_LIBRARY} SHARED IMPORTED)
-    add_library(${SDL2_MIXER_LIBRARY} SHARED IMPORTED)
-    set_target_properties(${SDL2_LIBRARY} PROPERTIES IMPORTED_LOCATION
-    ${DISTRIBUTION_DIR}/${ANDROID_BUILD_DIR}/obj/local/${ANDROID_ABI}/libSDL2.so)
-    set_target_properties(${SDL2_MIXER_LIBRARY} PROPERTIES IMPORTED_LOCATION
-    ${DISTRIBUTION_DIR}/${ANDROID_BUILD_DIR}/obj/local/${ANDROID_ABI}/libSDL2_mixer.so)
-
-    GET_SDL_EXT_DIR(SDL_DIR "")
-    GET_SDL_EXT_DIR(SDL_MIXER_DIR "mixer")
-
-    set(SDL2_INCLUDE_DIR ${SDL_DIR}/include)
-    set(SDL2_MIXER_INCLUDE_DIR ${SDL_MIXER_DIR} ${SDL_MIXER_DIR}/include)
-
-    add_library(${SHORT_NAME} SHARED ${SDL_DIR}/src/main/android/SDL_android_main.c ${SOURCE_FILES})
+    add_library(${SHORT_NAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
 else()
     add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
-
-    find_package(SDL2 REQUIRED)
-    find_package(SDL2_mixer REQUIRED)
 endif()
 
 if(MSVC)
