@@ -143,7 +143,9 @@ static void draw_scenario_info(void)
 
     lang_text_draw_centered(32, 11 + scenario_property_player_rank(), 335, 210, 260, FONT_NORMAL_BLACK);
     if (scenario_is_open_play()) {
-        lang_text_draw_multiline(145, scenario_open_play_id(), 345, 270, 260, FONT_NORMAL_BLACK);
+        if (scenario_open_play_id() < 12) {
+            lang_text_draw_multiline(145, scenario_open_play_id(), 345, 270, 260, FONT_NORMAL_BLACK);
+        }
     } else {
         lang_text_draw_centered(44, 127, 335, 262, 260, FONT_NORMAL_BLACK);
         int width;
