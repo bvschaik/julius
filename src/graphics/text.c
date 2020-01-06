@@ -369,7 +369,11 @@ int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_
                 }
             } else {
                 for (int i = 0; i < word_num_chars; i++) {
-                    tmp_line[line_index++] = *str++;
+                    if (line_index == 0 && *str <= ' ') {
+                        str++; // skip whitespace at start of line
+                    } else {
+                        tmp_line[line_index++] = *str++;
+                    }
                 }
                 if (!*str) {
                     has_more_characters = 0;
