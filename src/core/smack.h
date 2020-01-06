@@ -27,21 +27,13 @@ typedef enum {
 } smk_frame_status;
 
 /**
- * Open SMK file
- * @param filename Filename
- * @param mode Open mode, one of SMK_MODE_* constants
- * @return SMK object if opening succeeded, otherwise NULL
- */
-smk smk_open_file(const char* filename, smk_file_mode mode);
-
-/**
  * Open SMK file from file pointer.
  * SMK takes ownership of the file pointer and will close it when done.
  * @param file File
  * @param mode Open mode, one of SMK_MODE_* constants
  * @return SMK object if opening succeeded, otherwise NULL
  */
-smk smk_open_filepointer(FILE* file, smk_file_mode mode);
+smk smk_open(FILE* file, smk_file_mode mode);
 
 /**
  * Close SMK file and clean up memory
