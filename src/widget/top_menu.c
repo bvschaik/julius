@@ -363,7 +363,7 @@ static void menu_file_new_game(int param)
     building_construction_clear_type();
     game_undo_disable();
     game_state_reset_overlay();
-    window_main_menu_show();
+    window_main_menu_show(1);
 }
 
 static void menu_file_replay_map(int param)

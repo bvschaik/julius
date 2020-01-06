@@ -9,6 +9,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "sound/music.h"
 #include "window/cck_selection.h"
 #include "window/file_dialog.h"
 #include "window/new_career.h"
@@ -88,8 +89,11 @@ static void button_click(int type, int param2)
     }
 }
 
-void window_main_menu_show(void)
+void window_main_menu_show(int restart_music)
 {
+    if (restart_music) {
+        sound_music_play_intro();
+    }
     window_type window = {
         WINDOW_MAIN_MENU,
         draw_background,

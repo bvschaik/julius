@@ -13,7 +13,6 @@
 #include "input/keyboard.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
-#include "window/main_menu.h"
 #include "window/mission_selection.h"
 
 static void start_mission(int param1, int param2);
@@ -60,7 +59,7 @@ static void handle_mouse(const mouse *m)
 {
     if (m->right.went_up) {
         keyboard_stop_capture();
-        window_main_menu_show();
+        window_go_back();
     }
 
     if (image_buttons_handle_mouse(mouse_in_dialog(m), 464, 249, &image_button_start_mission, 1, 0)) {

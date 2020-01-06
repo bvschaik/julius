@@ -142,7 +142,7 @@ void game_exit_editor(void)
     }
 
     editor_set_active(0);
-    window_main_menu_show();
+    window_main_menu_show(1);
 }
 
 static int get_elapsed_ticks(void)

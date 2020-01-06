@@ -26,7 +26,7 @@ static void draw_background(void)
 static void handle_mouse(const mouse *m)
 {
     if (m->left.went_up || m->right.went_up) {
-        window_main_menu_show();
+        window_main_menu_show(0);
     }
 }
 

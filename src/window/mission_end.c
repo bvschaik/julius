@@ -105,7 +105,7 @@ static void advance_to_next_mission(void)
     game_state_reset_overlay();
 
     if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
-        window_main_menu_show();
+        window_main_menu_show(1);
         if (!scenario_is_custom()) {
             setting_clear_personal_savings();
             scenario_settings_init();
@@ -136,7 +136,7 @@ static void button_fired(int param1, int param2)
     city_victory_stop_governing();
     game_undo_disable();
     if (scenario_is_custom()) {
-        window_main_menu_show();
+        window_main_menu_show(1);
     } else {
         window_mission_selection_show();
     }
