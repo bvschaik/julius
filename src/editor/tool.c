@@ -97,6 +97,9 @@ int editor_tool_is_in_use(void)
 
 void editor_tool_start_use(const map_tile *tile)
 {
+    if (!data.active) {
+        return;
+    }
     data.build_in_progress = 1;
     data.start_elevation = map_elevation_at(tile->grid_offset);
     data.start_tile = *tile;
