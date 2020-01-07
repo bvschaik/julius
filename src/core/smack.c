@@ -189,13 +189,13 @@ static inline uint8_t read_byte(bitstream *bs)
 
 // 8-bit huffman tree functions
 
-static huffnode8 *build_tree8_nodes(bitstream *bs, hufftree8 *tree, int value, int bits)
+static huffnode8 *build_tree8_nodes(bitstream *bs, hufftree8 *tree)
 {
     huffnode8 *node = &tree->nodes[tree->size++];
     if (read_bit(bs)) {
         node->is_leaf = 0;
-        node->b[0] = build_tree8_nodes(bs, tree, value, bits + 1);
-        node->b[1] = build_tree8_nodes(bs, tree, value | (1 << bits), bits + 1);
+        node->b[0] = build_tree8_nodes(bs, tree);
+        node->b[1] = build_tree8_nodes(bs, tree);
     } else {
         node->is_leaf = 1;
         node->value = read_byte(bs);
@@ -211,7 +211,7 @@ static hufftree8 *create_tree8(bitstream *bs)
             log_error("SMK: no memory for 8-bit tree", 0, 0);
             return NULL;
         }
-        build_tree8_nodes(bs, tree, 0, 0);
+        build_tree8_nodes(bs, tree);
         if (read_bit(bs) != 0) {
             log_error("SMK: 8-bit tree not closed", 0, 0);
             free(tree);
@@ -269,7 +269,7 @@ static void free_tree16(hufftree16 *tree)
     free(tree);
 }
 
-static huffnode16 *build_tree16_nodes(bitstream *bs, hufftree16 *tree, int value, int bits)
+static huffnode16 *build_tree16_nodes(bitstream *bs, hufftree16 *tree)
 {
     huffnode16 *node = (huffnode16 *) smk_malloc(sizeof(huffnode16));
     if (!node) {
@@ -278,12 +278,12 @@ static huffnode16 *build_tree16_nodes(bitstream *bs, hufftree16 *tree, int value
     }
     if (read_bit(bs)) {
         node->is_leaf = 0;
-        node->b[0] = build_tree16_nodes(bs, tree, value, bits + 1);
+        node->b[0] = build_tree16_nodes(bs, tree);
         if (!node->b[0]) {
             free(node);
             return NULL;
         }
-        node->b[1] = build_tree16_nodes(bs, tree, value | (1 << bits), bits + 1);
+        node->b[1] = build_tree16_nodes(bs, tree);
         if (!node->b[1]) {
             free_node16(node->b[0]);
             free(node);
@@ -317,7 +317,7 @@ static hufftree16 *create_tree16(bitstream *bs, hufftree8 *low, hufftree8 *high)
     for (int i = 0; i < 3; i++) {
         tree->escape_codes[i] = read_byte(bs) | read_byte(bs) << 8;
     }
-    tree->root = build_tree16_nodes(bs, tree, 0, 0);
+    tree->root = build_tree16_nodes(bs, tree);
     if (!tree->root) {
         free(tree);
         return NULL;
