@@ -109,6 +109,9 @@ void map_natives_init(void)
             } else if (image_id == image_meeting) {
                 type = BUILDING_NATIVE_MEETING;
                 map_image_set(grid_offset, native_image + 2);
+                map_image_set(grid_offset + map_grid_delta(1, 0), native_image + 2);
+                map_image_set(grid_offset + map_grid_delta(0, 1), native_image + 2);
+                map_image_set(grid_offset + map_grid_delta(1, 1), native_image + 2);
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_group(GROUP_BUILDING_FARM_CROPS) + random_bit);

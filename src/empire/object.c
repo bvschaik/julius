@@ -8,9 +8,6 @@
 #include "game/animation.h"
 #include "scenario/empire.h"
 
-#define HEADER_SIZE 1280
-#define DATA_SIZE 12800
-
 #define MAX_OBJECTS 200
 
 typedef struct {
@@ -159,7 +156,6 @@ void empire_object_init_cities(void)
         city->empire_object_id = i;
     }
 }
-
 
 int empire_object_init_distant_battle_travel_months(int object_type)
 {
