@@ -2,6 +2,7 @@
 
 #include "core/dir.h"
 #include "core/file.h"
+#include "core/smacker.h"
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
@@ -9,13 +10,11 @@
 #include "sound/music.h"
 #include "sound/speech.h"
 
-#include "core/smack.h"
-
 static struct {
     int is_playing;
     int is_ended;
 
-    smk s;
+    smacker s;
     struct {
         int width;
         int height;
@@ -35,7 +34,7 @@ static struct {
 static void close_smk(void)
 {
     if (data.s) {
-        smk_close(data.s);
+        smacker_close(data.s);
         data.s = 0;
     }
 }
@@ -50,21 +49,21 @@ static int load_smk(const char *filename)
 #ifdef __vita__
     // Vita file i/o is too slow to play videos smoothly from disk, so pre-load
     // the pre-loading causes a short pause before video starts
-    data.s = smk_open(fp, SMK_MODE_MEMORY);
+    data.s = smacker_open(fp, SMACKER_MODE_MEMORY);
 #else
-    data.s = smk_open(fp, SMK_MODE_DISK);
+    data.s = smacker_open(fp, SMACKER_MODE_DISK);
 #endif
     if (!data.s) {
-        // smk_open() closes the stream on error: no need to close fp
+        // smacker_open() closes the stream on error: no need to close fp
         return 0;
     }
 
     int width, height, y_scale, micros_per_frame;
-    smk_info_frames(data.s, 0, &micros_per_frame);
-    smk_info_video(data.s, &width, &height, &y_scale);
+    smacker_get_frames_info(data.s, 0, &micros_per_frame);
+    smacker_get_video_info(data.s, &width, &height, &y_scale);
 
     data.video.width = width;
-    data.video.height = y_scale == SMK_Y_SCALE_NONE ? height : height * 2;
+    data.video.height = y_scale == SMACKER_Y_SCALE_NONE ? height : height * 2;
     data.video.y_scale = y_scale;
     data.video.current_frame = 0;
     data.video.micros_per_frame = micros_per_frame;
@@ -72,7 +71,7 @@ static int load_smk(const char *filename)
     data.audio.has_audio = 0;
     if (setting_sound(SOUND_EFFECTS)->enabled) {
         int has_track, channels, bitdepth, rate;
-        smk_info_audio(data.s, 0, &has_track, &channels, &bitdepth, &rate);
+        smacker_get_audio_info(data.s, 0, &has_track, &channels, &bitdepth, &rate);
         if (has_track) {
             data.audio.has_audio = 1;
             data.audio.bitdepth = bitdepth;
@@ -81,7 +80,7 @@ static int load_smk(const char *filename)
         }
     }
 
-    if (smk_first(data.s) != SMK_FRAME_OK) {
+    if (smacker_first_frame(data.s) != SMACKER_FRAME_OK) {
         close_smk();
         return 0;
     }
@@ -115,11 +114,11 @@ void video_init(void)
     data.video.start_render_millis = time_get_millis();
 
     if (data.audio.has_audio) {
-        int audio_len = smk_get_audio_size(data.s, 0);
+        int audio_len = smacker_get_frame_audio_size(data.s, 0);
         if (audio_len > 0) {
             sound_device_use_custom_music_player(
                 data.audio.bitdepth, data.audio.channels, data.audio.rate,
-                smk_get_audio(data.s, 0), audio_len
+                smacker_get_frame_audio(data.s, 0), audio_len
             );
         }
     }
@@ -158,7 +157,7 @@ void video_draw(int x_offset, int y_offset)
 
     int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
     if (frame_no > data.video.current_frame) {
-        if (smk_next(data.s) != SMK_FRAME_OK) {
+        if (smacker_next_frame(data.s) != SMACKER_FRAME_OK) {
             close_smk();
             data.is_ended = 1;
             data.is_playing = 0;
@@ -168,9 +167,9 @@ void video_draw(int x_offset, int y_offset)
         data.video.current_frame++;
 
         if (data.audio.has_audio) {
-            int audio_len = smk_get_audio_size(data.s, 0);
+            int audio_len = smacker_get_frame_audio_size(data.s, 0);
             if (audio_len > 0) {
-                sound_device_write_custom_music_data(smk_get_audio(data.s, 0), audio_len);
+                sound_device_write_custom_music_data(smacker_get_frame_audio(data.s, 0), audio_len);
             }
         }
     }
@@ -178,12 +177,12 @@ void video_draw(int x_offset, int y_offset)
     if (!clip->is_visible) {
         return;
     }
-    const unsigned char *frame = smk_get_video(data.s);
-    const uint32_t *pal = smk_get_palette(data.s);
+    const unsigned char *frame = smacker_get_frame_video(data.s);
+    const uint32_t *pal = smacker_get_frame_palette(data.s);
     if (frame && pal) {
         for (int y = clip->clipped_pixels_top; y < clip->visible_pixels_y; y++) {
             color_t *pixel = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y + y_offset + clip->clipped_pixels_top);
-            int video_y = data.video.y_scale == SMK_Y_SCALE_NONE ? y : y / 2;
+            int video_y = data.video.y_scale == SMACKER_Y_SCALE_NONE ? y : y / 2;
             const unsigned char *line = frame + (video_y * data.video.width);
             for (int x = clip->clipped_pixels_left; x < clip->visible_pixels_x; x++) {
                 *pixel = pal[line[x]];

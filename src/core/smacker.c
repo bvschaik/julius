@@ -1,4 +1,4 @@
-#include "smack.h"
+#include "smacker.h"
 
 #include "core/log.h"
 
@@ -68,9 +68,9 @@ typedef struct {
     int audio_len[MAX_TRACKS];
 } frame_data_t;
 
-struct smk_t {
+struct smacker_t {
     FILE *fp;
-    smk_file_mode mode;
+    smacker_file_mode mode;
     uint8_t *memory_buffer;
 
     int32_t width;
@@ -130,7 +130,7 @@ static const int CHAIN_SIZE[64] = {
     57,   58,   59,  128,  256,  512, 1024, 2048
 };
 
-static inline void *smk_malloc(size_t s)
+static inline void *clear_malloc(size_t s)
 {
     void *buf = malloc(s);
     if (buf) {
@@ -206,7 +206,7 @@ static huffnode8 *build_tree8_nodes(bitstream *bs, hufftree8 *tree)
 static hufftree8 *create_tree8(bitstream *bs)
 {
     if (read_bit(bs)) {
-        hufftree8 *tree = (hufftree8 *) smk_malloc(sizeof(hufftree8));
+        hufftree8 *tree = (hufftree8 *) clear_malloc(sizeof(hufftree8));
         if (!tree) {
             log_error("SMK: no memory for 8-bit tree", 0, 0);
             return NULL;
@@ -271,7 +271,7 @@ static void free_tree16(hufftree16 *tree)
 
 static huffnode16 *build_tree16_nodes(bitstream *bs, hufftree16 *tree)
 {
-    huffnode16 *node = (huffnode16 *) smk_malloc(sizeof(huffnode16));
+    huffnode16 *node = (huffnode16 *) clear_malloc(sizeof(huffnode16));
     if (!node) {
         log_error("SMK: no memory for 16-bit tree node", 0, 0);
         return NULL;
@@ -307,7 +307,7 @@ static huffnode16 *build_tree16_nodes(bitstream *bs, hufftree16 *tree)
 
 static hufftree16 *create_tree16(bitstream *bs, hufftree8 *low, hufftree8 *high)
 {
-    hufftree16 *tree = (hufftree16 *) smk_malloc(sizeof(hufftree16));
+    hufftree16 *tree = (hufftree16 *) clear_malloc(sizeof(hufftree16));
     if (!tree) {
         log_error("SMK: no memory for 16-bit tree", 0, 0);
         return NULL;
@@ -330,7 +330,7 @@ static hufftree16 *create_tree16(bitstream *bs, hufftree8 *low, hufftree8 *high)
     for (int i = 0; i < 3; i++) {
         if (!tree->escape_nodes[i]) {
             // Escape node is not in the tree: create a dummy node
-            tree->escape_nodes[i] = (huffnode16 *) smk_malloc(sizeof(huffnode16));
+            tree->escape_nodes[i] = (huffnode16 *) clear_malloc(sizeof(huffnode16));
             tree->escape_nodes[i]->is_leaf = 0;
             tree->escape_nodes[i]->value = 0;
         }
@@ -382,7 +382,7 @@ static hufftree16 *read_header_tree(bitstream *bs)
     }
 }
 
-static void read_header_trees(smk s, uint8_t *data)
+static void read_header_trees(smacker s, uint8_t *data)
 {
     bitstream bstream;
     bitstream *bs = bitstream_init(&bstream, data, s->trees_size);
@@ -393,9 +393,9 @@ static void read_header_trees(smk s, uint8_t *data)
     s->type_tree = read_header_tree(bs);
 }
 
-// SMK I/O functions
+// Smacker I/O functions
 
-static int read_header(smk s)
+static int read_header(smacker s)
 {
     uint8_t header[HEADER_SIZE];
     if (fread(header, 1, HEADER_SIZE, s->fp) != HEADER_SIZE) {
@@ -433,14 +433,14 @@ static int read_header(smk s)
     return 1;
 }
 
-static int read_frame_info(smk s)
+static int read_frame_info(smacker s)
 {
     int sizes_length = sizeof(int32_t) * s->frames;
     int types_length = sizeof(uint8_t) * s->frames;
 
-    s->frame_sizes = (int32_t *) smk_malloc(sizes_length);
-    s->frame_offsets = (long *) smk_malloc(sizeof(long) * s->frames);
-    s->frame_types = (uint8_t *) smk_malloc(types_length);
+    s->frame_sizes = (int32_t *) clear_malloc(sizes_length);
+    s->frame_offsets = (long *) clear_malloc(sizeof(long) * s->frames);
+    s->frame_types = (uint8_t *) clear_malloc(types_length);
 
     if (!s->frame_sizes || !s->frame_offsets || !s->frame_types) {
         log_error("SMK: no memory for frame info", 0, 0);
@@ -469,9 +469,9 @@ static int read_frame_info(smk s)
     return 1;
 }
 
-static int read_trees_data(smk s)
+static int read_trees_data(smacker s)
 {
-    uint8_t *trees_data = (uint8_t *) smk_malloc(s->trees_size);
+    uint8_t *trees_data = (uint8_t *) clear_malloc(s->trees_size);
     if (!trees_data) {
         log_error("SMK: no memory for tree input data", 0, 0);
         return 0;
@@ -486,16 +486,16 @@ static int read_trees_data(smk s)
     return 1;
 }
 
-int allocate_frame_memory(smk s)
+int allocate_frame_memory(smacker s)
 {
-    s->frame_data.video = smk_malloc(sizeof(uint8_t) * s->width * s->height);
+    s->frame_data.video = clear_malloc(sizeof(uint8_t) * s->width * s->height);
     if (!s->frame_data.video) {
         log_error("SMK: no memory for video frame", 0, 0);
         return 0;
     }
     for (int i = 0; i < MAX_TRACKS; i++) {
         if (s->audio_rate[i] & AUDIO_FLAG_HAS_TRACK) {
-            s->frame_data.audio[i] = smk_malloc(s->audio_size[i]);
+            s->frame_data.audio[i] = clear_malloc(s->audio_size[i]);
             if (!s->frame_data.audio[i]) {
                 log_error("SMK: no memory for audio track", 0, i);
                 return 0;
@@ -505,7 +505,7 @@ int allocate_frame_memory(smk s)
     return 1;
 }
 
-static int read_frame_data_in_memory(smk s)
+static int read_frame_data_in_memory(smacker s)
 {
     if (fseek(s->fp, 0, SEEK_END) != 0) {
         log_error("SMK: unable to seek", 0, 0);
@@ -531,41 +531,41 @@ static int read_frame_data_in_memory(smk s)
     return 1;
 }
 
-smk smk_open(FILE *fp, smk_file_mode mode)
+smacker smacker_open(FILE *fp, smacker_file_mode mode)
 {
     if (!fp) {
         log_error("SMK: file does not exist", 0, 0);
         return NULL;
     }
-    if (mode != SMK_MODE_DISK && mode != SMK_MODE_MEMORY) {
+    if (mode != SMACKER_MODE_DISK && mode != SMACKER_MODE_MEMORY) {
         log_error("SMK: invalid open mode", 0, mode);
         return NULL;
     }
-    smk s = (struct smk_t *) smk_malloc(sizeof(struct smk_t));
-    memset(s, 0, sizeof(struct smk_t));
+    smacker s = (struct smacker_t *) clear_malloc(sizeof(struct smacker_t));
+    memset(s, 0, sizeof(struct smacker_t));
     s->fp = fp;
     s->mode = mode;
 
     if (!read_header(s)) {
-        smk_close(s);
+        smacker_close(s);
         return NULL;
     }
     if (!read_frame_info(s)) {
-        smk_close(s);
+        smacker_close(s);
         return NULL;
     }
     if (!read_trees_data(s)) {
-        smk_close(s);
+        smacker_close(s);
         return NULL;
     }
     if (!allocate_frame_memory(s)) {
-        smk_close(s);
+        smacker_close(s);
         return NULL;
     }
     s->frame_data_offset_in_file = ftell(s->fp);
-    if (s->mode == SMK_MODE_MEMORY) {
+    if (s->mode == SMACKER_MODE_MEMORY) {
         if (!read_frame_data_in_memory(s)) {
-            smk_close(s);
+            smacker_close(s);
             return NULL;
         }
         // Close file since we no longer need it
@@ -575,7 +575,7 @@ smk smk_open(FILE *fp, smk_file_mode mode)
     return s;
 }
 
-void smk_close(smk s)
+void smacker_close(smacker s)
 {
     if (s->fp) {
         fclose(s->fp);
@@ -595,9 +595,9 @@ void smk_close(smk s)
     free(s);
 }
 
-// SMK info functions
+// Smacker info functions
 
-void smk_info_frames(const smk s, int *frame_count, int *usf)
+void smacker_get_frames_info(const smacker s, int *frame_count, int *usf)
 {
     if (frame_count) {
         *frame_count = s->frames;
@@ -607,7 +607,7 @@ void smk_info_frames(const smk s, int *frame_count, int *usf)
     }
 }
 
-void smk_info_video(const smk s, int *width, int *height, int *y_scale_mode)
+void smacker_get_video_info(const smacker s, int *width, int *height, int *y_scale_mode)
 {
     if (width) {
         *width = s->width;
@@ -617,16 +617,16 @@ void smk_info_video(const smk s, int *width, int *height, int *y_scale_mode)
     }
     if (y_scale_mode) {
         if (s->flags & FLAG_Y_INTERLACE) {
-            *y_scale_mode = SMK_Y_SCALE_INTERLACE;
+            *y_scale_mode = SMACKER_Y_SCALE_INTERLACE;
         } else if (s->flags & FLAG_Y_DOUBLE) {
-            *y_scale_mode = SMK_Y_SCALE_DOUBLE;
+            *y_scale_mode = SMACKER_Y_SCALE_DOUBLE;
         } else {
-            *y_scale_mode = SMK_Y_SCALE_NONE;
+            *y_scale_mode = SMACKER_Y_SCALE_NONE;
         }
     }
 }
 
-void smk_info_audio(const smk s, int track, int *enabled, int *channels, int *bitdepth, int *audio_rate)
+void smacker_get_audio_info(const smacker s, int track, int *enabled, int *channels, int *bitdepth, int *audio_rate)
 {
     int has_track = (s->audio_rate[track] & AUDIO_FLAG_HAS_TRACK) ? 1 : 0;
     if (enabled) {
@@ -651,7 +651,7 @@ void smk_info_audio(const smk s, int track, int *enabled, int *channels, int *bi
     }
 }
 
-// SMK decoding functions
+// Smacker decoding functions
 
 static int read_audio_frame_trees(bitstream *bs, hufftree8 **trees, int num_trees)
 {
@@ -667,7 +667,7 @@ static int read_audio_frame_trees(bitstream *bs, hufftree8 **trees, int num_tree
     return 1;
 }
 
-static int decode_audio_track(smk s, int track, uint8_t *data, int length)
+static int decode_audio_track(smacker s, int track, uint8_t *data, int length)
 {
     if ((s->audio_rate[track] & AUDIO_FLAG_COMPRESSED) == 0) {
         // Uncompressed data, just copy and return
@@ -744,7 +744,7 @@ static int decode_audio_track(smk s, int track, uint8_t *data, int length)
     return 1;
 }
 
-static int decode_palette(smk s, uint8_t *data, int length)
+static int decode_palette(smacker s, uint8_t *data, int length)
 {
     color_t new_palette[MAX_PALETTE];
     int index = 0;
@@ -785,7 +785,7 @@ static int decode_palette(smk s, uint8_t *data, int length)
     return 1;
 }
 
-static int decode_video(smk s, uint8_t *frame_data, int length)
+static int decode_video(smacker s, uint8_t *frame_data, int length)
 {
     reset_escape16(s->mclr_tree);
     reset_escape16(s->mmap_tree);
@@ -843,9 +843,9 @@ static int decode_video(smk s, uint8_t *frame_data, int length)
     return 1;
 }
 
-static uint8_t *read_frame_data(smk s, int frame_id)
+static uint8_t *read_frame_data(smacker s, int frame_id)
 {
-    if (s->mode == SMK_MODE_MEMORY) {
+    if (s->mode == SMACKER_MODE_MEMORY) {
         return &s->memory_buffer[s->frame_offsets[frame_id]];
     }
     if (fseek(s->fp, s->frame_data_offset_in_file + s->frame_offsets[frame_id], SEEK_SET) != 0) {
@@ -853,7 +853,7 @@ static uint8_t *read_frame_data(smk s, int frame_id)
         return NULL;
     }
     int frame_size = s->frame_sizes[frame_id];
-    uint8_t *frame_data = (uint8_t *) smk_malloc(frame_size);
+    uint8_t *frame_data = (uint8_t *) clear_malloc(frame_size);
     if (!frame_data) {
         log_error("SMK: no memory for frame data", 0, frame_id);
         return NULL;
@@ -866,23 +866,23 @@ static uint8_t *read_frame_data(smk s, int frame_id)
     return frame_data;
 }
 
-static void free_frame_data(const smk s, uint8_t *frame_data)
+static void free_frame_data(const smacker s, uint8_t *frame_data)
 {
-    if (s->mode == SMK_MODE_DISK) {
+    if (s->mode == SMACKER_MODE_DISK) {
         free(frame_data);
     }
 }
 
-static smk_frame_status decode_frame(smk s)
+static smacker_frame_status decode_frame(smacker s)
 {
     int frame_id = s->current_frame;
     if (frame_id >= s->frames) {
-        return SMK_FRAME_DONE;
+        return SMACKER_FRAME_DONE;
     }
 
     uint8_t *frame_data = read_frame_data(s, frame_id);
     if (!frame_data) {
-        return SMK_FRAME_ERROR;
+        return SMACKER_FRAME_ERROR;
     }
 
     uint8_t frame_type = s->frame_types[frame_id];
@@ -891,7 +891,7 @@ static smk_frame_status decode_frame(smk s)
         int palette_size = frame_data[0] * 4;
         if (!decode_palette(s, &frame_data[1], palette_size - 1)) {
             free_frame_data(s, frame_data);
-            return SMK_FRAME_ERROR;
+            return SMACKER_FRAME_ERROR;
         }
         data_index += palette_size;
     }
@@ -906,43 +906,43 @@ static smk_frame_status decode_frame(smk s)
     }
     if (!decode_video(s, &frame_data[data_index], s->frame_sizes[frame_id] - data_index)) {
         free_frame_data(s, frame_data);
-        return SMK_FRAME_ERROR;
+        return SMACKER_FRAME_ERROR;
     }
 
     free_frame_data(s, frame_data);
-    return SMK_FRAME_OK;
+    return SMACKER_FRAME_OK;
 }
 
-smk_frame_status smk_first(smk s)
+smacker_frame_status smacker_first_frame(smacker s)
 {
     s->current_frame = 0;
     return decode_frame(s);
 }
 
-smk_frame_status smk_next(smk s)
+smacker_frame_status smacker_next_frame(smacker s)
 {
     s->current_frame++;
     return decode_frame(s);
 }
 
-// SMK get frame data functions
+// Smacker get frame data functions
 
-const uint32_t *smk_get_palette(const smk s)
+const uint32_t *smacker_get_frame_palette(const smacker s)
 {
     return s->frame_data.palette;
 }
 
-const uint8_t *smk_get_video(const smk s)
+const uint8_t *smacker_get_frame_video(const smacker s)
 {
     return s->frame_data.video;
 }
 
-int smk_get_audio_size(const smk s, int track)
+int smacker_get_frame_audio_size(const smacker s, int track)
 {
     return s->frame_data.audio_len[track];
 }
 
-const uint8_t *smk_get_audio(const smk s, int track)
+const uint8_t *smacker_get_frame_audio(const smacker s, int track)
 {
     return s->frame_data.audio[track];
 }
