@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define AUDIO_RATE 44100
+#define AUDIO_RATE 22050
 #define AUDIO_FORMAT AUDIO_S16
 #define AUDIO_CHANNELS 2
 #define AUDIO_BUFFERS 1024
