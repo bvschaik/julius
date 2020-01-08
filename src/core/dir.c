@@ -137,27 +137,32 @@ static void move_left(char *str)
     *str = 0;
 }
 
-static int case_correct_file(char *filepath)
+static int case_correct_file(char *full_path, int base_path_size)
 {
+    char base_path[3 * FILE_NAME_MAX] = { '.', 0 };
+    char *filepath = full_path + base_path_size;
     char *slash = strchr(filepath, '/');
     if (!slash) {
         slash = strchr(filepath, '\\');
     }
+    if(base_path_size > 1) {
+        snprintf(base_path, (size_t) base_path_size, "%s", full_path);
+    }
     if (slash) {
         *slash = 0;
-        if (correct_case(".", filepath)) {
+        if (correct_case(base_path, filepath)) {
             char *path = slash + 1;
             if (*path == '\\') {
                 // double backslash: move everything to the left
                 move_left(path);
             }
-            if (correct_case(filepath, path)) {
+            if (correct_case(full_path, path)) {
                 *slash = '/';
                 return 1;
             }
         }
     } else {
-        if (correct_case(".", filepath)) {
+        if (correct_case(base_path, filepath)) {
             return 1;
         }
     }
@@ -176,5 +181,5 @@ char *dir_get_file(const char* filepath)
         file_close(fp);
         return full_path;
     }
-    return case_correct_file(full_path + base_path_size) ? full_path : NULL;
+     return case_correct_file(full_path, base_path_size) ? full_path : NULL;
 }
