@@ -374,6 +374,7 @@ static void menu_file_replay_map(int param)
         game_file_start_scenario_by_name(scenario_name());
         window_city_show();
     } else {
+        scenario_save_campaign_player_name();
         window_mission_briefing_show();
     }
 }
