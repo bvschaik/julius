@@ -117,7 +117,6 @@ static void handle_mouse(const mouse *m)
 
 static void button_menu_item(int index, int param2)
 {
-    // TODO select tool
     switch (data.selected_submenu) {
         case MENU_BRUSH_SIZE:
             editor_tool_set_brush_size(index + 1);
