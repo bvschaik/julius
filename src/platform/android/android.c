@@ -135,7 +135,7 @@ const char* android_get_c3_path(void)
 float android_get_screen_scale(void)
 {
     java_function_handler handler;
-    float result = 100.0f;
+    float result = 1.0f;
     if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "getScreenScale", "()F", &handler)) {
         result = (float) (*handler.env)->CallFloatMethod(handler.env, handler.activity, handler.method);
     }

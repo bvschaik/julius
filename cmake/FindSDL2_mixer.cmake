@@ -41,13 +41,13 @@ IF(ANDROID_BUILD)
     SET_TARGET_PROPERTIES(${SDL2_MIXER_LIBRARY} PROPERTIES IMPORTED_LOCATION
     ${PROJECT_SOURCE_DIR}/android/distribution/android/SDL2/intermediates/ndkBuild/${ANDROID_BUILD_DIR}/obj/local/${ANDROID_ABI}/libSDL2_mixer.so)
     
-	SET(SDL2_MIXER_INCLUDE_DIR_TEMP ${SDL_MIXER_EXT_DIR} ${SDL_MIXER_EXT_DIR}/include)
-	FOREACH(CURRENT_INCLUDE_DIR ${SDL2_MIXER_INCLUDE_DIR_TEMP})
-		IF(EXISTS "${CURRENT_INCLUDE_DIR}/SDL_mixer.h")
-			SET(SDL2_MIXER_INCLUDE_DIR ${CURRENT_INCLUDE_DIR})
-			BREAK()
-		ENDIF()
-	ENDFOREACH()
+    SET(SDL2_MIXER_INCLUDE_DIR_TEMP ${SDL_MIXER_EXT_DIR} ${SDL_MIXER_EXT_DIR}/include)
+    FOREACH(CURRENT_INCLUDE_DIR ${SDL2_MIXER_INCLUDE_DIR_TEMP})
+        IF(EXISTS "${CURRENT_INCLUDE_DIR}/SDL_mixer.h")
+            SET(SDL2_MIXER_INCLUDE_DIR ${CURRENT_INCLUDE_DIR})
+            BREAK()
+        ENDIF()
+    ENDFOREACH()
 ELSE()
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       set(SDL2_ARCH_64 TRUE)
@@ -60,27 +60,27 @@ ELSE()
 
     if(MINGW AND DEFINED SDL_EXT_DIR)
         if(SDL2_ARCH_64)
-	      set(SDL_MINGW_EXT_DIR "${SDL_MIXER_EXT_DIR}/x86_64-w64-mingw32")
+            set(SDL_MINGW_EXT_DIR "${SDL_MIXER_EXT_DIR}/x86_64-w64-mingw32")
         else()
-	      set(SDL_MINGW_EXT_DIR "${SDL_MIXER_EXT_DIR}/i686-w64-mingw32")
-	    endif()
+          set(SDL_MINGW_EXT_DIR "${SDL_MIXER_EXT_DIR}/i686-w64-mingw32")
+        endif()
     endif()
 
     SET(SDL2_SEARCH_PATHS
-	    ~/Library/Frameworks
-	    /Library/Frameworks
-	    /usr/local
-	    /usr
-	    /sw # Fink
-	    /opt/local # DarwinPorts
-	    /opt/csw # Blastwave
-	    /opt
+        ~/Library/Frameworks
+        /Library/Frameworks
+        /usr/local
+        /usr
+        /sw # Fink
+        /opt/local # DarwinPorts
+        /opt/csw # Blastwave
+        /opt
         ${SDL_MIXER_EXT_DIR}
         ${SDL_MINGW_EXT_DIR}
     )
 
     if (VITA)
-        SET(SDL2_SEARCH_PATHS $ENV{VITASDK}/arm-vita-eabi)
+      SET(SDL2_SEARCH_PATHS $ENV{VITASDK}/arm-vita-eabi)
     endif()
 
     if(NOT SDL2_MIXER_INCLUDE_DIR AND SDL2MIXER_INCLUDE_DIR)
@@ -157,4 +157,3 @@ set(SDL2MIXER_INCLUDE_DIR ${SDL2_MIXER_INCLUDE_DIRS})
 set(SDL2MIXER_FOUND ${SDL2_MIXER_FOUND})
 
 mark_as_advanced(SDL2_MIXER_LIBRARY SDL2_MIXER_INCLUDE_DIR)
-

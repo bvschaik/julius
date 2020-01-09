@@ -139,14 +139,11 @@ static void move_left(char *str)
 
 static int case_correct_file(char *full_path, int base_path_size)
 {
-    char base_path[3 * FILE_NAME_MAX] = { '.', 0 };
+    const char *base_path = platform_get_base_path();
     char *filepath = full_path + base_path_size;
     char *slash = strchr(filepath, '/');
     if (!slash) {
         slash = strchr(filepath, '\\');
-    }
-    if(base_path_size > 1) {
-        snprintf(base_path, (size_t) base_path_size, "%s", full_path);
     }
     if (slash) {
         *slash = 0;
@@ -169,7 +166,7 @@ static int case_correct_file(char *full_path, int base_path_size)
     return 0;
 }
 
-char *dir_get_file(const char* filepath)
+char *dir_get_file(const char *filepath)
 {
     platform_check_file_access_permissions();
 

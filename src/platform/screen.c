@@ -72,7 +72,8 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         return 0;
     }
 #ifdef __ANDROID__
-    float scale = android_get_screen_scale();
+    int scale = SDL_max((int) (android_get_screen_scale() + 0.2f), 1);
+    scale = SDL_min(5, scale);
     scale_percentage = scale * 100;
 #endif
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);

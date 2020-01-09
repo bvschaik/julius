@@ -16,7 +16,7 @@
 #endif
 
 static int has_file_access_permissions = 1;
-static char base_path[FILE_NAME_MAX];
+static char base_path[FILE_NAME_MAX] = { '.', 0 };
 static int base_path_length = 0;
 
 #ifdef _WIN32
