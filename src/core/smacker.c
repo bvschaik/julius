@@ -315,6 +315,7 @@ static hufftree16 *create_tree16(bitstream *bs, hufftree8 *low, hufftree8 *high)
     tree->low = low;
     tree->high = high;
     for (int i = 0; i < 3; i++) {
+        // Do not join the following two lines as it results in an optimization bug for MSVC. See PR #215
         tree->escape_codes[i] = read_byte(bs);
         tree->escape_codes[i] |= read_byte(bs) << 8;
     }
@@ -719,6 +720,7 @@ static int decode_audio_track(smacker s, int track, uint8_t *data, int length)
 
         while (index < uncompressed_length / 2) {
             for (int c = 0; c < channels; c++) {
+                // Do not join the following two lines as it results in an optimization bug for MSVC. See PR #215
                 uint16_t value = lookup_tree8(bs, trees[c * 2]);
                 value |= lookup_tree8(bs, trees[c * 2 + 1]) << 8;
                 audio_data[index] = value + audio_data[index - channels];
