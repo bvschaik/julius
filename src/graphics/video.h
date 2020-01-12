@@ -9,6 +9,14 @@
 int video_start(const char* filename);
 
 /**
+ * Get size of the video
+ * Call only after succesful video_start()
+ * @param width Out: video width
+ * @param height Out: video height
+ */
+void video_size(int *width, int *height);
+
+/**
  * Initializes the video subsystem, necessary just before a video is drawn for the first time
  */
 void video_init(void);

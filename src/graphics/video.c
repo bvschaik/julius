@@ -103,6 +103,12 @@ int video_start(const char *filename)
     }
 }
 
+void video_size(int *width, int *height)
+{
+    *width = data.video.width;
+    *height = data.video.y_scale == SMACKER_Y_SCALE_NONE ? data.video.height : 2 * data.video.height;
+}
+
 void video_init(void)
 {
     data.video.start_render_millis = time_get_millis();
