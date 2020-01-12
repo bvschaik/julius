@@ -70,7 +70,6 @@ typedef struct {
 
 struct smacker_t {
     FILE *fp;
-    uint8_t *memory_buffer;
 
     int32_t width;
     int32_t height;
@@ -459,6 +458,7 @@ static int read_frame_info(smacker s)
         free(s->frame_types);
         return 0;
     }
+
     uint8_t *data = (uint8_t *) s->frame_sizes;
     long offset = 0;
     for (int i = 0; i < s->frames; i++) {
@@ -506,32 +506,6 @@ int allocate_frame_memory(smacker s)
     return 1;
 }
 
-static int read_frame_data_in_memory(smacker s)
-{
-    if (fseek(s->fp, 0, SEEK_END) != 0) {
-        log_error("SMK: unable to seek", 0, 0);
-        return 0;
-    }
-    long end_offset = ftell(s->fp);
-    if (fseek(s->fp, s->frame_data_offset_in_file, SEEK_SET) != 0) {
-        log_error("SMK: unable to seek", 0, 0);
-        return 0;
-    }
-    long data_length = end_offset - s->frame_data_offset_in_file;
-    s->memory_buffer = (uint8_t *) malloc(data_length);
-    if (!s->memory_buffer) {
-        log_error("SMK: unable to allocate memory for data buffer", 0, 0);
-        return 0;
-    }
-    if (fread(s->memory_buffer, 1, data_length, s->fp) != data_length) {
-        log_error("SMK: unable to read frame data into buffer", 0, 0);
-        free(s->memory_buffer);
-        s->memory_buffer = NULL;
-        return 0;
-    }
-    return 1;
-}
-
 smacker smacker_open(FILE *fp)
 {
     if (!fp) {
@@ -564,10 +538,7 @@ smacker smacker_open(FILE *fp)
 
 void smacker_close(smacker s)
 {
-    if (s->fp) {
-        fclose(s->fp);
-    }
-    free(s->memory_buffer);
+    fclose(s->fp);
     free(s->frame_offsets);
     free(s->frame_sizes);
     free(s->frame_types);
