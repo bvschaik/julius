@@ -46,13 +46,8 @@ static int load_smk(const char *filename)
         return 0;
     }
     FILE *fp = file_open(path, "rb");
-#ifdef __vita__
-    // Vita file i/o is too slow to play videos smoothly from disk, so pre-load
-    // the pre-loading causes a short pause before video starts
-    data.s = smacker_open(fp, SMACKER_MODE_MEMORY);
-#else
     data.s = smacker_open(fp, SMACKER_MODE_DISK);
-#endif
+
     if (!data.s) {
         // smacker_open() closes the stream on error: no need to close fp
         return 0;
