@@ -151,7 +151,7 @@ void video_draw(int x_offset, int y_offset)
 
     int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
     int draw_frame = data.video.current_frame == 0;
-    if (frame_no > data.video.current_frame) {
+    while (frame_no > data.video.current_frame) {
         if (smacker_next_frame(data.s) != SMACKER_FRAME_OK) {
             close_smk();
             data.is_ended = 1;
