@@ -125,6 +125,10 @@ void widget_map_editor_handle_mouse(const mouse *m)
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m, tile);
 
+    if (!tile->grid_offset) {
+        return;
+    }
+
     if (m->left.went_down) {
         editor_tool_start_use(tile);
         editor_tool_update_use(tile);
