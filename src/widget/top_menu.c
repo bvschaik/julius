@@ -278,7 +278,7 @@ static int handle_mouse_submenu(const mouse *m)
         data.open_sub_menu = menu_id;
     }
     if (!menu_handle_mouse(m, &menu[data.open_sub_menu - 1], &data.focus_sub_menu_id)) {
-        if (m->left.went_down) {
+        if (m->left.went_up) {
             clear_state();
             window_go_back();
             return 1;
@@ -322,7 +322,7 @@ static int handle_right_click(int type)
 static int handle_mouse_menu(const mouse *m)
 {
     int menu_id = menu_bar_handle_mouse(m, menu, 4, &data.focus_menu_id);
-    if (menu_id && m->left.went_down) {
+    if (menu_id && m->left.went_up) {
         data.open_sub_menu = menu_id;
         top_menu_window_show();
         return 1;

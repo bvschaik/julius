@@ -385,7 +385,7 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
         window_city_show();
     } else {
         update_city_view_coords(m->x, m->y, tile);
-        if ((!m->is_touch && m->left.went_down) || (m->is_touch && m->left.went_up && touch_was_click(get_earliest_touch()))) {
+        if (m->left.went_up && (!m->is_touch || touch_was_click(get_earliest_touch()))) {
             military_map_click(legion_formation_id, tile);
         }
     }

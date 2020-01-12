@@ -130,7 +130,7 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_down) {
+    if (m->right.went_up) {
         window_go_back();
     }
     if (data.num_items > MAX_ITEMS_PER_LIST) {

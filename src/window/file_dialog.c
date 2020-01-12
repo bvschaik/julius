@@ -184,7 +184,7 @@ static void handle_mouse(const mouse *m)
         return;
     }
 
-    if (m->right.went_down) {
+    if (m->right.went_up) {
         window_go_back();
         return;
     }

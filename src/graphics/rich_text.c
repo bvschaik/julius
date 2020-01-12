@@ -122,7 +122,7 @@ void rich_text_clear_links(void)
 
 int rich_text_get_clicked_link(const mouse *m)
 {
-    if (m->left.went_down) {
+    if (m->left.went_up) {
         for (int i = 0; i < num_links; i++) {
             if (m->x >= links[i].x_min && m->x <= links[i].x_max &&
                 m->y >= links[i].y_min && m->y <= links[i].y_max) {

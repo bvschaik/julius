@@ -134,7 +134,7 @@ void widget_map_editor_handle_mouse(const mouse *m)
     if (m->left.went_up) {
         editor_tool_end_use(tile);
     }
-    if (m->right.went_down) {
+    if (m->right.went_up) {
         editor_tool_deactivate();
     }
 }

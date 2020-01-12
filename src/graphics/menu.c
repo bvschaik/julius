@@ -96,7 +96,7 @@ int menu_handle_mouse(const mouse *m, menu_bar_item *menu, int *focus_item_id)
     if (!item_id) {
         return 0;
     }
-    if (m->left.went_down) {
+    if (m->left.went_up) {
         menu_item *item = &menu->items[item_id -1];
         item->left_click_handler(item->parameter);
     }

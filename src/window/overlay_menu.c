@@ -122,7 +122,7 @@ static void handle_submenu(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_down) {
+    if (m->right.went_up) {
         window_city_show();
         return;
     }

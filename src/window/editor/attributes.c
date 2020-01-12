@@ -167,7 +167,7 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_down) {
+    if (m->right.went_up) {
         stop(0);
         window_editor_map_show();
     } else {

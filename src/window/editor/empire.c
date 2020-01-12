@@ -290,8 +290,7 @@ static int is_outside_map(int x, int y)
 
 static void determine_selected_object(const mouse *m)
 {
-    int left_button_pressed = (!m->is_touch && m->left.went_down) || (m->is_touch && m->left.went_up);
-    if (!left_button_pressed || data.finished_scroll || is_outside_map(m->x, m->y)) {
+    if (!m->left.went_up || data.finished_scroll || is_outside_map(m->x, m->y)) {
         data.finished_scroll = 0;
         return;
     }
@@ -333,7 +332,7 @@ static void handle_mouse(const mouse *m)
     if (!arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2)) {
         if (!generic_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, generic_button_ok, 1, &data.focus_button_id)) {
             determine_selected_object(m);
-            if (m->right.went_down) {
+            if (m->right.went_up) {
                 empire_clear_selected_object();
                 window_invalidate();
             }
