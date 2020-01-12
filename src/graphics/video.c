@@ -150,6 +150,7 @@ void video_draw(int x_offset, int y_offset)
     time_millis now_millis = time_get_millis();
 
     int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
+    int draw_frame = data.video.current_frame == 0;
     if (frame_no > data.video.current_frame) {
         if (smacker_next_frame(data.s) != SMACKER_FRAME_OK) {
             close_smk();
@@ -159,6 +160,7 @@ void video_draw(int x_offset, int y_offset)
             return;
         }
         data.video.current_frame++;
+        draw_frame = 1;
 
         if (data.audio.has_audio) {
             int audio_len = smacker_get_frame_audio_size(data.s, 0);
@@ -166,6 +168,9 @@ void video_draw(int x_offset, int y_offset)
                 sound_device_write_custom_music_data(smacker_get_frame_audio(data.s, 0), audio_len);
             }
         }
+    }
+    if (!draw_frame) {
+        return;
     }
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, data.video.width, data.video.height);
     if (!clip->is_visible) {
