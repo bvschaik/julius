@@ -70,7 +70,6 @@ typedef struct {
 
 struct smacker_t {
     FILE *fp;
-    smacker_file_mode mode;
     uint8_t *memory_buffer;
 
     int32_t width;
@@ -533,20 +532,15 @@ static int read_frame_data_in_memory(smacker s)
     return 1;
 }
 
-smacker smacker_open(FILE *fp, smacker_file_mode mode)
+smacker smacker_open(FILE *fp)
 {
     if (!fp) {
         log_error("SMK: file does not exist", 0, 0);
         return NULL;
     }
-    if (mode != SMACKER_MODE_DISK && mode != SMACKER_MODE_MEMORY) {
-        log_error("SMK: invalid open mode", 0, mode);
-        return NULL;
-    }
     smacker s = (struct smacker_t *) clear_malloc(sizeof(struct smacker_t));
     memset(s, 0, sizeof(struct smacker_t));
     s->fp = fp;
-    s->mode = mode;
 
     if (!read_header(s)) {
         smacker_close(s);
@@ -565,15 +559,6 @@ smacker smacker_open(FILE *fp, smacker_file_mode mode)
         return NULL;
     }
     s->frame_data_offset_in_file = ftell(s->fp);
-    if (s->mode == SMACKER_MODE_MEMORY) {
-        if (!read_frame_data_in_memory(s)) {
-            smacker_close(s);
-            return NULL;
-        }
-        // Close file since we no longer need it
-        fclose(s->fp);
-        s->fp = NULL;
-    }
     return s;
 }
 
@@ -849,9 +834,6 @@ static int decode_video(smacker s, uint8_t *frame_data, int length)
 
 static uint8_t *read_frame_data(smacker s, int frame_id)
 {
-    if (s->mode == SMACKER_MODE_MEMORY) {
-        return &s->memory_buffer[s->frame_offsets[frame_id]];
-    }
     if (fseek(s->fp, s->frame_data_offset_in_file + s->frame_offsets[frame_id], SEEK_SET) != 0) {
         log_error("SMK: unable to seek to frame data", 0, frame_id);
         return NULL;
@@ -872,9 +854,7 @@ static uint8_t *read_frame_data(smacker s, int frame_id)
 
 static void free_frame_data(const smacker s, uint8_t *frame_data)
 {
-    if (s->mode == SMACKER_MODE_DISK) {
-        free(frame_data);
-    }
+    free(frame_data);
 }
 
 static smacker_frame_status decode_frame(smacker s)

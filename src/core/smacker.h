@@ -9,11 +9,6 @@
 /** Smacker object struct pointer */
 typedef struct smacker_t* smacker;
 
-typedef enum {
-    SMACKER_MODE_DISK = 1,
-    SMACKER_MODE_MEMORY = 2
-} smacker_file_mode;
-
 enum {
     SMACKER_Y_SCALE_NONE = 0,
     SMACKER_Y_SCALE_INTERLACE = 1,
@@ -30,10 +25,9 @@ typedef enum {
  * Open SMK file from file pointer.
  * Smacker takes ownership of the file pointer and will close it when done.
  * @param file File
- * @param mode Open mode, one of SMACKER_MODE_* constants
  * @return Smacker object if opening succeeded, otherwise NULL
  */
-smacker smacker_open(FILE* file, smacker_file_mode mode);
+smacker smacker_open(FILE* file);
 
 /**
  * Close SMK file and clean up memory
