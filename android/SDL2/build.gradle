@@ -3,16 +3,15 @@ apply plugin: 'com.android.library'
 buildDir = file("../distribution/${rootProject.name}/${project.name}")
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 20010
+        versionName "2.0.10"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
@@ -36,18 +35,4 @@ android {
             path '../../ext/SDL2/Android.mk'
         }
     }
-}
-
-repositories {
-    google()
-    jcenter()
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    testImplementation 'junit:junit:4.12'
 }

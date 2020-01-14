@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
-import android.support.v4.provider.DocumentFile;
+import androidx.documentfile.provider.DocumentFile;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -125,7 +125,7 @@ public class FileManager
             return new String[0];
         }
 
-        for (FileInfo file : getFolderFileList(activity, baseUri)) {
+        for (FileInfo file : getFolderFileList(activity, FileInfo.base)) {
             String fileName = file.getName();
             int extCharPos = fileName.lastIndexOf('.');
             if (extCharPos == -1 && ext.isEmpty()) {

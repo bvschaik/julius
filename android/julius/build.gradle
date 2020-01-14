@@ -4,7 +4,7 @@ buildDir = file("../distribution/${rootProject.name}/${project.name}")
 
 task getVersion {
     def project_version_major = 1
-    def project_version_minor = 1
+    def project_version_minor = 2
     def project_version_patch = 0
     def is_release_version = false
 
@@ -70,18 +70,17 @@ task getVersion {
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
         applicationId "bvschaik.julius"
-        minSdkVersion 21
-        targetSdkVersion 28
+        minSdkVersion 19
+        targetSdkVersion 29
 
         versionName getVersion.versionName
         versionCode getVersion.versionCode
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_BUILD=ON"
@@ -121,15 +120,9 @@ android {
 
 repositories {
     google()
-    jcenter()
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation "androidx.documentfile:documentfile:1.0.1"
     implementation project(':SDL2')
-    testImplementation 'junit:junit:4.12'
 }
