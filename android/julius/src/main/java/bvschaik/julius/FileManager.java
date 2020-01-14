@@ -9,11 +9,13 @@ import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FileManager
 {
     private static Uri baseUri = Uri.EMPTY;
+    private static HashMap<Uri, List<FileInfo>> folderStructureCache = new HashMap<>();
 
     public static String getC3Path()
     {
@@ -44,16 +46,19 @@ public class FileManager
 
     private static List<FileInfo> getFolderFileList(Activity activity, FileInfo folder)
     {
-        List<FileInfo> result = new ArrayList<>();
         if(!folder.isDirectory()) {
-            return result;
+            return new ArrayList<>();
         }
         return getFolderFileList(activity, folder.getUri());
     }
 
     private static List<FileInfo> getFolderFileList(Activity activity, Uri folder)
     {
-        List<FileInfo> result = new ArrayList<>();
+        List<FileInfo> result = folderStructureCache.get(folder);
+        if(result != null) {
+            return result;
+        }
+        result = new ArrayList<>();
         Uri children = DocumentsContract.buildChildDocumentsUriUsingTree(folder, DocumentsContract.getDocumentId(folder));
         String[] columns = new String[] {
                 DocumentsContract.Document.COLUMN_DOCUMENT_ID,
@@ -67,6 +72,7 @@ public class FileManager
             }
             cursor.close();
         }
+        folderStructureCache.put(folder, result);
         return result;
     }
 
@@ -148,6 +154,7 @@ public class FileManager
                 return false;
             }
             DocumentFile file = fileInfo.generateDocumentFile(activity);
+            folderStructureCache.clear();
             return file.delete();
         } catch(Exception e) {
             Log.e("julius", "Error in deleteFile: " + e);
@@ -183,6 +190,7 @@ public class FileManager
                 if(!isWrite) {
                     return 0;
                 } else {
+                    folderStructureCache.remove(folderInfo.getUri());
                     DocumentFile folder = folderInfo.generateDocumentFile(activity);
                     DocumentFile file = folder.createFile("application/octet-stream", filepart[filepart.length - 1]);
                     fileUri = file.getUri();
