@@ -72,7 +72,7 @@ public class JuliusSDL2Activity extends SDLActivity
             }
 
             getContentResolver().takePersistableUriPermission(data.getData(), data.getFlags() & rwFlagsPermission);
-            FileManager.setBaseUri(this, data.getData());
+            FileManager.setBaseUri(data.getData());
         }
     }
 

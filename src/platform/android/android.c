@@ -133,12 +133,12 @@ int android_set_base_path(const char *path)
 {
     int result = 0;
     java_function_handler handler;
-    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "setBaseUri", "(Lbvschaik/julius/JuliusSDL2Activity;Ljava/lang/String;)I", &handler)) {
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "setBaseUri", "(Ljava/lang/String;)I", &handler)) {
         destroy_java_function_handler(&handler);
         return 0;
     }
     jstring jpath = (*handler.env)->NewStringUTF(handler.env, path);
-    result = (int)(*handler.env)->CallStaticIntMethod(handler.env, handler.class, handler.method, handler.activity, jpath);
+    result = (int)(*handler.env)->CallStaticIntMethod(handler.env, handler.class, handler.method, jpath);
     destroy_java_function_handler(&handler);
 
     return result;
@@ -167,4 +167,34 @@ int android_get_directory_contents_by_extension(char **list, int *count, const c
     destroy_java_function_handler(&handler);
 
     return 1;
+}
+
+int android_check_file_exists(const char *filename)
+{
+    int result = 0;
+    java_function_handler handler;
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "fileExists", "(Lbvschaik/julius/JuliusSDL2Activity;Ljava/lang/String;)Z", &handler)) {
+        destroy_java_function_handler(&handler);
+        return 0;
+    }
+    jstring jfilename = (*handler.env)->NewStringUTF(handler.env, filename);
+    result = (int)(*handler.env)->CallStaticBooleanMethod(handler.env, handler.class, handler.method, handler.activity, jfilename);
+    destroy_java_function_handler(&handler);
+
+    return result;
+}
+
+int android_remove_file(const char *filename)
+{
+    int result = 0;
+    java_function_handler handler;
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "deleteFile", "(Lbvschaik/julius/JuliusSDL2Activity;Ljava/lang/String;)Z", &handler)) {
+        destroy_java_function_handler(&handler);
+        return 0;
+    }
+    jstring jfilename = (*handler.env)->NewStringUTF(handler.env, filename);
+    result = (int)(*handler.env)->CallStaticBooleanMethod(handler.env, handler.class, handler.method, handler.activity, jfilename);
+    destroy_java_function_handler(&handler);
+
+    return result;
 }

@@ -71,4 +71,11 @@ void file_remove_extension(uint8_t *filename);
  */
 int file_exists(const char *filename);
 
+/**
+ * Remove a file
+ * @param filename Filename to remove
+ * @return boolean true if the file removal was successful, false otherwise
+ */
+int file_remove(const char *filename);
+
 #endif // CORE_FILE_H

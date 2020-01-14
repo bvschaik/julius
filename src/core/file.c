@@ -121,5 +121,18 @@ void file_remove_extension(uint8_t *filename)
 
 int file_exists(const char *filename)
 {
+#ifdef __ANDROID__
+    return android_check_file_exists(filename);
+#else
     return NULL != dir_get_file(filename);
+#endif
+}
+
+int file_remove(const char* filename)
+{
+#ifdef __ANDROID__
+    return android_remove_file(filename);
+#else
+    return remove(filename) == 0;
+#endif
 }

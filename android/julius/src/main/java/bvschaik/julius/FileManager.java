@@ -21,15 +21,15 @@ public class FileManager
         return baseUri.toString();
     }
 
-    public static int setBaseUri(JuliusSDL2Activity activity, String path)
+    public static int setBaseUri(String path)
     {
         if(baseUri != Uri.EMPTY) {
             return 1;
         }
-        return setBaseUri(activity, Uri.parse(path));
+        return setBaseUri(Uri.parse(path));
     }
 
-    static int setBaseUri(JuliusSDL2Activity activity, Uri newUri)
+    static int setBaseUri(Uri newUri)
     {
         try {
             baseUri = newUri;
@@ -90,6 +90,23 @@ public class FileManager
         }
         return currentDir;
     }
+    
+    private static FileInfo getFile(JuliusSDL2Activity activity, String filename)
+    {
+        try {
+            if(baseUri == Uri.EMPTY) {
+                return null;
+            }
+            String[] filepart = filename.split("[\\\\/]");
+            FileInfo folderInfo = getPathFolder(activity, filepart);
+            if(folderInfo == null) {
+                return null;
+            }
+            return findFile(activity, folderInfo, filepart[filepart.length - 1]);
+        } catch(Exception e) {
+            return null;
+        }
+    }
 
     public static String[] getFilesByExtension(JuliusSDL2Activity activity, String ext)
     {
@@ -113,6 +130,25 @@ public class FileManager
         }
         String[] result = new String[fileList.size()];
         return fileList.toArray(result);
+    }
+
+    public static boolean fileExists(JuliusSDL2Activity activity, String filename)
+    {
+        return getFile(activity, filename) != null;
+    }
+
+    public static boolean deleteFile(JuliusSDL2Activity activity, String filename)
+    {
+        try {
+            FileInfo fileInfo = getFile(activity, filename);
+            if(fileInfo == null) {
+                return false;
+            }
+            DocumentFile file = fileInfo.generateDocumentFile(activity);
+            return file.delete();
+        } catch(Exception e) {
+            return false;
+        }   
     }
 
     public static int openFileDescriptor(JuliusSDL2Activity activity, String filename, String mode)
