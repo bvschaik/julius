@@ -9,6 +9,9 @@ static grid_u8 rubble_type_grid;
 
 int map_building_at(int grid_offset)
 {
+    if (grid_offset < 0 || grid_offset >= GRID_SIZE * GRID_SIZE) {
+        return 0;
+    }
     return buildings_grid.items[grid_offset];
 }
 

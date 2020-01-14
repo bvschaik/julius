@@ -6,17 +6,20 @@ static grid_u16 figures;
 
 int map_has_figure_at(int grid_offset)
 {
-    return figures.items[grid_offset] > 0;
+    return grid_offset >= 0 && grid_offset < GRID_SIZE * GRID_SIZE && figures.items[grid_offset] > 0;
 }
 
 int map_figure_at(int grid_offset)
 {
+    if (grid_offset < 0 || grid_offset >= GRID_SIZE * GRID_SIZE) {
+        return 0;
+    }
     return figures.items[grid_offset];
 }
 
 void map_figure_add(figure *f)
 {
-    if (f->grid_offset < 0) {
+    if (f->grid_offset < 0 || f->grid_offset >= GRID_SIZE * GRID_SIZE) {
         return;
     }
     f->figures_on_same_tile_index = 0;
@@ -40,6 +43,9 @@ void map_figure_add(figure *f)
 
 void map_figure_update(figure *f)
 {
+    if (f->grid_offset < 0 || f->grid_offset >= GRID_SIZE * GRID_SIZE) {
+        return;
+    }
     f->figures_on_same_tile_index = 0;
 
     figure *next = figure_get(figures.items[f->grid_offset]);
@@ -57,7 +63,7 @@ void map_figure_update(figure *f)
 
 void map_figure_delete(figure *f)
 {
-    if (f->grid_offset < 0 || !figures.items[f->grid_offset]) {
+    if (f->grid_offset < 0 || f->grid_offset >= GRID_SIZE * GRID_SIZE || !figures.items[f->grid_offset]) {
         f->next_figure_id_on_same_tile = 0;
         return;
     }
