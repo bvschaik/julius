@@ -36,3 +36,8 @@ android {
         }
     }
 }
+
+repositories {
+    google()
+    jcenter()
+}
