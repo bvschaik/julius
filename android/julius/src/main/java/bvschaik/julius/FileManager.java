@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.support.v4.provider.DocumentFile;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class FileManager
             FileInfo.base = new FileInfo(DocumentsContract.getTreeDocumentId(newUri), null, DocumentsContract.Document.MIME_TYPE_DIR);
             return 1;
         } catch(Exception e) {
+            Log.e("julius", "Error in setBaseUri: " + e);
             return 0;
         }
     }
@@ -104,6 +106,7 @@ public class FileManager
             }
             return findFile(activity, folderInfo, filepart[filepart.length - 1]);
         } catch(Exception e) {
+            Log.e("julius", "Error in getFile: " + e);
             return null;
         }
     }
@@ -147,6 +150,7 @@ public class FileManager
             DocumentFile file = fileInfo.generateDocumentFile(activity);
             return file.delete();
         } catch(Exception e) {
+            Log.e("julius", "Error in deleteFile: " + e);
             return false;
         }   
     }
@@ -189,13 +193,14 @@ public class FileManager
             ParcelFileDescriptor pfd = activity.getContentResolver().openFileDescriptor(fileUri, internalMode);
             return pfd.detachFd();
         } catch (Exception e) {
+            Log.e("julius", "Error in openFileDescriptor: " + e);
             return 0;
         }
     }
 
     private static class FileInfo
     {
-        public static FileInfo base;
+        static FileInfo base;
         private String documentId;
         private String name;
         private DocumentFile file = null;
