@@ -396,8 +396,7 @@ static const char* ask_for_data_dir(int again)
     } else {
         android_toast_message("Please select the location of the Caesar 3 files.");
     }
-    android_show_c3_path_dialog();
-    return android_get_c3_path();
+    return android_show_c3_path_dialog();
 #else
     if (again) {
         int result = tinyfd_messageBox("Wrong folder selected",

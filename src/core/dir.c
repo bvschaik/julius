@@ -3,6 +3,7 @@
 #include "core/file.h"
 #include "core/string.h"
 #include "platform/file.h"
+#include "platform/android/android.h"
 
 #include <dirent.h>
 #include <stdio.h>
@@ -81,6 +82,12 @@ static int compare_lower(const void *va, const void *vb)
 const dir_listing *dir_find_files_with_extension(const char *extension)
 {
     clear_dir_listing();
+
+#ifdef __ANDROID__
+    if (!android_get_directory_contents_by_extension(listing.files, &listing.num_files, extension, DIR_MAX_FILES)) {
+        return &listing;
+    }
+#else
     fs_dir_type *d = fs_dir_open(FS_BASE_DIR);
     if (!d) {
         return &listing;
@@ -103,6 +110,7 @@ const dir_listing *dir_find_files_with_extension(const char *extension)
         dir_entry_close_name(name);
     }
     fs_dir_close(d);
+#endif
     qsort(listing.files, listing.num_files, sizeof(char*), compare_lower);
 
     return &listing;
@@ -139,6 +147,16 @@ static void move_left(char *str)
 
 static int case_correct_file(char *full_path, int base_path_size)
 {
+#ifdef __ANDROID__
+    // Android checks for proper case in the Java side
+    return 1;
+#else
+    FILE *fp = file_open(full_path, "rb");
+    if (fp) {
+        file_close(fp);
+        return 1;
+    }
+
     const char *base_path = platform_get_base_path();
     char *filepath = full_path + base_path_size;
     char *slash = strchr(filepath, '/');
@@ -164,19 +182,12 @@ static int case_correct_file(char *full_path, int base_path_size)
         }
     }
     return 0;
+#endif
 }
 
 char *dir_get_file(const char *filepath)
 {
-    platform_check_file_access_permissions();
-
     static char full_path[3 * FILE_NAME_MAX];
     int base_path_size = platform_generate_full_file_path(full_path, filepath);
-
-    FILE* fp = file_open(full_path, "rb");
-    if (fp) {
-        file_close(fp);
-        return full_path;
-    }
-     return case_correct_file(full_path, base_path_size) ? full_path : NULL;
+    return case_correct_file(full_path, base_path_size) ? full_path : 0;
 }

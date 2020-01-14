@@ -37,7 +37,7 @@ static int request_java_static_function_handler(const char *class_name, const ch
     }
     handler->method = (*handler->env)->GetStaticMethodID(handler->env, handler->class, method_name, method_signature);
     if (handler->method == NULL) {
-        SDL_Log("Problem loading method '%s' from class '%s'.", method_name, class_name);
+        SDL_Log("Problem loading static method '%s' from class '%s'.", method_name, class_name);
         return 0;
     }
     return 1;
@@ -56,7 +56,7 @@ static int request_java_class_function_handler(const char *class_name, const cha
     return 1;
 }
 
-static void destroy_java_function_handler(java_function_handler* handler)
+static void destroy_java_function_handler(java_function_handler *handler)
 {
     if(handler->env && handler->activity) {
         (*handler->env)->DeleteLocalRef(handler->env, handler->activity);
@@ -67,35 +67,29 @@ static void destroy_java_function_handler(java_function_handler* handler)
     handler->method = NULL;
 }
 
-static void wait_on_pause(void)
+static const char* get_c3_path(void)
 {
     java_function_handler handler;
-    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "waitOnPause", "()V", &handler)) {
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "getC3Path", "()Ljava/lang/String;", &handler)) {
+        destroy_java_function_handler(&handler);
+        return NULL;
+    }
+
+    jobject result = (*handler.env)->CallStaticObjectMethod(handler.env, handler.class, handler.method);
+    const char *path = (*handler.env)->GetStringUTFChars(handler.env, (jstring)result, NULL);
+    destroy_java_function_handler(&handler);
+
+    return path;
+}
+
+const char* android_show_c3_path_dialog(void)
+{
+    java_function_handler handler;
+    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "showDirectorySelection", "()V", &handler)) {
         (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method);
     }
     destroy_java_function_handler(&handler);
-}
-
-int android_check_rw_permissions(void)
-{
-    java_function_handler handler;
-    int result = 0;
-    if (request_java_static_function_handler("bvschaik/julius/PermissionsManager", "HasWriteAccess", "(Lbvschaik/julius/JuliusSDL2Activity;)Z", &handler)) {
-        result = (*handler.env)->CallStaticBooleanMethod(handler.env, handler.class, handler.method, handler.activity);
-    }
-    destroy_java_function_handler(&handler);
-    return result;
-}
-
-void android_request_rw_permissions(void)
-{
-    java_function_handler handler;
-    int result = 0;
-    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "requestPermissions", "()V", &handler)) {
-        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method);
-    }
-    destroy_java_function_handler(&handler);
-    wait_on_pause();
+    return get_c3_path();
 }
 
 void android_toast_message(const char *message)
@@ -106,30 +100,6 @@ void android_toast_message(const char *message)
         (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method, jmessage);
     }
     destroy_java_function_handler(&handler);
-}
-
-void android_show_c3_path_dialog(void)
-{
-    java_function_handler handler;
-    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "showDirectorySelection", "()V", &handler)) {
-        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method);
-    }
-    destroy_java_function_handler(&handler);
-}
-
-const char* android_get_c3_path(void)
-{
-    java_function_handler handler;
-    if (!request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "getC3Path", "()Ljava/lang/String;", &handler)) {
-        destroy_java_function_handler(&handler);
-        return NULL;
-    }
-
-    jobject result = (*handler.env)->CallObjectMethod(handler.env, handler.activity, handler.method);
-    const char *path = (*handler.env)->GetStringUTFChars(handler.env, (jstring)result, NULL);
-    destroy_java_function_handler(&handler);
-
-    return path;
 }
 
 float android_get_screen_scale(void)
@@ -143,7 +113,58 @@ float android_get_screen_scale(void)
     return result;
 }
 
-JNIEXPORT void JNICALL Java_bvschaik_julius_JuliusSDL2Activity_informCurrentRWPermissions(JNIEnv* env, jobject obj, jboolean hasWriteAccess)
+int android_get_file_descriptor(const char *filename, const char *mode)
 {
-    platform_set_file_access_permissions((int)hasWriteAccess);
+    int result = 0;
+    java_function_handler handler;
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "openFileDescriptor", "(Lbvschaik/julius/JuliusSDL2Activity;Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
+        destroy_java_function_handler(&handler);
+        return 0;
+    }
+    jstring jfilename = (*handler.env)->NewStringUTF(handler.env, filename);
+    jstring jmode = (*handler.env)->NewStringUTF(handler.env, mode);
+    result = (int)(*handler.env)->CallStaticIntMethod(handler.env, handler.class, handler.method, handler.activity, jfilename, jmode);
+    destroy_java_function_handler(&handler);
+
+    return result;
+}
+
+int android_set_base_path(const char *path)
+{
+    int result = 0;
+    java_function_handler handler;
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "setBaseUri", "(Lbvschaik/julius/JuliusSDL2Activity;Ljava/lang/String;)I", &handler)) {
+        destroy_java_function_handler(&handler);
+        return 0;
+    }
+    jstring jpath = (*handler.env)->NewStringUTF(handler.env, path);
+    result = (int)(*handler.env)->CallStaticIntMethod(handler.env, handler.class, handler.method, handler.activity, jpath);
+    destroy_java_function_handler(&handler);
+
+    return result;
+}
+
+int android_get_directory_contents_by_extension(char **list, int *count, const char *extension, int max_files)
+{
+    java_function_handler handler;
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "getFilesByExtension", "(Lbvschaik/julius/JuliusSDL2Activity;Ljava/lang/String;)[Ljava/lang/String;", &handler)) {
+        destroy_java_function_handler(&handler);
+        return 0;
+    }
+    jstring jextension = (*handler.env)->NewStringUTF(handler.env, extension);
+    jobjectArray result = (jobjectArray)(*handler.env)->CallStaticObjectMethod(handler.env, handler.class, handler.method, handler.activity, jextension);
+    
+    int len = (*handler.env)->GetArrayLength(handler.env, result);
+    if(len > max_files) {
+        len = max_files;
+    }
+    for(int i = 0; i < len; ++ i) {
+        jstring jfileName = (jstring) (*handler.env)->GetObjectArrayElement(handler.env, result, i);
+        const char *fileName = (*handler.env)->GetStringUTFChars(handler.env, jfileName, NULL);
+        strcpy(list[i], fileName);
+    }
+    *count = len;
+    destroy_java_function_handler(&handler);
+
+    return 1;
 }

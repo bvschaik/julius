@@ -5,12 +5,12 @@
 
 #include <jni.h>
 
-int android_check_rw_permissions(void);
-void android_request_rw_permissions(void);
 void android_toast_message(const char *messge);
-void android_show_c3_path_dialog(void);
-const char* android_get_c3_path(void);
+const char* android_show_c3_path_dialog(void);
 float android_get_screen_scale(void);
+int android_get_file_descriptor(const char *filename, const char *mode);
+int android_set_base_path(const char *path);
+int android_get_directory_contents_by_extension(char **list, int *count, const char *extension, int max_files);
 
 #endif // __ANDROID__
 #endif // PLATFORM_ANDROID_H

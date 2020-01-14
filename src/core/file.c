@@ -3,6 +3,10 @@
 #include "core/dir.h"
 #include "core/string.h"
 
+#ifdef __ANDROID__
+#include "platform/android/android.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -31,6 +35,17 @@ FILE *file_open(const char *filename, const char *mode)
     free(wmode);
 
     return fp;
+}
+
+#elif defined(__ANDROID__)
+
+FILE* file_open(const char *filename, const char *mode)
+{
+    int fd = android_get_file_descriptor(filename, mode);
+    if (!fd) {
+        return NULL;
+    }
+    return fdopen(fd, mode);
 }
 
 #else

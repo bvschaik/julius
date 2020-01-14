@@ -1,25 +1,23 @@
 package bvschaik.julius;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.Toast;
 import org.libsdl.app.SDLActivity;
 
 public class JuliusSDL2Activity extends SDLActivity
 {
-    private Uri C3Path = Uri.EMPTY;
     private static final int GET_FOLDER_RESULT = 500;
-    public boolean paused = true;
+    private static final int rwFlagsPermission = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                               | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+    public static boolean paused = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        informCurrentRWPermissions(PermissionsManager.HasWriteAccess(this));
     }
 
     @Override
@@ -51,19 +49,30 @@ public class JuliusSDL2Activity extends SDLActivity
         paused = false;
     }
 
-    private void showDirectoryIntent()
+    public void showDirectorySelection()
     {
+        // Wait before showing window
+        Sleep(1000);
+
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        intent.addFlags(
+                rwFlagsPermission
+                        | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                        | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+        );
         startActivityForResult(intent, GET_FOLDER_RESULT);
         paused = true;
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        switch(requestCode) {
-            case GET_FOLDER_RESULT:
-                C3Path = data.getData();
-                break;
+        if (requestCode == GET_FOLDER_RESULT) {
+            if (data.getData() == null) {
+                return;
+            }
+
+            getContentResolver().takePersistableUriPermission(data.getData(), data.getFlags() & rwFlagsPermission);
+            FileManager.setBaseUri(this, data.getData());
         }
     }
 
@@ -79,28 +88,7 @@ public class JuliusSDL2Activity extends SDLActivity
         });
     }
 
-    public void showDirectorySelection()
-    {
-        // Wait before showing window
-        Sleep(1000);
-        showDirectoryIntent();
-    }
-
-    public void requestPermissions()
-    {
-        if(PermissionsManager.RequestPermissions(this)) {
-            paused = true;
-        }
-    }
-
-    public String getC3Path()
-    {
-        // Halt startup until directory is selected
-        waitOnPause();
-        return DirectoryHelper.GetPathFromUri(C3Path);
-    }
-
-    public void waitOnPause()
+    static public void waitOnPause()
     {
         while(paused) {
             Sleep(1000);
@@ -109,7 +97,7 @@ public class JuliusSDL2Activity extends SDLActivity
 
     public float getScreenScale()
     {
-        return this.getResources().getDisplayMetrics().density;
+        return getResources().getDisplayMetrics().density;
     }
 
     static private void Sleep(int ms)
@@ -118,6 +106,4 @@ public class JuliusSDL2Activity extends SDLActivity
             Thread.sleep(ms);
         } catch(InterruptedException e) {}
     }
-
-    public native void informCurrentRWPermissions(boolean hasWriteAccess);
 }
