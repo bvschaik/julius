@@ -118,7 +118,7 @@ static int handle_right_click_allow_building_info(const map_tile *tile)
     return allow;
 }
 
-static int is_legion_click(const map_tile *tile)
+static int handle_legion_click(const map_tile *tile)
 {
     if (tile->grid_offset) {
         int formation_id = formation_legion_at_grid_offset(tile->grid_offset);
@@ -252,7 +252,7 @@ static void widget_city_handle_first_touch(map_tile *tile)
 {
     const touch *first = get_earliest_touch();
 
-    if (touch_was_click(first) && is_legion_click(tile)) {
+    if (touch_was_click(first) && handle_legion_click(tile)) {
         return;
     }
 
@@ -322,10 +322,11 @@ void widget_city_handle_mouse(const mouse *m)
     update_city_view_coords(m->x, m->y, tile);
     building_construction_reset_draw_as_constructing();
     if (m->left.went_down) {
-        if (!is_legion_click(tile)) {
-            build_start(tile);
-            build_move(tile);
+        if (handle_legion_click(tile)) {
+            return;
         }
+        build_start(tile);
+        build_move(tile);
     } else if (m->left.is_down) {
         build_move(tile);
     }
@@ -385,7 +386,7 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
         window_city_show();
     } else {
         update_city_view_coords(m->x, m->y, tile);
-        if (m->left.went_up && (!m->is_touch || touch_was_click(get_earliest_touch()))) {
+        if ((!m->is_touch && m->left.went_down) || (m->is_touch && m->left.went_up && touch_was_click(get_earliest_touch()))) {
             military_map_click(legion_formation_id, tile);
         }
     }
