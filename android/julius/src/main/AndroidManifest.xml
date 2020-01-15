@@ -16,7 +16,7 @@
 		android:hardwareAccelerated="true">
 
         <activity
-            android:name=".JuliusSDL2Activity"
+            android:name=".JuliusMainActivity"
             android:label="Julius"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance"

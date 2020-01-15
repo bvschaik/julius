@@ -20,7 +20,7 @@ public class FileManager
     public static String getC3Path()
     {
         // Halt startup until directory is selected
-        JuliusSDL2Activity.waitOnPause();
+        JuliusMainActivity.waitOnPause();
         return baseUri.toString();
     }
 
@@ -99,7 +99,7 @@ public class FileManager
         return currentDir;
     }
     
-    private static FileInfo getFile(JuliusSDL2Activity activity, String filename)
+    private static FileInfo getFile(JuliusMainActivity activity, String filename)
     {
         try {
             if(baseUri == Uri.EMPTY) {
@@ -117,7 +117,7 @@ public class FileManager
         }
     }
 
-    public static String[] getFilesByExtension(JuliusSDL2Activity activity, String ext)
+    public static String[] getFilesByExtension(JuliusMainActivity activity, String ext)
     {
         List<String> fileList = new ArrayList<>();
 
@@ -141,12 +141,12 @@ public class FileManager
         return fileList.toArray(result);
     }
 
-    public static boolean fileExists(JuliusSDL2Activity activity, String filename)
+    public static boolean fileExists(JuliusMainActivity activity, String filename)
     {
         return getFile(activity, filename) != null;
     }
 
-    public static boolean deleteFile(JuliusSDL2Activity activity, String filename)
+    public static boolean deleteFile(JuliusMainActivity activity, String filename)
     {
         try {
             FileInfo fileInfo = getFile(activity, filename);
@@ -162,7 +162,7 @@ public class FileManager
         }   
     }
 
-    public static int openFileDescriptor(JuliusSDL2Activity activity, String filename, String mode)
+    public static int openFileDescriptor(JuliusMainActivity activity, String filename, String mode)
     {
         try {
             if(baseUri == Uri.EMPTY) {

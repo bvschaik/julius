@@ -1,8 +1,8 @@
 #include "core/dir.h"
 
 #include "core/file.h"
+#include "core/log.h"
 #include "core/string.h"
-#include "platform/file.h"
 #include "platform/android/android.h"
 
 #include <dirent.h>
@@ -56,6 +56,50 @@ static const char *filename_to_utf8(const wchar_t *str)
 #define CURRENT_DIR "."
 #endif
 
+#ifdef _WIN32
+#include <windows.h>
+
+#define fs_dir_type _WDIR
+#define fs_dir_entry struct _wdirent
+#define fs_dir_open _wopendir
+#define fs_dir_close _wclosedir
+#define fs_dir_read _wreaddir
+#define dir_entry_name(d) filename_to_utf8(d->d_name)
+#define dir_entry_close_name(n) free((void*)n)
+
+static const char *filename_to_utf8(const wchar_t *str)
+{
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
+    char* result = (char*)malloc(sizeof(char) * size_needed);
+    WideCharToMultiByte(CP_UTF8, 0, str, -1, result, size_needed, NULL, NULL);
+    return result;
+}
+
+#else // not _WIN32
+#define fs_dir_type DIR
+#define fs_dir_entry struct dirent
+#define fs_dir_open opendir
+#define fs_dir_close closedir
+#define fs_dir_read readdir
+#define dir_entry_name(d) ((d)->d_name)
+#define dir_entry_close_name(n)
+#endif
+
+#ifdef __vita__
+#define CURRENT_DIR VITA_PATH_PREFIX
+#elif defined(_WIN32)
+#define CURRENT_DIR L"."
+#else
+#define CURRENT_DIR "."
+#endif
+
+#ifdef _MSC_VER
+#include <direct.h>
+#define chdir _chdir
+#elif !defined(__vita__) || !defined(__ANDROID__)
+#include <unistd.h>
+#endif
+
 static dir_listing listing;
 static int listing_initialized = 0;
 
@@ -88,7 +132,7 @@ const dir_listing *dir_find_files_with_extension(const char *extension)
         return &listing;
     }
 #else
-    fs_dir_type *d = fs_dir_open(FS_BASE_DIR);
+    fs_dir_type *d = fs_dir_open(CURRENT_DIR);
     if (!d) {
         return &listing;
     }
@@ -145,49 +189,58 @@ static void move_left(char *str)
     *str = 0;
 }
 
-static int case_correct_file(char *full_path, int base_path_size)
+int dir_set_base_path(const char *path)
+{
+    if (!path) {
+        log_error("set_base_path: path was not set. Julius will probably crash.", 0, 0);
+        return 0;
+    }
+#ifdef __ANDROID__
+    return android_set_base_path(path);
+#else
+    return chdir(path) == 0;
+#endif
+}
+
+const char *dir_get_case_corrected_file(const char *filepath)
 {
 #ifdef __ANDROID__
     // Android checks for proper case in the Java side
-    return 1;
+    return filepath;
 #else
-    FILE *fp = file_open(full_path, "rb");
+    static char corrected_filename[2 * FILE_NAME_MAX];
+
+    FILE* fp = file_open(filepath, "rb");
     if (fp) {
         file_close(fp);
-        return 1;
+        return filepath;
     }
 
-    const char *base_path = platform_get_base_path();
-    char *filepath = full_path + base_path_size;
-    char *slash = strchr(filepath, '/');
+    strncpy(corrected_filename, filepath, 2 * FILE_NAME_MAX);
+    corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
+
+    char* slash = strchr(corrected_filename, '/');
     if (!slash) {
-        slash = strchr(filepath, '\\');
+        slash = strchr(corrected_filename, '\\');
     }
     if (slash) {
         *slash = 0;
-        if (correct_case(base_path, filepath)) {
+        if (correct_case(".", corrected_filename)) {
             char *path = slash + 1;
             if (*path == '\\') {
                 // double backslash: move everything to the left
                 move_left(path);
             }
-            if (correct_case(full_path, path)) {
+            if (correct_case(corrected_filename, path)) {
                 *slash = '/';
-                return 1;
+                return corrected_filename;
             }
         }
     } else {
-        if (correct_case(base_path, filepath)) {
-            return 1;
+        if (correct_case(".", corrected_filename)) {
+            return corrected_filename;
         }
     }
     return 0;
 #endif
-}
-
-char *dir_get_file(const char *filepath)
-{
-    static char full_path[3 * FILE_NAME_MAX];
-    int base_path_size = platform_generate_full_file_path(full_path, filepath);
-    return case_correct_file(full_path, base_path_size) ? full_path : 0;
 }

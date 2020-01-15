@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.widget.Toast;
 import org.libsdl.app.SDLActivity;
 
-public class JuliusSDL2Activity extends SDLActivity
+public class JuliusMainActivity extends SDLActivity
 {
     private static final int GET_FOLDER_RESULT = 500;
     private static final int rwFlagsPermission = Intent.FLAG_GRANT_READ_URI_PERMISSION

@@ -7,6 +7,10 @@
 #include "platform/android/android.h"
 #endif
 
+#ifdef __vita__
+#include "platform/vita/vita.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,7 +18,17 @@
 #include <windows.h>
 #endif
 
-#if defined(_WIN32)
+#if defined(__vita__)
+
+FILE *file_open(const char *filename, const char *mode)
+{
+    char* resolved_path = vita_prepend_path(filename);
+    FILE* fp = fopen(resolved_path, mode);
+    free(resolved_path);
+    return fp;
+}
+
+#elif defined(_WIN32)
 
 wchar_t *utf8_to_wchar(const char *str)
 {
@@ -124,7 +138,7 @@ int file_exists(const char *filename)
 #ifdef __ANDROID__
     return android_check_file_exists(filename);
 #else
-    return NULL != dir_get_file(filename);
+    return NULL != dir_get_case_corrected_file(filename);
 #endif
 }
 

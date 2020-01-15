@@ -15,7 +15,6 @@
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "platform/virtual_keyboard.h"
-#include "window/main_menu.h"
 #include "window/mission_selection.h"
 
 static void start_mission(int param1, int param2);

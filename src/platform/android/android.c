@@ -1,5 +1,4 @@
 #include "android.h"
-#include "platform/file.h"
 #include "SDL.h"
 
 typedef struct
@@ -85,7 +84,7 @@ static const char* get_c3_path(void)
 const char* android_show_c3_path_dialog(void)
 {
     java_function_handler handler;
-    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "showDirectorySelection", "()V", &handler)) {
+    if (request_java_class_function_handler("bvschaik/julius/JuliusMainActivity", "showDirectorySelection", "()V", &handler)) {
         (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method);
     }
     destroy_java_function_handler(&handler);
@@ -95,7 +94,7 @@ const char* android_show_c3_path_dialog(void)
 void android_toast_message(const char *message)
 {
     java_function_handler handler;
-    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "toastMessage", "(Ljava/lang/String;)V", &handler)) {
+    if (request_java_class_function_handler("bvschaik/julius/JuliusMainActivity", "toastMessage", "(Ljava/lang/String;)V", &handler)) {
         jstring jmessage = (*handler.env)->NewStringUTF(handler.env, message);
         (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method, jmessage);
     }
@@ -106,7 +105,7 @@ float android_get_screen_scale(void)
 {
     java_function_handler handler;
     float result = 1.0f;
-    if (request_java_class_function_handler("bvschaik/julius/JuliusSDL2Activity", "getScreenScale", "()F", &handler)) {
+    if (request_java_class_function_handler("bvschaik/julius/JuliusMainActivity", "getScreenScale", "()F", &handler)) {
         result = (float) (*handler.env)->CallFloatMethod(handler.env, handler.activity, handler.method);
     }
     destroy_java_function_handler(&handler);
@@ -117,7 +116,7 @@ int android_get_file_descriptor(const char *filename, const char *mode)
 {
     int result = 0;
     java_function_handler handler;
-    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "openFileDescriptor", "(Lbvschaik/julius/JuliusSDL2Activity;Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "openFileDescriptor", "(Lbvschaik/julius/JuliusMainActivity;Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
         destroy_java_function_handler(&handler);
         return 0;
     }
@@ -147,7 +146,7 @@ int android_set_base_path(const char *path)
 int android_get_directory_contents_by_extension(char **list, int *count, const char *extension, int max_files)
 {
     java_function_handler handler;
-    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "getFilesByExtension", "(Lbvschaik/julius/JuliusSDL2Activity;Ljava/lang/String;)[Ljava/lang/String;", &handler)) {
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "getFilesByExtension", "(Lbvschaik/julius/JuliusMainActivity;Ljava/lang/String;)[Ljava/lang/String;", &handler)) {
         destroy_java_function_handler(&handler);
         return 0;
     }
@@ -173,7 +172,7 @@ int android_check_file_exists(const char *filename)
 {
     int result = 0;
     java_function_handler handler;
-    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "fileExists", "(Lbvschaik/julius/JuliusSDL2Activity;Ljava/lang/String;)Z", &handler)) {
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "fileExists", "(Lbvschaik/julius/JuliusMainActivity;Ljava/lang/String;)Z", &handler)) {
         destroy_java_function_handler(&handler);
         return 0;
     }
@@ -188,7 +187,7 @@ int android_remove_file(const char *filename)
 {
     int result = 0;
     java_function_handler handler;
-    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "deleteFile", "(Lbvschaik/julius/JuliusSDL2Activity;Ljava/lang/String;)Z", &handler)) {
+    if (!request_java_static_function_handler("bvschaik/julius/FileManager", "deleteFile", "(Lbvschaik/julius/JuliusMainActivity;Ljava/lang/String;)Z", &handler)) {
         destroy_java_function_handler(&handler);
         return 0;
     }

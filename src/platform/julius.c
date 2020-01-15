@@ -3,13 +3,13 @@
 #include "core/backtrace.h"
 #include "core/encoding.h"
 #include "core/file.h"
+#include "core/dir.h"
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/game.h"
 #include "input/mouse.h"
 #include "platform/arguments.h"
 #include "platform/cursor.h"
-#include "platform/file.h"
 #include "platform/keyboard_input.h"
 #include "platform/prefs.h"
 #include "platform/screen.h"
@@ -384,7 +384,7 @@ static const char* ask_for_data_dir(int again)
             SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
             "The selected folder is not a proper Caesar 3 folder.\n\n"
             "Please select a path directly from either the internal storage "
-            "or the SD card, otherwise the path will not be recognised.\n\n"
+            "or the SD card, otherwise the path may not be recognised.\n\n"
             "Press OK to select another folder or Cancel to exit.",
             SDL_arraysize(buttons), buttons, NULL
         };
@@ -416,7 +416,7 @@ static int pre_init(const char *custom_data_dir)
 {
     if (custom_data_dir) {
         SDL_Log("Loading game from %s", custom_data_dir);
-        if (!platform_set_base_path(custom_data_dir)) {
+        if (!dir_set_base_path(custom_data_dir)) {
             SDL_Log("%s: directory not found", custom_data_dir);
             return 0;
         }
@@ -431,7 +431,7 @@ static int pre_init(const char *custom_data_dir)
     #if SDL_VERSION_ATLEAST(2, 0, 1)
         char *base_path = SDL_GetBasePath();
         if (base_path) {
-            if (platform_set_base_path(base_path)) {
+            if (dir_set_base_path(base_path)) {
                 SDL_Log("Loading game from base path %s", base_path);
                 if (game_pre_init()) {
                     SDL_free(base_path);
@@ -446,7 +446,7 @@ static int pre_init(const char *custom_data_dir)
         const char *user_dir = pref_data_dir();
         if (user_dir) {
             SDL_Log("Loading game from user pref %s", user_dir);
-            if (platform_set_base_path(user_dir) && game_pre_init()) {
+            if (dir_set_base_path(user_dir) && game_pre_init()) {
                 return 1;
             }
         }
@@ -454,7 +454,7 @@ static int pre_init(const char *custom_data_dir)
         user_dir = ask_for_data_dir(0);
         while (user_dir) {
             SDL_Log("Loading game from user-selected dir %s", user_dir);
-            if (platform_set_base_path(user_dir) && game_pre_init()) {
+            if (dir_set_base_path(user_dir) && game_pre_init()) {
                 pref_save_data_dir(user_dir);
     #ifdef __ANDROID__
                 android_toast_message("C3 files found. Path saved.");
@@ -497,7 +497,7 @@ static void setup(const julius_args *args)
 
     if (!pre_init(args->data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
-        exit(2);
+        exit(1);
     }
 
     char title[100];
@@ -513,7 +513,7 @@ static void setup(const julius_args *args)
 
     if (!game_init()) {
         SDL_Log("Exiting: game init failed");
-        exit(3);
+        exit(2);
     }
 }
 

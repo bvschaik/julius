@@ -74,14 +74,13 @@ void sound_device_close(void)
 static Mix_Chunk *load_chunk(const char *filename)
 {
     if (filename[0]) {
-#ifdef __vita__
+#if defined(__vita__) || defined(__ANDROID__)
         FILE *fp = file_open(filename, "rb");
+        if(!fp) {
+            return NULL;
+        }
         SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
         return Mix_LoadWAV_RW(sdl_fp, 1);
-#elif ANDROID
-        char resolved_filename[FILE_NAME_MAX];
-        sprintf(resolved_filename, "%s/%s", android_get_c3_path(), filenames[i]);
-        return Mix_LoadWAV(resolved_filename);
 #else
         return Mix_LoadWAV(filename);
 #endif

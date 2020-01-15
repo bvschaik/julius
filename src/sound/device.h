@@ -1,9 +1,7 @@
 #ifndef SOUND_DEVICE_H
 #define SOUND_DEVICE_H
 
-#include "core/file.h"
-
-#define CHANNEL_FILENAME_MAX FILE_NAME_MAX
+#define CHANNEL_FILENAME_MAX 32
 
 void sound_device_open(void);
 void sound_device_close(void);
