@@ -27,3 +27,5 @@ You can then place some or all of the following files in the main folder where y
 * `"mp3/setup.mp3"` - Main menu music.
 
 For each file that is missing, Julius will play the original wav instead.
+
+The original mp3 files can be downloaded [here](https://bintray.com/bvschaik/caesar3-music/mp3).
