@@ -6,7 +6,7 @@
 #include "graphics/window.h"
 #include "sound/music.h"
 
-#define NUM_INTRO_VIDEOS 2
+#define NUM_INTRO_VIDEOS 3
 
 static struct {
     int width;
@@ -14,11 +14,11 @@ static struct {
     int current_video;
 } data;
 
-static const char *intro_videos[NUM_INTRO_VIDEOS] = { "smk/logo.smk", "smk/intro.smk" };
+static const char *intro_videos[NUM_INTRO_VIDEOS] = { "smk/logo.smk", "smk/intro.smk", "smk/credits.smk" };
 
 static int start_next_video(void)
 {
-    while(data.current_video < NUM_INTRO_VIDEOS) {
+    while (data.current_video < NUM_INTRO_VIDEOS) {
         if (video_start(intro_videos[data.current_video])) {
             video_size(&data.width, &data.height);
             video_init();
