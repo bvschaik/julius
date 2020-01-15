@@ -4,6 +4,7 @@
 #include "core/log.h"
 #include "core/string.h"
 #include "platform/android/android.h"
+#include "platform/vita/vita.h"
 
 #include <dirent.h>
 #include <stdio.h>
