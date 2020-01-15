@@ -4,20 +4,35 @@
 #include "graphics/screen.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
+#include "sound/music.h"
+
+#define NUM_INTRO_VIDEOS 2
 
 static struct {
     int width;
     int height;
+    int current_video;
 } data;
+
+static const char *intro_videos[NUM_INTRO_VIDEOS] = { "smk/logo.smk", "smk/intro.smk" };
+
+static int start_next_video(void)
+{
+    while(data.current_video < NUM_INTRO_VIDEOS) {
+        if (video_start(intro_videos[data.current_video])) {
+            video_size(&data.width, &data.height);
+            video_init();
+            ++data.current_video;
+            return 1;
+        }
+    }
+    return 0;
+}
 
 static int init(void)
 {
-    if (video_start("smk/intro.smk")) {
-        video_size(&data.width, &data.height);
-        video_init();
-        return 1;
-    }
-    return 0;
+    data.current_video = 0;
+    return start_next_video();
 }
 
 static void draw_background(void)
@@ -33,8 +48,12 @@ static void draw_foreground(void)
 static void handle_mouse(const mouse *m)
 {
     if (m->left.went_up || m->right.went_up || video_is_finished()) {
+        sound_music_stop();
         video_stop();
-        window_go_back();
+        if (!start_next_video()) {
+            sound_music_play_intro();
+            window_go_back();
+        }
     }
 }
 
