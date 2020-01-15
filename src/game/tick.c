@@ -99,7 +99,7 @@ static void advance_month(void)
     city_festival_update();
     tutorial_on_month_tick();
     if (setting_monthly_autosave()) {
-        game_file_write_saved_game("last.sav");
+        game_file_write_saved_game("autosave.sav");
     }
 }
 

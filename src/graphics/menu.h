@@ -5,6 +5,7 @@
 
 typedef struct {
     short y_start;
+    short text_group;
     short text_number;
     void (*left_click_handler)(int param);
     int parameter;

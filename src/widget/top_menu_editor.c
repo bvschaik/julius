@@ -38,31 +38,31 @@ static void menu_resets_invasions(int param);
 static void menu_empire_choose(int param);
 
 static menu_item menu_file[] = {
-    {0, 1, menu_file_new_map, 0},
-    {20, 2, menu_file_load_map, 0},
-    {40, 3, menu_file_save_map, 0},
-    {60, 4, menu_file_exit_editor, 0},
+    {0, 7, 1, menu_file_new_map, 0},
+    {20, 7, 2, menu_file_load_map, 0},
+    {40, 7, 3, menu_file_save_map, 0},
+    {60, 7, 4, menu_file_exit_editor, 0},
 };
 
 static menu_item menu_options[] = {
-    {0, 1, menu_options_display, 0},
-    {20, 2, menu_options_sound, 0},
-    {40, 3, menu_options_speed, 0},
+    {0, 2, 1, menu_options_display, 0},
+    {20, 2, 2, menu_options_sound, 0},
+    {40, 2, 3, menu_options_speed, 0},
 };
 
 static menu_item menu_help[] = {
-    {0, 1, menu_help_help, 0},
-    {20, 7, menu_help_about, 0},
+    {0, 3, 1, menu_help_help, 0},
+    {20, 3, 7, menu_help_about, 0},
 };
 
 static menu_item menu_resets[] = {
-    {0, 1, menu_resets_herds, 0},
-    {20, 2, menu_resets_fish, 0},
-    {40, 3, menu_resets_invasions, 0},
+    {0, 10, 1, menu_resets_herds, 0},
+    {20, 10, 2, menu_resets_fish, 0},
+    {40, 10, 3, menu_resets_invasions, 0},
 };
 
 static menu_item menu_empire[] = {
-    {0, 1, menu_empire_choose, 0},
+    {0, 149, 1, menu_empire_choose, 0},
 };
 
 static menu_bar_item menu[] = {
