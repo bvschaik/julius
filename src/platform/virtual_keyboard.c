@@ -8,7 +8,7 @@ static struct
     input_box input_location;
 } data;
 
-static int is_mouse_inside_input(const mouse* m)
+static int is_mouse_inside_input(const mouse *m)
 {
     return (m->x > data.input_location.x && m->x < (data.input_location.x + data.input_location.w) &&
             m->y > data.input_location.y && m->y < (data.input_location.y + data.input_location.h));

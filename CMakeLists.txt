@@ -12,7 +12,7 @@ endif()
 option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
 cmake_dependent_option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF "NOT MSVC" OFF)
 cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT MSVC; NOT VITA_BUILD" OFF)
-cmake_dependent_option(ANDROID_BUILD "Build for the Android environment." OFF "NOT VITA_BUILD; NOT SWITCH_BUILD" OFF)
+cmake_dependent_option(ANDROID_BUILD "Build for the Android environment." OFF "NOT MSVC; NOT VITA_BUILD; NOT SWITCH_BUILD" OFF)
 
 if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})

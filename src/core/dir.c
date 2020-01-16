@@ -71,7 +71,7 @@ static const char *filename_to_utf8(const wchar_t *str)
 static const char *filename_to_utf8(const wchar_t *str)
 {
     int size_needed = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
-    char* result = (char*)malloc(sizeof(char) * size_needed);
+    char *result = (char*)malloc(sizeof(char) * size_needed);
     WideCharToMultiByte(CP_UTF8, 0, str, -1, result, size_needed, NULL, NULL);
     return result;
 }
@@ -211,7 +211,7 @@ const char *dir_get_case_corrected_file(const char *filepath)
 #else
     static char corrected_filename[2 * FILE_NAME_MAX];
 
-    FILE* fp = file_open(filepath, "rb");
+    FILE *fp = file_open(filepath, "rb");
     if (fp) {
         file_close(fp);
         return filepath;
@@ -220,7 +220,7 @@ const char *dir_get_case_corrected_file(const char *filepath)
     strncpy(corrected_filename, filepath, 2 * FILE_NAME_MAX);
     corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
 
-    char* slash = strchr(corrected_filename, '/');
+    char *slash = strchr(corrected_filename, '/');
     if (!slash) {
         slash = strchr(corrected_filename, '\\');
     }

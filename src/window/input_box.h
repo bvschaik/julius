@@ -11,6 +11,6 @@ typedef struct
     int h;
 } input_box;
 
-void input_box_draw(const input_box* box);
+void input_box_draw(const input_box *box);
 
 #endif // WINDOW_INPUT_BOX_H

@@ -22,8 +22,8 @@
 
 FILE *file_open(const char *filename, const char *mode)
 {
-    char* resolved_path = vita_prepend_path(filename);
-    FILE* fp = fopen(resolved_path, mode);
+    char *resolved_path = vita_prepend_path(filename);
+    FILE *fp = fopen(resolved_path, mode);
     free(resolved_path);
     return fp;
 }
@@ -53,7 +53,7 @@ FILE *file_open(const char *filename, const char *mode)
 
 #elif defined(__ANDROID__)
 
-FILE* file_open(const char *filename, const char *mode)
+FILE *file_open(const char *filename, const char *mode)
 {
     int fd = android_get_file_descriptor(filename, mode);
     if (!fd) {
@@ -142,7 +142,7 @@ int file_exists(const char *filename)
 #endif
 }
 
-int file_remove(const char* filename)
+int file_remove(const char *filename)
 {
 #ifdef __ANDROID__
     return android_remove_file(filename);
