@@ -434,11 +434,6 @@ static void draw_foreground(void)
 static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (m_dialog->scrolled == SCROLL_DOWN) {
-        rich_text_scroll(1, 3);
-    } else if (m_dialog->scrolled == SCROLL_UP) {
-        rich_text_scroll(0, 3);
-    }
     if (data.show_video) {
         if (!image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
             image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0);

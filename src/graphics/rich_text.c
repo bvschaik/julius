@@ -9,11 +9,13 @@
 
 #define MAX_LINKS 50
 
+static void text_scroll(int is_down, int num_lines);
+
 static image_button image_button_scroll_up = {
-    0, 0, 39, 26, IB_SCROLL, 96, 8, rich_text_scroll, button_none, 0, 1, 1
+    0, 0, 39, 26, IB_SCROLL, 96, 8, text_scroll, button_none, 0, 1, 1
 };
 static image_button image_button_scroll_down = {
-    0, 0, 39, 26, IB_SCROLL, 96, 12, rich_text_scroll, button_none, 1, 1, 1
+    0, 0, 39, 26, IB_SCROLL, 96, 12, text_scroll, button_none, 1, 1, 1
 };
 
 static struct {
@@ -449,9 +451,9 @@ static int handle_scrollbar_dot(const mouse *m)
 int rich_text_handle_mouse(const mouse *m)
 {
     if (m->scrolled == SCROLL_DOWN) {
-        rich_text_scroll(1, 3);
+        text_scroll(1, 3);
     } else if (m->scrolled == SCROLL_UP) {
-        rich_text_scroll(0, 3);
+        text_scroll(0, 3);
     }
 
     if (image_buttons_handle_mouse(
@@ -468,7 +470,7 @@ int rich_text_handle_mouse(const mouse *m)
     return handle_scrollbar_dot(m);
 }
 
-void rich_text_scroll(int is_down, int num_lines)
+static void text_scroll(int is_down, int num_lines)
 {
     if (is_down) {
         data.scroll_position += num_lines;
