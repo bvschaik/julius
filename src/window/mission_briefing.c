@@ -57,16 +57,17 @@ static void draw_background(void)
     
     graphics_in_dialog();
     int text_id = 200 + scenario_campaign_mission();
-    
+    const lang_message *msg = lang_get_message(text_id);
+
     outer_panel_draw(16, 32, 38, 27);
-    text_draw(lang_get_message(text_id)->title.text, 32, 48, FONT_LARGE_BLACK, 0);
-    text_draw(lang_get_message(text_id)->subtitle.text, 32, 78, FONT_NORMAL_BLACK, 0);
+    text_draw(msg->title.text, 32, 48, FONT_LARGE_BLACK, 0);
+    text_draw(msg->subtitle.text, 32, 78, FONT_NORMAL_BLACK, 0);
 
     lang_text_draw(62, 7, 376, 433, FONT_NORMAL_BLACK);
     if (!data.is_review && game_mission_has_choice()) {
         lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK);
     }
-    
+
     inner_panel_draw(32, 96, 33, 5);
     lang_text_draw(62, 10, 48, 104, FONT_NORMAL_WHITE);
     int goal_index = 0;
@@ -117,14 +118,14 @@ static void draw_background(void)
         label_draw(16 + x, 32 + y, 31, 1);
         lang_text_draw(62, immediate_goal_text, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
     }
-    
+
     inner_panel_draw(32, 184, 33, 15);
-    
+
     rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
-    rich_text_init(lang_get_message(text_id)->content.text, 64, 184, 31, 15, 0);
+    rich_text_init(msg->content.text, 64, 184, 31, 15, 0);
 
     graphics_set_clip_rectangle(35, 187, 522, 234);
-    rich_text_draw(lang_get_message(text_id)->content.text, 48, 196, 496, 14, 0);
+    rich_text_draw(msg->content.text, 48, 196, 496, 14, 0);
     graphics_reset_clip_rectangle();
 
     graphics_reset_dialog();
