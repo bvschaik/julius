@@ -608,7 +608,8 @@ static int savegame_read_from_file(FILE *fp)
         } else {
             result = fread(piece->buf.data, 1, piece->buf.size, fp) == piece->buf.size;
         }
-        if (!result) {
+        // The last piece may be smaller than buf.size
+        if (!result && i != (savegame_data.num_pieces - 1)) {
             return 0;
         }
     }
