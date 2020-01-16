@@ -258,7 +258,7 @@ void map_orientation_update_buildings(void)
                     }
                 }
                 map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
-                map_terrain_add_gatehouse_roads(b->x, b->y, b->subtype.orientation);
+                map_terrain_add_gatehouse_roads(b->x, b->y, 0);
                 break;
             case BUILDING_TRIUMPHAL_ARCH:
                 if (b->subtype.orientation == 1) {
