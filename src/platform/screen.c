@@ -37,6 +37,23 @@ static int scale_pixels_to_logical(int pixel_value)
     return pixel_value * 100 / scale_percentage;
 }
 
+#ifdef __ANDROID__
+static void set_scale_for_screen(int pixel_width, int pixel_height)
+{
+    int scale = SDL_max((int)android_get_screen_scale(), 1);
+    scale = SDL_min(5, scale);
+    scale_percentage = scale * 100;
+    // Assure width is at least 640 and height is at least 480
+    float width_reference = scale_pixels_to_logical(pixel_width) / (float) MINIMUM.WIDTH;
+    float height_reference = scale_pixels_to_logical(pixel_height) / (float) MINIMUM.HEIGHT;
+    float minimum_reference = SDL_min(width_reference, height_reference);
+    if (minimum_reference < 1.0f) {
+        scale_percentage *= minimum_reference;
+    }
+    SDL_Log("Auto-setting scale to %i", scale_percentage);
+}
+#endif
+
 int platform_screen_create(const char *title, int display_scale_percentage)
 {
     scale_percentage = display_scale_percentage;
@@ -71,11 +88,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
         return 0;
     }
-#ifdef __ANDROID__
-    int scale = SDL_max((int) android_get_screen_scale(), 1);
-    scale = SDL_min(5, scale);
-    scale_percentage = scale * 100;
-#endif
+
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!SDL.renderer) {
         SDL_Log("Unable to create renderer, trying software renderer: %s", SDL_GetError());
@@ -112,6 +125,10 @@ void platform_screen_destroy(void)
 
 int platform_screen_resize(int pixel_width, int pixel_height)
 {
+#ifdef __ANDROID__
+    set_scale_for_screen(pixel_width, pixel_height);
+#endif
+
     int logical_width = scale_pixels_to_logical(pixel_width);
     int logical_height = scale_pixels_to_logical(pixel_height);
 
