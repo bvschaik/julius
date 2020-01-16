@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
-import androidx.documentfile.provider.DocumentFile;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.List;
 public class FileManager
 {
     private static Uri baseUri = Uri.EMPTY;
-    private static HashMap<Uri, List<FileInfo>> folderStructureCache = new HashMap<>();
+    static HashMap<Uri, List<FileInfo>> folderStructureCache = new HashMap<>();
 
     public static String getC3Path()
     {
@@ -26,6 +25,7 @@ public class FileManager
 
     public static int setBaseUri(String path)
     {
+        folderStructureCache.clear();
         if(baseUri != Uri.EMPTY) {
             return 1;
         }
@@ -98,7 +98,7 @@ public class FileManager
         }
         return currentDir;
     }
-    
+
     private static FileInfo getFile(JuliusMainActivity activity, String filename)
     {
         try {
@@ -126,6 +126,9 @@ public class FileManager
         }
 
         for (FileInfo file : getFolderFileList(activity, FileInfo.base)) {
+            if(file.isDirectory()) {
+                continue;
+            }
             String fileName = file.getName();
             int extCharPos = fileName.lastIndexOf('.');
             if (extCharPos == -1 && ext.isEmpty()) {
@@ -153,13 +156,12 @@ public class FileManager
             if(fileInfo == null) {
                 return false;
             }
-            DocumentFile file = fileInfo.generateDocumentFile(activity);
             folderStructureCache.clear();
-            return file.delete();
+            return DocumentsContract.deleteDocument(activity.getContentResolver(), fileInfo.getUri());
         } catch(Exception e) {
             Log.e("julius", "Error in deleteFile: " + e);
             return false;
-        }   
+        }
     }
 
     public static int openFileDescriptor(JuliusMainActivity activity, String filename, String mode)
@@ -191,9 +193,10 @@ public class FileManager
                     return 0;
                 } else {
                     folderStructureCache.remove(folderInfo.getUri());
-                    DocumentFile folder = folderInfo.generateDocumentFile(activity);
-                    DocumentFile file = folder.createFile("application/octet-stream", filepart[filepart.length - 1]);
-                    fileUri = file.getUri();
+                    fileUri = DocumentsContract.createDocument(activity.getContentResolver(), folderInfo.getUri(), "application/octet-stream", filepart[filepart.length - 1]);
+                    if(fileUri == null) {
+                        return 0;
+                    }
                 }
             } else {
                 fileUri = fileInfo.getUri();
@@ -211,7 +214,7 @@ public class FileManager
         static FileInfo base;
         private String documentId;
         private String name;
-        private DocumentFile file = null;
+        private Uri uri;
         private String mimetype;
 
         private FileInfo(String documentId, String name, String mimetype)
@@ -219,6 +222,7 @@ public class FileManager
             this.documentId = documentId;
             this.name = name;
             this.mimetype = mimetype;
+            this.uri = Uri.EMPTY;
         }
 
         public String getName()
@@ -231,24 +235,12 @@ public class FileManager
             return mimetype.equals(DocumentsContract.Document.MIME_TYPE_DIR);
         }
 
-        public Uri getUri()
+        Uri getUri()
         {
-            return DocumentsContract.buildDocumentUriUsingTree(baseUri, documentId);
-        }
-
-        private DocumentFile generateDocumentFile(Activity activity)
-        {
-            if(baseUri == null) {
-                return null;
+            if(baseUri != Uri.EMPTY && uri == Uri.EMPTY) {
+                uri = DocumentsContract.buildDocumentUriUsingTree(baseUri, documentId);
             }
-            if(file == null) {
-                if (isDirectory()) {
-                    file = DocumentFile.fromTreeUri(activity, getUri());
-                } else {
-                    file = DocumentFile.fromSingleUri(activity, getUri());
-                }
-            }
-            return file;
+            return uri;
         }
     }
 }

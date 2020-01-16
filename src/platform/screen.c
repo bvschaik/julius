@@ -40,8 +40,9 @@ static int scale_pixels_to_logical(int pixel_value)
 #ifdef __ANDROID__
 static void set_scale_for_screen(int pixel_width, int pixel_height)
 {
-    int scale = SDL_max((int)android_get_screen_scale(), 1);
-    scale = SDL_min(5, scale);
+    float scale = android_get_screen_scale();
+    scale = SDL_min(scale, 5.0f);
+    scale = SDL_max(0.5f, scale);
     scale_percentage = scale * 100;
     // Assure width is at least 640 and height is at least 480
     float width_reference = scale_pixels_to_logical(pixel_width) / (float) MINIMUM.WIDTH;

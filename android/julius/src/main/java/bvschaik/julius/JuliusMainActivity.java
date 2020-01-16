@@ -28,6 +28,13 @@ public class JuliusMainActivity extends SDLActivity
     }
 
     @Override
+    public void onStop()
+    {
+        super.onStop();
+        FileManager.folderStructureCache.clear();
+    }
+
+    @Override
     protected String[] getLibraries() {
         return new String[]{
             "SDL2",
@@ -42,6 +49,7 @@ public class JuliusMainActivity extends SDLActivity
         super.onPause();
         paused = true;
     }
+
     @Override
     protected void onResume()
     {

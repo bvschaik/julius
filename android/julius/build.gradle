@@ -75,7 +75,7 @@ android {
 
     defaultConfig {
         applicationId "bvschaik.julius"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
 
         versionName getVersion.versionName
@@ -123,6 +123,5 @@ repositories {
 }
 
 dependencies {
-    implementation "androidx.documentfile:documentfile:1.0.1"
     implementation project(':SDL2')
 }
