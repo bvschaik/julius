@@ -234,13 +234,22 @@ static void button_ok_cancel(int is_ok, int param2)
         return;
     }
     if (data.dialog_type == FILE_DIALOG_LOAD) {
-        keyboard_stop_capture();
         if (data.type == FILE_TYPE_SAVED_GAME) {
-            game_file_load_saved_game(filename);
-            window_city_show();
+            if (game_file_load_saved_game(filename)) {
+                keyboard_stop_capture();
+                window_city_show();
+            } else {
+                data.message_not_exist_start_time = time_get_millis();
+                return;
+            }
         } else if (data.type == FILE_TYPE_SCENARIO) {
-            game_file_editor_load_scenario(filename);
-            window_editor_map_show();
+            if (game_file_editor_load_scenario(filename)) {
+                keyboard_stop_capture();
+                window_editor_map_show();
+            } else {
+                data.message_not_exist_start_time = time_get_millis();
+                return;
+            }
         }
     } else if (data.dialog_type == FILE_DIALOG_SAVE) {
         keyboard_stop_capture();
