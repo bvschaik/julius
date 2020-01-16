@@ -195,6 +195,10 @@ void city_sentiment_update(void)
             if (city_data.population.population < 200) {
                 b->sentiment.house_happiness += 10;
             }
+            if (b->sentiment.house_happiness < 50) {
+                // Small town can't be upset
+                b->sentiment.house_happiness = 50
+            }
             continue;
         }
         // population >= 300
