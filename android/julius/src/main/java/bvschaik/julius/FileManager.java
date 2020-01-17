@@ -9,12 +9,11 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class FileManager
 {
     private static Uri baseUri = Uri.EMPTY;
-    static HashMap<Uri, List<FileInfo>> folderStructureCache = new HashMap<>();
+    static HashMap<Uri, HashMap<String, FileInfo>> folderStructureCache = new HashMap<>();
 
     public static String getC3Path()
     {
@@ -36,7 +35,7 @@ public class FileManager
     {
         try {
             baseUri = newUri;
-            FileInfo.base = new FileInfo(DocumentsContract.getTreeDocumentId(newUri), null, DocumentsContract.Document.MIME_TYPE_DIR);
+            FileInfo.base = new FileInfo(DocumentsContract.getTreeDocumentId(newUri), null, DocumentsContract.Document.MIME_TYPE_DIR, Uri.EMPTY);
             return 1;
         } catch(Exception e) {
             Log.e("julius", "Error in setBaseUri: " + e);
@@ -44,31 +43,31 @@ public class FileManager
         }
     }
 
-    private static List<FileInfo> getFolderFileList(Activity activity, FileInfo folder)
+    private static HashMap<String, FileInfo> getFolderContents(Activity activity, FileInfo folder)
     {
         if(!folder.isDirectory()) {
-            return new ArrayList<>();
+            return new HashMap<>();
         }
-        return getFolderFileList(activity, folder.getUri());
+        return getFolderContents(activity, folder.getUri());
     }
 
-    private static List<FileInfo> getFolderFileList(Activity activity, Uri folder)
+    private static HashMap<String, FileInfo> getFolderContents(Activity activity, Uri folder)
     {
-        List<FileInfo> result = folderStructureCache.get(folder);
+        HashMap<String, FileInfo> result = folderStructureCache.get(folder);
         if(result != null) {
             return result;
         }
-        result = new ArrayList<>();
+        result = new HashMap<>();
         Uri children = DocumentsContract.buildChildDocumentsUriUsingTree(folder, DocumentsContract.getDocumentId(folder));
         String[] columns = new String[] {
                 DocumentsContract.Document.COLUMN_DOCUMENT_ID,
                 DocumentsContract.Document.COLUMN_DISPLAY_NAME,
                 DocumentsContract.Document.COLUMN_MIME_TYPE
         };
-        Cursor cursor = activity.getContentResolver().query(children, columns,null,null,null);
+        Cursor cursor = activity.getContentResolver().query(children, columns, null, null, null);
         if(cursor != null) {
             while (cursor.moveToNext()) {
-                result.add(new FileInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2)));
+                result.put(cursor.getString(1).toLowerCase(), new FileInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2), folder));
             }
             cursor.close();
         }
@@ -78,15 +77,10 @@ public class FileManager
 
     private static FileInfo findFile(Activity activity, FileInfo folder, String fileName)
     {
-        for(FileInfo file : getFolderFileList(activity, folder)) {
-            if(fileName.equalsIgnoreCase(file.getName())) {
-                return file;
-            }
-        }
-        return null;
+        return getFolderContents(activity, folder).get(fileName.toLowerCase());
     }
 
-    private static FileInfo getPathFolder(Activity activity, String[] path)
+    private static FileInfo getFolderFromPath(Activity activity, String[] path)
     {
         FileInfo currentDir = FileInfo.base;
 
@@ -99,33 +93,33 @@ public class FileManager
         return currentDir;
     }
 
-    private static FileInfo getFile(JuliusMainActivity activity, String filename)
+    private static FileInfo getFileFromPath(JuliusMainActivity activity, String filePath)
     {
         try {
             if(baseUri == Uri.EMPTY) {
                 return null;
             }
-            String[] filepart = filename.split("[\\\\/]");
-            FileInfo folderInfo = getPathFolder(activity, filepart);
+            String[] filePart = filePath.split("[\\\\/]");
+            FileInfo folderInfo = getFolderFromPath(activity, filePart);
             if(folderInfo == null) {
                 return null;
             }
-            return findFile(activity, folderInfo, filepart[filepart.length - 1]);
+            return findFile(activity, folderInfo, filePart[filePart.length - 1]);
         } catch(Exception e) {
-            Log.e("julius", "Error in getFile: " + e);
+            Log.e("julius", "Error in getFileFromPath: " + e);
             return null;
         }
     }
 
     public static String[] getFilesByExtension(JuliusMainActivity activity, String ext)
     {
-        List<String> fileList = new ArrayList<>();
+        ArrayList<String> fileList = new ArrayList<>();
 
         if(baseUri == Uri.EMPTY) {
             return new String[0];
         }
 
-        for (FileInfo file : getFolderFileList(activity, FileInfo.base)) {
+        for (FileInfo file : getFolderContents(activity, FileInfo.base).values()) {
             if(file.isDirectory()) {
                 continue;
             }
@@ -144,19 +138,22 @@ public class FileManager
         return fileList.toArray(result);
     }
 
-    public static boolean fileExists(JuliusMainActivity activity, String filename)
+    public static boolean fileExists(JuliusMainActivity activity, String filePath)
     {
-        return getFile(activity, filename) != null;
+        return getFileFromPath(activity, filePath) != null;
     }
 
-    public static boolean deleteFile(JuliusMainActivity activity, String filename)
+    public static boolean deleteFile(JuliusMainActivity activity, String filePath)
     {
         try {
-            FileInfo fileInfo = getFile(activity, filename);
+            FileInfo fileInfo = getFileFromPath(activity, filePath);
             if(fileInfo == null) {
                 return false;
             }
-            folderStructureCache.clear();
+            HashMap<String, FileInfo> folderList = folderStructureCache.get(fileInfo.getParentUri());
+            if(folderList != null) {
+                folderList.remove(fileInfo.getName().toLowerCase());
+            }
             return DocumentsContract.deleteDocument(activity.getContentResolver(), fileInfo.getUri());
         } catch(Exception e) {
             Log.e("julius", "Error in deleteFile: " + e);
@@ -164,7 +161,7 @@ public class FileManager
         }
     }
 
-    public static int openFileDescriptor(JuliusMainActivity activity, String filename, String mode)
+    public static int openFileDescriptor(JuliusMainActivity activity, String filePath, String mode)
     {
         try {
             if(baseUri == Uri.EMPTY) {
@@ -181,28 +178,33 @@ public class FileManager
                 isWrite = true;
             }
 
-            String[] filepart = filename.split("[\\\\/]");
-            FileInfo folderInfo = getPathFolder(activity, filepart);
+            String[] fileParts = filePath.split("[\\\\/]");
+            String fileName = fileParts[fileParts.length - 1];
+            FileInfo folderInfo = getFolderFromPath(activity, fileParts);
             if(folderInfo == null) {
                 return 0;
             }
-            FileInfo fileInfo = findFile(activity, folderInfo, filepart[filepart.length - 1]);
+            FileInfo fileInfo = findFile(activity, folderInfo, fileName);
             Uri fileUri;
             if(fileInfo == null) {
                 if(!isWrite) {
                     return 0;
                 } else {
-                    folderStructureCache.remove(folderInfo.getUri());
-                    fileUri = DocumentsContract.createDocument(activity.getContentResolver(), folderInfo.getUri(), "application/octet-stream", filepart[filepart.length - 1]);
+                    fileUri = DocumentsContract.createDocument(activity.getContentResolver(), folderInfo.getUri(), "application/octet-stream", fileName);
                     if(fileUri == null) {
                         return 0;
+                    }
+                    HashMap<String, FileInfo> folderCache = folderStructureCache.get(folderInfo.getUri());
+                    if(folderCache != null) {
+                        fileInfo = new FileInfo(DocumentsContract.getDocumentId(fileUri), fileName, "application/octet-stream", folderInfo.getUri());
+                        folderCache.put(fileName.toLowerCase(), fileInfo);
                     }
                 }
             } else {
                 fileUri = fileInfo.getUri();
             }
             ParcelFileDescriptor pfd = activity.getContentResolver().openFileDescriptor(fileUri, internalMode);
-            return pfd.detachFd();
+            return (pfd == null) ? 0 : pfd.detachFd();
         } catch (Exception e) {
             Log.e("julius", "Error in openFileDescriptor: " + e);
             return 0;
@@ -214,14 +216,16 @@ public class FileManager
         static FileInfo base;
         private String documentId;
         private String name;
+        private String mimeType;
+        private Uri parent;
         private Uri uri;
-        private String mimetype;
 
-        private FileInfo(String documentId, String name, String mimetype)
+        private FileInfo(String documentId, String name, String mimeType, Uri parent)
         {
             this.documentId = documentId;
             this.name = name;
-            this.mimetype = mimetype;
+            this.mimeType = mimeType;
+            this.parent = parent;
             this.uri = Uri.EMPTY;
         }
 
@@ -232,7 +236,7 @@ public class FileManager
 
         public boolean isDirectory()
         {
-            return mimetype.equals(DocumentsContract.Document.MIME_TYPE_DIR);
+            return mimeType.equals(DocumentsContract.Document.MIME_TYPE_DIR);
         }
 
         Uri getUri()
@@ -241,6 +245,11 @@ public class FileManager
                 uri = DocumentsContract.buildDocumentUriUsingTree(baseUri, documentId);
             }
             return uri;
+        }
+
+        Uri getParentUri()
+        {
+            return parent;
         }
     }
 }
