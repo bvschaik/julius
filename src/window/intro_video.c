@@ -19,10 +19,9 @@ static const char *intro_videos[NUM_INTRO_VIDEOS] = { "smk/logo.smk", "smk/intro
 static int start_next_video(void)
 {
     while (data.current_video < NUM_INTRO_VIDEOS) {
-        if (video_start(intro_videos[data.current_video])) {
+        if (video_start(intro_videos[data.current_video++])) {
             video_size(&data.width, &data.height);
             video_init();
-            ++data.current_video;
             return 1;
         }
     }
