@@ -37,6 +37,8 @@ static void change_game_speed(int is_down)
         } else {
             setting_increase_game_speed();
         }
+        city_warning_clear_all();
+        city_warning_game_speed();
     }
 }
 
@@ -75,6 +77,9 @@ static void toggle_pause(void)
     if (window_is(WINDOW_CITY)) {
         game_state_toggle_paused();
         city_warning_clear_all();
+        if (!game_state_is_paused()) {
+            city_warning_game_speed();
+        }
     }
 }
 

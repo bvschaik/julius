@@ -67,5 +67,6 @@ const uint8_t *city_warning_get(int id);
 
 void city_warning_clear_all(void);
 void city_warning_clear_outdated(void);
+void city_warning_game_speed(void);
 
 #endif // CITY_WARNING_H

@@ -5,6 +5,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include <stdio.h>
 
 #define MAX_WARNINGS 5
 #define MAX_TEXT 100
@@ -80,4 +81,17 @@ void city_warning_clear_outdated(void)
             warnings[i].in_use = 0;
         }
     }
+}
+
+void city_warning_game_speed(void)
+{
+    const uint8_t *langText = lang_get_string(45, 2);
+    struct warning *w = new_warning();
+    if (!w) {
+        return;
+    }
+    w->in_use = 1;
+    // 15 seconds is a long time to display the game speed
+    w->time = time_get_millis() - TIMEOUT_MS * 0.9;
+    sprintf((char*)w->text, "%s %d%%", langText, setting_game_speed());
 }
