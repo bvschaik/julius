@@ -426,7 +426,10 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
     if (img->num_animation_sprites
         && map_property_is_draw_tile(grid_offset)
         && b->type == BUILDING_HIPPODROME) {
-        image_draw_masked(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90, draw_building_as_deleted(b) ? COLOR_MASK_RED : 0);
+        image_draw_masked(image_id + 1,
+            x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90,
+            draw_building_as_deleted(b) ? COLOR_MASK_RED : 0
+        );
     }
 }
 
@@ -437,7 +440,7 @@ static void deletion_draw_terrain_top(int x, int y, int grid_offset)
     }
 }
 
-static void deletion_draw_remaining(int x, int y, int grid_offset)
+static void deletion_draw_figures_animations(int x, int y, int grid_offset)
 {
     if (map_property_is_deleted(grid_offset) && !map_building_at(grid_offset)) {
         image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
@@ -447,7 +450,11 @@ static void deletion_draw_remaining(int x, int y, int grid_offset)
     }
     draw_figures(x, y, grid_offset);
     draw_animation(x, y, grid_offset);
+}
 
+static void deletion_draw_remaining(int x, int y, int grid_offset)
+{
+    draw_elevated_figures(x, y, grid_offset);
     draw_hippodrome_ornaments(x, y, grid_offset);
 }
 
@@ -477,8 +484,8 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         );
     } else {
         city_view_foreach_map_tile(deletion_draw_terrain_top);
+        city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
-        city_view_foreach_map_tile(draw_elevated_figures);
         city_view_foreach_map_tile(clear_deleted);
     }
 }
