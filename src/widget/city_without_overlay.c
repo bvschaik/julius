@@ -448,7 +448,6 @@ static void deletion_draw_remaining(int x, int y, int grid_offset)
     draw_figures(x, y, grid_offset);
     draw_animation(x, y, grid_offset);
 
-    draw_elevated_figures(x, y, grid_offset);
     draw_hippodrome_ornaments(x, y, grid_offset);
 }
 
@@ -479,6 +478,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
     } else {
         city_view_foreach_map_tile(deletion_draw_terrain_top);
         city_view_foreach_map_tile(deletion_draw_remaining);
+        city_view_foreach_map_tile(draw_elevated_figures);
         city_view_foreach_map_tile(clear_deleted);
     }
 }
