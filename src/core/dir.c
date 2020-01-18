@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -36,6 +37,14 @@ static const char *filename_to_utf8(const wchar_t *str)
 #define fs_dir_read readdir
 #define dir_entry_name(d) ((d)->d_name)
 #define dir_entry_close_name(n)
+#endif
+
+#ifndef S_ISLNK
+#define S_ISLNK(m) 0
+#endif
+
+#ifndef S_ISSOCK
+#define S_ISSOCK(m) 0
 #endif
 
 #ifdef __vita__
@@ -77,8 +86,15 @@ const dir_listing *dir_find_files_with_extension(const char *extension)
         return &listing;
     }
     fs_dir_entry *entry;
+    struct stat file_info;
     while ((entry = fs_dir_read(d)) && listing.num_files < DIR_MAX_FILES) {
         const char *name = dir_entry_name(entry);
+        if (stat(name, &file_info) != -1) {
+            int m = file_info.st_mode;
+            if (S_ISDIR(m) || S_ISCHR(m) || S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m)) {
+                continue;
+            }
+        }
         if (file_has_extension(name, extension)) {
             strncpy(listing.files[listing.num_files], name, FILE_NAME_MAX);
             listing.files[listing.num_files][FILE_NAME_MAX - 1] = 0;

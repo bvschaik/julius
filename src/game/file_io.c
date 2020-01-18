@@ -514,7 +514,7 @@ int game_file_io_read_scenario(const char *filename)
     }
     for (int i = 0; i < scenario_data.num_pieces; i++) {
         if (fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp) != scenario_data.pieces[i].buf.size) {
-            log_error("Unable to save scenario", filename, 0);
+            log_error("Unable to load scenario", filename, 0);
             file_close(fp);
             return 0;
         }
@@ -598,7 +598,7 @@ static int write_compressed_chunk(FILE *fp, const void *buffer, int bytes_to_wri
     return 1;
 }
 
-static void savegame_read_from_file(FILE *fp)
+static int savegame_read_from_file(FILE *fp)
 {
     for (int i = 0; i < savegame_data.num_pieces; i++) {
         file_piece *piece = &savegame_data.pieces[i];
@@ -608,10 +608,12 @@ static void savegame_read_from_file(FILE *fp)
         } else {
             result = fread(piece->buf.data, 1, piece->buf.size, fp) == piece->buf.size;
         }
-        if (!result) {
-            return;
+        // The last piece may be smaller than buf.size
+        if (!result && i != (savegame_data.num_pieces - 1)) {
+            return 0;
         }
     }
+    return 1;
 }
 
 static void savegame_write_to_file(FILE *fp)
@@ -633,14 +635,18 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     log_info("Loading saved game", filename, 0);
     FILE *fp = file_open(dir_get_case_corrected_file(filename), "rb");
     if (!fp) {
+        log_error("Unable to load game", 0, 0);
         return 0;
     }
     if (offset) {
         fseek(fp, offset, SEEK_SET);
     }
-    savegame_read_from_file(fp);
+    int result = savegame_read_from_file(fp);
     file_close(fp);
-
+    if (!result) {
+        log_error("Unable to load game", 0, 0);
+        return 0;
+    }
     savegame_load_from_state(&savegame_data.state);
     return 1;
 }
