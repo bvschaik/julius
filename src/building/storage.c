@@ -1,5 +1,6 @@
 #include "storage.h"
 
+#include "city/resource.h"
 #include "building/building.h"
 
 #include <string.h>
@@ -70,6 +71,12 @@ const building_storage *building_storage_get(int storage_id)
 void building_storage_toggle_empty_all(int storage_id)
 {
     data.storages[storage_id].storage.empty_all = 1 - data.storages[storage_id].storage.empty_all;
+    const resource_list *list = city_resource_get_available();
+    for (int i = 0; i < list->size; i++) {
+        int resource = list->items[i];
+       	data.storages[storage_id].storage.resource_state[resource] = BUILDING_STORAGE_STATE_NOT_ACCEPTING; 
+    }	
+    
 }
 
 void building_storage_cycle_resource_state(int storage_id, resource_type resource_id)

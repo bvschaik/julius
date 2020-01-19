@@ -11,3 +11,4 @@ res/julius.icns
 /CMakeSettings.json
 out/
 ext/SDL2/*/
+*~
