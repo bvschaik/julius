@@ -8,6 +8,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "game/file.h"
+#include "game/settings.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -32,7 +33,7 @@ static void button_start_scenario(int param1, int param2);
 
 static image_button image_buttons[] = {
     {276, 210, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 8, button_scroll, button_none, 0, 1, 1},
-    {276, 440, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, button_scroll, button_none, 1, 1, 1},
+    {276, 408, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, button_scroll, button_none, 1, 1, 1},
     {600, 440, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start_scenario, button_none, 1, 0, 1},
 };
 
@@ -66,7 +67,11 @@ static struct {
 static void init(void)
 {
     scenario_set_custom(2);
-    string_copy(lang_get_string(9, 5), data.player_name, 32);
+    string_copy(setting_player_name(), data.player_name, 32);
+    if (string_length(data.player_name) == 0) {
+        string_copy(lang_get_string(9, 5), data.player_name, 32);
+    }
+    keyboard_start_capture(data.player_name, 32, 1, 216, FONT_NORMAL_WHITE);
     data.scenarios = dir_find_files_with_extension("map");
     data.scroll_position = 0;
     data.focus_button_id = 0;
@@ -88,6 +93,7 @@ static void draw_scenario_list(void)
         strcpy(file, data.scenarios->files[i + data.scroll_position]);
         encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
         file_remove_extension(displayable_file);
+        text_ellipsize(displayable_file, font, 240);
         text_draw(displayable_file, 24, 220 + 16 * i, font, 0);
     }
 }
@@ -111,18 +117,24 @@ static void draw_scrollbar_dot(void)
 static void draw_scenario_governor_name(void)
 {
     inner_panel_draw(16, 434, 16, 2);
+    text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
     text_draw(data.player_name, 24, 444, FONT_NORMAL_WHITE, 0);
     text_draw_cursor(24, 444, keyboard_is_insert());
 }
 
 static void draw_scenario_info(void)
 {
+    const int scenario_info_x = 335;
+    const int scenario_info_width = 300;
+    const int scenario_criteria_x = scenario_info_x + scenario_info_width - 205;
+
     image_draw(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
 
-    text_draw_centered(data.selected_scenario_display, 335, 25, 260, FONT_LARGE_BLACK, 0);
-    text_draw_centered(scenario_brief_description(), 335, 60, 260, FONT_NORMAL_WHITE, 0);
-    lang_text_draw_year(scenario_property_start_year(), 410, 90, FONT_LARGE_BLACK);
-    lang_text_draw_centered(44, 77 + scenario_property_climate(), 335, 150, 260, FONT_NORMAL_BLACK);
+    text_ellipsize(data.selected_scenario_display, FONT_LARGE_BLACK, scenario_info_width);
+    text_draw_centered(data.selected_scenario_display, scenario_info_x, 25, scenario_info_width, FONT_LARGE_BLACK, 0);
+    text_draw_centered(scenario_brief_description(), scenario_info_x, 60, scenario_info_width, FONT_NORMAL_WHITE, 0);
+    lang_text_draw_year(scenario_property_start_year(), scenario_criteria_x, 90, FONT_LARGE_BLACK);
+    lang_text_draw_centered(44, 77 + scenario_property_climate(), scenario_info_x, 150, scenario_info_width, FONT_NORMAL_BLACK);
 
     // map size
     int text_id;
@@ -134,7 +146,7 @@ static void draw_scenario_info(void)
         case 120: text_id = 125; break;
         default: text_id = 126; break;
     }
-    lang_text_draw_centered(44, text_id, 335, 170, 260, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(44, text_id, scenario_info_x, 170, scenario_info_width, FONT_NORMAL_BLACK);
 
     // military
     int num_invasions = scenario_invasion_count();
@@ -149,46 +161,46 @@ static void draw_scenario_info(void)
     } else {
         text_id = 116;
     }
-    lang_text_draw_centered(44, text_id, 335, 190, 260, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(44, text_id, scenario_info_x, 190, scenario_info_width, FONT_NORMAL_BLACK);
 
-    lang_text_draw_centered(32, 11 + scenario_property_player_rank(), 335, 210, 260, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(32, 11 + scenario_property_player_rank(), scenario_info_x, 210, scenario_info_width, FONT_NORMAL_BLACK);
     if (scenario_is_open_play()) {
         if (scenario_open_play_id() < 12) {
-            lang_text_draw_multiline(145, scenario_open_play_id(), 345, 270, 260, FONT_NORMAL_BLACK);
+            lang_text_draw_multiline(145, scenario_open_play_id(), scenario_info_x + 10, 270, scenario_info_width - 10, FONT_NORMAL_BLACK);
         }
     } else {
-        lang_text_draw_centered(44, 127, 335, 262, 260, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(44, 127, scenario_info_x, 262, scenario_info_width, FONT_NORMAL_BLACK);
         int width;
         if (scenario_criteria_culture_enabled()) {
-            width = text_draw_number(scenario_criteria_culture(), '@', " ", 410, 290, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 129, 410 + width, 290, FONT_NORMAL_BLACK);
+            width = text_draw_number(scenario_criteria_culture(), '@', " ", scenario_criteria_x, 290, FONT_NORMAL_BLACK);
+            lang_text_draw(44, 129, scenario_criteria_x + width, 290, FONT_NORMAL_BLACK);
         }
         if (scenario_criteria_prosperity_enabled()) {
-            width = text_draw_number(scenario_criteria_prosperity(), '@', " ", 410, 306, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 130, 410 + width, 306, FONT_NORMAL_BLACK);
+            width = text_draw_number(scenario_criteria_prosperity(), '@', " ", scenario_criteria_x, 306, FONT_NORMAL_BLACK);
+            lang_text_draw(44, 130, scenario_criteria_x + width, 306, FONT_NORMAL_BLACK);
         }
         if (scenario_criteria_peace_enabled()) {
-            width = text_draw_number(scenario_criteria_peace(), '@', " ", 410, 322, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 131, 410 + width, 322, FONT_NORMAL_BLACK);
+            width = text_draw_number(scenario_criteria_peace(), '@', " ", scenario_criteria_x, 322, FONT_NORMAL_BLACK);
+            lang_text_draw(44, 131, scenario_criteria_x + width, 322, FONT_NORMAL_BLACK);
         }
         if (scenario_criteria_favor_enabled()) {
-            width = text_draw_number(scenario_criteria_favor(), '@', " ", 410, 338, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 132, 410 + width, 338, FONT_NORMAL_BLACK);
+            width = text_draw_number(scenario_criteria_favor(), '@', " ", scenario_criteria_x, 338, FONT_NORMAL_BLACK);
+            lang_text_draw(44, 132, scenario_criteria_x + width, 338, FONT_NORMAL_BLACK);
         }
         if (scenario_criteria_population_enabled()) {
-            width = text_draw_number(scenario_criteria_population(), '@', " ", 410, 354, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 133, 410 + width, 354, FONT_NORMAL_BLACK);
+            width = text_draw_number(scenario_criteria_population(), '@', " ", scenario_criteria_x, 354, FONT_NORMAL_BLACK);
+            lang_text_draw(44, 133, scenario_criteria_x + width, 354, FONT_NORMAL_BLACK);
         }
         if (scenario_criteria_time_limit_enabled()) {
-            width = text_draw_number(scenario_criteria_time_limit_years(), '@', " ", 410, 370, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 134, 410 + width, 370, FONT_NORMAL_BLACK);
+            width = text_draw_number(scenario_criteria_time_limit_years(), '@', " ", scenario_criteria_x, 370, FONT_NORMAL_BLACK);
+            lang_text_draw(44, 134, scenario_criteria_x + width, 370, FONT_NORMAL_BLACK);
         }
         if (scenario_criteria_survival_enabled()) {
-            width = text_draw_number(scenario_criteria_survival_years(), '@', " ", 410, 386, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 135, 410 + width, 386, FONT_NORMAL_BLACK);
+            width = text_draw_number(scenario_criteria_survival_years(), '@', " ", scenario_criteria_x, 386, FONT_NORMAL_BLACK);
+            lang_text_draw(44, 135, scenario_criteria_x + width, 386, FONT_NORMAL_BLACK);
         }
     }
-    lang_text_draw_centered(44, 136, 335, 446, 260, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(44, 136, scenario_info_x, 446, scenario_info_width, FONT_NORMAL_BLACK);
 }
 
 static void draw_background(void)
@@ -245,6 +257,7 @@ static void handle_mouse(const mouse *m)
         return;
     }
     if (m->right.went_up) {
+        keyboard_stop_capture();
         window_go_back();
         return;
     }
@@ -252,7 +265,12 @@ static void handle_mouse(const mouse *m)
     if (image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 3, 0)) {
         return;
     }
-    generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 13, &data.focus_button_id);
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 13, &data.focus_button_id)) {
+        return;
+    }
+    if (keyboard_input_is_accepted()) {
+        button_start_scenario(0, 0);
+    }
 }
 
 static void button_select_item(int index, int param2)
@@ -288,9 +306,12 @@ static void button_scroll(int is_down, int num_lines)
 
 static void button_start_scenario(int param1, int param2)
 {
-    sound_speech_stop();
-    game_file_start_scenario(data.selected_scenario_filename);
-    window_city_show();
+    setting_set_player_name(data.player_name);
+    if (game_file_start_scenario(data.selected_scenario_filename)) {
+        sound_speech_stop();
+        keyboard_stop_capture();
+        window_city_show();
+    }
 }
 
 void window_cck_selection_show(void)
