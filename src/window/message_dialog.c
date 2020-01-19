@@ -415,12 +415,11 @@ static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 
-    // Close the message on right click
+    // Close the message on a right click
     if (m->right.went_up) {
 	    button_close(0, 0);
 	    return;
     }
-
     if (m_dialog->scrolled == SCROLL_DOWN) {
         rich_text_scroll(1, 3);
     } else if (m_dialog->scrolled == SCROLL_UP) {

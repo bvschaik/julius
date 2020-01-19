@@ -185,13 +185,10 @@ static void handle_mouse_scrollbar(const mouse *m)
 static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-
-    // Close the list on right click
     if (m->right.went_up) {
         window_city_show();
         return;
     }
-
     if (m_dialog->scrolled == SCROLL_DOWN) {
         button_scroll(1, 3);
     } else if (m_dialog->scrolled == SCROLL_UP) {
