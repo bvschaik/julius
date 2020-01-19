@@ -149,8 +149,10 @@ static void button_cancel(int param1, int param2)
     setting_reset_sound(SOUND_SPEECH, data.original_speech.enabled, data.original_speech.volume);
     setting_reset_sound(SOUND_CITY, data.original_city.enabled, data.original_city.volume);
     if (data.original_music.enabled) {
-        sound_music_reset();
-        sound_music_update();
+        if (setting_sound_is_enabled(SOUND_MUSIC) != data.original_music.enabled) {
+            sound_music_reset();
+            sound_music_update();
+        }
     } else {
         sound_music_stop();
     }
