@@ -104,7 +104,7 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.is_down) {
+    if (m->right.went_up) {
         window_editor_attributes_show();
     } else {
         generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 47, &focus_button_id);

@@ -227,16 +227,11 @@ static int get_message_image_id(const lang_message *msg)
     }
 }
 
-static void draw_background_normal(void)
+static void draw_title(const lang_message *msg)
 {
-    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
-    const lang_message *msg = lang_get_message(data.text_id);
-    data.x = msg->x;
-    data.y = msg->y;
-    int header_offset = msg->type == TYPE_MANUAL ? 48 : 32;
-    data.x_text = data.x + 16;
-    outer_panel_draw(data.x, data.y, msg->width_blocks, msg->height_blocks);
-
+    if (!msg->title.text) {
+        return;
+    }
     int image_id = get_message_image_id(msg);
     const image *img = image_id ? image_get(image_id) : 0;
     // title
@@ -261,7 +256,10 @@ static void draw_background_normal(void)
             data.y_text = data.y + image_y + img->height + 8;
         }
     }
-    // subtitle
+}
+
+static void draw_subtitle(const lang_message *msg)
+{
     if (msg->subtitle.x && msg->subtitle.text) {
         int width = 16 * msg->width_blocks - 16 - msg->subtitle.x;
         int height = text_draw_multiline(msg->subtitle.text,
@@ -270,6 +268,14 @@ static void draw_background_normal(void)
             data.y_text = data.y + msg->subtitle.y + height;
         }
     }
+}
+
+static void draw_content(const lang_message *msg)
+{
+    if (!msg->content.text) {
+        return;
+    }
+    int header_offset = msg->type == TYPE_MANUAL ? 48 : 32;
     data.text_height_blocks = msg->height_blocks - 1 - (header_offset + data.y_text - data.y) / 16;
     data.text_width_blocks = rich_text_init(msg->content.text,
         data.x_text, data.y_text, msg->width_blocks - 4, data.text_height_blocks, 1);
@@ -289,6 +295,20 @@ static void draw_background_normal(void)
     }
     graphics_reset_clip_rectangle();
     rich_text_draw_scrollbar_dot();
+}
+
+static void draw_background_normal(void)
+{
+    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
+    const lang_message *msg = lang_get_message(data.text_id);
+    data.x = msg->x;
+    data.y = msg->y;
+    data.x_text = data.x + 16;
+    outer_panel_draw(data.x, data.y, msg->width_blocks, msg->height_blocks);
+
+    draw_title(msg);
+    draw_subtitle(msg);
+    draw_content(msg);
 }
 
 static void draw_background_video(void)

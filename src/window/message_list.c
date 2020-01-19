@@ -103,9 +103,9 @@ static void draw_messages(int total_messages)
     int index = city_message_scroll_position();
     for (int i = 0; i < max; i++, index++) {
         const city_message *msg = city_message_get(index);
-        int message_id = city_message_get_text_id(msg->message_type);
+        const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_type));
         int image_offset = 0;
-        if (lang_get_message(message_id)->message_type == MESSAGE_TYPE_DISASTER) {
+        if (lang_msg->message_type == MESSAGE_TYPE_DISASTER) {
             image_offset = 2;
         }
         if (msg->is_read) {
@@ -123,7 +123,7 @@ static void draw_messages(int total_messages)
         lang_text_draw_year(msg->year,
             data.x_text + 42 + width, data.y_text + 8 + 20 * i, font);
         text_draw(
-            lang_get_message(message_id)->title.text,
+            lang_msg->title.text,
             data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
     }
     if (city_message_can_scroll()) {

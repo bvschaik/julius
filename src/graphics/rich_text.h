@@ -88,18 +88,11 @@ void rich_text_draw_scrollbar(void);
 void rich_text_draw_scrollbar_dot(void);
 
 /**
- * Handles mouse interaction with the scrollbar
+ * Handles mouse interaction with the scrollbar and scroll wheel
  * @param m Mouse state
  * @return True if any interaction was handled
  */
 int rich_text_handle_mouse(const mouse *m);
-
-/**
- * Scrolls the text
- * @param is_down Whether to scroll down or up
- * @param num_lines Number of lines to scroll
- */
-void rich_text_scroll(int is_down, int num_lines);
 
 /**
  * Gets scroll position in absolute number of lines
