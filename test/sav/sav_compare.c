@@ -356,6 +356,10 @@ static int is_exception_image_grid(int global_offset)
     if ((v1 == 734 && is_between(v2, 743, 770)) || (v2 == 734 && is_between(v1, 743, 770))) {
         return 1;
     }
+    // road to granary: in julius the roads lead into the granary
+    if (both_between(v1, v2, 591, 657)) {
+        return 1;
+    }
     return 0;
 }
 
