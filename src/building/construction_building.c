@@ -335,6 +335,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_GRANARY:
             b->storage_id = building_storage_create();
             add_building(b, image_group(GROUP_BUILDING_GRANARY));
+            map_tiles_update_area_roads(b->x, b->y, 5);
             break;
         case BUILDING_MARKET:
             add_building(b, image_group(GROUP_BUILDING_MARKET));

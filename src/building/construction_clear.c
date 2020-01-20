@@ -136,13 +136,13 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
             }
         }
     }
-    int radius;
-    if (x_max - x_min <= y_max - y_min) {
-        radius = y_max - y_min + 3;
-    } else {
-        radius = x_max - x_min + 3;
-    }
     if (!measure_only) {
+        int radius;
+        if (x_max - x_min <= y_max - y_min) {
+            radius = y_max - y_min + 3;
+        } else {
+            radius = x_max - x_min + 3;
+        }
         map_tiles_update_region_empty_land(x_min, y_min, x_max, y_max);
         map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
         map_tiles_update_region_rubble(x_min, y_min, x_max, y_max);
