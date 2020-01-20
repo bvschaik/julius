@@ -85,6 +85,13 @@ void building_storage_cycle_resource_state(int storage_id, resource_type resourc
     data.storages[storage_id].storage.resource_state[resource_id] = state;
 }
 
+void building_storage_accept_none(int storage_id)
+{
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        data.storages[storage_id].storage.resource_state[r] = BUILDING_STORAGE_STATE_NOT_ACCEPTING;
+    }
+}
+
 void building_storage_save_state(buffer *buf)
 {
     for (int i = 0; i < MAX_STORAGES; i++) {
