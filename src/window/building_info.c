@@ -568,15 +568,25 @@ static void handle_mouse(const mouse *m)
 
 static void get_tooltip(tooltip_context *c)
 {
-    int text_id = 0;
+    int text_id = 0, group_id = 0;
     if (focus_image_button_id) {
         text_id = focus_image_button_id;
     } else if (context.type == BUILDING_INFO_LEGION) {
         text_id = window_building_get_legion_info_tooltip_text(&context);
+    } else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
+        int btype = building_get(context.building_id)->type;
+        if (btype == BUILDING_GRANARY) {
+            window_building_get_tooltip_granary_orders(&group_id, &text_id);
+        } else if (btype == BUILDING_WAREHOUSE) {
+            window_building_get_tooltip_warehouse_orders(&group_id, &text_id);
+        }
     }
-    if (text_id) {
+    if (text_id || group_id) {
         c->type = TOOLTIP_BUTTON;
         c->text_id = text_id;
+        if (group_id) {
+            c->text_group = group_id;
+        }
     }
 }
 

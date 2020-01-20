@@ -62,6 +62,12 @@ const building_storage *building_storage_get(int storage_id);
 void building_storage_cycle_resource_state(int storage_id, resource_type resource_id);
 
 /**
+ * Sets all goods to 'not accepting'
+ * @param storage_id Storage id
+ */
+void building_storage_accept_none(int storage_id);
+
+/**
  * Toggles the empty all flag for the storage
  * @param storage_id Storage id
  */
