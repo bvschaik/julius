@@ -33,7 +33,8 @@ enum {
     INFO_NONE = 0,
     INFO_FUNDS = 1,
     INFO_POPULATION = 2,
-    INFO_DATE = 3
+    INFO_DATE = 3,
+    INFO_GAME_SPEED = 4
 };
 
 static void menu_file_new_game(int param);
@@ -109,16 +110,18 @@ static struct {
     int offset_funds;
     int offset_population;
     int offset_date;
+    int offset_game_speed;
 
     int open_sub_menu;
     int focus_menu_id;
     int focus_sub_menu_id;
-} data = {0, 0, 0, 0, 0, 0};
+} data = {0, 0, 0, 0, 0, 0, 0};
 
 static struct {
     int population;
     int treasury;
     int month;
+    int game_speed;
 } drawn;
 
 static void clear_state(void)
@@ -217,7 +220,8 @@ void widget_top_menu_draw(int force)
 {
     if (!force && drawn.treasury == city_finance_treasury() &&
         drawn.population == city_population() &&
-        drawn.month == game_time_month()) {
+        drawn.month == game_time_month() &&
+        (!data.offset_game_speed || drawn.game_speed == setting_game_speed())) {
         return;
     }
 
@@ -234,6 +238,7 @@ void widget_top_menu_draw(int force)
         data.offset_funds = 338;
         data.offset_population = 453;
         data.offset_date = 547;
+        data.offset_game_speed = 0;
 
         int width = lang_text_draw_colored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasure_color);
         text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
@@ -247,6 +252,7 @@ void widget_top_menu_draw(int force)
         data.offset_funds = 338;
         data.offset_population = 458;
         data.offset_date = 652;
+        data.offset_game_speed = 0;
 
         int width = lang_text_draw_colored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasure_color);
         text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
@@ -260,6 +266,7 @@ void widget_top_menu_draw(int force)
         data.offset_funds = 493;
         data.offset_population = 637;
         data.offset_date = 852;
+        data.offset_game_speed = 0;
 
         int width = lang_text_draw_colored(6, 0, 495, 5, FONT_NORMAL_PLAIN, treasure_color);
         text_draw_number_colored(treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
@@ -269,10 +276,18 @@ void widget_top_menu_draw(int force)
 
         width = lang_text_draw_colored(25, game_time_month(), 850, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
         lang_text_draw_year_colored(game_time_year(), 850 + width, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
+
+    }
+    if (s_width >= 1150) {
+        int width = lang_text_get_width(45, 2, FONT_NORMAL_GREEN);
+        data.offset_game_speed = s_width - width - 65;
+        lang_text_draw(45, 2, data.offset_game_speed, 5, FONT_NORMAL_GREEN);
+        text_draw_percentage(setting_game_speed(), data.offset_game_speed + width, 5, FONT_NORMAL_GREEN);
     }
     drawn.treasury = treasury;
     drawn.population = city_population();
     drawn.month = game_time_month();
+    drawn.game_speed = setting_game_speed();
 }
 
 static int handle_mouse_submenu(const mouse *m)
@@ -310,6 +325,9 @@ static int get_info_id(int mouse_x, int mouse_y)
     if (mouse_x > data.offset_date && mouse_x < data.offset_date + 128) {
         return INFO_DATE;
     }
+    if (data.offset_game_speed && mouse_x > data.offset_game_speed && mouse_x < screen_width() - 15) {
+        return INFO_GAME_SPEED;
+    }
     return INFO_NONE;
 }
 
@@ -324,6 +342,8 @@ static int handle_right_click(int type)
         window_message_dialog_show(16, window_city_draw_all);
     } else if (type == INFO_DATE) {
         window_message_dialog_show(17, window_city_draw_all);
+    } else if (type == INFO_GAME_SPEED) {
+        menu_options_speed(0);
     }
     return 1;
 }
@@ -361,6 +381,10 @@ int widget_top_menu_get_tooltip_text(tooltip_context *c)
     }
     int button_id = get_info_id(c->mouse_x, c->mouse_y);
     if (button_id) {
+        if (button_id == INFO_GAME_SPEED) {
+            c->text_group = 2;
+            return 3;
+        }
         return 59 + button_id;
     }
     return 0;
@@ -480,7 +504,6 @@ static void menu_help_about(int param)
     window_go_back();
     window_message_dialog_show(MESSAGE_DIALOG_ABOUT, window_city_draw_all);
 }
-
 
 static void menu_advisors_go_to(int advisor)
 {
