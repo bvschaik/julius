@@ -413,7 +413,7 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
                 tiles[i] = 1;
             }
         } else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
-            building* b = building_get(map_building_at(offset));
+            building *b = building_get(map_building_at(offset));
             if (b->type == BUILDING_GRANARY) {
                 tiles[i]  = (offset == b->grid_offset + map_grid_delta(1, 0)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(0, 1)) ? 1 : 0;
