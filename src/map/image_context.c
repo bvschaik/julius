@@ -4,6 +4,7 @@
 #include "city/view.h"
 #include "map/building.h"
 #include "map/elevation.h"
+#include "map/grid.h"
 #include "map/property.h"
 #include "map/terrain.h"
 
@@ -410,6 +411,14 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
             if (b->type == BUILDING_GATEHOUSE &&
                 b->subtype.orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
                 tiles[i] = 1;
+            }
+        } else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
+            building* b = building_get(map_building_at(offset));
+            if (b->type == BUILDING_GRANARY) {
+                tiles[i]  = (offset == b->grid_offset + map_grid_delta(1, 0)) ? 1 : 0;
+                tiles[i] |= (offset == b->grid_offset + map_grid_delta(0, 1)) ? 1 : 0;
+                tiles[i] |= (offset == b->grid_offset + map_grid_delta(2, 1)) ? 1 : 0;
+                tiles[i] |= (offset == b->grid_offset + map_grid_delta(1, 2)) ? 1 : 0;
             }
         }
     }
