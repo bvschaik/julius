@@ -312,8 +312,7 @@ static int is_in_minimap(const mouse *m)
 
 int widget_minimap_handle_mouse(const mouse *m)
 {
-    int is_mouse_down = m->left.went_down || m->left.is_down || m->right.went_down || m->right.is_down;
-    if (is_mouse_down && is_in_minimap(m)) {
+    if ((m->left.went_down || m->right.went_down) && is_in_minimap(m)) {
         int grid_offset = get_mouse_grid_offset(m);
         if (grid_offset > 0) {
             city_view_go_to_grid_offset(grid_offset);
