@@ -44,7 +44,7 @@ static image_button image_button_advisor[] = {
     {-4, 0, 24, 24, IB_NORMAL, 199, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
 };
 static generic_button generic_button_open_trade[] = {
-    {50, 68, 400, 20, button_open_trade, button_none, 0, 0}
+    {50, 61, 400, 26, button_open_trade, button_none, 0, 0}
 };
 
 static struct {
@@ -186,10 +186,10 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             draw_trade_resource(resource, trade_max, x_offset + index + 110, y_offset + 33);
             index += 32;
         }
-        button_border_draw(x_offset + 50, y_offset + 68, 400, 20, data.selected_button);
         index = lang_text_draw_amount(8, 0, city->cost_to_open,
                                            x_offset + 60, y_offset + 73, FONT_NORMAL_GREEN);
         lang_text_draw(47, 6, x_offset + index + 60, y_offset + 73, FONT_NORMAL_GREEN);
+        image_draw(8072 - city->is_sea_trade, x_offset + 400, y_offset + 65 + 2 * city->is_sea_trade);
     }
 }
 
@@ -387,7 +387,7 @@ static void draw_panel_buttons(const empire_city *city)
     image_buttons_draw(data.x_max - 44, data.y_max - 100, image_button_advisor, 1);
     if (city) {
         if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
-            button_border_draw((data.x_min + data.x_max - 500) / 2 + 50, data.y_max - 40, 400, 20, data.selected_button);
+            button_border_draw((data.x_min + data.x_max - 500) / 2 + 50, data.y_max - 44, 400, 26, data.selected_button);
         }
     }
 }
@@ -484,7 +484,7 @@ static void handle_mouse(const mouse *m)
             const empire_city *city = empire_city_get(data.selected_city);
             if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
                 generic_buttons_handle_mouse(
-                    m, (data.x_min + data.x_max - 500) / 2, data.y_max - 108,
+                    m, (data.x_min + data.x_max - 500) / 2, data.y_max - 105,
                         generic_button_open_trade, 1, &data.selected_button);
             }
         }
@@ -548,6 +548,30 @@ static int get_tooltip_resource(tooltip_context *c)
     return 0;
 }
 
+static void get_tooltip_trade_route_type(tooltip_context *c)
+{
+    int selected_object = empire_selected_object();
+    if (!selected_object || empire_object_get(selected_object - 1)->type != EMPIRE_OBJECT_CITY) {
+        return;
+    }
+
+    data.selected_city = empire_city_get_for_object(selected_object - 1);
+    const empire_city *city = empire_city_get(data.selected_city);
+    if (city->type != EMPIRE_CITY_TRADE || city->is_open) {
+        return;
+    }
+
+    int x_offset = (data.x_min + data.x_max + 300) / 2;
+    int y_offset = data.y_max - 41;
+    int y_offset_max = y_offset + 22 - 2 * city->is_sea_trade;
+    if (c->mouse_x >= x_offset && c->mouse_x < x_offset + 32 &&
+        c->mouse_y >= y_offset && c->mouse_y < y_offset_max) {
+        c->type = TOOLTIP_BUTTON;
+        c->text_group = 44;
+        c->text_id = 28 + city->is_sea_trade;
+    }
+}
+
 static void get_tooltip(tooltip_context *c)
 {
     int resource = get_tooltip_resource(c);
@@ -561,6 +585,8 @@ static void get_tooltip(tooltip_context *c)
             case 2: c->text_id = 2; break;
             case 3: c->text_id = 69; break;
         }
+    } else {
+        get_tooltip_trade_route_type(c);
     }
 }
 
