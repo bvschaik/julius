@@ -24,13 +24,13 @@ static void button_delete(int param1, int param2);
 static void button_save(int param1, int param2);
 
 static generic_button buttons[] = {
-    {30, 152, 90, 177, GB_IMMEDIATE, button_year, button_none},
-    {330, 152, 410, 177, GB_IMMEDIATE, button_amount, button_none},
-    {430, 152, 530, 177, GB_IMMEDIATE, button_resource, button_none},
-    {70, 190, 210, 215, GB_IMMEDIATE, button_deadline_years, button_none},
-    {400, 190, 480, 215, GB_IMMEDIATE, button_favor, button_none},
-    {10, 234, 260, 259, GB_IMMEDIATE, button_delete, button_none},
-    {300, 234, 400, 259, GB_IMMEDIATE, button_save, button_none}
+    {30, 152, 60, 25, button_year, button_none},
+    {330, 152, 80, 25, button_amount, button_none},
+    {430, 152, 100, 25, button_resource, button_none},
+    {70, 190, 140, 25, button_deadline_years, button_none},
+    {400, 190, 80, 25, button_favor, button_none},
+    {10, 234, 250, 25, button_delete, button_none},
+    {300, 234, 100, 25, button_save, button_none}
 };
 
 static struct {

@@ -23,12 +23,12 @@ static void arrow_button_effects(int is_down, int param2);
 static void arrow_button_city(int is_down, int param2);
 
 static generic_button buttons[] = {
-    {64, 162, 288, 182, GB_IMMEDIATE, button_toggle, button_none, SOUND_MUSIC, 0},
-    {64, 192, 288, 212, GB_IMMEDIATE, button_toggle, button_none, SOUND_SPEECH, 0},
-    {64, 222, 288, 242, GB_IMMEDIATE, button_toggle, button_none, SOUND_EFFECTS, 0},
-    {64, 252, 288, 272, GB_IMMEDIATE, button_toggle, button_none, SOUND_CITY, 0},
-    {144, 296, 336, 316, GB_IMMEDIATE, button_ok, button_none, 1, 0},
-    {144, 296, 336, 346, GB_IMMEDIATE, button_cancel, button_none, 1, 0},
+    {64, 162, 224, 20, button_toggle, button_none, SOUND_MUSIC, 0},
+    {64, 192, 224, 20, button_toggle, button_none, SOUND_SPEECH, 0},
+    {64, 222, 224, 20, button_toggle, button_none, SOUND_EFFECTS, 0},
+    {64, 252, 224, 20, button_toggle, button_none, SOUND_CITY, 0},
+    {144, 296, 192, 20, button_ok, button_none, 1, 0},
+    {144, 326, 192, 20, button_cancel, button_none, 1, 0},
 };
 
 static arrow_button arrow_buttons[] = {

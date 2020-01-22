@@ -29,14 +29,14 @@ static image_button image_buttons_bottom[] = {
 };
 
 static generic_button buttons_gods_size[] = {
-    {70, 96, 150, 186, GB_IMMEDIATE, button_god, button_none, 0, 0},
-    {170, 96, 250, 186, GB_IMMEDIATE, button_god, button_none, 1, 0},
-    {270, 96, 350, 186, GB_IMMEDIATE, button_god, button_none, 2, 0},
-    {370, 96, 450, 186, GB_IMMEDIATE, button_god, button_none, 3, 0},
-    {470, 96, 550, 186, GB_IMMEDIATE, button_god, button_none, 4, 0},
-    {102, 216, 532, 242, GB_IMMEDIATE, button_size, button_none, 1, 0},
-    {102, 246, 532, 272, GB_IMMEDIATE, button_size, button_none, 2, 0},
-    {102, 276, 532, 302, GB_IMMEDIATE, button_size, button_none, 3, 0},
+    {70, 96, 80, 90, button_god, button_none, 0, 0},
+    {170, 96, 80, 90, button_god, button_none, 1, 0},
+    {270, 96, 80, 90, button_god, button_none, 2, 0},
+    {370, 96, 80, 90, button_god, button_none, 3, 0},
+    {470, 96, 80, 90, button_god, button_none, 4, 0},
+    {102, 216, 430, 26, button_size, button_none, 1, 0},
+    {102, 246, 430, 26, button_size, button_none, 2, 0},
+    {102, 276, 430, 26, button_size, button_none, 3, 0},
 };
 
 static int focus_button_id;

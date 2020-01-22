@@ -34,21 +34,21 @@ static image_button image_buttons[] = {
 };
 
 static generic_button file_buttons[] = {
-    {28, 220, 280, 236, GB_IMMEDIATE, button_select_item, button_none, 0, 0},
-    {28, 236, 280, 252, GB_IMMEDIATE, button_select_item, button_none, 1, 0},
-    {28, 252, 280, 268, GB_IMMEDIATE, button_select_item, button_none, 2, 0},
-    {28, 268, 280, 284, GB_IMMEDIATE, button_select_item, button_none, 3, 0},
-    {28, 284, 280, 300, GB_IMMEDIATE, button_select_item, button_none, 4, 0},
-    {28, 300, 280, 316, GB_IMMEDIATE, button_select_item, button_none, 5, 0},
-    {28, 316, 280, 332, GB_IMMEDIATE, button_select_item, button_none, 6, 0},
-    {28, 332, 280, 348, GB_IMMEDIATE, button_select_item, button_none, 7, 0},
-    {28, 348, 280, 364, GB_IMMEDIATE, button_select_item, button_none, 8, 0},
-    {28, 364, 280, 380, GB_IMMEDIATE, button_select_item, button_none, 9, 0},
-    {28, 380, 280, 396, GB_IMMEDIATE, button_select_item, button_none, 10, 0},
-    {28, 396, 280, 412, GB_IMMEDIATE, button_select_item, button_none, 11, 0},
-    {28, 412, 280, 428, GB_IMMEDIATE, button_select_item, button_none, 12, 0},
-    {28, 428, 280, 444, GB_IMMEDIATE, button_select_item, button_none, 13, 0},
-    {28, 444, 280, 460, GB_IMMEDIATE, button_select_item, button_none, 14, 0},
+    {18, 220, 252, 16, button_select_item, button_none, 0, 0},
+    {18, 236, 252, 16, button_select_item, button_none, 1, 0},
+    {18, 252, 252, 16, button_select_item, button_none, 2, 0},
+    {18, 268, 252, 16, button_select_item, button_none, 3, 0},
+    {18, 284, 252, 16, button_select_item, button_none, 4, 0},
+    {18, 300, 252, 16, button_select_item, button_none, 5, 0},
+    {18, 316, 252, 16, button_select_item, button_none, 6, 0},
+    {18, 332, 252, 16, button_select_item, button_none, 7, 0},
+    {18, 348, 252, 16, button_select_item, button_none, 8, 0},
+    {18, 364, 252, 16, button_select_item, button_none, 9, 0},
+    {18, 380, 252, 16, button_select_item, button_none, 10, 0},
+    {18, 396, 252, 16, button_select_item, button_none, 11, 0},
+    {18, 412, 252, 16, button_select_item, button_none, 12, 0},
+    {18, 428, 252, 16, button_select_item, button_none, 13, 0},
+    {18, 444, 252, 16, button_select_item, button_none, 14, 0},
 };
 
 static struct {

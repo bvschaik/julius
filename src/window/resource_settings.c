@@ -36,9 +36,9 @@ static arrow_button resource_arrow_buttons[] = {
 };
 
 static generic_button resource_generic_buttons[] = {
-    {98, 250, 530, 280, GB_IMMEDIATE, button_toggle_industry, button_none, 0, 0},
-    {98, 212, 530, 242, GB_IMMEDIATE, button_toggle_trade, button_none, 0, 0},
-    {98, 288, 530, 338, GB_IMMEDIATE, button_toggle_stockpile, button_none, 0, 0},
+    {98, 250, 432, 30, button_toggle_industry, button_none, 0, 0},
+    {98, 212, 432, 30, button_toggle_trade, button_none, 0, 0},
+    {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
 };
 
 static struct {

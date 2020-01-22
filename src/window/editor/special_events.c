@@ -29,19 +29,19 @@ static void button_iron_mine_toggle(int param1, int param2);
 static void button_clay_pit_toggle(int param1, int param2);
 
 static generic_button buttons[] = {
-    {216, 106, 316, 130, GB_IMMEDIATE, button_earthquake_severity, button_none},
-    {326, 106, 476, 130, GB_IMMEDIATE, button_earthquake_year, button_none},
-    {216, 136, 316, 160, GB_IMMEDIATE, button_gladiator_toggle,button_none},
-    {326, 136, 476, 160, GB_IMMEDIATE, button_gladiator_year,button_none},
-    {216, 166, 316, 190, GB_IMMEDIATE, button_emperor_toggle,button_none},
-    {326, 166, 476, 190, GB_IMMEDIATE, button_emperor_year, button_none},
-    {216, 196, 316, 220, GB_IMMEDIATE, button_sea_trade_toggle, button_none},
-    {216, 226, 316, 250, GB_IMMEDIATE, button_land_trade_toggle, button_none},
-    {216, 256, 316, 280, GB_IMMEDIATE, button_raise_wages_toggle, button_none},
-    {216, 286, 316, 310, GB_IMMEDIATE, button_lower_wages_toggle, button_none},
-    {216, 316, 316, 340, GB_IMMEDIATE, button_contamination_toggle, button_none},
-    {216, 346, 316, 370, GB_IMMEDIATE, button_iron_mine_toggle, button_none},
-    {216, 376, 316, 400, GB_IMMEDIATE, button_clay_pit_toggle, button_none},
+    {216, 106, 100, 24, button_earthquake_severity, button_none},
+    {326, 106, 150, 24, button_earthquake_year, button_none},
+    {216, 136, 100, 24, button_gladiator_toggle,button_none},
+    {326, 136, 150, 24, button_gladiator_year,button_none},
+    {216, 166, 100, 24, button_emperor_toggle,button_none},
+    {326, 166, 150, 24, button_emperor_year, button_none},
+    {216, 196, 100, 24, button_sea_trade_toggle, button_none},
+    {216, 226, 100, 24, button_land_trade_toggle, button_none},
+    {216, 256, 100, 24, button_raise_wages_toggle, button_none},
+    {216, 286, 100, 24, button_lower_wages_toggle, button_none},
+    {216, 316, 100, 24, button_contamination_toggle, button_none},
+    {216, 346, 100, 24, button_iron_mine_toggle, button_none},
+    {216, 376, 100, 24, button_clay_pit_toggle, button_none},
 };
 
 static int focus_button_id;

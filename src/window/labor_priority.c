@@ -19,16 +19,16 @@ static struct {
 } data;
 
 static generic_button priority_buttons[] = {
-    {180, 256, 460, 281, GB_IMMEDIATE, button_set_priority, button_none, 0, 0}, // no prio
-    {178, 221, 205, 248, GB_IMMEDIATE, button_set_priority, button_none, 1, 0},
-    {210, 221, 237, 248, GB_IMMEDIATE, button_set_priority, button_none, 2, 0},
-    {242, 221, 269, 248, GB_IMMEDIATE, button_set_priority, button_none, 3, 0},
-    {274, 221, 301, 248, GB_IMMEDIATE, button_set_priority, button_none, 4, 0},
-    {306, 221, 333, 248, GB_IMMEDIATE, button_set_priority, button_none, 5, 0},
-    {338, 221, 365, 248, GB_IMMEDIATE, button_set_priority, button_none, 6, 0},
-    {370, 221, 397, 248, GB_IMMEDIATE, button_set_priority, button_none, 7, 0},
-    {402, 221, 429, 248, GB_IMMEDIATE, button_set_priority, button_none, 8, 0},
-    {434, 221, 461, 248, GB_IMMEDIATE, button_set_priority, button_none, 9, 0},
+    {180, 256, 280, 25, button_set_priority, button_none, 0, 0}, // no prio
+    {178, 221, 27, 27, button_set_priority, button_none, 1, 0},
+    {210, 221, 27, 27, button_set_priority, button_none, 2, 0},
+    {242, 221, 27, 27, button_set_priority, button_none, 3, 0},
+    {274, 221, 27, 27, button_set_priority, button_none, 4, 0},
+    {306, 221, 27, 27, button_set_priority, button_none, 5, 0},
+    {338, 221, 27, 27, button_set_priority, button_none, 6, 0},
+    {370, 221, 27, 27, button_set_priority, button_none, 7, 0},
+    {402, 221, 27, 27, button_set_priority, button_none, 8, 0},
+    {434, 221, 27, 27, button_set_priority, button_none, 9, 0},
 };
 
 static void init(int category)

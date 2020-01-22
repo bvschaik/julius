@@ -22,36 +22,36 @@ static void granary_orders(int param1, int param2);
 static void warehouse_orders(int index, int param2);
 
 static generic_button go_to_orders_button[] = {
-    {0, 0, 304, 20, GB_IMMEDIATE, go_to_orders, button_none, 0, 0}
+    {0, 0, 304, 20, go_to_orders, button_none, 0, 0}
 };
 
 static generic_button orders_resource_buttons[] = {
-    {0, 0, 210, 22, GB_IMMEDIATE, toggle_resource_state, button_none, 1, 0},
-    {0, 22, 210, 44, GB_IMMEDIATE, toggle_resource_state, button_none, 2, 0},
-    {0, 44, 210, 66, GB_IMMEDIATE, toggle_resource_state, button_none, 3, 0},
-    {0, 66, 210, 88, GB_IMMEDIATE, toggle_resource_state, button_none, 4, 0},
-    {0, 88, 210, 110, GB_IMMEDIATE, toggle_resource_state, button_none, 5, 0},
-    {0, 110, 210, 132, GB_IMMEDIATE, toggle_resource_state, button_none, 6, 0},
-    {0, 132, 210, 154, GB_IMMEDIATE, toggle_resource_state, button_none, 7, 0},
-    {0, 154, 210, 176, GB_IMMEDIATE, toggle_resource_state, button_none, 8, 0},
-    {0, 176, 210, 198, GB_IMMEDIATE, toggle_resource_state, button_none, 9, 0},
-    {0, 198, 210, 220, GB_IMMEDIATE, toggle_resource_state, button_none, 10, 0},
-    {0, 220, 210, 242, GB_IMMEDIATE, toggle_resource_state, button_none, 11, 0},
-    {0, 242, 210, 264, GB_IMMEDIATE, toggle_resource_state, button_none, 12, 0},                                                   
-    {0, 264, 210, 286, GB_IMMEDIATE, toggle_resource_state, button_none, 13, 0},
-    {0, 286, 210, 308, GB_IMMEDIATE, toggle_resource_state, button_none, 14, 0},
-    {0, 308, 210, 330, GB_IMMEDIATE, toggle_resource_state, button_none, 15, 0},
+    {0, 0, 210, 22, toggle_resource_state, button_none, 1, 0},
+    {0, 22, 210, 22, toggle_resource_state, button_none, 2, 0},
+    {0, 44, 210, 22, toggle_resource_state, button_none, 3, 0},
+    {0, 66, 210, 22, toggle_resource_state, button_none, 4, 0},
+    {0, 88, 210, 22, toggle_resource_state, button_none, 5, 0},
+    {0, 110, 210, 22, toggle_resource_state, button_none, 6, 0},
+    {0, 132, 210, 22, toggle_resource_state, button_none, 7, 0},
+    {0, 154, 210, 22, toggle_resource_state, button_none, 8, 0},
+    {0, 176, 210, 22, toggle_resource_state, button_none, 9, 0},
+    {0, 198, 210, 22, toggle_resource_state, button_none, 10, 0},
+    {0, 220, 210, 22, toggle_resource_state, button_none, 11, 0},
+    {0, 242, 210, 22, toggle_resource_state, button_none, 12, 0},                                                   
+    {0, 264, 210, 22, toggle_resource_state, button_none, 13, 0},
+    {0, 286, 210, 22, toggle_resource_state, button_none, 14, 0},
+    {0, 308, 210, 22, toggle_resource_state, button_none, 15, 0},
 };
 
 static generic_button granary_order_buttons[] = {
-    {0, 0, 304, 20, GB_IMMEDIATE, granary_orders, button_none, 0, 0},
-    {314, 0, 334, 20, GB_IMMEDIATE, granary_orders, button_none, 1, 0},
+    {0, 0, 304, 20, granary_orders, button_none, 0, 0},
+    {314, 0, 20, 20, granary_orders, button_none, 1, 0},
 };
 
 static generic_button warehouse_order_buttons[] = {
-    {0, 0, 304, 20, GB_IMMEDIATE, warehouse_orders, button_none, 0, 0},
-    {0, -22, 304, -2, GB_IMMEDIATE, warehouse_orders, button_none, 1, 0},
-    {314, 0, 334, 20, GB_IMMEDIATE, warehouse_orders, button_none, 2, 0},
+    {0, 0, 304, 20, warehouse_orders, button_none, 0, 0},
+    {0, -22, 304, 20, warehouse_orders, button_none, 1, 0},
+    {314, 0, 20, 20, warehouse_orders, button_none, 2, 0},
 };
 
 static struct {

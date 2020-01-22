@@ -18,15 +18,15 @@ static void arrow_button_wages(int is_down, int param2);
 static void button_priority(int category, int param2);
 
 static generic_button category_buttons[] = {
-    {40, 77, 600, 99, GB_IMMEDIATE, button_priority, button_none, 0, 0},
-    {40, 102, 600, 124, GB_IMMEDIATE, button_priority, button_none, 1, 0},
-    {40, 127, 600, 149, GB_IMMEDIATE, button_priority, button_none, 2, 0},
-    {40, 152, 600, 174, GB_IMMEDIATE, button_priority, button_none, 3, 0},
-    {40, 177, 600, 199, GB_IMMEDIATE, button_priority, button_none, 4, 0},
-    {40, 202, 600, 224, GB_IMMEDIATE, button_priority, button_none, 5, 0},
-    {40, 227, 600, 249, GB_IMMEDIATE, button_priority, button_none, 6, 0},
-    {40, 252, 600, 274, GB_IMMEDIATE, button_priority, button_none, 7, 0},
-    {40, 277, 600, 299, GB_IMMEDIATE, button_priority, button_none, 8, 0},
+    {40, 77, 560, 22, button_priority, button_none, 0, 0},
+    {40, 102, 560, 22, button_priority, button_none, 1, 0},
+    {40, 127, 560, 22, button_priority, button_none, 2, 0},
+    {40, 152, 560, 22, button_priority, button_none, 3, 0},
+    {40, 177, 560, 22, button_priority, button_none, 4, 0},
+    {40, 202, 560, 22, button_priority, button_none, 5, 0},
+    {40, 227, 560, 22, button_priority, button_none, 6, 0},
+    {40, 252, 560, 22, button_priority, button_none, 7, 0},
+    {40, 277, 560, 22, button_priority, button_none, 8, 0},
 };
 
 static arrow_button wage_buttons[] = {

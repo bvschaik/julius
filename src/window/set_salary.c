@@ -20,18 +20,18 @@ static void button_cancel(int param1, int param2);
 static void button_set_salary(int rank, int param2);
 
 static generic_button buttons[] = {
-    {240, 395, 400, 415, GB_IMMEDIATE, button_cancel, button_none, 0, 0},
-    {144, 85, 496, 105, GB_IMMEDIATE, button_set_salary, button_none, 0, 0},
-    {144, 105, 496, 125, GB_IMMEDIATE, button_set_salary, button_none, 1, 0},
-    {144, 125, 496, 145, GB_IMMEDIATE, button_set_salary, button_none, 2, 0},
-    {144, 145, 496, 165, GB_IMMEDIATE, button_set_salary, button_none, 3, 0},
-    {144, 165, 496, 185, GB_IMMEDIATE, button_set_salary, button_none, 4, 0},
-    {144, 185, 496, 205, GB_IMMEDIATE, button_set_salary, button_none, 5, 0},
-    {144, 205, 496, 225, GB_IMMEDIATE, button_set_salary, button_none, 6, 0},
-    {144, 225, 496, 245, GB_IMMEDIATE, button_set_salary, button_none, 7, 0},
-    {144, 245, 496, 265, GB_IMMEDIATE, button_set_salary, button_none, 8, 0},
-    {144, 265, 496, 285, GB_IMMEDIATE, button_set_salary, button_none, 9, 0},
-    {144, 285, 496, 305, GB_IMMEDIATE, button_set_salary, button_none, 10, 0},
+    {240, 395, 160, 20, button_cancel, button_none, 0, 0},
+    {144, 85, 352, 20, button_set_salary, button_none, 0, 0},
+    {144, 105, 352, 20, button_set_salary, button_none, 1, 0},
+    {144, 125, 352, 20, button_set_salary, button_none, 2, 0},
+    {144, 145, 352, 20, button_set_salary, button_none, 3, 0},
+    {144, 165, 352, 20, button_set_salary, button_none, 4, 0},
+    {144, 185, 352, 20, button_set_salary, button_none, 5, 0},
+    {144, 205, 352, 20, button_set_salary, button_none, 6, 0},
+    {144, 225, 352, 20, button_set_salary, button_none, 7, 0},
+    {144, 245, 352, 20, button_set_salary, button_none, 8, 0},
+    {144, 265, 352, 20, button_set_salary, button_none, 9, 0},
+    {144, 285, 352, 20, button_set_salary, button_none, 10, 0},
 };
 
 static int focus_button_id;

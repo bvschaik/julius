@@ -19,7 +19,7 @@
 static void button_hold_festival(int param1, int param2);
 
 static generic_button hold_festival_button[] = {
-    {102, 280, 402, 300, GB_IMMEDIATE, button_hold_festival, button_none, 0, 0},
+    {102, 280, 300, 20, button_hold_festival, button_none, 0, 0},
 };
 
 static int focus_button_id;

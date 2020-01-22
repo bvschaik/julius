@@ -36,14 +36,14 @@ static void button_gift_to_emperor(int param1, int param2);
 static void button_request(int index, int param2);
 
 static generic_button imperial_buttons[] = {
-    {320, 367, 570, 387, GB_IMMEDIATE, button_donate_to_city, button_none, 0, 0},
-    {70, 393, 570, 413, GB_IMMEDIATE, button_set_salary, button_none, 0, 0},
-    {320, 341, 570, 361, GB_IMMEDIATE, button_gift_to_emperor, button_none, 0, 0},
-    {38, 96, 598, 136, GB_IMMEDIATE, button_request, button_none, 0, 0},
-    {38, 138, 598, 178, GB_IMMEDIATE, button_request, button_none, 1, 0},
-    {38, 180, 598, 220, GB_IMMEDIATE, button_request, button_none, 2, 0},
-    {38, 222, 598, 262, GB_IMMEDIATE, button_request, button_none, 3, 0},
-    {38, 264, 598, 304, GB_IMMEDIATE, button_request, button_none, 4, 0},
+    {320, 367, 250, 20, button_donate_to_city, button_none, 0, 0},
+    {70, 393, 500, 20, button_set_salary, button_none, 0, 0},
+    {320, 341, 250, 20, button_gift_to_emperor, button_none, 0, 0},
+    {38, 96, 560, 40, button_request, button_none, 0, 0},
+    {38, 138, 560, 40, button_request, button_none, 1, 0},
+    {38, 180, 560, 40, button_request, button_none, 2, 0},
+    {38, 222, 560, 40, button_request, button_none, 3, 0},
+    {38, 264, 560, 40, button_request, button_none, 4, 0},
 };
 
 static int focus_button_id;

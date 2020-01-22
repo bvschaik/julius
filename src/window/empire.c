@@ -44,7 +44,7 @@ static image_button image_button_advisor[] = {
     {-4, 0, 24, 24, IB_NORMAL, 199, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
 };
 static generic_button generic_button_open_trade[] = {
-    {50, 68, 450, 91, GB_IMMEDIATE, button_open_trade, button_none, 0, 0}
+    {50, 68, 400, 20, button_open_trade, button_none, 0, 0}
 };
 
 static struct {
@@ -484,7 +484,7 @@ static void handle_mouse(const mouse *m)
             const empire_city *city = empire_city_get(data.selected_city);
             if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
                 generic_buttons_handle_mouse(
-                    m, (data.x_min + data.x_max - 500) / 2, data.y_max - 105,
+                    m, (data.x_min + data.x_max - 500) / 2, data.y_max - 108,
                         generic_button_open_trade, 1, &data.selected_button);
             }
         }

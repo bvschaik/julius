@@ -14,18 +14,18 @@ static void button_accept(int param1, int param2);
 static void button_cancel(int param1, int param2);
 
 static generic_button buttons[] = {
-    {21, 51, 46, 76, GB_ON_MOUSE_UP, button_number, button_none, 1, 0},
-    {51, 51, 76, 76, GB_ON_MOUSE_UP, button_number, button_none, 2, 0},
-    {81, 51, 106, 76, GB_ON_MOUSE_UP, button_number, button_none, 3, 0},
-    {21, 81, 46, 106, GB_ON_MOUSE_UP, button_number, button_none, 4, 0},
-    {51, 81, 76, 106, GB_ON_MOUSE_UP, button_number, button_none, 5, 0},
-    {81, 81, 106, 106, GB_ON_MOUSE_UP, button_number, button_none, 6, 0},
-    {21, 111, 46, 136, GB_ON_MOUSE_UP, button_number, button_none, 7, 0},
-    {51, 111, 76, 136, GB_ON_MOUSE_UP, button_number, button_none, 8, 0},
-    {81, 111, 106, 136, GB_ON_MOUSE_UP, button_number, button_none, 9, 0},
-    {21, 141, 46, 166, GB_ON_MOUSE_UP, button_number, button_none, 0, 0},
-    {51, 141, 106, 166, GB_ON_MOUSE_UP, button_accept, button_none, 1, 0},
-    {21, 171, 136, 196, GB_ON_MOUSE_UP, button_cancel, button_none, 1, 0}
+    {21, 51, 25, 25, button_number, button_none, 1, 0},
+    {51, 51, 25, 25, button_number, button_none, 2, 0},
+    {81, 51, 25, 25, button_number, button_none, 3, 0},
+    {21, 81, 25, 25, button_number, button_none, 4, 0},
+    {51, 81, 25, 25, button_number, button_none, 5, 0},
+    {81, 81, 25, 25, button_number, button_none, 6, 0},
+    {21, 111, 25, 25, button_number, button_none, 7, 0},
+    {51, 111, 25, 25, button_number, button_none, 8, 0},
+    {81, 111, 25, 25, button_number, button_none, 9, 0},
+    {21, 141, 25, 25, button_number, button_none, 0, 0},
+    {51, 141, 55, 25, button_accept, button_none, 1, 0},
+    {21, 171, 85, 25, button_cancel, button_none, 1, 0}
 };
 
 static struct {

@@ -13,11 +13,11 @@ static void button_set_resolution(int id, int param2);
 static void button_cancel(int param1, int param2);
 
 static generic_button buttons[] = {
-    {144, 136, 336, 156, GB_IMMEDIATE, button_fullscreen, button_none, 1, 0},
-    {144, 160, 336, 180, GB_IMMEDIATE, button_set_resolution, button_none, 1, 0},
-    {144, 184, 336, 204, GB_IMMEDIATE, button_set_resolution, button_none, 2, 0},
-    {144, 208, 336, 228, GB_IMMEDIATE, button_set_resolution, button_none, 3, 0},
-    {144, 232, 336, 252, GB_IMMEDIATE, button_cancel, button_none, 1, 0},
+    {128, 136, 224, 20, button_fullscreen, button_none, 1, 0},
+    {128, 160, 224, 20, button_set_resolution, button_none, 1, 0},
+    {128, 184, 224, 20, button_set_resolution, button_none, 2, 0},
+    {128, 208, 224, 20, button_set_resolution, button_none, 3, 0},
+    {128, 232, 224, 20, button_cancel, button_none, 1, 0},
 };
 
 static struct {

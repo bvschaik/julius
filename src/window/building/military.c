@@ -17,15 +17,15 @@ static void button_return_to_fort(int param1, int param2);
 static void button_layout(int index, int param2);
 
 static generic_button layout_buttons[] = {
-    {19, 139, 103, 223, GB_IMMEDIATE, button_layout, button_none, 0, 0},
-    {104, 139, 188, 223, GB_IMMEDIATE, button_layout, button_none, 1, 0},
-    {189, 139, 273, 223, GB_IMMEDIATE, button_layout, button_none, 2, 0},
-    {274, 139, 358, 223, GB_IMMEDIATE, button_layout, button_none, 3, 0},
-    {359, 139, 443, 223, GB_IMMEDIATE, button_layout, button_none, 4, 0}
+    {19, 139, 84, 84, button_layout, button_none, 0, 0},
+    {104, 139, 84, 84, button_layout, button_none, 1, 0},
+    {189, 139, 84, 84, button_layout, button_none, 2, 0},
+    {274, 139, 84, 84, button_layout, button_none, 3, 0},
+    {359, 139, 84, 84, button_layout, button_none, 4, 0}
 };
 
 static generic_button return_button[] = {
-    {0, 0, 288, 32, GB_IMMEDIATE, button_return_to_fort, button_none, 0, 0},
+    {0, 0, 288, 32, button_return_to_fort, button_none, 0, 0},
 };
 
 static struct {

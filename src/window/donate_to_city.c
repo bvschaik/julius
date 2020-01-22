@@ -19,13 +19,13 @@ static void button_cancel(int param1, int param2);
 static void arrow_button_amount(int is_down, int param2);
 
 static generic_button buttons[] = {
-    {336, 283, 496, 303, GB_IMMEDIATE, button_cancel, button_none, 0, 0},
-    {144, 283, 304, 303, GB_IMMEDIATE, button_donate, button_none, 0, 0},
-    {128, 216, 192, 236, GB_IMMEDIATE, button_set_amount, button_none, 0, 0},
-    {208, 216, 272, 236, GB_IMMEDIATE, button_set_amount, button_none, 1, 0},
-    {288, 216, 352, 236, GB_IMMEDIATE, button_set_amount, button_none, 2, 0},
-    {368, 216, 432, 236, GB_IMMEDIATE, button_set_amount, button_none, 3, 0},
-    {448, 216, 512, 236, GB_IMMEDIATE, button_set_amount, button_none, 4, 0},
+    {336, 283, 160, 20, button_cancel, button_none, 0, 0},
+    {144, 283, 160, 20, button_donate, button_none, 0, 0},
+    {128, 216, 64, 20, button_set_amount, button_none, 0, 0},
+    {208, 216, 64, 20, button_set_amount, button_none, 1, 0},
+    {288, 216, 64, 20, button_set_amount, button_none, 2, 0},
+    {368, 216, 64, 20, button_set_amount, button_none, 3, 0},
+    {448, 216, 64, 20, button_set_amount, button_none, 4, 0},
 };
 
 static arrow_button arrow_buttons[] = {

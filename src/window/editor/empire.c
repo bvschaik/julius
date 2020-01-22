@@ -30,7 +30,7 @@ static arrow_button arrow_buttons_empire[] = {
     {32, 48, 15, 24, button_change_empire, 0, 0}
 };
 static generic_button generic_button_ok[] = {
-    {84, 48, 184, 72, GB_IMMEDIATE, button_ok, button_none, 0, 0}
+    {84, 48, 100, 24, button_ok, button_none, 0, 0}
 };
 
 static struct {

@@ -26,15 +26,15 @@ static void button_flotsam(int param1, int param2);
 static void button_milestone(int milestone_pct, int param2);
 
 static generic_button buttons[] = {
-    {262, 76, 462, 106, GB_IMMEDIATE, button_rank, button_none},
-    {262, 116, 462, 146, GB_IMMEDIATE, button_start_year, button_none},
-    {262, 156, 462, 186, GB_IMMEDIATE, button_initial_funds,button_none},
-    {262, 196, 462, 226, GB_IMMEDIATE, button_rescue_loan,button_none},
-    {262, 236, 462, 266, GB_IMMEDIATE, button_wheat,button_none},
-    {262, 276, 462, 306, GB_IMMEDIATE, button_flotsam, button_none, 0},
-    {262, 316, 462, 346, GB_IMMEDIATE, button_milestone, button_none, 25},
-    {262, 356, 462, 386, GB_IMMEDIATE, button_milestone, button_none, 50},
-    {262, 396, 462, 426, GB_IMMEDIATE, button_milestone, button_none, 75}
+    {262, 76, 200, 30, button_rank, button_none},
+    {262, 116, 200, 30, button_start_year, button_none},
+    {262, 156, 200, 30, button_initial_funds,button_none},
+    {262, 196, 200, 30, button_rescue_loan,button_none},
+    {262, 236, 200, 30, button_wheat,button_none},
+    {262, 276, 200, 30, button_flotsam, button_none, 0},
+    {262, 316, 200, 30, button_milestone, button_none, 25},
+    {262, 356, 200, 30, button_milestone, button_none, 50},
+    {262, 396, 200, 30, button_milestone, button_none, 75}
 };
 
 static int focus_button_id;

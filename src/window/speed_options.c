@@ -16,8 +16,8 @@ static void arrow_button_game(int is_down, int param2);
 static void arrow_button_scroll(int is_down, int param2);
 
 static generic_button buttons[] = {
-    {144, 232, 336, 252, GB_IMMEDIATE, button_ok, button_none, 1, 0},
-    {144, 262, 336, 282, GB_IMMEDIATE, button_cancel, button_none, 1, 0},
+    {144, 232, 192, 20, button_ok, button_none, 1, 0},
+    {144, 262, 192, 20, button_cancel, button_none, 1, 0},
 };
 
 static arrow_button arrow_buttons[] = {

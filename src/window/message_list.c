@@ -35,16 +35,16 @@ static image_button image_button_scroll_down = {
     0, 0, 39, 26, IB_SCROLL, 96, 12, button_scroll, button_none, 1, 1, 1
 };
 static generic_button generic_buttons_messages[] = {
-    {0, 0, 412, 18, GB_ON_MOUSE_UP, button_message, button_delete, 0, 0},
-    {0, 20, 412, 38, GB_ON_MOUSE_UP, button_message, button_delete, 1, 0},
-    {0, 40, 412, 58, GB_ON_MOUSE_UP, button_message, button_delete, 2, 0},
-    {0, 60, 412, 78, GB_ON_MOUSE_UP, button_message, button_delete, 3, 0},
-    {0, 80, 412, 98, GB_ON_MOUSE_UP, button_message, button_delete, 4, 0},
-    {0, 100, 412, 118, GB_ON_MOUSE_UP, button_message, button_delete, 5, 0},
-    {0, 120, 412, 138, GB_ON_MOUSE_UP, button_message, button_delete, 6, 0},
-    {0, 140, 412, 158, GB_ON_MOUSE_UP, button_message, button_delete, 7, 0},
-    {0, 160, 412, 178, GB_ON_MOUSE_UP, button_message, button_delete, 8, 0},
-    {0, 180, 412, 198, GB_ON_MOUSE_UP, button_message, button_delete, 9, 0},
+    {0, 0, 412, 18, button_message, button_delete, 0, 0},
+    {0, 20, 412, 18, button_message, button_delete, 1, 0},
+    {0, 40, 412, 18, button_message, button_delete, 2, 0},
+    {0, 60, 412, 18, button_message, button_delete, 3, 0},
+    {0, 80, 412, 18, button_message, button_delete, 4, 0},
+    {0, 100, 412, 18, button_message, button_delete, 5, 0},
+    {0, 120, 412, 18, button_message, button_delete, 6, 0},
+    {0, 140, 412, 18, button_message, button_delete, 7, 0},
+    {0, 160, 412, 18, button_message, button_delete, 8, 0},
+    {0, 180, 412, 18, button_message, button_delete, 9, 0},
 };
 
 static struct {
