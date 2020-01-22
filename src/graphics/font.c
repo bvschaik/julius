@@ -4,6 +4,7 @@
 #include "core/image.h"
 
 static int image_y_offset_default(uint8_t c, int image_height, int line_height);
+static int image_y_offset_default_small(uint8_t c, int image_height, int line_height);
 static int image_y_offset_eastern(uint8_t c, int image_height, int line_height);
 static int image_y_offset_cyrillic_normal_small_plain(uint8_t c, int image_height, int line_height);
 static int image_y_offset_cyrillic_normal_colored(uint8_t c, int image_height, int line_height);
@@ -77,9 +78,9 @@ static const font_definition DEFINITIONS_DEFAULT[] = {
     {FONT_LARGE_PLAIN, 536, 0, 10, 8, 1, 1, 23, image_y_offset_default},
     {FONT_LARGE_BLACK, 670, 0, 10, 8, 1, 0, 23, image_y_offset_default},
     {FONT_LARGE_BROWN, 804, 0, 10, 8, 1, 0, 24, image_y_offset_default},
-    {FONT_SMALL_PLAIN,  938, 0, 4, 4, 1, 1, 9, image_y_offset_default},
+    {FONT_SMALL_PLAIN,  938, 0, 4, 4, 1, 1, 9,  image_y_offset_default_small},
     {FONT_NORMAL_GREEN,1072, 0, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 0, 0, 11, image_y_offset_default}
+    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 0, 0, 11, image_y_offset_default_small}
 };
 
 static const font_definition DEFINITIONS_EASTERN[] = {
@@ -135,6 +136,22 @@ int image_y_offset_default(uint8_t c, int image_height, int line_height)
     }
     if (c < 128 || c == 0xE7) {
         offset = 0;
+    }
+    return offset;
+}
+
+int image_y_offset_default_small(uint8_t c, int image_height, int line_height)
+{
+    int offset = image_height - line_height;
+    if (offset < 0) {
+        offset = 0;
+    }
+    if (c < 128 || c == 0xE7) {
+        offset = 0;
+    } else if (c >= 0xC0 && c <= 0xDF) {
+        offset += 2;
+    } else if (c >= 0xE0) {
+        offset += 1;
     }
     return offset;
 }
