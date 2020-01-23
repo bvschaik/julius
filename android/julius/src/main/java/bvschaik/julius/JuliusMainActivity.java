@@ -68,6 +68,9 @@ public class JuliusMainActivity extends SDLActivity
                         | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
                         | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
         );
+        intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+        intent.putExtra("android.content.extra.FANCY", true);
+        intent.putExtra("android.content.extra.SHOW_FILESIZE", true);
         startActivityForResult(intent, GET_FOLDER_RESULT);
         paused = true;
     }

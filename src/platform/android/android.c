@@ -57,8 +57,13 @@ static int request_java_class_function_handler(const char *class_name, const cha
 
 static void destroy_java_function_handler(java_function_handler *handler)
 {
-    if(handler->env && handler->activity) {
-        (*handler->env)->DeleteLocalRef(handler->env, handler->activity);
+    if(handler->env) {
+        if(handler->activity) {
+            (*handler->env)->DeleteLocalRef(handler->env, handler->activity);
+        }
+        if(handler->class) {
+            (*handler->env)->DeleteLocalRef(handler->env, handler->class);
+        }
     }
     handler->env = NULL;
     handler->class = NULL;
@@ -76,6 +81,7 @@ static const char* get_c3_path(void)
 
     jobject result = (*handler.env)->CallStaticObjectMethod(handler.env, handler.class, handler.method);
     const char *path = (*handler.env)->GetStringUTFChars(handler.env, (jstring)result, NULL);
+    (*handler.env)->DeleteLocalRef(handler.env, result);
     destroy_java_function_handler(&handler);
 
     return path;
@@ -97,6 +103,7 @@ void android_toast_message(const char *message)
     if (request_java_class_function_handler("bvschaik/julius/JuliusMainActivity", "toastMessage", "(Ljava/lang/String;)V", &handler)) {
         jstring jmessage = (*handler.env)->NewStringUTF(handler.env, message);
         (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method, jmessage);
+        (*handler.env)->DeleteLocalRef(handler.env, jmessage);
     }
     destroy_java_function_handler(&handler);
 }
@@ -123,6 +130,8 @@ int android_get_file_descriptor(const char *filename, const char *mode)
     jstring jfilename = (*handler.env)->NewStringUTF(handler.env, filename);
     jstring jmode = (*handler.env)->NewStringUTF(handler.env, mode);
     result = (int)(*handler.env)->CallStaticIntMethod(handler.env, handler.class, handler.method, handler.activity, jfilename, jmode);
+    (*handler.env)->DeleteLocalRef(handler.env, jfilename);
+    (*handler.env)->DeleteLocalRef(handler.env, jmode);
     destroy_java_function_handler(&handler);
 
     return result;
@@ -138,6 +147,7 @@ int android_set_base_path(const char *path)
     }
     jstring jpath = (*handler.env)->NewStringUTF(handler.env, path);
     result = (int)(*handler.env)->CallStaticIntMethod(handler.env, handler.class, handler.method, jpath);
+    (*handler.env)->DeleteLocalRef(handler.env, jpath);
     destroy_java_function_handler(&handler);
 
     return result;
@@ -152,7 +162,8 @@ int android_get_directory_contents_by_extension(char **list, int *count, const c
     }
     jstring jextension = (*handler.env)->NewStringUTF(handler.env, extension);
     jobjectArray result = (jobjectArray)(*handler.env)->CallStaticObjectMethod(handler.env, handler.class, handler.method, handler.activity, jextension);
-    
+    (*handler.env)->DeleteLocalRef(handler.env, jextension);
+
     int len = (*handler.env)->GetArrayLength(handler.env, result);
     if(len > max_files) {
         len = max_files;
@@ -161,7 +172,9 @@ int android_get_directory_contents_by_extension(char **list, int *count, const c
         jstring jfileName = (jstring) (*handler.env)->GetObjectArrayElement(handler.env, result, i);
         const char *fileName = (*handler.env)->GetStringUTFChars(handler.env, jfileName, NULL);
         strcpy(list[i], fileName);
+        (*handler.env)->DeleteLocalRef(handler.env, jfileName);
     }
+    (*handler.env)->DeleteLocalRef(handler.env, result);
     *count = len;
     destroy_java_function_handler(&handler);
 
@@ -178,6 +191,7 @@ int android_check_file_exists(const char *filename)
     }
     jstring jfilename = (*handler.env)->NewStringUTF(handler.env, filename);
     result = (int)(*handler.env)->CallStaticBooleanMethod(handler.env, handler.class, handler.method, handler.activity, jfilename);
+    (*handler.env)->DeleteLocalRef(handler.env, jfilename);
     destroy_java_function_handler(&handler);
 
     return result;
@@ -193,6 +207,7 @@ int android_remove_file(const char *filename)
     }
     jstring jfilename = (*handler.env)->NewStringUTF(handler.env, filename);
     result = (int)(*handler.env)->CallStaticBooleanMethod(handler.env, handler.class, handler.method, handler.activity, jfilename);
+    (*handler.env)->DeleteLocalRef(handler.env, jfilename);
     destroy_java_function_handler(&handler);
 
     return result;
