@@ -63,7 +63,7 @@ after_build:
   - dir
   - set /P DEPLOY_VERSION=<C:\projects\julius\res\version.txt
   - if [%APPVEYOR_REPO_BRANCH:~0,8%] == [feature/] set DEPLOY_VERSION=%APPVEYOR_REPO_BRANCH:feature/=%-%DEPLOY_VERSION%
-  - 7z a C:\projects\julius\julius-%DEPLOY_VERSION%-windows.zip julius.exe SDL2.dll SDL2_mixer.dll
+  - 7z a C:\projects\julius\julius-%DEPLOY_VERSION%-windows.zip julius.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
 
 cache:
   - SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
