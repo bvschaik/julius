@@ -128,8 +128,13 @@ int sound_device_play_music(const char *filename)
         #endif
 
         music = Mix_LoadMUS(resolved_filename);
-        if (music) {
-            Mix_PlayMusic(music, -1);
+        if (!music) {
+            SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Error opening music file '%s'. Reason: %s", resolved_filename, Mix_GetError());
+        } else {
+            if (Mix_PlayMusic(music, -1) == -1) {
+                music = 0;
+                SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Error playing music file '%s'. Reason: %s", resolved_filename, Mix_GetError());
+            }
         }
 
         #ifdef __vita__
