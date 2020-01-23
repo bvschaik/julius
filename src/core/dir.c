@@ -57,43 +57,6 @@ static const char *filename_to_utf8(const wchar_t *str)
 #define CURRENT_DIR "."
 #endif
 
-#ifdef _WIN32
-#include <windows.h>
-
-#define fs_dir_type _WDIR
-#define fs_dir_entry struct _wdirent
-#define fs_dir_open _wopendir
-#define fs_dir_close _wclosedir
-#define fs_dir_read _wreaddir
-#define dir_entry_name(d) filename_to_utf8(d->d_name)
-#define dir_entry_close_name(n) free((void*)n)
-
-static const char *filename_to_utf8(const wchar_t *str)
-{
-    int size_needed = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
-    char *result = (char*)malloc(sizeof(char) * size_needed);
-    WideCharToMultiByte(CP_UTF8, 0, str, -1, result, size_needed, NULL, NULL);
-    return result;
-}
-
-#else // not _WIN32
-#define fs_dir_type DIR
-#define fs_dir_entry struct dirent
-#define fs_dir_open opendir
-#define fs_dir_close closedir
-#define fs_dir_read readdir
-#define dir_entry_name(d) ((d)->d_name)
-#define dir_entry_close_name(n)
-#endif
-
-#ifdef __vita__
-#define CURRENT_DIR VITA_PATH_PREFIX
-#elif defined(_WIN32)
-#define CURRENT_DIR L"."
-#else
-#define CURRENT_DIR "."
-#endif
-
 #ifdef _MSC_VER
 #include <direct.h>
 #define chdir _chdir
