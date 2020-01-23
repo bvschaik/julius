@@ -98,7 +98,7 @@ the compilation of the source files to an executable.
 
 In order to properly install MinGW-64, do the following:
 
-1. Obtain [MinGW-w64](https://sourceforge.net/projects/mingw-w64/) and proceed to install it.
+1. Obtain [MinGW-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe) and proceed to install it.
    The default options are good enough.
 
 2. Add the MinGW-w64 binaries to the `path`:
