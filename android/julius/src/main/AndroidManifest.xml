@@ -20,12 +20,15 @@
             android:label="Julius"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance"
-            android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation">
+            android:resizeableActivity="true"
+            android:configChanges="orientation|uiMode|density|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data android:name="com.samsung.android.keepalive.density" android:value="true" />
 
     </application>
 

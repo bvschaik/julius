@@ -90,6 +90,10 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         return 0;
     }
 
+#ifdef FORCE_FULLSCREEN
+    SDL_GetWindowSize(SDL.window, &width, &height);
+#endif
+
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!SDL.renderer) {
         SDL_Log("Unable to create renderer, trying software renderer: %s", SDL_GetError());
@@ -142,11 +146,9 @@ int platform_screen_resize(int pixel_width, int pixel_height)
     SDL.texture = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         logical_width, logical_height);
-    if (scale_percentage != 100) {
-        // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
-        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
-        SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
-    }
+    // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
+    SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
     if (SDL.texture) {
         SDL_Log("Texture created (%d x %d)", logical_width, logical_height);
         screen_set_resolution(logical_width, logical_height);
@@ -188,6 +190,7 @@ void platform_screen_set_fullscreen(void)
 
 void platform_screen_set_windowed(void)
 {
+#ifndef FORCE_FULLSCREEN
     int logical_width, logical_height;
     setting_window(&logical_width, &logical_height);
     int pixel_width = scale_logical_to_pixels(logical_width);
@@ -202,10 +205,12 @@ void platform_screen_set_windowed(void)
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
     }
     setting_set_display(0, pixel_width, pixel_height);
+#endif
 }
 
 void platform_screen_set_window_size(int logical_width, int logical_height)
 {
+#ifndef FORCE_FULLSCREEN
     int pixel_width = scale_logical_to_pixels(logical_width);
     int pixel_height = scale_logical_to_pixels(logical_height);
     if (setting_fullscreen()) {
@@ -225,6 +230,7 @@ void platform_screen_set_window_size(int logical_width, int logical_height)
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
     }
     setting_set_display(0, pixel_width, pixel_height);
+#endif
 }
 
 void platform_screen_center_window(void)
