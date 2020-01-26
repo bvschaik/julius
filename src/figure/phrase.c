@@ -376,7 +376,12 @@ static int prefect_phrase(figure *f)
     } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         return 13 + f->phrase_sequence_exact;
     } else if (f->min_max_seen >= 50) {
-        return 7;
+        // alternate between "no sign of crime around here" and the regular city phrases
+        if (f->phrase_sequence_exact % 2) {
+            return 7;
+        } else {
+            return 0;
+        }
     } else if (f->min_max_seen >= 10) {
         return 8;
     } else {
