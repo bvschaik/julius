@@ -320,6 +320,7 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_REQUEST_REFUSED:
         case MESSAGE_REQUEST_REFUSED_OVERDUE:
         case MESSAGE_REQUEST_RECEIVED_LATE:
+        case MESSAGE_REQUEST_CAN_COMPLY:
             return MESSAGE_ADVISOR_IMPERIAL;
 
         case MESSAGE_UNEMPLOYMENT:
