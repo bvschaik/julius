@@ -314,6 +314,9 @@ static void draw_empire_object(const empire_object *obj)
         if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
             city->type == EMPIRE_CITY_FUTURE_ROMAN) {
             image_id = image_group(GROUP_EMPIRE_FOREIGN_CITY);
+        } else if (city->type == EMPIRE_CITY_TRADE) {
+            // Fix cases where empire map still gives a blue flag for new trade cities (e.g. Massilia in campaign Lugdunum)
+            image_id = image_group(GROUP_EMPIRE_CITY_TRADE);
         }
     }
     if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
