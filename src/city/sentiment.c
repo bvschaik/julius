@@ -195,9 +195,8 @@ void city_sentiment_update(void)
             if (city_data.population.population < 200) {
                 b->sentiment.house_happiness += 10;
             } else if (default_sentiment < 50) {
-                // give a boost for very hard so that 
-                // immigration is not prevented simply because
-                // you are between pop 300 and 200
+                // Fix very hard immigration bug: give a boost for Very Hard difficulty so that
+                // immigration is not halted simply because you are between pop 200 and 300
                 b->sentiment.house_happiness += 50 - default_sentiment;
             }
             continue;
