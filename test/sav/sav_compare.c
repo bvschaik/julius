@@ -319,6 +319,26 @@ static int unpack(const char *filename, unsigned char *buffer)
     return offset;
 }
 
+static int has_adjacent_building_type(int part_offset, int building_type)
+{
+    int grid_offset = part_offset / 2;
+    const int adjacent_tiles[] = { -162, 1, 162, -1 };
+    
+    for (int i = 0; i < 4; ++i) {
+        int adjacent_offset = grid_offset + adjacent_tiles[i];
+        if (adjacent_offset < 0 || adjacent_offset >= 162 * 162) {
+            continue;
+        }
+        int building_id = to_ushort(&file1_data[offset_of_part("building_grid") + adjacent_offset * 2]);
+        int building_offset = offset_of_part("buildings") + building_id * 128;
+        int type = to_ushort(&file1_data[building_offset + 10]);
+        if (type == building_type) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 static int is_between(unsigned int value, unsigned int range_from, unsigned int range_to)
 {
     return value >= range_from && value <= range_to;
@@ -344,7 +364,7 @@ static int is_exception_cityinfo(int global_offset, int part_offset)
     return 0;
 }
 
-static int is_exception_image_grid(int global_offset)
+static int is_exception_image_grid(int global_offset, int part_offset)
 {
     unsigned int v1 = to_ushort(&file1_data[global_offset & ~1]);
     unsigned int v2 = to_ushort(&file2_data[global_offset & ~1]);
@@ -354,6 +374,12 @@ static int is_exception_image_grid(int global_offset)
     }
     // burning tent: fix in julius to use its own graphic
     if ((v1 == 734 && is_between(v2, 743, 770)) || (v2 == 734 && is_between(v1, 743, 770))) {
+        return 1;
+    }
+    // Exception for roads next to a granary: in julius the dirt roads and paved roads lead
+    // into the granary, while in Caesar 3 they do not. Therefore we do not check roads that
+    // are adjacent to a granary (building type 71).
+    if (both_between(v1, v2, 591, 657) && has_adjacent_building_type(part_offset, 71)) {
         return 1;
     }
     return 0;
@@ -403,7 +429,7 @@ static int is_exception(int index, int global_offset, int part_offset)
         return 1;
     }
     if (index == index_of_part("image_grid")) {
-        return is_exception_image_grid(global_offset);
+        return is_exception_image_grid(global_offset, part_offset);
     }
     if (index == index_of_part("sprite_grid")) {
         // don't care about sprite + building = animation

@@ -109,7 +109,7 @@ void scenario_editor_request_get(int index, editor_request *request)
     request->amount = scenario.requests[index].amount;
     request->resource = scenario.requests[index].resource;
     request->deadline_years = scenario.requests[index].deadline_years;
-    request->favor= scenario.requests[index].favor;
+    request->favor = scenario.requests[index].favor;
 }
 
 static void sort_requests(void)

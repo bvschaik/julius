@@ -12,21 +12,21 @@
 static void button_menu_item(int index, int param2);
 
 static generic_button build_menu_buttons[] = {
-    {0, 0, 160, 20, GB_IMMEDIATE, button_menu_item, button_none, 0, 0},
-    {0, 24, 160, 44, GB_IMMEDIATE, button_menu_item, button_none, 1, 0},
-    {0, 48, 160, 68, GB_IMMEDIATE, button_menu_item, button_none, 2, 0},
-    {0, 72, 160, 92, GB_IMMEDIATE, button_menu_item, button_none, 3, 0},
-    {0, 96, 160, 116, GB_IMMEDIATE, button_menu_item, button_none, 4, 0},
-    {0, 120, 160, 140, GB_IMMEDIATE, button_menu_item, button_none, 5, 0},
-    {0, 144, 160, 164, GB_IMMEDIATE, button_menu_item, button_none, 6, 0},
-    {0, 168, 160, 188, GB_IMMEDIATE, button_menu_item, button_none, 7, 0},
-    {0, 192, 160, 212, GB_IMMEDIATE, button_menu_item, button_none, 8, 0},
-    {0, 216, 160, 236, GB_IMMEDIATE, button_menu_item, button_none, 9, 0},
-    {0, 240, 160, 260, GB_IMMEDIATE, button_menu_item, button_none, 10, 0},
-    {0, 264, 160, 284, GB_IMMEDIATE, button_menu_item, button_none, 11, 0},
-    {0, 288, 160, 308, GB_IMMEDIATE, button_menu_item, button_none, 12, 0},
-    {0, 312, 160, 332, GB_IMMEDIATE, button_menu_item, button_none, 13, 0},
-    {0, 336, 160, 356, GB_IMMEDIATE, button_menu_item, button_none, 14, 0}
+    {0, 0, 160, 20, button_menu_item, button_none, 0, 0},
+    {0, 24, 160, 20, button_menu_item, button_none, 1, 0},
+    {0, 48, 160, 20, button_menu_item, button_none, 2, 0},
+    {0, 72, 160, 20, button_menu_item, button_none, 3, 0},
+    {0, 96, 160, 20, button_menu_item, button_none, 4, 0},
+    {0, 120, 160, 20, button_menu_item, button_none, 5, 0},
+    {0, 144, 160, 20, button_menu_item, button_none, 6, 0},
+    {0, 168, 160, 20, button_menu_item, button_none, 7, 0},
+    {0, 192, 160, 20, button_menu_item, button_none, 8, 0},
+    {0, 216, 160, 20, button_menu_item, button_none, 9, 0},
+    {0, 240, 160, 20, button_menu_item, button_none, 10, 0},
+    {0, 264, 160, 20, button_menu_item, button_none, 11, 0},
+    {0, 288, 160, 20, button_menu_item, button_none, 12, 0},
+    {0, 312, 160, 20, button_menu_item, button_none, 13, 0},
+    {0, 336, 160, 20, button_menu_item, button_none, 14, 0}
 };
 
 static const int Y_MENU_OFFSETS[16] = {

@@ -15,9 +15,9 @@ static void button_accept(int param1, int param2);
 static void button_continue_governing(int months, int param2);
 
 static generic_button victory_buttons[] = {
-    {32, 112, 416, 132, GB_ON_MOUSE_UP, button_accept, button_none, 0, 0},
-    {32, 144, 416, 164, GB_IMMEDIATE, button_continue_governing, button_none, 24, 0},
-    {32, 176, 416, 196, GB_IMMEDIATE, button_continue_governing, button_none, 60, 0},
+    {32, 112, 480, 20, button_accept, button_none, 0, 0},
+    {32, 144, 480, 20, button_continue_governing, button_none, 24, 0},
+    {32, 176, 480, 20, button_continue_governing, button_none, 60, 0},
 };
 
 static int focus_button_id = 0;

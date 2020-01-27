@@ -24,11 +24,11 @@ static void button_intro_movie(int param1, int param2);
 static int focus_button_id;
 
 static generic_button buttons[] = {
-    {192, 100, 448, 125, GB_ON_MOUSE_UP, button_click, button_none, 1, 0},
-    {192, 140, 448, 165, GB_ON_MOUSE_UP, button_click, button_none, 2, 0},
-    {192, 180, 448, 205, GB_ON_MOUSE_UP, button_click, button_none, 3, 0},
-    {192, 220, 448, 245, GB_ON_MOUSE_UP, button_click, button_none, 4, 0},
-    {192, 260, 448, 285, GB_ON_MOUSE_UP, button_click, button_none, 5, 0},
+    {192, 100, 256, 25, button_click, button_none, 1, 0},
+    {192, 140, 256, 25, button_click, button_none, 2, 0},
+    {192, 180, 256, 25, button_click, button_none, 3, 0},
+    {192, 220, 256, 25, button_click, button_none, 4, 0},
+    {192, 260, 256, 25, button_click, button_none, 5, 0},
 };
 
 static image_button movie_button =

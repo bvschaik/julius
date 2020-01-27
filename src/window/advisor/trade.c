@@ -19,23 +19,23 @@ static void button_empire(int param1, int param2);
 static void button_resource(int resource_index, int param2);
 
 static generic_button resource_buttons[] = {
-    {400, 398, 600, 421, GB_IMMEDIATE, button_prices, button_none, 1, 0},
-    {100, 398, 300, 421, GB_IMMEDIATE, button_empire, button_none, 1, 0},
-    {80, 56, 560, 76, GB_IMMEDIATE, button_resource, button_none, 0, 0},
-    {80, 78, 560, 98, GB_IMMEDIATE, button_resource, button_none, 1, 0},
-    {80, 100, 560, 120, GB_IMMEDIATE, button_resource, button_none, 2, 0},
-    {80, 122, 560, 142, GB_IMMEDIATE, button_resource, button_none, 3, 0},
-    {80, 144, 560, 164, GB_IMMEDIATE, button_resource, button_none, 4, 0},
-    {80, 166, 560, 186, GB_IMMEDIATE, button_resource, button_none, 5, 0},
-    {80, 188, 560, 208, GB_IMMEDIATE, button_resource, button_none, 6, 0},
-    {80, 210, 560, 230, GB_IMMEDIATE, button_resource, button_none, 7, 0},
-    {80, 232, 560, 252, GB_IMMEDIATE, button_resource, button_none, 8, 0},
-    {80, 254, 560, 274, GB_IMMEDIATE, button_resource, button_none, 9, 0},
-    {80, 276, 560, 296, GB_IMMEDIATE, button_resource, button_none, 10, 0},
-    {80, 298, 560, 318, GB_IMMEDIATE, button_resource, button_none, 11, 0},
-    {80, 320, 560, 340, GB_IMMEDIATE, button_resource, button_none, 12, 0},
-    {80, 342, 560, 362, GB_IMMEDIATE, button_resource, button_none, 13, 0},
-    {80, 364, 560, 384, GB_IMMEDIATE, button_resource, button_none, 14, 0}
+    {400, 398, 200, 23, button_prices, button_none, 1, 0},
+    {100, 398, 200, 23, button_empire, button_none, 1, 0},
+    {80, 56, 480, 20, button_resource, button_none, 0, 0},
+    {80, 78, 480, 20, button_resource, button_none, 1, 0},
+    {80, 100, 480, 20, button_resource, button_none, 2, 0},
+    {80, 122, 480, 20, button_resource, button_none, 3, 0},
+    {80, 144, 480, 20, button_resource, button_none, 4, 0},
+    {80, 166, 480, 20, button_resource, button_none, 5, 0},
+    {80, 188, 480, 20, button_resource, button_none, 6, 0},
+    {80, 210, 480, 20, button_resource, button_none, 7, 0},
+    {80, 232, 480, 20, button_resource, button_none, 8, 0},
+    {80, 254, 480, 20, button_resource, button_none, 9, 0},
+    {80, 276, 480, 20, button_resource, button_none, 10, 0},
+    {80, 298, 480, 20, button_resource, button_none, 11, 0},
+    {80, 320, 480, 20, button_resource, button_none, 12, 0},
+    {80, 342, 480, 20, button_resource, button_none, 13, 0},
+    {80, 364, 480, 20, button_resource, button_none, 14, 0}
 };
 
 static int focus_button_id;

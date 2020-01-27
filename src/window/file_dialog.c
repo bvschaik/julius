@@ -34,18 +34,18 @@ static image_button image_buttons[] = {
     {464, 300, 39, 26, IB_SCROLL, 96, 12, button_scroll, button_none, 1, 1, 1},
 };
 static generic_button file_buttons[] = {
-    {160, 128, 448, 144, GB_IMMEDIATE, button_select_file, button_none, 0, 0},
-    {160, 144, 448, 160, GB_IMMEDIATE, button_select_file, button_none, 1, 0},
-    {160, 160, 448, 176, GB_IMMEDIATE, button_select_file, button_none, 2, 0},
-    {160, 176, 448, 192, GB_IMMEDIATE, button_select_file, button_none, 3, 0},
-    {160, 192, 448, 208, GB_IMMEDIATE, button_select_file, button_none, 4, 0},
-    {160, 208, 448, 224, GB_IMMEDIATE, button_select_file, button_none, 5, 0},
-    {160, 224, 448, 240, GB_IMMEDIATE, button_select_file, button_none, 6, 0},
-    {160, 240, 448, 256, GB_IMMEDIATE, button_select_file, button_none, 7, 0},
-    {160, 256, 448, 272, GB_IMMEDIATE, button_select_file, button_none, 8, 0},
-    {160, 272, 448, 288, GB_IMMEDIATE, button_select_file, button_none, 9, 0},
-    {160, 288, 448, 304, GB_IMMEDIATE, button_select_file, button_none, 10, 0},
-    {160, 304, 448, 320, GB_IMMEDIATE, button_select_file, button_none, 11, 0},
+    {160, 128, 288, 16, button_select_file, button_none, 0, 0},
+    {160, 144, 288, 16, button_select_file, button_none, 1, 0},
+    {160, 160, 288, 16, button_select_file, button_none, 2, 0},
+    {160, 176, 288, 16, button_select_file, button_none, 3, 0},
+    {160, 192, 288, 16, button_select_file, button_none, 4, 0},
+    {160, 208, 288, 16, button_select_file, button_none, 5, 0},
+    {160, 224, 288, 16, button_select_file, button_none, 6, 0},
+    {160, 240, 288, 16, button_select_file, button_none, 7, 0},
+    {160, 256, 288, 16, button_select_file, button_none, 8, 0},
+    {160, 272, 288, 16, button_select_file, button_none, 9, 0},
+    {160, 288, 288, 16, button_select_file, button_none, 10, 0},
+    {160, 304, 288, 16, button_select_file, button_none, 11, 0},
 };
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;

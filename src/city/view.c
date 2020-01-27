@@ -28,7 +28,7 @@ static struct {
         int x_pixels;
         int y_pixels;
     } selected_tile;
-} data = {0, 0, 0, 0, {0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0}};
+} data;
 
 static int view_to_grid_offset_lookup[VIEW_X_MAX][VIEW_Y_MAX];
 
@@ -160,7 +160,7 @@ int city_view_scroll(int direction)
         return 0;
     }
     int dx = 1;
-    int dy = 2;
+    int dy = 4;
     switch (direction) {
         case DIR_0_TOP:
             data.camera.y -= dy;

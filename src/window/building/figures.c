@@ -36,13 +36,13 @@ static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
 };
 
 static generic_button figure_buttons[] = {
-    {26, 46, 76, 96, GB_IMMEDIATE, select_figure, button_none, 0, 0},
-    {86, 46, 136, 96, GB_IMMEDIATE, select_figure, button_none, 1, 0},
-    {146, 46, 196, 96, GB_IMMEDIATE, select_figure, button_none, 2, 0},
-    {206, 46, 256, 96, GB_IMMEDIATE, select_figure, button_none, 3, 0},
-    {266, 46, 316, 96, GB_IMMEDIATE, select_figure, button_none, 4, 0},
-    {326, 46, 376, 96, GB_IMMEDIATE, select_figure, button_none, 5, 0},
-    {386, 46, 436, 96, GB_IMMEDIATE, select_figure, button_none, 6, 0},
+    {26, 46, 50, 50, select_figure, button_none, 0, 0},
+    {86, 46, 50, 50, select_figure, button_none, 1, 0},
+    {146, 46, 50, 50, select_figure, button_none, 2, 0},
+    {206, 46, 50, 50, select_figure, button_none, 3, 0},
+    {266, 46, 50, 50, select_figure, button_none, 4, 0},
+    {326, 46, 50, 50, select_figure, button_none, 5, 0},
+    {386, 46, 50, 50, select_figure, button_none, 6, 0},
 };
 
 static struct {

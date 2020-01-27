@@ -4,17 +4,11 @@
 #include "graphics/button.h"
 #include "input/mouse.h"
 
-enum {
-    GB_IMMEDIATE = 1,
-    GB_ON_MOUSE_UP = 3,
-};
-
 typedef struct {
-    short x_start;
-    short y_start;
-    short x_end;
-    short y_end;
-    int button_type;
+    short x;
+    short y;
+    short width;
+    short height;
     void (*left_click_handler)(int param1, int param2);
     void (*right_click_handler)(int param1, int param2);
     int parameter1;

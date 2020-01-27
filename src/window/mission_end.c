@@ -27,7 +27,7 @@
 static void button_fired(int param1, int param2);
 
 static generic_button fired_buttons[] = {
-    {64, 208, 384, 228, GB_IMMEDIATE, button_fired, button_none, 0, 0},
+    {80, 224, 480, 25, button_fired, button_none, 0, 0},
 };
 
 static int focus_button_id;
@@ -126,7 +126,7 @@ static void handle_mouse(const mouse *m)
             advance_to_next_mission();
         }
     } else {
-        generic_buttons_handle_mouse(mouse_in_dialog(m), 48, 16,
+        generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0,
                                      fired_buttons, 1, &focus_button_id);
     }
 }

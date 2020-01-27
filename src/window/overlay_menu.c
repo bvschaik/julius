@@ -14,28 +14,28 @@ static void button_menu_item(int index, int param2);
 static void button_submenu_item(int index, int param2);
 
 static generic_button menu_buttons[] = {
-    {0, 0, 160, 24, GB_IMMEDIATE, button_menu_item, button_none, 0, 0},
-    {0, 24, 160, 48, GB_IMMEDIATE, button_menu_item, button_none, 1, 0},
-    {0, 48, 160, 72, GB_IMMEDIATE, button_menu_item, button_none, 2, 0},
-    {0, 72, 160, 96, GB_IMMEDIATE, button_menu_item, button_none, 3, 0},
-    {0, 96, 160, 120, GB_IMMEDIATE, button_menu_item, button_none, 4, 0},
-    {0, 120, 160, 144, GB_IMMEDIATE, button_menu_item, button_none, 5, 0},
-    {0, 144, 160, 168, GB_IMMEDIATE, button_menu_item, button_none, 6, 0},
-    {0, 168, 160, 192, GB_IMMEDIATE, button_menu_item, button_none, 7, 0},
-    {0, 192, 160, 216, GB_IMMEDIATE, button_menu_item, button_none, 8, 0},
-    {0, 216, 160, 240, GB_IMMEDIATE, button_menu_item, button_none, 9, 0},
+    {0, 0, 160, 24, button_menu_item, button_none, 0, 0},
+    {0, 24, 160, 24, button_menu_item, button_none, 1, 0},
+    {0, 48, 160, 24, button_menu_item, button_none, 2, 0},
+    {0, 72, 160, 24, button_menu_item, button_none, 3, 0},
+    {0, 96, 160, 24, button_menu_item, button_none, 4, 0},
+    {0, 120, 160, 24, button_menu_item, button_none, 5, 0},
+    {0, 144, 160, 24, button_menu_item, button_none, 6, 0},
+    {0, 168, 160, 24, button_menu_item, button_none, 7, 0},
+    {0, 192, 160, 24, button_menu_item, button_none, 8, 0},
+    {0, 216, 160, 24, button_menu_item, button_none, 9, 0},
 };
 static generic_button submenu_buttons[] = {
-    {0, 0, 160, 24, GB_IMMEDIATE, button_submenu_item, button_none, 0, 0},
-    {0, 24, 160, 48, GB_IMMEDIATE, button_submenu_item, button_none, 1, 0},
-    {0, 48, 160, 72, GB_IMMEDIATE, button_submenu_item, button_none, 2, 0},
-    {0, 72, 160, 96, GB_IMMEDIATE, button_submenu_item, button_none, 3, 0},
-    {0, 96, 160, 120, GB_IMMEDIATE, button_submenu_item, button_none, 4, 0},
-    {0, 120, 160, 144, GB_IMMEDIATE, button_submenu_item, button_none, 5, 0},
-    {0, 144, 160, 168, GB_IMMEDIATE, button_submenu_item, button_none, 6, 0},
-    {0, 168, 160, 192, GB_IMMEDIATE, button_submenu_item, button_none, 7, 0},
-    {0, 192, 160, 216, GB_IMMEDIATE, button_submenu_item, button_none, 8, 0},
-    {0, 216, 160, 240, GB_IMMEDIATE, button_submenu_item, button_none, 9, 0},
+    {0, 0, 160, 24, button_submenu_item, button_none, 0, 0},
+    {0, 24, 160, 24, button_submenu_item, button_none, 1, 0},
+    {0, 48, 160, 24, button_submenu_item, button_none, 2, 0},
+    {0, 72, 160, 24, button_submenu_item, button_none, 3, 0},
+    {0, 96, 160, 24, button_submenu_item, button_none, 4, 0},
+    {0, 120, 160, 24, button_submenu_item, button_none, 5, 0},
+    {0, 144, 160, 24, button_submenu_item, button_none, 6, 0},
+    {0, 168, 160, 24, button_submenu_item, button_none, 7, 0},
+    {0, 192, 160, 24, button_submenu_item, button_none, 8, 0},
+    {0, 216, 160, 24, button_submenu_item, button_none, 9, 0},
 };
 
 static const int MENU_ID_TO_OVERLAY[8] = {OVERLAY_NONE, OVERLAY_WATER, 1, 3, 5, 6, 7, OVERLAY_RELIGION};

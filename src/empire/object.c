@@ -130,8 +130,8 @@ void empire_object_init_cities(void)
             city->buys_resource[resource] = 0;
             if (city->type == EMPIRE_CITY_DISTANT_ROMAN
                 || city->type == EMPIRE_CITY_DISTANT_FOREIGN
-                || city->type== EMPIRE_CITY_VULNERABLE_ROMAN
-                || city->type== EMPIRE_CITY_FUTURE_ROMAN) {
+                || city->type == EMPIRE_CITY_VULNERABLE_ROMAN
+                || city->type == EMPIRE_CITY_FUTURE_ROMAN) {
                 continue;
             }
             if (empire_object_city_sells_resource(i, resource)) {

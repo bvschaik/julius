@@ -33,21 +33,21 @@ static void button_population_value(int param1, int param2);
 static void button_open_play_toggle(int param1, int param2);
 
 static generic_button buttons[] = {
-    {316, 132, 396, 162, GB_IMMEDIATE, button_rating_toggle, button_none, RATING_CULTURE},
-    {416, 132, 596, 162, GB_IMMEDIATE, button_rating_value, button_none, RATING_CULTURE},
-    {316, 172, 396, 202, GB_IMMEDIATE, button_rating_toggle, button_none, RATING_PROSPERITY},
-    {416, 172, 596, 202, GB_IMMEDIATE, button_rating_value, button_none, RATING_PROSPERITY},
-    {316, 212, 396, 242, GB_IMMEDIATE, button_rating_toggle, button_none, RATING_PEACE},
-    {416, 212, 596, 242, GB_IMMEDIATE, button_rating_value, button_none, RATING_PEACE},
-    {316, 252, 396, 282, GB_IMMEDIATE, button_rating_toggle, button_none, RATING_FAVOR},
-    {416, 252, 596, 282, GB_IMMEDIATE, button_rating_value, button_none, RATING_FAVOR},
-    {316, 292, 396, 322, GB_IMMEDIATE, button_time_limit_toggle, button_none},
-    {416, 292, 596, 322, GB_IMMEDIATE, button_time_limit_years, button_none},
-    {316, 332, 396, 362, GB_IMMEDIATE, button_survival_toggle, button_none},
-    {416, 332, 596, 362, GB_IMMEDIATE, button_survival_years, button_none},
-    {316, 372, 396, 402, GB_IMMEDIATE, button_population_toggle, button_none},
-    {416, 372, 596, 402, GB_IMMEDIATE, button_population_value, button_none},
-    {316, 92, 396, 122, GB_IMMEDIATE, button_open_play_toggle, button_none},
+    {316, 132, 80, 30, button_rating_toggle, button_none, RATING_CULTURE},
+    {416, 132, 180, 30, button_rating_value, button_none, RATING_CULTURE},
+    {316, 172, 80, 30, button_rating_toggle, button_none, RATING_PROSPERITY},
+    {416, 172, 180, 30, button_rating_value, button_none, RATING_PROSPERITY},
+    {316, 212, 80, 30, button_rating_toggle, button_none, RATING_PEACE},
+    {416, 212, 180, 30, button_rating_value, button_none, RATING_PEACE},
+    {316, 252, 80, 30, button_rating_toggle, button_none, RATING_FAVOR},
+    {416, 252, 180, 30, button_rating_value, button_none, RATING_FAVOR},
+    {316, 292, 80, 30, button_time_limit_toggle, button_none},
+    {416, 292, 180, 30, button_time_limit_years, button_none},
+    {316, 332, 80, 30, button_survival_toggle, button_none},
+    {416, 332, 180, 30, button_survival_years, button_none},
+    {316, 372, 80, 30, button_population_toggle, button_none},
+    {416, 372, 180, 30, button_population_value, button_none},
+    {316, 92, 80, 30, button_open_play_toggle, button_none},
 };
 
 static int focus_button_id;
