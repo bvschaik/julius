@@ -20,6 +20,16 @@ typedef enum {
     DRAW_TYPE_BLEND_ALPHA
 } draw_type;
 
+static int footprint_x_start_per_height[] = {
+    28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
+    0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
+};
+
+static int footprint_offset_per_height[] = {
+    0, 2, 8, 18, 32, 50, 72, 98, 128, 162, 200, 242, 288, 338, 392, 450,
+    508, 562, 612, 658, 700, 738, 772, 802, 828, 850, 868, 882, 892, 898
+};
+
 static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, draw_type type)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, img->height);
@@ -318,63 +328,55 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
     if (!clip->is_visible) {
         return;
     }
-    // footprints are ALWAYS clipped in half, if they are clipped
+    // if the current tile is not clipped, just draw it normally
     if (clip->clip_y == CLIP_NONE && clip->clip_x == CLIP_NONE && color_mask == COLOR_NO_MASK) {
         draw_footprint_simple(data, x_offset, y_offset);
         return;
     }
-    int clip_left = clip->clip_x == CLIP_LEFT;
-    int clip_right = clip->clip_x == CLIP_RIGHT;
-    if (clip->clip_y != CLIP_TOP) {
-        const color_t *src = data;
-        for (int y = 0; y < 15; y++) {
-            int x_max = 4 * y + 2;
-            int x_start = 29 - 1 - 2 * y;
-            if (clip_left || clip_right) {
-                x_max = 2 * y;
-            }
-            if (clip_left) {
-                x_start = 30;
-                src += x_max + 2;
-            }
-            color_t *buffer = graphics_get_pixel(x_offset + x_start, y_offset + y);
-            if (color_mask == COLOR_NO_MASK) {
-                memcpy(buffer, src, x_max * sizeof(color_t));
+    int clip_left = clip->clip_x == CLIP_LEFT || clip->clip_x == CLIP_BOTH;
+    int clip_right = clip->clip_x == CLIP_RIGHT || clip->clip_x == CLIP_BOTH;
+    const color_t *src = &data[footprint_offset_per_height[clip->clipped_pixels_top]];
+    for (int y = clip->clipped_pixels_top; y < clip->clipped_pixels_top + clip->visible_pixels_y; y++) {
+        int x_start = footprint_x_start_per_height[y];
+        int x_max = 58 - x_start * 2;
+        int x_pixel_advance = 0;
+        if (clip_left) {
+            if (clip->clipped_pixels_left + clip->visible_pixels_x < x_start) {
                 src += x_max;
-            } else {
-                for (int x = 0; x < x_max; x++, buffer++, src++) {
-                    *buffer = *src & color_mask;
-                }
+                continue;
             }
-            if (clip_right) {
-                src += x_max + 2;
+            if (clip->clipped_pixels_left > x_start) {
+                int pixels_to_reduce = clip->clipped_pixels_left - x_start;
+                if (pixels_to_reduce >= x_max) {
+                    src += x_max;
+                    continue;
+                }
+                src += pixels_to_reduce;
+                x_max -= pixels_to_reduce;
+                x_start = clip->clipped_pixels_left;
             }
         }
-    }
-    if (clip->clip_y != CLIP_BOTTOM) {
-        const color_t *src = &data[900 / 2];
-        for (int y = 0; y < 15; y++) {
-            int x_max = 4 * (15 - 1 - y) + 2;
-            int x_start = 2 * y;
-            if (clip_left || clip_right) {
-                x_max = x_max / 2 - 1;
-            }
-            if (clip_left) {
-                x_start = 30;
-                src += x_max + 2;
-            }
-            color_t *buffer = graphics_get_pixel(x_offset + x_start, 15 + y_offset + y);
-            if (color_mask == COLOR_NO_MASK) {
-                memcpy(buffer, src, x_max * sizeof(color_t));
+        if (clip_right) {
+            int clip_x = 58 - clip->clipped_pixels_right;
+            if (clip_x < x_start) {
                 src += x_max;
-            } else {
-                for (int x = 0; x < x_max; x++, buffer++, src++) {
-                    *buffer = *src & color_mask;
-                }
+                continue;
             }
-            if (clip_right) {
-                src += x_max + 2;
+            if (x_start + x_max > clip_x) {
+                int temp_x_max = clip_x - x_start;
+                x_pixel_advance = x_max - temp_x_max;
+                x_max = temp_x_max;
             }
+        }
+        color_t *buffer = graphics_get_pixel(x_offset + x_start, y_offset + y);
+        if (color_mask == COLOR_NO_MASK) {
+            memcpy(buffer, src, x_max * sizeof(color_t));
+            src += x_max + x_pixel_advance;
+        } else {
+            for (int x = 0; x < x_max; x++, buffer++, src++) {
+                *buffer = *src & color_mask;
+            }
+            src += x_pixel_advance;
         }
     }
 }
