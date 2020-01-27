@@ -24,6 +24,16 @@ static void find_minimum_road_tile(int x, int y, int size, int *min_value, int *
                 }
             }
         }
+        if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
+            building_get(map_building_at(grid_offset))->type != BUILDING_ROADBLOCK) {
+            if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+                int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
+                if (road_index < *min_value) {
+                    *min_value = road_index;
+                    *min_grid_offset = grid_offset;
+                }
+            }
+        }
     }
 }
 
@@ -251,7 +261,10 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset)
         building *b = building_get(map_building_at(grid_offset));
         if (b->type == BUILDING_GATEHOUSE) {
             is_road = 0;
-        } else if (b->type == BUILDING_GRANARY) {
+        } else if (b->type == BUILDING_ROADBLOCK) {
+            is_road = 0;
+	}
+       else if (b->type == BUILDING_GRANARY) {
             if (map_routing_citizen_is_road(grid_offset)) {
                 is_road = 1;
             }

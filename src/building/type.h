@@ -125,8 +125,9 @@ typedef enum {
     BUILDING_WEAPONS_WORKSHOP = 112,
     BUILDING_FURNITURE_WORKSHOP = 113,
     BUILDING_POTTERY_WORKSHOP = 114,
+    BUILDING_ROADBLOCK = 115,
     // helper constants
-    BUILDING_TYPE_MAX = 115
+    BUILDING_TYPE_MAX = 116
 } building_type;
 
 /**

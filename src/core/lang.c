@@ -119,6 +119,13 @@ int lang_load(const char *text_filename, const char *message_filename)
 
 const uint8_t *lang_get_string(int group, int index)
 {
+    // Add new strings
+    if ((group == 28) && (index == 115)) {
+        return "Roadblock";
+    }
+    if ((group == 28) && (index == 116)) {
+        return "Roadblock stops loitering citzens.";
+    }
     const uint8_t *str = &data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;
     while (index > 0) {

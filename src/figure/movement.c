@@ -201,6 +201,10 @@ static void advance_route_tile(figure *f, int roaming_enabled)
                 // do not allow roaming through gatehouse
                 f->direction = DIR_FIGURE_REROUTE;
             }
+            if (building_get(map_building_at(target_grid_offset))->type == BUILDING_ROADBLOCK) {
+                // do not allow roaming through roadblock
+                f->direction = DIR_FIGURE_REROUTE;
+            }
         }
     } else if (map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
         int type = building_get(map_building_at(target_grid_offset))->type;

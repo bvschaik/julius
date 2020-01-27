@@ -3,6 +3,7 @@
 #include "building/animation.h"
 #include "building/construction.h"
 #include "building/dock.h"
+#include "building/type.h"
 #include "city/buildings.h"
 #include "city/entertainment.h"
 #include "city/labor.h"
@@ -74,6 +75,10 @@ static void draw_footprint(int x, int y, int grid_offset)
         if (building_id) {
             building *b = building_get(building_id);
             if (draw_building_as_deleted(b)) {
+                color_mask = COLOR_MASK_RED;
+            }
+	    // Colour Roadblocks red
+            if (b->type == BUILDING_ROADBLOCK) {
                 color_mask = COLOR_MASK_RED;
             }
             int view_x, view_y, view_width, view_height;

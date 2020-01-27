@@ -115,6 +115,7 @@ static int get_height_id(void)
             case BUILDING_GOVERNORS_VILLA:
             case BUILDING_GOVERNORS_PALACE:
             case BUILDING_FORUM:
+            case BUILDING_ROADBLOCK:
             case BUILDING_FORUM_UPGRADED:
             case BUILDING_WINE_WORKSHOP:
             case BUILDING_OIL_WORKSHOP:
@@ -461,6 +462,8 @@ static void draw_background(void)
             window_building_draw_triumphal_arch(&context);
         } else if (btype == BUILDING_PREFECTURE) {
             window_building_draw_prefect(&context);
+        } else if (btype == BUILDING_ROADBLOCK) {
+            window_building_draw_roadblock(&context);
         } else if (btype == BUILDING_GATEHOUSE) {
             window_building_draw_gatehouse(&context);
         } else if (btype == BUILDING_TOWER) {

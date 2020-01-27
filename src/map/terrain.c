@@ -267,6 +267,12 @@ static void add_road(int grid_offset)
     }
 }
 
+void map_terrain_add_roadblock_road(int x, int y, int orientation)
+{
+    // roads under roadblock
+    map_terrain_add(map_grid_offset(x,y), TERRAIN_ROAD);
+}
+
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation)
 {
     // roads under gatehouse

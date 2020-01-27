@@ -146,6 +146,10 @@ static building_properties properties[140] = {
 
 const building_properties *building_properties_for_type(building_type type)
 {
+    // Roadblock properties, as plaza
+    if (type == 115){
+        return &properties[38];
+    }
     return &properties[type];
 }
 

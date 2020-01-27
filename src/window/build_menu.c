@@ -150,12 +150,16 @@ static void draw_menu_buttons(void)
         label_draw(x_offset - 266, data.y_offset + 110 + 24 * i, 16, data.focus_button_id == i + 1 ? 1 : 2);
         int type = building_menu_type(data.selected_submenu, item_index);
         lang_text_draw_centered(28, type, x_offset - 266, data.y_offset + 113 + 24 * i, 176, FONT_NORMAL_GREEN);
+
         if (type == BUILDING_DRAGGABLE_RESERVOIR) {
             type = BUILDING_RESERVOIR;
         }
         int cost = model_get_building(type)->cost;
         if (type == BUILDING_FORT) {
             cost = 0;
+        }
+        if (type == BUILDING_ROADBLOCK) {
+            cost = 40;
         }
         if (cost) {
             text_draw_money(cost, x_offset - 82, data.y_offset + 114 + 24 * i, FONT_NORMAL_GREEN);
