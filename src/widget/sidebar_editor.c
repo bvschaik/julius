@@ -109,7 +109,7 @@ static void draw_status(void)
 
     entry = scenario_map_river_entry();
     exit = scenario_map_river_exit();
-    if (entry.x != -1 || entry.x != -1) {
+    if (entry.x != -1 || exit.x != -1) {
         if (entry.x == -1) {
             lang_text_draw(44, 137, text_offset, 239, FONT_NORMAL_RED);
         } else if (exit.x == -1) {
