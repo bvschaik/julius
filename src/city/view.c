@@ -334,14 +334,12 @@ void city_view_rotate_right(void)
 
 static void set_viewport(int x_offset, int y_offset, int width, int height)
 {
-    int width_tiles = width / 60;
-    int height_tiles = height / 15;
     data.viewport.x = x_offset;
     data.viewport.y = y_offset;
-    data.viewport.width_pixels = width_tiles * 60 - 2;
-    data.viewport.height_pixels = height_tiles * 15;
-    data.viewport.width_tiles = width_tiles;
-    data.viewport.height_tiles = height_tiles;
+    data.viewport.width_pixels = width - 2;
+    data.viewport.height_pixels = height * 15;
+    data.viewport.width_tiles = width / 60;
+    data.viewport.height_tiles = height / 15;
 }
 
 static void set_viewport_with_sidebar(void)
