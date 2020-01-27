@@ -51,6 +51,7 @@ int scroll_in_progress(void)
 
 static int should_scroll(int speed_modifier)
 {
+    return 1;
     time_millis current_time = time_get_millis();
     time_millis diff = current_time - data.last_scroll_time;
     unsigned int scroll_delay = (100 - setting_scroll_speed() + speed_modifier) / 10;
