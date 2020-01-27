@@ -272,24 +272,44 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
     }
 }
 
-void hotkey_left(void)
+void hotkey_left_press(void)
 {
-    scroll_arrow_left();
+    scroll_arrow_left(1);
 }
 
-void hotkey_right(void)
+void hotkey_right_press(void)
 {
-    scroll_arrow_right();
+    scroll_arrow_right(1);
 }
 
-void hotkey_up(void)
+void hotkey_up_press(void)
 {
-    scroll_arrow_up();
+    scroll_arrow_up(1);
 }
 
-void hotkey_down(void)
+void hotkey_down_press(void)
 {
-    scroll_arrow_down();
+    scroll_arrow_down(1);
+}
+
+void hotkey_left_release(void)
+{
+    scroll_arrow_left(0);
+}
+
+void hotkey_right_release(void)
+{
+    scroll_arrow_right(0);
+}
+
+void hotkey_up_release(void)
+{
+    scroll_arrow_up(0);
+}
+
+void hotkey_down_release(void)
+{
+    scroll_arrow_down(0);
 }
 
 void hotkey_home(void)

@@ -64,14 +64,6 @@ static int should_scroll(int speed_modifier)
     return 0;
 }
 
-static void reset_arrow_keys(void)
-{
-    data.arrow_key.left = 0;
-    data.arrow_key.right = 0;
-    data.arrow_key.up = 0;
-    data.arrow_key.down = 0;
-}
-
 static int direction_from_sides(int top, int left, int bottom, int right)
 {
     // two sides
@@ -259,14 +251,12 @@ int scroll_get_direction(const mouse *m)
         // keyboard arrow keys
         if (data.arrow_key.left) {
             left = 1;
-        }
-        if (data.arrow_key.right) {
+        } else if (data.arrow_key.right) {
             right = 1;
         }
         if (data.arrow_key.up) {
             top = 1;
-        }
-        if (data.arrow_key.down) {
+        } else if (data.arrow_key.down) {
             bottom = 1;
         }
         data.is_scrolling = (top | left | bottom | right);
@@ -275,7 +265,6 @@ int scroll_get_direction(const mouse *m)
     }
 
     if (should_scroll(speed_modifier)) {
-        reset_arrow_keys();
         int direction = direction_from_sides(top, left, bottom, right);
         if (direction != DIR_8_NONE) {
             clear_scroll_decay(0);
@@ -286,22 +275,22 @@ int scroll_get_direction(const mouse *m)
     }
 }
 
-void scroll_arrow_left(void)
+void scroll_arrow_left(int is_down)
 {
-    data.arrow_key.left = 1;
+    data.arrow_key.left = is_down;
 }
 
-void scroll_arrow_right(void)
+void scroll_arrow_right(int is_down)
 {
-    data.arrow_key.right = 1;
+    data.arrow_key.right = is_down;
 }
 
-void scroll_arrow_up(void)
+void scroll_arrow_up(int is_down)
 {
-    data.arrow_key.up = 1;
+    data.arrow_key.up = is_down;
 }
 
-void scroll_arrow_down(void)
+void scroll_arrow_down(int is_down)
 {
-    data.arrow_key.down = 1;
+    data.arrow_key.down = is_down;
 }

@@ -18,9 +18,9 @@ void scroll_end_touch_drag(void);
 int scroll_decay(view_tile *position);
 touch_coords scroll_get_original_touch_position(void);
 
-void scroll_arrow_left(void);
-void scroll_arrow_right(void);
-void scroll_arrow_up(void);
-void scroll_arrow_down(void);
+void scroll_arrow_left(int is_down);
+void scroll_arrow_right(int is_down);
+void scroll_arrow_up(int is_down);
+void scroll_arrow_down(int is_down);
 
 #endif // INPUT_SCROLL_H
