@@ -270,7 +270,7 @@ int formation_legion_curse(void)
 {
     formation *best_legion = 0;
     int best_legion_weight = 0;
-    for (int i = 1; i <= MAX_FORMATIONS; i++) {
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use == 1 && m->is_legion) {
             int weight = m->num_figures;
