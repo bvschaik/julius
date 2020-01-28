@@ -299,15 +299,14 @@ void city_gods_calculate_moods(int update_moods)
         city_data.religion.gods[i].target_happiness += 12 - festival_penalty;
     }
 
-    // BUG poor Venus never gets points here!
-    if (max_god < 4) {
+    if (max_god < MAX_GODS) {
         if (city_data.religion.gods[max_god].target_happiness >= 50) {
             city_data.religion.gods[max_god].target_happiness = 100;
         } else {
             city_data.religion.gods[max_god].target_happiness += 50;
         }
     }
-    if (min_god < 4) {
+    if (min_god < MAX_GODS) {
         city_data.religion.gods[min_god].target_happiness -= 25;
     }
     int min_happiness;
