@@ -124,7 +124,7 @@ const uint8_t *lang_get_string(int group, int index)
         return "Roadblock";
     }
     if ((group == 28) && (index == 116)) {
-        return "Roadblock stops loitering citzens.";
+        return "Roadblock stops loitering citizens.";
     }
     const uint8_t *str = &data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;

@@ -74,11 +74,11 @@ static void draw_footprint(int x, int y, int grid_offset)
         color_t color_mask = 0;
         if (building_id) {
             building *b = building_get(building_id);
-            if (draw_building_as_deleted(b)) {
-                color_mask = COLOR_MASK_RED;
-            }
 	    // Colour Roadblocks red
             if (b->type == BUILDING_ROADBLOCK) {
+                color_mask = COLOR_MASK_LIGHTRED;
+            }
+            if (draw_building_as_deleted(b)) {
                 color_mask = COLOR_MASK_RED;
             }
             int view_x, view_y, view_width, view_height;
