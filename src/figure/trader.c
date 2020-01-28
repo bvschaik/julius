@@ -41,16 +41,14 @@ void trader_record_bought_resource(int trader_id, resource_type resource)
 {
     data.traders[trader_id].bought_amount++;
     data.traders[trader_id].bought_resources[resource]++;
-    // BUG: trader buys resource from city, so city sells the resource: should be sell price
-    data.traders[trader_id].bought_value += trade_price_buy(resource);
+    data.traders[trader_id].bought_value += trade_price_sell(resource);
 }
 
 void trader_record_sold_resource(int trader_id, resource_type resource)
 {
     data.traders[trader_id].sold_amount++;
     data.traders[trader_id].sold_resources[resource]++;
-    // BUG: trader sells resource to city, so city buys the resource: should be buy price
-    data.traders[trader_id].sold_value += trade_price_sell(resource);
+    data.traders[trader_id].sold_value += trade_price_buy(resource);
 }
 
 int trader_bought_resources(int trader_id, resource_type resource)
