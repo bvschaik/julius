@@ -743,6 +743,7 @@ else()
 
     if(UNIX AND NOT APPLE)
         install(FILES "res/julius.desktop" DESTINATION share/applications/)
+        install(FILES "res/julius.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.bvschaik.julius.metainfo.xml")
         install(FILES "res/julius_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "julius.png")
         install(FILES "res/julius_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "julius.png")
         install(FILES "res/julius_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "julius.png")
