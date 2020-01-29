@@ -357,7 +357,7 @@ static void set_viewport(int x_offset, int y_offset, int width, int height)
     data.viewport.x = x_offset;
     data.viewport.y = y_offset;
     data.viewport.width_pixels = width - 2;
-    data.viewport.height_pixels = height * 15;
+    data.viewport.height_pixels = height;
     data.viewport.width_tiles = width / 60;
     data.viewport.height_tiles = height / 15;
 }

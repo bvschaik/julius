@@ -18,7 +18,7 @@ enum {
     EMPIRE_HEIGHT = 1000,
     EMPIRE_HEADER_SIZE = 1280,
     EMPIRE_DATA_SIZE = 12800,
-    SCROLL_AMOUNT = 20
+    SCROLL_AMOUNT = 10
 };
 
 static struct {

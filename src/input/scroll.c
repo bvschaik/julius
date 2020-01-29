@@ -18,6 +18,7 @@ static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
 
 static struct {
     int is_scrolling;
+    int is_touch;
     struct {
         int up;
         int down;
@@ -35,6 +36,7 @@ static struct {
         time_millis last_time;
         pixel_offset last_position;
         int decaying;
+        float modifier;
     } speed;
     struct {
         int active;
@@ -43,7 +45,6 @@ static struct {
         int width;
         int height;
         int margin;
-        int multiplier;
     } limits;
     touch_coords start_touch;
 } data;
@@ -122,8 +123,7 @@ void scroll_set_custom_margins(int x, int y, int width, int height)
     data.limits.y = y;
     data.limits.width = width;
     data.limits.height = height;
-    data.limits.margin = setting_scroll_speed();
-    data.limits.multiplier = (width < 900 || height < 500) ? 2 : 3;
+    data.limits.margin = 100;
 }
 
 void scroll_restore_margins(void)
@@ -142,12 +142,14 @@ void scroll_start_touch_drag(const pixel_offset *position, touch_coords coords)
     data.position.current = *position;
     data.start_touch = coords;
     data.is_scrolling = 1;
+    data.is_touch = 1;
     clear_scroll_decay(position);
 }
 
 int scroll_move_touch_drag(int original_x, int original_y, int current_x, int current_y, pixel_offset *position)
 {
     data.is_scrolling = 1;
+    data.is_touch = 1;
 
     position->x = data.position.original.x - (current_x - original_x);
     position->y = data.position.original.y - (current_y - original_y);
@@ -164,6 +166,7 @@ int scroll_move_touch_drag(int original_x, int original_y, int current_x, int cu
 
 void scroll_end_touch_drag(void)
 {
+    data.is_touch = 0;
     data.speed.last_position.x = data.position.current.x + data.speed.x;
     data.speed.last_position.y = data.position.current.y + data.speed.y;
     data.speed.last_time = time_get_millis();
@@ -205,7 +208,7 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta)
 {
     int direction = scroll_get_direction(m);
     if (direction == DIR_8_NONE) {
-        if (!m->is_touch && !data.speed.decaying && (data.speed.x || data.speed.y)) {
+        if (!data.is_touch && !data.speed.decaying && (data.speed.x || data.speed.y)) {
             data.is_scrolling = 1;
             data.speed.x = absolute_decrement(data.speed.x, 2);
             data.speed.y = absolute_decrement(data.speed.y, 1);
@@ -222,27 +225,42 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta)
     }
     int dir_x = DIRECTION_X[direction];
     int dir_y = DIRECTION_Y[direction];
-    int max_speed = 30 * setting_scroll_speed() / 100;
+    int max_speed = (30 * setting_scroll_speed() / 100) ^ 1;
     int max_speed_x = max_speed * dir_x;
     int max_speed_y = max_speed * dir_y / 2;
 
-    if (!dir_x) {
-        data.speed.x = absolute_decrement(data.speed.x, 2);
-    } else if (data.speed.x * dir_x < 0) {
-        data.speed.x = -data.speed.x;
-    } else if (data.speed.x != max_speed_x) {
-        data.speed.x += dir_x;
-    }
-    if (!dir_y) {
-        data.speed.y = absolute_decrement(data.speed.y, 1);
-    } else if (data.speed.y * dir_y < 0) {
-        data.speed.y = -data.speed.y;
-    } else if (data.speed.y != max_speed_y) {
-        data.speed.y += dir_y;
+    if (!data.limits.active) {
+        if (!dir_x) {
+            data.speed.x = absolute_decrement(data.speed.x, 2);
+        } else if (data.speed.x * dir_x < 0) {
+            data.speed.x = -data.speed.x;
+        } else if (data.speed.x != max_speed_x) {
+            data.speed.x += dir_x;
+        }
+        if (!dir_y) {
+            data.speed.y = absolute_decrement(data.speed.y, 1);
+        } else if (data.speed.y * dir_y < 0) {
+            data.speed.y = -data.speed.y;
+        } else if (data.speed.y != max_speed_y) {
+            data.speed.y += dir_y;
+        }
+    } else {
+        data.speed.x = (int) (max_speed_x * data.speed.modifier);
+        data.speed.y = (int) (max_speed_y * data.speed.modifier);
     }
 
-    delta->x = data.speed.x;
-    delta->y = data.speed.y;
+    // Adjust delta for time (allows scrolling at the same rate at lower FPS)
+    // Expects the game to run at least at 5FPS to work
+    time_millis current_time = time_get_millis();
+    time_millis time_delta = current_time - data.speed.last_time;
+    data.speed.last_time = current_time;
+    if(time_delta > 17 && time_delta < MAX_SPEED_TIME_WEIGHT) {
+        delta->x = (int) ((float) (data.speed.x / 17.0f) * time_delta);
+        delta->y = (int) ((float) (data.speed.y / 17.0f) * time_delta);
+    } else {
+        delta->x = data.speed.x;
+        delta->y = data.speed.y;
+    }
 }
 
 int scroll_get_direction(const mouse *m)
@@ -266,39 +284,36 @@ int scroll_get_direction(const mouse *m)
     int bottom = 0;
     int left = 0;
     int right = 0;
-    int speed_modifier = 0;
     int border = SCROLL_BORDER;
     int x = m->x;
     int y = m->y;
     if (data.limits.active) {
-        border = data.limits.margin * data.limits.multiplier;
-        speed_modifier = border;
+        border = data.limits.margin;
         width = data.limits.width;
         height = data.limits.height;
         x -= data.limits.x;
         y -= data.limits.y;
+        data.speed.modifier = 0;
     }
     // mouse near map edge
     if ((!m->is_touch || data.limits.active) && (x >= 0 && x < width && y >= 0 && y < height)) {
         if (x < border) {
             left = 1;
-            speed_modifier = (x < speed_modifier) ? x : speed_modifier;
-        }
-        if (x >= width - border) {
+            data.speed.modifier = 1 - x / (float) border;
+        } else if (x >= width - border) {
             right = 1;
-            speed_modifier = ((width - x) < speed_modifier) ? (width - x) : speed_modifier;
+            data.speed.modifier = 1 - (width - x) / (float) border;
         }
         if (y < border) {
             top = 1;
-            speed_modifier = (y < speed_modifier) ? y : speed_modifier;
-        }
-        if (y >= height - border) {
+            data.speed.modifier = (float) fmax(data.speed.modifier, 1 - y / (float) border);
+        } else if (y >= height - border) {
             bottom = 1;
-            speed_modifier = ((height - y) < speed_modifier) ? (height - y) : speed_modifier;
+            data.speed.modifier = (float) fmax(data.speed.modifier, 1 - (height - y) / (float) border);
         }
     }
 
-    if (!data.limits.active) {
+    if (!data.is_touch) {
         // keyboard arrow keys
         if (data.arrow_key.left) {
             left = 1;
@@ -311,8 +326,6 @@ int scroll_get_direction(const mouse *m)
             bottom = 1;
         }
         data.is_scrolling = (top | left | bottom | right);
-    } else {
-        speed_modifier /= data.limits.multiplier;
     }
     return direction_from_sides(top, left, bottom, right);
 }
