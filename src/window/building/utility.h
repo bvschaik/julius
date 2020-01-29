@@ -6,6 +6,7 @@
 void window_building_draw_engineers_post(building_info_context *c);
 
 void window_building_draw_prefect(building_info_context *c);
+void window_building_draw_roadblock(building_info_context *c);
 
 void window_building_draw_burning_ruin(building_info_context *c);
 void window_building_draw_rubble(building_info_context *c);

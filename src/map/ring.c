@@ -30,11 +30,6 @@ void map_ring_init(void)
                 data.tiles[index].x = x;
                 data.tiles[index].y = y;
             }
-            // exception (bug in game): size 4 distance 2, left corner is off by x+1, y-1
-            if (size == 4 && dist == 2) {
-                data.tiles[index-1].x += 1;
-                data.tiles[index-1].y -= 1;
-            }
             // left row up
             for (x = -dist, y = size + dist - 2; y >= -dist; y--, index++) {
                 data.tiles[index].x = x;
