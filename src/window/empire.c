@@ -435,7 +435,7 @@ static void handle_mouse(const mouse *m)
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
-            view_tile position;
+            pixel_offset position;
             if (t->has_started) {
                 data.is_scrolling = 1;
                 empire_get_scroll(&position.x, &position.y);

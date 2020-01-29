@@ -10,7 +10,7 @@
 typedef struct {
     int x;
     int y;
-} view_tile;
+} view_tile, pixel_offset;
 
 typedef void (map_callback)(int x, int y, int grid_offset);
 
@@ -21,10 +21,14 @@ int city_view_orientation(void);
 void city_view_reset_orientation(void);
 
 void city_view_get_camera(int *x, int *y);
+void city_view_get_pixel_offset(int *x, int *y);
+void city_view_get_camera_in_pixels(int *x, int *y);
 
 void city_view_set_camera(int x, int y);
 
-int city_view_scroll(int direction);
+void city_view_set_camera_from_pixel_position(int x, int y);
+
+int city_view_scroll(int x, int y);
 
 int city_view_to_grid_offset(int x_view, int y_view);
 
