@@ -36,7 +36,6 @@ static void check_camera_boundaries(void)
 {
     int x_min = (VIEW_X_MAX - map_grid_width()) / 2;
     int y_min = (VIEW_Y_MAX - 2 * map_grid_height()) / 2;
-
     if (data.camera.tile.x < x_min - 1) {
         data.camera.tile.x = x_min - 1;
         data.camera.pixel.x = 0;
@@ -248,7 +247,6 @@ int city_view_pixels_to_view_tile(int x_pixels, int y_pixels, view_tile *tile)
 
     x_pixels += data.camera.pixel.x;
     y_pixels += data.camera.pixel.y;
-
     int odd = ((x_pixels - data.viewport.x) / 30 + (y_pixels - data.viewport.y) / 15) & 1;
     int x_is_odd = ((x_pixels - data.viewport.x) / 30) & 1;
     int y_is_odd = ((y_pixels - data.viewport.y) / 15) & 1;

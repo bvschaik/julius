@@ -20,12 +20,12 @@ typedef enum {
     DRAW_TYPE_BLEND_ALPHA
 } draw_type;
 
-static int footprint_x_start_per_height[] = {
+static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
     28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
     0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
 };
 
-static int footprint_offset_per_height[] = {
+static const int FOOTPRINT_OFFSET_PER_HEIGHT[] = {
     0, 2, 8, 18, 32, 50, 72, 98, 128, 162, 200, 242, 288, 338, 392, 450,
     508, 562, 612, 658, 700, 738, 772, 802, 828, 850, 868, 882, 892, 898
 };
@@ -328,16 +328,16 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
     if (!clip->is_visible) {
         return;
     }
-    // if the current tile is not clipped, just draw it normally
+    // If the current tile neither clipped nor color masked, just draw it normally
     if (clip->clip_y == CLIP_NONE && clip->clip_x == CLIP_NONE && color_mask == COLOR_NO_MASK) {
         draw_footprint_simple(data, x_offset, y_offset);
         return;
     }
     int clip_left = clip->clip_x == CLIP_LEFT || clip->clip_x == CLIP_BOTH;
     int clip_right = clip->clip_x == CLIP_RIGHT || clip->clip_x == CLIP_BOTH;
-    const color_t *src = &data[footprint_offset_per_height[clip->clipped_pixels_top]];
+    const color_t *src = &data[FOOTPRINT_OFFSET_PER_HEIGHT[clip->clipped_pixels_top]];
     for (int y = clip->clipped_pixels_top; y < clip->clipped_pixels_top + clip->visible_pixels_y; y++) {
-        int x_start = footprint_x_start_per_height[y];
+        int x_start = FOOTPRINT_X_START_PER_HEIGHT[y];
         int x_max = 58 - x_start * 2;
         int x_pixel_advance = 0;
         if (clip_left) {

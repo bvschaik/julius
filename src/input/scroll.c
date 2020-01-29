@@ -225,7 +225,7 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta)
     }
     int dir_x = DIRECTION_X[direction];
     int dir_y = DIRECTION_Y[direction];
-    int max_speed = (30 * setting_scroll_speed() / 100) ^ 1;
+    int max_speed = (30 * setting_scroll_speed() / 100) & ~1;
     int max_speed_x = max_speed * dir_x;
     int max_speed_y = max_speed * dir_y / 2;
 
