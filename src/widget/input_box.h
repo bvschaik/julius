@@ -1,5 +1,5 @@
-#ifndef WINDOW_INPUT_BOX_H
-#define WINDOW_INPUT_BOX_H
+#ifndef WIDGET_INPUT_BOX_H
+#define WIDGET_INPUT_BOX_H
 
 #define INPUT_BOX_BLOCK_SIZE 16
 
@@ -13,4 +13,4 @@ typedef struct
 
 void input_box_draw(const input_box *box);
 
-#endif // WINDOW_INPUT_BOX_H
+#endif // WIDGET_INPUT_BOX_H

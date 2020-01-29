@@ -1,4 +1,4 @@
-package bvschaik.julius;
+package com.github.bvschaik.julius;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,25 +7,11 @@ import android.os.Looper;
 import android.widget.Toast;
 import org.libsdl.app.SDLActivity;
 
-public class JuliusMainActivity extends SDLActivity
-{
+public class JuliusMainActivity extends SDLActivity {
     private static final int GET_FOLDER_RESULT = 500;
-    private static final int rwFlagsPermission = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                               | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-    public static boolean paused = true;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        paused = false;
-    }
+    private static final int RW_FLAGS_PERMISSION = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                                 | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+    static boolean paused = false;
 
     @Override
     public void onStop()
@@ -60,18 +46,21 @@ public class JuliusMainActivity extends SDLActivity
     public void showDirectorySelection()
     {
         // Wait before showing window
-        Sleep(1000);
-
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        intent.addFlags(
-                rwFlagsPermission
-                        | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
-                        | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-        );
-        intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        intent.putExtra("android.content.extra.FANCY", true);
-        intent.putExtra("android.content.extra.SHOW_FILESIZE", true);
-        startActivityForResult(intent, GET_FOLDER_RESULT);
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable()
+        {
+            public void run() {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                intent.addFlags(
+                        RW_FLAGS_PERMISSION
+                                | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                                | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+                );
+                intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+                intent.putExtra("android.content.extra.FANCY", true);
+                intent.putExtra("android.content.extra.SHOW_FILESIZE", true);
+                startActivityForResult(intent, GET_FOLDER_RESULT);
+            }
+        }, 1000);
         paused = true;
     }
 
@@ -82,15 +71,14 @@ public class JuliusMainActivity extends SDLActivity
                 return;
             }
 
-            getContentResolver().takePersistableUriPermission(data.getData(), data.getFlags() & rwFlagsPermission);
+            getContentResolver().takePersistableUriPermission(data.getData(), data.getFlags() & RW_FLAGS_PERMISSION);
             FileManager.setBaseUri(data.getData());
         }
     }
 
     public void toastMessage(final String message)
     {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable()
+        new Handler(Looper.getMainLooper()).post(new Runnable()
         {
             public void run()
             {
@@ -99,10 +87,10 @@ public class JuliusMainActivity extends SDLActivity
         });
     }
 
-    static public void waitOnPause()
+    public static void waitOnPause()
     {
         while(paused) {
-            Sleep(1000);
+            sleep(1000);
         }
     }
 
@@ -111,7 +99,7 @@ public class JuliusMainActivity extends SDLActivity
         return getResources().getDisplayMetrics().density;
     }
 
-    static private void Sleep(int ms)
+    private static void sleep(int ms)
     {
         try {
             Thread.sleep(ms);

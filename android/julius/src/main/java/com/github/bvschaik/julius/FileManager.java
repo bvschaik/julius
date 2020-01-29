@@ -1,4 +1,4 @@
-package bvschaik.julius;
+package com.github.bvschaik.julius;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -10,8 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FileManager
-{
+public class FileManager {
     private static Uri baseUri = Uri.EMPTY;
     static HashMap<Uri, HashMap<String, FileInfo>> folderStructureCache = new HashMap<>();
 
@@ -211,8 +210,7 @@ public class FileManager
         }
     }
 
-    private static class FileInfo
-    {
+    private static class FileInfo {
         static FileInfo base;
         private String documentId;
         private String name;

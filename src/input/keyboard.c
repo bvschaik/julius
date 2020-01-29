@@ -66,7 +66,7 @@ void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation
     data.max_length = max_length;
     data.allow_punctuation = allow_punctuation;
     data.accepted = 0;
-    data.box_width = (capture_box->w - 1) * INPUT_BOX_BLOCK_SIZE;
+    data.box_width = (capture_box->w - 2) * INPUT_BOX_BLOCK_SIZE;
     data.font = font;
     set_offset_to_end();
     platform_start_virtual_keyboard(capture_box);

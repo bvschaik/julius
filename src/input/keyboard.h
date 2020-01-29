@@ -2,7 +2,7 @@
 #define INPUT_KEYBOARD_H
 
 #include "graphics/font.h"
-#include "window/input_box.h"
+#include "widget/input_box.h"
 
 #include <stdint.h>
 

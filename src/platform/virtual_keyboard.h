@@ -2,7 +2,7 @@
 #define PLATFORM_VIRTUAL_KEYBOARD_H
 
 #include "input/mouse.h"
-#include "window/input_box.h"
+#include "widget/input_box.h"
 
 void platform_start_virtual_keyboard(const input_box *capture_box);
 void platform_resume_virtual_keyboard(void);
