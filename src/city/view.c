@@ -43,7 +43,7 @@ static void check_camera_boundaries(void)
     }
     if (data.camera.tile.x > VIEW_X_MAX - x_min - data.viewport.width_tiles - 1) {
         data.camera.tile.x = VIEW_X_MAX - x_min - data.viewport.width_tiles - 1;
-        data.camera.pixel.x = 60;
+        data.camera.pixel.x = 59;
     }
     if (data.camera.tile.y < y_min - 2) {
         data.camera.tile.y = y_min - 1;
@@ -51,7 +51,7 @@ static void check_camera_boundaries(void)
     }
     if (data.camera.tile.y > VIEW_Y_MAX - y_min - data.viewport.height_tiles - 1) {
         data.camera.tile.y = VIEW_Y_MAX - y_min - data.viewport.height_tiles - 1;
-        data.camera.pixel.y = 30;
+        data.camera.pixel.y = 29;
     }
     data.camera.tile.y &= ~1;
 }
@@ -138,11 +138,11 @@ static void adjust_camera_position_for_pixels(void)
         data.camera.tile.y -= 2;
         data.camera.pixel.y += 30;
     }
-    while (data.camera.pixel.x > 60) {
+    while (data.camera.pixel.x >= 60) {
         data.camera.tile.x++;
         data.camera.pixel.x -= 60;
     }
-    while (data.camera.pixel.y > 30) {
+    while (data.camera.pixel.y >= 30) {
         data.camera.tile.y += 2;
         data.camera.pixel.y -= 30;
     }
@@ -459,7 +459,7 @@ void city_view_foreach_map_tile(map_callback *callback)
     int odd = 0;
     int y_view = data.camera.tile.y - 8;
     int y_graphic = data.viewport.y - 9*15 - data.camera.pixel.y;
-    for (int y = 0; y < data.viewport.height_tiles + 16 + (data.camera.pixel.y + 2) / 15; y++) {
+    for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
         if (y_view >= 0 && y_view < VIEW_Y_MAX) {
             int x_graphic = -(4*58 + 8) - data.camera.pixel.x;
             if (odd) {
@@ -489,7 +489,7 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
     int y_view = data.camera.tile.y - 8;
     int y_graphic = data.viewport.y - 9*15 - data.camera.pixel.y;
     int x_graphic, x_view;
-    for (int y = 0; y < data.viewport.height_tiles + 16 + (data.camera.pixel.y + 2) / 15; y++) {
+    for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
         if (y_view >= 0 && y_view < VIEW_Y_MAX) {
             if (callback1) {
                 x_graphic = -(4*58 + 8) - data.camera.pixel.x;

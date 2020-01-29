@@ -79,30 +79,6 @@ static int direction_from_sides(int top, int left, int bottom, int right)
     return DIR_8_NONE;
 }
 
-static int direction_has(int direction, int match)
-{
-    switch (match) {
-        case DIR_0_TOP:
-            return direction == DIR_0_TOP || direction == DIR_1_TOP_RIGHT || direction == DIR_7_TOP_LEFT;
-        case DIR_1_TOP_RIGHT:
-            return direction == DIR_1_TOP_RIGHT;
-        case DIR_2_RIGHT:
-            return direction == DIR_2_RIGHT || direction == DIR_1_TOP_RIGHT || direction == DIR_3_BOTTOM_RIGHT;
-        case DIR_3_BOTTOM_RIGHT:
-            return direction == DIR_3_BOTTOM_RIGHT;
-        case DIR_4_BOTTOM:
-            return direction == DIR_4_BOTTOM || direction == DIR_3_BOTTOM_RIGHT || direction == DIR_5_BOTTOM_LEFT;
-        case DIR_5_BOTTOM_LEFT:
-            return direction == DIR_5_BOTTOM_LEFT;
-        case DIR_6_LEFT:
-            return direction == DIR_6_LEFT || direction == DIR_5_BOTTOM_LEFT || direction == DIR_7_TOP_LEFT;
-        case DIR_7_TOP_LEFT:
-            return direction == DIR_7_TOP_LEFT;
-        default:
-            return 0;
-    }
-}
-
 static void clear_scroll_decay(const pixel_offset *position)
 {
     data.speed.x = 0;
