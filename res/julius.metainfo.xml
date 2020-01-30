@@ -4,7 +4,7 @@
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>AGPL-3.0</project_license>
 	<name>Julius</name>
-	<summary>Julius is an open source re-implementation of Ceaser III</summary>
+	<summary>Julius is an open source re-implementation of Caesar III</summary>
 	<description>
 		<p>Julius is an open source re-implementation of Caesar III.</p>
 		<p>The aim of this project is to create an open-source version of Caesar 3, with the same logic as the original, but with some UI enhancements, that is able to be played on multiple platforms. The same logic means that the saved games are 100% compatible, and any gameplay bugs present in the original Caesar 3 game will also be present in Julius.</p>
