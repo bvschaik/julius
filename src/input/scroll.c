@@ -16,6 +16,9 @@ static const time_millis MAX_SPEED_TIME_WEIGHT = 200;
 static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
 static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
 
+// TODO Remove this when the extra settings have been added
+static const int USE_SMOOTH_SCROLLING = 1;
+
 static struct {
     int is_scrolling;
     int is_touch;
@@ -52,6 +55,20 @@ static struct {
 int scroll_in_progress(void)
 {
     return data.is_scrolling;
+}
+
+static int should_scroll(void)
+{
+    time_millis current_time = time_get_millis();
+    time_millis diff = current_time - data.speed.last_time;
+    unsigned int scroll_delay = (100 - setting_scroll_speed()) / 10;
+    if (scroll_delay < 10) { // 0% = 10 = no scroll at all
+        if (diff >= 12 * scroll_delay + 2) {
+            data.speed.last_time = current_time;
+            return 1;
+        }
+    }
+    return 0;
 }
 
 static int direction_from_sides(int top, int left, int bottom, int right)
@@ -118,6 +135,7 @@ static void find_scroll_speed(const pixel_offset *position)
 
 void scroll_set_custom_margins(int x, int y, int width, int height)
 {
+    data.is_touch = 1;
     data.limits.active = 1;
     data.limits.x = x;
     data.limits.y = y;
@@ -128,6 +146,7 @@ void scroll_set_custom_margins(int x, int y, int width, int height)
 
 void scroll_restore_margins(void)
 {
+    data.is_touch = 0;
     data.limits.active = 0;
 }
 
@@ -207,8 +226,9 @@ static int absolute_decrement(int value, int step)
 void scroll_get_delta(const mouse *m, pixel_offset *delta)
 {
     int direction = scroll_get_direction(m);
+
     if (direction == DIR_8_NONE) {
-        if (!data.is_touch && !data.speed.decaying && (data.speed.x || data.speed.y)) {
+        if (!data.is_touch && !data.speed.decaying && (data.speed.x || data.speed.y) && USE_SMOOTH_SCROLLING) {
             data.is_scrolling = 1;
             data.speed.x = absolute_decrement(data.speed.x, 2);
             data.speed.y = absolute_decrement(data.speed.y, 1);
@@ -225,6 +245,14 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta)
     }
     int dir_x = DIRECTION_X[direction];
     int dir_y = DIRECTION_Y[direction];
+
+    if (!USE_SMOOTH_SCROLLING && !data.is_touch) {
+        int do_scroll = should_scroll();
+        delta->x = 60 * dir_x * do_scroll;
+        delta->y = 30 * dir_y * do_scroll;
+        return;
+    }
+
     int max_speed = (30 * setting_scroll_speed() / 100) & ~1;
     int max_speed_x = max_speed * dir_x;
     int max_speed_y = max_speed * dir_y / 2;
