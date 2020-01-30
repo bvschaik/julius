@@ -38,7 +38,7 @@ static generic_button buttons[] = {
 static image_button movie_button =
     {591, 442, 33, 22, IB_NORMAL, 89, 0, button_intro_movie, button_none, 0, 0, 1};
 
-static void draw_version(void)
+static void draw_version_string(void)
 {
     char version_string[100] = "v";
     int version_length = string_length(JULIUS_VERSION);
@@ -49,10 +49,13 @@ static void draw_version(void)
 
     int text_width = text_get_width(version_string, FONT_SMALL_PLAIN);
 
-    graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
-    graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
-
-    text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
+    if (text_y <= 500 && (screen_width() - 640) / 2 < text_width + 18) {
+        graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
+        graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
+        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
+    } else {
+        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_WHITE);
+    }
 }
 
 static void draw_background(void)
@@ -61,7 +64,7 @@ static void draw_background(void)
     graphics_in_dialog();
     image_draw(image_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
     graphics_reset_dialog();
-    draw_version();
+    draw_version_string();
 }
 
 static void draw_foreground(void)
