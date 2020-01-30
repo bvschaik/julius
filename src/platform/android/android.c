@@ -9,6 +9,8 @@ typedef struct
     jmethodID method;
 } java_function_handler;
 
+static int hasDirectory;
+
 static int startup_java_function_handler(const char *class_name, java_function_handler *handler)
 {
     handler->env = SDL_AndroidGetJNIEnv();
@@ -94,6 +96,13 @@ const char* android_show_c3_path_dialog(void)
         (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method);
     }
     destroy_java_function_handler(&handler);
+
+    hasDirectory = 0;
+
+    while (!hasDirectory) {
+        SDL_WaitEventTimeout(NULL, 2000);
+    }
+
     return get_c3_path();
 }
 
@@ -211,4 +220,9 @@ int android_remove_file(const char *filename)
     destroy_java_function_handler(&handler);
 
     return result;
+}
+
+JNIEXPORT void JNICALL Java_com_github_bvschaik_julius_JuliusMainActivity_gotDirectory(JNIEnv *env)
+{
+    hasDirectory = 1;
 }

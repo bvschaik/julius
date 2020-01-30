@@ -11,7 +11,6 @@ public class JuliusMainActivity extends SDLActivity {
     private static final int GET_FOLDER_RESULT = 500;
     private static final int RW_FLAGS_PERMISSION = Intent.FLAG_GRANT_READ_URI_PERMISSION
                                                  | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-    static boolean paused = false;
 
     @Override
     public void onStop()
@@ -27,20 +26,6 @@ public class JuliusMainActivity extends SDLActivity {
             "SDL2_mixer",
             "julius"
         };
-    }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        paused = true;
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        paused = false;
     }
 
     public void showDirectorySelection()
@@ -61,18 +46,19 @@ public class JuliusMainActivity extends SDLActivity {
                 startActivityForResult(intent, GET_FOLDER_RESULT);
             }
         }, 1000);
-        paused = true;
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == GET_FOLDER_RESULT) {
             if (data.getData() == null) {
+                this.gotDirectory();
                 return;
             }
 
             getContentResolver().takePersistableUriPermission(data.getData(), data.getFlags() & RW_FLAGS_PERMISSION);
             FileManager.setBaseUri(data.getData());
+            this.gotDirectory();
         }
     }
 
@@ -87,22 +73,10 @@ public class JuliusMainActivity extends SDLActivity {
         });
     }
 
-    public static void waitOnPause()
-    {
-        while(paused) {
-            sleep(1000);
-        }
-    }
-
     public float getScreenScale()
     {
         return getResources().getDisplayMetrics().density;
     }
 
-    private static void sleep(int ms)
-    {
-        try {
-            Thread.sleep(ms);
-        } catch(InterruptedException e) {}
-    }
+    private native void gotDirectory();
 }

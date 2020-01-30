@@ -16,8 +16,6 @@ public class FileManager {
 
     public static String getC3Path()
     {
-        // Halt startup until directory is selected
-        JuliusMainActivity.waitOnPause();
         return baseUri.toString();
     }
 
