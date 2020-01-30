@@ -325,6 +325,8 @@ message_advisor city_message_get_advisor(city_message_type message_type)
 
         case MESSAGE_UNEMPLOYMENT:
         case MESSAGE_WORKERS_NEEDED:
+        case MESSAGE_ROME_LOWERS_WAGES:
+        case MESSAGE_ROME_RAISES_WAGES:
             return MESSAGE_ADVISOR_LABOR;
 
         case MESSAGE_NOT_ENOUGH_FOOD:
