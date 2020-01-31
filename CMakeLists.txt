@@ -148,6 +148,7 @@ set(TINYFD_FILES
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/arguments.c
+    ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c

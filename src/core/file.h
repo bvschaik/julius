@@ -1,9 +1,8 @@
 #ifndef CORE_FILE_H
 #define CORE_FILE_H
 
-#include <stdlib.h>
-#include <stdint.h>
 #include <stdio.h>
+#include <stdint.h>
 
 /**
  * @file
@@ -18,7 +17,6 @@
 
 /**
  * Wrapper for fopen converting filename to path in current working directory
- * This exists because some platforms (e.g. PS Vita) don't support chdir() / getcwd()
  *
  * @param filename Filename
  * @param mode Mode to open the file (e.g. "wb").
@@ -28,8 +26,7 @@ FILE* file_open(const char *filename, const char *mode);
 
 /**
  * Wrapper to fclose
- * @param filename Filename
- * @param mode Mode to open the file (e.g. "wb").
+ * @param stream The FILE stream to close
  * @return See fclose (If the stream is successfully closed, a zero value is returned.
  *         On failure, EOF is returned.)
  */

@@ -2,74 +2,12 @@
 
 #include "core/dir.h"
 #include "core/string.h"
-
-#ifdef __ANDROID__
-#include "platform/android/android.h"
-#endif
-
-#ifdef __vita__
-#include "platform/vita/vita.h"
-#endif
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
-#if defined(__vita__)
+#include "platform/file_manager.h"
 
 FILE *file_open(const char *filename, const char *mode)
 {
-    char *resolved_path = vita_prepend_path(filename);
-    FILE *fp = fopen(resolved_path, mode);
-    free(resolved_path);
-    return fp;
+    return platform_file_manager_open_file(filename, mode);
 }
-
-#elif defined(_WIN32)
-
-wchar_t *utf8_to_wchar(const char *str)
-{
-    int size_needed = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
-    wchar_t *result = (wchar_t*) malloc(sizeof(wchar_t) * size_needed);
-    MultiByteToWideChar(CP_UTF8, 0, str, -1, result, size_needed);
-    return result;
-}
-
-FILE *file_open(const char *filename, const char *mode)
-{
-    wchar_t *wfile = utf8_to_wchar(filename);
-    wchar_t *wmode = utf8_to_wchar(mode);
-
-    FILE *fp = _wfopen(wfile, wmode);
-
-    free(wfile);
-    free(wmode);
-
-    return fp;
-}
-
-#elif defined(__ANDROID__)
-
-FILE *file_open(const char *filename, const char *mode)
-{
-    int fd = android_get_file_descriptor(filename, mode);
-    if (!fd) {
-        return NULL;
-    }
-    return fdopen(fd, mode);
-}
-
-#else
-
-FILE *file_open(const char *filename, const char *mode)
-{
-    return fopen(filename, mode);
-}
-
-#endif
 
 int file_close(FILE *stream)
 {
@@ -119,7 +57,6 @@ void file_append_extension(char *filename, const char *extension)
     filename[4] = 0;
 }
 
-
 void file_remove_extension(uint8_t *filename)
 {
     uint8_t c;
@@ -135,18 +72,10 @@ void file_remove_extension(uint8_t *filename)
 
 int file_exists(const char *filename)
 {
-#ifdef __ANDROID__
-    return android_check_file_exists(filename);
-#else
-    return NULL != dir_get_case_corrected_file(filename);
-#endif
+    return platform_file_manager_file_exists(filename);
 }
 
 int file_remove(const char *filename)
 {
-#ifdef __ANDROID__
-    return android_remove_file(filename);
-#else
-    return remove(filename) == 0;
-#endif
+    return platform_file_manager_remove_file(filename);
 }

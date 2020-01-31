@@ -10,6 +10,7 @@
 #include "input/mouse.h"
 #include "platform/arguments.h"
 #include "platform/cursor.h"
+#include "platform/file_manager.h"
 #include "platform/keyboard_input.h"
 #include "platform/prefs.h"
 #include "platform/screen.h"
@@ -416,7 +417,7 @@ static int pre_init(const char *custom_data_dir)
 {
     if (custom_data_dir) {
         SDL_Log("Loading game from %s", custom_data_dir);
-        if (!dir_set_base_path(custom_data_dir)) {
+        if (!platform_file_manager_set_base_path(custom_data_dir)) {
             SDL_Log("%s: directory not found", custom_data_dir);
             return 0;
         }
@@ -431,7 +432,7 @@ static int pre_init(const char *custom_data_dir)
     #if SDL_VERSION_ATLEAST(2, 0, 1)
         char *base_path = SDL_GetBasePath();
         if (base_path) {
-            if (dir_set_base_path(base_path)) {
+            if (platform_file_manager_set_base_path(base_path)) {
                 SDL_Log("Loading game from base path %s", base_path);
                 if (game_pre_init()) {
                     SDL_free(base_path);
@@ -446,7 +447,7 @@ static int pre_init(const char *custom_data_dir)
         const char *user_dir = pref_data_dir();
         if (user_dir) {
             SDL_Log("Loading game from user pref %s", user_dir);
-            if (dir_set_base_path(user_dir) && game_pre_init()) {
+            if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
                 return 1;
             }
         }
@@ -454,7 +455,7 @@ static int pre_init(const char *custom_data_dir)
         user_dir = ask_for_data_dir(0);
         while (user_dir) {
             SDL_Log("Loading game from user-selected dir %s", user_dir);
-            if (dir_set_base_path(user_dir) && game_pre_init()) {
+            if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
                 pref_save_data_dir(user_dir);
     #ifdef __ANDROID__
                 android_toast_message("C3 files found. Path saved.");

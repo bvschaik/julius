@@ -24,13 +24,6 @@ typedef struct {
 const dir_listing *dir_find_files_with_extension(const char *extension);
 
 /**
- * Sets the base path for Julius
- * @param path The path to be set as the base
- * @return true if the base path was correctly set, false otherwise
- */
-int dir_set_base_path(const char *path);
-
-/**
  * Get the case sensitive filename of the file
  * @param filepath File path to match to a case-sensitive file on the filesystem
  * @return Case-corrected file, or NULL if the file was not found
