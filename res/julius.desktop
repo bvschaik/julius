@@ -3,7 +3,7 @@
 Type=Application
 Version=1.0
 Exec=julius
-Icon=julius
+Icon=com.github.bvschaik.julius
 Name=Julius
 GenericName=Roman city management game
 Comment=Open Source re-implementation of Caesar 3.

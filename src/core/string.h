@@ -24,6 +24,14 @@ void string_copy(const uint8_t *src, uint8_t *dst, int maxlength);
 int string_length(const uint8_t *str);
 
 /**
+ * Convert (cast) C-string to internal string.
+ * Only use this for known ASCII-only strings!
+ * @param str C string
+ * @return Game string, or NULL if non-ascii values are found in str
+ */
+const uint8_t *string_from_ascii(const char *str);
+
+/**
  * Converts the string to integer
  * @return integer
  */

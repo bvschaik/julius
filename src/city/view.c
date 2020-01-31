@@ -160,7 +160,7 @@ int city_view_scroll(int direction)
         return 0;
     }
     int dx = 1;
-    int dy = 4;
+    int dy = 2;
     switch (direction) {
         case DIR_0_TOP:
             data.camera.y -= dy;

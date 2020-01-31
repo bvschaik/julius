@@ -272,7 +272,7 @@ static void draw_footprint_water(int x, int y, int grid_offset)
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building *b = building_get(map_building_at(grid_offset));
         int terrain = map_terrain_get(grid_offset);
-        if (b->id && b->has_well_access == 1) {
+        if (b->id && (b->has_well_access || (b->house_size && b->has_water_access))) {
             terrain |= TERRAIN_FOUNTAIN_RANGE;
         }
         int image_offset;
