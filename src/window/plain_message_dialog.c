@@ -1,14 +1,11 @@
 #include "plain_message_dialog.h"
 
-#include "core/encoding.h"
+#include "core/string.h"
 #include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-
-#define MAX_TITLE 50
-#define MAX_MESSAGE 250
 
 static void button_ok(int param1, int param2);
 
@@ -17,8 +14,8 @@ static image_button buttons[] = {
 };
 
 static struct {
-    uint8_t title[MAX_TITLE];
-    uint8_t message[MAX_MESSAGE];
+    const uint8_t *title;
+    const uint8_t *message;
 } data;
 
 static int init(const char *title, const char *message)
@@ -27,8 +24,8 @@ static int init(const char *title, const char *message)
         // don't show popup over popup
         return 0;
     }
-    encoding_from_utf8(title, data.title, MAX_TITLE);
-    encoding_from_utf8(message, data.message, MAX_MESSAGE);
+    data.title = string_from_ascii(title);
+    data.message = string_from_ascii(message);
     return 1;
 }
 

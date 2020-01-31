@@ -27,6 +27,18 @@ int string_length(const uint8_t *str)
     return length;
 }
 
+const uint8_t *string_from_ascii(const char *str)
+{
+    const char *s = str;
+    while (*s) {
+        if (*s < 0 || *s > 127) {
+            return 0;
+        }
+        s++;
+    }
+    return (const uint8_t *) str;
+}
+
 int string_to_int(const uint8_t *str)
 {
     static const int multipliers[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000};
