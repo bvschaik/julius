@@ -74,9 +74,7 @@ static wchar_t *utf8_to_wchar(const char *str)
 int platform_file_manager_get_directory_contents_by_extension(char **file_list, int *file_count, const char *extension, int max_files)
 {
 #ifdef __ANDROID__
-    if (!android_get_directory_contents_by_extension(file_list, file_count, extension, max_files)) {
-        return 0;
-    }
+    return android_get_directory_contents_by_extension(file_list, file_count, extension, max_files);
 #else
     fs_dir_type *d = fs_dir_open(CURRENT_DIR);
     if (!d) {

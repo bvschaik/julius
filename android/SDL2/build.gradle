@@ -18,6 +18,7 @@ android {
         externalNativeBuild {
             ndkBuild {
                 cFlags '-DMUSIC_WAV'
+                arguments 'SUPPORT_FLAC=false SUPPORT_OGG=false SUPPORT_MOD_MODPLUG=false SUPPORT_MID_TIMIDITY=false'
             }
         }
     }
