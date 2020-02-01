@@ -1,5 +1,6 @@
 #include "main_menu.h"
 
+#include "core/string.h"
 #include "editor/editor.h"
 #include "game/game.h"
 #include "game/system.h"
@@ -9,7 +10,10 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
+#include "graphics/screen.h"
 #include "graphics/window.h"
+#include "platform/version.h"
 #include "sound/music.h"
 #include "window/cck_selection.h"
 #include "window/file_dialog.h"
@@ -34,12 +38,35 @@ static generic_button buttons[] = {
 static image_button movie_button =
     {591, 442, 33, 22, IB_NORMAL, 89, 0, button_intro_movie, button_none, 0, 0, 1};
 
+static void draw_version_string(void)
+{
+    uint8_t version_string[100] = "v";
+    const uint8_t *julius_version = string_from_ascii(JULIUS_VERSION);
+    const uint8_t *julius_version_suffix = string_from_ascii(JULIUS_VERSION_SUFFIX);
+    int version_length = string_length(julius_version);
+    int text_y = screen_height() - 30;
+
+    string_copy(julius_version, version_string + 1, 99);
+    string_copy(julius_version_suffix, version_string + 1 + version_length, 99 - version_length);
+
+    int text_width = text_get_width(version_string, FONT_SMALL_PLAIN);
+
+    if (text_y <= 500 && (screen_width() - 640) / 2 < text_width + 18) {
+        graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
+        graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
+        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
+    } else {
+        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_WHITE);
+    }
+}
+
 static void draw_background(void)
 {
     graphics_clear_screen();
     graphics_in_dialog();
     image_draw(image_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
     graphics_reset_dialog();
+    draw_version_string();
 }
 
 static void draw_foreground(void)
