@@ -11,7 +11,7 @@
 #include "graphics/window.h"
 #include "window/main_menu.h"
 
-#define NUM_CHECKBOXES 3
+#define NUM_CHECKBOXES 4
 #define NUM_BOTTOM_BUTTONS 3
 
 static void toggle_switch(int id, int param2);
@@ -22,6 +22,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO },
     { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
     { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
+    { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
 };
 
 static generic_button bottom_buttons[] = {
@@ -39,7 +40,7 @@ static const char *bottom_button_texts[] = {
 static struct {
     int focus_button;
     int bottom_focus_button;
-    int options[CONFIG_MAX_ENTRIES];
+    int values[CONFIG_MAX_ENTRIES];
 } data;
 
 static const uint8_t* ascii(const char *str)
@@ -51,7 +52,7 @@ static void init(void)
 {
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         config_key key = checkbox_buttons[i].parameter1;
-        data.options[key] = config_get(key);
+        data.values[key] = config_get(key);
     }
 }
 
@@ -71,10 +72,11 @@ static void draw_background(void)
     text_draw(ascii("Extra information in the control panel"), 50, 101, FONT_NORMAL_BLACK, 0);
     text_draw(ascii("Gameplay changes"), 20, 149, FONT_NORMAL_BLACK, 0);
     text_draw(ascii("Fix immigration bug on very hard"), 50, 173, FONT_NORMAL_BLACK, 0);
+    text_draw(ascii("Fix 100-year-old ghosts"), 50, 197, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];
-        if (data.options[btn->parameter1]) {
+        if (data.values[btn->parameter1]) {
             text_draw(ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK, 0);
         }
     }
@@ -108,7 +110,7 @@ static void handle_mouse(const mouse *m)
 
 static void toggle_switch(int key, int param2)
 {
-    data.options[key] = 1 - data.options[key];
+    data.values[key] = 1 - data.values[key];
     window_invalidate();
 }
 
@@ -124,7 +126,7 @@ static void button_close(int save, int param2)
     if (save) {
         for (int i = 0; i < NUM_CHECKBOXES; i++) {
             config_key key = checkbox_buttons[i].parameter1;
-            config_set(key, data.options[key]);
+            config_set(key, data.values[key]);
         }
     }
     window_main_menu_show(0);

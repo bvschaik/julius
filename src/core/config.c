@@ -13,6 +13,7 @@ static const char *INI_FILENAME = "julius.ini";
 // Keep this in the same order as the config_keys in config.h
 static const char *ini_keys[] = {
     "gameplay_fix_immigration",
+    "gameplay_fix_100y_ghosts",
     "ui_sidebar_info",
     "ui_show_intro_video",
 };
@@ -32,6 +33,7 @@ void config_set(config_key key, int value)
 void config_set_defaults(void)
 {
     values[CONFIG_GP_FIX_IMMIGRATION_BUG] = 0;
+    values[CONFIG_GP_FIX_100_YEAR_GHOSTS] = 0;
     values[CONFIG_UI_SIDEBAR_INFO] = 0;
     values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
 }
@@ -69,7 +71,6 @@ void config_save(void)
         log_error("Unable to write configuration file", INI_FILENAME, 0);
         return;
     }
-    char line_buffer[MAX_LINE];
     for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
         fprintf(fp, "%s=%d\n", ini_keys[i], values[i]);
     }
