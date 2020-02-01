@@ -31,7 +31,7 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
     for (int i = 0; i < 2 * value; i++) {
         image_draw(image_base + 1, x_offset + 11, --y);
     }
-    if (value > 30 && has_reached) {
+    if (value >= 30 && has_reached) {
         image_draw(image_base + 2, x_offset - 6, y);
     }
 }
@@ -61,8 +61,7 @@ static int draw_background(void)
         width = text_draw_number(0, '@', " ", 85, 334, FONT_NORMAL_BLACK);
     }
     lang_text_draw(53, 5, 85 + width, 334, FONT_NORMAL_BLACK);
-    int has_reached = !scenario_criteria_culture_enabled() ||
-        culture > scenario_criteria_culture() || culture == 100;
+    int has_reached = !scenario_criteria_culture_enabled() || culture >= scenario_criteria_culture();
     draw_rating_column(110, 274, culture, has_reached);
 
     // prosperity
@@ -76,8 +75,7 @@ static int draw_background(void)
         width = text_draw_number(0, '@', " ", 205, 334, FONT_NORMAL_BLACK);
     }
     lang_text_draw(53, 5, 205 + width, 334, FONT_NORMAL_BLACK);
-    has_reached = !scenario_criteria_prosperity_enabled() ||
-        prosperity > scenario_criteria_prosperity() || prosperity == 100;
+    has_reached = !scenario_criteria_prosperity_enabled() || prosperity >= scenario_criteria_prosperity();
     draw_rating_column(230, 274, prosperity, has_reached);
 
     // peace
@@ -91,8 +89,7 @@ static int draw_background(void)
         width = text_draw_number(0, '@', " ", 325, 334, FONT_NORMAL_BLACK);
     }
     lang_text_draw(53, 5, 325 + width, 334, FONT_NORMAL_BLACK);
-    has_reached = !scenario_criteria_peace_enabled() ||
-        peace > scenario_criteria_peace() || peace == 100;
+    has_reached = !scenario_criteria_peace_enabled() || peace >= scenario_criteria_peace();
     draw_rating_column(350, 274, peace, has_reached);
 
     // favor
@@ -106,8 +103,7 @@ static int draw_background(void)
         width = text_draw_number(0, '@', " ", 445, 334, FONT_NORMAL_BLACK);
     }
     lang_text_draw(53, 5, 445 + width, 334, FONT_NORMAL_BLACK);
-    has_reached = !scenario_criteria_favor_enabled() ||
-        favor > scenario_criteria_favor() || favor == 100;
+    has_reached = !scenario_criteria_favor_enabled() || favor >= scenario_criteria_favor();
     draw_rating_column(470, 274, favor, has_reached);
 
     // bottom info box
