@@ -16,14 +16,15 @@
 #include "platform/version.h"
 #include "sound/music.h"
 #include "window/cck_selection.h"
+#include "window/config.h"
 #include "window/file_dialog.h"
-#include "window/intro_video.h"
 #include "window/new_career.h"
 #include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
 
+#define MAX_BUTTONS 6
+
 static void button_click(int type, int param2);
-static void button_intro_movie(int param1, int param2);
 
 static int focus_button_id;
 
@@ -33,10 +34,8 @@ static generic_button buttons[] = {
     {192, 180, 256, 25, button_click, button_none, 3, 0},
     {192, 220, 256, 25, button_click, button_none, 4, 0},
     {192, 260, 256, 25, button_click, button_none, 5, 0},
+    {192, 300, 256, 25, button_click, button_none, 6, 0},
 };
-
-static image_button movie_button =
-    {591, 442, 33, 22, IB_NORMAL, 89, 0, button_intro_movie, button_none, 0, 0, 1};
 
 static void draw_version_string(void)
 {
@@ -73,19 +72,16 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    large_label_draw(192, 100, 16, focus_button_id == 1 ? 1 : 0);
-    large_label_draw(192, 140, 16, focus_button_id == 2 ? 1 : 0);
-    large_label_draw(192, 180, 16, focus_button_id == 3 ? 1 : 0);
-    large_label_draw(192, 220, 16, focus_button_id == 4 ? 1 : 0);
-    large_label_draw(192, 260, 16, focus_button_id == 5 ? 1 : 0);
+    for (int i = 0; i < MAX_BUTTONS; i++) {
+        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
+    }
 
     lang_text_draw_centered(30, 1, 192, 106, 256, FONT_NORMAL_GREEN);
     lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_GREEN);
     lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN);
     lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(30, 5, 192, 266, 256, FONT_NORMAL_GREEN);
-
-    image_buttons_draw(0, 0, &movie_button, 1);
+    lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(30, 5, 192, 306, 256, FONT_NORMAL_GREEN);
 
     graphics_reset_dialog();
 }
@@ -93,10 +89,7 @@ static void draw_foreground(void)
 static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    int dummy;
-    if (!image_buttons_handle_mouse(m_dialog, 0, 0, &movie_button, 1, &dummy)) {
-        generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 5, &focus_button_id);
-    }
+    generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id);
 }
 
 static void confirm_exit(int accepted)
@@ -126,13 +119,10 @@ static void button_click(int type, int param2)
             sound_music_play_editor();
         }
     } else if (type == 5) {
+        window_config_show();
+    } else if (type == 6) {
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
     }
-}
-
-static void button_intro_movie(int param1, int param2)
-{
-    window_intro_video_show();
 }
 
 void window_main_menu_show(int restart_music)

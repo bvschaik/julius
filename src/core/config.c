@@ -13,7 +13,8 @@ static const char *INI_FILENAME = "julius.ini";
 // Keep this in the same order as the config_keys in config.h
 static const char *ini_keys[] = {
     "gameplay_fix_immigration",
-    "ui_sidebar_info"
+    "ui_sidebar_info",
+    "ui_show_intro_video",
 };
 
 static int values[CONFIG_MAX_ENTRIES];
@@ -32,6 +33,7 @@ void config_set_defaults(void)
 {
     values[CONFIG_GP_FIX_IMMIGRATION_BUG] = 0;
     values[CONFIG_UI_SIDEBAR_INFO] = 0;
+    values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
 }
 
 void config_load(void)
