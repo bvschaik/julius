@@ -45,7 +45,7 @@ void config_load(void)
     }
     char line_buffer[MAX_LINE];
     char *line;
-    while ((line = fgets(line, MAX_LINE, fp))) {
+    while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         char *equals = strchr(line, '=');
         if (equals) {
             *equals = 0;
