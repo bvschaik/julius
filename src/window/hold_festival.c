@@ -4,6 +4,7 @@
 #include "city/festival.h"
 #include "city/finance.h"
 #include "city/gods.h"
+#include "core/image_group.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -22,10 +23,10 @@ static void button_close(int param1, int param2);
 static void button_hold_festival(int param1, int param2);
 
 static image_button image_buttons_bottom[] = {
-    {58, 316, 27, 27, IB_NORMAL, 134, 0, button_help, button_none, 0, 0, 1},
-    {558, 319, 24, 24, IB_NORMAL, 134, 4, button_close, button_none, 0, 0, 1},
-    {358, 317, 39, 26, IB_NORMAL, 96, 0, button_hold_festival, button_none, 1, 0, 1},
-    {400, 317, 39, 26, IB_NORMAL, 96, 4, button_close, button_none, 0, 0, 1},
+    {58, 316, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+    {558, 319, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1},
+    {358, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_hold_festival, button_none, 1, 0, 1},
+    {400, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close, button_none, 0, 0, 1},
 };
 
 static generic_button buttons_gods_size[] = {

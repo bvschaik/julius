@@ -3,6 +3,7 @@
 #include "city/message.h"
 #include "city/sentiment.h"
 #include "city/view.h"
+#include "core/image_group.h"
 #include "core/lang.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -31,37 +32,37 @@ static void button_advisor(int advisor, int param2);
 static void button_go_to_problem(int param1, int param2);
 
 static image_button image_button_back = {
-    0, 0, 31, 20, IB_NORMAL, 90, 8, button_back, button_none, 0, 0, 1
+    0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1
 };
 static image_button image_button_close = {
-    0, 0, 24, 24, IB_NORMAL, 134, 4, button_close, button_none, 0, 0, 1
+    0, 0, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1
 };
 static image_button image_button_go_to_problem = {
-    0, 0, 27, 27, IB_NORMAL, 92, 52, button_go_to_problem, button_none, 1, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 52, button_go_to_problem, button_none, 1, 0, 1
 };
 static image_button image_button_help = {
-    0, 0, 18, 27, IB_NORMAL, 134, 0, button_help, button_none, 1, 0, 1
+    0, 0, 18, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 1, 0, 1
 };
 static image_button image_button_labor = {
-    0, 0, 27, 27, IB_NORMAL, 199, 0, button_advisor, button_none, ADVISOR_LABOR, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 0, button_advisor, button_none, ADVISOR_LABOR, 0, 1
 };
 static image_button image_button_trade = {
-    0, 0, 27, 27, IB_NORMAL, 199, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1
 };
 static image_button image_button_population = {
-    0, 0, 27, 27, IB_NORMAL, 199, 15, button_advisor, button_none, ADVISOR_POPULATION, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 15, button_advisor, button_none, ADVISOR_POPULATION, 0, 1
 };
 static image_button image_button_imperial = {
-    0, 0, 27, 27, IB_NORMAL, 199, 6, button_advisor, button_none, ADVISOR_IMPERIAL, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 6, button_advisor, button_none, ADVISOR_IMPERIAL, 0, 1
 };
 static image_button image_button_military = {
-    0, 0, 27, 27, IB_NORMAL, 199, 3, button_advisor, button_none, ADVISOR_MILITARY, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 3, button_advisor, button_none, ADVISOR_MILITARY, 0, 1
 };
 static image_button image_button_health = {
-    0, 0, 27, 27, IB_NORMAL, 199, 18, button_advisor, button_none, ADVISOR_HEALTH, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 18, button_advisor, button_none, ADVISOR_HEALTH, 0, 1
 };
 static image_button image_button_religion = {
-    0, 0, 27, 27, IB_NORMAL, 199, 27, button_advisor, button_none, ADVISOR_RELIGION, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 27, button_advisor, button_none, ADVISOR_RELIGION, 0, 1
 };
 
 static struct {

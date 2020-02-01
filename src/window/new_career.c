@@ -1,5 +1,6 @@
 #include "new_career.h"
 
+#include "core/image_group.h"
 #include "core/lang.h"
 #include "core/string.h"
 #include "game/settings.h"
@@ -18,7 +19,7 @@
 static void start_mission(int param1, int param2);
 
 static image_button image_button_start_mission = {
-    0, 0, 27, 27, IB_NORMAL, 92, 56, start_mission, button_none, 1, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, start_mission, button_none, 1, 0, 1
 };
 
 static uint8_t player_name[32];

@@ -8,6 +8,7 @@
 #include "city/resource.h"
 #include "city/view.h"
 #include "core/calc.h"
+#include "core/image_group.h"
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "figure/phrase.h"
@@ -42,12 +43,12 @@ static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
 
 static image_button image_buttons_help_close[] = {
-    {14, 0, 27, 27, IB_NORMAL, 134, 0, button_help, button_none, 0, 0, 1},
-    {424, 3, 24, 24, IB_NORMAL, 134, 4, button_close, button_none, 0, 0, 1}
+    {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+    {424, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1}
 };
 
 static image_button image_buttons_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 199, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}
+    {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}
 };
 
 static building_info_context context;

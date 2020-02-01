@@ -9,6 +9,7 @@
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "city/warning.h"
+#include "core/image_group.h"
 #include "figure/formation.h"
 #include "game/settings.h"
 #include "game/tutorial.h"
@@ -36,7 +37,7 @@ static void button_change_advisor(int advisor, int param2);
 static void button_help(int param1, int param2);
 
 static image_button help_button = {
-    11, -7, 27, 27, IB_NORMAL, 134, 0, button_help, button_none, 0, 0, 1
+    11, -7, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1
 };
 
 static generic_button advisor_buttons[] = {

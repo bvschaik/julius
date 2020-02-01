@@ -1,5 +1,6 @@
 #include "plain_message_dialog.h"
 
+#include "core/image_group.h"
 #include "core/string.h"
 #include "graphics/graphics.h"
 #include "graphics/image_button.h"
@@ -10,7 +11,7 @@
 static void button_ok(int param1, int param2);
 
 static image_button buttons[] = {
-    {223, 140, 39, 26, IB_NORMAL, 96, 0, button_ok, button_none, 1, 0, 1},
+    {223, 140, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok, button_none, 1, 0, 1},
 };
 
 static struct {
