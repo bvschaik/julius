@@ -92,6 +92,8 @@ static int road_within_radius(int x, int y, int size, int radius, int *x_road, i
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             if (map_terrain_is(map_grid_offset(xx, yy), TERRAIN_ROAD)) {
+                // Don't spawn walkers on roadblocks
+		if (building_get(map_building_at(map_grid_offset(xx, yy)))->type == BUILDING_ROADBLOCK) continue;
                 if (x_road && y_road) {
                     *x_road = xx;
                     *y_road = yy;
