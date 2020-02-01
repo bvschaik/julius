@@ -11,7 +11,7 @@
 #include "graphics/window.h"
 #include "window/main_menu.h"
 
-#define NUM_CHECKBOXES 2
+#define NUM_CHECKBOXES 3
 #define NUM_BOTTOM_BUTTONS 3
 
 static void toggle_switch(int id, int param2);
@@ -19,8 +19,9 @@ static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
 
 static generic_button checkbox_buttons[] = {
-    { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
-    { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
+    { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO },
+    { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
+    { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
 };
 
 static generic_button bottom_buttons[] = {
@@ -66,9 +67,10 @@ static void draw_background(void)
     text_draw_centered(ascii("Julius configuration options"), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
     text_draw(ascii("User interface changes"), 20, 53, FONT_NORMAL_BLACK, 0);
-    text_draw(ascii("Extra information in the sidebar"), 50, 77, FONT_NORMAL_BLACK, 0);
-    text_draw(ascii("Gameplay changes"), 20, 125, FONT_NORMAL_BLACK, 0);
-    text_draw(ascii("Fix immigration bug on very hard"), 50, 149, FONT_NORMAL_BLACK, 0);
+    text_draw(ascii("Play intro videos"), 50, 77, FONT_NORMAL_BLACK, 0);
+    text_draw(ascii("Extra information in the control panel"), 50, 101, FONT_NORMAL_BLACK, 0);
+    text_draw(ascii("Gameplay changes"), 20, 149, FONT_NORMAL_BLACK, 0);
+    text_draw(ascii("Fix immigration bug on very hard"), 50, 173, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];
@@ -128,7 +130,7 @@ static void button_close(int save, int param2)
     window_main_menu_show(0);
 }
 
-void window_configuration_show()
+void window_config_show()
 {
     window_type window = {
         WINDOW_CONFIG,
