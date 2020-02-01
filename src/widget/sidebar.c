@@ -4,6 +4,7 @@
 #include "city/message.h"
 #include "city/view.h"
 #include "city/warning.h"
+#include "core/config.h"
 #include "core/direction.h"
 #include "game/orientation.h"
 #include "game/settings.h"
@@ -197,7 +198,7 @@ static void draw_sidebar_extra_info_panel(int x_offset, int is_collapsed)
 {
     int y_offset = FILLER_Y_OFFSET;
 
-    if (!is_collapsed) {
+    if (!is_collapsed && config_get(CONFIG_UI_SIDEBAR_INFO)) {
         // extra information, if it fits
         if (screen_height() - y_offset >= 64) {
             y_offset += 64;
@@ -209,7 +210,7 @@ static void draw_sidebar_extra_info_panel(int x_offset, int is_collapsed)
 
 static void draw_sidebar_extra_info_buttons(int x_offset, int is_collapsed)
 {
-    if (is_collapsed) {
+    if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
         return;
     }
     int s_height = screen_height();
@@ -375,8 +376,9 @@ int widget_sidebar_handle_mouse(const mouse *m)
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 39;
         }
-        // TODO only handle if we draw them
-        click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
+        if (config_get(CONFIG_UI_SIDEBAR_INFO) && screen_height() - FILLER_Y_OFFSET >= 64) {
+            click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
+        }
     }
     return click;
 }
