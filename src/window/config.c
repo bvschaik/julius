@@ -2,6 +2,7 @@
 
 #include "core/config.h"
 #include "core/image_group.h"
+#include "core/string.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -43,11 +44,6 @@ static struct {
     int values[CONFIG_MAX_ENTRIES];
 } data;
 
-static const uint8_t* ascii(const char *str)
-{
-    return (const uint8_t *) str;
-}
-
 static void init(void)
 {
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
@@ -65,24 +61,24 @@ static void draw_background(void)
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
 
-    text_draw_centered(ascii("Julius configuration options"), 16, 16, 608, FONT_LARGE_BLACK, 0);
+    text_draw_centered(string_from_ascii("Julius configuration options"), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
-    text_draw(ascii("User interface changes"), 20, 53, FONT_NORMAL_BLACK, 0);
-    text_draw(ascii("Play intro videos"), 50, 77, FONT_NORMAL_BLACK, 0);
-    text_draw(ascii("Extra information in the control panel"), 50, 101, FONT_NORMAL_BLACK, 0);
-    text_draw(ascii("Gameplay changes"), 20, 149, FONT_NORMAL_BLACK, 0);
-    text_draw(ascii("Fix immigration bug on very hard"), 50, 173, FONT_NORMAL_BLACK, 0);
-    text_draw(ascii("Fix 100-year-old ghosts"), 50, 197, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("User interface changes"), 20, 53, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Play intro videos"), 50, 77, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Extra information in the control panel"), 50, 101, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Gameplay changes"), 20, 149, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fix immigration bug on very hard"), 50, 173, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fix 100-year-old ghosts"), 50, 197, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];
         if (data.values[btn->parameter1]) {
-            text_draw(ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK, 0);
+            text_draw(string_from_ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK, 0);
         }
     }
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
-        text_draw_centered(ascii(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
+        text_draw_centered(string_from_ascii(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
     }
 
     graphics_reset_dialog();
