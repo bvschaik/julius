@@ -1,10 +1,12 @@
 #include "logo.h"
 
+#include "core/config.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/window.h"
 #include "sound/music.h"
+#include "window/intro_video.h"
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
 
@@ -48,5 +50,8 @@ void window_logo_show(int show_patch_message)
             "https://bintray.com/bvschaik/caesar3-patches\n"
             "Continue at your own risk."
         );
+    }
+    if (config_get(CONFIG_UI_SHOW_INTRO_VIDEO)) {
+        window_intro_video_show();
     }
 }

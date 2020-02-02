@@ -2,6 +2,7 @@
 
 #include "building/construction.h"
 #include "building/model.h"
+#include "core/config.h"
 #include "core/image.h"
 #include "core/lang.h"
 #include "core/log.h"
@@ -42,6 +43,7 @@ static void errlog(const char *msg)
 int game_pre_init(void)
 {
     settings_load();
+    config_load();
     scenario_settings_init();
     game_state_unpause();
 
@@ -215,5 +217,6 @@ void game_exit(void)
 {
     video_shutdown();
     settings_save();
+    config_save();
     sound_system_shutdown();
 }
