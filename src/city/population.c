@@ -204,10 +204,18 @@ void city_population_remove_for_troop_request(int num_people)
 
 int city_population_people_of_working_age(void)
 {
-    return
-        get_people_in_age_decennium(2) +
-        get_people_in_age_decennium(3) +
-        get_people_in_age_decennium(4);
+    if (config_get(CONFIG_GP_CH_RETIRE_AT_60)) {
+	return
+            get_people_in_age_decennium(2) +
+            get_people_in_age_decennium(3) +
+            get_people_in_age_decennium(4) +
+            get_people_in_age_decennium(5);
+    } else {
+        return
+            get_people_in_age_decennium(2) +
+            get_people_in_age_decennium(3) +
+            get_people_in_age_decennium(4);
+    }
 }
 
 static int get_people_aged_between(int min, int max)

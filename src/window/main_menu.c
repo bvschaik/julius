@@ -37,8 +37,8 @@ static generic_button buttons[] = {
     {192, 300, 256, 25, button_click, button_none, 6, 0},
 };
 
-static image_button movie_button =
-    {591, 442, 33, 22, IB_NORMAL, 89, 0, button_intro_movie, button_none, 0, 0, 1};
+//static image_button movie_button =
+//    {591, 442, 33, 22, IB_NORMAL, 89, 0, button_intro_movie, button_none, 0, 0, 1};
 
 static void draw_version_string(void)
 {
