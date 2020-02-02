@@ -249,7 +249,7 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
                     int height = def->image_y_offset(*str, img->height, def->line_height);
                     image_draw_letter(def->font, letter_id, x, y - height, color);
                 }
-                x += img->width;
+                x += img->width + def->letter_spacing_draw;
             }
             if (num_link_chars > 0) {
                 num_link_chars -= num_bytes;
