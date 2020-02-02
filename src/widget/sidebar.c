@@ -254,6 +254,7 @@ static void draw_extra_info_panel(int x_offset, int extra_info_height)
 
     lang_text_draw(45, 2, x_offset + 11, y_offset + 10, FONT_NORMAL_WHITE);
     text_draw_percentage(data.extra_info.game_speed, x_offset + 60, y_offset + 36, FONT_NORMAL_GREEN);
+    arrow_buttons_draw(x_offset, y_offset, arrow_buttons_speed, 2);
 
     if (extra_info_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
         lang_text_draw(68, 148, x_offset + 11, y_offset + 68, FONT_NORMAL_WHITE);
@@ -275,8 +276,9 @@ static void draw_extra_info_buttons(int x_offset, int is_collapsed)
 
     if (update_extra_info(extra_info_height)) {
         draw_extra_info_panel(x_offset, extra_info_height);
+    } else {
+        arrow_buttons_draw(x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
     }
-    arrow_buttons_draw(x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
 
     graphics_reset_clip_rectangle();
 }
@@ -436,7 +438,7 @@ int widget_sidebar_handle_mouse(const mouse *m)
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 39;
         }
-        if (config_get(CONFIG_UI_SIDEBAR_INFO) && data.extra_info.height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
+        if (data.extra_info.height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
             click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
         }
     }
