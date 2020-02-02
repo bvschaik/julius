@@ -144,7 +144,7 @@ void scenario_editor_request_save(int index, editor_request *request)
     scenario.requests[index].amount = request->amount;
     scenario.requests[index].resource = request->resource;
     scenario.requests[index].deadline_years = request->deadline_years;
-    scenario.requests[index].favor = request->deadline_years;
+    scenario.requests[index].favor = request->favor;
     sort_requests();
     scenario.is_saved = 0;
 }
