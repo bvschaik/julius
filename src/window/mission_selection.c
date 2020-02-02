@@ -1,5 +1,6 @@
 #include "mission_selection.h"
 
+#include "core/image_group.h"
 #include "game/mission.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -37,7 +38,7 @@ static const struct {
 };
 
 static image_button image_button_start_mission = {
-    0, 0, 27, 27, IB_NORMAL, 92, 56, button_start, button_none, 1, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start, button_none, 1, 0, 1
 };
 
 static struct {

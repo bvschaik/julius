@@ -2,6 +2,7 @@
 
 #include "city/message.h"
 #include "core/calc.h"
+#include "core/image_group.h"
 #include "core/lang.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -23,16 +24,16 @@ static void button_message(int param1, int param2);
 static void button_delete(int param1, int param2);
 
 static image_button image_button_help = {
-    0, 0, 27, 27, IB_NORMAL, 134, 0, button_help, button_none, 0, 0, 1
+    0, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1
 };
 static image_button image_button_close = {
-    0, 0, 24, 24, IB_NORMAL, 134, 4, button_close, button_none, 0, 0, 1
+    0, 0, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1
 };
 static image_button image_button_scroll_up = {
-    0, 0, 39, 26, IB_SCROLL, 96, 8, button_scroll, button_none, 0, 1, 1
+    0, 0, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 8, button_scroll, button_none, 0, 1, 1
 };
 static image_button image_button_scroll_down = {
-    0, 0, 39, 26, IB_SCROLL, 96, 12, button_scroll, button_none, 1, 1, 1
+    0, 0, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, button_scroll, button_none, 1, 1, 1
 };
 static generic_button generic_buttons_messages[] = {
     {0, 0, 412, 18, button_message, button_delete, 0, 0},

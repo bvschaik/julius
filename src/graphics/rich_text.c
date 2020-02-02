@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "core/image.h"
+#include "core/image_group.h"
 #include "core/string.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
@@ -12,10 +13,10 @@
 static void text_scroll(int is_down, int num_lines);
 
 static image_button image_button_scroll_up = {
-    0, 0, 39, 26, IB_SCROLL, 96, 8, text_scroll, button_none, 0, 1, 1
+    0, 0, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 8, text_scroll, button_none, 0, 1, 1
 };
 static image_button image_button_scroll_down = {
-    0, 0, 39, 26, IB_SCROLL, 96, 12, text_scroll, button_none, 1, 1, 1
+    0, 0, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, text_scroll, button_none, 1, 1, 1
 };
 
 static struct {

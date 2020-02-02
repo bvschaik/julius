@@ -4,6 +4,7 @@
 #include "core/dir.h"
 #include "core/encoding.h"
 #include "core/file.h"
+#include "core/image_group.h"
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
@@ -28,10 +29,10 @@ static void button_scroll(int is_down, int num_lines);
 static void button_select_file(int index, int param2);
 
 static image_button image_buttons[] = {
-    {344, 335, 39, 26, IB_NORMAL, 96, 0, button_ok_cancel, button_none, 1, 0, 1},
-    {392, 335, 39, 26, IB_NORMAL, 96, 4, button_ok_cancel, button_none, 0, 0, 1},
-    {464, 120, 39, 26, IB_SCROLL, 96, 8, button_scroll, button_none, 0, 1, 1},
-    {464, 300, 39, 26, IB_SCROLL, 96, 12, button_scroll, button_none, 1, 1, 1},
+    {344, 335, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok_cancel, button_none, 1, 0, 1},
+    {392, 335, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_ok_cancel, button_none, 0, 0, 1},
+    {464, 120, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 8, button_scroll, button_none, 0, 1, 1},
+    {464, 300, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, button_scroll, button_none, 1, 1, 1},
 };
 static generic_button file_buttons[] = {
     {160, 128, 288, 16, button_select_file, button_none, 0, 0},

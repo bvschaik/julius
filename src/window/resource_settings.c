@@ -3,6 +3,7 @@
 #include "building/count.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/image_group.h"
 #include "empire/city.h"
 #include "graphics/arrow_button.h"
 #include "graphics/generic_button.h"
@@ -26,8 +27,8 @@ static void button_toggle_trade(int param1, int param2);
 static void button_toggle_stockpile(int param1, int param2);
 
 static image_button resource_image_buttons[] = {
-    {58, 332, 27, 27, IB_NORMAL, 134, 0, button_help, button_none, 0, 0, 1},
-    {558, 335, 24, 24, IB_NORMAL, 134, 4, button_ok, button_none, 0, 0, 1}
+    {58, 332, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+    {558, 335, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_ok, button_none, 0, 0, 1}
 };
 
 static arrow_button resource_arrow_buttons[] = {

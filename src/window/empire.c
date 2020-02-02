@@ -3,6 +3,7 @@
 #include "building/menu.h"
 #include "city/military.h"
 #include "city/warning.h"
+#include "core/image_group.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/object.h"
@@ -35,13 +36,13 @@ static void button_advisor(int advisor, int param2);
 static void button_open_trade(int param1, int param2);
 
 static image_button image_button_help[] = {
-    {0, 0, 27, 27, IB_NORMAL, 134, 0, button_help, button_none, 0, 0, 1}
+    {0, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1}
 };
 static image_button image_button_return_to_city[] = {
-    {0, 0, 24, 24, IB_NORMAL, 134, 4, button_return_to_city, button_none, 0, 0, 1}
+    {0, 0, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_return_to_city, button_none, 0, 0, 1}
 };
 static image_button image_button_advisor[] = {
-    {-4, 0, 24, 24, IB_NORMAL, 199, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
+    {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
 };
 static generic_button generic_button_open_trade[] = {
     {50, 61, 400, 26, button_open_trade, button_none, 0, 0}

@@ -1,5 +1,6 @@
 #include "popup_dialog.h"
 
+#include "core/image_group.h"
 #include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
@@ -12,8 +13,8 @@ static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);
 
 static image_button buttons[] = {
-    {192, 100, 39, 26, IB_NORMAL, 96, 0, button_ok, button_none, 1, 0, 1},
-    {256, 100, 39, 26, IB_NORMAL, 96, 4, button_cancel, button_none, 0, 0, 1},
+    {192, 100, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok, button_none, 1, 0, 1},
+    {256, 100, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_cancel, button_none, 0, 0, 1},
 };
 
 static struct {
