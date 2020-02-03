@@ -8,12 +8,12 @@
 
 #include <math.h>
 
-static const int MOUSE_BORDER = 5;
-static const int TOUCH_BORDER = 100;
-static const int DECAY_MULTIPLIER = 300;
-static const time_millis DECAY_BASE_TIME = 350;
-static const time_millis DECAY_MAX_TIME = 1050; // DECAY_BASE_TIME * 3
-static const time_millis MAX_SPEED_TIME_WEIGHT = 200;
+#define MOUSE_BORDER 5
+#define TOUCH_BORDER 100
+#define DECAY_MULTIPLIER 300
+#define DECAY_BASE_TIME 350
+#define DECAY_MAX_TIME 1050 // DECAY_BASE_TIME * 3
+#define MAX_SPEED_TIME_WEIGHT 200
 
 static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
 static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
