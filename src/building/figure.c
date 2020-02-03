@@ -42,6 +42,10 @@ static void generate_labor_seeker(building *b, int x, int y)
     if (city_population() <= 0) {
         return;
     }
+    if (config_get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
+        b->houses_covered = 100;
+	return;
+    }
     if (b->figure_id2) {
         figure *f = figure_get(b->figure_id2);
         if (!f->state || f->type != FIGURE_LABOR_SEEKER || f->building_id != b->id) {

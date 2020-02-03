@@ -78,7 +78,7 @@ static void draw_background(void)
     text_draw(string_from_ascii("Disable jealousness of gods"), 50, 245, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Enable global labour pool"), 50, 269, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Extend school walkers range"), 50, 293, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Change retirement age to 60"), 50, 317, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Change citizens' retirement age from 50 to 60"), 50, 317, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];
