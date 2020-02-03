@@ -161,18 +161,18 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
 void platform_handle_key_up(SDL_KeyboardEvent *event)
 {
     switch (event->keysym.sym) {
-    case SDLK_LEFT:
-        hotkey_left_release();
-        break;
-    case SDLK_RIGHT:
-        hotkey_right_release();
-        break;
-    case SDLK_UP:
-        hotkey_up_release();
-        break;
-    case SDLK_DOWN:
-        hotkey_down_release();
-        break;
+        case SDLK_LEFT:
+            hotkey_left_release();
+            break;
+        case SDLK_RIGHT:
+            hotkey_right_release();
+            break;
+        case SDLK_UP:
+            hotkey_up_release();
+            break;
+        case SDLK_DOWN:
+            hotkey_down_release();
+            break;
     }
 }
 

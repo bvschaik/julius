@@ -42,7 +42,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
         color_t *dst = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
         int x_max = img->width - clip->clipped_pixels_right;
         if (type == DRAW_TYPE_NONE) {
-            if (img->draw.type == 0 || img->draw.is_external) { // can be transparent
+            if (img->draw.type == IMAGE_TYPE_NORMAL || img->draw.is_external) { // can be transparent
                 for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
                     if (*data != COLOR_TRANSPARENT) {
                         *dst = *data;
@@ -386,16 +386,14 @@ static const color_t *tile_data(const color_t *data, int index)
     return &data[900 * index];
 }
 
-static int draw_footprint_size1(int image_id, int x, int y, color_t color_mask)
+static void draw_footprint_size1(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
 
     draw_footprint_tile(tile_data(data, 0), x, y, color_mask);
-
-    return FOOTPRINT_WIDTH;
 }
 
-static int draw_footprint_size2(int image_id, int x, int y, color_t color_mask)
+static void draw_footprint_size2(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
 
@@ -406,11 +404,9 @@ static int draw_footprint_size2(int image_id, int x, int y, color_t color_mask)
     draw_footprint_tile(tile_data(data, index++), x + 30, y + 15, color_mask);
     
     draw_footprint_tile(tile_data(data, index++), x, y + 30, color_mask);
-    
-    return FOOTPRINT_WIDTH;
 }
 
-static int draw_footprint_size3(int image_id, int x, int y, color_t color_mask)
+static void draw_footprint_size3(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
     
@@ -428,11 +424,9 @@ static int draw_footprint_size3(int image_id, int x, int y, color_t color_mask)
     draw_footprint_tile(tile_data(data, index++), x + 30, y + 45, color_mask);
     
     draw_footprint_tile(tile_data(data, index++), x, y + 60, color_mask);
-
-    return FOOTPRINT_WIDTH;
 }
 
-static int draw_footprint_size4(int image_id, int x, int y, color_t color_mask)
+static void draw_footprint_size4(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
 
@@ -459,11 +453,9 @@ static int draw_footprint_size4(int image_id, int x, int y, color_t color_mask)
     draw_footprint_tile(tile_data(data, index++), x + 30, y + 75, color_mask);
 
     draw_footprint_tile(tile_data(data, index++), x, y + 90, color_mask);
-    
-    return FOOTPRINT_WIDTH;
 }
 
-static int draw_footprint_size5(int image_id, int x, int y, color_t color_mask)
+static void draw_footprint_size5(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
 
@@ -501,8 +493,6 @@ static int draw_footprint_size5(int image_id, int x, int y, color_t color_mask)
     draw_footprint_tile(tile_data(data, index++), x + 30, y + 105, color_mask);
 
     draw_footprint_tile(tile_data(data, index++), x, y + 120, color_mask);
-    
-    return FOOTPRINT_WIDTH;
 }
 
 
@@ -541,7 +531,7 @@ void image_draw_masked(int image_id, int x, int y, color_t color_mask)
         return;
     }
 
-    if (img->draw.type == 30) { // isometric
+    if (img->draw.type == IMAGE_TYPE_ISOMETRIC) {
         log_error("use image_draw_isometric_footprint for isometric!", 0, image_id);
         return;
     }
@@ -566,7 +556,7 @@ void image_draw_blend(int image_id, int x, int y, color_t color)
         return;
     }
 
-    if (img->draw.type == 30) { // isometric
+    if (img->draw.type == IMAGE_TYPE_ISOMETRIC) {
         return;
     }
 
@@ -638,7 +628,7 @@ void image_draw_fullscreen_background(int image_id)
 void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
-    if (img->draw.type != 30) { // isometric
+    if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         return;
     }
     switch (img->width) {
@@ -663,7 +653,7 @@ void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_ma
 void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
-    if (img->draw.type != 30) { // isometric
+    if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         return;
     }
     switch (img->width) {
@@ -688,7 +678,7 @@ void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, c
 void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
-    if (img->draw.type != 30) { // isometric
+    if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         return;
     }
     if (!img->draw.has_compressed_part) {
@@ -733,7 +723,7 @@ void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask)
 void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
-    if (img->draw.type != 30) { // isometric
+    if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         return;
     }
     if (!img->draw.has_compressed_part) {

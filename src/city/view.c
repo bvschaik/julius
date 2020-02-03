@@ -6,6 +6,10 @@
 #include "widget/minimap.h"
 
 #define MENUBAR_HEIGHT 24
+#define TILE_WIDTH_PIXELS 60
+#define TILE_HEIGHT_PIXELS 30
+#define HALF_TILE_WIDTH_PIXELS 30
+#define HALF_TILE_HEIGHT_PIXELS 15
 
 static struct {
     int screen_width;
@@ -40,17 +44,17 @@ static void check_camera_boundaries(void)
         data.camera.tile.x = x_min - 1;
         data.camera.pixel.x = 0;
     }
-    if (data.camera.tile.x > VIEW_X_MAX - x_min - data.viewport.width_tiles - 1) {
-        data.camera.tile.x = VIEW_X_MAX - x_min - data.viewport.width_tiles - 1;
-        data.camera.pixel.x = 59;
+    if (data.camera.tile.x >= VIEW_X_MAX - x_min - data.viewport.width_tiles) {
+        data.camera.tile.x = VIEW_X_MAX - x_min - data.viewport.width_tiles;
+        data.camera.pixel.x = 0;
     }
     if (data.camera.tile.y < y_min - 2) {
         data.camera.tile.y = y_min - 1;
         data.camera.pixel.y = 0;
     }
-    if (data.camera.tile.y > VIEW_Y_MAX - y_min - data.viewport.height_tiles - 1) {
-        data.camera.tile.y = VIEW_Y_MAX - y_min - data.viewport.height_tiles - 1;
-        data.camera.pixel.y = 29;
+    if (data.camera.tile.y >= ((VIEW_Y_MAX - y_min - data.viewport.height_tiles) & ~1)) {
+        data.camera.tile.y = VIEW_Y_MAX - y_min - data.viewport.height_tiles;
+        data.camera.pixel.y = 0;
     }
     data.camera.tile.y &= ~1;
 }
@@ -131,19 +135,19 @@ static void adjust_camera_position_for_pixels(void)
 {
     while (data.camera.pixel.x < 0) {
         data.camera.tile.x--;
-        data.camera.pixel.x += 60;
+        data.camera.pixel.x += TILE_WIDTH_PIXELS;
     }
     while (data.camera.pixel.y < 0) {
         data.camera.tile.y -= 2;
-        data.camera.pixel.y += 30;
+        data.camera.pixel.y += TILE_HEIGHT_PIXELS;
     }
-    while (data.camera.pixel.x >= 60) {
+    while (data.camera.pixel.x >= TILE_WIDTH_PIXELS) {
         data.camera.tile.x++;
-        data.camera.pixel.x -= 60;
+        data.camera.pixel.x -= TILE_WIDTH_PIXELS;
     }
-    while (data.camera.pixel.y >= 30) {
+    while (data.camera.pixel.y >= TILE_HEIGHT_PIXELS) {
         data.camera.tile.y += 2;
-        data.camera.pixel.y -= 30;
+        data.camera.pixel.y -= TILE_HEIGHT_PIXELS;
     }
 }
 
@@ -179,8 +183,8 @@ void city_view_get_pixel_offset(int *x, int *y)
 
 void city_view_get_camera_in_pixels(int *x, int *y)
 {
-    *x = data.camera.tile.x * 60 + data.camera.pixel.x;
-    *y = data.camera.tile.y * 15 + data.camera.pixel.y;
+    *x = data.camera.tile.x * TILE_WIDTH_PIXELS + data.camera.pixel.x;
+    *y = data.camera.tile.y * HALF_TILE_HEIGHT_PIXELS + data.camera.pixel.y;
 }
 
 void city_view_set_camera(int x, int y)
@@ -192,10 +196,10 @@ void city_view_set_camera(int x, int y)
 
 void city_view_set_camera_from_pixel_position(int x, int y)
 {
-    data.camera.tile.x = x / 60;
-    data.camera.tile.y = y / 15;
-    data.camera.pixel.x = x % 60;
-    data.camera.pixel.y = y % 30;
+    data.camera.tile.x = x / TILE_WIDTH_PIXELS;
+    data.camera.tile.y = y / HALF_TILE_HEIGHT_PIXELS;
+    data.camera.pixel.x = x % TILE_WIDTH_PIXELS;
+    data.camera.pixel.y = y % TILE_HEIGHT_PIXELS;
     check_camera_boundaries();
 }
 
@@ -247,15 +251,15 @@ int city_view_pixels_to_view_tile(int x_pixels, int y_pixels, view_tile *tile)
 
     x_pixels += data.camera.pixel.x;
     y_pixels += data.camera.pixel.y;
-    int odd = ((x_pixels - data.viewport.x) / 30 + (y_pixels - data.viewport.y) / 15) & 1;
-    int x_is_odd = ((x_pixels - data.viewport.x) / 30) & 1;
-    int y_is_odd = ((y_pixels - data.viewport.y) / 15) & 1;
-    int x_mod = ((x_pixels - data.viewport.x) % 30) / 2;
-    int y_mod = (y_pixels - data.viewport.y) % 15;
-    int x_view_offset = (x_pixels - data.viewport.x) / 60;
-    int y_view_offset = (y_pixels - data.viewport.y) / 15;
+    int odd = ((x_pixels - data.viewport.x) / HALF_TILE_WIDTH_PIXELS + (y_pixels - data.viewport.y) / HALF_TILE_HEIGHT_PIXELS) & 1;
+    int x_is_odd = ((x_pixels - data.viewport.x) / HALF_TILE_WIDTH_PIXELS) & 1;
+    int y_is_odd = ((y_pixels - data.viewport.y) / HALF_TILE_HEIGHT_PIXELS) & 1;
+    int x_mod = ((x_pixels - data.viewport.x) % HALF_TILE_WIDTH_PIXELS) / 2;
+    int y_mod = (y_pixels - data.viewport.y) % HALF_TILE_HEIGHT_PIXELS;
+    int x_view_offset = (x_pixels - data.viewport.x) / TILE_WIDTH_PIXELS;
+    int y_view_offset = (y_pixels - data.viewport.y) / HALF_TILE_HEIGHT_PIXELS;
     if (odd) {
-        if (x_mod + y_mod >= 15 - 1) {
+        if (x_mod + y_mod >= HALF_TILE_HEIGHT_PIXELS - 1) {
             y_view_offset++;
             if (x_is_odd && !y_is_odd) {
                 x_view_offset++;
@@ -268,11 +272,11 @@ int city_view_pixels_to_view_tile(int x_pixels, int y_pixels, view_tile *tile)
             x_view_offset++;
         }
     }
-    data.selected_tile.x_pixels = data.viewport.x + 60 * x_view_offset - data.camera.pixel.x;
+    data.selected_tile.x_pixels = data.viewport.x + TILE_WIDTH_PIXELS * x_view_offset - data.camera.pixel.x;
     if (y_view_offset & 1) {
-        data.selected_tile.x_pixels -= 30;
+        data.selected_tile.x_pixels -= HALF_TILE_WIDTH_PIXELS;
     }
-    data.selected_tile.y_pixels = data.viewport.y + 15 * y_view_offset - 15 - data.camera.pixel.y; // TODO why -1?
+    data.selected_tile.y_pixels = data.viewport.y + HALF_TILE_HEIGHT_PIXELS * y_view_offset - HALF_TILE_HEIGHT_PIXELS - data.camera.pixel.y; // TODO why -1?
 
     tile->x = data.camera.tile.x + x_view_offset;
     tile->y = data.camera.tile.y + y_view_offset;
@@ -356,8 +360,8 @@ static void set_viewport(int x_offset, int y_offset, int width, int height)
     data.viewport.y = y_offset;
     data.viewport.width_pixels = width - 2;
     data.viewport.height_pixels = height;
-    data.viewport.width_tiles = width / 60;
-    data.viewport.height_tiles = height / 15;
+    data.viewport.width_tiles = width / TILE_WIDTH_PIXELS;
+    data.viewport.height_tiles = height / HALF_TILE_HEIGHT_PIXELS;
 }
 
 static void set_viewport_with_sidebar(void)
@@ -456,12 +460,12 @@ void city_view_foreach_map_tile(map_callback *callback)
 {
     int odd = 0;
     int y_view = data.camera.tile.y - 8;
-    int y_graphic = data.viewport.y - 9*15 - data.camera.pixel.y;
+    int y_graphic = data.viewport.y - 9 * HALF_TILE_HEIGHT_PIXELS - data.camera.pixel.y;
     for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
         if (y_view >= 0 && y_view < VIEW_Y_MAX) {
-            int x_graphic = -(4*58 + 8) - data.camera.pixel.x;
+            int x_graphic = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel.x;
             if (odd) {
-                x_graphic += data.viewport.x - 30;
+                x_graphic += data.viewport.x - HALF_TILE_WIDTH_PIXELS;
             } else {
                 x_graphic += data.viewport.x;
             }
@@ -471,12 +475,12 @@ void city_view_foreach_map_tile(map_callback *callback)
                     int grid_offset = view_to_grid_offset_lookup[x_view][y_view];
                     callback(x_graphic, y_graphic, grid_offset);
                 }
-                x_graphic += 60;
+                x_graphic += TILE_WIDTH_PIXELS;
                 x_view++;
             }
         }
         odd = 1 - odd;
-        y_graphic += 15;
+        y_graphic += HALF_TILE_HEIGHT_PIXELS;
         y_view++;
     }
 }
@@ -485,14 +489,14 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
 {
     int odd = 0;
     int y_view = data.camera.tile.y - 8;
-    int y_graphic = data.viewport.y - 9*15 - data.camera.pixel.y;
+    int y_graphic = data.viewport.y - 9 * HALF_TILE_HEIGHT_PIXELS - data.camera.pixel.y;
     int x_graphic, x_view;
     for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
         if (y_view >= 0 && y_view < VIEW_Y_MAX) {
             if (callback1) {
-                x_graphic = -(4*58 + 8) - data.camera.pixel.x;
+                x_graphic = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel.x;
                 if (odd) {
-                    x_graphic += data.viewport.x - 30;
+                    x_graphic += data.viewport.x - HALF_TILE_WIDTH_PIXELS;
                 } else {
                     x_graphic += data.viewport.x;
                 }
@@ -504,14 +508,14 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
                             callback1(x_graphic, y_graphic, grid_offset);
                         }
                     }
-                    x_graphic += 60;
+                    x_graphic += TILE_WIDTH_PIXELS;
                     x_view++;
                 }
             }
             if (callback2) {
-                x_graphic = -(4*58 + 8) - data.camera.pixel.x;
+                x_graphic = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel.x;
                 if (odd) {
-                    x_graphic += data.viewport.x - 30;
+                    x_graphic += data.viewport.x - HALF_TILE_WIDTH_PIXELS;
                 } else {
                     x_graphic += data.viewport.x;
                 }
@@ -523,14 +527,14 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
                             callback2(x_graphic, y_graphic, grid_offset);
                         }
                     }
-                    x_graphic += 60;
+                    x_graphic += TILE_WIDTH_PIXELS;
                     x_view++;
                 }
             }
             if (callback3) {
-                x_graphic = -(4*58 + 8) - data.camera.pixel.x;
+                x_graphic = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel.x;
                 if (odd) {
-                    x_graphic += data.viewport.x - 30;
+                    x_graphic += data.viewport.x - HALF_TILE_WIDTH_PIXELS;
                 } else {
                     x_graphic += data.viewport.x;
                 }
@@ -542,13 +546,13 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
                             callback3(x_graphic, y_graphic, grid_offset);
                         }
                     }
-                    x_graphic += 60;
+                    x_graphic += TILE_WIDTH_PIXELS;
                     x_view++;
                 }
             }
         }
         odd = 1 - odd;
-        y_graphic += 15;
+        y_graphic += HALF_TILE_HEIGHT_PIXELS;
         y_view++;
     }
 }

@@ -7,17 +7,18 @@
 
 #include <math.h>
 
-static const int SCROLL_BORDER = 5;
-static const int SCROLL_DECAY_MULTIPLIER = 300;
-static const time_millis SCROLL_DECAY_BASE_TIME = 350;
-static const time_millis SCROLL_DECAY_MAX_TIME = 1050; // SCROLL_DECAY_BASE_TIME * 3
+static const int MOUSE_BORDER = 5;
+static const int TOUCH_BORDER = 100;
+static const int DECAY_MULTIPLIER = 300;
+static const time_millis DECAY_BASE_TIME = 350;
+static const time_millis DECAY_MAX_TIME = 1050; // DECAY_BASE_TIME * 3
 static const time_millis MAX_SPEED_TIME_WEIGHT = 200;
 
 static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
 static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
 
 // TODO Remove this when the extra settings have been added
-static const int USE_SMOOTH_SCROLLING = 1;
+static const int USE_SMOOTH_SCROLLING = 0;
 
 static struct {
     int is_scrolling;
@@ -47,7 +48,6 @@ static struct {
         int y;
         int width;
         int height;
-        int margin;
     } limits;
     touch_coords start_touch;
 } data;
@@ -124,9 +124,9 @@ static void find_scroll_speed(const pixel_offset *position)
     }
 
     time_millis weighted_time = total_time - delta_time;
-    int delta_position = (position->x - data.speed.last_position.x) * SCROLL_DECAY_MULTIPLIER;
+    int delta_position = (position->x - data.speed.last_position.x) * DECAY_MULTIPLIER;
     data.speed.x = (int) (data.speed.x * weighted_time + delta_position) / (int) total_time;
-    delta_position = (position->y - data.speed.last_position.y) * SCROLL_DECAY_MULTIPLIER;
+    delta_position = (position->y - data.speed.last_position.y) * DECAY_MULTIPLIER;
     data.speed.y = (int) (data.speed.y * weighted_time + delta_position) / (int) total_time;
 
     data.speed.last_time = current_time;
@@ -141,7 +141,6 @@ void scroll_set_custom_margins(int x, int y, int width, int height)
     data.limits.y = y;
     data.limits.width = width;
     data.limits.height = height;
-    data.limits.margin = 100;
 }
 
 void scroll_restore_margins(void)
@@ -198,12 +197,12 @@ int scroll_decay(pixel_offset *position)
         return 0;
     }
     time_millis elapsed = time_get_millis() - data.speed.last_time;
-    if (elapsed > SCROLL_DECAY_MAX_TIME) {
+    if (elapsed > DECAY_MAX_TIME) {
         data.is_scrolling = 0;
         clear_scroll_decay(0);
         return 0;
     }
-    double exponent = exp(-((int)elapsed) / (double)SCROLL_DECAY_BASE_TIME);
+    double exponent = exp(-((int)elapsed) / (double)DECAY_BASE_TIME);
     position->x = data.speed.last_position.x - ((int)(data.speed.x * exponent));
     position->y = data.speed.last_position.y - ((int)(data.speed.y * exponent));
     if (position->x == data.speed.last_position.x && position->y == data.speed.last_position.y) {
@@ -312,11 +311,11 @@ int scroll_get_direction(const mouse *m)
     int bottom = 0;
     int left = 0;
     int right = 0;
-    int border = SCROLL_BORDER;
+    int border = MOUSE_BORDER;
     int x = m->x;
     int y = m->y;
     if (data.limits.active) {
-        border = data.limits.margin;
+        border = TOUCH_BORDER;
         width = data.limits.width;
         height = data.limits.height;
         x -= data.limits.x;
