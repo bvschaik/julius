@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 /**
  * @file
@@ -17,7 +18,6 @@
 
 /**
  * Wrapper for fopen converting filename to path in current working directory
- *
  * @param filename Filename
  * @param mode Mode to open the file (e.g. "wb").
  * @return FILE
