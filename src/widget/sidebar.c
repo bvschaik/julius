@@ -267,8 +267,8 @@ static void draw_extra_info_buttons(int x_offset, int is_collapsed)
     }
 
     graphics_set_clip_rectangle(x_offset, 24,
-            screen_width() - x_offset - SIDEBAR_BORDER,
-            screen_height() - 24 - BOTTOM_BORDER);
+            screen_width() - x_offset,
+            screen_height() - 24);
 
     if (update_extra_info(extra_info_height)) {
         draw_extra_info_panel(x_offset, extra_info_height);

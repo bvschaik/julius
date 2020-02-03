@@ -16,6 +16,7 @@ static const char *ini_keys[] = {
     "gameplay_fix_100y_ghosts",
     "ui_sidebar_info",
     "ui_show_intro_video",
+    "ui_enable_smooth_scrolling",
 };
 
 static int values[CONFIG_MAX_ENTRIES];
@@ -36,6 +37,7 @@ void config_set_defaults(void)
     values[CONFIG_GP_FIX_100_YEAR_GHOSTS] = 0;
     values[CONFIG_UI_SIDEBAR_INFO] = 0;
     values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
+    values[CONFIG_UI_ENABLE_SMOOTH_SCROLLING] = 0;
 }
 
 void config_load(void)

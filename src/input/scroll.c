@@ -1,5 +1,6 @@
 #include "scroll.h"
 
+#include "core/config.h"
 #include "core/direction.h"
 #include "core/time.h"
 #include "game/settings.h"
@@ -16,9 +17,6 @@ static const time_millis MAX_SPEED_TIME_WEIGHT = 200;
 
 static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
 static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
-
-// TODO Remove this when the extra settings have been added
-static const int USE_SMOOTH_SCROLLING = 0;
 
 static struct {
     int is_scrolling;
@@ -224,10 +222,11 @@ static int absolute_decrement(int value, int step)
 
 void scroll_get_delta(const mouse *m, pixel_offset *delta)
 {
+    int use_smooth_scrolling = config_get(CONFIG_UI_ENABLE_SMOOTH_SCROLLING);
     int direction = scroll_get_direction(m);
 
     if (direction == DIR_8_NONE) {
-        if (!data.is_touch && !data.speed.decaying && (data.speed.x || data.speed.y) && USE_SMOOTH_SCROLLING) {
+        if (!data.is_touch && !data.speed.decaying && (data.speed.x || data.speed.y) && use_smooth_scrolling) {
             data.is_scrolling = 1;
             data.speed.x = absolute_decrement(data.speed.x, 2);
             data.speed.y = absolute_decrement(data.speed.y, 1);
@@ -245,7 +244,7 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta)
     int dir_x = DIRECTION_X[direction];
     int dir_y = DIRECTION_Y[direction];
 
-    if (!USE_SMOOTH_SCROLLING && !data.is_touch) {
+    if (!use_smooth_scrolling && !data.is_touch) {
         int do_scroll = should_scroll();
         delta->x = 60 * dir_x * do_scroll;
         delta->y = 30 * dir_y * do_scroll;
