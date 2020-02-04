@@ -82,6 +82,7 @@ static struct {
     int y_text;
     int text_height_blocks;
     int text_width_blocks;
+    int focus_button_id;
 } data;
 
 static struct {
@@ -469,6 +470,7 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
+    data.focus_button_id = 0;
     const mouse *m_dialog = mouse_in_dialog(m);
     const lang_message *msg = lang_get_message(data.text_id);
     if (data.show_video) {
@@ -479,7 +481,7 @@ static void handle_mouse(const mouse *m)
             return;
         }
         if (msg->type == TYPE_MESSAGE && (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)) {
-            image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, 0);
+            image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id);
         }
         return;
     }
@@ -577,6 +579,15 @@ static void button_go_to_problem(int param1, int param2)
     window_city_show();
 }
 
+static void get_tooltip(tooltip_context *c)
+{
+    if (data.focus_button_id) {
+        c->type = TOOLTIP_BUTTON;
+        c->text_group = 12;
+        c->text_id = 1;
+    }
+}
+
 void window_message_dialog_show(int text_id, void (*background_callback)(void))
 {
     window_type window = {
@@ -584,7 +595,7 @@ void window_message_dialog_show(int text_id, void (*background_callback)(void))
         draw_background,
         draw_foreground,
         handle_mouse,
-        0
+        get_tooltip
     };
     init(text_id, background_callback);
     window_show(&window);
