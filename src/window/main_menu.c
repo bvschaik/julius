@@ -65,7 +65,9 @@ static void draw_background(void)
     graphics_in_dialog();
     image_draw(image_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
     graphics_reset_dialog();
-    draw_version_string();
+    if (window_get_id() == WINDOW_MAIN_MENU) {
+        draw_version_string();
+    }
 }
 
 static void draw_foreground(void)

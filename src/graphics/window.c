@@ -62,6 +62,19 @@ window_id window_get_id(void)
     return current_window->id;
 }
 
+void window_draw_old_behind(void)
+{
+    decrease_queue_index();
+    window_type *window_behind = &window_queue[queue_index];
+    increase_queue_index();
+    if (window_behind->draw_background) {
+        window_behind->draw_background();
+    }
+    if (window_behind->draw_foreground) {
+        window_behind->draw_foreground();
+    }
+}
+
 void window_show(const window_type *window)
 {
     increase_queue_index();

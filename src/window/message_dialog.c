@@ -391,6 +391,8 @@ static void draw_background(void)
 {
     if (data.background_callback) {
         data.background_callback();
+    } else {
+        window_draw_old_behind();
     }
     graphics_in_dialog();
     if (data.show_video) {
