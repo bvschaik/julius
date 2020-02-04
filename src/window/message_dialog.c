@@ -350,7 +350,7 @@ static void draw_background_video(void)
     width += lang_text_draw_year(player_message.year, data.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE);
     
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_DISASTER &&
-        data.text_id == 251) {
+        data.text_id == MESSAGE_DIALOG_THEFT) {
         lang_text_draw_amount(8, 0, player_message.param1, data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE);
     } else {
         width += lang_text_draw(63, 5, data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE);
@@ -450,6 +450,10 @@ static void draw_foreground_video(void)
     video_draw(data.x + 8, data.y + 8);
     image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
     image_buttons_draw(data.x + 372, data.y + 410, &image_button_close, 1);
+    const lang_message *msg = lang_get_message(data.text_id);
+    if (msg->type == TYPE_MESSAGE && (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)) {
+        image_buttons_draw(data.x + 48, data.y + 407, &image_button_go_to_problem, 1);
+    }
 }
 
 static void draw_foreground(void)
@@ -466,15 +470,20 @@ static void draw_foreground(void)
 static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
+    const lang_message *msg = lang_get_message(data.text_id);
     if (data.show_video) {
-        if (!image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
-            image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0);
+        if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
+            return;
+        }
+        if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
+            return;
+        }
+        if (msg->type == TYPE_MESSAGE && (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)) {
+            image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, 0);
         }
         return;
     }
     // no video
-    const lang_message *msg = lang_get_message(data.text_id);
-
     if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(
                 m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 36, &image_button_back, 1, 0)) {
         return;
