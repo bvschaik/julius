@@ -89,7 +89,7 @@ void window_display_options_show(void (*close_callback)(void))
 {
     window_type window = {
         WINDOW_DISPLAY_OPTIONS,
-        0,
+        window_draw_old_behind,
         draw_foreground,
         handle_mouse
     };

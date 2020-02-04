@@ -39,6 +39,7 @@ static int init(popup_dialog_type type, void (*close_func)(int accepted), int ha
 
 static void draw_background(void)
 {
+    window_draw_old_behind();
     graphics_in_dialog();
     outer_panel_draw(80, 80, 30, 10);
     lang_text_draw_centered(GROUP, data.type, 80, 100, 480, FONT_LARGE_BLACK);

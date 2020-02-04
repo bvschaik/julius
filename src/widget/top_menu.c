@@ -428,24 +428,28 @@ static void menu_file_exit_game(int param)
 static void menu_options_display(int param)
 {
     clear_state();
+    window_city_show();
     window_display_options_show(window_city_show);
 }
 
 static void menu_options_sound(int param)
 {
     clear_state();
+    window_city_show();
     window_sound_options_show(window_city_show);
 }
 
 static void menu_options_speed(int param)
 {
     clear_state();
+    window_city_show();
     window_speed_options_show(window_city_show);
 }
 
 static void menu_options_difficulty(int param)
 {
     clear_state();
+    window_city_show();
     window_difficulty_options_show(window_city_show);
 }
 
