@@ -19,7 +19,7 @@ typedef uint32_t color_t;
 #define COLOR_SIDEBAR 0xbdb592
 #define COLOR_NO_MASK 0xffffff
 #define COLOR_MASK_RED 0xff0818 // bit lost 0xf863
-#define COLOR_MASK_LIGHTRED 0xFF5606 
+#define COLOR_MASK_LIGHTRED 0xFFAD90 
 #define COLOR_MASK_GREEN 0x18ff18
 #define COLOR_TOOLTIP 0x424242
 #define COLOR_SOLDIER 0xf70000
