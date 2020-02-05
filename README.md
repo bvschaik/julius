@@ -18,6 +18,7 @@ The aim of this project is to create an open-source version of Caesar 3, with th
 as the original, but with some UI enhancements, that is able to be played on multiple platforms.
 The same logic means that the saved games are 100% compatible, and any gameplay bugs
 present in the original Caesar 3 game will also be present in Julius.
+It is meant as a drop-in replacement for Caesar 3, with the same look and feel, so there will be no major UI changes.
 
 UI enhancements include:
 - Support for widescreen resolutions
