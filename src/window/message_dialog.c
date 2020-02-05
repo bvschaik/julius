@@ -82,6 +82,7 @@ static struct {
     int y_text;
     int text_height_blocks;
     int text_width_blocks;
+    int focus_button_id;
 } data;
 
 static struct {
@@ -133,6 +134,11 @@ static int resource_image(int resource)
     int image_id = image_group(GROUP_RESOURCE_ICONS) + resource;
     image_id += resource_image_offset(resource, RESOURCE_IMAGE_ICON);
     return image_id;
+}
+
+static int is_problem_message(const lang_message *msg)
+{
+    return msg->type == TYPE_MESSAGE && (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION);
 }
 
 static void draw_city_message_text(const lang_message *msg)
@@ -350,7 +356,7 @@ static void draw_background_video(void)
     width += lang_text_draw_year(player_message.year, data.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE);
     
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_DISASTER &&
-        data.text_id == 251) {
+        data.text_id == MESSAGE_DIALOG_THEFT) {
         lang_text_draw_amount(8, 0, player_message.param1, data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE);
     } else {
         width += lang_text_draw(63, 5, data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE);
@@ -450,6 +456,10 @@ static void draw_foreground_video(void)
     video_draw(data.x + 8, data.y + 8);
     image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
     image_buttons_draw(data.x + 372, data.y + 410, &image_button_close, 1);
+    const lang_message *msg = lang_get_message(data.text_id);
+    if (is_problem_message(msg)) {
+        image_buttons_draw(data.x + 48, data.y + 407, &image_button_go_to_problem, 1);
+    }
 }
 
 static void draw_foreground(void)
@@ -465,16 +475,22 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
+    data.focus_button_id = 0;
     const mouse *m_dialog = mouse_in_dialog(m);
+    const lang_message *msg = lang_get_message(data.text_id);
     if (data.show_video) {
-        if (!image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
-            image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0);
+        if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
+            return;
+        }
+        if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
+            return;
+        }
+        if (is_problem_message(msg)) {
+            image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id);
         }
         return;
     }
     // no video
-    const lang_message *msg = lang_get_message(data.text_id);
-
     if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(
                 m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 36, &image_button_back, 1, 0)) {
         return;
@@ -568,6 +584,15 @@ static void button_go_to_problem(int param1, int param2)
     window_city_show();
 }
 
+static void get_tooltip(tooltip_context *c)
+{
+    if (data.focus_button_id) {
+        c->type = TOOLTIP_BUTTON;
+        c->text_group = 12;
+        c->text_id = 1;
+    }
+}
+
 void window_message_dialog_show(int text_id, void (*background_callback)(void))
 {
     window_type window = {
@@ -575,7 +600,7 @@ void window_message_dialog_show(int text_id, void (*background_callback)(void))
         draw_background,
         draw_foreground,
         handle_mouse,
-        0
+        get_tooltip
     };
     init(text_id, background_callback);
     window_show(&window);
