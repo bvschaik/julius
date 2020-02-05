@@ -22,7 +22,7 @@ static void button_close(int save, int param2);
 static generic_button checkbox_buttons[] = {
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO },
     { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
-    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_ENABLE_SMOOTH_SCROLLING },
+    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING },
     { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
     { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
 };

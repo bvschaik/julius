@@ -322,8 +322,9 @@ static void handle_mouse(const mouse *m)
             scroll_end_touch_drag();
         }
     }
-    if (!empire_scroll_map(scroll_get_direction(m))) {
-        view_tile position;
+    pixel_offset position;
+    scroll_get_delta(m, &position);
+    if (!empire_scroll_map(position.x, position.y)) {
         if (scroll_decay(&position)) {
             empire_set_scroll(position.x, position.y);
         }

@@ -42,7 +42,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
         color_t *dst = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
         int x_max = img->width - clip->clipped_pixels_right;
         if (type == DRAW_TYPE_NONE) {
-            if (img->draw.type == IMAGE_TYPE_NORMAL || img->draw.is_external) { // can be transparent
+            if (img->draw.type == IMAGE_TYPE_WITH_TRANSPARENCY || img->draw.is_external) { // can be transparent
                 for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
                     if (*data != COLOR_TRANSPARENT) {
                         *dst = *data;
