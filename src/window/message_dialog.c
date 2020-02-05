@@ -136,6 +136,11 @@ static int resource_image(int resource)
     return image_id;
 }
 
+static int is_problem_message(const lang_message *msg)
+{
+    return msg->type == TYPE_MESSAGE && (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION);
+}
+
 static void draw_city_message_text(const lang_message *msg)
 {
     if (msg->message_type != MESSAGE_TYPE_TUTORIAL) {
@@ -452,7 +457,7 @@ static void draw_foreground_video(void)
     image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
     image_buttons_draw(data.x + 372, data.y + 410, &image_button_close, 1);
     const lang_message *msg = lang_get_message(data.text_id);
-    if (msg->type == TYPE_MESSAGE && (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)) {
+    if (is_problem_message(msg)) {
         image_buttons_draw(data.x + 48, data.y + 407, &image_button_go_to_problem, 1);
     }
 }
@@ -480,7 +485,7 @@ static void handle_mouse(const mouse *m)
         if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
             return;
         }
-        if (msg->type == TYPE_MESSAGE && (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)) {
+        if (is_problem_message(msg)) {
             image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id);
         }
         return;
