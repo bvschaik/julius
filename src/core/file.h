@@ -1,8 +1,8 @@
 #ifndef CORE_FILE_H
 #define CORE_FILE_H
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 /**

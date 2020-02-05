@@ -1,15 +1,17 @@
 #include "android.h"
+
 #include "SDL.h"
 
-typedef struct
-{
+#include <jni.h>
+
+typedef struct {
     JNIEnv *env;
     jclass class;
     jobject activity;
     jmethodID method;
 } java_function_handler;
 
-static int hasDirectory;
+static int has_directory;
 
 static int startup_java_function_handler(const char *class_name, java_function_handler *handler)
 {
@@ -97,9 +99,9 @@ const char* android_show_c3_path_dialog(void)
     }
     destroy_java_function_handler(&handler);
 
-    hasDirectory = 0;
+    has_directory = 0;
 
-    while (!hasDirectory) {
+    while (!has_directory) {
         SDL_WaitEventTimeout(NULL, 2000);
     }
 
@@ -178,10 +180,10 @@ int android_get_directory_contents_by_extension(char **list, int *count, const c
         len = max_files;
     }
     for(int i = 0; i < len; ++ i) {
-        jstring jfileName = (jstring) (*handler.env)->GetObjectArrayElement(handler.env, result, i);
-        const char *fileName = (*handler.env)->GetStringUTFChars(handler.env, jfileName, NULL);
-        strcpy(list[i], fileName);
-        (*handler.env)->DeleteLocalRef(handler.env, jfileName);
+        jstring jfilename = (jstring) (*handler.env)->GetObjectArrayElement(handler.env, result, i);
+        const char *filename = (*handler.env)->GetStringUTFChars(handler.env, jfilename, NULL);
+        strcpy(list[i], filename);
+        (*handler.env)->DeleteLocalRef(handler.env, jfilename);
     }
     (*handler.env)->DeleteLocalRef(handler.env, result);
     *count = len;
@@ -224,5 +226,5 @@ int android_remove_file(const char *filename)
 
 JNIEXPORT void JNICALL Java_com_github_bvschaik_julius_JuliusMainActivity_gotDirectory(JNIEnv *env)
 {
-    hasDirectory = 1;
+    has_directory = 1;
 }

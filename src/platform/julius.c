@@ -3,7 +3,6 @@
 #include "core/backtrace.h"
 #include "core/encoding.h"
 #include "core/file.h"
-#include "core/dir.h"
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/game.h"

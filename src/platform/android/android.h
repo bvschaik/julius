@@ -3,8 +3,6 @@
 
 #ifdef __ANDROID__
 
-#include <jni.h>
-
 void android_toast_message(const char *messge);
 const char* android_show_c3_path_dialog(void);
 float android_get_screen_scale(void);

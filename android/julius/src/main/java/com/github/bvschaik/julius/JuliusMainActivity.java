@@ -21,7 +21,7 @@ public class JuliusMainActivity extends SDLActivity {
 
     @Override
     protected String[] getLibraries() {
-        return new String[]{
+        return new String[] {
             "SDL2",
             "SDL2_mixer",
             "julius"
@@ -33,7 +33,8 @@ public class JuliusMainActivity extends SDLActivity {
         // Wait before showing window
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable()
         {
-            public void run() {
+            public void run()
+            {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                 intent.addFlags(
                         RW_FLAGS_PERMISSION
