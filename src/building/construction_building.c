@@ -405,7 +405,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_ORACLE));
             break;
         case BUILDING_ROADBLOCK:
-            add_building(b, image_group(GROUP_TERRAIN_PLAZA));
+            add_building(b, image_group(GROUP_ROADBLOCK));
             map_terrain_add_roadblock_road(b->x, b->y, orientation);	    
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
