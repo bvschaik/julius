@@ -258,8 +258,7 @@ static void play_channel(int channel, int direction)
             left_pan = right_pan = 0;
             break;
     }
-    sound_device_set_channel_panning(channel, left_pan, right_pan);
-    sound_device_play_channel(channel);
+    sound_device_play_channel_panned(channel, setting_sound(SOUND_CITY)->volume, left_pan, right_pan);
 }
 
 void sound_city_play(void)

@@ -99,26 +99,19 @@ int sound_device_is_channel_playing(int channel)
     return data.chunks[channel] && Mix_Playing(channel);
 }
 
-void sound_device_set_music_volume(int volume_percentage)
+void sound_device_set_music_volume(int volume_pct)
 {
-    Mix_VolumeMusic(percentage_to_volume(volume_percentage));
+    Mix_VolumeMusic(percentage_to_volume(volume_pct));
 }
 
-void sound_device_set_channel_volume(int channel, int volume_percentage)
+void sound_device_set_channel_volume(int channel, int volume_pct)
 {
     if (data.chunks[channel]) {
-        Mix_VolumeChunk(data.chunks[channel], percentage_to_volume(volume_percentage));
+        Mix_VolumeChunk(data.chunks[channel], percentage_to_volume(volume_pct));
     }
 }
 
-void sound_device_set_channel_panning(int channel, int left_pct, int right_pct)
-{
-    if (data.chunks[channel]) {
-        Mix_SetPanning(channel, left_pct * 255 / 100, right_pct * 255 / 100);
-    }
-}
-
-int sound_device_play_music(const char *filename)
+int sound_device_play_music(const char *filename, int volume_pct)
 {
     if (data.initialized) {
         sound_device_stop_music();
@@ -136,6 +129,8 @@ int sound_device_play_music(const char *filename)
             if (Mix_PlayMusic(data.music, -1) == -1) {
                 data.music = 0;
                 SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Error playing music file '%s'. Reason: %s", resolved_filename, Mix_GetError());
+            } else {
+                sound_device_set_music_volume(volume_pct);
             }
         }
 
@@ -148,23 +143,34 @@ int sound_device_play_music(const char *filename)
     return 0;
 }
 
-void sound_device_play_file_on_channel(const char *filename, int channel)
+void sound_device_play_file_on_channel(const char *filename, int channel, int volume_pct)
 {
     if (data.initialized) {
-        if (data.chunks[channel]) {
-            sound_device_stop_channel(channel);
-        }
+        sound_device_stop_channel(channel);
         load_file_for_channel(filename, channel);
         if (data.chunks[channel]) {
+            sound_device_set_channel_volume(channel, volume_pct);
             Mix_PlayChannel(channel, data.chunks[channel], 0);
         }
     }
 }
 
-void sound_device_play_channel(int channel)
+void sound_device_play_channel(int channel, int volume_pct)
 {
     if (data.initialized) {
         if (data.chunks[channel]) {
+            sound_device_set_channel_volume(channel, volume_pct);
+            Mix_PlayChannel(channel, data.chunks[channel], 0);
+        }
+    }
+}
+
+void sound_device_play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct)
+{
+    if (data.initialized) {
+        if (data.chunks[channel]) {
+            Mix_SetPanning(channel, left_pct * 255 / 100, right_pct * 255 / 100);
+            sound_device_set_channel_volume(channel, volume_pct);
             Mix_PlayChannel(channel, data.chunks[channel], 0);
         }
     }

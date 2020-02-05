@@ -19,5 +19,5 @@ void sound_effect_play(int effect)
     if (sound_device_is_channel_playing(effect)) {
         return;
     }
-    sound_device_play_channel(effect);
+    sound_device_play_channel(effect, setting_sound(SOUND_EFFECTS)->volume);
 }
