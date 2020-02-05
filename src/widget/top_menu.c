@@ -164,12 +164,17 @@ static void init_from_settings(void)
     set_text_for_warnings();
 }
 
+static void draw_background(void)
+{
+    window_city_draw_panels();
+    window_city_draw();
+}
+
 static void draw_foreground(void)
 {
     if (!data.open_sub_menu) {
         return;
     }
-    window_city_draw();
     menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
 }
 
@@ -182,7 +187,7 @@ static void top_menu_window_show(void)
 {
     window_type window = {
         WINDOW_TOP_MENU,
-        window_city_draw_panels,
+        draw_background,
         draw_foreground,
         handle_mouse,
         0
@@ -284,6 +289,7 @@ static int handle_mouse_submenu(const mouse *m)
     }
     int menu_id = menu_bar_handle_mouse(m, menu, 4, &data.focus_menu_id);
     if (menu_id && menu_id != data.open_sub_menu) {
+        window_city_draw();
         data.open_sub_menu = menu_id;
     }
     if (!menu_handle_mouse(m, &menu[data.open_sub_menu - 1], &data.focus_sub_menu_id)) {
@@ -428,28 +434,24 @@ static void menu_file_exit_game(int param)
 static void menu_options_display(int param)
 {
     clear_state();
-    window_city_show();
     window_display_options_show(window_city_show);
 }
 
 static void menu_options_sound(int param)
 {
     clear_state();
-    window_city_show();
     window_sound_options_show(window_city_show);
 }
 
 static void menu_options_speed(int param)
 {
     clear_state();
-    window_city_show();
     window_speed_options_show(window_city_show);
 }
 
 static void menu_options_difficulty(int param)
 {
     clear_state();
-    window_city_show();
     window_difficulty_options_show(window_city_show);
 }
 

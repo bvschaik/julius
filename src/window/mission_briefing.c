@@ -56,7 +56,7 @@ static void draw_background(void)
         }
     }
 
-    window_draw_old_behind();
+    window_draw_underlying_window();
     
     graphics_in_dialog();
     int text_id = 200 + scenario_campaign_mission();

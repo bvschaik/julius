@@ -12,6 +12,7 @@ static int queue_index = 0;
 static window_type *current_window = 0;
 static int refresh_immediate;
 static int refresh_on_draw;
+static int underlying_windows_redrawing;
 
 static void noop(void)
 {
@@ -60,19 +61,6 @@ int window_is(window_id id)
 window_id window_get_id(void)
 {
     return current_window->id;
-}
-
-void window_draw_old_behind(void)
-{
-    decrease_queue_index();
-    window_type *window_behind = &window_queue[queue_index];
-    increase_queue_index();
-    if (window_behind->draw_background) {
-        window_behind->draw_background();
-    }
-    if (window_behind->draw_foreground) {
-        window_behind->draw_foreground();
-    }
 }
 
 void window_show(const window_type *window)
@@ -129,4 +117,21 @@ void window_draw(int force)
     tooltip_handle(m, current_window->get_tooltip);
     warning_draw();
     update_mouse_after();
+}
+
+void window_draw_underlying_window(void)
+{
+    if (underlying_windows_redrawing < MAX_QUEUE) {
+        ++underlying_windows_redrawing;
+        decrease_queue_index();
+        window_type *window_behind = &window_queue[queue_index];
+        if (window_behind->draw_background) {
+            window_behind->draw_background();
+        }
+        if (window_behind->draw_foreground) {
+            window_behind->draw_foreground();
+        }
+        increase_queue_index();
+        --underlying_windows_redrawing;
+    }
 }

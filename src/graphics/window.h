@@ -96,9 +96,9 @@ void window_request_refresh(void);
  */
 int window_is_invalid(void);
 
-void window_draw_old_behind(void);
-
 void window_draw(int force);
+
+void window_draw_underlying_window(void);
 
 int window_is(window_id id);
 

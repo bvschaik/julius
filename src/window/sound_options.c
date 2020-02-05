@@ -201,7 +201,7 @@ void window_sound_options_show(void (*close_callback)(void))
 {
     window_type window = {
         WINDOW_SOUND_OPTIONS,
-        window_draw_old_behind,
+        window_draw_underlying_window,
         draw_foreground,
         handle_mouse,
     };
