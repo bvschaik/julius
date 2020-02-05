@@ -7,7 +7,6 @@ void sound_device_open(void);
 void sound_device_close(void);
 
 void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILENAME_MAX]);
-int sound_device_has_channel(int channel);
 int sound_device_is_channel_playing(int channel);
 
 void sound_device_set_music_volume(int volume_percentage);

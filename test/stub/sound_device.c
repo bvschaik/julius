@@ -9,11 +9,6 @@ void sound_device_close(void)
 void sound_device_init_channels(int numChannels, char filenames[][CHANNEL_FILENAME_MAX])
 {}
 
-int sound_device_has_channel(int channel)
-{
-    return 0;
-}
-
 int sound_device_is_channel_playing(int channel)
 {
     return 0;
