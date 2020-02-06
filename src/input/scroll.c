@@ -23,8 +23,14 @@
 static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
 static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
 
+typedef enum {
+    KEY_STATE_UNPRESSED = 0,
+    KEY_STATE_PRESSED = 1,
+    KEY_STATE_HELD = 2
+} key_state;
+
 typedef struct {
-    int state;
+    key_state state;
     time_millis last_change;
 } key;
 
@@ -63,13 +69,13 @@ static struct {
 static int is_arrow_key_pressed(key *arrow)
 {
     if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
-        return arrow->state;
+        return arrow->state != KEY_STATE_UNPRESSED;
     }
-    if (arrow->state == 1) {
-        arrow->state = 2;
+    if (arrow->state == KEY_STATE_PRESSED) {
+        arrow->state = KEY_STATE_HELD;
         return 1;
     }
-    if (arrow->state == 2 && time_get_millis() - arrow->last_change >= KEY_WAIT_TIME_AFTER_HOLD) {
+    if (arrow->state == KEY_STATE_HELD && time_get_millis() - arrow->last_change >= KEY_WAIT_TIME_AFTER_HOLD) {
         return 1;
     }
     return 0;
@@ -80,8 +86,8 @@ static void restart_active_arrow(key *arrow, const key *exception)
     if (arrow == exception) {
         return;
     }
-    if (arrow->state) {
-        arrow->state = 1;
+    if (arrow->state != KEY_STATE_UNPRESSED) {
+        arrow->state = KEY_STATE_PRESSED;
         arrow->last_change = time_get_millis();
     }
 }
@@ -95,9 +101,9 @@ static void restart_all_active_arrows_except(const key *arrow)
     restart_active_arrow(&data.arrow_key.right, arrow);
 }
 
-static void set_arrow_key_state(key *arrow, int state)
+static void set_arrow_key_state(key *arrow, key_state state)
 {
-    if (state && arrow->state) {
+    if (state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_UNPRESSED) {
         return;
     }
     arrow->state = state;
@@ -427,20 +433,20 @@ int scroll_get_direction(const mouse *m)
 
 void scroll_arrow_left(int is_down)
 {
-    set_arrow_key_state(&data.arrow_key.left, is_down);
+    set_arrow_key_state(&data.arrow_key.left, is_down ? KEY_STATE_PRESSED : KEY_STATE_UNPRESSED);
 }
 
 void scroll_arrow_right(int is_down)
 {
-    set_arrow_key_state(&data.arrow_key.right, is_down);
+    set_arrow_key_state(&data.arrow_key.right, is_down ? KEY_STATE_PRESSED : KEY_STATE_UNPRESSED);
 }
 
 void scroll_arrow_up(int is_down)
 {
-    set_arrow_key_state(&data.arrow_key.up, is_down);
+    set_arrow_key_state(&data.arrow_key.up, is_down ? KEY_STATE_PRESSED : KEY_STATE_UNPRESSED);
 }
 
 void scroll_arrow_down(int is_down)
 {
-    set_arrow_key_state(&data.arrow_key.down, is_down);
+    set_arrow_key_state(&data.arrow_key.down, is_down ? KEY_STATE_PRESSED : KEY_STATE_UNPRESSED);
 }
