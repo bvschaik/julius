@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/warning.h"
+#include "core/config.h"
 #include "figuretype/migrant.h"
 #include "game/undo.h"
 #include "graphics/window.h"
@@ -51,20 +52,23 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
     int x_min, x_max, y_min, y_max;
     map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
 
+    int visual_feedback_on_delete = config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE);
+
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = map_grid_offset(x,y);
             if (measure_only) {
                 building* b = get_deletable_building(grid_offset);
-                if (map_property_is_deleted(grid_offset) || (b && map_property_is_deleted(b->grid_offset))) {
-                    continue;
+                if (visual_feedback_on_delete) {
+                    if (map_property_is_deleted(grid_offset) || (b && map_property_is_deleted(b->grid_offset))) {
+                        continue;
+                    }
+                    map_building_tiles_mark_deleting(grid_offset);
                 }
-                map_building_tiles_mark_deleting(grid_offset);
                 if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                     if (b) {
                         items_placed++;
                     }
-                    continue;
                 }
                 if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION) || // keep the "access ramp deletion costs money" bug from C3
                    (map_terrain_is(grid_offset, TERRAIN_WATER))) { // keep the "bridge is free" bug from C3
@@ -73,7 +77,9 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                 if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) || map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                     items_placed++;
                 }
-                continue;
+                if (visual_feedback_on_delete) {
+                    continue;
+                }
             }
             if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION)) {
                 continue;
@@ -84,14 +90,14 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                     continue;
                 }
                 if (b->type == BUILDING_FORT_GROUND || b->type == BUILDING_FORT) {
-                    if (confirm.fort_confirmed != 1) {
+                    if (!measure_only && confirm.fort_confirmed != 1) {
                         continue;
                     }
-                    if (confirm.fort_confirmed == 1) {
+                    if (!measure_only && confirm.fort_confirmed == 1) {
                         game_undo_disable();
                     }
                 }
-                if (b->house_size && b->house_population) {
+                if (b->house_size && b->house_population && !measure_only) {
                     figure_create_homeless(b->x, b->y, b->house_population);
                     b->house_population = 0;
                 }
@@ -124,10 +130,10 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                 items_placed++;
                 map_aqueduct_remove(grid_offset);
             } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
-                if (map_bridge_count_figures(grid_offset) > 0) {
+                if (!measure_only && map_bridge_count_figures(grid_offset) > 0) {
                     city_warning_show(WARNING_PEOPLE_ON_BRIDGE);
                 } else if (confirm.bridge_confirmed == 1) {
-                    map_bridge_remove(grid_offset, 0);
+                    map_bridge_remove(grid_offset, measure_only);
                     items_placed++;
                 }
             } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
@@ -136,7 +142,7 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
             }
         }
     }
-    if (!measure_only) {
+    if (!measure_only || !visual_feedback_on_delete) {
         int radius;
         if (x_max - x_min <= y_max - y_min) {
             radius = y_max - y_min + 3;
@@ -151,6 +157,8 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
         map_tiles_update_all_plazas();
         map_tiles_update_area_walls(x_min, y_min, radius);
         map_tiles_update_region_aqueducts(x_min - 3, y_min - 3, x_max + 3, y_max + 3);
+    }
+    if (!measure_only) {
         map_routing_update_land();
         map_routing_update_walls();
         map_routing_update_water();
