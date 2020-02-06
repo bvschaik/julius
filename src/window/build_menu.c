@@ -158,9 +158,6 @@ static void draw_menu_buttons(void)
         if (type == BUILDING_FORT) {
             cost = 0;
         }
-        if (type == BUILDING_ROADBLOCK) {
-            cost = 40;
-        }
         if (cost) {
             text_draw_money(cost, x_offset - 82, data.y_offset + 114 + 24 * i, FONT_NORMAL_GREEN);
         }

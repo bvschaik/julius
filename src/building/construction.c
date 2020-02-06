@@ -432,7 +432,7 @@ void building_construction_update(int x, int y, int grid_offset)
     } else if (type == BUILDING_GATEHOUSE) {
         mark_construction(x, y, 2, ~TERRAIN_ROAD, 0);
     } else if (type == BUILDING_ROADBLOCK) {
-        mark_construction(x, y, 1, ~TERRAIN_ROAD, 0);
+        // Don't show the footprint for roadblocks
     } else if (type == BUILDING_TRIUMPHAL_ARCH) {
         mark_construction(x, y, 3, ~TERRAIN_ROAD, 0);
     } else if (type == BUILDING_WAREHOUSE) {

@@ -228,6 +228,9 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
     if (type == BUILDING_PLAZA && !map_terrain_is(grid_offset, TERRAIN_ROAD)) {
         return 1;
     }
+    if (type == BUILDING_ROADBLOCK && !map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        return 1;
+    }
     if (city_finance_out_of_money()) {
         return 1;
     }

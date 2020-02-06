@@ -536,6 +536,11 @@ int building_construction_place_building(building_type type, int x, int y)
             }
         }
     }
+    if (type == BUILDING_ROADBLOCK) {
+        if (map_tiles_are_clear(x, y, size, TERRAIN_ROAD)) {
+            return 0;
+        }
+    }
     if (type == BUILDING_TRIUMPHAL_ARCH) {
         if (!map_tiles_are_clear(x, y, size, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
