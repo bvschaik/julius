@@ -71,7 +71,7 @@ static void draw_foreground(void)
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         draw_paused_and_time_left();
     }
-    widget_city_draw_construction_cost();
+    widget_city_draw_construction_cost_and_size();
     if (window_is(WINDOW_CITY)) {
         city_message_process_queue();
     }

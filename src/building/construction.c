@@ -334,6 +334,24 @@ int building_construction_cost(void)
     return data.cost;
 }
 
+int building_construction_size(int *x, int *y)
+{
+    if (!building_construction_is_updatable()) {
+        return 0;
+    }
+    *x = data.end.x - data.start.x;
+    *y = data.end.y - data.start.y;
+    if (*x < 0) {
+        *x = -*x;
+    }
+    if (*y < 0) {
+        *y = -*y;
+    }
+    (*x)++;
+    (*y)++;
+    return 1;
+}
+
 int building_construction_in_progress(void)
 {
     return data.in_progress;

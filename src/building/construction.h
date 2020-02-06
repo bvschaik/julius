@@ -11,6 +11,8 @@ building_type building_construction_type(void);
 
 int building_construction_cost(void);
 
+int building_construction_size(int *x, int *y);
+
 int building_construction_in_progress(void);
 
 void building_construction_start(int x, int y, int grid_offset);
