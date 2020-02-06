@@ -14,6 +14,7 @@
 #include "input/touch.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "scenario/property.h"
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
@@ -72,7 +73,8 @@ void widget_city_draw_construction_cost(void)
     set_city_clip_rectangle();
     color_t color;
     if (cost <= city_finance_treasury()) {
-        color = COLOR_ORANGE;
+        // Color blind friendly
+        color = scenario_property_climate() == CLIMATE_DESERT ? COLOR_ORANGE : COLOR_ORANGE_LIGHT;
     } else {
         color = COLOR_RED;
     }
