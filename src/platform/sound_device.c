@@ -20,10 +20,15 @@
 #define USE_SDL_AUDIOSTREAM 
 #endif
 
+typedef struct {
+    const char *filename;
+    Mix_Chunk *chunk;
+} sound_channel;
+
 static struct {
     int initialized;
     Mix_Music *music;
-    Mix_Chunk *chunks[MAX_CHANNELS];
+    sound_channel channels[MAX_CHANNELS];
 } data;
 
 static struct {
@@ -49,7 +54,7 @@ void sound_device_open(void)
     if (0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
         data.initialized = 1;
         for (int i = 0; i < MAX_CHANNELS; i++) {
-            data.chunks[i] = 0;
+            data.channels[i].chunk = 0;
         }
     } else {
         log_error("SOUND: not initialized", 0, 0);
@@ -67,17 +72,27 @@ void sound_device_close(void)
     }
 }
 
-static void load_file_for_channel(const char *filename, int channel)
+static Mix_Chunk *load_chunk(const char *filename)
 {
     if (filename[0]) {
 #ifdef __vita__
         FILE *fp = file_open(filename, "rb");
         SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
-        data.chunks[channel] = Mix_LoadWAV_RW(sdl_fp, 1);
+        return Mix_LoadWAV_RW(sdl_fp, 1);
 #else
-        data.chunks[channel] = Mix_LoadWAV(filename);
+        return Mix_LoadWAV(filename);
 #endif
+    } else {
+        return NULL;
     }
+}
+
+static int load_channel(sound_channel *channel)
+{
+    if (!channel->chunk && channel->filename) {
+        channel->chunk = load_chunk(channel->filename);
+    }
+    return channel->chunk ? 1 : 0;
 }
 
 void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILENAME_MAX])
@@ -89,14 +104,15 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
         Mix_AllocateChannels(num_channels);
         log_info("Loading audio files", 0, 0);
         for (int i = 0; i < num_channels; i++) {
-            load_file_for_channel(filenames[i], i);
+            data.channels[i].chunk = 0;
+            data.channels[i].filename = filenames[i][0] ? filenames[i] : 0;
         }
     }
 }
 
 int sound_device_is_channel_playing(int channel)
 {
-    return data.chunks[channel] && Mix_Playing(channel);
+    return data.channels[channel].chunk && Mix_Playing(channel);
 }
 
 void sound_device_set_music_volume(int volume_pct)
@@ -106,8 +122,8 @@ void sound_device_set_music_volume(int volume_pct)
 
 void sound_device_set_channel_volume(int channel, int volume_pct)
 {
-    if (data.chunks[channel]) {
-        Mix_VolumeChunk(data.chunks[channel], percentage_to_volume(volume_pct));
+    if (data.channels[channel].chunk) {
+        Mix_VolumeChunk(data.channels[channel].chunk, percentage_to_volume(volume_pct));
     }
 }
 
@@ -147,10 +163,10 @@ void sound_device_play_file_on_channel(const char *filename, int channel, int vo
 {
     if (data.initialized) {
         sound_device_stop_channel(channel);
-        load_file_for_channel(filename, channel);
-        if (data.chunks[channel]) {
+        data.channels[channel].chunk = load_chunk(filename);
+        if (data.channels[channel].chunk) {
             sound_device_set_channel_volume(channel, volume_pct);
-            Mix_PlayChannel(channel, data.chunks[channel], 0);
+            Mix_PlayChannel(channel, data.channels[channel].chunk, 0);
         }
     }
 }
@@ -158,9 +174,10 @@ void sound_device_play_file_on_channel(const char *filename, int channel, int vo
 void sound_device_play_channel(int channel, int volume_pct)
 {
     if (data.initialized) {
-        if (data.chunks[channel]) {
+        sound_channel *ch = &data.channels[channel];
+        if (load_channel(ch)) {
             sound_device_set_channel_volume(channel, volume_pct);
-            Mix_PlayChannel(channel, data.chunks[channel], 0);
+            Mix_PlayChannel(channel, ch->chunk, 0);
         }
     }
 }
@@ -168,10 +185,11 @@ void sound_device_play_channel(int channel, int volume_pct)
 void sound_device_play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct)
 {
     if (data.initialized) {
-        if (data.chunks[channel]) {
+        sound_channel *ch = &data.channels[channel];
+        if (load_channel(ch)) {
             Mix_SetPanning(channel, left_pct * 255 / 100, right_pct * 255 / 100);
             sound_device_set_channel_volume(channel, volume_pct);
-            Mix_PlayChannel(channel, data.chunks[channel], 0);
+            Mix_PlayChannel(channel, ch->chunk, 0);
         }
     }
 }
@@ -190,10 +208,11 @@ void sound_device_stop_music(void)
 void sound_device_stop_channel(int channel)
 {
     if (data.initialized) {
-        if (data.chunks[channel]) {
+        sound_channel *ch = &data.channels[channel];
+        if (ch->chunk) {
             Mix_HaltChannel(channel);
-            Mix_FreeChunk(data.chunks[channel]);
-            data.chunks[channel] = 0;
+            Mix_FreeChunk(ch->chunk);
+            ch->chunk = 0;
         }
     }
 }
