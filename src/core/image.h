@@ -8,10 +8,10 @@
 #define IMAGE_FONT_MULTIBYTE_OFFSET 10000
 #define IMAGE_FONT_MULTIBYTE_MAX_CHARS 2188
 
-typedef enum {
+enum {
     IMAGE_TYPE_WITH_TRANSPARENCY = 0,
     IMAGE_TYPE_ISOMETRIC = 30
-} image_type;
+};
 
 /**
  * @file
@@ -30,7 +30,7 @@ typedef struct {
     int animation_can_reverse;
     int animation_speed_id;
     struct {
-        image_type type;
+        int type;
         int is_fully_compressed;
         int is_external;
         int has_compressed_part;
