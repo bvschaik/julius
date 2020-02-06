@@ -213,7 +213,7 @@ static void widget_city_handle_touch_scroll(const touch *t)
     }
 
     touch_coords original = scroll_get_original_touch_position();
-    if(scroll_move_touch_drag(original.x, original.y, t->current_point.x, t->current_point.y, &camera_pixel_position)) {
+    if (scroll_move_touch_drag(original.x, original.y, t->current_point.x, t->current_point.y, &camera_pixel_position)) {
         city_view_set_camera_from_pixel_position(camera_pixel_position.x, camera_pixel_position.y);
         sound_city_decay_views();
     }
