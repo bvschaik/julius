@@ -25,7 +25,7 @@ static const char FIGURE_SOUNDS[32][20][SOUND_FILENAME_MAX] = {
         "vigils_relig1.wav", "vigils_great1.wav", "vigils_great2.wav", "vigils_exact1.wav",
         "vigils_exact2.wav", "vigils_exact3.wav", "vigils_exact4.wav", "vigils_exact5.wav",
         "vigils_exact6.wav", "vigils_exact7.wav", "vigils_exact8.wav", "vigils_exact9.wav",
-        "vigils_exact0.wav", "vigils_free1.wav", "vigils_free2.wav", "vigils_free3.wav"
+        "vigils_exact10.wav", "vigils_free1.wav", "vigils_free2.wav", "vigils_free3.wav"
     },
     { // 1
         "wallguard_starv1.wav", "wallguard_nojob1.wav", "wallguard_needjob1.wav", "wallguard_nofun1.wav",
