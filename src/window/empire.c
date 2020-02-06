@@ -455,7 +455,7 @@ static void handle_mouse(const mouse *m)
         }
     }
     pixel_offset position;
-    scroll_get_delta(m, &position);
+    scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE);
     if (!empire_scroll_map(position.x, position.y)) {
         if (scroll_decay(&position)) {
             empire_set_scroll(position.x, position.y);

@@ -115,7 +115,7 @@ static void update_city_view_coords(const mouse *m, map_tile *tile)
 static void scroll_map(const mouse *m)
 {
     pixel_offset delta;
-    scroll_get_delta(m, &delta);
+    scroll_get_delta(m, &delta, SCROLL_TYPE_CITY);
     if (city_view_scroll(delta.x, delta.y)) {
         sound_city_decay_views();
     }

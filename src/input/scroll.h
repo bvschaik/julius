@@ -5,6 +5,11 @@
 #include "input/mouse.h"
 #include "input/touch.h"
 
+typedef enum {
+    SCROLL_TYPE_CITY,
+    SCROLL_TYPE_EMPIRE
+} scroll_type;
+
 int scroll_in_progress(void);
 
 int scroll_get_direction(const mouse *m);
@@ -12,7 +17,7 @@ int scroll_get_direction(const mouse *m);
 void scroll_set_custom_margins(int x, int y, int width, int height);
 void scroll_restore_margins(void);
 
-void scroll_get_delta(const mouse *m, pixel_offset *delta);
+void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type);
 
 void scroll_start_touch_drag(const pixel_offset *position, touch_coords coords);
 int scroll_move_touch_drag(int original_x, int original_y, int current_x, int current_y, pixel_offset *position);

@@ -16,6 +16,10 @@
 #define KEY_WAIT_TIME_AFTER_HOLD 500
 #define MAX_SPEED_TIME_WEIGHT 200
 
+#define SCROLL_STEP_CITY_X 60
+#define SCROLL_STEP_CITY_Y 30
+#define SCROLL_STEP_EMPIRE 20
+
 static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
 static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
 
@@ -84,6 +88,7 @@ static void restart_active_arrow(key *arrow, const key *exception)
 
 static void restart_all_active_arrows_except(const key *arrow)
 {
+    data.speed.last_time = 0;
     restart_active_arrow(&data.arrow_key.up, arrow);
     restart_active_arrow(&data.arrow_key.down, arrow);
     restart_active_arrow(&data.arrow_key.left, arrow);
@@ -97,7 +102,9 @@ static void set_arrow_key_state(key *arrow, int state)
     }
     arrow->state = state;
     arrow->last_change = time_get_millis();
-    restart_all_active_arrows_except(arrow);
+    if (!config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
+        restart_all_active_arrows_except(arrow);
+    }
 }
 
 int scroll_in_progress(void)
@@ -278,7 +285,7 @@ static int absolute_decrement(int value, int step)
     return (step >= -value) ? 0 : value + step;
 }
 
-void scroll_get_delta(const mouse *m, pixel_offset *delta)
+void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
 {
     int use_smooth_scrolling = config_get(CONFIG_UI_SMOOTH_SCROLLING);
     int direction = scroll_get_direction(m);
@@ -304,8 +311,10 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta)
 
     if (!use_smooth_scrolling && !data.is_touch) {
         int do_scroll = should_scroll();
-        delta->x = 60 * dir_x * do_scroll;
-        delta->y = 30 * dir_y * do_scroll;
+        int step_x = (type == SCROLL_TYPE_CITY) ? SCROLL_STEP_CITY_X : SCROLL_STEP_EMPIRE;
+        int step_y = (type == SCROLL_TYPE_CITY) ? SCROLL_STEP_CITY_Y : SCROLL_STEP_EMPIRE;
+        delta->x = step_x * dir_x * do_scroll;
+        delta->y = step_y * dir_y * do_scroll;
         return;
     }
 
