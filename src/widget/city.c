@@ -74,7 +74,7 @@ void widget_city_draw_construction_cost(void)
     color_t color;
     if (cost <= city_finance_treasury()) {
         // Color blind friendly
-        color = (scenario_property_climate() == CLIMATE_DESERT) ? COLOR_ORANGE : COLOR_ORANGE_LIGHT;
+        color = scenario_property_climate() == CLIMATE_DESERT ? COLOR_ORANGE : COLOR_ORANGE_LIGHT;
     } else {
         color = COLOR_RED;
     }
