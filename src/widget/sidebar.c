@@ -36,8 +36,6 @@
 
 #define SIDEBAR_COLLAPSED_WIDTH 42
 #define SIDEBAR_EXPANDED_WIDTH 162
-#define SIDEBAR_BORDER ((screen_width() + 20) % 60)
-#define BOTTOM_BORDER ((screen_height() - 24) % 15)
 #define FILLER_Y_OFFSET 474
 
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64
@@ -136,14 +134,12 @@ static struct {
 
 static int get_x_offset_expanded(void)
 {
-    int s_width = screen_width();
-    return (s_width - (s_width + 20) % 60 - SIDEBAR_EXPANDED_WIDTH);
+    return screen_width() - SIDEBAR_EXPANDED_WIDTH;
 }
 
 static int get_x_offset_collapsed(void)
 {
-    int s_width = screen_width();
-    return s_width - (s_width + 20) % 60 - SIDEBAR_COLLAPSED_WIDTH;
+    return screen_width() - SIDEBAR_COLLAPSED_WIDTH;
 }
 
 static void draw_minimap(int force)
@@ -192,7 +188,7 @@ static void draw_sidebar_filler(int x_offset, int y_offset, int is_collapsed)
 {
     // relief images below panel
     int image_base = image_group(GROUP_SIDE_PANEL);
-    int y_max = screen_height() - BOTTOM_BORDER;
+    int y_max = screen_height();
     while (y_offset < y_max) {
         if (y_max - y_offset <= 120) {
             image_draw(image_base + 2 + is_collapsed, x_offset, y_offset);
@@ -271,8 +267,8 @@ static void draw_extra_info_buttons(int x_offset, int is_collapsed)
     }
 
     graphics_set_clip_rectangle(x_offset, 24,
-            screen_width() - x_offset - SIDEBAR_BORDER,
-            screen_height() - 24 - BOTTOM_BORDER);
+            screen_width() - x_offset,
+            screen_height() - 24);
 
     if (update_extra_info(extra_info_height)) {
         draw_extra_info_panel(x_offset, extra_info_height);
@@ -295,7 +291,7 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
     draw_sidebar_filler(x_offset, FILLER_Y_OFFSET + extra_info_height, is_collapsed);
 }
 
-static void draw_sidebar(void)
+void widget_sidebar_draw_background(void)
 {
     int image_base = image_group(GROUP_SIDE_PANEL);
     int is_collapsed = city_view_is_sidebar_collapsed();
@@ -313,39 +309,6 @@ static void draw_sidebar(void)
     draw_minimap(1);
 
     draw_sidebar_remainder(x_offset, is_collapsed);
-}
-
-static void draw_filler_borders(void)
-{
-    int border_right_width = SIDEBAR_BORDER;
-    if (border_right_width) {
-        int image_id = image_group(GROUP_TOP_MENU_SIDEBAR) + 13;
-        if (border_right_width > 24) {
-            // larger border
-            image_id -= 1;
-        }
-        if (border_right_width > 40) {
-            int x_offset = screen_width() - 35;
-            int y_max = screen_height();
-            for (int y_offset = 24; y_offset < y_max; y_offset += 24) {
-                image_draw(image_id, x_offset, y_offset);
-            }
-        }
-        int x_offset = screen_width() - border_right_width;
-        int y_max = screen_height();
-        for (int y_offset = 24; y_offset < y_max; y_offset += 24) {
-            image_draw(image_id, x_offset, y_offset);
-        }
-    }
-
-    int border_bottom_height = BOTTOM_BORDER;
-    graphics_fill_rect(0, screen_height() - border_bottom_height, screen_width(), border_bottom_height, COLOR_BLACK);
-}
-
-void widget_sidebar_draw_background(void)
-{
-    draw_sidebar();
-    draw_filler_borders();
 }
 
 static void enable_building_buttons(void)
@@ -563,7 +526,7 @@ static void draw_sliding_foreground(void)
 
     int x_offset_expanded = get_x_offset_expanded();
     int x_offset_collapsed = get_x_offset_collapsed();
-    graphics_set_clip_rectangle(x_offset_expanded, 24, SIDEBAR_EXPANDED_WIDTH, screen_height() - 24 - BOTTOM_BORDER);
+    graphics_set_clip_rectangle(x_offset_expanded, 24, SIDEBAR_EXPANDED_WIDTH, screen_height() - 24);
 
     int image_base = image_group(GROUP_SIDE_PANEL);
     // draw collapsed sidebar

@@ -3,10 +3,14 @@
 
 void hotkey_character(int c, int with_ctrl, int with_alt);
 
-void hotkey_left(void);
-void hotkey_right(void);
-void hotkey_up(void);
-void hotkey_down(void);
+void hotkey_left_press(void);
+void hotkey_right_press(void);
+void hotkey_up_press(void);
+void hotkey_down_press(void);
+void hotkey_left_release(void);
+void hotkey_right_release(void);
+void hotkey_up_release(void);
+void hotkey_down_release(void);
 void hotkey_home(void);
 void hotkey_end(void);
 void hotkey_esc(void);
