@@ -3,6 +3,7 @@
 #include "building/animation.h"
 #include "building/construction.h"
 #include "building/industry.h"
+#include "core/config.h"
 #include "city/view.h"
 #include "core/log.h"
 #include "game/resource.h"
@@ -132,26 +133,40 @@ static int is_drawable_farm_corner(int grid_offset)
     return 0;
 }
 
-static void draw_flattened_building_footprint(const building *b, int x, int y, int image_offset)
+static int draw_building_as_deleted(building *b)
+{
+    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
+        return 0;
+    }
+    b = building_main(b);
+    return (b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset)));
+}
+
+static int is_multi_tile_terrain(int grid_offset)
+{
+    return (!map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1);
+}
+
+static void draw_flattened_building_footprint(const building *b, int x, int y, int image_offset, color_t color_mask)
 {
     int image_base = image_group(GROUP_TERRAIN_OVERLAY) + image_offset;
     if (b->house_size) {
         image_base += 4;
     }
     if (b->size == 1) {
-        image_draw_isometric_footprint_from_draw_tile(image_base, x, y, 0);
+        image_draw_isometric_footprint_from_draw_tile(image_base, x, y, color_mask);
     } else if (b->size == 2) {
         const int x_tile_offset[] = {30, 0, 60, 30};
         const int y_tile_offset[] = {-15, 0, 0, 15};
         for (int i = 0; i < 4; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + i, x + x_tile_offset[i], y + y_tile_offset[i], 0);
+            image_draw_isometric_footprint_from_draw_tile(image_base + i, x + x_tile_offset[i], y + y_tile_offset[i], color_mask);
         }
     } else if (b->size == 3) {
         const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 3, 3, 3};
         const int x_tile_offset[] = {60, 30, 90, 0, 60, 120, 30, 90, 60};
         const int y_tile_offset[] = {-30, -15, -15, 0, 0, 0, 15, 15, 30};
         for (int i = 0; i < 9; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], 0);
+            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], color_mask);
         }
     } else if (b->size == 4) {
         const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 3, 3, 3, 3, 3, 3};
@@ -174,7 +189,7 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
             45
         };
         for (int i = 0; i < 16; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], 0);
+            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], color_mask);
         }
     } else if (b->size == 5) {
         const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 1, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
@@ -201,7 +216,7 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
             60
         };
         for (int i = 0; i < 25; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], 0);
+            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], color_mask);
         }
     }
 }
@@ -213,15 +228,16 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
         return;
     }
     building *b = building_get(building_id);
+    color_t color_mask = draw_building_as_deleted(b) ? COLOR_MASK_RED : 0;
     if (overlay->show_building(b)) {
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(grid_offset, city_view_orientation())) {
-                image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+                image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
             } else if (map_property_is_draw_tile(grid_offset)) {
-                image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+                image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
             }
         } else {
-            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
         }
     } else {
         int draw = 1;
@@ -229,7 +245,7 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
             draw = is_drawable_farm_corner(grid_offset);
         }
         if (draw) {
-            draw_flattened_building_footprint(b, x, y, image_offset);
+            draw_flattened_building_footprint(b, x, y, image_offset, color_mask);
         }
     }
 }
@@ -282,11 +298,12 @@ static void draw_overlay_column(int x, int y, int height, int is_red)
 
 static void draw_building_top(int grid_offset, building *b, int x, int y)
 {
+    color_t color_mask = draw_building_as_deleted(b) ? COLOR_MASK_RED : 0;
     if (building_is_farm(b->type)) {
         if (is_drawable_farmhouse(grid_offset, city_view_orientation())) {
-            image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+            image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
         } else if (map_property_is_draw_tile(grid_offset)) {
-            image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+            image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
         }
         return;
     }
@@ -310,7 +327,7 @@ static void draw_building_top(int grid_offset, building *b, int x, int y)
         image_draw(image_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42);
     }
 
-    image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+    image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
 }
 
 void city_with_overlay_draw_building_top(int x, int y, int grid_offset)
@@ -344,8 +361,12 @@ static void draw_top(int x, int y, int grid_offset)
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset)) {
                 city_with_overlay_draw_building_top(x, y, grid_offset);
             } else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                color_t color_mask = 0;
+                if (map_property_is_deleted(grid_offset) && !is_multi_tile_terrain(grid_offset)) {
+                    color_mask = COLOR_MASK_RED;
+                }
                 // terrain
-                image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+                image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
             }
         }
     }
@@ -386,7 +407,7 @@ static void draw_animation(int x, int y, int grid_offset)
     if (img->num_animation_sprites && draw) {
         if (map_property_is_draw_tile(grid_offset)) {
             building *b = building_get(map_building_at(grid_offset));
-            int color_mask = 0;
+            int color_mask = draw_building_as_deleted(b) ? COLOR_MASK_RED : 0;
             if (b->type == BUILDING_GRANARY) {
                 image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 1,
                                   x + img->sprite_offset_x,
@@ -454,21 +475,54 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
     }
 }
 
+static void deletion_draw_terrain_top(int x, int y, int grid_offset)
+{
+    if (is_multi_tile_terrain(grid_offset)) {
+        draw_top(x, y, grid_offset);
+    }
+}
+
+static void deletion_draw_animations(int x, int y, int grid_offset)
+{
+    if (map_property_is_deleted(grid_offset) && !map_building_at(grid_offset)) {
+        image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
+    }
+    if (!is_multi_tile_terrain(grid_offset)) {
+        draw_top(x, y, grid_offset);
+    }
+    draw_figures(x, y, grid_offset);
+    draw_animation(x, y, grid_offset);
+}
+
+static void clear_deleted(int x, int y, int grid_offset)
+{
+    map_property_clear_deleted(grid_offset);
+}
+
 void city_with_overlay_draw(const map_tile *tile)
 {
     if (!select_city_overlay()) {
         return;
     }
 
-    city_building_ghost_mark_deleting(tile);
+    int should_mark_deleting = city_building_ghost_mark_deleting(tile);
     city_view_foreach_map_tile(draw_footprint);
-    city_view_foreach_valid_map_tile(
-        draw_figures,
-        draw_top,
-        draw_animation
-    );
-    city_building_ghost_draw(tile);
-    city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
+    if (!should_mark_deleting) {
+        city_view_foreach_valid_map_tile(
+            draw_figures,
+            draw_top,
+            draw_animation
+        );
+        city_building_ghost_draw(tile);
+        city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
+        city_view_foreach_map_tile(clear_deleted);
+    } else {
+        city_view_foreach_map_tile(draw_figures);
+        city_view_foreach_map_tile(deletion_draw_terrain_top);
+        city_view_foreach_map_tile(deletion_draw_animations);
+        city_view_foreach_map_tile(draw_elevated_figures);
+        city_view_foreach_map_tile(clear_deleted);
+    }
 }
 
 int city_with_overlay_get_tooltip_text(tooltip_context *c, int grid_offset)
