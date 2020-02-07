@@ -381,9 +381,9 @@ static void handle_bookmark(int number, int with_modifier)
     }
 }
 
-static void take_screenshot(void)
+static void take_screenshot(int full_city)
 {
-    graphics_save_screenshot();
+    graphics_save_screenshot(full_city);
 }
 
 void hotkey_func(int f_number, int with_modifier)
@@ -400,6 +400,6 @@ void hotkey_func(int f_number, int with_modifier)
         case 7: system_resize(640, 480); break;
         case 8: system_resize(800, 600); break;
         case 9: system_resize(1024, 768); break;
-        case 12: take_screenshot(); break;
+        case 12: take_screenshot(with_modifier); break;
     }
 }
