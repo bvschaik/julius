@@ -3,8 +3,8 @@
 #include "building/animation.h"
 #include "building/construction.h"
 #include "building/industry.h"
-#include "core/config.h"
 #include "city/view.h"
+#include "core/config.h"
 #include "core/log.h"
 #include "game/resource.h"
 #include "game/state.h"
@@ -139,12 +139,12 @@ static int draw_building_as_deleted(building *b)
         return 0;
     }
     b = building_main(b);
-    return (b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset)));
+    return b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset));
 }
 
 static int is_multi_tile_terrain(int grid_offset)
 {
-    return (!map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1);
+    return !map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1;
 }
 
 static void draw_flattened_building_footprint(const building *b, int x, int y, int image_offset, color_t color_mask)

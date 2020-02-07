@@ -1,9 +1,9 @@
 #include "city_overlay_other.h"
 
 #include "building/model.h"
-#include "core/config.h"
 #include "city/finance.h"
 #include "core/calc.h"
+#include "core/config.h"
 #include "game/resource.h"
 #include "game/state.h"
 #include "graphics/image.h"
@@ -254,7 +254,7 @@ static int has_deleted_building(int grid_offset)
     }
     building *b = building_get(map_building_at(grid_offset));
     b = building_main(b);
-    return (b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset)));
+    return b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset));
 }
 
 static int terrain_on_water_overlay(void)
