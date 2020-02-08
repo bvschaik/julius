@@ -9,6 +9,8 @@
 #include "city/warning.h"
 #include "core/config.h"
 #include "core/direction.h"
+#include "core/lang.h"
+#include "core/string.h"
 #include "game/orientation.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -297,9 +299,23 @@ static int update_extra_info(int height, int is_background)
     return changed;
 }
 
-static void draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective *obj)
+static void draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective *obj, int cut_off_at_parenthesis)
 {
-    lang_text_draw(text_group, text_id, x_offset + 11, y_offset, FONT_NORMAL_WHITE);
+    if (cut_off_at_parenthesis) {
+        // Exception for Chinese: the string for "population" includes the hotkey " (6)"
+        // To fix that: cut the string off at the '('
+        uint8_t tmp[100];
+        string_copy(lang_get_string(text_group, text_id), tmp, 100);
+        for (int i = 0; i < 100 && tmp[i]; i++) {
+            if (tmp[i] == '(') {
+                tmp[i] = 0;
+                break;
+            }
+        }
+        text_draw(tmp, x_offset + 11, y_offset, FONT_NORMAL_WHITE, 0);
+    } else {
+        lang_text_draw(text_group, text_id, x_offset + 11, y_offset, FONT_NORMAL_WHITE);
+    }
     font_t font = obj->value >= obj->target ? FONT_NORMAL_GREEN : FONT_NORMAL_RED;
     int width = text_draw_number(obj->value, '@', "", x_offset + 11, y_offset + 16, font);
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + 16, font);
@@ -324,11 +340,11 @@ static void draw_extra_info_panel(int x_offset, int extra_info_height)
         text_draw_number(data.extra_info.unemployment_amount, '(', ")", x_offset + 11 + width, y_offset + 88, FONT_NORMAL_GREEN);
     }
     if (extra_info_height >= EXTRA_INFO_HEIGHT_RATINGS) {
-        draw_extra_info_objective(x_offset, y_offset + 110, 53, 1, &data.extra_info.culture);
-        draw_extra_info_objective(x_offset, y_offset + 142, 53, 2, &data.extra_info.prosperity);
-        draw_extra_info_objective(x_offset, y_offset + 174, 53, 3, &data.extra_info.peace);
-        draw_extra_info_objective(x_offset, y_offset + 206, 53, 4, &data.extra_info.favor);
-        draw_extra_info_objective(x_offset, y_offset + 238, 4, 6, &data.extra_info.population);
+        draw_extra_info_objective(x_offset, y_offset + 110, 53, 1, &data.extra_info.culture, 0);
+        draw_extra_info_objective(x_offset, y_offset + 142, 53, 2, &data.extra_info.prosperity, 0);
+        draw_extra_info_objective(x_offset, y_offset + 174, 53, 3, &data.extra_info.peace, 0);
+        draw_extra_info_objective(x_offset, y_offset + 206, 53, 4, &data.extra_info.favor, 0);
+        draw_extra_info_objective(x_offset, y_offset + 238, 4, 6, &data.extra_info.population, 1);
     }
 }
 
