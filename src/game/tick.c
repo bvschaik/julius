@@ -167,11 +167,13 @@ static void advance_tick(void)
 
 void game_tick_run(void)
 {
+    if (editor_is_active()) {
+        figure_action_handle(); // just update the flag figures
+        return;
+    }
     random_generate_next();
     game_undo_reduce_time_available();
-    if (!editor_is_active()) {
-        advance_tick();
-    }
+    advance_tick();
     figure_action_handle();
     scenario_earthquake_process();
     scenario_gladiator_revolt_process();
