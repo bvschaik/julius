@@ -183,6 +183,7 @@ static void enable_tutorial1_after_collapse(int *enabled, building_type type)
     enable_tutorial1_after_fire(enabled, type);
     enable_if_allowed(enabled, type, BUILDING_ENGINEERS_POST);
     enable_if_allowed(enabled, type, BUILDING_SENATE_UPGRADED);
+    enable_if_allowed(enabled, type, BUILDING_ROADBLOCK);
 }
 
 static void enable_tutorial2_start(int *enabled, building_type type)
@@ -194,6 +195,7 @@ static void enable_tutorial2_start(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_PREFECTURE);
     enable_if_allowed(enabled, type, BUILDING_ENGINEERS_POST);
     enable_if_allowed(enabled, type, BUILDING_SENATE_UPGRADED);
+    enable_if_allowed(enabled, type, BUILDING_ROADBLOCK);
     enable_if_allowed(enabled, type, BUILDING_MARKET);
     enable_if_allowed(enabled, type, BUILDING_GRANARY);
     enable_if_allowed(enabled, type, BUILDING_MENU_FARMS);
