@@ -41,9 +41,8 @@
 
 #define SIDEBAR_COLLAPSED_WIDTH 42
 #define SIDEBAR_EXPANDED_WIDTH 162
-#define SIDEBAR_BORDER ((screen_width() + 20) % 60)
-#define BOTTOM_BORDER ((screen_height() - 24) % 15)
 #define FILLER_Y_OFFSET 474
+
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64
 #define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 112
 #define EXTRA_INFO_HEIGHT_RATINGS 272
@@ -174,7 +173,8 @@ static void draw_buttons(void)
         int x_offset = get_x_offset_collapsed();
         image_buttons_draw(x_offset, 24, button_expand_sidebar, 1);
         image_buttons_draw(x_offset, 24, buttons_build_collapsed, 12);
-    } else {
+    }
+    else {
         int x_offset = get_x_offset_expanded();
         image_buttons_draw(x_offset, 24, buttons_overlays_collapse_sidebar, 2);
         image_buttons_draw(x_offset, 24, buttons_build_expanded, 15);
@@ -195,7 +195,8 @@ static void draw_overlay_text(int x_offset)
     if (!city_view_is_sidebar_collapsed()) {
         if (game_state_overlay()) {
             lang_text_draw_centered(14, game_state_overlay(), x_offset, 32, 117, FONT_NORMAL_GREEN);
-        } else {
+        }
+        else {
             lang_text_draw_centered(6, 4, x_offset, 32, 117, FONT_NORMAL_GREEN);
         }
     }
@@ -205,154 +206,36 @@ static void draw_sidebar_filler(int x_offset, int y_offset, int is_collapsed)
 {
     // relief images below panel
     int image_base = image_group(GROUP_SIDE_PANEL);
-    int y_max = screen_height() - BOTTOM_BORDER;
-    while (y_offset < y_max) {
-        if (y_max - y_offset <= 120) {
-            image_draw(image_base + 2 + is_collapsed, x_offset, y_offset);
-            y_offset += 120;
-        } else {
-            image_draw(image_base + 4 + is_collapsed, x_offset, y_offset);
-            y_offset += 285;
-        }
-    }
-}
-
-static int calculate_extra_info_height(int is_collapsed)
-{
-    if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
-        data.extra_info.height = 0;
-    } else {
-        int available_height = screen_height() - FILLER_Y_OFFSET;
-        if (available_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
-            data.extra_info.height = EXTRA_INFO_HEIGHT_UNEMPLOYMENT;
-        } else if (available_height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
-            data.extra_info.height = EXTRA_INFO_HEIGHT_GAME_SPEED;
-        } else {
-            data.extra_info.height = 0;
-        }
-    }
-    return data.extra_info.height;
-}
-
-static int update_extra_info(int height)
-{
-    int changed = 0;
-    if (height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
-        int game_speed = setting_game_speed();
-        if (game_speed != data.extra_info.game_speed) {
-            data.extra_info.game_speed = game_speed;
-            changed = 1;
-        }
-    }
-    if (height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
-        int percentage = city_labor_unemployment_percentage();
-        int amount = city_labor_workers_unemployed() - city_labor_workers_needed();
-        if (percentage != data.extra_info.unemployment_percentage || amount != data.extra_info.unemployment_amount) {
-            data.extra_info.unemployment_percentage = percentage;
-            data.extra_info.unemployment_amount = amount;
-            changed = 1;
-        }
-    }
-    return changed;
-}
-
-static void draw_extra_info_panel(int x_offset, int extra_info_height)
-{
-    int y_offset = FILLER_Y_OFFSET;
-
-    int panel_blocks = extra_info_height / 16;
-    graphics_draw_vertical_line(x_offset, y_offset, y_offset + extra_info_height, COLOR_WHITE);
-    graphics_draw_vertical_line(x_offset + SIDEBAR_EXPANDED_WIDTH - 1, y_offset, y_offset + extra_info_height, COLOR_SIDEBAR);
-    inner_panel_draw(x_offset + 1, y_offset, SIDEBAR_EXPANDED_WIDTH / 16, panel_blocks);
-
-    lang_text_draw(45, 2, x_offset + 11, y_offset + 10, FONT_NORMAL_WHITE);
-    text_draw_percentage(data.extra_info.game_speed, x_offset + 60, y_offset + 36, FONT_NORMAL_GREEN);
-
-    if (extra_info_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
-        lang_text_draw(68, 148, x_offset + 11, y_offset + 68, FONT_NORMAL_WHITE);
-        int width = text_draw_percentage(data.extra_info.unemployment_percentage, x_offset + 11, y_offset + 88, FONT_NORMAL_GREEN);
-        text_draw_number(data.extra_info.unemployment_amount, '(', ")", x_offset + 11 + width, y_offset + 88, FONT_NORMAL_GREEN);
-    }
-}
-
-static void draw_extra_info_buttons(int x_offset, int is_collapsed)
-{
-    int extra_info_height = data.extra_info.height;
-    if (!extra_info_height) {
-        return;
-    }
-
-    graphics_set_clip_rectangle(x_offset, 24,
-            screen_width() - x_offset - SIDEBAR_BORDER,
-            screen_height() - 24 - BOTTOM_BORDER);
-
-    if (update_extra_info(extra_info_height)) {
-        draw_extra_info_panel(x_offset, extra_info_height);
-    }
-    arrow_buttons_draw(x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
-
-    graphics_reset_clip_rectangle();
-}
-
-static void draw_sidebar_remainder(int x_offset, int is_collapsed)
-{
-    int extra_info_height = calculate_extra_info_height(is_collapsed);
-
-    if (extra_info_height) {
-        update_extra_info(extra_info_height);
-        draw_extra_info_panel(x_offset, extra_info_height);
-    }
-
-    draw_sidebar_filler(x_offset, FILLER_Y_OFFSET + extra_info_height, is_collapsed);
-}
-
-static void draw_sidebar(void)
-{
-    int image_base = image_group(GROUP_SIDE_PANEL);
-    int is_collapsed = city_view_is_sidebar_collapsed();
-    int x_offset;
-    if (is_collapsed) {
-        x_offset = get_x_offset_collapsed();
-        image_draw(image_base, x_offset, 24);
-    } else {
-        x_offset = get_x_offset_expanded();
-        image_draw(image_base + 1, x_offset, 24);
-    }
-    draw_buttons();
-    draw_overlay_text(x_offset + 4);
-    draw_build_image(x_offset + 6, 0);
-    draw_minimap(1);
-
-    draw_sidebar_remainder(x_offset, is_collapsed);
-{
-    // relief images below panel
-    int image_base = image_group(GROUP_SIDE_PANEL);
     int y_max = screen_height();
     while (y_offset < y_max) {
         if (y_max - y_offset <= 120) {
             image_draw(image_base + 2 + is_collapsed, x_offset, y_offset);
             y_offset += 120;
-        } else {
+        }
+        else {
             image_draw(image_base + 4 + is_collapsed, x_offset, y_offset);
             y_offset += 285;
         }
     }
->>>>>>> f35a14ceca39e822e5031851222869e61d0c4a35
 }
 
 static int calculate_extra_info_height(int is_collapsed)
 {
     if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
         data.extra_info.height = 0;
-    } else {
+    }
+    else {
         int available_height = screen_height() - FILLER_Y_OFFSET;
         if (available_height >= EXTRA_INFO_HEIGHT_RATINGS) {
             data.extra_info.height = EXTRA_INFO_HEIGHT_RATINGS;
-        } else if (available_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
+        }
+        else if (available_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
             data.extra_info.height = EXTRA_INFO_HEIGHT_UNEMPLOYMENT;
-        } else if (available_height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
+        }
+        else if (available_height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
             data.extra_info.height = EXTRA_INFO_HEIGHT_GAME_SPEED;
-        } else {
+        }
+        else {
             data.extra_info.height = 0;
         }
     }
@@ -387,11 +270,12 @@ static void set_extra_info_objectives(void)
     }
 }
 
-static int update_extra_info_value(int value, int *field)
+static int update_extra_info_value(int value, int* field)
 {
     if (value == *field) {
         return 0;
-    } else {
+    }
+    else {
         *field = value;
         return 1;
     }
@@ -423,7 +307,7 @@ static int update_extra_info(int height, int is_background)
     return changed;
 }
 
-static void draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective *obj, int cut_off_at_parenthesis)
+static void draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective* obj, int cut_off_at_parenthesis)
 {
     if (cut_off_at_parenthesis) {
         // Exception for Chinese: the string for "population" includes the hotkey " (6)"
@@ -437,7 +321,8 @@ static void draw_extra_info_objective(int x_offset, int y_offset, int text_group
             }
         }
         text_draw(tmp, x_offset + 11, y_offset, FONT_NORMAL_WHITE, 0);
-    } else {
+    }
+    else {
         lang_text_draw(text_group, text_id, x_offset + 11, y_offset, FONT_NORMAL_WHITE);
     }
     font_t font = obj->value >= obj->target ? FONT_NORMAL_GREEN : FONT_NORMAL_RED;
@@ -480,12 +365,13 @@ static void draw_extra_info_buttons(int x_offset, int is_collapsed)
     }
 
     graphics_set_clip_rectangle(x_offset, 24,
-            screen_width() - x_offset,
-            screen_height() - 24);
+        screen_width() - x_offset,
+        screen_height() - 24);
 
     if (update_extra_info(extra_info_height, 0)) {
         draw_extra_info_panel(x_offset, extra_info_height);
-    } else {
+    }
+    else {
         arrow_buttons_draw(x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
     }
 
@@ -512,7 +398,8 @@ void widget_sidebar_draw_background(void)
     if (is_collapsed) {
         x_offset = get_x_offset_collapsed();
         image_draw(image_base, x_offset, 24);
-    } else {
+    }
+    else {
         x_offset = get_x_offset_expanded();
         image_draw(image_base + 1, x_offset, 24);
     }
@@ -563,7 +450,8 @@ void widget_sidebar_draw_foreground(void)
     int is_collapsed = city_view_is_sidebar_collapsed();
     if (is_collapsed) {
         x_offset = get_x_offset_collapsed();
-    } else {
+    }
+    else {
         x_offset = get_x_offset_expanded();
     }
     draw_buttons();
@@ -579,7 +467,7 @@ void widget_sidebar_draw_foreground_military(void)
     draw_minimap(0);
 }
 
-int widget_sidebar_handle_mouse(const mouse *m)
+int widget_sidebar_handle_mouse(const mouse* m)
 {
     if (widget_city_has_input()) {
         return 0;
@@ -597,7 +485,8 @@ int widget_sidebar_handle_mouse(const mouse *m)
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 19;
         }
-    } else {
+    }
+    else {
         if (widget_minimap_handle_mouse(m)) {
             return 1;
         }
@@ -614,7 +503,6 @@ int widget_sidebar_handle_mouse(const mouse *m)
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 39;
         }
-        if (config_get(CONFIG_UI_SIDEBAR_INFO) && data.extra_info.height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
         if (data.extra_info.height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
             click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
         }
@@ -622,11 +510,12 @@ int widget_sidebar_handle_mouse(const mouse *m)
     return click;
 }
 
-void widget_sidebar_handle_mouse_build_menu(const mouse *m)
+void widget_sidebar_handle_mouse_build_menu(const mouse* m)
 {
     if (city_view_is_sidebar_collapsed()) {
         image_buttons_handle_mouse(m, get_x_offset_collapsed(), 24, buttons_build_collapsed, 12, 0);
-    } else {
+    }
+    else {
         image_buttons_handle_mouse(m, get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
     }
 }
@@ -673,7 +562,8 @@ static void button_go_to_problem(int param1, int param2)
     if (grid_offset) {
         city_view_go_to_grid_offset(grid_offset);
         window_city_show();
-    } else {
+    }
+    else {
         window_invalidate();
     }
 }
@@ -705,7 +595,8 @@ static void button_rotate(int clockwise, int param2)
 {
     if (clockwise) {
         game_orientation_rotate_right();
-    } else {
+    }
+    else {
         game_orientation_rotate_left();
     }
     window_invalidate();
@@ -715,7 +606,8 @@ static void button_game_speed(int is_down, int param2)
 {
     if (is_down) {
         setting_decrease_game_speed();
-    } else {
+    }
+    else {
         setting_increase_game_speed();
     }
 }
@@ -751,7 +643,8 @@ static void draw_sliding_foreground(void)
     // draw expanded sidebar on top of it
     if (city_view_is_sidebar_collapsed()) {
         x_offset_expanded += PROGRESS_TO_X_OFFSET[47 - data.progress];
-    } else {
+    }
+    else {
         x_offset_expanded += PROGRESS_TO_X_OFFSET[data.progress];
     }
     image_draw(image_base + 1, x_offset_expanded, 24);
@@ -779,7 +672,7 @@ static void slide_sidebar(void)
     data.slide_start = time_get_millis();
     city_view_start_sidebar_toggle();
     sound_effect_play(SOUND_EFFECT_SIDEBAR);
-    
+
     window_type window = {
         WINDOW_SLIDING_SIDEBAR,
         window_city_draw,
