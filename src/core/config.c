@@ -17,6 +17,7 @@ static const char *ini_keys[] = {
     "ui_sidebar_info",
     "ui_show_intro_video",
     "ui_smooth_scrolling",
+    "ui_walker_waypoints",
     "gameplay_change_grandfestival",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",

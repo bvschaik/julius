@@ -12,7 +12,7 @@
 #include "graphics/window.h"
 #include "window/main_menu.h"
 
-#define NUM_CHECKBOXES 10
+#define NUM_CHECKBOXES 11
 #define NUM_BOTTOM_BUTTONS 3
 
 static void toggle_switch(int id, int param2);
@@ -23,16 +23,14 @@ static generic_button checkbox_buttons[] = {
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO },
     { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
     { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING },
-    { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
-    { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
-    { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL },
-    { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS },
-    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GLOBAL_LABOUR },
-    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SCHOOL_WALKERS },
-    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RETIRE_AT_60 },
-    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING },
+    { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_WALKER_WAYPOINTS },
     { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
     { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
+    { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL },
+    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS },
+    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GLOBAL_LABOUR },
+    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SCHOOL_WALKERS },
+    { 20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RETIRE_AT_60 },
 };
 
 static generic_button bottom_buttons[] = {
@@ -76,14 +74,15 @@ static void draw_background(void)
     text_draw(string_from_ascii("Play intro videos"), 50, 77, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Extra information in the control panel"), 50, 101, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Enable smooth scrolling"), 50, 125, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Gameplay changes"), 20, 149, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix immigration bug on very hard"), 50, 173, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix 100-year-old ghosts"), 50, 197, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Grand festivals allow extra blessing from a god"), 50, 221, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Disable jealousness of gods"), 50, 245, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Enable global labour pool"), 50, 269, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Extend school walkers range"), 50, 293, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Change citizens' retirement age from 50 to 60"), 50, 317, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Draw walker waypoints on overlay after right clicking on a building."), 50, 149, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Gameplay changes"), 20, 173, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fix immigration bug on very hard"), 50, 197, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fix 100-year-old ghosts"), 50, 221, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Grand festivals allow extra blessing from a god"), 50, 245, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Disable jealousness of gods"), 50, 269, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Enable global labour pool"), 50, 293, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Extend school walkers range"), 50, 317, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Change citizens' retirement age from 50 to 60"), 50, 341, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];

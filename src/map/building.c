@@ -1,6 +1,7 @@
 #include "building.h"
 
 #include "building/building.h"
+#include "core/config.h"
 #include "map/grid.h"
 
 static grid_u16 buildings_grid;
@@ -38,7 +39,12 @@ void map_highlight_clear(int grid_offset)
 
 int map_is_highlighted(int grid_offset)
 {
-    return highlight_grid.items[grid_offset];
+    if (config_get(CONFIG_UI_WALKER_WAYPOINTS)) {
+        return highlight_grid.items[grid_offset];
+    }
+    else {    
+        return 0;
+    }
 }
 
 int map_building_damage_increase(int grid_offset)
