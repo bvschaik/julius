@@ -224,6 +224,11 @@ void building_update_state(void)
                     road_recalc = 1;
                 }
                 map_building_tiles_remove(i, b->x, b->y);
+		if (b->type == BUILDING_ROADBLOCK) {
+		    // Leave the road behind the deleted roadblock
+		    map_terrain_add_roadblock_road(b->x,b->y,0);
+                    road_recalc = 1;
+		}
                 land_recalc = 1;
                 building_delete(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
