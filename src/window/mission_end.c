@@ -135,6 +135,8 @@ static void handle_mouse(const mouse *m)
 
 static void button_fired(int param1, int param2)
 {
+    sound_music_stop();
+    sound_speech_stop();
     city_victory_stop_governing();
     game_undo_disable();
     if (scenario_is_custom()) {
@@ -182,5 +184,6 @@ void window_mission_end_show_won(void)
 
 void window_mission_end_show_fired(void)
 {
+    sound_music_reset();
     window_intermezzo_show(INTERMEZZO_FIRED, show_end_dialog);
 }
