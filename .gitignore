@@ -11,4 +11,10 @@ res/julius.icns
 /CMakeSettings.json
 out/
 ext/SDL2/*/
+<<<<<<< HEAD
 *~
+=======
+.vscode
+
+/android
+>>>>>>> ec6e3f32a898892e4e092cfb01b22cdc0dd3f901
