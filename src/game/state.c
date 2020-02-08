@@ -5,6 +5,7 @@
 #include "city/warning.h"
 #include "core/random.h"
 #include "map/ring.h"
+#include "map/building.h"
 
 static struct {
     int paused;
@@ -56,6 +57,7 @@ void game_state_toggle_overlay(void)
     int tmp = data.previous_overlay;
     data.previous_overlay = data.current_overlay;
     data.current_overlay = tmp;
+    map_clear_highlights();
 }
 
 void game_state_set_overlay(int overlay)
@@ -66,4 +68,5 @@ void game_state_set_overlay(int overlay)
         data.previous_overlay = OVERLAY_NONE;
     }
     data.current_overlay = overlay;
+    map_clear_highlights();
 }
