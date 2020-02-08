@@ -110,7 +110,7 @@ static void set_amount(int value)
 }
 static void button_amount(int param1, int param2)
 {
-    window_numeric_input_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 3, 120, set_amount);
+    window_numeric_input_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 3, 200, set_amount);
 }
 
 static void set_type(int value)
