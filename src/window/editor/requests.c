@@ -72,9 +72,9 @@ static void draw_foreground(void)
         if (request.resource) {
             text_draw_number(request.year, '+', " ", x + 20, y + 6, FONT_NORMAL_BLACK);
             lang_text_draw_year(scenario_property_start_year() + request.year, x + 80, y + 6, FONT_NORMAL_BLACK);
-            int width = text_draw_number(request.amount, '@', " ", x + 150, y + 6, FONT_NORMAL_BLACK);
+            int width = text_draw_number(request.amount, '@', " ", x + 180, y + 6, FONT_NORMAL_BLACK);
             int offset = request.resource + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON);
-            image_draw(image_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 160 + width, y + 3);
+            image_draw(image_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 190 + width, y + 3);
         } else {
             lang_text_draw_centered(44, 23, x, y + 6, 290, FONT_NORMAL_BLACK);
         }
