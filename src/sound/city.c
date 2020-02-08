@@ -194,9 +194,7 @@ void sound_city_init(void)
 void sound_city_set_volume(int percentage)
 {
     for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++) {
-        if (sound_device_has_channel(i)) {
-            sound_device_set_channel_volume(i, percentage);
-        }
+        sound_device_set_channel_volume(i, percentage);
     }
 }
 
@@ -239,7 +237,7 @@ static void play_channel(int channel, int direction)
     if (!setting_sound(SOUND_CITY)->enabled) {
         return;
     }
-    if (!sound_device_has_channel(channel) || sound_device_is_channel_playing(channel)) {
+    if (sound_device_is_channel_playing(channel)) {
         return;
     }
     int left_pan;
@@ -260,8 +258,7 @@ static void play_channel(int channel, int direction)
             left_pan = right_pan = 0;
             break;
     }
-    sound_device_set_channel_panning(channel, left_pan, right_pan);
-    sound_device_play_channel(channel);
+    sound_device_play_channel_panned(channel, setting_sound(SOUND_CITY)->volume, left_pan, right_pan);
 }
 
 void sound_city_play(void)

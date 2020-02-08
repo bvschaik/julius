@@ -80,24 +80,26 @@ static int draw_background(void)
     } else {
         distant_battle_text_id = 12;
     }
+    int bullet_x = 60;
+    int text_x = 80;
     if (num_legions <= 0) {
-        image_draw(image_group(GROUP_BULLET), 100, 359);
-        lang_text_draw(51, enemy_text_id, 120, 358, FONT_NORMAL_BLACK);
+        image_draw(image_group(GROUP_BULLET), bullet_x, 359);
+        lang_text_draw(51, enemy_text_id, text_x, 358, FONT_NORMAL_BLACK);
 
-        image_draw(image_group(GROUP_BULLET), 100, 379);
-        lang_text_draw(51, distant_battle_text_id, 120, 378, FONT_NORMAL_BLACK);
+        image_draw(image_group(GROUP_BULLET), bullet_x, 379);
+        lang_text_draw(51, distant_battle_text_id, text_x, 378, FONT_NORMAL_BLACK);
     } else {
         // has forts
-        image_draw(image_group(GROUP_BULLET), 100, 349);
-        int width = lang_text_draw_amount(8, 46, city_military_total_soldiers(), 120, 348, FONT_NORMAL_BLACK);
-        width += lang_text_draw(51, 7, 120 + width, 348, FONT_NORMAL_BLACK);
-        lang_text_draw_amount(8, 48, city_military_total_legions(), 120 + width, 348, FONT_NORMAL_BLACK);
+        image_draw(image_group(GROUP_BULLET), bullet_x, 349);
+        int width = lang_text_draw_amount(8, 46, city_military_total_soldiers(), text_x, 348, FONT_NORMAL_BLACK);
+        width += lang_text_draw(51, 7, text_x + width, 348, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 48, city_military_total_legions(), text_x + width, 348, FONT_NORMAL_BLACK);
 
-        image_draw(image_group(GROUP_BULLET), 100, 369);
-        lang_text_draw(51, enemy_text_id, 120, 368, FONT_NORMAL_BLACK);
+        image_draw(image_group(GROUP_BULLET), bullet_x, 369);
+        lang_text_draw(51, enemy_text_id, text_x, 368, FONT_NORMAL_BLACK);
 
-        image_draw(image_group(GROUP_BULLET), 100, 389);
-        lang_text_draw(51, distant_battle_text_id, 120, 388, FONT_NORMAL_BLACK);
+        image_draw(image_group(GROUP_BULLET), bullet_x, 389);
+        lang_text_draw(51, distant_battle_text_id, text_x, 388, FONT_NORMAL_BLACK);
     }
 
     inner_panel_draw(32, 70, 36, 17);

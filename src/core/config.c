@@ -16,6 +16,7 @@ static const char *ini_keys[] = {
     "gameplay_fix_100y_ghosts",
     "ui_sidebar_info",
     "ui_show_intro_video",
+    "ui_smooth_scrolling",
     "gameplay_change_grandfestival",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",
@@ -40,11 +41,13 @@ void config_set_defaults(void)
     values[CONFIG_GP_FIX_IMMIGRATION_BUG] = 0;
     values[CONFIG_GP_FIX_100_YEAR_GHOSTS] = 0;
     values[CONFIG_UI_SIDEBAR_INFO] = 0;
+    values[CONFIG_UI_SMOOTH_SCROLLING] = 0;
     values[CONFIG_GP_CH_GRANDFESTIVAL] = 0;
     values[CONFIG_GP_CH_JEALOUS_GODS] = 0;
     values[CONFIG_GP_CH_GLOBAL_LABOUR] = 0;
     values[CONFIG_GP_CH_SCHOOL_WALKERS] = 0;
     values[CONFIG_GP_CH_RETIRE_AT_60] = 0;
+    values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
 }
 
 void config_load(void)

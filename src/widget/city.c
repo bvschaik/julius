@@ -14,6 +14,7 @@
 #include "input/touch.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "scenario/property.h"
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
@@ -72,7 +73,8 @@ void widget_city_draw_construction_cost(void)
     set_city_clip_rectangle();
     color_t color;
     if (cost <= city_finance_treasury()) {
-        color = COLOR_ORANGE;
+        // Color blind friendly
+        color = scenario_property_climate() == CLIMATE_DESERT ? COLOR_ORANGE : COLOR_ORANGE_LIGHT;
     } else {
         color = COLOR_RED;
     }
@@ -155,14 +157,16 @@ static void build_end(void)
     }
 }
 
-static void scroll_map(int direction)
+static void scroll_map(const mouse *m)
 {
-    if (city_view_scroll(direction)) {
+    pixel_offset delta;
+    scroll_get_delta(m, &delta, SCROLL_TYPE_CITY);
+    if (city_view_scroll(delta.x, delta.y)) {
         sound_city_decay_views();
     } else {
-        view_tile position;
+        pixel_offset position;
         if (scroll_decay(&position)) {
-            city_view_set_camera(position.x, position.y);
+            city_view_set_camera_from_pixel_position(position.x, position.y);
             sound_city_decay_views();
         }
     }
@@ -194,15 +198,15 @@ static void widget_city_handle_touch_scroll(const touch *t)
         return;
     }
     scroll_restore_margins();
-    view_tile camera_position;
+    pixel_offset camera_pixel_position;
     
     if (!data.capture_input) {
         return;
     }
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
-        city_view_get_camera(&camera_position.x, &camera_position.y);
-        scroll_start_touch_drag(&camera_position, (was_click) ? t->current_point : t->start_point);
+        city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
+        scroll_start_touch_drag(&camera_pixel_position, (was_click) ? t->current_point : t->start_point);
         return;
     }
 
@@ -210,17 +214,9 @@ static void widget_city_handle_touch_scroll(const touch *t)
         return;
     }
 
-    touch_coords position = scroll_get_original_touch_position();
-    view_tile original, current;
-    if (!city_view_pixels_to_view_tile(position.x, position.y, &original)) {
-        return;
-    }
-    if (!city_view_pixels_to_view_tile(t->current_point.x, t->current_point.y, &current)) {
-        return;
-    }
-
-    if (scroll_move_touch_drag(original.x, original.y, current.x, current.y, &camera_position)) {
-        city_view_set_camera(camera_position.x, camera_position.y);
+    touch_coords original = scroll_get_original_touch_position();
+    if (scroll_move_touch_drag(original.x, original.y, t->current_point.x, t->current_point.y, &camera_pixel_position)) {
+        city_view_set_camera_from_pixel_position(camera_pixel_position.x, camera_pixel_position.y);
         sound_city_decay_views();
     }
 
@@ -313,7 +309,7 @@ int widget_city_has_input(void)
 
 void widget_city_handle_mouse(const mouse *m)
 {
-    scroll_map(scroll_get_direction(m));
+    scroll_map(m);
     if (m->is_touch) {
         widget_city_handle_touch();
         return;
@@ -379,7 +375,7 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
             data.capture_input = 0;
         }
     }
-    scroll_map(scroll_get_direction(m));
+    scroll_map(m);
     if (m->right.went_up) {
         data.capture_input = 0;
         city_warning_clear_all();

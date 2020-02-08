@@ -37,9 +37,6 @@ static generic_button buttons[] = {
     {192, 300, 256, 25, button_click, button_none, 6, 0},
 };
 
-//static image_button movie_button =
-//    {591, 442, 33, 22, IB_NORMAL, 89, 0, button_intro_movie, button_none, 0, 0, 1};
-
 static void draw_version_string(void)
 {
     uint8_t version_string[100] = "v";
@@ -58,7 +55,7 @@ static void draw_version_string(void)
         graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
     } else {
-        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_WHITE);
+        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_LIGHT_GRAY);
     }
 }
 

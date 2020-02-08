@@ -112,16 +112,18 @@ static void update_city_view_coords(const mouse *m, map_tile *tile)
     }
 }
 
-static void scroll_map(int direction)
+static void scroll_map(const mouse *m)
 {
-    if (city_view_scroll(direction)) {
+    pixel_offset delta;
+    scroll_get_delta(m, &delta, SCROLL_TYPE_CITY);
+    if (city_view_scroll(delta.x, delta.y)) {
         sound_city_decay_views();
     }
 }
 
 void widget_map_editor_handle_mouse(const mouse *m)
 {
-    scroll_map(scroll_get_direction(m));
+    scroll_map(m);
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m, tile);
 

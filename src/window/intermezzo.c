@@ -61,6 +61,8 @@ static const char SOUND_FILES_WON[][32] = {
     "wavs/22w.wav",
 };
 
+static const char SOUND_FILE_LOSE[] = "wavs/lose_game.wav";
+
 static struct {
     intermezzo_type type;
     void (*callback)(void);
@@ -72,16 +74,16 @@ static void init(intermezzo_type type, void (*callback)(void))
     data.type = type;
     data.callback = callback;
     data.start_time = time_get_millis();
-    if (data.type != INTERMEZZO_FIRED) {
-        sound_music_stop();
-        sound_speech_stop();
-        if (!scenario_is_custom()) {
-            int mission = scenario_campaign_mission();
-            if (data.type == INTERMEZZO_MISSION_BRIEFING) {
-                sound_speech_play_file(SOUND_FILES_BRIEFING[mission]);
-            } else if (data.type == INTERMEZZO_WON) {
-                sound_speech_play_file(SOUND_FILES_WON[mission]);
-            }
+    sound_music_stop();
+    sound_speech_stop();
+    if (data.type == INTERMEZZO_FIRED) {
+        sound_speech_play_file(SOUND_FILE_LOSE);
+    } else if (!scenario_is_custom()) {
+        int mission = scenario_campaign_mission();
+        if (data.type == INTERMEZZO_MISSION_BRIEFING) {
+            sound_speech_play_file(SOUND_FILES_BRIEFING[mission]);
+        } else if (data.type == INTERMEZZO_WON) {
+            sound_speech_play_file(SOUND_FILES_WON[mission]);
         }
     }
 }

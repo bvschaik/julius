@@ -1,16 +1,23 @@
+# IDE data
 .kdev4
-/build*/
-cmake-build-debug
-/data
 *.kdev4
 .vs
+.vscode
+/CMakeSettings.json
+
+# Generated resources
 src/platform/version.h
 res/version.rc
 res/version.txt
 res/julius.icns
-/CMakeSettings.json
+
+# Build output and data directories
+/build*/
 out/
+cmake-build-debug
+/data
 ext/SDL2/*/
+<<<<<<< HEAD
 <<<<<<< HEAD
 *~
 =======
@@ -18,3 +25,5 @@ ext/SDL2/*/
 
 /android
 >>>>>>> ec6e3f32a898892e4e092cfb01b22cdc0dd3f901
+=======
+>>>>>>> f35a14ceca39e822e5031851222869e61d0c4a35

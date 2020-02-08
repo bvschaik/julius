@@ -55,8 +55,15 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font)
 {
     int width = 0;
     if (year >= 0) {
-        width += lang_text_draw(20, 1, x_offset + width, y_offset, font);
-        width += text_draw_number(year, ' ', " ", x_offset + width, y_offset, font);
+        // TODO language-based check instead of encoding
+        int swap_year_and_ad = encoding_get() != ENCODING_CYRILLIC;
+        if (swap_year_and_ad) {
+            width += lang_text_draw(20, 1, x_offset + width, y_offset, font);
+            width += text_draw_number(year, ' ', " ", x_offset + width, y_offset, font);
+        } else {
+            width += text_draw_number(year, ' ', " ", x_offset + width, y_offset, font);
+            width += lang_text_draw(20, 1, x_offset + width, y_offset, font);
+        }
     } else {
         width += text_draw_number(-year, ' ', " ", x_offset + width, y_offset, font);
         width += lang_text_draw(20, 0, x_offset + width, y_offset, font);

@@ -99,47 +99,19 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
             break;
         case SDLK_LEFT:
             keyboard_left();
-            hotkey_left();
-            // check if another key still down as well (only last-pressed repeats)
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_UP)) {
-                hotkey_up();
-            }
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_DOWN)) {
-                hotkey_down();
-            }
+            hotkey_left_press();
             break;
         case SDLK_RIGHT:
             keyboard_right();
-            hotkey_right();
-            // check if another key still down as well (only last-pressed repeats)
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_UP)) {
-                hotkey_up();
-            }
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_DOWN)) {
-                hotkey_down();
-            }
+            hotkey_right_press();
             break;
         case SDLK_UP:
             keyboard_left();
-            hotkey_up();
-            // check if another key still down as well (only last-pressed repeats)
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_LEFT)) {
-                hotkey_left();
-            }
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_RIGHT)) {
-                hotkey_right();
-            }
+            hotkey_up_press();
             break;
         case SDLK_DOWN:
             keyboard_right();
-            hotkey_down();
-            // check if another key still down as well (only last-pressed repeats)
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_LEFT)) {
-                hotkey_left();
-            }
-            if (event->repeat && is_key_currently_down(SDL_SCANCODE_RIGHT)) {
-                hotkey_right();
-            }
+            hotkey_down_press();
             break;
         case SDLK_HOME:
             keyboard_home();
@@ -182,6 +154,24 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
                     hotkey_character(event->keysym.sym, is_ctrl_down(event), is_alt_down(event));
                 }
             }
+            break;
+    }
+}
+
+void platform_handle_key_up(SDL_KeyboardEvent *event)
+{
+    switch (event->keysym.sym) {
+        case SDLK_LEFT:
+            hotkey_left_release();
+            break;
+        case SDLK_RIGHT:
+            hotkey_right_release();
+            break;
+        case SDLK_UP:
+            hotkey_up_release();
+            break;
+        case SDLK_DOWN:
+            hotkey_down_release();
             break;
     }
 }

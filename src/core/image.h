@@ -8,6 +8,11 @@
 #define IMAGE_FONT_MULTIBYTE_OFFSET 10000
 #define IMAGE_FONT_MULTIBYTE_MAX_CHARS 2188
 
+enum {
+    IMAGE_TYPE_WITH_TRANSPARENCY = 0,
+    IMAGE_TYPE_ISOMETRIC = 30
+};
+
 /**
  * @file
  * Image functions

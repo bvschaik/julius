@@ -1,5 +1,6 @@
 #include "edit_request.h"
 
+#include "game/resource.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -109,16 +110,28 @@ static void set_amount(int value)
 }
 static void button_amount(int param1, int param2)
 {
-    window_numeric_input_show(screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 50, 3, 999, set_amount);
+    int max_amount = 999;
+    int max_digits = 3;
+    if (data.request.resource == RESOURCE_DENARII) {
+        max_amount = 30000;
+        max_digits = 5;
+    }
+    window_numeric_input_show(
+        screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 50,
+        max_digits, max_amount, set_amount
+    );
 }
 
 static void set_resource(int value)
 {
     data.request.resource = value;
+    if (data.request.amount > 999) {
+        data.request.amount = 999;
+    }
 }
 static void button_resource(int param1, int param2)
 {
-    window_select_list_show(screen_dialog_offset_x() + 210, screen_dialog_offset_y() + 40, 23, 16, set_resource);
+    window_select_list_show(screen_dialog_offset_x() + 210, screen_dialog_offset_y() + 40, 23, 17, set_resource);
 }
 
 static void set_deadline_years(int value)

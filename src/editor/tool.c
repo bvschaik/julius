@@ -326,16 +326,20 @@ static void place_building(const map_tile *tile)
 {
     int image_id;
     int size;
+    building_type type;
     switch (data.type) {
         case TOOL_NATIVE_HUT:
+            type = BUILDING_NATIVE_HUT;
             image_id = image_group(GROUP_EDITOR_BUILDING_NATIVE) + (random_byte() & 1);
             size = 1;
             break;
         case TOOL_NATIVE_CENTER:
+            type = BUILDING_NATIVE_MEETING;
             image_id = image_group(GROUP_EDITOR_BUILDING_NATIVE) + 2;
             size = 2;
             break;
         case TOOL_NATIVE_FIELD:
+            type = BUILDING_NATIVE_CROPS;
             image_id = image_group(GROUP_EDITOR_BUILDING_CROPS);
             size = 1;
             break;
@@ -344,7 +348,8 @@ static void place_building(const map_tile *tile)
     }
 
     if (editor_tool_can_place_building(tile, size * size, 0)) {
-        map_building_tiles_add(0, tile->x, tile->y, size, image_id, TERRAIN_BUILDING);
+        building *b = building_create(type, tile->x, tile->y);
+        map_building_tiles_add(b->id, tile->x, tile->y, size, image_id, TERRAIN_BUILDING);
         scenario_editor_updated_terrain();
     } else {
         city_warning_show(WARNING_EDITOR_CANNOT_PLACE);

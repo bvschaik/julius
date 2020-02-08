@@ -1,6 +1,7 @@
 #include "city.h"
 
 #include "city/message.h"
+#include "city/victory.h"
 #include "city/view.h"
 #include "game/state.h"
 #include "game/time.h"
@@ -31,7 +32,7 @@ static int center_in_city(int element_width_pixels)
 
 static void draw_paused_and_time_left(void)
 {
-    if (scenario_criteria_time_limit_enabled()) {
+    if (scenario_criteria_time_limit_enabled() && !city_victory_has_won()) {
         int years;
         if (scenario_criteria_max_year() <= game_time_year() + 1) {
             years = 0;
@@ -42,7 +43,7 @@ static void draw_paused_and_time_left(void)
         label_draw(1, 25, 15, 1);
         int width = lang_text_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
-    } else if (scenario_criteria_survival_enabled()) {
+    } else if (scenario_criteria_survival_enabled() && !city_victory_has_won()) {
         int years;
         if (scenario_criteria_max_year() <= game_time_year() + 1) {
             years = 0;

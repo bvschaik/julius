@@ -303,7 +303,7 @@ static void handle_mouse(const mouse *m)
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
-            view_tile position;
+            pixel_offset position;
             if (t->has_started) {
                 data.is_scrolling = 1;
                 empire_get_scroll(&position.x, &position.y);
@@ -322,8 +322,9 @@ static void handle_mouse(const mouse *m)
             scroll_end_touch_drag();
         }
     }
-    if (!empire_scroll_map(scroll_get_direction(m))) {
-        view_tile position;
+    pixel_offset position;
+    scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE);
+    if (!empire_scroll_map(position.x, position.y)) {
         if (scroll_decay(&position)) {
             empire_set_scroll(position.x, position.y);
         }

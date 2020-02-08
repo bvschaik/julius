@@ -21,8 +21,6 @@
 #include "window/editor/map.h"
 
 #define SIDEBAR_WIDTH 162
-#define SIDEBAR_BORDER ((screen_width() + 20) % 60)
-#define BOTTOM_BORDER ((screen_height() - 24) % 15)
 
 static void button_build_tool(int tool, int param2);
 static void button_build_menu(int submenu, int param2);
@@ -51,8 +49,7 @@ static image_button buttons_build[] = {
 
 static int get_x_offset(void)
 {
-    int s_width = screen_width();
-    return (s_width - (s_width + 20) % 60 - SIDEBAR_WIDTH);
+    return screen_width() - SIDEBAR_WIDTH;
 }
 
 static void draw_minimap(int force)
@@ -143,7 +140,7 @@ static void draw_status(void)
     }
 }
 
-static void draw_sidebar(void)
+void widget_sidebar_editor_draw_background(void)
 {
     int image_base = image_group(GROUP_EDITOR_SIDE_PANEL);
     int x_offset = get_x_offset();
@@ -154,7 +151,7 @@ static void draw_sidebar(void)
 
     // relief images below panel
     int y_offset = 474;
-    int y_max = screen_height() - BOTTOM_BORDER;
+    int y_max = screen_height();
     while (y_offset < y_max) {
         if (y_max - y_offset <= 120) {
             image_draw(image_base + 1, x_offset, y_offset);
@@ -164,39 +161,6 @@ static void draw_sidebar(void)
             y_offset += 285;
         }
     }
-}
-
-static void draw_filler_borders(void)
-{
-    int border_right_width = SIDEBAR_BORDER;
-    if (border_right_width) {
-        int image_id = image_group(GROUP_TOP_MENU_SIDEBAR) + 13;
-        if (border_right_width > 24) {
-            // larger border
-            image_id -= 1;
-        }
-        if (border_right_width > 40) {
-            int x_offset = screen_width() - 35;
-            int y_max = screen_height();
-            for (int y_offset = 24; y_offset < y_max; y_offset += 24) {
-                image_draw(image_id, x_offset, y_offset);
-            }
-        }
-        int x_offset = screen_width() - border_right_width;
-        int y_max = screen_height();
-        for (int y_offset = 24; y_offset < y_max; y_offset += 24) {
-            image_draw(image_id, x_offset, y_offset);
-        }
-    }
-
-    int border_bottom_height = BOTTOM_BORDER;
-    graphics_fill_rect(0, screen_height() - border_bottom_height, screen_width(), border_bottom_height, COLOR_BLACK);
-}
-
-void widget_sidebar_editor_draw_background(void)
-{
-    draw_sidebar();
-    draw_filler_borders();
 }
 
 void widget_sidebar_editor_draw_foreground(void)
