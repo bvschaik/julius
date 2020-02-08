@@ -475,6 +475,9 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
+    if (m->right.went_up) {
+        button_close(0, 0);
+    }
     data.focus_button_id = 0;
     const mouse *m_dialog = mouse_in_dialog(m);
     const lang_message *msg = lang_get_message(data.text_id);
