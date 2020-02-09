@@ -1,7 +1,7 @@
 #include "core/encoding.h"
 
 #include "core/encoding_multibyte.h"
-#include "core/lang.h"
+#include "core/locale.h"
 #include "core/string.h"
 
 #include <stdlib.h>
@@ -20,10 +20,6 @@ typedef struct {
     uint32_t utf8;
     const letter_code *code;
 } from_utf8_lookup;
-
-static const uint8_t NEW_GAME_POLISH[] = { 0x4e, 0x6f, 0x77, 0x61, 0x20, 0x67, 0x72, 0x61, 0 };
-static const uint8_t NEW_GAME_RUSSIAN[] = { 0xcd, 0xee, 0xe2, 0xe0, 0xff, 0x20, 0xe8, 0xe3, 0xf0, 0xe0, 0 };
-static const uint8_t NEW_GAME_TRADITIONAL_CHINESE[] = { 0x83, 0x80, 0x20, 0x84, 0x80, 0x20, 0x85, 0x80, 0 };
 
 static const letter_code HIGH_TO_UTF8_DEFAULT[HIGH_CHAR_COUNT] = {
     {0x80, 3, {0xe2, 0x82, 0xac}},
@@ -578,23 +574,22 @@ static const letter_code* get_letter_code_for_combining_utf8(const char *prev_ch
 
 encoding_type encoding_determine(void)
 {
-    // A really dirty way to 'detect' encoding:
+    // Determine encoding based on language:
     // - Windows-1250 (Central/Eastern Europe) is used in Polish only
     // - Windows-1251 (Cyrillic) is used in Russian only
     // - Windows-950 (Big5) is used in Traditional Chinese only
     // - Windows-1252 (Western Europe) is used in all other languages
-    // Check if the string for "New game" is Polish, Russian or Chinese
-    const uint8_t *new_game_string = lang_get_string(1, 1);
-    if (string_equals(NEW_GAME_POLISH, new_game_string)) {
+    language_type language = locale_determine_language();
+    if (language == LANGUAGE_POLISH) {
         to_utf8_table = HIGH_TO_UTF8_EASTERN;
         encoding = ENCODING_EASTERN_EUROPE;
-    } else if (string_equals(NEW_GAME_RUSSIAN, new_game_string)) {
+    } else if (language == LANGUAGE_RUSSIAN) {
         to_utf8_table = HIGH_TO_UTF8_CYRILLIC;
         encoding = ENCODING_CYRILLIC;
-    } else if (string_equals(NEW_GAME_TRADITIONAL_CHINESE, new_game_string)) {
+    } else if (language == LANGUAGE_TRADITIONAL_CHINESE) {
         to_utf8_table = NULL;
         encoding = ENCODING_TRADITIONAL_CHINESE;
-    } else {
+    } else { // assume Western encoding
         to_utf8_table = HIGH_TO_UTF8_DEFAULT;
         encoding = ENCODING_WESTERN_EUROPE;
     }
