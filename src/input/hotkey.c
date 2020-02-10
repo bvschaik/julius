@@ -386,14 +386,14 @@ static void take_screenshot(int full_city)
     graphics_save_screenshot(full_city);
 }
 
-void hotkey_func(int f_number, int with_ctrl)
+void hotkey_func(int f_number, int with_any_modifier, int with_ctrl)
 {
     switch (f_number) {
         case 1:
         case 2:
         case 3:
         case 4:
-            handle_bookmark(f_number - 1, with_ctrl);
+            handle_bookmark(f_number - 1, with_any_modifier);
             break;
         case 5: system_center(); break;
         case 6: system_set_fullscreen(!setting_fullscreen()); break;

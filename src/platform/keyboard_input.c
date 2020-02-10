@@ -33,7 +33,8 @@ static int is_repeatable_key(SDL_Keycode code)
 
 static void send_fn(SDL_KeyboardEvent *event, int f_number)
 {
-    hotkey_func(f_number, is_ctrl_down(event));
+    int with_any_modifier = (event->keysym.mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_GUI)) != 0;
+    hotkey_func(f_number, with_any_modifier, is_ctrl_down(event));
 }
 
 void platform_handle_key_down(SDL_KeyboardEvent *event)
