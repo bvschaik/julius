@@ -1,0 +1,10 @@
+CHANGES - changes for libpng
+
+Version 1.6.37.f-julius-build [Feb 11, 2020]
+  Many files removed, others trimmed to make the library more lightweight.
+  Disabled most compiler options in pnglibconf.h
+
+Send comments/corrections/commendations to png-mng-implement at lists.sf.net.
+Subscription is required; visit
+https://lists.sourceforge.net/lists/listinfo/png-mng-implement
+to subscribe.

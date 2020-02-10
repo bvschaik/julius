@@ -12,7 +12,7 @@
 #include "graphics/window.h"
 #include "window/main_menu.h"
 
-#define NUM_CHECKBOXES 7
+#define NUM_CHECKBOXES 8
 #define NUM_BOTTOM_BUTTONS 3
 
 static void toggle_switch(int id, int param2);
@@ -27,6 +27,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_ALLOW_CYCLING_TEMPLES },
     { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
     { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
+    { 20, 336, 20, 20, toggle_switch, button_none, CONFIG_MISC_SCREENSHOT_PNG_FORMAT },
 };
 
 static generic_button bottom_buttons[] = {
@@ -75,6 +76,8 @@ static void draw_background(void)
     text_draw(string_from_ascii("Gameplay changes"), 20, 221, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Fix immigration bug on very hard"), 50, 245, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Fix 100-year-old ghosts"), 50, 269, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Miscellaneous"), 20, 317, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Save screenshots as PNG (can be slow)"), 50, 341, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];
