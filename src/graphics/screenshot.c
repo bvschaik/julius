@@ -6,8 +6,8 @@
 #include "core/log.h"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
-#include "map/grid.h"
 #include "graphics/window.h"
+#include "map/grid.h"
 #include "widget/city_without_overlay.h"
 
 #include <stdio.h>
@@ -18,11 +18,16 @@
 #define HEADER_SIZE 26
 #define TILE_X_SIZE 60
 #define TILE_Y_SIZE 30
-#define IMAGE_HEIGHT_CHUNK (2 * TILE_Y_SIZE)
+#define IMAGE_HEIGHT_CHUNK TILE_Y_SIZE
 #define BMP_BITS_PER_PIXEL 24
 #define BMP_BYTES_PER_PIXEL (BMP_BITS_PER_PIXEL / 8)
 
-static const char filename_format[] = "city %Y-%m-%d %H.%M.%S.bmp";
+enum {
+    FULL_CITY_SCREENSHOT = 0,
+    DISPLAY_SCREENSHOT = 1
+};
+
+static const char filename_format[] = "full city %Y-%m-%d %H.%M.%S.bmp";
 
 static void full_city_screenshot(void);
 
@@ -64,13 +69,13 @@ static int create_bmp_chunk(int width, int height)
     return 1;
 }
 
-static const char *generate_filename(void)
+static const char *generate_filename(int city_screenshot)
 {
     static char filename[100];
     time_t curtime = time(NULL);
     struct tm *loctime = localtime(&curtime);
 
-    strftime(filename, 100, filename_format, loctime);
+    strftime(filename, 100, filename_format + city_screenshot * 5 * sizeof(char), loctime);
 
     return filename;
 }
@@ -118,7 +123,7 @@ void graphics_save_screenshot(int full_city)
         return;
     }
 
-    const char *filename = generate_filename();
+    const char *filename = generate_filename(DISPLAY_SCREENSHOT);
     FILE *fp = file_open(filename, "wb");
     if (!fp) {
         log_error("Unable to write screenshot to:", filename, 0);
@@ -159,7 +164,7 @@ static void full_city_screenshot(void)
         return;
     }
 
-    const char *filename = generate_filename();
+    const char *filename = generate_filename(FULL_CITY_SCREENSHOT);
     FILE *fp = file_open(filename, "wb");
     if (!fp) {
         log_error("Unable to write screenshot to:", filename, 0);
@@ -170,7 +175,7 @@ static void full_city_screenshot(void)
     uint8_t header[HEADER_SIZE];
     buffer buf;
     buffer_init(&buf, header, HEADER_SIZE);
-    write_bmp_header(&buf, city_height_pixels);
+    write_bmp_header(&buf, city_height_pixels + TILE_Y_SIZE);
     fwrite(header, 1, HEADER_SIZE, fp);
 
     int new_width = city_width_pixels + (city_view_is_sidebar_collapsed() ? 40 : 160);
@@ -179,7 +184,7 @@ static void full_city_screenshot(void)
 
     int base_width = (GRID_SIZE * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
     int max_height = (GRID_SIZE * TILE_Y_SIZE + city_height_pixels) / 2;
-    int min_height = max_height - city_height_pixels;
+    int min_height = max_height - city_height_pixels - TILE_Y_SIZE;
     map_tile dummy_tile = { 0, 0, 0 };
     const color_t *canvas = graphics_canvas();
 

@@ -386,20 +386,20 @@ static void take_screenshot(int full_city)
     graphics_save_screenshot(full_city);
 }
 
-void hotkey_func(int f_number, int with_modifier)
+void hotkey_func(int f_number, int with_ctrl)
 {
     switch (f_number) {
         case 1:
         case 2:
         case 3:
         case 4:
-            handle_bookmark(f_number - 1, with_modifier);
+            handle_bookmark(f_number - 1, with_ctrl);
             break;
         case 5: system_center(); break;
         case 6: system_set_fullscreen(!setting_fullscreen()); break;
         case 7: system_resize(640, 480); break;
         case 8: system_resize(800, 600); break;
         case 9: system_resize(1024, 768); break;
-        case 12: take_screenshot(with_modifier); break;
+        case 12: take_screenshot(with_ctrl); break;
     }
 }
