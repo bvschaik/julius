@@ -18,6 +18,6 @@ void hotkey_page_up(void);
 void hotkey_page_down(void);
 void hotkey_enter(void);
 
-void hotkey_func(int f_number, int with_modifier);
+void hotkey_func(int f_number, int with_any_modifier, int with_ctrl);
 
 #endif // INPUT_HOTKEY_H
