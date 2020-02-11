@@ -1,6 +1,7 @@
 #include "menu.h"
 
 #include "city/buildings.h"
+#include "core/config.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
 #include "scenario/building.h"
@@ -74,10 +75,19 @@ static void enable_clear(int *enabled, building_type menu_building_type)
     }
 }
 
+static void enable_cycling_temples_if_allowed(building_type type)
+{
+    int sub = (type == BUILDING_MENU_SMALL_TEMPLES) ? BUILDING_MENU_ALL_SMALL_TEMPLES : BUILDING_MENU_ALL_LARGE_TEMPLES;
+    menu_enabled[sub][0] = config_get(CONFIG_UI_ALLOW_CYCLING_TEMPLES);
+}
+
 static void enable_if_allowed(int *enabled, building_type menu_building_type, building_type type)
 {
     if (menu_building_type == type && scenario_building_allowed(type)) {
         *enabled = 1;
+        if (type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES) {
+            enable_cycling_temples_if_allowed(type);
+        }
     }
 }
 
