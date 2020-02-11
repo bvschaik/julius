@@ -51,21 +51,22 @@ static generic_button build_menu_buttons[] = {
     {0, 696, 256, 20, button_menu_index, button_none, 30, 0},
 };
 
-static const int Y_MENU_OFFSETS[BUILD_MENU_MAX] = {
+static const int Y_MENU_OFFSETS[] = {
     0, 322, 306, 274, 258, 226, 210, 178, 162, 130, 114,
     82, 66, 34, 18, -30, -46, -62, -78, -78, -94,
-    -94, -110, -110, 0, 0, 0, 0, 0, 0
+    -94, -110, -110,
+    0, 0, 0, 0, 0, 0
 };
 
 static struct {
-    building_menu_group selected_submenu;
+    build_menu_group selected_submenu;
     int num_items;
     int y_offset;
 
     int focus_button_id;
 } data;
 
-static int init(building_menu_group submenu)
+static int init(build_menu_group submenu)
 {
     data.selected_submenu = submenu;
     data.num_items = building_menu_count_items(submenu);
@@ -73,8 +74,8 @@ static int init(building_menu_group submenu)
     if (submenu == BUILD_MENU_VACANT_HOUSE ||
         submenu == BUILD_MENU_CLEAR_LAND ||
         submenu == BUILD_MENU_ROAD) {
-            button_menu_item(0);
-            return 0;
+        button_menu_item(0);
+        return 0;
     } else {
         return 1;
     }
@@ -222,7 +223,7 @@ static void button_menu_index(int param1, int param2)
 
 static int set_submenu_for_type(building_type type)
 {
-    building_menu_group current_menu = data.selected_submenu;
+    build_menu_group current_menu = data.selected_submenu;
     switch (type) {
         case BUILDING_MENU_FARMS:
             data.selected_submenu = BUILD_MENU_FARMS;

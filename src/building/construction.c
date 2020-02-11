@@ -260,7 +260,7 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
 void building_construction_set_type(building_type type)
 {
     data.type = type;
-    data.sub_type = 0;
+    data.sub_type = BUILDING_NONE;
     data.in_progress = 0;
     data.start.x = 0;
     data.start.y = 0;
@@ -318,7 +318,7 @@ void building_construction_set_type(building_type type)
 void building_construction_clear_type(void)
 {
     data.cost = 0;
-    data.sub_type = 0;
+    data.sub_type = BUILDING_NONE;
     data.type = BUILDING_NONE;
 }
 

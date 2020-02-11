@@ -35,7 +35,7 @@ typedef enum {
     BUILD_MENU_UNUSED_3 = 28,
     BUILD_MENU_UNUSED_4 = 29,
     BUILD_MENU_MAX = 30
-} building_menu_group;
+} build_menu_group;
 
 void building_menu_enable_all(void);
 
