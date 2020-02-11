@@ -224,26 +224,26 @@ static int set_submenu_for_type(building_type type)
 {
     building_menu_group current_menu = data.selected_submenu;
     switch (type) {
-    case BUILDING_MENU_FARMS:
-        data.selected_submenu = BUILDING_MENU_ALL_FARMS;
-        break;
-    case BUILDING_MENU_RAW_MATERIALS:
-        data.selected_submenu = BUILDING_MENU_ALL_RAW_MATERIALS;
-        break;
-    case BUILDING_MENU_WORKSHOPS:
-        data.selected_submenu = BUILDING_MENU_ALL_WORKSHOPS;
-        break;
-    case BUILDING_MENU_SMALL_TEMPLES:
-        data.selected_submenu = BUILDING_MENU_ALL_SMALL_TEMPLES;
-        break;
-    case BUILDING_MENU_LARGE_TEMPLES:
-        data.selected_submenu = BUILDING_MENU_ALL_LARGE_TEMPLES;
-        break;
-    case BUILDING_FORT:
-        data.selected_submenu = BUILDING_MENU_ALL_FORTS;
-        break;
-    default:
-        return 0;
+        case BUILDING_MENU_FARMS:
+            data.selected_submenu = BUILDING_MENU_ALL_FARMS;
+            break;
+        case BUILDING_MENU_RAW_MATERIALS:
+            data.selected_submenu = BUILDING_MENU_ALL_RAW_MATERIALS;
+            break;
+        case BUILDING_MENU_WORKSHOPS:
+            data.selected_submenu = BUILDING_MENU_ALL_WORKSHOPS;
+            break;
+        case BUILDING_MENU_SMALL_TEMPLES:
+            data.selected_submenu = BUILDING_MENU_ALL_SMALL_TEMPLES;
+            break;
+        case BUILDING_MENU_LARGE_TEMPLES:
+            data.selected_submenu = BUILDING_MENU_ALL_LARGE_TEMPLES;
+            break;
+        case BUILDING_FORT:
+            data.selected_submenu = BUILDING_MENU_ALL_FORTS;
+            break;
+        default:
+            return 0;
     }
     return current_menu != data.selected_submenu;
 }
