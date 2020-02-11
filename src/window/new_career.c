@@ -17,9 +17,11 @@
 #include "window/mission_selection.h"
 
 static void start_mission(int param1, int param2);
+static void button_back(int param1, int param2);
 
-static image_button image_button_start_mission = {
-    0, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, start_mission, button_none, 1, 0, 1
+static image_button image_buttons[] = {
+    {0,   2, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON,     8, button_back,   button_none, 0, 0, 1},
+    {305, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, start_mission, button_none, 1, 0, 1}
 };
 
 static uint8_t player_name[32];
@@ -46,12 +48,13 @@ static void draw_foreground(void)
     outer_panel_draw(128, 160, 24, 8);
     lang_text_draw_centered(31, 0, 128, 172, 384, FONT_LARGE_BLACK);
     lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK);
+    lang_text_draw(12, 0, 200, 256, FONT_NORMAL_BLACK);
     inner_panel_draw(160, 208, 20, 2);
     text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
     text_draw(player_name, 176, 216, FONT_NORMAL_WHITE, 0);
     text_draw_cursor(176, 217, keyboard_is_insert());
-    
-    image_buttons_draw(464, 249, &image_button_start_mission, 1);
+
+    image_buttons_draw(159, 249, image_buttons, 2);
 
     graphics_reset_dialog();
 }
@@ -63,12 +66,18 @@ static void handle_mouse(const mouse *m)
         window_go_back();
     }
 
-    if (image_buttons_handle_mouse(mouse_in_dialog(m), 464, 249, &image_button_start_mission, 1, 0)) {
+    if (image_buttons_handle_mouse(mouse_in_dialog(m), 159, 249, image_buttons, 2, 0)) {
         return;
     }
     if (keyboard_input_is_accepted()) {
         start_mission(0, 0);
     }
+}
+
+static void button_back(int param1, int param2)
+{
+    keyboard_stop_capture();
+    window_go_back();
 }
 
 static void start_mission(int param1, int param2)
