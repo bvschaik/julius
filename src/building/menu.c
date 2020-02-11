@@ -1,13 +1,14 @@
 #include "menu.h"
 
 #include "city/buildings.h"
+#include "core/config.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
 #include "scenario/building.h"
 
-#define MAX_BUILDING_ITEMS 30
+#define BUILD_MENU_ITEM_MAX 30
 
-static const building_type MENU_BUILDING_TYPE[MAX_BUILDING_ITEMS][MAX_BUILDING_ITEMS] = {
+static const building_type MENU_BUILDING_TYPE[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
     {BUILDING_HOUSE_VACANT_LOT, 0},
     {BUILDING_CLEAR_LAND, 0},
     {BUILDING_ROAD, 0},
@@ -40,8 +41,8 @@ static const building_type MENU_BUILDING_TYPE[MAX_BUILDING_ITEMS][MAX_BUILDING_I
     {BUILDING_WHEAT_FARM, BUILDING_VEGETABLE_FARM, BUILDING_FRUIT_FARM, BUILDING_OLIVE_FARM, BUILDING_VINES_FARM, BUILDING_PIG_FARM, 0},
     {BUILDING_CLAY_PIT, BUILDING_MARBLE_QUARRY, BUILDING_IRON_MINE, BUILDING_TIMBER_YARD, 0},
     {BUILDING_WINE_WORKSHOP, BUILDING_OIL_WORKSHOP, BUILDING_WEAPONS_WORKSHOP, BUILDING_FURNITURE_WORKSHOP, BUILDING_POTTERY_WORKSHOP, 0},
-    {BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY, BUILDING_SMALL_TEMPLE_MARS, BUILDING_SMALL_TEMPLE_VENUS, 0},
-    {BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY, BUILDING_LARGE_TEMPLE_MARS, BUILDING_LARGE_TEMPLE_VENUS, 0},
+    {BUILDING_MENU_SMALL_TEMPLES, BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY, BUILDING_SMALL_TEMPLE_MARS, BUILDING_SMALL_TEMPLE_VENUS, 0},
+    {BUILDING_MENU_LARGE_TEMPLES, BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY, BUILDING_LARGE_TEMPLE_MARS, BUILDING_LARGE_TEMPLE_VENUS, 0},
     {BUILDING_FORT_LEGIONARIES, BUILDING_FORT_JAVELIN, BUILDING_FORT_MOUNTED, 0},
     {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0}, // 25 herd/fish points
     {0}, // 26 unused
@@ -49,14 +50,14 @@ static const building_type MENU_BUILDING_TYPE[MAX_BUILDING_ITEMS][MAX_BUILDING_I
     {0}, // 28 unused
     {0}, // 29 unused
 };
-static int menu_enabled[MAX_BUILDING_ITEMS][MAX_BUILDING_ITEMS];
+static int menu_enabled[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX];
 
 static int changed = 1;
 
 void building_menu_enable_all(void)
 {
-    for (int sub = 0; sub < MAX_BUILDING_ITEMS; sub++) {
-        for (int item = 0; item < MAX_BUILDING_ITEMS; item++) {
+    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
+        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
             menu_enabled[sub][item] = 1;
         }
     }
@@ -76,10 +77,19 @@ static void enable_clear(int *enabled, building_type menu_building_type)
     }
 }
 
+static void enable_cycling_temples_if_allowed(building_type type)
+{
+    int sub = (type == BUILDING_MENU_SMALL_TEMPLES) ? BUILD_MENU_SMALL_TEMPLES : BUILD_MENU_LARGE_TEMPLES;
+    menu_enabled[sub][0] = config_get(CONFIG_UI_ALLOW_CYCLING_TEMPLES);
+}
+
 static void enable_if_allowed(int *enabled, building_type menu_building_type, building_type type)
 {
     if (menu_building_type == type && scenario_building_allowed(type)) {
         *enabled = 1;
+        if (type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES) {
+            enable_cycling_temples_if_allowed(type);
+        }
     }
 }
 
@@ -250,8 +260,8 @@ static void disable_resources(int *enabled, building_type type)
 void building_menu_update(void)
 {
     tutorial_build_buttons tutorial_buttons = tutorial_get_build_buttons();
-    for (int sub = 0; sub < MAX_BUILDING_ITEMS; sub++) {
-        for (int item = 0; item < MAX_BUILDING_ITEMS; item++) {
+    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
+        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
             int building_type = MENU_BUILDING_TYPE[sub][item];
             int *menu_item = &menu_enabled[sub][item];
             // first 12 items always disabled
@@ -296,7 +306,7 @@ void building_menu_update(void)
 int building_menu_count_items(int submenu)
 {
     int count = 0;
-    for (int item = 0; item < MAX_BUILDING_ITEMS; item++) {
+    for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
         if (menu_enabled[submenu][item] && MENU_BUILDING_TYPE[submenu][item] > 0) {
             count++;
         }
@@ -306,7 +316,7 @@ int building_menu_count_items(int submenu)
 
 int building_menu_next_index(int submenu, int current_index)
 {
-    for (int i = current_index + 1; i < MAX_BUILDING_ITEMS; i++) {
+    for (int i = current_index + 1; i < BUILD_MENU_ITEM_MAX; i++) {
         if (MENU_BUILDING_TYPE[submenu][i] <= 0) {
             return 0;
         }
