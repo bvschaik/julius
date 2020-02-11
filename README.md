@@ -2,7 +2,7 @@
 
 [![Gitter](https://badges.gitter.im/julius-game/community.svg)](https://gitter.im/julius-game/community) [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) [![Travis](https://api.travis-ci.org/bvschaik/julius.svg?branch=master)](https://travis-ci.org/bvschaik/julius)
 
-| Platform | Latest release | Latest unstable |
+| Platform | Latest release | Latest build (may be unstable) |
 |----------|----------------|-----------------|
 | Windows  | [![Download](https://api.bintray.com/packages/bvschaik/julius/windows-release/images/download.svg)](https://bintray.com/bvschaik/julius/windows-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/windows-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/windows-unstable/_latestVersion#files) |
 | Linux AppImage | [![Download](https://api.bintray.com/packages/bvschaik/julius/linux-release/images/download.svg)](https://bintray.com/bvschaik/julius/linux-release/_latestVersion#files) | [![Download](https://api.bintray.com/packages/bvschaik/julius/linux-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/linux-unstable/_latestVersion#files) |
