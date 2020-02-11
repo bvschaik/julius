@@ -19,11 +19,11 @@ then
 cat > "bintray.json" <<EOF
 {
   "package": {
-    "subject": "bvschaik",
+    "subject": "keriew",
     "repo": "$REPO",
     "name": "linux$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/bvschaik/julius.git"
+    "vcs_url": "https://github.com/keriew/julius.git"
   },
 
   "version": {
@@ -47,11 +47,11 @@ then
 cat > "bintray.json" <<EOF
 {
   "package": {
-    "subject": "bvschaik",
+    "subject": "keriew",
     "repo": "$REPO",
     "name": "mac$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/bvschaik/julius.git"
+    "vcs_url": "https://github.com/keriew/julius.git"
   },
 
   "version": {
@@ -76,11 +76,11 @@ then
 cat > "bintray.json" <<EOF
 {
   "package": {
-    "subject": "bvschaik",
+    "subject": "keriew",
     "repo": "$REPO",
     "name": "vita$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/bvschaik/julius.git"
+    "vcs_url": "https://github.com/keriew/julius.git"
   },
 
   "version": {
@@ -105,11 +105,11 @@ then
 cat > "bintray.json" <<EOF
 {
   "package": {
-    "subject": "bvschaik",
+    "subject": "keriew",
     "repo": "$REPO",
     "name": "switch$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/bvschaik/julius.git"
+    "vcs_url": "https://github.com/keriew/julius.git"
   },
 
   "version": {
