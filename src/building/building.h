@@ -26,6 +26,7 @@ typedef struct {
         short orientation;
         short fort_figure_type;
         short native_meeting_center_id;
+        short market_goods;
     } subtype;
     unsigned char road_network_id;
     unsigned short created_sequence;

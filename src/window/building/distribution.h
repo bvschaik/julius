@@ -7,6 +7,12 @@
 void window_building_draw_dock(building_info_context *c);
 
 void window_building_draw_market(building_info_context *c);
+void window_building_draw_market_foreground(building_info_context *c);
+void window_building_draw_market_orders(building_info_context *c);
+void window_building_draw_market_orders_foreground(building_info_context *c);
+
+void window_building_handle_mouse_market(const mouse* m, building_info_context* c);
+void window_building_handle_mouse_market_orders(const mouse* m, building_info_context* c);
 
 void window_building_draw_granary(building_info_context *c);
 void window_building_draw_granary_foreground(building_info_context *c);

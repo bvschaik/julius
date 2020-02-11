@@ -158,6 +158,11 @@ building *building_create(building_type type, int x, int y)
         b->data.granary.resource_stored[RESOURCE_NONE] = 2400;
     }
     
+    if (type == BUILDING_MARKET) {
+	// Set it as accepting all goods
+        b->subtype.market_goods = 0x0000;
+    }
+    
     b->x = x;
     b->y = y;
     b->grid_offset = map_grid_offset(x, y);

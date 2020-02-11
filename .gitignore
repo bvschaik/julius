@@ -17,13 +17,6 @@ out/
 cmake-build-debug
 /data
 ext/SDL2/*/
-<<<<<<< HEAD
-<<<<<<< HEAD
 *~
-=======
 .vscode
-
 /android
->>>>>>> ec6e3f32a898892e4e092cfb01b22cdc0dd3f901
-=======
->>>>>>> f35a14ceca39e822e5031851222869e61d0c4a35

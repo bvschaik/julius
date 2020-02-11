@@ -415,7 +415,11 @@ static void draw_background(void)
         } else if (btype == BUILDING_POTTERY_WORKSHOP) {
             window_building_draw_pottery_workshop(&context);
         } else if (btype == BUILDING_MARKET) {
-            window_building_draw_market(&context);
+            if (context.storage_show_special_orders) {
+                window_building_draw_market_orders(&context);
+            } else {
+                window_building_draw_market(&context);
+            }
         } else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
                 window_building_draw_granary_orders(&context);
@@ -541,6 +545,12 @@ static void draw_foreground(void)
             } else {
                 window_building_draw_warehouse_foreground(&context);
             }
+        } else if (btype == BUILDING_MARKET) {
+            if (context.storage_show_special_orders) {
+                window_building_draw_market_orders_foreground(&context);
+            } else {
+                window_building_draw_market_foreground(&context);
+            }
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info_foreground(&context);
@@ -587,7 +597,13 @@ static void handle_mouse(const mouse *m)
         window_building_handle_mouse_figure_list(m, &context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.building_id)->type;
-        if (btype == BUILDING_GRANARY) {
+        if (btype == BUILDING_MARKET) {
+            if (context.storage_show_special_orders) {
+                window_building_handle_mouse_market_orders(m, &context);
+            } else {
+                window_building_handle_mouse_market(m, &context);
+            }
+	} else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
                 window_building_handle_mouse_granary_orders(m, &context);
             } else {

@@ -41,6 +41,7 @@ void config_set_defaults(void)
 {
     values[CONFIG_GP_FIX_IMMIGRATION_BUG] = 0;
     values[CONFIG_GP_FIX_100_YEAR_GHOSTS] = 0;
+    values[CONFIG_UI_WALKER_WAYPOINTS] = 0;
     values[CONFIG_UI_SIDEBAR_INFO] = 0;
     values[CONFIG_UI_SMOOTH_SCROLLING] = 0;
     values[CONFIG_GP_CH_GRANDFESTIVAL] = 0;
