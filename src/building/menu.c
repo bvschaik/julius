@@ -6,7 +6,7 @@
 #include "game/tutorial.h"
 #include "scenario/building.h"
 
-static const building_type MENU_BUILDING_TYPE[BUILDING_MENU_MAX][BUILDING_MENU_MAX] = {
+static const building_type MENU_BUILDING_TYPE[BUILD_MENU_MAX][BUILD_MENU_MAX] = {
     {BUILDING_HOUSE_VACANT_LOT, 0},
     {BUILDING_CLEAR_LAND, 0},
     {BUILDING_ROAD, 0},
@@ -48,14 +48,14 @@ static const building_type MENU_BUILDING_TYPE[BUILDING_MENU_MAX][BUILDING_MENU_M
     {0}, // 28 unused
     {0}, // 29 unused
 };
-static int menu_enabled[BUILDING_MENU_MAX][BUILDING_MENU_MAX];
+static int menu_enabled[BUILD_MENU_MAX][BUILD_MENU_MAX];
 
 static int changed = 1;
 
 void building_menu_enable_all(void)
 {
-    for (int sub = 0; sub < BUILDING_MENU_MAX; sub++) {
-        for (int item = 0; item < BUILDING_MENU_MAX; item++) {
+    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
+        for (int item = 0; item < BUILD_MENU_MAX; item++) {
             menu_enabled[sub][item] = 1;
         }
     }
@@ -77,7 +77,7 @@ static void enable_clear(int *enabled, building_type menu_building_type)
 
 static void enable_cycling_temples_if_allowed(building_type type)
 {
-    int sub = (type == BUILDING_MENU_SMALL_TEMPLES) ? BUILDING_MENU_ALL_SMALL_TEMPLES : BUILDING_MENU_ALL_LARGE_TEMPLES;
+    int sub = (type == BUILDING_MENU_SMALL_TEMPLES) ? BUILD_MENU_SMALL_TEMPLES : BUILD_MENU_LARGE_TEMPLES;
     menu_enabled[sub][0] = config_get(CONFIG_UI_ALLOW_CYCLING_TEMPLES);
 }
 
@@ -258,8 +258,8 @@ static void disable_resources(int *enabled, building_type type)
 void building_menu_update(void)
 {
     tutorial_build_buttons tutorial_buttons = tutorial_get_build_buttons();
-    for (int sub = 0; sub < BUILDING_MENU_MAX; sub++) {
-        for (int item = 0; item < BUILDING_MENU_MAX; item++) {
+    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
+        for (int item = 0; item < BUILD_MENU_MAX; item++) {
             int building_type = MENU_BUILDING_TYPE[sub][item];
             int *menu_item = &menu_enabled[sub][item];
             // first 12 items always disabled
@@ -304,7 +304,7 @@ void building_menu_update(void)
 int building_menu_count_items(int submenu)
 {
     int count = 0;
-    for (int item = 0; item < BUILDING_MENU_MAX; item++) {
+    for (int item = 0; item < BUILD_MENU_MAX; item++) {
         if (menu_enabled[submenu][item] && MENU_BUILDING_TYPE[submenu][item] > 0) {
             count++;
         }
@@ -314,7 +314,7 @@ int building_menu_count_items(int submenu)
 
 int building_menu_next_index(int submenu, int current_index)
 {
-    for (int i = current_index + 1; i < BUILDING_MENU_MAX; i++) {
+    for (int i = current_index + 1; i < BUILD_MENU_MAX; i++) {
         if (MENU_BUILDING_TYPE[submenu][i] <= 0) {
             return 0;
         }

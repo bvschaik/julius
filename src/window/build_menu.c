@@ -51,7 +51,7 @@ static generic_button build_menu_buttons[] = {
     {0, 696, 256, 20, button_menu_index, button_none, 30, 0},
 };
 
-static const int Y_MENU_OFFSETS[BUILDING_MENU_MAX] = {
+static const int Y_MENU_OFFSETS[BUILD_MENU_MAX] = {
     0, 322, 306, 274, 258, 226, 210, 178, 162, 130, 114,
     82, 66, 34, 18, -30, -46, -62, -78, -78, -94,
     -94, -110, -110, 0, 0, 0, 0, 0, 0
@@ -70,9 +70,9 @@ static int init(building_menu_group submenu)
     data.selected_submenu = submenu;
     data.num_items = building_menu_count_items(submenu);
     data.y_offset = Y_MENU_OFFSETS[data.num_items];
-    if (submenu == BUILDING_MENU_VACANT_HOUSES ||
-        submenu == BUILDING_MENU_CLEAR_LAND ||
-        submenu == BUILDING_MENU_ROAD) {
+    if (submenu == BUILD_MENU_VACANT_HOUSE ||
+        submenu == BUILD_MENU_CLEAR_LAND ||
+        submenu == BUILD_MENU_ROAD) {
             button_menu_item(0);
             return 0;
     } else {
@@ -88,45 +88,45 @@ int window_build_menu_image(void)
     int image_base = image_group(GROUP_PANEL_WINDOWS);
     switch (data.selected_submenu) {
         default:
-        case BUILDING_MENU_VACANT_HOUSES:
+        case BUILD_MENU_VACANT_HOUSE:
             return image_base;
-        case BUILDING_MENU_CLEAR_LAND:
+        case BUILD_MENU_CLEAR_LAND:
             if (scenario_property_climate() == CLIMATE_DESERT) {
                 return image_group(GROUP_PANEL_WINDOWS_DESERT);
             } else {
                 return image_base + 11;
             }
-        case BUILDING_MENU_ROAD:
+        case BUILD_MENU_ROAD:
             if (scenario_property_climate() == CLIMATE_DESERT) {
                 return image_group(GROUP_PANEL_WINDOWS_DESERT) + 1;
             } else {
                 return image_base + 10;
             }
-        case BUILDING_MENU_WATER_STRUCTURES:
+        case BUILD_MENU_WATER_STRUCTURES:
             if (scenario_property_climate() == CLIMATE_DESERT) {
                 return image_group(GROUP_PANEL_WINDOWS_DESERT) + 2;
             } else {
                 return image_base + 3;
             }
-        case BUILDING_MENU_HEALTH:
+        case BUILD_MENU_HEALTH:
             return image_base + 5;
-        case BUILDING_MENU_TEMPLES:
+        case BUILD_MENU_TEMPLES:
             return image_base + 1;
-        case BUILDING_MENU_EDUCATION:
+        case BUILD_MENU_EDUCATION:
             return image_base + 6;
-        case BUILDING_MENU_ENTERTAINMENT:
+        case BUILD_MENU_ENTERTAINMENT:
             return image_base + 4;
-        case BUILDING_MENU_ADMINISTRATION:
+        case BUILD_MENU_ADMINISTRATION:
             return image_base + 2;
-        case BUILDING_MENU_ENGINEERING:
+        case BUILD_MENU_ENGINEERING:
             return image_base + 7;
-        case BUILDING_MENU_SECURITY:
+        case BUILD_MENU_SECURITY:
             if (scenario_property_climate() == CLIMATE_DESERT) {
                 return image_group(GROUP_PANEL_WINDOWS_DESERT) + 3;
             } else {
                 return image_base + 8;
             }
-        case BUILDING_MENU_INDUSTRIAL:
+        case BUILD_MENU_INDUSTRIAL:
             return image_base + 9;
     }
 }
@@ -145,8 +145,8 @@ static int get_sidebar_x_offset(void)
 
 static is_all_button(building_type type)
 {
-    return (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILDING_MENU_ALL_SMALL_TEMPLES) ||
-           (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILDING_MENU_ALL_LARGE_TEMPLES);
+    return (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) ||
+           (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
 }
 
 static void draw_menu_buttons(void)
@@ -169,10 +169,10 @@ static void draw_menu_buttons(void)
         if (type == BUILDING_FORT) {
             cost = 0;
         }
-        if (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILDING_MENU_ALL_SMALL_TEMPLES) {
+        if (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) {
             cost = model_get_building(BUILDING_SMALL_TEMPLE_CERES)->cost;
         }
-        if (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILDING_MENU_ALL_LARGE_TEMPLES) {
+        if (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES) {
             cost = model_get_building(BUILDING_LARGE_TEMPLE_CERES)->cost;
         }
         if (cost) {
@@ -225,22 +225,22 @@ static int set_submenu_for_type(building_type type)
     building_menu_group current_menu = data.selected_submenu;
     switch (type) {
         case BUILDING_MENU_FARMS:
-            data.selected_submenu = BUILDING_MENU_ALL_FARMS;
+            data.selected_submenu = BUILD_MENU_FARMS;
             break;
         case BUILDING_MENU_RAW_MATERIALS:
-            data.selected_submenu = BUILDING_MENU_ALL_RAW_MATERIALS;
+            data.selected_submenu = BUILD_MENU_RAW_MATERIALS;
             break;
         case BUILDING_MENU_WORKSHOPS:
-            data.selected_submenu = BUILDING_MENU_ALL_WORKSHOPS;
+            data.selected_submenu = BUILD_MENU_WORKSHOPS;
             break;
         case BUILDING_MENU_SMALL_TEMPLES:
-            data.selected_submenu = BUILDING_MENU_ALL_SMALL_TEMPLES;
+            data.selected_submenu = BUILD_MENU_SMALL_TEMPLES;
             break;
         case BUILDING_MENU_LARGE_TEMPLES:
-            data.selected_submenu = BUILDING_MENU_ALL_LARGE_TEMPLES;
+            data.selected_submenu = BUILD_MENU_LARGE_TEMPLES;
             break;
         case BUILDING_FORT:
-            data.selected_submenu = BUILDING_MENU_ALL_FORTS;
+            data.selected_submenu = BUILD_MENU_FORTS;
             break;
         default:
             return 0;
@@ -255,7 +255,7 @@ static void button_menu_item(int item)
     building_type type = building_menu_type(data.selected_submenu, item);
     building_construction_set_type(type);
 
-    if(set_submenu_for_type(type)) {
+    if (set_submenu_for_type(type)) {
         data.num_items = building_menu_count_items(data.selected_submenu);
         data.y_offset = Y_MENU_OFFSETS[data.num_items];
         building_construction_clear_type();
