@@ -144,7 +144,7 @@ static int get_sidebar_x_offset(void)
     return view_x + view_width;
 }
 
-static is_all_button(building_type type)
+static int is_all_button(building_type type)
 {
     return (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) ||
            (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
