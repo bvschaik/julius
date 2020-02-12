@@ -5,7 +5,7 @@
   
 | Platform | Latest release |
 |----------|----------------|
-| Windows  | [![Download](https://api.bintray.com/packages/keriew/JuliusGC/windows_release/images/download.svg)](https://bintray.com/keriew/juliusgc/windows_release/_latestVersion) | [![Download](https://api.bintray.com/packages/keriew/julius/windows-unstable/images/download.svg)](https://bintray.com/keriew/julius/windows-unstable/_latestVersion#files) |
+| Windows  | [![Download](https://api.bintray.com/packages/keriew/JuliusGC/windows_release/images/download.svg)](https://bintray.com/keriew/JuliusGC/windows_release/_latestVersion) | [![Download](https://api.bintray.com/packages/keriew/julius/windows-unstable/images/download.svg)](https://bintray.com/keriew/julius/windows-unstable/_latestVersion#files) |
 | Linux AppImage | [![Download](https://api.bintray.com/packages/keriew/julius/linux-unstable/images/download.svg)](https://bintray.com/keriew/julius/linux-unstable/_latestVersion#files) |
 | Mac | [![Download](https://api.bintray.com/packages/keriew/julius/mac-unstable/images/download.svg)](https://bintray.com/keriew/julius/mac-unstable/_latestVersion#files) |
 | PS Vita | [![Download](https://api.bintray.com/packages/keriew/julius/vita-unstable/images/download.svg)](https://bintray.com/keriew/julius/vita-unstable/_latestVersion#files) |
