@@ -49,6 +49,7 @@ deploy:
   on:
     all_branches: true
     repo: Keriew/julius
+    condition: $DEPLOY
   file: bintray.json
   user: keriew
   skip_cleanup: true

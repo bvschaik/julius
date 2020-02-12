@@ -1,8 +1,15 @@
 # Julius ![](res/julius_48.png)
+
+[![Travis](https://api.travis-ci.org/keriew/julius.svg?branch=master)](https://travis-ci.org/Keriew/julius)
+
   
-|             | Latest release |
-|-------------|----------------|
-| Windows     | [![Download](https://api.bintray.com/packages/keriew/JuliusGC/windows_release/download.svg)](https://bintray.com/keriew/JuliusGC/windows_release/_latestVersion) ||
+| Platform | Latest release |
+|----------|----------------|
+| Windows  | [![Download](https://api.bintray.com/packages/keriew/JuliusGC/windows_release/images/download.svg)](https://bintray.com/keriew/juliusgc/windows_release/_latestVersion) | [![Download](https://api.bintray.com/packages/keriew/julius/windows-unstable/images/download.svg)](https://bintray.com/keriew/julius/windows-unstable/_latestVersion#files) |
+| Linux AppImage | [![Download](https://api.bintray.com/packages/keriew/julius/linux-unstable/images/download.svg)](https://bintray.com/keriew/julius/linux-unstable/_latestVersion#files) |
+| Mac | [![Download](https://api.bintray.com/packages/keriew/julius/mac-unstable/images/download.svg)](https://bintray.com/keriew/julius/mac-unstable/_latestVersion#files) |
+| PS Vita | [![Download](https://api.bintray.com/packages/keriew/julius/vita-unstable/images/download.svg)](https://bintray.com/keriew/julius/vita-unstable/_latestVersion#files) |
+| Nintendo Switch | [![Download](https://api.bintray.com/packages/keriew/julius/switch-unstable/images/download.svg)](https://bintray.com/keriew/julius/switch-unstable/_latestVersion#files) |
 
 
 ![](https://github.com/bvschaik/julius/blob/master/res/sce_sys/livearea/contents/bg.png?raw=true)
@@ -44,3 +51,4 @@ See [Running](doc/RUNNING.md) for further instructions and startup options.
 ## Bugs
 
 Julius recreates many bugs that you can find in original Caesar 3 game, to preserve 100% saves compatibility. See the list of [Bugs & idiosyncrasies](doc/bugs.md) to find out more.
+
