@@ -111,13 +111,13 @@ static void draw_scrollbar_dot(void)
 static void draw_scenario_info(void)
 {
     const int scenario_info_x = 335;
-    const int scenario_info_width = 260;
-    const int scenario_criteria_x = scenario_info_x + scenario_info_width - 205;
+    const int scenario_info_width = 280;
+    const int scenario_criteria_x = 420;
 
     image_draw(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
 
-    text_ellipsize(data.selected_scenario_display, FONT_LARGE_BLACK, scenario_info_width + 30);
-    text_draw_centered(data.selected_scenario_display, scenario_info_x, 25, scenario_info_width + 30, FONT_LARGE_BLACK, 0);
+    text_ellipsize(data.selected_scenario_display, FONT_LARGE_BLACK, scenario_info_width + 10);
+    text_draw_centered(data.selected_scenario_display, scenario_info_x, 25, scenario_info_width + 10, FONT_LARGE_BLACK, 0);
     text_draw_centered(scenario_brief_description(), scenario_info_x, 60, scenario_info_width, FONT_NORMAL_WHITE, 0);
     lang_text_draw_year(scenario_property_start_year(), scenario_criteria_x, 90, FONT_LARGE_BLACK);
     lang_text_draw_centered(44, 77 + scenario_property_climate(), scenario_info_x, 150, scenario_info_width, FONT_NORMAL_BLACK);
