@@ -13,17 +13,6 @@ static int is_alt_down(SDL_KeyboardEvent *event)
     return (event->keysym.mod & KMOD_ALT) != 0;
 }
 
-static int is_key_currently_down(SDL_Scancode key)
-{
-    int numkeys = 0;
-    const Uint8* key_state = SDL_GetKeyboardState(&numkeys);
-    if (key > numkeys - 1) {
-        return 0;
-    } else {
-        return key_state[key];
-    }
-}
-
 static int is_repeatable_key(SDL_Keycode code)
 {
     return code == SDLK_UP || code == SDLK_DOWN ||

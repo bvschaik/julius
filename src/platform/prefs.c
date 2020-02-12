@@ -13,7 +13,7 @@ static FILE *open_pref_file(const char *filename, const char *mode)
         if (!pref_dir) {
             return NULL;
         }
-        int dir_len = strlen(pref_dir);
+        size_t dir_len = strlen(pref_dir);
         char *pref_file = malloc((strlen(filename) + dir_len + 2) * sizeof(char));
         if (!pref_file) {
             SDL_free(pref_dir);
@@ -36,7 +36,7 @@ const char* pref_data_dir(void)
     static char data_dir[1000];
     FILE *fp = open_pref_file("data_dir.txt", "r");
     if (fp) {
-        int length = fread(data_dir, 1, 1000, fp);
+        size_t length = fread(data_dir, 1, 1000, fp);
         fclose(fp);
         if (length > 0) {
             data_dir[length] = 0;

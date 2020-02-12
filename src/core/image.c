@@ -262,7 +262,7 @@ static void convert_images(image *images, int size, buffer *buf, color_t *dst)
             continue;
         }
         buffer_set(buf, img->draw.offset);
-        int img_offset = dst - start_dst;
+        int img_offset = (int) (dst - start_dst);
         if (img->draw.is_fully_compressed) {
             dst += convert_compressed(buf, img->draw.data_length, dst);
         } else if (img->draw.has_compressed_part) { // isometric tile
