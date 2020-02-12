@@ -1,5 +1,6 @@
 #include "smacker.h"
 
+#include "core/file.h"
 #include "core/log.h"
 
 #include <stdint.h>
@@ -538,7 +539,7 @@ smacker smacker_open(FILE *fp)
 
 void smacker_close(smacker s)
 {
-    fclose(s->fp);
+    file_close(s->fp);
     free(s->frame_offsets);
     free(s->frame_sizes);
     free(s->frame_types);

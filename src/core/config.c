@@ -67,7 +67,7 @@ void config_load(void)
             }
         }
     }
-    fclose(fp);
+    file_close(fp);
 }
 
 void config_save(void)
@@ -80,5 +80,5 @@ void config_save(void)
     for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
         fprintf(fp, "%s=%d\n", ini_keys[i], values[i]);
     }
-    fclose(fp);
+    file_close(fp);
 }
