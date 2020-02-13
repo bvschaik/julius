@@ -86,7 +86,7 @@ int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id)
     }
     int num_importable = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (storage->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
+        if (!building_warehouse_is_not_accepting(r,warehouse)) {
             if (empire_can_import_resource_from_city(city_id, r)) {
                 num_importable++;
             }
@@ -97,13 +97,13 @@ int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id)
     }
     int can_import = 0;
     int resource = city_trade_current_caravan_import_resource();
-    if (storage->resource_state[resource] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
+    if (!building_warehouse_is_not_accepting(resource,warehouse) &&
         empire_can_import_resource_from_city(city_id, resource)) {
         can_import = 1;
     } else {
         for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
             resource = city_trade_next_caravan_import_resource();
-            if (storage->resource_state[resource] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
+            if (!building_warehouse_is_not_accepting(resource,warehouse) &&
                     empire_can_import_resource_from_city(city_id, resource)) {
                 can_import = 1;
                 break;
@@ -254,7 +254,7 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
         const building_storage *s = building_storage_get(b->storage_id);
         int num_imports_for_warehouse = 0;
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-            if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && empire_can_import_resource_from_city(city_id, r)) {
+            if (!building_warehouse_is_not_accepting(r,b) && empire_can_import_resource_from_city(city_id, r)) {
                 num_imports_for_warehouse++;
             }
         }
@@ -267,12 +267,12 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
             }
             if (num_importable && num_imports_for_warehouse && !s->empty_all) {
                 for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-                    if (s->resource_state[city_trade_next_caravan_import_resource()] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
+                    if (!building_warehouse_is_not_accepting(city_trade_next_caravan_import_resource(),b)) {
                         break;
                     }
                 }
                 int resource = city_trade_current_caravan_import_resource();
-                if (s->resource_state[resource] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
+                if (!building_warehouse_is_not_accepting(resource,b)) {
                     if (space->subtype.warehouse_resource_id == RESOURCE_NONE) {
                         distance_penalty -= 16;
                     }
