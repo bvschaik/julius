@@ -19,8 +19,13 @@ enum {
 typedef enum {
     BUILDING_STORAGE_STATE_ACCEPTING = 0,
     BUILDING_STORAGE_STATE_NOT_ACCEPTING = 1,
-    BUILDING_STORAGE_STATE_GETTING = 2
+    BUILDING_STORAGE_STATE_GETTING = 2,
+    BUILDING_STORAGE_STATE_ACCEPTING_HALF = 3,
+    BUILDING_STORAGE_STATE_ACCEPTING_QUARTER = 4,
+    BUILDING_STORAGE_STATE_GETTING_HALF = 5,
+    BUILDING_STORAGE_STATE_GETTING_QUARTER = 6,
 } building_storage_state;
+
 
 /**
  * Building storage struct
@@ -61,6 +66,7 @@ const building_storage *building_storage_get(int storage_id);
  */
 void building_storage_cycle_resource_state(int storage_id, resource_type resource_id);
 
+void building_storage_cycle_partial_resource_state(int storage_id, resource_type resource_id);
 /**
  * Sets all goods to 'not accepting'
  * @param storage_id Storage id

@@ -61,6 +61,10 @@ int building_warehouse_add_resource(building *b, int resource)
     if (b->id <= 0) {
         return 0;
     }
+    building *main = building_main(b);    
+    if (building_warehouse_is_not_accepting(resource,main)) {
+        return 0;
+    }
     // check building itself
     int find_space = 0;
     if (b->subtype.warehouse_resource_id && b->subtype.warehouse_resource_id != resource) {
@@ -216,6 +220,53 @@ void building_warehouses_add_resource(int resource, int amount)
     }
 }
 
+int HALF_WAREHOUSE = 16;
+int QUARTER_WAREHOUSE = 8;
+
+int building_warehouse_is_accepting(int resource, building *b)
+{
+        const building_storage *s = building_storage_get(b->storage_id);
+        int amount = building_warehouse_get_amount(b, resource);	
+        if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING) ||
+	    (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_WAREHOUSE) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER && amount < QUARTER_WAREHOUSE)) {
+		return 1;
+	} else {
+        	return 0;
+	}	
+}
+
+int building_warehouse_is_getting(int resource, building *b)
+{
+        const building_storage *s = building_storage_get(b->storage_id);
+        int amount = building_warehouse_get_amount(b, resource);	
+        if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
+	    (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_WAREHOUSE) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER && amount < QUARTER_WAREHOUSE)) {
+		return 1;
+	} else {
+	    return 0;
+	}	
+}
+
+int building_warehouse_is_gettable(int resource, building *b)
+{
+        const building_storage *s = building_storage_get(b->storage_id);
+        if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
+	    (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER)) {
+		return 1;
+	} else {
+	    return 0;
+	}	
+}
+
+int building_warehouse_is_not_accepting(int resource, building *b)
+{
+    return !((building_warehouse_is_accepting(resource,b) || building_warehouse_is_getting(resource,b)));
+}
+
+
 int building_warehouses_remove_resource(int resource, int amount)
 {
     int amount_left = amount;
@@ -228,7 +279,7 @@ int building_warehouses_remove_resource(int resource, int amount)
         }
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
-            if (building_storage_get(b->storage_id)->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING) {
+            if (!building_warehouse_is_getting(resource,b)) {
                 city_resource_set_last_used_warehouse(building_id);
                 amount_left = building_warehouse_remove_resource(b, resource, amount_left);
             }
@@ -268,7 +319,7 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
             continue;
         }
         const building_storage *s = building_storage_get(building_dst->storage_id);
-        if (s->resource_state[resource] == BUILDING_STORAGE_STATE_NOT_ACCEPTING || s->empty_all) {
+        if (building_warehouse_is_not_accepting(resource,building_dst) || s->empty_all) {
             continue;
         }
         int pct_workers = calc_percentage(building_dst->num_workers, model_get_building(building_dst->type)->laborers);
@@ -323,7 +374,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
                 }
             }
         }
-        if (loads_stored > 0 && s->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING) {
+        if (loads_stored > 0 && !building_warehouse_is_gettable(resource,b)) {
             int dist = calc_distance_with_penalty(b->x, b->y, src->x, src->y,
                                                   src->distance_from_entry, b->distance_from_entry);
             dist -= 4 * loads_stored;
@@ -360,7 +411,7 @@ static int determine_granary_accept_foods(int resources[RESOURCE_MAX_FOOD])
             const building_storage *s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
                 for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
-                    if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
+                    if (!building_warehouse_is_not_accepting(r,b)) {
                         resources[r]++;
                         can_accept = 1;
                     }
@@ -390,7 +441,7 @@ static int determine_granary_get_foods(int resources[RESOURCE_MAX_FOOD])
             const building_storage *s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
                 for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
-                    if (s->resource_state[r] == BUILDING_STORAGE_STATE_GETTING) {
+                    if (building_warehouse_is_getting(r,b)) {
                         resources[r]++;
                         can_get = 1;
                     }
@@ -433,7 +484,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     building *space;
     // get resources
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (s->resource_state[r] != BUILDING_STORAGE_STATE_GETTING || city_resource_is_stockpiled(r)) {
+        if (!building_warehouse_is_getting(r,warehouse) || city_resource_is_stockpiled(r)) {
             continue;
         }
         int loads_stored = 0;
