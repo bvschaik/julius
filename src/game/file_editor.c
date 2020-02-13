@@ -128,6 +128,7 @@ static void prepare_map_for_editing(void)
     map_routing_update_all();
 
     city_view_init();
+    game_state_unpause();
 }
 
 void game_file_editor_create_scenario(int size)

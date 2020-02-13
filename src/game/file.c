@@ -185,6 +185,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     image_load_enemy(scenario_property_enemy());
 
     city_data_init_scenario();
+    game_state_unpause();
 }
 
 static int load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file)
