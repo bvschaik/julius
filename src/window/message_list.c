@@ -223,6 +223,9 @@ static void handle_mouse(const mouse *m)
         return;
     }
     handle_mouse_scrollbar(m_dialog);
+    if (m_dialog->right.went_up) {
+        button_close(0, 0);
+    }
 }
 
 static void button_scroll(int is_down, int num_lines)
