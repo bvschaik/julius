@@ -1,6 +1,5 @@
 # Julius ![](res/julius_48.png)
 
-<<<<<<< HEAD
 [![Travis](https://api.travis-ci.org/keriew/julius.svg?branch=master)](https://travis-ci.org/Keriew/julius)
 
   
@@ -12,17 +11,6 @@
 | PS Vita | [![Download](https://api.bintray.com/packages/keriew/julius/vita-unstable/images/download.svg)](https://bintray.com/keriew/julius/vita-unstable/_latestVersion#files) |
 | Nintendo Switch | [![Download](https://api.bintray.com/packages/keriew/julius/switch-unstable/images/download.svg)](https://bintray.com/keriew/julius/switch-unstable/_latestVersion#files) |
 
-=======
-[![Gitter](https://badges.gitter.im/julius-game/community.svg)](https://gitter.im/julius-game/community) [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) [![Travis](https://api.travis-ci.org/bvschaik/julius.svg?branch=master)](https://travis-ci.org/bvschaik/julius)
-
-| Platform | Latest release | Latest build (may be unstable) |
-|----------|----------------|-----------------|
-| Windows  | [![Download](https://api.bintray.com/packages/bvschaik/julius/windows-release/images/download.svg)](https://bintray.com/bvschaik/julius/windows-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/windows-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/windows-unstable/_latestVersion#files) |
-| Linux AppImage | [![Download](https://api.bintray.com/packages/bvschaik/julius/linux-release/images/download.svg)](https://bintray.com/bvschaik/julius/linux-release/_latestVersion#files) | [![Download](https://api.bintray.com/packages/bvschaik/julius/linux-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/linux-unstable/_latestVersion#files) |
-| Mac | [![Download](https://api.bintray.com/packages/bvschaik/julius/mac-release/images/download.svg)](https://bintray.com/bvschaik/julius/mac-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/mac-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/mac-unstable/_latestVersion#files) |
-| PS Vita | [![Download](https://api.bintray.com/packages/bvschaik/julius/vita-release/images/download.svg)](https://bintray.com/bvschaik/julius/vita-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/vita-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/vita-unstable/_latestVersion#files) |
-| Nintendo Switch | [![Download](https://api.bintray.com/packages/bvschaik/julius/switch-release/images/download.svg)](https://bintray.com/bvschaik/julius/switch-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/switch-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/switch-unstable/_latestVersion#files) |
->>>>>>> bbed1d2ee5c5e7655c3ff9c27437c24ed66af010
 
 ![](https://github.com/bvschaik/julius/blob/master/res/sce_sys/livearea/contents/bg.png?raw=true)
 
