@@ -26,6 +26,7 @@ typedef enum {
     BUILDING_STORAGE_STATE_GETTING_QUARTER = 6,
 } building_storage_state;
 
+
 /**
  * Building storage struct
  */
