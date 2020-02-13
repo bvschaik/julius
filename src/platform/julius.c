@@ -480,6 +480,8 @@ static void setup(const julius_args *args)
     // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
     platform_init_cursors(args->cursor_scale_percentage);
 
+    time_set_millis(SDL_GetTicks());
+
     if (!game_init()) {
         SDL_Log("Exiting: game init failed");
         exit(2);
