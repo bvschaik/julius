@@ -14,6 +14,7 @@
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
+#include "core/config.h"
 #include "core/image.h"
 #include "core/time.h"
 #include "figure/formation.h"
@@ -490,7 +491,11 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
 {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
-        if (f->state != FIGURE_STATE_ALIVE || !figure_is_enemy(f)) {
+        if(config_get(CONFIG_GP_CH_WOLVES_BLOCK)) {
+	    if ((f->state != FIGURE_STATE_ALIVE || !figure_is_enemy(f)) && f->type != FIGURE_WOLF) {
+            continue;
+	    }
+	} else if (f->state != FIGURE_STATE_ALIVE || !figure_is_enemy(f)) {
             continue;
         }
         int dx = (f->x > x_start) ? (f->x - x_start) : (x_start - f->x);

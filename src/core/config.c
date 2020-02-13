@@ -25,6 +25,7 @@ static const char *ini_keys[] = {
     "gameplay_change_school_walkers",
     "gameplay_change_retire_at_60",
     "gameplay_enable_extra_forts",
+    "gameplay_wolves_block",
     "ui_allow_cycling_temples"
 };
 
@@ -53,6 +54,7 @@ void config_set_defaults(void)
     values[CONFIG_GP_CH_SCHOOL_WALKERS] = 0;
     values[CONFIG_GP_CH_RETIRE_AT_60] = 0;
     values[CONFIG_GP_CH_EXTRA_FORTS] = 0;
+    values[CONFIG_GP_CH_WOLVES_BLOCK] = 0;
     values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
     values[CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE] = 0;
 }
