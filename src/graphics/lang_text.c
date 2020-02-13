@@ -1,6 +1,7 @@
 #include "lang_text.h"
 
 #include "core/lang.h"
+#include "core/locale.h"
 #include "graphics/text.h"
 
 int lang_text_get_width(int group, int number, font_t font)
@@ -55,14 +56,13 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font)
 {
     int width = 0;
     if (year >= 0) {
-        // TODO language-based check instead of encoding
-        int swap_year_and_ad = encoding_get() != ENCODING_CYRILLIC;
-        if (swap_year_and_ad) {
-            width += lang_text_draw(20, 1, x_offset + width, y_offset, font);
+        int use_year_ad = locale_year_before_ad();
+        if (use_year_ad) {
             width += text_draw_number(year, ' ', " ", x_offset + width, y_offset, font);
+            width += lang_text_draw(20, 1, x_offset + width, y_offset, font);
         } else {
-            width += text_draw_number(year, ' ', " ", x_offset + width, y_offset, font);
             width += lang_text_draw(20, 1, x_offset + width, y_offset, font);
+            width += text_draw_number(year, ' ', " ", x_offset + width, y_offset, font);
         }
     } else {
         width += text_draw_number(-year, ' ', " ", x_offset + width, y_offset, font);

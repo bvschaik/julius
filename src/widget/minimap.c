@@ -251,7 +251,7 @@ static void draw_uncached(int x_offset, int y_offset, int width_tiles, int heigh
 
 void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling)
 {
-    if (width_tiles * 2 != data.width || height_tiles != data.height) {
+    if (width_tiles * 2 != data.width || height_tiles != data.height || x_offset != data.x_offset) {
         draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
         return;
     }

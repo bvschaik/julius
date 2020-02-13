@@ -309,7 +309,7 @@ void window_file_dialog_show(file_type type, file_dialog_type dialog_type)
 {
     window_type window = {
         WINDOW_FILE_DIALOG,
-        0,
+        window_draw_underlying_window,
         draw_foreground,
         handle_mouse
     };

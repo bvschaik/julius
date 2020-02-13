@@ -7,6 +7,7 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/view.h"
+#include "core/config.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
@@ -651,6 +652,9 @@ static void draw_road(const map_tile *tile, int x, int y)
 
 int city_building_ghost_mark_deleting(const map_tile *tile)
 {
+    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
+        return 0;
+    }
     int construction_type = building_construction_type();
     if (!tile->grid_offset || building_construction_draw_as_constructing() ||
         scroll_in_progress() || construction_type != BUILDING_CLEAR_LAND) {

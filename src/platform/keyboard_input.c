@@ -3,12 +3,6 @@
 #include "input/hotkey.h"
 #include "input/keyboard.h"
 
-static void send_fn(SDL_KeyboardEvent *event, int f_number)
-{
-    int with_modifier = (event->keysym.mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_GUI)) != 0;
-    hotkey_func(f_number, with_modifier);
-}
-
 static int is_ctrl_down(SDL_KeyboardEvent *event)
 {
     return (event->keysym.mod & KMOD_CTRL) != 0;
@@ -19,22 +13,17 @@ static int is_alt_down(SDL_KeyboardEvent *event)
     return (event->keysym.mod & KMOD_ALT) != 0;
 }
 
-static int is_key_currently_down(SDL_Scancode key)
-{
-    int numkeys = 0;
-    const Uint8* key_state = SDL_GetKeyboardState(&numkeys);
-    if (key > numkeys - 1) {
-        return 0;
-    } else {
-        return key_state[key];
-    }
-}
-
 static int is_repeatable_key(SDL_Keycode code)
 {
     return code == SDLK_UP || code == SDLK_DOWN ||
            code == SDLK_LEFT || code == SDLK_RIGHT ||
            code == SDLK_BACKSPACE || code == SDLK_DELETE;
+}
+
+static void send_fn(SDL_KeyboardEvent *event, int f_number)
+{
+    int with_any_modifier = (event->keysym.mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_GUI)) != 0;
+    hotkey_func(f_number, with_any_modifier, is_ctrl_down(event));
 }
 
 void platform_handle_key_down(SDL_KeyboardEvent *event)

@@ -88,10 +88,10 @@ static void calculate_lookup(void)
             y_view_step = 1;
             break;
         case DIR_2_RIGHT:
-            x_view_start = 1;
+            x_view_start = 3;
             x_view_skip = 1;
             x_view_step = 1;
-            y_view_start = VIEW_X_MAX - 1;
+            y_view_start = VIEW_X_MAX - 3;
             y_view_skip = 1;
             y_view_step = -1;
             break;
@@ -104,10 +104,10 @@ static void calculate_lookup(void)
             y_view_step = -1;
             break;
         case DIR_6_LEFT:
-            x_view_start = VIEW_Y_MAX - 2;
+            x_view_start = VIEW_Y_MAX;
             x_view_skip = -1;
             x_view_step = -1;
-            y_view_start = VIEW_X_MAX - 1;
+            y_view_start = VIEW_X_MAX - 3;
             y_view_skip = -1;
             y_view_step = 1;
             break;
@@ -324,10 +324,6 @@ void city_view_rotate_left(void)
         city_view_grid_offset_to_xy_view(center_grid_offset, &x, &y);
         data.camera.tile.x = x - data.viewport.width_tiles / 2;
         data.camera.tile.y = y - data.viewport.height_tiles / 2;
-        if (data.orientation == DIR_0_TOP ||
-            data.orientation == DIR_4_BOTTOM) {
-            data.camera.tile.x++;
-        }
     }
     check_camera_boundaries();
 }
@@ -346,10 +342,6 @@ void city_view_rotate_right(void)
         city_view_grid_offset_to_xy_view(center_grid_offset, &x, &y);
         data.camera.tile.x = x - data.viewport.width_tiles / 2;
         data.camera.tile.y = y - data.viewport.height_tiles / 2;
-        if (data.orientation == DIR_0_TOP ||
-            data.orientation == DIR_4_BOTTOM) {
-            data.camera.tile.y += 2;
-        }
     }
     check_camera_boundaries();
 }

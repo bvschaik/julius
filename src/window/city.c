@@ -67,7 +67,9 @@ static void draw_foreground(void)
     widget_top_menu_draw(0);
     window_city_draw();
     widget_sidebar_draw_foreground();
-    draw_paused_and_time_left();
+    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
+        draw_paused_and_time_left();
+    }
     widget_city_draw_construction_cost();
     if (window_is(WINDOW_CITY)) {
         city_message_process_queue();

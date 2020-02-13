@@ -18,12 +18,14 @@ static const char *ini_keys[] = {
     "ui_show_intro_video",
     "ui_smooth_scrolling",
     "ui_walker_waypoints",
+    "ui_visual_feedback_on_delete",
     "gameplay_change_grandfestival",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",
     "gameplay_change_school_walkers",
     "gameplay_change_retire_at_60",
     "gameplay_enable_extra_forts",
+    "ui_allow_cycling_temples"
 };
 
 static int values[CONFIG_MAX_ENTRIES];
@@ -52,6 +54,7 @@ void config_set_defaults(void)
     values[CONFIG_GP_CH_RETIRE_AT_60] = 0;
     values[CONFIG_GP_CH_EXTRA_FORTS] = 0;
     values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
+    values[CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE] = 0;
 }
 
 void config_load(void)
@@ -77,7 +80,7 @@ void config_load(void)
             }
         }
     }
-    fclose(fp);
+    file_close(fp);
 }
 
 void config_save(void)
@@ -90,5 +93,5 @@ void config_save(void)
     for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
         fprintf(fp, "%s=%d\n", ini_keys[i], values[i]);
     }
-    fclose(fp);
+    file_close(fp);
 }

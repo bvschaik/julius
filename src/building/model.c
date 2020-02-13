@@ -69,7 +69,7 @@ static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int 
 {
     ptr = skip_non_digits(ptr);
     *value = string_to_int(ptr);
-    ptr += index_of(ptr, ',', end_ptr - ptr);
+    ptr += index_of(ptr, ',', (int) (end_ptr - ptr));
     return ptr;
 }
 

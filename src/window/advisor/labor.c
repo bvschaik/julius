@@ -138,9 +138,3 @@ const advisor_window_type *window_advisor_labor(void)
     };
     return &window;
 }
-
-void window_advisor_labor_draw_dialog_background(void)
-{
-    draw_background();
-    draw_foreground();
-}
