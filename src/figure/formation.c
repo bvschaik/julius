@@ -2,6 +2,7 @@
 
 #include "city/military.h"
 #include "core/calc.h"
+#include "core/config.h"
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
 #include "figure/formation_enemy.h"
@@ -233,6 +234,15 @@ int formation_get_num_legions(void)
         }
     }
     return total;
+}
+
+int formation_get_max_legions(void)
+{
+   if (config_get(CONFIG_GP_CH_EXTRA_FORTS)) {
+	  return MAX_LEGIONS+3;
+   } else {
+	  return MAX_LEGIONS; 
+   }
 }
 
 int formation_for_legion(int legion_index)

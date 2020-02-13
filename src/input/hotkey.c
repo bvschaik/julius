@@ -98,9 +98,9 @@ static void cycle_legion(void)
     if (window_is(WINDOW_CITY)) {
         int legion_id = current_legion_id;
         current_legion_id = 0;
-        for (int i = 1; i <= MAX_LEGIONS; i++) {
+        for (int i = 1; i <= formation_get_max_legions(); i++) {
             legion_id++;
-            if (legion_id > MAX_LEGIONS) {
+            if (legion_id > formation_get_max_legions()) {
                 legion_id = 1;
             }
             const formation *m = formation_get(legion_id);

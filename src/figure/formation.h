@@ -151,6 +151,7 @@ int formation_get_num_legions_cached(void);
 void formation_calculate_legion_totals(void);
 
 int formation_get_num_legions(void);
+int formation_get_max_legions(void);
 
 int formation_for_legion(int legion_index);
 

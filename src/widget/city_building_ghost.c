@@ -478,7 +478,7 @@ static void draw_fort(const map_tile *tile, int x, int y)
 {
     int fully_blocked = 0;
     int blocked = 0;
-    if (formation_get_num_legions_cached() >= MAX_LEGIONS || city_finance_out_of_money()) {
+    if (formation_get_num_legions_cached() >= formation_get_max_legions() || city_finance_out_of_money()) {
         fully_blocked = 1;
         blocked = 1;
     }
