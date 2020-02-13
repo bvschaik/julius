@@ -1,6 +1,7 @@
 #include "distribution.h"
 
 #include "building/building.h"
+#include "building/market.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
@@ -21,6 +22,7 @@ static void toggle_resource_state(int index, int param2);
 static void toggle_partial_resource_state(int index, int param2);
 static void granary_orders(int param1, int param2);
 static void warehouse_orders(int index, int param2);
+static void market_orders(int index, int param2);
 
 static generic_button go_to_orders_button[] = {
     {0, 0, 304, 20, go_to_orders, button_none, 0, 0}
@@ -67,6 +69,10 @@ static generic_button granary_order_buttons[] = {
     {314, 0, 20, 20, granary_orders, button_none, 1, 0},
 };
 
+static generic_button market_order_buttons[] = {
+    {314, 0, 20, 20, market_orders, button_none, 0, 0},
+};
+
 static generic_button warehouse_order_buttons[] = {
     {0, 0, 304, 20, warehouse_orders, button_none, 0, 0},
     {0, -22, 304, 20, warehouse_orders, button_none, 1, 0},
@@ -84,6 +90,13 @@ static struct {
 uint8_t full_button_text[] = {'F', 0};
 uint8_t half_button_text[] = {'H', 0};
 uint8_t quarter_button_text[] = {'Q', 0};
+
+static void draw_accept_none_button(int x, int y, int focused)
+{
+    uint8_t refuse_button_text[] = { 'x', 0 };
+    button_border_draw(x, y, 20, 20, focused ? 1 : 0);
+    text_draw_centered(refuse_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+}
 
 void window_building_draw_dock(building_info_context *c)
 {
@@ -129,6 +142,7 @@ void window_building_draw_market(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(97, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     building *b = building_get(c->building_id);
+    font_t font;
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (b->num_workers <= 0) {
@@ -138,46 +152,119 @@ void window_building_draw_market(building_info_context *c)
         if (b->data.market.inventory[INVENTORY_WHEAT] || b->data.market.inventory[INVENTORY_VEGETABLES] ||
             b->data.market.inventory[INVENTORY_FRUIT] || b->data.market.inventory[INVENTORY_MEAT]) {
             // food stocks
+	        font = is_good_accepted(INVENTORY_WHEAT,b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
             image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + 64);
             text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
-                c->x_offset + 64, c->y_offset + 70, FONT_NORMAL_BLACK);
+                c->x_offset + 64, c->y_offset + 70, font);
 
+	        font = is_good_accepted(INVENTORY_VEGETABLES,b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
             image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + 64);
             text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
-                c->x_offset + 174, c->y_offset + 70, FONT_NORMAL_BLACK);
+                c->x_offset + 174, c->y_offset + 70, font);
 
+            font = is_good_accepted(INVENTORY_FRUIT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
             image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + 64);
             text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
-                c->x_offset + 284, c->y_offset + 70, FONT_NORMAL_BLACK);
+                c->x_offset + 284, c->y_offset + 70, font);
 
+            font = is_good_accepted(INVENTORY_MEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
             image_draw(image_id + RESOURCE_MEAT +
                 resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
                 c->x_offset + 362, c->y_offset + 64);
             text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
-                c->x_offset + 394, c->y_offset + 70, FONT_NORMAL_BLACK);
+                c->x_offset + 394, c->y_offset + 70, font);
         } else {
             window_building_draw_description_at(c, 48, 97, 4);
         }
         // good stocks
+        font = is_good_accepted(INVENTORY_POTTERY, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + 104);
         text_draw_number(b->data.market.inventory[INVENTORY_POTTERY], '@', " ",
-            c->x_offset + 64, c->y_offset + 110, FONT_NORMAL_BLACK);
+            c->x_offset + 64, c->y_offset + 110, font);
 
+        font = is_good_accepted(INVENTORY_FURNITURE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + 104);
         text_draw_number(b->data.market.inventory[INVENTORY_FURNITURE], '@', " ",
-            c->x_offset + 174, c->y_offset + 110, FONT_NORMAL_BLACK);
+            c->x_offset + 174, c->y_offset + 110, font);
 
+        font = is_good_accepted(INVENTORY_OIL, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_OIL, c->x_offset + 252, c->y_offset + 104);
         text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
-            c->x_offset + 284, c->y_offset + 110, FONT_NORMAL_BLACK);
+            c->x_offset + 284, c->y_offset + 110, font);
 
+        font = is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_WINE, c->x_offset + 362, c->y_offset + 104);
         text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
-            c->x_offset + 394, c->y_offset + 110, FONT_NORMAL_BLACK);
+            c->x_offset + 394, c->y_offset + 110, font);
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 }
+
+void window_building_draw_market_foreground(building_info_context* c)
+{
+    button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+        16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
+        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+}
+
+void window_building_draw_market_orders(building_info_context* c)
+{
+    c->help_id = 3;
+    int y_offset = window_building_get_vertical_offset(c, 28);
+    outer_panel_draw(c->x_offset, y_offset, 29, 28);
+    lang_text_draw_centered(97, 0, c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
+}
+
+void window_building_draw_market_orders_foreground(building_info_context* c)
+{
+    int y_offset = window_building_get_vertical_offset(c, 28);
+    resource_type resources[] = { RESOURCE_WHEAT,RESOURCE_VEGETABLES,RESOURCE_FRUIT,RESOURCE_MEAT,RESOURCE_WINE,RESOURCE_OIL,RESOURCE_FURNITURE,RESOURCE_POTTERY };
+
+    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
+
+    for (int i = INVENTORY_WHEAT; i < INVENTORY_MAX; i++) {
+        resource_type resource = resources[i];
+        int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
+            resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
+        image_draw(image_id, c->x_offset + 408, y_offset + 46 + 22 * i);
+        lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
+        button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
+        building *b = building_get(c->building_id);
+        int state = is_good_accepted(i,b);
+        if (state) {
+            lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
+        } else {
+            lang_text_draw(99, 8, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_RED);
+        }
+    }
+}
+
+
+
+void window_building_handle_mouse_market(const mouse* m, building_info_context* c)
+{
+    generic_buttons_handle_mouse(
+        m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+        go_to_orders_button, 1, &data.focus_button_id);
+}
+
+void window_building_handle_mouse_market_orders(const mouse* m, building_info_context* c)
+{
+    int y_offset = window_building_get_vertical_offset(c, 28);
+
+    data.building_id = c->building_id;
+    if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46,
+        orders_resource_buttons, INVENTORY_MAX,
+        &data.resource_focus_button_id)) {
+        return;
+    }
+    generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, market_order_buttons, 1, &data.orders_focus_button_id);
+}
+
 
 void window_building_draw_granary(building_info_context *c)
 {
@@ -244,6 +331,7 @@ void window_building_handle_mouse_granary(const mouse *m, building_info_context 
     generic_buttons_handle_mouse(
         m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
         go_to_orders_button, 1, &data.focus_button_id);
+
 }
 
 void window_building_draw_granary_orders(building_info_context *c)
@@ -255,12 +343,6 @@ void window_building_draw_granary_orders(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 }
 
-static void draw_accept_none_button(int x, int y, int focused)
-{
-    uint8_t refuse_button_text[] = {'x', 0};
-    button_border_draw(x, y, 20, 20, focused ? 1 : 0);
-    text_draw_centered(refuse_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
-}
 
 void window_building_draw_granary_orders_foreground(building_info_context *c)
 {
@@ -522,12 +604,27 @@ static void toggle_resource_state(int index, int param2)
 {
     building *b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_WAREHOUSE) {
-        resource = city_resource_get_available()->items[index-1];
-    } else {
-        resource = city_resource_get_available_foods()->items[index-1];
+    if (b->type == BUILDING_MARKET) {
+        toggle_good_accepted(index-1, b);
     }
-    building_storage_cycle_resource_state(b->storage_id, resource);
+    else {
+        if (b->type == BUILDING_WAREHOUSE) {
+            resource = city_resource_get_available()->items[index - 1];
+        }
+        else {
+            resource = city_resource_get_available_foods()->items[index - 1];
+        }
+        building_storage_cycle_resource_state(b->storage_id, resource);
+    }
+    window_invalidate();
+}
+
+static void market_orders(int index, int param2)
+{
+    building *b = building_get(data.building_id);
+    if (index == 0) {
+        unaccept_all_goods(b);
+    }
     window_invalidate();
 }
 

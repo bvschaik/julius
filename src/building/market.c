@@ -62,6 +62,20 @@ static void update_good_resource(struct resource_data *data, resource_type resou
     }
 }
 
+int is_good_accepted(inventory_type resource, building *market) {
+    int goods_bit = 1 << resource;
+    return !(market->subtype.market_goods & goods_bit);
+}
+
+void toggle_good_accepted(inventory_type resource, building *market) {
+    int goods_bit = 1 << resource;
+    market->subtype.market_goods ^= goods_bit;
+}
+
+void unaccept_all_goods(building *market) {
+    market->subtype.market_goods=0xFFFF;
+}
+
 int building_market_get_storage_destination(building *market)
 {
     struct resource_data resources[INVENTORY_MAX];
@@ -136,30 +150,30 @@ int building_market_get_storage_destination(building *market)
         return 0;
     }
     // prefer food if we don't have it
-    if (!market->data.market.inventory[INVENTORY_WHEAT] && resources[INVENTORY_WHEAT].num_buildings) {
+    if (!market->data.market.inventory[INVENTORY_WHEAT] && resources[INVENTORY_WHEAT].num_buildings && is_good_accepted(INVENTORY_WHEAT, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_WHEAT;
         return resources[INVENTORY_WHEAT].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_VEGETABLES] && resources[INVENTORY_VEGETABLES].num_buildings) {
+    } else if (!market->data.market.inventory[INVENTORY_VEGETABLES] && resources[INVENTORY_VEGETABLES].num_buildings && is_good_accepted(INVENTORY_VEGETABLES, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_VEGETABLES;
         return resources[INVENTORY_VEGETABLES].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_FRUIT] && resources[INVENTORY_FRUIT].num_buildings) {
+    } else if (!market->data.market.inventory[INVENTORY_FRUIT] && resources[INVENTORY_FRUIT].num_buildings && is_good_accepted(INVENTORY_FRUIT, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_FRUIT;
         return resources[INVENTORY_FRUIT].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_MEAT] && resources[INVENTORY_MEAT].num_buildings) {
+    } else if (!market->data.market.inventory[INVENTORY_MEAT] && resources[INVENTORY_MEAT].num_buildings && is_good_accepted(INVENTORY_MEAT, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_MEAT;
         return resources[INVENTORY_MEAT].building_id;
     }
     // then prefer resource if we don't have it
-    if (!market->data.market.inventory[INVENTORY_POTTERY] && resources[INVENTORY_POTTERY].num_buildings) {
+    if (!market->data.market.inventory[INVENTORY_POTTERY] && resources[INVENTORY_POTTERY].num_buildings && is_good_accepted(INVENTORY_POTTERY, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_POTTERY;
         return resources[INVENTORY_POTTERY].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_FURNITURE] && resources[INVENTORY_FURNITURE].num_buildings) {
+    } else if (!market->data.market.inventory[INVENTORY_FURNITURE] && resources[INVENTORY_FURNITURE].num_buildings && is_good_accepted(INVENTORY_FURNITURE, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_FURNITURE;
         return resources[INVENTORY_FURNITURE].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_OIL] && resources[INVENTORY_OIL].num_buildings) {
+    } else if (!market->data.market.inventory[INVENTORY_OIL] && resources[INVENTORY_OIL].num_buildings && is_good_accepted(INVENTORY_OIL, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_OIL;
         return resources[INVENTORY_OIL].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_WINE] && resources[INVENTORY_WINE].num_buildings) {
+    } else if (!market->data.market.inventory[INVENTORY_WINE] && resources[INVENTORY_WINE].num_buildings && is_good_accepted(INVENTORY_WINE, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_WINE;
         return resources[INVENTORY_WINE].building_id;
     }
@@ -167,61 +181,73 @@ int building_market_get_storage_destination(building *market)
     int min_stock = 50;
     int fetch_inventory = -1;
     if (resources[INVENTORY_WHEAT].num_buildings &&
-        market->data.market.inventory[INVENTORY_WHEAT] < min_stock) {
+        market->data.market.inventory[INVENTORY_WHEAT] < min_stock
+	&& is_good_accepted(INVENTORY_WHEAT, market)) {
         min_stock = market->data.market.inventory[INVENTORY_WHEAT];
         fetch_inventory = INVENTORY_WHEAT;
     }
     if (resources[INVENTORY_VEGETABLES].num_buildings &&
-        market->data.market.inventory[INVENTORY_VEGETABLES] < min_stock) {
+        market->data.market.inventory[INVENTORY_VEGETABLES] < min_stock
+	&& is_good_accepted(INVENTORY_VEGETABLES, market)) {
         min_stock = market->data.market.inventory[INVENTORY_VEGETABLES];
         fetch_inventory = INVENTORY_VEGETABLES;
     }
     if (resources[INVENTORY_FRUIT].num_buildings &&
-        market->data.market.inventory[INVENTORY_FRUIT] < min_stock) {
+        market->data.market.inventory[INVENTORY_FRUIT] < min_stock
+        && is_good_accepted(INVENTORY_FRUIT, market)) {
         min_stock = market->data.market.inventory[INVENTORY_FRUIT];
         fetch_inventory = INVENTORY_FRUIT;
     }
     if (resources[INVENTORY_MEAT].num_buildings &&
-        market->data.market.inventory[INVENTORY_MEAT] < min_stock) {
+        market->data.market.inventory[INVENTORY_MEAT] < min_stock
+	&& is_good_accepted(INVENTORY_MEAT, market)) {
         min_stock = market->data.market.inventory[INVENTORY_MEAT];
         fetch_inventory = INVENTORY_MEAT;
     }
     if (resources[INVENTORY_POTTERY].num_buildings &&
-        market->data.market.inventory[INVENTORY_POTTERY] < min_stock) {
+        market->data.market.inventory[INVENTORY_POTTERY] < min_stock
+	&& is_good_accepted(INVENTORY_POTTERY, market)) {
         min_stock = market->data.market.inventory[INVENTORY_POTTERY];
         fetch_inventory = INVENTORY_POTTERY;
     }
     if (resources[INVENTORY_FURNITURE].num_buildings &&
-        market->data.market.inventory[INVENTORY_FURNITURE] < min_stock) {
+        market->data.market.inventory[INVENTORY_FURNITURE] < min_stock
+	&& is_good_accepted(INVENTORY_FURNITURE, market)) {
         min_stock = market->data.market.inventory[INVENTORY_FURNITURE];
         fetch_inventory = INVENTORY_FURNITURE;
     }
     if (resources[INVENTORY_OIL].num_buildings &&
-        market->data.market.inventory[INVENTORY_OIL] < min_stock) {
+        market->data.market.inventory[INVENTORY_OIL] < min_stock
+	&& is_good_accepted(INVENTORY_OIL, market)) {
         min_stock = market->data.market.inventory[INVENTORY_OIL];
         fetch_inventory = INVENTORY_OIL;
     }
     if (resources[INVENTORY_WINE].num_buildings &&
-        market->data.market.inventory[INVENTORY_WINE] < min_stock) {
+        market->data.market.inventory[INVENTORY_WINE] < min_stock
+	&& is_good_accepted(INVENTORY_WINE, market)) {
         fetch_inventory = INVENTORY_WINE;
     }
 
     if (fetch_inventory == -1) {
         // all items well stocked: pick food below threshold
         if (resources[INVENTORY_WHEAT].num_buildings &&
-            market->data.market.inventory[INVENTORY_WHEAT] < 600) {
+            market->data.market.inventory[INVENTORY_WHEAT] < 600
+	    && is_good_accepted(INVENTORY_WHEAT, market)) {
             fetch_inventory = INVENTORY_WHEAT;
         }
         if (resources[INVENTORY_VEGETABLES].num_buildings &&
-            market->data.market.inventory[INVENTORY_VEGETABLES] < 400) {
+            market->data.market.inventory[INVENTORY_VEGETABLES] < 400
+	    && is_good_accepted(INVENTORY_VEGETABLES, market)) {
             fetch_inventory = INVENTORY_VEGETABLES;
         }
         if (resources[INVENTORY_FRUIT].num_buildings &&
-            market->data.market.inventory[INVENTORY_FRUIT] < 400) {
+            market->data.market.inventory[INVENTORY_FRUIT] < 400
+	    && is_good_accepted(INVENTORY_FRUIT, market)) {
             fetch_inventory = INVENTORY_FRUIT;
         }
         if (resources[INVENTORY_MEAT].num_buildings &&
-            market->data.market.inventory[INVENTORY_MEAT] < 400) {
+            market->data.market.inventory[INVENTORY_MEAT] < 400
+	    && is_good_accepted(INVENTORY_MEAT, market)) {
             fetch_inventory = INVENTORY_MEAT;
         }
     }
