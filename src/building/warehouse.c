@@ -249,6 +249,18 @@ int building_warehouse_is_getting(int resource, building *b)
 	}	
 }
 
+int building_warehouse_is_gettable(int resource, building *b)
+{
+        const building_storage *s = building_storage_get(b->storage_id);
+        if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
+	    (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER)) {
+		return 1;
+	} else {
+	    return 0;
+	}	
+}
+
 int building_warehouse_is_not_accepting(int resource, building *b)
 {
     return !((building_warehouse_is_accepting(resource,b) || building_warehouse_is_getting(resource,b)));
@@ -362,7 +374,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
                 }
             }
         }
-        if (loads_stored > 0 && !building_warehouse_is_getting(resource,b)) {
+        if (loads_stored > 0 && !building_warehouse_is_gettable(resource,b)) {
             int dist = calc_distance_with_penalty(b->x, b->y, src->x, src->y,
                                                   src->distance_from_entry, b->distance_from_entry);
             dist -= 4 * loads_stored;
