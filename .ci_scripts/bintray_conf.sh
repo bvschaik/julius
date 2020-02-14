@@ -3,14 +3,22 @@
 build_dir="$(pwd)/build"
 
 VERSION=$(cat res/version.txt)
-if [[ "$TRAVIS_BRANCH" == "master" ]]
+if [[ ! -z "$TRAVIS_TAG" ]]
+then
+  REPO=julius
+  NAME_SUFFIX=-release
+elif [[ "$TRAVIS_BRANCH" == "master" ]]
 then
   REPO=julius
   NAME_SUFFIX=-unstable
-else
+elif [[ "$TRAVIS_BRANCH" =~ ^feature/ ]]
+then
   REPO=julius-branches
   NAME_SUFFIX=
   VERSION=${TRAVIS_BRANCH##feature/}-$VERSION
+else
+  echo "Unknown branch type $TRAVIS_BRANCH - skipping deply to Bintray"
+  exit
 fi
 
 # Linux portable binary: https://appimage.org/

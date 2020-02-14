@@ -93,6 +93,20 @@ deploy:
   publish: true
   on:
     branch: master
+    APPVEYOR_REPO_TAG: false
+    CMAKE_BUILD_TYPE: Release
+- provider: BinTray
+  username: bvschaik
+  api_key:
+    secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
+  subject: bvschaik
+  repo: julius
+  package: windows-release
+  version: $(DEPLOY_VERSION)
+  artifact: julius-dist
+  publish: true
+  on:
+    APPVEYOR_REPO_TAG: true
     CMAKE_BUILD_TYPE: Release
 - provider: BinTray
   username: bvschaik
