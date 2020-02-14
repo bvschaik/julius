@@ -11,12 +11,15 @@
 #include "city/buildings.h"
 #include "city/view.h"
 #include "city/warning.h"
+#include "core/config.h"
 #include "core/image.h"
 #include "core/random.h"
 #include "figure/formation_legion.h"
 #include "game/undo.h"
 #include "map/building_tiles.h"
+#include "map/grid.h"
 #include "map/orientation.h"
+#include "map/routing.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
@@ -612,6 +615,7 @@ int building_construction_place_building(building_type type, int x, int y)
         return 0;
     }
     building_construction_warning_check_all(type, x, y, size);
+    
 
     // phew, checks done!
     building *b;

@@ -43,7 +43,12 @@ static void generate_labor_seeker(building *b, int x, int y)
         return;
     }
     if (config_get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
-        b->houses_covered = 100;
+	// If it can access Rome
+        if (b->distance_from_entry) {
+            b->houses_covered = 100;
+	} else {
+            b->houses_covered = 0;
+	}
 	return;
     }
     if (b->figure_id2) {
@@ -63,9 +68,14 @@ static void generate_labor_seeker(building *b, int x, int y)
 static void spawn_labor_seeker(building *b, int x, int y, int min_houses)
 {
     if (config_get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
-        b->houses_covered = 2 * min_houses;
-    }
-    else if (b->houses_covered <= min_houses) {
+	// If it can access Rome
+        if (b->distance_from_entry) {
+            b->houses_covered = 2 * min_houses;
+	}
+	else {
+            b->houses_covered = 0;
+	}
+    } else if (b->houses_covered <= min_houses) {
         generate_labor_seeker(b, x, y);
     }
 }
