@@ -34,8 +34,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius.AppImage",
-      "uploadPattern": "julius-$VERSION-linux.AppImage"
+      "includePattern": "${build_dir}/juliusgc.AppImage",
+      "uploadPattern": "juliusgc-$VERSION-linux.AppImage"
     }
   ],
 
@@ -62,8 +62,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius.dmg",
-      "uploadPattern": "julius-$VERSION-mac.dmg",
+      "includePattern": "${build_dir}/juliusgc.dmg",
+      "uploadPattern": "juliusgc-$VERSION-mac.dmg",
       "listInDownloads": true
     }
   ],
@@ -91,8 +91,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius.vpk",
-      "uploadPattern": "julius-$VERSION-vita.vpk",
+      "includePattern": "${build_dir}/juliusgc.vpk",
+      "uploadPattern": "juliusgc-$VERSION-vita.vpk",
       "listInDownloads": true
     }
   ],
@@ -120,8 +120,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius_switch.zip",
-      "uploadPattern": "julius-$VERSION-switch.zip",
+      "includePattern": "${build_dir}/juliusgc_switch.zip",
+      "uploadPattern": "juliusgc-$VERSION-switch.zip",
       "listInDownloads": true
     }
   ],
