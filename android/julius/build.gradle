@@ -4,7 +4,7 @@ buildDir = file("../distribution/${rootProject.name}/${project.name}")
 
 task getVersion {
     def project_version_major = 1
-    def project_version_minor = 2
+    def project_version_minor = 3
     def project_version_patch = 0
     def is_release_version = false
 
