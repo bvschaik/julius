@@ -23,6 +23,10 @@ static int try_import_resource(int building_id, int resource, int city_id)
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return 0;
     }
+
+    if (building_warehouse_is_not_accepting(resource,warehouse)) {
+        return 0;
+    }
     
     int route_id = empire_city_get_route_id(city_id);
     // try existing storage bay with the same resource
@@ -102,7 +106,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
             continue;
         }
         const building_storage *storage = building_storage_get(b->storage_id);
-        if (storage->resource_state[resource] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && !storage->empty_all) {
+        if (!building_warehouse_is_not_accepting(resource,b) && !storage->empty_all) {
             int distance_penalty = 32;
             building *space = b;
             for (int s = 0; s < 8; s++) {
