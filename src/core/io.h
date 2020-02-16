@@ -13,7 +13,7 @@
  * @param max_size Max size to read
  * @return Number of bytes read
  */
-int io_read_file_into_buffer(const char *filepath, void *buffer, int max_size);
+int io_read_file_into_buffer(const char *filepath, void *buffer, int max_size, int localizable);
 
 /**
  * Reads part of the file into the buffer
@@ -22,7 +22,7 @@ int io_read_file_into_buffer(const char *filepath, void *buffer, int max_size);
  * @param size Number of bytes to read
  * @param offset_in_file Offset into the file to start reading
  */
-int io_read_file_part_into_buffer(const char *filepath, void *buffer, int size, int offset_in_file);
+int io_read_file_part_into_buffer(const char *filepath, void *buffer, int size, int offset_in_file, int localizable);
 
 /**
  * Writes the entire buffer to the file

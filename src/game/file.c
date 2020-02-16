@@ -189,7 +189,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
 
 static int load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file)
 {
-    if (!file_exists(scenario_file)) {
+    if (!file_exists(scenario_file, 0)) {
         return 0;
     }
 
@@ -247,7 +247,7 @@ static int get_campaign_mission_offset(int mission_id)
     uint8_t offset_data[4];
     buffer buf;
     buffer_init(&buf, offset_data, 4);
-    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, offset_data, 4, 4 * mission_id)) {
+    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, offset_data, 4, 4 * mission_id, 0)) {
         return 0;
     }
     return buffer_read_i32(&buf);
@@ -374,7 +374,7 @@ void game_file_write_mission_saved_game(void)
     } else if (rank > 11) {
         rank = 11;
     }
-    if (city_mission_should_save_start() && !file_exists(MISSION_SAVED_GAMES[rank])) {
+    if (city_mission_should_save_start() && !file_exists(MISSION_SAVED_GAMES[rank], 0)) {
         game_file_io_write_saved_game(MISSION_SAVED_GAMES[rank]);
     }
 }

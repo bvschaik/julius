@@ -18,6 +18,7 @@ static const uint8_t NEW_GAME_TRADITIONAL_CHINESE[] = { 0x83, 0x80, 0x20, 0x84, 
 
 static struct {
     language_type last_determined_language;
+    const char *locale_directory;
 } data;
 
 static language_type determine_language(void)
@@ -71,6 +72,16 @@ language_type locale_determine_language(void)
     data.last_determined_language = determine_language();
     log_language();
     return data.last_determined_language;
+}
+
+const char *locale_get_directory(void)
+{
+    return data.locale_directory;
+}
+
+void locale_set_directory(const char *dir)
+{
+    data.locale_directory = dir;
 }
 
 int locale_year_before_ad(void)
