@@ -76,9 +76,9 @@ void file_remove_extension(uint8_t *filename)
     }
 }
 
-int file_exists(const char *filename)
+int file_exists(const char *filename, int localizable)
 {
-    return NULL != dir_get_case_corrected_file(filename);
+    return NULL != dir_get_case_corrected_file(filename, localizable);
 }
 
 int file_remove(const char *filename)

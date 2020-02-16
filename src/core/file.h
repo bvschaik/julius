@@ -65,7 +65,7 @@ void file_remove_extension(uint8_t *filename);
  * @param filename Filename to check
  * @return boolean true if the file exists, false otherwise
  */
-int file_exists(const char *filename);
+int file_exists(const char *filename, int localizable);
 
 /**
  * Remove a file

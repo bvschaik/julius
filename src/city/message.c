@@ -114,7 +114,7 @@ static int has_video(int text_id)
     }
     char video_file[FILE_NAME_MAX];
     encoding_to_utf8(msg->video.text, video_file, FILE_NAME_MAX, 0);
-    return file_exists(video_file);
+    return file_exists(video_file, 1);
 }
 
 static void enqueue_message(int sequence)
