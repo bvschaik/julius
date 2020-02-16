@@ -14,8 +14,17 @@ typedef enum {
     CONFIG_MAX_ENTRIES
 } config_key;
 
+typedef enum {
+    CONFIG_STRING_UI_LANGUAGE_DIR,
+    CONFIG_STRING_MAX_ENTRIES
+} config_string_key;
+
 int config_get(config_key key);
 void config_set(config_key key, int value);
+
+const char *config_get_string(config_string_key key);
+void config_set_string(config_string_key key, const char *value);
+
 void config_set_defaults(void);
 
 void config_load(void);

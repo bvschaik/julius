@@ -1,7 +1,7 @@
 #include "core/dir.h"
 
+#include "core/config.h"
 #include "core/file.h"
-#include "core/locale.h"
 #include "core/string.h"
 #include "platform/file_manager.h"
 
@@ -113,7 +113,7 @@ const char *get_case_corrected_file(const char *dir, const char *filepath)
     }
 
     strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len);
-    corrected_filename[dir_len + 2 * FILE_NAME_MAX - 1] = 0;
+    corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
 
     FILE *fp = file_open(corrected_filename, "rb");
     if (fp) {
@@ -156,7 +156,7 @@ const char *get_case_corrected_file(const char *dir, const char *filepath)
 const char *dir_get_case_corrected_file(const char *filepath, int localizable)
 {
     if (localizable) {
-        const char *custom_dir = locale_get_directory();
+        const char *custom_dir = config_get_string(CONFIG_STRING_UI_LANGUAGE_DIR);
         if (custom_dir) {
             const char *path = get_case_corrected_file(custom_dir, filepath);
             if (path) {
