@@ -26,18 +26,6 @@ typedef enum {
 language_type locale_determine_language(void);
 
 /**
- * Gets the locale directory, if set
- * @return Directory name or null
- */
-const char *locale_get_directory(void);
-
-/**
- * Sets the locale directory
- * @param dir Directory, or null
- */
-void locale_set_directory(const char *dir);
-
-/**
  * Check whether to write the year before the 'AD' part or the other way around
  * @return Boolean true if years should be written as "200 AD", false for "AD 200"
  */
