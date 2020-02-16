@@ -134,7 +134,7 @@ static int handle_legion_click(const map_tile *tile)
 
 static void build_start(const map_tile *tile)
 {
-    if (tile->grid_offset /*&& !game_state_is_paused()*/) { // TODO FIXME
+    if (tile->grid_offset) { // Allow building on paused
         building_construction_start(tile->x, tile->y, tile->grid_offset);
     }
 }
