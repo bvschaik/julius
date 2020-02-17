@@ -1,5 +1,6 @@
 #include "city.h"
 
+#include "building/construction.h"
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"
