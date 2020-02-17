@@ -18,6 +18,13 @@
 
 #define BUFFER_SIZE 400000
 
+#define FILE_TEXT_ENG "c3.eng"
+#define FILE_MM_ENG "c3_mm.eng"
+#define FILE_TEXT_RUS "c3.rus"
+#define FILE_MM_RUS "c3_mm.rus"
+#define FILE_EDITOR_TEXT_ENG "c3_map.eng"
+#define FILE_EDITOR_MM_ENG "c3_map_mm.eng"
+
 static struct {
     struct {
         int32_t offset;
@@ -39,10 +46,10 @@ static void parse_text(buffer *buf)
     buffer_read_raw(buf, data.text_data, MAX_TEXT_DATA);
 }
 
-static int load_text(const char *filename, uint8_t *buf_data)
+static int load_text(const char *filename, uint8_t *buf_data, int localized)
 {
     buffer buf;
-    int filesize = io_read_file_into_buffer(filename, buf_data, BUFFER_SIZE, MUST_BE_LOCALIZED);
+    int filesize = io_read_file_into_buffer(filename, buf_data, BUFFER_SIZE, localized);
     if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
         return 0;
     }
@@ -94,10 +101,10 @@ static void parse_message(buffer *buf)
     buffer_read_raw(buf, &data.message_data, MAX_MESSAGE_DATA);
 }
 
-static int load_message(const char *filename, uint8_t *data_buffer)
+static int load_message(const char *filename, uint8_t *data_buffer, int localized)
 {
     buffer buf;
-    int filesize = io_read_file_into_buffer(filename, data_buffer, BUFFER_SIZE, MUST_BE_LOCALIZED);
+    int filesize = io_read_file_into_buffer(filename, data_buffer, BUFFER_SIZE, localized);
     if (filesize < MIN_MESSAGE_SIZE || filesize > MAX_MESSAGE_SIZE) {
         return 0;
     }
@@ -106,15 +113,28 @@ static int load_message(const char *filename, uint8_t *data_buffer)
     return 1;
 }
 
-int lang_load(const char *text_filename, const char *message_filename)
+static int load_files(const char *text_filename, const char *message_filename, int localized)
 {
     uint8_t *buffer = (uint8_t *) malloc(BUFFER_SIZE);
     if (!buffer) {
         return 0;
     }
-    int success = load_text(text_filename, buffer) && load_message(message_filename, buffer);
+    int success = load_text(text_filename, buffer, localized) && load_message(message_filename, buffer, localized);
     free(buffer);
     return success;
+}
+
+int lang_load(int is_editor)
+{
+    if (is_editor) {
+        return load_files(FILE_EDITOR_TEXT_ENG, FILE_EDITOR_MM_ENG, MAY_BE_LOCALIZED);
+    }
+    // Prefer language files from localized dir, fall back to main dir
+    return
+        load_files(FILE_TEXT_ENG, FILE_MM_ENG, MUST_BE_LOCALIZED) ||
+        load_files(FILE_TEXT_RUS, FILE_MM_RUS, MUST_BE_LOCALIZED) ||
+        load_files(FILE_TEXT_ENG, FILE_MM_ENG, NOT_LOCALIZED) ||
+        load_files(FILE_TEXT_RUS, FILE_MM_RUS, NOT_LOCALIZED);
 }
 
 const uint8_t *lang_get_string(int group, int index)
