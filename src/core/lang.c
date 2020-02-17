@@ -42,7 +42,7 @@ static void parse_text(buffer *buf)
 static int load_text(const char *filename, uint8_t *buf_data)
 {
     buffer buf;
-    int filesize = io_read_file_into_buffer(filename, buf_data, BUFFER_SIZE, 1);
+    int filesize = io_read_file_into_buffer(filename, buf_data, BUFFER_SIZE, MUST_BE_LOCALIZED);
     if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
         return 0;
     }
@@ -97,7 +97,7 @@ static void parse_message(buffer *buf)
 static int load_message(const char *filename, uint8_t *data_buffer)
 {
     buffer buf;
-    int filesize = io_read_file_into_buffer(filename, data_buffer, BUFFER_SIZE, 1);
+    int filesize = io_read_file_into_buffer(filename, data_buffer, BUFFER_SIZE, MUST_BE_LOCALIZED);
     if (filesize < MIN_MESSAGE_SIZE || filesize > MAX_MESSAGE_SIZE) {
         return 0;
     }

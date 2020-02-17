@@ -155,12 +155,14 @@ const char *get_case_corrected_file(const char *dir, const char *filepath)
 
 const char *dir_get_case_corrected_file(const char *filepath, int localizable)
 {
-    if (localizable) {
+    if (localizable != NOT_LOCALIZED) {
         const char *custom_dir = config_get_string(CONFIG_STRING_UI_LANGUAGE_DIR);
         if (custom_dir) {
             const char *path = get_case_corrected_file(custom_dir, filepath);
             if (path) {
                 return path;
+            } else if (localizable == MUST_BE_LOCALIZED) {
+                return 0;
             }
         }
     }

@@ -1,6 +1,8 @@
 #ifndef CORE_IO_H
 #define CORE_IO_H
 
+#include "core/dir.h"
+
 /**
  * @file
  * I/O functions.
