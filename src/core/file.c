@@ -1,6 +1,5 @@
 #include "core/file.h"
 
-#include "core/dir.h"
 #include "core/string.h"
 #include "platform/file_manager.h"
 

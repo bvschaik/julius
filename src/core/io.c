@@ -47,7 +47,7 @@ int io_read_file_part_into_buffer(const char *filepath, void *buffer, int size, 
 int io_write_buffer_to_file(const char *filepath, const void *buffer, int size)
 {
     // Find existing file to overwrite
-    const char *cased_file = dir_get_case_corrected_file(filepath, 0);
+    const char *cased_file = dir_get_case_corrected_file(filepath, NOT_LOCALIZED);
     if (!cased_file) {
         cased_file = filepath;
     }

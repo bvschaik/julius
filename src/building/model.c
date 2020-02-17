@@ -81,7 +81,7 @@ int model_load(void)
         return 0;
     }
     memset(buffer, 0, TMP_BUFFER_SIZE);
-    int filesize = io_read_file_into_buffer("c3_model.txt", buffer, TMP_BUFFER_SIZE, 0);
+    int filesize = io_read_file_into_buffer("c3_model.txt", buffer, TMP_BUFFER_SIZE, NOT_LOCALIZED);
     if (filesize == 0) {
         log_error("no c3_model.txt file", 0, 0);
         free(buffer);
