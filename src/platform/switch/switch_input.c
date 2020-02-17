@@ -299,7 +299,7 @@ void switch_handle_analog_sticks(void)
     for (int direction = 0; direction < ANALOG_MAX; ++direction) {
         if (right_analog_state[direction] != direction_states[direction]) {
             right_analog_state[direction] = direction_states[direction];
-            vita_create_key_event_for_direction(direction, direction_states[direction]);
+            switch_create_key_event_for_direction(direction, direction_states[direction]);
         }
     }
 }
@@ -468,16 +468,16 @@ static void switch_create_key_event_for_direction(int direction, int key_pressed
     uint32_t event_type = key_pressed ? SDL_KEYDOWN : SDL_KEYUP;
     switch (direction) {
     case ANALOG_UP:
-        vita_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_UP, SDLK_UP);
+        switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_UP, SDLK_UP);
         break;
     case ANALOG_DOWN:
-        vita_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_DOWN, SDLK_DOWN);
+        switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_DOWN, SDLK_DOWN);
         break;
     case ANALOG_LEFT:
-        vita_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_LEFT, SDLK_LEFT);
+        switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_LEFT, SDLK_LEFT);
         break;
     case ANALOG_RIGHT:
-        vita_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
+        switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
         break;
     }
 }
