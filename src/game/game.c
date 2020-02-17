@@ -47,7 +47,7 @@ int game_pre_init(void)
     scenario_settings_init();
     game_state_unpause();
 
-    if (!lang_load("c3.eng", "c3_mm.eng") && !lang_load("c3.rus", "c3_mm.rus")) {
+    if (!lang_load(0)) {
         errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return 0;
     }
@@ -103,7 +103,7 @@ int game_init(void)
 
 int game_init_editor(void)
 {
-    if (!lang_load("c3_map.eng", "c3_map_mm.eng")) {
+    if (!lang_load(1)) {
         errlog("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
         return 0;
     }
@@ -129,7 +129,7 @@ int game_init_editor(void)
 
 void game_exit_editor(void)
 {
-    if (!lang_load("c3.eng", "c3_mm.eng") && !lang_load("c3.rus", "c3_mm.rus")) {
+    if (!lang_load(0)) {
         errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return;
     }

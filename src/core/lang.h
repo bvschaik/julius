@@ -70,11 +70,10 @@ typedef struct {
 
 /**
  * Loads the language files
- * @param text_filename File with text strings
- * @param message_filename File with messages
+ * @param is_editor Whether to load the editor language files or the regular ones
  * @return boolean true on success, false on failure
  */
-int lang_load(const char *text_filename, const char *message_filename);
+int lang_load(int is_editor);
 
 /**
  * Gets a localized string
