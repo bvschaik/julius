@@ -326,7 +326,6 @@ static void main_loop(void)
         switch_finish_simulated_mouse_clicks();
         switch_handle_analog_sticks();
         switch_handle_virtual_keyboard();
-        switch_handle_repeat_keys();
         while (switch_poll_event(&event)) {
 #else
         while (SDL_PollEvent(&event)) {
