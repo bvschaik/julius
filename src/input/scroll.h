@@ -12,6 +12,7 @@ typedef enum {
 } scroll_type;
 
 int scroll_in_progress(void);
+int scroll_is_smooth(void);
 
 int scroll_get_direction(const mouse *m);
 
@@ -22,7 +23,7 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type);
 
 void scroll_start_touch_drag(const pixel_offset *position, touch_coords coords);
 int scroll_move_touch_drag(int original_x, int original_y, int current_x, int current_y, pixel_offset *position);
-void scroll_end_touch_drag(void);
+void scroll_end_touch_drag(int do_decay);
 int scroll_decay(pixel_offset *position);
 touch_coords scroll_get_original_touch_position(void);
 

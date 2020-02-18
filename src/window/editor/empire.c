@@ -319,7 +319,7 @@ static void handle_mouse(const mouse *m)
         if (t->has_ended) {
             data.is_scrolling = 0;
             data.finished_scroll = !touch_was_click(t);
-            scroll_end_touch_drag();
+            scroll_end_touch_drag(1);
         }
     }
     pixel_offset position;
@@ -334,8 +334,7 @@ static void handle_mouse(const mouse *m)
         if (!generic_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, generic_button_ok, 1, &data.focus_button_id)) {
             determine_selected_object(m);
             if (m->right.went_up) {
-                empire_clear_selected_object();
-                window_invalidate();
+                window_editor_map_show();
             }
             int selected_object = empire_selected_object();
             if (selected_object) {

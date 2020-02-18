@@ -26,6 +26,7 @@
 
 static struct {
     map_tile current_tile;
+    int selected_grid_offset;
     int capture_input;
 } data;
 
@@ -234,7 +235,7 @@ static void widget_city_handle_touch_scroll(const touch *t)
     }
 
     if (t->has_ended) {
-        scroll_end_touch_drag();
+        scroll_end_touch_drag(1);
     }
 }
 
@@ -249,43 +250,76 @@ static void widget_city_handle_last_touch(map_tile *tile)
             building_construction_cancel();
             return;
         }
-        if (handle_right_click_allow_building_info(tile)) {
-            scroll_end_touch_drag();
-            data.capture_input = 0;
-            window_building_info_show(tile->grid_offset);
-        }
     }
+}
+
+static int handle_cancel_construction_button(const touch *t)
+{
+    if (!building_construction_type()) {
+        return 0;
+    }
+    int x, y, width, height;
+    city_view_get_viewport(&x, &y, &width, &height);
+    int box_size = 5 * 16;
+    width -= box_size;
+
+    if (t->current_point.x < width || t->current_point.x >= width + box_size ||
+        t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
+        return 0;
+    }
+    if (building_construction_is_updatable() && building_construction_in_progress()) {
+        building_construction_cancel();
+    } else {
+        building_construction_set_type(BUILDING_NONE);
+    }
+    return 1;
 }
 
 static void widget_city_handle_first_touch(map_tile *tile)
 {
     const touch *first = get_earliest_touch();
 
-    if (touch_was_click(first) && handle_legion_click(tile)) {
-        return;
+    if (touch_was_click(first)) {
+        if (handle_cancel_construction_button(first) || handle_legion_click(tile)) {
+            return;
+        }
+        if (!building_construction_type() && handle_right_click_allow_building_info(tile)) {
+            scroll_end_touch_drag(0);
+            data.capture_input = 0;
+            window_building_info_show(tile->grid_offset);
+            return;
+        }
     }
 
     widget_city_handle_touch_scroll(first);
 
     if (building_construction_is_updatable()) {
-        if (first->has_started) {
-            build_start(tile);
-        }
-        if (building_construction_in_progress()) {
+        if (!building_construction_in_progress()) {
+            if (first->has_started) {
+                build_start(tile);
+            }
+        } else {
             build_move(tile);
             if (first->has_ended) {
-                build_end();
-                widget_city_clear_current_tile();
+                if (data.selected_grid_offset == tile->grid_offset) {
+                    build_end();
+                    widget_city_clear_current_tile();
+                } else {
+                    data.selected_grid_offset = tile->grid_offset;
+                }
             }
         }
         return;
     }
 
-    if (first->has_ended && data.capture_input) {
+    if (touch_was_click(first) && first->has_ended && data.capture_input &&
+        data.selected_grid_offset == tile->grid_offset) {
         build_start(tile);
         build_move(tile);
         build_end();
         widget_city_clear_current_tile();
+    } else if (first->has_ended) {
+        data.selected_grid_offset = tile->grid_offset;
     }
 }
 
@@ -305,7 +339,6 @@ static void widget_city_handle_touch(void)
         scroll_restore_margins();
     }
 
-    widget_city_handle_last_touch(tile);
     widget_city_handle_first_touch(tile);
 
     if (first->has_ended) {
@@ -347,6 +380,8 @@ void widget_city_handle_mouse(const mouse *m)
             if (handle_right_click_allow_building_info(tile)) {
                 window_building_info_show(tile->grid_offset);
             }
+        } else {
+            building_construction_cancel();
         }
     }
 }
@@ -434,5 +469,6 @@ void widget_city_get_tooltip(tooltip_context *c)
 
 void widget_city_clear_current_tile(void)
 {
+    data.selected_grid_offset = 0;
     data.current_tile.grid_offset = 0;
 }

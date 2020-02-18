@@ -63,6 +63,19 @@ static void draw_paused_and_time_left(void)
     }
 }
 
+static void draw_cancel_construction(void)
+{
+    if (!mouse_get()->is_touch || !building_construction_type()) {
+        return;
+    }
+    uint8_t cancel_button_text[] = { 'X', 0 };
+    int x, y, width, height;
+    city_view_get_viewport(&x, &y, &width, &height);
+    width -= 4 * 16;
+    outer_panel_draw(width, 40, 3, 3);
+    text_draw_centered(cancel_button_text, width, 58, 3 * 16, FONT_NORMAL_BLACK, 0);
+}
+
 static void draw_foreground(void)
 {
     widget_top_menu_draw(0);
@@ -70,6 +83,7 @@ static void draw_foreground(void)
     widget_sidebar_draw_foreground();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         draw_paused_and_time_left();
+        draw_cancel_construction();
     }
     widget_city_draw_construction_cost_and_size();
     if (window_is(WINDOW_CITY)) {

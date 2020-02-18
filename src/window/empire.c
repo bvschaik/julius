@@ -451,7 +451,7 @@ static void handle_mouse(const mouse *m)
         if (t->has_ended) {
             data.is_scrolling = 0;
             data.finished_scroll = !touch_was_click(t);
-            scroll_end_touch_drag();
+            scroll_end_touch_drag(1);
         }
     }
     pixel_offset position;
@@ -480,8 +480,7 @@ static void handle_mouse(const mouse *m)
     }
     determine_selected_object(m);
     if (m->right.went_up) {
-        empire_clear_selected_object();
-        window_invalidate();
+        window_city_show();
     }
     int selected_object = empire_selected_object();
     if (selected_object) {

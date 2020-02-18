@@ -202,6 +202,6 @@ int touch_to_mouse(void)
         }
         return 0;
     }
-    mouse_set_from_touch(first, get_latest_touch());
+    mouse_set_from_touch(first);
     return 1;
 }

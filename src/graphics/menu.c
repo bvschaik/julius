@@ -76,8 +76,8 @@ void menu_draw(menu_bar_item *menu, int focus_item_id)
             continue;
         }
         if (i == focus_item_id - 1) {
-            graphics_fill_rect(menu->x_start, y_offset - 2,
-                16 * menu->calculated_width_blocks, 16, COLOR_BLACK);
+            graphics_fill_rect(menu->x_start, y_offset - 4,
+                16 * menu->calculated_width_blocks, 20, COLOR_BLACK);
             lang_text_draw_colored(sub->text_group, sub->text_number,
                 menu->x_start + 8, y_offset, FONT_NORMAL_PLAIN, COLOR_ORANGE);
         } else {
@@ -97,8 +97,8 @@ static int get_menu_item(const mouse *m, menu_bar_item *menu)
         }
         if (menu->x_start <= m->x &&
             menu->x_start + 16 * menu->calculated_width_blocks > m->x &&
-            y_offset <= m->y &&
-            y_offset + 15 > m->y) {
+            y_offset - 2 <= m->y &&
+            y_offset + 19 > m->y) {
             return i + 1;
         }
         y_offset += MENU_ITEM_HEIGHT;

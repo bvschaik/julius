@@ -189,7 +189,7 @@ static int get_elapsed_ticks(void)
     if (building_construction_in_progress()) {
         return 0;
     }
-    if (scroll_in_progress()) {
+    if (scroll_in_progress() && !scroll_is_smooth()) {
         return 0;
     }
 

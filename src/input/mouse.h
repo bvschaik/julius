@@ -62,9 +62,8 @@ void mouse_set_inside_window(int inside);
 /**
  * Changes the mouse information from touch information
  * @param first The first touch
- * @param last The last touch
  */
-void mouse_set_from_touch(const touch *first, const touch *last);
+void mouse_set_from_touch(const touch *first);
 
 void mouse_reset_up_state(void);
 
