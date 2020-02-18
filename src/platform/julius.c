@@ -321,13 +321,11 @@ static void main_loop(void)
         vita_finish_simulated_mouse_clicks();
         vita_handle_analog_sticks();
         vita_handle_virtual_keyboard();
-        vita_handle_repeat_keys();
         while (vita_poll_event(&event)) {
 #elif defined(__SWITCH__)
         switch_finish_simulated_mouse_clicks();
         switch_handle_analog_sticks();
         switch_handle_virtual_keyboard();
-        switch_handle_repeat_keys();
         while (switch_poll_event(&event)) {
 #else
         while (SDL_PollEvent(&event)) {

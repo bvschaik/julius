@@ -26,6 +26,15 @@ enum {
     SWITCH_NUM_BUTTONS  = 16
 };
 
+enum
+{
+    ANALOG_LEFT = 0,
+    ANALOG_UP = 1,
+    ANALOG_RIGHT = 2,
+    ANALOG_DOWN = 3,
+    ANALOG_MAX = 4
+};
+
 int last_mouse_x = 0;
 int last_mouse_y = 0;
 int touch_mode = TOUCH_MODE_TOUCHPAD;
@@ -38,7 +47,8 @@ static int hires_dy = 0;
 static int vkbd_requested = 0;
 static int fast_mouse = 0;
 static int slow_mouse = 0;
-static int pressed_buttons[SWITCH_NUM_BUTTONS] = { 0 };
+static int pressed_buttons[SWITCH_NUM_BUTTONS];
+static int right_analog_state[ANALOG_MAX];
 static SDL_Keycode map_switch_button_to_sdlkey[SWITCH_NUM_BUTTONS] =
 {
     NO_MAPPING,     // SWITCH_PAD_A
@@ -58,6 +68,7 @@ static SDL_Keycode map_switch_button_to_sdlkey[SWITCH_NUM_BUTTONS] =
     SDLK_RIGHT,     // SWITCH_PAD_RIGHT
     SDLK_DOWN       // SWITCH_PAD_DOWN
 };
+#define ANALOG_DIRECTION_TO_SDLKEY_OFFSET 12
 
 static uint8_t map_switch_button_to_sdlmousebutton[SWITCH_NUM_BUTTONS] =
 {
@@ -85,6 +96,7 @@ static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, u
 static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32_t event_type);
 
 static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
+static void switch_create_key_event_for_direction(int direction, int key_pressed);
 
 int switch_poll_event(SDL_Event *event)
 {
@@ -184,21 +196,6 @@ int switch_poll_event(SDL_Event *event)
     return ret;
 }
 
-
-void switch_handle_repeat_keys(void)
-{
-    if (pressed_buttons[SWITCH_PAD_UP]) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_UP, SDLK_UP);
-    } else if (pressed_buttons[SWITCH_PAD_DOWN]) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DOWN, SDLK_DOWN);
-    }
-    if (pressed_buttons[SWITCH_PAD_LEFT]) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_LEFT, SDLK_LEFT);
-    } else if (pressed_buttons[SWITCH_PAD_RIGHT]) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
-    }
-}
-
 void switch_handle_analog_sticks(void)
 {
     if (!joy) {
@@ -233,17 +230,17 @@ void switch_handle_analog_sticks(void)
                 x = 0;
                 xrel = 0 - last_mouse_x;
             }
-            if (x > SWITCH_DISPLAY_WIDTH) {
-                x = SWITCH_DISPLAY_WIDTH;
-                xrel = SWITCH_DISPLAY_WIDTH - last_mouse_x;
+            if (x >= SWITCH_DISPLAY_WIDTH) {
+                x = SWITCH_DISPLAY_WIDTH - 1;
+                xrel = x - last_mouse_x;
             }
             if (y < 0) {
                 y = 0;
                 yrel = 0 - last_mouse_y;
             }
-            if (y > SWITCH_DISPLAY_HEIGHT) {
-                y = SWITCH_DISPLAY_HEIGHT;
-                yrel = SWITCH_DISPLAY_HEIGHT - last_mouse_y;
+            if (y >= SWITCH_DISPLAY_HEIGHT) {
+                y = SWITCH_DISPLAY_HEIGHT - 1;
+                yrel = y - last_mouse_y;
             }
             SDL_Event event;
             event.type = SDL_MOUSEMOTION;
@@ -261,58 +258,49 @@ void switch_handle_analog_sticks(void)
     float right_joy_dead_zone_squared = 10240.0*10240.0;
     float slope = 0.414214f; // tangent of 22.5 degrees for size of angular zones
 
-    if ((right_x * right_x + right_y * right_y) <= right_joy_dead_zone_squared) {
-        return;
-    }
+    int direction_states[ANALOG_MAX] = { 0, 0, 0, 0 };
 
-    int up = 0;
-    int down = 0;
-    int left = 0;
-    int right = 0;
-
-    if (right_y > 0 && right_x > 0) {
-        // upper right quadrant
-        if (right_y > slope * right_x) {
-            up = 1;
-        }
-        if (right_x > slope * right_y) {
-            right = 1;
-        }
-    } else if (right_y > 0 && right_x <= 0) {
-        // upper left quadrant
-        if (right_y > slope * (-right_x)) {
-            up = 1;
-        }
-        if ((-right_x) > slope * right_y) {
-            left = 1;
-        }
-    } else if (right_y <= 0 && right_x > 0) {
-        // lower right quadrant
-        if ((-right_y) > slope * right_x) {
-            down = 1;
-        }
-        if (right_x > slope * (-right_y)) {
-            right = 1;
-        }
-    } else if (right_y <= 0 && right_x <= 0) {
-        // lower left quadrant
-        if ((-right_y) > slope * (-right_x)) {
-            down = 1;
-        }
-        if ((-right_x) > slope * (-right_y)) {
-            left = 1;
+    if (right_x * right_x + right_y * right_y > right_joy_dead_zone_squared) {
+        if (right_y > 0 && right_x > 0) {
+            // upper right quadrant
+            if (right_y > slope *right_x) {
+                direction_states[ANALOG_UP] = 1;
+            }
+            if (right_x > slope *right_y) {
+                direction_states[ANALOG_RIGHT] = 1;
+            }
+        } else if (right_y > 0 && right_x <= 0) {
+            // upper left quadrant
+            if (right_y > slope * -right_x) {
+                direction_states[ANALOG_UP] = 1;
+            }
+            if (-right_x > slope *right_y) {
+                direction_states[ANALOG_LEFT] = 1;
+            }
+        } else if (right_y <= 0 && right_x > 0) {
+            // lower right quadrant
+            if (-right_y > slope *right_x) {
+                direction_states[ANALOG_DOWN] = 1;
+            }
+            if (right_x > slope * -right_y) {
+                direction_states[ANALOG_RIGHT] = 1;
+            }
+        } else if (right_y <= 0 && right_x <= 0) {
+            // lower left quadrant
+            if (-right_y > slope * -right_x) {
+                direction_states[ANALOG_DOWN] = 1;
+            }
+            if (-right_x > slope * -right_y) {
+                direction_states[ANALOG_LEFT] = 1;
+            }
         }
     }
 
-    if (!pressed_buttons[SWITCH_PAD_UP] && up) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_UP, SDLK_UP);
-    } else if (!pressed_buttons[SWITCH_PAD_DOWN] && down) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DOWN, SDLK_DOWN);
-    }
-    if (!pressed_buttons[SWITCH_PAD_LEFT] && left) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_LEFT, SDLK_LEFT);
-    } else if (!pressed_buttons[SWITCH_PAD_RIGHT] && right) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
+    for (int direction = 0; direction < ANALOG_MAX; ++direction) {
+        if (right_analog_state[direction] != direction_states[direction]) {
+            right_analog_state[direction] = direction_states[direction];
+            switch_create_key_event_for_direction(direction, direction_states[direction]);
+        }
     }
 }
 
@@ -473,4 +461,23 @@ static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancod
     event.key.keysym.sym = key;
     event.key.keysym.mod = 0;
     SDL_PushEvent(&event);
+}
+
+static void switch_create_key_event_for_direction(int direction, int key_pressed)
+{
+    uint32_t event_type = key_pressed ? SDL_KEYDOWN : SDL_KEYUP;
+    switch (direction) {
+        case ANALOG_UP:
+            switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_UP, SDLK_UP);
+            break;
+        case ANALOG_DOWN:
+            switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_DOWN, SDLK_DOWN);
+            break;
+        case ANALOG_LEFT:
+            switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_LEFT, SDLK_LEFT);
+            break;
+        case ANALOG_RIGHT:
+            switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
+            break;
+    }
 }
