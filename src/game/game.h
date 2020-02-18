@@ -7,6 +7,8 @@ int game_init(void);
 
 int game_init_editor(void);
 
+int game_reload_language(void);
+
 void game_run(void);
 
 void game_draw(void);
