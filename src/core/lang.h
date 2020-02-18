@@ -69,6 +69,13 @@ typedef struct {
 } lang_message;
 
 /**
+ * Checks whether the directory contains language files
+ * @param dir Directory to check
+ * @return boolean true if it contains language files, false if not
+ */
+int lang_dir_is_valid(const char *dir);
+
+/**
  * Loads the language files
  * @param is_editor Whether to load the editor language files or the regular ones
  * @return boolean true on success, false on failure

@@ -1,10 +1,12 @@
 #include "core/lang.h"
 
 #include "core/buffer.h"
+#include "core/file.h"
 #include "core/io.h"
 #include "core/string.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_TEXT_ENTRIES 1000
 #define MAX_TEXT_DATA 200000
@@ -35,6 +37,26 @@ static struct {
     lang_message message_entries[MAX_MESSAGE_ENTRIES];
     uint8_t message_data[MAX_MESSAGE_DATA];
 } data;
+
+static int file_exists_in_dir(const char *dir, const char *file)
+{
+    char path[2 * FILE_NAME_MAX];
+    strncpy(path, dir, 2 * FILE_NAME_MAX);
+    strncat(path, "/", 2 * FILE_NAME_MAX);
+    strncat(path, file, 2 * FILE_NAME_MAX);
+    return file_exists(path, NOT_LOCALIZED);
+}
+
+int lang_dir_is_valid(const char *dir)
+{
+    if (file_exists_in_dir(dir, FILE_TEXT_ENG) && file_exists_in_dir(dir, FILE_MM_ENG)) {
+        return 1;
+    }
+    if (file_exists_in_dir(dir, FILE_TEXT_RUS) && file_exists_in_dir(dir, FILE_MM_RUS)) {
+        return 1;
+    }
+    return 0;
+}
 
 static void parse_text(buffer *buf)
 {
