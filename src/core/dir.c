@@ -53,7 +53,7 @@ static int compare_lower(const void *va, const void *vb)
     return string_compare_case_insensitive(*(const char**)va, *(const char**)vb);
 }
 
-static int add_file_with_extension_to_listing(const char *filename)
+static int add_to_listing(const char *filename)
 {
     if (data.listing.num_files >= data.max_files) {
         expand_dir_listing();
@@ -67,11 +67,16 @@ static int add_file_with_extension_to_listing(const char *filename)
 const dir_listing *dir_find_files_with_extension(const char *extension)
 {
     clear_dir_listing();
-    if (platform_file_manager_list_directory_contents(0, TYPE_FILE, extension, add_file_with_extension_to_listing) == LIST_ERROR) {
-        return &data.listing;
-    }
+    platform_file_manager_list_directory_contents(0, TYPE_FILE, extension, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
+    return &data.listing;
+}
 
+const dir_listing *dir_find_all_subdirectories(void)
+{
+    clear_dir_listing();
+    platform_file_manager_list_directory_contents(0, TYPE_DIR, 0, add_to_listing);
+    qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
     return &data.listing;
 }
 

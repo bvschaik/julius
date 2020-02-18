@@ -7,7 +7,6 @@
 #include <string.h>
 
 #define MAX_LINE 100
-#define MAX_STRING_VALUE 64
 
 static const char *INI_FILENAME = "julius.ini";
 
@@ -29,7 +28,7 @@ static const char *ini_string_keys[] = {
 };
 
 static int values[CONFIG_MAX_ENTRIES];
-static char string_values[CONFIG_STRING_MAX_ENTRIES][MAX_STRING_VALUE];
+static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
 int config_get(config_key key)
 {
@@ -55,7 +54,7 @@ void config_set_string(config_string_key key, const char *value)
     if (!value) {
         string_values[key][0] = 0;
     } else {
-        strncpy(string_values[key], value, MAX_STRING_VALUE);
+        strncpy(string_values[key], value, CONFIG_STRING_VALUE_MAX);
     }
 }
 
@@ -106,7 +105,7 @@ void config_load(void)
                     const char *value = &equals[1];
                     log_info("Config key", ini_string_keys[i], 0);
                     log_info("Config value", value, 0);
-                    strncpy(string_values[i], value, MAX_STRING_VALUE);
+                    strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX);
                     break;
                 }
             }
