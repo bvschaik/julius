@@ -260,7 +260,7 @@ void switch_handle_analog_sticks(void)
 
     int direction_states[ANALOG_MAX] = { 0, 0, 0, 0 };
 
-    if ((right_x * right_x + right_y * right_y) > right_joy_dead_zone_squared) {
+    if (right_x * right_x + right_y * right_y > right_joy_dead_zone_squared) {
         if (right_y > 0 && right_x > 0) {
             // upper right quadrant
             if (right_y > slope *right_x) {
@@ -271,26 +271,26 @@ void switch_handle_analog_sticks(void)
             }
         } else if (right_y > 0 && right_x <= 0) {
             // upper left quadrant
-            if (right_y > slope *(-right_x)) {
+            if (right_y > slope * -right_x) {
                 direction_states[ANALOG_UP] = 1;
             }
-            if ((-right_x) > slope *right_y) {
+            if (-right_x > slope *right_y) {
                 direction_states[ANALOG_LEFT] = 1;
             }
         } else if (right_y <= 0 && right_x > 0) {
             // lower right quadrant
-            if ((-right_y) > slope *right_x) {
+            if (-right_y > slope *right_x) {
                 direction_states[ANALOG_DOWN] = 1;
             }
-            if (right_x > slope *(-right_y)) {
+            if (right_x > slope * -right_y) {
                 direction_states[ANALOG_RIGHT] = 1;
             }
         } else if (right_y <= 0 && right_x <= 0) {
             // lower left quadrant
-            if ((-right_y) > slope *(-right_x)) {
+            if (-right_y > slope * -right_x) {
                 direction_states[ANALOG_DOWN] = 1;
             }
-            if ((-right_x) > slope *(-right_y)) {
+            if (-right_x > slope * -right_y) {
                 direction_states[ANALOG_LEFT] = 1;
             }
         }
@@ -467,17 +467,17 @@ static void switch_create_key_event_for_direction(int direction, int key_pressed
 {
     uint32_t event_type = key_pressed ? SDL_KEYDOWN : SDL_KEYUP;
     switch (direction) {
-    case ANALOG_UP:
-        switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_UP, SDLK_UP);
-        break;
-    case ANALOG_DOWN:
-        switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_DOWN, SDLK_DOWN);
-        break;
-    case ANALOG_LEFT:
-        switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_LEFT, SDLK_LEFT);
-        break;
-    case ANALOG_RIGHT:
-        switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
-        break;
+        case ANALOG_UP:
+            switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_UP, SDLK_UP);
+            break;
+        case ANALOG_DOWN:
+            switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_DOWN, SDLK_DOWN);
+            break;
+        case ANALOG_LEFT:
+            switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_LEFT, SDLK_LEFT);
+            break;
+        case ANALOG_RIGHT:
+            switch_create_and_push_sdlkey_event(event_type, SDL_SCANCODE_RIGHT, SDLK_RIGHT);
+            break;
     }
 }
