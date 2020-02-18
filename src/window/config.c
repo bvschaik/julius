@@ -1,7 +1,9 @@
 #include "config.h"
 
 #include "core/config.h"
+#include "core/dir.h"
 #include "core/image_group.h"
+#include "core/lang.h"
 #include "core/string.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
@@ -12,8 +14,11 @@
 #include "graphics/window.h"
 #include "window/main_menu.h"
 
+#include <string.h>
+
 #define NUM_CHECKBOXES 9
 #define NUM_BOTTOM_BUTTONS 3
+#define MAX_LANGUAGE_DIRS 20
 
 static void toggle_switch(int id, int param2);
 static void button_reset_defaults(int param1, int param2);
@@ -47,6 +52,10 @@ static struct {
     int focus_button;
     int bottom_focus_button;
     int values[CONFIG_MAX_ENTRIES];
+    char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
+    char language_options_data[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
+    char *language_options[MAX_LANGUAGE_DIRS];
+    int num_language_options;
 } data;
 
 static void init(void)
@@ -54,6 +63,16 @@ static void init(void)
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         config_key key = checkbox_buttons[i].parameter1;
         data.values[key] = config_get(key);
+    }
+    data.num_language_options = 0;
+    const dir_listing *subdirs = dir_find_all_subdirectories();
+    for (int i = 0; i < subdirs->num_files; i++) {
+        if (lang_dir_is_valid(subdirs->files[i])) {
+            int opt_id = data.num_language_options;
+            strncpy(data.language_options_data[opt_id], subdirs->files[i], CONFIG_STRING_VALUE_MAX);
+            data.language_options[opt_id] = data.language_options_data[opt_id];
+            data.num_language_options++;
+        }
     }
 }
 
