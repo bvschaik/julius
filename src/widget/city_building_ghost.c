@@ -274,53 +274,28 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
     }
 }
 
-static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
+static int get_aqueduct_image(int grid_offset)
 {
-    int map_x = tile->x - 1;
-    int map_y = tile->y - 1;
-    int blocked = 0;
-    if (building_construction_in_progress()) {
-        if (!building_construction_cost()) {
-            blocked = 1;
-        }
-    } else {
-        if (map_building_is_reservoir(map_x, map_y)) {
-            blocked = 0;
-        } else if (!map_tiles_are_clear(map_x, map_y, 3, TERRAIN_ALL)) {
-            blocked = 1;
-        }
-    }
-    if (city_finance_out_of_money()) {
-        blocked = 1;
-    }
-    if (building_construction_in_progress()) {
-        int x_start, y_start;
-        building_construction_get_view_position(&x_start, &y_start);
-        y_start -= 30;
-        if (blocked) {
-            for (int i = 0; i < 9; i++) {
-                draw_flat_tile(x_start + X_VIEW_OFFSETS[i], y_start + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
+    int image_id = image_group(GROUP_BUILDING_AQUEDUCT);
+    const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 1);
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        int group_offset = img->group_offset;
+        if (!img->aqueduct_offset) {
+            if (map_terrain_is(grid_offset - 162, TERRAIN_ROAD)) {
+                group_offset = 3;
+            } else {
+                group_offset = 2;
             }
-        } else {
-            draw_building(image_group(GROUP_BUILDING_RESERVOIR), x_start, y_start);
         }
-    }
-    // mouse pointer = center tile of reservoir instead of north, correct here:
-    y -= 30;
-    if (blocked) {
-        for (int i = 0; i < 9; i++) {
-            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
+        if (map_tiles_is_paved_road(grid_offset)) {
+            image_id += group_offset + 13;
+        } else {
+            image_id += group_offset + 21;
         }
     } else {
-        int image_id = image_group(GROUP_BUILDING_RESERVOIR);
-        draw_building(image_id, x, y);
-        if (map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER)) {
-            const image *img = image_get(image_id);
-            int x_water = x - 58 + img->sprite_offset_x - 2;
-            int y_water = y + img->sprite_offset_y - (img->height - 90);
-            image_draw_masked(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
-        }
+        image_id += img->group_offset + 15;
     }
+    return image_id;
 }
 
 static void draw_aqueduct(const map_tile *tile, int x, int y)
@@ -344,26 +319,84 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
     if (blocked) {
         draw_flat_tile(x, y, COLOR_MASK_RED);
     } else {
-        int image_id = image_group(GROUP_BUILDING_AQUEDUCT);
-        const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 0);
-        if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-            int group_offset = img->group_offset;
-            if (!img->aqueduct_offset) {
-                if (map_terrain_is(grid_offset - 162, TERRAIN_ROAD)) {
-                    group_offset = 3;
-                } else {
-                    group_offset = 2;
-                }
-            }
-            if (map_tiles_is_paved_road(grid_offset)) {
-                image_id += group_offset + 13;
-            } else {
-                image_id += group_offset + 21;
+        draw_building(get_aqueduct_image(grid_offset), x, y);
+    }
+}
+
+static void draw_aqueducts_around_reservoir(int grid_offset, int x, int y)
+{
+    grid_offset -= GRID_SIZE + 1;
+    map_tile tile;
+    for (int i = 9; i < 16; ++i) {
+        tile.grid_offset = grid_offset + TILE_GRID_OFFSETS[0][i];
+        if (map_terrain_is(tile.grid_offset, TERRAIN_AQUEDUCT)) {
+            int image_id = get_aqueduct_image(tile.grid_offset);
+            image_draw_isometric_footprint(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], 0);
+            image_draw_isometric_top(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], 0);
+        }
+    }
+}
+
+static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
+{
+    int map_x = tile->x - 1;
+    int map_y = tile->y - 1;
+    int blocked = 0;
+    if (building_construction_in_progress()) {
+        if (!building_construction_cost()) {
+            blocked = 1;
+        }
+    } else {
+        if (map_building_is_reservoir(map_x, map_y)) {
+            blocked = 0;
+        } else if (!map_tiles_are_clear(map_x, map_y, 3, TERRAIN_ALL)) {
+            blocked = 1;
+        }
+    }
+    if (city_finance_out_of_money()) {
+        blocked = 1;
+    }
+    int draw_later = 0;
+    int x_start, y_start, offset;
+    if (building_construction_in_progress()) {
+        building_construction_get_view_position(&x_start, &y_start);
+        y_start -= 30;
+        if (blocked) {
+            for (int i = 0; i < 9; i++) {
+                draw_flat_tile(x_start + X_VIEW_OFFSETS[i], y_start + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
             }
         } else {
-            image_id += img->group_offset + 15;
+            offset = city_view_pixels_to_grid_offset(x_start, y_start);
+            if (map_grid_offset_to_x(offset) - 1 > map_x || map_grid_offset_to_y(offset) - 1 > map_y) {
+                draw_later = 1;
+            } else {
+                draw_building(image_group(GROUP_BUILDING_RESERVOIR), x_start, y_start);
+                draw_aqueducts_around_reservoir(offset + GRID_SIZE + 2, x_start, y_start);
+            }
         }
+    }
+    // mouse pointer = center tile of reservoir instead of north, correct here:
+    y -= 30;
+    if (blocked) {
+        for (int i = 0; i < 9; i++) {
+            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
+        }
+    } else {
+        int image_id = image_group(GROUP_BUILDING_RESERVOIR);
         draw_building(image_id, x, y);
+        if (building_construction_in_progress()) {
+            draw_aqueducts_around_reservoir(tile->grid_offset, x, y);
+        }
+        if (map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER)) {
+            const image *img = image_get(image_id);
+            int x_water = x - 58 + img->sprite_offset_x - 2;
+            int y_water = y + img->sprite_offset_y - (img->height - 90);
+            image_draw_masked(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
+        }
+        if (draw_later) {
+            draw_building(image_group(GROUP_BUILDING_RESERVOIR), x_start, y_start);
+            draw_aqueducts_around_reservoir(offset + GRID_SIZE + 2, x_start, y_start);
+        }
     }
 }
 
