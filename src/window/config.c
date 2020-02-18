@@ -5,14 +5,17 @@
 #include "core/image_group.h"
 #include "core/lang.h"
 #include "core/string.h"
+#include "game/game.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "window/main_menu.h"
+#include "window/select_list.h"
 
 #include <string.h>
 
@@ -21,19 +24,24 @@
 #define MAX_LANGUAGE_DIRS 20
 
 static void toggle_switch(int id, int param2);
+static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
 
 static generic_button checkbox_buttons[] = {
-    { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO },
-    { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
-    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING },
-    { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE },
-    { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_ALLOW_CYCLING_TEMPLES },
-    { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE },
-    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
-    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
-    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS }
+    { 20, 102, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO },
+    { 20, 126, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
+    { 20, 150, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING },
+    { 20, 174, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE },
+    { 20, 198, 20, 20, toggle_switch, button_none, CONFIG_UI_ALLOW_CYCLING_TEMPLES },
+    { 20, 222, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE },
+    { 20, 280, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
+    { 20, 304, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
+    { 20, 328, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS }
+};
+
+static generic_button language_button = {
+    120, 50, 150, 24, button_language_select, button_none
 };
 
 static generic_button bottom_buttons[] = {
@@ -50,12 +58,16 @@ static const char *bottom_button_texts[] = {
 
 static struct {
     int focus_button;
+    int language_focus_button;
     int bottom_focus_button;
     int values[CONFIG_MAX_ENTRIES];
     char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
-    char language_options_data[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
-    char *language_options[MAX_LANGUAGE_DIRS];
+
+    uint8_t language_options_data[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
+    uint8_t *language_options[MAX_LANGUAGE_DIRS];
+    char language_options_utf8[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
     int num_language_options;
+    int selected_language_option;
 } data;
 
 static void init(void)
@@ -64,13 +76,28 @@ static void init(void)
         config_key key = checkbox_buttons[i].parameter1;
         data.values[key] = config_get(key);
     }
-    data.num_language_options = 0;
+    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
+        const char *value = config_get_string(i);
+        if (value) {
+            strncpy(data.string_values[i], value, CONFIG_STRING_VALUE_MAX);
+        } else {
+            data.string_values[i][0] = 0;
+        }
+    }
+
+    string_copy(string_from_ascii("(default)"), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
+    data.language_options[0] = data.language_options_data[0];
+    data.num_language_options = 1;
     const dir_listing *subdirs = dir_find_all_subdirectories();
     for (int i = 0; i < subdirs->num_files; i++) {
         if (lang_dir_is_valid(subdirs->files[i])) {
             int opt_id = data.num_language_options;
-            strncpy(data.language_options_data[opt_id], subdirs->files[i], CONFIG_STRING_VALUE_MAX);
+            strncpy(data.language_options_utf8[opt_id], subdirs->files[i], CONFIG_STRING_VALUE_MAX);
+            encoding_from_utf8(subdirs->files[i], data.language_options_data[opt_id], CONFIG_STRING_VALUE_MAX);
             data.language_options[opt_id] = data.language_options_data[opt_id];
+            if (strcmp(data.string_values[CONFIG_STRING_UI_LANGUAGE_DIR], subdirs->files[i]) == 0) {
+                data.selected_language_option = opt_id;
+            }
             data.num_language_options++;
         }
     }
@@ -87,17 +114,22 @@ static void draw_background(void)
 
     text_draw_centered(string_from_ascii("Julius configuration options"), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
-    text_draw(string_from_ascii("User interface changes"), 20, 53, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Play intro videos"), 50, 77, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Extra information in the control panel"), 50, 101, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Enable smooth scrolling"), 50, 125, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Improve visual feedback when clearing land"), 50, 149, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Allow building each temple in succession"), 50, 173, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Show range when building reservoirs, fountains and wells"), 50, 197, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Gameplay changes"), 20, 245, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix immigration bug on very hard"), 50, 269, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix 100-year-old ghosts"), 50, 293, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix Emperor change and survival time in custom missions"), 50, 317, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Language:"), 20, 56, FONT_NORMAL_BLACK, 0);
+    text_draw_centered(data.language_options[data.selected_language_option],
+        language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
+
+    text_draw(string_from_ascii("User interface changes"), 20, 83, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Play intro videos"), 50, 107, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Extra information in the control panel"), 50, 131, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Enable smooth scrolling"), 50, 155, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Improve visual feedback when clearing land"), 50, 179, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Allow building each temple in succession"), 50, 203, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Show range when building reservoirs, fountains and wells"), 50, 227, FONT_NORMAL_BLACK, 0);
+
+    text_draw(string_from_ascii("Gameplay changes"), 20, 261, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fix immigration bug on very hard"), 50, 285, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fix 100-year-old ghosts"), 50, 309, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fix Emperor change and survival time in custom missions"), 50, 333, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];
@@ -123,6 +155,7 @@ static void draw_foreground(void)
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         button_border_draw(bottom_buttons[i].x, bottom_buttons[i].y, bottom_buttons[i].width, bottom_buttons[i].height, data.bottom_focus_button == i + 1);
     }
+    button_border_draw(language_button.x, language_button.y, language_button.width, language_button.height, data.language_focus_button == 1);
     graphics_reset_dialog();
 }
 
@@ -131,12 +164,31 @@ static void handle_mouse(const mouse *m)
     const mouse *m_dialog = mouse_in_dialog(m);
     generic_buttons_handle_mouse(m_dialog, 0, 0, checkbox_buttons, NUM_CHECKBOXES, &data.focus_button);
     generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
+    generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
 }
 
 static void toggle_switch(int key, int param2)
 {
     data.values[key] = 1 - data.values[key];
     window_invalidate();
+}
+
+static void set_language(int index)
+{
+    if (index == 0) {
+        data.string_values[CONFIG_STRING_UI_LANGUAGE_DIR][0] = 0;
+    } else {
+        strncpy(data.string_values[CONFIG_STRING_UI_LANGUAGE_DIR], data.language_options_utf8[index], CONFIG_STRING_VALUE_MAX);
+    }
+    data.selected_language_option = index;
+}
+static void button_language_select(int param1, int param2)
+{
+    window_select_list_show_text(
+        screen_dialog_offset_x() + language_button.x + language_button.width - 10,
+        screen_dialog_offset_y() + language_button.y - 5,
+        data.language_options, data.num_language_options, set_language
+    );
 }
 
 static void button_reset_defaults(int param1, int param2)
@@ -152,6 +204,12 @@ static void button_close(int save, int param2)
         for (int i = 0; i < NUM_CHECKBOXES; i++) {
             config_key key = checkbox_buttons[i].parameter1;
             config_set(key, data.values[key]);
+        }
+        for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
+            config_set_string(i, data.string_values[i]);
+        }
+        if (!game_reload_language()) {
+            // TODO notify user that language is invalid?
         }
     }
     window_main_menu_show(0);
