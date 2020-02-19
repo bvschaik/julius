@@ -19,6 +19,7 @@
 #include "scenario/invasion.h"
 #include "window/advisors.h"
 #include "window/building_info.h"
+#include "window/file_dialog.h"
 #include "window/numeric_input.h"
 #include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
@@ -160,10 +161,38 @@ static void input_number(int number)
     }
 }
 
+static void load_file(void)
+{
+    if (window_is(WINDOW_EDITOR_MAP)) {
+        window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_LOAD);
+    } else if (window_is(WINDOW_CITY) || window_is(WINDOW_MAIN_MENU)) {
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+    }
+}
+
+static void save_file(void)
+{
+    if (window_is(WINDOW_EDITOR_MAP)) {
+        window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
+    } else if (window_is(WINDOW_CITY)) {
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
+    }
+}
+
 void hotkey_character(int c, int with_ctrl, int with_alt)
 {
-    if (with_ctrl && c == 'a') {
-        editor_toggle_battle_info();
+    if (with_ctrl) {
+        switch (c) {
+            case 'a':
+                editor_toggle_battle_info();
+                break;
+            case 'o':
+                load_file();
+                break;
+            case 's':
+                save_file();
+                break;
+        }
         return;
     }
     if (with_alt) {
