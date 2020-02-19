@@ -10,7 +10,7 @@ You have two main options in how you want to build Julius. You can either:
 
 1. Make sure you have [Microsoft Visual Studio](https://visualstudio.microsoft.com/vs/) installed.
    Please note that only Visual Studio 2017 (fully updated) or Visual Studio 2019 can be directly used.
-   You need to have `C++ CMake tools for Windows` installed for Visual Studio what you can install via
+   You need to have `C++ CMake tools for Windows` installed for Visual Studio that you can install via
    Visual Studio Installer as an optional package.
    These instructions assume you are using Visual Studio 2019.
 
