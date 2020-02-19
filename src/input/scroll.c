@@ -1,5 +1,6 @@
 #include "scroll.h"
 
+#include "core/calc.h"
 #include "core/config.h"
 #include "core/direction.h"
 #include "core/time.h"
@@ -122,13 +123,7 @@ int scroll_in_progress(void)
 
 static int get_scroll_speed_factor(void)
 {
-    int factor = (100 - setting_scroll_speed()) / 10;
-    if (factor < 0) {
-        factor = 0;
-    } else if (factor > 10) {
-        factor = 10;
-    }
-    return factor;
+    return calc_bound((100 - setting_scroll_speed()) / 10, 0, 10);
 }
 
 static int should_scroll(void)
