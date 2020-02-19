@@ -261,7 +261,7 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset)
         } else if (b->type == BUILDING_ROADBLOCK) {
             is_road = 0;
 	}
-       else if (b->type == BUILDING_GRANARY) {
+       else if (b->type == BUILDING_GRANARY || b->type == BUILDING_TRIUMPHAL_ARCH) {
             if (map_routing_citizen_is_road(grid_offset)) {
                 is_road = 1;
             }
