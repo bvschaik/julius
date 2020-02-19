@@ -1,15 +1,18 @@
 #include "hotkey.h"
 
+#include "building/construction.h"
 #include "building/type.h"
 #include "city/finance.h"
 #include "city/victory.h"
 #include "city/view.h"
 #include "city/warning.h"
+#include "editor/editor.h"
 #include "figure/formation.h"
 #include "game/orientation.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
+#include "game/undo.h"
 #include "graphics/screenshot.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
@@ -19,11 +22,14 @@
 #include "scenario/invasion.h"
 #include "window/advisors.h"
 #include "window/building_info.h"
+#include "window/file_dialog.h"
+#include "window/main_menu.h"
 #include "window/numeric_input.h"
 #include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/city.h"
 #include "window/editor/empire.h"
+#include "window/editor/map.h"
 
 static struct {
     int is_cheating;
@@ -160,10 +166,58 @@ static void input_number(int number)
     }
 }
 
+static void new_map(void)
+{
+    if (editor_is_active() && window_is(WINDOW_EDITOR_MAP)) {
+        // TODO: here we need the size selection for triggering window_select_list_show?
+    } else if (window_is(WINDOW_CITY)) {
+        building_construction_clear_type();
+        game_undo_disable();
+        game_state_reset_overlay();
+        window_main_menu_show(1);
+    }
+}
+
+static void load_file(void)
+{
+    if (editor_is_active() && window_is(WINDOW_EDITOR_MAP)) {
+        window_editor_map_show();
+        window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_LOAD);
+    } else if (window_is(WINDOW_CITY)) {
+        building_construction_clear_type();
+        window_city_show();
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+    }
+}
+
+static void save_file(void)
+{
+    if (editor_is_active() && window_is(WINDOW_EDITOR_MAP)) {
+        window_editor_map_show();
+        window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
+    } else if (window_is(WINDOW_CITY)) {
+        window_city_show();
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
+    }
+}
+
 void hotkey_character(int c, int with_ctrl, int with_alt)
 {
-    if (with_ctrl && c == 'a') {
-        editor_toggle_battle_info();
+    if (with_ctrl) {
+        switch (c) {
+            case 'a':
+                editor_toggle_battle_info();
+                break;
+            case 'o':
+                load_file();
+                break;
+            case 's':
+                save_file();
+                break;
+            case 'n':
+                new_map();
+                break;
+        }
         return;
     }
     if (with_alt) {
