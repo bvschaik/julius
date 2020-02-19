@@ -76,3 +76,51 @@ artifacts:
     name: julius
   - path: julius-$(DEPLOY_VERSION)-windows.zip
     name: julius-dist
+<<<<<<< HEAD:appveyor.yml
+=======
+
+before_deploy:
+  - echo Deploying to %DEPLOY_VERSION%
+
+deploy:
+- provider: BinTray
+  username: bvschaik
+  api_key:
+    secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
+  subject: bvschaik
+  repo: julius
+  package: windows-unstable
+  version: $(DEPLOY_VERSION)
+  artifact: julius-dist
+  publish: true
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: false
+    CMAKE_BUILD_TYPE: Release
+- provider: BinTray
+  username: bvschaik
+  api_key:
+    secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
+  subject: bvschaik
+  repo: julius
+  package: windows-release
+  version: $(DEPLOY_VERSION)
+  artifact: julius-dist
+  publish: true
+  on:
+    APPVEYOR_REPO_TAG: true
+    CMAKE_BUILD_TYPE: Release
+- provider: BinTray
+  username: bvschaik
+  api_key:
+    secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
+  subject: bvschaik
+  repo: julius-branches
+  package: windows
+  version: $(DEPLOY_VERSION)
+  artifact: julius-dist
+  publish: true
+  on:
+    branch: /feature\/.*/
+    CMAKE_BUILD_TYPE: Release
+>>>>>>> 2088c4915186da35a4e8a6c8308566be733b98c6:.appveyor.yml

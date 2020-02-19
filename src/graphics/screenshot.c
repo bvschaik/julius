@@ -2,6 +2,7 @@
 
 #include "city/view.h"
 #include "core/buffer.h"
+#include "core/config.h"
 #include "core/file.h"
 #include "core/log.h"
 #include "graphics/screen.h"
@@ -10,98 +11,177 @@
 #include "map/grid.h"
 #include "widget/city_without_overlay.h"
 
+#include "png/png.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#define HEADER_SIZE 26
+#define TOP_MENU_HEIGHT 24
 #define TILE_X_SIZE 60
 #define TILE_Y_SIZE 30
 #define IMAGE_HEIGHT_CHUNK TILE_Y_SIZE
-#define BMP_BITS_PER_PIXEL 24
-#define BMP_BYTES_PER_PIXEL (BMP_BITS_PER_PIXEL / 8)
+#define IMAGE_BYTES_PER_PIXEL 3
 
 enum {
     FULL_CITY_SCREENSHOT = 0,
-    DISPLAY_SCREENSHOT = 1
+    DISPLAY_SCREENSHOT = 1,
+    MAX_SCREENSHOT_TYPES = 2
 };
 
-static const char filename_format[] = "full city %Y-%m-%d %H.%M.%S.bmp";
+static const char filename_formats[MAX_SCREENSHOT_TYPES][32] = {
+    "full city %Y-%m-%d %H.%M.%S.png",
+    "city %Y-%m-%d %H.%M.%S.png",
+};
 
 static void full_city_screenshot(void);
 
 static struct {
     int width;
     int height;
-    int scanline_size;
+    int row_size;
+    int rows_in_memory;
+    int current_y;
+    int final_y;
     uint8_t *pixels;
-} bmp_chunk;
+    FILE *fp;
+    png_structp png_ptr;
+    png_infop info_ptr;
+} image;
 
-static void free_bmp_chunk(void)
+static void image_free(void)
 {
-    bmp_chunk.width = 0;
-    bmp_chunk.height = 0;
-    bmp_chunk.scanline_size = 0;
-    free(bmp_chunk.pixels);
-    bmp_chunk.pixels = 0;
+    image.width = 0;
+    image.height = 0;
+    image.row_size = 0;
+    image.rows_in_memory = 0;
+    free(image.pixels);
+    image.pixels = 0;
+    if (image.fp) {
+        file_close(image.fp);
+        image.fp = 0;
+    }
+    png_destroy_write_struct(&image.png_ptr, &image.info_ptr);
 }
 
-static int create_bmp_chunk(int width, int height)
+static int image_create(int width, int height, int rows_in_memory)
 {
-    free(bmp_chunk.pixels);
-    if (!width || !height) {
+    image_free();
+    if (!width || !height || !rows_in_memory) {
         return 0;
     }
-    int scanline_padding = 4 - (width * BMP_BYTES_PER_PIXEL) % 4;
-    if (scanline_padding == 4) {
-        scanline_padding = 0;
-    }
-    bmp_chunk.width = width;
-    bmp_chunk.height = height;
-    bmp_chunk.scanline_size = width * BMP_BYTES_PER_PIXEL + scanline_padding;
-    bmp_chunk.pixels = (uint8_t *) malloc(bmp_chunk.scanline_size * height);
-    if (!bmp_chunk.pixels) {
-        free_bmp_chunk();
+    image.png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
+    if(!image.png_ptr) {
         return 0;
     }
-    memset(bmp_chunk.pixels, 0, bmp_chunk.scanline_size * height);
+    image.info_ptr = png_create_info_struct(image.png_ptr);
+    if (!image.info_ptr) {
+        image_free();
+        return 0;
+    }
+    png_set_compression_level(image.png_ptr, 3);
+    image.width = width;
+    image.height = height;
+    image.row_size = width * IMAGE_BYTES_PER_PIXEL;
+    image.rows_in_memory = rows_in_memory;
+    image.pixels = (uint8_t *) malloc(image.row_size);
+    if (!image.pixels) {
+        image_free();
+        return 0;
+    }
+    memset(image.pixels, 0, image.row_size);
     return 1;
 }
 
 static const char *generate_filename(int city_screenshot)
 {
-    static char filename[100];
+    static char filename[FILE_NAME_MAX];
     time_t curtime = time(NULL);
     struct tm *loctime = localtime(&curtime);
-
-    strftime(filename, 100, filename_format + city_screenshot * 5 * sizeof(char), loctime);
-
+    strftime(filename, FILE_NAME_MAX, filename_formats[city_screenshot], loctime);
     return filename;
 }
 
-static void write_bmp_header(buffer *buf, int full_height)
+int image_begin_io(const char *filename)
 {
-    buffer_write_i8(buf, 'B');
-    buffer_write_i8(buf, 'M');
-    buffer_write_i32(buf, HEADER_SIZE + bmp_chunk.scanline_size * full_height); // file size
-    buffer_write_i32(buf, 0); // reserved
-    buffer_write_i32(buf, HEADER_SIZE); // data offset
-    buffer_write_i32(buf, 12); // dib size
-    buffer_write_i16(buf, (int16_t) bmp_chunk.width);
-    buffer_write_i16(buf, (int16_t) full_height);
-    buffer_write_i16(buf, 1); // planes
-    buffer_write_i16(buf, BMP_BITS_PER_PIXEL);
+    FILE *fp = file_open(filename, "wb");
+    if (!fp) {
+        return 0;
+    }
+    image.fp = fp;
+    png_init_io(image.png_ptr, fp);
+    return 1;
 }
 
-static void pixel(color_t input, uint8_t *r, uint8_t *g, uint8_t *b)
+static int image_write_header(void)
 {
-    color_t rr = (input & 0xff0000) >> 16;
-    color_t gg = (input & 0x00ff00) >> 8;
-    color_t bb = (input & 0x0000ff) >> 0;
-    *r = (uint8_t) rr;
-    *g = (uint8_t) gg;
-    *b = (uint8_t) bb;
+    if (setjmp(png_jmpbuf(image.png_ptr))) {
+        return 0;
+    }
+    png_set_IHDR(image.png_ptr, image.info_ptr, image.width, image.height, 8, PNG_COLOR_TYPE_RGB,
+                    PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+    png_write_info(image.png_ptr, image.info_ptr);
+    return 1;
+}
+
+static int image_set_loop_height_limits(int min, int max)
+{
+    if (min > max) {
+        image.current_y = max;
+        image.final_y = min;
+    } else {
+        image.current_y = min;
+        image.final_y = max;
+    }
+    return image.current_y;
+}
+
+static int image_request_rows(void)
+{
+    if (image.current_y != image.final_y) {
+        image.current_y += image.rows_in_memory;
+        return image.rows_in_memory;
+    }
+    return 0;
+}
+
+static int image_write_rows(const color_t *canvas, int canvas_width)
+{
+    if (setjmp(png_jmpbuf(image.png_ptr))) {
+        return 0;
+    }
+    for (int y = 0; y < image.rows_in_memory; ++y) {
+        uint8_t *pixel = image.pixels;
+        for (int x = 0; x < image.width; x++) {
+            color_t input = canvas[y * canvas_width + x];
+            *(pixel + 0) = (uint8_t) ((input & 0xff0000) >> 16);
+            *(pixel + 1) = (uint8_t) ((input & 0x00ff00) >> 8);
+            *(pixel + 2) = (uint8_t) ((input & 0x0000ff) >> 0);
+            pixel += 3;
+        }
+        png_write_row(image.png_ptr, image.pixels);
+    }
+    return 1;
+}
+
+static int image_write_canvas(void)
+{
+    const color_t *canvas = graphics_canvas();
+    int current_height = image_set_loop_height_limits(0, image.height);
+    int size;
+    while ((size = image_request_rows())) {
+        if (!image_write_rows(canvas + current_height * image.width, image.width)) {
+            return 0;
+        }
+        current_height += size;
+    }
+    return 1;
+}
+
+static void image_finish(void)
+{
+    png_write_end(image.png_ptr, image.info_ptr);
 }
 
 void graphics_save_screenshot(int full_city)
@@ -110,40 +190,30 @@ void graphics_save_screenshot(int full_city)
         full_city_screenshot();
         return;
     }
-    uint8_t header[HEADER_SIZE];
-    buffer buf;
-    buffer_init(&buf, header, HEADER_SIZE);
-
     int width = screen_width();
     int height = screen_height();
-    const color_t *canvas = graphics_canvas();
 
-    if (!create_bmp_chunk(width, 1)) {
+    if (!image_create(width, height, 1)) {
         log_error("Unable to create memory for screenshot", 0, 0);
         return;
     }
 
     const char *filename = generate_filename(DISPLAY_SCREENSHOT);
-    FILE *fp = file_open(filename, "wb");
-    if (!fp) {
+    if (!image_begin_io(filename) || !image_write_header()) {
         log_error("Unable to write screenshot to:", filename, 0);
-        free_bmp_chunk();
+        image_free();
         return;
     }
 
-    write_bmp_header(&buf, height);
-    fwrite(header, 1, HEADER_SIZE, fp);
-    for (int y = height - 1; y >= 0; y--) {
-        for (int x = 0; x < width; x++) {
-            pixel(canvas[y * width + x],
-                &bmp_chunk.pixels[3*x+2], &bmp_chunk.pixels[3*x+1], &bmp_chunk.pixels[3*x]);
-        }
-        fwrite(bmp_chunk.pixels, sizeof(uint8_t), bmp_chunk.scanline_size, fp);
+    if (!image_write_canvas()) {
+        log_error("Error writing image", 0, 0);
+        image_free();
+        return;
     }
-    file_close(fp);
-    free_bmp_chunk();
 
+    image_finish();
     log_info("Saved screenshot:", filename, 0);
+    image_free();
 }
 
 static void full_city_screenshot(void)
@@ -159,52 +229,45 @@ static void full_city_screenshot(void)
     int city_width_pixels = map_grid_width() * TILE_X_SIZE;
     int city_height_pixels = map_grid_height() * TILE_Y_SIZE;
 
-    if (!create_bmp_chunk(city_width_pixels, IMAGE_HEIGHT_CHUNK)) {
-        log_error("Unable to assign memory for full city screenshot creation", 0, 0);
+    if (!image_create(city_width_pixels, city_height_pixels + TILE_Y_SIZE, IMAGE_HEIGHT_CHUNK)) {
+        log_error("Unable to set memory for full city screenshot", 0, 0);
         return;
     }
-
     const char *filename = generate_filename(FULL_CITY_SCREENSHOT);
-    FILE *fp = file_open(filename, "wb");
-    if (!fp) {
+    if (!image_begin_io(filename) || !image_write_header()) {
         log_error("Unable to write screenshot to:", filename, 0);
-        free_bmp_chunk();
+        image_free();
         return;
     }
 
-    uint8_t header[HEADER_SIZE];
-    buffer buf;
-    buffer_init(&buf, header, HEADER_SIZE);
-    write_bmp_header(&buf, city_height_pixels + TILE_Y_SIZE);
-    fwrite(header, 1, HEADER_SIZE, fp);
-
-    int new_width = city_width_pixels + (city_view_is_sidebar_collapsed() ? 40 : 160);
-    screen_set_resolution(new_width, 24 + IMAGE_HEIGHT_CHUNK);
-    graphics_set_clip_rectangle(0, 24, city_width_pixels, IMAGE_HEIGHT_CHUNK);
+    int canvas_width = city_width_pixels + (city_view_is_sidebar_collapsed() ? 40 : 160);
+    screen_set_resolution(canvas_width, TOP_MENU_HEIGHT + IMAGE_HEIGHT_CHUNK);
+    graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, city_width_pixels, IMAGE_HEIGHT_CHUNK);
 
     int base_width = (GRID_SIZE * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
     int max_height = (GRID_SIZE * TILE_Y_SIZE + city_height_pixels) / 2;
     int min_height = max_height - city_height_pixels - TILE_Y_SIZE;
     map_tile dummy_tile = { 0, 0, 0 };
-    const color_t *canvas = graphics_canvas();
-
-    for (int current_height = max_height - IMAGE_HEIGHT_CHUNK; current_height >= min_height; current_height -= IMAGE_HEIGHT_CHUNK) {
+    int error = 0;
+    int current_height = image_set_loop_height_limits(min_height, max_height);
+    int size;
+    const color_t *canvas = (color_t *) graphics_canvas() + TOP_MENU_HEIGHT * canvas_width;
+    while ((size = image_request_rows())) {
         city_view_set_camera_from_pixel_position(base_width, current_height);
         city_without_overlay_draw(0, 0, &dummy_tile);
-        for (int y = IMAGE_HEIGHT_CHUNK - 1; y >= 0; y--) {
-            for (int x = 0; x < city_width_pixels; x++) {
-                pixel(canvas[(y + 24) * new_width + x],
-                    &bmp_chunk.pixels[3 * x + 2], &bmp_chunk.pixels[3 * x + 1], &bmp_chunk.pixels[3 * x]);
-            }
-            fwrite(bmp_chunk.pixels, sizeof(uint8_t), bmp_chunk.scanline_size, fp);
+        if (!image_write_rows(canvas, canvas_width)) {
+            log_error("Error writing image", 0, 0);
+            error = 1;
+            break;
         }
+        current_height += size;
     }
     graphics_reset_clip_rectangle();
     screen_set_resolution(width, height);
     city_view_set_camera_from_pixel_position(original_camera_pixels.x, original_camera_pixels.y);
-
-    file_close(fp);
-    free_bmp_chunk();
-
-    log_info("Saved full city screenshot:", filename, 0);
+    if (!error) {
+        image_finish();
+        log_info("Saved full city screenshot:", filename, 0);
+    }
+    image_free();
 }

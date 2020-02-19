@@ -53,7 +53,7 @@ if (CMAKE_COMPILER_IS_GNUCC)
 endif()
 
 set(PROJECT_VERSION_MAJOR 1)
-set(PROJECT_VERSION_MINOR 2)
+set(PROJECT_VERSION_MINOR 3)
 set(PROJECT_VERSION_PATCH 0)
 set(IS_RELEASE_VERSION FALSE)
 
@@ -139,6 +139,24 @@ endif()
 
 set(TINYFD_FILES
     ext/tinyfiledialogs/tinyfiledialogs.c
+)
+
+set(PNG_FILES
+    ext/png/png.c
+    ext/png/pngerror.c
+    ext/png/pngmem.c
+    ext/png/pngset.c
+    ext/png/pngwio.c
+    ext/png/pngwrite.c
+    ext/png/pngwutil.c
+)
+
+set(ZLIB_FILES
+    ext/zlib/adler32.c
+    ext/zlib/crc32.c
+    ext/zlib/deflate.c
+    ext/zlib/trees.c
+    ext/zlib/zutil.c
 )
 
 set(PLATFORM_FILES
@@ -534,7 +552,9 @@ add_executable(julius
     ${WIDGET_FILES}
     ${WINDOW_FILES}
     ${EDITOR_FILES}
+    ${PNG_FILES}
     ${TINYFD_FILES}
+    ${ZLIB_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc
     ${MACOSX_FILES}
 )

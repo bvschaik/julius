@@ -185,6 +185,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     image_load_enemy(scenario_property_enemy());
 
     city_data_init_scenario();
+    game_state_unpause();
 }
 
 static int load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file)
@@ -350,7 +351,7 @@ int game_file_load_saved_game(const char *filename)
     if (!game_file_io_read_saved_game(filename, 0)) {
         return 0;
     }
-    sound_music_stop();
+    sound_music_update();
     
     initialize_saved_game();
     building_storage_reset_building_ids();

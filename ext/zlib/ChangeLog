@@ -1,0 +1,5 @@
+
+                ChangeLog file for zlib
+
+Changes in 1.2.11.f-julius-build (11 Feb 2020)
+- Many files removed, others trimmed to make the library more lightweight.

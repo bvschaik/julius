@@ -11,6 +11,7 @@
 #include "map/point.h"
 #include "map/property.h"
 #include "sound/city.h"
+#include "sound/effect.h"
 #include "widget/city_figure.h"
 #include "widget/map_editor_tool.h"
 
@@ -139,6 +140,7 @@ void widget_map_editor_handle_mouse(const mouse *m)
     }
     if (m->left.went_up) {
         editor_tool_end_use(tile);
+        sound_effect_play(SOUND_EFFECT_BUILD);
     }
     if (m->right.went_up) {
         editor_tool_deactivate();

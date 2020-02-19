@@ -103,7 +103,7 @@ int window_build_menu_image(void)
             } else {
                 return image_base + 10;
             }
-        case BUILD_MENU_WATER_STRUCTURES:
+        case BUILD_MENU_WATER:
             if (scenario_property_climate() == CLIMATE_DESERT) {
                 return image_group(GROUP_PANEL_WINDOWS_DESERT) + 2;
             } else {
@@ -127,7 +127,7 @@ int window_build_menu_image(void)
             } else {
                 return image_base + 8;
             }
-        case BUILD_MENU_INDUSTRIAL:
+        case BUILD_MENU_INDUSTRY:
             return image_base + 9;
     }
 }

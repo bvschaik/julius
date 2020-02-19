@@ -201,7 +201,9 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
         return 0;
     }
     if (!distance) {
-        info->cost = model_get_building(BUILDING_RESERVOIR)->cost;
+        if (info->place_reservoir_at_end == PLACE_RESERVOIR_YES) {
+            info->cost = model_get_building(BUILDING_RESERVOIR)->cost;
+        }
         return 1;
     }
     if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, x_start, y_start)) {

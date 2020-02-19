@@ -10,6 +10,8 @@ You have two main options in how you want to build Julius. You can either:
 
 1. Make sure you have [Microsoft Visual Studio](https://visualstudio.microsoft.com/vs/) installed.
    Please note that only Visual Studio 2017 (fully updated) or Visual Studio 2019 can be directly used.
+   You need to have `C++ CMake tools for Windows` installed for Visual Studio that you can install via
+   Visual Studio Installer as an optional package.
    These instructions assume you are using Visual Studio 2019.
 
 2. Download the `SDL2` development library as a zip file:
@@ -52,7 +54,7 @@ You have two main options in how you want to build Julius. You can either:
 10. Paste the location of your library paths. If you used the above example paths,
     then paste the following code:
 
-	`-DCMAKE_PREFIX_PATH=C:\libs\SDL2-2.0.10;C:\libs\SDL2_mixer-2.0.4`
+	`-DCMAKE_PREFIX_PATH=C:\libs\SDL2-devel-2.0.10-VC\SDL2-2.0.10;C:\libs\SDL2_mixer-devel-2.0.4-VC\SDL2_mixer-2.0.4`
 
 	Notice that you must always include `-DCMAKE_PREFIX_PATH=` at the start.
 
@@ -237,8 +239,8 @@ If you then wish to proceed building Julius, delete the `build` folder and proce
 	Both libraries are available inside your library directory. Using the example library
     location, the files should be in the following location:
 
-	* `SDL2` - `C:\libs\SDL2-2.0.10\i686-w64-mingw32\lib`
-	* `SDL2_mixer` - `C:\libs\SDL2_mixer-2.0.4\i686-w64-mingw32\lib`
+	* `SDL2` - `C:\libs\SDL2-2.0.10\i686-w64-mingw32\bin`
+	* `SDL2_mixer` - `C:\libs\SDL2_mixer-2.0.4\i686-w64-mingw32\bin`
 
 
 **Success!** You should now be able to run the game.

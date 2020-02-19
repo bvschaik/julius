@@ -140,6 +140,7 @@ void figure_init_scenario(void)
         memset(&data.figures[i], 0, sizeof(figure));
         data.figures[i].id = i;
     }
+    data.created_sequence = 0;
 }
 
 static void figure_save(buffer *buf, const figure *f)

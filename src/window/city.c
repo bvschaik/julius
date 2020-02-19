@@ -1,5 +1,6 @@
 #include "city.h"
 
+#include "building/construction.h"
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"
@@ -86,11 +87,13 @@ static void draw_foreground_military(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (widget_top_menu_handle_mouse(m)) {
-        return;
-    }
-    if (widget_sidebar_handle_mouse(m)) {
-        return;
+    if (!building_construction_in_progress()) {
+        if (widget_top_menu_handle_mouse(m)) {
+            return;
+        }
+        if (widget_sidebar_handle_mouse(m)) {
+            return;
+        }
     }
     widget_city_handle_mouse(m);
 }
