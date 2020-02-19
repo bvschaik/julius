@@ -493,6 +493,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/config.c
     ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
     ${PROJECT_SOURCE_DIR}/src/window/display_options.c
+	${PROJECT_SOURCE_DIR}/src/window/replay_confirm.c
     ${PROJECT_SOURCE_DIR}/src/window/donate_to_city.c
     ${PROJECT_SOURCE_DIR}/src/window/empire.c
     ${PROJECT_SOURCE_DIR}/src/window/file_dialog.c

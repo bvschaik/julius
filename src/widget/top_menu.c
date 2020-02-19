@@ -19,6 +19,7 @@
 #include "widget/city.h"
 #include "window/advisors.h"
 #include "window/city.h"
+#include "window/replay_confirm.h"
 #include "window/difficulty_options.h"
 #include "window/display_options.h"
 #include "window/file_dialog.h"
@@ -385,13 +386,19 @@ static void menu_file_replay_map(int param)
 {
     clear_state();
     building_construction_clear_type();
-    if (scenario_is_custom()) {
+	window_city_show();	// Show the window ... now we have to draw
+	window_confirm_replay_show(window_city_show);
+
+
+	// I need this logic for actually restarting, so don't delte it
+	
+	/*if (scenario_is_custom()) {
         game_file_start_scenario_by_name(scenario_name());
         window_city_show();
     } else {
         scenario_save_campaign_player_name();
         window_mission_briefing_show();
-    }
+    }*/
 }
 
 static void menu_file_load_game(int param)
