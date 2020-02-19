@@ -6,13 +6,11 @@
  * Directory-related functions.
  */
 
-#define DIR_MAX_FILES 200
-
 /**
  * Directory listing
  */
 typedef struct {
-    char *files[DIR_MAX_FILES]; /**< Filenames in UTF-8 encoding */
+    char **files; /**< Filenames in UTF-8 encoding */
     int num_files; /**< Number of files in the list */
 } dir_listing;
 

@@ -59,21 +59,46 @@ static const char *filename_to_utf8(const wchar_t *str)
 #define CURRENT_DIR "."
 #endif
 
-static dir_listing listing;
-static int listing_initialized = 0;
+#define BASE_MAX_FILES 100
+
+static struct {
+    dir_listing listing;
+    int max_files;
+} data;
+
+static void allocate_listing_files(int min, int max)
+{
+    for (int i = min; i < max; i++) {
+        data.listing.files[i] = malloc(FILE_NAME_MAX * sizeof(char));
+        data.listing.files[i][0] = 0;
+    }
+}
 
 static void clear_dir_listing(void)
 {
-    if (!listing_initialized) {
-        for (int i = 0; i < DIR_MAX_FILES; i++) {
-            listing.files[i] = malloc(FILE_NAME_MAX * sizeof(char));
+    data.listing.num_files = 0;
+    if (data.max_files <= 0) {
+        data.listing.files = (char **) malloc(BASE_MAX_FILES * sizeof(char *));
+        allocate_listing_files(0, BASE_MAX_FILES);
+        data.max_files = BASE_MAX_FILES;
+    } else {
+        for (int i = 0; i < data.max_files; i++) {
+            data.listing.files[i][0] = 0;
         }
-        listing_initialized = 1;
     }
-    listing.num_files = 0;
-    for (int i = 0; i < DIR_MAX_FILES; i++) {
-        listing.files[i][0] = 0;
-    }
+}
+
+static void expand_dir_listing(void)
+{
+    int old_max_files = data.max_files;
+    char **old_listing = data.listing.files;
+
+    data.max_files = 2 * old_max_files;
+    data.listing.files = (char **) malloc(data.max_files * sizeof(char *));
+
+    memcpy(data.listing.files, old_listing, old_max_files * sizeof(char *));
+    allocate_listing_files(old_max_files, data.max_files);
+    free(old_listing);
 }
 
 static int compare_lower(const void *va, const void *vb)
@@ -87,11 +112,11 @@ const dir_listing *dir_find_files_with_extension(const char *extension)
     clear_dir_listing();
     fs_dir_type *d = fs_dir_open(CURRENT_DIR);
     if (!d) {
-        return &listing;
+        return &data.listing;
     }
     fs_dir_entry *entry;
     struct stat file_info;
-    while ((entry = fs_dir_read(d)) && listing.num_files < DIR_MAX_FILES) {
+    while ((entry = fs_dir_read(d))) {
         const char *name = dir_entry_name(entry);
         if (stat(name, &file_info) != -1) {
             int m = file_info.st_mode;
@@ -100,15 +125,18 @@ const dir_listing *dir_find_files_with_extension(const char *extension)
             }
         }
         if (file_has_extension(name, extension)) {
-            strncpy(listing.files[listing.num_files], name, FILE_NAME_MAX);
-            listing.files[listing.num_files][FILE_NAME_MAX - 1] = 0;
-            ++listing.num_files;
+            if (data.listing.num_files >= data.max_files) {
+                expand_dir_listing();
+            }
+            strncpy(data.listing.files[data.listing.num_files], name, FILE_NAME_MAX);
+            data.listing.files[data.listing.num_files][FILE_NAME_MAX - 1] = 0;
+            ++data.listing.num_files;
         }
     }
     fs_dir_close(d);
-    qsort(listing.files, listing.num_files, sizeof(char*), compare_lower);
+    qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
 
-    return &listing;
+    return &data.listing;
 }
 
 static int correct_case(const char *dir, char *filename)
