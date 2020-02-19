@@ -26,7 +26,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE },
     { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_ALLOW_CYCLING_TEMPLES },
     { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
-    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
+    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS }
 };
 
 static generic_button bottom_buttons[] = {
