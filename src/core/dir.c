@@ -61,13 +61,13 @@ static int listing_initialized = 0;
 static void clear_dir_listing(void)
 {
     if (!listing_initialized) {
-        for (int i = 0; i < DIR_MAX_FILES; i++) {
+        for (int i = 0; i < DIR_MAX_SAVE_FILES; i++) {
             listing.files[i] = malloc(FILE_NAME_MAX * sizeof(char));
         }
         listing_initialized = 1;
     }
     listing.num_files = 0;
-    for (int i = 0; i < DIR_MAX_FILES; i++) {
+    for (int i = 0; i < DIR_MAX_SAVE_FILES; i++) {
         listing.files[i][0] = 0;
     }
 }
@@ -87,7 +87,8 @@ const dir_listing *dir_find_files_with_extension(const char *extension)
     }
     fs_dir_entry *entry;
     struct stat file_info;
-    while ((entry = fs_dir_read(d)) && listing.num_files < DIR_MAX_FILES) {
+    int dir_max_files = !strcmp(extension, "sav") ? DIR_MAX_SAVE_FILES : DIR_MAX_FILES;
+    while ((entry = fs_dir_read(d)) && listing.num_files < dir_max_files) {
         const char *name = dir_entry_name(entry);
         if (stat(name, &file_info) != -1) {
             int m = file_info.st_mode;
