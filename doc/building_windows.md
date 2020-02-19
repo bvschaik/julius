@@ -237,8 +237,8 @@ If you then wish to proceed building Julius, delete the `build` folder and proce
 	Both libraries are available inside your library directory. Using the example library
     location, the files should be in the following location:
 
-	* `SDL2` - `C:\libs\SDL2-2.0.10\i686-w64-mingw32\lib`
-	* `SDL2_mixer` - `C:\libs\SDL2_mixer-2.0.4\i686-w64-mingw32\lib`
+	* `SDL2` - `C:\libs\SDL2-2.0.10\i686-w64-mingw32\bin`
+	* `SDL2_mixer` - `C:\libs\SDL2_mixer-2.0.4\i686-w64-mingw32\bin`
 
 
 **Success!** You should now be able to run the game.
