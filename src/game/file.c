@@ -351,7 +351,6 @@ int game_file_load_saved_game(const char *filename)
     if (!game_file_io_read_saved_game(filename, 0)) {
         return 0;
     }
-    sound_music_stop();
     sound_music_update();
     
     initialize_saved_game();
