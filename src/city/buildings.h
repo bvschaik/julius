@@ -7,6 +7,7 @@ int city_buildings_has_senate(void);
 void city_buildings_add_senate(building *senate);
 void city_buildings_remove_senate(building *senate);
 
+int city_buildings_has_barracks(void);
 void city_buildings_add_barracks(building *barracks);
 void city_buildings_remove_barracks(building *barracks);
 int city_buildings_get_barracks(void);

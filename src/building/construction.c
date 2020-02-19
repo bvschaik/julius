@@ -478,7 +478,7 @@ void building_construction_update(int x, int y, int grid_offset)
         // never mark as constructing
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
-            !(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
+            !(type == BUILDING_BARRACKS && city_buildings_has_barracks()) &&
             !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center())) {
             int size = building_properties_for_type(type)->size;
             mark_construction(x, y, size, TERRAIN_ALL, 0);

@@ -610,7 +610,7 @@ int building_construction_place_building(building_type type, int x, int y)
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }
-    if (type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) {
+    if (type == BUILDING_BARRACKS && city_buildings_has_barracks()) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }

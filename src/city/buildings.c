@@ -28,8 +28,14 @@ void city_buildings_remove_senate(building *senate)
     }
 }
 
+int city_buildings_has_barracks(void)
+{
+	return city_data.building.barracks_placed;
+}
+
 void city_buildings_add_barracks(building *barracks)
 {
+    city_data.building.barracks_placed = 1;
     if (!city_data.building.barracks_grid_offset) {
         city_data.building.barracks_building_id = barracks->id;
         city_data.building.barracks_x = barracks->x;

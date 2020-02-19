@@ -223,7 +223,7 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
     if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
         return 1;
     }
-    if (type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS)) {
+    if (type == BUILDING_BARRACKS && city_buildings_has_barracks()) {
         return 1;
     }
     if (type == BUILDING_PLAZA && !map_terrain_is(grid_offset, TERRAIN_ROAD)) {
