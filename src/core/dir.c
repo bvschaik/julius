@@ -19,14 +19,19 @@
 #define fs_dir_close _wclosedir
 #define fs_dir_read _wreaddir
 #define dir_entry_name(d) filename_to_utf8(d->d_name)
-#define dir_entry_close_name(n) free((void*)n)
 
 static const char *filename_to_utf8(const wchar_t *str)
 {
+    static char *filename_buffer = 0;
+    static int filename_buffer_size = 0;
     int size_needed = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
-    char *result = (char*) malloc(sizeof(char) * size_needed);
-    WideCharToMultiByte(CP_UTF8, 0, str, -1, result, size_needed, NULL, NULL);
-    return result;
+    if (size_needed > filename_buffer_size) {
+        free(filename_buffer);
+        filename_buffer = (char*) malloc(sizeof(char) * size_needed);
+        filename_buffer_size = size_needed;
+    }
+    WideCharToMultiByte(CP_UTF8, 0, str, -1, filename_buffer, size_needed, NULL, NULL);
+    return filename_buffer;
 }
 
 #else // not _WIN32
@@ -36,7 +41,6 @@ static const char *filename_to_utf8(const wchar_t *str)
 #define fs_dir_close closedir
 #define fs_dir_read readdir
 #define dir_entry_name(d) ((d)->d_name)
-#define dir_entry_close_name(n)
 #endif
 
 #ifndef S_ISLNK
@@ -100,7 +104,6 @@ const dir_listing *dir_find_files_with_extension(const char *extension)
             listing.files[listing.num_files][FILE_NAME_MAX - 1] = 0;
             ++listing.num_files;
         }
-        dir_entry_close_name(name);
     }
     fs_dir_close(d);
     qsort(listing.files, listing.num_files, sizeof(char*), compare_lower);
