@@ -91,14 +91,10 @@ static void clear_dir_listing(void)
 static void expand_dir_listing(void)
 {
     int old_max_files = data.max_files;
-    char **old_listing = data.listing.files;
 
     data.max_files = 2 * old_max_files;
-    data.listing.files = (char **) malloc(data.max_files * sizeof(char *));
-
-    memcpy(data.listing.files, old_listing, old_max_files * sizeof(char *));
+    data.listing.files = (char **) realloc(data.listing.files, data.max_files * sizeof(char *));
     allocate_listing_files(old_max_files, data.max_files);
-    free(old_listing);
 }
 
 static int compare_lower(const void *va, const void *vb)
