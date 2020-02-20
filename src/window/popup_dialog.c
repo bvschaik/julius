@@ -9,6 +9,9 @@
 
 #define GROUP 5
 
+#define PROCEED_GROUP 43
+#define PROCEED_TEXT 5
+
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);
 
@@ -56,6 +59,7 @@ static void draw_background(void)
         }
     } else {
         lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK);
+        lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK);
     }
     graphics_reset_dialog();
 }
@@ -112,7 +116,7 @@ void window_popup_dialog_show(popup_dialog_type type,
     }
 }
 
-void window_popup_dialog_show_confirm(int text_group, int text_id,
+void window_popup_dialog_show_confirmation(int text_group, int text_id,
         void (*close_func)(int accepted))
 {
     if (init(POPUP_DIALOG_NONE, text_group, text_id, close_func, 1)) {
