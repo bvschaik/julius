@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "core/config.h"
 #include "city/data_private.h"
 #include "city/message.h"
 #include "city/population.h"
@@ -125,9 +126,15 @@ const labor_category_data *city_labor_category(int category)
 void city_labor_calculate_workers(int num_plebs, int num_patricians)
 {
     city_data.population.percentage_plebs = calc_percentage(num_plebs, num_plebs + num_patricians);
-    city_data.population.working_age = calc_adjust_with_percentage(city_population_people_of_working_age(), 60);
-    city_data.labor.workers_available = calc_adjust_with_percentage(
-        city_data.population.working_age, city_data.population.percentage_plebs);
+
+    if (config_get(CONFIG_GP_CH_FIXED_WORKERS)) {    
+        city_data.population.working_age = calc_adjust_with_percentage(num_plebs, 38);
+        city_data.labor.workers_available = city_data.population.working_age;
+    } else {
+        city_data.population.working_age = calc_adjust_with_percentage(city_population_people_of_working_age(), 60);
+        city_data.labor.workers_available = calc_adjust_with_percentage(
+            city_data.population.working_age, city_data.population.percentage_plebs);
+    }
 }
 
 static int is_industry_disabled(building *b) {

@@ -1,9 +1,11 @@
 #include "road_access.h"
 
 #include "building/building.h"
+#include "core/config.h"
 #include "city/map.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
@@ -253,21 +255,35 @@ static int terrain_is_road_like(int grid_offset)
 
 static int get_adjacent_road_tile_for_roaming(int grid_offset)
 {
-    int is_road = terrain_is_road_like(grid_offset);
-    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        building *b = building_get(map_building_at(grid_offset));
-        if (b->type == BUILDING_GATEHOUSE) {
-            is_road = 0;
-        } else if (b->type == BUILDING_ROADBLOCK) {
-            is_road = 0;
+	int is_road = terrain_is_road_like(grid_offset);
+	if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+		building* b = building_get(map_building_at(grid_offset));
+		if (b->type == BUILDING_GATEHOUSE) {
+			is_road = 0;
+		}
+		else if (b->type == BUILDING_ROADBLOCK) {
+			is_road = 0;
+		}
+		else if (b->type == BUILDING_GRANARY) {
+			if (map_routing_citizen_is_road(grid_offset)) {
+				if (config_get(CONFIG_GP_CH_DYNAMIC_GRANARIES)) {
+					if (map_property_multi_tile_xy(grid_offset) == EDGE_X1Y1 || map_has_adjacent_road_tiles(grid_offset)) {
+						is_road = 1;
+					}
+				}
+				else {
+					is_road = 1;
+				}
+
+			}
+		}
+		else if (b->type == BUILDING_TRIUMPHAL_ARCH) {
+			if (map_routing_citizen_is_road(grid_offset)) {
+				is_road = 1;
+			}
+		}
 	}
-       else if (b->type == BUILDING_GRANARY || b->type == BUILDING_TRIUMPHAL_ARCH) {
-            if (map_routing_citizen_is_road(grid_offset)) {
-                is_road = 1;
-            }
-        }
-    }
-    return is_road;
+	return is_road;
 }
 
 int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles)
@@ -281,6 +297,7 @@ int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles)
 
     return road_tiles[0] + road_tiles[2] + road_tiles[4] + road_tiles[6];
 }
+
 
 int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int *road_tiles)
 {
@@ -302,4 +319,16 @@ int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int *road_tiles)
         }
     }
     return max_stretch;
+}
+
+int map_has_adjacent_road_tiles(int grid_offset)
+{
+    int adjacent_roads = terrain_is_road_like(grid_offset + map_grid_delta(0, -1))
+    + terrain_is_road_like(grid_offset + map_grid_delta(1, 0))
+    + terrain_is_road_like(grid_offset + map_grid_delta(0, 1))
+    + terrain_is_road_like(grid_offset + map_grid_delta(-1, 0));
+    return adjacent_roads;
+
+
+
 }

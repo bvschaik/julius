@@ -21,4 +21,6 @@ int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles);
 
 int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int *road_tiles);
 
+int map_has_adjacent_road_tiles(int grid_offset);
+
 #endif // MAP_ROAD_ACCESS_H

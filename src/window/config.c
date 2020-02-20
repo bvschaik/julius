@@ -12,7 +12,7 @@
 #include "graphics/window.h"
 #include "window/main_menu.h"
 
-#define NUM_CHECKBOXES 14
+#define NUM_CHECKBOXES 16
 #define NUM_BOTTOM_BUTTONS 3
 
 static void toggle_switch(int id, int param2);
@@ -32,12 +32,14 @@ static generic_button checkbox_buttons[] = {
     { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GLOBAL_LABOUR },
     { 20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SCHOOL_WALKERS },
     { 20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RETIRE_AT_60 },
-    { 20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_EXTRA_FORTS },
-    { 20, 408, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK },
+    { 20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIXED_WORKERS },
+    { 20, 408, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_EXTRA_FORTS },
+    { 20, 432, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK },
+    { 20, 456, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DYNAMIC_GRANARIES },
 };
 
 static generic_button bottom_buttons[] = {
-    { 20, 430, 150, 30, button_reset_defaults, button_none },
+    { 200, 430, 150, 30, button_reset_defaults, button_none },
     { 410, 430, 100, 30, button_close, button_none, 0 },
     { 520, 430, 100, 30, button_close, button_none, 1 },
 };
@@ -87,8 +89,10 @@ static void draw_background(void)
     text_draw(string_from_ascii("Enable global labour pool"), 50, 317, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Extend school walkers range"), 50, 341, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Change citizens' retirement age from 50 to 60"), 50, 365, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Allow building 3 extra forts"), 50, 389, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Block building around wolves"), 50, 413, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fixed worker pool - 38% of population"), 50, 389, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Allow building 3 extra forts"), 50, 413, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Block building around wolves"), 50, 437, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Dynamic granaries"), 50, 451, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];
