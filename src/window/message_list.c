@@ -158,10 +158,10 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse_scrollbar(const mouse *m)
+static int handle_mouse_scrollbar(const mouse *m)
 {
     if (!city_message_can_scroll() || !m->left.is_down) {
-        return;
+        return 0;
     }
     int scrollbar_x = data.x_text + 16 * data.text_width_blocks + 1;
     int scrollbar_y = data.y_text + 26;
@@ -180,7 +180,9 @@ static void handle_mouse_scrollbar(const mouse *m)
             data.scroll_position_drag = 0;
         }
         window_invalidate();
+        return 1;
     }
+    return 0;
 }
 
 static void handle_mouse(const mouse *m)
@@ -222,8 +224,10 @@ static void handle_mouse(const mouse *m)
         }
         return;
     }
-    handle_mouse_scrollbar(m_dialog);
-    if (m_dialog->right.went_up) {
+    if (handle_mouse_scrollbar(m_dialog)) {
+        return;
+    }
+    if (m_dialog->right.went_up || (m->is_touch && m->left.double_click)) {
         button_close(0, 0);
     }
 }

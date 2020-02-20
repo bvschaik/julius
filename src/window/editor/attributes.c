@@ -170,19 +170,16 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
+    const mouse *m_dialog = mouse_in_dialog(m);
+    if (input_box_handle_mouse(m_dialog, &scenario_description_input) ||
+        generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 10, &data.focus_button_id) ||
+        arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2) ||
+        widget_sidebar_editor_handle_mouse_attributes(m)) {
+        return;
+    }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
         stop(0);
         window_editor_map_show();
-    } else {
-        const mouse *m_dialog = mouse_in_dialog(m);
-        if (input_box_handle_mouse(m_dialog, &scenario_description_input)) {
-            return;
-        }
-        if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 10, &data.focus_button_id)) {
-            if (!arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2)) {
-                widget_sidebar_editor_handle_mouse_attributes(m);
-            }
-        }
     }
 }
 

@@ -16,6 +16,7 @@
 #include "graphics/text.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
+#include "input/scroll.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 #include "window/advisors.h"
@@ -108,6 +109,7 @@ static void set_city_message(int year, int month,
 
 static void init(int text_id, void (*background_callback)(void))
 {
+    scroll_end_touch_drag(0);
     for (int i = 0; i < MAX_HISTORY; i++) {
         data.history[i].text_id = 0;
         data.history[i].scroll_position = 0;
@@ -477,9 +479,6 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
-        button_close(0, 0);
-    }
     data.focus_button_id = 0;
     const mouse *m_dialog = mouse_in_dialog(m);
     const lang_message *msg = lang_get_message(data.text_id);
@@ -491,7 +490,12 @@ static void handle_mouse(const mouse *m)
             return;
         }
         if (is_problem_message(msg)) {
-            image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id);
+            if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id)) {
+                return;
+            }
+        }
+        if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+            button_close(0, 0);
         }
         return;
     }
@@ -529,6 +533,10 @@ static void handle_mouse(const mouse *m)
         data.text_id = text_id;
         rich_text_reset(0);
         window_invalidate();
+        return;
+    }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+        button_close(0, 0);
     }
 }
 

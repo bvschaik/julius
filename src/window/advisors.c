@@ -170,13 +170,12 @@ static void handle_mouse(const mouse *m)
         focus_button_id = -1;
         return;
     }
-    if (m->right.went_up) {
-        window_city_show();
+    if (current_advisor_window->handle_mouse && current_advisor_window->handle_mouse(m_dialog)) {
         return;
     }
-
-    if (current_advisor_window->handle_mouse) {
-        current_advisor_window->handle_mouse(m_dialog);
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+        window_city_show();
+        return;
     }
 }
 

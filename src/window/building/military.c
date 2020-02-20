@@ -360,7 +360,7 @@ void window_building_draw_legion_info_foreground(building_info_context *c)
     }
 }
 
-void window_building_handle_mouse_legion_info(const mouse *m, building_info_context *c)
+int window_building_handle_mouse_legion_info(const mouse *m, building_info_context *c)
 {
     data.context_for_callback = c;
     int handled = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, layout_buttons, 5, &data.focus_button_id);
@@ -370,10 +370,11 @@ void window_building_handle_mouse_legion_info(const mouse *m, building_info_cont
         }
     }
     if (!handled) {
-        generic_buttons_handle_mouse(m, c->x_offset + 16 * (c->width_blocks - 18) / 2,
+        handled = generic_buttons_handle_mouse(m, c->x_offset + 16 * (c->width_blocks - 18) / 2,
             c->y_offset + 16 * c->height_blocks - 48, return_button, 1, &data.return_button_id);
     }
     data.context_for_callback = 0;
+    return handled;
 }
 
 int window_building_get_legion_info_tooltip_text(building_info_context *c)

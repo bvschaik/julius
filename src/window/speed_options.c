@@ -70,13 +70,13 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
+    const mouse *m_dialog = mouse_in_dialog(m);
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 2, &data.focus_button_id) ||
+        arrow_buttons_handle_mouse(m_dialog, 160, 40, arrow_buttons, 4)) {
+        return;
+    }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
         data.close_callback();
-    } else {
-        const mouse *m_dialog = mouse_in_dialog(m);
-        if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 2, &data.focus_button_id)) {
-            arrow_buttons_handle_mouse(m_dialog, 160, 40, arrow_buttons, 4);
-        }
     }
 }
 

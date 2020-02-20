@@ -30,7 +30,7 @@ static void clear_mouse_button(mouse_button *button)
     button->system_change = SYSTEM_NONE;
 }
 
-void mouse_set_from_touch(const touch *first)
+void mouse_set_from_touch(const touch *first, const touch *last)
 {
     data.x = first->current_point.x;
     data.y = first->current_point.y;
@@ -100,6 +100,7 @@ static void update_button_state(mouse_button *button)
     button->double_click = (button->system_change & SYSTEM_DOUBLE_CLICK) == SYSTEM_DOUBLE_CLICK;
     button->system_change = SYSTEM_NONE;
     button->is_down = (button->is_down || button->went_down) && !button->went_up;
+    button->double_click = 0;
 }
 
 void mouse_determine_button_state(void)

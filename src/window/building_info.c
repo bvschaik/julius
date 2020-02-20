@@ -521,41 +521,23 @@ static void draw_foreground(void)
     }
 }
 
-static void handle_mouse(const mouse *m)
+static int handle_specific_building_info_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
-        window_city_show();
-        return;
-    }
-    // general buttons
-    if (context.storage_show_special_orders) {
-        int y_offset = window_building_get_vertical_offset(&context, 28);
-        image_buttons_handle_mouse(m, context.x_offset, y_offset + 400, image_buttons_help_close, 2, &focus_image_button_id);
-    } else {
-        image_buttons_handle_mouse(
-            m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
-            image_buttons_help_close, 2, &focus_image_button_id);
-    }
-    if (context.can_go_to_advisor) {
-        image_buttons_handle_mouse(
-            m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
-            image_buttons_advisor, 1, 0);
-    }
     // building-specific buttons
     if (context.type == BUILDING_INFO_NONE) {
-        return;
+        return 0;
     }
     if (context.type == BUILDING_INFO_LEGION) {
-        window_building_handle_mouse_legion_info(m, &context);
+        return window_building_handle_mouse_legion_info(m, &context);
     } else if (context.figure.drawn) {
-        window_building_handle_mouse_figure_list(m, &context);
+        return window_building_handle_mouse_figure_list(m, &context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.building_id)->type;
         if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
-                window_building_handle_mouse_granary_orders(m, &context);
+                return window_building_handle_mouse_granary_orders(m, &context);
             } else {
-                window_building_handle_mouse_granary(m, &context);
+                return window_building_handle_mouse_granary(m, &context);
             }
         } else if (btype == BUILDING_WAREHOUSE) {
             if (context.storage_show_special_orders) {
@@ -564,6 +546,32 @@ static void handle_mouse(const mouse *m)
                 window_building_handle_mouse_warehouse(m, &context);
             }
         }
+    }
+    return 0;
+}
+
+static void handle_mouse(const mouse *m)
+{
+    int handled = 0;
+    // general buttons
+    if (context.storage_show_special_orders) {
+        int y_offset = window_building_get_vertical_offset(&context, 28);
+        handled = image_buttons_handle_mouse(m, context.x_offset, y_offset + 400, image_buttons_help_close, 2, &focus_image_button_id);
+    } else {
+        handled = image_buttons_handle_mouse(
+                      m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
+                      image_buttons_help_close, 2, &focus_image_button_id);
+    }
+    if (context.can_go_to_advisor) {
+        handled = image_buttons_handle_mouse(
+                      m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
+                      image_buttons_advisor, 1, 0);
+    }
+    if (!handled) {
+        handled = handle_specific_building_info_mouse(m);
+    }
+    if (!handled && (m->right.went_up || (m->is_touch && m->left.double_click))) {
+        window_city_show();
     }
 }
 

@@ -10,7 +10,7 @@ typedef struct {
      */
     int (*draw_background)(void);
     void (*draw_foreground)(void);
-    void (*handle_mouse)(const mouse *m);
+    int (*handle_mouse)(const mouse *m);
     int (*get_tooltip_text)(void);
 } advisor_window_type;
 

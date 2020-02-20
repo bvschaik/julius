@@ -333,14 +333,13 @@ static void handle_mouse(const mouse *m)
     if (!arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2)) {
         if (!generic_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, generic_button_ok, 1, &data.focus_button_id)) {
             determine_selected_object(m);
-            if (m->right.went_up) {
-                window_editor_map_show();
-            }
             int selected_object = empire_selected_object();
             if (selected_object) {
                 if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY) {
                     data.selected_city = empire_city_get_for_object(selected_object - 1);
                 }
+            } else if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+                window_editor_map_show();
             }
         }
     }

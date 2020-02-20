@@ -155,9 +155,9 @@ static void draw_foreground(void)
     button_border_draw(440, 286, 110, 66, focus_button_id == SELECTED_RATING_FAVOR);
 }
 
-static void handle_mouse(const mouse *m)
+static int handle_mouse(const mouse *m)
 {
-    generic_buttons_handle_mouse(m, 0, 0, rating_buttons, 4, &focus_button_id);
+    return generic_buttons_handle_mouse(m, 0, 0, rating_buttons, 4, &focus_button_id);
 }
 
 static void button_rating(int rating, int param2)

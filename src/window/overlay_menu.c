@@ -58,6 +58,8 @@ static struct {
 
     int menu_focus_button_id;
     int submenu_focus_button_id;
+
+    int keep_submenu_open;
 } data;
 
 static void init(void)
@@ -105,35 +107,54 @@ static int count_submenu_items(int submenu_id)
     return total;
 }
 
-static void handle_submenu(void)
+static void open_submenu(int index, int keep_open)
+{
+    data.keep_submenu_open = keep_open;
+    data.selected_menu = index;
+    data.selected_submenu = MENU_ID_TO_SUBMENU_ID[index];
+    data.num_submenu_items = count_submenu_items(data.selected_submenu);
+}
+
+static void close_submenu(void)
+{
+    data.keep_submenu_open = 0;
+    data.selected_menu = 0;
+    data.selected_submenu = 0;
+    data.num_submenu_items = 0;
+}
+
+static void handle_submenu_focus(void)
 {
     if (data.menu_focus_button_id || data.submenu_focus_button_id) {
         data.submenu_focus_time = time_get_millis();
         if (data.menu_focus_button_id) {
-            data.selected_menu = data.menu_focus_button_id - 1;
-            data.selected_submenu = MENU_ID_TO_SUBMENU_ID[data.selected_menu];
-            data.num_submenu_items = count_submenu_items(data.selected_submenu);
+            open_submenu(data.menu_focus_button_id - 1, 0);
         }
     } else if (time_get_millis() - data.submenu_focus_time > 500) {
-        data.selected_submenu = 0;
-        data.num_submenu_items = 0;
+        close_submenu();
     }
 }
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
-        window_city_show();
-        return;
-    }
     int x_offset = get_sidebar_x_offset();
-    generic_buttons_handle_mouse(m, x_offset - 170, 72, menu_buttons, 8, &data.menu_focus_button_id);
+    int handled = 0;
+    handled |= generic_buttons_handle_mouse(m, x_offset - 170, 72, menu_buttons, 8, &data.menu_focus_button_id);
 
-    handle_submenu();
+    if (!data.keep_submenu_open) {
+        handle_submenu_focus();
+    }
     if (data.selected_submenu) {
-        generic_buttons_handle_mouse(
+        handled |= generic_buttons_handle_mouse(
             m, x_offset - 348, 72 + 24 * data.selected_menu,
             submenu_buttons, data.num_submenu_items, &data.submenu_focus_button_id);
+    }
+    if (!handled && (m->right.went_up || (m->is_touch && m->left.double_click))) {
+        if (data.keep_submenu_open) {
+            close_submenu();
+        } else {
+            window_city_show();
+        }
     }
 }
 
@@ -141,8 +162,15 @@ static void button_menu_item(int index, int param2)
 {
     if (MENU_ID_TO_SUBMENU_ID[index] == 0) {
         game_state_set_overlay(MENU_ID_TO_OVERLAY[index]);
+        close_submenu();
+        window_city_show();
+    } else {
+        if (data.keep_submenu_open && data.selected_submenu == MENU_ID_TO_SUBMENU_ID[index]) {
+            close_submenu();
+        } else {
+            open_submenu(index, 1);
+        }
     }
-    window_city_show();
 }
 
 static void button_submenu_item(int index, int param2)
@@ -151,6 +179,7 @@ static void button_submenu_item(int index, int param2)
     if (overlay) {
         game_state_set_overlay(overlay);
     }
+    close_submenu();
     window_city_show();
 }
 
