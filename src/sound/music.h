@@ -7,9 +7,7 @@ void sound_music_play_intro(void);
 
 void sound_music_play_editor(void);
 
-void sound_music_reset(void);
-
-void sound_music_update(void);
+void sound_music_update(int force);
 
 void sound_music_stop(void);
 

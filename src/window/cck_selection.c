@@ -291,7 +291,7 @@ static void button_scroll(int is_down, int num_lines)
 static void button_start_scenario(int param1, int param2)
 {
     if (game_file_start_scenario(data.selected_scenario_filename)) {
-        sound_music_update();
+        sound_music_update(1);
         window_city_show();
     }
 }
