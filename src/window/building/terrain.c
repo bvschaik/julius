@@ -9,6 +9,7 @@
 #include "graphics/panel.h"
 #include "sound/speech.h"
 #include "window/building/figures.h"
+
 void window_building_draw_no_people(building_info_context *c)
 {
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -63,7 +64,7 @@ void window_building_draw_terrain(building_info_context *c)
         }
         if (c->terrain_type != TERRAIN_INFO_ROAD && c->terrain_type != TERRAIN_INFO_PLAZA) {
             lang_text_draw_multiline(70, c->terrain_type + 25,
-                c->x_offset + 36, c->y_offset + 16 * c->height_blocks - 113,
+                c->x_offset + 40, c->y_offset + 16 * c->height_blocks - 113,
                 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
         }
         window_building_draw_figure_list(c);
