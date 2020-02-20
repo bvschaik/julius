@@ -76,7 +76,7 @@ static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
 
 static void draw_flat_tile(int x, int y, color_t color_mask)
 {
-    if(color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT) {
+    if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT) {
         image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_GREEN);
     }
     image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, color_mask);

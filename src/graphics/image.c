@@ -284,7 +284,7 @@ static void draw_compressed_blend_alpha(const image *img, const color_t *data, i
         return;
     }
     color_t alpha = COMPONENT(color, 24);
-    if(!alpha) {
+    if (!alpha) {
         return;
     }
     int unclipped = clip->clip_x == CLIP_NONE;
