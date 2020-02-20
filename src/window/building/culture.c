@@ -121,7 +121,7 @@ void window_building_draw_oracle(building_info_context *c)
     window_building_play_sound(c, "wavs/oracle.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(110, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 143, 110, 1);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 110, 1);
 }
 
 void window_building_draw_theater(building_info_context *c)

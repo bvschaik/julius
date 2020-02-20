@@ -48,7 +48,7 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 113, group_id, 1);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
 }
 
 void window_building_draw_wheat_farm(building_info_context *c)
@@ -116,7 +116,7 @@ static void draw_raw_material(building_info_context *c, int help_id, const char 
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 113, group_id, 1);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
 }
 
 void window_building_draw_marble_quarry(building_info_context *c)
