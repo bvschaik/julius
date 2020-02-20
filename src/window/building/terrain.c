@@ -14,7 +14,6 @@ void window_building_draw_no_people(building_info_context *c)
 {
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(70, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    lang_text_draw_centered(13, 1, c->x_offset, c->y_offset + 16 * c->height_blocks - 22, 16 * c->width_blocks, FONT_NORMAL_BLACK);
 }
 
 void window_building_draw_terrain(building_info_context *c)
