@@ -12,7 +12,7 @@
 #include "graphics/window.h"
 #include "window/main_menu.h"
 
-#define NUM_CHECKBOXES 17
+#define NUM_CHECKBOXES 18
 #define NUM_BOTTOM_BUTTONS 3
 
 static void toggle_switch(int id, int param2);
@@ -37,6 +37,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 432, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK },
     { 20, 456, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DYNAMIC_GRANARIES },
     { 20, 480, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE },
+    { 20, 504, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION },
 };
 
 static generic_button bottom_buttons[] = {
@@ -95,6 +96,7 @@ static void draw_background(void)
     text_draw(string_from_ascii("Block building around wolves"), 50, 437, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Dynamic granaries"), 50, 461, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Houses stockpile more goods from market"), 50, 485, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Buying market ladies don't distribute goods"), 50, 509, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];

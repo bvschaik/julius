@@ -28,6 +28,8 @@ static const char *ini_keys[] = {
     "gameplay_enable_extra_forts",
     "gameplay_wolves_block",
     "gameplay_dynamic_granaries",
+    "gameplay_houses_stockpile_more",
+    "gameplay_buyers_dont_distribute",
 };
 
 static int values[CONFIG_MAX_ENTRIES];
@@ -58,6 +60,8 @@ void config_set_defaults(void)
     values[CONFIG_GP_CH_EXTRA_FORTS] = 0;
     values[CONFIG_GP_CH_WOLVES_BLOCK] = 0;
     values[CONFIG_GP_CH_DYNAMIC_GRANARIES] = 0;
+    values[CONFIG_GP_CH_MORE_STOCKPILE] = 0;
+    values[CONFIG_GP_CH_NO_BUYER_DISTRIBUTION] = 0;
     values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
     values[CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE] = 0;
 }
