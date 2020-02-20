@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "core/config.h"
 #include "figuretype/crime.h"
 #include "game/resource.h"
 #include "map/building.h"
@@ -261,17 +262,22 @@ static void distribute_market_resources(building *b, building *market)
         market->data.market.pottery_demand = 10;
         distribute_good(b, market, 8 * model->pottery, INVENTORY_POTTERY);
     }
+    int goods_no = 4;
+    if (config_get(CONFIG_GP_CH_MORE_STOCKPILE)) {
+        goods_no = 8;
+    }
+    
     if (model->furniture) {
         market->data.market.furniture_demand = 10;
-        distribute_good(b, market, 4 * model->furniture, INVENTORY_FURNITURE);
+        distribute_good(b, market, goods_no * model->furniture, INVENTORY_FURNITURE);
     }
     if (model->oil) {
         market->data.market.oil_demand = 10;
-        distribute_good(b, market, 4 * model->oil, INVENTORY_OIL);
+        distribute_good(b, market, goods_no * model->oil, INVENTORY_OIL);
     }
     if (model->wine) {
         market->data.market.wine_demand = 10;
-        distribute_good(b, market, 4 * model->wine, INVENTORY_WINE);
+        distribute_good(b, market, goods_no * model->wine, INVENTORY_WINE);
     }
 }
 

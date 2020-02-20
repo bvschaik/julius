@@ -12,7 +12,7 @@
 #include "graphics/window.h"
 #include "window/main_menu.h"
 
-#define NUM_CHECKBOXES 16
+#define NUM_CHECKBOXES 17
 #define NUM_BOTTOM_BUTTONS 3
 
 static void toggle_switch(int id, int param2);
@@ -36,6 +36,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 408, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_EXTRA_FORTS },
     { 20, 432, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK },
     { 20, 456, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DYNAMIC_GRANARIES },
+    { 20, 480, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE },
 };
 
 static generic_button bottom_buttons[] = {
@@ -92,7 +93,8 @@ static void draw_background(void)
     text_draw(string_from_ascii("Fixed worker pool - 38% of population"), 50, 389, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Allow building 3 extra forts"), 50, 413, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Block building around wolves"), 50, 437, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Dynamic granaries"), 50, 451, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Dynamic granaries"), 50, 461, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Houses stockpile more goods from market"), 50, 485, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];
