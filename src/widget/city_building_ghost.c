@@ -274,6 +274,18 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
     }
 }
 
+static void draw_single_reservoir(int x, int y, int has_water)
+{
+    int image_id = image_group(GROUP_BUILDING_RESERVOIR);
+    draw_building(image_id, x, y);
+    if (has_water) {
+        const image *img = image_get(image_id);
+        int x_water = x - 58 + img->sprite_offset_x - 2;
+        int y_water = y + img->sprite_offset_y - (img->height - 90);
+        image_draw_masked(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
+    }
+}
+
 static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
 {
     int map_x = tile->x - 1;
@@ -295,6 +307,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     }
     int draw_later = 0;
     int x_start, y_start, offset;
+    int has_water = map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER);
     if (building_construction_in_progress()) {
         building_construction_get_view_position(&x_start, &y_start);
         y_start -= 30;
@@ -304,10 +317,15 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             }
         } else {
             offset = city_view_pixels_to_grid_offset(x_start, y_start);
-            if (map_grid_offset_to_x(offset) - 1 > map_x || map_grid_offset_to_y(offset) - 1 > map_y) {
+            int map_x_start = map_grid_offset_to_x(offset) - 1;
+            int map_y_start = map_grid_offset_to_y(offset) - 1;
+            if (!has_water) {
+                has_water = map_terrain_exists_tile_in_area_with_type(map_x_start - 1, map_y_start - 1, 5, TERRAIN_WATER);
+            }
+            if (map_x_start > map_x || map_y_start > map_y) {
                 draw_later = 1;
             } else {
-                draw_building(image_group(GROUP_BUILDING_RESERVOIR), x_start, y_start);
+                draw_single_reservoir(x_start, y_start, has_water);
             }
             city_view_pixels_to_grid_offset(x, y);
         }
@@ -319,16 +337,9 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else {
-        int image_id = image_group(GROUP_BUILDING_RESERVOIR);
-        draw_building(image_id, x, y);
-        if (map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER)) {
-            const image *img = image_get(image_id);
-            int x_water = x - 58 + img->sprite_offset_x - 2;
-            int y_water = y + img->sprite_offset_y - (img->height - 90);
-            image_draw_masked(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
-        }
+        draw_single_reservoir(x, y, has_water);
         if (draw_later) {
-            draw_building(image_group(GROUP_BUILDING_RESERVOIR), x_start, y_start);
+            draw_single_reservoir(x_start, y_start, has_water);
         }
     }
 }
