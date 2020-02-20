@@ -159,8 +159,6 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
                 data += b;
                 x += b;
             } else {
-                // number of concrete pixels
-                const color_t *pixels = data;
                 data += b;
                 color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
                 if (unclipped) {
@@ -168,7 +166,6 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
                     while (b) {
                         *dst = color;
                         dst++;
-                        pixels++;
                         b--;
                     }
                 } else {
@@ -178,7 +175,6 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
                         }
                         dst++;
                         x++;
-                        pixels++;
                         b--;
                     }
                 }
@@ -257,8 +253,6 @@ static void draw_compressed_blend(const image *img, const color_t *data, int x_o
                 data += b;
                 x += b;
             } else {
-                // number of concrete pixels
-                const color_t *pixels = data;
                 data += b;
                 color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
                 if (unclipped) {
@@ -266,7 +260,6 @@ static void draw_compressed_blend(const image *img, const color_t *data, int x_o
                     while (b) {
                         *dst &= color;
                         dst++;
-                        pixels++;
                         b--;
                     }
                 } else {
@@ -276,7 +269,57 @@ static void draw_compressed_blend(const image *img, const color_t *data, int x_o
                         }
                         dst++;
                         x++;
-                        pixels++;
+                        b--;
+                    }
+                }
+            }
+        }
+    }
+}
+
+static void draw_compressed_blend_alpha(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
+{
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
+    if (!clip->is_visible) {
+        return;
+    }
+    color_t alpha = COMPONENT(color, 24);
+    if(!alpha) {
+        return;
+    }
+    int unclipped = clip->clip_x == CLIP_NONE;
+
+    for (int y = 0; y < height - clip->clipped_pixels_bottom; y++) {
+        int x = 0;
+        while (x < img->width) {
+            color_t b = *data;
+            data++;
+            if (b == 255) {
+                // transparent pixels to skip
+                x += *data;
+                data++;
+            } else if (y < clip->clipped_pixels_top) {
+                data += b;
+                x += b;
+            } else {
+                data += b;
+                color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
+                if (unclipped) {
+                    x += b;
+                    while (b) {
+                        color_t d = *dst;
+                        *dst = MIX(color, d, alpha, 0) | MIX(color, d, alpha, 8) | MIX(color, d, alpha, 16);
+                        dst++;
+                        b--;
+                    }
+                } else {
+                    while (b) {
+                        if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right) {
+                            color_t d = *dst;
+                            *dst = MIX(color, d, alpha, 0) | MIX(color, d, alpha, 8) | MIX(color, d, alpha, 16);
+                        }
+                        dst++;
+                        x++;
                         b--;
                     }
                 }
@@ -564,6 +607,25 @@ void image_draw_blend(int image_id, int x, int y, color_t color)
         draw_compressed_blend(img, data, x, y, img->height, color);
     } else {
         draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND);
+    }
+}
+
+void image_draw_blend_alpha(int image_id, int x, int y, color_t color)
+{
+    const image *img = image_get(image_id);
+    const color_t *data = image_data(image_id);
+    if (!data) {
+        return;
+    }
+
+    if (img->draw.type == IMAGE_TYPE_ISOMETRIC) {
+        return;
+    }
+
+    if (img->draw.is_fully_compressed) {
+        draw_compressed_blend_alpha(img, data, x, y, img->height, color);
+    } else {
+        draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
     }
 }
 
