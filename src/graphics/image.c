@@ -287,6 +287,10 @@ static void draw_compressed_blend_alpha(const image *img, const color_t *data, i
     if (!alpha) {
         return;
     }
+    if (alpha == 255) {
+        draw_compressed_set(img, data, x_offset, y_offset, height, color);
+        return;
+    }
     int unclipped = clip->clip_x == CLIP_NONE;
 
     for (int y = 0; y < height - clip->clipped_pixels_bottom; y++) {

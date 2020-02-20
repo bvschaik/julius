@@ -78,8 +78,9 @@ static void draw_flat_tile(int x, int y, color_t color_mask)
 {
     if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT) {
         image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_GREEN);
+    } else {
+        image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, color_mask);
     }
-    image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, color_mask);
 }
 
 static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_tiles)
