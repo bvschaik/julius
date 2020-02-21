@@ -102,6 +102,11 @@ void city_ratings_change_favor(int amount)
     city_data.ratings.favor = calc_bound(city_data.ratings.favor + amount, 0, 100);
 }
 
+void city_ratings_reset_favor_emperor_change(void)
+{
+    city_data.ratings.favor = 50;
+}
+
 void city_ratings_reduce_favor_missed_request(int penalty)
 {
     city_ratings_change_favor(-penalty);
