@@ -173,7 +173,7 @@ static void button_back(int param1, int param2)
 static void button_start_mission(int param1, int param2)
 {
     sound_speech_stop();
-    sound_music_reset();
+    sound_music_update(1);
     window_city_show();
     city_mission_reset_save_start();
 }

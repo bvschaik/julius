@@ -58,7 +58,6 @@ void game_file_editor_clear_data(void)
     game_state_init();
     game_animation_init();
     sound_city_init();
-    sound_music_reset();
     building_menu_enable_all();
     building_clear_all();
     building_storage_clear_all();

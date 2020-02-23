@@ -99,7 +99,6 @@ static void clear_scenario_data(void)
     game_state_init();
     game_animation_init();
     sound_city_init();
-    sound_music_reset();
     building_menu_enable_all();
     building_clear_all();
     building_storage_clear_all();
@@ -226,7 +225,6 @@ static void initialize_saved_game(void)
     city_message_init_problem_areas();
 
     sound_city_init();
-    sound_music_reset();
 
     game_undo_disable();
     game_state_reset_overlay();
@@ -351,10 +349,10 @@ int game_file_load_saved_game(const char *filename)
     if (!game_file_io_read_saved_game(filename, 0)) {
         return 0;
     }
-    sound_music_update();
-    
     initialize_saved_game();
     building_storage_reset_building_ids();
+
+    sound_music_update(1);
     return 1;
 }
 

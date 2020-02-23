@@ -384,6 +384,7 @@ static void menu_file_new_game(int param)
 static void replay_map_confirmed(int confirmed)
 {
     if (!confirmed) {
+        window_city_show();
         return;
     }
     if (scenario_is_custom()) {
@@ -398,7 +399,7 @@ static void menu_file_replay_map(int param)
 {
     clear_state();
     building_construction_clear_type();
-    window_popup_dialog_show_confirm(1, 2, replay_map_confirmed);
+    window_popup_dialog_show_confirmation(1, 2, replay_map_confirmed);
 }
 
 static void menu_file_load_game(int param)

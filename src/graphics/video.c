@@ -84,8 +84,7 @@ static int load_smk(const char *filename)
 static void end_video(void)
 {
     sound_device_use_default_music_player();
-    sound_music_reset();
-    sound_music_update();
+    sound_music_update(1);
 }
 
 int video_start(const char *filename)

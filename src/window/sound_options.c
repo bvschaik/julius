@@ -125,8 +125,7 @@ static void button_toggle(int type, int param2)
     setting_toggle_sound_enabled(type);
     if (type == SOUND_MUSIC) {
         if (setting_sound(SOUND_MUSIC)->enabled) {
-            sound_music_reset();
-            sound_music_update();
+            sound_music_update(1);
         } else {
             sound_music_stop();
         }
@@ -150,8 +149,7 @@ static void button_cancel(int param1, int param2)
     setting_reset_sound(SOUND_CITY, data.original_city.enabled, data.original_city.volume);
     if (data.original_music.enabled) {
         if (setting_sound_is_enabled(SOUND_MUSIC) != data.original_music.enabled) {
-            sound_music_reset();
-            sound_music_update();
+            sound_music_update(1);
         }
     } else {
         sound_music_stop();

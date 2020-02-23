@@ -17,7 +17,6 @@ static void draw_vacant_lot(building_info_context *c)
     window_building_prepare_figure_list(c);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(128, 0, c->x_offset, c->y_offset + 8, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    lang_text_draw_centered(13, 1, c->x_offset, c->y_offset + 16 * c->height_blocks - 22, 16 * c->width_blocks, FONT_NORMAL_BLACK);
     window_building_draw_figure_list(c);
 
     int text_id = 2;

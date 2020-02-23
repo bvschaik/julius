@@ -82,15 +82,9 @@ void sound_music_play_editor(void)
     }
 }
 
-void sound_music_reset(void)
+void sound_music_update(int force)
 {
-    data.current_track = TRACK_NONE;
-    data.next_check = 0;
-}
-
-void sound_music_update(void)
-{
-    if (data.next_check) {
+    if (data.next_check && !force) {
         --data.next_check;
         return;
     }
@@ -128,4 +122,5 @@ void sound_music_stop(void)
 {
     sound_device_stop_music();
     data.current_track = TRACK_NONE;
+    data.next_check = 0;
 }

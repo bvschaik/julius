@@ -160,7 +160,6 @@ static void show_end_dialog(void)
 
 static void show_intermezzo(void)
 {
-    sound_music_reset();
     window_intermezzo_show(INTERMEZZO_WON, show_end_dialog);
 }
 
@@ -184,6 +183,5 @@ void window_mission_end_show_won(void)
 
 void window_mission_end_show_fired(void)
 {
-    sound_music_reset();
     window_intermezzo_show(INTERMEZZO_FIRED, show_end_dialog);
 }

@@ -110,8 +110,8 @@ int building_construction_place_wall(int measure_only, int x_start, int y_start,
     int start_offset = map_grid_offset(x_start, y_start);
     int end_offset = map_grid_offset(x_end, y_end);
     int forbidden_terrain_mask =
-        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB |
-        TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION |
+        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING |
+        TERRAIN_SHRUB | TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION |
         TERRAIN_RUBBLE | TERRAIN_AQUEDUCT | TERRAIN_ACCESS_RAMP;
     if (map_terrain_is(start_offset, forbidden_terrain_mask)) {
         return 0;
