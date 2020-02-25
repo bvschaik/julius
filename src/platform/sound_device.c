@@ -77,6 +77,9 @@ static Mix_Chunk *load_chunk(const char *filename)
     if (filename[0]) {
 #ifdef __vita__
         FILE *fp = file_open(filename, "rb");
+        if (!fp) {
+            return NULL;
+        }
         SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
         return Mix_LoadWAV_RW(sdl_fp, 1);
 #else
@@ -132,28 +135,26 @@ int sound_device_play_music(const char *filename, int volume_pct)
     if (data.initialized) {
         sound_device_stop_music();
 
-        #ifdef __vita__
-        char *resolved_filename = vita_prepend_path(filename); // There is no Mix_LoadMUS equivalent for fp
-        #else
-        const char *resolved_filename = filename;
-        #endif
-
-        data.music = Mix_LoadMUS(resolved_filename);
+#ifdef __vita__
+        FILE *fp = file_open(filename, "rb");
+        if (!fp) {
+            return 0;
+        }
+        SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
+        data.music = Mix_LoadMUSType_RW(sdl_fp, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+#else
+        data.music = Mix_LoadMUS(filename);
+#endif
         if (!data.music) {
-            SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Error opening music file '%s'. Reason: %s", resolved_filename, Mix_GetError());
+            SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
         } else {
             if (Mix_PlayMusic(data.music, -1) == -1) {
                 data.music = 0;
-                SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Error playing music file '%s'. Reason: %s", resolved_filename, Mix_GetError());
+                SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
             } else {
                 sound_device_set_music_volume(volume_pct);
             }
         }
-
-        #ifdef __vita__
-        free(resolved_filename);
-        #endif
-
         return data.music ? 1 : 0;
     }
     return 0;

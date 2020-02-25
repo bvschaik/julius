@@ -671,5 +671,5 @@ int game_file_io_write_saved_game(const char *filename)
 
 int game_file_io_delete_saved_game(const char *filename)
 {
-    return remove(filename) == 0;
+    return file_remove(filename);
 }

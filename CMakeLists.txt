@@ -161,6 +161,7 @@ set(ZLIB_FILES
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/arguments.c
+    ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
@@ -534,8 +535,7 @@ if(APPLE)
     set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/julius.icns)
 endif()
 
-add_executable(julius
-    WIN32
+set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${CORE_FILES}
     ${BUILDING_FILES}
@@ -575,7 +575,6 @@ function(GET_SDL_EXT_DIR result module)
     foreach(child ${children})
         if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
             set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
-            set(internal_result "${SDL_LOCATION}/${child}")
             break()
         endif()
     endforeach()
@@ -583,6 +582,8 @@ endfunction()
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
+
+add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
@@ -774,6 +775,8 @@ else()
     endif()
 
     # Unit tests
-    enable_testing()
-    add_subdirectory(test)
+    if(NOT VITA_BUILD AND NOT SWITCH_BUILD)
+        enable_testing()
+        add_subdirectory(test)
+    endif()
 endif()
