@@ -326,16 +326,16 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             }
             switch (city_view_orientation()) {
                 case DIR_0_TOP:
-                    draw_later = (map_x_start > map_x || map_y_start > map_y);
+                    draw_later = map_x_start > map_x || map_y_start > map_y;
                     break;
                 case DIR_2_RIGHT:
-                    draw_later = (map_x_start < map_x || map_y_start > map_y);
+                    draw_later = map_x_start < map_x || map_y_start > map_y;
                     break;
                 case DIR_4_BOTTOM:
-                    draw_later = (map_x_start < map_x || map_y_start < map_y);
+                    draw_later = map_x_start < map_x || map_y_start < map_y;
                     break;
                 case DIR_6_LEFT:
-                    draw_later = (map_x_start > map_x || map_y_start < map_y);
+                    draw_later = map_x_start > map_x || map_y_start < map_y;
                     break;
             }
             if (!draw_later) {
