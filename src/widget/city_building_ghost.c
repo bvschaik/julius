@@ -324,9 +324,21 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             if (!has_water) {
                 has_water = map_terrain_exists_tile_in_area_with_type(map_x_start - 1, map_y_start - 1, 5, TERRAIN_WATER);
             }
-            if (map_x_start > map_x || map_y_start > map_y) {
-                draw_later = 1;
-            } else {
+            switch (city_view_orientation()) {
+                case DIR_0_TOP:
+                    draw_later = (map_x_start > map_x || map_y_start > map_y);
+                    break;
+                case DIR_2_RIGHT:
+                    draw_later = (map_x_start < map_x || map_y_start > map_y);
+                    break;
+                case DIR_4_BOTTOM:
+                    draw_later = (map_x_start < map_x || map_y_start < map_y);
+                    break;
+                case DIR_6_LEFT:
+                    draw_later = (map_x_start > map_x || map_y_start < map_y);
+                    break;
+            }
+            if (!draw_later) {
                 draw_single_reservoir(x_start, y_start, has_water);
             }
         }
