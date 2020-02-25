@@ -316,7 +316,9 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
                 draw_flat_tile(x_start + X_VIEW_OFFSETS[i], y_start + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
             }
         } else {
-            offset = city_view_pixels_to_grid_offset(x_start, y_start);
+            view_tile view;
+            city_view_pixels_to_view_tile(x_start, y_start, &view);
+            offset = city_view_tile_to_grid_offset(&view);
             int map_x_start = map_grid_offset_to_x(offset) - 1;
             int map_y_start = map_grid_offset_to_y(offset) - 1;
             if (!has_water) {
@@ -327,7 +329,6 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             } else {
                 draw_single_reservoir(x_start, y_start, has_water);
             }
-            city_view_pixels_to_grid_offset(x, y);
         }
     }
     // mouse pointer = center tile of reservoir instead of north, correct here:

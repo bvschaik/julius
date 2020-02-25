@@ -89,7 +89,10 @@ void widget_city_draw_construction_cost(void)
 
 static void update_city_view_coords(int x, int y, map_tile *tile)
 {
-    tile->grid_offset = city_view_pixels_to_grid_offset(x, y);
+    view_tile view;
+    city_view_pixels_to_view_tile(x, y, &view);
+    tile->grid_offset = city_view_tile_to_grid_offset(&view);
+    city_view_set_selected_view_tile(&view);
     if (tile->grid_offset) {
         tile->x = map_grid_offset_to_x(tile->grid_offset);
         tile->y = map_grid_offset_to_y(tile->grid_offset);

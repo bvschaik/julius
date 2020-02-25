@@ -104,7 +104,10 @@ void widget_map_editor_draw(void)
 
 static void update_city_view_coords(const mouse *m, map_tile *tile)
 {
-    tile->grid_offset = city_view_pixels_to_grid_offset(m->x, m->y);
+    view_tile view;
+    city_view_pixels_to_view_tile(m->x, m->y, &view);
+    tile->grid_offset = city_view_tile_to_grid_offset(&view);
+    city_view_set_selected_view_tile(&view);
     if (tile->grid_offset) {
         tile->x = map_grid_offset_to_x(tile->grid_offset);
         tile->y = map_grid_offset_to_y(tile->grid_offset);

@@ -38,7 +38,9 @@ void city_view_get_selected_tile_pixels(int *x_pixels, int *y_pixels);
 
 int city_view_pixels_to_view_tile(int x_pixels, int y_pixels, view_tile *tile);
 
-int city_view_pixels_to_grid_offset(int x_pixels, int y_pixels);
+void city_view_set_selected_view_tile(const view_tile *tile);
+
+int city_view_tile_to_grid_offset(const view_tile *tile);
 
 void city_view_go_to_grid_offset(int grid_offset);
 
