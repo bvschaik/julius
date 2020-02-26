@@ -143,6 +143,11 @@ int touch_create(touch_coords start_coords, time_millis start_time)
     return index;
 }
 
+int touch_in_use(int index)
+{
+    return index >= 0 && index < MAX_ACTIVE_TOUCHES && touch_data[index].in_use;
+}
+
 void touch_update(int index, touch_coords current_coords, touch_coords frame_movement, time_millis current_time, int has_ended)
 {
     if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !touch_data[index].in_use) {

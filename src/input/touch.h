@@ -43,6 +43,7 @@ void reset_touches(void);
 
 int touch_create(touch_coords start_coords, time_millis start_time);
 void touch_update(int index, touch_coords current_coords, touch_coords frame_movement, time_millis current_time, int has_ended);
+int touch_in_use(int index);
 
 int touch_to_mouse(void);
 

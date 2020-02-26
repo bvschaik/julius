@@ -22,7 +22,7 @@ static touch_coords get_touch_coordinates(float x, float y)
 static int get_touch_index(SDL_FingerID id)
 {
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
-        if (touch_id[i] == id) {
+        if (touch_id[i] == id && touch_in_use(i)) {
             return i;
         }
     }
