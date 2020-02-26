@@ -641,7 +641,7 @@ int map_tiles_set_wall(int x, int y)
     if (!map_terrain_is(grid_offset, TERRAIN_WALL)) {
         tile_set = 1;
     }
-    map_terrain_set(grid_offset, TERRAIN_WALL);
+    map_terrain_add(grid_offset, TERRAIN_WALL);
     map_property_clear_constructing(grid_offset);
 
     foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_wall_image);
