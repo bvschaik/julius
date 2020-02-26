@@ -267,7 +267,7 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset)
 		else if (b->type == BUILDING_GRANARY) {
 			if (map_routing_citizen_is_road(grid_offset)) {
 				if (config_get(CONFIG_GP_CH_DYNAMIC_GRANARIES)) {
-					if (map_property_multi_tile_xy(grid_offset) == EDGE_X1Y1 || map_has_adjacent_road_tiles(grid_offset)) {
+					if (map_property_multi_tile_xy(grid_offset) == EDGE_X1Y1 || map_has_adjacent_road_tiles(grid_offset) || map_has_adjacent_granary_road(grid_offset)) {
 						is_road = 1;
 					}
 				}
@@ -331,4 +331,24 @@ int map_has_adjacent_road_tiles(int grid_offset)
 
 
 
+}
+
+int map_has_adjacent_granary_road(int grid_offset)	
+{
+	int tiles[4];
+	tiles[0] = grid_offset + map_grid_delta(0, -1);
+	tiles[1] = grid_offset + map_grid_delta(1, 0);
+	tiles[2] = grid_offset + map_grid_delta(0, 1);
+	tiles[3] = grid_offset + map_grid_delta(-1, 0);
+	for (int i = 0; i < 4; i++) {
+		if (building_get(map_building_at(tiles[i]))->type != BUILDING_GRANARY) continue;
+		switch (map_property_multi_tile_xy(tiles[i])) {
+		case EDGE_X1Y0:
+		case EDGE_X0Y1:
+		case EDGE_X2Y1:
+		case EDGE_X1Y2:
+            return 1;
+		}
+	}
+	return 0;
 }
