@@ -5,6 +5,7 @@
 #include "building/industry.h"
 #include "building/warehouse.h"
 #include "city/resource.h"
+#include "core/config.h"
 #include "core/image.h"
 #include "figure/combat.h"
 #include "figure/image.h"
@@ -284,6 +285,9 @@ static void determine_granaryman_destination(figure *f, int road_network_id)
         if (dst_building_id) {
             f->loads_sold_or_carrying = 0;
             set_destination(f, FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD, dst_building_id, dst.x, dst.y);
+            if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
+                f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+            }	    
         } else {
             f->state = FIGURE_STATE_DEAD;
         }
@@ -488,6 +492,9 @@ void figure_warehouseman_action(figure *f)
             }
             break;
         case FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD:
+            if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {	    
+                f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+	    }
             f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
@@ -499,6 +506,9 @@ void figure_warehouseman_action(figure *f)
             }
             break;
         case FIGURE_ACTION_55_WAREHOUSEMAN_AT_GRANARY:
+            if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {	    
+                f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+	    }
             f->wait_ticks++;
             if (f->wait_ticks > 4) {
                 int resource;
@@ -515,6 +525,9 @@ void figure_warehouseman_action(figure *f)
             break;
         case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
             // update graphic
+            if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {	    
+                f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+	    }
             if (f->loads_sold_or_carrying <= 0) {
                 f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             } else if (f->loads_sold_or_carrying == 1) {

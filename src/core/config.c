@@ -32,6 +32,7 @@ static const char *ini_keys[] = {
     "gameplay_houses_stockpile_more",
     "gameplay_buyers_dont_distribute",
     "gameplay_change_immediate_delete",
+    "gameplay_change_getting_granaries_go_offroad",
 };
 
 static int values[CONFIG_MAX_ENTRIES];

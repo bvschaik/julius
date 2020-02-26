@@ -7,6 +7,7 @@
 #include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/config.h"
 #include "map/routing_terrain.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -369,9 +370,11 @@ int building_granary_for_getting(building *src, map_point *dst)
     int min_building_id = 0;
     for (int i = 0; i < non_getting_granaries.num_items; i++) {
         building *b = building_get(non_getting_granaries.building_ids[i]);
-        if (b->road_network_id != src->road_network_id) {
-            continue;
-        }
+        if (!config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
+            if (b->road_network_id != src->road_network_id) {
+                continue;
+            }
+        }	    	
         const building_storage *s = building_storage_get(b->storage_id);
         int amount_gettable = 0;
         if ((building_granary_is_getting(RESOURCE_WHEAT,src)) &&

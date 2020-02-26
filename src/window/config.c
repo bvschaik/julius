@@ -12,7 +12,7 @@
 #include "graphics/window.h"
 #include "window/main_menu.h"
 
-#define NUM_CHECKBOXES 20
+#define NUM_CHECKBOXES 21
 #define CONFIG_PAGES 3
 #define NUM_BOTTOM_BUTTONS 5
 
@@ -20,7 +20,7 @@
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
-static int options_per_page[CONFIG_PAGES] = { 5,14,1 };
+static int options_per_page[CONFIG_PAGES] = { 5,14,2 };
 static void toggle_switch(int id, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
@@ -48,6 +48,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION },
     { 20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS },
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS },
+    { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD },
 };
 
 
@@ -96,6 +97,7 @@ static const char *option_names[] = {
     "Buying market ladies don't distribute goods",
     "Fix Emperor change and survival time in custom missions",
     "Immediately destroy buildings",
+    "Cart pushers from getting granaries can go offroad",
 };
 
 static struct {
