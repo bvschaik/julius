@@ -35,10 +35,33 @@ static int scale_pixels_to_logical(int pixel_value)
     return pixel_value * 100 / scale_percentage;
 }
 
+void platform_screen_set_scale(int display_scale_percentage)
+{
+    scale_percentage = display_scale_percentage;
+}
+
+int platform_screen_get_scale()
+{
+    return scale_percentage;
+}
+
+void platform_screen_get_scaled_params(int* width, int* height)
+{
+    int fullscreen = setting_fullscreen();
+    if (fullscreen == 1) {
+        SDL_DisplayMode mode;
+        SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(SDL.window), &mode);
+        *width = mode.w;
+        *height = mode.h;
+    }
+    else {
+        setting_window(width, height);
+    }
+}
+
 int platform_screen_create(const char *title, int display_scale_percentage)
 {
     scale_percentage = display_scale_percentage;
-
     int width, height;
     int fullscreen = setting_fullscreen();
     if (fullscreen) {
@@ -59,6 +82,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     if (fullscreen) {
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
+    
     SDL.window = SDL_CreateWindow(title,
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         width, height, flags);
@@ -83,7 +107,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     }
 #endif
     SDL_SetWindowMinimumSize(SDL.window, scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
-    return platform_screen_resize(width, height);
+    return platform_screen_resize(width, height, 1);
 }
 
 void platform_screen_destroy(void)
@@ -102,7 +126,7 @@ void platform_screen_destroy(void)
     }
 }
 
-int platform_screen_resize(int pixel_width, int pixel_height)
+int platform_screen_resize(int pixel_width, int pixel_height, int save)
 {
     int logical_width = scale_pixels_to_logical(pixel_width);
     int logical_height = scale_pixels_to_logical(pixel_height);
@@ -111,16 +135,18 @@ int platform_screen_resize(int pixel_width, int pixel_height)
         SDL_DestroyTexture(SDL.texture);
         SDL.texture = 0;
     }
+    if (save) {
+        setting_set_display(setting_fullscreen(), logical_width, logical_height);
+    }
 
-    setting_set_display(setting_fullscreen(), logical_width, logical_height);
     SDL.texture = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         logical_width, logical_height);
-    if (scale_percentage != 100) {
-        // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
-        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
-        SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
-    }
+   
+    // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
+    SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
+    
     if (SDL.texture) {
         SDL_Log("Texture created (%d x %d)", logical_width, logical_height);
         screen_set_resolution(logical_width, logical_height);

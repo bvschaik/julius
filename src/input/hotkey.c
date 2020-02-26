@@ -17,6 +17,7 @@
 #include "map/bookmark.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"
+#include "platform/screen.h"
 #include "window/advisors.h"
 #include "window/building_info.h"
 #include "window/numeric_input.h"
@@ -160,6 +161,35 @@ static void input_number(int number)
     }
 }
 
+static void change_zoom(int direction)
+{
+    /*if (!window_is(WINDOW_CITY)) {
+        return;
+    }*/
+
+    // direction = -1 => zoom out
+    // direction = 1  => zoom in
+    int zoom_amount = 0;
+    if (direction == 1) {
+        zoom_amount = 10;
+    }
+    else if (direction == -1) {
+        zoom_amount = -10;
+    }
+    
+    int current_scale = platform_screen_get_scale();
+    current_scale += zoom_amount;
+    if (current_scale < 50 || current_scale > 150) {
+        // forbidden, do nothing
+        return;
+    }
+
+    int width, height;
+    platform_screen_set_scale(current_scale);    
+    platform_screen_get_scaled_params(&width, &height);    
+    platform_screen_resize(width, height, 0);
+}
+
 void hotkey_character(int c, int with_ctrl, int with_alt)
 {
     if (with_ctrl && c == 'a') {
@@ -194,10 +224,12 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
 
     switch (c) {
         case '[':
-            change_game_speed(1);
+            change_zoom(-1);
+            //change_game_speed(1);
             break;
         case ']':
-            change_game_speed(0);
+            change_zoom(+1);
+            //change_game_speed(0);
             break;
         case ' ':
             toggle_overlay();
