@@ -8,7 +8,7 @@
 
 #define MAX_LINE 100
 
-static const char *INI_FILENAME = "juliusgc.ini";
+static const char *INI_FILENAME = "augustus.ini";
 
 // Keep this in the same order as the config_keys in config.h
 static const char *ini_keys[] = {
@@ -66,6 +66,8 @@ void config_set_defaults(void)
     values[CONFIG_GP_CH_DYNAMIC_GRANARIES] = 0;
     values[CONFIG_GP_CH_MORE_STOCKPILE] = 0;
     values[CONFIG_GP_CH_NO_BUYER_DISTRIBUTION] = 0;
+    values[CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS] = 0;
+    values[CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD] = 0;
     values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
     values[CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE] = 0;
 }

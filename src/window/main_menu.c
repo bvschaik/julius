@@ -39,14 +39,14 @@ static generic_button buttons[] = {
 
 static void draw_version_string(void)
 {
-    uint8_t version_string[100] = "v";
+    uint8_t version_string[100] = "Augustus v";
     const uint8_t *julius_version = string_from_ascii(JULIUS_VERSION);
     const uint8_t *julius_version_suffix = string_from_ascii(JULIUS_VERSION_SUFFIX);
     int version_length = string_length(julius_version);
     int text_y = screen_height() - 30;
 
-    string_copy(julius_version, version_string + 1, 99);
-    string_copy(julius_version_suffix, version_string + 1 + version_length, 99 - version_length);
+    string_copy(julius_version, version_string + 10, 90);
+    string_copy(julius_version_suffix, version_string + 10 + version_length, 90 - version_length);
 
     int text_width = text_get_width(version_string, FONT_SMALL_PLAIN);
 

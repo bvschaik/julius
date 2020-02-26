@@ -49,12 +49,10 @@ deploy:
   on:
     all_branches: true
     repo: Keriew/julius
-    condition: $DEPLOY
+    condition: "$DEPLOY"
   file: bintray.json
   user: keriew
   skip_cleanup: true
-  key:
-    secure: "HT4ufGFaTRYsYhCeqtBJWdQwtbYxEAwhLQ0fu5TIeIBoX8lnfiRiVwx9gmawc9pq+4AT4OAJoCMu4wHphoXyDfrzeFY7i6d7LL9J15S4JfCH7eOYyTUk00cuqX+lpaciymLnCG3melPAk3kKzxrz/Fg3XSnIw3sahc0cu4zQIsoS7Pbx8xMYvDErB9Oxled9Cvooa0r/z1+IPUpNe6iL5P8CV/XZiv7cGVFtNdVdTIm4DgD2nruo6sesUu4GrMyd1xB3DkhFWXBxWpKe+3Rg4nLnm4hbPKKuyG9mGAuNazeLt4CTeTuw2eZPGJAtfBZMUG9yhS82AT+SZ9rv0Kdb4KIA5k+/9B980jqXY2mKyojPf1hWmBsk1UTUsbASngTxAc91/PcMdrwXRRVb746qhIDnFjfwrJuZScHxOe6mE3MutqBkANOddVVe4PJNHuvj56cVAePpVxGrvSTgsp8jcdbs4eUEsq6MVEi59y4RSRRI75pcQXB1qzAugn5QxdYB3yF4uEfFrpPwvrVTYl5HN3bFWx0308RnrXQHGLT9i3aC9mNLSg00X2zBugJlHhB/kcCvcigEgSCO65MEkXCfkk7L8OpFyh1enbyA5IrgL2Z7wTxBgvZh0+1pqa5fqqMiVH5+mlZFERIQN5HhwhHTS6o86sq8l3hEana/MV7qV8g="
-          
+  key: 92abc2b88217abc81de1eeba37e5066a0baa6a25
 after_deploy:
-  - ./.ci_scripts/bintray_link.sh
+- "./.ci_scripts/bintray_link.sh"

@@ -5,19 +5,19 @@ build_dir="$(pwd)/build"
 VERSION=$(cat res/version.txt)
 if [[ ! -z "$TRAVIS_TAG" ]]
 then
-  REPO=julius
+  REPO=Augustus
   NAME_SUFFIX=-release
 elif [[ "$TRAVIS_BRANCH" == "master" ]]
 then
-  REPO=julius
+  REPO=Augustus
   NAME_SUFFIX=-unstable
 elif [[ "$TRAVIS_BRANCH" =~ ^feature/ ]]
 then
-  REPO=julius-branches
+  REPO=Augustus-branches
   NAME_SUFFIX=
   VERSION=${TRAVIS_BRANCH##feature/}-$VERSION
 else
-  echo "Unknown branch type $TRAVIS_BRANCH - skipping deply to Bintray"
+  echo "Unknown branch type $TRAVIS_BRANCH - skipping deploy to Bintray"
   exit
 fi
 
@@ -31,7 +31,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "linux$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/keriew/julius.git"
+    "vcs_url": "https://github.com/Keriew/julius.git"
   },
 
   "version": {
@@ -42,8 +42,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/juliusgc.AppImage",
-      "uploadPattern": "juliusgc-$VERSION-linux.AppImage"
+      "includePattern": "${build_dir}/julius.AppImage",
+      "uploadPattern": "julius-$VERSION-linux.AppImage"
     }
   ],
 
@@ -59,7 +59,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "mac$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/keriew/julius.git"
+    "vcs_url": "https://github.com/Keriew/julius.git"
   },
 
   "version": {
@@ -70,8 +70,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/juliusgc.dmg",
-      "uploadPattern": "juliusgc-$VERSION-mac.dmg",
+      "includePattern": "${build_dir}/julius.dmg",
+      "uploadPattern": "julius-$VERSION-mac.dmg",
       "listInDownloads": true
     }
   ],
@@ -88,7 +88,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "vita$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/keriew/julius.git"
+    "vcs_url": "https://github.com/Keriew/julius.git"
   },
 
   "version": {
@@ -99,8 +99,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/juliusgc.vpk",
-      "uploadPattern": "juliusgc-$VERSION-vita.vpk",
+      "includePattern": "${build_dir}/julius.vpk",
+      "uploadPattern": "julius-$VERSION-vita.vpk",
       "listInDownloads": true
     }
   ],
@@ -117,7 +117,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "switch$NAME_SUFFIX",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/keriew/julius.git"
+    "vcs_url": "https://github.com/Keriew/julius.git"
   },
 
   "version": {
@@ -128,8 +128,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/juliusgc_switch.zip",
-      "uploadPattern": "juliusgc-$VERSION-switch.zip",
+      "includePattern": "${build_dir}/julius.zip",
+      "uploadPattern": "julius-$VERSION-switch.zip",
       "listInDownloads": true
     }
   ],
