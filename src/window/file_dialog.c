@@ -73,6 +73,8 @@ static struct {
 file_type_data saved_game_data = {"sav"};
 file_type_data scenario_data = {"map"};
 
+static int double_click = 0;
+
 static void init(file_type type, file_dialog_type dialog_type)
 {
     data.type = type;
@@ -174,6 +176,7 @@ static int handle_scrollbar(const mouse *m)
 
 static void handle_mouse(const mouse *m)
 {
+    double_click = m->left.double_click;
     if (m->scrolled == SCROLL_DOWN) {
         button_scroll(1, 3);
     } else if (m->scrolled == SCROLL_UP) {
@@ -302,6 +305,10 @@ static void button_select_file(int index, int param2)
         file_remove_extension(data.typed_name);
         keyboard_refresh();
         data.message_not_exist_start_time = 0;
+    }
+    if (data.dialog_type != FILE_DIALOG_DELETE && double_click) {
+        double_click = 0;
+        button_ok_cancel(1, 0);
     }
 }
 

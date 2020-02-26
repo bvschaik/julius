@@ -1,15 +1,20 @@
 #include "input/mouse.h"
 
+#include "core/time.h"
 #include "graphics/screen.h"
 
 enum {
     SYSTEM_NONE = 0,
     SYSTEM_UP = 1,
-    SYSTEM_DOWN = 2
+    SYSTEM_DOWN = 2,
+    SYSTEM_DOUBLE_CLICK = 4
 };
+
+#define DOUBLE_CLICK_TIME 300
 
 static mouse data;
 static mouse dialog;
+static time_millis last_click;
 
 const mouse *mouse_get(void)
 {
@@ -31,6 +36,7 @@ void mouse_set_from_touch(const touch *first, const touch *last)
         data.left.is_down = (!first->has_ended && first->in_use);
         data.left.went_down = first->has_started;
         data.left.went_up = first->has_ended;
+        data.left.double_click = touch_was_double_click(first);
 
         data.right.is_down = (!last->has_ended && last->in_use);
         data.right.went_down = last->has_started;
@@ -39,6 +45,7 @@ void mouse_set_from_touch(const touch *first, const touch *last)
         data.left.is_down = 0;
         data.left.went_down = 0;
         data.left.went_up = 0;
+        data.left.double_click = 0;
 
         data.right.is_down = 0;
         data.right.went_down = 0;
@@ -48,6 +55,9 @@ void mouse_set_from_touch(const touch *first, const touch *last)
 
 void mouse_set_position(int x, int y)
 {
+    if (x != data.x || y != data.y) {
+        last_click = 0;
+    }
     data.x = x;
     data.y = y;
     data.is_touch = 0;
@@ -59,6 +69,11 @@ void mouse_set_left_down(int down)
     data.left.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
     data.is_touch = 0;
     data.is_inside_window = 1;
+    if (!down) {
+        time_millis now = time_get_millis();
+        data.left.system_change |= ((last_click < now) && ((now - last_click) <= DOUBLE_CLICK_TIME)) ? SYSTEM_DOUBLE_CLICK : SYSTEM_NONE;
+        last_click = now;
+    }
 }
 
 void mouse_set_right_down(int down)
@@ -66,6 +81,7 @@ void mouse_set_right_down(int down)
     data.right.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
     data.is_touch = 0;
     data.is_inside_window = 1;
+    last_click = 0;
 }
 
 void mouse_set_inside_window(int inside)
@@ -78,6 +94,7 @@ static void update_button_state(mouse_button *button)
 {
     button->went_down = (button->system_change & SYSTEM_DOWN) == SYSTEM_DOWN;
     button->went_up = (button->system_change & SYSTEM_UP) == SYSTEM_UP;
+    button->double_click = (button->system_change & SYSTEM_DOUBLE_CLICK) == SYSTEM_DOUBLE_CLICK;
     button->system_change = SYSTEM_NONE;
     button->is_down = (button->is_down || button->went_down) && !button->went_up;
 }
@@ -111,6 +128,7 @@ void mouse_reset_button_state(void)
     data.left.is_down = 0;
     data.left.went_down = 0;
     data.left.went_up = 0;
+    data.left.double_click = 0;
     data.left.system_change = SYSTEM_NONE;
 
     data.right.is_down = 0;
