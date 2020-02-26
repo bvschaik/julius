@@ -30,6 +30,8 @@ void city_ratings_peace_record_rioter(void);
 
 void city_ratings_change_favor(int amount);
 
+void city_ratings_reset_favor_emperor_change(void);
+
 void city_ratings_reduce_favor_missed_request(int penalty);
 
 void city_ratings_limit_favor(int max_favor);

@@ -14,6 +14,7 @@ static const char *INI_FILENAME = "juliusgc.ini";
 static const char *ini_keys[] = {
     "gameplay_fix_immigration",
     "gameplay_fix_100y_ghosts",
+    "gameplay_fix_editor_events",
     "ui_sidebar_info",
     "ui_show_intro_video",
     "ui_smooth_scrolling",
@@ -49,6 +50,7 @@ void config_set_defaults(void)
     values[CONFIG_GP_FIX_IMMIGRATION_BUG] = 0;
     values[CONFIG_GP_FIX_100_YEAR_GHOSTS] = 0;
     values[CONFIG_UI_WALKER_WAYPOINTS] = 0;
+    values[CONFIG_GP_FIX_EDITOR_EVENTS] = 0;
     values[CONFIG_UI_SIDEBAR_INFO] = 0;
     values[CONFIG_UI_SMOOTH_SCROLLING] = 0;
     values[CONFIG_GP_CH_GRANDFESTIVAL] = 0;
