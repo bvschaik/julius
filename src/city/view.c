@@ -550,6 +550,45 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
     }
 }
 
+static void do_valid_callback(int x, int y, int grid_offset, map_callback *callback)
+{
+    if (map_image_at(grid_offset) >= 6) {
+        callback(x, y, grid_offset);
+    }
+}
+
+void city_view_foreach_tile_in_range(int x, int y, int grid_offset, int size, int radius, map_callback *callback)
+{
+    int x_delta = HALF_TILE_WIDTH_PIXELS;
+    int y_delta = HALF_TILE_HEIGHT_PIXELS;
+    int x_offset = HALF_TILE_WIDTH_PIXELS;
+    int y_offset = TILE_HEIGHT_PIXELS;
+    if (size) {
+        --size;
+        y += HALF_TILE_HEIGHT_PIXELS * size;
+        x_offset += HALF_TILE_WIDTH_PIXELS * size;
+        y_offset += HALF_TILE_HEIGHT_PIXELS * size;
+    } else {
+        do_valid_callback(x, y, grid_offset, callback);
+    }
+    for (int ring = 0; ring < radius; ++ring) {
+        int offset_north = grid_offset + map_grid_delta(-ring - 2, -ring - 2);
+        int offset_south = grid_offset + map_grid_delta(ring + size, ring + size);
+        do_valid_callback(x, y + y_offset, offset_south, callback);
+        do_valid_callback(x, y - y_offset, offset_north, callback);
+        do_valid_callback(x - x_offset - x_delta, y, grid_offset + map_grid_delta(-ring - 2, ring + size), callback);
+        do_valid_callback(x + x_offset + x_delta, y, grid_offset + map_grid_delta(ring + size, -ring - 2), callback);
+        for (int tile = 1; tile < (ring + size) * 2; ++tile) {
+            do_valid_callback(x + x_delta * tile, y - y_offset + y_delta * tile, offset_north + tile, callback);
+            do_valid_callback(x - x_delta * tile, y - y_offset + y_delta * tile, offset_north + tile * GRID_SIZE, callback);
+            do_valid_callback(x + x_delta * tile, y + y_offset - y_delta * tile, offset_south - tile * GRID_SIZE, callback);
+            do_valid_callback(x - x_delta * tile, y + y_offset - y_delta * tile, offset_south - tile, callback);
+        }
+        x_offset += TILE_WIDTH_PIXELS;
+        y_offset += TILE_HEIGHT_PIXELS;
+    }
+}
+
 void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, map_callback *callback)
 {
     int odd = 0;

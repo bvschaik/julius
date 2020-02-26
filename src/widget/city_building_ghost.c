@@ -287,6 +287,16 @@ static void draw_single_reservoir(int x, int y, int has_water)
     }
 }
 
+static void draw_reservoir_range_with_water(int x, int y, int grid_offset)
+{
+    image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_ALPHA_BLUE);
+}
+
+static void draw_reservoir_range_without_water(int x, int y, int grid_offset)
+{
+    image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_ALPHA_GRAY);
+}
+
 static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
 {
     int map_x = tile->x - 1;
@@ -340,6 +350,8 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
                     break;
             }
             if (!draw_later) {
+                city_view_foreach_tile_in_range(x, y, tile->grid_offset, 3, 10, has_water ? draw_reservoir_range_with_water : draw_reservoir_range_without_water);
+                city_view_foreach_tile_in_range(x_start, y_start, offset, 3, 10, has_water ? draw_reservoir_range_with_water : draw_reservoir_range_without_water);
                 draw_single_reservoir(x_start, y_start, has_water);
             }
         }
@@ -351,6 +363,12 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else {
+        if(!building_construction_in_progress() || draw_later) {
+            city_view_foreach_tile_in_range(x, y, tile->grid_offset, 3, 10, has_water ? draw_reservoir_range_with_water : draw_reservoir_range_without_water);
+            if(draw_later) {
+                city_view_foreach_tile_in_range(x_start, y_start, offset, 3, 10, has_water ? draw_reservoir_range_with_water : draw_reservoir_range_without_water);
+            }
+        }
         draw_single_reservoir(x, y, has_water);
         if (draw_later) {
             draw_single_reservoir(x_start, y_start, has_water);
