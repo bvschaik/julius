@@ -149,6 +149,9 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
         } else {
             radius = x_max - x_min + 3;
         }
+        if (config_get(CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS)) {
+	    building_update_state();
+        }
         map_tiles_update_region_empty_land(x_min, y_min, x_max, y_max);
         map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
         map_tiles_update_region_rubble(x_min, y_min, x_max, y_max);
