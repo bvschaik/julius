@@ -368,7 +368,7 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
     time_millis current_time = time_get_millis();
     time_millis time_delta = current_time - data.speed.last_time;
     data.speed.last_time = current_time;
-    if(time_delta > 17 && time_delta < MAX_SPEED_TIME_WEIGHT) {
+    if (time_delta > 17 && time_delta < MAX_SPEED_TIME_WEIGHT) {
         delta->x = (int) ((float) (data.speed.x / FRAME_TIME) * time_delta);
         delta->y = (int) ((float) (data.speed.y / FRAME_TIME) * time_delta);
     } else {
