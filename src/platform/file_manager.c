@@ -119,6 +119,10 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
             if (is_file(m) && !file_has_extension(name, extension)) {
                 continue;
             }
+            if (type & TYPE_DIR && name[0] == '.') {
+                // Skip current (.), parent (..) and hidden directories (.*)
+                continue;
+            }
             match = callback(name);
         } else if (file_has_extension(name, extension)) {
             match = callback(name);
