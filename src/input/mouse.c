@@ -125,6 +125,8 @@ void mouse_reset_up_state(void)
 
 void mouse_reset_button_state(void)
 {
+    last_click = 0;
+
     data.left.is_down = 0;
     data.left.went_down = 0;
     data.left.went_up = 0;

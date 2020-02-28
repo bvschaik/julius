@@ -39,7 +39,7 @@ int touch_was_double_click(const touch *t);
 int touch_is_scroll(void);
 int touch_get_scroll(void);
 
-void reset_touches(void);
+void reset_touches(int reset_old_touch);
 
 int touch_create(touch_coords start_coords, time_millis start_time);
 void touch_update(int index, touch_coords current_coords, touch_coords frame_movement, time_millis current_time, int has_ended);
