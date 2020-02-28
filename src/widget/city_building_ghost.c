@@ -274,6 +274,18 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
     }
 }
 
+static void draw_single_reservoir(int x, int y, int has_water)
+{
+    int image_id = image_group(GROUP_BUILDING_RESERVOIR);
+    draw_building(image_id, x, y);
+    if (has_water) {
+        const image *img = image_get(image_id);
+        int x_water = x - 58 + img->sprite_offset_x - 2;
+        int y_water = y + img->sprite_offset_y - (img->height - 90);
+        image_draw_masked(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
+    }
+}
+
 static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
 {
     int map_x = tile->x - 1;
@@ -293,8 +305,10 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     if (city_finance_out_of_money()) {
         blocked = 1;
     }
+    int draw_later = 0;
+    int x_start, y_start, offset;
+    int has_water = map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER);
     if (building_construction_in_progress()) {
-        int x_start, y_start;
         building_construction_get_view_position(&x_start, &y_start);
         y_start -= 30;
         if (blocked) {
@@ -302,7 +316,31 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
                 draw_flat_tile(x_start + X_VIEW_OFFSETS[i], y_start + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
             }
         } else {
-            draw_building(image_group(GROUP_BUILDING_RESERVOIR), x_start, y_start);
+            view_tile view;
+            city_view_pixels_to_view_tile(x_start, y_start, &view);
+            offset = city_view_tile_to_grid_offset(&view);
+            int map_x_start = map_grid_offset_to_x(offset) - 1;
+            int map_y_start = map_grid_offset_to_y(offset) - 1;
+            if (!has_water) {
+                has_water = map_terrain_exists_tile_in_area_with_type(map_x_start - 1, map_y_start - 1, 5, TERRAIN_WATER);
+            }
+            switch (city_view_orientation()) {
+                case DIR_0_TOP:
+                    draw_later = map_x_start > map_x || map_y_start > map_y;
+                    break;
+                case DIR_2_RIGHT:
+                    draw_later = map_x_start < map_x || map_y_start > map_y;
+                    break;
+                case DIR_4_BOTTOM:
+                    draw_later = map_x_start < map_x || map_y_start < map_y;
+                    break;
+                case DIR_6_LEFT:
+                    draw_later = map_x_start > map_x || map_y_start < map_y;
+                    break;
+            }
+            if (!draw_later) {
+                draw_single_reservoir(x_start, y_start, has_water);
+            }
         }
     }
     // mouse pointer = center tile of reservoir instead of north, correct here:
@@ -312,13 +350,9 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else {
-        int image_id = image_group(GROUP_BUILDING_RESERVOIR);
-        draw_building(image_id, x, y);
-        if (map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER)) {
-            const image *img = image_get(image_id);
-            int x_water = x - 58 + img->sprite_offset_x - 2;
-            int y_water = y + img->sprite_offset_y - (img->height - 90);
-            image_draw_masked(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
+        draw_single_reservoir(x, y, has_water);
+        if (draw_later) {
+            draw_single_reservoir(x_start, y_start, has_water);
         }
     }
 }
@@ -345,7 +379,7 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
         draw_flat_tile(x, y, COLOR_MASK_RED);
     } else {
         int image_id = image_group(GROUP_BUILDING_AQUEDUCT);
-        const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 0);
+        const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 1);
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
             int group_offset = img->group_offset;
             if (!img->aqueduct_offset) {
