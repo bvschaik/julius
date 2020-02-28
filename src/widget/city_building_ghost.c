@@ -23,6 +23,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
+#include "scenario/property.h"
 #include "widget/city_bridge.h"
 
 #define MAX_TILES 25
