@@ -165,7 +165,7 @@ void touch_update(int index, touch_coords current_coords, touch_coords frame_mov
     }
 }
 
-void reset_touches(void)
+void reset_touches(int reset_old_touch)
 {
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         touch *t = &touch_data[i];
@@ -174,7 +174,11 @@ void reset_touches(void)
         }
         if (t->has_ended) {
             t->in_use = 0;
-            old_touch = *t;
+            if (!reset_old_touch) {
+                old_touch = *t;
+            } else {
+                old_touch.last_change_time = 0;
+            }
             t->has_started = 0;
             t->has_moved = 0;
             t->has_ended = 0;
