@@ -38,7 +38,7 @@ int image_init(void)
     return 1;
 }
 
-int image_load_climate(int climate_id, int is_editor)
+int image_load_climate(int climate_id, int is_editor, int force_reload)
 {
     return 1;
 }

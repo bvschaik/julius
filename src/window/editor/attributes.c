@@ -242,7 +242,7 @@ static void button_demand_changes(int param1, int param2)
 static void change_climate(int param1, int param2)
 {
     scenario_editor_cycle_climate();
-    image_load_climate(scenario_property_climate(), 1);
+    image_load_climate(scenario_property_climate(), 1, 0);
     widget_minimap_invalidate();
     window_request_refresh();
 }

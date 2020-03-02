@@ -288,9 +288,9 @@ static void load_empire(void)
     convert_uncompressed(&buf, size, data.empire_data);
 }
 
-int image_load_climate(int climate_id, int is_editor)
+int image_load_climate(int climate_id, int is_editor, int force_reload)
 {
-    if (climate_id == data.current_climate && is_editor == data.is_editor) {
+    if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload) {
         return 1;
     }
 
