@@ -126,7 +126,12 @@ static void draw_building(int image_id, int x, int y)
     image_draw_isometric_top(image_id, x, y, COLOR_MASK_GREEN);
 }
 
-static void draw_regular_building(building_type type, int image_id, int x, int y)
+static void draw_fountain_range(int x, int y, int grid_offset)
+{
+    image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_ALPHA_BLUE);
+}
+
+static void draw_regular_building(building_type type, int image_id, int x, int y, int grid_offset)
 {
     if (building_is_farm(type)) {
         draw_building(image_id, x, y);
@@ -155,6 +160,9 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
         } else {
             image_draw_masked(image_id + 1, x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56, COLOR_MASK_GREEN);
         }
+    } else if (type == BUILDING_WELL) {
+        city_view_foreach_tile_in_range(grid_offset, 1, 2, draw_fountain_range);
+        draw_building(image_id, x, y);
     } else if (type != BUILDING_CLEAR_LAND) {
         draw_building(image_id, x, y);
     }
@@ -280,7 +288,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
         draw_partially_blocked(x_view, y_view, fully_blocked, num_tiles, blocked_tiles);
     } else {
         int image_id = get_building_image_id(tile->x, tile->y, type, props);
-        draw_regular_building(type, image_id, x_view, y_view);
+        draw_regular_building(type, image_id, x_view, y_view, grid_offset);
     }
 }
 
@@ -446,11 +454,6 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
         }
         draw_building(image_id, x, y);
     }
-}
-
-static void draw_fountain_range(int x, int y, int grid_offset)
-{
-    image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_ALPHA_BLUE);
 }
 
 static void draw_fountain(const map_tile *tile, int x, int y)
