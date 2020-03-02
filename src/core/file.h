@@ -65,6 +65,7 @@ void file_remove_extension(uint8_t *filename);
 /**
  * Check if file exists
  * @param filename Filename to check
+ * @param localizable Whether the file may be localized (see core/dir.h)
  * @return boolean true if the file exists, false otherwise
  */
 int file_exists(const char *filename, int localizable);
