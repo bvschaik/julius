@@ -19,7 +19,8 @@ static const char *ini_keys[] = {
     "ui_show_intro_video",
     "ui_smooth_scrolling",
     "ui_visual_feedback_on_delete",
-    "ui_allow_cycling_temples"
+    "ui_allow_cycling_temples",
+    "ui_show_water_structure_range"
 };
 
 static int values[CONFIG_MAX_ENTRIES];
@@ -44,6 +45,7 @@ void config_set_defaults(void)
     values[CONFIG_UI_SMOOTH_SCROLLING] = 0;
     values[CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE] = 0;
     values[CONFIG_UI_ALLOW_CYCLING_TEMPLES] = 0;
+    values[CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE] = 0;
 }
 
 void config_load(void)

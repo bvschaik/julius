@@ -161,7 +161,9 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
             image_draw_masked(image_id + 1, x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56, COLOR_MASK_GREEN);
         }
     } else if (type == BUILDING_WELL) {
-        city_view_foreach_tile_in_range(grid_offset, 1, 2, draw_fountain_range);
+        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
+            city_view_foreach_tile_in_range(grid_offset, 1, 2, draw_fountain_range);
+        }
         draw_building(image_id, x, y);
     } else if (type != BUILDING_CLEAR_LAND) {
         draw_building(image_id, x, y);
@@ -383,8 +385,10 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
                     break;
             }
             if (!draw_later) {
-                city_view_foreach_tile_in_range(offset + 1, 3, 10, draw_first_reservoir_range);
-                city_view_foreach_tile_in_range(tile->grid_offset - GRID_SIZE - 1, 3, 10, draw_second_reservoir_range);
+                if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
+                    city_view_foreach_tile_in_range(offset + 1, 3, 10, draw_first_reservoir_range);
+                    city_view_foreach_tile_in_range(tile->grid_offset - GRID_SIZE - 1, 3, 10, draw_second_reservoir_range);
+                }
                 draw_single_reservoir(x_start, y_start, has_water);
             }
         }
@@ -399,7 +403,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else {
-        if (!building_construction_in_progress() || draw_later) {
+        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!building_construction_in_progress() || draw_later)) {
             if (draw_later) {
                 city_view_foreach_tile_in_range(offset + 1, 3, 10, draw_first_reservoir_range);
             }
@@ -462,7 +466,9 @@ static void draw_fountain(const map_tile *tile, int x, int y)
         draw_flat_tile(x, y, COLOR_MASK_RED);
     } else {
         int image_id = image_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
-        city_view_foreach_tile_in_range(tile->grid_offset, 1, scenario_property_climate() == CLIMATE_DESERT ? 3 : 4, draw_fountain_range);
+        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
+            city_view_foreach_tile_in_range(tile->grid_offset, 1, scenario_property_climate() == CLIMATE_DESERT ? 3 : 4, draw_fountain_range);
+        }
         draw_building(image_id, x, y);
         if (map_terrain_is(tile->grid_offset, TERRAIN_RESERVOIR_RANGE)) {
             const image *img = image_get(image_id);
