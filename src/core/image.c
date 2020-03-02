@@ -278,7 +278,7 @@ static void convert_images(image *images, int size, buffer *buf, color_t *dst)
 
 static void load_empire(void)
 {
-    int size = io_read_file_into_buffer(EMPIRE_555, data.tmp_data, EMPIRE_DATA_SIZE, MAY_BE_LOCALIZED);
+    int size = io_read_file_into_buffer(EMPIRE_555, MAY_BE_LOCALIZED, data.tmp_data, EMPIRE_DATA_SIZE);
     if (size != EMPIRE_DATA_SIZE / 2) {
         log_error("unable to load empire data", EMPIRE_555, 0);
         return;
@@ -297,7 +297,7 @@ int image_load_climate(int climate_id, int is_editor)
     const char *filename_bmp = is_editor ? EDITOR_GRAPHICS_555[climate_id] : MAIN_GRAPHICS_555[climate_id];
     const char *filename_idx = is_editor ? EDITOR_GRAPHICS_SG2[climate_id] : MAIN_GRAPHICS_SG2[climate_id];
 
-    if (MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, data.tmp_data, MAIN_INDEX_SIZE, MAY_BE_LOCALIZED)) {
+    if (MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, MAY_BE_LOCALIZED, data.tmp_data, MAIN_INDEX_SIZE)) {
         return 0;
     }
 
@@ -307,7 +307,7 @@ int image_load_climate(int climate_id, int is_editor)
     buffer_init(&buf, &data.tmp_data[HEADER_SIZE], ENTRY_SIZE * MAIN_ENTRIES);
     read_index(&buf, data.main, MAIN_ENTRIES);
 
-    int data_size = io_read_file_into_buffer(filename_bmp, data.tmp_data, SCRATCH_DATA_SIZE, MAY_BE_LOCALIZED);
+    int data_size = io_read_file_into_buffer(filename_bmp, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
@@ -348,15 +348,15 @@ static int load_cyrillic_fonts(void)
     if (!alloc_font_memory(CYRILLIC_FONT_ENTRIES, CYRILLIC_FONT_DATA_SIZE)) {
         return 0;
     }
-    if (CYRILLIC_FONT_INDEX_SIZE != io_read_file_part_into_buffer(CYRILLIC_FONTS_SG2, data.tmp_data,
-        CYRILLIC_FONT_INDEX_SIZE, CYRILLIC_FONT_INDEX_OFFSET, MAY_BE_LOCALIZED)) {
+    if (CYRILLIC_FONT_INDEX_SIZE != io_read_file_part_into_buffer(CYRILLIC_FONTS_SG2, MAY_BE_LOCALIZED,
+        data.tmp_data, CYRILLIC_FONT_INDEX_SIZE, CYRILLIC_FONT_INDEX_OFFSET)) {
         return 0;
     }
     buffer buf;
     buffer_init(&buf, data.tmp_data, CYRILLIC_FONT_INDEX_SIZE);
     read_index(&buf, data.font, CYRILLIC_FONT_ENTRIES);
 
-    int data_size = io_read_file_into_buffer(CYRILLIC_FONTS_555, data.tmp_data, SCRATCH_DATA_SIZE, MAY_BE_LOCALIZED);
+    int data_size = io_read_file_into_buffer(CYRILLIC_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
@@ -409,7 +409,7 @@ static int load_traditional_chinese_fonts(void)
         return 0;
     }
 
-    int data_size = io_read_file_into_buffer(TRAD_CHINESE_FONTS_555, data.tmp_data, SCRATCH_DATA_SIZE, MAY_BE_LOCALIZED);
+    int data_size = io_read_file_into_buffer(TRAD_CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
@@ -446,7 +446,7 @@ int image_load_enemy(int enemy_id)
     const char *filename_bmp = ENEMY_GRAPHICS_555[enemy_id];
     const char *filename_idx = ENEMY_GRAPHICS_SG2[enemy_id];
 
-    if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(filename_idx, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET, NOT_LOCALIZED)) {
+    if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(filename_idx, MAY_BE_LOCALIZED, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET)) {
         return 0;
     }
 
@@ -454,7 +454,7 @@ int image_load_enemy(int enemy_id)
     buffer_init(&buf, data.tmp_data, ENEMY_INDEX_SIZE);
     read_index(&buf, data.enemy, ENEMY_ENTRIES);
 
-    int data_size = io_read_file_into_buffer(filename_bmp, data.tmp_data, SCRATCH_DATA_SIZE, MAY_BE_LOCALIZED);
+    int data_size = io_read_file_into_buffer(filename_bmp, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
@@ -470,14 +470,14 @@ static const color_t *load_external_data(int image_id)
     strcpy(&filename[4], data.bitmaps[img->draw.bitmap_id]);
     file_change_extension(filename, "555");
     int size = io_read_file_part_into_buffer(
-        &filename[4], data.tmp_data,
-        img->draw.data_length, img->draw.offset - 1, MAY_BE_LOCALIZED
+        &filename[4], MAY_BE_LOCALIZED, data.tmp_data,
+        img->draw.data_length, img->draw.offset - 1
     );
     if (!size) {
         // try in 555 dir
         size = io_read_file_part_into_buffer(
-            filename, data.tmp_data,
-            img->draw.data_length, img->draw.offset - 1, MAY_BE_LOCALIZED
+            filename, MAY_BE_LOCALIZED, data.tmp_data,
+            img->draw.data_length, img->draw.offset - 1
         );
         if (!size) {
             log_error("unable to load external image",
