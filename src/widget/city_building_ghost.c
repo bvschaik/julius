@@ -383,7 +383,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
                     break;
             }
             if (!draw_later) {
-                city_view_foreach_tile_in_range(offset, 3, 10, draw_first_reservoir_range);
+                city_view_foreach_tile_in_range(offset + 1, 3, 10, draw_first_reservoir_range);
                 city_view_foreach_tile_in_range(tile->grid_offset - GRID_SIZE - 1, 3, 10, draw_second_reservoir_range);
                 draw_single_reservoir(x_start, y_start, has_water);
             }
@@ -401,7 +401,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     } else {
         if (!building_construction_in_progress() || draw_later) {
             if (draw_later) {
-                city_view_foreach_tile_in_range(offset, 3, 10, draw_first_reservoir_range);
+                city_view_foreach_tile_in_range(offset + 1, 3, 10, draw_first_reservoir_range);
             }
             city_view_foreach_tile_in_range(tile->grid_offset - GRID_SIZE - 1, 3, 10, draw_second_reservoir_range);
         }

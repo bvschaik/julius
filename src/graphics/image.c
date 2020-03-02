@@ -292,10 +292,14 @@ static void draw_compressed_blend_alpha(const image *img, const color_t *data, i
         draw_compressed_set(img, data, x_offset, y_offset, height, color);
         return;
     }
+    color_t alpha_dst = 256 - alpha;
+    color_t src_rb = (color & 0xff00ff) * alpha;
+    color_t src_g = (color & 0x00ff00) * alpha;
     int unclipped = clip->clip_x == CLIP_NONE;
 
     for (int y = 0; y < height - clip->clipped_pixels_bottom; y++) {
         int x = 0;
+        color_t *dst = graphics_get_pixel(x_offset, y_offset + y);
         while (x < img->width) {
             color_t b = *data;
             data++;
@@ -308,22 +312,21 @@ static void draw_compressed_blend_alpha(const image *img, const color_t *data, i
                 x += b;
             } else {
                 data += b;
-                color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
                 if (unclipped) {
-                    x += b;
                     while (b) {
-                        color_t d = *dst;
-                        *dst = MIX_RB(color, d, alpha) | MIX_G(color, d, alpha);
-                        dst++;
+                        color_t d = dst[x];
+                        dst[x] = (((src_rb + (d & 0xff00ff) * alpha_dst) & 0xff00ff00) |
+                                  ((src_g  + (d & 0x00ff00) * alpha_dst) & 0x00ff0000)) >> 8;
                         b--;
+                        x++;
                     }
                 } else {
                     while (b) {
                         if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right) {
-                            color_t d = *dst;
-                            *dst = MIX_RB(color, d, alpha) | MIX_G(color, d, alpha);
+                            color_t d = dst[x];
+                            dst[x] = (((src_rb + (d & 0xff00ff) * alpha_dst) & 0xff00ff00) |
+                                      ((src_g  + (d & 0x00ff00) * alpha_dst) & 0x00ff0000)) >> 8;
                         }
-                        dst++;
                         x++;
                         b--;
                     }
