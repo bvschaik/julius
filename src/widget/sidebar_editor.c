@@ -14,8 +14,8 @@
 #include "scenario/editor_events.h"
 #include "scenario/editor_map.h"
 #include "scenario/map.h"
+#include "widget/map_editor.h"
 #include "widget/minimap.h"
-
 #include "window/editor/attributes.h"
 #include "window/editor/build_menu.h"
 #include "window/editor/map.h"
@@ -202,6 +202,7 @@ static void button_attributes(int show, int param2)
 
 static void button_build_tool(int tool, int param2)
 {
+    widget_map_editor_clear_current_tile();
     editor_tool_set_type(tool);
     if (window_is(WINDOW_EDITOR_BUILD_MENU)) {
         window_editor_map_show();

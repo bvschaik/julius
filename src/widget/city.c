@@ -199,7 +199,7 @@ static int touch_in_city(const touch *t)
     return (coords.x >= 0 && coords.x < width && coords.y >= 0 && coords.y < height);
 }
 
-static void widget_city_handle_touch_scroll(const touch *t)
+static void handle_touch_scroll(const touch *t)
 {
     if (building_construction_type()) {
         if (t->has_started) {
@@ -240,7 +240,7 @@ static void widget_city_handle_touch_scroll(const touch *t)
     }
 }
 
-static void widget_city_handle_last_touch(void)
+static void handle_last_touch(void)
 {
     const touch *last = get_latest_touch();
     if (last->in_use && touch_was_click(last)) {
@@ -266,7 +266,7 @@ static int handle_cancel_construction_button(const touch *t)
     return 1;
 }
 
-static void widget_city_handle_first_touch(map_tile *tile)
+static void handle_first_touch(map_tile *tile)
 {
     const touch *first = get_earliest_touch();
 
@@ -282,7 +282,7 @@ static void widget_city_handle_first_touch(map_tile *tile)
         }
     }
 
-    widget_city_handle_touch_scroll(first);
+    handle_touch_scroll(first);
 
     if (!touch_in_city(first)) {
         return;
@@ -334,7 +334,7 @@ static void widget_city_handle_first_touch(map_tile *tile)
     }
 }
 
-static void widget_city_handle_touch(void)
+static void handle_touch(void)
 {
     const touch *first = get_earliest_touch();
     if (!first->in_use) {
@@ -352,8 +352,8 @@ static void widget_city_handle_touch(void)
         scroll_restore_margins();
     }
 
-    widget_city_handle_last_touch();
-    widget_city_handle_first_touch(tile);
+    handle_last_touch();
+    handle_first_touch(tile);
 
     if (first->has_ended) {
         data.capture_input = 0;
@@ -371,7 +371,7 @@ void widget_city_handle_mouse(const mouse *m)
 {
     scroll_map(m);
     if (m->is_touch) {
-        widget_city_handle_touch();
+        handle_touch();
         return;
     }
     map_tile *tile = &data.current_tile;
@@ -434,7 +434,7 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
         if (t->has_started) {
             data.capture_input = 1;
         }
-        widget_city_handle_touch_scroll(t);
+        handle_touch_scroll(t);
         if (t->has_ended) {
             data.capture_input = 0;
         }
