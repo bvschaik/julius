@@ -21,15 +21,46 @@ typedef enum {
     CONFIG_STRING_MAX_ENTRIES
 } config_string_key;
 
+/**
+ * Get an integer config value
+ * @param key Integer key
+ */
 int config_get(config_key key);
+
+/**
+ * Set an integer config value
+ * @param key Integer key
+ * @param value Value to set
+ */
 void config_set(config_key key, int value);
 
+/**
+ * Get a string config value
+ * @param key String key
+ * @return Config value, is always non-NULL but may be an empty string
+ */
 const char *config_get_string(config_string_key key);
+
+/**
+ * Set a string config value
+ * @param key String key
+ * @param value Value to set
+ */
 void config_set_string(config_string_key key, const char *value);
 
+/**
+ * Reset all settings to their defaults
+ */
 void config_set_defaults(void);
 
+/**
+ * Load config from file
+ */
 void config_load(void);
+
+/**
+ * Save config to file
+ */
 void config_save(void);
 
 #endif // CORE_CONFIG_H
