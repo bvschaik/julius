@@ -42,11 +42,7 @@ void config_set(config_key key, int value)
 
 const char *config_get_string(config_string_key key)
 {
-    if (string_values[key][0]) {
-        return string_values[key];
-    } else {
-        return 0;
-    }
+    return string_values[key];
 }
 
 void config_set_string(config_string_key key, const char *value)

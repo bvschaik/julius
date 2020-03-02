@@ -15,6 +15,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "window/main_menu.h"
+#include "window/plain_message_dialog.h"
 #include "window/select_list.h"
 
 #include <string.h>
@@ -78,11 +79,7 @@ static void init(void)
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         const char *value = config_get_string(i);
-        if (value) {
-            strncpy(data.string_values[i], value, CONFIG_STRING_VALUE_MAX);
-        } else {
-            data.string_values[i][0] = 0;
-        }
+        strncpy(data.string_values[i], value, CONFIG_STRING_VALUE_MAX);
     }
 
     string_copy(string_from_ascii("(default)"), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
@@ -200,19 +197,30 @@ static void button_reset_defaults(int param1, int param2)
 
 static void button_close(int save, int param2)
 {
-    if (save) {
-        for (int i = 0; i < NUM_CHECKBOXES; i++) {
-            config_key key = checkbox_buttons[i].parameter1;
-            config_set(key, data.values[key]);
-        }
-        for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-            config_set_string(i, data.string_values[i]);
-        }
-        if (!game_reload_language()) {
-            // TODO notify user that language is invalid?
-        }
+    if (!save) {
+        window_main_menu_show(0);
+        return;
     }
-    window_main_menu_show(0);
+    char old_language_dir[CONFIG_STRING_VALUE_MAX];
+    strncpy(old_language_dir, config_get_string(CONFIG_STRING_UI_LANGUAGE_DIR), CONFIG_STRING_VALUE_MAX);
+    for (int i = 0; i < NUM_CHECKBOXES; i++) {
+        config_key key = checkbox_buttons[i].parameter1;
+        config_set(key, data.values[key]);
+    }
+    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
+        config_set_string(i, data.string_values[i]);
+    }
+    if (!game_reload_language()) {
+        // Notify user that language dir is invalid and revert to previously selected
+        window_plain_message_dialog_show(
+            "Invalid language directory",
+            "The directory you selected does not contain a valid language pack. Please check the log for errors."
+        );
+        config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, old_language_dir);
+        game_reload_language();
+    } else {
+        window_main_menu_show(0);
+    }
 }
 
 void window_config_show()
