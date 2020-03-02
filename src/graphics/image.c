@@ -10,7 +10,8 @@
 #define FOOTPRINT_HEIGHT 30
 
 #define COMPONENT(c, shift) ((c >> shift) & 0xff)
-#define MIX(src, dst, alpha, shift) ((((COMPONENT(src, shift) * alpha + COMPONENT(dst, shift) * (256 - alpha)) >> 8) & 0xff) << shift)
+#define MIX_RB(src, dst, alpha) ((((src & 0xff00ff) * alpha + (dst & 0xff00ff) * (256 - alpha)) >> 8) & 0xff00ff)
+#define MIX_G(src, dst, alpha) ((((src & 0x00ff00) * alpha + (dst & 0x00ff00) * (256 - alpha)) >> 8) & 0x00ff00)
 
 typedef enum {
     DRAW_TYPE_SET,
@@ -84,7 +85,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
                     } else {
                         color_t s = color;
                         color_t d = *dst;
-                        *dst = MIX(s, d, alpha, 0) | MIX(s, d, alpha, 8) | MIX(s, d, alpha, 16);
+                        *dst = MIX_RB(s, d, alpha) | MIX_G(s, d, alpha);
                     }
                 }
                 data++;
@@ -312,7 +313,7 @@ static void draw_compressed_blend_alpha(const image *img, const color_t *data, i
                     x += b;
                     while (b) {
                         color_t d = *dst;
-                        *dst = MIX(color, d, alpha, 0) | MIX(color, d, alpha, 8) | MIX(color, d, alpha, 16);
+                        *dst = MIX_RB(color, d, alpha) | MIX_G(color, d, alpha);
                         dst++;
                         b--;
                     }
@@ -320,7 +321,7 @@ static void draw_compressed_blend_alpha(const image *img, const color_t *data, i
                     while (b) {
                         if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right) {
                             color_t d = *dst;
-                            *dst = MIX(color, d, alpha, 0) | MIX(color, d, alpha, 8) | MIX(color, d, alpha, 16);
+                            *dst = MIX_RB(color, d, alpha) | MIX_G(color, d, alpha);
                         }
                         dst++;
                         x++;
