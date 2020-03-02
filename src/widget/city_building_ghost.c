@@ -399,8 +399,8 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else {
-        if(!building_construction_in_progress() || draw_later) {
-            if(draw_later) {
+        if (!building_construction_in_progress() || draw_later) {
+            if (draw_later) {
                 city_view_foreach_tile_in_range(offset, 3, 10, draw_first_reservoir_range);
             }
             city_view_foreach_tile_in_range(tile->grid_offset - GRID_SIZE - 1, 3, 10, draw_second_reservoir_range);
