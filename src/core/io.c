@@ -4,7 +4,7 @@
 
 #include "core/file.h"
 
-int io_read_file_into_buffer(const char *filepath, void *buffer, int max_size, int localizable)
+int io_read_file_into_buffer(const char *filepath, int localizable, void *buffer, int max_size)
 {
     const char *cased_file = dir_get_file(filepath, localizable);
     if (!cased_file) {
@@ -25,7 +25,7 @@ int io_read_file_into_buffer(const char *filepath, void *buffer, int max_size, i
     return bytes_read;
 }
 
-int io_read_file_part_into_buffer(const char *filepath, void *buffer, int size, int offset_in_file, int localizable)
+int io_read_file_part_into_buffer(const char *filepath, int localizable, void *buffer, int size, int offset_in_file)
 {
     const char *cased_file = dir_get_file(filepath, localizable);
     if (!cased_file) {

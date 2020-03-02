@@ -68,10 +68,10 @@ static void parse_text(buffer *buf)
     buffer_read_raw(buf, data.text_data, MAX_TEXT_DATA);
 }
 
-static int load_text(const char *filename, uint8_t *buf_data, int localized)
+static int load_text(const char *filename, int localizable, uint8_t *buf_data)
 {
     buffer buf;
-    int filesize = io_read_file_into_buffer(filename, buf_data, BUFFER_SIZE, localized);
+    int filesize = io_read_file_into_buffer(filename, localizable, buf_data, BUFFER_SIZE);
     if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
         return 0;
     }
@@ -123,10 +123,10 @@ static void parse_message(buffer *buf)
     buffer_read_raw(buf, &data.message_data, MAX_MESSAGE_DATA);
 }
 
-static int load_message(const char *filename, uint8_t *data_buffer, int localized)
+static int load_message(const char *filename, int localizable, uint8_t *data_buffer)
 {
     buffer buf;
-    int filesize = io_read_file_into_buffer(filename, data_buffer, BUFFER_SIZE, localized);
+    int filesize = io_read_file_into_buffer(filename, localizable, data_buffer, BUFFER_SIZE);
     if (filesize < MIN_MESSAGE_SIZE || filesize > MAX_MESSAGE_SIZE) {
         return 0;
     }
@@ -135,13 +135,13 @@ static int load_message(const char *filename, uint8_t *data_buffer, int localize
     return 1;
 }
 
-static int load_files(const char *text_filename, const char *message_filename, int localized)
+static int load_files(const char *text_filename, const char *message_filename, int localizable)
 {
     uint8_t *buffer = (uint8_t *) malloc(BUFFER_SIZE);
     if (!buffer) {
         return 0;
     }
-    int success = load_text(text_filename, buffer, localized) && load_message(message_filename, buffer, localized);
+    int success = load_text(text_filename, localizable, buffer) && load_message(message_filename, localizable, buffer);
     free(buffer);
     return success;
 }

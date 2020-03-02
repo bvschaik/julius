@@ -247,7 +247,7 @@ static int get_campaign_mission_offset(int mission_id)
     uint8_t offset_data[4];
     buffer buf;
     buffer_init(&buf, offset_data, 4);
-    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, offset_data, 4, 4 * mission_id, NOT_LOCALIZED)) {
+    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, offset_data, 4, 4 * mission_id)) {
         return 0;
     }
     return buffer_read_i32(&buf);
