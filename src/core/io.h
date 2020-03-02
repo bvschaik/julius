@@ -13,6 +13,7 @@
  * @param filepath File to read
  * @param buffer Buffer to read into
  * @param max_size Max size to read
+ * @param localizable Whether the file may be localized (see core/dir.h)
  * @return Number of bytes read
  */
 int io_read_file_into_buffer(const char *filepath, void *buffer, int max_size, int localizable);
@@ -23,6 +24,7 @@ int io_read_file_into_buffer(const char *filepath, void *buffer, int max_size, i
  * @param buffer Buffer to read into
  * @param size Number of bytes to read
  * @param offset_in_file Offset into the file to start reading
+ * @param localizable Whether the file may be localized (see core/dir.h)
  */
 int io_read_file_part_into_buffer(const char *filepath, void *buffer, int size, int offset_in_file, int localizable);
 

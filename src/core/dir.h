@@ -34,10 +34,11 @@ const dir_listing *dir_find_files_with_extension(const char *extension);
 const dir_listing *dir_find_all_subdirectories(void);
 
 /**
- * Get the case sensitive filename of the file
+ * Get the case sensitive and localized filename of the file
  * @param filepath File path to match to a case-sensitive file on the filesystem
- * @return Case-corrected file, or NULL if the file was not found
+ * @param localizable Whether the file may, must or must not be localized
+ * @return Corrected file, or NULL if the file was not found
  */
-const char *dir_get_case_corrected_file(const char *filepath, int localizable);
+const char *dir_get_file(const char *filepath, int localizable);
 
 #endif // CORE_DIR_H
