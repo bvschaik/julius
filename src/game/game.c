@@ -76,7 +76,7 @@ int game_init(void)
         errlog("unable to init graphics");
         return 0;
     }
-    if (!image_load_climate(CLIMATE_CENTRAL, 0)) {
+    if (!image_load_climate(CLIMATE_CENTRAL, 0, 0)) {
         errlog("unable to load main graphics");
         return 0;
     }
@@ -101,7 +101,7 @@ int game_init(void)
     return 1;
 }
 
-static int reload_language(int is_editor)
+static int reload_language(int is_editor, int reload_images)
 {
     if (!lang_load(is_editor)) {
         if (is_editor) {
@@ -119,7 +119,7 @@ static int reload_language(int is_editor)
         errlog("unable to load font graphics");
         return 0;
     }
-    if (!image_load_climate(CLIMATE_CENTRAL, 1)) {
+    if (!image_load_climate(CLIMATE_CENTRAL, is_editor, reload_images)) {
         errlog("unable to load main graphics");
         return 0;
     }
@@ -128,7 +128,7 @@ static int reload_language(int is_editor)
 
 int game_init_editor(void)
 {
-    if (!reload_language(1)) {
+    if (!reload_language(1, 0)) {
         return 0;
     }
 
@@ -142,7 +142,7 @@ int game_init_editor(void)
 
 void game_exit_editor(void)
 {
-    if (!reload_language(0)) {
+    if (!reload_language(0, 0)) {
         return;
     }
     editor_set_active(0);
@@ -151,7 +151,7 @@ void game_exit_editor(void)
 
 int game_reload_language(void)
 {
-    return reload_language(0);
+    return reload_language(0, 1);
 }
 
 static int get_elapsed_ticks(void)
