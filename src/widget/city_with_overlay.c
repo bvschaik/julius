@@ -514,8 +514,7 @@ void city_with_overlay_draw(const map_tile *tile)
             draw_animation
         );
         city_building_ghost_draw(tile);
-        city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
-        city_view_foreach_map_tile(clear_deleted);
+        city_view_foreach_map_tile(draw_elevated_figures);
     } else {
         city_view_foreach_map_tile(draw_figures);
         city_view_foreach_map_tile(deletion_draw_terrain_top);

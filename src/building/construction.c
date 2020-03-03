@@ -558,6 +558,7 @@ void building_construction_place(void)
             items_placed = last_items_cleared;
         }
         placement_cost *= items_placed;
+        map_property_clear_constructing_and_deleted();
     } else if (type == BUILDING_WALL) {
         placement_cost *= building_construction_place_wall(0, x_start, y_start, x_end, y_end);
     } else if (type == BUILDING_ROAD) {
