@@ -306,27 +306,31 @@ static void draw_compressed_blend_alpha(const image *img, const color_t *data, i
             if (b == 255) {
                 // transparent pixels to skip
                 x += *data;
+                dst += *data;
                 data++;
             } else if (y < clip->clipped_pixels_top) {
                 data += b;
                 x += b;
+                dst += b;
             } else {
                 data += b;
                 if (unclipped) {
+                    x += b;
                     while (b) {
-                        color_t d = dst[x];
-                        dst[x] = (((src_rb + (d & 0xff00ff) * alpha_dst) & 0xff00ff00) |
-                                  ((src_g  + (d & 0x00ff00) * alpha_dst) & 0x00ff0000)) >> 8;
+                        color_t d = *dst;
+                        *dst = (((src_rb + (d & 0xff00ff) * alpha_dst) & 0xff00ff00) |
+                                ((src_g  + (d & 0x00ff00) * alpha_dst) & 0x00ff0000)) >> 8;
                         b--;
-                        x++;
+                        dst++;
                     }
                 } else {
                     while (b) {
                         if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right) {
-                            color_t d = dst[x];
-                            dst[x] = (((src_rb + (d & 0xff00ff) * alpha_dst) & 0xff00ff00) |
-                                      ((src_g  + (d & 0x00ff00) * alpha_dst) & 0x00ff0000)) >> 8;
+                            color_t d = *dst;
+                            *dst = (((src_rb + (d & 0xff00ff) * alpha_dst) & 0xff00ff00) |
+                                   ((src_g  + (d & 0x00ff00) * alpha_dst) & 0x00ff0000)) >> 8;
                         }
+                        dst++;
                         x++;
                         b--;
                     }
