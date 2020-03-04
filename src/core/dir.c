@@ -83,10 +83,10 @@ static int compare_case(const char *filename)
     return LIST_NO_MATCH;
 }
 
-static int correct_case(const char *dir, char *filename)
+static int correct_case(const char *dir, char *filename, int type)
 {
     data.cased_filename = filename;
-    return platform_file_manager_list_directory_contents(dir, TYPE_FILE, 0, compare_case) == LIST_MATCH;
+    return platform_file_manager_list_directory_contents(dir, type, 0, compare_case) == LIST_MATCH;
 }
 
 static void move_left(char *str)
@@ -121,19 +121,19 @@ const char *dir_get_case_corrected_file(const char *filepath)
     }
     if (slash) {
         *slash = 0;
-        if (correct_case(".", corrected_filename)) {
+        if (correct_case(".", corrected_filename, TYPE_DIR)) {
             char *path = slash + 1;
             if (*path == '\\') {
                 // double backslash: move everything to the left
                 move_left(path);
             }
-            if (correct_case(corrected_filename, path)) {
+            if (correct_case(corrected_filename, path, TYPE_FILE)) {
                 *slash = '/';
                 return corrected_filename;
             }
         }
     } else {
-        if (correct_case(".", corrected_filename)) {
+        if (correct_case(".", corrected_filename, TYPE_FILE)) {
             return corrected_filename;
         }
     }
