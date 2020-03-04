@@ -179,6 +179,7 @@ static void set_language(int index)
     }
     data.selected_language_option = index;
 }
+
 static void button_language_select(int param1, int param2)
 {
     window_select_list_show_text(
