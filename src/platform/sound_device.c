@@ -49,15 +49,42 @@ static int percentage_to_volume(int percentage)
     return percentage * SDL_MIX_MAXVOLUME / 100;
 }
 
+static void init_channels(void)
+{
+    data.initialized = 1;
+    for (int i = 0; i < MAX_CHANNELS; i++) {
+        data.channels[i].chunk = 0;
+    }
+}
+
 void sound_device_open(void)
 {
     if (0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
-        data.initialized = 1;
-        for (int i = 0; i < MAX_CHANNELS; i++) {
-            data.channels[i].chunk = 0;
+        init_channels();
+        return;
+    }
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Sound failed to initialize using default driver: %s", Mix_GetError());
+    // Try to work around SDL choosing the wrong driver on Windows sometimes
+    for (int i = 0; i < SDL_GetNumAudioDrivers(); i++) {
+        const char *driver_name = SDL_GetAudioDriver(i);
+        if (SDL_strcmp(driver_name, "disk") == 0 || SDL_strcmp(driver_name, "dummy") == 0) {
+            // Skip "write-to-disk" and dummy drivers
+            continue;
         }
-    } else {
-        log_error("SOUND: not initialized", 0, 0);
+        if (0 == SDL_AudioInit(driver_name) &&
+            0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
+            SDL_Log("Using audio driver: %s", driver_name);
+            init_channels();
+            return;
+        } else {
+            SDL_Log("Not using audio driver %s, reason: %s", driver_name, SDL_GetError());
+        }
+    }
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Sound failed to initialize: %s", Mix_GetError());
+    int max = SDL_GetNumAudioDevices(0);
+    SDL_Log("Number of audio devices: %d", max);
+    for (int i = 0; i < max; i++) {
+        SDL_Log("Audio device: %s", SDL_GetAudioDeviceName(i, 0));
     }
 }
 
