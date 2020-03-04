@@ -12,7 +12,7 @@
 #include "graphics/window.h"
 #include "window/main_menu.h"
 
-#define NUM_CHECKBOXES 9
+#define NUM_CHECKBOXES 10
 #define NUM_BOTTOM_BUTTONS 3
 
 static void toggle_switch(int id, int param2);
@@ -26,9 +26,10 @@ static generic_button checkbox_buttons[] = {
     { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE },
     { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_ALLOW_CYCLING_TEMPLES },
     { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE },
-    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
-    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
-    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS }
+    { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE },
+    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
+    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
+    { 20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS }
 };
 
 static generic_button bottom_buttons[] = {
@@ -75,10 +76,11 @@ static void draw_background(void)
     text_draw(string_from_ascii("Improve visual feedback when clearing land"), 50, 149, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Allow building each temple in succession"), 50, 173, FONT_NORMAL_BLACK, 0);
     text_draw(string_from_ascii("Show range when building reservoirs, fountains and wells"), 50, 197, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Gameplay changes"), 20, 245, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix immigration bug on very hard"), 50, 269, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix 100-year-old ghosts"), 50, 293, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix Emperor change and survival time in custom missions"), 50, 317, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Show draggable construction size"), 50, 221, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Gameplay changes"), 20, 269, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fix immigration bug on very hard"), 50, 293, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fix 100-year-old ghosts"), 50, 317, FONT_NORMAL_BLACK, 0);
+    text_draw(string_from_ascii("Fix Emperor change and survival time in custom missions"), 50, 341, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];

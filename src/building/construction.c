@@ -14,6 +14,7 @@
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
+#include "core/config.h"
 #include "core/image.h"
 #include "core/time.h"
 #include "figure/formation.h"
@@ -336,7 +337,9 @@ int building_construction_cost(void)
 
 int building_construction_size(int *x, int *y)
 {
-    if (!building_construction_is_updatable()) {
+    if (!config_get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) ||
+        !building_construction_is_updatable() ||
+        (data.type != BUILDING_CLEAR_LAND && !data.cost)) {
         return 0;
     }
     *x = data.end.x - data.start.x;
