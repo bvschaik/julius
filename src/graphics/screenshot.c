@@ -7,6 +7,7 @@
 #include "core/log.h"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
+#include "graphics/menu.h"
 #include "graphics/window.h"
 #include "map/grid.h"
 #include "widget/city_without_overlay.h"
@@ -18,7 +19,6 @@
 #include <string.h>
 #include <time.h>
 
-#define TOP_MENU_HEIGHT 24
 #define TILE_X_SIZE 60
 #define TILE_Y_SIZE 30
 #define IMAGE_HEIGHT_CHUNK TILE_Y_SIZE

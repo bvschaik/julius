@@ -1,11 +1,11 @@
 #include "view.h"
 
 #include "core/direction.h"
+#include "graphics/menu.h"
 #include "map/grid.h"
 #include "map/image.h"
 #include "widget/minimap.h"
 
-#define MENUBAR_HEIGHT 24
 #define TILE_WIDTH_PIXELS 60
 #define TILE_HEIGHT_PIXELS 30
 #define HALF_TILE_WIDTH_PIXELS 30
@@ -359,12 +359,12 @@ static void set_viewport(int x_offset, int y_offset, int width, int height)
 
 static void set_viewport_with_sidebar(void)
 {
-    set_viewport(0, MENUBAR_HEIGHT, data.screen_width - 160, data.screen_height - MENUBAR_HEIGHT);
+    set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - 160, data.screen_height - TOP_MENU_HEIGHT);
 }
 
 static void set_viewport_without_sidebar(void)
 {
-    set_viewport(0, MENUBAR_HEIGHT, data.screen_width - 40, data.screen_height - MENUBAR_HEIGHT);
+    set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - 40, data.screen_height - TOP_MENU_HEIGHT);
 }
 
 void city_view_set_viewport(int screen_width, int screen_height)
