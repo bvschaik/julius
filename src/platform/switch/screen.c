@@ -3,6 +3,7 @@
 #include "SDL.h"
 
 #include "game/settings.h"
+#include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "input/mouse.h"
@@ -157,4 +158,9 @@ void platform_screen_render(void)
     SDL_RenderCopy(SDL.renderer, current_cursor->texture, NULL, &dst);
 
     SDL_RenderPresent(SDL.renderer);
+}
+
+int system_is_fullscreen_only(void)
+{
+    return 1;
 }
