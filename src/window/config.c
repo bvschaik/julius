@@ -42,7 +42,7 @@ static generic_button checkbox_buttons[] = {
 };
 
 static generic_button language_button = {
-    120, 50, 150, 24, button_language_select, button_none
+    120, 50, 200, 24, button_language_select, button_none
 };
 
 static generic_button bottom_buttons[] = {
