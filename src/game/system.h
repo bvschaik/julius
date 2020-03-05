@@ -36,6 +36,12 @@ void system_set_fullscreen(int fullscreen);
 void system_set_cursor(int cursor_id);
 
 /**
+ * Returns whether the system uses a virtual keyboard
+ * @return true a virtual keyboard is used, false otherwise
+ */
+int system_use_virtual_keyboard(void);
+
+/**
  * Exit the game
  */
 void system_exit(void);
