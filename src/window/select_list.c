@@ -161,7 +161,7 @@ void window_select_list_show(int x, int y, int group, int num_items, void (*call
 {
     window_type window = {
         WINDOW_SELECT_LIST,
-        0,
+        window_draw_underlying_window,
         draw_foreground,
         handle_mouse,
         0
@@ -174,7 +174,7 @@ void window_select_list_show_text(int x, int y, uint8_t **items, int num_items, 
 {
     window_type window = {
         WINDOW_SELECT_LIST,
-        0,
+        window_draw_underlying_window,
         draw_foreground,
         handle_mouse,
         0
