@@ -57,49 +57,49 @@ static void menu_help_about(int param);
 static void menu_advisors_go_to(int advisor);
 
 static menu_item menu_file[] = {
-    {0, 1, 1, menu_file_new_game, 0},
-    {20, 1, 2, menu_file_replay_map, 0},
-    {40, 1, 3, menu_file_load_game, 0},
-    {60, 1, 4, menu_file_save_game, 0},
-    {80, 1, 6, menu_file_delete_game, 0},
-    {100, 1, 5, menu_file_exit_game, 0},
+    {1, 1, menu_file_new_game, 0},
+    {1, 2, menu_file_replay_map, 0},
+    {1, 3, menu_file_load_game, 0},
+    {1, 4, menu_file_save_game, 0},
+    {1, 6, menu_file_delete_game, 0},
+    {1, 5, menu_file_exit_game, 0},
 };
 
 static menu_item menu_options[] = {
-    {0, 2, 1, menu_options_display, 0},
-    {20, 2, 2, menu_options_sound, 0},
-    {40, 2, 3, menu_options_speed, 0},
-    {60, 2, 6, menu_options_difficulty, 0},
-    {80, 19, 51, menu_options_autosave, 0},
+    {2, 1, menu_options_display, 0},
+    {2, 2, menu_options_sound, 0},
+    {2, 3, menu_options_speed, 0},
+    {2, 6, menu_options_difficulty, 0},
+    {19, 51, menu_options_autosave, 0},
 };
 
 static menu_item menu_help[] = {
-    {0, 3, 1, menu_help_help, 0},
-    {20, 3, 2, menu_help_mouse_help, 0},
-    {40, 3, 5, menu_help_warnings, 0},
-    {60, 3, 7, menu_help_about, 0},
+    {3, 1, menu_help_help, 0},
+    {3, 2, menu_help_mouse_help, 0},
+    {3, 5, menu_help_warnings, 0},
+    {3, 7, menu_help_about, 0},
 };
 
 static menu_item menu_advisors[] = {
-    {0, 4, 1, menu_advisors_go_to, 1},
-    {20, 4, 2, menu_advisors_go_to, 2},
-    {40, 4, 3, menu_advisors_go_to, 3},
-    {60, 4, 4, menu_advisors_go_to, 4},
-    {80, 4, 5, menu_advisors_go_to, 5},
-    {100, 4, 6, menu_advisors_go_to, 6},
-    {120, 4, 7, menu_advisors_go_to, 7},
-    {140, 4, 8, menu_advisors_go_to, 8},
-    {160, 4, 9, menu_advisors_go_to, 9},
-    {180, 4, 10, menu_advisors_go_to, 10},
-    {200, 4, 11, menu_advisors_go_to, 11},
-    {220, 4, 12, menu_advisors_go_to, 12},
+    {4, 1, menu_advisors_go_to, 1},
+    {4, 2, menu_advisors_go_to, 2},
+    {4, 3, menu_advisors_go_to, 3},
+    {4, 4, menu_advisors_go_to, 4},
+    {4, 5, menu_advisors_go_to, 5},
+    {4, 6, menu_advisors_go_to, 6},
+    {4, 7, menu_advisors_go_to, 7},
+    {4, 8, menu_advisors_go_to, 8},
+    {4, 9, menu_advisors_go_to, 9},
+    {4, 10, menu_advisors_go_to, 10},
+    {4, 11, menu_advisors_go_to, 11},
+    {4, 12, menu_advisors_go_to, 12},
 };
 
 static menu_bar_item menu[] = {
-    {10, 0, 6, 1, menu_file, 6},
-    {10, 0, 6, 2, menu_options, 5},
-    {10, 0, 6, 3, menu_help, 4},
-    {10, 0, 6, 4, menu_advisors, 12},
+    {1, menu_file, 6},
+    {2, menu_options, 5},
+    {3, menu_help, 4},
+    {4, menu_advisors, 12},
 };
 
 static const int INDEX_OPTIONS = 1;
@@ -113,7 +113,7 @@ static struct {
     int open_sub_menu;
     int focus_menu_id;
     int focus_sub_menu_id;
-} data = {0, 0, 0, 0, 0, 0};
+} data;
 
 static struct {
     int population;
@@ -157,8 +157,9 @@ static void set_text_for_warnings(void)
     menu_update_text(&menu[INDEX_HELP], 2, setting_warnings() ? 6 : 5);
 }
 
-static void init_from_settings(void)
+static void init(void)
 {
+    menu[INDEX_OPTIONS].items[0].hidden = system_is_fullscreen_only();
     set_text_for_autosave();
     set_text_for_tooltips();
     set_text_for_warnings();
@@ -192,7 +193,7 @@ static void top_menu_window_show(void)
         handle_mouse,
         0
     };
-    init_from_settings();
+    init();
     window_show(&window);
 }
 

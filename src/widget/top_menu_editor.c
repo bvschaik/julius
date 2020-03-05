@@ -38,40 +38,42 @@ static void menu_resets_invasions(int param);
 static void menu_empire_choose(int param);
 
 static menu_item menu_file[] = {
-    {0, 7, 1, menu_file_new_map, 0},
-    {20, 7, 2, menu_file_load_map, 0},
-    {40, 7, 3, menu_file_save_map, 0},
-    {60, 7, 4, menu_file_exit_editor, 0},
+    {7, 1, menu_file_new_map, 0},
+    {7, 2, menu_file_load_map, 0},
+    {7, 3, menu_file_save_map, 0},
+    {7, 4, menu_file_exit_editor, 0},
 };
 
 static menu_item menu_options[] = {
-    {0, 2, 1, menu_options_display, 0},
-    {20, 2, 2, menu_options_sound, 0},
-    {40, 2, 3, menu_options_speed, 0},
+    {2, 1, menu_options_display, 0},
+    {2, 2, menu_options_sound, 0},
+    {2, 3, menu_options_speed, 0},
 };
 
 static menu_item menu_help[] = {
-    {0, 3, 1, menu_help_help, 0},
-    {20, 3, 7, menu_help_about, 0},
+    {3, 1, menu_help_help, 0},
+    {3, 7, menu_help_about, 0},
 };
 
 static menu_item menu_resets[] = {
-    {0, 10, 1, menu_resets_herds, 0},
-    {20, 10, 2, menu_resets_fish, 0},
-    {40, 10, 3, menu_resets_invasions, 0},
+    {10, 1, menu_resets_herds, 0},
+    {10, 2, menu_resets_fish, 0},
+    {10, 3, menu_resets_invasions, 0},
 };
 
 static menu_item menu_empire[] = {
-    {0, 149, 1, menu_empire_choose, 0},
+    {149, 1, menu_empire_choose, 0},
 };
 
 static menu_bar_item menu[] = {
-    {10, 0, 6, 7, menu_file, 4},
-    {10, 0, 6, 2, menu_options, 3},
-    {10, 0, 6, 3, menu_help, 2},
-    {10, 0, 6, 10, menu_resets, 3},
-    {10, 0, 6, 149, menu_empire, 1},
+    {7, menu_file, 4},
+    {2, menu_options, 3},
+    {3, menu_help, 2},
+    {10, menu_resets, 3},
+    {149, menu_empire, 1},
 };
+
+#define INDEX_OPTIONS 1
 
 static struct {
     int open_sub_menu;
@@ -84,6 +86,11 @@ static void clear_state(void)
     data.open_sub_menu = 0;
     data.focus_menu_id = 0;
     data.focus_sub_menu_id = 0;
+}
+
+static void init(void)
+{
+    menu[INDEX_OPTIONS].items[0].hidden = system_is_fullscreen_only();
 }
 
 static void draw_foreground(void)
@@ -109,6 +116,7 @@ static void top_menu_window_show(void)
         handle_mouse,
         0
     };
+    init();
     window_show(&window);
 }
 
