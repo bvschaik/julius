@@ -1,6 +1,7 @@
 #include "platform/screen.h"
 #include "input/mouse.h"
 #include "game/settings.h"
+#include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 
@@ -80,4 +81,9 @@ void platform_screen_render(void)
     vita2d_end_drawing();
     vita2d_wait_rendering_done();
     vita2d_swap_buffers();
+}
+
+int system_is_fullscreen_only(void)
+{
+    return 1;
 }

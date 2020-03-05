@@ -3,22 +3,24 @@
 
 #include "input/mouse.h"
 
+#define TOP_MENU_HEIGHT 24
+
 typedef struct {
-    short y_start;
     short text_group;
     short text_number;
     void (*left_click_handler)(int param);
     int parameter;
+    int hidden;
 } menu_item;
 
 typedef struct {
-    short x_start;
-    short x_end;
-    short y_start;
     short text_group;
     menu_item *items;
     int num_items;
+    short x_start;
+    short x_end;
     int calculated_width_blocks;
+    int calculated_height_blocks;
 } menu_bar_item;
 
 void menu_bar_draw(menu_bar_item *items, int num_items);

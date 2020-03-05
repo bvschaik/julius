@@ -5,7 +5,7 @@ static uint8_t EMPTY[] = {0};
 
 static lang_message msg;
 
-int lang_load(const char *text_filename, const char *message_filename)
+int lang_load(int is_editor)
 {
     return 1;
 }

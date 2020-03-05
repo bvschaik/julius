@@ -17,7 +17,7 @@ void sound_speech_play_file(const char *filename)
     }
     sound_device_stop_channel(SOUND_CHANNEL_SPEECH);
 
-    const char *cased_filename = dir_get_case_corrected_file(filename);
+    const char *cased_filename = dir_get_file(filename, MAY_BE_LOCALIZED);
     if (cased_filename) {
         sound_device_play_file_on_channel(cased_filename, SOUND_CHANNEL_SPEECH, setting_sound(SOUND_SPEECH)->volume);
     }

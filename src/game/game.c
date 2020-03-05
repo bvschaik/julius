@@ -47,7 +47,7 @@ int game_pre_init(void)
     scenario_settings_init();
     game_state_unpause();
 
-    if (!lang_load("c3.eng", "c3_mm.eng") && !lang_load("c3.rus", "c3_mm.rus")) {
+    if (!lang_load(0)) {
         errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return 0;
     }
@@ -76,7 +76,7 @@ int game_init(void)
         errlog("unable to init graphics");
         return 0;
     }
-    if (!image_load_climate(CLIMATE_CENTRAL, 0)) {
+    if (!image_load_climate(CLIMATE_CENTRAL, 0, 0)) {
         errlog("unable to load main graphics");
         return 0;
     }
@@ -101,10 +101,14 @@ int game_init(void)
     return 1;
 }
 
-int game_init_editor(void)
+static int reload_language(int is_editor, int reload_images)
 {
-    if (!lang_load("c3_map.eng", "c3_map_mm.eng")) {
-        errlog("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
+    if (!lang_load(is_editor)) {
+        if (is_editor) {
+            errlog("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
+        } else {
+            errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
+        }
         return 0;
     }
     encoding_type encoding = encoding_determine();
@@ -115,10 +119,19 @@ int game_init_editor(void)
         errlog("unable to load font graphics");
         return 0;
     }
-    if (!image_load_climate(CLIMATE_CENTRAL, 1)) {
+    if (!image_load_climate(CLIMATE_CENTRAL, is_editor, reload_images)) {
         errlog("unable to load main graphics");
         return 0;
     }
+    return 1;
+}
+
+int game_init_editor(void)
+{
+    if (!reload_language(1, 0)) {
+        return 0;
+    }
+
     game_file_editor_clear_data();
     game_file_editor_create_scenario(2);
 
@@ -129,25 +142,16 @@ int game_init_editor(void)
 
 void game_exit_editor(void)
 {
-    if (!lang_load("c3.eng", "c3_mm.eng") && !lang_load("c3.rus", "c3_mm.rus")) {
-        errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
+    if (!reload_language(0, 0)) {
         return;
     }
-    encoding_type encoding = encoding_determine();
-    log_info("Detected encoding:", 0, encoding);
-    font_set_encoding(encoding);
-
-    if (!image_load_fonts(encoding)) {
-        errlog("unable to load font graphics");
-        return;
-    }
-    if (!image_load_climate(CLIMATE_CENTRAL, 0)) {
-        errlog("unable to load main graphics");
-        return;
-    }
-
     editor_set_active(0);
     window_main_menu_show(1);
+}
+
+int game_reload_language(void)
+{
+    return reload_language(0, 1);
 }
 
 static int get_elapsed_ticks(void)
