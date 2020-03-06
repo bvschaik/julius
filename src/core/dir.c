@@ -107,18 +107,18 @@ static void move_left(char *str)
 static const char *get_case_corrected_file(const char *dir, const char *filepath)
 {
     static char corrected_filename[2 * FILE_NAME_MAX];
+    corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
 
     int dir_len = 0;
     if (dir) {
         dir_len = strlen(dir) + 1;
-        strncpy(corrected_filename, dir, dir_len);
+        strncpy(corrected_filename, dir, 2 * FILE_NAME_MAX - 1);
         corrected_filename[dir_len - 1] = '/';
     } else {
         dir = ".";
     }
 
-    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len);
-    corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
+    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len - 1);
 
     FILE *fp = file_open(corrected_filename, "rb");
     if (fp) {
@@ -130,8 +130,7 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         return 0;
     }
 
-    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX);
-    corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
+    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len - 1);
 
     char *slash = strchr(&corrected_filename[dir_len], '/');
     if (!slash) {

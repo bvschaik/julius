@@ -41,9 +41,10 @@ static struct {
 static int file_exists_in_dir(const char *dir, const char *file)
 {
     char path[2 * FILE_NAME_MAX];
-    strncpy(path, dir, 2 * FILE_NAME_MAX);
-    strncat(path, "/", 2 * FILE_NAME_MAX);
-    strncat(path, file, 2 * FILE_NAME_MAX);
+    path[2 * FILE_NAME_MAX - 1] = 0;
+    strncpy(path, dir, 2 * FILE_NAME_MAX - 1);
+    strncat(path, "/", 2 * FILE_NAME_MAX - 1);
+    strncat(path, file, 2 * FILE_NAME_MAX - 1);
     return file_exists(path, NOT_LOCALIZED);
 }
 

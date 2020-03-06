@@ -50,7 +50,7 @@ void config_set_string(config_string_key key, const char *value)
     if (!value) {
         string_values[key][0] = 0;
     } else {
-        strncpy(string_values[key], value, CONFIG_STRING_VALUE_MAX);
+        strncpy(string_values[key], value, CONFIG_STRING_VALUE_MAX - 1);
     }
 }
 
@@ -101,7 +101,7 @@ void config_load(void)
                     const char *value = &equals[1];
                     log_info("Config key", ini_string_keys[i], 0);
                     log_info("Config value", value, 0);
-                    strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX);
+                    strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX - 1);
                     break;
                 }
             }
