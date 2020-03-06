@@ -62,6 +62,7 @@ deploy:
     condition: $DEPLOY
   file: bintray.json
   user: bvschaik
+  skip_cleanup: true
   key:
     secure: "aOBNdwEeWFDLn5WxkczOvVdT0GgI97sr20wA+uG+RtUPclGczYYIxHWvp4l9ZsAJ32FIB9IzuuzrOHWFcv+vK2/4DaIDmYhilY197fBBSSDYdMNAxNCNSZkMV0t0B4OYaB9GI55QN0UIoycb6CHLxYA+uf4Y7pMZFxaKX9Fv1FXe5/XhsTVgrdZn+EVpMnCwD6LuPTlcwlVNppUgJmRVOX21SKyyW2VGvXjBRbYVssKm7ETBKnbZRqEIcvz6osBgCz7rBoj1V81q+TA3WQfCpaao8VQVQggBRtF/A0F6P4iHyHaCFF3PBzlX/0oqeg/fTrjQZhbItPjg+6lMTcSrxgLtrRwTnnfCUC3S/13HkdW5uK27Xu8xvi0KUw+SRc1z9/zU7ilMwri6I0eHk1yOWfIE9Uweg7DSvrkEovC+g2qsPmmSsz/m+lHjzv+qecdpkPzPOUF0dj3cjN03ktcnmdlj+aZrF+e7D651gwGdlhBg1jd0v8iVuQ5l1FkOMYiQznQpdUpJy9jAeBz4HRbe0G9SApA5NCRt4ZEAPF7TDbpRaPuHkxTN1mxgZQAxSqyCJlLi9baqh4fYdwryLLv0Ewk21E4ramjq+CqtIvpQBvLgyizPdku9qOgFMMtGi2SabJWiCa6nPNT/P6YWRBb8/0eObP6I2pGKNBaTHhY1zYw="
 
