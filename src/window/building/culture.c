@@ -157,7 +157,7 @@ void window_building_draw_theater(building_info_context *c)
 void window_building_draw_amphitheater(building_info_context *c)
 {
     c->help_id = 72;
-    window_building_play_sound(c, "wavs/amphitheatre.wav");
+    window_building_play_sound(c, "wavs/ampitheatre.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(71, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     building *b = building_get(c->building_id);
