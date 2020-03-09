@@ -15,6 +15,7 @@
 #define ENEMY_ENTRIES 801
 #define CYRILLIC_FONT_ENTRIES 2000
 #define TRAD_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS)
+#define KOREAN_FONT_ENTRIES (1 * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS) // TODO 3 sizes
 
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET HEADER_SIZE
@@ -27,6 +28,7 @@
 #define ENEMY_DATA_SIZE 2400000
 #define CYRILLIC_FONT_DATA_SIZE 1500000
 #define TRAD_CHINESE_FONT_DATA_SIZE 7000000
+#define KOREAN_FONT_DATA_SIZE 7000000 // TODO CHECK
 #define SCRATCH_DATA_SIZE 12100000
 
 #define CYRILLIC_FONT_BASE_OFFSET 201
@@ -67,6 +69,7 @@ static const char EMPIRE_555[NAME_SIZE] = "The_empire.555";
 static const char CYRILLIC_FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
 static const char CYRILLIC_FONTS_555[NAME_SIZE] = "C3_fonts.555";
 static const char TRAD_CHINESE_FONTS_555[NAME_SIZE] = "rome.555";
+static const char KOREAN_FONTS_555[NAME_SIZE] = "korean.555";
 
 static const char ENEMY_GRAPHICS_SG2[][NAME_SIZE] = {
     "goths.sg2",
@@ -418,11 +421,70 @@ static int load_traditional_chinese_fonts(void)
     color_t *pixels = data.font_data;
     int pixel_offset = 0;
 
-    log_info("Parsing chinese font", 0, 0);
+    log_info("Parsing Chinese font", 0, 0);
     pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 12, 0);
     pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 16, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS);
     pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 20, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2);
-    log_info("Done parsing chinese font", 0, 0);
+    log_info("Done parsing Chinese font", 0, 0);
+
+    data.fonts_enabled = MULTIBYTE_IN_FONT;
+    data.font_base_offset = 0;
+    return 1;
+}
+
+static int parse_korean_font(buffer *input, color_t *pixels, int pixel_offset, int char_size, int index_offset)
+{
+    int bytes_per_row = char_size <= 16 ? 2 : 3;
+    for (int i = 0; i < IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS; i++) {
+        image *img = &data.font[index_offset + i];
+        img->width = char_size;
+        img->height = char_size;
+        img->draw.bitmap_id = 0;
+        img->draw.offset = pixel_offset;
+        img->draw.uncompressed_length = img->draw.data_length = char_size * (char_size - 1);
+        for (int row = 0; row < char_size; row++) {
+            unsigned int bits = buffer_read_u16(input);
+            if (bytes_per_row == 3) {
+                bits += buffer_read_u8(input) << 16;
+            }
+            int prev_set = 0;
+            for (int col = 0; col < char_size; col++) {
+                int set = bits & 1;
+                if (set) {
+                    *pixels = COLOR_OPAQUE;
+                } else if (prev_set) {
+                    *pixels = COLOR_SEMI_TRANSPARENT;
+                } else {
+                    *pixels = COLOR_TRANSPARENT;
+                }
+                pixels++;
+                pixel_offset++;
+                bits >>= 1;
+                prev_set = set;
+            }
+        }
+    }
+    return pixel_offset;
+}
+
+static int load_korean_fonts(void)
+{
+    if (!alloc_font_memory(KOREAN_FONT_ENTRIES, KOREAN_FONT_DATA_SIZE)) {
+        return 0;
+    }
+
+    int data_size = io_read_file_into_buffer(KOREAN_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    if (!data_size) {
+        return 0;
+    }
+    buffer input;
+    buffer_init(&input, data.tmp_data, data_size);
+    color_t *pixels = data.font_data;
+    int pixel_offset = 0;
+
+    log_info("Parsing Korean font", 0, 0);
+    pixel_offset = parse_korean_font(&input, &pixels[pixel_offset], pixel_offset, 12, 0);
+    log_info("Done parsing Korean font", 0, 0);
 
     data.fonts_enabled = MULTIBYTE_IN_FONT;
     data.font_base_offset = 0;
@@ -435,6 +497,8 @@ int image_load_fonts(encoding_type encoding)
         return load_cyrillic_fonts();
     } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
         return load_traditional_chinese_fonts();
+    } else if (encoding == ENCODING_KOREAN) {
+        return load_korean_fonts();
     } else {
         free_font_memory();
         return 1;
