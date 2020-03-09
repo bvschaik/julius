@@ -16,6 +16,7 @@ static const uint8_t NEW_GAME_POLISH[] = { 0x4e, 0x6f, 0x77, 0x61, 0x20, 0x67, 0
 static const uint8_t NEW_GAME_RUSSIAN[] = { 0xcd, 0xee, 0xe2, 0xe0, 0xff, 0x20, 0xe8, 0xe3, 0xf0, 0xe0, 0 };
 static const uint8_t NEW_GAME_SWEDISH[] = { 0x4e, 0x79, 0x74, 0x74, 0x20, 0x73, 0x70, 0x65, 0x6c, 0}; // Nytt spel
 static const uint8_t NEW_GAME_TRADITIONAL_CHINESE[] = { 0x83, 0x80, 0x20, 0x84, 0x80, 0x20, 0x85, 0x80, 0 };
+static const uint8_t NEW_GAME_KOREAN[] = { 0xbb, 0xf5, 0x20, 0xb0, 0xd4, 0xc0, 0xd3, 0 };
 
 static struct {
     language_type last_determined_language;
@@ -46,6 +47,8 @@ static language_type determine_language(void)
         return LANGUAGE_SWEDISH;
     } else if (string_equals(NEW_GAME_TRADITIONAL_CHINESE, new_game_string)) {
         return LANGUAGE_TRADITIONAL_CHINESE;
+    } else if (string_equals(NEW_GAME_KOREAN, new_game_string)) {
+        return LANGUAGE_KOREAN;
     } else {
         return LANGUAGE_UNKNOWN;
     }
@@ -65,6 +68,7 @@ static void log_language(void)
         case LANGUAGE_RUSSIAN: desc = "Russian"; break;
         case LANGUAGE_SWEDISH: desc = "Swedish"; break;
         case LANGUAGE_TRADITIONAL_CHINESE: desc = "Traditional Chinese"; break;
+        case LANGUAGE_KOREAN: desc = "Korean"; break;
         default: desc = "Unknown"; break;
     }
     log_info("Detected language:", desc, 0);
