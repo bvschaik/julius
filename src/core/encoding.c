@@ -589,6 +589,9 @@ encoding_type encoding_determine(void)
     } else if (language == LANGUAGE_TRADITIONAL_CHINESE) {
         to_utf8_table = NULL;
         encoding = ENCODING_TRADITIONAL_CHINESE;
+    } else if (language == LANGUAGE_KOREAN) {
+        to_utf8_table = NULL;
+        encoding = ENCODING_KOREAN;
     } else { // assume Western encoding
         to_utf8_table = HIGH_TO_UTF8_DEFAULT;
         encoding = ENCODING_WESTERN_EUROPE;
