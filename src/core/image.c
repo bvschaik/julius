@@ -475,6 +475,7 @@ static int load_korean_fonts(void)
 
     int data_size = io_read_file_into_buffer(KOREAN_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
+        log_error("Julius requires extra files for Korean characters:", KOREAN_FONTS_555, 0);
         return 0;
     }
     buffer input;
