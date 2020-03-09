@@ -616,7 +616,7 @@ int encoding_can_display(const char *utf8_char)
 void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int decomposed)
 {
     if (!to_utf8_table) {
-        encoding_multibyte_to_utf8(input, output, output_length);
+        encoding_multibyte_to_utf8(encoding, input, output, output_length);
         return;
     }
     const char *max_output = &output[output_length - 1];

@@ -48,7 +48,7 @@ int encoding_multibyte_big5_to_image_id(int big5)
 static uint16_t to_unicode(const uint8_t byte1, const uint8_t byte2)
 {
     int image_id = (byte1 & 0x7f) | ((byte2 & 0x7f) << 7);
-    if (image_id < IMAGE_FONT_MULTIBYTE_MAX_CHARS) {
+    if (image_id < IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
         for (int i = 0; entries[i].image_id; i++) {
             if (entries[i].image_id == image_id) {
                 return entries[i].unicode;
@@ -66,7 +66,7 @@ static uint16_t to_unicode(const uint8_t byte1, const uint8_t byte2)
     return 0;
 }
 
-void encoding_multibyte_to_utf8(const uint8_t *input, char *output, int output_length)
+void encoding_multibyte_to_utf8(encoding_type encoding, const uint8_t *input, char *output, int output_length)
 {
     const char *max_output = &output[output_length - 1];
 
@@ -77,6 +77,7 @@ void encoding_multibyte_to_utf8(const uint8_t *input, char *output, int output_l
             ++input;
         } else {
             // multi-byte char
+            // TODO differentiate between chinese and korean here
             uint16_t unicode = to_unicode(input[0], input[1]);
             if (unicode) {
                 // Convert Unicode char to UTF-8

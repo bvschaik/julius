@@ -109,13 +109,13 @@ static const font_definition DEFINITIONS_CYRILLIC[] = {
 };
 
 static const font_definition DEFINITIONS_TRADITIONAL_CHINESE[] = {
-    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_MAX_CHARS, 6, 6, 1, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, 6, 6, 1, 1, 11, image_y_offset_default},
     {FONT_NORMAL_BLACK, 134, 0, 6, 6, 1, 1, 11, image_y_offset_default},
     {FONT_NORMAL_WHITE, 268, 0, 6, 6, 1, 1, 11, image_y_offset_default},
     {FONT_NORMAL_RED, 402, 0, 6, 6, 1, 1, 11, image_y_offset_default},
-    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_default},
-    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_default},
-    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_MAX_CHARS * 2, 10, 8, 1, 1, 24, image_y_offset_default},
+    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 10, 8, 1, 1, 24, image_y_offset_default},
     {FONT_SMALL_PLAIN, 938, 0, 4, 4, 1, 1, 9, image_y_offset_default},
     {FONT_NORMAL_GREEN, 1072, 0, 6, 6, 1, 1, 11, image_y_offset_default},
     {FONT_SMALL_BLACK, 1206, 0, 6, 6, 1, 1, 11, image_y_offset_default}
@@ -323,13 +323,14 @@ const font_definition *font_definition_for(font_t font)
 int font_letter_id(const font_definition *def, const uint8_t *str, int *num_bytes)
 {
     if (data.multibyte && *str >= 0x80) {
+        // TODO differentiate between chinese and korean here
         *num_bytes = 2;
         int char_id = (str[0] & 0x7f) | ((str[1] & 0x7f) << 7);
-        if (char_id >= IMAGE_FONT_MULTIBYTE_MAX_CHARS) {
+        if (char_id >= IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
             // lookup in table
             int big5_encoded = str[0] << 8 | str[1];
             char_id = encoding_multibyte_big5_to_image_id(big5_encoded);
-            if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_MAX_CHARS) {
+            if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
                 return -1;
             }
         }
