@@ -87,7 +87,7 @@ static void init(void)
     data.num_language_options = 1;
     const dir_listing *subdirs = dir_find_all_subdirectories();
     for (int i = 0; i < subdirs->num_files; i++) {
-        if (lang_dir_is_valid(subdirs->files[i])) {
+        if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i])) {
             int opt_id = data.num_language_options;
             strncpy(data.language_options_utf8[opt_id], subdirs->files[i], CONFIG_STRING_VALUE_MAX - 1);
             encoding_from_utf8(subdirs->files[i], data.language_options_data[opt_id], CONFIG_STRING_VALUE_MAX);
