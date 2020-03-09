@@ -15,7 +15,7 @@
 #define ENEMY_ENTRIES 801
 #define CYRILLIC_FONT_ENTRIES 2000
 #define TRAD_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS)
-#define KOREAN_FONT_ENTRIES (1 * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS) // TODO 3 sizes
+#define KOREAN_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS)
 
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET HEADER_SIZE
@@ -28,7 +28,7 @@
 #define ENEMY_DATA_SIZE 2400000
 #define CYRILLIC_FONT_DATA_SIZE 1500000
 #define TRAD_CHINESE_FONT_DATA_SIZE 7000000
-#define KOREAN_FONT_DATA_SIZE 7000000 // TODO CHECK
+#define KOREAN_FONT_DATA_SIZE 7500000
 #define SCRATCH_DATA_SIZE 12100000
 
 #define CYRILLIC_FONT_BASE_OFFSET 201
@@ -441,7 +441,7 @@ static int parse_korean_font(buffer *input, color_t *pixels, int pixel_offset, i
         img->height = char_size;
         img->draw.bitmap_id = 0;
         img->draw.offset = pixel_offset;
-        img->draw.uncompressed_length = img->draw.data_length = char_size * (char_size - 1);
+        img->draw.uncompressed_length = img->draw.data_length = char_size * char_size;
         for (int row = 0; row < char_size; row++) {
             unsigned int bits = buffer_read_u16(input);
             if (bytes_per_row == 3) {
@@ -484,6 +484,8 @@ static int load_korean_fonts(void)
 
     log_info("Parsing Korean font", 0, 0);
     pixel_offset = parse_korean_font(&input, &pixels[pixel_offset], pixel_offset, 12, 0);
+    pixel_offset = parse_korean_font(&input, &pixels[pixel_offset], pixel_offset, 15, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS);
+    pixel_offset = parse_korean_font(&input, &pixels[pixel_offset], pixel_offset, 20, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2);
     log_info("Done parsing Korean font", 0, 0);
 
     data.fonts_enabled = MULTIBYTE_IN_FONT;
