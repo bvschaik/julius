@@ -267,7 +267,7 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
             }
             if (num_importable && num_imports_for_warehouse && !s->empty_all) {
                 for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-                    if (!building_warehouse_is_not_accepting(city_trade_next_caravan_import_resource(),b)) {
+                    if (building_warehouse_is_not_accepting(city_trade_next_caravan_import_resource(),b)) {
                         break;
                     }
                 }

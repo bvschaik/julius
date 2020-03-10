@@ -5,7 +5,7 @@
 
 #include <string.h>
 
-#define MAX_STORAGES 200
+#define MAX_STORAGES 1000
 
 struct data_storage {
     int in_use;

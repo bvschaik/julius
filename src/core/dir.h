@@ -20,6 +20,8 @@ typedef struct {
  * @return Directory listing
  */
 const dir_listing *dir_find_files_with_extension(const char *extension);
+const dir_listing* dir_append_files_with_extension(const char* extension);
+
 
 /**
  * Get the case sensitive filename of the file
@@ -27,5 +29,4 @@ const dir_listing *dir_find_files_with_extension(const char *extension);
  * @return Case-corrected file, or NULL if the file was not found
  */
 const char *dir_get_case_corrected_file(const char *filepath);
-
 #endif // CORE_DIR_H

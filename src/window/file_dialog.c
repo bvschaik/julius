@@ -71,6 +71,7 @@ static struct {
 } data;
 
 file_type_data saved_game_data = {"sav"};
+file_type_data saved_game_data_expanded = {"svx"};
 file_type_data scenario_data = {"map"};
 
 static void init(file_type type, file_dialog_type dialog_type)
@@ -80,7 +81,6 @@ static void init(file_type type, file_dialog_type dialog_type)
     if (strlen(data.file_data->last_loaded_file) == 0) {
         string_copy(lang_get_string(9, type == FILE_TYPE_SCENARIO ? 7 : 6), data.typed_name, FILE_NAME_MAX);
         encoding_to_utf8(data.typed_name, data.file_data->last_loaded_file, FILE_NAME_MAX, 0);
-        file_append_extension(data.file_data->last_loaded_file, data.file_data->extension);
     } else {
         encoding_from_utf8(data.file_data->last_loaded_file, data.typed_name, FILE_NAME_MAX);
         file_remove_extension(data.typed_name);
@@ -89,7 +89,13 @@ static void init(file_type type, file_dialog_type dialog_type)
     data.message_not_exist_start_time = 0;
     data.scroll_position = 0;
 
-    data.file_list = dir_find_files_with_extension(data.file_data->extension);
+    if (data.dialog_type != FILE_DIALOG_SAVE) {
+        data.file_list = dir_find_files_with_extension(data.file_data->extension);
+        data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
+    }
+    else {
+        data.file_list = dir_find_files_with_extension(saved_game_data_expanded.extension);
+    }
 
     strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
     keyboard_start_capture(data.typed_name, FILE_NAME_MAX, 0, MAX_FILE_WINDOW_TEXT_WIDTH, FONT_NORMAL_WHITE);
@@ -137,7 +143,7 @@ static void draw_foreground(void)
             font = FONT_NORMAL_WHITE;
         }
         encoding_from_utf8(data.file_list->files[data.scroll_position + i], file, FILE_NAME_MAX);
-        file_remove_extension(file);
+        //file_remove_extension(file);
         text_ellipsize(file, font, MAX_FILE_WINDOW_TEXT_WIDTH);
         text_draw(file, 160, 130 + 16 * i, font, 0);
     }
@@ -202,7 +208,6 @@ static const char *get_chosen_filename(void)
     // Check if we should work with the selected file
     uint8_t selected_name[FILE_NAME_MAX];
     encoding_from_utf8(data.selected_file, selected_name, FILE_NAME_MAX);
-    file_remove_extension(selected_name);
 
     if (string_equals(selected_name, data.typed_name)) {
         // user has not modified the string after selecting it: use filename
@@ -217,7 +222,6 @@ static const char *get_chosen_filename(void)
 #endif
     static char typed_file[FILE_NAME_MAX];
     encoding_to_utf8(data.typed_name, typed_file, FILE_NAME_MAX, use_decomposed);
-    file_append_extension(typed_file, data.file_data->extension);
     return typed_file;
 }
 
@@ -255,6 +259,9 @@ static void button_ok_cancel(int is_ok, int param2)
     } else if (data.dialog_type == FILE_DIALOG_SAVE) {
         keyboard_stop_capture();
         if (data.type == FILE_TYPE_SAVED_GAME) {
+            if (!file_has_extension(filename, saved_game_data_expanded.extension)) {
+                file_append_extension(filename, saved_game_data_expanded.extension);
+            }
             game_file_write_saved_game(filename);
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {
@@ -264,6 +271,8 @@ static void button_ok_cancel(int is_ok, int param2)
     } else if (data.dialog_type == FILE_DIALOG_DELETE) {
         if (game_file_delete_saved_game(filename)) {
             dir_find_files_with_extension(data.file_data->extension);
+            dir_append_files_with_extension(saved_game_data_expanded.extension);
+
             if (data.scroll_position + 12 >= data.file_list->num_files) {
                 --data.scroll_position;
             }
@@ -299,7 +308,6 @@ static void button_select_file(int index, int param2)
     if (index < data.file_list->num_files) {
         strncpy(data.selected_file, data.file_list->files[data.scroll_position + index], FILE_NAME_MAX - 1);
         encoding_from_utf8(data.selected_file, data.typed_name, FILE_NAME_MAX);
-        file_remove_extension(data.typed_name);
         keyboard_refresh();
         data.message_not_exist_start_time = 0;
     }

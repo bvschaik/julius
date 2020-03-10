@@ -6,7 +6,7 @@
 #include "figure/action.h"
 #include "figure/type.h"
 
-#define MAX_FIGURES 1000
+#define MAX_FIGURES 5000
 
 typedef struct {
     int id;

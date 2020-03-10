@@ -2,9 +2,9 @@
 
 #include <string.h>
 
-#define MAX_SMALL 500
-#define MAX_LARGE 2000
-#define MAX_BURNING 500
+#define MAX_SMALL 2500
+#define MAX_LARGE 10000
+#define MAX_BURNING 2500
 
 static struct {
     struct {

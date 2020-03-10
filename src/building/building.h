@@ -4,7 +4,7 @@
 #include "building/type.h"
 #include "core/buffer.h"
 
-#define MAX_BUILDINGS 2000
+#define MAX_BUILDINGS 10000
 
 typedef struct {
     int id;
