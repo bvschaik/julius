@@ -6,12 +6,12 @@
 
 typedef struct {
     uint16_t image_id;
-    uint16_t big5;
+    uint16_t codepage;
     uint16_t unicode;
 } multibyte_entry;
 
 // only define the characters that are actually used in the language files
-static multibyte_entry entries[] = {
+static multibyte_entry trad_chinese_entries[] = {
     { 4, 0xb943, 0x904a },
     { 5, 0xc0b8, 0x6232 },
     { 14, 0xc2f7, 0x96e2 },
@@ -35,31 +35,46 @@ static multibyte_entry entries[] = {
     { 0, 0, 0 }
 };
 
+static multibyte_entry korean_entries[] = {
+    { 1, 0xbdc3, 0xc2dc },
+    { 1, 0xc0fa, 0xc800 },
+    { 0, 0, 0 }
+};
+
 int encoding_multibyte_big5_to_image_id(int big5)
 {
-    for (int i = 0; entries[i].image_id; i++) {
-        if (entries[i].big5 == big5) {
-            return entries[i].image_id;
+    for (int i = 0; trad_chinese_entries[i].image_id; i++) {
+        if (trad_chinese_entries[i].codepage == big5) {
+            return trad_chinese_entries[i].image_id;
         }
     }
     return -1;
 }
 
-static uint16_t to_unicode(const uint8_t byte1, const uint8_t byte2)
+static uint16_t to_unicode(encoding_type encoding, const uint8_t byte1, const uint8_t byte2)
 {
-    int image_id = (byte1 & 0x7f) | ((byte2 & 0x7f) << 7);
-    if (image_id < IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
-        for (int i = 0; entries[i].image_id; i++) {
-            if (entries[i].image_id == image_id) {
-                return entries[i].unicode;
+    if (encoding == ENCODING_TRADITIONAL_CHINESE) {
+        int image_id = (byte1 & 0x7f) | ((byte2 & 0x7f) << 7);
+        if (image_id < IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
+            for (int i = 0; trad_chinese_entries[i].image_id; i++) {
+                if (trad_chinese_entries[i].image_id == image_id) {
+                    return trad_chinese_entries[i].unicode;
+                }
+            }
+        } else {
+            // Input is not image ID but Big5 encoding: look up in table
+            int big5 = byte1 << 8 | byte2;
+            for (int i = 0; trad_chinese_entries[i].image_id; i++) {
+                if (trad_chinese_entries[i].image_id == big5) {
+                    return trad_chinese_entries[i].unicode;
+                }
             }
         }
-    } else {
-        // Input is not image ID but Big5 encoding: look up in table
-        int big5 = byte1 << 8 | byte2;
-        for (int i = 0; entries[i].image_id; i++) {
-            if (entries[i].image_id == big5) {
-                return entries[i].unicode;
+    } else if (encoding == ENCODING_KOREAN) {
+        int cp949 = byte1 << 8 | byte2;
+        for (int i = 0; korean_entries[i].image_id; i++) {
+            if (korean_entries[i].codepage == cp949) {
+                return korean_entries[i].unicode;
             }
         }
     }
@@ -77,8 +92,7 @@ void encoding_multibyte_to_utf8(encoding_type encoding, const uint8_t *input, ch
             ++input;
         } else {
             // multi-byte char
-            // TODO differentiate between chinese and korean here
-            uint16_t unicode = to_unicode(input[0], input[1]);
+            uint16_t unicode = to_unicode(encoding, input[0], input[1]);
             if (unicode) {
                 // Convert Unicode char to UTF-8
                 if (unicode < 0x80) {
