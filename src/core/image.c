@@ -116,6 +116,8 @@ static const char ENEMY_GRAPHICS_555[][NAME_SIZE] = {
     "Phoenician.555",
 };
 
+static const image DUMMY_IMAGE;
+
 static struct {
     int current_climate;
     int is_editor;
@@ -584,8 +586,10 @@ const image *image_letter(int letter_id)
         return &data.font[data.font_base_offset + letter_id];
     } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         return &data.font[data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET];
-    } else {
+    } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
         return &data.main[data.group_image_ids[GROUP_FONT] + letter_id];
+    } else {
+        return &DUMMY_IMAGE;
     }
 }
 
@@ -618,9 +622,11 @@ const color_t *image_data_letter(int letter_id)
         return &data.font_data[data.font[data.font_base_offset + letter_id].draw.offset];
     } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         return &data.font_data[data.font[data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET].draw.offset];
-    } else {
+    } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
         int image_id = data.group_image_ids[GROUP_FONT] + letter_id;
         return &data.main_data[data.main[image_id].draw.offset];
+    } else {
+        return NULL;
     }
 }
 
