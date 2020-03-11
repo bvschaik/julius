@@ -84,9 +84,14 @@ int game_init(void)
         errlog("unable to load enemy graphics");
         return 0;
     }
+    int missing_fonts = 0;
     if (!image_load_fonts(encoding_get())) {
         errlog("unable to load font graphics");
-        return 0;
+        if (encoding_get() == ENCODING_KOREAN) {
+            missing_fonts = 1;
+        } else {
+            return 0;
+        }
     }
 
     if (!model_load()) {
@@ -96,7 +101,7 @@ int game_init(void)
 
     sound_system_init();
     game_state_init();
-    window_logo_show(is_unpatched());
+    window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
 
     return 1;
 }
