@@ -22,26 +22,41 @@ travis_retry() {
   return $result
 }
 
+function get_sdl_lib_info {
+  shopt -s extglob
+  SDL_LIB_FULL=$1
+  SDL_LIB_NAME=${SDL_LIB_FULL%-*}
+  SDL_LIB_MODULE=${SDL_LIB_NAME//SDL?([0-9])/}
+  SDL_LIB_VERSION=${SDL_LIB_FULL#*-}
+}
+
 function get_sdl_lib_url {
-  local LIB=$1
-  local EXT=$2
-  if [[ $LIB == SDL2-* ]]
+  local EXT=$1
+  if [[ $SDL_LIB_FULL == *.* ]]
   then
-    SDL_LIB_URL=https://www.libsdl.org/release/$LIB.$EXT
+    if [[ $SDL_LIB_MODULE != "" ]]
+    then
+      local SDL_URL_PATH="projects/SDL$SDL_LIB_MODULE/release"
+    else
+      local SDL_URL_PATH="release"
+    fi
+    SDL_LIB_URL="https://www.libsdl.org/$SDL_URL_PATH/$SDL_LIB_FULL.$EXT"
   else
-    SDL_LIB_URL=${LIB#*_}
-    SDL_LIB_URL=${SDL_LIB_URL%-*}
-    SDL_LIB_URL=https://www.libsdl.org/projects/SDL_$SDL_LIB_URL/release/$LIB.$EXT
+    SDL_LIB_URL="https://hg.libsdl.org/$SDL_LIB_NAME/archive/$SDL_LIB_VERSION.$EXT"
+  fi
+  if [ $SDL_LIB_VERSION == "tip" ]
+  then
+    SDL_LIB_FULL=`find . -maxdepth 1 -name "$SDL_LIB_NAME-*" -printf "%T@ %p" | sort -nr | head -1 | cut -c25-`
   fi
 }
 
 function install_sdl_lib {
-  local LIB=$1
-  if [ ! "$(ls -A $LIB)" ]
+  get_sdl_lib_info $1
+  if [ ! "$(ls -A $SDL_LIB_FULL)" ]
   then
-    get_sdl_lib_url $LIB "tar.gz"
+    get_sdl_lib_url "tar.gz"
     travis_retry curl -L $SDL_LIB_URL | tar xz
-    cd $LIB
+    cd $SDL_LIB_FULL
     mkdir build
     cd build
     SDL2_CONFIG="${SDL2_CONFIG}" ../configure --prefix=$(pwd)/..
@@ -55,19 +70,18 @@ function install_sdl_lib {
     cp SDL_mixer.h include/ 2>/dev/null
     cd ..
   fi
-  ln -s "$(pwd)/$LIB" "$(pwd)/ext/SDL2/"
+  ln -s "$(pwd)/$SDL_LIB_FULL" "$(pwd)/ext/SDL2/"
 }
 
 function install_sdl_macos {
-  local LIB=$1
-  local LIB_NAME=${LIB%-*}
-  if [ ! -f $LIB/image.dmg ]
+  get_sdl_lib_info $1
+  if [ ! -f $SDL_LIB_FULL/image.dmg ]
   then
-    mkdir -p $LIB
-    get_sdl_lib_url $LIB "dmg"
-    travis_retry curl -o $LIB/image.dmg $SDL_LIB_URL
+    mkdir -p $SDL_LIB_FULL
+    get_sdl_lib_url "dmg"
+    travis_retry curl -o $SDL_LIB_FULL/image.dmg $SDL_LIB_URL
   fi
-  local VOLUME=$(hdiutil attach $LIB/image.dmg | grep -o '/Volumes/.*')
+  local VOLUME=$(hdiutil attach $SDL_LIB_FULL/image.dmg | grep -o '/Volumes/.*')
   mkdir -p ~/Library/Frameworks
   echo "Installing framework:" "/Volumes/SDL2"/*.framework
   cp -rp "$VOLUME"/*.framework ~/Library/Frameworks

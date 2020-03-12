@@ -17,3 +17,16 @@ out/
 cmake-build-debug
 /data
 ext/SDL2/*/
+
+# Android
+*.iml
+.gradle
+local.properties
+.DS_Store
+/captures
+.externalNativeBuild
+.idea
+gen/
+.cxx/
+distribution/
+*.log
