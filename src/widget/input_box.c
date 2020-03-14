@@ -5,8 +5,13 @@
 
 static int is_mouse_inside_input(const mouse *m, const input_box *box)
 {
-    return (m->x > box->x && m->x < box->x + box->w * INPUT_BOX_BLOCK_SIZE &&
-            m->y > box->y && m->y < box->y + box->h * INPUT_BOX_BLOCK_SIZE);
+    return m->x >= box->x && m->x < box->x + box->width_blocks  * INPUT_BOX_BLOCK_SIZE &&
+           m->y >= box->y && m->y < box->y + box->height_blocks * INPUT_BOX_BLOCK_SIZE;
+}
+
+void input_box_draw(const input_box *box)
+{
+    inner_panel_draw(box->x, box->y, box->width_blocks, box->height_blocks);
 }
 
 int input_box_handle_mouse(const mouse *m, const input_box *box)
@@ -21,9 +26,4 @@ int input_box_handle_mouse(const mouse *m, const input_box *box)
         platform_virtual_keyboard_hide();
     }
     return selected;
-}
-
-void input_box_draw(const input_box *box)
-{
-    inner_panel_draw(box->x, box->y, box->w, box->h);
 }

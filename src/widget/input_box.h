@@ -8,8 +8,8 @@
 typedef struct {
     int x;
     int y;
-    int w;
-    int h;
+    int width_blocks;
+    int height_blocks;
 } input_box;
 
 int input_box_handle_mouse(const mouse *m, const input_box *box);

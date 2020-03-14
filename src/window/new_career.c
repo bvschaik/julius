@@ -67,6 +67,7 @@ static void handle_mouse(const mouse *m)
     if (m->right.went_up) {
         keyboard_stop_capture();
         window_go_back();
+        return;
     }
 
     const mouse *m_dialog = mouse_in_dialog(m);
