@@ -68,8 +68,8 @@ void widget_city_draw_construction_cost_and_size(void)
     }
     int size_x, size_y;
     int cost = building_construction_cost();
-    int size = building_construction_size(&size_x, &size_y);
-    if (!cost && !size) {
+    int has_size = building_construction_size(&size_x, &size_y);
+    if (!cost && !has_size) {
         return;
     }
     set_city_clip_rectangle();
@@ -86,7 +86,7 @@ void widget_city_draw_construction_cost_and_size(void)
         text_draw_number_colored(cost, '@', " ", x + 58 + 1, y + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
         text_draw_number_colored(cost, '@', " ", x + 58, y, FONT_NORMAL_PLAIN, color);
     }
-    if (size) {
+    if (has_size) {
         int width = -text_get_width("  ", FONT_SMALL_PLAIN);
         width += text_draw_number_colored(size_x, '@', "x", x - 15 + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
         text_draw_number_colored(size_x, '@', "x", x - 15, y + 25, FONT_SMALL_PLAIN, COLOR_YELLOW);

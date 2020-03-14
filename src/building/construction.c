@@ -342,16 +342,18 @@ int building_construction_size(int *x, int *y)
         (data.type != BUILDING_CLEAR_LAND && !data.cost)) {
         return 0;
     }
-    *x = data.end.x - data.start.x;
-    *y = data.end.y - data.start.y;
-    if (*x < 0) {
-        *x = -*x;
+    int size_x = data.end.x - data.start.x;
+    int size_y = data.end.y - data.start.y;
+    if (size_x < 0) {
+        size_x = -size_x;
     }
-    if (*y < 0) {
-        *y = -*y;
+    if (size_y < 0) {
+        size_y = -size_y;
     }
-    (*x)++;
-    (*y)++;
+    size_x++;
+    size_y++;
+    *x = size_x;
+    *y = size_y;
     return 1;
 }
 
