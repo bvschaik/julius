@@ -48,7 +48,7 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if(image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 1, 0)) {
+    if (image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 1, 0)) {
         return;
     }
     if (m->right.went_up || (m->is_touch && m->left.double_click)) {
