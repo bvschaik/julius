@@ -50,9 +50,10 @@ int image_init(void);
  * Loads the image collection for the specified climate
  * @param climate_id Climate to load
  * @param is_editor Whether to load the editor graphics or not
+ * @param force_reload Whether to force loading graphics even if climate/editor are the same
  * @return boolean true on success, false on failure
  */
-int image_load_climate(int climate_id, int is_editor);
+int image_load_climate(int climate_id, int is_editor, int force_reload);
 
 /**
  * Loads external fonts file (Cyrillic and Traditional Chinese)

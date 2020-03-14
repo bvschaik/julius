@@ -19,6 +19,12 @@ void system_resize(int width, int height);
 void system_center(void);
 
 /**
+ * Returns whether the window must always be fullscreen
+ * @return true when only fullscreen can be used, false otherwise
+ */
+int system_is_fullscreen_only(void);
+
+/**
  * Set fullscreen on/off
  */
 void system_set_fullscreen(int fullscreen);

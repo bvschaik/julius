@@ -1,5 +1,6 @@
 #include "core/dir.h"
 
+#include "core/config.h"
 #include "core/file.h"
 #include "core/string.h"
 #include "platform/file_manager.h"
@@ -52,7 +53,7 @@ static int compare_lower(const void *va, const void *vb)
     return string_compare_case_insensitive(*(const char**)va, *(const char**)vb);
 }
 
-static int add_file_with_extension_to_listing(const char *filename)
+static int add_to_listing(const char *filename)
 {
     if (data.listing.num_files >= data.max_files) {
         expand_dir_listing();
@@ -66,11 +67,16 @@ static int add_file_with_extension_to_listing(const char *filename)
 const dir_listing *dir_find_files_with_extension(const char *extension)
 {
     clear_dir_listing();
-    if (platform_file_manager_list_directory_contents(0, TYPE_FILE, extension, add_file_with_extension_to_listing) == LIST_ERROR) {
-        return &data.listing;
-    }
+    platform_file_manager_list_directory_contents(0, TYPE_FILE, extension, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
+    return &data.listing;
+}
 
+const dir_listing *dir_find_all_subdirectories(void)
+{
+    clear_dir_listing();
+    platform_file_manager_list_directory_contents(0, TYPE_DIR, 0, add_to_listing);
+    qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
     return &data.listing;
 }
 
@@ -83,10 +89,10 @@ static int compare_case(const char *filename)
     return LIST_NO_MATCH;
 }
 
-static int correct_case(const char *dir, char *filename)
+static int correct_case(const char *dir, char *filename, int type)
 {
     data.cased_filename = filename;
-    return platform_file_manager_list_directory_contents(dir, TYPE_FILE, 0, compare_case) == LIST_MATCH;
+    return platform_file_manager_list_directory_contents(dir, type, 0, compare_case) == LIST_MATCH;
 }
 
 static void move_left(char *str)
@@ -98,44 +104,73 @@ static void move_left(char *str)
     *str = 0;
 }
 
-const char *dir_get_case_corrected_file(const char *filepath)
+static const char *get_case_corrected_file(const char *dir, const char *filepath)
 {
     static char corrected_filename[2 * FILE_NAME_MAX];
 
-    FILE *fp = file_open(filepath, "rb");
+    int dir_len = 0;
+    if (dir) {
+        dir_len = strlen(dir) + 1;
+        strncpy(corrected_filename, dir, dir_len);
+        corrected_filename[dir_len - 1] = '/';
+    } else {
+        dir = ".";
+    }
+
+    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len);
+    corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
+
+    FILE *fp = file_open(corrected_filename, "rb");
     if (fp) {
         file_close(fp);
-        return filepath;
+        return corrected_filename;
     }
 
     if (!platform_file_manager_should_case_correct_file()) {
         return 0;
     }
 
-    strncpy(corrected_filename, filepath, 2 * FILE_NAME_MAX);
+    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX);
     corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
 
-    char *slash = strchr(corrected_filename, '/');
+    char *slash = strchr(&corrected_filename[dir_len], '/');
     if (!slash) {
-        slash = strchr(corrected_filename, '\\');
+        slash = strchr(&corrected_filename[dir_len], '\\');
     }
     if (slash) {
         *slash = 0;
-        if (correct_case(".", corrected_filename)) {
+        if (correct_case(dir, &corrected_filename[dir_len], TYPE_DIR)) {
             char *path = slash + 1;
             if (*path == '\\') {
                 // double backslash: move everything to the left
                 move_left(path);
             }
-            if (correct_case(corrected_filename, path)) {
+            if (correct_case(corrected_filename, path, TYPE_FILE)) {
                 *slash = '/';
                 return corrected_filename;
             }
         }
     } else {
-        if (correct_case(".", corrected_filename)) {
+        if (correct_case(dir, corrected_filename, TYPE_FILE)) {
             return corrected_filename;
         }
     }
     return 0;
+}
+
+const char *dir_get_file(const char *filepath, int localizable)
+{
+    if (localizable != NOT_LOCALIZED) {
+        const char *custom_dir = config_get_string(CONFIG_STRING_UI_LANGUAGE_DIR);
+        if (*custom_dir) {
+            const char *path = get_case_corrected_file(custom_dir, filepath);
+            if (path) {
+                return path;
+            } else if (localizable == MUST_BE_LOCALIZED) {
+                return 0;
+            }
+        }
+    }
+
+    return get_case_corrected_file(0, filepath);
 }

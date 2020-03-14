@@ -20,6 +20,7 @@
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
+#include "graphics/menu.h"
 #include "graphics/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
@@ -355,9 +356,9 @@ static void draw_extra_info_buttons(int x_offset, int is_collapsed)
         return;
     }
 
-    graphics_set_clip_rectangle(x_offset, 24,
+    graphics_set_clip_rectangle(x_offset, TOP_MENU_HEIGHT,
             screen_width() - x_offset,
-            screen_height() - 24);
+            screen_height() - TOP_MENU_HEIGHT);
 
     if (update_extra_info(extra_info_height, 0)) {
         draw_extra_info_panel(x_offset, extra_info_height);
@@ -615,7 +616,7 @@ static void draw_sliding_foreground(void)
 
     int x_offset_expanded = get_x_offset_expanded();
     int x_offset_collapsed = get_x_offset_collapsed();
-    graphics_set_clip_rectangle(x_offset_expanded, 24, SIDEBAR_EXPANDED_WIDTH, screen_height() - 24);
+    graphics_set_clip_rectangle(x_offset_expanded, TOP_MENU_HEIGHT, SIDEBAR_EXPANDED_WIDTH, screen_height() - TOP_MENU_HEIGHT);
 
     int image_base = image_group(GROUP_SIDE_PANEL);
     // draw collapsed sidebar
