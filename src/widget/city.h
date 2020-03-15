@@ -12,7 +12,7 @@ typedef struct {
 void widget_city_draw(void);
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord);
 
-void widget_city_draw_construction_cost(void);
+void widget_city_draw_construction_cost_and_size(void);
 
 int widget_city_has_input(void);
 void widget_city_handle_mouse(const mouse *m);
