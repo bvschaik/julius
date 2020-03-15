@@ -351,8 +351,13 @@ void hotkey_page_down(void)
     change_game_speed(1);
 }
 
-void hotkey_enter(void)
+void hotkey_enter(int with_alt)
 {
+    if (with_alt) {
+        system_set_fullscreen(!setting_fullscreen());
+        return;
+    }
+
     if (window_is(WINDOW_POPUP_DIALOG)) {
         window_popup_dialog_confirm();
     } else if (window_is(WINDOW_PLAIN_MESSAGE_DIALOG)) {
