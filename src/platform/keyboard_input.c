@@ -1,5 +1,6 @@
 #include "keyboard_input.h"
 
+#include "game/system.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"
 
@@ -168,4 +169,13 @@ void platform_handle_key_up(SDL_KeyboardEvent *event)
 void platform_handle_text(SDL_TextInputEvent *event)
 {
     keyboard_character(event->text);
+}
+
+int system_use_virtual_keyboard(void)
+{
+#if defined (__vita__) || defined(__SWITCH__)
+    return 1;
+#else
+    return 0;
+#endif
 }
