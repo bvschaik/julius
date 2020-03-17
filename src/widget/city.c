@@ -4,6 +4,7 @@
 #include "city/finance.h"
 #include "city/view.h"
 #include "city/warning.h"
+#include "core/string.h"
 #include "figure/formation_legion.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -87,7 +88,7 @@ void widget_city_draw_construction_cost_and_size(void)
         text_draw_number_colored(cost, '@', " ", x + 58, y, FONT_NORMAL_PLAIN, color);
     }
     if (has_size) {
-        int width = -text_get_width("  ", FONT_SMALL_PLAIN);
+        int width = -text_get_width(string_from_ascii("  "), FONT_SMALL_PLAIN);
         width += text_draw_number_colored(size_x, '@', "x", x - 15 + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
         text_draw_number_colored(size_x, '@', "x", x - 15, y + 25, FONT_SMALL_PLAIN, COLOR_YELLOW);
         text_draw_number_colored(size_y, '@', " ", x - 15 + width + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
