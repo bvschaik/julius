@@ -74,8 +74,9 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
     switch (event->keysym.sym) {
         case SDLK_RETURN:
         case SDLK_KP_ENTER:
-            if(!is_alt_down(event))
+            if (!is_alt_down(event)) {
                 keyboard_return();
+            }
             hotkey_enter(is_alt_down(event));
             break;
         case SDLK_BACKSPACE:
