@@ -50,9 +50,14 @@
 
 // sliding sidebar progress to x offset translation
 static const int PROGRESS_TO_X_OFFSET[] = {
-    1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 18, 21, 24, 27,
-    30, 33, 37, 41, 45, 49, 54, 59, 64, 70, 76, 83, 91, 99, 106, 113,
-    119, 125, 130, 135, 139, 143, 146, 149, 152, 154, 156, 158, 160, 162, 165
+    1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 10,
+    11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 24, 25,
+    27, 28, 30, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49,
+    51, 54, 56, 59, 61, 64, 67, 70, 73, 76, 80, 83, 87,
+    91, 95, 99, 102, 106, 109, 113, 116, 119, 122, 125,
+    127, 130, 132, 135, 137, 139, 141, 143, 144, 146,
+    147, 149, 150, 152, 153, 154, 155, 156, 157, 158,
+    159, 160, 161, 162, 163, 164, 165
 };
 
 static void slide_sidebar(void);
@@ -600,14 +605,14 @@ static void update_progress(void)
 {
     time_millis now = time_get_millis();
     time_millis diff = now - data.slide_start;
-    data.progress = diff / 10;
+    data.progress = diff / 5;
 }
 
 static void draw_sliding_foreground(void)
 {
     window_request_refresh();
     update_progress();
-    if (data.progress >= 47) {
+    if (data.progress >= 94) {
         city_view_toggle_sidebar();
         window_city_show();
         window_draw(1);
@@ -626,7 +631,7 @@ static void draw_sliding_foreground(void)
 
     // draw expanded sidebar on top of it
     if (city_view_is_sidebar_collapsed()) {
-        x_offset_expanded += PROGRESS_TO_X_OFFSET[47 - data.progress];
+        x_offset_expanded += PROGRESS_TO_X_OFFSET[94 - data.progress];
     } else {
         x_offset_expanded += PROGRESS_TO_X_OFFSET[data.progress];
     }
