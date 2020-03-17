@@ -137,6 +137,18 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDLK_SPACE:
             hotkey_character(event->keysym.sym, is_ctrl_down(event), is_alt_down(event));
             break;
+        case SDLK_KP_0: hotkey_character('0', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_1: hotkey_character('1', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_2: hotkey_character('2', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_3: hotkey_character('3', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_4: hotkey_character('4', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_5: hotkey_character('5', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_6: hotkey_character('6', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_7: hotkey_character('7', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_8: hotkey_character('8', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_9: hotkey_character('9', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_MINUS: hotkey_character('-', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_PLUS: hotkey_character('+', is_ctrl_down(event), is_alt_down(event)); break;
         default:
             if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
                 // Send keycodes only for letters (layout dependent codes)

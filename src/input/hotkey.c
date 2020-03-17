@@ -267,6 +267,7 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
             show_advisor(ADVISOR_FINANCIAL);
             break;
         case '=':
+        case '+':
             show_advisor(ADVISOR_CHIEF);
             break;
     }
