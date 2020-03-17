@@ -48,8 +48,10 @@
 #define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 112
 #define EXTRA_INFO_HEIGHT_RATINGS 272
 
+#define SIDEBAR_SLIDE_STEPS 94
+
 // sliding sidebar progress to x offset translation
-static const int PROGRESS_TO_X_OFFSET[] = {
+static const int PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS] = {
     1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 10,
     11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 24, 25,
     27, 28, 30, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49,
@@ -612,7 +614,7 @@ static void draw_sliding_foreground(void)
 {
     window_request_refresh();
     update_progress();
-    if (data.progress >= 94) {
+    if (data.progress >= SIDEBAR_SLIDE_STEPS) {
         city_view_toggle_sidebar();
         window_city_show();
         window_draw(1);
@@ -631,7 +633,7 @@ static void draw_sliding_foreground(void)
 
     // draw expanded sidebar on top of it
     if (city_view_is_sidebar_collapsed()) {
-        x_offset_expanded += PROGRESS_TO_X_OFFSET[94 - data.progress];
+        x_offset_expanded += PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS - data.progress];
     } else {
         x_offset_expanded += PROGRESS_TO_X_OFFSET[data.progress];
     }
