@@ -165,7 +165,7 @@ static void handle_mouse(const mouse *m)
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, checkbox_buttons, NUM_CHECKBOXES, &data.focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
-    if (!handled && (m->right.went_up || (m->is_touch && m->left.double_click))) {
+    if (!handled && m->right.went_up) {
         window_main_menu_show(0);
     }
 }
