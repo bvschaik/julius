@@ -227,6 +227,7 @@ static void initialize_saved_game(void)
 
     sound_city_init();
 
+    building_construction_clear_type();
     game_undo_disable();
     game_state_reset_overlay();
 
