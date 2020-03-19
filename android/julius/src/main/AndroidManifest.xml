@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.bvschaik.julius">
+
+    <uses-feature android:glEsVersion="0x00020000"/>
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.hardware.gamepad" android:required="false" />
+    <uses-feature android:name="android.hardware.audio.output" android:required="false" />
+    <uses-feature android:name="android.hardware.type.pc" android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:label="Julius"
+        android:icon="@mipmap/julius"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+		android:hardwareAccelerated="true">
+
+        <activity
+            android:name=".JuliusMainActivity"
+            android:label="Julius"
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleInstance"
+            android:resizeableActivity="true"
+            android:configChanges="orientation|uiMode|density|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data android:name="com.samsung.android.keepalive.density" android:value="true" />
+
+    </application>
+
+</manifest>

@@ -89,7 +89,7 @@ misrepresented as being the original software.
 #ifndef TINYFILEDIALOGS_H
 #define TINYFILEDIALOGS_H
 
-#if defined(_WIN32) || defined(__APPLE__) || defined (__unix__)
+#if defined(_WIN32) || defined(__APPLE__) || defined (__unix__)  && !defined(__ANDROID__)
 #define USE_TINYFILEDIALOGS 1
 #endif
 
