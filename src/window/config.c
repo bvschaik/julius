@@ -161,9 +161,13 @@ static void draw_foreground(void)
 static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    generic_buttons_handle_mouse(m_dialog, 0, 0, checkbox_buttons, NUM_CHECKBOXES, &data.focus_button);
-    generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
-    generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
+    int handled = 0;
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, checkbox_buttons, NUM_CHECKBOXES, &data.focus_button);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
+    if (!handled && m->right.went_up) {
+        window_main_menu_show(0);
+    }
 }
 
 static void toggle_switch(int key, int param2)

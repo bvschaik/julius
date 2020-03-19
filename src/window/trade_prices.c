@@ -34,7 +34,7 @@ static void draw_background(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
         window_advisors_show();
     }
 }

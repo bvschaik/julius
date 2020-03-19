@@ -21,6 +21,15 @@ const mouse *mouse_get(void)
     return &data;
 }
 
+static void clear_mouse_button(mouse_button *button)
+{
+    button->is_down = 0;
+    button->went_down = 0;
+    button->went_up = 0;
+    button->double_click = 0;
+    button->system_change = SYSTEM_NONE;
+}
+
 void mouse_set_from_touch(const touch *first, const touch *last)
 {
     data.x = first->current_point.x;
@@ -32,25 +41,19 @@ void mouse_set_from_touch(const touch *first, const touch *last)
     data.left.system_change = SYSTEM_NONE;
     data.right.system_change = SYSTEM_NONE;
 
-    if (!touch_is_scroll()) {
-        data.left.is_down = (!first->has_ended && first->in_use);
-        data.left.went_down = first->has_started;
-        data.left.went_up = first->has_ended;
-        data.left.double_click = touch_was_double_click(first);
-
-        data.right.is_down = (!last->has_ended && last->in_use);
-        data.right.went_down = last->has_started;
-        data.right.went_up = last->has_ended;
-    } else {
-        data.left.is_down = 0;
-        data.left.went_down = 0;
-        data.left.went_up = 0;
-        data.left.double_click = 0;
-
-        data.right.is_down = 0;
-        data.right.went_down = 0;
-        data.right.went_up = 0;
+    if (touch_is_scroll()) {
+        mouse_reset_button_state();
+        return;
     }
+
+    data.left.is_down = (!first->has_ended && first->in_use);
+    data.left.went_down = first->has_started;
+    data.left.went_up = first->has_ended;
+    data.left.double_click = touch_was_double_click(first);
+
+    data.right.is_down = (!last->has_ended && last->in_use);
+    data.right.went_down = last->has_started;
+    data.right.went_up = last->has_ended;
 }
 
 void mouse_set_position(int x, int y)
@@ -97,6 +100,7 @@ static void update_button_state(mouse_button *button)
     button->double_click = (button->system_change & SYSTEM_DOUBLE_CLICK) == SYSTEM_DOUBLE_CLICK;
     button->system_change = SYSTEM_NONE;
     button->is_down = (button->is_down || button->went_down) && !button->went_up;
+    button->double_click = 0;
 }
 
 void mouse_determine_button_state(void)
@@ -126,17 +130,8 @@ void mouse_reset_up_state(void)
 void mouse_reset_button_state(void)
 {
     last_click = 0;
-
-    data.left.is_down = 0;
-    data.left.went_down = 0;
-    data.left.went_up = 0;
-    data.left.double_click = 0;
-    data.left.system_change = SYSTEM_NONE;
-
-    data.right.is_down = 0;
-    data.right.went_down = 0;
-    data.right.went_up = 0;
-    data.right.system_change = SYSTEM_NONE;
+    clear_mouse_button(&data.left);
+    clear_mouse_button(&data.right);
 }
 
 const mouse *mouse_in_dialog(const mouse *m)

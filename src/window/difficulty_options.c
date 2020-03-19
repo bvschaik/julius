@@ -38,10 +38,11 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
+    if (arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrow_buttons, 4)) {
+        return;
+    }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
         data.close_callback();
-    } else {
-        arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrow_buttons, 4);
     }
 }
 

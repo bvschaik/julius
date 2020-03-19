@@ -753,6 +753,9 @@ int city_building_ghost_mark_deleting(const map_tile *tile)
         scroll_in_progress() || construction_type != BUILDING_CLEAR_LAND) {
         return (construction_type == BUILDING_CLEAR_LAND);
     }
+    if (!building_construction_in_progress()) {
+        map_property_clear_constructing_and_deleted();
+    }
     map_building_tiles_mark_deleting(tile->grid_offset);
     return 1;
 }

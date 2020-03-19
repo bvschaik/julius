@@ -88,10 +88,11 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
+    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 7, &data.focus_button_id)) {
+        return;
+    }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
         button_save(0, 0);
-    } else {
-        generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 7, &data.focus_button_id);
     }
 }
 

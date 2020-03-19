@@ -79,7 +79,7 @@ static void handle_mouse(const mouse *m)
 {
     if (data.has_buttons) {
         image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 2, 0);
-    } else if (m->right.went_up) {
+    } else if (m->right.went_up || (m->is_touch && m->left.double_click)) {
         data.close_func(0);
         window_go_back();
     }

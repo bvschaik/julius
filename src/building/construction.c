@@ -407,10 +407,14 @@ int building_construction_is_updatable(void)
 void building_construction_cancel(void)
 {
     map_property_clear_constructing_and_deleted();
-    if (building_construction_is_updatable()) {
-        game_undo_restore_map(1);
+    if (data.in_progress && building_construction_is_updatable()) {
+        if (building_construction_is_updatable()) {
+            game_undo_restore_map(1);
+        }
+        data.in_progress = 0;
+    } else {
+        building_construction_set_type(BUILDING_NONE);
     }
-    data.in_progress = 0;
 }
 
 void building_construction_update(int x, int y, int grid_offset)

@@ -9,3 +9,8 @@ int scroll_in_progress(void)
 {
     return 0;
 }
+
+int scroll_is_smooth(void)
+{
+    return 0;
+}

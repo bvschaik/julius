@@ -64,12 +64,6 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
-        keyboard_stop_capture();
-        window_go_back();
-        return;
-    }
-
     const mouse *m_dialog = mouse_in_dialog(m);
     if (input_box_handle_mouse(m_dialog, &player_name_input) ||
         image_buttons_handle_mouse(m_dialog, 159, 249, image_buttons, 2, 0)) {
@@ -77,6 +71,11 @@ static void handle_mouse(const mouse *m)
     }
     if (keyboard_input_is_accepted()) {
         start_mission(0, 0);
+        return;
+    }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+        keyboard_stop_capture();
+        window_go_back();
     }
 }
 

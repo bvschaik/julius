@@ -379,11 +379,12 @@ void window_building_prepare_figure_list(building_info_context *c)
     }
 }
 
-void window_building_handle_mouse_figure_list(const mouse *m, building_info_context *c)
+int window_building_handle_mouse_figure_list(const mouse *m, building_info_context *c)
 {
     data.context_for_callback = c;
-    generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, figure_buttons, c->figure.count, &data.focus_button_id);
+    int handled = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, figure_buttons, c->figure.count, &data.focus_button_id);
     data.context_for_callback = 0;
+    return handled;
 }
 
 static void select_figure(int index, int param2)

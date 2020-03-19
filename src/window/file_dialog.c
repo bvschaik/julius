@@ -190,19 +190,16 @@ static void handle_mouse(const mouse *m)
         return;
     }
 
-    if (m->right.went_up) {
+    const mouse *m_dialog = mouse_in_dialog(m);
+    if (input_box_handle_mouse(m_dialog, &file_name_input) ||
+        generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 12, &data.focus_button_id) ||
+        image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 4, 0) ||
+        handle_scrollbar(m)) {
+        return;
+    }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
         keyboard_stop_capture();
         window_go_back();
-        return;
-    }
-    const mouse *m_dialog = mouse_in_dialog(m);
-    if (input_box_handle_mouse(m_dialog, &file_name_input)) {
-        return;
-    }
-    if (!generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 12, &data.focus_button_id)) {
-        if (!image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 4, 0)) {
-            handle_scrollbar(m);
-        }
     }
 }
 
