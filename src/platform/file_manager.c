@@ -3,6 +3,7 @@
 #include "core/file.h"
 #include "core/log.h"
 #include "core/string.h"
+#include "platform/android/android.h"
 #include "platform/vita/vita.h"
 
 #include <dirent.h>
@@ -100,6 +101,9 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
     } else {
         current_dir = set_dir_name(dir);
     }
+#ifdef __ANDROID__
+    return android_get_directory_contents(current_dir, type, extension, callback);
+#else
     fs_dir_type *d = fs_dir_open(current_dir);
     if (!d) {
         return LIST_ERROR;
@@ -136,11 +140,12 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
         free_dir_name(current_dir);
     }
     return match;
+#endif
 }
 
 int platform_file_manager_should_case_correct_file(void)
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__ANDROID__)
     return 0;
 #else
     return 1;
@@ -153,7 +158,11 @@ int platform_file_manager_set_base_path(const char *path)
         log_error("set_base_path: path was not set. Julius will probably crash.", 0, 0);
         return 0;
     }
+#ifdef __ANDROID__
+    return android_set_base_path(path);
+#else
     return chdir(path) == 0;
+#endif
 }
 
 #if defined(__vita__)
@@ -195,6 +204,22 @@ int platform_file_manager_remove_file(const char *filename)
     int result = _wremove(wfile);
     free(wfile);
     return result == 0;
+}
+
+#elif defined(__ANDROID__)
+
+FILE *platform_file_manager_open_file(const char *filename, const char *mode)
+{
+    int fd = android_get_file_descriptor(filename, mode);
+    if (!fd) {
+        return NULL;
+    }
+    return fdopen(fd, mode);
+}
+
+int platform_file_manager_remove_file(const char *filename)
+{
+    return android_remove_file(filename);
 }
 
 #else

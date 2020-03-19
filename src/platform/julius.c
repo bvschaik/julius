@@ -34,8 +34,16 @@
 #include "platform/vita/vita_input.h"
 #endif
 
+#ifdef __ANDROID__
+#include "platform/android/android.h"
+#endif
+
 #if defined(_WIN32)
 #include <string.h>
+#endif
+
+#if defined(USE_TINYFILEDIALOGS) || defined(__ANDROID__)
+#define SHOW_FOLDER_SELECT_DIALOG
 #endif
 
 #ifdef DRAW_FPS
@@ -356,9 +364,33 @@ static int init_sdl(void)
     return 1;
 }
 
-#ifdef USE_TINYFILEDIALOGS
-static const char *ask_for_data_dir(int again)
+#ifdef SHOW_FOLDER_SELECT_DIALOG
+static const char* ask_for_data_dir(int again)
 {
+#ifdef __ANDROID__
+    if (again) {
+        const SDL_MessageBoxButtonData buttons[] = {
+           { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK" },
+           { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel" }
+        };
+        const SDL_MessageBoxData messageboxdata = {
+            SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
+            "The selected folder is not a proper Caesar 3 folder.\n\n"
+            "Please select a path directly from either the internal storage "
+            "or the SD card, otherwise the path may not be recognised.\n\n"
+            "Press OK to select another folder or Cancel to exit.",
+            SDL_arraysize(buttons), buttons, NULL
+        };
+        int result;
+        SDL_ShowMessageBox(&messageboxdata, &result);
+        if (!result) {
+            return NULL;
+        }
+    } else {
+        android_toast_message("Please select the location of the Caesar 3 files.");
+    }
+    return android_show_c3_path_dialog();
+#else
     if (again) {
         int result = tinyfd_messageBox("Wrong folder selected",
             "Julius requires the original files from Caesar 3 to run.\n\n"
@@ -405,7 +437,7 @@ static int pre_init(const char *custom_data_dir)
     }
     #endif
 
-    #ifdef USE_TINYFILEDIALOGS
+    #ifdef SHOW_FOLDER_SELECT_DIALOG
         const char *user_dir = pref_data_dir();
         if (user_dir) {
             SDL_Log("Loading game from user pref %s", user_dir);
@@ -419,6 +451,9 @@ static int pre_init(const char *custom_data_dir)
             SDL_Log("Loading game from user-selected dir %s", user_dir);
             if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
                 pref_save_data_dir(user_dir);
+#ifdef __ANDROID__
+                android_toast_message("C3 files found. Path saved.");
+#endif
                 return 1;
             }
             user_dir = ask_for_data_dir(1);

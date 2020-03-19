@@ -2,7 +2,7 @@
 
 #include "core/log.h"
 
-#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__) && !defined(__SWITCH__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && !defined(__vita__) && !defined(__SWITCH__) && !defined(__ANDROID__)
 
 #include <execinfo.h>
 

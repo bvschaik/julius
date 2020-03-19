@@ -5,6 +5,7 @@
 #include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
+#include "platform/android/android.h"
 
 #include "SDL.h"
 
@@ -36,6 +37,24 @@ static int scale_pixels_to_logical(int pixel_value)
 {
     return pixel_value * 100 / scale_percentage;
 }
+
+#ifdef __ANDROID__
+static void set_scale_for_screen(int pixel_width, int pixel_height)
+{
+    float scale = android_get_screen_scale();
+    scale = SDL_min(scale, 5.0f);
+    scale = SDL_max(0.5f, scale);
+    scale_percentage = scale * 100;
+    // Assure width is at least 640 and height is at least 480
+    float width_reference = scale_pixels_to_logical(pixel_width) / (float) MINIMUM.WIDTH;
+    float height_reference = scale_pixels_to_logical(pixel_height) / (float) MINIMUM.HEIGHT;
+    float minimum_reference = SDL_min(width_reference, height_reference);
+    if (minimum_reference < 1.0f) {
+        scale_percentage *= minimum_reference;
+    }
+    SDL_Log("Auto-setting scale to %i", scale_percentage);
+}
+#endif
 
 int platform_screen_create(const char *title, int display_scale_percentage)
 {
@@ -110,6 +129,10 @@ void platform_screen_destroy(void)
 
 int platform_screen_resize(int pixel_width, int pixel_height)
 {
+#ifdef __ANDROID__
+    set_scale_for_screen(pixel_width, pixel_height);
+#endif
+
     int logical_width = scale_pixels_to_logical(pixel_width);
     int logical_height = scale_pixels_to_logical(pixel_height);
 
@@ -237,5 +260,9 @@ void system_set_mouse_position(int *x, int *y)
 
 int system_is_fullscreen_only(void)
 {
+#ifdef __ANDROID__
+    return 1;
+#else
     return 0;
+#endif
 }

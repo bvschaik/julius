@@ -32,6 +32,16 @@ jobs:
     services:
       - docker
     env: BUILD_TARGET=switch DEPLOY=switch
+  - os: linux
+    dist: trusty
+    language: android
+    jdk: oraclejdk8
+    android:
+      components:
+      - build-tools-29.0.2
+      - android-29
+    name: Android
+    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=android DEPLOY=android
 
 cache:
   directories:
