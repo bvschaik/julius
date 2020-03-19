@@ -3518,9 +3518,7 @@ static int whiptailPresent(void)
 
 static int graphicMode(void)
 {
-        return !( tinyfd_forceConsole && (isTerminalRunning() || terminalName()) )
-          && ( getenv("DISPLAY")
-            || (isDarwin() && (!getenv("SSH_TTY") || getenv("DISPLAY") ) ) ) ;
+        return !tinyfd_forceConsole;
 }
 
 

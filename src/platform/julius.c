@@ -373,7 +373,7 @@ static const char* ask_for_data_dir(int again)
             return NULL;
         }
     }
-    return tinyfd_selectFolderDialog("Julius requires the original files from Caesar 3 to run.\n\nPlease select your Caesar 3 folder.", NULL);
+    return tinyfd_selectFolderDialog("Julius requires the original files from Caesar 3 to run.\nPlease select your Caesar 3 folder.", NULL);
 }
 #endif
 
