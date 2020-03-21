@@ -582,7 +582,7 @@ function(GET_SDL_EXT_DIR result module)
     endforeach()
 endfunction()
 
-find_package(SDL2 REQUIRED)
+find_package(SDL2 REQUIRED CONFIG)
 find_package(SDL2_mixer REQUIRED)
 
 add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
@@ -639,7 +639,7 @@ if(APPLE)
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
-include_directories(${SDL2_INCLUDE_DIR})
+include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
 if (SWITCH_BUILD)
