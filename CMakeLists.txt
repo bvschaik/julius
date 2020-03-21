@@ -625,6 +625,15 @@ if(APPLE)
 
     set(DIRS "")
 
+    # if SDL2 library is a framework, we need to indicate to CMake
+    # the path to its dependencies. SDL2_LIBRARY contains two parts.
+    # Example: /Library/Frameworks/SDL2.framework;-framework Cocoa
+    # So strip out everything after the ';'
+    string(REGEX REPLACE ";.*$" "" SDL2_LIB_DIR "${SDL2_LIBRARY}")
+    if(EXISTS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
+        set(DIRS "${DIRS};${SDL2_LIB_DIR}/Versions/A/Frameworks")
+    endif()
+
     # if SDL2_mixer library is a framework, we need to indicate to CMake
     # the path to its dependencies (Ogg.framework etc):
     if(EXISTS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
