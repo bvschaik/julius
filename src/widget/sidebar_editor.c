@@ -177,9 +177,9 @@ int widget_sidebar_editor_handle_mouse(const mouse *m)
     return image_buttons_handle_mouse(m, get_x_offset(), 24, buttons_build, 17, 0);
 }
 
-void widget_sidebar_editor_handle_mouse_build_menu(const mouse *m)
+int widget_sidebar_editor_handle_mouse_build_menu(const mouse *m)
 {
-    image_buttons_handle_mouse(m, get_x_offset(), 24, buttons_build, 17, 0);
+    return image_buttons_handle_mouse(m, get_x_offset(), 24, buttons_build, 17, 0);
 }
 
 int widget_sidebar_editor_handle_mouse_attributes(const mouse *m)

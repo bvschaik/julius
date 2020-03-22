@@ -106,13 +106,12 @@ static int handle_build_submenu(const mouse *m)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
-        window_editor_map_show();
+    if (!handle_build_submenu(m) ||
+        widget_sidebar_editor_handle_mouse_build_menu(m)) {
         return;
     }
-
-    if (!handle_build_submenu(m)) {
-        widget_sidebar_editor_handle_mouse_build_menu(m);
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+        window_editor_map_show();
     }
 }
 
