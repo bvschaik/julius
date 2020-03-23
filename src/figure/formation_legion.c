@@ -197,6 +197,10 @@ void formation_legions_dispatch_to_distant_battle(void)
             num_legions++;
         }
     }
+    // Protect from overflow -> only stores 1 unsigned byte
+    if (roman_strength > 255) {
+        roman_strength = 255;
+    }
     if (num_legions > 0) {
         city_military_dispatch_to_distant_battle(roman_strength);
     }
