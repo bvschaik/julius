@@ -428,6 +428,9 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
     }
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
+        if (!t->in_use) {
+            return;
+        }
         if (t->has_started) {
             data.capture_input = 1;
         }

@@ -55,6 +55,7 @@ static struct {
         int y;
         time_millis start_time;
         time_millis last_time;
+        time_millis stopped_time;
         pixel_offset last_position;
         int decaying;
         float modifier;
@@ -198,10 +199,24 @@ static void find_scroll_speed(const pixel_offset *position)
     }
 
     time_millis weighted_time = total_time - delta_time;
-    int delta_position = (position->x - data.speed.last_position.x) * DECAY_MULTIPLIER;
-    data.speed.x = (int) (data.speed.x * weighted_time + delta_position) / (int) total_time;
-    delta_position = (position->y - data.speed.last_position.y) * DECAY_MULTIPLIER;
-    data.speed.y = (int) (data.speed.y * weighted_time + delta_position) / (int) total_time;
+    int delta_position_x = (position->x - data.speed.last_position.x) * DECAY_MULTIPLIER;
+    int delta_position_y = (position->y - data.speed.last_position.y) * DECAY_MULTIPLIER;
+
+    data.speed.x = (int) (data.speed.x * weighted_time + delta_position_x) / (int) total_time;
+    data.speed.y = (int) (data.speed.y * weighted_time + delta_position_y) / (int) total_time;
+
+    // Stop speed when the user stopped moving the finger
+    if (delta_position_x == 0 && delta_position_y == 0) {
+        delta_time = current_time - data.speed.stopped_time;
+        if (delta_time > MAX_SPEED_TIME_WEIGHT) {
+            data.speed.stopped_time = current_time;
+        } else if (delta_time > MAX_SPEED_TIME_WEIGHT / 5) {
+            data.speed.x = 0;
+            data.speed.y = 0;
+        }
+    } else {
+        data.speed.stopped_time = 0;
+    }
 
     data.speed.last_time = current_time;
     data.speed.last_position = *position;
@@ -290,28 +305,6 @@ int scroll_decay(pixel_offset *position)
     return 1;
 }
 
-static int absolute_increment(int value, int step, int max)
-{
-    if (step == 0) {
-        step = value >= 0 ? 1 : -1;
-    }
-    if (max >= 0) {
-        return (value + step >= max) ? max : value + step;
-    }
-    return (value + step <= max) ? max : value + step;
-}
-
-static int absolute_decrement(int value, int step)
-{
-    if (step == 0) {
-        step = value >= 0 ? 1 : -1;
-    }
-    if (value >= 0) {
-        return (step >= value) ? 0 : value - step;
-    }
-    return (step >= -value) ? 0 : value + step;
-}
-
 void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
 {
     int use_smooth_scrolling = config_get(CONFIG_UI_SMOOTH_SCROLLING);
@@ -322,8 +315,8 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
         if (!data.is_touch && !data.speed.decaying && (data.speed.x || data.speed.y) && use_smooth_scrolling) {
             data.is_scrolling = 1;
             int max_speed = SCROLL_STEP[type][get_scroll_speed_factor()];
-            data.speed.x = absolute_decrement(data.speed.x, max_speed / THRUST);
-            data.speed.y = absolute_decrement(data.speed.y, (max_speed / y_fraction) / THRUST);
+            data.speed.x = calc_absolute_decrement(data.speed.x, max_speed / THRUST);
+            data.speed.y = calc_absolute_decrement(data.speed.y, (max_speed / y_fraction) / THRUST);
             delta->x = data.speed.x;
             delta->y = data.speed.y;
         } else {
@@ -352,18 +345,18 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
 
     if (!data.limits.active) {
         if (!dir_x) {
-            data.speed.x = absolute_decrement(data.speed.x, max_speed / THRUST);
+            data.speed.x = calc_absolute_decrement(data.speed.x, max_speed / THRUST);
         } else if (data.speed.x * dir_x < 0) {
             data.speed.x = -data.speed.x;
         } else if (data.speed.x != max_speed_x) {
-            data.speed.x = absolute_increment(data.speed.x, max_speed_x / THRUST, max_speed_x);
+            data.speed.x = calc_absolute_increment(data.speed.x, max_speed_x / THRUST, max_speed_x);
         }
         if (!dir_y) {
-            data.speed.y = absolute_decrement(data.speed.y, (max_speed / y_fraction) / THRUST);
+            data.speed.y = calc_absolute_decrement(data.speed.y, (max_speed / y_fraction) / THRUST);
         } else if (data.speed.y * dir_y < 0) {
             data.speed.y = -data.speed.y;
         } else if (data.speed.y != max_speed_y) {
-            data.speed.y = absolute_increment(data.speed.y, max_speed_y / THRUST, max_speed_y);
+            data.speed.y = calc_absolute_increment(data.speed.y, max_speed_y / THRUST, max_speed_y);
         }
     } else {
         data.speed.x = (int) (max_speed_x * data.speed.modifier);
@@ -375,7 +368,7 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
     time_millis current_time = time_get_millis();
     time_millis time_delta = current_time - data.speed.last_time;
     data.speed.last_time = current_time;
-    if (time_delta > 17 && time_delta < MAX_SPEED_TIME_WEIGHT) {
+    if (time_delta > (int) FRAME_TIME && time_delta < MAX_SPEED_TIME_WEIGHT) {
         delta->x = (int) ((float) (data.speed.x / FRAME_TIME) * time_delta);
         delta->y = (int) ((float) (data.speed.y / FRAME_TIME) * time_delta);
     } else {
