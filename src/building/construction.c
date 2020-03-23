@@ -370,19 +370,23 @@ void building_construction_start(int x, int y, int grid_offset)
 
     if (game_undo_start_build(data.type)) {
         data.in_progress = 1;
+        int can_start = 1;
         switch (data.type) {
             case BUILDING_ROAD:
-                map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, data.start.x, data.start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, data.start.x, data.start.y);
                 break;
             case BUILDING_AQUEDUCT:
             case BUILDING_DRAGGABLE_RESERVOIR:
-                map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, data.start.x, data.start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, data.start.x, data.start.y);
                 break;
             case BUILDING_WALL:
-                map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, data.start.x, data.start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, data.start.x, data.start.y);
                 break;
             default:
                 break;
+        }
+        if (!can_start) {
+            building_construction_cancel();
         }
     }
 }
