@@ -1,6 +1,7 @@
 #include "warehouse.h"
 
 #include "building/count.h"
+#include "building/granary.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "city/buildings.h"
@@ -441,7 +442,7 @@ static int determine_granary_get_foods(int resources[RESOURCE_MAX_FOOD])
             const building_storage *s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
                 for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
-                    if (building_warehouse_is_getting(r,b)) {
+                    if (building_granary_is_getting(r,b)) {
                         resources[r]++;
                         can_get = 1;
                     }
