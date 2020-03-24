@@ -13,6 +13,8 @@
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
+#include "input/hotkey.h"
+#include "input/keyboard.h"
 #include "platform/version.h"
 #include "sound/music.h"
 #include "window/cck_selection.h"
@@ -91,7 +93,12 @@ static void draw_foreground(void)
 static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id);
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id)) {
+        return;
+    }
+    if (keyboard_is_esc_pressed()) {
+        hotkey_esc();
+    }
 }
 
 static void confirm_exit(int accepted)

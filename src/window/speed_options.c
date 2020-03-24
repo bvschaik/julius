@@ -8,6 +8,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);
@@ -75,7 +76,7 @@ static void handle_mouse(const mouse *m)
         arrow_buttons_handle_mouse(m_dialog, 160, 40, arrow_buttons, 4)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         data.close_callback();
     }
 }

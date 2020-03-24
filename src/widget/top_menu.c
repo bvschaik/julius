@@ -15,6 +15,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/keyboard.h"
 #include "scenario/property.h"
 #include "widget/city.h"
 #include "window/advisors.h"
@@ -280,7 +281,7 @@ void widget_top_menu_draw(int force)
 
 static int handle_mouse_submenu(const mouse *m)
 {
-    if (m->right.went_up) {
+    if (m->right.went_up || keyboard_is_esc_pressed()) {
         clear_state();
         window_go_back();
         return 1;

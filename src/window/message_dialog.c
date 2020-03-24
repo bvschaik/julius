@@ -16,6 +16,7 @@
 #include "graphics/text.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "input/scroll.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
@@ -494,7 +495,7 @@ static void handle_mouse(const mouse *m)
                 return;
             }
         }
-        if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+        if (input_go_back_requested()) {
             button_close(0, 0);
         }
         return;
@@ -535,7 +536,7 @@ static void handle_mouse(const mouse *m)
         window_invalidate();
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         button_close(0, 0);
     }
 }

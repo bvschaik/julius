@@ -8,6 +8,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "window/city.h"
 
 static void button_menu_item(int index, int param2);
@@ -149,7 +150,7 @@ static void handle_mouse(const mouse *m)
             m, x_offset - 348, 72 + 24 * data.selected_menu,
             submenu_buttons, data.num_submenu_items, &data.submenu_focus_button_id);
     }
-    if (!handled && (m->right.went_up || (m->is_touch && m->left.double_click))) {
+    if (!handled && input_go_back_requested()) {
         if (data.keep_submenu_open) {
             close_submenu();
         } else {

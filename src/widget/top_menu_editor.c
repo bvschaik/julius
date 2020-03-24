@@ -7,6 +7,7 @@
 #include "graphics/menu.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
+#include "input/keyboard.h"
 #include "scenario/editor_map.h"
 #include "scenario/scenario.h"
 #include "window/display_options.h"
@@ -133,7 +134,7 @@ void widget_top_menu_editor_draw(void)
 
 static int handle_mouse_submenu(const mouse *m)
 {
-    if (m->right.went_up) {
+    if (m->right.went_up || keyboard_is_esc_pressed()) {
         clear_state();
         window_go_back();
         return 1;

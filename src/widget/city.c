@@ -11,6 +11,8 @@
 #include "graphics/graphics.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/hotkey.h"
+#include "input/keyboard.h"
 #include "input/scroll.h"
 #include "input/touch.h"
 #include "map/building.h"
@@ -397,6 +399,13 @@ void widget_city_handle_mouse(const mouse *m)
             building_construction_cancel();
         }
     }
+    if (keyboard_is_esc_pressed()) {
+        if (building_construction_type()) {
+            building_construction_cancel();
+        } else {
+            hotkey_esc();
+        }
+    }
 }
 
 static void military_map_click(int legion_formation_id, const map_tile *tile)
@@ -440,7 +449,7 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
         }
     }
     scroll_map(m);
-    if (m->right.went_up) {
+    if (m->right.went_up || keyboard_is_esc_pressed()) {
         data.capture_input = 0;
         city_warning_clear_all();
         window_city_show();

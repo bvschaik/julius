@@ -16,6 +16,7 @@
 #include "graphics/image_button.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -570,7 +571,7 @@ static void handle_mouse(const mouse *m)
     if (!handled) {
         handled = handle_specific_building_info_mouse(m);
     }
-    if (!handled && (m->right.went_up || (m->is_touch && m->left.double_click))) {
+    if (!handled && input_go_back_requested()) {
         window_city_show();
     }
 }
