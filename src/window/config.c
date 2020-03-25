@@ -17,24 +17,18 @@
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
-
-<<<<<<< HEAD
-#define NUM_CHECKBOXES 21
-#define CONFIG_PAGES 3
-#define NUM_BOTTOM_BUTTONS 5
-=======
 #include <string.h>
 
-#define NUM_CHECKBOXES 10
-#define NUM_BOTTOM_BUTTONS 3
+#define NUM_CHECKBOXES 23
+#define CONFIG_PAGES 3
+#define NUM_BOTTOM_BUTTONS 5
 #define MAX_LANGUAGE_DIRS 20
->>>>>>> f1759c677643d79a9da916a1f978ff7275c4e24f
 
 #define FIRST_BUTTON_Y 72
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
-static int options_per_page[CONFIG_PAGES] = { 5,14,2 };
+static int options_per_page[CONFIG_PAGES] = { 7,14,2 };
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
@@ -43,12 +37,13 @@ static void button_page(int param1, int param2);
 
 
 static generic_button checkbox_buttons[] = {
-<<<<<<< HEAD
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO },
     { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
     { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING },
     { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_WALKER_WAYPOINTS },
     { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE },
+    { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE },
+    { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE },
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
     { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
     { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL },
@@ -65,22 +60,10 @@ static generic_button checkbox_buttons[] = {
     { 20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS },
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS },
     { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD },
-=======
-    { 20, 102, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO },
-    { 20, 126, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
-    { 20, 150, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING },
-    { 20, 174, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE },
-    { 20, 198, 20, 20, toggle_switch, button_none, CONFIG_UI_ALLOW_CYCLING_TEMPLES },
-    { 20, 222, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE },
-    { 20, 246, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE },
-    { 20, 318, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
-    { 20, 342, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
-    { 20, 366, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS }
 };
 
 static generic_button language_button = {
     120, 50, 200, 24, button_language_select, button_none
->>>>>>> f1759c677643d79a9da916a1f978ff7275c4e24f
 };
 
 
@@ -114,6 +97,8 @@ static const char *option_names[] = {
     "Enable smooth scrolling",
     "Draw walker waypoints on overlay after right clicking on a building",
     "Improve visual clarity when clearing",
+    "Show range when building reservoirs, fountains and wells",
+    "Show draggable construction size",
     "Fix immigration bug on very hard",
     "Fix 100-year-old ghosts",
     "Grand festivals allow extra blessing from a god",
@@ -137,18 +122,14 @@ static struct {
     int language_focus_button;
     int bottom_focus_button;
     int values[CONFIG_MAX_ENTRIES];
-<<<<<<< HEAD
     int page;
     int starting_option;
-=======
     char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
-
     uint8_t language_options_data[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
     uint8_t *language_options[MAX_LANGUAGE_DIRS];
     char language_options_utf8[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
     int num_language_options;
     int selected_language_option;
->>>>>>> f1759c677643d79a9da916a1f978ff7275c4e24f
 } data;
 
 
@@ -194,26 +175,9 @@ static void draw_background(void)
 
     text_draw_centered(string_from_ascii(pages_names[data.page]), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
-<<<<<<< HEAD
-=======
     text_draw(string_from_ascii("Language:"), 20, 56, FONT_NORMAL_BLACK, 0);
     text_draw_centered(data.language_options[data.selected_language_option],
         language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
-
-    text_draw(string_from_ascii("User interface changes"), 20, 83, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Play intro videos"), 50, 107, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Extra information in the control panel"), 50, 131, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Enable smooth scrolling"), 50, 155, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Improve visual feedback when clearing land"), 50, 179, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Allow building each temple in succession"), 50, 203, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Show range when building reservoirs, fountains and wells"), 50, 227, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Show draggable construction size"), 50, 251, FONT_NORMAL_BLACK, 0);
-  
-    text_draw(string_from_ascii("Gameplay changes"), 20, 299, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix immigration bug on very hard"), 50, 323, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix 100-year-old ghosts"), 50, 347, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix Emperor change and survival time in custom missions"), 50, 371, FONT_NORMAL_BLACK, 0);
->>>>>>> f1759c677643d79a9da916a1f978ff7275c4e24f
 
     for(int i = 0; i < options_per_page[data.page]; i++) {
         text_draw(string_from_ascii(option_names[data.starting_option+i]), 44, FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET, FONT_NORMAL_BLACK, 0);
@@ -254,20 +218,13 @@ static void draw_foreground(void)
 static void handle_mouse(const mouse *m)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-<<<<<<< HEAD
-    int starting_option = 0;
-
-    generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons, data.starting_option+options_per_page[data.page], &data.focus_button,data.starting_option);
-    generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
-=======
     int handled = 0;
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, checkbox_buttons, NUM_CHECKBOXES, &data.focus_button);
+    handled |= generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons, data.starting_option + options_per_page[data.page], &data.focus_button, data.starting_option);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
     if (!handled && m->right.went_up) {
         window_main_menu_show(0);
     }
->>>>>>> f1759c677643d79a9da916a1f978ff7275c4e24f
 }
 
 static void toggle_switch(int key, int param2)

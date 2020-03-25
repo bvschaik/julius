@@ -20,7 +20,8 @@ static const char *ini_keys[] = {
     "ui_smooth_scrolling",
     "ui_walker_waypoints",
     "ui_visual_feedback_on_delete",
-<<<<<<< HEAD
+    "ui_show_water_structure_range",
+    "ui_show_construction_size",
     "gameplay_change_grandfestival",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",
@@ -34,15 +35,10 @@ static const char *ini_keys[] = {
     "gameplay_buyers_dont_distribute",
     "gameplay_change_immediate_delete",
     "gameplay_change_getting_granaries_go_offroad",
-=======
-    "ui_allow_cycling_temples",
-    "ui_show_water_structure_range",
-    "ui_show_construction_size"
 };
 
 static const char *ini_string_keys[] = {
     "ui_language_dir"
->>>>>>> f1759c677643d79a9da916a1f978ff7275c4e24f
 };
 
 static int values[CONFIG_MAX_ENTRIES];
@@ -95,14 +91,9 @@ void config_set_defaults(void)
     values[CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD] = 0;
     values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
     values[CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE] = 0;
-<<<<<<< HEAD
-=======
-    values[CONFIG_UI_ALLOW_CYCLING_TEMPLES] = 0;
     values[CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE] = 0;
     values[CONFIG_UI_SHOW_CONSTRUCTION_SIZE] = 0;
-
     string_values[CONFIG_STRING_UI_LANGUAGE_DIR][0] = 0;
->>>>>>> f1759c677643d79a9da916a1f978ff7275c4e24f
 }
 
 void config_load(void)
@@ -137,7 +128,7 @@ void config_load(void)
                     const char *value = &equals[1];
                     log_info("Config key", ini_string_keys[i], 0);
                     log_info("Config value", value, 0);
-                    strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX - 1);
+                    strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX);
                     break;
                 }
             }

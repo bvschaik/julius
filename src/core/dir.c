@@ -159,33 +159,10 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
 
 const dir_listing* dir_append_files_with_extension(const char* extension)
 {
-    fs_dir_type* d = fs_dir_open(CURRENT_DIR);
-    if (!d) {
-        return &data.listing;
-    }
-    fs_dir_entry* entry;
-    struct stat file_info;
-    while ((entry = fs_dir_read(d))) {
-        const char* name = dir_entry_name(entry);
-        if (stat(name, &file_info) != -1) {
-            int m = file_info.st_mode;
-            if (S_ISDIR(m) || S_ISCHR(m) || S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m)) {
-                continue;
-            }
-        }
-        if (file_has_extension(name, extension)) {
-            if (data.listing.num_files >= data.max_files) {
-                expand_dir_listing();
-            }
-            strncpy(data.listing.files[data.listing.num_files], name, FILE_NAME_MAX);
-            data.listing.files[data.listing.num_files][FILE_NAME_MAX - 1] = 0;
-            ++data.listing.num_files;
-        }
-    }
-    fs_dir_close(d);
+    platform_file_manager_list_directory_contents(0, TYPE_FILE, extension, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
-
     return &data.listing;
+}
 
 const char *dir_get_file(const char *filepath, int localizable)
 {
