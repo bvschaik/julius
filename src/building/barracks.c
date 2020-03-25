@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "building/model.h"
+#include "core/config.h"
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/resource.h"
@@ -131,7 +132,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_TOWER && b->num_workers > 0 &&
-            !b->figure_id && b->road_network_id == barracks->road_network_id) {
+            !b->figure_id && (b->road_network_id == barracks->road_network_id || config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))) {
             tower = b;
             break;
         }

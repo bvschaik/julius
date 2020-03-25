@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/view.h"
 #include "core/calc.h"
+#include "core/config.h"
 #include "core/image.h"
 #include "figure/combat.h"
 #include "figure/enemy_army.h"
@@ -238,6 +239,10 @@ void figure_tower_sentry_action(figure *f)
             break;
         case FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER:
             f->terrain_usage = TERRAIN_USAGE_ROADS;
+            if (config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD)) {
+                f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+            }	    
+	    
             f->is_ghost = 0;
             f->height_adjusted_ticks = 0;
             figure_movement_move_ticks(f, 1);

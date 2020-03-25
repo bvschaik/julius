@@ -19,7 +19,7 @@
 #include "window/select_list.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 23
+#define NUM_CHECKBOXES 24
 #define CONFIG_PAGES 3
 #define NUM_BOTTOM_BUTTONS 5
 #define MAX_LANGUAGE_DIRS 20
@@ -28,7 +28,7 @@
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
-static int options_per_page[CONFIG_PAGES] = { 7,14,2 };
+static int options_per_page[CONFIG_PAGES] = { 7,14,3 };
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
@@ -60,6 +60,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS },
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS },
     { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD },
+    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD },
 };
 
 static generic_button language_button = {
@@ -115,6 +116,7 @@ static const char *option_names[] = {
     "Fix Emperor change and survival time in custom missions",
     "Immediately destroy buildings",
     "Cart pushers from getting granaries can go offroad",
+    "Tower sentries don't need road access from barracks",
 };
 
 static struct {
