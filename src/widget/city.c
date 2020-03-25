@@ -120,10 +120,6 @@ static int handle_right_click_allow_building_info(const map_tile *tile)
     if (!window_is(WINDOW_CITY)) {
         allow = 0;
     }
-    if (building_construction_type()) {
-        allow = 0;
-    }
-    building_construction_set_type(BUILDING_NONE);
     window_city_show();
 
     if (!tile->grid_offset) {
@@ -393,7 +389,7 @@ void widget_city_handle_mouse(const mouse *m)
         build_end();
     }
     if (m->right.went_up) {
-        if (!building_construction_in_progress()) {
+        if (!building_construction_type()) {
             if (handle_right_click_allow_building_info(tile)) {
                 window_building_info_show(tile->grid_offset);
             }
