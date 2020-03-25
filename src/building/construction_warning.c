@@ -83,7 +83,7 @@ static void check_water(int type, int x, int y)
 
 static void check_workers(int type)
 {
-    if (!has_warning && type != BUILDING_WELL) {
+    if (!has_warning && type != BUILDING_WELL && type != BUILDING_FORT_LEGIONARIES && type != BUILDING_FORT_JAVELIN & type != BUILDING_FORT_MOUNTED) {
         if (model_get_building(type)->laborers > 0 && city_labor_workers_needed() >= 10) {
             show(WARNING_WORKERS_NEEDED);
         }
