@@ -13,9 +13,11 @@ typedef enum {
     LANGUAGE_ITALIAN,
     LANGUAGE_SPANISH,
     // Translations done by other publishers
+    LANGUAGE_KOREAN,
     LANGUAGE_POLISH,
     LANGUAGE_PORTUGUESE,
     LANGUAGE_RUSSIAN,
+    LANGUAGE_SWEDISH,
     LANGUAGE_TRADITIONAL_CHINESE
 } language_type;
 

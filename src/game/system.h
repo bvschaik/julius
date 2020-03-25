@@ -19,6 +19,12 @@ void system_resize(int width, int height);
 void system_center(void);
 
 /**
+ * Returns whether the window must always be fullscreen
+ * @return true when only fullscreen can be used, false otherwise
+ */
+int system_is_fullscreen_only(void);
+
+/**
  * Set fullscreen on/off
  */
 void system_set_fullscreen(int fullscreen);
@@ -28,6 +34,12 @@ void system_set_fullscreen(int fullscreen);
  * @param cursor_id Cursor to set
  */
 void system_set_cursor(int cursor_id);
+
+/**
+ * Returns whether the system uses a virtual keyboard
+ * @return true a virtual keyboard is used, false otherwise
+ */
+int system_use_virtual_keyboard(void);
 
 /**
  * Exit the game

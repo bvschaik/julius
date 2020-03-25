@@ -1,69 +1,19 @@
 #include "core/dir.h"
 
+#include "core/config.h"
 #include "core/file.h"
 #include "core/string.h"
-#include "platform/vita/vita.h"
+#include "platform/file_manager.h"
 
-#include <dirent.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
-
-#ifdef _WIN32
-#include <windows.h>
-
-#define fs_dir_type _WDIR
-#define fs_dir_entry struct _wdirent
-#define fs_dir_open _wopendir
-#define fs_dir_close _wclosedir
-#define fs_dir_read _wreaddir
-#define dir_entry_name(d) filename_to_utf8(d->d_name)
-
-static const char *filename_to_utf8(const wchar_t *str)
-{
-    static char *filename_buffer = 0;
-    static int filename_buffer_size = 0;
-    int size_needed = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
-    if (size_needed > filename_buffer_size) {
-        free(filename_buffer);
-        filename_buffer = (char*) malloc(sizeof(char) * size_needed);
-        filename_buffer_size = size_needed;
-    }
-    WideCharToMultiByte(CP_UTF8, 0, str, -1, filename_buffer, size_needed, NULL, NULL);
-    return filename_buffer;
-}
-
-#else // not _WIN32
-#define fs_dir_type DIR
-#define fs_dir_entry struct dirent
-#define fs_dir_open opendir
-#define fs_dir_close closedir
-#define fs_dir_read readdir
-#define dir_entry_name(d) ((d)->d_name)
-#endif
-
-#ifndef S_ISLNK
-#define S_ISLNK(m) 0
-#endif
-
-#ifndef S_ISSOCK
-#define S_ISSOCK(m) 0
-#endif
-
-#ifdef __vita__
-#define CURRENT_DIR VITA_PATH_PREFIX
-#elif defined(_WIN32)
-#define CURRENT_DIR L"."
-#else
-#define CURRENT_DIR "."
-#endif
 
 #define BASE_MAX_FILES 100
 
 static struct {
     dir_listing listing;
     int max_files;
+    char *cased_filename;
 } data;
 
 static void allocate_listing_files(int min, int max)
@@ -103,56 +53,46 @@ static int compare_lower(const void *va, const void *vb)
     return string_compare_case_insensitive(*(const char**)va, *(const char**)vb);
 }
 
+static int add_to_listing(const char *filename)
+{
+    if (data.listing.num_files >= data.max_files) {
+        expand_dir_listing();
+    }
+    strncpy(data.listing.files[data.listing.num_files], filename, FILE_NAME_MAX);
+    data.listing.files[data.listing.num_files][FILE_NAME_MAX - 1] = 0;
+    ++data.listing.num_files;
+    return LIST_CONTINUE;
+}
+
 const dir_listing *dir_find_files_with_extension(const char *extension)
 {
     clear_dir_listing();
-    fs_dir_type *d = fs_dir_open(CURRENT_DIR);
-    if (!d) {
-        return &data.listing;
-    }
-    fs_dir_entry *entry;
-    struct stat file_info;
-    while ((entry = fs_dir_read(d))) {
-        const char *name = dir_entry_name(entry);
-        if (stat(name, &file_info) != -1) {
-            int m = file_info.st_mode;
-            if (S_ISDIR(m) || S_ISCHR(m) || S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m)) {
-                continue;
-            }
-        }
-        if (file_has_extension(name, extension)) {
-            if (data.listing.num_files >= data.max_files) {
-                expand_dir_listing();
-            }
-            strncpy(data.listing.files[data.listing.num_files], name, FILE_NAME_MAX);
-            data.listing.files[data.listing.num_files][FILE_NAME_MAX - 1] = 0;
-            ++data.listing.num_files;
-        }
-    }
-    fs_dir_close(d);
+    platform_file_manager_list_directory_contents(0, TYPE_FILE, extension, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
-
     return &data.listing;
 }
 
-static int correct_case(const char *dir, char *filename)
+const dir_listing *dir_find_all_subdirectories(void)
 {
-    // Note: we do not use the _w* variants for Windows here, because the
-    // Windows filesystem is case insensitive and doesn't need corrections
-    DIR *d = opendir(dir);
-    if (!d) {
-        return 0;
+    clear_dir_listing();
+    platform_file_manager_list_directory_contents(0, TYPE_DIR, 0, add_to_listing);
+    qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
+    return &data.listing;
+}
+
+static int compare_case(const char *filename)
+{
+    if (string_compare_case_insensitive(filename, data.cased_filename) == 0) {
+        strcpy(data.cased_filename, filename);
+        return LIST_MATCH;
     }
-    struct dirent *entry;
-    while ((entry = readdir(d))) {
-        if (string_compare_case_insensitive(entry->d_name, filename) == 0) {
-            strcpy(filename, entry->d_name);
-            closedir(d);
-            return 1;
-        }
-    }
-    closedir(d);
-    return 0;
+    return LIST_NO_MATCH;
+}
+
+static int correct_case(const char *dir, char *filename, int type)
+{
+    data.cased_filename = filename;
+    return platform_file_manager_list_directory_contents(dir, type, 0, compare_case) == LIST_MATCH;
 }
 
 static void move_left(char *str)
@@ -164,38 +104,53 @@ static void move_left(char *str)
     *str = 0;
 }
 
-const char *dir_get_case_corrected_file(const char *filepath)
+static const char *get_case_corrected_file(const char *dir, const char *filepath)
 {
     static char corrected_filename[2 * FILE_NAME_MAX];
-
-    FILE *fp = file_open(filepath, "rb");
-    if (fp) {
-        file_close(fp);
-        return filepath;
-    }
-
-    strncpy(corrected_filename, filepath, 2 * FILE_NAME_MAX);
     corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
 
-    char *slash = strchr(corrected_filename, '/');
+    int dir_len = 0;
+    if (dir) {
+        dir_len = strlen(dir) + 1;
+        strncpy(corrected_filename, dir, 2 * FILE_NAME_MAX - 1);
+        corrected_filename[dir_len - 1] = '/';
+    } else {
+        dir = ".";
+    }
+
+    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len - 1);
+
+    FILE *fp = file_open(corrected_filename, "rb");
+    if (fp) {
+        file_close(fp);
+        return corrected_filename;
+    }
+
+    if (!platform_file_manager_should_case_correct_file()) {
+        return 0;
+    }
+
+    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len - 1);
+
+    char *slash = strchr(&corrected_filename[dir_len], '/');
     if (!slash) {
-        slash = strchr(corrected_filename, '\\');
+        slash = strchr(&corrected_filename[dir_len], '\\');
     }
     if (slash) {
         *slash = 0;
-        if (correct_case(".", corrected_filename)) {
+        if (correct_case(dir, &corrected_filename[dir_len], TYPE_DIR)) {
             char *path = slash + 1;
             if (*path == '\\') {
                 // double backslash: move everything to the left
                 move_left(path);
             }
-            if (correct_case(corrected_filename, path)) {
+            if (correct_case(corrected_filename, path, TYPE_FILE)) {
                 *slash = '/';
                 return corrected_filename;
             }
         }
     } else {
-        if (correct_case(".", corrected_filename)) {
+        if (correct_case(dir, corrected_filename, TYPE_FILE)) {
             return corrected_filename;
         }
     }
@@ -231,4 +186,20 @@ const dir_listing* dir_append_files_with_extension(const char* extension)
     qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
 
     return &data.listing;
+
+const char *dir_get_file(const char *filepath, int localizable)
+{
+    if (localizable != NOT_LOCALIZED) {
+        const char *custom_dir = config_get_string(CONFIG_STRING_UI_LANGUAGE_DIR);
+        if (*custom_dir) {
+            const char *path = get_case_corrected_file(custom_dir, filepath);
+            if (path) {
+                return path;
+            } else if (localizable == MUST_BE_LOCALIZED) {
+                return 0;
+            }
+        }
+    }
+
+    return get_case_corrected_file(0, filepath);
 }

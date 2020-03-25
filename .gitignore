@@ -20,3 +20,15 @@ ext/SDL2/*/
 *~
 .vscode
 /android
+# Android
+*.iml
+.gradle
+local.properties
+.DS_Store
+/captures
+.externalNativeBuild
+.idea
+gen/
+.cxx/
+distribution/
+*.log

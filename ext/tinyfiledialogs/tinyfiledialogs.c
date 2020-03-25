@@ -3518,9 +3518,7 @@ static int whiptailPresent(void)
 
 static int graphicMode(void)
 {
-        return !( tinyfd_forceConsole && (isTerminalRunning() || terminalName()) )
-          && ( getenv("DISPLAY")
-            || (isDarwin() && (!getenv("SSH_TTY") || getenv("DISPLAY") ) ) ) ;
+        return !tinyfd_forceConsole;
 }
 
 
@@ -4166,11 +4164,6 @@ int tinyfd_messageBox(
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return 1;}
 
                 strcpy( lDialogString , "kdialog" ) ;
-                if ( kdialogPresent() == 2 )
-                {
-                        strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                }
-
                 strcat( lDialogString , " --" ) ;
                 if ( aDialogType && ( ! strcmp( "okcancel" , aDialogType )
                         || ! strcmp( "yesno" , aDialogType ) || ! strcmp( "yesnocancel" , aDialogType ) ) )
@@ -4234,10 +4227,6 @@ int tinyfd_messageBox(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
                         strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-                        if ( (zenity3Present() >= 4) && !getenv("SSH_TTY") )
-                        {
-                                strcat(lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 else if ( matedialogPresent() )
                 {
@@ -4253,10 +4242,6 @@ int tinyfd_messageBox(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
                         strcpy( lDialogString , "szAnswer=$(qarma" ) ;
-                        if ( !getenv("SSH_TTY") )
-                        {
-                                strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 strcat(lDialogString, " --");
 
@@ -5242,11 +5227,6 @@ char const * tinyfd_inputBox(
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
                 strcpy( lDialogString , "szAnswer=$(kdialog" ) ;
 
-                if ( kdialogPresent() == 2 )
-                {
-                        strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                }
-
                 if ( ! aDefaultInput )
                 {
                         strcat(lDialogString, " --password ") ;
@@ -5282,10 +5262,6 @@ char const * tinyfd_inputBox(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
                         strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-                        if ( (zenity3Present() >= 4) && !getenv("SSH_TTY") )
-                        {
-                                strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 else if ( matedialogPresent() )
                 {
@@ -5301,10 +5277,6 @@ char const * tinyfd_inputBox(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
                         strcpy( lDialogString ,  "szAnswer=$(qarma" ) ;
-                        if ( !getenv("SSH_TTY") )
-                        {
-                                strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 strcat( lDialogString ," --entry" ) ;
 
@@ -5779,10 +5751,6 @@ char const * tinyfd_saveFileDialog(
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
 
                 strcpy( lDialogString , "kdialog" ) ;
-                if ( kdialogPresent() == 2 )
-                {
-                        strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                }
                 strcat( lDialogString , " --getsavefilename " ) ;
 
                 if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
@@ -5828,10 +5796,6 @@ char const * tinyfd_saveFileDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
                         strcpy( lDialogString , "zenity" ) ;
-                        if ( (zenity3Present() >= 4) && !getenv("SSH_TTY") )
-                        {
-                                strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 else if ( matedialogPresent() )
                 {
@@ -5847,10 +5811,6 @@ char const * tinyfd_saveFileDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
                         strcpy( lDialogString , "qarma" ) ;
-                        if ( !getenv("SSH_TTY") )
-                        {
-                                strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 strcat(lDialogString, " --file-selection --save --confirm-overwrite" ) ;
 
@@ -6213,10 +6173,6 @@ char const * tinyfd_openFileDialog(
                 lWasKdialog = 1 ;
 
                 strcpy( lDialogString , "kdialog" ) ;
-                if ( kdialogPresent() == 2 )
-                {
-                        strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                }
                 strcat( lDialogString , " --getopenfilename " ) ;
 
                 if ( aDefaultPathAndFile && strlen(aDefaultPathAndFile) )
@@ -6266,10 +6222,6 @@ char const * tinyfd_openFileDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
                         strcpy( lDialogString , "zenity" ) ;
-                        if ( (zenity3Present() >= 4) && !getenv("SSH_TTY") )
-                        {
-                                strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 else if ( matedialogPresent() )
                 {
@@ -6285,10 +6237,6 @@ char const * tinyfd_openFileDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
                         strcpy( lDialogString , "qarma" ) ;
-                        if ( !getenv("SSH_TTY") )
-                        {
-                                strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 strcat( lDialogString , " --file-selection" ) ;
 
@@ -6625,10 +6573,6 @@ char const * tinyfd_selectFolderDialog(
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
                 strcpy( lDialogString , "kdialog" ) ;
-                if ( kdialogPresent() == 2 )
-                {
-                        strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                }
                 strcat( lDialogString , " --getexistingdirectory " ) ;
 
                 if ( aDefaultPath && strlen(aDefaultPath) )
@@ -6659,10 +6603,6 @@ char const * tinyfd_selectFolderDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
                         strcpy( lDialogString , "zenity" ) ;
-                        if ( (zenity3Present() >= 4) && !getenv("SSH_TTY") )
-                        {
-                                strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 else if ( matedialogPresent() )
                 {
@@ -6678,10 +6618,6 @@ char const * tinyfd_selectFolderDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
                         strcpy( lDialogString , "qarma" ) ;
-                        if ( !getenv("SSH_TTY") )
-                        {
-                                strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 strcat( lDialogString , " --file-selection --directory" ) ;
 
@@ -6937,10 +6873,6 @@ to set mycolor to choose color default color {");
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
                 strcpy( lDialogString , "kdialog" ) ;
-                if ( kdialogPresent() == 2 )
-                {
-                        strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                }
                 sprintf( lDialogString + strlen(lDialogString) , " --getcolor --default '%s'" , lpDefaultHexRGB ) ;
 
                 if ( aTitle && strlen(aTitle) )
@@ -6957,10 +6889,6 @@ to set mycolor to choose color default color {");
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity3");return (char const *)1;}
                         strcpy( lDialogString , "zenity" );
-                        if ( (zenity3Present() >= 4) && !getenv("SSH_TTY") )
-                        {
-                                strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 else if ( matedialogPresent() )
                 {
@@ -6976,10 +6904,6 @@ to set mycolor to choose color default color {");
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
                         strcpy( lDialogString , "qarma" ) ;
-                        if ( !getenv("SSH_TTY") )
-                        {
-                                strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 strcat( lDialogString , " --color-selection --show-palette" ) ;
                 sprintf( lDialogString + strlen(lDialogString), " --color=%s" , lpDefaultHexRGB ) ;
@@ -7164,10 +7088,6 @@ char const * tinyfd_arrayDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
                         strcpy( lDialogString , "zenity" ) ;
-                        if ( (zenity3Present() >= 4) && !getenv("SSH_TTY") )
-                        {
-                                strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 else if ( matedialogPresent() )
                 {
@@ -7183,10 +7103,6 @@ char const * tinyfd_arrayDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
                         strcpy( lDialogString , "qarma" ) ;
-                        if ( !getenv("SSH_TTY") )
-                        {
-                                strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
-                        }
                 }
                 strcat( lDialogString , " --list --print-column=ALL" ) ;
 

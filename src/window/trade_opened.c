@@ -46,7 +46,12 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    image_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, image_buttons, 2, 0);
+    if (image_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, image_buttons, 2, 0)) {
+        return;
+    }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+        window_empire_show();
+    }
 }
 
 static void button_advisor(int advisor, int param2)

@@ -451,7 +451,7 @@ static void handle_mouse(const mouse *m)
         if (t->has_ended) {
             data.is_scrolling = 0;
             data.finished_scroll = !touch_was_click(t);
-            scroll_end_touch_drag();
+            scroll_end_touch_drag(1);
         }
     }
     pixel_offset position;
@@ -479,10 +479,6 @@ static void handle_mouse(const mouse *m)
         return;
     }
     determine_selected_object(m);
-    if (m->right.went_up) {
-        empire_clear_selected_object();
-        window_invalidate();
-    }
     int selected_object = empire_selected_object();
     if (selected_object) {
         if (empire_object_get(selected_object -1)->type == EMPIRE_OBJECT_CITY) {
@@ -493,6 +489,10 @@ static void handle_mouse(const mouse *m)
                     m, (data.x_min + data.x_max - 500) / 2, data.y_max - 105,
                         generic_button_open_trade, 1, &data.selected_button);
             }
+        }
+    } else {
+        if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+            window_city_show();
         }
     }
 }

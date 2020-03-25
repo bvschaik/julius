@@ -336,6 +336,28 @@ int building_construction_cost(void)
     return data.cost;
 }
 
+int building_construction_size(int *x, int *y)
+{
+    if (!config_get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) ||
+        !building_construction_is_updatable() ||
+        (data.type != BUILDING_CLEAR_LAND && !data.cost)) {
+        return 0;
+    }
+    int size_x = data.end.x - data.start.x;
+    int size_y = data.end.y - data.start.y;
+    if (size_x < 0) {
+        size_x = -size_x;
+    }
+    if (size_y < 0) {
+        size_y = -size_y;
+    }
+    size_x++;
+    size_y++;
+    *x = size_x;
+    *y = size_y;
+    return 1;
+}
+
 int building_construction_in_progress(void)
 {
     return data.in_progress;
@@ -386,10 +408,14 @@ int building_construction_is_updatable(void)
 void building_construction_cancel(void)
 {
     map_property_clear_constructing_and_deleted();
-    if (building_construction_is_updatable()) {
-        game_undo_restore_map(1);
+    if (data.in_progress && building_construction_is_updatable()) {
+        if (building_construction_is_updatable()) {
+            game_undo_restore_map(1);
+        }
+        data.in_progress = 0;
+    } else {
+        building_construction_set_type(BUILDING_NONE);
     }
-    data.in_progress = 0;
 }
 
 void building_construction_update(int x, int y, int grid_offset)
@@ -566,6 +592,7 @@ void building_construction_place(void)
             items_placed = last_items_cleared;
         }
         placement_cost *= items_placed;
+        map_property_clear_constructing_and_deleted();
     } else if (type == BUILDING_WALL) {
         placement_cost *= building_construction_place_wall(0, x_start, y_start, x_end, y_end);
     } else if (type == BUILDING_ROAD) {

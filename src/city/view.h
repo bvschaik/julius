@@ -38,7 +38,9 @@ void city_view_get_selected_tile_pixels(int *x_pixels, int *y_pixels);
 
 int city_view_pixels_to_view_tile(int x_pixels, int y_pixels, view_tile *tile);
 
-int city_view_pixels_to_grid_offset(int x_pixels, int y_pixels);
+void city_view_set_selected_view_tile(const view_tile *tile);
+
+int city_view_tile_to_grid_offset(const view_tile *tile);
 
 void city_view_go_to_grid_offset(int grid_offset);
 
@@ -68,6 +70,8 @@ void city_view_load_scenario_state(buffer *camera);
 void city_view_foreach_map_tile(map_callback *callback);
 
 void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2, map_callback *callback3);
+
+void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_callback *callback);
 
 void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, map_callback *callback);
 

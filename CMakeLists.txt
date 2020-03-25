@@ -161,12 +161,14 @@ set(ZLIB_FILES
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/arguments.c
+    ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
     ${PROJECT_SOURCE_DIR}/src/platform/prefs.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
     ${PROJECT_SOURCE_DIR}/src/platform/touch.c
+    ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.c
 )
 
 if (VITA_BUILD)
@@ -437,6 +439,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_risks.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_with_overlay.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_without_overlay.c
+    ${PROJECT_SOURCE_DIR}/src/widget/input_box.c
     ${PROJECT_SOURCE_DIR}/src/widget/map_editor.c
     ${PROJECT_SOURCE_DIR}/src/widget/map_editor_tool.c
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
@@ -534,8 +537,7 @@ if(APPLE)
     set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/julius.icns)
 endif()
 
-add_executable(julius
-    WIN32
+set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${CORE_FILES}
     ${BUILDING_FILES}
@@ -575,7 +577,6 @@ function(GET_SDL_EXT_DIR result module)
     foreach(child ${children})
         if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
             set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
-            set(internal_result "${SDL_LOCATION}/${child}")
             break()
         endif()
     endforeach()
@@ -583,6 +584,8 @@ endfunction()
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
+
+add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
@@ -621,6 +624,15 @@ if(APPLE)
         MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist.in")
 
     set(DIRS "")
+
+    # if SDL2 library is a framework, we need to indicate to CMake
+    # the path to its dependencies. SDL2_LIBRARY contains two parts.
+    # Example: /Library/Frameworks/SDL2.framework;-framework Cocoa
+    # So strip out everything after the ';'
+    string(REGEX REPLACE ";.*$" "" SDL2_LIB_DIR "${SDL2_LIBRARY}")
+    if(EXISTS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
+        set(DIRS "${DIRS};${SDL2_LIB_DIR}/Versions/A/Frameworks")
+    endif()
 
     # if SDL2_mixer library is a framework, we need to indicate to CMake
     # the path to its dependencies (Ogg.framework etc):
@@ -774,6 +786,8 @@ else()
     endif()
 
     # Unit tests
-    enable_testing()
-    add_subdirectory(test)
+    if(NOT VITA_BUILD AND NOT SWITCH_BUILD)
+        enable_testing()
+        add_subdirectory(test)
+    endif()
 endif()

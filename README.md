@@ -28,8 +28,7 @@ Gameplay enhancements include:
 - And more!
 
 Augustus, like project Julius requires the original assets (graphics, sounds, etc) from Caesar 3 to run.
-It optionally [supports the high-quality MP3 files](doc/mp3_support.md) once provided on the
-Sierra website.
+It optionally [supports the high-quality MP3 files](https://github.com/bvschaik/julius/wiki/MP3-Support) once provided on the Sierra website.
 
 ## Running the game
 

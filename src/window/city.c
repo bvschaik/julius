@@ -6,6 +6,7 @@
 #include "city/view.h"
 #include "game/state.h"
 #include "game/time.h"
+#include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
@@ -63,6 +64,18 @@ static void draw_paused_and_time_left(void)
     }
 }
 
+static void draw_cancel_construction(void)
+{
+    if (!mouse_get()->is_touch || !building_construction_type()) {
+        return;
+    }
+    int x, y, width, height;
+    city_view_get_viewport(&x, &y, &width, &height);
+    width -= 4 * 16;
+    inner_panel_draw(width - 4, 40, 3, 2);
+    image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+}
+
 static void draw_foreground(void)
 {
     widget_top_menu_draw(0);
@@ -70,8 +83,9 @@ static void draw_foreground(void)
     widget_sidebar_draw_foreground();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         draw_paused_and_time_left();
+        draw_cancel_construction();
     }
-    widget_city_draw_construction_cost();
+    widget_city_draw_construction_cost_and_size();
     if (window_is(WINDOW_CITY)) {
         city_message_process_queue();
     }

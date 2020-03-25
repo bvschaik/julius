@@ -17,6 +17,7 @@
 #include "input/keyboard.h"
 #include "scenario/editor.h"
 #include "scenario/property.h"
+#include "widget/input_box.h"
 #include "widget/minimap.h"
 #include "widget/sidebar_editor.h"
 #include "window/editor/allowed_buildings.h"
@@ -62,6 +63,8 @@ static arrow_button image_arrows[] = {
     {44, 424, 21, 24, change_image, 1, 0},
 };
 
+static input_box scenario_description_input = { 92, 40, 19, 2 };
+
 static struct {
     int is_paused;
     uint8_t brief_description[BRIEF_DESC_LENGTH];
@@ -74,7 +77,7 @@ static void start(void)
         keyboard_resume_capture();
     } else {
         string_copy(scenario_brief_description(), data.brief_description, BRIEF_DESC_LENGTH);
-        keyboard_start_capture(data.brief_description, BRIEF_DESC_LENGTH, 1, 280, FONT_NORMAL_WHITE);
+        keyboard_start_capture(data.brief_description, BRIEF_DESC_LENGTH, 1, &scenario_description_input, FONT_NORMAL_WHITE);
     }
 }
 
@@ -99,7 +102,7 @@ static void draw_foreground(void)
     graphics_in_dialog();
     outer_panel_draw(0, 28, 30, 28);
 
-    inner_panel_draw(92, 40, 19, 2);
+    input_box_draw(&scenario_description_input);
     text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
     text_draw(data.brief_description, 100, 50, FONT_NORMAL_WHITE, 0);
     text_draw_cursor(100, 51, keyboard_is_insert());
@@ -167,16 +170,16 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
+    const mouse *m_dialog = mouse_in_dialog(m);
+    if (input_box_handle_mouse(m_dialog, &scenario_description_input) ||
+        generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 10, &data.focus_button_id) ||
+        arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2) ||
+        widget_sidebar_editor_handle_mouse_attributes(m)) {
+        return;
+    }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
         stop(0);
         window_editor_map_show();
-    } else {
-        const mouse *m_dialog = mouse_in_dialog(m);
-        if (!generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 10, &data.focus_button_id)) {
-            if (!arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2)) {
-                widget_sidebar_editor_handle_mouse_attributes(m);
-            }
-        }
     }
 }
 
@@ -242,7 +245,7 @@ static void button_demand_changes(int param1, int param2)
 static void change_climate(int param1, int param2)
 {
     scenario_editor_cycle_climate();
-    image_load_climate(scenario_property_climate(), 1);
+    image_load_climate(scenario_property_climate(), 1, 0);
     widget_minimap_invalidate();
     window_request_refresh();
 }

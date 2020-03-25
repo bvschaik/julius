@@ -1,26 +1,27 @@
 language: c
 matrix:
+
+jobs:
   include:
   - os: linux
     compiler: gcc
-    env: SDL_LIB=SDL2-2.0.10 SDL_MIXER_LIB=SDL2_mixer-2.0.4 RUN_CODECOV=1
+    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 RUN_CODECOV=1
   - os: linux
     compiler: gcc
     env: SDL_LIB=SDL2-2.0.0 SDL_MIXER_LIB=SDL2_mixer-2.0.0
   - os: linux
     compiler: clang
-    env: SDL_LIB=SDL2-2.0.10 SDL_MIXER_LIB=SDL2_mixer-2.0.4
+    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4
   - os: linux
     dist: xenial
     name: Linux AppImage
     compiler: gcc
-    sudo: require
     env: BUILD_TARGET=appimage DEPLOY=appimage
     services:
     - docker
   - os: osx
     compiler: clang
-    env: SDL_LIB=SDL2-2.0.10 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
+    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
   - os: linux
     name: PS Vita
     env: BUILD_TARGET=vita DEPLOY=vita

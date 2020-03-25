@@ -14,7 +14,8 @@
 #define MAIN_ENTRIES 10000
 #define ENEMY_ENTRIES 801
 #define CYRILLIC_FONT_ENTRIES 2000
-#define TRAD_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_MAX_CHARS)
+#define TRAD_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS)
+#define KOREAN_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS)
 
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET HEADER_SIZE
@@ -27,6 +28,7 @@
 #define ENEMY_DATA_SIZE 2400000
 #define CYRILLIC_FONT_DATA_SIZE 1500000
 #define TRAD_CHINESE_FONT_DATA_SIZE 7000000
+#define KOREAN_FONT_DATA_SIZE 7500000
 #define SCRATCH_DATA_SIZE 12100000
 
 #define CYRILLIC_FONT_BASE_OFFSET 201
@@ -67,6 +69,7 @@ static const char EMPIRE_555[NAME_SIZE] = "The_empire.555";
 static const char CYRILLIC_FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
 static const char CYRILLIC_FONTS_555[NAME_SIZE] = "C3_fonts.555";
 static const char TRAD_CHINESE_FONTS_555[NAME_SIZE] = "rome.555";
+static const char KOREAN_FONTS_555[NAME_SIZE] = "korean.555";
 
 static const char ENEMY_GRAPHICS_SG2[][NAME_SIZE] = {
     "goths.sg2",
@@ -112,6 +115,8 @@ static const char ENEMY_GRAPHICS_555[][NAME_SIZE] = {
     "North African.555",
     "Phoenician.555",
 };
+
+static const image DUMMY_IMAGE;
 
 static struct {
     int current_climate;
@@ -311,7 +316,7 @@ static void convert_images(image *images, int size, buffer *buf, color_t *dst)
 
 static void load_empire(void)
 {
-    int size = io_read_file_into_buffer(EMPIRE_555, data.tmp_data, EMPIRE_DATA_SIZE);
+    int size = io_read_file_into_buffer(EMPIRE_555, MAY_BE_LOCALIZED, data.tmp_data, EMPIRE_DATA_SIZE);
     if (size != EMPIRE_DATA_SIZE / 2) {
         log_error("unable to load empire data", EMPIRE_555, 0);
         return;
@@ -321,16 +326,16 @@ static void load_empire(void)
     convert_uncompressed(&buf, size, data.empire_data);
 }
 
-int image_load_climate(int climate_id, int is_editor)
+int image_load_climate(int climate_id, int is_editor, int force_reload)
 {
-    if (climate_id == data.current_climate && is_editor == data.is_editor) {
+    if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload) {
         return 1;
     }
 
     const char *filename_bmp = is_editor ? EDITOR_GRAPHICS_555[climate_id] : MAIN_GRAPHICS_555[climate_id];
     const char *filename_idx = is_editor ? EDITOR_GRAPHICS_SG2[climate_id] : MAIN_GRAPHICS_SG2[climate_id];
 
-    if (MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, data.tmp_data, MAIN_INDEX_SIZE)) {
+    if (MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, MAY_BE_LOCALIZED, data.tmp_data, MAIN_INDEX_SIZE)) {
         return 0;
     }
 
@@ -340,7 +345,7 @@ int image_load_climate(int climate_id, int is_editor)
     buffer_init(&buf, &data.tmp_data[HEADER_SIZE], ENTRY_SIZE * MAIN_ENTRIES);
     read_index(&buf, data.main, MAIN_ENTRIES);
 
-    int data_size = io_read_file_into_buffer(filename_bmp, data.tmp_data, SCRATCH_DATA_SIZE);
+    int data_size = io_read_file_into_buffer(filename_bmp, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
@@ -381,15 +386,15 @@ static int load_cyrillic_fonts(void)
     if (!alloc_font_memory(CYRILLIC_FONT_ENTRIES, CYRILLIC_FONT_DATA_SIZE)) {
         return 0;
     }
-    if (CYRILLIC_FONT_INDEX_SIZE != io_read_file_part_into_buffer(CYRILLIC_FONTS_SG2, data.tmp_data,
-        CYRILLIC_FONT_INDEX_SIZE, CYRILLIC_FONT_INDEX_OFFSET)) {
+    if (CYRILLIC_FONT_INDEX_SIZE != io_read_file_part_into_buffer(CYRILLIC_FONTS_SG2, MAY_BE_LOCALIZED,
+        data.tmp_data, CYRILLIC_FONT_INDEX_SIZE, CYRILLIC_FONT_INDEX_OFFSET)) {
         return 0;
     }
     buffer buf;
     buffer_init(&buf, data.tmp_data, CYRILLIC_FONT_INDEX_SIZE);
     read_index(&buf, data.font, CYRILLIC_FONT_ENTRIES);
 
-    int data_size = io_read_file_into_buffer(CYRILLIC_FONTS_555, data.tmp_data, SCRATCH_DATA_SIZE);
+    int data_size = io_read_file_into_buffer(CYRILLIC_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
@@ -404,7 +409,7 @@ static int load_cyrillic_fonts(void)
 static int parse_chinese_font(buffer *input, color_t *pixels, int pixel_offset, int char_size, int index_offset)
 {
     int bytes_per_row = char_size <= 16 ? 2 : 3;
-    for (int i = 0; i < IMAGE_FONT_MULTIBYTE_MAX_CHARS; i++) {
+    for (int i = 0; i < IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS; i++) {
         image *img = &data.font[index_offset + i];
         img->width = char_size;
         img->height = char_size - 1;
@@ -442,7 +447,7 @@ static int load_traditional_chinese_fonts(void)
         return 0;
     }
 
-    int data_size = io_read_file_into_buffer(TRAD_CHINESE_FONTS_555, data.tmp_data, SCRATCH_DATA_SIZE);
+    int data_size = io_read_file_into_buffer(TRAD_CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
@@ -451,11 +456,73 @@ static int load_traditional_chinese_fonts(void)
     color_t *pixels = data.font_data;
     int pixel_offset = 0;
 
-    log_info("Parsing chinese font", 0, 0);
+    log_info("Parsing Chinese font", 0, 0);
     pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 12, 0);
-    pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 16, IMAGE_FONT_MULTIBYTE_MAX_CHARS);
-    pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 20, IMAGE_FONT_MULTIBYTE_MAX_CHARS * 2);
-    log_info("Done parsing chinese font", 0, 0);
+    pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 16, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS);
+    pixel_offset = parse_chinese_font(&input, &pixels[pixel_offset], pixel_offset, 20, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2);
+    log_info("Done parsing Chinese font", 0, 0);
+
+    data.fonts_enabled = MULTIBYTE_IN_FONT;
+    data.font_base_offset = 0;
+    return 1;
+}
+
+static int parse_korean_font(buffer *input, color_t *pixels, int pixel_offset, int char_size, int index_offset)
+{
+    int bytes_per_row = char_size <= 16 ? 2 : 3;
+    for (int i = 0; i < IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS; i++) {
+        image *img = &data.font[index_offset + i];
+        img->width = char_size;
+        img->height = char_size;
+        img->draw.bitmap_id = 0;
+        img->draw.offset = pixel_offset;
+        img->draw.uncompressed_length = img->draw.data_length = char_size * char_size;
+        for (int row = 0; row < char_size; row++) {
+            unsigned int bits = buffer_read_u16(input);
+            if (bytes_per_row == 3) {
+                bits += buffer_read_u8(input) << 16;
+            }
+            int prev_set = 0;
+            for (int col = 0; col < char_size; col++) {
+                int set = bits & 1;
+                if (set) {
+                    *pixels = COLOR_OPAQUE;
+                } else if (prev_set) {
+                    *pixels = COLOR_SEMI_TRANSPARENT;
+                } else {
+                    *pixels = COLOR_TRANSPARENT;
+                }
+                pixels++;
+                pixel_offset++;
+                bits >>= 1;
+                prev_set = set;
+            }
+        }
+    }
+    return pixel_offset;
+}
+
+static int load_korean_fonts(void)
+{
+    if (!alloc_font_memory(KOREAN_FONT_ENTRIES, KOREAN_FONT_DATA_SIZE)) {
+        return 0;
+    }
+
+    int data_size = io_read_file_into_buffer(KOREAN_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    if (!data_size) {
+        log_error("Julius requires extra files for Korean characters:", KOREAN_FONTS_555, 0);
+        return 0;
+    }
+    buffer input;
+    buffer_init(&input, data.tmp_data, data_size);
+    color_t *pixels = data.font_data;
+    int pixel_offset = 0;
+
+    log_info("Parsing Korean font", 0, 0);
+    pixel_offset = parse_korean_font(&input, &pixels[pixel_offset], pixel_offset, 12, 0);
+    pixel_offset = parse_korean_font(&input, &pixels[pixel_offset], pixel_offset, 15, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS);
+    pixel_offset = parse_korean_font(&input, &pixels[pixel_offset], pixel_offset, 20, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2);
+    log_info("Done parsing Korean font", 0, 0);
 
     data.fonts_enabled = MULTIBYTE_IN_FONT;
     data.font_base_offset = 0;
@@ -468,6 +535,8 @@ int image_load_fonts(encoding_type encoding)
         return load_cyrillic_fonts();
     } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
         return load_traditional_chinese_fonts();
+    } else if (encoding == ENCODING_KOREAN) {
+        return load_korean_fonts();
     } else {
         free_font_memory();
         return 1;
@@ -479,7 +548,7 @@ int image_load_enemy(int enemy_id)
     const char *filename_bmp = ENEMY_GRAPHICS_555[enemy_id];
     const char *filename_idx = ENEMY_GRAPHICS_SG2[enemy_id];
 
-    if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(filename_idx, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET)) {
+    if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(filename_idx, MAY_BE_LOCALIZED, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET)) {
         return 0;
     }
 
@@ -487,7 +556,7 @@ int image_load_enemy(int enemy_id)
     buffer_init(&buf, data.tmp_data, ENEMY_INDEX_SIZE);
     read_index(&buf, data.enemy, ENEMY_ENTRIES);
 
-    int data_size = io_read_file_into_buffer(filename_bmp, data.tmp_data, SCRATCH_DATA_SIZE);
+    int data_size = io_read_file_into_buffer(filename_bmp, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
@@ -503,13 +572,13 @@ static const color_t *load_external_data(int image_id)
     strcpy(&filename[4], data.bitmaps[img->draw.bitmap_id]);
     file_change_extension(filename, "555");
     int size = io_read_file_part_into_buffer(
-        &filename[4], data.tmp_data,
+        &filename[4], MAY_BE_LOCALIZED, data.tmp_data,
         img->draw.data_length, img->draw.offset - 1
     );
     if (!size) {
         // try in 555 dir
         size = io_read_file_part_into_buffer(
-            filename, data.tmp_data,
+            filename, MAY_BE_LOCALIZED, data.tmp_data,
             img->draw.data_length, img->draw.offset - 1
         );
         if (!size) {
@@ -556,8 +625,10 @@ const image *image_letter(int letter_id)
         return &data.font[data.font_base_offset + letter_id];
     } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         return &data.font[data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET];
-    } else {
+    } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
         return &data.main[data.group_image_ids[GROUP_FONT] + letter_id];
+    } else {
+        return &DUMMY_IMAGE;
     }
 }
 
@@ -593,9 +664,11 @@ const color_t *image_data_letter(int letter_id)
         return &data.font_data[data.font[data.font_base_offset + letter_id].draw.offset];
     } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         return &data.font_data[data.font[data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET].draw.offset];
-    } else {
+    } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
         int image_id = data.group_image_ids[GROUP_FONT] + letter_id;
         return &data.main_data[data.main[image_id].draw.offset];
+    } else {
+        return NULL;
     }
 }
 

@@ -104,16 +104,15 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
-        window_advisors_show();
-        return;
-    }
-
     const mouse *m_dialog = mouse_in_dialog(m);
-    image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 4, &focus_image_button_id);
-    generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_gods_size, 8, &focus_button_id);
+    int handled = 0;
+    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 4, &focus_image_button_id);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_gods_size, 8, &focus_button_id);
     if (focus_image_button_id) {
         focus_button_id = 0;
+    }
+    if (!handled && (m->right.went_up || (m->is_touch && m->left.double_click))) {
+        window_advisors_show();
     }
 }
 

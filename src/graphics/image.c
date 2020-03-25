@@ -10,7 +10,8 @@
 #define FOOTPRINT_HEIGHT 30
 
 #define COMPONENT(c, shift) ((c >> shift) & 0xff)
-#define MIX(src, dst, alpha, shift) ((((COMPONENT(src, shift) * alpha + COMPONENT(dst, shift) * (256 - alpha)) >> 8) & 0xff) << shift)
+#define MIX_RB(src, dst, alpha) ((((src & 0xff00ff) * alpha + (dst & 0xff00ff) * (256 - alpha)) >> 8) & 0xff00ff)
+#define MIX_G(src, dst, alpha) ((((src & 0x00ff00) * alpha + (dst & 0x00ff00) * (256 - alpha)) >> 8) & 0x00ff00)
 
 typedef enum {
     DRAW_TYPE_SET,
@@ -84,7 +85,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
                     } else {
                         color_t s = color;
                         color_t d = *dst;
-                        *dst = MIX(s, d, alpha, 0) | MIX(s, d, alpha, 8) | MIX(s, d, alpha, 16);
+                        *dst = MIX_RB(s, d, alpha) | MIX_G(s, d, alpha);
                     }
                 }
                 data++;
@@ -159,8 +160,6 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
                 data += b;
                 x += b;
             } else {
-                // number of concrete pixels
-                const color_t *pixels = data;
                 data += b;
                 color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
                 if (unclipped) {
@@ -168,7 +167,6 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
                     while (b) {
                         *dst = color;
                         dst++;
-                        pixels++;
                         b--;
                     }
                 } else {
@@ -178,7 +176,6 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
                         }
                         dst++;
                         x++;
-                        pixels++;
                         b--;
                     }
                 }
@@ -257,8 +254,6 @@ static void draw_compressed_blend(const image *img, const color_t *data, int x_o
                 data += b;
                 x += b;
             } else {
-                // number of concrete pixels
-                const color_t *pixels = data;
                 data += b;
                 color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
                 if (unclipped) {
@@ -266,7 +261,6 @@ static void draw_compressed_blend(const image *img, const color_t *data, int x_o
                     while (b) {
                         *dst &= color;
                         dst++;
-                        pixels++;
                         b--;
                     }
                 } else {
@@ -276,7 +270,68 @@ static void draw_compressed_blend(const image *img, const color_t *data, int x_o
                         }
                         dst++;
                         x++;
-                        pixels++;
+                        b--;
+                    }
+                }
+            }
+        }
+    }
+}
+
+static void draw_compressed_blend_alpha(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
+{
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
+    if (!clip->is_visible) {
+        return;
+    }
+    color_t alpha = COMPONENT(color, 24);
+    if (!alpha) {
+        return;
+    }
+    if (alpha == 255) {
+        draw_compressed_set(img, data, x_offset, y_offset, height, color);
+        return;
+    }
+    color_t alpha_dst = 256 - alpha;
+    color_t src_rb = (color & 0xff00ff) * alpha;
+    color_t src_g = (color & 0x00ff00) * alpha;
+    int unclipped = clip->clip_x == CLIP_NONE;
+
+    for (int y = 0; y < height - clip->clipped_pixels_bottom; y++) {
+        int x = 0;
+        color_t *dst = graphics_get_pixel(x_offset, y_offset + y);
+        while (x < img->width) {
+            color_t b = *data;
+            data++;
+            if (b == 255) {
+                // transparent pixels to skip
+                x += *data;
+                dst += *data;
+                data++;
+            } else if (y < clip->clipped_pixels_top) {
+                data += b;
+                x += b;
+                dst += b;
+            } else {
+                data += b;
+                if (unclipped) {
+                    x += b;
+                    while (b) {
+                        color_t d = *dst;
+                        *dst = (((src_rb + (d & 0xff00ff) * alpha_dst) & 0xff00ff00) |
+                                ((src_g  + (d & 0x00ff00) * alpha_dst) & 0x00ff0000)) >> 8;
+                        b--;
+                        dst++;
+                    }
+                } else {
+                    while (b) {
+                        if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right) {
+                            color_t d = *dst;
+                            *dst = (((src_rb + (d & 0xff00ff) * alpha_dst) & 0xff00ff00) |
+                                   ((src_g  + (d & 0x00ff00) * alpha_dst) & 0x00ff0000)) >> 8;
+                        }
+                        dst++;
+                        x++;
                         b--;
                     }
                 }
@@ -567,6 +622,25 @@ void image_draw_blend(int image_id, int x, int y, color_t color)
     }
 }
 
+void image_draw_blend_alpha(int image_id, int x, int y, color_t color)
+{
+    const image *img = image_get(image_id);
+    const color_t *data = image_data(image_id);
+    if (!data) {
+        return;
+    }
+
+    if (img->draw.type == IMAGE_TYPE_ISOMETRIC) {
+        return;
+    }
+
+    if (img->draw.is_fully_compressed) {
+        draw_compressed_blend_alpha(img, data, x, y, img->height, color);
+    } else {
+        draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
+    }
+}
+
 static void draw_multibyte_letter(font_t font, const image *img, const color_t *data, int x, int y, color_t color)
 {
     switch (font) {
@@ -584,6 +658,11 @@ static void draw_multibyte_letter(font_t font, const image *img, const color_t *
             break;
         case FONT_NORMAL_PLAIN:
             draw_uncompressed(img, data, x, y + 2, color, DRAW_TYPE_BLEND_ALPHA);
+            break;
+        case FONT_NORMAL_BLACK:
+        case FONT_LARGE_BLACK:
+            draw_uncompressed(img, data, x + 1, y + 1, 0xcead9c, DRAW_TYPE_BLEND_ALPHA);
+            draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
             break;
         default:
             draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);

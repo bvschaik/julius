@@ -126,6 +126,11 @@ static int get_scroll_speed_factor(void)
     return calc_bound((100 - setting_scroll_speed()) / 10, 0, 10);
 }
 
+int scroll_is_smooth(void)
+{
+    return config_get(CONFIG_UI_SMOOTH_SCROLLING) || data.is_touch || data.speed.decaying;
+}
+
 static int should_scroll(void)
 {
     time_millis current_time = time_get_millis();
@@ -251,13 +256,15 @@ int scroll_move_touch_drag(int original_x, int original_y, int current_x, int cu
     return 0;
 }
 
-void scroll_end_touch_drag(void)
+void scroll_end_touch_drag(int do_decay)
 {
     data.is_touch = 0;
-    data.speed.last_position.x = data.position.current.x + data.speed.x;
-    data.speed.last_position.y = data.position.current.y + data.speed.y;
-    data.speed.last_time = time_get_millis();
-    data.speed.decaying = 1;
+    if (do_decay) {
+        data.speed.last_position.x = data.position.current.x + data.speed.x;
+        data.speed.last_position.y = data.position.current.y + data.speed.y;
+        data.speed.last_time = time_get_millis();
+        data.speed.decaying = 1;
+    }
 }
 
 int scroll_decay(pixel_offset *position)
@@ -368,7 +375,7 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
     time_millis current_time = time_get_millis();
     time_millis time_delta = current_time - data.speed.last_time;
     data.speed.last_time = current_time;
-    if(time_delta > 17 && time_delta < MAX_SPEED_TIME_WEIGHT) {
+    if (time_delta > 17 && time_delta < MAX_SPEED_TIME_WEIGHT) {
         delta->x = (int) ((float) (data.speed.x / FRAME_TIME) * time_delta);
         delta->y = (int) ((float) (data.speed.y / FRAME_TIME) * time_delta);
     } else {

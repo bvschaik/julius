@@ -1,5 +1,6 @@
 #include "keyboard_input.h"
 
+#include "game/system.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"
 
@@ -74,8 +75,10 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
     switch (event->keysym.sym) {
         case SDLK_RETURN:
         case SDLK_KP_ENTER:
-            keyboard_return();
-            hotkey_enter();
+            if (!is_alt_down(event)) {
+                keyboard_return();
+            }
+            hotkey_enter(is_alt_down(event));
             break;
         case SDLK_BACKSPACE:
             keyboard_backspace();
@@ -136,6 +139,18 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDLK_SPACE:
             hotkey_character(event->keysym.sym, is_ctrl_down(event), is_alt_down(event));
             break;
+        case SDLK_KP_0: hotkey_character('0', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_1: hotkey_character('1', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_2: hotkey_character('2', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_3: hotkey_character('3', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_4: hotkey_character('4', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_5: hotkey_character('5', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_6: hotkey_character('6', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_7: hotkey_character('7', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_8: hotkey_character('8', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_9: hotkey_character('9', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_MINUS: hotkey_character('-', is_ctrl_down(event), is_alt_down(event)); break;
+        case SDLK_KP_PLUS: hotkey_character('+', is_ctrl_down(event), is_alt_down(event)); break;
         default:
             if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
                 // Send keycodes only for letters (layout dependent codes)
@@ -168,4 +183,13 @@ void platform_handle_key_up(SDL_KeyboardEvent *event)
 void platform_handle_text(SDL_TextInputEvent *event)
 {
     keyboard_character(event->text);
+}
+
+int system_use_virtual_keyboard(void)
+{
+#if defined (__vita__) || defined(__SWITCH__)
+    return 1;
+#else
+    return 0;
+#endif
 }

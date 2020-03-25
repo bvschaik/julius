@@ -459,11 +459,6 @@ static void deletion_draw_remaining(int x, int y, int grid_offset)
     draw_hippodrome_ornaments(x, y, grid_offset);
 }
 
-static void clear_deleted(int x, int y, int grid_offset)
-{
-    map_property_clear_deleted(grid_offset);
-}
-
 void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile)
 {
     init_draw_context(selected_figure_id, figure_coord);
@@ -481,12 +476,11 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_valid_map_tile(
             draw_elevated_figures,
             draw_hippodrome_ornaments,
-            clear_deleted
+            0
         );
     } else {
         city_view_foreach_map_tile(deletion_draw_terrain_top);
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
-        city_view_foreach_map_tile(clear_deleted);
     }
 }

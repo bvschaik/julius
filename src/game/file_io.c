@@ -608,7 +608,7 @@ int game_file_io_read_scenario(const char *filename)
 {
     log_info("Loading scenario", filename, 0);
     init_scenario_data();
-    FILE *fp = file_open(dir_get_case_corrected_file(filename), "rb");
+    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
     if (!fp) {
         return 0;
     }
@@ -740,7 +740,8 @@ int game_file_io_read_saved_game(const char *filename, int offset)
         init_savegame_data();
     }
 
-    FILE *fp = file_open(dir_get_case_corrected_file(filename), "rb");
+    log_info("Loading saved game", filename, 0);
+    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
     if (!fp) {
         log_error("Unable to load game, unable to open file.", 0, 0);
         return 0;
@@ -778,5 +779,5 @@ int game_file_io_write_saved_game(const char *filename)
 
 int game_file_io_delete_saved_game(const char *filename)
 {
-    return remove(filename) == 0;
+    return file_remove(filename);
 }

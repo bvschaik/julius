@@ -7,6 +7,7 @@
 #include "core/log.h"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
+#include "graphics/menu.h"
 #include "graphics/window.h"
 #include "map/grid.h"
 #include "widget/city_without_overlay.h"
@@ -18,7 +19,6 @@
 #include <string.h>
 #include <time.h>
 
-#define TOP_MENU_HEIGHT 24
 #define TILE_X_SIZE 60
 #define TILE_Y_SIZE 30
 #define IMAGE_HEIGHT_CHUNK TILE_Y_SIZE
@@ -34,8 +34,6 @@ static const char filename_formats[MAX_SCREENSHOT_TYPES][32] = {
     "full city %Y-%m-%d %H.%M.%S.png",
     "city %Y-%m-%d %H.%M.%S.png",
 };
-
-static void full_city_screenshot(void);
 
 static struct {
     int width;
@@ -72,7 +70,7 @@ static int image_create(int width, int height, int rows_in_memory)
         return 0;
     }
     image.png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-    if(!image.png_ptr) {
+    if (!image.png_ptr) {
         return 0;
     }
     image.info_ptr = png_create_info_struct(image.png_ptr);
@@ -127,13 +125,8 @@ static int image_write_header(void)
 
 static int image_set_loop_height_limits(int min, int max)
 {
-    if (min > max) {
-        image.current_y = max;
-        image.final_y = min;
-    } else {
-        image.current_y = min;
-        image.final_y = max;
-    }
+    image.current_y = min;
+    image.final_y = max;
     return image.current_y;
 }
 
@@ -184,12 +177,8 @@ static void image_finish(void)
     png_write_end(image.png_ptr, image.info_ptr);
 }
 
-void graphics_save_screenshot(int full_city)
+static void create_window_screenshot(void)
 {
-    if (full_city) {
-        full_city_screenshot();
-        return;
-    }
     int width = screen_width();
     int height = screen_height();
 
@@ -216,7 +205,7 @@ void graphics_save_screenshot(int full_city)
     image_free();
 }
 
-static void full_city_screenshot(void)
+static void create_full_city_screenshot(void)
 {
     if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY)) {
         return;
@@ -270,4 +259,13 @@ static void full_city_screenshot(void)
         log_info("Saved full city screenshot:", filename, 0);
     }
     image_free();
+}
+
+void graphics_save_screenshot(int full_city)
+{
+    if (full_city) {
+        create_full_city_screenshot();
+    } else {
+        create_window_screenshot();
+    }
 }

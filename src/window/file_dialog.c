@@ -19,6 +19,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/keyboard.h"
+#include "widget/input_box.h"
 #include "window/city.h"
 #include "window/editor/map.h"
 
@@ -50,7 +51,8 @@ static generic_button file_buttons[] = {
 };
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
-static const int MAX_FILE_WINDOW_TEXT_WIDTH = 18 * 16;
+static const int MAX_FILE_WINDOW_TEXT_WIDTH = 18 * INPUT_BOX_BLOCK_SIZE;
+static input_box file_name_input = { 144, 80, 20, 2 };
 
 typedef struct {
     char extension[4];
@@ -73,6 +75,8 @@ static struct {
 file_type_data saved_game_data = {"sav"};
 file_type_data saved_game_data_expanded = {"svx"};
 file_type_data scenario_data = {"map"};
+
+static int double_click = 0;
 
 static void init(file_type type, file_dialog_type dialog_type)
 {
@@ -98,7 +102,7 @@ static void init(file_type type, file_dialog_type dialog_type)
     }
 
     strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
-    keyboard_start_capture(data.typed_name, FILE_NAME_MAX, 0, MAX_FILE_WINDOW_TEXT_WIDTH, FONT_NORMAL_WHITE);
+    keyboard_start_capture(data.typed_name, FILE_NAME_MAX, 0, &file_name_input, FONT_NORMAL_WHITE);
 }
 
 static void draw_scrollbar_dot(void)
@@ -123,7 +127,7 @@ static void draw_foreground(void)
     uint8_t file[FILE_NAME_MAX];
 
     outer_panel_draw(128, 40, 24, 21);
-    inner_panel_draw(144, 80, 20, 2);
+    input_box_draw(&file_name_input);
     inner_panel_draw(144, 120, 20, 13);
 
     // title
@@ -180,6 +184,7 @@ static int handle_scrollbar(const mouse *m)
 
 static void handle_mouse(const mouse *m)
 {
+    double_click = m->left.double_click;
     if (m->scrolled == SCROLL_DOWN) {
         button_scroll(1, 3);
     } else if (m->scrolled == SCROLL_UP) {
@@ -191,15 +196,16 @@ static void handle_mouse(const mouse *m)
         return;
     }
 
-    if (m->right.went_up) {
-        window_go_back();
+    const mouse *m_dialog = mouse_in_dialog(m);
+    if (input_box_handle_mouse(m_dialog, &file_name_input) ||
+        generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 12, &data.focus_button_id) ||
+        image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 4, 0) ||
+        handle_scrollbar(m)) {
         return;
     }
-    const mouse *m_dialog = mouse_in_dialog(m);
-    if (!generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 12, &data.focus_button_id)) {
-        if (!image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 4, 0)) {
-            handle_scrollbar(m);
-        }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+        keyboard_stop_capture();
+        window_go_back();
     }
 }
 
@@ -228,13 +234,14 @@ static const char *get_chosen_filename(void)
 static void button_ok_cancel(int is_ok, int param2)
 {
     if (!is_ok) {
+        keyboard_stop_capture();
         window_go_back();
         return;
     }
 
     const char *filename = get_chosen_filename();
 
-    if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(filename)) {
+    if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(filename, NOT_LOCALIZED)) {
         data.message_not_exist_start_time = time_get_millis();
         return;
     }
@@ -310,6 +317,10 @@ static void button_select_file(int index, int param2)
         encoding_from_utf8(data.selected_file, data.typed_name, FILE_NAME_MAX);
         keyboard_refresh();
         data.message_not_exist_start_time = 0;
+    }
+    if (data.dialog_type != FILE_DIALOG_DELETE && double_click) {
+        double_click = 0;
+        button_ok_cancel(1, 0);
     }
 }
 

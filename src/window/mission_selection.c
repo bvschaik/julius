@@ -124,12 +124,20 @@ static void handle_mouse(const mouse *m)
         if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44)) {
             scenario_set_campaign_mission(game_mission_peaceful());
             data.choice = 1;
+            if (m_dialog->left.double_click) {
+                button_start(0, 0);
+                return;
+            }
             window_invalidate();
             sound_speech_play_file("wavs/fanfare_nu1.wav");
         }
         if (is_mouse_hit(m_dialog, x_military, y_military, 44)) {
             scenario_set_campaign_mission(game_mission_military());
             data.choice = 2;
+            if (m_dialog->left.double_click) {
+                button_start(0, 0);
+                return;
+            }
             window_invalidate();
             sound_speech_play_file("wavs/fanfare_nu5.wav");
         }

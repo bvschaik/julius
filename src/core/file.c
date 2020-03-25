@@ -1,60 +1,15 @@
 #include "core/file.h"
 
-#include "core/dir.h"
 #include "core/string.h"
+#include "platform/file_manager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __vita__
-#include "platform/vita/vita.h"
-#endif
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
-#if defined(__vita__)
-
 FILE *file_open(const char *filename, const char *mode)
 {
-    char *resolved_path = vita_prepend_path(filename);
-    FILE *fp = fopen(resolved_path, mode);
-    free(resolved_path);
-    return fp;
+    return platform_file_manager_open_file(filename, mode);
 }
-
-#elif defined(_WIN32)
-
-wchar_t *utf8_to_wchar(const char *str)
-{
-    int size_needed = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
-    wchar_t *result = (wchar_t*) malloc(sizeof(wchar_t) * size_needed);
-    MultiByteToWideChar(CP_UTF8, 0, str, -1, result, size_needed);
-    return result;
-}
-
-FILE *file_open(const char *filename, const char *mode)
-{
-    wchar_t *wfile = utf8_to_wchar(filename);
-    wchar_t *wmode = utf8_to_wchar(mode);
-
-    FILE *fp = _wfopen(wfile, wmode);
-
-    free(wfile);
-    free(wmode);
-
-    return fp;
-}
-
-#else
-
-FILE *file_open(const char *filename, const char *mode)
-{
-    return fopen(filename, mode);
-}
-
-#endif
 
 int file_close(FILE *stream)
 {
@@ -63,6 +18,9 @@ int file_close(FILE *stream)
 
 int file_has_extension(const char *filename, const char *extension)
 {
+    if (!extension || !*extension) {
+        return 1;
+    }
     char c;
     do {
         c = *filename;
@@ -104,7 +62,6 @@ void file_append_extension(char *filename, const char *extension)
     filename[4] = 0;
 }
 
-
 void file_remove_extension(uint8_t *filename)
 {
     uint8_t c;
@@ -118,7 +75,12 @@ void file_remove_extension(uint8_t *filename)
     }
 }
 
-int file_exists(const char *filename)
+int file_exists(const char *filename, int localizable)
 {
-    return NULL != dir_get_case_corrected_file(filename);
+    return NULL != dir_get_file(filename, localizable);
+}
+
+int file_remove(const char *filename)
+{
+    return platform_file_manager_remove_file(filename);
 }

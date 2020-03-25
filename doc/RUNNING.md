@@ -9,7 +9,7 @@ Note that there are [command line options](#command-line-options) which are avai
 If you have the high-quality MP3 music files that were once available for download from the Sierra Website,
 the game supports playing them.
 
-Please check [MP3 support](mp3_support.md) for details.
+Please check [MP3 support](https://github.com/bvschaik/julius/wiki/MP3-Support) for details.
 
 ## Windows
 

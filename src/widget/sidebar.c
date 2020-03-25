@@ -20,6 +20,7 @@
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
+#include "graphics/menu.h"
 #include "graphics/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
@@ -47,11 +48,18 @@
 #define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 112
 #define EXTRA_INFO_HEIGHT_RATINGS 272
 
+#define SIDEBAR_SLIDE_STEPS 94
+
 // sliding sidebar progress to x offset translation
-static const int PROGRESS_TO_X_OFFSET[] = {
-    1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 18, 21, 24, 27,
-    30, 33, 37, 41, 45, 49, 54, 59, 64, 70, 76, 83, 91, 99, 106, 113,
-    119, 125, 130, 135, 139, 143, 146, 149, 152, 154, 156, 158, 160, 162, 165
+static const int PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS] = {
+    1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 10,
+    11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 24, 25,
+    27, 28, 30, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49,
+    51, 54, 56, 59, 61, 64, 67, 70, 73, 76, 80, 83, 87,
+    91, 95, 99, 102, 106, 109, 113, 116, 119, 122, 125,
+    127, 130, 132, 135, 137, 139, 141, 143, 144, 146,
+    147, 149, 150, 152, 153, 154, 155, 156, 157, 158,
+    159, 160, 161, 162, 163, 164, 165
 };
 
 static void slide_sidebar(void);
@@ -364,9 +372,9 @@ static void draw_extra_info_buttons(int x_offset, int is_collapsed)
         return;
     }
 
-    graphics_set_clip_rectangle(x_offset, 24,
-        screen_width() - x_offset,
-        screen_height() - 24);
+    graphics_set_clip_rectangle(x_offset, TOP_MENU_HEIGHT,
+            screen_width() - x_offset,
+            screen_height() - TOP_MENU_HEIGHT);
 
     if (update_extra_info(extra_info_height, 0)) {
         draw_extra_info_panel(x_offset, extra_info_height);
@@ -616,14 +624,14 @@ static void update_progress(void)
 {
     time_millis now = time_get_millis();
     time_millis diff = now - data.slide_start;
-    data.progress = diff / 10;
+    data.progress = diff / 5;
 }
 
 static void draw_sliding_foreground(void)
 {
     window_request_refresh();
     update_progress();
-    if (data.progress >= 47) {
+    if (data.progress >= SIDEBAR_SLIDE_STEPS) {
         city_view_toggle_sidebar();
         window_city_show();
         window_draw(1);
@@ -632,7 +640,7 @@ static void draw_sliding_foreground(void)
 
     int x_offset_expanded = get_x_offset_expanded();
     int x_offset_collapsed = get_x_offset_collapsed();
-    graphics_set_clip_rectangle(x_offset_expanded, 24, SIDEBAR_EXPANDED_WIDTH, screen_height() - 24);
+    graphics_set_clip_rectangle(x_offset_expanded, TOP_MENU_HEIGHT, SIDEBAR_EXPANDED_WIDTH, screen_height() - TOP_MENU_HEIGHT);
 
     int image_base = image_group(GROUP_SIDE_PANEL);
     // draw collapsed sidebar
@@ -642,9 +650,8 @@ static void draw_sliding_foreground(void)
 
     // draw expanded sidebar on top of it
     if (city_view_is_sidebar_collapsed()) {
-        x_offset_expanded += PROGRESS_TO_X_OFFSET[47 - data.progress];
-    }
-    else {
+        x_offset_expanded += PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS - data.progress];
+    } else {
         x_offset_expanded += PROGRESS_TO_X_OFFSET[data.progress];
     }
     image_draw(image_base + 1, x_offset_expanded, 24);

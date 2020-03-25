@@ -10,6 +10,7 @@ void image_draw_enemy(int image_id, int x, int y);
 
 void image_draw_masked(int image_id, int x, int y, color_t color_mask);
 void image_draw_blend(int image_id, int x, int y, color_t color);
+void image_draw_blend_alpha(int image_id, int x, int y, color_t color);
 void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color);
 
 void image_draw_fullscreen_background(int image_id);

@@ -49,15 +49,42 @@ static int percentage_to_volume(int percentage)
     return percentage * SDL_MIX_MAXVOLUME / 100;
 }
 
+static void init_channels(void)
+{
+    data.initialized = 1;
+    for (int i = 0; i < MAX_CHANNELS; i++) {
+        data.channels[i].chunk = 0;
+    }
+}
+
 void sound_device_open(void)
 {
     if (0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
-        data.initialized = 1;
-        for (int i = 0; i < MAX_CHANNELS; i++) {
-            data.channels[i].chunk = 0;
+        init_channels();
+        return;
+    }
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Sound failed to initialize using default driver: %s", Mix_GetError());
+    // Try to work around SDL choosing the wrong driver on Windows sometimes
+    for (int i = 0; i < SDL_GetNumAudioDrivers(); i++) {
+        const char *driver_name = SDL_GetAudioDriver(i);
+        if (SDL_strcmp(driver_name, "disk") == 0 || SDL_strcmp(driver_name, "dummy") == 0) {
+            // Skip "write-to-disk" and dummy drivers
+            continue;
         }
-    } else {
-        log_error("SOUND: not initialized", 0, 0);
+        if (0 == SDL_AudioInit(driver_name) &&
+            0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
+            SDL_Log("Using audio driver: %s", driver_name);
+            init_channels();
+            return;
+        } else {
+            SDL_Log("Not using audio driver %s, reason: %s", driver_name, SDL_GetError());
+        }
+    }
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Sound failed to initialize: %s", Mix_GetError());
+    int max = SDL_GetNumAudioDevices(0);
+    SDL_Log("Number of audio devices: %d", max);
+    for (int i = 0; i < max; i++) {
+        SDL_Log("Audio device: %s", SDL_GetAudioDeviceName(i, 0));
     }
 }
 
@@ -77,6 +104,9 @@ static Mix_Chunk *load_chunk(const char *filename)
     if (filename[0]) {
 #ifdef __vita__
         FILE *fp = file_open(filename, "rb");
+        if (!fp) {
+            return NULL;
+        }
         SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
         return Mix_LoadWAV_RW(sdl_fp, 1);
 #else
@@ -132,28 +162,26 @@ int sound_device_play_music(const char *filename, int volume_pct)
     if (data.initialized) {
         sound_device_stop_music();
 
-        #ifdef __vita__
-        char *resolved_filename = vita_prepend_path(filename); // There is no Mix_LoadMUS equivalent for fp
-        #else
-        const char *resolved_filename = filename;
-        #endif
-
-        data.music = Mix_LoadMUS(resolved_filename);
+#ifdef __vita__
+        FILE *fp = file_open(filename, "rb");
+        if (!fp) {
+            return 0;
+        }
+        SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
+        data.music = Mix_LoadMUSType_RW(sdl_fp, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+#else
+        data.music = Mix_LoadMUS(filename);
+#endif
         if (!data.music) {
-            SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Error opening music file '%s'. Reason: %s", resolved_filename, Mix_GetError());
+            SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
         } else {
             if (Mix_PlayMusic(data.music, -1) == -1) {
                 data.music = 0;
-                SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Error playing music file '%s'. Reason: %s", resolved_filename, Mix_GetError());
+                SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
             } else {
                 sound_device_set_music_volume(volume_pct);
             }
         }
-
-        #ifdef __vita__
-        free(resolved_filename);
-        #endif
-
         return data.music ? 1 : 0;
     }
     return 0;

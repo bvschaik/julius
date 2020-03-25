@@ -67,6 +67,8 @@ window_id window_get_id(void)
 
 void window_show(const window_type *window)
 {
+    mouse_reset_button_state();
+    reset_touches(1);
     increase_queue_index();
     data.window_queue[data.queue_index] = *window;
     data.current_window = &data.window_queue[data.queue_index];
@@ -98,7 +100,7 @@ static void update_mouse_before(void)
 
 static void update_mouse_after(void)
 {
-    reset_touches();
+    reset_touches(0);
     mouse_reset_scroll();
     input_cursor_update(data.current_window->id);
 }

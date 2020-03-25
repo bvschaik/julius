@@ -11,6 +11,7 @@ static int image_y_offset_cyrillic_large_plain(uint8_t c, int image_height, int 
 static int image_y_offset_cyrillic_large_black(uint8_t c, int image_height, int line_height);
 static int image_y_offset_cyrillic_large_brown(uint8_t c, int image_height, int line_height);
 static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int line_height);
+static int image_y_offset_korean(uint8_t c, int image_height, int line_height);
 
 static const int CHAR_TO_FONT_IMAGE_DEFAULT[] = {
     0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x01,
@@ -109,16 +110,35 @@ static const font_definition DEFINITIONS_CYRILLIC[] = {
 };
 
 static const font_definition DEFINITIONS_TRADITIONAL_CHINESE[] = {
-    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_MAX_CHARS, 6, 6, 1, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, 6, 6, 1, 1, 11, image_y_offset_default},
     {FONT_NORMAL_BLACK, 134, 0, 6, 6, 1, 1, 11, image_y_offset_default},
     {FONT_NORMAL_WHITE, 268, 0, 6, 6, 1, 1, 11, image_y_offset_default},
     {FONT_NORMAL_RED, 402, 0, 6, 6, 1, 1, 11, image_y_offset_default},
-    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_default},
-    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_default},
-    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_MAX_CHARS * 2, 10, 8, 1, 1, 24, image_y_offset_default},
+    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 10, 8, 1, 1, 24, image_y_offset_default},
     {FONT_SMALL_PLAIN, 938, 0, 4, 4, 1, 1, 9, image_y_offset_default},
     {FONT_NORMAL_GREEN, 1072, 0, 6, 6, 1, 1, 11, image_y_offset_default},
     {FONT_SMALL_BLACK, 1206, 0, 6, 6, 1, 1, 11, image_y_offset_default}
+};
+
+static const font_definition DEFINITIONS_KOREAN[] = {
+    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 1, 6, 6, 1, 1, 11, image_y_offset_korean},
+    {FONT_NORMAL_BLACK, 134, 0, 6, 6, 0, 0, 11, image_y_offset_korean},
+    {FONT_NORMAL_WHITE, 268, 0, 6, 6, 0, 0, 11, image_y_offset_korean},
+    {FONT_NORMAL_RED, 402, 0, 6, 6, 0, 0, 11, image_y_offset_korean},
+    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_korean},
+    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 10, 8, 1, 0, 23, image_y_offset_korean},
+    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 10, 8, 1, 0, 24, image_y_offset_korean},
+    {FONT_SMALL_PLAIN, 938, 0, 4, 4, 1, 1, 9, image_y_offset_korean},
+    {FONT_NORMAL_GREEN, 1072, 0, 6, 6, 0, 0, 11, image_y_offset_korean},
+    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 0, 0, 11, image_y_offset_korean}
+};
+
+enum {
+    MULTIBYTE_NONE = 0,
+    MULTIBYTE_CHINESE = 1,
+    MULTIBYTE_KOREAN = 2,
 };
 
 static struct {
@@ -127,7 +147,7 @@ static struct {
     int multibyte;
 } data;
 
-int image_y_offset_default(uint8_t c, int image_height, int line_height)
+static int image_y_offset_default(uint8_t c, int image_height, int line_height)
 {
     int offset = image_height - line_height;
     if (offset < 0) {
@@ -139,7 +159,7 @@ int image_y_offset_default(uint8_t c, int image_height, int line_height)
     return offset;
 }
 
-int image_y_offset_eastern(uint8_t c, int image_height, int line_height)
+static int image_y_offset_eastern(uint8_t c, int image_height, int line_height)
 {
     int offset = image_height - line_height;
     if (offset < 0) {
@@ -296,9 +316,24 @@ static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int 
     }
 }
 
+static int image_y_offset_korean(uint8_t c, int image_height, int line_height)
+{
+    if (c < 128) {
+        return 0;
+    }
+    if (line_height == 11) {
+        if (image_height == 12) {
+            return 0;
+        } else if (image_height == 15) {
+            return 3;
+        }
+    }
+    return image_height - line_height;
+}
+
 void font_set_encoding(encoding_type encoding)
 {
-    data.multibyte = 0;
+    data.multibyte = MULTIBYTE_NONE;
     if (encoding == ENCODING_EASTERN_EUROPE) {
         data.font_mapping = CHAR_TO_FONT_IMAGE_EASTERN;
         data.font_definitions = DEFINITIONS_EASTERN;
@@ -308,7 +343,11 @@ void font_set_encoding(encoding_type encoding)
     } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
         data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
         data.font_definitions = DEFINITIONS_TRADITIONAL_CHINESE;
-        data.multibyte = 1;
+        data.multibyte = MULTIBYTE_CHINESE;
+    } else if (encoding == ENCODING_KOREAN) {
+        data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
+        data.font_definitions = DEFINITIONS_KOREAN;
+        data.multibyte = MULTIBYTE_KOREAN;
     } else {
         data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
         data.font_definitions = DEFINITIONS_DEFAULT;
@@ -322,18 +361,30 @@ const font_definition *font_definition_for(font_t font)
 
 int font_letter_id(const font_definition *def, const uint8_t *str, int *num_bytes)
 {
-    if (data.multibyte && *str >= 0x80) {
+    if (data.multibyte != MULTIBYTE_NONE && *str >= 0x80) {
         *num_bytes = 2;
-        int char_id = (str[0] & 0x7f) | ((str[1] & 0x7f) << 7);
-        if (char_id >= IMAGE_FONT_MULTIBYTE_MAX_CHARS) {
-            // lookup in table
-            int big5_encoded = str[0] << 8 | str[1];
-            char_id = encoding_multibyte_big5_to_image_id(big5_encoded);
-            if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_MAX_CHARS) {
+        if (data.multibyte == MULTIBYTE_CHINESE) {
+            int char_id = (str[0] & 0x7f) | ((str[1] & 0x7f) << 7);
+            if (char_id >= IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
+                // lookup in table
+                int big5_encoded = str[0] << 8 | str[1];
+                char_id = encoding_multibyte_big5_to_image_id(big5_encoded);
+                if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
+                    return -1;
+                }
+            }
+            return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
+        } else if (data.multibyte == MULTIBYTE_KOREAN) {
+            int b0 = str[0] - 0xb0;
+            int b1 = str[1] - 0xa1;
+            int char_id = b0 * 94 + b1;
+            if (b0 < 0 || b1 < 0 || char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS) {
                 return -1;
             }
+            return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
+        } else {
+            return -1;
         }
-        return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
     } else {
         *num_bytes = 1;
         if (!data.font_mapping[*str]) {

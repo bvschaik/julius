@@ -495,11 +495,6 @@ static void deletion_draw_animations(int x, int y, int grid_offset)
     draw_animation(x, y, grid_offset);
 }
 
-static void clear_deleted(int x, int y, int grid_offset)
-{
-    map_property_clear_deleted(grid_offset);
-}
-
 void city_with_overlay_draw(const map_tile *tile)
 {
     if (!select_city_overlay()) {
@@ -515,14 +510,12 @@ void city_with_overlay_draw(const map_tile *tile)
             draw_animation
         );
         city_building_ghost_draw(tile);
-        city_view_foreach_valid_map_tile(draw_elevated_figures, 0, 0);
-        city_view_foreach_map_tile(clear_deleted);
+        city_view_foreach_map_tile(draw_elevated_figures);
     } else {
         city_view_foreach_map_tile(draw_figures);
         city_view_foreach_map_tile(deletion_draw_terrain_top);
         city_view_foreach_map_tile(deletion_draw_animations);
         city_view_foreach_map_tile(draw_elevated_figures);
-        city_view_foreach_map_tile(clear_deleted);
     }
 }
 

@@ -45,7 +45,12 @@ int editor_tool_is_active(void)
 
 void editor_tool_deactivate(void)
 {
-    data.active = 0;
+    if (editor_tool_is_updatable() && data.build_in_progress) {
+        game_undo_restore_map(1);
+        data.build_in_progress = 0;
+    } else {
+        data.active = 0;
+    }
 }
 
 void editor_tool_set_type(tool_type type)
@@ -90,6 +95,11 @@ void editor_tool_foreach_brush_tile(void (*callback)(const void *user_data, int 
     }
 }
 
+int editor_tool_is_updatable(void)
+{
+    return data.type == TOOL_ROAD;
+}
+
 int editor_tool_is_in_use(void)
 {
     return data.build_in_progress;
@@ -109,9 +119,9 @@ void editor_tool_start_use(const map_tile *tile)
     }
 }
 
-static int is_brush(tool_type type)
+int editor_tool_is_brush(void)
 {
-    switch (type) {
+    switch (data.type) {
         case TOOL_GRASS:
         case TOOL_TREES:
         case TOOL_WATER:
@@ -226,7 +236,7 @@ void editor_tool_update_use(const map_tile *tile)
         building_construction_place_road(1, data.start_tile.x, data.start_tile.y, tile->x, tile->y);
         return;
     }
-    if (!is_brush(data.type)) {
+    if (!editor_tool_is_brush()) {
         return;
     }
 

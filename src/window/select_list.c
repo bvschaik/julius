@@ -130,20 +130,24 @@ static void draw_foreground(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
-        window_go_back();
-    }
     if (data.num_items > MAX_ITEMS_PER_LIST) {
         int items_first = items_in_first_list();
-        if (!generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, items_first, &data.focus_button_id)) {
-            int second_id = 0;
-            generic_buttons_handle_mouse(m, data.x, data.y, buttons_list2, data.num_items - items_first, &second_id);
-            if (second_id > 0) {
-                data.focus_button_id = second_id + MAX_ITEMS_PER_LIST;
-            }
+        if (generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, items_first, &data.focus_button_id)) {
+            return;
+        }
+        int second_id = 0;
+        generic_buttons_handle_mouse(m, data.x, data.y, buttons_list2, data.num_items - items_first, &second_id);
+        if (second_id > 0) {
+            data.focus_button_id = second_id + MAX_ITEMS_PER_LIST;
+            return;
         }
     } else {
-        generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, data.num_items, &data.focus_button_id);
+        if (generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, data.num_items, &data.focus_button_id)) {
+            return;
+        }
+    }
+    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+        window_go_back();
     }
 }
 
@@ -161,7 +165,7 @@ void window_select_list_show(int x, int y, int group, int num_items, void (*call
 {
     window_type window = {
         WINDOW_SELECT_LIST,
-        0,
+        window_draw_underlying_window,
         draw_foreground,
         handle_mouse,
         0
@@ -174,7 +178,7 @@ void window_select_list_show_text(int x, int y, uint8_t **items, int num_items, 
 {
     window_type window = {
         WINDOW_SELECT_LIST,
-        0,
+        window_draw_underlying_window,
         draw_foreground,
         handle_mouse,
         0

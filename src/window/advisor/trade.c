@@ -95,10 +95,10 @@ static void draw_foreground(void)
     lang_text_draw_centered(54, 30, 100, 402, 200, FONT_NORMAL_BLACK);
 }
 
-static void handle_mouse(const mouse *m)
+static int handle_mouse(const mouse *m)
 {
     int num_resources = city_resource_get_available()->size;
-    generic_buttons_handle_mouse(m, 0, 0, resource_buttons, num_resources + 2, &focus_button_id);
+    return generic_buttons_handle_mouse(m, 0, 0, resource_buttons, num_resources + 2, &focus_button_id);
 }
 
 static void button_prices(int param1, int param2)

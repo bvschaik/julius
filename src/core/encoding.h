@@ -11,6 +11,7 @@ typedef enum {
     ENCODING_EASTERN_EUROPE = 1250,
     ENCODING_CYRILLIC = 1251,
     ENCODING_TRADITIONAL_CHINESE = 950,
+    ENCODING_KOREAN = 949
 } encoding_type;
 
 /**

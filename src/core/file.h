@@ -1,9 +1,11 @@
 #ifndef CORE_FILE_H
 #define CORE_FILE_H
 
-#include <stdlib.h>
+#include "core/dir.h"
+
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /**
  * @file
@@ -18,8 +20,6 @@
 
 /**
  * Wrapper for fopen converting filename to path in current working directory
- * This exists because some platforms (e.g. PS Vita) don't support chdir() / getcwd()
- *
  * @param filename Filename
  * @param mode Mode to open the file (e.g. "wb").
  * @return FILE
@@ -28,8 +28,6 @@ FILE* file_open(const char *filename, const char *mode);
 
 /**
  * Wrapper to fclose
- * @param filename Filename
- * @param mode Mode to open the file (e.g. "wb").
  * @return See fclose (If the stream is successfully closed, a zero value is returned.
  *         On failure, EOF is returned.)
  */
@@ -67,8 +65,16 @@ void file_remove_extension(uint8_t *filename);
 /**
  * Check if file exists
  * @param filename Filename to check
+ * @param localizable Whether the file may be localized (see core/dir.h)
  * @return boolean true if the file exists, false otherwise
  */
-int file_exists(const char *filename);
+int file_exists(const char *filename, int localizable);
+
+/**
+ * Remove a file
+ * @param filename Filename to remove
+ * @return boolean true if the file removal was successful, false otherwise
+ */
+int file_remove(const char *filename);
 
 #endif // CORE_FILE_H

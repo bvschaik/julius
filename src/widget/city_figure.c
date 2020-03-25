@@ -116,9 +116,6 @@ static void draw_fort_standard(const figure *f, int x, int y)
 
 static void draw_map_flag(const figure *f, int x, int y)
 {
-    if (f->y < 0 || f->x < 0) {
-        return;
-    }
     // base
     image_draw(f->image_id, x, y);
     // flag
