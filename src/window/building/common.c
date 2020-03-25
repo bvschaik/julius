@@ -53,24 +53,34 @@ int window_building_get_vertical_offset(building_info_context *c, int new_window
     return new_window_y;
 }
 
-void window_building_draw_employment(building_info_context *c, int y_offset)
+void window_building_draw_employment(building_info_context* c, int y_offset)
 {
-    building *b = building_get(c->building_id);
+    do_window_building_draw_employment(c, y_offset, 1);
+}
+
+void do_window_building_draw_employment(building_info_context* c, int y_offset, int consider_house_covering)
+{
+    building* b = building_get(c->building_id);
     int text_id;
     if (b->num_workers >= model_get_building(b->type)->laborers) {
         text_id = 0;
-    } else if (city_population() <= 0) {
+    }
+    else if (city_population() <= 0) {
         text_id = 16; // no people in city
-    } else if (b->houses_covered <= 0) {
+    }
+    else if (consider_house_covering == 1 && b->houses_covered <= 0) {
         text_id = 17; // no employees nearby
-    } else if (b->houses_covered < 40) {
+    }
+    else if (consider_house_covering == 1 && b->houses_covered < 40) {
         text_id = 20; // poor access to employees
-    } else if (city_labor_category(b->labor_category)->workers_allocated <= 0) {
+    }
+    else if (consider_house_covering == 1 && city_labor_category(b->labor_category)->workers_allocated <= 0) {
         text_id = 18; // no people allocated
-    } else {
+    }
+    else {
         text_id = 19; // too few people allocated
     }
-    if (!text_id && b->houses_covered < 40) {
+    if (!text_id && consider_house_covering == 1 && b->houses_covered < 40) {
         text_id = 20; // poor access to employees
     }
     y_offset += c->y_offset;
@@ -83,7 +93,8 @@ void window_building_draw_employment(building_info_context *c, int y_offset)
             c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
         lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
         lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_SMALL_BLACK);
-    } else {
+    }
+    else {
         int width = lang_text_draw_amount(8, 12, b->num_workers,
             c->x_offset + 60, y_offset + 16, FONT_SMALL_BLACK);
         width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
