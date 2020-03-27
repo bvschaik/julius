@@ -267,6 +267,27 @@ int building_warehouse_is_not_accepting(int resource, building *b)
     return !((building_warehouse_is_accepting(resource,b) || building_warehouse_is_getting(resource,b)));
 }
 
+int building_warehouse_get_acceptable_quantity(int resource, building* b)
+{
+    const building_storage* s = building_storage_get(b->storage_id);
+    switch (s->resource_state[resource]) {
+    case BUILDING_STORAGE_STATE_ACCEPTING:
+    case BUILDING_STORAGE_STATE_GETTING:
+        return 32;
+        break;
+    case BUILDING_STORAGE_STATE_ACCEPTING_HALF:
+    case BUILDING_STORAGE_STATE_GETTING_HALF:
+        return HALF_WAREHOUSE;
+        break;
+    case BUILDING_STORAGE_STATE_ACCEPTING_QUARTER:
+    case BUILDING_STORAGE_STATE_GETTING_QUARTER:
+        return QUARTER_WAREHOUSE;
+        break;
+    default:
+        return 0;
+    }
+}
+
 
 int building_warehouses_remove_resource(int resource, int amount)
 {
@@ -511,7 +532,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
                 }
             }
         }
-        if (room >= 8 && loads_stored <= 4 && city_resource_count(r) - loads_stored > 4) {
+        if (room >= 8 && (loads_stored <= 4 || ((building_warehouse_get_acceptable_quantity(r,space) - loads_stored) > 4)) && city_resource_count(r) - loads_stored > 4) {
             *resource = r;
             return WAREHOUSE_TASK_GETTING;
         }
