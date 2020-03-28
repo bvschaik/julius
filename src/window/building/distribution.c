@@ -415,7 +415,7 @@ int window_building_handle_mouse_granary_orders(const mouse *m, building_info_co
     if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46,
         orders_partial_resource_buttons, city_resource_get_available()->size,
         &data.partial_resource_focus_button_id)) {
-        return;
+        return 1;
     }
     
     return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, granary_order_buttons, 2, &data.orders_focus_button_id);
@@ -581,7 +581,7 @@ int window_building_handle_mouse_warehouse_orders(const mouse *m, building_info_
     if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46,
         orders_partial_resource_buttons, city_resource_get_available()->size,
         &data.partial_resource_focus_button_id)) {
-        return;
+        return 1;
     }
     return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404,
         warehouse_order_buttons, 3, &data.orders_focus_button_id);
