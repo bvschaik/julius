@@ -1,5 +1,4 @@
 language: c
-matrix:
 
 jobs:
   include:
