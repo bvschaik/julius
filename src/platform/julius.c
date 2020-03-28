@@ -207,7 +207,7 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
             break;
         case SDL_WINDOWEVENT_SIZE_CHANGED:
             SDL_Log("Window resized to %d x %d", (int) event->data1, (int) event->data2);
-            platform_screen_resize(event->data1, event->data2);
+            platform_screen_resize(event->data1, event->data2, 1);
             break;
         case SDL_WINDOWEVENT_RESIZED:
             SDL_Log("System resize to %d x %d", (int) event->data1, (int) event->data2);
