@@ -163,8 +163,14 @@ int building_granary_remove_for_getting_deliveryman(building *src, building *dst
         }
     }
     
-    if (max_amount > 800) {
-        max_amount = 800;
+    if ((CONFIG_GP_CH_GRANARIES_GET_DOUBLE)) {
+        if (max_amount > 1600) {
+            max_amount = 1600;
+        }
+    } else {
+        if (max_amount > 800) {
+            max_amount = 800;
+        }
     }
     if (max_amount > dst->data.granary.resource_stored[RESOURCE_NONE]) {
         max_amount = dst->data.granary.resource_stored[RESOURCE_NONE];
