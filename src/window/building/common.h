@@ -68,7 +68,11 @@ int window_building_get_vertical_offset(building_info_context *c, int new_window
 
 void window_building_draw_employment(building_info_context *c, int y_offset);
 
-void do_window_building_draw_employment(building_info_context* c, int y_offset, int consider_house_covering);
+void window_building_draw_employment_without_house_cover(building_info_context *c, int y_offset);
+
+int draw_employment_info(building_info_context* c, building* b, int y_offset, int consider_house_covering);
+
+void draw_employment_details(building_info_context *c, int y_offset, int text_id, building *b);
 
 void window_building_draw_description(building_info_context *c, int text_group, int text_id);
 

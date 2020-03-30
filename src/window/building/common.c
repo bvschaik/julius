@@ -53,36 +53,46 @@ int window_building_get_vertical_offset(building_info_context *c, int new_window
     return new_window_y;
 }
 
-void window_building_draw_employment(building_info_context* c, int y_offset)
+void window_building_draw_employment(building_info_context *c, int y_offset)
 {
-    do_window_building_draw_employment(c, y_offset, 1);
+    building *b = building_get(c->building_id);
+    int text_id = draw_employment_info(c, b, y_offset, 1);
+    draw_employment_details(c, y_offset, text_id, b);
 }
 
-void do_window_building_draw_employment(building_info_context* c, int y_offset, int consider_house_covering)
+void window_building_draw_employment_without_house_cover(building_info_context* c, int y_offset)
 {
     building* b = building_get(c->building_id);
+    int text_id = draw_employment_info(c, b, y_offset, 0);
+    draw_employment_details(c, y_offset, text_id, b);
+}
+
+int draw_employment_info(building_info_context *c, building *b, int y_offset, int consider_house_covering)
+{
     int text_id;
     if (b->num_workers >= model_get_building(b->type)->laborers) {
         text_id = 0;
-    }
-    else if (city_population() <= 0) {
+    } else if (city_population() <= 0) {
         text_id = 16; // no people in city
-    }
-    else if (consider_house_covering == 1 && b->houses_covered <= 0) {
+    } else if (!consider_house_covering) {
+        text_id = 19;
+    } else if (b->houses_covered <= 0) {
         text_id = 17; // no employees nearby
-    }
-    else if (consider_house_covering == 1 && b->houses_covered < 40) {
+    } else if (b->houses_covered < 40) {
         text_id = 20; // poor access to employees
-    }
-    else if (consider_house_covering == 1 && city_labor_category(b->labor_category)->workers_allocated <= 0) {
+    } else if (city_labor_category(b->labor_category)->workers_allocated <= 0) {
         text_id = 18; // no people allocated
-    }
-    else {
+    } else {
         text_id = 19; // too few people allocated
     }
     if (!text_id && consider_house_covering == 1 && b->houses_covered < 40) {
         text_id = 20; // poor access to employees
     }
+    return text_id;
+}
+
+void draw_employment_details(building_info_context *c, int y_offset, int text_id, building *b)
+{
     y_offset += c->y_offset;
     image_draw(image_group(GROUP_CONTEXT_ICONS) + 14,
         c->x_offset + 40, y_offset + 6);
