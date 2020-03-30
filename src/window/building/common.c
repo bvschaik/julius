@@ -60,9 +60,9 @@ void window_building_draw_employment(building_info_context *c, int y_offset)
     draw_employment_details(c, y_offset, text_id, b);
 }
 
-void window_building_draw_employment_without_house_cover(building_info_context* c, int y_offset)
+void window_building_draw_employment_without_house_cover(building_info_context *c, int y_offset)
 {
-    building* b = building_get(c->building_id);
+    building *b = building_get(c->building_id);
     int text_id = draw_employment_info(c, b, y_offset, 0);
     draw_employment_details(c, y_offset, text_id, b);
 }
