@@ -85,7 +85,7 @@ int draw_employment_info(building_info_context *c, building *b, int y_offset, in
     } else {
         text_id = 19; // too few people allocated
     }
-    if (!text_id && consider_house_covering == 1 && b->houses_covered < 40) {
+    if (!text_id && consider_house_covering && b->houses_covered < 40) {
         text_id = 20; // poor access to employees
     }
     return text_id;
