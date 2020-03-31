@@ -53,21 +53,7 @@ int window_building_get_vertical_offset(building_info_context *c, int new_window
     return new_window_y;
 }
 
-void window_building_draw_employment(building_info_context *c, int y_offset)
-{
-    building *b = building_get(c->building_id);
-    int text_id = draw_employment_info(c, b, y_offset, 1);
-    draw_employment_details(c, y_offset, text_id, b);
-}
-
-void window_building_draw_employment_without_house_cover(building_info_context *c, int y_offset)
-{
-    building *b = building_get(c->building_id);
-    int text_id = draw_employment_info(c, b, y_offset, 0);
-    draw_employment_details(c, y_offset, text_id, b);
-}
-
-int draw_employment_info(building_info_context *c, building *b, int y_offset, int consider_house_covering)
+static int draw_employment_info(building_info_context *c, building *b, int y_offset, int consider_house_covering)
 {
     int text_id;
     if (b->num_workers >= model_get_building(b->type)->laborers) {
@@ -91,7 +77,7 @@ int draw_employment_info(building_info_context *c, building *b, int y_offset, in
     return text_id;
 }
 
-void draw_employment_details(building_info_context *c, int y_offset, int text_id, building *b)
+static void draw_employment_details(building_info_context *c, int y_offset, int text_id, building *b)
 {
     y_offset += c->y_offset;
     image_draw(image_group(GROUP_CONTEXT_ICONS) + 14,
@@ -103,14 +89,27 @@ void draw_employment_details(building_info_context *c, int y_offset, int text_id
             c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
         lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
         lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_SMALL_BLACK);
-    }
-    else {
+    } else {
         int width = lang_text_draw_amount(8, 12, b->num_workers,
             c->x_offset + 60, y_offset + 16, FONT_SMALL_BLACK);
         width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
             c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
         lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
     }
+}
+
+void window_building_draw_employment(building_info_context *c, int y_offset)
+{
+    building *b = building_get(c->building_id);
+    int text_id = draw_employment_info(c, b, y_offset, 1);
+    draw_employment_details(c, y_offset, text_id, b);
+}
+
+void window_building_draw_employment_without_house_cover(building_info_context *c, int y_offset)
+{
+    building *b = building_get(c->building_id);
+    int text_id = draw_employment_info(c, b, y_offset, 0);
+    draw_employment_details(c, y_offset, text_id, b);
 }
 
 void window_building_draw_description(building_info_context *c, int text_group, int text_id)
