@@ -1,8 +1,6 @@
 #ifndef WINDOW_BUILDING_COMMON_H
 #define WINDOW_BUILDING_COMMON_H
 
-#include "building/building.h"
-
 static const int MIN_Y_POSITION = 32;
 static const int MARGIN_POSITION = 16;
 
