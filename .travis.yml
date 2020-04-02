@@ -12,6 +12,9 @@ jobs:
     compiler: clang
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4
   - os: linux
+    compiler: gcc
+    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=linux DEPLOY=linux
+  - os: linux
     dist: xenial # Oldest still-supported LTS right now against which the AppImage is built. Update this to the next LTS when support drops.
     name: Linux AppImage
     compiler: gcc
