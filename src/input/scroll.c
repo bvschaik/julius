@@ -17,7 +17,7 @@
 #define KEY_WAIT_TIME_AFTER_HOLD 500
 #define MAX_SPEED_TIME_WEIGHT 200
 #define THRUST 6
-#define FRAME_TIME 17.0f
+#define FRAME_TIME 16.67f
 
 static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
 static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
@@ -363,12 +363,12 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
         data.speed.y = (int) (max_speed_y * data.speed.modifier);
     }
 
-    // Adjust delta for time (allows scrolling at the same rate at lower FPS)
+    // Adjust delta for time (allows scrolling at the same rate regardless of FPS)
     // Expects the game to run at least at 5FPS to work
     time_millis current_time = time_get_millis();
     time_millis time_delta = current_time - data.speed.last_time;
     data.speed.last_time = current_time;
-    if (time_delta > (int) FRAME_TIME && time_delta < MAX_SPEED_TIME_WEIGHT) {
+    if (time_delta < MAX_SPEED_TIME_WEIGHT) {
         delta->x = (int) ((float) (data.speed.x / FRAME_TIME) * time_delta);
         delta->y = (int) ((float) (data.speed.y / FRAME_TIME) * time_delta);
     } else {
