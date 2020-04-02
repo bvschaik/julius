@@ -355,9 +355,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
                 draw_flat_tile(x_start + X_VIEW_OFFSETS[i], y_start + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
             }
         } else {
-            view_tile view;
-            city_view_pixels_to_view_tile(x_start, y_start, &view);
-            offset = city_view_tile_to_grid_offset(&view);
+            offset = building_construction_get_start_grid_offset();
             if (offset != reservoir_range_data.last_grid_offset) {
                 reservoir_range_data.last_grid_offset = offset;
                 reservoir_range_data.total = 0;
@@ -386,7 +384,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             }
             if (!draw_later) {
                 if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-                    city_view_foreach_tile_in_range(offset + 1, 3, 10, draw_first_reservoir_range);
+                    city_view_foreach_tile_in_range(offset - GRID_SIZE - 1, 3, 10, draw_first_reservoir_range);
                     city_view_foreach_tile_in_range(tile->grid_offset - GRID_SIZE - 1, 3, 10, draw_second_reservoir_range);
                 }
                 draw_single_reservoir(x_start, y_start, has_water);
@@ -405,7 +403,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     } else {
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!building_construction_in_progress() || draw_later)) {
             if (draw_later) {
-                city_view_foreach_tile_in_range(offset + 1, 3, 10, draw_first_reservoir_range);
+                city_view_foreach_tile_in_range(offset - GRID_SIZE - 1, 3, 10, draw_first_reservoir_range);
             }
             city_view_foreach_tile_in_range(tile->grid_offset - GRID_SIZE - 1, 3, 10, draw_second_reservoir_range);
         }
