@@ -34,15 +34,25 @@ static struct {
 static struct {
 #ifdef USE_SDL_AUDIOSTREAM
     SDL_AudioStream *stream;
-#else
+#endif
     SDL_AudioCVT cvt;
     unsigned char *buffer;
     int buffer_size;
     int cur_read;
     int cur_write;
-#endif
     SDL_AudioFormat format;
 } custom_music;
+
+static int sdl_lib_supports_audiostream(void)
+{
+    static int sdl_version;
+    if (!sdl_version) {
+        SDL_version ver;
+        SDL_GetVersion(&ver);
+        sdl_version = SDL_VERSIONNUM(ver.major, ver.minor, ver.patch);
+    }
+    return sdl_version >= SDL_VERSIONNUM(2, 0, 7);
+}
 
 static int percentage_to_volume(int percentage)
 {
@@ -248,16 +258,18 @@ void sound_device_stop_channel(int channel)
 static void free_custom_audio_stream(void)
 {
 #ifdef USE_SDL_AUDIOSTREAM
-    if (custom_music.stream) {
-        SDL_FreeAudioStream(custom_music.stream);
-        custom_music.stream = 0;
+    if (sdl_lib_supports_audiostream()) {
+        if (custom_music.stream) {
+            SDL_FreeAudioStream(custom_music.stream);
+            custom_music.stream = 0;
+        }
+        return;
     }
-#else
+#endif
     if (custom_music.buffer) {
         free(custom_music.buffer);
         custom_music.buffer = 0;
     }
-#endif
 }
 
 static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_channels, int src_rate,
@@ -266,14 +278,14 @@ static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_chan
     free_custom_audio_stream();
 
 #ifdef USE_SDL_AUDIOSTREAM
-    custom_music.stream = SDL_NewAudioStream(
-        src_format, src_channels, src_rate,
-        dst_format, dst_channels, dst_rate
-    );
-    if (!custom_music.stream) {
-        return 0;
+    if (sdl_lib_supports_audiostream()) {
+        custom_music.stream = SDL_NewAudioStream(
+            src_format, src_channels, src_rate,
+            dst_format, dst_channels, dst_rate
+        );
+        return custom_music.stream != 0;
     }
-#else
+#endif
     int result = SDL_BuildAudioCVT(
         &custom_music.cvt, src_format, src_channels, src_rate,
         dst_format, dst_channels, dst_rate
@@ -290,7 +302,6 @@ static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_chan
     }
     custom_music.cur_read = 0;
     custom_music.cur_write = 0;
-#endif
 
     return 1;
 }
@@ -298,10 +309,11 @@ static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_chan
 static int custom_audio_stream_active(void)
 {
 #ifdef USE_SDL_AUDIOSTREAM
-    return custom_music.stream != 0;
-#else
-    return custom_music.buffer != 0;
+    if (sdl_lib_supports_audiostream()) {
+        return custom_music.stream != 0;
+    }
 #endif
+    return custom_music.buffer != 0;
 }
 
 static int put_custom_audio_stream(Uint8 *data, int len)
@@ -311,8 +323,10 @@ static int put_custom_audio_stream(Uint8 *data, int len)
     }
 
 #ifdef USE_SDL_AUDIOSTREAM
-    return SDL_AudioStreamPut(custom_music.stream, data, len) == 0;
-#else
+    if (sdl_lib_supports_audiostream()) {
+        return SDL_AudioStreamPut(custom_music.stream, data, len) == 0;
+    }
+#endif
     // Convert audio to SDL format
     custom_music.cvt.buf = (Uint8*)malloc((size_t)(len * custom_music.cvt.len_mult));
     if (!custom_music.cvt.buf) {
@@ -339,7 +353,6 @@ static int put_custom_audio_stream(Uint8 *data, int len)
     custom_music.cvt.len = 0;
 
     return 1;
-#endif
 }
 
 static int get_custom_audio_stream(Uint8 *dst, int len)
@@ -349,8 +362,10 @@ static int get_custom_audio_stream(Uint8 *dst, int len)
     }
 
 #ifdef USE_SDL_AUDIOSTREAM
-    return SDL_AudioStreamGet(custom_music.stream, dst, len);
-#else
+    if (sdl_lib_supports_audiostream()) {
+        return SDL_AudioStreamGet(custom_music.stream, dst, len);
+    }
+#endif
     int bytes_copied = 0;
     if (custom_music.cur_read < custom_music.cur_write) {
         int bytes_available = custom_music.cur_write - custom_music.cur_read;
@@ -373,7 +388,6 @@ static int get_custom_audio_stream(Uint8 *dst, int len)
     custom_music.cur_read = (custom_music.cur_read + bytes_copied) % custom_music.buffer_size;
 
     return bytes_copied;
-#endif
 }
 
 static void custom_music_callback(void* dummy, Uint8* stream, int len)

@@ -394,6 +394,9 @@ static int pre_init(const char *custom_data_dir)
     }
 
     #if SDL_VERSION_ATLEAST(2, 0, 1)
+    SDL_version ver;
+    SDL_GetVersion(&ver);
+    if (SDL_VERSIONNUM(ver.major, ver.minor, ver.patch) >= SDL_VERSIONNUM(2, 0, 1)) {
         char *base_path = SDL_GetBasePath();
         if (base_path) {
             if (platform_file_manager_set_base_path(base_path)) {
@@ -405,6 +408,7 @@ static int pre_init(const char *custom_data_dir)
             }
             SDL_free(base_path);
         }
+    }
     #endif
 
     #ifdef USE_TINYFILEDIALOGS
