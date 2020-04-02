@@ -1,5 +1,7 @@
 #include "platform/prefs.h"
 
+#include "platform/platform.h"
+
 #include "SDL.h"
 
 #include <stdlib.h>
@@ -9,6 +11,7 @@
 static FILE *open_pref_file(const char *filename, const char *mode)
 {
     #if SDL_VERSION_ATLEAST(2, 0, 1)
+    if (platform_sdl_version_at_least(2, 0, 1)) {
         char *pref_dir = SDL_GetPrefPath("bvschaik", "julius");
         if (!pref_dir) {
             return NULL;
@@ -26,9 +29,9 @@ static FILE *open_pref_file(const char *filename, const char *mode)
         FILE *fp = fopen(pref_file, mode);
         free(pref_file);
         return fp;
-    #else
-        return NULL;
+    }
     #endif
+    return NULL;
 }
 
 const char* pref_data_dir(void)
