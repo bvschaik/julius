@@ -62,8 +62,8 @@ static struct {
     int focus_button;
     int language_focus_button;
     int bottom_focus_button;
-    int values[CONFIG_MAX_ENTRIES];
-    char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
+    int original_values[CONFIG_MAX_ENTRIES];
+    char original_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
     uint8_t language_options_data[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
     uint8_t *language_options[MAX_LANGUAGE_DIRS];
@@ -74,13 +74,12 @@ static struct {
 
 static void init(void)
 {
-    for (int i = 0; i < NUM_CHECKBOXES; i++) {
-        config_key key = checkbox_buttons[i].parameter1;
-        data.values[key] = config_get(key);
+    for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
+        data.original_values[i] = config_get(i);
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         const char *value = config_get_string(i);
-        strncpy(data.string_values[i], value, CONFIG_STRING_VALUE_MAX - 1);
+        strncpy(data.original_string_values[i], value, CONFIG_STRING_VALUE_MAX - 1);
     }
 
     string_copy(string_from_ascii("(default)"), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
@@ -93,7 +92,7 @@ static void init(void)
             strncpy(data.language_options_utf8[opt_id], subdirs->files[i], CONFIG_STRING_VALUE_MAX - 1);
             encoding_from_utf8(subdirs->files[i], data.language_options_data[opt_id], CONFIG_STRING_VALUE_MAX);
             data.language_options[opt_id] = data.language_options_data[opt_id];
-            if (strcmp(data.string_values[CONFIG_STRING_UI_LANGUAGE_DIR], subdirs->files[i]) == 0) {
+            if (strcmp(data.original_string_values[CONFIG_STRING_UI_LANGUAGE_DIR], subdirs->files[i]) == 0) {
                 data.selected_language_option = opt_id;
             }
             data.num_language_options++;
@@ -132,7 +131,7 @@ static void draw_background(void)
 
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
         generic_button *btn = &checkbox_buttons[i];
-        if (data.values[btn->parameter1]) {
+        if (config_get(btn->parameter1)) {
             text_draw(string_from_ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK, 0);
         }
     }
@@ -172,17 +171,14 @@ static void handle_mouse(const mouse *m)
 
 static void toggle_switch(int key, int param2)
 {
-    data.values[key] = 1 - data.values[key];
+    config_set(key, 1 - config_get(key));
     window_invalidate();
 }
 
 static void set_language(int index)
 {
-    if (index == 0) {
-        data.string_values[CONFIG_STRING_UI_LANGUAGE_DIR][0] = 0;
-    } else {
-        strncpy(data.string_values[CONFIG_STRING_UI_LANGUAGE_DIR], data.language_options_utf8[index], CONFIG_STRING_VALUE_MAX - 1);
-    }
+    const char *dir = index == 0 ? "" : data.language_options_utf8[index];
+    config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, dir);
     data.selected_language_option = index;
 }
 
@@ -198,25 +194,27 @@ static void button_language_select(int param1, int param2)
 static void button_reset_defaults(int param1, int param2)
 {
     config_set_defaults();
-    init();
     window_invalidate();
+}
+
+static void cancel_values(void)
+{
+    for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
+        config_set(i, data.original_values[i]);
+    }
+    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
+        config_set_string(i, data.original_string_values[i]);
+    }
 }
 
 static void button_close(int save, int param2)
 {
     if (!save) {
+        cancel_values();
         window_main_menu_show(0);
         return;
     }
-    char old_language_dir[CONFIG_STRING_VALUE_MAX];
-    strncpy(old_language_dir, config_get_string(CONFIG_STRING_UI_LANGUAGE_DIR), CONFIG_STRING_VALUE_MAX - 1);
-    for (int i = 0; i < NUM_CHECKBOXES; i++) {
-        config_key key = checkbox_buttons[i].parameter1;
-        config_set(key, data.values[key]);
-    }
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        config_set_string(i, data.string_values[i]);
-    }
+    const char *old_language_dir = data.original_string_values[CONFIG_STRING_UI_LANGUAGE_DIR];
     if (!game_reload_language()) {
         // Notify user that language dir is invalid and revert to previously selected
         window_plain_message_dialog_show(
