@@ -737,6 +737,11 @@ void building_construction_get_view_position(int *view_x, int *view_y)
     *view_y = data.start_offset_y_view;
 }
 
+int building_construction_get_start_grid_offset(void)
+{
+    return data.start.grid_offset;
+}
+
 void building_construction_reset_draw_as_constructing(void)
 {
     data.draw_as_constructing = 0;
