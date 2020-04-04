@@ -4,7 +4,9 @@
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"
+#include "city/warning.h"
 #include "figure/formation.h"
+#include "game/settings.h"
 #include "game/state.h"
 #include "game/time.h"
 #include "graphics/image.h"
@@ -104,11 +106,16 @@ static void draw_foreground_military(void)
     draw_paused_and_time_left();
 }
 
-static void show_overlay(int overlay)
+static void exit_military_command(void)
 {
     if (window_is(WINDOW_CITY_MILITARY)) {
         window_city_show();
     }
+}
+
+static void show_overlay(int overlay)
+{
+    exit_military_command();
     if (game_state_overlay() == overlay) {
         game_state_set_overlay(OVERLAY_NONE);
     } else {
@@ -145,21 +152,38 @@ static void cycle_legion(void)
     }
 }
 
+static void toggle_pause(void)
+{
+    exit_military_command();
+    game_state_toggle_paused();
+    city_warning_clear_all();
+}
+
 static void handle_hotkeys(void)
 {
     const hotkeys *h = hotkey_state();
+    if (h->toggle_pause) {
+        toggle_pause();
+    }
+    if (h->decrease_game_speed) {
+        setting_decrease_game_speed();
+    }
+    if (h->increase_game_speed) {
+        setting_increase_game_speed();
+    }
     if (h->show_overlay) {
         show_overlay(h->show_overlay);
-    } else if (h->toggle_overlay) {
-        if (window_is(WINDOW_CITY_MILITARY)) {
-            window_city_show();
-        }
+    }
+    if (h->toggle_overlay) {
+        exit_military_command();
         game_state_toggle_overlay();
         city_with_overlay_update();
         window_invalidate();
-    } else if (h->show_advisor) {
+    }
+    if (h->show_advisor) {
         window_advisors_show_advisor(h->show_advisor);
-    } else if (h->cycle_legion) {
+    }
+    if (h->cycle_legion) {
         cycle_legion();
     }
 }

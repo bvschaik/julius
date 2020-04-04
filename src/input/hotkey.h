@@ -3,9 +3,12 @@
 
 typedef struct {
     int cycle_legion;
+    int decrease_game_speed;
+    int increase_game_speed;
     int show_advisor;
     int show_overlay;
     int toggle_overlay;
+    int toggle_pause;
 } hotkeys;
 
 const hotkeys *hotkey_state(void);
