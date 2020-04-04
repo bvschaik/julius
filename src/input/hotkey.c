@@ -5,7 +5,6 @@
 #include "city/victory.h"
 #include "city/view.h"
 #include "city/warning.h"
-#include "figure/formation.h"
 #include "game/orientation.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -67,47 +66,6 @@ static void toggle_pause(void)
     if (window_is(WINDOW_CITY)) {
         game_state_toggle_paused();
         city_warning_clear_all();
-    }
-}
-
-static void show_advisor(advisor_type advisor)
-{
-    exit_military_command();
-    if (window_is(WINDOW_ADVISORS)) {
-        if (window_advisors_get_advisor() == advisor) {
-            window_city_show();
-        } else {
-            window_advisors_show_advisor(advisor);
-        }
-    } else if (window_is(WINDOW_CITY)) {
-        window_advisors_show_advisor(advisor);
-    }
-}
-
-static void cycle_legion(void)
-{
-    static int current_legion_id = 1;
-    if (window_is(WINDOW_CITY)) {
-        int legion_id = current_legion_id;
-        current_legion_id = 0;
-        for (int i = 1; i <= MAX_LEGIONS; i++) {
-            legion_id++;
-            if (legion_id > MAX_LEGIONS) {
-                legion_id = 1;
-            }
-            const formation *m = formation_get(legion_id);
-            if (m->in_use == 1 && !m->is_herd && m->is_legion) {
-                if (current_legion_id == 0) {
-                    current_legion_id = legion_id;
-                    break;
-                }
-            }
-        }
-        if (current_legion_id > 0) {
-            const formation *m = formation_get(current_legion_id);
-            city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
-            window_invalidate();
-        }
     }
 }
 
@@ -234,7 +192,7 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
             data.hotkey_state.show_overlay = OVERLAY_WATER;
             break;
         case 'l':
-            cycle_legion();
+            data.hotkey_state.cycle_legion = 1;
             break;
         case '1':
             data.hotkey_state.show_advisor = ADVISOR_LABOR;
