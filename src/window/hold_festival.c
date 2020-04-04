@@ -13,6 +13,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "window/advisors.h"
 #include "window/message_dialog.h"
 
@@ -111,7 +112,7 @@ static void handle_mouse(const mouse *m)
     if (focus_image_button_id) {
         focus_button_id = 0;
     }
-    if (!handled && (m->right.went_up || (m->is_touch && m->left.double_click))) {
+    if (!handled && input_go_back_requested()) {
         window_advisors_show();
     }
 }

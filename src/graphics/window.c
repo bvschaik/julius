@@ -2,6 +2,7 @@
 
 #include "graphics/warning.h"
 #include "input/cursor.h"
+#include "input/keyboard.h"
 #include "input/touch.h"
 #include "window/city.h"
 
@@ -91,23 +92,24 @@ void window_go_back(void)
     window_invalidate();
 }
 
-static void update_mouse_before(void)
+static void update_input_before(void)
 {
     if (!touch_to_mouse()) {
         mouse_determine_button_state();  // touch overrides mouse
     }
 }
 
-static void update_mouse_after(void)
+static void update_input_after(void)
 {
     reset_touches(0);
     mouse_reset_scroll();
     input_cursor_update(data.current_window->id);
+    keyboard_reset_esc_state();
 }
 
 void window_draw(int force)
 {
-    update_mouse_before();
+    update_input_before();
     window_type *w = data.current_window;
     if (force || data.refresh_on_draw) {
         tooltip_invalidate();
@@ -121,7 +123,7 @@ void window_draw(int force)
     w->handle_mouse(m);
     tooltip_handle(m, w->get_tooltip);
     warning_draw();
-    update_mouse_after();
+    update_input_after();
 }
 
 void window_draw_underlying_window(void)

@@ -12,6 +12,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "window/advisors.h"
 
 #define MIN_DIALOG_WIDTH 384
@@ -85,7 +86,7 @@ static void handle_mouse(const mouse *m)
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 12, &focus_button_id)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         window_advisors_show();
     }
 }

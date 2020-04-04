@@ -18,6 +18,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
@@ -491,7 +492,7 @@ static void handle_mouse(const mouse *m)
             }
         }
     } else {
-        if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+        if (input_go_back_requested()) {
             window_city_show();
         }
     }

@@ -21,6 +21,8 @@ static struct {
     
     int box_width;
     font_t font;
+
+    int esc_is_down;
 } data = {0};
 
 static void change_start_offset_by(int length)
@@ -268,6 +270,11 @@ void keyboard_end(void)
     }
 }
 
+void keyboard_esc(void)
+{
+    data.esc_is_down = 1;
+}
+
 void keyboard_character(const char *text_utf8)
 {
     if (!data.capture) {
@@ -296,4 +303,14 @@ void keyboard_character(const char *text_utf8)
     if (add) {
         add_char(c);
     }
+}
+
+int keyboard_is_esc_pressed(void)
+{
+    return data.esc_is_down;
+}
+
+void keyboard_reset_esc_state(void)
+{
+    data.esc_is_down = 0;
 }

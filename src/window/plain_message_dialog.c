@@ -7,6 +7,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 
 static void button_ok(int param1, int param2);
 
@@ -51,7 +52,7 @@ static void handle_mouse(const mouse *m)
     if (image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 1, 0)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         window_plain_message_dialog_accept();
     }
 }

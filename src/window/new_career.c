@@ -11,6 +11,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "input/keyboard.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
@@ -73,7 +74,7 @@ static void handle_mouse(const mouse *m)
         start_mission(0, 0);
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         keyboard_stop_capture();
         window_go_back();
     }

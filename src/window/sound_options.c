@@ -8,6 +8,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "sound/music.h"
@@ -115,7 +116,7 @@ static void handle_mouse(const mouse *m)
         arrow_buttons_handle_mouse(m_dialog, 208, 60, arrow_buttons, 8)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         data.close_callback();
     }
 }

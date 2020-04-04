@@ -7,6 +7,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 
 #define MAX_ITEMS_PER_LIST 20
 
@@ -146,7 +147,7 @@ static void handle_mouse(const mouse *m)
             return;
         }
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         window_go_back();
     }
 }

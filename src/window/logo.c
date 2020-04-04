@@ -5,6 +5,8 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/window.h"
+#include "input/hotkey.h"
+#include "input/keyboard.h"
 #include "sound/music.h"
 #include "window/intro_video.h"
 #include "window/main_menu.h"
@@ -29,6 +31,10 @@ static void handle_mouse(const mouse *m)
 {
     if (m->left.went_up || m->right.went_up) {
         window_main_menu_show(0);
+        return;
+    }
+    if (keyboard_is_esc_pressed()) {
+        hotkey_esc();
     }
 }
 

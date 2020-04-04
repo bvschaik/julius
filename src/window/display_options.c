@@ -7,6 +7,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "input/input.h"
 
 static void button_fullscreen(int param1, int param2);
 static void button_set_resolution(int id, int param2);
@@ -60,7 +61,7 @@ static void handle_mouse(const mouse *m)
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &data.focus_button_id)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         data.close_callback();
     }
 }

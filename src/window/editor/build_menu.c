@@ -6,6 +6,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "widget/map_editor.h"
 #include "widget/sidebar_editor.h"
 #include "window/editor/map.h"
@@ -106,11 +107,11 @@ static int handle_build_submenu(const mouse *m)
 
 static void handle_mouse(const mouse *m)
 {
-    if (!handle_build_submenu(m) ||
+    if (handle_build_submenu(m) ||
         widget_sidebar_editor_handle_mouse_build_menu(m)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         window_editor_map_show();
     }
 }
