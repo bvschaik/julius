@@ -8,6 +8,7 @@
 #include "graphics/screen.h"
 
 #include <math.h>
+#include <SDL_mouse.h>
 
 #define MOUSE_BORDER 5
 #define TOUCH_BORDER 100
@@ -244,9 +245,12 @@ void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
     clear_scroll_decay(position);
 }
 
-int scroll_move_mouse_drag(int original_x, int original_y, int current_x, int current_y, pixel_offset *position) {
-    position->x = data.position.original.x - (current_x - original_x);
-    position->y = data.position.original.y - (current_y - original_y);
+int scroll_move_mouse_drag(pixel_offset *position) {
+    int delta_x, delta_y;
+    SDL_GetRelativeMouseState(&delta_x, &delta_y);
+
+    position->x = data.position.current.x + delta_x;
+    position->y = data.position.current.y + delta_y;
 
     if (position->x != data.position.current.x || position->y != data.position.current.y) {
       data.position.current.x = position->x;
