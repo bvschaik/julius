@@ -292,6 +292,28 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             platform_touch_end(&event->tfinger);
             break;
 
+        case SDL_JOYAXISMOTION:
+            platform_joystick_handle_axis();
+            break;
+        case SDL_JOYBALLMOTION:
+            platform_joystick_handle_trackball();
+            break;
+        case SDL_JOYHATMOTION:
+            platform_joystick_handle_hat();
+            break;
+        case SDL_JOYBUTTONDOWN:
+            platform_joystick_handle_button(1);
+            break;
+        case SDL_JOYBUTTONUP:
+            platform_joystick_handle_button(0);
+            break;
+        case SDL_JOYDEVICEADDED:
+            platform_joystick_device_changed(event->jdevice.which, 1);
+            break;
+        case SDL_JOYDEVICEREMOVED:
+            platform_joystick_device_changed(event->jdevice.which, 0);
+            break;
+
         case SDL_QUIT:
             *quit = 1;
             break;
@@ -354,15 +376,13 @@ static int init_sdl(void)
 
     // on Vita, need video init only to enable physical kbd/mouse and touch events
     SDL_flags |= SDL_INIT_VIDEO;
-
-#if defined(__vita__) || defined(__SWITCH__)
     SDL_flags |= SDL_INIT_JOYSTICK;
-#endif
 
     if (SDL_Init(SDL_flags) != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }
+    platform_joystick_init();
 #if SDL_VERSION_ATLEAST(2, 0, 10)
     SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
     SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
