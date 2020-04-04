@@ -26,9 +26,22 @@
 #include "window/city.h"
 #include "window/editor/empire.h"
 
+#include <string.h>
+
 static struct {
     int is_cheating;
+    hotkeys hotkey_state;
 } data;
+
+const hotkeys *hotkey_state(void)
+{
+    return &data.hotkey_state;
+}
+
+void hotkey_reset_state(void)
+{
+    memset(&data.hotkey_state, 0, sizeof(data.hotkey_state));
+}
 
 static void change_game_speed(int is_down)
 {
@@ -45,28 +58,6 @@ static void exit_military_command(void)
 {
     if (window_is(WINDOW_CITY_MILITARY)) {
         window_city_show();
-    }
-}
-
-static void toggle_overlay(void)
-{
-    exit_military_command();
-    if (window_is(WINDOW_CITY)) {
-        game_state_toggle_overlay();
-        window_invalidate();
-    }
-}
-
-static void show_overlay(int overlay)
-{
-    exit_military_command();
-    if (window_is(WINDOW_CITY)) {
-        if (game_state_overlay() == overlay) {
-            game_state_set_overlay(OVERLAY_NONE);
-        } else {
-            game_state_set_overlay(overlay);
-        }
-        window_invalidate();
     }
 }
 
@@ -229,25 +220,25 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
             change_game_speed(0);
             break;
         case ' ':
-            toggle_overlay();
+            data.hotkey_state.toggle_overlay = 1;
             break;
         case 'p':
             toggle_pause();
             break;
         case 'f':
-            show_overlay(OVERLAY_FIRE);
+            data.hotkey_state.show_overlay = OVERLAY_FIRE;
             break;
         case 'd':
-            show_overlay(OVERLAY_DAMAGE);
+            data.hotkey_state.show_overlay = OVERLAY_DAMAGE;
             break;
         case 'c':
-            show_overlay(OVERLAY_CRIME);
+            data.hotkey_state.show_overlay = OVERLAY_CRIME;
             break;
         case 't':
-            show_overlay(OVERLAY_PROBLEMS);
+            data.hotkey_state.show_overlay = OVERLAY_PROBLEMS;
             break;
         case 'w':
-            show_overlay(OVERLAY_WATER);
+            data.hotkey_state.show_overlay = OVERLAY_WATER;
             break;
         case 'l':
             cycle_legion();
