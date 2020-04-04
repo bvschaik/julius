@@ -12,6 +12,9 @@ void keyboard_resume_capture(void);
 void keyboard_pause_capture(void);
 void keyboard_stop_capture(void);
 
+void keyboard_start_capture_numeric(void (*callback)(int));
+void keyboard_stop_capture_numeric(void);
+
 int keyboard_input_is_accepted(void);
 int keyboard_is_insert(void);
 int keyboard_cursor_position(void);
