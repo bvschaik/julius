@@ -17,6 +17,7 @@
 #include "widget/city_with_overlay.h"
 #include "widget/sidebar.h"
 #include "widget/top_menu.h"
+#include "window/advisors.h"
 
 static int selected_legion_formation_id;
 
@@ -127,6 +128,8 @@ static void handle_hotkeys(void)
         game_state_toggle_overlay();
         city_with_overlay_update();
         window_invalidate();
+    } else if (h->show_advisor) {
+        window_advisors_show_advisor(h->show_advisor);
     }
 }
 

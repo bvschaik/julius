@@ -244,51 +244,51 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
             cycle_legion();
             break;
         case '1':
-            show_advisor(ADVISOR_LABOR);
+            data.hotkey_state.show_advisor = ADVISOR_LABOR;
             input_number(1);
             break;
         case '2':
-            show_advisor(ADVISOR_MILITARY);
+            data.hotkey_state.show_advisor = ADVISOR_MILITARY;
             input_number(2);
             break;
         case '3':
-            show_advisor(ADVISOR_IMPERIAL);
+            data.hotkey_state.show_advisor = ADVISOR_IMPERIAL;
             input_number(3);
             break;
         case '4':
-            show_advisor(ADVISOR_RATINGS);
+            data.hotkey_state.show_advisor = ADVISOR_RATINGS;
             input_number(4);
             break;
         case '5':
-            show_advisor(ADVISOR_TRADE);
+            data.hotkey_state.show_advisor = ADVISOR_TRADE;
             input_number(5);
             break;
         case '6':
-            show_advisor(ADVISOR_POPULATION);
+            data.hotkey_state.show_advisor = ADVISOR_POPULATION;
             input_number(6);
             break;
         case '7':
-            show_advisor(ADVISOR_HEALTH);
+            data.hotkey_state.show_advisor = ADVISOR_HEALTH;
             input_number(7);
             break;
         case '8':
-            show_advisor(ADVISOR_EDUCATION);
+            data.hotkey_state.show_advisor = ADVISOR_EDUCATION;
             input_number(8);
             break;
         case '9':
-            show_advisor(ADVISOR_ENTERTAINMENT);
+            data.hotkey_state.show_advisor = ADVISOR_ENTERTAINMENT;
             input_number(9);
             break;
         case '0':
-            show_advisor(ADVISOR_RELIGION);
+            data.hotkey_state.show_advisor = ADVISOR_RELIGION;
             input_number(0);
             break;
         case '-':
-            show_advisor(ADVISOR_FINANCIAL);
+            data.hotkey_state.show_advisor = ADVISOR_FINANCIAL;
             break;
         case '=':
         case '+':
-            show_advisor(ADVISOR_CHIEF);
+            data.hotkey_state.show_advisor = ADVISOR_CHIEF;
             break;
     }
 }
