@@ -6,6 +6,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "input/hotkey.h"
 #include "input/input.h"
 
 #define GROUP 5
@@ -15,6 +16,7 @@
 
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);
+static void confirm(void);
 
 static image_button buttons[] = {
     {192, 100, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok, button_none, 1, 0, 1},
@@ -76,7 +78,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m)
 {
     if (data.has_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 2, 0)) {
         return;
@@ -85,20 +87,23 @@ static void handle_mouse(const mouse *m)
         data.close_func(0);
         window_go_back();
     }
+    if (hotkey_state()->enter) {
+        confirm();
+    }
 }
 
-void button_ok(int param1, int param2)
+static void button_ok(int param1, int param2)
 {
-    window_popup_dialog_confirm();
+    confirm();
 }
 
-void button_cancel(int param1, int param2)
+static void button_cancel(int param1, int param2)
 {
     window_go_back();
     data.close_func(0);
 }
 
-void window_popup_dialog_confirm(void)
+static void confirm(void)
 {
     window_go_back();
     data.close_func(1);
@@ -112,7 +117,7 @@ void window_popup_dialog_show(popup_dialog_type type,
             WINDOW_POPUP_DIALOG,
             draw_background,
             draw_foreground,
-            handle_mouse
+            handle_input
         };
         window_show(&window);
     }
@@ -126,7 +131,7 @@ void window_popup_dialog_show_confirmation(int text_group, int text_id,
             WINDOW_POPUP_DIALOG,
             draw_background,
             draw_foreground,
-            handle_mouse
+            handle_input
         };
         window_show(&window);
     }

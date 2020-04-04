@@ -2,6 +2,10 @@
 #define INPUT_HOTKEY_H
 
 typedef struct {
+    // fixed keys with multiple functions
+    int enter;
+    int escape;
+    // keys with specific function
     int cycle_legion;
     int decrease_game_speed;
     int increase_game_speed;
