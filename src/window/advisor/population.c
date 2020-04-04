@@ -387,7 +387,7 @@ static int draw_background(void)
     } else if (city_migration_percentage() < 80) {
         lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE);
         int text_id;
-        switch (city_migration_no_immigation_cause()) {
+        switch (city_migration_no_immigration_cause()) {
             case NO_IMMIGRATION_LOW_WAGES: text_id = 20; break;
             case NO_IMMIGRATION_NO_JOBS: text_id = 21; break;
             case NO_IMMIGRATION_NO_FOOD: text_id = 22; break;
