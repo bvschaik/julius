@@ -7,6 +7,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/hotkey.h"
 #include "input/input.h"
 #include "input/keyboard.h"
 #include "sound/effect.h"
@@ -16,6 +17,7 @@ static void button_accept(int param1, int param2);
 static void button_cancel(int param1, int param2);
 
 static void input_number(int number);
+static void input_accept(void);
 
 static generic_button buttons[] = {
     {21, 51, 25, 25, button_number, button_none, 1, 0},
@@ -102,13 +104,16 @@ static void draw_foreground(void)
             data.focus_button_id == 12 ? COLOR_BLUE : COLOR_BLACK);
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m)
 {
     if (generic_buttons_handle_mouse(m, data.x, data.y, buttons, 12, &data.focus_button_id)) {
         return;
     }
     if (input_go_back_requested()) {
         close();
+    }
+    if (hotkey_state()->enter) {
+        input_accept();
     }
 }
 
@@ -119,7 +124,7 @@ static void button_number(int number, int param2)
 
 static void button_accept(int param1, int param2)
 {
-    window_numeric_input_accept();
+    input_accept();
 }
 
 static void button_cancel(int param1, int param2)
@@ -136,7 +141,7 @@ static void input_number(int number)
     }
 }
 
-void window_numeric_input_accept(void)
+static void input_accept(void)
 {
     close();
     if (data.value > data.max_value) {
@@ -151,7 +156,7 @@ void window_numeric_input_show(int x, int y, int max_digits, int max_value, void
         WINDOW_NUMERIC_INPUT,
         0,
         draw_foreground,
-        handle_mouse,
+        handle_input,
     };
     init(x, y, max_digits, max_value, callback);
     window_show(&window);

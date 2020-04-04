@@ -7,6 +7,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/hotkey.h"
 #include "input/input.h"
 
 static void button_ok(int param1, int param2);
@@ -47,24 +48,27 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void close(void)
+{
+    window_go_back();
+}
+
+static void handle_input(const mouse *m)
 {
     if (image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 1, 0)) {
         return;
     }
     if (input_go_back_requested()) {
-        window_plain_message_dialog_accept();
+        close();
+    }
+    if (hotkey_state()->enter) {
+        close();
     }
 }
 
-void button_ok(int param1, int param2)
+static void button_ok(int param1, int param2)
 {
-    window_plain_message_dialog_accept();
-}
-
-void window_plain_message_dialog_accept(void)
-{
-    window_go_back();
+    close();
 }
 
 void window_plain_message_dialog_show(const char *title, const char *message)
@@ -74,7 +78,7 @@ void window_plain_message_dialog_show(const char *title, const char *message)
             WINDOW_PLAIN_MESSAGE_DIALOG,
             draw_background,
             draw_foreground,
-            handle_mouse
+            handle_input
         };
         window_show(&window);
     }

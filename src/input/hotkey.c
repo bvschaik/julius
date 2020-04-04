@@ -291,14 +291,7 @@ void hotkey_enter(int with_alt)
         system_set_fullscreen(!setting_fullscreen());
         return;
     }
-
-    if (window_is(WINDOW_POPUP_DIALOG)) {
-        window_popup_dialog_confirm();
-    } else if (window_is(WINDOW_PLAIN_MESSAGE_DIALOG)) {
-        window_plain_message_dialog_accept();
-    } else if (window_is(WINDOW_NUMERIC_INPUT)) {
-        window_numeric_input_accept();
-    }
+    data.hotkey_state.enter = 1;
 }
 
 static void go_to_bookmark(int number)
