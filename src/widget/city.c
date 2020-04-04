@@ -370,6 +370,13 @@ int widget_city_has_input(void)
 
 void widget_city_handle_mouse(const mouse *m)
 {
+    if (m->right.is_down && !m->right.went_down) {
+        pixel_offset camera_pixel_position;
+        mouse_coords original = scroll_get_original_mouse_position();
+
+        if (scroll_move_mouse_drag(original.x, original.y, m->x, m->y, &camera_pixel_position))
+            city_view_set_camera_from_pixel_position(camera_pixel_position.x, camera_pixel_position.y);
+    }
     scroll_map(m);
     if (m->is_touch) {
         handle_touch();
@@ -392,9 +399,19 @@ void widget_city_handle_mouse(const mouse *m)
     if (m->left.went_up) {
         build_end();
     }
+    if (m->right.went_down) {
+        pixel_offset camera_pixel_position;
+        city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
+        mouse_coords original_coords = {
+            .x = m->x,
+            .y = m->y
+        };
+        scroll_start_mouse_drag(&camera_pixel_position, original_coords);
+    }
     if (m->right.went_up) {
         if (!building_construction_in_progress()) {
-            if (handle_right_click_allow_building_info(tile)) {
+            mouse_coords original = scroll_get_original_mouse_position();
+            if (original.x == m->x && original.y == m->y && handle_right_click_allow_building_info(tile)) {
                 window_building_info_show(tile->grid_offset);
             }
         } else {

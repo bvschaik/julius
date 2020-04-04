@@ -67,6 +67,7 @@ static struct {
         int height;
     } limits;
     touch_coords start_touch;
+    mouse_coords start_mouse;
 } data;
 
 static int is_arrow_key_pressed(key *arrow)
@@ -226,6 +227,33 @@ void scroll_restore_margins(void)
 touch_coords scroll_get_original_touch_position(void)
 {
     return data.start_touch;
+}
+
+mouse_coords scroll_get_original_mouse_position(void)
+{
+    return data.start_mouse;
+}
+
+void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
+{
+    data.position.original = *position;
+    data.position.current = *position;
+    data.start_mouse = coords;
+    data.is_scrolling = 1;
+    data.is_touch = 0;
+    clear_scroll_decay(position);
+}
+
+int scroll_move_mouse_drag(int original_x, int original_y, int current_x, int current_y, pixel_offset *position) {
+    position->x = data.position.original.x - (current_x - original_x);
+    position->y = data.position.original.y - (current_y - original_y);
+
+    if (position->x != data.position.current.x || position->y != data.position.current.y) {
+      data.position.current.x = position->x;
+      data.position.current.y = position->y;
+      return 1;
+    }
+    return 0;
 }
 
 void scroll_start_touch_drag(const pixel_offset *position, touch_coords coords)
