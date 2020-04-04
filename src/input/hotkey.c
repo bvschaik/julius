@@ -42,30 +42,10 @@ void hotkey_reset_state(void)
     memset(&data.hotkey_state, 0, sizeof(data.hotkey_state));
 }
 
-static void change_game_speed(int is_down)
-{
-    if (window_is(WINDOW_CITY)) {
-        if (is_down) {
-            setting_decrease_game_speed();
-        } else {
-            setting_increase_game_speed();
-        }
-    }
-}
-
 static void exit_military_command(void)
 {
     if (window_is(WINDOW_CITY_MILITARY)) {
         window_city_show();
-    }
-}
-
-static void toggle_pause(void)
-{
-    exit_military_command();
-    if (window_is(WINDOW_CITY)) {
-        game_state_toggle_paused();
-        city_warning_clear_all();
     }
 }
 
@@ -151,30 +131,22 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
             case 'v':
                 cheat_victory();
                 break;
-
-            // Azerty keyboards need alt gr for these keys
-            case '[': case '5':
-                change_game_speed(1);
-                break;
-            case ']': case '-':
-                change_game_speed(0);
-                break;
         }
         return;
     }
 
     switch (c) {
         case '[':
-            change_game_speed(1);
+            data.hotkey_state.decrease_game_speed = 1;
             break;
         case ']':
-            change_game_speed(0);
+            data.hotkey_state.increase_game_speed = 1;
             break;
         case ' ':
             data.hotkey_state.toggle_overlay = 1;
             break;
         case 'p':
-            toggle_pause();
+            data.hotkey_state.toggle_pause = 1;
             break;
         case 'f':
             data.hotkey_state.show_overlay = OVERLAY_FIRE;
@@ -305,12 +277,12 @@ void hotkey_esc(void)
 
 void hotkey_page_up(void)
 {
-    change_game_speed(0);
+    data.hotkey_state.increase_game_speed = 1;
 }
 
 void hotkey_page_down(void)
 {
-    change_game_speed(1);
+    data.hotkey_state.decrease_game_speed = 1;
 }
 
 void hotkey_enter(int with_alt)
