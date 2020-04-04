@@ -11,8 +11,10 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/hotkey.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
+#include "widget/city_with_overlay.h"
 #include "widget/sidebar.h"
 #include "widget/top_menu.h"
 
@@ -99,8 +101,38 @@ static void draw_foreground_military(void)
     draw_paused_and_time_left();
 }
 
+static void show_overlay(int overlay)
+{
+    if (window_is(WINDOW_CITY_MILITARY)) {
+        window_city_show();
+    }
+    if (game_state_overlay() == overlay) {
+        game_state_set_overlay(OVERLAY_NONE);
+    } else {
+        game_state_set_overlay(overlay);
+    }
+    city_with_overlay_update();
+    window_invalidate();
+}
+
+static void handle_hotkeys(void)
+{
+    const hotkeys *h = hotkey_state();
+    if (h->show_overlay) {
+        show_overlay(h->show_overlay);
+    } else if (h->toggle_overlay) {
+        if (window_is(WINDOW_CITY_MILITARY)) {
+            window_city_show();
+        }
+        game_state_toggle_overlay();
+        city_with_overlay_update();
+        window_invalidate();
+    }
+}
+
 static void handle_mouse(const mouse *m)
 {
+    handle_hotkeys();
     if (!building_construction_in_progress()) {
         if (widget_top_menu_handle_mouse(m)) {
             return;
@@ -114,6 +146,7 @@ static void handle_mouse(const mouse *m)
 
 static void handle_mouse_military(const mouse *m)
 {
+    handle_hotkeys();
     widget_city_handle_mouse_military(m, selected_legion_formation_id);
 }
 

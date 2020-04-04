@@ -79,7 +79,6 @@ static const city_overlay *get_city_overlay(void)
         case OVERLAY_DESIRABILITY:
             return city_overlay_for_desirability();
         default:
-            log_info("Unknown city overlay!", 0, game_state_overlay());
             return 0;
     }
 }
@@ -90,6 +89,11 @@ static int select_city_overlay(void)
         overlay = get_city_overlay();
     }
     return overlay != 0;
+}
+
+void city_with_overlay_update(void)
+{
+    select_city_overlay();
 }
 
 static int is_drawable_farmhouse(int grid_offset, int map_orientation)

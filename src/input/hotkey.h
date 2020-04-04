@@ -1,6 +1,14 @@
 #ifndef INPUT_HOTKEY_H
 #define INPUT_HOTKEY_H
 
+typedef struct {
+    int show_overlay;
+    int toggle_overlay;
+} hotkeys;
+
+const hotkeys *hotkey_state(void);
+void hotkey_reset_state(void);
+
 void hotkey_character(int c, int with_ctrl, int with_alt);
 
 void hotkey_left_press(void);
