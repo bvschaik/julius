@@ -4,6 +4,7 @@
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"
+#include "figure/formation.h"
 #include "game/state.h"
 #include "game/time.h"
 #include "graphics/image.h"
@@ -12,6 +13,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/hotkey.h"
+#include "map/grid.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
 #include "widget/city_with_overlay.h"
@@ -116,6 +118,33 @@ static void show_overlay(int overlay)
     window_invalidate();
 }
 
+static void cycle_legion(void)
+{
+    static int current_legion_id = 1;
+    if (window_is(WINDOW_CITY)) {
+        int legion_id = current_legion_id;
+        current_legion_id = 0;
+        for (int i = 1; i <= MAX_LEGIONS; i++) {
+            legion_id++;
+            if (legion_id > MAX_LEGIONS) {
+                legion_id = 1;
+            }
+            const formation *m = formation_get(legion_id);
+            if (m->in_use == 1 && !m->is_herd && m->is_legion) {
+                if (current_legion_id == 0) {
+                    current_legion_id = legion_id;
+                    break;
+                }
+            }
+        }
+        if (current_legion_id > 0) {
+            const formation *m = formation_get(current_legion_id);
+            city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
+            window_invalidate();
+        }
+    }
+}
+
 static void handle_hotkeys(void)
 {
     const hotkeys *h = hotkey_state();
@@ -130,6 +159,8 @@ static void handle_hotkeys(void)
         window_invalidate();
     } else if (h->show_advisor) {
         window_advisors_show_advisor(h->show_advisor);
+    } else if (h->cycle_legion) {
+        cycle_legion();
     }
 }
 
