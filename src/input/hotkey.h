@@ -2,6 +2,7 @@
 #define INPUT_HOTKEY_H
 
 typedef struct {
+    int show_advisor;
     int show_overlay;
     int toggle_overlay;
 } hotkeys;

@@ -18,6 +18,7 @@
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/window.h"
+#include "input/hotkey.h"
 #include "input/input.h"
 #include "window/city.h"
 #include "window/message_dialog.h"
@@ -159,8 +160,21 @@ static void draw_foreground(void)
     }
 }
 
+static void handle_hotkeys(void)
+{
+    const hotkeys *h = hotkey_state();
+    if (h->show_advisor) {
+        if (current_advisor == h->show_advisor) {
+            window_city_show();
+        } else {
+            window_advisors_show_advisor(h->show_advisor);
+        }
+    }
+}
+
 static void handle_mouse(const mouse *m)
 {
+    handle_hotkeys();
     const mouse *m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 13, &focus_button_id)) {
         return;
