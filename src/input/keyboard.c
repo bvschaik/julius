@@ -9,6 +9,9 @@ static struct {
     int insert;
     int capture;
     int accepted;
+
+    int capture_numeric;
+    void (*capture_numeric_callback)(int);
     
     uint8_t *text;
     int cursor_position;
@@ -99,6 +102,18 @@ void keyboard_stop_capture(void)
     data.max_length = 0;
     data.accepted = 0;
     platform_virtual_keyboard_hide();
+}
+
+void keyboard_start_capture_numeric(void (*callback)(int))
+{
+    data.capture_numeric = 1;
+    data.capture_numeric_callback = callback;
+}
+
+void keyboard_stop_capture_numeric(void)
+{
+    data.capture_numeric = 0;
+    data.capture_numeric_callback = 0;
 }
 
 int keyboard_input_is_accepted(void)
@@ -277,6 +292,13 @@ void keyboard_esc(void)
 
 void keyboard_character(const char *text_utf8)
 {
+    if (data.capture_numeric) {
+        char c = text_utf8[0];
+        if (c >= '0' && c <= '9') {
+            data.capture_numeric_callback(c - '0');
+        }
+        return;
+    }
     if (!data.capture) {
         return;
     }

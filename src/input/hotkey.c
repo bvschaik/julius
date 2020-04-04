@@ -145,13 +145,6 @@ static void editor_toggle_battle_info(void)
     }
 }
 
-static void input_number(int number)
-{
-    if (window_is(WINDOW_NUMERIC_INPUT)) {
-        window_numeric_input_number(number);
-    }
-}
-
 static void load_file(void)
 {
     if (window_is(WINDOW_EDITOR_MAP)) {
@@ -245,43 +238,33 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
             break;
         case '1':
             data.hotkey_state.show_advisor = ADVISOR_LABOR;
-            input_number(1);
             break;
         case '2':
             data.hotkey_state.show_advisor = ADVISOR_MILITARY;
-            input_number(2);
             break;
         case '3':
             data.hotkey_state.show_advisor = ADVISOR_IMPERIAL;
-            input_number(3);
             break;
         case '4':
             data.hotkey_state.show_advisor = ADVISOR_RATINGS;
-            input_number(4);
             break;
         case '5':
             data.hotkey_state.show_advisor = ADVISOR_TRADE;
-            input_number(5);
             break;
         case '6':
             data.hotkey_state.show_advisor = ADVISOR_POPULATION;
-            input_number(6);
             break;
         case '7':
             data.hotkey_state.show_advisor = ADVISOR_HEALTH;
-            input_number(7);
             break;
         case '8':
             data.hotkey_state.show_advisor = ADVISOR_EDUCATION;
-            input_number(8);
             break;
         case '9':
             data.hotkey_state.show_advisor = ADVISOR_ENTERTAINMENT;
-            input_number(9);
             break;
         case '0':
             data.hotkey_state.show_advisor = ADVISOR_RELIGION;
-            input_number(0);
             break;
         case '-':
             data.hotkey_state.show_advisor = ADVISOR_FINANCIAL;

@@ -3,7 +3,6 @@
 
 void window_numeric_input_show(int x, int y, int max_digits, int max_value, void (*callback)(int));
 
-void window_numeric_input_number(int number);
 void window_numeric_input_accept(void);
 
 #endif // WINDOW_NUMERIC_INPUT_H
