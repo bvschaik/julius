@@ -9,12 +9,14 @@ typedef struct {
     int cycle_legion;
     int decrease_game_speed;
     int increase_game_speed;
+    int rotate_map_left;
+    int rotate_map_right;
     int show_advisor;
     int show_overlay;
     int toggle_overlay;
     int toggle_pause;
-    int rotate_map_left;
-    int rotate_map_right;
+    int set_bookmark;
+    int go_to_bookmark;
 } hotkeys;
 
 const hotkeys *hotkey_state(void);

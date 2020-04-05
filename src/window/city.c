@@ -15,6 +15,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "map/bookmark.h"
 #include "map/grid.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
@@ -192,6 +193,14 @@ static void handle_hotkeys(const hotkeys *h)
     if (h->rotate_map_right) {
         game_orientation_rotate_right();
         window_invalidate();
+    }
+    if (h->go_to_bookmark) {
+        if (map_bookmark_go_to(h->go_to_bookmark - 1)) {
+            window_invalidate();
+        }
+    }
+    if (h->set_bookmark) {
+        map_bookmark_save(h->set_bookmark - 1);
     }
 }
 
