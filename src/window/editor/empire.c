@@ -45,11 +45,6 @@ static struct {
     int show_battle_objects;
 } data;
 
-void window_editor_empire_toggle_battle_info(void)
-{
-    data.show_battle_objects = !data.show_battle_objects;
-}
-
 static void init(void)
 {
     data.selected_button = 0;
@@ -301,6 +296,9 @@ static void determine_selected_object(const mouse *m)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
+    if (h->toggle_editor_battle_info) {
+        data.show_battle_objects = !data.show_battle_objects;
+    }
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {

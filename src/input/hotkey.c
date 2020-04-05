@@ -15,7 +15,6 @@
 #include "window/building_info.h"
 #include "window/file_dialog.h"
 #include "window/popup_dialog.h"
-#include "window/editor/empire.h"
 
 #include <string.h>
 
@@ -61,13 +60,6 @@ static void cheat_money(void)
     }
 }
 
-static void editor_toggle_battle_info(void)
-{
-    if (window_is(WINDOW_EDITOR_EMPIRE)) {
-        window_editor_empire_toggle_battle_info();
-    }
-}
-
 static void load_file(void)
 {
     if (window_is(WINDOW_EDITOR_MAP)) {
@@ -91,7 +83,7 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
     if (with_ctrl) {
         switch (c) {
             case 'a':
-                editor_toggle_battle_info();
+                data.hotkey_state.toggle_editor_battle_info = 1;
                 break;
             case 'o':
                 load_file();
