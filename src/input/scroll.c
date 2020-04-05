@@ -11,6 +11,7 @@
 
 #include <math.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 #define MOUSE_BORDER 5
 #define TOUCH_BORDER 100
