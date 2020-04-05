@@ -10,6 +10,7 @@
 #include "platform/screen.h"
 
 #include <math.h>
+#include <stddef.h>
 
 #define MOUSE_BORDER 5
 #define TOUCH_BORDER 100
