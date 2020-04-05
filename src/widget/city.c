@@ -371,8 +371,9 @@ void widget_city_handle_mouse(const mouse *m)
     if (m->right.is_down && !m->right.went_down) {
         pixel_offset camera_pixel_position;
 
-        if (scroll_move_mouse_drag(&camera_pixel_position))
+        if (scroll_move_mouse_drag(&camera_pixel_position)) {
             city_view_set_camera_from_pixel_position(camera_pixel_position.x, camera_pixel_position.y);
+        }
     } else if (!m->right.went_up) {
         scroll_map(m);
     }

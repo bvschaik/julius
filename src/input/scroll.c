@@ -9,7 +9,7 @@
 #include "platform/screen.h"
 
 #include <math.h>
-#include <SDL_mouse.h>
+#include <platform/mouse.h>
 
 #define MOUSE_BORDER 5
 #define TOUCH_BORDER 100
@@ -266,19 +266,20 @@ void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
     data.cumulative_delta_y = 0;
     clear_scroll_decay(position);
 
-    SDL_SetRelativeMouseMode(1);
+    platform_mouse_set_relative_mode(1);
 
     // Discard the first value, which is incorrect (the first one gives the relative position to center of window)
-    SDL_GetRelativeMouseState(NULL, NULL);
+    platform_mouse_get_relative_state(NULL, NULL);
 }
 
-int scroll_move_mouse_drag(pixel_offset *position) {
+int scroll_move_mouse_drag(pixel_offset *position)
+{
     if (!data.is_scrolling) {
         return 0;
     }
 
     int delta_x = 0, delta_y = 0;
-    SDL_GetRelativeMouseState(&delta_x, &delta_y);
+    platform_mouse_get_relative_state(&delta_x, &delta_y);
 
     // Store tiny movements until we decide that it's enough to move into scroll mode
     if (!data.has_scrolled) {
@@ -313,7 +314,7 @@ int scroll_end_mouse_drag()
     data.is_scrolling = 0;
     data.has_scrolled = 0;
 
-    SDL_SetRelativeMouseMode(0);
+    platform_mouse_set_relative_mode(0);
     mouse_coords original = scroll_get_original_mouse_position();
     platform_screen_warp_mouse(original.x, original.y);
     mouse_set_position(original.x, original.y);
