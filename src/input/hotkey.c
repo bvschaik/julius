@@ -1,6 +1,7 @@
 #include "hotkey.h"
 
 #include "building/type.h"
+#include "city/constants.h"
 #include "city/finance.h"
 #include "city/victory.h"
 #include "game/settings.h"
@@ -10,13 +11,10 @@
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
-#include "map/bookmark.h"
 #include "scenario/invasion.h"
-#include "window/advisors.h"
 #include "window/building_info.h"
 #include "window/file_dialog.h"
 #include "window/popup_dialog.h"
-#include "window/city.h"
 #include "window/editor/empire.h"
 
 #include <string.h>
@@ -34,13 +32,6 @@ const hotkeys *hotkey_state(void)
 void hotkey_reset_state(void)
 {
     memset(&data.hotkey_state, 0, sizeof(data.hotkey_state));
-}
-
-static void exit_military_command(void)
-{
-    if (window_is(WINDOW_CITY_MILITARY)) {
-        window_city_show();
-    }
 }
 
 static void cheat_init_or_invasion(void)
@@ -274,25 +265,6 @@ void hotkey_enter(int with_alt)
     data.hotkey_state.enter_pressed = 1;
 }
 
-static void go_to_bookmark(int number)
-{
-    if (map_bookmark_go_to(number)) {
-        window_invalidate();
-    }
-}
-
-static void handle_bookmark(int number, int with_modifier)
-{
-    exit_military_command();
-    if (window_is(WINDOW_CITY)) {
-        if (with_modifier) {
-            map_bookmark_save(number);
-        } else {
-            go_to_bookmark(number);
-        }
-    }
-}
-
 static void take_screenshot(int full_city)
 {
     graphics_save_screenshot(full_city);
@@ -305,7 +277,11 @@ void hotkey_func(int f_number, int with_any_modifier, int with_ctrl)
         case 2:
         case 3:
         case 4:
-            handle_bookmark(f_number - 1, with_any_modifier);
+            if (with_any_modifier) {
+                data.hotkey_state.set_bookmark = f_number;
+            } else {
+                data.hotkey_state.go_to_bookmark = f_number;
+            }
             break;
         case 5: system_center(); break;
         case 6: system_set_fullscreen(!setting_fullscreen()); break;
