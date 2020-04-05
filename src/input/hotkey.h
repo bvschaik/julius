@@ -3,7 +3,7 @@
 
 typedef struct {
     // fixed keys with multiple functions
-    int enter;
+    int enter_pressed;
     int escape;
     // keys with specific function
     int cycle_legion;

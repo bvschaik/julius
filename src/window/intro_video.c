@@ -46,7 +46,7 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (m->left.went_up || m->right.went_up || video_is_finished() || h->enter) {
+    if (m->left.went_up || m->right.went_up || video_is_finished() || h->enter_pressed) {
         sound_music_stop();
         video_stop();
         if (!start_next_video()) {
