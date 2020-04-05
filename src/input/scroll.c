@@ -259,10 +259,10 @@ int scroll_move_mouse_drag(pixel_offset *position) {
     position->y = data.position.current.y + delta_y;
 
     if (position->x != data.position.current.x || position->y != data.position.current.y) {
-      data.is_scrolling = 1;
-      data.position.current.x = position->x;
-      data.position.current.y = position->y;
-      return 1;
+        data.is_scrolling = 1;
+        data.position.current.x = position->x;
+        data.position.current.y = position->y;
+        return 1;
     }
     return 0;
 }

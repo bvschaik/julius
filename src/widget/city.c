@@ -403,10 +403,7 @@ void widget_city_handle_mouse(const mouse *m)
     if (m->right.went_down) {
         pixel_offset camera_pixel_position;
         city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
-        mouse_coords original_coords = {
-            .x = m->x,
-            .y = m->y
-        };
+        mouse_coords original_coords = {.x = m->x, .y = m->y};
         scroll_start_mouse_drag(&camera_pixel_position, original_coords);
     }
     if (m->right.went_up) {
