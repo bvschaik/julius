@@ -1,23 +1,17 @@
 #include "hotkey.h"
 
-#include "building/type.h"
 #include "city/constants.h"
-#include "city/finance.h"
-#include "city/victory.h"
+#include "game/cheats.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
 #include "graphics/screenshot.h"
 #include "graphics/video.h"
-#include "graphics/window.h"
-#include "scenario/invasion.h"
-#include "window/building_info.h"
 #include "window/popup_dialog.h"
 
 #include <string.h>
 
 static struct {
-    int is_cheating;
     hotkeys hotkey_state;
 } data;
 
@@ -29,33 +23,6 @@ const hotkeys *hotkey_state(void)
 void hotkey_reset_state(void)
 {
     memset(&data.hotkey_state, 0, sizeof(data.hotkey_state));
-}
-
-static void cheat_init_or_invasion(void)
-{
-    if (window_is(WINDOW_BUILDING_INFO)) {
-        data.is_cheating = window_building_info_get_building_type() == BUILDING_WELL;
-    } else if (data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
-        data.is_cheating = 2;
-        scenario_invasion_start_from_cheat();
-    } else {
-        data.is_cheating = 0;
-    }
-}
-
-static void cheat_victory(void)
-{
-    if (data.is_cheating) {
-        city_victory_force_win();
-    }
-}
-
-static void cheat_money(void)
-{
-    if (data.is_cheating) {
-        city_finance_process_cheat();
-        window_invalidate();
-    }
 }
 
 void hotkey_character(int c, int with_ctrl, int with_alt)
@@ -80,13 +47,13 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
                 data.hotkey_state.escape_pressed = 1;
                 break;
             case 'k':
-                cheat_init_or_invasion();
+                game_cheat_activate();
                 break;
             case 'c':
-                cheat_money();
+                game_cheat_money();
                 break;
             case 'v':
-                cheat_victory();
+                game_cheat_victory();
                 break;
         }
         return;
@@ -192,14 +159,9 @@ void hotkey_enter(int with_alt)
 {
     if (with_alt) {
         system_set_fullscreen(!setting_fullscreen());
-        return;
+    } else {
+        data.hotkey_state.enter_pressed = 1;
     }
-    data.hotkey_state.enter_pressed = 1;
-}
-
-static void take_screenshot(int full_city)
-{
-    graphics_save_screenshot(full_city);
 }
 
 void hotkey_func(int f_number, int with_any_modifier, int with_ctrl)
@@ -220,7 +182,7 @@ void hotkey_func(int f_number, int with_any_modifier, int with_ctrl)
         case 7: system_resize(640, 480); break;
         case 8: system_resize(800, 600); break;
         case 9: system_resize(1024, 768); break;
-        case 12: take_screenshot(with_ctrl); break;
+        case 12: graphics_save_screenshot(with_ctrl); break;
     }
 }
 
