@@ -120,7 +120,7 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
             hotkey_page_down();
             break;
         case SDLK_ESCAPE:
-            keyboard_esc();
+            hotkey_esc();
             break;
         case SDLK_F1: send_fn(event, 1); break;
         case SDLK_F2: send_fn(event, 2); break;

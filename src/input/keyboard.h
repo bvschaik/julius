@@ -31,11 +31,7 @@ void keyboard_left(void);
 void keyboard_right(void);
 void keyboard_home(void);
 void keyboard_end(void);
-void keyboard_esc(void);
 
 void keyboard_character(const char *text_utf8);
-
-int keyboard_is_esc_pressed(void);
-void keyboard_reset_esc_state(void);
 
 #endif // INPUT_KEYBOARD_H

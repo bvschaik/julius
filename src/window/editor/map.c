@@ -47,13 +47,13 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (widget_top_menu_editor_handle_mouse(m)) {
+    if (widget_top_menu_editor_handle_input(m, h)) {
         return;
     }
     if (widget_sidebar_editor_handle_mouse(m)) {
         return;
     }
-    widget_map_editor_handle_mouse(m);
+    widget_map_editor_handle_input(m, h);
 }
 
 void window_editor_map_draw_all(void)

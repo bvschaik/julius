@@ -14,7 +14,6 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "input/keyboard.h"
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
@@ -165,7 +164,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, checkbox_buttons, NUM_CHECKBOXES, &data.focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
-    if (!handled && (m->right.went_up || keyboard_is_esc_pressed())) {
+    if (!handled && (m->right.went_up || h->escape_pressed)) {
         window_main_menu_show(0);
     }
 }

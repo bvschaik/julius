@@ -190,20 +190,20 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     handle_hotkeys(h);
     if (!building_construction_in_progress()) {
-        if (widget_top_menu_handle_mouse(m)) {
+        if (widget_top_menu_handle_input(m, h)) {
             return;
         }
         if (widget_sidebar_handle_mouse(m)) {
             return;
         }
     }
-    widget_city_handle_mouse(m);
+    widget_city_handle_input(m, h);
 }
 
 static void handle_input_military(const mouse *m, const hotkeys *h)
 {
     handle_hotkeys(h);
-    widget_city_handle_mouse_military(m, selected_legion_formation_id);
+    widget_city_handle_input_military(m, h, selected_legion_formation_id);
 }
 
 static void get_tooltip(tooltip_context *c)

@@ -3,7 +3,6 @@
 #include "graphics/warning.h"
 #include "input/cursor.h"
 #include "input/hotkey.h"
-#include "input/keyboard.h"
 #include "input/touch.h"
 #include "window/city.h"
 
@@ -105,7 +104,6 @@ static void update_input_after(void)
     reset_touches(0);
     mouse_reset_scroll();
     input_cursor_update(data.current_window->id);
-    keyboard_reset_esc_state();
     hotkey_reset_state();
 }
 
