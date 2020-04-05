@@ -1,4 +1,3 @@
-#include <SDL_mouse.h>
 #include "city.h"
 
 #include "building/construction.h"
@@ -372,12 +371,11 @@ int widget_city_has_input(void)
 void widget_city_handle_mouse(const mouse *m)
 {
     if (m->right.is_down && !m->right.went_down) {
-        SDL_SetRelativeMouseMode(1);
         pixel_offset camera_pixel_position;
 
         if (scroll_move_mouse_drag(&camera_pixel_position))
             city_view_set_camera_from_pixel_position(camera_pixel_position.x, camera_pixel_position.y);
-    } else {
+    } else if (!m->right.went_up) {
         scroll_map(m);
     }
 
@@ -413,9 +411,8 @@ void widget_city_handle_mouse(const mouse *m)
     }
     if (m->right.went_up) {
         if (!building_construction_in_progress()) {
-            SDL_SetRelativeMouseMode(0);
-            mouse_coords original = scroll_get_original_mouse_position();
-            if (original.x == m->x && original.y == m->y && handle_right_click_allow_building_info(tile)) {
+            int has_scrolled = scroll_end_mouse_drag();
+            if (!has_scrolled && handle_right_click_allow_building_info(tile)) {
                 window_building_info_show(tile->grid_offset);
             }
         } else {

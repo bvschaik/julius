@@ -226,6 +226,10 @@ void platform_screen_render(void)
     SDL_RenderPresent(SDL.renderer);
 }
 
+void platform_screen_warp_mouse(int x, int y) {
+    SDL_WarpMouseInWindow(SDL.window, x, y);
+}
+
 int system_is_fullscreen_only(void)
 {
     return 0;

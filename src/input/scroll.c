@@ -6,6 +6,7 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/screen.h"
+#include "platform/screen.h"
 
 #include <math.h>
 #include <SDL_mouse.h>
@@ -240,24 +241,45 @@ void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
     data.position.original = *position;
     data.position.current = *position;
     data.start_mouse = coords;
-    data.is_scrolling = 1;
+    data.is_scrolling = 0;
     data.is_touch = 0;
     clear_scroll_decay(position);
+
+    SDL_SetRelativeMouseMode(1);
+
+    // Discard the first value, which is incorrect (the first one gives the relative position to center of window)
+    SDL_GetRelativeMouseState(NULL, NULL);
 }
 
 int scroll_move_mouse_drag(pixel_offset *position) {
-    int delta_x, delta_y;
+    int delta_x = 0, delta_y = 0;
     SDL_GetRelativeMouseState(&delta_x, &delta_y);
 
     position->x = data.position.current.x + delta_x;
     position->y = data.position.current.y + delta_y;
 
     if (position->x != data.position.current.x || position->y != data.position.current.y) {
+      data.is_scrolling = 1;
       data.position.current.x = position->x;
       data.position.current.y = position->y;
       return 1;
     }
     return 0;
+}
+
+int scroll_end_mouse_drag()
+{
+    int has_scrolled = data.is_scrolling == 1;
+
+    data.is_touch = 0;
+    data.is_scrolling = 0;
+
+    SDL_SetRelativeMouseMode(0);
+    mouse_coords original = scroll_get_original_mouse_position();
+    platform_screen_warp_mouse(original.x, original.y);
+    mouse_set_position(original.x, original.y);
+
+    return has_scrolled;
 }
 
 void scroll_start_touch_drag(const pixel_offset *position, touch_coords coords)

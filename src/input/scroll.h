@@ -23,6 +23,7 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type);
 
 void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords);
 int scroll_move_mouse_drag(pixel_offset *position);
+int scroll_end_mouse_drag(void);
 mouse_coords scroll_get_original_mouse_position(void);
 
 void scroll_start_touch_drag(const pixel_offset *position, touch_coords coords);
