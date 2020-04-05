@@ -196,6 +196,9 @@ void city_view_set_camera(int x, int y)
 
 void city_view_set_camera_from_pixel_position(int x, int y)
 {
+    x = x < 0 ? 0 : x;
+    y = y < 0 ? 0 : y;
+
     data.camera.tile.x = x / TILE_WIDTH_PIXELS;
     data.camera.tile.y = y / HALF_TILE_HEIGHT_PIXELS;
     data.camera.pixel.x = x % TILE_WIDTH_PIXELS;

@@ -258,8 +258,6 @@ mouse_coords scroll_get_original_mouse_position(void)
 
 void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
 {
-    data.position.original = *position;
-    data.position.current = *position;
     data.start_mouse = coords;
     data.has_scrolled = 0;
     data.is_scrolling = 1;
@@ -293,16 +291,16 @@ int scroll_move_mouse_drag(pixel_offset *position)
         int has_scrolled = abs(data.cumulative_delta_x) > SCROLL_MOUSE_MIN_DELTA || abs(data.cumulative_delta_y) > SCROLL_MOUSE_MIN_DELTA;
         data.has_scrolled = data.has_scrolled || has_scrolled;
 
+        city_view_get_camera_in_pixels(&position->x, &position->y);
+
         if (data.has_scrolled) {
-            data.position.current.x += delta_x;
-            data.position.current.y += delta_y;
+            position->x += delta_x;
+            position->y += delta_y;
         } else {
             data.cumulative_delta_x = delta_x;
             data.cumulative_delta_y = delta_y;
         }
 
-        position->x = data.position.current.x;
-        position->y = data.position.current.y;
         return 1;
     }
     return 0;
