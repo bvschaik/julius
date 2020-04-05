@@ -15,6 +15,7 @@ typedef struct {
     int show_overlay;
     int toggle_overlay;
     int toggle_pause;
+    int toggle_editor_battle_info;
     int set_bookmark;
     int go_to_bookmark;
 } hotkeys;
