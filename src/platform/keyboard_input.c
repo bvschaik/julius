@@ -3,6 +3,7 @@
 #include "game/system.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"
+#include "input/scroll.h"
 
 static int is_ctrl_down(SDL_KeyboardEvent *event)
 {
@@ -91,19 +92,19 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
             break;
         case SDLK_LEFT:
             keyboard_left();
-            hotkey_left_press();
+            scroll_arrow_left(1);
             break;
         case SDLK_RIGHT:
             keyboard_right();
-            hotkey_right_press();
+            scroll_arrow_right(1);
             break;
         case SDLK_UP:
             keyboard_left();
-            hotkey_up_press();
+            scroll_arrow_up(1);
             break;
         case SDLK_DOWN:
             keyboard_right();
-            hotkey_down_press();
+            scroll_arrow_down(1);
             break;
         case SDLK_HOME:
             keyboard_home();
@@ -166,16 +167,16 @@ void platform_handle_key_up(SDL_KeyboardEvent *event)
 {
     switch (event->keysym.sym) {
         case SDLK_LEFT:
-            hotkey_left_release();
+            scroll_arrow_left(0);
             break;
         case SDLK_RIGHT:
-            hotkey_right_release();
+            scroll_arrow_right(0);
             break;
         case SDLK_UP:
-            hotkey_up_release();
+            scroll_arrow_up(0);
             break;
         case SDLK_DOWN:
-            hotkey_down_release();
+            scroll_arrow_down(0);
             break;
     }
 }

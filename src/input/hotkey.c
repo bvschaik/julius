@@ -10,7 +10,6 @@
 #include "graphics/screenshot.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
-#include "input/scroll.h"
 #include "scenario/invasion.h"
 #include "window/building_info.h"
 #include "window/popup_dialog.h"
@@ -162,46 +161,6 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
             data.hotkey_state.show_advisor = ADVISOR_CHIEF;
             break;
     }
-}
-
-void hotkey_left_press(void)
-{
-    scroll_arrow_left(1);
-}
-
-void hotkey_right_press(void)
-{
-    scroll_arrow_right(1);
-}
-
-void hotkey_up_press(void)
-{
-    scroll_arrow_up(1);
-}
-
-void hotkey_down_press(void)
-{
-    scroll_arrow_down(1);
-}
-
-void hotkey_left_release(void)
-{
-    scroll_arrow_left(0);
-}
-
-void hotkey_right_release(void)
-{
-    scroll_arrow_right(0);
-}
-
-void hotkey_up_release(void)
-{
-    scroll_arrow_up(0);
-}
-
-void hotkey_down_release(void)
-{
-    scroll_arrow_down(0);
 }
 
 void hotkey_home(void)
