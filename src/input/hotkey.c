@@ -3,9 +3,6 @@
 #include "building/type.h"
 #include "city/finance.h"
 #include "city/victory.h"
-#include "city/view.h"
-#include "city/warning.h"
-#include "game/orientation.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
@@ -14,13 +11,10 @@
 #include "graphics/window.h"
 #include "input/scroll.h"
 #include "map/bookmark.h"
-#include "map/grid.h"
 #include "scenario/invasion.h"
 #include "window/advisors.h"
 #include "window/building_info.h"
 #include "window/file_dialog.h"
-#include "window/numeric_input.h"
-#include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/city.h"
 #include "window/editor/empire.h"
@@ -120,7 +114,7 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
     if (with_alt) {
         switch (c) {
             case 'x':
-                hotkey_esc();
+                data.hotkey_state.escape_pressed = 1;
                 break;
             case 'k':
                 cheat_init_or_invasion();
@@ -248,18 +242,12 @@ void hotkey_down_release(void)
 
 void hotkey_home(void)
 {
-    if (window_is(WINDOW_CITY)) {
-        game_orientation_rotate_left();
-        window_invalidate();
-    }
+    data.hotkey_state.rotate_map_left = 1;
 }
 
 void hotkey_end(void)
 {
-    if (window_is(WINDOW_CITY)) {
-        game_orientation_rotate_right();
-        window_invalidate();
-    }
+    data.hotkey_state.rotate_map_right = 1;
 }
 
 void hotkey_esc(void)

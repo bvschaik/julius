@@ -13,6 +13,8 @@ typedef struct {
     int show_overlay;
     int toggle_overlay;
     int toggle_pause;
+    int rotate_map_left;
+    int rotate_map_right;
 } hotkeys;
 
 const hotkeys *hotkey_state(void);
