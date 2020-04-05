@@ -6,10 +6,10 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/screen.h"
+#include "platform/mouse.h"
 #include "platform/screen.h"
 
 #include <math.h>
-#include <platform/mouse.h>
 
 #define MOUSE_BORDER 5
 #define TOUCH_BORDER 100
