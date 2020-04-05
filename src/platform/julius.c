@@ -247,7 +247,7 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             platform_handle_text(&event->text);
             break;
         case SDL_MOUSEMOTION:
-            if (event->motion.which != SDL_TOUCH_MOUSEID) {
+            if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
                 mouse_set_position(event->motion.x, event->motion.y);
             }
             break;
