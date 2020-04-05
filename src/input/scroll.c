@@ -72,6 +72,8 @@ static struct {
     } limits;
     touch_coords start_touch;
     mouse_coords start_mouse;
+    unsigned int cumulative_delta_x;
+    unsigned int cumulative_delta_y;
 } data;
 
 static int is_arrow_key_pressed(key *arrow)
@@ -260,6 +262,8 @@ void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
     data.has_scrolled = 0;
     data.is_scrolling = 1;
     data.is_touch = 0;
+    data.cumulative_delta_x = 0;
+    data.cumulative_delta_y = 0;
     clear_scroll_decay(position);
 
     SDL_SetRelativeMouseMode(1);
@@ -279,8 +283,12 @@ int scroll_move_mouse_drag(pixel_offset *position) {
     position->x = data.position.current.x + delta_x;
     position->y = data.position.current.y + delta_y;
 
+    data.cumulative_delta_x += abs(delta_x);
+    data.cumulative_delta_y += abs(delta_y);
+
     if (position->x != data.position.current.x || position->y != data.position.current.y) {
-        data.has_scrolled = 1;
+        int has_scrolled = data.cumulative_delta_x > SCROLL_MOUSE_MIN_DELTA || data.cumulative_delta_y > SCROLL_MOUSE_MIN_DELTA;
+        data.has_scrolled = data.has_scrolled || has_scrolled;
         data.position.current.x = position->x;
         data.position.current.y = position->y;
         return 1;
