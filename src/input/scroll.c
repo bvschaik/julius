@@ -72,8 +72,8 @@ static struct {
     } limits;
     touch_coords start_touch;
     mouse_coords start_mouse;
-    unsigned int cumulative_delta_x;
-    unsigned int cumulative_delta_y;
+    int cumulative_delta_x;
+    int cumulative_delta_y;
 } data;
 
 static int is_arrow_key_pressed(key *arrow)
@@ -280,17 +280,26 @@ int scroll_move_mouse_drag(pixel_offset *position) {
     int delta_x = 0, delta_y = 0;
     SDL_GetRelativeMouseState(&delta_x, &delta_y);
 
-    position->x = data.position.current.x + delta_x;
-    position->y = data.position.current.y + delta_y;
+    // Store tiny movements until we decide that it's enough to move into scroll mode
+    if (!data.has_scrolled) {
+        delta_x += data.cumulative_delta_x;
+        delta_y += data.cumulative_delta_y;
+    }
 
-    data.cumulative_delta_x += abs(delta_x);
-    data.cumulative_delta_y += abs(delta_y);
-
-    if (position->x != data.position.current.x || position->y != data.position.current.y) {
+    if (delta_x != 0 || delta_y != 0) {
         int has_scrolled = data.cumulative_delta_x > SCROLL_MOUSE_MIN_DELTA || data.cumulative_delta_y > SCROLL_MOUSE_MIN_DELTA;
         data.has_scrolled = data.has_scrolled || has_scrolled;
-        data.position.current.x = position->x;
-        data.position.current.y = position->y;
+
+        if (data.has_scrolled) {
+            data.position.current.x += delta_x;
+            data.position.current.y += delta_y;
+        } else {
+            data.cumulative_delta_x = delta_x;
+            data.cumulative_delta_y = delta_y;
+        }
+
+        position->x = data.position.current.x;
+        position->y = data.position.current.y;
         return 1;
     }
     return 0;
