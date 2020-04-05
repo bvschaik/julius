@@ -97,6 +97,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (h->escape_pressed) {
         hotkey_handle_escape();
     }
+    if (h->load_file) {
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+    }
 }
 
 static void confirm_exit(int accepted)

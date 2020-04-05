@@ -13,7 +13,6 @@
 #include "input/scroll.h"
 #include "scenario/invasion.h"
 #include "window/building_info.h"
-#include "window/file_dialog.h"
 #include "window/popup_dialog.h"
 
 #include <string.h>
@@ -60,24 +59,6 @@ static void cheat_money(void)
     }
 }
 
-static void load_file(void)
-{
-    if (window_is(WINDOW_EDITOR_MAP)) {
-        window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_LOAD);
-    } else if (window_is(WINDOW_CITY) || window_is(WINDOW_MAIN_MENU)) {
-        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
-    }
-}
-
-static void save_file(void)
-{
-    if (window_is(WINDOW_EDITOR_MAP)) {
-        window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
-    } else if (window_is(WINDOW_CITY)) {
-        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
-    }
-}
-
 void hotkey_character(int c, int with_ctrl, int with_alt)
 {
     if (with_ctrl) {
@@ -86,10 +67,10 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
                 data.hotkey_state.toggle_editor_battle_info = 1;
                 break;
             case 'o':
-                load_file();
+                data.hotkey_state.load_file = 1;
                 break;
             case 's':
-                save_file();
+                data.hotkey_state.save_file = 1;
                 break;
         }
         return;

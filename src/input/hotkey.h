@@ -18,6 +18,8 @@ typedef struct {
     int toggle_editor_battle_info;
     int set_bookmark;
     int go_to_bookmark;
+    int load_file;
+    int save_file;
 } hotkeys;
 
 const hotkeys *hotkey_state(void);

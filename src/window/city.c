@@ -23,6 +23,7 @@
 #include "widget/sidebar.h"
 #include "widget/top_menu.h"
 #include "window/advisors.h"
+#include "window/file_dialog.h"
 
 static int selected_legion_formation_id;
 
@@ -201,6 +202,12 @@ static void handle_hotkeys(const hotkeys *h)
     }
     if (h->set_bookmark) {
         map_bookmark_save(h->set_bookmark - 1);
+    }
+    if (h->load_file) {
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+    }
+    if (h->save_file) {
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
     }
 }
 
