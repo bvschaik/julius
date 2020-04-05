@@ -158,7 +158,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     int handled = 0;
@@ -235,7 +235,7 @@ void window_config_show()
         WINDOW_CONFIG,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     init();
     window_show(&window);

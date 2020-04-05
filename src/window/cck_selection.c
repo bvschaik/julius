@@ -16,7 +16,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "input/keyboard.h"
 #include "scenario/criteria.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
@@ -232,7 +231,7 @@ static int handle_scrollbar(const mouse *m)
     return 0;
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->scrolled == SCROLL_DOWN) {
         button_scroll(1, 3);
@@ -249,11 +248,11 @@ static void handle_mouse(const mouse *m)
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 15, &data.focus_button_id)) {
         return;
     }
-    if (keyboard_input_is_accepted()) {
+    if (h->enter) {
         button_start_scenario(0, 0);
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         window_go_back();
     }
 }
@@ -303,7 +302,7 @@ void window_cck_selection_show(void)
         WINDOW_CCK_SELECTION,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     init();
     window_show(&window);

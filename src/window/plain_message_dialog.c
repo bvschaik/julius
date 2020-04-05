@@ -7,7 +7,6 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "input/hotkey.h"
 #include "input/input.h"
 
 static void button_ok(int param1, int param2);
@@ -53,15 +52,15 @@ static void close(void)
     window_go_back();
 }
 
-static void handle_input(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 1, 0)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         close();
     }
-    if (hotkey_state()->enter) {
+    if (h->enter) {
         close();
     }
 }

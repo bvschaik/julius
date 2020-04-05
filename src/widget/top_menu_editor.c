@@ -103,7 +103,7 @@ static void draw_foreground(void)
     menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     widget_top_menu_editor_handle_mouse(m);
 }
@@ -114,8 +114,7 @@ static void top_menu_window_show(void)
         WINDOW_EDITOR_TOP_MENU,
         0,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     init();
     window_show(&window);

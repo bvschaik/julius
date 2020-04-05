@@ -551,7 +551,7 @@ static int handle_specific_building_info_mouse(const mouse *m)
     return 0;
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     int handled = 0;
     // general buttons
@@ -571,7 +571,7 @@ static void handle_mouse(const mouse *m)
     if (!handled) {
         handled = handle_specific_building_info_mouse(m);
     }
-    if (!handled && input_go_back_requested()) {
+    if (!handled && input_go_back_requested(m, h)) {
         window_city_show();
     }
 }
@@ -631,7 +631,7 @@ void window_building_info_show(int grid_offset)
         WINDOW_BUILDING_INFO,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     init(grid_offset);

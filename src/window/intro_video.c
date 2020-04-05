@@ -44,9 +44,9 @@ static void draw_foreground(void)
     video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (m->left.went_up || m->right.went_up || video_is_finished()) {
+    if (m->left.went_up || m->right.went_up || video_is_finished() || h->enter) {
         sound_music_stop();
         video_stop();
         if (!start_next_video()) {
@@ -63,8 +63,7 @@ void window_intro_video_show(void)
             WINDOW_INTRO_VIDEO,
             draw_background,
             draw_foreground,
-            handle_mouse,
-            0
+            handle_input
         };
         window_show(&window);
     }

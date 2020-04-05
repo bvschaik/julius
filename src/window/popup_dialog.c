@@ -6,7 +6,6 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
-#include "input/hotkey.h"
 #include "input/input.h"
 
 #define GROUP 5
@@ -78,16 +77,16 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (data.has_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 2, 0)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         data.close_func(0);
         window_go_back();
     }
-    if (hotkey_state()->enter) {
+    if (h->enter) {
         confirm();
     }
 }

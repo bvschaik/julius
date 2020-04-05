@@ -431,7 +431,7 @@ static void determine_selected_object(const mouse *m)
     window_invalidate();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
@@ -492,7 +492,7 @@ static void handle_mouse(const mouse *m)
             }
         }
     } else {
-        if (input_go_back_requested()) {
+        if (input_go_back_requested(m, h)) {
             window_city_show();
         }
     }
@@ -632,7 +632,7 @@ void window_empire_show(void)
         WINDOW_EMPIRE,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     init();

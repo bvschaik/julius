@@ -87,12 +87,12 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 7, &data.focus_button_id)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         button_save(0, 0);
     }
 }
@@ -101,6 +101,7 @@ static void set_year(int value)
 {
     data.request.year = value;
 }
+
 static void button_year(int param1, int param2)
 {
     window_numeric_input_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 50, 3, 999, set_year);
@@ -110,6 +111,7 @@ static void set_amount(int value)
 {
     data.request.amount = value;
 }
+
 static void button_amount(int param1, int param2)
 {
     int max_amount = 999;
@@ -131,6 +133,7 @@ static void set_resource(int value)
         data.request.amount = 999;
     }
 }
+
 static void button_resource(int param1, int param2)
 {
     window_select_list_show(screen_dialog_offset_x() + 210, screen_dialog_offset_y() + 40, 23, 17, set_resource);
@@ -140,6 +143,7 @@ static void set_deadline_years(int value)
 {
     data.request.deadline_years = value;
 }
+
 static void button_deadline_years(int param1, int param2)
 {
     window_numeric_input_show(screen_dialog_offset_x() + 220, screen_dialog_offset_y() + 100, 3, 999, set_deadline_years);
@@ -149,6 +153,7 @@ static void set_favor(int value)
 {
     data.request.favor = value;
 }
+
 static void button_favor(int param1, int param2)
 {
     window_numeric_input_show(screen_dialog_offset_x() + 260, screen_dialog_offset_y() + 100, 3, 100, set_favor);
@@ -172,7 +177,7 @@ void window_editor_edit_request_show(int id)
         WINDOW_EDITOR_EDIT_REQUEST,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     init(id);
     window_show(&window);

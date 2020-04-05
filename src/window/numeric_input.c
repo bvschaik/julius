@@ -7,7 +7,6 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "input/hotkey.h"
 #include "input/input.h"
 #include "input/keyboard.h"
 #include "sound/effect.h"
@@ -104,15 +103,15 @@ static void draw_foreground(void)
             data.focus_button_id == 12 ? COLOR_BLUE : COLOR_BLACK);
 }
 
-static void handle_input(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(m, data.x, data.y, buttons, 12, &data.focus_button_id)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         close();
     }
-    if (hotkey_state()->enter) {
+    if (h->enter) {
         input_accept();
     }
 }

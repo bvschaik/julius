@@ -63,7 +63,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     if (input_box_handle_mouse(m_dialog, &player_name_input) ||
@@ -74,7 +74,7 @@ static void handle_mouse(const mouse *m)
         start_mission(0, 0);
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         keyboard_stop_capture();
         window_go_back();
     }
@@ -99,8 +99,7 @@ void window_new_career_show(void)
         WINDOW_NEW_CAREER,
         draw_background,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     init();
     window_show(&window);

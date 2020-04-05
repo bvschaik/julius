@@ -95,7 +95,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 
@@ -160,8 +160,7 @@ void window_mission_selection_show(void)
         WINDOW_MISSION_SELECTION,
         draw_background,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     data.choice = 0;
     data.focus_button = 0;

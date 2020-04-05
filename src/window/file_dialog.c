@@ -177,7 +177,7 @@ static int handle_scrollbar(const mouse *m)
     return 0;
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     double_click = m->left.double_click;
     if (m->scrolled == SCROLL_DOWN) {
@@ -198,7 +198,7 @@ static void handle_mouse(const mouse *m)
         handle_scrollbar(m)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         keyboard_stop_capture();
         window_go_back();
     }
@@ -323,7 +323,7 @@ void window_file_dialog_show(file_type type, file_dialog_type dialog_type)
         WINDOW_FILE_DIALOG,
         window_draw_underlying_window,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     init(type, dialog_type);
     window_show(&window);
