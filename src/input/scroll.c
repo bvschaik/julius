@@ -41,6 +41,7 @@ typedef struct {
 
 static struct {
     int is_scrolling;
+    int has_scrolled;
     int is_touch;
     struct {
         key up;
@@ -256,7 +257,8 @@ void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
     data.position.original = *position;
     data.position.current = *position;
     data.start_mouse = coords;
-    data.is_scrolling = 0;
+    data.has_scrolled = 0;
+    data.is_scrolling = 1;
     data.is_touch = 0;
     clear_scroll_decay(position);
 
@@ -267,6 +269,10 @@ void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
 }
 
 int scroll_move_mouse_drag(pixel_offset *position) {
+    if (!data.is_scrolling) {
+        return 0;
+    }
+
     int delta_x = 0, delta_y = 0;
     SDL_GetRelativeMouseState(&delta_x, &delta_y);
 
@@ -274,7 +280,7 @@ int scroll_move_mouse_drag(pixel_offset *position) {
     position->y = data.position.current.y + delta_y;
 
     if (position->x != data.position.current.x || position->y != data.position.current.y) {
-        data.is_scrolling = 1;
+        data.has_scrolled = 1;
         data.position.current.x = position->x;
         data.position.current.y = position->y;
         return 1;
@@ -284,10 +290,11 @@ int scroll_move_mouse_drag(pixel_offset *position) {
 
 int scroll_end_mouse_drag()
 {
-    int has_scrolled = data.is_scrolling == 1;
+    int has_scrolled = data.has_scrolled == 1;
 
     data.is_touch = 0;
     data.is_scrolling = 0;
+    data.has_scrolled = 0;
 
     SDL_SetRelativeMouseMode(0);
     mouse_coords original = scroll_get_original_mouse_position();

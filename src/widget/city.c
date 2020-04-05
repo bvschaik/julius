@@ -398,7 +398,7 @@ void widget_city_handle_mouse(const mouse *m)
     if (m->left.went_up) {
         build_end();
     }
-    if (m->right.went_down) {
+    if (m->right.went_down && !building_construction_type()) {
         pixel_offset camera_pixel_position;
         city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
         mouse_coords original_coords = {.x = m->x, .y = m->y};
