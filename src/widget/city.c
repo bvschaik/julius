@@ -368,6 +368,11 @@ int widget_city_has_input(void)
 
 void widget_city_handle_mouse(const mouse *m)
 {
+    if (m->is_touch) {
+        handle_touch();
+        return;
+    }
+
     if (m->right.is_down && !m->right.went_down) {
         pixel_offset camera_pixel_position;
 
@@ -378,10 +383,6 @@ void widget_city_handle_mouse(const mouse *m)
         scroll_map(m);
     }
 
-    if (m->is_touch) {
-        handle_touch();
-        return;
-    }
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
     building_construction_reset_draw_as_constructing();
