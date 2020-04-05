@@ -289,7 +289,7 @@ int scroll_move_mouse_drag(pixel_offset *position)
     }
 
     if (delta_x != 0 || delta_y != 0) {
-        int has_scrolled = data.cumulative_delta_x > SCROLL_MOUSE_MIN_DELTA || data.cumulative_delta_y > SCROLL_MOUSE_MIN_DELTA;
+        int has_scrolled = abs(data.cumulative_delta_x) > SCROLL_MOUSE_MIN_DELTA || abs(data.cumulative_delta_y) > SCROLL_MOUSE_MIN_DELTA;
         data.has_scrolled = data.has_scrolled || has_scrolled;
 
         if (data.has_scrolled) {
