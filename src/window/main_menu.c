@@ -13,8 +13,6 @@
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
-#include "input/hotkey.h"
-#include "input/keyboard.h"
 #include "platform/version.h"
 #include "sound/music.h"
 #include "window/cck_selection.h"
@@ -96,8 +94,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id)) {
         return;
     }
-    if (keyboard_is_esc_pressed()) {
-        hotkey_esc();
+    if (h->escape_pressed) {
+        hotkey_handle_escape();
     }
 }
 

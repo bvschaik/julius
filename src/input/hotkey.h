@@ -4,7 +4,7 @@
 typedef struct {
     // fixed keys with multiple functions
     int enter_pressed;
-    int escape;
+    int escape_pressed;
     // keys with specific function
     int cycle_legion;
     int decrease_game_speed;
@@ -36,5 +36,7 @@ void hotkey_page_down(void);
 void hotkey_enter(int with_alt);
 
 void hotkey_func(int f_number, int with_any_modifier, int with_ctrl);
+
+void hotkey_handle_escape(void);
 
 #endif // INPUT_HOTKEY_H

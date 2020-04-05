@@ -7,7 +7,6 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/window.h"
-#include "input/keyboard.h"
 #include "scenario/property.h"
 #include "sound/speech.h"
 #include "window/mission_briefing.h"
@@ -112,7 +111,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.focus_button = 2;
     }
 
-    if (m_dialog->right.went_up || keyboard_is_esc_pressed()) {
+    if (m_dialog->right.went_up || h->escape_pressed) {
         data.choice = 0;
         window_invalidate();
     }

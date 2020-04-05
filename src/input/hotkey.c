@@ -262,17 +262,9 @@ void hotkey_end(void)
     }
 }
 
-static void confirm_exit(int accepted)
-{
-    if (accepted) {
-        system_exit();
-    }
-}
-
 void hotkey_esc(void)
 {
-    video_stop();
-    window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
+    data.hotkey_state.escape_pressed = 1;
 }
 
 void hotkey_page_up(void)
@@ -334,4 +326,17 @@ void hotkey_func(int f_number, int with_any_modifier, int with_ctrl)
         case 9: system_resize(1024, 768); break;
         case 12: take_screenshot(with_ctrl); break;
     }
+}
+
+static void confirm_exit(int accepted)
+{
+    if (accepted) {
+        system_exit();
+    }
+}
+
+void hotkey_handle_escape(void)
+{
+    video_stop();
+    window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
 }
