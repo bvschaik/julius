@@ -248,7 +248,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 15, &data.focus_button_id)) {
         return;
     }
-    if (h->enter) {
+    if (h->enter_pressed) {
         button_start_scenario(0, 0);
         return;
     }

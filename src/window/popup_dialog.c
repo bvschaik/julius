@@ -86,7 +86,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.close_func(0);
         window_go_back();
     }
-    if (h->enter) {
+    if (h->enter_pressed) {
         confirm();
     }
 }

@@ -291,7 +291,7 @@ void hotkey_enter(int with_alt)
         system_set_fullscreen(!setting_fullscreen());
         return;
     }
-    data.hotkey_state.enter = 1;
+    data.hotkey_state.enter_pressed = 1;
 }
 
 static void go_to_bookmark(int number)

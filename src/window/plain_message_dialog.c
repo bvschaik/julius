@@ -60,7 +60,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (input_go_back_requested(m, h)) {
         close();
     }
-    if (h->enter) {
+    if (h->enter_pressed) {
         close();
     }
 }
