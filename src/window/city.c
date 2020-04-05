@@ -14,7 +14,6 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "input/hotkey.h"
 #include "map/grid.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
@@ -159,9 +158,8 @@ static void toggle_pause(void)
     city_warning_clear_all();
 }
 
-static void handle_hotkeys(void)
+static void handle_hotkeys(const hotkeys *h)
 {
-    const hotkeys *h = hotkey_state();
     if (h->toggle_pause) {
         toggle_pause();
     }
@@ -188,9 +186,9 @@ static void handle_hotkeys(void)
     }
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
-    handle_hotkeys();
+    handle_hotkeys(h);
     if (!building_construction_in_progress()) {
         if (widget_top_menu_handle_mouse(m)) {
             return;
@@ -202,9 +200,9 @@ static void handle_mouse(const mouse *m)
     widget_city_handle_mouse(m);
 }
 
-static void handle_mouse_military(const mouse *m)
+static void handle_input_military(const mouse *m, const hotkeys *h)
 {
-    handle_hotkeys();
+    handle_hotkeys(h);
     widget_city_handle_mouse_military(m, selected_legion_formation_id);
 }
 
@@ -244,7 +242,7 @@ void window_city_show(void)
         WINDOW_CITY,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     window_show(&window);
@@ -257,7 +255,7 @@ void window_city_military_show(int legion_formation_id)
         WINDOW_CITY_MILITARY,
         draw_background,
         draw_foreground_military,
-        handle_mouse_military,
+        handle_input_military,
         get_tooltip
     };
     window_show(&window);

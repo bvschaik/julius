@@ -186,7 +186,7 @@ static int handle_mouse_scrollbar(const mouse *m)
     return 0;
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     if (m_dialog->scrolled == SCROLL_DOWN) {
@@ -228,7 +228,7 @@ static void handle_mouse(const mouse *m)
     if (handle_mouse_scrollbar(m_dialog)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         button_close(0, 0);
     }
 }
@@ -292,7 +292,7 @@ void window_message_list_show(void)
         WINDOW_MESSAGE_LIST,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     init();

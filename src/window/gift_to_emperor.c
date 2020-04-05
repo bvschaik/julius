@@ -87,12 +87,12 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &focus_button_id)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         window_advisors_show();
     }
 }
@@ -123,8 +123,7 @@ void window_gift_to_emperor_show(void)
         WINDOW_GIFT_TO_EMPEROR,
         draw_background,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     init();
     window_show(&window);

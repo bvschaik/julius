@@ -90,7 +90,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id)) {
@@ -143,7 +143,7 @@ void window_main_menu_show(int restart_music)
         WINDOW_MAIN_MENU,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     window_show(&window);
 }

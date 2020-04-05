@@ -27,7 +27,7 @@ static void draw_background(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->left.went_up || m->right.went_up) {
         window_main_menu_show(0);
@@ -44,7 +44,7 @@ void window_logo_show(int show_patch_message)
         WINDOW_LOGO,
         draw_background,
         0,
-        handle_mouse
+        handle_input
     };
     init();
     window_show(&window);

@@ -299,7 +299,7 @@ static void determine_selected_object(const mouse *m)
     window_invalidate();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
@@ -339,7 +339,7 @@ static void handle_mouse(const mouse *m)
                 if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY) {
                     data.selected_city = empire_city_get_for_object(selected_object - 1);
                 }
-            } else if (input_go_back_requested()) {
+            } else if (input_go_back_requested(m, h)) {
                 window_editor_map_show();
             }
         }
@@ -364,7 +364,7 @@ void window_editor_empire_show(void)
         WINDOW_EDITOR_EMPIRE,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     init();
     window_show(&window);

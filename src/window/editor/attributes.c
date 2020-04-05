@@ -169,7 +169,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     if (input_box_handle_mouse(m_dialog, &scenario_description_input) ||
@@ -178,7 +178,7 @@ static void handle_mouse(const mouse *m)
         widget_sidebar_editor_handle_mouse_attributes(m)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         stop(0);
         window_editor_map_show();
     }
@@ -263,7 +263,7 @@ void window_editor_attributes_show(void)
         WINDOW_EDITOR_ATTRIBUTES,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     start();
     window_show(&window);

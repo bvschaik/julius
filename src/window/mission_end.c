@@ -120,10 +120,10 @@ static void advance_to_next_mission(void)
     }
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (city_victory_state() == VICTORY_STATE_WON) {
-        if (input_go_back_requested()) {
+        if (input_go_back_requested(m, h)) {
             sound_music_stop();
             sound_speech_stop();
             advance_to_next_mission();
@@ -153,8 +153,7 @@ static void show_end_dialog(void)
         WINDOW_MISSION_END,
         draw_background,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     window_show(&window);
 }

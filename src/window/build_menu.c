@@ -196,13 +196,13 @@ static int handle_build_submenu(const mouse *m)
                build_menu_buttons, data.num_items, &data.focus_button_id);
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (handle_build_submenu(m) ||
         widget_sidebar_handle_mouse_build_menu(m)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         window_city_show();
         return;
     }
@@ -273,7 +273,7 @@ void window_build_menu_show(int submenu)
             WINDOW_BUILD_MENU,
             draw_background,
             draw_foreground,
-            handle_mouse,
+            handle_input,
             0
         };
         window_show(&window);

@@ -87,12 +87,12 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 7, &data.focus_button_id)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         button_save(0, 0);
     }
 }
@@ -164,7 +164,7 @@ void window_editor_edit_invasion_show(int id)
         WINDOW_EDITOR_EDIT_INVASION,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     init(id);
     window_show(&window);
