@@ -1,6 +1,6 @@
 # Julius ![](res/julius_48.png)
 
-[![Gitter](https://badges.gitter.im/julius-game/community.svg)](https://gitter.im/julius-game/community) [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) [![Travis](https://api.travis-ci.org/bvschaik/julius.svg?branch=master)](https://travis-ci.org/bvschaik/julius)
+[![Gitter](https://badges.gitter.im/julius-game/community.svg)](https://gitter.im/julius-game/community) [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/bvschaik/julius?branch=master&svg=true)](https://ci.appveyor.com/project/bvschaik/julius) [![Travis](https://api.travis-ci.com/bvschaik/julius.svg?branch=master)](https://travis-ci.com/github/bvschaik/julius)
 
 | Platform | Latest release | Latest build (may be unstable) |
 |----------|----------------|-----------------|

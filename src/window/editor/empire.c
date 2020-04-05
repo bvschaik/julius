@@ -14,6 +14,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "input/scroll.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
@@ -338,7 +339,7 @@ static void handle_mouse(const mouse *m)
                 if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY) {
                     data.selected_city = empire_city_get_for_object(selected_object - 1);
                 }
-            } else if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+            } else if (input_go_back_requested()) {
                 window_editor_map_show();
             }
         }

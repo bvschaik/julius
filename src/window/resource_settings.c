@@ -14,6 +14,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "scenario/building.h"
 #include "window/advisor/trade.h"
 #include "window/message_dialog.h"
@@ -175,7 +176,7 @@ static void handle_mouse(const mouse *m)
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, resource_generic_buttons, 3, &data.focus_button_id)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         window_advisors_show();
     }
 }

@@ -18,6 +18,7 @@
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "window/city.h"
 #include "window/message_dialog.h"
 #include "window/advisor/chief.h"
@@ -173,7 +174,7 @@ static void handle_mouse(const mouse *m)
     if (current_advisor_window->handle_mouse && current_advisor_window->handle_mouse(m_dialog)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         window_city_show();
         return;
     }

@@ -15,6 +15,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "input/keyboard.h"
 #include "scenario/criteria.h"
 #include "scenario/invasion.h"
@@ -252,7 +253,7 @@ static void handle_mouse(const mouse *m)
         button_start_scenario(0, 0);
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         window_go_back();
     }
 }

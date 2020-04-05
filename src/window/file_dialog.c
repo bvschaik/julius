@@ -18,6 +18,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "input/keyboard.h"
 #include "widget/input_box.h"
 #include "window/city.h"
@@ -197,7 +198,7 @@ static void handle_mouse(const mouse *m)
         handle_scrollbar(m)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         keyboard_stop_capture();
         window_go_back();
     }

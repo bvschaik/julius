@@ -7,6 +7,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "scenario/editor.h"
 #include "window/editor/attributes.h"
 #include "window/editor/map.h"
@@ -107,7 +108,7 @@ static void handle_mouse(const mouse *m)
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 47, &focus_button_id)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         window_editor_attributes_show();
     }
 }

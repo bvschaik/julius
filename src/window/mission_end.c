@@ -15,6 +15,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"
@@ -122,7 +123,7 @@ static void advance_to_next_mission(void)
 static void handle_mouse(const mouse *m)
 {
     if (city_victory_state() == VICTORY_STATE_WON) {
-        if (m->right.went_up) {
+        if (input_go_back_requested()) {
             sound_music_stop();
             sound_speech_stop();
             advance_to_next_mission();

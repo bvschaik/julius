@@ -165,6 +165,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
+    ${PROJECT_SOURCE_DIR}/src/platform/platform.c
     ${PROJECT_SOURCE_DIR}/src/platform/prefs.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
     ${PROJECT_SOURCE_DIR}/src/platform/touch.c
@@ -343,6 +344,7 @@ set(GAME_FILES
 set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/cursor.c
     ${PROJECT_SOURCE_DIR}/src/input/hotkey.c
+    ${PROJECT_SOURCE_DIR}/src/input/input.c
     ${PROJECT_SOURCE_DIR}/src/input/keyboard.c
     ${PROJECT_SOURCE_DIR}/src/input/mouse.c
     ${PROJECT_SOURCE_DIR}/src/input/scroll.c
@@ -624,6 +626,15 @@ if(APPLE)
         MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist.in")
 
     set(DIRS "")
+
+    # if SDL2 library is a framework, we need to indicate to CMake
+    # the path to its dependencies. SDL2_LIBRARY contains two parts.
+    # Example: /Library/Frameworks/SDL2.framework;-framework Cocoa
+    # So strip out everything after the ';'
+    string(REGEX REPLACE ";.*$" "" SDL2_LIB_DIR "${SDL2_LIBRARY}")
+    if(EXISTS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
+        set(DIRS "${DIRS};${SDL2_LIB_DIR}/Versions/A/Frameworks")
+    endif()
 
     # if SDL2_mixer library is a framework, we need to indicate to CMake
     # the path to its dependencies (Ogg.framework etc):

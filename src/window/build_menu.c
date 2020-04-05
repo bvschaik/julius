@@ -10,6 +10,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "scenario/property.h"
 #include "widget/city.h"
 #include "widget/sidebar.h"
@@ -197,13 +198,13 @@ static int handle_build_submenu(const mouse *m)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.went_up) {
-        window_city_show();
+    if (handle_build_submenu(m) ||
+        widget_sidebar_handle_mouse_build_menu(m)) {
         return;
     }
-
-    if (!handle_build_submenu(m)) {
-        widget_sidebar_handle_mouse_build_menu(m);
+    if (input_go_back_requested()) {
+        window_city_show();
+        return;
     }
 }
 

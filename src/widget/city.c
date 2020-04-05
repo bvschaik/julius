@@ -11,6 +11,8 @@
 #include "graphics/graphics.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/hotkey.h"
+#include "input/keyboard.h"
 #include "input/scroll.h"
 #include "input/touch.h"
 #include "map/building.h"
@@ -120,10 +122,6 @@ static int handle_right_click_allow_building_info(const map_tile *tile)
     if (!window_is(WINDOW_CITY)) {
         allow = 0;
     }
-    if (building_construction_type()) {
-        allow = 0;
-    }
-    building_construction_set_type(BUILDING_NONE);
     window_city_show();
 
     if (!tile->grid_offset) {
@@ -407,13 +405,20 @@ void widget_city_handle_mouse(const mouse *m)
         scroll_start_mouse_drag(&camera_pixel_position, original_coords);
     }
     if (m->right.went_up) {
-        if (!building_construction_in_progress()) {
+        if (!building_construction_type()) {
             int has_scrolled = scroll_end_mouse_drag();
             if (!has_scrolled && handle_right_click_allow_building_info(tile)) {
                 window_building_info_show(tile->grid_offset);
             }
         } else {
             building_construction_cancel();
+        }
+    }
+    if (keyboard_is_esc_pressed()) {
+        if (building_construction_type()) {
+            building_construction_cancel();
+        } else {
+            hotkey_esc();
         }
     }
 }
@@ -447,6 +452,9 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
     }
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
+        if (!t->in_use) {
+            return;
+        }
         if (t->has_started) {
             data.capture_input = 1;
         }
@@ -456,7 +464,7 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
         }
     }
     scroll_map(m);
-    if (m->right.went_up) {
+    if (m->right.went_up || keyboard_is_esc_pressed()) {
         data.capture_input = 0;
         city_warning_clear_all();
         window_city_show();

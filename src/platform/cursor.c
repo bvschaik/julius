@@ -1,4 +1,5 @@
 #include "game/system.h"
+#include "graphics/color.h"
 #include "input/cursor.h"
 
 #include "SDL.h"
@@ -7,24 +8,24 @@ static SDL_Cursor* cursors[CURSOR_MAX];
 static SDL_Surface* cursor_surfaces[CURSOR_MAX];
 static int current_cursor_id = CURSOR_ARROW;
 
-static const SDL_Color mouse_colors[] = {
-    { 0x00, 0x00, 0x00, 0x00 }, /* Transparent */
-    { 0x00, 0x00, 0x00, 0xFF }, /* Black */
-    { 0x3F, 0x3F, 0x3F, 0xFF }, /* Dark gray */
-    { 0x73, 0x73, 0x73, 0xFF }, /* Medium gray */
-    { 0xB3, 0xB3, 0xB3, 0xFF }, /* Light gray */
-    { 0xFF, 0xFF, 0xFF, 0xFF }  /* White */
+static const color_t mouse_colors[] = {
+    COLOR_MOUSE_TRANSPARENT,
+    COLOR_MOUSE_TRANSPARENT,
+    COLOR_MOUSE_TRANSPARENT,
+    COLOR_MOUSE_BLACK,
+    COLOR_MOUSE_DARK_GRAY,
+    COLOR_MOUSE_MEDIUM_GRAY,
+    COLOR_MOUSE_LIGHT_GRAY,
+    COLOR_MOUSE_WHITE
 };
 
 static SDL_Surface* generate_cursor_surface(const char* data, int width, int height)
 {
-    SDL_Surface* cursor_surface = SDL_CreateRGBSurfaceFrom((void*)data, width, height, 8, sizeof(Uint8) * width, 0, 0, 0, 0);
-
-    SDL_LockSurface(cursor_surface);
-    SDL_SetPaletteColors(cursor_surface->format->palette, mouse_colors, ' ', 1);
-    SDL_SetPaletteColors(cursor_surface->format->palette, &mouse_colors[1], '#', 5);
-    SDL_UnlockSurface(cursor_surface);
-
+    SDL_Surface *cursor_surface = SDL_CreateRGBSurface(0, width, height, 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+    color_t *pixels = cursor_surface->pixels;
+    for (int i = 0; i < width * height; ++i) {
+        pixels[i] = mouse_colors[data[i] - 32];
+    }
     return cursor_surface;
 }
 

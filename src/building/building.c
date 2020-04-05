@@ -277,6 +277,13 @@ int building_is_house(building_type type)
     return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
 }
 
+int building_is_fort(building_type type)
+{
+    return type == BUILDING_FORT_LEGIONARIES ||
+        type == BUILDING_FORT_JAVELIN ||
+        type == BUILDING_FORT_MOUNTED;
+}
+
 int building_get_highest_id(void)
 {
     return extra.highest_id_in_use;

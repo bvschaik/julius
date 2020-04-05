@@ -32,6 +32,7 @@ int building_construction_road_orientation(void);
 
 void building_construction_record_view_position(int view_x, int view_y, int grid_offset);
 void building_construction_get_view_position(int *view_x, int *view_y);
+int building_construction_get_start_grid_offset(void);
 
 void building_construction_reset_draw_as_constructing(void);
 int building_construction_draw_as_constructing(void);

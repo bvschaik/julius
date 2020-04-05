@@ -14,6 +14,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "input/keyboard.h"
 #include "scenario/editor.h"
 #include "scenario/property.h"
@@ -177,7 +178,7 @@ static void handle_mouse(const mouse *m)
         widget_sidebar_editor_handle_mouse_attributes(m)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested()) {
         stop(0);
         window_editor_map_show();
     }

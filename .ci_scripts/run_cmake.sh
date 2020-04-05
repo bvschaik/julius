@@ -13,6 +13,9 @@ case "$BUILD_TARGET" in
 "appimage")
 	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
 	;;
+"linux")
+	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
+	;;
 *)
 	mkdir build && cd build && cmake ..
 	;;

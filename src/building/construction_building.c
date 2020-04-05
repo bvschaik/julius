@@ -571,7 +571,7 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
     }
-    if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
+    if (building_is_fort(type)) {
         if (!map_tiles_are_clear(x + 3, y - 1, 4, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
@@ -604,7 +604,7 @@ int building_construction_place_building(building_type type, int x, int y)
 
     // phew, checks done!
     building *b;
-    if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
+    if (building_is_fort(type)) {
         b = building_create(BUILDING_FORT, x, y);
     } else {
         b = building_create(type, x, y);
