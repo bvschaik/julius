@@ -83,6 +83,10 @@ void platform_screen_render(void)
     vita2d_swap_buffers();
 }
 
+void platform_screen_warp_mouse(int x, int y) {
+    SDL_WarpMouseInWindow(my_window, x, y);
+}
+
 int system_is_fullscreen_only(void)
 {
     return 1;
