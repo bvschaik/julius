@@ -315,11 +315,21 @@ static void handle_touch(void)
 
 void widget_map_editor_handle_mouse(const mouse *m)
 {
-    scroll_map(m);
     if (m->is_touch) {
         handle_touch();
         return;
     }
+
+    if (m->right.is_down && !m->right.went_down) {
+        pixel_offset camera_pixel_position;
+
+        if (scroll_move_mouse_drag(&camera_pixel_position)) {
+            city_view_set_camera_from_pixel_position(camera_pixel_position.x, camera_pixel_position.y);
+        }
+    } else if (!m->right.went_up) {
+        scroll_map(m);
+    }
+
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
 
@@ -339,8 +349,21 @@ void widget_map_editor_handle_mouse(const mouse *m)
         editor_tool_end_use(tile);
         sound_effect_play(SOUND_EFFECT_BUILD);
     }
+    if (m->right.went_down && !editor_tool_is_active()) {
+        pixel_offset camera_pixel_position;
+        city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
+        mouse_coords original_coords = {.x = m->x, .y = m->y};
+        scroll_start_mouse_drag(&camera_pixel_position, original_coords);
+    }
     if (m->right.went_up) {
-        editor_tool_deactivate();
+        if (!editor_tool_is_active()) {
+            int has_scrolled = scroll_end_mouse_drag();
+            if (!has_scrolled) {
+                editor_tool_deactivate();
+            }
+        } else {
+            editor_tool_deactivate();
+        }
     }
     if (keyboard_is_esc_pressed()) {
         if (editor_tool_is_active()) {
