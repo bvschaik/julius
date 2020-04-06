@@ -133,7 +133,7 @@ static void cycle_legion(void)
     if (window_is(WINDOW_CITY)) {
         int legion_id = current_legion_id;
         current_legion_id = 0;
-        for (int i = 1; i <= MAX_LEGIONS; i++) {
+        for (int i = 1; i < MAX_FORMATIONS; i++) {
             legion_id++;
             if (legion_id > MAX_LEGIONS) {
                 legion_id = 1;
