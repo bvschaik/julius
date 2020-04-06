@@ -308,6 +308,10 @@ int scroll_move_mouse_drag(pixel_offset *position)
 
 int scroll_end_mouse_drag()
 {
+    if (!data.is_scrolling) {
+        return 0;
+    }
+
     int has_scrolled = data.has_scrolled == 1;
 
     data.is_touch = 0;
