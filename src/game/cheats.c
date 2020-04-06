@@ -26,14 +26,14 @@ void game_cheat_activate(void)
 void game_cheat_money(void)
 {
     if (data.is_cheating) {
-        city_victory_force_win();
+        city_finance_process_cheat();
+        window_invalidate();
     }
 }
 
 void game_cheat_victory(void)
 {
     if (data.is_cheating) {
-        city_finance_process_cheat();
-        window_invalidate();
+        city_victory_force_win();
     }
 }
