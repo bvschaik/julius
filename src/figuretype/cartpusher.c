@@ -112,7 +112,7 @@ static void determine_cartpusher_destination_food(figure *f, int road_network_id
     if (dst_building_id && config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
         building* dst_building = building_get(dst_building_id);
-        if ((b >= BUILDING_WHEAT_FARM && b <= BUILDING_PIG_FARM) || b == BUILDING_WHARF) {
+        if ((b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) || b->type == BUILDING_WHARF) {
             dist = calc_distance_with_penalty(b->x, b->y, dst_building->x, dst_building->y, b->distance_from_entry, dst_building->distance_from_entry);
         }
         if (dist >= 64) {
