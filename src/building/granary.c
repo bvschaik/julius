@@ -279,6 +279,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
         }
+
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
             continue;
         }
@@ -293,6 +294,13 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
         if (building_granary_is_not_accepting(resource,b) || s->empty_all) {
             continue;
         }
+
+        if (config_get(CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES)) {
+                if (building_granary_is_getting(resource, b)) {
+                    continue;
+                }
+        }
+
         if (b->data.granary.resource_stored[RESOURCE_NONE] >= ONE_LOAD) {
             // there is room
             int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
