@@ -40,7 +40,9 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
                 if (type != BUILDING_MISSION_POST &&
                     type != BUILDING_NATIVE_HUT &&
                     type != BUILDING_NATIVE_MEETING &&
-                    type != BUILDING_NATIVE_CROPS) {
+                    type != BUILDING_NATIVE_CROPS &&
+		    type != BUILDING_ROADBLOCK
+		    ) {
                     return 1;
                 }
             }

@@ -248,6 +248,7 @@ static void set_native_target_building(formation *m)
             case BUILDING_NATIVE_MEETING:
             case BUILDING_WAREHOUSE:
             case BUILDING_FORT:
+            case BUILDING_ROADBLOCK:
                 break;
             default: {
                 int distance = calc_maximum_distance(meeting_x, meeting_y, b->x, b->y);
