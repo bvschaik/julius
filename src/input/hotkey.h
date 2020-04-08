@@ -1,6 +1,8 @@
 #ifndef INPUT_HOTKEY_H
 #define INPUT_HOTKEY_H
 
+#include "input/keys.h"
+
 typedef struct {
     // fixed keys with multiple functions
     int enter_pressed;
@@ -25,16 +27,9 @@ typedef struct {
 const hotkeys *hotkey_state(void);
 void hotkey_reset_state(void);
 
+void hotkey_key_pressed(key_type key, key_modifier_type mod, int repeat);
+
 void hotkey_character(int c, int with_ctrl, int with_alt);
-
-void hotkey_home(void);
-void hotkey_end(void);
-void hotkey_esc(void);
-void hotkey_page_up(void);
-void hotkey_page_down(void);
-void hotkey_enter(int with_alt);
-
-void hotkey_func(int f_number, int with_any_modifier, int with_ctrl);
 
 void hotkey_handle_escape(void);
 

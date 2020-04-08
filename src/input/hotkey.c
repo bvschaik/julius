@@ -12,6 +12,14 @@
 #include <string.h>
 
 typedef struct {
+    int *action;
+    int value;
+    key_type key;
+    key_modifier_type modifiers;
+    int repeatable;
+} hotkey_definition;
+
+typedef struct {
     int center_screen;
     int toggle_fullscreen;
     int resize_to;
@@ -24,6 +32,60 @@ static struct {
     hotkeys hotkey_state;
 } data;
 
+static hotkey_definition definitions[] = {
+    { &data.hotkey_state.enter_pressed, 1, KEY_ENTER, KEY_MOD_NONE },
+    { &data.hotkey_state.escape_pressed, 1, KEY_ESCAPE, KEY_MOD_NONE },
+    { &data.hotkey_state.toggle_pause, 1, KEY_P, KEY_MOD_NONE },
+    { &data.hotkey_state.toggle_overlay, 1, KEY_SPACE, KEY_MOD_NONE },
+    { &data.hotkey_state.cycle_legion, 1, KEY_L, KEY_MOD_NONE },
+    { &data.hotkey_state.decrease_game_speed, 1, KEY_LEFTBRACKET, KEY_MOD_NONE, 1 },
+    { &data.hotkey_state.increase_game_speed, 1, KEY_RIGHTBRACKET, KEY_MOD_NONE, 1 },
+    { &data.hotkey_state.rotate_map_left, 1, KEY_HOME, KEY_MOD_NONE },
+    { &data.hotkey_state.rotate_map_right, 1, KEY_END, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_LABOR, KEY_1, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_MILITARY, KEY_2, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_IMPERIAL, KEY_3, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_RATINGS, KEY_4, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_TRADE, KEY_5, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_POPULATION, KEY_6, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_HEALTH, KEY_7, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_EDUCATION, KEY_8, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_ENTERTAINMENT, KEY_9, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_RELIGION, KEY_0, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_FINANCIAL, KEY_MINUS, KEY_MOD_NONE },
+    { &data.hotkey_state.show_advisor, ADVISOR_CHIEF, KEY_EQUALS, KEY_MOD_NONE },
+    { &data.hotkey_state.show_overlay, OVERLAY_WATER, KEY_W, KEY_MOD_NONE },
+    { &data.hotkey_state.show_overlay, OVERLAY_FIRE, KEY_F, KEY_MOD_NONE },
+    { &data.hotkey_state.show_overlay, OVERLAY_DAMAGE, KEY_D, KEY_MOD_NONE },
+    { &data.hotkey_state.show_overlay, OVERLAY_CRIME, KEY_C, KEY_MOD_NONE },
+    { &data.hotkey_state.show_overlay, OVERLAY_PROBLEMS, KEY_T, KEY_MOD_NONE },
+    { &data.hotkey_state.toggle_editor_battle_info, 1, KEY_A, KEY_MOD_CTRL },
+    { &data.hotkey_state.load_file, 1, KEY_O, KEY_MOD_CTRL },
+    { &data.hotkey_state.save_file, 1, KEY_S, KEY_MOD_CTRL },
+    { &data.hotkey_state.go_to_bookmark, 1, KEY_F1, KEY_MOD_NONE },
+    { &data.hotkey_state.go_to_bookmark, 2, KEY_F2, KEY_MOD_NONE },
+    { &data.hotkey_state.go_to_bookmark, 3, KEY_F3, KEY_MOD_NONE },
+    { &data.hotkey_state.go_to_bookmark, 4, KEY_F4, KEY_MOD_NONE },
+    { &data.hotkey_state.set_bookmark, 1, KEY_F1, KEY_MOD_CTRL },
+    { &data.hotkey_state.set_bookmark, 2, KEY_F2, KEY_MOD_CTRL },
+    { &data.hotkey_state.set_bookmark, 3, KEY_F3, KEY_MOD_CTRL },
+    { &data.hotkey_state.set_bookmark, 4, KEY_F4, KEY_MOD_CTRL },
+    { &data.hotkey_state.set_bookmark, 1, KEY_F1, KEY_MOD_ALT }, // mac specific: F1 key alone does not work
+    { &data.hotkey_state.set_bookmark, 2, KEY_F2, KEY_MOD_ALT },
+    { &data.hotkey_state.set_bookmark, 3, KEY_F3, KEY_MOD_ALT },
+    { &data.hotkey_state.set_bookmark, 4, KEY_F4, KEY_MOD_ALT },
+    { &data.global_hotkey_state.center_screen, 1, KEY_F5, KEY_MOD_NONE },
+    { &data.global_hotkey_state.toggle_fullscreen, 1, KEY_F6, KEY_MOD_NONE },
+    { &data.global_hotkey_state.toggle_fullscreen, 1, KEY_ENTER, KEY_MOD_ALT },
+    { &data.global_hotkey_state.resize_to, 640, KEY_F7, KEY_MOD_NONE },
+    { &data.global_hotkey_state.resize_to, 800, KEY_F8, KEY_MOD_NONE },
+    { &data.global_hotkey_state.resize_to, 1024, KEY_F9, KEY_MOD_NONE },
+    { &data.global_hotkey_state.save_screenshot, 1, KEY_F12, KEY_MOD_NONE },
+    { &data.global_hotkey_state.save_screenshot, 1, KEY_F12, KEY_MOD_ALT }, // mac specific
+    { &data.global_hotkey_state.save_screenshot, 1, KEY_F12, KEY_MOD_CTRL },
+    { 0 }
+};
+
 const hotkeys *hotkey_state(void)
 {
     return &data.hotkey_state;
@@ -35,27 +97,21 @@ void hotkey_reset_state(void)
     memset(&data.global_hotkey_state, 0, sizeof(data.global_hotkey_state));
 }
 
+void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
+{
+    hotkey_definition *def = definitions;
+    while (def->action) {
+        if (def->key == key && def->modifiers == modifiers && (!repeat || def->repeatable)) {
+            *(def->action) = def->value;
+        }
+        def++;
+    }
+}
+
 void hotkey_character(int c, int with_ctrl, int with_alt)
 {
-    if (with_ctrl) {
-        switch (c) {
-            case 'a':
-                data.hotkey_state.toggle_editor_battle_info = 1;
-                break;
-            case 'o':
-                data.hotkey_state.load_file = 1;
-                break;
-            case 's':
-                data.hotkey_state.save_file = 1;
-                break;
-        }
-        return;
-    }
     if (with_alt) {
         switch (c) {
-            case 'x':
-                data.hotkey_state.escape_pressed = 1;
-                break;
             case 'k':
                 game_cheat_activate();
                 break;
@@ -67,148 +123,6 @@ void hotkey_character(int c, int with_ctrl, int with_alt)
                 break;
         }
         return;
-    }
-
-    switch (c) {
-        case '[':
-            data.hotkey_state.decrease_game_speed = 1;
-            break;
-        case ']':
-            data.hotkey_state.increase_game_speed = 1;
-            break;
-        case ' ':
-            data.hotkey_state.toggle_overlay = 1;
-            break;
-        case 'p':
-            data.hotkey_state.toggle_pause = 1;
-            break;
-        case 'f':
-            data.hotkey_state.show_overlay = OVERLAY_FIRE;
-            break;
-        case 'd':
-            data.hotkey_state.show_overlay = OVERLAY_DAMAGE;
-            break;
-        case 'c':
-            data.hotkey_state.show_overlay = OVERLAY_CRIME;
-            break;
-        case 't':
-            data.hotkey_state.show_overlay = OVERLAY_PROBLEMS;
-            break;
-        case 'w':
-            data.hotkey_state.show_overlay = OVERLAY_WATER;
-            break;
-        case 'l':
-            data.hotkey_state.cycle_legion = 1;
-            break;
-        case '1':
-            data.hotkey_state.show_advisor = ADVISOR_LABOR;
-            break;
-        case '2':
-            data.hotkey_state.show_advisor = ADVISOR_MILITARY;
-            break;
-        case '3':
-            data.hotkey_state.show_advisor = ADVISOR_IMPERIAL;
-            break;
-        case '4':
-            data.hotkey_state.show_advisor = ADVISOR_RATINGS;
-            break;
-        case '5':
-            data.hotkey_state.show_advisor = ADVISOR_TRADE;
-            break;
-        case '6':
-            data.hotkey_state.show_advisor = ADVISOR_POPULATION;
-            break;
-        case '7':
-            data.hotkey_state.show_advisor = ADVISOR_HEALTH;
-            break;
-        case '8':
-            data.hotkey_state.show_advisor = ADVISOR_EDUCATION;
-            break;
-        case '9':
-            data.hotkey_state.show_advisor = ADVISOR_ENTERTAINMENT;
-            break;
-        case '0':
-            data.hotkey_state.show_advisor = ADVISOR_RELIGION;
-            break;
-        case '-':
-            data.hotkey_state.show_advisor = ADVISOR_FINANCIAL;
-            break;
-        case '=':
-        case '+':
-            data.hotkey_state.show_advisor = ADVISOR_CHIEF;
-            break;
-    }
-}
-
-void hotkey_home(void)
-{
-    data.hotkey_state.rotate_map_left = 1;
-}
-
-void hotkey_end(void)
-{
-    data.hotkey_state.rotate_map_right = 1;
-}
-
-void hotkey_esc(void)
-{
-    data.hotkey_state.escape_pressed = 1;
-}
-
-void hotkey_page_up(void)
-{
-    data.hotkey_state.increase_game_speed = 1;
-}
-
-void hotkey_page_down(void)
-{
-    data.hotkey_state.decrease_game_speed = 1;
-}
-
-void hotkey_enter(int with_alt)
-{
-    if (with_alt) {
-        data.global_hotkey_state.toggle_fullscreen = 1;
-    } else {
-        data.hotkey_state.enter_pressed = 1;
-    }
-}
-
-void hotkey_func(int f_number, int with_any_modifier, int with_ctrl)
-{
-    switch (f_number) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-            if (with_any_modifier) {
-                data.hotkey_state.set_bookmark = f_number;
-            } else {
-                data.hotkey_state.go_to_bookmark = f_number;
-            }
-            break;
-        case 5:
-            data.global_hotkey_state.center_screen = 1;
-            break;
-        case 6:
-            data.global_hotkey_state.toggle_fullscreen = 1;
-            break;
-        case 7:
-            data.global_hotkey_state.resize_to = 640;
-            break;
-        case 8:
-            data.global_hotkey_state.resize_to = 800;
-            break;
-        case 9:
-            data.global_hotkey_state.resize_to = 1024;
-            break;
-        case 12:
-            if (with_ctrl) {
-                data.global_hotkey_state.save_city_screenshot = 1;
-            } else {
-                data.global_hotkey_state.save_screenshot = 1;
-            }
-            break;
     }
 }
 
