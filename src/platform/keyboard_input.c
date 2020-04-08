@@ -1,5 +1,6 @@
 #include "keyboard_input.h"
 
+#include "game/cheats.h"
 #include "game/system.h"
 #include "input/hotkey.h"
 #include "input/keys.h"
@@ -184,15 +185,19 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         hotkey_key_pressed(key, mod, event->repeat);
     }
 
-    switch (event->keysym.sym) {
-        default:
-            if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
-                // Send keycodes only for letters (layout dependent codes)
-                if (event->keysym.sym >= SDLK_a && event->keysym.sym <= SDLK_z) {
-                    hotkey_character(event->keysym.sym, is_ctrl_down(event), is_alt_down(event));
-                }
-            }
-            break;
+    // handle cheats: special case since they ARE layout dependent
+    if (!event->repeat && is_alt_down(event)) {
+        switch (event->keysym.sym) {
+            case SDLK_k:
+                game_cheat_activate();
+                break;
+            case SDLK_c:
+                game_cheat_money();
+                break;
+            case SDLK_v:
+                game_cheat_victory();
+                break;
+        }
     }
 }
 
