@@ -97,6 +97,7 @@ static void update_input_before(void)
     if (!touch_to_mouse()) {
         mouse_determine_button_state();  // touch overrides mouse
     }
+    hotkey_handle_global_keys();
 }
 
 static void update_input_after(void)

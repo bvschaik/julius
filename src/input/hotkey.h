@@ -38,4 +38,6 @@ void hotkey_func(int f_number, int with_any_modifier, int with_ctrl);
 
 void hotkey_handle_escape(void);
 
+void hotkey_handle_global_keys(void);
+
 #endif // INPUT_HOTKEY_H
