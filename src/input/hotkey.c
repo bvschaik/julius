@@ -1,7 +1,6 @@
 #include "hotkey.h"
 
 #include "city/constants.h"
-#include "game/cheats.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
@@ -137,24 +136,6 @@ void hotkey_key_released(key_type key)
             arrow->action(0);
         }
         arrow++;
-    }
-}
-
-void hotkey_character(int c, int with_ctrl, int with_alt)
-{
-    if (with_alt) {
-        switch (c) {
-            case 'k':
-                game_cheat_activate();
-                break;
-            case 'c':
-                game_cheat_money();
-                break;
-            case 'v':
-                game_cheat_victory();
-                break;
-        }
-        return;
     }
 }
 
