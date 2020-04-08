@@ -6,21 +6,9 @@
 #include "input/keys.h"
 #include "input/keyboard.h"
 
-static int is_ctrl_down(SDL_KeyboardEvent *event)
-{
-    return (event->keysym.mod & KMOD_CTRL) != 0;
-}
-
 static int is_alt_down(SDL_KeyboardEvent *event)
 {
     return (event->keysym.mod & KMOD_ALT) != 0;
-}
-
-static int is_repeatable_key(SDL_Keycode code)
-{
-    return code == SDLK_UP || code == SDLK_DOWN ||
-           code == SDLK_LEFT || code == SDLK_RIGHT ||
-           code == SDLK_BACKSPACE || code == SDLK_DELETE;
 }
 
 static key_type get_key_from_scancode(SDL_Scancode scancode)
