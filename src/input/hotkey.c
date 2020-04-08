@@ -7,6 +7,7 @@
 #include "game/system.h"
 #include "graphics/screenshot.h"
 #include "graphics/video.h"
+#include "input/scroll.h"
 #include "window/popup_dialog.h"
 
 #include <string.h>
@@ -18,6 +19,11 @@ typedef struct {
     key_modifier_type modifiers;
     int repeatable;
 } hotkey_definition;
+
+typedef struct {
+    void (*action)(int is_down);
+    key_type key;
+} arrow_definition;
 
 typedef struct {
     int center_screen;
@@ -82,7 +88,15 @@ static hotkey_definition definitions[] = {
     { &data.global_hotkey_state.resize_to, 1024, KEY_F9, KEY_MOD_NONE },
     { &data.global_hotkey_state.save_screenshot, 1, KEY_F12, KEY_MOD_NONE },
     { &data.global_hotkey_state.save_screenshot, 1, KEY_F12, KEY_MOD_ALT }, // mac specific
-    { &data.global_hotkey_state.save_screenshot, 1, KEY_F12, KEY_MOD_CTRL },
+    { &data.global_hotkey_state.save_city_screenshot, 1, KEY_F12, KEY_MOD_CTRL },
+    { 0 }
+};
+
+static arrow_definition arrows[] = {
+    { scroll_arrow_up, KEY_UP },
+    { scroll_arrow_down, KEY_DOWN },
+    { scroll_arrow_left, KEY_LEFT },
+    { scroll_arrow_right, KEY_RIGHT },
     { 0 }
 };
 
@@ -99,12 +113,30 @@ void hotkey_reset_state(void)
 
 void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
 {
+    arrow_definition *arrow = arrows;
+    while (arrow->action) {
+        if (arrow->key == key) {
+            arrow->action(1);
+        }
+        arrow++;
+    }
     hotkey_definition *def = definitions;
     while (def->action) {
         if (def->key == key && def->modifiers == modifiers && (!repeat || def->repeatable)) {
             *(def->action) = def->value;
         }
         def++;
+    }
+}
+
+void hotkey_key_released(key_type key)
+{
+    arrow_definition *arrow = arrows;
+    while (arrow->action) {
+        if (arrow->key == key) {
+            arrow->action(0);
+        }
+        arrow++;
     }
 }
 

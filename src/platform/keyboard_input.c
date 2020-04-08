@@ -4,7 +4,6 @@
 #include "input/hotkey.h"
 #include "input/keys.h"
 #include "input/keyboard.h"
-#include "input/scroll.h"
 
 static int is_ctrl_down(SDL_KeyboardEvent *event)
 {
@@ -186,18 +185,6 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
     }
 
     switch (event->keysym.sym) {
-        case SDLK_LEFT:
-            scroll_arrow_left(1);
-            break;
-        case SDLK_RIGHT:
-            scroll_arrow_right(1);
-            break;
-        case SDLK_UP:
-            scroll_arrow_up(1);
-            break;
-        case SDLK_DOWN:
-            scroll_arrow_down(1);
-            break;
         default:
             if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
                 // Send keycodes only for letters (layout dependent codes)
@@ -211,19 +198,9 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
 
 void platform_handle_key_up(SDL_KeyboardEvent *event)
 {
-    switch (event->keysym.sym) {
-        case SDLK_LEFT:
-            scroll_arrow_left(0);
-            break;
-        case SDLK_RIGHT:
-            scroll_arrow_right(0);
-            break;
-        case SDLK_UP:
-            scroll_arrow_up(0);
-            break;
-        case SDLK_DOWN:
-            scroll_arrow_down(0);
-            break;
+    key_type key = get_key_from_scancode(event->keysym.scancode);
+    if (key != KEY_NONE) {
+        hotkey_key_released(key);
     }
 }
 
