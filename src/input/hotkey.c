@@ -11,7 +11,16 @@
 
 #include <string.h>
 
+typedef struct {
+    int center_screen;
+    int toggle_fullscreen;
+    int resize_to;
+    int save_screenshot;
+    int save_city_screenshot;
+} global_hotkeys;
+
 static struct {
+    global_hotkeys global_hotkey_state;
     hotkeys hotkey_state;
 } data;
 
@@ -23,6 +32,7 @@ const hotkeys *hotkey_state(void)
 void hotkey_reset_state(void)
 {
     memset(&data.hotkey_state, 0, sizeof(data.hotkey_state));
+    memset(&data.global_hotkey_state, 0, sizeof(data.global_hotkey_state));
 }
 
 void hotkey_character(int c, int with_ctrl, int with_alt)
@@ -158,7 +168,7 @@ void hotkey_page_down(void)
 void hotkey_enter(int with_alt)
 {
     if (with_alt) {
-        system_set_fullscreen(!setting_fullscreen());
+        data.global_hotkey_state.toggle_fullscreen = 1;
     } else {
         data.hotkey_state.enter_pressed = 1;
     }
@@ -177,12 +187,28 @@ void hotkey_func(int f_number, int with_any_modifier, int with_ctrl)
                 data.hotkey_state.go_to_bookmark = f_number;
             }
             break;
-        case 5: system_center(); break;
-        case 6: system_set_fullscreen(!setting_fullscreen()); break;
-        case 7: system_resize(640, 480); break;
-        case 8: system_resize(800, 600); break;
-        case 9: system_resize(1024, 768); break;
-        case 12: graphics_save_screenshot(with_ctrl); break;
+        case 5:
+            data.global_hotkey_state.center_screen = 1;
+            break;
+        case 6:
+            data.global_hotkey_state.toggle_fullscreen = 1;
+            break;
+        case 7:
+            data.global_hotkey_state.resize_to = 640;
+            break;
+        case 8:
+            data.global_hotkey_state.resize_to = 800;
+            break;
+        case 9:
+            data.global_hotkey_state.resize_to = 1024;
+            break;
+        case 12:
+            if (with_ctrl) {
+                data.global_hotkey_state.save_city_screenshot = 1;
+            } else {
+                data.global_hotkey_state.save_screenshot = 1;
+            }
+            break;
     }
 }
 
@@ -197,4 +223,27 @@ void hotkey_handle_escape(void)
 {
     video_stop();
     window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
+}
+
+void hotkey_handle_global_keys(void)
+{
+    if (data.global_hotkey_state.center_screen) {
+        system_center();
+    }
+    if (data.global_hotkey_state.resize_to) {
+        switch (data.global_hotkey_state.resize_to) {
+            case 640: system_resize(640, 480); break;
+            case 800: system_resize(800, 600); break;
+            case 1024: system_resize(1024, 768); break;
+        }
+    }
+    if (data.global_hotkey_state.toggle_fullscreen) {
+        system_set_fullscreen(!setting_fullscreen());
+    }
+    if (data.global_hotkey_state.save_screenshot) {
+        graphics_save_screenshot(0);
+    }
+    if (data.global_hotkey_state.save_city_screenshot) {
+        graphics_save_screenshot(1);
+    }
 }
