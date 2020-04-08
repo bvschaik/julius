@@ -45,6 +45,8 @@ static hotkey_definition definitions[] = {
     { &data.hotkey_state.cycle_legion, 1, KEY_L, KEY_MOD_NONE },
     { &data.hotkey_state.decrease_game_speed, 1, KEY_LEFTBRACKET, KEY_MOD_NONE, 1 },
     { &data.hotkey_state.increase_game_speed, 1, KEY_RIGHTBRACKET, KEY_MOD_NONE, 1 },
+    { &data.hotkey_state.decrease_game_speed, 1, KEY_PAGEDOWN, KEY_MOD_NONE, 1 },
+    { &data.hotkey_state.increase_game_speed, 1, KEY_PAGEUP, KEY_MOD_NONE, 1 },
     { &data.hotkey_state.rotate_map_left, 1, KEY_HOME, KEY_MOD_NONE },
     { &data.hotkey_state.rotate_map_right, 1, KEY_END, KEY_MOD_NONE },
     { &data.hotkey_state.show_advisor, ADVISOR_LABOR, KEY_1, KEY_MOD_NONE },
