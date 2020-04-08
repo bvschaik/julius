@@ -2,6 +2,7 @@
 
 #include "game/system.h"
 #include "input/hotkey.h"
+#include "input/keys.h"
 #include "input/keyboard.h"
 #include "input/scroll.h"
 
@@ -22,64 +23,130 @@ static int is_repeatable_key(SDL_Keycode code)
            code == SDLK_BACKSPACE || code == SDLK_DELETE;
 }
 
-static void send_fn(SDL_KeyboardEvent *event, int f_number)
+static key_type get_key_from_scancode(SDL_Scancode scancode)
 {
-    int with_any_modifier = (event->keysym.mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_GUI)) != 0;
-    hotkey_func(f_number, with_any_modifier, is_ctrl_down(event));
+    switch (scancode) {
+        case SDL_SCANCODE_A: return KEY_A;
+        case SDL_SCANCODE_B: return KEY_B;
+        case SDL_SCANCODE_C: return KEY_C;
+        case SDL_SCANCODE_D: return KEY_D;
+        case SDL_SCANCODE_E: return KEY_E;
+        case SDL_SCANCODE_F: return KEY_F;
+        case SDL_SCANCODE_G: return KEY_G;
+        case SDL_SCANCODE_H: return KEY_H;
+        case SDL_SCANCODE_I: return KEY_I;
+        case SDL_SCANCODE_J: return KEY_J;
+        case SDL_SCANCODE_K: return KEY_K;
+        case SDL_SCANCODE_L: return KEY_L;
+        case SDL_SCANCODE_M: return KEY_M;
+        case SDL_SCANCODE_N: return KEY_N;
+        case SDL_SCANCODE_O: return KEY_O;
+        case SDL_SCANCODE_P: return KEY_P;
+        case SDL_SCANCODE_Q: return KEY_Q;
+        case SDL_SCANCODE_R: return KEY_R;
+        case SDL_SCANCODE_S: return KEY_S;
+        case SDL_SCANCODE_T: return KEY_T;
+        case SDL_SCANCODE_U: return KEY_U;
+        case SDL_SCANCODE_V: return KEY_V;
+        case SDL_SCANCODE_W: return KEY_W;
+        case SDL_SCANCODE_X: return KEY_X;
+        case SDL_SCANCODE_Y: return KEY_Y;
+        case SDL_SCANCODE_Z: return KEY_Z;
+        case SDL_SCANCODE_1: return KEY_1;
+        case SDL_SCANCODE_2: return KEY_2;
+        case SDL_SCANCODE_3: return KEY_3;
+        case SDL_SCANCODE_4: return KEY_4;
+        case SDL_SCANCODE_5: return KEY_5;
+        case SDL_SCANCODE_6: return KEY_6;
+        case SDL_SCANCODE_7: return KEY_7;
+        case SDL_SCANCODE_8: return KEY_8;
+        case SDL_SCANCODE_9: return KEY_9;
+        case SDL_SCANCODE_0: return KEY_0;
+        case SDL_SCANCODE_RETURN: return KEY_ENTER;
+        case SDL_SCANCODE_ESCAPE: return KEY_ESCAPE;
+        case SDL_SCANCODE_BACKSPACE: return KEY_BACKSPACE;
+        case SDL_SCANCODE_TAB: return KEY_TAB;
+        case SDL_SCANCODE_SPACE: return KEY_SPACE;
+        case SDL_SCANCODE_MINUS: return KEY_MINUS;
+        case SDL_SCANCODE_EQUALS: return KEY_EQUALS;
+        case SDL_SCANCODE_LEFTBRACKET: return KEY_LEFTBRACKET;
+        case SDL_SCANCODE_RIGHTBRACKET: return KEY_RIGHTBRACKET;
+        case SDL_SCANCODE_BACKSLASH: return KEY_BACKSLASH;
+        case SDL_SCANCODE_SEMICOLON: return KEY_SEMICOLON;
+        case SDL_SCANCODE_APOSTROPHE: return KEY_APOSTROPHE;
+        case SDL_SCANCODE_GRAVE: return KEY_GRAVE;
+        case SDL_SCANCODE_COMMA: return KEY_COMMA;
+        case SDL_SCANCODE_PERIOD: return KEY_PERIOD;
+        case SDL_SCANCODE_SLASH: return KEY_SLASH;
+        case SDL_SCANCODE_F1: return KEY_F1;
+        case SDL_SCANCODE_F2: return KEY_F2;
+        case SDL_SCANCODE_F3: return KEY_F3;
+        case SDL_SCANCODE_F4: return KEY_F4;
+        case SDL_SCANCODE_F5: return KEY_F5;
+        case SDL_SCANCODE_F6: return KEY_F6;
+        case SDL_SCANCODE_F7: return KEY_F7;
+        case SDL_SCANCODE_F8: return KEY_F8;
+        case SDL_SCANCODE_F9: return KEY_F9;
+        case SDL_SCANCODE_F10: return KEY_F10;
+        case SDL_SCANCODE_F11: return KEY_F11;
+        case SDL_SCANCODE_F12: return KEY_F12;
+        case SDL_SCANCODE_INSERT: return KEY_INSERT;
+        case SDL_SCANCODE_HOME: return KEY_HOME;
+        case SDL_SCANCODE_PAGEUP: return KEY_PAGEUP;
+        case SDL_SCANCODE_DELETE: return KEY_DELETE;
+        case SDL_SCANCODE_END: return KEY_END;
+        case SDL_SCANCODE_PAGEDOWN: return KEY_PAGEDOWN;
+        case SDL_SCANCODE_RIGHT: return KEY_RIGHT;
+        case SDL_SCANCODE_LEFT: return KEY_LEFT;
+        case SDL_SCANCODE_DOWN: return KEY_DOWN;
+        case SDL_SCANCODE_UP: return KEY_UP;
+        case SDL_SCANCODE_KP_MINUS: return KEY_MINUS;
+        case SDL_SCANCODE_KP_PLUS: return KEY_EQUALS;
+        case SDL_SCANCODE_KP_ENTER: return KEY_ENTER;
+        case SDL_SCANCODE_KP_1: return KEY_1;
+        case SDL_SCANCODE_KP_2: return KEY_2;
+        case SDL_SCANCODE_KP_3: return KEY_3;
+        case SDL_SCANCODE_KP_4: return KEY_4;
+        case SDL_SCANCODE_KP_5: return KEY_5;
+        case SDL_SCANCODE_KP_6: return KEY_6;
+        case SDL_SCANCODE_KP_7: return KEY_7;
+        case SDL_SCANCODE_KP_8: return KEY_8;
+        case SDL_SCANCODE_KP_9: return KEY_9;
+        case SDL_SCANCODE_KP_0: return KEY_0;
+        case SDL_SCANCODE_KP_PERIOD: return KEY_PERIOD;
+        case SDL_SCANCODE_KP_EQUALS: return KEY_EQUALS;
+        default: return KEY_NONE;
+    }
+}
+
+static key_modifier_type get_modifier(int mod)
+{
+    key_modifier_type key_mod = KEY_MOD_NONE;
+    if (mod & KMOD_SHIFT) {
+        key_mod |= KEY_MOD_SHIFT;
+    }
+    if (mod & KMOD_CTRL) {
+        key_mod |= KEY_MOD_CTRL;
+    }
+    if (mod & KMOD_ALT) {
+        key_mod |= KEY_MOD_ALT;
+    }
+    if (mod & KMOD_GUI) {
+        key_mod |= KEY_MOD_GUI;
+    }
+    return key_mod;
 }
 
 void platform_handle_key_down(SDL_KeyboardEvent *event)
 {
-    if (event->repeat && !is_repeatable_key(event->keysym.sym)) {
-        // ignore multiple presses in SDL >= 2.0.5 for keys other than arrows
-        // and backspace/delete to prevent hotkeys firing more than once
-        return;
-    }
-
-    // Send scancodes for non-layout dependent keys
-    switch (event->keysym.scancode) {
-        case SDL_SCANCODE_1:
-        case SDL_SCANCODE_2:
-        case SDL_SCANCODE_3:
-        case SDL_SCANCODE_4:
-        case SDL_SCANCODE_5:
-        case SDL_SCANCODE_6:
-        case SDL_SCANCODE_7:
-        case SDL_SCANCODE_8:
-        case SDL_SCANCODE_9:
-        case SDL_SCANCODE_0:
-        case SDL_SCANCODE_MINUS:
-        case SDL_SCANCODE_EQUALS:
-            hotkey_character(*SDL_GetScancodeName(event->keysym.scancode), is_ctrl_down(event), is_alt_down(event));
-            return;
-        case SDL_SCANCODE_LEFTBRACKET:
-            hotkey_character('[', is_ctrl_down(event), is_alt_down(event));
-            return;
-        case SDL_SCANCODE_RIGHTBRACKET:
-            hotkey_character(']', is_ctrl_down(event), is_alt_down(event));
-            return;
-        default:
-            break;
-    }
-
-    // Send scancodes for letters that are not on the current keyboard layout (e.g. Russian)
-    if (event->keysym.scancode >= SDL_SCANCODE_A && event->keysym.scancode <= SDL_SCANCODE_Z) {
-        SDL_Keycode keycode = SDLK_a + event->keysym.scancode - SDL_SCANCODE_A;
-        if (SDL_GetScancodeFromKey(keycode) == 0) {
-            // There is no key producing the Latin letter, send scancode value
-            char letter = 'a' + event->keysym.scancode - SDL_SCANCODE_A;
-            hotkey_character(letter, is_ctrl_down(event), is_alt_down(event));
-            return;
-        }
-    }
-
+    // handle keyboard input keys
     switch (event->keysym.sym) {
         case SDLK_RETURN:
         case SDLK_KP_ENTER:
-            if (!is_alt_down(event)) {
+            // only send enter if no modifier is also down
+            if ((event->keysym.mod & (KMOD_CTRL | KMOD_ALT | KMOD_GUI)) == 0) {
                 keyboard_return();
             }
-            hotkey_enter(is_alt_down(event));
             break;
         case SDLK_BACKSPACE:
             keyboard_backspace();
@@ -92,66 +159,45 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
             break;
         case SDLK_LEFT:
             keyboard_left();
-            scroll_arrow_left(1);
             break;
         case SDLK_RIGHT:
             keyboard_right();
-            scroll_arrow_right(1);
             break;
         case SDLK_UP:
             keyboard_left();
-            scroll_arrow_up(1);
             break;
         case SDLK_DOWN:
             keyboard_right();
-            scroll_arrow_down(1);
             break;
         case SDLK_HOME:
             keyboard_home();
-            hotkey_home();
             break;
         case SDLK_END:
             keyboard_end();
-            hotkey_end();
             break;
-        case SDLK_PAGEUP:
-            hotkey_page_up();
+    }
+
+    // handle hotkeys
+    key_type key = get_key_from_scancode(event->keysym.scancode);
+    key_modifier_type mod = get_modifier(event->keysym.mod);
+
+    if (key != KEY_NONE) {
+        hotkey_key_pressed(key, mod, event->repeat);
+    }
+
+    switch (event->keysym.sym) {
+        case SDLK_LEFT:
+            scroll_arrow_left(1);
             break;
-        case SDLK_PAGEDOWN:
-            hotkey_page_down();
+        case SDLK_RIGHT:
+            scroll_arrow_right(1);
             break;
-        case SDLK_ESCAPE:
-            hotkey_esc();
+        case SDLK_UP:
+            scroll_arrow_up(1);
             break;
-        case SDLK_F1: send_fn(event, 1); break;
-        case SDLK_F2: send_fn(event, 2); break;
-        case SDLK_F3: send_fn(event, 3); break;
-        case SDLK_F4: send_fn(event, 4); break;
-        case SDLK_F5: send_fn(event, 5); break;
-        case SDLK_F6: send_fn(event, 6); break;
-        case SDLK_F7: send_fn(event, 7); break;
-        case SDLK_F8: send_fn(event, 8); break;
-        case SDLK_F9: send_fn(event, 9); break;
-        case SDLK_F10: send_fn(event, 10); break;
-        case SDLK_F11: send_fn(event, 11); break;
-        case SDLK_F12: send_fn(event, 12); break;
-        case SDLK_LEFTBRACKET:
-        case SDLK_RIGHTBRACKET:
-        case SDLK_SPACE:
-            hotkey_character(event->keysym.sym, is_ctrl_down(event), is_alt_down(event));
+        case SDLK_DOWN:
+            scroll_arrow_down(1);
             break;
-        case SDLK_KP_0: hotkey_character('0', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_1: hotkey_character('1', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_2: hotkey_character('2', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_3: hotkey_character('3', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_4: hotkey_character('4', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_5: hotkey_character('5', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_6: hotkey_character('6', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_7: hotkey_character('7', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_8: hotkey_character('8', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_9: hotkey_character('9', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_MINUS: hotkey_character('-', is_ctrl_down(event), is_alt_down(event)); break;
-        case SDLK_KP_PLUS: hotkey_character('+', is_ctrl_down(event), is_alt_down(event)); break;
         default:
             if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
                 // Send keycodes only for letters (layout dependent codes)
