@@ -78,6 +78,7 @@ typedef enum {
     KEY_LEFT,
     KEY_DOWN,
     KEY_UP,
+    KEY_MAX_ITEMS
 } key_type;
 
 typedef enum {
@@ -87,5 +88,9 @@ typedef enum {
     KEY_MOD_ALT = 4,
     KEY_MOD_GUI = 8,
 } key_modifier_type;
+
+const char *key_combination_name(key_type key, key_modifier_type modifiers);
+
+int key_combination_from_name(const char *name, key_type *key, key_modifier_type *modifiers);
 
 #endif // INPUT_KEYS_H
