@@ -3,6 +3,7 @@
 #include "building/construction.h"
 #include "building/model.h"
 #include "core/config.h"
+#include "core/hotkey_config.h"
 #include "core/image.h"
 #include "core/lang.h"
 #include "core/log.h"
@@ -19,8 +20,8 @@
 #include "graphics/font.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
-#include "input/scroll.h"
 #include "input/cursor.h"
+#include "input/scroll.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
@@ -44,6 +45,7 @@ int game_pre_init(void)
 {
     settings_load();
     config_load();
+    hotkey_config_load();
     scenario_settings_init();
     game_state_unpause();
 
@@ -227,5 +229,6 @@ void game_exit(void)
     video_shutdown();
     settings_save();
     config_save();
+    hotkey_config_save();
     sound_system_shutdown();
 }

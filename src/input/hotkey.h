@@ -1,6 +1,7 @@
 #ifndef INPUT_HOTKEY_H
 #define INPUT_HOTKEY_H
 
+#include "core/hotkey_config.h"
 #include "input/keys.h"
 
 typedef struct {
@@ -23,6 +24,8 @@ typedef struct {
     int load_file;
     int save_file;
 } hotkeys;
+
+void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings);
 
 const hotkeys *hotkey_state(void);
 void hotkey_reset_state(void);
