@@ -39,6 +39,7 @@ static const char *ini_keys[] = {
     "gameplay_change_tower_sentries_go_offroad",
     "gameplay_change_farms_deliver_close",
     "gameplay_change_only_deliver_to_accepting_granaries",
+    "gameplay_change_all_houses_merge",
 };
 
 static const char *ini_string_keys[] = {
@@ -101,6 +102,7 @@ void config_set_defaults(void)
     values[CONFIG_GP_CH_GRANARIES_GET_DOUBLE] = 0;
     values[CONFIG_GP_CH_FARMS_DELIVER_CLOSE] = 0;
     values[CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES] = 0;
+    values[CONFIG_GP_CH_ALL_HOUSES_MERGE] = 0;
     string_values[CONFIG_STRING_UI_LANGUAGE_DIR][0] = 0;
 }
 

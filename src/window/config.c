@@ -19,7 +19,7 @@
 #include "window/select_list.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 27
+#define NUM_CHECKBOXES 28
 #define CONFIG_PAGES 3
 #define NUM_BOTTOM_BUTTONS 5
 #define MAX_LANGUAGE_DIRS 20
@@ -28,7 +28,7 @@
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
-static int options_per_page[CONFIG_PAGES] = { 7,14,6 };
+static int options_per_page[CONFIG_PAGES] = { 7,14,7 };
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
@@ -64,6 +64,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD },
     { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FARMS_DELIVER_CLOSE },
     { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES },
+    { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ALL_HOUSES_MERGE },
 };
 
 static generic_button language_button = {
@@ -122,7 +123,8 @@ static const char *option_names[] = {
     "Double the capacity of cart pushers from getting granaries",
     "Tower sentries don't need road access from barracks",
     "Farms and wharves deliver only to nearby granaries",
-    "Food isn't delivered to getting granaries"
+    "Food isn't delivered to getting granaries",
+    "All houses merge"
 };
 
 static struct {
