@@ -201,12 +201,3 @@ void platform_handle_text(SDL_TextInputEvent *event)
 {
     keyboard_character(event->text);
 }
-
-int system_use_virtual_keyboard(void)
-{
-#if defined (__vita__) || defined(__SWITCH__)
-    return 1;
-#else
-    return 0;
-#endif
-}

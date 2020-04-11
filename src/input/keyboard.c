@@ -2,8 +2,8 @@
 
 #include "core/encoding.h"
 #include "core/string.h"
+#include "game/system.h"
 #include "graphics/text.h"
-#include "platform/virtual_keyboard.h"
 
 static struct {
     int insert;
@@ -88,7 +88,7 @@ void keyboard_resume_capture(void)
 void keyboard_pause_capture(void)
 {
     data.capture = 0;
-    platform_virtual_keyboard_hide();
+    system_keyboard_hide();
 }
 
 void keyboard_stop_capture(void)
@@ -99,7 +99,7 @@ void keyboard_stop_capture(void)
     data.length = 0;
     data.max_length = 0;
     data.accepted = 0;
-    platform_virtual_keyboard_hide();
+    system_keyboard_hide();
 }
 
 void keyboard_start_capture_numeric(void (*callback)(int))
