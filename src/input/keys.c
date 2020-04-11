@@ -76,7 +76,7 @@ int key_combination_from_name(const char *name, key_type *key, key_modifier_type
                 *modifiers |= mod;
             } else {
                 *key = parse_key(token);
-                if (key == KEY_NONE) {
+                if (*key == KEY_NONE) {
                     return 0;
                 }
             }
