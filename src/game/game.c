@@ -229,6 +229,5 @@ void game_exit(void)
     video_shutdown();
     settings_save();
     config_save();
-    hotkey_config_save();
     sound_system_shutdown();
 }
