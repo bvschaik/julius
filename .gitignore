@@ -6,7 +6,7 @@
 /CMakeSettings.json
 
 # Generated resources
-src/platform/version.h
+src/platform/version.c
 res/version.rc
 res/version.txt
 res/julius.icns
@@ -26,7 +26,6 @@ local.properties
 /captures
 .externalNativeBuild
 .idea
-gen/
 .cxx/
 distribution/
 *.log

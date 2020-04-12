@@ -6,6 +6,7 @@
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/game.h"
+#include "game/system.h"
 #include "input/mouse.h"
 #include "platform/arguments.h"
 #include "platform/cursor.h"
@@ -15,7 +16,6 @@
 #include "platform/prefs.h"
 #include "platform/screen.h"
 #include "platform/touch.h"
-#include "platform/version.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.h"
 
@@ -444,7 +444,7 @@ static void setup(const julius_args *args)
     signal(SIGSEGV, handler);
     setup_logging();
 
-    SDL_Log("Julius version %s%s", JULIUS_VERSION, JULIUS_VERSION_SUFFIX);
+    SDL_Log("Julius version %s", system_version());
 
     if (!init_sdl()) {
         SDL_Log("Exiting: SDL init failed");

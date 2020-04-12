@@ -7,6 +7,12 @@
  */
 
 /**
+ * Gets the version of Julius
+ * @return Version number
+ */
+const char *system_version(void);
+
+/**
  * Resize window
  * @param width New width
  * @param height New height

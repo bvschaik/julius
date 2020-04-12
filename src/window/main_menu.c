@@ -13,7 +13,6 @@
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
-#include "platform/version.h"
 #include "sound/music.h"
 #include "window/cck_selection.h"
 #include "window/config.h"
@@ -40,13 +39,9 @@ static generic_button buttons[] = {
 static void draw_version_string(void)
 {
     uint8_t version_string[100] = "v";
-    const uint8_t *julius_version = string_from_ascii(JULIUS_VERSION);
-    const uint8_t *julius_version_suffix = string_from_ascii(JULIUS_VERSION_SUFFIX);
-    int version_length = string_length(julius_version);
     int text_y = screen_height() - 30;
 
-    string_copy(julius_version, version_string + 1, 99);
-    string_copy(julius_version_suffix, version_string + 1 + version_length, 99 - version_length);
+    string_copy(string_from_ascii(system_version()), version_string + 1, 99);
 
     int text_width = text_get_width(version_string, FONT_SMALL_PLAIN);
 
