@@ -42,7 +42,7 @@ void scrollbar_update_max(scrollbar_type *scrollbar, int max_scroll_position)
 
 void scrollbar_draw(scrollbar_type *scrollbar)
 {
-    if (scrollbar->max_scroll_position > 0) {
+    if (scrollbar->max_scroll_position > 0 || scrollbar->always_visible) {
         image_buttons_draw(scrollbar->x, scrollbar->y, &image_button_scroll_up, 1);
         image_buttons_draw(scrollbar->x, scrollbar->y + scrollbar->height - 26, &image_button_scroll_down, 1);
 
@@ -54,11 +54,12 @@ void scrollbar_draw(scrollbar_type *scrollbar)
         } else {
             pct = calc_percentage(scrollbar->scroll_position, scrollbar->max_scroll_position);
         }
-        int offset = calc_adjust_with_percentage(scrollbar->height - 77, pct);
+        int offset = calc_adjust_with_percentage(scrollbar->height - 77 - 2 * scrollbar->dot_padding, pct);
         if (scrollbar->is_dragging_scroll) {
             offset = scrollbar->scroll_position_drag;
         }
-        image_draw(image_group(GROUP_PANEL_BUTTON) + 39, scrollbar->x + 7, scrollbar->y + offset + 26);
+        image_draw(image_group(GROUP_PANEL_BUTTON) + 39, scrollbar->x + 7,
+            scrollbar->y + offset + 26 + scrollbar->dot_padding);
     }
 }
 
@@ -67,24 +68,25 @@ static int handle_scrollbar_dot(scrollbar_type *scrollbar, const mouse *m)
     if (scrollbar->max_scroll_position <= 0 || !m->left.is_down) {
         return 0;
     }
-    int total_height = scrollbar->height - 77;
+    int total_height = scrollbar->height - 77 - 2 * scrollbar->dot_padding;
     if (m->x < scrollbar->x || m->x >= scrollbar->x + 39) {
         return 0;
     }
-    if (m->y < scrollbar->y + 26 || m->y > scrollbar->y + scrollbar->height - 26) {
+    if (m->y < scrollbar->y + 26 + scrollbar->dot_padding ||
+        m->y > scrollbar->y + scrollbar->height - 26 - scrollbar->dot_padding) {
         return 0;
     }
-    int dot_height = m->y - scrollbar->y - 12 - 26;
-    if (dot_height < 0) {
-        dot_height = 0;
+    int dot_offset = m->y - scrollbar->y - 12 - 26;
+    if (dot_offset < 0) {
+        dot_offset = 0;
     }
-    if (dot_height > total_height) {
-        dot_height = total_height;
+    if (dot_offset > total_height) {
+        dot_offset = total_height;
     }
-    int pct_scrolled = calc_percentage(dot_height, total_height);
+    int pct_scrolled = calc_percentage(dot_offset, total_height);
     scrollbar->scroll_position = calc_adjust_with_percentage(scrollbar->max_scroll_position, pct_scrolled);
     scrollbar->is_dragging_scroll = 1;
-    scrollbar->scroll_position_drag = dot_height;
+    scrollbar->scroll_position_drag = dot_offset;
     if (scrollbar->scroll_position_drag < 0) {
         scrollbar->scroll_position_drag = 0;
     }
@@ -96,6 +98,9 @@ static int handle_scrollbar_dot(scrollbar_type *scrollbar, const mouse *m)
 
 int scrollbar_handle_mouse(scrollbar_type *scrollbar, const mouse *m)
 {
+    if (scrollbar->max_scroll_position <= 0) {
+        return 0;
+    }
     current = scrollbar;
     if (m->scrolled == SCROLL_DOWN) {
         text_scroll(1, 3);
