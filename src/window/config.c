@@ -18,6 +18,8 @@
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
 
+#include "window/hotkey_config.h"
+
 #include <string.h>
 
 #define NUM_CHECKBOXES 10
@@ -221,6 +223,8 @@ static void button_language_select(int param1, int param2)
 
 static void button_reset_defaults(int param1, int param2)
 {
+    window_hotkey_config_show();
+    /*
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         data.config_values[i].new_value = config_get_default_value(i);
     }
@@ -229,6 +233,7 @@ static void button_reset_defaults(int param1, int param2)
     }
     set_language(0);
     window_invalidate();
+    */
 }
 
 static void cancel_values(void)

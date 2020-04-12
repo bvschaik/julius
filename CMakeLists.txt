@@ -509,6 +509,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/file_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/gift_to_emperor.c
     ${PROJECT_SOURCE_DIR}/src/window/hold_festival.c
+    ${PROJECT_SOURCE_DIR}/src/window/hotkey_config.c
     ${PROJECT_SOURCE_DIR}/src/window/intermezzo.c
     ${PROJECT_SOURCE_DIR}/src/window/intro_video.c
     ${PROJECT_SOURCE_DIR}/src/window/labor_priority.c
