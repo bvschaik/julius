@@ -304,7 +304,6 @@ static void draw_content(const lang_message *msg)
             data.text_height_blocks - 1, 0);
     }
     graphics_reset_clip_rectangle();
-    rich_text_draw_scrollbar_dot();
 }
 
 static void draw_background_normal(void)
