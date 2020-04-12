@@ -204,17 +204,9 @@ int city_message_next_problem_area_grid_offset(void);
 
 void city_message_clear_scroll(void);
 
-void city_message_update_scroll(int max_messages);
-
-int city_message_can_scroll(void);
-
 int city_message_scroll_position(void);
 
-void city_message_scroll(int is_down, int amount);
-
-int city_message_scroll_percentage(void);
-
-void city_message_set_scroll_percentage(int percentage);
+void city_message_set_scroll_position(int scroll_position);
 
 void city_message_save_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population);
 

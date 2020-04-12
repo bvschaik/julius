@@ -17,9 +17,12 @@ static image_button image_button_scroll_down = {
 
 static scrollbar_type *current;
 
-void scrollbar_init(scrollbar_type *scrollbar, int max_scroll_position)
+void scrollbar_init(scrollbar_type *scrollbar, int scroll_position, int max_scroll_position)
 {
-    scrollbar->scroll_position = 0;
+    if (scroll_position > max_scroll_position) {
+        scroll_position = max_scroll_position;
+    }
+    scrollbar->scroll_position = scroll_position;
     scrollbar->max_scroll_position = max_scroll_position;
 }
 
@@ -29,9 +32,17 @@ void scrollbar_reset(scrollbar_type *scrollbar, int scroll_position)
     scrollbar->is_dragging_scroll = 0;
 }
 
+void scrollbar_update_max(scrollbar_type *scrollbar, int max_scroll_position)
+{
+    scrollbar->max_scroll_position = max_scroll_position;
+    if (scrollbar->scroll_position > max_scroll_position) {
+        scrollbar->scroll_position = max_scroll_position;
+    }
+}
+
 void scrollbar_draw(scrollbar_type *scrollbar)
 {
-    if (scrollbar->max_scroll_position) {
+    if (scrollbar->max_scroll_position > 0) {
         image_buttons_draw(scrollbar->x, scrollbar->y, &image_button_scroll_up, 1);
         image_buttons_draw(scrollbar->x, scrollbar->y + scrollbar->height - 26, &image_button_scroll_down, 1);
 
