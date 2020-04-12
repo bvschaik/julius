@@ -96,7 +96,7 @@ static void init(file_type type, file_dialog_type dialog_type)
     data.message_not_exist_start_time = 0;
 
     data.file_list = dir_find_files_with_extension(data.file_data->extension);
-    scrollbar_init(&scrollbar, data.file_list->num_files - NUM_FILES_IN_VIEW);
+    scrollbar_init(&scrollbar, 0, data.file_list->num_files - NUM_FILES_IN_VIEW);
 
     strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
     keyboard_start_capture(data.typed_name, FILE_NAME_MAX, 0, &file_name_input, FONT_NORMAL_WHITE);

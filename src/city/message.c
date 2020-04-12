@@ -1,6 +1,5 @@
 #include "message.h"
 
-#include "core/calc.h"
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/lang.h"
@@ -48,7 +47,6 @@ static struct {
     time_millis problem_last_click_time;
 
     int scroll_position;
-    int max_scroll_position;
 } data;
 
 static int should_play_sound = 1;
@@ -493,25 +491,7 @@ int city_message_next_problem_area_grid_offset(void)
 
 void city_message_clear_scroll(void)
 {
-    data.scroll_position = data.max_scroll_position = 0;
-}
-
-void city_message_update_scroll(int max_messages)
-{
-    if (data.total_messages <= max_messages) {
-        data.scroll_position = 0;
-        data.max_scroll_position = 0;
-    } else {
-        data.max_scroll_position = data.total_messages - max_messages;
-        if (data.scroll_position >= data.max_scroll_position) {
-            data.scroll_position = data.max_scroll_position;
-        }
-    }
-}
-
-int city_message_can_scroll(void)
-{
-    return data.max_scroll_position > 0;
+    data.scroll_position = 0;
 }
 
 int city_message_scroll_position(void)
@@ -519,35 +499,9 @@ int city_message_scroll_position(void)
     return data.scroll_position;
 }
 
-void city_message_scroll(int is_down, int amount)
+void city_message_set_scroll_position(int scroll_position)
 {
-    if (is_down) {
-        data.scroll_position += amount;
-        if (data.scroll_position > data.max_scroll_position) {
-            data.scroll_position = data.max_scroll_position;
-        }
-    } else {
-        data.scroll_position -= amount;
-        if (data.scroll_position < 0) {
-            data.scroll_position = 0;
-        }
-    }
-}
-
-int city_message_scroll_percentage(void)
-{
-    if (data.scroll_position <= 0) {
-        return 0;
-    } else if (data.scroll_position >= data.max_scroll_position) {
-        return 100;
-    } else {
-        return calc_percentage(data.scroll_position, data.max_scroll_position);
-    }
-}
-
-void city_message_set_scroll_percentage(int percentage)
-{
-    data.scroll_position = calc_adjust_with_percentage(data.max_scroll_position, percentage);
+    data.scroll_position = scroll_position;
 }
 
 void city_message_save_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population)
