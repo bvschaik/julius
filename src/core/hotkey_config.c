@@ -68,6 +68,20 @@ static struct {
     int num_mappings;
 } data;
 
+const hotkey_mapping *hotkey_for_action(hotkey_action action, int index)
+{
+    int num = 0;
+    for (int i = 0; i < data.num_mappings; i++) {
+        if (data.mappings[i].action == action) {
+            if (num == index) {
+                return &data.mappings[i];
+            }
+            num++;
+        }
+    }
+    return 0;
+}
+
 static void add_mapping(key_type key, key_modifier_type modifiers, hotkey_action action)
 {
     data.mappings[data.num_mappings].key = key;
