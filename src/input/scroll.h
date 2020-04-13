@@ -5,8 +5,6 @@
 #include "input/mouse.h"
 #include "input/touch.h"
 
-#define SCROLL_MOUSE_MIN_DELTA 4
-
 typedef enum {
     SCROLL_TYPE_CITY = 0,
     SCROLL_TYPE_EMPIRE = 1,

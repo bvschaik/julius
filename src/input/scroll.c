@@ -10,10 +10,10 @@
 #include "platform/screen.h"
 
 #include <math.h>
-#include <stddef.h>
 #include <stdlib.h>
 
 #define MOUSE_BORDER 5
+#define MOUSE_SCROLL_MIN_DELTA 4
 #define TOUCH_BORDER 100
 #define DECAY_MULTIPLIER 300
 #define DECAY_BASE_TIME 350
@@ -267,9 +267,6 @@ void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
     clear_scroll_decay(position);
 
     platform_mouse_set_relative_mode(1);
-
-    // Discard the first value, which is incorrect (the first one gives the relative position to center of window)
-    platform_mouse_get_relative_state(NULL, NULL);
 }
 
 int scroll_move_mouse_drag(pixel_offset *position)
@@ -288,7 +285,7 @@ int scroll_move_mouse_drag(pixel_offset *position)
     }
 
     if (delta_x != 0 || delta_y != 0) {
-        int has_scrolled = abs(data.cumulative_delta_x) > SCROLL_MOUSE_MIN_DELTA || abs(data.cumulative_delta_y) > SCROLL_MOUSE_MIN_DELTA;
+        int has_scrolled = abs(data.cumulative_delta_x) > MOUSE_SCROLL_MIN_DELTA || abs(data.cumulative_delta_y) > MOUSE_SCROLL_MIN_DELTA;
         data.has_scrolled = data.has_scrolled || has_scrolled;
 
         city_view_get_camera_in_pixels(&position->x, &position->y);

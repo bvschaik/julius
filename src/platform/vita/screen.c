@@ -83,7 +83,8 @@ void platform_screen_render(void)
     vita2d_swap_buffers();
 }
 
-void platform_screen_warp_mouse(int x, int y) {
+void platform_screen_warp_mouse(int x, int y)
+{
     SDL_WarpMouseInWindow(my_window, x, y);
 }
 
