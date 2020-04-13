@@ -6,13 +6,20 @@
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 
+#define SCROLL_BUTTON_HEIGHT 26
+#define SCROLL_BUTTON_WIDTH 39
+#define SCROLL_DOT_SIZE 25
+#define TOTAL_BUTTON_HEIGHT (2 * SCROLL_BUTTON_HEIGHT + SCROLL_DOT_SIZE)
+
 static void text_scroll(int is_down, int num_lines);
 
 static image_button image_button_scroll_up = {
-    0, 0, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 8, text_scroll, button_none, 0, 1, 1
+    0, 0, SCROLL_BUTTON_WIDTH, SCROLL_BUTTON_HEIGHT, IB_SCROLL,
+    GROUP_OK_CANCEL_SCROLL_BUTTONS, 8, text_scroll, button_none, 0, 1, 1
 };
 static image_button image_button_scroll_down = {
-    0, 0, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, text_scroll, button_none, 1, 1, 1
+    0, 0, SCROLL_BUTTON_WIDTH, SCROLL_BUTTON_HEIGHT, IB_SCROLL,
+    GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, text_scroll, button_none, 1, 1, 1
 };
 
 static scrollbar_type *current;
@@ -44,7 +51,8 @@ void scrollbar_draw(scrollbar_type *scrollbar)
 {
     if (scrollbar->max_scroll_position > 0 || scrollbar->always_visible) {
         image_buttons_draw(scrollbar->x, scrollbar->y, &image_button_scroll_up, 1);
-        image_buttons_draw(scrollbar->x, scrollbar->y + scrollbar->height - 26, &image_button_scroll_down, 1);
+        image_buttons_draw(scrollbar->x, scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
+            &image_button_scroll_down, 1);
 
         int pct;
         if (scrollbar->scroll_position <= 0) {
@@ -54,12 +62,14 @@ void scrollbar_draw(scrollbar_type *scrollbar)
         } else {
             pct = calc_percentage(scrollbar->scroll_position, scrollbar->max_scroll_position);
         }
-        int offset = calc_adjust_with_percentage(scrollbar->height - 77 - 2 * scrollbar->dot_padding, pct);
+        int offset = calc_adjust_with_percentage(
+            scrollbar->height - TOTAL_BUTTON_HEIGHT - 2 * scrollbar->dot_padding, pct);
         if (scrollbar->is_dragging_scroll) {
             offset = scrollbar->scroll_position_drag;
         }
-        image_draw(image_group(GROUP_PANEL_BUTTON) + 39, scrollbar->x + 7,
-            scrollbar->y + offset + 26 + scrollbar->dot_padding);
+        image_draw(image_group(GROUP_PANEL_BUTTON) + 39,
+            scrollbar->x + (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2,
+            scrollbar->y + offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding);
     }
 }
 
@@ -68,23 +78,24 @@ static int handle_scrollbar_dot(scrollbar_type *scrollbar, const mouse *m)
     if (scrollbar->max_scroll_position <= 0 || !m->left.is_down) {
         return 0;
     }
-    int total_height = scrollbar->height - 77 - 2 * scrollbar->dot_padding;
-    if (m->x < scrollbar->x || m->x >= scrollbar->x + 39) {
+    int track_height = scrollbar->height - TOTAL_BUTTON_HEIGHT - 2 * scrollbar->dot_padding;
+    if (m->x < scrollbar->x || m->x >= scrollbar->x + SCROLL_BUTTON_WIDTH) {
         return 0;
     }
-    if (m->y < scrollbar->y + 26 + scrollbar->dot_padding ||
-        m->y > scrollbar->y + scrollbar->height - 26 - scrollbar->dot_padding) {
+    if (m->y < scrollbar->y + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding ||
+        m->y > scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT - scrollbar->dot_padding) {
         return 0;
     }
-    int dot_offset = m->y - scrollbar->y - 12 - 26;
+    int dot_offset = m->y - scrollbar->y - SCROLL_DOT_SIZE/2 - SCROLL_BUTTON_HEIGHT;
     if (dot_offset < 0) {
         dot_offset = 0;
     }
-    if (dot_offset > total_height) {
-        dot_offset = total_height;
+    if (dot_offset > track_height) {
+        dot_offset = track_height;
     }
-    int pct_scrolled = calc_percentage(dot_offset, total_height);
-    scrollbar->scroll_position = calc_adjust_with_percentage(scrollbar->max_scroll_position, pct_scrolled);
+    int pct_scrolled = calc_percentage(dot_offset, track_height);
+    scrollbar->scroll_position = calc_adjust_with_percentage(
+        scrollbar->max_scroll_position, pct_scrolled);
     scrollbar->is_dragging_scroll = 1;
     scrollbar->scroll_position_drag = dot_offset;
     if (scrollbar->scroll_position_drag < 0) {
@@ -108,11 +119,12 @@ int scrollbar_handle_mouse(scrollbar_type *scrollbar, const mouse *m)
         text_scroll(0, 3);
     }
 
-    if (image_buttons_handle_mouse(m, scrollbar->x, scrollbar->y, &image_button_scroll_up, 1, 0)) {
+    if (image_buttons_handle_mouse(m,
+        scrollbar->x, scrollbar->y, &image_button_scroll_up, 1, 0)) {
         return 1;
     }
     if (image_buttons_handle_mouse(m,
-        scrollbar->x, scrollbar->y + scrollbar->height - 26,
+        scrollbar->x, scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
         &image_button_scroll_down, 1, 0)) {
         return 1;
     }
