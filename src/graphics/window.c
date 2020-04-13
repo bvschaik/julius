@@ -2,7 +2,7 @@
 
 #include "graphics/warning.h"
 #include "input/cursor.h"
-#include "input/keyboard.h"
+#include "input/hotkey.h"
 #include "input/touch.h"
 #include "window/city.h"
 
@@ -20,7 +20,7 @@ static struct {
 static void noop(void)
 {
 }
-static void noop_mouse(const mouse *m)
+static void noop_input(const mouse *m, const hotkeys *h)
 {
 }
 
@@ -79,8 +79,8 @@ void window_show(const window_type *window)
     if (!data.current_window->draw_foreground) {
         data.current_window->draw_foreground = noop;
     }
-    if (!data.current_window->handle_mouse) {
-        data.current_window->handle_mouse = noop_mouse;
+    if (!data.current_window->handle_input) {
+        data.current_window->handle_input = noop_input;
     }
     window_invalidate();
 }
@@ -97,6 +97,7 @@ static void update_input_before(void)
     if (!touch_to_mouse()) {
         mouse_determine_button_state();  // touch overrides mouse
     }
+    hotkey_handle_global_keys();
 }
 
 static void update_input_after(void)
@@ -104,7 +105,7 @@ static void update_input_after(void)
     reset_touches(0);
     mouse_reset_scroll();
     input_cursor_update(data.current_window->id);
-    keyboard_reset_esc_state();
+    hotkey_reset_state();
 }
 
 void window_draw(int force)
@@ -120,7 +121,8 @@ void window_draw(int force)
     w->draw_foreground();
 
     const mouse *m = mouse_get();
-    w->handle_mouse(m);
+    const hotkeys *h = hotkey_state();
+    w->handle_input(m, h);
     tooltip_handle(m, w->get_tooltip);
     warning_draw();
     update_input_after();

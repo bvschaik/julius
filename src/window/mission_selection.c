@@ -7,7 +7,6 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/window.h"
-#include "input/keyboard.h"
 #include "scenario/property.h"
 #include "sound/speech.h"
 #include "window/mission_briefing.h"
@@ -95,7 +94,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 
@@ -112,7 +111,7 @@ static void handle_mouse(const mouse *m)
         data.focus_button = 2;
     }
 
-    if (m_dialog->right.went_up || keyboard_is_esc_pressed()) {
+    if (m_dialog->right.went_up || h->escape_pressed) {
         data.choice = 0;
         window_invalidate();
     }
@@ -160,8 +159,7 @@ void window_mission_selection_show(void)
         WINDOW_MISSION_SELECTION,
         draw_background,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     data.choice = 0;
     data.focus_button = 0;

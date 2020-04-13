@@ -304,7 +304,6 @@ static void draw_content(const lang_message *msg)
             data.text_height_blocks - 1, 0);
     }
     graphics_reset_clip_rectangle();
-    rich_text_draw_scrollbar_dot();
 }
 
 static void draw_background_normal(void)
@@ -478,7 +477,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     data.focus_button_id = 0;
     const mouse *m_dialog = mouse_in_dialog(m);
@@ -495,7 +494,7 @@ static void handle_mouse(const mouse *m)
                 return;
             }
         }
-        if (input_go_back_requested()) {
+        if (input_go_back_requested(m, h)) {
             button_close(0, 0);
         }
         return;
@@ -536,7 +535,7 @@ static void handle_mouse(const mouse *m)
         window_invalidate();
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         button_close(0, 0);
     }
 }
@@ -613,7 +612,7 @@ void window_message_dialog_show(int text_id, void (*background_callback)(void))
         WINDOW_MESSAGE_DIALOG,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     init(text_id, background_callback);

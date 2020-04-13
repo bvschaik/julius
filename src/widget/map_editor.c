@@ -4,8 +4,6 @@
 #include "editor/tool.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "input/hotkey.h"
-#include "input/keyboard.h"
 #include "input/scroll.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -313,7 +311,7 @@ static void handle_touch(void)
     }
 }
 
-void widget_map_editor_handle_mouse(const mouse *m)
+void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->is_touch) {
         handle_touch();
@@ -366,11 +364,11 @@ void widget_map_editor_handle_mouse(const mouse *m)
         editor_tool_end_use(tile);
         sound_effect_play(SOUND_EFFECT_BUILD);
     }
-    if (keyboard_is_esc_pressed()) {
+    if (h->escape_pressed) {
         if (editor_tool_is_active()) {
             editor_tool_deactivate();
         } else {
-            hotkey_esc();
+            hotkey_handle_escape();
         }
     }
 }

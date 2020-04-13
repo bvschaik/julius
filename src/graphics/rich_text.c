@@ -6,18 +6,14 @@
 #include "core/string.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
+#include "graphics/scrollbar.h"
 #include "graphics/window.h"
 
 #define MAX_LINKS 50
 
-static void text_scroll(int is_down, int num_lines);
+static void on_scroll(void);
 
-static image_button image_button_scroll_up = {
-    0, 0, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 8, text_scroll, button_none, 0, 1, 1
-};
-static image_button image_button_scroll_down = {
-    0, 0, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, text_scroll, button_none, 1, 1, 1
-};
+static scrollbar_type scrollbar = { 0, 0, 0, on_scroll};
 
 static struct {
     int message_id;
@@ -40,10 +36,7 @@ static struct {
     int text_height_blocks;
     int text_height_lines;
     int num_lines;
-    int scroll_position;
     int max_scroll_position;
-    int is_dragging_scroll;
-    int scroll_position_drag;
     struct {
         int scroll_position;
         int num_lines;
@@ -59,22 +52,16 @@ int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks
         data.text_height_blocks = height_blocks;
         data.text_height_lines = height_blocks - 1;
         data.text_width_blocks = width_blocks;
-        
-        image_button_scroll_up.enabled = 1;
-        image_button_scroll_down.enabled = 1;
 
         data.num_lines = rich_text_draw(text,
             data.x_text + 8, data.y_text + 6,
             16 * data.text_width_blocks - 16, data.text_height_lines, 1);
-        if (data.num_lines <= data.text_height_lines) {
-            if (adjust_width_on_no_scroll) {
-                data.text_width_blocks += 2;
-            }
-            data.max_scroll_position = 0;
-            image_button_scroll_up.enabled = 0;
-            image_button_scroll_down.enabled = 0;
-        } else {
-            data.max_scroll_position = data.num_lines - data.text_height_lines;
+        scrollbar.x = data.x_text + 16 * data.text_width_blocks - 1;
+        scrollbar.y = data.y_text;
+        scrollbar.height = 16 * data.text_height_blocks;
+        scrollbar_init(&scrollbar, scrollbar.scroll_position, data.num_lines - data.text_height_lines);
+        if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll) {
+            data.text_width_blocks += 2;
         }
         window_invalidate();
     }
@@ -89,26 +76,25 @@ void rich_text_set_fonts(font_t normal_font, font_t link_font)
 
 void rich_text_reset(int scroll_position)
 {
-    data.scroll_position = scroll_position;
+    scrollbar_reset(&scrollbar, scroll_position);
     data.num_lines = 0;
-    data.is_dragging_scroll = 0;
     rich_text_clear_links();
 }
 
 void rich_text_save(void)
 {
     data.backup.num_lines = data.num_lines;
-    data.backup.scroll_position = data.scroll_position;
     data.backup.text_height_lines = data.text_height_lines;
-    data.scroll_position = 0;
+    data.backup.scroll_position = scrollbar.scroll_position;
     data.text_height_lines = 30;
+    scrollbar.scroll_position = 0;
 }
 
 void rich_text_restore(void)
 {
     data.num_lines = data.backup.num_lines;
-    data.scroll_position = data.backup.scroll_position;
     data.text_height_lines = data.backup.text_height_lines;
+    scrollbar.scroll_position = data.backup.scroll_position;
 }
 
 void rich_text_clear_links(void)
@@ -340,7 +326,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
 
         int outside_viewport = 0;
         if (!measure_only) {
-            if (line < data.scroll_position || line >= data.scroll_position + height_lines) {
+            if (line < scrollbar.scroll_position || line >= scrollbar.scroll_position + height_lines) {
                 outside_viewport = 1;
             }
         }
@@ -355,11 +341,11 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                     const image *img = image_get(image_id);
                     image_height_lines = img->height / 16 + 2;
                     int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
-                    if (line < height_lines + data.scroll_position) {
-                        if (line >= data.scroll_position) {
+                    if (line < height_lines + scrollbar.scroll_position) {
+                        if (line >= scrollbar.scroll_position) {
                             image_draw(image_id, image_offset_x, y + 8);
                         } else {
-                            image_draw(image_id, image_offset_x, y + 8 - 16 * (data.scroll_position - line));
+                            image_draw(image_id, image_offset_x, y + 8 - 16 * (scrollbar.scroll_position - line));
                         }
                     }
                     image_id = 0;
@@ -387,109 +373,21 @@ int rich_text_draw_colored(const uint8_t *text, int x_offset, int y_offset, int 
 
 void rich_text_draw_scrollbar(void)
 {
-    if (data.max_scroll_position) {
-        image_buttons_draw(
-            data.x_text + 16 * data.text_width_blocks - 1,
-            data.y_text,
-            &image_button_scroll_up, 1);
-        image_buttons_draw(
-            data.x_text + 16 * data.text_width_blocks - 1,
-            data.y_text + 16 * data.text_height_blocks - 26,
-            &image_button_scroll_down, 1);
-        rich_text_draw_scrollbar_dot();
-    }
-}
-
-void rich_text_draw_scrollbar_dot(void)
-{
-    if (data.max_scroll_position) {
-        int pct;
-        if (data.scroll_position <= 0) {
-            pct = 0;
-        } else if (data.scroll_position >= data.max_scroll_position) {
-            pct = 100;
-        } else {
-            pct = calc_percentage(data.scroll_position, data.max_scroll_position);
-        }
-        int offset = calc_adjust_with_percentage(16 * data.text_height_blocks - 77, pct);
-        if (data.is_dragging_scroll) {
-            offset = data.scroll_position_drag;
-        }
-        image_draw(image_group(GROUP_PANEL_BUTTON) + 39,
-            data.x_text + 16 * data.text_width_blocks + 6, data.y_text + offset + 26);
-    }
-}
-
-static int handle_scrollbar_dot(const mouse *m)
-{
-    if (data.max_scroll_position <= 0 || !m->left.is_down) {
-        return 0;
-    }
-    int total_height = 16 * data.text_height_blocks - 52;
-    if (m->x < data.x_text + 16 * data.text_width_blocks + 1 ||
-        m->x > data.x_text + 16 * data.text_width_blocks + 41) {
-        return 0;
-    }
-    if (m->y < data.y_text + 26 || m->y > data.y_text + 26 + total_height) {
-        return 0;
-    }
-    int dot_height = m->y - data.y_text - 11;
-    if (dot_height > total_height) {
-        dot_height = total_height;
-    }
-    int pct_scrolled = calc_percentage(dot_height, total_height);
-    data.scroll_position = calc_adjust_with_percentage(data.max_scroll_position, pct_scrolled);
-    data.is_dragging_scroll = 1;
-    data.scroll_position_drag = dot_height - 25;
-    rich_text_clear_links();
-    if (data.scroll_position_drag < 0) {
-        data.scroll_position_drag = 0;
-    }
-    window_invalidate();
-    return 1;
+    scrollbar_draw(&scrollbar);
 }
 
 int rich_text_handle_mouse(const mouse *m)
 {
-    if (m->scrolled == SCROLL_DOWN) {
-        text_scroll(1, 3);
-    } else if (m->scrolled == SCROLL_UP) {
-        text_scroll(0, 3);
-    }
-
-    if (image_buttons_handle_mouse(
-        m, data.x_text + 16 * data.text_width_blocks - 1, data.y_text,
-        &image_button_scroll_up, 1, 0)) {
-            return 1;
-    }
-    if (image_buttons_handle_mouse(m,
-        data.x_text + 16 * data.text_width_blocks - 1,
-        data.y_text + 16 * data.text_height_blocks - 26,
-        &image_button_scroll_down, 1, 0)) {
-            return 1;
-    }
-    return handle_scrollbar_dot(m);
+    return scrollbar_handle_mouse(&scrollbar, m);
 }
 
-static void text_scroll(int is_down, int num_lines)
+static void on_scroll(void)
 {
-    if (is_down) {
-        data.scroll_position += num_lines;
-        if (data.scroll_position > data.max_scroll_position) {
-            data.scroll_position = data.max_scroll_position;
-        }
-    } else {
-        data.scroll_position -= num_lines;
-        if (data.scroll_position < 0) {
-            data.scroll_position = 0;
-        }
-    }
     rich_text_clear_links();
-    data.is_dragging_scroll = 0;
     window_invalidate();
 }
 
 int rich_text_scroll_position(void)
 {
-    return data.scroll_position;
+    return scrollbar.scroll_position;
 }

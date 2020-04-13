@@ -16,8 +16,6 @@ typedef enum {
 int scroll_in_progress(void);
 int scroll_is_smooth(void);
 
-int scroll_get_direction(const mouse *m);
-
 void scroll_set_custom_margins(int x, int y, int width, int height);
 void scroll_restore_margins(void);
 

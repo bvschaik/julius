@@ -11,8 +11,6 @@
 #include "graphics/graphics.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "input/hotkey.h"
-#include "input/keyboard.h"
 #include "input/scroll.h"
 #include "input/touch.h"
 #include "map/building.h"
@@ -366,7 +364,7 @@ int widget_city_has_input(void)
     return data.capture_input;
 }
 
-void widget_city_handle_mouse(const mouse *m)
+void widget_city_handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->is_touch) {
         handle_touch();
@@ -416,11 +414,11 @@ void widget_city_handle_mouse(const mouse *m)
             building_construction_cancel();
         }
     }
-    if (keyboard_is_esc_pressed()) {
+    if (h->escape_pressed) {
         if (building_construction_type()) {
             building_construction_cancel();
         } else {
-            hotkey_esc();
+            hotkey_handle_escape();
         }
     }
 }
@@ -445,7 +443,7 @@ static void military_map_click(int legion_formation_id, const map_tile *tile)
     window_city_show();
 }
 
-void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
+void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int legion_formation_id)
 {
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
@@ -466,7 +464,7 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
         }
     }
     scroll_map(m);
-    if (m->right.went_up || keyboard_is_esc_pressed()) {
+    if (m->right.went_up || h->escape_pressed) {
         data.capture_input = 0;
         city_warning_clear_all();
         window_city_show();

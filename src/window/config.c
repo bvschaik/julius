@@ -14,7 +14,6 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "input/keyboard.h"
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
@@ -158,14 +157,14 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     int handled = 0;
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, checkbox_buttons, NUM_CHECKBOXES, &data.focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
-    if (!handled && (m->right.went_up || keyboard_is_esc_pressed())) {
+    if (!handled && (m->right.went_up || h->escape_pressed)) {
         window_main_menu_show(0);
     }
 }
@@ -235,7 +234,7 @@ void window_config_show()
         WINDOW_CONFIG,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     init();
     window_show(&window);

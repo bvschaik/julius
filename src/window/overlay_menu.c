@@ -136,7 +136,7 @@ static void handle_submenu_focus(void)
     }
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     int x_offset = get_sidebar_x_offset();
     int handled = 0;
@@ -150,7 +150,7 @@ static void handle_mouse(const mouse *m)
             m, x_offset - 348, 72 + 24 * data.selected_menu,
             submenu_buttons, data.num_submenu_items, &data.submenu_focus_button_id);
     }
-    if (!handled && input_go_back_requested()) {
+    if (!handled && input_go_back_requested(m, h)) {
         if (data.keep_submenu_open) {
             close_submenu();
         } else {
@@ -190,8 +190,7 @@ void window_overlay_menu_show(void)
         WINDOW_OVERLAY_MENU,
         draw_background,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     init();
     window_show(&window);

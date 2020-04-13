@@ -12,6 +12,9 @@ void keyboard_resume_capture(void);
 void keyboard_pause_capture(void);
 void keyboard_stop_capture(void);
 
+void keyboard_start_capture_numeric(void (*callback)(int));
+void keyboard_stop_capture_numeric(void);
+
 int keyboard_input_is_accepted(void);
 int keyboard_is_insert(void);
 int keyboard_cursor_position(void);
@@ -28,11 +31,7 @@ void keyboard_left(void);
 void keyboard_right(void);
 void keyboard_home(void);
 void keyboard_end(void);
-void keyboard_esc(void);
 
 void keyboard_character(const char *text_utf8);
-
-int keyboard_is_esc_pressed(void);
-void keyboard_reset_esc_state(void);
 
 #endif // INPUT_KEYBOARD_H

@@ -83,11 +83,6 @@ int rich_text_draw_colored(const uint8_t *text, int x_offset, int y_offset,
 void rich_text_draw_scrollbar(void);
 
 /**
- * Draws the dot in the scrollbar
- */
-void rich_text_draw_scrollbar_dot(void);
-
-/**
  * Handles mouse interaction with the scrollbar and scroll wheel
  * @param m Mouse state
  * @return True if any interaction was handled

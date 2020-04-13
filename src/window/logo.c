@@ -5,8 +5,6 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/window.h"
-#include "input/hotkey.h"
-#include "input/keyboard.h"
 #include "sound/music.h"
 #include "window/intro_video.h"
 #include "window/main_menu.h"
@@ -27,14 +25,14 @@ static void draw_background(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->left.went_up || m->right.went_up) {
         window_main_menu_show(0);
         return;
     }
-    if (keyboard_is_esc_pressed()) {
-        hotkey_esc();
+    if (h->escape_pressed) {
+        hotkey_handle_escape();
     }
 }
 
@@ -44,7 +42,7 @@ void window_logo_show(int show_patch_message)
         WINDOW_LOGO,
         draw_background,
         0,
-        handle_mouse
+        handle_input
     };
     init();
     window_show(&window);

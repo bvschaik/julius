@@ -1,360 +1,339 @@
 #include "hotkey.h"
 
-#include "building/type.h"
-#include "city/finance.h"
-#include "city/victory.h"
-#include "city/view.h"
-#include "city/warning.h"
-#include "figure/formation.h"
-#include "game/orientation.h"
+#include "city/constants.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
 #include "graphics/screenshot.h"
 #include "graphics/video.h"
-#include "graphics/window.h"
 #include "input/scroll.h"
-#include "map/bookmark.h"
-#include "map/grid.h"
-#include "scenario/invasion.h"
-#include "window/advisors.h"
-#include "window/building_info.h"
-#include "window/file_dialog.h"
-#include "window/numeric_input.h"
-#include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
-#include "window/city.h"
-#include "window/editor/empire.h"
+
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    int *action;
+    int value;
+    key_type key;
+    key_modifier_type modifiers;
+    int repeatable;
+} hotkey_definition;
+
+typedef struct {
+    void (*action)(int is_down);
+    key_type key;
+} arrow_definition;
+
+typedef struct {
+    int center_screen;
+    int toggle_fullscreen;
+    int resize_to;
+    int save_screenshot;
+    int save_city_screenshot;
+} global_hotkeys;
 
 static struct {
-    int is_cheating;
+    global_hotkeys global_hotkey_state;
+    hotkeys hotkey_state;
+
+    hotkey_definition *definitions;
+    int num_definitions;
+    arrow_definition *arrows;
+    int num_arrows;    
 } data;
 
-static void change_game_speed(int is_down)
+static void add_definition(const hotkey_mapping *mapping)
 {
-    if (window_is(WINDOW_CITY)) {
-        if (is_down) {
-            setting_decrease_game_speed();
+    hotkey_definition *def = &data.definitions[data.num_definitions];
+    def->key = mapping->key;
+    def->modifiers = mapping->modifiers;
+    def->value = 1;
+    def->repeatable = 0;
+    switch (mapping->action) {
+        case HOTKEY_TOGGLE_PAUSE:
+            def->action = &data.hotkey_state.toggle_pause;
+            break;
+        case HOTKEY_TOGGLE_OVERLAY:
+            def->action = &data.hotkey_state.toggle_overlay;
+            break;
+        case HOTKEY_CYCLE_LEGION:
+            def->action = &data.hotkey_state.cycle_legion;
+            break;
+        case HOTKEY_INCREASE_GAME_SPEED:
+            def->action = &data.hotkey_state.increase_game_speed;
+            def->repeatable = 1;
+            break;
+        case HOTKEY_DECREASE_GAME_SPEED:
+            def->action = &data.hotkey_state.decrease_game_speed;
+            def->repeatable = 1;
+            break;
+        case HOTKEY_ROTATE_MAP_LEFT:
+            def->action = &data.hotkey_state.rotate_map_left;
+            break;
+        case HOTKEY_ROTATE_MAP_RIGHT:
+            def->action = &data.hotkey_state.rotate_map_right;
+            break;
+        case HOTKEY_SHOW_ADVISOR_LABOR:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_LABOR;
+            break;
+        case HOTKEY_SHOW_ADVISOR_MILITARY:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_MILITARY;
+            break;
+        case HOTKEY_SHOW_ADVISOR_IMPERIAL:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_IMPERIAL;
+            break;
+        case HOTKEY_SHOW_ADVISOR_RATINGS:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_RATINGS;
+            break;
+        case HOTKEY_SHOW_ADVISOR_TRADE:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_TRADE;
+            break;
+        case HOTKEY_SHOW_ADVISOR_POPULATION:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_POPULATION;
+            break;
+        case HOTKEY_SHOW_ADVISOR_HEALTH:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_HEALTH;
+            break;
+        case HOTKEY_SHOW_ADVISOR_EDUCATION:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_EDUCATION;
+            break;
+        case HOTKEY_SHOW_ADVISOR_ENTERTAINMENT:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_ENTERTAINMENT;
+            break;
+        case HOTKEY_SHOW_ADVISOR_RELIGION:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_RELIGION;
+            break;
+        case HOTKEY_SHOW_ADVISOR_FINANCIAL:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_FINANCIAL;
+            break;
+        case HOTKEY_SHOW_ADVISOR_CHIEF:
+            def->action = &data.hotkey_state.show_advisor;
+            def->value = ADVISOR_CHIEF;
+            break;
+        case HOTKEY_SHOW_OVERLAY_WATER:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_WATER;
+            break;
+        case HOTKEY_SHOW_OVERLAY_FIRE:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_FIRE;
+            break;
+        case HOTKEY_SHOW_OVERLAY_DAMAGE:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_DAMAGE;
+            break;
+        case HOTKEY_SHOW_OVERLAY_CRIME:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_CRIME;
+            break;
+        case HOTKEY_SHOW_OVERLAY_PROBLEMS:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_PROBLEMS;
+            break;
+        case HOTKEY_EDITOR_TOGGLE_BATTLE_INFO:
+            def->action = &data.hotkey_state.toggle_editor_battle_info;
+            break;
+        case HOTKEY_LOAD_FILE:
+            def->action = &data.hotkey_state.load_file;
+            break;
+        case HOTKEY_SAVE_FILE:
+            def->action = &data.hotkey_state.save_file;
+            break;
+        case HOTKEY_GO_TO_BOOKMARK_1:
+            def->action = &data.hotkey_state.go_to_bookmark;
+            def->value = 1;
+            break;
+        case HOTKEY_GO_TO_BOOKMARK_2:
+            def->action = &data.hotkey_state.go_to_bookmark;
+            def->value = 2;
+            break;
+        case HOTKEY_GO_TO_BOOKMARK_3:
+            def->action = &data.hotkey_state.go_to_bookmark;
+            def->value = 3;
+            break;
+        case HOTKEY_GO_TO_BOOKMARK_4:
+            def->action = &data.hotkey_state.go_to_bookmark;
+            def->value = 4;
+            break;
+        case HOTKEY_SET_BOOKMARK_1:
+            def->action = &data.hotkey_state.set_bookmark;
+            def->value = 1;
+            break;
+        case HOTKEY_SET_BOOKMARK_2:
+            def->action = &data.hotkey_state.set_bookmark;
+            def->value = 2;
+            break;
+        case HOTKEY_SET_BOOKMARK_3:
+            def->action = &data.hotkey_state.set_bookmark;
+            def->value = 3;
+            break;
+        case HOTKEY_SET_BOOKMARK_4:
+            def->action = &data.hotkey_state.set_bookmark;
+            def->value = 4;
+            break;
+        case HOTKEY_CENTER_SCREEN:
+            def->action = &data.global_hotkey_state.center_screen;
+            break;
+        case HOTKEY_TOGGLE_FULLSCREEN:
+            def->action = &data.global_hotkey_state.toggle_fullscreen;
+            break;
+        case HOTKEY_RESIZE_TO_640:
+            def->action = &data.global_hotkey_state.resize_to;
+            def->value = 640;
+            break;
+        case HOTKEY_RESIZE_TO_800:
+            def->action = &data.global_hotkey_state.resize_to;
+            def->value = 800;
+            break;
+        case HOTKEY_RESIZE_TO_1024:
+            def->action = &data.global_hotkey_state.resize_to;
+            def->value = 1024;
+            break;
+        case HOTKEY_SAVE_SCREENSHOT:
+            def->action = &data.global_hotkey_state.save_screenshot;
+            break;
+        case HOTKEY_SAVE_CITY_SCREENSHOT:
+            def->action = &data.global_hotkey_state.save_city_screenshot;
+            break;
+        default:
+            def->action = 0;
+    }
+    if (def->action) {
+        data.num_definitions++;
+    }
+}
+
+static void add_arrow(const hotkey_mapping *mapping)
+{
+    arrow_definition *arrow = &data.arrows[data.num_arrows];
+    arrow->key = mapping->key;
+    switch (mapping->action) {
+        case HOTKEY_ARROW_UP:
+            arrow->action = scroll_arrow_up;
+            break;
+        case HOTKEY_ARROW_DOWN:
+            arrow->action = scroll_arrow_down;
+            break;
+        case HOTKEY_ARROW_LEFT:
+            arrow->action = scroll_arrow_left;
+            break;
+        case HOTKEY_ARROW_RIGHT:
+            arrow->action = scroll_arrow_right;
+            break;
+        default:
+            arrow->action = 0;
+            break;
+    }
+    if (arrow->action) {
+        data.num_arrows++;
+    }
+}
+
+static int allocate_mapping_memory(int total_definitions, int total_arrows)
+{
+    free(data.definitions);
+    free(data.arrows);
+    data.num_definitions = 0;
+    data.num_arrows = 0;
+    data.definitions = malloc(sizeof(hotkey_definition) * total_definitions);
+    data.arrows = malloc(sizeof(arrow_definition) * total_arrows);
+    if (!data.definitions || !data.arrows) {
+        free(data.definitions);
+        free(data.arrows);
+        return 0;
+    }
+    return 1;
+}
+
+void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
+{
+    int total_definitions = 2; // Enter and ESC are fixed hotkeys
+    int total_arrows = 0;
+    for (int i = 0; i < num_mappings; i++) {
+        hotkey_action action = mappings[i].action;
+        if (action == HOTKEY_ARROW_UP || action == HOTKEY_ARROW_DOWN ||
+            action == HOTKEY_ARROW_LEFT || action == HOTKEY_ARROW_RIGHT) {
+            total_arrows++;
         } else {
-            setting_increase_game_speed();
+            total_definitions++;
         }
     }
-}
-
-static void exit_military_command(void)
-{
-    if (window_is(WINDOW_CITY_MILITARY)) {
-        window_city_show();
-    }
-}
-
-static void toggle_overlay(void)
-{
-    exit_military_command();
-    if (window_is(WINDOW_CITY)) {
-        game_state_toggle_overlay();
-        window_invalidate();
-    }
-}
-
-static void show_overlay(int overlay)
-{
-    exit_military_command();
-    if (window_is(WINDOW_CITY)) {
-        if (game_state_overlay() == overlay) {
-            game_state_set_overlay(OVERLAY_NONE);
-        } else {
-            game_state_set_overlay(overlay);
-        }
-        window_invalidate();
-    }
-}
-
-static void toggle_pause(void)
-{
-    exit_military_command();
-    if (window_is(WINDOW_CITY)) {
-        game_state_toggle_paused();
-        city_warning_clear_all();
-    }
-}
-
-static void show_advisor(advisor_type advisor)
-{
-    exit_military_command();
-    if (window_is(WINDOW_ADVISORS)) {
-        if (window_advisors_get_advisor() == advisor) {
-            window_city_show();
-        } else {
-            window_advisors_show_advisor(advisor);
-        }
-    } else if (window_is(WINDOW_CITY)) {
-        window_advisors_show_advisor(advisor);
-    }
-}
-
-static void cycle_legion(void)
-{
-    static int current_legion_id = 1;
-    if (window_is(WINDOW_CITY)) {
-        int legion_id = current_legion_id;
-        current_legion_id = 0;
-        for (int i = 1; i <= MAX_LEGIONS; i++) {
-            legion_id++;
-            if (legion_id > MAX_LEGIONS) {
-                legion_id = 1;
-            }
-            const formation *m = formation_get(legion_id);
-            if (m->in_use == 1 && !m->is_herd && m->is_legion) {
-                if (current_legion_id == 0) {
-                    current_legion_id = legion_id;
-                    break;
-                }
-            }
-        }
-        if (current_legion_id > 0) {
-            const formation *m = formation_get(current_legion_id);
-            city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
-            window_invalidate();
-        }
-    }
-}
-
-static void cheat_init_or_invasion(void)
-{
-    if (window_is(WINDOW_BUILDING_INFO)) {
-        data.is_cheating = window_building_info_get_building_type() == BUILDING_WELL;
-    } else if (data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
-        data.is_cheating = 2;
-        scenario_invasion_start_from_cheat();
-    } else {
-        data.is_cheating = 0;
-    }
-}
-
-static void cheat_victory(void)
-{
-    if (data.is_cheating) {
-        city_victory_force_win();
-    }
-}
-
-static void cheat_money(void)
-{
-    if (data.is_cheating) {
-        city_finance_process_cheat();
-        window_invalidate();
-    }
-}
-
-static void editor_toggle_battle_info(void)
-{
-    if (window_is(WINDOW_EDITOR_EMPIRE)) {
-        window_editor_empire_toggle_battle_info();
-    }
-}
-
-static void input_number(int number)
-{
-    if (window_is(WINDOW_NUMERIC_INPUT)) {
-        window_numeric_input_number(number);
-    }
-}
-
-static void load_file(void)
-{
-    if (window_is(WINDOW_EDITOR_MAP)) {
-        window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_LOAD);
-    } else if (window_is(WINDOW_CITY) || window_is(WINDOW_MAIN_MENU)) {
-        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
-    }
-}
-
-static void save_file(void)
-{
-    if (window_is(WINDOW_EDITOR_MAP)) {
-        window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
-    } else if (window_is(WINDOW_CITY)) {
-        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
-    }
-}
-
-void hotkey_character(int c, int with_ctrl, int with_alt)
-{
-    if (with_ctrl) {
-        switch (c) {
-            case 'a':
-                editor_toggle_battle_info();
-                break;
-            case 'o':
-                load_file();
-                break;
-            case 's':
-                save_file();
-                break;
-        }
+    if (!allocate_mapping_memory(total_definitions, total_arrows)) {
         return;
     }
-    if (with_alt) {
-        switch (c) {
-            case 'x':
-                hotkey_esc();
-                break;
-            case 'k':
-                cheat_init_or_invasion();
-                break;
-            case 'c':
-                cheat_money();
-                break;
-            case 'v':
-                cheat_victory();
-                break;
 
-            // Azerty keyboards need alt gr for these keys
-            case '[': case '5':
-                change_game_speed(1);
-                break;
-            case ']': case '-':
-                change_game_speed(0);
-                break;
+    // Fixed keys: Escape and Enter
+    data.definitions[0].action = &data.hotkey_state.enter_pressed;
+    data.definitions[0].key = KEY_ENTER;
+    data.definitions[0].modifiers = 0;
+    data.definitions[0].repeatable = 0;
+    data.definitions[0].value = 1;
+
+    data.definitions[1].action = &data.hotkey_state.escape_pressed;
+    data.definitions[1].key = KEY_ESCAPE;
+    data.definitions[1].modifiers = 0;
+    data.definitions[1].repeatable = 0;
+    data.definitions[1].value = 1;
+
+    data.num_definitions = 2;
+
+    for (int i = 0; i < num_mappings; i++) {
+        hotkey_action action = mappings[i].action;
+        if (action == HOTKEY_ARROW_UP || action == HOTKEY_ARROW_DOWN ||
+            action == HOTKEY_ARROW_LEFT || action == HOTKEY_ARROW_RIGHT) {
+            add_arrow(&mappings[i]);
+        } else {
+            add_definition(&mappings[i]);
         }
-        return;
-    }
-
-    switch (c) {
-        case '[':
-            change_game_speed(1);
-            break;
-        case ']':
-            change_game_speed(0);
-            break;
-        case ' ':
-            toggle_overlay();
-            break;
-        case 'p':
-            toggle_pause();
-            break;
-        case 'f':
-            show_overlay(OVERLAY_FIRE);
-            break;
-        case 'd':
-            show_overlay(OVERLAY_DAMAGE);
-            break;
-        case 'c':
-            show_overlay(OVERLAY_CRIME);
-            break;
-        case 't':
-            show_overlay(OVERLAY_PROBLEMS);
-            break;
-        case 'w':
-            show_overlay(OVERLAY_WATER);
-            break;
-        case 'l':
-            cycle_legion();
-            break;
-        case '1':
-            show_advisor(ADVISOR_LABOR);
-            input_number(1);
-            break;
-        case '2':
-            show_advisor(ADVISOR_MILITARY);
-            input_number(2);
-            break;
-        case '3':
-            show_advisor(ADVISOR_IMPERIAL);
-            input_number(3);
-            break;
-        case '4':
-            show_advisor(ADVISOR_RATINGS);
-            input_number(4);
-            break;
-        case '5':
-            show_advisor(ADVISOR_TRADE);
-            input_number(5);
-            break;
-        case '6':
-            show_advisor(ADVISOR_POPULATION);
-            input_number(6);
-            break;
-        case '7':
-            show_advisor(ADVISOR_HEALTH);
-            input_number(7);
-            break;
-        case '8':
-            show_advisor(ADVISOR_EDUCATION);
-            input_number(8);
-            break;
-        case '9':
-            show_advisor(ADVISOR_ENTERTAINMENT);
-            input_number(9);
-            break;
-        case '0':
-            show_advisor(ADVISOR_RELIGION);
-            input_number(0);
-            break;
-        case '-':
-            show_advisor(ADVISOR_FINANCIAL);
-            break;
-        case '=':
-        case '+':
-            show_advisor(ADVISOR_CHIEF);
-            break;
     }
 }
 
-void hotkey_left_press(void)
+const hotkeys *hotkey_state(void)
 {
-    scroll_arrow_left(1);
+    return &data.hotkey_state;
 }
 
-void hotkey_right_press(void)
+void hotkey_reset_state(void)
 {
-    scroll_arrow_right(1);
+    memset(&data.hotkey_state, 0, sizeof(data.hotkey_state));
+    memset(&data.global_hotkey_state, 0, sizeof(data.global_hotkey_state));
 }
 
-void hotkey_up_press(void)
+void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
 {
-    scroll_arrow_up(1);
-}
-
-void hotkey_down_press(void)
-{
-    scroll_arrow_down(1);
-}
-
-void hotkey_left_release(void)
-{
-    scroll_arrow_left(0);
-}
-
-void hotkey_right_release(void)
-{
-    scroll_arrow_right(0);
-}
-
-void hotkey_up_release(void)
-{
-    scroll_arrow_up(0);
-}
-
-void hotkey_down_release(void)
-{
-    scroll_arrow_down(0);
-}
-
-void hotkey_home(void)
-{
-    if (window_is(WINDOW_CITY)) {
-        game_orientation_rotate_left();
-        window_invalidate();
+    for (int i = 0; i < data.num_arrows; i++) {
+        arrow_definition *arrow = &data.arrows[i];
+        if (arrow->key == key) {
+            arrow->action(1);
+        }
+    }
+    for (int i = 0; i < data.num_definitions; i++) {
+        hotkey_definition *def = &data.definitions[i];
+        if (def->key == key && def->modifiers == modifiers && (!repeat || def->repeatable)) {
+            *(def->action) = def->value;
+        }
     }
 }
 
-void hotkey_end(void)
+void hotkey_key_released(key_type key)
 {
-    if (window_is(WINDOW_CITY)) {
-        game_orientation_rotate_right();
-        window_invalidate();
+    for (int i = 0; i < data.num_arrows; i++) {
+        arrow_definition *arrow = &data.arrows[i];
+        if (arrow->key == key) {
+            arrow->action(0);
+        }
     }
 }
 
@@ -365,76 +344,31 @@ static void confirm_exit(int accepted)
     }
 }
 
-void hotkey_esc(void)
+void hotkey_handle_escape(void)
 {
     video_stop();
     window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
 }
 
-void hotkey_page_up(void)
+void hotkey_handle_global_keys(void)
 {
-    change_game_speed(0);
-}
-
-void hotkey_page_down(void)
-{
-    change_game_speed(1);
-}
-
-void hotkey_enter(int with_alt)
-{
-    if (with_alt) {
-        system_set_fullscreen(!setting_fullscreen());
-        return;
+    if (data.global_hotkey_state.center_screen) {
+        system_center();
     }
-
-    if (window_is(WINDOW_POPUP_DIALOG)) {
-        window_popup_dialog_confirm();
-    } else if (window_is(WINDOW_PLAIN_MESSAGE_DIALOG)) {
-        window_plain_message_dialog_accept();
-    } else if (window_is(WINDOW_NUMERIC_INPUT)) {
-        window_numeric_input_accept();
-    }
-}
-
-static void go_to_bookmark(int number)
-{
-    if (map_bookmark_go_to(number)) {
-        window_invalidate();
-    }
-}
-
-static void handle_bookmark(int number, int with_modifier)
-{
-    exit_military_command();
-    if (window_is(WINDOW_CITY)) {
-        if (with_modifier) {
-            map_bookmark_save(number);
-        } else {
-            go_to_bookmark(number);
+    if (data.global_hotkey_state.resize_to) {
+        switch (data.global_hotkey_state.resize_to) {
+            case 640: system_resize(640, 480); break;
+            case 800: system_resize(800, 600); break;
+            case 1024: system_resize(1024, 768); break;
         }
     }
-}
-
-static void take_screenshot(int full_city)
-{
-    graphics_save_screenshot(full_city);
-}
-
-void hotkey_func(int f_number, int with_any_modifier, int with_ctrl)
-{
-    switch (f_number) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-            handle_bookmark(f_number - 1, with_any_modifier);
-            break;
-        case 5: system_center(); break;
-        case 6: system_set_fullscreen(!setting_fullscreen()); break;
-        case 7: system_resize(640, 480); break;
-        case 8: system_resize(800, 600); break;
-        case 9: system_resize(1024, 768); break;
-        case 12: take_screenshot(with_ctrl); break;
+    if (data.global_hotkey_state.toggle_fullscreen) {
+        system_set_fullscreen(!setting_fullscreen());
+    }
+    if (data.global_hotkey_state.save_screenshot) {
+        graphics_save_screenshot(0);
+    }
+    if (data.global_hotkey_state.save_city_screenshot) {
+        graphics_save_screenshot(1);
     }
 }

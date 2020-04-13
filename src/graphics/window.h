@@ -2,6 +2,7 @@
 #define GRAPHICS_WINDOW_H
 
 #include "graphics/tooltip.h"
+#include "input/hotkey.h"
 #include "input/mouse.h"
 
 typedef enum {
@@ -76,7 +77,7 @@ typedef struct {
     window_id id;
     void (*draw_background)(void);
     void (*draw_foreground)(void);
-    void (*handle_mouse)(const mouse *m);
+    void (*handle_input)(const mouse *m, const hotkeys *h);
     void (*get_tooltip)(tooltip_context *c);
 } window_type;
 

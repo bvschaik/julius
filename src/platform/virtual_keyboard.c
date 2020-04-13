@@ -1,24 +1,31 @@
-#include "virtual_keyboard.h"
-
 #include "game/system.h"
 
 #include "SDL.h"
 
-void platform_virtual_keyboard_show(void)
+static int use_virtual_keyboard(void)
 {
-    if (system_use_virtual_keyboard()) {
+#if defined (__vita__) || defined(__SWITCH__)
+    return 1;
+#else
+    return 0;
+#endif
+}
+
+static int is_showing(void)
+{
+    return SDL_IsTextInputActive();
+}
+
+void system_keyboard_show(void)
+{
+    if (use_virtual_keyboard() && !is_showing()) {
         SDL_StartTextInput();
     }
 }
 
-void platform_virtual_keyboard_hide(void)
+void system_keyboard_hide(void)
 {
-    if (system_use_virtual_keyboard()) {
+    if (use_virtual_keyboard() && is_showing()) {
         SDL_StopTextInput();
     }
-}
-
-int platform_virtual_keyboard_showing(void)
-{
-    return SDL_IsTextInputActive();
 }

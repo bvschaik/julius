@@ -37,12 +37,12 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrow_buttons, 4)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         data.close_callback();
     }
 }
@@ -67,7 +67,7 @@ void window_difficulty_options_show(void (*close_callback)(void))
         WINDOW_DIFFICULTY_OPTIONS,
         window_draw_underlying_window,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     data.close_callback = close_callback;
     window_show(&window);

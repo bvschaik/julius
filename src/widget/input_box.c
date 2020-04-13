@@ -1,7 +1,7 @@
 #include "input_box.h"
 
+#include "game/system.h"
 #include "graphics/panel.h"
-#include "platform/virtual_keyboard.h"
 
 static int is_mouse_inside_input(const mouse *m, const input_box *box)
 {
@@ -20,10 +20,10 @@ int input_box_handle_mouse(const mouse *m, const input_box *box)
         return 0;
     }
     int selected = is_mouse_inside_input(m, box);
-    if (!platform_virtual_keyboard_showing() && selected) {
-        platform_virtual_keyboard_show();
-    } else if (platform_virtual_keyboard_showing() && !selected) {
-        platform_virtual_keyboard_hide();
+    if (selected) {
+        system_keyboard_show();
+    } else {
+        system_keyboard_hide();
     }
     return selected;
 }

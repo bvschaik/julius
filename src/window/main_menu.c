@@ -13,9 +13,6 @@
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
-#include "input/hotkey.h"
-#include "input/keyboard.h"
-#include "platform/version.h"
 #include "sound/music.h"
 #include "window/cck_selection.h"
 #include "window/config.h"
@@ -42,13 +39,9 @@ static generic_button buttons[] = {
 static void draw_version_string(void)
 {
     uint8_t version_string[100] = "v";
-    const uint8_t *julius_version = string_from_ascii(JULIUS_VERSION);
-    const uint8_t *julius_version_suffix = string_from_ascii(JULIUS_VERSION_SUFFIX);
-    int version_length = string_length(julius_version);
     int text_y = screen_height() - 30;
 
-    string_copy(julius_version, version_string + 1, 99);
-    string_copy(julius_version_suffix, version_string + 1 + version_length, 99 - version_length);
+    string_copy(string_from_ascii(system_version()), version_string + 1, 99);
 
     int text_width = text_get_width(version_string, FONT_SMALL_PLAIN);
 
@@ -90,14 +83,17 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id)) {
         return;
     }
-    if (keyboard_is_esc_pressed()) {
-        hotkey_esc();
+    if (h->escape_pressed) {
+        hotkey_handle_escape();
+    }
+    if (h->load_file) {
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
     }
 }
 
@@ -143,7 +139,7 @@ void window_main_menu_show(int restart_music)
         WINDOW_MAIN_MENU,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     window_show(&window);
 }

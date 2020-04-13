@@ -2,13 +2,16 @@
 
 #include "core/encoding.h"
 #include "core/string.h"
+#include "game/system.h"
 #include "graphics/text.h"
-#include "platform/virtual_keyboard.h"
 
 static struct {
     int insert;
     int capture;
     int accepted;
+
+    int capture_numeric;
+    void (*capture_numeric_callback)(int);
     
     uint8_t *text;
     int cursor_position;
@@ -21,9 +24,7 @@ static struct {
     
     int box_width;
     font_t font;
-
-    int esc_is_down;
-} data = {0};
+} data;
 
 static void change_start_offset_by(int length)
 {
@@ -87,7 +88,7 @@ void keyboard_resume_capture(void)
 void keyboard_pause_capture(void)
 {
     data.capture = 0;
-    platform_virtual_keyboard_hide();
+    system_keyboard_hide();
 }
 
 void keyboard_stop_capture(void)
@@ -98,7 +99,19 @@ void keyboard_stop_capture(void)
     data.length = 0;
     data.max_length = 0;
     data.accepted = 0;
-    platform_virtual_keyboard_hide();
+    system_keyboard_hide();
+}
+
+void keyboard_start_capture_numeric(void (*callback)(int))
+{
+    data.capture_numeric = 1;
+    data.capture_numeric_callback = callback;
+}
+
+void keyboard_stop_capture_numeric(void)
+{
+    data.capture_numeric = 0;
+    data.capture_numeric_callback = 0;
 }
 
 int keyboard_input_is_accepted(void)
@@ -270,13 +283,15 @@ void keyboard_end(void)
     }
 }
 
-void keyboard_esc(void)
-{
-    data.esc_is_down = 1;
-}
-
 void keyboard_character(const char *text_utf8)
 {
+    if (data.capture_numeric) {
+        char c = text_utf8[0];
+        if (c >= '0' && c <= '9') {
+            data.capture_numeric_callback(c - '0');
+        }
+        return;
+    }
     if (!data.capture) {
         return;
     }
@@ -303,14 +318,4 @@ void keyboard_character(const char *text_utf8)
     if (add) {
         add_char(c);
     }
-}
-
-int keyboard_is_esc_pressed(void)
-{
-    return data.esc_is_down;
-}
-
-void keyboard_reset_esc_state(void)
-{
-    data.esc_is_down = 0;
 }

@@ -137,12 +137,12 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 13, &focus_button_id)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         window_editor_attributes_show();
     }
 }
@@ -231,7 +231,7 @@ void window_editor_special_events_show(void)
         WINDOW_EDITOR_SPECIAL_EVENTS,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     window_show(&window);
 }

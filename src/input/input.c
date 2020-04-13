@@ -1,10 +1,9 @@
 #include "input.h"
 
-#include "input/keyboard.h"
+#include "input/hotkey.h"
 #include "input/mouse.h"
 
-int input_go_back_requested(void)
+int input_go_back_requested(const mouse *m, const hotkeys *h)
 {
-    const mouse *m = mouse_get();
-    return m->right.went_up || (m->is_touch && m->left.double_click) || keyboard_is_esc_pressed();
+    return m->right.went_up || (m->is_touch && m->left.double_click) || h->escape_pressed;
 }

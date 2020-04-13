@@ -159,8 +159,20 @@ static void draw_foreground(void)
     }
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_hotkeys(const hotkeys *h)
 {
+    if (h->show_advisor) {
+        if (current_advisor == h->show_advisor) {
+            window_city_show();
+        } else {
+            window_advisors_show_advisor(h->show_advisor);
+        }
+    }
+}
+
+static void handle_input(const mouse *m, const hotkeys *h)
+{
+    handle_hotkeys(h);
     const mouse *m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 13, &focus_button_id)) {
         return;
@@ -174,7 +186,7 @@ static void handle_mouse(const mouse *m)
     if (current_advisor_window->handle_mouse && current_advisor_window->handle_mouse(m_dialog)) {
         return;
     }
-    if (input_go_back_requested()) {
+    if (input_go_back_requested(m, h)) {
         window_city_show();
         return;
     }
@@ -229,7 +241,7 @@ void window_advisors_show(void)
         WINDOW_ADVISORS,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     init();
