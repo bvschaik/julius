@@ -22,30 +22,33 @@ typedef enum {
 
 typedef enum {
     JOYSTICK_HAT_CENTERED = 0,
-    JOYSTICK_HAT_TOP = 1,
+    JOYSTICK_HAT_UP = 1,
     JOYSTICK_HAT_LEFT = 2,
-    JOYSTICK_HAT_BOTTOM = 4,
+    JOYSTICK_HAT_DOWN = 4,
     JOYSTICK_HAT_RIGHT = 8
 } joystick_hat_position;
 
 typedef enum {
-    MAPPING_ACTION_CURSOR_UP = 0,
-    MAPPING_ACTION_CURSOR_LEFT = 1,
-    MAPPING_ACTION_CURSOR_DOWN = 2,
-    MAPPING_ACTION_CURSOR_RIGHT = 3,
-    MAPPING_ACTION_LEFT_MOUSE_BUTTON = 4,
-    MAPPING_ACTION_MIDDLE_MOUSE_BUTTON = 5,
-    MAPPING_ACTION_RIGHT_MOUSE_BUTTON = 6,
-    MAPPING_ACTION_SCROLL_UP = 7,
-    MAPPING_ACTION_SCROLL_LEFT = 8,
-    MAPPING_ACTION_SCROLL_DOWN = 9,
-    MAPPING_ACTION_SCROLL_RIGHT = 10,
-    MAPPING_ACTION_MAX = 11
+    MAPPING_ACTION_CURSOR_UP,
+    MAPPING_ACTION_CURSOR_LEFT,
+    MAPPING_ACTION_CURSOR_DOWN,
+    MAPPING_ACTION_CURSOR_RIGHT,
+    MAPPING_ACTION_LEFT_MOUSE_BUTTON,
+    MAPPING_ACTION_MIDDLE_MOUSE_BUTTON,
+    MAPPING_ACTION_RIGHT_MOUSE_BUTTON,
+    MAPPING_ACTION_SCROLL_UP,
+    MAPPING_ACTION_SCROLL_LEFT,
+    MAPPING_ACTION_SCROLL_DOWN,
+    MAPPING_ACTION_SCROLL_RIGHT,
+    MAPPING_ACTION_RESET_MAPPING,
+    MAPPING_ACTION_MAX
 } mapping_action;
 
 typedef struct {
-    joystick_element type;
-    int id;
+    joystick_element first_element;
+    int first_id;
+    joystick_element second_element;
+    int second_id;
 } mapping_element;
 
 typedef struct {
@@ -54,16 +57,17 @@ typedef struct {
     char guid[JOYSTICK_MAX_GUID];
     int total_axis;
     int total_buttons;
-    int total_balls;
+    int total_trackballs;
     int total_hats;
-    mapping_element mapping[MAPPING_ACTION_MAX];
+    mapping_element first_mapping[MAPPING_ACTION_MAX];
+    mapping_element second_mapping[MAPPING_ACTION_MAX];
 } joystick_model;
 
 joystick_model *joystick_get_model_by_guid(const char *guid);
-joystick_model *joystick_get_model_by_index(int index);
 joystick_model *joystick_get_first_unused_model(void);
 
-int joystick_add(int joystick_id, const joystick_model *model);
+int joystick_add(int joystick_id, joystick_model *model);
+int joystick_is_listened(int joystick_id);
 int joystick_remove(int joystick_id);
 void joystick_update_element(int joystick_id, joystick_element element, int element_id, int value1, int value2);
 

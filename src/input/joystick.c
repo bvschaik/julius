@@ -4,6 +4,8 @@
 
 #include <string.h>
 
+typedef int joystick_axis;
+
 typedef struct {
     int is_down;
     int went_down;
@@ -27,19 +29,18 @@ static struct {
     struct {
         int id;
         int connected;
-        const joystick_model *model;
-        int axis[JOYSTICK_MAX_AXIS];
+        joystick_model *model;
+        joystick_axis axis[JOYSTICK_MAX_AXIS];
         joystick_button button[JOYSTICK_MAX_BUTTONS];
         joystick_trackball trackball[JOYSTICK_MAX_TRACKBALLS];
         joystick_hat hat[JOYSTICK_MAX_HATS];
     } joystick[JOYSTICK_MAX_CONTROLLERS];
-    int actions_used_this_frame[MAPPING_ACTION_MAX];
 } data;
 
 joystick_model *joystick_get_model_by_guid(const char *guid)
 {
     for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
-        joystick_model *model = joystick_get_model_by_index(i);
+        joystick_model *model = &data.connected_models[i];
         if (strcmp(guid, model->guid) == 0) {
             return model;
         }
@@ -47,15 +48,10 @@ joystick_model *joystick_get_model_by_guid(const char *guid)
     return 0;
 }
 
-joystick_model *joystick_get_model_by_index(int index)
-{
-    return &data.connected_models[index];
-}
-
 joystick_model *joystick_get_first_unused_model(void)
 {
     for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
-        joystick_model *model = joystick_get_model_by_index(i);
+        joystick_model *model = &data.connected_models[i];
         if (!model->connected_joysticks) {
             return model;
         }
@@ -80,9 +76,9 @@ static void update_button(joystick_button *button, int value)
 
 static void update_hat(joystick_hat *hat, joystick_hat_position position)
 {
-    update_button(&hat->top, position & JOYSTICK_HAT_TOP);
+    update_button(&hat->top, position & JOYSTICK_HAT_UP);
     update_button(&hat->left, position & JOYSTICK_HAT_LEFT);
-    update_button(&hat->bottom, position & JOYSTICK_HAT_BOTTOM);
+    update_button(&hat->bottom, position & JOYSTICK_HAT_DOWN);
     update_button(&hat->right, position & JOYSTICK_HAT_RIGHT);
 }
 
@@ -140,14 +136,21 @@ static int get_joystick_slot_from_id(int joystick_id)
     return JOYSTICK_NO_SLOT;
 }
 
-int joystick_add(int joystick_id, const joystick_model *model)
+int joystick_add(int joystick_id, joystick_model *model)
 {
     int slot = get_free_joystick_slot();
     if (slot != JOYSTICK_NO_SLOT) {
         data.joystick[slot].id = joystick_id;
         data.joystick[slot].model = model;
+        data.joystick[slot].connected = 1;
+        model->connected_joysticks++;
     }
     return slot;
+}
+
+int joystick_is_listened(int joystick_id)
+{
+    return get_joystick_slot_from_id(joystick_id) != JOYSTICK_NO_SLOT;
 }
 
 int joystick_remove(int joystick_id)
@@ -157,6 +160,7 @@ int joystick_remove(int joystick_id)
         return 0;
     }
     data.joystick[slot].connected = 0;
+    data.joystick[slot].model->connected_joysticks--;
     data.joystick[slot].model = 0;
     joystick_reset_state(slot);
     return 1;
@@ -186,5 +190,45 @@ void joystick_update_element(int joystick_id, joystick_element element, int elem
     }
 }
 
-void joystick_to_mouse_and_keyboard(void)
-{}
+static void get_joystick_input_for(mapping_action action, int *value, joystick_element *element)
+{
+    *value = 0;
+    *element = JOYSTICK_ELEMENT_NONE;
+
+    for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
+        if (!data.joystick[i].connected) {
+            continue;
+        }
+        mapping_element *first_mapping = data.joystick[i].model->first_mapping;
+        mapping_element *second_mapping = data.joystick[i].model->second_mapping;
+        joystick_element action_element = first_mapping[action].first_element;
+        if (action_element != JOYSTICK_ELEMENT_NONE) {
+            switch (action_element) {
+
+            }
+        }
+    }
+}
+
+static int translate_mouse_cursor_position(void)
+{
+    int value_up, value_left, value_down, value_right;
+    joystick_element element_up, element_left, element_down, element_right;
+
+    get_joystick_input_for(MAPPING_ACTION_CURSOR_UP, &value_up, &element_up);
+    get_joystick_input_for(MAPPING_ACTION_CURSOR_DOWN, &value_down, &element_down);
+    get_joystick_input_for(MAPPING_ACTION_CURSOR_LEFT, &value_left, &element_left);
+    get_joystick_input_for(MAPPING_ACTION_CURSOR_RIGHT, &value_right, &element_right);
+
+
+}
+
+int joystick_to_mouse_and_keyboard(void)
+{
+    int handled = 0;
+    handled |= translate_mouse_cursor_position();
+    handled |= translate_mouse_button_presses();
+    handled |= translate_scrolling();
+    handled |= translate_mapping_reset();
+    return handled;
+}

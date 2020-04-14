@@ -14,6 +14,7 @@
 #include "input/touch.h"
 #include "platform/arguments.h"
 #include "platform/file_manager.h"
+#include "platform/joystick.h"
 #include "platform/keyboard_input.h"
 #include "platform/platform.h"
 #include "platform/prefs.h"
@@ -293,19 +294,19 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             break;
 
         case SDL_JOYAXISMOTION:
-            platform_joystick_handle_axis();
+            platform_joystick_handle_axis(&event->jaxis);
             break;
         case SDL_JOYBALLMOTION:
-            platform_joystick_handle_trackball();
+            platform_joystick_handle_trackball(&event->jball);
             break;
         case SDL_JOYHATMOTION:
-            platform_joystick_handle_hat();
+            platform_joystick_handle_hat(&event->jhat);
             break;
         case SDL_JOYBUTTONDOWN:
-            platform_joystick_handle_button(1);
+            platform_joystick_handle_button(&event->jbutton, 1);
             break;
         case SDL_JOYBUTTONUP:
-            platform_joystick_handle_button(0);
+            platform_joystick_handle_button(&event->jbutton, 0);
             break;
         case SDL_JOYDEVICEADDED:
             platform_joystick_device_changed(event->jdevice.which, 1);
