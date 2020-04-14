@@ -190,6 +190,43 @@ void joystick_update_element(int joystick_id, joystick_element element, int elem
     }
 }
 
+static int get_input_for_mapping(int joystick_id, mapping_action *action, int *value, joystick_element *element)
+{
+    for (int j = 0; j < JOYSTICK_MAPPING_ELEMENTS_MAX; ++j) {
+        joystick_element current_element = first_mapping[action].element[j].type;
+        int current_value = 0;
+        if (current_element == JOYSTICK_ELEMENT_NONE) {
+            continue;
+        }
+        int element_id = first_mapping[action].element[j].id;
+        int element_position = first_mapping[action].element[j].position;
+        switch (current_element) {
+            case JOYSTICK_ELEMENT_AXIS:
+                current_value = data.joystick[i].axis[element_id];
+                break;
+            case JOYSTICK_ELEMENT_BUTTON:
+                current_value = data.joystick[i].button[element_id].is_down;
+                break;
+            case JOYSTICK_ELEMENT_TRACKBALL:
+                if (element_position == JOYSTICK_TRACKBALL_X) {
+                    current_value = data.joystick[i].trackball[element_id].delta_x;
+                } else {
+                    current_value = data.joystick[i].trackball[element_id].delta_x;
+                }
+                break;
+            case JOYSTICK_ELEMENT_HAT:
+                switch
+                    current_value = data.joystick[i].axis[element_id];
+                break;
+        }
+
+        if (current_value == 0) {
+            *value = 0;
+            return;
+        }
+    }
+}
+
 static void get_joystick_input_for(mapping_action action, int *value, joystick_element *element)
 {
     *value = 0;
@@ -199,13 +236,9 @@ static void get_joystick_input_for(mapping_action action, int *value, joystick_e
         if (!data.joystick[i].connected) {
             continue;
         }
-        mapping_element *first_mapping = data.joystick[i].model->first_mapping;
-        mapping_element *second_mapping = data.joystick[i].model->second_mapping;
-        joystick_element action_element = first_mapping[action].first_element;
-        if (action_element != JOYSTICK_ELEMENT_NONE) {
-            switch (action_element) {
-
-            }
+        if(get_input_for_mapping(i, &data.joystick[i].model->first_mapping[action], value, element) ||
+           get_input_for_mapping(i, &data.joystick[i].model->second_mapping[action], value, element)) {
+            return;
         }
     }
 }

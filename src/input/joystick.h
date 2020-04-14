@@ -12,6 +12,8 @@
 #define JOYSTICK_MAX_CONTROLLERS 6
 #define JOYSTICK_NO_SLOT -1
 
+#define JOYSTICK_MAPPING_ELEMENTS_MAX 2
+
 typedef enum {
     JOYSTICK_ELEMENT_NONE = 0,
     JOYSTICK_ELEMENT_AXIS = 1,
@@ -27,6 +29,11 @@ typedef enum {
     JOYSTICK_HAT_DOWN = 4,
     JOYSTICK_HAT_RIGHT = 8
 } joystick_hat_position;
+
+typedef enum {
+    JOYSTICK_TRACKBALL_X = 0,
+    JOYSTICK_TRACKBALL_Y = 1
+} joystick_trackball_position;
 
 typedef enum {
     MAPPING_ACTION_CURSOR_UP,
@@ -45,10 +52,11 @@ typedef enum {
 } mapping_action;
 
 typedef struct {
-    joystick_element first_element;
-    int first_id;
-    joystick_element second_element;
-    int second_id;
+    struct {
+        joystick_element type;
+        int id;
+        int position;
+    } element[JOYSTICK_MAPPING_ELEMENTS_MAX];
 } mapping_element;
 
 typedef struct {
@@ -71,6 +79,6 @@ int joystick_is_listened(int joystick_id);
 int joystick_remove(int joystick_id);
 void joystick_update_element(int joystick_id, joystick_element element, int element_id, int value1, int value2);
 
-void joystick_to_mouse_and_keyboard(void);
+int joystick_to_mouse_and_keyboard(void);
 
 #endif // INPUT_JOYSTICK_H
