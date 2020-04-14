@@ -193,10 +193,10 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (scrollbar_handle_mouse(&scrollbar, m)) {
+    const mouse *m_dialog = mouse_in_dialog(m);
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
         return;
     }
-    const mouse *m_dialog = mouse_in_dialog(m);
     if (image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0)) {
         return;
     }

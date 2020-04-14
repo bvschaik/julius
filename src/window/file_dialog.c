@@ -155,7 +155,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (input_box_handle_mouse(m_dialog, &file_name_input) ||
         generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, NUM_FILES_IN_VIEW, &data.focus_button_id) ||
         image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0) ||
-        scrollbar_handle_mouse(&scrollbar, m)) {
+        scrollbar_handle_mouse(&scrollbar, m_dialog)) {
         return;
     }
     if (input_go_back_requested(m, h)) {
