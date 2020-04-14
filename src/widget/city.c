@@ -367,6 +367,7 @@ int widget_city_has_input(void)
 void widget_city_handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->is_touch) {
+        scroll_map(m);
         handle_touch();
         return;
     }

@@ -314,6 +314,7 @@ static void handle_touch(void)
 void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->is_touch) {
+        scroll_map(m);
         handle_touch();
         return;
     }
