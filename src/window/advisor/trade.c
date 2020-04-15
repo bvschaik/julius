@@ -80,6 +80,8 @@ static void draw_foreground(void)
             resource_trade_status trade_status = city_resource_trade_status(resource);
             if (trade_status == TRADE_STATUS_IMPORT) {
                 lang_text_draw(54, 5, 380, y_offset + 61, FONT_NORMAL_WHITE);
+                text_draw_number(city_resource_export_over(resource), '@', " ",
+                    500, y_offset + 61, FONT_NORMAL_WHITE);
             } else if (trade_status == TRADE_STATUS_EXPORT) {
                 lang_text_draw(54, 6, 380, y_offset + 61, FONT_NORMAL_WHITE);
                 text_draw_number(city_resource_export_over(resource), '@', " ",

@@ -125,7 +125,7 @@ static void draw_foreground(void)
                 lang_text_draw_centered(54, 18, 114, 221, 400, FONT_NORMAL_BLACK);
                 break;
             case TRADE_STATUS_IMPORT:
-                lang_text_draw_centered(54, 19, 114, 221, 400, FONT_NORMAL_BLACK);
+                lang_text_draw_centered(54, 19, 114, 221, 200, FONT_NORMAL_BLACK);
                 break;
             case TRADE_STATUS_EXPORT:
                 lang_text_draw_centered(54, 20, 114, 221, 200, FONT_NORMAL_BLACK);
@@ -133,7 +133,7 @@ static void draw_foreground(void)
         }
     }
 
-    if (trade_status == TRADE_STATUS_EXPORT) {
+    if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
         lang_text_draw_amount(8, 10, city_resource_export_over(data.resource), 386, 221, FONT_NORMAL_BLACK);
     }
 
@@ -156,7 +156,7 @@ static void draw_foreground(void)
     }
 
     image_buttons_draw(0, 0, resource_image_buttons, 2);
-    if (trade_status == TRADE_STATUS_EXPORT) {
+    if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
         arrow_buttons_draw(0, 0, resource_arrow_buttons, 2);
     }
     graphics_reset_dialog();
@@ -168,7 +168,7 @@ static void handle_mouse(const mouse *m)
     if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0)) {
         return;
     }
-    if (city_resource_trade_status(data.resource) == TRADE_STATUS_EXPORT &&
+    if ((city_resource_trade_status(data.resource) == TRADE_STATUS_EXPORT || city_resource_trade_status(data.resource) == TRADE_STATUS_IMPORT) &&
             arrow_buttons_handle_mouse(m_dialog, 0, 0, resource_arrow_buttons, 2)) {
         return;
     }
