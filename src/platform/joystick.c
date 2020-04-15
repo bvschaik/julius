@@ -3,6 +3,22 @@
 #include "input/joystick.h"
 
 #include <stdio.h>
+#include <string.h>
+
+static mapping_element mapping_test[MAPPING_ACTION_MAX] = {
+    { { { JOYSTICK_ELEMENT_AXIS, 0, JOYSTICK_AXIS_POSITIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_AXIS, 1, JOYSTICK_AXIS_NEGATIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_AXIS, 0, JOYSTICK_AXIS_NEGATIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_AXIS, 1, JOYSTICK_AXIS_POSITIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
+    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } }
+};
 
 static joystick_model *get_joystick_model(SDL_Joystick *joystick, int instance_id)
 {
@@ -27,6 +43,7 @@ static joystick_model *get_joystick_model(SDL_Joystick *joystick, int instance_i
     model->total_hats = SDL_JoystickNumHats(joystick);
     model->total_trackballs = SDL_JoystickNumBalls(joystick);
     model->total_buttons = SDL_JoystickNumButtons(joystick);
+    memcpy(model->first_mapping, mapping_test, sizeof(mapping_element) * MAPPING_ACTION_MAX);
 
     return model;
 }
@@ -43,8 +60,7 @@ static void add_joystick(int index)
         SDL_JoystickClose(joystick);
         return;
     }
-    int slot = joystick_add(instance_id, model);
-    if (slot == JOYSTICK_NO_SLOT) {
+    if (!joystick_add(instance_id, model)) {
         SDL_JoystickClose(joystick);
     }
 }

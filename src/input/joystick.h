@@ -10,17 +10,21 @@
 #define JOYSTICK_MAX_TRACKBALLS 4
 #define JOYSTICK_MAX_HATS 4
 #define JOYSTICK_MAX_CONTROLLERS 6
-#define JOYSTICK_NO_SLOT -1
 
 #define JOYSTICK_MAPPING_ELEMENTS_MAX 2
 
 typedef enum {
     JOYSTICK_ELEMENT_NONE = 0,
     JOYSTICK_ELEMENT_AXIS = 1,
-    JOYSTICK_ELEMENT_BUTTON = 2,
-    JOYSTICK_ELEMENT_TRACKBALL = 3,
+    JOYSTICK_ELEMENT_TRACKBALL = 2,
+    JOYSTICK_ELEMENT_BUTTON = 3,
     JOYSTICK_ELEMENT_HAT = 4
 } joystick_element;
+
+typedef enum {
+    JOYSTICK_AXIS_POSITIVE = 0,
+    JOYSTICK_AXIS_NEGATIVE = 1
+} joystick_axis_position;
 
 typedef enum {
     JOYSTICK_HAT_CENTERED = 0,
@@ -31,8 +35,10 @@ typedef enum {
 } joystick_hat_position;
 
 typedef enum {
-    JOYSTICK_TRACKBALL_X = 0,
-    JOYSTICK_TRACKBALL_Y = 1
+    JOYSTICK_TRACKBALL_X_POSITIVE = 0,
+    JOYSTICK_TRACKBALL_X_NEGATIVE = 1,
+    JOYSTICK_TRACKBALL_Y_POSITIVE = 2,
+    JOYSTICK_TRACKBALL_Y_NEGATIVE = 3,
 } joystick_trackball_position;
 
 typedef enum {
