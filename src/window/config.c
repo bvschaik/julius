@@ -19,7 +19,7 @@
 #include "window/select_list.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 29
+#define NUM_CHECKBOXES 30
 #define CONFIG_PAGES 3
 #define NUM_BOTTOM_BUTTONS 5
 #define MAX_LANGUAGE_DIRS 20
@@ -28,7 +28,7 @@
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
-static int options_per_page[CONFIG_PAGES] = { 7,14,8 };
+static int options_per_page[CONFIG_PAGES] = { 7,14,9 };
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
@@ -66,6 +66,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES },
     { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ALL_HOUSES_MERGE },
     { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE },
+    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY },
 };
 
 static generic_button language_button = {
@@ -126,7 +127,8 @@ static const char *option_names[] = {
     "Farms and wharves deliver only to nearby granaries",
     "Food isn't delivered to getting granaries",
     "All houses merge",
-    "Open trade route count as providing different wine type"
+    "Open trade route count as providing different wine type",
+    "Randomly collapsing clay pits and iron mines take some money instead",
 };
 
 static struct {

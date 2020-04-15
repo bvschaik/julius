@@ -1,11 +1,13 @@
 #include "random_event.h"
 
 #include "building/destruction.h"
+#include "city/finance.h"
 #include "city/health.h"
 #include "city/labor.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "city/trade.h"
+#include "core/config.h"
 #include "core/random.h"
 #include "scenario/data.h"
 #include "scenario/property.h"
@@ -95,9 +97,14 @@ static void contaminate_water(void)
 static void destroy_iron_mine(void)
 {
     if (scenario.random_events.iron_mine_collapse) {
-        int grid_offset = building_destroy_first_of_type(BUILDING_IRON_MINE);
-        if (grid_offset) {
-            city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
+        if(config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
+            city_finance_process_sundry(250);
+            city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, 0);
+	} else {
+            int grid_offset = building_destroy_first_of_type(BUILDING_IRON_MINE);
+            if (grid_offset) {
+                city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
+            }
         }
     }
 }
@@ -105,9 +112,14 @@ static void destroy_iron_mine(void)
 static void destroy_clay_pit(void)
 {
     if (scenario.random_events.clay_pit_flooded) {
-        int grid_offset = building_destroy_first_of_type(BUILDING_CLAY_PIT);
-        if (grid_offset) {
-            city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, grid_offset);
+        if(config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
+            city_finance_process_sundry(250);
+            city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, 0);
+	} else {	    
+            int grid_offset = building_destroy_first_of_type(BUILDING_CLAY_PIT);
+            if (grid_offset) {
+                city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, grid_offset);
+            }
         }
     }
 }
