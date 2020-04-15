@@ -26,10 +26,10 @@ static scrollbar_type *current;
 
 void scrollbar_init(scrollbar_type *scrollbar, int scroll_position, int max_scroll_position)
 {
-    if (scroll_position > max_scroll_position) {
-        scroll_position = max_scroll_position;
+    if (max_scroll_position < 0) {
+        max_scroll_position = 0;
     }
-    scrollbar->scroll_position = scroll_position;
+    scrollbar->scroll_position = calc_bound(scroll_position, 0, max_scroll_position);
     scrollbar->max_scroll_position = max_scroll_position;
 }
 
@@ -41,6 +41,9 @@ void scrollbar_reset(scrollbar_type *scrollbar, int scroll_position)
 
 void scrollbar_update_max(scrollbar_type *scrollbar, int max_scroll_position)
 {
+    if (max_scroll_position < 0) {
+        max_scroll_position = 0;
+    }
     scrollbar->max_scroll_position = max_scroll_position;
     if (scrollbar->scroll_position > max_scroll_position) {
         scrollbar->scroll_position = max_scroll_position;

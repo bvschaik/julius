@@ -154,7 +154,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.focus_button_id = 12;
         return;
     }
-    if (scrollbar_handle_mouse(&scrollbar, m)) {
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
         data.focus_button_id = 13;
         return;
     }
