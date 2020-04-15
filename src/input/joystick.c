@@ -236,6 +236,7 @@ static int get_input_for_mapping(const joystick_info *joystick, const mapping_el
                 current_value = joystick->button[element_id];
                 break;
             case JOYSTICK_ELEMENT_HAT:
+            {
                 const joystick_hat *hat = &joystick->hat[element_id];
                 switch (element_position) {
                     case JOYSTICK_HAT_UP:
@@ -255,6 +256,7 @@ static int get_input_for_mapping(const joystick_info *joystick, const mapping_el
                         log_info("Invalid hat value for hat", 0, element_id);
                 }
                 break;
+            }
         }
         if (current_value == 0) {
             input->element = JOYSTICK_ELEMENT_NONE;
@@ -302,8 +304,7 @@ static void translate_input_for_element(mapped_input *input, joystick_element tr
             case JOYSTICK_ELEMENT_TRACKBALL:
                 input->value *= 5; // TODO is this a high enough value? I doubt it
                 break;
-            case JOYSTICK_ELEMENT_HAT:
-            case JOYSTICK_ELEMENT_BUTTON:
+            default:
                 input->value *= 32767;
         }
     } else if (translated_element == JOYSTICK_ELEMENT_TRACKBALL) {
@@ -311,8 +312,7 @@ static void translate_input_for_element(mapped_input *input, joystick_element tr
             case JOYSTICK_ELEMENT_AXIS:
                 input->value /= 5; // TODO is this a high enough value? I doubt it
                 break;
-            case JOYSTICK_ELEMENT_HAT:
-            case JOYSTICK_ELEMENT_BUTTON:
+            default:
                 input->value = 5;
         }
     } else if (translated_element == JOYSTICK_ELEMENT_BUTTON || translated_element == JOYSTICK_ELEMENT_HAT) {
