@@ -126,7 +126,7 @@ static joystick_info *get_free_joystick(void)
 static joystick_info *get_joystick_from_id(int joystick_id)
 {
     for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
-        if (data.joystick[i].id == joystick_id) {
+        if (data.joystick[i].id == joystick_id && data.joystick[i].connected) {
             return &data.joystick[i];
         }
     }
@@ -155,7 +155,7 @@ int joystick_is_listened(int joystick_id)
 int joystick_remove(int joystick_id)
 {
     joystick_info *joystick = get_joystick_from_id(joystick_id);
-    if (!joystick|| !joystick->connected) {
+    if (!joystick) {
         return 0;
     }
     joystick->connected = 0;
@@ -180,7 +180,7 @@ void joystick_update_element(int joystick_id, joystick_element element, int elem
             update_hat(&joystick->hat[element_id], value1);
             break;
         case JOYSTICK_ELEMENT_AXIS:
-            joystick->axis[element_id] = value1;
+            joystick->axis[element_id] = (abs(value1) >= 500) ? value1 : 0;
             break;
         case JOYSTICK_ELEMENT_TRACKBALL:
             update_trackball(&joystick->trackball[element_id], value1, value2);
@@ -269,7 +269,7 @@ static int get_input_for_mapping(const joystick_info *joystick, const mapping_el
             input->value = current_value;
         }
     }
-    return 1;
+    return input->value != 0;
 }
 
 static int get_joystick_input_for_action(mapping_action action, mapped_input *input)
@@ -333,7 +333,7 @@ static int rescale_axis(mapped_input *inputs)
     //of motion of the analog stick
     const float max_axis = 32767.0f;
     float analog_x = (float) inputs[DIRECTION_RIGHT].value - inputs[DIRECTION_LEFT].value;
-    float analog_y = (float) inputs[DIRECTION_UP].value - inputs[DIRECTION_DOWN].value;
+    float analog_y = (float) inputs[DIRECTION_DOWN].value - inputs[DIRECTION_UP].value;
     float dead_zone = (float) 2000.0f;
 
     inputs[DIRECTION_UP].value = 0;
@@ -377,15 +377,15 @@ static int rescale_axis(mapped_input *inputs)
             clamping_factor = max_axis / abs_analog_y;
         }
     }
-    if (analog_x > 0.0f) {
-        inputs[DIRECTION_UP].value = (int) (clamping_factor * analog_x);
-    } else if (analog_x < 0.0f) {
-        inputs[DIRECTION_DOWN].value = (int) (clamping_factor * -analog_x);
-    }
     if (analog_y > 0.0f) {
-        inputs[DIRECTION_RIGHT].value = (int) (clamping_factor * analog_y);
+        inputs[DIRECTION_DOWN].value = (int) (clamping_factor * analog_y);
     } else if (analog_y < 0.0f) {
-        inputs[DIRECTION_LEFT].value = (int) (clamping_factor * -analog_y);
+        inputs[DIRECTION_UP].value = (int) (clamping_factor * -analog_y);
+    }
+    if (analog_x > 0.0f) {
+        inputs[DIRECTION_RIGHT].value = (int) (clamping_factor * analog_x);
+    } else if (analog_x < 0.0f) {
+        inputs[DIRECTION_LEFT].value = (int) (clamping_factor * -analog_x);
     }
     return 1;
 }
