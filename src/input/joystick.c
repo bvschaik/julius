@@ -6,6 +6,7 @@
 #include "input/mouse.h"
 
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "SDL.h"
@@ -213,9 +214,6 @@ static int get_input_for_mapping(const joystick_info *joystick, const mapping_el
     for (int j = 0; j < JOYSTICK_MAPPING_ELEMENTS_MAX; ++j) {
         joystick_element current_element = mapping->element[j].type;
         int current_value = 0;
-        if (current_element == JOYSTICK_ELEMENT_NONE) {
-            continue;
-        }
         int element_id = mapping->element[j].id;
         int element_position = mapping->element[j].position;
         switch (current_element) {
@@ -275,6 +273,8 @@ static int get_input_for_mapping(const joystick_info *joystick, const mapping_el
                 }
                 break;
             }
+            default:
+                continue;
         }
         if (current_value == 0) {
             input->element = JOYSTICK_ELEMENT_NONE;

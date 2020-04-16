@@ -1,6 +1,7 @@
 #include "joystick.h"
 
 #include "input/joystick.h"
+#include "platform/platform.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -13,7 +14,7 @@ static mapping_element first_default_mapping[MAPPING_ACTION_MAX] = {
     { { { JOYSTICK_ELEMENT_AXIS, 5, JOYSTICK_AXIS_POSITIVE } } },
     { { { JOYSTICK_ELEMENT_AXIS, 2, JOYSTICK_AXIS_POSITIVE } } },
     { { { JOYSTICK_ELEMENT_BUTTON, 0 } } },
-    { JOYSTICK_ELEMENT_NONE },
+    { { { JOYSTICK_ELEMENT_NONE } } },
     { { { JOYSTICK_ELEMENT_BUTTON, 1 } } }
 };
 
@@ -75,7 +76,25 @@ static void remove_joystick(int instance_id)
     if (!joystick_is_listened(instance_id)) {
         return;
     }
-    SDL_JoystickClose(SDL_JoystickFromInstanceID(instance_id));
+    SDL_Joystick *joystick = 0;
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+    if (platform_sdl_version_at_least(2, 0, 4)) {
+        joystick = SDL_JoystickFromInstanceID(instance_id);
+    } else {
+#endif
+        for (int i = 0; i < SDL_NumJoysticks(); ++i) {
+            SDL_Joystick *current_joystick = SDL_JoystickOpen(i);
+            if (SDL_JoystickInstanceID(current_joystick) == instance_id) {
+                joystick = current_joystick;
+                break;
+            }
+        }
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+    }
+#endif
+    if (joystick) {
+        SDL_JoystickClose(joystick);
+    }
     joystick_remove(instance_id);
 }
 
