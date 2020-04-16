@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "core/log.h"
 #include "graphics/screen.h"
+#include "input/mouse.h"
 
 #include <math.h>
 #include <string.h>
@@ -50,7 +51,7 @@ typedef struct {
 enum {
     SLOWDOWN_FASTER = 1024,
     SLOWDOWN_NORMAL = 4096,
-    SLOWDOWN_SLOWER = 32768
+    SLOWDOWN_SLOWER = 8192
 } slowdown;
 
 static struct {
@@ -58,9 +59,12 @@ static struct {
     joystick_info joystick[JOYSTICK_MAX_CONTROLLERS];
     int connected_joysticks;
     struct {
-        int x;
-        int y;
-    } mouse_delta;
+        int x_delta;
+        int y_delta;
+        int left_button;
+        int middle_button;
+        int right_button;
+    } mouse;
 } data;
 
 joystick_model *joystick_get_model_by_guid(const char *guid)
@@ -87,10 +91,10 @@ joystick_model *joystick_get_first_unused_model(void)
 
 static void update_hat(joystick_hat *hat, joystick_hat_position position)
 {
-    hat->top = position & JOYSTICK_HAT_UP;
-    hat->left = position & JOYSTICK_HAT_LEFT;
-    hat->bottom = position & JOYSTICK_HAT_DOWN;
-    hat->right = position & JOYSTICK_HAT_RIGHT;
+    hat->top = (position & JOYSTICK_HAT_UP) ? 1 : 0;
+    hat->left = (position & JOYSTICK_HAT_LEFT) ? 1 : 0;
+    hat->bottom = (position & JOYSTICK_HAT_DOWN) ? 1 : 0;
+    hat->right = (position & JOYSTICK_HAT_RIGHT) ? 1 : 0;
 }
 
 static void update_trackball(joystick_trackball *trackball, int delta_x, int delta_y)
@@ -194,7 +198,7 @@ void joystick_update_element(int joystick_id, joystick_element element, int elem
             update_hat(&joystick->hat[element_id], value1);
             break;
         case JOYSTICK_ELEMENT_AXIS:
-            joystick->axis[element_id] = (abs(value1) >= 500) ? value1 : 0;
+            joystick->axis[element_id] = (abs(value1) > 1300) ? value1 : 0;
             break;
         case JOYSTICK_ELEMENT_TRACKBALL:
             update_trackball(&joystick->trackball[element_id], value1, value2);
@@ -353,7 +357,7 @@ static int rescale_axis(mapped_input *inputs)
     const float max_axis = 32767.0f;
     float analog_x = (float) inputs[DIRECTION_RIGHT].value - inputs[DIRECTION_LEFT].value;
     float analog_y = (float) inputs[DIRECTION_DOWN].value - inputs[DIRECTION_UP].value;
-    float dead_zone = (float) 2000.0f;
+    float dead_zone = 2000.0f;
 
     inputs[DIRECTION_UP].value = 0;
     inputs[DIRECTION_LEFT].value = 0;
@@ -441,17 +445,17 @@ static int translate_mouse_cursor_position(void)
     int delta_y = -cursor_input[DIRECTION_LEFT].value + cursor_input[DIRECTION_RIGHT].value;
 
     // Sub-pixel precision to allow slow mouse motion at speeds < 1 pixel/frame
-    data.mouse_delta.x += cursor_input[DIRECTION_RIGHT].value - cursor_input[DIRECTION_LEFT].value;
-    data.mouse_delta.y += cursor_input[DIRECTION_DOWN].value - cursor_input[DIRECTION_UP].value;
+    data.mouse.x_delta += cursor_input[DIRECTION_RIGHT].value - cursor_input[DIRECTION_LEFT].value;
+    data.mouse.y_delta += cursor_input[DIRECTION_DOWN].value - cursor_input[DIRECTION_UP].value;
 
-    if (data.mouse_delta.x == 0 && data.mouse_delta.y == 0) {
+    if (data.mouse.x_delta == 0 && data.mouse.y_delta == 0) {
         return 1;
     }
 
-    delta_x = data.mouse_delta.x / slowdown;
-    delta_y = data.mouse_delta.y / slowdown;
-    data.mouse_delta.x %= slowdown;
-    data.mouse_delta.y %= slowdown;
+    delta_x = data.mouse.x_delta / slowdown;
+    delta_y = data.mouse.y_delta / slowdown;
+    data.mouse.x_delta %= slowdown;
+    data.mouse.y_delta %= slowdown;
 
     int mouse_x, mouse_y;
     SDL_GetMouseState(&mouse_x, &mouse_y);
@@ -463,6 +467,24 @@ static int translate_mouse_cursor_position(void)
     return 1;
 }
 
+int translate_mouse_button_presses(void)
+{
+    int handled = 0;
+    int left_button = get_joystick_input_for_action(MAPPING_ACTION_LEFT_MOUSE_BUTTON, 0);
+    int right_button = get_joystick_input_for_action(MAPPING_ACTION_RIGHT_MOUSE_BUTTON, 0);
+    if (left_button != data.mouse.left_button) {
+        data.mouse.left_button = left_button;
+        mouse_set_left_down(left_button);
+        handled = 1;
+    }
+    if (right_button != data.mouse.right_button) {
+        data.mouse.right_button = right_button;
+        mouse_set_right_down(right_button);
+        handled = 1;
+    }
+    return handled;
+}
+
 int joystick_to_mouse_and_keyboard(void)
 {
     if (data.connected_joysticks == 0) {
@@ -470,7 +492,7 @@ int joystick_to_mouse_and_keyboard(void)
     }
     int handled = 0;
     handled |= translate_mouse_cursor_position();
-  //  handled |= translate_mouse_button_presses();
+    handled |= translate_mouse_button_presses();
   //  handled |= translate_scrolling();
  //   handled |= translate_mapping_reset();
     for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {

@@ -5,38 +5,23 @@
 #include <stdio.h>
 #include <string.h>
 
-static mapping_element mapping_test_1[MAPPING_ACTION_MAX] = {
-    { { { JOYSTICK_ELEMENT_AXIS, 1, JOYSTICK_AXIS_NEGATIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_AXIS, 0, JOYSTICK_AXIS_NEGATIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_AXIS, 1, JOYSTICK_AXIS_POSITIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_AXIS, 0, JOYSTICK_AXIS_POSITIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_AXIS, 2, JOYSTICK_AXIS_NEGATIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_AXIS, 2, JOYSTICK_AXIS_POSITIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } }
+static mapping_element first_default_mapping[MAPPING_ACTION_MAX] = {
+    { { { JOYSTICK_ELEMENT_AXIS, 1, JOYSTICK_AXIS_NEGATIVE } } },
+    { { { JOYSTICK_ELEMENT_AXIS, 0, JOYSTICK_AXIS_NEGATIVE } } },
+    { { { JOYSTICK_ELEMENT_AXIS, 1, JOYSTICK_AXIS_POSITIVE } } },
+    { { { JOYSTICK_ELEMENT_AXIS, 0, JOYSTICK_AXIS_POSITIVE } } },
+    { { { JOYSTICK_ELEMENT_AXIS, 5, JOYSTICK_AXIS_POSITIVE } } },
+    { { { JOYSTICK_ELEMENT_AXIS, 2, JOYSTICK_AXIS_POSITIVE } } },
+    { { { JOYSTICK_ELEMENT_BUTTON, 0 } } },
+    { JOYSTICK_ELEMENT_NONE },
+    { { { JOYSTICK_ELEMENT_BUTTON, 1 } } }
 };
 
-static mapping_element mapping_test_2[MAPPING_ACTION_MAX] = {
-    { { { JOYSTICK_ELEMENT_AXIS, 4, JOYSTICK_AXIS_NEGATIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_AXIS, 3, JOYSTICK_AXIS_NEGATIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_AXIS, 4, JOYSTICK_AXIS_POSITIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_AXIS, 3, JOYSTICK_AXIS_POSITIVE }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } },
-    { { { JOYSTICK_ELEMENT_NONE, 0, 0 }, { JOYSTICK_ELEMENT_NONE, 0, 0 } } }
+static mapping_element second_default_mapping[MAPPING_ACTION_MAX] = {
+    { { { JOYSTICK_ELEMENT_HAT, 0, JOYSTICK_HAT_UP } } },
+    { { { JOYSTICK_ELEMENT_HAT, 0, JOYSTICK_HAT_LEFT } } },
+    { { { JOYSTICK_ELEMENT_HAT, 0, JOYSTICK_HAT_DOWN } } },
+    { { { JOYSTICK_ELEMENT_HAT, 0, JOYSTICK_HAT_RIGHT } } }
 };
 
 static joystick_model *get_joystick_model(SDL_Joystick *joystick, int instance_id)
@@ -62,8 +47,8 @@ static joystick_model *get_joystick_model(SDL_Joystick *joystick, int instance_i
     model->total_hats = SDL_JoystickNumHats(joystick);
     model->total_trackballs = SDL_JoystickNumBalls(joystick);
     model->total_buttons = SDL_JoystickNumButtons(joystick);
-    memcpy(model->first_mapping, mapping_test_1, sizeof(mapping_element) * MAPPING_ACTION_MAX);
-    memcpy(model->second_mapping, mapping_test_2, sizeof(mapping_element) * MAPPING_ACTION_MAX);
+    memcpy(model->first_mapping, first_default_mapping, sizeof(mapping_element) * MAPPING_ACTION_MAX);
+    memcpy(model->second_mapping, second_default_mapping, sizeof(mapping_element) * MAPPING_ACTION_MAX);
 
     return model;
 }
