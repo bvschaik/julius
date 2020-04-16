@@ -290,6 +290,11 @@ static int get_input_for_mapping(const joystick_info *joystick, const mapping_el
 
 static int get_joystick_input_for_action(mapping_action action, mapped_input *input)
 {
+    static mapped_input dummy_input;
+    if (!input) {
+        input = &dummy_input;
+    }
+
     input->value = 0;
     input->element = JOYSTICK_ELEMENT_NONE;
 
@@ -427,6 +432,11 @@ static int translate_mouse_cursor_position(void)
     }
     
     int slowdown = SLOWDOWN_NORMAL;
+    if (get_joystick_input_for_action(MAPPING_ACTION_FASTER_CURSOR_SPEED, 0)) {
+        slowdown = SLOWDOWN_FASTER;
+    } else if (get_joystick_input_for_action(MAPPING_ACTION_SLOWER_CURSOR_SPEED, 0)) {
+        slowdown = SLOWDOWN_SLOWER;
+    }
     int delta_x = -cursor_input[DIRECTION_LEFT].value + cursor_input[DIRECTION_RIGHT].value;
     int delta_y = -cursor_input[DIRECTION_LEFT].value + cursor_input[DIRECTION_RIGHT].value;
 
@@ -438,10 +448,10 @@ static int translate_mouse_cursor_position(void)
         return 1;
     }
 
-    delta_x = data.mouse_delta.x / SLOWDOWN_NORMAL;
-    delta_y = data.mouse_delta.y / SLOWDOWN_NORMAL;
-    data.mouse_delta.x %= SLOWDOWN_NORMAL;
-    data.mouse_delta.y %= SLOWDOWN_NORMAL;
+    delta_x = data.mouse_delta.x / slowdown;
+    delta_y = data.mouse_delta.y / slowdown;
+    data.mouse_delta.x %= slowdown;
+    data.mouse_delta.y %= slowdown;
 
     int mouse_x, mouse_y;
     SDL_GetMouseState(&mouse_x, &mouse_y);
