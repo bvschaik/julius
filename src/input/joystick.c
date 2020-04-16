@@ -505,14 +505,14 @@ static int translate_mouse_scroll(void)
     translate_input_for_element(&scroll_up, JOYSTICK_ELEMENT_AXIS);
     translate_input_for_element(&scroll_down, JOYSTICK_ELEMENT_AXIS);
 
-    int max_scroll_time = 500;
+    int max_scroll_time = 50;
 
     if (scroll_up.value) {
         current_scroll = SCROLL_UP;
-        max_scroll_time = max_scroll_time * scroll_up.value / 32767;
+        max_scroll_time = max_scroll_time * 32767 / scroll_up.value;
     } else if (scroll_down.value) {
         current_scroll = SCROLL_DOWN;
-        max_scroll_time = max_scroll_time * scroll_down.value / 32767;
+        max_scroll_time = max_scroll_time * 32767 / scroll_down.value;
     }
 
     if (current_scroll != SCROLL_NONE) {
