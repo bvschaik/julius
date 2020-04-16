@@ -402,8 +402,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
     if (m->right.went_down && !building_construction_type()) {
         pixel_offset camera_pixel_position;
         city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
-        mouse_coords original_coords = {.x = m->x, .y = m->y};
-        scroll_start_mouse_drag(&camera_pixel_position, original_coords);
+        scroll_start_mouse_drag(&camera_pixel_position);
     }
     if (m->right.went_up) {
         if (!building_construction_type()) {

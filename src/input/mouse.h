@@ -26,11 +26,6 @@ typedef enum {
     SCROLL_DOWN = 1
 } scroll_state;
 
-typedef struct {
-    int x;
-    int y;
-} mouse_coords;
-
 /**
  * Mouse state
  */

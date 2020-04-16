@@ -5,9 +5,8 @@
 #include "core/direction.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "game/system.h"
 #include "graphics/screen.h"
-#include "platform/mouse.h"
-#include "platform/screen.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -73,7 +72,6 @@ static struct {
         int height;
     } limits;
     touch_coords start_touch;
-    mouse_coords start_mouse;
     int cumulative_delta_x;
     int cumulative_delta_y;
 } data;
@@ -251,14 +249,8 @@ touch_coords scroll_get_original_touch_position(void)
     return data.start_touch;
 }
 
-mouse_coords scroll_get_original_mouse_position(void)
+void scroll_start_mouse_drag(const pixel_offset *position)
 {
-    return data.start_mouse;
-}
-
-void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
-{
-    data.start_mouse = coords;
     data.has_scrolled = 0;
     data.is_scrolling = 1;
     data.is_touch = 0;
@@ -266,7 +258,7 @@ void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
     data.cumulative_delta_y = 0;
     clear_scroll_decay(position);
 
-    platform_mouse_set_relative_mode(1);
+    system_mouse_set_relative_mode(1);
 }
 
 int scroll_move_mouse_drag(pixel_offset *position)
@@ -276,7 +268,7 @@ int scroll_move_mouse_drag(pixel_offset *position)
     }
 
     int delta_x = 0, delta_y = 0;
-    platform_mouse_get_relative_state(&delta_x, &delta_y);
+    system_mouse_get_relative_state(&delta_x, &delta_y);
 
     // Store tiny movements until we decide that it's enough to move into scroll mode
     if (!data.has_scrolled) {
@@ -315,10 +307,7 @@ int scroll_end_mouse_drag()
     data.is_scrolling = 0;
     data.has_scrolled = 0;
 
-    platform_mouse_set_relative_mode(0);
-    mouse_coords original = scroll_get_original_mouse_position();
-    platform_screen_warp_mouse(original.x, original.y);
-    mouse_set_position(original.x, original.y);
+    system_mouse_set_relative_mode(0);
 
     return has_scrolled;
 }
