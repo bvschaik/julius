@@ -6,10 +6,14 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/screen.h"
+#include "platform/mouse.h"
+#include "platform/screen.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 #define MOUSE_BORDER 5
+#define MOUSE_SCROLL_MIN_DELTA 4
 #define TOUCH_BORDER 100
 #define DECAY_MULTIPLIER 300
 #define DECAY_BASE_TIME 350
@@ -39,6 +43,7 @@ typedef struct {
 
 static struct {
     int is_scrolling;
+    int has_scrolled;
     int is_touch;
     struct {
         key up;
@@ -68,6 +73,9 @@ static struct {
         int height;
     } limits;
     touch_coords start_touch;
+    mouse_coords start_mouse;
+    int cumulative_delta_x;
+    int cumulative_delta_y;
 } data;
 
 static int is_arrow_key_pressed(key *arrow)
@@ -241,6 +249,78 @@ void scroll_restore_margins(void)
 touch_coords scroll_get_original_touch_position(void)
 {
     return data.start_touch;
+}
+
+mouse_coords scroll_get_original_mouse_position(void)
+{
+    return data.start_mouse;
+}
+
+void scroll_start_mouse_drag(const pixel_offset *position, mouse_coords coords)
+{
+    data.start_mouse = coords;
+    data.has_scrolled = 0;
+    data.is_scrolling = 1;
+    data.is_touch = 0;
+    data.cumulative_delta_x = 0;
+    data.cumulative_delta_y = 0;
+    clear_scroll_decay(position);
+
+    platform_mouse_set_relative_mode(1);
+}
+
+int scroll_move_mouse_drag(pixel_offset *position)
+{
+    if (!data.is_scrolling) {
+        return 0;
+    }
+
+    int delta_x = 0, delta_y = 0;
+    platform_mouse_get_relative_state(&delta_x, &delta_y);
+
+    // Store tiny movements until we decide that it's enough to move into scroll mode
+    if (!data.has_scrolled) {
+        delta_x += data.cumulative_delta_x;
+        delta_y += data.cumulative_delta_y;
+    }
+
+    if (delta_x != 0 || delta_y != 0) {
+        int has_scrolled = abs(data.cumulative_delta_x) > MOUSE_SCROLL_MIN_DELTA || abs(data.cumulative_delta_y) > MOUSE_SCROLL_MIN_DELTA;
+        data.has_scrolled = data.has_scrolled || has_scrolled;
+
+        city_view_get_camera_in_pixels(&position->x, &position->y);
+
+        if (data.has_scrolled) {
+            position->x += delta_x;
+            position->y += delta_y;
+        } else {
+            data.cumulative_delta_x = delta_x;
+            data.cumulative_delta_y = delta_y;
+        }
+
+        return 1;
+    }
+    return 0;
+}
+
+int scroll_end_mouse_drag()
+{
+    if (!data.is_scrolling) {
+        return 0;
+    }
+
+    int has_scrolled = data.has_scrolled == 1;
+
+    data.is_touch = 0;
+    data.is_scrolling = 0;
+    data.has_scrolled = 0;
+
+    platform_mouse_set_relative_mode(0);
+    mouse_coords original = scroll_get_original_mouse_position();
+    platform_screen_warp_mouse(original.x, original.y);
+    mouse_set_position(original.x, original.y);
+
+    return has_scrolled;
 }
 
 void scroll_start_touch_drag(const pixel_offset *position, touch_coords coords)
