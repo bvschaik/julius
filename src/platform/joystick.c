@@ -15,7 +15,9 @@ static mapping_element first_default_mapping[MAPPING_ACTION_MAX] = {
     { { { JOYSTICK_ELEMENT_AXIS, 2, JOYSTICK_AXIS_POSITIVE } } },
     { { { JOYSTICK_ELEMENT_BUTTON, 0 } } },
     { { { JOYSTICK_ELEMENT_NONE } } },
-    { { { JOYSTICK_ELEMENT_BUTTON, 1 } } }
+    { { { JOYSTICK_ELEMENT_BUTTON, 1 } } },
+    { { { JOYSTICK_ELEMENT_AXIS, 4, JOYSTICK_AXIS_NEGATIVE } } },
+    { { { JOYSTICK_ELEMENT_AXIS, 4, JOYSTICK_AXIS_POSITIVE } } },
 };
 
 static mapping_element second_default_mapping[MAPPING_ACTION_MAX] = {

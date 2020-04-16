@@ -50,10 +50,10 @@ typedef struct {
 } mapped_input;
 
 enum {
-    SLOWDOWN_FASTER = 1024,
-    SLOWDOWN_NORMAL = 4096,
-    SLOWDOWN_SLOWER = 8192
-} slowdown;
+    CURSOR_SLOWDOWN_FASTER = 1024,
+    CURSOR_SLOWDOWN_NORMAL = 4096,
+    CURSOR_SLOWDOWN_SLOWER = 8192
+};
 
 static struct {
     joystick_model connected_models[JOYSTICK_MAX_CONTROLLERS];
@@ -65,6 +65,7 @@ static struct {
         int left_button;
         int middle_button;
         int right_button;
+        scroll_state scroll;
     } mouse;
 } data;
 
@@ -417,10 +418,10 @@ static int translate_mouse_cursor_position(void)
 {
     mapped_input cursor_input[NUM_DIRECTIONS];
 
-    int handled = get_joystick_input_for_action(MAPPING_ACTION_CURSOR_UP, &cursor_input[DIRECTION_UP]);
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_CURSOR_LEFT, &cursor_input[DIRECTION_LEFT]);
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_CURSOR_DOWN, &cursor_input[DIRECTION_DOWN]);
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_CURSOR_RIGHT, &cursor_input[DIRECTION_RIGHT]);
+    int handled = get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_UP, &cursor_input[DIRECTION_UP]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_LEFT, &cursor_input[DIRECTION_LEFT]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_DOWN, &cursor_input[DIRECTION_DOWN]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_RIGHT, &cursor_input[DIRECTION_RIGHT]);
     if (!handled) {
         return 0;
     }
@@ -435,11 +436,11 @@ static int translate_mouse_cursor_position(void)
         return 0;
     }
     
-    int slowdown = SLOWDOWN_NORMAL;
-    if (get_joystick_input_for_action(MAPPING_ACTION_FASTER_CURSOR_SPEED, 0)) {
-        slowdown = SLOWDOWN_FASTER;
-    } else if (get_joystick_input_for_action(MAPPING_ACTION_SLOWER_CURSOR_SPEED, 0)) {
-        slowdown = SLOWDOWN_SLOWER;
+    int slowdown = CURSOR_SLOWDOWN_NORMAL;
+    if (get_joystick_input_for_action(MAPPING_ACTION_FASTER_MOUSE_CURSOR_SPEED, 0)) {
+        slowdown = CURSOR_SLOWDOWN_FASTER;
+    } else if (get_joystick_input_for_action(MAPPING_ACTION_SLOWER_MOUSE_CURSOR_SPEED, 0)) {
+        slowdown = CURSOR_SLOWDOWN_SLOWER;
     }
     int delta_x = -cursor_input[DIRECTION_LEFT].value + cursor_input[DIRECTION_RIGHT].value;
     int delta_y = -cursor_input[DIRECTION_LEFT].value + cursor_input[DIRECTION_RIGHT].value;
@@ -467,21 +468,52 @@ static int translate_mouse_cursor_position(void)
     return 1;
 }
 
-int translate_mouse_button_presses(void)
+static int translate_mouse_button_presses(void)
 {
     int handled = 0;
-    int left_button = get_joystick_input_for_action(MAPPING_ACTION_LEFT_MOUSE_BUTTON, 0);
-    int right_button = get_joystick_input_for_action(MAPPING_ACTION_RIGHT_MOUSE_BUTTON, 0);
-    if (left_button != data.mouse.left_button) {
-        data.mouse.left_button = left_button;
-        mouse_set_left_down(left_button);
+    int button = get_joystick_input_for_action(MAPPING_ACTION_LEFT_MOUSE_BUTTON, 0);
+    if (button != data.mouse.left_button) {
+        data.mouse.left_button = button;
+        mouse_set_left_down(button);
         handled = 1;
     }
-    if (right_button != data.mouse.right_button) {
-        data.mouse.right_button = right_button;
-        mouse_set_right_down(right_button);
+    button = get_joystick_input_for_action(MAPPING_ACTION_RIGHT_MOUSE_BUTTON, 0);
+    if (button != data.mouse.right_button) {
+        data.mouse.right_button = button;
+        mouse_set_right_down(button);
         handled = 1;
     }
+    return handled;
+}
+
+static int translate_mouse_scroll(void)
+{
+    int handled = 0;
+    scroll_state current_scroll = SCROLL_NONE;
+
+    int scroll = get_joystick_input_for_action(MAPPING_ACTION_MOUSE_SCROLL_UP, 0);
+    if (scroll) {
+        current_scroll = SCROLL_UP;
+    } else {
+        scroll = get_joystick_input_for_action(MAPPING_ACTION_MOUSE_SCROLL_DOWN, 0);
+        if (scroll) {
+            current_scroll = SCROLL_DOWN;
+        }
+    }
+    if (current_scroll != data.mouse.scroll) {
+        data.mouse.scroll = current_scroll;
+        mouse_set_scroll(current_scroll);
+        return 1;
+    }
+    return 0;
+}
+
+static int translate_mouse(void)
+{
+    int handled = 0;
+    handled |= translate_mouse_cursor_position();
+    handled |= translate_mouse_button_presses();
+    handled |= translate_mouse_scroll();
     return handled;
 }
 
@@ -491,8 +523,7 @@ int joystick_to_mouse_and_keyboard(void)
         return 0;
     }
     int handled = 0;
-    handled |= translate_mouse_cursor_position();
-    handled |= translate_mouse_button_presses();
+    handled |= translate_mouse();
   //  handled |= translate_scrolling();
  //   handled |= translate_mapping_reset();
     for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
