@@ -5,6 +5,8 @@
 #include <math.h>
 #include <string.h>
 
+#include "SDL.h"
+
 typedef int joystick_axis;
 typedef int joystick_button;
 
@@ -43,10 +45,20 @@ typedef struct {
     int value;
 } mapped_input;
 
+enum {
+    SLOWDOWN_FASTER = 1024,
+    SLOWDOWN_NORMAL = 4096,
+    SLOWDOWN_SLOWER = 32768
+} slowdown;
+
 static struct {
     joystick_model connected_models[JOYSTICK_MAX_CONTROLLERS];
     joystick_info joystick[JOYSTICK_MAX_CONTROLLERS];
     int connected_joysticks;
+    struct {
+        int x;
+        int y;
+    } mouse_delta;
 } data;
 
 joystick_model *joystick_get_model_by_guid(const char *guid)
@@ -411,6 +423,30 @@ static int translate_mouse_cursor_position(void)
     if (!rescale_axis(cursor_input)) {
         return 0;
     }
+    
+    int slowdown = SLOWDOWN_NORMAL;
+    int delta_x = -cursor_input[DIRECTION_LEFT].value + cursor_input[DIRECTION_RIGHT].value;
+    int delta_y = -cursor_input[DIRECTION_LEFT].value + cursor_input[DIRECTION_RIGHT].value;
+
+    // Sub-pixel precision to allow slow mouse motion at speeds < 1 pixel/frame
+    data.mouse_delta.x += cursor_input[DIRECTION_RIGHT].value - cursor_input[DIRECTION_LEFT].value;
+    data.mouse_delta.y += cursor_input[DIRECTION_DOWN].value - cursor_input[DIRECTION_UP].value;
+
+    if (data.mouse_delta.x == 0 && data.mouse_delta.y == 0) {
+        return 1;
+    }
+
+    int delta_x = data.mouse_delta.x / SLOWDOWN_NORMAL;
+    int delta_y = data.mouse_delta.y / SLOWDOWN_NORMAL;
+    data.mouse_delta.x %= SLOWDOWN_NORMAL;
+    data.mouse_delta.y %= SLOWDOWN_NORMAL;
+
+    int mouse_x, mouse_y;
+    SDL_GetMouseState(&mouse_x, &mouse_y);
+    mouse_x += delta_x;
+    mouse_y += delta_y;
+    SDL_WarpMouseInWindow(NULL, mouse_x, mouse_y);
+
     return 1;
 }
 
