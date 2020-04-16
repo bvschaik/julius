@@ -1,16 +1,15 @@
 #include "joystick.h"
 
-#include "core/calc.h"
 #include "core/log.h"
 #include "core/time.h"
-#include "graphics/screen.h"
+#include "game/system.h"
+#include "graphics/window.h"
 #include "input/mouse.h"
+#include "input/scroll.h"
 
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "SDL.h"
 
 typedef int joystick_axis;
 typedef int joystick_button;
@@ -460,13 +459,7 @@ static int translate_mouse_cursor_position(void)
     data.mouse.x_delta %= slowdown;
     data.mouse.y_delta %= slowdown;
 
-    int mouse_x, mouse_y;
-    SDL_GetMouseState(&mouse_x, &mouse_y);
-    mouse_x = calc_bound(mouse_x + delta_x, 0, screen_width() - 1); // TODO scale
-    mouse_y = calc_bound(mouse_y + delta_y, 0, screen_height() - 1);
-
-    SDL_WarpMouseInWindow(NULL, mouse_x, mouse_y);
-
+    system_move_mouse_cursor(delta_x, delta_y);
     return 1;
 }
 
@@ -488,14 +481,25 @@ static int translate_mouse_button_presses(void)
     return handled;
 }
 
-static int translate_mouse_scroll(void)
+static int translate_mouse(void)
 {
+    int handled = 0;
+    handled |= translate_mouse_cursor_position();
+    handled |= translate_mouse_button_presses();
+    return handled;
+}
+
+static int translate_window_scrolling(void)
+{
+    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_EDITOR_MAP)) {
+        return 0;
+    }
     int handled = 0;
     scroll_state current_scroll = SCROLL_NONE;
     mapped_input scroll_up, scroll_down;
 
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_SCROLL_UP, &scroll_up);
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_SCROLL_DOWN, &scroll_down);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_WINDOW_UP, &scroll_up);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_WINDOW_DOWN, &scroll_down);
 
     if (!handled) {
         return 0;
@@ -528,14 +532,40 @@ static int translate_mouse_scroll(void)
     }
 }
 
-static int translate_mouse(void)
+static int translate_map_scrolling(void)
 {
-    int handled = 0;
-    handled |= translate_mouse_cursor_position();
-    handled |= translate_mouse_button_presses();
-    handled |= translate_mouse_scroll();
-    return handled;
+    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY) && !window_is(WINDOW_EDITOR_MAP)) {
+        return 0;
+    }
+
+    mapped_input map_scroll[NUM_DIRECTIONS];
+
+    int handled = get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_UP, &map_scroll[DIRECTION_UP]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_LEFT, &map_scroll[DIRECTION_LEFT]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_DOWN, &map_scroll[DIRECTION_DOWN]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_RIGHT, &map_scroll[DIRECTION_RIGHT]);
+    if (!handled) {
+        return 0;
+    }
+
+    // All mouse cursor input will internally be treated as a joystick axis
+    translate_input_for_element(&map_scroll[DIRECTION_UP], JOYSTICK_ELEMENT_AXIS);
+    translate_input_for_element(&map_scroll[DIRECTION_LEFT], JOYSTICK_ELEMENT_AXIS);
+    translate_input_for_element(&map_scroll[DIRECTION_DOWN], JOYSTICK_ELEMENT_AXIS);
+    translate_input_for_element(&map_scroll[DIRECTION_RIGHT], JOYSTICK_ELEMENT_AXIS);
+
+    if (!rescale_axis(map_scroll)) {
+        return 0;
+    }
+
+    scroll_arrow_up(map_scroll[DIRECTION_UP].value);
+    scroll_arrow_left(map_scroll[DIRECTION_LEFT].value);
+    scroll_arrow_down(map_scroll[DIRECTION_DOWN].value);
+    scroll_arrow_right(map_scroll[DIRECTION_RIGHT].value);
+
+    return 1;
 }
+
 
 int joystick_to_mouse_and_keyboard(void)
 {
@@ -544,7 +574,8 @@ int joystick_to_mouse_and_keyboard(void)
     }
     int handled = 0;
     handled |= translate_mouse();
-  //  handled |= translate_scrolling();
+    handled |= translate_window_scrolling();
+    handled |= translate_map_scrolling();
  //   handled |= translate_mapping_reset();
     for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
         joystick_reset_all_trackball_states(&data.joystick[i]);
