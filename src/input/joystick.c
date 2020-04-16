@@ -1,6 +1,8 @@
 #include "joystick.h"
 
+#include "core/calc.h"
 #include "core/log.h"
+#include "graphics/screen.h"
 
 #include <math.h>
 #include <string.h>
@@ -436,15 +438,16 @@ static int translate_mouse_cursor_position(void)
         return 1;
     }
 
-    int delta_x = data.mouse_delta.x / SLOWDOWN_NORMAL;
-    int delta_y = data.mouse_delta.y / SLOWDOWN_NORMAL;
+    delta_x = data.mouse_delta.x / SLOWDOWN_NORMAL;
+    delta_y = data.mouse_delta.y / SLOWDOWN_NORMAL;
     data.mouse_delta.x %= SLOWDOWN_NORMAL;
     data.mouse_delta.y %= SLOWDOWN_NORMAL;
 
     int mouse_x, mouse_y;
     SDL_GetMouseState(&mouse_x, &mouse_y);
-    mouse_x += delta_x;
-    mouse_y += delta_y;
+    mouse_x = calc_bound(mouse_x + delta_x, 0, screen_width() - 1); // TODO scale
+    mouse_y = calc_bound(mouse_y + delta_y, 0, screen_height() - 1);
+
     SDL_WarpMouseInWindow(NULL, mouse_x, mouse_y);
 
     return 1;
