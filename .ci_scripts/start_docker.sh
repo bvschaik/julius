@@ -8,6 +8,8 @@ case "$BUILD_TARGET" in
 	docker run -d --name vitasdk --workdir /build/git -v "${PWD}:/build/git" gnuton/vitasdk-docker:20190626 tail -f /dev/null
 	;;
 "switch")
-	docker run -d --name switchdev --workdir /build/git -v "${PWD}:/build/git" rsn8887/switchdev tail -f /dev/null
+	wget https://github.com/devkitPro/pacman/releases/download/devkitpro-pacman-1.0.1/devkitpro-pacman.deb
+	sudo dpkg -i devkitpro-pacman.deb
+	sudo dkp-pacman -Syyu --noconfirm devkitA64 devkit-env devkitpro-keyring devkitpro-pkgbuild-helpers libnx switch-dev switch-tools switch-sdl2 switch-sdl2_mixer switch-libpng switch-libjpeg-turbo switch-libmikmod switch-freetype
 	;;
 esac
