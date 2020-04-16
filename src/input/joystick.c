@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "core/log.h"
+#include "core/time.h"
 #include "graphics/screen.h"
 #include "input/mouse.h"
 
@@ -66,6 +67,7 @@ static struct {
         int middle_button;
         int right_button;
         scroll_state scroll;
+        time_millis last_scroll_time;
     } mouse;
 } data;
 
@@ -490,22 +492,40 @@ static int translate_mouse_scroll(void)
 {
     int handled = 0;
     scroll_state current_scroll = SCROLL_NONE;
+    mapped_input scroll_up, scroll_down;
 
-    int scroll = get_joystick_input_for_action(MAPPING_ACTION_MOUSE_SCROLL_UP, 0);
-    if (scroll) {
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_SCROLL_UP, &scroll_up);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_SCROLL_DOWN, &scroll_down);
+
+    if (!handled) {
+        return 0;
+    }
+
+    // All mouse scrolling input will internally be treated as a joystick axis
+    translate_input_for_element(&scroll_up, JOYSTICK_ELEMENT_AXIS);
+    translate_input_for_element(&scroll_down, JOYSTICK_ELEMENT_AXIS);
+
+    int max_scroll_time = 500;
+
+    if (scroll_up.value) {
         current_scroll = SCROLL_UP;
-    } else {
-        scroll = get_joystick_input_for_action(MAPPING_ACTION_MOUSE_SCROLL_DOWN, 0);
-        if (scroll) {
-            current_scroll = SCROLL_DOWN;
+        max_scroll_time = max_scroll_time * scroll_up.value / 32767;
+    } else if (scroll_down.value) {
+        current_scroll = SCROLL_DOWN;
+        max_scroll_time = max_scroll_time * scroll_down.value / 32767;
+    }
+
+    if (current_scroll != SCROLL_NONE) {
+        time_millis current_time = time_get_millis();
+        if (current_time - data.mouse.last_scroll_time > max_scroll_time) {
+            data.mouse.last_scroll_time = current_time;
+            mouse_set_scroll(current_scroll);
         }
-    }
-    if (current_scroll != data.mouse.scroll) {
-        data.mouse.scroll = current_scroll;
-        mouse_set_scroll(current_scroll);
         return 1;
+    } else {
+        data.mouse.last_scroll_time = 0;
+        return 0;
     }
-    return 0;
 }
 
 static int translate_mouse(void)
