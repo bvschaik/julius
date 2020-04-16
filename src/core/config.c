@@ -31,6 +31,9 @@ static const char *ini_string_keys[] = {
 static int values[CONFIG_MAX_ENTRIES];
 static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
+static int default_values[CONFIG_MAX_ENTRIES];
+static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
+
 int config_get(config_key key)
 {
     return values[key];
@@ -55,20 +58,22 @@ void config_set_string(config_string_key key, const char *value)
     }
 }
 
+int config_get_default_value(config_key key)
+{
+    return default_values[key];
+}
+
+const char *config_get_default_string_value(config_string_key key)
+{
+    return default_string_values[key];
+}
+
 void config_set_defaults(void)
 {
-    values[CONFIG_GP_FIX_IMMIGRATION_BUG] = 0;
-    values[CONFIG_GP_FIX_100_YEAR_GHOSTS] = 0;
-    values[CONFIG_GP_FIX_EDITOR_EVENTS] = 0;
-    values[CONFIG_UI_SIDEBAR_INFO] = 0;
-    values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
-    values[CONFIG_UI_SMOOTH_SCROLLING] = 0;
-    values[CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE] = 0;
-    values[CONFIG_UI_ALLOW_CYCLING_TEMPLES] = 0;
-    values[CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE] = 0;
-    values[CONFIG_UI_SHOW_CONSTRUCTION_SIZE] = 0;
-
-    string_values[CONFIG_STRING_UI_LANGUAGE_DIR][0] = 0;
+    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
+        values[i] = default_values[i];
+    }
+    strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR], default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR], CONFIG_STRING_VALUE_MAX - 1);
 }
 
 void config_load(void)
