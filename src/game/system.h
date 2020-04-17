@@ -50,6 +50,20 @@ void system_set_cursor(int cursor_id);
  */
 key_type system_keyboard_key_for_symbol(const char *name);
 
+/**
+ * Gets the key name for the current keyboard layout
+ * @param key Key to get the name for
+ * @return Key name, may be empty
+ */
+const char *system_keyboard_key_name(key_type key);
+
+/**
+ * Gets the key modifier name
+ * @param modifier Modifier
+ * @return Modifier name, may depend on OS
+ */
+const char *system_keyboard_key_modifier_name(key_modifier_type modifier);
+
 void system_keyboard_show(void);
 
 /**
