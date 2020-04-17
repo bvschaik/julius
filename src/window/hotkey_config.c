@@ -10,9 +10,8 @@
 #include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "window/hotkey_editor.h"
 #include "window/main_menu.h"
-
-#include <string.h>
 
 #define HOTKEY_HEADER -1
 
@@ -251,7 +250,7 @@ static void button_hotkey(int row, int is_alternative)
     if (widget->action == HOTKEY_HEADER) {
         return;
     }
-    //window_hotkey_editor_show();
+    window_hotkey_editor_show(widget->action, is_alternative, set_hotkey);
 }
 
 static void button_reset_defaults(int param1, int param2)
