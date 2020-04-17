@@ -107,6 +107,87 @@ static key_type get_key_from_scancode(SDL_Scancode scancode)
     }
 }
 
+static SDL_Scancode get_scancode_from_key(key_type key)
+{
+    switch (key) {
+        case KEY_A: return SDL_SCANCODE_A;
+        case KEY_B: return SDL_SCANCODE_B;
+        case KEY_C: return SDL_SCANCODE_C;
+        case KEY_D: return SDL_SCANCODE_D;
+        case KEY_E: return SDL_SCANCODE_E;
+        case KEY_F: return SDL_SCANCODE_F;
+        case KEY_G: return SDL_SCANCODE_G;
+        case KEY_H: return SDL_SCANCODE_H;
+        case KEY_I: return SDL_SCANCODE_I;
+        case KEY_J: return SDL_SCANCODE_J;
+        case KEY_K: return SDL_SCANCODE_K;
+        case KEY_L: return SDL_SCANCODE_L;
+        case KEY_M: return SDL_SCANCODE_M;
+        case KEY_N: return SDL_SCANCODE_N;
+        case KEY_O: return SDL_SCANCODE_O;
+        case KEY_P: return SDL_SCANCODE_P;
+        case KEY_Q: return SDL_SCANCODE_Q;
+        case KEY_R: return SDL_SCANCODE_R;
+        case KEY_S: return SDL_SCANCODE_S;
+        case KEY_T: return SDL_SCANCODE_T;
+        case KEY_U: return SDL_SCANCODE_U;
+        case KEY_V: return SDL_SCANCODE_V;
+        case KEY_W: return SDL_SCANCODE_W;
+        case KEY_X: return SDL_SCANCODE_X;
+        case KEY_Y: return SDL_SCANCODE_Y;
+        case KEY_Z: return SDL_SCANCODE_Z;
+        case KEY_1: return SDL_SCANCODE_1;
+        case KEY_2: return SDL_SCANCODE_2;
+        case KEY_3: return SDL_SCANCODE_3;
+        case KEY_4: return SDL_SCANCODE_4;
+        case KEY_5: return SDL_SCANCODE_5;
+        case KEY_6: return SDL_SCANCODE_6;
+        case KEY_7: return SDL_SCANCODE_7;
+        case KEY_8: return SDL_SCANCODE_8;
+        case KEY_9: return SDL_SCANCODE_9;
+        case KEY_0: return SDL_SCANCODE_0;
+        case KEY_ENTER: return SDL_SCANCODE_RETURN;
+        case KEY_ESCAPE: return SDL_SCANCODE_ESCAPE;
+        case KEY_BACKSPACE: return SDL_SCANCODE_BACKSPACE;
+        case KEY_TAB: return SDL_SCANCODE_TAB;
+        case KEY_SPACE: return SDL_SCANCODE_SPACE;
+        case KEY_MINUS: return SDL_SCANCODE_MINUS;
+        case KEY_EQUALS: return SDL_SCANCODE_EQUALS;
+        case KEY_LEFTBRACKET: return SDL_SCANCODE_LEFTBRACKET;
+        case KEY_RIGHTBRACKET: return SDL_SCANCODE_RIGHTBRACKET;
+        case KEY_BACKSLASH: return SDL_SCANCODE_BACKSLASH;
+        case KEY_SEMICOLON: return SDL_SCANCODE_SEMICOLON;
+        case KEY_APOSTROPHE: return SDL_SCANCODE_APOSTROPHE;
+        case KEY_GRAVE: return SDL_SCANCODE_GRAVE;
+        case KEY_COMMA: return SDL_SCANCODE_COMMA;
+        case KEY_PERIOD: return SDL_SCANCODE_PERIOD;
+        case KEY_SLASH: return SDL_SCANCODE_SLASH;
+        case KEY_F1: return SDL_SCANCODE_F1;
+        case KEY_F2: return SDL_SCANCODE_F2;
+        case KEY_F3: return SDL_SCANCODE_F3;
+        case KEY_F4: return SDL_SCANCODE_F4;
+        case KEY_F5: return SDL_SCANCODE_F5;
+        case KEY_F6: return SDL_SCANCODE_F6;
+        case KEY_F7: return SDL_SCANCODE_F7;
+        case KEY_F8: return SDL_SCANCODE_F8;
+        case KEY_F9: return SDL_SCANCODE_F9;
+        case KEY_F10: return SDL_SCANCODE_F10;
+        case KEY_F11: return SDL_SCANCODE_F11;
+        case KEY_F12: return SDL_SCANCODE_F12;
+        case KEY_INSERT: return SDL_SCANCODE_INSERT;
+        case KEY_HOME: return SDL_SCANCODE_HOME;
+        case KEY_PAGEUP: return SDL_SCANCODE_PAGEUP;
+        case KEY_DELETE: return SDL_SCANCODE_DELETE;
+        case KEY_END: return SDL_SCANCODE_END;
+        case KEY_PAGEDOWN: return SDL_SCANCODE_PAGEDOWN;
+        case KEY_RIGHT: return SDL_SCANCODE_RIGHT;
+        case KEY_LEFT: return SDL_SCANCODE_LEFT;
+        case KEY_DOWN: return SDL_SCANCODE_DOWN;
+        case KEY_UP: return SDL_SCANCODE_UP;
+        default: return SDL_SCANCODE_UNKNOWN;
+    }
+}
+
 static key_modifier_type get_modifier(int mod)
 {
     key_modifier_type key_mod = KEY_MOD_NONE;
@@ -213,4 +294,26 @@ key_type system_keyboard_key_for_symbol(const char *name)
         return KEY_NONE;
     }
     return get_key_from_scancode(scancode);
+}
+
+const char *system_keyboard_key_name(key_type key)
+{
+    SDL_Scancode scancode = get_scancode_from_key(key);
+    return SDL_GetKeyName(SDL_GetKeyFromScancode(scancode));
+}
+
+const char *system_keyboard_key_modifier_name(key_modifier_type modifier)
+{
+    switch (modifier) {
+        case KEY_MOD_CTRL: return "Ctrl";
+        case KEY_MOD_SHIFT: return "Shift";
+        case KEY_MOD_GUI:
+#ifdef __APPLE__
+            return "Cmd";
+#else
+            return "Gui";
+#endif
+        case KEY_MOD_ALT: return "Alt";
+        default: return "";
+    }
 }

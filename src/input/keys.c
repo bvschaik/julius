@@ -1,5 +1,8 @@
 #include "keys.h"
 
+#include "core/encoding.h"
+#include "game/system.h"
+
 #include <string.h>
 
 static const char *key_names[KEY_MAX_ITEMS] = {
@@ -8,6 +11,17 @@ static const char *key_names[KEY_MAX_ITEMS] = {
     "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3",
     "4", "5", "6", "7", "8", "9", "0", "-", "=", "Enter",
     "Esc", "Backspace", "Tab", "Space", "[", "]", "\\", ";", "'", "`",
+    ",", ".", "/", "F1", "F2", "F3", "F4", "F5", "F6", "F7",
+    "F8", "F9", "F10", "F11", "F12", "Insert", "Delete", "Home", "End", "PageUp",
+    "PageDown", "Right", "Left", "Down", "Up",
+};
+
+static const char *key_display_names[KEY_MAX_ITEMS] = {
+    "", "A", "B", "C", "D", "E", "F", "G", "H", "I",
+    "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
+    "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3",
+    "4", "5", "6", "7", "8", "9", "0", "-", "=", "Enter",
+    "Esc", "Backspace", "Tab", "Space", "Left bracket", "Right bracket", "Backslash", ";", "'", "Backtick",
     ",", ".", "/", "F1", "F2", "F3", "F4", "F5", "F6", "F7",
     "F8", "F9", "F10", "F11", "F12", "Insert", "Delete", "Home", "End", "PageUp",
     "PageDown", "Right", "Left", "Down", "Up",
@@ -87,4 +101,51 @@ int key_combination_from_name(const char *name, key_type *key, key_modifier_type
         return 0;
     }
     return 1;
+}
+
+const uint8_t *key_combination_display_name(key_type key, key_modifier_type modifiers)
+{
+    static char result[100];
+    static uint8_t str_result[100];
+
+    result[0] = 0;
+    if (modifiers & KEY_MOD_CTRL) {
+        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_CTRL));
+        strcat(result, " ");
+    }
+    if (modifiers & KEY_MOD_ALT) {
+        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_ALT));
+        strcat(result, " ");
+    }
+    if (modifiers & KEY_MOD_GUI) {
+        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_GUI));
+        strcat(result, " ");
+    }
+    if (modifiers & KEY_MOD_SHIFT) {
+        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_SHIFT));
+        strcat(result, " ");
+    }
+
+    // Modifiers are easy, now for key name...
+    const char *key_name = system_keyboard_key_name(key);
+    if (key_name[0] >= 0 && key_name[0] <= 127) {
+        // Special cases where we know the key is not displayable using the internal font
+        switch (key_name[0]) {
+            case '[': key_name = "Left bracket"; break;
+            case ']': key_name = "Right bracket"; break;
+            case '\\': key_name = "Backslash"; break;
+            case '`': key_name = "Backtick"; break;
+            case '\0': key_name = key_display_names[key];
+        }
+        strcat(result, key_name);
+    } else {
+        strcat(result, key_name);
+        if (!encoding_can_display(key_name)) {
+            strcat(result, " (");
+            strcat(result, key_display_names[key]);
+            strcat(result, ")");
+        }
+    }
+    encoding_from_utf8(result, str_result, 100);
+    return str_result;
 }
