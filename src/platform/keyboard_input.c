@@ -249,10 +249,7 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
     // handle hotkeys
     key_type key = get_key_from_scancode(event->keysym.scancode);
     key_modifier_type mod = get_modifier(event->keysym.mod);
-
-    if (key != KEY_NONE) {
-        hotkey_key_pressed(key, mod, event->repeat);
-    }
+    hotkey_key_pressed(key, mod, event->repeat);
 
     // handle cheats: special case since they ARE layout dependent
     if (!event->repeat && is_alt_down(event)) {
@@ -273,9 +270,8 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
 void platform_handle_key_up(SDL_KeyboardEvent *event)
 {
     key_type key = get_key_from_scancode(event->keysym.scancode);
-    if (key != KEY_NONE) {
-        hotkey_key_released(key);
-    }
+    key_modifier_type mod = get_modifier(event->keysym.mod);
+    hotkey_key_released(key, mod);
 }
 
 void platform_handle_text(SDL_TextInputEvent *event)
