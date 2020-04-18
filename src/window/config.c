@@ -23,11 +23,12 @@
 #include <string.h>
 
 #define NUM_CHECKBOXES 10
-#define NUM_BOTTOM_BUTTONS 3
+#define NUM_BOTTOM_BUTTONS 4
 #define MAX_LANGUAGE_DIRS 20
 
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
+static void button_hotkeys(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
 
@@ -48,13 +49,15 @@ static generic_button language_button = {
     120, 50, 200, 24, button_language_select, button_none
 };
 
-static generic_button bottom_buttons[] = {
-    { 20, 430, 150, 30, button_reset_defaults, button_none },
+static generic_button bottom_buttons[NUM_BOTTOM_BUTTONS] = {
+    { 20, 430, 180, 30, button_hotkeys, button_none },
+    { 250, 430, 150, 30, button_reset_defaults, button_none },
     { 410, 430, 100, 30, button_close, button_none, 0 },
     { 520, 430, 100, 30, button_close, button_none, 1 },
 };
 
 static const char *bottom_button_texts[] = {
+    "Configure hotkeys",
     "Reset defaults",
     "Cancel",
     "OK"
@@ -221,10 +224,13 @@ static void button_language_select(int param1, int param2)
     );
 }
 
-static void button_reset_defaults(int param1, int param2)
+static void button_hotkeys(int param1, int param2)
 {
     window_hotkey_config_show();
-    /*
+}
+
+static void button_reset_defaults(int param1, int param2)
+{
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         data.config_values[i].new_value = config_get_default_value(i);
     }
@@ -233,7 +239,6 @@ static void button_reset_defaults(int param1, int param2)
     }
     set_language(0);
     window_invalidate();
-    */
 }
 
 static void cancel_values(void)
