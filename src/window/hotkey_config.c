@@ -124,7 +124,7 @@ static generic_button hotkey_buttons[] = {
 };
 
 static generic_button bottom_buttons[] = {
-    { 20, 430, 150, 30, button_reset_defaults, button_none },
+    { 250, 430, 150, 30, button_reset_defaults, button_none },
     { 410, 430, 100, 30, button_close, button_none, 0 },
     { 520, 430, 100, 30, button_close, button_none, 1 },
 };
@@ -257,7 +257,7 @@ static void button_reset_defaults(int param1, int param2)
 {
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
         for (int index = 0; index < 2; index++) {
-            hotkey_default_for_action(action, index, &data.mappings[action][index]);
+            data.mappings[action][index] = *hotkey_default_for_action(action, index);
         }
     }
     window_invalidate();
@@ -271,11 +271,19 @@ static void on_scroll(void)
 static void button_close(int save, int param2)
 {
     if (!save) {
-        window_main_menu_show(0);
+        window_go_back();
         return;
     }
-    // TODO save mapping
-    window_main_menu_show(0);
+    hotkey_config_clear();
+    for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
+        for (int index = 0; index < 2; index++) {
+            if (data.mappings[action][index].key != KEY_NONE) {
+                hotkey_config_add_mapping(&data.mappings[action][index]);
+            }
+        }
+    }
+    hotkey_config_save();
+    window_go_back();
 }
 
 void window_hotkey_config_show(void)
