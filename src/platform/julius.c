@@ -6,15 +6,16 @@
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/game.h"
+#include "game/system.h"
 #include "input/mouse.h"
 #include "platform/arguments.h"
 #include "platform/cursor.h"
 #include "platform/file_manager.h"
 #include "platform/keyboard_input.h"
+#include "platform/platform.h"
 #include "platform/prefs.h"
 #include "platform/screen.h"
 #include "platform/touch.h"
-#include "platform/version.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.h"
 
@@ -247,7 +248,7 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             platform_handle_text(&event->text);
             break;
         case SDL_MOUSEMOTION:
-            if (event->motion.which != SDL_TOUCH_MOUSEID) {
+            if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
                 mouse_set_position(event->motion.x, event->motion.y);
             }
             break;
@@ -394,6 +395,7 @@ static int pre_init(const char *custom_data_dir)
     }
 
     #if SDL_VERSION_ATLEAST(2, 0, 1)
+    if (platform_sdl_version_at_least(2, 0, 1)) {
         char *base_path = SDL_GetBasePath();
         if (base_path) {
             if (platform_file_manager_set_base_path(base_path)) {
@@ -405,6 +407,7 @@ static int pre_init(const char *custom_data_dir)
             }
             SDL_free(base_path);
         }
+    }
     #endif
 
     #ifdef USE_TINYFILEDIALOGS
@@ -441,7 +444,7 @@ static void setup(const julius_args *args)
     signal(SIGSEGV, handler);
     setup_logging();
 
-    SDL_Log("Julius version %s%s", JULIUS_VERSION, JULIUS_VERSION_SUFFIX);
+    SDL_Log("Julius version %s", system_version());
 
     if (!init_sdl()) {
         SDL_Log("Exiting: SDL init failed");

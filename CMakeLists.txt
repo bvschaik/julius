@@ -129,7 +129,7 @@ if (SWITCH_BUILD)
     string(SUBSTRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}" 0 15 SWITCH_VERSION)
 endif()
 
-configure_file(${PROJECT_SOURCE_DIR}/gen/version.h.in ${PROJECT_SOURCE_DIR}/src/platform/version.h)
+configure_file(${PROJECT_SOURCE_DIR}/gen/version.c.in ${PROJECT_SOURCE_DIR}/src/platform/version.c)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
 
@@ -165,9 +165,12 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
+    ${PROJECT_SOURCE_DIR}/src/platform/mouse.c
+    ${PROJECT_SOURCE_DIR}/src/platform/platform.c
     ${PROJECT_SOURCE_DIR}/src/platform/prefs.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
     ${PROJECT_SOURCE_DIR}/src/platform/touch.c
+    ${PROJECT_SOURCE_DIR}/src/platform/version.c
     ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.c
 )
 
@@ -207,6 +210,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/encoding.c
     ${PROJECT_SOURCE_DIR}/src/core/encoding_multibyte.c
     ${PROJECT_SOURCE_DIR}/src/core/file.c
+    ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.c
     ${PROJECT_SOURCE_DIR}/src/core/image.c
     ${PROJECT_SOURCE_DIR}/src/core/io.c
     ${PROJECT_SOURCE_DIR}/src/core/lang.c
@@ -325,6 +329,7 @@ set(FIGURETYPE_FILES
 )
 set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/animation.c
+    ${PROJECT_SOURCE_DIR}/src/game/cheats.c
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
     ${PROJECT_SOURCE_DIR}/src/game/file.c
     ${PROJECT_SOURCE_DIR}/src/game/file_editor.c
@@ -343,7 +348,9 @@ set(GAME_FILES
 set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/cursor.c
     ${PROJECT_SOURCE_DIR}/src/input/hotkey.c
+    ${PROJECT_SOURCE_DIR}/src/input/input.c
     ${PROJECT_SOURCE_DIR}/src/input/keyboard.c
+    ${PROJECT_SOURCE_DIR}/src/input/keys.c
     ${PROJECT_SOURCE_DIR}/src/input/mouse.c
     ${PROJECT_SOURCE_DIR}/src/input/scroll.c
     ${PROJECT_SOURCE_DIR}/src/input/touch.c
@@ -414,6 +421,7 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/rich_text.c
     ${PROJECT_SOURCE_DIR}/src/graphics/screen.c
     ${PROJECT_SOURCE_DIR}/src/graphics/screenshot.c
+    ${PROJECT_SOURCE_DIR}/src/graphics/scrollbar.c
     ${PROJECT_SOURCE_DIR}/src/graphics/text.c
     ${PROJECT_SOURCE_DIR}/src/graphics/tooltip.c
     ${PROJECT_SOURCE_DIR}/src/graphics/video.c

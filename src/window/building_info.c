@@ -16,6 +16,7 @@
 #include "graphics/image_button.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -131,12 +132,12 @@ static int get_height_id(void)
             case BUILDING_COLOSSEUM:
             case BUILDING_SENATE:
             case BUILDING_SENATE_UPGRADED:
+            case BUILDING_FOUNTAIN:
                 return 2;
 
             case BUILDING_AMPHITHEATER:
                 return 3;
 
-            case BUILDING_FOUNTAIN:
             case BUILDING_WELL:
                 return 4;
 
@@ -602,7 +603,7 @@ static int handle_specific_building_info_mouse(const mouse *m)
     return 0;
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     int handled = 0;
     // general buttons
@@ -622,7 +623,7 @@ static void handle_mouse(const mouse *m)
     if (!handled) {
         handled = handle_specific_building_info_mouse(m);
     }
-    if (!handled && (m->right.went_up || (m->is_touch && m->left.double_click))) {
+    if (!handled && input_go_back_requested(m, h)) {
         window_city_show();
     }
 }
@@ -682,7 +683,7 @@ void window_building_info_show(int grid_offset)
         WINDOW_BUILDING_INFO,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     init(grid_offset);

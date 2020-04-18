@@ -102,9 +102,9 @@ static void draw_foreground(void)
     menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
-    widget_top_menu_editor_handle_mouse(m);
+    widget_top_menu_editor_handle_input(m, h);
 }
 
 static void top_menu_window_show(void)
@@ -113,8 +113,7 @@ static void top_menu_window_show(void)
         WINDOW_EDITOR_TOP_MENU,
         0,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     init();
     window_show(&window);
@@ -131,9 +130,9 @@ void widget_top_menu_editor_draw(void)
     menu_bar_draw(menu, 5);
 }
 
-static int handle_mouse_submenu(const mouse *m)
+static int handle_input_submenu(const mouse *m, const hotkeys *h)
 {
-    if (m->right.went_up) {
+    if (m->right.went_up || h->escape_pressed) {
         clear_state();
         window_go_back();
         return 1;
@@ -163,10 +162,10 @@ static int handle_mouse_menu(const mouse *m)
     return 0;
 }
 
-int widget_top_menu_editor_handle_mouse(const mouse *m)
+int widget_top_menu_editor_handle_input(const mouse *m, const hotkeys *h)
 {
     if (data.open_sub_menu) {
-        return handle_mouse_submenu(m);
+        return handle_input_submenu(m, h);
     } else {
         return handle_mouse_menu(m);
     }

@@ -25,6 +25,7 @@ typedef enum {
     SCROLL_UP = -1,
     SCROLL_DOWN = 1
 } scroll_state;
+
 /**
  * Mouse state
  */

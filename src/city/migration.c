@@ -141,7 +141,7 @@ void city_migration_determine_no_immigration_cause(void)
     }
 }
 
-int city_migration_no_immigation_cause(void)
+int city_migration_no_immigration_cause(void)
 {
     return city_data.migration.no_immigration_cause;
 }

@@ -7,11 +7,16 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
+#include "input/keyboard.h"
 #include "sound/effect.h"
 
 static void button_number(int number, int param2);
 static void button_accept(int param1, int param2);
 static void button_cancel(int param1, int param2);
+
+static void input_number(int number);
+static void input_accept(void);
 
 static generic_button buttons[] = {
     {21, 51, 25, 25, button_number, button_none, 1, 0},
@@ -50,6 +55,13 @@ static void init(int x, int y, int max_digits, int max_value, void (*callback)(i
     data.num_digits = 0;
     data.value = 0;
     data.focus_button_id = 0;
+    keyboard_start_capture_numeric(input_number);
+}
+
+static void close(void)
+{
+    keyboard_stop_capture_numeric();
+    window_go_back();
 }
 
 static void draw_number_button(int x, int y, int number, int is_selected)
@@ -91,32 +103,35 @@ static void draw_foreground(void)
             data.focus_button_id == 12 ? COLOR_BLUE : COLOR_BLACK);
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(m, data.x, data.y, buttons, 12, &data.focus_button_id)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
-        window_go_back();
+    if (input_go_back_requested(m, h)) {
+        close();
+    }
+    if (h->enter_pressed) {
+        input_accept();
     }
 }
 
 static void button_number(int number, int param2)
 {
-    window_numeric_input_number(number);
+    input_number(number);
 }
 
 static void button_accept(int param1, int param2)
 {
-    window_numeric_input_accept();
+    input_accept();
 }
 
 static void button_cancel(int param1, int param2)
 {
-    window_go_back();
+    close();
 }
 
-void window_numeric_input_number(int number)
+static void input_number(int number)
 {
     if (data.num_digits < data.max_digits) {
         data.value = data.value * 10 + number;
@@ -125,9 +140,9 @@ void window_numeric_input_number(int number)
     }
 }
 
-void window_numeric_input_accept(void)
+static void input_accept(void)
 {
-    window_go_back();
+    close();
     if (data.value > data.max_value) {
         data.value = data.max_value;
     }
@@ -140,7 +155,7 @@ void window_numeric_input_show(int x, int y, int max_digits, int max_value, void
         WINDOW_NUMERIC_INPUT,
         0,
         draw_foreground,
-        handle_mouse,
+        handle_input,
     };
     init(x, y, max_digits, max_value, callback);
     window_show(&window);

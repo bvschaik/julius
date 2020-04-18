@@ -51,6 +51,9 @@ static const char *ini_string_keys[] = {
 static int values[CONFIG_MAX_ENTRIES];
 static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
+static int default_values[CONFIG_MAX_ENTRIES];
+static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
+
 int config_get(config_key key)
 {
     return values[key];
@@ -73,6 +76,16 @@ void config_set_string(config_string_key key, const char *value)
     } else {
         strncpy(string_values[key], value, CONFIG_STRING_VALUE_MAX - 1);
     }
+}
+
+int config_get_default_value(config_key key)
+{
+    return default_values[key];
+}
+
+const char *config_get_default_string_value(config_string_key key)
+{
+    return default_string_values[key];
 }
 
 void config_set_defaults(void)

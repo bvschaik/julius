@@ -8,6 +8,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "window/advisors.h"
 
 static void draw_background(void)
@@ -32,9 +33,9 @@ static void draw_background(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested(m, h)) {
         window_advisors_show();
     }
 }
@@ -71,7 +72,7 @@ void window_trade_prices_show(void)
         WINDOW_TRADE_PRICES,
         draw_background,
         0,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     window_show(&window);

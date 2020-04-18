@@ -157,6 +157,8 @@ void building_update_desirability(void);
 
 int building_is_house(building_type type);
 
+int building_is_fort(building_type type);
+
 int building_get_highest_id(void);
 
 void building_update_highest_id(void);

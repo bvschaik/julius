@@ -6,6 +6,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "input/input.h"
 
 #define MIN_DIALOG_WIDTH 320
 
@@ -94,12 +95,12 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, priority_buttons, 1 + data.max_items, &data.focus_button_id)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested(m, h)) {
         window_go_back();
     }
 }
@@ -129,7 +130,7 @@ void window_labor_priority_show(int category)
         WINDOW_LABOR_PRIORITY,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     init(category);

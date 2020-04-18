@@ -120,10 +120,6 @@ static int handle_right_click_allow_building_info(const map_tile *tile)
     if (!window_is(WINDOW_CITY)) {
         allow = 0;
     }
-    if (building_construction_type()) {
-        allow = 0;
-    }
-    building_construction_set_type(BUILDING_NONE);
     window_city_show();
 
     if (!tile->grid_offset) {
@@ -368,13 +364,24 @@ int widget_city_has_input(void)
     return data.capture_input;
 }
 
-void widget_city_handle_mouse(const mouse *m)
+void widget_city_handle_input(const mouse *m, const hotkeys *h)
 {
-    scroll_map(m);
     if (m->is_touch) {
+        scroll_map(m);
         handle_touch();
         return;
     }
+
+    if (m->right.is_down && !m->right.went_down) {
+        pixel_offset camera_pixel_position;
+
+        if (scroll_move_mouse_drag(&camera_pixel_position)) {
+            city_view_set_camera_from_pixel_position(camera_pixel_position.x, camera_pixel_position.y);
+        }
+    } else if (!m->right.went_up) {
+        scroll_map(m);
+    }
+
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
     building_construction_reset_draw_as_constructing();
@@ -392,13 +399,26 @@ void widget_city_handle_mouse(const mouse *m)
     if (m->left.went_up) {
         build_end();
     }
+    if (m->right.went_down && !building_construction_type()) {
+        pixel_offset camera_pixel_position;
+        city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
+        scroll_start_mouse_drag(&camera_pixel_position);
+    }
     if (m->right.went_up) {
-        if (!building_construction_in_progress()) {
-            if (handle_right_click_allow_building_info(tile)) {
+        if (!building_construction_type()) {
+            int has_scrolled = scroll_end_mouse_drag();
+            if (!has_scrolled && handle_right_click_allow_building_info(tile)) {
                 window_building_info_show(tile->grid_offset);
             }
         } else {
             building_construction_cancel();
+        }
+    }
+    if (h->escape_pressed) {
+        if (building_construction_type()) {
+            building_construction_cancel();
+        } else {
+            hotkey_handle_escape();
         }
     }
 }
@@ -423,7 +443,7 @@ static void military_map_click(int legion_formation_id, const map_tile *tile)
     window_city_show();
 }
 
-void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
+void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int legion_formation_id)
 {
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
@@ -432,6 +452,9 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
     }
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
+        if (!t->in_use) {
+            return;
+        }
         if (t->has_started) {
             data.capture_input = 1;
         }
@@ -441,7 +464,7 @@ void widget_city_handle_mouse_military(const mouse *m, int legion_formation_id)
         }
     }
     scroll_map(m);
-    if (m->right.went_up) {
+    if (m->right.went_up || h->escape_pressed) {
         data.capture_input = 0;
         city_warning_clear_all();
         window_city_show();

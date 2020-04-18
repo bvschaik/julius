@@ -113,10 +113,10 @@ static void draw_background(void)
     }
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     time_millis current_time = time_get_millis();
-    if (m->right.went_up || current_time - data.start_time > DISPLAY_TIME_MILLIS) {
+    if (m->right.went_up || (m->is_touch && m->left.double_click) || current_time - data.start_time > DISPLAY_TIME_MILLIS) {
         data.callback();
     }
 }
@@ -127,8 +127,7 @@ void window_intermezzo_show(intermezzo_type type, void (*callback)(void))
         WINDOW_INTERMEZZO,
         draw_background,
         0,
-        handle_mouse,
-        0
+        handle_input
     };
     init(type, callback);
     window_show(&window);

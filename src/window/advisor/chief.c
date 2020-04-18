@@ -74,7 +74,7 @@ static int draw_background(void)
         lang_text_draw(61, 25, X_OFFSET, 106, FONT_NORMAL_GREEN);
     } else {
         int text_id;
-        switch (city_migration_no_immigation_cause()) {
+        switch (city_migration_no_immigration_cause()) {
             case NO_IMMIGRATION_LOW_WAGES: text_id = 19; break;
             case NO_IMMIGRATION_NO_JOBS: text_id = 20; break;
             case NO_IMMIGRATION_NO_FOOD: text_id = 21; break;

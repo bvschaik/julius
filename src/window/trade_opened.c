@@ -7,6 +7,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "window/advisors.h"
 #include "window/empire.h"
 
@@ -44,12 +45,12 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (image_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, image_buttons, 2, 0)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested(m, h)) {
         window_empire_show();
     }
 }
@@ -70,7 +71,7 @@ void window_trade_opened_show(int city)
         WINDOW_TRADE_OPENED,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     selected_city = city;
     window_show(&window);

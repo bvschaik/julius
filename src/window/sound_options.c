@@ -8,6 +8,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "sound/music.h"
@@ -108,14 +109,14 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 6, &data.focus_button_id) ||
         arrow_buttons_handle_mouse(m_dialog, 208, 60, arrow_buttons, 8)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested(m, h)) {
         data.close_callback();
     }
 }
@@ -201,7 +202,7 @@ void window_sound_options_show(void (*close_callback)(void))
         WINDOW_SOUND_OPTIONS,
         window_draw_underlying_window,
         draw_foreground,
-        handle_mouse,
+        handle_input,
     };
     init(close_callback);
     window_show(&window);

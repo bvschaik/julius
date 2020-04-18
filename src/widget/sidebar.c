@@ -518,13 +518,12 @@ int widget_sidebar_handle_mouse(const mouse* m)
     return click;
 }
 
-void widget_sidebar_handle_mouse_build_menu(const mouse* m)
+int widget_sidebar_handle_mouse_build_menu(const mouse *m)
 {
     if (city_view_is_sidebar_collapsed()) {
-        image_buttons_handle_mouse(m, get_x_offset_collapsed(), 24, buttons_build_collapsed, 12, 0);
-    }
-    else {
-        image_buttons_handle_mouse(m, get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
+        return image_buttons_handle_mouse(m, get_x_offset_collapsed(), 24, buttons_build_collapsed, 12, 0);
+    } else {
+        return image_buttons_handle_mouse(m, get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
     }
 }
 

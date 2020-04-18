@@ -11,6 +11,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "window/advisors.h"
 
 static void button_set_amount(int amount_id, int param2);
@@ -81,7 +82,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     focus_arrow_button_id = 0;
     const mouse *m_dialog = mouse_in_dialog(m);
@@ -92,7 +93,7 @@ static void handle_mouse(const mouse *m)
     if (focus_arrow_button_id) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested(m, h)) {
         window_advisors_show();
     }
 }
@@ -152,7 +153,7 @@ void window_donate_to_city_show(void)
         WINDOW_DONATE_TO_CITY,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     city_emperor_init_donation_amount();

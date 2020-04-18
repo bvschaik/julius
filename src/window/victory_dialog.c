@@ -65,7 +65,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     int num_buttons;
     if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
@@ -95,8 +95,7 @@ void window_victory_dialog_show(void)
         WINDOW_VICTORY_DIALOG,
         draw_background,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     window_show(&window);
 }

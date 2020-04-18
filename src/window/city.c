@@ -4,6 +4,10 @@
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"
+#include "city/warning.h"
+#include "figure/formation.h"
+#include "game/orientation.h"
+#include "game/settings.h"
 #include "game/state.h"
 #include "game/time.h"
 #include "graphics/image.h"
@@ -11,10 +15,15 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "map/bookmark.h"
+#include "map/grid.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
+#include "widget/city_with_overlay.h"
 #include "widget/sidebar.h"
 #include "widget/top_menu.h"
+#include "window/advisors.h"
+#include "window/file_dialog.h"
 
 static int selected_legion_formation_id;
 
@@ -99,22 +108,127 @@ static void draw_foreground_military(void)
     draw_paused_and_time_left();
 }
 
-static void handle_mouse(const mouse *m)
+static void exit_military_command(void)
 {
+    if (window_is(WINDOW_CITY_MILITARY)) {
+        window_city_show();
+    }
+}
+
+static void show_overlay(int overlay)
+{
+    exit_military_command();
+    if (game_state_overlay() == overlay) {
+        game_state_set_overlay(OVERLAY_NONE);
+    } else {
+        game_state_set_overlay(overlay);
+    }
+    city_with_overlay_update();
+    window_invalidate();
+}
+
+static void cycle_legion(void)
+{
+    static int current_legion_id = 1;
+    if (window_is(WINDOW_CITY)) {
+        int legion_id = current_legion_id;
+        current_legion_id = 0;
+        for (int i = 1; i < MAX_FORMATIONS; i++) {
+            legion_id++;
+            if (legion_id > MAX_LEGIONS) {
+                legion_id = 1;
+            }
+            const formation *m = formation_get(legion_id);
+            if (m->in_use == 1 && !m->is_herd && m->is_legion) {
+                if (current_legion_id == 0) {
+                    current_legion_id = legion_id;
+                    break;
+                }
+            }
+        }
+        if (current_legion_id > 0) {
+            const formation *m = formation_get(current_legion_id);
+            city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
+            window_invalidate();
+        }
+    }
+}
+
+static void toggle_pause(void)
+{
+    exit_military_command();
+    game_state_toggle_paused();
+    city_warning_clear_all();
+}
+
+static void handle_hotkeys(const hotkeys *h)
+{
+    if (h->toggle_pause) {
+        toggle_pause();
+    }
+    if (h->decrease_game_speed) {
+        setting_decrease_game_speed();
+    }
+    if (h->increase_game_speed) {
+        setting_increase_game_speed();
+    }
+    if (h->show_overlay) {
+        show_overlay(h->show_overlay);
+    }
+    if (h->toggle_overlay) {
+        exit_military_command();
+        game_state_toggle_overlay();
+        city_with_overlay_update();
+        window_invalidate();
+    }
+    if (h->show_advisor) {
+        window_advisors_show_advisor(h->show_advisor);
+    }
+    if (h->cycle_legion) {
+        cycle_legion();
+    }
+    if (h->rotate_map_left) {
+        game_orientation_rotate_left();
+        window_invalidate();
+    }
+    if (h->rotate_map_right) {
+        game_orientation_rotate_right();
+        window_invalidate();
+    }
+    if (h->go_to_bookmark) {
+        if (map_bookmark_go_to(h->go_to_bookmark - 1)) {
+            window_invalidate();
+        }
+    }
+    if (h->set_bookmark) {
+        map_bookmark_save(h->set_bookmark - 1);
+    }
+    if (h->load_file) {
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+    }
+    if (h->save_file) {
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
+    }
+}
+
+static void handle_input(const mouse *m, const hotkeys *h)
+{
+    handle_hotkeys(h);
     if (!building_construction_in_progress()) {
-        if (widget_top_menu_handle_mouse(m)) {
+        if (widget_top_menu_handle_input(m, h)) {
             return;
         }
         if (widget_sidebar_handle_mouse(m)) {
             return;
         }
     }
-    widget_city_handle_mouse(m);
+    widget_city_handle_input(m, h);
 }
 
-static void handle_mouse_military(const mouse *m)
+static void handle_input_military(const mouse *m, const hotkeys *h)
 {
-    widget_city_handle_mouse_military(m, selected_legion_formation_id);
+    handle_hotkeys(h);
+    widget_city_handle_input_military(m, h, selected_legion_formation_id);
 }
 
 static void get_tooltip(tooltip_context *c)
@@ -153,7 +267,7 @@ void window_city_show(void)
         WINDOW_CITY,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     window_show(&window);
@@ -166,7 +280,7 @@ void window_city_military_show(int legion_formation_id)
         WINDOW_CITY_MILITARY,
         draw_background,
         draw_foreground_military,
-        handle_mouse_military,
+        handle_input_military,
         get_tooltip
     };
     window_show(&window);

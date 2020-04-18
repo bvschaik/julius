@@ -16,8 +16,10 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "input/keyboard.h"
 #include "widget/input_box.h"
 #include "window/city.h"
@@ -25,15 +27,15 @@
 
 #include <string.h>
 
+#define NUM_FILES_IN_VIEW 12
+
 static void button_ok_cancel(int is_ok, int param2);
-static void button_scroll(int is_down, int num_lines);
 static void button_select_file(int index, int param2);
+static void on_scroll(void);
 
 static image_button image_buttons[] = {
     {344, 335, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok_cancel, button_none, 1, 0, 1},
     {392, 335, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_ok_cancel, button_none, 0, 0, 1},
-    {464, 120, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 8, button_scroll, button_none, 0, 1, 1},
-    {464, 300, 39, 26, IB_SCROLL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, button_scroll, button_none, 1, 1, 1},
 };
 static generic_button file_buttons[] = {
     {160, 128, 288, 16, button_select_file, button_none, 0, 0},
@@ -50,6 +52,8 @@ static generic_button file_buttons[] = {
     {160, 304, 288, 16, button_select_file, button_none, 11, 0},
 };
 
+static scrollbar_type scrollbar = { 464, 120, 206, on_scroll };
+
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
 static const int MAX_FILE_WINDOW_TEXT_WIDTH = 18 * INPUT_BOX_BLOCK_SIZE;
 static input_box file_name_input = { 144, 80, 20, 2 };
@@ -64,7 +68,6 @@ static struct {
     file_type type;
     file_dialog_type dialog_type;
     int focus_button_id;
-    int scroll_position;
     const dir_listing *file_list;
 
     file_type_data *file_data;
@@ -91,7 +94,6 @@ static void init(file_type type, file_dialog_type dialog_type)
     }
     data.dialog_type = dialog_type;
     data.message_not_exist_start_time = 0;
-    data.scroll_position = 0;
 
     if (data.dialog_type != FILE_DIALOG_SAVE) {
         data.file_list = dir_find_files_with_extension(data.file_data->extension);
@@ -100,25 +102,9 @@ static void init(file_type type, file_dialog_type dialog_type)
     else {
         data.file_list = dir_find_files_with_extension(saved_game_data_expanded.extension);
     }
-
+    scrollbar_init(&scrollbar, 0, data.file_list->num_files - NUM_FILES_IN_VIEW);
     strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
     keyboard_start_capture(data.typed_name, FILE_NAME_MAX, 0, &file_name_input, FONT_NORMAL_WHITE);
-}
-
-static void draw_scrollbar_dot(void)
-{
-    if (data.file_list->num_files > 12) {
-        int pct;
-        if (data.scroll_position <= 0) {
-            pct = 0;
-        } else if (data.scroll_position + 12 >= data.file_list->num_files) {
-            pct = 100;
-        } else {
-            pct = calc_percentage(data.scroll_position, data.file_list->num_files - 12);
-        }
-        int y_offset = calc_adjust_with_percentage(130, pct);
-        image_draw(image_group(GROUP_PANEL_BUTTON) + 39, 472, 145 + y_offset);
-    }
 }
 
 static void draw_foreground(void)
@@ -141,55 +127,29 @@ static void draw_foreground(void)
     }
     lang_text_draw(43, 5, 224, 342, FONT_NORMAL_BLACK);
 
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < NUM_FILES_IN_VIEW; i++) {
         font_t font = FONT_NORMAL_GREEN;
         if (data.focus_button_id == i + 1) {
             font = FONT_NORMAL_WHITE;
         }
-        encoding_from_utf8(data.file_list->files[data.scroll_position + i], file, FILE_NAME_MAX);
+        encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], file, FILE_NAME_MAX);
         //file_remove_extension(file);
         text_ellipsize(file, font, MAX_FILE_WINDOW_TEXT_WIDTH);
         text_draw(file, 160, 130 + 16 * i, font, 0);
     }
 
-    image_buttons_draw(0, 0, image_buttons, 4);
+    image_buttons_draw(0, 0, image_buttons, 2);
     text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
     text_draw(data.typed_name, 160, 90, FONT_NORMAL_WHITE, 0);
     text_draw_cursor(160, 91, keyboard_is_insert());
-    draw_scrollbar_dot();
+    scrollbar_draw(&scrollbar);
 
     graphics_reset_dialog();
 }
 
-static int handle_scrollbar(const mouse *m)
-{
-    const mouse *m_dialog = mouse_in_dialog(m);
-    if (data.file_list->num_files <= 12) {
-        return 0;
-    }
-    if (!m_dialog->left.is_down) {
-        return 0;
-    }
-    if (m_dialog->x >= 464 && m_dialog->x <= 496 && m_dialog->y >= 145 && m_dialog->y <= 300) {
-        int y_offset = m_dialog->y - 145;
-        if (y_offset > 130) {
-            y_offset = 130;
-        }
-        int pct = calc_percentage(y_offset, 130);
-        data.scroll_position = calc_adjust_with_percentage(data.file_list->num_files - 12, pct);
-        return 1;
-    }
-    return 0;
-}
-
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     double_click = m->left.double_click;
-    if (m->scrolled == SCROLL_DOWN) {
-        button_scroll(1, 3);
-    } else if (m->scrolled == SCROLL_UP) {
-        button_scroll(0, 3);
-    }
 
     if (keyboard_input_is_accepted()) {
         button_ok_cancel(1, 0);
@@ -198,12 +158,12 @@ static void handle_mouse(const mouse *m)
 
     const mouse *m_dialog = mouse_in_dialog(m);
     if (input_box_handle_mouse(m_dialog, &file_name_input) ||
-        generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, 12, &data.focus_button_id) ||
-        image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 4, 0) ||
-        handle_scrollbar(m)) {
+        generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, NUM_FILES_IN_VIEW, &data.focus_button_id) ||
+        image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0) ||
+        scrollbar_handle_mouse(&scrollbar, m_dialog)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested(m, h)) {
         keyboard_stop_capture();
         window_go_back();
     }
@@ -280,11 +240,12 @@ static void button_ok_cancel(int is_ok, int param2)
             dir_find_files_with_extension(data.file_data->extension);
             dir_append_files_with_extension(saved_game_data_expanded.extension);
 
-            if (data.scroll_position + 12 >= data.file_list->num_files) {
-                --data.scroll_position;
+            if (scrollbar.scroll_position + NUM_FILES_IN_VIEW >= data.file_list->num_files) {
+                --scrollbar.scroll_position;
+
             }
-            if (data.scroll_position < 0) {
-                data.scroll_position = 0;
+            if (scrollbar.scroll_position < 0) {
+                scrollbar.scroll_position = 0;
             }
         }
     }
@@ -292,28 +253,15 @@ static void button_ok_cancel(int is_ok, int param2)
     strncpy(data.file_data->last_loaded_file, filename, FILE_NAME_MAX);
 }
 
-static void button_scroll(int is_down, int num_lines)
+static void on_scroll(void)
 {
-    if (data.file_list->num_files > 12) {
-        if (is_down) {
-            data.scroll_position += num_lines;
-            if (data.scroll_position > data.file_list->num_files - 12) {
-                data.scroll_position = data.file_list->num_files - 12;
-            }
-        } else {
-            data.scroll_position -= num_lines;
-            if (data.scroll_position < 0) {
-                data.scroll_position = 0;
-            }
-        }
-        data.message_not_exist_start_time = 0;
-    }
+    data.message_not_exist_start_time = 0;
 }
 
 static void button_select_file(int index, int param2)
 {
     if (index < data.file_list->num_files) {
-        strncpy(data.selected_file, data.file_list->files[data.scroll_position + index], FILE_NAME_MAX - 1);
+        strncpy(data.selected_file, data.file_list->files[scrollbar.scroll_position + index], FILE_NAME_MAX - 1);
         encoding_from_utf8(data.selected_file, data.typed_name, FILE_NAME_MAX);
         keyboard_refresh();
         data.message_not_exist_start_time = 0;
@@ -330,7 +278,7 @@ void window_file_dialog_show(file_type type, file_dialog_type dialog_type)
         WINDOW_FILE_DIALOG,
         window_draw_underlying_window,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     init(type, dialog_type);
     window_show(&window);

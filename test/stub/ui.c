@@ -57,3 +57,8 @@ void window_popup_dialog_show(popup_dialog_type type, void (*okFunc)(int), int h
 
 void widget_minimap_invalidate(void)
 {}
+
+int window_building_info_get_building_type(void)
+{
+    return 0;
+}

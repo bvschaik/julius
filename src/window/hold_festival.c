@@ -13,6 +13,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "window/advisors.h"
 #include "window/message_dialog.h"
 
@@ -102,7 +103,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     int handled = 0;
@@ -111,7 +112,7 @@ static void handle_mouse(const mouse *m)
     if (focus_image_button_id) {
         focus_button_id = 0;
     }
-    if (!handled && (m->right.went_up || (m->is_touch && m->left.double_click))) {
+    if (!handled && input_go_back_requested(m, h)) {
         window_advisors_show();
     }
 }
@@ -179,7 +180,7 @@ void window_hold_festival_show(void)
         WINDOW_HOLD_FESTIVAL,
         draw_background,
         draw_foreground,
-        handle_mouse,
+        handle_input,
         get_tooltip
     };
     window_show(&window);

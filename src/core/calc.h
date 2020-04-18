@@ -90,4 +90,25 @@ int calc_missile_direction(int x_from, int y_from, int x_to, int y_to);
  */
 int32_t calc_bound(int32_t value, int32_t min, int32_t max);
 
+/**
+ * Absolutely increments a value by "step" until it reaches "max"
+ * If "max" is negative, "step" will *always* decrease "value",
+ * meaning if "step" is positive, it will be converted to negative.
+ * @param value Value to increment
+ * @param step Amout to increment
+ * @param max The incrementation limit
+ * @return Value incremented by step
+ */
+int calc_absolute_increment(int value, int step, int max);
+
+/**
+ * Absolutely decrements a value by "step" until it reaches 0
+ * If "value" is positive, "step" will *always* decrease "value",
+ * meaning if "step" is positive, it will be converted to negative.
+ * @param value Value to decrement
+ * @param step Amout to decrement
+ * @return Value decremented by step
+ */
+int calc_absolute_decrement(int value, int step);
+
 #endif // CORE_CALC_H

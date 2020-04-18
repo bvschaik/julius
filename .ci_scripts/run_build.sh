@@ -18,6 +18,10 @@ case "$BUILD_TARGET" in
 	cd .. && \
 	./.ci_scripts/package_appimage.sh
 	;;
+"linux")
+	cd build && make && make test && \
+	zip julius.zip julius
+	;;
 *)
 	cd build && make 
 	;;

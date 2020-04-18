@@ -5,11 +5,14 @@
 #include "core/direction.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "game/system.h"
 #include "graphics/screen.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 #define MOUSE_BORDER 5
+#define MOUSE_SCROLL_MIN_DELTA 4
 #define TOUCH_BORDER 100
 #define DECAY_MULTIPLIER 300
 #define DECAY_BASE_TIME 350
@@ -17,7 +20,7 @@
 #define KEY_WAIT_TIME_AFTER_HOLD 500
 #define MAX_SPEED_TIME_WEIGHT 200
 #define THRUST 6
-#define FRAME_TIME 17.0f
+#define FRAME_TIME 16.67f
 
 static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
 static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
@@ -39,6 +42,7 @@ typedef struct {
 
 static struct {
     int is_scrolling;
+    int has_scrolled;
     int is_touch;
     struct {
         key up;
@@ -55,6 +59,7 @@ static struct {
         int y;
         time_millis start_time;
         time_millis last_time;
+        time_millis stopped_time;
         pixel_offset last_position;
         int decaying;
         float modifier;
@@ -67,6 +72,8 @@ static struct {
         int height;
     } limits;
     touch_coords start_touch;
+    int cumulative_delta_x;
+    int cumulative_delta_y;
 } data;
 
 static int is_arrow_key_pressed(key *arrow)
@@ -198,10 +205,24 @@ static void find_scroll_speed(const pixel_offset *position)
     }
 
     time_millis weighted_time = total_time - delta_time;
-    int delta_position = (position->x - data.speed.last_position.x) * DECAY_MULTIPLIER;
-    data.speed.x = (int) (data.speed.x * weighted_time + delta_position) / (int) total_time;
-    delta_position = (position->y - data.speed.last_position.y) * DECAY_MULTIPLIER;
-    data.speed.y = (int) (data.speed.y * weighted_time + delta_position) / (int) total_time;
+    int delta_position_x = (position->x - data.speed.last_position.x) * DECAY_MULTIPLIER;
+    int delta_position_y = (position->y - data.speed.last_position.y) * DECAY_MULTIPLIER;
+
+    data.speed.x = (int) (data.speed.x * weighted_time + delta_position_x) / (int) total_time;
+    data.speed.y = (int) (data.speed.y * weighted_time + delta_position_y) / (int) total_time;
+
+    // Stop speed when the user stopped moving the finger
+    if (delta_position_x == 0 && delta_position_y == 0) {
+        delta_time = current_time - data.speed.stopped_time;
+        if (delta_time > MAX_SPEED_TIME_WEIGHT) {
+            data.speed.stopped_time = current_time;
+        } else if (delta_time > MAX_SPEED_TIME_WEIGHT / 5) {
+            data.speed.x = 0;
+            data.speed.y = 0;
+        }
+    } else {
+        data.speed.stopped_time = 0;
+    }
 
     data.speed.last_time = current_time;
     data.speed.last_position = *position;
@@ -226,6 +247,69 @@ void scroll_restore_margins(void)
 touch_coords scroll_get_original_touch_position(void)
 {
     return data.start_touch;
+}
+
+void scroll_start_mouse_drag(const pixel_offset *position)
+{
+    data.has_scrolled = 0;
+    data.is_scrolling = 1;
+    data.is_touch = 0;
+    data.cumulative_delta_x = 0;
+    data.cumulative_delta_y = 0;
+    clear_scroll_decay(position);
+
+    system_mouse_set_relative_mode(1);
+}
+
+int scroll_move_mouse_drag(pixel_offset *position)
+{
+    if (!data.is_scrolling) {
+        return 0;
+    }
+
+    int delta_x = 0, delta_y = 0;
+    system_mouse_get_relative_state(&delta_x, &delta_y);
+
+    // Store tiny movements until we decide that it's enough to move into scroll mode
+    if (!data.has_scrolled) {
+        delta_x += data.cumulative_delta_x;
+        delta_y += data.cumulative_delta_y;
+    }
+
+    if (delta_x != 0 || delta_y != 0) {
+        int has_scrolled = abs(data.cumulative_delta_x) > MOUSE_SCROLL_MIN_DELTA || abs(data.cumulative_delta_y) > MOUSE_SCROLL_MIN_DELTA;
+        data.has_scrolled = data.has_scrolled || has_scrolled;
+
+        city_view_get_camera_in_pixels(&position->x, &position->y);
+
+        if (data.has_scrolled) {
+            position->x += delta_x;
+            position->y += delta_y;
+        } else {
+            data.cumulative_delta_x = delta_x;
+            data.cumulative_delta_y = delta_y;
+        }
+
+        return 1;
+    }
+    return 0;
+}
+
+int scroll_end_mouse_drag()
+{
+    if (!data.is_scrolling) {
+        return 0;
+    }
+
+    int has_scrolled = data.has_scrolled == 1;
+
+    data.is_touch = 0;
+    data.is_scrolling = 0;
+    data.has_scrolled = 0;
+
+    system_mouse_set_relative_mode(0);
+
+    return has_scrolled;
 }
 
 void scroll_start_touch_drag(const pixel_offset *position, touch_coords coords)
@@ -290,101 +374,7 @@ int scroll_decay(pixel_offset *position)
     return 1;
 }
 
-static int absolute_increment(int value, int step, int max)
-{
-    if (step == 0) {
-        step = value >= 0 ? 1 : -1;
-    }
-    if (max >= 0) {
-        return (value + step >= max) ? max : value + step;
-    }
-    return (value + step <= max) ? max : value + step;
-}
-
-static int absolute_decrement(int value, int step)
-{
-    if (step == 0) {
-        step = value >= 0 ? 1 : -1;
-    }
-    if (value >= 0) {
-        return (step >= value) ? 0 : value - step;
-    }
-    return (step >= -value) ? 0 : value + step;
-}
-
-void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
-{
-    int use_smooth_scrolling = config_get(CONFIG_UI_SMOOTH_SCROLLING);
-    int direction = scroll_get_direction(m);
-    int y_fraction = type == SCROLL_TYPE_CITY ? 2 : 1;
-
-    if (direction == DIR_8_NONE) {
-        if (!data.is_touch && !data.speed.decaying && (data.speed.x || data.speed.y) && use_smooth_scrolling) {
-            data.is_scrolling = 1;
-            int max_speed = SCROLL_STEP[type][get_scroll_speed_factor()];
-            data.speed.x = absolute_decrement(data.speed.x, max_speed / THRUST);
-            data.speed.y = absolute_decrement(data.speed.y, (max_speed / y_fraction) / THRUST);
-            delta->x = data.speed.x;
-            delta->y = data.speed.y;
-        } else {
-            delta->x = 0;
-            delta->y = 0;
-        }
-        return;
-    }
-    if (data.speed.decaying) {
-        clear_scroll_decay(0);
-    }
-    int dir_x = DIRECTION_X[direction];
-    int dir_y = DIRECTION_Y[direction];
-
-    if (!use_smooth_scrolling && !data.is_touch) {
-        int do_scroll = should_scroll();
-        int step = SCROLL_STEP[type][0];
-        delta->x = step * dir_x * do_scroll;
-        delta->y = (step / y_fraction) * dir_y * do_scroll;
-        return;
-    }
-
-    int max_speed = SCROLL_STEP[type][get_scroll_speed_factor()];
-    int max_speed_x = max_speed * dir_x;
-    int max_speed_y = (max_speed / y_fraction) * dir_y;
-
-    if (!data.limits.active) {
-        if (!dir_x) {
-            data.speed.x = absolute_decrement(data.speed.x, max_speed / THRUST);
-        } else if (data.speed.x * dir_x < 0) {
-            data.speed.x = -data.speed.x;
-        } else if (data.speed.x != max_speed_x) {
-            data.speed.x = absolute_increment(data.speed.x, max_speed_x / THRUST, max_speed_x);
-        }
-        if (!dir_y) {
-            data.speed.y = absolute_decrement(data.speed.y, (max_speed / y_fraction) / THRUST);
-        } else if (data.speed.y * dir_y < 0) {
-            data.speed.y = -data.speed.y;
-        } else if (data.speed.y != max_speed_y) {
-            data.speed.y = absolute_increment(data.speed.y, max_speed_y / THRUST, max_speed_y);
-        }
-    } else {
-        data.speed.x = (int) (max_speed_x * data.speed.modifier);
-        data.speed.y = (int) (max_speed_y * data.speed.modifier);
-    }
-
-    // Adjust delta for time (allows scrolling at the same rate at lower FPS)
-    // Expects the game to run at least at 5FPS to work
-    time_millis current_time = time_get_millis();
-    time_millis time_delta = current_time - data.speed.last_time;
-    data.speed.last_time = current_time;
-    if (time_delta > 17 && time_delta < MAX_SPEED_TIME_WEIGHT) {
-        delta->x = (int) ((float) (data.speed.x / FRAME_TIME) * time_delta);
-        delta->y = (int) ((float) (data.speed.y / FRAME_TIME) * time_delta);
-    } else {
-        delta->x = data.speed.x;
-        delta->y = data.speed.y;
-    }
-}
-
-int scroll_get_direction(const mouse *m)
+static int get_direction(const mouse *m)
 {
     int is_inside_window = m->is_inside_window;
     int width = screen_width();
@@ -451,6 +441,78 @@ int scroll_get_direction(const mouse *m)
         data.is_scrolling = (top | left | bottom | right);
     }
     return direction_from_sides(top, left, bottom, right);
+}
+
+void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
+{
+    int use_smooth_scrolling = config_get(CONFIG_UI_SMOOTH_SCROLLING);
+    int direction = get_direction(m);
+    int y_fraction = type == SCROLL_TYPE_CITY ? 2 : 1;
+
+    if (direction == DIR_8_NONE) {
+        if (!data.is_touch && !data.speed.decaying && (data.speed.x || data.speed.y) && use_smooth_scrolling) {
+            data.is_scrolling = 1;
+            int max_speed = SCROLL_STEP[type][get_scroll_speed_factor()];
+            data.speed.x = calc_absolute_decrement(data.speed.x, max_speed / THRUST);
+            data.speed.y = calc_absolute_decrement(data.speed.y, (max_speed / y_fraction) / THRUST);
+            delta->x = data.speed.x;
+            delta->y = data.speed.y;
+        } else {
+            delta->x = 0;
+            delta->y = 0;
+        }
+        return;
+    }
+    if (data.speed.decaying) {
+        clear_scroll_decay(0);
+    }
+    int dir_x = DIRECTION_X[direction];
+    int dir_y = DIRECTION_Y[direction];
+
+    if (!use_smooth_scrolling && !data.is_touch) {
+        int do_scroll = should_scroll();
+        int step = SCROLL_STEP[type][0];
+        delta->x = step * dir_x * do_scroll;
+        delta->y = (step / y_fraction) * dir_y * do_scroll;
+        return;
+    }
+
+    int max_speed = SCROLL_STEP[type][get_scroll_speed_factor()];
+    int max_speed_x = max_speed * dir_x;
+    int max_speed_y = (max_speed / y_fraction) * dir_y;
+
+    if (!data.limits.active) {
+        if (!dir_x) {
+            data.speed.x = calc_absolute_decrement(data.speed.x, max_speed / THRUST);
+        } else if (data.speed.x * dir_x < 0) {
+            data.speed.x = -data.speed.x;
+        } else if (data.speed.x != max_speed_x) {
+            data.speed.x = calc_absolute_increment(data.speed.x, max_speed_x / THRUST, max_speed_x);
+        }
+        if (!dir_y) {
+            data.speed.y = calc_absolute_decrement(data.speed.y, (max_speed / y_fraction) / THRUST);
+        } else if (data.speed.y * dir_y < 0) {
+            data.speed.y = -data.speed.y;
+        } else if (data.speed.y != max_speed_y) {
+            data.speed.y = calc_absolute_increment(data.speed.y, max_speed_y / THRUST, max_speed_y);
+        }
+    } else {
+        data.speed.x = (int) (max_speed_x * data.speed.modifier);
+        data.speed.y = (int) (max_speed_y * data.speed.modifier);
+    }
+
+    // Adjust delta for time (allows scrolling at the same rate regardless of FPS)
+    // Expects the game to run at least at 5FPS to work
+    time_millis current_time = time_get_millis();
+    time_millis time_delta = current_time - data.speed.last_time;
+    data.speed.last_time = current_time;
+    if (time_delta < MAX_SPEED_TIME_WEIGHT) {
+        delta->x = (int) ((float) (data.speed.x / FRAME_TIME) * time_delta);
+        delta->y = (int) ((float) (data.speed.y / FRAME_TIME) * time_delta);
+    } else {
+        delta->x = data.speed.x;
+        delta->y = data.speed.y;
+    }
 }
 
 void scroll_arrow_left(int is_down)

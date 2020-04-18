@@ -371,19 +371,23 @@ void building_construction_start(int x, int y, int grid_offset)
 
     if (game_undo_start_build(data.type)) {
         data.in_progress = 1;
+        int can_start = 1;
         switch (data.type) {
             case BUILDING_ROAD:
-                map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, data.start.x, data.start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, data.start.x, data.start.y);
                 break;
             case BUILDING_AQUEDUCT:
             case BUILDING_DRAGGABLE_RESERVOIR:
-                map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, data.start.x, data.start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, data.start.x, data.start.y);
                 break;
             case BUILDING_WALL:
-                map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, data.start.x, data.start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, data.start.x, data.start.y);
                 break;
             default:
                 break;
+        }
+        if (!can_start) {
+            building_construction_cancel();
         }
     }
 }
@@ -475,7 +479,7 @@ void building_construction_update(int x, int y, int grid_offset)
         mark_construction(x, y, 3, ~TERRAIN_ROAD, 0);
     } else if (type == BUILDING_WAREHOUSE) {
         mark_construction(x, y, 3, TERRAIN_ALL, 0);
-    } else if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
+    } else if (building_is_fort(type)) {
         if (formation_get_num_legions_cached() < 6) {
             const int offsets_x[] = {3, 4, 4, 3};
             const int offsets_y[] = {-1, -1, 0, 0};
@@ -742,6 +746,11 @@ void building_construction_get_view_position(int *view_x, int *view_y)
 {
     *view_x = data.start_offset_x_view;
     *view_y = data.start_offset_y_view;
+}
+
+int building_construction_get_start_grid_offset(void)
+{
+    return data.start.grid_offset;
 }
 
 void building_construction_reset_draw_as_constructing(void)

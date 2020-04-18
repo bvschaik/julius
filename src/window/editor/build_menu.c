@@ -6,6 +6,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "widget/map_editor.h"
 #include "widget/sidebar_editor.h"
 #include "window/editor/map.h"
@@ -104,15 +105,14 @@ static int handle_build_submenu(const mouse *m)
                build_menu_buttons, data.num_items, &data.focus_button_id);
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (m->right.went_up) {
-        window_editor_map_show();
+    if (handle_build_submenu(m) ||
+        widget_sidebar_editor_handle_mouse_build_menu(m)) {
         return;
     }
-
-    if (!handle_build_submenu(m)) {
-        widget_sidebar_editor_handle_mouse_build_menu(m);
+    if (input_go_back_requested(m, h)) {
+        window_editor_map_show();
     }
 }
 
@@ -172,8 +172,7 @@ void window_editor_build_menu_show(int submenu)
         WINDOW_EDITOR_BUILD_MENU,
         draw_background,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     window_show(&window);
 }

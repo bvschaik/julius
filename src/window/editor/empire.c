@@ -14,6 +14,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "input/scroll.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
@@ -43,11 +44,6 @@ static struct {
     int finished_scroll;
     int show_battle_objects;
 } data;
-
-void window_editor_empire_toggle_battle_info(void)
-{
-    data.show_battle_objects = !data.show_battle_objects;
-}
 
 static void init(void)
 {
@@ -298,8 +294,11 @@ static void determine_selected_object(const mouse *m)
     window_invalidate();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
+    if (h->toggle_editor_battle_info) {
+        data.show_battle_objects = !data.show_battle_objects;
+    }
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
@@ -338,7 +337,7 @@ static void handle_mouse(const mouse *m)
                 if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY) {
                     data.selected_city = empire_city_get_for_object(selected_object - 1);
                 }
-            } else if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+            } else if (input_go_back_requested(m, h)) {
                 window_editor_map_show();
             }
         }
@@ -363,7 +362,7 @@ void window_editor_empire_show(void)
         WINDOW_EDITOR_EMPIRE,
         draw_background,
         draw_foreground,
-        handle_mouse
+        handle_input
     };
     init();
     window_show(&window);

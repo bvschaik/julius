@@ -14,6 +14,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "scenario/building.h"
 #include "window/advisor/trade.h"
 #include "window/message_dialog.h"
@@ -162,7 +163,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0)) {
@@ -175,7 +176,7 @@ static void handle_mouse(const mouse *m)
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, resource_generic_buttons, 3, &data.focus_button_id)) {
         return;
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested(m, h)) {
         window_advisors_show();
     }
 }
@@ -218,8 +219,7 @@ void window_resource_settings_show(resource_type resource)
         WINDOW_RESOURCE_SETTINGS,
         draw_background,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     init(resource);
     window_show(&window);

@@ -45,6 +45,7 @@ typedef enum {
 /**
  * Get an integer config value
  * @param key Integer key
+ * @return Config value
  */
 int config_get(config_key key);
 
@@ -68,6 +69,20 @@ const char *config_get_string(config_string_key key);
  * @param value Value to set
  */
 void config_set_string(config_string_key key, const char *value);
+
+/**
+ * Set a default config value
+ * @param key Integer key
+ * @return Default config value
+ */
+int config_get_default_value(config_key key);
+
+/**
+ * Get a string default config value
+ * @param key String key
+ * @return Default config value, is always non-NULL but may be an empty string
+ */
+const char *config_get_default_string_value(config_string_key key);
 
 /**
  * Reset all settings to their defaults

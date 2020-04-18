@@ -7,6 +7,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "input/input.h"
 
 #define MAX_ITEMS_PER_LIST 20
 
@@ -128,7 +129,7 @@ static void draw_foreground(void)
     }
 }
 
-static void handle_mouse(const mouse *m)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (data.num_items > MAX_ITEMS_PER_LIST) {
         int items_first = items_in_first_list();
@@ -146,7 +147,7 @@ static void handle_mouse(const mouse *m)
             return;
         }
     }
-    if (m->right.went_up || (m->is_touch && m->left.double_click)) {
+    if (input_go_back_requested(m, h)) {
         window_go_back();
     }
 }
@@ -167,8 +168,7 @@ void window_select_list_show(int x, int y, int group, int num_items, void (*call
         WINDOW_SELECT_LIST,
         window_draw_underlying_window,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     init_group(x, y, group, num_items, callback);
     window_show(&window);
@@ -180,8 +180,7 @@ void window_select_list_show_text(int x, int y, uint8_t **items, int num_items, 
         WINDOW_SELECT_LIST,
         window_draw_underlying_window,
         draw_foreground,
-        handle_mouse,
-        0
+        handle_input
     };
     init_text(x, y, items, num_items, callback);
     window_show(&window);

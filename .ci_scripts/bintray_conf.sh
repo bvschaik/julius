@@ -21,8 +21,36 @@ else
   exit
 fi
 
+if [ "$DEPLOY" = "linux" ]
+then
+cat > "bintray.json" <<EOF
+{
+  "package": {
+    "subject": "bvschaik",
+    "repo": "$REPO",
+    "name": "linux$NAME_SUFFIX",
+    "licenses": ["AGPL-V3"],
+    "vcs_url": "https://github.com/bvschaik/julius.git"
+  },
+
+  "version": {
+    "name": "$VERSION",
+    "released": "$(date +'%Y-%m-%d')",
+    "desc": "Automated Linux build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
+  },
+
+  "files": [
+    {
+      "includePattern": "${build_dir}/julius.zip",
+      "uploadPattern": "julius-$VERSION-linux-x86_64.zip"
+    }
+  ],
+
+  "publish": true
+}
+EOF
 # Linux portable binary: https://appimage.org/
-if [ "$DEPLOY" = "appimage" ]
+elif [ "$DEPLOY" = "appimage" ]
 then
 cat > "bintray.json" <<EOF
 {
