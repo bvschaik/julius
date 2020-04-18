@@ -166,30 +166,34 @@ const hotkey_mapping *hotkey_for_action(hotkey_action action, int index)
     return 0;
 }
 
-int hotkey_default_for_action(hotkey_action action, int index, hotkey_mapping *mapping)
+const hotkey_mapping *hotkey_default_for_action(hotkey_action action, int index)
 {
-    if (index < 0 || index >= 2) {
+    if (index < 0 || index >= 2 || action < 0 || action >= HOTKEY_MAX_ITEMS) {
         return 0;
     }
-    *mapping = data.default_mappings[action][index];
-    if (data.default_mappings[action][index].key == KEY_NONE) {
-        return 0;
-    }
-    return 1;
+    return &data.default_mappings[action][index];
 }
 
-static void add_mapping(const hotkey_mapping *mapping)
+void hotkey_config_clear(void)
 {
-    data.mappings[data.num_mappings] = *mapping;
-    data.num_mappings++;
+    data.num_mappings = 0;
+}
+
+void hotkey_config_add_mapping(const hotkey_mapping *mapping)
+{
+    if (data.num_mappings < MAX_MAPPINGS) {
+        data.mappings[data.num_mappings] = *mapping;
+        data.num_mappings++;
+    }
 }
 
 static void load_defaults(void)
 {
+    hotkey_config_clear();
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
         for (int index = 0; index < 2; index++) {
             if (data.default_mappings[action][index].key) {
-                add_mapping(&data.default_mappings[action][index]);
+                hotkey_config_add_mapping(&data.default_mappings[action][index]);
             }
         }
     }
@@ -197,6 +201,7 @@ static void load_defaults(void)
 
 static void load_file(void)
 {
+    hotkey_config_clear();
     FILE *fp = file_open(INI_FILENAME, "rt");
     if (!fp) {
         return;
@@ -221,13 +226,10 @@ static void load_file(void)
                 hotkey_mapping mapping;
                 if (key_combination_from_name(value, &mapping.key, &mapping.modifiers)) {
                     mapping.action = i;
-                    add_mapping(&mapping);
+                    hotkey_config_add_mapping(&mapping);
                 }
                 break;
             }
-        }
-        if (data.num_mappings >= MAX_MAPPINGS) {
-            break;
         }
     }
     file_close(fp);
@@ -236,7 +238,6 @@ static void load_file(void)
 void hotkey_config_load(void)
 {
     init_defaults();
-    data.num_mappings = 0;
     load_file();
     if (data.num_mappings == 0) {
         load_defaults();
