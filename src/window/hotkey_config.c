@@ -255,7 +255,11 @@ static void button_hotkey(int row, int is_alternative)
 
 static void button_reset_defaults(int param1, int param2)
 {
-    // TODO load defaults
+    for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
+        for (int index = 0; index < 2; index++) {
+            hotkey_default_for_action(action, index, &data.mappings[action][index]);
+        }
+    }
     window_invalidate();
 }
 

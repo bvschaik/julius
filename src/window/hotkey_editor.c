@@ -97,9 +97,9 @@ static void button_close(int ok, int param2)
 
 void window_hotkey_editor_key_pressed(key_type key, key_modifier_type modifiers)
 {
-    if (key == KEY_ENTER) {
+    if (key == KEY_ENTER && modifiers == KEY_MOD_NONE) {
         button_close(1, 0);
-    } else if (key == KEY_ESCAPE) {
+    } else if (key == KEY_ESCAPE && modifiers == KEY_MOD_NONE) {
         button_close(0, 0);
     } else {
         if (key != KEY_NONE) {

@@ -61,6 +61,8 @@ typedef struct {
 
 const hotkey_mapping *hotkey_for_action(hotkey_action action, int index);
 
+int hotkey_default_for_action(hotkey_action action, int index, hotkey_mapping *mapping);
+
 /**
  * Load hotkey config from file
  */
