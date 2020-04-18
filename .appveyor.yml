@@ -1,6 +1,6 @@
 environment:
   CTEST_OUTPUT_ON_FAILURE: 1
-  SDL2_VERSION: 2.0.10
+  SDL2_VERSION: 2.0.12
   SDL2_MIXER_VERSION: 2.0.4
   MINGW_PATH: C:\MinGW
   MINGW_W64_PATH: C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1
