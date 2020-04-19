@@ -541,6 +541,10 @@ set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/tool.c
     ${PROJECT_SOURCE_DIR}/src/editor/tool_restriction.c
 )
+set(TRANSLATION_FILES
+    ${PROJECT_SOURCE_DIR}/src/translation/translation.c
+    ${PROJECT_SOURCE_DIR}/src/translation/english.c
+)
 
 set(MACOSX_FILES "")
 if(APPLE)
@@ -564,6 +568,7 @@ set(SOURCE_FILES
     ${WIDGET_FILES}
     ${WINDOW_FILES}
     ${EDITOR_FILES}
+    ${TRANSLATION_FILES}
     ${PNG_FILES}
     ${TINYFD_FILES}
     ${ZLIB_FILES}

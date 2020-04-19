@@ -1,6 +1,8 @@
 #ifndef CORE_ENCODING_H
 #define CORE_ENCODING_H
 
+#include "core/locale.h"
+
 #include <stdint.h>
 
 /**
@@ -17,9 +19,10 @@ typedef enum {
 /**
  * Determines the encoding used for the language files (= game),
  * and sets up conversion routines for utf-8 strings
+ * @param language Game language
  * @return encoding (best guess)
  */
-encoding_type encoding_determine(void);
+encoding_type encoding_determine(language_type language);
 
 /**
  * Returns the determined internal encoding type
