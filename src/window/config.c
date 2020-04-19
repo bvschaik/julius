@@ -41,20 +41,20 @@ typedef struct {
     int y;
     void (*toggle_handler)(int param);
     int parameter;
-    const char *description;
+    translation_key description;
 } checkbox;
 
 static checkbox checkbox_buttons[] = {
-    { 20, 102, toggle_switch, CONFIG_UI_SHOW_INTRO_VIDEO, "Play intro videos" },
-    { 20, 126, toggle_switch, CONFIG_UI_SIDEBAR_INFO, "Extra information in the control panel" },
-    { 20, 150, toggle_switch, CONFIG_UI_SMOOTH_SCROLLING, "Enable smooth scrolling" },
-    { 20, 174, toggle_switch, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE, "Improve visual feedback when clearing land" },
-    { 20, 198, toggle_switch, CONFIG_UI_ALLOW_CYCLING_TEMPLES, "Allow building each temple in succession" },
-    { 20, 222, toggle_switch, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, "Show range when building reservoirs, fountains and wells" },
-    { 20, 246, toggle_switch, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, "Show draggable construction size" },
-    { 20, 318, toggle_switch, CONFIG_GP_FIX_IMMIGRATION_BUG, "Fix immigration bug on very hard" },
-    { 20, 342, toggle_switch, CONFIG_GP_FIX_100_YEAR_GHOSTS, "Fix 100-year-old ghosts" },
-    { 20, 366, toggle_switch, CONFIG_GP_FIX_EDITOR_EVENTS, "Fix Emperor change and survival time in custom missions" }
+    { 20, 102, toggle_switch, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO },
+    { 20, 126, toggle_switch, CONFIG_UI_SIDEBAR_INFO, TR_CONFIG_SIDEBAR_INFO },
+    { 20, 150, toggle_switch, CONFIG_UI_SMOOTH_SCROLLING, TR_CONFIG_SMOOTH_SCROLLING },
+    { 20, 174, toggle_switch, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE, TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE },
+    { 20, 198, toggle_switch, CONFIG_UI_ALLOW_CYCLING_TEMPLES, TR_CONFIG_ALLOW_CYCLING_TEMPLES },
+    { 20, 222, toggle_switch, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE },
+    { 20, 246, toggle_switch, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE },
+    { 20, 318, toggle_switch, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG },
+    { 20, 342, toggle_switch, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS },
+    { 20, 366, toggle_switch, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS }
 };
 
 static generic_button language_button = {
@@ -68,11 +68,11 @@ static generic_button bottom_buttons[NUM_BOTTOM_BUTTONS] = {
     { 520, 430, 100, 30, button_close, button_none, 1 },
 };
 
-static const char *bottom_button_texts[] = {
-    "Configure hotkeys",
-    "Reset defaults",
-    "Cancel",
-    "OK"
+static translation_key bottom_button_texts[] = {
+    TR_BUTTON_CONFIGURE_HOTKEYS,
+    TR_BUTTON_RESET_DEFAULTS,
+    TR_BUTTON_CANCEL,
+    TR_BUTTON_OK
 };
 
 static struct {
@@ -118,7 +118,7 @@ static void checkboxes_draw_text(const checkbox *checkboxes, int num_checkboxes)
         if (data.config_values[cb->parameter].new_value) {
             text_draw(string_from_ascii("x"), cb->x + 6, cb->y + 3, FONT_NORMAL_BLACK, 0);
         }
-        text_draw(string_from_ascii(cb->description), cb->x + 30, cb->y + 5, FONT_NORMAL_BLACK, 0);
+        text_draw(translation_for(cb->description), cb->x + 30, cb->y + 5, FONT_NORMAL_BLACK, 0);
     }
 }
 
@@ -176,7 +176,7 @@ static void init(void)
         strncpy(data.config_string_values[i].new_value, value, CONFIG_STRING_VALUE_MAX - 1);
     }
 
-    string_copy(string_from_ascii("(default)"), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
+    string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
     data.language_options[0] = data.language_options_data[0];
     data.num_language_options = 1;
     const dir_listing *subdirs = dir_find_all_subdirectories();
@@ -203,19 +203,19 @@ static void draw_background(void)
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
 
-    text_draw_centered(string_from_ascii("Julius configuration options"), 16, 16, 608, FONT_LARGE_BLACK, 0);
+    text_draw_centered(translation_for(TR_CONFIG_TITLE), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
-    text_draw(string_from_ascii("Language:"), 20, 56, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, 56, FONT_NORMAL_BLACK, 0);
     text_draw_centered(data.language_options[data.selected_language_option],
         language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
 
-    text_draw(string_from_ascii("User interface changes"), 20, 83, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Gameplay changes"), 20, 299, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_CONFIG_HEADER_UI_CHANGES), 20, 83, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_CONFIG_HEADER_GAMEPLAY_CHANGES), 20, 299, FONT_NORMAL_BLACK, 0);
 
     checkboxes_draw_text(checkbox_buttons, NUM_CHECKBOXES);
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
-        text_draw_centered(string_from_ascii(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
+        text_draw_centered(translation_for(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
     }
 
     graphics_reset_dialog();

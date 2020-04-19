@@ -26,6 +26,21 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CANCEL, "Cancel"},
     {TR_BUTTON_RESET_DEFAULTS, "Reset defaults"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Configure hotkeys"},
+    {TR_CONFIG_TITLE, "Julius configuration options"},
+    {TR_CONFIG_LANGUAGE_LABEL, "Language:"},
+    {TR_CONFIG_LANGUAGE_DEFAULT, "(default)"},
+    {TR_CONFIG_HEADER_UI_CHANGES, "User interface changes"},
+    {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Gameplay changes"},
+    {TR_CONFIG_SHOW_INTRO_VIDEO, "Play intro videos"},
+    {TR_CONFIG_SIDEBAR_INFO, "Extra information in the control panel"},
+    {TR_CONFIG_SMOOTH_SCROLLING, "Enable smooth scrolling"},
+    {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Improve visual feedback when clearing land"},
+    {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Allow building each temple in succession"},
+    {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Show range when building reservoirs, fountains and wells"},
+    {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Show draggable construction size"},
+    {TR_CONFIG_FIX_IMMIGRATION_BUG, "Fix immigration bug on very hard"},
+    {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Fix 100-year-old ghosts"},
+    {TR_CONFIG_FIX_EDITOR_EVENTS, "Fix Emperor change and survival time in custom missions"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
