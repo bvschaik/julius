@@ -6,6 +6,7 @@
 #include "core/hotkey_config.h"
 #include "core/image.h"
 #include "core/lang.h"
+#include "core/locale.h"
 #include "core/log.h"
 #include "core/random.h"
 #include "core/time.h"
@@ -26,6 +27,7 @@
 #include "scenario/scenario.h"
 #include "sound/city.h"
 #include "sound/system.h"
+#include "translation/translation.h"
 #include "window/editor/map.h"
 #include "window/logo.h"
 #include "window/main_menu.h"
@@ -41,6 +43,16 @@ static void errlog(const char *msg)
     log_error(msg, 0, 0);
 }
 
+static encoding_type update_encoding(void)
+{
+    language_type language = locale_determine_language();
+    encoding_type encoding = encoding_determine(language);
+    log_info("Detected encoding:", 0, encoding);
+    font_set_encoding(encoding);
+    translation_load(language);
+    return encoding;
+}
+
 int game_pre_init(void)
 {
     settings_load();
@@ -53,9 +65,7 @@ int game_pre_init(void)
         errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return 0;
     }
-    encoding_type encoding = encoding_determine();
-    log_info("Detected encoding:", 0, encoding);
-    font_set_encoding(encoding);
+    update_encoding();
     random_init();
     return 1;
 }
@@ -118,9 +128,7 @@ static int reload_language(int is_editor, int reload_images)
         }
         return 0;
     }
-    encoding_type encoding = encoding_determine();
-    log_info("Detected encoding:", 0, encoding);
-    font_set_encoding(encoding);
+    encoding_type encoding = update_encoding();
 
     if (!image_load_fonts(encoding)) {
         errlog("unable to load font graphics");

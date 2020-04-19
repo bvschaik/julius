@@ -23,3 +23,6 @@ const lang_message *lang_get_message(int id)
 
 void font_set_encoding(encoding_type encoding)
 {}
+
+void translation_load(language_type language)
+{}
