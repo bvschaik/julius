@@ -22,27 +22,39 @@
 
 #include <string.h>
 
+#define CHECKBOX_CHECK_SIZE 20
+#define CHECKBOX_HEIGHT 20
+#define CHECKBOX_WIDTH 600
+
 #define NUM_CHECKBOXES 10
 #define NUM_BOTTOM_BUTTONS 4
 #define MAX_LANGUAGE_DIRS 20
 
-static void toggle_switch(int id, int param2);
+static void toggle_switch(int id);
 static void button_language_select(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
 
-static generic_button checkbox_buttons[] = {
-    { 20, 102, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO },
-    { 20, 126, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
-    { 20, 150, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING },
-    { 20, 174, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE },
-    { 20, 198, 20, 20, toggle_switch, button_none, CONFIG_UI_ALLOW_CYCLING_TEMPLES },
-    { 20, 222, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE },
-    { 20, 246, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE },
-    { 20, 318, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
-    { 20, 342, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
-    { 20, 366, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS }
+typedef struct {
+    int x;
+    int y;
+    void (*toggle_handler)(int param);
+    int parameter;
+    const char *description;
+} checkbox;
+
+static checkbox checkbox_buttons[] = {
+    { 20, 102, toggle_switch, CONFIG_UI_SHOW_INTRO_VIDEO, "Play intro videos" },
+    { 20, 126, toggle_switch, CONFIG_UI_SIDEBAR_INFO, "Extra information in the control panel" },
+    { 20, 150, toggle_switch, CONFIG_UI_SMOOTH_SCROLLING, "Enable smooth scrolling" },
+    { 20, 174, toggle_switch, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE, "Improve visual feedback when clearing land" },
+    { 20, 198, toggle_switch, CONFIG_UI_ALLOW_CYCLING_TEMPLES, "Allow building each temple in succession" },
+    { 20, 222, toggle_switch, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, "Show range when building reservoirs, fountains and wells" },
+    { 20, 246, toggle_switch, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, "Show draggable construction size" },
+    { 20, 318, toggle_switch, CONFIG_GP_FIX_IMMIGRATION_BUG, "Fix immigration bug on very hard" },
+    { 20, 342, toggle_switch, CONFIG_GP_FIX_100_YEAR_GHOSTS, "Fix 100-year-old ghosts" },
+    { 20, 366, toggle_switch, CONFIG_GP_FIX_EDITOR_EVENTS, "Fix Emperor change and survival time in custom missions" }
 };
 
 static generic_button language_button = {
@@ -99,6 +111,56 @@ static void init_config_values(void)
     data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].change_action = config_change_string_language;
 }
 
+static void checkboxes_draw_text(const checkbox *checkboxes, int num_checkboxes)
+{
+    for (int i = 0; i < num_checkboxes; i++) {
+        const checkbox *cb = &checkboxes[i];
+        if (data.config_values[cb->parameter].new_value) {
+            text_draw(string_from_ascii("x"), cb->x + 6, cb->y + 3, FONT_NORMAL_BLACK, 0);
+        }
+        text_draw(string_from_ascii(cb->description), cb->x + 30, cb->y + 5, FONT_NORMAL_BLACK, 0);
+    }
+}
+
+static void checkboxes_draw(const checkbox *checkboxes, int num_checkboxes, int focus_button)
+{
+    for (int i = 0; i < num_checkboxes; i++) {
+        const checkbox *cb = &checkboxes[i];
+        button_border_draw(cb->x, cb->y, CHECKBOX_CHECK_SIZE, CHECKBOX_CHECK_SIZE, focus_button == i + 1);
+    }
+}
+
+static int get_checkbox(const mouse *m, const checkbox *checkboxes, int num_checkboxes)
+{
+    for (int i = 0; i < num_checkboxes; i++) {
+        if (checkboxes[i].x <= m->x &&
+            checkboxes[i].x + CHECKBOX_WIDTH > m->x &&
+            checkboxes[i].y <= m->y &&
+            checkboxes[i].y + CHECKBOX_HEIGHT > m->y) {
+            return i + 1;
+        }
+    }
+    return 0;
+}
+
+static int checkboxes_handle_mouse(const mouse *m, const checkbox *checkboxes, int num_checkboxes, int *focus_button_id)
+{
+    int checkbox_id = get_checkbox(m, checkboxes, num_checkboxes);
+    if (focus_button_id) {
+        *focus_button_id = checkbox_id;
+    }
+    if (!checkbox_id) {
+        return 0;
+    }
+    const checkbox *cb = &checkboxes[checkbox_id - 1];
+    if (m->left.went_up) {
+        cb->toggle_handler(cb->parameter);
+    } else {
+        return 0;
+    }
+    return checkbox_id;
+}
+
 static void init(void)
 {
     if (!data.config_values[0].change_action) {
@@ -148,25 +210,9 @@ static void draw_background(void)
         language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
 
     text_draw(string_from_ascii("User interface changes"), 20, 83, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Play intro videos"), 50, 107, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Extra information in the control panel"), 50, 131, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Enable smooth scrolling"), 50, 155, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Improve visual feedback when clearing land"), 50, 179, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Allow building each temple in succession"), 50, 203, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Show range when building reservoirs, fountains and wells"), 50, 227, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Show draggable construction size"), 50, 251, FONT_NORMAL_BLACK, 0);
-  
     text_draw(string_from_ascii("Gameplay changes"), 20, 299, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix immigration bug on very hard"), 50, 323, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix 100-year-old ghosts"), 50, 347, FONT_NORMAL_BLACK, 0);
-    text_draw(string_from_ascii("Fix Emperor change and survival time in custom missions"), 50, 371, FONT_NORMAL_BLACK, 0);
 
-    for (int i = 0; i < NUM_CHECKBOXES; i++) {
-        generic_button *btn = &checkbox_buttons[i];
-        if (data.config_values[btn->parameter1].new_value) {
-            text_draw(string_from_ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK, 0);
-        }
-    }
+    checkboxes_draw_text(checkbox_buttons, NUM_CHECKBOXES);
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         text_draw_centered(string_from_ascii(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
@@ -178,10 +224,9 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    for (int i = 0; i < NUM_CHECKBOXES; i++) {
-        generic_button *btn = &checkbox_buttons[i];
-        button_border_draw(btn->x, btn->y, btn->width, btn->height, data.focus_button == i + 1);
-    }
+
+    checkboxes_draw(checkbox_buttons, NUM_CHECKBOXES, data.focus_button);
+
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         button_border_draw(bottom_buttons[i].x, bottom_buttons[i].y, bottom_buttons[i].width, bottom_buttons[i].height, data.bottom_focus_button == i + 1);
     }
@@ -193,7 +238,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     int handled = 0;
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, checkbox_buttons, NUM_CHECKBOXES, &data.focus_button);
+    handled |= checkboxes_handle_mouse(m_dialog, checkbox_buttons, NUM_CHECKBOXES, &data.focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
     if (!handled && (m->right.went_up || h->escape_pressed)) {
@@ -201,7 +246,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void toggle_switch(int key, int param2)
+static void toggle_switch(int key)
 {
     data.config_values[key].new_value = 1 - data.config_values[key].new_value;
     window_invalidate();
