@@ -10,6 +10,7 @@
 #include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "translation/translation.h"
 #include "window/hotkey_editor.h"
 #include "window/main_menu.h"
 
@@ -129,10 +130,10 @@ static generic_button bottom_buttons[] = {
     { 520, 430, 100, 30, button_close, button_none, 1 },
 };
 
-static const char *bottom_button_texts[] = {
-    "Reset defaults",
-    "Cancel",
-    "OK"
+static translation_key bottom_button_texts[] = {
+    TR_BUTTON_RESET_DEFAULTS,
+    TR_BUTTON_CANCEL,
+    TR_BUTTON_OK
 };
 
 static struct {
@@ -165,10 +166,10 @@ static void draw_background(void)
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
 
-    text_draw_centered(string_from_ascii("Julius hotkey configuration"), 16, 16, 608, FONT_LARGE_BLACK, 0);
+    text_draw_centered(translation_for(TR_HOTKEY_TITLE), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
-    text_draw_centered(string_from_ascii("Hotkey"), HOTKEY_X_OFFSET_1, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK, 0);
-    text_draw_centered(string_from_ascii("Alternative"), HOTKEY_X_OFFSET_2, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK, 0);
+    text_draw_centered(translation_for(TR_HOTKEY_LABEL), HOTKEY_X_OFFSET_1, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK, 0);
+    text_draw_centered(translation_for(TR_HOTKEY_ALTERNATIVE_LABEL), HOTKEY_X_OFFSET_2, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK, 0);
 
     inner_panel_draw(20, 72, 35, 22);
     int y_base = 80;
@@ -199,7 +200,7 @@ static void draw_background(void)
     }
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
-        text_draw_centered(string_from_ascii(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
+        text_draw_centered(translation_for(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
     }
 
     graphics_reset_dialog();
