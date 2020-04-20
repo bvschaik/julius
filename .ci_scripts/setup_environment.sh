@@ -4,6 +4,7 @@ case "$BUILD_TARGET" in
 "vita")
 	export VITASDK=/usr/local/vitasdk
 	export PATH=$VITASDK/bin:$PATH
+	sudo apt-get install lib32gcc1
 	git clone https://github.com/vitasdk/vdpm
 	cd vdpm
 	./bootstrap-vitasdk.sh
