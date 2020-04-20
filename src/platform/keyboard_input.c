@@ -88,21 +88,22 @@ static key_type get_key_from_scancode(SDL_Scancode scancode)
         case SDL_SCANCODE_LEFT: return KEY_LEFT;
         case SDL_SCANCODE_DOWN: return KEY_DOWN;
         case SDL_SCANCODE_UP: return KEY_UP;
-        case SDL_SCANCODE_KP_MINUS: return KEY_MINUS;
-        case SDL_SCANCODE_KP_PLUS: return KEY_EQUALS;
         case SDL_SCANCODE_KP_ENTER: return KEY_ENTER;
-        case SDL_SCANCODE_KP_1: return KEY_1;
-        case SDL_SCANCODE_KP_2: return KEY_2;
-        case SDL_SCANCODE_KP_3: return KEY_3;
-        case SDL_SCANCODE_KP_4: return KEY_4;
-        case SDL_SCANCODE_KP_5: return KEY_5;
-        case SDL_SCANCODE_KP_6: return KEY_6;
-        case SDL_SCANCODE_KP_7: return KEY_7;
-        case SDL_SCANCODE_KP_8: return KEY_8;
-        case SDL_SCANCODE_KP_9: return KEY_9;
-        case SDL_SCANCODE_KP_0: return KEY_0;
-        case SDL_SCANCODE_KP_PERIOD: return KEY_PERIOD;
-        case SDL_SCANCODE_KP_EQUALS: return KEY_EQUALS;
+        case SDL_SCANCODE_KP_1: return KEY_KP_1;
+        case SDL_SCANCODE_KP_2: return KEY_KP_2;
+        case SDL_SCANCODE_KP_3: return KEY_KP_3;
+        case SDL_SCANCODE_KP_4: return KEY_KP_4;
+        case SDL_SCANCODE_KP_5: return KEY_KP_5;
+        case SDL_SCANCODE_KP_6: return KEY_KP_6;
+        case SDL_SCANCODE_KP_7: return KEY_KP_7;
+        case SDL_SCANCODE_KP_8: return KEY_KP_8;
+        case SDL_SCANCODE_KP_9: return KEY_KP_9;
+        case SDL_SCANCODE_KP_0: return KEY_KP_0;
+        case SDL_SCANCODE_KP_PERIOD: return KEY_KP_PERIOD;
+        case SDL_SCANCODE_KP_PLUS: return KEY_KP_PLUS;
+        case SDL_SCANCODE_KP_MINUS: return KEY_KP_MINUS;
+        case SDL_SCANCODE_KP_MULTIPLY: return KEY_KP_MULTIPLY;
+        case SDL_SCANCODE_KP_DIVIDE: return KEY_KP_DIVIDE;
         default: return KEY_NONE;
     }
 }
@@ -184,6 +185,21 @@ static SDL_Scancode get_scancode_from_key(key_type key)
         case KEY_LEFT: return SDL_SCANCODE_LEFT;
         case KEY_DOWN: return SDL_SCANCODE_DOWN;
         case KEY_UP: return SDL_SCANCODE_UP;
+        case KEY_KP_1: return SDL_SCANCODE_KP_1;
+        case KEY_KP_2: return SDL_SCANCODE_KP_2;
+        case KEY_KP_3: return SDL_SCANCODE_KP_3;
+        case KEY_KP_4: return SDL_SCANCODE_KP_4;
+        case KEY_KP_5: return SDL_SCANCODE_KP_5;
+        case KEY_KP_6: return SDL_SCANCODE_KP_6;
+        case KEY_KP_7: return SDL_SCANCODE_KP_7;
+        case KEY_KP_8: return SDL_SCANCODE_KP_8;
+        case KEY_KP_9: return SDL_SCANCODE_KP_9;
+        case KEY_KP_0: return SDL_SCANCODE_KP_0;
+        case KEY_KP_PERIOD: return SDL_SCANCODE_KP_PERIOD;
+        case KEY_KP_PLUS: return SDL_SCANCODE_KP_PLUS;
+        case KEY_KP_MINUS: return SDL_SCANCODE_KP_MINUS;
+        case KEY_KP_MULTIPLY: return SDL_SCANCODE_KP_MULTIPLY;
+        case KEY_KP_DIVIDE: return SDL_SCANCODE_KP_DIVIDE;
         default: return SDL_SCANCODE_UNKNOWN;
     }
 }

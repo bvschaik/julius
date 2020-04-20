@@ -80,6 +80,22 @@ typedef enum {
     KEY_LEFT,
     KEY_DOWN,
     KEY_UP,
+    // keypad keys
+    KEY_KP_1,
+    KEY_KP_2,
+    KEY_KP_3,
+    KEY_KP_4,
+    KEY_KP_5,
+    KEY_KP_6,
+    KEY_KP_7,
+    KEY_KP_8,
+    KEY_KP_9,
+    KEY_KP_0,
+    KEY_KP_PERIOD,
+    KEY_KP_PLUS,
+    KEY_KP_MINUS,
+    KEY_KP_MULTIPLY,
+    KEY_KP_DIVIDE,
     KEY_MAX_ITEMS
 } key_type;
 
