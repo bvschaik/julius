@@ -724,19 +724,13 @@ elseif(SWITCH_BUILD)
         GLESv2
         glapi
         drm_nouveau
-        png
-        jpeg
         vorbisidec
-        mikmod
         modplug
         mpg123
         FLAC
         opusfile
         opus
         ogg
-        jpeg
-        png
-        freetype
         m
         z
         nx
