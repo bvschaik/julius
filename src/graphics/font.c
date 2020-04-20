@@ -359,6 +359,12 @@ const font_definition *font_definition_for(font_t font)
     return &data.font_definitions[font];
 }
 
+int font_can_display(const uint8_t *character)
+{
+    int dummy;
+    return font_letter_id(&data.font_definitions[FONT_NORMAL_BLACK], character, &dummy) >= 0;
+}
+
 int font_letter_id(const font_definition *def, const uint8_t *str, int *num_bytes)
 {
     if (data.multibyte != MULTIBYTE_NONE && *str >= 0x80) {

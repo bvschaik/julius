@@ -2,6 +2,7 @@
 
 #include "core/encoding.h"
 #include "game/system.h"
+#include "graphics/font.h"
 
 #include <string.h>
 
@@ -103,6 +104,16 @@ int key_combination_from_name(const char *name, key_type *key, key_modifier_type
     return 1;
 }
 
+static int can_display(const char *key_name)
+{
+    if (!encoding_can_display(key_name)) {
+        return 0;
+    }
+    uint8_t internal_name[10];
+    encoding_from_utf8(key_name, internal_name, 10);
+    return font_can_display(internal_name);
+}
+
 const uint8_t *key_combination_display_name(key_type key, key_modifier_type modifiers)
 {
     static char result[100];
@@ -135,16 +146,27 @@ const uint8_t *key_combination_display_name(key_type key, key_modifier_type modi
             case ']': key_name = "Right bracket"; break;
             case '\\': key_name = "Backslash"; break;
             case '`': key_name = "Backtick"; break;
+            case '~': key_name = "Tilde"; break;
+            case '#': key_name = "Hash"; break;
+            case '$': key_name = "Dollar"; break;
+            case '&': key_name = "Ampersand"; break;
+            case '<': key_name = "Less than"; break;
+            case '>': key_name = "Greater than"; break;
+            case '@': key_name = "At-sign"; break;
+            case '^': key_name = "Caret"; break;
+            case '_': key_name = "Underscore"; break;
+            case '|': key_name = "Pipe"; break;
+            case '{': key_name = "Left curly brace"; break;
+            case '}': key_name = "Right curly brace"; break;
             case '\0': key_name = key_display_names[key];
         }
         strcat(result, key_name);
-    } else {
+    } else if (can_display(key_name)) {
         strcat(result, key_name);
-        if (!encoding_can_display(key_name)) {
-            strcat(result, " (");
-            strcat(result, key_display_names[key]);
-            strcat(result, ")");
-        }
+    } else {
+        strcat(result, "? (");
+        strcat(result, key_display_names[key]);
+        strcat(result, ")");
     }
     encoding_from_utf8(result, str_result, 100);
     return str_result;
