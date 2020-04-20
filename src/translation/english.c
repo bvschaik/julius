@@ -56,7 +56,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_ARROW_LEFT, "Left"},
     {TR_HOTKEY_ARROW_RIGHT, "Right"},
     {TR_HOTKEY_TOGGLE_FULLSCREEN, "Toggle fullscreen"},
-    {TR_HOTKEY_CENTER_SCREEN, "Center window"},
+    {TR_HOTKEY_CENTER_WINDOW, "Center window"},
     {TR_HOTKEY_RESIZE_TO_640, "Resize window to 640x480"},
     {TR_HOTKEY_RESIZE_TO_800, "Resize window to 800x600"},
     {TR_HOTKEY_RESIZE_TO_1024, "Resize window to 1024x768"},
