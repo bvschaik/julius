@@ -185,7 +185,7 @@ static void add_definition(const hotkey_mapping *mapping)
             def->action = &data.hotkey_state.set_bookmark;
             def->value = 4;
             break;
-        case HOTKEY_CENTER_SCREEN:
+        case HOTKEY_CENTER_WINDOW:
             def->action = &data.global_hotkey_state.center_screen;
             break;
         case HOTKEY_TOGGLE_FULLSCREEN:
