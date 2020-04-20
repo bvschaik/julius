@@ -761,11 +761,9 @@ elseif(SWITCH_BUILD)
         COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switchdata/icon0.jpg --nacp=${SHORT_NAME}.nacp
         COMMAND rm -rf release
         COMMAND mkdir release
-        COMMAND cd release
-        COMMAND ls
-        COMMAND mkdir ${SHORT_NAME}
-        COMMAND cp -f ../${SHORT_NAME}.nro ${SHORT_NAME}/${SHORT_NAME}.nro
-        COMMAND zip -r ../${SHORT_NAME}_switch.zip ${SHORT_NAME} -x "*.DS_Store" -x "*__MAC*"
+        COMMAND cd release && mkdir ${SHORT_NAME} && cd ..
+        COMMAND cp -f ${SHORT_NAME}.nro release/${SHORT_NAME}/${SHORT_NAME}.nro
+        COMMAND cd release && zip -r ../${SHORT_NAME}_switch.zip ${SHORT_NAME} -x "*.DS_Store" -x "*__MAC*"
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
 else()
