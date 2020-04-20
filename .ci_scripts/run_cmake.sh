@@ -17,7 +17,6 @@ case "$BUILD_TARGET" in
 	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF ..
 	;;
 "android")
-	./.ci_scripts/prepare_android_build.sh
 	;;
 *)
 	mkdir build && cd build && cmake ..
