@@ -262,6 +262,9 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDLK_END:
             keyboard_end();
             break;
+        case SDLK_AC_BACK:
+            event->keysym.scancode = SDL_SCANCODE_ESCAPE;
+            break;
     }
 
     // handle hotkeys
