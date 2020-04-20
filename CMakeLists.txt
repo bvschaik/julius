@@ -659,7 +659,12 @@ endif()
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
-if (SWITCH_BUILD)
+if(VITA_BUILD)
+    include_directories(
+        $ENV{VITASDK}/arm-vita-eabi/include
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+elseif (SWITCH_BUILD)
     include_directories(
         ${DEVKITPRO}/portlibs/switch/include/SDL2
         ${DEVKITPRO}/libnx/include
@@ -699,6 +704,7 @@ if (VITA_BUILD)
         ScePgf_stub
         SceAppMgr_stub
     )
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__vita__")
     # this setting enables larger heap memory sizes on Vita, up to ~330 MB
     # useful for pre-loading videos into memory
     set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
