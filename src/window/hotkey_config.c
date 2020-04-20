@@ -87,9 +87,9 @@ static hotkey_widget hotkey_widgets[] = {
     { HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Toggle battle info" },
 };
 
-#define HOTKEY_X_OFFSET_1 300
-#define HOTKEY_X_OFFSET_2 440
-#define HOTKEY_BTN_WIDTH 130
+#define HOTKEY_X_OFFSET_1 290
+#define HOTKEY_X_OFFSET_2 430
+#define HOTKEY_BTN_WIDTH 140
 #define HOTKEY_BTN_HEIGHT 22
 
 static generic_button hotkey_buttons[] = {
@@ -183,13 +183,17 @@ static void draw_background(void)
             const hotkey_mapping *mapping1 = &data.mappings[widget->action][0];
             if (mapping1->key) {
                 const uint8_t *keyname = key_combination_display_name(mapping1->key, mapping1->modifiers);
-                text_draw_centered(keyname, HOTKEY_X_OFFSET_1, text_offset, HOTKEY_BTN_WIDTH, FONT_NORMAL_WHITE, 0);
+                graphics_set_clip_rectangle(HOTKEY_X_OFFSET_1, text_offset, HOTKEY_BTN_WIDTH, HOTKEY_BTN_HEIGHT);
+                text_draw_centered(keyname, HOTKEY_X_OFFSET_1 + 3, text_offset, HOTKEY_BTN_WIDTH - 6, FONT_NORMAL_WHITE, 0);
+                graphics_reset_clip_rectangle();
             }
 
             const hotkey_mapping *mapping2 = &data.mappings[widget->action][1];
             if (mapping2->key) {
+                graphics_set_clip_rectangle(HOTKEY_X_OFFSET_2, text_offset, HOTKEY_BTN_WIDTH, HOTKEY_BTN_HEIGHT);
                 const uint8_t *keyname = key_combination_display_name(mapping2->key, mapping2->modifiers);
-                text_draw_centered(keyname, HOTKEY_X_OFFSET_2, text_offset, HOTKEY_BTN_WIDTH, FONT_NORMAL_WHITE, 0);
+                text_draw_centered(keyname, HOTKEY_X_OFFSET_2 + 3, text_offset, HOTKEY_BTN_WIDTH - 6, FONT_NORMAL_WHITE, 0);
+                graphics_reset_clip_rectangle();
             }
         }
     }
