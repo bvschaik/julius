@@ -762,6 +762,7 @@ elseif(SWITCH_BUILD)
         COMMAND rm -rf release
         COMMAND mkdir release
         COMMAND cd release
+        COMMAND ls
         COMMAND mkdir ${SHORT_NAME}
         COMMAND cp -f ../${SHORT_NAME}.nro ${SHORT_NAME}/${SHORT_NAME}.nro
         COMMAND zip -r ../${SHORT_NAME}_switch.zip ${SHORT_NAME} -x "*.DS_Store" -x "*__MAC*"
