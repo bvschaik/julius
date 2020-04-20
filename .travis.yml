@@ -39,7 +39,7 @@ cache:
   - $SDL_MIXER_LIB
 
 install:
-  - ./.ci_scripts/start_docker.sh
+  - ./.ci_scripts/setup_environment.sh
   - ./.ci_scripts/install_sdl.sh;
 
 before_script:

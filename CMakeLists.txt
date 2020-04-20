@@ -681,16 +681,11 @@ if (VITA_BUILD)
         vorbisfile
         vorbis
         mikmod
-        modplug
         mpg123
         FLAC
         ogg
-        jpeg
-        png
-        freetype
         vita2d
         m
-        z
         SceAppUtil_stub
         SceAudio_stub
         SceCommonDialog_stub
