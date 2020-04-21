@@ -154,7 +154,7 @@ static void load_file(void)
     char *line;
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
-        int last = strlen(line) - 1;
+        size_t last = strlen(line) - 1;
         while (last >= 0 && (line[last] == '\n' || line[last] == '\r')) {
             line[last] = 0;
             last--;

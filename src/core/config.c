@@ -73,7 +73,7 @@ void config_set_defaults(void)
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         values[i] = default_values[i];
     }
-    strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR], default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR], CONFIG_STRING_VALUE_MAX - 1);
+    strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR], default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR], CONFIG_STRING_VALUE_MAX);
 }
 
 void config_load(void)
@@ -87,7 +87,7 @@ void config_load(void)
     char *line;
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
-        int last = strlen(line) - 1;
+        size_t last = strlen(line) - 1;
         while (last >= 0 && (line[last] == '\n' || line[last] == '\r')) {
             line[last] = 0;
             last--;
