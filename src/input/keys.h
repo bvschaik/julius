@@ -96,6 +96,8 @@ typedef enum {
     KEY_KP_MINUS,
     KEY_KP_MULTIPLY,
     KEY_KP_DIVIDE,
+    // the key next to left shift on ISO (Non-US) keyboards, usually \ or <
+    KEY_NON_US,
     KEY_MAX_ITEMS
 } key_type;
 
