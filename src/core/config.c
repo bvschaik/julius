@@ -54,7 +54,7 @@ void config_set_string(config_string_key key, const char *value)
     if (!value) {
         string_values[key][0] = 0;
     } else {
-        snprintf(string_values[key], CONFIG_STRING_VALUE_MAX, "%s", value);
+        strncpy(string_values[key], value, CONFIG_STRING_VALUE_MAX - 1);
     }
 }
 
@@ -73,7 +73,7 @@ void config_set_defaults(void)
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         values[i] = default_values[i];
     }
-    snprintf(string_values[CONFIG_STRING_UI_LANGUAGE_DIR], CONFIG_STRING_VALUE_MAX, "%s", default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR]);
+    strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR], default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR], CONFIG_STRING_VALUE_MAX);
 }
 
 void config_load(void)
@@ -108,7 +108,7 @@ void config_load(void)
                     const char *value = &equals[1];
                     log_info("Config key", ini_string_keys[i], 0);
                     log_info("Config value", value, 0);
-                    snprintf(string_values[i], CONFIG_STRING_VALUE_MAX, "%s", value);
+                    strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX - 1);
                     break;
                 }
             }
