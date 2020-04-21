@@ -104,6 +104,7 @@ static key_type get_key_from_scancode(SDL_Scancode scancode)
         case SDL_SCANCODE_KP_MINUS: return KEY_KP_MINUS;
         case SDL_SCANCODE_KP_MULTIPLY: return KEY_KP_MULTIPLY;
         case SDL_SCANCODE_KP_DIVIDE: return KEY_KP_DIVIDE;
+        case SDL_SCANCODE_NONUSBACKSLASH: return KEY_NON_US;
         default: return KEY_NONE;
     }
 }
@@ -200,6 +201,7 @@ static SDL_Scancode get_scancode_from_key(key_type key)
         case KEY_KP_MINUS: return SDL_SCANCODE_KP_MINUS;
         case KEY_KP_MULTIPLY: return SDL_SCANCODE_KP_MULTIPLY;
         case KEY_KP_DIVIDE: return SDL_SCANCODE_KP_DIVIDE;
+        case KEY_NON_US: return SDL_SCANCODE_NONUSBACKSLASH;
         default: return SDL_SCANCODE_UNKNOWN;
     }
 }

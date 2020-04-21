@@ -15,6 +15,8 @@ static const char *key_names[KEY_MAX_ITEMS] = {
     ",", ".", "/", "F1", "F2", "F3", "F4", "F5", "F6", "F7",
     "F8", "F9", "F10", "F11", "F12", "Insert", "Delete", "Home", "End", "PageUp",
     "PageDown", "Right", "Left", "Down", "Up",
+    "Kp1", "Kp2", "Kp3", "Kp4", "Kp5", "Kp6", "Kp7", "Kp8", "Kp9", "Kp0",
+    "Kp.", "Kp+", "Kp-", "Kp*", "Kp/", "NonUS"
 };
 
 static const char *key_display_names[KEY_MAX_ITEMS] = {
@@ -26,6 +28,8 @@ static const char *key_display_names[KEY_MAX_ITEMS] = {
     ",", ".", "/", "F1", "F2", "F3", "F4", "F5", "F6", "F7",
     "F8", "F9", "F10", "F11", "F12", "Insert", "Delete", "Home", "End", "PageUp",
     "PageDown", "Right", "Left", "Down", "Up",
+    "Keypad 1", "Keypad 2", "Keypad 3", "Keypad 4", "Keypad 5", "Keypad 6", "Keypad 7", "Keypad 8", "Keypad 9", "Keypad 0",
+    "Keypad .", "Keypad +", "Keypad -", "Keypad *", "Keypad /", "NonUS"
 };
 
 typedef struct {
