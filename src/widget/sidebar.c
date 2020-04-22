@@ -44,6 +44,7 @@
 #define SIDEBAR_EXPANDED_WIDTH 162
 #define FILLER_Y_OFFSET 474
 
+#define EXTRA_INFO_HEIGHT_LINE_SEPARATOR 32
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64
 #define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 112
 #define EXTRA_INFO_HEIGHT_RATINGS 272
@@ -332,27 +333,49 @@ static void draw_extra_info_objective(int x_offset, int y_offset, int text_group
 static void draw_extra_info_panel(int x_offset, int extra_info_height)
 {
     int y_offset = FILLER_Y_OFFSET;
-
+    int y_current_line = y_offset;
+    // Space between lines, when line is purely text (no buttons)
+    int y_line_separator = EXTRA_INFO_HEIGHT_LINE_SEPARATOR;
+    
+    // Borders of the extra_info panel - extends to bottom of screen
     int panel_blocks = extra_info_height / 16;
     graphics_draw_vertical_line(x_offset, y_offset, y_offset + extra_info_height, COLOR_WHITE);
     graphics_draw_vertical_line(x_offset + SIDEBAR_EXPANDED_WIDTH - 1, y_offset, y_offset + extra_info_height, COLOR_SIDEBAR);
     inner_panel_draw(x_offset + 1, y_offset, SIDEBAR_EXPANDED_WIDTH / 16, panel_blocks);
 
-    lang_text_draw(45, 2, x_offset + 11, y_offset + 10, FONT_NORMAL_WHITE);
-    text_draw_percentage(data.extra_info.game_speed, x_offset + 60, y_offset + 36, FONT_NORMAL_GREEN);
+    // Game speed modifier in extra_info panel
+    y_current_line += 10;
+    lang_text_draw(45, 2, x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+    y_current_line += 26;
+    text_draw_percentage(data.extra_info.game_speed, x_offset + 60, y_current_line, FONT_NORMAL_GREEN);
     arrow_buttons_draw(x_offset, y_offset, arrow_buttons_speed, 2);
-
+    y_current_line += y_line_separator; 
+    
+    // Unemployment info in extra_info panel
     if (extra_info_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
-        lang_text_draw(68, 148, x_offset + 11, y_offset + 68, FONT_NORMAL_WHITE);
-        int width = text_draw_percentage(data.extra_info.unemployment_percentage, x_offset + 11, y_offset + 88, FONT_NORMAL_GREEN);
-        text_draw_number(data.extra_info.unemployment_amount, '(', ")", x_offset + 11 + width, y_offset + 88, FONT_NORMAL_GREEN);
+        lang_text_draw(68, 148, x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+        y_current_line += 20;
+        int width = text_draw_percentage(data.extra_info.unemployment_percentage, x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
+        text_draw_number(data.extra_info.unemployment_amount, '(', ")", x_offset + 11 + width, y_current_line, FONT_NORMAL_GREEN);
+        y_current_line += y_line_separator;
     }
+
+    // Objective value info on extra_info panel (culture, prosperity, peace, etc)
     if (extra_info_height >= EXTRA_INFO_HEIGHT_RATINGS) {
-        draw_extra_info_objective(x_offset, y_offset + 110, 53, 1, &data.extra_info.culture, 0);
-        draw_extra_info_objective(x_offset, y_offset + 142, 53, 2, &data.extra_info.prosperity, 0);
-        draw_extra_info_objective(x_offset, y_offset + 174, 53, 3, &data.extra_info.peace, 0);
-        draw_extra_info_objective(x_offset, y_offset + 206, 53, 4, &data.extra_info.favor, 0);
-        draw_extra_info_objective(x_offset, y_offset + 238, 4, 6, &data.extra_info.population, 1);
+        draw_extra_info_objective(x_offset, y_current_line, 53, 1, &data.extra_info.culture, 0);
+        y_current_line += y_line_separator;
+
+        draw_extra_info_objective(x_offset, y_current_line, 53, 2, &data.extra_info.prosperity, 0);
+        y_current_line += y_line_separator;
+
+        draw_extra_info_objective(x_offset, y_current_line, 53, 3, &data.extra_info.peace, 0);
+        y_current_line += y_line_separator;
+
+        draw_extra_info_objective(x_offset, y_current_line, 53, 4, &data.extra_info.favor, 0);
+        y_current_line += y_line_separator;
+
+        draw_extra_info_objective(x_offset, y_current_line, 4, 6, &data.extra_info.population, 1);
+        y_current_line += y_line_separator;
     }
 }
 
