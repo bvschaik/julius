@@ -436,31 +436,23 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
-            pixel_offset position;
             if (t->has_started) {
                 data.is_scrolling = 1;
-                empire_get_scroll(&position.x, &position.y);
-                scroll_start_touch_drag(&position, t->start_point);
+                scroll_drag_start(1);
             }
             if (data.is_scrolling && t->has_moved) {
-                touch_coords original = scroll_get_original_touch_position();
-                if (scroll_move_touch_drag(original.x, original.y, t->current_point.x, t->current_point.y, &position)) {
-                    empire_set_scroll(position.x, position.y);
-                }
+                scroll_drag_move();
             }
         }
         if (t->has_ended) {
             data.is_scrolling = 0;
             data.finished_scroll = !touch_was_click(t);
-            scroll_end_touch_drag(1);
+            scroll_drag_end();
         }
     }
     pixel_offset position;
-    scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE);
-    if (!empire_scroll_map(position.x, position.y)) {
-        if (scroll_decay(&position)) {
-            empire_set_scroll(position.x, position.y);
-        }
+    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
+        empire_scroll_map(position.x, position.y);
     }
     data.focus_button_id = 0;
     int button_id;
