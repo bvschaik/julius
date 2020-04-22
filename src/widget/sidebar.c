@@ -44,7 +44,7 @@
 #define SIDEBAR_EXPANDED_WIDTH 162
 #define FILLER_Y_OFFSET 474
 
-#define EXTRA_INFO_HEIGHT_LINE_SEPARATOR 32
+#define EXTRA_INFO_HEIGHT_LINE_SPACE 32
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64
 #define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 112
 #define EXTRA_INFO_HEIGHT_RATINGS 272
@@ -335,7 +335,7 @@ static void draw_extra_info_panel(int x_offset, int extra_info_height)
     int y_offset = FILLER_Y_OFFSET;
     int y_current_line = y_offset;
     // Space between lines, when line is purely text (no buttons)
-    int y_line_separator = EXTRA_INFO_HEIGHT_LINE_SEPARATOR;
+    int y_line_space = EXTRA_INFO_HEIGHT_LINE_SPACE;
     
     // Borders of the extra_info panel - extends to bottom of screen
     int panel_blocks = extra_info_height / 16;
@@ -349,7 +349,7 @@ static void draw_extra_info_panel(int x_offset, int extra_info_height)
     y_current_line += 26;
     text_draw_percentage(data.extra_info.game_speed, x_offset + 60, y_current_line, FONT_NORMAL_GREEN);
     arrow_buttons_draw(x_offset, y_offset, arrow_buttons_speed, 2);
-    y_current_line += y_line_separator; 
+    y_current_line += y_line_space; 
     
     // Unemployment info in extra_info panel
     if (extra_info_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
@@ -357,25 +357,25 @@ static void draw_extra_info_panel(int x_offset, int extra_info_height)
         y_current_line += 20;
         int width = text_draw_percentage(data.extra_info.unemployment_percentage, x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
         text_draw_number(data.extra_info.unemployment_amount, '(', ")", x_offset + 11 + width, y_current_line, FONT_NORMAL_GREEN);
-        y_current_line += y_line_separator;
+        y_current_line += y_line_space;
     }
 
     // Objective value info on extra_info panel (culture, prosperity, peace, etc)
     if (extra_info_height >= EXTRA_INFO_HEIGHT_RATINGS) {
         draw_extra_info_objective(x_offset, y_current_line, 53, 1, &data.extra_info.culture, 0);
-        y_current_line += y_line_separator;
+        y_current_line += y_line_space;
 
         draw_extra_info_objective(x_offset, y_current_line, 53, 2, &data.extra_info.prosperity, 0);
-        y_current_line += y_line_separator;
+        y_current_line += y_line_space;
 
         draw_extra_info_objective(x_offset, y_current_line, 53, 3, &data.extra_info.peace, 0);
-        y_current_line += y_line_separator;
+        y_current_line += y_line_space;
 
         draw_extra_info_objective(x_offset, y_current_line, 53, 4, &data.extra_info.favor, 0);
-        y_current_line += y_line_separator;
+        y_current_line += y_line_space;
 
         draw_extra_info_objective(x_offset, y_current_line, 4, 6, &data.extra_info.population, 1);
-        y_current_line += y_line_separator;
+        y_current_line += y_line_space;
     }
 }
 
