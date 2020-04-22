@@ -357,7 +357,7 @@ static void draw_extra_info_panel(int x_offset, int extra_info_height)
         y_current_line += 20;
         int width = text_draw_percentage(data.extra_info.unemployment_percentage, x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
         text_draw_number(data.extra_info.unemployment_amount, '(', ")", x_offset + 11 + width, y_current_line, FONT_NORMAL_GREEN);
-        y_current_line += y_line_space;
+        y_current_line += 22;
     }
 
     // Objective value info on extra_info panel (culture, prosperity, peace, etc)
