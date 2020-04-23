@@ -1,0 +1,234 @@
+#include "extra_info.h"
+#include "sidebar.h"
+
+#include "building/menu.h"
+#include "city/labor.h"
+#include "city/message.h"
+#include "city/population.h"
+#include "city/ratings.h"
+#include "city/view.h"
+#include "city/warning.h"
+#include "core/config.h"
+#include "core/direction.h"
+#include "core/lang.h"
+#include "core/string.h"
+#include "game/orientation.h"
+#include "game/settings.h"
+#include "game/state.h"
+#include "game/undo.h"
+#include "graphics/arrow_button.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
+#include "graphics/image_button.h"
+#include "graphics/lang_text.h"
+#include "graphics/menu.h"
+#include "graphics/panel.h"
+#include "graphics/screen.h"
+#include "graphics/text.h"
+#include "graphics/window.h"
+#include "map/orientation.h"
+#include "scenario/property.h"
+#include "scenario/criteria.h"
+#include "sound/effect.h"
+#include "widget/city.h"
+#include "widget/minimap.h"
+#include "window/advisors.h"
+#include "window/build_menu.h"
+#include "window/city.h"
+#include "window/empire.h"
+#include "window/message_dialog.h"
+#include "window/message_list.h"
+#include "window/mission_briefing.h"
+#include "window/overlay_menu.h"
+
+#define EXTRA_INFO_LINE_SPACE 32
+#define EXTRA_INFO_HEIGHT_GAME_SPEED 64
+#define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 112
+#define EXTRA_INFO_HEIGHT_RATINGS 272
+#define EXTRA_INFO_TOP_PADDING 10;
+#define EXTRA_INFO_SPEED_PADDING 26;
+#define EXTRA_INFO_UNEMPLOYMENT_TOP_PADDING 20;
+#define EXTRA_INFO_UNEMPLOYMENT_BOTTOM_PADDING 22;
+
+int calculate_extra_info_height(int is_collapsed)
+{
+    if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
+        sidebar_data_vals.extra_info_vals.height = 0;
+    } else {
+        int available_height = screen_height() - FILLER_Y_OFFSET;
+        if (available_height >= EXTRA_INFO_HEIGHT_RATINGS) {
+            sidebar_data_vals.extra_info_vals.height = EXTRA_INFO_HEIGHT_RATINGS;
+        } else if (available_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
+            sidebar_data_vals.extra_info_vals.height = EXTRA_INFO_HEIGHT_UNEMPLOYMENT;
+        } else if (available_height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
+            sidebar_data_vals.extra_info_vals.height = EXTRA_INFO_HEIGHT_GAME_SPEED;
+        } else {
+            sidebar_data_vals.extra_info_vals.height = 0;
+        }
+    }
+    return sidebar_data_vals.extra_info_vals.height;
+}
+
+static void set_extra_info_objectives(void)
+{
+    sidebar_data_vals.extra_info_vals.culture.target = 0;
+    sidebar_data_vals.extra_info_vals.prosperity.target = 0;
+    sidebar_data_vals.extra_info_vals.peace.target = 0;
+    sidebar_data_vals.extra_info_vals.favor.target = 0;
+    sidebar_data_vals.extra_info_vals.population.target = 0;
+
+    if (scenario_is_open_play()) {
+        return;
+    }
+    if (scenario_criteria_culture_enabled()) {
+        sidebar_data_vals.extra_info_vals.culture.target = scenario_criteria_culture();
+    }
+    if (scenario_criteria_prosperity_enabled()) {
+        sidebar_data_vals.extra_info_vals.prosperity.target = scenario_criteria_prosperity();
+    }
+    if (scenario_criteria_peace_enabled()) {
+        sidebar_data_vals.extra_info_vals.peace.target = scenario_criteria_peace();
+    }
+    if (scenario_criteria_favor_enabled()) {
+        sidebar_data_vals.extra_info_vals.favor.target = scenario_criteria_favor();
+    }
+    if (scenario_criteria_population_enabled()) {
+        sidebar_data_vals.extra_info_vals.population.target = scenario_criteria_population();
+    }
+}
+
+static int update_extra_info_value(int value, int *field)
+{
+    if (value == *field) {
+        return 0;
+    } else {
+        *field = value;
+        return 1;
+    }
+}
+
+int update_extra_info(int height, int is_background)
+{
+    int changed = 0;
+    if (height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
+        changed |= update_extra_info_value(setting_game_speed(), &sidebar_data_vals.extra_info_vals.game_speed);
+    }
+    if (height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
+        changed |= update_extra_info_value(city_labor_unemployment_percentage(), &sidebar_data_vals.extra_info_vals.unemployment_percentage);
+        changed |= update_extra_info_value(
+            city_labor_workers_unemployed() - city_labor_workers_needed(),
+            &sidebar_data_vals.extra_info_vals.unemployment_amount
+        );
+    }
+    if (height >= EXTRA_INFO_HEIGHT_RATINGS) {
+        if (is_background) {
+            set_extra_info_objectives();
+        }
+        changed |= update_extra_info_value(city_rating_culture(), &sidebar_data_vals.extra_info_vals.culture.value);
+        changed |= update_extra_info_value(city_rating_prosperity(), &sidebar_data_vals.extra_info_vals.prosperity.value);
+        changed |= update_extra_info_value(city_rating_peace(), &sidebar_data_vals.extra_info_vals.peace.value);
+        changed |= update_extra_info_value(city_rating_favor(), &sidebar_data_vals.extra_info_vals.favor.value);
+        changed |= update_extra_info_value(city_population(), &sidebar_data_vals.extra_info_vals.population.value);
+    }
+    return changed;
+}
+
+static void draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective *obj, int cut_off_at_parenthesis)
+{
+    if (cut_off_at_parenthesis) {
+        // Exception for Chinese: the string for "population" includes the hotkey " (6)"
+        // To fix that: cut the string off at the '('
+        uint8_t tmp[100];
+        string_copy(lang_get_string(text_group, text_id), tmp, 100);
+        for (int i = 0; i < 100 && tmp[i]; i++) {
+            if (tmp[i] == '(') {
+                tmp[i] = 0;
+                break;
+            }
+        }
+        text_draw(tmp, x_offset + 11, y_offset, FONT_NORMAL_WHITE, 0);
+    } else {
+        lang_text_draw(text_group, text_id, x_offset + 11, y_offset, FONT_NORMAL_WHITE);
+    }
+    font_t font = obj->value >= obj->target ? FONT_NORMAL_GREEN : FONT_NORMAL_RED;
+    int width = text_draw_number(obj->value, '@', "", x_offset + 11, y_offset + 16, font);
+    text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + 16, font);
+}
+
+
+void draw_extra_info_panel(int x_offset, int extra_info_height)
+{
+    int y_offset = FILLER_Y_OFFSET;
+
+    // Borders of the extra_info panel - extends to bottom of screen
+    int panel_blocks = extra_info_height / 16;
+    graphics_draw_vertical_line(x_offset, y_offset, y_offset + extra_info_height, COLOR_WHITE);
+    graphics_draw_vertical_line(x_offset + SIDEBAR_EXPANDED_WIDTH - 1, y_offset, y_offset + extra_info_height, COLOR_SIDEBAR);
+    inner_panel_draw(x_offset + 1, y_offset, SIDEBAR_EXPANDED_WIDTH / 16, panel_blocks);
+
+    int y_current_line = y_offset + EXTRA_INFO_TOP_PADDING;
+
+    // Game speed modifier in extra_info panel
+    lang_text_draw(45, 2, x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+    y_current_line += EXTRA_INFO_SPEED_PADDING;
+
+    text_draw_percentage(sidebar_data_vals.extra_info_vals.game_speed, x_offset + 60, y_current_line, FONT_NORMAL_GREEN);
+    arrow_buttons_draw(x_offset, y_offset, arrow_buttons_speed, 2);
+    y_current_line += EXTRA_INFO_LINE_SPACE; 
+    
+    // Unemployment info in extra_info panel
+    if (extra_info_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
+        lang_text_draw(68, 148, x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+        y_current_line += EXTRA_INFO_UNEMPLOYMENT_TOP_PADDING;
+
+        int width = text_draw_percentage(sidebar_data_vals.extra_info_vals.unemployment_percentage, x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
+        text_draw_number(sidebar_data_vals.extra_info_vals.unemployment_amount, '(', ")", x_offset + 11 + width, y_current_line, FONT_NORMAL_GREEN);
+        y_current_line += EXTRA_INFO_UNEMPLOYMENT_BOTTOM_PADDING;
+    }
+
+    // Objective value info on extra_info panel (culture, prosperity, peace, etc)
+    if (extra_info_height >= EXTRA_INFO_HEIGHT_RATINGS) {
+        draw_extra_info_objective(x_offset, y_current_line, 53, 1, &sidebar_data_vals.extra_info_vals.culture, 0);
+        y_current_line += EXTRA_INFO_LINE_SPACE;
+
+        draw_extra_info_objective(x_offset, y_current_line, 53, 2, &sidebar_data_vals.extra_info_vals.prosperity, 0);
+        y_current_line += EXTRA_INFO_LINE_SPACE;
+
+        draw_extra_info_objective(x_offset, y_current_line, 53, 3, &sidebar_data_vals.extra_info_vals.peace, 0);
+        y_current_line += EXTRA_INFO_LINE_SPACE;
+
+        draw_extra_info_objective(x_offset, y_current_line, 53, 4, &sidebar_data_vals.extra_info_vals.favor, 0);
+        y_current_line += EXTRA_INFO_LINE_SPACE;
+
+        draw_extra_info_objective(x_offset, y_current_line, 4, 6, &sidebar_data_vals.extra_info_vals.population, 1);
+        y_current_line += EXTRA_INFO_LINE_SPACE;
+    }
+}
+
+void draw_extra_info_buttons(int x_offset, int is_collapsed)
+{
+    int extra_info_height = sidebar_data_vals.extra_info_vals.height;
+    if (!extra_info_height) {
+        return;
+    }
+
+    graphics_set_clip_rectangle(x_offset, TOP_MENU_HEIGHT,
+            screen_width() - x_offset,
+            screen_height() - TOP_MENU_HEIGHT);
+
+    if (update_extra_info(extra_info_height, 0)) {
+        draw_extra_info_panel(x_offset, extra_info_height);
+    } else {
+        arrow_buttons_draw(x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
+    }
+
+    graphics_reset_clip_rectangle();
+}
+
+int extra_info_height_game_speed_check(int height)
+{
+  return sidebar_data_vals.extra_info_vals.height >= EXTRA_INFO_HEIGHT_GAME_SPEED;
+}
+
+
+
