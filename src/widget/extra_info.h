@@ -1,6 +1,8 @@
 #ifndef WIDGET_EXTRA_INFO_H
 #define WIDGET_EXTRA_INFO_H
 
+  //#include "sidebar.h"
+
 typedef struct {
     int value;
     int target;
@@ -23,5 +25,4 @@ void draw_extra_info_buttons(int x_offset, int is_collapsed);
 int calculate_extra_info_height(int is_collapsed);
 int update_extra_info(int height, int is_background);
 int extra_info_height_game_speed_check(int height);
-
 #endif // WIDGET_EXTRA_INFO_H
