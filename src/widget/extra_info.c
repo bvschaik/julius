@@ -1,45 +1,22 @@
 #include "extra_info.h"
-#include "sidebar.h"
 
-#include "building/menu.h"
+#include "sidebar.h"
 #include "city/labor.h"
-#include "city/message.h"
 #include "city/population.h"
 #include "city/ratings.h"
-#include "city/view.h"
-#include "city/warning.h"
 #include "core/config.h"
-#include "core/direction.h"
 #include "core/lang.h"
 #include "core/string.h"
-#include "game/orientation.h"
 #include "game/settings.h"
-#include "game/state.h"
-#include "game/undo.h"
 #include "graphics/arrow_button.h"
 #include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/menu.h"
 #include "graphics/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
-#include "graphics/window.h"
-#include "map/orientation.h"
 #include "scenario/property.h"
 #include "scenario/criteria.h"
-#include "sound/effect.h"
-#include "widget/city.h"
-#include "widget/minimap.h"
-#include "window/advisors.h"
-#include "window/build_menu.h"
-#include "window/city.h"
-#include "window/empire.h"
-#include "window/message_dialog.h"
-#include "window/message_list.h"
-#include "window/mission_briefing.h"
-#include "window/overlay_menu.h"
 
 #define EXTRA_INFO_LINE_SPACE 32
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64
@@ -154,7 +131,6 @@ static void draw_extra_info_objective(int x_offset, int y_offset, int text_group
     int width = text_draw_number(obj->value, '@', "", x_offset + 11, y_offset + 16, font);
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + 16, font);
 }
-
 
 void draw_extra_info_panel(int x_offset, int extra_info_height)
 {

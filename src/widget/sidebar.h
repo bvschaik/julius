@@ -3,7 +3,7 @@
 
 #include "input/mouse.h"
 #include "extra_info.h"
-#include "graphics/arrow_button.h"
+
 void widget_sidebar_draw_background(void);
 
 void widget_sidebar_draw_foreground(void);
@@ -18,6 +18,9 @@ int widget_sidebar_get_tooltip_text(void);
 #define SIDEBAR_COLLAPSED_WIDTH 42
 #define SIDEBAR_EXPANDED_WIDTH 162
 #define FILLER_Y_OFFSET 474
+
+// todo - get arrow stuff out of here; temp in here during breakout of extra_info.c from sidebar.c
+#include "graphics/arrow_button.h"
 void button_game_speed(int is_down, int param2);
 static arrow_button arrow_buttons_speed[] = {
     {11, 30, 17, 24, button_game_speed, 1, 0},
