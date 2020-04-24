@@ -544,6 +544,7 @@ set(EDITOR_FILES
 set(TRANSLATION_FILES
     ${PROJECT_SOURCE_DIR}/src/translation/translation.c
     ${PROJECT_SOURCE_DIR}/src/translation/english.c
+    ${PROJECT_SOURCE_DIR}/src/translation/portuguese.c
 )
 
 set(MACOSX_FILES "")

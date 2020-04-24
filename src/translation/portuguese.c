@@ -1,0 +1,107 @@
+#include "translation/common.h"
+#include "translation/translation.h"
+
+static translation_string all_strings[] = {
+    {TR_NO_PATCH_TITLE, "Patch 1.0.1.0 não instalado"},
+    {TR_NO_PATCH_MESSAGE,
+        "Sua instalação Caesar 3 não está rodando o patch 1.0.1.0. "
+        "Obtenha o patch desde:\n"
+        URL_PATCHES "\n"
+        "Continue por seu próprio risco."},
+    {TR_MISSING_FONTS_TITLE, "Tipos de letra em falta"},
+    {TR_MISSING_FONTS_MESSAGE,
+        "Sua instalação Caesar 3 exige ficheiros de tipo de letra extra. "
+        "Obtenha os tipos de letra desde:\n"
+        URL_PATCHES},
+    {TR_NO_EDITOR_TITLE, "Editor não instalado"},
+    {TR_NO_EDITOR_MESSAGE,
+        "Sua instalação Caesar não contém os ficheiros do editor de mapas. "
+        "Obtenha o editor desde:\n"
+        URL_EDITOR},
+    {TR_INVALID_LANGUAGE_TITLE, "Directório de liguagem inválido"},
+    {TR_INVALID_LANGUAGE_MESSAGE,
+        "O directório que selecionou não tem um pack de línguagem válido. "
+        "Por favor verifique o log para erros."},
+    {TR_BUTTON_OK, "OK"},
+    {TR_BUTTON_CANCEL, "Cancelar"},
+    {TR_BUTTON_RESET_DEFAULTS, "Repor padrão"},
+    {TR_BUTTON_CONFIGURE_HOTKEYS, "Teclas de atalho"},
+    {TR_CONFIG_TITLE, "Opções de configuração do Julius"},
+    {TR_CONFIG_LANGUAGE_LABEL, "Linguagem:"},
+    {TR_CONFIG_LANGUAGE_DEFAULT, "(defeito)"},
+    {TR_CONFIG_HEADER_UI_CHANGES, "Alterações do interface de usuário"},
+    {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Alterações de jogabilidade"},
+    {TR_CONFIG_SHOW_INTRO_VIDEO, "Correr vídeos de abertura"},
+    {TR_CONFIG_SIDEBAR_INFO, "Informação extra no painel de controle"},
+    {TR_CONFIG_SMOOTH_SCROLLING, "Permitir deslocamento suave do mapa"},
+    {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Melhorar o feedback visual quando limpaterreno"},
+    {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permitir construir cada templo em sucessão"},
+    {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Mostrar alcance quando constrói reservatórios, fontes e poços"},
+    {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Mostrar tamanho da construção arrastável"},
+    {TR_CONFIG_FIX_IMMIGRATION_BUG, "Resolver bug da emigração na dificuldade máxima"},
+    {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Resolver bug dos fantasmas com 100 anos"},
+    {TR_CONFIG_FIX_EDITOR_EVENTS, "Resolver bug de mudança de imperador e tempo de sobrevivência"},
+    {TR_HOTKEY_TITLE, "Configuração de teclas de atalho do Julius"},
+    {TR_HOTKEY_LABEL, "Tecla de atalho"},
+    {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternativa"},
+    {TR_HOTKEY_HEADER_ARROWS, "Teclas de direcção"},
+    {TR_HOTKEY_HEADER_GLOBAL, "Atalhos globais"},
+    {TR_HOTKEY_HEADER_CITY, "Atalhos da cidade"},
+    {TR_HOTKEY_HEADER_ADVISORS, "Conselheiros"},
+    {TR_HOTKEY_HEADER_OVERLAYS, "Visão da cidade"},
+    {TR_HOTKEY_HEADER_BOOKMARKS, "Marcadores do mapa de cidade"},
+    {TR_HOTKEY_HEADER_EDITOR, "Editor"},
+    {TR_HOTKEY_ARROW_UP, "Cima"},
+    {TR_HOTKEY_ARROW_DOWN, "Baixo"},
+    {TR_HOTKEY_ARROW_LEFT, "Esquerda"},
+    {TR_HOTKEY_ARROW_RIGHT, "Direita"},
+    {TR_HOTKEY_TOGGLE_FULLSCREEN, "Alternar tela inteira"},
+    {TR_HOTKEY_CENTER_WINDOW, "Centrar janeila"},
+    {TR_HOTKEY_RESIZE_TO_640, "Redimensionar para 640x480"},
+    {TR_HOTKEY_RESIZE_TO_800, "Redimensionar para 800x600"},
+    {TR_HOTKEY_RESIZE_TO_1024, "Redimensionar para 1024x768"},
+    {TR_HOTKEY_SAVE_SCREENSHOT, "Guardar captura de tela"},
+    {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Guardar imagem da cidade"},
+    {TR_HOTKEY_LOAD_FILE, "Carregar jogo"},
+    {TR_HOTKEY_SAVE_FILE, "Guardar jogo"},
+    {TR_HOTKEY_INCREASE_GAME_SPEED, "Aumentar velocidade do jogo"},
+    {TR_HOTKEY_DECREASE_GAME_SPEED, "Diminuir velocidade do jogo"},
+    {TR_HOTKEY_TOGGLE_PAUSE, "Alternar pausa"},
+    {TR_HOTKEY_CYCLE_LEGION, "Percorrer legiões"},
+    {TR_HOTKEY_ROTATE_MAP_LEFT, "Rodar mapa para a esquerda"},
+    {TR_HOTKEY_ROTATE_MAP_RIGHT, "Rodar mapa para a direita"},
+    {TR_HOTKEY_SHOW_ADVISOR_LABOR, "Conselheiro do trabalho"},
+    {TR_HOTKEY_SHOW_ADVISOR_MILITARY, "Conselheiro militar"},
+    {TR_HOTKEY_SHOW_ADVISOR_IMPERIAL, "Conselheiro imperial"},
+    {TR_HOTKEY_SHOW_ADVISOR_RATINGS, "Conselheiro dos índices"},
+    {TR_HOTKEY_SHOW_ADVISOR_TRADE, "Conselheiro do comércio exterior"},
+    {TR_HOTKEY_SHOW_ADVISOR_POPULATION, "Conselheiro da população"},
+    {TR_HOTKEY_SHOW_ADVISOR_HEALTH, "Conselheiro da saúde"},
+    {TR_HOTKEY_SHOW_ADVISOR_EDUCATION, "Conselheiro da educação"},
+    {TR_HOTKEY_SHOW_ADVISOR_ENTERTAINMENT, "Conselheiro do entretenimento"},
+    {TR_HOTKEY_SHOW_ADVISOR_RELIGION, "Conselheiro da religião"},
+    {TR_HOTKEY_SHOW_ADVISOR_FINANCIAL, "Conselheiro das finanças"},
+    {TR_HOTKEY_SHOW_ADVISOR_CHIEF, "Conselheiro chefe"},
+    {TR_HOTKEY_TOGGLE_OVERLAY, "Alternar mapa actual"},
+    {TR_HOTKEY_SHOW_OVERLAY_WATER, "Mostrar mapa da água"},
+    {TR_HOTKEY_SHOW_OVERLAY_FIRE, "Mostrar mapa de incêndio"},
+    {TR_HOTKEY_SHOW_OVERLAY_DAMAGE, "Mostrar mapa de avarias"},
+    {TR_HOTKEY_SHOW_OVERLAY_CRIME, "Mostrar mapa de criminalidade"},
+    {TR_HOTKEY_SHOW_OVERLAY_PROBLEMS, "Mostrar mapa de problemas"},
+    {TR_HOTKEY_GO_TO_BOOKMARK_1, "Ir para marcador 1"},
+    {TR_HOTKEY_GO_TO_BOOKMARK_2, "Ir para marcador 2"},
+    {TR_HOTKEY_GO_TO_BOOKMARK_3, "Ir para marcador 3"},
+    {TR_HOTKEY_GO_TO_BOOKMARK_4, "Ir para marcador 4"},
+    {TR_HOTKEY_SET_BOOKMARK_1, "Definir marcador 1"},
+    {TR_HOTKEY_SET_BOOKMARK_2, "Definir marcador 2"},
+    {TR_HOTKEY_SET_BOOKMARK_3, "Definir marcador 3"},
+    {TR_HOTKEY_SET_BOOKMARK_4, "Definir marcador 4"},
+    {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Alternar informação de batalha"},
+    {TR_HOTKEY_EDIT_TITLE, "Nova tecla de atalho"}
+};
+
+void translation_portuguese(const translation_string **strings, int *num_strings)
+{
+    *strings = all_strings;
+    *num_strings = sizeof(all_strings) / sizeof(translation_string);
+}
