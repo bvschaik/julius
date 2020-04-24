@@ -258,7 +258,6 @@ int sidebar_filler_extra_info_height_game_speed_check(void)
   return extra_info_vals.height >= EXTRA_INFO_HEIGHT_GAME_SPEED;
 }
 
-
 static void button_game_speed(int is_down, int param2)
 {
     if (is_down) {

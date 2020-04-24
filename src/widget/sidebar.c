@@ -326,7 +326,7 @@ int widget_sidebar_handle_mouse_build_menu(const mouse *m)
 
 int widget_sidebar_get_expanded_width(void)
 {
-  return SIDEBAR_EXPANDED_WIDTH;
+    return SIDEBAR_EXPANDED_WIDTH;
 }
 
 int widget_sidebar_get_tooltip_text(void)
@@ -409,7 +409,6 @@ static void button_rotate(int clockwise, int param2)
     window_invalidate();
 }
 
-
 static void update_progress(void)
 {
     time_millis now = time_get_millis();
@@ -469,7 +468,7 @@ static void slide_sidebar(void)
     sidebar_data_vals.slide_start = time_get_millis();
     city_view_start_sidebar_toggle();
     sound_effect_play(SOUND_EFFECT_SIDEBAR);
-    
+
     window_type window = {
         WINDOW_SLIDING_SIDEBAR,
         window_city_draw,
