@@ -13,10 +13,6 @@ int widget_sidebar_handle_mouse(const mouse *m);
 int widget_sidebar_handle_mouse_build_menu(const mouse *m);
 
 int widget_sidebar_get_tooltip_text(void);
-
-// used in extra_info.c as well as sidebar.c
-#define SIDEBAR_COLLAPSED_WIDTH 42
-#define SIDEBAR_EXPANDED_WIDTH 162
-#define FILLER_Y_OFFSET 474
+int widget_sidebar_get_expanded_width(void);
 
 #endif // WIDGET_SIDEBAR_H

@@ -186,22 +186,22 @@ static void draw_extra_info_objective(int x_offset, int y_offset, int text_group
 
 void sidebar_filler_draw_extra_info_panel(int x_offset, int extra_info_height)
 {
-    int y_offset = FILLER_Y_OFFSET;
-
     // Borders of the extra_info panel - extends to bottom of screen
     int panel_blocks = extra_info_height / 16;
-    graphics_draw_vertical_line(x_offset, y_offset, y_offset + extra_info_height, COLOR_WHITE);
-    graphics_draw_vertical_line(x_offset + SIDEBAR_EXPANDED_WIDTH - 1, y_offset, y_offset + extra_info_height, COLOR_SIDEBAR);
-    inner_panel_draw(x_offset + 1, y_offset, SIDEBAR_EXPANDED_WIDTH / 16, panel_blocks);
+    int sidebar_expanded_width = widget_sidebar_get_expanded_width();
+    graphics_draw_vertical_line(x_offset, FILLER_Y_OFFSET, FILLER_Y_OFFSET + extra_info_height, COLOR_WHITE);
+    graphics_draw_vertical_line(x_offset + sidebar_expanded_width - 1, FILLER_Y_OFFSET, FILLER_Y_OFFSET + extra_info_height, COLOR_SIDEBAR);
+    inner_panel_draw(x_offset + 1, FILLER_Y_OFFSET, sidebar_expanded_width / 16, panel_blocks);
 
-    int y_current_line = y_offset + EXTRA_INFO_TOP_PADDING;
+    // This var is basically a cursor for drawing stuff on the sidebar; starting from FILLER_Y_OFFSET, we work our way down, adding info to the sidebar_filler
+    int y_current_line = FILLER_Y_OFFSET + EXTRA_INFO_TOP_PADDING;
 
     // Game speed modifier in extra_info panel
     lang_text_draw(45, 2, x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
     y_current_line += EXTRA_INFO_SPEED_PADDING;
 
     text_draw_percentage(extra_info_vals.game_speed, x_offset + 60, y_current_line, FONT_NORMAL_GREEN);
-    arrow_buttons_draw(x_offset, y_offset, arrow_buttons_speed, 2);
+    arrow_buttons_draw(x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
     y_current_line += EXTRA_INFO_LINE_SPACE; 
     
     // Unemployment info in extra_info panel

@@ -42,6 +42,8 @@
 #include "window/overlay_menu.h"
 
 #define SIDEBAR_SLIDE_STEPS 94
+#define SIDEBAR_COLLAPSED_WIDTH 42
+#define SIDEBAR_EXPANDED_WIDTH 162
 
 typedef struct {
     time_millis slide_start;
@@ -128,10 +130,6 @@ static image_button buttons_top_expanded[] = {
     {84, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 6, button_rotate, button_none, 0, 0, 1},
     {123, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 9, button_rotate, button_none, 1, 0, 1},
 };
-
-
-
-
 
 static int get_x_offset_expanded(void)
 {
@@ -324,6 +322,11 @@ int widget_sidebar_handle_mouse_build_menu(const mouse *m)
     } else {
         return image_buttons_handle_mouse(m, get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
     }
+}
+
+int widget_sidebar_get_expanded_width(void)
+{
+  return SIDEBAR_EXPANDED_WIDTH;
 }
 
 int widget_sidebar_get_tooltip_text(void)
