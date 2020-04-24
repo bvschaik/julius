@@ -1,5 +1,5 @@
 #include "sidebar.h"
-#include "extra_info.h"
+
 
 #include "building/menu.h"
 #include "city/labor.h"
@@ -32,6 +32,7 @@
 #include "sound/effect.h"
 #include "widget/city.h"
 #include "widget/minimap.h"
+#include "widget/sidebar_filler.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -197,11 +198,11 @@ static void draw_sidebar_filler(int x_offset, int y_offset, int is_collapsed)
 
 static void draw_sidebar_remainder(int x_offset, int is_collapsed)
 {
-    int extra_info_height = calculate_extra_info_height(is_collapsed);
+    int extra_info_height = sidebar_filler_calculate_extra_info_height(is_collapsed);
 
     if (extra_info_height) {
-        update_extra_info(extra_info_height, 1);
-        draw_extra_info_panel(x_offset, extra_info_height);
+        sidebar_filler_update_extra_info(extra_info_height, 1);
+        sidebar_filler_draw_extra_info_panel(x_offset, extra_info_height);
     }
 
     draw_sidebar_filler(x_offset, FILLER_Y_OFFSET + extra_info_height, is_collapsed);
@@ -274,7 +275,7 @@ void widget_sidebar_draw_foreground(void)
     draw_minimap(0);
     draw_number_of_messages();
 
-    draw_extra_info_buttons(x_offset, is_collapsed);
+    sidebar_filler_draw_extra_info_buttons(x_offset, is_collapsed);
 }
 
 void widget_sidebar_draw_foreground_military(void)
@@ -317,7 +318,7 @@ int widget_sidebar_handle_mouse(const mouse *m)
         if (button_id) {
             sidebar_data_vals.focus_button_for_tooltip = button_id + 39;
         }
-        if (extra_info_height_game_speed_check(sidebar_data_vals.extra_info_vals.height)) {
+        if (sidebar_filler_extra_info_height_game_speed_check(sidebar_data_vals.extra_info_vals.height)) {
             click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
         }
     }
@@ -470,7 +471,7 @@ static void draw_sliding_foreground(void)
     draw_sidebar_filler(x_offset_collapsed, FILLER_Y_OFFSET, 1);
 
     draw_sidebar_remainder(x_offset_expanded, 0);
-    draw_extra_info_buttons(x_offset_expanded, 0);
+    sidebar_filler_draw_extra_info_buttons(x_offset_expanded, 0);
 
     graphics_reset_clip_rectangle();
 }

@@ -1,4 +1,4 @@
-#include "extra_info.h"
+#include "sidebar_filler.h"
 #include "sidebar.h"
 
 #include "building/menu.h"
@@ -50,7 +50,7 @@
 #define EXTRA_INFO_UNEMPLOYMENT_TOP_PADDING 20;
 #define EXTRA_INFO_UNEMPLOYMENT_BOTTOM_PADDING 22;
 
-int calculate_extra_info_height(int is_collapsed)
+int sidebar_filler_calculate_extra_info_height(int is_collapsed)
 {
     if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
         sidebar_data_vals.extra_info_vals.height = 0;
@@ -107,7 +107,7 @@ static int update_extra_info_value(int value, int *field)
     }
 }
 
-int update_extra_info(int height, int is_background)
+int sidebar_filler_update_extra_info(int height, int is_background)
 {
     int changed = 0;
     if (height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
@@ -156,7 +156,7 @@ static void draw_extra_info_objective(int x_offset, int y_offset, int text_group
 }
 
 
-void draw_extra_info_panel(int x_offset, int extra_info_height)
+void sidebar_filler_draw_extra_info_panel(int x_offset, int extra_info_height)
 {
     int y_offset = FILLER_Y_OFFSET;
 
@@ -205,7 +205,7 @@ void draw_extra_info_panel(int x_offset, int extra_info_height)
     }
 }
 
-void draw_extra_info_buttons(int x_offset, int is_collapsed)
+void sidebar_filler_draw_extra_info_buttons(int x_offset, int is_collapsed)
 {
     int extra_info_height = sidebar_data_vals.extra_info_vals.height;
     if (!extra_info_height) {
@@ -216,8 +216,8 @@ void draw_extra_info_buttons(int x_offset, int is_collapsed)
             screen_width() - x_offset,
             screen_height() - TOP_MENU_HEIGHT);
 
-    if (update_extra_info(extra_info_height, 0)) {
-        draw_extra_info_panel(x_offset, extra_info_height);
+    if (sidebar_filler_update_extra_info(extra_info_height, 0)) {
+        sidebar_filler_draw_extra_info_panel(x_offset, extra_info_height);
     } else {
         arrow_buttons_draw(x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
     }
@@ -225,7 +225,7 @@ void draw_extra_info_buttons(int x_offset, int is_collapsed)
     graphics_reset_clip_rectangle();
 }
 
-int extra_info_height_game_speed_check(int height)
+int sidebar_filler_extra_info_height_game_speed_check(int height)
 {
   return sidebar_data_vals.extra_info_vals.height >= EXTRA_INFO_HEIGHT_GAME_SPEED;
 }
