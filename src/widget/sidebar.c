@@ -319,7 +319,8 @@ int widget_sidebar_handle_mouse(const mouse *m)
             sidebar_data_vals.focus_button_for_tooltip = button_id + 39;
         }
         if (sidebar_filler_extra_info_height_game_speed_check(sidebar_data_vals.extra_info_vals.height)) {
-            click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
+            arrow_button *sidebar_arrow_buttons_speed = sidebar_filler_get_arrow_buttons_speed();
+            click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, sidebar_arrow_buttons_speed, 2);
         }
     }
     return click;
@@ -414,14 +415,6 @@ static void button_rotate(int clockwise, int param2)
     window_invalidate();
 }
 
-void button_game_speed(int is_down, int param2)
-{
-    if (is_down) {
-        setting_decrease_game_speed();
-    } else {
-        setting_increase_game_speed();
-    }
-}
 
 static void update_progress(void)
 {

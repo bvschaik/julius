@@ -50,6 +50,13 @@
 #define EXTRA_INFO_UNEMPLOYMENT_TOP_PADDING 20;
 #define EXTRA_INFO_UNEMPLOYMENT_BOTTOM_PADDING 22;
 
+static void button_game_speed(int is_down, int param2);
+
+static arrow_button arrow_buttons_speed[] = {
+    {11, 30, 17, 24, button_game_speed, 1, 0},
+    {35, 30, 15, 24, button_game_speed, 0, 0},
+};
+
 int sidebar_filler_calculate_extra_info_height(int is_collapsed)
 {
     if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
@@ -231,4 +238,16 @@ int sidebar_filler_extra_info_height_game_speed_check(int height)
 }
 
 
+static void button_game_speed(int is_down, int param2)
+{
+    if (is_down) {
+        setting_decrease_game_speed();
+    } else {
+        setting_increase_game_speed();
+    }
+}
 
+arrow_button *sidebar_filler_get_arrow_buttons_speed(void)
+{
+  return arrow_buttons_speed;
+}

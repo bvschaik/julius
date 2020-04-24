@@ -18,11 +18,6 @@ int widget_sidebar_get_tooltip_text(void);
 #define SIDEBAR_COLLAPSED_WIDTH 42
 #define SIDEBAR_EXPANDED_WIDTH 162
 #define FILLER_Y_OFFSET 474
-void button_game_speed(int is_down, int param2);
-static arrow_button arrow_buttons_speed[] = {
-    {11, 30, 17, 24, button_game_speed, 1, 0},
-    {35, 30, 15, 24, button_game_speed, 0, 0},
-};
 
 typedef struct {
     time_millis slide_start;
