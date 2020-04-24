@@ -37,11 +37,6 @@ static struct {
     int text_height_lines;
     int num_lines;
     int max_scroll_position;
-    struct {
-        int scroll_position;
-        int num_lines;
-        int text_height_lines;
-    } backup;
 } data;
 
 int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks, int height_blocks, int adjust_width_on_no_scroll)
@@ -79,22 +74,6 @@ void rich_text_reset(int scroll_position)
     scrollbar_reset(&scrollbar, scroll_position);
     data.num_lines = 0;
     rich_text_clear_links();
-}
-
-void rich_text_save(void)
-{
-    data.backup.num_lines = data.num_lines;
-    data.backup.text_height_lines = data.text_height_lines;
-    data.backup.scroll_position = scrollbar.scroll_position;
-    data.text_height_lines = 30;
-    scrollbar.scroll_position = 0;
-}
-
-void rich_text_restore(void)
-{
-    data.num_lines = data.backup.num_lines;
-    data.text_height_lines = data.backup.text_height_lines;
-    scrollbar.scroll_position = data.backup.scroll_position;
 }
 
 void rich_text_clear_links(void)
