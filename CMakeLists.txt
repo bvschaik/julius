@@ -661,7 +661,12 @@ endif()
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
-if (SWITCH_BUILD)
+if(VITA_BUILD)
+    include_directories(
+        $ENV{VITASDK}/arm-vita-eabi/include
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+elseif (SWITCH_BUILD)
     include_directories(
         ${DEVKITPRO}/portlibs/switch/include/SDL2
         ${DEVKITPRO}/libnx/include
@@ -683,16 +688,11 @@ if (VITA_BUILD)
         vorbisfile
         vorbis
         mikmod
-        modplug
         mpg123
         FLAC
         ogg
-        jpeg
-        png
-        freetype
         vita2d
         m
-        z
         SceAppUtil_stub
         SceAudio_stub
         SceCommonDialog_stub
@@ -706,6 +706,7 @@ if (VITA_BUILD)
         ScePgf_stub
         SceAppMgr_stub
     )
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__vita__")
     # this setting enables larger heap memory sizes on Vita, up to ~330 MB
     # useful for pre-loading videos into memory
     set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
@@ -726,19 +727,13 @@ elseif(SWITCH_BUILD)
         GLESv2
         glapi
         drm_nouveau
-        png
-        jpeg
         vorbisidec
-        mikmod
         modplug
         mpg123
         FLAC
         opusfile
         opus
         ogg
-        jpeg
-        png
-        freetype
         m
         z
         nx
@@ -772,8 +767,9 @@ elseif(SWITCH_BUILD)
         POST_BUILD
         COMMAND ${DEVKITPRO}/tools/bin/nacptool --create "${SHORT_NAME}" "rsn8887" ${SWITCH_VERSION} ${SHORT_NAME}.nacp
         COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switchdata/icon0.jpg --nacp=${SHORT_NAME}.nacp
-        COMMAND rm -rf release/${SHORT_NAME}
-        COMMAND mkdir -p release/${SHORT_NAME}
+        COMMAND rm -rf release
+        COMMAND mkdir release
+        COMMAND cd release && mkdir ${SHORT_NAME} && cd ..
         COMMAND cp -f ${SHORT_NAME}.nro release/${SHORT_NAME}/${SHORT_NAME}.nro
         COMMAND cd release && zip -r ../${SHORT_NAME}_switch.zip ${SHORT_NAME} -x "*.DS_Store" -x "*__MAC*"
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
