@@ -188,7 +188,9 @@ static void run_and_draw(void)
 
 static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
 {
-    mouse_set_position(event->x, event->y);
+    if (!SDL_GetRelativeMouseMode()) {
+        mouse_set_position(event->x, event->y);
+    }
     if (event->button == SDL_BUTTON_LEFT) {
         mouse_set_left_down(is_down);
     } else if (event->button == SDL_BUTTON_RIGHT) {
