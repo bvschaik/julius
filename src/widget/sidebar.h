@@ -2,8 +2,8 @@
 #define WIDGET_SIDEBAR_H
 
 #include "input/mouse.h"
-#include "sidebar_filler.h"
-#include "graphics/arrow_button.h"
+#include "widget/sidebar_filler.h"
+
 void widget_sidebar_draw_background(void);
 
 void widget_sidebar_draw_foreground(void);

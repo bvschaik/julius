@@ -1,6 +1,7 @@
 #ifndef WIDGET_SIDEBAR_FILLER_H
 #define WIDGET_SIDEBAR_FILLER_H
 
+// for arrow_button *sidebar_filler_get_arrow_buttons_speed()
 #include "graphics/arrow_button.h"
 
 typedef struct {

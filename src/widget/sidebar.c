@@ -1,6 +1,5 @@
 #include "sidebar.h"
 
-
 #include "building/menu.h"
 #include "city/labor.h"
 #include "city/message.h"
@@ -43,7 +42,6 @@
 #include "window/overlay_menu.h"
 
 #define SIDEBAR_SLIDE_STEPS 94
-
 
 // sliding sidebar progress to x offset translation
 static const int PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS] = {

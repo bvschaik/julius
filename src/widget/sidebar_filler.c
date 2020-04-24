@@ -1,5 +1,4 @@
 #include "sidebar_filler.h"
-#include "sidebar.h"
 
 #include "building/menu.h"
 #include "city/labor.h"
@@ -32,6 +31,7 @@
 #include "sound/effect.h"
 #include "widget/city.h"
 #include "widget/minimap.h"
+#include "widget/sidebar.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -161,7 +161,6 @@ static void draw_extra_info_objective(int x_offset, int y_offset, int text_group
     int width = text_draw_number(obj->value, '@', "", x_offset + 11, y_offset + 16, font);
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + 16, font);
 }
-
 
 void sidebar_filler_draw_extra_info_panel(int x_offset, int extra_info_height)
 {
