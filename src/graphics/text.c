@@ -326,26 +326,7 @@ void text_draw_number_centered_colored(int value, int x_offset, int y_offset, in
 
 int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_width, font_t font)
 {
-    int line_height;
-    switch (font) {
-        case FONT_LARGE_PLAIN:
-        case FONT_LARGE_BLACK:
-            line_height = 23;
-            break;
-        case FONT_LARGE_BROWN:
-            line_height = 24;
-            break;
-        case FONT_SMALL_PLAIN:
-            line_height = 9;
-            break;
-        case FONT_NORMAL_PLAIN:
-            line_height = 11;
-            break;
-        default:
-            line_height = 11;
-            break;
-    }
-
+    int line_height = font_definition_for(font)->line_height;
     int has_more_characters = 1;
     int guard = 0;
     int y = y_offset;
