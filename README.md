@@ -12,9 +12,7 @@ Chat: [Gitter](https://gitter.im/julius-game/community) or [Discord](http://www.
 | PS Vita | [![Download](https://api.bintray.com/packages/bvschaik/julius/vita-release/images/download.svg)](https://bintray.com/bvschaik/julius/vita-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/vita-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/vita-unstable/_latestVersion#files) |
 | Nintendo Switch | [![Download](https://api.bintray.com/packages/bvschaik/julius/switch-release/images/download.svg)](https://bintray.com/bvschaik/julius/switch-release/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius/switch-unstable/images/download.svg)](https://bintray.com/bvschaik/julius/switch-unstable/_latestVersion#files) |
 
-![](https://github.com/bvschaik/julius/blob/master/res/sce_sys/livearea/contents/bg.png?raw=true)
-
-Julius is an open source re-implementation of Caesar III.
+## Julius: an open source re-implementation of Caesar III
 
 The aim of this project is to create an open-source version of Caesar 3, with the same logic
 as the original, but with some UI enhancements, that is able to be played on multiple platforms.
@@ -30,6 +28,8 @@ UI enhancements include:
 Julius requires the original assets (graphics, sounds, etc) from Caesar 3 to run.
 It optionally [supports the high-quality MP3 files](https://github.com/bvschaik/julius/wiki/MP3-Support) once provided on the
 Sierra website.
+
+![](https://github.com/bvschaik/julius/blob/master/res/sce_sys/livearea/contents/bg.png?raw=true)
 
 ## Running the game
 
