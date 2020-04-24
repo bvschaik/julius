@@ -8,7 +8,6 @@
 #include "game/settings.h"
 #include "graphics/graphics.h"
 #include "graphics/lang_text.h"
-#include "graphics/rich_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -94,13 +93,12 @@ static void save_window_under_tooltip_to_buffer(int x, int y, int width, int hei
 static void draw_button_tooltip(tooltip_context *c)
 {
     const uint8_t *text = lang_get_string(c->text_group, c->text_id);
-    rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
 
     int width = 200;
-    int lines = rich_text_draw(text, 0, 0, width - 5, 30, 1);
+    int lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
     if (lines > 2) {
         width = 300;
-        lines = rich_text_draw(text, 0, 0, width - 5, 30, 1);
+        lines = text_measure_multiline(text, width, FONT_SMALL_PLAIN);
     }
     int height = 16 * lines + 10;
 
@@ -156,7 +154,7 @@ static void draw_button_tooltip(tooltip_context *c)
 
     graphics_draw_rect(x, y, width, height, COLOR_BLACK);
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-    rich_text_draw_colored(text, x + 5, y + 7, width - 5, lines, COLOR_TOOLTIP);
+    text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 }
 
 static void draw_overlay_tooltip(tooltip_context *c)
@@ -167,13 +165,12 @@ static void draw_overlay_tooltip(tooltip_context *c)
         string_copy(text, &overlay_string[offset], 1000);
         text = overlay_string;
     }
-    rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
 
     int width = 200;
-    int lines = rich_text_draw(text, 0, 0, width - 5, 30, 1);
+    int lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
     if (lines > 2) {
         width = 300;
-        lines = rich_text_draw(text, 0, 0, width - 5, 30, 1);
+        lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
     }
     int height = 16 * lines + 10;
 
@@ -195,7 +192,7 @@ static void draw_overlay_tooltip(tooltip_context *c)
 
     graphics_draw_rect(x, y, width, height, COLOR_BLACK);
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-    rich_text_draw_colored(text, x + 5, y + 7, width - 5, lines, COLOR_TOOLTIP);
+    text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 }
 
 static void draw_senate_tooltip(tooltip_context *c)
@@ -272,10 +269,8 @@ void tooltip_handle(const mouse *m, void (*func)(tooltip_context *))
         func(&context);
     }
     if (should_draw_tooltip(&context)) {
-        rich_text_save();
         draw_tooltip(&context);
         reset_tooltip(&context);
-        rich_text_restore();
     } else {
         restore_window_under_tooltip_from_buffer();
         button_tooltip_info.is_active = 0;
