@@ -43,6 +43,14 @@
 
 #define SIDEBAR_SLIDE_STEPS 94
 
+typedef struct {
+    time_millis slide_start;
+    int progress;
+    int focus_button_for_tooltip;
+} sidebar_data;
+
+sidebar_data sidebar_data_vals;
+
 // sliding sidebar progress to x offset translation
 static const int PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS] = {
     1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 10,
@@ -177,21 +185,6 @@ static void draw_overlay_text(int x_offset)
     }
 }
 
-static void draw_sidebar_filler(int x_offset, int y_offset, int is_collapsed)
-{
-    // relief images below panel
-    int image_base = image_group(GROUP_SIDE_PANEL);
-    int y_max = screen_height();
-    while (y_offset < y_max) {
-        if (y_max - y_offset <= 120) {
-            image_draw(image_base + 2 + is_collapsed, x_offset, y_offset);
-            y_offset += 120;
-        } else {
-            image_draw(image_base + 4 + is_collapsed, x_offset, y_offset);
-            y_offset += 285;
-        }
-    }
-}
 
 
 static void draw_sidebar_remainder(int x_offset, int is_collapsed)
@@ -203,7 +196,7 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
         sidebar_filler_draw_extra_info_panel(x_offset, extra_info_height);
     }
 
-    draw_sidebar_filler(x_offset, FILLER_Y_OFFSET + extra_info_height, is_collapsed);
+    sidebar_filler_draw_sidebar_filler(x_offset, FILLER_Y_OFFSET + extra_info_height, is_collapsed);
 }
 
 void widget_sidebar_draw_background(void)
@@ -316,7 +309,7 @@ int widget_sidebar_handle_mouse(const mouse *m)
         if (button_id) {
             sidebar_data_vals.focus_button_for_tooltip = button_id + 39;
         }
-        if (sidebar_filler_extra_info_height_game_speed_check(sidebar_data_vals.extra_info_vals.height)) {
+        if (sidebar_filler_extra_info_height_game_speed_check()) {
             arrow_button *sidebar_arrow_buttons_speed = sidebar_filler_get_arrow_buttons_speed();
             click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, sidebar_arrow_buttons_speed, 2);
         }
@@ -459,7 +452,7 @@ static void draw_sliding_foreground(void)
     draw_overlay_text(x_offset_expanded + 4);
     draw_build_image(x_offset_expanded + 6, 1);
 
-    draw_sidebar_filler(x_offset_collapsed, FILLER_Y_OFFSET, 1);
+    sidebar_filler_draw_sidebar_filler(x_offset_collapsed, FILLER_Y_OFFSET, 1);
 
     draw_sidebar_remainder(x_offset_expanded, 0);
     sidebar_filler_draw_extra_info_buttons(x_offset_expanded, 0);
