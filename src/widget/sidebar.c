@@ -183,8 +183,6 @@ static void draw_overlay_text(int x_offset)
     }
 }
 
-
-
 static void draw_sidebar_remainder(int x_offset, int is_collapsed)
 {
     int extra_info_height = sidebar_filler_calculate_extra_info_height(is_collapsed);

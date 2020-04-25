@@ -55,20 +55,6 @@ typedef struct {
     int target;
 } objective;
 
-typedef struct {
-    int height;
-    int game_speed;
-    int unemployment_percentage;
-    int unemployment_amount;
-    objective culture;
-    objective prosperity;
-    objective peace;
-    objective favor;
-    objective population;
-} extra_info;
-
-extra_info extra_info_vals;
-
 static void set_extra_info_objectives(void);
 static int update_extra_info_value(int value, int *field);
 static void draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective *obj, int cut_off_at_parenthesis);
@@ -79,50 +65,62 @@ static arrow_button arrow_buttons_speed[] = {
     {35, 30, 15, 24, button_game_speed, 0, 0},
 };
 
+static struct {
+    int height;
+    int game_speed;
+    int unemployment_percentage;
+    int unemployment_amount;
+    objective culture;
+    objective prosperity;
+    objective peace;
+    objective favor;
+    objective population;
+} data;
+
 int sidebar_filler_calculate_extra_info_height(int is_collapsed)
 {
     if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
-        extra_info_vals.height = 0;
+        data.height = 0;
     } else {
         int available_height = screen_height() - FILLER_Y_OFFSET;
         if (available_height >= EXTRA_INFO_HEIGHT_RATINGS) {
-            extra_info_vals.height = EXTRA_INFO_HEIGHT_RATINGS;
+            data.height = EXTRA_INFO_HEIGHT_RATINGS;
         } else if (available_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
-            extra_info_vals.height = EXTRA_INFO_HEIGHT_UNEMPLOYMENT;
+            data.height = EXTRA_INFO_HEIGHT_UNEMPLOYMENT;
         } else if (available_height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
-            extra_info_vals.height = EXTRA_INFO_HEIGHT_GAME_SPEED;
+            data.height = EXTRA_INFO_HEIGHT_GAME_SPEED;
         } else {
-            extra_info_vals.height = 0;
+            data.height = 0;
         }
     }
-    return extra_info_vals.height;
+    return data.height;
 }
 
 static void set_extra_info_objectives(void)
 {
-    extra_info_vals.culture.target = 0;
-    extra_info_vals.prosperity.target = 0;
-    extra_info_vals.peace.target = 0;
-    extra_info_vals.favor.target = 0;
-    extra_info_vals.population.target = 0;
+    data.culture.target = 0;
+    data.prosperity.target = 0;
+    data.peace.target = 0;
+    data.favor.target = 0;
+    data.population.target = 0;
 
     if (scenario_is_open_play()) {
         return;
     }
     if (scenario_criteria_culture_enabled()) {
-        extra_info_vals.culture.target = scenario_criteria_culture();
+        data.culture.target = scenario_criteria_culture();
     }
     if (scenario_criteria_prosperity_enabled()) {
-        extra_info_vals.prosperity.target = scenario_criteria_prosperity();
+        data.prosperity.target = scenario_criteria_prosperity();
     }
     if (scenario_criteria_peace_enabled()) {
-        extra_info_vals.peace.target = scenario_criteria_peace();
+        data.peace.target = scenario_criteria_peace();
     }
     if (scenario_criteria_favor_enabled()) {
-        extra_info_vals.favor.target = scenario_criteria_favor();
+        data.favor.target = scenario_criteria_favor();
     }
     if (scenario_criteria_population_enabled()) {
-        extra_info_vals.population.target = scenario_criteria_population();
+        data.population.target = scenario_criteria_population();
     }
 }
 
@@ -140,24 +138,24 @@ int sidebar_filler_update_extra_info(int height, int is_background)
 {
     int changed = 0;
     if (height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
-        changed |= update_extra_info_value(setting_game_speed(), &extra_info_vals.game_speed);
+        changed |= update_extra_info_value(setting_game_speed(), &data.game_speed);
     }
     if (height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
-        changed |= update_extra_info_value(city_labor_unemployment_percentage(), &extra_info_vals.unemployment_percentage);
+        changed |= update_extra_info_value(city_labor_unemployment_percentage(), &data.unemployment_percentage);
         changed |= update_extra_info_value(
             city_labor_workers_unemployed() - city_labor_workers_needed(),
-            &extra_info_vals.unemployment_amount
+            &data.unemployment_amount
         );
     }
     if (height >= EXTRA_INFO_HEIGHT_RATINGS) {
         if (is_background) {
             set_extra_info_objectives();
         }
-        changed |= update_extra_info_value(city_rating_culture(), &extra_info_vals.culture.value);
-        changed |= update_extra_info_value(city_rating_prosperity(), &extra_info_vals.prosperity.value);
-        changed |= update_extra_info_value(city_rating_peace(), &extra_info_vals.peace.value);
-        changed |= update_extra_info_value(city_rating_favor(), &extra_info_vals.favor.value);
-        changed |= update_extra_info_value(city_population(), &extra_info_vals.population.value);
+        changed |= update_extra_info_value(city_rating_culture(), &data.culture.value);
+        changed |= update_extra_info_value(city_rating_prosperity(), &data.prosperity.value);
+        changed |= update_extra_info_value(city_rating_peace(), &data.peace.value);
+        changed |= update_extra_info_value(city_rating_favor(), &data.favor.value);
+        changed |= update_extra_info_value(city_population(), &data.population.value);
     }
     return changed;
 }
@@ -200,7 +198,7 @@ void sidebar_filler_draw_extra_info_panel(int x_offset, int extra_info_height)
     lang_text_draw(45, 2, x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
     y_current_line += EXTRA_INFO_SPEED_PADDING;
 
-    text_draw_percentage(extra_info_vals.game_speed, x_offset + 60, y_current_line, FONT_NORMAL_GREEN);
+    text_draw_percentage(data.game_speed, x_offset + 60, y_current_line, FONT_NORMAL_GREEN);
     arrow_buttons_draw(x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
     y_current_line += EXTRA_INFO_LINE_SPACE; 
     
@@ -209,33 +207,33 @@ void sidebar_filler_draw_extra_info_panel(int x_offset, int extra_info_height)
         lang_text_draw(68, 148, x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
         y_current_line += EXTRA_INFO_UNEMPLOYMENT_TOP_PADDING;
 
-        int width = text_draw_percentage(extra_info_vals.unemployment_percentage, x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
-        text_draw_number(extra_info_vals.unemployment_amount, '(', ")", x_offset + 11 + width, y_current_line, FONT_NORMAL_GREEN);
+        int width = text_draw_percentage(data.unemployment_percentage, x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
+        text_draw_number(data.unemployment_amount, '(', ")", x_offset + 11 + width, y_current_line, FONT_NORMAL_GREEN);
         y_current_line += EXTRA_INFO_UNEMPLOYMENT_BOTTOM_PADDING;
     }
 
     // Objective value info on extra_info panel (culture, prosperity, peace, etc)
     if (extra_info_height >= EXTRA_INFO_HEIGHT_RATINGS) {
-        draw_extra_info_objective(x_offset, y_current_line, 53, 1, &extra_info_vals.culture, 0);
+        draw_extra_info_objective(x_offset, y_current_line, 53, 1, &data.culture, 0);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
-        draw_extra_info_objective(x_offset, y_current_line, 53, 2, &extra_info_vals.prosperity, 0);
+        draw_extra_info_objective(x_offset, y_current_line, 53, 2, &data.prosperity, 0);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
-        draw_extra_info_objective(x_offset, y_current_line, 53, 3, &extra_info_vals.peace, 0);
+        draw_extra_info_objective(x_offset, y_current_line, 53, 3, &data.peace, 0);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
-        draw_extra_info_objective(x_offset, y_current_line, 53, 4, &extra_info_vals.favor, 0);
+        draw_extra_info_objective(x_offset, y_current_line, 53, 4, &data.favor, 0);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
-        draw_extra_info_objective(x_offset, y_current_line, 4, 6, &extra_info_vals.population, 1);
+        draw_extra_info_objective(x_offset, y_current_line, 4, 6, &data.population, 1);
         y_current_line += EXTRA_INFO_LINE_SPACE;
     }
 }
 
 void sidebar_filler_draw_extra_info_buttons(int x_offset, int is_collapsed)
 {
-    int extra_info_height = extra_info_vals.height;
+    int extra_info_height = data.height;
     if (!extra_info_height) {
         return;
     }
@@ -255,7 +253,7 @@ void sidebar_filler_draw_extra_info_buttons(int x_offset, int is_collapsed)
 
 int sidebar_filler_extra_info_height_game_speed_check(void)
 {
-  return extra_info_vals.height >= EXTRA_INFO_HEIGHT_GAME_SPEED;
+  return data.height >= EXTRA_INFO_HEIGHT_GAME_SPEED;
 }
 
 static void button_game_speed(int is_down, int param2)
