@@ -32,6 +32,7 @@
 #include "widget/city.h"
 #include "widget/minimap.h"
 #include "widget/sidebar_filler.h"
+#include "widget/sidebar_constants.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -40,10 +41,6 @@
 #include "window/message_list.h"
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
-
-#define SIDEBAR_SLIDE_STEPS 94
-#define SIDEBAR_COLLAPSED_WIDTH 42
-#define SIDEBAR_EXPANDED_WIDTH 162
 
 typedef struct {
     time_millis slide_start;
@@ -320,11 +317,6 @@ int widget_sidebar_handle_mouse_build_menu(const mouse *m)
     } else {
         return image_buttons_handle_mouse(m, get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
     }
-}
-
-int widget_sidebar_get_expanded_width(void)
-{
-    return SIDEBAR_EXPANDED_WIDTH;
 }
 
 int widget_sidebar_get_tooltip_text(void)

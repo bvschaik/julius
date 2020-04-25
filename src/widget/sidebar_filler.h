@@ -13,7 +13,4 @@ int sidebar_filler_calculate_extra_info_height(int is_collapsed);
 int sidebar_filler_update_extra_info(int height, int is_background);
 int sidebar_filler_extra_info_height_game_speed_check(void);
 
-// Also used in widget/sidebar.c 
-#define FILLER_Y_OFFSET 474
-
 #endif // WIDGET_SIDEBAR_FILLER_H

@@ -31,7 +31,7 @@
 #include "sound/effect.h"
 #include "widget/city.h"
 #include "widget/minimap.h"
-#include "widget/sidebar.h"
+#include "widget/sidebar_constants.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -183,10 +183,9 @@ void sidebar_filler_draw_extra_info_panel(int x_offset, int extra_info_height)
 {
     // Borders of the extra_info panel - extends to bottom of screen
     int panel_blocks = extra_info_height / 16;
-    int sidebar_expanded_width = widget_sidebar_get_expanded_width();
     graphics_draw_vertical_line(x_offset, FILLER_Y_OFFSET, FILLER_Y_OFFSET + extra_info_height, COLOR_WHITE);
-    graphics_draw_vertical_line(x_offset + sidebar_expanded_width - 1, FILLER_Y_OFFSET, FILLER_Y_OFFSET + extra_info_height, COLOR_SIDEBAR);
-    inner_panel_draw(x_offset + 1, FILLER_Y_OFFSET, sidebar_expanded_width / 16, panel_blocks);
+    graphics_draw_vertical_line(x_offset + SIDEBAR_EXPANDED_WIDTH - 1, FILLER_Y_OFFSET, FILLER_Y_OFFSET + extra_info_height, COLOR_SIDEBAR);
+    inner_panel_draw(x_offset + 1, FILLER_Y_OFFSET, SIDEBAR_EXPANDED_WIDTH / 16, panel_blocks);
 
     // This var is basically a cursor for drawing stuff on the sidebar; starting from FILLER_Y_OFFSET, we work our way down, adding info to the sidebar_filler
     int y_current_line = FILLER_Y_OFFSET + EXTRA_INFO_TOP_PADDING;
