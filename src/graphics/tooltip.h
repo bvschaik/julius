@@ -3,6 +3,8 @@
 
 #include "input/mouse.h"
 
+#define TOOLTIP_MAX_EXTRA_VALUES 5
+
 typedef enum {
     TOOLTIP_NONE = 0,
     TOOLTIP_BUTTON = 1,
@@ -19,6 +21,9 @@ typedef struct {
     int text_id;
     int has_numeric_prefix;
     int numeric_prefix;
+    int num_extra_values;
+    int extra_value_text_groups[TOOLTIP_MAX_EXTRA_VALUES];
+    int extra_value_text_ids[TOOLTIP_MAX_EXTRA_VALUES];
 } tooltip_context;
 
 void tooltip_invalidate(void);
