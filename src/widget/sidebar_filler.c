@@ -50,20 +50,17 @@
 #define EXTRA_INFO_UNEMPLOYMENT_TOP_PADDING 20;
 #define EXTRA_INFO_UNEMPLOYMENT_BOTTOM_PADDING 22;
 
-typedef struct {
-    int value;
-    int target;
-} objective;
-
-static void set_extra_info_objectives(void);
-static int update_extra_info_value(int value, int *field);
-static void draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective *obj, int cut_off_at_parenthesis);
 static void button_game_speed(int is_down, int param2);
 
 static arrow_button arrow_buttons_speed[] = {
     {11, 30, 17, 24, button_game_speed, 1, 0},
     {35, 30, 15, 24, button_game_speed, 0, 0},
 };
+
+typedef struct {
+    int value;
+    int target;
+} objective;
 
 static struct {
     int height;
