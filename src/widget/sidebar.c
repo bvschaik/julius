@@ -42,13 +42,11 @@
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
 
-typedef struct {
+static struct {
     time_millis slide_start;
     int progress;
     int focus_button_for_tooltip;
-} sidebar_data;
-
-sidebar_data sidebar_data_vals;
+} data;
 
 // sliding sidebar progress to x offset translation
 static const int PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS] = {
@@ -274,16 +272,16 @@ int widget_sidebar_handle_mouse(const mouse *m)
     }
     int click = 0;
     int button_id;
-    sidebar_data_vals.focus_button_for_tooltip = 0;
+    data.focus_button_for_tooltip = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = get_x_offset_collapsed();
         click |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
         if (button_id) {
-            sidebar_data_vals.focus_button_for_tooltip = 12;
+            data.focus_button_for_tooltip = 12;
         }
         click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, 12, &button_id);
         if (button_id) {
-            sidebar_data_vals.focus_button_for_tooltip = button_id + 19;
+            data.focus_button_for_tooltip = button_id + 19;
         }
     } else {
         if (widget_minimap_handle_mouse(m)) {
@@ -292,19 +290,18 @@ int widget_sidebar_handle_mouse(const mouse *m)
         int x_offset = get_x_offset_expanded();
         click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2, &button_id);
         if (button_id) {
-            sidebar_data_vals.focus_button_for_tooltip = button_id + 9;
+            data.focus_button_for_tooltip = button_id + 9;
         }
         click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, 15, &button_id);
         if (button_id) {
-            sidebar_data_vals.focus_button_for_tooltip = button_id + 19;
+            data.focus_button_for_tooltip = button_id + 19;
         }
         click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, 6, &button_id);
         if (button_id) {
-            sidebar_data_vals.focus_button_for_tooltip = button_id + 39;
+            data.focus_button_for_tooltip = button_id + 39;
         }
-        if (sidebar_filler_extra_info_height_game_speed_check()) {
-            arrow_button *sidebar_arrow_buttons_speed = sidebar_filler_get_arrow_buttons_speed();
-            click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, sidebar_arrow_buttons_speed, 2);
+        if (sidebar_filler_enabled()) {
+            click |= sidebar_filler_handle_mouse(m, x_offset, FILLER_Y_OFFSET);
         }
     }
     return click;
@@ -321,7 +318,7 @@ int widget_sidebar_handle_mouse_build_menu(const mouse *m)
 
 int widget_sidebar_get_tooltip_text(void)
 {
-    return sidebar_data_vals.focus_button_for_tooltip;
+    return data.focus_button_for_tooltip;
 }
 
 static void button_overlay(int param1, int param2)
@@ -402,15 +399,15 @@ static void button_rotate(int clockwise, int param2)
 static void update_progress(void)
 {
     time_millis now = time_get_millis();
-    time_millis diff = now - sidebar_data_vals.slide_start;
-    sidebar_data_vals.progress = diff / 5;
+    time_millis diff = now - data.slide_start;
+    data.progress = diff / 5;
 }
 
 static void draw_sliding_foreground(void)
 {
     window_request_refresh();
     update_progress();
-    if (sidebar_data_vals.progress >= SIDEBAR_SLIDE_STEPS) {
+    if (data.progress >= SIDEBAR_SLIDE_STEPS) {
         city_view_toggle_sidebar();
         window_city_show();
         window_draw(1);
@@ -429,9 +426,9 @@ static void draw_sliding_foreground(void)
 
     // draw expanded sidebar on top of it
     if (city_view_is_sidebar_collapsed()) {
-        x_offset_expanded += PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS - sidebar_data_vals.progress];
+        x_offset_expanded += PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS - data.progress];
     } else {
-        x_offset_expanded += PROGRESS_TO_X_OFFSET[sidebar_data_vals.progress];
+        x_offset_expanded += PROGRESS_TO_X_OFFSET[data.progress];
     }
     image_draw(image_base + 1, x_offset_expanded, 24);
     image_buttons_draw(x_offset_expanded, 24, buttons_overlays_collapse_sidebar, 2);
@@ -454,8 +451,8 @@ static void draw_sliding_foreground(void)
 
 static void slide_sidebar(void)
 {
-    sidebar_data_vals.progress = 0;
-    sidebar_data_vals.slide_start = time_get_millis();
+    data.progress = 0;
+    data.slide_start = time_get_millis();
     city_view_start_sidebar_toggle();
     sound_effect_play(SOUND_EFFECT_SIDEBAR);
 

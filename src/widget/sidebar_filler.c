@@ -74,6 +74,18 @@ static struct {
     objective population;
 } data;
 
+int sidebar_filler_enabled(void)
+{
+  return data.height;
+}
+
+int sidebar_filler_handle_mouse(const mouse *m, int x_offset, int y_offset)
+{
+    int click = 0;
+    click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
+    return click;
+}
+
 int sidebar_filler_calculate_extra_info_height(int is_collapsed)
 {
     if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
@@ -259,11 +271,6 @@ static void button_game_speed(int is_down, int param2)
     } else {
         setting_increase_game_speed();
     }
-}
-
-arrow_button *sidebar_filler_get_arrow_buttons_speed(void)
-{
-  return arrow_buttons_speed;
 }
 
 void sidebar_filler_draw_sidebar_filler(int x_offset, int y_offset, int is_collapsed)
