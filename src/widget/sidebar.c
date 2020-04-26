@@ -196,7 +196,8 @@ static void draw_sidebar_relief(int x_offset, int y_offset, int is_collapsed)
 
 static void draw_sidebar_remainder(int x_offset, int is_collapsed)
 {
-    sidebar_filler_draw_filler_background(x_offset, is_collapsed);
+    sidebar_filler_draw_filler_background(x_offset, FILLER_Y_OFFSET, is_collapsed);
+    sidebar_filler_draw_filler_foreground(x_offset, FILLER_Y_OFFSET, is_collapsed);
     int sidebar_filler_height = sidebar_filler_get_filler_height();
     draw_sidebar_relief(x_offset, FILLER_Y_OFFSET + sidebar_filler_height, is_collapsed);
 }
@@ -268,7 +269,7 @@ void widget_sidebar_draw_foreground(void)
     draw_minimap(0);
     draw_number_of_messages();
 
-    sidebar_filler_draw_filler_foreground(x_offset, is_collapsed);
+    sidebar_filler_draw_filler_foreground(x_offset, FILLER_Y_OFFSET, is_collapsed);
 }
 
 void widget_sidebar_draw_foreground_military(void)
