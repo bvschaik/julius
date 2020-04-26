@@ -31,7 +31,6 @@
 #include "sound/effect.h"
 #include "widget/city.h"
 #include "widget/minimap.h"
-#include "widget/sidebar_constants.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -197,13 +196,13 @@ static void draw_extra_info_objective(int x_offset, int y_offset, int text_group
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + 16, font);
 }
 
-static void sidebar_filler_draw_extra_info_panel(int x_offset, int y_offset, int extra_info_height)
+static void sidebar_filler_draw_extra_info_panel(int x_offset, int y_offset, int sidebar_width, int extra_info_height)
 {
     // Borders of the extra_info panel - extends to bottom of screen
     int panel_blocks = extra_info_height / 16;
     graphics_draw_vertical_line(x_offset, y_offset, y_offset + extra_info_height, COLOR_WHITE);
-    graphics_draw_vertical_line(x_offset + SIDEBAR_EXPANDED_WIDTH - 1, y_offset, y_offset + extra_info_height, COLOR_SIDEBAR);
-    inner_panel_draw(x_offset + 1, y_offset, SIDEBAR_EXPANDED_WIDTH / 16, panel_blocks);
+    graphics_draw_vertical_line(x_offset + sidebar_width - 1, y_offset, y_offset + extra_info_height, COLOR_SIDEBAR);
+    inner_panel_draw(x_offset + 1, y_offset, sidebar_width / 16, panel_blocks);
 
     // This var is basically a cursor for drawing stuff on the sidebar; starting from y_offset, we work our way down, adding info to the sidebar_filler
     int y_current_line = y_offset + EXTRA_INFO_TOP_PADDING;
@@ -245,7 +244,7 @@ static void sidebar_filler_draw_extra_info_panel(int x_offset, int y_offset, int
     }
 }
 
-static void sidebar_filler_draw_extra_info_buttons(int x_offset, int y_offset, int is_collapsed)
+static void sidebar_filler_draw_extra_info_buttons(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
 {
     int extra_info_height = data.height;
     if (!extra_info_height) {
@@ -257,7 +256,7 @@ static void sidebar_filler_draw_extra_info_buttons(int x_offset, int y_offset, i
                                 screen_height() - TOP_MENU_HEIGHT);
 
     if (sidebar_filler_update_extra_info(extra_info_height, 0)) {
-        sidebar_filler_draw_extra_info_panel(x_offset, y_offset, extra_info_height);
+        sidebar_filler_draw_extra_info_panel(x_offset, y_offset, sidebar_width, extra_info_height);
     } else {
         arrow_buttons_draw(x_offset, y_offset, arrow_buttons_speed, 2);
     }
@@ -279,18 +278,18 @@ static void button_game_speed(int is_down, int param2)
     }
 }
 
-void sidebar_filler_draw_filler_background(int x_offset, int y_offset, int is_collapsed)
+void sidebar_filler_draw_filler_background(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
 {
     int extra_info_height = sidebar_filler_calculate_extra_info_height(y_offset, is_collapsed);
 
     if (extra_info_height) {
         sidebar_filler_update_extra_info(extra_info_height, 1);
-        sidebar_filler_draw_extra_info_panel(x_offset, y_offset, extra_info_height);
+        sidebar_filler_draw_extra_info_panel(x_offset, y_offset, sidebar_width, extra_info_height);
     }
 }
 
-void sidebar_filler_draw_filler_foreground(int x_offset, int y_offset, int is_collapsed)
+void sidebar_filler_draw_filler_foreground(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
 {
-    sidebar_filler_draw_extra_info_buttons(x_offset, y_offset, is_collapsed);
+    sidebar_filler_draw_extra_info_buttons(x_offset, y_offset, sidebar_width, is_collapsed);
 }
 

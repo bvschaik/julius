@@ -32,7 +32,6 @@
 #include "widget/city.h"
 #include "widget/minimap.h"
 #include "widget/sidebar_filler.h"
-#include "widget/sidebar_constants.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -41,6 +40,11 @@
 #include "window/message_list.h"
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
+
+#define FILLER_Y_OFFSET 474
+#define SIDEBAR_SLIDE_STEPS 94
+#define SIDEBAR_COLLAPSED_WIDTH 42
+#define SIDEBAR_EXPANDED_WIDTH 162
 
 static struct {
     time_millis slide_start;
@@ -196,8 +200,13 @@ static void draw_sidebar_relief(int x_offset, int y_offset, int is_collapsed)
 
 static void draw_sidebar_remainder(int x_offset, int is_collapsed)
 {
-    sidebar_filler_draw_filler_background(x_offset, FILLER_Y_OFFSET, is_collapsed);
-    sidebar_filler_draw_filler_foreground(x_offset, FILLER_Y_OFFSET, is_collapsed);
+    int sidebar_width = SIDEBAR_EXPANDED_WIDTH;
+    if (is_collapsed) {
+        sidebar_width = SIDEBAR_COLLAPSED_WIDTH;
+    }
+         
+    sidebar_filler_draw_filler_background(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
+    sidebar_filler_draw_filler_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
     int sidebar_filler_height = sidebar_filler_get_filler_height();
     draw_sidebar_relief(x_offset, FILLER_Y_OFFSET + sidebar_filler_height, is_collapsed);
 }
@@ -259,17 +268,20 @@ void widget_sidebar_draw_foreground(void)
     }
     int x_offset;
     int is_collapsed = city_view_is_sidebar_collapsed();
+    int sidebar_width;
     if (is_collapsed) {
         x_offset = get_x_offset_collapsed();
+        sidebar_width = SIDEBAR_COLLAPSED_WIDTH;
     } else {
         x_offset = get_x_offset_expanded();
+        sidebar_width = SIDEBAR_EXPANDED_WIDTH;
     }
     draw_buttons();
     draw_overlay_text(x_offset + 4);
     draw_minimap(0);
     draw_number_of_messages();
 
-    sidebar_filler_draw_filler_foreground(x_offset, FILLER_Y_OFFSET, is_collapsed);
+    sidebar_filler_draw_filler_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
 }
 
 void widget_sidebar_draw_foreground_military(void)
