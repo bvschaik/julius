@@ -76,10 +76,7 @@ static struct {
 
 int sidebar_filler_is_enabled(void)
 {
-    int enabled = data.height;
-    if (!data.height && !config_get(CONFIG_UI_SIDEBAR_INFO)) {
-        enabled = 0;
-    }
+    int enabled = config_get(CONFIG_UI_SIDEBAR_INFO);
     return enabled;
 }
 
