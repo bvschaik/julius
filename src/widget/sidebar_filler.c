@@ -74,9 +74,18 @@ static struct {
     objective population;
 } data;
 
-int sidebar_filler_enabled(void)
+int sidebar_filler_is_enabled(void)
 {
-  return data.height;
+    int enabled = data.height;
+    if (!data.height && !config_get(CONFIG_UI_SIDEBAR_INFO)) {
+        enabled = 0;
+    }
+    return enabled;
+}
+
+int sidebar_filler_get_filler_height(void)
+{
+    return data.height;
 }
 
 int sidebar_filler_handle_mouse(const mouse *m, int x_offset, int y_offset)
@@ -86,7 +95,7 @@ int sidebar_filler_handle_mouse(const mouse *m, int x_offset, int y_offset)
     return click;
 }
 
-int sidebar_filler_calculate_extra_info_height(int is_collapsed)
+static int sidebar_filler_calculate_extra_info_height(int is_collapsed)
 {
     if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
         data.height = 0;
@@ -143,7 +152,7 @@ static int update_extra_info_value(int value, int *field)
     }
 }
 
-int sidebar_filler_update_extra_info(int height, int is_background)
+static int sidebar_filler_update_extra_info(int height, int is_background)
 {
     int changed = 0;
     if (height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
@@ -152,9 +161,9 @@ int sidebar_filler_update_extra_info(int height, int is_background)
     if (height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
         changed |= update_extra_info_value(city_labor_unemployment_percentage(), &data.unemployment_percentage);
         changed |= update_extra_info_value(
-            city_labor_workers_unemployed() - city_labor_workers_needed(),
-            &data.unemployment_amount
-        );
+                       city_labor_workers_unemployed() - city_labor_workers_needed(),
+                       &data.unemployment_amount
+                   );
     }
     if (height >= EXTRA_INFO_HEIGHT_RATINGS) {
         if (is_background) {
@@ -191,7 +200,7 @@ static void draw_extra_info_objective(int x_offset, int y_offset, int text_group
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + 16, font);
 }
 
-void sidebar_filler_draw_extra_info_panel(int x_offset, int extra_info_height)
+static void sidebar_filler_draw_extra_info_panel(int x_offset, int extra_info_height)
 {
     // Borders of the extra_info panel - extends to bottom of screen
     int panel_blocks = extra_info_height / 16;
@@ -208,8 +217,8 @@ void sidebar_filler_draw_extra_info_panel(int x_offset, int extra_info_height)
 
     text_draw_percentage(data.game_speed, x_offset + 60, y_current_line, FONT_NORMAL_GREEN);
     arrow_buttons_draw(x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
-    y_current_line += EXTRA_INFO_LINE_SPACE; 
-    
+    y_current_line += EXTRA_INFO_LINE_SPACE;
+
     // Unemployment info in extra_info panel
     if (extra_info_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
         lang_text_draw(68, 148, x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
@@ -239,7 +248,7 @@ void sidebar_filler_draw_extra_info_panel(int x_offset, int extra_info_height)
     }
 }
 
-void sidebar_filler_draw_extra_info_buttons(int x_offset, int is_collapsed)
+static void sidebar_filler_draw_extra_info_buttons(int x_offset, int is_collapsed)
 {
     int extra_info_height = data.height;
     if (!extra_info_height) {
@@ -247,8 +256,8 @@ void sidebar_filler_draw_extra_info_buttons(int x_offset, int is_collapsed)
     }
 
     graphics_set_clip_rectangle(x_offset, TOP_MENU_HEIGHT,
-            screen_width() - x_offset,
-            screen_height() - TOP_MENU_HEIGHT);
+                                screen_width() - x_offset,
+                                screen_height() - TOP_MENU_HEIGHT);
 
     if (sidebar_filler_update_extra_info(extra_info_height, 0)) {
         sidebar_filler_draw_extra_info_panel(x_offset, extra_info_height);
@@ -259,9 +268,14 @@ void sidebar_filler_draw_extra_info_buttons(int x_offset, int is_collapsed)
     graphics_reset_clip_rectangle();
 }
 
+void sidebar_filler_draw_filler_foreground(int x_offset, int is_collapsed)
+{
+    sidebar_filler_draw_extra_info_buttons(x_offset, is_collapsed);
+}
+
 int sidebar_filler_extra_info_height_game_speed_check(void)
 {
-  return data.height >= EXTRA_INFO_HEIGHT_GAME_SPEED;
+    return data.height >= EXTRA_INFO_HEIGHT_GAME_SPEED;
 }
 
 static void button_game_speed(int is_down, int param2)
@@ -273,18 +287,13 @@ static void button_game_speed(int is_down, int param2)
     }
 }
 
-void sidebar_filler_draw_sidebar_filler(int x_offset, int y_offset, int is_collapsed)
+void sidebar_filler_draw_filler_background(int x_offset, int is_collapsed)
 {
-    // relief images below panel
-    int image_base = image_group(GROUP_SIDE_PANEL);
-    int y_max = screen_height();
-    while (y_offset < y_max) {
-        if (y_max - y_offset <= 120) {
-            image_draw(image_base + 2 + is_collapsed, x_offset, y_offset);
-            y_offset += 120;
-        } else {
-            image_draw(image_base + 4 + is_collapsed, x_offset, y_offset);
-            y_offset += 285;
-        }
+    int extra_info_height = sidebar_filler_calculate_extra_info_height(is_collapsed);
+
+    if (extra_info_height) {
+        sidebar_filler_update_extra_info(extra_info_height, 1);
+        sidebar_filler_draw_extra_info_panel(x_offset, extra_info_height);
     }
+    sidebar_filler_draw_extra_info_buttons(x_offset, 0);
 }
