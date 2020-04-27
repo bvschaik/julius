@@ -46,12 +46,6 @@
 #define SIDEBAR_COLLAPSED_WIDTH 42
 #define SIDEBAR_EXPANDED_WIDTH 162
 
-static struct {
-    time_millis slide_start;
-    int progress;
-    int focus_button_for_tooltip;
-} data;
-
 // sliding sidebar progress to x offset translation
 static const int PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS] = {
     1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 10,
@@ -130,6 +124,12 @@ static image_button buttons_top_expanded[] = {
     {123, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 9, button_rotate, button_none, 1, 0, 1},
 };
 
+static struct {
+    time_millis slide_start;
+    int progress;
+    int focus_button_for_tooltip;
+} data;
+
 static int get_x_offset_expanded(void)
 {
     return screen_width() - SIDEBAR_EXPANDED_WIDTH;
@@ -205,9 +205,9 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
         sidebar_width = SIDEBAR_COLLAPSED_WIDTH;
     }
          
-    sidebar_filler_draw_filler_background(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
-    sidebar_filler_draw_filler_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
-    int sidebar_filler_height = sidebar_filler_get_filler_height();
+    sidebar_filler_draw_background(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
+    sidebar_filler_draw_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
+    int sidebar_filler_height = sidebar_filler_get_height();
     draw_sidebar_relief(x_offset, FILLER_Y_OFFSET + sidebar_filler_height, is_collapsed);
 }
 
@@ -281,7 +281,7 @@ void widget_sidebar_draw_foreground(void)
     draw_minimap(0);
     draw_number_of_messages();
 
-    sidebar_filler_draw_filler_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
+    sidebar_filler_draw_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
 }
 
 void widget_sidebar_draw_foreground_military(void)
@@ -468,7 +468,6 @@ static void draw_sliding_foreground(void)
     draw_sidebar_relief(x_offset_collapsed, FILLER_Y_OFFSET, 1);
 
     draw_sidebar_remainder(x_offset_expanded, 0);
-
 
     graphics_reset_clip_rectangle();
 }

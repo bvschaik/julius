@@ -44,10 +44,10 @@
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64
 #define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 112
 #define EXTRA_INFO_HEIGHT_RATINGS 272
-#define EXTRA_INFO_TOP_PADDING 10;
-#define EXTRA_INFO_SPEED_PADDING 26;
-#define EXTRA_INFO_UNEMPLOYMENT_TOP_PADDING 20;
-#define EXTRA_INFO_UNEMPLOYMENT_BOTTOM_PADDING 22;
+#define EXTRA_INFO_TOP_PADDING 10
+#define EXTRA_INFO_SPEED_PADDING 26
+#define EXTRA_INFO_UNEMPLOYMENT_TOP_PADDING 20
+#define EXTRA_INFO_UNEMPLOYMENT_BOTTOM_PADDING 22
 
 static void button_game_speed(int is_down, int param2);
 
@@ -75,23 +75,20 @@ static struct {
 
 int sidebar_filler_is_enabled(void)
 {
-    int enabled = config_get(CONFIG_UI_SIDEBAR_INFO);
-    return enabled;
+    return config_get(CONFIG_UI_SIDEBAR_INFO);
 }
 
-int sidebar_filler_get_filler_height(void)
+int sidebar_filler_get_height(void)
 {
     return data.height;
 }
 
 int sidebar_filler_handle_mouse(const mouse *m, int x_offset, int y_offset)
 {
-    int click = 0;
-    click |= arrow_buttons_handle_mouse(m, x_offset, y_offset, arrow_buttons_speed, 2);
-    return click;
+    return arrow_buttons_handle_mouse(m, x_offset, y_offset, arrow_buttons_speed, 2);
 }
 
-static int sidebar_filler_calculate_extra_info_height(int y_offset, int is_collapsed)
+static int calculate_extra_info_height(int y_offset, int is_collapsed)
 {
     if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
         data.height = 0;
@@ -148,7 +145,7 @@ static int update_extra_info_value(int value, int *field)
     }
 }
 
-static int sidebar_filler_update_extra_info(int height, int is_background)
+static int update_extra_info(int height, int is_background)
 {
     int changed = 0;
     if (height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
@@ -196,7 +193,7 @@ static void draw_extra_info_objective(int x_offset, int y_offset, int text_group
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + 16, font);
 }
 
-static void sidebar_filler_draw_extra_info_panel(int x_offset, int y_offset, int sidebar_width, int extra_info_height)
+static void draw_extra_info_panel(int x_offset, int y_offset, int sidebar_width, int extra_info_height)
 {
     // Borders of the extra_info panel - extends to bottom of screen
     int panel_blocks = extra_info_height / 16;
@@ -244,7 +241,7 @@ static void sidebar_filler_draw_extra_info_panel(int x_offset, int y_offset, int
     }
 }
 
-static void sidebar_filler_draw_extra_info_buttons(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
+static void draw_extra_info_buttons(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
 {
     int extra_info_height = data.height;
     if (!extra_info_height) {
@@ -255,18 +252,13 @@ static void sidebar_filler_draw_extra_info_buttons(int x_offset, int y_offset, i
                                 screen_width() - x_offset,
                                 screen_height() - TOP_MENU_HEIGHT);
 
-    if (sidebar_filler_update_extra_info(extra_info_height, 0)) {
-        sidebar_filler_draw_extra_info_panel(x_offset, y_offset, sidebar_width, extra_info_height);
+    if (update_extra_info(extra_info_height, 0)) {
+        draw_extra_info_panel(x_offset, y_offset, sidebar_width, extra_info_height);
     } else {
         arrow_buttons_draw(x_offset, y_offset, arrow_buttons_speed, 2);
     }
 
     graphics_reset_clip_rectangle();
-}
-
-int sidebar_filler_extra_info_height_game_speed_check(void)
-{
-    return data.height >= EXTRA_INFO_HEIGHT_GAME_SPEED;
 }
 
 static void button_game_speed(int is_down, int param2)
@@ -278,18 +270,18 @@ static void button_game_speed(int is_down, int param2)
     }
 }
 
-void sidebar_filler_draw_filler_background(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
+void sidebar_filler_draw_background(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
 {
-    int extra_info_height = sidebar_filler_calculate_extra_info_height(y_offset, is_collapsed);
+    int extra_info_height = calculate_extra_info_height(y_offset, is_collapsed);
 
     if (extra_info_height) {
-        sidebar_filler_update_extra_info(extra_info_height, 1);
-        sidebar_filler_draw_extra_info_panel(x_offset, y_offset, sidebar_width, extra_info_height);
+        update_extra_info(extra_info_height, 1);
+        draw_extra_info_panel(x_offset, y_offset, sidebar_width, extra_info_height);
     }
 }
 
-void sidebar_filler_draw_filler_foreground(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
+void sidebar_filler_draw_foreground(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
 {
-    sidebar_filler_draw_extra_info_buttons(x_offset, y_offset, sidebar_width, is_collapsed);
+    draw_extra_info_buttons(x_offset, y_offset, sidebar_width, is_collapsed);
 }
 
