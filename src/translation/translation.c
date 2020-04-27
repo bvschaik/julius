@@ -48,6 +48,9 @@ void translation_load(language_type language)
         case LANGUAGE_GERMAN:
             translation_german(&strings, &num_strings);
             break;
+        case LANGUAGE_SPANISH:
+            translation_spanish(&strings, &num_strings);
+            break;
     }
 
     memset(data.strings, 0, sizeof(data.strings));
