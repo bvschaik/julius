@@ -156,7 +156,6 @@ static void cycle_legion(void)
 
 static void toggle_pause(void)
 {
-    exit_military_command();
     game_state_toggle_paused();
     city_warning_clear_all();
 }
