@@ -555,11 +555,14 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
 
 static int move_grid_offset_by_delta(int grid_offset, int x, int y)
 {
+    if (!map_grid_is_valid_offset(grid_offset)) {
+        return -1;
+    }
     int grid_x = grid_offset % GRID_SIZE;
     int grid_y = grid_offset / GRID_SIZE;
     if (grid_x + x < 0 || grid_x + x >= GRID_SIZE ||
         grid_y + y < 0 || grid_y + y >= GRID_SIZE) {
-        return 0;
+        return -1;
     }
     return grid_offset + map_grid_delta(x, y);
 }
