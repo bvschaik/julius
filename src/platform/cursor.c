@@ -12,11 +12,11 @@ static const color_t mouse_colors[] = {
     COLOR_TRANSPARENT,
     COLOR_TRANSPARENT,
     COLOR_TRANSPARENT,
-    COLOR_BLACK,
-    COLOR_DARK_GRAY,
-    COLOR_MEDIUM_GRAY,
-    COLOR_LIGHT_GRAY,
-    COLOR_WHITE
+    COLOR_OPAQUE | COLOR_BLACK,
+    COLOR_OPAQUE | COLOR_DARK_GRAY,
+    COLOR_OPAQUE | COLOR_MOUSE_MEDIUM_GRAY,
+    COLOR_OPAQUE | COLOR_LIGHT_GRAY,
+    COLOR_OPAQUE | COLOR_WHITE
 };
 
 static SDL_Surface* generate_cursor_surface(const char* data, int width, int height)

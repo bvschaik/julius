@@ -284,7 +284,7 @@ void graphics_shade_rect(int x, int y, int width, int height, int darkness)
             int g = (*pixel & 0xff00) >> 8;
             int b = (*pixel & 0xff);
             int grey = (r + g + b) / 3 >> darkness;
-            color_t new_pixel = (color_t) (COLOR_OPAQUE | grey << 16 | grey << 8 | grey);
+            color_t new_pixel = (color_t) (grey << 16 | grey << 8 | grey);
             *pixel = new_pixel;
         }
     }
