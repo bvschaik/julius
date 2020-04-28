@@ -31,7 +31,8 @@
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
 
-#define FILLER_Y_OFFSET 474
+#define SIDEBAR_VANILLA_SECTION_HEIGHT 450
+#define FILLER_Y_OFFSET (SIDEBAR_VANILLA_SECTION_HEIGHT + TOP_MENU_HEIGHT)
 #define SIDEBAR_SLIDE_STEPS 94
 #define SIDEBAR_COLLAPSED_WIDTH 42
 #define SIDEBAR_EXPANDED_WIDTH 162
@@ -118,7 +119,17 @@ static struct {
     time_millis slide_start;
     int progress;
     int focus_button_for_tooltip;
+    int height;
 } data;
+
+static void set_sidebar_height(int override)
+{
+    if (!override || override < 0) {
+        data.height = screen_height() - TOP_MENU_HEIGHT;
+    } else {
+        data.height = override;
+    }
+}
 
 static int get_x_offset_expanded(void)
 {
@@ -176,7 +187,7 @@ static void draw_sidebar_relief(int x_offset, int y_offset, int is_collapsed)
 {
     // relief images below panel
     int image_base = image_group(GROUP_SIDE_PANEL);
-    int y_max = screen_height();
+    int y_max = data.height;
     while (y_offset < y_max) {
         if (y_max - y_offset <= 120) {
             image_draw(image_base + 2 + is_collapsed, x_offset, y_offset);
@@ -194,8 +205,8 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
     if (is_collapsed) {
         sidebar_width = SIDEBAR_COLLAPSED_WIDTH;
     }
-         
-    sidebar_filler_draw_background(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
+    
+    sidebar_filler_draw_background(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed, data.height);
     sidebar_filler_draw_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
     int sidebar_filler_height = sidebar_filler_get_height();
     draw_sidebar_relief(x_offset, FILLER_Y_OFFSET + sidebar_filler_height, is_collapsed);
@@ -203,6 +214,7 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
 
 void widget_sidebar_draw_background(void)
 {
+    set_sidebar_height(0);
     int image_base = image_group(GROUP_SIDE_PANEL);
     int is_collapsed = city_view_is_sidebar_collapsed();
     int x_offset;
@@ -430,7 +442,7 @@ static void draw_sliding_foreground(void)
 
     int x_offset_expanded = get_x_offset_expanded();
     int x_offset_collapsed = get_x_offset_collapsed();
-    graphics_set_clip_rectangle(x_offset_expanded, TOP_MENU_HEIGHT, SIDEBAR_EXPANDED_WIDTH, screen_height() - TOP_MENU_HEIGHT);
+    graphics_set_clip_rectangle(x_offset_expanded, TOP_MENU_HEIGHT, SIDEBAR_EXPANDED_WIDTH, data.height);
 
     int image_base = image_group(GROUP_SIDE_PANEL);
     // draw collapsed sidebar

@@ -10,7 +10,6 @@
 #include "graphics/arrow_button.h"
 #include "graphics/graphics.h"
 #include "graphics/lang_text.h"
-#include "graphics/screen.h"
 #include "graphics/menu.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
@@ -65,12 +64,12 @@ int sidebar_filler_handle_mouse(const mouse *m, int x_offset, int y_offset)
     return arrow_buttons_handle_mouse(m, x_offset, y_offset, arrow_buttons_speed, 2);
 }
 
-static int calculate_extra_info_height(int y_offset, int is_collapsed)
+static int calculate_extra_info_height(int y_offset, int is_collapsed, int sidebar_height)
 {
     if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
         data.height = 0;
     } else {
-        int available_height = screen_height() - y_offset;
+        int available_height = sidebar_height - y_offset;
         if (available_height >= EXTRA_INFO_HEIGHT_RATINGS) {
             data.height = EXTRA_INFO_HEIGHT_RATINGS;
         } else if (available_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
@@ -225,17 +224,12 @@ static void draw_extra_info_buttons(int x_offset, int y_offset, int sidebar_widt
         return;
     }
 
-    graphics_set_clip_rectangle(x_offset, TOP_MENU_HEIGHT,
-                                screen_width() - x_offset,
-                                screen_height() - TOP_MENU_HEIGHT);
-
     if (update_extra_info(extra_info_height, 0)) {
+        // Updates displayed speed % after clicking the arrows
         draw_extra_info_panel(x_offset, y_offset, sidebar_width, extra_info_height);
     } else {
         arrow_buttons_draw(x_offset, y_offset, arrow_buttons_speed, 2);
     }
-
-    graphics_reset_clip_rectangle();
 }
 
 static void button_game_speed(int is_down, int param2)
@@ -247,9 +241,9 @@ static void button_game_speed(int is_down, int param2)
     }
 }
 
-void sidebar_filler_draw_background(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
+void sidebar_filler_draw_background(int x_offset, int y_offset, int sidebar_width, int is_collapsed, int sidebar_height)
 {
-    int extra_info_height = calculate_extra_info_height(y_offset, is_collapsed);
+    int extra_info_height = calculate_extra_info_height(y_offset, is_collapsed, sidebar_height);
 
     if (extra_info_height) {
         update_extra_info(extra_info_height, 1);
