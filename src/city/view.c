@@ -555,9 +555,6 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
 
 static int move_grid_offset_by_delta(int grid_offset, int x, int y)
 {
-    if (!map_grid_is_valid_offset(grid_offset)) {
-        return -1;
-    }
     int grid_x = grid_offset % GRID_SIZE;
     int grid_y = grid_offset / GRID_SIZE;
     if (grid_x + x < 0 || grid_x + x >= GRID_SIZE ||
@@ -569,7 +566,7 @@ static int move_grid_offset_by_delta(int grid_offset, int x, int y)
 
 static void do_valid_callback(int x, int y, int grid_offset, map_callback *callback)
 {
-    if (map_image_at(grid_offset) >= 6) {
+    if (map_grid_is_valid_offset(grid_offset) && map_image_at(grid_offset) >= 6) {
         callback(x, y, grid_offset);
     }
 }
