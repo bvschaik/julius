@@ -63,7 +63,7 @@ static generic_button language_button = {
 
 static generic_button bottom_buttons[NUM_BOTTOM_BUTTONS] = {
     { 20, 430, 180, 30, button_hotkeys, button_none },
-    { 250, 430, 150, 30, button_reset_defaults, button_none },
+    { 240, 430, 160, 30, button_reset_defaults, button_none },
     { 410, 430, 100, 30, button_close, button_none, 0 },
     { 520, 430, 100, 30, button_close, button_none, 1 },
 };
