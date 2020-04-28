@@ -599,10 +599,14 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
         do_valid_callback(x - x_offset - x_delta, y, move_grid_offset_by_delta(grid_offset, -ring - 2, ring + size), callback);
         do_valid_callback(x + x_offset + x_delta, y, move_grid_offset_by_delta(grid_offset, ring + size, -ring - 2), callback);
         for (int tile = 1; tile < ring * 2 + size + 2; ++tile) {
-            do_valid_callback(x + x_delta * tile, y - y_offset + y_delta * tile, move_grid_offset_by_delta(grid_offset, tile + offset_north, offset_north), callback);
-            do_valid_callback(x - x_delta * tile, y - y_offset + y_delta * tile, move_grid_offset_by_delta(grid_offset, offset_north, tile + offset_north), callback);
-            do_valid_callback(x + x_delta * tile, y + y_offset - y_delta * tile, move_grid_offset_by_delta(grid_offset, offset_south, offset_south - tile), callback);
-            do_valid_callback(x - x_delta * tile, y + y_offset - y_delta * tile, move_grid_offset_by_delta(grid_offset, offset_south - tile, offset_south), callback);
+            do_valid_callback(x + x_delta * tile, y - y_offset + y_delta * tile,
+                move_grid_offset_by_delta(grid_offset, tile + offset_north, offset_north), callback);
+            do_valid_callback(x - x_delta * tile, y - y_offset + y_delta * tile,
+                move_grid_offset_by_delta(grid_offset, offset_north, tile + offset_north), callback);
+            do_valid_callback(x + x_delta * tile, y + y_offset - y_delta * tile,
+                move_grid_offset_by_delta(grid_offset, offset_south, offset_south - tile), callback);
+            do_valid_callback(x - x_delta * tile, y + y_offset - y_delta * tile,
+                move_grid_offset_by_delta(grid_offset, offset_south - tile, offset_south), callback);
         }
         x_offset += TILE_WIDTH_PIXELS;
         y_offset += TILE_HEIGHT_PIXELS;
