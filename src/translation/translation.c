@@ -42,11 +42,14 @@ void translation_load(language_type language)
         default:
             translation_english(&strings, &num_strings);
             break;
-        case LANGUAGE_PORTUGUESE:
-            translation_portuguese(&strings, &num_strings);
+        case LANGUAGE_FRENCH:
+            translation_french(&strings, &num_strings);
             break;
         case LANGUAGE_GERMAN:
             translation_german(&strings, &num_strings);
+            break;
+        case LANGUAGE_PORTUGUESE:
+            translation_portuguese(&strings, &num_strings);
             break;
         case LANGUAGE_SPANISH:
             translation_spanish(&strings, &num_strings);

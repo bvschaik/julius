@@ -542,11 +542,12 @@ set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/tool_restriction.c
 )
 set(TRANSLATION_FILES
-    ${PROJECT_SOURCE_DIR}/src/translation/translation.c
     ${PROJECT_SOURCE_DIR}/src/translation/english.c
-    ${PROJECT_SOURCE_DIR}/src/translation/portuguese.c
+    ${PROJECT_SOURCE_DIR}/src/translation/french.c
     ${PROJECT_SOURCE_DIR}/src/translation/german.c
+    ${PROJECT_SOURCE_DIR}/src/translation/portuguese.c
     ${PROJECT_SOURCE_DIR}/src/translation/spanish.c
+    ${PROJECT_SOURCE_DIR}/src/translation/translation.c
 )
 
 set(MACOSX_FILES "")
