@@ -49,7 +49,7 @@ static struct {
     objective population;
 } data;
 
-int sidebar_filler_is_enabled(void)
+static int sidebar_filler_is_enabled(void)
 {
     return config_get(CONFIG_UI_SIDEBAR_INFO);
 }
@@ -61,15 +61,17 @@ int sidebar_filler_get_height(void)
 
 int sidebar_filler_handle_mouse(const mouse *m, int x_offset, int y_offset)
 {
+    if (!sidebar_filler_is_enabled()) {
+        return 0;
+    }
     return arrow_buttons_handle_mouse(m, x_offset, y_offset, arrow_buttons_speed, 2);
 }
 
-static int calculate_extra_info_height(int y_offset, int is_collapsed, int sidebar_height)
+static int calculate_extra_info_height(int available_height, int is_collapsed)
 {
     if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
         data.height = 0;
     } else {
-        int available_height = sidebar_height - y_offset;
         if (available_height >= EXTRA_INFO_HEIGHT_RATINGS) {
             data.height = EXTRA_INFO_HEIGHT_RATINGS;
         } else if (available_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
@@ -169,13 +171,13 @@ static void draw_extra_info_objective(int x_offset, int y_offset, int text_group
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + 16, font);
 }
 
-static void draw_extra_info_panel(int x_offset, int y_offset, int sidebar_width, int extra_info_height)
+static void draw_extra_info_panel(int x_offset, int y_offset, int width, int height)
 {
     // Borders of the extra_info panel - extends to bottom of screen
-    int panel_blocks = extra_info_height / 16;
-    graphics_draw_vertical_line(x_offset, y_offset, y_offset + extra_info_height, COLOR_WHITE);
-    graphics_draw_vertical_line(x_offset + sidebar_width - 1, y_offset, y_offset + extra_info_height, COLOR_SIDEBAR);
-    inner_panel_draw(x_offset + 1, y_offset, sidebar_width / 16, panel_blocks);
+    int panel_blocks = height / 16;
+    graphics_draw_vertical_line(x_offset, y_offset, y_offset + height, COLOR_WHITE);
+    graphics_draw_vertical_line(x_offset + width - 1, y_offset, y_offset + height, COLOR_SIDEBAR);
+    inner_panel_draw(x_offset + 1, y_offset, width / 16, panel_blocks);
 
     // This var is basically a cursor for drawing stuff on the sidebar; starting from y_offset, we work our way down, adding info to the sidebar_filler
     int y_current_line = y_offset + EXTRA_INFO_TOP_PADDING;
@@ -189,7 +191,7 @@ static void draw_extra_info_panel(int x_offset, int y_offset, int sidebar_width,
     y_current_line += EXTRA_INFO_LINE_SPACE;
 
     // Unemployment info in extra_info panel
-    if (extra_info_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
+    if (height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
         lang_text_draw(68, 148, x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
         y_current_line += EXTRA_INFO_UNEMPLOYMENT_TOP_PADDING;
 
@@ -199,7 +201,7 @@ static void draw_extra_info_panel(int x_offset, int y_offset, int sidebar_width,
     }
 
     // Objective value info on extra_info panel (culture, prosperity, peace, etc)
-    if (extra_info_height >= EXTRA_INFO_HEIGHT_RATINGS) {
+    if (height >= EXTRA_INFO_HEIGHT_RATINGS) {
         draw_extra_info_objective(x_offset, y_current_line, 53, 1, &data.culture, 0);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
@@ -217,7 +219,7 @@ static void draw_extra_info_panel(int x_offset, int y_offset, int sidebar_width,
     }
 }
 
-static void draw_extra_info_buttons(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
+static void draw_extra_info_buttons(int x_offset, int y_offset, int width, int is_collapsed)
 {
     int extra_info_height = data.height;
     if (!extra_info_height) {
@@ -226,7 +228,7 @@ static void draw_extra_info_buttons(int x_offset, int y_offset, int sidebar_widt
 
     if (update_extra_info(extra_info_height, 0)) {
         // Updates displayed speed % after clicking the arrows
-        draw_extra_info_panel(x_offset, y_offset, sidebar_width, extra_info_height);
+        draw_extra_info_panel(x_offset, y_offset, width, extra_info_height);
     } else {
         arrow_buttons_draw(x_offset, y_offset, arrow_buttons_speed, 2);
     }
@@ -241,18 +243,19 @@ static void button_game_speed(int is_down, int param2)
     }
 }
 
-void sidebar_filler_draw_background(int x_offset, int y_offset, int sidebar_width, int is_collapsed, int sidebar_height)
+void sidebar_filler_draw_background(int x_offset, int y_offset, int width, int available_height, int is_collapsed)
 {
-    int extra_info_height = calculate_extra_info_height(y_offset, is_collapsed, sidebar_height);
+    // Using the available height, find out what the final height of the extra info area will be
+    int extra_info_height = calculate_extra_info_height(available_height, is_collapsed);
 
     if (extra_info_height) {
         update_extra_info(extra_info_height, 1);
-        draw_extra_info_panel(x_offset, y_offset, sidebar_width, extra_info_height);
+        draw_extra_info_panel(x_offset, y_offset, width, extra_info_height);
     }
 }
 
-void sidebar_filler_draw_foreground(int x_offset, int y_offset, int sidebar_width, int is_collapsed)
+void sidebar_filler_draw_foreground(int x_offset, int y_offset, int width, int is_collapsed)
 {
-    draw_extra_info_buttons(x_offset, y_offset, sidebar_width, is_collapsed);
+    draw_extra_info_buttons(x_offset, y_offset, width, is_collapsed);
 }
 
