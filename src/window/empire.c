@@ -491,6 +491,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
                         generic_button_open_trade, 1, &data.selected_button);
             }
         }
+        if (input_go_back_requested(m, h)) {
+            empire_clear_selected_object();
+            window_invalidate();
+        }
     } else {
         if (input_go_back_requested(m, h)) {
             window_city_show();
