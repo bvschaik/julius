@@ -18,3 +18,7 @@ Gardens split roads into separate road networks. Even though marker trader can u
 ## Market trader cannot access food from the warehouse
 
 In original Caesar 3 game, market trader can get food only from granaries, never from warehouses (even though market traders get resources from a warehouse, such as pottery).
+
+## Trade ships appear to buy the wrong resources
+
+If you have one dock and are trading with two cities, it is possible that (1) you will get paid for a few more units of goods in the year than are allowed from the city buying them, (2) that a couple units of goods will show up as being loaded onto a ship from a city that does not trade those goods, and (3) because of the mistakenly loaded goods, that ship will fail to purchase a couple of loads of goods for which it has room and for which you have goods available. More details are available [in this comment](https://github.com/bvschaik/julius/issues/421#issuecomment-618942375).
