@@ -19,6 +19,8 @@
 #include "map/terrain.h"
 #include "scenario/map.h"
 
+#define OFFSET(x,y) (x + GRID_SIZE * y)
+
 #define FORBIDDEN_TERRAIN_MEADOW (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |\
             TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 
@@ -1025,10 +1027,10 @@ static int get_access_ramp_image_offset(int x, int y)
         return -1;
     }
     static const int offsets[4][6] = {
-        {162, 163, 0, 1, 324, 325},
-        {0, 162, 1, 163, -1, 161},
-        {0, 1, 162, 163, -162, -161},
-        {1, 163, 0, 162, 2, 164},
+        {OFFSET(0,1), OFFSET(1,1), OFFSET(0,0), OFFSET(1,0), OFFSET(0,2), OFFSET(1,2)},
+        {OFFSET(0,0), OFFSET(0,1), OFFSET(1,0), OFFSET(1,1), OFFSET(-1,0), OFFSET(-1,1)},
+        {OFFSET(0,0), OFFSET(1,0), OFFSET(0,1), OFFSET(1,1), OFFSET(0,-1), OFFSET(1,-1)},
+        {OFFSET(1,0), OFFSET(1,1), OFFSET(0,0), OFFSET(0,1), OFFSET(2,0), OFFSET(2,1)},
     };
     int base_offset = map_grid_offset(x, y);
     int image_offset = -1;

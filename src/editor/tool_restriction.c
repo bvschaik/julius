@@ -6,13 +6,15 @@
 #include "map/grid.h"
 #include "map/terrain.h"
 
-static const int TILE_GRID_OFFSETS[] = { 0, 162, 1, 163 };
+#define OFFSET(x,y) (x + GRID_SIZE * y)
+
+static const int TILE_GRID_OFFSETS[] = { 0, GRID_SIZE, 1, GRID_SIZE + 1 };
 
 static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[4][6] = {
-    {162, 163, 324, 325, 0, 1},
-    {0, 162, -1, 161, 1, 163},
-    {0, 1, -162, -161, 162, 163},
-    {1, 163, 2, 164, 0, 162},
+    {OFFSET(0,1), OFFSET(1,1), OFFSET(0,2), OFFSET(1,2), OFFSET(0,0), OFFSET(1,0)},
+    {OFFSET(0,0), OFFSET(0,1), OFFSET(-1,0), OFFSET(-1,1), OFFSET(1,0), OFFSET(1,1)},
+    {OFFSET(0,0), OFFSET(1,0), OFFSET(0,-1), OFFSET(1,-1), OFFSET(0,1), OFFSET(1,1)},
+    {OFFSET(1,0), OFFSET(1,1), OFFSET(2,0), OFFSET(2,1), OFFSET(0,0), OFFSET(0,1)},
 };
 
 static int is_clear_terrain(const map_tile *tile, int *warning)

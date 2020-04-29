@@ -16,6 +16,8 @@
 
 #include <string.h>
 
+#define OFFSET(x,y) (x + GRID_SIZE * y)
+
 #define MAX_QUEUE 1000
 
 static const int ADJACENT_OFFSETS[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
@@ -163,7 +165,7 @@ void map_water_supply_update_reservoir_fountain(void)
     const int *reservoirs = building_list_large_items();
     // fill reservoirs from full ones
     int changed = 1;
-    static const int CONNECTOR_OFFSETS[] = {-161, 165, 487, 161};
+    static const int CONNECTOR_OFFSETS[] = {OFFSET(1,-1), OFFSET(3,1), OFFSET(1,3), OFFSET(-1,1)};
     while (changed == 1) {
         changed = 0;
         for (int i = 0; i < total_reservoirs; i++) {

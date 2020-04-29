@@ -290,10 +290,6 @@ static struct {
     {terrain_images_aqueduct, 16}
 };
 
-static const int CONTEXT_TILE_OFFSETS[] = {
-    -162, -161, 1, 163, 162, 161, -1, -163
-};
-
 static void clear_current_offset(struct terrain_image_context *items, int num_items)
 {
     for (int i = 0; i < num_items; i++) {
@@ -355,7 +351,7 @@ const terrain_image *map_image_context_get_elevation(int grid_offset, int elevat
 {
     int tiles[MAX_TILES];
     for (int i = 0; i < MAX_TILES; i++) {
-        tiles[i] = map_elevation_at(grid_offset + CONTEXT_TILE_OFFSETS[i]) >= elevation ? 1 : 0;
+        tiles[i] = map_elevation_at(grid_offset + map_grid_direction_delta(i)) >= elevation ? 1 : 0;
     }
     return get_image(CONTEXT_ELEVATION, tiles);
 }
@@ -364,7 +360,7 @@ const terrain_image *map_image_context_get_earthquake(int grid_offset)
 {
     int tiles[MAX_TILES];
     for (int i = 0; i < MAX_TILES; i++) {
-        int offset = grid_offset + CONTEXT_TILE_OFFSETS[i];
+        int offset = grid_offset + map_grid_direction_delta(i);
         tiles[i] = (map_terrain_is(offset, TERRAIN_ROCK) &&
             map_property_is_plaza_or_earthquake(grid_offset)) ? 1 : 0;
     }
@@ -374,7 +370,7 @@ const terrain_image *map_image_context_get_earthquake(int grid_offset)
 static void fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, int tiles[MAX_TILES])
 {
     for (int i = 0; i < MAX_TILES; i++) {
-        tiles[i] = map_terrain_is(grid_offset + CONTEXT_TILE_OFFSETS[i], terrain) ? match_value : no_match_value;
+        tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), terrain) ? match_value : no_match_value;
     }
 }
 
@@ -396,7 +392,7 @@ const terrain_image *map_image_context_get_wall_gatehouse(int grid_offset)
 {
     int tiles[MAX_TILES] = {0,0,0,0,0,0,0,0};
     for (int i = 0; i < MAX_TILES; i += 2) {
-        tiles[i] = map_terrain_is(grid_offset + CONTEXT_TILE_OFFSETS[i], TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
+        tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
     }
     return get_image(CONTEXT_WALL_GATEHOUSE, tiles);
 }
@@ -405,7 +401,7 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
 {
     fill_matches(grid_offset, TERRAIN_ROAD, 1, 0, tiles);
     for (int i = 0; i < MAX_TILES; i += 2) {
-        int offset = grid_offset + CONTEXT_TILE_OFFSETS[i];
+        int offset = grid_offset + map_grid_direction_delta(i);
         if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {
             building *b = building_get(map_building_at(offset));
             if (b->type == BUILDING_GATEHOUSE &&
@@ -443,27 +439,31 @@ static int is_reservoir_construction_entrance(int grid_offset)
     if (!map_property_is_constructing(grid_offset)) {
         return 0;
     }
-    if (map_property_is_constructing(grid_offset + CONTEXT_TILE_OFFSETS[0]) && map_property_is_constructing(grid_offset + CONTEXT_TILE_OFFSETS[4])) {
-        return !map_property_is_constructing(grid_offset + 2 * CONTEXT_TILE_OFFSETS[0]) || !map_property_is_constructing(grid_offset + 2 * CONTEXT_TILE_OFFSETS[4]);
+    if (map_property_is_constructing(grid_offset + map_grid_direction_delta(0)) &&
+        map_property_is_constructing(grid_offset + map_grid_direction_delta(4))) {
+        return !map_property_is_constructing(grid_offset + 2 * map_grid_direction_delta(0)) ||
+            !map_property_is_constructing(grid_offset + 2 * map_grid_direction_delta(4));
     }
-    if (map_property_is_constructing(grid_offset + CONTEXT_TILE_OFFSETS[2]) && map_property_is_constructing(grid_offset + CONTEXT_TILE_OFFSETS[6])) {
-        return !map_property_is_constructing(grid_offset + 2 * CONTEXT_TILE_OFFSETS[2]) || !map_property_is_constructing(grid_offset + 2 * CONTEXT_TILE_OFFSETS[6]);
+    if (map_property_is_constructing(grid_offset + map_grid_direction_delta(2)) &&
+        map_property_is_constructing(grid_offset + map_grid_direction_delta(6))) {
+        return !map_property_is_constructing(grid_offset + 2 * map_grid_direction_delta(2)) ||
+            !map_property_is_constructing(grid_offset + 2 * map_grid_direction_delta(6));
     }
     return 0;
 }
 
-static void set_terrain_reservoir(int grid_offset, int index, int multi_tile_mask, int tiles[MAX_TILES], int include_construction)
+static void set_terrain_reservoir(int grid_offset, int direction, int multi_tile_mask, int tiles[MAX_TILES], int include_construction)
 {
-    int offset = grid_offset + CONTEXT_TILE_OFFSETS[index];
+    int offset = grid_offset + map_grid_direction_delta(direction);
     if (map_terrain_is(offset, TERRAIN_BUILDING)) {
         building *b = building_get(map_building_at(offset));
         if (b->type == BUILDING_RESERVOIR && map_property_multi_tile_xy(offset) == multi_tile_mask) {
-            tiles[index] = 1;
+            tiles[direction] = 1;
             return;
         }
     }
     if (include_construction && is_reservoir_construction_entrance(offset)) {
-        tiles[index] = 1;
+        tiles[direction] = 1;
     }
 }
 
@@ -472,7 +472,7 @@ const terrain_image *map_image_context_get_aqueduct(int grid_offset, int include
     int tiles[MAX_TILES] = {0,0,0,0,0,0,0,0};
     int has_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     for (int i = 0; i < MAX_TILES; i += 2) {
-        int offset = grid_offset + CONTEXT_TILE_OFFSETS[i];
+        int offset = grid_offset + map_grid_direction_delta(i);
         if (map_terrain_is(offset, TERRAIN_AQUEDUCT)) {
             if (has_road) {
                 if (!map_terrain_is(offset, TERRAIN_ROAD)) {
