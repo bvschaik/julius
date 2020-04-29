@@ -45,7 +45,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
         if (type == DRAW_TYPE_NONE) {
             if (img->draw.type == IMAGE_TYPE_WITH_TRANSPARENCY || img->draw.is_external) { // can be transparent
                 for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                    if (*data != COLOR_TRANSPARENT) {
+                    if (*data != COLOR_SG2_TRANSPARENT) {
                         *dst = *data;
                     }
                     data++;
@@ -57,28 +57,28 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
             }
         } else if (type == DRAW_TYPE_SET) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_TRANSPARENT) {
+                if (*data != COLOR_SG2_TRANSPARENT) {
                     *dst = color;
                 }
                 data++;
             }
         } else if (type == DRAW_TYPE_AND) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_TRANSPARENT) {
+                if (*data != COLOR_SG2_TRANSPARENT) {
                     *dst = *data & color;
                 }
                 data++;
             }
         } else if (type == DRAW_TYPE_BLEND) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_TRANSPARENT) {
+                if (*data != COLOR_SG2_TRANSPARENT) {
                     *dst &= color;
                 }
                 data++;
             }
         } else if (type == DRAW_TYPE_BLEND_ALPHA) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_TRANSPARENT) {
+                if (*data != COLOR_SG2_TRANSPARENT) {
                     color_t alpha = COMPONENT(*data, 24);
                     if (alpha == 255) {
                         *dst = color;
