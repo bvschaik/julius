@@ -37,6 +37,12 @@ int map_grid_offset_to_y(int grid_offset);
 
 int map_grid_delta(int x, int y);
 
+/**
+ * Adds the specified X and Y to the given offset with error checking
+ * @return New grid offset, or -1 if the x/y would wrap around to a different row/column
+ */
+int map_grid_add_delta(int grid_offset, int x, int y);
+
 int map_grid_direction_delta(int direction);
 
 void map_grid_size(int *width, int *height);

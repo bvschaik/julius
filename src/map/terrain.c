@@ -9,7 +9,7 @@ static grid_u16 terrain_grid_backup;
 
 int map_terrain_is(int grid_offset, int terrain)
 {
-    return grid_offset >= 0 && grid_offset < GRID_SIZE * GRID_SIZE && terrain_grid.items[grid_offset] & terrain;
+    return map_grid_is_valid_offset(grid_offset) && terrain_grid.items[grid_offset] & terrain;
 }
 
 int map_terrain_get(int grid_offset)

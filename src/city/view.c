@@ -553,21 +553,10 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
     }
 }
 
-static int move_grid_offset_by_delta(int grid_offset, int x, int y)
+static void do_valid_callback(int view_x, int view_y, int grid_offset, map_callback *callback)
 {
-    int grid_x = grid_offset % GRID_SIZE;
-    int grid_y = grid_offset / GRID_SIZE;
-    if (grid_x + x < 0 || grid_x + x >= GRID_SIZE ||
-        grid_y + y < 0 || grid_y + y >= GRID_SIZE) {
-        return -1;
-    }
-    return grid_offset + map_grid_delta(x, y);
-}
-
-static void do_valid_callback(int x, int y, int grid_offset, map_callback *callback)
-{
-    if (map_grid_is_valid_offset(grid_offset) && map_image_at(grid_offset) >= 6) {
-        callback(x, y, grid_offset);
+    if (grid_offset >= 0 && map_image_at(grid_offset) >= 6) {
+        callback(view_x, view_y, grid_offset);
     }
 }
 
@@ -577,7 +566,7 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
     city_view_grid_offset_to_xy_view(grid_offset, &x, &y);
     x = (x - data.camera.tile.x) * TILE_WIDTH_PIXELS - (y & 1) * HALF_TILE_WIDTH_PIXELS - data.camera.pixel.x + data.viewport.x;
     y = (y - data.camera.tile.y - 1) * HALF_TILE_HEIGHT_PIXELS - data.camera.pixel.y + data.viewport.y;
-    grid_offset += GRID_SIZE + 1;
+    grid_offset += map_grid_delta(1, 1);
 
     int x_delta = HALF_TILE_WIDTH_PIXELS;
     int y_delta = HALF_TILE_HEIGHT_PIXELS;
@@ -594,19 +583,19 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
     for (int ring = 0; ring < radius; ++ring) {
         int offset_north = -ring - 2;
         int offset_south = ring + size;
-        do_valid_callback(x, y + y_offset, move_grid_offset_by_delta(grid_offset, ring + size, ring + size), callback);
-        do_valid_callback(x, y - y_offset, move_grid_offset_by_delta(grid_offset, -ring - 2, -ring - 2), callback);
-        do_valid_callback(x - x_offset - x_delta, y, move_grid_offset_by_delta(grid_offset, -ring - 2, ring + size), callback);
-        do_valid_callback(x + x_offset + x_delta, y, move_grid_offset_by_delta(grid_offset, ring + size, -ring - 2), callback);
+        do_valid_callback(x, y + y_offset, map_grid_add_delta(grid_offset, ring + size, ring + size), callback);
+        do_valid_callback(x, y - y_offset, map_grid_add_delta(grid_offset, -ring - 2, -ring - 2), callback);
+        do_valid_callback(x - x_offset - x_delta, y, map_grid_add_delta(grid_offset, -ring - 2, ring + size), callback);
+        do_valid_callback(x + x_offset + x_delta, y, map_grid_add_delta(grid_offset, ring + size, -ring - 2), callback);
         for (int tile = 1; tile < ring * 2 + size + 2; ++tile) {
             do_valid_callback(x + x_delta * tile, y - y_offset + y_delta * tile,
-                move_grid_offset_by_delta(grid_offset, tile + offset_north, offset_north), callback);
+                map_grid_add_delta(grid_offset, tile + offset_north, offset_north), callback);
             do_valid_callback(x - x_delta * tile, y - y_offset + y_delta * tile,
-                move_grid_offset_by_delta(grid_offset, offset_north, tile + offset_north), callback);
+                map_grid_add_delta(grid_offset, offset_north, tile + offset_north), callback);
             do_valid_callback(x + x_delta * tile, y + y_offset - y_delta * tile,
-                move_grid_offset_by_delta(grid_offset, offset_south, offset_south - tile), callback);
+                map_grid_add_delta(grid_offset, offset_south, offset_south - tile), callback);
             do_valid_callback(x - x_delta * tile, y + y_offset - y_delta * tile,
-                move_grid_offset_by_delta(grid_offset, offset_south - tile, offset_south), callback);
+                map_grid_add_delta(grid_offset, offset_south - tile, offset_south), callback);
         }
         x_offset += TILE_WIDTH_PIXELS;
         y_offset += TILE_HEIGHT_PIXELS;

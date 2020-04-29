@@ -50,6 +50,17 @@ int map_grid_delta(int x, int y)
     return y * GRID_SIZE + x;
 }
 
+int map_grid_add_delta(int grid_offset, int x, int y)
+{
+    int raw_x = grid_offset % GRID_SIZE;
+    int raw_y = grid_offset / GRID_SIZE;
+    if (raw_x + x < 0 || raw_x + x >= GRID_SIZE ||
+        raw_y + y < 0 || raw_y + y >= GRID_SIZE) {
+        return -1;
+    }
+    return grid_offset + map_grid_delta(x, y);
+}
+
 int map_grid_direction_delta(int direction)
 {
     if (direction >= 0 && direction < 8) {
