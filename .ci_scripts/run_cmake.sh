@@ -12,13 +12,13 @@ case "$BUILD_TARGET" in
 	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSWITCH_BUILD=ON ..
 	;;
 "mac")
-	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
+	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF ..
 	;;
 "appimage")
-	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
+	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -DCMAKE_INSTALL_PREFIX=/usr ..
 	;;
 "linux")
-	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
+	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF ..
 	;;
 *)
 	mkdir build && cd build && cmake ..

@@ -6,6 +6,7 @@ if(VITA_BUILD AND SWITCH_BUILD)
 endif()
 
 option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
+option(SYSTEM_LIBS "Use system libraries when available." ON)
 cmake_dependent_option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF "NOT MSVC" OFF)
 cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT MSVC; NOT VITA_BUILD" OFF)
 
@@ -574,9 +575,7 @@ set(SOURCE_FILES
     ${WINDOW_FILES}
     ${EDITOR_FILES}
     ${TRANSLATION_FILES}
-    ${PNG_FILES}
     ${TINYFD_FILES}
-    ${ZLIB_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc
     ${MACOSX_FILES}
 )
@@ -670,6 +669,17 @@ endif()
 
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
+
+if(SYSTEM_LIBS)
+    find_package(PNG)
+endif()
+if(PNG_FOUND)
+    include_directories(${PNG_INCLUDE_DIRS})
+    target_link_libraries(${SHORT_NAME} ${PNG_LIBRARIES})
+else()
+    include_directories("ext/png")
+    target_sources(${SHORT_NAME} PRIVATE "${PNG_FILES}" "${ZLIB_FILES}")
+endif()
 
 if(VITA_BUILD)
     include_directories(
