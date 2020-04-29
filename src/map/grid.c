@@ -25,6 +25,11 @@ void map_grid_init(int width, int height, int start_offset, int border_size)
     map_data.border_size = border_size;
 }
 
+int map_grid_is_valid_offset(int grid_offset)
+{
+    return grid_offset >= 0 && grid_offset < GRID_SIZE * GRID_SIZE;
+}
+
 int map_grid_offset(int x, int y)
 {
     return map_data.start_offset + x + y * GRID_SIZE;

@@ -27,6 +27,8 @@ typedef struct {
 
 void map_grid_init(int width, int height, int start_offset, int border_size);
 
+int map_grid_is_valid_offset(int grid_offset);
+
 int map_grid_offset(int x, int y);
 
 int map_grid_offset_to_x(int grid_offset);
