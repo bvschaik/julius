@@ -50,7 +50,7 @@ static void draw_version_string(void)
         graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
     } else {
-        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_LIGHT_GRAY);
+        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
     }
 }
 

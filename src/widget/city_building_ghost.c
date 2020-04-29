@@ -128,7 +128,7 @@ static void draw_building(int image_id, int x, int y)
 
 static void draw_fountain_range(int x, int y, int grid_offset)
 {
-    image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_ALPHA_BLUE);
+    image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
 }
 
 static void draw_regular_building(building_type type, int image_id, int x, int y, int grid_offset)
@@ -312,7 +312,7 @@ static void draw_first_reservoir_range(int x, int y, int grid_offset)
         reservoir_range_data.offsets[reservoir_range_data.total] = grid_offset;
         reservoir_range_data.total++;
     }
-    image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_ALPHA_BLUE);
+    image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
 }
 
 static void draw_second_reservoir_range(int x, int y, int grid_offset)
@@ -322,7 +322,7 @@ static void draw_second_reservoir_range(int x, int y, int grid_offset)
             return;
         }
     }
-    image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_ALPHA_BLUE);
+    image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
 }
 
 static void draw_draggable_reservoir(const map_tile *tile, int x, int y)

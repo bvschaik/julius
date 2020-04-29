@@ -21,13 +21,14 @@ static vita2d_texture *init_cursor(const cursor *c)
         for (int x = 0; x < c->width; x++) {
             switch (c->data[y * c->width + x]) {
                 case '#':
-                    cursor_buf[y * CURSOR_SIZE + x] = COLOR_OPAQUE | COLOR_BLACK;
+                    cursor_buf[y * CURSOR_SIZE + x] = ALPHA_OPAQUE | COLOR_BLACK;
                     break;
                 case '\'':
-                    cursor_buf[y * CURSOR_SIZE + x] = COLOR_OPAQUE | COLOR_WHITE;
+                    cursor_buf[y * CURSOR_SIZE + x] = ALPHA_OPAQUE | COLOR_WHITE;
                     break;
                 case ' ':
-                    break; // COLOR_TRANSPARENT is 0x00000000 which is the default value of the buffer
+                    cursor_buf[y * CURSOR_SIZE + x] = ALPHA_TRANSPARENT;
+                    break;
             }
         }
     }

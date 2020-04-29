@@ -389,9 +389,9 @@ static int parse_chinese_font(buffer *input, color_t *pixels, int pixel_offset, 
             for (int col = 0; col < char_size; col++) {
                 int set = bits & 1;
                 if (set) {
-                    *pixels = COLOR_OPAQUE;
+                    *pixels = ALPHA_OPAQUE;
                 } else if (prev_set) {
-                    *pixels = COLOR_SEMI_TRANSPARENT;
+                    *pixels = ALPHA_FONT_SEMI_TRANSPARENT;
                 } else {
                     *pixels = COLOR_SG2_TRANSPARENT;
                 }
@@ -450,9 +450,9 @@ static int parse_korean_font(buffer *input, color_t *pixels, int pixel_offset, i
             for (int col = 0; col < char_size; col++) {
                 int set = bits & 1;
                 if (set) {
-                    *pixels = COLOR_OPAQUE;
+                    *pixels = ALPHA_OPAQUE;
                 } else if (prev_set) {
-                    *pixels = COLOR_SEMI_TRANSPARENT;
+                    *pixels = ALPHA_FONT_SEMI_TRANSPARENT;
                 } else {
                     *pixels = COLOR_SG2_TRANSPARENT;
                 }

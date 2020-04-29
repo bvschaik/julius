@@ -28,13 +28,13 @@ static SDL_Texture *init_cursor(const cursor *c)
         for (int x = 0; x < c->width; x++) {
             switch (c->data[y * c->width + x]) {
                 case '#':
-                    pixels[y * CURSOR_SIZE + x] = COLOR_OPAQUE | COLOR_BLACK;
+                    pixels[y * CURSOR_SIZE + x] = ALPHA_OPAQUE | COLOR_BLACK;
                     break;
                 case '\'':
-                    pixels[y * CURSOR_SIZE + x] = COLOR_OPAQUE | COLOR_WHITE;
+                    pixels[y * CURSOR_SIZE + x] = ALPHA_OPAQUE | COLOR_WHITE;
                     break;
                 case ' ':
-                    pixels[y * CURSOR_SIZE + x] = COLOR_TRANSPARENT;
+                    pixels[y * CURSOR_SIZE + x] = ALPHA_TRANSPARENT;
                     break;
             }
         }
