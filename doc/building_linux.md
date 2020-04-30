@@ -12,6 +12,7 @@ In order to follow these instructions, you'll need to install the following pack
 * `SDL2`
 * `SDL2_mixer`
 * `cmake`
+- `libpng` (optional, a bundled copy will be used if not found)
 
 Then skip steps 1. and 2. of the Ubuntu instructions.
 
@@ -23,7 +24,7 @@ of `sudo`.
 
 1. Open a terminal window and type the following command to install all the needed dependencies:
 
-        $ sudo apt install git libsdl2-dev libsdl2-mixer-dev cmake
+        $ sudo apt install git libsdl2-dev libsdl2-mixer-dev cmake libpng-dev
 
 2. Depending on what you already have installed, `apt` may ask you to install many packages.
    Confirm the installation.
