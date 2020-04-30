@@ -44,30 +44,32 @@ static const int Y_VIEW_OFFSETS[MAX_TILES] = {
     60, 60, 75, 75, 90, 90, 105, 105, 120
 };
 
+#define OFFSET(x,y) (x + GRID_SIZE * y)
+
 static const int TILE_GRID_OFFSETS[4][MAX_TILES] = {
-    {0,
-    162, 1, 163,
-    324, 2, 325, 164, 326,
-    486, 3, 487, 165, 488, 327, 489,
-    648, 4, 649, 166, 650, 328, 651, 490, 652},
-    {0,
-    -1, 162, 161,
-    -2, 324, 160, 323, 322,
-    -3, 486, 159, 485, 321, 484, 483,
-    -4, 648, 158, 647, 320, 646, 482, 645, 644},
-    {0,
-    -162, -1, -163,
-    -324, -2, -325, -164, -326,
-    -486, -3, -487, -165, -488, -327, -489,
-    -648, -4, -649, -166, -650, -328, -651, -490, -652},
-    {0,
-    1, -162, -161,
-    2, -324, -160, -323, -322,
-    3, -486, -159, -485, -321, -484, -483,
-    4, -648, -158, -647, -320, -646, -482, -645, -644},
+    {OFFSET(0,0),
+    OFFSET(0,1), OFFSET(1,0), OFFSET(1,1),
+    OFFSET(0,2), OFFSET(2,0), OFFSET(1,2), OFFSET(2,1), OFFSET(2,2),
+    OFFSET(0,3), OFFSET(3,0), OFFSET(1,3), OFFSET(3,1), OFFSET(2,3), OFFSET(3,2), OFFSET(3,3),
+    OFFSET(0,4), OFFSET(4,0), OFFSET(1,4), OFFSET(4,1), OFFSET(2,4), OFFSET(4,2), OFFSET(3,4), OFFSET(4,3), OFFSET(4,4)},
+    {OFFSET(0,0),
+    OFFSET(-1,0), OFFSET(0,1), OFFSET(-1,1),
+    OFFSET(-2,0), OFFSET(0,2), OFFSET(-2,1), OFFSET(-1,2), OFFSET(-2,2),
+    OFFSET(-3,0), OFFSET(0,3), OFFSET(-3,1), OFFSET(-1,3), OFFSET(-3,2), OFFSET(-2,3), OFFSET(-3,3),
+    OFFSET(-4,0), OFFSET(0,4), OFFSET(-4,1), OFFSET(-1,4), OFFSET(-4,2), OFFSET(-2,4), OFFSET(-4,3), OFFSET(-3,4), OFFSET(-4,4)},
+    {OFFSET(0,0),
+    OFFSET(0,-1), OFFSET(-1,0), OFFSET(-1,-1),
+    OFFSET(0,-2), OFFSET(-2,0), OFFSET(-1,-2), OFFSET(-2,-1), OFFSET(-2,-2),
+    OFFSET(0,-3), OFFSET(-3,0), OFFSET(-1,-3), OFFSET(-3,-1), OFFSET(-2,-3), OFFSET(-3,-2), OFFSET(-3,-3),
+    OFFSET(0,-4), OFFSET(-4,0), OFFSET(-1,-4), OFFSET(-4,-1), OFFSET(-2,-4), OFFSET(-4,-2), OFFSET(-3,-4), OFFSET(-4,-3), OFFSET(-4,-4)},
+    {OFFSET(0,0),
+    OFFSET(1,0), OFFSET(0,-1), OFFSET(1,-1),
+    OFFSET(2,0), OFFSET(0,-2), OFFSET(2,-1), OFFSET(1,-2), OFFSET(2,-2),
+    OFFSET(3,0), OFFSET(0,-3), OFFSET(3,-1), OFFSET(1,-3), OFFSET(3,-2), OFFSET(2,-3), OFFSET(3,-3),
+    OFFSET(4,0), OFFSET(0,-4), OFFSET(4,-1), OFFSET(1,-4), OFFSET(4,-2), OFFSET(2,-4), OFFSET(4,-3), OFFSET(3,-4), OFFSET(4,-4)},
 };
 
-static const int FORT_GROUND_GRID_OFFSETS[4] = {-159, -158, 4, 3};
+static const int FORT_GROUND_GRID_OFFSETS[4] = {OFFSET(3,-1), OFFSET(4,-1), OFFSET(4,0), OFFSET(3,0)};
 static const int FORT_GROUND_X_VIEW_OFFSETS[4] = {120, 90, -120, -90};
 static const int FORT_GROUND_Y_VIEW_OFFSETS[4] = {30, -75, -60, 45};
 
@@ -384,8 +386,8 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             }
             if (!draw_later) {
                 if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-                    city_view_foreach_tile_in_range(offset - GRID_SIZE - 1, 3, 10, draw_first_reservoir_range);
-                    city_view_foreach_tile_in_range(tile->grid_offset - GRID_SIZE - 1, 3, 10, draw_second_reservoir_range);
+                    city_view_foreach_tile_in_range(offset + map_grid_delta(-1,-1), 3, 10, draw_first_reservoir_range);
+                    city_view_foreach_tile_in_range(tile->grid_offset + map_grid_delta(-1,-1), 3, 10, draw_second_reservoir_range);
                 }
                 draw_single_reservoir(x_start, y_start, has_water);
             }
@@ -403,9 +405,9 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     } else {
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!building_construction_in_progress() || draw_later)) {
             if (draw_later) {
-                city_view_foreach_tile_in_range(offset - GRID_SIZE - 1, 3, 10, draw_first_reservoir_range);
+                city_view_foreach_tile_in_range(offset + map_grid_delta(-1,-1), 3, 10, draw_first_reservoir_range);
             }
-            city_view_foreach_tile_in_range(tile->grid_offset - GRID_SIZE - 1, 3, 10, draw_second_reservoir_range);
+            city_view_foreach_tile_in_range(tile->grid_offset + map_grid_delta(-1,-1), 3, 10, draw_second_reservoir_range);
         }
         draw_single_reservoir(x, y, has_water);
         if (draw_later) {
@@ -440,7 +442,7 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
             int group_offset = img->group_offset;
             if (!img->aqueduct_offset) {
-                if (map_terrain_is(grid_offset - 162, TERRAIN_ROAD)) {
+                if (map_terrain_is(grid_offset + map_grid_delta(0,-1), TERRAIN_ROAD)) {
                     group_offset = 3;
                 } else {
                     group_offset = 2;
