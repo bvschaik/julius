@@ -84,7 +84,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_BUILD=ON"
+                arguments "-DANDROID_BUILD=ON -DSYSTEM_LIBS=OFF"
             }
         }
         ndk {
