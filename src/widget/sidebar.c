@@ -21,7 +21,7 @@
 #include "sound/effect.h"
 #include "widget/city.h"
 #include "widget/minimap.h"
-#include "widget/sidebar_filler.h"
+#include "widget/sidebar_extra.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -201,9 +201,9 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
         width = SIDEBAR_COLLAPSED_WIDTH;
     }
     int available_height = get_sidebar_height() - SIDEBAR_VANILLA_SECTION_HEIGHT;
-    sidebar_filler_draw_background(x_offset, FILLER_Y_OFFSET, width, available_height, is_collapsed);
-    sidebar_filler_draw_foreground(x_offset, FILLER_Y_OFFSET, width, is_collapsed);
-    int relief_y_offset = FILLER_Y_OFFSET + sidebar_filler_get_height();
+    int extra_height = sidebar_extra_draw_background(x_offset, FILLER_Y_OFFSET, width, available_height, is_collapsed);
+    sidebar_extra_draw_foreground(x_offset, FILLER_Y_OFFSET, width, is_collapsed);
+    int relief_y_offset = FILLER_Y_OFFSET + extra_height;
     draw_sidebar_relief(x_offset, relief_y_offset, is_collapsed);
 }
 
@@ -277,7 +277,7 @@ void widget_sidebar_draw_foreground(void)
     draw_minimap(0);
     draw_number_of_messages();
 
-    sidebar_filler_draw_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
+    sidebar_extra_draw_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
 }
 
 void widget_sidebar_draw_foreground_military(void)
@@ -290,16 +290,16 @@ int widget_sidebar_handle_mouse(const mouse *m)
     if (widget_city_has_input()) {
         return 0;
     }
-    int click = 0;
+    int handled = 0;
     int button_id;
     data.focus_button_for_tooltip = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = get_x_offset_collapsed();
-        click |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = 12;
         }
-        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, 12, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, 12, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 19;
         }
@@ -308,21 +308,21 @@ int widget_sidebar_handle_mouse(const mouse *m)
             return 1;
         }
         int x_offset = get_x_offset_expanded();
-        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 9;
         }
-        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, 15, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, 15, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 19;
         }
-        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, 6, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, 6, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 39;
         }
-        click |= sidebar_filler_handle_mouse(m, x_offset, FILLER_Y_OFFSET);
+        handled |= sidebar_extra_handle_mouse(m, x_offset, FILLER_Y_OFFSET);
     }
-    return click;
+    return handled;
 }
 
 int widget_sidebar_handle_mouse_build_menu(const mouse *m)

@@ -453,7 +453,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar_editor.c
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar_filler.c    
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar_extra.c    
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.c
 )
