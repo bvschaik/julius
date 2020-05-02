@@ -506,9 +506,14 @@ static void draw_background(void)
             window_building_draw_triumphal_arch(&context);
         } else if (btype == BUILDING_PREFECTURE) {
             window_building_draw_prefect(&context);
-        } else if (btype == BUILDING_ROADBLOCK) {
-            window_building_draw_roadblock(&context);
-        } else if (btype == BUILDING_GATEHOUSE) {
+	} else if (btype == BUILDING_ROADBLOCK) {
+	    if (context.storage_show_special_orders) {
+	        window_building_draw_roadblock_orders(&context);
+	    } else {
+       	        window_building_draw_roadblock(&context);
+	    }
+	}
+	else if (btype == BUILDING_GATEHOUSE) {
             window_building_draw_gatehouse(&context);
         } else if (btype == BUILDING_TOWER) {
             window_building_draw_tower(&context);
@@ -557,6 +562,12 @@ static void draw_foreground(void)
             } else {
                 window_building_draw_market_foreground(&context);
             }
+        } else if (btype == BUILDING_ROADBLOCK) {
+            if (context.storage_show_special_orders) {
+                window_building_draw_roadblock_orders_foreground(&context);
+            } else {
+                window_building_draw_roadblock_foreground(&context);
+            }
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info_foreground(&context);
@@ -590,6 +601,12 @@ static int handle_specific_building_info_mouse(const mouse *m)
                 window_building_handle_mouse_market_orders(m, &context);
             } else {
                 window_building_handle_mouse_market(m, &context);
+            }
+	} else if (btype == BUILDING_ROADBLOCK) {
+            if (context.storage_show_special_orders) {
+                return window_building_handle_mouse_roadblock_orders(m, &context);
+            } else {
+                return window_building_handle_mouse_roadblock(m, &context);
             }
 	} else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {

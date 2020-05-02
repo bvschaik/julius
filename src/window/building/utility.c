@@ -1,9 +1,47 @@
 #include "utility.h"
 
 #include "building/building.h"
+#include "building/roadblock.h"
+#include "core/image.h"
+#include "graphics/generic_button.h"
+#include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/window.h"
 #include "map/water_supply.h"
+#include "window/building_info.h"
+
+
+static void go_to_orders(int param1, int param2);
+static void toggle_figure_state(int index, int param2);
+static void roadblock_orders(int index, int param2);
+
+
+
+static struct {
+    int focus_button_id;
+    int orders_focus_button_id;
+    int figure_focus_button_id;
+    int building_id;
+} data = {0, 0, 0, 0};
+
+static generic_button go_to_orders_button[] = {
+    {0, 0, 304, 20, go_to_orders, button_none, 0, 0}
+};
+
+
+static generic_button orders_permission_buttons[] = {
+    {0, 4, 210, 22, toggle_figure_state, button_none, 1, 0},
+    {0, 36, 210, 22, toggle_figure_state, button_none, 2, 0},
+    {0, 68, 210, 22, toggle_figure_state, button_none, 3, 0},
+    {0, 100, 210, 22, toggle_figure_state, button_none, 4, 0},
+};
+
+static generic_button roadblock_order_buttons[] = {
+    {314, 0, 20, 20, roadblock_orders, button_none, 0, 0},
+};
+
+
 
 void window_building_draw_engineers_post(building_info_context *c)
 {
@@ -85,7 +123,55 @@ void window_building_draw_roadblock(building_info_context *c)
     lang_text_draw_centered(28, 115, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     building *b = building_get(c->building_id);
     window_building_draw_description(c, 28, 116);
+    
 }
+
+void window_building_draw_roadblock_foreground(building_info_context* c)
+{
+    button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+        16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
+        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+
+}
+
+void window_building_draw_roadblock_orders(building_info_context* c)
+{
+    c->help_id = 3;
+    int y_offset = window_building_get_vertical_offset(c, 28);
+    outer_panel_draw(c->x_offset, y_offset, 29, 28);
+    lang_text_draw_centered(28, 115, c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
+
+}
+
+void window_building_draw_roadblock_orders_foreground(building_info_context* c)
+{
+    int y_offset = window_building_get_vertical_offset(c, 28);
+    int ids[8] = { GROUP_FIGURE_ENGINEER,GROUP_FIGURE_PREFECT,GROUP_FIGURE_PRIEST,GROUP_FIGURE_PRIEST,GROUP_FIGURE_MARKET_LADY,GROUP_FIGURE_MARKET_LADY,GROUP_FIGURE_ACTOR,GROUP_FIGURE_LION_TAMER};
+    building* b = building_get(c->building_id);
+    data.building_id = b->id;
+
+
+    for (int i = 0; i < 4; i++) {
+        image_draw(image_group(ids[i*2]) + 4, c->x_offset + 32, y_offset + 46 + 32 * i);
+        image_draw(image_group(ids[i*2+1]) + 4, c->x_offset + 64, y_offset + 46 + 32 * i);
+       // lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
+        button_border_draw(c->x_offset + 180, y_offset + 50 + 32 * i, 210, 22, data.figure_focus_button_id == i + 1);
+        int state = building_roadblock_get_permission(i+1, b);
+        if (state) {
+            lang_text_draw(99, 7, c->x_offset + 230, y_offset + 55 + 32 * i, FONT_NORMAL_WHITE);
+        }
+        else {
+            lang_text_draw(99, 8, c->x_offset + 230, y_offset + 55 + 32 * i, FONT_NORMAL_RED);
+        }
+
+
+        building* b = building_get(c->building_id);
+
+    }
+}
+
 
 void window_building_draw_burning_ruin(building_info_context *c)
 {
@@ -206,3 +292,45 @@ void window_building_draw_native_crops(building_info_context *c)
 {
     draw_native(c, 133);
 }
+
+void toggle_figure_state(int index, int param2) {
+    building* b = building_get(data.building_id);
+    if (b->type == BUILDING_ROADBLOCK) {
+        building_roadblock_set_permission(index, b);
+    }
+    window_invalidate();
+
+}
+
+static void roadblock_orders(int param1, int param2) {
+
+}
+
+static void go_to_orders(int param1, int param2)
+{
+    window_building_info_show_storage_orders();
+}
+
+
+int window_building_handle_mouse_roadblock(const mouse* m, building_info_context* c)
+{
+   return generic_buttons_handle_mouse(
+        m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+        go_to_orders_button, 1, &data.focus_button_id);
+}
+
+int window_building_handle_mouse_roadblock_orders(const mouse* m, building_info_context* c)
+{
+    int y_offset = window_building_get_vertical_offset(c, 28);
+
+    data.building_id = c->building_id;
+    if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46,
+        orders_permission_buttons, 4,
+        &data.figure_focus_button_id)) {
+        return 1;
+    }
+    return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, roadblock_order_buttons, 1, &data.orders_focus_button_id);
+
+
+}
+

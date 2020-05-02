@@ -1,6 +1,7 @@
 #include "road_access.h"
 
 #include "building/building.h"
+#include "building/roadblock.h"
 #include "core/config.h"
 #include "city/map.h"
 #include "map/building.h"
@@ -253,7 +254,7 @@ static int terrain_is_road_like(int grid_offset)
     return map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP) ? 1 : 0;
 }
 
-static int get_adjacent_road_tile_for_roaming(int grid_offset)
+static int get_adjacent_road_tile_for_roaming(int grid_offset, roadblock_permission perm)
 {
 	int is_road = terrain_is_road_like(grid_offset);
 	if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
@@ -262,7 +263,9 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset)
 			is_road = 0;
 		}
 		else if (b->type == BUILDING_ROADBLOCK) {
-			is_road = 0;
+			if (!building_roadblock_get_permission(perm,b)) {
+			    is_road = 0;
+			}
 		}
 		else if (b->type == BUILDING_GRANARY) {
 			if (map_routing_citizen_is_road(grid_offset)) {
@@ -286,14 +289,14 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset)
 	return is_road;
 }
 
-int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles)
+int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles, roadblock_permission perm)
 {
     road_tiles[1] = road_tiles[3] = road_tiles[5] = road_tiles[7] = 0;
 
-    road_tiles[0] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(0, -1));
-    road_tiles[2] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(1, 0));
-    road_tiles[4] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(0, 1));
-    road_tiles[6] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(-1, 0));
+    road_tiles[0] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(0, -1), perm);
+    road_tiles[2] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(1, 0), perm);
+    road_tiles[4] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(0, 1), perm);
+    road_tiles[6] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(-1, 0), perm);
 
     return road_tiles[0] + road_tiles[2] + road_tiles[4] + road_tiles[6];
 }
