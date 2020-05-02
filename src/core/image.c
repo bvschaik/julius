@@ -35,9 +35,6 @@
 
 #define NAME_SIZE 32
 
-#define COLOR_OPAQUE 0xff000000
-#define COLOR_SEMI_TRANSPARENT 0x99000000
-
 enum {
     NO_EXTRA_FONT = 0,
     FULL_CHARSET_IN_FONT = 1,
@@ -425,11 +422,11 @@ static int parse_chinese_font(buffer *input, color_t *pixels, int pixel_offset, 
             for (int col = 0; col < char_size; col++) {
                 int set = bits & 1;
                 if (set) {
-                    *pixels = COLOR_OPAQUE;
+                    *pixels = ALPHA_OPAQUE;
                 } else if (prev_set) {
-                    *pixels = COLOR_SEMI_TRANSPARENT;
+                    *pixels = ALPHA_FONT_SEMI_TRANSPARENT;
                 } else {
-                    *pixels = COLOR_TRANSPARENT;
+                    *pixels = COLOR_SG2_TRANSPARENT;
                 }
                 pixels++;
                 pixel_offset++;
@@ -486,11 +483,11 @@ static int parse_korean_font(buffer *input, color_t *pixels, int pixel_offset, i
             for (int col = 0; col < char_size; col++) {
                 int set = bits & 1;
                 if (set) {
-                    *pixels = COLOR_OPAQUE;
+                    *pixels = ALPHA_OPAQUE;
                 } else if (prev_set) {
-                    *pixels = COLOR_SEMI_TRANSPARENT;
+                    *pixels = ALPHA_FONT_SEMI_TRANSPARENT;
                 } else {
-                    *pixels = COLOR_TRANSPARENT;
+                    *pixels = COLOR_SG2_TRANSPARENT;
                 }
                 pixels++;
                 pixel_offset++;

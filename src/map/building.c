@@ -11,10 +11,7 @@ static grid_u8 highlight_grid;
 
 int map_building_at(int grid_offset)
 {
-    if (grid_offset < 0 || grid_offset >= GRID_SIZE * GRID_SIZE) {
-        return 0;
-    }
-    return buildings_grid.items[grid_offset];
+    return map_grid_is_valid_offset(grid_offset) ? buildings_grid.items[grid_offset] : 0;
 }
 
 void map_building_set(int grid_offset, int building_id)

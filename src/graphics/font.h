@@ -53,6 +53,13 @@ void font_set_encoding(encoding_type encoding);
 const font_definition *font_definition_for(font_t font);
 
 /**
+ * Checks whether the font has a glyph for the passed character
+ * @param character Character to check
+ * @return Boolean true if this character can be drawn on the screen, false otherwise
+ */
+int font_can_display(const uint8_t *character);
+
+/**
  * Gets the letter ID for the specified character and font
  * @param def Font definition
  * @param str Character string

@@ -82,9 +82,9 @@ void widget_city_draw_construction_cost_and_size(void)
         color_t color;
         if (cost <= city_finance_treasury()) {
             // Color blind friendly
-            color = scenario_property_climate() == CLIMATE_DESERT ? COLOR_ORANGE : COLOR_ORANGE_LIGHT;
+            color = scenario_property_climate() == CLIMATE_DESERT ? COLOR_FONT_ORANGE : COLOR_FONT_ORANGE_LIGHT;
         } else {
-            color = COLOR_RED;
+            color = COLOR_FONT_RED;
         }
         text_draw_number_colored(cost, '@', " ", x + 58 + 1, y + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
         text_draw_number_colored(cost, '@', " ", x + 58, y, FONT_NORMAL_PLAIN, color);
@@ -92,9 +92,9 @@ void widget_city_draw_construction_cost_and_size(void)
     if (has_size) {
         int width = -text_get_width(string_from_ascii("  "), FONT_SMALL_PLAIN);
         width += text_draw_number_colored(size_x, '@', "x", x - 15 + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
-        text_draw_number_colored(size_x, '@', "x", x - 15, y + 25, FONT_SMALL_PLAIN, COLOR_YELLOW);
+        text_draw_number_colored(size_x, '@', "x", x - 15, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
         text_draw_number_colored(size_y, '@', " ", x - 15 + width + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
-        text_draw_number_colored(size_y, '@', " ", x - 15 + width, y + 25, FONT_SMALL_PLAIN, COLOR_YELLOW);
+        text_draw_number_colored(size_y, '@', " ", x - 15 + width, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
     }
     graphics_reset_clip_rectangle();
 }
@@ -375,7 +375,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
     if (m->right.is_down && !m->right.went_down) {
         pixel_offset camera_pixel_position;
 
-        if (scroll_move_mouse_drag(&camera_pixel_position)) {
+        if (scroll_move_mouse_drag(m, &camera_pixel_position)) {
             city_view_set_camera_from_pixel_position(camera_pixel_position.x, camera_pixel_position.y);
         }
     } else if (!m->right.went_up) {
@@ -402,7 +402,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
     if (m->right.went_down && !building_construction_type()) {
         pixel_offset camera_pixel_position;
         city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
-        scroll_start_mouse_drag(&camera_pixel_position);
+        scroll_start_mouse_drag(m, &camera_pixel_position);
     }
     if (m->right.went_up) {
         if (!building_construction_type()) {

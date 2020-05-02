@@ -324,28 +324,12 @@ void text_draw_number_centered_colored(int value, int x_offset, int y_offset, in
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_width, font_t font)
+int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_width, font_t font, uint32_t color)
 {
-    int line_height;
-    switch (font) {
-        case FONT_LARGE_PLAIN:
-        case FONT_LARGE_BLACK:
-            line_height = 23;
-            break;
-        case FONT_LARGE_BROWN:
-            line_height = 24;
-            break;
-        case FONT_SMALL_PLAIN:
-            line_height = 9;
-            break;
-        case FONT_NORMAL_PLAIN:
-            line_height = 11;
-            break;
-        default:
-            line_height = 11;
-            break;
+    int line_height = font_definition_for(font)->line_height;
+    if (line_height < 11) {
+        line_height = 11;
     }
-
     int has_more_characters = 1;
     int guard = 0;
     int y = y_offset;
@@ -383,8 +367,43 @@ int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_
                 }
             }
         }
-        text_draw(tmp_line, x_offset, y, font, 0);
+        text_draw(tmp_line, x_offset, y, font, color);
         y += line_height + 5;
     }
     return y - y_offset;
+}
+
+int text_measure_multiline(const uint8_t *str, int box_width, font_t font)
+{
+    int line_height = font_definition_for(font)->line_height;
+    int has_more_characters = 1;
+    int guard = 0;
+    int num_lines = 0;
+    while (has_more_characters) {
+        if (++guard >= 100) {
+            break;
+        }
+        int current_width = 0;
+        int line_index = 0;
+        while (has_more_characters && current_width < box_width) {
+            int word_num_chars;
+            int word_width = get_word_width(str, font, &word_num_chars);
+            current_width += word_width;
+            if (current_width >= box_width) {
+                if (current_width == 0) {
+                    has_more_characters = 0;
+                }
+            } else {
+                str += word_num_chars;
+                if (!*str) {
+                    has_more_characters = 0;
+                } else if (*str == '\n') {
+                    str++;
+                    break;
+                }
+            }
+        }
+        num_lines += 1;
+    }
+    return num_lines;
 }

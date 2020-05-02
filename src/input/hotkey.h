@@ -30,8 +30,8 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings);
 const hotkeys *hotkey_state(void);
 void hotkey_reset_state(void);
 
-void hotkey_key_pressed(key_type key, key_modifier_type mod, int repeat);
-void hotkey_key_released(key_type key);
+void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat);
+void hotkey_key_released(key_type key, key_modifier_type modifiers);
 
 void hotkey_handle_escape(void);
 

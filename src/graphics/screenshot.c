@@ -12,7 +12,7 @@
 #include "map/grid.h"
 #include "widget/city_without_overlay.h"
 
-#include "png/png.h"
+#include "png.h"
 
 #include <stdio.h>
 #include <stdlib.h>

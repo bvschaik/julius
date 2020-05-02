@@ -109,7 +109,7 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
     static char corrected_filename[2 * FILE_NAME_MAX];
     corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
 
-    int dir_len = 0;
+    size_t dir_len = 0;
     if (dir) {
         dir_len = strlen(dir) + 1;
         strncpy(corrected_filename, dir, 2 * FILE_NAME_MAX - 1);

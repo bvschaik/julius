@@ -30,16 +30,6 @@ void rich_text_set_fonts(font_t normal_font, font_t link_font);
 void rich_text_reset(int scroll_position);
 
 /**
- * Save state (for tooltip)
- */
-void rich_text_save(void);
-
-/**
- * Restore state (for tooltip)
- */
-void rich_text_restore(void);
-
-/**
  * Clear the links table
  */
 void rich_text_clear_links(void);

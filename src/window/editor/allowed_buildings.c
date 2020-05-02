@@ -96,7 +96,7 @@ static void draw_foreground(void)
         if (scenario_editor_is_building_allowed(i)) {
             lang_text_draw_centered(67, i, x, y + 4, 190, FONT_NORMAL_BLACK);
         } else {
-            lang_text_draw_centered_colored(67, i, x, y + 4, 190, FONT_NORMAL_PLAIN, COLOR_RED);
+            lang_text_draw_centered_colored(67, i, x, y + 4, 190, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
         }
     }
 

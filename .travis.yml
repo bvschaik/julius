@@ -20,16 +20,12 @@ jobs:
     name: Linux AppImage
     compiler: gcc
     env: BUILD_TARGET=appimage DEPLOY=appimage
-    services:
-    - docker
   - os: osx
     compiler: clang
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
   - os: linux
     name: PS Vita
     env: BUILD_TARGET=vita DEPLOY=vita
-    services:
-    - docker
   - os: linux
     name: Nintendo Switch
     env: BUILD_TARGET=switch DEPLOY=switch
@@ -37,9 +33,9 @@ cache:
   directories:
   - "$SDL_LIB"
   - "$SDL_MIXER_LIB"
-install:
-- "./.ci_scripts/start_docker.sh"
-- "./.ci_scripts/install_sdl.sh;"
+  - ./.ci_scripts/setup_environment.sh
+  - ./.ci_scripts/install_sdl.sh;
+
 before_script:
 - "./.ci_scripts/run_cmake.sh"
 script:

@@ -47,20 +47,9 @@ void window_logo_show(int show_patch_message)
     init();
     window_show(&window);
     if (show_patch_message == MESSAGE_MISSING_PATCH) {
-        window_plain_message_dialog_show(
-            "Patch 1.0.1.0 not installed",
-            "Your Caesar 3 installation does not have the 1.0.1.0 patch installed. "
-            "You can download the patch from:\n"
-            "https://github.com/bvschaik/julius/wiki/Patches\n"
-            "Continue at your own risk."
-        );
+        window_plain_message_dialog_show(TR_NO_PATCH_TITLE, TR_NO_PATCH_MESSAGE);
     } else if (show_patch_message == MESSAGE_MISSING_FONTS) {
-        window_plain_message_dialog_show(
-            "Missing fonts",
-            "Your Caesar 3 installation requires extra font files. "
-            "You can download them for your language from:\n"
-            "https://github.com/bvschaik/julius/wiki/Patches"
-        );
+        window_plain_message_dialog_show(TR_MISSING_FONTS_TITLE, TR_MISSING_FONTS_MESSAGE);
     }
     if (config_get(CONFIG_UI_SHOW_INTRO_VIDEO)) {
         window_intro_video_show();

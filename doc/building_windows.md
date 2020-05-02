@@ -17,7 +17,7 @@ You have two main options in how you want to build Julius. You can either:
 2. Download the `SDL2` development library as a zip file:
 
 	* Open the [SDL2 download page](https://www.libsdl.org/download-2.0.php)
-    * In the section `Development Libraries`, select `SDL2-devel-2.0.10-VC.zip (Visual C++ 32/64-bit)`
+    * In the section `Development Libraries`, select `SDL2-devel-2.0.12-VC.zip (Visual C++ 32/64-bit)`
 
 3. Download the `SDL2_mixer` development library as a zip file:
 
@@ -54,7 +54,7 @@ You have two main options in how you want to build Julius. You can either:
 10. Paste the location of your library paths. If you used the above example paths,
     then paste the following code:
 
-	`-DCMAKE_PREFIX_PATH=C:\libs\SDL2-devel-2.0.10-VC\SDL2-2.0.10;C:\libs\SDL2_mixer-devel-2.0.4-VC\SDL2_mixer-2.0.4`
+	`-DCMAKE_PREFIX_PATH=C:\libs\SDL2-devel-2.0.12-VC\SDL2-2.0.12;C:\libs\SDL2_mixer-devel-2.0.4-VC\SDL2_mixer-2.0.4`
 
 	Notice that you must always include `-DCMAKE_PREFIX_PATH=` at the start.
 
@@ -78,7 +78,7 @@ You have two main options in how you want to build Julius. You can either:
 	Both libraries are available inside your library directory. Using the example library
     location, the files should be in the following location:
 
-	* `SDL2` - `C:\libs\SDL2-2.0.10\lib\x64`
+	* `SDL2` - `C:\libs\SDL2-2.0.12\lib\x64`
 	* `SDL2_mixer` - `C:\libs\SDL2_mixer-2.0.4\lib\x64`
 
 **Success!** You should now be able to run the game.
@@ -149,7 +149,7 @@ options are enough for Julius.
 1. Download the `SDL2` development library as a gzipped file:
 
 	* Open the [SDL2 download page](https://www.libsdl.org/download-2.0.php)
-    * In the section `Development Libraries`, select `SDL2-devel-2.0.10-mingw.tar.gz (MinGW 32/64-bit)`
+    * In the section `Development Libraries`, select `SDL2-devel-2.0.12-mingw.tar.gz (MinGW 32/64-bit)`
 
 2. Download the `SDL2_mixer` development library as a gzipped file:
 
@@ -217,7 +217,7 @@ If you then wish to proceed building Julius, delete the `build` folder and proce
 
 4. Run `cmake`:
 
-        > cmake .. -G "MinGW Makefiles" "-DCMAKE_PREFIX_PATH=C:\libs\SDL2-2.0.10\i686-w64-mingw32;C:\libs\SDL2_mixer-2.0.4\i686-w64-mingw32"
+        > cmake .. -G "MinGW Makefiles" "-DCMAKE_PREFIX_PATH=C:\libs\SDL2-2.0.12\i686-w64-mingw32;C:\libs\SDL2_mixer-2.0.4\i686-w64-mingw32"
 
     Replace the contents of `-DCMAKE_PREFIX_PATH=` with the location of the folders where
     you extracted `SDL2` and `SDL2_mixer` to, and be sure to add the `i686-w64-mingw32`
@@ -239,7 +239,7 @@ If you then wish to proceed building Julius, delete the `build` folder and proce
 	Both libraries are available inside your library directory. Using the example library
     location, the files should be in the following location:
 
-	* `SDL2` - `C:\libs\SDL2-2.0.10\i686-w64-mingw32\bin`
+	* `SDL2` - `C:\libs\SDL2-2.0.12\i686-w64-mingw32\bin`
 	* `SDL2_mixer` - `C:\libs\SDL2_mixer-2.0.4\i686-w64-mingw32\bin`
 
 

@@ -14,6 +14,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "window/hotkey_config.h"
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
@@ -21,7 +22,7 @@
 
 #define NUM_CHECKBOXES 30
 #define CONFIG_PAGES 3
-#define NUM_BOTTOM_BUTTONS 5
+#define NUM_BOTTOM_BUTTONS 6
 #define MAX_LANGUAGE_DIRS 20
 
 #define FIRST_BUTTON_Y 72
@@ -32,6 +33,7 @@ static int options_per_page[CONFIG_PAGES] = { 7,14,9 };
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
+static void button_hotkeys(int param1, int param2);
 static void button_close(int save, int param2);
 static void button_page(int param1, int param2);
 static int config_change_basic(config_key key);
@@ -82,26 +84,29 @@ static generic_button bottom_buttons[] = {
     { 200, 430, 150, 30, button_reset_defaults, button_none },
     { 410, 430, 100, 30, button_close, button_none, 0 },
     { 520, 430, 100, 30, button_close, button_none, 1 },
-    { 20, 430, 30, 30, button_page, button_none, 0 },
-    { 160, 430, 30, 30, button_page, button_none, 1 },
+    { 20, 410, 25, 25, button_page, button_none, 0 },
+    { 160, 410, 25, 25, button_page, button_none, 1 },
+    { 50, 430, 110, 30, button_hotkeys, button_none },
+
 
 };
 
-static const char *bottom_button_texts[] = {
+static const char* bottom_button_texts[] = {
     "Reset defaults",
     "Cancel",
     "OK",
     "-",
-    "+"
+    "+",
+    "Hotkeys"
 };
 
-static const char *pages_names[] = {
+static const char* pages_names[] = {
     "UI Improvements",
     "Gameplay Changes",
     "Gameplay Changes",
 };
 
-static const char *option_names[] = {
+static const char* option_names[] = {
     "Play intro videos",
     "Extra information in the control panel",
     "Enable smooth scrolling",
@@ -149,9 +154,9 @@ static struct {
         char original_value[CONFIG_STRING_VALUE_MAX];
         char new_value[CONFIG_STRING_VALUE_MAX];
         int (*change_action)(config_string_key key);
-    } config_string_values[CONFIG_STRING_MAX_ENTRIES];    
+    } config_string_values[CONFIG_STRING_MAX_ENTRIES];
     uint8_t language_options_data[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
-    uint8_t *language_options[MAX_LANGUAGE_DIRS];
+    uint8_t* language_options[MAX_LANGUAGE_DIRS];
     char language_options_utf8[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
     int num_language_options;
     int selected_language_option;
@@ -169,7 +174,7 @@ static void init(void)
         data.config_values[i].change_action = config_change_basic;
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        const char *value = config_get_string(i);
+        const char* value = config_get_string(i);
         strncpy(data.config_string_values[i].original_value, value, CONFIG_STRING_VALUE_MAX - 1);
         strncpy(data.config_string_values[i].new_value, value, CONFIG_STRING_VALUE_MAX - 1);
     }
@@ -178,7 +183,7 @@ static void init(void)
     string_copy(string_from_ascii("(default)"), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
     data.language_options[0] = data.language_options_data[0];
     data.num_language_options = 1;
-    const dir_listing *subdirs = dir_find_all_subdirectories();
+    const dir_listing* subdirs = dir_find_all_subdirectories();
     for (int i = 0; i < subdirs->num_files; i++) {
         if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i])) {
             int opt_id = data.num_language_options;
@@ -208,12 +213,12 @@ static void draw_background(void)
     text_draw_centered(data.language_options[data.selected_language_option],
         language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
 
-    for(int i = 0; i < options_per_page[data.page]; i++) {
-        text_draw(string_from_ascii(option_names[data.starting_option+i]), 44, FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET, FONT_NORMAL_BLACK, 0);
+    for (int i = 0; i < options_per_page[data.page]; i++) {
+        text_draw(string_from_ascii(option_names[data.starting_option + i]), 44, FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET, FONT_NORMAL_BLACK, 0);
     }
     for (int i = 0; i < options_per_page[data.page]; i++) {
-	int value = i + data.starting_option;
-        generic_button *btn = &checkbox_buttons[value];
+        int value = i + data.starting_option;
+        generic_button* btn = &checkbox_buttons[value];
         if (data.config_values[btn->parameter1].new_value) {
             text_draw(string_from_ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK, 0);
         }
@@ -222,11 +227,12 @@ static void draw_background(void)
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         text_draw_centered(string_from_ascii(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
     }
-    text_draw_centered(string_from_ascii("Page"), 80, 440, 30, FONT_NORMAL_BLACK, 0);
-    text_draw_number(data.page+1, '@', " ", 120 , 440, FONT_NORMAL_BLACK);
+    text_draw_centered(string_from_ascii("Page"), 80, 415, 30, FONT_NORMAL_BLACK, 0);
+    text_draw_number(data.page + 1, '@', " ", 120, 415, FONT_NORMAL_BLACK);
 
     graphics_reset_dialog();
 }
+
 
 static void draw_foreground(void)
 {
@@ -234,7 +240,7 @@ static void draw_foreground(void)
 
     for (int i = 0; i < options_per_page[data.page]; i++) {
         int value = data.starting_option + i;
-        generic_button *btn = &checkbox_buttons[value];
+        generic_button* btn = &checkbox_buttons[value];
         button_border_draw(btn->x, btn->y, btn->width, btn->height, data.focus_button == value + 1);
     }
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
@@ -244,9 +250,9 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
+static void handle_input(const mouse* m, const hotkeys* h)
 {
-    const mouse *m_dialog = mouse_in_dialog(m);
+    const mouse* m_dialog = mouse_in_dialog(m);
     int handled = 0;
     handled |= generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons, data.starting_option + options_per_page[data.page], &data.focus_button, data.starting_option);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
@@ -264,10 +270,15 @@ static void toggle_switch(int key, int param2)
 
 static void set_language(int index)
 {
-    const char *dir = index == 0 ? "" : data.language_options_utf8[index];
+    const char* dir = index == 0 ? "" : data.language_options_utf8[index];
     strncpy(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].new_value, dir, CONFIG_STRING_VALUE_MAX - 1);
 
     data.selected_language_option = index;
+}
+
+static void button_hotkeys(int param1, int param2)
+{
+    window_hotkey_config_show();
 }
 
 static void button_language_select(int param1, int param2)
@@ -349,10 +360,11 @@ static void button_page(int param1, int param2)
         if (data.page >= CONFIG_PAGES) {
             data.page = 0;
         }
-    } else {
+    }
+    else {
         data.page--;
         if (data.page < 0) {
-            data.page = CONFIG_PAGES-1;
+            data.page = CONFIG_PAGES - 1;
         }
     }
     data.starting_option = 0;
@@ -393,10 +405,7 @@ static int config_change_string_language(config_string_key key)
     config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
     if (!game_reload_language()) {
         // Notify user that language dir is invalid and revert to previously selected
-        window_plain_message_dialog_show(
-            "Invalid language directory",
-            "The directory you selected does not contain a valid language pack. Please check the log for errors."
-        );
+        window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE);
         config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].original_value);
         game_reload_language();
         return 0;

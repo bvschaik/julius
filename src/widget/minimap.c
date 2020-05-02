@@ -24,9 +24,9 @@ enum {
 };
 
 static const color_t ENEMY_COLOR_BY_CLIMATE[] = {
-    COLOR_ENEMY_CENTRAL,
-    COLOR_ENEMY_NORTHERN,
-    COLOR_ENEMY_DESERT
+    COLOR_MINIMAP_ENEMY_CENTRAL,
+    COLOR_MINIMAP_ENEMY_NORTHERN,
+    COLOR_MINIMAP_ENEMY_DESERT
 };
 
 static struct {
@@ -120,9 +120,9 @@ static int draw_figure(int x_view, int y_view, int grid_offset)
     if (color_type == FIGURE_COLOR_NONE) {
         return 0;
     }
-    color_t color = COLOR_BLACK;
+    color_t color = COLOR_MINIMAP_WOLF;
     if (color_type == FIGURE_COLOR_SOLDIER) {
-        color = COLOR_SOLDIER;
+        color = COLOR_MINIMAP_SOLDIER;
     } else if (color_type == FIGURE_COLOR_ENEMY) {
         color = data.enemy_color;
     }
@@ -216,7 +216,7 @@ static void draw_viewport_rectangle(void)
     graphics_draw_rect(x_offset, y_offset,
         view_width_tiles * 2 + 4,
         view_height_tiles - 4,
-        COLOR_YELLOW);
+        COLOR_MINIMAP_VIEWPORT);
 }
 
 static void prepare_minimap_cache(int width, int height)

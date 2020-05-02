@@ -20,14 +20,14 @@ static struct {
     const uint8_t *message;
 } data;
 
-static int init(const char *title, const char *message)
+static int init(translation_key title, translation_key message)
 {
     if (window_is(WINDOW_PLAIN_MESSAGE_DIALOG)) {
         // don't show popup over popup
         return 0;
     }
-    data.title = string_from_ascii(title);
-    data.message = string_from_ascii(message);
+    data.title = translation_for(title);
+    data.message = translation_for(message);
     return 1;
 }
 
@@ -36,7 +36,7 @@ static void draw_background(void)
     graphics_in_dialog();
     outer_panel_draw(80, 80, 30, 12);
     text_draw_centered(data.title, 80, 100, 480, FONT_LARGE_BLACK, 0);
-    text_draw_multiline(data.message, 100, 140, 450, FONT_NORMAL_BLACK);
+    text_draw_multiline(data.message, 100, 140, 450, FONT_NORMAL_BLACK, 0);
     graphics_reset_dialog();
 }
 
@@ -67,7 +67,7 @@ static void button_ok(int param1, int param2)
     close();
 }
 
-void window_plain_message_dialog_show(const char *title, const char *message)
+void window_plain_message_dialog_show(translation_key title, translation_key message)
 {
     if (init(title, message)) {
         window_type window = {

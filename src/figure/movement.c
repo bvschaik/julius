@@ -87,37 +87,30 @@ static void move_to_next_tile(figure *f)
             return;
         case DIR_0_TOP:
             f->y--;
-            f->grid_offset -= 162;
             break;
         case DIR_1_TOP_RIGHT:
             f->x++; f->y--;
-            f->grid_offset -= 161;
             break;
         case DIR_2_RIGHT:
             f->x++;
-            f->grid_offset += 1;
             break;
         case DIR_3_BOTTOM_RIGHT:
             f->x++; f->y++;
-            f->grid_offset += 163;
             break;
         case DIR_4_BOTTOM:
             f->y++;
-            f->grid_offset += 162;
             break;
         case DIR_5_BOTTOM_LEFT:
             f->x--; f->y++;
-            f->grid_offset += 161;
             break;
         case DIR_6_LEFT:
             f->x--;
-            f->grid_offset -= 1;
             break;
         case DIR_7_TOP_LEFT:
             f->x--; f->y--;
-            f->grid_offset -= 163;
             break;
     }
+    f->grid_offset += map_grid_direction_delta(f->direction);
     map_figure_add(f);
     if (map_terrain_is(f->grid_offset, TERRAIN_ROAD)) {
         f->is_on_road = 1;

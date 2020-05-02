@@ -572,14 +572,13 @@ static const letter_code* get_letter_code_for_combining_utf8(const char *prev_ch
     return search_utf8_table(&key, from_utf8_decomposed_table, decomposed_table_size);
 }
 
-encoding_type encoding_determine(void)
+encoding_type encoding_determine(language_type language)
 {
     // Determine encoding based on language:
     // - Windows-1250 (Central/Eastern Europe) is used in Polish only
     // - Windows-1251 (Cyrillic) is used in Russian only
     // - Windows-950 (Big5) is used in Traditional Chinese only
     // - Windows-1252 (Western Europe) is used in all other languages
-    language_type language = locale_determine_language();
     if (language == LANGUAGE_POLISH) {
         to_utf8_table = HIGH_TO_UTF8_EASTERN;
         encoding = ENCODING_EASTERN_EUROPE;

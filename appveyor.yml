@@ -1,6 +1,6 @@
 environment:
   CTEST_OUTPUT_ON_FAILURE: 1
-  SDL2_VERSION: 2.0.10
+  SDL2_VERSION: 2.0.12
   SDL2_MIXER_VERSION: 2.0.4
   MINGW_PATH: C:\MinGW
   MINGW_W64_PATH: C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1
@@ -41,9 +41,9 @@ before_build:
   - if [%COMPILER%] == [mingw-w64] set Path=%MINGW_W64_PATH%\mingw64\bin;%Path%
   - md build
   - cd build
-  - if [%COMPILER%] == [mingw] cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -D CMAKE_C_COMPILER=mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
-  - if [%COMPILER%] == [mingw-w64] cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -D CMAKE_C_COMPILER=x86_64-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
-  - if [%COMPILER%] == [msvc] cmake -G "Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -DCMAKE_PREFIX_PATH=C:/sdl-msvc/SDL2-%SDL2_VERSION%;C:/sdl-msvc/SDL2_mixer-%SDL2_MIXER_VERSION% ..
+  - if [%COMPILER%] == [mingw] cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -DSYSTEM_LIBS=OFF -D CMAKE_C_COMPILER=mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
+  - if [%COMPILER%] == [mingw-w64] cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -DSYSTEM_LIBS=OFF -D CMAKE_C_COMPILER=x86_64-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
+  - if [%COMPILER%] == [msvc] cmake -G "Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -DSYSTEM_LIBS=OFF -DCMAKE_PREFIX_PATH=C:/sdl-msvc/SDL2-%SDL2_VERSION%;C:/sdl-msvc/SDL2_mixer-%SDL2_MIXER_VERSION% ..
 
 build_script:
   - cmake --build .

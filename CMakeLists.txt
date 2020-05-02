@@ -6,6 +6,7 @@ if(VITA_BUILD AND SWITCH_BUILD)
 endif()
 
 option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
+option(SYSTEM_LIBS "Use system libraries when available." ON)
 cmake_dependent_option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF "NOT MSVC" OFF)
 cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT MSVC; NOT VITA_BUILD" OFF)
 
@@ -453,6 +454,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar_editor.c
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar_extra.c    
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.c
 )
@@ -509,6 +511,8 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/file_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/gift_to_emperor.c
     ${PROJECT_SOURCE_DIR}/src/window/hold_festival.c
+    ${PROJECT_SOURCE_DIR}/src/window/hotkey_config.c
+    ${PROJECT_SOURCE_DIR}/src/window/hotkey_editor.c
     ${PROJECT_SOURCE_DIR}/src/window/intermezzo.c
     ${PROJECT_SOURCE_DIR}/src/window/intro_video.c
     ${PROJECT_SOURCE_DIR}/src/window/labor_priority.c
@@ -539,6 +543,14 @@ set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/tool.c
     ${PROJECT_SOURCE_DIR}/src/editor/tool_restriction.c
 )
+set(TRANSLATION_FILES
+    ${PROJECT_SOURCE_DIR}/src/translation/english.c
+    ${PROJECT_SOURCE_DIR}/src/translation/french.c
+    ${PROJECT_SOURCE_DIR}/src/translation/german.c
+    ${PROJECT_SOURCE_DIR}/src/translation/portuguese.c
+    ${PROJECT_SOURCE_DIR}/src/translation/spanish.c
+    ${PROJECT_SOURCE_DIR}/src/translation/translation.c
+)
 
 set(MACOSX_FILES "")
 if(APPLE)
@@ -562,9 +574,8 @@ set(SOURCE_FILES
     ${WIDGET_FILES}
     ${WINDOW_FILES}
     ${EDITOR_FILES}
-    ${PNG_FILES}
+    ${TRANSLATION_FILES}
     ${TINYFD_FILES}
-    ${ZLIB_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc
     ${MACOSX_FILES}
 )
@@ -659,7 +670,23 @@ endif()
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
-if (SWITCH_BUILD)
+if(SYSTEM_LIBS)
+    find_package(PNG)
+endif()
+if(PNG_FOUND)
+    include_directories(${PNG_INCLUDE_DIRS})
+    target_link_libraries(${SHORT_NAME} ${PNG_LIBRARIES})
+else()
+    include_directories("ext/png")
+    target_sources(${SHORT_NAME} PRIVATE "${PNG_FILES}" "${ZLIB_FILES}")
+endif()
+
+if(VITA_BUILD)
+    include_directories(
+        $ENV{VITASDK}/arm-vita-eabi/include
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+elseif (SWITCH_BUILD)
     include_directories(
         ${DEVKITPRO}/portlibs/switch/include/SDL2
         ${DEVKITPRO}/libnx/include
@@ -681,16 +708,11 @@ if (VITA_BUILD)
         vorbisfile
         vorbis
         mikmod
-        modplug
         mpg123
         FLAC
         ogg
-        jpeg
-        png
-        freetype
         vita2d
         m
-        z
         SceAppUtil_stub
         SceAudio_stub
         SceCommonDialog_stub
@@ -704,6 +726,7 @@ if (VITA_BUILD)
         ScePgf_stub
         SceAppMgr_stub
     )
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__vita__")
     # this setting enables larger heap memory sizes on Vita, up to ~330 MB
     # useful for pre-loading videos into memory
     set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
@@ -724,19 +747,13 @@ elseif(SWITCH_BUILD)
         GLESv2
         glapi
         drm_nouveau
-        png
-        jpeg
         vorbisidec
-        mikmod
         modplug
         mpg123
         FLAC
         opusfile
         opus
         ogg
-        jpeg
-        png
-        freetype
         m
         z
         nx
@@ -770,8 +787,9 @@ elseif(SWITCH_BUILD)
         POST_BUILD
         COMMAND ${DEVKITPRO}/tools/bin/nacptool --create "${SHORT_NAME}" "rsn8887" ${SWITCH_VERSION} ${SHORT_NAME}.nacp
         COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switchdata/icon0.jpg --nacp=${SHORT_NAME}.nacp
-        COMMAND rm -rf release/${SHORT_NAME}
-        COMMAND mkdir -p release/${SHORT_NAME}
+        COMMAND rm -rf release
+        COMMAND mkdir release
+        COMMAND cd release && mkdir ${SHORT_NAME} && cd ..
         COMMAND cp -f ${SHORT_NAME}.nro release/${SHORT_NAME}/${SHORT_NAME}.nro
         COMMAND cd release && zip -r ../${SHORT_NAME}_switch.zip ${SHORT_NAME} -x "*.DS_Store" -x "*__MAC*"
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}

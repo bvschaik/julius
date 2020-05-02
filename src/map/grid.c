@@ -4,17 +4,34 @@
 
 #include <string.h>
 
+#define OFFSET(x,y) (x + GRID_SIZE * y)
+
 struct map_data_t map_data;
 
-static const int DIRECTION_DELTA[] = {-162, -161, 1, 163, 162, 161, -1, -163};
+static const int DIRECTION_DELTA[] = {-OFFSET(0,1), OFFSET(1,-1), 1, OFFSET(1,1), OFFSET(0,1), OFFSET(-1,1), -1, -OFFSET(1,1)};
 
 static const int ADJACENT_OFFSETS[][21] = {
     {0},
-    {-162, 1, 162, -1, 0},
-    {-162, -161, 2, 164, 325, 324, 161, -1, 0},
-    {-162, -161, -160, 3, 165, 327, 488, 487, 486, 323, 161, -1, 0},
-    {-162, -161, -160, -159, 4, 166, 328, 490, 651, 650, 649, 648, 485, 323, 161, -1, 0},
-    {-162, -161, -160, -159, -158, 5, 167, 329, 491, 653, 814, 813, 812, 811, 810, 647, 485, 323, 161, -1, 0},
+    {OFFSET(0,-1), OFFSET(1,0), OFFSET(0,1), OFFSET(-1,0), 0},
+    {OFFSET(0,-1), OFFSET(1,-1), OFFSET(2,0), OFFSET(2,1), OFFSET(1,2), OFFSET(0,2), OFFSET(-1,1), OFFSET(-1,0), 0},
+    {
+        OFFSET(0,-1), OFFSET(1,-1), OFFSET(2,-1),
+        OFFSET(3,0), OFFSET(3,1), OFFSET(3,2),
+        OFFSET(2,3), OFFSET(1,3), OFFSET(0,3),
+        OFFSET(-1,2), OFFSET(-1,1), OFFSET(-1,0), 0
+    },
+    {
+        OFFSET(0,-1), OFFSET(1,-1), OFFSET(2,-1), OFFSET(3,-1),
+        OFFSET(4,0), OFFSET(4,1), OFFSET(4,2), OFFSET(4,3),
+        OFFSET(3,4), OFFSET(2,4), OFFSET(1,4), OFFSET(0,4),
+        OFFSET(-1,3), OFFSET(-1,2), OFFSET(-1,1), OFFSET(-1,0), 0
+    },
+    {
+        OFFSET(0,-1), OFFSET(1,-1), OFFSET(2,-1), OFFSET(3,-1), OFFSET(4,-1),
+        OFFSET(5,0), OFFSET(5,1), OFFSET(5,2), OFFSET(5,3), OFFSET(5,4),
+        OFFSET(4,5), OFFSET(3,5), OFFSET(2,5), OFFSET(1,5), OFFSET(0,5),
+        OFFSET(-1,4), OFFSET(-1,3), OFFSET(-1,2), OFFSET(-1,1), OFFSET(-1,0), 0
+    },
 };
 
 void map_grid_init(int width, int height, int start_offset, int border_size)
@@ -23,6 +40,11 @@ void map_grid_init(int width, int height, int start_offset, int border_size)
     map_data.height = height;
     map_data.start_offset = start_offset;
     map_data.border_size = border_size;
+}
+
+int map_grid_is_valid_offset(int grid_offset)
+{
+    return grid_offset >= 0 && grid_offset < GRID_SIZE * GRID_SIZE;
 }
 
 int map_grid_offset(int x, int y)
@@ -43,6 +65,17 @@ int map_grid_offset_to_y(int grid_offset)
 int map_grid_delta(int x, int y)
 {
     return y * GRID_SIZE + x;
+}
+
+int map_grid_add_delta(int grid_offset, int x, int y)
+{
+    int raw_x = grid_offset % GRID_SIZE;
+    int raw_y = grid_offset / GRID_SIZE;
+    if (raw_x + x < 0 || raw_x + x >= GRID_SIZE ||
+        raw_y + y < 0 || raw_y + y >= GRID_SIZE) {
+        return -1;
+    }
+    return grid_offset + map_grid_delta(x, y);
 }
 
 int map_grid_direction_delta(int direction)

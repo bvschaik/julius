@@ -9,6 +9,7 @@ To build Julius, you'll need:
 - `cmake`
 - `SDL2`
 - `SDL2_mixer`
+- `libpng` (optional, a bundled copy will be used if not found)
 
 After cloning the repo (URL: `https://github.com/bvschaik/julius.git`), run the following commands:
 
@@ -17,6 +18,8 @@ After cloning the repo (URL: `https://github.com/bvschaik/julius.git`), run the 
 	$ make
 
 This results in a `julius` executable.
+
+To use the bundled copies of optional libraries even if a system version is available, add `-DSYSTEM_LIBS=OFF` to `cmake` invocation.
 
 To build the Vita or Switch versions, use `cmake .. -DVITA_BUILD=ON` or `cmake .. -DSWITCH_BUILD=ON`
 instead of `cmake ..`.

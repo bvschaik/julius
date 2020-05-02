@@ -79,14 +79,14 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
             fwrite("INFO: ", sizeof(char), 6, log_file);
         }
         fwrite(message, sizeof(char), strlen(message), log_file);
-        fwrite("\r\n", sizeof(char), 2, log_file);
+        fwrite("\n", sizeof(char), 1, log_file);
         fflush(log_file);
     }
 }
 
 static void setup_logging(void)
 {
-    log_file = file_open("julius-log.txt", "w");
+    log_file = file_open("julius-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
 
@@ -167,9 +167,9 @@ static void run_and_draw(void)
         int y_offset = 24;
         int y_offset_text = y_offset + 5;
         graphics_fill_rect(0, y_offset, 100, 20, COLOR_WHITE);
-        text_draw_number_colored(fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_PLAIN, COLOR_RED);
-        text_draw_number_colored(time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text, FONT_NORMAL_PLAIN, COLOR_RED);
-        text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_PLAIN, COLOR_RED);
+        text_draw_number_colored(fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
+        text_draw_number_colored(time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
+        text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
     }
 
     platform_screen_render();
@@ -188,7 +188,9 @@ static void run_and_draw(void)
 
 static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
 {
-    mouse_set_position(event->x, event->y);
+    if (!SDL_GetRelativeMouseMode()) {
+        mouse_set_position(event->x, event->y);
+    }
     if (event->button == SDL_BUTTON_LEFT) {
         mouse_set_left_down(is_down);
     } else if (event->button == SDL_BUTTON_RIGHT) {

@@ -1,36 +1,27 @@
 #include "sidebar.h"
 
 #include "building/menu.h"
-#include "city/labor.h"
 #include "city/message.h"
-#include "city/population.h"
-#include "city/ratings.h"
 #include "city/view.h"
 #include "city/warning.h"
-#include "core/config.h"
 #include "core/direction.h"
-#include "core/lang.h"
-#include "core/string.h"
 #include "game/orientation.h"
-#include "game/settings.h"
 #include "game/state.h"
 #include "game/undo.h"
-#include "graphics/arrow_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/menu.h"
-#include "graphics/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "map/orientation.h"
 #include "scenario/property.h"
-#include "scenario/criteria.h"
 #include "sound/effect.h"
 #include "widget/city.h"
 #include "widget/minimap.h"
+#include "widget/sidebar_extra.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -40,15 +31,11 @@
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
 
+#define SIDEBAR_VANILLA_SECTION_HEIGHT 450
+#define FILLER_Y_OFFSET (SIDEBAR_VANILLA_SECTION_HEIGHT + TOP_MENU_HEIGHT)
+#define SIDEBAR_SLIDE_STEPS 94
 #define SIDEBAR_COLLAPSED_WIDTH 42
 #define SIDEBAR_EXPANDED_WIDTH 162
-#define FILLER_Y_OFFSET 474
-
-#define EXTRA_INFO_HEIGHT_GAME_SPEED 64
-#define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 112
-#define EXTRA_INFO_HEIGHT_RATINGS 272
-
-#define SIDEBAR_SLIDE_STEPS 94
 
 // sliding sidebar progress to x offset translation
 static const int PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS] = {
@@ -76,7 +63,6 @@ static void button_empire(int param1, int param2);
 static void button_mission_briefing(int param1, int param2);
 static void button_rotate_north(int param1, int param2);
 static void button_rotate(int clockwise, int param2);
-static void button_game_speed(int is_down, int param2);
 
 static image_button buttons_overlays_collapse_sidebar[] = {
     {127, 5, 31, 20, IB_NORMAL, 90, 0, button_collapse_expand, button_none, 0, 0, 1},
@@ -129,32 +115,16 @@ static image_button buttons_top_expanded[] = {
     {123, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 9, button_rotate, button_none, 1, 0, 1},
 };
 
-static arrow_button arrow_buttons_speed[] = {
-    {11, 30, 17, 24, button_game_speed, 1, 0},
-    {35, 30, 15, 24, button_game_speed, 0, 0},
-};
-
-typedef struct {
-    int value;
-    int target;
-} objective;
-
 static struct {
     time_millis slide_start;
     int progress;
     int focus_button_for_tooltip;
-    struct {
-        int height;
-        int game_speed;
-        int unemployment_percentage;
-        int unemployment_amount;
-        objective culture;
-        objective prosperity;
-        objective peace;
-        objective favor;
-        objective population;
-    } extra_info;
 } data;
+
+static int get_sidebar_height(void)
+{
+    return screen_height() - TOP_MENU_HEIGHT;
+}
 
 static int get_x_offset_expanded(void)
 {
@@ -210,7 +180,7 @@ static void draw_overlay_text(int x_offset)
     }
 }
 
-static void draw_sidebar_filler(int x_offset, int y_offset, int is_collapsed)
+static void draw_sidebar_relief(int x_offset, int y_offset, int is_collapsed)
 {
     // relief images below panel
     int image_base = image_group(GROUP_SIDE_PANEL);
@@ -227,175 +197,17 @@ static void draw_sidebar_filler(int x_offset, int y_offset, int is_collapsed)
     }
 }
 
-static int calculate_extra_info_height(int is_collapsed)
-{
-    if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)) {
-        data.extra_info.height = 0;
-    }
-    else {
-        int available_height = screen_height() - FILLER_Y_OFFSET;
-        if (available_height >= EXTRA_INFO_HEIGHT_RATINGS) {
-            data.extra_info.height = EXTRA_INFO_HEIGHT_RATINGS;
-        }
-        else if (available_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
-            data.extra_info.height = EXTRA_INFO_HEIGHT_UNEMPLOYMENT;
-        }
-        else if (available_height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
-            data.extra_info.height = EXTRA_INFO_HEIGHT_GAME_SPEED;
-        }
-        else {
-            data.extra_info.height = 0;
-        }
-    }
-    return data.extra_info.height;
-}
-
-static void set_extra_info_objectives(void)
-{
-    data.extra_info.culture.target = 0;
-    data.extra_info.prosperity.target = 0;
-    data.extra_info.peace.target = 0;
-    data.extra_info.favor.target = 0;
-    data.extra_info.population.target = 0;
-
-    if (scenario_is_open_play()) {
-        return;
-    }
-    if (scenario_criteria_culture_enabled()) {
-        data.extra_info.culture.target = scenario_criteria_culture();
-    }
-    if (scenario_criteria_prosperity_enabled()) {
-        data.extra_info.prosperity.target = scenario_criteria_prosperity();
-    }
-    if (scenario_criteria_peace_enabled()) {
-        data.extra_info.peace.target = scenario_criteria_peace();
-    }
-    if (scenario_criteria_favor_enabled()) {
-        data.extra_info.favor.target = scenario_criteria_favor();
-    }
-    if (scenario_criteria_population_enabled()) {
-        data.extra_info.population.target = scenario_criteria_population();
-    }
-}
-
-static int update_extra_info_value(int value, int* field)
-{
-    if (value == *field) {
-        return 0;
-    }
-    else {
-        *field = value;
-        return 1;
-    }
-}
-
-static int update_extra_info(int height, int is_background)
-{
-    int changed = 0;
-    if (height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
-        changed |= update_extra_info_value(setting_game_speed(), &data.extra_info.game_speed);
-    }
-    if (height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
-        changed |= update_extra_info_value(city_labor_unemployment_percentage(), &data.extra_info.unemployment_percentage);
-        changed |= update_extra_info_value(
-            city_labor_workers_unemployed() - city_labor_workers_needed(),
-            &data.extra_info.unemployment_amount
-        );
-    }
-    if (height >= EXTRA_INFO_HEIGHT_RATINGS) {
-        if (is_background) {
-            set_extra_info_objectives();
-        }
-        changed |= update_extra_info_value(city_rating_culture(), &data.extra_info.culture.value);
-        changed |= update_extra_info_value(city_rating_prosperity(), &data.extra_info.prosperity.value);
-        changed |= update_extra_info_value(city_rating_peace(), &data.extra_info.peace.value);
-        changed |= update_extra_info_value(city_rating_favor(), &data.extra_info.favor.value);
-        changed |= update_extra_info_value(city_population(), &data.extra_info.population.value);
-    }
-    return changed;
-}
-
-static void draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective* obj, int cut_off_at_parenthesis)
-{
-    if (cut_off_at_parenthesis) {
-        // Exception for Chinese: the string for "population" includes the hotkey " (6)"
-        // To fix that: cut the string off at the '('
-        uint8_t tmp[100];
-        string_copy(lang_get_string(text_group, text_id), tmp, 100);
-        for (int i = 0; i < 100 && tmp[i]; i++) {
-            if (tmp[i] == '(') {
-                tmp[i] = 0;
-                break;
-            }
-        }
-        text_draw(tmp, x_offset + 11, y_offset, FONT_NORMAL_WHITE, 0);
-    }
-    else {
-        lang_text_draw(text_group, text_id, x_offset + 11, y_offset, FONT_NORMAL_WHITE);
-    }
-    font_t font = obj->value >= obj->target ? FONT_NORMAL_GREEN : FONT_NORMAL_RED;
-    int width = text_draw_number(obj->value, '@', "", x_offset + 11, y_offset + 16, font);
-    text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + 16, font);
-}
-
-static void draw_extra_info_panel(int x_offset, int extra_info_height)
-{
-    int y_offset = FILLER_Y_OFFSET;
-
-    int panel_blocks = extra_info_height / 16;
-    graphics_draw_vertical_line(x_offset, y_offset, y_offset + extra_info_height, COLOR_WHITE);
-    graphics_draw_vertical_line(x_offset + SIDEBAR_EXPANDED_WIDTH - 1, y_offset, y_offset + extra_info_height, COLOR_SIDEBAR);
-    inner_panel_draw(x_offset + 1, y_offset, SIDEBAR_EXPANDED_WIDTH / 16, panel_blocks);
-
-    lang_text_draw(45, 2, x_offset + 11, y_offset + 10, FONT_NORMAL_WHITE);
-    text_draw_percentage(data.extra_info.game_speed, x_offset + 60, y_offset + 36, FONT_NORMAL_GREEN);
-    arrow_buttons_draw(x_offset, y_offset, arrow_buttons_speed, 2);
-
-    if (extra_info_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
-        lang_text_draw(68, 148, x_offset + 11, y_offset + 68, FONT_NORMAL_WHITE);
-        int width = text_draw_percentage(data.extra_info.unemployment_percentage, x_offset + 11, y_offset + 88, FONT_NORMAL_GREEN);
-        text_draw_number(data.extra_info.unemployment_amount, '(', ")", x_offset + 11 + width, y_offset + 88, FONT_NORMAL_GREEN);
-    }
-    if (extra_info_height >= EXTRA_INFO_HEIGHT_RATINGS) {
-        draw_extra_info_objective(x_offset, y_offset + 110, 53, 1, &data.extra_info.culture, 0);
-        draw_extra_info_objective(x_offset, y_offset + 142, 53, 2, &data.extra_info.prosperity, 0);
-        draw_extra_info_objective(x_offset, y_offset + 174, 53, 3, &data.extra_info.peace, 0);
-        draw_extra_info_objective(x_offset, y_offset + 206, 53, 4, &data.extra_info.favor, 0);
-        draw_extra_info_objective(x_offset, y_offset + 238, 4, 6, &data.extra_info.population, 1);
-    }
-}
-
-static void draw_extra_info_buttons(int x_offset, int is_collapsed)
-{
-    int extra_info_height = data.extra_info.height;
-    if (!extra_info_height) {
-        return;
-    }
-
-    graphics_set_clip_rectangle(x_offset, TOP_MENU_HEIGHT,
-            screen_width() - x_offset,
-            screen_height() - TOP_MENU_HEIGHT);
-
-    if (update_extra_info(extra_info_height, 0)) {
-        draw_extra_info_panel(x_offset, extra_info_height);
-    }
-    else {
-        arrow_buttons_draw(x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
-    }
-
-    graphics_reset_clip_rectangle();
-}
-
 static void draw_sidebar_remainder(int x_offset, int is_collapsed)
 {
-    int extra_info_height = calculate_extra_info_height(is_collapsed);
-
-    if (extra_info_height) {
-        update_extra_info(extra_info_height, 1);
-        draw_extra_info_panel(x_offset, extra_info_height);
+    int width = SIDEBAR_EXPANDED_WIDTH;
+    if (is_collapsed) {
+        width = SIDEBAR_COLLAPSED_WIDTH;
     }
-
-    draw_sidebar_filler(x_offset, FILLER_Y_OFFSET + extra_info_height, is_collapsed);
+    int available_height = get_sidebar_height() - SIDEBAR_VANILLA_SECTION_HEIGHT;
+    int extra_height = sidebar_extra_draw_background(x_offset, FILLER_Y_OFFSET, width, available_height, is_collapsed);
+    sidebar_extra_draw_foreground(x_offset, FILLER_Y_OFFSET, width, is_collapsed);
+    int relief_y_offset = FILLER_Y_OFFSET + extra_height;
+    draw_sidebar_relief(x_offset, relief_y_offset, is_collapsed);
 }
 
 void widget_sidebar_draw_background(void)
@@ -456,18 +268,20 @@ void widget_sidebar_draw_foreground(void)
     }
     int x_offset;
     int is_collapsed = city_view_is_sidebar_collapsed();
+    int sidebar_width;
     if (is_collapsed) {
         x_offset = get_x_offset_collapsed();
-    }
-    else {
+        sidebar_width = SIDEBAR_COLLAPSED_WIDTH;
+    } else {
         x_offset = get_x_offset_expanded();
+        sidebar_width = SIDEBAR_EXPANDED_WIDTH;
     }
     draw_buttons();
     draw_overlay_text(x_offset + 4);
     draw_minimap(0);
     draw_number_of_messages();
 
-    draw_extra_info_buttons(x_offset, is_collapsed);
+    sidebar_extra_draw_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
 }
 
 void widget_sidebar_draw_foreground_military(void)
@@ -480,16 +294,16 @@ int widget_sidebar_handle_mouse(const mouse* m)
     if (widget_city_has_input()) {
         return 0;
     }
-    int click = 0;
+    int handled = 0;
     int button_id;
     data.focus_button_for_tooltip = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = get_x_offset_collapsed();
-        click |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = 12;
         }
-        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, 12, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, 12, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 19;
         }
@@ -499,23 +313,21 @@ int widget_sidebar_handle_mouse(const mouse* m)
             return 1;
         }
         int x_offset = get_x_offset_expanded();
-        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 9;
         }
-        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, 15, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, 15, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 19;
         }
-        click |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, 6, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, 6, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 39;
         }
-        if (data.extra_info.height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
-            click |= arrow_buttons_handle_mouse(m, x_offset, FILLER_Y_OFFSET, arrow_buttons_speed, 2);
-        }
+        handled |= sidebar_extra_handle_mouse(m, x_offset, FILLER_Y_OFFSET);
     }
-    return click;
+    return handled;
 }
 
 int widget_sidebar_handle_mouse_build_menu(const mouse *m)
@@ -609,16 +421,6 @@ static void button_rotate(int clockwise, int param2)
     window_invalidate();
 }
 
-static void button_game_speed(int is_down, int param2)
-{
-    if (is_down) {
-        setting_decrease_game_speed();
-    }
-    else {
-        setting_increase_game_speed();
-    }
-}
-
 static void update_progress(void)
 {
     time_millis now = time_get_millis();
@@ -639,7 +441,8 @@ static void draw_sliding_foreground(void)
 
     int x_offset_expanded = get_x_offset_expanded();
     int x_offset_collapsed = get_x_offset_collapsed();
-    graphics_set_clip_rectangle(x_offset_expanded, TOP_MENU_HEIGHT, SIDEBAR_EXPANDED_WIDTH, screen_height() - TOP_MENU_HEIGHT);
+    int height = get_sidebar_height();
+    graphics_set_clip_rectangle(x_offset_expanded, TOP_MENU_HEIGHT, SIDEBAR_EXPANDED_WIDTH, height);
 
     int image_base = image_group(GROUP_SIDE_PANEL);
     // draw collapsed sidebar
@@ -664,10 +467,9 @@ static void draw_sliding_foreground(void)
     draw_overlay_text(x_offset_expanded + 4);
     draw_build_image(x_offset_expanded + 6, 1);
 
-    draw_sidebar_filler(x_offset_collapsed, FILLER_Y_OFFSET, 1);
+    draw_sidebar_relief(x_offset_collapsed, FILLER_Y_OFFSET, 1);
 
     draw_sidebar_remainder(x_offset_expanded, 0);
-    draw_extra_info_buttons(x_offset_expanded, 0);
 
     graphics_reset_clip_rectangle();
 }

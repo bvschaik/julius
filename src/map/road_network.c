@@ -10,7 +10,7 @@
 
 #define MAX_QUEUE 1000
 
-static const int ADJACENT_OFFSETS[] = {-162, 1, 162, -1};
+static const int ADJACENT_OFFSETS[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
 
 static grid_u8 network;
 

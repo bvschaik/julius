@@ -8,7 +8,6 @@
 #include "SDL.h"
 
 #define CURSOR_SIZE 32
-#define ALPHA_OPAQUE (0xFFu << 24)
 
 static switch_cursor cursors[CURSOR_MAX];
 switch_cursor *current_cursor;
@@ -29,13 +28,13 @@ static SDL_Texture *init_cursor(const cursor *c)
         for (int x = 0; x < c->width; x++) {
             switch (c->data[y * c->width + x]) {
                 case '#':
-                    pixels[y * CURSOR_SIZE + x] = COLOR_BLACK | ALPHA_OPAQUE;
+                    pixels[y * CURSOR_SIZE + x] = ALPHA_OPAQUE | COLOR_BLACK;
                     break;
                 case '\'':
-                    pixels[y * CURSOR_SIZE + x] = COLOR_WHITE | ALPHA_OPAQUE;
+                    pixels[y * CURSOR_SIZE + x] = ALPHA_OPAQUE | COLOR_WHITE;
                     break;
                 case ' ':
-                    pixels[y * CURSOR_SIZE + x] = 0x00000000; // transparent
+                    pixels[y * CURSOR_SIZE + x] = ALPHA_TRANSPARENT;
                     break;
             }
         }

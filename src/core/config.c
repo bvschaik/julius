@@ -90,37 +90,10 @@ const char *config_get_default_string_value(config_string_key key)
 
 void config_set_defaults(void)
 {
-    values[CONFIG_GP_FIX_IMMIGRATION_BUG] = 0;
-    values[CONFIG_GP_FIX_100_YEAR_GHOSTS] = 0;
-    values[CONFIG_UI_WALKER_WAYPOINTS] = 0;
-    values[CONFIG_GP_FIX_EDITOR_EVENTS] = 0;
-    values[CONFIG_UI_SIDEBAR_INFO] = 0;
-    values[CONFIG_UI_SMOOTH_SCROLLING] = 0;
-    values[CONFIG_GP_CH_GRANDFESTIVAL] = 0;
-    values[CONFIG_GP_CH_JEALOUS_GODS] = 0;
-    values[CONFIG_GP_CH_GLOBAL_LABOUR] = 0;
-    values[CONFIG_GP_CH_SCHOOL_WALKERS] = 0;
-    values[CONFIG_GP_CH_RETIRE_AT_60] = 0;
-    values[CONFIG_GP_CH_FIXED_WORKERS] = 0;
-    values[CONFIG_GP_CH_EXTRA_FORTS] = 0;
-    values[CONFIG_GP_CH_WOLVES_BLOCK] = 0;
-    values[CONFIG_GP_CH_DYNAMIC_GRANARIES] = 0;
-    values[CONFIG_GP_CH_MORE_STOCKPILE] = 0;
-    values[CONFIG_GP_CH_NO_BUYER_DISTRIBUTION] = 0;
-    values[CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS] = 0;
-    values[CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD] = 0;
-    values[CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD] = 0;
-    values[CONFIG_UI_SHOW_INTRO_VIDEO] = 0;
-    values[CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE] = 0;
-    values[CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE] = 0;
-    values[CONFIG_UI_SHOW_CONSTRUCTION_SIZE] = 0;
-    values[CONFIG_GP_CH_GRANARIES_GET_DOUBLE] = 0;
-    values[CONFIG_GP_CH_FARMS_DELIVER_CLOSE] = 0;
-    values[CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES] = 0;
-    values[CONFIG_GP_CH_ALL_HOUSES_MERGE] = 0;
-    values[CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE] = 0;
-    values[CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY] = 0;
-    string_values[CONFIG_STRING_UI_LANGUAGE_DIR][0] = 0;
+    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
+        values[i] = default_values[i];
+    }
+    strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR], default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR], CONFIG_STRING_VALUE_MAX);
 }
 
 void config_load(void)
@@ -134,7 +107,7 @@ void config_load(void)
     char *line;
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
-        int last = strlen(line) - 1;
+        size_t last = strlen(line) - 1;
         while (last >= 0 && (line[last] == '\n' || line[last] == '\r')) {
             line[last] = 0;
             last--;

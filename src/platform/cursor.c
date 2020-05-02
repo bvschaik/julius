@@ -9,19 +9,19 @@ static SDL_Surface* cursor_surfaces[CURSOR_MAX];
 static int current_cursor_id = CURSOR_ARROW;
 
 static const color_t mouse_colors[] = {
-    COLOR_MOUSE_TRANSPARENT,
-    COLOR_MOUSE_TRANSPARENT,
-    COLOR_MOUSE_TRANSPARENT,
-    COLOR_MOUSE_BLACK,
-    COLOR_MOUSE_DARK_GRAY,
-    COLOR_MOUSE_MEDIUM_GRAY,
-    COLOR_MOUSE_LIGHT_GRAY,
-    COLOR_MOUSE_WHITE
+    ALPHA_TRANSPARENT,
+    ALPHA_TRANSPARENT,
+    ALPHA_TRANSPARENT,
+    ALPHA_OPAQUE | COLOR_BLACK,
+    ALPHA_OPAQUE | COLOR_MOUSE_DARK_GRAY,
+    ALPHA_OPAQUE | COLOR_MOUSE_MEDIUM_GRAY,
+    ALPHA_OPAQUE | COLOR_MOUSE_LIGHT_GRAY,
+    ALPHA_OPAQUE | COLOR_WHITE
 };
 
 static SDL_Surface* generate_cursor_surface(const char* data, int width, int height)
 {
-    SDL_Surface *cursor_surface = SDL_CreateRGBSurface(0, width, height, 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+    SDL_Surface *cursor_surface = SDL_CreateRGBSurface(0, width, height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
     color_t *pixels = cursor_surface->pixels;
     for (int i = 0; i < width * height; ++i) {
         pixels[i] = mouse_colors[data[i] - 32];

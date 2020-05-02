@@ -64,88 +64,154 @@ static const char *ini_keys[] = {
 };
 
 static struct {
+    hotkey_mapping default_mappings[HOTKEY_MAX_ITEMS][2];
     hotkey_mapping mappings[MAX_MAPPINGS];
     int num_mappings;
 } data;
 
-static void add_mapping(key_type key, key_modifier_type modifiers, hotkey_action action)
+static void set_mapping(key_type key, key_modifier_type modifiers, hotkey_action action)
 {
-    data.mappings[data.num_mappings].key = key;
-    data.mappings[data.num_mappings].modifiers = modifiers;
-    data.mappings[data.num_mappings].action = action;
-    data.num_mappings++;
+    hotkey_mapping *mapping = &data.default_mappings[action][0];
+    if (mapping->key) {
+        mapping = &data.default_mappings[action][1];
+    }
+    if (mapping->key) {
+        return;
+    }
+    mapping->key = key;
+    mapping->modifiers = modifiers;
+    mapping->action = action;
 }
 
-static void add_layout_mapping(const char *name, key_type default_key, key_modifier_type modifiers, hotkey_action action)
+static void set_layout_mapping(const char *name, key_type default_key, key_modifier_type modifiers, hotkey_action action)
 {
     key_type key = system_keyboard_key_for_symbol(name);
     if (key == KEY_NONE) {
         log_info("No key found on layout for", name, 0);
         key = default_key;
     }
-    add_mapping(key, modifiers, action);
+    set_mapping(key, modifiers, action);
+}
+
+void init_defaults(void)
+{
+    memset(data.default_mappings, 0, sizeof(data.default_mappings));
+    set_mapping(KEY_UP, KEY_MOD_NONE, HOTKEY_ARROW_UP);
+    set_mapping(KEY_DOWN, KEY_MOD_NONE, HOTKEY_ARROW_DOWN);
+    set_mapping(KEY_LEFT, KEY_MOD_NONE, HOTKEY_ARROW_LEFT);
+    set_mapping(KEY_RIGHT, KEY_MOD_NONE, HOTKEY_ARROW_RIGHT);
+    set_layout_mapping("P", KEY_P, KEY_MOD_NONE, HOTKEY_TOGGLE_PAUSE);
+    set_mapping(KEY_SPACE, KEY_MOD_NONE, HOTKEY_TOGGLE_OVERLAY);
+    set_layout_mapping("L", KEY_L, KEY_MOD_NONE, HOTKEY_CYCLE_LEGION);
+    set_layout_mapping("[", KEY_LEFTBRACKET, KEY_MOD_NONE, HOTKEY_DECREASE_GAME_SPEED);
+    set_layout_mapping("]", KEY_RIGHTBRACKET, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED);
+    set_mapping(KEY_PAGEDOWN, KEY_MOD_NONE, HOTKEY_DECREASE_GAME_SPEED);
+    set_mapping(KEY_PAGEUP, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED);
+    set_mapping(KEY_HOME, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_LEFT);
+    set_mapping(KEY_END, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_RIGHT);
+    set_mapping(KEY_1, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_LABOR);
+    set_mapping(KEY_2, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_MILITARY);
+    set_mapping(KEY_3, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_IMPERIAL);
+    set_mapping(KEY_4, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RATINGS);
+    set_mapping(KEY_5, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_TRADE);
+    set_mapping(KEY_6, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_POPULATION);
+    set_mapping(KEY_7, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_HEALTH);
+    set_mapping(KEY_8, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_EDUCATION);
+    set_mapping(KEY_9, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_ENTERTAINMENT);
+    set_mapping(KEY_0, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RELIGION);
+    set_mapping(KEY_KP_1, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_LABOR);
+    set_mapping(KEY_KP_2, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_MILITARY);
+    set_mapping(KEY_KP_3, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_IMPERIAL);
+    set_mapping(KEY_KP_4, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RATINGS);
+    set_mapping(KEY_KP_5, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_TRADE);
+    set_mapping(KEY_KP_6, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_POPULATION);
+    set_mapping(KEY_KP_7, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_HEALTH);
+    set_mapping(KEY_KP_8, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_EDUCATION);
+    set_mapping(KEY_KP_9, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_ENTERTAINMENT);
+    set_mapping(KEY_KP_0, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RELIGION);
+    set_layout_mapping("-", KEY_MINUS, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_FINANCIAL);
+    set_layout_mapping("=", KEY_EQUALS, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_CHIEF);
+    set_layout_mapping("W", KEY_W, KEY_MOD_NONE, HOTKEY_SHOW_OVERLAY_WATER);
+    set_layout_mapping("F", KEY_F, KEY_MOD_NONE, HOTKEY_SHOW_OVERLAY_FIRE);
+    set_layout_mapping("D", KEY_D, KEY_MOD_NONE, HOTKEY_SHOW_OVERLAY_DAMAGE);
+    set_layout_mapping("C", KEY_C, KEY_MOD_NONE, HOTKEY_SHOW_OVERLAY_CRIME);
+    set_layout_mapping("T", KEY_T, KEY_MOD_NONE, HOTKEY_SHOW_OVERLAY_PROBLEMS);
+    set_layout_mapping("A", KEY_A, KEY_MOD_CTRL, HOTKEY_EDITOR_TOGGLE_BATTLE_INFO);
+    set_layout_mapping("O", KEY_O, KEY_MOD_CTRL, HOTKEY_LOAD_FILE);
+    set_layout_mapping("S", KEY_S, KEY_MOD_CTRL, HOTKEY_SAVE_FILE);
+    set_mapping(KEY_F1, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_1);
+    set_mapping(KEY_F2, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_2);
+    set_mapping(KEY_F3, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_3);
+    set_mapping(KEY_F4, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_4);
+    set_mapping(KEY_F1, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_1); // mac specific: F1 key alone does not work
+    set_mapping(KEY_F2, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_2);
+    set_mapping(KEY_F3, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_3);
+    set_mapping(KEY_F4, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_4);
+    set_mapping(KEY_F1, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_1);
+    set_mapping(KEY_F2, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_2);
+    set_mapping(KEY_F3, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_3);
+    set_mapping(KEY_F4, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_4);
+    set_mapping(KEY_F5, KEY_MOD_NONE, HOTKEY_CENTER_WINDOW);
+    set_mapping(KEY_F6, KEY_MOD_NONE, HOTKEY_TOGGLE_FULLSCREEN);
+    set_mapping(KEY_ENTER, KEY_MOD_ALT, HOTKEY_TOGGLE_FULLSCREEN);
+    set_mapping(KEY_F7, KEY_MOD_NONE, HOTKEY_RESIZE_TO_640);
+    set_mapping(KEY_F8, KEY_MOD_NONE, HOTKEY_RESIZE_TO_800);
+    set_mapping(KEY_F9, KEY_MOD_NONE, HOTKEY_RESIZE_TO_1024);
+    set_mapping(KEY_F12, KEY_MOD_NONE, HOTKEY_SAVE_SCREENSHOT);
+    set_mapping(KEY_F12, KEY_MOD_ALT, HOTKEY_SAVE_SCREENSHOT); // mac specific
+    set_mapping(KEY_F12, KEY_MOD_CTRL, HOTKEY_SAVE_CITY_SCREENSHOT);
+}
+
+const hotkey_mapping *hotkey_for_action(hotkey_action action, int index)
+{
+    int num = 0;
+    for (int i = 0; i < data.num_mappings; i++) {
+        if (data.mappings[i].action == action) {
+            if (num == index) {
+                return &data.mappings[i];
+            }
+            num++;
+        }
+    }
+    return 0;
+}
+
+const hotkey_mapping *hotkey_default_for_action(hotkey_action action, int index)
+{
+    if (index < 0 || index >= 2 || action < 0 || action >= HOTKEY_MAX_ITEMS) {
+        return 0;
+    }
+    return &data.default_mappings[action][index];
+}
+
+void hotkey_config_clear(void)
+{
+    data.num_mappings = 0;
+}
+
+void hotkey_config_add_mapping(const hotkey_mapping *mapping)
+{
+    if (data.num_mappings < MAX_MAPPINGS) {
+        data.mappings[data.num_mappings] = *mapping;
+        data.num_mappings++;
+    }
 }
 
 static void load_defaults(void)
 {
-    add_mapping(KEY_UP, KEY_MOD_NONE, HOTKEY_ARROW_UP);
-    add_mapping(KEY_DOWN, KEY_MOD_NONE, HOTKEY_ARROW_DOWN);
-    add_mapping(KEY_LEFT, KEY_MOD_NONE, HOTKEY_ARROW_LEFT);
-    add_mapping(KEY_RIGHT, KEY_MOD_NONE, HOTKEY_ARROW_RIGHT);
-    add_layout_mapping("P", KEY_P, KEY_MOD_NONE, HOTKEY_TOGGLE_PAUSE);
-    add_mapping(KEY_SPACE, KEY_MOD_NONE, HOTKEY_TOGGLE_OVERLAY);
-    add_layout_mapping("L", KEY_L, KEY_MOD_NONE, HOTKEY_CYCLE_LEGION);
-    add_layout_mapping("[", KEY_LEFTBRACKET, KEY_MOD_NONE, HOTKEY_DECREASE_GAME_SPEED);
-    add_layout_mapping("]", KEY_RIGHTBRACKET, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED);
-    add_mapping(KEY_PAGEDOWN, KEY_MOD_NONE, HOTKEY_DECREASE_GAME_SPEED);
-    add_mapping(KEY_PAGEUP, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED);
-    add_mapping(KEY_HOME, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_LEFT);
-    add_mapping(KEY_END, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_RIGHT);
-    add_mapping(KEY_1, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_LABOR);
-    add_mapping(KEY_2, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_MILITARY);
-    add_mapping(KEY_3, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_IMPERIAL);
-    add_mapping(KEY_4, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RATINGS);
-    add_mapping(KEY_5, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_TRADE);
-    add_mapping(KEY_6, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_POPULATION);
-    add_mapping(KEY_7, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_HEALTH);
-    add_mapping(KEY_8, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_EDUCATION);
-    add_mapping(KEY_9, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_ENTERTAINMENT);
-    add_mapping(KEY_0, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RELIGION);
-    add_layout_mapping("-", KEY_MINUS, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_FINANCIAL);
-    add_layout_mapping("=", KEY_EQUALS, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_CHIEF);
-    add_layout_mapping("W", KEY_W, KEY_MOD_NONE, HOTKEY_SHOW_OVERLAY_WATER);
-    add_layout_mapping("F", KEY_F, KEY_MOD_NONE, HOTKEY_SHOW_OVERLAY_FIRE);
-    add_layout_mapping("D", KEY_D, KEY_MOD_NONE, HOTKEY_SHOW_OVERLAY_DAMAGE);
-    add_layout_mapping("C", KEY_C, KEY_MOD_NONE, HOTKEY_SHOW_OVERLAY_CRIME);
-    add_layout_mapping("T", KEY_T, KEY_MOD_NONE, HOTKEY_SHOW_OVERLAY_PROBLEMS);
-    add_layout_mapping("A", KEY_A, KEY_MOD_CTRL, HOTKEY_EDITOR_TOGGLE_BATTLE_INFO);
-    add_layout_mapping("O", KEY_O, KEY_MOD_CTRL, HOTKEY_LOAD_FILE);
-    add_layout_mapping("S", KEY_S, KEY_MOD_CTRL, HOTKEY_SAVE_FILE);
-    add_mapping(KEY_F1, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_1);
-    add_mapping(KEY_F2, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_2);
-    add_mapping(KEY_F3, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_3);
-    add_mapping(KEY_F4, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_4);
-    add_mapping(KEY_F1, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_1); // mac specific: F1 key alone does not work
-    add_mapping(KEY_F2, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_2);
-    add_mapping(KEY_F3, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_3);
-    add_mapping(KEY_F4, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_4);
-    add_mapping(KEY_F1, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_1);
-    add_mapping(KEY_F2, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_2);
-    add_mapping(KEY_F3, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_3);
-    add_mapping(KEY_F4, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_4);
-    add_mapping(KEY_F5, KEY_MOD_NONE, HOTKEY_CENTER_SCREEN);
-    add_mapping(KEY_F6, KEY_MOD_NONE, HOTKEY_TOGGLE_FULLSCREEN);
-    add_mapping(KEY_ENTER, KEY_MOD_ALT, HOTKEY_TOGGLE_FULLSCREEN);
-    add_mapping(KEY_F7, KEY_MOD_NONE, HOTKEY_RESIZE_TO_640);
-    add_mapping(KEY_F8, KEY_MOD_NONE, HOTKEY_RESIZE_TO_800);
-    add_mapping(KEY_F9, KEY_MOD_NONE, HOTKEY_RESIZE_TO_1024);
-    add_mapping(KEY_F12, KEY_MOD_NONE, HOTKEY_SAVE_SCREENSHOT);
-    add_mapping(KEY_F12, KEY_MOD_ALT, HOTKEY_SAVE_SCREENSHOT); // mac specific
-    add_mapping(KEY_F12, KEY_MOD_CTRL, HOTKEY_SAVE_CITY_SCREENSHOT);
+    hotkey_config_clear();
+    for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
+        for (int index = 0; index < 2; index++) {
+            if (data.default_mappings[action][index].key) {
+                hotkey_config_add_mapping(&data.default_mappings[action][index]);
+            }
+        }
+    }
 }
 
 static void load_file(void)
 {
+    hotkey_config_clear();
     FILE *fp = file_open(INI_FILENAME, "rt");
     if (!fp) {
         return;
@@ -154,7 +220,7 @@ static void load_file(void)
     char *line;
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
-        int last = strlen(line) - 1;
+        size_t last = strlen(line) - 1;
         while (last >= 0 && (line[last] == '\n' || line[last] == '\r')) {
             line[last] = 0;
             last--;
@@ -167,16 +233,13 @@ static void load_file(void)
         char *value = &equals[1];
         for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
             if (strcmp(ini_keys[i], line) == 0) {
-                key_type key;
-                key_modifier_type modifiers;
-                if (key_combination_from_name(value, &key, &modifiers)) {
-                    add_mapping(key, modifiers, i);
+                hotkey_mapping mapping;
+                if (key_combination_from_name(value, &mapping.key, &mapping.modifiers)) {
+                    mapping.action = i;
+                    hotkey_config_add_mapping(&mapping);
                 }
                 break;
             }
-        }
-        if (data.num_mappings >= MAX_MAPPINGS) {
-            break;
         }
     }
     file_close(fp);
@@ -184,7 +247,7 @@ static void load_file(void)
 
 void hotkey_config_load(void)
 {
-    data.num_mappings = 0;
+    init_defaults();
     load_file();
     if (data.num_mappings == 0) {
         load_defaults();
@@ -194,6 +257,7 @@ void hotkey_config_load(void)
 
 void hotkey_config_save(void)
 {
+    hotkey_install_mapping(data.mappings, data.num_mappings);
     FILE *fp = file_open(INI_FILENAME, "wt");
     if (!fp) {
         log_error("Unable to write hotkey configuration file", INI_FILENAME, 0);

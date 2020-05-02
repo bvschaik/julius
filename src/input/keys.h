@@ -1,6 +1,8 @@
 #ifndef INPUT_KEYS_H
 #define INPUT_KEYS_H
 
+#include <stdint.h>
+
 typedef enum {
     KEY_NONE = 0,
     KEY_A,
@@ -78,6 +80,24 @@ typedef enum {
     KEY_LEFT,
     KEY_DOWN,
     KEY_UP,
+    // keypad keys
+    KEY_KP_1,
+    KEY_KP_2,
+    KEY_KP_3,
+    KEY_KP_4,
+    KEY_KP_5,
+    KEY_KP_6,
+    KEY_KP_7,
+    KEY_KP_8,
+    KEY_KP_9,
+    KEY_KP_0,
+    KEY_KP_PERIOD,
+    KEY_KP_PLUS,
+    KEY_KP_MINUS,
+    KEY_KP_MULTIPLY,
+    KEY_KP_DIVIDE,
+    // the key next to left shift on ISO (Non-US) keyboards, usually \ or <
+    KEY_NON_US,
     KEY_MAX_ITEMS
 } key_type;
 
@@ -92,5 +112,7 @@ typedef enum {
 const char *key_combination_name(key_type key, key_modifier_type modifiers);
 
 int key_combination_from_name(const char *name, key_type *key, key_modifier_type *modifiers);
+
+const uint8_t *key_combination_display_name(key_type key, key_modifier_type modifiers);
 
 #endif // INPUT_KEYS_H

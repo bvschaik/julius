@@ -48,8 +48,7 @@ static void enqueue(int next_offset, int dist)
 
 static int valid_offset(int grid_offset)
 {
-    return grid_offset >= 0 && grid_offset < GRID_SIZE * GRID_SIZE &&
-        routing_distance.items[grid_offset] == 0;
+    return map_grid_is_valid_offset(grid_offset) && routing_distance.items[grid_offset] == 0;
 }
 
 static void route_queue(int source, int dest, void (*callback)(int next_offset, int dist))

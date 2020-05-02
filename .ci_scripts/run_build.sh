@@ -2,10 +2,14 @@
 
 case "$BUILD_TARGET" in
 "vita")
-	docker exec vitasdk /bin/bash -c "cd build && make"
+	export VITASDK=/usr/local/vitasdk
+	export PATH=$VITASDK/bin:$PATH
+	cd build && make
 	;;
 "switch")
-	docker exec switchdev /bin/bash -c "cd build && make"
+	export DEVKITPRO=/opt/devkitpro
+	export PATH=/opt/devkitpro/devkitA64/bin:/opt/devkitpro/tools/bin:$PATH
+	cd build && make
 	;;
 "mac")
 	cd build && make && make install && \

@@ -1,6 +1,7 @@
 #include "city_overlay_other.h"
 
 #include "building/model.h"
+#include "city/constants.h"
 #include "city/finance.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -114,9 +115,33 @@ static int get_column_height_none(const building *b)
     return NO_COLUMN;
 }
 
+static void add_god(tooltip_context *c, int god_id)
+{
+    int index = c->num_extra_values;
+    c->extra_value_text_groups[index] = 59;
+    c->extra_value_text_ids[index] = 11 + god_id;
+    c->num_extra_values++;
+}
 
 static int get_tooltip_religion(tooltip_context *c, const building *b)
 {
+    if (b->data.house.num_gods < 5) {
+        if (b->data.house.temple_ceres) {
+            add_god(c, GOD_CERES);
+        }
+        if (b->data.house.temple_neptune) {
+            add_god(c, GOD_NEPTUNE);
+        }
+        if (b->data.house.temple_mercury) {
+            add_god(c, GOD_MERCURY);
+        }
+        if (b->data.house.temple_mars) {
+            add_god(c, GOD_MARS);
+        }
+        if (b->data.house.temple_venus) {
+            add_god(c, GOD_VENUS);
+        }
+    }
     if (b->data.house.num_gods <= 0) {
         return 12;
     } else if (b->data.house.num_gods == 1) {

@@ -27,6 +27,8 @@ typedef struct {
 
 void map_grid_init(int width, int height, int start_offset, int border_size);
 
+int map_grid_is_valid_offset(int grid_offset);
+
 int map_grid_offset(int x, int y);
 
 int map_grid_offset_to_x(int grid_offset);
@@ -34,6 +36,12 @@ int map_grid_offset_to_x(int grid_offset);
 int map_grid_offset_to_y(int grid_offset);
 
 int map_grid_delta(int x, int y);
+
+/**
+ * Adds the specified X and Y to the given offset with error checking
+ * @return New grid offset, or -1 if the x/y would wrap around to a different row/column
+ */
+int map_grid_add_delta(int grid_offset, int x, int y);
 
 int map_grid_direction_delta(int direction);
 

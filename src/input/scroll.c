@@ -42,7 +42,6 @@ typedef struct {
 
 static struct {
     int is_scrolling;
-    int has_scrolled;
     int is_touch;
     struct {
         key up;
@@ -72,8 +71,11 @@ static struct {
         int height;
     } limits;
     touch_coords start_touch;
-    int cumulative_delta_x;
-    int cumulative_delta_y;
+    struct {
+        int start_x;
+        int start_y;
+        int has_scrolled;
+    } drag;
 } data;
 
 static int is_arrow_key_pressed(key *arrow)
@@ -249,50 +251,39 @@ touch_coords scroll_get_original_touch_position(void)
     return data.start_touch;
 }
 
-void scroll_start_mouse_drag(const pixel_offset *position)
+void scroll_start_mouse_drag(const mouse *m, const pixel_offset *position)
 {
-    data.has_scrolled = 0;
+    data.drag.has_scrolled = 0;
+    data.drag.start_x = m->x;
+    data.drag.start_y = m->y;
     data.is_scrolling = 1;
     data.is_touch = 0;
-    data.cumulative_delta_x = 0;
-    data.cumulative_delta_y = 0;
     clear_scroll_decay(position);
-
-    system_mouse_set_relative_mode(1);
 }
 
-int scroll_move_mouse_drag(pixel_offset *position)
+int scroll_move_mouse_drag(const mouse *m, pixel_offset *position)
 {
     if (!data.is_scrolling) {
         return 0;
     }
 
+    if (!data.drag.has_scrolled) {
+        int delta_x = abs(m->x - data.drag.start_x);
+        int delta_y = abs(m->y - data.drag.start_y);
+        if (delta_x <= MOUSE_SCROLL_MIN_DELTA && delta_y <= MOUSE_SCROLL_MIN_DELTA) {
+            return 0;
+        }
+        system_mouse_set_relative_mode(1);
+        data.drag.has_scrolled = 1;
+    }
+
     int delta_x = 0, delta_y = 0;
     system_mouse_get_relative_state(&delta_x, &delta_y);
 
-    // Store tiny movements until we decide that it's enough to move into scroll mode
-    if (!data.has_scrolled) {
-        delta_x += data.cumulative_delta_x;
-        delta_y += data.cumulative_delta_y;
-    }
-
-    if (delta_x != 0 || delta_y != 0) {
-        int has_scrolled = abs(data.cumulative_delta_x) > MOUSE_SCROLL_MIN_DELTA || abs(data.cumulative_delta_y) > MOUSE_SCROLL_MIN_DELTA;
-        data.has_scrolled = data.has_scrolled || has_scrolled;
-
-        city_view_get_camera_in_pixels(&position->x, &position->y);
-
-        if (data.has_scrolled) {
-            position->x += delta_x;
-            position->y += delta_y;
-        } else {
-            data.cumulative_delta_x = delta_x;
-            data.cumulative_delta_y = delta_y;
-        }
-
-        return 1;
-    }
-    return 0;
+    city_view_get_camera_in_pixels(&position->x, &position->y);
+    position->x += delta_x;
+    position->y += delta_y;
+    return 1;
 }
 
 int scroll_end_mouse_drag()
@@ -301,13 +292,15 @@ int scroll_end_mouse_drag()
         return 0;
     }
 
-    int has_scrolled = data.has_scrolled == 1;
+    int has_scrolled = data.drag.has_scrolled;
 
     data.is_touch = 0;
     data.is_scrolling = 0;
-    data.has_scrolled = 0;
+    data.drag.has_scrolled = 0;
 
-    system_mouse_set_relative_mode(0);
+    if (has_scrolled) {
+        system_mouse_set_relative_mode(0);
+    }
 
     return has_scrolled;
 }

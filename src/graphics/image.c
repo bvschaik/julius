@@ -45,7 +45,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
         if (type == DRAW_TYPE_NONE) {
             if (img->draw.type == IMAGE_TYPE_WITH_TRANSPARENCY || img->draw.is_external) { // can be transparent
                 for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                    if (*data != COLOR_TRANSPARENT) {
+                    if (*data != COLOR_SG2_TRANSPARENT) {
                         *dst = *data;
                     }
                     data++;
@@ -57,28 +57,28 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
             }
         } else if (type == DRAW_TYPE_SET) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_TRANSPARENT) {
+                if (*data != COLOR_SG2_TRANSPARENT) {
                     *dst = color;
                 }
                 data++;
             }
         } else if (type == DRAW_TYPE_AND) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_TRANSPARENT) {
+                if (*data != COLOR_SG2_TRANSPARENT) {
                     *dst = *data & color;
                 }
                 data++;
             }
         } else if (type == DRAW_TYPE_BLEND) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_TRANSPARENT) {
+                if (*data != COLOR_SG2_TRANSPARENT) {
                     *dst &= color;
                 }
                 data++;
             }
         } else if (type == DRAW_TYPE_BLEND_ALPHA) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_TRANSPARENT) {
+                if (*data != COLOR_SG2_TRANSPARENT) {
                     color_t alpha = COMPONENT(*data, 24);
                     if (alpha == 255) {
                         *dst = color;
@@ -377,14 +377,14 @@ static void draw_footprint_simple(const color_t *src, int x, int y)
 static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset, color_t color_mask)
 {
     if (!color_mask) {
-        color_mask = COLOR_NO_MASK;
+        color_mask = COLOR_MASK_NONE;
     }
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, FOOTPRINT_WIDTH, FOOTPRINT_HEIGHT);
     if (!clip->is_visible) {
         return;
     }
     // If the current tile neither clipped nor color masked, just draw it normally
-    if (clip->clip_y == CLIP_NONE && clip->clip_x == CLIP_NONE && color_mask == COLOR_NO_MASK) {
+    if (clip->clip_y == CLIP_NONE && clip->clip_x == CLIP_NONE && color_mask == COLOR_MASK_NONE) {
         draw_footprint_simple(data, x_offset, y_offset);
         return;
     }
@@ -424,7 +424,7 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
             }
         }
         color_t *buffer = graphics_get_pixel(x_offset + x_start, y_offset + y);
-        if (color_mask == COLOR_NO_MASK) {
+        if (color_mask == COLOR_MASK_NONE) {
             memcpy(buffer, src, x_max * sizeof(color_t));
             src += x_max + x_pixel_advance;
         } else {

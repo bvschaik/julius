@@ -12,10 +12,12 @@
 
 #define MAX_DIR 4
 
+#define OFFSET(x,y) (x + GRID_SIZE * y)
+
 static const int HOUSE_TILE_OFFSETS[] = {
-    0, 1, 162, 163, // 2x2
-    2, 164, 326, 325, 324, // 3x3
-    3, 165, 327, 489, 488, 487, 486 // 4x4
+    OFFSET(0,0), OFFSET(1,0), OFFSET(0,1), OFFSET(1,1), // 2x2
+    OFFSET(2,0), OFFSET(2,1), OFFSET(2,2), OFFSET(1,2), OFFSET(0,2), // 3x3
+    OFFSET(3,0), OFFSET(3,1), OFFSET(3,2), OFFSET(3,3), OFFSET(2,3), OFFSET(1,3), OFFSET(0,3) // 4x4
 };
 
 static const struct {

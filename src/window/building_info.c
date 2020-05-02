@@ -40,6 +40,8 @@
 #include "window/building/terrain.h"
 #include "window/building/utility.h"
 
+#define OFFSET(x,y) (x + GRID_SIZE * y)
+
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
@@ -298,7 +300,10 @@ static void init(int grid_offset)
     for (int i = 0; i < 7; i++) {
         context.figure.figure_ids[i] = 0;
     }
-    static const int FIGURE_OFFSETS[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
+    static const int FIGURE_OFFSETS[] = {
+        OFFSET(0,0), OFFSET(0,-1), OFFSET(0,1), OFFSET(1,0), OFFSET(-1,0),
+        OFFSET(-1,-1), OFFSET(1,-1), OFFSET(-1,1), OFFSET(1,1)
+    };
     for (int i = 0; i < 9 && context.figure.count < 7; i++) {
         int figure_id = map_figure_at(grid_offset + FIGURE_OFFSETS[i]);
         while (figure_id > 0 && context.figure.count < 7) {

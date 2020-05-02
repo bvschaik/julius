@@ -232,7 +232,7 @@ void widget_top_menu_draw(int force)
     color_t treasure_color = COLOR_WHITE;
     int treasury = city_finance_treasury();
     if (treasury < 0) {
-        treasure_color = COLOR_RED;
+        treasure_color = COLOR_FONT_RED;
     }
     int s_width = screen_width();
     if (s_width < 800) {
@@ -258,7 +258,7 @@ void widget_top_menu_draw(int force)
         width = lang_text_draw_colored(6, 1, 470, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
         text_draw_number_colored(city_population(), '@', " ", 466 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
 
-        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 655, 5, 110, FONT_NORMAL_PLAIN, COLOR_YELLOW);
+        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 655, 5, 110, FONT_NORMAL_PLAIN, COLOR_FONT_YELLOW);
     } else {
         data.offset_funds = 493;
         data.offset_population = 637;
@@ -270,7 +270,7 @@ void widget_top_menu_draw(int force)
         width = lang_text_draw_colored(6, 1, 645, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
         text_draw_number_colored(city_population(), '@', " ", 651 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
 
-        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 850, 5, 110, FONT_NORMAL_PLAIN, COLOR_YELLOW);
+        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 850, 5, 110, FONT_NORMAL_PLAIN, COLOR_FONT_YELLOW);
     }
     drawn.treasury = treasury;
     drawn.population = city_population();

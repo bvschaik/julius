@@ -6,7 +6,9 @@
 #include "game/system.h"
 #include "graphics/screenshot.h"
 #include "graphics/video.h"
+#include "graphics/window.h"
 #include "input/scroll.h"
+#include "window/hotkey_editor.h"
 #include "window/popup_dialog.h"
 
 #include <stdlib.h>
@@ -183,7 +185,7 @@ static void add_definition(const hotkey_mapping *mapping)
             def->action = &data.hotkey_state.set_bookmark;
             def->value = 4;
             break;
-        case HOTKEY_CENTER_SCREEN:
+        case HOTKEY_CENTER_WINDOW:
             def->action = &data.global_hotkey_state.center_screen;
             break;
         case HOTKEY_TOGGLE_FULLSCREEN:
@@ -313,6 +315,13 @@ void hotkey_reset_state(void)
 
 void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
 {
+    if (window_is(WINDOW_HOTKEY_EDITOR)) {
+        window_hotkey_editor_key_pressed(key, modifiers);
+        return;
+    }
+    if (key == KEY_NONE) {
+        return;
+    }
     for (int i = 0; i < data.num_arrows; i++) {
         arrow_definition *arrow = &data.arrows[i];
         if (arrow->key == key) {
@@ -327,8 +336,15 @@ void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
     }
 }
 
-void hotkey_key_released(key_type key)
+void hotkey_key_released(key_type key, key_modifier_type modifiers)
 {
+    if (window_is(WINDOW_HOTKEY_EDITOR)) {
+        window_hotkey_editor_key_released(key, modifiers);
+        return;
+    }
+    if (key == KEY_NONE) {
+        return;
+    }
     for (int i = 0; i < data.num_arrows; i++) {
         arrow_definition *arrow = &data.arrows[i];
         if (arrow->key == key) {

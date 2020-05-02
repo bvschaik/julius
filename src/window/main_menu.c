@@ -50,7 +50,7 @@ static void draw_version_string(void)
         graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
     } else {
-        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_LIGHT_GRAY);
+        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
     }
 }
 
@@ -115,11 +115,7 @@ static void button_click(int type, int param2)
     } else if (type == 4) {
         if (!editor_is_present() || !game_init_editor()) {
             window_plain_message_dialog_show(
-                "Editor not installed",
-                "Your Caesar 3 installation does not contain the editor files. "
-                "You can download them from:\n"
-                "https://bintray.com/bvschaik/caesar3-editor"
-            );
+                TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
         } else {
             sound_music_play_editor();
         }

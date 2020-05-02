@@ -8,7 +8,6 @@
 #include "SDL.h"
 
 #define CURSOR_SIZE 32
-#define ALPHA_OPAQUE (0xFFu << 24)
 
 static vita_cursor cursors[CURSOR_MAX];
 vita_cursor *current_cursor;
@@ -22,13 +21,14 @@ static vita2d_texture *init_cursor(const cursor *c)
         for (int x = 0; x < c->width; x++) {
             switch (c->data[y * c->width + x]) {
                 case '#':
-                    cursor_buf[y * CURSOR_SIZE + x] = COLOR_BLACK | ALPHA_OPAQUE;
+                    cursor_buf[y * CURSOR_SIZE + x] = ALPHA_OPAQUE | COLOR_BLACK;
                     break;
                 case '\'':
-                    cursor_buf[y * CURSOR_SIZE + x] = COLOR_WHITE | ALPHA_OPAQUE;
+                    cursor_buf[y * CURSOR_SIZE + x] = ALPHA_OPAQUE | COLOR_WHITE;
                     break;
                 case ' ':
-                    break; // Transparent is 0x00000000 which is the default value of the buffer
+                    cursor_buf[y * CURSOR_SIZE + x] = ALPHA_TRANSPARENT;
+                    break;
             }
         }
     }

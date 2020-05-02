@@ -43,7 +43,7 @@ typedef enum {
     HOTKEY_SET_BOOKMARK_2,
     HOTKEY_SET_BOOKMARK_3,
     HOTKEY_SET_BOOKMARK_4,
-    HOTKEY_CENTER_SCREEN,
+    HOTKEY_CENTER_WINDOW,
     HOTKEY_TOGGLE_FULLSCREEN,
     HOTKEY_RESIZE_TO_640,
     HOTKEY_RESIZE_TO_800,
@@ -60,12 +60,39 @@ typedef struct {
 } hotkey_mapping;
 
 /**
- * Load hotkey config from file
+ * Get mapping for action at the specified index
+ * @param action Action
+ * @param index Index
+ * @return Mapping or NULL if not set
+ */
+const hotkey_mapping *hotkey_for_action(hotkey_action action, int index);
+
+/**
+ * Get default mapping for action
+ * @param action Action
+ * @param index Index, can be 0 or 1
+ * @return Mapping, may be an empty mapping. Only returns NULL on invalid input
+ */
+const hotkey_mapping *hotkey_default_for_action(hotkey_action action, int index);
+
+/**
+ * Clear all hotkey mappings
+ */
+void hotkey_config_clear(void);
+
+/**
+ * Add a mapping
+ * @param mapping Mapping to add
+ */
+void hotkey_config_add_mapping(const hotkey_mapping *mapping);
+
+/**
+ * Load hotkey config from file and install hotkeys
  */
 void hotkey_config_load(void);
 
 /**
- * Save hotkey config to file
+ * Save hotkey config to file and install hotkeys
  */
 void hotkey_config_save(void);
 

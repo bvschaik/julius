@@ -313,7 +313,7 @@ int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_t
                 int can_move = 1;
                 for (int fig = 0; fig < m->num_figures; fig++) {
                     int grid_offset = map_grid_offset(xx, yy) + figure_offsets[fig];
-                    if (grid_offset < 0 || grid_offset >= GRID_SIZE * GRID_SIZE) {
+                    if (!map_grid_is_valid_offset(grid_offset)) {
                         can_move = 0;
                         break;
                     }
