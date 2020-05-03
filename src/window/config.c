@@ -124,7 +124,7 @@ static const char* option_names[] = {
     "Fixed worker pool - 38% of population",
     "Allow building 3 extra forts",
     "Block building around wolves",
-    "Dynamic granaries",
+    "Block unconnected granary roads",
     "Houses stockpile more goods from market",
     "Buying market ladies don't distribute goods",
     "Fix Emperor change and survival time in custom missions",
