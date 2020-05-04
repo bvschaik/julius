@@ -34,8 +34,10 @@ static arrow_button arrow_buttons[] = {
     {264, 242, 15, 24, arrow_button_amount, 0, 0},
 };
 
-static int focus_button_id;
-static int focus_arrow_button_id;
+static struct {
+    int focus_button_id;
+    int focus_arrow_button_id;
+} data;
 
 static void draw_background(void)
 {
@@ -68,14 +70,14 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    button_border_draw(128, 216, 64, 20, focus_button_id == 3);
-    button_border_draw(208, 216, 64, 20, focus_button_id == 4);
-    button_border_draw(288, 216, 64, 20, focus_button_id == 5);
-    button_border_draw(368, 216, 64, 20, focus_button_id == 6);
-    button_border_draw(448, 216, 64, 20, focus_button_id == 7);
+    button_border_draw(128, 216, 64, 20, data.focus_button_id == 3);
+    button_border_draw(208, 216, 64, 20, data.focus_button_id == 4);
+    button_border_draw(288, 216, 64, 20, data.focus_button_id == 5);
+    button_border_draw(368, 216, 64, 20, data.focus_button_id == 6);
+    button_border_draw(448, 216, 64, 20, data.focus_button_id == 7);
 
-    button_border_draw(336, 283, 160, 20, focus_button_id == 1);
-    button_border_draw(144, 283, 160, 20, focus_button_id == 2);
+    button_border_draw(336, 283, 160, 20, data.focus_button_id == 1);
+    button_border_draw(144, 283, 160, 20, data.focus_button_id == 2);
 
     arrow_buttons_draw(0, 0, arrow_buttons, 2);
 
@@ -84,13 +86,12 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    focus_arrow_button_id = 0;
+    data.focus_arrow_button_id = 0;
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 7, &focus_button_id)) {
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 7, &data.focus_button_id)) {
         return;
     }
-    arrow_buttons_handle_mouse(m_dialog, 0, 0, arrow_buttons, 2, &focus_arrow_button_id);
-    if (focus_arrow_button_id) {
+    if (arrow_buttons_handle_mouse(m_dialog, 0, 0, arrow_buttons, 2, &data.focus_arrow_button_id)) {
         return;
     }
     if (input_go_back_requested(m, h)) {
@@ -132,17 +133,17 @@ static void arrow_button_amount(int is_down, int param2)
 
 static void get_tooltip(tooltip_context *c)
 {
-    if (!focus_button_id && !focus_arrow_button_id) {
+    if (!data.focus_button_id && !data.focus_arrow_button_id) {
         return;
     }
     c->type = TOOLTIP_BUTTON;
-    if (focus_button_id == 1) {
+    if (data.focus_button_id == 1) {
         c->text_id = 98;
-    } else if (focus_button_id == 2) {
+    } else if (data.focus_button_id == 2) {
         c->text_id = 99;
-    } else if (focus_button_id) {
+    } else if (data.focus_button_id) {
         c->text_id = 100;
-    } else if (focus_arrow_button_id) {
+    } else if (data.focus_arrow_button_id) {
         c->text_id = 101;
     }
 }
