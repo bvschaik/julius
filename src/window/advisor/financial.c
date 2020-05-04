@@ -105,8 +105,7 @@ static void draw_foreground(void)
 
 static int handle_mouse(const mouse *m)
 {
-    arrow_button_focus = arrow_buttons_handle_mouse(m, 0, 0, arrow_buttons_taxes, 2);
-    return arrow_button_focus;
+    return arrow_buttons_handle_mouse(m, 0, 0, arrow_buttons_taxes, 2, &arrow_button_focus);
 }
 
 static void button_change_taxes(int is_down, int param2)

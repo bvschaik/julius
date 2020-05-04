@@ -39,7 +39,7 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrow_buttons, 4)) {
+    if (arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrow_buttons, 4, 0)) {
         return;
     }
     if (input_go_back_requested(m, h)) {

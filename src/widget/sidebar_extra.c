@@ -232,7 +232,7 @@ int sidebar_extra_handle_mouse(const mouse *m, int x_offset, int y_offset)
     if (!data.height) {
         return 0;
     }
-    return arrow_buttons_handle_mouse(m, x_offset, y_offset, arrow_buttons_speed, 2);
+    return arrow_buttons_handle_mouse(m, x_offset, y_offset, arrow_buttons_speed, 2, 0);
 }
 
 static void button_game_speed(int is_down, int param2)

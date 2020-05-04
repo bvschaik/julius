@@ -89,7 +89,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 7, &focus_button_id)) {
         return;
     }
-    focus_arrow_button_id = arrow_buttons_handle_mouse(m_dialog, 0, 0, arrow_buttons, 2);
+    arrow_buttons_handle_mouse(m_dialog, 0, 0, arrow_buttons, 2, &focus_arrow_button_id);
     if (focus_arrow_button_id) {
         return;
     }

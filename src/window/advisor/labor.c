@@ -102,8 +102,7 @@ static int handle_mouse(const mouse *m)
     if (generic_buttons_handle_mouse(m, 0, 0, category_buttons, 9, &focus_button_id)) {
         return 1;
     }
-    arrow_button_focus = arrow_buttons_handle_mouse(m, 0, 0, wage_buttons, 2);
-    return arrow_button_focus;
+    return arrow_buttons_handle_mouse(m, 0, 0, wage_buttons, 2, &arrow_button_focus);
 }
 
 static void arrow_button_wages(int is_down, int param2)
