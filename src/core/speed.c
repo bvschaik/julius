@@ -46,32 +46,32 @@ speed_direction speed_get_current_direction(const speed *sp)
     return (sp->current_speed > 0) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
 }
 
-static int adjust_speed_for_elapsed_time(int delta, time_millis last_time)
+static double adjust_speed_for_elapsed_time(int delta, time_millis last_time)
 {
-    return lround((delta / FRAME_TIME) * (time_get_millis() - last_time));
+    return round((delta / FRAME_TIME) * (time_get_millis() - last_time));
 }
 
-static int adjust_speed_for_frame_time(int delta, time_millis last_time)
+static int adjust_speed_for_frame_time(double delta, time_millis last_time)
 {
     return lround((delta / (double) (time_get_millis() - last_time)) * FRAME_TIME);
 }
 
 int speed_get_delta(speed *sp)
 {
-    int delta;
+    double delta;
     time_millis elapsed = time_get_millis() - sp->start_time;
-    int desired = adjust_speed_for_elapsed_time(sp->desired_speed, sp->last_speed_check);
-    if (sp->current_speed == sp->desired_speed || elapsed > sp->total_time * 5) {
+    double desired = adjust_speed_for_elapsed_time(sp->desired_speed, sp->last_speed_check);
+    if (sp->current_speed == sp->desired_speed || elapsed > sp->total_time * 4) {
         delta = (sp->total_time == SPEED_CHANGE_IMMEDIATE) ? sp->desired_speed : desired;
         sp->current_speed = sp->desired_speed;
     } else {
         double speed = sp->speed_difference * (sp->total_time / FRAME_TIME);
         double exponent = exp(-((int) elapsed) / (double) sp->total_time);
-        delta = (int) (speed - speed * exponent - sp->cumulative_delta);
-        sp->cumulative_delta += delta;
+        delta = speed - speed * exponent - sp->cumulative_delta;
+        sp->cumulative_delta += (int) delta;
         delta = desired + delta;
         sp->current_speed = adjust_speed_for_frame_time(delta, sp->last_speed_check);
     }
     sp->last_speed_check = time_get_millis();
-    return delta;
+    return (int) delta;
 }

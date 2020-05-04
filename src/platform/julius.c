@@ -274,10 +274,10 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             platform_touch_start(&event->tfinger);
             break;
         case SDL_FINGERMOTION:
-            platform_touch_update(&event->tfinger, 0);
+            platform_touch_move(&event->tfinger);
             break;
         case SDL_FINGERUP:
-            platform_touch_update(&event->tfinger, 1);
+            platform_touch_end(&event->tfinger);
             break;
 
         case SDL_QUIT:

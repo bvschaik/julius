@@ -238,18 +238,8 @@ void scroll_drag_move(void)
         }
     }
     if (data.is_scrolling) {
-        time_millis current_time = time_get_millis();
-        time_millis delta_time = current_time - data.last_time;
-
-        // SDL touch events sometimes incorrectly set movement to zero before the finger is released
-        // This gives a time tolerance before setting the movement to 0
-        if (!data.drag.is_touch ||
-            data.drag.delta.x != 0 || data.drag.delta.y != 0 ||
-            delta_time > DRAG_STOPPED_TIME_TOLERANCE) {
-            data.last_time = current_time;
-            speed_change(&data.speed.x, data.drag.delta.x, SPEED_CHANGE_IMMEDIATE);
-            speed_change(&data.speed.y, data.drag.delta.y, SPEED_CHANGE_IMMEDIATE);
-        }
+        speed_change(&data.speed.x, data.drag.delta.x, SPEED_CHANGE_IMMEDIATE);
+        speed_change(&data.speed.y, data.drag.delta.y, SPEED_CHANGE_IMMEDIATE);
     }
 }
 
@@ -264,7 +254,13 @@ int scroll_drag_end(void)
     data.drag.active = 0;
     data.is_scrolling = 0;
 
-    system_mouse_set_relative_mode(0);
+    if (!data.drag.is_touch) {
+        system_mouse_set_relative_mode(0);
+    } else if(has_scrolled) {
+        const touch *t = get_earliest_touch();
+        speed_change(&data.speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE);
+        speed_change(&data.speed.y, -t->frame_movement.y, SPEED_CHANGE_IMMEDIATE);
+    }
     data.x_align_direction = speed_get_current_direction(&data.speed.x);
     data.y_align_direction = speed_get_current_direction(&data.speed.y);
     speed_change(&data.speed.x, 0, SCROLL_DRAG_DECAY_TIME);

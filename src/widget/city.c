@@ -213,15 +213,13 @@ static void handle_touch_scroll(const touch *t)
         scroll_drag_start(1);
         return;
     }
-
     if (!touch_not_click(t)) {
         return;
     }
-
-    scroll_drag_move();
-
     if (t->has_ended) {
         scroll_drag_end();
+    } else {
+        scroll_drag_move();
     }
 }
 
