@@ -20,7 +20,10 @@ The same logic means that the saved games are 100% compatible, and any gameplay 
 present in the original Caesar 3 game will also be present in Julius.
 It is meant as a drop-in replacement for Caesar 3, with the same look and feel, so there will be no major UI changes.
 
-UI enhancements include:
+However, a fork of Julius, named [Augustus](https://github.com/Keriew/julius), is implementing many long-wanted gameplay changes, such as roadblocks.
+Beware: Augustus does not support the original Caesar 3 save files, while Julius does. So use Julius for a more vanilla experience with some visual improvements, or Augustus for a different gameplay experience.
+
+UI enhancements for Julius include:
 - Support for widescreen resolutions
 - Windowed mode support for 32-bit desktops
 - Several small in-game quality of life improvements
