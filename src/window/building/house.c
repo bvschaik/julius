@@ -33,7 +33,7 @@ static void draw_population_info(building_info_context *c, int y_offset)
     image_draw(image_group(GROUP_CONTEXT_ICONS) + 13, c->x_offset + 34, y_offset + 4);
     int width = text_draw_number(b->house_population, '@', " ", c->x_offset + 50, y_offset + 14, FONT_SMALL_BLACK);
     width += lang_text_draw(127, 20, c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
-    
+
     if (b->house_population_room < 0) {
         width += text_draw_number(-b->house_population_room, '@', " ", c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
         lang_text_draw(127, 21, c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
@@ -91,11 +91,11 @@ void window_building_draw_house(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(29, level, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 148, c->width_blocks - 2, 10);
-    
+
     draw_population_info(c, c->y_offset + 154);
     draw_tax_info(c, c->y_offset + 194);
     draw_happiness_info(c, c->y_offset + 214);
-    
+
     int resource_image = image_group(GROUP_RESOURCE_ICONS);
     // food inventory
     if (model_get_house(b->subtype.house_level)->food_types) {
@@ -129,7 +129,7 @@ void window_building_draw_house(building_info_context *c)
     // wine
     image_draw(resource_image + RESOURCE_WINE, c->x_offset + 362, c->y_offset + 274);
     text_draw_number(b->data.house.inventory[INVENTORY_WINE], '@', " ", c->x_offset + 394, c->y_offset + 278, FONT_SMALL_BLACK);
-    
+
     if (b->data.house.evolve_text_id == 62) {
         int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + 60, FONT_NORMAL_BLACK);
         width += lang_text_draw_colored(41, building_get(c->worst_desirability_building_id)->type,

@@ -135,7 +135,7 @@ static void draw_foreground(void)
 
     lang_text_draw(44, 42, 32, 245, FONT_NORMAL_BLACK);
     button_border_draw(212, 236, 250, 30, data.focus_button_id == 5);
-    
+
     editor_invasion invasion;
     scenario_editor_invasion_get(0, &invasion);
     if (invasion.type) {

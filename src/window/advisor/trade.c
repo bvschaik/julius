@@ -64,7 +64,7 @@ static void draw_foreground(void)
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 48, y_offset + 54);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 568, y_offset + 54);
-        
+
         if (focus_button_id - 3 == i) {
             button_border_draw(80, y_offset + 54, 480, 24, 1);
         }
