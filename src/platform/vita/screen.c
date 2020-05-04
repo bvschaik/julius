@@ -26,7 +26,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     SDL_Log("Creating empty texture\n");
     tex_buffer = vita2d_create_empty_texture_format(VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB);
     SDL_Log("Creating empty texture: done\n");
- 
+
     return platform_screen_resize(VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT);
 }
 

@@ -66,7 +66,7 @@ typedef struct {
     int months_from_home;
     int months_low_morale;
     int months_very_low_morale;
-    
+
     /* Figures */
     int figure_type; /**< Type of figure in this formation */
     int num_figures; /**< Current number of figures in the formation */
@@ -74,7 +74,7 @@ typedef struct {
     int figures[MAX_FORMATION_FIGURES]; /**< Figure IDs */
     int total_damage; /**< Total damage of all figures added */
     int max_total_damage; /**< Maximum total damage of all figures added */
-    
+
     /* Position */
     int x;
     int y;
@@ -87,7 +87,7 @@ typedef struct {
     int destination_x;
     int destination_y;
     int destination_building_id;
-    
+
     /* Movement */
     int wait_ticks;
     int is_halted;
@@ -104,7 +104,7 @@ typedef struct {
     int has_military_training; /**< Flag to indicate this legion has had military training */
     int legion_recruit_type; /**< Recruit type: none if this legion is fully occupied */
     int is_at_fort; /**< Flag to indicate this legion is resting at the fort */
-    
+
     /* Enemy-related */
     int enemy_type;
     int enemy_legion_index;
@@ -112,11 +112,11 @@ typedef struct {
     int invasion_id;
     int invasion_sequence;
     formation_state enemy_state;
-    
+
     /* Herd-related */
     int herd_direction;
     int herd_wolf_spawn_delay;
-    
+
     struct {
         int layout;
         int x_home;

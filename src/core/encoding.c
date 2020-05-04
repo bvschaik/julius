@@ -628,7 +628,7 @@ void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int
         return;
     }
     const char *max_output = &output[output_length - 1];
-    
+
     while (*input && output < max_output) {
         uint8_t c = *input;
         if (c < 0x80) {

@@ -534,7 +534,7 @@ void figure_native_trader_action(figure *f)
             break;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    
+
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
         f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + 96 + figure_image_corpse_offset(f);
         f->cart_image_id = 0;

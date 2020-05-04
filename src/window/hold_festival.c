@@ -62,7 +62,7 @@ static void draw_buttons(void)
     width += lang_text_draw_amount(8, 0, city_festival_grand_cost(), 110 + width, 284, FONT_NORMAL_BLACK);
     width += lang_text_draw_amount(8, 10, city_festival_grand_wine(), 120 + width, 284, FONT_NORMAL_BLACK);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, 120 + width, 279);
-    
+
     // greying out of buttons
     if (city_finance_out_of_money()) {
         graphics_shade_rect(104, 218, 426, 22, 0);

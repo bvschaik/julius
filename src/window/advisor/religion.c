@@ -55,11 +55,11 @@ static int draw_background(void)
         outer_panel_draw(0, 0, 40, height_blocks);
         lang_text_draw_multiline(59, 43, 60, 256, 520, FONT_NORMAL_BLACK);
     }
-    
+
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
-    
+
     lang_text_draw(59, 0, 60, 12, FONT_LARGE_BLACK);
-    
+
     // table header
     lang_text_draw(59, 5, 270, 32, FONT_SMALL_PLAIN);
     lang_text_draw(59, 1, 240, 46, FONT_SMALL_PLAIN);
@@ -68,9 +68,9 @@ static int draw_background(void)
     lang_text_draw(59, 6, 370, 18, FONT_SMALL_PLAIN);
     lang_text_draw(59, 9, 370, 32, FONT_SMALL_PLAIN);
     lang_text_draw(59, 7, 370, 46, FONT_SMALL_PLAIN);
-    
+
     inner_panel_draw(32, 60, 36, 8);
-    
+
     // god rows
     draw_god_row(GOD_CERES, 66, BUILDING_SMALL_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_CERES);
     draw_god_row(GOD_NEPTUNE, 86, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_NEPTUNE);
@@ -81,7 +81,7 @@ static int draw_background(void)
     // oracles
     lang_text_draw(59, 8, 40, 166, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_total(BUILDING_ORACLE), 230, 166, 50, FONT_NORMAL_WHITE);
-    
+
     city_gods_calculate_least_happy();
 
     lang_text_draw_multiline(59, 21 + get_religion_advice(), 60, 196, 512, FONT_NORMAL_BLACK);

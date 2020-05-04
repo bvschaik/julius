@@ -58,7 +58,7 @@ static void hit_opponent(figure *f)
     const formation *m = formation_get(f->formation_id);
     figure *opponent = figure_get(f->opponent_id);
     formation *opponent_formation = formation_get(opponent->formation_id);
-    
+
     const figure_properties *props = figure_properties_for_type(f->type);
     const figure_properties *opponent_props = figure_properties_for_type(opponent->type);
     int cat = opponent_props->category;
@@ -69,7 +69,7 @@ static void hit_opponent(figure *f)
     }
     int figure_attack = props->attack_value;
     int opponent_defense = opponent_props->defense_value;
-    
+
     // attack modifiers
     if (f->type == FIGURE_WOLF) {
         figure_attack = difficulty_adjust_wolf_attack(figure_attack);
@@ -96,7 +96,7 @@ static void hit_opponent(figure *f)
             opponent_defense += 4;
         }
     }
-    
+
     int max_damage = opponent_props->max_damage;
     int net_attack = figure_attack - opponent_defense;
     if (net_attack < 0) {
@@ -270,7 +270,7 @@ int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distan
 {
     int x = shooter->x;
     int y = shooter->y;
-    
+
     int min_distance = max_distance;
     figure *min_figure = 0;
     for (int i = 1; i < MAX_FIGURES; i++) {
@@ -298,7 +298,7 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
 {
     int x = enemy->x;
     int y = enemy->y;
-    
+
     figure *min_figure = 0;
     int min_distance = max_distance;
     for (int i = 1; i < MAX_FIGURES; i++) {
@@ -364,7 +364,7 @@ void figure_combat_attack_figure_at(figure *f, int grid_offset)
             opponent_id = opponent->next_figure_id_on_same_tile;
             continue;
         }
-        
+
         int opponent_category = figure_properties_for_type(opponent->type)->category;
         int attack = 0;
         if (opponent->state != FIGURE_STATE_ALIVE) {

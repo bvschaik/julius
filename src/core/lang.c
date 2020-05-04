@@ -114,7 +114,7 @@ static void parse_message(buffer *buf)
         m->video.y = buffer_read_i16(buf);
         buffer_skip(buf, 14);
         m->urgent = buffer_read_i32(buf);
-        
+
         m->video.text = get_message_text(buffer_read_i32(buf));
         buffer_skip(buf, 4);
         m->title.text = get_message_text(buffer_read_i32(buf));

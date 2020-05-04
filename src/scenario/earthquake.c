@@ -85,10 +85,10 @@ static void advance_earthquake_to_tile(int x, int y)
     map_tiles_update_all_gardens();
     map_tiles_update_all_roads();
     map_tiles_update_all_plazas();
-    
+
     map_routing_update_land();
     map_routing_update_walls();
-    
+
     figure_create_explosion_cloud(x, y, 1);
 }
 

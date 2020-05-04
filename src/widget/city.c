@@ -211,7 +211,7 @@ static void handle_touch_scroll(const touch *t)
     }
     scroll_restore_margins();
     pixel_offset camera_pixel_position;
-    
+
     if (!data.capture_input) {
         return;
     }

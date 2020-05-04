@@ -208,7 +208,7 @@ static int draw_background(void)
     } else {
         lang_text_draw(61, sentiment / 10 + 51, X_OFFSET, 286, FONT_NORMAL_GREEN);
     }
-    
+
     return ADVISOR_HEIGHT;
 }
 
