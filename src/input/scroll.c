@@ -403,8 +403,10 @@ int scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
     delta->x = speed_get_delta(&data.speed.x);
     delta->y = speed_get_delta(&data.speed.y);
     if (data.drag.active) {
-        data.drag.delta.x = 0;
-        data.drag.delta.y = 0;
+        if (data.is_scrolling) {
+            data.drag.delta.x = 0;
+            data.drag.delta.y = 0;
+        }
     } else {
         data.is_scrolling = set_scroll_speed_from_input(m, type);
         if (!data.is_scrolling) {

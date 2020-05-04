@@ -296,6 +296,10 @@ static void determine_selected_object(const mouse *m)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
+    pixel_offset position;
+    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
+        empire_scroll_map(position.x, position.y);
+    }
     if (h->toggle_editor_battle_info) {
         data.show_battle_objects = !data.show_battle_objects;
     }
@@ -303,6 +307,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         const touch *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
             if (t->has_started) {
+                data.is_scrolling = 1;
                 scroll_drag_start(1);
             }
             if (data.is_scrolling && t->has_moved) {
@@ -314,10 +319,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
             data.finished_scroll = !touch_was_click(t);
             scroll_drag_end();
         }
-    }
-    pixel_offset position;
-    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
-        empire_scroll_map(position.x, position.y);
     }
     data.focus_button_id = 0;
     if (!arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2)) {

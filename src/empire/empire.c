@@ -119,15 +119,11 @@ void empire_set_scroll(int x, int y)
     check_scroll_boundaries();
 }
 
-int empire_scroll_map(int x, int y)
+void empire_scroll_map(int x, int y)
 {
-    if (!x && !y) {
-        return 0;
-    }
     data.scroll_x += x;
     data.scroll_y += y;
     check_scroll_boundaries();
-    return 1;
 }
 
 int empire_selected_object(void)

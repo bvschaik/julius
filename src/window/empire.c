@@ -433,6 +433,10 @@ static void determine_selected_object(const mouse *m)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
+    pixel_offset position;
+    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
+        empire_scroll_map(position.x, position.y);
+    }
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
@@ -440,7 +444,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 data.is_scrolling = 1;
                 scroll_drag_start(1);
             }
-            if (data.is_scrolling && t->has_moved) {
+            if (data.is_scrolling && t->has_moved && !t->has_ended) {
                 scroll_drag_move();
             }
         }
@@ -449,10 +453,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
             data.finished_scroll = !touch_was_click(t);
             scroll_drag_end();
         }
-    }
-    pixel_offset position;
-    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
-        empire_scroll_map(position.x, position.y);
     }
     data.focus_button_id = 0;
     int button_id;
