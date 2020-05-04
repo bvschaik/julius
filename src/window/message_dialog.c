@@ -477,41 +477,36 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
+static int handle_input_video(const mouse *m_dialog, const lang_message *msg)
 {
-    data.focus_button_id = 0;
-    const mouse *m_dialog = mouse_in_dialog(m);
-    const lang_message *msg = lang_get_message(data.text_id);
-    if (data.show_video) {
-        if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
-            return;
-        }
-        if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
-            return;
-        }
-        if (is_problem_message(msg)) {
-            if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id)) {
-                return;
-            }
-        }
-        if (input_go_back_requested(m, h)) {
-            button_close(0, 0);
-        }
-        return;
+    if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
+        return 1;
     }
-    // no video
+    if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
+        return 1;
+    }
+    if (is_problem_message(msg)) {
+        if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static int handle_input_normal(const mouse *m_dialog, const lang_message *msg)
+{
     if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(
                 m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 36, &image_button_back, 1, 0)) {
-        return;
+        return 1;
     }
     if (msg->type == TYPE_MESSAGE) {
         if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 40,
                                        get_advisor_button(), 1, 0)) {
-            return;
+            return 1;
         }
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
             if (image_buttons_handle_mouse(m_dialog, data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1, 0)) {
-                return;
+                return 1;
             }
         }
     }
@@ -520,7 +515,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.x + 16 * msg->width_blocks - 38,
         data.y + 16 * msg->height_blocks - 36,
         &image_button_close, 1, 0)) {
-        return;
+        return 1;
     }
     rich_text_handle_mouse(m_dialog);
     int text_id = rich_text_get_clicked_link(m_dialog);
@@ -533,9 +528,23 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.text_id = text_id;
         rich_text_reset(0);
         window_invalidate();
-        return;
+        return 1;
     }
-    if (input_go_back_requested(m, h)) {
+    return 0;
+}
+
+static void handle_input(const mouse *m, const hotkeys *h)
+{
+    data.focus_button_id = 0;
+    const mouse *m_dialog = mouse_in_dialog(m);
+    const lang_message *msg = lang_get_message(data.text_id);
+    int handled;
+    if (data.show_video) {
+        handled = handle_input_video(m_dialog, msg);
+    } else {
+        handled = handle_input_normal(m_dialog, msg);
+    }
+    if (!handled && input_go_back_requested(m, h)) {
         button_close(0, 0);
     }
 }
