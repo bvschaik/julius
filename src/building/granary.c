@@ -85,7 +85,7 @@ int building_granary_remove_for_getting_deliveryman(building *src, building *dst
 {
     const building_storage *s_src = building_storage_get(src->storage_id);
     const building_storage *s_dst = building_storage_get(dst->storage_id);
-    
+
     int max_amount = 0;
     int max_resource = 0;
     if (s_dst->resource_state[RESOURCE_WHEAT] == BUILDING_STORAGE_STATE_GETTING &&
@@ -116,7 +116,7 @@ int building_granary_remove_for_getting_deliveryman(building *src, building *dst
             max_resource = RESOURCE_MEAT;
         }
     }
-    
+
     if (max_amount > 800) {
         max_amount = 800;
     }

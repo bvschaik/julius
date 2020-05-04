@@ -57,7 +57,7 @@ static void draw_background(void)
     }
 
     window_draw_underlying_window();
-    
+
     graphics_in_dialog();
     int text_id = 200 + scenario_campaign_mission();
     const lang_message *msg = lang_get_message(text_id);

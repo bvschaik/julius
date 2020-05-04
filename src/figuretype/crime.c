@@ -260,7 +260,7 @@ void figure_rioter_action(figure *f)
         dir = f->previous_tile_direction;
     }
     dir = figure_image_normalize_direction(dir);
-    
+
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
         f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + 96 + figure_image_corpse_offset(f);
     } else if (f->direction == DIR_FIGURE_ATTACK) {

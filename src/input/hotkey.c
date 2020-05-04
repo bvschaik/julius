@@ -42,7 +42,7 @@ static struct {
     hotkey_definition *definitions;
     int num_definitions;
     arrow_definition *arrows;
-    int num_arrows;    
+    int num_arrows;
 } data;
 
 static void add_definition(const hotkey_mapping *mapping)

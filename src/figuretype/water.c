@@ -292,7 +292,7 @@ void figure_fishing_boat_action(figure *f)
             break;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    
+
     if (f->action_state == FIGURE_ACTION_192_FISHING_BOAT_FISHING) {
         f->image_id = image_group(GROUP_FIGURE_SHIP) + dir + 16;
     } else {

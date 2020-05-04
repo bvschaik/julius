@@ -246,7 +246,7 @@ void figure_soldier_action(figure *f)
     }
     f->formation_position_x.soldier = m->x + formation_layout_position_x(layout, f->index_in_formation);
     f->formation_position_y.soldier = m->y + formation_layout_position_y(layout, f->index_in_formation);
-    
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);

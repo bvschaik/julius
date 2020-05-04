@@ -620,7 +620,7 @@ dirent_first(
 /*
  * Get next directory entry (internal).
  *
- * Returns 
+ * Returns
  */
 static WIN32_FIND_DATAW*
 dirent_next(
@@ -663,7 +663,7 @@ dirent_next(
  */
 static DIR*
 opendir(
-    const char *dirname) 
+    const char *dirname)
 {
     struct DIR *dirp;
     int error;

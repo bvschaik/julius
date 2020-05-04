@@ -1,5 +1,6 @@
 #include "core/encoding.h"
 
+#include "core/encoding_korean.h"
 #include "core/encoding_multibyte.h"
 #include "core/locale.h"
 #include "core/string.h"
@@ -589,6 +590,7 @@ encoding_type encoding_determine(language_type language)
         to_utf8_table = NULL;
         encoding = ENCODING_TRADITIONAL_CHINESE;
     } else if (language == LANGUAGE_KOREAN) {
+        encoding_korean_init();
         to_utf8_table = NULL;
         encoding = ENCODING_KOREAN;
     } else { // assume Western encoding
@@ -618,11 +620,15 @@ int encoding_can_display(const char *utf8_char)
 void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int decomposed)
 {
     if (!to_utf8_table) {
-        encoding_multibyte_to_utf8(encoding, input, output, output_length);
+        if (encoding == ENCODING_KOREAN) {
+            encoding_korean_to_utf8(input, output, output_length);
+        } else {
+            encoding_multibyte_to_utf8(encoding, input, output, output_length);
+        }
         return;
     }
     const char *max_output = &output[output_length - 1];
-    
+
     while (*input && output < max_output) {
         uint8_t c = *input;
         if (c < 0x80) {
@@ -657,6 +663,15 @@ void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int
 
 void encoding_from_utf8(const char *input, uint8_t *output, int output_length)
 {
+    if (!to_utf8_table) {
+        if (encoding == ENCODING_KOREAN) {
+            encoding_korean_from_utf8(input, output, output_length);
+        } else {
+            //encoding_multibyte_from_utf8(encoding, input, output, output_length);
+        }
+        return;
+    }
+
     const uint8_t *max_output = &output[output_length - 1];
 
     const char *prev_input = input;

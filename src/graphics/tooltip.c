@@ -114,7 +114,7 @@ static void draw_button_tooltip(tooltip_context *c)
     } else {
         x = c->mouse_x - width - 20;
     }
-    
+
     switch (window_get_id()) {
         case WINDOW_ADVISORS:
             if (c->mouse_y < screen_dialog_offset_y() + 432) {

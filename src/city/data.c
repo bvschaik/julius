@@ -1009,7 +1009,7 @@ static void save_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offse
     buffer_write_i32(entry_exit_xy, city_data.map.entry_flag.y);
     buffer_write_i32(entry_exit_xy, city_data.map.exit_flag.x);
     buffer_write_i32(entry_exit_xy, city_data.map.exit_flag.y);
-    
+
     buffer_write_i32(entry_exit_grid_offset, city_data.map.entry_flag.grid_offset);
     buffer_write_i32(entry_exit_grid_offset, city_data.map.exit_flag.grid_offset);
 }
@@ -1020,7 +1020,7 @@ static void load_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offse
     city_data.map.entry_flag.y = buffer_read_i32(entry_exit_xy);
     city_data.map.exit_flag.x = buffer_read_i32(entry_exit_xy);
     city_data.map.exit_flag.y = buffer_read_i32(entry_exit_xy);
-    
+
     city_data.map.entry_flag.grid_offset = buffer_read_i32(entry_exit_grid_offset);
     city_data.map.exit_flag.grid_offset = buffer_read_i32(entry_exit_grid_offset);
 }
@@ -1029,7 +1029,7 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
                           buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
 {
     save_main_data(main);
-    
+
     buffer_write_i32(faction, city_data.unused.faction_id);
     buffer_write_i8(faction_unknown, city_data.unused.faction_bytes[0]);
     buffer_write_i8(faction_unknown, city_data.unused.faction_bytes[1]);

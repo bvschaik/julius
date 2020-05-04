@@ -41,9 +41,9 @@ static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS), 10, 10);
-    
+
     lang_text_draw(50, 0, 60, 12, FONT_LARGE_BLACK);
-    
+
     // table headers
     lang_text_draw(50, 21, 60, 56, FONT_SMALL_PLAIN);
     lang_text_draw(50, 22, 170, 56, FONT_SMALL_PLAIN);

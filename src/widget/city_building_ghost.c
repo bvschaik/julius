@@ -529,19 +529,19 @@ static void draw_bridge(const map_tile *tile, int x, int y, building_type type)
     }
     int x_delta, y_delta;
     switch (dir) {
-        case DIR_0_TOP: 
+        case DIR_0_TOP:
             x_delta = 29;
             y_delta = -15;
             break;
-        case DIR_2_RIGHT: 
+        case DIR_2_RIGHT:
             x_delta = 29;
             y_delta = 15;
             break;
-        case DIR_4_BOTTOM: 
+        case DIR_4_BOTTOM:
             x_delta = -29;
             y_delta = 15;
             break;
-        case DIR_6_LEFT: 
+        case DIR_6_LEFT:
             x_delta = -29;
             y_delta = -15;
             break;
@@ -587,7 +587,7 @@ static void draw_fort(const map_tile *tile, int x, int y)
     int grid_offset_ground = grid_offset_fort + FORT_GROUND_GRID_OFFSETS[orientation_index];
     int blocked_tiles_fort[MAX_TILES];
     int blocked_tiles_ground[MAX_TILES];
-    
+
     blocked += is_blocked_for_building(grid_offset_fort, num_tiles_fort, blocked_tiles_fort);
     blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
 
@@ -624,7 +624,7 @@ static void draw_hippodrome(const map_tile *tile, int x, int y)
     int grid_offset1 = tile->grid_offset;
     int grid_offset2 = grid_offset1 + map_grid_delta(5, 0);
     int grid_offset3 = grid_offset1 + map_grid_delta(10, 0);
-    
+
     int blocked_tiles1[25];
     int blocked_tiles2[25];
     int blocked_tiles3[25];

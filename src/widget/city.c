@@ -204,7 +204,7 @@ static void handle_touch_scroll(const touch *t)
         return;
     }
     scroll_restore_margins();
-    
+
     if (!data.capture_input) {
         return;
     }

@@ -17,7 +17,7 @@
 
 #define MAX_CHANNELS 150
 
-#if SDL_VERSION_ATLEAST(2, 0, 7) 
+#if SDL_VERSION_ATLEAST(2, 0, 7)
 #define USE_SDL_AUDIOSTREAM
 #endif
 #define HAS_AUDIOSTREAM() (platform_sdl_version_at_least(2, 0, 7))

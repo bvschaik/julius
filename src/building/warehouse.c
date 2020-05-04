@@ -175,10 +175,10 @@ void building_warehouse_space_add_import(building *space, int resource)
     city_resource_add_to_warehouse(resource, 1);
     space->loads_stored++;
     space->subtype.warehouse_resource_id = resource;
-    
+
     int price = trade_price_buy(resource);
     city_finance_process_import(price);
-    
+
     building_warehouse_space_set_image(space, resource);
 }
 
@@ -189,10 +189,10 @@ void building_warehouse_space_remove_export(building *space, int resource)
     if (space->loads_stored <= 0) {
         space->subtype.warehouse_resource_id = RESOURCE_NONE;
     }
-    
+
     int price = trade_price_sell(resource);
     city_finance_process_export(price);
-    
+
     building_warehouse_space_set_image(space, resource);
 }
 

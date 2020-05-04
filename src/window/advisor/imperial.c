@@ -60,7 +60,7 @@ static void draw_request(int index, const scenario_request *request)
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + resource_offset, 110, 100 + 42 * index);
     lang_text_draw(23, request->resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE);
-    
+
     int width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE);
     lang_text_draw(12, 2, 310 + width, 102 + 42 * index, FONT_NORMAL_WHITE);
 
@@ -102,7 +102,7 @@ static int draw_background(void)
     lang_text_draw_multiline(52, city_rating_favor() / 5 + 22, 60, 60, 544, FONT_NORMAL_BLACK);
 
     inner_panel_draw(32, 90, 36, 14);
-    
+
     int num_requests = 0;
     if (city_military_months_until_distant_battle() > 0 && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         // can send to distant battle
@@ -167,7 +167,7 @@ static void draw_foreground(void)
     inner_panel_draw(64, 324, 32, 6);
 
     lang_text_draw(32, city_emperor_rank(), 72, 338, FONT_LARGE_BROWN);
-    
+
     int width = lang_text_draw(52, 1, 72, 372, FONT_NORMAL_WHITE);
     text_draw_money(city_emperor_personal_savings(), 80 + width, 372, FONT_NORMAL_WHITE);
 

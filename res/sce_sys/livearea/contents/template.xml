@@ -4,11 +4,11 @@
 	<livearea-background>
 		<image>bg.png</image>
 	</livearea-background>
-	 
+
 	<gate>
 		<startup-image>startup.png</startup-image>
 	</gate>
-	
+
 	<frame id="frame2">
 		<liveitem>
 			<text valign="bottom" align="left" text-align="left" text-valign="bottom" line-space="3" ellipsis="on">
@@ -16,7 +16,7 @@
 			</text>
 		</liveitem>
 	</frame>
-	
+
 	<frame id="frame3">
 		<liveitem>
 			<text valign="top" align="left" text-align="left" text-valign="top" line-space="2" ellipsis="on">

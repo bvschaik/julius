@@ -636,7 +636,7 @@ static int decode_audio_track(smacker s, int track, uint8_t *data, int length)
     }
 
     int32_t uncompressed_length = read_i32(data);
-    
+
     bitstream bstream;
     bitstream *bs = bitstream_init(&bstream, &data[4], length - 4);
     if (!read_bit(bs)) {
@@ -752,7 +752,7 @@ static int decode_video(smacker s, uint8_t *frame_data, int length)
     reset_escape16(s->mmap_tree);
     reset_escape16(s->full_tree);
     reset_escape16(s->type_tree);
-    
+
     bitstream bstream;
     bitstream *bs = bitstream_init(&bstream, frame_data, length);
 

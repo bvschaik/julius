@@ -23,7 +23,7 @@ static int try_import_resource(int building_id, int resource, int city_id)
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return 0;
     }
-    
+
     int route_id = empire_city_get_route_id(city_id);
     // try existing storage bay with the same resource
     building *space = warehouse;
@@ -58,7 +58,7 @@ static int try_export_resource(int building_id, int resource, int city_id)
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return 0;
     }
-    
+
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);

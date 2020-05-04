@@ -44,7 +44,7 @@ static void draw_won(void)
 {
     outer_panel_draw(48, 128, 34, 18);
     lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
-   
+
     inner_panel_draw(64, 184, 32, 7);
 
     if (scenario_is_custom()) {

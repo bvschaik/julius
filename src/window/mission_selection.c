@@ -49,7 +49,7 @@ static struct {
 static void draw_background(void)
 {
     int rank = scenario_campaign_rank();
-    
+
     image_draw_fullscreen_background(image_group(GROUP_SELECT_MISSION_BACKGROUND));
     graphics_in_dialog();
     image_draw(image_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);

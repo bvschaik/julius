@@ -234,11 +234,11 @@ void figure_enemy43_spear_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 1;
     enemy_action(f, m);
-    
+
     int dir = get_missile_direction(f, m);
-    
+
     f->is_enemy_image = 1;
-    
+
     switch (m->enemy_type) {
         case ENEMY_5_PERGAMUM:
         case ENEMY_6_SELEUCID:
@@ -272,11 +272,11 @@ void figure_enemy44_sword_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 1;
     enemy_action(f, m);
-    
+
     int dir = get_direction(f);
-    
+
     f->is_enemy_image = 1;
-    
+
     switch (m->enemy_type) {
         case ENEMY_5_PERGAMUM:
         case ENEMY_6_SELEUCID:
@@ -307,11 +307,11 @@ void figure_enemy45_sword_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 1;
     enemy_action(f, m);
-    
+
     int dir = get_direction(f);
-    
+
     f->is_enemy_image = 1;
-    
+
     switch (m->enemy_type) {
         case ENEMY_7_ETRUSCAN:
         case ENEMY_8_GREEK:
@@ -342,11 +342,11 @@ void figure_enemy_camel_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 1;
     enemy_action(f, m);
-    
+
     int dir = get_missile_direction(f, m);
-    
+
     f->is_enemy_image = 1;
-    
+
     if (f->direction == DIR_FIGURE_ATTACK) {
         f->image_id = 601 + dir + 8 * f->image_offset;
     } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
@@ -366,11 +366,11 @@ void figure_enemy_elephant_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 1;
     enemy_action(f, formation_get(f->formation_id));
-    
+
     int dir = get_direction(f);
-    
+
     f->is_enemy_image = 1;
-    
+
     if (f->direction == DIR_FIGURE_ATTACK || f->action_state == FIGURE_ACTION_150_ATTACK) {
         f->image_id = 601 + dir + 8 * f->image_offset;
     } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
@@ -386,11 +386,11 @@ void figure_enemy_chariot_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 3;
     enemy_action(f, formation_get(f->formation_id));
-    
+
     int dir = get_direction(f);
-    
+
     f->is_enemy_image = 1;
-    
+
     if (f->direction == DIR_FIGURE_ATTACK || f->action_state == FIGURE_ACTION_150_ATTACK) {
         f->image_id = 697 + dir + 8 * (f->image_offset / 2);
     } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
@@ -407,11 +407,11 @@ void figure_enemy49_fast_sword_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 2;
     enemy_action(f, m);
-    
+
     int dir = get_direction(f);
-    
+
     f->is_enemy_image = 1;
-    
+
     int attack_id, corpse_id, normal_id;
     if (m->enemy_type == ENEMY_0_BARBARIAN) {
         attack_id = 393;
@@ -450,11 +450,11 @@ void figure_enemy50_sword_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 1;
     enemy_action(f, m);
-    
+
     int dir = get_direction(f);
-    
+
     f->is_enemy_image = 1;
-    
+
     if (m->enemy_type != ENEMY_2_GAUL && m->enemy_type != ENEMY_3_CELT) {
         return;
     }
@@ -480,11 +480,11 @@ void figure_enemy51_spear_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 2;
     enemy_action(f, m);
-    
+
     int dir = get_missile_direction(f, m);
-    
+
     f->is_enemy_image = 1;
-    
+
     if (m->enemy_type != ENEMY_1_NUMIDIAN) {
         return;
     }
@@ -512,11 +512,11 @@ void figure_enemy52_mounted_archer_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 3;
     enemy_action(f, m);
-    
+
     int dir = get_missile_direction(f, m);
-    
+
     f->is_enemy_image = 1;
-    
+
     if (f->direction == DIR_FIGURE_ATTACK) {
         f->image_id = 601 + dir + 8 * f->image_offset;
     } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
@@ -537,11 +537,11 @@ void figure_enemy53_axe_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 1;
     enemy_action(f, m);
-    
+
     int dir = get_direction(f);
-    
+
     f->is_enemy_image = 1;
-    
+
     if (m->enemy_type != ENEMY_2_GAUL) {
         return;
     }
@@ -637,9 +637,9 @@ void figure_enemy_caesar_legionary_action(figure *f)
     f->cart_image_id = 0;
     f->speed_multiplier = 1;
     enemy_action(f, m);
-    
+
     int dir = get_direction(f);
-    
+
     if (f->direction == DIR_FIGURE_ATTACK) {
         f->image_id = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir +
             8 * ((f->attack_image_offset - 12) / 2);

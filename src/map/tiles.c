@@ -691,7 +691,7 @@ static void set_road_with_aqueduct_image(int grid_offset)
 
 static void set_road_image(int x, int y, int grid_offset)
 {
-    if (!map_terrain_is(grid_offset, TERRAIN_ROAD) || 
+    if (!map_terrain_is(grid_offset, TERRAIN_ROAD) ||
         map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING)) {
         return;
     }

@@ -353,10 +353,10 @@ static void draw_background_video(void)
     inner_panel_draw(data.x + 8, y_base, 25, inner_height_blocks);
     text_draw_centered(msg->title.text,
         data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK, 0);
-    
+
     int width = lang_text_draw(25, player_message.month, data.x + 16, y_base + 4, FONT_NORMAL_WHITE);
     width += lang_text_draw_year(player_message.year, data.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE);
-    
+
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_DISASTER &&
         data.text_id == MESSAGE_DIALOG_THEFT) {
         lang_text_draw_amount(8, 0, player_message.param1, data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE);
@@ -436,7 +436,7 @@ static image_button *get_advisor_button(void)
 static void draw_foreground_normal(void)
 {
     const lang_message *msg = lang_get_message(data.text_id);
-    
+
     if (msg->type == TYPE_MANUAL && data.num_history > 0) {
         image_buttons_draw(
             data.x + 16, data.y + 16 * msg->height_blocks - 36,

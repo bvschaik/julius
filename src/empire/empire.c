@@ -34,7 +34,7 @@ void empire_load(int is_custom_scenario, int empire_id)
 {
     char raw_data[EMPIRE_DATA_SIZE];
     const char *filename = is_custom_scenario ? "c32.emp" : "c3.emp";
-    
+
     // read header with scroll positions
     if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, raw_data, 4, 32 * empire_id)) {
         memset(raw_data, 0, 4);
@@ -140,7 +140,7 @@ void empire_select_object(int x, int y)
 {
     int map_x = x + data.scroll_x;
     int map_y = y + data.scroll_y;
-    
+
     data.selected_object = empire_object_get_closest(map_x, map_y);
 }
 

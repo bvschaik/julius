@@ -37,7 +37,7 @@ static generic_button orders_resource_buttons[] = {
     {0, 176, 210, 22, toggle_resource_state, button_none, 9, 0},
     {0, 198, 210, 22, toggle_resource_state, button_none, 10, 0},
     {0, 220, 210, 22, toggle_resource_state, button_none, 11, 0},
-    {0, 242, 210, 22, toggle_resource_state, button_none, 12, 0},                                                   
+    {0, 242, 210, 22, toggle_resource_state, button_none, 12, 0},
     {0, 264, 210, 22, toggle_resource_state, button_none, 13, 0},
     {0, 286, 210, 22, toggle_resource_state, button_none, 14, 0},
     {0, 308, 210, 22, toggle_resource_state, button_none, 15, 0},

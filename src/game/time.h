@@ -19,7 +19,7 @@ void game_time_init(int year);
 
 /**
  * The current game year
- * 
+ *
  */
 int game_time_year(void);
 

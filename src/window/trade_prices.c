@@ -46,7 +46,7 @@ static int get_tooltip_resource(tooltip_context *c)
     int y = screen_dialog_offset_y() + 192;
     int x_mouse = c->mouse_x;
     int y_mouse = c->mouse_y;
-    
+
     for (int i = 1; i < 16; i++) {
         int x = x_base + 30 * i;
         if (x <= x_mouse && x + 24 > x_mouse && y <= y_mouse && y + 24 > y_mouse) {
