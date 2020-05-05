@@ -32,42 +32,42 @@ typedef struct {
     int desired_speed;
     int current_speed;
     int cumulative_delta;
-} speed;
+} speed_type;
 
 /**
  * Clears speed structure
- * @param sp Speed structure to clear
+ * @param speed Speed structure to clear
  */
-void speed_clear(speed *sp);
+void speed_clear(speed_type *speed);
 
 /**
- * Changes the speed
- * @param sp Speed structure to act on
+ * Sets the new target speed
+ * @param speed Speed structure to act on
  * @param new_speed The new speed
  * @param total_time the time for the acceleration/deceleration, or SPEED_CHANGE_IMMEDIATE
  */
-void speed_change(speed *sp, int new_speed, time_millis total_time);
+void speed_set_target(speed_type *speed, int new_speed, time_millis total_time);
 
 /**
- * Immediately the speed (positive speed becomes negative and vice-versa)
+ * Immediately invert the speed (positive speed becomes negative and vice-versa)
  * @param sp Speed structure to act on
  */
-void speed_invert(speed *sp);
+void speed_invert(speed_type *speed);
 
 /**
  * Gets the delta, in pixels, to move since the last time speed_get_delta was called
  * The delta value is normalized to keep the same rate regardless of FPS, EXCEPT if
- * SPEED_CHANGE_IMMEDIATE was passed in speed_change
- * @param sp Speed structure to act on
+ * SPEED_CHANGE_IMMEDIATE was passed in speed_set_target
+ * @param speed Speed structure to act on
  * @return The delta movement
  */
-int speed_get_delta(speed *sp);
+int speed_get_delta(speed_type *speed);
 
 /**
  * Gets the current speed direction
- * @param sp Speed structure to act on
+ * @param speed Speed structure to act on
  * @return An enum with the current direction
  */
-speed_direction speed_get_current_direction(const speed *sp);
+speed_direction speed_get_current_direction(const speed_type *speed);
 
 #endif // CORE_SPEED_H
