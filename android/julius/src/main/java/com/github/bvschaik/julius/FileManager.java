@@ -17,13 +17,11 @@ public class FileManager {
     private static int FILE_TYPE_DIR = 1;
     private static int FILE_TYPE_FILE = 2;
 
-    public static String getC3Path()
-    {
+    public static String getC3Path() {
         return baseUri.toString();
     }
 
-    public static int setBaseUri(String path)
-    {
+    public static int setBaseUri(String path) {
         folderStructureCache.clear();
         if(baseUri != Uri.EMPTY) {
             return 1;
@@ -31,8 +29,7 @@ public class FileManager {
         return setBaseUri(Uri.parse(path));
     }
 
-    static int setBaseUri(Uri newUri)
-    {
+    static int setBaseUri(Uri newUri) {
         try {
             baseUri = newUri;
             FileInfo.base = new FileInfo(DocumentsContract.getTreeDocumentId(newUri), null, DocumentsContract.Document.MIME_TYPE_DIR, Uri.EMPTY);
@@ -43,16 +40,14 @@ public class FileManager {
         }
     }
 
-    private static HashMap<String, FileInfo> getFolderContents(Activity activity, FileInfo folder)
-    {
+    private static HashMap<String, FileInfo> getFolderContents(Activity activity, FileInfo folder) {
         if(!folder.isDirectory()) {
             return new HashMap<>();
         }
         return getFolderContents(activity, folder.getUri());
     }
 
-    private static HashMap<String, FileInfo> getFolderContents(Activity activity, Uri folder)
-    {
+    private static HashMap<String, FileInfo> getFolderContents(Activity activity, Uri folder) {
         HashMap<String, FileInfo> result = folderStructureCache.get(folder);
         if(result != null) {
             return result;
@@ -75,13 +70,11 @@ public class FileManager {
         return result;
     }
 
-    private static FileInfo findFile(Activity activity, FileInfo folder, String fileName)
-    {
+    private static FileInfo findFile(Activity activity, FileInfo folder, String fileName) {
         return getFolderContents(activity, folder).get(fileName.toLowerCase());
     }
 
-    private static FileInfo getFolderFromPath(Activity activity, String[] path)
-    {
+    private static FileInfo getFolderFromPath(Activity activity, String[] path) {
         FileInfo currentDir = FileInfo.base;
 
         for (int i = 0; i < path.length - 1; ++i) {
@@ -93,8 +86,7 @@ public class FileManager {
         return currentDir;
     }
 
-    private static FileInfo getFileFromPath(JuliusMainActivity activity, String filePath)
-    {
+    private static FileInfo getFileFromPath(JuliusMainActivity activity, String filePath) {
         try {
             if(baseUri == Uri.EMPTY) {
                 return null;
@@ -111,8 +103,7 @@ public class FileManager {
         }
     }
 
-    public static String[] getDirectoryContents(JuliusMainActivity activity, String dir, int type, String ext)
-    {
+    public static String[] getDirectoryContents(JuliusMainActivity activity, String dir, int type, String ext) {
         ArrayList<String> fileList = new ArrayList<>();
 
         if(baseUri == Uri.EMPTY) {
@@ -146,8 +137,7 @@ public class FileManager {
         return fileList.toArray(result);
     }
 
-    public static boolean deleteFile(JuliusMainActivity activity, String filePath)
-    {
+    public static boolean deleteFile(JuliusMainActivity activity, String filePath) {
         try {
             FileInfo fileInfo = getFileFromPath(activity, filePath);
             if(fileInfo == null) {
@@ -164,8 +154,7 @@ public class FileManager {
         }
     }
 
-    public static int openFileDescriptor(JuliusMainActivity activity, String filePath, String mode)
-    {
+    public static int openFileDescriptor(JuliusMainActivity activity, String filePath, String mode) {
         try {
             if(baseUri == Uri.EMPTY) {
                 return 0;
@@ -222,8 +211,7 @@ public class FileManager {
         private Uri parent;
         private Uri uri;
 
-        private FileInfo(String documentId, String name, String mimeType, Uri parent)
-        {
+        private FileInfo(String documentId, String name, String mimeType, Uri parent) {
             this.documentId = documentId;
             this.name = name;
             this.mimeType = mimeType;
@@ -231,26 +219,22 @@ public class FileManager {
             this.uri = Uri.EMPTY;
         }
 
-        public String getName()
-        {
+        public String getName() {
             return name;
         }
 
-        public boolean isDirectory()
-        {
+        public boolean isDirectory() {
             return mimeType.equals(DocumentsContract.Document.MIME_TYPE_DIR);
         }
 
-        Uri getUri()
-        {
+        Uri getUri() {
             if(baseUri != Uri.EMPTY && uri == Uri.EMPTY) {
                 uri = DocumentsContract.buildDocumentUriUsingTree(baseUri, documentId);
             }
             return uri;
         }
 
-        Uri getParentUri()
-        {
+        Uri getParentUri() {
             return parent;
         }
     }
