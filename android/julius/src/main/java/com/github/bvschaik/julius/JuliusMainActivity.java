@@ -13,8 +13,7 @@ public class JuliusMainActivity extends SDLActivity {
                                                  | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 
     @Override
-    public void onStop()
-    {
+    public void onStop() {
         super.onStop();
         FileManager.folderStructureCache.clear();
     }
@@ -28,13 +27,10 @@ public class JuliusMainActivity extends SDLActivity {
         };
     }
 
-    public void showDirectorySelection()
-    {
+    public void showDirectorySelection() {
         // Wait before showing window
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable()
-        {
-            public void run()
-            {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            public void run() {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                 intent.addFlags(
                         RW_FLAGS_PERMISSION
@@ -49,10 +45,9 @@ public class JuliusMainActivity extends SDLActivity {
         }, 1000);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == GET_FOLDER_RESULT) {
-            if (data.getData() == null) {
+            if (data == null || data.getData() == null) {
                 this.gotDirectory();
                 return;
             }
@@ -63,19 +58,15 @@ public class JuliusMainActivity extends SDLActivity {
         }
     }
 
-    public void toastMessage(final String message)
-    {
-        new Handler(Looper.getMainLooper()).post(new Runnable()
-        {
-            public void run()
-            {
+    public void toastMessage(final String message) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public float getScreenScale()
-    {
+    public float getScreenScale() {
         return getResources().getDisplayMetrics().density;
     }
 
