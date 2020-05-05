@@ -27,10 +27,10 @@ void system_mouse_set_relative_mode(int enabled)
         // Discard the first value, which is incorrect
         // (the first one gives the relative position to center of window)
         system_mouse_get_relative_state(NULL, NULL);
-    } else if(data.enabled) {
+    } else if (data.enabled) {
         data.enabled = 0;
+        SDL_SetRelativeMouseMode(SDL_FALSE);
         platform_screen_warp_mouse(data.x, data.y);
         mouse_set_position(data.x, data.y);
-        SDL_SetRelativeMouseMode(SDL_FALSE);
     }
 }

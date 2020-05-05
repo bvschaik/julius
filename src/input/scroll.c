@@ -19,7 +19,11 @@
 #define SCROLL_DRAG_DECAY_TIME 350
 #define SCROLL_REGULAR_DECAY_TIME 75
 #define KEY_WAIT_TIME_AFTER_HOLD 500
-#define DRAG_STOPPED_TIME_TOLERANCE 100
+#define TILE_X_PIXELS 60
+#define TILE_Y_PIXELS 15
+#define TILE_X_ALIGN_OFFSET 6
+#define TILE_Y_ALIGN_OFFSET 2
+#define MIN_DECAY_SPEED_TO_ALIGN 3
 
 static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
 static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
@@ -256,7 +260,7 @@ int scroll_drag_end(void)
 
     if (!data.drag.is_touch) {
         system_mouse_set_relative_mode(0);
-    } else if(has_scrolled) {
+    } else if (has_scrolled) {
         const touch *t = get_earliest_touch();
         speed_change(&data.speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE);
         speed_change(&data.speed.y, -t->frame_movement.y, SPEED_CHANGE_IMMEDIATE);
@@ -377,25 +381,44 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type)
     return 1;
 }
 
+static int get_alignment_delta(speed_direction direction, int camera_max_offset, int camera_offset)
+{
+    if (camera_offset == 0) {
+        return 0;
+    }
+    switch (direction) {
+        case SPEED_DIRECTION_STOPPED:
+            direction = (camera_offset >= camera_max_offset / 2) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+            break;
+        case SPEED_DIRECTION_NEGATIVE:
+            direction = (camera_offset >= camera_max_offset * 0.666667) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+            break;
+        default:
+            direction = (camera_offset >= camera_max_offset / 3) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+            break;
+    }
+    return (direction == SPEED_DIRECTION_POSITIVE) ? (camera_max_offset - camera_offset) : -camera_offset;
+}
+
 static void align_to_grid(pixel_offset *delta)
 {
+    if (data.is_scrolling && !data.speed.decaying) {
+        return;
+    }
     pixel_offset camera_offset;
     city_view_get_pixel_offset(&camera_offset.x, &camera_offset.y);
-    speed_direction align_direction;
-    if (camera_offset.x != 0 && delta->x == 0) {
-        align_direction = data.x_align_direction;
-        if (align_direction == SPEED_DIRECTION_STOPPED) {
-            align_direction = camera_offset.x >= 30 ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+    if (data.speed.decaying) {
+        if (abs(delta->x) >= MIN_DECAY_SPEED_TO_ALIGN || abs(delta->y) >= MIN_DECAY_SPEED_TO_ALIGN ||
+           (camera_offset.x > TILE_X_ALIGN_OFFSET && camera_offset.x < TILE_X_PIXELS - TILE_X_ALIGN_OFFSET) ||
+           (camera_offset.y > TILE_Y_ALIGN_OFFSET && camera_offset.y < TILE_Y_PIXELS - TILE_Y_ALIGN_OFFSET)) {
+            return;
         }
-        delta->x = align_direction;
     }
-    if (camera_offset.y != 0 && delta->y == 0) {
-        align_direction = data.y_align_direction;
-        if (align_direction == SPEED_DIRECTION_STOPPED) {
-            align_direction = camera_offset.x >= 8 ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
-        }
-        delta->y = align_direction;
-    }
+    speed_clear(&data.speed.x);
+    speed_clear(&data.speed.y);
+
+    delta->x = get_alignment_delta(data.x_align_direction, TILE_X_PIXELS, camera_offset.x);
+    delta->y = get_alignment_delta(data.y_align_direction, TILE_Y_PIXELS, camera_offset.y);
 }
 
 int scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)

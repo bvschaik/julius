@@ -172,22 +172,21 @@ static void build_end(void)
 static void scroll_map(const mouse *m)
 {
     pixel_offset delta;
-    if(scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
+    if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
         city_view_scroll(delta.x, delta.y);
         sound_city_decay_views();
     }
 }
 
-static int touch_in_city(const touch *t)
+static int input_coords_in_city(int x, int y)
 {
     int x_offset, y_offset, width, height;
     city_view_get_viewport(&x_offset, &y_offset, &width, &height);
 
-    touch_coords coords = t->current_point;
-    coords.x -= x_offset;
-    coords.y -= y_offset;
+    x -= x_offset;
+    y -= y_offset;
 
-    return (coords.x >= 0 && coords.x < width && coords.y >= 0 && coords.y < height);
+    return (x >= 0 && x < width && y >= 0 && y < height);
 }
 
 static void handle_touch_scroll(const touch *t)
@@ -267,7 +266,7 @@ static void handle_first_touch(map_tile *tile)
 
     handle_touch_scroll(first);
 
-    if (!touch_in_city(first)) {
+    if (!input_coords_in_city(first->current_point.x, first->current_point.y)) {
         return;
     }
 
@@ -326,11 +325,11 @@ static void handle_touch(void)
     }
 
     map_tile *tile = &data.current_tile;
-    if (!building_construction_in_progress() || touch_in_city(first)) {
+    if (!building_construction_in_progress() || input_coords_in_city(first->current_point.x, first->current_point.y)) {
         update_city_view_coords(first->current_point.x, first->current_point.y, tile);
     }
 
-    if (first->has_started && touch_in_city(first)) {
+    if (first->has_started && input_coords_in_city(first->current_point.x, first->current_point.y)) {
         data.capture_input = 1;
         scroll_restore_margins();
     }
@@ -380,7 +379,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
     if (m->left.went_up) {
         build_end();
     }
-    if (m->right.went_down && !building_construction_type()) {
+    if (m->right.went_down && input_coords_in_city(m->x, m->y) && !building_construction_type()) {
         scroll_drag_start(0);
     }
     if (m->right.went_up) {
