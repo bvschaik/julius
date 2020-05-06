@@ -24,9 +24,7 @@ typedef struct {
     int image_offset;
     int multibyte_image_offset;
     int space_width;
-    int space_width_draw;
     int letter_spacing;
-    int letter_spacing_draw;
     int line_height;
 
     /**
