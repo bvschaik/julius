@@ -180,7 +180,7 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
             if (word_char_seen) {
                 break;
             }
-            width += 4;
+            width += def->space_width;
         } else if (*str == '$') {
             if (word_char_seen) {
                 break;
@@ -189,7 +189,7 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
             // normal char
             int letter_id = font_letter_id(def, str, &num_bytes);
             if (letter_id >= 0) {
-                width += 1 + image_letter(letter_id)->width;
+                width += image_letter(letter_id)->width + def->letter_spacing;
             }
             word_char_seen = 1;
             if (num_bytes > 1) {
