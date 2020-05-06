@@ -8,10 +8,14 @@ task getVersion {
     def project_version_minor = (cmakeFile =~ /set\(PROJECT_VERSION_MINOR (\d+)\)/)[0][1].toInteger()
     def project_version_patch = (cmakeFile =~ /set\(PROJECT_VERSION_PATCH (\d+)\)/)[0][1].toInteger()
     def is_release_version = (cmakeFile =~ /set\(IS_RELEASE_VERSION ([A-Z]+)\)/)[0][1].toBoolean()
+    def project_unstable_version = 0;
+    if (!is_release_version) {
+        project_unstable_version = 1;
+    }
 
     def versionNumber = "${project_version_major}.${project_version_minor}.${project_version_patch}"
     def versionDetail = " unknown development version"
-    ext.versionCode = project_version_major * 10000 + project_version_minor * 100 + project_version_patch
+    ext.versionCode = project_version_major * 100000 + project_version_minor * 1000 + project_version_patch * 10 + project_unstable_version
 
     try {
         def stdout = new ByteArrayOutputStream()
@@ -122,6 +126,7 @@ android {
 
 repositories {
     google()
+    jcenter()
 }
 
 dependencies {
