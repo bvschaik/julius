@@ -169,7 +169,7 @@ int android_set_base_path(const char *path)
 int android_get_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *))
 {
     java_function_handler handler;
-    if (!request_java_static_function_handler("com/github/bvschaik/julius/FileManager", "getDirectoryContents", "(Lcom/github/bvschaik/julius/JuliusMainActivity;Ljava/lang/String;ILjava/lang/String;)[Ljava/lang/String;", &handler)) {
+    if (!request_java_static_function_handler("com/github/bvschaik/julius/FileManager", "getDirectoryFileList", "(Lcom/github/bvschaik/julius/JuliusMainActivity;Ljava/lang/String;ILjava/lang/String;)[Ljava/lang/String;", &handler)) {
         destroy_java_function_handler(&handler);
         return LIST_ERROR;
     }
