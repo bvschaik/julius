@@ -3,10 +3,11 @@ apply plugin: 'com.android.application'
 buildDir = file("../distribution/${rootProject.name}/${project.name}")
 
 task getVersion {
-    def project_version_major = 1
-    def project_version_minor = 3
-    def project_version_patch = 1
-    def is_release_version = false
+    def cmakeFile = rootProject.file("../CMakeLists.txt").text
+    def project_version_major = (cmakeFile =~ /set\(PROJECT_VERSION_MAJOR (\d+)\)/)[0][1].toInteger()
+    def project_version_minor = (cmakeFile =~ /set\(PROJECT_VERSION_MINOR (\d+)\)/)[0][1].toInteger()
+    def project_version_patch = (cmakeFile =~ /set\(PROJECT_VERSION_PATCH (\d+)\)/)[0][1].toInteger()
+    def is_release_version = (cmakeFile =~ /set\(IS_RELEASE_VERSION ([A-Z]+)\)/)[0][1].toBoolean()
 
     def versionNumber = "${project_version_major}.${project_version_minor}.${project_version_patch}"
     def versionDetail = " unknown development version"
