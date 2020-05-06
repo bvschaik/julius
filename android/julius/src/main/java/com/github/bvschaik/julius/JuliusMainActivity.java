@@ -1,29 +1,30 @@
 package com.github.bvschaik.julius;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
+
 import org.libsdl.app.SDLActivity;
 
 public class JuliusMainActivity extends SDLActivity {
     private static final int GET_FOLDER_RESULT = 500;
     private static final int RW_FLAGS_PERMISSION = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                                 | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 
     @Override
     public void onStop() {
         super.onStop();
-        FileManager.folderStructureCache.clear();
+        FileManager.clearCache();
     }
 
     @Override
     protected String[] getLibraries() {
-        return new String[] {
-            "SDL2",
-            "SDL2_mixer",
-            "julius"
+        return new String[]{
+                "SDL2",
+                "SDL2_mixer",
+                "julius"
         };
     }
 
@@ -46,6 +47,10 @@ public class JuliusMainActivity extends SDLActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            this.gotDirectory();
+            return;
+        }
         if (requestCode == GET_FOLDER_RESULT) {
             if (data == null || data.getData() == null) {
                 this.gotDirectory();

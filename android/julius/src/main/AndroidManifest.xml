@@ -13,7 +13,7 @@
         android:label="Julius"
         android:icon="@mipmap/julius"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-		android:hardwareAccelerated="true">
+        android:hardwareAccelerated="true">
 
         <activity
             android:name=".JuliusMainActivity"
@@ -28,6 +28,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Support for Samsung DeX -->
         <meta-data android:name="com.samsung.android.keepalive.density" android:value="true" />
 
     </application>
