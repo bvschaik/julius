@@ -20,7 +20,7 @@ void system_mouse_set_relative_mode(int enabled)
     if (enabled == data.enabled) {
         return;
     }
-    if(enabled) {
+    if (enabled) {
         SDL_GetMouseState(&data.x, &data.y);
         SDL_SetRelativeMouseMode(SDL_TRUE);
         // Discard the first value, which is incorrect
