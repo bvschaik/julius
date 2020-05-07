@@ -57,8 +57,16 @@ static void draw_background(void)
     text_draw_number_centered(5000, 364, 221, 64, FONT_NORMAL_WHITE);
     lang_text_draw_centered(52, 19, 444, 221, 64, FONT_NORMAL_WHITE);
 
-    lang_text_draw(52, 17, 128, 248, FONT_NORMAL_WHITE);
-    text_draw_number(city_emperor_donate_amount(), '@', " ", 316, 248, FONT_NORMAL_WHITE);
+    int width = lang_text_draw(52, 17, 128, 248, FONT_NORMAL_WHITE);
+
+    int button_start = 128 + width + 10;
+    if (button_start < 240) {
+        button_start = 240;
+    }
+    arrow_buttons[0].x_offset = button_start;
+    arrow_buttons[1].x_offset = arrow_buttons[0].x_offset + arrow_buttons[0].size;
+
+    text_draw_number(city_emperor_donate_amount(), '@', " ", button_start + 76, 248, FONT_NORMAL_WHITE);
 
     lang_text_draw_centered(13, 4, 336, 288, 160, FONT_NORMAL_BLACK);
     lang_text_draw_centered(52, 18, 144, 288, 160, FONT_NORMAL_BLACK);
