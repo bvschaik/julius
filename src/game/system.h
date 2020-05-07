@@ -22,6 +22,18 @@ const char *system_version(void);
 void system_resize(int width, int height);
 
 /**
+ * Reload game textures
+ */
+void system_reload_textures(void);
+
+/**
+ * Saves the screen buffer to memory
+ * Even though it is set to "void", uses "color_t" format
+ * @return true if saving was successful, false otherwise
+ */
+int system_save_screen_buffer(void *pixels);
+
+/**
  * Center window
  */
 void system_center(void);

@@ -699,7 +699,7 @@ void image_draw_fullscreen_background(int image_id)
     int s_width = screen_width();
     int s_height = screen_height();
     if (s_width > 1024 || s_height > 768) {
-        graphics_clear_screen();
+        graphics_clear_screens();
     }
     image_draw(image_id, (s_width - 1024) / 2, (s_height - 768) / 2);
 }

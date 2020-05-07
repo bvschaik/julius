@@ -17,7 +17,7 @@ void window_building_set_possible_position(int *x_offset, int *y_offset, int wid
     int dialog_height = 16 * height_blocks;
     int stub;
     int width;
-    city_view_get_viewport(&stub, &stub, &width, &stub);
+    city_view_get_unscaled_viewport(&stub, &stub, &width, &stub);
     width -= MARGIN_POSITION;
 
     if (*y_offset + dialog_height > screen_height() - MARGIN_POSITION) {

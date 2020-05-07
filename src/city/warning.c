@@ -5,6 +5,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "graphics/window.h"
 
 #define MAX_WARNINGS 5
 #define MAX_TEXT 100
@@ -78,6 +79,7 @@ void city_warning_clear_outdated(void)
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (warnings[i].in_use && time_get_millis() - warnings[i].time > TIMEOUT_MS) {
             warnings[i].in_use = 0;
+            window_request_refresh();
         }
     }
 }

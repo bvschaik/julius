@@ -249,7 +249,8 @@ static void read_header(buffer *buf)
 
 static color_t to_32_bit(uint16_t c)
 {
-    return ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) |
+    return ALPHA_OPAQUE |
+           ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) |
            ((c & 0x3e0) << 6)  | ((c & 0x380) << 1) |
            ((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
 }

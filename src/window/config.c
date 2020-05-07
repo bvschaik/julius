@@ -6,6 +6,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "game/game.h"
+#include "game/system.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -20,7 +21,7 @@
 #include "window/select_list.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 30
+#define NUM_CHECKBOXES 31
 #define CONFIG_PAGES 3
 #define NUM_BOTTOM_BUTTONS 6
 #define MAX_LANGUAGE_DIRS 20
@@ -29,7 +30,7 @@
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
-static int options_per_page[CONFIG_PAGES] = { 7,14,9 };
+static int options_per_page[CONFIG_PAGES] = { 8,14,9 };
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
@@ -37,6 +38,7 @@ static void button_hotkeys(int param1, int param2);
 static void button_close(int save, int param2);
 static void button_page(int param1, int param2);
 static int config_change_basic(config_key key);
+static int config_change_zoom(config_key key);
 static int config_change_string_basic(config_string_key key);
 static int config_change_string_language(config_string_key key);
 
@@ -49,6 +51,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE },
     { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE },
     { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE },
+    { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM },
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
     { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
     { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL },
@@ -78,8 +81,6 @@ static generic_button language_button = {
     120, 50, 200, 24, button_language_select, button_none
 };
 
-
-
 static generic_button bottom_buttons[] = {
     { 200, 430, 150, 30, button_reset_defaults, button_none },
     { 410, 430, 100, 30, button_close, button_none, 0 },
@@ -87,8 +88,6 @@ static generic_button bottom_buttons[] = {
     { 20, 410, 25, 25, button_page, button_none, 0 },
     { 160, 410, 25, 25, button_page, button_none, 1 },
     { 50, 430, 110, 30, button_hotkeys, button_none },
-
-
 };
 
 static const char* bottom_button_texts[] = {
@@ -114,6 +113,7 @@ static const char* option_names[] = {
     "Improve visual clarity when clearing",
     "Show range when building reservoirs, fountains and wells",
     "Show draggable construction size",
+    "Enable zoom (can be slow, uses more RAM)",
     "Fix immigration bug on very hard",
     "Fix 100-year-old ghosts",
     "Grand festivals allow extra blessing from a god",
@@ -178,6 +178,7 @@ static void init(void)
         strncpy(data.config_string_values[i].original_value, value, CONFIG_STRING_VALUE_MAX - 1);
         strncpy(data.config_string_values[i].new_value, value, CONFIG_STRING_VALUE_MAX - 1);
     }
+    data.config_values[CONFIG_UI_ZOOM].change_action = config_change_zoom;
     data.config_string_values[0].change_action = config_change_string_language;
 
     string_copy(string_from_ascii("(default)"), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
@@ -200,7 +201,7 @@ static void init(void)
 
 static void draw_background(void)
 {
-    graphics_clear_screen();
+    graphics_clear_screens();
 
     image_draw_fullscreen_background(image_group(GROUP_CONFIG));
 
@@ -397,6 +398,13 @@ static int config_change_string_basic(config_string_key key)
 {
     config_set_string(key, data.config_string_values[key].new_value);
     strncpy(data.config_string_values[key].original_value, data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
+    return 1;
+}
+
+static int config_change_zoom(config_key key)
+{
+    config_change_basic(key);
+    system_reload_textures();
     return 1;
 }
 

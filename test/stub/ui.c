@@ -14,6 +14,9 @@ int window_is(window_id id)
 void window_invalidate(void)
 {}
 
+void window_request_refresh(void)
+{}
+
 void window_logo_show(int show_patch_message)
 {}
 

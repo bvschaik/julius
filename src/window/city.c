@@ -5,11 +5,13 @@
 #include "city/victory.h"
 #include "city/view.h"
 #include "city/warning.h"
+#include "core/config.h"
 #include "figure/formation.h"
 #include "game/orientation.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/time.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -26,9 +28,19 @@
 #include "window/file_dialog.h"
 
 static int selected_legion_formation_id;
+static int city_view_dirty;
+
+static void clear_city_view(int force)
+{
+    if (config_get(CONFIG_UI_ZOOM) && (force || city_view_dirty)) {
+        graphics_clear_city_viewport();
+    }
+    city_view_dirty = 0;
+}
 
 static void draw_background(void)
 {
+    clear_city_view(1);
     widget_sidebar_draw_background();
     widget_top_menu_draw(1);
 }
@@ -36,7 +48,7 @@ static void draw_background(void)
 static int center_in_city(int element_width_pixels)
 {
     int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
     int margin = (width - element_width_pixels) / 2;
     return x + margin;
 }
@@ -54,6 +66,7 @@ static void draw_paused_and_time_left(void)
         label_draw(1, 25, 15, 1);
         int width = lang_text_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
+        city_view_dirty = 1;
     } else if (scenario_criteria_survival_enabled() && !city_victory_has_won()) {
         int years;
         if (scenario_criteria_max_year() <= game_time_year() + 1) {
@@ -65,11 +78,13 @@ static void draw_paused_and_time_left(void)
         label_draw(1, 25, 15, 1);
         int width = lang_text_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
+        city_view_dirty = 1;
     }
     if (game_state_is_paused()) {
         int x_offset = center_in_city(448);
         outer_panel_draw(x_offset, 40, 28, 3);
         lang_text_draw_centered(13, 2, x_offset, 58, 448, FONT_NORMAL_BLACK);
+        city_view_dirty = 1;
     }
 }
 
@@ -79,14 +94,16 @@ static void draw_cancel_construction(void)
         return;
     }
     int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
     width -= 4 * 16;
     inner_panel_draw(width - 4, 40, 3, 2);
     image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+    city_view_dirty = 1;
 }
 
 static void draw_foreground(void)
 {
+    clear_city_view(0);
     widget_top_menu_draw(0);
     window_city_draw();
     widget_sidebar_draw_foreground();
@@ -94,7 +111,7 @@ static void draw_foreground(void)
         draw_paused_and_time_left();
         draw_cancel_construction();
     }
-    widget_city_draw_construction_cost_and_size();
+    city_view_dirty |= widget_city_draw_construction_cost_and_size();
     if (window_is(WINDOW_CITY)) {
         city_message_process_queue();
     }

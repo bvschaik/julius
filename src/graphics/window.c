@@ -1,5 +1,6 @@
 #include "window.h"
 
+#include "graphics/graphics.h"
 #include "graphics/warning.h"
 #include "input/cursor.h"
 #include "input/hotkey.h"
@@ -113,6 +114,7 @@ void window_draw(int force)
     update_input_before();
     window_type *w = data.current_window;
     if (force || data.refresh_on_draw) {
+        graphics_clear_screen(CANVAS_UI);
         tooltip_invalidate();
         w->draw_background();
         data.refresh_on_draw = 0;

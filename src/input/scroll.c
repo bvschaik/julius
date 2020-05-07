@@ -76,6 +76,7 @@ static struct {
         int start_y;
         int has_scrolled;
     } drag;
+    int start_zoom;
 } data;
 
 static int is_arrow_key_pressed(key *arrow)
@@ -248,7 +249,10 @@ void scroll_restore_margins(void)
 
 touch_coords scroll_get_original_touch_position(void)
 {
-    return data.start_touch;
+    touch_coords result;
+    result.x = data.start_touch.x * data.start_zoom / city_view_get_scale();
+    result.y = data.start_touch.y * data.start_zoom / city_view_get_scale();
+    return result;
 }
 
 void scroll_start_mouse_drag(const mouse *m, const pixel_offset *position)
@@ -256,6 +260,7 @@ void scroll_start_mouse_drag(const mouse *m, const pixel_offset *position)
     data.drag.has_scrolled = 0;
     data.drag.start_x = m->x;
     data.drag.start_y = m->y;
+    data.start_zoom = city_view_get_scale();
     data.is_scrolling = 1;
     data.is_touch = 0;
     clear_scroll_decay(position);
@@ -281,8 +286,10 @@ int scroll_move_mouse_drag(const mouse *m, pixel_offset *position)
     system_mouse_get_relative_state(&delta_x, &delta_y);
 
     city_view_get_camera_in_pixels(&position->x, &position->y);
-    position->x += delta_x;
-    position->y += delta_y;
+
+    int zoom = city_view_get_scale();
+    position->x += calc_adjust_with_percentage(delta_x, zoom);
+    position->y += calc_adjust_with_percentage(delta_y, zoom);
     return 1;
 }
 
@@ -310,6 +317,7 @@ void scroll_start_touch_drag(const pixel_offset *position, touch_coords coords)
     data.position.original = *position;
     data.position.current = *position;
     data.start_touch = coords;
+    data.start_zoom = city_view_get_scale();
     data.is_scrolling = 1;
     data.is_touch = 1;
     clear_scroll_decay(position);
@@ -320,8 +328,9 @@ int scroll_move_touch_drag(int original_x, int original_y, int current_x, int cu
     data.is_scrolling = 1;
     data.is_touch = 1;
 
-    position->x = data.position.original.x - (current_x - original_x);
-    position->y = data.position.original.y - (current_y - original_y);
+    int zoom = city_view_get_scale();
+    position->x = data.position.original.x - calc_adjust_with_percentage(current_x - original_x, zoom);
+    position->y = data.position.original.y - calc_adjust_with_percentage(current_y - original_y, zoom);
 
     find_scroll_speed(position);
 
@@ -445,7 +454,7 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
     if (direction == DIR_8_NONE) {
         if (!data.is_touch && !data.speed.decaying && (data.speed.x || data.speed.y) && use_smooth_scrolling) {
             data.is_scrolling = 1;
-            int max_speed = SCROLL_STEP[type][get_scroll_speed_factor()];
+            int max_speed = calc_adjust_with_percentage(SCROLL_STEP[type][get_scroll_speed_factor()], city_view_get_scale());
             data.speed.x = calc_absolute_decrement(data.speed.x, max_speed / THRUST);
             data.speed.y = calc_absolute_decrement(data.speed.y, (max_speed / y_fraction) / THRUST);
             delta->x = data.speed.x;
@@ -470,7 +479,7 @@ void scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
         return;
     }
 
-    int max_speed = SCROLL_STEP[type][get_scroll_speed_factor()];
+    int max_speed = calc_adjust_with_percentage(SCROLL_STEP[type][get_scroll_speed_factor()], city_view_get_scale());
     int max_speed_x = max_speed * dir_x;
     int max_speed_y = (max_speed / y_fraction) * dir_y;
 

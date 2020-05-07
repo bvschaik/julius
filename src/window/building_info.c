@@ -153,7 +153,7 @@ static int get_height_id(void)
 static int center_in_city(int element_width_pixels)
 {
     int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
     int margin = (width - element_width_pixels) / 2;
     return x + margin;
 }

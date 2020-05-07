@@ -90,7 +90,7 @@ static void init(intermezzo_type type, void (*callback)(void))
 
 static void draw_background(void)
 {
-    graphics_clear_screen();
+    graphics_clear_screens();
     int x_offset = (screen_width() - 1024) / 2;
     int y_offset = (screen_height() - 768) / 2;
 

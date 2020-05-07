@@ -4,6 +4,11 @@
 #include "graphics/color.h"
 
 typedef enum {
+    CANVAS_UI = 0,
+    CANVAS_CITY = 1
+} canvas_type;
+
+typedef enum {
     CLIP_NONE,
     CLIP_LEFT,
     CLIP_RIGHT,
@@ -26,7 +31,8 @@ typedef struct {
 } clip_info;
 
 void graphics_init_canvas(int width, int height);
-const void *graphics_canvas(void);
+const void *graphics_canvas(canvas_type type);
+void graphics_set_active_canvas(canvas_type type);
 
 void graphics_in_dialog(void);
 void graphics_reset_dialog(void);
@@ -40,7 +46,9 @@ void graphics_draw_from_buffer(int x, int y, int width, int height, const color_
 
 color_t *graphics_get_pixel(int x, int y);
 
-void graphics_clear_screen(void);
+void graphics_clear_screen(canvas_type type);
+void graphics_clear_city_viewport(void);
+void graphics_clear_screens(void);
 
 void graphics_draw_vertical_line(int x, int y1, int y2, color_t color);
 void graphics_draw_horizontal_line(int x1, int x2, int y, color_t color);

@@ -1,5 +1,9 @@
 #include "graphics.h"
 
+#include "city/view.h"
+#include "core/config.h"
+#include "graphics/color.h"
+#include "graphics/menu.h"
 #include "graphics/screen.h"
 
 #include <stdlib.h>
@@ -12,7 +16,7 @@ static struct {
     color_t *pixels;
     int width;
     int height;
-} canvas = {NULL, 0, 0};
+} canvas[2];
 
 static struct {
     int x_start;
@@ -24,32 +28,56 @@ static struct {
 static struct {
     int x;
     int y;
-} translation = {0, 0};
+} translation;
 
 static clip_info clip;
+static canvas_type active_canvas;
 
 #ifdef __vita__
-extern vita2d_texture *tex_buffer;
+extern vita2d_texture *tex_buffer_ui;
+extern vita2d_texture * tex_buffer_city;
 #endif
 
 void graphics_init_canvas(int width, int height)
 {
 #ifdef __vita__
-    canvas.pixels = vita2d_texture_get_datap(tex_buffer);
+    canvas[CANVAS_UI].pixels = vita2d_texture_get_datap(tex_buffer_ui);
+    if (config_get(CONFIG_UI_ZOOM)) {
+        canvas[CANVAS_CITY].pixels = vita2d_texture_get_datap(tex_buffer_city);
+    } else {
+        canvas[CANVAS_CITY].pixels = 0;
+    }
 #else
-    free(canvas.pixels);
-    canvas.pixels = (color_t *) malloc((size_t) width * height * sizeof(color_t));
+    free(canvas[CANVAS_UI].pixels);
+    free(canvas[CANVAS_CITY].pixels);
+    canvas[CANVAS_UI].pixels = (color_t *) malloc((size_t) width * height * sizeof(color_t));
+    if (config_get(CONFIG_UI_ZOOM)) {
+        canvas[CANVAS_CITY].pixels = (color_t *) malloc((size_t) width * height * 4 * sizeof(color_t));
+    } else {
+        canvas[CANVAS_CITY].pixels = 0;
+    }
 #endif
-    memset(canvas.pixels, 0, (size_t) width * height * sizeof(color_t));
-    canvas.width = width;
-    canvas.height = height;
+    canvas[CANVAS_UI].width = width;
+    canvas[CANVAS_UI].height = height;
+    canvas[CANVAS_CITY].width = width * 2;
+    canvas[CANVAS_CITY].height = height * 2;
 
+    graphics_clear_screens();
     graphics_set_clip_rectangle(0, 0, width, height);
 }
 
-const void *graphics_canvas(void)
+const void *graphics_canvas(canvas_type type)
 {
-    return canvas.pixels;
+    if (!config_get(CONFIG_UI_ZOOM)) {
+        return canvas[CANVAS_UI].pixels;
+    }
+    return canvas[type].pixels;
+}
+
+void graphics_set_active_canvas(canvas_type type)
+{
+    active_canvas = type;
+    graphics_reset_clip_rectangle();
 }
 
 static void translate_clip(int dx, int dy)
@@ -92,21 +120,23 @@ void graphics_set_clip_rectangle(int x, int y, int width, int height)
     if (translation.y + clip_rectangle.y_start < 0) {
         clip_rectangle.y_start = -translation.y;
     }
-    if (translation.x + clip_rectangle.x_end > canvas.width) {
-        clip_rectangle.x_end = canvas.width - translation.x;
+    if (translation.x + clip_rectangle.x_end > canvas[active_canvas].width) {
+        clip_rectangle.x_end = canvas[active_canvas].width - translation.x;
     }
-    if (translation.y + clip_rectangle.y_end > canvas.height) {
-        clip_rectangle.y_end = canvas.height - translation.y;
+    if (translation.y + clip_rectangle.y_end > canvas[active_canvas].height) {
+        clip_rectangle.y_end = canvas[active_canvas].height - translation.y;
     }
 }
 
 void graphics_reset_clip_rectangle(void)
 {
     clip_rectangle.x_start = 0;
-    clip_rectangle.x_end = canvas.width;
+    clip_rectangle.x_end = canvas[active_canvas].width;
     clip_rectangle.y_start = 0;
-    clip_rectangle.y_end = canvas.height;
-    translate_clip(translation.x, translation.y);
+    clip_rectangle.y_end = canvas[active_canvas].height;
+    if (active_canvas == CANVAS_UI) {
+        translate_clip(translation.x, translation.y);
+    }
 }
 
 static void set_clip_x(int x_offset, int width)
@@ -206,12 +236,34 @@ void graphics_draw_from_buffer(int x, int y, int width, int height, const color_
 
 color_t *graphics_get_pixel(int x, int y)
 {
-    return &canvas.pixels[(translation.y + y) * canvas.width + (translation.x + x)];
+    if (active_canvas == CANVAS_UI) {
+        return &canvas[CANVAS_UI].pixels[(translation.y + y) * canvas[CANVAS_UI].width + translation.x + x];
+    } else {
+        return &canvas[CANVAS_CITY].pixels[y * canvas[CANVAS_CITY].width + x];
+    }
 }
 
-void graphics_clear_screen(void)
+void graphics_clear_screen(canvas_type type)
 {
-    memset(canvas.pixels, 0, sizeof(color_t) * canvas.width * canvas.height);
+    memset(canvas[type].pixels, 0, sizeof(color_t) * canvas[type].width * canvas[type].height);
+}
+
+void graphics_clear_city_viewport(void)
+{
+    int x, y, width, height;
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    while (y < height) {
+        memset(graphics_get_pixel(0, y + TOP_MENU_HEIGHT), 0, width * sizeof(color_t));
+        y++;
+    }
+}
+
+void graphics_clear_screens(void)
+{
+    graphics_clear_screen(CANVAS_UI);
+    if (config_get(CONFIG_UI_ZOOM)) {
+        graphics_clear_screen(CANVAS_CITY);
+    }
 }
 
 void graphics_draw_vertical_line(int x, int y1, int y2, color_t color)
@@ -224,10 +276,10 @@ void graphics_draw_vertical_line(int x, int y1, int y2, color_t color)
     y_min = y_min < clip_rectangle.y_start ? clip_rectangle.y_start : y_min;
     y_max = y_max >= clip_rectangle.y_end ? clip_rectangle.y_end - 1 : y_max;
     color_t *pixel = graphics_get_pixel(x, y_min);
-    color_t *end_pixel = pixel + ((y_max - y_min) * canvas.width);
+    color_t *end_pixel = pixel + ((y_max - y_min) * canvas[active_canvas].width);
     while (pixel <= end_pixel) {
         *pixel = color;
-        pixel += canvas.width;
+        pixel += canvas[active_canvas].width;
     }
 }
 
@@ -284,7 +336,7 @@ void graphics_shade_rect(int x, int y, int width, int height, int darkness)
             int g = (*pixel & 0xff00) >> 8;
             int b = (*pixel & 0xff);
             int grey = (r + g + b) / 3 >> darkness;
-            color_t new_pixel = (color_t) (grey << 16 | grey << 8 | grey);
+            color_t new_pixel = (color_t) (ALPHA_OPAQUE | grey << 16 | grey << 8 | grey);
             *pixel = new_pixel;
         }
     }

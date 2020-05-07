@@ -1,10 +1,14 @@
 #include "map_editor.h"
 
 #include "city/view.h"
+#include "core/config.h"
 #include "editor/tool.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/menu.h"
+#include "graphics/window.h"
 #include "input/scroll.h"
+#include "input/zoom.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/image.h"
@@ -86,23 +90,39 @@ static void draw_flags(int x, int y, int grid_offset)
     }
 }
 
-static void set_city_clip_rectangle(void)
+static void set_city_scaled_clip_rectangle(void)
 {
     int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
+    city_view_get_scaled_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
+}
+
+static void update_zoom_level(void)
+{
+    int zoom = city_view_get_scale();
+    pixel_offset offset;
+    city_view_get_camera_in_pixels(&offset.x, &offset.y);
+    if (zoom_update_value(&zoom, &offset)) {
+        city_view_set_scale(zoom);
+        city_view_set_camera_from_pixel_position(offset.x, offset.y);
+        sound_city_decay_views();
+    }
 }
 
 void widget_map_editor_draw(void)
 {
-    set_city_clip_rectangle();
+    if (config_get(CONFIG_UI_ZOOM)) {
+        update_zoom_level();
+        graphics_set_active_canvas(CANVAS_CITY);
+    }
+    set_city_scaled_clip_rectangle();
 
     init_draw_context();
     city_view_foreach_map_tile(draw_footprint);
     city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
     map_editor_tool_draw(&data.current_tile);
 
-    graphics_reset_clip_rectangle();
+    graphics_set_active_canvas(CANVAS_UI);
 }
 
 static void update_city_view_coords(int x, int y, map_tile *tile)
@@ -136,7 +156,7 @@ static void scroll_map(const mouse *m)
 static int touch_in_map(const touch *t)
 {
     int x_offset, y_offset, width, height;
-    city_view_get_viewport(&x_offset, &y_offset, &width, &height);
+    city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
 
     touch_coords coords = t->current_point;
     coords.x -= x_offset;
@@ -150,7 +170,7 @@ static void handle_touch_scroll(const touch *t)
     if (editor_tool_is_active()) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
-            city_view_get_viewport(&x_offset, &y_offset, &width, &height);
+            city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
             scroll_set_custom_margins(x_offset, y_offset, width, height);
         }
         if (t->has_ended) {
@@ -186,11 +206,28 @@ static void handle_touch_scroll(const touch *t)
     }
 }
 
+static void handle_touch_zoom(const touch *first, const touch *last)
+{
+    if (touch_not_click(first)) {
+        zoom_update_touch(first, last, city_view_get_scale());
+    }
+    if (first->has_ended || last->has_ended) {
+        zoom_end_touch();
+    }
+}
+
 static void handle_last_touch(void)
 {
     const touch *last = get_latest_touch();
-    if (last->in_use && touch_was_click(last)) {
+    if (!last->in_use) {
+        return;
+    }
+    if (touch_was_click(last)) {
         editor_tool_deactivate();
+        return;
+    }
+    if (touch_not_click(last)) {
+        handle_touch_zoom(get_earliest_touch(), last);
     }
 }
 
@@ -200,7 +237,7 @@ static int handle_cancel_construction_button(const touch *t)
         return 0;
     }
     int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
     int box_size = 5 * 16;
     width -= box_size;
 
@@ -315,6 +352,7 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->is_touch) {
         scroll_map(m);
+        zoom_map(m);
         handle_touch();
         return;
     }
@@ -327,6 +365,7 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
         }
     } else if (!m->right.went_up) {
         scroll_map(m);
+        zoom_map(m);
     }
 
     if (m->right.went_down && !editor_tool_is_active()) {

@@ -356,6 +356,7 @@ set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/mouse.c
     ${PROJECT_SOURCE_DIR}/src/input/scroll.c
     ${PROJECT_SOURCE_DIR}/src/input/touch.c
+    ${PROJECT_SOURCE_DIR}/src/input/zoom.c
 )
 set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/aqueduct.c

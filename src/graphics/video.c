@@ -189,7 +189,7 @@ void video_draw(int x_offset, int y_offset)
             int video_y = data.video.y_scale == SMACKER_Y_SCALE_NONE ? y : y / 2;
             const unsigned char *line = frame + (video_y * data.video.width);
             for (int x = clip->clipped_pixels_left; x < clip->visible_pixels_x; x++) {
-                *pixel = pal[line[x]];
+                *pixel = ALPHA_OPAQUE | pal[line[x]];
                 ++pixel;
             }
         }

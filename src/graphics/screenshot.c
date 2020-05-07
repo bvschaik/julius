@@ -5,6 +5,7 @@
 #include "core/config.h"
 #include "core/file.h"
 #include "core/log.h"
+#include "game/system.h"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
 #include "graphics/menu.h"
@@ -160,15 +161,28 @@ static int image_write_rows(const color_t *canvas, int canvas_width)
 
 static int image_write_canvas(void)
 {
-    const color_t *canvas = graphics_canvas();
+    const color_t *canvas;
+    color_t *screen_buffer = 0;
+    if (config_get(CONFIG_UI_ZOOM)) {
+        screen_buffer = malloc(image.width * image.height * sizeof(color_t));
+        if (!system_save_screen_buffer(screen_buffer)) {
+            free(screen_buffer);
+            return 0;
+        }
+        canvas = screen_buffer;
+    } else {
+        canvas = graphics_canvas(CANVAS_UI);
+    }
     int current_height = image_set_loop_height_limits(0, image.height);
     int size;
     while ((size = image_request_rows())) {
         if (!image_write_rows(canvas + current_height * image.width, image.width)) {
+            free(screen_buffer);
             return 0;
         }
         current_height += size;
     }
+    free(screen_buffer);
     return 1;
 }
 
@@ -230,6 +244,13 @@ static void create_full_city_screenshot(void)
     }
 
     int canvas_width = city_width_pixels + (city_view_is_sidebar_collapsed() ? 40 : 160);
+    int zoom_active = config_get(CONFIG_UI_ZOOM);
+    int old_scale = 100;
+    if (zoom_active) {
+        old_scale = city_view_get_scale();
+        city_view_set_scale(100);
+        config_set(CONFIG_UI_ZOOM, 0);
+    }
     screen_set_resolution(canvas_width, TOP_MENU_HEIGHT + IMAGE_HEIGHT_CHUNK);
     graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, city_width_pixels, IMAGE_HEIGHT_CHUNK);
 
@@ -240,7 +261,7 @@ static void create_full_city_screenshot(void)
     int error = 0;
     int current_height = image_set_loop_height_limits(min_height, max_height);
     int size;
-    const color_t *canvas = (color_t *) graphics_canvas() + TOP_MENU_HEIGHT * canvas_width;
+    const color_t *canvas = (color_t *) graphics_canvas(CANVAS_UI) + TOP_MENU_HEIGHT * canvas_width;
     while ((size = image_request_rows())) {
         city_view_set_camera_from_pixel_position(base_width, current_height);
         city_without_overlay_draw(0, 0, &dummy_tile);
@@ -251,7 +272,10 @@ static void create_full_city_screenshot(void)
         }
         current_height += size;
     }
-    graphics_reset_clip_rectangle();
+    if (zoom_active) {
+        config_set(CONFIG_UI_ZOOM, 1);
+        city_view_set_scale(old_scale);
+    }
     screen_set_resolution(width, height);
     city_view_set_camera_from_pixel_position(original_camera_pixels.x, original_camera_pixels.y);
     if (!error) {

@@ -4,14 +4,18 @@
 #include "city/finance.h"
 #include "city/view.h"
 #include "city/warning.h"
+#include "core/calc.h"
+#include "core/config.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "graphics/graphics.h"
+#include "graphics/menu.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
+#include "input/zoom.h"
 #include "input/touch.h"
 #include "map/building.h"
 #include "map/grid.h"
@@ -32,16 +36,39 @@ static struct {
     int capture_input;
 } data;
 
-static void set_city_clip_rectangle(void)
+static void set_city_scaled_clip_rectangle(void)
 {
     int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
+    city_view_get_scaled_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
+}
+
+static void set_city_unscaled_clip_rectangle(void)
+{
+    int x, y, width, height;
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    graphics_set_clip_rectangle(x, y, width, height);
+}
+
+static void update_zoom_level(void)
+{
+    int zoom = city_view_get_scale();
+    pixel_offset offset;
+    city_view_get_camera_in_pixels(&offset.x, &offset.y);
+    if (zoom_update_value(&zoom, &offset)) {
+        city_view_set_scale(zoom);
+        city_view_set_camera_from_pixel_position(offset.x, offset.y);
+        sound_city_decay_views();
+    }
 }
 
 void widget_city_draw(void)
 {
-    set_city_clip_rectangle();
+    if (config_get(CONFIG_UI_ZOOM)) {
+        update_zoom_level();
+        graphics_set_active_canvas(CANVAS_CITY);
+    }
+    set_city_scaled_clip_rectangle();
 
     if (game_state_overlay()) {
         city_with_overlay_draw(&data.current_tile);
@@ -49,35 +76,39 @@ void widget_city_draw(void)
         city_without_overlay_draw(0, 0, &data.current_tile);
     }
 
-    graphics_reset_clip_rectangle();
+    graphics_set_active_canvas(CANVAS_UI);
 }
 
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord)
 {
-    set_city_clip_rectangle();
+    set_city_scaled_clip_rectangle();
 
     city_without_overlay_draw(figure_id, coord, &data.current_tile);
 
     graphics_reset_clip_rectangle();
 }
 
-void widget_city_draw_construction_cost_and_size(void)
+int widget_city_draw_construction_cost_and_size(void)
 {
     if (!building_construction_in_progress()) {
-        return;
+        return 0;
     }
     if (scroll_in_progress()) {
-        return;
+        return 0;
     }
     int size_x, size_y;
     int cost = building_construction_cost();
     int has_size = building_construction_size(&size_x, &size_y);
     if (!cost && !has_size) {
-        return;
+        return 0;
     }
-    set_city_clip_rectangle();
+    set_city_unscaled_clip_rectangle();
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
+    int inverted_scale = calc_percentage(100, city_view_get_scale());
+    x = calc_adjust_with_percentage(x, inverted_scale);
+    y = calc_adjust_with_percentage(y, inverted_scale);
+
     if (cost) {
         color_t color;
         if (cost <= city_finance_treasury()) {
@@ -97,6 +128,7 @@ void widget_city_draw_construction_cost_and_size(void)
         text_draw_number_colored(size_y, '@', " ", x - 15 + width, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
     }
     graphics_reset_clip_rectangle();
+    return 1;
 }
 
 // INPUT HANDLING
@@ -187,7 +219,7 @@ static void scroll_map(const mouse *m)
 static int touch_in_city(const touch *t)
 {
     int x_offset, y_offset, width, height;
-    city_view_get_viewport(&x_offset, &y_offset, &width, &height);
+    city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
 
     touch_coords coords = t->current_point;
     coords.x -= x_offset;
@@ -201,7 +233,7 @@ static void handle_touch_scroll(const touch *t)
     if (building_construction_type()) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
-            city_view_get_viewport(&x_offset, &y_offset, &width, &height);
+            city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
             scroll_set_custom_margins(x_offset, y_offset, width, height);
         }
         if (t->has_ended) {
@@ -218,7 +250,7 @@ static void handle_touch_scroll(const touch *t)
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
         city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
-        scroll_start_touch_drag(&camera_pixel_position, (was_click) ? t->current_point : t->start_point);
+        scroll_start_touch_drag(&camera_pixel_position, was_click ? t->current_point : t->start_point);
         return;
     }
 
@@ -237,11 +269,28 @@ static void handle_touch_scroll(const touch *t)
     }
 }
 
+static void handle_touch_zoom(const touch *first, const touch *last)
+{
+    if (touch_not_click(first)) {
+        zoom_update_touch(first, last, city_view_get_scale());
+    }
+    if (first->has_ended || last->has_ended) {
+        zoom_end_touch();
+    }
+}
+
 static void handle_last_touch(void)
 {
     const touch *last = get_latest_touch();
-    if (last->in_use && touch_was_click(last)) {
+    if (!last->in_use) {
+        return;
+    }
+    if (touch_was_click(last)) {
         building_construction_cancel();
+        return;
+    }
+    if (touch_not_click(last)) {
+        handle_touch_zoom(get_earliest_touch(), last);
     }
 }
 
@@ -251,7 +300,7 @@ static int handle_cancel_construction_button(const touch *t)
         return 0;
     }
     int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
     int box_size = 5 * 16;
     width -= box_size;
 
@@ -368,6 +417,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->is_touch) {
         scroll_map(m);
+        zoom_map(m);
         handle_touch();
         return;
     }
@@ -380,6 +430,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
         }
     } else if (!m->right.went_up) {
         scroll_map(m);
+        zoom_map(m);
     }
 
     map_tile *tile = &data.current_tile;

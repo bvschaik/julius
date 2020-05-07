@@ -78,7 +78,7 @@ static void draw_footprint(int x, int y, int grid_offset)
                 color_mask = COLOR_MASK_RED;
             }
             int view_x, view_y, view_width, view_height;
-            city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
+            city_view_get_scaled_viewport(&view_x, &view_y, &view_width, &view_height);
             if (x < view_x + 100) {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
             } else if (x > view_x + view_width - 100) {

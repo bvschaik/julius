@@ -77,7 +77,7 @@ static void draw_background(void)
 static int get_sidebar_x_offset(void)
 {
     int view_x, view_y, view_width, view_height;
-    city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
+    city_view_get_unscaled_viewport(&view_x, &view_y, &view_width, &view_height);
     return view_x + view_width;
 }
 
@@ -114,6 +114,7 @@ static void open_submenu(int index, int keep_open)
     data.selected_menu = index;
     data.selected_submenu = MENU_ID_TO_SUBMENU_ID[index];
     data.num_submenu_items = count_submenu_items(data.selected_submenu);
+    window_invalidate();
 }
 
 static void close_submenu(void)
@@ -122,6 +123,7 @@ static void close_submenu(void)
     data.selected_menu = 0;
     data.selected_submenu = 0;
     data.num_submenu_items = 0;
+    window_invalidate();
 }
 
 static void handle_submenu_focus(void)

@@ -141,7 +141,7 @@ static void draw_background(void)
 static int get_sidebar_x_offset(void)
 {
     int view_x, view_y, view_width, view_height;
-    city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
+    city_view_get_unscaled_viewport(&view_x, &view_y, &view_width, &view_height);
     return view_x + view_width;
 }
 
@@ -261,6 +261,7 @@ static void button_menu_item(int item)
         data.num_items = building_menu_count_items(data.selected_submenu);
         data.y_offset = Y_MENU_OFFSETS[data.num_items];
         building_construction_clear_type();
+        window_invalidate();
     } else {
         window_city_show();
     }

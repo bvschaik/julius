@@ -25,7 +25,7 @@ static int init(const char *filename, int width, int height, void (*callback)(vo
 
 static void draw_background(void)
 {
-    graphics_clear_screen();
+    graphics_clear_screens();
 }
 
 static void draw_foreground(void)

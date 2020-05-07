@@ -159,7 +159,7 @@ static void init(void)
 
 static void draw_background(void)
 {
-    graphics_clear_screen();
+    graphics_clear_screen(CANVAS_UI);
 
     image_draw_fullscreen_background(image_group(GROUP_CONFIG));
 

@@ -17,7 +17,7 @@ static void init(void)
 
 static void draw_background(void)
 {
-    graphics_clear_screen();
+    graphics_clear_screens();
 
     graphics_in_dialog();
     image_draw(image_group(GROUP_LOGO), 0, 0);

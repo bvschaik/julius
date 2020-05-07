@@ -213,6 +213,7 @@ static void menu_file_confirm_exit(int accepted)
 static void menu_file_exit_editor(int param)
 {
     clear_state();
+    window_editor_map_show();
     if (scenario_is_saved()) {
         game_exit_editor();
     } else {

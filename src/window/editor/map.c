@@ -1,6 +1,7 @@
 #include "map.h"
 
 #include "city/view.h"
+#include "core/config.h"
 #include "editor/editor.h"
 #include "editor/tool.h"
 #include "game/game.h"
@@ -18,9 +19,11 @@
 #include "window/popup_dialog.h"
 #include "window/editor/attributes.h"
 
+static int city_view_dirty;
+
 static void draw_background(void)
 {
-    graphics_clear_screen();
+    graphics_clear_screens();
     widget_sidebar_editor_draw_background();
     widget_top_menu_editor_draw();
 }
@@ -31,14 +34,24 @@ static void draw_cancel_construction(void)
         return;
     }
     int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
     width -= 4 * 16;
     inner_panel_draw(width - 4, 40, 3, 2);
     image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+    city_view_dirty = 1;
+}
+
+static void clear_city_view(void)
+{
+    if (config_get(CONFIG_UI_ZOOM) && city_view_dirty) {
+        graphics_clear_city_viewport();
+    }
+    city_view_dirty = 0;
 }
 
 static void draw_foreground(void)
 {
+    clear_city_view();
     widget_sidebar_editor_draw_foreground();
     widget_map_editor_draw();
     if (window_is(WINDOW_EDITOR_MAP)) {

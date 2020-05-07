@@ -56,7 +56,7 @@ static void draw_version_string(void)
 
 static void draw_background(void)
 {
-    graphics_clear_screen();
+    graphics_clear_screens();
     graphics_in_dialog();
     image_draw(image_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
     graphics_reset_dialog();

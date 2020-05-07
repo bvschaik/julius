@@ -36,7 +36,7 @@ static int init(void)
 
 static void draw_background(void)
 {
-    graphics_clear_screen();
+    graphics_clear_screens();
 }
 
 static void draw_foreground(void)

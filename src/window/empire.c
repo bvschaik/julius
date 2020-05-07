@@ -287,7 +287,7 @@ static void draw_background(void)
     data.y_max = s_height <= MAX_HEIGHT ? s_height : data.y_min + MAX_HEIGHT;
 
     if (data.x_min || data.y_min) {
-        graphics_clear_screen();
+        graphics_clear_screens();
     }
     draw_paneling();
     draw_object_info();
