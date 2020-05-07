@@ -180,7 +180,7 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
             if (word_char_seen) {
                 break;
             }
-            width += 4;
+            width += def->space_width;
         } else if (*str == '$') {
             if (word_char_seen) {
                 break;
@@ -189,7 +189,7 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
             // normal char
             int letter_id = font_letter_id(def, str, &num_bytes);
             if (letter_id >= 0) {
-                width += 1 + image_letter(letter_id)->width;
+                width += image_letter(letter_id)->width + def->letter_spacing;
             }
             word_char_seen = 1;
             if (num_bytes > 1) {
@@ -231,12 +231,12 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
             int letter_id = font_letter_id(def, str, &num_bytes);
             int width;
             if (*str == ' ' || *str == '_' || letter_id < 0) {
-                width = def->space_width_draw;
+                width = def->space_width;
             } else {
                 const image *img = image_letter(letter_id);
                 int height = def->image_y_offset(*str, img->height, def->line_height);
                 image_draw_letter(def->font, letter_id, current_x, y - height, color);
-                width = def->letter_spacing_draw + img->width;
+                width = def->letter_spacing + img->width;
             }
             if (input_cursor.capture && input_cursor.position == input_cursor.cursor_position) {
                 if (!input_cursor.seen) {
@@ -257,7 +257,7 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
         input_cursor.x_offset = current_x - x;
         input_cursor.seen = 1;
     }
-    current_x += def->space_width_draw;
+    current_x += def->space_width;
     return current_x - x;
 }
 

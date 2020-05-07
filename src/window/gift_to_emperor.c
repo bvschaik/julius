@@ -20,7 +20,7 @@ static generic_button buttons[] = {
     {208, 213, 300, 20, button_set_gift, button_none, 1, 0},
     {208, 233, 300, 20, button_set_gift, button_none, 2, 0},
     {208, 253, 300, 20, button_set_gift, button_none, 3, 0},
-    {128, 336, 240, 20, button_send_gift, button_none, 0, 0},
+    {118, 336, 260, 20, button_send_gift, button_none, 0, 0},
     {400, 336, 160, 20, button_cancel, button_none, 0, 0},
 };
 
@@ -79,8 +79,8 @@ static void draw_foreground(void)
     }
     // can give at least one type
     if (city_emperor_can_send_gift(GIFT_MODEST)) {
-        lang_text_draw_centered(52, 66 + city_emperor_selected_gift_size(), 128, 341, 240, FONT_NORMAL_BLACK);
-        button_border_draw(128, 336, 240, 20, focus_button_id == 4);
+        lang_text_draw_centered(52, 66 + city_emperor_selected_gift_size(), 118, 341, 260, FONT_NORMAL_BLACK);
+        button_border_draw(118, 336, 260, 20, focus_button_id == 4);
     }
     button_border_draw(400, 336, 160, 20, focus_button_id == 5);
 

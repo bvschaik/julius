@@ -71,68 +71,68 @@ static const int CHAR_TO_FONT_IMAGE_CYRILLIC[] = {
 };
 
 static const font_definition DEFINITIONS_DEFAULT[] = {
-    {FONT_NORMAL_PLAIN,   0, 0, 6, 6, 1, 1, 11, image_y_offset_default},
-    {FONT_NORMAL_BLACK, 134, 0, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_NORMAL_WHITE, 268, 0, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_NORMAL_RED,   402, 0, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_LARGE_PLAIN, 536, 0, 10, 8, 1, 1, 23, image_y_offset_default},
-    {FONT_LARGE_BLACK, 670, 0, 10, 8, 1, 0, 23, image_y_offset_default},
-    {FONT_LARGE_BROWN, 804, 0, 10, 8, 1, 0, 24, image_y_offset_default},
-    {FONT_SMALL_PLAIN,  938, 0, 4, 4, 1, 1, 9, image_y_offset_default},
-    {FONT_NORMAL_GREEN,1072, 0, 6, 6, 0, 0, 11, image_y_offset_default},
-    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 0, 0, 11, image_y_offset_default}
+    {FONT_NORMAL_PLAIN,   0, 0, 6, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_BLACK, 134, 0, 6, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_WHITE, 268, 0, 6, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_RED,   402, 0, 6, 0, 11, image_y_offset_default},
+    {FONT_LARGE_PLAIN,  536, 0, 8, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BLACK,  670, 0, 8, 0, 23, image_y_offset_default},
+    {FONT_LARGE_BROWN,  804, 0, 8, 0, 24, image_y_offset_default},
+    {FONT_SMALL_PLAIN,  938, 0, 4, 1, 9, image_y_offset_default},
+    {FONT_NORMAL_GREEN,1072, 0, 6, 0, 11, image_y_offset_default},
+    {FONT_SMALL_BLACK, 1206, 0, 6, 0, 11, image_y_offset_default}
 };
 
 static const font_definition DEFINITIONS_EASTERN[] = {
-    {FONT_NORMAL_PLAIN,   0, 0, 6, 6, 1, 1, 11, image_y_offset_eastern},
-    {FONT_NORMAL_BLACK, 134, 0, 6, 6, 0, 0, 11, image_y_offset_eastern},
-    {FONT_NORMAL_WHITE, 268, 0, 6, 6, 0, 0, 11, image_y_offset_eastern},
-    {FONT_NORMAL_RED,   402, 0, 6, 6, 0, 0, 11, image_y_offset_eastern},
-    {FONT_LARGE_PLAIN, 536, 0, 10, 8, 1, 1, 23, image_y_offset_eastern},
-    {FONT_LARGE_BLACK, 670, 0, 10, 8, 1, 0, 23, image_y_offset_eastern},
-    {FONT_LARGE_BROWN, 804, 0, 10, 8, 1, 0, 24, image_y_offset_eastern},
-    {FONT_SMALL_PLAIN,  938, 0, 4, 4, 1, 1, 9, image_y_offset_eastern},
-    {FONT_NORMAL_GREEN,1072, 0, 6, 6, 0, 0, 11, image_y_offset_eastern},
-    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 0, 0, 11, image_y_offset_eastern}
+    {FONT_NORMAL_PLAIN,   0, 0, 6, 1, 11, image_y_offset_eastern},
+    {FONT_NORMAL_BLACK, 134, 0, 6, 0, 11, image_y_offset_eastern},
+    {FONT_NORMAL_WHITE, 268, 0, 6, 0, 11, image_y_offset_eastern},
+    {FONT_NORMAL_RED,   402, 0, 6, 0, 11, image_y_offset_eastern},
+    {FONT_LARGE_PLAIN,  536, 0, 8, 1, 23, image_y_offset_eastern},
+    {FONT_LARGE_BLACK,  670, 0, 8, 0, 23, image_y_offset_eastern},
+    {FONT_LARGE_BROWN,  804, 0, 8, 0, 24, image_y_offset_eastern},
+    {FONT_SMALL_PLAIN,  938, 0, 4, 1, 9, image_y_offset_eastern},
+    {FONT_NORMAL_GREEN,1072, 0, 6, 0, 11, image_y_offset_eastern},
+    {FONT_SMALL_BLACK, 1206, 0, 6, 0, 11, image_y_offset_eastern}
 };
 
 static const font_definition DEFINITIONS_CYRILLIC[] = {
-    {FONT_NORMAL_PLAIN,   0, 0, 6, 6, 1, 1, 11, image_y_offset_cyrillic_normal_small_plain},
-    {FONT_NORMAL_BLACK, 158, 0, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
-    {FONT_NORMAL_WHITE, 316, 0, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
-    {FONT_NORMAL_RED,   474, 0, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
-    {FONT_LARGE_PLAIN, 632, 0, 10, 8, 1, 1, 23, image_y_offset_cyrillic_large_plain},
-    {FONT_LARGE_BLACK, 790, 0, 10, 8, 1, 0, 23, image_y_offset_cyrillic_large_black},
-    {FONT_LARGE_BROWN, 948, 0, 10, 8, 1, 0, 24, image_y_offset_cyrillic_large_brown},
-    {FONT_SMALL_PLAIN,  1106, 0, 4, 4, 1, 1, 9, image_y_offset_cyrillic_normal_small_plain},
-    {FONT_NORMAL_GREEN, 1264, 0, 6, 6, 0, 0, 11, image_y_offset_cyrillic_normal_colored},
-    {FONT_SMALL_BLACK, 1422, 0, 6, 6, 0, 0, 11, image_y_offset_cyrillic_small_black}
+    {FONT_NORMAL_PLAIN,   0, 0, 6, 1, 11, image_y_offset_cyrillic_normal_small_plain},
+    {FONT_NORMAL_BLACK, 158, 0, 6, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_NORMAL_WHITE, 316, 0, 6, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_NORMAL_RED,   474, 0, 6, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_LARGE_PLAIN,  632, 0, 8, 1, 23, image_y_offset_cyrillic_large_plain},
+    {FONT_LARGE_BLACK,  790, 0, 8, 0, 23, image_y_offset_cyrillic_large_black},
+    {FONT_LARGE_BROWN,  948, 0, 8, 0, 24, image_y_offset_cyrillic_large_brown},
+    {FONT_SMALL_PLAIN, 1106, 0, 4, 1, 9, image_y_offset_cyrillic_normal_small_plain},
+    {FONT_NORMAL_GREEN, 1264, 0, 6, 0, 11, image_y_offset_cyrillic_normal_colored},
+    {FONT_SMALL_BLACK, 1422, 0, 6, 0, 11, image_y_offset_cyrillic_small_black}
 };
 
 static const font_definition DEFINITIONS_TRADITIONAL_CHINESE[] = {
-    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, 6, 6, 1, 1, 11, image_y_offset_default},
-    {FONT_NORMAL_BLACK, 134, 0, 6, 6, 1, 1, 11, image_y_offset_default},
-    {FONT_NORMAL_WHITE, 268, 0, 6, 6, 1, 1, 11, image_y_offset_default},
-    {FONT_NORMAL_RED, 402, 0, 6, 6, 1, 1, 11, image_y_offset_default},
-    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_default},
-    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_default},
-    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 10, 8, 1, 1, 24, image_y_offset_default},
-    {FONT_SMALL_PLAIN, 938, 0, 4, 4, 1, 1, 9, image_y_offset_default},
-    {FONT_NORMAL_GREEN, 1072, 0, 6, 6, 1, 1, 11, image_y_offset_default},
-    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 1, 1, 11, image_y_offset_default}
+    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, 6, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_BLACK, 134, 0, 6, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_WHITE, 268, 0, 6, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_RED, 402, 0, 6, 1, 11, image_y_offset_default},
+    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 8, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 8, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 8, 1, 24, image_y_offset_default},
+    {FONT_SMALL_PLAIN, 938, 0, 4, 1, 9, image_y_offset_default},
+    {FONT_NORMAL_GREEN, 1072, 0, 6, 1, 11, image_y_offset_default},
+    {FONT_SMALL_BLACK, 1206, 0, 6, 1, 11, image_y_offset_default}
 };
 
 static const font_definition DEFINITIONS_KOREAN[] = {
-    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 1, 6, 6, 1, 1, 11, image_y_offset_korean},
-    {FONT_NORMAL_BLACK, 134, 0, 6, 6, 0, 0, 11, image_y_offset_korean},
-    {FONT_NORMAL_WHITE, 268, 0, 6, 6, 0, 0, 11, image_y_offset_korean},
-    {FONT_NORMAL_RED, 402, 0, 6, 6, 0, 0, 11, image_y_offset_korean},
-    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 10, 8, 1, 1, 23, image_y_offset_korean},
-    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 10, 8, 1, 0, 23, image_y_offset_korean},
-    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 10, 8, 1, 0, 24, image_y_offset_korean},
-    {FONT_SMALL_PLAIN, 938, 0, 4, 4, 1, 1, 9, image_y_offset_korean},
-    {FONT_NORMAL_GREEN, 1072, 0, 6, 6, 0, 0, 11, image_y_offset_korean},
-    {FONT_SMALL_BLACK, 1206, 0, 6, 6, 0, 0, 11, image_y_offset_korean}
+    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 1, 6, 1, 11, image_y_offset_korean},
+    {FONT_NORMAL_BLACK, 134, 0, 6, 0, 11, image_y_offset_korean},
+    {FONT_NORMAL_WHITE, 268, 0, 6, 0, 11, image_y_offset_korean},
+    {FONT_NORMAL_RED, 402, 0, 6, 0, 11, image_y_offset_korean},
+    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 8, 1, 23, image_y_offset_korean},
+    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 8, 0, 23, image_y_offset_korean},
+    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 8, 0, 24, image_y_offset_korean},
+    {FONT_SMALL_PLAIN, 938, 0, 4, 1, 9, image_y_offset_korean},
+    {FONT_NORMAL_GREEN, 1072, 0, 6, 0, 11, image_y_offset_korean},
+    {FONT_SMALL_BLACK, 1206, 0, 6, 0, 11, image_y_offset_korean}
 };
 
 enum {

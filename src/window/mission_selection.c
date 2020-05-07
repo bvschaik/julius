@@ -111,15 +111,18 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.focus_button = 2;
     }
 
-    if (m_dialog->right.went_up || h->escape_pressed) {
-        data.choice = 0;
-        window_invalidate();
-    }
     if (data.choice > 0) {
         if (image_buttons_handle_mouse(m_dialog, 580, 410, &image_button_start_mission, 1, 0)) {
             return;
         }
+        if (m_dialog->right.went_up || h->escape_pressed) {
+            data.choice = 0;
+            window_invalidate();
+        }
+    } else if (h->escape_pressed) {
+        hotkey_handle_escape();
     }
+    
     if (m_dialog->left.went_up) {
         if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44)) {
             scenario_set_campaign_mission(game_mission_peaceful());

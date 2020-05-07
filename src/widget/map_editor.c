@@ -121,28 +121,21 @@ static void update_city_view_coords(int x, int y, map_tile *tile)
 static void scroll_map(const mouse *m)
 {
     pixel_offset delta;
-    scroll_get_delta(m, &delta, SCROLL_TYPE_CITY);
-    if (city_view_scroll(delta.x, delta.y)) {
+    if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
+        city_view_scroll(delta.x, delta.y);
         sound_city_decay_views();
-    } else {
-        pixel_offset position;
-        if (scroll_decay(&position)) {
-            city_view_set_camera_from_pixel_position(position.x, position.y);
-            sound_city_decay_views();
-        }
     }
 }
 
-static int touch_in_map(const touch *t)
+static int input_coords_in_map(int x, int y)
 {
     int x_offset, y_offset, width, height;
     city_view_get_viewport(&x_offset, &y_offset, &width, &height);
 
-    touch_coords coords = t->current_point;
-    coords.x -= x_offset;
-    coords.y -= y_offset;
+    x -= x_offset;
+    y -= y_offset;
 
-    return (coords.x >= 0 && coords.x < width && coords.y >= 0 && coords.y < height);
+    return (x >= 0 && x < width &&y >= 0 && y < height);
 }
 
 static void handle_touch_scroll(const touch *t)
@@ -159,15 +152,13 @@ static void handle_touch_scroll(const touch *t)
         return;
     }
     scroll_restore_margins();
-    pixel_offset camera_pixel_position;
 
     if (!data.capture_input) {
         return;
     }
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
-        city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
-        scroll_start_touch_drag(&camera_pixel_position, (was_click) ? t->current_point : t->start_point);
+        scroll_drag_start(1);
         return;
     }
 
@@ -175,14 +166,10 @@ static void handle_touch_scroll(const touch *t)
         return;
     }
 
-    touch_coords original = scroll_get_original_touch_position();
-    if (scroll_move_touch_drag(original.x, original.y, t->current_point.x, t->current_point.y, &camera_pixel_position)) {
-        city_view_set_camera_from_pixel_position(camera_pixel_position.x, camera_pixel_position.y);
-        sound_city_decay_views();
-    }
+    scroll_drag_move();
 
     if (t->has_ended) {
-        scroll_end_touch_drag(1);
+        scroll_drag_end();
     }
 }
 
@@ -224,7 +211,7 @@ static void handle_first_touch(map_tile *tile)
 
     handle_touch_scroll(first);
 
-    if (!touch_in_map(first)) {
+    if (!input_coords_in_map(first->current_point.x, first->current_point.y)) {
         return;
     }
 
@@ -294,11 +281,11 @@ static void handle_touch(void)
     }
 
     map_tile *tile = &data.current_tile;
-    if (!editor_tool_is_in_use() || touch_in_map(first)) {
+    if (!editor_tool_is_in_use() || input_coords_in_map(first->current_point.x, first->current_point.y)) {
         update_city_view_coords(first->current_point.x, first->current_point.y, tile);
     }
 
-    if (first->has_started && touch_in_map(first)) {
+    if (first->has_started && input_coords_in_map(first->current_point.x, first->current_point.y)) {
         data.capture_input = 1;
         scroll_restore_margins();
     }
@@ -313,30 +300,21 @@ static void handle_touch(void)
 
 void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
 {
+    scroll_map(m);
+
     if (m->is_touch) {
-        scroll_map(m);
         handle_touch();
         return;
     }
-
     if (m->right.is_down && !m->right.went_down) {
-        pixel_offset camera_pixel_position;
-
-        if (scroll_move_mouse_drag(m, &camera_pixel_position)) {
-            city_view_set_camera_from_pixel_position(camera_pixel_position.x, camera_pixel_position.y);
-        }
-    } else if (!m->right.went_up) {
-        scroll_map(m);
+        scroll_drag_move();
     }
-
-    if (m->right.went_down && !editor_tool_is_active()) {
-        pixel_offset camera_pixel_position;
-        city_view_get_camera_in_pixels(&camera_pixel_position.x, &camera_pixel_position.y);
-        scroll_start_mouse_drag(m, &camera_pixel_position);
+    if (m->right.went_down && input_coords_in_map(m->x, m->y) && !editor_tool_is_active()) {
+        scroll_drag_start(0);
     }
     if (m->right.went_up) {
         if (!editor_tool_is_active()) {
-            int has_scrolled = scroll_end_mouse_drag();
+            int has_scrolled = scroll_drag_end();
             if (!has_scrolled) {
                 editor_tool_deactivate();
             }

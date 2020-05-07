@@ -206,16 +206,12 @@ void city_view_set_camera_from_pixel_position(int x, int y)
     check_camera_boundaries();
 }
 
-int city_view_scroll(int x, int y)
+void city_view_scroll(int x, int y)
 {
-    if (!x && !y) {
-        return 0;
-    }
     data.camera.pixel.x += x;
     data.camera.pixel.y += y;
     adjust_camera_position_for_pixels();
     check_camera_boundaries();
-    return 1;
 }
 
 int city_view_to_grid_offset(int x_view, int y_view)
