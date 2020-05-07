@@ -7,7 +7,7 @@ void empire_load(int is_custom_scenario, int empire_id);
 void empire_load_editor(int empire_id, int viewport_width, int viewport_height);
 
 void empire_init_scenario(void);
-int empire_scroll_map(int x, int y);
+void empire_scroll_map(int x, int y);
 void empire_set_viewport(int width, int height);
 void empire_get_scroll(int *x_scroll, int *y_scroll);
 void empire_set_scroll(int x, int y);

@@ -11,19 +11,15 @@ typedef struct {
 } touch_coords;
 
 typedef struct {
-    float x;
-    float y;
-} touch_speed;
-
-typedef struct {
     int in_use;
     int has_started;
     int has_moved;
     int has_ended;
     touch_coords start_point;
     touch_coords current_point;
+    touch_coords previous_frame_point;
     touch_coords frame_movement;
-    touch_speed speed;
+    touch_coords last_movement;
     time_millis start_time;
     time_millis last_change_time;
 } touch;
@@ -42,7 +38,8 @@ int touch_get_scroll(void);
 void reset_touches(int reset_old_touch);
 
 int touch_create(touch_coords start_coords, time_millis start_time);
-void touch_update(int index, touch_coords current_coords, touch_coords frame_movement, time_millis current_time, int has_ended);
+void touch_move(int index, touch_coords current_coords, time_millis current_time);
+void touch_end(int index, time_millis current_time);
 int touch_in_use(int index);
 
 int touch_to_mouse(void);

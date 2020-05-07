@@ -4,12 +4,14 @@
 
 #include <stdlib.h>
 
+#define CLICK_TIME 300
+#define NOT_MOVING_RANGE 5
+#define SCROLL_FINGER_RADIUS 25
+#define MILLIS_TOLERANCE_BETWEEN_LAST_MOVE_AND_TOUCH_END 60
+
 static touch touch_data[MAX_ACTIVE_TOUCHES + 1];
 static touch old_touch;
 static int last_scroll_position;
-static const time_millis CLICK_TIME = 300;
-static const int NOT_MOVING_RANGE = 5;
-static const int SCROLL_FINGER_RADIUS = 25;
 
 static int start_delayed(const touch *t)
 {
@@ -84,7 +86,7 @@ int touch_is_scroll(void)
             first = 1;
             last = 0;
         }
-        return (((touch_data[last].start_time - touch_data[first].start_time) < CLICK_TIME) && !touch_was_click(get_latest_touch()));
+        return ((touch_data[last].start_time - touch_data[first].start_time) < CLICK_TIME) && !touch_was_click(get_latest_touch());
     }
     const touch *result = get_earliest_touch();
     return (result->in_use && start_delayed(result));
@@ -133,10 +135,10 @@ int touch_create(touch_coords start_coords, time_millis start_time)
         t->has_ended = 0;
         t->start_point = start_coords;
         t->current_point = start_coords;
+        t->previous_frame_point = start_coords;
         t->frame_movement.x = 0;
         t->frame_movement.y = 0;
-        t->speed.x = 0;
-        t->speed.y = 0;
+        t->last_movement = t->frame_movement;
         t->start_time = start_time;
         t->last_change_time = start_time;
     }
@@ -148,20 +150,29 @@ int touch_in_use(int index)
     return index >= 0 && index < MAX_ACTIVE_TOUCHES && touch_data[index].in_use;
 }
 
-void touch_update(int index, touch_coords current_coords, touch_coords frame_movement, time_millis current_time, int has_ended)
+void touch_move(int index, touch_coords current_coords, time_millis current_time)
 {
     if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !touch_data[index].in_use) {
         return;
     }
     touch *t = &touch_data[index];
-    t->current_point = current_coords;
-    t->frame_movement.x += frame_movement.x;
-    t->frame_movement.y += frame_movement.y;
     t->last_change_time = current_time;
-    t->has_ended = has_ended;
-
+    t->current_point = current_coords;
     if ((abs(current_coords.x - t->start_point.x) > NOT_MOVING_RANGE) || (abs(current_coords.y - t->start_point.y) > NOT_MOVING_RANGE)) {
         t->has_moved = 1;
+    }
+}
+
+void touch_end(int index, time_millis current_time)
+{
+    if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !touch_data[index].in_use) {
+        return;
+    }
+    touch *t = &touch_data[index];
+    t->has_ended = 1;
+    // This is needed because sometimes SDL waits for up to three frames to register the touch end
+    if (current_time - t->last_change_time < MILLIS_TOLERANCE_BETWEEN_LAST_MOVE_AND_TOUCH_END) {
+        t->frame_movement = t->last_movement;
     }
 }
 
@@ -183,11 +194,15 @@ void reset_touches(int reset_old_touch)
             t->has_moved = 0;
             t->has_ended = 0;
             last_scroll_position = 0;
-            continue;
+        } else {
+            t->frame_movement.x = t->current_point.x - t->previous_frame_point.x;
+            t->frame_movement.y = t->current_point.y - t->previous_frame_point.y;
+            if (t->frame_movement.x != 0 || t->frame_movement.y != 0) {
+                t->last_movement = t->frame_movement;
+            }
+            t->previous_frame_point = t->current_point;
+            t->has_started = start_delayed(t);
         }
-        t->has_started = start_delayed(t);
-        t->frame_movement.x = 0;
-        t->frame_movement.y = 0;
     }
 }
 

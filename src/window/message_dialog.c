@@ -110,7 +110,7 @@ static void set_city_message(int year, int month,
 
 static void init(int text_id, void (*background_callback)(void))
 {
-    scroll_end_touch_drag(0);
+    scroll_drag_end();
     for (int i = 0; i < MAX_HISTORY; i++) {
         data.history[i].text_id = 0;
         data.history[i].scroll_position = 0;
