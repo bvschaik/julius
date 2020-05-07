@@ -46,7 +46,7 @@ static image_button image_button_advisor[] = {
     {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
 };
 static generic_button generic_button_open_trade[] = {
-    {50, 61, 400, 26, button_open_trade, button_none, 0, 0}
+    {30, 61, 440, 26, button_open_trade, button_none, 0, 0}
 };
 
 static struct {
@@ -189,10 +189,10 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             index += 32;
         }
         index = lang_text_draw_amount(8, 0, city->cost_to_open,
-                                           x_offset + 60, y_offset + 73, FONT_NORMAL_GREEN);
-        lang_text_draw(47, 6, x_offset + index + 60, y_offset + 73, FONT_NORMAL_GREEN);
+            x_offset + 40, y_offset + 73, FONT_NORMAL_GREEN);
+        lang_text_draw(47, 6, x_offset + index + 40, y_offset + 73, FONT_NORMAL_GREEN);
         int image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1 - city->is_sea_trade;
-        image_draw(image_id, x_offset + 400, y_offset + 65 + 2 * city->is_sea_trade);
+        image_draw(image_id, x_offset + 430, y_offset + 65 + 2 * city->is_sea_trade);
     }
 }
 
@@ -393,7 +393,7 @@ static void draw_panel_buttons(const empire_city *city)
     image_buttons_draw(data.x_max - 44, data.y_max - 100, image_button_advisor, 1);
     if (city) {
         if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
-            button_border_draw((data.x_min + data.x_max - 500) / 2 + 50, data.y_max - 44, 400, 26, data.selected_button);
+            button_border_draw((data.x_min + data.x_max - 500) / 2 + 30, data.y_max - 44, 440, 26, data.selected_button);
         }
     }
 }
