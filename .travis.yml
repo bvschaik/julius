@@ -12,7 +12,6 @@ jobs:
     compiler: clang
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4
   - os: linux
-    dist: xenial
     compiler: gcc
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=linux DEPLOY=linux
   - os: linux
@@ -23,27 +22,31 @@ jobs:
   - os: osx
     compiler: clang
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
-  - os: linux
-    name: PS Vita
-    env: BUILD_TARGET=vita DEPLOY=vita
-  - os: linux
-    name: Nintendo Switch
-    env: BUILD_TARGET=switch DEPLOY=switch
+
 cache:
   directories:
-  - "$SDL_LIB"
-  - "$SDL_MIXER_LIB"
+  - $SDL_LIB
+  - $SDL_MIXER_LIB
+
+install:
   - ./.ci_scripts/setup_environment.sh
   - ./.ci_scripts/install_sdl.sh;
 
 before_script:
-- "./.ci_scripts/run_cmake.sh"
+  - ./.ci_scripts/run_cmake.sh
+
 script:
-- "./.ci_scripts/run_build.sh"
+  - ./.ci_scripts/run_build.sh
+
 after_success:
-- if [ $RUN_CODECOV ]; then bash <(curl -s https://codecov.io/bash); fi;
+  - if [ $RUN_CODECOV ];
+    then
+      bash <(curl -s https://codecov.io/bash);
+    fi;
+
 before_deploy:
-- "./.ci_scripts/bintray_conf.sh"
+  - ./.ci_scripts/bintray_conf.sh
+
 deploy:
   provider: bintray
   on:

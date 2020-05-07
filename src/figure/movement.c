@@ -78,6 +78,31 @@ static void set_target_height_bridge(figure *f)
     f->target_height = map_bridge_height(f->grid_offset);
 }
 
+static roadblock_permission get_permission_for_figure_type(figure* f)
+{
+    switch (f->type) {
+    case FIGURE_ENGINEER:
+    case FIGURE_PREFECT:
+        return PERMISSION_MAINTENANCE;
+        break;
+    case FIGURE_PRIEST:
+        return PERMISSION_PRIEST;
+        break;
+    case FIGURE_MARKET_TRADER:
+        return PERMISSION_MARKET;
+        break;
+    case FIGURE_GLADIATOR:
+    case FIGURE_CHARIOTEER:
+    case FIGURE_ACTOR:
+    case FIGURE_LION_TAMER:
+        return PERMISSION_ENTERTAINER;
+        break;
+    default:
+        return PERMISSION_NONE;
+        break;
+    }
+}
+
 static void move_to_next_tile(figure *f)
 {
     int old_x = f->x;
@@ -220,30 +245,6 @@ static void advance_route_tile(figure *f, int roaming_enabled)
     }
 }
 
-static roadblock_permission get_permission_for_figure_type(figure* f)
-{
-    switch (f->type) {
-    case FIGURE_ENGINEER:
-    case FIGURE_PREFECT:
-        return PERMISSION_MAINTENANCE;
-        break;
-    case FIGURE_PRIEST:
-        return PERMISSION_PRIEST;
-        break;
-    case FIGURE_MARKET_TRADER:
-        return PERMISSION_MARKET;
-        break;
-    case FIGURE_GLADIATOR:
-    case FIGURE_CHARIOTEER:
-    case FIGURE_ACTOR:
-    case FIGURE_LION_TAMER:
-        return PERMISSION_ENTERTAINER;
-        break;
-    default:
-        return PERMISSION_NONE;
-        break;
-    }
-}
 
 static void walk_ticks(figure *f, int num_ticks, int roaming_enabled)
 {

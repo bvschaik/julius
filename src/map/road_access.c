@@ -289,7 +289,7 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, roadblock_permiss
 	return is_road;
 }
 
-int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles, roadblock_permission perm)
+int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles, int perm)
 {
     road_tiles[1] = road_tiles[3] = road_tiles[5] = road_tiles[7] = 0;
 
