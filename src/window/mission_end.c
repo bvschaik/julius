@@ -60,9 +60,9 @@ static void draw_won(void)
     inner_panel_draw(64, 184, 32, 7);
 
     if (scenario_is_custom()) {
-        lang_text_draw_multiline(147, 20, 80, 192, 496, FONT_NORMAL_WHITE);
+        lang_text_draw_multiline(147, 20, 80, 192, 488, FONT_NORMAL_WHITE);
     } else {
-        lang_text_draw_multiline(147, scenario_campaign_mission(), 80, 192, 496, FONT_NORMAL_WHITE);
+        lang_text_draw_multiline(147, scenario_campaign_mission(), 80, 192, 488, FONT_NORMAL_WHITE);
     }
 
     int left_width = get_max(
