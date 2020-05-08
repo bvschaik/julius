@@ -1,9 +1,11 @@
 #include "city.h"
 
 #include "building/construction.h"
+#include "building/properties.h"
 #include "city/finance.h"
 #include "city/view.h"
 #include "city/warning.h"
+#include "core/direction.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
 #include "game/settings.h"
@@ -27,7 +29,7 @@
 
 static struct {
     map_tile current_tile;
-    int selected_grid_offset;
+    map_tile selected_tile;
     int new_start_grid_offset;
     int capture_input;
 } data;
@@ -178,6 +180,38 @@ static void scroll_map(const mouse *m)
     }
 }
 
+static int adjust_offset_for_orientation(int grid_offset, int size)
+{
+    switch (city_view_orientation()) {
+        case DIR_0_TOP:
+            return map_grid_add_delta(grid_offset, -size + 1, -size + 1);
+        case DIR_2_RIGHT:
+            return map_grid_add_delta(grid_offset, 0, -size + 1);
+        case DIR_6_LEFT:
+            return map_grid_add_delta(grid_offset, -size + 1, 0);
+        default:
+            return grid_offset;
+    }
+}
+
+static int has_confirmed_construction(int ghost_offset, int tile_offset, int range_size)
+{
+    tile_offset = adjust_offset_for_orientation(tile_offset, range_size);
+    int x = map_grid_offset_to_x(tile_offset);
+    int y = map_grid_offset_to_y(tile_offset);
+    if (ghost_offset <= 0 || !map_grid_is_inside(x, y, range_size)) {
+        return 0;
+    }
+    for (int dy = 0; dy < range_size; dy++) {
+        for (int dx = 0; dx < range_size; dx++) {
+            if (ghost_offset == tile_offset + map_grid_delta(dx, dy)) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 static int input_coords_in_city(int x, int y)
 {
     int x_offset, y_offset, width, height;
@@ -251,12 +285,13 @@ static int handle_cancel_construction_button(const touch *t)
 static void handle_first_touch(map_tile *tile)
 {
     const touch *first = get_earliest_touch();
+    building_type type = building_construction_type();
 
     if (touch_was_click(first)) {
         if (handle_cancel_construction_button(first) || handle_legion_click(tile)) {
             return;
         }
-        if (!building_construction_type() && handle_right_click_allow_building_info(tile)) {
+        if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
             scroll_drag_end();
             data.capture_input = 0;
             window_building_info_show(tile->grid_offset);
@@ -266,7 +301,7 @@ static void handle_first_touch(map_tile *tile)
 
     handle_touch_scroll(first);
 
-    if (!input_coords_in_city(first->current_point.x, first->current_point.y)) {
+    if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE) {
         return;
     }
 
@@ -278,41 +313,46 @@ static void handle_first_touch(map_tile *tile)
             }
         } else {
             if (first->has_started) {
-                if (data.selected_grid_offset != tile->grid_offset) {
+                if (data.selected_tile.grid_offset != tile->grid_offset) {
                     data.new_start_grid_offset = tile->grid_offset;
                 }
             }
             if (touch_not_click(first) && data.new_start_grid_offset) {
                 data.new_start_grid_offset = 0;
-                data.selected_grid_offset = 0;
+                data.selected_tile.grid_offset = 0;
                 building_construction_cancel();
                 build_start(tile);
             }
             build_move(tile);
-            if (data.selected_grid_offset != tile->grid_offset) {
-                data.selected_grid_offset = 0;
+            if (data.selected_tile.grid_offset != tile->grid_offset) {
+                data.selected_tile.grid_offset = 0;
             }
             if (first->has_ended) {
-                if (data.selected_grid_offset == tile->grid_offset) {
+                if (data.selected_tile.grid_offset == tile->grid_offset) {
                     build_end();
                     widget_city_clear_current_tile();
                     data.new_start_grid_offset = 0;
                 } else {
-                    data.selected_grid_offset = tile->grid_offset;
+                    data.selected_tile.grid_offset = tile->grid_offset;
                 }
             }
         }
         return;
     }
 
+    int size = building_properties_for_type(type)->size;
+    if (type == BUILDING_WAREHOUSE) {
+        size = 3;
+    }
+
     if (touch_was_click(first) && first->has_ended && data.capture_input &&
-        data.selected_grid_offset == tile->grid_offset) {
-        build_start(tile);
-        build_move(tile);
+        has_confirmed_construction(data.selected_tile.grid_offset, tile->grid_offset, size)) {
+        build_start(&data.selected_tile);
+        build_move(&data.selected_tile);
         build_end();
         widget_city_clear_current_tile();
     } else if (first->has_ended) {
-        data.selected_grid_offset = tile->grid_offset;
+        data.selected_tile = *tile;
     }
 }
 
@@ -487,6 +527,8 @@ void widget_city_get_tooltip(tooltip_context *c)
 
 void widget_city_clear_current_tile(void)
 {
-    data.selected_grid_offset = 0;
+    data.selected_tile.x = -1;
+    data.selected_tile.y = -1;
+    data.selected_tile.grid_offset = 0;
     data.current_tile.grid_offset = 0;
 }
