@@ -174,8 +174,8 @@ static void draw_extra_info_panel(int x_offset, int y_offset, int width, int hei
         lang_text_draw(68, 148, x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
         y_current_line += EXTRA_INFO_UNEMPLOYMENT_TOP_PADDING;
 
-        int width = text_draw_percentage(data.unemployment_percentage, x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
-        text_draw_number(data.unemployment_amount, '(', ")", x_offset + 11 + width, y_current_line, FONT_NORMAL_GREEN);
+        int text_width = text_draw_percentage(data.unemployment_percentage, x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
+        text_draw_number(data.unemployment_amount, '(', ")", x_offset + 11 + text_width, y_current_line, FONT_NORMAL_GREEN);
         y_current_line += EXTRA_INFO_UNEMPLOYMENT_BOTTOM_PADDING;
     }
 

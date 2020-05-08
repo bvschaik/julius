@@ -375,7 +375,6 @@ int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_
 
 int text_measure_multiline(const uint8_t *str, int box_width, font_t font)
 {
-    int line_height = font_definition_for(font)->line_height;
     int has_more_characters = 1;
     int guard = 0;
     int num_lines = 0;
@@ -384,7 +383,6 @@ int text_measure_multiline(const uint8_t *str, int box_width, font_t font)
             break;
         }
         int current_width = 0;
-        int line_index = 0;
         while (has_more_characters && current_width < box_width) {
             int word_num_chars;
             int word_width = get_word_width(str, font, &word_num_chars);
