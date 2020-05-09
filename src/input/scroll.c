@@ -302,7 +302,9 @@ static int get_direction(const mouse *m)
         data.speed.modifier = 0;
     }
     // mouse near map edge
-    if ((!m->is_touch || data.limits.active) && (x >= 0 && x < width && y >= 0 && y < height)) {
+    // NOTE: using <= width/height (instead of <) to compensate for rounding
+    // errors caused by scaling the display
+    if ((!m->is_touch || data.limits.active) && (x >= 0 && x <= width && y >= 0 && y <= height)) {
         if (x < border) {
             left = 1;
             data.speed.modifier = 1 - x / (float) border;
