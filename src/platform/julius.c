@@ -360,6 +360,9 @@ static int init_sdl(void)
 #elif SDL_VERSION_ATLEAST(2, 0, 4)
     SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
 #endif
+#ifdef __ANDROID__
+    SDL_SetHint(SDL_HINT_ANDROID_TRAP_BACK_BUTTON, "1");
+#endif
     SDL_Log("SDL initialized");
     return 1;
 }
