@@ -303,7 +303,8 @@ static int get_direction(const mouse *m)
     }
     // mouse near map edge
     // NOTE: using <= width/height (instead of <) to compensate for rounding
-    // errors caused by scaling the display
+    // errors caused by scaling the display. SDL adds a 1px border to either
+    // the right or the bottom when the aspect ratio does not match exactly.
     if ((!m->is_touch || data.limits.active) && (x >= 0 && x <= width && y >= 0 && y <= height)) {
         if (x < border) {
             left = 1;
