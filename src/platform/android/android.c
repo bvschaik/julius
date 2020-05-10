@@ -5,6 +5,7 @@
 #include "SDL.h"
 
 #include <jni.h>
+#include <string.h>
 
 typedef struct {
     JNIEnv *env;
@@ -13,7 +14,10 @@ typedef struct {
     jmethodID method;
 } java_function_handler;
 
+#define PATH_MAX 300
+
 static int has_directory;
+static char path[PATH_MAX];
 
 static int startup_java_function_handler(const char *class_name, java_function_handler *handler)
 {
@@ -86,7 +90,9 @@ static const char *get_c3_path(void)
     }
 
     jobject result = (*handler.env)->CallStaticObjectMethod(handler.env, handler.class, handler.method);
-    const char *path = (*handler.env)->GetStringUTFChars(handler.env, (jstring) result, NULL);
+    const char *temp_path = (*handler.env)->GetStringUTFChars(handler.env, (jstring) result, NULL);
+    strncpy(path, temp_path, PATH_MAX - 1);
+    (*handler.env)->ReleaseStringUTFChars(handler.env, (jstring) result, temp_path);
     (*handler.env)->DeleteLocalRef(handler.env, result);
     destroy_java_function_handler(&handler);
 
@@ -184,6 +190,7 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
         jstring jfilename = (jstring) (*handler.env)->GetObjectArrayElement(handler.env, result, i);
         const char *filename = (*handler.env)->GetStringUTFChars(handler.env, jfilename, NULL);
         match = callback(filename);
+        (*handler.env)->ReleaseStringUTFChars(handler.env, (jstring) jfilename, filename);
         (*handler.env)->DeleteLocalRef(handler.env, jfilename);
         if (match == LIST_MATCH) {
             break;
