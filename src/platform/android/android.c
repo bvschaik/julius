@@ -14,10 +14,10 @@ typedef struct {
     jmethodID method;
 } java_function_handler;
 
-#define PATH_MAX 300
+#define GAME_PATH_MAX 300
 
 static int has_directory;
-static char path[PATH_MAX];
+static char path[GAME_PATH_MAX];
 
 static int startup_java_function_handler(const char *class_name, java_function_handler *handler)
 {
@@ -91,7 +91,7 @@ static const char *get_c3_path(void)
 
     jobject result = (*handler.env)->CallStaticObjectMethod(handler.env, handler.class, handler.method);
     const char *temp_path = (*handler.env)->GetStringUTFChars(handler.env, (jstring) result, NULL);
-    strncpy(path, temp_path, PATH_MAX - 1);
+    strncpy(path, temp_path, GAME_PATH_MAX - 1);
     (*handler.env)->ReleaseStringUTFChars(handler.env, (jstring) result, temp_path);
     (*handler.env)->DeleteLocalRef(handler.env, result);
     destroy_java_function_handler(&handler);
@@ -215,6 +215,11 @@ int android_remove_file(const char *filename)
     destroy_java_function_handler(&handler);
 
     return result;
+}
+
+int android_is_mouse_in_use(void)
+{
+    return SDL_GetDefaultCursor() != 0 && !SDL_IsDeXMode() && !SDL_IsChromebook();
 }
 
 JNIEXPORT void JNICALL Java_com_github_bvschaik_julius_JuliusMainActivity_gotDirectory(JNIEnv *env)

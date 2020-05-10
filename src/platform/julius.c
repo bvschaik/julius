@@ -405,6 +405,7 @@ static const char* ask_for_data_dir(int again)
         }
     }
     return tinyfd_selectFolderDialog("Please select your Caesar 3 folder", NULL);
+#endif
 }
 #endif
 
