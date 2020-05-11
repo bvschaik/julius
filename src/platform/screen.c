@@ -221,6 +221,7 @@ void platform_screen_center_window(void)
 
 void platform_screen_render(void)
 {
+    SDL_RenderClear(SDL.renderer);
     SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
     SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
     SDL_RenderPresent(SDL.renderer);
