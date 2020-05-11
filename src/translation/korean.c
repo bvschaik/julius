@@ -8,11 +8,6 @@ static translation_string all_strings[] = {
         "패치는 이곳에서 다운로드하실 수 있습니다. \n"
         URL_PATCHES "\n"
         "패치 없이 진행하는 데 따른 문제는 본인 책임입니다."},
-    {TR_MISSING_FONTS_TITLE, "폰트 없음"},
-    {TR_MISSING_FONTS_MESSAGE,
-        "시저 3를 실행하기 위해서는 추가 폰트 파일이 필요합니다. "
-        "언어에 맞는 폰트 파일은 이곳에서 다운로드하실 수 있습니다. \n"
-        URL_PATCHES},
     {TR_NO_EDITOR_TITLE, "편집기가 설치되지 않음"},
     {TR_NO_EDITOR_MESSAGE,
         "현재 설치된 시저 3는 편집기 파일을 포함하고 있지 않습니다. "
