@@ -1,4 +1,4 @@
-#include "sidebar_extra.h"
+#include "extra.h"
 
 #include "city/labor.h"
 #include "city/population.h"

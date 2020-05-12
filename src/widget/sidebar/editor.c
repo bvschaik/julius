@@ -1,4 +1,4 @@
-#include "sidebar_editor.h"
+#include "editor.h"
 
 #include "core/image_group_editor.h"
 #include "editor/tool.h"

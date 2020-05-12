@@ -1,4 +1,4 @@
-#include "sidebar.h"
+#include "city.h"
 
 #include "building/menu.h"
 #include "city/message.h"
@@ -19,9 +19,9 @@
 #include "map/orientation.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
+#include "widget/sidebar/extra.h"
 #include "widget/city.h"
 #include "widget/minimap.h"
-#include "widget/sidebar_extra.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -207,7 +207,7 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
     draw_sidebar_relief(x_offset, relief_y_offset, is_collapsed);
 }
 
-void widget_sidebar_draw_background(void)
+void widget_sidebar_city_draw_background(void)
 {
     int image_base = image_group(GROUP_SIDE_PANEL);
     int is_collapsed = city_view_is_sidebar_collapsed();
@@ -257,7 +257,7 @@ static void draw_number_of_messages(void)
     }
 }
 
-void widget_sidebar_draw_foreground(void)
+void widget_sidebar_city_draw_foreground(void)
 {
     if (building_menu_has_changed()) {
         enable_building_buttons();
@@ -280,12 +280,12 @@ void widget_sidebar_draw_foreground(void)
     sidebar_extra_draw_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
 }
 
-void widget_sidebar_draw_foreground_military(void)
+void widget_sidebar_city_draw_foreground_military(void)
 {
     draw_minimap(0);
 }
 
-int widget_sidebar_handle_mouse(const mouse *m)
+int widget_sidebar_city_handle_mouse(const mouse *m)
 {
     if (widget_city_has_input()) {
         return 0;
@@ -325,7 +325,7 @@ int widget_sidebar_handle_mouse(const mouse *m)
     return handled;
 }
 
-int widget_sidebar_handle_mouse_build_menu(const mouse *m)
+int widget_sidebar_city_handle_mouse_build_menu(const mouse *m)
 {
     if (city_view_is_sidebar_collapsed()) {
         return image_buttons_handle_mouse(m, get_x_offset_collapsed(), 24, buttons_build_collapsed, 12, 0);
@@ -334,7 +334,7 @@ int widget_sidebar_handle_mouse_build_menu(const mouse *m)
     }
 }
 
-int widget_sidebar_get_tooltip_text(void)
+int widget_sidebar_city_get_tooltip_text(void)
 {
     return data.focus_button_for_tooltip;
 }
