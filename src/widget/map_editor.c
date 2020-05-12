@@ -304,22 +304,22 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
 
     if (m->is_touch) {
         handle_touch();
-        return;
-    }
-    if (m->right.is_down && !m->right.went_down) {
-        scroll_drag_move();
-    }
-    if (m->right.went_down && input_coords_in_map(m->x, m->y) && !editor_tool_is_active()) {
-        scroll_drag_start(0);
-    }
-    if (m->right.went_up) {
-        if (!editor_tool_is_active()) {
-            int has_scrolled = scroll_drag_end();
-            if (!has_scrolled) {
+    } else {
+        if (m->right.is_down && !m->right.went_down) {
+            scroll_drag_move();
+        }
+        if (m->right.went_down && input_coords_in_map(m->x, m->y) && !editor_tool_is_active()) {
+            scroll_drag_start(0);
+        }
+        if (m->right.went_up) {
+            if (!editor_tool_is_active()) {
+                int has_scrolled = scroll_drag_end();
+                if (!has_scrolled) {
+                    editor_tool_deactivate();
+                }
+            } else {
                 editor_tool_deactivate();
             }
-        } else {
-            editor_tool_deactivate();
         }
     }
 

@@ -389,15 +389,8 @@ int widget_city_has_input(void)
     return data.capture_input;
 }
 
-void widget_city_handle_input(const mouse *m, const hotkeys *h)
+static void handle_mouse(const mouse *m)
 {
-    scroll_map(m);
-
-    if (m->is_touch) {
-        handle_touch();
-        return;
-    }
-
     if (m->right.is_down && !m->right.went_down) {
         scroll_drag_move();
     }
@@ -432,6 +425,18 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
             building_construction_cancel();
         }
     }
+}
+
+void widget_city_handle_input(const mouse *m, const hotkeys *h)
+{
+    scroll_map(m);
+
+    if (m->is_touch) {
+        handle_touch();
+    } else {
+        handle_mouse(m);
+    }
+
     if (h->escape_pressed) {
         if (building_construction_type()) {
             building_construction_cancel();
