@@ -2,9 +2,7 @@
 
 case "$BUILD_TARGET" in
 "vita")
-	export VITASDK=/usr/local/vitasdk
-	export PATH=$VITASDK/bin:$PATH
-	cd build && make
+	docker exec vitasdk /bin/bash -c "cd build && make"
 	;;
 "switch")
 	export DEVKITPRO=/opt/devkitpro
