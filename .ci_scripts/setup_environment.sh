@@ -2,21 +2,10 @@
 
 case "$BUILD_TARGET" in
 "vita")
-	export VITASDK=/usr/local/vitasdk
-	export PATH=$VITASDK/bin:$PATH
-	sudo apt-get update
-	git clone https://github.com/vitasdk/vdpm
-	cd vdpm
-	./bootstrap-vitasdk.sh
-	vdpm libvita2d
-	vdpm sdl2
-	vdpm sdl2_mixer
-	vdpm mpg123
-	vdpm libogg
-	vdpm libpng
-	vdpm libvorbis
-	vdpm libmikmod
-	vdpm flac
+	# Note: Using a tagged version of the container to make sure that it's not updated unexpectedly
+	# You can update the tag by obtaining a recent one from here: https://hub.docker.com/r/gnuton/vitasdk-docker/tags
+	# Make sure that it compiles correctly and runs on a Vita prior to pushing the change
+	docker run -d --name vitasdk --workdir /build/git -v "${PWD}:/build/git" gnuton/vitasdk-docker:20190626 tail -f /dev/null
 	;;
 "switch")
 	wget https://github.com/devkitPro/pacman/releases/download/devkitpro-pacman-1.0.1/devkitpro-pacman.deb
