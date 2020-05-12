@@ -12,13 +12,13 @@
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
-#include "graphics/menu.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "map/orientation.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
+#include "widget/sidebar/common.h"
 #include "widget/sidebar/extra.h"
 #include "widget/city.h"
 #include "widget/minimap.h"
@@ -31,11 +31,8 @@
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
 
-#define SIDEBAR_VANILLA_SECTION_HEIGHT 450
-#define FILLER_Y_OFFSET (SIDEBAR_VANILLA_SECTION_HEIGHT + TOP_MENU_HEIGHT)
 #define SIDEBAR_SLIDE_STEPS 94
-#define SIDEBAR_COLLAPSED_WIDTH 42
-#define SIDEBAR_EXPANDED_WIDTH 162
+#define MINIMAP_Y_OFFSET 59
 
 // sliding sidebar progress to x offset translation
 static const int PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS] = {
@@ -126,33 +123,15 @@ static int get_sidebar_height(void)
     return screen_height() - TOP_MENU_HEIGHT;
 }
 
-static int get_x_offset_expanded(void)
-{
-    return screen_width() - SIDEBAR_EXPANDED_WIDTH;
-}
-
-static int get_x_offset_collapsed(void)
-{
-    return screen_width() - SIDEBAR_COLLAPSED_WIDTH;
-}
-
-static void draw_minimap(int force)
-{
-    if (!city_view_is_sidebar_collapsed()) {
-        int x_offset = get_x_offset_expanded();
-        widget_minimap_draw(x_offset + 8, 59, 73, 111, force);
-    }
-}
-
 static void draw_buttons(void)
 {
     buttons_build_expanded[12].enabled = game_can_undo();
     if (city_view_is_sidebar_collapsed()) {
-        int x_offset = get_x_offset_collapsed();
+        int x_offset = sidebar_common_get_x_offset_collapsed();
         image_buttons_draw(x_offset, 24, button_expand_sidebar, 1);
         image_buttons_draw(x_offset, 24, buttons_build_collapsed, 12);
     } else {
-        int x_offset = get_x_offset_expanded();
+        int x_offset = sidebar_common_get_x_offset_expanded();
         image_buttons_draw(x_offset, 24, buttons_overlays_collapse_sidebar, 2);
         image_buttons_draw(x_offset, 24, buttons_build_expanded, 15);
         image_buttons_draw(x_offset, 24, buttons_top_expanded, 6);
@@ -178,22 +157,6 @@ static void draw_overlay_text(int x_offset)
     }
 }
 
-static void draw_sidebar_relief(int x_offset, int y_offset, int is_collapsed)
-{
-    // relief images below panel
-    int image_base = image_group(GROUP_SIDE_PANEL);
-    int y_max = screen_height();
-    while (y_offset < y_max) {
-        if (y_max - y_offset <= 120) {
-            image_draw(image_base + 2 + is_collapsed, x_offset, y_offset);
-            y_offset += 120;
-        } else {
-            image_draw(image_base + 4 + is_collapsed, x_offset, y_offset);
-            y_offset += 285;
-        }
-    }
-}
-
 static void draw_sidebar_remainder(int x_offset, int is_collapsed)
 {
     int width = SIDEBAR_EXPANDED_WIDTH;
@@ -201,10 +164,10 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
         width = SIDEBAR_COLLAPSED_WIDTH;
     }
     int available_height = get_sidebar_height() - SIDEBAR_VANILLA_SECTION_HEIGHT;
-    int extra_height = sidebar_extra_draw_background(x_offset, FILLER_Y_OFFSET, width, available_height, is_collapsed);
-    sidebar_extra_draw_foreground(x_offset, FILLER_Y_OFFSET, width, is_collapsed);
-    int relief_y_offset = FILLER_Y_OFFSET + extra_height;
-    draw_sidebar_relief(x_offset, relief_y_offset, is_collapsed);
+    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_FILLER_Y_OFFSET, width, available_height, is_collapsed);
+    sidebar_extra_draw_foreground(x_offset, SIDEBAR_FILLER_Y_OFFSET, width, is_collapsed);
+    int relief_y_offset = SIDEBAR_FILLER_Y_OFFSET + extra_height;
+    sidebar_common_draw_relief(x_offset, relief_y_offset, GROUP_SIDE_PANEL, is_collapsed);
 }
 
 void widget_sidebar_city_draw_background(void)
@@ -213,16 +176,16 @@ void widget_sidebar_city_draw_background(void)
     int is_collapsed = city_view_is_sidebar_collapsed();
     int x_offset;
     if (is_collapsed) {
-        x_offset = get_x_offset_collapsed();
+        x_offset = sidebar_common_get_x_offset_collapsed();
         image_draw(image_base, x_offset, 24);
     } else {
-        x_offset = get_x_offset_expanded();
+        x_offset = sidebar_common_get_x_offset_expanded();
         image_draw(image_base + 1, x_offset, 24);
     }
     draw_buttons();
     draw_overlay_text(x_offset + 4);
     draw_build_image(x_offset + 6, 0);
-    draw_minimap(1);
+    sidebar_common_draw_minimap(MINIMAP_Y_OFFSET, 1);
 
     draw_sidebar_remainder(x_offset, is_collapsed);
 }
@@ -250,7 +213,7 @@ static void draw_number_of_messages(void)
         buttons_build_expanded[13].enabled = messages > 0;
         buttons_build_expanded[14].enabled = city_message_problem_area_count();
         if (messages) {
-            int x_offset = get_x_offset_expanded();
+            int x_offset = sidebar_common_get_x_offset_expanded();
             text_draw_number_centered_colored(messages, x_offset + 74, 452, 32, FONT_SMALL_PLAIN, COLOR_BLACK);
             text_draw_number_centered_colored(messages, x_offset + 73, 453, 32, FONT_SMALL_PLAIN, COLOR_WHITE);
         }
@@ -266,23 +229,23 @@ void widget_sidebar_city_draw_foreground(void)
     int is_collapsed = city_view_is_sidebar_collapsed();
     int sidebar_width;
     if (is_collapsed) {
-        x_offset = get_x_offset_collapsed();
+        x_offset = sidebar_common_get_x_offset_collapsed();
         sidebar_width = SIDEBAR_COLLAPSED_WIDTH;
     } else {
-        x_offset = get_x_offset_expanded();
+        x_offset = sidebar_common_get_x_offset_expanded();
         sidebar_width = SIDEBAR_EXPANDED_WIDTH;
     }
     draw_buttons();
     draw_overlay_text(x_offset + 4);
-    draw_minimap(0);
+    sidebar_common_draw_minimap(MINIMAP_Y_OFFSET, 0);
     draw_number_of_messages();
 
-    sidebar_extra_draw_foreground(x_offset, FILLER_Y_OFFSET, sidebar_width, is_collapsed);
+    sidebar_extra_draw_foreground(x_offset, SIDEBAR_FILLER_Y_OFFSET, sidebar_width, is_collapsed);
 }
 
 void widget_sidebar_city_draw_foreground_military(void)
 {
-    draw_minimap(0);
+    sidebar_common_draw_minimap(MINIMAP_Y_OFFSET, 0);
 }
 
 int widget_sidebar_city_handle_mouse(const mouse *m)
@@ -294,7 +257,7 @@ int widget_sidebar_city_handle_mouse(const mouse *m)
     int button_id;
     data.focus_button_for_tooltip = 0;
     if (city_view_is_sidebar_collapsed()) {
-        int x_offset = get_x_offset_collapsed();
+        int x_offset = sidebar_common_get_x_offset_collapsed();
         handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = 12;
@@ -307,7 +270,7 @@ int widget_sidebar_city_handle_mouse(const mouse *m)
         if (widget_minimap_handle_mouse(m)) {
             return 1;
         }
-        int x_offset = get_x_offset_expanded();
+        int x_offset = sidebar_common_get_x_offset_expanded();
         handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2, &button_id);
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 9;
@@ -320,7 +283,7 @@ int widget_sidebar_city_handle_mouse(const mouse *m)
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 39;
         }
-        handled |= sidebar_extra_handle_mouse(m, x_offset, FILLER_Y_OFFSET);
+        handled |= sidebar_extra_handle_mouse(m, x_offset, SIDEBAR_FILLER_Y_OFFSET);
     }
     return handled;
 }
@@ -328,9 +291,9 @@ int widget_sidebar_city_handle_mouse(const mouse *m)
 int widget_sidebar_city_handle_mouse_build_menu(const mouse *m)
 {
     if (city_view_is_sidebar_collapsed()) {
-        return image_buttons_handle_mouse(m, get_x_offset_collapsed(), 24, buttons_build_collapsed, 12, 0);
+        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_collapsed(), 24, buttons_build_collapsed, 12, 0);
     } else {
-        return image_buttons_handle_mouse(m, get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
+        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
     }
 }
 
@@ -432,8 +395,8 @@ static void draw_sliding_foreground(void)
         return;
     }
 
-    int x_offset_expanded = get_x_offset_expanded();
-    int x_offset_collapsed = get_x_offset_collapsed();
+    int x_offset_expanded = sidebar_common_get_x_offset_expanded();
+    int x_offset_collapsed = sidebar_common_get_x_offset_collapsed();
     int height = get_sidebar_height();
     graphics_set_clip_rectangle(x_offset_expanded, TOP_MENU_HEIGHT, SIDEBAR_EXPANDED_WIDTH, height);
 
@@ -460,7 +423,7 @@ static void draw_sliding_foreground(void)
     draw_overlay_text(x_offset_expanded + 4);
     draw_build_image(x_offset_expanded + 6, 1);
 
-    draw_sidebar_relief(x_offset_collapsed, FILLER_Y_OFFSET, 1);
+    sidebar_common_draw_relief(x_offset_collapsed, SIDEBAR_FILLER_Y_OFFSET, GROUP_SIDE_PANEL, 1);
 
     draw_sidebar_remainder(x_offset_expanded, 0);
 
