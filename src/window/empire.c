@@ -444,9 +444,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 data.is_scrolling = 1;
                 scroll_drag_start(1);
             }
-            if (data.is_scrolling && t->has_moved && !t->has_ended) {
-                scroll_drag_move();
-            }
         }
         if (t->has_ended) {
             data.is_scrolling = 0;

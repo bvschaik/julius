@@ -14,16 +14,15 @@
 #include <stdlib.h>
 
 #define MOUSE_BORDER 5
-#define SCROLL_DRAG_MIN_DELTA 4
 #define TOUCH_BORDER 100
+#define SCROLL_DRAG_MIN_DELTA 4
 #define SCROLL_DRAG_DECAY_TIME 350
 #define SCROLL_REGULAR_DECAY_TIME 75
 #define KEY_WAIT_TIME_AFTER_HOLD 500
+#define SCROLL_KEY_PRESSED 1
+#define SCROLL_KEY_MAX_VALUE 30000.0f
 #define TILE_X_PIXELS 60
 #define TILE_Y_PIXELS 30
-#define TILE_X_ALIGN_OFFSET 6
-#define TILE_Y_ALIGN_OFFSET 2
-#define MIN_DECAY_SPEED_TO_ALIGN 3
 
 static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
 static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
@@ -35,16 +34,19 @@ static const int SCROLL_STEP[SCROLL_TYPE_MAX][11] = {
 typedef enum {
     KEY_STATE_UNPRESSED = 0,
     KEY_STATE_PRESSED = 1,
-    KEY_STATE_HELD = 2
+    KEY_STATE_HELD = 2,
+    KEY_STATE_AXIS = 3
 } key_state;
 
 typedef struct {
     key_state state;
+    int value;
     time_millis last_change;
 } key;
 
 static struct {
     int is_scrolling;
+    int constant_input;
     struct {
         key up;
         key down;
@@ -54,13 +56,15 @@ static struct {
     struct {
         int active;
         int is_touch;
+        int has_started;
         pixel_offset delta;
     } drag;
     struct {
         speed_type x;
         speed_type y;
         int decaying;
-        float modifier;
+        float modifier_x;
+        float modifier_y;
     } speed;
     speed_direction x_align_direction;
     speed_direction y_align_direction;
@@ -83,8 +87,11 @@ static void clear_scroll_speed(void)
     data.y_align_direction = SPEED_DIRECTION_STOPPED;
 }
 
-static int is_arrow_key_pressed(key *arrow)
+static int get_arrow_key_value(key *arrow)
 {
+    if (arrow->state == KEY_STATE_AXIS) {
+        return arrow->value;
+    }
     if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
         return arrow->state != KEY_STATE_UNPRESSED;
     }
@@ -98,12 +105,27 @@ static int is_arrow_key_pressed(key *arrow)
     return 0;
 }
 
+float get_normalized_arrow_key_value(key *arrow)
+{
+    int value = get_arrow_key_value(arrow);
+    if (value == SCROLL_KEY_PRESSED) {
+        return 1.0f;
+    } else {
+        return fminf(arrow->value / SCROLL_KEY_MAX_VALUE, 1.0f);
+    }
+}
+
+static int is_arrow_active(const key *arrow)
+{
+    return arrow->value != 0;
+}
+
 static void restart_active_arrow(key *arrow, const key *exception)
 {
     if (arrow == exception) {
         return;
     }
-    if (arrow->state != KEY_STATE_UNPRESSED) {
+    if (arrow->state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_AXIS) {
         arrow->state = KEY_STATE_PRESSED;
         arrow->last_change = time_get_millis();
     }
@@ -118,14 +140,30 @@ static void restart_all_active_arrows_except(const key *arrow)
     restart_active_arrow(&data.arrow_key.right, arrow);
 }
 
-static void set_arrow_key_state(key *arrow, key_state state)
+static key_state get_key_state_for_value(int value)
 {
-    if (state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_UNPRESSED) {
+    if (!value) {
+        return KEY_STATE_UNPRESSED;
+    }
+    if (value == SCROLL_KEY_PRESSED) {
+        return KEY_STATE_PRESSED;
+    }
+    return KEY_STATE_AXIS;
+}
+
+static void set_arrow_key(key *arrow, int value)
+{
+    key_state state = get_key_state_for_value(value);
+    if (state != KEY_STATE_AXIS && state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_UNPRESSED) {
         return;
     }
-    arrow->state = state;
+    // Key should retain axis state even if its value is zero
+    if (arrow->state != KEY_STATE_AXIS || state != KEY_STATE_UNPRESSED) {
+        arrow->state = state;
+    }
+    arrow->value = value;
     arrow->last_change = time_get_millis();
-    if (!config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
+    if (state != KEY_STATE_AXIS && !config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
         restart_all_active_arrows_except(arrow);
     }
 }
@@ -150,8 +188,9 @@ static int should_scroll(void)
     time_millis current_time = time_get_millis();
     time_millis diff = current_time - data.last_time;
     unsigned int scroll_delay = get_scroll_speed_factor();
+    int further_delay = data.constant_input ? 20 - (int) (fmaxf(data.speed.modifier_x, data.speed.modifier_y) * 20) : 0;
     if (scroll_delay < 10) { // 0% = 10 = no scroll at all
-        if (diff >= 12 * scroll_delay + 2) {
+        if (diff >= 12 * (scroll_delay + further_delay) + 2) {
             data.last_time = current_time;
             return 1;
         }
@@ -214,10 +253,10 @@ void scroll_drag_start(int is_touch)
     clear_scroll_speed();
 }
 
-void scroll_drag_move(void)
+static int set_scroll_speed_from_drag(void)
 {
     if (!data.drag.active) {
-        return;
+        return 0;
     }
 
     int delta_x = 0;
@@ -237,14 +276,17 @@ void scroll_drag_move(void)
             system_mouse_set_relative_mode(1);
         }
         // Store tiny movements until we decide that it's enough to move into scroll mode
-        if (!data.is_scrolling) {
-            data.is_scrolling = abs(data.drag.delta.x) > SCROLL_DRAG_MIN_DELTA || abs(data.drag.delta.y) > SCROLL_DRAG_MIN_DELTA;
+        if (!data.drag.has_started) {
+            data.drag.has_started = abs(data.drag.delta.x) > SCROLL_DRAG_MIN_DELTA || abs(data.drag.delta.y) > SCROLL_DRAG_MIN_DELTA;
         }
     }
-    if (data.is_scrolling) {
+    if (data.drag.has_started) {
         speed_set_target(&data.speed.x, data.drag.delta.x, SPEED_CHANGE_IMMEDIATE);
         speed_set_target(&data.speed.y, data.drag.delta.y, SPEED_CHANGE_IMMEDIATE);
+        data.drag.delta.x = 0;
+        data.drag.delta.y = 0;
     }
+    return 1;
 }
 
 int scroll_drag_end(void)
@@ -253,10 +295,10 @@ int scroll_drag_end(void)
         return 0;
     }
 
-    int has_scrolled = data.is_scrolling;
+    int has_scrolled = data.drag.has_started;
 
     data.drag.active = 0;
-    data.is_scrolling = 0;
+    data.drag.has_started = 0;
 
     if (!data.drag.is_touch) {
         system_mouse_set_relative_mode(0);
@@ -271,6 +313,18 @@ int scroll_drag_end(void)
     speed_set_target(&data.speed.y, 0, SCROLL_DRAG_DECAY_TIME);
 
     return has_scrolled;
+}
+
+static int set_arrow_input(key *arrow, const key *opposite_arrow, float *modifier)
+{
+    if (get_arrow_key_value(arrow) && (!opposite_arrow || !is_arrow_active(opposite_arrow))) {
+        if (arrow->state == KEY_STATE_AXIS) {
+            data.constant_input = 1;
+            *modifier = get_normalized_arrow_key_value(arrow);
+        }
+        return 1;
+    }
+    return 0;
 }
 
 static int get_direction(const mouse *m)
@@ -293,13 +347,16 @@ static int get_direction(const mouse *m)
     int border = MOUSE_BORDER;
     int x = m->x;
     int y = m->y;
+    data.constant_input = 0;
+    data.speed.modifier_x = 0.0f;
+    data.speed.modifier_y = 0.0f;
     if (data.limits.active) {
         border = TOUCH_BORDER;
         width = data.limits.width;
         height = data.limits.height;
         x -= data.limits.x;
         y -= data.limits.y;
-        data.speed.modifier = 0;
+        data.constant_input = 1;
     }
     // mouse near map edge
     // NOTE: using <= width/height (instead of <) to compensate for rounding
@@ -308,31 +365,32 @@ static int get_direction(const mouse *m)
     if ((!m->is_touch || data.limits.active) && (x >= 0 && x <= width && y >= 0 && y <= height)) {
         if (x < border) {
             left = 1;
-            data.speed.modifier = 1 - x / (float) border;
+            data.speed.modifier_x = 1 - x / (float) border;
         } else if (x >= width - border) {
             right = 1;
-            data.speed.modifier = 1 - (width - x) / (float) border;
+            data.speed.modifier_x = 1 - (width - x) / (float) border;
         }
         if (y < border) {
             top = 1;
-            data.speed.modifier = (float) fmax(data.speed.modifier, 1 - y / (float) border);
+            data.speed.modifier_y = 1 - y / (float) border;
         } else if (y >= height - border) {
             bottom = 1;
-            data.speed.modifier = (float) fmax(data.speed.modifier, 1 - (height - y) / (float) border);
+            data.speed.modifier_y = 1 - (height - y) / (float) border;
         }
     }
-    // keyboard arrow keys
-    if (is_arrow_key_pressed(&data.arrow_key.left)) {
-        left = 1;
-    }
-    if (is_arrow_key_pressed(&data.arrow_key.right) && !data.arrow_key.left.state) {
-        right = 1;
-    }
-    if (is_arrow_key_pressed(&data.arrow_key.up)) {
-        top = 1;
-    }
-    if (is_arrow_key_pressed(&data.arrow_key.down) && !data.arrow_key.up.state) {
-        bottom = 1;
+    // keyboard/joystick arrow keys
+    left |= set_arrow_input(&data.arrow_key.left, 0, &data.speed.modifier_x);
+    right |= set_arrow_input(&data.arrow_key.right, &data.arrow_key.left, &data.speed.modifier_x);
+    top |= set_arrow_input(&data.arrow_key.up, 0, &data.speed.modifier_y);
+    bottom |= set_arrow_input(&data.arrow_key.down, &data.arrow_key.up, &data.speed.modifier_y);
+
+    if (data.constant_input) {
+        if (!data.speed.modifier_x) {
+            data.speed.modifier_x = data.speed.modifier_y;
+        }
+        if (!data.speed.modifier_y) {
+            data.speed.modifier_y = data.speed.modifier_x;
+        }
     }
 
     return direction_from_sides(top, left, bottom, right);
@@ -343,22 +401,27 @@ static int get_alignment_delta(speed_direction direction, int camera_max_offset,
     if (camera_offset == 0) {
         return 0;
     }
+    speed_direction calc_direction = SPEED_DIRECTION_STOPPED;
     switch (direction) {
         case SPEED_DIRECTION_STOPPED:
-            direction = (camera_offset >= camera_max_offset / 2) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+            calc_direction = (camera_offset >= camera_max_offset / 2) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+            direction = SPEED_DIRECTION_POSITIVE;
             break;
         case SPEED_DIRECTION_NEGATIVE:
-            direction = (camera_offset >= camera_max_offset * 0.666667) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+            calc_direction = (camera_offset >= camera_max_offset * 0.666667) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
             break;
         default:
-            direction = (camera_offset >= camera_max_offset / 3) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+            calc_direction = (camera_offset >= camera_max_offset / 3) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
             break;
     }
-    return (direction == SPEED_DIRECTION_POSITIVE) ? (camera_max_offset - camera_offset) : -camera_offset;
+    return (calc_direction == SPEED_DIRECTION_POSITIVE) ? (camera_max_offset - camera_offset) : (camera_offset * -direction);
 }
 
 static int set_scroll_speed_from_input(const mouse *m, scroll_type type)
 {
+    if (set_scroll_speed_from_drag()) {
+        return 1;
+    }
     int direction = get_direction(m);
     if (direction == DIR_8_NONE) {
         time_millis time = config_get(CONFIG_UI_SMOOTH_SCROLLING) ? SCROLL_REGULAR_DECAY_TIME : SPEED_CHANGE_IMMEDIATE;
@@ -393,7 +456,7 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type)
     int max_speed_x = max_speed * dir_x;
     int max_speed_y = (max_speed / y_fraction) * dir_y;
 
-    if (!data.limits.active) {
+    if (!data.constant_input) {
         if (speed_get_current_direction(&data.speed.x) * dir_x < 0) {
             speed_invert(&data.speed.x);
         } else if (data.speed.x.desired_speed != max_speed_x) {
@@ -405,47 +468,40 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type)
             speed_set_target(&data.speed.y, max_speed_y, SCROLL_REGULAR_DECAY_TIME);
         }
     } else {
-        speed_set_target(&data.speed.x, (int) (max_speed_x * data.speed.modifier), SPEED_CHANGE_IMMEDIATE);
-        speed_set_target(&data.speed.y, (int) (max_speed_y * data.speed.modifier), SPEED_CHANGE_IMMEDIATE);
+        speed_set_target(&data.speed.x, (int) (max_speed_x * data.speed.modifier_x), SPEED_CHANGE_IMMEDIATE);
+        speed_set_target(&data.speed.y, (int) (max_speed_y * data.speed.modifier_y), SPEED_CHANGE_IMMEDIATE);
     }
     return 1;
 }
 
 int scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
 {
+    data.is_scrolling = set_scroll_speed_from_input(m, type);
     delta->x = speed_get_delta(&data.speed.x);
     delta->y = speed_get_delta(&data.speed.y);
-    if (data.drag.active) {
-        if (data.is_scrolling) {
-            data.drag.delta.x = 0;
-            data.drag.delta.y = 0;
-        }
-    } else {
-        data.is_scrolling = set_scroll_speed_from_input(m, type);
-        if (!data.is_scrolling) {
-            data.speed.decaying = delta->x != 0 || delta->y != 0;
-            data.is_scrolling = data.speed.decaying;
-        }
+    if (!data.is_scrolling) {
+        data.speed.decaying = delta->x != 0 || delta->y != 0;
+        data.is_scrolling = data.speed.decaying;
     }
     return delta->x != 0 || delta->y != 0;
 }
 
-void scroll_arrow_left(int is_down)
+void scroll_arrow_left(int value)
 {
-    set_arrow_key_state(&data.arrow_key.left, is_down ? KEY_STATE_PRESSED : KEY_STATE_UNPRESSED);
+    set_arrow_key(&data.arrow_key.left, value);
 }
 
-void scroll_arrow_right(int is_down)
+void scroll_arrow_right(int value)
 {
-    set_arrow_key_state(&data.arrow_key.right, is_down ? KEY_STATE_PRESSED : KEY_STATE_UNPRESSED);
+    set_arrow_key(&data.arrow_key.right, value);
 }
 
-void scroll_arrow_up(int is_down)
+void scroll_arrow_up(int value)
 {
-    set_arrow_key_state(&data.arrow_key.up, is_down ? KEY_STATE_PRESSED : KEY_STATE_UNPRESSED);
+    set_arrow_key(&data.arrow_key.up, value);
 }
 
-void scroll_arrow_down(int is_down)
+void scroll_arrow_down(int value)
 {
-    set_arrow_key_state(&data.arrow_key.down, is_down ? KEY_STATE_PRESSED : KEY_STATE_UNPRESSED);
+    set_arrow_key(&data.arrow_key.down, value);
 }

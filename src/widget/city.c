@@ -251,8 +251,6 @@ static void handle_touch_scroll(const touch *t)
     }
     if (t->has_ended) {
         scroll_drag_end();
-    } else {
-        scroll_drag_move();
     }
 }
 
@@ -391,10 +389,6 @@ int widget_city_has_input(void)
 
 static void handle_mouse(const mouse *m)
 {
-    if (m->right.is_down && !m->right.went_down) {
-        scroll_drag_move();
-    }
-
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
     building_construction_reset_draw_as_constructing();

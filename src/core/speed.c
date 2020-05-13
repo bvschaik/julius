@@ -65,12 +65,16 @@ int speed_get_delta(speed_type *speed)
         delta = (speed->total_time == SPEED_CHANGE_IMMEDIATE) ? speed->desired_speed : desired;
         speed->current_speed = speed->desired_speed;
     } else {
-        double normalized_speed = speed->speed_difference * (speed->total_time / FRAME_TIME);
-        double exponent = exp(-((int) elapsed) / (double) speed->total_time);
-        delta = normalized_speed - normalized_speed * exponent - speed->cumulative_delta;
-        speed->cumulative_delta += (int) delta;
-        delta = desired + delta;
-        speed->current_speed = adjust_speed_for_frame_time(delta, speed->last_speed_check);
+        if (elapsed == 0) {
+            delta = adjust_speed_for_elapsed_time(speed->current_speed, speed->last_speed_check);
+        } else {
+            double normalized_speed = speed->speed_difference * (speed->total_time / FRAME_TIME);
+            double exponent = exp(-((int) elapsed) / (double) speed->total_time);
+            delta = normalized_speed - normalized_speed * exponent - speed->cumulative_delta;
+            speed->cumulative_delta += (int) delta;
+            delta = desired + delta;
+            speed->current_speed = adjust_speed_for_frame_time(delta, speed->last_speed_check);
+        }
     }
     speed->last_speed_check = time_get_millis();
     return (int) delta;
