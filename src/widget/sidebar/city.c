@@ -164,8 +164,8 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
         width = SIDEBAR_COLLAPSED_WIDTH;
     }
     int available_height = get_sidebar_height() - SIDEBAR_MAIN_SECTION_HEIGHT;
-    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_FILLER_Y_OFFSET, width, available_height, is_collapsed);
-    sidebar_extra_draw_foreground(x_offset, SIDEBAR_FILLER_Y_OFFSET, width, is_collapsed);
+    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_FILLER_Y_OFFSET, width, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
+    sidebar_extra_draw_foreground();
     int relief_y_offset = SIDEBAR_FILLER_Y_OFFSET + extra_height;
     sidebar_common_draw_relief(x_offset, relief_y_offset, GROUP_SIDE_PANEL, is_collapsed);
 }
@@ -240,7 +240,7 @@ void widget_sidebar_city_draw_foreground(void)
     sidebar_common_draw_minimap(MINIMAP_Y_OFFSET, 0);
     draw_number_of_messages();
 
-    sidebar_extra_draw_foreground(x_offset, SIDEBAR_FILLER_Y_OFFSET, sidebar_width, is_collapsed);
+    sidebar_extra_draw_foreground();
 }
 
 void widget_sidebar_city_draw_foreground_military(void)
@@ -283,7 +283,7 @@ int widget_sidebar_city_handle_mouse(const mouse *m)
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 39;
         }
-        handled |= sidebar_extra_handle_mouse(m, x_offset, SIDEBAR_FILLER_Y_OFFSET);
+        handled |= sidebar_extra_handle_mouse(m);
     }
     return handled;
 }
