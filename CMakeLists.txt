@@ -439,10 +439,6 @@ set(SOUND_FILES
     ${PROJECT_SOURCE_DIR}/src/sound/system.c
 )
 set(WIDGET_FILES
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/city.c
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/common.c
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.c
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/extra.c
     ${PROJECT_SOURCE_DIR}/src/widget/city.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_bridge.c
     ${PROJECT_SOURCE_DIR}/src/widget/city_building_ghost.c
@@ -460,6 +456,10 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.c
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/city.c
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/common.c
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.c
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/extra.c
 )
 set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisors.c

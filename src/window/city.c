@@ -18,10 +18,10 @@
 #include "map/bookmark.h"
 #include "map/grid.h"
 #include "scenario/criteria.h"
-#include "widget/sidebar/city.h"
 #include "widget/city.h"
 #include "widget/city_with_overlay.h"
 #include "widget/top_menu.h"
+#include "widget/sidebar/city.h"
 #include "window/advisors.h"
 #include "window/file_dialog.h"
 

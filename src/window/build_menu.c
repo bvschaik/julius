@@ -12,8 +12,8 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/property.h"
-#include "widget/sidebar/city.h"
 #include "widget/city.h"
+#include "widget/sidebar/city.h"
 #include "window/city.h"
 
 static void button_menu_index(int param1, int param2);

@@ -18,10 +18,10 @@
 #include "map/orientation.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
-#include "widget/sidebar/common.h"
-#include "widget/sidebar/extra.h"
 #include "widget/city.h"
 #include "widget/minimap.h"
+#include "widget/sidebar/common.h"
+#include "widget/sidebar/extra.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/city.h"
@@ -163,7 +163,7 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
     if (is_collapsed) {
         width = SIDEBAR_COLLAPSED_WIDTH;
     }
-    int available_height = get_sidebar_height() - SIDEBAR_VANILLA_SECTION_HEIGHT;
+    int available_height = get_sidebar_height() - SIDEBAR_MAIN_SECTION_HEIGHT;
     int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_FILLER_Y_OFFSET, width, available_height, is_collapsed);
     sidebar_extra_draw_foreground(x_offset, SIDEBAR_FILLER_Y_OFFSET, width, is_collapsed);
     int relief_y_offset = SIDEBAR_FILLER_Y_OFFSET + extra_height;
