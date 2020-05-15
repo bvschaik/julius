@@ -11,6 +11,9 @@
 #define HALF_TILE_WIDTH_PIXELS 30
 #define HALF_TILE_HEIGHT_PIXELS 15
 
+static const int X_DIRECTION_FOR_ORIENTATION[] = { 1,  1, -1, -1 };
+static const int Y_DIRECTION_FOR_ORIENTATION[] = { 1, -1, -1,  1 };
+
 static struct {
     int screen_width;
     int screen_height;
@@ -562,8 +565,12 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
     city_view_grid_offset_to_xy_view(grid_offset, &x, &y);
     x = (x - data.camera.tile.x) * TILE_WIDTH_PIXELS - (y & 1) * HALF_TILE_WIDTH_PIXELS - data.camera.pixel.x + data.viewport.x;
     y = (y - data.camera.tile.y - 1) * HALF_TILE_HEIGHT_PIXELS - data.camera.pixel.y + data.viewport.y;
-    grid_offset += map_grid_delta(1, 1);
+    int orientation_x = X_DIRECTION_FOR_ORIENTATION[data.orientation / 2];
+    int orientation_y = Y_DIRECTION_FOR_ORIENTATION[data.orientation / 2];
+    int pixel_rotation = orientation_x * orientation_y;
+    int rotation_delta = pixel_rotation == -1 ? (2 - size) : 1;
 
+    grid_offset += map_grid_delta(rotation_delta * orientation_x, rotation_delta * orientation_y);
     int x_delta = HALF_TILE_WIDTH_PIXELS;
     int y_delta = HALF_TILE_HEIGHT_PIXELS;
     int x_offset = HALF_TILE_WIDTH_PIXELS;
@@ -579,19 +586,19 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
     for (int ring = 0; ring < radius; ++ring) {
         int offset_north = -ring - 2;
         int offset_south = ring + size;
-        do_valid_callback(x, y + y_offset, map_grid_add_delta(grid_offset, ring + size, ring + size), callback);
-        do_valid_callback(x, y - y_offset, map_grid_add_delta(grid_offset, -ring - 2, -ring - 2), callback);
-        do_valid_callback(x - x_offset - x_delta, y, map_grid_add_delta(grid_offset, -ring - 2, ring + size), callback);
-        do_valid_callback(x + x_offset + x_delta, y, map_grid_add_delta(grid_offset, ring + size, -ring - 2), callback);
+        do_valid_callback(x, y + y_offset * pixel_rotation, map_grid_add_delta(grid_offset, offset_south * orientation_x, offset_south * orientation_y), callback);
+        do_valid_callback(x, y - y_offset * pixel_rotation, map_grid_add_delta(grid_offset, offset_north * orientation_x, offset_north * orientation_y), callback);
+        do_valid_callback(x - x_offset - x_delta, y, map_grid_add_delta(grid_offset, offset_north * orientation_x, offset_south * orientation_y), callback);
+        do_valid_callback(x + x_offset + x_delta, y, map_grid_add_delta(grid_offset, offset_south * orientation_x, offset_north * orientation_y), callback);
         for (int tile = 1; tile < ring * 2 + size + 2; ++tile) {
-            do_valid_callback(x + x_delta * tile, y - y_offset + y_delta * tile,
-                map_grid_add_delta(grid_offset, tile + offset_north, offset_north), callback);
-            do_valid_callback(x - x_delta * tile, y - y_offset + y_delta * tile,
-                map_grid_add_delta(grid_offset, offset_north, tile + offset_north), callback);
-            do_valid_callback(x + x_delta * tile, y + y_offset - y_delta * tile,
-                map_grid_add_delta(grid_offset, offset_south, offset_south - tile), callback);
-            do_valid_callback(x - x_delta * tile, y + y_offset - y_delta * tile,
-                map_grid_add_delta(grid_offset, offset_south - tile, offset_south), callback);
+            do_valid_callback(x + x_delta * tile, y - y_offset * pixel_rotation + y_delta * pixel_rotation * tile,
+                map_grid_add_delta(grid_offset, (tile + offset_north) * orientation_x, offset_north * orientation_y), callback);
+            do_valid_callback(x - x_delta * tile, y - y_offset * pixel_rotation + y_delta * pixel_rotation * tile,
+                map_grid_add_delta(grid_offset, offset_north * orientation_x, (tile + offset_north) * orientation_y), callback);
+            do_valid_callback(x + x_delta * tile, y + y_offset * pixel_rotation - y_delta * pixel_rotation * tile,
+                map_grid_add_delta(grid_offset, offset_south * orientation_x, (offset_south - tile) * orientation_y), callback);
+            do_valid_callback(x - x_delta * tile, y + y_offset * pixel_rotation - y_delta * pixel_rotation * tile,
+                map_grid_add_delta(grid_offset, (offset_south - tile) * orientation_x, offset_south * orientation_y), callback);
         }
         x_offset += TILE_WIDTH_PIXELS;
         y_offset += TILE_HEIGHT_PIXELS;
