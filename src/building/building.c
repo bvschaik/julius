@@ -312,6 +312,18 @@ void building_update_highest_id(void)
     }
 }
 
+int building_mothball(building *b)
+{
+    if (b->state == BUILDING_STATE_IN_USE ) {
+        b->state = BUILDING_STATE_MOTHBALLED;
+        b->num_workers = 0;
+    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
+        b->state = BUILDING_STATE_IN_USE;
+    }
+    return b->state;
+
+}
+
 void building_totals_add_corrupted_house(int unfixable)
 {
     extra.incorrect_houses++;

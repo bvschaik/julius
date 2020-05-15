@@ -163,6 +163,8 @@ int building_get_highest_id(void);
 
 void building_update_highest_id(void);
 
+int building_mothball(building* b);
+
 void building_totals_add_corrupted_house(int unfixable);
 
 void building_clear_all(void);

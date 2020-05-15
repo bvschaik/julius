@@ -1,6 +1,7 @@
 #include "building_info.h"
 
 #include "building/barracks.h"
+#include "building/building.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
 #include "building/warehouse.h"
@@ -12,9 +13,11 @@
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "figure/phrase.h"
+#include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/screen.h"
+#include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "map/aqueduct.h"
@@ -45,6 +48,7 @@
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
+static void button_mothball (int mothball, int param2);
 
 static image_button image_buttons_help_close[] = {
     {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
@@ -55,8 +59,13 @@ static image_button image_buttons_advisor[] = {
     {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}
 };
 
+static generic_button generic_button_mothball[] = {
+    {400, 3, 24, 24, button_mothball, button_none, 0, 0}
+};
+
 static building_info_context context;
 static int focus_image_button_id;
+static int focus_generic_button_id;
 
 static int get_height_id(void)
 {
@@ -148,6 +157,16 @@ static int get_height_id(void)
         }
     }
     return 0;
+}
+
+static void draw_mothball_button(int x, int y, int focused)
+{
+    uint8_t working_text[] = { 'x', 0 };
+        button_border_draw(x, y, 20, 20, focused ? 1 : 0);
+        building* b = building_get(context.building_id);
+        if (b->state == BUILDING_STATE_IN_USE) {
+            text_draw_centered(working_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+        }
 }
 
 static int center_in_city(int element_width_pixels)
@@ -582,6 +601,12 @@ static void draw_foreground(void)
     if (context.can_go_to_advisor) {
         image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_advisor, 1);
     }
+    if (!context.storage_show_special_orders) {
+        int workers_needed = model_get_building(building_get(context.building_id)->type)->laborers;
+        if (workers_needed) {
+            draw_mothball_button(context.x_offset + 400, context.y_offset + 3 + 16 * context.height_blocks - 40, focus_generic_button_id);
+        }
+    }
 }
 
 static int handle_specific_building_info_mouse(const mouse *m)
@@ -636,12 +661,15 @@ static void handle_input(const mouse *m, const hotkeys *h)
         handled = image_buttons_handle_mouse(
                       m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
                       image_buttons_help_close, 2, &focus_image_button_id);
+        handled = generic_buttons_handle_mouse(
+            m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_mothball, 1, &focus_generic_button_id);
     }
     if (context.can_go_to_advisor) {
         handled = image_buttons_handle_mouse(
                       m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
                       image_buttons_advisor, 1, 0);
     }
+ 
     if (!handled) {
         handled = handle_specific_building_info_mouse(m);
     }
@@ -655,6 +683,15 @@ static void get_tooltip(tooltip_context *c)
     int text_id = 0, group_id = 0;
     if (focus_image_button_id) {
         text_id = focus_image_button_id;
+    }
+    else if (focus_generic_button_id) {
+        if (building_get(context.building_id)->state == BUILDING_STATE_IN_USE) {
+            text_id = 8;
+            group_id = 54;
+        } else {
+            text_id = 10;
+            group_id = 54;
+        }
     } else if (context.type == BUILDING_INFO_LEGION) {
         text_id = window_building_get_legion_info_tooltip_text(&context);
     } else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
@@ -697,6 +734,16 @@ static void button_close(int param1, int param2)
 static void button_advisor(int advisor, int param2)
 {
     window_advisors_show_advisor(advisor);
+}
+
+static void button_mothball(int mothball, int param2)
+{
+    building* b = building_get(context.building_id);
+    int workers_needed = model_get_building(b->type)->laborers;
+    if (workers_needed) {
+        building_mothball(b);
+        window_invalidate();
+    }
 }
 
 void window_building_info_show(int grid_offset)
