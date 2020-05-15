@@ -567,9 +567,14 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
     y = (y - data.camera.tile.y - 1) * HALF_TILE_HEIGHT_PIXELS - data.camera.pixel.y + data.viewport.y;
     int orientation_x = X_DIRECTION_FOR_ORIENTATION[data.orientation / 2];
     int orientation_y = Y_DIRECTION_FOR_ORIENTATION[data.orientation / 2];
-    int pixel_rotation = orientation_x * orientation_y;
-    int rotation_delta = pixel_rotation == -1 ? (2 - size) : 1;
 
+    // If we are rotated east or west, the pixel location needs to be rotated
+    // to match its corresponding grid_offset. Since for east and west
+    // only one of the orientations is negative, we can get a negative value
+    // which can then be used to properly offset the pixel positions
+    int pixel_rotation = orientation_x * orientation_y;
+
+    int rotation_delta = pixel_rotation == -1 ? (2 - size) : 1;
     grid_offset += map_grid_delta(rotation_delta * orientation_x, rotation_delta * orientation_y);
     int x_delta = HALF_TILE_WIDTH_PIXELS;
     int y_delta = HALF_TILE_HEIGHT_PIXELS;
@@ -583,6 +588,10 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
     } else {
         do_valid_callback(x, y, grid_offset, callback);
     }
+    // Basic algorithm: we cycle the radius as successive rings
+    // Starting at the innermost ring (determined by size), we first cycle
+    // the top, left, right and bottom corners of the ring.
+    // Then we stretch from each corner of the ring to reach the next one, closing the ring
     for (int ring = 0; ring < radius; ++ring) {
         int offset_north = -ring - 2;
         int offset_south = ring + size;
