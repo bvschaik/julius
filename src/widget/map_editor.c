@@ -166,8 +166,6 @@ static void handle_touch_scroll(const touch *t)
         return;
     }
 
-    scroll_drag_move();
-
     if (t->has_ended) {
         scroll_drag_end();
     }
@@ -305,9 +303,6 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
     if (m->is_touch) {
         handle_touch();
     } else {
-        if (m->right.is_down && !m->right.went_down) {
-            scroll_drag_move();
-        }
         if (m->right.went_down && input_coords_in_map(m->x, m->y) && !editor_tool_is_active()) {
             scroll_drag_start(0);
         }
