@@ -11,7 +11,7 @@ Each building in Caesar 3 is assigned to only one road network. That can result 
 
 ## Market trader doesn't take goods from the warehouse
 
-Gardens split roads into separate road networks. Even though marker trader can use garden tiles as road tiles and pass by a given warehouse, that warehouse (even if full) might be ignored if it's assigned to another road network than market building (each building is assigned to a single road network in Caesar 3). To avoid this problem make sure that market traders traverse your city via road tiles rather than gardens.
+Gardens split roads into separate road networks. Even though market trader can use garden tiles as road tiles and pass by a given warehouse, that warehouse (even if full) might be ignored if it's assigned to another road network than market building (each building is assigned to a single road network in Caesar 3). To avoid this problem make sure that market traders traverse your city via road tiles rather than gardens.
 
 ![Bugs - two road networks](images/bugs_gardens.png)
 
