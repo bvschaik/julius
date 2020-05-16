@@ -20,7 +20,7 @@
 #include "scenario/property.h"
 #include "widget/input_box.h"
 #include "widget/minimap.h"
-#include "widget/sidebar_editor.h"
+#include "widget/sidebar/editor.h"
 #include "window/editor/allowed_buildings.h"
 #include "window/editor/demand_changes.h"
 #include "window/editor/invasions.h"

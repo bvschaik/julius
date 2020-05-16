@@ -150,6 +150,10 @@ int game_init_editor(void)
     game_file_editor_clear_data();
     game_file_editor_create_scenario(2);
 
+    if (city_view_is_sidebar_collapsed()) {
+        city_view_toggle_sidebar();
+    }
+
     editor_set_active(1);
     window_editor_map_show();
     return 1;

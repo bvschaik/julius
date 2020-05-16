@@ -8,7 +8,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "widget/map_editor.h"
-#include "widget/sidebar_editor.h"
+#include "widget/sidebar/editor.h"
 #include "window/editor/map.h"
 
 static void button_menu_item(int index, int param2);
