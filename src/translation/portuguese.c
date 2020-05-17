@@ -38,6 +38,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permitir construir cada templo em sucessão"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Mostrar alcance quando constrói reservatórios, fontes e poços"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Mostrar tamanho da construção arrastável"},
+    {TR_CONFIG_HIGHLIGHT_LEGIONS, "Realçar legiões focadas pelo mouse"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Resolver bug da emigração na dificuldade máxima"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Resolver bug dos fantasmas com 100 anos"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Resolver bug de mudança de imperador e tempo de sobrevivência"},

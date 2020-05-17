@@ -26,7 +26,7 @@
 #define CHECKBOX_HEIGHT 20
 #define CHECKBOX_WIDTH 600
 
-#define NUM_CHECKBOXES 10
+#define NUM_CHECKBOXES 11
 #define NUM_BOTTOM_BUTTONS 4
 #define MAX_LANGUAGE_DIRS 20
 
@@ -52,9 +52,10 @@ static checkbox checkbox_buttons[] = {
     { 20, 198, toggle_switch, CONFIG_UI_ALLOW_CYCLING_TEMPLES, TR_CONFIG_ALLOW_CYCLING_TEMPLES },
     { 20, 222, toggle_switch, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE },
     { 20, 246, toggle_switch, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE },
-    { 20, 318, toggle_switch, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG },
-    { 20, 342, toggle_switch, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS },
-    { 20, 366, toggle_switch, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS }
+    { 20, 270, toggle_switch, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS },
+    { 20, 342, toggle_switch, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG },
+    { 20, 366, toggle_switch, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS },
+    { 20, 390, toggle_switch, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS }
 };
 
 static generic_button language_button = {
@@ -210,7 +211,7 @@ static void draw_background(void)
         language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
 
     text_draw(translation_for(TR_CONFIG_HEADER_UI_CHANGES), 20, 83, FONT_NORMAL_BLACK, 0);
-    text_draw(translation_for(TR_CONFIG_HEADER_GAMEPLAY_CHANGES), 20, 299, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_CONFIG_HEADER_GAMEPLAY_CHANGES), 20, 323, FONT_NORMAL_BLACK, 0);
 
     checkboxes_draw_text(checkbox_buttons, NUM_CHECKBOXES);
 
