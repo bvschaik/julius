@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/view.h"
 #include "figure/figure.h"
+#include "figure/formation.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
@@ -19,8 +20,9 @@
 enum {
     FIGURE_COLOR_NONE = 0,
     FIGURE_COLOR_SOLDIER = 1,
-    FIGURE_COLOR_ENEMY = 2,
-    FIGURE_COLOR_WOLF = 3
+    FIGURE_COLOR_SELECTED_SOLDIER = 2,
+    FIGURE_COLOR_ENEMY = 3,
+    FIGURE_COLOR_WOLF = 4
 };
 
 static const color_t ENEMY_COLOR_BY_CLIMATE[] = {
@@ -46,6 +48,8 @@ static struct {
         int grid_offset;
     } mouse;
     int refresh_requested;
+    int selected_formation[MAX_LEGIONS];
+    int num_selected_formations;
 } data;
 
 void widget_minimap_invalidate(void)
@@ -95,11 +99,21 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.absolute_y &= ~1;
 }
 
+static int is_selected_formation(int formation_id)
+{
+    for (int i = 0; i < data.num_selected_formations; ++i) {
+        if (data.selected_formation[i] == formation_id) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 static int has_figure_color(figure *f)
 {
     int type = f->type;
     if (figure_is_legion(f)) {
-        return FIGURE_COLOR_SOLDIER;
+        return FIGURE_COLOR_SOLDIER + is_selected_formation(f->formation_id);
     }
     if (figure_is_enemy(f)) {
         return FIGURE_COLOR_ENEMY;
@@ -123,10 +137,12 @@ static int draw_figure(int x_view, int y_view, int grid_offset)
     color_t color = COLOR_MINIMAP_WOLF;
     if (color_type == FIGURE_COLOR_SOLDIER) {
         color = COLOR_MINIMAP_SOLDIER;
+    } else if (color_type == FIGURE_COLOR_SELECTED_SOLDIER) {
+        color = COLOR_MINIMAP_SELECTED_SOLDIER;
     } else if (color_type == FIGURE_COLOR_ENEMY) {
         color = data.enemy_color;
     }
-    graphics_draw_horizontal_line(x_view, x_view +1, y_view, color);
+    graphics_draw_horizontal_line(x_view, x_view + 1, y_view, color);
     return 1;
 }
 
@@ -270,6 +286,14 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
     graphics_draw_from_buffer(x_offset, y_offset, data.width, data.height, data.cache);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
+}
+
+void widget_minimap_set_selected_formations(int *formation_ids, int num_formations)
+{
+    data.num_selected_formations = num_formations;
+    for (int i = 0; i < num_formations; ++i) {
+        data.selected_formation[i] = formation_ids[i];
+    }
 }
 
 void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force)

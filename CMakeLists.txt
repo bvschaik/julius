@@ -472,6 +472,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/common.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/extra.c
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/military.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/slide.c
 )
 set(WINDOW_FILES
@@ -536,6 +537,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/message_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/message_list.c
+    ${PROJECT_SOURCE_DIR}/src/window/military_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_end.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_selection.c
