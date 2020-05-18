@@ -15,12 +15,9 @@ int sidebar_common_get_x_offset_collapsed(void)
     return screen_width() - SIDEBAR_COLLAPSED_WIDTH;
 }
 
-void sidebar_common_draw_minimap(int y_offset, int force)
+int sidebar_common_get_height(void)
 {
-    if (!city_view_is_sidebar_collapsed()) {
-        int x_offset = sidebar_common_get_x_offset_expanded();
-        widget_minimap_draw(x_offset + 8, y_offset, 73, 111, force);
-    }
+    return screen_height() - TOP_MENU_HEIGHT;
 }
 
 void sidebar_common_draw_relief(int x_offset, int y_offset, int image, int is_collapsed)
