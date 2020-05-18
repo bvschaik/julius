@@ -40,6 +40,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Zeige Reichweite beim Bauen von Reservoirs und Brunnen"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Zeige Konstruktionsgröße beim Bauen"},
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "Hebe Legion beim Berühren mit der Maus hervor"},
+    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Aktiviere rechtsseitiges Bedienfeld für Legionen"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Behebe Immigrationsfehler auf 'Sehr schwierig'"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Behebe '100 Jahre alte Geister'"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Behebe Wechsel- und Überlebenszeit des Imperators in eigenen Missionen"},

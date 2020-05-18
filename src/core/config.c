@@ -23,7 +23,8 @@ static const char *ini_keys[] = {
     "ui_allow_cycling_temples",
     "ui_show_water_structure_range",
     "ui_show_construction_size",
-    "ui_highlight_legions"
+    "ui_highlight_legions",
+    "ui_show_military_sidebar"
 };
 
 static const char *ini_string_keys[] = {
