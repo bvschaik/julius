@@ -403,21 +403,21 @@ static void menu_file_load_game(int param)
 {
     clear_state();
     building_construction_clear_type();
-    window_city_show();
+    window_go_back();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
 }
 
 static void menu_file_save_game(int param)
 {
     clear_state();
-    window_city_show();
+    window_go_back();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
 }
 
 static void menu_file_delete_game(int param)
 {
     clear_state();
-    window_city_show();
+    window_go_back();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_DELETE);
 }
 
@@ -426,7 +426,7 @@ static void menu_file_confirm_exit(int accepted)
     if (accepted) {
         system_exit();
     } else {
-        window_city_show();
+        window_city_return();
     }
 }
 
@@ -439,25 +439,25 @@ static void menu_file_exit_game(int param)
 static void menu_options_display(int param)
 {
     clear_state();
-    window_display_options_show(window_city_show);
+    window_display_options_show(window_city_return);
 }
 
 static void menu_options_sound(int param)
 {
     clear_state();
-    window_sound_options_show(window_city_show);
+    window_sound_options_show(window_city_return);
 }
 
 static void menu_options_speed(int param)
 {
     clear_state();
-    window_speed_options_show(window_city_show);
+    window_speed_options_show(window_city_return);
 }
 
 static void menu_options_difficulty(int param)
 {
     clear_state();
-    window_difficulty_options_show(window_city_show);
+    window_difficulty_options_show(window_city_return);
 }
 
 static void menu_options_autosave(int param)

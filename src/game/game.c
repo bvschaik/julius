@@ -187,6 +187,7 @@ static int get_elapsed_ticks(void)
         case WINDOW_CITY_MILITARY:
         case WINDOW_SLIDING_SIDEBAR:
         case WINDOW_OVERLAY_MENU:
+        case WINDOW_MILITARY_MENU:
         case WINDOW_BUILD_MENU:
             game_speed_index = (100 - setting_game_speed()) / 10;
             if (game_speed_index >= 10) {
