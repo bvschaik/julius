@@ -422,12 +422,11 @@ static int contains_non_stockpiled_food(building *space, const int *resources)
     return 0;
 }
 
-// 0 = getting resource, >0 = resource to deliver
 int building_warehouse_determine_worker_task(building *warehouse, int *resource)
 {
     int pct_workers = calc_percentage(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
     if (pct_workers < 50) {
-        return -1;
+        return WAREHOUSE_TASK_NONE;
     }
     const building_storage *s = building_storage_get(warehouse->storage_id);
     building *space;
