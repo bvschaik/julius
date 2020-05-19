@@ -163,7 +163,7 @@ static void run_and_draw(void)
         fps.last_update_time = time_after_draw;
         fps.frame_count = 0;
     }
-    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
+    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_SLIDING_SIDEBAR)) {
         int y_offset = 24;
         int y_offset_text = y_offset + 5;
         graphics_fill_rect(0, y_offset, 100, 20, COLOR_WHITE);
