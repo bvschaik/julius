@@ -1,7 +1,6 @@
 #include "slide.h"
 
-#include "city/view.h"
-#include "core/time.h"
+#include "core/speed.h"
 #include "graphics/graphics.h"
 #include "graphics/menu.h"
 #include "graphics/window.h"
@@ -9,42 +8,24 @@
 #include "widget/sidebar/common.h"
 #include "window/city.h"
 
-#define SIDEBAR_SLIDE_STEPS 94
-
-// sliding sidebar progress to x offset translation
-static const int PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS] = {
-    1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 10,
-    11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 24, 25,
-    27, 28, 30, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49,
-    51, 54, 56, 59, 61, 64, 67, 70, 73, 76, 80, 83, 87,
-    91, 95, 99, 102, 106, 109, 113, 116, 119, 122, 125,
-    127, 130, 132, 135, 137, 139, 141, 143, 144, 146,
-    147, 149, 150, 152, 153, 154, 155, 156, 157, 158,
-    159, 160, 161, 162, 163, 164, 165
-};
+#define SLIDE_SPEED 10
+#define SLIDE_ACCELERATION_MILLIS 75
 
 static struct {
-    time_millis slide_start;
-    int progress;
-    collapsed_draw_function collapsed_callback;
-    expanded_draw_function expanded_callback;
+    int position;
+    speed_type slide_speed;
+    slide_direction direction;
+    back_sidebar_draw_function back_sidebar_draw;
+    front_sidebar_draw_function front_sidebar_draw;
+    slide_finished_function finished_callback;
 } data;
-
-static void update_progress(void)
-{
-    time_millis now = time_get_millis();
-    time_millis diff = now - data.slide_start;
-    data.progress = diff / 5;
-}
 
 static void draw_sliding_foreground(void)
 {
     window_request_refresh();
-    update_progress();
-    if (data.progress >= SIDEBAR_SLIDE_STEPS) {
-        city_view_toggle_sidebar();
-        window_city_show();
-        window_draw(1);
+    data.position += speed_get_delta(&data.slide_speed);
+    if (data.position >= SIDEBAR_EXPANDED_WIDTH) {
+        data.finished_callback();
         return;
     }
 
@@ -52,25 +33,27 @@ static void draw_sliding_foreground(void)
     int x_offset = sidebar_common_get_x_offset_expanded();
     graphics_set_clip_rectangle(x_offset, TOP_MENU_HEIGHT, SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height());
 
-    if (city_view_is_sidebar_collapsed()) {
-        x_offset += PROGRESS_TO_X_OFFSET[SIDEBAR_SLIDE_STEPS - data.progress];
+    if (data.direction == SLIDE_DIRECTION_IN) {
+        x_offset += SIDEBAR_EXPANDED_WIDTH - data.position;
     } else {
-        x_offset += PROGRESS_TO_X_OFFSET[data.progress];
+        x_offset += data.position;
     }
 
-    data.collapsed_callback();
-    data.expanded_callback(x_offset);
+    data.back_sidebar_draw();
+    data.front_sidebar_draw(x_offset);
 
     graphics_reset_clip_rectangle();
 }
 
-void sidebar_slide(collapsed_draw_function collapsed_callback, expanded_draw_function expanded_callback)
+void sidebar_slide(slide_direction direction, back_sidebar_draw_function back_sidebar_callback, front_sidebar_draw_function front_sidebar_callback, slide_finished_function finished_callback)
 {
-    data.progress = 0;
-    data.slide_start = time_get_millis();
-    data.collapsed_callback = collapsed_callback;
-    data.expanded_callback = expanded_callback;
-    city_view_start_sidebar_toggle();
+    data.direction = direction;
+    data.position = 0;
+    speed_clear(&data.slide_speed);
+    speed_set_target(&data.slide_speed, SLIDE_SPEED, SLIDE_ACCELERATION_MILLIS);
+    data.back_sidebar_draw = back_sidebar_callback;
+    data.front_sidebar_draw = front_sidebar_callback;
+    data.finished_callback = finished_callback;
     sound_effect_play(SOUND_EFFECT_SIDEBAR);
 
     window_type window = {
