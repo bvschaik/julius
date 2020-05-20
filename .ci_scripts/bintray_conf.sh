@@ -6,15 +6,12 @@ VERSION=$(cat res/version.txt)
 if [[ ! -z "$TRAVIS_TAG" ]]
 then
   REPO=julius
-  NAME_SUFFIX=-release
 elif [[ "$TRAVIS_BRANCH" == "master" ]]
 then
-  REPO=julius
-  NAME_SUFFIX=-unstable
+  REPO=julius-dev
 elif [[ "$TRAVIS_BRANCH" =~ ^feature/ ]]
 then
   REPO=julius-branches
-  NAME_SUFFIX=
   VERSION=${TRAVIS_BRANCH##feature/}-$VERSION
 else
   echo "Unknown branch type $TRAVIS_BRANCH - skipping deply to Bintray"
@@ -28,7 +25,7 @@ cat > "bintray.json" <<EOF
   "package": {
     "subject": "bvschaik",
     "repo": "$REPO",
-    "name": "linux$NAME_SUFFIX",
+    "name": "linux",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },
@@ -57,7 +54,7 @@ cat > "bintray.json" <<EOF
   "package": {
     "subject": "bvschaik",
     "repo": "$REPO",
-    "name": "linux$NAME_SUFFIX",
+    "name": "linux",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },
@@ -85,7 +82,7 @@ cat > "bintray.json" <<EOF
   "package": {
     "subject": "bvschaik",
     "repo": "$REPO",
-    "name": "mac$NAME_SUFFIX",
+    "name": "mac",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },
@@ -114,7 +111,7 @@ cat > "bintray.json" <<EOF
   "package": {
     "subject": "bvschaik",
     "repo": "$REPO",
-    "name": "vita$NAME_SUFFIX",
+    "name": "vita",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },
@@ -143,7 +140,7 @@ cat > "bintray.json" <<EOF
   "package": {
     "subject": "bvschaik",
     "repo": "$REPO",
-    "name": "switch$NAME_SUFFIX",
+    "name": "switch",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },
