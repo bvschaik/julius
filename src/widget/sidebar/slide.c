@@ -8,8 +8,9 @@
 #include "widget/sidebar/common.h"
 #include "window/city.h"
 
-#define SLIDE_SPEED 10
-#define SLIDE_ACCELERATION_MILLIS 75
+#define SLIDE_SPEED 7
+#define SLIDE_ACCELERATION_MILLIS 65
+#define SIDEBAR_DECELERATION_OFFSET 125
 
 static struct {
     int position;
@@ -34,6 +35,9 @@ static void draw_sliding_foreground(void)
     graphics_set_clip_rectangle(x_offset, TOP_MENU_HEIGHT, SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height());
 
     if (data.direction == SLIDE_DIRECTION_IN) {
+        if (data.position > SIDEBAR_DECELERATION_OFFSET) {
+            speed_set_target(&data.slide_speed, 1, SLIDE_ACCELERATION_MILLIS, 1);
+        }
         x_offset += SIDEBAR_EXPANDED_WIDTH - data.position;
     } else {
         x_offset += data.position;
@@ -50,7 +54,7 @@ void sidebar_slide(slide_direction direction, back_sidebar_draw_function back_si
     data.direction = direction;
     data.position = 0;
     speed_clear(&data.slide_speed);
-    speed_set_target(&data.slide_speed, SLIDE_SPEED, SLIDE_ACCELERATION_MILLIS);
+    speed_set_target(&data.slide_speed, SLIDE_SPEED, direction == SLIDE_DIRECTION_OUT ? SLIDE_ACCELERATION_MILLIS : SPEED_CHANGE_IMMEDIATE, 1);
     data.back_sidebar_draw = back_sidebar_callback;
     data.front_sidebar_draw = front_sidebar_callback;
     data.finished_callback = finished_callback;
