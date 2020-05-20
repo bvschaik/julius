@@ -436,7 +436,7 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type)
     int dir_y = DIRECTION_Y[direction];
     int y_fraction = type == SCROLL_TYPE_CITY ? 2 : 1;
 
-    if (!config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
+    if (!config_get(CONFIG_UI_SMOOTH_SCROLLING) && !data.limits.active) {
         int do_scroll = should_scroll();
         int step = SCROLL_STEP[type][0];
         int align_x = 0;
