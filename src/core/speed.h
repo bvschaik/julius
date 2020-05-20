@@ -28,10 +28,13 @@ typedef struct {
     time_millis start_time;
     time_millis total_time;
     time_millis last_speed_check;
-    int speed_difference;
-    int desired_speed;
-    int current_speed;
-    int cumulative_delta;
+    double speed_difference;
+    double desired_speed;
+    double current_speed;
+    double adjusted_current_speed;
+    double cumulative_delta;
+    double fine_position;
+    int adjust_for_time;
 } speed_type;
 
 /**
@@ -45,8 +48,12 @@ void speed_clear(speed_type *speed);
  * @param speed Speed structure to act on
  * @param new_speed The new speed
  * @param total_time the time for the acceleration/deceleration, or SPEED_CHANGE_IMMEDIATE
+ * @param adjust_for_time If set to "1", in speed_get_delta, the delta value will be
+ *                        adjusted to keep the same rate regardless of FPS
+ *                        If set to "0", speed_get_delta will return the brute value
+ *                        without taking into account the elapsed time
  */
-void speed_set_target(speed_type *speed, int new_speed, time_millis total_time);
+void speed_set_target(speed_type *speed, double new_speed, time_millis total_time, int adjust_for_time);
 
 /**
  * Immediately invert the speed (positive speed becomes negative and vice-versa)
@@ -56,8 +63,8 @@ void speed_invert(speed_type *speed);
 
 /**
  * Gets the delta, in pixels, to move since the last time speed_get_delta was called
- * The delta value is normalized to keep the same rate regardless of FPS, EXCEPT if
- * SPEED_CHANGE_IMMEDIATE was passed in speed_set_target
+ * If speed_should_adjust_for_elapsed_time is enabled, the delta value is adjust_for_time to keep
+ * the same rate regardless of FPS
  * @param speed Speed structure to act on
  * @return The delta movement
  */
