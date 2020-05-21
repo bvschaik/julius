@@ -276,7 +276,7 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
 
         str += num_bytes;
         length -= num_bytes;
-        input_cursor.position++;
+        input_cursor.position += num_bytes;
     }
     if (input_cursor.capture && !input_cursor.seen) {
         input_cursor.width = 4;
