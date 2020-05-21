@@ -1,5 +1,5 @@
-Bugs & idiosyncrasies
-=====================
+Original bugs & idiosyncrasies
+==============================
 
 Julius recreates many bugs that you can find in original Caesar 3 game, to preserve 100% saves compatibility. This is an incomplete list of those bugs and some gameplay idiosyncrasies that you can encounter during the gameplay. Feel free to send a pull request with other bug reports that update this list.
 
@@ -22,3 +22,7 @@ In original Caesar 3 game, market trader can get food only from granaries, never
 ## Trade ships appear to buy the wrong resources
 
 If you have one dock and are trading with two cities, it is possible that (1) you will get paid for a few more units of goods in the year than are allowed from the city buying them, (2) that a couple units of goods will show up as being loaded onto a ship from a city that does not trade those goods, and (3) because of the mistakenly loaded goods, that ship will fail to purchase a couple of loads of goods for which it has room and for which you have goods available. More details are available [in this comment](https://github.com/bvschaik/julius/issues/421#issuecomment-618942375).
+
+## More original bugs
+
+For a more comprehensive list of original bugs, along with their current status, please check the [original bug issue reports](https://github.com/bvschaik/julius/issues/labels/original%20bug).
