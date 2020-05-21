@@ -106,35 +106,59 @@ int text_get_width(const uint8_t *str, font_t font)
     return width;
 }
 
+static int get_letter_width(const uint8_t *str, const font_definition *def, int *num_bytes)
+{
+    *num_bytes = 1;
+    if (*str == ' ') {
+        return def->space_width;
+    }
+    int letter_id = font_letter_id(def, str, num_bytes);
+    if (letter_id >= 0) {
+        return def->letter_spacing + image_letter(letter_id)->width;
+    } else {
+        return 0;
+    }
+}
+
 unsigned int text_get_max_length_for_width(const uint8_t *str, int length, font_t font, unsigned int requested_width, int invert)
 {
     const font_definition *def = font_definition_for(font);
-    length = (!length) ? string_length(str) : length;
-    unsigned int maxlen = length;
-    unsigned int width = 0;
-    int step = 1;
+    if (!length) {
+        length = string_length(str);
+    }
     if (invert) {
-        str += length - 1;
-        step = -1;
-    }
-    while (maxlen) {
-        // TODO FIX THIS: MULTIBYTE CANNOT BE TRAVERSED BACKWARDS
-        int num_bytes = 1;
-        if (*str == ' ') {
-            width += def->space_width;
-        } else {
-            int letter_id = font_letter_id(def, str, &num_bytes);
-            if (letter_id >= 0) {
-                width += def->letter_spacing + image_letter(letter_id)->width;
+        unsigned int maxlen = length;
+        unsigned int width = 0;
+        const uint8_t *s = str;
+        while (maxlen) {
+            int num_bytes;
+            width += get_letter_width(s, def, &num_bytes);
+            s += num_bytes;
+            maxlen -= num_bytes;
+        }
+
+        maxlen = length;
+        while (maxlen && width > requested_width) {
+            int num_bytes;
+            width -= get_letter_width(str, def, &num_bytes);
+            str += num_bytes;
+            maxlen -= num_bytes;
+        }
+        return maxlen;
+    } else {
+        unsigned int maxlen = length;
+        unsigned int width = 0;
+        while (maxlen) {
+            int num_bytes;
+            width += get_letter_width(str, def, &num_bytes);
+            if (width > requested_width) {
+                break;
             }
+            str += num_bytes;
+            maxlen -= num_bytes;
         }
-        if (width > requested_width) {
-            break;
-        }
-        str += step * num_bytes;
-        maxlen -= num_bytes;
+        return length - maxlen;
     }
-    return length - maxlen;
 }
 
 void text_ellipsize(uint8_t *str, font_t font, int requested_width)
