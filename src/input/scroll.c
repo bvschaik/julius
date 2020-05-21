@@ -489,6 +489,7 @@ int scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
 void scroll_stop(void)
 {
     clear_scroll_speed();
+    system_mouse_set_relative_mode(0);
     data.is_scrolling = 0;
     data.constant_input = 0;
     data.drag.active = 0;

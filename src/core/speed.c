@@ -54,7 +54,7 @@ void speed_set_target(speed_type *speed, double new_speed, time_millis total_tim
 
 void speed_invert(speed_type *speed)
 {
-    speed_set_target(speed, -speed->desired_speed, SPEED_CHANGE_IMMEDIATE, speed->adjust_for_time);
+    speed_set_target(speed, -speed->current_speed, SPEED_CHANGE_IMMEDIATE, speed->adjust_for_time);
 }
 
 speed_direction speed_get_current_direction(const speed_type *speed)
