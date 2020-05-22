@@ -76,6 +76,9 @@ int handle_fine_position(speed_type *speed, double delta)
 
 int speed_get_delta(speed_type *speed)
 {
+    if (speed->adjust_for_time && speed->last_speed_check == time_get_millis()) {
+        return 0;
+    }
     double delta;
     time_millis elapsed = time_get_millis() - speed->start_time;
     double desired = speed->desired_speed;

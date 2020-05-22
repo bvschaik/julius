@@ -65,6 +65,7 @@ void speed_invert(speed_type *speed);
  * Gets the delta, in pixels, to move since the last time speed_get_delta was called
  * If speed_should_adjust_for_elapsed_time is enabled, the delta value is adjust_for_time to keep
  * the same rate regardless of FPS
+ * Please note: this function should only be called once per frame
  * @param speed Speed structure to act on
  * @return The delta movement
  */
