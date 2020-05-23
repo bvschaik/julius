@@ -369,6 +369,7 @@ static const char* ask_for_data_dir(int again)
 {
     if (again) {
         int result = tinyfd_messageBox("Wrong folder selected",
+            "Julius requires the original files from Caesar 3 to run.\n\n"
             "The selected folder is not a proper Caesar 3 folder.\n\n"
             "Press OK to select another folder or Cancel to exit.",
             "okcancel", "warning", 1);
@@ -376,7 +377,7 @@ static const char* ask_for_data_dir(int again)
             return NULL;
         }
     }
-    return tinyfd_selectFolderDialog("Julius requires the original files from Caesar 3 to run.\nPlease select your Caesar 3 folder.", NULL);
+    return tinyfd_selectFolderDialog("Please select your Caesar 3 folder", NULL);
 }
 #endif
 
