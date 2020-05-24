@@ -97,7 +97,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Setze Lesezeichen 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Setze Lesezeichen 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Kampfinformationen umschalten"},
-    {TR_HOTKEY_EDIT_TITLE, "Drücke neue Tastenkombination"}
+    {TR_HOTKEY_EDIT_TITLE, "Drücke neue Tastenkombination"},
+    {TR_TEXT_DENARIUS_SUFFIX, " Dn"}
 };
 
 void translation_german(const translation_string **strings, int *num_strings)

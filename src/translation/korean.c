@@ -92,7 +92,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "3지점 설정"},
     {TR_HOTKEY_SET_BOOKMARK_4, "4지점 설정"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "전투 정보 전환"},
-    {TR_HOTKEY_EDIT_TITLE, "새 단축키 입력"}
+    {TR_HOTKEY_EDIT_TITLE, "새 단축키 입력"},
+    {TR_TEXT_DENARIUS_SUFFIX, " Dn"} // ToDo: Translate here
 };
 
 void translation_korean(const translation_string **strings, int *num_strings)

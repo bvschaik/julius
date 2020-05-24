@@ -92,7 +92,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Назначить закладку 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Назначить закладку 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Информация боя"},
-    {TR_HOTKEY_EDIT_TITLE, "Нажмите клавишу"}
+    {TR_HOTKEY_EDIT_TITLE, "Нажмите клавишу"},
+    {TR_TEXT_DENARIUS_SUFFIX, " Ден"}
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)

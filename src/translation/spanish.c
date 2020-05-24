@@ -97,7 +97,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Definir atajo de mapa 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Definir atajo de mapa 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Activar información de batalla"},
-    {TR_HOTKEY_EDIT_TITLE, "Presiona nueva tecla"}
+    {TR_HOTKEY_EDIT_TITLE, "Presiona nueva tecla"},
+    {TR_TEXT_DENARIUS_SUFFIX, " Dn"}
 };
 
 void translation_spanish(const translation_string **strings, int *num_strings)

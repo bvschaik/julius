@@ -4,6 +4,7 @@
 #include "core/time.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "translation/translation.h"
 
 #include <string.h>
 
@@ -292,7 +293,7 @@ int text_draw_number_colored(int value, char prefix, const char *postfix, int x_
 int text_draw_money(int value, int x_offset, int y_offset, font_t font)
 {
     uint8_t str[100];
-    number_to_string(str, value, '@', " Dn");
+    number_to_string(str, value, '@', translation_for(TR_TEXT_DENARIUS_SUFFIX));
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 

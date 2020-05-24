@@ -97,7 +97,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Définir comme point d'intérêt 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Définir comme point d'intérêt 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Afficher les infos de bataille"},
-    {TR_HOTKEY_EDIT_TITLE, "Appuyez sur une touche"}
+    {TR_HOTKEY_EDIT_TITLE, "Appuyez sur une touche"},
+    {TR_TEXT_DENARIUS_SUFFIX, " Dn"}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
