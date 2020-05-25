@@ -9,7 +9,7 @@
 #include <string.h>
 
 #define ELLIPSIS_LENGTH 4
-#define TEXT_BUFFER_LENGTH 100
+#define NUMBER_BUFFER_LENGTH 100
 
 static uint8_t tmp_line[200];
 
@@ -280,57 +280,53 @@ static int number_to_string(uint8_t *str, int value, char prefix, const char *po
 
 int text_draw_number(int value, char prefix, const char *postfix, int x_offset, int y_offset, font_t font)
 {
-    uint8_t str[100];
+    uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, prefix, postfix);
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 
 int text_draw_number_colored(int value, char prefix, const char *postfix, int x_offset, int y_offset, font_t font, color_t color)
 {
-    uint8_t str[100];
+    uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, prefix, postfix);
     return text_draw(str, x_offset, y_offset, font, color);
 }
 
 int text_draw_money(int value, int x_offset, int y_offset, font_t font)
 {
-    uint8_t str[TEXT_BUFFER_LENGTH];
-    const int money_len = number_to_string(str, value, '@', "");
+    uint8_t str[NUMBER_BUFFER_LENGTH];
+    int money_len = number_to_string(str, value, '@', " ");
     const uint8_t *postfix = lang_get_string(6, 0);
-    if (postfix) {
-        const int postfix_len = strlen(postfix);
-        if (money_len + postfix_len + 1 < TEXT_BUFFER_LENGTH) {
-            str[money_len] = ' ';
-            strcpy(str + money_len + 1, postfix);
-        }
+    if (postfix && money_len < NUMBER_BUFFER_LENGTH - 1) {
+        string_copy(postfix, str + money_len, NUMBER_BUFFER_LENGTH - money_len - 1);
     }
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 
 int text_draw_percentage(int value, int x_offset, int y_offset, font_t font)
 {
-    uint8_t str[100];
+    uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', "%");
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 
 void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, font_t font)
 {
-    uint8_t str[100];
+    uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
 void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int y_offset, int box_width, font_t font)
 {
-    uint8_t str[100];
+    uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, prefix, " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
 void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, font_t font, color_t color)
 {
-    uint8_t str[100];
+    uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
