@@ -338,14 +338,13 @@ static void translate_input_for_element(mapped_input *input, joystick_element tr
                 input->value /= 5; // TODO is this a high enough value? I doubt it
                 break;
             default:
-                input->value = 5;
+                input->value *= 5;
         }
     } else if (translated_element == JOYSTICK_ELEMENT_BUTTON || translated_element == JOYSTICK_ELEMENT_HAT) {
         input->value = (input->value != 0) ? 1 : 0;
     }
     input->element = translated_element;
 }
-
 
 static int rescale_axis(mapped_input *inputs)
 {
@@ -413,6 +412,17 @@ static int rescale_axis(mapped_input *inputs)
         inputs[DIRECTION_LEFT].value = (int) (clamping_factor * -analog_x);
     }
     return 1;
+}
+
+static joystick_element get_highest_priority_element(mapped_input *inputs, int total_inputs)
+{
+    joystick_element highest_priority = inputs[0].element;
+    for (int i = 1; i < total_inputs; ++i) {
+        if (inputs[i].element < highest_priority && inputs[i].element != JOYSTICK_ELEMENT_NONE) {
+            highest_priority = inputs[i].element;
+        }
+    }
+    return highest_priority;
 }
 
 static int translate_mouse_cursor_position(void)
@@ -539,23 +549,35 @@ static int translate_map_scrolling(void)
     }
 
     mapped_input map_scroll[NUM_DIRECTIONS];
+    static int had_value;
 
-    int handled = get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_UP, &map_scroll[DIRECTION_UP]);
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_LEFT, &map_scroll[DIRECTION_LEFT]);
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_DOWN, &map_scroll[DIRECTION_DOWN]);
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_RIGHT, &map_scroll[DIRECTION_RIGHT]);
+    int handled = get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_UP, &map_scroll[DIRECTION_UP]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_LEFT, &map_scroll[DIRECTION_LEFT]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_DOWN, &map_scroll[DIRECTION_DOWN]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_RIGHT, &map_scroll[DIRECTION_RIGHT]);
+
     if (!handled) {
+        if (had_value) {
+            scroll_arrow_up(0);
+            scroll_arrow_left(0);
+            scroll_arrow_down(0);
+            scroll_arrow_right(0);
+            had_value = 0;
+        }
         return 0;
     }
 
-    // All mouse cursor input will internally be treated as a joystick axis
-    translate_input_for_element(&map_scroll[DIRECTION_UP], JOYSTICK_ELEMENT_AXIS);
-    translate_input_for_element(&map_scroll[DIRECTION_LEFT], JOYSTICK_ELEMENT_AXIS);
-    translate_input_for_element(&map_scroll[DIRECTION_DOWN], JOYSTICK_ELEMENT_AXIS);
-    translate_input_for_element(&map_scroll[DIRECTION_RIGHT], JOYSTICK_ELEMENT_AXIS);
+    had_value = 1;
 
-    if (!rescale_axis(map_scroll)) {
-        return 0;
+    joystick_element base_element = get_highest_priority_element(map_scroll, 4);
+
+    translate_input_for_element(&map_scroll[DIRECTION_UP], base_element);
+    translate_input_for_element(&map_scroll[DIRECTION_LEFT], base_element);
+    translate_input_for_element(&map_scroll[DIRECTION_DOWN], base_element);
+    translate_input_for_element(&map_scroll[DIRECTION_RIGHT], base_element);
+
+    if (base_element == JOYSTICK_ELEMENT_AXIS) {
+        rescale_axis(map_scroll);
     }
 
     scroll_arrow_up(map_scroll[DIRECTION_UP].value);
