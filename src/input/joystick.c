@@ -519,7 +519,7 @@ static int translate_window_scrolling(void)
     translate_input_for_element(&scroll_up, JOYSTICK_ELEMENT_AXIS);
     translate_input_for_element(&scroll_down, JOYSTICK_ELEMENT_AXIS);
 
-    int max_scroll_time = 50;
+    unsigned int max_scroll_time = 50;
 
     if (scroll_up.value) {
         current_scroll = SCROLL_UP;
