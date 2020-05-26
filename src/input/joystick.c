@@ -588,7 +588,6 @@ static int translate_map_scrolling(void)
     return 1;
 }
 
-
 int joystick_to_mouse_and_keyboard(void)
 {
     if (data.connected_joysticks == 0) {
