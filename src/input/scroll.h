@@ -22,6 +22,8 @@ int scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type);
 void scroll_drag_start(int is_touch);
 int scroll_drag_end(void);
 
+void scroll_stop(void);
+
 void scroll_arrow_left(int value);
 void scroll_arrow_right(int value);
 void scroll_arrow_up(int value);
