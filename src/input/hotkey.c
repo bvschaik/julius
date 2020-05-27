@@ -461,3 +461,10 @@ void hotkey_handle_global_keys(void)
         graphics_save_screenshot(1);
     }
 }
+
+void hotkey_set_value_for_action(hotkey_action action, int value)
+{
+    hotkey_definition def;
+    set_definition_for_action(action, &def);
+    *(def.action) = value ? def.value : 0;
+}

@@ -4,6 +4,7 @@
 #include "core/time.h"
 #include "game/system.h"
 #include "graphics/window.h"
+#include "input/hotkey.h"
 #include "input/mouse.h"
 #include "input/scroll.h"
 
@@ -21,6 +22,13 @@ enum {
     DIRECTION_RIGHT = 3,
     NUM_DIRECTIONS = 4
 };
+
+typedef enum {
+    INPUT_STATE_IS_UP,
+    INPUT_STATE_WENT_DOWN,
+    INPUT_STATE_IS_DOWN,
+    INPUT_STATE_WENT_UP
+} input_state;
 
 typedef struct {
     joystick_button top;
@@ -47,6 +55,7 @@ typedef struct {
 typedef struct {
     joystick_element element;
     int value;
+    input_state state;
 } mapped_input;
 
 enum {
@@ -54,6 +63,9 @@ enum {
     CURSOR_SLOWDOWN_NORMAL = 4096,
     CURSOR_SLOWDOWN_SLOWER = 8192
 };
+
+#define JOYSTICK_HOTKEY_OFFSET MAPPING_ACTION_ROTATE_MAP_LEFT
+#define JOYSTICK_MAX_HOTKEYS 6
 
 static struct {
     joystick_model connected_models[JOYSTICK_MAX_CONTROLLERS];
@@ -68,7 +80,18 @@ static struct {
         scroll_state scroll;
         time_millis last_scroll_time;
     } mouse;
+    mapped_input map_scroll[NUM_DIRECTIONS];
+    mapped_input joystick_hotkey[JOYSTICK_MAX_HOTKEYS];
 } data;
+
+static hotkey_action JOYSTICK_MAPPING_TO_HOTKEY_ACTION[JOYSTICK_MAX_HOTKEYS] = {
+    HOTKEY_ROTATE_MAP_LEFT,
+    HOTKEY_ROTATE_MAP_RIGHT,
+    HOTKEY_INCREASE_GAME_SPEED,
+    HOTKEY_DECREASE_GAME_SPEED,
+    HOTKEY_TOGGLE_PAUSE,
+    HOTKEY_CYCLE_LEGION
+};
 
 joystick_model *joystick_get_model_by_guid(const char *guid)
 {
@@ -294,6 +317,23 @@ static int get_input_for_mapping(const joystick_info *joystick, const mapping_el
     return input->value != 0;
 }
 
+static void set_input_state(mapped_input *input)
+{
+    if (input->value) {
+        if (input->state == INPUT_STATE_IS_UP || input->state == INPUT_STATE_WENT_UP) {
+            input->state = INPUT_STATE_WENT_DOWN;
+        } else {
+            input->state = INPUT_STATE_IS_DOWN;
+        }
+    } else {
+        if (input->state == INPUT_STATE_IS_DOWN || input->state == INPUT_STATE_WENT_DOWN) {
+            input->state = INPUT_STATE_WENT_UP;
+        } else {
+            input->state = INPUT_STATE_IS_UP;
+        }
+    }
+}
+
 static int get_joystick_input_for_action(mapping_action action, mapped_input *input)
 {
     static mapped_input dummy_input;
@@ -311,10 +351,11 @@ static int get_joystick_input_for_action(mapping_action action, mapped_input *in
         }
         if(get_input_for_mapping(joystick, &joystick->model->first_mapping[action], input) ||
            get_input_for_mapping(joystick, &joystick->model->second_mapping[action], input)) {
+            set_input_state(input);
             return 1;
         }
     }
-
+    set_input_state(input);
     return 0;
 }
 
@@ -425,6 +466,14 @@ static joystick_element get_highest_priority_element(mapped_input *inputs, int t
     return highest_priority;
 }
 
+static int translate_mapping_reset(void)
+{
+    if (!get_joystick_input_for_action(MAPPING_ACTION_RESET_MAPPING, 0)) {
+        return 0;
+    }
+    return 1;
+}
+
 static int translate_mouse_cursor_position(void)
 {
     mapped_input cursor_input[NUM_DIRECTIONS];
@@ -499,9 +548,18 @@ static int translate_mouse(void)
     return handled;
 }
 
+static void window_has_map_scrolling(void)
+{
+    return window_is(WINDOW_CITY) ||
+        window_is(WINDOW_CITY_MILITARY) ||
+        window_is(WINDOW_EDITOR_MAP) ||
+        window_is(WINDOW_EMPIRE) ||
+        window_is(WINDOW_EDITOR_EMPIRE);
+}
+
 static int translate_window_scrolling(void)
 {
-    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_EDITOR_MAP)) {
+    if (window_has_map_scrolling()) {
         return 0;
     }
     int handled = 0;
@@ -544,48 +602,69 @@ static int translate_window_scrolling(void)
 
 static int translate_map_scrolling(void)
 {
-    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY) && !window_is(WINDOW_EDITOR_MAP)) {
+    if (!window_has_map_scrolling()) {
         return 0;
     }
 
-    mapped_input map_scroll[NUM_DIRECTIONS];
-    static int had_value;
-
-    int handled = get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_UP, &map_scroll[DIRECTION_UP]);
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_LEFT, &map_scroll[DIRECTION_LEFT]);
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_DOWN, &map_scroll[DIRECTION_DOWN]);
-    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_RIGHT, &map_scroll[DIRECTION_RIGHT]);
+    int handled = get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_UP, &data.map_scroll[DIRECTION_UP]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_LEFT, &data.map_scroll[DIRECTION_LEFT]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_DOWN, &data.map_scroll[DIRECTION_DOWN]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_RIGHT, &data.map_scroll[DIRECTION_RIGHT]);
 
     if (!handled) {
-        if (had_value) {
+        int stopped_scrolling = 0;
+        for (int direction = 0; direction < NUM_DIRECTIONS; ++direction) {
+            if (data.map_scroll[direction].state == INPUT_STATE_IS_DOWN ||
+                data.map_scroll[direction].state == INPUT_STATE_WENT_DOWN) {
+                stopped_scrolling = 0;
+                break;
+            } else if (data.map_scroll[direction].state == INPUT_STATE_WENT_UP) {
+                stopped_scrolling |= 1;
+            }
+        }
+        if (stopped_scrolling) {
             scroll_arrow_up(0);
             scroll_arrow_left(0);
             scroll_arrow_down(0);
             scroll_arrow_right(0);
-            had_value = 0;
         }
         return 0;
     }
 
-    had_value = 1;
+    joystick_element base_element = get_highest_priority_element(data.map_scroll, 4);
 
-    joystick_element base_element = get_highest_priority_element(map_scroll, 4);
-
-    translate_input_for_element(&map_scroll[DIRECTION_UP], base_element);
-    translate_input_for_element(&map_scroll[DIRECTION_LEFT], base_element);
-    translate_input_for_element(&map_scroll[DIRECTION_DOWN], base_element);
-    translate_input_for_element(&map_scroll[DIRECTION_RIGHT], base_element);
+    translate_input_for_element(&data.map_scroll[DIRECTION_UP], base_element);
+    translate_input_for_element(&data.map_scroll[DIRECTION_LEFT], base_element);
+    translate_input_for_element(&data.map_scroll[DIRECTION_DOWN], base_element);
+    translate_input_for_element(&data.map_scroll[DIRECTION_RIGHT], base_element);
 
     if (base_element == JOYSTICK_ELEMENT_AXIS) {
-        rescale_axis(map_scroll);
+        rescale_axis(data.map_scroll);
     }
 
-    scroll_arrow_up(map_scroll[DIRECTION_UP].value);
-    scroll_arrow_left(map_scroll[DIRECTION_LEFT].value);
-    scroll_arrow_down(map_scroll[DIRECTION_DOWN].value);
-    scroll_arrow_right(map_scroll[DIRECTION_RIGHT].value);
+    scroll_arrow_up(data.map_scroll[DIRECTION_UP].value);
+    scroll_arrow_left(data.map_scroll[DIRECTION_LEFT].value);
+    scroll_arrow_down(data.map_scroll[DIRECTION_DOWN].value);
+    scroll_arrow_right(data.map_scroll[DIRECTION_RIGHT].value);
 
     return 1;
+}
+
+static int translate_hotkeys(void)
+{
+    int handled = 0;
+    for (int i = 0; i < JOYSTICK_MAX_HOTKEYS; ++i) {
+        int value = get_joystick_input_for_action(JOYSTICK_HOTKEY_OFFSET + i, &data.joystick_hotkey[i]);
+        handled |= value;
+        if (value) {
+            if (data.joystick_hotkey[i].state == INPUT_STATE_WENT_DOWN) {
+                hotkey_set_value_for_action(JOYSTICK_MAPPING_TO_HOTKEY_ACTION[i], 1);
+            }
+        } else if (data.joystick_hotkey[i].state == INPUT_STATE_WENT_UP) {
+            hotkey_set_value_for_action(JOYSTICK_MAPPING_TO_HOTKEY_ACTION[i], 0);
+        }
+    }
+    return handled;
 }
 
 int joystick_to_mouse_and_keyboard(void)
@@ -594,10 +673,12 @@ int joystick_to_mouse_and_keyboard(void)
         return 0;
     }
     int handled = 0;
-    handled |= translate_mouse();
-    handled |= translate_window_scrolling();
-    handled |= translate_map_scrolling();
- //   handled |= translate_mapping_reset();
+    if (!translate_mapping_reset()) {
+        handled |= translate_mouse();
+        handled |= translate_window_scrolling();
+        handled |= translate_map_scrolling();
+        handled |= translate_hotkeys();
+    }
     for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
         joystick_reset_all_trackball_states(&data.joystick[i]);
     }
