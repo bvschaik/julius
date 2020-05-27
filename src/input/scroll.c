@@ -480,7 +480,7 @@ int scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type)
     delta->x = speed_get_delta(&data.speed.x);
     delta->y = speed_get_delta(&data.speed.y);
     if (!data.is_scrolling) {
-        data.speed.decaying = delta->x != 0 || delta->y != 0;
+        data.speed.decaying = speed_is_changing(&data.speed.x) || speed_is_changing(&data.speed.y);
         data.is_scrolling = data.speed.decaying;
     }
     return delta->x != 0 || delta->y != 0;

@@ -78,4 +78,11 @@ int speed_get_delta(speed_type *speed);
  */
 speed_direction speed_get_current_direction(const speed_type *speed);
 
+/**
+ * Indicates whether the speed is accelerating/decelerating
+ * @param speed Speed structure to act on
+ * @return Whether the speed is changing
+ */
+int speed_is_changing(const speed_type *speed);
+
 #endif // CORE_SPEED_H

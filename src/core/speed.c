@@ -105,3 +105,8 @@ int speed_get_delta(speed_type *speed)
     speed->last_speed_check = time_get_millis();
     return handle_fine_position(speed, delta);
 }
+
+int speed_is_changing(const speed_type *speed)
+{
+    return speed->current_speed != speed->desired_speed;
+}
