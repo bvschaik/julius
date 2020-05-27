@@ -137,15 +137,19 @@ static int get_road_tile_for_aqueduct(int grid_offset, int gate_orientation)
 
 int map_get_adjacent_road_tiles_for_aqueduct(int grid_offset)
 {
-    int road_tiles = 0;
-    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, -1), 1);
-    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(1, 0), 2);
-    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, 1), 1);
-    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(-1, 0), 2);
+    int road_tiles_x = 0;
+    int road_tiles_y = 0;
+    road_tiles_y += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, -1), 1);
+    road_tiles_x += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(1, 0), 2);
+    road_tiles_y += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, 1), 1);
+    road_tiles_x += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(-1, 0), 2);
+    int road_tiles = road_tiles_x + road_tiles_y;
     if (road_tiles == 4) {
         if (building_get(map_building_at(grid_offset))->type == BUILDING_GRANARY) {
-            road_tiles = 2;
+            return 2;
         }
+    } else if (road_tiles_x == 1 && road_tiles_y == 1) { // Curved roads
+        return 0;
     }
     return road_tiles;
 }
