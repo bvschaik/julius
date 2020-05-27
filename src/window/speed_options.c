@@ -1,6 +1,7 @@
 #include "speed_options.h"
 
 #include "game/settings.h"
+#include "game/state.h"
 #include "graphics/arrow_button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -89,6 +90,7 @@ static void button_ok(int param1, int param2)
 static void button_cancel(int param1, int param2)
 {
     setting_reset_speeds(data.original_game_speed, data.original_scroll_speed);
+    game_state_set_speed(data.original_game_speed, 1);
     data.close_callback();
 }
 
@@ -99,6 +101,7 @@ static void arrow_button_game(int is_down, int param2)
     } else {
         setting_increase_game_speed();
     }
+    game_state_set_speed(setting_game_speed(), 1);
 }
 
 static void arrow_button_scroll(int is_down, int param2)

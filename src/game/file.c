@@ -96,7 +96,7 @@ static void clear_scenario_data(void)
     building_construction_clear_type();
     city_data_init();
     city_message_init_scenario();
-    game_state_init();
+    game_state_init(setting_game_speed());
     game_animation_init();
     sound_city_init();
     building_menu_enable_all();
@@ -238,6 +238,8 @@ static void initialize_saved_game(void)
     map_tiles_determine_gardens();
 
     city_message_clear_scroll();
+
+    game_state_set_speed(setting_game_speed(), 1);
 
     game_state_unpause();
 }

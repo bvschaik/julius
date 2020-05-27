@@ -167,9 +167,11 @@ static void handle_hotkeys(const hotkeys *h)
     }
     if (h->decrease_game_speed) {
         setting_decrease_game_speed();
+        game_state_set_speed(setting_game_speed(), 1);
     }
     if (h->increase_game_speed) {
         setting_increase_game_speed();
+        game_state_set_speed(setting_game_speed(), 1);
     }
     if (h->show_overlay) {
         show_overlay(h->show_overlay);

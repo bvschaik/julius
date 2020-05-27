@@ -18,7 +18,6 @@ endfunction(except_file)
 # Replace some source files with stubs
 except_file(TEST_CORE_FILES "core/image.c" ${CORE_FILES})
 except_file(TEST_CORE_FILES "core/lang.c" ${TEST_CORE_FILES})
-except_file(TEST_CORE_FILES "core/speed.c" ${TEST_CORE_FILES})
 except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
 
 add_executable(compare
@@ -52,6 +51,10 @@ add_executable(autopilot
     ${SOUND_FILES}
     ${EDITOR_FILES}
 )
+
+if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
+    target_link_libraries(autopilot m)
+endif()
 
 file(COPY data/c3.emp DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY data/c32.emp DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

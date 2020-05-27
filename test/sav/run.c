@@ -3,6 +3,7 @@
 #include "game/file.h"
 #include "game/game.h"
 #include "game/settings.h"
+#include "game/state.h"
 
 #ifdef _MSC_VER
 #include <direct.h>
@@ -26,7 +27,7 @@ static void handler(int sig)
 
 static void run_ticks(int ticks)
 {
-    setting_reset_speeds(100, setting_scroll_speed());
+    game_state_set_speed(100, 0);
     time_set_millis(0);
     for (int i = 1; i <= ticks; i++) {
         time_set_millis(2 * i);

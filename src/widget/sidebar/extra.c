@@ -7,6 +7,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "graphics/arrow_button.h"
 #include "graphics/graphics.h"
 #include "graphics/lang_text.h"
@@ -277,4 +278,5 @@ static void button_game_speed(int is_down, int param2)
     } else {
         setting_increase_game_speed();
     }
+    game_state_set_speed(setting_game_speed(), 1);
 }

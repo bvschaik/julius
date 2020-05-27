@@ -55,7 +55,7 @@ void game_file_editor_clear_data(void)
     city_data_init();
     city_data_init_scenario();
     city_message_init_scenario();
-    game_state_init();
+    game_state_init(70); // speed at 70%, nice speed for flag animations
     game_animation_init();
     sound_city_init();
     building_menu_enable_all();

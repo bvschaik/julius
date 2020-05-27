@@ -2,6 +2,7 @@
 
 #include "building/construction.h"
 #include "building/model.h"
+#include "core/calc.h"
 #include "core/config.h"
 #include "core/hotkey_config.h"
 #include "core/image.h"
@@ -9,7 +10,6 @@
 #include "core/locale.h"
 #include "core/log.h"
 #include "core/random.h"
-#include "core/time.h"
 #include "editor/editor.h"
 #include "figure/type.h"
 #include "game/animation.h"
@@ -32,11 +32,7 @@
 #include "window/logo.h"
 #include "window/main_menu.h"
 
-static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
-    0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
-};
-
-static time_millis last_update;
+#define MAX_TICKS_PER_FRAME 20
 
 static void errlog(const char *msg)
 {
@@ -112,7 +108,7 @@ int game_init(void)
     }
 
     sound_system_init();
-    game_state_init();
+    game_state_init(setting_game_speed());
     window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
 
     return 1;
@@ -175,11 +171,12 @@ int game_reload_language(void)
 
 static int get_elapsed_ticks(void)
 {
-    if (game_state_is_paused()) {
+    int ticks_this_frame = game_state_get_ticks();
+    if (game_state_is_paused() ||
+        building_construction_in_progress() ||
+        (scroll_in_progress() && !scroll_is_smooth())) {
         return 0;
     }
-    int game_speed_index = 0;
-    int ticks_per_frame = 1;
     switch (window_get_id()) {
         default:
             return 0;
@@ -188,38 +185,15 @@ static int get_elapsed_ticks(void)
         case WINDOW_SLIDING_SIDEBAR:
         case WINDOW_OVERLAY_MENU:
         case WINDOW_BUILD_MENU:
-            game_speed_index = (100 - setting_game_speed()) / 10;
-            if (game_speed_index >= 10) {
-                return 0;
-            } else if (game_speed_index < 0) {
-                ticks_per_frame = setting_game_speed() / 100;
-                game_speed_index = 0;
-            }
-            break;
         case WINDOW_EDITOR_MAP:
-            game_speed_index = 3; // 70%, nice speed for flag animations
-            break;
+            return ticks_this_frame;
     }
-    if (building_construction_in_progress()) {
-        return 0;
-    }
-    if (scroll_in_progress() && !scroll_is_smooth()) {
-        return 0;
-    }
-
-    time_millis now = time_get_millis();
-    time_millis diff = now - last_update;
-    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
-        return 0;
-    }
-    last_update = now;
-    return ticks_per_frame;
 }
 
 void game_run(void)
 {
     game_animation_update();
-    int num_ticks = get_elapsed_ticks();
+    int num_ticks = calc_bound(get_elapsed_ticks(), 0, MAX_TICKS_PER_FRAME);
     for (int i = 0; i < num_ticks; i++) {
         game_tick_run();
         game_file_write_mission_saved_game();

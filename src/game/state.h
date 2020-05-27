@@ -29,13 +29,17 @@ enum {
     OVERLAY_PROBLEMS = 29
 };
 
-void game_state_init(void);
+void game_state_init(int speed);
 
 int game_state_is_paused(void);
 
 void game_state_toggle_paused(void);
 
 void game_state_unpause(void);
+
+void game_state_set_speed(int speed, int adjust_for_time);
+
+int game_state_get_ticks(void);
 
 int game_state_overlay(void);
 
