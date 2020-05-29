@@ -120,7 +120,9 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Установить закладку 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Установить закладку 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Информация о сражениях"},
-    {TR_HOTKEY_EDIT_TITLE, "Нажмите клавишу"}
+    {TR_HOTKEY_EDIT_TITLE, "Нажмите клавишу"},
+    {TR_BUILDING_ROADBLOCK, "Дорожный блок"},
+    {TR_BUILDING_ROADBLOCK_DESC, "Блокирует проход бесцельно бродящим ходокам"}
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
