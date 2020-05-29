@@ -30,16 +30,14 @@ static void set_strings(const translation_string *strings, int num_strings)
 
 void translation_load(language_type language)
 {
-    const translation_string *strings = 0;
+    const translation_string *strings = NULL;
     int num_strings = 0;
-    const translation_string *default_strings;
-    int num_default_strings;
+    const translation_string *default_strings = NULL;
+    int num_default_strings = 0;
     translation_english(&default_strings, &num_default_strings);
 
     switch (language) {
         case LANGUAGE_ENGLISH:
-        case LANGUAGE_UNKNOWN:
-        default:
             translation_english(&strings, &num_strings);
             break;
         case LANGUAGE_FRENCH:
@@ -51,14 +49,22 @@ void translation_load(language_type language)
         case LANGUAGE_PORTUGUESE:
             translation_portuguese(&strings, &num_strings);
             break;
+        case LANGUAGE_RUSSIAN:
+            translation_russian(&strings, &num_strings);
+            break;
         case LANGUAGE_SPANISH:
             translation_spanish(&strings, &num_strings);
+            break;
+        default:
+        case LANGUAGE_UNKNOWN:
             break;
     }
 
     memset(data.strings, 0, sizeof(data.strings));
     data.buf_index = 0;
-    set_strings(strings, num_strings);
+    if (strings) {
+        set_strings(strings, num_strings);
+    }
     set_strings(default_strings, num_default_strings);
 
     log_info("Memory used for translation", 0, data.buf_index);
