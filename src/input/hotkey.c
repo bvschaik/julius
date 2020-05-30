@@ -153,6 +153,9 @@ static void add_definition(const hotkey_mapping *mapping)
         case HOTKEY_SAVE_FILE:
             def->action = &data.hotkey_state.save_file;
             break;
+        case HOTKEY_ROTATE_BUILDING:
+            def->action = &data.hotkey_state.rotate_building;
+            break;
         case HOTKEY_GO_TO_BOOKMARK_1:
             def->action = &data.hotkey_state.go_to_bookmark;
             def->value = 1;

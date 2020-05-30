@@ -23,6 +23,7 @@ typedef struct {
     int go_to_bookmark;
     int load_file;
     int save_file;
+    int rotate_building;
 } hotkeys;
 
 void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings);

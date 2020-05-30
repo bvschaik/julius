@@ -115,6 +115,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_OVERLAY_FIRE, "Show fire overlay"},
     {TR_HOTKEY_SHOW_OVERLAY_DAMAGE, "Damage overlay"},
     {TR_HOTKEY_SHOW_OVERLAY_CRIME, "Crime overlay"},
+    {TR_HOTKEY_ROTATE_BUILDING, "Rotate building"},
     {TR_HOTKEY_SHOW_OVERLAY_PROBLEMS, "Problems overlay"},
     {TR_HOTKEY_GO_TO_BOOKMARK_1, "Go to bookmark 1"},
     {TR_HOTKEY_GO_TO_BOOKMARK_2, "Go to bookmark 2"},
