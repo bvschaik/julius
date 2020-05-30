@@ -6,8 +6,10 @@
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
+#include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "map/grid.h"
@@ -15,6 +17,56 @@
 #include "window/city.h"
 
 #define ADVISOR_HEIGHT 26
+
+#define SCROLL_BUTTON_HEIGHT 26
+#define SCROLL_BUTTON_WIDTH 39
+#define SCROLL_DOT_SIZE 25
+#define TOTAL_BUTTON_HEIGHT (2 * SCROLL_BUTTON_HEIGHT + SCROLL_DOT_SIZE)
+
+static struct {
+    int button_delta;
+} data;
+
+
+
+static void text_scroll(int is_down, int num_lines)
+{
+    if (is_down) {
+        data.button_delta += 1;
+    }
+    else {
+        data.button_delta -= 1;
+    }
+    if (data.button_delta < 0) {
+        data.button_delta = 0;
+    }
+    int max_delta = formation_get_num_legions() - 6;
+    if (data.button_delta > max_delta) {
+        data.button_delta = max_delta;
+    }
+    if (data.button_delta < 0) {
+        data.button_delta = 0;
+    }
+
+
+
+}
+
+static void init()
+{
+    data.button_delta = 0;
+}
+
+
+
+static image_button image_button_scroll_up = {
+    0, 0, SCROLL_BUTTON_WIDTH, SCROLL_BUTTON_HEIGHT, IB_NORMAL,
+    GROUP_OK_CANCEL_SCROLL_BUTTONS, 8, text_scroll, button_none, 0, 1, 1
+};
+static image_button image_button_scroll_down = {
+    0, 0, SCROLL_BUTTON_WIDTH, SCROLL_BUTTON_HEIGHT, IB_NORMAL,
+    GROUP_OK_CANCEL_SCROLL_BUTTONS, 12, text_scroll, button_none, 1, 1, 1
+};
 
 static void button_go_to_legion(int legion_id, int param2);
 static void button_return_to_fort(int legion_id, int param2);
@@ -107,9 +159,8 @@ static int draw_background(void)
         lang_text_draw_multiline(51, 16, 64, 200, 496, FONT_NORMAL_GREEN);
         return ADVISOR_HEIGHT;
     }
-
-    for (int i = 0; i < num_legions; i++) {
-        const formation *m = formation_get(formation_for_legion(i + 1));
+    for (int i = 0; i < 6 && i < num_legions; i++) {
+        const formation *m = formation_get(formation_for_legion(i + 1 + data.button_delta));
         button_border_draw(38, 77 + 44 * i, 560, 40, 0);
         image_draw(image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id, 48, 82 + 44 * i);
         lang_text_draw(138, m->legion_id, 100, 83 + 44 * i, FONT_NORMAL_WHITE);
@@ -151,29 +202,40 @@ static int draw_background(void)
 
 static void draw_foreground(void)
 {
+
     num_legions = formation_get_num_legions();
-    for (int i = 0; i < num_legions; i++) {
+    for (int i = 0; i < 6 && i < num_legions; i++) {
         button_border_draw(400, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 1);
         button_border_draw(480, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 2);
         button_border_draw(560, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 3);
     }
+    image_buttons_draw(590, 10, &image_button_scroll_up, 1);
+    image_buttons_draw(590, 380, &image_button_scroll_down, 1);
 }
 
 static int handle_mouse(const mouse *m)
 {
+    if (image_buttons_handle_mouse(m, 590, 10, &image_button_scroll_up, 1, 0)) {
+        window_invalidate();
+        return 1;
+    }
+    if (image_buttons_handle_mouse(m, 590, 380, &image_button_scroll_down, 1, 0)) {
+        window_invalidate();
+        return 1;
+    }
     return generic_buttons_handle_mouse(m, 0, 0, fort_buttons, 3 * num_legions, &focus_button_id);
 }
 
 static void button_go_to_legion(int legion_id, int param2)
 {
-    const formation *m = formation_get(formation_for_legion(legion_id));
+    const formation *m = formation_get(formation_for_legion(legion_id+data.button_delta));
     city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
     window_city_show();
 }
 
 static void button_return_to_fort(int legion_id, int param2)
 {
-    formation *m = formation_get(formation_for_legion(legion_id));
+    formation *m = formation_get(formation_for_legion(legion_id+data.button_delta));
     if (!m->in_distant_battle) {
         formation_legion_return_home(m);
         window_invalidate();
@@ -182,7 +244,7 @@ static void button_return_to_fort(int legion_id, int param2)
 
 static void button_empire_service(int legion_id, int param2)
 {
-    int formation_id = formation_for_legion(legion_id);
+    int formation_id = formation_for_legion(legion_id+data.button_delta);
     formation_toggle_empire_service(formation_id);
     formation_calculate_figures();
     window_invalidate();
@@ -196,5 +258,6 @@ const advisor_window_type *window_advisor_military(void)
         handle_mouse,
         0
     };
+    init();
     return &window;
 }
