@@ -1,5 +1,6 @@
 #include "military.h"
-
+#include "building/barracks.h"
+#include "building/building.h"
 #include "building/count.h"
 #include "city/view.h"
 #include "core/calc.h"
@@ -10,11 +11,14 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "graphics/window.h"
 #include "sound/speech.h"
 #include "window/city.h"
 
 static void button_return_to_fort(int param1, int param2);
 static void button_layout(int index, int param2);
+static void button_priority(int index, int param2);
+
 
 static generic_button layout_buttons[] = {
     {19, 139, 84, 84, button_layout, button_none, 0, 0},
@@ -24,15 +28,39 @@ static generic_button layout_buttons[] = {
     {359, 139, 84, 84, button_layout, button_none, 4, 0}
 };
 
+static generic_button priority_buttons[] = {
+    {96, 0, 24, 24, button_priority, button_none, 0, 0},
+    {96, 24, 24, 24, button_priority, button_none, 1, 0},
+};
+
+
 static generic_button return_button[] = {
     {0, 0, 288, 32, button_return_to_fort, button_none, 0, 0},
 };
 
 static struct {
     int focus_button_id;
+    int focus_priority_button_id;
     int return_button_id;
+    int building_id;
     building_info_context *context_for_callback;
 } data;
+
+static void draw_priority_buttons(int x, int y, int buttons)
+{
+    uint8_t permission_selection_text[] = { 'x', 0 };
+    for (int i = 0; i < buttons; i++)
+    {
+        int x_adj = x + priority_buttons[i].x;
+        int y_adj = y + priority_buttons[i].y;
+        building* barracks = building_get(data.building_id);
+        int priority = building_barracks_get_priority(barracks);
+        button_border_draw(x_adj , y_adj, 20, 20, data.focus_priority_button_id == i + 1 ? 1 : 0);
+        if (priority == i ) {
+            text_draw_centered(permission_selection_text, x_adj + 1, y_adj + 4, 20, FONT_NORMAL_BLACK, 0);
+        }
+    }
+}
 
 void window_building_draw_wall(building_info_context *c)
 {
@@ -76,6 +104,7 @@ void window_building_draw_tower(building_info_context *c)
 void window_building_draw_barracks(building_info_context *c)
 {
     c->help_id = 37;
+    data.building_id = c->building_id;
     window_building_play_sound(c, "wavs/barracks.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
@@ -111,7 +140,28 @@ void window_building_draw_barracks(building_info_context *c)
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    lang_text_draw(50, 21, c->x_offset + 46, c->y_offset + 204, FONT_NORMAL_BLACK); // "Priority"
+    lang_text_draw(91, 0, c->x_offset + 46, c->y_offset + 224, FONT_NORMAL_BLACK); // "Tower"
+    lang_text_draw(89, 0, c->x_offset + 46, c->y_offset + 244, FONT_NORMAL_BLACK); // "Fort"
+    
 }
+
+void window_building_draw_barracks_foreground(building_info_context* c)
+{
+    draw_priority_buttons(c->x_offset + 46, c->y_offset + 224,2);
+
+}
+
+int window_building_handle_mouse_barracks(const mouse* m, building_info_context* c)
+{
+    if (generic_buttons_handle_mouse(m, c->x_offset + 46, c->y_offset + 224, priority_buttons, 2, &data.focus_priority_button_id))
+    {
+        window_invalidate();
+        return 1;
+    } 
+    return 0;
+}
+
 
 void window_building_draw_military_academy(building_info_context *c)
 {
@@ -431,4 +481,12 @@ static void button_layout(int index, int param2)
         case 4: sound_speech_play_file("wavs/cohort5.wav"); break;
     }
     window_city_military_show(data.context_for_callback->formation_id);
+}
+
+static void button_priority(int index, int param2)
+{
+    building* barracks = building_get(data.building_id);
+    if (index != barracks->subtype.barracks_priority) {
+        building_barracks_toggle_priority(barracks);
+    }
 }

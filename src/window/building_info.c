@@ -119,7 +119,6 @@ static int get_height_id(void)
             case BUILDING_TOWER:
             case BUILDING_FORT:
             case BUILDING_MILITARY_ACADEMY:
-            case BUILDING_BARRACKS:
             case BUILDING_MARKET:
             case BUILDING_GRANARY:
             case BUILDING_SHIPYARD:
@@ -146,6 +145,7 @@ static int get_height_id(void)
             case BUILDING_FOUNTAIN:
                 return 2;
 
+            case BUILDING_BARRACKS:
             case BUILDING_AMPHITHEATER:
                 return 3;
 
@@ -587,7 +587,9 @@ static void draw_foreground(void)
             } else {
                 window_building_draw_roadblock_foreground(&context);
             }
-        }
+        } else if (btype == BUILDING_BARRACKS) {
+		window_building_draw_barracks_foreground(&context);
+	}
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info_foreground(&context);
     }
@@ -633,6 +635,8 @@ static int handle_specific_building_info_mouse(const mouse *m)
             } else {
                 return window_building_handle_mouse_roadblock(m, &context);
             }
+	} else if (btype == BUILDING_BARRACKS) {
+            return window_building_handle_mouse_barracks(m, &context);
 	} else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
                 return window_building_handle_mouse_granary_orders(m, &context);

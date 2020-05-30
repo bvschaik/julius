@@ -1161,9 +1161,19 @@ static void spawn_figure_barracks(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             map_has_road_access(b->x, b->y, b->size, &road);
-            if (!building_barracks_create_tower_sentry(b, road.x, road.y)) {
-                building_barracks_create_soldier(b, road.x, road.y);
+            switch (b->subtype.barracks_priority)
+            {
+            case PRIORITY_FORT:
+                if (!building_barracks_create_soldier(b, road.x, road.y)) {
+                    building_barracks_create_tower_sentry(b, road.x, road.y);
+                }
+                break;
+            default:
+                if (!building_barracks_create_tower_sentry(b, road.x, road.y)) {
+                    building_barracks_create_soldier(b, road.x, road.y);
+                }
             }
+
         }
     }
 }
