@@ -39,7 +39,7 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
 {
     map_point dst;
     int understaffed_storages = 0;
-    
+
     // priority 1: warehouse if resource is on stockpile
     int dst_building_id = building_warehouse_for_storing(0, f->x, f->y,
         b->output_resource_id, b->distance_from_entry, road_network_id,
@@ -179,7 +179,7 @@ void figure_cartpusher_action(figure *f)
     int road_network_id = map_road_network_get(f->grid_offset);
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     building *b = building_get(f->building_id);
-    
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
@@ -439,7 +439,7 @@ void figure_warehouseman_action(figure *f)
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
     int road_network_id = map_road_network_get(f->grid_offset);
-    
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);

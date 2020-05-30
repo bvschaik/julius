@@ -130,7 +130,7 @@ static void merge(building *b)
     if (HOUSE_IMAGE[b->subtype.house_level].offset) {
         image_id += 1;
     }
-    
+
     map_building_tiles_remove(b->id, b->x, b->y);
     b->x = merge_data.x;
     b->y = merge_data.y;

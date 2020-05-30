@@ -70,7 +70,7 @@ static int draw_background(void)
 
     graphics_draw_horizontal_line(280, 350, 198, COLOR_BLACK);
     graphics_draw_horizontal_line(420, 490, 198, COLOR_BLACK);
-    
+
     draw_row(60, 10, 203, last_year->income.total, this_year->income.total);
 
     // expenses
@@ -90,7 +90,7 @@ static int draw_background(void)
 
     graphics_draw_horizontal_line(280, 350, 330, COLOR_BLACK);
     graphics_draw_horizontal_line(420, 490, 330, COLOR_BLACK);
-    
+
     draw_row(60, 17, 335, last_year->expenses.total, this_year->expenses.total);
     draw_row(60, 18, 358, last_year->net_in_out, this_year->net_in_out);
     draw_row(60, 19, 381, last_year->balance, this_year->balance);
@@ -105,8 +105,7 @@ static void draw_foreground(void)
 
 static int handle_mouse(const mouse *m)
 {
-    arrow_button_focus = arrow_buttons_handle_mouse(m, 0, 0, arrow_buttons_taxes, 2);
-    return arrow_button_focus;
+    return arrow_buttons_handle_mouse(m, 0, 0, arrow_buttons_taxes, 2, &arrow_button_focus);
 }
 
 static void button_change_taxes(int is_down, int param2)

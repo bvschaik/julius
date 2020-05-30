@@ -323,7 +323,7 @@ static int has_adjacent_building_type(int part_offset, int building_type)
 {
     int grid_offset = part_offset / 2;
     const int adjacent_tiles[] = { -162, 1, 162, -1 };
-    
+
     for (int i = 0; i < 4; ++i) {
         int adjacent_offset = grid_offset + adjacent_tiles[i];
         if (adjacent_offset < 0 || adjacent_offset >= 162 * 162) {

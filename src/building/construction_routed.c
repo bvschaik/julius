@@ -91,7 +91,7 @@ int building_construction_place_road(int measure_only, int x_start, int y_start,
     if (map_terrain_is(end_offset, forbidden_terrain_mask)) {
         return 0;
     }
-    
+
     int items_placed = 0;
     if (map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, x_start, y_start) &&
             place_routed_building(x_start, y_start, x_end, y_end, ROUTED_BUILDING_ROAD, &items_placed)) {

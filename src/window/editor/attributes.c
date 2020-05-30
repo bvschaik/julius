@@ -20,7 +20,7 @@
 #include "scenario/property.h"
 #include "widget/input_box.h"
 #include "widget/minimap.h"
-#include "widget/sidebar_editor.h"
+#include "widget/sidebar/editor.h"
 #include "window/editor/allowed_buildings.h"
 #include "window/editor/demand_changes.h"
 #include "window/editor/invasions.h"
@@ -135,7 +135,7 @@ static void draw_foreground(void)
 
     lang_text_draw(44, 42, 32, 245, FONT_NORMAL_BLACK);
     button_border_draw(212, 236, 250, 30, data.focus_button_id == 5);
-    
+
     editor_invasion invasion;
     scenario_editor_invasion_get(0, &invasion);
     if (invasion.type) {
@@ -174,7 +174,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     const mouse *m_dialog = mouse_in_dialog(m);
     if (input_box_handle_mouse(m_dialog, &scenario_description_input) ||
         generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 10, &data.focus_button_id) ||
-        arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2) ||
+        arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2, 0) ||
         widget_sidebar_editor_handle_mouse_attributes(m)) {
         return;
     }

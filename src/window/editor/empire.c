@@ -296,40 +296,29 @@ static void determine_selected_object(const mouse *m)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
+    pixel_offset position;
+    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
+        empire_scroll_map(position.x, position.y);
+    }
     if (h->toggle_editor_battle_info) {
         data.show_battle_objects = !data.show_battle_objects;
     }
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
-            pixel_offset position;
             if (t->has_started) {
                 data.is_scrolling = 1;
-                empire_get_scroll(&position.x, &position.y);
-                scroll_start_touch_drag(&position, t->start_point);
-            }
-            if (data.is_scrolling && t->has_moved) {
-                touch_coords original = scroll_get_original_touch_position();
-                if (scroll_move_touch_drag(original.x, original.y, t->current_point.x, t->current_point.y, &position)) {
-                    empire_set_scroll(position.x, position.y);
-                }
+                scroll_drag_start(1);
             }
         }
         if (t->has_ended) {
             data.is_scrolling = 0;
             data.finished_scroll = !touch_was_click(t);
-            scroll_end_touch_drag(1);
-        }
-    }
-    pixel_offset position;
-    scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE);
-    if (!empire_scroll_map(position.x, position.y)) {
-        if (scroll_decay(&position)) {
-            empire_set_scroll(position.x, position.y);
+            scroll_drag_end();
         }
     }
     data.focus_button_id = 0;
-    if (!arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2)) {
+    if (!arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2, 0)) {
         if (!generic_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, generic_button_ok, 1, &data.focus_button_id)) {
             determine_selected_object(m);
             int selected_object = empire_selected_object();

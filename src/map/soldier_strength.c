@@ -16,7 +16,7 @@ void map_soldier_strength_add(int x, int y, int radius, int amount)
 {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, 1, radius, &x_min, &y_min, &x_max, &y_max);
-    
+
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = map_grid_offset(xx, yy);

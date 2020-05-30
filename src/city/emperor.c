@@ -41,7 +41,7 @@ static void update_debt_state(void)
         int rescue_loan = difficulty_adjust_money(scenario_rescue_loan());
         city_finance_process_donation(rescue_loan);
         city_finance_calculate_totals();
-        
+
         city_data.emperor.debt_state = 1;
         city_data.emperor.months_in_debt = 0;
         city_message_post(1, MESSAGE_CITY_IN_DEBT, 0, 0);

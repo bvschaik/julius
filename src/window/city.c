@@ -22,8 +22,8 @@
 #include "scenario/criteria.h"
 #include "widget/city.h"
 #include "widget/city_with_overlay.h"
-#include "widget/sidebar.h"
 #include "widget/top_menu.h"
+#include "widget/sidebar/city.h"
 #include "window/advisors.h"
 #include "window/file_dialog.h"
 
@@ -41,7 +41,7 @@ static void clear_city_view(int force)
 static void draw_background(void)
 {
     clear_city_view(1);
-    widget_sidebar_draw_background();
+    widget_sidebar_city_draw_background();
     widget_top_menu_draw(1);
 }
 
@@ -106,7 +106,7 @@ static void draw_foreground(void)
     clear_city_view(0);
     widget_top_menu_draw(0);
     window_city_draw();
-    widget_sidebar_draw_foreground();
+    widget_sidebar_city_draw_foreground();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         draw_paused_and_time_left();
         draw_cancel_construction();
@@ -121,7 +121,7 @@ static void draw_foreground_military(void)
 {
     widget_top_menu_draw(0);
     window_city_draw();
-    widget_sidebar_draw_foreground_military();
+    widget_sidebar_city_draw_foreground_military();
     draw_paused_and_time_left();
 }
 
@@ -234,7 +234,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         if (widget_top_menu_handle_input(m, h)) {
             return;
         }
-        if (widget_sidebar_handle_mouse(m)) {
+        if (widget_sidebar_city_handle_mouse(m)) {
             return;
         }
     }
@@ -251,7 +251,7 @@ static void get_tooltip(tooltip_context *c)
 {
     int text_id = widget_top_menu_get_tooltip_text(c);
     if (!text_id) {
-        text_id = widget_sidebar_get_tooltip_text();
+        text_id = widget_sidebar_city_get_tooltip_text();
     }
     if (text_id) {
         c->type = TOOLTIP_BUTTON;

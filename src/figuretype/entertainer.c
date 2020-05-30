@@ -18,7 +18,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
     int road_network = map_road_network_get(map_grid_offset(x,y));
 
     building_list_small_clear();
-    
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {

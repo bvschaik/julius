@@ -12,7 +12,7 @@ static struct {
 
     int capture_numeric;
     void (*capture_numeric_callback)(int);
-    
+
     uint8_t *text;
     int cursor_position;
     int length;
@@ -21,7 +21,7 @@ static struct {
 
     int offset_start;
     int offset_end;
-    
+
     int box_width;
     font_t font;
 } data;

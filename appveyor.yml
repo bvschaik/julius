@@ -88,8 +88,8 @@ deploy:
   api_key:
     secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
   subject: bvschaik
-  repo: julius
-  package: windows-unstable
+  repo: julius-dev
+  package: windows
   version: $(DEPLOY_VERSION)
   artifact: julius-dist
   publish: true
@@ -103,7 +103,7 @@ deploy:
     secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
   subject: bvschaik
   repo: julius
-  package: windows-release
+  package: windows
   version: $(DEPLOY_VERSION)
   artifact: julius-dist
   publish: true

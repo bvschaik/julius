@@ -13,7 +13,7 @@
 #include "input/input.h"
 #include "scenario/property.h"
 #include "widget/city.h"
-#include "widget/sidebar.h"
+#include "widget/sidebar/city.h"
 #include "window/city.h"
 
 static void button_menu_index(int param1, int param2);
@@ -199,7 +199,7 @@ static int handle_build_submenu(const mouse *m)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (handle_build_submenu(m) ||
-        widget_sidebar_handle_mouse_build_menu(m)) {
+        widget_sidebar_city_handle_mouse_build_menu(m)) {
         return;
     }
     if (input_go_back_requested(m, h)) {

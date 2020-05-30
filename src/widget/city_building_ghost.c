@@ -73,6 +73,8 @@ static const int FORT_GROUND_GRID_OFFSETS[4] = {OFFSET(3,-1), OFFSET(4,-1), OFFS
 static const int FORT_GROUND_X_VIEW_OFFSETS[4] = {120, 90, -120, -90};
 static const int FORT_GROUND_Y_VIEW_OFFSETS[4] = {30, -75, -60, 45};
 
+static const int RESERVOIR_GRID_OFFSETS[4] = {OFFSET(-1,-1), OFFSET(1,-1), OFFSET(1,1), OFFSET(-1,1)};
+
 static const int HIPPODROME_X_VIEW_OFFSETS[4] = {150, 150, -150, -150};
 static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
 
@@ -352,6 +354,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     int draw_later = 0;
     int x_start, y_start, offset;
     int has_water = map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER);
+    int orientation_index = city_view_orientation() / 2;
     if (building_construction_in_progress()) {
         building_construction_get_view_position(&x_start, &y_start);
         y_start -= 30;
@@ -389,8 +392,8 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             }
             if (!draw_later) {
                 if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-                    city_view_foreach_tile_in_range(offset + map_grid_delta(-1,-1), 3, 10, draw_first_reservoir_range);
-                    city_view_foreach_tile_in_range(tile->grid_offset + map_grid_delta(-1,-1), 3, 10, draw_second_reservoir_range);
+                    city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
+                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
                 }
                 draw_single_reservoir(x_start, y_start, has_water);
             }
@@ -408,9 +411,9 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     } else {
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!building_construction_in_progress() || draw_later)) {
             if (draw_later) {
-                city_view_foreach_tile_in_range(offset + map_grid_delta(-1,-1), 3, 10, draw_first_reservoir_range);
+                city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
             }
-            city_view_foreach_tile_in_range(tile->grid_offset + map_grid_delta(-1,-1), 3, 10, draw_second_reservoir_range);
+            city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
         }
         draw_single_reservoir(x, y, has_water);
         if (draw_later) {
@@ -429,7 +432,10 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
         }
     } else {
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-            blocked = map_get_adjacent_road_tiles_for_aqueduct(grid_offset) == 2 ? 0 : 1;
+            blocked = !map_is_straight_road_for_aqueduct(grid_offset);
+            if (map_property_is_plaza_or_earthquake(grid_offset)) {
+                blocked = 1;
+            }
         } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
             blocked = 1;
         }
@@ -532,19 +538,19 @@ static void draw_bridge(const map_tile *tile, int x, int y, building_type type)
     }
     int x_delta, y_delta;
     switch (dir) {
-        case DIR_0_TOP: 
+        case DIR_0_TOP:
             x_delta = 29;
             y_delta = -15;
             break;
-        case DIR_2_RIGHT: 
+        case DIR_2_RIGHT:
             x_delta = 29;
             y_delta = 15;
             break;
-        case DIR_4_BOTTOM: 
+        case DIR_4_BOTTOM:
             x_delta = -29;
             y_delta = 15;
             break;
-        case DIR_6_LEFT: 
+        case DIR_6_LEFT:
             x_delta = -29;
             y_delta = -15;
             break;
@@ -590,7 +596,7 @@ static void draw_fort(const map_tile *tile, int x, int y)
     int grid_offset_ground = grid_offset_fort + FORT_GROUND_GRID_OFFSETS[orientation_index];
     int blocked_tiles_fort[MAX_TILES];
     int blocked_tiles_ground[MAX_TILES];
-    
+
     blocked += is_blocked_for_building(grid_offset_fort, num_tiles_fort, blocked_tiles_fort);
     blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
 
@@ -627,7 +633,7 @@ static void draw_hippodrome(const map_tile *tile, int x, int y)
     int grid_offset1 = tile->grid_offset;
     int grid_offset2 = grid_offset1 + map_grid_delta(5, 0);
     int grid_offset3 = grid_offset1 + map_grid_delta(10, 0);
-    
+
     int blocked_tiles1[25];
     int blocked_tiles2[25];
     int blocked_tiles3[25];

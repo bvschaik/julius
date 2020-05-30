@@ -46,7 +46,12 @@ void platform_touch_start(SDL_TouchFingerEvent *event)
     }
 }
 
-void platform_touch_update(SDL_TouchFingerEvent *event, int has_ended)
+void platform_touch_move(SDL_TouchFingerEvent *event)
 {
-    touch_update(get_touch_index(event->fingerId), get_touch_coordinates(event->x, event->y), get_touch_coordinates(event->dx, event->dy), event->timestamp, has_ended);
+    touch_move(get_touch_index(event->fingerId), get_touch_coordinates(event->x, event->y), event->timestamp);
+}
+
+void platform_touch_end(SDL_TouchFingerEvent *event)
+{
+    touch_end(get_touch_index(event->fingerId), event->timestamp);
 }

@@ -1,5 +1,6 @@
 #include "core/encoding.h"
 
+#include "core/encoding_korean.h"
 #include "core/encoding_multibyte.h"
 #include "core/locale.h"
 #include "core/string.h"
@@ -414,12 +415,14 @@ static const letter_code HIGH_TO_UTF8_CYRILLIC[HIGH_CHAR_COUNT] = {
     {0xff, 2, {0xd1, 0x8f}},
 };
 
-static encoding_type encoding;
-static const letter_code *to_utf8_table;
-static from_utf8_lookup from_utf8_table[HIGH_CHAR_COUNT];
-static from_utf8_lookup from_utf8_decomposed_table[HIGH_CHAR_COUNT];
-static int utf8_table_size;
-static int decomposed_table_size;
+static struct {
+    encoding_type encoding;
+    const letter_code *to_utf8_table;
+    from_utf8_lookup from_utf8_table[HIGH_CHAR_COUNT];
+    from_utf8_lookup from_utf8_decomposed_table[HIGH_CHAR_COUNT];
+    int utf8_table_size;
+    int decomposed_table_size;
+} data;
 
 static uint32_t calculate_utf8_value(const uint8_t *bytes, int length)
 {
@@ -448,44 +451,45 @@ static int compare_utf8_lookup(const void *a, const void *b)
 
 static void build_reverse_lookup_table(void)
 {
-    if (!to_utf8_table) {
-        utf8_table_size = 0;
+    if (!data.to_utf8_table) {
+        data.utf8_table_size = 0;
         return;
     }
     for (int i = 0; i < HIGH_CHAR_COUNT; i++) {
-        const letter_code *code = &to_utf8_table[i];
-        from_utf8_table[i].code = code;
-        from_utf8_table[i].utf8 = calculate_utf8_value(code->utf8_value, code->bytes);
+        const letter_code *code = &data.to_utf8_table[i];
+        data.from_utf8_table[i].code = code;
+        data.from_utf8_table[i].utf8 = calculate_utf8_value(code->utf8_value, code->bytes);
     }
-    utf8_table_size = HIGH_CHAR_COUNT;
-    qsort(from_utf8_table, utf8_table_size, sizeof(from_utf8_lookup), compare_utf8_lookup);
+    data.utf8_table_size = HIGH_CHAR_COUNT;
+    qsort(data.from_utf8_table, data.utf8_table_size, sizeof(from_utf8_lookup), compare_utf8_lookup);
 }
 
 static void build_decomposed_lookup_table(void)
 {
-    if (!to_utf8_table) {
-        decomposed_table_size = 0;
+    if (!data.to_utf8_table) {
+        data.decomposed_table_size = 0;
         return;
     }
     int index = 0;
     for (int i = 0; i < HIGH_CHAR_COUNT; i++) {
-        const letter_code *code = &to_utf8_table[i];
+        const letter_code *code = &data.to_utf8_table[i];
         if (code->bytes_decomposed > 0) {
-            from_utf8_decomposed_table[index].code = code;
-            from_utf8_decomposed_table[index].utf8 = calculate_utf8_value(code->utf8_decomposed, code->bytes_decomposed);
+            data.from_utf8_decomposed_table[index].code = code;
+            data.from_utf8_decomposed_table[index].utf8 =
+                calculate_utf8_value(code->utf8_decomposed, code->bytes_decomposed);
             index++;
         }
     }
-    decomposed_table_size = index;
-    qsort(from_utf8_decomposed_table, decomposed_table_size, sizeof(from_utf8_lookup), compare_utf8_lookup);
+    data.decomposed_table_size = index;
+    qsort(data.from_utf8_decomposed_table, data.decomposed_table_size, sizeof(from_utf8_lookup), compare_utf8_lookup);
 }
 
 static const letter_code* get_letter_code_for_internal(uint8_t c)
 {
-    if (c < 0x80 || !to_utf8_table) {
+    if (c < 0x80 || !data.to_utf8_table) {
         return NULL;
     }
-    return &to_utf8_table[c - 0x80];
+    return &data.to_utf8_table[c - 0x80];
 }
 
 static int get_utf8_code(const char *c, int *num_bytes)
@@ -552,7 +556,7 @@ static const letter_code* get_letter_code_for_utf8(const char *c, int *num_bytes
     if (key.utf8 == 0) {
         return NULL;
     }
-    return search_utf8_table(&key, from_utf8_table, utf8_table_size);
+    return search_utf8_table(&key, data.from_utf8_table, data.utf8_table_size);
 }
 
 static const letter_code* get_letter_code_for_combining_utf8(const char *prev_char, const char *combining_char)
@@ -569,7 +573,7 @@ static const letter_code* get_letter_code_for_combining_utf8(const char *prev_ch
     code |= prev_code;
 
     from_utf8_lookup key = {code};
-    return search_utf8_table(&key, from_utf8_decomposed_table, decomposed_table_size);
+    return search_utf8_table(&key, data.from_utf8_decomposed_table, data.decomposed_table_size);
 }
 
 encoding_type encoding_determine(language_type language)
@@ -580,29 +584,30 @@ encoding_type encoding_determine(language_type language)
     // - Windows-950 (Big5) is used in Traditional Chinese only
     // - Windows-1252 (Western Europe) is used in all other languages
     if (language == LANGUAGE_POLISH) {
-        to_utf8_table = HIGH_TO_UTF8_EASTERN;
-        encoding = ENCODING_EASTERN_EUROPE;
+        data.to_utf8_table = HIGH_TO_UTF8_EASTERN;
+        data.encoding = ENCODING_EASTERN_EUROPE;
     } else if (language == LANGUAGE_RUSSIAN) {
-        to_utf8_table = HIGH_TO_UTF8_CYRILLIC;
-        encoding = ENCODING_CYRILLIC;
+        data.to_utf8_table = HIGH_TO_UTF8_CYRILLIC;
+        data.encoding = ENCODING_CYRILLIC;
     } else if (language == LANGUAGE_TRADITIONAL_CHINESE) {
-        to_utf8_table = NULL;
-        encoding = ENCODING_TRADITIONAL_CHINESE;
+        data.to_utf8_table = NULL;
+        data.encoding = ENCODING_TRADITIONAL_CHINESE;
     } else if (language == LANGUAGE_KOREAN) {
-        to_utf8_table = NULL;
-        encoding = ENCODING_KOREAN;
+        encoding_korean_init();
+        data.to_utf8_table = NULL;
+        data.encoding = ENCODING_KOREAN;
     } else { // assume Western encoding
-        to_utf8_table = HIGH_TO_UTF8_DEFAULT;
-        encoding = ENCODING_WESTERN_EUROPE;
+        data.to_utf8_table = HIGH_TO_UTF8_DEFAULT;
+        data.encoding = ENCODING_WESTERN_EUROPE;
     }
     build_reverse_lookup_table();
     build_decomposed_lookup_table();
-    return encoding;
+    return data.encoding;
 }
 
 encoding_type encoding_get(void)
 {
-    return encoding;
+    return data.encoding;
 }
 
 static int is_ascii(const char *utf8_char)
@@ -617,12 +622,16 @@ int encoding_can_display(const char *utf8_char)
 
 void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int decomposed)
 {
-    if (!to_utf8_table) {
-        encoding_multibyte_to_utf8(encoding, input, output, output_length);
+    if (!data.to_utf8_table) {
+        if (data.encoding == ENCODING_KOREAN) {
+            encoding_korean_to_utf8(input, output, output_length);
+        } else {
+            encoding_multibyte_to_utf8(data.encoding, input, output, output_length);
+        }
         return;
     }
     const char *max_output = &output[output_length - 1];
-    
+
     while (*input && output < max_output) {
         uint8_t c = *input;
         if (c < 0x80) {
@@ -657,6 +666,15 @@ void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int
 
 void encoding_from_utf8(const char *input, uint8_t *output, int output_length)
 {
+    if (!data.to_utf8_table) {
+        if (data.encoding == ENCODING_KOREAN) {
+            encoding_korean_from_utf8(input, output, output_length);
+        } else {
+            //encoding_multibyte_from_utf8(data.encoding, input, output, output_length);
+        }
+        return;
+    }
+
     const uint8_t *max_output = &output[output_length - 1];
 
     const char *prev_input = input;

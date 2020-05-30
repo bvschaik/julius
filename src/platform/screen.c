@@ -37,7 +37,7 @@ static int scale_percentage = 100;
 
 static int scale_logical_to_pixels(int logical_value)
 {
-    return logical_value * scale_percentage / 100; 
+    return logical_value * scale_percentage / 100;
 }
 
 static int scale_pixels_to_logical(int pixel_value)

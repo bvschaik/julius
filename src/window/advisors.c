@@ -181,7 +181,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
     image_buttons_handle_mouse(m_dialog, 0, 16 * (advisor_height - 2), &help_button, 1, &button_id);
     if (button_id) {
         focus_button_id = -1;
-        return;
     }
     if (current_advisor_window->handle_mouse && current_advisor_window->handle_mouse(m_dialog)) {
         return;

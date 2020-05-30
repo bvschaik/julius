@@ -46,7 +46,7 @@ static image_button image_button_advisor[] = {
     {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
 };
 static generic_button generic_button_open_trade[] = {
-    {50, 61, 400, 26, button_open_trade, button_none, 0, 0}
+    {30, 61, 440, 26, button_open_trade, button_none, 0, 0}
 };
 
 static struct {
@@ -189,10 +189,10 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             index += 32;
         }
         index = lang_text_draw_amount(8, 0, city->cost_to_open,
-                                           x_offset + 60, y_offset + 73, FONT_NORMAL_GREEN);
-        lang_text_draw(47, 6, x_offset + index + 60, y_offset + 73, FONT_NORMAL_GREEN);
+            x_offset + 40, y_offset + 73, FONT_NORMAL_GREEN);
+        lang_text_draw(47, 6, x_offset + index + 40, y_offset + 73, FONT_NORMAL_GREEN);
         int image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1 - city->is_sea_trade;
-        image_draw(image_id, x_offset + 400, y_offset + 65 + 2 * city->is_sea_trade);
+        image_draw(image_id, x_offset + 430, y_offset + 65 + 2 * city->is_sea_trade);
     }
 }
 
@@ -393,7 +393,7 @@ static void draw_panel_buttons(const empire_city *city)
     image_buttons_draw(data.x_max - 44, data.y_max - 100, image_button_advisor, 1);
     if (city) {
         if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
-            button_border_draw((data.x_min + data.x_max - 500) / 2 + 50, data.y_max - 44, 400, 26, data.selected_button);
+            button_border_draw((data.x_min + data.x_max - 500) / 2 + 30, data.y_max - 44, 440, 26, data.selected_button);
         }
     }
 }
@@ -433,33 +433,22 @@ static void determine_selected_object(const mouse *m)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
+    pixel_offset position;
+    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
+        empire_scroll_map(position.x, position.y);
+    }
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
-            pixel_offset position;
             if (t->has_started) {
                 data.is_scrolling = 1;
-                empire_get_scroll(&position.x, &position.y);
-                scroll_start_touch_drag(&position, t->start_point);
-            }
-            if (data.is_scrolling && t->has_moved) {
-                touch_coords original = scroll_get_original_touch_position();
-                if (scroll_move_touch_drag(original.x, original.y, t->current_point.x, t->current_point.y, &position)) {
-                    empire_set_scroll(position.x, position.y);
-                }
+                scroll_drag_start(1);
             }
         }
         if (t->has_ended) {
             data.is_scrolling = 0;
             data.finished_scroll = !touch_was_click(t);
-            scroll_end_touch_drag(1);
-        }
-    }
-    pixel_offset position;
-    scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE);
-    if (!empire_scroll_map(position.x, position.y)) {
-        if (scroll_decay(&position)) {
-            empire_set_scroll(position.x, position.y);
+            scroll_drag_end();
         }
     }
     data.focus_button_id = 0;
@@ -475,9 +464,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
     image_buttons_handle_mouse(m, data.x_max - 44, data.y_max - 100, image_button_advisor, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 3;
-    }
-    if (data.focus_button_id) {
-        return;
     }
     determine_selected_object(m);
     int selected_object = empire_selected_object();

@@ -14,7 +14,7 @@ static void arrow_button_gods(int param1, int param2);
 static arrow_button arrow_buttons[] = {
     {0, 54, 15, 24, arrow_button_difficulty, 0, 0},
     {24, 54, 17, 24, arrow_button_difficulty, 1, 0},
-    {0, 102, 21, 24, arrow_button_gods, 2, 0}
+    {24, 102, 21, 24, arrow_button_gods, 2, 0}
 };
 
 static struct {
@@ -29,8 +29,8 @@ static void draw_foreground(void)
 
     lang_text_draw_centered(153, 0, 48, 94, 384, FONT_LARGE_BLACK);
 
-    lang_text_draw_centered(153, setting_difficulty() + 1, 80, 142, 224, FONT_NORMAL_BLACK);
-    lang_text_draw_centered(153, setting_gods_enabled() ? 7 : 6, 80, 190, 224, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(153, setting_difficulty() + 1, 70, 142, 244, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(153, setting_gods_enabled() ? 7 : 6, 70, 190, 244, FONT_NORMAL_BLACK);
     arrow_buttons_draw(288, 80, arrow_buttons, 3);
     lang_text_draw_centered(153, 8, 48, 246, 384, FONT_NORMAL_BLACK);
 
@@ -39,7 +39,7 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrow_buttons, 4)) {
+    if (arrow_buttons_handle_mouse(mouse_in_dialog(m), 288, 80, arrow_buttons, 4, 0)) {
         return;
     }
     if (input_go_back_requested(m, h)) {

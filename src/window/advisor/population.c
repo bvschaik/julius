@@ -282,7 +282,7 @@ static int draw_background(void)
     }
 
     image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
-    
+
     int big_text, top_text, bot_text;
     void (*big_graph)(int, int, int);
     void (*top_graph)(int, int, int);

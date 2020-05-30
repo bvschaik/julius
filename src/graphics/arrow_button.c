@@ -36,7 +36,7 @@ static int get_button(const mouse *m, int x, int y, arrow_button *buttons, int n
     return 0;
 }
 
-int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *buttons, int num_buttons)
+int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *buttons, int num_buttons, int *focus_button_id)
 {
     static time_millis last_time = 0;
 
@@ -58,6 +58,9 @@ int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *butto
         }
     }
     int button_id = get_button(m, x, y, buttons, num_buttons);
+    if (focus_button_id) {
+        *focus_button_id = button_id;
+    }
     if (!button_id) {
         return 0;
     }
@@ -81,6 +84,7 @@ int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *butto
             }
             btn->left_click_handler(btn->parameter1, btn->parameter2);
         }
+        return button_id;
     }
-    return button_id;
+    return 0;
 }

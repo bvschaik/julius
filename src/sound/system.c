@@ -184,7 +184,7 @@ static void correct_channel_filenames(void)
 void sound_system_init(void)
 {
     correct_channel_filenames();
-    
+
     sound_device_open();
     sound_device_init_channels(SOUND_CHANNEL_MAX, channel_filenames);
 

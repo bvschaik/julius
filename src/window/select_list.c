@@ -119,7 +119,7 @@ static void draw_foreground(void)
             draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
         }
         for (int i = 0; i < data.num_items - max_first; i++) {
-            draw_item(i + max_first, 205, 11 + 20 * i, max_first + i + 1 == data.focus_button_id);
+            draw_item(i + max_first, 205, 11 + 20 * i, MAX_ITEMS_PER_LIST + i + 1 == data.focus_button_id);
         }
     } else {
         outer_panel_draw(data.x, data.y, 13, (20 * data.num_items + 24) / 16);
@@ -140,7 +140,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
         generic_buttons_handle_mouse(m, data.x, data.y, buttons_list2, data.num_items - items_first, &second_id);
         if (second_id > 0) {
             data.focus_button_id = second_id + MAX_ITEMS_PER_LIST;
-            return;
         }
     } else {
         if (generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, data.num_items, &data.focus_button_id)) {

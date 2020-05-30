@@ -180,10 +180,10 @@ void building_warehouse_space_add_import(building *space, int resource)
     city_resource_add_to_warehouse(resource, 1);
     space->loads_stored++;
     space->subtype.warehouse_resource_id = resource;
-    
+
     int price = trade_price_buy(resource);
     city_finance_process_import(price);
-    
+
     building_warehouse_space_set_image(space, resource);
 }
 
@@ -194,10 +194,10 @@ void building_warehouse_space_remove_export(building *space, int resource)
     if (space->loads_stored <= 0) {
         space->subtype.warehouse_resource_id = RESOURCE_NONE;
     }
-    
+
     int price = trade_price_sell(resource);
     city_finance_process_export(price);
-    
+
     building_warehouse_space_set_image(space, resource);
 }
 
@@ -495,12 +495,11 @@ static int contains_non_stockpiled_food(building *space, const int *resources)
     return 0;
 }
 
-// 0 = getting resource, >0 = resource to deliver
 int building_warehouse_determine_worker_task(building *warehouse, int *resource)
 {
     int pct_workers = calc_percentage(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
     if (pct_workers < 50) {
-        return -1;
+        return WAREHOUSE_TASK_NONE;
     }
     const building_storage *s = building_storage_get(warehouse->storage_id);
     building *space;

@@ -202,11 +202,11 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
             int num_bytes = 1;
             int letter_id = font_letter_id(def, str, &num_bytes);
             if (letter_id < 0) {
-                x += def->space_width_draw;
+                x += def->space_width;
             } else {
                 if (num_bytes > 1 && start_link) {
                     // add space before links in multibyte charsets
-                    x += def->space_width_draw;
+                    x += def->space_width;
                     start_link = 0;
                 }
                 const image *img = image_letter(letter_id);
@@ -214,7 +214,7 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
                     int height = def->image_y_offset(*str, img->height, def->line_height);
                     image_draw_letter(def->font, letter_id, x, y - height, color);
                 }
-                x += img->width + def->letter_spacing_draw;
+                x += img->width + def->letter_spacing;
             }
             if (num_link_chars > 0) {
                 num_link_chars -= num_bytes;

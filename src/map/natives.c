@@ -98,7 +98,7 @@ void map_natives_init(void)
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset)) {
                 continue;
             }
-            
+
             int random_bit = map_random_get(grid_offset) & 1;
             int type;
             int image_id = map_image_at(grid_offset);
@@ -146,7 +146,7 @@ void map_natives_init(void)
             }
         }
     }
-    
+
     determine_meeting_center();
 }
 
@@ -162,7 +162,7 @@ void map_natives_init_editor(void)
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset)) {
                 continue;
             }
-            
+
             int type;
             int image_id = map_image_at(grid_offset);
             if (image_id == image_hut) {

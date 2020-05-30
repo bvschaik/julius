@@ -135,7 +135,7 @@ int building_granary_remove_for_getting_deliveryman(building *src, building *dst
 {
     const building_storage *s_src = building_storage_get(src->storage_id);
     const building_storage *s_dst = building_storage_get(dst->storage_id);
-    
+
     int max_amount = 0;
     int max_resource = 0;
     if (building_granary_is_getting(RESOURCE_WHEAT,dst) && !building_granary_is_gettable(RESOURCE_WHEAT,src)) {

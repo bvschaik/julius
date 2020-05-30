@@ -276,10 +276,10 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             platform_touch_start(&event->tfinger);
             break;
         case SDL_FINGERMOTION:
-            platform_touch_update(&event->tfinger, 0);
+            platform_touch_move(&event->tfinger);
             break;
         case SDL_FINGERUP:
-            platform_touch_update(&event->tfinger, 1);
+            platform_touch_end(&event->tfinger);
             break;
 
         case SDL_QUIT:
@@ -371,6 +371,7 @@ static const char* ask_for_data_dir(int again)
 {
     if (again) {
         int result = tinyfd_messageBox("Wrong folder selected",
+            "Julius requires the original files from Caesar 3 to run.\n\n"
             "The selected folder is not a proper Caesar 3 folder.\n\n"
             "Press OK to select another folder or Cancel to exit.",
             "okcancel", "warning", 1);
@@ -378,7 +379,7 @@ static const char* ask_for_data_dir(int again)
             return NULL;
         }
     }
-    return tinyfd_selectFolderDialog("Julius requires the original files from Caesar 3 to run.\nPlease select your Caesar 3 folder.", NULL);
+    return tinyfd_selectFolderDialog("Please select your Caesar 3 folder", NULL);
 }
 #endif
 

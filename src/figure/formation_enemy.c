@@ -393,19 +393,19 @@ static void update_enemy_movement(formation *m, int roman_distance)
             switch (m->enemy_legion_index) {
                 case 0:
                 case 1:
-                    regroup_duration = 2; 
-                    advance_duration = 4; 
+                    regroup_duration = 2;
+                    advance_duration = 4;
                     halt_duration = 2;
                     break;
                 case 2:
                 case 3:
-                    regroup_duration = 2; 
-                    advance_duration = 5; 
+                    regroup_duration = 2;
+                    advance_duration = 5;
                     halt_duration = 3;
                     break;
                 default:
-                    regroup_duration = 2; 
-                    advance_duration = 6; 
+                    regroup_duration = 2;
+                    advance_duration = 6;
                     halt_duration = 4;
                     break;
             }

@@ -110,7 +110,7 @@ static void set_city_message(int year, int month,
 
 static void init(int text_id, void (*background_callback)(void))
 {
-    scroll_end_touch_drag(0);
+    scroll_drag_end();
     for (int i = 0; i < MAX_HISTORY; i++) {
         data.history[i].text_id = 0;
         data.history[i].scroll_position = 0;
@@ -158,8 +158,8 @@ static void draw_city_message_text(const lang_message *msg)
                 lang_text_draw(41, player_message.param1, data.x + 240, data.y_text + 6, FONT_NORMAL_WHITE);
             }
         } else {
-            width += lang_text_draw(63, 5, data.x_text + width + 80, data.y_text + 6, FONT_NORMAL_WHITE);
-            text_draw(scenario_player_name(), data.x_text + width + 80, data.y_text + 6, FONT_NORMAL_WHITE, 0);
+            width += lang_text_draw(63, 5, data.x_text + width + 60, data.y_text + 6, FONT_NORMAL_WHITE);
+            text_draw(scenario_player_name(), data.x_text + width + 60, data.y_text + 6, FONT_NORMAL_WHITE, 0);
         }
     }
     switch (msg->message_type) {
@@ -353,16 +353,16 @@ static void draw_background_video(void)
     inner_panel_draw(data.x + 8, y_base, 25, inner_height_blocks);
     text_draw_centered(msg->title.text,
         data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK, 0);
-    
+
     int width = lang_text_draw(25, player_message.month, data.x + 16, y_base + 4, FONT_NORMAL_WHITE);
     width += lang_text_draw_year(player_message.year, data.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE);
-    
+
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_DISASTER &&
         data.text_id == MESSAGE_DIALOG_THEFT) {
         lang_text_draw_amount(8, 0, player_message.param1, data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE);
     } else {
-        width += lang_text_draw(63, 5, data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE);
-        text_draw(scenario_player_name(), data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE, 0);
+        width += lang_text_draw(63, 5, data.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE);
+        text_draw(scenario_player_name(), data.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE, 0);
     }
 
     data.text_height_blocks = msg->height_blocks - 1 - (32 + data.y_text - data.y) / 16;
@@ -436,7 +436,7 @@ static image_button *get_advisor_button(void)
 static void draw_foreground_normal(void)
 {
     const lang_message *msg = lang_get_message(data.text_id);
-    
+
     if (msg->type == TYPE_MANUAL && data.num_history > 0) {
         image_buttons_draw(
             data.x + 16, data.y + 16 * msg->height_blocks - 36,
@@ -477,48 +477,36 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
+static int handle_input_video(const mouse *m_dialog, const lang_message *msg)
 {
-    data.focus_button_id = 0;
-    const mouse *m_dialog = mouse_in_dialog(m);
-
-    // Close the message on a right click
-    if (m->right.went_up) {
-	    button_close(0, 0);
-	    return;
+    if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
+        return 1;
     }
-
-    const lang_message *msg = lang_get_message(data.text_id);
-    if (data.show_video) {
-        if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
-            return;
-        }
-        if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
-            return;
-        }
-        if (is_problem_message(msg)) {
-            if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id)) {
-                return;
-            }
-        }
-        if (input_go_back_requested(m, h)) {
-            button_close(0, 0);
-        }
-        return;
+    if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
+        return 1;
     }
-    // no video
+    if (is_problem_message(msg)) {
+        if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static int handle_input_normal(const mouse *m_dialog, const lang_message *msg)
+{
     if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(
                 m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 36, &image_button_back, 1, 0)) {
-        return;
+        return 1;
     }
     if (msg->type == TYPE_MESSAGE) {
         if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 40,
                                        get_advisor_button(), 1, 0)) {
-            return;
+            return 1;
         }
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
             if (image_buttons_handle_mouse(m_dialog, data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1, 0)) {
-                return;
+                return 1;
             }
         }
     }
@@ -527,7 +515,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.x + 16 * msg->width_blocks - 38,
         data.y + 16 * msg->height_blocks - 36,
         &image_button_close, 1, 0)) {
-        return;
+        return 1;
     }
     rich_text_handle_mouse(m_dialog);
     int text_id = rich_text_get_clicked_link(m_dialog);
@@ -540,9 +528,23 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.text_id = text_id;
         rich_text_reset(0);
         window_invalidate();
-        return;
+        return 1;
     }
-    if (input_go_back_requested(m, h)) {
+    return 0;
+}
+
+static void handle_input(const mouse *m, const hotkeys *h)
+{
+    data.focus_button_id = 0;
+    const mouse *m_dialog = mouse_in_dialog(m);
+    const lang_message *msg = lang_get_message(data.text_id);
+    int handled;
+    if (data.show_video) {
+        handled = handle_input_video(m_dialog, msg);
+    } else {
+        handled = handle_input_normal(m_dialog, msg);
+    }
+    if (!handled && input_go_back_requested(m, h)) {
         button_close(0, 0);
     }
 

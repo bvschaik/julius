@@ -41,7 +41,7 @@ static generic_button orders_resource_buttons[] = {
     {0, 176, 210, 22, toggle_resource_state, button_none, 9, 0},
     {0, 198, 210, 22, toggle_resource_state, button_none, 10, 0},
     {0, 220, 210, 22, toggle_resource_state, button_none, 11, 0},
-    {0, 242, 210, 22, toggle_resource_state, button_none, 12, 0},                                                   
+    {0, 242, 210, 22, toggle_resource_state, button_none, 12, 0},
     {0, 264, 210, 22, toggle_resource_state, button_none, 13, 0},
     {0, 286, 210, 22, toggle_resource_state, button_none, 14, 0},
     {0, 308, 210, 22, toggle_resource_state, button_none, 15, 0},
@@ -385,7 +385,7 @@ void window_building_draw_granary_orders_foreground(building_info_context *c)
     const building_storage *storage = building_storage_get(building_get(c->building_id)->storage_id);
     if (storage->empty_all) {
         lang_text_draw_centered(98, 8, c->x_offset + 80, y_offset + 408, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-        lang_text_draw_centered(98, 9, c->x_offset + 80, y_offset + 384, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+        lang_text_draw_centered(98, 9, c->x_offset, y_offset + 384, 16 * c->width_blocks, FONT_NORMAL_BLACK);
     } else {
         lang_text_draw_centered(98, 7, c->x_offset + 80, y_offset + 408, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
     }
@@ -561,7 +561,7 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
     const building_storage *storage = building_storage_get(building_get(c->building_id)->storage_id);
     if (storage->empty_all) {
         lang_text_draw_centered(99, 5, c->x_offset + 80, y_offset + 408, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-        lang_text_draw_centered(99, 6, c->x_offset + 80, y_offset + 426, 16 * (c->width_blocks - 10), FONT_SMALL_PLAIN);
+        lang_text_draw_centered(99, 6, c->x_offset, y_offset + 426, 16 * c->width_blocks, FONT_SMALL_PLAIN);
     } else {
         lang_text_draw_centered(99, 4, c->x_offset + 80, y_offset + 408, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
     }

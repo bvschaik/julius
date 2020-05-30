@@ -17,7 +17,7 @@
 
 #define MAX_CHANNELS 150
 
-#if SDL_VERSION_ATLEAST(2, 0, 7) 
+#if SDL_VERSION_ATLEAST(2, 0, 7)
 #define USE_SDL_AUDIOSTREAM
 #endif
 #define HAS_AUDIOSTREAM() (platform_sdl_version_at_least(2, 0, 7))
@@ -312,15 +312,15 @@ static int custom_audio_stream_active(void)
     return custom_music.buffer != 0;
 }
 
-static int put_custom_audio_stream(Uint8 *data, int len)
+static int put_custom_audio_stream(Uint8 *audio_data, int len)
 {
-    if (!data || len <= 0 || !custom_audio_stream_active()) {
+    if (!audio_data || len <= 0 || !custom_audio_stream_active()) {
         return 0;
     }
 
 #ifdef USE_SDL_AUDIOSTREAM
     if (custom_music.use_audiostream) {
-        return SDL_AudioStreamPut(custom_music.stream, data, len) == 0;
+        return SDL_AudioStreamPut(custom_music.stream, audio_data, len) == 0;
     }
 #endif
 
@@ -329,7 +329,7 @@ static int put_custom_audio_stream(Uint8 *data, int len)
     if (!custom_music.cvt.buf) {
         return 0;
     }
-    memcpy(custom_music.cvt.buf, data, len);
+    memcpy(custom_music.cvt.buf, audio_data, len);
     custom_music.cvt.len = len;
     SDL_ConvertAudio(&custom_music.cvt);
     int converted_len = custom_music.cvt.len_cvt;
@@ -399,7 +399,7 @@ static void custom_music_callback(void* dummy, Uint8* stream, int len)
 }
 
 void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate,
-                                          const unsigned char *data, int len)
+                                          const unsigned char *audio_data, int len)
 {
     SDL_AudioFormat format;
     if (bitdepth == 8) {
@@ -424,14 +424,14 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
         return;
     }
 
-    sound_device_write_custom_music_data(data, len);
+    sound_device_write_custom_music_data(audio_data, len);
 
     Mix_HookMusic(custom_music_callback, 0);
 }
 
-void sound_device_write_custom_music_data(const unsigned char *data, int len)
+void sound_device_write_custom_music_data(const unsigned char *audio_data, int len)
 {
-    if (!data || len <= 0 || !custom_audio_stream_active()) {
+    if (!audio_data || len <= 0 || !custom_audio_stream_active()) {
         return;
     }
     // Mix audio to sound effect volume
@@ -440,7 +440,7 @@ void sound_device_write_custom_music_data(const unsigned char *data, int len)
         return;
     }
     memset(mix_buffer, (custom_music.format == AUDIO_U8) ? 128 : 0, len);
-    SDL_MixAudioFormat(mix_buffer, data,
+    SDL_MixAudioFormat(mix_buffer, audio_data,
         custom_music.format, len,
         percentage_to_volume(setting_sound(SOUND_EFFECTS)->volume));
 

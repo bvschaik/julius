@@ -143,14 +143,14 @@ void init_defaults(void)
     set_mapping(KEY_F2, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_2);
     set_mapping(KEY_F3, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_3);
     set_mapping(KEY_F4, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_4);
-    set_mapping(KEY_F1, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_1); // mac specific: F1 key alone does not work
-    set_mapping(KEY_F2, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_2);
-    set_mapping(KEY_F3, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_3);
-    set_mapping(KEY_F4, KEY_MOD_ALT, HOTKEY_GO_TO_BOOKMARK_4);
     set_mapping(KEY_F1, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_1);
     set_mapping(KEY_F2, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_2);
     set_mapping(KEY_F3, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_3);
     set_mapping(KEY_F4, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_4);
+    set_mapping(KEY_F1, KEY_MOD_ALT, HOTKEY_SET_BOOKMARK_1); // mac specific: Ctrl+F1 key does not work
+    set_mapping(KEY_F2, KEY_MOD_ALT, HOTKEY_SET_BOOKMARK_2);
+    set_mapping(KEY_F3, KEY_MOD_ALT, HOTKEY_SET_BOOKMARK_3);
+    set_mapping(KEY_F4, KEY_MOD_ALT, HOTKEY_SET_BOOKMARK_4);
     set_mapping(KEY_F5, KEY_MOD_NONE, HOTKEY_CENTER_WINDOW);
     set_mapping(KEY_F6, KEY_MOD_NONE, HOTKEY_TOGGLE_FULLSCREEN);
     set_mapping(KEY_ENTER, KEY_MOD_ALT, HOTKEY_TOGGLE_FULLSCREEN);
@@ -178,7 +178,7 @@ const hotkey_mapping *hotkey_for_action(hotkey_action action, int index)
 
 const hotkey_mapping *hotkey_default_for_action(hotkey_action action, int index)
 {
-    if (index < 0 || index >= 2 || action < 0 || action >= HOTKEY_MAX_ITEMS) {
+    if (index < 0 || index >= 2 || (int) action < 0 || action >= HOTKEY_MAX_ITEMS) {
         return 0;
     }
     return &data.default_mappings[action][index];
@@ -220,10 +220,9 @@ static void load_file(void)
     char *line;
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
-        size_t last = strlen(line) - 1;
-        while (last >= 0 && (line[last] == '\n' || line[last] == '\r')) {
-            line[last] = 0;
-            last--;
+        size_t size = strlen(line);
+        while (size > 0 && (line[size-1] == '\n' || line[size-1] == '\r')) {
+            line[--size] = 0;
         }
         char *equals = strchr(line, '=');
         if (!equals) {

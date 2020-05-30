@@ -124,7 +124,7 @@ static int place_plaza(int x_start, int y_start, int x_end, int y_end)
     int x_min, y_min, x_max, y_max;
     map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
     game_undo_restore_map(1);
-    
+
     int items_placed = 0;
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
