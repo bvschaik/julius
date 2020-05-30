@@ -30,6 +30,12 @@ encoding_type encoding_determine(language_type language);
  */
 encoding_type encoding_get(void);
 
+/*
+ * Returns whether the encoding uses multibyte chars for the internal strings
+ * @return boolean true if the encoding uses multibyte
+ */
+int encoding_is_multibyte(void);
+
 /**
  * Returns whether the current operating system uses decomposed form for UTF-8 strings
  * @return Boolean true if using decomposed, false otherwise

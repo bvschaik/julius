@@ -610,6 +610,11 @@ encoding_type encoding_get(void)
     return data.encoding;
 }
 
+int encoding_is_multibyte(void)
+{
+    return !data.to_utf8_table;
+}
+
 int encoding_system_uses_decomposed(void)
 {
 #ifdef __APPLE__
