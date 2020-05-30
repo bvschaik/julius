@@ -76,11 +76,11 @@ void building_storage_toggle_empty_all(int storage_id)
 void building_storage_cycle_resource_state(int storage_id, resource_type resource_id)
 {
     int state = data.storages[storage_id].storage.resource_state[resource_id];
-    if (state == BUILDING_STORAGE_STATE_ACCEPTING || state == BUILDING_STORAGE_STATE_ACCEPTING_HALF || state == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER) {
+    if (state == BUILDING_STORAGE_STATE_ACCEPTING || state == BUILDING_STORAGE_STATE_ACCEPTING_HALF || state == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS || state == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER) {
         state = BUILDING_STORAGE_STATE_NOT_ACCEPTING;
     } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
         state = BUILDING_STORAGE_STATE_GETTING;
-    } else if (state == BUILDING_STORAGE_STATE_GETTING || state == BUILDING_STORAGE_STATE_GETTING_HALF || state == BUILDING_STORAGE_STATE_GETTING_QUARTER) {
+    } else if (state == BUILDING_STORAGE_STATE_GETTING || state == BUILDING_STORAGE_STATE_GETTING_3QUARTERS || state == BUILDING_STORAGE_STATE_GETTING_HALF || state == BUILDING_STORAGE_STATE_GETTING_QUARTER) {
         state = BUILDING_STORAGE_STATE_ACCEPTING;
     }
     data.storages[storage_id].storage.resource_state[resource_id] = state;
@@ -106,6 +106,8 @@ void building_storage_cycle_partial_resource_state(int storage_id, resource_type
 {
     int state = data.storages[storage_id].storage.resource_state[resource_id];
     if (state == BUILDING_STORAGE_STATE_ACCEPTING) {
+        state = BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS;
+    } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS) {
         state = BUILDING_STORAGE_STATE_ACCEPTING_HALF;
     } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_HALF) {
         state = BUILDING_STORAGE_STATE_ACCEPTING_QUARTER;
@@ -113,6 +115,8 @@ void building_storage_cycle_partial_resource_state(int storage_id, resource_type
         state = BUILDING_STORAGE_STATE_ACCEPTING;
     }
     if (state == BUILDING_STORAGE_STATE_GETTING) {
+        state = BUILDING_STORAGE_STATE_GETTING_3QUARTERS;
+    } else if (state == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) {
         state = BUILDING_STORAGE_STATE_GETTING_HALF;
     } else if (state == BUILDING_STORAGE_STATE_GETTING_HALF) {
         state = BUILDING_STORAGE_STATE_GETTING_QUARTER;

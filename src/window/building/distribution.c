@@ -48,21 +48,21 @@ static generic_button orders_resource_buttons[] = {
 };
 
 static generic_button orders_partial_resource_buttons[] = {
-    {214, 0, 20, 22, toggle_partial_resource_state, button_none, 1, 0},
-    {214, 22, 20, 22, toggle_partial_resource_state, button_none, 2, 0},
-    {214, 44, 20, 22, toggle_partial_resource_state, button_none, 3, 0},
-    {214, 66, 20, 22, toggle_partial_resource_state, button_none, 4, 0},
-    {214, 88, 20, 22, toggle_partial_resource_state, button_none, 5, 0},
-    {214, 110, 20, 22, toggle_partial_resource_state, button_none, 6, 0},
-    {214, 132, 20, 22, toggle_partial_resource_state, button_none, 7, 0},
-    {214, 154, 20, 22, toggle_partial_resource_state, button_none, 8, 0},
-    {214, 176, 20, 22, toggle_partial_resource_state, button_none, 9, 0},
-    {214, 198, 20, 22, toggle_partial_resource_state, button_none, 10, 0},
-    {214, 220, 20, 22, toggle_partial_resource_state, button_none, 11, 0},
-    {214, 242, 20, 22, toggle_partial_resource_state, button_none, 12, 0},                                                   
-    {214, 264, 20, 22, toggle_partial_resource_state, button_none, 13, 0},
-    {214, 286, 20, 22, toggle_partial_resource_state, button_none, 14, 0},
-    {214, 308, 20, 22, toggle_partial_resource_state, button_none, 15, 0},
+    {210, 0, 28, 22, toggle_partial_resource_state, button_none, 1, 0},
+    {210, 22, 28, 22, toggle_partial_resource_state, button_none, 2, 0},
+    {210, 44, 28, 22, toggle_partial_resource_state, button_none, 3, 0},
+    {210, 66, 28, 22, toggle_partial_resource_state, button_none, 4, 0},
+    {210, 88, 28, 22, toggle_partial_resource_state, button_none, 5, 0},
+    {210, 110, 28, 22, toggle_partial_resource_state, button_none, 6, 0},
+    {210, 132, 28, 22, toggle_partial_resource_state, button_none, 7, 0},
+    {210, 154, 28, 22, toggle_partial_resource_state, button_none, 8, 0},
+    {210, 176, 28, 22, toggle_partial_resource_state, button_none, 9, 0},
+    {210, 198, 28, 22, toggle_partial_resource_state, button_none, 10, 0},
+    {210, 220, 28, 22, toggle_partial_resource_state, button_none, 11, 0},
+    {210, 242, 28, 22, toggle_partial_resource_state, button_none, 12, 0},                                                   
+    {210, 264, 28, 22, toggle_partial_resource_state, button_none, 13, 0},
+    {210, 286, 28, 22, toggle_partial_resource_state, button_none, 14, 0},
+    {210, 308, 28, 22, toggle_partial_resource_state, button_none, 15, 0},
 };
 
 static generic_button warehouse_distribution_permissions_buttons[] = {
@@ -96,9 +96,15 @@ static struct {
     int partial_resource_focus_button_id;
 } data = {0, 0, 0, 0, 0, 0};
 
-uint8_t full_button_text[] = {'F', 0};
-uint8_t half_button_text[] = {'H', 0};
-uint8_t quarter_button_text[] = {'Q', 0};
+uint8_t warehouse_full_button_text[] = "32";
+uint8_t warehouse_3quarters_button_text[] = "24";
+uint8_t warehouse_half_button_text[] = "16";
+uint8_t warehouse_quarter_button_text[] = "8";
+uint8_t granary_full_button_text[] = "24";
+uint8_t granary_3quarters_button_text[] = "18";
+uint8_t granary_half_button_text[] = "12";
+uint8_t granary_quarter_button_text[] = "6";
+
 
 static void draw_accept_none_button(int x, int y, int focused)
 {
@@ -399,35 +405,42 @@ void window_building_draw_granary_orders_foreground(building_info_context *c)
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
             resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
-        image_draw(image_id, c->x_offset + 416, y_offset + 46 + 22 * i);
+        image_draw(image_id, c->x_offset + 420, y_offset + 46 + 22 * i);
         lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
         button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
-        button_border_draw(c->x_offset + 394, y_offset + 46 + 22 * i, 20, 22, data.partial_resource_focus_button_id == i + 1);
+        button_border_draw(c->x_offset + 390, y_offset + 46 + 22 * i, 28, 22, data.partial_resource_focus_button_id == i + 1);
 
         int state = storage->resource_state[resource];
         if (state == BUILDING_STORAGE_STATE_ACCEPTING) {
             lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(full_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(granary_full_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+        } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS) {
+            lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
+            text_draw_centered(granary_3quarters_button_text, c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_HALF) {
             lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(half_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(granary_half_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER) {
             lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(quarter_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(granary_quarter_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
             lang_text_draw(99, 8, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_RED);
         } else if (state == BUILDING_STORAGE_STATE_GETTING) {
             image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
             lang_text_draw(99, 9, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(full_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(granary_full_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+        } else if (state == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) {
+            image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
+            lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
+            text_draw_centered(granary_3quarters_button_text, c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         } else if (state == BUILDING_STORAGE_STATE_GETTING_HALF) {
             image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
             lang_text_draw(99, 9, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(half_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(granary_half_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         } else if (state == BUILDING_STORAGE_STATE_GETTING_QUARTER) {
             image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
             lang_text_draw(99, 9, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(quarter_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(granary_quarter_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         }
 
     }
@@ -579,36 +592,43 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
         int resource = list->items[i];
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
-        image_draw(image_id, c->x_offset + 416, y_offset + 46 + 22 * i);
+        image_draw(image_id, c->x_offset + 420, y_offset + 46 + 22 * i);
         lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
         button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
-        button_border_draw(c->x_offset + 394, y_offset + 46 + 22 * i, 20, 22, data.partial_resource_focus_button_id == i + 1);
+        button_border_draw(c->x_offset + 390, y_offset + 46 + 22 * i, 28, 22, data.partial_resource_focus_button_id == i + 1);
 
 
         int state = storage->resource_state[resource];
         if (state == BUILDING_STORAGE_STATE_ACCEPTING) {
             lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(full_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(warehouse_full_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+        } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS) {
+            lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
+            text_draw_centered(warehouse_3quarters_button_text, c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_HALF) {
             lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(half_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(warehouse_half_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER) {
             lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(quarter_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(warehouse_quarter_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
             lang_text_draw(99, 8, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_RED);
         } else if (state == BUILDING_STORAGE_STATE_GETTING) {
             image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
             lang_text_draw(99, 9, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(full_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(warehouse_full_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+        } else if (state == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) {
+            image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
+            lang_text_draw(99, 9, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
+            text_draw_centered(warehouse_3quarters_button_text, c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         } else if (state == BUILDING_STORAGE_STATE_GETTING_HALF) {
             image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
             lang_text_draw(99, 9, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(half_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(warehouse_half_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         } else if (state == BUILDING_STORAGE_STATE_GETTING_QUARTER) {
             image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
             lang_text_draw(99, 9, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-	    text_draw_centered(quarter_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
+	    text_draw_centered(warehouse_quarter_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
         }
     }
 }

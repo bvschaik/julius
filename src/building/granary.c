@@ -38,6 +38,7 @@ int building_granary_get_amount(building *granary, int resource)
     return granary->data.granary.resource_stored[resource];
 }
 
+int THREEQUARTERS_GRANARY = 1800;
 int HALF_GRANARY = 1200;
 int QUARTER_GRANARY = 600;
 
@@ -46,7 +47,8 @@ int building_granary_is_accepting(int resource, building *b)
         const building_storage *s = building_storage_get(b->storage_id);
         int amount = building_granary_get_amount(b, resource);	
         if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING) ||
-	    (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_GRANARY) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS && amount < THREEQUARTERS_GRANARY) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_GRANARY) ||
             (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER && amount < QUARTER_GRANARY)) {
 	    return 1;
 	} else {
@@ -59,7 +61,8 @@ int building_granary_is_getting(int resource, building *b)
         const building_storage *s = building_storage_get(b->storage_id);
         int amount = building_granary_get_amount(b, resource);	
         if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
-	    (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_GRANARY) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS && amount < THREEQUARTERS_GRANARY) ||
+	        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_GRANARY) ||
             (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER && amount < QUARTER_GRANARY)) {
 	    return 1;
 	} else {
@@ -71,7 +74,8 @@ int building_granary_is_gettable(int resource, building *b)
 {
         const building_storage *s = building_storage_get(b->storage_id);
         if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
-	    (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
             (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER)) {
 	    return 1;
 	} else {

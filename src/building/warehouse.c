@@ -221,6 +221,7 @@ void building_warehouses_add_resource(int resource, int amount)
     }
 }
 
+int THREEQ_WAREHOUSE = 24;
 int HALF_WAREHOUSE = 16;
 int QUARTER_WAREHOUSE = 8;
 
@@ -229,7 +230,8 @@ int building_warehouse_is_accepting(int resource, building *b)
         const building_storage *s = building_storage_get(b->storage_id);
         int amount = building_warehouse_get_amount(b, resource);	
         if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING) ||
-	    (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_WAREHOUSE) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS && amount < THREEQ_WAREHOUSE) ||
+	        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_WAREHOUSE) ||
             (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER && amount < QUARTER_WAREHOUSE)) {
 		return 1;
 	} else {
@@ -242,7 +244,8 @@ int building_warehouse_is_getting(int resource, building *b)
         const building_storage *s = building_storage_get(b->storage_id);
         int amount = building_warehouse_get_amount(b, resource);	
         if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
-	    (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_WAREHOUSE) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS && amount < THREEQ_WAREHOUSE) ||
+	        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_WAREHOUSE) ||
             (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER && amount < QUARTER_WAREHOUSE)) {
 		return 1;
 	} else {
@@ -274,6 +277,10 @@ int building_warehouse_get_acceptable_quantity(int resource, building* b)
     case BUILDING_STORAGE_STATE_ACCEPTING:
     case BUILDING_STORAGE_STATE_GETTING:
         return 32;
+        break;
+    case BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS:
+    case BUILDING_STORAGE_STATE_GETTING_3QUARTERS:
+        return THREEQ_WAREHOUSE;
         break;
     case BUILDING_STORAGE_STATE_ACCEPTING_HALF:
     case BUILDING_STORAGE_STATE_GETTING_HALF:
@@ -433,7 +440,7 @@ static int determine_granary_accept_foods(int resources[RESOURCE_MAX_FOOD])
             const building_storage *s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
                 for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
-                    if (!building_warehouse_is_not_accepting(r,b)) {
+                    if (!building_granary_is_not_accepting(r,b)) {
                         resources[r]++;
                         can_accept = 1;
                     }
