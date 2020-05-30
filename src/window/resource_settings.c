@@ -55,6 +55,7 @@ static void init(resource_type resource)
 
 static void draw_background(void)
 {
+    window_draw_underlying_window();
     graphics_in_dialog();
     window_advisor_trade_draw_dialog_background();
     graphics_reset_dialog();
