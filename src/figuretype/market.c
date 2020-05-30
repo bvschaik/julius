@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/granary.h"
+#include "building/storage.h"
 #include "building/warehouse.h"
 #include "core/image.h"
 #include "figure/combat.h"

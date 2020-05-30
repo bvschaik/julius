@@ -86,6 +86,22 @@ void building_storage_cycle_resource_state(int storage_id, resource_type resourc
     data.storages[storage_id].storage.resource_state[resource_id] = state;
 }
 
+void building_storage_set_permission(building_storage_permission_states p, building* b)
+{
+    const building_storage *s = building_storage_get(b->storage_id);
+    int permission_bit = 1 << p;
+    int perms = s->permissions;
+    perms ^= permission_bit;
+    data.storages[b->storage_id].storage.permissions = perms;
+}
+
+int building_storage_get_permission(building_storage_permission_states p, building* b)
+{
+    const building_storage* s = building_storage_get(b->storage_id);
+    int permission_bit = 1 << p;
+    return !(s->permissions & permission_bit);
+}
+
 void building_storage_cycle_partial_resource_state(int storage_id, resource_type resource_id)
 {
     int state = data.storages[storage_id].storage.resource_state[resource_id];
@@ -115,7 +131,7 @@ void building_storage_accept_none(int storage_id)
 void building_storage_save_state(buffer *buf)
 {
     for (int i = 0; i < MAX_STORAGES; i++) {
-        buffer_write_i32(buf, 0); // unused integer
+        buffer_write_i32(buf, data.storages[i].storage.permissions); // Originally unused
         buffer_write_i32(buf, data.storages[i].building_id);
         buffer_write_u8(buf, (uint8_t) data.storages[i].in_use);
         buffer_write_u8(buf, (uint8_t) data.storages[i].storage.empty_all);
@@ -131,7 +147,7 @@ void building_storage_save_state(buffer *buf)
 void building_storage_load_state(buffer *buf)
 {
     for (int i = 0; i < MAX_STORAGES; i++) {
-        buffer_skip(buf, 4); // unused integer
+        data.storages[i].storage.permissions = buffer_read_i32(buf); // Originally unused
         data.storages[i].building_id = buffer_read_i32(buf);
         data.storages[i].in_use = buffer_read_u8(buf);
         data.storages[i].storage.empty_all = buffer_read_u8(buf);
