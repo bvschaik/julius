@@ -1,6 +1,6 @@
 # Augustus ![](res/julius_48.png)
 
-[![Travis](https://api.travis-ci.org/keriew/julius.svg?branch=master)](https://travis-ci.org/Keriew/julius)
+[![Travis](https://travis-ci.com/Keriew/augustus.svg?branch=master)](https://travis-ci.org/Keriew/augustus)
 
   
 | Platform | Latest release |
