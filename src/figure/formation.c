@@ -65,6 +65,9 @@ formation *formation_create_legion(int building_id, int x, int y, figure_type ty
     m->morale = 50;
     m->is_at_fort = 1;
     m->legion_id = formation_id - 1;
+    if (m->legion_id >= 9) {
+        m->legion_id = 9;
+    }
     m->x = m->standard_x = m->x_home = x + 3;
     m->y = m->standard_y = m->y_home = y - 1;
 
@@ -239,7 +242,7 @@ int formation_get_num_legions(void)
 int formation_get_max_legions(void)
 {
    if (config_get(CONFIG_GP_CH_EXTRA_FORTS)) {
-	  return MAX_LEGIONS+3;
+	  return MAX_LEGIONS+4;
    } else {
 	  return MAX_LEGIONS; 
    }

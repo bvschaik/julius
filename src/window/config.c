@@ -122,7 +122,7 @@ static const char* option_names[] = {
     "Extend school walkers range",
     "Change citizens' retirement age from 50 to 60",
     "Fixed worker pool - 38% of population",
-    "Allow building 3 extra forts",
+    "Allow building 4 extra forts",
     "Block building around wolves",
     "Block unconnected granary roads",
     "Houses stockpile more goods from market",
