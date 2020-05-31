@@ -19,59 +19,82 @@ static struct {
     int max_length;
     int allow_punctuation;
 
-    int offset_start;
-    int offset_end;
+    int viewport_start;
+    int viewport_end;
+    int viewport_cursor_position;
 
     int box_width;
     font_t font;
 } data;
 
-#include <stdio.h>
-static void debug_print(void)
+static int get_current_char_bytes(void)
 {
-    printf("Text:");
-    for (int i = 0; i <= data.length; i++) {
-        printf(" %02x", data.text[i]);
-    }
-    printf("\n");
-    printf("     ");
-    for (int i = 0; i < data.cursor_position; i++) {
-        printf("   ");
-    }
-    printf(" ^^\n");
+    return data.text[data.cursor_position] >= 0x80 && encoding_is_multibyte() ? 2 : 1;
 }
 
-static void change_start_offset_by(int length)
+static void set_viewport_to_start(void)
 {
-    if (length < 0 || data.offset_start == 0) {
+    data.viewport_start = 0;
+    data.viewport_end = text_get_max_length_for_width(data.text, data.length, data.font, data.box_width, 0);
+}
+
+static void set_viewport_to_end(void)
+{
+    data.viewport_end = data.length;
+    int maxlen = text_get_max_length_for_width(data.text, data.length, data.font, data.box_width, 1);
+    data.viewport_start = data.length - maxlen;
+}
+
+static void include_cursor_in_viewport(void)
+{
+    // first check if we can keep the viewport
+    int new_start = data.viewport_start;
+    int new_end = text_get_max_length_for_width(data.text, data.length - new_start, data.font, data.box_width, 0);
+    if (data.cursor_position >= new_start && data.cursor_position < new_end) {
         return;
     }
-    int max_left = (data.offset_start < length) ? data.offset_start : length;
-    data.offset_start -= max_left;
-    data.offset_end = data.offset_start + text_get_max_length_for_width(data.text + data.offset_start, data.length, data.font, data.box_width, 0);
-}
-
-static void change_end_offset_by(int length)
-{
-    if (length < 0 || data.offset_end == data.length) {
-        return;
-    }
-    int remaining = data.length - data.offset_end;
-    int max_right = (remaining < length) ? remaining : length;
-    data.offset_end += max_right;
-    data.offset_start = data.offset_end - text_get_max_length_for_width(data.text, data.offset_end, data.font, data.box_width, 1);
-}
-
-static void set_offset_to_end(void)
-{
-    data.offset_end = data.length;
-    int maxlen = data.length;
-    if (text_get_width(data.text, data.font) <= data.box_width) {
-        data.offset_start = 0;
+    if (data.cursor_position <= data.viewport_cursor_position) {
+        // move toward start
+        int maxlen = text_get_max_length_for_width(
+            data.text + data.cursor_position,
+            data.length - data.cursor_position,
+            data.font, data.box_width, 0);
+        if (data.cursor_position + maxlen < data.length) {
+            data.viewport_start = data.cursor_position;
+            data.viewport_end = data.cursor_position + maxlen;
+        } else {
+            // all remaining text fits: set to end
+            set_viewport_to_end();
+        }
     } else {
-        maxlen = text_get_max_length_for_width(data.text, data.length, data.font, data.box_width, 1);
-        data.offset_start = data.length - maxlen;
+        // move toward end
+        int viewport_length = data.cursor_position + get_current_char_bytes();
+        int maxlen = text_get_max_length_for_width(
+            data.text, viewport_length, data.font, data.box_width, 1);
+        if (maxlen < viewport_length) {
+            data.viewport_start = viewport_length - maxlen;
+            data.viewport_end = viewport_length;
+        } else {
+            // all remaining text fits: set to start
+            set_viewport_to_start();
+        }
     }
+}
+
+static void update_viewport(int has_changed)
+{
+    int is_within_viewport = data.cursor_position >= data.viewport_start &&
+        data.cursor_position < data.viewport_end;
+    if (!has_changed && is_within_viewport) {
+        // no update necessary
+    } else if (data.cursor_position == 0) {
+        set_viewport_to_start();
+    } else if (data.cursor_position == data.length) {
+        set_viewport_to_end();
+    } else {
+        include_cursor_in_viewport();
+    }
+    data.viewport_cursor_position = data.cursor_position;
 }
 
 void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation, const input_box *capture_box, font_t font)
@@ -85,14 +108,14 @@ void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation
     data.accepted = 0;
     data.box_width = (capture_box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
     data.font = font;
-    //set_offset_to_end();
+    update_viewport(1);
 }
 
 void keyboard_refresh(void)
 {
     data.length = string_length(data.text);
     data.cursor_position = data.length;
-    //set_offset_to_end();
+    update_viewport(1);
 }
 
 void keyboard_resume_capture(void)
@@ -146,17 +169,17 @@ int keyboard_is_insert(void)
 
 int keyboard_cursor_position(void)
 {
-    return data.cursor_position - data.offset_start;
+    return data.cursor_position - data.viewport_start;
 }
 
 int keyboard_offset_start(void)
 {
-    return 0; //data.offset_start;
+    return data.viewport_start;
 }
 
 int keyboard_offset_end(void)
 {
-    return data.length; //data.offset_end;
+    return data.viewport_end;
 }
 
 void keyboard_return(void)
@@ -199,11 +222,7 @@ static void move_cursor_left(void)
 
 static void move_cursor_right(void)
 {
-    if (data.text[data.cursor_position] >= 0x80 && encoding_is_multibyte()) {
-        data.cursor_position += 2;
-    } else {
-        data.cursor_position++;
-    }
+    data.cursor_position += get_current_char_bytes();
 }
 
 static void insert_char(const uint8_t *value, int bytes)
@@ -217,26 +236,15 @@ static void insert_char(const uint8_t *value, int bytes)
         data.cursor_position++;
     }
     data.length += bytes;
-    data.offset_end += bytes;
 }
 
 static void remove_current_char(void)
 {
-    int bytes = 1;
-    if (data.text[data.cursor_position] >= 0x80 && encoding_is_multibyte()) {
-        bytes = 2;
+    int bytes = get_current_char_bytes();
+    for (int i = 0; i < bytes; i++) {
         move_left(&data.text[data.cursor_position], &data.text[data.length]);
     }
-    move_left(&data.text[data.cursor_position], &data.text[data.length]);
-    if (data.offset_end + bytes > data.length) {
-        data.offset_end -= bytes;
-    }
     data.length -= bytes;
-    // if (data.offset_end != data.length) {
-    //     data.offset_end = data.offset_start + text_get_max_length_for_width(data.text + data.offset_start, data.length - data.offset_start, data.font, data.box_width, 0);
-    // } else if (data.offset_start) {
-    //     data.offset_start = data.offset_end - text_get_max_length_for_width(data.text, data.offset_end, data.font, data.box_width, 1);
-    // }
 }
 
 static void add_char(const uint8_t *value, int bytes)
@@ -249,18 +257,6 @@ static void add_char(const uint8_t *value, int bytes)
         }
         insert_char(value, bytes);
     }
-    // int maxlen = text_get_max_length_for_width(data.text + data.offset_start, data.length, data.font, data.box_width, 0);
-    // if (data.cursor_position < (data.offset_start + maxlen - 2)) {
-    //     data.offset_end = data.offset_start + maxlen;
-    //     if (data.offset_end > data.length) {
-    //         set_offset_to_end();
-    //     }
-    // } else {
-    //     if (!data.insert && data.offset_end < data.length) {
-    //         data.offset_end++;
-    //     }
-    //     data.offset_start = data.offset_end - text_get_max_length_for_width(data.text, data.offset_end, data.font, data.box_width, 1);
-    // }
 }
 
 void keyboard_backspace(void)
@@ -268,6 +264,7 @@ void keyboard_backspace(void)
     if (data.capture && data.cursor_position > 0) {
         move_cursor_left();
         remove_current_char();
+        update_viewport(1);
     }
 }
 
@@ -275,6 +272,7 @@ void keyboard_delete(void)
 {
     if (data.capture && data.cursor_position < data.length) {
         remove_current_char();
+        update_viewport(1);
     }
 }
 
@@ -288,10 +286,8 @@ void keyboard_left(void)
     if (data.capture) {
         if (data.cursor_position > 0) {
             move_cursor_left();
+            update_viewport(0);
         }
-        // if (data.offset_start > 0 && data.cursor_position == (data.offset_start - 1)) {
-        //     change_start_offset_by(5);
-        // }
     }
 }
 
@@ -300,10 +296,8 @@ void keyboard_right(void)
     if (data.capture) {
         if (data.cursor_position < data.length) {
             move_cursor_right();
+            update_viewport(0);
         }
-        // if (data.offset_end < data.length && data.cursor_position == data.offset_end) {
-        //     change_end_offset_by(5);
-        // }
     }
 }
 
@@ -311,10 +305,7 @@ void keyboard_home(void)
 {
     if (data.capture) {
         data.cursor_position = 0;
-        // if (data.offset_start > 0) {
-        //     data.offset_start = 0;
-        //     data.offset_end = text_get_max_length_for_width(data.text, data.length, data.font, data.box_width, 0);
-        // }
+        update_viewport(0);
     }
 }
 
@@ -322,9 +313,7 @@ void keyboard_end(void)
 {
     if (data.capture) {
         data.cursor_position = data.length;
-        // if (data.offset_end < data.length) {
-        //     set_offset_to_end();
-        // }
+        update_viewport(0);
     }
 }
 
@@ -361,8 +350,7 @@ void keyboard_character(const char *text_utf8)
     }
 
     if (add) {
-        debug_print();
         add_char(internal_char, string_length(internal_char));
-        debug_print();
+        update_viewport(1);
     }
 }
