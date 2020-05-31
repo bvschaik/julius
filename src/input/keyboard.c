@@ -50,7 +50,7 @@ static void include_cursor_in_viewport(void)
     // first check if we can keep the viewport
     int new_start = data.viewport_start;
     int new_end = text_get_max_length_for_width(data.text, data.length - new_start, data.font, data.box_width, 0);
-    if (data.cursor_position >= new_start && data.cursor_position < new_end) {
+    if (data.cursor_position >= new_start && data.cursor_position < new_end && new_start + new_end < data.length) {
         return;
     }
     if (data.cursor_position <= data.viewport_cursor_position) {
@@ -97,7 +97,7 @@ static void update_viewport(int has_changed)
     data.viewport_cursor_position = data.cursor_position;
 }
 
-void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation, const input_box *capture_box, font_t font)
+void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation, int box_width, font_t font)
 {
     data.capture = 1;
     data.text = text;
@@ -106,7 +106,7 @@ void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation
     data.max_length = max_length;
     data.allow_punctuation = allow_punctuation;
     data.accepted = 0;
-    data.box_width = (capture_box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
+    data.box_width = box_width;
     data.font = font;
     update_viewport(1);
 }

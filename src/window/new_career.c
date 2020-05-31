@@ -12,7 +12,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "input/keyboard.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "widget/input_box.h"
@@ -26,7 +25,7 @@ static image_button image_buttons[] = {
     {305, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, start_mission, button_none, 1, 0, 1}
 };
 
-static input_box player_name_input = { 160, 208, 20, 2 };
+static input_box player_name_input = { 160, 208, 20, 2, FONT_NORMAL_WHITE };
 
 static uint8_t player_name[32];
 
@@ -35,7 +34,7 @@ static void init(void)
     setting_clear_personal_savings();
     scenario_settings_init();
     string_copy(lang_get_string(9, 5), player_name, 32);
-    keyboard_start_capture(player_name, 32, 1, &player_name_input, FONT_NORMAL_WHITE);
+    input_box_start(&player_name_input, player_name, 32, 1);
 }
 
 static void draw_background(void)
@@ -54,9 +53,6 @@ static void draw_foreground(void)
     lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK);
     lang_text_draw(12, 0, 200, 256, FONT_NORMAL_BLACK);
     input_box_draw(&player_name_input);
-    text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
-    text_draw(player_name, 176, 216, FONT_NORMAL_WHITE, 0);
-    text_draw_cursor(176, 217, keyboard_is_insert());
 
     image_buttons_draw(159, 249, image_buttons, 2);
 
@@ -70,25 +66,24 @@ static void handle_input(const mouse *m, const hotkeys *h)
         image_buttons_handle_mouse(m_dialog, 159, 249, image_buttons, 2, 0)) {
         return;
     }
-    if (keyboard_input_is_accepted()) {
+    if (input_box_is_accepted(&player_name_input)) {
         start_mission(0, 0);
         return;
     }
     if (input_go_back_requested(m, h)) {
-        keyboard_stop_capture();
-        window_go_back();
+        button_back(0, 0);
     }
 }
 
 static void button_back(int param1, int param2)
 {
-    keyboard_stop_capture();
+    input_box_stop(&player_name_input);
     window_go_back();
 }
 
 static void start_mission(int param1, int param2)
 {
-    keyboard_stop_capture();
+    input_box_stop(&player_name_input);
     setting_set_player_name(player_name);
     window_mission_selection_show();
 }
