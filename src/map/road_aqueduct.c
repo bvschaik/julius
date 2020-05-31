@@ -117,7 +117,7 @@ int map_get_aqueduct_with_road_image(int grid_offset)
 }
 
 
-static int get_road_tile_for_aqueduct(int grid_offset, int gate_orientation)
+static int is_road_tile_for_aqueduct(int grid_offset, int gate_orientation)
 {
     int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
@@ -135,17 +135,20 @@ static int get_road_tile_for_aqueduct(int grid_offset, int gate_orientation)
     return is_road;
 }
 
-int map_get_adjacent_road_tiles_for_aqueduct(int grid_offset)
+int map_is_straight_road_for_aqueduct(int grid_offset)
 {
-    int road_tiles = 0;
-    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, -1), 1);
-    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(1, 0), 2);
-    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, 1), 1);
-    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(-1, 0), 2);
-    if (road_tiles == 4) {
-        if (building_get(map_building_at(grid_offset))->type == BUILDING_GRANARY) {
-            road_tiles = 2;
-        }
+    int road_tiles_x =
+        is_road_tile_for_aqueduct(grid_offset + map_grid_delta(1, 0), 2) +
+        is_road_tile_for_aqueduct(grid_offset + map_grid_delta(-1, 0), 2);
+    int road_tiles_y =
+        is_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, -1), 1) +
+        is_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, 1), 1);
+
+    if (road_tiles_x == 2 && road_tiles_y == 0) {
+        return 1;
+    } else if (road_tiles_y == 2 && road_tiles_x == 0) {
+        return 1;
+    } else {
+        return 0;
     }
-    return road_tiles;
 }

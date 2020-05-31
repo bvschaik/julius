@@ -180,3 +180,12 @@ void building_barracks_load_state(buffer *buf)
 {
     tower_sentry_request = buffer_read_i32(buf);
 }
+
+void building_barracks_toggle_priority(building* barracks) {
+    barracks->subtype.barracks_priority = 1 - barracks->subtype.barracks_priority;
+}
+
+int building_barracks_get_priority(building* barracks) {
+    return barracks->subtype.barracks_priority;
+}
+

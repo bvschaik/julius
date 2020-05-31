@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/granary.h"
+#include "building/storage.h"
 #include "building/warehouse.h"
 #include "core/image.h"
 #include "figure/combat.h"
@@ -90,7 +91,7 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
         return 0;
     }
     building_warehouse_remove_resource(warehouse, resource, num_loads);
-    
+
     // create delivery boys
     int boy1 = create_delivery_boy(f->id, f);
     if (num_loads > 1) {
@@ -104,7 +105,7 @@ void figure_market_buyer_action(figure *f)
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 800;
-    
+
     building *b = building_get(f->building_id);
     if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != f->id) {
         f->state = FIGURE_STATE_DEAD;
@@ -157,7 +158,7 @@ void figure_delivery_boy_action(figure *f)
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
-    
+
     figure *leader = figure_get(f->leading_figure_id);
     if (f->leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE) {
         f->state = FIGURE_STATE_DEAD;

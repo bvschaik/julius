@@ -298,7 +298,7 @@ void sound_city_play(void)
     if (!max_sound_id) {
         return;
     }
-    
+
     // always only one channel available... use it
     int channel = channels[max_sound_id].channel;
     int direction;

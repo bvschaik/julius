@@ -64,9 +64,9 @@ building *building_create(building_type type, int x, int y)
         city_warning_show(WARNING_DATA_LIMIT_REACHED);
         return &all_buildings[0];
     }
-    
+
     const building_properties *props = building_properties_for_type(type);
-    
+
     memset(&(b->data), 0, sizeof(b->data));
 
     b->state = BUILDING_STATE_CREATED;
@@ -77,7 +77,7 @@ building *building_create(building_type type, int x, int y)
     b->created_sequence = extra.created_sequence++;
     b->sentiment.house_happiness = 50;
     b->distance_from_entry = 0;
-    
+
     // house size
     b->house_size = 0;
     if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
@@ -89,14 +89,14 @@ building *building_create(building_type type, int x, int y)
     } else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE) {
         b->house_size = 4;
     }
-    
+
     // subtype
     if (building_is_house(type)) {
         b->subtype.house_level = type - BUILDING_HOUSE_VACANT_LOT;
     } else {
         b->subtype.house_level = 0;
     }
-    
+
     // input/output resources
     switch (type) {
         case BUILDING_WHEAT_FARM:
@@ -153,7 +153,7 @@ building *building_create(building_type type, int x, int y)
             b->output_resource_id = RESOURCE_NONE;
             break;
     }
-    
+
     if (type == BUILDING_GRANARY) {
         b->data.granary.resource_stored[RESOURCE_NONE] = 2400;
     }
@@ -355,7 +355,7 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     buffer_write_i32(highest_id_ever, extra.highest_id_ever);
     buffer_skip(highest_id_ever, 4);
     buffer_write_i32(sequence, extra.created_sequence);
-    
+
     buffer_write_i32(corrupt_houses, extra.incorrect_houses);
     buffer_write_i32(corrupt_houses, extra.unfixable_houses);
 }

@@ -77,7 +77,7 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    
+
     color_t color;
     for (int i = 0; i < 9; i++) {
         color = COLOR_BLACK;

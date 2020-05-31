@@ -274,7 +274,7 @@ void tutorial_save_state(buffer *buf1, buffer *buf2, buffer *buf3)
     buffer_write_i32(buf1, data.tutorial1.senate_built);
     buffer_write_i32(buf1, data.tutorial2.population_450_reached);
     buffer_write_i32(buf1, data.tutorial2.pottery_made);
-    
+
     buffer_write_i32(buf2, data.tutorial2.pottery_made_year);
 
     buffer_write_i32(buf3, data.tutorial3.disease);
@@ -291,7 +291,7 @@ void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3)
     data.tutorial1.senate_built = buffer_read_i32(buf1);
     data.tutorial2.population_450_reached = buffer_read_i32(buf1);
     data.tutorial2.pottery_made = buffer_read_i32(buf1);
-    
+
     data.tutorial2.pottery_made_year = buffer_read_i32(buf2);
 
     data.tutorial3.disease = buffer_read_i32(buf3);

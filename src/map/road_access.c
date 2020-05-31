@@ -308,7 +308,7 @@ int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int *road_tiles)
     road_tiles[3] = terrain_is_road_like(grid_offset + map_grid_delta(1, 1));
     road_tiles[5] = terrain_is_road_like(grid_offset + map_grid_delta(-1, 1));
     road_tiles[7] = terrain_is_road_like(grid_offset + map_grid_delta(-1, -1));
-    
+
     int max_stretch = 0;
     int stretch = 0;
     for (int i = 0; i < 16; i++) {

@@ -474,7 +474,7 @@ int city_message_next_problem_area_grid_offset(void)
                 index++;
                 if (data.problem_index < index) {
                     data.problem_index++;
-                    int grid_offset = grid_offset = msg->param2;
+                    int grid_offset = msg->param2;
                     if (lang_msg_type == MESSAGE_TYPE_INVASION) {
                         int formation_grid_offset = formation_grid_offset_for_invasion(msg->param1);
                         if (formation_grid_offset) {

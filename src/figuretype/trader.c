@@ -60,6 +60,9 @@ int figure_trade_caravan_can_buy(figure *trader, int warehouse_id, int city_id)
     if (trader->trader_amount_bought >= 8) {
         return 0;
     }
+    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, warehouse)) {
+        return 0;
+    }
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
@@ -78,6 +81,9 @@ int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id)
         return 0;
     }
     if (trader->loads_sold_or_carrying >= 8) {
+        return 0;
+    }
+    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, warehouse)) {
         return 0;
     }
     const building_storage *storage = building_storage_get(warehouse->storage_id);
@@ -249,6 +255,9 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
             continue;
         }
         if (!b->has_road_access || b->distance_from_entry <= 0) {
+            continue;
+        }
+        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, b)) {
             continue;
         }
         const building_storage *s = building_storage_get(b->storage_id);
@@ -534,7 +543,7 @@ void figure_native_trader_action(figure *f)
             break;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    
+
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
         f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + 96 + figure_image_corpse_offset(f);
         f->cart_image_id = 0;

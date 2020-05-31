@@ -28,6 +28,7 @@ typedef struct {
         short native_meeting_center_id;
         short market_goods;
         short roadblock_exceptions;
+        short barracks_priority;
     } subtype;
     unsigned char road_network_id;
     unsigned short created_sequence;

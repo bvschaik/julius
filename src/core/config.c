@@ -108,10 +108,9 @@ void config_load(void)
     char *line;
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
-        size_t last = strlen(line) - 1;
-        while (last >= 0 && (line[last] == '\n' || line[last] == '\r')) {
-            line[last] = 0;
-            last--;
+        size_t size = strlen(line);
+        while (size > 0 && (line[size-1] == '\n' || line[size-1] == '\r')) {
+            line[--size] = 0;
         }
         char *equals = strchr(line, '=');
         if (equals) {

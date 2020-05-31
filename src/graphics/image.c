@@ -454,30 +454,30 @@ static void draw_footprint_size2(int image_id, int x, int y, color_t color_mask)
 
     int index = 0;
     draw_footprint_tile(tile_data(data, index++), x, y, color_mask);
-    
+
     draw_footprint_tile(tile_data(data, index++), x - 30, y + 15, color_mask);
     draw_footprint_tile(tile_data(data, index++), x + 30, y + 15, color_mask);
-    
+
     draw_footprint_tile(tile_data(data, index++), x, y + 30, color_mask);
 }
 
 static void draw_footprint_size3(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
-    
+
     int index = 0;
     draw_footprint_tile(tile_data(data, index++), x, y, color_mask);
 
     draw_footprint_tile(tile_data(data, index++), x - 30, y + 15, color_mask);
     draw_footprint_tile(tile_data(data, index++), x + 30, y + 15, color_mask);
-    
+
     draw_footprint_tile(tile_data(data, index++), x - 60, y + 30, color_mask);
     draw_footprint_tile(tile_data(data, index++), x, y + 30, color_mask);
     draw_footprint_tile(tile_data(data, index++), x + 60, y + 30, color_mask);
-    
+
     draw_footprint_tile(tile_data(data, index++), x - 30, y + 45, color_mask);
     draw_footprint_tile(tile_data(data, index++), x + 30, y + 45, color_mask);
-    
+
     draw_footprint_tile(tile_data(data, index++), x, y + 60, color_mask);
 }
 
@@ -503,7 +503,7 @@ static void draw_footprint_size4(int image_id, int x, int y, color_t color_mask)
     draw_footprint_tile(tile_data(data, index++), x - 60, y + 60, color_mask);
     draw_footprint_tile(tile_data(data, index++), x, y + 60, color_mask);
     draw_footprint_tile(tile_data(data, index++), x + 60, y + 60, color_mask);
-    
+
     draw_footprint_tile(tile_data(data, index++), x - 30, y + 75, color_mask);
     draw_footprint_tile(tile_data(data, index++), x + 30, y + 75, color_mask);
 
@@ -539,7 +539,7 @@ static void draw_footprint_size5(int image_id, int x, int y, color_t color_mask)
     draw_footprint_tile(tile_data(data, index++), x - 30, y + 75, color_mask);
     draw_footprint_tile(tile_data(data, index++), x + 30, y + 75, color_mask);
     draw_footprint_tile(tile_data(data, index++), x + 90, y + 75, color_mask);
-    
+
     draw_footprint_tile(tile_data(data, index++), x - 60, y + 90, color_mask);
     draw_footprint_tile(tile_data(data, index++), x, y + 90, color_mask);
     draw_footprint_tile(tile_data(data, index++), x + 60, y + 90, color_mask);

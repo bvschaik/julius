@@ -1,4 +1,4 @@
-#include "sidebar_editor.h"
+#include "editor.h"
 
 #include "core/image_group_editor.h"
 #include "editor/tool.h"
@@ -16,11 +16,12 @@
 #include "scenario/map.h"
 #include "widget/map_editor.h"
 #include "widget/minimap.h"
+#include "widget/sidebar/common.h"
 #include "window/editor/attributes.h"
 #include "window/editor/build_menu.h"
 #include "window/editor/map.h"
 
-#define SIDEBAR_WIDTH 162
+#define MINIMAP_Y_OFFSET 30
 
 static void button_build_tool(int tool, int param2);
 static void button_build_menu(int submenu, int param2);
@@ -47,24 +48,14 @@ static image_button buttons_build[] = {
     {113, 411, 39, 26, IB_BUILD, GROUP_EDITOR_SIDEBAR_BUTTONS, 51, button_build_menu, button_none, MENU_ANIMAL_POINTS, 0, 1},
 };
 
-static int get_x_offset(void)
-{
-    return screen_width() - SIDEBAR_WIDTH;
-}
-
-static void draw_minimap(int force)
-{
-    widget_minimap_draw(get_x_offset() + 8, 30, 73, 111, force);
-}
-
 static void draw_buttons(void)
 {
-    image_buttons_draw(get_x_offset(), 24, buttons_build, 17);
+    image_buttons_draw(sidebar_common_get_x_offset_expanded(), TOP_MENU_HEIGHT, buttons_build, 17);
 }
 
 static void draw_status(void)
 {
-    int x_offset = get_x_offset();
+    int x_offset = sidebar_common_get_x_offset_expanded();
     inner_panel_draw(x_offset + 1, 175, 10, 7);
     int text_offset = x_offset + 6;
 
@@ -143,30 +134,18 @@ static void draw_status(void)
 void widget_sidebar_editor_draw_background(void)
 {
     int image_base = image_group(GROUP_EDITOR_SIDE_PANEL);
-    int x_offset = get_x_offset();
-    image_draw(image_base, x_offset, 24);
+    int x_offset = sidebar_common_get_x_offset_expanded();
+    image_draw(image_base, x_offset, TOP_MENU_HEIGHT);
     draw_buttons();
-    draw_minimap(1);
+    widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
     draw_status();
-
-    // relief images below panel
-    int y_offset = 474;
-    int y_max = screen_height();
-    while (y_offset < y_max) {
-        if (y_max - y_offset <= 120) {
-            image_draw(image_base + 1, x_offset, y_offset);
-            y_offset += 120;
-        } else {
-            image_draw(image_base + 2, x_offset, y_offset);
-            y_offset += 285;
-        }
-    }
+    sidebar_common_draw_relief(x_offset, SIDEBAR_FILLER_Y_OFFSET, GROUP_EDITOR_SIDE_PANEL, 0);
 }
 
 void widget_sidebar_editor_draw_foreground(void)
 {
     draw_buttons();
-    draw_minimap(0);
+    widget_minimap_draw(sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
 }
 
 int widget_sidebar_editor_handle_mouse(const mouse *m)
@@ -174,17 +153,17 @@ int widget_sidebar_editor_handle_mouse(const mouse *m)
     if (widget_minimap_handle_mouse(m)) {
         return 1;
     }
-    return image_buttons_handle_mouse(m, get_x_offset(), 24, buttons_build, 17, 0);
+    return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build, 17, 0);
 }
 
 int widget_sidebar_editor_handle_mouse_build_menu(const mouse *m)
 {
-    return image_buttons_handle_mouse(m, get_x_offset(), 24, buttons_build, 17, 0);
+    return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build, 17, 0);
 }
 
 int widget_sidebar_editor_handle_mouse_attributes(const mouse *m)
 {
-    return image_buttons_handle_mouse(m, get_x_offset(), 24, buttons_build, 2, 0);
+    return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build, 2, 0);
 }
 
 static void button_attributes(int show, int param2)

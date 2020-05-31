@@ -1,6 +1,6 @@
 # Augustus ![](res/julius_48.png)
 
-[![Travis](https://api.travis-ci.org/keriew/julius.svg?branch=master)](https://travis-ci.org/Keriew/julius)
+[![Travis](https://travis-ci.com/Keriew/augustus.svg?branch=master)](https://travis-ci.org/Keriew/augustus)
 
   
 | Platform | Latest release |
@@ -25,7 +25,11 @@ Gameplay enhancements include:
 - Market special orders
 - Global labour pool
 - Partial warehouse storage
+- Increased game limits
 - And more!
+=======
+
+Because of gameplay changes and additions, save files from Augustus are NOT compatible with Caesar 3 or Julius. Augustus is able to load Caesar 3 save files, but not the other way around. If you want vanilla experience with visual and UI improvements, or want to use save files in base Caesar 3, check [Julius](https://github.com/bvschaik/julius).
 
 Augustus, like project Julius requires the original assets (graphics, sounds, etc) from Caesar 3 to run.
 It optionally [supports the high-quality MP3 files](https://github.com/bvschaik/julius/wiki/MP3-Support) once provided on the Sierra website.
@@ -49,4 +53,5 @@ See [Running](doc/RUNNING.md) for further instructions and startup options.
 
 ## Bugs
 
-Julius recreates many bugs that you can find in original Caesar 3 game, to preserve 100% saves compatibility. See the list of [Bugs & idiosyncrasies](doc/bugs.md) to find out more.
+Julius recreates many bugs that you can find in original Caesar 3 game, to preserve 100% saves compatibility. See the list of [Bugs & idiosyncrasies](doc/bugs.md) to find out more.:w
+

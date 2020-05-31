@@ -48,7 +48,7 @@ void figure_ballista_action(figure *f)
     f->is_ghost = 1;
     f->height_adjusted_ticks = 10;
     f->current_height = 45;
-    
+
     if (b->state != BUILDING_STATE_IN_USE || b->figure_id4 != f->id) {
         f->state = FIGURE_STATE_DEAD;
     }
@@ -178,7 +178,7 @@ void figure_tower_sentry_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
-    
+
     tower_sentry_pick_target(f);
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:

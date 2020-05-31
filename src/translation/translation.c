@@ -1,7 +1,6 @@
 #include "translation.h"
 
 #include "core/encoding.h"
-#include "core/log.h"
 #include "core/string.h"
 
 #include <string.h>
@@ -46,6 +45,9 @@ void translation_load(language_type language)
         case LANGUAGE_GERMAN:
             translation_german(&strings, &num_strings);
             break;
+        case LANGUAGE_KOREAN:
+            translation_korean(&strings, &num_strings);
+            break;
         case LANGUAGE_PORTUGUESE:
             translation_portuguese(&strings, &num_strings);
             break;
@@ -66,8 +68,6 @@ void translation_load(language_type language)
         set_strings(strings, num_strings);
     }
     set_strings(default_strings, num_default_strings);
-
-    log_info("Memory used for translation", 0, data.buf_index);
 }
 
 const uint8_t *translation_for(translation_key key)

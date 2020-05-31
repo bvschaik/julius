@@ -119,7 +119,6 @@ static int get_height_id(void)
             case BUILDING_TOWER:
             case BUILDING_FORT:
             case BUILDING_MILITARY_ACADEMY:
-            case BUILDING_BARRACKS:
             case BUILDING_MARKET:
             case BUILDING_GRANARY:
             case BUILDING_SHIPYARD:
@@ -146,6 +145,7 @@ static int get_height_id(void)
             case BUILDING_FOUNTAIN:
                 return 2;
 
+            case BUILDING_BARRACKS:
             case BUILDING_AMPHITHEATER:
                 return 3;
 
@@ -587,7 +587,9 @@ static void draw_foreground(void)
             } else {
                 window_building_draw_roadblock_foreground(&context);
             }
-        }
+        } else if (btype == BUILDING_BARRACKS) {
+		window_building_draw_barracks_foreground(&context);
+	}
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info_foreground(&context);
     }
@@ -633,6 +635,8 @@ static int handle_specific_building_info_mouse(const mouse *m)
             } else {
                 return window_building_handle_mouse_roadblock(m, &context);
             }
+	} else if (btype == BUILDING_BARRACKS) {
+            return window_building_handle_mouse_barracks(m, &context);
 	} else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
                 return window_building_handle_mouse_granary_orders(m, &context);
@@ -656,22 +660,22 @@ static void handle_input(const mouse *m, const hotkeys *h)
     // general buttons
     if (context.storage_show_special_orders) {
         int y_offset = window_building_get_vertical_offset(&context, 28);
-        handled = image_buttons_handle_mouse(m, context.x_offset, y_offset + 400, image_buttons_help_close, 2, &focus_image_button_id);
+        handled |= image_buttons_handle_mouse(m, context.x_offset, y_offset + 400, image_buttons_help_close, 2, &focus_image_button_id);
     } else {
-        handled = image_buttons_handle_mouse(
+        handled |= image_buttons_handle_mouse(
                       m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
                       image_buttons_help_close, 2, &focus_image_button_id);
         handled = generic_buttons_handle_mouse(
             m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_mothball, 1, &focus_generic_button_id);
     }
     if (context.can_go_to_advisor) {
-        handled = image_buttons_handle_mouse(
+        handled |= image_buttons_handle_mouse(
                       m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
                       image_buttons_advisor, 1, 0);
     }
  
     if (!handled) {
-        handled = handle_specific_building_info_mouse(m);
+        handled |= handle_specific_building_info_mouse(m);
     }
     if (!handled && input_go_back_requested(m, h)) {
         window_city_show();

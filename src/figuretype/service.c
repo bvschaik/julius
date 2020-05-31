@@ -192,7 +192,7 @@ void figure_market_trader_action(figure *f)
 void figure_tax_collector_action(figure *f)
 {
     building *b = building_get(f->building_id);
-    
+
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 512;
@@ -200,7 +200,7 @@ void figure_tax_collector_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
-    
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
@@ -249,7 +249,7 @@ void figure_tax_collector_action(figure *f)
                 } else {
                     f->state = FIGURE_STATE_DEAD;
                 }
-            } 
+            }
             figure_movement_roam_ticks(f, 1);
             break;
         case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:

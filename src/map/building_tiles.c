@@ -110,28 +110,28 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_i
     // crop tile 1
     int growth = progress / 10;
     set_crop_tile(building_id, x, y, 0, 2, crop_image_id, growth);
-    
+
     // crop tile 2
     growth -= 4;
     if (growth < 0) {
         growth = 0;
     }
     set_crop_tile(building_id, x, y, 1, 2, crop_image_id, growth);
-    
+
     // crop tile 3
     growth -= 4;
     if (growth < 0) {
         growth = 0;
     }
     set_crop_tile(building_id, x, y, 2, 2, crop_image_id, growth);
-    
+
     // crop tile 4
     growth -= 4;
     if (growth < 0) {
         growth = 0;
     }
     set_crop_tile(building_id, x, y, 2, 1, crop_image_id, growth);
-    
+
     // crop tile 5
     growth -= 4;
     if (growth < 0) {

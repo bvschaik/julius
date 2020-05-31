@@ -64,18 +64,18 @@ static void draw_foreground(void)
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 48, y_offset + 54);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 568, y_offset + 54);
-        
+
         if (focus_button_id - 3 == i) {
             button_border_draw(80, y_offset + 54, 480, 24, 1);
         }
         lang_text_draw(23, resource, 88, y_offset + 61, FONT_NORMAL_WHITE);
         text_draw_number_centered(city_resource_count(resource),
-            180, y_offset + 61, 100, FONT_NORMAL_WHITE);
+            180, y_offset + 61, 60, FONT_NORMAL_WHITE);
         if (city_resource_is_mothballed(resource)) {
-            lang_text_draw(18, 5, 300, y_offset + 61, FONT_NORMAL_WHITE);
+            lang_text_draw_centered(18, 5, 240, y_offset + 61, 100, FONT_NORMAL_WHITE);
         }
         if (city_resource_is_stockpiled(resource)) {
-            lang_text_draw(54, 3, 380, y_offset + 61, FONT_NORMAL_WHITE);
+            lang_text_draw(54, 3, 340, y_offset + 61, FONT_NORMAL_WHITE);
         } else {
             resource_trade_status trade_status = city_resource_trade_status(resource);
             if (trade_status == TRADE_STATUS_IMPORT) {
@@ -83,9 +83,9 @@ static void draw_foreground(void)
                 text_draw_number(city_resource_export_over(resource), '@', " ",
                     500, y_offset + 61, FONT_NORMAL_WHITE);
             } else if (trade_status == TRADE_STATUS_EXPORT) {
-                lang_text_draw(54, 6, 380, y_offset + 61, FONT_NORMAL_WHITE);
+                int width = lang_text_draw(54, 6, 340, y_offset + 61, FONT_NORMAL_WHITE);
                 text_draw_number(city_resource_export_over(resource), '@', " ",
-                    500, y_offset + 61, FONT_NORMAL_WHITE);
+                    340 + width, y_offset + 61, FONT_NORMAL_WHITE);
             }
         }
     }

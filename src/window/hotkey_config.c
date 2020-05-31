@@ -28,7 +28,7 @@ static void button_close(int save, int param2);
 static scrollbar_type scrollbar = {580, 72, 352, on_scroll};
 
 typedef struct {
-    hotkey_action action;
+    int action;
     translation_key name;
 } hotkey_widget;
 

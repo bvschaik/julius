@@ -278,7 +278,7 @@ static void reset_taxes(void)
     city_data.taxes.yearly.collected_patricians = 0;
     city_data.taxes.yearly.uncollected_plebs = 0;
     city_data.taxes.yearly.uncollected_patricians = 0;
-    
+
     // reset tax income in building list
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);

@@ -82,16 +82,16 @@ static int closest_house_with_room(int x, int y)
 void figure_immigrant_action(figure *f)
 {
     building *b = building_get(f->immigrant_building_id);
-    
+
     f->terrain_usage = TERRAIN_USAGE_ANY;
     f->cart_image_id = 0;
     if (b->state != BUILDING_STATE_IN_USE || b->immigrant_figure_id != f->id || !b->house_size) {
         f->state = FIGURE_STATE_DEAD;
         return;
     }
-    
+
     figure_image_increase_offset(f, 12);
-    
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
@@ -161,7 +161,7 @@ void figure_immigrant_action(figure *f)
             f->is_ghost = f->in_building_wait_ticks ? 1 : 0;
             break;
     }
-    
+
     update_direction_and_image(f);
 }
 
@@ -169,9 +169,9 @@ void figure_emigrant_action(figure *f)
 {
     f->terrain_usage = TERRAIN_USAGE_ANY;
     f->cart_image_id = 0;
-    
+
     figure_image_increase_offset(f, 12);
-    
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
@@ -224,7 +224,7 @@ void figure_homeless_action(figure *f)
 {
     figure_image_increase_offset(f, 12);
     f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-    
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);

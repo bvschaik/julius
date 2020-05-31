@@ -1,5 +1,6 @@
 #include "market.h"
 
+#include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -94,6 +95,9 @@ int building_market_get_storage_destination(building *market)
         }
         if (!b->has_road_access || b->distance_from_entry <= 0 ||
             b->road_network_id != market->road_network_id) {
+            continue;
+        }
+        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_MARKET,b)) {
             continue;
         }
         int distance = calc_maximum_distance(market->x, market->y, b->x, b->y);

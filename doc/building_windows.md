@@ -28,7 +28,7 @@ You have two main options in how you want to build Julius. You can either:
    (I recommend something like `C:\libs`).
 
 5. Open Microsoft Visual Studio. Select `Clone or check out code`.
- 
+
  	![Visual Studio 2019 Startup window](images/building_windows_msvc_1.png)
 
 6. In the `Repository location` option, type `https://github.com/bvschaik/julius.git`.
@@ -127,7 +127,7 @@ In order to properly install MinGW-64, do the following:
 CMake is the tool that tells MinGW-w64 which files to compile and what options to use.
 
 Open the [download page for CMake](https://cmake.org/download/) and select the file from
-the `Windows win64-x64 Installer` option to install. 
+the `Windows win64-x64 Installer` option to install.
 
 During install, check the option `Add CMake to the system PATH for the current user`:
 

@@ -53,7 +53,7 @@ void window_building_draw_terrain(building_info_context *c)
                 c->help_id = 330;
             }
         }
-        
+
         window_building_prepare_figure_list(c);
         outer_panel_draw(c->x_offset, c->y_offset,
             c->width_blocks, c->height_blocks);

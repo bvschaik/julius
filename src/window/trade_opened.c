@@ -23,6 +23,7 @@ static int selected_city;
 
 static void draw_background(void)
 {
+    window_draw_underlying_window();
     graphics_in_dialog();
 
     outer_panel_draw(80, 64, 30, 14);

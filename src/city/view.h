@@ -31,7 +31,7 @@ void city_view_set_camera(int x, int y);
 
 void city_view_set_camera_from_pixel_position(int x, int y);
 
-int city_view_scroll(int x, int y);
+void city_view_scroll(int x, int y);
 
 int city_view_to_grid_offset(int x_view, int y_view);
 

@@ -72,7 +72,7 @@ static int draw_background(void)
     lang_text_draw(57, 6, 478, 86, FONT_SMALL_PLAIN);
 
     inner_panel_draw(32, 100, 36, 4);
-    
+
     // schools
     lang_text_draw_amount(8, 18, building_count_total(BUILDING_SCHOOL), 40, 105, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_SCHOOL), 150, 105, 100, FONT_NORMAL_WHITE);

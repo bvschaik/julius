@@ -45,7 +45,7 @@ void scenario_distant_battle_process(void)
             scenario.empire.distant_battle_enemy_travel_months > 4 &&
             scenario.empire.distant_battle_roman_travel_months > 4 &&
             !city_military_has_distant_battle()) {
-            
+
             city_message_post(1, MESSAGE_CAESAR_REQUESTS_ARMY, 0, 0);
             city_military_init_distant_battle(scenario.invasions[i].amount);
             return;

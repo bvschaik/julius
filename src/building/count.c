@@ -81,7 +81,7 @@ void building_count_update(void)
                 increase_count(type, b->num_workers > 0);
                 city_health_add_hospital_workers(b->num_workers);
                 break;
-            
+
             // water
             case BUILDING_RESERVOIR:
             case BUILDING_FOUNTAIN:
@@ -241,7 +241,7 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
     for (int i = 0; i < RESOURCE_MAX; i++) {
         buffer_write_i32(industry, data.industry[i].active);
     }
-    
+
     // culture 1
     buffer_write_i32(culture1, data.buildings[BUILDING_THEATER].total);
     buffer_write_i32(culture1, data.buildings[BUILDING_THEATER].active);
@@ -304,7 +304,7 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
     buffer_write_i32(military, data.buildings[BUILDING_MILITARY_ACADEMY].active);
     buffer_write_i32(military, data.buildings[BUILDING_BARRACKS].total);
     buffer_write_i32(military, data.buildings[BUILDING_BARRACKS].active);
-    
+
     // support
     buffer_write_i32(support, data.buildings[BUILDING_MARKET].total);
     buffer_write_i32(support, data.buildings[BUILDING_MARKET].active);
@@ -324,7 +324,7 @@ void building_count_load_state(buffer *industry, buffer *culture1, buffer *cultu
     for (int i = 0; i < RESOURCE_MAX; i++) {
         data.industry[i].active = buffer_read_i32(industry);
     }
-    
+
     // culture 1
     data.buildings[BUILDING_THEATER].total = buffer_read_i32(culture1);
     data.buildings[BUILDING_THEATER].active = buffer_read_i32(culture1);
@@ -387,7 +387,7 @@ void building_count_load_state(buffer *industry, buffer *culture1, buffer *cultu
     data.buildings[BUILDING_MILITARY_ACADEMY].active = buffer_read_i32(military);
     data.buildings[BUILDING_BARRACKS].total = buffer_read_i32(military);
     data.buildings[BUILDING_BARRACKS].active = buffer_read_i32(military);
-    
+
     // support
     data.buildings[BUILDING_MARKET].total = buffer_read_i32(support);
     data.buildings[BUILDING_MARKET].active = buffer_read_i32(support);

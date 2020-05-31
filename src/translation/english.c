@@ -52,7 +52,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SCHOOL_WALKERS, "Extend school walkers range"},
     {TR_CONFIG_RETIRE_AT_60, "Change citizens' retirement age from 50 to 60"},
     {TR_CONFIG_FIXED_WORKERS, "Fixed worker pool - 38% of population"},
-    {TR_CONFIG_EXTRA_FORTS, "Allow building 3 extra forts"},
+    {TR_CONFIG_EXTRA_FORTS, "Allow building 4 extra forts"},
     {TR_CONFIG_WOLVES_BLOCK, "Block building around wolves"},
     {TR_CONFIG_DYNAMIC_GRANARIES, "Block unconnected granary roads"},
     {TR_CONFIG_MORE_STOCKPILE, "Houses stockpile more goods from market"},

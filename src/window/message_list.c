@@ -142,31 +142,31 @@ static void draw_foreground(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
+    int old_button_id = data.focus_button_id;
+    data.focus_button_id = 0;
+
     int button_id;
-    image_buttons_handle_mouse(m_dialog, 16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1, &button_id);
+    int handled = image_buttons_handle_mouse(m_dialog, 16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 11;
-        return;
     }
-    image_buttons_handle_mouse(m_dialog, 16 * data.width_blocks - 38,
+    handled |= image_buttons_handle_mouse(m_dialog, 16 * data.width_blocks - 38,
         32 + 16 * data.height_blocks - 36, &image_button_close, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 12;
-        return;
     }
     if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
         data.focus_button_id = 13;
-        return;
     }
-    int old_focus_button_id = data.focus_button_id;
-    if (generic_buttons_handle_mouse(m_dialog, data.x_text, data.y_text + 4,
-        generic_buttons_messages, MAX_MESSAGES, &data.focus_button_id)) {
-        if (old_focus_button_id != data.focus_button_id) {
-            window_invalidate();
-        }
-        return;
+    handled |= generic_buttons_handle_mouse(m_dialog, data.x_text, data.y_text + 4,
+        generic_buttons_messages, MAX_MESSAGES, &button_id);
+    if (!data.focus_button_id) {
+        data.focus_button_id = button_id;
     }
-    if (input_go_back_requested(m, h)) {
+    if (button_id && old_button_id != button_id) {
+        window_invalidate();
+    }
+    if (!handled && input_go_back_requested(m, h)) {
         button_close(0, 0);
     }
 }

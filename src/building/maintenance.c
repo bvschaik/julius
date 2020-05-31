@@ -75,7 +75,7 @@ void building_maintenance_update_burning_ruins(void)
         if (dir1 < 0) dir1 = 7;
         int dir2 = fire_spread_direction + 1;
         if (dir2 > 7) dir2 = 0;
-        
+
         int grid_offset = b->grid_offset;
         int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(fire_spread_direction));
         if (next_building_id && !building_get(next_building_id)->fire_proof) {
@@ -140,7 +140,7 @@ static void collapse_building(building *b)
     if (!tutorial_handle_collapse()) {
         city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->grid_offset);
     }
-    
+
     game_undo_disable();
     building_destroy_by_collapse(b);
 }
@@ -151,7 +151,7 @@ static void fire_building(building *b)
     if (!tutorial_handle_fire()) {
         city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->grid_offset);
     }
-    
+
     building_destroy_by_fire(b);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
@@ -319,10 +319,10 @@ void building_maintenance_check_rome_access(void)
             map_tiles_update_all_aqueducts(0);
             map_tiles_update_all_empty_land();
             map_tiles_update_all_meadow();
-            
+
             map_routing_update_land();
             map_routing_update_walls();
-            
+
             if (map_routing_distance(exit_point->grid_offset)) {
                 city_message_post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
                 game_undo_disable();

@@ -88,7 +88,7 @@ Another option is to get the game files by installing Caesar 3 using [WINE](http
 Touch modes can be toggled with the select button. There are three modes:
 1. Touchpad mode (default)
     * Single finger drag = move the mouse pointer (indirectly like on a touchpad)
-    * Single short tap = left mouse click  
+    * Single short tap = left mouse click
     * Single short tap while holding a second finger down = right mouse click
     * Dual finger drag = drag'n'drop (left mouse button is held down)
     * Three finger drag = drag'n'drop (right mouse button is held down)
@@ -96,7 +96,7 @@ Touch modes can be toggled with the select button. There are three modes:
     * Pointer jumps to finger, nothing else
 3. Julius mode
     * Pointer jumps to finger
-    * Single short tap = left mouse click  
+    * Single short tap = left mouse click
     * Single short tap while holding a second finger down = right mouse click
     * Dual finger drag = scroll
     * Dragging is context sensitive
@@ -114,7 +114,7 @@ with all Bluetooth devices.
    [Nintendo Homebrew's Guide](https://nh-server.github.io/switch-guide/) or, alternatively, on
    [AtlasNX's Guide](https://guide.teamatlasnx.com/).
 2. Extract the contents of `julius_switch.zip` into the `switch` folder on your SD card,
-   so that you have a folder `/switch/julius` with `julius.nro` inside. 
+   so that you have a folder `/switch/julius` with `julius.nro` inside.
 3. Copy all the files from a Caesar 3 install into the `/switch/julius/` folder, so that you
    have the file `/switch/julius/c3.eng` and more.
 
@@ -136,7 +136,7 @@ with all Bluetooth devices.
 Touch modes can be toggled with the minus button. There are three modes:
 1. Touchpad mode (default)
     * Single finger drag = move the mouse pointer (indirectly like on a touchpad)
-    * Single short tap = left mouse click  
+    * Single short tap = left mouse click
     * Single short tap while holding a second finger down = right mouse click
     * Dual finger drag = drag'n'drop (left mouse button is held down)
     * Three finger drag = drag'n'drop (right mouse button is held down)
@@ -144,7 +144,7 @@ Touch modes can be toggled with the minus button. There are three modes:
     * Pointer jumps to finger, nothing else
 3. Julius mode
     * Pointer jumps to finger
-    * Single short tap = left mouse click  
+    * Single short tap = left mouse click
     * Single short tap while holding a second finger down = right mouse click
     * Dual finger drag = scroll
     * Dragging is context sensitive

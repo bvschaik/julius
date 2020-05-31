@@ -4,6 +4,7 @@
 #include "graphics/warning.h"
 #include "input/cursor.h"
 #include "input/hotkey.h"
+#include "input/scroll.h"
 #include "input/touch.h"
 #include "window/city.h"
 
@@ -41,6 +42,13 @@ static void decrease_queue_index(void)
     }
 }
 
+static void reset_input(void)
+{
+    mouse_reset_button_state();
+    reset_touches(1);
+    scroll_stop();
+}
+
 void window_invalidate(void)
 {
     data.refresh_immediate = 1;
@@ -69,8 +77,7 @@ window_id window_get_id(void)
 
 void window_show(const window_type *window)
 {
-    mouse_reset_button_state();
-    reset_touches(1);
+    reset_input();
     increase_queue_index();
     data.window_queue[data.queue_index] = *window;
     data.current_window = &data.window_queue[data.queue_index];
@@ -88,6 +95,7 @@ void window_show(const window_type *window)
 
 void window_go_back(void)
 {
+    reset_input();
     decrease_queue_index();
     data.current_window = &data.window_queue[data.queue_index];
     window_invalidate();

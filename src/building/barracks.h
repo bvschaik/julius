@@ -22,4 +22,14 @@ void building_barracks_save_state(buffer *buf);
 
 void building_barracks_load_state(buffer *buf);
 
+void building_barracks_toggle_priority(building* barracks);
+
+int building_barracks_get_priority(building* barracks);
+
+
+typedef enum {
+	PRIORITY_TOWER = 0,
+	PRIORITY_FORT = 1,
+} barracks_priority;
+
 #endif // BUILDING_BARRACKS_H

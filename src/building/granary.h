@@ -17,6 +17,8 @@ int building_granary_remove_resource(building *granary, int resource, int amount
 
 int building_granary_remove_for_getting_deliveryman(building *src, building *dst, int *resource);
 
+int building_granary_is_not_accepting(int resource, building* b);
+
 int building_granary_determine_worker_task(building *granary);
 
 void building_granaries_calculate_stocks(void);

@@ -18,6 +18,7 @@ endfunction(except_file)
 # Replace some source files with stubs
 except_file(TEST_CORE_FILES "core/image.c" ${CORE_FILES})
 except_file(TEST_CORE_FILES "core/lang.c" ${TEST_CORE_FILES})
+except_file(TEST_CORE_FILES "core/speed.c" ${TEST_CORE_FILES})
 except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
 
 add_executable(compare

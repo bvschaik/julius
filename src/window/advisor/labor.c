@@ -41,9 +41,9 @@ static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS), 10, 10);
-    
+
     lang_text_draw(50, 0, 60, 12, FONT_LARGE_BLACK);
-    
+
     // table headers
     lang_text_draw(50, 21, 60, 56, FONT_SMALL_PLAIN);
     lang_text_draw(50, 22, 170, 56, FONT_SMALL_PLAIN);
@@ -102,8 +102,7 @@ static int handle_mouse(const mouse *m)
     if (generic_buttons_handle_mouse(m, 0, 0, category_buttons, 9, &focus_button_id)) {
         return 1;
     }
-    arrow_button_focus = arrow_buttons_handle_mouse(m, 0, 0, wage_buttons, 2);
-    return arrow_button_focus;
+    return arrow_buttons_handle_mouse(m, 0, 0, wage_buttons, 2, &arrow_button_focus);
 }
 
 static void arrow_button_wages(int is_down, int param2)

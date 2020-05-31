@@ -519,7 +519,7 @@ void building_house_process_evolve_and_consume_goods(void)
 void building_house_determine_evolve_text(building *house, int worst_desirability_building)
 {
     int level = house->subtype.house_level;
-    
+
     // this house will devolve soon because...
 
     const model_house *model = model_get_house(level);
