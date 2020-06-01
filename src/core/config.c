@@ -43,6 +43,7 @@ static const char *ini_keys[] = {
     "gameplay_change_all_houses_merge",
     "gameplay_change_wine_open_trade_route_counts",
     "gameplay_change_random_mine_or_pit_collapses_take_money",
+    "gameplay_change_multiple_barracks",
 };
 
 static const char *ini_string_keys[] = {

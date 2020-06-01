@@ -21,7 +21,7 @@
 #include "window/select_list.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 31
+#define NUM_CHECKBOXES 32
 #define CONFIG_PAGES 3
 #define NUM_BOTTOM_BUTTONS 6
 #define MAX_LANGUAGE_DIRS 20
@@ -30,7 +30,7 @@
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
-static int options_per_page[CONFIG_PAGES] = { 8,14,9 };
+static int options_per_page[CONFIG_PAGES] = { 8,14,10 };
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
@@ -75,6 +75,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ALL_HOUSES_MERGE },
     { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE },
     { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY },
+    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MULTIPLE_BARRACKS },
 };
 
 static generic_button language_button = {
@@ -137,6 +138,7 @@ static const char* option_names[] = {
     "All houses merge",
     "Open trade route count as providing different wine type",
     "Randomly collapsing clay pits and iron mines take some money instead",
+    "Allow building multiple barracks",
 };
 
 static struct {
