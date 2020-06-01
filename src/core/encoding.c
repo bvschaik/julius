@@ -669,10 +669,11 @@ void encoding_from_utf8(const char *input, uint8_t *output, int output_length)
     if (!data.to_utf8_table) {
         if (data.encoding == ENCODING_KOREAN) {
             encoding_korean_from_utf8(input, output, output_length);
+            return;
         } else {
             //encoding_multibyte_from_utf8(data.encoding, input, output, output_length);
         }
-        return;
+        // return;
     }
 
     const uint8_t *max_output = &output[output_length - 1];
