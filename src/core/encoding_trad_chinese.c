@@ -2316,9 +2316,9 @@ void encoding_trad_chinese_from_utf8(const char *input, uint8_t *output, int out
             const chinese_entry *entry = bsearch(&key, utf8_to_codepage,
                 IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_utf8);
             if (entry && output + 2 <= max_output) {
-                *output = (entry->internal >> 8) & 0xff;
-                output++;
                 *output = entry->internal & 0xff;
+                output++;
+                *output = (entry->internal >> 8) & 0xff;
                 output++;
                 input += entry->utf8[2] ? 3 : 2;
             } else {
