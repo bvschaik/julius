@@ -10,6 +10,6 @@ case "$BUILD_TARGET" in
 "switch")
 	wget https://github.com/devkitPro/pacman/releases/download/devkitpro-pacman-1.0.1/devkitpro-pacman.deb
 	sudo dpkg -i devkitpro-pacman.deb
-	sudo dkp-pacman -Syyu --noconfirm devkitA64 devkitpro-pkgbuild-helpers libnx switch-tools switch-sdl2 switch-sdl2_mixer switch-libpng
+	sudo dkp-pacman -Syyu --noconfirm devkitA64 devkitpro-pkgbuild-helpers libnx switch-tools switch-pkg-config switch-sdl2 switch-sdl2_mixer switch-libpng
 	;;
 esac

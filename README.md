@@ -27,7 +27,6 @@ Gameplay enhancements include:
 - Partial warehouse storage
 - Increased game limits
 - And more!
-=======
 
 Because of gameplay changes and additions, save files from Augustus are NOT compatible with Caesar 3 or Julius. Augustus is able to load Caesar 3 save files, but not the other way around. If you want vanilla experience with visual and UI improvements, or want to use save files in base Caesar 3, check [Julius](https://github.com/bvschaik/julius).
 
