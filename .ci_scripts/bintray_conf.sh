@@ -26,11 +26,11 @@ then
 cat > "bintray.json" <<EOF
 {
   "package": {
-    "subject": "bvschaik",
+    "subject": "keriew",
     "repo": "$REPO",
     "name": "linux",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/bvschaik/julius.git"
+    "vcs_url": "https://github.com/Keriew/julius.git"
   },
 
   "version": {
@@ -41,8 +41,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius.zip",
-      "uploadPattern": "julius-$VERSION-linux-x86_64.zip"
+      "includePattern": "${build_dir}/augustus.zip",
+      "uploadPattern": "augustus-$VERSION-linux-x86_64.zip"
     }
   ],
 
@@ -59,7 +59,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "linux",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/Keriew/julius.git"
+    "vcs_url": "https://github.com/Keriew/augustus.git"
   },
 
   "version": {
@@ -70,8 +70,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius.AppImage",
-      "uploadPattern": "julius-$VERSION-linux.AppImage"
+      "includePattern": "${build_dir}/augustus.AppImage",
+      "uploadPattern": "augustus-$VERSION-linux.AppImage"
     }
   ],
 
@@ -87,7 +87,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "mac",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/Keriew/julius.git"
+    "vcs_url": "https://github.com/Keriew/augustus.git"
   },
 
   "version": {
@@ -98,8 +98,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius.dmg",
-      "uploadPattern": "julius-$VERSION-mac.dmg",
+      "includePattern": "${build_dir}/augustus.dmg",
+      "uploadPattern": "augustus-$VERSION-mac.dmg",
       "listInDownloads": true
     }
   ],
@@ -116,7 +116,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "vita",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/Keriew/julius.git"
+    "vcs_url": "https://github.com/Keriew/augustus.git"
   },
 
   "version": {
@@ -127,8 +127,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius.vpk",
-      "uploadPattern": "julius-$VERSION-vita.vpk",
+      "includePattern": "${build_dir}/augustus.vpk",
+      "uploadPattern": "augustus-$VERSION-vita.vpk",
       "listInDownloads": true
     }
   ],
@@ -145,7 +145,7 @@ cat > "bintray.json" <<EOF
     "repo": "$REPO",
     "name": "switch",
     "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/Keriew/julius.git"
+    "vcs_url": "https://github.com/Keriew/augustus.git"
   },
 
   "version": {
@@ -156,8 +156,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius.zip",
-      "uploadPattern": "julius-$VERSION-switch.zip",
+      "includePattern": "${build_dir}/augustus.zip",
+      "uploadPattern": "augustus-$VERSION-switch.zip",
       "listInDownloads": true
     }
   ],

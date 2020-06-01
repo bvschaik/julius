@@ -4,7 +4,7 @@ build_dir="$(pwd)/build"
 
 if [ "$DEPLOY" = "switch" ]
 then
-mkdir -p $build_dir/release/julius
-cp -f $build_dir/julius.nro $build_dir/release/julius/julius.nro
-cd $build_dir/release && zip -r ../julius_switch.zip julius -x "*.DS_Store" -x "*__MAC*"
+mkdir -p $build_dir/release/augustus
+cp -f $build_dir/augustus.nro $build_dir/release/augustus/augustus.nro
+cd $build_dir/release && zip -r ../augustus_switch.zip augustus -x "*.DS_Store" -x "*__MAC*"
 fi
