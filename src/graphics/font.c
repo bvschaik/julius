@@ -1,6 +1,6 @@
 #include "font.h"
 
-#include "core/encoding_multibyte.h"
+#include "core/encoding_trad_chinese.h"
 #include "core/image.h"
 
 static int image_y_offset_default(uint8_t c, int image_height, int line_height);
@@ -374,7 +374,7 @@ int font_letter_id(const font_definition *def, const uint8_t *str, int *num_byte
             if (char_id >= IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
                 // lookup in table
                 int big5_encoded = str[0] << 8 | str[1];
-                char_id = encoding_multibyte_big5_to_image_id(big5_encoded);
+                char_id = encoding_trad_chinese_big5_to_image_id(big5_encoded);
                 if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
                     return -1;
                 }
