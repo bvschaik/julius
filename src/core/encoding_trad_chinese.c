@@ -309,7 +309,7 @@ static const chinese_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHA
     {0x82a6, {0xe5, 0x80, 0xbc}},
     {0x82a7, {0xe9, 0x9a, 0xa8}},
     {0x82a8, {0xe7, 0x95, 0xab}},
-    {0x82a9, {0xef, 0xbc, 0x8d}},
+    {0x82a9, {0xe2, 0x80, 0x93}},
     {0x82aa, {0xe5, 0xbd, 0xb1}},
     {0x82ab, {0xe9, 0x9f, 0xbf}},
     {0x82ac, {0xe5, 0x8a, 0x9b}},
@@ -440,7 +440,7 @@ static const chinese_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHA
     {0x83a9, {0xe8, 0xbf, 0xa6}},
     {0x83aa, {0xe5, 0xa4, 0xaa}},
     {0x83ab, {0xe5, 0x9f, 0xba}},
-    {0x83ac, {0xc2, 0xb7, 0x00}},
+    {0x83ac, {0xc2, 0xb7}},
     {0x83ad, {0xe8, 0xab, 0xbe}},
     {0x83ae, {0xe7, 0x93, 0xa6}},
     {0x83af, {0xe6, 0xb4, 0x9b}},
@@ -688,7 +688,7 @@ static const chinese_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHA
     {0x85a1, {0xe7, 0x9c, 0x81}},
     {0x85a2, {0xe5, 0xa2, 0x9e}},
     {0x85a3, {0xe5, 0x88, 0xaa}},
-    {0x85a4, {0xe5, 0xbe, 0xa9}},
+    {0x85a4, {0xe8, 0xa4, 0x87}},
     {0x85a5, {0xe8, 0xb3, 0xbc}},
     {0x85a6, {0xe8, 0xb2, 0xb7}},
     {0x85a7, {0xe5, 0x85, 0x8d}},
@@ -1292,7 +1292,7 @@ static const chinese_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHA
     {0x89fd, {0xe5, 0xa4, 0xa5}},
     {0x89fe, {0xe4, 0xbc, 0xb4}},
     {0x89ff, {0xe6, 0xa8, 0xb5}},
-    {0x8a80, {0xe5, 0x82, 0xb3}},
+    {0x8a80, {0xe5, 0x82, 0x85}},
     {0x8a81, {0xe9, 0xa3, 0xaa}},
     {0x8a82, {0xe7, 0x94, 0xb2}},
     {0x8a83, {0xe5, 0xa1, 0x91}},
@@ -1469,7 +1469,7 @@ static const chinese_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHA
     {0x8bae, {0xe5, 0x96, 0x9a}},
     {0x8baf, {0xe9, 0x9b, 0xa8}},
     {0x8bb0, {0xe7, 0x89, 0x87}},
-    {0x8bb1, {0xe4, 0xba, 0x91}},
+    {0x8bb1, {0xe9, 0x9b, 0xb2}},
     {0x8bb2, {0xe6, 0x87, 0x82}},
     {0x8bb3, {0xe7, 0x95, 0x8f}},
     {0x8bb4, {0xe5, 0x80, 0x8d}},
@@ -1483,7 +1483,7 @@ static const chinese_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHA
     {0x8bbc, {0xe7, 0x96, 0xab}},
     {0x8bbd, {0xe7, 0x82, 0x99}},
     {0x8bbe, {0xe9, 0xad, 0x82}},
-    {0x8bbf, {0xe8, 0x98, 0x87}},
+    {0x8bbf, {0xe7, 0x94, 0xa6}},
     {0x8bc0, {0xe6, 0xae, 0xba}},
     {0x8bc1, {0xe9, 0x80, 0xae}},
     {0x8bc2, {0xe6, 0x8d, 0x95}},
@@ -1624,7 +1624,7 @@ static const chinese_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHA
     {0x8cc9, {0xe6, 0xb8, 0xb8}},
     {0x8cca, {0xe6, 0xa1, 0x86}},
     {0x8ccb, {0xe7, 0xab, 0xaf}},
-    {0x8ccc, {0xe6, 0xad, 0xb7}},
+    {0x8ccc, {0xe6, 0x9b, 0x86}},
     {0x8ccd, {0xe6, 0x9f, 0xb1}},
     {0x8cce, {0xe7, 0xab, 0x9f}},
     {0x8ccf, {0xe6, 0xa3, 0x95}},
@@ -2204,12 +2204,42 @@ static const chinese_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHA
 
 static chinese_entry *utf8_to_codepage;
 
+typedef struct {
+    uint16_t image_id;
+    uint16_t codepage;
+} image_entry;
+
+// only define the characters that are actually used in the language files
+static image_entry image_entries[] = {
+    {4, 0xb943},
+    {5, 0xc0b8},
+    {14, 0xc2f7},
+    {15, 0xb67d},
+    {51, 0xabd2},
+    {68, 0xad6e},
+    {69, 0xc3b9},
+    {70, 0xb0a8},
+    {71, 0xb0ea},
+    {72, 0xb6dc},
+    {73, 0xa148},
+    {80, 0xaaba},
+    {118, 0xa175},
+    {119, 0xb3cd},
+    {120, 0xbcbb},
+    {121, 0xa46a},
+    {122, 0xa176},
+    {297, 0xa1d0},
+    {782, 0xb751},
+    {1439, 0xa2bb},
+    {0, 0}
+};
+
 static int compare_utf8(const void *a, const void *b)
 {
     const uint8_t *va = ((const chinese_entry*) a)->utf8;
     const uint8_t *vb = ((const chinese_entry*) b)->utf8;
     for (int i = 0; i < 3; i++) {
-        if (va[i] == vb[i]) {
+        if (va[i] == vb[i] || (va[i] == 0 || vb[i] == 0)) {
             continue;
         }
         return va[i] < vb[i] ? -1 : 1;
@@ -2251,10 +2281,10 @@ void encoding_trad_chinese_to_utf8(const uint8_t *input, char *output, int outpu
             ++input;
         } else {
             // multi-byte char
-            const chinese_entry key = {input[0] << 8 | input[1]};
+            const chinese_entry key = {input[1] << 8 | input[0]};
             const chinese_entry *entry = bsearch(&key, codepage_to_utf8,
                 IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_internal);
-            int bytes = entry->utf8[2] ? 3 : 2;
+            int bytes = entry ? (entry->utf8[2] ? 3 : 2) : 0;
             if (entry && output + bytes <= max_output) {
                 for (int i = 0; i < bytes; i++) {
                     *output = entry->utf8[i];
@@ -2281,7 +2311,7 @@ void encoding_trad_chinese_from_utf8(const char *input, uint8_t *output, int out
             ++output;
             ++input;
         } else {
-            // multi-byte char: Chinese characters may be 2 or 3 bytes in UTF-8
+            // multi-byte char: Chinese characters from the table may be 2 or 3 bytes in UTF-8
             const chinese_entry key = {0, {(uint8_t)input[0], (uint8_t)input[1], (uint8_t)input[2]}};
             const chinese_entry *entry = bsearch(&key, utf8_to_codepage,
                 IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_utf8);
@@ -2294,9 +2324,19 @@ void encoding_trad_chinese_from_utf8(const char *input, uint8_t *output, int out
             } else {
                 *output = '?';
                 output++;
-                input += 3;
+                input++;
             }
         }
     }
     *output = 0;
+}
+
+int encoding_trad_chinese_big5_to_image_id(int big5)
+{
+    for (int i = 0; image_entries[i].image_id; i++) {
+        if (image_entries[i].codepage == big5) {
+            return image_entries[i].image_id;
+        }
+    }
+    return -1;
 }
