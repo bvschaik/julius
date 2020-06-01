@@ -169,7 +169,7 @@ static void draw_trader(building_info_context *c, figure *f)
 
 static void draw_enemy(building_info_context *c, figure *f)
 {
-    int image_id = 8;
+    int image_id = FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[f->type];
     int enemy_type = formation_get(f->formation_id)->enemy_type;
     switch (f->type) {
         case FIGURE_ENEMY43_SPEAR:
