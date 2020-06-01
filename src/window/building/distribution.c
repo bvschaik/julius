@@ -298,6 +298,7 @@ void window_building_handle_mouse_market_orders(const mouse* m, building_info_co
 void window_building_draw_granary(building_info_context *c)
 {
     c->help_id = 3;
+    data.building_id = c->building_id;    
     window_building_play_sound(c, "wavs/granary.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(98, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
