@@ -211,6 +211,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/encoding.c
     ${PROJECT_SOURCE_DIR}/src/core/encoding_korean.c
     ${PROJECT_SOURCE_DIR}/src/core/encoding_multibyte.c
+    ${PROJECT_SOURCE_DIR}/src/core/encoding_trad_chinese.c
     ${PROJECT_SOURCE_DIR}/src/core/file.c
     ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.c
     ${PROJECT_SOURCE_DIR}/src/core/image.c
