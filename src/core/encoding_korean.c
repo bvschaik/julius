@@ -1,6 +1,7 @@
 #include "encoding_korean.h"
 
 #include "core/image.h"
+#include "core/log.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -2363,7 +2364,7 @@ static const korean_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS
     {0xc8fe, {0xed, 0x9e, 0x9d}}
 };
 
-static korean_entry utf8_to_codepage[IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS];
+static korean_entry *utf8_to_codepage;
 
 static int compare_utf8(const void *a, const void *b)
 {
@@ -2387,6 +2388,13 @@ static int compare_codepage(const void *a, const void *b)
 
 void encoding_korean_init(void)
 {
+    if (!utf8_to_codepage) {
+        utf8_to_codepage = (korean_entry*) malloc(sizeof(korean_entry) * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS);
+        if (!utf8_to_codepage) {
+            log_error("Unable to allocate memory for Korean codepage", 0, 0);
+            return;
+        }
+    }
     // codepage_to_unicode is already sorted, copy data and sort the other way around
     memcpy(utf8_to_codepage, codepage_to_utf8,
         IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * sizeof(korean_entry));
@@ -2422,6 +2430,10 @@ void encoding_korean_to_utf8(const uint8_t *input, char *output, int output_leng
 
 void encoding_korean_from_utf8(const char *input, uint8_t *output, int output_length)
 {
+    if (!utf8_to_codepage) {
+        output[0] = 0;
+        return;
+    }
     const uint8_t *max_output = &output[output_length - 1];
 
     while (*input && output < max_output) {
