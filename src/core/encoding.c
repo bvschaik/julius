@@ -610,6 +610,15 @@ encoding_type encoding_get(void)
     return data.encoding;
 }
 
+int encoding_system_uses_decomposed(void)
+{
+#ifdef __APPLE__
+    return 1;
+#else
+    return 0;
+#endif
+}
+
 static int is_ascii(const char *utf8_char)
 {
     return ((uint8_t) *utf8_char & 0x80) == 0;

@@ -31,6 +31,12 @@ encoding_type encoding_determine(language_type language);
 encoding_type encoding_get(void);
 
 /**
+ * Returns whether the current operating system uses decomposed form for UTF-8 strings
+ * @return Boolean true if using decomposed, false otherwise
+ */
+int encoding_system_uses_decomposed(void);
+
+/**
  * Checks whether the character can be displayed using the internal encoding
  * @param utf8_char UTF-8 encoded character
  * @return boolean true when the character can be displayed, false otherwise

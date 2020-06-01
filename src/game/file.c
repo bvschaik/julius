@@ -17,6 +17,7 @@
 #include "core/file.h"
 #include "core/image.h"
 #include "core/io.h"
+#include "core/lang.h"
 #include "core/string.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
@@ -374,7 +375,15 @@ void game_file_write_mission_saved_game(void)
     } else if (rank > 11) {
         rank = 11;
     }
-    if (city_mission_should_save_start() && !file_exists(MISSION_SAVED_GAMES[rank], NOT_LOCALIZED)) {
-        game_file_io_write_saved_game(MISSION_SAVED_GAMES[rank]);
+    const char *filename = MISSION_SAVED_GAMES[rank];
+    if (locale_translate_rank_autosaves()) {
+        char localized_filename[FILE_NAME_MAX];
+        encoding_to_utf8(lang_get_string(32, rank), localized_filename, FILE_NAME_MAX,
+            encoding_system_uses_decomposed());
+        strcat(localized_filename, ".sav");
+        filename = localized_filename;
+    }
+    if (city_mission_should_save_start() && !file_exists(filename, NOT_LOCALIZED)) {
+        game_file_io_write_saved_game(filename);
     }
 }
