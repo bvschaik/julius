@@ -31,6 +31,7 @@ static struct {
     int initialized;
     Mix_Music *music;
     sound_channel channels[MAX_CHANNELS];
+    uint8_t *music_data;
 } data;
 
 static struct {
@@ -172,8 +173,15 @@ int sound_device_play_music(const char *filename, int volume_pct)
         if (!fp) {
             return 0;
         }
-        SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
-        data.music = Mix_LoadMUSType_RW(sdl_fp, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+        fseek(fp, 0, SEEK_END);
+        long music_length = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+
+        data.music_data = malloc(music_length);
+        fread(data.music_data, 1, music_length, fp);
+        fclose(fp);
+        SDL_RWops *sdl_music = SDL_RWFromMem(data.music_data, music_length);
+        data.music = Mix_LoadMUSType_RW(sdl_music, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
 #else
         data.music = Mix_LoadMUS(filename);
 #endif
@@ -234,6 +242,10 @@ void sound_device_stop_music(void)
             Mix_HaltMusic();
             Mix_FreeMusic(data.music);
             data.music = 0;
+        }
+        if (data.music_data) {
+            free(data.music_data);
+            data.music_data = 0;
         }
     }
 }
