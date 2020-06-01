@@ -86,7 +86,7 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
 
 static void setup_logging(void)
 {
-    log_file = file_open("julius-log.txt", "wt");
+    log_file = file_open("augustus-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
 
@@ -449,7 +449,7 @@ static void setup(const julius_args *args)
     signal(SIGSEGV, handler);
     setup_logging();
 
-    SDL_Log("Julius version %s", system_version());
+    SDL_Log("Augustus version %s", system_version());
 
     if (!init_sdl()) {
         SDL_Log("Exiting: SDL init failed");

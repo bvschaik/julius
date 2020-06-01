@@ -12,7 +12,7 @@ case "$BUILD_TARGET" in
 "mac")
 	cd build && make && make install && \
 	echo "Creating disk image" && \
-	hdiutil create -volname Julius -srcfolder julius.app -ov -format UDZO julius.dmg
+	hdiutil create -volname Augustus -srcfolder augustus.app -ov -format UDZO augustus.dmg
 	;;
 "appimage")
 	cd build && make && \
@@ -22,7 +22,7 @@ case "$BUILD_TARGET" in
 	;;
 "linux")
 	cd build && make && \
-	zip julius.zip julius
+	zip augustus.zip augustus
 	;;
 *)
 	cd build && make 

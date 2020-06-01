@@ -27,12 +27,12 @@ if(SWITCH_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     endif()
 endif()
 
-set(SHORT_NAME julius)
+set(SHORT_NAME augustus)
 project(${SHORT_NAME} C)
 
 if (VITA_BUILD)
     include("${VITASDK}/share/vita.cmake" REQUIRED)
-    set(VITA_TITLEID  "JULIUS001")
+    set(VITA_TITLEID  "AUGUSTUS001")
 endif()
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
@@ -646,7 +646,7 @@ if(APPLE)
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
 
-    set_target_properties(julius PROPERTIES
+    set_target_properties(augustus PROPERTIES
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist.in")
 

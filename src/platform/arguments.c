@@ -99,7 +99,7 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
     }
 
     if (!ok) {
-        SDL_Log("Usage: julius [ARGS] [DATA_DIR]");
+        SDL_Log("Usage: augustus [ARGS] [DATA_DIR]");
         SDL_Log("ARGS may be:");
         SDL_Log("--display-scale NUMBER");
         SDL_Log("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");

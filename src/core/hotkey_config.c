@@ -11,7 +11,7 @@
 #define MAX_LINE 100
 #define MAX_MAPPINGS HOTKEY_MAX_ITEMS * 2
 
-static const char *INI_FILENAME = "julius-hotkeys.ini";
+static const char *INI_FILENAME = "augustus-hotkeys.ini";
 
 // Keep this in the same order as the actions in hotkey_config.h
 static const char *ini_keys[] = {
