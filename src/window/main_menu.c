@@ -39,9 +39,10 @@ static generic_button buttons[] = {
 static void draw_version_string(void)
 {
     uint8_t version_string[100] = "Augustus v";
+    int version_prefix_length = string_length(version_string);
     int text_y = screen_height() - 30;
 
-    string_copy(string_from_ascii(system_version()), version_string + 1, 90);
+    string_copy(string_from_ascii(system_version()), version_string + version_prefix_length, 99);
 
     int text_width = text_get_width(version_string, FONT_SMALL_PLAIN);
 
