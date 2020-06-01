@@ -100,6 +100,7 @@ static void draw_won(void)
 
 static void draw_background(void)
 {
+    window_draw_underlying_window();    
     graphics_in_dialog();
     if (city_victory_state() == VICTORY_STATE_WON) {
         draw_won();
