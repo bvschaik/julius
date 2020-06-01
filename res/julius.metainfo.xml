@@ -7,7 +7,7 @@
 	<summary>Julius is an open source re-implementation of Caesar III</summary>
 	<description>
 		<p>Julius is an open source re-implementation of Caesar III.</p>
-		<p>The aim of this project is to create an open-source version of Caesar 3, with the same logic as the original, but with some UI enhancements, that is able to be played on multiple platforms. The same logic means that the saved games are 100% compatible, and any gameplay bugs present in the original Caesar 3 game will also be present in Julius.</p>
+		<p>Julius is a fully working open-source version of Caesar 3, with the same logic as the original, but with some UI enhancements, that is able to be played on multiple platforms. The same logic means that the saved games are 100% compatible, and any gameplay bugs present in the original Caesar 3 game will also be present in Julius.</p>
 		<ul>UI enhancements include:
 			<li>Support for widescreen resolutions</li>
 			<li>Windowed mode support for 32-bit desktops</li>
@@ -22,6 +22,7 @@
 		</screenshot>
 	</screenshots>
 	<releases>
+		<release version="1.4.1" date="2020-06-01"/>
 		<release version="1.4.0" date="2020-05-10"/>
 		<release version="1.3.1" date="2020-02-24"/>
 		<release version="1.3.0" date="2020-02-14"/>
