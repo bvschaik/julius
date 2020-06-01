@@ -433,20 +433,13 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
     }
 }
 
-static void deletion_draw_terrain_top(int x, int y, int grid_offset)
-{
-    if (is_multi_tile_terrain(grid_offset)) {
-        draw_top(x, y, grid_offset);
-    }
-}
-
 static void deletion_draw_figures_animations(int x, int y, int grid_offset)
 {
     if (map_property_is_deleted(grid_offset) && !map_building_at(grid_offset)) {
         image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
-    }
-    if (!is_multi_tile_terrain(grid_offset)) {
-        draw_top(x, y, grid_offset);
+        if (!is_multi_tile_terrain(grid_offset)) {
+            draw_top(x, y, grid_offset);
+        }
     }
     draw_figures(x, y, grid_offset);
     draw_animation(x, y, grid_offset);
@@ -478,7 +471,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
             0
         );
     } else {
-        city_view_foreach_map_tile(deletion_draw_terrain_top);
+        city_view_foreach_map_tile(draw_top);
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
     }
