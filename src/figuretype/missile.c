@@ -68,7 +68,7 @@ static int is_citizen(figure *f)
 {
     if (f->action_state != FIGURE_ACTION_149_CORPSE) {
         if (f->type && f->type != FIGURE_EXPLOSION && f->type != FIGURE_FORT_STANDARD &&
-            f->type != FIGURE_MAP_FLAG && f->type != FIGURE_FLOTSAM && f->type < FIGURE_INDIGENOUS_NATIVE) {
+            f->type != FIGURE_MAP_FLAG && f->type != FIGURE_FLOTSAM && f->type < FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_TOWER_SENTRY) {
             return f->id;
         }
     }
