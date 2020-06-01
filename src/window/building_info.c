@@ -745,7 +745,7 @@ static void button_mothball(int mothball, int param2)
     building* b = building_get(context.building_id);
     int workers_needed = model_get_building(b->type)->laborers;
     if (workers_needed) {
-        building_mothball(b);
+        building_mothball_toggle(b);
         window_invalidate();
     }
 }
