@@ -97,6 +97,13 @@ static roadblock_permission get_permission_for_figure_type(figure* f)
     case FIGURE_LION_TAMER:
         return PERMISSION_ENTERTAINER;
         break;
+    case FIGURE_SURGEON:
+    case FIGURE_DOCTOR:
+        return PERMISSION_MEDICINE;
+    case FIGURE_SCHOOL_CHILD:
+    case FIGURE_TEACHER:
+    case FIGURE_LIBRARIAN:
+        return PERMISSION_EDUCATION;
     default:
         return PERMISSION_NONE;
         break;

@@ -43,6 +43,7 @@ after_success:
     then
       bash <(curl -s https://codecov.io/bash);
     fi;
+  - ./.ci_scripts/create_zipped_release.sh
 
 before_deploy:
   - ./.ci_scripts/bintray_conf.sh

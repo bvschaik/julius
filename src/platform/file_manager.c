@@ -150,7 +150,7 @@ int platform_file_manager_should_case_correct_file(void)
 int platform_file_manager_set_base_path(const char *path)
 {
     if (!path) {
-        log_error("set_base_path: path was not set. Julius will probably crash.", 0, 0);
+        log_error("set_base_path: path was not set. Augustus will probably crash.", 0, 0);
         return 0;
     }
     return chdir(path) == 0;

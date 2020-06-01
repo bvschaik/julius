@@ -35,6 +35,9 @@ static generic_button orders_permission_buttons[] = {
     {0, 36, 210, 22, toggle_figure_state, button_none, 2, 0},
     {0, 68, 210, 22, toggle_figure_state, button_none, 3, 0},
     {0, 100, 210, 22, toggle_figure_state, button_none, 4, 0},
+    {0, 132, 210, 22, toggle_figure_state, button_none, 5, 0},
+    {0, 164, 210, 22, toggle_figure_state, button_none, 6, 0},
+
 };
 
 static generic_button roadblock_order_buttons[] = {
@@ -148,12 +151,15 @@ void window_building_draw_roadblock_orders(building_info_context* c)
 void window_building_draw_roadblock_orders_foreground(building_info_context* c)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
-    int ids[8] = { GROUP_FIGURE_ENGINEER,GROUP_FIGURE_PREFECT,GROUP_FIGURE_PRIEST,GROUP_FIGURE_PRIEST,GROUP_FIGURE_MARKET_LADY,GROUP_FIGURE_MARKET_LADY,GROUP_FIGURE_ACTOR,GROUP_FIGURE_LION_TAMER};
+    int ids[12] = { GROUP_FIGURE_ENGINEER,GROUP_FIGURE_PREFECT,GROUP_FIGURE_PRIEST,GROUP_FIGURE_PRIEST,
+        GROUP_FIGURE_MARKET_LADY,GROUP_FIGURE_MARKET_LADY,GROUP_FIGURE_ACTOR,GROUP_FIGURE_LION_TAMER,
+        GROUP_FIGURE_TEACHER_LIBRARIAN, GROUP_FIGURE_SCHOOL_CHILD, GROUP_FIGURE_DOCTOR_SURGEON, GROUP_FIGURE_DOCTOR_SURGEON,
+    };
     building* b = building_get(c->building_id);
     data.building_id = b->id;
 
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 6; i++) {
         image_draw(image_group(ids[i*2]) + 4, c->x_offset + 32, y_offset + 46 + 32 * i);
         image_draw(image_group(ids[i*2+1]) + 4, c->x_offset + 64, y_offset + 46 + 32 * i);
        // lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
@@ -325,7 +331,7 @@ int window_building_handle_mouse_roadblock_orders(const mouse* m, building_info_
 
     data.building_id = c->building_id;
     if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46,
-        orders_permission_buttons, 4,
+        orders_permission_buttons, 6,
         &data.figure_focus_button_id)) {
         return 1;
     }
