@@ -2,6 +2,8 @@
 
 [![Travis](https://travis-ci.com/Keriew/augustus.svg?branch=master)](https://travis-ci.com/Keriew/augustus)
 
+Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh)
+
   
 | Platform | Latest release |
 |----------|----------------|
