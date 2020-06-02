@@ -727,3 +727,19 @@ void encoding_from_utf8(const char *input, uint8_t *output, int output_length)
     }
     *output = 0;
 }
+
+int encoding_get_utf8_character_bytes(const char input)
+{
+    if ((input & 0x80) == 0) { // 0xxx xxxx
+        return 1;
+    } else if ((input & 0xe0) == 0xc0) { // 110x xxxx
+        return 2;
+    } else if ((input & 0xf0) == 0xe0) { // 1110 xxxx
+        return 3;
+    } else if ((input & 0xf8) == 0xf0) { // 1111 0xxx
+        return 4;
+    } else {
+        // continuation byte or unknown: fall back to 1
+        return 1;
+    }
+}
