@@ -4,6 +4,7 @@
 #include "core/dir.h"
 #include "core/image_group.h"
 #include "core/lang.h"
+#include "core/log.h"
 #include "core/string.h"
 #include "game/game.h"
 #include "game/system.h"
@@ -19,11 +20,11 @@
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
+#include "translation/translation.h"
 #include <string.h>
 
 #define NUM_CHECKBOXES 32
 #define CONFIG_PAGES 3
-#define NUM_BOTTOM_BUTTONS 6
 #define MAX_LANGUAGE_DIRS 20
 
 #define FIRST_BUTTON_Y 72
@@ -44,107 +45,67 @@ static int config_change_string_language(config_string_key key);
 
 
 static generic_button checkbox_buttons[] = {
-    { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO },
-    { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO },
-    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING },
-    { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_WALKER_WAYPOINTS },
-    { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE },
-    { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE },
-    { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE },
-    { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM },
-    { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG },
-    { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS },
-    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL },
-    { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS },
-    { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GLOBAL_LABOUR },
-    { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SCHOOL_WALKERS },
-    { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RETIRE_AT_60 },
-    { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIXED_WORKERS },
-    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_EXTRA_FORTS },
-    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK },
-    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DYNAMIC_GRANARIES },
-    { 20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE },
-    { 20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION },
-    { 20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS },
-    { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS },
-    { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD },
-    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANARIES_GET_DOUBLE },
-    { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD },
-    { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FARMS_DELIVER_CLOSE },
-    { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES },
-    { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ALL_HOUSES_MERGE },
-    { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE },
-    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY },
-    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MULTIPLE_BARRACKS },
+    { 20,  72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO },
+    { 20,  96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO, TR_CONFIG_SIDEBAR_INFO },
+    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING, TR_CONFIG_SMOOTH_SCROLLING },
+    { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_WALKER_WAYPOINTS, TR_CONFIG_DRAW_WALKER_WAYPOINTS },
+    { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE, TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE },
+    { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE },
+    { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE },
+    { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM, TR_CONFIG_ENABLE_ZOOM },
+    { 20,  72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG },
+    { 20,  96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS },
+    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL, TR_CONFIG_GRANDFESTIVAL },
+    { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS, TR_CONFIG_JEALOUS_GODS },
+    { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GLOBAL_LABOUR, TR_CONFIG_GLOBAL_LABOUR },
+    { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SCHOOL_WALKERS, TR_CONFIG_SCHOOL_WALKERS },
+    { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RETIRE_AT_60, TR_CONFIG_RETIRE_AT_60 },
+    { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIXED_WORKERS, TR_CONFIG_FIXED_WORKERS },
+    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_EXTRA_FORTS, TR_CONFIG_EXTRA_FORTS },
+    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK, TR_CONFIG_WOLVES_BLOCK },
+    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DYNAMIC_GRANARIES, TR_CONFIG_DYNAMIC_GRANARIES },
+    { 20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE, TR_CONFIG_MORE_STOCKPILE },
+    { 20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION, TR_CONFIG_NO_BUYER_DISTRIBUTION },
+    { 20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS },
+    { 20,  72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS, TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS },
+    { 20,  96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD, TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD },
+    { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANARIES_GET_DOUBLE, TR_CONFIG_GRANARIES_GET_DOUBLE },
+    { 20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD, TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD },
+    { 20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FARMS_DELIVER_CLOSE, TR_CONFIG_FARMS_DELIVER_CLOSE },
+    { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES, TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES },
+    { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ALL_HOUSES_MERGE, TR_CONFIG_ALL_HOUSES_MERGE },
+    { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE },
+    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY, TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY },
+    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MULTIPLE_BARRACKS, TR_CONFIG_MULTIPLE_BARRACKS },
 };
 
 static generic_button language_button = {
-    120, 50, 200, 24, button_language_select, button_none
+    120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL
 };
 
 static generic_button bottom_buttons[] = {
-    { 200, 430, 150, 30, button_reset_defaults, button_none },
-    { 410, 430, 100, 30, button_close, button_none, 0 },
-    { 520, 430, 100, 30, button_close, button_none, 1 },
-    { 20, 410, 25, 25, button_page, button_none, 0 },
-    { 160, 410, 25, 25, button_page, button_none, 1 },
-    { 50, 430, 110, 30, button_hotkeys, button_none },
+    { 250, 436, 150, 30, button_reset_defaults, button_none, 0, TR_BUTTON_RESET_DEFAULTS },
+    { 410, 436, 100, 30, button_close, button_none, 0, TR_BUTTON_CANCEL },
+    { 520, 436, 100, 30, button_close, button_none, 1, TR_BUTTON_OK },
+    { 20, 436, 180, 30, button_hotkeys, button_none, 0, TR_BUTTON_CONFIGURE_HOTKEYS }
 };
 
-static const char* bottom_button_texts[] = {
-    "Reset defaults",
-    "Cancel",
-    "OK",
-    "-",
-    "+",
-    "Hotkeys"
+static generic_button page_buttons[] = {
+    { 20, 410, 25, 25, button_page, button_none, 0, TR_BUTTON_PREV },
+    { 160, 410, 25, 25, button_page, button_none, 1, TR_BUTTON_NEXT }
 };
 
-static const char* pages_names[] = {
-    "UI Improvements",
-    "Gameplay Changes",
-    "Gameplay Changes",
-};
-
-static const char* option_names[] = {
-    "Play intro videos",
-    "Extra information in the control panel",
-    "Enable smooth scrolling",
-    "Draw walker waypoints on overlay after right clicking on a building",
-    "Improve visual clarity when clearing",
-    "Show range when building reservoirs, fountains and wells",
-    "Show draggable construction size",
-    "Enable zoom (can be slow, uses more RAM)",
-    "Fix immigration bug on very hard",
-    "Fix 100-year-old ghosts",
-    "Grand festivals allow extra blessing from a god",
-    "Disable jealousness of gods",
-    "Enable global labour pool",
-    "Extend school walkers range",
-    "Change citizens' retirement age from 50 to 60",
-    "Fixed worker pool - 38% of population",
-    "Allow building 4 extra forts",
-    "Block building around wolves",
-    "Block unconnected granary roads",
-    "Houses stockpile more goods from market",
-    "Buying market ladies don't distribute goods",
-    "Fix Emperor change and survival time in custom missions",
-    "Immediately destroy buildings",
-    "Cart pushers from getting granaries can go offroad",
-    "Double the capacity of cart pushers from getting granaries",
-    "Tower sentries don't need road access from barracks",
-    "Farms and wharves deliver only to nearby granaries",
-    "Food isn't delivered to getting granaries",
-    "All houses merge",
-    "Open trade route count as providing different wine type",
-    "Randomly collapsing clay pits and iron mines take some money instead",
-    "Allow building multiple barracks",
+static translation_key page_names[] = {
+    TR_CONFIG_HEADER_UI_CHANGES,
+    TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
+    TR_CONFIG_HEADER_GAMEPLAY_CHANGES
 };
 
 static struct {
     int focus_button;
     int language_focus_button;
     int bottom_focus_button;
+    int page_focus_button;
     int page;
     int starting_option;
     struct {
@@ -183,7 +144,7 @@ static void init(void)
     data.config_values[CONFIG_UI_ZOOM].change_action = config_change_zoom;
     data.config_string_values[0].change_action = config_change_string_language;
 
-    string_copy(string_from_ascii("(default)"), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
+    string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
     data.language_options[0] = data.language_options_data[0];
     data.num_language_options = 1;
     const dir_listing* subdirs = dir_find_all_subdirectories();
@@ -210,14 +171,14 @@ static void draw_background(void)
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
 
-    text_draw_centered(string_from_ascii(pages_names[data.page]), 16, 16, 608, FONT_LARGE_BLACK, 0);
+    text_draw_centered(translation_for(page_names[data.page]), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
-    text_draw(string_from_ascii("Language:"), 20, 56, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, 56, FONT_NORMAL_BLACK, 0);
     text_draw_centered(data.language_options[data.selected_language_option],
         language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < options_per_page[data.page]; i++) {
-        text_draw(string_from_ascii(option_names[data.starting_option + i]), 44, FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET, FONT_NORMAL_BLACK, 0);
+        text_draw(translation_for(checkbox_buttons[data.starting_option + i].parameter2), 44, FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET, FONT_NORMAL_BLACK, 0);
     }
     for (int i = 0; i < options_per_page[data.page]; i++) {
         int value = i + data.starting_option;
@@ -227,11 +188,17 @@ static void draw_background(void)
         }
     }
 
-    for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
-        text_draw_centered(string_from_ascii(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
+    for (int i = 0; i < sizeof(bottom_buttons) / sizeof(*bottom_buttons); i++) {
+        text_draw_centered(translation_for(bottom_buttons[i].parameter2), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
     }
-    text_draw_centered(string_from_ascii("Page"), 80, 415, 30, FONT_NORMAL_BLACK, 0);
-    text_draw_number(data.page + 1, '@', " ", 120, 415, FONT_NORMAL_BLACK);
+    for (int i = 0; i < sizeof(page_buttons) / sizeof(*page_buttons); i++) {
+        text_draw_centered(translation_for(page_buttons[i].parameter2), page_buttons[i].x, page_buttons[i].y + 6, page_buttons[i].width, FONT_NORMAL_BLACK, 0);
+    }
+
+    text_draw_label_and_number_centered(translation_for(TR_CONFIG_PAGE_LABEL), data.page + 1, "", 60, 416, 85, FONT_NORMAL_BLACK, 0);
+
+    //text_draw_centered(translation_for(TR_CONFIG_PAGE_LABEL), 80, 415, 30, FONT_NORMAL_BLACK, 0);
+    //text_draw_number(data.page + 1, '@', " ", 120, 415, FONT_NORMAL_BLACK);
 
     graphics_reset_dialog();
 }
@@ -246,8 +213,11 @@ static void draw_foreground(void)
         generic_button* btn = &checkbox_buttons[value];
         button_border_draw(btn->x, btn->y, btn->width, btn->height, data.focus_button == value + 1);
     }
-    for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
+    for (int i = 0; i < sizeof(bottom_buttons) / sizeof(*bottom_buttons); i++) {
         button_border_draw(bottom_buttons[i].x, bottom_buttons[i].y, bottom_buttons[i].width, bottom_buttons[i].height, data.bottom_focus_button == i + 1);
+    }
+    for (int i = 0; i < sizeof(page_buttons) / sizeof(*page_buttons); i++) {
+        button_border_draw(page_buttons[i].x, page_buttons[i].y, page_buttons[i].width, page_buttons[i].height, data.page_focus_button == i + 1);
     }
     button_border_draw(language_button.x, language_button.y, language_button.width, language_button.height, data.language_focus_button == 1);
     graphics_reset_dialog();
@@ -258,7 +228,8 @@ static void handle_input(const mouse* m, const hotkeys* h)
     const mouse* m_dialog = mouse_in_dialog(m);
     int handled = 0;
     handled |= generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons, data.starting_option + options_per_page[data.page], &data.focus_button, data.starting_option);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, sizeof(bottom_buttons) / sizeof(*bottom_buttons), &data.bottom_focus_button);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, sizeof(page_buttons) / sizeof(*page_buttons), &data.page_focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
     if (!handled && (m->right.went_up || h->escape_pressed)) {
         window_main_menu_show(0);

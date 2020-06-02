@@ -310,6 +310,22 @@ int text_draw_percentage(int value, int x_offset, int y_offset, font_t font)
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 
+int text_draw_label_and_number(const char* label, int value, const char *postfix, int x_offset, int y_offset, font_t font, color_t color)
+{
+    uint8_t str[2 * NUMBER_BUFFER_LENGTH];
+    uint8_t* pos = label ? string_copy(label, str, NUMBER_BUFFER_LENGTH) : str;
+    number_to_string(pos, value, '@', postfix);
+    return text_draw(str, x_offset, y_offset, font, color);
+}
+
+void text_draw_label_and_number_centered(const char* label, int value, const char *postfix, int x_offset, int y_offset, int box_width, font_t font, color_t color)
+{
+    uint8_t str[2 * NUMBER_BUFFER_LENGTH];
+    uint8_t* pos = label ? string_copy(label, str, NUMBER_BUFFER_LENGTH) : str;
+    number_to_string(pos, value, '@', postfix);
+    text_draw_centered(str, x_offset, y_offset, box_width, font, color);
+}
+
 void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, font_t font)
 {
     uint8_t str[NUMBER_BUFFER_LENGTH];

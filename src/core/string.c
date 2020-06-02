@@ -2,7 +2,7 @@
 
 #include <ctype.h>
 
-void string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
+uint8_t* string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
 {
     int length = 0;
     while (length < maxlength && *src) {
@@ -15,6 +15,7 @@ void string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
         dst--;
     }
     *dst = 0;
+    return dst;
 }
 
 int string_length(const uint8_t *str)
