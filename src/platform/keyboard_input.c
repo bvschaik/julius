@@ -294,7 +294,7 @@ void platform_handle_key_up(SDL_KeyboardEvent *event)
 
 void platform_handle_text(SDL_TextInputEvent *event)
 {
-    keyboard_character(event->text);
+    keyboard_text(event->text);
 }
 
 key_type system_keyboard_key_for_symbol(const char *name)
