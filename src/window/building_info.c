@@ -510,7 +510,11 @@ static void draw_background(void)
         } else if (btype == BUILDING_SHIPYARD) {
             window_building_draw_shipyard(&context);
         } else if (btype == BUILDING_DOCK) {
-            window_building_draw_dock(&context);
+	    if (context.storage_show_special_orders) {
+	        window_building_draw_dock_orders(&context);
+	    } else {
+                window_building_draw_dock(&context);
+	    }
         } else if (btype == BUILDING_WHARF) {
             window_building_draw_wharf(&context);
         } else if (btype == BUILDING_RESERVOIR) {
@@ -587,6 +591,12 @@ static void draw_foreground(void)
             } else {
                 window_building_draw_roadblock_foreground(&context);
             }
+        } else if (btype == BUILDING_DOCK) {
+            if (context.storage_show_special_orders) {
+                window_building_draw_dock_orders_foreground(&context);
+            } else {
+                window_building_draw_dock_foreground(&context);
+            }
         } else if (btype == BUILDING_BARRACKS) {
 		window_building_draw_barracks_foreground(&context);
 	}
@@ -634,6 +644,12 @@ static int handle_specific_building_info_mouse(const mouse *m)
                 return window_building_handle_mouse_roadblock_orders(m, &context);
             } else {
                 return window_building_handle_mouse_roadblock(m, &context);
+            }
+	} else if (btype == BUILDING_DOCK) {
+            if (context.storage_show_special_orders) {
+                return window_building_handle_mouse_dock_orders(m, &context);
+            } else {
+                return window_building_handle_mouse_dock(m, &context);
             }
 	} else if (btype == BUILDING_BARRACKS) {
             return window_building_handle_mouse_barracks(m, &context);

@@ -1,6 +1,9 @@
 #include "dock.h"
 
+#include "building/market.h"
 #include "city/buildings.h"
+#include "city/resource.h"
+#include "empire/city.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"
@@ -49,6 +52,23 @@ int building_dock_is_connected_to_open_water(int x, int y)
     }
 }
 
+int building_dock_accepts_ship(int ship_id, int dock_id)
+{
+    building* dock = building_get(dock_id);
+    figure* f = figure_get(ship_id);
+
+    empire_city* city = empire_city_get(f->empire_city_id);
+    for (int resource = RESOURCE_WHEAT; resource < RESOURCE_MAX; resource++) {
+        if (city->sells_resource[resource] || city->buys_resource[resource]) {
+            if (!is_good_accepted(resource - 1, dock)) {
+                dock_id = 0;
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
 int building_dock_get_free_destination(int ship_id, map_point *tile)
 {
     if (!city_buildings_has_working_dock()) {
@@ -58,7 +78,15 @@ int building_dock_get_free_destination(int ship_id, map_point *tile)
     for (int i = 0; i < 10; i++) {
         dock_id = city_buildings_get_working_dock(i);
         if (!dock_id) continue;
-        building *dock = building_get(dock_id);
+        if (!building_dock_accepts_ship(ship_id,dock_id))
+        {
+            dock_id = 0;
+            continue;
+        }
+
+        building* dock = building_get(dock_id);
+
+
         if (!dock->data.dock.trade_ship_id || dock->data.dock.trade_ship_id == ship_id) {
             break;
         }
@@ -80,7 +108,7 @@ int building_dock_get_free_destination(int ship_id, map_point *tile)
     return dock_id;
 }
 
-int building_dock_get_queue_destination(map_point *tile)
+int building_dock_get_queue_destination(int ship_id, map_point *tile)
 {
     if (!city_buildings_has_working_dock()) {
         return 0;
@@ -89,6 +117,11 @@ int building_dock_get_queue_destination(map_point *tile)
     for (int i = 0; i < 10; i++) {
         int dock_id = city_buildings_get_working_dock(i);
         if (!dock_id) continue;
+        if (!building_dock_accepts_ship(ship_id, dock_id))
+        {
+            dock_id = 0;
+            continue;
+        }
         building *dock = building_get(dock_id);
         int dx, dy;
         switch (dock->data.dock.orientation) {
@@ -106,6 +139,11 @@ int building_dock_get_queue_destination(map_point *tile)
     for (int i = 0; i < 10; i++) {
         int dock_id = city_buildings_get_working_dock(i);
         if (!dock_id) continue;
+        if (!building_dock_accepts_ship(ship_id, dock_id))
+        {
+            dock_id = 0;
+            continue;
+        }
         building *dock = building_get(dock_id);
         int dx, dy;
         switch (dock->data.dock.orientation) {

@@ -644,7 +644,7 @@ void figure_trade_ship_action(figure *f)
                     f->action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
                     f->destination_x = tile.x;
                     f->destination_y = tile.y;
-                } else if (building_dock_get_queue_destination(&tile)) {
+                } else if (building_dock_get_queue_destination(f->id, &tile)) {
                     f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                     f->destination_x = tile.x;
                     f->destination_y = tile.y;
@@ -726,7 +726,7 @@ void figure_trade_ship_action(figure *f)
                     f->destination_x = tile.x;
                     f->destination_y = tile.y;
                 } else if (map_figure_at(f->grid_offset) != f->id &&
-                    building_dock_get_queue_destination(&tile)) {
+                    building_dock_get_queue_destination(f->id,&tile)) {
                     f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                     f->destination_x = tile.x;
                     f->destination_y = tile.y;

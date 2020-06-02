@@ -164,6 +164,70 @@ void window_building_draw_dock(building_info_context *c)
     window_building_draw_employment(c, 142);
 }
 
+void window_building_draw_dock_foreground(building_info_context* c)
+{
+    button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+        16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
+        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+}
+
+void window_building_draw_dock_orders(building_info_context* c)
+{
+    c->help_id = 83;
+    int y_offset = window_building_get_vertical_offset(c, 28);
+    outer_panel_draw(c->x_offset, y_offset, 29, 28);
+    lang_text_draw_centered(101, 0, c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
+}
+
+void window_building_draw_dock_orders_foreground(building_info_context* c)
+{
+    int y_offset = window_building_get_vertical_offset(c, 28);
+
+    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
+
+    for (int i = 0; i < 15; i++) {
+        resource_type resource = i + 1;
+        int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
+            resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
+        image_draw(image_id, c->x_offset + 408, y_offset + 46 + 22 * i);
+        lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
+        button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
+        building* b = building_get(c->building_id);
+        int state = is_good_accepted(i, b);
+        if (state) {
+            lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
+        }
+        else {
+            lang_text_draw(99, 8, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_RED);
+        }
+    }
+}
+
+int window_building_handle_mouse_dock(const mouse* m, building_info_context* c)
+{
+    return generic_buttons_handle_mouse(
+        m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+        go_to_orders_button, 1, &data.focus_button_id);
+}
+
+int window_building_handle_mouse_dock_orders(const mouse* m, building_info_context* c)
+{
+    int y_offset = window_building_get_vertical_offset(c, 28);
+
+    data.building_id = c->building_id;
+    if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46,
+        orders_resource_buttons, 15,
+        &data.resource_focus_button_id)) {
+        return 1;
+    }
+    return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, market_order_buttons, 1, &data.orders_focus_button_id);
+}
+
+
+
 void window_building_draw_market(building_info_context *c)
 {
     c->help_id = 2;
@@ -670,7 +734,7 @@ static void toggle_resource_state(int index, int param2)
 {
     building *b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_MARKET) {
+    if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK) {
         toggle_good_accepted(index-1, b);
     }
     else {
