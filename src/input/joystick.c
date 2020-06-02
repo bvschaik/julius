@@ -548,7 +548,7 @@ static int translate_mouse(void)
     return handled;
 }
 
-static void window_has_map_scrolling(void)
+static int window_has_map_scrolling(void)
 {
     return window_is(WINDOW_CITY) ||
         window_is(WINDOW_CITY_MILITARY) ||

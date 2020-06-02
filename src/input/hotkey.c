@@ -52,7 +52,7 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
     def->repeatable = 0;
     switch (action) {
         case HOTKEY_TOGGLE_PAUSE:
-            return &data.hotkey_state.toggle_pause;
+            def->action = &data.hotkey_state.toggle_pause;
             break;
         case HOTKEY_TOGGLE_OVERLAY:
             def->action = &data.hotkey_state.toggle_overlay;
