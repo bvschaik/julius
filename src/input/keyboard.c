@@ -27,9 +27,14 @@ static struct {
     font_t font;
 } data;
 
+static int get_char_bytes(const uint8_t *str)
+{
+    return str[0] >= 0x80 && encoding_is_multibyte() ? 2 : 1;
+}
+
 static int get_current_char_bytes(void)
 {
-    return data.text[data.cursor_position] >= 0x80 && encoding_is_multibyte() ? 2 : 1;
+    return get_char_bytes(&data.text[data.cursor_position]);
 }
 
 static void set_viewport_to_start(void)
@@ -317,22 +322,9 @@ void keyboard_end(void)
     }
 }
 
-void keyboard_character(const char *text_utf8)
+static int keyboard_character(uint8_t *text)
 {
-    if (data.capture_numeric) {
-        char c = text_utf8[0];
-        if (c >= '0' && c <= '9') {
-            data.capture_numeric_callback(c - '0');
-        }
-        return;
-    }
-    if (!data.capture) {
-        return;
-    }
-
-    uint8_t internal_char[3];
-    encoding_from_utf8(text_utf8, internal_char, 3);
-    uint8_t c = internal_char[0];
+    uint8_t c = text[0];
 
     int add = 0;
     if (c == ' ' || c == '-') {
@@ -349,8 +341,32 @@ void keyboard_character(const char *text_utf8)
         add = 1;
     }
 
+    int bytes = get_char_bytes(text);
     if (add) {
-        add_char(internal_char, string_length(internal_char));
+        add_char(text, bytes);
         update_viewport(1);
+    }
+    return bytes;
+}
+
+void keyboard_text(const char *text_utf8)
+{
+    if (data.capture_numeric) {
+        char c = text_utf8[0];
+        if (c >= '0' && c <= '9') {
+            data.capture_numeric_callback(c - '0');
+        }
+        return;
+    }
+    if (!data.capture) {
+        return;
+    }
+
+    uint8_t internal_char[100];
+    encoding_from_utf8(text_utf8, internal_char, 100);
+
+    int index = 0;
+    while (internal_char[index]) {
+        index += keyboard_character(&internal_char[index]);
     }
 }
