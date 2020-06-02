@@ -59,6 +59,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_ALL_HOUSES_MERGE, "Разрешить слияние всех домов"},
     {TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, "Торговые пути увеличивают разнообразие вина"},
     {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Разрушающиеся шахты забирают часть денег"},
+    {TR_CONFIG_MULTIPLE_BARRACKS, "Разрешить постройку нескольких казарм" },
     {TR_HOTKEY_TITLE, "Настройки горячих клавиш Augustus"},
     {TR_HOTKEY_LABEL, "Основная"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Альтернативная"},
