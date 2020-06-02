@@ -1,5 +1,6 @@
 #include "encoding_trad_chinese.h"
 
+#include "core/encoding.h"
 #include "core/image.h"
 #include "core/log.h"
 
@@ -2324,7 +2325,7 @@ void encoding_trad_chinese_from_utf8(const char *input, uint8_t *output, int out
             } else {
                 *output = '?';
                 output++;
-                input++;
+                input += encoding_get_utf8_character_bytes(*input);
             }
         }
     }

@@ -1,5 +1,6 @@
 #include "encoding_korean.h"
 
+#include "core/encoding.h"
 #include "core/image.h"
 #include "core/log.h"
 
@@ -2451,11 +2452,12 @@ void encoding_korean_from_utf8(const char *input, uint8_t *output, int output_le
                 output++;
                 *output = entry->cp949 & 0xff;
                 output++;
+                input += 3;
             } else {
                 *output = '?';
                 output++;
+                input += encoding_get_utf8_character_bytes(*input);
             }
-            input += 3;
         }
     }
     *output = 0;

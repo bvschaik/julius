@@ -66,4 +66,11 @@ void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int
  */
 void encoding_from_utf8(const char *input, uint8_t *output, int output_length);
 
+/**
+ * Returns the number of bytes that the next utf-8 character takes up
+ * @param input Next input byte
+ * @return Number of bytes used by the character
+ */
+int encoding_get_utf8_character_bytes(const char input);
+
 #endif // CORE_ENCODING_H
