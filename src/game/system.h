@@ -64,6 +64,18 @@ const char *system_keyboard_key_name(key_type key);
  */
 const char *system_keyboard_key_modifier_name(key_modifier_type modifier);
 
+/**
+ * Sets the position/size of the keyboard input box
+ * @param x X offset
+ * @param y Y offset
+ * @param width Width of the box
+ * @param height Height of the box
+ */
+void system_keyboard_set_input_rect(int x, int y, int width, int height);
+
+/**
+ * Show the virtual keyboard
+ */
 void system_keyboard_show(void);
 
 /**
