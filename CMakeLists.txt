@@ -182,7 +182,6 @@ if (VITA_BUILD)
         ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.c
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_touch.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
     )
 elseif (SWITCH_BUILD)
@@ -191,7 +190,6 @@ elseif (SWITCH_BUILD)
         ${PROJECT_SOURCE_DIR}/src/platform/switch/cursor.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.c
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_touch.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_keyboard.c
     )
 else()

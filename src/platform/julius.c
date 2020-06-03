@@ -8,6 +8,7 @@
 #include "game/game.h"
 #include "game/system.h"
 #include "input/mouse.h"
+#include "input/touch.h"
 #include "platform/arguments.h"
 #include "platform/cursor.h"
 #include "platform/file_manager.h"
@@ -25,13 +26,11 @@
 
 #ifdef __SWITCH__
 #include "platform/switch/switch_input.h"
-#include "platform/switch/switch_touch.h"
 #endif
 
 #ifdef __vita__
 #include "platform/vita/vita.h"
 #include "platform/vita/vita_input.h"
-#include "platform/vita/vita_touch.h"
 #endif
 
 #if defined(_WIN32)
@@ -314,12 +313,10 @@ static void main_loop(void)
         SDL_Event event;
         /* Process event queue */
 #ifdef __vita__
-        vita_finish_simulated_mouse_clicks();
         vita_handle_analog_sticks();
         vita_handle_virtual_keyboard();
         while (vita_poll_event(&event)) {
 #elif defined(__SWITCH__)
-        switch_finish_simulated_mouse_clicks();
         switch_handle_analog_sticks();
         switch_handle_virtual_keyboard();
         while (switch_poll_event(&event)) {
@@ -461,6 +458,12 @@ static void setup(const julius_args *args)
 
     // Black
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
+
+    touch_set_mode(TOUCH_MODE_TOUCHPAD);
+#endif
+
+#ifdef __SWITCH__
+    touch_set_mode(TOUCH_MODE_TOUCHPAD);
 #endif
 
     if (!pre_init(args->data_directory)) {

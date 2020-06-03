@@ -1,5 +1,6 @@
 #include "platform/screen.h"
 
+#include "core/calc.h"
 #include "game/settings.h"
 #include "game/system.h"
 #include "graphics/graphics.h"
@@ -227,9 +228,11 @@ void platform_screen_render(void)
     SDL_RenderPresent(SDL.renderer);
 }
 
-void platform_screen_warp_mouse(int x, int y)
+void system_set_mouse_position(int *x, int *y)
 {
-    SDL_WarpMouseInWindow(SDL.window, x, y);
+    *x = calc_bound(*x, 0, scale_logical_to_pixels(screen_width()) - 1);
+    *y = calc_bound(*y, 0, scale_logical_to_pixels(screen_height()) - 1);
+    SDL_WarpMouseInWindow(SDL.window, *x, *y);
 }
 
 int system_is_fullscreen_only(void)
