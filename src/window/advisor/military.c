@@ -209,19 +209,23 @@ static void draw_foreground(void)
         button_border_draw(480, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 2);
         button_border_draw(560, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 3);
     }
-    image_buttons_draw(590, 10, &image_button_scroll_up, 1);
-    image_buttons_draw(590, 380, &image_button_scroll_down, 1);
+    if (num_legions > 6) {
+        image_buttons_draw(590, 10, &image_button_scroll_up, 1);
+        image_buttons_draw(590, 380, &image_button_scroll_down, 1);
+    }
 }
 
 static int handle_mouse(const mouse *m)
 {
-    if (image_buttons_handle_mouse(m, 590, 10, &image_button_scroll_up, 1, 0)) {
-        window_invalidate();
-        return 1;
-    }
-    if (image_buttons_handle_mouse(m, 590, 380, &image_button_scroll_down, 1, 0)) {
-        window_invalidate();
-        return 1;
+    if (num_legions > 6) {
+        if (image_buttons_handle_mouse(m, 590, 10, &image_button_scroll_up, 1, 0)) {
+            window_invalidate();
+            return 1;
+        }
+        if (image_buttons_handle_mouse(m, 590, 380, &image_button_scroll_down, 1, 0)) {
+            window_invalidate();
+            return 1;
+        }
     }
     return generic_buttons_handle_mouse(m, 0, 0, fort_buttons, 3 * num_legions, &focus_button_id);
 }
