@@ -538,7 +538,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
                 }
             }
         }
-        if (room >= 8 && (loads_stored <= 4 || ((building_warehouse_get_acceptable_quantity(r,space) - loads_stored) >= 4)) && city_resource_count(r) - loads_stored >= 4) {
+        if (room >= 4 && (loads_stored <= 4 || ((building_warehouse_get_acceptable_quantity(r,warehouse) - loads_stored) >= 4)) && city_resource_count(r) - loads_stored >= 4) {
             *resource = r;
             return WAREHOUSE_TASK_GETTING;
         }
