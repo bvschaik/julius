@@ -38,6 +38,8 @@ void overlay_problems_prepare_building(building *b)
         } else if (b->loads_stored <= 0) {
             b->show_on_problem_overlay = 1;
         }
+    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
+        b->show_on_problem_overlay = 1;
     }
 }
 
