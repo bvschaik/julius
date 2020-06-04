@@ -24,6 +24,7 @@ static int focus_button_id = 0;
 
 static void draw_background(void)
 {
+    window_draw_underlying_window();    	
     graphics_in_dialog();
 
     outer_panel_draw(48, 128, 34, 15);
