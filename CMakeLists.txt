@@ -726,6 +726,7 @@ if (VITA_BUILD)
         SceDisplay_stub
         SceGxm_stub
         SceHid_stub
+        SceIofilemgr_stub
         SceSysmodule_stub
         SceTouch_stub
         ScePower_stub

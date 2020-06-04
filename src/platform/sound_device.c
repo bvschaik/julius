@@ -10,6 +10,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __vita__
+#include <psp2/io/fcntl.h>
+#endif
+
 #define AUDIO_RATE 22050
 #define AUDIO_FORMAT AUDIO_S16
 #define AUDIO_CHANNELS 2
@@ -21,6 +25,14 @@
 #define USE_SDL_AUDIOSTREAM
 #endif
 #define HAS_AUDIOSTREAM() (platform_sdl_version_at_least(2, 0, 7))
+
+#ifdef __vita__
+static struct {
+    char filename[FILE_NAME_MAX];
+    char *buffer;
+    int size;
+} vita_music_data;
+#endif
 
 typedef struct {
     const char *filename;
@@ -162,18 +174,42 @@ void sound_device_set_channel_volume(int channel, int volume_pct)
     }
 }
 
+#ifdef __vita__
+static void load_music_for_vita(const char *filename)
+{
+    if (vita_music_data.buffer) {
+        if (strcmp(filename, vita_music_data.filename) == 0) {
+            return;
+        }
+        free(vita_music_data.buffer);
+        vita_music_data.buffer = 0;
+    }
+    strncpy(vita_music_data.filename, filename, FILE_NAME_MAX - 1);
+    char *resolved_filename = vita_prepend_path(filename);
+    SceUID fd = sceIoOpen(resolved_filename, SCE_O_RDONLY, 0777);
+    free(resolved_filename);
+    if (fd < 0) {
+        return;
+    }
+    vita_music_data.size = sceIoLseek(fd, 0, SCE_SEEK_END);
+    sceIoLseek(fd, 0, SCE_SEEK_SET);
+    vita_music_data.buffer = malloc(sizeof(char) * vita_music_data.size);
+    sceIoRead(fd, vita_music_data.buffer, vita_music_data.size);
+    sceIoClose(fd);
+}
+#endif
+
 int sound_device_play_music(const char *filename, int volume_pct)
 {
     if (data.initialized) {
         sound_device_stop_music();
-
 #ifdef __vita__
-        FILE *fp = file_open(filename, "rb");
-        if (!fp) {
+        load_music_for_vita(filename);
+        if (!vita_music_data.buffer) {
             return 0;
         }
-        SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
-        data.music = Mix_LoadMUSType_RW(sdl_fp, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+        SDL_RWops *sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
+        data.music = Mix_LoadMUSType_RW(sdl_music, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
 #else
         data.music = Mix_LoadMUS(filename);
 #endif
