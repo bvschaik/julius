@@ -87,20 +87,30 @@ static void init(file_type type, file_dialog_type dialog_type)
     data.file_data = type == FILE_TYPE_SCENARIO ? &scenario_data : &saved_game_data;
     if (strlen(data.file_data->last_loaded_file) == 0) {
         string_copy(lang_get_string(9, type == FILE_TYPE_SCENARIO ? 7 : 6), data.typed_name, FILE_NAME_MAX);
+        if (type == FILE_TYPE_SAVED_GAME) {
+            file_append_extension(data.typed_name, saved_game_data_expanded.extension);
+        }
         encoding_to_utf8(data.typed_name, data.file_data->last_loaded_file, FILE_NAME_MAX, 0);
     } else {
         encoding_from_utf8(data.file_data->last_loaded_file, data.typed_name, FILE_NAME_MAX);
-        file_remove_extension(data.typed_name);
     }
     data.dialog_type = dialog_type;
     data.message_not_exist_start_time = 0;
 
     if (data.dialog_type != FILE_DIALOG_SAVE) {
-        data.file_list = dir_find_files_with_extension(data.file_data->extension);
-        data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
+        if (type == FILE_TYPE_SCENARIO) {
+            data.file_list = dir_find_files_with_extension(scenario_data.extension);
+        }  else {
+            data.file_list = dir_find_files_with_extension(data.file_data->extension);
+            data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
+        }
     }
     else {
-        data.file_list = dir_find_files_with_extension(saved_game_data_expanded.extension);
+        if (type == FILE_TYPE_SCENARIO) {
+            data.file_list = dir_find_files_with_extension(scenario_data.extension);
+        } else {
+            data.file_list = dir_find_files_with_extension(saved_game_data_expanded.extension);
+        }
     }
     scrollbar_init(&scrollbar, 0, data.file_list->num_files - NUM_FILES_IN_VIEW);
     strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
@@ -232,6 +242,9 @@ static void button_ok_cancel(int is_ok, int param2)
             game_file_write_saved_game(filename);
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {
+            if (!file_has_extension(filename, scenario_data.extension)) {
+                file_append_extension(filename, scenario_data.extension);
+            }
             game_file_editor_write_scenario(filename);
             window_editor_map_show();
         }
