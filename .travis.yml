@@ -52,7 +52,7 @@ deploy:
   provider: bintray
   on:
     all_branches: true
-    repo: Keriew/julius
+    repo: Keriew/augustus
     condition: "$DEPLOY"
   file: bintray.json
   user: keriew
