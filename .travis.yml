@@ -57,6 +57,6 @@ deploy:
   file: bintray.json
   user: keriew
   skip_cleanup: true
-  key: 92abc2b88217abc81de1eeba37e5066a0baa6a25
+  key: 6093cf980a68ae93b30c50859935cc5a6add8774
 after_deploy:
 - "./.ci_scripts/bintray_link.sh"
