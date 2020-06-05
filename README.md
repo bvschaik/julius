@@ -8,10 +8,9 @@ Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh)
 | Platform | Latest release |
 |----------|----------------|
 | Windows  | [![Download](https://api.bintray.com/packages/keriew/Augustus/windows_release/images/download.svg)](https://bintray.com/keriew/Augustus/windows_release/_latestVersion) | [![Download](https://api.bintray.com/packages/keriew/julius/windows-unstable/images/download.svg)](https://bintray.com/keriew/julius/windows-unstable/_latestVersion#files) |
-| Linux AppImage | [![Download](https://api.bintray.com/packages/keriew/Augustus/linux-unstable/images/download.svg)](https://bintray.com/keriew/Augustus/linux-unstable/_latestVersion#files) |
-| Mac | [![Download](https://api.bintray.com/packages/keriew/Augustus/mac-unstable/images/download.svg)](https://bintray.com/keriew/Augustus/mac-unstable/_latestVersion#files) |
+| Linux AppImage | [![Download](https://api.bintray.com/packages/keriew/Augustus/linux/images/download.svg)](https://bintray.com/keriew/Augustus/linux/_latestVersion#files) |
+| Mac | [![Download](https://api.bintray.com/packages/keriew/Augustus/mac/images/download.svg)](https://bintray.com/keriew/Augustus/mac/_latestVersion#files) |
 | PS Vita | [![Download](https://api.bintray.com/packages/keriew/Augustus/vita-unstable/images/download.svg)](https://bintray.com/keriew/Augustus/vita-unstable/_latestVersion#files) |
-| Nintendo Switch | [![Download](https://api.bintray.com/packages/keriew/Augustus/switch-unstable/images/download.svg)](https://bintray.com/keriew/Augustus/switch-unstable/_latestVersion#files) |
 
 
 ![](https://github.com/bvschaik/julius/blob/master/res/sce_sys/livearea/contents/bg.png?raw=true)
