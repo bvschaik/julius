@@ -331,7 +331,7 @@ static void allocate_workers_to_water(void)
     int building_id = start_building_id;
     start_building_id = 0;
     for (int guard = 1; guard < MAX_BUILDINGS; guard++, building_id++) {
-        if (building_id >= 2000) {
+        if (building_id >= MAX_BUILDINGS) {
             building_id = 1;
         }
         building *b = building_get(building_id);

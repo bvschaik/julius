@@ -6,14 +6,12 @@ VERSION=$(cat res/version.txt)
 if [[ ! -z "$TRAVIS_TAG" ]]
 then
   REPO=Augustus
-  NAME_SUFFIX=-release
 elif [[ "$TRAVIS_BRANCH" == "master" ]]
 then
   REPO=Augustus-unstable
 elif [[ "$TRAVIS_BRANCH" =~ ^feature/ ]]
 then
   REPO=Augustus-branches
-  NAME_SUFFIX=
   VERSION=${TRAVIS_BRANCH##feature/}-$VERSION
 else
   echo "Unknown branch type $TRAVIS_BRANCH - skipping deploy to Bintray"
