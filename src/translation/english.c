@@ -46,6 +46,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Fix Emperor change and survival time in custom missions"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Draw walker waypoints on overlay after right clicking on a building"},
     {TR_CONFIG_ENABLE_ZOOM, "Enable zoom (can be slow, uses more RAM)"},
+    {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Fix uncompleted rating columns on low targets"},
     {TR_CONFIG_GRANDFESTIVAL, "Grand festivals allow extra blessing from a god"},
     {TR_CONFIG_JEALOUS_GODS, "Disable jealousness of gods"},
     {TR_CONFIG_GLOBAL_LABOUR, "Enable global labour pool"},

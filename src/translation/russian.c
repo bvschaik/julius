@@ -39,6 +39,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Исправлять запросы Императора и время выживания в польз. миссиях"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Отображать маршрут ходоков по правому щелчку на здании"},
     {TR_CONFIG_ENABLE_ZOOM, "Включить функцию зума (возможно замедление)"},
+    {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Исправить незавершенные колонны рейтинга"},
     {TR_CONFIG_GRANDFESTIVAL, "Великий фестиваль разрешает дополнительное благословение от божества"},
     {TR_CONFIG_JEALOUS_GODS, "Отключить ревность божеств"},
     {TR_CONFIG_GLOBAL_LABOUR, "Включить глобальный пул работников"},
