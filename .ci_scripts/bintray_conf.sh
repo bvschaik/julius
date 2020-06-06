@@ -9,8 +9,7 @@ then
   NAME_SUFFIX=-release
 elif [[ "$TRAVIS_BRANCH" == "master" ]]
 then
-  REPO=Augustus
-  NAME_SUFFIX=-unstable
+  REPO=Augustus-unstable
 elif [[ "$TRAVIS_BRANCH" =~ ^feature/ ]]
 then
   REPO=Augustus-branches
