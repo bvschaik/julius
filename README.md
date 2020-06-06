@@ -5,11 +5,11 @@
 Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh)
 
   
-| Platform | Latest release |
-|----------|----------------|
-| Windows  | [![Download](https://api.bintray.com/packages/keriew/Augustus/windows_release/images/download.svg)](https://bintray.com/keriew/Augustus/windows_release/_latestVersion) | [![Download](https://api.bintray.com/packages/keriew/julius/windows-unstable/images/download.svg)](https://bintray.com/keriew/julius/windows-unstable/_latestVersion#files) |
-| Linux AppImage | [![Download](https://api.bintray.com/packages/keriew/Augustus/linux/images/download.svg)](https://bintray.com/keriew/Augustus/linux/_latestVersion#files) |
-| Mac | [![Download](https://api.bintray.com/packages/keriew/Augustus/mac/images/download.svg)](https://bintray.com/keriew/Augustus/mac/_latestVersion#files) |
+| Platform | Latest release | Unstable build |
+|----------|----------------|----------------|
+| Windows  | [![Download](https://api.bintray.com/packages/keriew/Augustus/windows_release/images/download.svg)](https://bintray.com/keriew/Augustus/windows_release/_latestVersion) | [![Download](https://api.bintray.com/packages/keriew/Augustus-unstable/windows-unstable/images/download.svg)](https://bintray.com/keriew/Augustus-unstable/windows-unstable/_latestVersion) | 
+| Linux AppImage | [![Download](https://api.bintray.com/packages/keriew/Augustus/linux/images/download.svg)](https://bintray.com/keriew/Augustus/linux/_latestVersion#files) | [![Download](https://api.bintray.com/packages/keriew/Augustus-unstable/linux/images/download.svg)](https://bintray.com/keriew/Augustus-unstable/linux/_latestVersion#files)
+| Mac | [![Download](https://api.bintray.com/packages/keriew/Augustus/mac/images/download.svg)](https://bintray.com/keriew/Augustus/mac/_latestVersion#files) | [![Download](https://api.bintray.com/packages/keriew/Augustus-unstable/mac/images/download.svg)](https://bintray.com/keriew/Augustus-unstable/mac/_latestVersion#files) |
 | PS Vita | [![Download](https://api.bintray.com/packages/keriew/Augustus/vita-unstable/images/download.svg)](https://bintray.com/keriew/Augustus/vita-unstable/_latestVersion#files) |
 
 
@@ -27,6 +27,7 @@ Gameplay enhancements include:
 - Global labour pool
 - Partial warehouse storage
 - Increased game limits
+- Zoom controls
 - And more!
 
 Because of gameplay changes and additions, save files from Augustus are NOT compatible with Caesar 3 or Julius. Augustus is able to load Caesar 3 save files, but not the other way around. If you want vanilla experience with visual and UI improvements, or want to use save files in base Caesar 3, check [Julius](https://github.com/bvschaik/julius).
