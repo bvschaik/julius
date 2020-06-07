@@ -30,7 +30,6 @@ static void draw_sliding_foreground(void)
         return;
     }
 
-    int height = sidebar_common_get_height();
     int x_offset = sidebar_common_get_x_offset_expanded();
     graphics_set_clip_rectangle(x_offset, TOP_MENU_HEIGHT, SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height());
 
