@@ -313,6 +313,7 @@ int touch_to_mouse(void)
             break;
         default:
             mouse_set_from_touch(first, get_latest_touch());
+            break;
     }
     return 1;
 }
