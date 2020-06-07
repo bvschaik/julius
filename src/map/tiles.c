@@ -667,8 +667,7 @@ static void set_aqueduct_image(int grid_offset, int is_road, const terrain_image
     int group_offset = img->group_offset;
     if (is_road) {
         if (!img->aqueduct_offset || (group_offset != 2 && group_offset != 3)) {
-            if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD) ||
-                map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_ROAD)) {
+            if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD)) {
                 group_offset = 3;
             } else {
                 group_offset = 2;
