@@ -180,7 +180,7 @@ void text_ellipsize(uint8_t *str, font_t font, int requested_width)
             }
         }
         if (ellipsis_width + width <= requested_width) {
-            length_with_ellipsis++;
+            length_with_ellipsis += num_bytes;
         }
         if (width > requested_width) {
             break;
