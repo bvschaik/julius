@@ -337,7 +337,7 @@ static void button_close(int save, int param2)
     }
 }
 
-void window_config_show()
+void window_config_show(void)
 {
     window_type window = {
         WINDOW_CONFIG,

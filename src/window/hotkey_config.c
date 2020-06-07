@@ -11,8 +11,8 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "translation/translation.h"
+#include "window/config.h"
 #include "window/hotkey_editor.h"
-#include "window/main_menu.h"
 
 #define HOTKEY_HEADER -1
 
@@ -239,7 +239,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2, &data.focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
     if (!handled && (m->right.went_up || h->escape_pressed)) {
-        window_main_menu_show(0);
+        window_config_show();
     }
 }
 
