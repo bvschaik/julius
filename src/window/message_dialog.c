@@ -173,11 +173,12 @@ static void draw_city_message_text(const lang_message *msg)
         case MESSAGE_TYPE_EMIGRATION: {
             int low_mood_cause = city_sentiment_low_mood_cause();
             if (low_mood_cause >= 1 && low_mood_cause <= 5) {
-                lang_text_draw(12, low_mood_cause + 2,
-                    data.x + 64, data.y_text + 44, FONT_NORMAL_WHITE);
+                int max_width = 16 * (data.text_width_blocks - 1) - 64;
+                lang_text_draw_multiline(12, low_mood_cause + 2,
+                    data.x + 64, data.y_text + 44, max_width, FONT_NORMAL_WHITE);
             }
             rich_text_draw(msg->content.text,
-                data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16,
+                data.x_text + 8, data.y_text + 86, 16 * (data.text_width_blocks - 1),
                 data.text_height_blocks - 1, 0);
             break;
         }
