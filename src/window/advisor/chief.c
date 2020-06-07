@@ -177,7 +177,7 @@ static int draw_background(void)
     }
 
     // religion
-    draw_title(246, 7);
+    draw_title(246, 9);
     if (demands->religion == 1) {
         lang_text_draw(61, 46, X_OFFSET, 246, FONT_NORMAL_RED);
     } else if (demands->religion == 2) {
