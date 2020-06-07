@@ -69,7 +69,7 @@ static int get_height_id(void)
             case TERRAIN_INFO_GARDEN:
                 return 1;
             default:
-                return 0;
+                return 5;
         }
     } else if (context.type == BUILDING_INFO_BUILDING) {
         switch (building_get(context.building_id)->type) {
@@ -328,6 +328,7 @@ static void init(int grid_offset)
         case 2: context.height_blocks = 18; break;
         case 3: context.height_blocks = 19; break;
         case 4: context.height_blocks = 14; break;
+        case 5: context.height_blocks = 23; break;
         default: context.height_blocks = 22; break;
     }
     // dialog placement
