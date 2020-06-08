@@ -269,6 +269,8 @@ static int load_campaign_mission(int mission_id)
         scenario_restore_campaign_player_name();
     }
     initialize_saved_game();
+    scenario_fix_patch_trade(mission_id);
+
     city_data_init_campaign_mission();
     return 1;
 }

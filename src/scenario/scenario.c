@@ -1,5 +1,7 @@
 #include "scenario.h"
 
+#include "city/resource.h"
+#include "empire/trade_route.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
 #include "scenario/data.h"
@@ -451,6 +453,14 @@ void scenario_settings_init_mission(void)
     scenario.settings.starting_favor = difficulty_starting_favor();
     scenario.settings.starting_personal_savings = setting_personal_savings_for_mission(scenario.settings.campaign_rank);
 }
+
+void scenario_fix_patch_trade(int mission_id) {
+    // Damascus, allow import of marble
+    if (mission_id == 15) {
+        trade_route_init(1, RESOURCE_MARBLE, 15);
+    }
+}
+
 
 void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
 {
