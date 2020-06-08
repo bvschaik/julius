@@ -233,7 +233,7 @@ static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y)
     *pixel_y += y_offset - img->sprite_offset_y;
 }
 
-static void draw_figure(const figure *f, int x, int y, int hover)
+static void draw_figure(const figure *f, int x, int y, int highlight)
 {
     if (f->cart_image_id) {
         switch (f->type) {
@@ -264,17 +264,17 @@ static void draw_figure(const figure *f, int x, int y, int hover)
             image_draw_enemy(f->image_id, x, y);
         } else {
             image_draw(f->image_id, x, y);
-            if (hover) {
-                image_draw_blend_alpha(f->image_id, x, y, COLOR_MASK_GREEN_LEGION);
+            if (highlight) {
+                image_draw_blend_alpha(f->image_id, x, y, COLOR_MASK_LEGION_HIGHLIGHT);
             }
         }
     }
 }
 
-void city_draw_figure(const figure *f, int x, int y, int hover)
+void city_draw_figure(const figure *f, int x, int y, int highlight)
 {
     adjust_pixel_offset(f, &x, &y);
-    draw_figure(f, x, y, hover);
+    draw_figure(f, x, y, highlight);
 }
 
 void city_draw_selected_figure(const figure *f, int x, int y, pixel_coordinate *coord)
