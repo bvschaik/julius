@@ -125,6 +125,13 @@ void city_buildings_build_triumphal_arch(void)
     city_data.building.triumphal_arches_placed++;
 }
 
+void city_buildings_remove_triumphal_arch(void)
+{
+    if (city_data.building.triumphal_arches_placed > 0) {
+        city_data.building.triumphal_arches_placed--;
+    }
+}
+
 void city_buildings_earn_triumphal_arch(void)
 {
     city_data.building.triumphal_arches_available++;

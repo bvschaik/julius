@@ -676,9 +676,7 @@ void building_construction_place(void)
     }
     formation_move_herds_away(x_end, y_end);
     city_finance_process_construction(placement_cost);
-    if (type != BUILDING_TRIUMPHAL_ARCH) {
-        game_undo_finish_build(placement_cost);
-    }
+    game_undo_finish_build(placement_cost);
 }
 
 static void set_warning(int *warning_id, int warning)
