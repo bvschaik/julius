@@ -98,9 +98,11 @@ static void destroy_iron_mine(void)
 {
     if (scenario.random_events.iron_mine_collapse) {
         if(config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
-            city_finance_process_sundry(250);
-            city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, 0);
-	} else {
+            if(building_find(BUILDING_IRON_MINE) < MAX_BUILDINGS) {
+                city_finance_process_sundry(250);
+                city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, 0);
+            }
+    } else {
             int grid_offset = building_destroy_first_of_type(BUILDING_IRON_MINE);
             if (grid_offset) {
                 city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
@@ -113,9 +115,11 @@ static void destroy_clay_pit(void)
 {
     if (scenario.random_events.clay_pit_flooded) {
         if(config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
-            city_finance_process_sundry(250);
-            city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, 0);
-	} else {	    
+            if(building_find(BUILDING_CLAY_PIT) < MAX_BUILDINGS) {
+                city_finance_process_sundry(250);
+                city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, 0);
+            }
+        } else {
             int grid_offset = building_destroy_first_of_type(BUILDING_CLAY_PIT);
             if (grid_offset) {
                 city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, grid_offset);

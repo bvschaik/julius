@@ -144,6 +144,8 @@ typedef struct {
 
 building *building_get(int id);
 
+int building_find(building_type type);
+
 building *building_main(building *b);
 
 building *building_next(building *b);
