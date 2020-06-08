@@ -38,7 +38,7 @@ building *building_get(int id)
 
 int building_find(building_type type)
 {
-    for (int i = 0; i < MAX_BUILDINGS; ++i) {
+    for (int i = 1; i < MAX_BUILDINGS; ++i) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == type) {
             return i;
