@@ -257,7 +257,8 @@ int building_warehouse_is_gettable(int resource, building *b)
 {
         const building_storage *s = building_storage_get(b->storage_id);
         if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
-	    (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) ||
             (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER)) {
 		return 1;
 	} else {
