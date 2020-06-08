@@ -1,4 +1,6 @@
 #include "platform/screen.h"
+
+#include "core/calc.h"
 #include "input/mouse.h"
 #include "game/settings.h"
 #include "game/system.h"
@@ -77,15 +79,19 @@ void platform_screen_render(void)
     vita2d_start_drawing();
     vita2d_draw_texture(tex_buffer, 0, 0);
     const mouse *mouse = mouse_get();
-    vita2d_draw_texture(current_cursor->texture, mouse->x - current_cursor->hotspot_x, mouse->y - current_cursor->hotspot_y);
+    if (!mouse->is_touch) {
+        vita2d_draw_texture(current_cursor->texture, mouse->x - current_cursor->hotspot_x, mouse->y - current_cursor->hotspot_y);
+    }
     vita2d_end_drawing();
     vita2d_wait_rendering_done();
     vita2d_swap_buffers();
 }
 
-void platform_screen_warp_mouse(int x, int y)
+void system_set_mouse_position(int *x, int *y)
 {
-    SDL_WarpMouseInWindow(my_window, x, y);
+    *x = calc_bound(*x, 0, VITA_DISPLAY_WIDTH - 1);
+    *y = calc_bound(*y, 0, VITA_DISPLAY_HEIGHT - 1);
+    SDL_WarpMouseInWindow(my_window, *x, *y);
 }
 
 int system_is_fullscreen_only(void)
