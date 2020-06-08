@@ -327,7 +327,7 @@ int formation_legion_at_building(int grid_offset)
 
 void formation_legion_update(void)
 {
-    for (int i = 1; i <= formation_get_max_legions(); i++) {
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use != 1 || !m->is_legion) {
             continue;
