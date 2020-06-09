@@ -23,6 +23,7 @@ static const char *ini_keys[] = {
     "ui_show_water_structure_range",
     "ui_show_construction_size",
     "ui_zoom",
+    "ui_complete_ratings_columns",
     "gameplay_change_grandfestival",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",
