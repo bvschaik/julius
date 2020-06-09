@@ -57,6 +57,15 @@ int building_storage_create(void)
     return 0;
 }
 
+int building_storage_restore(int storage_id) 
+{
+    if (data.storages[storage_id].in_use) {
+        return 0;
+    }
+    data.storages[storage_id].in_use = 1;
+    return storage_id;
+}
+
 void building_storage_delete(int storage_id)
 {
     data.storages[storage_id].in_use = 0;
