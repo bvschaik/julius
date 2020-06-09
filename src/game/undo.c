@@ -3,6 +3,7 @@
 #include "building/industry.h"
 #include "building/properties.h"
 #include "building/warehouse.h"
+#include "building/storage.h"
 #include "city/finance.h"
 #include "core/image.h"
 #include "game/resource.h"
@@ -205,6 +206,11 @@ void game_undo_perform(void)
             if (data.buildings[i].id) {
                 building *b = building_get(data.buildings[i].id);
                 memcpy(b, &data.buildings[i], sizeof(building));
+                if (b->type == BUILDING_WAREHOUSE || b->type == BUILDING_GRANARY) {
+                    if (!building_storage_restore(b->storage_id)) {
+                        building_storage_reset_building_ids();
+                    }
+                }
                 add_building_to_terrain(b);
             }
         }
