@@ -415,7 +415,9 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
         }
     }
     if (min_building) {
-        map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
+        if (dst) {
+            map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
+        }
         return min_building->id;
     } else {
         return 0;
@@ -540,6 +542,9 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
             }
         }
         if (room >= 4 && (loads_stored <= 4 || ((building_warehouse_get_acceptable_quantity(r,warehouse) - loads_stored) >= 4)) && city_resource_count(r) - loads_stored >= 4) {
+            if (!building_warehouse_for_getting(warehouse, r, 0)) {
+                continue;
+            }
             *resource = r;
             return WAREHOUSE_TASK_GETTING;
         }
