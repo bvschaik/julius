@@ -18,6 +18,7 @@ cmake-build-debug
 /data
 ext/SDL2/*/
 *~
+*.swp
 .vscode
 /android
 # Android

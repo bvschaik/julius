@@ -562,7 +562,7 @@ set(TRANSLATION_FILES
 
 set(MACOSX_FILES "")
 if(APPLE)
-    set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/julius.icns)
+    set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/augustus.icns)
 endif()
 
 set(SOURCE_FILES
@@ -584,7 +584,7 @@ set(SOURCE_FILES
     ${EDITOR_FILES}
     ${TRANSLATION_FILES}
     ${TINYFD_FILES}
-    ${PROJECT_SOURCE_DIR}/res/julius.rc
+    ${PROJECT_SOURCE_DIR}/res/augustus.rc
     ${MACOSX_FILES}
 )
 
@@ -620,27 +620,27 @@ endif()
 
 if(APPLE)
     # generating a macOS icns file (see https://stackoverflow.com/a/20703594)
-    add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/julius.icns
-        COMMAND mkdir -p julius.iconset
-        COMMAND sips -z 16 16    julius_256.png --out julius.iconset/icon_16x16.png
-        COMMAND sips -z 32 32    julius_256.png --out julius.iconset/icon_16x16@2x.png
-        COMMAND sips -z 32 32    julius_256.png --out julius.iconset/icon_32x32.png
-        COMMAND sips -z 64 64    julius_256.png --out julius.iconset/icon_32x32@2x.png
-        COMMAND sips -z 128 128  julius_256.png --out julius.iconset/icon_128x128.png
-        COMMAND sips -z 256 256  julius_256.png --out julius.iconset/icon_128x128@2x.png
-        COMMAND sips -z 256 256  julius_256.png --out julius.iconset/icon_256x256.png
-        COMMAND sips -z 512 512  julius_512.png --out julius.iconset/icon_256x256@2x.png
-        COMMAND iconutil -c icns julius.iconset
-        COMMAND rm -R julius.iconset
+    add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/augustus.icns
+        COMMAND mkdir -p augustus.iconset
+        COMMAND sips -z 16 16    augustus_256.png --out augustus.iconset/icon_16x16.png
+        COMMAND sips -z 32 32    augustus_256.png --out augustus.iconset/icon_16x16@2x.png
+        COMMAND sips -z 32 32    augustus_256.png --out augustus.iconset/icon_32x32.png
+        COMMAND sips -z 64 64    augustus_256.png --out augustus.iconset/icon_32x32@2x.png
+        COMMAND sips -z 128 128  augustus_256.png --out augustus.iconset/icon_128x128.png
+        COMMAND sips -z 256 256  augustus_256.png --out augustus.iconset/icon_128x128@2x.png
+        COMMAND sips -z 256 256  augustus_256.png --out augustus.iconset/icon_256x256.png
+        COMMAND sips -z 512 512  augustus_512.png --out augustus.iconset/icon_256x256@2x.png
+        COMMAND iconutil -c icns augustus.iconset
+        COMMAND rm -R augustus.iconset
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/res)
-    set_source_files_properties(${PROJECT_SOURCE_DIR}/res/julius.icns PROPERTIES
+    set_source_files_properties(${PROJECT_SOURCE_DIR}/res/augustus.icns PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources")
 
     # setting variables that will populate Info.plist
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "nl.biancavanschaik.julius")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OS X deployment version" FORCE)
-    set(MACOSX_BUNDLE_ICON_FILE "julius.icns")
+    set(MACOSX_BUNDLE_ICON_FILE "augustus.icns")
     set(MACOSX_BUNDLE_BUNDLE_VERSION
         "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}")
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
@@ -806,11 +806,11 @@ else()
     endif()
 
     if(UNIX AND NOT APPLE)
-        install(FILES "res/julius.desktop" DESTINATION "share/applications" RENAME "com.github.bvschaik.julius.desktop")
-        install(FILES "res/julius.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.bvschaik.julius.metainfo.xml")
-        install(FILES "res/julius_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.bvschaik.julius.png")
-        install(FILES "res/julius_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.bvschaik.julius.png")
-        install(FILES "res/julius_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.bvschaik.julius.png")
+        install(FILES "res/augustus.desktop" DESTINATION "share/applications" RENAME "com.github.keriew.augustus.desktop")
+        install(FILES "res/augustus.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.keriew.augustus.metainfo.xml")
+        install(FILES "res/augustus_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.keriew.augustus.png")
+        install(FILES "res/augustus_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.keriew.augustus.png")
+        install(FILES "res/augustus_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.keriew.augustus.png")
     endif()
 
     # Unit tests

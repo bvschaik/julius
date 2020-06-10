@@ -17,10 +17,10 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "FileDescription", "Julius, an open source clone of Caesar 3"
+            VALUE "FileDescription", "Augustus, an open source clone of Caesar 3"
             VALUE "FileVersion", "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@@VERSION_REVISION@"
-            VALUE "OriginalFilename", "julius.exe"
-            VALUE "ProductName", "Julius"
+            VALUE "OriginalFilename", "Augustus.exe"
+            VALUE "ProductName", "Augustus"
             VALUE "ProductVersion", "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@@VERSION_REVISION@"
         END
     END
