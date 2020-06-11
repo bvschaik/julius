@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+	<id>com.github.keriew.augustus</id>
+	<metadata_license>CC0-1.0</metadata_license>
+	<project_license>AGPL-3.0</project_license>
+	<name>Augustus</name>
+	<summary>Augustus is an open source re-implementation of Caesar III with changes to gameplay</summary>
+	<description>
+		<p>Augustus is an open source re-implementation of Caesar III with changes to gameplay.</p>
+		<p>The aim of this project is to provide enhanced, customizable gameplay to Caesar 3 using project Julius UI enhancements.</p>
+		<ul>UI enhancements include:
+			<li>Support for widescreen resolutions</li>
+			<li>Windowed mode support for 32-bit desktops</li>
+			<li>Several small in-game quality of life improvements</li>
+			<li>Zoom controls</li>
+		</ul>
+
+		<ul>Gameplay changes include:
+			<li>Roadblocks</li>
+			<li>Market special orders</li>
+			<li>Partial warehouse storage</li>
+			<li>Increased game limits</li>
+		<p>Augustus requires the original assets (graphics, sounds, etc) from Caesar 3 to run. It optionally supports the high-quality MP3 files once provided on the Sierra website.</p>
+	</description>
+	<launchable type="desktop-id">com.github.keriew.augustus.desktop</launchable>
+	<screenshots>
+		<screenshot type="default">
+			<image type="source">https://raw.githubusercontent.com/keriew/augustus/master/res/sce_sys/livearea/contents/bg.png</image>
+		</screenshot>
+	</screenshots>
+	<releases>
+		<release version="1.4.1a" date="2020-06-09"/>
+		<release version="1.4.1" date="2020-06-09"/>
+		<release version="1.4.0" date="2020-06-05"/>
+		<release version="1.3.1" date="2020-02-24"/>
+		<release version="1.3.0" date="2020-02-14"/>
+	</releases>
+	<url type="homepage">https://github.com/keriew/augustus</url>
+	<developer_name>Tomasz Drzewiecki</developer_name>
+	<content_rating type="oars-1.1">
+		<content_attribute id="violence-fantasy">moderate</content_attribute>
+	</content_rating>
+</component>
