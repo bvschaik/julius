@@ -743,3 +743,45 @@ int encoding_get_utf8_character_bytes(const char input)
         return 1;
     }
 }
+
+void encoding_utf16_to_utf8(uint16_t *input, uint8_t *output)
+{
+    for (int i = 0; input[i]; i++) {
+        if ((input[i] & 0xff80) == 0) {
+            *(output++) = input[i] & 0xff;
+        } else if ((input[i] & 0xf800) == 0) {
+            *(output++) = ((input[i] >> 6) & 0xff) | 0xc0;
+            *(output++) = (input[i] & 0x3f) | 0x80;
+        } else if ((input[i] & 0xfc00) == 0xd800 && (input[i + 1] & 0xfc00) == 0xdc00) {
+            *(output++) = (((input[i] + 64) >> 8) & 0x3) | 0xf0;
+            *(output++) = (((input[i] >> 2) + 16) & 0x3f) | 0x80;
+            *(output++) = ((input[i] >> 4) & 0x30) | 0x80 | ((input[i + 1] << 2) & 0xf);
+            *(output++) = (input[i + 1] & 0x3f) | 0x80;
+            i += 1;
+        } else {
+            *(output++) = ((input[i] >> 12) & 0xf) | 0xe0;
+            *(output++) = ((input[i] >> 6) & 0x3f) | 0x80;
+            *(output++) = (input[i] & 0x3f) | 0x80;
+        }
+    }
+
+    *output = '\0';
+}
+
+void encoding_utf8_to_utf16(uint8_t *input, uint16_t *output)
+{
+    for (int i = 0; input[i];) {
+        if ((input[i] & 0xe0) == 0xe0) {
+            *(output++) = ((input[i] & 0x0f) << 12) | ((input[i + 1] & 0x3f) << 6) | (input[i + 2] & 0x3f);
+            i += 3;
+        } else if ((input[i] & 0xc0) == 0xc0) {
+            *(output++) = ((input[i] & 0x1f) << 6) | (input[i + 1] & 0x3f);
+            i += 2;
+        } else {
+            *(output++) = input[i];
+            i += 1;
+        }
+    }
+
+    *output = '\0';
+}

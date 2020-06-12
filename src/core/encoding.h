@@ -73,4 +73,18 @@ void encoding_from_utf8(const char *input, uint8_t *output, int output_length);
  */
 int encoding_get_utf8_character_bytes(const char input);
 
+/**
+ * Converts an UTF-16 input input to UTF-8 output
+ * @param input Input to convert, encoded using UTF-16
+ * @param output Output buffer to store the UTF-8 encoded input
+ */
+void encoding_utf16_to_utf8(uint16_t *input, uint8_t *output);
+
+/**
+ * Converts an UTF-8 input input to UTF-16 output
+ * @param input Input to convert, encoded using UTF-8
+ * @param output Output buffer to store the UTF-16 encoded input
+ */
+void encoding_utf8_to_utf16(uint8_t *input, uint16_t *output);
+
 #endif // CORE_ENCODING_H
