@@ -182,7 +182,6 @@ if (VITA_BUILD)
         ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.c
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_touch.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
     )
 elseif (SWITCH_BUILD)
@@ -191,7 +190,6 @@ elseif (SWITCH_BUILD)
         ${PROJECT_SOURCE_DIR}/src/platform/switch/cursor.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.c
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_touch.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_keyboard.c
     )
 else()
@@ -210,7 +208,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/dir.c
     ${PROJECT_SOURCE_DIR}/src/core/encoding.c
     ${PROJECT_SOURCE_DIR}/src/core/encoding_korean.c
-    ${PROJECT_SOURCE_DIR}/src/core/encoding_multibyte.c
+    ${PROJECT_SOURCE_DIR}/src/core/encoding_trad_chinese.c
     ${PROJECT_SOURCE_DIR}/src/core/file.c
     ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.c
     ${PROJECT_SOURCE_DIR}/src/core/image.c
@@ -557,6 +555,7 @@ set(TRANSLATION_FILES
     ${PROJECT_SOURCE_DIR}/src/translation/portuguese.c
     ${PROJECT_SOURCE_DIR}/src/translation/russian.c
     ${PROJECT_SOURCE_DIR}/src/translation/spanish.c
+    ${PROJECT_SOURCE_DIR}/src/translation/traditional_chinese.c
     ${PROJECT_SOURCE_DIR}/src/translation/translation.c
 )
 
@@ -728,6 +727,7 @@ if (VITA_BUILD)
         SceDisplay_stub
         SceGxm_stub
         SceHid_stub
+        SceIofilemgr_stub
         SceSysmodule_stub
         SceTouch_stub
         ScePower_stub

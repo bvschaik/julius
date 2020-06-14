@@ -33,6 +33,7 @@ typedef enum {
     TR_CONFIG_ALLOW_CYCLING_TEMPLES,
     TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE,
     TR_CONFIG_SHOW_CONSTRUCTION_SIZE,
+    TR_CONFIG_HIGHLIGHT_LEGIONS,
     TR_CONFIG_FIX_IMMIGRATION_BUG,
     TR_CONFIG_FIX_100_YEAR_GHOSTS,
     TR_CONFIG_FIX_EDITOR_EVENTS,
@@ -138,5 +139,6 @@ void translation_korean(const translation_string **strings, int *num_strings);
 void translation_portuguese(const translation_string **strings, int *num_strings);
 void translation_russian(const translation_string **strings, int *num_strings);
 void translation_spanish(const translation_string **strings, int *num_strings);
+void translation_traditional_chinese(const translation_string **strings, int *num_strings);
 
 #endif // TRANSLATION_TRANSLATION_H

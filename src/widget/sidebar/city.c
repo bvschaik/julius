@@ -271,6 +271,13 @@ int widget_sidebar_city_get_tooltip_text(void)
     return data.focus_button_for_tooltip;
 }
 
+static void slide_finished(void)
+{
+    city_view_toggle_sidebar();
+    window_city_show();
+    window_draw(1);
+}
+
 static void button_overlay(int param1, int param2)
 {
     window_overlay_menu_show();
@@ -278,7 +285,8 @@ static void button_overlay(int param1, int param2)
 
 static void button_collapse_expand(int param1, int param2)
 {
-    sidebar_slide(draw_collapsed_background, draw_expanded_background);
+    city_view_start_sidebar_toggle();
+    sidebar_slide(!city_view_is_sidebar_collapsed(), draw_collapsed_background, draw_expanded_background, slide_finished);
 }
 
 static void button_build(int submenu, int param2)

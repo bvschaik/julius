@@ -409,18 +409,18 @@ static int parse_chinese_font(buffer *input, color_t *pixels, int pixel_offset, 
     int bytes_per_row = char_size <= 16 ? 2 : 3;
     for (int i = 0; i < IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS; i++) {
         image *img = &data.font[index_offset + i];
-        img->width = char_size;
+        img->width = char_size + 1;
         img->height = char_size - 1;
         img->draw.bitmap_id = 0;
         img->draw.offset = pixel_offset;
-        img->draw.uncompressed_length = img->draw.data_length = char_size * (char_size - 1);
-        for (int row = 0; row < char_size - 1; row++) {
+        img->draw.uncompressed_length = img->draw.data_length = img->width * img->height;
+        for (int row = 0; row < img->height; row++) {
             unsigned int bits = buffer_read_u16(input);
             if (bytes_per_row == 3) {
                 bits += buffer_read_u8(input) << 16;
             }
             int prev_set = 0;
-            for (int col = 0; col < char_size; col++) {
+            for (int col = 0; col < img->width; col++) {
                 int set = bits & 1;
                 if (set) {
                     *pixels = ALPHA_OPAQUE;

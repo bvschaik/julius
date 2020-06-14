@@ -2,6 +2,7 @@
 
 #include "building/industry.h"
 #include "building/properties.h"
+#include "building/storage.h"
 #include "building/warehouse.h"
 #include "building/storage.h"
 #include "city/finance.h"

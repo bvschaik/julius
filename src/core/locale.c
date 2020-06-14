@@ -86,3 +86,24 @@ int locale_year_before_ad(void)
     // In all languages it's "200 AD" except for English
     return data.last_determined_language != LANGUAGE_ENGLISH;
 }
+
+int locale_translate_rank_autosaves(void)
+{
+    switch (data.last_determined_language) {
+        case LANGUAGE_ENGLISH:
+        case LANGUAGE_FRENCH:
+        case LANGUAGE_GERMAN:
+        case LANGUAGE_ITALIAN:
+        case LANGUAGE_POLISH:
+        case LANGUAGE_PORTUGUESE:
+        case LANGUAGE_SPANISH:
+        case LANGUAGE_SWEDISH:
+        case LANGUAGE_RUSSIAN:
+            return 1;
+
+        case LANGUAGE_KOREAN:
+        case LANGUAGE_TRADITIONAL_CHINESE: // original adds 01_ prefixes
+        default:
+            return 0;
+    }
+}

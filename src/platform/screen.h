@@ -17,6 +17,4 @@ void platform_screen_center_window(void);
 
 void platform_screen_render(void);
 
-void platform_screen_warp_mouse(int x, int y);
-
 #endif // PLATFORM_SCREEN_H

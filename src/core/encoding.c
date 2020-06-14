@@ -1,7 +1,7 @@
 #include "core/encoding.h"
 
 #include "core/encoding_korean.h"
-#include "core/encoding_multibyte.h"
+#include "core/encoding_trad_chinese.h"
 #include "core/locale.h"
 #include "core/string.h"
 
@@ -590,6 +590,7 @@ encoding_type encoding_determine(language_type language)
         data.to_utf8_table = HIGH_TO_UTF8_CYRILLIC;
         data.encoding = ENCODING_CYRILLIC;
     } else if (language == LANGUAGE_TRADITIONAL_CHINESE) {
+        encoding_trad_chinese_init();
         data.to_utf8_table = NULL;
         data.encoding = ENCODING_TRADITIONAL_CHINESE;
     } else if (language == LANGUAGE_KOREAN) {
@@ -610,6 +611,20 @@ encoding_type encoding_get(void)
     return data.encoding;
 }
 
+int encoding_is_multibyte(void)
+{
+    return !data.to_utf8_table;
+}
+
+int encoding_system_uses_decomposed(void)
+{
+#ifdef __APPLE__
+    return 1;
+#else
+    return 0;
+#endif
+}
+
 static int is_ascii(const char *utf8_char)
 {
     return ((uint8_t) *utf8_char & 0x80) == 0;
@@ -625,8 +640,10 @@ void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int
     if (!data.to_utf8_table) {
         if (data.encoding == ENCODING_KOREAN) {
             encoding_korean_to_utf8(input, output, output_length);
+        } else if (data.encoding == ENCODING_TRADITIONAL_CHINESE) {
+            encoding_trad_chinese_to_utf8(input, output, output_length);
         } else {
-            encoding_multibyte_to_utf8(data.encoding, input, output, output_length);
+            *output = 0;
         }
         return;
     }
@@ -670,10 +687,10 @@ void encoding_from_utf8(const char *input, uint8_t *output, int output_length)
         if (data.encoding == ENCODING_KOREAN) {
             encoding_korean_from_utf8(input, output, output_length);
             return;
-        } else {
-            //encoding_multibyte_from_utf8(data.encoding, input, output, output_length);
+        } else if (data.encoding == ENCODING_TRADITIONAL_CHINESE) {
+            encoding_trad_chinese_from_utf8(input, output, output_length);
+            return;
         }
-        // return;
     }
 
     const uint8_t *max_output = &output[output_length - 1];
@@ -709,4 +726,62 @@ void encoding_from_utf8(const char *input, uint8_t *output, int output_length)
         }
     }
     *output = 0;
+}
+
+int encoding_get_utf8_character_bytes(const char input)
+{
+    if ((input & 0x80) == 0) { // 0xxx xxxx
+        return 1;
+    } else if ((input & 0xe0) == 0xc0) { // 110x xxxx
+        return 2;
+    } else if ((input & 0xf0) == 0xe0) { // 1110 xxxx
+        return 3;
+    } else if ((input & 0xf8) == 0xf0) { // 1111 0xxx
+        return 4;
+    } else {
+        // continuation byte or unknown: fall back to 1
+        return 1;
+    }
+}
+
+void encoding_utf16_to_utf8(uint16_t *input, uint8_t *output)
+{
+    for (int i = 0; input[i]; i++) {
+        if ((input[i] & 0xff80) == 0) {
+            *(output++) = input[i] & 0xff;
+        } else if ((input[i] & 0xf800) == 0) {
+            *(output++) = ((input[i] >> 6) & 0xff) | 0xc0;
+            *(output++) = (input[i] & 0x3f) | 0x80;
+        } else if ((input[i] & 0xfc00) == 0xd800 && (input[i + 1] & 0xfc00) == 0xdc00) {
+            *(output++) = (((input[i] + 64) >> 8) & 0x3) | 0xf0;
+            *(output++) = (((input[i] >> 2) + 16) & 0x3f) | 0x80;
+            *(output++) = ((input[i] >> 4) & 0x30) | 0x80 | ((input[i + 1] << 2) & 0xf);
+            *(output++) = (input[i + 1] & 0x3f) | 0x80;
+            i += 1;
+        } else {
+            *(output++) = ((input[i] >> 12) & 0xf) | 0xe0;
+            *(output++) = ((input[i] >> 6) & 0x3f) | 0x80;
+            *(output++) = (input[i] & 0x3f) | 0x80;
+        }
+    }
+
+    *output = '\0';
+}
+
+void encoding_utf8_to_utf16(uint8_t *input, uint16_t *output)
+{
+    for (int i = 0; input[i];) {
+        if ((input[i] & 0xe0) == 0xe0) {
+            *(output++) = ((input[i] & 0x0f) << 12) | ((input[i + 1] & 0x3f) << 6) | (input[i + 2] & 0x3f);
+            i += 3;
+        } else if ((input[i] & 0xc0) == 0xc0) {
+            *(output++) = ((input[i] & 0x1f) << 6) | (input[i + 1] & 0x3f);
+            i += 2;
+        } else {
+            *(output++) = input[i];
+            i += 1;
+        }
+    }
+
+    *output = '\0';
 }

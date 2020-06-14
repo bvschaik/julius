@@ -57,8 +57,8 @@ void translation_load(language_type language)
         case LANGUAGE_SPANISH:
             translation_spanish(&strings, &num_strings);
             break;
-        default:
-        case LANGUAGE_UNKNOWN:
+        case LANGUAGE_TRADITIONAL_CHINESE:
+            translation_traditional_chinese(&strings, &num_strings);
             break;
     }
 

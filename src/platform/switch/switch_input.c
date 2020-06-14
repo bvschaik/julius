@@ -1,9 +1,11 @@
 #include "switch_input.h"
-#include "switch_touch.h"
+#include "switch_keyboard.h"
 #include "switch.h"
 #include <math.h>
 
-#include "switch_keyboard.h"
+#include "core/encoding.h"
+#include "input/mouse.h"
+
 #define NO_MAPPING -1
 
 enum {
@@ -35,10 +37,7 @@ enum
     ANALOG_MAX = 4
 };
 
-int last_mouse_x = 0;
-int last_mouse_y = 0;
-int touch_mode = TOUCH_MODE_TOUCHPAD;
-static bool can_change_touch_mode = true;
+static int can_change_touch_mode = 1;
 
 static SDL_Joystick *joy = NULL;
 
@@ -102,15 +101,7 @@ int switch_poll_event(SDL_Event *event)
 {
     int ret = SDL_PollEvent(event);
     if (event != NULL) {
-        if (touch_mode != TOUCH_MODE_ORIGINAL) {
-            switch_handle_touch(event);
-        }
         switch (event->type) {
-            case SDL_MOUSEMOTION:
-                // update joystick / touch mouse coords
-                last_mouse_x = event->motion.x;
-                last_mouse_y = event->motion.y;
-                break;
             case SDL_JOYBUTTONDOWN:
                 if (event->jbutton.which != 0) { // Only Joystick 0 controls the game
                     break;
@@ -145,9 +136,8 @@ int switch_poll_event(SDL_Event *event)
                         break;
                     case SWITCH_PAD_MINUS:
                         if (can_change_touch_mode) {
-                            touch_mode++;
-                            touch_mode %= NUM_TOUCH_MODES;
-                            can_change_touch_mode = false;
+                            touch_cycle_mode();
+                            can_change_touch_mode = 0;
                         }
                         break;
                     default:
@@ -184,7 +174,7 @@ int switch_poll_event(SDL_Event *event)
                         hires_dy = 0;
                         break;
                     case SWITCH_PAD_MINUS:
-                        can_change_touch_mode = true;
+                        can_change_touch_mode = 1;
                         break;
                     default:
                         break;
@@ -224,6 +214,8 @@ void switch_handle_analog_sticks(void)
         hires_dy %= slowdown;
         if (xrel != 0 || yrel != 0) {
             // limit joystick mouse to screen coords, same as physical mouse
+            int last_mouse_x = mouse_get()->x;
+            int last_mouse_y = mouse_get()->y;
             int x = last_mouse_x + xrel;
             int y = last_mouse_y + yrel;
             if (x < 0) {
@@ -312,21 +304,6 @@ void switch_handle_virtual_keyboard(void)
     }
 }
 
-static int get_utf8_character_bytes(const uint8_t *uc)
-{
-    if (uc[0] < 0x80) {
-        return 1;
-    } else if ((uc[0] & 0xe0) == 0xc0 && (uc[1] & 0xc0) == 0x80) {
-        return 2;
-    } else if ((uc[0] & 0xf0) == 0xe0 && (uc[1] & 0xc0) == 0x80 && (uc[2] & 0xc0) == 0x80) {
-        return 3;
-    } else if ((uc[0] & 0xf8) == 0xf0 && (uc[1] & 0xc0) == 0x80 && (uc[2] & 0xc0) == 0x80 && (uc[3] & 0xc0) == 0x80) {
-        return 4;
-    } else {
-        return 1;
-    }
-}
-
 static void switch_start_text_input(char *initial_text, int multiline)
 {
     char text[601] = {'\0'};
@@ -344,7 +321,7 @@ static void switch_start_text_input(char *initial_text, int multiline)
     }
     const uint8_t *utf8_text = (uint8_t*) text;
     for (int i = 0; i < 599 && utf8_text[i];) {
-        int bytes_in_char = get_utf8_character_bytes(&utf8_text[i]);
+        int bytes_in_char = encoding_get_utf8_character_bytes(utf8_text[i]);
         SDL_Event textinput_event;
         textinput_event.type = SDL_TEXTINPUT;
         for (int n = 0; n < bytes_in_char; n++) {
@@ -449,8 +426,8 @@ static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event,
         event->button.state = SDL_RELEASED;
         pressed_buttons[switch_button] = 0;
     }
-    event->button.x = last_mouse_x;
-    event->button.y = last_mouse_y;
+    event->button.x = mouse_get()->x;
+    event->button.y = mouse_get()->y;
 }
 
 static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key)

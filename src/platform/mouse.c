@@ -28,8 +28,16 @@ void system_mouse_set_relative_mode(int enabled)
         system_mouse_get_relative_state(NULL, NULL);
     } else {
         SDL_SetRelativeMouseMode(SDL_FALSE);
-        platform_screen_warp_mouse(data.x, data.y);
+        system_set_mouse_position(&data.x, &data.y);
         mouse_set_position(data.x, data.y);
     }
     data.enabled = enabled;
+}
+
+void system_move_mouse_cursor(int delta_x, int delta_y)
+{
+    int x = mouse_get()->x + delta_x;
+    int y = mouse_get()->y + delta_y;
+    system_set_mouse_position(&x, &y);
+    mouse_set_position(x, y);
 }

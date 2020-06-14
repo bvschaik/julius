@@ -11,6 +11,12 @@ static int use_virtual_keyboard(void)
 #endif
 }
 
+void system_keyboard_set_input_rect(int x, int y, int width, int height)
+{
+    SDL_Rect rect = {x, y, width, height};
+    SDL_SetTextInputRect(&rect);
+}
+
 static int is_showing(void)
 {
     return SDL_IsTextInputActive();

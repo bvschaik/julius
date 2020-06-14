@@ -662,31 +662,39 @@ int map_tiles_is_paved_road(int grid_offset)
     return 0;
 }
 
-static void set_road_with_aqueduct_image(int grid_offset)
+static void set_aqueduct_image(int grid_offset, int is_road, const terrain_image *img)
 {
+    int group_offset = img->group_offset;
+    if (is_road) {
+        if (!img->aqueduct_offset || (group_offset != 2 && group_offset != 3)) {
+            if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD)) {
+                group_offset = 3;
+            } else {
+                group_offset = 2;
+            }
+        }
+        if (map_tiles_is_paved_road(grid_offset)) {
+            group_offset -= 2;
+        } else {
+            group_offset += 6;
+        }
+    }
     int image_aqueduct = image_group(GROUP_BUILDING_AQUEDUCT);
     int water_offset;
-    if (map_image_at(grid_offset) < image_aqueduct + 15) {
+    int image_id = map_image_at(grid_offset);
+    if (image_id >= image_aqueduct && image_id < image_aqueduct + 15) {
         water_offset = 0;
     } else {
         water_offset = 15;
     }
-    const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 0);
-    int group_offset = img->group_offset;
-    if (!img->aqueduct_offset) {
-        if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD)) {
-            group_offset = 3;
-        } else {
-            group_offset = 2;
-        }
-    }
-    if (map_tiles_is_paved_road(grid_offset)) {
-        map_image_set(grid_offset, image_aqueduct + water_offset + group_offset - 2);
-    } else {
-        map_image_set(grid_offset, image_aqueduct + water_offset + group_offset + 6);
-    }
+    map_image_set(grid_offset, image_aqueduct + water_offset + group_offset);
     map_property_set_multi_tile_size(grid_offset, 1);
     map_property_mark_draw_tile(grid_offset);
+}
+
+static void set_road_with_aqueduct_image(int grid_offset)
+{
+    set_aqueduct_image(grid_offset, 1, map_image_context_get_aqueduct(grid_offset, 0));
 }
 
 static void set_road_image(int x, int y, int grid_offset)
@@ -904,42 +912,21 @@ void map_tiles_set_water(int x, int y)
     foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_water_image);
 }
 
-static void set_aqueduct_image(int grid_offset)
+static void set_aqueduct(int grid_offset)
 {
     const terrain_image *img = map_image_context_get_aqueduct(grid_offset, aqueduct_include_construction);
-    int group_offset = img->group_offset;
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+    int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
+    if (is_road) {
         map_property_clear_plaza_or_earthquake(grid_offset);
-        if (!img->aqueduct_offset) {
-            if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD)) {
-                group_offset = 3;
-            } else {
-                group_offset = 2;
-            }
-        }
-        if (map_tiles_is_paved_road(grid_offset)) {
-            group_offset -= 2;
-        } else {
-            group_offset += 6;
-        }
     }
-    int water_offset = map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT);
-    if (water_offset >= 0 && water_offset < 15) {
-        water_offset = 0;
-    } else {
-        water_offset = 15;
-    }
-    map_image_set(grid_offset, image_group(GROUP_BUILDING_AQUEDUCT) +
-        water_offset + group_offset + img->item_offset);
-    map_property_set_multi_tile_size(grid_offset, 1);
-    map_property_mark_draw_tile(grid_offset);
+    set_aqueduct_image(grid_offset, is_road, img);
     map_aqueduct_set(grid_offset, img->aqueduct_offset);
 }
 
 static void update_aqueduct_tile(int x, int y, int grid_offset)
 {
     if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) && map_aqueduct_at(grid_offset) <= 15) {
-        set_aqueduct_image(grid_offset);
+        set_aqueduct(grid_offset);
     }
 }
 
@@ -1082,7 +1069,7 @@ static int get_access_ramp_image_offset(int x, int y)
 static void set_elevation_aqueduct_image(int grid_offset)
 {
     if (map_aqueduct_at(grid_offset) <= 15 && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        set_aqueduct_image(grid_offset);
+        set_aqueduct(grid_offset);
     }
 }
 

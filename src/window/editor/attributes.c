@@ -15,7 +15,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "input/keyboard.h"
 #include "scenario/editor.h"
 #include "scenario/property.h"
 #include "widget/input_box.h"
@@ -64,7 +63,7 @@ static arrow_button image_arrows[] = {
     {44, 424, 21, 24, change_image, 1, 0},
 };
 
-static input_box scenario_description_input = { 92, 40, 19, 2 };
+static input_box scenario_description_input = { 92, 40, 19, 2, FONT_NORMAL_WHITE };
 
 static struct {
     int is_paused;
@@ -75,19 +74,19 @@ static struct {
 static void start(void)
 {
     if (data.is_paused) {
-        keyboard_resume_capture();
+        input_box_resume(&scenario_description_input);
     } else {
         string_copy(scenario_brief_description(), data.brief_description, BRIEF_DESC_LENGTH);
-        keyboard_start_capture(data.brief_description, BRIEF_DESC_LENGTH, 1, &scenario_description_input, FONT_NORMAL_WHITE);
+        input_box_start(&scenario_description_input, data.brief_description, BRIEF_DESC_LENGTH, 1);
     }
 }
 
 static void stop(int paused)
 {
     if (paused) {
-        keyboard_pause_capture();
+        input_box_pause(&scenario_description_input);
     } else {
-        keyboard_stop_capture();
+        input_box_stop(&scenario_description_input);
     }
     data.is_paused = paused;
     scenario_editor_update_brief_description(data.brief_description);
@@ -104,9 +103,6 @@ static void draw_foreground(void)
     outer_panel_draw(0, 28, 30, 28);
 
     input_box_draw(&scenario_description_input);
-    text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
-    text_draw(data.brief_description, 100, 50, FONT_NORMAL_WHITE, 0);
-    text_draw_cursor(100, 51, keyboard_is_insert());
 
     button_border_draw(212, 76, 250, 30, data.focus_button_id == 1);
     lang_text_draw_centered(44, 88, 212, 85, 250, FONT_NORMAL_BLACK);

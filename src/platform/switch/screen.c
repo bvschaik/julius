@@ -3,6 +3,7 @@
 #include "SDL.h"
 
 #include "city/view.h"
+#include "core/calc.h"
 #include "core/config.h"
 #include "game/settings.h"
 #include "game/system.h"
@@ -204,19 +205,23 @@ void platform_screen_render(void)
     SDL_RenderCopy(SDL.renderer, SDL.texture_ui, NULL, NULL);
 
     const mouse *mouse = mouse_get();
-    SDL_Rect dst;
-    dst.x = ((mouse->x - current_cursor->hotspot_x) * SWITCH_PIXEL_WIDTH) / SWITCH_DISPLAY_WIDTH;
-    dst.y = ((mouse->y - current_cursor->hotspot_y) * SWITCH_PIXEL_HEIGHT) / SWITCH_DISPLAY_HEIGHT;
-    dst.w = (32 * SWITCH_PIXEL_WIDTH) / SWITCH_DISPLAY_WIDTH;
-    dst.h = (32 * SWITCH_PIXEL_HEIGHT) / SWITCH_DISPLAY_HEIGHT;
-    SDL_RenderCopy(SDL.renderer, current_cursor->texture, NULL, &dst);
+    if (!mouse->is_touch) {
+        SDL_Rect dst;
+        dst.x = ((mouse->x - current_cursor->hotspot_x) * SWITCH_PIXEL_WIDTH) / SWITCH_DISPLAY_WIDTH;
+        dst.y = ((mouse->y - current_cursor->hotspot_y) * SWITCH_PIXEL_HEIGHT) / SWITCH_DISPLAY_HEIGHT;
+        dst.w = (32 * SWITCH_PIXEL_WIDTH) / SWITCH_DISPLAY_WIDTH;
+        dst.h = (32 * SWITCH_PIXEL_HEIGHT) / SWITCH_DISPLAY_HEIGHT;
+        SDL_RenderCopy(SDL.renderer, current_cursor->texture, NULL, &dst);
+    }
 
     SDL_RenderPresent(SDL.renderer);
 }
 
-void platform_screen_warp_mouse(int x, int y)
+void system_set_mouse_position(int *x, int *y)
 {
-    SDL_WarpMouseInWindow(SDL.window, x, y);
+    *x = calc_bound(*x, 0, SWITCH_DISPLAY_WIDTH - 1);
+    *y = calc_bound(*y, 0, SWITCH_DISPLAY_HEIGHT - 1);
+    SDL_WarpMouseInWindow(SDL.window, *x, *y);
 }
 
 int system_is_fullscreen_only(void)

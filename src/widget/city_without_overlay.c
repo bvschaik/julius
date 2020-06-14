@@ -10,7 +10,9 @@
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/view.h"
+#include "core/config.h"
 #include "core/time.h"
+#include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "map/building.h"
@@ -25,6 +27,23 @@
 #include "widget/city_building_ghost.h"
 #include "widget/city_figure.h"
 
+#define OFFSET(x,y) (x + GRID_SIZE * y)
+
+static const int ADJACENT_OFFSETS[2][4][7] = {
+    {
+        { OFFSET(-1, 0), OFFSET(-1, -1),  OFFSET(-1, -2), OFFSET(0, -2), OFFSET(1, -2) },
+        { OFFSET(0, -1), OFFSET(1, -1),  OFFSET(2, -1), OFFSET(2, 0), OFFSET(2, 1) },
+        { OFFSET(1, 0), OFFSET(1, 1),  OFFSET(1, 2), OFFSET(0, 2), OFFSET(-1, 2)},
+        { OFFSET(0, 1), OFFSET(-1, 1),  OFFSET(-2, 1), OFFSET(-2, 0), OFFSET(-2, -1) }
+    },
+    {
+        { OFFSET(-1, 0), OFFSET(-1, -1),  OFFSET(-1, -2), OFFSET(-1, -3), OFFSET(0, -3),  OFFSET(1, -3), OFFSET(2, -3) },
+        { OFFSET(0, -1), OFFSET(1, -1),  OFFSET(2, -1), OFFSET(3, -1), OFFSET(3, 0),  OFFSET(3, 1), OFFSET(3, 2) },
+        { OFFSET(1, 0), OFFSET(1, 1),  OFFSET(1, 2), OFFSET(1, 3), OFFSET(0, 3),  OFFSET(-1, 3), OFFSET(-2, 3) },
+        { OFFSET(0, 1), OFFSET(-1, 1),  OFFSET(-2, 1), OFFSET(-3, 1), OFFSET(-3, 0),  OFFSET(-3, -1), OFFSET(-3, -2) }
+    }
+};
+
 static struct {
     time_millis last_water_animation_time;
     int advance_water_animation;
@@ -32,10 +51,11 @@ static struct {
     int image_id_water_first;
     int image_id_water_last;
     int selected_figure_id;
+    int highlighted_formation;
     pixel_coordinate *selected_figure_coord;
-} draw_context = {0, 0, 0, 0, 0, 0};
+} draw_context;
 
-static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_coord)
+static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_coord, int highlighted_formation)
 {
     draw_context.advance_water_animation = 0;
     if (!selected_figure_id) {
@@ -49,6 +69,7 @@ static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_c
     draw_context.image_id_water_last = 5 + draw_context.image_id_water_first;
     draw_context.selected_figure_id = selected_figure_id;
     draw_context.selected_figure_coord = figure_coord;
+    draw_context.highlighted_formation = highlighted_formation;
 }
 
 static int draw_building_as_deleted(building *b)
@@ -62,6 +83,20 @@ static int is_multi_tile_terrain(int grid_offset)
     return (!map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1);
 }
 
+static int has_adjacent_deletion(int grid_offset)
+{
+    int size = map_property_multi_tile_size(grid_offset);
+    int total_adjacent_offsets = size * 2 + 1;
+    const int *adjacent_offset = ADJACENT_OFFSETS[size - 2][city_view_orientation() / 2];
+    for (int i = 0; i < total_adjacent_offsets; ++i) {
+        if (map_property_is_deleted(grid_offset + adjacent_offset[i]) ||
+            draw_building_as_deleted(building_get(map_building_at(grid_offset + adjacent_offset[i])))) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 static void draw_footprint(int x, int y, int grid_offset)
 {
     building_construction_record_view_position(x, y, grid_offset);
@@ -71,12 +106,8 @@ static void draw_footprint(int x, int y, int grid_offset)
     } else if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
-        color_t color_mask = 0;
         if (building_id) {
             building *b = building_get(building_id);
-            if (draw_building_as_deleted(b)) {
-                color_mask = COLOR_MASK_RED;
-            }
             int view_x, view_y, view_width, view_height;
             city_view_get_scaled_viewport(&view_x, &view_y, &view_width, &view_height);
             if (x < view_x + 100) {
@@ -105,7 +136,7 @@ static void draw_footprint(int x, int y, int grid_offset)
             }
             map_image_set(grid_offset, image_id);
         }
-        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
+        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0);
     }
 }
 
@@ -259,7 +290,8 @@ static void draw_figures(int x, int y, int grid_offset)
         figure *f = figure_get(figure_id);
         if (!f->is_ghost) {
             if (!draw_context.selected_figure_id) {
-                city_draw_figure(f, x, y);
+                int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
+                city_draw_figure(f, x, y, highlight);
             } else if (figure_id == draw_context.selected_figure_id) {
                 city_draw_selected_figure(f, x, y, draw_context.selected_figure_coord);
             }
@@ -413,7 +445,7 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
         if ((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks) {
-            city_draw_figure(f, x, y);
+            city_draw_figure(f, x, y, 0);
         }
         figure_id = f->next_figure_id_on_same_tile;
     }
@@ -434,13 +466,25 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
     }
 }
 
+static int should_draw_top_before_deletion(int grid_offset)
+{
+    return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);
+}
+
+static void deletion_draw_terrain_top(int x, int y, int grid_offset)
+{
+    if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset)) {
+        draw_top(x, y, grid_offset);
+    }
+}
+
 static void deletion_draw_figures_animations(int x, int y, int grid_offset)
 {
-    if (map_property_is_deleted(grid_offset) && !map_building_at(grid_offset)) {
+    if (map_property_is_deleted(grid_offset) || draw_building_as_deleted(building_get(map_building_at(grid_offset)))) {
         image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
-        if (!is_multi_tile_terrain(grid_offset)) {
-            draw_top(x, y, grid_offset);
-        }
+    }
+    if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset)) {
+        draw_top(x, y, grid_offset);
     }
     draw_figures(x, y, grid_offset);
     draw_animation(x, y, grid_offset);
@@ -454,7 +498,14 @@ static void deletion_draw_remaining(int x, int y, int grid_offset)
 
 void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile)
 {
-    init_draw_context(selected_figure_id, figure_coord);
+    int highlighted_formation = 0;
+    if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
+        highlighted_formation = formation_legion_at_grid_offset(tile->grid_offset);
+        if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
+            highlighted_formation = 0;
+        }
+    }
+    init_draw_context(selected_figure_id, figure_coord, highlighted_formation);
     int should_mark_deleting = city_building_ghost_mark_deleting(tile);
     city_view_foreach_map_tile(draw_footprint);
     if (!should_mark_deleting) {
@@ -472,7 +523,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
             0
         );
     } else {
-        city_view_foreach_map_tile(draw_top);
+        city_view_foreach_map_tile(deletion_draw_terrain_top);
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
     }

@@ -23,7 +23,7 @@
 #include "translation/translation.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 33
+#define NUM_CHECKBOXES 34
 #define CONFIG_PAGES 3
 #define MAX_LANGUAGE_DIRS 20
 
@@ -31,7 +31,7 @@
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
-static int options_per_page[CONFIG_PAGES] = { 9,14,10 };
+static int options_per_page[CONFIG_PAGES] = { 10,14,10 };
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
@@ -54,6 +54,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE },
     { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM, TR_CONFIG_ENABLE_ZOOM },
     { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_UI_COMPLETE_RATING_COLUMNS, TR_CONFIG_COMPLETE_RATING_COLUMNS },
+    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS  },
     { 20,  72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG },
     { 20,  96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS },
     { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL, TR_CONFIG_GRANDFESTIVAL },
@@ -349,7 +350,7 @@ static void button_page(int param1, int param2)
     window_invalidate();
 }
 
-void window_config_show()
+void window_config_show(void)
 {
     window_type window = {
         WINDOW_CONFIG,

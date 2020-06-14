@@ -76,6 +76,18 @@ const char *system_keyboard_key_name(key_type key);
  */
 const char *system_keyboard_key_modifier_name(key_modifier_type modifier);
 
+/**
+ * Sets the position/size of the keyboard input box
+ * @param x X offset
+ * @param y Y offset
+ * @param width Width of the box
+ * @param height Height of the box
+ */
+void system_keyboard_set_input_rect(int x, int y, int width, int height);
+
+/**
+ * Show the virtual keyboard
+ */
 void system_keyboard_show(void);
 
 /**
@@ -96,6 +108,23 @@ void system_mouse_set_relative_mode(int enabled);
  * @param y Y position of the mouse
  */
 void system_mouse_get_relative_state(int *x, int *y);
+
+/**
+ * Moves the mouse cursor
+ * @param delta_x The amount to move on the X axis
+ * @param delta_y The amount to move on the Y axis
+ */
+void system_move_mouse_cursor(int delta_x, int delta_y);
+
+/**
+ * Sets the mouse position
+ * @param x Pointer to X position of the mouse
+ * @param y Pointer to Y position of the mouse
+ * Note: the function limits x and y to the bounds of the game window
+ * if the x and y are less than 0 or greater than the width/height, they will be
+ * changed to fit in the window
+ */
+void system_set_mouse_position(int *x, int *y);
 
 /**
  * Exit the game

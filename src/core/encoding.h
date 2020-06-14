@@ -30,6 +30,18 @@ encoding_type encoding_determine(language_type language);
  */
 encoding_type encoding_get(void);
 
+/*
+ * Returns whether the encoding uses multibyte chars for the internal strings
+ * @return boolean true if the encoding uses multibyte
+ */
+int encoding_is_multibyte(void);
+
+/**
+ * Returns whether the current operating system uses decomposed form for UTF-8 strings
+ * @return Boolean true if using decomposed, false otherwise
+ */
+int encoding_system_uses_decomposed(void);
+
 /**
  * Checks whether the character can be displayed using the internal encoding
  * @param utf8_char UTF-8 encoded character
@@ -53,5 +65,26 @@ void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int
  * @param output_length Length of the output buffer
  */
 void encoding_from_utf8(const char *input, uint8_t *output, int output_length);
+
+/**
+ * Returns the number of bytes that the next utf-8 character takes up
+ * @param input Next input byte
+ * @return Number of bytes used by the character
+ */
+int encoding_get_utf8_character_bytes(const char input);
+
+/**
+ * Converts an UTF-16 input input to UTF-8 output
+ * @param input Input to convert, encoded using UTF-16
+ * @param output Output buffer to store the UTF-8 encoded input
+ */
+void encoding_utf16_to_utf8(uint16_t *input, uint8_t *output);
+
+/**
+ * Converts an UTF-8 input input to UTF-16 output
+ * @param input Input to convert, encoded using UTF-8
+ * @param output Output buffer to store the UTF-16 encoded input
+ */
+void encoding_utf8_to_utf16(uint8_t *input, uint16_t *output);
 
 #endif // CORE_ENCODING_H

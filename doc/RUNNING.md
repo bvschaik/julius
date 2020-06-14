@@ -20,6 +20,12 @@ Julius supports Windows XP and higher.
 3. Copy julius.exe, SDL2.dll and SDL2_mixer.dll to the folder where you installed Caesar 3
 4. Run julius.exe
 
+**Note:** If you install Caesar 3 using Steam and plan to use Steam to launch the game,
+***do not*** rename `julius.exe` to `c3.exe`.
+Doing so will make the mouse cursor disappear when using right-click to scroll.
+   
+Instead, open `SierraLauncher.ini` and replace `Game1Exe=c3.exe` with the `Game1Exe=julius.exe`.
+
 ## Linux/BSD
 
 OpenBSD and FreeBSD provide Julius as [package](http://ports.su/games/julius).
