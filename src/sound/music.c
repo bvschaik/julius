@@ -43,8 +43,8 @@ static const char mp3_tracks[][32] = {
     "mp3/ROME3.mp3",
     "mp3/ROME4.mp3",
     "mp3/ROME5.mp3",
-    "mp3/Combat_Long.mp3",
     "mp3/Combat_Short.mp3",
+    "mp3/Combat_Long.mp3",
     "mp3/setup.mp3"
 };
 
