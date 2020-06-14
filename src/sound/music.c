@@ -31,8 +31,8 @@ static const char tracks[][32] = {
     "wavs/ROME3.WAV",
     "wavs/ROME4.WAV",
     "wavs/ROME5.WAV",
-    "wavs/Combat_Long.wav",
     "wavs/Combat_Short.wav",
+    "wavs/Combat_Long.wav",
     "wavs/setup.wav"
 };
 
@@ -43,8 +43,8 @@ static const char mp3_tracks[][32] = {
     "mp3/ROME3.mp3",
     "mp3/ROME4.mp3",
     "mp3/ROME5.mp3",
-    "mp3/Combat_Long.mp3",
     "mp3/Combat_Short.mp3",
+    "mp3/Combat_Long.mp3",
     "mp3/setup.mp3"
 };
 
