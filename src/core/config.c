@@ -32,7 +32,7 @@ static const char *ini_string_keys[] = {
 static int values[CONFIG_MAX_ENTRIES];
 static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
-static int default_values[CONFIG_MAX_ENTRIES];
+static int default_values[CONFIG_MAX_ENTRIES] = {[CONFIG_UI_SMOOTH_SCROLLING] = 1};
 static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
 int config_get(config_key key)
