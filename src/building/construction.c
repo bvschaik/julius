@@ -7,6 +7,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "building/properties.h"
+#include "building/rotation.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/finance.h"
@@ -420,6 +421,7 @@ void building_construction_cancel(void)
     } else {
         building_construction_set_type(BUILDING_NONE);
     }
+    reset_rotation();
 }
 
 void building_construction_update(int x, int y, int grid_offset)
@@ -492,10 +494,14 @@ void building_construction_update(int x, int y, int grid_offset)
             }
         }
     } else if (type == BUILDING_HIPPODROME) {
+        int x_offset_1, y_offset_1;
+        get_offset_with_rotation(5, get_rotation(), &x_offset_1, &y_offset_1);
+        int x_offset_2, y_offset_2;
+        get_offset_with_rotation(10, get_rotation(), &x_offset_2, &y_offset_2);
         if (map_building_tiles_are_clear(x, y, 5, TERRAIN_ALL) &&
-            map_building_tiles_are_clear(x + 5, y, 5, TERRAIN_ALL) &&
-            map_building_tiles_are_clear(x + 10, y, 5, TERRAIN_ALL)) {
-            mark_construction(x, y, 5, TERRAIN_ALL, 0);
+            map_building_tiles_are_clear(x + x_offset_1, y + y_offset_1, 5, TERRAIN_ALL) &&
+            map_building_tiles_are_clear(x + x_offset_2, y + y_offset_2, 5, TERRAIN_ALL)) {
+                mark_construction(x, y, 5, TERRAIN_ALL, 0);
         }
     } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
         if (!map_water_determine_orientation_size2(x, y, 1, 0, 0)) {

@@ -175,9 +175,9 @@ void city_resource_calculate_warehouse_stocks(void)
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
             b->has_road_access = 0;
-            if (map_has_road_access(b->x, b->y, b->size, 0)) {
+            if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, b->size, 0)) {
                 b->has_road_access = 1;
-            } else if (map_has_road_access(b->x, b->y, 3, 0)) {
+            } else if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0)) {
                 b->has_road_access = 2;
             }
         }

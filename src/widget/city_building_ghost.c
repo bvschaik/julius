@@ -4,6 +4,7 @@
 #include "building/count.h"
 #include "building/industry.h"
 #include "building/properties.h"
+#include "building/rotation.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/view.h"
@@ -135,6 +136,20 @@ static void draw_fountain_range(int x, int y, int grid_offset)
     image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
 }
 
+static void image_draw_warehouse(int image_id, int x, int y){
+    
+    int image_id_space = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
+    int corner = get_corner(get_building_orientation(get_rotation()));
+    for (int i = 0; i < 9; i++) {
+        if(i == corner){
+            draw_building(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
+            image_draw_masked(image_group(GROUP_BUILDING_WAREHOUSE) + 17, x + X_VIEW_OFFSETS[i] - 4, y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_GREEN);
+        } else {
+            draw_building(image_id_space, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
+        }
+    }
+}
+
 static void draw_regular_building(building_type type, int image_id, int x, int y, int grid_offset)
 {
     if (building_is_farm(type)) {
@@ -144,12 +159,7 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
             image_draw_isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
         }
     } else if (type == BUILDING_WAREHOUSE) {
-        draw_building(image_id, x, y);
-        image_draw_masked(image_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, COLOR_MASK_GREEN);
-        int image_id_space = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
-        for (int i = 1; i < 9; i++) {
-            draw_building(image_id_space, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
-        }
+        image_draw_warehouse(image_id, x, y);
     } else if (type == BUILDING_GRANARY) {
         image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
         const image *img = image_get(image_id + 1);
@@ -629,11 +639,13 @@ static void draw_hippodrome(const map_tile *tile, int x, int y)
         blocked = 1;
     }
     int num_tiles = 25;
-    int orientation_index = city_view_orientation() / 2;
+    
+    force_two_orientations();
+    int orientation_index = get_building_orientation(get_rotation())/2;
     int grid_offset1 = tile->grid_offset;
-    int grid_offset2 = grid_offset1 + map_grid_delta(5, 0);
-    int grid_offset3 = grid_offset1 + map_grid_delta(10, 0);
-
+    int grid_offset2 = grid_offset1 + get_delta_with_rotation(5);
+    int grid_offset3 = grid_offset1 + get_delta_with_rotation(10);
+    
     int blocked_tiles1[25];
     int blocked_tiles2[25];
     int blocked_tiles3[25];
