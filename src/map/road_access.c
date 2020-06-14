@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/roadblock.h"
+#include "building/rotation.h"
 #include "core/config.h"
 #include "city/map.h"
 #include "map/building.h"
@@ -33,6 +34,24 @@ static void find_minimum_road_tile(int x, int y, int size, int *min_value, int *
 
 int map_has_road_access(int x, int y, int size, map_point *road)
 {
+    return map_has_road_access_rotation(0, x, y, size, road);
+}
+
+int map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road){
+    switch(rotation){
+        case 1:
+            x = x - size + 1;
+            break;
+        case 2:
+            x = x - size + 1;
+            y = y - size + 1;
+            break;
+        case 3:
+            y = y - size + 1;
+            break;
+        default:
+            break;
+    }
     int min_value = 12;
     int min_grid_offset = map_grid_offset(x, y);
     find_minimum_road_tile(x, y, size, &min_value, &min_grid_offset);
@@ -45,13 +64,15 @@ int map_has_road_access(int x, int y, int size, map_point *road)
     return 0;
 }
 
-int map_has_road_access_hippodrome(int x, int y, map_point *road)
-{
+int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int rotation){
     int min_value = 12;
     int min_grid_offset = map_grid_offset(x, y);
+    int x_offset, y_offset;
+    get_offset_with_rotation(5, rotation, &x_offset, &y_offset);
     find_minimum_road_tile(x, y, 5, &min_value, &min_grid_offset);
-    find_minimum_road_tile(x + 5, y, 5, &min_value, &min_grid_offset);
-    find_minimum_road_tile(x + 10, y, 5, &min_value, &min_grid_offset);
+    find_minimum_road_tile(x + x_offset, y + y_offset, 5, &min_value, &min_grid_offset);
+    get_offset_with_rotation(10, rotation, &x_offset, &y_offset);
+    find_minimum_road_tile(x + x_offset, y + y_offset, 5, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road) {
             map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
@@ -59,6 +80,11 @@ int map_has_road_access_hippodrome(int x, int y, map_point *road)
         return 1;
     }
     return 0;
+}
+
+int map_has_road_access_hippodrome(int x, int y, map_point *road)
+{
+    return map_has_road_access_hippodrome_rotation( x, y, road, get_rotation());
 }
 
 int map_has_road_access_granary(int x, int y, map_point *road)
@@ -153,9 +179,21 @@ int map_closest_reachable_road_within_radius(int x, int y, int size, int radius,
     }
     return 0;
 }
-
-int map_road_to_largest_network(int x, int y, int size, int *x_road, int *y_road)
-{
+int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, int *x_road, int *y_road){
+    switch(rotation){
+    case 1:
+        x = x - size + 1;
+        break;
+    case 2:
+        x = x - size + 1;
+        y = y - size + 1;
+        break;
+    case 3:
+        y = y - size + 1;
+        break;
+    default:
+        break;
+    }
     int min_index = 12;
     int min_grid_offset = -1;
     int base_offset = map_grid_offset(x, y);
@@ -190,6 +228,10 @@ int map_road_to_largest_network(int x, int y, int size, int *x_road, int *y_road
         return min_grid_offset;
     }
     return -1;
+}
+int map_road_to_largest_network(int x, int y, int size, int *x_road, int *y_road)
+{
+    return map_road_to_largest_network_rotation(0, x, y, size, x_road, y_road);
 }
 
 static void check_road_to_largest_network_hippodrome(int x, int y, int *min_index, int *min_grid_offset)
