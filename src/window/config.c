@@ -12,6 +12,7 @@
 #include "graphics/image.h"
 #include "graphics/panel.h"
 #include "graphics/screen.h"
+#include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "window/main_menu.h"
@@ -24,11 +25,18 @@
 
 #define CHECKBOX_CHECK_SIZE 20
 #define CHECKBOX_HEIGHT 20
-#define CHECKBOX_WIDTH 600
+#define CHECKBOX_WIDTH 560
+
+#define NUM_VISIBLE_ITEMS 15
+
+#define ITEM_Y_OFFSET 60
+#define ITEM_HEIGHT 24
 
 #define NUM_CHECKBOXES 11
 #define NUM_BOTTOM_BUTTONS 4
 #define MAX_LANGUAGE_DIRS 20
+
+static void on_scroll(void);
 
 static void toggle_switch(int id);
 static void button_language_select(int param1, int param2);
@@ -36,30 +44,42 @@ static void button_hotkeys(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
 
-typedef struct {
-    int x;
-    int y;
-    void (*toggle_handler)(int param);
-    int parameter;
-    translation_key description;
-} checkbox;
+static scrollbar_type scrollbar = {580, ITEM_Y_OFFSET, ITEM_HEIGHT * NUM_VISIBLE_ITEMS, on_scroll, 4};
 
-static checkbox checkbox_buttons[] = {
-    { 20, 102, toggle_switch, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO },
-    { 20, 126, toggle_switch, CONFIG_UI_SIDEBAR_INFO, TR_CONFIG_SIDEBAR_INFO },
-    { 20, 150, toggle_switch, CONFIG_UI_SMOOTH_SCROLLING, TR_CONFIG_SMOOTH_SCROLLING },
-    { 20, 174, toggle_switch, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE, TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE },
-    { 20, 198, toggle_switch, CONFIG_UI_ALLOW_CYCLING_TEMPLES, TR_CONFIG_ALLOW_CYCLING_TEMPLES },
-    { 20, 222, toggle_switch, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE },
-    { 20, 246, toggle_switch, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE },
-    { 20, 270, toggle_switch, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS },
-    { 20, 342, toggle_switch, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG },
-    { 20, 366, toggle_switch, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS },
-    { 20, 390, toggle_switch, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS }
+enum {
+    TYPE_NONE,
+    TYPE_HEADER,
+    TYPE_CHECKBOX,
+    TYPE_LANGUAGE
+};
+
+typedef struct {
+    int type;
+    translation_key description;
+    int checkbox_parameter;
+} config_widget;
+
+static config_widget widgets[] = {
+    { TYPE_LANGUAGE, TR_CONFIG_LANGUAGE_LABEL },
+    { TYPE_NONE },
+    { TYPE_HEADER, TR_CONFIG_HEADER_UI_CHANGES },
+    { TYPE_CHECKBOX, TR_CONFIG_SHOW_INTRO_VIDEO, CONFIG_UI_SHOW_INTRO_VIDEO},
+    { TYPE_CHECKBOX, TR_CONFIG_SIDEBAR_INFO, CONFIG_UI_SIDEBAR_INFO},
+    { TYPE_CHECKBOX, TR_CONFIG_SMOOTH_SCROLLING, CONFIG_UI_SMOOTH_SCROLLING },
+    { TYPE_CHECKBOX, TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE },
+    { TYPE_CHECKBOX, TR_CONFIG_ALLOW_CYCLING_TEMPLES, CONFIG_UI_ALLOW_CYCLING_TEMPLES },
+    { TYPE_CHECKBOX, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE },
+    { TYPE_CHECKBOX, TR_CONFIG_SHOW_CONSTRUCTION_SIZE, CONFIG_UI_SHOW_CONSTRUCTION_SIZE },
+    { TYPE_CHECKBOX, TR_CONFIG_HIGHLIGHT_LEGIONS, CONFIG_UI_HIGHLIGHT_LEGIONS },
+    { TYPE_NONE },
+    { TYPE_HEADER, TR_CONFIG_HEADER_GAMEPLAY_CHANGES },
+    { TYPE_CHECKBOX, TR_CONFIG_FIX_IMMIGRATION_BUG, CONFIG_GP_FIX_IMMIGRATION_BUG },
+    { TYPE_CHECKBOX, TR_CONFIG_FIX_100_YEAR_GHOSTS, CONFIG_GP_FIX_100_YEAR_GHOSTS },
+    { TYPE_CHECKBOX, TR_CONFIG_FIX_EDITOR_EVENTS, CONFIG_GP_FIX_EDITOR_EVENTS }
 };
 
 static generic_button language_button = {
-    120, 50, 200, 24, button_language_select, button_none
+    120, 0, 200, 24, button_language_select, button_none
 };
 
 static generic_button bottom_buttons[NUM_BOTTOM_BUTTONS] = {
@@ -112,54 +132,40 @@ static void init_config_values(void)
     data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].change_action = config_change_string_language;
 }
 
-static void checkboxes_draw_text(const checkbox *checkboxes, int num_checkboxes)
+static void checkbox_draw_text(int x, int y, int value_key, translation_key description)
 {
-    for (int i = 0; i < num_checkboxes; i++) {
-        const checkbox *cb = &checkboxes[i];
-        if (data.config_values[cb->parameter].new_value) {
-            text_draw(string_from_ascii("x"), cb->x + 6, cb->y + 3, FONT_NORMAL_BLACK, 0);
-        }
-        text_draw(translation_for(cb->description), cb->x + 30, cb->y + 5, FONT_NORMAL_BLACK, 0);
+    if (data.config_values[value_key].new_value) {
+        text_draw(string_from_ascii("x"), x + 6, y + 3, FONT_NORMAL_BLACK, 0);
     }
+    text_draw(translation_for(description), x + 30, y + 5, FONT_NORMAL_BLACK, 0);
 }
 
-static void checkboxes_draw(const checkbox *checkboxes, int num_checkboxes, int focus_button)
+static void checkbox_draw(int x, int y, int has_focus)
 {
-    for (int i = 0; i < num_checkboxes; i++) {
-        const checkbox *cb = &checkboxes[i];
-        button_border_draw(cb->x, cb->y, CHECKBOX_CHECK_SIZE, CHECKBOX_CHECK_SIZE, focus_button == i + 1);
-    }
+    button_border_draw(x, y, CHECKBOX_CHECK_SIZE, CHECKBOX_CHECK_SIZE, has_focus);
 }
 
-static int get_checkbox(const mouse *m, const checkbox *checkboxes, int num_checkboxes)
+static int is_checkbox(const mouse *m, int x, int y)
 {
-    for (int i = 0; i < num_checkboxes; i++) {
-        if (checkboxes[i].x <= m->x &&
-            checkboxes[i].x + CHECKBOX_WIDTH > m->x &&
-            checkboxes[i].y <= m->y &&
-            checkboxes[i].y + CHECKBOX_HEIGHT > m->y) {
-            return i + 1;
-        }
+    if (x <= m->x && x + CHECKBOX_WIDTH > m->x &&
+        y <= m->y && y + CHECKBOX_HEIGHT > m->y) {
+        return 1;
     }
     return 0;
 }
 
-static int checkboxes_handle_mouse(const mouse *m, const checkbox *checkboxes, int num_checkboxes, int *focus_button_id)
+static int checkbox_handle_mouse(const mouse *m, int x, int y, int value_key, int *focus)
 {
-    int checkbox_id = get_checkbox(m, checkboxes, num_checkboxes);
-    if (focus_button_id) {
-        *focus_button_id = checkbox_id;
-    }
-    if (!checkbox_id) {
+    if (!is_checkbox(m, x, y)) {
         return 0;
     }
-    const checkbox *cb = &checkboxes[checkbox_id - 1];
+    *focus = 1;
     if (m->left.went_up) {
-        cb->toggle_handler(cb->parameter);
+        toggle_switch(value_key);
+        return 1;
     } else {
         return 0;
     }
-    return checkbox_id;
 }
 
 static void init(void)
@@ -193,6 +199,8 @@ static void init(void)
             data.num_language_options++;
         }
     }
+
+    scrollbar_init(&scrollbar, 0, sizeof(widgets) / sizeof(config_widget) - NUM_VISIBLE_ITEMS);
 }
 
 static void draw_background(void)
@@ -206,14 +214,19 @@ static void draw_background(void)
 
     text_draw_centered(translation_for(TR_CONFIG_TITLE), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
-    text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, 56, FONT_NORMAL_BLACK, 0);
-    text_draw_centered(data.language_options[data.selected_language_option],
-        language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
-
-    text_draw(translation_for(TR_CONFIG_HEADER_UI_CHANGES), 20, 83, FONT_NORMAL_BLACK, 0);
-    text_draw(translation_for(TR_CONFIG_HEADER_GAMEPLAY_CHANGES), 20, 323, FONT_NORMAL_BLACK, 0);
-
-    checkboxes_draw_text(checkbox_buttons, NUM_CHECKBOXES);
+    for (int i = 0; i < NUM_VISIBLE_ITEMS; i++) {
+        config_widget *w = &widgets[i + scrollbar.scroll_position];
+        int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
+        if (w->type == TYPE_HEADER) {
+            text_draw(translation_for(w->description), 20, y, FONT_NORMAL_BLACK, 0);
+        } else if (w->type == TYPE_CHECKBOX) {
+            checkbox_draw_text(20, y, w->checkbox_parameter, w->description);
+        } else if (w->type == TYPE_LANGUAGE) {
+            text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, y + 6, FONT_NORMAL_BLACK, 0);
+            text_draw_centered(data.language_options[data.selected_language_option],
+                language_button.x, y + language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
+        }
+    }
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         text_draw_centered(translation_for(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
@@ -226,25 +239,60 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    checkboxes_draw(checkbox_buttons, NUM_CHECKBOXES, data.focus_button);
+    for (int i = 0; i < NUM_VISIBLE_ITEMS; i++) {
+        config_widget *w = &widgets[i + scrollbar.scroll_position];
+        int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
+        if (w->type == TYPE_CHECKBOX) {
+            checkbox_draw(20, y, data.focus_button == i + 1);
+        } else if (w->type == TYPE_LANGUAGE) {
+            button_border_draw(language_button.x, y + language_button.y, language_button.width, language_button.height, data.language_focus_button == 1);
+        }
+    }
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         button_border_draw(bottom_buttons[i].x, bottom_buttons[i].y, bottom_buttons[i].width, bottom_buttons[i].height, data.bottom_focus_button == i + 1);
     }
-    button_border_draw(language_button.x, language_button.y, language_button.width, language_button.height, data.language_focus_button == 1);
+
+    inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / 16 - 3);
+    scrollbar_draw(&scrollbar);
+
     graphics_reset_dialog();
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
+        return;
+    }
+
     int handled = 0;
-    handled |= checkboxes_handle_mouse(m_dialog, checkbox_buttons, NUM_CHECKBOXES, &data.focus_button);
+    data.focus_button = 0;
+    
+    for (int i = 0; i < NUM_VISIBLE_ITEMS; i++) {
+        config_widget *w = &widgets[i + scrollbar.scroll_position];
+        int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
+        if (w->type == TYPE_CHECKBOX) {
+            int focus = 0;
+            handled |= checkbox_handle_mouse(m_dialog, 20, y, w->checkbox_parameter, &focus);
+            if (focus) {
+                data.focus_button = i + 1;
+            }
+        } else if (w->type == TYPE_LANGUAGE) {
+            handled |= generic_buttons_handle_mouse(m_dialog, 0, y, &language_button, 1, &data.language_focus_button);
+        }
+    }
+
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
+
     if (!handled && (m->right.went_up || h->escape_pressed)) {
         window_main_menu_show(0);
     }
+}
+
+static void on_scroll(void)
+{
+    window_invalidate();
 }
 
 static void toggle_switch(int key)
@@ -265,7 +313,7 @@ static void button_language_select(int param1, int param2)
 {
     window_select_list_show_text(
         screen_dialog_offset_x() + language_button.x + language_button.width - 10,
-        screen_dialog_offset_y() + language_button.y - 5,
+        screen_dialog_offset_y() + 45,
         data.language_options, data.num_language_options, set_language
     );
 }
