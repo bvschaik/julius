@@ -24,11 +24,14 @@ static translation_string all_strings[] = {
         "Veuillez consulter les erreurs dans le fichier de log."},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Annuler"},
-    {TR_BUTTON_RESET_DEFAULTS, "Réglages par défaut"},
+    {TR_BUTTON_RESET_DEFAULTS, "Réinitialiser"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Contrôles du clavier"},
-    {TR_CONFIG_TITLE, "Options de configuration de Julius"},
+    {TR_BUTTON_NEXT, "+"},
+    {TR_BUTTON_PREV, "-"},
+    {TR_CONFIG_TITLE, "Options de configuration de Augustus"},
     {TR_CONFIG_LANGUAGE_LABEL, "Langue :"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(par défaut)"},
+    {TR_CONFIG_PAGE_LABEL, "Page"},
     {TR_CONFIG_HEADER_UI_CHANGES, "Configuration de l'interface"},
     {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Configuration du jeu"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Jouer la vidéo d'introduction"},
@@ -41,8 +44,32 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corrige le bug d'immigration en mode très difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corrige le bug des fantômes de 100 ans"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corrige \"Nouvel Empereur\" et la survie des parties créees avec l'éditeur"},
-    {TR_HOTKEY_TITLE, "Configuration du clavier"},
-    {TR_HOTKEY_LABEL, "Touche"},
+    {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Affiche l'itinéraire du marcheur en cliquant droit sur un bâtiment"},
+    {TR_CONFIG_ENABLE_ZOOM, "Active le zoom (peut être lent et utilise plus de RAM)"},
+    {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Corrige les colonnes d'évaluation incomplètes"},
+    {TR_CONFIG_GRANDFESTIVAL, "Les grandes fêtes permettent une bénédiction supplémentaire d'un dieu"},
+    {TR_CONFIG_JEALOUS_GODS, "Déactive la jalousie des dieux"},
+    {TR_CONFIG_GLOBAL_LABOUR, "Active la main-d'œuvre globale"},
+    {TR_CONFIG_SCHOOL_WALKERS, "Augmente la couverture des écoliers"},
+    {TR_CONFIG_RETIRE_AT_60, "Change l'âge de retraitre des citoyens de 50 à 60"},
+    {TR_CONFIG_FIXED_WORKERS, "Corrige la force travail - 38% de la population"},
+    {TR_CONFIG_EXTRA_FORTS, "Autorise la construction de 4 forts supplémentaires"},
+    {TR_CONFIG_WOLVES_BLOCK, "Bloque la construction autour des loups"},
+    {TR_CONFIG_DYNAMIC_GRANARIES, "Bloque les routes des greniers non connectées"},
+    {TR_CONFIG_MORE_STOCKPILE, "Les maisons stockent plus de marchandises du marché"},
+    {TR_CONFIG_NO_BUYER_DISTRIBUTION, "Les vendeuses du marché ne distribuent pas les marchandises"},
+    {TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS, "Destruction immédiate des bâtiments"},
+    {TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD, "Les charretiers peuvent faire du hors route"},
+    {TR_CONFIG_GRANARIES_GET_DOUBLE, "Double la capacité des charretiers sortant des greniers"},
+    {TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD, "Les sentinelles de la tour n'ont plus besoin de route"},
+    {TR_CONFIG_FARMS_DELIVER_CLOSE, "Fermes et Quais ne livrent plus qu'aux grenier à proximité"},
+    {TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES, "La nourriture n'est pas livrée depuis/vers les greniers"},
+    {TR_CONFIG_ALL_HOUSES_MERGE, "Toutes les maisons fusionnent"},
+    {TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, "Ouvre des routes commerciales qui founissent différents types de vins"},
+    {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Des puits d'argile qui s'effondrent au hasard et les mines de fer prennent de l'argent à la place."},
+    {TR_CONFIG_MULTIPLE_BARRACKS, "Autorise la construction de plusieurs casernes." },
+    {TR_HOTKEY_TITLE, "Configuration Raccourcis clavier"},
+    {TR_HOTKEY_LABEL, "Raccourcis clavier"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},
     {TR_HOTKEY_HEADER_ARROWS, "Flèches directionnelles"},
     {TR_HOTKEY_HEADER_GLOBAL, "Contrôles globaux"},
@@ -97,8 +124,16 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Définir comme point d'intérêt 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Définir comme point d'intérêt 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Afficher les infos de bataille"},
-    {TR_HOTKEY_EDIT_TITLE, "Appuyez sur une touche"}
+    {TR_HOTKEY_EDIT_TITLE, "Appuyez sur une touche"},
+    {TR_BUILDING_ROADBLOCK, "Barrages"},
+    {TR_BUILDING_ROADBLOCK_DESC, "Barrages arrêtent les citoyens errants"}
 };
+
+void translation_french(const translation_string** strings, int* num_strings)
+{
+    *strings = all_strings;
+    *num_strings = sizeof(all_strings) / sizeof(translation_string);
+}
 
 void translation_french(const translation_string **strings, int *num_strings)
 {
