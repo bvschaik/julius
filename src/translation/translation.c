@@ -8,7 +8,7 @@
 #define BUFFER_SIZE 100000
 
 static struct {
-    const uint8_t *strings[TRANSLATION_MAX_KEY];
+    uint8_t *strings[TRANSLATION_MAX_KEY];
     uint8_t buffer[BUFFER_SIZE];
     int buf_index;
 } data;
