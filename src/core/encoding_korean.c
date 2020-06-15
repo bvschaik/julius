@@ -2438,7 +2438,7 @@ void encoding_korean_from_utf8(const char *input, uint8_t *output, int output_le
     const uint8_t *max_output = &output[output_length - 1];
 
     while (*input && output < max_output) {
-        if (*input >= 0 && *input <= 0x7f) {
+        if ((*input & 0x80) == 0) {
             *output = *input;
             ++output;
             ++input;

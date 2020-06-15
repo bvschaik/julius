@@ -143,7 +143,7 @@ const uint8_t *key_combination_display_name(key_type key, key_modifier_type modi
 
     // Modifiers are easy, now for key name...
     const char *key_name = system_keyboard_key_name(key);
-    if (key_name[0] >= 0 && key_name[0] <= 127) {
+    if ((key_name[0] & 0x80) == 0) {
         // Special cases where we know the key is not displayable using the internal font
         switch (key_name[0]) {
             case '[': key_name = "Left bracket"; break;
