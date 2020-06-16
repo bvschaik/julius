@@ -105,8 +105,12 @@ static void draw_footprint(int x, int y, int grid_offset)
     } else if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
+        color_t color_mask = 0;
         if (building_id) {
             building *b = building_get(building_id);
+            if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && draw_building_as_deleted(b)) {
+                color_mask = COLOR_MASK_RED;
+            }
             int view_x, view_y, view_width, view_height;
             city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
             if (x < view_x + 100) {
@@ -135,7 +139,7 @@ static void draw_footprint(int x, int y, int grid_offset)
             }
             map_image_set(grid_offset, image_id);
         }
-        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0);
+        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
     }
 }
 
