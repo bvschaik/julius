@@ -550,6 +550,7 @@ set(TRANSLATION_FILES
     ${PROJECT_SOURCE_DIR}/src/translation/french.c
     ${PROJECT_SOURCE_DIR}/src/translation/german.c
     ${PROJECT_SOURCE_DIR}/src/translation/korean.c
+    ${PROJECT_SOURCE_DIR}/src/translation/polish.c
     ${PROJECT_SOURCE_DIR}/src/translation/portuguese.c
     ${PROJECT_SOURCE_DIR}/src/translation/russian.c
     ${PROJECT_SOURCE_DIR}/src/translation/spanish.c
