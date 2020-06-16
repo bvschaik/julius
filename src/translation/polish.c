@@ -98,7 +98,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Ustaw punkt skoku 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Ustaw punkt skoku 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Przełącz informacje o bitwach"},
-    {TR_HOTKEY_EDIT_TITLE, "Wprowadź nowy skrót"}
+    {TR_HOTKEY_EDIT_TITLE, "Wprowadź skrót"}
 };
 
 void translation_polish(const translation_string **strings, int *num_strings)
