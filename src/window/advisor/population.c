@@ -122,7 +122,7 @@ static void draw_history_graph(int full_size, int x, int y)
         lang_text_draw_year(start_year, x + width - 20, y + 210, FONT_SMALL_PLAIN);
 
         width = lang_text_draw(25, end_month, x + 380, y + 210, FONT_SMALL_PLAIN);
-        lang_text_draw_year(start_year, x + width + 380, y + 210, FONT_SMALL_PLAIN);
+        lang_text_draw_year(end_year, x + width + 380, y + 210, FONT_SMALL_PLAIN);
     }
 
     if (full_size) {
