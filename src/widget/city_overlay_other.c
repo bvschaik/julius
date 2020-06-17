@@ -117,10 +117,10 @@ static int get_column_height_none(const building *b)
 
 static void add_god(tooltip_context *c, int god_id)
 {
-    int index = c->num_extra_values;
-    c->extra_value_text_groups[index] = 59;
-    c->extra_value_text_ids[index] = 11 + god_id;
-    c->num_extra_values++;
+    int index = c->num_extra_texts;
+    c->extra_text_groups[index] = 59;
+    c->extra_text_ids[index] = 11 + god_id;
+    c->num_extra_texts++;
 }
 
 static int get_tooltip_religion(tooltip_context *c, const building *b)

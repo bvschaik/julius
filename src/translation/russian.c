@@ -38,6 +38,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Постройка храмов в циклической последовательности"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Зона покрытия при постройке резервуаров, колодцев и фонтанов"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Показывать область при групповой стройке зданий"},
+    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Отображать боковую панель армии"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Исправить баг иммиграции в режиме \"Очень сложный\""},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Исправить баг 100-летних жителей"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Исправить баг Императора и времени выживания в режиме конструктора"},

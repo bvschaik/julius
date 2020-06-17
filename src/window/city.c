@@ -283,16 +283,9 @@ int window_city_military_is_cursor_in_menu(void)
         return 0;
     }
     const mouse *m = mouse_get();
-    view_tile view;
-    if (city_view_pixels_to_view_tile(m->x, m->y, &view)) {
-        int hovered_formation = formation_legion_at_grid_offset(city_view_tile_to_grid_offset(&view));
-        if (hovered_formation > 0 && !formation_get(hovered_formation)->in_distant_battle) {
-            return 1;
-        }
-    }
     int x, y, width, height;
     city_view_get_viewport(&x, &y, &width, &height);
-    return m->x < x || m->x >= width || m->y < y || m->y >=height;
+    return m->x < x || m->x >= width || m->y < y || m->y >= height;
 }
 
 void window_city_draw_all(void)

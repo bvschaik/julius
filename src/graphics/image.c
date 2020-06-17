@@ -839,3 +839,70 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
         draw_compressed_and(img, data, x, y, height, color_mask);
     }
 }
+
+static color_t color_average(const image *img, const color_t *data, int x, int y, unsigned int scale_factor)
+{
+    x *= scale_factor;
+    y *= scale_factor;
+    int rb = 0, g = 0;
+    int num_colors = 0;
+    int num_transparent = 0;
+    int max_x = x + scale_factor;
+    int max_y = y + scale_factor;
+    while (y < max_y) {
+        if (y == img->height) {
+            break;
+        }
+        int current_x = x;
+        while (current_x < max_x) {
+            if (current_x == img->width) {
+                break;
+            }
+            color_t color = data[y * img->width + current_x];
+            if (color == COLOR_SG2_TRANSPARENT) {
+                num_transparent++;
+            } else {
+                // Note: keeping the R and B channels on the same int limits scale_factor to a maximum of 16
+                rb += color & 0xff00ff;
+                g += color & 0xff00;
+                num_colors++;
+            }
+            current_x++;
+        }
+        y++;
+    }
+    if (num_transparent > num_colors) {
+        return COLOR_SG2_TRANSPARENT;
+    }
+    return ((rb / num_colors) & 0xff0000) | ((g / num_colors) & 0xff00) | ((rb & 0xffff) / num_colors);
+}
+
+void image_draw_scaled_down(int image_id, int x_offset, int y_offset, unsigned int scale_factor)
+{
+    const image *img = image_get(image_id);
+    const color_t *data = image_data(image_id);
+
+    if (!data || img->draw.type == IMAGE_TYPE_ISOMETRIC || img->draw.is_fully_compressed || !scale_factor) {
+        return;
+    }
+
+    int width = img->width / scale_factor;
+    int height = img->height / scale_factor;
+
+    if (!width || !height) {
+        return;
+    }
+
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, width, height);
+    if (!clip->is_visible) {
+        return;
+    }
+    for (int y = clip->clipped_pixels_top; y < height - clip->clipped_pixels_bottom; y++) {
+        color_t *dst = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
+        int x_max = width - clip->clipped_pixels_right;
+
+        for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
+            *dst = color_average(img, data, x, y, scale_factor);
+        }
+    }
+}
