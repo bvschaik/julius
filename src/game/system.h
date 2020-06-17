@@ -75,8 +75,9 @@ void system_keyboard_set_input_rect(int x, int y, int width, int height);
 
 /**
  * Show the virtual keyboard
+ * @param text The text to display on the virtual keyboard
  */
-void system_keyboard_show(void);
+void system_keyboard_show(const uint8_t *text);
 
 /**
  * Hide the virtual keyboard

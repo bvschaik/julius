@@ -1,10 +1,11 @@
 #include "switch_input.h"
-#include "switch_keyboard.h"
 #include "switch.h"
 #include <math.h>
+#include <switch.h>
 
 #include "core/encoding.h"
 #include "input/mouse.h"
+#include "input/touch.h"
 
 #define NO_MAPPING -1
 
@@ -43,7 +44,8 @@ static SDL_Joystick *joy = NULL;
 
 static int hires_dx = 0; // sub-pixel-precision counters to allow slow pointer motion of <1 pixel per frame
 static int hires_dy = 0;
-static int vkbd_requested = 0;
+static int vkbd_requested;
+static const char *vkbd_text;
 static int fast_mouse = 0;
 static int slow_mouse = 0;
 static int pressed_buttons[SWITCH_NUM_BUTTONS];
@@ -89,13 +91,36 @@ static uint8_t map_switch_button_to_sdlmousebutton[SWITCH_NUM_BUTTONS] =
     NO_MAPPING          // SWITCH_PAD_DOWN
 };
 
-static void switch_start_text_input(char *initial_text, int multiline);
+static void switch_start_text_input(void);
 static void switch_rescale_analog(int *x, int *y, int dead);
 static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t event_type);
 static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32_t event_type);
 
 static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 static void switch_create_key_event_for_direction(int direction, int key_pressed);
+
+void platform_init_callback(void)
+{
+    touch_set_mode(TOUCH_MODE_TOUCHPAD);
+}
+
+void platform_per_frame_callback(void)
+{
+    if (vkbd_requested) {
+        switch_start_text_input();
+        vkbd_requested = 0;
+    }
+    switch_handle_analog_sticks();
+}
+
+void platform_show_virtual_keyboard(const uint8_t *text)
+{
+    vkbd_text = text ? (const char *)text : "";
+    vkbd_requested = 1;
+}
+
+void platform_hide_virtual_keyboard(void)
+{}
 
 int switch_poll_event(SDL_Event *event)
 {
@@ -296,18 +321,26 @@ void switch_handle_analog_sticks(void)
     }
 }
 
-void switch_handle_virtual_keyboard(void)
+static void switch_keyboard_get(char *title, const char *initial_text, int max_len, char *buf)
 {
-    if (vkbd_requested) {
-        vkbd_requested = 0;
-        switch_start_text_input("", 0);
+    Result rc = 0;
+
+    SwkbdConfig kbd;
+
+    rc = swkbdCreate(&kbd, 0);
+
+    if (R_SUCCEEDED(rc)) {
+        swkbdConfigMakePresetDefault(&kbd);
+        swkbdConfigSetInitialText(&kbd, initial_text);
+        rc = swkbdShow(&kbd, buf, max_len);
+        swkbdClose(&kbd);
     }
 }
 
-static void switch_start_text_input(char *initial_text, int multiline)
+static void switch_start_text_input(void)
 {
     char text[601] = {'\0'};
-    switch_keyboard_get("Enter New Text:", initial_text, 600, multiline, text);
+    switch_keyboard_get("Enter New Text:", vkbd_text, 600, text);
     if (text == NULL)  {
         return;
     }

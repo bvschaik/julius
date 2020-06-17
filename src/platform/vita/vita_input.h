@@ -5,6 +5,5 @@
 
 int vita_poll_event(SDL_Event *event);
 void vita_handle_analog_sticks(void);
-void vita_handle_virtual_keyboard(void);
 
 #endif /* VITA_INPUT_H */

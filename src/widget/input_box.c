@@ -65,7 +65,7 @@ int input_box_handle_mouse(const mouse *m, const input_box *box)
     }
     int selected = is_mouse_inside_input(m, box);
     if (selected) {
-        system_keyboard_show();
+        system_keyboard_show(box->text);
     } else {
         system_keyboard_hide();
     }

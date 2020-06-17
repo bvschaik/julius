@@ -4,6 +4,8 @@
 #include <math.h>
 
 #include "core/encoding.h"
+#include "core/string.h"
+#include "game/system.h"
 #include "input/mouse.h"
 
 #define NO_MAPPING -1
@@ -38,7 +40,8 @@ static SDL_Joystick *joy = NULL;
 
 static int hires_dx = 0; // sub-pixel-precision counters to allow slow pointer motion of <1 pixel per frame
 static int hires_dy = 0;
-static int vkbd_requested = 0;
+static int vkbd_requested;
+static const uint8_t *vkbd_text;
 static int pressed_buttons[VITA_NUM_BUTTONS];
 static int right_analog_state[ANALOG_MAX];
 static SDL_Keycode map_vita_button_to_sdlkey[VITA_NUM_BUTTONS] =
@@ -74,13 +77,31 @@ static uint8_t map_vita_button_to_sdlmousebutton[VITA_NUM_BUTTONS] =
     NO_MAPPING           // VITA_START
 };
 
-static void vita_start_text_input(char *initial_text, int multiline);
+static void vita_start_text_input(void);
 static void vita_rescale_analog(int *x, int *y, int dead);
 static void vita_button_to_sdlkey_event(int vita_button, SDL_Event *event, uint32_t event_type);
 static void vita_button_to_sdlmouse_event(int vita_button, SDL_Event *event, uint32_t event_type);
 
 static void vita_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 static void vita_create_key_event_for_direction(int direction, int key_pressed);
+
+void platform_per_frame_callback(void)
+{
+    if (vkbd_requested) {
+        vita_start_text_input();
+        vkbd_requested = 0;
+    }
+    vita_handle_analog_sticks();
+}
+
+void platform_show_virtual_keyboard(const uint8_t *text)
+{
+    vkbd_text = text ? text : string_from_ascii("");
+    vkbd_requested = 1;
+}
+
+void platform_hide_virtual_keyboard(void)
+{}
 
 int vita_poll_event(SDL_Event *event)
 {
@@ -107,7 +128,7 @@ int vita_poll_event(SDL_Event *event)
                         vita_button_to_sdlmouse_event(event->jbutton.button, event, SDL_MOUSEBUTTONDOWN);
                         break;
                     case VITA_PAD_START:
-                        vkbd_requested = 1;
+                        system_keyboard_show(0);
                         break;
                     case VITA_PAD_SELECT:
                         if (can_change_touch_mode) {
@@ -253,17 +274,9 @@ void vita_handle_analog_sticks(void)
     }
 }
 
-void vita_handle_virtual_keyboard(void)
+static void vita_start_text_input(void)
 {
-    if (vkbd_requested) {
-        vkbd_requested = 0;
-        vita_start_text_input("", 0);
-    }
-}
-
-static void vita_start_text_input(char *initial_text, int multiline)
-{
-    char *text = vita_keyboard_get("Enter New Text:", initial_text, 600, multiline);
+    char *text = vita_keyboard_get(string_from_ascii("Enter New Text:"), vkbd_text, 600);
     if (text == NULL)  {
         return;
     }

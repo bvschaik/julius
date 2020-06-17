@@ -190,7 +190,6 @@ elseif (SWITCH_BUILD)
         ${PROJECT_SOURCE_DIR}/src/platform/switch/cursor.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.c
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_keyboard.c
     )
 else()
     set(PLATFORM_FILES
