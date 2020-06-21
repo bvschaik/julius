@@ -251,6 +251,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/model.c
     ${PROJECT_SOURCE_DIR}/src/building/properties.c
     ${PROJECT_SOURCE_DIR}/src/building/roadblock.c
+    ${PROJECT_SOURCE_DIR}/src/building/rotation.c
     ${PROJECT_SOURCE_DIR}/src/building/storage.c
     ${PROJECT_SOURCE_DIR}/src/building/warehouse.c
 )
