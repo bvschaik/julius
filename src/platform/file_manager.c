@@ -156,11 +156,6 @@ int platform_file_manager_set_base_path(const char *path)
     return chdir(path) == 0;
 }
 
-int platform_file_manager_remove_file(const char *filename)
-{
-    return remove(filename) == 0;
-}
-
 #if defined(__vita__)
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
@@ -169,6 +164,14 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
     FILE *fp = fopen(resolved_path, mode);
     free(resolved_path);
     return fp;
+}
+
+int platform_file_manager_remove_file(const char *filename)
+{
+    char *resolved_path = vita_prepend_path(filename);
+    int result = remove(resolved_path);
+    free(resolved_path);
+    return result == 0;
 }
 
 #elif defined(_WIN32)
@@ -186,11 +189,24 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
     return fp;
 }
 
+int platform_file_manager_remove_file(const char *filename)
+{
+    wchar_t *wfile = utf8_to_wchar(filename);
+    int result = _wremove(wfile);
+    free(wfile);
+    return result == 0;
+}
+
 #else
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
     return fopen(filename, mode);
+}
+
+int platform_file_manager_remove_file(const char *filename)
+{
+    return remove(filename) == 0;
 }
 
 #endif
