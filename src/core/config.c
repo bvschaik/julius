@@ -55,7 +55,18 @@ static const char *ini_string_keys[] = {
 static int values[CONFIG_MAX_ENTRIES];
 static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
-static int default_values[CONFIG_MAX_ENTRIES];
+static int default_values[CONFIG_MAX_ENTRIES] = {
+    [CONFIG_GP_FIX_IMMIGRATION_BUG] = 1,
+    [CONFIG_GP_FIX_100_YEAR_GHOSTS] = 1,
+    [CONFIG_GP_FIX_EDITOR_EVENTS] = 1,
+    [CONFIG_UI_SIDEBAR_INFO] = 1,
+    [CONFIG_UI_SMOOTH_SCROLLING] = 1,
+    [CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE] = 1,
+    [CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE] = 1,
+    [CONFIG_UI_SHOW_CONSTRUCTION_SIZE] = 1,
+    [CONFIG_UI_HIGHLIGHT_LEGIONS] = 1,
+};
+
 static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
 int config_get(config_key key)
