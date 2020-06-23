@@ -207,6 +207,32 @@ static void load_empire_data(int is_custom_scenario, int empire_id)
     scenario_distant_battle_set_enemy_travel_months();
 }
 
+/**
+ * search for hippodrome buildings, all three pieces should have the same subtype.orientation 
+ */
+static void check_hippodrome_compatibility(building *b){
+    // if we got the middle part of the hippodrome
+    if(b->next_part_building_id && b->prev_part_building_id){
+        building * next = building_get(b->next_part_building_id);
+        building * prev = building_get(b->prev_part_building_id);
+        // if orientation is different, it means that rotation was not available yet in augustus, so it should be set to 0
+        if(b->subtype.orientation != next->subtype.orientation || b->subtype.orientation != prev->subtype.orientation){
+            prev->subtype.orientation = 0;
+            b->subtype.orientation = 0;
+            next->subtype.orientation = 0;
+        }
+    }
+}
+
+static void check_backward_compatibility(void){
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if(b->type == BUILDING_HIPPODROME){
+            check_hippodrome_compatibility(b);
+        }
+    }
+}
+
 static void initialize_saved_game(void)
 {
     load_empire_data(scenario_is_custom(), scenario_empire_id());
@@ -352,6 +378,7 @@ int game_file_load_saved_game(const char *filename)
     if (!game_file_io_read_saved_game(filename, 0)) {
         return 0;
     }
+    check_backward_compatibility();
     initialize_saved_game();
     building_storage_reset_building_ids();
 
