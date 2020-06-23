@@ -531,7 +531,7 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
         if (!building_orientation) {
-            if (building_construction_road_orientation() == 1) {
+            if (get_road_orientation() == 1) {
                 building_orientation = 1;
             } else {
                 building_orientation = 2;
@@ -549,7 +549,7 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
         if (!building_orientation) {
-            if (building_construction_road_orientation() == 1) {
+            if (get_road_orientation() == 1) {
                 building_orientation = 1;
             } else {
                 building_orientation = 3;

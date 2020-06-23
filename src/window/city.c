@@ -227,7 +227,7 @@ static void handle_hotkeys(const hotkeys *h)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
     }
     if (h->rotate_building) {
-        rotate();
+        rotate_by_hotkey();
     }
 }
 

@@ -17,7 +17,6 @@
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/image.h"
-#include "core/time.h"
 #include "figure/formation.h"
 #include "game/undo.h"
 #include "graphics/window.h"
@@ -62,8 +61,6 @@ static struct {
         int water;
         int wall;
     } required_terrain;
-    int road_orientation;
-    time_millis road_last_update;
     int draw_as_constructing;
     int start_offset_x_view;
     int start_offset_y_view;
@@ -277,8 +274,6 @@ void building_construction_set_type(building_type type)
         data.required_terrain.tree = 0;
         data.required_terrain.rock = 0;
         data.required_terrain.meadow = 0;
-        data.road_orientation = 0;
-        data.road_last_update = time_get_millis();
         data.start.grid_offset = 0;
 
         switch (type) {
@@ -299,11 +294,6 @@ void building_construction_set_type(building_type type)
                 break;
             case BUILDING_CLAY_PIT:
                 data.required_terrain.water = 1;
-                break;
-            case BUILDING_GATEHOUSE:
-            case BUILDING_ROADBLOCK:
-            case BUILDING_TRIUMPHAL_ARCH:
-                data.road_orientation = 1;
                 break;
             case BUILDING_TOWER:
                 data.required_terrain.wall = 1;
@@ -721,21 +711,6 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
         }
     }
     return 1;
-}
-
-void building_construction_update_road_orientation(void)
-{
-    if (data.road_orientation > 0) {
-        if (time_get_millis() - data.road_last_update > 1500) {
-            data.road_last_update = time_get_millis();
-            data.road_orientation = data.road_orientation == 1 ? 2 : 1;
-        }
-    }
-}
-
-int building_construction_road_orientation(void)
-{
-    return data.road_orientation;
 }
 
 void building_construction_record_view_position(int view_x, int view_y, int grid_offset)

@@ -195,7 +195,7 @@ static int get_building_image_id(int map_x, int map_y, building_type type, const
         } else if (orientation == 1) {
             image_offset = 0;
         } else {
-            image_offset = building_construction_road_orientation() == 2 ? 1 : 0;
+            image_offset = get_road_orientation() == 2 ? 1 : 0;
         }
         int map_orientation = city_view_orientation();
         if (map_orientation == DIR_6_LEFT || map_orientation == DIR_2_RIGHT) {
@@ -210,7 +210,7 @@ static int get_building_image_id(int map_x, int map_y, building_type type, const
         } else if (orientation == 1) {
             image_offset = 0;
         } else {
-            image_offset = building_construction_road_orientation() == 2 ? 2 : 0;
+            image_offset = get_road_orientation() == 2 ? 2 : 0;
         }
         int map_orientation = city_view_orientation();
         if (map_orientation == DIR_6_LEFT || map_orientation == DIR_2_RIGHT) {
@@ -274,8 +274,7 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
 
 static void draw_default(const map_tile *tile, int x_view, int y_view, building_type type)
 {
-    // update road required based on timer
-    building_construction_update_road_orientation();
+
 
     const building_properties *props = building_properties_for_type(type);
     int building_size = type == BUILDING_WAREHOUSE ? 3 : props->size;
@@ -792,6 +791,9 @@ void city_building_ghost_draw(const map_tile *tile)
     }
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
+
+    // update road required based on timer
+    update_road_orientation();
     switch (type) {
         case BUILDING_DRAGGABLE_RESERVOIR:
             draw_draggable_reservoir(tile, x, y);
