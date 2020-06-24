@@ -72,7 +72,11 @@ static int get_height_id(void)
                 return 5;
         }
     } else if (context.type == BUILDING_INFO_BUILDING) {
-        switch (building_get(context.building_id)->type) {
+        const building *b = building_get(context.building_id);
+        if (building_is_house(b->type) && b->house_population <= 0) {
+            return 5;
+        }
+        switch (b->type) {
             case BUILDING_SMALL_TEMPLE_CERES:
             case BUILDING_SMALL_TEMPLE_NEPTUNE:
             case BUILDING_SMALL_TEMPLE_MERCURY:
