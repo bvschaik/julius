@@ -233,7 +233,7 @@ static void button_ok_cancel(int is_ok, int param2)
         }
     }
 
-    strncpy(data.file_data->last_loaded_file, filename, FILE_NAME_MAX);
+    strncpy(data.file_data->last_loaded_file, filename, FILE_NAME_MAX - 1);
 }
 
 static void on_scroll(void)
