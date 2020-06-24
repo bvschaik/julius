@@ -382,7 +382,7 @@ void game_file_write_mission_saved_game(void)
         char localized_filename[FILE_NAME_MAX];
         encoding_to_utf8(lang_get_string(32, rank), localized_filename, FILE_NAME_MAX,
             encoding_system_uses_decomposed());
-        strcat(localized_filename, ".sav");
+        strcat(localized_filename, ".svx");
         filename = localized_filename;
     }
     if (city_mission_should_save_start() && !file_exists(filename, NOT_LOCALIZED)) {
