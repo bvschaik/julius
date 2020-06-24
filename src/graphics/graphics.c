@@ -178,29 +178,29 @@ const clip_info *graphics_get_clip_info(int x, int y, int width, int height)
 
 void graphics_save_to_buffer(int x, int y, int width, int height, color_t *buffer)
 {
-    const clip_info *clip = graphics_get_clip_info(x, y, width, height);
-    if (!clip->is_visible) {
+    const clip_info *current_clip = graphics_get_clip_info(x, y, width, height);
+    if (!current_clip->is_visible) {
         return;
     }
-    int min_x = x + clip->clipped_pixels_left;
-    int min_dy = clip->clipped_pixels_top;
-    int max_dy = height - clip->clipped_pixels_bottom;
+    int min_x = x + current_clip->clipped_pixels_left;
+    int min_dy = current_clip->clipped_pixels_top;
+    int max_dy = height - current_clip->clipped_pixels_bottom;
     for (int dy = min_dy; dy < max_dy; dy++) {
-        memcpy(&buffer[dy * width], graphics_get_pixel(min_x, y + dy), sizeof(color_t) * clip->visible_pixels_x);
+        memcpy(&buffer[dy * width], graphics_get_pixel(min_x, y + dy), sizeof(color_t) * current_clip->visible_pixels_x);
     }
 }
 
 void graphics_draw_from_buffer(int x, int y, int width, int height, const color_t *buffer)
 {
-    const clip_info *clip = graphics_get_clip_info(x, y, width, height);
-    if (!clip->is_visible) {
+    const clip_info *current_clip = graphics_get_clip_info(x, y, width, height);
+    if (!current_clip->is_visible) {
         return;
     }
-    int min_x = x + clip->clipped_pixels_left;
-    int min_dy = clip->clipped_pixels_top;
-    int max_dy = height - clip->clipped_pixels_bottom;
+    int min_x = x + current_clip->clipped_pixels_left;
+    int min_dy = current_clip->clipped_pixels_top;
+    int max_dy = height - current_clip->clipped_pixels_bottom;
     for (int dy = min_dy; dy < max_dy; dy++) {
-        memcpy(graphics_get_pixel(min_x, y + dy), &buffer[dy * width], sizeof(color_t) * clip->visible_pixels_x);
+        memcpy(graphics_get_pixel(min_x, y + dy), &buffer[dy * width], sizeof(color_t) * current_clip->visible_pixels_x);
     }
 }
 

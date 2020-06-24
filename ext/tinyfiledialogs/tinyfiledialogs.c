@@ -3309,11 +3309,16 @@ static char const * dialogNameOnly(void)
         static char lDialogName[128] = "*" ;
         if ( lDialogName[0] == '*' )
         {
-                if ( isDarwin() && copyAndDetectPresence(lDialogName , "/opt/local/bin/dialog" ) )
-                {}
-                else if ( copyAndDetectPresence(lDialogName , "dialog" ) )
-                {}
-                else
+                int result = 0;
+                if ( isDarwin() )
+                {
+                        result = copyAndDetectPresence(lDialogName, "/opt/local/bin/dialog" ) ;
+                }
+                if ( ! result )
+                {
+                        result = copyAndDetectPresence(lDialogName , "dialog" ) ;
+                }
+                if ( ! result )
                 {
                         strcpy(lDialogName , "" ) ;
                 }
