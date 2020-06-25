@@ -23,7 +23,7 @@
 #include "translation/translation.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 34
+#define NUM_CHECKBOXES 35
 #define CONFIG_PAGES 3
 #define MAX_LANGUAGE_DIRS 20
 
@@ -31,7 +31,7 @@
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
-static int options_per_page[CONFIG_PAGES] = { 10,14,10 };
+static int options_per_page[CONFIG_PAGES] = { 10,14,11 };
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
@@ -79,6 +79,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE },
     { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY, TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY },
     { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MULTIPLE_BARRACKS, TR_CONFIG_MULTIPLE_BARRACKS },
+    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT, TR_CONFIG_NOT_ACCEPTING_WAREHOUSES },
 };
 
 static generic_button language_button = {

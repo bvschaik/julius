@@ -145,6 +145,9 @@ static building *add_warehouse_space(int x, int y, building *prev)
 static void add_warehouse(building *b)
 {
     b->storage_id = building_storage_create();
+    if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
+        building_storage_accept_none(b->storage_id);
+    }
     b->prev_part_building_id = 0;
     map_building_tiles_add(b->id, b->x, b->y, 1, image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
 
