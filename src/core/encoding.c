@@ -593,6 +593,10 @@ encoding_type encoding_determine(language_type language)
         encoding_trad_chinese_init();
         data.to_utf8_table = NULL;
         data.encoding = ENCODING_TRADITIONAL_CHINESE;
+    } else if (language == LANGUAGE_SIMPLIFIED_CHINESE) {
+        //encoding_trad_chinese_init(); // TODO
+        data.to_utf8_table = NULL;
+        data.encoding = ENCODING_SIMPLIFIED_CHINESE;
     } else if (language == LANGUAGE_KOREAN) {
         encoding_korean_init();
         data.to_utf8_table = NULL;
