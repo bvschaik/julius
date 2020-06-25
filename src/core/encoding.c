@@ -1,6 +1,7 @@
 #include "core/encoding.h"
 
 #include "core/encoding_korean.h"
+#include "core/encoding_simp_chinese.h"
 #include "core/encoding_trad_chinese.h"
 #include "core/locale.h"
 #include "core/string.h"
@@ -594,7 +595,7 @@ encoding_type encoding_determine(language_type language)
         data.to_utf8_table = NULL;
         data.encoding = ENCODING_TRADITIONAL_CHINESE;
     } else if (language == LANGUAGE_SIMPLIFIED_CHINESE) {
-        //encoding_trad_chinese_init(); // TODO
+        encoding_simp_chinese_init();
         data.to_utf8_table = NULL;
         data.encoding = ENCODING_SIMPLIFIED_CHINESE;
     } else if (language == LANGUAGE_KOREAN) {
@@ -646,6 +647,8 @@ void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int
             encoding_korean_to_utf8(input, output, output_length);
         } else if (data.encoding == ENCODING_TRADITIONAL_CHINESE) {
             encoding_trad_chinese_to_utf8(input, output, output_length);
+        } else if (data.encoding == ENCODING_SIMPLIFIED_CHINESE) {
+            encoding_simp_chinese_to_utf8(input, output, output_length);
         } else {
             *output = 0;
         }
@@ -693,6 +696,9 @@ void encoding_from_utf8(const char *input, uint8_t *output, int output_length)
             return;
         } else if (data.encoding == ENCODING_TRADITIONAL_CHINESE) {
             encoding_trad_chinese_from_utf8(input, output, output_length);
+            return;
+        } else if (data.encoding == ENCODING_SIMPLIFIED_CHINESE) {
+            encoding_simp_chinese_from_utf8(input, output, output_length);
             return;
         }
     }
