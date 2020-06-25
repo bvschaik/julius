@@ -17,24 +17,45 @@
 
 static int tower_sentry_request = 0;
 
-int building_get_barracks_for_weapon(int resource, int road_network_id, map_point *dst)
+int building_get_barracks_for_weapon(int x, int y, int resource, int road_network_id, int distance_from_entry, map_point* dst)
 {
-    if (resource != RESOURCE_WEAPONS) {
-        return 0;
-    }
-    if (city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
-        return 0;
-    }
-    if (building_count_active(BUILDING_BARRACKS) <= 0) {
-        return 0;
-    }
-    building *b = building_get(city_buildings_get_barracks());
-    if (b->loads_stored < 5 && city_military_has_legionary_legions()) {
-        if (map_has_road_access(b->x, b->y, b->size, dst) && b->road_network_id == road_network_id) {
-            return b->id;
+	if (resource != RESOURCE_WEAPONS) {
+		return 0;
+	}
+	if (city_resource_is_stockpiled(resource)) {
+		return 0;
+	}
+	int min_dist = INFINITE;
+	building* min_building = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		building* b = building_get(i);
+		if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_BARRACKS) {
+			continue;
+		}
+		if (!map_has_road_access(b->x, b->y, b->size, 0)) {
+            continue;
+		}
+        if (b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
+            continue;
         }
-    }
-    return 0;
+
+		if (b->loads_stored >= MAX_WEAPONS_BARRACKS) {
+			continue;
+		}
+		int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+		dist += 8 * b->loads_stored;
+		if (dist < min_dist) {
+			min_dist = dist;
+			min_building = b;
+		}
+	}
+	if (min_building && min_dist < INFINITE) {
+		if (dst) {
+			map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
+		}
+        return min_building->id;
+	}
+	return 0;
 }
 
 void building_barracks_add_weapon(building *barracks)
