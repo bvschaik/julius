@@ -110,13 +110,26 @@ static const font_definition DEFINITIONS_CYRILLIC[] = {
 };
 
 static const font_definition DEFINITIONS_TRADITIONAL_CHINESE[] = {
-    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, 6, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS, 6, 1, 11, image_y_offset_default},
     {FONT_NORMAL_BLACK, 134, 0, 6, 0, 11, image_y_offset_default},
     {FONT_NORMAL_WHITE, 268, 0, 6, 0, 11, image_y_offset_default},
     {FONT_NORMAL_RED, 402, 0, 6, 0, 11, image_y_offset_default},
-    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 8, 1, 23, image_y_offset_default},
-    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 8, 0, 23, image_y_offset_default},
-    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * 2, 8, 0, 24, image_y_offset_default},
+    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS * 2, 8, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS * 2, 8, 0, 23, image_y_offset_default},
+    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS * 2, 8, 0, 24, image_y_offset_default},
+    {FONT_SMALL_PLAIN, 938, 0, 4, 1, 9, image_y_offset_default},
+    {FONT_NORMAL_GREEN, 1072, 0, 6, 0, 11, image_y_offset_default},
+    {FONT_SMALL_BLACK, 1206, 0, 6, 0, 11, image_y_offset_default}
+};
+
+static const font_definition DEFINITIONS_SIMPLIFIED_CHINESE[] = {
+    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS, 6, 1, 11, image_y_offset_default},
+    {FONT_NORMAL_BLACK, 134, 0, 6, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_WHITE, 268, 0, 6, 0, 11, image_y_offset_default},
+    {FONT_NORMAL_RED, 402, 0, 6, 0, 11, image_y_offset_default},
+    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS * 2, 8, 1, 23, image_y_offset_default},
+    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS * 2, 8, 0, 23, image_y_offset_default},
+    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS * 2, 8, 0, 24, image_y_offset_default},
     {FONT_SMALL_PLAIN, 938, 0, 4, 1, 9, image_y_offset_default},
     {FONT_NORMAL_GREEN, 1072, 0, 6, 0, 11, image_y_offset_default},
     {FONT_SMALL_BLACK, 1206, 0, 6, 0, 11, image_y_offset_default}
@@ -137,8 +150,9 @@ static const font_definition DEFINITIONS_KOREAN[] = {
 
 enum {
     MULTIBYTE_NONE = 0,
-    MULTIBYTE_CHINESE = 1,
-    MULTIBYTE_KOREAN = 2,
+    MULTIBYTE_TRADITIONAL_CHINESE = 1,
+    MULTIBYTE_SIMPLIFIED_CHINESE = 2,
+    MULTIBYTE_KOREAN = 3,
 };
 
 static struct {
@@ -343,7 +357,11 @@ void font_set_encoding(encoding_type encoding)
     } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
         data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
         data.font_definitions = DEFINITIONS_TRADITIONAL_CHINESE;
-        data.multibyte = MULTIBYTE_CHINESE;
+        data.multibyte = MULTIBYTE_TRADITIONAL_CHINESE;
+    } else if (encoding == ENCODING_SIMPLIFIED_CHINESE) {
+        data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
+        data.font_definitions = DEFINITIONS_SIMPLIFIED_CHINESE;
+        data.multibyte = MULTIBYTE_SIMPLIFIED_CHINESE;
     } else if (encoding == ENCODING_KOREAN) {
         data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
         data.font_definitions = DEFINITIONS_KOREAN;
@@ -369,15 +387,21 @@ int font_letter_id(const font_definition *def, const uint8_t *str, int *num_byte
 {
     if (data.multibyte != MULTIBYTE_NONE && *str >= 0x80) {
         *num_bytes = 2;
-        if (data.multibyte == MULTIBYTE_CHINESE) {
+        if (data.multibyte == MULTIBYTE_TRADITIONAL_CHINESE) {
             int char_id = (str[0] & 0x7f) | ((str[1] & 0x7f) << 7);
-            if (char_id >= IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
+            if (char_id >= IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS) {
                 // lookup in table
                 int big5_encoded = str[0] << 8 | str[1];
                 char_id = encoding_trad_chinese_big5_to_image_id(big5_encoded);
-                if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS) {
+                if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS) {
                     return -1;
                 }
+            }
+            return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
+        } else if (data.multibyte == MULTIBYTE_SIMPLIFIED_CHINESE) {
+            int char_id = (str[0] & 0x7f) | ((str[1] & 0x7f) << 7);
+            if (char_id >= IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS) {
+                return -1;
             }
             return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
         } else if (data.multibyte == MULTIBYTE_KOREAN) {
