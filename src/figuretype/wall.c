@@ -263,9 +263,7 @@ void figure_tower_sentry_action(figure *f)
         f->current_height = 18;
     } else if (map_terrain_is(f->grid_offset, TERRAIN_GATEHOUSE)) {
         f->in_building_wait_ticks = 24;
-    } else if (f->action_state != FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER) {
-        f->state = FIGURE_STATE_DEAD;
-    }
+    } 
     if (f->in_building_wait_ticks) {
         f->in_building_wait_ticks--;
         f->height_adjusted_ticks = 0;
@@ -277,7 +275,16 @@ void figure_tower_sentry_action(figure *f)
     } else if (f->action_state == FIGURE_ACTION_172_TOWER_SENTRY_FIRING) {
         f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
             dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
-    } else {
+    } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        int image_id = image_group(GROUP_FIGURE_TOWER_SENTRY);
+        if (f->attack_image_offset < 16) {
+            f->image_id = image_id + 96 + dir;
+        }
+        else {
+            f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 16) / 2);
+        }
+    }
+    else {
         f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
             dir + 8 * f->image_offset;
     }
