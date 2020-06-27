@@ -38,16 +38,19 @@ static void add_fort(int type, building *fort)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
     }
 
-    fort->formation_id = formation_legion_create_for_fort(fort);
     // create parade ground
-    building *ground = building_create(BUILDING_FORT_GROUND, fort->x + 3, fort->y - 1);
+    const int offsets_x[] = {3, -1, -4, 0};
+    const int offsets_y[] = {-1, -4, 0, 3};
+    building *ground = building_create(BUILDING_FORT_GROUND, fort->x + offsets_x[get_rotation()], fort->y + offsets_y[get_rotation()]);
     game_undo_add_building(ground);
-    ground->formation_id = fort->formation_id;
     ground->prev_part_building_id = fort->id;
     fort->next_part_building_id = ground->id;
     ground->next_part_building_id = 0;
-    map_building_tiles_add(ground->id, fort->x + 3, fort->y - 1, 4,
+    map_building_tiles_add(ground->id, fort->x + offsets_x[get_rotation()], fort->y + offsets_y[get_rotation()], 4,
         image_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+
+    fort->formation_id = formation_legion_create_for_fort(fort);
+    ground->formation_id = fort->formation_id;
 }
 
 static void add_hippodrome(building *b)
@@ -585,7 +588,12 @@ int building_construction_place_building(building_type type, int x, int y)
         }
     }
     if (building_is_fort(type)) {
-        if (!map_tiles_are_clear(x + 3, y - 1, 4, terrain_mask)) {
+        const int offsets_x[] = {3, -1, -4, 0};
+        const int offsets_y[] = {-1, -4, 0, 3};
+        int orient_index = get_rotation();
+        int x_offset = offsets_x[orient_index];
+        int y_offset = offsets_y[orient_index];
+        if (!map_tiles_are_clear(x + x_offset, y + y_offset, 4, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }

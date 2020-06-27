@@ -70,7 +70,12 @@ static const int TILE_GRID_OFFSETS[4][MAX_TILES] = {
     OFFSET(4,0), OFFSET(0,-4), OFFSET(4,-1), OFFSET(1,-4), OFFSET(4,-2), OFFSET(2,-4), OFFSET(4,-3), OFFSET(3,-4), OFFSET(4,-4)},
 };
 
-static const int FORT_GROUND_GRID_OFFSETS[4] = {OFFSET(3,-1), OFFSET(4,-1), OFFSET(4,0), OFFSET(3,0)};
+static const int FORT_GROUND_GRID_OFFSETS[4][4] = {
+    { OFFSET(3,-1),  OFFSET(4,-1), OFFSET(4,0),  OFFSET(3,0)},
+    { OFFSET(-1,-4), OFFSET(0,-4), OFFSET(0,-3), OFFSET(-1,-3)},
+    { OFFSET(-4,0),  OFFSET(-3,0), OFFSET(-3,1), OFFSET(-4,1)},
+    { OFFSET(0,3),   OFFSET(1,3), OFFSET(1,4),  OFFSET(0,4)}
+};
 static const int FORT_GROUND_X_VIEW_OFFSETS[4] = {120, 90, -120, -90};
 static const int FORT_GROUND_Y_VIEW_OFFSETS[4] = {30, -75, -60, 45};
 
@@ -600,15 +605,15 @@ static void draw_fort(const map_tile *tile, int x, int y)
     int num_tiles_ground = building_properties_for_type(BUILDING_FORT_GROUND)->size;
     num_tiles_ground *= num_tiles_ground;
 
-    int orientation_index = city_view_orientation() / 2;
     int grid_offset_fort = tile->grid_offset;
-    int grid_offset_ground = grid_offset_fort + FORT_GROUND_GRID_OFFSETS[orientation_index];
+    int grid_offset_ground = grid_offset_fort + FORT_GROUND_GRID_OFFSETS[get_rotation()][city_view_orientation()/2];
     int blocked_tiles_fort[MAX_TILES];
     int blocked_tiles_ground[MAX_TILES];
 
     blocked += is_blocked_for_building(grid_offset_fort, num_tiles_fort, blocked_tiles_fort);
     blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
 
+    int orientation_index = get_building_orientation(get_rotation())/2;
     int x_ground = x + FORT_GROUND_X_VIEW_OFFSETS[orientation_index];
     int y_ground = y + FORT_GROUND_Y_VIEW_OFFSETS[orientation_index];
 

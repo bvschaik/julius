@@ -68,6 +68,9 @@ static struct {
 
 static int last_items_cleared;
 
+static const int FORT_X_OFFSET[4][4] = {{3,4,4,3},{-1,0,0,-1},{-4,-3,-3,4},{0,1,1,0}};
+static const int FORT_Y_OFFSET[4][4] = {{-1,-1,0,0},{-4,-4,-3,-3},{0,0,1,1},{3,3,4,4}};
+
 static void mark_construction(int x, int y, int size, int terrain, int absolute_xy)
 {
     if (map_building_tiles_mark_construction(x, y, size, terrain, absolute_xy)) {
@@ -473,13 +476,8 @@ void building_construction_update(int x, int y, int grid_offset)
         mark_construction(x, y, 3, TERRAIN_ALL, 0);
     } else if (building_is_fort(type)) {
         if (formation_get_num_legions_cached() < 6) {
-            const int offsets_x[] = {3, 4, 4, 3};
-            const int offsets_y[] = {-1, -1, 0, 0};
-            int orient_index = city_view_orientation() / 2;
-            int x_offset = offsets_x[orient_index];
-            int y_offset = offsets_y[orient_index];
             if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) &&
-                map_building_tiles_are_clear(x + x_offset, y + y_offset, 4, TERRAIN_ALL)) {
+                map_building_tiles_are_clear(x + FORT_X_OFFSET[get_rotation()][city_view_orientation()/2], y + FORT_Y_OFFSET[get_rotation()][city_view_orientation()/2], 4, TERRAIN_ALL)) {
                 mark_construction(x, y, 3, TERRAIN_ALL, 0);
             }
         }
