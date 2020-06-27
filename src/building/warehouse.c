@@ -1,5 +1,6 @@
 #include "warehouse.h"
 
+#include "building/barracks.h"
 #include "building/count.h"
 #include "building/granary.h"
 #include "building/model.h"
@@ -552,8 +553,8 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     // deliver weapons to barracks
     if (building_count_active(BUILDING_BARRACKS) > 0 && city_military_has_legionary_legions() &&
         !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
-        building *barracks = building_get(city_buildings_get_barracks());
-        if (barracks->loads_stored < 4 &&
+        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x,warehouse->y,RESOURCE_WEAPONS,warehouse->road_network_id,warehouse->distance_from_entry,0));
+        if (barracks->loads_stored < MAX_WEAPONS_BARRACKS &&
                 warehouse->road_network_id == barracks->road_network_id) {
             space = warehouse;
             for (int i = 0; i < 8; i++) {

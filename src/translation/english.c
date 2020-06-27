@@ -70,6 +70,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, "Open trade route count as providing different wine type"},
     {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Randomly collapsing clay pits and iron mines take some money instead"},
     {TR_CONFIG_MULTIPLE_BARRACKS, "Allow building multiple barracks." },
+    {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warehouses don't accept anything when built"},
     {TR_HOTKEY_TITLE, "Augustus hotkey configuration"},
     {TR_HOTKEY_LABEL, "Hotkey"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},
