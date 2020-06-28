@@ -144,7 +144,7 @@ static void draw_fountain_range(int x, int y, int grid_offset)
 static void image_draw_warehouse(int image_id, int x, int y){
     
     int image_id_space = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
-    int corner = get_corner(get_building_orientation(get_rotation()));
+    int corner = building_rotation_get_corner(building_rotation_get_building_orientation(building_rotation_get_rotation()));
     for (int i = 0; i < 9; i++) {
         if(i == corner){
             draw_building(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
@@ -200,7 +200,7 @@ static int get_building_image_id(int map_x, int map_y, building_type type, const
         } else if (orientation == 1) {
             image_offset = 0;
         } else {
-            image_offset = get_road_orientation() == 2 ? 1 : 0;
+            image_offset = building_rotation_get_road_orientation() == 2 ? 1 : 0;
         }
         int map_orientation = city_view_orientation();
         if (map_orientation == DIR_6_LEFT || map_orientation == DIR_2_RIGHT) {
@@ -215,7 +215,7 @@ static int get_building_image_id(int map_x, int map_y, building_type type, const
         } else if (orientation == 1) {
             image_offset = 0;
         } else {
-            image_offset = get_road_orientation() == 2 ? 2 : 0;
+            image_offset = building_rotation_get_road_orientation() == 2 ? 2 : 0;
         }
         int map_orientation = city_view_orientation();
         if (map_orientation == DIR_6_LEFT || map_orientation == DIR_2_RIGHT) {
@@ -606,14 +606,14 @@ static void draw_fort(const map_tile *tile, int x, int y)
     num_tiles_ground *= num_tiles_ground;
 
     int grid_offset_fort = tile->grid_offset;
-    int grid_offset_ground = grid_offset_fort + FORT_GROUND_GRID_OFFSETS[get_rotation()][city_view_orientation()/2];
+    int grid_offset_ground = grid_offset_fort + FORT_GROUND_GRID_OFFSETS[building_rotation_get_rotation()][city_view_orientation()/2];
     int blocked_tiles_fort[MAX_TILES];
     int blocked_tiles_ground[MAX_TILES];
 
     blocked += is_blocked_for_building(grid_offset_fort, num_tiles_fort, blocked_tiles_fort);
     blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
 
-    int orientation_index = get_building_orientation(get_rotation())/2;
+    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation())/2;
     int x_ground = x + FORT_GROUND_X_VIEW_OFFSETS[orientation_index];
     int y_ground = y + FORT_GROUND_Y_VIEW_OFFSETS[orientation_index];
 
@@ -644,11 +644,11 @@ static void draw_hippodrome(const map_tile *tile, int x, int y)
     }
     int num_tiles = 25;
     
-    force_two_orientations();
-    int orientation_index = get_building_orientation(get_rotation())/2;
+    building_rotation_force_two_orientations();
+    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation())/2;
     int grid_offset1 = tile->grid_offset;
-    int grid_offset2 = grid_offset1 + get_delta_with_rotation(5);
-    int grid_offset3 = grid_offset1 + get_delta_with_rotation(10);
+    int grid_offset2 = grid_offset1 + building_rotation_get_delta_with_rotation(5);
+    int grid_offset3 = grid_offset1 + building_rotation_get_delta_with_rotation(10);
     
     int blocked_tiles1[25];
     int blocked_tiles2[25];
@@ -798,7 +798,7 @@ void city_building_ghost_draw(const map_tile *tile)
     city_view_get_selected_tile_pixels(&x, &y);
 
     // update road required based on timer
-    update_road_orientation();
+    building_rotation_update_road_orientation();
     switch (type) {
         case BUILDING_DRAGGABLE_RESERVOIR:
             draw_draggable_reservoir(tile, x, y);

@@ -152,7 +152,7 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
     } else {
         building_part = 1; // part 2
     }
-    int orientation =  get_building_orientation(b->subtype.orientation);
+    int orientation =  building_rotation_get_building_orientation(b->subtype.orientation);
     int population = city_population();
     if ((building_part == 0 ) && population > 2000) {
         // first building part

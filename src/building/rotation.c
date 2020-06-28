@@ -17,7 +17,7 @@ static void rotate(void){
     }
 }
 
-void update_road_orientation(void)
+void building_rotation_update_road_orientation(void)
 {
     if (!config_get(CONFIG_UI_ROTATE_MANUALLY)) {
         if (time_get_millis() - road_last_update > 1500) {
@@ -28,37 +28,37 @@ void update_road_orientation(void)
     }
 }
 
-int get_road_orientation(void)
+int building_rotation_get_road_orientation(void)
 {
     return road_orientation;
 }
 
-void force_two_orientations(void){ // for composite buildings like hippodrome
+void building_rotation_force_two_orientations(void){ // for composite buildings like hippodrome
     if(rotation == 1 || rotation == 2){
         rotation = 3;
     }
 }
 
-int get_rotation(void){
+int building_rotation_get_rotation(void){
     return rotation;
 }
 
-void rotate_by_hotkey(void){
+void building_rotation_rotate_by_hotkey(void){
     if(config_get(CONFIG_UI_ROTATE_MANUALLY)){
         rotate();
         road_orientation = road_orientation == 1 ? 2 : 1;
     }
 }
 
-void reset_rotation(void){
+void building_rotation_reset_rotation(void){
     rotation = 0;
 }
 
-int get_building_orientation(int building_rotation){
+int building_rotation_get_building_orientation(int building_rotation){
     return (2*building_rotation + city_view_orientation())%8;
 }
 
-int get_delta_with_rotation(int default_delta){
+int building_rotation_get_delta_with_rotation(int default_delta){
     if(rotation == 0) {
         return map_grid_delta(default_delta, 0);
     } else if (rotation == 1) {
@@ -70,7 +70,7 @@ int get_delta_with_rotation(int default_delta){
     }
 }
 
-void get_offset_with_rotation(int offset, int rot, int * x, int * y){
+void building_rotation_get_offset_with_rotation(int offset, int rot, int * x, int * y){
     if(rot == 0) {
         *x = offset;
         *y = 0;
@@ -86,7 +86,7 @@ void get_offset_with_rotation(int offset, int rot, int * x, int * y){
     }
 }
 
-int get_corner(int rot){
+int building_rotation_get_corner(int rot){
     switch(rot){
         case DIR_2_RIGHT:
             return 4; // left corner

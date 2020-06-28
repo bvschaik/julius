@@ -68,10 +68,10 @@ int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int r
     int min_value = 12;
     int min_grid_offset = map_grid_offset(x, y);
     int x_offset, y_offset;
-    get_offset_with_rotation(5, rotation, &x_offset, &y_offset);
+    building_rotation_get_offset_with_rotation(5, rotation, &x_offset, &y_offset);
     find_minimum_road_tile(x, y, 5, &min_value, &min_grid_offset);
     find_minimum_road_tile(x + x_offset, y + y_offset, 5, &min_value, &min_grid_offset);
-    get_offset_with_rotation(10, rotation, &x_offset, &y_offset);
+    building_rotation_get_offset_with_rotation(10, rotation, &x_offset, &y_offset);
     find_minimum_road_tile(x + x_offset, y + y_offset, 5, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road) {
@@ -84,7 +84,7 @@ int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int r
 
 int map_has_road_access_hippodrome(int x, int y, map_point *road)
 {
-    return map_has_road_access_hippodrome_rotation( x, y, road, get_rotation());
+    return map_has_road_access_hippodrome_rotation( x, y, road, building_rotation_get_rotation());
 }
 
 int map_has_road_access_granary(int x, int y, map_point *road)

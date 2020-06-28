@@ -177,7 +177,7 @@ building *building_create(building_type type, int x, int y)
     }
 
     if(type == BUILDING_WAREHOUSE || type == BUILDING_HIPPODROME) {
-        b->subtype.orientation = get_rotation();
+        b->subtype.orientation = building_rotation_get_rotation();
     }
     
     b->x = x;

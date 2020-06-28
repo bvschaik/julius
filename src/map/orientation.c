@@ -290,7 +290,7 @@ void map_orientation_update_buildings(void)
                 } else {
                     building_part = 1; // part 2
                 }
-                map_orientation = get_building_orientation(b->subtype.orientation);
+                map_orientation = building_rotation_get_building_orientation(b->subtype.orientation);
                 if (map_orientation == DIR_0_TOP) {
                     image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
                     switch (building_part) {
