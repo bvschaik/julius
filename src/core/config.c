@@ -25,6 +25,7 @@ static const char *ini_keys[] = {
     "ui_zoom",
     "ui_complete_ratings_columns",
     "ui_highlight_legions",
+    "ui_rotate_manually",
     "gameplay_change_grandfestival",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",

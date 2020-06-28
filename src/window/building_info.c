@@ -296,12 +296,12 @@ static void init(int grid_offset)
                 }
                 break;
             case BUILDING_HIPPODROME:
-                if (map_has_road_access_hippodrome(b->x, b->y, 0)) {
+                if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation)) {
                     context.has_road_access = 1;
                 }
                 break;
             case BUILDING_WAREHOUSE:
-                if (map_has_road_access(b->x, b->y, 3, 0)) {
+                if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0)) { 
                     context.has_road_access = 1;
                 }
                 context.warehouse_space_text = building_warehouse_get_space_info(b);

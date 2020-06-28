@@ -304,14 +304,25 @@ static void set_horse_destination(figure *f, int state)
 {
     building *b = building_get(f->building_id);
     int orientation = city_view_orientation();
+    int rotation =  b->subtype.orientation;
     if (state == HORSE_CREATED) {
         map_figure_delete(f);
-        if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
-            f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
-            f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+        if(rotation == 0){
+            if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
+                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+            } else {
+                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+            }
         } else {
-            f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
-            f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+            if (orientation == DIR_0_TOP || orientation == DIR_2_RIGHT) {
+                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+            } else {
+                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+            }
         }
         if (f->resource_id == 1) {
             f->destination_y++;
@@ -323,29 +334,59 @@ static void set_horse_destination(figure *f, int state)
         f->grid_offset = map_grid_offset(f->x, f->y);
         map_figure_add(f);
     } else if (state == HORSE_RACING) {
-        if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
-            f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
-            f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
-        } else {
-            f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
-            f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
-        }
-    } else if (state == HORSE_FINISHED) {
-        if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
-            if (f->resource_id) {
-                f->destination_x = b->x + 1;
-                f->destination_y = b->y + 2;
+        if(rotation == 0){
+            if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
+                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
             } else {
-                f->destination_x = b->x + 1;
-                f->destination_y = b->y + 1;
+                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
             }
         } else {
-            if (f->resource_id) {
-                f->destination_x = b->x + 12;
-                f->destination_y = b->y + 3;
+            if (orientation == DIR_0_TOP || orientation == DIR_2_RIGHT) {
+                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
             } else {
-                f->destination_x = b->x + 12;
-                f->destination_y = b->y + 2;
+                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+            }
+        }
+    } else if (state == HORSE_FINISHED) {
+        if(rotation == 0){
+            if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
+                if (f->resource_id) {
+                    f->destination_x = b->x + 1;
+                    f->destination_y = b->y + 2;
+                } else {
+                    f->destination_x = b->x + 1;
+                    f->destination_y = b->y + 1;
+                }
+            } else {
+                if (f->resource_id) {
+                    f->destination_x = b->x + 12;
+                    f->destination_y = b->y + 3;
+                } else {
+                    f->destination_x = b->x + 12;
+                    f->destination_y = b->y + 2;
+                }
+            }
+        } else {  
+            if (orientation == DIR_0_TOP || orientation == DIR_2_RIGHT) {
+                if (f->resource_id) {
+                    f->destination_x = b->x + 2;
+                    f->destination_y = b->y + 1;
+                } else {
+                    f->destination_x = b->x + 1;
+                    f->destination_y = b->y + 1;
+                }
+            } else {
+                if (f->resource_id) {
+                    f->destination_x = b->x + 3;
+                    f->destination_y = b->y + 12;
+                } else {
+                    f->destination_x = b->x + 2;
+                    f->destination_y = b->y + 12;
+                }
             }
         }
     }
@@ -357,7 +398,10 @@ void figure_hippodrome_horse_action(figure *f)
     f->use_cross_country = 1;
     f->is_ghost = 0;
     figure_image_increase_offset(f, 8);
-
+    if(!(building_get(f->building_id)->state)){
+        f->state = FIGURE_STATE_DEAD;
+        return;
+    }
     switch (f->action_state) {
         case FIGURE_ACTION_200_HIPPODROME_HORSE_CREATED:
             f->image_offset = 0;

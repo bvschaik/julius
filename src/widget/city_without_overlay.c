@@ -3,6 +3,7 @@
 #include "building/animation.h"
 #include "building/construction.h"
 #include "building/dock.h"
+#include "building/rotation.h"
 #include "building/type.h"
 #include "city/buildings.h"
 #include "city/entertainment.h"
@@ -142,10 +143,18 @@ static void draw_footprint(int x, int y, int grid_offset)
 
 static void draw_hippodrome_spectators(const building *b, int x, int y, color_t color_mask)
 {
-    int subtype = b->subtype.orientation;
-    int orientation = city_view_orientation();
+    // get which part of the hippodrome is getting checked
+    int building_part;
+    if(b->prev_part_building_id == 0){
+        building_part = 0; // part 1, no previous building
+    } else if(b->next_part_building_id == 0){
+        building_part = 2; // part 3, no next building
+    } else {
+        building_part = 1; // part 2
+    }
+    int orientation =  building_rotation_get_building_orientation(b->subtype.orientation);
     int population = city_population();
-    if ((subtype == 0 || subtype == 3) && population > 2000) {
+    if ((building_part == 0 ) && population > 2000) {
         // first building part
         switch (orientation) {
             case DIR_0_TOP:
@@ -160,7 +169,7 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
             case DIR_6_LEFT:
                 image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
         }
-    } else if ((subtype == 1 || subtype == 4) && population > 100) {
+    } else if ((building_part == 1) && population > 100) {
         // middle building part
         switch (orientation) {
             case DIR_0_TOP:
@@ -171,7 +180,7 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
             case DIR_6_LEFT:
                 image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_1) + 7, x, y - 80, color_mask);
         }
-    } else if ((subtype == 2 || subtype == 5) && population > 1000) {
+    } else if ((building_part == 2 ) && population > 1000) {
         // last building part
         switch (orientation) {
             case DIR_0_TOP:

@@ -7,6 +7,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "building/properties.h"
+#include "building/rotation.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/finance.h"
@@ -16,7 +17,6 @@
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/image.h"
-#include "core/time.h"
 #include "figure/formation.h"
 #include "game/undo.h"
 #include "graphics/window.h"
@@ -61,14 +61,15 @@ static struct {
         int water;
         int wall;
     } required_terrain;
-    int road_orientation;
-    time_millis road_last_update;
     int draw_as_constructing;
     int start_offset_x_view;
     int start_offset_y_view;
 } data;
 
 static int last_items_cleared;
+
+static const int FORT_X_OFFSET[4][4] = {{3,4,4,3},{-1,0,0,-1},{-4,-3,-3,4},{0,1,1,0}};
+static const int FORT_Y_OFFSET[4][4] = {{-1,-1,0,0},{-4,-4,-3,-3},{0,0,1,1},{3,3,4,4}};
 
 static void mark_construction(int x, int y, int size, int terrain, int absolute_xy)
 {
@@ -276,8 +277,6 @@ void building_construction_set_type(building_type type)
         data.required_terrain.tree = 0;
         data.required_terrain.rock = 0;
         data.required_terrain.meadow = 0;
-        data.road_orientation = 0;
-        data.road_last_update = time_get_millis();
         data.start.grid_offset = 0;
 
         switch (type) {
@@ -298,11 +297,6 @@ void building_construction_set_type(building_type type)
                 break;
             case BUILDING_CLAY_PIT:
                 data.required_terrain.water = 1;
-                break;
-            case BUILDING_GATEHOUSE:
-            case BUILDING_ROADBLOCK:
-            case BUILDING_TRIUMPHAL_ARCH:
-                data.road_orientation = 1;
                 break;
             case BUILDING_TOWER:
                 data.required_terrain.wall = 1;
@@ -420,6 +414,7 @@ void building_construction_cancel(void)
     } else {
         building_construction_set_type(BUILDING_NONE);
     }
+    building_rotation_reset_rotation();
 }
 
 void building_construction_update(int x, int y, int grid_offset)
@@ -481,21 +476,20 @@ void building_construction_update(int x, int y, int grid_offset)
         mark_construction(x, y, 3, TERRAIN_ALL, 0);
     } else if (building_is_fort(type)) {
         if (formation_get_num_legions_cached() < 6) {
-            const int offsets_x[] = {3, 4, 4, 3};
-            const int offsets_y[] = {-1, -1, 0, 0};
-            int orient_index = city_view_orientation() / 2;
-            int x_offset = offsets_x[orient_index];
-            int y_offset = offsets_y[orient_index];
             if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) &&
-                map_building_tiles_are_clear(x + x_offset, y + y_offset, 4, TERRAIN_ALL)) {
+                map_building_tiles_are_clear(x + FORT_X_OFFSET[building_rotation_get_rotation()][city_view_orientation()/2], y + FORT_Y_OFFSET[building_rotation_get_rotation()][city_view_orientation()/2], 4, TERRAIN_ALL)) {
                 mark_construction(x, y, 3, TERRAIN_ALL, 0);
             }
         }
     } else if (type == BUILDING_HIPPODROME) {
+        int x_offset_1, y_offset_1;
+        building_rotation_get_offset_with_rotation(5, building_rotation_get_rotation(), &x_offset_1, &y_offset_1);
+        int x_offset_2, y_offset_2;
+        building_rotation_get_offset_with_rotation(10, building_rotation_get_rotation(), &x_offset_2, &y_offset_2);
         if (map_building_tiles_are_clear(x, y, 5, TERRAIN_ALL) &&
-            map_building_tiles_are_clear(x + 5, y, 5, TERRAIN_ALL) &&
-            map_building_tiles_are_clear(x + 10, y, 5, TERRAIN_ALL)) {
-            mark_construction(x, y, 5, TERRAIN_ALL, 0);
+            map_building_tiles_are_clear(x + x_offset_1, y + y_offset_1, 5, TERRAIN_ALL) &&
+            map_building_tiles_are_clear(x + x_offset_2, y + y_offset_2, 5, TERRAIN_ALL)) {
+                mark_construction(x, y, 5, TERRAIN_ALL, 0);
         }
     } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
         if (!map_water_determine_orientation_size2(x, y, 1, 0, 0)) {
@@ -715,21 +709,6 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
         }
     }
     return 1;
-}
-
-void building_construction_update_road_orientation(void)
-{
-    if (data.road_orientation > 0) {
-        if (time_get_millis() - data.road_last_update > 1500) {
-            data.road_last_update = time_get_millis();
-            data.road_orientation = data.road_orientation == 1 ? 2 : 1;
-        }
-    }
-}
-
-int building_construction_road_orientation(void)
-{
-    return data.road_orientation;
 }
 
 void building_construction_record_view_position(int view_x, int view_y, int grid_offset)

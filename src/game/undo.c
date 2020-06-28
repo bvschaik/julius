@@ -71,6 +71,15 @@ void game_undo_add_building(building *b)
     }
 }
 
+void game_undo_adjust_building(building * b){
+    for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
+        if(data.buildings[i].id == b->id){
+            // found! update the building now
+            memcpy(&data.buildings[i], b, sizeof(building));
+        }
+    }
+}
+
 int game_undo_contains_building(int building_id)
 {
     if (building_id <= 0 || !game_can_undo()) {

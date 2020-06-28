@@ -7,6 +7,7 @@
 #include "building/dock.h"
 #include "building/menu.h"
 #include "building/properties.h"
+#include "building/rotation.h"
 #include "building/storage.h"
 #include "city/buildings.h"
 #include "city/view.h"
@@ -37,16 +38,19 @@ static void add_fort(int type, building *fort)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
     }
 
-    fort->formation_id = formation_legion_create_for_fort(fort);
     // create parade ground
-    building *ground = building_create(BUILDING_FORT_GROUND, fort->x + 3, fort->y - 1);
+    const int offsets_x[] = {3, -1, -4, 0};
+    const int offsets_y[] = {-1, -4, 0, 3};
+    building *ground = building_create(BUILDING_FORT_GROUND, fort->x + offsets_x[building_rotation_get_rotation()], fort->y + offsets_y[building_rotation_get_rotation()]);
     game_undo_add_building(ground);
-    ground->formation_id = fort->formation_id;
     ground->prev_part_building_id = fort->id;
     fort->next_part_building_id = ground->id;
     ground->next_part_building_id = 0;
-    map_building_tiles_add(ground->id, fort->x + 3, fort->y - 1, 4,
+    map_building_tiles_add(ground->id, fort->x + offsets_x[building_rotation_get_rotation()], fort->y + offsets_y[building_rotation_get_rotation()], 4,
         image_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
+
+    fort->formation_id = formation_legion_create_for_fort(fort);
+    ground->formation_id = fort->formation_id;
 }
 
 static void add_hippodrome(building *b)
@@ -55,13 +59,10 @@ static void add_hippodrome(building *b)
     int image2 = image_group(GROUP_BUILDING_HIPPODROME_2);
     city_buildings_add_hippodrome();
 
-    int orientation = city_view_orientation();
+    building_rotation_force_two_orientations();
+    int orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
     building *part1 = b;
-    if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
-        part1->subtype.orientation = 0;
-    } else {
-        part1->subtype.orientation = 3;
-    }
+
     part1->prev_part_building_id = 0;
     int image_id;
     switch (orientation) {
@@ -81,14 +82,11 @@ static void add_hippodrome(building *b)
             return;
     }
     map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
-
-    building *part2 = building_create(BUILDING_HIPPODROME, b->x + 5, b->y);
+    int x_offset, y_offset;
+    building_rotation_get_offset_with_rotation(5, building_rotation_get_rotation(), &x_offset, &y_offset);
+    building *part2 = building_create(BUILDING_HIPPODROME, b->x + x_offset, b->y + y_offset);
     game_undo_add_building(part2);
-    if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
-        part2->subtype.orientation = 1;
-    } else {
-        part2->subtype.orientation = 4;
-    }
+
     part2->prev_part_building_id = part1->id;
     part1->next_part_building_id = part2->id;
     part2->next_part_building_id = 0;
@@ -102,15 +100,12 @@ static void add_hippodrome(building *b)
             image_id = image1 + 2;
             break;
     }
-    map_building_tiles_add(part2->id, b->x + 5, b->y, b->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(part2->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
 
-    building *part3 = building_create(BUILDING_HIPPODROME, b->x + 10, b->y);
+    building_rotation_get_offset_with_rotation(10, building_rotation_get_rotation(), &x_offset, &y_offset);
+    building *part3 = building_create(BUILDING_HIPPODROME, b->x + x_offset, b->y + y_offset);
     game_undo_add_building(part3);
-    if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
-        part3->subtype.orientation = 2;
-    } else {
-        part3->subtype.orientation = 5;
-    }
+
     part3->prev_part_building_id = part2->id;
     part2->next_part_building_id = part3->id;
     part3->next_part_building_id = 0;
@@ -128,7 +123,7 @@ static void add_hippodrome(building *b)
             image_id = image1 + 4;
             break;
     }
-    map_building_tiles_add(part3->id, b->x + 10, b->y, b->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(part3->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
 }
 
 static building *add_warehouse_space(int x, int y, building *prev)
@@ -144,22 +139,30 @@ static building *add_warehouse_space(int x, int y, building *prev)
 
 static void add_warehouse(building *b)
 {
+    int x_offset[9] = {0, 0, 1, 1, 0, 2, 1, 2, 2}; 
+    int y_offset[9] = {0, 1, 0, 1, 2, 0, 2, 1, 2}; 
+    int corner = building_rotation_get_corner(2*building_rotation_get_rotation());
+
     b->storage_id = building_storage_create();
     if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
         building_storage_accept_none(b->storage_id);
     }
     b->prev_part_building_id = 0;
-    map_building_tiles_add(b->id, b->x, b->y, 1, image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x + x_offset[corner], b->y + y_offset[corner], 1, image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
 
     building *prev = b;
-    prev = add_warehouse_space(b->x + 1, b->y, prev);
-    prev = add_warehouse_space(b->x + 2, b->y, prev);
-    prev = add_warehouse_space(b->x, b->y + 1, prev);
-    prev = add_warehouse_space(b->x + 1, b->y + 1, prev);
-    prev = add_warehouse_space(b->x + 2, b->y + 1, prev);
-    prev = add_warehouse_space(b->x, b->y + 2, prev);
-    prev = add_warehouse_space(b->x + 1, b->y + 2, prev);
-    prev = add_warehouse_space(b->x + 2, b->y + 2, prev);
+    for(int i = 0; i < 9; i++){
+        if(i == corner){
+            continue;
+        }
+        prev = add_warehouse_space(b->x + x_offset[i], b->y + y_offset[i], prev);
+    }
+    // adjust BUILDING_WAREHOUSE
+    b->x = b->x + x_offset[corner];
+    b->y = b->y + y_offset[corner];
+    b->grid_offset = map_grid_offset(b->x, b->y);
+    game_undo_adjust_building(b);
+
     prev->next_part_building_id = 0;
 }
 
@@ -535,7 +538,7 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
         if (!building_orientation) {
-            if (building_construction_road_orientation() == 1) {
+            if (building_rotation_get_road_orientation() == 1) {
                 building_orientation = 1;
             } else {
                 building_orientation = 2;
@@ -553,7 +556,7 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
         if (!building_orientation) {
-            if (building_construction_road_orientation() == 1) {
+            if (building_rotation_get_road_orientation() == 1) {
                 building_orientation = 1;
             } else {
                 building_orientation = 3;
@@ -589,7 +592,12 @@ int building_construction_place_building(building_type type, int x, int y)
         }
     }
     if (building_is_fort(type)) {
-        if (!map_tiles_are_clear(x + 3, y - 1, 4, terrain_mask)) {
+        const int offsets_x[] = {3, -1, -4, 0};
+        const int offsets_y[] = {-1, -4, 0, 3};
+        int orient_index = building_rotation_get_rotation();
+        int x_offset = offsets_x[orient_index];
+        int y_offset = offsets_y[orient_index];
+        if (!map_tiles_are_clear(x + x_offset, y + y_offset, 4, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }
@@ -603,8 +611,12 @@ int building_construction_place_building(building_type type, int x, int y)
             city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
             return 0;
         }
-        if (!map_tiles_are_clear(x + 5, y, 5, terrain_mask) ||
-            !map_tiles_are_clear(x + 10, y, 5, terrain_mask)) {
+        int x_offset_1, y_offset_1;
+        building_rotation_get_offset_with_rotation(5, building_rotation_get_rotation(), &x_offset_1, &y_offset_1);
+        int x_offset_2, y_offset_2;
+        building_rotation_get_offset_with_rotation(10, building_rotation_get_rotation(), &x_offset_2, &y_offset_2);
+        if (!map_tiles_are_clear(x + x_offset_1, y + y_offset_1, 5, terrain_mask) ||
+            !map_tiles_are_clear(x + x_offset_2, y + y_offset_2, 5, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }

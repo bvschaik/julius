@@ -2,6 +2,7 @@
 
 #include "building/building_state.h"
 #include "building/properties.h"
+#include "building/rotation.h"
 #include "building/storage.h"
 #include "city/buildings.h"
 #include "city/population.h"
@@ -174,6 +175,10 @@ building *building_create(building_type type, int x, int y)
 	// Set it as accepting all goods
         b->subtype.market_goods = 0x0000;
     }
+
+    if(type == BUILDING_WAREHOUSE || type == BUILDING_HIPPODROME) {
+        b->subtype.orientation = building_rotation_get_rotation();
+    }
     
     b->x = x;
     b->y = y;
@@ -182,7 +187,6 @@ building *building_create(building_type type, int x, int y)
     b->figure_roam_direction = b->house_figure_generation_delay & 6;
     b->fire_proof = props->fire_proof;
     b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
-
     return b;
 }
 

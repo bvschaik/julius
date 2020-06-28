@@ -154,8 +154,8 @@ static void spawn_figure_warehouse(building *b)
         }
     }
     map_point road;
-    if (map_has_road_access(b->x, b->y, b->size, &road) ||
-        map_has_road_access(b->x, b->y, 3, &road)) {
+    if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, b->size, &road) ||
+        map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
         if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN)) {
             return;
@@ -483,7 +483,7 @@ static void spawn_figure_hippodrome(building *b)
         return;
     }
     map_point road;
-    if (map_has_road_access_hippodrome(b->x, b->y, &road)) {
+    if (map_has_road_access_hippodrome_rotation(b->x, b->y, &road, b->subtype.orientation)) {
         if (b->houses_covered <= 50 || b->data.entertainment.days1 <= 0) {
             generate_labor_seeker(b, road.x, road.y);
         }
