@@ -200,7 +200,7 @@ static void extinguish_fire(figure *f)
 {
     building *burn = building_get(f->destination_building_id);
     int distance = calc_maximum_distance(f->x, f->y, burn->x, burn->y);
-    if (burn->state == BUILDING_STATE_IN_USE && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
+    if ((burn->state == BUILDING_STATE_IN_USE || burn->state == BUILDING_STATE_MOTHBALLED) && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
         burn->fire_duration = 32;
         sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
     } else {
