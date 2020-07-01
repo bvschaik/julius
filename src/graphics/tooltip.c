@@ -11,6 +11,8 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "scenario/criteria.h"
+#include "scenario/property.h"
 #include "window/advisors.h"
 
 #include <stdlib.h>
@@ -215,7 +217,7 @@ static void draw_overlay_tooltip(tooltip_context *c)
 static void draw_senate_tooltip(tooltip_context *c)
 {
     int x, y;
-    int width = 180;
+    int width = 220;
     int height = 80;
     if (c->mouse_x < width + 20) {
         x = c->mouse_x + 20;
@@ -237,25 +239,43 @@ static void draw_senate_tooltip(tooltip_context *c)
 
     // unemployment
     lang_text_draw_colored(68, 148, x + 5, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(city_labor_unemployment_percentage(), '@', "%",
+    width = text_draw_number_colored(city_labor_unemployment_percentage(), '@', "%",
         x + 140, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    text_draw_number_colored(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")",
+        x + 140 + width, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
     // ratings
     lang_text_draw_colored(68, 149, x + 5, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_culture(), '@', " ",
         x + 140, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    if ( !scenario_is_open_play() && scenario_criteria_culture_enabled()) {
+        text_draw_number_colored(scenario_criteria_culture(), '(', ")",
+            x + 140 + width, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    }
 
     lang_text_draw_colored(68, 150, x + 5, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_prosperity(), '@', " ",
         x + 140, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    if ( !scenario_is_open_play() && scenario_criteria_prosperity_enabled()) {
+        text_draw_number_colored(scenario_criteria_prosperity(), '(', ")",
+            x + 140 + width, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    }
 
     lang_text_draw_colored(68, 151, x + 5, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_peace(), '@', " ",
         x + 140, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    if ( !scenario_is_open_play() && scenario_criteria_peace_enabled()) {
+        text_draw_number_colored(scenario_criteria_peace(), '(', ")",
+            x + 140 + width, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    }
 
     lang_text_draw_colored(68, 152, x + 5, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_favor(), '@', " ",
         x + 140, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    if ( !scenario_is_open_play() && scenario_criteria_favor_enabled()) {
+        text_draw_number_colored(scenario_criteria_favor(), '(', ")",
+            x + 140 + width, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    }
 }
 
 static void draw_tooltip(tooltip_context *c)

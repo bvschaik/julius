@@ -40,7 +40,8 @@ static int draw_background(void)
     draw_title(66, 1);
     if (city_labor_unemployment_percentage() > 0) {
         width = lang_text_draw(61, 12, X_OFFSET, 66, FONT_NORMAL_RED);
-        text_draw_percentage(city_labor_unemployment_percentage(), X_OFFSET + width, 66, FONT_NORMAL_RED);
+        width += text_draw_percentage(city_labor_unemployment_percentage(), X_OFFSET + width, 66, FONT_NORMAL_RED);
+        text_draw_number(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")", X_OFFSET + 11 + width, 66, FONT_NORMAL_RED);
     } else if (city_labor_workers_needed() > 0) {
         width = lang_text_draw(61, 13, X_OFFSET, 66, FONT_NORMAL_RED);
         lang_text_draw_amount(8, 12, city_labor_workers_needed(), X_OFFSET + width, 66, FONT_NORMAL_RED);
