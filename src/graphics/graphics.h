@@ -5,7 +5,9 @@
 
 typedef enum {
     CANVAS_UI = 0,
-    CANVAS_CITY = 1
+    CANVAS_CITY = 1,
+    CANVAS_CUSTOM = 2,
+    MAX_CANVAS = 3
 } canvas_type;
 
 typedef enum {
@@ -33,6 +35,8 @@ typedef struct {
 void graphics_init_canvas(int width, int height);
 const void *graphics_canvas(canvas_type type);
 void graphics_set_active_canvas(canvas_type type);
+void graphics_set_custom_canvas(color_t *pixels, int width, int height);
+canvas_type graphics_get_canvas_type(void);
 
 void graphics_in_dialog(void);
 void graphics_reset_dialog(void);

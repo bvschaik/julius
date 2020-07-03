@@ -16,7 +16,7 @@ static struct {
     color_t *pixels;
     int width;
     int height;
-} canvas[2];
+} canvas[MAX_CANVAS];
 
 static struct {
     int x_start;
@@ -78,6 +78,19 @@ void graphics_set_active_canvas(canvas_type type)
 {
     active_canvas = type;
     graphics_reset_clip_rectangle();
+}
+
+void graphics_set_custom_canvas(color_t *pixels, int width, int height)
+{
+    canvas[CANVAS_CUSTOM].pixels = pixels;
+    canvas[CANVAS_CUSTOM].width = width;
+    canvas[CANVAS_CUSTOM].height = height;
+    graphics_set_active_canvas(CANVAS_CUSTOM);
+}
+
+canvas_type graphics_get_canvas_type(void)
+{
+    return active_canvas;
 }
 
 static void translate_clip(int dx, int dy)
@@ -239,7 +252,7 @@ color_t *graphics_get_pixel(int x, int y)
     if (active_canvas == CANVAS_UI) {
         return &canvas[CANVAS_UI].pixels[(translation.y + y) * canvas[CANVAS_UI].width + translation.x + x];
     } else {
-        return &canvas[CANVAS_CITY].pixels[y * canvas[CANVAS_CITY].width + x];
+        return &canvas[active_canvas].pixels[y * canvas[active_canvas].width + x];
     }
 }
 

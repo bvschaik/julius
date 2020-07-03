@@ -138,6 +138,12 @@ if(DRAW_FPS)
   add_definitions(-DDRAW_FPS)
 endif()
 
+set(EXPAT_FILES
+    ext/expat/xmlparse.c
+    ext/expat/xmlrole.c
+    ext/expat/xmltok.c
+)
+
 set(TINYFD_FILES
     ext/tinyfiledialogs/tinyfiledialogs.c
 )
@@ -145,10 +151,18 @@ set(TINYFD_FILES
 set(PNG_FILES
     ext/png/png.c
     ext/png/pngerror.c
+    ext/png/pngget.c
     ext/png/pngmem.c
+    ext/png/pngpread.c
+    ext/png/pngread.c
+    ext/png/pngrio.c
+    ext/png/pngrtran.c
+    ext/png/pngrutil.c
     ext/png/pngset.c
+    ext/png/pngtrans.c
     ext/png/pngwio.c
     ext/png/pngwrite.c
+    ext/png/pngwtran.c
     ext/png/pngwutil.c
 )
 
@@ -156,6 +170,9 @@ set(ZLIB_FILES
     ext/zlib/adler32.c
     ext/zlib/crc32.c
     ext/zlib/deflate.c
+    ext/zlib/inffast.c
+    ext/zlib/inflate.c
+    ext/zlib/inftrees.c
     ext/zlib/trees.c
     ext/zlib/zutil.c
 )
@@ -215,6 +232,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/io.c
     ${PROJECT_SOURCE_DIR}/src/core/lang.c
     ${PROJECT_SOURCE_DIR}/src/core/locale.c
+    ${PROJECT_SOURCE_DIR}/src/core/mods.c
     ${PROJECT_SOURCE_DIR}/src/core/random.c
     ${PROJECT_SOURCE_DIR}/src/core/smacker.c
     ${PROJECT_SOURCE_DIR}/src/core/speed.c
@@ -681,14 +699,33 @@ include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
 if(SYSTEM_LIBS)
+    find_package(ZLIB)
     find_package(PNG)
+    find_package(EXPAT)
 endif()
+
+if(PNG_FOUND)
+    include_directories(${ZLIB_INCLUDE_DIRS})
+    target_link_libraries(${SHORT_NAME} ${ZLIB_LIBRARIES})
+else()
+    include_directories("ext/zlib")
+    target_sources(${SHORT_NAME} PRIVATE "${ZLIB_FILES}")
+endif()
+
 if(PNG_FOUND)
     include_directories(${PNG_INCLUDE_DIRS})
     target_link_libraries(${SHORT_NAME} ${PNG_LIBRARIES})
 else()
     include_directories("ext/png")
-    target_sources(${SHORT_NAME} PRIVATE "${PNG_FILES}" "${ZLIB_FILES}")
+    target_sources(${SHORT_NAME} PRIVATE "${PNG_FILES}")
+endif()
+
+if(EXPAT_FOUND)
+    include_directories(${EXPAT_INCLUDE_DIRS})
+    target_link_libraries(${SHORT_NAME} ${EXPAT_LIBRARIES})
+else()
+    include_directories("ext/expat")
+    target_sources(${SHORT_NAME} PRIVATE "${EXPAT_FILES}")
 endif()
 
 if(VITA_BUILD)

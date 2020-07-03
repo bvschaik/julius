@@ -64,10 +64,10 @@ static int add_to_listing(const char *filename)
     return LIST_CONTINUE;
 }
 
-const dir_listing *dir_find_files_with_extension(const char *extension)
+const dir_listing *dir_find_files_with_extension(const char *dir, const char *extension)
 {
     clear_dir_listing();
-    platform_file_manager_list_directory_contents(0, TYPE_FILE, extension, add_to_listing);
+    platform_file_manager_list_directory_contents(dir, TYPE_FILE, extension, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
     return &data.listing;
 }

@@ -8,6 +8,7 @@
 #include "core/lang.h"
 #include "core/locale.h"
 #include "core/log.h"
+#include "core/mods.h"
 #include "core/random.h"
 #include "core/time.h"
 #include "editor/editor.h"
@@ -111,6 +112,7 @@ int game_init(void)
         return 0;
     }
 
+    mods_init();
     sound_system_init();
     game_state_init();
     window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));

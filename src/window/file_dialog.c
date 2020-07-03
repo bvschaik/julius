@@ -99,17 +99,17 @@ static void init(file_type type, file_dialog_type dialog_type)
 
     if (data.dialog_type != FILE_DIALOG_SAVE) {
         if (type == FILE_TYPE_SCENARIO) {
-            data.file_list = dir_find_files_with_extension(scenario_data.extension);
+            data.file_list = dir_find_files_with_extension(".", scenario_data.extension);
         }  else {
-            data.file_list = dir_find_files_with_extension(data.file_data->extension);
+            data.file_list = dir_find_files_with_extension(".", data.file_data->extension);
             data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
         }
     }
     else {
         if (type == FILE_TYPE_SCENARIO) {
-            data.file_list = dir_find_files_with_extension(scenario_data.extension);
+            data.file_list = dir_find_files_with_extension(".", scenario_data.extension);
         } else {
-            data.file_list = dir_find_files_with_extension(saved_game_data_expanded.extension);
+            data.file_list = dir_find_files_with_extension(".", saved_game_data_expanded.extension);
         }
     }
     scrollbar_init(&scrollbar, 0, data.file_list->num_files - NUM_FILES_IN_VIEW);
@@ -242,7 +242,7 @@ static void button_ok_cancel(int is_ok, int param2)
         }
     } else if (data.dialog_type == FILE_DIALOG_DELETE) {
         if (game_file_delete_saved_game(filename)) {
-            dir_find_files_with_extension(data.file_data->extension);
+            dir_find_files_with_extension(".", data.file_data->extension);
             dir_append_files_with_extension(saved_game_data_expanded.extension);
 
             if (scrollbar.scroll_position + NUM_FILES_IN_VIEW >= data.file_list->num_files) {

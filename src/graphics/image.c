@@ -57,7 +57,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
             }
         } else if (type == DRAW_TYPE_SET) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_SG2_TRANSPARENT) {
+                if (*data != COLOR_SG2_TRANSPARENT || img->draw.type == IMAGE_TYPE_MOD) {
                     *dst = color;
                 }
                 data++;
@@ -708,6 +708,9 @@ void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_ma
 {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
+        if (img->draw.type == IMAGE_TYPE_MOD) {
+            image_draw_masked(image_id, x, y, color_mask);
+        }
         return;
     }
     switch (img->width) {
@@ -733,6 +736,9 @@ void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, c
 {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
+        if (img->draw.type == IMAGE_TYPE_MOD) {
+            image_draw_masked(image_id, x, y, color_mask);
+        }
         return;
     }
     switch (img->width) {
@@ -758,6 +764,9 @@ void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
+        if (img->draw.type == IMAGE_TYPE_MOD) {
+            image_draw_masked(image_id, x, y, color_mask);
+        }
         return;
     }
     if (!img->draw.has_compressed_part) {
@@ -803,6 +812,9 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
 {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
+        if (img->draw.type == IMAGE_TYPE_MOD) {
+            image_draw_masked(image_id, x, y, color_mask);
+        }
         return;
     }
     if (!img->draw.has_compressed_part) {
