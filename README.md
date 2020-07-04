@@ -13,8 +13,6 @@ Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh)
 | PS Vita | [![Download](https://api.bintray.com/packages/keriew/Augustus/vita-unstable/images/download.svg)](https://bintray.com/keriew/Augustus/vita-unstable/_latestVersion#files) |
 
 
-![](https://github.com/bvschaik/julius/blob/master/res/sce_sys/livearea/contents/bg.png?raw=true)
-
 Augustus is a fork of the Julius project that intends to incorporate gameplay changes.
 =======
 The aim of this project is to provide enhanced, customizable gameplay to Caesar 3 using project Julius UI enhancements.
