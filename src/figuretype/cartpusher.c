@@ -3,6 +3,7 @@
 #include "building/barracks.h"
 #include "building/granary.h"
 #include "building/industry.h"
+#include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -424,7 +425,9 @@ static void determine_warehouseman_destination(figure *f, int road_network_id)
     // priority 5: resource to other warehouse
     dst_building_id = building_warehouse_for_storing(f->building_id, f->x, f->y, f->resource_id,
         warehouse->distance_from_entry, road_network_id, 0, &dst);
-    if (dst_building_id) {
+    
+    int empty_warehouse = building_storage_get(building_get(f->building_id)->storage_id)->empty_all; // deliver to another warehouse because this one is being emptied
+    if (dst_building_id && empty_warehouse) {
         if (dst_building_id == f->building_id) {
             f->state = FIGURE_STATE_DEAD;
         } else {
