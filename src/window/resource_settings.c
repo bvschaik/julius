@@ -55,6 +55,11 @@ static void init(resource_type resource)
 
 static void draw_background(void)
 {
+    // added this draw call to fix a bug where the Help window is larger than the
+    // trade dialog itself, causing bits of it to remain on the screen when going
+    // back to the dialog. Bug was not present in original C3.
+    window_advisors_draw_dialog_background();
+
     graphics_in_dialog();
     window_advisor_trade_draw_dialog_background();
     graphics_reset_dialog();
@@ -180,7 +185,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
-        window_advisors_show();
+        window_go_back();
     }
 }
 
@@ -191,7 +196,7 @@ static void button_help(int param1, int param2)
 
 static void button_ok(int param1, int param2)
 {
-    window_advisors_show();
+    window_go_back();
 }
 
 static void button_export_up_down(int is_down, int param2)
@@ -216,11 +221,11 @@ static void button_toggle_stockpile(int param1, int param2)
     city_resource_toggle_stockpiled(data.resource);
 }
 
-void window_resource_settings_show(resource_type resource)
+void window_resource_settings_show(resource_type resource, void (*override_draw_background_fn)(void))
 {
     window_type window = {
         WINDOW_RESOURCE_SETTINGS,
-        draw_background,
+        (override_draw_background_fn ? override_draw_background_fn : draw_background),
         draw_foreground,
         handle_input
     };

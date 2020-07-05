@@ -26,6 +26,7 @@
 #include "window/city.h"
 #include "window/message_dialog.h"
 #include "window/popup_dialog.h"
+#include "window/resource_settings.h"
 #include "window/trade_opened.h"
 
 #define MAX_WIDTH 2032
@@ -35,6 +36,7 @@ static void button_help(int param1, int param2);
 static void button_return_to_city(int param1, int param2);
 static void button_advisor(int advisor, int param2);
 static void button_open_trade(int param1, int param2);
+static void button_show_resource_window(int resource, int param2);
 
 static image_button image_button_help[] = {
     {0, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1}
@@ -44,6 +46,23 @@ static image_button image_button_return_to_city[] = {
 };
 static image_button image_button_advisor[] = {
     {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
+};
+static generic_button generic_button_trade_resource[] = {
+    {0, 0, 27, 27, button_show_resource_window, button_none, 1, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 2, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 3, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 4, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 5, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 6, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 7, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 8, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 9, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 10, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 11, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 12, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 13, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 14, 0},
+    {0, 0, 27, 27, button_show_resource_window, button_none, 15, 0}
 };
 static generic_button generic_button_open_trade[] = {
     {30, 61, 440, 26, button_open_trade, button_none, 0, 0}
@@ -57,6 +76,7 @@ static struct {
     int focus_button_id;
     int is_scrolling;
     int finished_scroll;
+    int focus_resource;
 } data = {0, 1};
 
 static void init(void)
@@ -106,9 +126,14 @@ static void draw_paneling(void)
     graphics_reset_clip_rectangle();
 }
 
-static void draw_trade_resource(resource_type resource, int trade_max, int x_offset, int y_offset)
+static void draw_trade_resource(resource_type resource, int trade_max, int x_offset, int y_offset, int is_open)
 {
-    graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
+    int width = (is_open ? 101 : 30);
+    generic_button_trade_resource[resource - 1].x = x_offset;
+    generic_button_trade_resource[resource - 1].y = y_offset;
+    generic_button_trade_resource[resource - 1].width = width;
+    button_border_draw(x_offset - 2, y_offset - 2, width + 2, 30, (data.focus_resource == resource));
+
     int image_id = resource + image_group(GROUP_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
     image_draw(image_id + resource_offset, x_offset + 1, y_offset + 1);
@@ -128,45 +153,45 @@ static void draw_trade_resource(resource_type resource, int trade_max, int x_off
 static void draw_trade_city_info(const empire_object *object, const empire_city *city)
 {
     int x_offset = (data.x_min + data.x_max - 500) / 2;
-    int y_offset = data.y_max - 108;
+    int y_offset = data.y_max - 113;
     if (city->is_open) {
         // city sells
-        lang_text_draw(47, 10, x_offset + 40, y_offset + 30, FONT_NORMAL_GREEN);
+        lang_text_draw(47, 10, x_offset + 44, y_offset + 40, FONT_NORMAL_GREEN);
         int index = 0;
         for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
             if (!empire_object_city_sells_resource(object->id, resource)) {
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
-            draw_trade_resource(resource, trade_max, x_offset + 100 * index + 120, y_offset + 21);
+            draw_trade_resource(resource, trade_max, x_offset + 104 * index + 120, y_offset + 31, city->is_open);
             int trade_now = trade_route_traded(city->route_id, resource);
             if (trade_now > trade_max) {
                 trade_max = trade_now;
             }
-            int text_width = text_draw_number(trade_now, '@', "", x_offset + 100 * index + 150, y_offset + 30, FONT_NORMAL_GREEN);
-            text_width += lang_text_draw(47, 11, x_offset + 100 * index + 148 + text_width, y_offset + 30, FONT_NORMAL_GREEN);
-            text_draw_number(trade_max, '@', "", x_offset + 100 * index + 138 + text_width, y_offset + 30, FONT_NORMAL_GREEN);
+            int text_width = text_draw_number(trade_now, '@', "", x_offset + 104 * index + 150, y_offset + 40, FONT_NORMAL_GREEN);
+            text_width += lang_text_draw(47, 11, x_offset + 104 * index + 148 + text_width, y_offset + 40, FONT_NORMAL_GREEN);
+            text_draw_number(trade_max, '@', "", x_offset + 104 * index + 138 + text_width, y_offset + 40, FONT_NORMAL_GREEN);
             index++;
         }
         // city buys
-        lang_text_draw(47, 9, x_offset + 40, y_offset + 60, FONT_NORMAL_GREEN);
+        lang_text_draw(47, 9, x_offset + 44, y_offset + 71, FONT_NORMAL_GREEN);
         index = 0;
         for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
             if (!empire_object_city_buys_resource(object->id, resource)) {
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
-            draw_trade_resource(resource, trade_max, x_offset + 100 * index + 120, y_offset + 51);
+            draw_trade_resource(resource, trade_max, x_offset + 104 * index + 120, y_offset + 62, city->is_open);
             int trade_now = trade_route_traded(city->route_id, resource);
             if (trade_now > trade_max) {
                 trade_max = trade_now;
             }
             int text_width = text_draw_number(trade_now, '@', "",
-                                             x_offset + 100 * index + 150, y_offset + 60, FONT_NORMAL_GREEN);
+                                             x_offset + 104 * index + 150, y_offset + 71, FONT_NORMAL_GREEN);
             text_width += lang_text_draw(47, 11,
-                                        x_offset + 100 * index + 148 + text_width, y_offset + 60, FONT_NORMAL_GREEN);
+                                        x_offset + 104 * index + 148 + text_width, y_offset + 71, FONT_NORMAL_GREEN);
             text_draw_number(trade_max, '@', "",
-                             x_offset + 100 * index + 138 + text_width, y_offset + 60, FONT_NORMAL_GREEN);
+                             x_offset + 104 * index + 138 + text_width, y_offset + 71, FONT_NORMAL_GREEN);
             index++;
         }
     } else { // trade is closed
@@ -176,7 +201,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
-            draw_trade_resource(resource, trade_max, x_offset + index + 60, y_offset + 33);
+            draw_trade_resource(resource, trade_max, x_offset + index + 60, y_offset + 33, city->is_open);
             index += 32;
         }
         index += lang_text_draw(47, 4, x_offset + index + 100, y_offset + 42, FONT_NORMAL_GREEN);
@@ -185,7 +210,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
-            draw_trade_resource(resource, trade_max, x_offset + index + 110, y_offset + 33);
+            draw_trade_resource(resource, trade_max, x_offset + index + 110, y_offset + 33, city->is_open);
             index += 32;
         }
         index = lang_text_draw_amount(8, 0, city->cost_to_open,
@@ -290,7 +315,6 @@ static void draw_background(void)
         graphics_clear_screen();
     }
     draw_paneling();
-    draw_object_info();
 }
 
 static void draw_empire_object(const empire_object *obj)
@@ -393,7 +417,7 @@ static void draw_panel_buttons(const empire_city *city)
     image_buttons_draw(data.x_max - 44, data.y_max - 100, image_button_advisor, 1);
     if (city) {
         if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
-            button_border_draw((data.x_min + data.x_max - 500) / 2 + 30, data.y_max - 44, 440, 26, data.selected_button);
+            button_border_draw((data.x_min + data.x_max - 500) / 2 + 30, data.y_max - 49, 440, 26, data.selected_button);
         }
     }
 }
@@ -413,6 +437,7 @@ static void draw_foreground(void)
     }
     draw_city_name(city);
     draw_panel_buttons(city);
+    draw_object_info();
 }
 
 static int is_outside_map(int x, int y)
@@ -452,6 +477,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         }
     }
     data.focus_button_id = 0;
+    data.focus_resource = 0;
     int button_id;
     image_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 44, image_button_help, 1, &button_id);
     if (button_id) {
@@ -468,13 +494,30 @@ static void handle_input(const mouse *m, const hotkeys *h)
     determine_selected_object(m);
     int selected_object = empire_selected_object();
     if (selected_object) {
-        if (empire_object_get(selected_object -1)->type == EMPIRE_OBJECT_CITY) {
-            data.selected_city = empire_city_get_for_object(selected_object -1);
+        const empire_object* obj = empire_object_get(selected_object - 1);
+        if (obj->type == EMPIRE_OBJECT_CITY) {
+            data.selected_city = empire_city_get_for_object(selected_object - 1);
             const empire_city *city = empire_city_get(data.selected_city);
-            if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
-                generic_buttons_handle_mouse(
-                    m, (data.x_min + data.x_max - 500) / 2, data.y_max - 105,
+            if (city->type == EMPIRE_CITY_TRADE) {
+
+                // we only want to handle resource buttons that the selected city trades
+                for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+                    if (empire_object_city_sells_resource(obj->id, resource) ||
+                        empire_object_city_buys_resource(obj->id, resource)) {
+
+                        generic_buttons_handle_mouse(m, 0, 0,
+                            generic_button_trade_resource + resource - 1, 1, &button_id);
+                        if (button_id) {
+                            data.focus_resource = resource;
+                        }
+                    }
+                }
+
+                if (!city->is_open) {
+                    generic_buttons_handle_mouse(
+                        m, (data.x_min + data.x_max - 500) / 2, data.y_max - 105,
                         generic_button_open_trade, 1, &data.selected_button);
+                }
             }
         }
         if (input_go_back_requested(m, h)) {
@@ -493,56 +536,6 @@ static int is_mouse_hit(tooltip_context *c, int x, int y, int size)
     int mx = c->mouse_x;
     int my = c->mouse_y;
     return x <= mx && mx < x + size && y <= my && my < y + size;
-}
-
-static int get_tooltip_resource(tooltip_context *c)
-{
-    const empire_city *city = empire_city_get(data.selected_city);
-    if (city->type != EMPIRE_CITY_TRADE) {
-        return 0;
-    }
-    int object_id = empire_selected_object() - 1;
-    int x_offset = (data.x_min + data.x_max - 500) / 2;
-    int y_offset = data.y_max - 108;
-
-    if (city->is_open) {
-        for (int r = RESOURCE_MIN, index = 0; r < RESOURCE_MAX; r++) {
-            if (empire_object_city_sells_resource(object_id, r)) {
-                if (is_mouse_hit(c, x_offset + 120 + 100 * index, y_offset + 21, 26)) {
-                    return r;
-                }
-                index++;
-            }
-        }
-        for (int r = 1, index = 0; r <= 15; r++) {
-            if (empire_object_city_buys_resource(object_id, r)) {
-                if (is_mouse_hit(c, x_offset + 120 + 100 * index, y_offset + 51, 26)) {
-                    return r;
-                }
-                index++;
-            }
-        }
-    } else {
-        int item_offset = lang_text_get_width(47, 5, FONT_NORMAL_GREEN);
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-            if (empire_object_city_sells_resource(object_id, r)) {
-                if (is_mouse_hit(c, x_offset + 60 + item_offset, y_offset + 35, 26)) {
-                    return r;
-                }
-                item_offset += 32;
-            }
-        }
-        item_offset += lang_text_get_width(47, 4, FONT_NORMAL_GREEN);
-        for (int r = 1; r <= 15; r++) {
-            if (empire_object_city_buys_resource(object_id, r)) {
-                if (is_mouse_hit(c, x_offset + 110 + item_offset, y_offset + 35, 26)) {
-                    return r;
-                }
-                item_offset += 32;
-            }
-        }
-    }
-    return 0;
 }
 
 static void get_tooltip_trade_route_type(tooltip_context *c)
@@ -571,17 +564,16 @@ static void get_tooltip_trade_route_type(tooltip_context *c)
 
 static void get_tooltip(tooltip_context *c)
 {
-    int resource = get_tooltip_resource(c);
-    if (resource) {
-        c->type = TOOLTIP_BUTTON;
-        c->text_id = 131 + resource;
-    } else if (data.focus_button_id) {
+    if (data.focus_button_id) {
         c->type = TOOLTIP_BUTTON;
         switch (data.focus_button_id) {
             case 1: c->text_id = 1; break;
             case 2: c->text_id = 2; break;
             case 3: c->text_id = 69; break;
         }
+    } else if (data.focus_resource) {
+        c->type = TOOLTIP_BUTTON;
+        c->text_id = 131 + data.focus_resource;
     } else {
         get_tooltip_trade_route_type(c);
     }
@@ -600,6 +592,17 @@ static void button_return_to_city(int param1, int param2)
 static void button_advisor(int advisor, int param2)
 {
     window_advisors_show_advisor(advisor);
+}
+
+static void draw_screen()
+{
+    draw_background();
+    draw_foreground();
+}
+
+static void button_show_resource_window(int resource, int param2)
+{
+    window_resource_settings_show(resource, draw_screen);
 }
 
 static void confirmed_open_trade(int accepted)
