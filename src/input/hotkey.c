@@ -214,7 +214,7 @@ static void add_definition(const hotkey_mapping *mapping)
             def->action = &data.hotkey_state.building;
             def->value = BUILDING_HOUSE_VACANT_LOT;
             break;
-        case HOTKEY_BUILD_CLEAR:
+        case HOTKEY_BUILD_CLEAR_LAND:
             def->action = &data.hotkey_state.building;
             def->value = BUILDING_CLEAR_LAND;
             break;

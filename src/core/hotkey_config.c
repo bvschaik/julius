@@ -27,7 +27,7 @@ static const char *ini_keys[] = {
     "rotate_map_left",
     "rotate_map_right",
     "build_vacant_house",
-    "build_clear",
+    "build_clear_land",
     "build_road",
     "build_wall",
     "build_prefecture",
