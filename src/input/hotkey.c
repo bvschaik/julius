@@ -1,5 +1,6 @@
 #include "hotkey.h"
 
+#include "building/menu.h"
 #include "city/constants.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -208,6 +209,47 @@ static void add_definition(const hotkey_mapping *mapping)
             break;
         case HOTKEY_SAVE_CITY_SCREENSHOT:
             def->action = &data.global_hotkey_state.save_city_screenshot;
+            break;
+        case HOTKEY_BUILD_VACANT_HOUSE:
+            def->action = &data.hotkey_state.building;
+            def->value = (BUILD_MENU_VACANT_HOUSE + 1) << 8;
+            break;
+        case HOTKEY_BUILD_CLEAR:
+            def->action = &data.hotkey_state.building;
+            def->value = (BUILD_MENU_CLEAR_LAND + 1) << 8;
+            break;
+        case HOTKEY_BUILD_ROAD:
+            def->action = &data.hotkey_state.building;
+            def->value = (BUILD_MENU_ROAD + 1) << 8;
+            break;
+        case HOTKEY_BUILD_ENGINEERS_POST:
+            def->action = &data.hotkey_state.building;
+            def->value = (BUILD_MENU_ENGINEERING + 1) << 8;
+            def->value |= 2;
+            break;
+        case HOTKEY_BUILD_WALL:
+            def->action = &data.hotkey_state.building;
+            def->value = (BUILD_MENU_SECURITY + 1) << 8;
+            break;
+        case HOTKEY_BUILD_GATEHOUSE:
+            def->action = &data.hotkey_state.building;
+            def->value = (BUILD_MENU_SECURITY + 1) << 8;
+            def->value |= 2;
+            break;
+        case HOTKEY_BUILD_PREFECTURE:
+            def->action = &data.hotkey_state.building;
+            def->value = (BUILD_MENU_SECURITY + 1) << 8;
+            def->value |= 3;
+            break;
+        case HOTKEY_BUILD_GRANARY:
+            def->action = &data.hotkey_state.building;
+            def->value = (BUILD_MENU_INDUSTRY + 1) << 8;
+            def->value |= 4;
+            break;
+        case HOTKEY_BUILD_WAREHOUSE:
+            def->action = &data.hotkey_state.building;
+            def->value = (BUILD_MENU_INDUSTRY + 1) << 8;
+            def->value |= 5;
             break;
         default:
             def->action = 0;
