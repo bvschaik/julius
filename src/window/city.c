@@ -211,12 +211,7 @@ static void handle_hotkeys(const hotkeys *h)
     }
     if (h->building) {
         building_construction_cancel();
-        // we reserve 8 bits for the submenu selection, which should be overkill
-        // the menu item is decremented by 1 because one of the valid values
-        // (BUILD_MENU_VACANT_HOUSE) is 0, shifting it up would still give us 0
-        int menu = (h->building >> 8) - 1;
-        int submenu = h->building & 0xff;
-        building_construction_set_type(building_menu_type(menu, submenu));
+        building_construction_set_type(h->building);
     }
 }
 
