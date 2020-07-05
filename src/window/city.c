@@ -19,6 +19,7 @@
 #include "map/bookmark.h"
 #include "map/grid.h"
 #include "scenario/criteria.h"
+#include "scenario/building.h"
 #include "widget/city.h"
 #include "widget/city_with_overlay.h"
 #include "widget/top_menu.h"
