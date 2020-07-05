@@ -1,6 +1,8 @@
 #include "city.h"
 
+#include "building/building.h"
 #include "building/construction.h"
+#include "city/buildings.h"
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"
@@ -155,6 +157,64 @@ static void cycle_legion(void)
     }
 }
 
+/** 
+    Takes a building and retrieve its proper type for cloning.
+    For example, given a fort, return the enumaration value corresponding to
+    the specific type of fort rather than the general value
+
+    @param building Building to examine
+    @return the building_type value to clone, or BUILDING_NONE if not cloneable
+*/
+static short get_clone_type_from_building(building* building)
+{
+    short clone_type = building->type;
+
+    if (building_is_house(clone_type)) {
+        return BUILDING_HOUSE_VACANT_LOT;
+    }
+
+    switch (clone_type) {
+        case BUILDING_FORT:
+            switch (building->subtype.fort_figure_type) {
+                case FIGURE_FORT_LEGIONARY: return BUILDING_FORT_LEGIONARIES;
+                case FIGURE_FORT_JAVELIN: return BUILDING_FORT_JAVELIN;
+                case FIGURE_FORT_MOUNTED: return BUILDING_FORT_MOUNTED;
+            }
+            return BUILDING_NONE;
+        case BUILDING_TRIUMPHAL_ARCH:
+            // Triumphal arches don't seem to have any protection around making
+            // more than you've earned, so check that here
+            if (city_buildings_triumphal_arch_available()) {
+                break;
+            }
+            // fallthrough
+        case BUILDING_NATIVE_CROPS:
+        case BUILDING_NATIVE_HUT:
+        case BUILDING_NATIVE_MEETING:
+        case BUILDING_BURNING_RUIN:
+            return BUILDING_NONE;
+    }
+
+    return clone_type;
+}
+
+/**
+    Enter construction mode with the same building as cursor is currently over
+*/
+static void clone_building_at_current_tile(void)
+{
+    int building_id = widget_city_building_at_current_tile();
+    if (building_id) {
+        building* target_building = building_main(building_get(building_id));
+
+        short clone_type = get_clone_type_from_building(target_building);
+        if (clone_type) {
+            building_construction_cancel();
+            building_construction_set_type(clone_type);
+        }
+    }
+}
+
 static void toggle_pause(void)
 {
     game_state_toggle_paused();
@@ -214,6 +274,9 @@ static void handle_hotkeys(const hotkeys *h)
             building_construction_cancel();
             building_construction_set_type(h->building);
         }
+    }
+    if (h->clone_building) {
+        clone_building_at_current_tile();
     }
 }
 

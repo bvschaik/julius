@@ -23,4 +23,6 @@ void widget_city_get_tooltip(tooltip_context *c);
 
 void widget_city_clear_current_tile(void);
 
+int widget_city_building_at_current_tile(void);
+
 #endif // WIDGET_CITY_H

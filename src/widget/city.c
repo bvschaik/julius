@@ -493,6 +493,11 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
     }
 }
 
+int widget_city_building_at_current_tile(void)
+{
+    return map_building_at(data.current_tile.grid_offset);
+}
+
 void widget_city_get_tooltip(tooltip_context *c)
 {
     if (setting_tooltips() == TOOLTIPS_NONE) {
