@@ -14,6 +14,7 @@
 #include "graphics/image.h"
 #include "graphics/panel.h"
 #include "graphics/screen.h"
+#include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "window/hotkey_config.h"
@@ -31,6 +32,14 @@
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
+#define CHECKBOX_CHECK_SIZE 20
+#define CHECKBOX_HEIGHT 20
+#define CHECKBOX_WIDTH 560
+
+#define NUM_VISIBLE_ITEMS 15
+
+#define ITEM_Y_OFFSET 60
+#define ITEM_HEIGHT 24
 
 static int options_per_page[CONFIG_PAGES] = { 11,14,12 };
 
@@ -167,6 +176,7 @@ static void init(void)
             data.num_language_options++;
         }
     }
+
 }
 
 static void draw_background(void)
@@ -266,7 +276,7 @@ static void button_language_select(int param1, int param2)
 {
     window_select_list_show_text(
         screen_dialog_offset_x() + language_button.x + language_button.width - 10,
-        screen_dialog_offset_y() + language_button.y - 5,
+        screen_dialog_offset_y() + 45,
         data.language_options, data.num_language_options, set_language
     );
 }
@@ -289,7 +299,7 @@ static void cancel_values(void)
         data.config_values[i].new_value = data.config_values[i].original_value;
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        strncpy(data.config_string_values[i].new_value, data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1);
+        memcpy(data.config_string_values[i].new_value, data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1); // memcpy required to fix warning on Switch build
     }
 }
 

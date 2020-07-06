@@ -32,7 +32,7 @@ const uint8_t *string_from_ascii(const char *str)
 {
     const char *s = str;
     while (*s) {
-        if (*s < 0 || *s > 127) {
+        if (*s & 0x80) {
             return 0;
         }
         s++;

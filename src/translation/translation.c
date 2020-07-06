@@ -8,7 +8,7 @@
 #define BUFFER_SIZE 100000
 
 static struct {
-    const uint8_t *strings[TRANSLATION_MAX_KEY];
+    uint8_t *strings[TRANSLATION_MAX_KEY];
     uint8_t buffer[BUFFER_SIZE];
     int buf_index;
 } data;
@@ -47,6 +47,9 @@ void translation_load(language_type language)
             break;
         case LANGUAGE_KOREAN:
             translation_korean(&strings, &num_strings);
+            break;
+        case LANGUAGE_POLISH:
+            translation_polish(&strings, &num_strings);
             break;
         case LANGUAGE_PORTUGUESE:
             translation_portuguese(&strings, &num_strings);

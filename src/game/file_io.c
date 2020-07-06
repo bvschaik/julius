@@ -779,5 +779,10 @@ int game_file_io_write_saved_game(const char *filename)
 
 int game_file_io_delete_saved_game(const char *filename)
 {
-    return file_remove(filename);
+    log_info("Deleting game", filename, 0);
+    int result = file_remove(filename);
+    if (!result) {
+        log_error("Unable to delete game", 0, 0);
+    }
+    return result;
 }

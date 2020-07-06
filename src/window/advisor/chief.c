@@ -18,12 +18,12 @@
 #include "scenario/property.h"
 
 #define ADVISOR_HEIGHT 23
-#define X_OFFSET 240
+#define X_OFFSET 232
 
 static void draw_title(int y, int text_id)
 {
-    image_draw(image_group(GROUP_BULLET), 40, y + 1);
-    lang_text_draw(61, text_id, 60, y, FONT_NORMAL_WHITE);
+    image_draw(image_group(GROUP_BULLET), 32, y + 1);
+    lang_text_draw(61, text_id, 52, y, FONT_NORMAL_WHITE);
 }
 
 static int draw_background(void)
@@ -34,7 +34,7 @@ static int draw_background(void)
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 11, 10, 10);
 
     lang_text_draw(61, 0, 60, 12, FONT_LARGE_BLACK);
-    inner_panel_draw(32, 60, 36, 16);
+    inner_panel_draw(24, 60, 37, 16);
 
     // workers
     draw_title(66, 1);
@@ -42,6 +42,7 @@ static int draw_background(void)
         width = lang_text_draw(61, 12, X_OFFSET, 66, FONT_NORMAL_RED);
         width += text_draw_percentage(city_labor_unemployment_percentage(), X_OFFSET + width, 66, FONT_NORMAL_RED);
         text_draw_number(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")", X_OFFSET + 11 + width, 66, FONT_NORMAL_RED);
+        text_draw_number(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")", X_OFFSET + width, 66, FONT_NORMAL_RED);
     } else if (city_labor_workers_needed() > 0) {
         width = lang_text_draw(61, 13, X_OFFSET, 66, FONT_NORMAL_RED);
         lang_text_draw_amount(8, 12, city_labor_workers_needed(), X_OFFSET + width, 66, FONT_NORMAL_RED);
