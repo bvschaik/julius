@@ -17,6 +17,7 @@
 #include "graphics/window.h"
 #include "map/bookmark.h"
 #include "map/grid.h"
+#include "scenario/building.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
 #include "widget/city_with_overlay.h"
@@ -207,6 +208,12 @@ static void handle_hotkeys(const hotkeys *h)
     }
     if (h->save_file) {
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
+    }
+    if (h->building) {
+        if (scenario_building_allowed(h->building)) {
+            building_construction_cancel();
+            building_construction_set_type(h->building);
+        }
     }
 }
 

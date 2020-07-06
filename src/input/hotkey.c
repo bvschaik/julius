@@ -1,5 +1,6 @@
 #include "hotkey.h"
 
+#include "building/type.h"
 #include "city/constants.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -208,6 +209,70 @@ static void add_definition(const hotkey_mapping *mapping)
             break;
         case HOTKEY_SAVE_CITY_SCREENSHOT:
             def->action = &data.global_hotkey_state.save_city_screenshot;
+            break;
+        case HOTKEY_BUILD_VACANT_HOUSE:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_HOUSE_VACANT_LOT;
+            break;
+        case HOTKEY_BUILD_CLEAR_LAND:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_CLEAR_LAND;
+            break;
+        case HOTKEY_BUILD_ROAD:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_ROAD;
+            break;
+        case HOTKEY_BUILD_ENGINEERS_POST:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_ENGINEERS_POST;
+            break;
+        case HOTKEY_BUILD_WALL:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_WALL;
+            break;
+        case HOTKEY_BUILD_GATEHOUSE:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_GATEHOUSE;
+            break;
+        case HOTKEY_BUILD_PREFECTURE:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_PREFECTURE;
+            break;
+        case HOTKEY_BUILD_GRANARY:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_GRANARY;
+            break;
+        case HOTKEY_BUILD_WAREHOUSE:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_WAREHOUSE;
+            break;
+        case HOTKEY_BUILD_MARKET:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_MARKET;
+            break;
+        case HOTKEY_BUILD_PLAZA:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_PLAZA;
+            break;
+        case HOTKEY_BUILD_GARDENS:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_GARDENS;
+            break;
+        case HOTKEY_BUILD_RESERVOIR:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_RESERVOIR;
+            break;
+        case HOTKEY_BUILD_AQUEDUCT:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_AQUEDUCT;
+            break;
+        case HOTKEY_BUILD_FOUNTAIN:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_FOUNTAIN;
+            break;
+        case HOTKEY_BUILD_DOCTOR:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_DOCTOR;
             break;
         default:
             def->action = 0;
