@@ -246,6 +246,34 @@ static void add_definition(const hotkey_mapping *mapping)
             def->action = &data.hotkey_state.building;
             def->value = BUILDING_WAREHOUSE;
             break;
+        case HOTKEY_BUILD_MARKET:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_MARKET;
+            break;
+        case HOTKEY_BUILD_PLAZA:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_PLAZA;
+            break;
+        case HOTKEY_BUILD_GARDENS:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_GARDENS;
+            break;
+        case HOTKEY_BUILD_RESERVOIR:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_RESERVOIR;
+            break;
+        case HOTKEY_BUILD_AQUADUCT:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_AQUEDUCT;
+            break;
+        case HOTKEY_BUILD_FOUNTAIN:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_WAREHOUSE;
+            break;
+        case HOTKEY_BUILD_DOCTOR:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_DOCTOR;
+            break;
         default:
             def->action = 0;
     }
