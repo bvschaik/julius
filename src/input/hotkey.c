@@ -268,7 +268,7 @@ static void add_definition(const hotkey_mapping *mapping)
             break;
         case HOTKEY_BUILD_FOUNTAIN:
             def->action = &data.hotkey_state.building;
-            def->value = BUILDING_WAREHOUSE;
+            def->value = BUILDING_FOUNTAIN;
             break;
         case HOTKEY_BUILD_DOCTOR:
             def->action = &data.hotkey_state.building;
