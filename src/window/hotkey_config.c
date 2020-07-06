@@ -1,11 +1,13 @@
 #include "config.h"
 
+#include "building/type.h"
 #include "core/hotkey_config.h"
 #include "core/image_group.h"
 #include "core/string.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/scrollbar.h"
 #include "graphics/text.h"
@@ -15,6 +17,8 @@
 #include "window/hotkey_editor.h"
 
 #define HOTKEY_HEADER -1
+#define TR_NONE -1
+#define GROUP_BUILDINGS 28
 
 #define NUM_VISIBLE_OPTIONS 14
 #define NUM_BOTTOM_BUTTONS 3
@@ -29,7 +33,9 @@ static scrollbar_type scrollbar = {580, 72, 352, on_scroll};
 
 typedef struct {
     int action;
-    translation_key name;
+    translation_key name_translation;
+    int name_text_group;
+    int name_text_id;
 } hotkey_widget;
 
 static hotkey_widget hotkey_widgets[] = {
@@ -56,22 +62,22 @@ static hotkey_widget hotkey_widgets[] = {
     {HOTKEY_ROTATE_MAP_LEFT, TR_HOTKEY_ROTATE_MAP_LEFT},
     {HOTKEY_ROTATE_MAP_RIGHT, TR_HOTKEY_ROTATE_MAP_RIGHT},
     {HOTKEY_HEADER, TR_HOTKEY_HEADER_BUILD},
-    {HOTKEY_BUILD_CLEAR_LAND, TR_HOTKEY_BUILD_CLEAR_LAND},
-    {HOTKEY_BUILD_VACANT_HOUSE, TR_HOTKEY_BUILD_VACANT_HOUSE},
-    {HOTKEY_BUILD_ROAD, TR_HOTKEY_BUILD_ROAD},
-    {HOTKEY_BUILD_PLAZA, TR_HOTKEY_BUILD_PLAZA},
-    {HOTKEY_BUILD_GARDENS, TR_HOTKEY_BUILD_GARDENS},
-    {HOTKEY_BUILD_PREFECTURE, TR_HOTKEY_BUILD_PREFECTURE},
-    {HOTKEY_BUILD_ENGINEERS_POST, TR_HOTKEY_BUILD_ENGINEERS_POST},
-    {HOTKEY_BUILD_DOCTOR, TR_HOTKEY_BUILD_DOCTOR},
-    {HOTKEY_BUILD_GRANARY, TR_HOTKEY_BUILD_GRANARY},
-    {HOTKEY_BUILD_WAREHOUSE, TR_HOTKEY_BUILD_WAREHOUSE},
-    {HOTKEY_BUILD_MARKET, TR_HOTKEY_BUILD_MARKET},
-    {HOTKEY_BUILD_WALL, TR_HOTKEY_BUILD_WALL},
-    {HOTKEY_BUILD_GATEHOUSE, TR_HOTKEY_BUILD_GATEHOUSE},
-    {HOTKEY_BUILD_RESERVOIR, TR_HOTKEY_BUILD_RESERVOIR},
-    {HOTKEY_BUILD_AQUEDUCT, TR_HOTKEY_BUILD_AQUEDUCT},
-    {HOTKEY_BUILD_FOUNTAIN, TR_HOTKEY_BUILD_FOUNTAIN},
+    {HOTKEY_BUILD_CLEAR_LAND, TR_NONE, 68, 21},
+    {HOTKEY_BUILD_VACANT_HOUSE, TR_NONE, 67, 20},
+    {HOTKEY_BUILD_ROAD, TR_NONE, GROUP_BUILDINGS, BUILDING_ROAD},
+    {HOTKEY_BUILD_PLAZA, TR_NONE, GROUP_BUILDINGS, BUILDING_PLAZA},
+    {HOTKEY_BUILD_GARDENS, TR_NONE, GROUP_BUILDINGS, BUILDING_GARDENS},
+    {HOTKEY_BUILD_PREFECTURE, TR_NONE, GROUP_BUILDINGS, BUILDING_PREFECTURE},
+    {HOTKEY_BUILD_ENGINEERS_POST, TR_NONE, GROUP_BUILDINGS, BUILDING_ENGINEERS_POST},
+    {HOTKEY_BUILD_DOCTOR, TR_NONE, GROUP_BUILDINGS, BUILDING_DOCTOR},
+    {HOTKEY_BUILD_GRANARY, TR_NONE, GROUP_BUILDINGS, BUILDING_GRANARY},
+    {HOTKEY_BUILD_WAREHOUSE, TR_NONE, GROUP_BUILDINGS, BUILDING_WAREHOUSE},
+    {HOTKEY_BUILD_MARKET, TR_NONE, GROUP_BUILDINGS, BUILDING_MARKET},
+    {HOTKEY_BUILD_WALL, TR_NONE, GROUP_BUILDINGS, BUILDING_WALL},
+    {HOTKEY_BUILD_GATEHOUSE, TR_NONE, GROUP_BUILDINGS, BUILDING_GATEHOUSE},
+    {HOTKEY_BUILD_RESERVOIR, TR_NONE, GROUP_BUILDINGS, BUILDING_RESERVOIR},
+    {HOTKEY_BUILD_AQUEDUCT, TR_NONE, GROUP_BUILDINGS, BUILDING_AQUEDUCT},
+    {HOTKEY_BUILD_FOUNTAIN, TR_NONE, GROUP_BUILDINGS, BUILDING_FOUNTAIN},
     {HOTKEY_HEADER, TR_HOTKEY_HEADER_ADVISORS},
     {HOTKEY_SHOW_ADVISOR_LABOR, TR_HOTKEY_SHOW_ADVISOR_LABOR},
     {HOTKEY_SHOW_ADVISOR_MILITARY, TR_HOTKEY_SHOW_ADVISOR_MILITARY},
@@ -194,9 +200,15 @@ static void draw_background(void)
         hotkey_widget *widget = &hotkey_widgets[i + scrollbar.scroll_position];
         int text_offset = y_base + 6 + 24 * i;
         if (widget->action == HOTKEY_HEADER) {
-            text_draw(translation_for(widget->name), 32, text_offset, FONT_NORMAL_WHITE, 0);
+            text_draw(translation_for(widget->name_translation), 32, text_offset, FONT_NORMAL_WHITE, 0);
         } else {
-            text_draw(translation_for(widget->name), 32, text_offset, FONT_NORMAL_GREEN, 0);
+            if (widget->name_translation != TR_NONE) {
+                text_draw(translation_for(widget->name_translation),
+                    32, text_offset, FONT_NORMAL_GREEN, 0);
+            } else {
+                lang_text_draw(widget->name_text_group, widget->name_text_id,
+                    32, text_offset, FONT_NORMAL_GREEN);
+            }
 
             const hotkey_mapping *mapping1 = &data.mappings[widget->action][0];
             if (mapping1->key) {
@@ -217,7 +229,9 @@ static void draw_background(void)
     }
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
-        text_draw_centered(translation_for(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
+        text_draw_centered(translation_for(bottom_button_texts[i]),
+            bottom_buttons[i].x, bottom_buttons[i].y + 9,
+            bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
     }
 
     graphics_reset_dialog();
@@ -240,7 +254,9 @@ static void draw_foreground(void)
     }
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
-        button_border_draw(bottom_buttons[i].x, bottom_buttons[i].y, bottom_buttons[i].width, bottom_buttons[i].height, data.bottom_focus_button == i + 1);
+        button_border_draw(bottom_buttons[i].x, bottom_buttons[i].y,
+            bottom_buttons[i].width, bottom_buttons[i].height,
+            data.bottom_focus_button == i + 1);
     }
     graphics_reset_dialog();
 }
