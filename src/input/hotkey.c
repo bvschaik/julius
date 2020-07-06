@@ -273,7 +273,7 @@ static void add_definition(const hotkey_mapping *mapping)
         case HOTKEY_BUILD_DOCTOR:
             def->action = &data.hotkey_state.building;
             def->value = BUILDING_DOCTOR;
-	    break;
+            break;
         case HOTKEY_BUILD_CLONE:
             def->action = &data.hotkey_state.clone_building;
             break;
