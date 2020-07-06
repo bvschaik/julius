@@ -86,7 +86,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_BUILD_WALL, "Build wall"},
     {TR_HOTKEY_BUILD_GATEHOUSE, "Build gatehouse"},
     {TR_HOTKEY_BUILD_RESERVOIR, "Build reservoir"},
-    {TR_HOTKEY_BUILD_AQUADUCT, "Build aquaduct"},
+    {TR_HOTKEY_BUILD_AQUEDUCT, "Build aqueduct"},
     {TR_HOTKEY_BUILD_FOUNTAIN, "Build fountain"},
     {TR_HOTKEY_SHOW_ADVISOR_LABOR, "Labor advisor"},
     {TR_HOTKEY_SHOW_ADVISOR_MILITARY, "Military advisor"},
