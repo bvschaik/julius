@@ -237,7 +237,7 @@ int building_house_can_expand(building *house, int num_tiles)
                         ok_tiles++;
                     }
                 }
-            } else if (map_terrain_is(tile_offset, TERRAIN_GARDEN)) {
+            } else if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !config_get(CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS)) {
                 ok_tiles++;
             }
         }
