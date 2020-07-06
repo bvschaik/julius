@@ -29,6 +29,8 @@ jobs:
       - docker
   - os: linux
     name: Nintendo Switch
+    services:
+      - docker
     env: BUILD_TARGET=switch DEPLOY=switch
 
 cache:
