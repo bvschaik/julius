@@ -587,15 +587,9 @@ static void button_advisor(int advisor, int param2)
     window_advisors_show_advisor(advisor);
 }
 
-static void draw_screen(void)
-{
-    draw_background();
-    draw_foreground();
-}
-
 static void button_show_resource_window(int resource, int param2)
 {
-    window_resource_settings_show(resource, draw_screen);
+    window_resource_settings_show(resource);
 }
 
 static void confirmed_open_trade(int accepted)

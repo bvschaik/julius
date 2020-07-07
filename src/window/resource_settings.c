@@ -55,14 +55,7 @@ static void init(resource_type resource)
 
 static void draw_background(void)
 {
-    // added this draw call to fix a bug where the Help window is larger than the
-    // trade dialog itself, causing bits of it to remain on the screen when going
-    // back to the dialog. Bug was not present in original C3.
-    window_advisors_draw_dialog_background();
-
-    graphics_in_dialog();
-    window_advisor_trade_draw_dialog_background();
-    graphics_reset_dialog();
+    window_draw_underlying_window();
 }
 
 static void draw_foreground(void)
@@ -221,11 +214,11 @@ static void button_toggle_stockpile(int param1, int param2)
     city_resource_toggle_stockpiled(data.resource);
 }
 
-void window_resource_settings_show(resource_type resource, void (*override_draw_background_fn)(void))
+void window_resource_settings_show(resource_type resource)
 {
     window_type window = {
         WINDOW_RESOURCE_SETTINGS,
-        (override_draw_background_fn ? override_draw_background_fn : draw_background),
+        draw_background,
         draw_foreground,
         handle_input
     };

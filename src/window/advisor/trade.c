@@ -113,7 +113,7 @@ static void button_empire(int param1, int param2)
 
 static void button_resource(int resource_index, int param2)
 {
-    window_resource_settings_show(city_resource_get_available()->items[resource_index], 0 /*NULL*/);
+    window_resource_settings_show(city_resource_get_available()->items[resource_index]);
 }
 
 static int get_tooltip_text(void)

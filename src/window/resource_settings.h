@@ -12,6 +12,6 @@
            if override_draw_background_fn is NULL, the standard trade advisor screen background
            will be shown instead
 */
-void window_resource_settings_show(resource_type resource, void (*override_draw_background_fn)(void));
+void window_resource_settings_show(resource_type resource);
 
 #endif // WINDOW_RESOURCE_SETTINGS_H
