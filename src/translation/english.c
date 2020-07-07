@@ -82,6 +82,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "Overlays"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "City map bookmarks"},
     {TR_HOTKEY_HEADER_EDITOR, "Editor"},
+    {TR_HOTKEY_HEADER_BUILD, "Construction hotkeys"},
     {TR_HOTKEY_ARROW_UP, "Up"},
     {TR_HOTKEY_ARROW_DOWN, "Down"},
     {TR_HOTKEY_ARROW_LEFT, "Left"},
