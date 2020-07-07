@@ -531,13 +531,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static int is_mouse_hit(tooltip_context *c, int x, int y, int size)
-{
-    int mx = c->mouse_x;
-    int my = c->mouse_y;
-    return x <= mx && mx < x + size && y <= my && my < y + size;
-}
-
 static void get_tooltip_trade_route_type(tooltip_context *c)
 {
     int selected_object = empire_selected_object();
@@ -594,7 +587,7 @@ static void button_advisor(int advisor, int param2)
     window_advisors_show_advisor(advisor);
 }
 
-static void draw_screen()
+static void draw_screen(void)
 {
     draw_background();
     draw_foreground();
