@@ -366,7 +366,6 @@ static void place_building(const map_tile *tile)
     }
 }
 
-
 static void update_terrain_after_elevation_changes(void)
 {
     map_elevation_remove_cliffs();

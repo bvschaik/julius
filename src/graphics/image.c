@@ -550,7 +550,6 @@ static void draw_footprint_size5(int image_id, int x, int y, color_t color_mask)
     draw_footprint_tile(tile_data(data, index++), x, y + 120, color_mask);
 }
 
-
 void image_draw(int image_id, int x, int y)
 {
     const image *img = image_get(image_id);

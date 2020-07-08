@@ -38,7 +38,6 @@ int game_time_day(void);
  */
 int game_time_tick(void);
 
-
 /**
  * Increases tick
  * @return True if the tick overflows
@@ -61,7 +60,6 @@ int game_time_advance_month(void);
  * Increase year
  */
 void game_time_advance_year(void);
-
 
 /**
  * Saves the game time

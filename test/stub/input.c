@@ -17,7 +17,6 @@ int key_combination_from_name(const char *name, key_type *key, key_modifier_type
     return 0;
 }
 
-
 key_type system_keyboard_key_for_symbol(const char *name)
 {
     return KEY_NONE;

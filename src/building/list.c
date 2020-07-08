@@ -95,7 +95,6 @@ const int *building_list_burning_items(void)
     return data.burning.items;
 }
 
-
 void building_list_save_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals)
 {
     for (int i = 0; i < MAX_SMALL; i++) {

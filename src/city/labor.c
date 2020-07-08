@@ -445,7 +445,6 @@ void city_labor_allocate_workers(void)
     allocate_workers_to_buildings();
 }
 
-
 void city_labor_update(void)
 {
     calculate_workers_needed_per_category();

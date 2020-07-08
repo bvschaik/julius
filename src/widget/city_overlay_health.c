@@ -22,7 +22,6 @@ static int show_building_hospital(const building *b)
     return b->type == BUILDING_HOSPITAL;
 }
 
-
 static int show_figure_barber(const figure *f)
 {
     return f->type == FIGURE_BARBER;
@@ -43,7 +42,6 @@ static int show_figure_hospital(const figure *f)
     return f->type == FIGURE_SURGEON;
 }
 
-
 static int get_column_height_barber(const building *b)
 {
     return b->house_size && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
@@ -63,7 +61,6 @@ static int get_column_height_hospital(const building *b)
 {
     return b->house_size && b->data.house.hospital ? b->data.house.hospital / 10 : NO_COLUMN;
 }
-
 
 static int get_tooltip_barber(tooltip_context *c, const building *b)
 {

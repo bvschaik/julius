@@ -19,7 +19,6 @@ typedef struct {
     int system_change;
 } mouse_button;
 
-
 typedef enum {
     SCROLL_NONE = 0,
     SCROLL_UP = -1,

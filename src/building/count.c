@@ -230,7 +230,6 @@ int building_count_industry_total(resource_type resource)
     return data.industry[resource].total;
 }
 
-
 void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2,
                                 buffer *culture3, buffer *military, buffer *support)
 {

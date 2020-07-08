@@ -263,7 +263,6 @@ enum {
     GOD_STATE_ANGRY = 2
 };
 
-
 static void play_sound_file(int sound_id, int phrase_id)
 {
     if (sound_id >= 0 && phrase_id >= 0) {

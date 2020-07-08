@@ -492,7 +492,6 @@ static void menu_help_about(int param)
     window_message_dialog_show(MESSAGE_DIALOG_ABOUT, window_city_draw_all);
 }
 
-
 static void menu_advisors_go_to(int advisor)
 {
     clear_state();

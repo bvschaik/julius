@@ -157,7 +157,6 @@ static int can_spawn_wolf(formation *m)
     return 0;
 }
 
-
 static void update_herd_formation(formation *m)
 {
     if (can_spawn_wolf(m)) {

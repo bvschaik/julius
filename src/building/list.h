@@ -67,5 +67,4 @@ void building_list_save_state(buffer *small, buffer *large, buffer *burning, buf
 
 void building_list_load_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals);
 
-
 #endif // BUILDING_LIST_H

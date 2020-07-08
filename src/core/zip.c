@@ -114,7 +114,6 @@ static const uint8_t pk_copy_length_extra_bits[16] = {
     0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8,
 };
 
-
 static void pk_memcpy(uint8_t *dst, const uint8_t *src, int length)
 {
     for (int i = 0; i < length; i++) {

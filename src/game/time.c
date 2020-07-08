@@ -70,7 +70,6 @@ void game_time_advance_year(void)
     ++data.year;
 }
 
-
 void game_time_save_state(buffer *buf)
 {
     buffer_write_i32(buf, data.tick);

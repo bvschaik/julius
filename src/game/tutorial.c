@@ -280,7 +280,6 @@ void tutorial_save_state(buffer *buf1, buffer *buf2, buffer *buf3)
     buffer_write_i32(buf3, data.tutorial3.disease);
 }
 
-
 void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3)
 {
     data.tutorial1.fire = buffer_read_i32(buf1);
