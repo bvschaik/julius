@@ -260,7 +260,7 @@ static void add_definition(const hotkey_mapping *mapping)
             break;
         case HOTKEY_BUILD_RESERVOIR:
             def->action = &data.hotkey_state.building;
-            def->value = BUILDING_RESERVOIR;
+            def->value = BUILDING_DRAGGABLE_RESERVOIR;
             break;
         case HOTKEY_BUILD_AQUEDUCT:
             def->action = &data.hotkey_state.building;
