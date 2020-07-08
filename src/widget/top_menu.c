@@ -392,6 +392,7 @@ static void replay_map_confirmed(int confirmed)
         window_mission_briefing_show();
     }
 }
+
 static void menu_file_replay_map(int param)
 {
     clear_state();

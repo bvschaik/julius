@@ -71,6 +71,7 @@ static void set_year(int value)
     }
     scenario_editor_set_start_year(value);
 }
+
 static void button_year(int param1, int param2)
 {
     window_numeric_input_show(screen_dialog_offset_x() + 140, screen_dialog_offset_y() + 80,
