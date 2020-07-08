@@ -11,10 +11,10 @@ void system_keyboard_set_input_rect(int x, int y, int width, int height)
     SDL_SetTextInputRect(&rect);
 }
 
-void system_keyboard_show(const uint8_t *text)
+void system_keyboard_show(const uint8_t *text, int max_length)
 {
 #ifdef PLATFORM_USE_VIRTUAL_KEYBOARD
-    platform_show_virtual_keyboard(text);
+    platform_show_virtual_keyboard(text, max_length);
 #endif
 }
 

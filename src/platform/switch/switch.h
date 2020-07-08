@@ -17,7 +17,7 @@ void platform_init_callback(void);
 void platform_per_frame_callback(void);
 
 #define PLATFORM_USE_VIRTUAL_KEYBOARD
-void platform_show_virtual_keyboard(const uint8_t *text);
+void platform_show_virtual_keyboard(const uint8_t *text, int max_length);
 void platform_hide_virtual_keyboard(void);
 
 typedef struct {

@@ -3,12 +3,14 @@
 #include "vita.h"
 #include <math.h>
 
+#include "core/calc.h"
 #include "core/encoding.h"
 #include "core/string.h"
 #include "game/system.h"
 #include "input/mouse.h"
 
 #define NO_MAPPING -1
+#define MAX_VKBD_TEXT_SIZE 600
 
 enum {
     VITA_PAD_TRIANGLE   = 0,
@@ -38,10 +40,14 @@ static int can_change_touch_mode = 1;
 
 static SDL_Joystick *joy = NULL;
 
+static struct {
+    char utf8_text[MAX_VKBD_TEXT_SIZE];
+    int requested;
+    int max_length;
+} vkbd;
+
 static int hires_dx = 0; // sub-pixel-precision counters to allow slow pointer motion of <1 pixel per frame
 static int hires_dy = 0;
-static int vkbd_requested;
-static const uint8_t *vkbd_text;
 static int pressed_buttons[VITA_NUM_BUTTONS];
 static int right_analog_state[ANALOG_MAX];
 static SDL_Keycode map_vita_button_to_sdlkey[VITA_NUM_BUTTONS] =
@@ -87,17 +93,18 @@ static void vita_create_key_event_for_direction(int direction, int key_pressed);
 
 void platform_per_frame_callback(void)
 {
-    if (vkbd_requested) {
+    if (vkbd.requested) {
         vita_start_text_input();
-        vkbd_requested = 0;
+        vkbd.requested = 0;
     }
     vita_handle_analog_sticks();
 }
 
-void platform_show_virtual_keyboard(const uint8_t *text)
+void platform_show_virtual_keyboard(const uint8_t *text, int max_length)
 {
-    vkbd_text = text ? text : string_from_ascii("");
-    vkbd_requested = 1;
+    vkbd.max_length = calc_bound(max_length, 0, MAX_VKBD_TEXT_SIZE);
+    encoding_to_utf8(text, vkbd.utf8_text, MAX_VKBD_TEXT_SIZE, 0);
+    vkbd.requested = 1;
 }
 
 void platform_hide_virtual_keyboard(void)
@@ -128,7 +135,7 @@ int vita_poll_event(SDL_Event *event)
                         vita_button_to_sdlmouse_event(event->jbutton.button, event, SDL_MOUSEBUTTONDOWN);
                         break;
                     case VITA_PAD_START:
-                        system_keyboard_show(0);
+                        vkbd.requested = 1;
                         break;
                     case VITA_PAD_SELECT:
                         if (can_change_touch_mode) {
@@ -276,21 +283,20 @@ void vita_handle_analog_sticks(void)
 
 static void vita_start_text_input(void)
 {
-    char *text = vita_keyboard_get(string_from_ascii("Enter New Text:"), vkbd_text, 600);
+    char *text = vita_keyboard_get("Enter New Text:", vkbd.utf8_text, vkbd.max_length);
     if (text == NULL)  {
         return;
     }
-    for (int i = 0; i < 600; i++) {
+    for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
         vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
         vita_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
     }
-    for (int i = 0; i < 600; i++) {
+    for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
         vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DELETE, SDLK_DELETE);
         vita_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
     }
-    const uint8_t *utf8_text = (uint8_t*) text;
-    for (int i = 0; i < 599 && utf8_text[i];) {
-        int bytes_in_char = encoding_get_utf8_character_bytes(utf8_text[i]);
+    for (int i = 0; i < MAX_VKBD_TEXT_SIZE - 1 && text[i];) {
+        int bytes_in_char = encoding_get_utf8_character_bytes(text[i]);
         SDL_Event textinput_event;
         textinput_event.type = SDL_TEXTINPUT;
         for (int n = 0; n < bytes_in_char; n++) {

@@ -744,7 +744,7 @@ int encoding_get_utf8_character_bytes(const char input)
     }
 }
 
-void encoding_utf16_to_utf8(const uint16_t *input, uint8_t *output)
+void encoding_utf16_to_utf8(const uint16_t *input, char *output)
 {
     for (int i = 0; input[i]; i++) {
         if ((input[i] & 0xff80) == 0) {
@@ -768,7 +768,7 @@ void encoding_utf16_to_utf8(const uint16_t *input, uint8_t *output)
     *output = '\0';
 }
 
-void encoding_utf8_to_utf16(const uint8_t *input, uint16_t *output)
+void encoding_utf8_to_utf16(const char *input, uint16_t *output)
 {
     for (int i = 0; input[i];) {
         if ((input[i] & 0xe0) == 0xe0) {

@@ -3,11 +3,13 @@
 #include <math.h>
 #include <switch.h>
 
+#include "core/calc.h"
 #include "core/encoding.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 
 #define NO_MAPPING -1
+#define MAX_VKBD_TEXT_SIZE 600
 
 enum {
     SWITCH_PAD_A        = 0,
@@ -42,10 +44,14 @@ static int can_change_touch_mode = 1;
 
 static SDL_Joystick *joy = NULL;
 
+static struct {
+    char utf8_text[MAX_VKBD_TEXT_SIZE];
+    int requested;
+    int max_length;
+} vkbd;
+
 static int hires_dx = 0; // sub-pixel-precision counters to allow slow pointer motion of <1 pixel per frame
 static int hires_dy = 0;
-static int vkbd_requested;
-static const char *vkbd_text;
 static int fast_mouse = 0;
 static int slow_mouse = 0;
 static int pressed_buttons[SWITCH_NUM_BUTTONS];
@@ -106,17 +112,18 @@ void platform_init_callback(void)
 
 void platform_per_frame_callback(void)
 {
-    if (vkbd_requested) {
+    if (vkbd.requested) {
         switch_start_text_input();
-        vkbd_requested = 0;
+        vkbd.requested = 0;
     }
     switch_handle_analog_sticks();
 }
 
-void platform_show_virtual_keyboard(const uint8_t *text)
+void platform_show_virtual_keyboard(const uint8_t *text, int max_length)
 {
-    vkbd_text = text ? (const char *)text : "";
-    vkbd_requested = 1;
+    vkbd.max_length = calc_bound(max_length, 0, MAX_VKBD_TEXT_SIZE);
+    encoding_to_utf8(text, vkbd.utf8_text, MAX_VKBD_TEXT_SIZE, 0);
+    vkbd.requested = 1;
 }
 
 void platform_hide_virtual_keyboard(void)
@@ -157,7 +164,7 @@ int switch_poll_event(SDL_Event *event)
                         hires_dy = 0;
                         break;
                     case SWITCH_PAD_PLUS:
-                        vkbd_requested = 1;
+                        vkbd.requested = 1;
                         break;
                     case SWITCH_PAD_MINUS:
                         if (can_change_touch_mode) {
@@ -321,7 +328,7 @@ void switch_handle_analog_sticks(void)
     }
 }
 
-static void switch_keyboard_get(char *title, const char *initial_text, int max_len, char *buf)
+static int switch_keyboard_get(char *title, char *buffer, int max_len)
 {
     Result rc = 0;
 
@@ -331,34 +338,32 @@ static void switch_keyboard_get(char *title, const char *initial_text, int max_l
 
     if (R_SUCCEEDED(rc)) {
         swkbdConfigMakePresetDefault(&kbd);
-        swkbdConfigSetInitialText(&kbd, initial_text);
-        rc = swkbdShow(&kbd, buf, max_len);
+        swkbdConfigSetInitialText(&kbd, buffer);
+        rc = swkbdShow(&kbd, buffer, max_len);
         swkbdClose(&kbd);
     }
+    return R_SUCCEEDED(rc);
 }
 
 static void switch_start_text_input(void)
 {
-    char text[601] = {'\0'};
-    switch_keyboard_get("Enter New Text:", vkbd_text, 600, text);
-    if (text == NULL)  {
+    if (!switch_keyboard_get("Enter New Text:", vkbd.utf8_text, vkbd.max_length)) {
         return;
     }
-    for (int i = 0; i < 600; i++) {
+    for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
         switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
         switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
     }
-    for (int i = 0; i < 600; i++) {
+    for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
         switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DELETE, SDLK_DELETE);
         switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
     }
-    const uint8_t *utf8_text = (uint8_t*) text;
-    for (int i = 0; i < 599 && utf8_text[i];) {
-        int bytes_in_char = encoding_get_utf8_character_bytes(utf8_text[i]);
+    for (int i = 0; i < MAX_VKBD_TEXT_SIZE - 1 && vkbd.utf8_text[i];) {
+        int bytes_in_char = encoding_get_utf8_character_bytes(vkbd.utf8_text[i]);
         SDL_Event textinput_event;
         textinput_event.type = SDL_TEXTINPUT;
         for (int n = 0; n < bytes_in_char; n++) {
-            textinput_event.text.text[n] = text[i + n];
+            textinput_event.text.text[n] = vkbd.utf8_text[i + n];
         }
         textinput_event.text.text[bytes_in_char] = 0;
         SDL_PushEvent(&textinput_event);
