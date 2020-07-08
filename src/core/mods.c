@@ -3,6 +3,7 @@
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/log.h"
+#include "core/png.h"
 #include "core/string.h"
 #include "graphics/color.h"
 #include "graphics/graphics.h"
@@ -33,7 +34,7 @@ static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG
     { "id", "src", "width", "height" }, // image
     { "src", "group", "image", "x", "y" } // layer
 };
-static const color_t DUMMY_IMAGE_DATA = COLOR_BLACK;
+static color_t DUMMY_IMAGE_DATA = COLOR_BLACK;
 
 static void xml_start_mod_element(const char **attributes);
 static void xml_start_image_element(const char **attributes);
@@ -94,9 +95,33 @@ static struct {
     int total_images;
 } data;
 
+static const char *get_full_image_path(const char *path)
+{
+    strncpy(data.xml.image_base_path + data.xml.image_base_path_position, path, FILE_NAME_MAX - data.xml.image_base_path_position - 1);
+    return data.xml.image_base_path;
+}
+
 static void load_layer(layer *l)
 {
+    if (l->modded_image_path) {
+        int size = l->width * l->height * sizeof(color_t);
+        l->data = malloc(size);
+        memset(l->data, 0, size);
+        if (!l->data) {
+            log_error("Not enough memory to load layer", l->modded_image_path, 0);
+         //   load_dummy_image(img);
+            return;
+        }
+        png_read(get_full_image_path(l->modded_image_path), (uint8_t *)l->data);
+    }
+}
 
+static void unload_layer(layer *l)
+{
+    free(l->modded_image_path);
+    l->modded_image_path = 0;
+    free(l->data);
+    l->data = 0;
 }
 
 static color_t layer_get_color_for_image_position(layer *l, int x, int y)
@@ -121,55 +146,59 @@ static void load_modded_image(modded_image *img)
     if (img->loaded) {
         return;
     }
-    img->data = malloc(img->img.draw.data_length);
-    memset(img->data, 0, img->img.draw.data_length);
-    if (!img->data) {
-        log_error("Not enough memory to load image", img->id, 0);
-        load_dummy_image(img);
-        return;
-    }
-    canvas_type type = graphics_get_canvas_type();
-    graphics_set_custom_canvas(img->data, img->img.width, img->img.height);
+ //   canvas_type type = graphics_get_canvas_type();
+ //   graphics_set_custom_canvas(img->data, img->img.width, img->img.height);
 
     for (int i = 0; i < img->num_layers; ++i) {
         load_layer(&img->layers[i]);
     }
 
-    for (int y = 0; y < img->img.height; ++y) {
-        color_t *pixel = graphics_get_pixel(0, y);
-        for (int x = 0; x < img->img.width; ++x) {
-            for (int l = img->num_layers - 1; l >= 0; --l) {
-                int image_pixel_alpha = *pixel & ALPHA_OPAQUE;
-                if (image_pixel_alpha == ALPHA_OPAQUE) {
-                    break;
+    if (img->num_layers == 1) {
+        img->data = img->layers[0].data;
+        img->layers[0].data = 0;
+    } else {
+        img->data = malloc(img->img.draw.data_length);
+        memset(img->data, 0, img->img.draw.data_length);
+        if (!img->data) {
+            log_error("Not enough memory to load image", img->id, 0);
+            load_dummy_image(img);
+            return;
+        }
+        for (int y = 0; y < img->img.height; ++y) {
+            color_t *pixel = &img->data[y * img->img.width];
+            for (int x = 0; x < img->img.width; ++x) {
+                for (int l = img->num_layers - 1; l >= 0; --l) {
+                    int image_pixel_alpha = *pixel & ALPHA_OPAQUE;
+                    if (image_pixel_alpha == ALPHA_OPAQUE) {
+                        break;
+                    }
+                    color_t layer_pixel = COLOR_BLUE;// layer_get_color_for_image_position(&img->layers[l], x, y);
+                    int layer_pixel_alpha = layer_pixel & ALPHA_OPAQUE;
+                    if (layer_pixel_alpha == ALPHA_TRANSPARENT) {
+                        continue;
+                    }
+                    if (layer_pixel_alpha == ALPHA_OPAQUE && image_pixel_alpha == ALPHA_TRANSPARENT) {
+                        *pixel = layer_pixel;
+                    } if (layer_pixel_alpha == ALPHA_OPAQUE) {
+                        int alpha = image_pixel_alpha >> 24;
+                        *pixel = MIX_RB(layer_pixel, *pixel, alpha, 1) | MIX_G(layer_pixel, *pixel, alpha, 1) | ALPHA_OPAQUE;
+                    } else {
+                        int alpha_src = layer_pixel_alpha >> 24;
+                        int alpha_dst = image_pixel_alpha >> 24;
+                        *pixel = MIX_RB(layer_pixel, *pixel, alpha_src, alpha_dst) | MIX_G(layer_pixel, *pixel, alpha_src, alpha_dst);
+                        *pixel |= MIX_A(alpha_src, alpha_dst) << 24;
+                    }
                 }
-                color_t layer_pixel = COLOR_BLUE;// layer_get_color_for_image_position(&img->layers[l], x, y);
-                int layer_pixel_alpha = layer_pixel & ALPHA_OPAQUE;
-                if (layer_pixel_alpha == ALPHA_TRANSPARENT) {
-                    continue;
-                }
-                if (layer_pixel_alpha == ALPHA_OPAQUE && image_pixel_alpha == ALPHA_TRANSPARENT) {
-                    *pixel = layer_pixel;
-                } if (layer_pixel_alpha == ALPHA_OPAQUE) {
-                    int alpha = image_pixel_alpha >> 24;
-                    *pixel = MIX_RB(layer_pixel, *pixel, alpha, 1) | MIX_G(layer_pixel, *pixel, alpha, 1) | ALPHA_OPAQUE;
-                } else {
-                    int alpha_src = layer_pixel_alpha >> 24;
-                    int alpha_dst = image_pixel_alpha >> 24;
-                    *pixel = MIX_RB(layer_pixel, *pixel, alpha_src, alpha_dst) | MIX_G(layer_pixel, *pixel, alpha_src, alpha_dst);
-                    *pixel |= MIX_A(alpha_src, alpha_dst) << 24;
-                }
+                ++pixel;
             }
-            ++pixel;
         }
     }
 
     for (int i = 0; i < img->num_layers; ++i) {
-      //  unload_layer(&img->layers[i]);
+        unload_layer(&img->layers[i]);
     }
 
-    graphics_set_active_canvas(type);
-    img->img.draw.type = IMAGE_TYPE_MOD;
+ //   graphics_set_active_canvas(type);
     img->loaded = 1;
 }
 
@@ -187,12 +216,6 @@ static void set_modded_image_base_path(const char *author, const char *name)
     data.xml.image_base_path_position = position;
 }
 
-static const char *get_full_image_path(const char *path)
-{
-    strncpy(data.xml.file_name + data.xml.file_name_position, path, FILE_NAME_MAX - data.xml.file_name_position - 1);
-    return data.xml.file_name;
-}
-
 static int add_layer_from_image_path(modded_image *img, const char *path, int offset_x, int offset_y)
 {
     layer *current_layer = &img->layers[img->num_layers];
@@ -201,19 +224,15 @@ static int add_layer_from_image_path(modded_image *img, const char *path, int of
     strncpy(current_layer->modded_image_path, path, path_size);
     strncpy(current_layer->modded_image_path + path_size, ".png", 5);
 
-    if (!img->img.width || !img->img.height) {
-        int width = 0;
-        int height = 0;
-     //   if (!png_get_image_size(get_full_image_path(current_layer->modded_image_path), &width, &height)) {
-     //       log_info("Unable to load image", path, 0);
-     //       return 0;
-     //   }
-        if (!img->img.width) {
-            img->img.width = width;
-        }
-        if (!img->img.height) {
-            img->img.height = height;
-        }
+    if (!png_get_image_size(get_full_image_path(current_layer->modded_image_path), &current_layer->width, &current_layer->height)) {
+        log_info("Unable to load image", path, 0);
+        return 0;
+    }
+    if (!img->img.width) {
+        img->img.width = current_layer->width;
+    }
+    if (!img->img.height) {
+        img->img.height = current_layer->height;
     }
     current_layer->x_offset = offset_x;
     current_layer->y_offset = offset_y;
@@ -245,6 +264,8 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
     if (!img->img.height) {
         img->img.height = original_image->height;
     }
+    current_layer->width = original_image->width;
+    current_layer->height = original_image->height;
     current_layer->x_offset = offset_x;
     current_layer->y_offset = offset_y;
     img->num_layers++;
@@ -362,6 +383,7 @@ static void xml_end_image_element(void)
     image *img = &data.xml.current_image->img;
     img->draw.data_length = img->width * img->height * sizeof(color_t);
     img->draw.uncompressed_length = img->draw.data_length;
+    img->draw.type = IMAGE_TYPE_MOD;
     if (!data.xml.current_image->num_layers || !img->draw.data_length) {
         return;
     }

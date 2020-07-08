@@ -233,6 +233,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/lang.c
     ${PROJECT_SOURCE_DIR}/src/core/locale.c
     ${PROJECT_SOURCE_DIR}/src/core/mods.c
+    ${PROJECT_SOURCE_DIR}/src/core/png.c
     ${PROJECT_SOURCE_DIR}/src/core/random.c
     ${PROJECT_SOURCE_DIR}/src/core/smacker.c
     ${PROJECT_SOURCE_DIR}/src/core/speed.c
