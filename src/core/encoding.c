@@ -484,7 +484,7 @@ static void build_decomposed_lookup_table(void)
     qsort(data.from_utf8_decomposed_table, data.decomposed_table_size, sizeof(from_utf8_lookup), compare_utf8_lookup);
 }
 
-static const letter_code* get_letter_code_for_internal(uint8_t c)
+static const letter_code *get_letter_code_for_internal(uint8_t c)
 {
     if (c < 0x80 || !data.to_utf8_table) {
         return NULL;
@@ -520,13 +520,13 @@ static int is_combining_char(uint8_t b1, uint8_t b2)
     return 0;
 }
 
-static const letter_code* search_utf8_table(const from_utf8_lookup *key, const from_utf8_lookup *table, int size)
+static const letter_code *search_utf8_table(const from_utf8_lookup *key, const from_utf8_lookup *table, int size)
 {
     const from_utf8_lookup *result = bsearch(key, table, size, sizeof(from_utf8_lookup), compare_utf8_lookup);
     return result ? result->code : NULL;
 }
 
-static const letter_code* get_letter_code_for_utf8(const char *c, int *num_bytes, int *is_accent)
+static const letter_code *get_letter_code_for_utf8(const char *c, int *num_bytes, int *is_accent)
 {
     static letter_code single_char = {0, 1};
     from_utf8_lookup key = {0, NULL};
@@ -559,7 +559,7 @@ static const letter_code* get_letter_code_for_utf8(const char *c, int *num_bytes
     return search_utf8_table(&key, data.from_utf8_table, data.utf8_table_size);
 }
 
-static const letter_code* get_letter_code_for_combining_utf8(const char *prev_char, const char *combining_char)
+static const letter_code *get_letter_code_for_combining_utf8(const char *prev_char, const char *combining_char)
 {
     int prev_bytes, comb_bytes;
     uint32_t prev_code = get_utf8_code(prev_char, &prev_bytes);

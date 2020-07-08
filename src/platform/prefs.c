@@ -34,7 +34,7 @@ static FILE *open_pref_file(const char *filename, const char *mode)
     return NULL;
 }
 
-const char* pref_data_dir(void)
+const char *pref_data_dir(void)
 {
     static char data_dir[1000];
     FILE *fp = open_pref_file("data_dir.txt", "r");

@@ -21,7 +21,7 @@ typedef struct {
     int hotspot_y;
     int width;
     int height;
-    const char* data;
+    const char *data;
 } cursor;
 
 const cursor *input_cursor_data(cursor_shape cursor_id, cursor_scale scale);

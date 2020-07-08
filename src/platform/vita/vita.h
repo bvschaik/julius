@@ -19,7 +19,7 @@ extern vita_cursor *current_cursor; // defined in cursor.c
 
 int chdir(const char *path);
 
-char* vita_prepend_path(const char *path);
+char *vita_prepend_path(const char *path);
 
 #endif // __vita__
 #endif // PLATFORM_VITA_H

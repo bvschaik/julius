@@ -29,7 +29,7 @@ int building_list_small_size(void);
  * Returns the items on the small list
  * @return List of building IDs
  */
-const int* building_list_small_items(void);
+const int *building_list_small_items(void);
 
 /**
  * Clears the large building list
@@ -53,7 +53,7 @@ int building_list_large_size(void);
  * Returns the items on the large list
  * @return List of building IDs
  */
-const int* building_list_large_items(void);
+const int *building_list_large_items(void);
 
 void building_list_burning_clear(void);
 
@@ -61,7 +61,7 @@ void building_list_burning_add(int building_id);
 
 int building_list_burning_size(void);
 
-const int* building_list_burning_items(void);
+const int *building_list_burning_items(void);
 
 void building_list_save_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals);
 

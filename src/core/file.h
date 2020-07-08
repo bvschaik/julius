@@ -24,7 +24,7 @@
  * @param mode Mode to open the file (e.g. "wb").
  * @return FILE
  */
-FILE* file_open(const char *filename, const char *mode);
+FILE *file_open(const char *filename, const char *mode);
 
 /**
  * Wrapper to fclose

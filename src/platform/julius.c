@@ -362,7 +362,7 @@ static int init_sdl(void)
 }
 
 #ifdef USE_TINYFILEDIALOGS
-static const char* ask_for_data_dir(int again)
+static const char *ask_for_data_dir(int again)
 {
     if (again) {
         int result = tinyfd_messageBox("Wrong folder selected",
