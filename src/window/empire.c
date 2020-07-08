@@ -542,11 +542,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static int is_mouse_hit(tooltip_context* c, int x, int y, int width, int height)
+static int is_mouse_hit(tooltip_context* c, int x, int y, int size)
 {
     int mx = c->mouse_x;
     int my = c->mouse_y;
-    return x <= mx && mx < x + width && y <= my && my < y + height;
+    return x <= mx && mx < x + size && y <= my && my < y + size;
 }
 
 static int get_tooltip_resource(tooltip_context* c)
@@ -562,7 +562,7 @@ static int get_tooltip_resource(tooltip_context* c)
     int item_offset = lang_text_get_width(47, 5, FONT_NORMAL_GREEN);
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         if (empire_object_city_sells_resource(object_id, r)) {
-            if (is_mouse_hit(c, x_offset + 60 + item_offset, y_offset + 33, 26, 26)) {
+            if (is_mouse_hit(c, x_offset + 60 + item_offset, y_offset + 33, 26)) {
                 return r;
             }
             item_offset += 32;
@@ -571,7 +571,7 @@ static int get_tooltip_resource(tooltip_context* c)
     item_offset += lang_text_get_width(47, 4, FONT_NORMAL_GREEN);
     for (int r = RESOURCE_MIN; r <= RESOURCE_MAX; r++) {
         if (empire_object_city_buys_resource(object_id, r)) {
-            if (is_mouse_hit(c, x_offset + 110 + item_offset, y_offset + 33, 26, 26)) {
+            if (is_mouse_hit(c, x_offset + 110 + item_offset, y_offset + 33, 26)) {
                 return r;
             }
             item_offset += 32;
