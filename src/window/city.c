@@ -204,8 +204,6 @@ static short get_clone_type_from_building(building* building)
 
 /**
     Helper function for retrieving which construction mode to enter.
-    First checks for clear terrain for an early exit opportunity,
-    then checks for the various cloneable features
 
     @param grid_offset the grid_offset of the tile to examine
     @return type to use in building_construction_set_type (0 if none)
@@ -214,10 +212,7 @@ static int get_clone_type_from_grid_offset(int grid_offset)
 {
     int terrain = map_terrain_get(grid_offset);
 
-    // we can short circuit a bit if this is an empty tile
-    if ((terrain & TERRAIN_NOT_CLEAR) == terrain) {
-        return BUILDING_NONE;
-    } else if (terrain & TERRAIN_BUILDING) {
+    if (terrain & TERRAIN_BUILDING) {
         int building_id = map_building_at(grid_offset);
         if (building_id) {
             building *building = building_main(building_get(building_id));
