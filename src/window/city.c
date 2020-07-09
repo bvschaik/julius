@@ -17,8 +17,12 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "map/aqueduct.h"
 #include "map/bookmark.h"
+#include "map/building.h"
 #include "map/grid.h"
+#include "map/property.h"
+#include "map/terrain.h"
 #include "scenario/building.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
@@ -199,19 +203,54 @@ static short get_clone_type_from_building(building* building)
 }
 
 /**
+    Helper function for retrieving which construction mode to enter.
+    First checks for clear terrain for an early exit opportunity,
+    then checks for buildings, aqueducts, road/plaza and walls.
+
+    @param grid_offset the grid_offset of the tile to examine
+    @return type to use in building_construction_set_type (0 if none)
+*/
+static int get_clone_type_from_grid_offset(int grid_offset)
+{
+    // we can short circuit a bit if this is an empty tile in general
+    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+        return 0;
+    }
+
+    int building_id = map_building_at(grid_offset);
+    if (building_id) {
+        return get_clone_type_from_building(building_main(building_get(building_id)));
+    }
+
+    if (map_aqueduct_at(grid_offset)) {
+        return BUILDING_AQUEDUCT;
+    }
+
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        if (map_property_is_plaza_or_earthquake(grid_offset)) {
+            return BUILDING_PLAZA;
+        }
+        return BUILDING_ROAD;
+    }
+
+    if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
+        return BUILDING_WALL;
+    }
+
+    return 0;
+}
+
+/**
     Enter construction mode with the same building as cursor is currently over
 */
-static void clone_building_at_current_tile(void)
+static void clone_building_at_current_grid_offset(void)
 {
-    int building_id = widget_city_building_at_current_tile();
-    if (building_id) {
-        building* target_building = building_main(building_get(building_id));
+    int grid_offset = widget_city_current_grid_offset();
+    short clone_type = get_clone_type_from_grid_offset(grid_offset);
 
-        short clone_type = get_clone_type_from_building(target_building);
-        if (clone_type) {
-            building_construction_cancel();
-            building_construction_set_type(clone_type);
-        }
+    if (clone_type) {
+        building_construction_cancel();
+        building_construction_set_type(clone_type);
     }
 }
 
@@ -276,7 +315,7 @@ static void handle_hotkeys(const hotkeys *h)
         }
     }
     if (h->clone_building) {
-        clone_building_at_current_tile();
+        clone_building_at_current_grid_offset();
     }
 }
 
