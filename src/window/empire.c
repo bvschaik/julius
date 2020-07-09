@@ -542,16 +542,16 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static int is_mouse_hit(tooltip_context* c, int x, int y, int size)
+static int is_mouse_hit(tooltip_context *c, int x, int y, int size)
 {
     int mx = c->mouse_x;
     int my = c->mouse_y;
     return x <= mx && mx < x + size && y <= my && my < y + size;
 }
 
-static int get_tooltip_resource(tooltip_context* c)
+static int get_tooltip_resource(tooltip_context *c)
 {
-    const empire_city* city = empire_city_get(data.selected_city);
+    const empire_city *city = empire_city_get(data.selected_city);
     if (city->type != EMPIRE_CITY_TRADE) {
         return 0;
     }
