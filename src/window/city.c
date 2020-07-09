@@ -17,11 +17,11 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "map/aqueduct.h"
 #include "map/bookmark.h"
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/property.h"
+#include "map/sprite.h"
 #include "map/terrain.h"
 #include "scenario/building.h"
 #include "scenario/criteria.h"
@@ -205,39 +205,45 @@ static short get_clone_type_from_building(building* building)
 /**
     Helper function for retrieving which construction mode to enter.
     First checks for clear terrain for an early exit opportunity,
-    then checks for buildings, aqueducts, road/plaza and walls.
+    then checks for the various cloneable features
 
     @param grid_offset the grid_offset of the tile to examine
     @return type to use in building_construction_set_type (0 if none)
 */
 static int get_clone_type_from_grid_offset(int grid_offset)
 {
-    // we can short circuit a bit if this is an empty tile in general
-    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
-        return 0;
+    // we can short circuit a bit if this is an empty tile
+    if (!grid_offset || !map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+        return BUILDING_NONE;
     }
 
-    int building_id = map_building_at(grid_offset);
-    if (building_id) {
-        return get_clone_type_from_building(building_main(building_get(building_id)));
-    }
+    int terrain = map_terrain_get(grid_offset);
 
-    if (map_aqueduct_at(grid_offset)) {
+    if (terrain & TERRAIN_BUILDING) {
+        int building_id = map_building_at(grid_offset);
+        if (building_id) {
+            building *building = building_main(building_get(building_id));
+            return get_clone_type_from_building(building);
+        }
+    } else if (terrain & TERRAIN_AQUEDUCT) {
         return BUILDING_AQUEDUCT;
-    }
-
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-        if (map_property_is_plaza_or_earthquake(grid_offset)) {
+    } else if (terrain & TERRAIN_WALL) {
+        return BUILDING_WALL;
+    } else if (terrain & TERRAIN_GARDEN) {
+        return BUILDING_GARDENS;
+    } else if (terrain & TERRAIN_ROAD) {
+        if (terrain & TERRAIN_WATER) {
+            if (map_sprite_bridge_at(grid_offset) > 6) {
+                return BUILDING_SHIP_BRIDGE;
+            }
+            return BUILDING_LOW_BRIDGE;
+        } else if (map_property_is_plaza_or_earthquake(grid_offset)) {
             return BUILDING_PLAZA;
         }
         return BUILDING_ROAD;
     }
 
-    if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
-        return BUILDING_WALL;
-    }
-
-    return 0;
+    return BUILDING_NONE;
 }
 
 /**
