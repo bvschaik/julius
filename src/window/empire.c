@@ -65,7 +65,7 @@ static generic_button generic_button_trade_resource[] = {
     {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_POTTERY, 0}
 };
 static generic_button generic_button_open_trade[] = {
-    {30, 61, 440, 26, button_open_trade, button_none, 0, 0}
+    {30, 56, 440, 26, button_open_trade, button_none, 0, 0}
 };
 
 static struct {
@@ -552,7 +552,9 @@ static int is_mouse_hit(tooltip_context *c, int x, int y, int size)
 static int get_tooltip_resource(tooltip_context *c)
 {
     const empire_city *city = empire_city_get(data.selected_city);
-    if (city->type != EMPIRE_CITY_TRADE) {
+    // we only want to check tooltips on our own closed cities.
+    // open city resource tooltips are handled by their respective buttons directly
+    if (city->type != EMPIRE_CITY_TRADE || city->is_open) {
         return 0;
     }
     int object_id = empire_selected_object() - 1;
