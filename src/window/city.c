@@ -212,14 +212,12 @@ static short get_clone_type_from_building(building* building)
 */
 static int get_clone_type_from_grid_offset(int grid_offset)
 {
-    // we can short circuit a bit if this is an empty tile
-    if (!grid_offset || !map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
-        return BUILDING_NONE;
-    }
-
     int terrain = map_terrain_get(grid_offset);
 
-    if (terrain & TERRAIN_BUILDING) {
+    // we can short circuit a bit if this is an empty tile
+    if ((terrain & TERRAIN_NOT_CLEAR) == terrain) {
+        return BUILDING_NONE;
+    } else if (terrain & TERRAIN_BUILDING) {
         int building_id = map_building_at(grid_offset);
         if (building_id) {
             building *building = building_main(building_get(building_id));
