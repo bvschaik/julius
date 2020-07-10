@@ -42,6 +42,7 @@ static const char *ini_keys[] = {
     "build_reservoir",
     "build_aqueduct",
     "build_fountain",
+    "build_roadblock",
     "show_advisor_labor",
     "show_advisor_military",
     "show_advisor_imperial",
