@@ -55,9 +55,7 @@ static void init(resource_type resource)
 
 static void draw_background(void)
 {
-    graphics_in_dialog();
-    window_advisor_trade_draw_dialog_background();
-    graphics_reset_dialog();
+    window_draw_underlying_window();
 }
 
 static void draw_foreground(void)
@@ -180,7 +178,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
-        window_advisors_show();
+        window_go_back();
     }
 }
 
@@ -191,7 +189,7 @@ static void button_help(int param1, int param2)
 
 static void button_ok(int param1, int param2)
 {
-    window_advisors_show();
+    window_go_back();
 }
 
 static void button_export_up_down(int is_down, int param2)
