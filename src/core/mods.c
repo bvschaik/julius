@@ -7,6 +7,7 @@
 #include "core/string.h"
 #include "graphics/color.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
 
 #include "expat.h"
 
@@ -101,53 +102,80 @@ static const char *get_full_image_path(const char *path)
     return data.xml.image_base_path;
 }
 
+static void load_dummy_layer(layer *l)
+{
+    l->data = &DUMMY_IMAGE_DATA;
+    l->width = 1;
+    l->height = 1;
+}
+
 static void load_layer(layer *l)
 {
-    if (l->modded_image_path) {
-        int size = l->width * l->height * sizeof(color_t);
-        l->data = malloc(size);
-        memset(l->data, 0, size);
-        if (!l->data) {
-            log_error("Not enough memory to load layer", l->modded_image_path, 0);
-         //   load_dummy_image(img);
-            return;
-        }
-        png_read(get_full_image_path(l->modded_image_path), (uint8_t *)l->data);
+    int size = l->width * l->height * sizeof(color_t);
+    l->data = malloc(size);
+    if (!l->data) {
+        log_error("Problem loading layer", l->modded_image_path, 0);
+        load_dummy_layer(l);
+        return;
     }
+    memset(l->data, 0, size);
+    if (l->modded_image_path) {
+        if (!png_read(get_full_image_path(l->modded_image_path), (uint8_t *) l->data)) {
+            log_error("Problem loading layer", l->modded_image_path, 0);
+            load_dummy_layer(l);
+        }
+        return;
+    }
+    const image *layer_image = image_get(l->original_image_id);
+    if (layer_image->draw.type == IMAGE_TYPE_MOD) {
+        // Ugly const removal. The only other way would be to memcpy the image data.
+        // That's a waste of ram, and we're not going to change l->data anyway
+        l->data = (color_t *) image_data(l->original_image_id);
+        if (!l->data) {
+            load_dummy_layer(l);
+        }
+        return;
+    }
+    canvas_type type = graphics_get_canvas_type();
+    graphics_set_custom_canvas(l->data, l->width, l->height);
+    if (layer_image->draw.type == IMAGE_TYPE_ISOMETRIC) {
+        int tiles = (l->width + 2) / 60;
+        int y_offset = l->height - 30 * tiles;
+        y_offset += 15 * tiles - 15;
+        image_draw_isometric_footprint_from_draw_tile(l->original_image_id, 0, y_offset, 0);
+        image_draw_isometric_top_from_draw_tile(l->original_image_id, 0, y_offset, 0);
+    } else {
+        image_draw(l->original_image_id, 0, 0);
+    }
+    graphics_set_active_canvas(type);
 }
 
 static void unload_layer(layer *l)
 {
     free(l->modded_image_path);
     l->modded_image_path = 0;
-    free(l->data);
+    const image *layer_image = image_get(l->original_image_id);
+    if (layer_image->draw.type != IMAGE_TYPE_MOD && l->data != &DUMMY_IMAGE_DATA) {
+        free(l->data);
+    }
     l->data = 0;
 }
 
 static color_t layer_get_color_for_image_position(layer *l, int x, int y)
 {
-    return COLOR_BLACK;
+    x -= l->x_offset;
+    y -= l->y_offset;
+    if (x < 0 || x > l->width || y < 0 || y > l->height) {
+        return ALPHA_TRANSPARENT;
+    }
+    return l->data[y * l->width + x];
 }
 
-static void load_dummy_image(modded_image *img)
-{
-    img->active = 1;
-    img->loaded = 1;
-    img->img.width = 1;
-    img->img.height = 1;
-    img->img.draw.data_length = sizeof(color_t);
-    img->img.draw.uncompressed_length = sizeof(color_t);
-    img->img.draw.type = IMAGE_TYPE_MOD;
-    img->data = &DUMMY_IMAGE_DATA;
-}
-
-static void load_modded_image(modded_image *img)
+static int load_modded_image(modded_image *img)
 {
     if (img->loaded) {
-        return;
+        return 1;
     }
- //   canvas_type type = graphics_get_canvas_type();
- //   graphics_set_custom_canvas(img->data, img->img.width, img->img.height);
 
     for (int i = 0; i < img->num_layers; ++i) {
         load_layer(&img->layers[i]);
@@ -161,8 +189,11 @@ static void load_modded_image(modded_image *img)
         memset(img->data, 0, img->img.draw.data_length);
         if (!img->data) {
             log_error("Not enough memory to load image", img->id, 0);
-            load_dummy_image(img);
-            return;
+            for (int i = 0; i < img->num_layers; ++i) {
+                unload_layer(&img->layers[i]);
+            }
+            img->active = 0;
+            return 0;
         }
         for (int y = 0; y < img->img.height; ++y) {
             color_t *pixel = &img->data[y * img->img.width];
@@ -172,7 +203,7 @@ static void load_modded_image(modded_image *img)
                     if (image_pixel_alpha == ALPHA_OPAQUE) {
                         break;
                     }
-                    color_t layer_pixel = COLOR_BLUE;// layer_get_color_for_image_position(&img->layers[l], x, y);
+                    color_t layer_pixel = layer_get_color_for_image_position(&img->layers[l], x, y);
                     int layer_pixel_alpha = layer_pixel & ALPHA_OPAQUE;
                     if (layer_pixel_alpha == ALPHA_TRANSPARENT) {
                         continue;
@@ -193,13 +224,11 @@ static void load_modded_image(modded_image *img)
             }
         }
     }
-
     for (int i = 0; i < img->num_layers; ++i) {
         unload_layer(&img->layers[i]);
     }
-
- //   graphics_set_active_canvas(type);
     img->loaded = 1;
+    return 1;
 }
 
 static void set_modded_image_base_path(const char *author, const char *name)
@@ -251,7 +280,7 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
         }
     } else {
         int group = string_to_int(string_from_ascii(group_id));
-        int id = string_to_int(string_from_ascii(image_id));
+        int id = image_id ? string_to_int(string_from_ascii(image_id)) : 0;
         current_layer->original_image_id = image_group(group) + id;
     }
     original_image = image_get(current_layer->original_image_id);
@@ -341,6 +370,9 @@ static void xml_start_layer_element(const char **attributes)
     int offset_x = 0;
     int offset_y = 0;
     modded_image *img = data.xml.current_image;
+    if (img->num_layers == MAX_LAYERS) {
+        return;
+    }
     int total_attributes = count_xml_attributes(attributes);
     if (total_attributes < 2 && total_attributes > 8 || total_attributes % 2) {
         data.xml.error = 1;
@@ -365,7 +397,7 @@ static void xml_start_layer_element(const char **attributes)
     }
     if (path) {
         add_layer_from_image_path(img, path, offset_x, offset_y);
-    } else if (group && id) {
+    } else if (group) {
         add_layer_from_image_id(img, group, id, offset_x, offset_y);
     } else {
         log_info("Invalid layer for image", img->id, img->num_layers);
@@ -383,10 +415,10 @@ static void xml_end_image_element(void)
     image *img = &data.xml.current_image->img;
     img->draw.data_length = img->width * img->height * sizeof(color_t);
     img->draw.uncompressed_length = img->draw.data_length;
-    img->draw.type = IMAGE_TYPE_MOD;
     if (!data.xml.current_image->num_layers || !img->draw.data_length) {
         return;
     }
+    img->draw.type = IMAGE_TYPE_MOD;
     data.xml.current_image->active = 1;
     if (img->draw.data_length < IMAGE_PRELOAD_MAX_SIZE) {
         load_modded_image(data.xml.current_image);
@@ -516,6 +548,9 @@ int mods_get_group_id(const char *mod_author, const char *mod_name)
 
 int mods_get_image_id(int mod_group_id, const char *image_name)
 {
+    if (!image_name) {
+        return 0;
+    }
     int max_images = 0;
     for (int i = 0; i < data.total_groups; ++i) {
         image_groups *group = &data.groups[i];
@@ -550,7 +585,9 @@ const color_t *mods_get_image_data(int image_id)
         return 0;
     }
     if (!img->loaded) {
-        load_modded_image(img);
+        if (!load_modded_image(img)) {
+            return 0;
+        }
     }
     return img->data;
 }
