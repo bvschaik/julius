@@ -2,26 +2,34 @@
 
 #include "building/construction.h"
 #include "building/type.h"
+#include "city/gods.h"
 #include "city/finance.h"
 #include "city/victory.h"
 #include "city/warning.h"
 #include "core/string.h"
+#include "game/tick.h"
 #include "graphics/window.h"
 #include "scenario/invasion.h"
 #include "window/building_info.h"
 #include "window/city.h"
 #include "window/console.h"
 
-#define NUMBER_OF_COMMANDS 1
+#define NUMBER_OF_COMMANDS 3
 
 static void game_cheat_add_money(uint8_t *);
+static void game_cheat_advance_year(uint8_t *);
+static void game_cheat_cast_blessing(uint8_t *);
 
 static void (* const execute_command[])(uint8_t * args) = {
     game_cheat_add_money,
+    game_cheat_advance_year,
+    game_cheat_cast_blessing,
 };
 
 static const char *commands[] = {
     "addmoney",
+    "nextyear",
+    "blessing",
 };
 
 static struct {
@@ -101,6 +109,20 @@ static void game_cheat_add_money(uint8_t * args){
     window_invalidate();
 
     city_warning_show_console((uint8_t*)"Added money");
+}
+
+static void game_cheat_advance_year(uint8_t * args){
+    game_tick_cheat_year();
+
+    city_warning_show_console((uint8_t*)"Year advanced");
+} 
+
+static void game_cheat_cast_blessing(uint8_t * args){
+    int god_id = 0;
+    parse_integer(args, &god_id);
+    city_god_blessing_cheat(god_id);
+
+    city_warning_show_console((uint8_t*)"Casted blessing");
 }
 void game_cheat_parse_command(uint8_t * command){
     uint8_t command_to_call[MAX_COMMAND_SIZE];
