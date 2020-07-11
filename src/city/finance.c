@@ -68,6 +68,12 @@ void city_finance_process_cheat(void)
     }
 }
 
+void city_finance_process_console(int amount)
+{
+    city_data.finance.treasury += amount;
+    city_data.finance.cheated_money += amount;
+}
+
 void city_finance_process_stolen(int stolen)
 {
     city_data.finance.stolen_this_year += stolen;

@@ -65,3 +65,9 @@ int window_building_info_get_building_type(void)
 {
     return 0;
 }
+
+void window_city_show(void)
+{}
+
+void window_console_show(int type, int dialog_type)
+{}
