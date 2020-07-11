@@ -9,7 +9,8 @@ typedef enum {
     TOOLTIP_NONE = 0,
     TOOLTIP_BUTTON = 1,
     TOOLTIP_OVERLAY = 2,
-    TOOLTIP_SENATE = 3
+    TOOLTIP_SENATE = 3,
+    TOOLTIP_TILES = 4
 } tooltip_type;
 
 typedef struct {

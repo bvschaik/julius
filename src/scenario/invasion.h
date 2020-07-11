@@ -18,6 +18,8 @@ int scenario_invasion_start_from_caesar(int size);
 
 void scenario_invasion_start_from_cheat(void);
 
+void scenario_invasion_start_from_console(int attack_type, int size, int invasion_point);
+
 void scenario_invasion_process(void);
 
 void scenario_invasion_save_state(buffer *invasion_id, buffer *warnings);

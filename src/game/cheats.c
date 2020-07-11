@@ -8,32 +8,42 @@
 #include "city/warning.h"
 #include "core/string.h"
 #include "game/tick.h"
+#include "graphics/color.h"
+#include "graphics/font.h"
+#include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/invasion.h"
 #include "window/building_info.h"
 #include "window/city.h"
 #include "window/console.h"
 
-#define NUMBER_OF_COMMANDS 3
+#define NUMBER_OF_COMMANDS 5
 
 static void game_cheat_add_money(uint8_t *);
+static void game_cheat_start_invasion(uint8_t *);
 static void game_cheat_advance_year(uint8_t *);
 static void game_cheat_cast_blessing(uint8_t *);
+static void game_cheat_show_tooltip(uint8_t *);
 
 static void (* const execute_command[])(uint8_t * args) = {
     game_cheat_add_money,
+    game_cheat_start_invasion,
     game_cheat_advance_year,
     game_cheat_cast_blessing,
+    game_cheat_show_tooltip
 };
 
 static const char *commands[] = {
     "addmoney",
+    "startinvasion",
     "nextyear",
     "blessing",
+    "showtooltip"
 };
 
 static struct {
     int is_cheating;
+    int tooltip_enabled;
 } data;
 
 static int parse_word(uint8_t * string, uint8_t * word){
@@ -71,6 +81,10 @@ void game_cheat_activate(void)
     } else {
         data.is_cheating = 0;
     }
+}
+
+int game_cheat_tooltip_enabled(void){
+    return data.tooltip_enabled; 
 }
 
 void game_cheat_money(void)
@@ -111,6 +125,18 @@ static void game_cheat_add_money(uint8_t * args){
     city_warning_show_console((uint8_t*)"Added money");
 }
 
+static void game_cheat_start_invasion(uint8_t * args){
+    int attack_type = 0;
+    int size = 0;
+    int invasion_point = 0;
+    int index = parse_integer(args, &attack_type); // 0 barbarians, 1 caesar, 2 mars natives
+    index = parse_integer(args+index, &size);
+    parse_integer(args+index,&invasion_point);
+    scenario_invasion_start_from_console(attack_type, size, invasion_point);
+
+    city_warning_show_console((uint8_t*)"Started invasion");
+}
+
 static void game_cheat_advance_year(uint8_t * args){
     game_tick_cheat_year();
 
@@ -124,6 +150,15 @@ static void game_cheat_cast_blessing(uint8_t * args){
 
     city_warning_show_console((uint8_t*)"Casted blessing");
 }
+
+static void game_cheat_show_tooltip(uint8_t * args){
+    parse_integer(args, &data.tooltip_enabled);
+
+    city_warning_show_console((uint8_t*)"Show tooltip toggled");
+
+}
+
+
 void game_cheat_parse_command(uint8_t * command){
     uint8_t command_to_call[MAX_COMMAND_SIZE];
     int next_arg = parse_word(command,command_to_call);
