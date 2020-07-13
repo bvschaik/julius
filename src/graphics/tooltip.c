@@ -2,6 +2,7 @@
 
 #include "city/labor.h"
 #include "city/ratings.h"
+#include "city/view.h"
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
@@ -11,6 +12,8 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "map/grid.h"
+#include "map/property.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "window/advisors.h"
@@ -278,15 +281,51 @@ static void draw_senate_tooltip(tooltip_context *c)
     }
 }
 
+static void draw_tile_tooltip(tooltip_context * c){
+    view_tile view;
+    if (city_view_pixels_to_view_tile(c->mouse_x, c->mouse_y, &view)) {
+        int grid_offset = city_view_tile_to_grid_offset(&view);
+        city_view_set_selected_view_tile(&view);
+        int x_tile = map_grid_offset_to_x(grid_offset);
+        int y_tile = map_grid_offset_to_y(grid_offset);
+
+        int x, y;
+        int width = 60;
+        int height = 40;
+        if (c->mouse_x < width + 20) {
+            x = c->mouse_x + 20;
+        } else {
+            x = c->mouse_x - width - 20;
+        }
+        if (c->mouse_y < 40) {
+            y = c->mouse_y + 10;
+        } else if (c->mouse_y + height - 32 > screen_height()) {
+            y = screen_height() - height;
+        } else {
+            y = c->mouse_y - 32;
+        }
+
+        save_window_under_tooltip_to_buffer(x, y, width, height);
+
+        graphics_draw_rect(x, y, width, height, COLOR_BLACK);
+        graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
+        text_draw_label_and_number("x: ", x_tile, " ", x + 2, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+        text_draw_label_and_number("y: ", y_tile, " ", x + 2 , y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    }
+}
+
 static void draw_tooltip(tooltip_context *c)
 {
     if (c->type == TOOLTIP_BUTTON) {
         draw_button_tooltip(c);
     } else if (c->type == TOOLTIP_OVERLAY) {
         draw_overlay_tooltip(c);
+    } else if(c->type == TOOLTIP_TILES) {
+        draw_tile_tooltip(c);
     } else if (c->type == TOOLTIP_SENATE) {
         draw_senate_tooltip(c);
     }
+
 }
 
 void tooltip_invalidate(void)

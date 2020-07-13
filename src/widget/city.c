@@ -10,6 +10,7 @@
 #include "core/direction.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
+#include "game/cheats.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "graphics/graphics.h"
@@ -557,6 +558,12 @@ void widget_city_get_tooltip(tooltip_context *c)
     int grid_offset = data.current_tile.grid_offset;
     int building_id = map_building_at(grid_offset);
     int overlay = game_state_overlay();
+    // cheat tooltips
+    if(overlay == OVERLAY_NONE && game_cheat_tooltip_enabled()){
+        c->type = TOOLTIP_TILES;
+        c->high_priority = 1;
+        return;
+    }
     // regular tooltips
     if (overlay == OVERLAY_NONE && building_id && building_get(building_id)->type == BUILDING_SENATE_UPGRADED) {
         c->type = TOOLTIP_SENATE;

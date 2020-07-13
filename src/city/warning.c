@@ -83,3 +83,13 @@ void city_warning_clear_outdated(void)
         }
     }
 }
+
+void city_warning_show_console(uint8_t* warning_text){
+    struct warning *w = new_warning();
+    if (!w) {
+        return;
+    }
+    w->in_use = 1;
+    w->time = time_get_millis();
+    string_copy(warning_text, w->text, MAX_TEXT);
+}

@@ -1,6 +1,7 @@
 #include "invasion.h"
 
 #include "building/destruction.h"
+#include "city/emperor.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -66,6 +67,12 @@ static const struct {
     {80, 20, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY46_CAMEL, 0}, FORMATION_ENEMY_WIDE_COLUMN}, // egyptian
     {90, 10, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY47_ELEPHANT, 0}, FORMATION_ENEMY_WIDE_COLUMN}, // carthaginian
     {100, 0, 0, {FIGURE_ENEMY_CAESAR_LEGIONARY, 0, 0}, FORMATION_COLUMN} // caesar
+};
+
+enum {
+    ATTACK_TYPE_BARBARIAN,
+    ATTACK_TYPE_CAESAR,
+    ATTACK_TYPE_NATIVES
 };
 
 typedef struct {
@@ -432,6 +439,41 @@ void scenario_invasion_start_from_cheat(void)
         } else {
             city_message_post(1, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
         }
+    }
+}
+
+void scenario_invasion_start_from_console(int attack_type, int size, int invasion_point)
+{
+    switch(attack_type){
+
+        case ATTACK_TYPE_BARBARIAN:
+        {
+            int enemy_id = scenario.enemy_id;
+            int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], size, invasion_point, FORMATION_ATTACK_RANDOM, 23);
+            if (grid_offset) {
+                if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4) {
+                    city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+                } else {
+                    city_message_post(1, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
+                }
+            }
+            break;
+        }
+        case ATTACK_TYPE_CAESAR:
+        {
+            city_emperor_force_attack(size);
+            break;
+        }
+        case ATTACK_TYPE_NATIVES:
+        {
+            int grid_offset = start_invasion(ENEMY_0_BARBARIAN, size, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
+            if (grid_offset) {
+                city_message_post(1, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset);
+            }
+            break;
+        }
+        default:
+            break;
     }
 }
 

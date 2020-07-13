@@ -51,4 +51,6 @@ int city_emperor_rank(void);
 
 void city_emperor_mark_soldier_killed(void);
 
+void city_emperor_force_attack(int size);
+
 #endif // CITY_EMPEROR_H

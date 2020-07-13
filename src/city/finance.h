@@ -21,6 +21,8 @@ void city_finance_process_export(int price);
 
 void city_finance_process_cheat(void);
 
+void city_finance_process_console(int amount);
+
 void city_finance_process_stolen(int stolen);
 
 void city_finance_process_donation(int amount);

@@ -13,6 +13,8 @@
 
 const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
+static int cheated_invasion = 0;
+
 void city_emperor_init_scenario(int rank)
 {
     city_data.ratings.favor = scenario_starting_favor();
@@ -87,7 +89,7 @@ static void update_debt_state(void)
 
 static void process_caesar_invasion(void)
 {
-    if (city_data.figure.imperial_soldiers) {
+    if (city_data.figure.imperial_soldiers && !cheated_invasion) {
         // caesar invasion in progress
         city_data.emperor.invasion.duration_day_countdown--;
         if (city_data.ratings.favor >= 35 && city_data.emperor.invasion.duration_day_countdown < 176) {
@@ -141,6 +143,7 @@ static void process_caesar_invasion(void)
                 size = 144;
             }
             if (scenario_invasion_start_from_caesar(size)) {
+                cheated_invasion = 0;
                 city_data.emperor.invasion.count++;
                 city_data.emperor.invasion.duration_day_countdown = 192;
                 city_data.emperor.invasion.retreat_message_shown = 0;
@@ -328,4 +331,16 @@ int city_emperor_donate_amount(void)
 void city_emperor_mark_soldier_killed(void)
 {
     city_data.emperor.invasion.soldiers_killed++;
+}
+
+void city_emperor_force_attack(int size){
+    if (scenario_invasion_start_from_caesar(size)) {
+        cheated_invasion = 1;
+        city_data.emperor.invasion.count++;
+        city_data.emperor.invasion.days_until_invasion = 0;
+        city_data.emperor.invasion.duration_day_countdown = 192;
+        city_data.emperor.invasion.retreat_message_shown = 0;
+        city_data.emperor.invasion.size = size;
+        city_data.emperor.invasion.soldiers_killed = 0;
+    }
 }

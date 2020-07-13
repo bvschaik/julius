@@ -181,3 +181,7 @@ void game_tick_run(void)
     scenario_emperor_change_process();
     city_victory_check();
 }
+
+void game_tick_cheat_year(void){
+    advance_year();
+}

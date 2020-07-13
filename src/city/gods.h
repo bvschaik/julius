@@ -26,4 +26,6 @@ void city_god_spirit_of_mars_mark_used(void);
 
 int city_god_neptune_create_shipwreck_flotsam(void);
 
+void city_god_blessing_cheat(int god_id);
+
 #endif // CITY_GODS_H

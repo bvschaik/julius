@@ -398,3 +398,7 @@ int city_god_neptune_create_shipwreck_flotsam(void)
         return 0;
     }
 }
+
+void city_god_blessing_cheat(int god_id){
+    perform_blessing(god_id);
+}
