@@ -63,6 +63,8 @@ static int load_png(const char *path)
 
 int png_get_image_size(const char *path, int *width, int *height)
 {
+    *width = 0;
+    *height = 0;
     if (!load_png(path)) {
         return 0;
     }

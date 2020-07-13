@@ -17,16 +17,12 @@
 #define XML_MAX_DEPTH 3
 #define XML_MAX_ATTRIBUTES 5
 #define XML_TAG_MAX_LENGTH 10
-#define XML_STRING_MAX_LENGTH 32
+#define XML_STRING_MAX_LENGTH 50
 
 #define MAX_LAYERS 5
 #define MAX_GROUPS 100
 
 #define IMAGE_PRELOAD_MAX_SIZE 65535
-
-#define MIX_RB(src, dst, alpha_src, alpha_dst) ((((src & 0xff00ff) * alpha_src + (dst & 0xff00ff) * (256 - alpha_src) * alpha_dst) >> 8) & 0xff00ff)
-#define MIX_G(src, dst, alpha_src, alpha_dst) ((((src & 0x00ff00) * alpha_src + (dst & 0x00ff00) * (256 - alpha_src) * alpha_dst) >> 8) & 0x00ff00)
-#define MIX_A(alpha_src, alpha_dst) (alpha_src + alpha_dst * (256 - alpha_src))
 
 static const char *MODS_FOLDER = "mods";
 static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_TAG_MAX_LENGTH] = { "mod", "image", "layer" };
@@ -121,7 +117,8 @@ static void load_layer(layer *l)
     memset(l->data, 0, size);
     if (l->modded_image_path) {
         if (!png_read(get_full_image_path(l->modded_image_path), (uint8_t *) l->data)) {
-            log_error("Problem loading layer", l->modded_image_path, 0);
+            free(l->data);
+            log_error("Problem loading layer from file", l->modded_image_path, 0);
             load_dummy_layer(l);
         }
         return;
@@ -132,6 +129,7 @@ static void load_layer(layer *l)
         // That's a waste of ram, and we're not going to change l->data anyway
         l->data = (color_t *) image_data(l->original_image_id);
         if (!l->data) {
+            log_error("Problem loading layer from image id", 0, l->original_image_id);
             load_dummy_layer(l);
         }
         return;
@@ -165,7 +163,7 @@ static color_t layer_get_color_for_image_position(layer *l, int x, int y)
 {
     x -= l->x_offset;
     y -= l->y_offset;
-    if (x < 0 || x > l->width || y < 0 || y > l->height) {
+    if (x < 0 || x >= l->width || y < 0 || y >= l->height) {
         return ALPHA_TRANSPARENT;
     }
     return l->data[y * l->width + x];
@@ -181,47 +179,43 @@ static int load_modded_image(modded_image *img)
         load_layer(&img->layers[i]);
     }
 
-    if (img->num_layers == 1) {
-        img->data = img->layers[0].data;
-        img->layers[0].data = 0;
-    } else {
-        img->data = malloc(img->img.draw.data_length);
-        memset(img->data, 0, img->img.draw.data_length);
-        if (!img->data) {
-            log_error("Not enough memory to load image", img->id, 0);
-            for (int i = 0; i < img->num_layers; ++i) {
-                unload_layer(&img->layers[i]);
-            }
-            img->active = 0;
-            return 0;
+    img->data = malloc(img->img.draw.data_length);
+    memset(img->data, 0, img->img.draw.data_length);
+    if (!img->data) {
+        log_error("Not enough memory to load image", img->id, 0);
+        for (int i = 0; i < img->num_layers; ++i) {
+            unload_layer(&img->layers[i]);
         }
-        for (int y = 0; y < img->img.height; ++y) {
-            color_t *pixel = &img->data[y * img->img.width];
-            for (int x = 0; x < img->img.width; ++x) {
-                for (int l = img->num_layers - 1; l >= 0; --l) {
-                    int image_pixel_alpha = *pixel & ALPHA_OPAQUE;
-                    if (image_pixel_alpha == ALPHA_OPAQUE) {
-                        break;
-                    }
-                    color_t layer_pixel = layer_get_color_for_image_position(&img->layers[l], x, y);
-                    int layer_pixel_alpha = layer_pixel & ALPHA_OPAQUE;
-                    if (layer_pixel_alpha == ALPHA_TRANSPARENT) {
-                        continue;
-                    }
-                    if (layer_pixel_alpha == ALPHA_OPAQUE && image_pixel_alpha == ALPHA_TRANSPARENT) {
-                        *pixel = layer_pixel;
-                    } if (layer_pixel_alpha == ALPHA_OPAQUE) {
-                        int alpha = image_pixel_alpha >> 24;
-                        *pixel = MIX_RB(layer_pixel, *pixel, alpha, 1) | MIX_G(layer_pixel, *pixel, alpha, 1) | ALPHA_OPAQUE;
-                    } else {
-                        int alpha_src = layer_pixel_alpha >> 24;
-                        int alpha_dst = image_pixel_alpha >> 24;
-                        *pixel = MIX_RB(layer_pixel, *pixel, alpha_src, alpha_dst) | MIX_G(layer_pixel, *pixel, alpha_src, alpha_dst);
-                        *pixel |= MIX_A(alpha_src, alpha_dst) << 24;
-                    }
+        img->active = 0;
+        return 0;
+    }
+    for (int y = 0; y < img->img.height; ++y) {
+        color_t *pixel = &img->data[y * img->img.width];
+        for (int x = 0; x < img->img.width; ++x) {
+            for (int l = img->num_layers - 1; l >= 0; --l) {
+                color_t image_pixel_alpha = *pixel & COLOR_CHANNEL_ALPHA;
+                if (image_pixel_alpha == ALPHA_OPAQUE) {
+                    break;
                 }
-                ++pixel;
+                color_t layer_pixel = layer_get_color_for_image_position(&img->layers[l], x, y);
+                color_t layer_pixel_alpha = layer_pixel & COLOR_CHANNEL_ALPHA;
+                if (layer_pixel_alpha == ALPHA_TRANSPARENT) {
+                    continue;
+                }
+                if (image_pixel_alpha == ALPHA_TRANSPARENT) {
+                    *pixel = layer_pixel;
+                } else if (layer_pixel_alpha == ALPHA_OPAQUE) {
+                    color_t alpha = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
+                    color_t s = *pixel;
+                    color_t d = layer_pixel;
+                    *pixel = COLOR_BLEND_ALPHA_TO_OPAQUE(*pixel, layer_pixel, alpha);
+                } else {
+                    int alpha_src = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
+                    int alpha_dst = layer_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
+                    *pixel = COLOR_BLEND_ALPHAS(*pixel, layer_pixel, alpha_src, alpha_dst);
+                }
             }
+            ++pixel;
         }
     }
     for (int i = 0; i < img->num_layers; ++i) {
@@ -255,6 +249,7 @@ static int add_layer_from_image_path(modded_image *img, const char *path, int of
 
     if (!png_get_image_size(get_full_image_path(current_layer->modded_image_path), &current_layer->width, &current_layer->height)) {
         log_info("Unable to load image", path, 0);
+        unload_layer(current_layer);
         return 0;
     }
     if (!img->img.width) {
@@ -272,6 +267,8 @@ static int add_layer_from_image_path(modded_image *img, const char *path, int of
 static int add_layer_from_image_id(modded_image *img, const char *group_id, const char *image_id, int offset_x, int offset_y)
 {
     layer *current_layer = &img->layers[img->num_layers];
+    current_layer->width = 0;
+    current_layer->height = 0;
     const image *original_image = 0;
     if (strcmp(group_id, "this") == 0) {
         current_layer->original_image_id = mods_get_image_id(data.groups[data.total_groups].id, image_id);
@@ -480,7 +477,7 @@ static void process_mod_file(const char *xml_file_name)
     FILE *xml_file = file_open(xml_file_name, "r");
 
     if (!xml_file) {
-        log_error("Error opening mod file", 0, 0);
+        log_error("Error opening mod file", xml_file_name, 0);
         return;
     }
 
@@ -494,7 +491,7 @@ static void process_mod_file(const char *xml_file_name)
         size_t bytes_read = fread(buffer, 1, XML_BUFFER_SIZE, xml_file);
         done = bytes_read < sizeof(buffer);
         if (XML_Parse(parser, buffer, (int) bytes_read, done) == XML_STATUS_ERROR || data.xml.error) {
-            log_error("Error parsing file", 0, 0);
+            log_error("Error parsing file", xml_file_name, 0);
             break;
         }
     } while (!done);
@@ -502,6 +499,9 @@ static void process_mod_file(const char *xml_file_name)
     if (data.xml.error || !data.xml.finished) {
         for (int i = 1; i <= data.groups[data.total_groups].images; ++i) {
             modded_image *img = &data.images[data.total_images - i];
+            for (int i = 0; i < img->num_layers; ++i) {
+                unload_layer(&img->layers[i]);
+            }
             if (img->loaded) {
                 free(img->data);
             }
@@ -573,7 +573,7 @@ const image *mods_get_image(int image_id)
 {
     modded_image *img = &data.images[image_id - MAIN_ENTRIES];
     if (!img->active) {
-        return 0;
+        return image_get(0);
     }
     return &img->img;
 }
@@ -582,11 +582,11 @@ const color_t *mods_get_image_data(int image_id)
 {
     modded_image *img = &data.images[image_id - MAIN_ENTRIES];
     if (!img->active) {
-        return 0;
+        return image_data(0);
     }
     if (!img->loaded) {
         if (!load_modded_image(img)) {
-            return 0;
+            return image_data(0);
         }
     }
     return img->data;

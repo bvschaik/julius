@@ -9,10 +9,6 @@
 #define FOOTPRINT_WIDTH 58
 #define FOOTPRINT_HEIGHT 30
 
-#define COMPONENT(c, shift) ((c >> shift) & 0xff)
-#define MIX_RB(src, dst, alpha) ((((src & 0xff00ff) * alpha + (dst & 0xff00ff) * (256 - alpha)) >> 8) & 0xff00ff)
-#define MIX_G(src, dst, alpha) ((((src & 0x00ff00) * alpha + (dst & 0x00ff00) * (256 - alpha)) >> 8) & 0x00ff00)
-
 typedef enum {
     DRAW_TYPE_SET,
     DRAW_TYPE_AND,
@@ -79,13 +75,13 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
         } else if (type == DRAW_TYPE_BLEND_ALPHA) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
                 if (*data != COLOR_SG2_TRANSPARENT) {
-                    color_t alpha = COMPONENT(*data, 24);
+                    color_t alpha = COLOR_COMPONENT(*data, COLOR_BITSHIFT_ALPHA);
                     if (alpha == 255) {
                         *dst = color;
                     } else {
                         color_t s = color;
                         color_t d = *dst;
-                        *dst = MIX_RB(s, d, alpha) | MIX_G(s, d, alpha);
+                        *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(s, d, alpha);
                     }
                 }
                 data++;
@@ -284,7 +280,7 @@ static void draw_compressed_blend_alpha(const image *img, const color_t *data, i
     if (!clip->is_visible) {
         return;
     }
-    color_t alpha = COMPONENT(color, 24);
+    color_t alpha = COLOR_COMPONENT(color, COLOR_BITSHIFT_ALPHA);
     if (!alpha) {
         return;
     }
