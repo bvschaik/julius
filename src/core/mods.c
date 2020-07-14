@@ -1,5 +1,6 @@
 #include "mods.h"
 
+#include "core/calc.h"
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/log.h"
@@ -15,9 +16,10 @@
 
 #define XML_BUFFER_SIZE 1024
 #define XML_MAX_DEPTH 3
-#define XML_MAX_ATTRIBUTES 5
-#define XML_TAG_MAX_LENGTH 10
-#define XML_STRING_MAX_LENGTH 50
+#define XML_MAX_ELEMENTS_PER_DEPTH 2
+#define XML_MAX_ATTRIBUTES 6
+#define XML_TAG_MAX_LENGTH 12
+#define XML_STRING_MAX_LENGTH 32
 
 #define MAX_LAYERS 5
 #define MAX_GROUPS 100
@@ -25,27 +27,30 @@
 #define IMAGE_PRELOAD_MAX_SIZE 65535
 
 static const char *MODS_FOLDER = "mods";
-static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_TAG_MAX_LENGTH] = { "mod", "image", "layer" };
-static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG_MAX_LENGTH] = {
-    { "author", "name" }, // mod
-    { "id", "src", "width", "height" }, // image
-    { "src", "group", "image", "x", "y" } // layer
+static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_TAG_MAX_LENGTH] = { { "mod" }, { "image" }, { "layer", "animation" } };
+static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG_MAX_LENGTH] = {
+    { { "author", "name" } }, // mod
+    { { "id", "src", "width", "height", "group", "image" } }, // image
+    { { "src", "group", "image", "x", "y" }, // layer
+    { "frames", "speed", "reversible", "x", "y" } } // animation
 };
 static color_t DUMMY_IMAGE_DATA = COLOR_BLACK;
 
 static void xml_start_mod_element(const char **attributes);
 static void xml_start_image_element(const char **attributes);
 static void xml_start_layer_element(const char **attributes);
+static void xml_start_animation_element(const char **attributes);
 static void xml_end_mod_element(void);
 static void xml_end_image_element(void);
 static void xml_end_layer_element(void);
+static void xml_end_animation_element(void);
 
-static const void (*xml_start_element_callback[XML_MAX_DEPTH])(const char **attributes) = {
-    xml_start_mod_element, xml_start_image_element, xml_start_layer_element
+static const void (*xml_start_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH])(const char **attributes) = {
+    { xml_start_mod_element }, { xml_start_image_element }, { xml_start_layer_element, xml_start_animation_element }
 };
 
-static const void (*xml_end_element_callback[XML_MAX_DEPTH])(void) = {
-    xml_end_mod_element, xml_end_image_element, xml_end_layer_element
+static const void (*xml_end_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH])(void) = {
+    { xml_end_mod_element }, { xml_end_image_element }, { xml_end_layer_element, xml_end_animation_element }
 };
 
 typedef struct {
@@ -271,7 +276,14 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
     current_layer->height = 0;
     const image *original_image = 0;
     if (strcmp(group_id, "this") == 0) {
-        current_layer->original_image_id = mods_get_image_id(data.groups[data.total_groups].id, image_id);
+        int group = data.groups[data.total_groups].id - MAIN_ENTRIES;
+        for (int i = 0; i < data.groups[data.total_groups].images; ++i) {
+            if (strcmp(data.images[group].id, image_id) == 0) {
+                current_layer->original_image_id = group + MAIN_ENTRIES;
+                break;
+            }
+            group++;
+        }
         if (!current_layer->original_image_id) {
             return 0;
         }
@@ -317,10 +329,10 @@ static void xml_start_mod_element(const char **attributes)
     group->id = data.total_images + MAIN_ENTRIES;
     group->images = 0;
     for (int i = 0; i < 4; i += 2) {
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[0][0]) == 0) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[0][0][0]) == 0) {
             strncpy(group->author, attributes[i + 1], XML_STRING_MAX_LENGTH - 1);
         }
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[0][1]) == 0) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[0][0][1]) == 0) {
             strncpy(group->name, attributes[i + 1], XML_STRING_MAX_LENGTH - 1);
         }
     }
@@ -335,27 +347,40 @@ static void xml_start_image_element(const char **attributes)
 {
     data.xml.current_image = &data.images[data.total_images];
     modded_image *img = data.xml.current_image;
+    const char *path = 0;
+    const char *group = 0;
+    const char *id = 0;
     int total_attributes = count_xml_attributes(attributes);
     if (total_attributes < 2 || total_attributes > 8 || total_attributes % 2) {
         data.xml.error = 1;
         return;
     }
     for (int i = 0; i < total_attributes; i += 2) {
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0]) == 0) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][0]) == 0) {
             strncpy(img->id, attributes[i + 1], XML_STRING_MAX_LENGTH - 1);
         }
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][1]) == 0) {
-            add_layer_from_image_path(img, attributes[i + 1], 0, 0);
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][1]) == 0) {
+            path = attributes[i + 1];
         }
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][2]) == 0) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][2]) == 0) {
             img->img.width = string_to_int(string_from_ascii(attributes[i + 1]));
         }
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][3]) == 0) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][3]) == 0) {
             img->img.height = string_to_int(string_from_ascii(attributes[i + 1]));
         }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][4]) == 0) {
+            group = attributes[i + 1];
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][5]) == 0) {
+            id = attributes[i + 1];
+        }
     }
-    if (img->id == '\0') {
-        data.xml.error = 1;
+    if (path) {
+        add_layer_from_image_path(img, path, 0, 0);
+    } else if (group) {
+        add_layer_from_image_id(img, group, id, 0, 0);
+    } else {
+        log_info("Invalid layer for image", img->id, 0);
     }
 }
 
@@ -376,19 +401,19 @@ static void xml_start_layer_element(const char **attributes)
         return;
     }
     for (int i = 0; i < total_attributes; i += 2) {
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0]) == 0) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][0]) == 0) {
             path = attributes[i + 1];
         }
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1]) == 0) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][1]) == 0) {
             group = attributes[i + 1];
         }
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][2]) == 0) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][2]) == 0) {
             id = attributes[i + 1];
         }
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][3]) == 0) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][3]) == 0) {
             offset_x = string_to_int(string_from_ascii(attributes[i + 1]));
         }
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][4]) == 0) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][4]) == 0) {
             offset_y = string_to_int(string_from_ascii(attributes[i + 1]));
         }
     }
@@ -398,6 +423,41 @@ static void xml_start_layer_element(const char **attributes)
         add_layer_from_image_id(img, group, id, offset_x, offset_y);
     } else {
         log_info("Invalid layer for image", img->id, img->num_layers);
+    }
+}
+
+static void xml_start_animation_element(const char **attributes)
+{
+    modded_image *img = data.xml.current_image;
+    if (img->img.num_animation_sprites) {
+        return;
+    }
+    int total_attributes = count_xml_attributes(attributes);
+    if (total_attributes % 2) {
+        data.xml.error = 1;
+        return;
+    }
+   
+    for (int i = 0; i < total_attributes; i += 2) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][0]) == 0) {
+            img->img.num_animation_sprites = string_to_int(string_from_ascii(attributes[i + 1]));
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][1]) == 0) {
+            img->img.animation_speed_id = calc_bound(string_to_int(string_from_ascii(attributes[i + 1])), 0, 50);
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][2]) == 0) {
+            const char *value = attributes[i + 1];
+            if (strcmp(value, "true") == 0 || strcmp(value, "1") == 0 || strcmp(value, "reversible") == 0 ||
+                strcmp(value, "yes") == 0 || strcmp(value, "y") == 0) {
+                img->img.animation_can_reverse = 1;
+            }
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][3]) == 0) {
+            img->img.sprite_offset_x = string_to_int(string_from_ascii(attributes[i + 1]));
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][4]) == 0) {
+            img->img.sprite_offset_y = string_to_int(string_from_ascii(attributes[i + 1]));
+        }
     }
 }
 
@@ -427,18 +487,39 @@ static void xml_end_image_element(void)
 static void xml_end_layer_element(void)
 {}
 
+static void xml_end_animation_element(void)
+{}
+
+static int get_element_index(const char *name)
+{
+    for (int i = 0; i < XML_MAX_ELEMENTS_PER_DEPTH; ++i) {
+        if (XML_FILE_ELEMENTS[data.xml.depth][i][0] == 0) {
+            continue;
+        }
+        if (strcmp(XML_FILE_ELEMENTS[data.xml.depth][i], name) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 static void XMLCALL xml_start_element(void *unused, const char *name, const char **attributes)
 {
     if (data.xml.error) {
         return;
     }
-    if (data.xml.finished || data.xml.depth == XML_MAX_DEPTH ||
-        strcmp(XML_FILE_ELEMENTS[data.xml.depth], name) != 0) {
+    if (data.xml.finished || data.xml.depth == XML_MAX_DEPTH) {
         data.xml.error = 1;
         log_error("Invalid XML parameter", name, 0);
         return;
     }
-    (*xml_start_element_callback[data.xml.depth])(attributes);
+    int index = get_element_index(name);
+    if(index == -1) {
+        data.xml.error = 1;
+        log_error("Invalid XML parameter", name, 0);
+        return;
+    }
+    (*xml_start_element_callback[data.xml.depth][index])(attributes);
     data.xml.depth++;
 }
 
@@ -448,12 +529,13 @@ static void XMLCALL xml_end_element(void *unused, const char *name)
         return;
     }
     data.xml.depth--;
-    if (strcmp(XML_FILE_ELEMENTS[data.xml.depth], name) != 0) {
+    int index = get_element_index(name);
+    if (index == -1) {
         data.xml.error = 1;
         log_error("Invalid XML parameter", name, 0);
         return;
     }
-    (*xml_end_element_callback[data.xml.depth])();
+    (*xml_end_element_callback[data.xml.depth][index])();
 }
 
 static const char *append_file_to_mods_folder(const char *file_name)
@@ -548,7 +630,7 @@ int mods_get_group_id(const char *mod_author, const char *mod_name)
 
 int mods_get_image_id(int mod_group_id, const char *image_name)
 {
-    if (!image_name) {
+    if (!image_name || !*image_name) {
         return 0;
     }
     int max_images = 0;
