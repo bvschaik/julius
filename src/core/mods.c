@@ -45,11 +45,11 @@ static void xml_end_image_element(void);
 static void xml_end_layer_element(void);
 static void xml_end_animation_element(void);
 
-static const void (*xml_start_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH])(const char **attributes) = {
+static void (*xml_start_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH])(const char **attributes) = {
     { xml_start_mod_element }, { xml_start_image_element }, { xml_start_layer_element, xml_start_animation_element }
 };
 
-static const void (*xml_end_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH])(void) = {
+static void (*xml_end_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH])(void) = {
     { xml_end_mod_element }, { xml_end_image_element }, { xml_end_layer_element, xml_end_animation_element }
 };
 
@@ -211,8 +211,6 @@ static int load_modded_image(modded_image *img)
                     *pixel = layer_pixel;
                 } else if (layer_pixel_alpha == ALPHA_OPAQUE) {
                     color_t alpha = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
-                    color_t s = *pixel;
-                    color_t d = layer_pixel;
                     *pixel = COLOR_BLEND_ALPHA_TO_OPAQUE(*pixel, layer_pixel, alpha);
                 } else {
                     int alpha_src = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
@@ -351,7 +349,7 @@ static void xml_start_image_element(const char **attributes)
     const char *group = 0;
     const char *id = 0;
     int total_attributes = count_xml_attributes(attributes);
-    if (total_attributes < 2 || total_attributes > 8 || total_attributes % 2) {
+    if (total_attributes < 2 || total_attributes > 10 || total_attributes % 2) {
         data.xml.error = 1;
         return;
     }
@@ -396,7 +394,7 @@ static void xml_start_layer_element(const char **attributes)
         return;
     }
     int total_attributes = count_xml_attributes(attributes);
-    if (total_attributes < 2 && total_attributes > 8 || total_attributes % 2) {
+    if (total_attributes < 2 || total_attributes > 8 || total_attributes % 2) {
         data.xml.error = 1;
         return;
     }
@@ -591,6 +589,8 @@ static void process_mod_file(const char *xml_file_name)
         }
         data.total_images -= data.groups[data.total_groups].images;
     }
+
+    clear_xml_info();
 
     XML_ParserFree(parser);
     file_close(xml_file);
