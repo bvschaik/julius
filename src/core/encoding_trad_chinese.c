@@ -2264,7 +2264,7 @@ void encoding_trad_chinese_init(void)
             return;
         }
     }
-    // codepage_to_unicode is already sorted, copy data and sort the other way around
+    // codepage_to_utf8 is already sorted, copy data and sort the other way around
     memcpy(utf8_to_codepage, codepage_to_utf8,
         IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS * sizeof(chinese_entry));
 
