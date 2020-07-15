@@ -164,7 +164,11 @@ static struct {
 
 static int image_y_offset_none(uint8_t c, int image_height, int line_height)
 {
-    return 0;
+    int offset = image_height - line_height;
+    if (offset < 0 || c < 0x80) {
+        offset = 0;
+    }
+    return offset;
 }
 
 static int image_y_offset_default(uint8_t c, int image_height, int line_height)
@@ -173,7 +177,7 @@ static int image_y_offset_default(uint8_t c, int image_height, int line_height)
     if (offset < 0) {
         offset = 0;
     }
-    if (c < 128 || c == 0xE7) {
+    if (c < 0x80 || c == 0xE7) {
         offset = 0;
     }
     return offset;
@@ -185,7 +189,7 @@ static int image_y_offset_eastern(uint8_t c, int image_height, int line_height)
     if (offset < 0) {
         offset = 0;
     }
-    if (c < 128 || c == 0xEA || c == 0xB9 || c == 0xA5 || c == 0xCA) {
+    if (c < 0x80 || c == 0xEA || c == 0xB9 || c == 0xA5 || c == 0xCA) {
         offset = 0;
     }
     return offset;
@@ -338,7 +342,7 @@ static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int 
 
 static int image_y_offset_korean(uint8_t c, int image_height, int line_height)
 {
-    if (c < 128) {
+    if (c < 0x80) {
         return 0;
     }
     if (line_height == 11) {
