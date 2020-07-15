@@ -1,15 +1,9 @@
 #include "game/system.h"
 
-#include "SDL.h"
+#include "switch/switch.h"
+#include "vita/vita.h"
 
-static int use_virtual_keyboard(void)
-{
-#if defined (__vita__) || defined(__SWITCH__)
-    return 1;
-#else
-    return 0;
-#endif
-}
+#include "SDL.h"
 
 void system_keyboard_set_input_rect(int x, int y, int width, int height)
 {
@@ -17,21 +11,16 @@ void system_keyboard_set_input_rect(int x, int y, int width, int height)
     SDL_SetTextInputRect(&rect);
 }
 
-static int is_showing(void)
+void system_keyboard_show(const uint8_t *text, int max_length)
 {
-    return SDL_IsTextInputActive();
-}
-
-void system_keyboard_show(void)
-{
-    if (use_virtual_keyboard() && !is_showing()) {
-        SDL_StartTextInput();
-    }
+#ifdef PLATFORM_USE_VIRTUAL_KEYBOARD
+    platform_show_virtual_keyboard(text, max_length);
+#endif
 }
 
 void system_keyboard_hide(void)
 {
-    if (use_virtual_keyboard() && is_showing()) {
-        SDL_StopTextInput();
-    }
+#ifdef PLATFORM_USE_VIRTUAL_KEYBOARD
+    platform_hide_virtual_keyboard();
+#endif
 }

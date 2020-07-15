@@ -8,6 +8,7 @@
 void input_box_start(input_box *box, uint8_t *text, int length, int allow_punctuation)
 {
     box->text = text;
+    box->max_length = length;
     int text_width = (box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
     keyboard_start_capture(text, length, allow_punctuation, text_width, box->font);
     system_keyboard_set_input_rect(box->x, box->y,
@@ -65,7 +66,7 @@ int input_box_handle_mouse(const mouse *m, const input_box *box)
     }
     int selected = is_mouse_inside_input(m, box);
     if (selected) {
-        system_keyboard_show();
+        system_keyboard_show(box->text, box->max_length);
     } else {
         system_keyboard_hide();
     }
