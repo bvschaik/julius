@@ -81,7 +81,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
         if (type == DRAW_TYPE_NONE) {
             if (img->draw.type == IMAGE_TYPE_WITH_TRANSPARENCY || img->draw.is_external) { // can be transparent
                 for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                    if (*data != COLOR_SG2_TRANSPARENT && (*data & ALPHA_OPAQUE) == ALPHA_OPAQUE) {
+                    if (*data != COLOR_SG2_TRANSPARENT) {
                         *dst = *data;
                     }
                     data++;
