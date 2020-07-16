@@ -233,7 +233,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/lang.c
     ${PROJECT_SOURCE_DIR}/src/core/locale.c
     ${PROJECT_SOURCE_DIR}/src/core/mods.c
-    ${PROJECT_SOURCE_DIR}/src/core/png.c
+    ${PROJECT_SOURCE_DIR}/src/core/png_read.c
     ${PROJECT_SOURCE_DIR}/src/core/random.c
     ${PROJECT_SOURCE_DIR}/src/core/smacker.c
     ${PROJECT_SOURCE_DIR}/src/core/speed.c
@@ -705,7 +705,7 @@ if(SYSTEM_LIBS)
     find_package(EXPAT)
 endif()
 
-if(PNG_FOUND)
+if(ZLIB_FOUND)
     include_directories(${ZLIB_INCLUDE_DIRS})
     target_link_libraries(${SHORT_NAME} ${ZLIB_LIBRARIES})
 else()
@@ -727,6 +727,9 @@ if(EXPAT_FOUND)
 else()
     include_directories("ext/expat")
     target_sources(${SHORT_NAME} PRIVATE "${EXPAT_FILES}")
+    if(NOT WIN32)
+        add_compile_definitions(XML_DEV_URANDOM)
+    endif()
 endif()
 
 if(VITA_BUILD)
@@ -854,9 +857,4 @@ else()
         install(FILES "res/augustus_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.keriew.augustus.png")
     endif()
 
-    # Unit tests
-    if(NOT VITA_BUILD AND NOT SWITCH_BUILD)
-        enable_testing()
-        add_subdirectory(test)
-    endif()
 endif()

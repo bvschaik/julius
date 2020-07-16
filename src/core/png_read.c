@@ -1,8 +1,8 @@
-#include "core/png.h"
+#include "core/png_read.h"
 
 #include "core/log.h"
 
-#include "png/png.h"
+#include "png.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +24,7 @@ static void unload_png(void)
 static int load_png(const char *path)
 {
     unload_png();
-    char header[8];
+    png_byte header[8];
     data.fp = fopen(path, "rb");
     if (!data.fp) {
         log_error("Unable to open png file", path, 0);

@@ -4,7 +4,7 @@
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/log.h"
-#include "core/png.h"
+#include "core/png_read.h"
 #include "core/string.h"
 #include "graphics/color.h"
 #include "graphics/graphics.h"

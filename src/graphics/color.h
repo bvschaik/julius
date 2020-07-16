@@ -64,14 +64,14 @@ typedef uint32_t color_t;
         ((((((src) & (channel)) * (alpha_src) + ((((dst) & (channel)) * (0xff - (alpha_src))) >> 8) * (alpha_dst))) / (alpha_mix)) & (channel))
 
 #define COLOR_BLEND_ALPHA_TO_OPAQUE(src, dst, alpha) \
-        ALPHA_OPAQUE | \
+        (ALPHA_OPAQUE | \
         COLOR_BLEND_CHANNEL_TO_OPAQUE(src, dst, alpha, COLOR_CHANNEL_RED | COLOR_CHANNEL_BLUE) | \
-        COLOR_BLEND_CHANNEL_TO_OPAQUE(src, dst, alpha, COLOR_CHANNEL_GREEN)
+        COLOR_BLEND_CHANNEL_TO_OPAQUE(src, dst, alpha, COLOR_CHANNEL_GREEN))
 
 #define COLOR_BLEND_ALPHAS(src, dst, alpha_src, alpha_dst, alpha_mix) \
-        (alpha_mix) << COLOR_BITSHIFT_ALPHA | \
+        ((alpha_mix) << COLOR_BITSHIFT_ALPHA | \
         COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_RED) | \
         COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_GREEN) | \
-        COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_BLUE)
+        COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_BLUE))
 
 #endif // GRAPHICS_COLOR_H
