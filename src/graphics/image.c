@@ -27,7 +27,7 @@ static const int FOOTPRINT_OFFSET_PER_HEIGHT[] = {
     508, 562, 612, 658, 700, 738, 772, 802, 828, 850, 868, 882, 892, 898
 };
 
-static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, draw_type type)
+static void draw_modded_image(const image *img, const color_t *data, int x_offset, int y_offset, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, img->height);
     if (!clip->is_visible) {
@@ -38,8 +38,48 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
         data += clip->clipped_pixels_left;
         color_t *dst = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
         int x_max = img->width - clip->clipped_pixels_right;
+        if (color && color != COLOR_MASK_NONE) {
+            for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
+                color_t alpha = *data & COLOR_CHANNEL_ALPHA;
+                if (alpha == ALPHA_OPAQUE) {
+                    *dst = *data & color;
+                } else if (alpha != ALPHA_TRANSPARENT) {
+                    *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA) & color;
+                }
+                data++;
+            }
+        } else {
+            for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
+                color_t alpha = *data & COLOR_CHANNEL_ALPHA;
+                if (alpha == ALPHA_OPAQUE) {
+                    *dst = *data;
+                } else if (alpha != ALPHA_TRANSPARENT) {
+                    *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA);
+                }
+                data++;
+            }
+        }
+        data += clip->clipped_pixels_right;
+    }
+}
+
+static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, draw_type type)
+{
+    if (img->draw.type == IMAGE_TYPE_MOD) {
+        draw_modded_image(img, data, x_offset, y_offset, color);
+        return;
+    }
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, img->height);
+    if (!clip->is_visible) {
+        return;
+    }
+    data += img->width * clip->clipped_pixels_top;
+    for (int y = clip->clipped_pixels_top; y < img->height - clip->clipped_pixels_bottom; y++) {
+        data += clip->clipped_pixels_left;
+        color_t *dst = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
+        int x_max = img->width - clip->clipped_pixels_right;
         if (type == DRAW_TYPE_NONE) {
-            if (img->draw.type == IMAGE_TYPE_WITH_TRANSPARENCY || img->draw.type == IMAGE_TYPE_MOD || img->draw.is_external) { // can be transparent
+            if (img->draw.type == IMAGE_TYPE_WITH_TRANSPARENCY || img->draw.is_external) { // can be transparent
                 for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
                     if (*data != COLOR_SG2_TRANSPARENT && (*data & ALPHA_OPAQUE) == ALPHA_OPAQUE) {
                         *dst = *data;
@@ -60,7 +100,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
             }
         } else if (type == DRAW_TYPE_AND) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if ((img->draw.type != IMAGE_TYPE_MOD && *data != COLOR_SG2_TRANSPARENT) || (img->draw.type == IMAGE_TYPE_MOD && (*data & ALPHA_OPAQUE) == ALPHA_OPAQUE)) {
+                if (*data != COLOR_SG2_TRANSPARENT) {
                     *dst = *data & color;
                 }
                 data++;
@@ -758,7 +798,12 @@ void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask)
             int tiles = (img->width + 2) / 60;
             int y_offset = img->height - 30 * tiles;
             y_offset += 15 * tiles - 15;
-            image_draw_masked(image_id, x, y - y_offset, color_mask);
+            const image *img = image_get(image_id);
+            const color_t *data = image_data(image_id);
+            if (!data) {
+                return;
+            }
+            draw_modded_image(img, data, x, y - y_offset, color_mask);
         }
         return;
     }
@@ -809,7 +854,12 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
             int tiles = (img->width + 2) / 60;
             int y_offset = img->height - 30 * tiles;
             y_offset += 15 * tiles - 15;
-            image_draw_masked(image_id, x, y - y_offset, color_mask);
+            const image *img = image_get(image_id);
+            const color_t *data = image_data(image_id);
+            if (!data) {
+                return;
+            }
+            draw_modded_image(img, data, x, y - y_offset, color_mask);
         }
         return;
     }

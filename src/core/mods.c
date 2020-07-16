@@ -213,9 +213,10 @@ static int load_modded_image(modded_image *img)
                     color_t alpha = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
                     *pixel = COLOR_BLEND_ALPHA_TO_OPAQUE(*pixel, layer_pixel, alpha);
                 } else {
-                    int alpha_src = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
-                    int alpha_dst = layer_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
-                    *pixel = COLOR_BLEND_ALPHAS(*pixel, layer_pixel, alpha_src, alpha_dst);
+                    color_t alpha_src = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
+                    color_t alpha_dst = layer_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
+                    color_t alpha_mix = COLOR_MIX_ALPHA(alpha_src, alpha_dst);
+                    *pixel = COLOR_BLEND_ALPHAS(*pixel, layer_pixel, alpha_src, alpha_dst, alpha_mix);
                 }
             }
             ++pixel;
