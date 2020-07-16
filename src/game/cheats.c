@@ -104,7 +104,6 @@ void game_cheat_victory(void)
 
 void game_cheat_breakpoint(){
     if (data.is_cheating) {
-        asm("nop");
     }
 }
 
