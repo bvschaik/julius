@@ -61,4 +61,6 @@ void city_population_check_consistency(void);
 int city_population_graph_order(void);
 void city_population_set_graph_order(int order);
 
+int city_population_open_housing_capacity(void);
+
 #endif // CITY_POPULATION_H
