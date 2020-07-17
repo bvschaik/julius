@@ -1,5 +1,6 @@
 #include "game/system.h"
 
+#include "android/android.h"
 #include "switch/switch.h"
 #include "vita/vita.h"
 
