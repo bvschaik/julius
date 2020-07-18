@@ -42,4 +42,6 @@ void city_ratings_update_explanations(void);
 
 void city_ratings_update(int is_yearly_update);
 
+int city_ratings_prosperity_max(void);
+
 #endif // CITY_RATINGS_H

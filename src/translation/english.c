@@ -135,7 +135,24 @@ static translation_string all_strings[] = {
     {TR_BUILDING_ROADBLOCK_DESC, "Roadblock stops loitering citizens."},
     {TR_HEADER_HOUSING, "Housing"},
     {TR_ADVISOR_HOUSING_ROOM, "City housing has room available for"},
-    {TR_ADVISOR_HOUSING_NO_ROOM, "There is no room available in city housing."}
+    {TR_ADVISOR_HOUSING_NO_ROOM, "There is no room available in city housing."},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, "Residences demanding pottery"},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE, "Residences demanding furniture"},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_OIL, "Residences demanding oil"},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_WINE, "Residences demanding wine"},
+    {TR_ADVISOR_TOTAL_NUM_HOUSES, "Total residences:"},
+    {TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY, "Available capacity:"},
+    {TR_ADVISOR_TOTAL_HOUSING_CAPACITY, "Total capacity:"},
+    {TR_ADVISOR_ADVISOR_HEADER_HOUSING, "Population - Housing"},
+    {TR_ADVISOR_BUTTON_GRAPHS, "Graphs"},
+    {TR_ADVISOR_HOUSING_PROSPERITY_RATING, "Housing prosperity rating is"},
+    {TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES, "Percentage of your population in villas and palaces is"},
+    {TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS, "Percentage of your population in tents and shacks is"},
+    {TR_ADVISOR_AVERAGE_TAX, "Average tax income per residence is"},
+    {TR_ADVISOR_AVERAGE_AGE, "Average age of your population is"},
+    {TR_ADVISOR_PERCENT_IN_WORKFORCE, "Percentage of your population in the workforce is"},
+    {TR_ADVISOR_BIRTHS_LAST_YEAR, "Births last year:"},
+    {TR_ADVISOR_DEATHS_LAST_YEAR, "Deaths last year:"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

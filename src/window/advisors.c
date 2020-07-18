@@ -33,6 +33,7 @@
 #include "window/advisor/ratings.h"
 #include "window/advisor/religion.h"
 #include "window/advisor/trade.h"
+#include "window/advisor/housing.h"
 
 static void button_change_advisor(int advisor, int param2);
 static void button_help(int param1, int param2);
@@ -70,11 +71,19 @@ static const advisor_window_type *(*sub_advisors[])(void) = {
     window_advisor_entertainment,
     window_advisor_religion,
     window_advisor_financial,
-    window_advisor_chief
+    window_advisor_chief,
+    0,
+    // sub-advisors begin here
+    0,
+    0,
+    0,
+    0,
+    0,
+    window_advisor_housing //population sub-advisor
 };
 
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
-    0, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
+    0, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 0, 0, 0, 0, 0, 0, 25
 };
 
 static const advisor_window_type *current_advisor_window = 0;
@@ -130,7 +139,7 @@ void window_advisors_draw_dialog_background(void)
 
     for (int i = 0; i < 13; i++) {
         int selected_offset = 0;
-        if (current_advisor && i == current_advisor - 1) {
+        if (current_advisor && i == (current_advisor % 13) - 1) {
             selected_offset = 13;
         }
         image_draw(image_group(GROUP_ADVISOR_ICONS) + i + selected_offset, 48 * i + 12, 441);
@@ -203,7 +212,7 @@ static void button_change_advisor(int advisor, int param2)
 
 static void button_help(int param1, int param2)
 {
-    if (current_advisor > 0 && current_advisor < 13) {
+    if (current_advisor > 0) {
         window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], 0);
     }
 }

@@ -159,6 +159,20 @@ static int get_people_in_age_decennium(int decennium)
     return pop;
 }
 
+int city_population_average_age(void)
+{
+    recalculate_population();
+    if (!city_data.population.population) {
+        return 0;
+    }
+
+    int age_sum = 0;
+    for (int i = 0; i < 100; i++) {
+        age_sum += (city_data.population.at_age[i] * i);
+    }
+    return age_sum/city_data.population.population;
+}
+
 void city_population_add(int num_people)
 {
     city_data.population.last_change = num_people;
@@ -216,6 +230,17 @@ int city_population_people_of_working_age(void)
             get_people_in_age_decennium(3) +
             get_people_in_age_decennium(4);
     }
+}
+
+int city_population_percent_in_workforce(void) {
+    if (!city_data.population.population) {
+        return 0;
+    }
+
+    if (config_get(CONFIG_GP_CH_FIXED_WORKERS)) {
+        return 38;
+    }
+    return calc_percentage(city_data.labor.workers_available, city_data.population.population);
 }
 
 static int get_people_aged_between(int min, int max)
@@ -317,6 +342,83 @@ static void yearly_recalculate_population(void)
     city_data.population.average_per_year = city_data.population.total_all_years / city_data.population.total_years;
 }
 
+int calculate_total_housing_buildings(void)
+{
+    int total = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (b->state == BUILDING_STATE_UNUSED ||
+            b->state == BUILDING_STATE_UNDO ||
+            b->state == BUILDING_STATE_DELETED_BY_GAME ||
+            b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+            continue;
+        }
+        if (building_is_house(b->type) && b->house_population > 0) {
+            total += 1;
+        }
+    }
+
+    return total;
+}
+
+int * calculate_number_of_each_housing_type(void) {
+
+   static int housing_type_counts[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    for (int i = 0; i <= 19; i++) {
+        housing_type_counts[i] = 0;
+    }
+
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (b->state == BUILDING_STATE_UNUSED ||
+            b->state == BUILDING_STATE_UNDO ||
+            b->state == BUILDING_STATE_DELETED_BY_GAME ||
+            b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+            continue;
+        }
+        if (b->house_size) {
+            housing_type_counts[b->subtype.house_level] +=1;
+        }
+    }
+
+   return housing_type_counts;
+}
+
+int * calculate_houses_demanding_goods(int * housing_type_counts) {
+    static int houses_demanding_goods[4] = {0, 0, 0, 0};
+
+    for (int i = 0; i <= 3; i++) {
+        houses_demanding_goods[i] = 0;
+    }
+
+    //pottery
+    for(int i=7; i<=19; i++)
+    {
+        houses_demanding_goods[0] += housing_type_counts[i];
+    }
+
+    //furniture
+    for(int i=9; i<=19; i++)
+    {
+        houses_demanding_goods[1] += housing_type_counts[i];
+    }
+
+    //oil
+    for(int i=10; i<=19; i++)
+    {
+        houses_demanding_goods[2] += housing_type_counts[i];
+    }
+
+    //wine
+    for(int i=12; i<=19; i++)
+    {
+        houses_demanding_goods[3] += housing_type_counts[i];
+    }
+
+    return houses_demanding_goods;
+}
+
 static int calculate_people_per_house_type(void)
 {
     city_data.population.people_in_tents_shacks = 0;
@@ -387,4 +489,32 @@ void city_population_set_graph_order(int order)
 
 int city_population_open_housing_capacity(void) {
     return city_data.population.room_in_houses;
+}
+
+int city_population_total_housing_capacity(void) {
+    return city_data.population.total_capacity;
+}
+
+int city_population_yearly_deaths(void) {
+    return city_data.population.yearly_deaths;
+}
+
+int city_population_yearly_births(void) {
+    return city_data.population.yearly_births;
+}
+
+int percentage_city_population_in_tents_shacks(void) {
+    if (!city_data.population.population) {
+        return 0;
+    }
+
+    return calc_percentage(city_data.population.people_in_tents_shacks, city_data.population.population);
+}
+
+int percentage_city_population_in_villas_palaces(void) {
+    if (!city_data.population.population) {
+        return 0;
+    }
+
+    return calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population);
 }

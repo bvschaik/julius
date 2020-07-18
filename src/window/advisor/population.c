@@ -1,7 +1,10 @@
 #include "population.h"
 
+#include "core/config.h"
+#include "city/finance.h"
 #include "city/migration.h"
 #include "city/population.h"
+#include "city/ratings.h"
 #include "city/resource.h"
 #include "game/time.h"
 #include "graphics/generic_button.h"
@@ -12,14 +15,18 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
+#include "translation/translation.h"
+#include "window/advisors.h"
 
 #define ADVISOR_HEIGHT 27
+#define HOUSING_ADVISOR_ID 19
 
 static void button_graph(int param1, int param2);
 
 static generic_button graph_buttons[] = {
     {503,  61, 104, 55, button_graph, button_none, 0, 0},
     {503, 161, 104, 55, button_graph, button_none, 1, 0},
+    {545, 260, 60, 51, button_graph, button_none, 0, 1}
 };
 
 static int focus_button_id;
@@ -266,6 +273,115 @@ static void draw_society_graph(int full_size, int x, int y)
     }
 }
 
+static void print_society_info(void) {
+    int width;
+    int avg_tax_per_house = 0;
+    if (calculate_total_housing_buildings() > 0) {
+        avg_tax_per_house = city_finance_estimated_tax_income() / calculate_total_housing_buildings();
+    }
+
+    // Housing prosperity cap
+    width = text_draw(translation_for(TR_ADVISOR_HOUSING_PROSPERITY_RATING), 75, 342, FONT_NORMAL_WHITE, 0);
+    text_draw_number(city_ratings_prosperity_max(), '@', " ", 75 + width, 342, FONT_NORMAL_WHITE);
+
+    // Percent patricians
+    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES), 75, 360, FONT_NORMAL_WHITE, 0);
+    text_draw_percentage(percentage_city_population_in_villas_palaces(), 75 + width, 360, FONT_NORMAL_WHITE);
+
+    // Percent impoverished
+    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS), 75, 378, FONT_NORMAL_WHITE, 0);
+    text_draw_percentage(percentage_city_population_in_tents_shacks(), 75 + width, 378, FONT_NORMAL_WHITE);
+
+    // Average tax
+    width = text_draw(translation_for(TR_ADVISOR_AVERAGE_TAX), 75, 396, FONT_NORMAL_WHITE, 0);
+    text_draw_money(avg_tax_per_house, 75 + width, 396, FONT_NORMAL_WHITE);
+}
+
+static void print_census_info(void) {
+
+    int width;
+
+    // Average age
+    width = text_draw(translation_for(TR_ADVISOR_AVERAGE_AGE), 75, 342, FONT_NORMAL_WHITE, 0);
+    text_draw_number(city_population_average_age(), '@', " ", 75 + width, 342, FONT_NORMAL_WHITE);
+
+    // Percent working age
+    width = text_draw(translation_for(TR_ADVISOR_PERCENT_IN_WORKFORCE), 75, 360, FONT_NORMAL_WHITE, 0);
+    text_draw_percentage(city_population_percent_in_workforce(), 75 + width, 360, FONT_NORMAL_WHITE);
+
+    // Yearly births
+    width = text_draw(translation_for(TR_ADVISOR_BIRTHS_LAST_YEAR), 75, 378, FONT_NORMAL_WHITE, 0);
+    text_draw_number(city_population_yearly_births(), '@', "", 75 + width, 378, FONT_NORMAL_WHITE);
+
+    // Yearly deaths
+    width = text_draw(translation_for(TR_ADVISOR_DEATHS_LAST_YEAR), 75, 396, FONT_NORMAL_WHITE, 0);
+    text_draw_number(city_population_yearly_deaths(), '@', "", 75 + width, 396, FONT_NORMAL_WHITE);
+}
+
+static void print_history_info(void) {
+    int width;
+
+    // food stores
+    if (scenario_property_rome_supplies_wheat()) {
+        lang_text_draw(55, 11, 75, 342, FONT_NORMAL_WHITE);
+    } else {
+        width = lang_text_draw_amount(8, 6, city_resource_operating_granaries(), 70, 342, FONT_NORMAL_WHITE);
+        if (city_resource_food_supply_months() > 0) {
+            width += lang_text_draw(55, 12, 70 + width, 342, FONT_NORMAL_WHITE);
+            lang_text_draw_amount(8, 4, city_resource_food_supply_months(), 70 + width, 342, FONT_NORMAL_WHITE);
+        } else if (city_resource_food_stored() > city_resource_food_needed() / 2) {
+            lang_text_draw(55, 13, 70 + width, 342, FONT_NORMAL_WHITE);
+        } else if (city_resource_food_stored() > 0) {
+            lang_text_draw(55, 15, 70 + width, 342, FONT_NORMAL_WHITE);
+        } else {
+            lang_text_draw(55, 14, 70 + width, 342, FONT_NORMAL_WHITE);
+        }
+    }
+
+    // food types eaten
+    width = lang_text_draw(55, 16, 75, 360, FONT_NORMAL_WHITE);
+    text_draw_number(city_resource_food_types_available(), '@', " ", 75 + width, 360, FONT_NORMAL_WHITE);
+
+    // immigration
+    int newcomers = city_migration_newcomers();
+    if (newcomers >= 5) {
+        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
+        width = text_draw_number(newcomers, '@', " ", 70, 396, FONT_NORMAL_WHITE);
+        lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE);
+    } else if (city_migration_no_room_for_immigrants()) {
+        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
+        lang_text_draw(55, 19, 75, 396, FONT_NORMAL_WHITE);
+    } else if (city_migration_percentage() < 80) {
+        lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE);
+        int text_id;
+        switch (city_migration_no_immigration_cause()) {
+            case NO_IMMIGRATION_LOW_WAGES: text_id = 20; break;
+            case NO_IMMIGRATION_NO_JOBS: text_id = 21; break;
+            case NO_IMMIGRATION_NO_FOOD: text_id = 22; break;
+            case NO_IMMIGRATION_HIGH_TAXES: text_id = 23; break;
+            case NO_IMMIGRATION_MANY_TENTS: text_id = 31; break;
+            case NO_IMMIGRATION_LOW_MOOD: text_id = 32; break;
+            default: text_id = 0; break;
+        }
+        if (text_id) {
+            lang_text_draw(55, text_id, 75, 396, FONT_NORMAL_WHITE);
+        }
+    } else {
+        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
+        width = text_draw_number(newcomers, '@', " ", 70, 396, FONT_NORMAL_WHITE);
+        if (newcomers == 1) {
+            lang_text_draw(55, 18, 70 + width, 396, FONT_NORMAL_WHITE);
+        } else {
+            lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE);
+        }
+    }}
+
+static void draw_housing_button(int full_size, int x, int y)
+{
+    image_draw_isometric_footprint(image_group(29) + 2, x, y, COLOR_MASK_NONE);
+    image_draw_isometric_top(image_group(29) + 2, x, y, COLOR_MASK_NONE);
+}
+
 static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
@@ -287,6 +403,9 @@ static int draw_background(void)
     void (*big_graph)(int, int, int);
     void (*top_graph)(int, int, int);
     void (*bot_graph)(int, int, int);
+    void (*housing_button)(int, int, int);
+    void (*info_panel)();
+
     switch (graph_order) {
         default:
         case 0:
@@ -296,6 +415,8 @@ static int draw_background(void)
             big_graph = draw_history_graph;
             top_graph = draw_census_graph;
             bot_graph = draw_society_graph;
+            housing_button = draw_housing_button;
+            info_panel = print_history_info;
             break;
         case 1:
             big_text = 6;
@@ -304,6 +425,8 @@ static int draw_background(void)
             big_graph = draw_history_graph;
             top_graph = draw_society_graph;
             bot_graph = draw_census_graph;
+            housing_button = draw_housing_button;
+            info_panel = print_history_info;
             break;
         case 2:
             big_text = 7;
@@ -312,6 +435,8 @@ static int draw_background(void)
             big_graph = draw_census_graph;
             top_graph = draw_history_graph;
             bot_graph = draw_society_graph;
+            housing_button = draw_housing_button;
+            info_panel = print_census_info;
             break;
         case 3:
             big_text = 7;
@@ -320,6 +445,8 @@ static int draw_background(void)
             big_graph = draw_census_graph;
             top_graph = draw_society_graph;
             bot_graph = draw_history_graph;
+            housing_button = draw_housing_button;
+            info_panel = print_census_info;
             break;
         case 4:
             big_text = 8;
@@ -328,6 +455,8 @@ static int draw_background(void)
             big_graph = draw_society_graph;
             top_graph = draw_history_graph;
             bot_graph = draw_census_graph;
+            housing_button = draw_housing_button;
+            info_panel = print_society_info;
             break;
         case 5:
             big_text = 8;
@@ -336,132 +465,100 @@ static int draw_background(void)
             big_graph = draw_society_graph;
             top_graph = draw_census_graph;
             bot_graph = draw_history_graph;
+            housing_button = draw_housing_button;
+            info_panel = print_society_info;
             break;
     }
+
+    text_draw_centered(translation_for(TR_HEADER_HOUSING), 545, 315, 61, FONT_NORMAL_BLACK, 0);
     lang_text_draw_centered(55, big_text, 60, 295, 400, FONT_NORMAL_BLACK);
-    lang_text_draw_centered(55, top_text, 504, 120, 100, FONT_NORMAL_BLACK);
-    lang_text_draw_centered(55, bot_text, 504, 220, 100, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(55, top_text, 504, 130, 100, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(55, bot_text, 504, 230, 100, FONT_NORMAL_BLACK);
+
     big_graph(1, 64, 64);
     top_graph(0, 505, 63);
     bot_graph(0, 505, 163);
+    housing_button(0, 545, 275);
 
-    // food/migration info panel
+    // info panel
     inner_panel_draw(48, 336, 34, 5);
     int image_id = image_group(GROUP_BULLET);
-    int width;
     image_draw(image_id, 56, 344);
     image_draw(image_id, 56, 362);
     image_draw(image_id, 56, 380);
     image_draw(image_id, 56, 398);
 
-    // food stores
-    if (scenario_property_rome_supplies_wheat()) {
-        lang_text_draw(55, 11, 75, 342, FONT_NORMAL_WHITE);
-    } else {
-        width = lang_text_draw_amount(8, 6, city_resource_operating_granaries(), 75, 342, FONT_NORMAL_WHITE);
-        if (city_resource_food_supply_months() > 0) {
-            width += lang_text_draw(55, 12, 75 + width, 342, FONT_NORMAL_WHITE);
-            lang_text_draw_amount(8, 4, city_resource_food_supply_months(), 75 + width, 342, FONT_NORMAL_WHITE);
-        } else if (city_resource_food_stored() > city_resource_food_needed() / 2) {
-            lang_text_draw(55, 13, 75 + width, 342, FONT_NORMAL_WHITE);
-        } else if (city_resource_food_stored() > 0) {
-            lang_text_draw(55, 15, 75 + width, 342, FONT_NORMAL_WHITE);
-        } else {
-            lang_text_draw(55, 14, 75 + width, 342, FONT_NORMAL_WHITE);
-        }
-    }
-
-    // food types eaten
-    width = lang_text_draw(55, 16, 75, 360, FONT_NORMAL_WHITE);
-    text_draw_number(city_resource_food_types_available(), '@', " ", 75 + width, 360, FONT_NORMAL_WHITE);
-
-    // immigration
-    int newcomers = city_migration_newcomers();
-    if (newcomers >= 5) {
-        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
-        width = text_draw_number(newcomers, '@', " ", 75, 396, FONT_NORMAL_WHITE);
-        lang_text_draw(55, 17, 75 + width, 396, FONT_NORMAL_WHITE);
-    } else if (city_migration_no_room_for_immigrants()) {
-        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
-        lang_text_draw(55, 19, 75, 396, FONT_NORMAL_WHITE);
-    } else if (city_migration_percentage() < 80) {
-        lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE);
-        int text_id;
-        switch (city_migration_no_immigration_cause()) {
-            case NO_IMMIGRATION_LOW_WAGES: text_id = 20; break;
-            case NO_IMMIGRATION_NO_JOBS: text_id = 21; break;
-            case NO_IMMIGRATION_NO_FOOD: text_id = 22; break;
-            case NO_IMMIGRATION_HIGH_TAXES: text_id = 23; break;
-            case NO_IMMIGRATION_MANY_TENTS: text_id = 31; break;
-            case NO_IMMIGRATION_LOW_MOOD: text_id = 32; break;
-            default: text_id = 0; break;
-        }
-        if (text_id) {
-            lang_text_draw(55, text_id, 75, 396, FONT_NORMAL_WHITE);
-        }
-    } else {
-        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
-        width = text_draw_number(newcomers, '@', " ", 75, 396, FONT_NORMAL_WHITE);
-        if (newcomers == 1) {
-            lang_text_draw(55, 18, 75 + width, 396, FONT_NORMAL_WHITE);
-        } else {
-            lang_text_draw(55, 17, 75 + width, 396, FONT_NORMAL_WHITE);
-        }
-    }
+    info_panel();
 
     return ADVISOR_HEIGHT;
 }
+
+
 
 static void draw_foreground(void)
 {
     if (focus_button_id == 0) {
         button_border_draw(501, 60, 106, 57, 0);
         button_border_draw(501, 160, 106, 57, 0);
+        button_border_draw(545, 260, 60, 51, 0);
     } else if (focus_button_id == 1) {
         button_border_draw(501, 60, 106, 57, 1);
         button_border_draw(501, 160, 106, 57, 0);
+        button_border_draw(545, 260, 60, 51, 0);
     } else if (focus_button_id == 2) {
         button_border_draw(501, 60, 106, 57, 0);
         button_border_draw(501, 160, 106, 57, 1);
+        button_border_draw(545, 260, 60, 51, 0);
+    } else if (focus_button_id == 3) {
+        button_border_draw(501, 60, 106, 57, 0);
+        button_border_draw(501, 160, 106, 57, 0);
+        button_border_draw(545, 260, 60, 51, 1);
     }
 }
 
 static int handle_mouse(const mouse *m)
 {
-    return generic_buttons_handle_mouse(m, 0, 0, graph_buttons, 2, &focus_button_id);
+    return generic_buttons_handle_mouse(m, 0, 0, graph_buttons, 3, &focus_button_id);
 }
 
 static void button_graph(int param1, int param2)
 {
     int new_order;
-    switch (city_population_graph_order()) {
-        default:
-        case 0:
-            new_order = param1 ? 5 : 2;
-            break;
-        case 1:
-            new_order = param1 ? 3 : 4;
-            break;
-        case 2:
-            new_order = param1 ? 4 : 0;
-            break;
-        case 3:
-            new_order = param1 ? 1 : 5;
-            break;
-        case 4:
-            new_order = param1 ? 2 : 1;
-            break;
-        case 5:
-            new_order = param1 ? 0 : 3;
-            break;
+
+    if (param2) {
+        // go to housing advisor
+        window_advisors_show_advisor(HOUSING_ADVISOR_ID);
+    } else {
+        switch (city_population_graph_order()) {
+            default:
+            case 0:
+                new_order = param1 ? 5 : 2;
+                break;
+            case 1:
+                new_order = param1 ? 3 : 4;
+                break;
+            case 2:
+                new_order = param1 ? 4 : 0;
+                break;
+            case 3:
+                new_order = param1 ? 1 : 5;
+                break;
+            case 4:
+                new_order = param1 ? 2 : 1;
+                break;
+            case 5:
+                new_order = param1 ? 0 : 3;
+                break;
+        }
+        city_population_set_graph_order(new_order);
     }
-    city_population_set_graph_order(new_order);
+
     window_invalidate();
 }
 
 static int get_tooltip_text(void)
 {
-    if (focus_button_id) {
+    if (focus_button_id && focus_button_id < 3) {
         return 111;
     } else {
         return 0;

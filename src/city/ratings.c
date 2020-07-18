@@ -605,3 +605,7 @@ void city_ratings_update(int is_yearly_update)
         update_peace_rating();
     }
 }
+
+int city_ratings_prosperity_max(void) {
+    return city_data.ratings.prosperity_max;
+}
