@@ -258,14 +258,14 @@ static void draw_roman_army_info(const empire_object *object)
     if (city_military_distant_battle_roman_army_is_traveling()) {
         if (city_military_distant_battle_roman_months_traveled() == object->distant_battle_travel_months) {
             int x_offset = (data.x_min + data.x_max - 240) / 2;
-            int y_offset = data.y_max - 88;
+            int y_offset = data.y_max - 68;
             int text_id;
             if (city_military_distant_battle_roman_army_is_traveling_forth()) {
                 text_id = 15;
             } else {
                 text_id = 16;
             }
-            lang_text_draw_multiline(47, text_id, x_offset, y_offset, 240, FONT_NORMAL_BLACK);
+            lang_text_draw_multiline(47, text_id, x_offset, y_offset, 240, FONT_NORMAL_GREEN);
         }
     }
 }
@@ -277,7 +277,7 @@ static void draw_enemy_army_info(const empire_object *object)
             lang_text_draw_multiline(47, 14,
                 (data.x_min + data.x_max - 240) / 2,
                 data.y_max - 68,
-                240, FONT_NORMAL_BLACK);
+                240, FONT_NORMAL_GREEN);
         }
     }
 }
