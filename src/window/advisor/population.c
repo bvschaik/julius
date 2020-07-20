@@ -384,6 +384,8 @@ static void draw_housing_button(int full_size, int x, int y)
 
 static int draw_background(void)
 {
+    int width;
+
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
 
@@ -398,6 +400,9 @@ static int draw_background(void)
     }
 
     image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
+
+    width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
+    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450+width, 25, FONT_NORMAL_BLACK, 0);
 
     int big_text, top_text, bot_text;
     void (*big_graph)(int, int, int);

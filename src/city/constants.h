@@ -15,7 +15,8 @@ typedef enum {
     ADVISOR_ENTERTAINMENT = 9,
     ADVISOR_RELIGION = 10,
     ADVISOR_FINANCIAL = 11,
-    ADVISOR_CHIEF = 12
+    ADVISOR_CHIEF = 12,
+    ADVISOR_HOUSING = 19
 } advisor_type;
 
 typedef enum {

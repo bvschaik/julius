@@ -77,11 +77,15 @@ static void draw_housing_table()
 static int draw_background(void)
 {
     int val;
+    int width;
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     inner_panel_draw(24, 60, 32, 16);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 5, 555, 265);
+
+    width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
+    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450+width, 25, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < 58; i++) {
         val = i/2;

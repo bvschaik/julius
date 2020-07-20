@@ -114,6 +114,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_ADVISOR_RELIGION, "Religion advisor"},
     {TR_HOTKEY_SHOW_ADVISOR_FINANCIAL, "Financial advisor"},
     {TR_HOTKEY_SHOW_ADVISOR_CHIEF, "Chief advisor"},
+    {TR_HOTKEY_SHOW_ADVISOR_HOUSING, "Housing advisor"},
     {TR_HOTKEY_TOGGLE_OVERLAY, "Toggle current overlay"},
     {TR_HOTKEY_SHOW_OVERLAY_WATER, "Show water overlay"},
     {TR_HOTKEY_SHOW_OVERLAY_FIRE, "Show fire overlay"},
@@ -152,7 +153,8 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_AVERAGE_AGE, "Average age of your population is"},
     {TR_ADVISOR_PERCENT_IN_WORKFORCE, "Percentage of your population in the workforce is"},
     {TR_ADVISOR_BIRTHS_LAST_YEAR, "Births last year:"},
-    {TR_ADVISOR_DEATHS_LAST_YEAR, "Deaths last year:"}
+    {TR_ADVISOR_DEATHS_LAST_YEAR, "Deaths last year:"},
+    {TR_ADVISOR_TOTAL_POPULATION, "residents total"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
