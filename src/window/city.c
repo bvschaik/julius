@@ -178,6 +178,8 @@ static short get_clone_type_from_building(building* building)
     }
 
     switch (clone_type) {
+        case BUILDING_RESERVOIR:
+            return BUILDING_DRAGGABLE_RESERVOIR;
         case BUILDING_FORT:
             switch (building->subtype.fort_figure_type) {
                 case FIGURE_FORT_LEGIONARY: return BUILDING_FORT_LEGIONARIES;
