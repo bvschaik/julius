@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/house_population.h"
+#include "building/model.h"
 #include "city/data_private.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -386,34 +387,30 @@ int * calculate_number_of_each_housing_type(void) {
 }
 
 int * calculate_houses_demanding_goods(int * housing_type_counts) {
+    const model_house *model;
     static int houses_demanding_goods[4] = {0, 0, 0, 0};
 
     for (int i = 0; i <= 3; i++) {
         houses_demanding_goods[i] = 0;
     }
 
-    //pottery
-    for(int i=7; i<=19; i++)
-    {
-        houses_demanding_goods[0] += housing_type_counts[i];
-    }
+    for(int i=0; i<=19; i++) {
+        model = model_get_house(i);
+        if (model->pottery) {
+            houses_demanding_goods[0] += housing_type_counts[i];
+        }
 
-    //furniture
-    for(int i=9; i<=19; i++)
-    {
-        houses_demanding_goods[1] += housing_type_counts[i];
-    }
+        if (model->furniture) {
+            houses_demanding_goods[1] += housing_type_counts[i];
+        }
 
-    //oil
-    for(int i=10; i<=19; i++)
-    {
-        houses_demanding_goods[2] += housing_type_counts[i];
-    }
+        if (model->oil) {
+            houses_demanding_goods[2] += housing_type_counts[i];
+        }
 
-    //wine
-    for(int i=12; i<=19; i++)
-    {
-        houses_demanding_goods[3] += housing_type_counts[i];
+        if (model->wine) {
+            houses_demanding_goods[3] += housing_type_counts[i];
+        }
     }
 
     return houses_demanding_goods;
