@@ -202,8 +202,6 @@ void building_warehouse_space_remove_export(building *space, int resource)
     building_warehouse_space_set_image(space, resource);
 }
 
-
-
 void building_warehouses_add_resource(int resource, int amount)
 {
     int building_id = city_resource_last_used_warehouse();

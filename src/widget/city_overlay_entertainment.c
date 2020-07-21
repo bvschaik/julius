@@ -31,7 +31,6 @@ static int show_building_hippodrome(const building *b)
     return b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME;
 }
 
-
 static building *get_entertainment_building(const figure *f)
 {
     if (f->action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
@@ -79,7 +78,6 @@ static int show_figure_hippodrome(const figure *f)
     return f->type == FIGURE_CHARIOTEER;
 }
 
-
 static int get_column_height_entertainment(const building *b)
 {
     return b->house_size && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
@@ -104,7 +102,6 @@ static int get_column_height_hippodrome(const building *b)
 {
     return b->house_size && b->data.house.hippodrome ? b->data.house.hippodrome / 10 : NO_COLUMN;
 }
-
 
 static int get_tooltip_entertainment(tooltip_context *c, const building *b)
 {
@@ -184,7 +181,6 @@ static int get_tooltip_hippodrome(tooltip_context *c, const building *b)
         return 90;
     }
 }
-
 
 const city_overlay *city_overlay_for_entertainment(void)
 {

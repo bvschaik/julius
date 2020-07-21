@@ -144,6 +144,7 @@ static void set_milestone_year(int value)
 {
     scenario_editor_set_milestone_year(dialog_milestone_pct, value);
 }
+
 static void button_milestone(int milestone_pct, int param2)
 {
     dialog_milestone_pct = milestone_pct;

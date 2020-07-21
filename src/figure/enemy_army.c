@@ -125,7 +125,6 @@ int enemy_army_is_stronger_than_legions(void)
     return totals.enemy_strength > 2 * totals.legion_strength;
 }
 
-
 void enemy_armies_save_state(buffer *buf, buffer *totals_buf)
 {
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {

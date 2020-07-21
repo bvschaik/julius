@@ -336,7 +336,6 @@ void empire_city_set_foreign(int city_id)
     cities[city_id].type = EMPIRE_CITY_DISTANT_FOREIGN;
 }
 
-
 void empire_city_save_state(buffer *buf)
 {
     for (int i = 0; i < MAX_CITIES; i++) {

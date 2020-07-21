@@ -393,6 +393,7 @@ static void replay_map_confirmed(int confirmed)
         window_mission_briefing_show();
     }
 }
+
 static void menu_file_replay_map(int param)
 {
     clear_state();
@@ -492,7 +493,6 @@ static void menu_help_about(int param)
     window_go_back();
     window_message_dialog_show(MESSAGE_DIALOG_ABOUT, window_city_draw_all);
 }
-
 
 static void menu_advisors_go_to(int advisor)
 {

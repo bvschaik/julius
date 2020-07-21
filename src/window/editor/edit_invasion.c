@@ -101,6 +101,7 @@ static void set_year(int value)
 {
     data.invasion.year = value;
 }
+
 static void button_year(int param1, int param2)
 {
     window_numeric_input_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 50, 3, 999, set_year);
@@ -110,6 +111,7 @@ static void set_amount(int value)
 {
     data.invasion.amount = value;
 }
+
 static void button_amount(int param1, int param2)
 {
     window_numeric_input_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 3, 200, set_amount);
@@ -119,6 +121,7 @@ static void set_type(int value)
 {
     data.invasion.type = value == 3 ? 4 : value;
 }
+
 static void button_type(int param1, int param2)
 {
     window_select_list_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 120, 34, 4, set_type);
@@ -128,6 +131,7 @@ static void set_from(int value)
 {
     data.invasion.from = value;
 }
+
 static void button_from(int param1, int param2)
 {
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE) {
@@ -139,6 +143,7 @@ static void set_attack(int value)
 {
     data.invasion.attack_type = value;
 }
+
 static void button_attack(int param1, int param2)
 {
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE) {

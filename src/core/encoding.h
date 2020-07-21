@@ -13,6 +13,7 @@ typedef enum {
     ENCODING_EASTERN_EUROPE = 1250,
     ENCODING_CYRILLIC = 1251,
     ENCODING_TRADITIONAL_CHINESE = 950,
+    ENCODING_SIMPLIFIED_CHINESE = 936,
     ENCODING_KOREAN = 949
 } encoding_type;
 
@@ -78,13 +79,13 @@ int encoding_get_utf8_character_bytes(const char input);
  * @param input Input to convert, encoded using UTF-16
  * @param output Output buffer to store the UTF-8 encoded input
  */
-void encoding_utf16_to_utf8(uint16_t *input, uint8_t *output);
+void encoding_utf16_to_utf8(const uint16_t *input, char *output);
 
 /**
  * Converts an UTF-8 input input to UTF-16 output
  * @param input Input to convert, encoded using UTF-8
  * @param output Output buffer to store the UTF-16 encoded input
  */
-void encoding_utf8_to_utf16(uint8_t *input, uint16_t *output);
+void encoding_utf8_to_utf16(const char *input, uint16_t *output);
 
 #endif // CORE_ENCODING_H

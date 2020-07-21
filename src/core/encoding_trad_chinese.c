@@ -12,7 +12,7 @@ typedef struct {
     uint8_t utf8[3];
 } chinese_entry;
 
-static const chinese_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS] = {
+static const chinese_entry codepage_to_utf8[IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS] = {
     {0x8080, {0xef, 0xbc, 0x81}},
     {0x8081, {0xe6, 0xaa, 0x94}},
     {0x8082, {0xe6, 0xa1, 0x88}},
@@ -2258,17 +2258,17 @@ static int compare_internal(const void *a, const void *b)
 void encoding_trad_chinese_init(void)
 {
     if (!utf8_to_codepage) {
-        utf8_to_codepage = (chinese_entry*) malloc(sizeof(chinese_entry) * IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS);
+        utf8_to_codepage = (chinese_entry*) malloc(sizeof(chinese_entry) * IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS);
         if (!utf8_to_codepage) {
             log_error("Unable to allocate memory for Chinese codepage", 0, 0);
             return;
         }
     }
-    // codepage_to_unicode is already sorted, copy data and sort the other way around
+    // codepage_to_utf8 is already sorted, copy data and sort the other way around
     memcpy(utf8_to_codepage, codepage_to_utf8,
-        IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS * sizeof(chinese_entry));
+        IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS * sizeof(chinese_entry));
 
-    qsort(utf8_to_codepage, IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_utf8);
+    qsort(utf8_to_codepage, IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_utf8);
 }
 
 void encoding_trad_chinese_to_utf8(const uint8_t *input, char *output, int output_length)
@@ -2284,7 +2284,7 @@ void encoding_trad_chinese_to_utf8(const uint8_t *input, char *output, int outpu
             // multi-byte char
             const chinese_entry key = {input[1] << 8 | input[0]};
             const chinese_entry *entry = bsearch(&key, codepage_to_utf8,
-                IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_internal);
+                IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_internal);
             int bytes = entry ? (entry->utf8[2] ? 3 : 2) : 0;
             if (entry && output + bytes <= max_output) {
                 for (int i = 0; i < bytes; i++) {
@@ -2315,7 +2315,7 @@ void encoding_trad_chinese_from_utf8(const char *input, uint8_t *output, int out
             // multi-byte char: Chinese characters from the table may be 2 or 3 bytes in UTF-8
             const chinese_entry key = {0, {(uint8_t)input[0], (uint8_t)input[1], (uint8_t)input[2]}};
             const chinese_entry *entry = bsearch(&key, utf8_to_codepage,
-                IMAGE_FONT_MULTIBYTE_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_utf8);
+                IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_utf8);
             if (entry && output + 2 <= max_output) {
                 *output = entry->internal & 0xff;
                 output++;

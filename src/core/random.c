@@ -74,7 +74,6 @@ int32_t random_from_pool(int index)
     return data.pool[(data.pool_index + index) % MAX_RANDOM];
 }
 
-
 void random_load_state(buffer *buf)
 {
     data.iv1 = buffer_read_u32(buf);

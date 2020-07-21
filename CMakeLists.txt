@@ -190,7 +190,6 @@ elseif (SWITCH_BUILD)
         ${PROJECT_SOURCE_DIR}/src/platform/switch/cursor.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.c
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_keyboard.c
     )
 else()
     set(PLATFORM_FILES
@@ -208,6 +207,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/dir.c
     ${PROJECT_SOURCE_DIR}/src/core/encoding.c
     ${PROJECT_SOURCE_DIR}/src/core/encoding_korean.c
+    ${PROJECT_SOURCE_DIR}/src/core/encoding_simp_chinese.c
     ${PROJECT_SOURCE_DIR}/src/core/encoding_trad_chinese.c
     ${PROJECT_SOURCE_DIR}/src/core/file.c
     ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.c
@@ -557,6 +557,7 @@ set(TRANSLATION_FILES
     ${PROJECT_SOURCE_DIR}/src/translation/polish.c
     ${PROJECT_SOURCE_DIR}/src/translation/portuguese.c
     ${PROJECT_SOURCE_DIR}/src/translation/russian.c
+    ${PROJECT_SOURCE_DIR}/src/translation/simplified_chinese.c
     ${PROJECT_SOURCE_DIR}/src/translation/spanish.c
     ${PROJECT_SOURCE_DIR}/src/translation/traditional_chinese.c
     ${PROJECT_SOURCE_DIR}/src/translation/translation.c

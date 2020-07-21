@@ -260,7 +260,6 @@ void city_message_process_queue(void)
     }
 }
 
-
 void city_message_sort_and_compact(void)
 {
     for (int i = 0; i < MAX_MESSAGES; i++) {

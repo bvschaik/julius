@@ -46,7 +46,6 @@ static int show_building_desirability(const building *b)
     return 0;
 }
 
-
 static int show_figure_religion(const figure *f)
 {
     return f->type == FIGURE_PRIEST;
@@ -72,7 +71,6 @@ static int show_figure_none(const figure *f)
 {
     return 0;
 }
-
 
 static int get_column_height_religion(const building *b)
 {

@@ -92,6 +92,7 @@ static void set_year(int value)
 {
     data.price_change.year = value;
 }
+
 static void button_year(int param1, int param2)
 {
     window_numeric_input_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 50, 3, 999, set_year);
@@ -101,6 +102,7 @@ static void set_resource(int value)
 {
     data.price_change.resource = value;
 }
+
 static void button_resource(int param1, int param2)
 {
     window_select_list_show(screen_dialog_offset_x() + 25, screen_dialog_offset_y() + 40, 23, 16, set_resource);
@@ -115,6 +117,7 @@ static void set_amount(int value)
 {
     data.price_change.amount = value;
 }
+
 static void button_amount(int param1, int param2)
 {
     window_numeric_input_show(screen_dialog_offset_x() + 460, screen_dialog_offset_y() + 50, 2, 99, set_amount);

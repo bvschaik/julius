@@ -223,7 +223,6 @@ int empire_object_get_max_invasion_path(void)
     return max_path;
 }
 
-
 int empire_object_get_closest(int x, int y)
 {
     int min_dist = 10000;

@@ -42,7 +42,7 @@ static void reset_timer(void)
     last_update = time_get_millis();
 }
 
-static int should_draw_tooltip(tooltip_context* c)
+static int should_draw_tooltip(tooltip_context *c)
 {
     if (c->type == TOOLTIP_NONE) {
         reset_timer();

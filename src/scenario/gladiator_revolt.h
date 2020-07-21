@@ -15,5 +15,4 @@ void scenario_gladiator_revolt_save_state(buffer *buf);
 
 void scenario_gladiator_revolt_load_state(buffer *buf);
 
-
 #endif // SCENARIO_GLADIATOR_REVOLT_H

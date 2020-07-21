@@ -7,7 +7,7 @@
 #include <stdint.h>
 
 /** Smacker object struct pointer */
-typedef struct smacker_t* smacker;
+typedef struct smacker_t *smacker;
 
 enum {
     SMACKER_Y_SCALE_NONE = 0,
@@ -27,7 +27,7 @@ typedef enum {
  * @param file File
  * @return Smacker object if opening succeeded, otherwise NULL
  */
-smacker smacker_open(FILE* file);
+smacker smacker_open(FILE *file);
 
 /**
  * Close SMK file and clean up memory

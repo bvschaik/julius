@@ -3,7 +3,6 @@
 
 #include "core/buffer.h"
 
-
 typedef enum {
     MESSAGE_CAT_RIOT = 0,
     MESSAGE_CAT_FIRE = 1,

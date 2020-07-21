@@ -197,6 +197,7 @@ static void set_enemy(int enemy)
     scenario_editor_set_enemy(enemy);
     start();
 }
+
 static void button_enemy(int param1, int param2)
 {
     stop(1);

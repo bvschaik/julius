@@ -1,7 +1,6 @@
 #ifndef CITY_CONSTANTS_H
 #define CITY_CONSTANTS_H
 
-
 typedef enum {
     ADVISOR_NONE = 0,
     ADVISOR_LABOR = 1,

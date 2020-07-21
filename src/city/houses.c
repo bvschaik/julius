@@ -57,7 +57,7 @@ void city_houses_calculate_culture_demands(void)
     city_data.houses.education = 0;
     if (city_data.houses.missing.more_education > city_data.houses.missing.education) {
         city_data.houses.education = 1; // schools(academies?)
-    } else if (city_data.houses.missing.more_education == city_data.houses.missing.education) {
+    } else if (city_data.houses.missing.more_education < city_data.houses.missing.education) {
         city_data.houses.education = 2; // libraries
     } else if (city_data.houses.missing.more_education || city_data.houses.missing.education) {
         city_data.houses.education = 3; // more education

@@ -468,7 +468,7 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
 {
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
-    building* b = building_get(map_building_at(grid_offset));
+    building *b = building_get(map_building_at(grid_offset));
     if (img->num_animation_sprites
         && map_property_is_draw_tile(grid_offset)
         && b->type == BUILDING_HIPPODROME) {

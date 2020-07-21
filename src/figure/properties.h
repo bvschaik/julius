@@ -13,7 +13,6 @@ typedef enum {
     FIGURE_CATEGORY_ANIMAL = 6
 } figure_category;
 
-
 typedef struct {
     figure_category category;
     int max_damage;

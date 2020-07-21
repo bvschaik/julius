@@ -259,7 +259,6 @@ int map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int *x_t
     return 0;
 }
 
-
 static void add_road(int grid_offset)
 {
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
@@ -323,7 +322,6 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation)
         map_terrain_remove(map_grid_offset(x+2,y+2), TERRAIN_ROAD);
     }
 }
-
 
 void map_terrain_backup(void)
 {

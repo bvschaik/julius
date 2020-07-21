@@ -22,7 +22,6 @@ static int show_building_academy(const building *b)
     return b->type == BUILDING_ACADEMY;
 }
 
-
 static int show_figure_education(const figure *f)
 {
     return f->type == FIGURE_SCHOOL_CHILD || f->type == FIGURE_LIBRARIAN || f->type == FIGURE_TEACHER;
@@ -43,7 +42,6 @@ static int show_figure_academy(const figure *f)
     return f->type == FIGURE_TEACHER;
 }
 
-
 static int get_column_height_education(const building *b)
 {
     return b->house_size && b->data.house.education ? b->data.house.education * 3 - 1 : NO_COLUMN;
@@ -63,7 +61,6 @@ static int get_column_height_academy(const building *b)
 {
     return b->house_size && b->data.house.academy ? b->data.house.academy / 10 : NO_COLUMN;
 }
-
 
 static int get_tooltip_education(tooltip_context *c, const building *b)
 {

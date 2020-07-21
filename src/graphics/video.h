@@ -6,7 +6,7 @@
  * @param filename Video file
  * @return True if the video could be loaded
  */
-int video_start(const char* filename);
+int video_start(const char *filename);
 
 /**
  * Get size of the video

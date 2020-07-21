@@ -25,7 +25,6 @@ void enemy_armies_clear_ignore_roman_soldiers(void);
 
 void enemy_armies_clear_formations(void);
 
-
 int enemy_army_total_enemy_formations(void);
 
 void enemy_army_totals_clear(void);

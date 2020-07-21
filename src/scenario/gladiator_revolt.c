@@ -68,5 +68,3 @@ void scenario_gladiator_revolt_load_state(buffer *buf)
     data.end_month = buffer_read_i32(buf);
     data.state = buffer_read_i32(buf);
 }
-
-

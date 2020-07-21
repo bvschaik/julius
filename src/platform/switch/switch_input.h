@@ -5,6 +5,5 @@
 
 int switch_poll_event(SDL_Event *event);
 void switch_handle_analog_sticks(void);
-void switch_handle_virtual_keyboard(void);
 
 #endif /* SWITCH_INPUT_H */

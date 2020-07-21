@@ -1196,7 +1196,6 @@ static void update_native_crop_progress(building *b)
     map_image_set(b->grid_offset, image_group(GROUP_BUILDING_FARM_CROPS) + b->data.industry.progress);
 }
 
-
 void building_figure_generate(void)
 {
     int patrician_generated = 0;

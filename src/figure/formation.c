@@ -611,7 +611,6 @@ void formation_update_all(int second_time)
     formation_herd_update();
 }
 
-
 void formations_save_state(buffer *buf, buffer *totals)
 {
     for (int i = 0; i < MAX_FORMATIONS; i++) {

@@ -116,7 +116,6 @@ int map_get_aqueduct_with_road_image(int grid_offset)
     }
 }
 
-
 static int is_road_tile_for_aqueduct(int grid_offset, int gate_orientation)
 {
     int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
