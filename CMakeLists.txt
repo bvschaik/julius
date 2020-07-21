@@ -470,6 +470,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisor/entertainment.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/financial.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/health.c
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/housing.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/imperial.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/labor.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/military.c

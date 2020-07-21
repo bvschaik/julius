@@ -55,6 +55,7 @@ static const char *ini_keys[] = {
     "show_advisor_religion",
     "show_advisor_financial",
     "show_advisor_chief",
+    "show_advisor_housing",
     "show_overlay_water",
     "show_overlay_fire",
     "show_overlay_damage",
