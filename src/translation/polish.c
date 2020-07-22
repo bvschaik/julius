@@ -98,7 +98,30 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Ustaw punkt skoku 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Ustaw punkt skoku 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Przełącz informacje o bitwach"},
-    {TR_HOTKEY_EDIT_TITLE, "Wprowadź skrót"}
+    {TR_HOTKEY_EDIT_TITLE, "Wprowadź skrót"},
+    {TR_BUILDING_ROADBLOCK, "Blokada drogi"},
+    {TR_BUILDING_ROADBLOCK_DESC, "Blokada drogi zatrzymuje przechodniów bez celu."},
+    {TR_HEADER_HOUSING, "Domy"},
+    {TR_ADVISOR_HOUSING_ROOM, "W miejskich domach jest miejsce dla"},
+    {TR_ADVISOR_HOUSING_NO_ROOM, "Brak miejsca w miejskich domach."},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, "Domy wymagające garnków"},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE, "Domy wymagające mebli"},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_OIL, "Domy wymagające oliwy"},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_WINE, "Domy wymagające wina"},
+    {TR_ADVISOR_TOTAL_NUM_HOUSES, "Razem domów:"},
+    {TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY, "Dostępne zakwaterowanie:"},
+    {TR_ADVISOR_TOTAL_HOUSING_CAPACITY, "Całkowite zakwaterowanie:"},
+    {TR_ADVISOR_ADVISOR_HEADER_HOUSING, "Populacja - domy"},
+    {TR_ADVISOR_BUTTON_GRAPHS, "Wykresy"},
+    {TR_ADVISOR_HOUSING_PROSPERITY_RATING, "Bogactwo domów"},
+    {TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES, "Procent populacji w willach i pałacach"},
+    {TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS, "Procent populacji w namiotach i szałasach"},
+    {TR_ADVISOR_AVERAGE_TAX, "Średni podatek na głowę"},
+    {TR_ADVISOR_AVERAGE_AGE, "Średnia wieku populacji"},
+    {TR_ADVISOR_PERCENT_IN_WORKFORCE, "Procent populacji w sile roboczej"},
+    {TR_ADVISOR_BIRTHS_LAST_YEAR, "Narodzin w zeszłym roku:"},
+    {TR_ADVISOR_DEATHS_LAST_YEAR, "Śmierci w zeszłym roku:"},
+    {TR_ADVISOR_TOTAL_POPULATION, "Razem mieszkańców"}
 };
 
 void translation_polish(const translation_string **strings, int *num_strings)
