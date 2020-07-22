@@ -143,6 +143,13 @@ void figure_init_scenario(void)
     data.created_sequence = 0;
 }
 
+void figure_kill_all()
+{
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        data.figures[i].state = FIGURE_STATE_DEAD;
+    }
+}
+
 static void figure_save(buffer *buf, const figure *f)
 {
     buffer_write_u8(buf, f->alternative_location_index);

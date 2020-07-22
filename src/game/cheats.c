@@ -7,6 +7,7 @@
 #include "city/victory.h"
 #include "city/warning.h"
 #include "core/string.h"
+#include "figure/figure.h"
 #include "game/tick.h"
 #include "graphics/color.h"
 #include "graphics/font.h"
@@ -17,20 +18,22 @@
 #include "window/city.h"
 #include "window/console.h"
 
-#define NUMBER_OF_COMMANDS 5
+#define NUMBER_OF_COMMANDS 6
 
 static void game_cheat_add_money(uint8_t *);
 static void game_cheat_start_invasion(uint8_t *);
 static void game_cheat_advance_year(uint8_t *);
 static void game_cheat_cast_blessing(uint8_t *);
 static void game_cheat_show_tooltip(uint8_t *);
+static void game_cheat_kill_all(uint8_t*);
 
 static void (* const execute_command[])(uint8_t * args) = {
     game_cheat_add_money,
     game_cheat_start_invasion,
     game_cheat_advance_year,
     game_cheat_cast_blessing,
-    game_cheat_show_tooltip
+    game_cheat_show_tooltip,
+    game_cheat_kill_all
 };
 
 static const char *commands[] = {
@@ -38,7 +41,8 @@ static const char *commands[] = {
     "startinvasion",
     "nextyear",
     "blessing",
-    "showtooltip"
+    "showtooltip",
+    "killall"
 };
 
 static struct {
@@ -155,6 +159,11 @@ static void game_cheat_show_tooltip(uint8_t * args){
 
     city_warning_show_console((uint8_t*)"Show tooltip toggled");
 
+}
+
+static void game_cheat_kill_all(uint8_t* args) {
+    figure_kill_all();
+    city_warning_show_console((uint8_t*)"Killed all walkers");
 }
 
 
