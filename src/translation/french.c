@@ -1,6 +1,9 @@
 #include "translation/common.h"
 #include "translation/translation.h"
 
+#include "translation/common.h"
+#include "translation/translation.h"
+
 static translation_string all_strings[] = {
     {TR_NO_PATCH_TITLE, "Patch 1.0.1.0 manquant"},
     {TR_NO_PATCH_MESSAGE,
@@ -28,7 +31,7 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Contrôles du clavier"},
     {TR_BUTTON_NEXT, "+"},
     {TR_BUTTON_PREV, "-"},
-    {TR_CONFIG_TITLE, "Options de configuration de Augustus"},
+    {TR_CONFIG_TITLE, "Options de configuration d'Augustus"},
     {TR_CONFIG_LANGUAGE_LABEL, "Langue :"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(par défaut)"},
     {TR_CONFIG_PAGE_LABEL, "Page"},
@@ -42,6 +45,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Voir la zone d'effet en plaçant des réservoirs, des fontaines et des puits"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Voir la taille des constructions durant le glissement de la souris"},
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "Mettre en surbrillance les légions au survol du curseur"},
+    {TR_CONFIG_ROTATE_MANUALLY, "Rotation corps de garde et l'arc de triomphe par raccourci clavier"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corrige le bug d'immigration en mode très difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corrige le bug des fantômes de 100 ans"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corrige \"Nouvel Empereur\" et la survie des parties créees avec l'éditeur"},
@@ -69,6 +73,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, "Ouvre des routes commerciales qui founissent différents types de vins"},
     {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Les mines coûtent de l'argent au lieu d'être détruites."},
     {TR_CONFIG_MULTIPLE_BARRACKS, "Autorise la construction de plusieurs casernes." },
+    {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Les entrepôts n'acceptent rien une fois construits"},
+    {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Les maisons ne s'étendent pas sur les jardins"},
     {TR_HOTKEY_TITLE, "Configuration Raccourcis clavier"},
     {TR_HOTKEY_LABEL, "Raccourcis clavier"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},
@@ -79,6 +85,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "Cartes de visualisation"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "Points d'intérêt de la cité"},
     {TR_HOTKEY_HEADER_EDITOR, "Editeur"},
+    {TR_HOTKEY_HEADER_BUILD, "Raccourcis de construction"},
     {TR_HOTKEY_ARROW_UP, "Haut"},
     {TR_HOTKEY_ARROW_DOWN, "Bas"},
     {TR_HOTKEY_ARROW_LEFT, "Gauche"},
@@ -110,11 +117,13 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_ADVISOR_RELIGION, "Religion"},
     {TR_HOTKEY_SHOW_ADVISOR_FINANCIAL, "Finances"},
     {TR_HOTKEY_SHOW_ADVISOR_CHIEF, "Conseiller personnel"},
+    {TR_HOTKEY_SHOW_ADVISOR_HOUSING, "Conseiller en logement"},
     {TR_HOTKEY_TOGGLE_OVERLAY, "Basculer sur la carte précédente"},
     {TR_HOTKEY_SHOW_OVERLAY_WATER, "Eau"},
     {TR_HOTKEY_SHOW_OVERLAY_FIRE, "Incendies"},
     {TR_HOTKEY_SHOW_OVERLAY_DAMAGE, "Dégats"},
     {TR_HOTKEY_SHOW_OVERLAY_CRIME, "Criminalité"},
+    {TR_HOTKEY_ROTATE_BUILDING, "Rotation de bâtiment"},
     {TR_HOTKEY_SHOW_OVERLAY_PROBLEMS, "Problèmes"},
     {TR_HOTKEY_GO_TO_BOOKMARK_1, "Aller au point d'intérêt 1"},
     {TR_HOTKEY_GO_TO_BOOKMARK_2, "Aller au point d'intérêt 2"},
@@ -127,7 +136,28 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Afficher les infos de bataille"},
     {TR_HOTKEY_EDIT_TITLE, "Appuyez sur une touche"},
     {TR_BUILDING_ROADBLOCK, "Barrages"},
-    {TR_BUILDING_ROADBLOCK_DESC, "Barrages arrêtent les citoyens errants"}
+    {TR_BUILDING_ROADBLOCK_DESC, "Barrages arrêtent les citoyens errants"},
+    {TR_HEADER_HOUSING, "Logement"},
+    {TR_ADVISOR_HOUSING_ROOM, "Le logement en ville a de la place pour"},
+    {TR_ADVISOR_HOUSING_NO_ROOM, "Il n'y a plus de chambre disponible dans les logements."},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, "Résidences exigeant de la poterie"},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE, "Résidences exigeantes en mobilier"},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_OIL, "Résidences exigeantes en huile"},
+    {TR_ADVISOR_RESIDENCES_DEMANDING_WINE, "Résidences exigeant du vin"},
+    {TR_ADVISOR_TOTAL_NUM_HOUSES, "Total des résidences :"},
+    {TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY, "Capacité totale :"},
+    {TR_ADVISOR_TOTAL_HOUSING_CAPACITY, "Capacité totale :"},
+    {TR_ADVISOR_ADVISOR_HEADER_HOUSING, "Population - Logement"},
+    {TR_ADVISOR_BUTTON_GRAPHS, "Graphiques"},
+    {TR_ADVISOR_HOUSING_PROSPERITY_RATING, "La cote de prospérité du logement est"},
+    {TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES, "Pourcentage de votre population dans les villas et palais est"},
+    {TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS, "Pourcentage de votre population dans les tentes et cabanes est"},
+    {TR_ADVISOR_AVERAGE_TAX, "Le revenu fiscal moyen par résidence est"},
+    {TR_ADVISOR_AVERAGE_AGE, "L'âge moyen de votre population est"},
+    {TR_ADVISOR_PERCENT_IN_WORKFORCE, "Pourcentage de votre population active est"},
+    {TR_ADVISOR_BIRTHS_LAST_YEAR, "Naissances l'an dernier :"},
+    {TR_ADVISOR_DEATHS_LAST_YEAR, "Morts l'an dernier :"},
+    {TR_ADVISOR_TOTAL_POPULATION, "résidents total"}
 };
 
 void translation_french(const translation_string** strings, int* num_strings)
