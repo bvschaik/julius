@@ -2,7 +2,7 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Exec=julius
+Exec=augustus
 Icon=com.github.keriew.augustus
 Name=Augustus
 GenericName=Roman city management game
