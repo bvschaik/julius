@@ -1,6 +1,7 @@
 #include "translation.h"
 
 #include "core/encoding.h"
+#include "core/log.h"
 #include "core/string.h"
 
 #include <string.h>
@@ -13,12 +14,15 @@ static struct {
     int buf_index;
 } data;
 
-static void set_strings(const translation_string *strings, int num_strings)
+static void set_strings(const translation_string *strings, int num_strings, int is_default)
 {
     for (int i = 0; i < num_strings; i++) {
         const translation_string *string = &strings[i];
         if (data.strings[string->key]) {
             continue;
+        }
+        if (is_default) {
+            log_info("Translation key not found:", string->string, string->key);
         }
         int length_left = BUFFER_SIZE - data.buf_index;
         encoding_from_utf8(string->string, &data.buffer[data.buf_index], length_left);
@@ -47,6 +51,9 @@ void translation_load(language_type language)
         case LANGUAGE_GERMAN:
             translation_german(&strings, &num_strings);
             break;
+        case LANGUAGE_ITALIAN:
+            translation_italian(&strings, &num_strings);
+            break;
         case LANGUAGE_KOREAN:
             translation_korean(&strings, &num_strings);
             break;
@@ -72,8 +79,8 @@ void translation_load(language_type language)
 
     memset(data.strings, 0, sizeof(data.strings));
     data.buf_index = 0;
-    set_strings(strings, num_strings);
-    set_strings(default_strings, num_default_strings);
+    set_strings(strings, num_strings, 0);
+    set_strings(default_strings, num_default_strings, 1);
 }
 
 const uint8_t *translation_for(translation_key key)
