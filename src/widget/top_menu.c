@@ -323,11 +323,11 @@ static int handle_right_click(int type)
         return 0;
     }
     if (type == INFO_FUNDS) {
-        window_message_dialog_show(15, window_city_draw_all);
+        window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, window_city_draw_all);
     } else if (type == INFO_POPULATION) {
-        window_message_dialog_show(16, window_city_draw_all);
+        window_message_dialog_show(MESSAGE_DIALOG_TOP_POPULATION, window_city_draw_all);
     } else if (type == INFO_DATE) {
-        window_message_dialog_show(17, window_city_draw_all);
+        window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, window_city_draw_all);
     }
     return 1;
 }
