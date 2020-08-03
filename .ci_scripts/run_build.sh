@@ -8,19 +8,22 @@ case "$BUILD_TARGET" in
 	docker exec switchdev /bin/bash -c "cd build && make"
 	;;
 "mac")
+	cp -r res/mods ./build	
 	cd build && make && make install && \
 	echo "Creating disk image" && \
 	hdiutil create -volname Augustus -srcfolder augustus.app -ov -format UDZO augustus.dmg
 	;;
 "appimage")
+	cp -r res/mods ./build		
 	cd build && make && \
 	make DESTDIR=AppDir install && \
 	cd .. && \
 	./.ci_scripts/package_appimage.sh
 	;;
 "linux")
+	cp -r res/mods ./build
 	cd build && make && \
-	zip augustus.zip augustus
+	zip -r augustus.zip augustus mods
 	;;
 *)
 	cd build && make 
