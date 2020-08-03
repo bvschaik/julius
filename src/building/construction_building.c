@@ -14,6 +14,7 @@
 #include "city/warning.h"
 #include "core/config.h"
 #include "core/image.h"
+#include "core/mods.h"
 #include "core/random.h"
 #include "figure/formation_legion.h"
 #include "game/undo.h"
@@ -414,7 +415,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_ORACLE));
             break;
         case BUILDING_ROADBLOCK:
-            add_building(b, image_group(GROUP_ROADBLOCK));
+            add_building(b, mods_get_group_id("Keriew", "Roadblocks"));
             map_terrain_add_roadblock_road(b->x, b->y, orientation);	    
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
