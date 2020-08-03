@@ -408,6 +408,8 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
                 b->subtype.orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
                 tiles[i] = 1;
             }
+        } else if (map_terrain_is(offset, TERRAIN_ACCESS_RAMP)) {
+            tiles[i] = 1;
         } else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
             building *b = building_get(map_building_at(offset));
             if (b->type == BUILDING_GRANARY) {
