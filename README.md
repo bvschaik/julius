@@ -17,7 +17,7 @@ Augustus is a fork of the Julius project that intends to incorporate gameplay ch
 =======
 The aim of this project is to provide enhanced, customizable gameplay to Caesar 3 using project Julius UI enhancements.
 
-Augustus is able to load Caesar 3 and Julius saves, however saves made with Augustus are unlikely to work in either original C3 or project Julius.
+Augustus is able to load Caesar 3 and Julius saves, however saves made with Augustus **will not work** outside Augustus.
 
 Gameplay enhancements include:
 - Roadblocks
@@ -52,5 +52,4 @@ See [Running](doc/RUNNING.md) for further instructions and startup options.
 
 ## Bugs
 
-Julius recreates many bugs that you can find in original Caesar 3 game, to preserve 100% saves compatibility. See the list of [Bugs & idiosyncrasies](doc/bugs.md) to find out more.:w
-
+See the list of [Bugs & idiosyncrasies](doc/bugs.md) to find out more about some known bugs.
