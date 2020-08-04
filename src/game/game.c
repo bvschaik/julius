@@ -32,6 +32,8 @@
 #include "window/logo.h"
 #include "window/main_menu.h"
 
+#define MAX_TICKS_PER_FRAME 20
+
 static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
     702, 502, 352, 242, 162, 112, 82, 57, 37, 22, 16
 };
@@ -227,11 +229,16 @@ static int get_elapsed_ticks(void)
         data.last_update = now;
         return 1;
     }
-    if (diff < millis_per_tick) {
+    int ticks = diff / millis_per_tick;
+    if (!ticks) {
         return 0;
+    } else if (ticks <= MAX_TICKS_PER_FRAME) {
+        data.last_update = now - (diff % millis_per_tick); // account for left-over millis in this frame
+        return ticks;
+    } else {
+        data.last_update = now;
+        return MAX_TICKS_PER_FRAME;
     }
-    data.last_update = now - (diff % millis_per_tick);
-    return diff / millis_per_tick;
 }
 
 void game_run(void)
