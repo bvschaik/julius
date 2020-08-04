@@ -10,13 +10,13 @@
 #include "map/terrain.h"
 
 /**
-*   Takes a building and retrieve its proper type for cloning.
-*   For example, given a fort, return the enumaration value corresponding to
-*   the specific type of fort rather than the general value
-*
-*   @param building Building to examine
-*   @return the building_type value to clone, or BUILDING_NONE if not cloneable
-*/
+ * Takes a building and retrieve its proper type for cloning.
+ * For example, given a fort, return the enumaration value corresponding to
+ * the specific type of fort rather than the general value
+ *
+ * @param building Building to examine
+ * @return the building_type value to clone, or BUILDING_NONE if not cloneable
+ */
 static short get_clone_type_from_building(building *building)
 {
     short clone_type = building->type;
@@ -53,11 +53,11 @@ static short get_clone_type_from_building(building *building)
 }
 
 /**
-*   Helper function for retrieving which construction mode to enter.
-*
-*   @param grid_offset the grid_offset of the tile to examine
-*   @return type to use in building_construction_set_type (0 if none)
-*/
+ * Helper function for retrieving which construction mode to enter.
+ *
+ * @param grid_offset the grid_offset of the tile to examine
+ * @return type to use in building_construction_set_type (0 if none)
+ */
 static int get_clone_type_from_grid_offset(int grid_offset)
 {
     int terrain = map_terrain_get(grid_offset);
@@ -90,8 +90,8 @@ static int get_clone_type_from_grid_offset(int grid_offset)
 }
 
 /**
-*   Enter construction mode with the same building as cursor is currently over
-*/
+ * Enter construction mode with the same building as cursor is currently over
+ */
 void building_clone_from_grid_offset(int grid_offset)
 {
     short clone_type = get_clone_type_from_grid_offset(grid_offset);
