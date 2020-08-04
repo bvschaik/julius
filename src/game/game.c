@@ -33,10 +33,16 @@
 #include "window/main_menu.h"
 
 static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
-    0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
+    702, 502, 352, 242, 162, 112, 82, 57, 37, 22, 16
+};
+static const time_millis MILLIS_PER_HYPER_SPEED[] = {
+    702, 16, 8, 5, 3, 2
 };
 
-static time_millis last_update;
+static struct {
+    int last_check_was_valid;
+    time_millis last_update;
+} data;
 
 static void errlog(const char *msg)
 {
@@ -175,11 +181,12 @@ int game_reload_language(void)
 
 static int get_elapsed_ticks(void)
 {
+    int last_check_was_valid = data.last_check_was_valid;
+    data.last_check_was_valid = 0;
     if (game_state_is_paused()) {
         return 0;
     }
-    int game_speed_index = 0;
-    int ticks_per_frame = 1;
+    int millis_per_tick = 1;
     switch (window_get_id()) {
         default:
             return 0;
@@ -187,17 +194,22 @@ static int get_elapsed_ticks(void)
         case WINDOW_CITY_MILITARY:
         case WINDOW_SLIDING_SIDEBAR:
         case WINDOW_OVERLAY_MENU:
-        case WINDOW_BUILD_MENU:
-            game_speed_index = (100 - setting_game_speed()) / 10;
-            if (game_speed_index >= 10) {
+        case WINDOW_BUILD_MENU: {
+            int speed = setting_game_speed();
+            if (speed < 10) {
                 return 0;
-            } else if (game_speed_index < 0) {
-                ticks_per_frame = setting_game_speed() / 100;
-                game_speed_index = 0;
+            } else if (speed <= 100) {
+                millis_per_tick = MILLIS_PER_TICK_PER_SPEED[speed / 10];
+            } else {
+                if (speed > 500) {
+                    speed = 500;
+                }
+                millis_per_tick = MILLIS_PER_HYPER_SPEED[speed / 100];
             }
             break;
+        }
         case WINDOW_EDITOR_MAP:
-            game_speed_index = 3; // 70%, nice speed for flag animations
+            millis_per_tick = MILLIS_PER_TICK_PER_SPEED[7]; // 70%, nice speed for flag animations
             break;
     }
     if (building_construction_in_progress()) {
@@ -208,12 +220,18 @@ static int get_elapsed_ticks(void)
     }
 
     time_millis now = time_get_millis();
-    time_millis diff = now - last_update;
-    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
+    time_millis diff = now - data.last_update;
+    data.last_check_was_valid = 1;
+    if (!last_check_was_valid) {
+        // returning to map from another window or pause: always force a tick
+        data.last_update = now;
+        return 1;
+    }
+    if (diff < millis_per_tick) {
         return 0;
     }
-    last_update = now;
-    return ticks_per_frame;
+    data.last_update = now - (diff % millis_per_tick);
+    return diff / millis_per_tick;
 }
 
 void game_run(void)

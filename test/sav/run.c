@@ -26,7 +26,7 @@ static void handler(int sig)
 
 static void run_ticks(int ticks)
 {
-    setting_reset_speeds(100, setting_scroll_speed());
+    setting_reset_speeds(500, setting_scroll_speed());
     time_set_millis(0);
     for (int i = 1; i <= ticks; i++) {
         time_set_millis(2 * i);
