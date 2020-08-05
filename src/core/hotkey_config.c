@@ -77,6 +77,7 @@ static const char *ini_keys[] = {
     "resize_to_1024",
     "save_screenshot",
     "save_city_screenshot",
+    "clone_building"
 };
 
 static struct {

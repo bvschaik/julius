@@ -64,6 +64,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Resize window to 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Save screenshot"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Save full city screenshot"},
+    {TR_HOTKEY_BUILD_CLONE, "Clone building under cursor"},
     {TR_HOTKEY_LOAD_FILE, "Load file"},
     {TR_HOTKEY_SAVE_FILE, "Save file"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Increase game speed"},
