@@ -168,6 +168,7 @@ static void build_end(void)
             sound_effect_play(SOUND_EFFECT_BUILD);
         }
         building_construction_place();
+        widget_minimap_invalidate();
     }
 }
 
