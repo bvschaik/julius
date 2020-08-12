@@ -100,7 +100,7 @@ static int get_column_height_fire(const building *b)
 
 static int get_column_height_damage(const building *b)
 {
-    return b->damage_risk > 0 ? b->damage_risk / 10 : NO_COLUMN;
+    return b->damage_risk > 0 ? b->damage_risk / 20 : NO_COLUMN;
 }
 
 static int get_column_height_crime(const building *b)
