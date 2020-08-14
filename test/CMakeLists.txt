@@ -21,6 +21,17 @@ except_file(TEST_CORE_FILES "core/lang.c" ${TEST_CORE_FILES})
 except_file(TEST_CORE_FILES "core/speed.c" ${TEST_CORE_FILES})
 except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
 
+add_executable(translationcheck
+    translation/check.c
+    stub/log.c
+    ${PROJECT_SOURCE_DIR}/src/core/encoding.c
+    ${PROJECT_SOURCE_DIR}/src/core/encoding_korean.c
+    ${PROJECT_SOURCE_DIR}/src/core/encoding_simp_chinese.c
+    ${PROJECT_SOURCE_DIR}/src/core/encoding_trad_chinese.c
+    ${PROJECT_SOURCE_DIR}/src/core/string.c
+    ${TRANSLATION_FILES}
+)
+
 add_executable(compare
     sav/compare.c
     sav/sav_compare.c

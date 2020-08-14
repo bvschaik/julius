@@ -9,7 +9,7 @@ static void print_message(const char *msg, const char *param_str, int param_int)
         printf("  %s", param_str);
     }
     if (param_int) {
-        printf("  %s", param_str);
+        printf("  %d", param_int);
     }
     printf("\n");
 }
