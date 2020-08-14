@@ -69,6 +69,9 @@ void translation_load(language_type language)
         case LANGUAGE_SPANISH:
             translation_spanish(&strings, &num_strings);
             break;
+        case LANGUAGE_SWEDISH:
+            translation_swedish(&strings, &num_strings);
+            break;
         case LANGUAGE_SIMPLIFIED_CHINESE:
             translation_simplified_chinese(&strings, &num_strings);
             break;
