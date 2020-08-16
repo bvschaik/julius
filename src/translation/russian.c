@@ -38,6 +38,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Постройка храмов в циклической последовательности"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Зона покрытия при постройке резервуаров, колодцев и фонтанов"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Показывать область при групповой стройке зданий"},
+    {TR_CONFIG_HIGHLIGHT_LEGIONS, "Выделите легион при наведении курсора"}, // TODO: Google Translate
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Исправить баг иммиграции в режиме \"Очень сложный\""},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Исправить баг 100-летних жителей"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Исправить баг Императора и времени выживания в режиме конструктора"},
@@ -51,6 +52,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "Слои"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "Точки на карте города"},
     {TR_HOTKEY_HEADER_EDITOR, "Редактор карт"},
+    {TR_HOTKEY_HEADER_BUILD, "Строительство"}, // TODO: Google Translate
     {TR_HOTKEY_ARROW_UP, "Вверх"},
     {TR_HOTKEY_ARROW_DOWN, "Вниз"},
     {TR_HOTKEY_ARROW_LEFT, "Влево"},
@@ -62,6 +64,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Изменить размер на 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Скриншот видимого"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Скриншот всего города"},
+    {TR_HOTKEY_BUILD_CLONE, "Клонировать здание под курсором"}, // TODO: Google Translate
     {TR_HOTKEY_LOAD_FILE, "Загрузить"},
     {TR_HOTKEY_SAVE_FILE, "Сохранить"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Увеличить скорость игры"},

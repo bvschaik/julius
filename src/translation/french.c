@@ -52,6 +52,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "Cartes de visualisation"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "Points d'intérêt de la cité"},
     {TR_HOTKEY_HEADER_EDITOR, "Editeur"},
+    {TR_HOTKEY_HEADER_BUILD, "Contrôles de construction"}, // TODO: Google Translate
     {TR_HOTKEY_ARROW_UP, "Haut"},
     {TR_HOTKEY_ARROW_DOWN, "Bas"},
     {TR_HOTKEY_ARROW_LEFT, "Gauche"},
@@ -63,6 +64,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Redimensionner en 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Capturer l'écran de jeu"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Capturer la cité entière"},
+    {TR_HOTKEY_BUILD_CLONE, "Cloner le bâtiment sous le curseur"}, // TODO: Google Translate
     {TR_HOTKEY_LOAD_FILE, "Charger une partie"},
     {TR_HOTKEY_SAVE_FILE, "Sauvegarder une partie"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Augmenter la vitesse du jeu"},

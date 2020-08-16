@@ -52,6 +52,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "Spezialkarten"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "Lesezeichen für Stadtkarten"},
     {TR_HOTKEY_HEADER_EDITOR, "Editor"},
+    {TR_HOTKEY_HEADER_BUILD, "Bau-Tastenkombinationen"}, // TODO: Google Translate
     {TR_HOTKEY_ARROW_UP, "Hoch"},
     {TR_HOTKEY_ARROW_DOWN, "Runter"},
     {TR_HOTKEY_ARROW_LEFT, "Links"},
@@ -63,6 +64,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Fenstergröße: 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Screenshot speichern"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Stadtweiten Screenshot sp."},
+    {TR_HOTKEY_BUILD_CLONE, "Gebäude unter Cursor klonen"}, // TODO: Google Translate
     {TR_HOTKEY_LOAD_FILE, "Datei laden"},
     {TR_HOTKEY_SAVE_FILE, "Datei speichern"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Spielgeschwindigkeit erhöhen"},
@@ -98,7 +100,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Setze Lesezeichen 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Setze Lesezeichen 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Kampfinformationen umschalten"},
-    {TR_HOTKEY_EDIT_TITLE, "Drücke neue Tastenkombination"}
+    {TR_HOTKEY_EDIT_TITLE, "Neue Tastenkombination"}
 };
 
 void translation_german(const translation_string **strings, int *num_strings)
