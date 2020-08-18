@@ -153,7 +153,7 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius_switch.zip",
+      "includePattern": "${pwd}/release/julius_switch.zip",
       "uploadPattern": "julius-$VERSION-switch.zip",
       "listInDownloads": true
     }

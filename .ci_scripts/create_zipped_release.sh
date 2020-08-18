@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 build_dir="$(pwd)/build"
+release_dir="$(pwd)/release"
 
 if [ "$DEPLOY" = "switch" ]
 then
-mkdir -p $build_dir/release/julius
-cp -f $build_dir/julius.nro $build_dir/release/julius/julius.nro
-cd $build_dir/release && zip -r ../julius_switch.zip julius -x "*.DS_Store" -x "*__MAC*"
+mkdir -p release/julius
+cp -f $build_dir/julius.nro $release_dir/julius/julius.nro
+cd $release_dir && zip -r julius_switch.zip julius -x "*.DS_Store" -x "*__MAC*"
 fi
