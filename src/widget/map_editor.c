@@ -364,6 +364,7 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
 
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
+    zoom_map(m);
 
     if (tile->grid_offset) {
         if (m->left.went_down) {
