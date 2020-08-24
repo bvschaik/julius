@@ -28,6 +28,8 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Configure hotkeys"},
     {TR_BUTTON_NEXT, "+"},
     {TR_BUTTON_PREV, "-"},
+    {TR_BUTTON_BACK_TO_MAIN_MENU, "Back to main menu"},
+    {TR_LABEL_PAUSE_MENU, "Pause"},
     {TR_CONFIG_TITLE, "Augustus configuration options"},
     {TR_CONFIG_LANGUAGE_LABEL, "Language:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(default)"},

@@ -26,6 +26,8 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CANCEL, "取消"},
     {TR_BUTTON_RESET_DEFAULTS, "重置默认"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "热键绑定"},
+    {TR_BUTTON_BACK_TO_MAIN_MENU, "返回主菜单"}, // TODO: Google translate
+    {TR_LABEL_PAUSE_MENU, "暂停"}, // TODO: Google translate
     {TR_CONFIG_TITLE, "Julius 配置设定"},
     {TR_CONFIG_LANGUAGE_LABEL, "语言包:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "默认"},

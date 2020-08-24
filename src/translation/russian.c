@@ -21,6 +21,8 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CANCEL, "Отмена"},
     {TR_BUTTON_RESET_DEFAULTS, "По умолчанию"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Горячие клавиши"},
+    {TR_BUTTON_BACK_TO_MAIN_MENU, "Вернуться в главное меню"},
+    {TR_LABEL_PAUSE_MENU, "Пауза"},
     {TR_CONFIG_TITLE, "Настройки Augustus"},
     {TR_CONFIG_LANGUAGE_LABEL, "Язык:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(по умолчанию)"},

@@ -16,6 +16,7 @@
 #include "graphics/graphics.h"
 #include "graphics/menu.h"
 #include "graphics/text.h"
+#include "graphics/video.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
 #include "input/zoom.h"
@@ -28,6 +29,7 @@
 #include "sound/effect.h"
 #include "widget/city_with_overlay.h"
 #include "widget/city_without_overlay.h"
+#include "widget/city_pause_menu.h"
 #include "widget/minimap.h"
 #include "window/building_info.h"
 #include "window/city.h"
@@ -486,7 +488,8 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
         if (building_construction_type()) {
             building_construction_cancel();
         } else {
-            hotkey_handle_escape();
+            video_stop();
+            window_city_pause_menu_show();
         }
     }
 }

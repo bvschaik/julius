@@ -31,6 +31,8 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Contrôles du clavier"},
     {TR_BUTTON_NEXT, "+"},
     {TR_BUTTON_PREV, "-"},
+    {TR_BUTTON_BACK_TO_MAIN_MENU,       "Retour au menu principal"}, // TODO: Google translate
+    {TR_LABEL_PAUSE_MENU,               "Pause"}, // TODO: Google translate
     {TR_CONFIG_TITLE, "Options de configuration d'Augustus"},
     {TR_CONFIG_LANGUAGE_LABEL, "Langue :"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(par défaut)"},

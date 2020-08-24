@@ -19,6 +19,8 @@ static translation_string all_strings[] = {
         "기록에서 오류를 확인해 주세요."},
     {TR_BUTTON_OK, "확인"},
     {TR_BUTTON_CANCEL, "취소"},
+    {TR_BUTTON_BACK_TO_MAIN_MENU,       "메인 메뉴로 돌아 가기"}, // TODO: Google translate
+    {TR_LABEL_PAUSE_MENU,               "중지"}, // TODO: Google translate
     {TR_BUTTON_RESET_DEFAULTS, "기본값으로 초기화"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "단축키 설정"},
     {TR_CONFIG_TITLE, "Julius 설정 옵션"},

@@ -26,6 +26,8 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CANCEL, "Cancelar"},
     {TR_BUTTON_RESET_DEFAULTS, "Por defecto"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Configurar teclado"},
+    {TR_BUTTON_BACK_TO_MAIN_MENU, "Regresar al menú principal"}, // TODO: Google translate
+    {TR_LABEL_PAUSE_MENU, "Pausa"}, // TODO: Google translate
     {TR_CONFIG_TITLE, "Opciones de configuración de Julius"},
     {TR_CONFIG_LANGUAGE_LABEL, "Idioma:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(por defecto)"},

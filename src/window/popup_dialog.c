@@ -1,9 +1,10 @@
 #include "popup_dialog.h"
-
 #include "core/image_group.h"
+
 #include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
+#include "graphics/text.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -22,16 +23,23 @@ static image_button buttons[] = {
     {256, 100, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_cancel, button_none, 0, 0, 1},
 };
 
+union text_holder {
+    struct {
+        int custom_text_group;
+        int custom_text_id;
+    };
+    const uint8_t *str;
+};
+
 static struct {
     popup_dialog_type type;
-    int custom_text_group;
-    int custom_text_id;
+    union text_holder custom_text;
     int ok_clicked;
     void (*close_func)(int accepted);
     int has_buttons;
 } data;
 
-static int init(popup_dialog_type type, int custom_text_group, int custom_text_id,
+static int init(popup_dialog_type type, union text_holder custom_text,
         void (*close_func)(int accepted), int has_ok_cancel_buttons)
 {
     if (window_is(WINDOW_POPUP_DIALOG)) {
@@ -39,8 +47,7 @@ static int init(popup_dialog_type type, int custom_text_group, int custom_text_i
         return 0;
     }
     data.type = type;
-    data.custom_text_group = custom_text_group;
-    data.custom_text_id = custom_text_id;
+    data.custom_text = custom_text;
     data.ok_clicked = 0;
     data.close_func = close_func;
     data.has_buttons = has_ok_cancel_buttons;
@@ -59,8 +66,11 @@ static void draw_background(void)
         } else {
             lang_text_draw_centered(GROUP, data.type + 1, 80, 140, 480, FONT_NORMAL_BLACK);
         }
+    } else if (data.type == POPUP_DIALOG_NONE) {
+        lang_text_draw_centered(data.custom_text.custom_text_group, data.custom_text.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK);
+        lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK);
     } else {
-        lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK);
+        text_draw_centered(data.custom_text.str, 80, 100, 480, FONT_LARGE_BLACK, 0);
         lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK);
     }
     graphics_reset_dialog();
@@ -111,7 +121,11 @@ static void confirm(void)
 void window_popup_dialog_show(popup_dialog_type type,
         void (*close_func)(int accepted), int has_ok_cancel_buttons)
 {
-    if (init(type, 0, 0, close_func, has_ok_cancel_buttons)) {
+    union text_holder custom_text = {
+            .custom_text_group = 0,
+            .custom_text_id = 0
+    };
+    if (init(type, custom_text, close_func, has_ok_cancel_buttons)) {
         window_type window = {
             WINDOW_POPUP_DIALOG,
             draw_background,
@@ -125,12 +139,31 @@ void window_popup_dialog_show(popup_dialog_type type,
 void window_popup_dialog_show_confirmation(int text_group, int text_id,
         void (*close_func)(int accepted))
 {
-    if (init(POPUP_DIALOG_NONE, text_group, text_id, close_func, 1)) {
+    union text_holder custom_text = {
+            .custom_text_group = text_group,
+            .custom_text_id = text_id
+    };
+    if (init(POPUP_DIALOG_NONE, custom_text, close_func, 1)) {
         window_type window = {
             WINDOW_POPUP_DIALOG,
             draw_background,
             draw_foreground,
             handle_input
+        };
+        window_show(&window);
+    }
+}
+
+void window_text_popup_dialog_show(const uint8_t *str,
+        void (*close_func)(int accepted), int has_ok_cancel_buttons)
+{
+    union text_holder custom_text = { .str = str };
+    if (init(POPUP_DIALOG_CUSTOM, custom_text, close_func, 1)) {
+        window_type window = {
+                WINDOW_POPUP_DIALOG,
+                draw_background,
+                draw_foreground,
+                handle_input
         };
         window_show(&window);
     }
