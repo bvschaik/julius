@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "core/image.h"
+#include "core/mods.h"
 #include "map/aqueduct.h"
 #include "map/building_tiles.h"
 #include "map/data.h"
@@ -212,6 +213,46 @@ void map_water_supply_update_reservoir_fountain(void)
         } else {
             b->has_water_access = 0;
         }
+    }
+    //ponds
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building* b = building_get(i);
+        char image_name[17];
+
+        if (b->type != BUILDING_SMALL_POND && b->type != BUILDING_LARGE_POND) {
+            continue;
+        }
+
+        if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
+            b->has_water_access = 1;
+        }
+        else {
+            b->has_water_access = 0;
+        }
+
+        if (scenario_property_climate() == CLIMATE_DESERT) {
+            if (b->has_water_access) {
+                strcpy(image_name, "s pond south on");
+            }
+            else {
+                strcpy(image_name, "s pond south off");
+            }
+        }
+        else {
+            if (b->has_water_access) {
+                strcpy(image_name, "s pond north on");
+            }
+            else {
+                strcpy(image_name, "s pond north off");
+            }
+        }
+
+
+        if (b->type == BUILDING_LARGE_POND) {
+            image_name[0] = "l"[0];
+        }
+
+        map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), image_name), TERRAIN_BUILDING);
     }
 }
 

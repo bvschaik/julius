@@ -9,6 +9,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
+#include "translation/translation.h"
 #include "sound/speech.h"
 
 void window_building_set_possible_position(int *x_offset, int *y_offset, int width_blocks, int height_blocks)
@@ -116,6 +117,12 @@ void window_building_draw_description(building_info_context *c, int text_group, 
 {
     lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + 56,
         16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+}
+
+void window_building_draw_description_from_tr_string(building_info_context* c, int translation_key)
+{
+    text_draw_multiline(translation_for(translation_key), c->x_offset + 32, c->y_offset + 56,
+        16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
 }
 
 void window_building_draw_description_at(building_info_context *c, int y_offset, int text_group, int text_id)

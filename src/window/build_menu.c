@@ -244,6 +244,15 @@ static int set_submenu_for_type(building_type type)
         case BUILDING_FORT:
             data.selected_submenu = BUILD_MENU_FORTS;
             break;
+        case BUILDING_MENU_PARKS:
+            data.selected_submenu = BUILD_MENU_PARKS;
+            break;
+        case BUILDING_MENU_TREES:
+            data.selected_submenu = BUILD_MENU_TREES;
+            break;
+        case BUILDING_MENU_PATHS:
+            data.selected_submenu = BUILD_MENU_PATHS;
+            break;
         default:
             return 0;
     }

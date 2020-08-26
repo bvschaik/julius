@@ -1,3 +1,4 @@
+#include "building/type.h"
 #include "core/lang.h"
 
 #include "core/buffer.h"
@@ -163,13 +164,16 @@ int lang_load(int is_editor)
 
 const uint8_t *lang_get_string(int group, int index)
 {
-    // Add new strings
-    if ((group == 28) && (index == 115)) {
+       // Add new strings
+    
+    if ((group == 28) && (index == BUILDING_ROADBLOCK)) {
         return translation_for(TR_BUILDING_ROADBLOCK);
     }
-    if ((group == 28) && (index == 116)) {
-        return translation_for(TR_BUILDING_ROADBLOCK_DESC);
+
+    if ((group == 28) && (index >= BUILDING_MENU_TREES && index <= BUILDING_SMALL_STATUE_ALT_B)) {
+        return translation_for(index + 25);
     }
+
     const uint8_t *str = &data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;
     while (index > 0) {

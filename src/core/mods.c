@@ -24,7 +24,8 @@
 #define MAX_LAYERS 5
 #define MAX_GROUPS 100
 
-#define IMAGE_PRELOAD_MAX_SIZE 65535
+//todo: change this back to its old value when mod path issue is fixed
+#define IMAGE_PRELOAD_MAX_SIZE 80000
 
 static const char *MODS_FOLDER = "mods";
 static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_TAG_MAX_LENGTH] = { { "mod" }, { "image" }, { "layer", "animation" } };

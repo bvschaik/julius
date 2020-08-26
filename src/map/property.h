@@ -41,6 +41,7 @@ int map_property_is_plaza_or_earthquake(int grid_offset);
 void map_property_mark_plaza_or_earthquake(int grid_offset);
 void map_property_clear_plaza_or_earthquake(int grid_offset);
 
+
 int map_property_is_constructing(int grid_offset);
 void map_property_mark_constructing(int grid_offset);
 void map_property_clear_constructing(int grid_offset);

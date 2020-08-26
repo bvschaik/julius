@@ -1,5 +1,6 @@
 #include "construction.h"
 
+#include "building/building.h"
 #include "building/construction_building.h"
 #include "building/construction_clear.h"
 #include "building/construction_routed.h"
@@ -17,6 +18,7 @@
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/image.h"
+#include "core/mods.h"
 #include "figure/formation.h"
 #include "game/undo.h"
 #include "graphics/window.h"
@@ -166,6 +168,50 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end)
     map_tiles_update_all_gardens();
     return items_placed;
 }
+
+static int plot_draggable_building(int x_start, int y_start, int x_end, int y_end, int building_type, int image_id)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
+    map_image_restore();
+    map_image_backup();
+
+    int items_placed = 0;
+    for (int y = y_min; y <= y_max; y++) {
+        for (int x = x_min; x <= x_max; x++) {
+            int grid_offset = map_grid_offset(x, y);
+            if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+                items_placed++;
+                map_image_set(grid_offset, image_id);
+            }
+        }
+    }
+
+    return items_placed;
+}
+
+static int place_draggable_building(int x_start, int y_start, int x_end, int y_end, int building_type, int image_id)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
+    map_image_restore();
+
+    int items_placed = 0;
+    for (int y = y_min; y <= y_max; y++) {
+        for (int x = x_min; x <= x_max; x++) {
+            int grid_offset = map_grid_offset(x, y);
+            if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+                items_placed++;
+                building* b = building_create(building_type, x, y);
+                game_undo_add_building(b);
+                map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
+            }
+        }
+    }
+
+    return items_placed;
+}
+
 
 static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_start, int x_end, int y_end, struct reservoir_info *info)
 {
@@ -393,6 +439,22 @@ int building_construction_is_updatable(void)
         case BUILDING_ROAD:
         case BUILDING_AQUEDUCT:
         case BUILDING_DRAGGABLE_RESERVOIR:
+        case BUILDING_PINE_TREE:
+        case BUILDING_FIR_TREE:
+        case BUILDING_OAK_TREE:
+        case BUILDING_ELM_TREE:
+        case BUILDING_FIG_TREE:
+        case BUILDING_PLUM_TREE:
+        case BUILDING_PALM_TREE:
+        case BUILDING_DATE_TREE:
+        case BUILDING_PINE_PATH:
+        case BUILDING_FIR_PATH:
+        case BUILDING_OAK_PATH:
+        case BUILDING_ELM_PATH:
+        case BUILDING_FIG_PATH:
+        case BUILDING_PLUM_PATH:
+        case BUILDING_PALM_PATH:
+        case BUILDING_DATE_PATH:
         case BUILDING_WALL:
         case BUILDING_PLAZA:
         case BUILDING_GARDENS:
@@ -450,6 +512,11 @@ void building_construction_update(int x, int y, int grid_offset)
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_GARDENS) {
         int items_placed = place_garden(data.start.x, data.start.y, x, y);
+        if (items_placed >= 0) current_cost *= items_placed;
+    }
+    else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_PATH) {
+        int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id); 
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
         int length = map_bridge_building_length();
@@ -648,6 +715,11 @@ void building_construction_place(void)
         placement_cost = info.cost;
         map_tiles_update_all_aqueducts(0);
         map_routing_update_land();
+    }
+    else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_PATH) {
+        // this is a poor but functional mapping of btype to image id, replace when properties are refactored
+        int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id);
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);
     } else if (!building_construction_place_building(type, x_end, y_end)) {

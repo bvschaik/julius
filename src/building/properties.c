@@ -1,4 +1,6 @@
 #include "properties.h"
+#include "type.h"
+#include "core/mods.h"
 
 static building_properties properties[140] = {
 // SZ FIRE GRP OFF
@@ -41,7 +43,7 @@ static building_properties properties[140] = {
     {3, 0,  51, 0},
     {3, 0,  52, 0},
     {1, 1,  58, 0},
-    {1, 1,  59, 0},
+    {1, 1,  59, 1},
     {3, 1,  66, 0},
     {1, 1,  61, 0},
     {2, 1,  61, 1},
@@ -144,15 +146,31 @@ static building_properties properties[140] = {
     {0, 0,   0, 0}
 };
 
+// these are for modded assets and the group/image offset values are not static and should not be used
+building_properties SMALL_CUSTOM_DECOR_PROPERTIES = { 1, 1, 0, 0 };
+building_properties MEDIUM_CUSTOM_DECOR_PROPERTIES = { 2, 1, 0, 0 };
+building_properties LARGE_CUSTOM_DECOR_PROPERTIES = {3, 1, 0, 0 };
 
-building_properties ROADBLOCK_PROPERTIES = { 1, 1 , 10000, 0 };
 
 const building_properties *building_properties_for_type(building_type type)
 {
     // Roadblock properties, as plaza
-    if (type == 115){
+    if (type == BUILDING_ROADBLOCK){
         return &properties[38];
     }
+
+    if (type == BUILDING_SMALL_POND){
+        return &MEDIUM_CUSTOM_DECOR_PROPERTIES;
+    }
+
+    if (type == BUILDING_LARGE_POND){
+        return &LARGE_CUSTOM_DECOR_PROPERTIES;
+    }
+
+    if (type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) {
+        return &SMALL_CUSTOM_DECOR_PROPERTIES;
+    }
+
     return &properties[type];
 }
 

@@ -72,6 +72,8 @@ void window_building_draw_employment_without_house_cover(building_info_context *
 
 void window_building_draw_description(building_info_context *c, int text_group, int text_id);
 
+void window_building_draw_description_from_tr_string(building_info_context* c, int translation_key);
+
 void window_building_draw_description_at(building_info_context *c, int y_offset, int text_group, int text_id);
 
 void window_building_play_sound(building_info_context *c, const char *sound_file);
