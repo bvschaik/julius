@@ -15,22 +15,23 @@ Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh) or
 ## Julius: an open source re-implementation of Caesar III
 
 Julius is a fully working open-source version of Caesar 3, with the same logic
-as the original, but with some UI enhancements, that is able to be played on multiple platforms.
-The same logic means that the saved games are 100% compatible, and any gameplay bugs
+as the original, but with some UI enhancements, that can be played on multiple platforms.
+
+Julius will not run without the original Caesar 3 files. You can buy a digital copy from [GOG](https://www.gog.com/game/caesar_3) or
+[Steam](https://store.steampowered.com/app/517790/Caesar_3/), or you can use an original CD-ROM version.
+
+The goal of the project is to have exactly the same game logic as Caesar 3, with the same look
+and feel. This means that the saved games are 100% compatible with Caesar 3, and any gameplay bugs
 present in the original Caesar 3 game will also be present in Julius.
-It is meant as a drop-in replacement for Caesar 3, with the same look and feel, so there will be no major UI changes.
 
-However, a fork of Julius, named [Augustus](https://github.com/Keriew/julius), is implementing many long-wanted gameplay changes, such as roadblocks.
-Beware: Augustus does not support the original Caesar 3 save files, while Julius does. So use Julius for a more vanilla experience with some visual improvements, or Augustus for a different gameplay experience.
-
-UI enhancements for Julius include:
+Enhancements for Julius include:
 - Support for widescreen resolutions
 - Windowed mode support for 32-bit desktops
 - A lot of small in-game [quality of life improvements](https://github.com/bvschaik/julius/wiki/Improvements-from-Caesar-3)
+- Support for the [high-quality MP3 files](https://github.com/bvschaik/julius/wiki/MP3-Support) once provided on the Sierra website
 
-Julius requires the original assets (graphics, sounds, etc) from Caesar 3 to run.
-It optionally [supports the high-quality MP3 files](https://github.com/bvschaik/julius/wiki/MP3-Support) once provided on the
-Sierra website.
+While Julius does not implement any gameplay changes, a fork of Julius named [Augustus](https://github.com/Keriew/julius) is implementing many long-wanted gameplay changes, such as roadblocks.
+Beware: Augustus does not support the original Caesar 3 save files, while Julius does. So use Julius for a more vanilla experience with some visual improvements, or Augustus for a different gameplay experience.
 
 ![](https://github.com/bvschaik/julius/blob/master/res/sce_sys/livearea/contents/bg.png?raw=true)
 
