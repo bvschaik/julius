@@ -24,17 +24,21 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
+#include "map/water_supply.h"
 #include "scenario/property.h"
 #include "widget/city_bridge.h"
 
-#define MAX_TILES 25
+#define MAX_TILES 49
 
 static const int X_VIEW_OFFSETS[MAX_TILES] = {
     0,
     -30, 30, 0,
     -60, 60, -30, 30, 0,
     -90, 90, -60, 60, -30, 30, 0,
-    -120, 120, -90, 90, -60, 60, -30, 30, 0
+    -120, 120, -90, 90, -60, 60, -30, 30, 0,
+    -150, 150, -120, 120, -90, 90, -60, 60, -30, 30, 0,
+    -180, 180, -150, 150, -120, 120, -90, 90, -60, 60, -30, 30, 0,
+
 };
 
 static const int Y_VIEW_OFFSETS[MAX_TILES] = {
@@ -42,7 +46,9 @@ static const int Y_VIEW_OFFSETS[MAX_TILES] = {
     15, 15, 30,
     30, 30, 45, 45, 60,
     45, 45, 60, 60, 75, 75, 90,
-    60, 60, 75, 75, 90, 90, 105, 105, 120
+    60, 60, 75, 75, 90, 90, 105, 105, 120,
+    75, 75, 90, 90, 105, 105, 120, 120, 135, 135, 150,
+    90, 90, 105, 105, 120, 120, 135, 135, 150, 150, 165, 165, 180,
 };
 
 #define OFFSET(x,y) (x + GRID_SIZE * y)
@@ -52,22 +58,31 @@ static const int TILE_GRID_OFFSETS[4][MAX_TILES] = {
     OFFSET(0,1), OFFSET(1,0), OFFSET(1,1),
     OFFSET(0,2), OFFSET(2,0), OFFSET(1,2), OFFSET(2,1), OFFSET(2,2),
     OFFSET(0,3), OFFSET(3,0), OFFSET(1,3), OFFSET(3,1), OFFSET(2,3), OFFSET(3,2), OFFSET(3,3),
-    OFFSET(0,4), OFFSET(4,0), OFFSET(1,4), OFFSET(4,1), OFFSET(2,4), OFFSET(4,2), OFFSET(3,4), OFFSET(4,3), OFFSET(4,4)},
+    OFFSET(0,4), OFFSET(4,0), OFFSET(1,4), OFFSET(4,1), OFFSET(2,4), OFFSET(4,2), OFFSET(3,4), OFFSET(4,3), OFFSET(4,4),
+    OFFSET(0,5), OFFSET(5,0), OFFSET(1,5), OFFSET(5,1), OFFSET(2,5), OFFSET(5,2), OFFSET(3,5), OFFSET(5,3), OFFSET(4,5), OFFSET(5,4),OFFSET(5,5),
+    OFFSET(0,6), OFFSET(6,0), OFFSET(1,6), OFFSET(6,1), OFFSET(2,6), OFFSET(6,2), OFFSET(3,6), OFFSET(6,3), OFFSET(4,6), OFFSET(6,4),OFFSET(5,6),OFFSET(6,5),OFFSET(6,6)},
     {OFFSET(0,0),
     OFFSET(-1,0), OFFSET(0,1), OFFSET(-1,1),
     OFFSET(-2,0), OFFSET(0,2), OFFSET(-2,1), OFFSET(-1,2), OFFSET(-2,2),
     OFFSET(-3,0), OFFSET(0,3), OFFSET(-3,1), OFFSET(-1,3), OFFSET(-3,2), OFFSET(-2,3), OFFSET(-3,3),
-    OFFSET(-4,0), OFFSET(0,4), OFFSET(-4,1), OFFSET(-1,4), OFFSET(-4,2), OFFSET(-2,4), OFFSET(-4,3), OFFSET(-3,4), OFFSET(-4,4)},
+    OFFSET(-4,0), OFFSET(0,4), OFFSET(-4,1), OFFSET(-1,4), OFFSET(-4,2), OFFSET(-2,4), OFFSET(-4,3), OFFSET(-3,4), OFFSET(-4,4),
+    OFFSET(-5,0), OFFSET(0,5), OFFSET(-5,1), OFFSET(-1,5), OFFSET(-5,2), OFFSET(-2,5), OFFSET(-5,3), OFFSET(-3,5), OFFSET(-5,4), OFFSET(-4,5), OFFSET(-5,5),
+    OFFSET(-6,0), OFFSET(0,6), OFFSET(-6,1), OFFSET(-1,6), OFFSET(-6,2), OFFSET(-2,6), OFFSET(-6,3), OFFSET(-3,6), OFFSET(-6,4), OFFSET(-4,6), OFFSET(-6,5), OFFSET(-5,6), OFFSET(-6,6) },
     {OFFSET(0,0),
     OFFSET(0,-1), OFFSET(-1,0), OFFSET(-1,-1),
     OFFSET(0,-2), OFFSET(-2,0), OFFSET(-1,-2), OFFSET(-2,-1), OFFSET(-2,-2),
     OFFSET(0,-3), OFFSET(-3,0), OFFSET(-1,-3), OFFSET(-3,-1), OFFSET(-2,-3), OFFSET(-3,-2), OFFSET(-3,-3),
-    OFFSET(0,-4), OFFSET(-4,0), OFFSET(-1,-4), OFFSET(-4,-1), OFFSET(-2,-4), OFFSET(-4,-2), OFFSET(-3,-4), OFFSET(-4,-3), OFFSET(-4,-4)},
+    OFFSET(0,-4), OFFSET(-4,0), OFFSET(-1,-4), OFFSET(-4,-1), OFFSET(-2,-4), OFFSET(-4,-2), OFFSET(-3,-4), OFFSET(-4,-3), OFFSET(-4,-4),
+    OFFSET(0,-5), OFFSET(-5,0), OFFSET(-1,-5), OFFSET(-5,-1), OFFSET(-2,-5), OFFSET(-5,-2), OFFSET(-3,-5), OFFSET(-5,-3), OFFSET(-4,-5), OFFSET(-5,-4), OFFSET(-5,-5),
+    OFFSET(0,-6), OFFSET(-6,0), OFFSET(-1,-6), OFFSET(-6,-1), OFFSET(-2,-6), OFFSET(-6,-2), OFFSET(-3,-6), OFFSET(-6,-3), OFFSET(-4,-6), OFFSET(-6,-4), OFFSET(-5,-6), OFFSET(-6,-5), OFFSET(-6,-6)},
     {OFFSET(0,0),
     OFFSET(1,0), OFFSET(0,-1), OFFSET(1,-1),
     OFFSET(2,0), OFFSET(0,-2), OFFSET(2,-1), OFFSET(1,-2), OFFSET(2,-2),
     OFFSET(3,0), OFFSET(0,-3), OFFSET(3,-1), OFFSET(1,-3), OFFSET(3,-2), OFFSET(2,-3), OFFSET(3,-3),
-    OFFSET(4,0), OFFSET(0,-4), OFFSET(4,-1), OFFSET(1,-4), OFFSET(4,-2), OFFSET(2,-4), OFFSET(4,-3), OFFSET(3,-4), OFFSET(4,-4)},
+    OFFSET(4,0), OFFSET(0,-4), OFFSET(4,-1), OFFSET(1,-4), OFFSET(4,-2), OFFSET(2,-4), OFFSET(4,-3), OFFSET(3,-4), OFFSET(4,-4),
+    OFFSET(5,0), OFFSET(0,-5), OFFSET(5,-1), OFFSET(1,-5), OFFSET(5,-2), OFFSET(2,-5), OFFSET(5,-3), OFFSET(3,-5), OFFSET(5,-4), OFFSET(4,-5), OFFSET(5,-5),
+    OFFSET(6,0), OFFSET(0,-6), OFFSET(6,-1), OFFSET(1,-6), OFFSET(6,-2), OFFSET(2,-6), OFFSET(6,-3), OFFSET(3,-6), OFFSET(6,-4), OFFSET(4,-6), OFFSET(6,-5), OFFSET(5,-6), OFFSET(6,-6)},
+
 };
 
 static const int FORT_GROUND_GRID_OFFSETS[4][4] = {
@@ -490,7 +505,7 @@ static void draw_fountain(const map_tile *tile, int x, int y)
     } else {
         int image_id = image_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-            city_view_foreach_tile_in_range(tile->grid_offset, 1, scenario_property_climate() == CLIMATE_DESERT ? 3 : 4, draw_fountain_range);
+            city_view_foreach_tile_in_range(tile->grid_offset, 1, map_water_supply_fountain_radius(), draw_fountain_range);
         }
         draw_building(image_id, x, y);
         if (map_terrain_is(tile->grid_offset, TERRAIN_RESERVOIR_RANGE)) {

@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/industry.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "city/data_private.h"
 #include "core/calc.h"
 #include "empire/city.h"
@@ -337,12 +338,19 @@ void city_resource_consume_food(void)
     calculate_available_food();
     city_data.resource.food_types_eaten = 0;
     city_data.unused.unknown_00c0 = 0;
+    int ceres_module = building_monument_upgraded(BUILDING_GRAND_TEMPLE_CERES);
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
             int num_types = model_get_house(b->subtype.house_level)->food_types;
-            int amount_per_type = calc_adjust_with_percentage(b->house_population, 50);
+            int amount_per_type;
+            if (ceres_module && b->data.house.temple_ceres) {
+                amount_per_type = calc_adjust_with_percentage(b->house_population, 45);
+            }
+            else {
+                amount_per_type = calc_adjust_with_percentage(b->house_population, 50);
+            }
             if (num_types > 1) {
                 amount_per_type /= num_types;
             }

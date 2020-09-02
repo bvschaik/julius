@@ -1,6 +1,7 @@
 #include "migration.h"
 
 #include "building/house_population.h"
+#include "building/monument.h"
 #include "city/data_private.h"
 #include "city/figures.h"
 #include "city/message.h"
@@ -44,8 +45,12 @@ static void update_status(void)
         if (city_data.migration.emigration_duration) {
             city_data.migration.emigration_duration--;
         } else {
+            int migration_size = 12;
+            if (building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
+                migration_size = 24;
+            }
             city_data.migration.immigration_amount_per_batch =
-                calc_adjust_with_percentage(12, city_data.migration.percentage);
+                calc_adjust_with_percentage(migration_size, city_data.migration.percentage);
             city_data.migration.immigration_duration = 2;
         }
     } else if (city_data.migration.percentage < 0) {

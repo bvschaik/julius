@@ -3,6 +3,7 @@
 #include "building/barracks.h"
 #include "building/count.h"
 #include "building/granary.h"
+#include "building/monument.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "city/buildings.h"
@@ -423,6 +424,61 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
     }
 }
 
+int building_warehouse_with_resource(int src_building_id, int x, int y, int resource,
+    int distance_from_entry, int road_network_id, int* understaffed,
+    map_point* dst)
+{
+    int min_dist = 10000;
+    building* min_building = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building* b = building_get(i);
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE_SPACE) {
+            continue;
+        }
+        if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
+            continue;
+        }
+        b = building_main(b);
+
+        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+        if (pct_workers < 100) {
+            if (understaffed) {
+                *understaffed += 1;
+            }
+            continue;
+        }
+        int loads_stored = 0;
+        building* space = b;
+        const building_storage* s = building_storage_get(b->storage_id);
+        for (int t = 0; t < 8; t++) {
+            space = building_next(space);
+            if (space->id > 0 && space->loads_stored > 0) {
+                if (space->subtype.warehouse_resource_id == resource) {
+                    loads_stored += space->loads_stored;
+                }
+            }
+        }
+        if (loads_stored > 0) {
+            int dist = calc_distance_with_penalty(b->x, b->y, x, y,
+                distance_from_entry, b->distance_from_entry);
+            dist -= 4 * loads_stored;
+            if (dist < min_dist) {
+                min_dist = dist;
+                min_building = b;
+            }
+        }
+    }
+    if (min_building) {
+        if (dst) {
+            map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
+        }
+        return min_building->id;
+    }
+    else {
+        return 0;
+    }
+}
+
 static int determine_granary_accept_foods(int resources[RESOURCE_MAX_FOOD], int road_network)
 {
     if (scenario_property_rome_supplies_wheat()) {
@@ -554,6 +610,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
             return WAREHOUSE_TASK_GETTING;
         }
     }
+    
     // deliver weapons to barracks
     if (building_count_active(BUILDING_BARRACKS) > 0 && city_military_has_legionary_legions() &&
         !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {

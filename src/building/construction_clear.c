@@ -1,6 +1,7 @@
 #include "construction_clear.h"
 
 #include "building/building.h"
+#include "building/monument.h"
 #include "city/warning.h"
 #include "core/config.h"
 #include "figuretype/migrant.h"
@@ -24,6 +25,7 @@ static struct {
     int y_end;
     int bridge_confirmed;
     int fort_confirmed;
+    int monument_confirmed;
 } confirm;
 
 static building *get_deletable_building(int grid_offset)
@@ -87,6 +89,14 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                         continue;
                     }
                     if (!measure_only && confirm.fort_confirmed == 1) {
+                        game_undo_disable();
+                    }
+                }
+                if (building_monument_is_monument(b)) {
+                    if (!measure_only && confirm.monument_confirmed != 1) {
+                        continue;
+                    }
+                    if (!measure_only && confirm.monument_confirmed == 1) {
                         game_undo_disable();
                     }
                 }
@@ -158,6 +168,7 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
         map_routing_update_land();
         map_routing_update_walls();
         map_routing_update_water();
+        building_monument_recalculate_monuments();
         if (config_get(CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS)) {
             building_update_state();
         }
@@ -186,6 +197,17 @@ static void confirm_delete_bridge(int accepted)
     clear_land_confirmed(0, confirm.x_start, confirm.y_start, confirm.x_end, confirm.y_end);
 }
 
+static void confirm_delete_monument(int accepted)
+{
+    if (accepted == 1) {
+        confirm.monument_confirmed = 1;
+    }
+    else {
+        confirm.monument_confirmed = -1;
+    }
+    clear_land_confirmed(0, confirm.x_start, confirm.y_start, confirm.x_end, confirm.y_end);
+}
+
 int building_construction_clear_land(int measure_only, int x_start, int y_start, int x_end, int y_end)
 {
     confirm.fort_confirmed = 0;
@@ -199,6 +221,7 @@ int building_construction_clear_land(int measure_only, int x_start, int y_start,
 
     int ask_confirm_bridge = 0;
     int ask_confirm_fort = 0;
+    int ask_confirm_monument = 0;
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = map_grid_offset(x,y);
@@ -208,10 +231,14 @@ int building_construction_clear_land(int measure_only, int x_start, int y_start,
                 if (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND) {
                     ask_confirm_fort = 1;
                 }
+                if (building_monument_is_monument(b)) {
+                    ask_confirm_monument = 1;
+                }
             }
             if (map_is_bridge(grid_offset)) {
                 ask_confirm_bridge = 1;
             }
+
         }
     }
     confirm.x_start = x_start;
@@ -220,6 +247,9 @@ int building_construction_clear_land(int measure_only, int x_start, int y_start,
     confirm.y_end = y_end;
     if (ask_confirm_fort) {
         window_popup_dialog_show(POPUP_DIALOG_DELETE_FORT, confirm_delete_fort, 2);
+        return -1;
+    } else if (ask_confirm_monument) {
+        window_popup_dialog_show(POPUP_DIALOG_DELETE_FORT, confirm_delete_monument, 2);
         return -1;
     } else if (ask_confirm_bridge) {
         window_popup_dialog_show(POPUP_DIALOG_DELETE_BRIDGE, confirm_delete_bridge, 2);

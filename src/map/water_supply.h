@@ -11,5 +11,6 @@ enum {
 };
 
 int map_water_supply_is_well_unnecessary(int well_id, int radius);
+int map_water_supply_fountain_radius();
 
 #endif // MAP_WATER_SUPPLY_H

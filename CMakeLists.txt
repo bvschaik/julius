@@ -268,6 +268,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/market.c
     ${PROJECT_SOURCE_DIR}/src/building/menu.c
     ${PROJECT_SOURCE_DIR}/src/building/model.c
+    ${PROJECT_SOURCE_DIR}/src/building/monument.c
     ${PROJECT_SOURCE_DIR}/src/building/properties.c
     ${PROJECT_SOURCE_DIR}/src/building/roadblock.c
     ${PROJECT_SOURCE_DIR}/src/building/rotation.c
@@ -348,6 +349,7 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/trader.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/wall.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/water.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/workcamp.c
 )
 set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/animation.c

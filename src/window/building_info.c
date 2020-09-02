@@ -96,6 +96,11 @@ static int get_height_id(void)
             case BUILDING_LARGE_TEMPLE_MERCURY:
             case BUILDING_LARGE_TEMPLE_MARS:
             case BUILDING_LARGE_TEMPLE_VENUS:
+            case BUILDING_GRAND_TEMPLE_CERES:
+            case BUILDING_GRAND_TEMPLE_NEPTUNE:
+            case BUILDING_GRAND_TEMPLE_MERCURY:
+            case BUILDING_GRAND_TEMPLE_MARS:
+            case BUILDING_GRAND_TEMPLE_VENUS:
             case BUILDING_ORACLE:
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:
@@ -139,6 +144,7 @@ static int get_height_id(void)
             case BUILDING_WEAPONS_WORKSHOP:
             case BUILDING_FURNITURE_WORKSHOP:
             case BUILDING_POTTERY_WORKSHOP:
+            case BUILDING_WORKCAMP:
                 return 1;
 
             case BUILDING_THEATER:
@@ -504,6 +510,18 @@ static void draw_background(void)
             window_building_draw_temple_venus(&context);
         } else if (btype == BUILDING_ORACLE) {
             window_building_draw_oracle(&context);
+        } else if (btype == BUILDING_WORKCAMP) {
+            window_building_draw_work_camp(&context);
+		} else if (btype == BUILDING_GRAND_TEMPLE_CERES) {
+			window_building_draw_grand_temple_ceres(&context);
+		} else if (btype == BUILDING_GRAND_TEMPLE_NEPTUNE) {
+			window_building_draw_grand_temple_neptune(&context);
+		} else if (btype == BUILDING_GRAND_TEMPLE_MERCURY) {
+			window_building_draw_grand_temple_mercury(&context);
+		} else if (btype == BUILDING_GRAND_TEMPLE_MARS) {
+			window_building_draw_grand_temple_mars(&context);
+        } else if (btype == BUILDING_GRAND_TEMPLE_VENUS) {
+            window_building_draw_grand_temple_venus(&context);
         } else if (btype == BUILDING_GOVERNORS_HOUSE || btype == BUILDING_GOVERNORS_VILLA || btype == BUILDING_GOVERNORS_PALACE) {
             window_building_draw_governor_home(&context);
         } else if (btype == BUILDING_FORUM || btype == BUILDING_FORUM_UPGRADED) {
@@ -604,7 +622,9 @@ static void draw_foreground(void)
             }
         } else if (btype == BUILDING_BARRACKS) {
 		window_building_draw_barracks_foreground(&context);
-	}
+        } else if (btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) {
+            window_building_draw_grand_temple_foreground(&context);
+        }
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info_foreground(&context);
     }
@@ -670,6 +690,8 @@ static int handle_specific_building_info_mouse(const mouse *m)
             } else {
                 window_building_handle_mouse_warehouse(m, &context);
             }
+        }  else if (btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) {
+            window_building_handle_mouse_grand_temple(m, &context);
         }
     }
     return 0;

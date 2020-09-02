@@ -48,6 +48,10 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
 
 int building_warehouse_for_getting(building *src, int resource, map_point *dst);
 
+int building_warehouse_with_resource(int src_building_id, int x, int y, int resource,
+    int distance_from_entry, int road_network_id, int* understaffed,
+    map_point* dst);
+
 int building_warehouse_determine_worker_task(building *warehouse, int *resource);
 
 #endif // BUILDING_WAREHOUSE_H

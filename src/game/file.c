@@ -4,6 +4,7 @@
 #include "building/granary.h"
 #include "building/maintenance.h"
 #include "building/menu.h"
+#include "building/monument.h"
 #include "building/storage.h"
 #include "city/data.h"
 #include "city/emperor.h"
@@ -265,6 +266,8 @@ static void initialize_saved_game(void)
     map_tiles_determine_gardens();
 
     city_message_clear_scroll();
+
+    building_monument_recalculate_monuments();
 
     game_state_unpause();
 }

@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "core/config.h"
 #include "figuretype/crime.h"
 #include "game/resource.h"
@@ -203,6 +204,15 @@ static void prefect_coverage(building *b, int *min_happiness_seen)
     }
 }
 
+static void lift_mood(building* b)
+{
+    if (b->type == BUILDING_HIPPODROME) {
+        b = building_main(b);
+    }
+    b->sentiment.house_happiness = 100;
+}
+
+
 static void tax_collector_coverage(building *b, int *max_tax_multiplier)
 {
     if (b->house_size && b->house_population > 0) {
@@ -367,23 +377,31 @@ int figure_service_provide_coverage(figure *f)
             switch (building_get(f->building_id)->type) {
                 case BUILDING_SMALL_TEMPLE_CERES:
                 case BUILDING_LARGE_TEMPLE_CERES:
+                case BUILDING_GRAND_TEMPLE_CERES:
                     houses_serviced = provide_culture(x, y, religion_coverage_ceres);
                     break;
                 case BUILDING_SMALL_TEMPLE_NEPTUNE:
                 case BUILDING_LARGE_TEMPLE_NEPTUNE:
+                case BUILDING_GRAND_TEMPLE_NEPTUNE:
                     houses_serviced = provide_culture(x, y, religion_coverage_neptune);
                     break;
                 case BUILDING_SMALL_TEMPLE_MERCURY:
                 case BUILDING_LARGE_TEMPLE_MERCURY:
+                case BUILDING_GRAND_TEMPLE_MERCURY:
                     houses_serviced = provide_culture(x, y, religion_coverage_mercury);
                     break;
                 case BUILDING_SMALL_TEMPLE_MARS:
                 case BUILDING_LARGE_TEMPLE_MARS:
+                case BUILDING_GRAND_TEMPLE_MARS:
                     houses_serviced = provide_culture(x, y, religion_coverage_mars);
                     break;
                 case BUILDING_SMALL_TEMPLE_VENUS:
                 case BUILDING_LARGE_TEMPLE_VENUS:
+                case BUILDING_GRAND_TEMPLE_VENUS:
                     houses_serviced = provide_culture(x, y, religion_coverage_venus);
+                    if (building_monument_upgraded(BUILDING_GRAND_TEMPLE_VENUS)) {
+                        houses_serviced = provide_culture(x, y, lift_mood);
+                    }
                     break;
                 default:
                     break;

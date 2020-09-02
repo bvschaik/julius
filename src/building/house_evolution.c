@@ -2,6 +2,7 @@
 
 #include "building/house.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "city/houses.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -482,10 +483,15 @@ static void consume_resource(building *b, int inventory, int amount)
 static void consume_resources(building *b)
 {
     const model_house *model = model_get_house(b->subtype.house_level);
-    consume_resource(b, INVENTORY_POTTERY, model->pottery);
-    consume_resource(b, INVENTORY_FURNITURE, model->furniture);
-    consume_resource(b, INVENTORY_OIL, model->oil);
-    consume_resource(b, INVENTORY_WINE, model->wine);
+    if (!(game_time_month() % 6) && b->data.house.temple_mercury && building_monument_upgraded(BUILDING_GRAND_TEMPLE_MERCURY)) {
+        
+    }
+    else {
+        consume_resource(b, INVENTORY_POTTERY, model->pottery);
+        consume_resource(b, INVENTORY_FURNITURE, model->furniture);
+        consume_resource(b, INVENTORY_OIL, model->oil);
+        consume_resource(b, INVENTORY_WINE, model->wine);
+    }
 }
 
 static int (*evolve_callback[])(building *, house_demands *) = {

@@ -6,6 +6,7 @@
 #include "building/count.h"
 #include "building/dock.h"
 #include "building/menu.h"
+#include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/storage.h"
@@ -26,6 +27,8 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
+#include "scenario/property.h"
+
 
 static void add_fort(int type, building *fort)
 {
@@ -504,9 +507,57 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_DISTRIBUTION_CENTER_UNUSED:
             city_buildings_add_distribution_center(b);
             break;
+        case BUILDING_GRAND_TEMPLE_CERES:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 01"));
+            b->subtype.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 9);
+            building_monument_initialize(b);
+            break;
+        case BUILDING_GRAND_TEMPLE_NEPTUNE:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 01"));
+            b->subtype.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 9);
+            building_monument_initialize(b);
+            break;
+        case BUILDING_GRAND_TEMPLE_MERCURY:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 01"));
+            b->subtype.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 9);
+            building_monument_initialize(b);
+            break;
+        case BUILDING_GRAND_TEMPLE_MARS:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 01"));
+            b->subtype.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 9);
+            building_monument_initialize(b);
+            break;
+        case BUILDING_GRAND_TEMPLE_VENUS:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 01"));
+            b->subtype.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 9);
+            building_monument_initialize(b);
+            break;
+
+        case BUILDING_WORKCAMP:
+            switch (scenario_property_climate())
+            {
+            case CLIMATE_NORTHERN:
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Workcamps"), "Workcamp North"));
+                break;
+            case CLIMATE_DESERT:
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Workcamps"), "Workcamp South"));
+                break;
+            default:
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Workcamps"), "Workcamp Central"));
+                break;
+            }
+            break;
     }
     map_routing_update_land();
     map_routing_update_walls();
+    if (building_monument_is_monument(b)) {
+        building_monument_recalculate_monuments();
+    }
 }
 
 int building_construction_place_building(building_type type, int x, int y)
@@ -606,6 +657,10 @@ int building_construction_place_building(building_type type, int x, int y)
             city_warning_show(WARNING_MAX_LEGIONS_REACHED);
             return 0;
         }
+    }
+    if (building_monument_has_monument(type)) {
+        city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
+        return 0;
     }
     if (type == BUILDING_HIPPODROME) {
         if (city_buildings_has_hippodrome()) {

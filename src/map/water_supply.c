@@ -1,6 +1,7 @@
 #include "water_supply.h"
 
 #include "building/building.h"
+#include "building/monument.h"
 #include "building/list.h"
 #include "core/image.h"
 #include "map/aqueduct.h"
@@ -207,8 +208,7 @@ void map_water_supply_update_reservoir_fountain(void)
         if (map_terrain_is(b->grid_offset, TERRAIN_RESERVOIR_RANGE) && b->num_workers) {
             b->has_water_access = 1;
             map_terrain_add_with_radius(b->x, b->y, 1,
-                scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
-                TERRAIN_FOUNTAIN_RANGE);
+                map_water_supply_fountain_radius(), TERRAIN_FOUNTAIN_RANGE);
         } else {
             b->has_water_access = 0;
         }
@@ -235,4 +235,15 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius)
         }
     }
     return num_houses ? WELL_UNNECESSARY_FOUNTAIN : WELL_UNNECESSARY_NO_HOUSES;
+}
+
+int map_water_supply_fountain_radius() {
+    int radius = CLIMATE_DESERT ? 3 : 4;
+	if (building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
+        radius++;
+	}
+    if (building_monument_upgraded(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
+        radius++;
+    }
+    return radius;
 }

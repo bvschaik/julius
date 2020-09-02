@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/dock.h"
+#include "building/monument.h"
 #include "building/warehouse.h"
 #include "building/storage.h"
 #include "city/buildings.h"
@@ -24,6 +25,8 @@
 #include "map/figure.h"
 #include "map/road_access.h"
 #include "scenario/map.h"
+
+
 
 int figure_create_trade_caravan(int x, int y, int city_id)
 {
@@ -57,7 +60,7 @@ int figure_trade_caravan_can_buy(figure *trader, int warehouse_id, int city_id)
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return 0;
     }
-    if (trader->trader_amount_bought >= 8) {
+    if (trader->trader_amount_bought >= figure_trade_land_trade_units()) {
         return 0;
     }
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, warehouse)) {
@@ -80,7 +83,7 @@ int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id)
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return 0;
     }
-    if (trader->loads_sold_or_carrying >= 8) {
+    if (trader->loads_sold_or_carrying >= figure_trade_land_trade_units()) {
         return 0;
     }
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, warehouse)) {
@@ -229,7 +232,7 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
     importable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         exportable[r] = empire_can_export_resource_to_city(city_id, r);
-        if (f->trader_amount_bought >= 8) {
+        if (f->trader_amount_bought >= figure_trade_land_trade_units()) {
             exportable[r] = 0;
         }
         if (city_id) {
@@ -237,7 +240,7 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
         } else { // exclude own city (id=0), shouldn't happen, but still..
             importable[r] = 0;
         }
-        if (f->loads_sold_or_carrying >= 8) {
+        if (f->loads_sold_or_carrying >= figure_trade_land_trade_units()) {
             importable[r] = 0;
         }
     }
@@ -631,7 +634,7 @@ void figure_trade_ship_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_110_TRADE_SHIP_CREATED:
-            f->loads_sold_or_carrying = 12;
+            f->loads_sold_or_carrying = figure_trade_sea_trade_units();
             f->trader_amount_bought = 0;
             f->is_ghost = 1;
             f->wait_ticks++;
@@ -750,4 +753,20 @@ void figure_trade_ship_action(figure *f)
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
     f->image_id = image_group(GROUP_FIGURE_SHIP) + dir;
+}
+
+int figure_trade_land_trade_units()
+{
+    if (building_monument_upgraded(BUILDING_GRAND_TEMPLE_MERCURY)) {
+        return 12;
+    }
+    return 8;
+}
+
+int figure_trade_sea_trade_units()
+{
+    if (building_monument_upgraded(BUILDING_GRAND_TEMPLE_MERCURY)) {
+        return 16;
+    }
+    return 12;
 }

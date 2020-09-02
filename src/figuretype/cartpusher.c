@@ -3,6 +3,7 @@
 #include "building/barracks.h"
 #include "building/granary.h"
 #include "building/industry.h"
+#include "building/monument.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/resource.h"

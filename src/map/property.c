@@ -9,6 +9,7 @@ enum {
     BIT_SIZE3 = 0x02,
     BIT_SIZE4 = 0x04,
     BIT_SIZE5 = 0x08,
+    BIT_SIZE7 = 0x0f,
     BIT_SIZES = 0x0f,
     BIT_NO_SIZES = 0xf0,
     BIT_CONSTRUCTION = 0x10,
@@ -111,6 +112,7 @@ int map_property_multi_tile_size(int grid_offset)
         case BIT_SIZE3: return 3;
         case BIT_SIZE4: return 4;
         case BIT_SIZE5: return 5;
+        case BIT_SIZE7: return 7;
         default: return 1;
     }
 }
@@ -123,6 +125,8 @@ void map_property_set_multi_tile_size(int grid_offset, int size)
         case 3: bitfields_grid.items[grid_offset] |= BIT_SIZE3; break;
         case 4: bitfields_grid.items[grid_offset] |= BIT_SIZE4; break;
         case 5: bitfields_grid.items[grid_offset] |= BIT_SIZE5; break;
+        case 7: bitfields_grid.items[grid_offset] |= BIT_SIZE7; break;
+
     }
 }
 

@@ -7,8 +7,10 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "graphics/window.h"
 #include "map/water_supply.h"
+#include "translation/translation.h"
 #include "window/building_info.h"
 
 
@@ -134,8 +136,8 @@ void window_building_draw_roadblock_foreground(building_info_context* c)
 {
     button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
         16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
-        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+    text_draw_centered(translation_for(TR_BUILDING_ROADBLOCK), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
+        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK,0);
 
 }
 
@@ -144,7 +146,7 @@ void window_building_draw_roadblock_orders(building_info_context* c)
     c->help_id = 3;
     int y_offset = window_building_get_vertical_offset(c, 28);
     outer_panel_draw(c->x_offset, y_offset, 29, 28);
-    lang_text_draw_centered(28, 115, c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    text_draw_centered(translation_for(TR_BUILDING_ROADBLOCK), c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK,0);
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 
 }

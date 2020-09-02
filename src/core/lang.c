@@ -164,11 +164,25 @@ int lang_load(int is_editor)
 const uint8_t *lang_get_string(int group, int index)
 {
     // Add new strings
-    if ((group == 28) && (index == 115)) {
-        return translation_for(TR_BUILDING_ROADBLOCK);
-    }
-    if ((group == 28) && (index == 116)) {
-        return translation_for(TR_BUILDING_ROADBLOCK_DESC);
+    if (group == 28) {
+        switch (index) {
+        case 115:
+            return translation_for(TR_BUILDING_ROADBLOCK);
+        case 116:
+            return translation_for(TR_BUILDING_WORK_CAMP);
+        case 117:
+            return translation_for(TR_BUILDING_GRAND_TEMPLE_CERES);
+        case 118:
+            return translation_for(TR_BUILDING_GRAND_TEMPLE_NEPTUNE);
+        case 119:
+            return translation_for(TR_BUILDING_GRAND_TEMPLE_MERCURY);
+        case 120:
+            return translation_for(TR_BUILDING_GRAND_TEMPLE_MARS);
+        case 121:
+            return translation_for(TR_BUILDING_GRAND_TEMPLE_VENUS);
+        default:
+            break;
+        }
     }
     const uint8_t *str = &data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;

@@ -1,5 +1,6 @@
 #include "combat.h"
 
+#include "building/monument.h"
 #include "core/calc.h"
 #include "figure/formation.h"
 #include "figure/movement.h"
@@ -82,6 +83,9 @@ static void hit_opponent(figure *f)
     if (m->is_halted && m->figure_type == FIGURE_FORT_LEGIONARY &&
             attack_is_same_direction(f->attack_direction, m->direction)) {
         figure_attack += 4; // coordinated formation attack bonus
+    }
+    if (m->is_legion && building_monument_upgraded(BUILDING_GRAND_TEMPLE_MARS)) {
+        figure_attack += 2;
     }
     // defense modifiers
     if (opponent_formation->is_halted &&

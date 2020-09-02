@@ -1,4 +1,6 @@
 #include "properties.h"
+#include "core/image_group.h" 
+
 
 static building_properties properties[140] = {
 // SZ FIRE GRP OFF
@@ -118,10 +120,12 @@ static building_properties properties[140] = {
     {2, 0, 124, 0},
     {2, 0, 125, 0},
     {0, 0,   0, 0},
-    {1, 1,   0, 0},
-    {1, 1,   0, 0},
-    {1, 1,   0, 0},
-    {1, 1,   0, 0},
+    {3, 0,   GROUP_BUILDING_WAREHOUSE, 0},
+    {7, 0,   GROUP_BUILDING_TEMPLE_CERES, 1},
+    {7, 0,   GROUP_BUILDING_TEMPLE_NEPTUNE, 1},
+    {7, 0,   GROUP_BUILDING_TEMPLE_MERCURY, 1},
+    {7, 0,   GROUP_BUILDING_TEMPLE_MARS, 1},
+    {7, 0,   GROUP_BUILDING_TEMPLE_VENUS, 1},
     {1, 1,   0, 0},
     {1, 1,   0, 0},
     {1, 1,   0, 0},
@@ -140,8 +144,7 @@ static building_properties properties[140] = {
     {0, 0,   0, 0},
     {0, 0,   0, 0},
     {0, 0,   0, 0},
-    {0, 0,   0, 0},
-    {0, 0,   0, 0}
+
 };
 
 

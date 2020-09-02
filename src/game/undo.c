@@ -1,6 +1,7 @@
 #include "undo.h"
 
 #include "building/industry.h"
+#include "building/monument.h"
 #include "building/properties.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
@@ -262,6 +263,7 @@ void game_undo_perform(void)
     }
     map_routing_update_land();
     map_routing_update_walls();
+    building_monument_recalculate_monuments();
     data.num_buildings = 0;
 }
 

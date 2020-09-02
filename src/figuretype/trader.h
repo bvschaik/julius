@@ -27,4 +27,8 @@ int figure_trade_ship_is_trading(figure *ship);
 
 void figure_trade_ship_action(figure *f);
 
+int figure_trade_land_trade_units();
+
+int figure_trade_sea_trade_units();
+
 #endif // FIGURETYPE_TRADER_H

@@ -1,9 +1,26 @@
 #include "culture.h"
 
 #include "building/building.h"
+#include "building/monument.h"
+#include "city/resource.h"
+#include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
+#include "translation/translation.h"
+#include "window/popup_dialog.h"
+
+static void add_module_prompt(int param1, int param2);
+
+static generic_button add_module_button[] = {
+    {0, 0, 304, 20, add_module_prompt, button_none, 0, 0}
+};
+
+static struct {
+    int focus_button_id;
+    int building_id;
+} data = { 0, 0 };
 
 static void draw_culture_info(building_info_context *c, int help_id, const char *sound_file, int group_id)
 {
@@ -307,4 +324,96 @@ void window_building_draw_lion_house(building_info_context *c)
 void window_building_draw_chariot_maker(building_info_context *c)
 {
     draw_entertainment_school(c, "wavs/char_pit.wav", 78);
+}
+
+static void window_building_draw_monument_resources_needed(building_info_context* c)
+{
+    building* b = building_get(c->building_id);
+    if (b->subtype.monument_phase != MONUMENT_FINISHED)
+    {
+        for (int r = RESOURCE_TIMBER; r <= RESOURCE_MARBLE; r++) {
+            int image_id = image_group(GROUP_RESOURCE_ICONS);
+            image_draw(image_id + r, c->x_offset + 22, c->y_offset - 156 + r * 20);
+            text_draw_number(b->data.monument.resources_needed[r], '@', " ", c->x_offset + 54, c->y_offset + 10 + r * 20 - 160, FONT_NORMAL_BLACK);
+        }
+    }
+}
+
+static void draw_grand_temple(building_info_context* c, const char* sound_file, int name)
+{
+    window_building_play_sound(c, sound_file);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
+    text_draw_centered(translation_for(name), c->x_offset, c->y_offset+12, 16*c->width_blocks, FONT_LARGE_BLACK, 0);
+    window_building_draw_monument_resources_needed(c);
+    window_building_draw_employment(c, 138);
+}
+
+void window_building_draw_grand_temple_foreground(building_info_context* c)
+{
+    building* b = building_get(c->building_id);
+    if (b->subtype.monument_phase == MONUMENT_FINISHED && !b->data.monument.upgrades) {
+        button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+            16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+        text_draw_centered(translation_for(TR_BUILDING_GRAND_TEMPLE_ADD_MODULE), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
+            16 * (c->width_blocks - 10), FONT_NORMAL_BLACK, 0);
+    }
+}
+
+int window_building_handle_mouse_grand_temple(const mouse* m, building_info_context* c)
+{
+    building* b = building_get(c->building_id);
+	data.building_id = c->building_id;
+    if (b->subtype.monument_phase != MONUMENT_FINISHED || b->data.monument.upgrades) {
+        return 0;
+    }
+	if (generic_buttons_handle_mouse(m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+		add_module_button, 1, &data.focus_button_id)) {
+        return 1;
+	}
+	return 0;
+}
+
+void window_building_draw_grand_temple_ceres(building_info_context* c)
+{
+    draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES);
+}
+
+void window_building_draw_grand_temple_neptune(building_info_context* c)
+{
+    draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE);
+}
+
+void window_building_draw_grand_temple_mercury(building_info_context* c)
+{
+    draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY);
+}
+
+void window_building_draw_grand_temple_mars(building_info_context* c)
+{
+    draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS);
+}
+
+void window_building_draw_grand_temple_venus(building_info_context* c)
+{
+    draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS);
+}
+
+void window_building_draw_work_camp(building_info_context* c)
+{
+	window_building_play_sound(c, "wavs/eng_post.wav");
+	outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+	inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
+    text_draw_centered(translation_for(TR_BUILDING_WORK_CAMP), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    window_building_draw_employment(c, 138);
+}
+
+static void add_module() {
+    building* b = building_get(data.building_id);
+    building_monument_add_module(b);
+}
+
+static void add_module_prompt(int param1, int param2)
+{
+    window_popup_dialog_show_confirmation(1, 2, add_module);
 }

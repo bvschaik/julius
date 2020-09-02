@@ -10,7 +10,7 @@ struct map_data_t map_data;
 
 static const int DIRECTION_DELTA[] = {-OFFSET(0,1), OFFSET(1,-1), 1, OFFSET(1,1), OFFSET(0,1), OFFSET(-1,1), -1, -OFFSET(1,1)};
 
-static const int ADJACENT_OFFSETS[][21] = {
+static const int ADJACENT_OFFSETS[][29] = {
     {0},
     {OFFSET(0,-1), OFFSET(1,0), OFFSET(0,1), OFFSET(-1,0), 0},
     {OFFSET(0,-1), OFFSET(1,-1), OFFSET(2,0), OFFSET(2,1), OFFSET(1,2), OFFSET(0,2), OFFSET(-1,1), OFFSET(-1,0), 0},
@@ -32,6 +32,13 @@ static const int ADJACENT_OFFSETS[][21] = {
         OFFSET(4,5), OFFSET(3,5), OFFSET(2,5), OFFSET(1,5), OFFSET(0,5),
         OFFSET(-1,4), OFFSET(-1,3), OFFSET(-1,2), OFFSET(-1,1), OFFSET(-1,0), 0
     },
+    { 0
+    },
+    {   OFFSET(0,-1), OFFSET(1,-1), OFFSET(2,-1), OFFSET(3,-1), OFFSET(4,-1), OFFSET(5,-1), OFFSET(6,-1),
+        OFFSET(7,0), OFFSET(7,1), OFFSET(7,2), OFFSET(7,3), OFFSET(7,4), OFFSET(7,5), OFFSET(7,6),
+        OFFSET(6,7), OFFSET(5,7), OFFSET(4,7), OFFSET(3,7), OFFSET(2,7), OFFSET(1,7), OFFSET(0,7),
+        OFFSET(-1,6), OFFSET(-1,5), OFFSET(-1,4), OFFSET(-1,3), OFFSET(-1,2), OFFSET(-1,1), OFFSET(-1,0), 0
+    }
 };
 
 void map_grid_init(int width, int height, int start_offset, int border_size)

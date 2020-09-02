@@ -1,5 +1,6 @@
 #include "industry.h"
 
+#include "building/monument.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/image.h"
@@ -15,6 +16,11 @@
 int building_is_farm(building_type type)
 {
     return type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM;
+}
+
+int building_is_raw_resource_producer(building_type type)
+{
+    return type >= BUILDING_MARBLE_QUARRY && type <= BUILDING_CLAY_PIT;
 }
 
 int building_is_workshop(building_type type)
@@ -61,6 +67,12 @@ void building_industry_update_production(void)
             }
             if (b->data.industry.blessing_days_left && building_is_farm(b->type)) {
                 b->data.industry.progress += b->num_workers;
+            }
+            if (building_monument_working(BUILDING_GRAND_TEMPLE_CERES) && building_is_farm(b->type)) {
+                b->data.industry.progress += b->num_workers / 2;
+            }
+            if (building_monument_working(BUILDING_GRAND_TEMPLE_MERCURY) && building_is_raw_resource_producer(b->type)) {
+                b->data.industry.progress += b->num_workers / 2;
             }
             int max = max_progress(b);
             if (b->data.industry.progress > max) {

@@ -1,5 +1,6 @@
 #include "formation.h"
 
+#include "building/monument.h"
 #include "city/military.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -288,6 +289,9 @@ void formation_change_morale(formation *m, int amount)
                 max_morale = 70;
                 break;
         }
+    }
+    if (m->is_legion && building_monument_working(BUILDING_GRAND_TEMPLE_MARS)) {
+        max_morale += 10;
     }
     m->morale = calc_bound(m->morale + amount, 0, max_morale);
 }

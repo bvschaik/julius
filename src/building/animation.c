@@ -2,6 +2,7 @@
 
 #include "building/industry.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "game/animation.h"
@@ -52,6 +53,10 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_GRANARY && b->num_workers < model_get_building(b->type)->laborers) {
         return 0;
     }
+    if (building_monument_is_monument(b) && (b->num_workers <= 0 || b->subtype.monument_phase != MONUMENT_FINISHED)) {
+        return 0;
+    }
+
 
     const image *img = image_get(image_id);
     if (!game_animation_should_advance(img->animation_speed_id)) {
