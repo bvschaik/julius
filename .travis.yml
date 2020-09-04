@@ -14,24 +14,34 @@ jobs:
   - os: linux
     compiler: gcc
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=linux DEPLOY=linux
+    git:
+      depth: false
   - os: linux
     dist: xenial # Oldest still-supported LTS right now against which the AppImage is built. Update this to the next LTS when support drops.
     name: Linux AppImage
     compiler: gcc
     env: BUILD_TARGET=appimage DEPLOY=appimage
+    git:
+      depth: false
   - os: osx
     compiler: clang
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
+    git:
+      depth: false
   - os: linux
     name: PS Vita
     env: BUILD_TARGET=vita DEPLOY=vita
+    git:
+      depth: false
     services:
       - docker
   - os: linux
     name: Nintendo Switch
+    env: BUILD_TARGET=switch DEPLOY=switch
+    git:
+      depth: false
     services:
       - docker
-    env: BUILD_TARGET=switch DEPLOY=switch
 
 cache:
   directories:
