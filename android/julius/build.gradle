@@ -4,74 +4,65 @@ buildDir = file("../distribution/${rootProject.name}/${project.name}")
 
 task getVersion {
     def cmakeFile = rootProject.file("../CMakeLists.txt").text
-    def project_version_major = (cmakeFile =~ /set\(PROJECT_VERSION_MAJOR (\d+)\)/)[0][1].toInteger()
-    def project_version_minor = (cmakeFile =~ /set\(PROJECT_VERSION_MINOR (\d+)\)/)[0][1].toInteger()
-    def project_version_patch = (cmakeFile =~ /set\(PROJECT_VERSION_PATCH (\d+)\)/)[0][1].toInteger()
-    def is_release_version = (cmakeFile =~ /set\(IS_RELEASE_VERSION ([A-Z]+)\)/)[0][1].toBoolean()
-    def project_unstable_version = 0;
-    if (!is_release_version) {
-        project_unstable_version = 1;
-    }
+    def versionMajor = (cmakeFile =~ /set\(PROJECT_VERSION_MAJOR (\d+)\)/)[0][1].toInteger()
+    def versionMinor = (cmakeFile =~ /set\(PROJECT_VERSION_MINOR (\d+)\)/)[0][1].toInteger()
+    def versionPatch = (cmakeFile =~ /set\(PROJECT_VERSION_PATCH (\d+)\)/)[0][1].toInteger()
+    def isRelease = (cmakeFile =~ /set\(IS_RELEASE_VERSION ([A-Z]+)\)/)[0][1].toBoolean()
 
-    def versionNumber = "${project_version_major}.${project_version_minor}.${project_version_patch}"
-    def versionDetail = " unknown development version"
-    ext.versionCode = project_version_major * 100000 + project_version_minor * 1000 + project_version_patch * 10 + project_unstable_version
+    def versionTweak = 0
+    def versionDetail
+    if (isRelease) {
+        versionDetail = ""
+    } else {
+        try {
+            def stdout = new ByteArrayOutputStream()
+            def stderr = new ByteArrayOutputStream()
 
-    try {
-        def stdout = new ByteArrayOutputStream()
-        def stderr = new ByteArrayOutputStream()
-        def tweak_result
-        def dirty_postfix = ""
+            def tweakResult = exec {
+                commandLine "git", "rev-list", "--count", "HEAD", "^tags/v${versionMajor}.${versionMinor}.${versionPatch}"
+                workingDir = "../.."
+                standardOutput = stdout
+                errorOutput = stderr
+                ignoreExitValue = true
+            }.exitValue
 
-        if (is_release_version) {
+            versionTweak = stdout.toString().trim().toInteger()
+            stdout.reset()
+
+            def lastCommitResult = exec {
+                commandLine "git", "rev-parse", "--short", "--verify", "HEAD"
+                workingDir "../.."
+                standardOutput = stdout
+                errorOutput = stderr
+                ignoreExitValue = true
+            }.exitValue
+            def versionCommit = stdout.toString().trim()
+
+            def isDirty = exec {
+                commandLine "git", "diff-index", "--quiet", "HEAD", "--"
+                workingDir "../.."
+                ignoreExitValue = true
+            }.exitValue
+
             versionDetail = ""
-            throw new StopExecutionException()
+            if (tweakResult == 0) {
+                versionDetail += ".$versionTweak"
+            }
+            if (lastCommitResult == 0) {
+                versionDetail += "-$versionCommit"
+            }
+            if (isDirty) {
+                versionDetail += "-dirty"
+            }
+        } catch (Exception) {
+            versionDetail = " unknown development version"
         }
-        tweak_result = exec {
-            ignoreExitValue = true
-            commandLine "git", "rev-list", "--count", "HEAD", "^tags/v${project_version_major}.${project_version_minor}.${project_version_patch}"
-            standardOutput = stdout
-            errorOutput = stderr
-            workingDir = "../.."
-        }.exitValue
-
-        def project_version_tweak = stdout.toString().trim()
-        stdout.reset()
-
-        def not_repository_clone = exec {
-            commandLine "git", "rev-parse", "--short", "--verify", "HEAD"
-            workingDir "../.."
-            standardOutput = stdout
-            errorOutput = stderr
-            ignoreExitValue = true
-        }.exitValue
-
-        if (not_repository_clone) {
-            throw new StopExecutionException()
-        }
-
-        def version_commit_hash = stdout.toString().trim()
-        def version_commit_dirty = exec {
-            commandLine "git", "diff-index", "--quiet", "HEAD", "--"
-            workingDir "../.."
-            ignoreExitValue = true
-        }.exitValue
-
-        if (version_commit_dirty) {
-            dirty_postfix = "-dirty"
-        }
-
-        // Happens on a shallow git clone, like Travis does. Append date to version ref.
-        if (tweak_result) {
-            def today = new Date().format("yyyyMMdd")
-            versionDetail = "-${today}-${version_commit_hash}${dirty_postfix}"
-        } else {
-            versionDetail = ".${project_version_tweak}-${version_commit_hash}${dirty_postfix}"
-        }
-        ext.versionName = "${versionNumber}${versionDetail}"
-    } catch(Exception) {
-        ext.versionName = "${versionNumber}${versionDetail}"
     }
+
+    def versionNumber = "${versionMajor}.${versionMinor}.${versionPatch}"
+
+    ext.versionCode = versionMajor * 10000000 + versionMinor * 100000 + versionPatch * 1000 + versionTweak
+    ext.versionName = versionNumber + versionDetail
 }
 
 android {
@@ -102,6 +93,7 @@ android {
     buildTypes {
         debug {
             ext.alwaysUpdateBuildId = false
+            applicationIdSuffix ".debug"
         }
         release {
             minifyEnabled false
