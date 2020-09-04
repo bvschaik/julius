@@ -96,16 +96,7 @@ android {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
         sourceSets {
-            main {
-                java {
-                    srcDir 'src/main/java'
-                    srcDir '../../ext/SDL2'
-                    exclude '**/android-project-ant/**'
-                }
-                res {
-                    srcDir '../../res/android'
-                }
-            }
+            main.res.srcDirs += '../../res/android'
         }
     }
     buildTypes {
