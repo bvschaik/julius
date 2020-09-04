@@ -22,6 +22,9 @@ android {
                 arguments 'SUPPORT_FLAC=false SUPPORT_OGG=false SUPPORT_MOD_MODPLUG=false SUPPORT_MID_TIMIDITY=false'
             }
         }
+        sourceSets {
+            main.java.srcDirs += '../../ext/SDL2/SDL2-2.0.12/android-project/app/src/main/java'
+        }
     }
     buildTypes {
         debug {
