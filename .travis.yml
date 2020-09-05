@@ -52,11 +52,16 @@ jobs:
       - android-29
     name: Android
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=android DEPLOY=android
+    git:
+      depth: false
 
 cache:
   directories:
   - $SDL_LIB
   - $SDL_MIXER_LIB
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_070dfb7b48d5_key -iv $encrypted_070dfb7b48d5_iv -in android/julius.keystore.enc -out android/julius.keystore -d
 
 install:
   - ./.ci_scripts/setup_environment.sh
