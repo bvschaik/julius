@@ -20,6 +20,9 @@
 #define OFFSET(x,y) (x + GRID_SIZE * y)
 
 #define MAX_QUEUE 1000
+#define POND_CLIMATE_IMAGE_OFFSET 10 
+#define POND_WATERED_IMAGE_OFFSET 1
+#define POND_LARGE_IMAGE_OFFSET 20
 
 static const int ADJACENT_OFFSETS[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
 
@@ -217,7 +220,6 @@ void map_water_supply_update_reservoir_fountain(void)
     //ponds
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        char image_name[17];
 
         if (b->type != BUILDING_SMALL_POND && b->type != BUILDING_LARGE_POND) {
             continue;
@@ -230,29 +232,19 @@ void map_water_supply_update_reservoir_fountain(void)
             b->has_water_access = 0;
         }
 
+        int offset = 0;
         if (scenario_property_climate() == CLIMATE_DESERT) {
-            if (b->has_water_access) {
-                strcpy(image_name, "s pond south on");
-            }
-            else {
-                strcpy(image_name, "s pond south off");
-            }
+            offset += POND_CLIMATE_IMAGE_OFFSET;
         }
-        else {
-            if (b->has_water_access) {
-                strcpy(image_name, "s pond north on");
-            }
-            else {
-                strcpy(image_name, "s pond north off");
-            }
+        if (b->has_water_access) {
+            offset += POND_WATERED_IMAGE_OFFSET;
         }
-
-
         if (b->type == BUILDING_LARGE_POND) {
-            image_name[0] = "l"[0];
+            offset += POND_LARGE_IMAGE_OFFSET;
         }
 
-        map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), image_name), TERRAIN_BUILDING);
+        map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset, TERRAIN_BUILDING);
+
     }
 }
 
