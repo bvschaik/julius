@@ -10,14 +10,14 @@
 
     <application
         android:allowBackup="true"
-        android:label="Julius"
+        android:label="@string/app_name"
         android:icon="@mipmap/julius"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
         android:hardwareAccelerated="true">
 
         <activity
             android:name=".JuliusMainActivity"
-            android:label="Julius"
+            android:label="@string/app_name"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance"
             android:resizeableActivity="true"
