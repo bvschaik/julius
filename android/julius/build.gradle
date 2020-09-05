@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
 
-buildDir = file("../distribution/${rootProject.name}/${project.name}")
-
 task getVersion {
     def cmakeFile = rootProject.file("../CMakeLists.txt").text
     def versionMajor = (cmakeFile =~ /set\(PROJECT_VERSION_MAJOR (\d+)\)/)[0][1].toInteger()
@@ -80,7 +78,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_BUILD=ON -DSYSTEM_LIBS=OFF"
+                arguments "-DANDROID_BUILD=ON", "-DSYSTEM_LIBS=OFF"
             }
         }
         ndk {
