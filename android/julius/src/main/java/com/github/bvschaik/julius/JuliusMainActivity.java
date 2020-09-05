@@ -47,24 +47,22 @@ public class JuliusMainActivity extends SDLActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
-            this.gotDirectory();
-            return;
-        }
         if (requestCode == GET_FOLDER_RESULT) {
-            if (data == null || data.getData() == null) {
-                this.gotDirectory();
-                return;
+            if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+                getContentResolver().takePersistableUriPermission(
+                        data.getData(),
+                        data.getFlags() & RW_FLAGS_PERMISSION
+                );
+                FileManager.setBaseUri(data.getData());
             }
-
-            getContentResolver().takePersistableUriPermission(data.getData(), data.getFlags() & RW_FLAGS_PERMISSION);
-            FileManager.setBaseUri(data.getData());
-            this.gotDirectory();
+            gotDirectory();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     public void toastMessage(final String message) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+        runOnUiThread(new Runnable() {
             public void run() {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }

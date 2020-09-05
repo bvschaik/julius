@@ -368,7 +368,7 @@ static int init_sdl(void)
 }
 
 #ifdef SHOW_FOLDER_SELECT_DIALOG
-static const char* ask_for_data_dir(int again)
+static const char *ask_for_data_dir(int again)
 {
 #ifdef __ANDROID__
     if (again) {
