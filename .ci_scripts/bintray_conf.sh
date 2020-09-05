@@ -18,14 +18,56 @@ else
   exit
 fi
 
-if [ "$DEPLOY" = "linux" ]
-then
+case "$DEPLOY" in
+"linux")
+  NAME="linux"
+  DESC="Linux"
+  INCLUDE_PATTERN="${build_dir}/julius.zip"
+  UPLOAD_PATTERN="julius-$VERSION-linux-x86_64.zip"
+  ;;
+"appimage")
+  # Linux portable binary: https://appimage.org/
+  NAME="linux"
+  DESC="Linux AppImage"
+  INCLUDE_PATTERN="${build_dir}/julius.AppImage"
+  UPLOAD_PATTERN="julius-$VERSION-linux.AppImage"
+  ;;
+"mac")
+  NAME="mac"
+  DESC="macOS"
+  INCLUDE_PATTERN="${build_dir}/julius.dmg"
+  UPLOAD_PATTERN="julius-$VERSION-mac.dmg"
+  ;;
+"vita")
+  NAME="vita"
+  DESC="Vita"
+  INCLUDE_PATTERN="${build_dir}/julius.vpk"
+  UPLOAD_PATTERN="julius-$VERSION-vita.vpk"
+  ;;
+"switch")
+  NAME="switch"
+  DESC="Switch"
+  INCLUDE_PATTERN="$(pwd)/release/julius_switch.zip"
+  UPLOAD_PATTERN="julius-$VERSION-switch.zip"
+  ;;
+"android")
+  NAME="android"
+  DESC="Android"
+  INCLUDE_PATTERN="${build_dir}/julius.apk"
+  UPLOAD_PATTERN="julius-$VERSION-android.apk"
+  ;;
+*)
+  echo "Unknown deploy type $DEPLOY - skipping deply to Bintray"
+  exit
+  ;;
+esac
+
 cat > "bintray.json" <<EOF
 {
   "package": {
     "subject": "bvschaik",
     "repo": "$REPO",
-    "name": "linux",
+    "name": "$NAME",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/bvschaik/julius.git"
   },
@@ -33,70 +75,13 @@ cat > "bintray.json" <<EOF
   "version": {
     "name": "$VERSION",
     "released": "$(date +'%Y-%m-%d')",
-    "desc": "Automated Linux build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
+    "desc": "Automated $DESC build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
   },
 
   "files": [
     {
-      "includePattern": "${build_dir}/julius.zip",
-      "uploadPattern": "julius-$VERSION-linux-x86_64.zip"
-    }
-  ],
-
-  "publish": true
-}
-EOF
-# Linux portable binary: https://appimage.org/
-elif [ "$DEPLOY" = "appimage" ]
-then
-cat > "bintray.json" <<EOF
-{
-  "package": {
-    "subject": "bvschaik",
-    "repo": "$REPO",
-    "name": "linux",
-    "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/bvschaik/julius.git"
-  },
-
-  "version": {
-    "name": "$VERSION",
-    "released": "$(date +'%Y-%m-%d')",
-    "desc": "Automated Linux AppImage build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
-  },
-
-  "files": [
-    {
-      "includePattern": "${build_dir}/julius.AppImage",
-      "uploadPattern": "julius-$VERSION-linux.AppImage"
-    }
-  ],
-
-  "publish": true
-}
-EOF
-elif [ "$DEPLOY" = "mac" ]
-then
-cat > "bintray.json" <<EOF
-{
-  "package": {
-    "subject": "bvschaik",
-    "repo": "$REPO",
-    "name": "mac",
-    "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/bvschaik/julius.git"
-  },
-
-  "version": {
-    "name": "$VERSION",
-    "released": "$(date +'%Y-%m-%d')",
-    "desc": "Automated macOS build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
-  },
-
-  "files": [
-    {
-      "includePattern": "${build_dir}/julius.dmg",
-      "uploadPattern": "julius-$VERSION-mac.dmg",
+      "includePattern": "$INCLUDE_PATTERN",
+      "uploadPattern": "$UPLOAD_PATTERN",
       "listInDownloads": true
     }
   ],
@@ -104,88 +89,3 @@ cat > "bintray.json" <<EOF
   "publish": true
 }
 EOF
-elif [ "$DEPLOY" = "vita" ]
-then
-cat > "bintray.json" <<EOF
-{
-  "package": {
-    "subject": "bvschaik",
-    "repo": "$REPO",
-    "name": "vita",
-    "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/bvschaik/julius.git"
-  },
-
-  "version": {
-    "name": "$VERSION",
-    "released": "$(date +'%Y-%m-%d')",
-    "desc": "Automated Vita build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
-  },
-
-  "files": [
-    {
-      "includePattern": "${build_dir}/julius.vpk",
-      "uploadPattern": "julius-$VERSION-vita.vpk",
-      "listInDownloads": true
-    }
-  ],
-
-  "publish": true
-}
-EOF
-elif [ "$DEPLOY" = "switch" ]
-then
-cat > "bintray.json" <<EOF
-{
-  "package": {
-    "subject": "bvschaik",
-    "repo": "$REPO",
-    "name": "switch",
-    "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/bvschaik/julius.git"
-  },
-
-  "version": {
-    "name": "$VERSION",
-    "released": "$(date +'%Y-%m-%d')",
-    "desc": "Automated Switch build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
-  },
-
-  "files": [
-    {
-      "includePattern": "$(pwd)/release/julius_switch.zip",
-      "uploadPattern": "julius-$VERSION-switch.zip",
-      "listInDownloads": true
-    }
-  ],
-
-  "publish": true
-}
-EOF
-elif [ "$DEPLOY" = "android" ]
-then
-cat > "bintray.json" <<EOF
-{
-  "package": {
-    "subject": "bvschaik",
-    "repo": "$REPO",
-    "name": "android$NAME_SUFFIX",
-    "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/bvschaik/julius.git"
-  },
-  "version": {
-    "name": "$VERSION",
-    "released": "$(date +'%Y-%m-%d')",
-    "desc": "Automated Android build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
-  },
-  "files": [
-    {
-      "includePattern": "${build_dir}/julius.apk",
-      "uploadPattern": "julius-$VERSION-android.apk",
-      "listInDownloads": true
-    }
-  ],
-  "publish": true
-}
-EOF
-fi
