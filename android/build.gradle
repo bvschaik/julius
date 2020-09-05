@@ -13,9 +13,6 @@ buildscript {
     }
 }
 
-// Instead of having a build dir inside android app dir use the same project top level build dir to reduce clutter
-buildDir = file("distribution/${rootProject.name}/${project.name}")
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

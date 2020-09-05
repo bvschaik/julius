@@ -24,7 +24,7 @@ case "$BUILD_TARGET" in
 	;;
 "android")
 	cd android && TERM=dumb ./gradlew assembleRelease && \
-	cd .. && cp android/distribution/android/julius/outputs/apk/release/julius-release.apk build/julius.apk
+	cd .. && cp android/julius/build/outputs/apk/release/julius-release.apk build/julius.apk
 	;;
 *)
 	cd build && make && make test

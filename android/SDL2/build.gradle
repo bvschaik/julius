@@ -1,7 +1,5 @@
 apply plugin: 'com.android.library'
 
-buildDir = file("../distribution/${rootProject.name}/${project.name}")
-
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"

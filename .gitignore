@@ -28,6 +28,6 @@ local.properties
 .externalNativeBuild
 .idea
 .cxx/
-distribution/
 *.log
-/android/build
+/android/build/
+/android/*/build/
