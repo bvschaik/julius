@@ -13,6 +13,7 @@ res/julius.icns
 
 # Build output and data directories
 /build*/
+/release
 out/
 cmake-build-debug
 /data
@@ -29,3 +30,4 @@ local.properties
 .cxx/
 distribution/
 *.log
+/android/build
