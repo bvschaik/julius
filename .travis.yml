@@ -3,15 +3,19 @@ language: c
 jobs:
   include:
   - os: linux
+    name: Linux GCC
     compiler: gcc
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 RUN_CODECOV=1
   - os: linux
+    name: Linux GCC old SDL
     compiler: gcc
     env: SDL_LIB=SDL2-2.0.0 SDL_MIXER_LIB=SDL2_mixer-2.0.0
   - os: linux
+    name: Linux Clang
     compiler: clang
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4
   - os: linux
+    name: Linux release
     compiler: gcc
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=linux DEPLOY=linux
     git:
@@ -24,6 +28,7 @@ jobs:
     git:
       depth: false
   - os: osx
+    name: macOS
     compiler: clang
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
     git:
