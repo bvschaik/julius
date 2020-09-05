@@ -23,8 +23,8 @@ case "$BUILD_TARGET" in
 	zip julius.zip julius
 	;;
 "android")
-	cd android && TERM=dumb ./gradlew assembleDebug && \
-	cd .. && cp android/distribution/android/julius/outputs/apk/debug/julius-debug.apk build/julius.apk
+	cd android && TERM=dumb ./gradlew assembleRelease && \
+	cd .. && cp android/distribution/android/julius/outputs/apk/release/julius-release.apk build/julius.apk
 	;;
 *)
 	cd build && make && make test
