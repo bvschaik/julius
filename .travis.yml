@@ -7,7 +7,7 @@ jobs:
     compiler: gcc
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 RUN_CODECOV=1
   - os: linux
-    name: Linux GCC old SDL
+    name: Linux GCC, old SDL
     compiler: gcc
     env: SDL_LIB=SDL2-2.0.0 SDL_MIXER_LIB=SDL2_mixer-2.0.0
   - os: linux
@@ -15,22 +15,15 @@ jobs:
     compiler: clang
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4
   - os: linux
-    name: Linux release
-    compiler: gcc
-    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=linux DEPLOY=linux
-    git:
-      depth: false
-  - os: linux
-    dist: xenial # Oldest still-supported LTS right now against which the AppImage is built. Update this to the next LTS when support drops.
-    name: Linux AppImage
-    compiler: gcc
-    env: BUILD_TARGET=appimage DEPLOY=appimage
-    git:
-      depth: false
-  - os: osx
-    name: macOS
-    compiler: clang
-    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
+    dist: trusty
+    language: android
+    jdk: oraclejdk8
+    android:
+      components:
+      - build-tools-29.0.3
+      - android-29
+    name: Android
+    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=android DEPLOY=android
     git:
       depth: false
   - os: linux
@@ -47,16 +40,23 @@ jobs:
       depth: false
     services:
       - docker
+  - os: osx
+    name: macOS
+    compiler: clang
+    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
+    git:
+      depth: false
   - os: linux
-    dist: trusty
-    language: android
-    jdk: oraclejdk8
-    android:
-      components:
-      - build-tools-29.0.3
-      - android-29
-    name: Android
-    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=android DEPLOY=android
+    name: Linux release
+    compiler: gcc
+    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=linux DEPLOY=linux
+    git:
+      depth: false
+  - os: linux
+    dist: xenial # Oldest still-supported LTS right now against which the AppImage is built. Update this to the next LTS when support drops.
+    name: Linux AppImage
+    compiler: gcc
+    env: BUILD_TARGET=appimage DEPLOY=appimage
     git:
       depth: false
 
