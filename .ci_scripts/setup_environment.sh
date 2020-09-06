@@ -16,7 +16,7 @@ case "$BUILD_TARGET" in
 	mkdir -p $HOME/.android
 	touch $HOME/.android/repositories.cfg
 
-	for PACKAGE in 'ndk-bundle' 'cmake;3.6.4111459'
+	for PACKAGE in 'ndk-bundle' 'cmake;3.10.2.4988404'
 	do
 	  echo "Installing $PACKAGE..."
 	  yes | sdkmanager $PACKAGE > /dev/null
