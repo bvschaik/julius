@@ -15,7 +15,7 @@ typedef struct {
 } java_function_handler;
 
 #define GAME_PATH_MAX 300
-#define CLASS_JULIUS_ACTIVITY ""
+#define CLASS_JULIUS_ACTIVITY "com/github/bvschaik/julius/JuliusMainActivity"
 #define CLASS_FILE_MANAGER "com/github/bvschaik/julius/FileManager"
 
 static int has_directory;
