@@ -219,11 +219,6 @@ int android_remove_file(const char *filename)
     return result;
 }
 
-int android_is_mouse_in_use(void)
-{
-    return SDL_GetDefaultCursor() != 0 && !SDL_IsDeXMode() && !SDL_IsChromebook();
-}
-
 JNIEXPORT void JNICALL Java_com_github_bvschaik_julius_JuliusMainActivity_gotDirectory(JNIEnv *env, jobject thiz)
 {
     has_directory = 1;

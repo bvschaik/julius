@@ -12,7 +12,6 @@ int android_get_file_descriptor(const char *filename, const char *mode);
 int android_set_base_path(const char *path);
 int android_get_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *));
 int android_remove_file(const char *filename);
-int android_is_mouse_in_use(void);
 
 #define PLATFORM_USE_VIRTUAL_KEYBOARD
 void platform_show_virtual_keyboard(const uint8_t *text, int max_length);

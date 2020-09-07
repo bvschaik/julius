@@ -34,9 +34,7 @@
 #include "platform/vita/vita_input.h"
 #endif
 
-#ifdef __ANDROID__
 #include "platform/android/android.h"
-#endif
 
 #if defined(_WIN32)
 #include <string.h>

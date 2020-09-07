@@ -6,7 +6,6 @@
 #include "input/keys.h"
 #include "input/keyboard.h"
 #include "input/mouse.h"
-#include "platform/android/android.h"
 
 static int is_alt_down(SDL_KeyboardEvent *event)
 {
@@ -267,17 +266,6 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
         case SDLK_AC_BACK:
             event->keysym.scancode = SDL_SCANCODE_ESCAPE;
             break;
-#ifdef __ANDROID__
-        // Hack: since Android handles the right mouse button as a back button
-        // and SDL doesn't yet have a proper implementation for this, we'll
-        // treat the back button as a right mouse button when the mouse is active
-        case SDLK_ESCAPE:
-            if (android_is_mouse_in_use()) {
-                mouse_set_right_down(1);
-                return;
-            }
-            break;
-#endif
     }
 
     // handle hotkeys
@@ -303,16 +291,6 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
 
 void platform_handle_key_up(SDL_KeyboardEvent *event)
 {
-#ifdef __ANDROID__
-    // Hack: since Android handles the right mouse button as a back button
-    // and SDL doesn't yet have a proper implementation for this, we'll
-    // treat the back button as a right mouse button when the mouse is active
-    if (event->keysym.sym == SDLK_ESCAPE && android_is_mouse_in_use()) {
-        mouse_set_right_down(0);
-        return;
-    }
-#endif
-
     key_type key = get_key_from_scancode(event->keysym.scancode);
     key_modifier_type mod = get_modifier(event->keysym.mod);
     hotkey_key_released(key, mod);
