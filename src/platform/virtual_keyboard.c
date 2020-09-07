@@ -1,5 +1,6 @@
 #include "game/system.h"
 
+// The following includes are all required as they define PLATFORM_USE_VIRTUAL_KEYBOARD
 #include "android/android.h"
 #include "switch/switch.h"
 #include "vita/vita.h"
