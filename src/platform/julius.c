@@ -6,6 +6,7 @@
 #include "core/lang.h"
 #include "core/time.h"
 #include "game/game.h"
+#include "game/settings.h"
 #include "game/system.h"
 #include "input/mouse.h"
 #include "input/touch.h"
@@ -490,6 +491,13 @@ static void setup(const julius_args *args)
     if (!pre_init(args->data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
         exit(1);
+    }
+
+    if (args->force_windowed && setting_fullscreen()) {
+        int w, h;
+        setting_window(&w, &h);
+        setting_set_display(0, w, h);
+        SDL_Log("Forcing windowed mode with size %d x %d", w, h);
     }
 
     char title[100];
