@@ -75,7 +75,8 @@ int platform_screen_create(const char *title, int display_scale_percentage)
 
     platform_screen_destroy();
 
-    SDL_Log("Creating screen %d x %d, fullscreen? %d\n", width, height, fullscreen);
+    SDL_Log("Creating screen %d x %d, %s, %s", width, height,
+        fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
     if (fullscreen) {
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -93,6 +94,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         SDL_GetWindowSize(SDL.window, &width, &height);
     }
 
+    SDL_Log("Creating renderer");
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!SDL.renderer) {
         SDL_Log("Unable to create renderer, trying software renderer: %s", SDL_GetError());
@@ -151,7 +153,7 @@ int platform_screen_resize(int pixel_width, int pixel_height)
     SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
 
     if (SDL.texture) {
-        SDL_Log("Texture created (%d x %d)", logical_width, logical_height);
+        SDL_Log("Texture created: %d x %d", logical_width, logical_height);
         screen_set_resolution(logical_width, logical_height);
         return 1;
     } else {
@@ -172,11 +174,12 @@ void platform_screen_move(int x, int y)
 void platform_screen_set_fullscreen(void)
 {
     SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
+    int display = SDL_GetWindowDisplayIndex(SDL.window);
     SDL_DisplayMode mode;
-    SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(SDL.window), &mode);
-    SDL_Log("User to fullscreen %d x %d\n", mode.w, mode.h);
+    SDL_GetDesktopDisplayMode(display, &mode);
+    SDL_Log("User to fullscreen %d x %d on display %d", mode.w, mode.h, display);
     if (0 != SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN_DESKTOP)) {
-        SDL_Log("Unable to enter fullscreen: %s\n", SDL_GetError());
+        SDL_Log("Unable to enter fullscreen: %s", SDL_GetError());
         return;
     }
     SDL_SetWindowDisplayMode(SDL.window, &mode);
@@ -198,7 +201,8 @@ void platform_screen_set_windowed(void)
     setting_window(&logical_width, &logical_height);
     int pixel_width = scale_logical_to_pixels(logical_width);
     int pixel_height = scale_logical_to_pixels(logical_height);
-    SDL_Log("User to windowed %d x %d", pixel_width, pixel_height);
+    int display = SDL_GetWindowDisplayIndex(SDL.window);
+    SDL_Log("User to windowed %d x %d on display %d", pixel_width, pixel_height, display);
     SDL_SetWindowFullscreen(SDL.window, 0);
     SDL_SetWindowSize(SDL.window, pixel_width, pixel_height);
     if (window_pos.centered) {
@@ -217,6 +221,7 @@ void platform_screen_set_window_size(int logical_width, int logical_height)
     }
     int pixel_width = scale_logical_to_pixels(logical_width);
     int pixel_height = scale_logical_to_pixels(logical_height);
+    int display = SDL_GetWindowDisplayIndex(SDL.window);
     if (setting_fullscreen()) {
         SDL_SetWindowFullscreen(SDL.window, 0);
     } else {
@@ -229,7 +234,7 @@ void platform_screen_set_window_size(int logical_width, int logical_height)
     if (window_pos.centered) {
         platform_screen_center_window();
     }
-    SDL_Log("User resize to %d x %d\n", pixel_width, pixel_height);
+    SDL_Log("User resize to %d x %d on display %d", pixel_width, pixel_height, display);
     if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
     }
