@@ -39,7 +39,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
 
     platform_screen_destroy();
 
-    SDL_Log("Creating screen %d x %d, fullscreen? %d\n", width, height, fullscreen);
+    SDL_Log("Creating screen %d x %d, fullscreen? %d", width, height, fullscreen);
     Uint32 flags = SDL_WINDOW_RESIZABLE;
     if (fullscreen) {
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -109,24 +109,24 @@ void platform_screen_set_fullscreen(void)
     SDL_GetWindowSize(SDL.window, &orig_w, &orig_h);
     SDL_DisplayMode mode;
     SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(SDL.window), &mode);
-    SDL_Log("User to fullscreen %d x %d\n", mode.w, mode.h);
+    SDL_Log("User to fullscreen %d x %d", mode.w, mode.h);
     if (0 != SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN_DESKTOP)) {
-        SDL_Log("Unable to enter fullscreen: %s\n", SDL_GetError());
+        SDL_Log("Unable to enter fullscreen: %s", SDL_GetError());
         return;
     }
     SDL_SetWindowDisplayMode(SDL.window, &mode);
-    setting_set_display(1, mode.w, mode.h);
+    setting_set_fullscreen(1, mode.w, mode.h);
 }
 
 void platform_screen_set_windowed(void)
 {
     int width, height;
     setting_window(&width, &height);
-    SDL_Log("User to windowed %d x %d\n", width, height);
+    SDL_Log("User to windowed %d x %d", width, height);
     SDL_SetWindowFullscreen(SDL.window, 0);
     SDL_SetWindowSize(SDL.window, width, height);
     SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
-    setting_set_display(0, width, height);
+    setting_set_windowed(width, height);
 }
 
 void platform_screen_set_window_size(int width, int height)
@@ -136,8 +136,8 @@ void platform_screen_set_window_size(int width, int height)
     }
     SDL_SetWindowSize(SDL.window, width, height);
     SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
-    SDL_Log("User resize to %d x %d\n", width, height);
-    setting_set_display(0, width, height);
+    SDL_Log("User resize to %d x %d", width, height);
+    setting_set_windowed(width, height);
 }
 
 void platform_screen_center_window(void)
