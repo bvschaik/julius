@@ -115,7 +115,7 @@ void platform_screen_set_fullscreen(void)
         return;
     }
     SDL_SetWindowDisplayMode(SDL.window, &mode);
-    setting_set_fullscreen(1, mode.w, mode.h);
+    setting_set_display(1, mode.w, mode.h);
 }
 
 void platform_screen_set_windowed(void)
@@ -126,7 +126,7 @@ void platform_screen_set_windowed(void)
     SDL_SetWindowFullscreen(SDL.window, 0);
     SDL_SetWindowSize(SDL.window, width, height);
     SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
-    setting_set_windowed(width, height);
+    setting_set_display(0, width, height);
 }
 
 void platform_screen_set_window_size(int width, int height)
@@ -137,7 +137,7 @@ void platform_screen_set_window_size(int width, int height)
     SDL_SetWindowSize(SDL.window, width, height);
     SDL_SetWindowPosition(SDL.window, window_pos.x, window_pos.y);
     SDL_Log("User resize to %d x %d", width, height);
-    setting_set_windowed(width, height);
+    setting_set_display(0, width, height);
 }
 
 void platform_screen_center_window(void)
