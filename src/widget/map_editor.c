@@ -330,19 +330,17 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
 
-    if (!tile->grid_offset) {
-        return;
-    }
-
-    if (m->left.went_down) {
-        if (!editor_tool_is_in_use()) {
-            editor_tool_start_use(tile);
+    if (tile->grid_offset) {
+        if (m->left.went_down) {
+            if (!editor_tool_is_in_use()) {
+                editor_tool_start_use(tile);
+            }
+            editor_tool_update_use(tile);
+        } else if (m->left.is_down || editor_tool_is_in_use()) {
+            editor_tool_update_use(tile);
         }
-        editor_tool_update_use(tile);
-    } else if (m->left.is_down || editor_tool_is_in_use()) {
-        editor_tool_update_use(tile);
     }
-    if (m->left.went_up) {
+    if (m->left.went_up && editor_tool_is_in_use()) {
         editor_tool_end_use(tile);
         sound_effect_play(SOUND_EFFECT_BUILD);
     }
