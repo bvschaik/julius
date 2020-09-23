@@ -181,7 +181,13 @@
     <image id="sml statue 2" src="Small_Statue_01" />
 
     <image id="sml statue 3" src="Small_Statue_02" />	
-	
-	
+
+
+<!-- Note: Assets for 'Small Statue 2' and 'Small Statue 3' respectively -->
+    <image id="obelisk" >	
+		<layer src="Obelisk_Footprint" />
+		<layer group="213" image="3" x="52" y="0" />
+		<layer src="Obelisk_Top" x="57" y="63" />
+    </image>	
 	
 </mod>
