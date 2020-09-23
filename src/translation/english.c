@@ -183,8 +183,10 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GREEN_PAVILION, "Green pavilion" },
     {TR_BUILDING_SMALL_STATUE_ALT, "Goddess sculpture" },
     {TR_BUILDING_SMALL_STATUE_ALT_B, "Senator sculpture"},
-    {TR_BUILDING_POND_DESC, "Ponds fill from city reservoirs and provide water for animals and a cool, relaxing oasis for people. All citizens would love to live near a pond." },
-    {TR_BUILDING_WINDOW_POND, "Pond"}  
+    { TR_BUILDING_OBELISK, "Obelisk" },
+    {TR_BUILDING_POND_DESC, "Ponds fill from city reservoirs and provide water for plants and animals and a cool, relaxing oasis for people. All citizens would love to live near a pond." },
+    {TR_BUILDING_WINDOW_POND, "Pond"},    
+    {TR_BUILDING_OBELISK_DESC, "A prestigious monument inspired by the works of the ancient kings of the Nile."}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

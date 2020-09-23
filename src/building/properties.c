@@ -159,7 +159,7 @@ const building_properties *building_properties_for_type(building_type type)
         return &properties[38];
     }
 
-    if (type == BUILDING_SMALL_POND){
+    if (type == BUILDING_SMALL_POND || type == BUILDING_OBELISK){
         return &MEDIUM_CUSTOM_DECOR_PROPERTIES;
     }
 

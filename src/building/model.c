@@ -167,7 +167,7 @@ const model_building *model_get_building(building_type type)
         return &buildings[41];
     }
 
-    if(type == BUILDING_SMALL_POND) {
+    if(type == BUILDING_SMALL_POND || type==BUILDING_OBELISK) {
         return &buildings[42];
     }
 

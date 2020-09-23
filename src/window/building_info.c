@@ -544,6 +544,8 @@ static void draw_background(void)
             window_building_draw_triumphal_arch(&context);
         } else if (btype == BUILDING_PREFECTURE) {
             window_building_draw_prefect(&context);
+        } else if (btype == BUILDING_OBELISK) {
+            window_building_draw_obelisk(&context);        
 	} else if (btype == BUILDING_ROADBLOCK) {
 	    if (context.storage_show_special_orders) {
 	        window_building_draw_roadblock_orders(&context);

@@ -121,7 +121,7 @@ void window_building_draw_description(building_info_context *c, int text_group, 
 
 void window_building_draw_description_from_tr_string(building_info_context* c, int translation_key)
 {
-    text_draw_multiline(translation_for(translation_key), c->x_offset + 32, c->y_offset + 56,
+    text_draw_multiline(translation_for(translation_key), c->x_offset + 32, c->y_offset + 76,
         16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
 }
 

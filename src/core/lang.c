@@ -170,7 +170,7 @@ const uint8_t *lang_get_string(int group, int index)
         return translation_for(TR_BUILDING_ROADBLOCK);
     }
 
-    if ((group == 28) && (index >= BUILDING_MENU_TREES && index <= BUILDING_SMALL_STATUE_ALT_B)) {
+    if ((group == 28) && (index >= BUILDING_MENU_TREES && index <= BUILDING_OBELISK)) {
         return translation_for(index + 25);
     }
 

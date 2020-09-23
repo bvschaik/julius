@@ -304,7 +304,9 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_SMALL_STATUE_ALT_B:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml statue 3"));
             break;
-
+        case BUILDING_OBELISK:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "obelisk"));
+            break;
         // health
         case BUILDING_DOCTOR:
             add_building(b, image_group(GROUP_BUILDING_DOCTOR));

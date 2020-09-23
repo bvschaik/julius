@@ -129,6 +129,16 @@ void window_building_draw_pond(building_info_context * c)
     window_building_play_sound(c, "wavs/fountain.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     
-    text_draw_centered(translation_for(TR_BUILDING_WINDOW_POND), c->x_offset, c->y_offset + 30, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    text_draw_centered(translation_for(TR_BUILDING_WINDOW_POND), c->x_offset, c->y_offset + 25, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     window_building_draw_description_from_tr_string(c, TR_BUILDING_POND_DESC);
+}
+
+void window_building_draw_obelisk(building_info_context* c)
+{
+    c->help_id = 79;
+    window_building_play_sound(c, "wavs/statue.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+
+    text_draw_centered(translation_for(TR_BUILDING_OBELISK), c->x_offset, c->y_offset + 25, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    window_building_draw_description_from_tr_string(c, TR_BUILDING_OBELISK_DESC);
 }
