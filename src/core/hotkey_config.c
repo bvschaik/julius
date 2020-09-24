@@ -110,7 +110,7 @@ static void set_layout_mapping(const char *name, key_type default_key, key_modif
     set_mapping(key, modifiers, action);
 }
 
-void init_defaults(void)
+static void init_defaults(void)
 {
     memset(data.default_mappings, 0, sizeof(data.default_mappings));
     set_mapping(KEY_UP, KEY_MOD_NONE, HOTKEY_ARROW_UP);

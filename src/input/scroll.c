@@ -105,7 +105,7 @@ static int get_arrow_key_value(key *arrow)
     return 0;
 }
 
-float get_normalized_arrow_key_value(key *arrow)
+static float get_normalized_arrow_key_value(key *arrow)
 {
     int value = get_arrow_key_value(arrow);
     if (value == SCROLL_KEY_PRESSED) {

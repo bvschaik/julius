@@ -19,7 +19,7 @@ static int is_problem_cartpusher(int figure_id)
     }
 }
 
-void overlay_problems_prepare_building(building *b)
+void city_overlay_problems_prepare_building(building *b)
 {
     if (b->house_size) {
         return;

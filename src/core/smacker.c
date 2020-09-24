@@ -488,7 +488,7 @@ static int read_trees_data(smacker s)
     return 1;
 }
 
-int allocate_frame_memory(smacker s)
+static int allocate_frame_memory(smacker s)
 {
     s->frame_data.video = clear_malloc(sizeof(uint8_t) * s->width * s->height);
     if (!s->frame_data.video) {
