@@ -242,7 +242,7 @@ static void handle_touch_scroll(const touch *t)
     if (!data.capture_input) {
         return;
     }
-    int was_click = touch_was_click(get_latest_touch());
+    int was_click = touch_was_click(touch_get_latest());
     if (t->has_started || was_click) {
         scroll_drag_start(1);
         return;
@@ -257,7 +257,7 @@ static void handle_touch_scroll(const touch *t)
 
 static void handle_last_touch(void)
 {
-    const touch *last = get_latest_touch();
+    const touch *last = touch_get_latest();
     if (last->in_use && touch_was_click(last)) {
         building_construction_cancel();
     }
@@ -283,7 +283,7 @@ static int handle_cancel_construction_button(const touch *t)
 
 static void handle_first_touch(map_tile *tile)
 {
-    const touch *first = get_earliest_touch();
+    const touch *first = touch_get_earliest();
     building_type type = building_construction_type();
 
     if (touch_was_click(first)) {
@@ -357,7 +357,7 @@ static void handle_first_touch(map_tile *tile)
 
 static void handle_touch(void)
 {
-    const touch *first = get_earliest_touch();
+    const touch *first = touch_get_earliest();
     if (!first->in_use) {
         scroll_restore_margins();
         return;
@@ -469,7 +469,7 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
         return;
     }
     if (m->is_touch) {
-        const touch *t = get_earliest_touch();
+        const touch *t = touch_get_earliest();
         if (!t->in_use) {
             return;
         }
@@ -488,7 +488,7 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
         window_city_show();
     } else {
         update_city_view_coords(m->x, m->y, tile);
-        if ((!m->is_touch && m->left.went_down) || (m->is_touch && m->left.went_up && touch_was_click(get_earliest_touch()))) {
+        if ((!m->is_touch && m->left.went_down) || (m->is_touch && m->left.went_up && touch_was_click(touch_get_earliest()))) {
             military_map_click(legion_formation_id, tile);
         }
     }

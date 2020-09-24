@@ -464,7 +464,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         empire_scroll_map(position.x, position.y);
     }
     if (m->is_touch) {
-        const touch *t = get_earliest_touch();
+        const touch *t = touch_get_earliest();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
             if (t->has_started) {
                 data.is_scrolling = 1;
