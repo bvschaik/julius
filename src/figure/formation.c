@@ -417,7 +417,7 @@ void formation_set_home(formation *m, int x, int y)
     m->y_home = y;
 }
 
-void formation_clear_figures(void)
+static void clear_figures(void)
 {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *f = &formations[i];
@@ -431,7 +431,7 @@ void formation_clear_figures(void)
     }
 }
 
-int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage)
+static int add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage)
 {
     formation *f = &formations[formation_id];
     f->num_figures++;
@@ -465,7 +465,7 @@ void formation_move_herds_away(int x, int y)
 
 void formation_calculate_figures(void)
 {
-    formation_clear_figures();
+    clear_figures();
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
         if (f->state != FIGURE_STATE_ALIVE) {
@@ -477,7 +477,7 @@ void formation_calculate_figures(void)
         if (f->type == FIGURE_ENEMY54_GLADIATOR) {
             continue;
         }
-        int index = formation_add_figure(f->formation_id, i,
+        int index = add_figure(f->formation_id, i,
             f->formation_at_rest != 1, f->damage,
             figure_properties_for_type(f->type)->max_damage
         );

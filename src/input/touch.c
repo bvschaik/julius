@@ -59,7 +59,7 @@ const touch *touch_get_latest(void)
     return (active_touches > 1) ? &data.finger[touch_index] : &data.finger[MAX_ACTIVE_TOUCHES];
 }
 
-int touch_get_total_active(void)
+static int get_total_active_touches(void)
 {
     int active_touches = 0;
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
@@ -90,7 +90,7 @@ int touch_was_double_click(const touch *t)
 
 int touch_is_scroll(void)
 {
-    int num_touches = touch_get_total_active();
+    int num_touches = get_total_active_touches();
     if (num_touches > 2) {
         return 0;
     }
@@ -253,7 +253,7 @@ static void handle_mouse_touchpad(void)
         return;
     }
 
-    int num_fingers = touch_get_total_active();
+    int num_fingers = get_total_active_touches();
 
     if (!num_fingers) {
         return;

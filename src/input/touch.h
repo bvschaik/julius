@@ -33,7 +33,6 @@ typedef struct {
 
 const touch *touch_get_earliest(void);
 const touch *touch_get_latest(void);
-int touch_get_total_active(void);
 
 int touch_not_click(const touch *t);
 int touch_was_click(const touch *t);

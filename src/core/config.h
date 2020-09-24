@@ -66,11 +66,6 @@ int config_get_default_value(config_key key);
 const char *config_get_default_string_value(config_string_key key);
 
 /**
- * Reset all settings to their defaults
- */
-void config_set_defaults(void);
-
-/**
  * Load config from file
  */
 void config_load(void);

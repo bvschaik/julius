@@ -167,9 +167,6 @@ void formation_set_destination(formation *m, int x, int y);
 void formation_set_destination_building(formation *m, int x, int y, int building_id);
 void formation_set_home(formation *m, int x, int y);
 
-void formation_clear_figures(void);
-int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage);
-
 void formation_move_herds_away(int x, int y);
 
 void formation_calculate_figures(void);
