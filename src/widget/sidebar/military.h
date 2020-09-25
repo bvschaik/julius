@@ -4,9 +4,6 @@
 #include "graphics/tooltip.h"
 #include "input/mouse.h"
 
-void widget_sidebar_military_set_single_formation_id(int formation_id);
-void widget_sidebar_military_select_all(void);
-
 int widget_sidebar_military_enter(int formation_id);
 int widget_sidebar_military_exit(void);
 
