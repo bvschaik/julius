@@ -349,12 +349,7 @@ static void draw_military_panel_background(int x_offset)
 
 static void set_minimap_selected_formations(void)
 {
-    static int formations[MAX_LEGIONS];
-    for (int i = 0; i < data.total_selected_legions; ++i) {
-        formations[i] = data.selected_legions[i].formation_id;
-    }
-    widget_minimap_set_selected_formations(formations, data.total_selected_legions);
-    widget_minimap_invalidate();
+    widget_minimap_set_selected_formation(data.active_legion->formation_id);
 }
 
 static void draw_background(int x_offset)

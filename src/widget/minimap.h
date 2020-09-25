@@ -3,7 +3,7 @@
 
 #include "input/mouse.h"
 
-void widget_minimap_set_selected_formations(int *formation_ids, int num_formations);
+void widget_minimap_set_selected_formation(int formation_id);
 
 void widget_minimap_invalidate(void);
 
