@@ -135,12 +135,11 @@ static int handle_right_click_allow_building_info(const map_tile *tile)
     return allow;
 }
 
-static int handle_legion_click(const map_tile *tile, int legion_formation_id)
+static int handle_legion_click(const map_tile *tile)
 {
     if (tile->grid_offset) {
         int formation_id = formation_legion_at_grid_offset(tile->grid_offset);
-        if (formation_id > 0 && formation_id != legion_formation_id &&
-            !formation_get(formation_id)->in_distant_battle) {
+        if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
             window_city_military_show(formation_id);
             return 1;
         }
@@ -289,7 +288,7 @@ static void handle_first_touch(map_tile *tile)
     building_type type = building_construction_type();
 
     if (touch_was_click(first)) {
-        if (handle_cancel_construction_button(first) || handle_legion_click(tile, 0)) {
+        if (handle_cancel_construction_button(first) || handle_legion_click(tile)) {
             return;
         }
         if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
@@ -396,7 +395,7 @@ static void handle_mouse(const mouse *m)
     update_city_view_coords(m->x, m->y, tile);
     building_construction_reset_draw_as_constructing();
     if (m->left.went_down) {
-        if (handle_legion_click(tile, 0)) {
+        if (handle_legion_click(tile)) {
             return;
         }
         if (!building_construction_in_progress()) {
@@ -446,29 +445,20 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
 static void military_map_click(int legion_formation_id, const map_tile *tile)
 {
     if (!tile->grid_offset) {
-        if (!config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR)) {
-            window_city_show();
-        }
         return;
     }
     formation *m = formation_get(legion_formation_id);
     if (m->in_distant_battle || m->cursed_by_mars) {
         return;
     }
-    if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && handle_legion_click(tile, legion_formation_id)) {
-        return;
-    }
     int other_formation_id = formation_legion_at_building(tile->grid_offset);
     if (other_formation_id && other_formation_id == legion_formation_id) {
         formation_legion_return_home(m);
-        window_city_show();
     } else {
         formation_legion_move_to(m, tile->x, tile->y);
         sound_speech_play_file("wavs/cohort5.wav");
-        if (!config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR)) {
-            window_city_show();
-        }
     }
+    window_city_show();
 }
 
 void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int legion_formation_id)
