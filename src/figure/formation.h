@@ -135,6 +135,9 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
 
 formation *formation_get(int formation_id);
 
+int formation_get_selected(void);
+void formation_set_selected(int formation_id);
+
 void formation_toggle_empire_service(int formation_id);
 
 void formation_record_missile_fired(formation *m);
