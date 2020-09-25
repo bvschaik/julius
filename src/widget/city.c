@@ -5,7 +5,6 @@
 #include "city/finance.h"
 #include "city/view.h"
 #include "city/warning.h"
-#include "core/config.h"
 #include "core/direction.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
