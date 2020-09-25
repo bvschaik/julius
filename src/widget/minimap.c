@@ -41,6 +41,7 @@ static struct {
     int width;
     int height;
     color_t enemy_color;
+    int selected_formation;
     color_t *cache;
     struct {
         int x;
@@ -48,8 +49,6 @@ static struct {
         int grid_offset;
     } mouse;
     int refresh_requested;
-    int selected_formation[MAX_LEGIONS];
-    int num_selected_formations;
 } data;
 
 void widget_minimap_invalidate(void)
@@ -99,21 +98,12 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.absolute_y &= ~1;
 }
 
-static int is_selected_formation(int formation_id)
-{
-    for (int i = 0; i < data.num_selected_formations; ++i) {
-        if (data.selected_formation[i] == formation_id) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
 static int has_figure_color(figure *f)
 {
     int type = f->type;
     if (figure_is_legion(f)) {
-        return FIGURE_COLOR_SOLDIER + is_selected_formation(f->formation_id);
+        return (data.selected_formation == f->formation_id) ?
+            FIGURE_COLOR_SELECTED_SOLDIER : FIGURE_COLOR_SOLDIER;
     }
     if (figure_is_enemy(f)) {
         return FIGURE_COLOR_ENEMY;
@@ -288,12 +278,10 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
     graphics_reset_clip_rectangle();
 }
 
-void widget_minimap_set_selected_formations(int *formation_ids, int num_formations)
+void widget_minimap_set_selected_formation(int formation_id)
 {
-    data.num_selected_formations = num_formations;
-    for (int i = 0; i < num_formations; ++i) {
-        data.selected_formation[i] = formation_ids[i];
-    }
+    data.selected_formation = formation_id;
+    widget_minimap_invalidate();
 }
 
 void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force)
