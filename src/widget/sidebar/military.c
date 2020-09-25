@@ -27,6 +27,8 @@
 #include "window/city.h"
 #include "window/military_menu.h"
 
+#define LAYOUTS_PER_LEGION 5
+
 #define Y_OFFSET_PANEL_START 175
 #define MILITARY_PANEL_BLOCKS 19
 
@@ -70,7 +72,7 @@ static arrow_button buttons_cycle_legion[] = {
     {125, 0, 21, 24, button_cycle_legion, 1, 0},
 };
 
-static generic_button buttons_formation_layout[FORMATIONS_PER_LEGION - 2][FORMATIONS_PER_LEGION] = {
+static generic_button buttons_formation_layout[LAYOUTS_PER_LEGION - 2][LAYOUTS_PER_LEGION] = {
     {
         {2, 0, 46, 46, button_select_formation_layout, button_none, 0, 0},
         {52, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
@@ -116,15 +118,15 @@ static const int IMAGE_OFFSETS_TO_FORMATION[7] = {
     FORMATION_SINGLE_LINE_2
 };
 
-static const int LAYOUT_IMAGE_OFFSETS_LEGIONARY[2][FORMATIONS_PER_LEGION] = {
+static const int LAYOUT_IMAGE_OFFSETS_LEGIONARY[2][LAYOUTS_PER_LEGION] = {
     {0, 0, 2, 3, 4}, {0, 0, 3, 2, 4},
 };
 
-static const int LAYOUT_IMAGE_OFFSETS_OTHER[2][FORMATIONS_PER_LEGION] = {
+static const int LAYOUT_IMAGE_OFFSETS_OTHER[2][LAYOUTS_PER_LEGION] = {
     {5, 6, 2, 3, 4}, {6, 5, 3, 2, 4},
 };
 
-static const int LAYOUT_BUTTON_INDEXES_LEGIONARY[2][FORMATIONS_PER_LEGION] = {
+static const int LAYOUT_BUTTON_INDEXES_LEGIONARY[2][LAYOUTS_PER_LEGION] = {
     {
         FORMATION_TORTOISE,
         FORMATION_COLUMN,
@@ -141,7 +143,7 @@ static const int LAYOUT_BUTTON_INDEXES_LEGIONARY[2][FORMATIONS_PER_LEGION] = {
     }
 };
 
-static const int LAYOUT_BUTTON_INDEXES_OTHER[2][FORMATIONS_PER_LEGION] = {
+static const int LAYOUT_BUTTON_INDEXES_OTHER[2][LAYOUTS_PER_LEGION] = {
     {
         FORMATION_SINGLE_LINE_1,
         FORMATION_SINGLE_LINE_2,
@@ -160,12 +162,12 @@ static const int LAYOUT_BUTTON_INDEXES_OTHER[2][FORMATIONS_PER_LEGION] = {
 
 static int available_layouts_for_legion(const formation *m)
 {
-    int layouts = FORMATIONS_PER_LEGION;
+    int layouts = LAYOUTS_PER_LEGION;
     if (m->figure_type == FIGURE_FORT_LEGIONARY) {
         if (m->has_military_training) {
-            layouts = FORMATIONS_PER_LEGION - 1;
+            layouts = LAYOUTS_PER_LEGION - 1;
         } else {
-            layouts = FORMATIONS_PER_LEGION - 2;
+            layouts = LAYOUTS_PER_LEGION - 2;
         }
     }
     return layouts;
@@ -180,10 +182,10 @@ static void draw_layout_buttons(int x, int y, int draw_buttons, const formation 
     const int *offsets = (m->figure_type == FIGURE_FORT_LEGIONARY) ? LAYOUT_IMAGE_OFFSETS_LEGIONARY[index] : LAYOUT_IMAGE_OFFSETS_OTHER[index];
     int formation_types = available_layouts_for_legion(m);
 
-    int start_formation = FORMATIONS_PER_LEGION - formation_types;
+    int start_formation = LAYOUTS_PER_LEGION - formation_types;
     const generic_button *button_offsets = buttons_formation_layout[formation_types - 3];
 
-    for (int i = start_formation; i < FORMATIONS_PER_LEGION; i++) {
+    for (int i = start_formation; i < LAYOUTS_PER_LEGION; i++) {
         const generic_button *current_button_offset = &button_offsets[i - start_formation];
         int is_selected_formation = m->layout == IMAGE_OFFSETS_TO_FORMATION[offsets[i]];
         int is_button_focused = i == data.inner_buttons_focus_id - 1 + start_formation;
