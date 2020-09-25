@@ -264,7 +264,7 @@ static void handle_input_military(const mouse *m, const hotkeys *h)
     if (widget_top_menu_handle_input(m, h)) {
         return;
     }
-    if (widget_sidebar_military_handle_input(m)) {
+    if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && widget_sidebar_military_handle_input(m)) {
         return;
     }
     widget_city_handle_input_military(m, h, selected_legion_formation_id);
