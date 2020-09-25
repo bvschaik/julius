@@ -14,6 +14,7 @@
 #include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "graphics/window.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -506,8 +507,14 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at_grid_offset(tile->grid_offset);
-        if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
-            highlighted_formation = 0;
+        if (highlighted_formation > 0) {
+            int selected_formation = formation_get_selected();
+            if (selected_formation && highlighted_formation != selected_formation) {
+                highlighted_formation = 0;
+            }
+            if (formation_get(highlighted_formation)->in_distant_battle) {
+                highlighted_formation = 0;
+            }
         }
     }
     init_draw_context(selected_figure_id, figure_coord, highlighted_formation);

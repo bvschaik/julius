@@ -19,6 +19,7 @@ static struct {
     int id_last_in_use;
     int id_last_legion;
     int num_legions;
+    int selected_formation;
 } data;
 
 void formations_clear(void)
@@ -133,6 +134,16 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
 formation *formation_get(int formation_id)
 {
     return &formations[formation_id];
+}
+
+int formation_get_selected(void)
+{
+    return data.selected_formation;
+}
+
+void formation_set_selected(int formation_id)
+{
+    data.selected_formation = formation_id;
 }
 
 void formation_toggle_empire_service(int formation_id)
