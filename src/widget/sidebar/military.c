@@ -528,39 +528,13 @@ int widget_sidebar_military_get_tooltip_text(tooltip_context *c)
     return 0;
 }
 
-void widget_sidebar_military_set_single_formation_id(int formation_id)
+static void set_formation_id(int formation_id)
 {
     data.active_legion = &data.selected_legions[0];
     data.active_legion->formation_id = formation_id;
     clear_legion_info(data.active_legion);
 
     data.total_selected_legions = 1;
-}
-
-void widget_sidebar_military_select_all(void)
-{
-    int active_formation = data.active_legion->formation_id;
-    int num_legions = formation_get_num_legions();
-    int current_legion = 1;
-    for (int i = 1; i < MAX_FORMATIONS; ++i) {
-        const formation *m = formation_get(i);
-        if (m->in_use != 1 || m->is_herd || !m->is_legion) {
-            continue;
-        }
-        legion_info *l = &data.selected_legions[current_legion - 1];
-        l->formation_id = i;
-        clear_legion_info(l);
-
-        if (active_formation == i) {
-            data.active_legion = l;
-        }
-        current_legion++;
-        if (current_legion > num_legions) {
-            break;
-        }
-    }
-    data.total_selected_legions = num_legions;
-    set_minimap_selected_formations();
 }
 
 static void slide_in_finished(void)
@@ -584,7 +558,7 @@ static void slide_out_finished(void)
 int widget_sidebar_military_enter(int formation_id)
 {
     int had_selected_legions = data.total_selected_legions;
-    widget_sidebar_military_set_single_formation_id(formation_id);
+    set_formation_id(formation_id);
     if (had_selected_legions) {
         set_minimap_selected_formations();
         return 0;
@@ -643,7 +617,7 @@ static void button_cycle_legion(int cycle_forward, int param2)
         }
     }
     window_city_military_set_formation_id(l->formation_id);
-    widget_sidebar_military_set_single_formation_id(l->formation_id);
+    set_formation_id(l->formation_id);
     set_minimap_selected_formations();
 }
 
