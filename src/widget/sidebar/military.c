@@ -27,8 +27,8 @@
 
 #define LAYOUTS_PER_LEGION 5
 
-#define Y_OFFSET_PANEL_START 175
-#define MILITARY_PANEL_BLOCKS 19
+#define Y_OFFSET_PANEL_START 176
+#define MILITARY_PANEL_BLOCKS 18
 
 typedef struct {
     int formation_id;
@@ -88,7 +88,7 @@ static generic_button buttons_formation_layout[LAYOUTS_PER_LEGION - 2][LAYOUTS_P
     }
 };
 
-static generic_button buttons_single_legion_bottom[] = {
+static generic_button buttons_bottom[] = {
     {10, 0, 30, 30, button_go_to_legion, button_none, 0, 0},
     {60, 0, 30, 30, button_return_to_fort, button_none, 0, 0},
     {110, 0, 30, 30, button_empire_service, button_none, 0, 0},
@@ -108,7 +108,7 @@ static const int LAYOUT_IMAGE_OFFSETS_LEGIONARY[2][LAYOUTS_PER_LEGION] = {
     {0, 0, 2, 3, 4}, {0, 0, 3, 2, 4},
 };
 
-static const int LAYOUT_IMAGE_OFFSETS_OTHER[2][LAYOUTS_PER_LEGION] = {
+static const int LAYOUT_IMAGE_OFFSETS_AUXILIARY[2][LAYOUTS_PER_LEGION] = {
     {5, 6, 2, 3, 4}, {6, 5, 3, 2, 4},
 };
 
@@ -129,7 +129,7 @@ static const int LAYOUT_BUTTON_INDEXES_LEGIONARY[2][LAYOUTS_PER_LEGION] = {
     }
 };
 
-static const int LAYOUT_BUTTON_INDEXES_OTHER[2][LAYOUTS_PER_LEGION] = {
+static const int LAYOUT_BUTTON_INDEXES_AUXILIARY[2][LAYOUTS_PER_LEGION] = {
     {
         FORMATION_SINGLE_LINE_1,
         FORMATION_SINGLE_LINE_2,
@@ -165,7 +165,8 @@ static void draw_layout_buttons(int x, int y, int draw_buttons, const formation 
     if (city_view_orientation() == DIR_6_LEFT || city_view_orientation() == DIR_2_RIGHT) {
         index = 1;
     }
-    const int *offsets = (m->figure_type == FIGURE_FORT_LEGIONARY) ? LAYOUT_IMAGE_OFFSETS_LEGIONARY[index] : LAYOUT_IMAGE_OFFSETS_OTHER[index];
+    const int *offsets = (m->figure_type == FIGURE_FORT_LEGIONARY) ?
+        LAYOUT_IMAGE_OFFSETS_LEGIONARY[index] : LAYOUT_IMAGE_OFFSETS_AUXILIARY[index];
     int formation_types = available_layouts_for_legion(m);
 
     int start_formation = LAYOUTS_PER_LEGION - formation_types;
@@ -214,26 +215,19 @@ static void clear_legion_info(legion_info *legion)
     legion->empire_service = 0;
 }
 
-static void draw_military_info_single(int x_offset, int y_offset)
+static void draw_military_info(int x_offset, int y_offset)
 {
     legion_info *legion = &data.active_legion;
     const formation *m = formation_get(legion->formation_id);
     int formation_image = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
 
-    // Legion name (and optionally legion cycle buttons)
-    if (formation_get_num_legions() == 1) {
-        image_draw(formation_image, x_offset, y_offset + 10);
-        lang_text_draw_centered(138, m->legion_id, x_offset + image_get(formation_image)->width, y_offset + 14, SIDEBAR_EXPANDED_WIDTH - 6 - image_get(formation_image)->width, FONT_NORMAL_WHITE);
-    } else {
-        arrow_buttons_draw(x_offset, y_offset + 6, buttons_cycle_legion, 2);
-        image_draw(formation_image, x_offset + (SIDEBAR_EXPANDED_WIDTH - 12 - image_get(formation_image)->width) / 2, y_offset + 8);
-        lang_text_draw_centered(138, m->legion_id, x_offset, y_offset + 34, SIDEBAR_EXPANDED_WIDTH - 12, FONT_NORMAL_WHITE);
-        y_offset += 20;
-    }
+    // Legion name
+    image_draw(formation_image, x_offset + (SIDEBAR_EXPANDED_WIDTH - 12 - image_get(formation_image)->width) / 2, y_offset + 8);
+    lang_text_draw_centered(138, m->legion_id, x_offset, y_offset + 34, SIDEBAR_EXPANDED_WIDTH - 12, FONT_NORMAL_WHITE);
 
     // Number of soldiers
-    int width = text_draw_number(m->num_figures, '@', " ", x_offset, y_offset + 40, FONT_NORMAL_WHITE);
-    lang_text_draw(138, 46 - m->figure_type, x_offset + width, y_offset + 40, FONT_NORMAL_WHITE);
+    int width = text_draw_number(m->num_figures, '@', " ", x_offset, y_offset + 54, FONT_NORMAL_WHITE);
+    lang_text_draw(138, 46 - m->figure_type, x_offset + width, y_offset + 54, FONT_NORMAL_WHITE);
 
     // No soldiers
     if (!m->num_figures) {
@@ -254,30 +248,30 @@ static void draw_military_info_single(int x_offset, int y_offset)
     }
 
     // Morale
-    lang_text_draw(138, 36, x_offset, y_offset + 66, FONT_NORMAL_WHITE);
-    lang_text_draw(138, 37 + m->morale / 5, x_offset + 4, y_offset + 86, m->morale < 13 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
+    lang_text_draw(138, 36, x_offset, y_offset + 74, FONT_NORMAL_WHITE);
+    lang_text_draw(138, 37 + m->morale / 5, x_offset + 4, y_offset + 94, m->morale < 13 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
 
     // Health
     int health = calc_percentage(m->total_damage, m->max_total_damage);
-    lang_text_draw(138, 24, x_offset, y_offset + 108, FONT_NORMAL_WHITE);
-    lang_text_draw(138, get_health_text_id(health), x_offset + 4, y_offset + 128, health < 55 ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+    lang_text_draw(138, 24, x_offset, y_offset + 114, FONT_NORMAL_WHITE);
+    lang_text_draw(138, get_health_text_id(health), x_offset + 4, y_offset + 134, health < 55 ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
 
     // Formation layout
-    draw_layout_buttons(x_offset, y_offset + 146, 1, m);
+    draw_layout_buttons(x_offset, y_offset + 156, 1, m);
 
     int formation_options_image = image_group(GROUP_FORT_ICONS);
 
     // Go to legion button
-    button_border_draw(x_offset + 10, y_offset + 247, 30, 30, data.bottom_buttons_focus_id == 1);
-    image_draw(formation_options_image, x_offset + 13, y_offset + 250);
+    button_border_draw(x_offset + 10, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 1);
+    image_draw(formation_options_image, x_offset + 13, y_offset + 260);
 
     // Return to fort button
-    button_border_draw(x_offset + 60, y_offset + 247, 30, 30, data.bottom_buttons_focus_id == 2);
-    image_draw(formation_options_image + 1 + m->is_at_fort, x_offset + 63, y_offset + 250);
+    button_border_draw(x_offset + 60, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 2);
+    image_draw(formation_options_image + 1 + m->is_at_fort, x_offset + 63, y_offset + 260);
 
     // Empire service button
-    button_border_draw(x_offset + 110, y_offset + 247, 30, 30, data.bottom_buttons_focus_id == 3);
-    image_draw(formation_options_image + 4 - m->empire_service, x_offset + 113, y_offset + 250);
+    button_border_draw(x_offset + 110, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 3);
+    image_draw(formation_options_image + 4 - m->empire_service, x_offset + 113, y_offset + 260);
 
     legion->health = health;
     legion->layout = m->layout;
@@ -291,10 +285,11 @@ static void draw_military_panel_background(int x_offset)
 {
     graphics_draw_vertical_line(x_offset, Y_OFFSET_PANEL_START, Y_OFFSET_PANEL_START + MILITARY_PANEL_BLOCKS * 16, COLOR_WHITE);
     graphics_draw_vertical_line(x_offset + SIDEBAR_EXPANDED_WIDTH - 1, Y_OFFSET_PANEL_START, Y_OFFSET_PANEL_START + MILITARY_PANEL_BLOCKS * 16, COLOR_SIDEBAR);
-    inner_panel_draw(x_offset + 1, Y_OFFSET_PANEL_START, SIDEBAR_EXPANDED_WIDTH / 16, MILITARY_PANEL_BLOCKS);
+    inner_panel_draw(x_offset + 1, Y_OFFSET_PANEL_START + 10, SIDEBAR_EXPANDED_WIDTH / 16, MILITARY_PANEL_BLOCKS);
+    inner_panel_draw(x_offset + 1, Y_OFFSET_PANEL_START, SIDEBAR_EXPANDED_WIDTH / 16, 1);
 
     if (data.total_selected_legions == 1) {
-        draw_military_info_single(x_offset + 6, Y_OFFSET_PANEL_START);
+        draw_military_info(x_offset + 6, Y_OFFSET_PANEL_START);
     }
 }
 
@@ -310,8 +305,10 @@ static void draw_background(int x_offset)
     lang_text_draw_centered(61, 5, x_offset, 32, 117, FONT_NORMAL_GREEN);
     widget_minimap_draw(x_offset + 8, 59, 73, 111, 1);
     draw_military_panel_background(x_offset);
-    int panel_height = Y_OFFSET_PANEL_START + MILITARY_PANEL_BLOCKS * 16;
-    int extra_height = sidebar_extra_draw_background(x_offset, panel_height, SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height() - panel_height + TOP_MENU_HEIGHT, 0, SIDEBAR_EXTRA_DISPLAY_ALL);
+    int panel_height = 474; // Y_OFFSET_PANEL_START + MILITARY_PANEL_BLOCKS * 16;
+    int extra_height = sidebar_extra_draw_background(x_offset, panel_height,
+        SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height() - panel_height + TOP_MENU_HEIGHT,
+        0, SIDEBAR_EXTRA_DISPLAY_ALL);
     sidebar_extra_draw_foreground();
 
     sidebar_common_draw_relief(x_offset, panel_height + extra_height, GROUP_SIDE_PANEL, 0);
@@ -348,12 +345,11 @@ static void draw_military_panel_foreground(void)
         if (!m->num_figures) {
             return;
         }
-        int y_offset = Y_OFFSET_PANEL_START + (num_legions > 1 ? 20 : 0);
-        x_offset += 6;
-        draw_layout_buttons(x_offset, y_offset + 146, 0, m);
-        button_border_draw(x_offset + 10, y_offset + 247, 30, 30, data.bottom_buttons_focus_id == 1);
-        button_border_draw(x_offset + 60, y_offset + 247, 30, 30, data.bottom_buttons_focus_id == 2);
-        button_border_draw(x_offset + 110, y_offset + 247, 30, 30, data.bottom_buttons_focus_id == 3);
+        int y_offset = Y_OFFSET_PANEL_START;
+        draw_layout_buttons(x_offset + 6, y_offset + 156, 0, m);
+        button_border_draw(x_offset + 16, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 1);
+        button_border_draw(x_offset + 66, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 2);
+        button_border_draw(x_offset + 116, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 3);
     }
 }
 
@@ -375,18 +371,19 @@ int widget_sidebar_military_handle_input(const mouse *m)
     }
     if (data.total_selected_legions == 1) {
         int num_legions = formation_get_num_legions();
-        int extra_y_offset = num_legions > 1 ? 20 : 0;
         if (num_legions > 1 &&
             arrow_buttons_handle_mouse(m, x_offset + 6, Y_OFFSET_PANEL_START + 6, buttons_cycle_legion, 2, 0)) {
             return 1;
         }
         const formation *selected_legion = formation_get(data.active_legion.formation_id);
         if (selected_legion->num_figures > 0) {
-            generic_button *formation_layout_buttons = buttons_formation_layout[available_layouts_for_legion(selected_legion) - 3];
-            if (generic_buttons_handle_mouse(m, x_offset + 6, Y_OFFSET_PANEL_START + extra_y_offset + 146, formation_layout_buttons, 5, &data.inner_buttons_focus_id)) {
+            generic_button *layout_buttons = buttons_formation_layout[available_layouts_for_legion(selected_legion) - 3];
+            if (generic_buttons_handle_mouse(m, x_offset + 6, Y_OFFSET_PANEL_START + 156,
+                layout_buttons, 5, &data.inner_buttons_focus_id)) {
                 return 1;
             }
-            if (generic_buttons_handle_mouse(m, x_offset + 6, Y_OFFSET_PANEL_START + extra_y_offset + 247, buttons_single_legion_bottom, 3, &data.bottom_buttons_focus_id)) {
+            if (generic_buttons_handle_mouse(m, x_offset + 6, Y_OFFSET_PANEL_START + 257,
+                buttons_bottom, 3, &data.bottom_buttons_focus_id)) {
                 return 1;
             }
         }
@@ -436,7 +433,7 @@ int widget_sidebar_military_get_tooltip_text(tooltip_context *c)
                 index += index_increase;
                 layout = LAYOUT_BUTTON_INDEXES_LEGIONARY[0][index];
             } else {
-                layout = LAYOUT_BUTTON_INDEXES_OTHER[0][index];
+                layout = LAYOUT_BUTTON_INDEXES_AUXILIARY[0][index];
             }
             c->text_group = 138;
             return get_layout_text_id(layout);
@@ -560,7 +557,7 @@ static void button_select_formation_layout(int index, int param2)
         index += index_increase;
         layout_indexes = LAYOUT_BUTTON_INDEXES_LEGIONARY[swap_lines];
     } else {
-        layout_indexes = LAYOUT_BUTTON_INDEXES_OTHER[swap_lines];
+        layout_indexes = LAYOUT_BUTTON_INDEXES_AUXILIARY[swap_lines];
     }
     formation_legion_change_layout(m, layout_indexes[index]);
     switch (index) {

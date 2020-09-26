@@ -120,7 +120,6 @@ static void draw_foreground_military(void)
     window_city_draw();
     if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR)) {
         widget_sidebar_military_draw_foreground();
-        city_message_process_queue();
     } else {
         widget_sidebar_city_draw_foreground();
     }
