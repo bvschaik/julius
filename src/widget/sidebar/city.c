@@ -272,7 +272,6 @@ static void slide_finished(void)
 {
     city_view_toggle_sidebar();
     window_city_show();
-    window_draw(1);
 }
 
 static void button_overlay(int param1, int param2)

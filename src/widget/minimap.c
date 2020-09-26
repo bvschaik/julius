@@ -41,7 +41,6 @@ static struct {
     int width;
     int height;
     color_t enemy_color;
-    int selected_formation;
     color_t *cache;
     struct {
         int x;
@@ -102,7 +101,7 @@ static int has_figure_color(figure *f)
 {
     int type = f->type;
     if (figure_is_legion(f)) {
-        return (data.selected_formation == f->formation_id) ?
+        return formation_get_selected() == f->formation_id ?
             FIGURE_COLOR_SELECTED_SOLDIER : FIGURE_COLOR_SOLDIER;
     }
     if (figure_is_enemy(f)) {
@@ -276,12 +275,6 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
     graphics_draw_from_buffer(x_offset, y_offset, data.width, data.height, data.cache);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
-}
-
-void widget_minimap_set_selected_formation(int formation_id)
-{
-    data.selected_formation = formation_id;
-    widget_minimap_invalidate();
 }
 
 void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force)
