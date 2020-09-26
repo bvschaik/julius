@@ -300,7 +300,7 @@ static void draw_military_panel_background(int x_offset)
 
 static void set_minimap_selected_formations(void)
 {
-    widget_minimap_set_selected_formation(data.active_legion.formation_id);
+    widget_minimap_invalidate();
 }
 
 static void draw_background(int x_offset)
@@ -469,7 +469,6 @@ static void slide_in_finished(void)
     }
     set_minimap_selected_formations();
     window_city_return();
-    window_draw(1);
 }
 
 static void slide_out_finished(void)
@@ -540,7 +539,7 @@ static void button_cycle_legion(int cycle_forward, int param2)
             break;
         }
     }
-    window_city_military_set_formation_id(legion->formation_id);
+    formation_set_selected(legion->formation_id);
     set_formation_id(legion->formation_id);
     set_minimap_selected_formations();
 }
