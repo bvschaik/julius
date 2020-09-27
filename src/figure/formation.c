@@ -31,6 +31,7 @@ void formations_clear(void)
     data.id_last_in_use = 0;
     data.id_last_legion = 0;
     data.num_legions = 0;
+    data.selected_formation = 0;
 }
 
 void formation_clear(int formation_id)
@@ -682,6 +683,7 @@ void formations_load_state(buffer *buf, buffer *totals)
     data.id_last_in_use = buffer_read_i32(totals);
     data.id_last_legion = buffer_read_i32(totals);
     data.num_legions = buffer_read_i32(totals);
+    data.selected_formation = 0;
     for (int i = 0; i < MAX_FORMATIONS; i++) {
         formation *f = &formations[i];
         f->id = i;
