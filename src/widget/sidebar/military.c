@@ -333,14 +333,13 @@ static void draw_military_panel_foreground(void)
 {
     int x_offset = sidebar_common_get_x_offset_expanded();
     if (data.total_selected_legions == 1) {
-        int num_legions = formation_get_num_legions();
-        if (num_legions > 1) {
-            arrow_buttons_draw(x_offset + 6, 181, buttons_cycle_legion, 2);
-        }
         const formation *m = formation_get(data.active_legion.formation_id);
         if (has_legion_changed(&data.active_legion, m)) {
             draw_military_panel_background(x_offset);
-            return;
+        }
+        int num_legions = formation_get_num_legions();
+        if (num_legions > 1) {
+            arrow_buttons_draw(x_offset + 6, 181, buttons_cycle_legion, 2);
         }
         if (!m->num_figures) {
             return;
