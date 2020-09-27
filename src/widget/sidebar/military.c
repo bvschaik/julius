@@ -317,14 +317,14 @@ void widget_sidebar_military_draw_background(void)
     draw_background(sidebar_common_get_x_offset_expanded());
 }
 
-static int has_legion_changed(const legion_info *l, const formation *m)
+static int has_legion_changed(const legion_info *legion, const formation *m)
 {
-    return l->health != calc_percentage(m->total_damage, m->max_total_damage) ||
-        l->layout != m->layout ||
-        l->morale != m->morale ||
-        l->soldiers != m->num_figures ||
-        l->is_at_fort != m->is_at_fort ||
-        l->empire_service != m->empire_service;
+    return legion->health != calc_percentage(m->total_damage, m->max_total_damage) ||
+        legion->layout != m->layout ||
+        legion->morale != m->morale ||
+        legion->soldiers != m->num_figures ||
+        legion->is_at_fort != m->is_at_fort ||
+        legion->empire_service != m->empire_service;
 }
 
 static void draw_military_panel_foreground(void)
