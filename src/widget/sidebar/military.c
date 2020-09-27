@@ -30,70 +30,6 @@
 #define Y_OFFSET_PANEL_START 176
 #define MILITARY_PANEL_BLOCKS 18
 
-typedef struct {
-    int formation_id;
-    int soldiers;
-    int health;
-    int morale;
-    int layout;
-    int is_at_fort;
-    int empire_service;
-} legion_info;
-
-static struct {
-    legion_info active_legion;
-    int total_selected_legions;
-    int top_buttons_focus_id;
-    int inner_buttons_focus_id;
-    int bottom_buttons_focus_id;
-    int city_view_was_collapsed;
-} data;
-
-static void button_military_menu(int param1, int param2);
-static void button_close_military_sidebar(int param1, int param2);
-static void button_cycle_legion(int cycle_forward, int param2);
-static void button_select_formation_layout(int index, int param2);
-static void button_go_to_legion(int param1, int param2);
-static void button_return_to_fort(int param1, int param2);
-static void button_empire_service(int param1, int param2);
-
-static image_button buttons_title_close[] = {
-    {127, 5, 31, 20, IB_NORMAL, 90, 0, button_close_military_sidebar, button_none, 0, 0, 1},
-    {4, 3, 117, 31, IB_NORMAL, 93, 0, button_military_menu, button_none, 0, 0, 1}
-};
-
-static arrow_button buttons_cycle_legion[] = {
-    {1, 0, 19, 24, button_cycle_legion, 0, 0},
-    {125, 0, 21, 24, button_cycle_legion, 1, 0},
-};
-
-static generic_button buttons_formation_layout[LAYOUTS_PER_LEGION - 2][LAYOUTS_PER_LEGION] = {
-    {
-        {2, 0, 46, 46, button_select_formation_layout, button_none, 0, 0},
-        {52, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
-        {102, 0, 46, 46, button_select_formation_layout, button_none, 2, 0}
-    },
-    {
-        {27, 50, 46, 46, button_select_formation_layout, button_none, 0, 0},
-        {27, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
-        {77, 0, 46, 46, button_select_formation_layout, button_none, 2, 0},
-        {77, 50, 46, 46, button_select_formation_layout, button_none, 3, 0}
-    },
-    {
-        {27, 0, 46, 46, button_select_formation_layout, button_none, 0, 0},
-        {77, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
-        {2, 50, 46, 46, button_select_formation_layout, button_none, 2, 0},
-        {52, 50, 46, 46, button_select_formation_layout, button_none, 3, 0},
-        {102, 50, 46, 46, button_select_formation_layout, button_none, 4, 0}
-    }
-};
-
-static generic_button buttons_bottom[] = {
-    {10, 0, 30, 30, button_go_to_legion, button_none, 0, 0},
-    {60, 0, 30, 30, button_return_to_fort, button_none, 0, 0},
-    {110, 0, 30, 30, button_empire_service, button_none, 0, 0},
-};
-
 static const int IMAGE_OFFSETS_TO_FORMATION[7] = {
     FORMATION_COLUMN,
     FORMATION_TORTOISE,
@@ -145,6 +81,70 @@ static const int LAYOUT_BUTTON_INDEXES_AUXILIARY[2][LAYOUTS_PER_LEGION] = {
         FORMATION_MOP_UP
     }
 };
+
+static void button_military_menu(int param1, int param2);
+static void button_close_military_sidebar(int param1, int param2);
+static void button_cycle_legion(int cycle_forward, int param2);
+static void button_select_formation_layout(int index, int param2);
+static void button_go_to_legion(int param1, int param2);
+static void button_return_to_fort(int param1, int param2);
+static void button_empire_service(int param1, int param2);
+
+static image_button buttons_title_close[] = {
+    {127, 5, 31, 20, IB_NORMAL, 90, 0, button_close_military_sidebar, button_none, 0, 0, 1},
+    {4, 3, 117, 31, IB_NORMAL, 93, 0, button_military_menu, button_none, 0, 0, 1}
+};
+
+static arrow_button buttons_cycle_legion[] = {
+    {1, 0, 19, 24, button_cycle_legion, 0, 0},
+    {125, 0, 21, 24, button_cycle_legion, 1, 0},
+};
+
+static generic_button buttons_formation_layout[LAYOUTS_PER_LEGION - 2][LAYOUTS_PER_LEGION] = {
+    {
+        {2, 0, 46, 46, button_select_formation_layout, button_none, 0, 0},
+        {52, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
+        {102, 0, 46, 46, button_select_formation_layout, button_none, 2, 0}
+    },
+    {
+        {27, 50, 46, 46, button_select_formation_layout, button_none, 0, 0},
+        {27, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
+        {77, 0, 46, 46, button_select_formation_layout, button_none, 2, 0},
+        {77, 50, 46, 46, button_select_formation_layout, button_none, 3, 0}
+    },
+    {
+        {27, 0, 46, 46, button_select_formation_layout, button_none, 0, 0},
+        {77, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
+        {2, 50, 46, 46, button_select_formation_layout, button_none, 2, 0},
+        {52, 50, 46, 46, button_select_formation_layout, button_none, 3, 0},
+        {102, 50, 46, 46, button_select_formation_layout, button_none, 4, 0}
+    }
+};
+
+static generic_button buttons_bottom[] = {
+    {10, 0, 30, 30, button_go_to_legion, button_none, 0, 0},
+    {60, 0, 30, 30, button_return_to_fort, button_none, 0, 0},
+    {110, 0, 30, 30, button_empire_service, button_none, 0, 0},
+};
+
+typedef struct {
+    int formation_id;
+    int soldiers;
+    int health;
+    int morale;
+    int layout;
+    int is_at_fort;
+    int empire_service;
+} legion_info;
+
+static struct {
+    legion_info active_legion;
+    int total_selected_legions;
+    int top_buttons_focus_id;
+    int inner_buttons_focus_id;
+    int bottom_buttons_focus_id;
+    int city_view_was_collapsed;
+} data;
 
 static int available_layouts_for_legion(const formation *m)
 {
