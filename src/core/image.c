@@ -366,7 +366,8 @@ static int load_cyrillic_fonts(void)
     return 1;
 }
 
-static int parse_chinese_font(int num_chars, buffer *input, color_t *pixels, int pixel_offset, int char_size, int index_offset)
+static int parse_chinese_font(
+    int num_chars, buffer *input, color_t *pixels, int pixel_offset, int char_size, int index_offset)
 {
     int bytes_per_row = char_size <= 16 ? 2 : 3;
     for (int i = 0; i < num_chars; i++) {
@@ -407,7 +408,8 @@ static int load_traditional_chinese_fonts(void)
         return 0;
     }
 
-    int data_size = io_read_file_into_buffer(TRAD_CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    int data_size = io_read_file_into_buffer(
+        TRAD_CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
@@ -434,7 +436,8 @@ static int load_simplified_chinese_fonts(void)
         return 0;
     }
 
-    int data_size = io_read_file_into_buffer(TRAD_CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    int data_size = io_read_file_into_buffer(
+        TRAD_CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
@@ -507,9 +510,12 @@ static int load_korean_fonts(void)
     int pixel_offset = 0;
 
     log_info("Parsing Korean font", 0, 0);
-    pixel_offset = parse_korean_font(&input, &pixels[pixel_offset], pixel_offset, 12, 0);
-    pixel_offset = parse_korean_font(&input, &pixels[pixel_offset], pixel_offset, 15, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS);
-    pixel_offset = parse_korean_font(&input, &pixels[pixel_offset], pixel_offset, 20, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2);
+    pixel_offset = parse_korean_font(
+        &input, &pixels[pixel_offset], pixel_offset, 12, 0);
+    pixel_offset = parse_korean_font(
+        &input, &pixels[pixel_offset], pixel_offset, 15, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS);
+    pixel_offset = parse_korean_font(
+        &input, &pixels[pixel_offset], pixel_offset, 20, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2);
     log_info("Done parsing Korean font", 0, 0);
 
     data.fonts_enabled = MULTIBYTE_IN_FONT;
@@ -538,7 +544,8 @@ int image_load_enemy(int enemy_id)
     const char *filename_bmp = ENEMY_GRAPHICS_555[enemy_id];
     const char *filename_idx = ENEMY_GRAPHICS_SG2[enemy_id];
 
-    if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(filename_idx, MAY_BE_LOCALIZED, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET)) {
+    if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(
+        filename_idx, MAY_BE_LOCALIZED, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET)) {
         return 0;
     }
 
