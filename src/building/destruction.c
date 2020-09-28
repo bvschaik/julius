@@ -64,8 +64,12 @@ static void destroy_on_fire(building *b, int plagued)
         }
         map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
     }
-    static const int x_tiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0};
-    static const int y_tiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5};
+    static const int x_tiles[] = {
+        0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0
+    };
+    static const int y_tiles[] = {
+        0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5
+    };
     for (int tile = 1; tile < num_tiles; tile++) {
         int x = x_tiles[tile] + b->x;
         int y = y_tiles[tile] + b->y;

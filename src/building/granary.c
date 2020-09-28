@@ -147,16 +147,20 @@ int building_granary_determine_worker_task(building *granary)
     if (granary->data.granary.resource_stored[RESOURCE_NONE] <= 0) {
         return GRANARY_TASK_NONE; // granary full, nothing to get
     }
-    if (s->resource_state[RESOURCE_WHEAT] == BUILDING_STORAGE_STATE_GETTING && non_getting_granaries.total_storage_wheat > ONE_LOAD) {
+    if (s->resource_state[RESOURCE_WHEAT] == BUILDING_STORAGE_STATE_GETTING
+        && non_getting_granaries.total_storage_wheat > ONE_LOAD) {
         return GRANARY_TASK_GETTING;
     }
-    if (s->resource_state[RESOURCE_VEGETABLES] == BUILDING_STORAGE_STATE_GETTING && non_getting_granaries.total_storage_vegetables > ONE_LOAD) {
+    if (s->resource_state[RESOURCE_VEGETABLES] == BUILDING_STORAGE_STATE_GETTING
+        && non_getting_granaries.total_storage_vegetables > ONE_LOAD) {
         return GRANARY_TASK_GETTING;
     }
-    if (s->resource_state[RESOURCE_FRUIT] == BUILDING_STORAGE_STATE_GETTING && non_getting_granaries.total_storage_fruit > ONE_LOAD) {
+    if (s->resource_state[RESOURCE_FRUIT] == BUILDING_STORAGE_STATE_GETTING
+        && non_getting_granaries.total_storage_fruit > ONE_LOAD) {
         return GRANARY_TASK_GETTING;
     }
-    if (s->resource_state[RESOURCE_MEAT] == BUILDING_STORAGE_STATE_GETTING && non_getting_granaries.total_storage_meat > ONE_LOAD) {
+    if (s->resource_state[RESOURCE_MEAT] == BUILDING_STORAGE_STATE_GETTING
+        && non_getting_granaries.total_storage_meat > ONE_LOAD) {
         return GRANARY_TASK_GETTING;
     }
     return GRANARY_TASK_NONE;
@@ -243,7 +247,8 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
         }
         if (b->data.granary.resource_stored[RESOURCE_NONE] >= ONE_LOAD) {
             // there is room
-            int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
+            int dist = calc_distance_with_penalty(
+                b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = i;
@@ -288,7 +293,8 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
         }
         if (b->data.granary.resource_stored[RESOURCE_NONE] > ONE_LOAD) {
             // there is room
-            int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
+            int dist = calc_distance_with_penalty(
+                b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = i;

@@ -453,11 +453,16 @@ void building_house_devolve_from_large_villa(building *house)
 
     // the other tiles (new buildings)
     image_id = house_image_group(HOUSE_MEDIUM_INSULA);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x + 2, house->y, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x + 2, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x, house->y + 2, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x + 1, house->y + 2, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x + 2, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x + 2, house->y, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x + 2, house->y + 1, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x + 1, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x + 2, house->y + 2, image_id, population_per_tile, inventory_per_tile);
 }
 
 void building_house_devolve_from_large_palace(building *house)
@@ -489,13 +494,20 @@ void building_house_devolve_from_large_palace(building *house)
 
     // the other tiles (new buildings)
     image_id = house_image_group(HOUSE_MEDIUM_INSULA);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x + 3, house->y, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x + 3, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x + 3, house->y + 2, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x, house->y + 3, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x + 1, house->y + 3, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x + 2, house->y + 3, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, house->x + 3, house->y + 3, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x + 3, house->y, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x + 3, house->y + 1, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x + 3, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x, house->y + 3, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x + 1, house->y + 3, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x + 2, house->y + 3, image_id, population_per_tile, inventory_per_tile);
+    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+        house->x + 3, house->y + 3, image_id, population_per_tile, inventory_per_tile);
 }
 
 void building_house_check_for_corruption(building *house)

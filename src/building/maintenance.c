@@ -114,7 +114,8 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
     for (int i = 0; i < burning_size; i++) {
         int building_id = burning[i];
         building *b = building_get(building_id);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_BURNING_RUIN && !b->ruin_has_plague && b->distance_from_entry) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_BURNING_RUIN
+            && !b->ruin_has_plague && b->distance_from_entry) {
             int dist = calc_maximum_distance(x, y, b->x, b->y);
             if (b->figure_id4) {
                 if (dist < min_occupied_dist) {
