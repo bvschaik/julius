@@ -77,7 +77,8 @@ static int update_ime_dialog(void) {
         sceImeDialogGetResult(&result);
 
         if ((ime_dialog_option == SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_CLOSE) ||
-        (ime_dialog_option != SCE_IME_OPTION_MULTILINE && (result.button == SCE_IME_DIALOG_BUTTON_ENTER || result.button == SCE_IME_DIALOG_BUTTON_CLOSE))) {
+            (ime_dialog_option != SCE_IME_OPTION_MULTILINE &&
+            (result.button == SCE_IME_DIALOG_BUTTON_ENTER || result.button == SCE_IME_DIALOG_BUTTON_CLOSE))) {
             // Convert UTF16 to UTF8
             encoding_utf16_to_utf8(ime_input_text_utf16, ime_input_text_utf8);
         } else {

@@ -74,7 +74,8 @@ void mouse_set_left_down(int down)
     data.is_inside_window = 1;
     if (!down) {
         time_millis now = time_get_millis();
-        data.left.system_change |= ((last_click < now) && ((now - last_click) <= DOUBLE_CLICK_TIME)) ? SYSTEM_DOUBLE_CLICK : SYSTEM_NONE;
+        int is_double_click = (last_click < now) && ((now - last_click) <= DOUBLE_CLICK_TIME);
+        data.left.system_change |= is_double_click ? SYSTEM_DOUBLE_CLICK : SYSTEM_NONE;
         last_click = now;
     }
 }

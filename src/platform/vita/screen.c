@@ -20,13 +20,15 @@ vita2d_texture *tex_buffer = NULL;
 int platform_screen_create(const char *title, int display_scale_percentage)
 {
     if (!my_window) {
-        my_window = SDL_CreateWindow("Dummy window used only as event listener", 0, 0, VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT, 0);
+        my_window = SDL_CreateWindow("Dummy window used only as event listener",
+            0, 0, VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT, 0);
     }
     if (!my_renderer) {
         my_renderer = SDL_CreateRenderer(my_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     }
     SDL_Log("Creating empty texture");
-    tex_buffer = vita2d_create_empty_texture_format(VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB);
+    tex_buffer = vita2d_create_empty_texture_format(
+        VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB);
     SDL_Log("Creating empty texture: done");
 
     return platform_screen_resize(VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT);
@@ -80,7 +82,8 @@ void platform_screen_render(void)
     vita2d_draw_texture(tex_buffer, 0, 0);
     const mouse *mouse = mouse_get();
     if (!mouse->is_touch) {
-        vita2d_draw_texture(current_cursor->texture, mouse->x - current_cursor->hotspot_x, mouse->y - current_cursor->hotspot_y);
+        vita2d_draw_texture(current_cursor->texture,
+            mouse->x - current_cursor->hotspot_x, mouse->y - current_cursor->hotspot_y);
     }
     vita2d_end_drawing();
     vita2d_wait_rendering_done();

@@ -65,7 +65,8 @@ static int closest_house_with_room(int x, int y)
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->distance_from_entry > 0 && b->house_population_room > 0) {
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size
+            && b->distance_from_entry > 0 && b->house_population_room > 0) {
             if (!b->immigrant_figure_id) {
                 int dist = calc_maximum_distance(x, y, b->x, b->y);
                 if (dist < min_dist) {

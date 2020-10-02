@@ -188,7 +188,8 @@ static int should_scroll(void)
     time_millis current_time = time_get_millis();
     time_millis diff = current_time - data.last_time;
     unsigned int scroll_delay = get_scroll_speed_factor();
-    int further_delay = data.constant_input ? 20 - (int) (fmaxf(data.speed.modifier_x, data.speed.modifier_y) * 20) : 0;
+    int further_delay = data.constant_input ?
+        20 - (int) (fmaxf(data.speed.modifier_x, data.speed.modifier_y) * 20) : 0;
     if (scroll_delay < 10) { // 0% = 10 = no scroll at all
         if (diff >= 12 * (scroll_delay + further_delay) + 2) {
             data.last_time = current_time;
@@ -277,7 +278,8 @@ static int set_scroll_speed_from_drag(void)
         }
         // Store tiny movements until we decide that it's enough to move into scroll mode
         if (!data.drag.has_started) {
-            data.drag.has_started = abs(data.drag.delta.x) > SCROLL_DRAG_MIN_DELTA || abs(data.drag.delta.y) > SCROLL_DRAG_MIN_DELTA;
+            data.drag.has_started = abs(data.drag.delta.x) > SCROLL_DRAG_MIN_DELTA
+                || abs(data.drag.delta.y) > SCROLL_DRAG_MIN_DELTA;
         }
     }
     if (data.drag.has_started) {
@@ -404,17 +406,21 @@ static int get_alignment_delta(speed_direction direction, int camera_max_offset,
     speed_direction calc_direction = SPEED_DIRECTION_STOPPED;
     switch (direction) {
         case SPEED_DIRECTION_STOPPED:
-            calc_direction = (camera_offset >= camera_max_offset / 2) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+            calc_direction =
+                (camera_offset >= camera_max_offset / 2) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
             direction = SPEED_DIRECTION_POSITIVE;
             break;
         case SPEED_DIRECTION_NEGATIVE:
-            calc_direction = (camera_offset >= camera_max_offset * 0.666667) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+            calc_direction =
+                (camera_offset >= camera_max_offset * 0.666667) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
             break;
         default:
-            calc_direction = (camera_offset >= camera_max_offset / 3) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
+            calc_direction =
+                (camera_offset >= camera_max_offset / 3) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
             break;
     }
-    return (calc_direction == SPEED_DIRECTION_POSITIVE) ? (camera_max_offset - camera_offset) : (camera_offset * -direction);
+    return (calc_direction == SPEED_DIRECTION_POSITIVE) ?
+        (camera_max_offset - camera_offset) : (camera_offset * -direction);
 }
 
 static int set_scroll_speed_from_input(const mouse *m, scroll_type type)
@@ -448,7 +454,8 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type)
             align_y = get_alignment_delta(dir_y, TILE_Y_PIXELS, camera_offset.y);
         }
         speed_set_target(&data.speed.x, (step + align_x) * dir_x * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
-        speed_set_target(&data.speed.y, ((step / y_fraction) + align_y) * dir_y * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
+        speed_set_target(&data.speed.y, ((step / y_fraction) + align_y) * dir_y * do_scroll,
+            SPEED_CHANGE_IMMEDIATE, 0);
         return 1;
     }
 

@@ -14,7 +14,8 @@ vita_cursor *current_cursor;
 
 static vita2d_texture *init_cursor(const cursor *c)
 {
-    vita2d_texture *tex = vita2d_create_empty_texture_format(CURSOR_SIZE, CURSOR_SIZE, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ARGB);
+    vita2d_texture *tex = vita2d_create_empty_texture_format(
+        CURSOR_SIZE, CURSOR_SIZE, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ARGB);
     color_t *cursor_buf = vita2d_texture_get_datap(tex);
 
     for (int y = 0; y < c->height; y++) {
