@@ -34,7 +34,8 @@ static void add_desirability_at_distance(int x, int y, int size, int distance, i
             const ring_tile *tile = map_ring_tile(i);
             if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
                 desirability_grid.items[base_offset + tile->grid_offset] += desirability;
-                desirability_grid.items[base_offset] = calc_bound(desirability_grid.items[base_offset], -100, 100); // BUG: bounding on wrong tile
+                // BUG: bounding on wrong tile:
+                desirability_grid.items[base_offset] = calc_bound(desirability_grid.items[base_offset], -100, 100);
             }
         }
     } else {

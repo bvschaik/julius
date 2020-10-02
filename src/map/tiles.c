@@ -212,7 +212,8 @@ static void clear_garden_image(int x, int y, int grid_offset)
 
 static void set_garden_image(int x, int y, int grid_offset)
 {
-    if (map_terrain_is(grid_offset, TERRAIN_GARDEN) && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
+    if (map_terrain_is(grid_offset, TERRAIN_GARDEN)
+        && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
         if (!map_image_at(grid_offset)) {
             int image_id = image_group(GROUP_TERRAIN_GARDEN);
             if (is_all_terrain_in_area(x, y, 2, TERRAIN_GARDEN)) {

@@ -196,7 +196,8 @@ static void check_road_to_largest_network_hippodrome(int x, int y, int *min_inde
     }
 }
 
-static void check_min_dist_hippodrome(int base_offset, int x_offset, int *min_dist, int *min_grid_offset, int *min_x_offset)
+static void check_min_dist_hippodrome(
+    int base_offset, int x_offset, int *min_dist, int *min_grid_offset, int *min_x_offset)
 {
     for (const int *tile_delta = map_grid_adjacent_offsets(5); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;

@@ -8,7 +8,9 @@
 
 struct map_data_t map_data;
 
-static const int DIRECTION_DELTA[] = {-OFFSET(0,1), OFFSET(1,-1), 1, OFFSET(1,1), OFFSET(0,1), OFFSET(-1,1), -1, -OFFSET(1,1)};
+static const int DIRECTION_DELTA[] = {
+    -OFFSET(0,1), OFFSET(1,-1), 1, OFFSET(1,1), OFFSET(0,1), OFFSET(-1,1), -1, -OFFSET(1,1)
+};
 
 static const int ADJACENT_OFFSETS[][21] = {
     {0},
@@ -145,7 +147,8 @@ void map_grid_get_area(int x, int y, int size, int radius,
     map_grid_bound_area(x_min, y_min, x_max, y_max);
 }
 
-void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, int *x_min, int *y_min, int *x_max, int *y_max)
+void map_grid_start_end_to_area(
+    int x_start, int y_start, int x_end, int y_end, int *x_min, int *y_min, int *x_max, int *y_max)
 {
     if (x_start < x_end) {
         *x_min = x_start;
