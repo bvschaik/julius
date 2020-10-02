@@ -46,7 +46,8 @@ void empire_load(int is_custom_scenario, int empire_id)
 
     // read data section with objects
     int offset = EMPIRE_HEADER_SIZE + EMPIRE_DATA_SIZE * empire_id;
-    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, raw_data, EMPIRE_DATA_SIZE, offset) != EMPIRE_DATA_SIZE) {
+    int read_size = io_read_file_part_into_buffer(filename, NOT_LOCALIZED, raw_data, EMPIRE_DATA_SIZE, offset);
+    if (read_size != EMPIRE_DATA_SIZE) {
         // load empty empire when loading fails
         log_error("Unable to load empire data from file", filename, 0);
         memset(raw_data, 0, EMPIRE_DATA_SIZE);

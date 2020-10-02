@@ -36,7 +36,8 @@ static int get_button(const mouse *m, int x, int y, arrow_button *buttons, int n
     return 0;
 }
 
-int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *buttons, int num_buttons, int *focus_button_id)
+int arrow_buttons_handle_mouse(
+    const mouse *m, int x, int y, arrow_button *buttons, int num_buttons, int *focus_button_id)
 {
     static time_millis last_time = 0;
 
