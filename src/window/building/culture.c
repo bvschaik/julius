@@ -341,12 +341,15 @@ static void window_building_draw_monument_resources_needed(building_info_context
 
 static void draw_grand_temple(building_info_context* c, const char* sound_file, int name)
 {
+    building* b = building_get(c->building_id);
     window_building_play_sound(c, sound_file);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     text_draw_centered(translation_for(name), c->x_offset, c->y_offset+12, 16*c->width_blocks, FONT_LARGE_BLACK, 0);
     window_building_draw_monument_resources_needed(c);
-    window_building_draw_employment(c, 138);
+    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
+        window_building_draw_employment(c, 138);
+    }
 }
 
 void window_building_draw_grand_temple_foreground(building_info_context* c)
