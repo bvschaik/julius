@@ -238,7 +238,7 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius)
 }
 
 int map_water_supply_fountain_radius() {
-    int radius = CLIMATE_DESERT ? 3 : 4;
+    int radius = scenario_property_climate() == CLIMATE_DESERT ? 3 : 4;
 	if (building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
         radius++;
 	}
