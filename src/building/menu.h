@@ -22,7 +22,8 @@ typedef enum {
     BUILD_MENU_SMALL_TEMPLES = 15,
     BUILD_MENU_LARGE_TEMPLES = 16,
     BUILD_MENU_FORTS = 17,
-    BUILD_MENU_MAX = 18
+    BUILD_MENU_GRAND_TEMPLES = 18,
+    BUILD_MENU_MAX = 19
 } build_menu_group;
 
 void building_menu_enable_all(void);

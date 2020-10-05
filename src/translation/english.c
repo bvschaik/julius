@@ -145,6 +145,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC, "Grand temple to Mercury" },
     {TR_BUILDING_GRAND_TEMPLE_MARS_DESC, "Grand Temple to Mars" },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, "Grand Temple to Venus" },
+    {TR_BUILDING_GRAND_TEMPLE_MENU, "Grand temple" },
     {TR_BUILDING_WORK_CAMP, "Work camp" },
     {TR_HEADER_HOUSING, "Housing"},
     {TR_ADVISOR_HOUSING_ROOM, "City housing has room available for"},

@@ -180,6 +180,8 @@ const uint8_t *lang_get_string(int group, int index)
             return translation_for(TR_BUILDING_GRAND_TEMPLE_MARS);
         case 121:
             return translation_for(TR_BUILDING_GRAND_TEMPLE_VENUS);
+        case 122:
+            return translation_for(TR_BUILDING_GRAND_TEMPLE_MENU);
         default:
             break;
         }

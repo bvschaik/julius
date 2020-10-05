@@ -132,8 +132,9 @@ typedef enum {
     BUILDING_GRAND_TEMPLE_MERCURY = 119,
     BUILDING_GRAND_TEMPLE_MARS = 120,
     BUILDING_GRAND_TEMPLE_VENUS = 121,
+    BUILDING_MENU_GRAND_TEMPLES = 122,
         // helper constants
-    BUILDING_TYPE_MAX = 122,
+    BUILDING_TYPE_MAX = 123,
 } building_type;
 
 /**

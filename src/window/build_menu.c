@@ -243,6 +243,9 @@ static int set_submenu_for_type(building_type type)
             break;
         case BUILDING_FORT:
             data.selected_submenu = BUILD_MENU_FORTS;
+			break;
+		case BUILDING_MENU_GRAND_TEMPLES:
+			data.selected_submenu = BUILD_MENU_GRAND_TEMPLES;
             break;
         default:
             return 0;
