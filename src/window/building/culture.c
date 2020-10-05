@@ -379,27 +379,27 @@ int window_building_handle_mouse_grand_temple(const mouse* m, building_info_cont
 
 void window_building_draw_grand_temple_ceres(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES);
+    draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES_DESC);
 }
 
 void window_building_draw_grand_temple_neptune(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE);
+    draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC);
 }
 
 void window_building_draw_grand_temple_mercury(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY);
+    draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC);
 }
 
 void window_building_draw_grand_temple_mars(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS);
+    draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS_DESC);
 }
 
 void window_building_draw_grand_temple_venus(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS);
+    draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS_DESC);
 }
 
 void window_building_draw_work_camp(building_info_context* c)
