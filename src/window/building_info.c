@@ -146,6 +146,7 @@ static int get_height_id(void)
             case BUILDING_FURNITURE_WORKSHOP:
             case BUILDING_POTTERY_WORKSHOP:
             case BUILDING_WORKCAMP:
+            case BUILDING_ENGINEER_GUILD:
                 return 1;
 
             case BUILDING_THEATER:
@@ -521,8 +522,10 @@ static void draw_background(void)
             window_building_draw_oracle(&context);
         } else if (btype == BUILDING_WORKCAMP) {
             window_building_draw_work_camp(&context);
-		} else if (btype == BUILDING_GRAND_TEMPLE_CERES) {
-			window_building_draw_grand_temple_ceres(&context);
+        } else if (btype == BUILDING_ENGINEER_GUILD) {
+            window_building_draw_engineer_guild(&context);
+        } else if (btype == BUILDING_GRAND_TEMPLE_CERES) {
+            window_building_draw_grand_temple_ceres(&context);
 		} else if (btype == BUILDING_GRAND_TEMPLE_NEPTUNE) {
 			window_building_draw_grand_temple_neptune(&context);
 		} else if (btype == BUILDING_GRAND_TEMPLE_MERCURY) {

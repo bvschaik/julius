@@ -183,6 +183,8 @@ const uint8_t *lang_get_string(int group, int index)
             return translation_for(TR_BUILDING_GRAND_TEMPLE_VENUS);
         case BUILDING_MENU_GRAND_TEMPLES:
             return translation_for(TR_BUILDING_GRAND_TEMPLE_MENU);
+        case BUILDING_ENGINEER_GUILD:
+            return translation_for(TR_BUILDING_ENGINEER_GUILD);
         default:
             break;
         }

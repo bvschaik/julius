@@ -165,6 +165,7 @@ building_properties MEDIUM_CUSTOM_DECOR_PROPERTIES = { 2, 1, 0, 0 };
 building_properties LARGE_CUSTOM_DECOR_PROPERTIES = {3, 1, 0, 0 };
 building_properties GRAND_TEMPLE_PROPERTIES = { 7, 0, 0, 1 };
 building_properties WORKCAMP_PROPERTIES = { 3, 0, 0, 0 };
+building_properties ENGINEER_GUILD_PROPERTIES = { 2, 0, 0, 0 };
 
 const building_properties *building_properties_for_type(building_type type)
 {
@@ -175,6 +176,10 @@ const building_properties *building_properties_for_type(building_type type)
 
     if (type == BUILDING_WORKCAMP) {
         return &WORKCAMP_PROPERTIES;
+    }
+
+    if (type == BUILDING_ENGINEER_GUILD) {
+        return &ENGINEER_GUILD_PROPERTIES;
     }
 
     if (type >= BUILDING_GRAND_TEMPLE_CERES && type <= BUILDING_GRAND_TEMPLE_VENUS) {

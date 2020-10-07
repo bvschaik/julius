@@ -56,6 +56,9 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (building_monument_is_monument(b) && (b->num_workers <= 0 || b->subtype.monument_phase != MONUMENT_FINISHED)) {
         return 0;
     }
+    if (b->type == BUILDING_ENGINEER_GUILD && b->num_workers <= 0) {
+        return 0;
+    }
 
 
     const image *img = image_get(image_id);

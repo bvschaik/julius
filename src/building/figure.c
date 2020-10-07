@@ -1190,24 +1190,33 @@ static void spawn_figure_military_academy(building *b)
 
 static void spawn_figure_work_camp(building* b)
 {
+	check_labor_problem(b);
+	map_point road;
+	if (map_has_road_access(b->x, b->y, b->size, &road)) {
+		spawn_labor_seeker(b, road.x, road.y, 100);
+		if (has_figure_of_type(b, FIGURE_WORK_CAMP_WORKER)) {
+			return;
+		}
+		figure* f = figure_create(FIGURE_WORK_CAMP_WORKER, road.x, road.y, DIR_4_BOTTOM);
+		f->action_state = FIGURE_ACTION_203_WORK_CAMP_WORKER_CREATED;
+		b->figure_id = f->id;
+		f->building_id = b->id;
+	}
+}
+
+static void spawn_figure_engineer_guild(building* b) {
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
-        if (has_figure_of_types(b, FIGURE_WORK_CAMP_WORKER, FIGURE_WORK_CAMP_ENGINEER)) {
+        if (has_figure_of_type(b, FIGURE_WORK_CAMP_ENGINEER)) {
             return;
         }
         if (building_monument_get_monument(road.x, road.y, RESOURCE_NONE, b->road_network_id, b->distance_from_entry, 0)) {
-                figure* f = figure_create(FIGURE_WORK_CAMP_ENGINEER, road.x, road.y, DIR_4_BOTTOM);
-                f->action_state = FIGURE_ACTION_206_WORK_CAMP_ENGINEER_CREATED;
-                b->figure_id = f->id;
-                f->building_id = b->id;
-
-        } else {
-            figure* f = figure_create(FIGURE_WORK_CAMP_WORKER, road.x, road.y, DIR_4_BOTTOM);
-                f->action_state = FIGURE_ACTION_203_WORK_CAMP_WORKER_CREATED;
-                b->figure_id = f->id;
-                f->building_id = b->id;
+            figure* f = figure_create(FIGURE_WORK_CAMP_ENGINEER, road.x, road.y, DIR_4_BOTTOM);
+            f->action_state = FIGURE_ACTION_206_WORK_CAMP_ENGINEER_CREATED;
+            b->figure_id = f->id;
+            f->building_id = b->id;
         }
     }
 }
@@ -1342,6 +1351,9 @@ void building_figure_generate(void)
                     break;
                 case BUILDING_WORKCAMP:
                     spawn_figure_work_camp(b);
+                    break;
+                case BUILDING_ENGINEER_GUILD:
+                    spawn_figure_engineer_guild(b);
                     break;
                 case BUILDING_GRAND_TEMPLE_CERES:
                 case BUILDING_GRAND_TEMPLE_NEPTUNE:

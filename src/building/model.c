@@ -156,6 +156,7 @@ int model_load(void)
 
 const model_building MODEL_ROADBLOCK = {40,0,0,0,0};
 const model_building MODEL_WORK_CAMP = { 150,-10,2,3,4,25 };
+const model_building MODEL_ENGINEER_GUILD = { 150,-8,1,2,4,25 };
 const model_building MODEL_GRAND_TEMPLE_CERES = { 5000,20,2,-4,5,30 };
 const model_building MODEL_GRAND_TEMPLE_NEPTUNE = { 5000,20,2,-4,5,30 };
 const model_building MODEL_GRAND_TEMPLE_MERCURY = { 5000,20,2,-4,5,30 };
@@ -170,6 +171,9 @@ const model_building *model_get_building(building_type type)
         break;
     case BUILDING_WORKCAMP:
         return &MODEL_WORK_CAMP;
+        break;
+    case BUILDING_ENGINEER_GUILD:
+        return &MODEL_ENGINEER_GUILD;
         break;
     case BUILDING_GRAND_TEMPLE_CERES:
         return &MODEL_GRAND_TEMPLE_CERES;
