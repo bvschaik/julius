@@ -105,7 +105,7 @@ static int get_arrow_key_value(key* arrow)
     return 0;
 }
 
-float get_normalized_arrow_key_value(key* arrow)
+static float get_normalized_arrow_key_value(key *arrow)
 {
     int value = get_arrow_key_value(arrow);
     if (value == SCROLL_KEY_PRESSED) {
@@ -270,9 +270,8 @@ static int set_scroll_speed_from_drag(void)
     int delta_y = 0;
     if (!data.drag.is_touch) {
         system_mouse_get_relative_state(&delta_x, &delta_y);
-    }
-    else {
-        const touch* t = get_earliest_touch();
+    } else {
+        const touch *t = touch_get_earliest();
         delta_x = -t->frame_movement.x;
         delta_y = -t->frame_movement.y;
     }
@@ -310,9 +309,8 @@ int scroll_drag_end(void)
 
     if (!data.drag.is_touch) {
         system_mouse_set_relative_mode(0);
-    }
-    else if (has_scrolled) {
-        const touch* t = get_earliest_touch();
+    } else if (has_scrolled) {
+        const touch *t = touch_get_earliest();
         speed_set_target(&data.speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE, 1);
         speed_set_target(&data.speed.y, -t->frame_movement.y, SPEED_CHANGE_IMMEDIATE, 1);
     }

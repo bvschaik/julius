@@ -65,71 +65,88 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-  set(SDL2_ARCH_64 TRUE)
-  set(SDL2_PROCESSOR_ARCH "x64")
-else()
-  set(SDL2_ARCH_64 FALSE)
-  set(SDL2_PROCESSOR_ARCH "x86")
-endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-
 GET_SDL_EXT_DIR(SDL_EXT_DIR "")
 
-if(MINGW AND DEFINED SDL_EXT_DIR)
-    if(SDL2_ARCH_64)
-	  set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/x86_64-w64-mingw32")
+IF(ANDROID_BUILD)
+    STRING(TOLOWER ${CMAKE_BUILD_TYPE} ANDROID_BUILD_DIR)
+    SET(SDL2_LIBRARY SDL2)
+    SET(SDL2_ANDROID_HOOK ${SDL_EXT_DIR}/src/main/android/SDL_android_main.c)
+    ADD_LIBRARY(${SDL2_LIBRARY} SHARED IMPORTED)
+    SET_TARGET_PROPERTIES(${SDL2_LIBRARY} PROPERTIES IMPORTED_LOCATION
+    ${PROJECT_SOURCE_DIR}/android/SDL2/build/intermediates/ndkBuild/${ANDROID_BUILD_DIR}/obj/local/${ANDROID_ABI}/libSDL2.so)
+
+    SET(SDL2_INCLUDE_DIR_TEMP ${SDL_EXT_DIR}/include)
+    FOREACH(CURRENT_INCLUDE_DIR ${SDL2_INCLUDE_DIR_TEMP})
+        IF(EXISTS "${CURRENT_INCLUDE_DIR}/SDL_version.h")
+            SET(SDL2_INCLUDE_DIR ${CURRENT_INCLUDE_DIR})
+            BREAK()
+        ENDIF()
+    ENDFOREACH()
+ELSE()
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(SDL2_ARCH_64 TRUE)
+        set(SDL2_PROCESSOR_ARCH "x64")
     else()
-	  set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/i686-w64-mingw32")
-	endif()
-endif()
+        set(SDL2_ARCH_64 FALSE)
+        set(SDL2_PROCESSOR_ARCH "x86")
+    endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-SET(SDL2_SEARCH_PATHS
-	~/Library/Frameworks
-	/Library/Frameworks
-	/usr/local
-	/usr
-	/sw # Fink
-	/opt/local # DarwinPorts
-	/opt/csw # Blastwave
-	/opt
-	${SDL_EXT_DIR}
-	${SDL_MINGW_EXT_DIR}
-)
+    if(MINGW AND DEFINED SDL_EXT_DIR)
+        if(SDL2_ARCH_64)
+            set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/x86_64-w64-mingw32")
+        else()
+            set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/i686-w64-mingw32")
+        endif()
+    endif()
 
-if (VITA)
-	SET(SDL2_SEARCH_PATHS $ENV{VITASDK}/arm-vita-eabi)
-endif()
+    SET(SDL2_SEARCH_PATHS
+        ~/Library/Frameworks
+        /Library/Frameworks
+        /usr/local
+        /usr
+        /sw # Fink
+        /opt/local # DarwinPorts
+        /opt/csw # Blastwave
+        /opt
+        ${SDL_EXT_DIR}
+        ${SDL_MINGW_EXT_DIR}
+    )
 
-FIND_PATH(SDL2_INCLUDE_DIR SDL_log.h
-	HINTS
-	$ENV{SDL2DIR}
-	PATH_SUFFIXES include/SDL2 include
-	PATHS ${SDL2_SEARCH_PATHS}
-)
+    if (VITA)
+        SET(SDL2_SEARCH_PATHS $ENV{VITASDK}/arm-vita-eabi)
+    endif()
 
-FIND_LIBRARY(SDL2_LIBRARY_TEMP
-	NAMES SDL2
-	HINTS
-	$ENV{SDL2DIR}
-	PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
-	PATHS ${SDL2_SEARCH_PATHS}
-)
+    FIND_PATH(SDL2_INCLUDE_DIR SDL_log.h
+        HINTS
+        $ENV{SDL2DIR}
+        PATH_SUFFIXES include/SDL2 include
+        PATHS ${SDL2_SEARCH_PATHS}
+    )
 
-IF(NOT SDL2_BUILDING_LIBRARY)
-	IF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
-		# Non-OS X framework versions expect you to also dynamically link to
-		# SDL2main. This is mainly for Windows and OS X. Other (Unix) platforms
-		# seem to provide SDL2main for compatibility even though they don't
-		# necessarily need it.
-		FIND_LIBRARY(SDL2MAIN_LIBRARY
-			NAMES SDL2main
-			HINTS
-			$ENV{SDL2DIR}
-			PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
-			PATHS ${SDL2_SEARCH_PATHS}
-		)
-	ENDIF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
-ENDIF(NOT SDL2_BUILDING_LIBRARY)
+    FIND_LIBRARY(SDL2_LIBRARY_TEMP
+        NAMES SDL2
+        HINTS
+        $ENV{SDL2DIR}
+        PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
+        PATHS ${SDL2_SEARCH_PATHS}
+    )
+
+    IF(NOT SDL2_BUILDING_LIBRARY)
+        IF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
+            # Non-OS X framework versions expect you to also dynamically link to
+            # SDL2main. This is mainly for Windows and OS X. Other (Unix) platforms
+            # seem to provide SDL2main for compatibility even though they don't
+            # necessarily need it.
+            FIND_LIBRARY(SDL2MAIN_LIBRARY
+                NAMES SDL2main
+                HINTS
+                $ENV{SDL2DIR}
+                PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
+                PATHS ${SDL2_SEARCH_PATHS}
+            )
+        ENDIF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
+    ENDIF(NOT SDL2_BUILDING_LIBRARY)
+ENDIF()
 
 # SDL2 may require threads on your system.
 # The Apple build may not need an explicit flag because one of the

@@ -102,7 +102,7 @@ static const char *generate_filename(int city_screenshot)
     return filename;
 }
 
-int image_begin_io(const char *filename)
+static int image_begin_io(const char *filename)
 {
     FILE *fp = file_open(filename, "wb");
     if (!fp) {

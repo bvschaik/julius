@@ -370,7 +370,7 @@ void city_with_overlay_draw_building_top(int x, int y, int grid_offset)
 {
     building *b = building_get(map_building_at(grid_offset));
     if (overlay->type == OVERLAY_PROBLEMS) {
-        overlay_problems_prepare_building(b);
+        city_overlay_problems_prepare_building(b);
     }
     if (overlay->show_building(b)) {
         draw_building_top(grid_offset, b, x, y);

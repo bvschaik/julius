@@ -43,9 +43,9 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     if (!my_renderer) {
         my_renderer = SDL_CreateRenderer(my_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     }
-    SDL_Log("Creating empty texture\n");
+    SDL_Log("Creating empty texture");
     tex_buffer = vita2d_create_empty_texture_format(VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB);
-    SDL_Log("Creating empty texture: done\n");
+    SDL_Log("Creating empty texture: done");
 
     return platform_screen_resize(VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT);
 }
@@ -71,7 +71,7 @@ void platform_screen_move(int x, int y)
 
 void platform_screen_set_fullscreen(void)
 {
-    SDL_Log("User to fullscreen\n");
+    SDL_Log("User to fullscreen");
     setting_set_display(1, VITA_DISPLAY_WIDTH, VITA_DISPLAY_HEIGHT);
 }
 
@@ -79,13 +79,13 @@ void platform_screen_set_windowed(void)
 {
     int width, height;
     setting_window(&width, &height);
-    SDL_Log("User to windowed \n");
+    SDL_Log("User to windowed");
     setting_set_display(0, width, height);
 }
 
 void platform_screen_set_window_size(int width, int height)
 {
-    SDL_Log("User resize to \n");
+    SDL_Log("User resize to");
     setting_set_display(0, width, height);
 }
 

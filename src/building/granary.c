@@ -27,7 +27,7 @@ static struct {
     int total_storage_meat;
 } non_getting_granaries;
 
-int building_granary_get_amount(building *granary, int resource)
+static int get_amount(building *granary, int resource)
 {
     if (!resource_is_food(resource)) {
         return 0;
@@ -45,7 +45,7 @@ int QUARTER_GRANARY = 600;
 int building_granary_is_accepting(int resource, building *b)
 {
         const building_storage *s = building_storage_get(b->storage_id);
-        int amount = building_granary_get_amount(b, resource);	
+        int amount = get_amount(b, resource);	
         if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING) ||
             (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS && amount < THREEQUARTERS_GRANARY) ||
             (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_GRANARY) ||
@@ -59,7 +59,7 @@ int building_granary_is_accepting(int resource, building *b)
 int building_granary_is_getting(int resource, building *b)
 {
         const building_storage *s = building_storage_get(b->storage_id);
-        int amount = building_granary_get_amount(b, resource);	
+        int amount = get_amount(b, resource);	
         if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
             (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS && amount < THREEQUARTERS_GRANARY) ||
 	        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_GRANARY) ||
@@ -441,7 +441,7 @@ void building_granary_bless(void)
         }
         int total_stored = 0;
         for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            total_stored += building_granary_get_amount(b, r);
+            total_stored += get_amount(b, r);
         }
         if (total_stored < min_stored) {
             min_stored = total_stored;
@@ -480,7 +480,7 @@ void building_granary_warehouse_curse(int big)
             }
         } else if (b->type == BUILDING_GRANARY) {
             for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-                total_stored += building_granary_get_amount(b, r);
+                total_stored += get_amount(b, r);
             }
             total_stored /= UNITS_PER_LOAD;
         } else {

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 build_dir="$(pwd)/build"
+release_dir="$(pwd)/release"
 
 if [ "$DEPLOY" = "switch" ]
 then

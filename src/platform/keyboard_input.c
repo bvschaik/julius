@@ -5,6 +5,7 @@
 #include "input/hotkey.h"
 #include "input/keys.h"
 #include "input/keyboard.h"
+#include "input/mouse.h"
 
 static int is_alt_down(SDL_KeyboardEvent *event)
 {
@@ -261,6 +262,9 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
             break;
         case SDLK_END:
             keyboard_end();
+            break;
+        case SDLK_AC_BACK:
+            event->keysym.scancode = SDL_SCANCODE_ESCAPE;
             break;
     }
 

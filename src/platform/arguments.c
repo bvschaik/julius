@@ -52,6 +52,7 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
     output_args->data_directory = 0;
     output_args->display_scale_percentage = 100;
     output_args->cursor_scale_percentage = 100;
+    output_args->force_windowed = 0;
 
     for (int i = 1; i < argc; i++) {
         // we ignore "-psn" arguments, this is needed to launch the app
@@ -88,6 +89,8 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
                 SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
+        } else if (SDL_strcmp(argv[i], "--windowed") == 0) {
+            output_args->force_windowed = 1;
         } else if (SDL_strcmp(argv[i], "--help") == 0) {
             ok = 0;
         } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
@@ -105,6 +108,8 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
         SDL_Log("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
         SDL_Log("--cursor-scale NUMBER");
         SDL_Log("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
+        SDL_Log("--windowed");
+        SDL_Log("          Forces the game to start in windowed mode");
         SDL_Log("The last argument, if present, is interpreted as data directory for the Caesar 3 installation");
     }
     return ok;

@@ -8,6 +8,12 @@ static translation_string all_strings[] = {
         "패치는 이곳에서 다운로드하실 수 있습니다. \n"
         URL_PATCHES "\n"
         "패치 없이 진행하는 데 따른 문제는 본인 책임입니다."},
+    // Do not translate the following message since it cannot be shown in Korean:
+    {TR_MISSING_FONTS_TITLE, "Missing fonts"},
+    {TR_MISSING_FONTS_MESSAGE,
+        "Your Caesar 3 installation requires extra font files. "
+        "You can download them for your language from:\n"
+        URL_PATCHES},
     {TR_NO_EDITOR_TITLE, "편집기가 설치되지 않음"},
     {TR_NO_EDITOR_MESSAGE,
         "현재 설치된 시저 3는 편집기 파일을 포함하고 있지 않습니다. "
@@ -47,6 +53,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "맵보기"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "도시 맵 즉시 이동"},
     {TR_HOTKEY_HEADER_EDITOR, "편집기"},
+    {TR_HOTKEY_HEADER_BUILD, "건설 단축키"}, // TODO: Google Translate
     {TR_HOTKEY_ARROW_UP, "위"},
     {TR_HOTKEY_ARROW_DOWN, "아래"},
     {TR_HOTKEY_ARROW_LEFT, "왼쪽"},
@@ -58,6 +65,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "창 크기 1024x768로 변경"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "스크린샷 저장"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "도시 전체 스크린샷 저장"},
+    {TR_HOTKEY_BUILD_CLONE, "커서 아래에 건물 복제"}, // TODO: Google Translate
     {TR_HOTKEY_LOAD_FILE, "파일 불러오기"},
     {TR_HOTKEY_SAVE_FILE, "파일 저장하기"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "게임 속도 증가"},

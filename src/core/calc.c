@@ -24,29 +24,11 @@ static int get_delta(int value1, int value2)
     }
 }
 
-int calc_total_distance(int x1, int y1, int x2, int y2)
-{
-    int distance_x = get_delta(x1, x2);
-    int distance_y = get_delta(y1, y2);
-    return distance_x + distance_y;
-}
-
 int calc_maximum_distance(int x1, int y1, int x2, int y2)
 {
     int distance_x = get_delta(x1, x2);
     int distance_y = get_delta(y1, y2);
     if (distance_x >= distance_y) {
-        return distance_x;
-    } else {
-        return distance_y;
-    }
-}
-
-int calc_minimum_distance(int x1, int y1, int x2, int y2)
-{
-    int distance_x = get_delta(x1, x2);
-    int distance_y = get_delta(y1, y2);
-    if (distance_x <= distance_y) {
         return distance_x;
     } else {
         return distance_y;
@@ -245,19 +227,6 @@ int32_t calc_bound(int32_t value, int32_t min, int32_t max)
     }
 }
 
-int calc_absolute_increment(int value, int step, int max)
-{
-    if (step == 0) {
-        step = 1;
-    } else if (step < 0) {
-        step = -step;
-    }
-    if (max >= 0) {
-        return (value + step >= max) ? max : value + step;
-    }
-    return (value - step <= max) ? max : value - step;
-}
-
 int calc_absolute_decrement(int value, int step)
 {
     if (value == 0) {
@@ -265,7 +234,8 @@ int calc_absolute_decrement(int value, int step)
     }
     if (step == 0) {
         step = 1;
-    } else if (step < 0) {
+    }
+    else if (step < 0) {
         step = -step;
     }
     if (value >= 0) {

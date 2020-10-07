@@ -86,6 +86,7 @@ typedef enum {
 	TR_HOTKEY_RESIZE_TO_1024,
 	TR_HOTKEY_SAVE_SCREENSHOT,
 	TR_HOTKEY_SAVE_CITY_SCREENSHOT,
+	TR_HOTKEY_BUILD_CLONE,
 	TR_HOTKEY_LOAD_FILE,
 	TR_HOTKEY_SAVE_FILE,
 	TR_HOTKEY_INCREASE_GAME_SPEED,
@@ -236,6 +237,7 @@ void translation_portuguese(const translation_string** strings, int* num_strings
 void translation_russian(const translation_string** strings, int* num_strings);
 void translation_spanish(const translation_string** strings, int* num_strings);
 void translation_simplified_chinese(const translation_string** strings, int* num_strings);
+void translation_swedish(const translation_string **strings, int *num_strings);
 void translation_traditional_chinese(const translation_string** strings, int* num_strings);
 
 #endif // TRANSLATION_TRANSLATION_H

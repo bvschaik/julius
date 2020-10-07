@@ -225,11 +225,6 @@ void city_view_scroll(int x, int y)
     check_camera_boundaries();
 }
 
-int city_view_to_grid_offset(int x_view, int y_view)
-{
-    return view_to_grid_offset_lookup[x_view][y_view];
-}
-
 void city_view_grid_offset_to_xy_view(int grid_offset, int *x_view, int *y_view)
 {
     *x_view = *y_view = 0;

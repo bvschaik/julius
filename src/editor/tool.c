@@ -413,6 +413,9 @@ void editor_tool_end_use(const map_tile *tile)
         return;
     }
     data.build_in_progress = 0;
+    if (!tile->grid_offset) {
+        return;
+    }
     switch (data.type) {
         case TOOL_EARTHQUAKE_POINT:
             place_earthquake_flag(tile);

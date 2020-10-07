@@ -32,81 +32,97 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-  set(SDL2_ARCH_64 TRUE)
-  set(SDL2_PROCESSOR_ARCH "x64")
-else()
-  set(SDL2_ARCH_64 FALSE)
-  set(SDL2_PROCESSOR_ARCH "x86")
-endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+GET_SDL_EXT_DIR(SDL_MIXER_EXT_DIR "mixer")
 
-GET_SDL_EXT_DIR(SDL_EXT_DIR "mixer")
+IF(ANDROID_BUILD)
+    STRING(TOLOWER ${CMAKE_BUILD_TYPE} ANDROID_BUILD_DIR)
+    SET(SDL2_MIXER_LIBRARY SDL2_mixer)
+    ADD_LIBRARY(${SDL2_MIXER_LIBRARY} SHARED IMPORTED)
+    SET_TARGET_PROPERTIES(${SDL2_MIXER_LIBRARY} PROPERTIES IMPORTED_LOCATION
+    ${PROJECT_SOURCE_DIR}/android/SDL2/build/intermediates/ndkBuild/${ANDROID_BUILD_DIR}/obj/local/${ANDROID_ABI}/libSDL2_mixer.so)
 
-if(MINGW AND DEFINED SDL_EXT_DIR)
-    if(SDL2_ARCH_64)
-	  set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/x86_64-w64-mingw32")
+    SET(SDL2_MIXER_INCLUDE_DIR_TEMP ${SDL_MIXER_EXT_DIR} ${SDL_MIXER_EXT_DIR}/include)
+    FOREACH(CURRENT_INCLUDE_DIR ${SDL2_MIXER_INCLUDE_DIR_TEMP})
+        IF(EXISTS "${CURRENT_INCLUDE_DIR}/SDL_mixer.h")
+            SET(SDL2_MIXER_INCLUDE_DIR ${CURRENT_INCLUDE_DIR})
+            BREAK()
+        ENDIF()
+    ENDFOREACH()
+ELSE()
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      set(SDL2_ARCH_64 TRUE)
+      set(SDL2_PROCESSOR_ARCH "x64")
     else()
-	  set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/i686-w64-mingw32")
-	endif()
-endif()
+      set(SDL2_ARCH_64 FALSE)
+      set(SDL2_PROCESSOR_ARCH "x86")
+    endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-SET(SDL2_SEARCH_PATHS
-	~/Library/Frameworks
-	/Library/Frameworks
-	/usr/local
-	/usr
-	/sw # Fink
-	/opt/local # DarwinPorts
-	/opt/csw # Blastwave
-	/opt
-    ${SDL_EXT_DIR}
-    ${SDL_MINGW_EXT_DIR}
-)
+    if(MINGW AND DEFINED SDL_MIXER_EXT_DIR)
+        if(SDL2_ARCH_64)
+          set(SDL_MINGW_EXT_DIR "${SDL_MIXER_EXT_DIR}/x86_64-w64-mingw32")
+        else()
+          set(SDL_MINGW_EXT_DIR "${SDL_MIXER_EXT_DIR}/i686-w64-mingw32")
+        endif()
+    endif()
 
-if (VITA)
-    SET(SDL2_SEARCH_PATHS $ENV{VITASDK}/arm-vita-eabi)
-endif()
+    SET(SDL2_SEARCH_PATHS
+        ~/Library/Frameworks
+        /Library/Frameworks
+        /usr/local
+        /usr
+        /sw # Fink
+        /opt/local # DarwinPorts
+        /opt/csw # Blastwave
+        /opt
+        ${SDL_MIXER_EXT_DIR}
+        ${SDL_MINGW_EXT_DIR}
+    )
 
-if(NOT SDL2_MIXER_INCLUDE_DIR AND SDL2MIXER_INCLUDE_DIR)
-  set(SDL2_MIXER_INCLUDE_DIR ${SDL2MIXER_INCLUDE_DIR} CACHE PATH "directory cache
-entry initialized from old variable name")
-endif()
+    if (VITA)
+        SET(SDL2_SEARCH_PATHS $ENV{VITASDK}/arm-vita-eabi)
+    endif()
 
-if(APPLE)
-  # Try to find the include in the SDL2_mixer framework bundle
-  # This fixes CMake finding the header from SDL_mixer 1.2 when both 1.2 and 2.0 are installed
-  find_path(SDL2_MIXER_INCLUDE_DIR SDL2_mixer/SDL_mixer.h
-    HINTS
-      ENV SDL2MIXERDIR
-      ENV SDL2DIR
-    PATH_SUFFIXES include include/SDL2
-    PATHS ${SDL2_SEARCH_PATHS}
-  )
-  set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INCLUDE_DIR}/Headers")
-endif()
+    if(NOT SDL2_MIXER_INCLUDE_DIR AND SDL2MIXER_INCLUDE_DIR)
+      set(SDL2_MIXER_INCLUDE_DIR ${SDL2MIXER_INCLUDE_DIR} CACHE PATH "directory cache
+    entry initialized from old variable name")
+    endif()
 
-if(NOT APPLE OR NOT EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
-  find_path(SDL2_MIXER_INCLUDE_DIR SDL_mixer.h
-    HINTS
-      ENV SDL2MIXERDIR
-      ENV SDL2DIR
-    PATH_SUFFIXES include include/SDL2
-    PATHS ${SDL2_SEARCH_PATHS}
-  )
-endif()
+    if(APPLE)
+      # Try to find the include in the SDL2_mixer framework bundle
+      # This fixes CMake finding the header from SDL_mixer 1.2 when both 1.2 and 2.0 are installed
+      find_path(SDL2_MIXER_INCLUDE_DIR SDL2_mixer/SDL_mixer.h
+        HINTS
+          ENV SDL2MIXERDIR
+          ENV SDL2DIR
+        PATH_SUFFIXES include include/SDL2
+        PATHS ${SDL2_SEARCH_PATHS}
+      )
+      set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INCLUDE_DIR}/Headers")
+    endif()
 
-if(NOT SDL2_MIXER_LIBRARY AND SDL2MIXER_LIBRARY)
-  set(SDL2_MIXER_LIBRARY ${SDL2MIXER_LIBRARY} CACHE FILEPATH "file cache entry
-initialized from old variable name")
-endif()
-find_library(SDL2_MIXER_LIBRARY
-  NAMES SDL2_mixer
-  HINTS
-    ENV SDL2MIXERDIR
-    ENV SDL2DIR
-  PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
-  PATHS ${SDL2_SEARCH_PATHS}
-)
+    if(NOT APPLE OR NOT EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
+      find_path(SDL2_MIXER_INCLUDE_DIR SDL_mixer.h
+        HINTS
+          ENV SDL2MIXERDIR
+          ENV SDL2DIR
+        PATH_SUFFIXES include include/SDL2
+        PATHS ${SDL2_SEARCH_PATHS}
+      )
+    endif()
+
+    if(NOT SDL2_MIXER_LIBRARY AND SDL2MIXER_LIBRARY)
+      set(SDL2_MIXER_LIBRARY ${SDL2MIXER_LIBRARY} CACHE FILEPATH "file cache entry
+    initialized from old variable name")
+    endif()
+    find_library(SDL2_MIXER_LIBRARY
+      NAMES SDL2_mixer
+      HINTS
+        ENV SDL2MIXERDIR
+        ENV SDL2DIR
+      PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
+      PATHS ${SDL2_SEARCH_PATHS}
+    )
+ENDIF()
 
 if(SDL2_MIXER_INCLUDE_DIR AND EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
     file(STRINGS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h" SDL2_MIXER_VERSION_MAJOR_LINE REGEX "^#define[ \t]+SDL_MIXER_MAJOR_VERSION[ \t]+[0-9]+$")

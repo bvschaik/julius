@@ -16,6 +16,9 @@ case "$BUILD_TARGET" in
 "linux")
 	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF ..
 	;;
+"android")
+	mkdir build
+	;;
 *)
 	mkdir build && cd build && cmake ..
 	;;

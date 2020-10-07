@@ -1,7 +1,7 @@
 #include "game.h"
 
-#include "building/construction.h"
 #include "building/model.h"
+#include "city/view.h"
 #include "core/config.h"
 #include "core/hotkey_config.h"
 #include "core/image.h"
@@ -10,20 +10,18 @@
 #include "core/log.h"
 #include "core/mods.h"
 #include "core/random.h"
-#include "core/time.h"
 #include "editor/editor.h"
 #include "figure/type.h"
 #include "game/animation.h"
 #include "game/file.h"
 #include "game/file_editor.h"
 #include "game/settings.h"
+#include "game/speed.h"
 #include "game/state.h"
 #include "game/tick.h"
 #include "graphics/font.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
-#include "input/cursor.h"
-#include "input/scroll.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
@@ -32,12 +30,6 @@
 #include "window/editor/map.h"
 #include "window/logo.h"
 #include "window/main_menu.h"
-
-static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
-    0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
-};
-
-static time_millis last_update;
 
 static void errlog(const char *msg)
 {
@@ -89,7 +81,7 @@ int game_init(void)
         errlog("unable to init graphics");
         return 0;
     }
-    if (!image_load_climate(CLIMATE_CENTRAL, 0, 0)) {
+    if (!image_load_climate(CLIMATE_CENTRAL, 0, 1)) {
         errlog("unable to load main graphics");
         return 0;
     }
@@ -175,53 +167,10 @@ int game_reload_language(void)
     return reload_language(0, 1);
 }
 
-static int get_elapsed_ticks(void)
-{
-    if (game_state_is_paused()) {
-        return 0;
-    }
-    int game_speed_index = 0;
-    int ticks_per_frame = 1;
-    switch (window_get_id()) {
-        default:
-            return 0;
-        case WINDOW_CITY:
-        case WINDOW_CITY_MILITARY:
-        case WINDOW_SLIDING_SIDEBAR:
-        case WINDOW_OVERLAY_MENU:
-        case WINDOW_BUILD_MENU:
-            game_speed_index = (100 - setting_game_speed()) / 10;
-            if (game_speed_index >= 10) {
-                return 0;
-            } else if (game_speed_index < 0) {
-                ticks_per_frame = setting_game_speed() / 100;
-                game_speed_index = 0;
-            }
-            break;
-        case WINDOW_EDITOR_MAP:
-            game_speed_index = 3; // 70%, nice speed for flag animations
-            break;
-    }
-    if (building_construction_in_progress()) {
-        return 0;
-    }
-    if (scroll_in_progress() && !scroll_is_smooth()) {
-        return 0;
-    }
-
-    time_millis now = time_get_millis();
-    time_millis diff = now - last_update;
-    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
-        return 0;
-    }
-    last_update = now;
-    return ticks_per_frame;
-}
-
 void game_run(void)
 {
     game_animation_update();
-    int num_ticks = get_elapsed_ticks();
+    int num_ticks = game_speed_get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {
         game_tick_run();
         game_file_write_mission_saved_game();

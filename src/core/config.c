@@ -107,7 +107,7 @@ const char *config_get_default_string_value(config_string_key key)
     return default_string_values[key];
 }
 
-void config_set_defaults(void)
+static void set_defaults(void)
 {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         values[i] = default_values[i];
@@ -117,7 +117,7 @@ void config_set_defaults(void)
 
 void config_load(void)
 {
-    config_set_defaults();
+    set_defaults();
     FILE *fp = file_open(INI_FILENAME, "rt");
     if (!fp) {
         return;

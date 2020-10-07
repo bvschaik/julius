@@ -9,8 +9,6 @@ enum {
     GRANARY_TASK_GETTING = 0
 };
 
-int building_granary_get_amount(building *granary, int resource);
-
 int building_granary_add_resource(building *granary, int resource, int is_produced);
 
 int building_granary_remove_resource(building *granary, int resource, int amount);

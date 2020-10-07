@@ -100,23 +100,10 @@ void empire_set_viewport(int width, int height)
     check_scroll_boundaries();
 }
 
-void empire_get_scroll(int *x_scroll, int *y_scroll)
-{
-    *x_scroll = data.scroll_x;
-    *y_scroll = data.scroll_y;
-}
-
 void empire_adjust_scroll(int *x_offset, int *y_offset)
 {
     *x_offset = *x_offset - data.scroll_x;
     *y_offset = *y_offset - data.scroll_y;
-}
-
-void empire_set_scroll(int x, int y)
-{
-    data.scroll_x = x;
-    data.scroll_y = y;
-    check_scroll_boundaries();
 }
 
 void empire_scroll_map(int x, int y)

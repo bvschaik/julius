@@ -1,5 +1,6 @@
 #include "city.h"
 
+#include "building/clone.h"
 #include "building/construction.h"
 #include "building/rotation.h"
 #include "city/message.h"
@@ -235,6 +236,9 @@ static void handle_hotkeys(const hotkeys *h)
             building_construction_cancel();
             building_construction_set_type(h->building);
         }
+    }
+    if (h->clone_building) {
+        building_clone_from_grid_offset(widget_city_current_grid_offset());
     }
 }
 

@@ -29,7 +29,7 @@ static int start_delayed(const touch *t)
     return (t->has_started && !t->has_moved && !t->has_ended && ((time_get_millis() - t->start_time) < (time_millis) (CLICK_TIME / 2)));
 }
 
-const touch *get_earliest_touch(void)
+const touch *touch_get_earliest(void)
 {
     time_millis timestamp = -1;
     int touch_index = MAX_ACTIVE_TOUCHES;
@@ -42,7 +42,7 @@ const touch *get_earliest_touch(void)
     return &data.finger[touch_index];
 }
 
-const touch *get_latest_touch(void)
+const touch *touch_get_latest(void)
 {
     int active_touches = 0;
     time_millis timestamp = 0;
@@ -59,7 +59,7 @@ const touch *get_latest_touch(void)
     return (active_touches > 1) ? &data.finger[touch_index] : &data.finger[MAX_ACTIVE_TOUCHES];
 }
 
-int get_total_active_touches(void)
+static int get_total_active_touches(void)
 {
     int active_touches = 0;
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
@@ -94,9 +94,9 @@ int touch_is_scroll(void)
     if (num_touches > 2) {
         return 0;
     }
-    const touch *first = get_earliest_touch();
+    const touch *first = touch_get_earliest();
     if (num_touches == 2) {
-        const touch *last = get_latest_touch();
+        const touch *last = touch_get_latest();
         return ((last->start_time - first->start_time) < CLICK_TIME) && !touch_was_click(last);
     }
     return first->in_use && start_delayed(first);
@@ -104,8 +104,8 @@ int touch_is_scroll(void)
 
 int touch_get_scroll(void)
 {
-    const touch *first = get_earliest_touch();
-    const touch *last = get_latest_touch();
+    const touch *first = touch_get_earliest();
+    const touch *last = touch_get_latest();
     if (!touch_is_scroll() || !first->has_moved || !last->has_moved) {
         return SCROLL_NONE;
     }
@@ -260,18 +260,18 @@ static void handle_mouse_touchpad(void)
     }
 
     if (any_touch_went_up()) {
-        if (num_fingers == 1 && touch_was_click(get_earliest_touch())) {
+        if (num_fingers == 1 && touch_was_click(touch_get_earliest())) {
             mouse_set_left_down(1);
             mouse_determine_button_state();
             data.touchpad_mode_click_type = EMULATED_MOUSE_CLICK_LEFT;
         } else if (num_fingers == 2 &&
-            (touch_was_click(get_earliest_touch()) || touch_was_click(get_latest_touch()))) {
+            (touch_was_click(touch_get_earliest()) || touch_was_click(touch_get_latest()))) {
             mouse_set_right_down(1);
             mouse_determine_button_state();
             data.touchpad_mode_click_type = EMULATED_MOUSE_CLICK_RIGHT;
         }
     } else {
-        const touch *t = get_earliest_touch();
+        const touch *t = touch_get_earliest();
         if (!t->has_moved) {
             return;
         }
@@ -284,7 +284,7 @@ static void handle_mouse_direct(void)
     mouse_reset_scroll();
     mouse_reset_button_state();
 
-    const touch *first = get_earliest_touch();
+    const touch *first = touch_get_earliest();
     int x = first->current_point.x;
     int y = first->current_point.y;
     system_set_mouse_position(&x, &y);
@@ -293,7 +293,7 @@ static void handle_mouse_direct(void)
 
 int touch_to_mouse(void)
 {
-    const touch *first = get_earliest_touch();
+    const touch *first = touch_get_earliest();
     if (!first->in_use) {
         if (mouse_get()->is_touch) {
             mouse_reset_scroll();
@@ -312,7 +312,7 @@ int touch_to_mouse(void)
             handle_mouse_direct();
             break;
         default:
-            mouse_set_from_touch(first, get_latest_touch());
+            mouse_set_from_touch(first, touch_get_latest());
             break;
     }
     return 1;

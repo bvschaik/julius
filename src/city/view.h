@@ -33,8 +33,6 @@ void city_view_set_camera_from_pixel_position(int x, int y);
 
 void city_view_scroll(int x, int y);
 
-int city_view_to_grid_offset(int x_view, int y_view);
-
 void city_view_grid_offset_to_xy_view(int grid_offset, int *x_view, int *y_view);
 
 void city_view_get_selected_tile_pixels(int *x_pixels, int *y_pixels);

@@ -25,6 +25,10 @@ case "$BUILD_TARGET" in
 	cd build && make && \
 	zip -r augustus.zip augustus mods
 	;;
+"android")
+	cd android && TERM=dumb ./gradlew assembleRelease && \
+	cd .. && cp android/julius/build/outputs/apk/release/julius-release.apk build/julius.apk
+	;;
 *)
 	cd build && make 
 	;;

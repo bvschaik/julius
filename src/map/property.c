@@ -138,7 +138,7 @@ void map_property_init_alternate_terrain(void)
         for (int x = 0; x < map_width; x++) {
             int grid_offset = map_grid_offset(x, y);
             if (map_random_get(grid_offset) & 1) {
-                map_property_set_alternate_terrain(grid_offset);
+                bitfields_grid.items[grid_offset] |= BIT_ALTERNATE_TERRAIN;
             }
         }
     }
@@ -147,11 +147,6 @@ void map_property_init_alternate_terrain(void)
 int map_property_is_alternate_terrain(int grid_offset)
 {
     return bitfields_grid.items[grid_offset] & BIT_ALTERNATE_TERRAIN;
-}
-
-void map_property_set_alternate_terrain(int grid_offset)
-{
-    bitfields_grid.items[grid_offset] |= BIT_ALTERNATE_TERRAIN;
 }
 
 int map_property_is_plaza_or_earthquake(int grid_offset)

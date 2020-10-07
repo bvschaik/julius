@@ -3,7 +3,7 @@
 
 #include "city_overlay.h"
 
-void overlay_problems_prepare_building(building *b);
+void city_overlay_problems_prepare_building(building *b);
 
 const city_overlay *city_overlay_for_fire(void);
 

@@ -65,7 +65,7 @@ speed_direction speed_get_current_direction(const speed_type *speed)
     return (speed->current_speed > 0) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
 }
 
-int handle_fine_position(speed_type *speed, double delta)
+static int handle_fine_position(speed_type *speed, double delta)
 {
     int delta_rounded = (int) delta;
     speed->fine_position += delta - delta_rounded;

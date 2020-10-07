@@ -29,7 +29,7 @@ static SDL_Surface *generate_cursor_surface(const char *data, int width, int hei
     return cursor_surface;
 }
 
-cursor_scale get_cursor_scale(int scale_percentage)
+static cursor_scale get_cursor_scale(int scale_percentage)
 {
     if (scale_percentage <= 100) {
         return CURSOR_SCALE_1;

@@ -130,17 +130,12 @@ cat > "bintray.json" <<EOF
     }
   ],
 
-  "publish": true
-}
-EOF
-elif [ "$DEPLOY" = "switch" ]
-then
 cat > "bintray.json" <<EOF
 {
   "package": {
     "subject": "keriew",
     "repo": "$REPO",
-    "name": "switch",
+    "name": "$NAME",
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/Keriew/augustus.git"
   },
@@ -148,7 +143,7 @@ cat > "bintray.json" <<EOF
   "version": {
     "name": "$VERSION",
     "released": "$(date +'%Y-%m-%d')",
-    "desc": "Automated Switch build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
+    "desc": "Automated $DESC build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
   },
 
   "files": [
@@ -162,4 +157,3 @@ cat > "bintray.json" <<EOF
   "publish": true
 }
 EOF
-fi

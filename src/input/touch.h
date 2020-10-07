@@ -31,9 +31,8 @@ typedef struct {
     time_millis last_change_time;
 } touch;
 
-const touch *get_earliest_touch(void);
-const touch *get_latest_touch(void);
-int get_total_active_touches(void);
+const touch *touch_get_earliest(void);
+const touch *touch_get_latest(void);
 
 int touch_not_click(const touch *t);
 int touch_was_click(const touch *t);

@@ -64,6 +64,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Finestra a 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Salva l'immagine"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Salva l'immagine dell'intera città"},
+    {TR_HOTKEY_BUILD_CLONE, "Clona edificio sotto il cursore"}, // TODO: Google Translate
     {TR_HOTKEY_LOAD_FILE, "Carica file"},
     {TR_HOTKEY_SAVE_FILE, "Salva file"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Aumenta la velocità"},

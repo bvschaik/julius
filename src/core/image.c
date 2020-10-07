@@ -150,11 +150,6 @@ int image_init(void)
     return 1;
 }
 
-void image_enable_fonts(int enable)
-{
-    data.fonts_enabled = enable;
-}
-
 static void prepare_index(image *images, int size)
 {
     int offset = 4;
