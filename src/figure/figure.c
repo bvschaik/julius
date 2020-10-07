@@ -144,7 +144,7 @@ void figure_init_scenario(void)
     data.created_sequence = 0;
 }
 
-void figure_kill_all()
+void figure_kill_all(void)
 {
     for (int i = 1; i < MAX_FIGURES; i++) {
         data.figures[i].state = FIGURE_STATE_DEAD;

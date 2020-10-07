@@ -146,7 +146,7 @@ void config_load(void)
                     const char *value = &equals[1];
                     log_info("Config key", ini_string_keys[i], 0);
                     log_info("Config value", value, 0);
-                    strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX);
+                    strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX - 1);
                     break;
                 }
             }

@@ -11,6 +11,7 @@
 #include "graphics/image.h"
 
 #include "expat.h"
+#include "PMurHash/PMurHash.h"
 
 #include <string.h>
 
@@ -25,6 +26,8 @@
 #define MAX_GROUPS 100
 
 #define IMAGE_PRELOAD_MAX_SIZE 65535
+
+#define MOD_HASH_SEED 0x12345678
 
 static const char *MODS_FOLDER = "mods";
 static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_TAG_MAX_LENGTH] = { { "mod" }, { "image" }, { "layer", "animation" } };
@@ -79,6 +82,7 @@ typedef struct {
     char name[XML_STRING_MAX_LENGTH];
     int id;
     int images;
+    int first_image_id;
 } image_groups;
 
 static struct {
@@ -291,13 +295,13 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
     current_layer->height = 0;
     const image *original_image = 0;
     if (strcmp(group_id, "this") == 0) {
-        int group = data.groups[data.total_groups].id - MAIN_ENTRIES;
+        int image = data.groups[data.total_groups].first_image_id;
         for (int i = 0; i < data.groups[data.total_groups].images; ++i) {
-            if (strcmp(data.images[group].id, image_id) == 0) {
-                current_layer->original_image_id = group + MAIN_ENTRIES;
+            if (strcmp(data.images[image].id, image_id) == 0) {
+                current_layer->original_image_id = image;
                 break;
             }
-            group++;
+            image++;
         }
         if (!current_layer->original_image_id) {
             return 0;
@@ -334,6 +338,25 @@ static int count_xml_attributes(const char **attributes)
     return total;
 }
 
+static uint32_t get_group_hash(const char *author, const char *name)
+{
+    uint32_t hash = MOD_HASH_SEED;
+    uint32_t carry = 0;
+    uint32_t author_length = (uint32_t) strlen(author);
+    uint32_t name_length = (uint32_t) strlen(name);
+
+    PMurHash32_Process(&hash, &carry, author, author_length);
+    PMurHash32_Process(&hash, &carry, name, name_length);
+
+    hash = PMurHash32_Result(hash, carry, author_length + name_length);
+
+    // The following code increases the risk of hash collision but allows better image indexing
+    if (hash < 0x4000) {
+        hash |= 0x4000;
+    }
+    return hash & 0xffffff00;
+}
+
 static void xml_start_mod_element(const char **attributes)
 {
     if (count_xml_attributes(attributes) != 4) {
@@ -341,7 +364,7 @@ static void xml_start_mod_element(const char **attributes)
         return;
     }
     image_groups *group = &data.groups[data.total_groups];
-    group->id = data.total_images + MAIN_ENTRIES;
+    group->first_image_id = data.total_images;
     group->images = 0;
     for (int i = 0; i < 4; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[0][0][0]) == 0) {
@@ -355,6 +378,7 @@ static void xml_start_mod_element(const char **attributes)
         data.xml.error = 1;
         return;
     }
+    group->id = get_group_hash(group->author, group->name);
     set_modded_image_base_path(group->author, group->name);
 }
 
@@ -616,10 +640,10 @@ static void process_mod_file(const char *xml_file_name)
 static void setup_mods_folder_string(void)
 {
     size_t mods_folder_length = strlen(MODS_FOLDER);
-    strncpy(data.xml.file_name, MODS_FOLDER, FILE_NAME_MAX - 1);
+    strcpy(data.xml.file_name, MODS_FOLDER);
     data.xml.file_name[mods_folder_length] = '/';
     data.xml.file_name_position = mods_folder_length + 1;
-    strncpy(data.xml.image_base_path, data.xml.file_name, FILE_NAME_MAX - 1);
+    strncpy(data.xml.image_base_path, data.xml.file_name, FILE_NAME_MAX);
 }
 
 void mods_init(void)
@@ -641,11 +665,11 @@ void mods_init(void)
 
 int mods_get_group_id(const char *mod_author, const char *mod_name)
 {
+    int id = get_group_hash(mod_author, mod_name);
     for (int i = 0; i < data.total_groups; ++i) {
         image_groups *group = &data.groups[i];
-        if (strcmp(group->author, mod_author) == 0 &&
-            strcmp(group->name, mod_name) == 0) {
-            return group->id;
+        if (id == group->id) {
+            return id;
         }
     }
     return 0;
@@ -657,26 +681,38 @@ int mods_get_image_id(int mod_group_id, const char *image_name)
         return 0;
     }
     int max_images = 0;
+    int image_id = 0;
     for (int i = 0; i < data.total_groups; ++i) {
         image_groups *group = &data.groups[i];
         if (group->id == mod_group_id) {
             max_images = group->images;
+            image_id = group->first_image_id;
             break;
         }
     }
-    mod_group_id -= MAIN_ENTRIES;
     for (int i = 0; i < max_images; ++i) {
-        if (strcmp(data.images[mod_group_id].id, image_name) == 0) {
-            return mod_group_id + MAIN_ENTRIES;
+        if (strcmp(data.images[image_id].id, image_name) == 0) {
+            return mod_group_id + i;
         }
-        mod_group_id++;
+        image_id++;
+    }
+    return 0;
+}
+
+static int get_image_position_from_id(int image_id)
+{
+    unsigned int image_group = image_id & 0xffffff00;
+    for (int i = 0; i < data.total_groups; ++i) {
+        if (data.groups[i].id == image_group) {
+            return data.groups[i].first_image_id + (image_id - image_group);
+        }
     }
     return 0;
 }
 
 const image *mods_get_image(int image_id)
 {
-    modded_image *img = &data.images[image_id - MAIN_ENTRIES];
+    modded_image *img = &data.images[get_image_position_from_id(image_id)];
     if (!img->active) {
         return image_get(0);
     }
@@ -685,7 +721,7 @@ const image *mods_get_image(int image_id)
 
 const color_t *mods_get_image_data(int image_id)
 {
-    modded_image *img = &data.images[image_id - MAIN_ENTRIES];
+    modded_image *img = &data.images[get_image_position_from_id(image_id)];
     if (!img->active) {
         return image_data(0);
     }

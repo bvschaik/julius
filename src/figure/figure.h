@@ -140,7 +140,7 @@ int figure_is_herd(const figure *f);
 
 void figure_init_scenario(void);
 
-void figure_kill_all();
+void figure_kill_all(void);
 
 void figure_save_state(buffer *list, buffer *seq);
 
