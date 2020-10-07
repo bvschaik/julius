@@ -122,6 +122,11 @@ void building_count_update(void)
             case BUILDING_LARGE_TEMPLE_MERCURY:
             case BUILDING_LARGE_TEMPLE_MARS:
             case BUILDING_LARGE_TEMPLE_VENUS:
+            case BUILDING_GRAND_TEMPLE_CERES:
+            case BUILDING_GRAND_TEMPLE_NEPTUNE:
+            case BUILDING_GRAND_TEMPLE_MERCURY:
+            case BUILDING_GRAND_TEMPLE_MARS:
+            case BUILDING_GRAND_TEMPLE_VENUS:
             case BUILDING_ORACLE:
                 increase_count(type, b->num_workers > 0);
                 break;

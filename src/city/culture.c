@@ -111,27 +111,32 @@ void city_culture_update_coverage(void)
     coverage.religion[GOD_CERES] = top(calc_percentage(
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_CERES) +
-            1500 * building_count_active(BUILDING_LARGE_TEMPLE_CERES),
+            1500 * building_count_active(BUILDING_LARGE_TEMPLE_CERES) +
+            5000 * building_count_active(BUILDING_GRAND_TEMPLE_CERES),
         population));
     coverage.religion[GOD_NEPTUNE] = top(calc_percentage(
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_NEPTUNE) +
-            1500 * building_count_active(BUILDING_LARGE_TEMPLE_NEPTUNE),
+            1500 * building_count_active(BUILDING_LARGE_TEMPLE_NEPTUNE) +
+            5000 * building_count_active(BUILDING_GRAND_TEMPLE_NEPTUNE),
         population));
     coverage.religion[GOD_MERCURY] = top(calc_percentage(
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_MERCURY) +
-            1500 * building_count_active(BUILDING_LARGE_TEMPLE_MERCURY),
+            1500 * building_count_active(BUILDING_LARGE_TEMPLE_MERCURY) +
+            5000 * building_count_active(BUILDING_GRAND_TEMPLE_MERCURY),
         population));
     coverage.religion[GOD_MARS] = top(calc_percentage(
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_MARS) +
-            1500 * building_count_active(BUILDING_LARGE_TEMPLE_MARS),
+            1500 * building_count_active(BUILDING_LARGE_TEMPLE_MARS) +
+            5000 * building_count_active(BUILDING_GRAND_TEMPLE_MARS),
         population));
     coverage.religion[GOD_VENUS] = top(calc_percentage(
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_VENUS) +
-            1500 * building_count_active(BUILDING_LARGE_TEMPLE_VENUS),
+            1500 * building_count_active(BUILDING_LARGE_TEMPLE_VENUS) +
+            5000 * building_count_active(BUILDING_GRAND_TEMPLE_VENUS),
         population));
     coverage.oracle = top(calc_percentage(500 * oracles, population));
 
