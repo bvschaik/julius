@@ -31,6 +31,7 @@ void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int 
 void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, font_t font, color_t color);
 
 int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_width, font_t font, uint32_t color);
+void text_draw_centered_with_linebreaks(const uint8_t* str, int x, int y, int box_width, font_t font, color_t color);
 /**
  * @return Number of lines required to draw the text
  */

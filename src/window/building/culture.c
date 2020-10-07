@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/monument.h"
 #include "city/resource.h"
+#include "core/mods.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -345,20 +346,34 @@ static void window_building_draw_monument_resources_needed(building_info_context
     }
 }
 
-static void draw_grand_temple(building_info_context* c, const char* sound_file, int name, int bonus_desc, int module_desc)
+static void draw_grand_temple(building_info_context* c, const char* sound_file, int name, int module_name, int bonus_desc, int module_desc, int banner_id)
 {
     building* b = building_get(c->building_id);
     window_building_play_sound(c, sound_file);
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    text_draw_centered(translation_for(name), c->x_offset, c->y_offset+12, 16*c->width_blocks, FONT_LARGE_BLACK, 0);
+    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    } 
+    else {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, 16);
+    }
+    //image_draw(mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Monument icon"), c->x_offset + 22, c->y_offset + 12);
+    if (b->data.monument.upgrades) {
+        text_draw_centered(translation_for(module_name), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    }
+    else {
+        text_draw_centered(translation_for(name), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    }
+    
     window_building_draw_monument_resources_needed(c);
     if (b->subtype.monument_phase == MONUMENT_FINISHED) {
-        int height = text_draw_multiline(translation_for(bonus_desc), c->x_offset + 22, c->y_offset + 56, 16 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        int height = text_draw_multiline(translation_for(bonus_desc), c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         if (b->data.monument.upgrades) {
-            height = text_draw_multiline(translation_for(module_desc), c->x_offset + 22, c->y_offset + 66 + height, 16 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+            height += text_draw_multiline(translation_for(module_desc), c->x_offset + 22, c->y_offset + 66 + height, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         }
         inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 96 + height);
+        image_draw(banner_id, c->x_offset + 32, c->y_offset + 166 + height);
+        text_draw_centered_with_linebreaks(translation_for(TR_BUILDING_VENUS_TEMPLE_QUOTE), c->x_offset, c->y_offset + 386 + height, 16 * c->width_blocks, FONT_NORMAL_BLACK, 0);
     }
 }
 
@@ -393,27 +408,27 @@ int window_building_handle_mouse_grand_temple(const mouse* m, building_info_cont
 
 void window_building_draw_grand_temple_ceres(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES_DESC, TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_DESC);
+    draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES_DESC, TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Ceres L Banner"));
 }
 
 void window_building_draw_grand_temple_neptune(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_DESC);
+    draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Nept L Banner"));
 }
 
 void window_building_draw_grand_temple_mercury(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC, TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_DESC);
+    draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC, TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Merc L Banner"));
 }
 
 void window_building_draw_grand_temple_mars(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS_DESC, TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_DESC);
+    draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS_DESC, TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Mars L Banner"));
 }
 
 void window_building_draw_grand_temple_venus(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_DESC);
+    draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Venus L Banner"));
 }
 
 void window_building_draw_work_camp(building_info_context* c)

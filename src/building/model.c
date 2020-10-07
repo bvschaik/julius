@@ -155,12 +155,12 @@ int model_load(void)
 }
 
 const model_building MODEL_ROADBLOCK = {40,0,0,0,0};
-const model_building MODEL_WORK_CAMP = { 40,-2,1,1,2,10 };
-const model_building MODEL_GRAND_TEMPLE_CERES = { 50,0,0,0,0,10 };
-const model_building MODEL_GRAND_TEMPLE_NEPTUNE = { 50,0,0,0,0,10 };
-const model_building MODEL_GRAND_TEMPLE_MERCURY = { 50,0,0,0,0,10 };
-const model_building MODEL_GRAND_TEMPLE_MARS = { 50,0,0,0,0,10 };
-const model_building MODEL_GRAND_TEMPLE_VENUS = { 50,0,0,0,0,10 };
+const model_building MODEL_WORK_CAMP = { 150,-10,2,3,4,25 };
+const model_building MODEL_GRAND_TEMPLE_CERES = { 5000,20,2,-4,5,30 };
+const model_building MODEL_GRAND_TEMPLE_NEPTUNE = { 5000,20,2,-4,5,30 };
+const model_building MODEL_GRAND_TEMPLE_MERCURY = { 5000,20,2,-4,5,30 };
+const model_building MODEL_GRAND_TEMPLE_MARS = { 5000,20,2,-4,5,30 };
+const model_building MODEL_GRAND_TEMPLE_VENUS = { 5000,20,2,-4,5,30 };
 
 const model_building *model_get_building(building_type type)
 {

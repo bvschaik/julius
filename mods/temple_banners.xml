@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE mod>
+
+<mod author="Areldir" name="Grand_Temple_Banners">
+<!-- Note: Banner images for Grand Temples -->
+    <image id="Ceres L Banner" src="Ceres_Banner" />
+    <image id="Mars L Banner" src="Mars_Banner" />
+    <image id="Merc L Banner" src="Mercury_Banner" />
+    <image id="Venus L Banner" src="Venus_Banner" />
+    <image id="Nept L Banner" src="Neptune_Banner" />
+    <image id="Panth L Banner" src="Pantheon_Banner" />
+
+
+
+</mod>		

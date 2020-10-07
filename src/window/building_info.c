@@ -152,15 +152,17 @@ static int get_height_id(void)
 
             case BUILDING_BARRACKS:
             case BUILDING_AMPHITHEATER:
+                return 3;
+
+            case BUILDING_WELL:
+                return 4;
+
             case BUILDING_GRAND_TEMPLE_CERES:
             case BUILDING_GRAND_TEMPLE_NEPTUNE:
             case BUILDING_GRAND_TEMPLE_MERCURY:
             case BUILDING_GRAND_TEMPLE_MARS:
             case BUILDING_GRAND_TEMPLE_VENUS:
-                return 3;
-
-            case BUILDING_WELL:
-                return 4;
+                return 6;
 
             default:
                 return 0;
@@ -391,6 +393,7 @@ static void init(int grid_offset)
         case 3: context.height_blocks = 19; break;
         case 4: context.height_blocks = 14; break;
         case 5: context.height_blocks = 23; break;
+        case 6: context.height_blocks = 38; break;
         default: context.height_blocks = 22; break;
     }
     // dialog placement
