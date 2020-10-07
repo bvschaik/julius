@@ -41,6 +41,8 @@ static void add_fort(int type, building *fort)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
     }
 
+    fort->monthly_levy = 20;    
+
     // create parade ground
     const int offsets_x[] = {3, -1, -4, 0};
     const int offsets_y[] = {-1, -4, 0, 3};
@@ -487,6 +489,7 @@ static void add_to_map(int type, building *b, int size,
             break;
         // defense
         case BUILDING_TOWER:
+            b->monthly_levy = 2;
             map_terrain_remove_with_radius(b->x, b->y, 2, 0, TERRAIN_WALL);
             map_building_tiles_add(b->id, b->x, b->y, size, image_group(GROUP_BUILDING_TOWER),
                 TERRAIN_BUILDING | TERRAIN_GATEHOUSE);

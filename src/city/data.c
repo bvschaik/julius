@@ -238,9 +238,10 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.ratings.prosperity);
     buffer_write_i32(main, city_data.ratings.peace);
     buffer_write_i32(main, city_data.ratings.favor);
-    for (int i = 0; i < 4; i++) {
-        buffer_write_i32(main, city_data.unused.unknown_4238[i]);
-    }
+    buffer_write_i32(main, city_data.finance.levies_so_far);
+    buffer_write_i32(main, city_data.finance.this_year.expenses.levies);
+    buffer_write_i32(main, city_data.finance.last_year.expenses.levies);
+    buffer_write_i32(main, city_data.unused.unknown_4238[0]);    
     buffer_write_i32(main, city_data.ratings.prosperity_treasury_last_year);
     buffer_write_i32(main, city_data.ratings.culture_points.theater);
     buffer_write_i32(main, city_data.ratings.culture_points.religion);
@@ -715,9 +716,10 @@ static void load_main_data(buffer *main)
     city_data.ratings.prosperity = buffer_read_i32(main);
     city_data.ratings.peace = buffer_read_i32(main);
     city_data.ratings.favor = buffer_read_i32(main);
-    for (int i = 0; i < 4; i++) {
-        city_data.unused.unknown_4238[i] = buffer_read_i32(main);
-    }
+    city_data.finance.levies_so_far = buffer_read_i32(main);
+    city_data.finance.this_year.expenses.levies = buffer_read_i32(main);
+    city_data.finance.last_year.expenses.levies = buffer_read_i32(main);
+    city_data.unused.unknown_4238[0] = buffer_read_i32(main);    
     city_data.ratings.prosperity_treasury_last_year = buffer_read_i32(main);
     city_data.ratings.culture_points.theater = buffer_read_i32(main);
     city_data.ratings.culture_points.religion = buffer_read_i32(main);

@@ -115,6 +115,7 @@ extern struct city_data_t {
         int32_t interest_so_far;
         int32_t salary_so_far;
         int32_t wages_so_far;
+        int32_t levies_so_far;
         int16_t stolen_this_year;
         int16_t stolen_last_year;
         int32_t cheated_money;

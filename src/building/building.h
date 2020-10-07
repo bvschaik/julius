@@ -65,6 +65,7 @@ typedef struct {
     unsigned char house_figure_generation_delay;
     unsigned char house_tax_coverage;
     short formation_id;
+    short monthly_levy;
     union {
         struct {
             short queued_docker_id;

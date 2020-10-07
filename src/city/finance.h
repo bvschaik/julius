@@ -61,6 +61,7 @@ typedef struct {
         int sundries;
         int tribute;
         int total;
+        int levies;
     } expenses;
     int net_in_out;
     int balance;

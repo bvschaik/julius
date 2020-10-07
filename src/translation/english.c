@@ -240,6 +240,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_POND_DESC, "Ponds fill from city reservoirs and provide water for plants and animals and a cool, relaxing oasis for people. All citizens would love to live near a pond." },
     {TR_BUILDING_WINDOW_POND, "Pond"},    
     {TR_BUILDING_OBELISK_DESC, "A prestigious monument inspired by the works of the ancient kings of the Nile."},
+    {TR_ADVISOR_FINANCE_LEVIES, "Building levies"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -122,6 +122,7 @@ void city_finance_calculate_totals(void)
         this_year->expenses.interest +
         this_year->expenses.construction +
         this_year->expenses.wages +
+        this_year->expenses.levies +
         this_year->expenses.imports;
 
     finance_overview *last_year = &city_data.finance.last_year;
@@ -136,6 +137,7 @@ void city_finance_estimate_wages(void)
 {
     int monthly_wages = city_data.labor.wages * city_data.labor.workers_employed / 10 / 12;
     city_data.finance.this_year.expenses.wages = city_data.finance.wages_so_far;
+    city_data.finance.this_year.expenses.levies = city_data.finance.levies_so_far;
     city_data.finance.estimated_wages = (12 - game_time_month()) * monthly_wages + city_data.finance.wages_so_far;
 }
 
@@ -269,12 +271,26 @@ static void pay_monthly_salary(void)
     }
 }
 
+static void pay_monthly_building_levies(void) {
+    int levies = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building* b = building_get(i);
+        if (b->state == BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED && b->monthly_levy) {
+            levies += b->monthly_levy;
+        }
+    }
+    
+    city_data.finance.treasury -= levies;   
+    city_data.finance.levies_so_far += levies;
+}
+
 void city_finance_handle_month_change(void)
 {
     collect_monthly_taxes();
     pay_monthly_wages();
     pay_monthly_interest();
     pay_monthly_salary();
+    pay_monthly_building_levies();
 }
 
 static void reset_taxes(void)
@@ -304,6 +320,10 @@ static void copy_amounts_to_last_year(void)
     city_data.finance.wages_so_far = 0;
     city_data.finance.wage_rate_paid_last_year = city_data.finance.wage_rate_paid_this_year;
     city_data.finance.wage_rate_paid_this_year = 0;
+
+    //levies
+    last_year->expenses.levies = city_data.finance.levies_so_far;
+    city_data.finance.levies_so_far = 0;
 
     // import/export
     last_year->income.exports = this_year->income.exports;

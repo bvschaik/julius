@@ -9,8 +9,9 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "translation/translation.h"
 
-#define ADVISOR_HEIGHT 26
+#define ADVISOR_HEIGHT 27
 
 static void button_change_taxes(int is_down, int param2);
 
@@ -24,6 +25,13 @@ static int arrow_button_focus;
 static void draw_row(int group, int number, int y, int value_last_year, int value_this_year)
 {
     lang_text_draw(group, number, 80, y, FONT_NORMAL_BLACK);
+    text_draw_number(value_last_year, '@', " ", 290, y, FONT_NORMAL_BLACK);
+    text_draw_number(value_this_year, '@', " ", 430, y, FONT_NORMAL_BLACK);
+}
+
+static void draw_tr_row(int tr_string, int y, int value_last_year, int value_this_year)
+{
+    text_draw(translation_for(tr_string), 80, y, FONT_NORMAL_BLACK, 0);
     text_draw_number(value_last_year, '@', " ", 290, y, FONT_NORMAL_BLACK);
     text_draw_number(value_this_year, '@', " ", 430, y, FONT_NORMAL_BLACK);
 }
@@ -77,23 +85,24 @@ static int draw_background(void)
     draw_row(60, 11, 227, last_year->expenses.imports, this_year->expenses.imports);
     draw_row(60, 12, 242, last_year->expenses.wages, this_year->expenses.wages);
     draw_row(60, 13, 257, last_year->expenses.construction, this_year->expenses.construction);
+    draw_tr_row(TR_ADVISOR_FINANCE_LEVIES, 272, last_year->expenses.levies, this_year->expenses.levies);
 
     // interest (with percentage)
-    width = lang_text_draw(60, 14, 80, 272, FONT_NORMAL_BLACK);
-    text_draw_percentage(10, 80 + width, 272, FONT_NORMAL_BLACK);
-    text_draw_number(last_year->expenses.interest, '@', " ", 290, 272, FONT_NORMAL_BLACK);
-    text_draw_number(last_year->expenses.interest, '@', " ", 430, 272, FONT_NORMAL_BLACK);
+    width = lang_text_draw(60, 14, 80, 287, FONT_NORMAL_BLACK);
+    text_draw_percentage(10, 80 + width, 287, FONT_NORMAL_BLACK);
+    text_draw_number(last_year->expenses.interest, '@', " ", 290, 287, FONT_NORMAL_BLACK);
+    text_draw_number(last_year->expenses.interest, '@', " ", 430, 287, FONT_NORMAL_BLACK);
 
-    draw_row(60, 15, 287, last_year->expenses.salary, this_year->expenses.salary);
-    draw_row(60, 16, 302, last_year->expenses.sundries, this_year->expenses.sundries);
-    draw_row(60, 21, 317, last_year->expenses.tribute, this_year->expenses.tribute);
+    draw_row(60, 15, 302, last_year->expenses.salary, this_year->expenses.salary);
+    draw_row(60, 16, 317, last_year->expenses.sundries, this_year->expenses.sundries);
+    draw_row(60, 21, 332, last_year->expenses.tribute, this_year->expenses.tribute);
 
-    graphics_draw_horizontal_line(280, 350, 330, COLOR_BLACK);
-    graphics_draw_horizontal_line(420, 490, 330, COLOR_BLACK);
+    graphics_draw_horizontal_line(280, 350, 345, COLOR_BLACK);
+    graphics_draw_horizontal_line(420, 490, 345, COLOR_BLACK);
 
-    draw_row(60, 17, 335, last_year->expenses.total, this_year->expenses.total);
-    draw_row(60, 18, 358, last_year->net_in_out, this_year->net_in_out);
-    draw_row(60, 19, 381, last_year->balance, this_year->balance);
+    draw_row(60, 17, 350, last_year->expenses.total, this_year->expenses.total);
+    draw_row(60, 18, 373, last_year->net_in_out, this_year->net_in_out);
+    draw_row(60, 19, 396, last_year->balance, this_year->balance);
 
     return ADVISOR_HEIGHT;
 }
