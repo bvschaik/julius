@@ -4,6 +4,7 @@
 #include "building/monument.h"
 #include "building/list.h"
 #include "core/image.h"
+#include "core/mods.h"
 #include "map/aqueduct.h"
 #include "map/building_tiles.h"
 #include "map/data.h"
@@ -20,6 +21,9 @@
 #define OFFSET(x,y) (x + GRID_SIZE * y)
 
 #define MAX_QUEUE 1000
+#define POND_CLIMATE_IMAGE_OFFSET 10 
+#define POND_WATERED_IMAGE_OFFSET 1
+#define POND_LARGE_IMAGE_OFFSET 20
 
 static const int ADJACENT_OFFSETS[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
 
@@ -212,6 +216,35 @@ void map_water_supply_update_reservoir_fountain(void)
         } else {
             b->has_water_access = 0;
         }
+    }
+    //ponds
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building* b = building_get(i);
+
+        if (b->type != BUILDING_SMALL_POND && b->type != BUILDING_LARGE_POND) {
+            continue;
+        }
+
+        if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
+            b->has_water_access = 1;
+        }
+        else {
+            b->has_water_access = 0;
+        }
+
+        int offset = 0;
+        if (scenario_property_climate() == CLIMATE_DESERT) {
+            offset += POND_CLIMATE_IMAGE_OFFSET;
+        }
+        if (b->has_water_access) {
+            offset += POND_WATERED_IMAGE_OFFSET;
+        }
+        if (b->type == BUILDING_LARGE_POND) {
+            offset += POND_LARGE_IMAGE_OFFSET;
+        }
+
+        map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset, TERRAIN_BUILDING);
+
     }
 }
 

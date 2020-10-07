@@ -29,7 +29,6 @@
 #include "map/water.h"
 #include "scenario/property.h"
 
-
 static void add_fort(int type, building *fort)
 {
     fort->prev_part_building_id = 0;
@@ -268,6 +267,46 @@ static void add_to_map(int type, building *b, int size,
             break;
         case BUILDING_LARGE_STATUE:
             add_building(b, image_group(GROUP_BUILDING_STATUE) + 2);
+            break;
+        case BUILDING_SMALL_POND:
+            if (scenario_property_climate() == CLIMATE_DESERT) {
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "s pond south off"));
+            }
+            else {
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "s pond north off"));
+            }
+            break;
+        case BUILDING_LARGE_POND:
+            if (scenario_property_climate() == CLIMATE_DESERT) {
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "l pond south off"));
+            } 
+            else {
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "l pond north off"));
+            }
+            break;
+        case BUILDING_PAVILION_BLUE:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion blue"));
+            break;
+        case BUILDING_PAVILION_RED:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion red"));
+            break;
+        case BUILDING_PAVILION_ORANGE:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion orange"));
+            break;
+        case BUILDING_PAVILION_YELLOW:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion yellow"));
+            break;
+        case BUILDING_PAVILION_GREEN:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion green"));
+            break;
+        case BUILDING_SMALL_STATUE_ALT:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml statue 2"));
+            break;
+        case BUILDING_SMALL_STATUE_ALT_B:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml statue 3"));
+            break;
+        case BUILDING_OBELISK:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "obelisk"));
             break;
         // health
         case BUILDING_DOCTOR:

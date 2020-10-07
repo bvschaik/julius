@@ -1,3 +1,4 @@
+#include "building/type.h"
 #include "core/lang.h"
 
 #include "core/buffer.h"
@@ -168,24 +169,29 @@ const uint8_t *lang_get_string(int group, int index)
         switch (index) {
         case 115:
             return translation_for(TR_BUILDING_ROADBLOCK);
-        case 116:
+        case BUILDING_WORKCAMP:
             return translation_for(TR_BUILDING_WORK_CAMP);
-        case 117:
+        case BUILDING_GRAND_TEMPLE_CERES:
             return translation_for(TR_BUILDING_GRAND_TEMPLE_CERES);
-        case 118:
+        case BUILDING_GRAND_TEMPLE_NEPTUNE:
             return translation_for(TR_BUILDING_GRAND_TEMPLE_NEPTUNE);
-        case 119:
+        case BUILDING_GRAND_TEMPLE_MERCURY:
             return translation_for(TR_BUILDING_GRAND_TEMPLE_MERCURY);
-        case 120:
+        case BUILDING_GRAND_TEMPLE_MARS:
             return translation_for(TR_BUILDING_GRAND_TEMPLE_MARS);
-        case 121:
+        case BUILDING_GRAND_TEMPLE_VENUS:
             return translation_for(TR_BUILDING_GRAND_TEMPLE_VENUS);
-        case 122:
+        case BUILDING_MENU_GRAND_TEMPLES:
             return translation_for(TR_BUILDING_GRAND_TEMPLE_MENU);
         default:
             break;
         }
     }
+    
+    if ((group == 28) && (index >= BUILDING_MENU_TREES && index <= BUILDING_OBELISK)) {
+        return translation_for(index + 53);
+    }
+
     const uint8_t *str = &data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;
     while (index > 0) {
@@ -201,7 +207,6 @@ const uint8_t *lang_get_string(int group, int index)
     return str;
 }
 
-const lang_message *lang_get_message(int id)
-{
+const lang_message *lang_get_message(int id) {
     return &data.message_entries[id];
 }

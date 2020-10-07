@@ -5,10 +5,13 @@
 #include "building/industry.h"
 #include "building/properties.h"
 #include "building/rotation.h"
+#include "building/type.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/view.h"
 #include "core/config.h"
+#include "core/config.h"
+#include "core/log.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
@@ -205,8 +208,13 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
 }
 
 static int get_building_image_id(int map_x, int map_y, building_type type, const building_properties *props)
-{
-    int image_id = image_group(props->image_group) + props->image_offset;
+{   int image_id;
+    if (props->image_group >= 10000) {
+        image_id = props->image_group + props->image_offset;
+	} else {
+        image_id = image_group(props->image_group) + props->image_offset;
+    }
+
     if (type == BUILDING_GATEHOUSE) {
         int orientation = map_orientation_for_gatehouse(map_x, map_y);
         int image_offset;
@@ -298,6 +306,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
 
     const building_properties *props = building_properties_for_type(type);
     int building_size = type == BUILDING_WAREHOUSE ? 3 : props->size;
+    int image_id = 0;
 
     // check if we can place building
     int grid_offset = tile->grid_offset;
@@ -322,11 +331,12 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
             blocked_tiles[i] = 0;
         }
     }
-    if (blocked) {
+    if (blocked || type > BUILDING_ROADBLOCK) {
+        // modded asset image ids cannot currently be looked up from static building properties
         draw_partially_blocked(x_view, y_view, fully_blocked, num_tiles, blocked_tiles);
     } else {
-        int image_id = get_building_image_id(tile->x, tile->y, type, props);
-        draw_regular_building(type, image_id, x_view, y_view, grid_offset);
+        image_id = get_building_image_id(tile->x, tile->y, type, props);
+        draw_regular_building(type, image_id, x_view, y_view, grid_offset);        
     }
 }
 

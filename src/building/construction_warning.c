@@ -32,11 +32,28 @@ static void check_road_access(int type, int x, int y, int size)
 {
     switch (type) {
         case BUILDING_SMALL_STATUE:
+        case BUILDING_SMALL_STATUE_ALT:
+        case BUILDING_SMALL_STATUE_ALT_B:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_LARGE_STATUE:
         case BUILDING_FOUNTAIN:
         case BUILDING_WELL:
         case BUILDING_RESERVOIR:
+        case BUILDING_SMALL_POND:
+        case BUILDING_LARGE_POND:
+        case BUILDING_PINE_TREE:
+        case BUILDING_FIR_TREE:
+        case BUILDING_OAK_TREE:
+        case BUILDING_ELM_TREE:
+        case BUILDING_FIG_TREE:
+        case BUILDING_PLUM_TREE:
+        case BUILDING_PALM_TREE:
+        case BUILDING_DATE_TREE:
+        case BUILDING_PAVILION_BLUE:
+        case BUILDING_PAVILION_RED:
+        case BUILDING_PAVILION_ORANGE:
+        case BUILDING_PAVILION_YELLOW:
+        case BUILDING_PAVILION_GREEN:
         case BUILDING_GATEHOUSE:
         case BUILDING_ROADBLOCK:
         case BUILDING_TRIUMPHAL_ARCH:
@@ -66,12 +83,12 @@ static void check_road_access(int type, int x, int y, int size)
 static void check_water(int type, int x, int y)
 {
     if (!has_warning) {
-        if (type == BUILDING_FOUNTAIN || type == BUILDING_BATHHOUSE) {
+        if (type == BUILDING_FOUNTAIN || type == BUILDING_BATHHOUSE || type == BUILDING_SMALL_POND || type == BUILDING_LARGE_POND) {
             int grid_offset = map_grid_offset(x, y);
             int has_water = 0;
             if (map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE)) {
                 has_water = 1;
-            } else if (type == BUILDING_BATHHOUSE) {
+            } else if (type == BUILDING_BATHHOUSE || type == BUILDING_SMALL_POND || type == BUILDING_LARGE_POND) {
                 if (map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_RESERVOIR_RANGE) ||
                     map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_RESERVOIR_RANGE) ||
                     map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_RESERVOIR_RANGE)) {

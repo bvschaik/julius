@@ -188,6 +188,19 @@ const model_building *model_get_building(building_type type)
         break;
 
     }
+
+    if (type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) {
+        return &buildings[41];
+    }
+
+    if(type == BUILDING_SMALL_POND || type==BUILDING_OBELISK) {
+        return &buildings[42];
+    }
+
+    if(type == BUILDING_LARGE_POND) {
+        return &buildings[43];
+    }
+
     return &buildings[type];
 }
 

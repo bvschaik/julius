@@ -48,7 +48,7 @@
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
-static void button_mothball (int mothball, int param2);
+static void button_mothball(int mothball, int param2);
 
 static image_button image_buttons_help_close[] = {
     {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
@@ -71,20 +71,26 @@ static int get_height_id(void)
 {
     if (context.type == BUILDING_INFO_TERRAIN) {
         switch (context.terrain_type) {
-            case TERRAIN_INFO_AQUEDUCT:
-                return 4;
-            case TERRAIN_INFO_RUBBLE:
-            case TERRAIN_INFO_WALL:
-            case TERRAIN_INFO_GARDEN:
-                return 1;
-            default:
-                return 5;
+        case TERRAIN_INFO_AQUEDUCT:
+            return 4;
+        case TERRAIN_INFO_RUBBLE:
+        case TERRAIN_INFO_WALL:
+        case TERRAIN_INFO_GARDEN:
+            return 1;
+        default:
+            return 5;
         }
-    } else if (context.type == BUILDING_INFO_BUILDING) {
-        const building *b = building_get(context.building_id);
+    }
+    else if (context.type == BUILDING_INFO_BUILDING) {
+        const building* b = building_get(context.building_id);
         if (building_is_house(b->type) && b->house_population <= 0) {
             return 5;
         }
+
+        if (b->type >= BUILDING_SMALL_POND && b->type <= BUILDING_SMALL_STATUE_ALT_B) {
+            return 1;
+        }
+
         switch (b->type) {
             case BUILDING_SMALL_TEMPLE_CERES:
             case BUILDING_SMALL_TEMPLE_NEPTUNE:
@@ -549,12 +555,18 @@ static void draw_background(void)
             window_building_draw_fountain(&context);
         } else if (btype == BUILDING_WELL) {
             window_building_draw_well(&context);
-        } else if (btype == BUILDING_SMALL_STATUE || btype == BUILDING_MEDIUM_STATUE || btype == BUILDING_LARGE_STATUE) {
+        } else if (btype == BUILDING_SMALL_STATUE || btype == BUILDING_MEDIUM_STATUE || btype == BUILDING_LARGE_STATUE || btype == BUILDING_SMALL_STATUE_ALT || btype == BUILDING_SMALL_STATUE_ALT_B) {
             window_building_draw_statue(&context);
+        } else if (btype == BUILDING_SMALL_POND || btype == BUILDING_LARGE_POND) {
+            window_building_draw_pond(&context);
+        } else if (btype >= BUILDING_PINE_TREE && btype <= BUILDING_PAVILION_GREEN) {
+            window_building_draw_garden(&context);
         } else if (btype == BUILDING_TRIUMPHAL_ARCH) {
             window_building_draw_triumphal_arch(&context);
         } else if (btype == BUILDING_PREFECTURE) {
             window_building_draw_prefect(&context);
+        } else if (btype == BUILDING_OBELISK) {
+            window_building_draw_obelisk(&context);        
 	} else if (btype == BUILDING_ROADBLOCK) {
 	    if (context.storage_show_special_orders) {
 	        window_building_draw_roadblock_orders(&context);
