@@ -5,8 +5,11 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "translation/translation.h"
+
 
 #define GROUP 5
 
@@ -29,6 +32,8 @@ static struct {
     int ok_clicked;
     void (*close_func)(int accepted);
     int has_buttons;
+    int from_tr;
+    int translation_key;
 } data;
 
 static int init(popup_dialog_type type, int custom_text_group, int custom_text_id,
@@ -60,7 +65,12 @@ static void draw_background(void)
             lang_text_draw_centered(GROUP, data.type + 1, 80, 140, 480, FONT_NORMAL_BLACK);
         }
     } else {
-        lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK);
+        if (data.from_tr) {
+            text_draw_centered(translation_for(data.translation_key), 80, 100, 480, FONT_LARGE_BLACK, 0);
+        }
+        else {
+            lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK);            
+        }
         lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK);
     }
     graphics_reset_dialog();
@@ -135,3 +145,20 @@ void window_popup_dialog_show_confirmation(int text_group, int text_id,
         window_show(&window);
     }
 }
+
+void window_popup_dialog_show_confirmation_from_tr(int translation_key,
+    void (*close_func)(int accepted))
+{
+    if (init(POPUP_DIALOG_NONE, 0, 0, close_func, 1)) {
+        window_type window = {
+            WINDOW_POPUP_DIALOG,
+            draw_background,
+            draw_foreground,
+            handle_input
+        };
+        data.from_tr = 1;
+        data.translation_key = translation_key;
+        window_show(&window);
+    }
+}
+
