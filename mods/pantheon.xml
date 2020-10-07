@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE mod>
+
+<mod author="Areldir" name="Pantheon">
+<!-- Note: Pantheon Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
+    <image id="Pantheon Const 01" src="Pantheon_Complex_Construction_01" />
+    <image id="Pantheon Const 02" src="Pantheon_Complex_Construction_02" />	
+    <image id="Pantheon Const 03" src="Pantheon_Complex_Construction_03" />	
+    <image id="Pantheon Const 04" src="Pantheon_Complex_Construction_04" />	
+    <image id="Pantheon Const 05" src="Pantheon_Complex_Construction_05" />	
+<!-- Note: Pantheon Complex ON/OFF States -->
+    <image id="Pantheon On" src="Pantheon_Temple_Complex_On" />	
+    <image id="Pantheon Off" src="Pantheon_Temple_Complex_Off" />		
+<!-- Note: Pantheon Complex Module Animation -->
+    <image id="Pantheon Module" width="418" height="231">
+		<layer group="this" image="Pantheon Off" />
+        <animation speed="5" frames="3" x="86" y="139" reversible="true" />
+    </image>
+    <image src="Pantheon_Temple_Complex_Module_01" />
+    <image src="Pantheon_Temple_Complex_Module_02" />
+    <image src="Pantheon_Temple_Complex_Module_03" />
+</mod>	

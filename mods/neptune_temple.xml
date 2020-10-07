@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!DOCTYPE mod>
+
+<mod author="Areldir" name="Neptune_Temple">
+<!-- Note: Neptune Large Temple Off state for NO Reservoir Access -->
+    <image id="Neptune LTemple Off" >
+		<layer group="72" image="1" />
+        <layer src="Neptune_Temple_Ponds_Off" x="21" y="55" />
+    </image>
+<!-- Note: Neptune Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
+    <image id="Neptune Complex Const 01" src="Neptune_Temple_Complex_Construction_01" />
+    <image id="Neptune Complex Const 02" src="Neptune_Temple_Complex_Construction_02" />	
+    <image id="Neptune Complex Const 03" src="Neptune_Temple_Complex_Construction_03" />	
+    <image id="Neptune Complex Const 04" src="Neptune_Temple_Complex_Construction_04" />	
+    <image id="Neptune Complex Const 05" width="418" height="231">
+	    <layer src="Neptune_Temple_Complex_Construction_05" />
+		<layer group="this" image="Neptune LTemple Off" x="150" y="2" />
+	</image>
+<!-- Note: Neptune Complex ON/OFF States -->
+    <image id="Neptune Complex Off" width="418" height="231">
+        <layer src="Neptune_Temple_Complex_Base_Layer" />
+		<layer group="this" image="Neptune LTemple Off" x="150" y="2" />
+        <layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84" />
+    </image>
+    <image id="Neptune Complex On" width="418" height="231">
+        <layer src="Neptune_Temple_Complex_Base_Layer" />
+		<layer group="72" image="1" x="150" y="2" />
+        <layer src="Neptune_Temple_Complex_On_Layer" x="135" y="117" />
+        <layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84" />		
+    </image>		
+<!-- Note: Neptune Complex Module Animation References (REFERENCE IMAGES - DO NOT USE!!) -->
+    <image id="Neptune Module F1">
+		<layer src="Neptune_Temple_Complex_Module_01" />
+		<layer group="206" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F2">
+		<layer src="Neptune_Temple_Complex_Module_02" />
+		<layer group="206" image="1" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F3">
+		<layer src="Neptune_Temple_Complex_Module_03" />
+		<layer group="206" image="2" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F4">
+		<layer src="Neptune_Temple_Complex_Module_04" />
+		<layer group="206" image="3" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F5">
+		<layer src="Neptune_Temple_Complex_Module_05" />
+		<layer group="206" image="4" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F6">
+		<layer src="Neptune_Temple_Complex_Module_01" />
+		<layer group="206" image="5" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F7">
+		<layer src="Neptune_Temple_Complex_Module_02" />
+		<layer group="206" image="6" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F8">
+		<layer src="Neptune_Temple_Complex_Module_03" />
+		<layer group="206" image="7" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F9">
+		<layer src="Neptune_Temple_Complex_Module_04" />
+		<layer group="206" image="8" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F10">
+		<layer src="Neptune_Temple_Complex_Module_05" />
+		<layer group="206" image="9" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F11">
+		<layer src="Neptune_Temple_Complex_Module_01" />
+		<layer group="206" image="10" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F12">
+		<layer src="Neptune_Temple_Complex_Module_02" />
+		<layer group="206" image="11" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F13">
+		<layer src="Neptune_Temple_Complex_Module_03" />
+		<layer group="206" image="12" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F14">
+		<layer src="Neptune_Temple_Complex_Module_04" />
+		<layer group="206" image="13" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F15">
+		<layer src="Neptune_Temple_Complex_Module_05" />
+		<layer group="206" image="14" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F16">
+		<layer src="Neptune_Temple_Complex_Module_01" />
+		<layer group="206" image="15" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F17">
+		<layer src="Neptune_Temple_Complex_Module_02" />
+		<layer group="206" image="16" x="45" y="30" />
+    </image>
+    <image id="Neptune Module F18">
+		<layer src="Neptune_Temple_Complex_Module_03" />
+		<layer group="206" image="17" x="45" y="30" />
+    </image>
+<!-- Note: Neptune Complex Module Animation (USE THIS ONE!!) -->
+    <image id="Neptune Complex Module2" width="418" height="231">
+		<layer group="this" image="Neptune Complex On" />
+        <animation speed="5" frames="18" x="98" y="147" reversible="false" />
+    </image>
+    <image group="this" image="Neptune Module F1"/>
+    <image group="this" image="Neptune Module F2"/>
+    <image group="this" image="Neptune Module F3"/>
+    <image group="this" image="Neptune Module F4"/>	
+    <image group="this" image="Neptune Module F5"/>	
+    <image group="this" image="Neptune Module F6"/>	
+    <image group="this" image="Neptune Module F7"/>	
+    <image group="this" image="Neptune Module F8"/>	
+    <image group="this" image="Neptune Module F9"/>	
+    <image group="this" image="Neptune Module F10"/>
+    <image group="this" image="Neptune Module F11"/>
+    <image group="this" image="Neptune Module F12"/>
+    <image group="this" image="Neptune Module F13"/>	
+    <image group="this" image="Neptune Module F14"/>	
+    <image group="this" image="Neptune Module F15"/>	
+    <image group="this" image="Neptune Module F16"/>	
+    <image group="this" image="Neptune Module F17"/>	
+    <image group="this" image="Neptune Module F18"/>
+	
+</mod>	

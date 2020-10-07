@@ -191,7 +191,7 @@ const uint8_t *lang_get_string(int group, int index)
     }
     
     if ((group == 28) && (index >= BUILDING_MENU_TREES && index <= BUILDING_OBELISK)) {
-        return translation_for(index + 53);
+        return translation_for(index + 56);
     }
 
     const uint8_t *str = &data.text_data[data.text_entries[group].offset];

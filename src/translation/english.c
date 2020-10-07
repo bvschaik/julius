@@ -136,7 +136,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_ROADBLOCK, "Roadblock"},
     {TR_BUILDING_ROADBLOCK_DESC, "Roadblock stops loitering citizens."},
     {TR_BUILDING_ENGINEER_GUILD, "Engineer guild" },
-    {TR_BUILDING_ENGINEER_GUILD_DESC, "Engineers here work tirelessly to finish monuments for the glory of Rome." },
+    {TR_BUILDING_ENGINEER_GUILD_DESC, "Engineers here work tirelessly to construct monuments for the glory of Rome." },
     {TR_BUILDING_GRAND_TEMPLE_ADD_MODULE, "Bestow epithet on temple" },
     {TR_BUILDING_GRAND_TEMPLE_CERES, "Ceres grand temple" },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE, "Neptune grand temple" },

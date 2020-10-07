@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<!DOCTYPE mod>
+
+<mod author="Areldir" name="Ceres_Temple">
+<!-- Note: Ceres Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
+    <image id="Ceres Complex Const 01" src="Ceres_Temple_Complex_Construction_01" />
+    <image id="Ceres Complex Const 02" src="Ceres_Temple_Complex_Construction_02" />	
+    <image id="Ceres Complex Const 03" src="Ceres_Temple_Complex_Construction_03" />	
+    <image id="Ceres Complex Const 04" src="Ceres_Temple_Complex_Construction_04" />	
+    <image id="Ceres Complex Const 05" width="418" height="231">
+	    <layer src="Ceres_Temple_Complex_Construction_05" />
+		<layer group="71" image="1" x="90" y="-3" />
+	</image>
+<!-- Note: Ceres Complex ON/OFF States -->
+    <image id="Ceres Complex Off" width="418" height="231">
+        <layer src="Ceres_Temple_Complex_Base_Layer" />
+		<layer group="71" image="1" x="90" y="0" />
+        <layer src="Ceres_Temple_Complex_Top_Layer" x="59" y="87" />
+    </image>
+    <image id="Ceres Complex On" width="418" height="231">
+        <layer src="Ceres_Temple_Complex_Base_Layer" />
+		<layer group="71" image="1" x="90" y="0" />
+        <layer src="Ceres_Temple_Complex_On_Layer" x="199" y="125" />		
+        <layer src="Ceres_Temple_Complex_Top_Layer" x="59" y="87" />
+    </image>	
+<!-- Note: Ceres Complex Module Animation References (REFERENCE IMAGES - DO NOT USE!!) -->
+    <image id="Ceres Module F1">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_01" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F2">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_02" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F3">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_03" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F4">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_04" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F5">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_05" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F6">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_06" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F7">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_07" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F8">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_08" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F9">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_09" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F10">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_10" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F11">
+		<layer src="Ceres_Temple_Complex_Module_01" />
+		<layer src="Ceres_Farmer_11" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F12">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_01" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F13">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_02" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F14">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_03" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F15">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_04" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F16">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_05" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F17">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_06" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F18">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_07" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F19">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_08" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F20">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_09" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F21">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_10" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F22">
+		<layer src="Ceres_Temple_Complex_Module_02" />
+		<layer src="Ceres_Farmer_11" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F23">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_01" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F24">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_02" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F25">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_03" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F26">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_04" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F27">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_05" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F28">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_06" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F29">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_07" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F30">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_08" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F31">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_09" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F32">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_10" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F33">
+		<layer src="Ceres_Temple_Complex_Module_03" />
+		<layer src="Ceres_Farmer_11" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F34">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_01" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F35">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_02" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F36">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_03" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F37">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_04" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F38">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_05" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F39">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_06" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F40">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_07" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F41">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_08" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F42">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_09" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F43">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_10" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F44">
+		<layer src="Ceres_Temple_Complex_Module_04" />
+		<layer src="Ceres_Farmer_11" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F45">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_01" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F46">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_02" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F47">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_03" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F48">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_04" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F49">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_05" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F50">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_06" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F51">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_07" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F52">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_08" x="40" y="15" />
+    </image>
+    <image id="Ceres Module F53">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_09" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F54">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_10" x="40" y="15" />
+    </image>	
+    <image id="Ceres Module F55">
+		<layer src="Ceres_Temple_Complex_Module_05" />
+		<layer src="Ceres_Farmer_11" x="40" y="15" />
+    </image>
+<!-- Note: Ceres Complex Module Animation (USE THIS ONE!!) -->
+    <image id="Ceres Complex Module" width="418" height="231">
+		<layer group="this" image="Ceres Complex Off" />
+        <animation speed="7" frames="55" x="190" y="215" reversible="false" />
+    </image>
+    <image group="this" image="Ceres Module F1" />
+    <image group="this" image="Ceres Module F2" />
+    <image group="this" image="Ceres Module F3" />
+    <image group="this" image="Ceres Module F4" />
+    <image group="this" image="Ceres Module F5" />
+    <image group="this" image="Ceres Module F6" />
+    <image group="this" image="Ceres Module F7" />
+    <image group="this" image="Ceres Module F8" />
+    <image group="this" image="Ceres Module F9" />
+    <image group="this" image="Ceres Module F10" />
+    <image group="this" image="Ceres Module F11" />
+    <image group="this" image="Ceres Module F12" />
+    <image group="this" image="Ceres Module F13" />	
+    <image group="this" image="Ceres Module F14" />
+    <image group="this" image="Ceres Module F15" />
+    <image group="this" image="Ceres Module F16" />
+    <image group="this" image="Ceres Module F17" />
+    <image group="this" image="Ceres Module F18" />
+    <image group="this" image="Ceres Module F19" />
+    <image group="this" image="Ceres Module F20" />
+    <image group="this" image="Ceres Module F21" />
+    <image group="this" image="Ceres Module F22" />
+    <image group="this" image="Ceres Module F23" />
+    <image group="this" image="Ceres Module F24" />
+    <image group="this" image="Ceres Module F25" />
+    <image group="this" image="Ceres Module F26" />
+    <image group="this" image="Ceres Module F27" />
+    <image group="this" image="Ceres Module F28" />
+    <image group="this" image="Ceres Module F29" />
+    <image group="this" image="Ceres Module F30" />
+    <image group="this" image="Ceres Module F31" />
+    <image group="this" image="Ceres Module F32" />
+    <image group="this" image="Ceres Module F33" />
+    <image group="this" image="Ceres Module F34" />
+    <image group="this" image="Ceres Module F35" />
+    <image group="this" image="Ceres Module F36" />
+    <image group="this" image="Ceres Module F37" />
+    <image group="this" image="Ceres Module F38" />
+    <image group="this" image="Ceres Module F39" />
+    <image group="this" image="Ceres Module F40" />
+    <image group="this" image="Ceres Module F41" />
+    <image group="this" image="Ceres Module F42" />
+    <image group="this" image="Ceres Module F43" />
+    <image group="this" image="Ceres Module F44" />
+    <image group="this" image="Ceres Module F45" />
+    <image group="this" image="Ceres Module F46" />
+    <image group="this" image="Ceres Module F47" />
+    <image group="this" image="Ceres Module F48" />
+    <image group="this" image="Ceres Module F49" />
+    <image group="this" image="Ceres Module F50" />
+    <image group="this" image="Ceres Module F51" />
+    <image group="this" image="Ceres Module F52" />
+    <image group="this" image="Ceres Module F53" />
+    <image group="this" image="Ceres Module F54" />
+    <image group="this" image="Ceres Module F55" />
+</mod>	
