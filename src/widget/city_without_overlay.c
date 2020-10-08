@@ -540,4 +540,5 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
     }
+
 }

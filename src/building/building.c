@@ -247,7 +247,7 @@ void building_update_state(void)
                     aqueduct_recalc = 1;
                 } else if (b->type == BUILDING_GRANARY) {
                     road_recalc = 1;
-                } else if (b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) {
+                } else if ((b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) || b->type == BUILDING_PANTHEON) {
                     road_recalc = 1;
                 }
                 map_building_tiles_remove(i, b->x, b->y);

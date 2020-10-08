@@ -162,6 +162,7 @@ const model_building MODEL_GRAND_TEMPLE_NEPTUNE = { 5000,20,2,-4,5,30 };
 const model_building MODEL_GRAND_TEMPLE_MERCURY = { 5000,20,2,-4,5,30 };
 const model_building MODEL_GRAND_TEMPLE_MARS = { 5000,20,2,-4,5,30 };
 const model_building MODEL_GRAND_TEMPLE_VENUS = { 5000,20,2,-4,5,30 };
+const model_building MODEL_PANTHEON = { 7500,20,2,-4,5,30 };
 
 const model_building *model_get_building(building_type type)
 {
@@ -190,6 +191,10 @@ const model_building *model_get_building(building_type type)
     case BUILDING_GRAND_TEMPLE_VENUS:
         return &MODEL_GRAND_TEMPLE_VENUS;
         break;
+    case BUILDING_PANTHEON:
+        return &MODEL_PANTHEON;
+        break;
+
 
     }
 

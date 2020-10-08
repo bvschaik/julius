@@ -163,8 +163,9 @@ typedef enum {
     BUILDING_SMALL_STATUE_ALT_B = 150,
     BUILDING_OBELISK = 151,
     BUILDING_ENGINEER_GUILD = 152,
+    BUILDING_PANTHEON = 153,
     // helper constants
-    BUILDING_TYPE_MAX = 153
+    BUILDING_TYPE_MAX = 154
 } building_type;
 
 /**

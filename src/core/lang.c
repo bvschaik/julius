@@ -181,6 +181,8 @@ const uint8_t *lang_get_string(int group, int index)
             return translation_for(TR_BUILDING_GRAND_TEMPLE_MARS);
         case BUILDING_GRAND_TEMPLE_VENUS:
             return translation_for(TR_BUILDING_GRAND_TEMPLE_VENUS);
+        case BUILDING_PANTHEON:
+            return translation_for(TR_BUILDING_PANTHEON);
         case BUILDING_MENU_GRAND_TEMPLES:
             return translation_for(TR_BUILDING_GRAND_TEMPLE_MENU);
         case BUILDING_ENGINEER_GUILD:

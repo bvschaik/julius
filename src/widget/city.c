@@ -72,13 +72,11 @@ void widget_city_draw(void)
         graphics_set_active_canvas(CANVAS_CITY);
     }
     set_city_scaled_clip_rectangle();
-
     if (game_state_overlay()) {
         city_with_overlay_draw(&data.current_tile);
     } else {
         city_without_overlay_draw(0, 0, &data.current_tile);
     }
-
     graphics_set_active_canvas(CANVAS_UI);
 }
 

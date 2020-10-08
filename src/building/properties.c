@@ -186,6 +186,10 @@ const building_properties *building_properties_for_type(building_type type)
         return &GRAND_TEMPLE_PROPERTIES;
     }
 
+    if (type == BUILDING_PANTHEON) {
+        return &GRAND_TEMPLE_PROPERTIES;
+    }
+
     if (type == BUILDING_SMALL_POND || type == BUILDING_OBELISK){
         return &MEDIUM_CUSTOM_DECOR_PROPERTIES;
     }

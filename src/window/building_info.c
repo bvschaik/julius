@@ -169,6 +169,7 @@ static int get_height_id(void)
             case BUILDING_GRAND_TEMPLE_MERCURY:
             case BUILDING_GRAND_TEMPLE_MARS:
             case BUILDING_GRAND_TEMPLE_VENUS:
+            case BUILDING_PANTHEON:
                 return 6;
 
             default:
@@ -534,6 +535,8 @@ static void draw_background(void)
 			window_building_draw_grand_temple_mars(&context);
         } else if (btype == BUILDING_GRAND_TEMPLE_VENUS) {
             window_building_draw_grand_temple_venus(&context);
+        } else if (btype == BUILDING_PANTHEON) {
+            window_building_draw_pantheon(&context);
         } else if (btype == BUILDING_GOVERNORS_HOUSE || btype == BUILDING_GOVERNORS_VILLA || btype == BUILDING_GOVERNORS_PALACE) {
             window_building_draw_governor_home(&context);
         } else if (btype == BUILDING_FORUM || btype == BUILDING_FORUM_UPGRADED) {
@@ -640,7 +643,7 @@ static void draw_foreground(void)
             }
         } else if (btype == BUILDING_BARRACKS) {
 		window_building_draw_barracks_foreground(&context);
-        } else if (btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) {
+        } else if ((btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) || btype == BUILDING_PANTHEON) {
             window_building_draw_grand_temple_foreground(&context);
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
@@ -708,7 +711,7 @@ static int handle_specific_building_info_mouse(const mouse *m)
             } else {
                 window_building_handle_mouse_warehouse(m, &context);
             }
-        }  else if (btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) {
+        }  else if ((btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) || btype == BUILDING_PANTHEON) {
             window_building_handle_mouse_grand_temple(m, &context);
         }
     }

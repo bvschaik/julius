@@ -89,6 +89,9 @@ int building_monument_add_module(building* b) {
 	case BUILDING_GRAND_TEMPLE_VENUS:
 		map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Module"), TERRAIN_BUILDING);
 		break;
+	case BUILDING_PANTHEON:
+		map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Module"), TERRAIN_BUILDING);
+		break;
 	}
 	b->data.monument.upgrades = 1;
 	return 1;
@@ -339,6 +342,44 @@ void building_monument_initialize(building* b)
 			break;
 		}
 		break;
+	case BUILDING_PANTHEON:
+		switch (b->subtype.monument_phase) {
+		case MONUMENT_FINISHED:
+			break;
+		case MONUMENT_START:
+			resources_needed[RESOURCE_MARBLE] = 48;
+			resources_needed[RESOURCE_NONE] = 1;
+			break;
+		case 2:
+			resources_needed[RESOURCE_MARBLE] = 48;
+			resources_needed[RESOURCE_TIMBER] = 16;
+			resources_needed[RESOURCE_NONE] = 1;
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 02"), TERRAIN_BUILDING);
+			break;
+		case 3:
+			resources_needed[RESOURCE_MARBLE] = 32;
+			resources_needed[RESOURCE_TIMBER] = 16;
+			resources_needed[RESOURCE_NONE] = 1;
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 03"), TERRAIN_BUILDING);			
+			break;
+		case 4:
+			resources_needed[RESOURCE_MARBLE] = 24;
+			resources_needed[RESOURCE_TIMBER] = 40;
+			resources_needed[RESOURCE_CLAY] = 72;
+			resources_needed[RESOURCE_NONE] = 1;
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 04"), TERRAIN_BUILDING);			
+			break;
+		case 5:
+			resources_needed[RESOURCE_NONE] = 1;
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 05"), TERRAIN_BUILDING);			
+			break;
+		case 6:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon On"), TERRAIN_BUILDING);
+			b->subtype.monument_phase = MONUMENT_FINISHED;
+			break;
+		}
+		break;
+
 	}
 	if (b->subtype.monument_phase == MONUMENT_FINISHED) {
 		b->monthly_levy = 100;
@@ -356,6 +397,7 @@ int building_monument_is_monument(building* b)
 		case BUILDING_GRAND_TEMPLE_MERCURY:
 		case BUILDING_GRAND_TEMPLE_MARS:
 		case BUILDING_GRAND_TEMPLE_VENUS:
+		case BUILDING_PANTHEON:
 			return 1;
 		break;
 	}

@@ -432,6 +432,12 @@ void window_building_draw_grand_temple_venus(building_info_context* c)
     draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Venus L Banner"), TR_BUILDING_VENUS_TEMPLE_QUOTE);
 }
 
+void window_building_draw_pantheon(building_info_context* c)
+{
+    draw_grand_temple(c, "wavs/oracle.wav", TR_BUILDING_PANTHEON_DESC, TR_BUILDING_PANTHEON_DESC_MODULE_1, TR_BUILDING_PANTHEON_BONUS_DESC, TR_BUILDING_PANTHEON_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Panth L Banner"), TR_BUILDING_PANTHEON_QUOTE);
+}
+
+
 void window_building_draw_work_camp(building_info_context* c)
 {
 	window_building_play_sound(c, "wavs/eng_post.wav");
@@ -454,9 +460,13 @@ void window_building_draw_engineer_guild(building_info_context* c)
     window_building_draw_employment(c, 138);
 }
 
-static void add_module() {
+static int add_module(int accepted) {
+    if (!accepted) {
+        return 0;
+    }
     building* b = building_get(data.building_id);
     building_monument_add_module(b);
+    return 1;
 }
 
 static void add_module_prompt(int param1, int param2)
