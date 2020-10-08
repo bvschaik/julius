@@ -182,7 +182,7 @@ void building_monument_initialize(building* b)
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 1;
+			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 05"), TERRAIN_BUILDING);
 			break;
 		case 6:
@@ -220,7 +220,7 @@ void building_monument_initialize(building* b)
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 1;
+			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 05"), TERRAIN_BUILDING);
 			break;
 		case 6:
@@ -259,7 +259,7 @@ void building_monument_initialize(building* b)
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 1;
+			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 05"), TERRAIN_BUILDING);
 			break;
 		case 6:
@@ -296,7 +296,7 @@ void building_monument_initialize(building* b)
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 1;
+			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 05"), TERRAIN_BUILDING);
 			break;
 		case 6:
@@ -333,7 +333,7 @@ void building_monument_initialize(building* b)
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 1;
+			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 05"), TERRAIN_BUILDING);
 			break;
 		case 6:
@@ -370,7 +370,7 @@ void building_monument_initialize(building* b)
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 04"), TERRAIN_BUILDING);			
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 1;
+			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 05"), TERRAIN_BUILDING);			
 			break;
 		case 6:

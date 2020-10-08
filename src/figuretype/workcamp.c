@@ -259,7 +259,8 @@ void figure_workcamp_engineer_action(figure* f) {
 				f->destination_building_id = monument_id;
 				f->destination_x = dst.x;
 				f->destination_y = dst.y;
-				building_monument_add_delivery(f->destination_building_id, f->id, RESOURCE_NONE, 1);
+				// Only send 1 engineer
+				building_monument_add_delivery(f->destination_building_id, f->id, RESOURCE_NONE, 10);
 				f->action_state = FIGURE_ACTION_207_WORK_CAMP_ENGINEER_GOING_TO_MONUMENT;
 				break;
 			}
@@ -293,7 +294,10 @@ void figure_workcamp_engineer_action(figure* f) {
 			if (f->wait_ticks >= 48) {
 				f->state = FIGURE_STATE_DEAD;
 				monument = building_get(f->destination_building_id);
-				building_monument_progress(monument);
+				monument->data.monument.resources_needed[RESOURCE_NONE]--;
+				if (monument->data.monument.resources_needed[RESOURCE_NONE] <= 0) {
+					building_monument_progress(monument);
+				}
 			}
 			else {
 				f->wait_ticks++;
