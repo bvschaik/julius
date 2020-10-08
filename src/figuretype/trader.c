@@ -334,6 +334,15 @@ static void go_to_next_warehouse(figure *f, int x_src, int y_src, int distance_t
     }
 }
 
+static int trader_image_id() 
+{
+    if (scenario_property_climate() == CLIMATE_DESERT) {
+        return IMAGE_CAMEL;
+    } else {
+        return image_group(GROUP_FIGURE_TRADE_CARAVAN);
+    }
+}
+
 void figure_trade_caravan_action(figure *f)
 {
     f->is_ghost = 0;
@@ -436,15 +445,9 @@ void figure_trade_caravan_action(figure *f)
             break;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    int base_image_id = 0;
-    if (scenario_property_climate() == CLIMATE_DESERT) {
-        base_image_id = IMAGE_CAMEL;
-    }
-    else {
-        base_image_id = image_group(GROUP_FIGURE_TRADE_CARAVAN);
-    }
 
-    f->image_id = base_image_id + dir + 8 * f->image_offset; 
+
+    f->image_id = trader_image_id() + dir + 8 * f->image_offset;
 }
 
 void figure_trade_caravan_donkey_action(figure *f)
@@ -474,14 +477,8 @@ void figure_trade_caravan_donkey_action(figure *f)
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
     int base_image_id = 0;
-    if (scenario_property_climate() == CLIMATE_DESERT) {
-        base_image_id = IMAGE_CAMEL;
-    }
-    else {
-        base_image_id = image_group(GROUP_FIGURE_TRADE_CARAVAN);
-    }
     
-    f->image_id = base_image_id + dir + 8 * f->image_offset;
+    f->image_id = trader_image_id() + dir + 8 * f->image_offset;
 }
 
 void figure_native_trader_action(figure *f)
