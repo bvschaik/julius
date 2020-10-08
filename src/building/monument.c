@@ -148,9 +148,7 @@ int building_monument_has_unfinished_monuments() {
 
 void building_monument_initialize(building* b)
 {
-	if (b->subtype.monument_phase == MONUMENT_FINISHED) {
-		b->monthly_levy = 100;
-	}
+
 	short resources_needed[RESOURCE_MAX] = { 0 };
 	switch (b->type) {
 	case BUILDING_GRAND_TEMPLE_CERES:
@@ -342,7 +340,9 @@ void building_monument_initialize(building* b)
 		}
 		break;
 	}
-
+	if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+		b->monthly_levy = 100;
+	}
 	for (int resource = 0; resource < RESOURCE_MAX; resource++) {
 		b->data.monument.resources_needed[resource] = resources_needed[resource];
 	}
