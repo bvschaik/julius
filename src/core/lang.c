@@ -167,7 +167,7 @@ const uint8_t *lang_get_string(int group, int index)
     // Add new strings
     if (group == 28) {
         switch (index) {
-        case 115:
+        case BUILDING_ROADBLOCK:
             return translation_for(TR_BUILDING_ROADBLOCK);
         case BUILDING_WORKCAMP:
             return translation_for(TR_BUILDING_WORK_CAMP);
@@ -185,15 +185,69 @@ const uint8_t *lang_get_string(int group, int index)
             return translation_for(TR_BUILDING_GRAND_TEMPLE_MENU);
         case BUILDING_ENGINEER_GUILD:
             return translation_for(TR_BUILDING_ENGINEER_GUILD);
+        case BUILDING_MENU_TREES:
+            return translation_for(TR_BUILDING_MENU_TREES);
+        case BUILDING_MENU_PATHS:
+            return translation_for(TR_BUILDING_MENU_PATHS);
+        case BUILDING_MENU_PARKS:
+            return translation_for(TR_BUILDING_MENU_PARKS);
+        case BUILDING_SMALL_POND:
+            return translation_for(TR_BUILDING_SMALL_POND);
+        case BUILDING_LARGE_POND:
+            return translation_for(TR_BUILDING_LARGE_POND);
+        case BUILDING_PINE_TREE:
+            return translation_for(TR_BUILDING_PINE_TREE);
+        case BUILDING_FIR_TREE:
+            return translation_for(TR_BUILDING_FIR_TREE);
+        case BUILDING_OAK_TREE:
+            return translation_for(TR_BUILDING_OAK_TREE);
+        case BUILDING_ELM_TREE:
+            return translation_for(TR_BUILDING_ELM_TREE);
+        case BUILDING_FIG_TREE:
+            return translation_for(TR_BUILDING_FIG_TREE);
+        case BUILDING_PLUM_TREE:
+            return translation_for(TR_BUILDING_PLUM_TREE);
+        case BUILDING_PALM_TREE:
+            return translation_for(TR_BUILDING_PALM_TREE);
+        case BUILDING_DATE_TREE:
+            return translation_for(TR_BUILDING_DATE_TREE);
+        case BUILDING_PINE_PATH:
+            return translation_for(TR_BUILDING_PINE_PATH);
+        case BUILDING_FIR_PATH:
+            return translation_for(TR_BUILDING_FIR_PATH);
+        case BUILDING_OAK_PATH:
+            return translation_for(TR_BUILDING_OAK_PATH);
+        case BUILDING_ELM_PATH:
+            return translation_for(TR_BUILDING_ELM_PATH);
+        case BUILDING_FIG_PATH:
+            return translation_for(TR_BUILDING_FIG_PATH);
+        case BUILDING_PLUM_PATH:
+            return translation_for(TR_BUILDING_PLUM_PATH);
+        case BUILDING_PALM_PATH:
+            return translation_for(TR_BUILDING_PALM_PATH);
+        case BUILDING_DATE_PATH:
+            return translation_for(TR_BUILDING_DATE_PATH);
+        case BUILDING_PAVILION_BLUE:
+            return translation_for(TR_BUILDING_BLUE_PAVILION);
+        case BUILDING_PAVILION_RED:
+            return translation_for(TR_BUILDING_RED_PAVILION);
+        case BUILDING_PAVILION_ORANGE:
+            return translation_for(TR_BUILDING_ORANGE_PAVILION);
+        case BUILDING_PAVILION_YELLOW:
+            return translation_for(TR_BUILDING_YELLOW_PAVILION);
+        case BUILDING_PAVILION_GREEN:
+            return translation_for(TR_BUILDING_GREEN_PAVILION);
+        case BUILDING_SMALL_STATUE_ALT:
+            return translation_for(TR_BUILDING_SMALL_STATUE_ALT);
+        case BUILDING_SMALL_STATUE_ALT_B:
+            return translation_for(BUILDING_SMALL_STATUE_ALT_B);
+        case BUILDING_OBELISK:
+            return translation_for(TR_BUILDING_OBELISK);
         default:
             break;
         }
     }
     
-    if ((group == 28) && (index >= BUILDING_MENU_TREES && index <= BUILDING_OBELISK)) {
-        return translation_for(index + 56);
-    }
-
     const uint8_t *str = &data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;
     while (index > 0) {
