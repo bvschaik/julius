@@ -291,7 +291,7 @@ void figure_workcamp_engineer_action(figure* f) {
 		f->terrain_usage = TERRAIN_USAGE_ANY;
 		f->use_cross_country = 1;
 		if (figure_movement_move_ticks_cross_country(f, 1)) {
-			if (f->wait_ticks >= 48) {
+			if (f->wait_ticks >= 384) {
 				f->state = FIGURE_STATE_DEAD;
 				monument = building_get(f->destination_building_id);
 				monument->data.monument.resources_needed[RESOURCE_NONE]--;
