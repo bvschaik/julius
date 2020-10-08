@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/view.h"
 #include "core/config.h"
+#include "core/mods.h"
 #include "empire/city.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
@@ -49,6 +50,20 @@ static struct {
 
 static int big_people_image(figure_type type)
 {
+    switch (type)
+    {
+    case FIGURE_WORK_CAMP_SLAVE:
+        return mods_get_image_id(mods_get_group_id("Areldir", "Slave_Walker"), "Slave Portrait");
+        break;
+    case FIGURE_WORK_CAMP_ENGINEER:
+        return image_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[FIGURE_ENGINEER] - 1;
+        break;
+    case FIGURE_WORK_CAMP_WORKER:
+        return image_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[FIGURE_PATRICIAN] - 1;
+        break;
+    default:
+        break;
+    }
     return image_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type] - 1;
 }
 
