@@ -7,6 +7,8 @@ void figure_movement_init_roaming(figure *f);
 
 void figure_movement_move_ticks(figure *f, int num_ticks);
 
+void figure_movement_move_ticks_with_percentage(figure* f, int num_ticks, int tick_percentage);
+
 void figure_movement_move_ticks_tower_sentry(figure *f, int num_ticks);
 
 void figure_movement_roam_ticks(figure *f, int num_ticks);

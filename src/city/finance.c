@@ -275,7 +275,7 @@ static void pay_monthly_building_levies(void) {
     int levies = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED && b->monthly_levy) {
+        if (b->state == BUILDING_STATE_IN_USE && b->monthly_levy) {
             levies += b->monthly_levy;
         }
     }

@@ -358,6 +358,16 @@ void figure_movement_move_ticks(figure *f, int num_ticks)
     walk_ticks(f, num_ticks, 0);
 }
 
+void figure_movement_move_ticks_with_percentage(figure* f, int num_ticks, int tick_percentage)
+{
+    f->progress_to_next_tick += tick_percentage;
+    if (f->progress_to_next_tick >= 100) {
+        f->progress_to_next_tick -= 100;
+        num_ticks++;
+    }
+    walk_ticks(f, num_ticks, 0);
+}
+
 void figure_movement_move_ticks_tower_sentry(figure *f, int num_ticks)
 {
     while (num_ticks > 0) {
