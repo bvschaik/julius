@@ -395,14 +395,7 @@ static void draw_animation(int x, int y, int grid_offset)
                 if (b->type == BUILDING_GRANARY) {
                     image_draw_masked(image_id + animation_offset + 5, x + 77, y - 49, color_mask);
                 } else {
-                    int ydiff = 0;
-                    switch (map_property_multi_tile_size(grid_offset)) {
-                        case 1: ydiff = 30; break;
-                        case 2: ydiff = 45; break;
-                        case 3: ydiff = 60; break;
-                        case 4: ydiff = 75; break;
-                        case 5: ydiff = 90; break;
-                    }
+                    int ydiff = 15 * map_property_multi_tile_size(grid_offset) + 15;
                     image_draw_masked(image_id + animation_offset,
                                       x + img->sprite_offset_x,
                                       y + ydiff + img->sprite_offset_y - img->height,
