@@ -163,7 +163,7 @@ static building_properties properties[170] = {
 building_properties SMALL_CUSTOM_DECOR_PROPERTIES = { 1, 1, 0, 0 };
 building_properties MEDIUM_CUSTOM_DECOR_PROPERTIES = { 2, 1, 0, 0 };
 building_properties LARGE_CUSTOM_DECOR_PROPERTIES = {3, 1, 0, 0 };
-building_properties GRAND_TEMPLE_PROPERTIES = { 7, 0, 0, 1 };
+building_properties GRAND_TEMPLE_PROPERTIES = { 7, 1, 0, 0 };
 building_properties WORKCAMP_PROPERTIES = { 3, 0, 0, 0 };
 building_properties ENGINEER_GUILD_PROPERTIES = { 2, 0, 0, 0 };
 
