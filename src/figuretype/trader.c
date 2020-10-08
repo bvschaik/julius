@@ -25,6 +25,8 @@
 #include "map/figure.h"
 #include "map/road_access.h"
 #include "scenario/map.h"
+#include "scenario/property.h"
+
 
 
 
@@ -434,7 +436,15 @@ void figure_trade_caravan_action(figure *f)
             break;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    f->image_id = image_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * f->image_offset;
+    int base_image_id = 0;
+    if (scenario_property_climate() == CLIMATE_DESERT) {
+        base_image_id = IMAGE_CAMEL;
+    }
+    else {
+        base_image_id = image_group(GROUP_FIGURE_TRADE_CARAVAN);
+    }
+
+    f->image_id = base_image_id + dir + 8 * f->image_offset; 
 }
 
 void figure_trade_caravan_donkey_action(figure *f)
@@ -463,7 +473,15 @@ void figure_trade_caravan_donkey_action(figure *f)
         f->is_ghost = 1;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    f->image_id = image_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * f->image_offset;
+    int base_image_id = 0;
+    if (scenario_property_climate() == CLIMATE_DESERT) {
+        base_image_id = IMAGE_CAMEL;
+    }
+    else {
+        base_image_id = image_group(GROUP_FIGURE_TRADE_CARAVAN);
+    }
+    
+    f->image_id = base_image_id + dir + 8 * f->image_offset;
 }
 
 void figure_native_trader_action(figure *f)
