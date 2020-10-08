@@ -182,7 +182,7 @@ static int cartpusher_speed() {
 }
 
 static int cartpusher_percentage_speed() {
-    return 50;
+    return 0;
 }
 
 static void reroute_cartpusher(figure *f)
