@@ -18,9 +18,10 @@
 #define XML_BUFFER_SIZE 1024
 #define XML_MAX_DEPTH 3
 #define XML_MAX_ELEMENTS_PER_DEPTH 2
-#define XML_MAX_ATTRIBUTES 6
+#define XML_MAX_ATTRIBUTES 7
 #define XML_TAG_MAX_LENGTH 12
 #define XML_STRING_MAX_LENGTH 32
+#define XML_MAX_IMAGE_INDEXES 256
 
 #define MAX_LAYERS 5
 #define MAX_GROUPS 100
@@ -33,7 +34,7 @@ static const char *MODS_FOLDER = "mods";
 static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_TAG_MAX_LENGTH] = { { "mod" }, { "image" }, { "layer", "animation" } };
 static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG_MAX_LENGTH] = {
     { { "author", "name" } }, // mod
-    { { "id", "src", "width", "height", "group", "image" } }, // image
+    { { "id", "src", "width", "height", "group", "image", "index" } }, // image
     { { "src", "group", "image", "x", "y" }, // layer
     { "frames", "speed", "reversible", "x", "y" } } // animation
 };
@@ -75,6 +76,7 @@ typedef struct {
     int num_layers;
     image img;
     color_t *data;
+    int index;
 } modded_image;
 
 typedef struct {
@@ -91,6 +93,7 @@ static struct {
         size_t file_name_position;
         char image_base_path[FILE_NAME_MAX];
         size_t image_base_path_position;
+        int image_index;
         int depth;
         int error;
         int finished;
@@ -207,7 +210,6 @@ static int load_modded_image(modded_image *img)
     }
 
     img->data = malloc(img->img.draw.data_length);
-    memset(img->data, 0, img->img.draw.data_length);
     if (!img->data) {
         log_error("Not enough memory to load image", img->id, 0);
         for (int i = 0; i < img->num_layers; ++i) {
@@ -216,6 +218,7 @@ static int load_modded_image(modded_image *img)
         img->active = 0;
         return 0;
     }
+    memset(img->data, 0, img->img.draw.data_length);
     for (int y = 0; y < img->img.height; ++y) {
         color_t *pixel = &img->data[y * img->img.width];
         for (int x = 0; x < img->img.width; ++x) {
@@ -378,19 +381,24 @@ static void xml_start_mod_element(const char **attributes)
         data.xml.error = 1;
         return;
     }
+    data.xml.image_index = 0;
     group->id = get_group_hash(group->author, group->name);
     set_modded_image_base_path(group->author, group->name);
 }
 
 static void xml_start_image_element(const char **attributes)
 {
+    if (data.xml.image_index >= XML_MAX_IMAGE_INDEXES) {
+        log_info("Image index number in the xml file exceeds the maximum. Further images for this xml will not be loaded:", data.xml.file_name, 0);
+        return;
+    }
     data.xml.current_image = &data.images[data.total_images];
     modded_image *img = data.xml.current_image;
     const char *path = 0;
     const char *group = 0;
     const char *id = 0;
     int total_attributes = count_xml_attributes(attributes);
-    if (total_attributes < 2 || total_attributes > 10 || total_attributes % 2) {
+    if (total_attributes < 2 || total_attributes > 12 || total_attributes % 2) {
         data.xml.error = 1;
         return;
     }
@@ -413,7 +421,14 @@ static void xml_start_image_element(const char **attributes)
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][5]) == 0) {
             id = attributes[i + 1];
         }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][6]) == 0) {
+            int index = string_to_int(string_from_ascii(attributes[i + 1]));
+            if (data.xml.image_index < index) {
+                data.xml.image_index = index;
+            }
+        }
     }
+    img->index = data.xml.image_index;
     if (path) {
         add_layer_from_image_path(img, path, 0, 0);
     } else if (group) {
@@ -425,6 +440,9 @@ static void xml_start_image_element(const char **attributes)
 
 static void xml_start_layer_element(const char **attributes)
 {
+    if (data.xml.image_index >= XML_MAX_IMAGE_INDEXES) {
+        return;
+    }
     const char *path = 0;
     const char *group = 0;
     const char *id = 0;
@@ -467,6 +485,9 @@ static void xml_start_layer_element(const char **attributes)
 
 static void xml_start_animation_element(const char **attributes)
 {
+    if (data.xml.image_index >= XML_MAX_IMAGE_INDEXES) {
+        return;
+    }
     modded_image *img = data.xml.current_image;
     if (img->img.num_animation_sprites) {
         return;
@@ -508,6 +529,9 @@ static void xml_end_mod_element(void)
 
 static void xml_end_image_element(void)
 {
+    if (data.xml.image_index >= XML_MAX_IMAGE_INDEXES) {
+        return;
+    }
     image *img = &data.xml.current_image->img;
     img->draw.data_length = img->width * img->height * sizeof(color_t);
     img->draw.uncompressed_length = img->draw.data_length;
@@ -521,6 +545,7 @@ static void xml_end_image_element(void)
     }
     data.total_images++;
     data.groups[data.total_groups].images++;
+    data.xml.image_index++;
 }
 
 static void xml_end_layer_element(void)
@@ -691,10 +716,9 @@ int mods_get_image_id(int mod_group_id, const char *image_name)
         }
     }
     for (int i = 0; i < max_images; ++i) {
-        if (strcmp(data.images[image_id].id, image_name) == 0) {
-            return mod_group_id + i;
+        if (strcmp(data.images[image_id + i].id, image_name) == 0) {
+            return mod_group_id + data.images[image_id + i].index;
         }
-        image_id++;
     }
     return 0;
 }
@@ -702,9 +726,15 @@ int mods_get_image_id(int mod_group_id, const char *image_name)
 static int get_image_position_from_id(int image_id)
 {
     unsigned int image_group = image_id & 0xffffff00;
+    int image_index = image_id & 0xff;
     for (int i = 0; i < data.total_groups; ++i) {
-        if (data.groups[i].id == image_group) {
-            return data.groups[i].first_image_id + (image_id - image_group);
+        image_groups *group = &data.groups[i];
+        if (group->id == image_group) {
+            for (int j = 0; j < group->images; ++j) {
+                if (data.images[group->first_image_id + j].index == image_index) {
+                    return group->first_image_id + j;
+                }
+            }
         }
     }
     return 0;

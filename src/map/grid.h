@@ -25,6 +25,10 @@ typedef struct {
     int16_t items[GRID_SIZE * GRID_SIZE];
 } grid_i16;
 
+typedef struct {
+    uint32_t items[GRID_SIZE * GRID_SIZE];
+} grid_u32;
+
 void map_grid_init(int width, int height, int start_offset, int border_size);
 
 int map_grid_is_valid_offset(int grid_offset);
@@ -74,6 +78,8 @@ void map_grid_clear_u16(uint16_t *grid);
 
 void map_grid_clear_i16(int16_t *grid);
 
+void map_grid_clear_u32(uint32_t *grid);
+
 void map_grid_init_i8(int8_t *grid, int8_t value);
 
 void map_grid_and_u8(uint8_t *grid, uint8_t mask);
@@ -84,6 +90,8 @@ void map_grid_copy_u8(const uint8_t *src, uint8_t *dst);
 
 void map_grid_copy_u16(const uint16_t *src, uint16_t *dst);
 
+void map_grid_copy_u32(const uint32_t *src, uint32_t *dst);
+
 
 void map_grid_save_state_u8(const uint8_t *grid, buffer *buf);
 
@@ -91,10 +99,18 @@ void map_grid_save_state_i8(const int8_t *grid, buffer *buf);
 
 void map_grid_save_state_u16(const uint16_t *grid, buffer *buf);
 
+void map_grid_save_state_u32_to_u16(const uint32_t *grid, buffer *buf);
+
+void map_grid_save_state_u32(const uint32_t *grid, buffer *buf);
+
 void map_grid_load_state_u8(uint8_t *grid, buffer *buf);
 
 void map_grid_load_state_i8(int8_t *grid, buffer *buf);
 
 void map_grid_load_state_u16(uint16_t *grid, buffer *buf);
+
+void map_grid_load_state_u16_to_u32(uint32_t *grid, buffer *buf);
+
+void map_grid_load_state_u32(uint32_t *grid, buffer *buf);
 
 #endif // MAP_GRID_H
