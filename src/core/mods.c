@@ -24,7 +24,7 @@
 #define MAX_LAYERS 5
 #define MAX_GROUPS 100
 
-#define IMAGE_PRELOAD_MAX_SIZE 6553500
+#define IMAGE_PRELOAD_MAX_SIZE 65535
 
 static const char *MODS_FOLDER = "mods";
 static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_TAG_MAX_LENGTH] = { { "mod" }, { "image" }, { "layer", "animation" } };
@@ -60,6 +60,7 @@ typedef struct {
     int y_offset;
     int width;
     int height;
+    int is_modded_image_reference;
     color_t *data;
 } layer;
 
@@ -95,12 +96,15 @@ static struct {
     modded_image images[MAX_MODDED_IMAGES];
     int total_groups;
     int total_images;
+    int loaded;
 } data;
 
-static const char *get_full_image_path(const char *path)
+static void get_full_image_path(char *full_path, const char *file_name)
 {
-    strncpy(data.xml.image_base_path + data.xml.image_base_path_position, path, FILE_NAME_MAX - data.xml.image_base_path_position - 1);
-    return data.xml.image_base_path;
+    strncpy(full_path, data.xml.image_base_path, data.xml.image_base_path_position);
+    size_t file_name_size = strlen(file_name);
+    strncpy(full_path + data.xml.image_base_path_position, file_name, file_name_size);
+    strncpy(full_path + data.xml.image_base_path_position + file_name_size, ".png", 5);
 }
 
 static void load_dummy_layer(layer *l)
@@ -121,7 +125,7 @@ static void load_layer(layer *l)
     }
     memset(l->data, 0, size);
     if (l->modded_image_path) {
-        if (!png_read(get_full_image_path(l->modded_image_path), (uint8_t *) l->data)) {
+        if (!png_read(l->modded_image_path, (uint8_t *) l->data)) {
             free(l->data);
             log_error("Problem loading layer from file", l->modded_image_path, 0);
             load_dummy_layer(l);
@@ -133,6 +137,7 @@ static void load_layer(layer *l)
         // Ugly const removal. The only other way would be to memcpy the image data.
         // That's a waste of ram, and we're not going to change l->data anyway
         l->data = (color_t *) image_data(l->original_image_id);
+        l->is_modded_image_reference = 1;
         if (!l->data) {
             log_error("Problem loading layer from image id", 0, l->original_image_id);
             load_dummy_layer(l);
@@ -158,7 +163,7 @@ static void unload_layer(layer *l)
     free(l->modded_image_path);
     l->modded_image_path = 0;
     const image *layer_image = image_get(l->original_image_id);
-    if (layer_image->draw.type != IMAGE_TYPE_MOD && l->data != &DUMMY_IMAGE_DATA) {
+    if (!l->is_modded_image_reference) {
         free(l->data);
     }
     l->data = 0;
@@ -182,6 +187,19 @@ static int load_modded_image(modded_image *img)
 
     for (int i = 0; i < img->num_layers; ++i) {
         load_layer(&img->layers[i]);
+    }
+
+    // Special cases for images which are simple aliases to another mod image
+   if (img->num_layers == 1) {
+        layer *l = &img->layers[0];
+        if (l->is_modded_image_reference &&
+            img->img.width == l->width && img->img.height == l->height &&
+            l->x_offset == 0 && l->y_offset == 0) {
+            img->data = l->data;
+            unload_layer(l);
+            img->loaded = 1;
+            return 1;
+        }
     }
 
     img->data = malloc(img->img.draw.data_length);
@@ -247,11 +265,9 @@ static int add_layer_from_image_path(modded_image *img, const char *path, int of
 {
     layer *current_layer = &img->layers[img->num_layers];
     size_t path_size = strlen(path);
-    current_layer->modded_image_path = malloc((path_size + 5) * sizeof(char));
-    strncpy(current_layer->modded_image_path, path, path_size);
-    strncpy(current_layer->modded_image_path + path_size, ".png", 5);
-
-    if (!png_get_image_size(get_full_image_path(current_layer->modded_image_path), &current_layer->width, &current_layer->height)) {
+    current_layer->modded_image_path = malloc(FILE_NAME_MAX * sizeof(char));
+    get_full_image_path(current_layer->modded_image_path, path);
+    if (!png_get_image_size(current_layer->modded_image_path, &current_layer->width, &current_layer->height)) {
         log_info("Unable to load image", path, 0);
         unload_layer(current_layer);
         return 0;
@@ -608,6 +624,10 @@ static void setup_mods_folder_string(void)
 
 void mods_init(void)
 {
+    if (data.loaded) {
+        return;
+    }
+
     setup_mods_folder_string();
 
     const dir_listing *xml_files = dir_find_files_with_extension(MODS_FOLDER, "xml");
@@ -615,6 +635,8 @@ void mods_init(void)
     for (int i = 0; i < xml_files->num_files; ++i) {
         process_mod_file(xml_files->files[i]);
     }
+
+    data.loaded = 1;
 }
 
 int mods_get_group_id(const char *mod_author, const char *mod_name)
