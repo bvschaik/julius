@@ -1360,6 +1360,7 @@ void building_figure_generate(void)
                 case BUILDING_GRAND_TEMPLE_MERCURY:
                 case BUILDING_GRAND_TEMPLE_MARS:
                 case BUILDING_GRAND_TEMPLE_VENUS:
+                case BUILDING_PANTHEON:
                     if (b->subtype.monument_phase == MONUMENT_FINISHED) {
                         spawn_figure_temple(b);
                     }

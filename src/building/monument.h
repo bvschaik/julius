@@ -23,19 +23,21 @@ int building_monument_access_point(building* b, map_point* dst);
 int building_monument_add_module(building* b);
 int building_monument_deliver_resource(building* b, int resource);
 int building_monument_get_monument(int x, int y, int resource, int road_network_id, int distance_from_entry, map_point* dst);
-int building_monument_has_unfinished_monuments();
+int building_monument_has_unfinished_monuments(void);
 void building_monument_initialize(building* b);
 int building_monument_is_monument(building* b);
 int building_monument_needs_resource(building* b, int resource);
 int building_monument_needs_resources(building* b);
 int building_monument_progress(building* b);
-void building_monument_recalculate_monuments();
+void building_monument_recalculate_monuments(void);
 int building_monument_working(int type);
 int building_monument_resource_in_delivery(int monument_id, int resource_id);
 int building_monument_remove_delivery(int figure_id);
 int building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no);
 int building_monument_has_monument(int type);
 int building_monument_upgraded(int type);
+int building_monument_finish_monuments(void);
+
 
 
 
