@@ -411,17 +411,22 @@ int building_monument_needs_resource(building* b, int resource) {
 	return (b->data.monument.resources_needed[resource]);
 }
 
-int building_monument_finish_monuments() {
+
+int building_monument_phase(int phase) {
 	for (int i = 0; i < MAX_MONUMENTS; i++) {
 		int monument_id = monuments[i];
 		building* b = building_get(monument_id);
 		if (!building_monument_is_monument(b)) {
 			continue;
 		}
-		b->subtype.monument_phase = 6;
+		b->subtype.monument_phase = phase;
 		building_monument_initialize(b);
 	}
 	return 1;
+}
+
+int building_monument_finish_monuments() {
+	return building_monument_phase(6);
 }
 
 int building_monument_needs_resources(building* b) {
@@ -541,6 +546,8 @@ int building_monument_working(int type) {
 	}
 	return monument_id;
 }
+
+
 
 int building_monument_upgraded(int type) {
 	int monument_id = building_monument_working(type);
