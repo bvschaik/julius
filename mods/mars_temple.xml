@@ -21,10 +21,18 @@
 		<layer group="this" image="Mars Complex Off" />
         <layer src="Mars_Temple_Complex_On_Layer" x="199" y="121" />
     </image>	
-<!-- Note: Mars Complex Module Animation -->
+<!-- Note: Mars Complex Module Animation (Priests buff Mess Hall) -->
     <image id="Mars Complex Module" width="418" height="231">
 		<layer group="this" image="Mars Complex Off" />
-        <animation speed="5" frames="5" x="211" y="231" reversible="false" />
+        <animation speed="6" frames="3" x="191" y="97" reversible="true" />
+    </image>
+    <image src="Mars_Temple_Complex_Module2_01" />
+    <image src="Mars_Temple_Complex_Module2_02" />
+    <image src="Mars_Temple_Complex_Module2_03" />	
+<!-- Note: Mars Complex Module2 Animation (Priests reduce goods consumption) -->
+    <image id="Mars Complex Module2" width="418" height="231">
+		<layer group="this" image="Mars Complex Off" />
+        <animation speed="6" frames="5" x="211" y="105" reversible="false" />
     </image>
     <image src="Mars_Temple_Complex_Module_01" />
     <image src="Mars_Temple_Complex_Module_02" />

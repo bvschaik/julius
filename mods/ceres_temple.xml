@@ -12,12 +12,12 @@
 		<layer group="71" image="1" x="90" y="-3" />
 	</image>
 <!-- Note: Ceres Complex ON/OFF States -->
-    <image id="Ceres Complex Off" width="418" height="231">
+    <image id="Ceres Complex Off" width="418" height="234">
         <layer src="Ceres_Temple_Complex_Base_Layer" />
 		<layer group="71" image="1" x="90" y="0" />
         <layer src="Ceres_Temple_Complex_Top_Layer" x="59" y="87" />
     </image>
-    <image id="Ceres Complex On" width="418" height="231">
+    <image id="Ceres Complex On" width="418" height="234">
         <layer src="Ceres_Temple_Complex_Base_Layer" />
 		<layer group="71" image="1" x="90" y="0" />
         <layer src="Ceres_Temple_Complex_On_Layer" x="199" y="125" />		
@@ -244,10 +244,10 @@
 		<layer src="Ceres_Temple_Complex_Module_05" />
 		<layer src="Ceres_Farmer_11" x="40" y="15" />
     </image>
-<!-- Note: Ceres Complex Module Animation (USE THIS ONE!!) -->
-    <image id="Ceres Complex Module" width="418" height="231">
+<!-- Note: Ceres Complex Module Animation (Priests collect/dristribute food)(USE THIS ONE!!) -->
+    <image id="Ceres Complex Module" width="418" height="234">
 		<layer group="this" image="Ceres Complex Off" />
-        <animation speed="7" frames="55" x="190" y="215" reversible="false" />
+        <animation speed="6" frames="55" x="190" y="95" reversible="false" />
     </image>
     <image group="this" image="Ceres Module F1" />
     <image group="this" image="Ceres Module F2" />
@@ -304,4 +304,12 @@
     <image group="this" image="Ceres Module F53" />
     <image group="this" image="Ceres Module F54" />
     <image group="this" image="Ceres Module F55" />
+<!-- Note: Ceres Complex Module2 Animation (Priests reduce food consumption) -->
+    <image id="Ceres Complex Module2" width="418" height="234">
+		<layer group="this" image="Ceres Complex Off" />
+        <animation speed="6" frames="3" x="190" y="95" reversible="true" />
+    </image>
+    <image src="Ceres_Temple_Complex_Module2_01" />
+    <image src="Ceres_Temple_Complex_Module2_02" />
+    <image src="Ceres_Temple_Complex_Module2_03" />	
 </mod>	

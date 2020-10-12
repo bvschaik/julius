@@ -21,11 +21,11 @@
 		<layer group="this" image="Venus Complex Off" />
         <layer src="Venus_Temple_Complex_On_Layer" x="198" y="121" />
     </image>		
-<!-- Note: Venus Complex Module Animation -->
+<!-- Note: Venus Complex Module Animation (Priests bless schools, baths & hospitals) -->
     <image id="Venus Complex Module" width="418" height="231">
 		<layer group="this" image="Venus Complex Off" />
-        <layer src="Venus_Temple_Complex_Module_Layer" x="185" y="93" />
-        <animation speed="8" frames="15" x="225" y="234" reversible="false" />
+        <layer src="Venus_Temple_Complex_Module_Layer" x="185" y="92" />
+        <animation speed="8" frames="15" x="225" y="114" reversible="false" />
     </image>
     <image group="105" />
     <image group="105" image="1" />
@@ -42,4 +42,12 @@
     <image group="105" image="55" />
     <image group="105" image="64" />
     <image group="105" image="65" />		
+<!-- Note: Venus Complex Module2 Animation (Priests buff desirability & entertainment) -->
+    <image id="Venus Complex Module2" width="418" height="231">
+		<layer group="this" image="Venus Complex Off" />
+        <animation speed="6" frames="3" x="184" y="92" reversible="true" />
+    </image>
+    <image src="Venus_Temple_Complex_Module2_01" />
+    <image src="Venus_Temple_Complex_Module2_02" />
+    <image src="Venus_Temple_Complex_Module2_03" />	
 </mod>	

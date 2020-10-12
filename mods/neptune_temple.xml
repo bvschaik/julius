@@ -101,10 +101,18 @@
 		<layer src="Neptune_Temple_Complex_Module_03" />
 		<layer group="206" image="17" x="45" y="30" />
     </image>
-<!-- Note: Neptune Complex Module Animation (USE THIS ONE!!) -->
+<!-- Note: Neptune Complex Module Animation (Chariot Walkers) -->
+    <image id="Neptune Complex Module" width="418" height="231">
+		<layer group="this" image="Neptune Complex Off" />
+        <animation speed="6" frames="3" x="98" y="27" reversible="true" />
+    </image>
+    <image src="Neptune_Temple_Complex_Module2_01" />
+    <image src="Neptune_Temple_Complex_Module2_02" />
+    <image src="Neptune_Temple_Complex_Module2_03" />	
+<!-- Note: Neptune Complex Module2 Animation (Water into Wine)(USE THIS ONE!!) -->
     <image id="Neptune Complex Module2" width="418" height="231">
 		<layer group="this" image="Neptune Complex On" />
-        <animation speed="5" frames="18" x="98" y="147" reversible="false" />
+        <animation speed="5" frames="18" x="98" y="27" reversible="false" />
     </image>
     <image group="this" image="Neptune Module F1"/>
     <image group="this" image="Neptune Module F2"/>
@@ -123,6 +131,5 @@
     <image group="this" image="Neptune Module F15"/>	
     <image group="this" image="Neptune Module F16"/>	
     <image group="this" image="Neptune Module F17"/>	
-    <image group="this" image="Neptune Module F18"/>
-	
+    <image group="this" image="Neptune Module F18"/>	
 </mod>	

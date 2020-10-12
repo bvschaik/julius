@@ -21,13 +21,21 @@
 		<layer group="this" image="Mercury Complex Off" />
         <layer src="Mercury_Temple_Complex_On_Layer" x="135" y="117" />
     </image>		
-<!-- Note: Mercury Complex Module Animation -->
+<!-- Note: Mercury Complex Module Animation (Priests reduce Oil/Wine consumption) -->
     <image id="Mercury Complex Module" width="418" height="231">
 		<layer group="this" image="Mercury Complex Off" />
-        <animation speed="5" frames="3" x="115" y="225" reversible="true" />
+        <animation speed="5" frames="3" x="115" y="105" reversible="true" />
     </image>
     <image src="Mercury_Temple_Complex_Module_01" />
     <image src="Mercury_Temple_Complex_Module_02" />
     <image src="Mercury_Temple_Complex_Module_03" />
+<!-- Note: Mercury Complex Module2 Animation (Priests reduce Pottery/Furniture consumption) -->
+    <image id="Mercury Complex Module2" width="418" height="231">
+		<layer group="this" image="Mercury Complex Off" />
+        <animation speed="5" frames="3" x="94" y="103" reversible="true" />
+    </image>
+    <image src="Mercury_Temple_Complex_Module2_01" />
+    <image src="Mercury_Temple_Complex_Module2_02" />
+    <image src="Mercury_Temple_Complex_Module2_03" />
 
 </mod>	

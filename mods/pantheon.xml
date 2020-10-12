@@ -11,12 +11,20 @@
 <!-- Note: Pantheon Complex ON/OFF States -->
     <image id="Pantheon On" src="Pantheon_Temple_Complex_On" />	
     <image id="Pantheon Off" src="Pantheon_Temple_Complex_Off" />		
-<!-- Note: Pantheon Complex Module Animation -->
+<!-- Note: Pantheon Complex Module Animation (Bonus destination walkers) -->
     <image id="Pantheon Module" width="418" height="231">
 		<layer group="this" image="Pantheon Off" />
-        <animation speed="5" frames="3" x="86" y="139" reversible="true" />
+        <animation speed="5" frames="3" x="86" y="19" reversible="true" />
     </image>
     <image src="Pantheon_Temple_Complex_Module_01" />
     <image src="Pantheon_Temple_Complex_Module_02" />
     <image src="Pantheon_Temple_Complex_Module_03" />
+<!-- Note: Pantheon Complex Module2 Animation (Oracles spawn walkers) -->
+    <image id="Pantheon Module2" width="418" height="231">
+		<layer group="this" image="Pantheon Off" />
+        <animation speed="5" frames="3" x="86" y="19" reversible="true" />
+    </image>
+    <image src="Pantheon_Temple_Complex_Module2_01" />
+    <image src="Pantheon_Temple_Complex_Module2_02" />
+    <image src="Pantheon_Temple_Complex_Module2_03" />	
 </mod>	

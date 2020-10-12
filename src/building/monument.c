@@ -70,6 +70,9 @@ int building_monument_add_module(building* b, int module_type) {
 	if (b->data.monument.upgrades) {
 		return 0;
 	}
+
+	b->data.monument.upgrades = module_type;
+
 	if (b->data.monument.upgrades == 1) {
 		switch (b->type) {
 			case BUILDING_GRAND_TEMPLE_CERES:
@@ -115,7 +118,7 @@ int building_monument_add_module(building* b, int module_type) {
 		}
 	}
 	
-	b->data.monument.upgrades = module_type;
+	
 	return 1;
 }
 
