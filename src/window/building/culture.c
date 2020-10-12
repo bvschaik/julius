@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/monument.h"
+#include "city/constants.h"
 #include "city/resource.h"
 #include "core/mods.h"
 #include "graphics/generic_button.h"
@@ -9,10 +10,15 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "sound/speech.h"
 #include "translation/translation.h"
-#include "window/popup_dialog.h"
+#include "window/option_popup.h"
 
-static void add_module_prompt(int param1, int param2);
+#define GOD_PANTHEON 5
+
+static void add_module_prompt(void);
+
+static int god_id;
 
 static generic_button add_module_button[] = {
     {0, 0, 304, 20, add_module_prompt, button_none, 0, 0}
@@ -22,6 +28,21 @@ static struct {
     int focus_button_id;
     int building_id;
 } data = { 0, 0 };
+
+option_menu_item temple_module_options[12] = {
+   {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Ceres M Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Ceres M2 Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Nept M Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Nept M2 Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Merc M Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Merc M2 Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Mars M Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Mars M2 Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Venus M Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Venus M2 Icon"},
+   {TR_BUILDING_PANTHEON_DESC_MODULE_1, TR_BUILDING_PANTHEON_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Panth M Icon"},
+   {TR_BUILDING_PANTHEON_DESC_MODULE_2, TR_BUILDING_PANTHEON_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Panth M2 Icon"}
+};
 
 static void draw_culture_info(building_info_context *c, int help_id, const char *sound_file, int group_id)
 {
@@ -338,7 +359,8 @@ static void window_building_draw_monument_resources_needed(building_info_context
         text_draw(translation_for(TR_REQUIRED_RESOURCES), c->x_offset + 22, c->y_offset + 70, FONT_NORMAL_BLACK, 0);
         for (int r = RESOURCE_TIMBER; r <= RESOURCE_MARBLE; r++) {
             int image_id = image_group(GROUP_RESOURCE_ICONS);
-            image_draw(image_id + r, c->x_offset + 22, c->y_offset - 110 + r * 20);
+            image_draw(image_id + r, c->x_offset + 22, c->y_offset - 105 + r * 20);
+            text_draw_number(b->data.monument.resources_needed[r], '@', " ", c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
             text_draw_number(b->data.monument.resources_needed[r], '@', " ", c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
 
         }
@@ -348,10 +370,11 @@ static void window_building_draw_monument_resources_needed(building_info_context
     }
 }
 
-static void draw_grand_temple(building_info_context* c, const char* sound_file, int name, int module_name, int bonus_desc, int module_desc, int banner_id, int quote)
+static void draw_grand_temple(building_info_context* c, const char* sound_file, int name, int bonus_desc,int banner_id, int quote, int temple_god_id)
 {
     building* b = building_get(c->building_id);
     window_building_play_sound(c, sound_file);
+    god_id = temple_god_id;
     if (b->subtype.monument_phase == MONUMENT_FINISHED) {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     } 
@@ -359,6 +382,7 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, 20);
     }
     if (b->data.monument.upgrades) {
+        int module_name = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].header;
         text_draw_centered(translation_for(module_name), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     }
     else {
@@ -369,6 +393,7 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
     if (b->subtype.monument_phase == MONUMENT_FINISHED) {
         int height = text_draw_multiline(translation_for(bonus_desc), c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         if (b->data.monument.upgrades) {
+            int module_desc = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].desc;
             height += text_draw_multiline(translation_for(module_desc), c->x_offset + 22, c->y_offset + 66 + height, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         }
         inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height, c->width_blocks - 2, 4);
@@ -409,32 +434,32 @@ int window_building_handle_mouse_grand_temple(const mouse* m, building_info_cont
 
 void window_building_draw_grand_temple_ceres(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES_DESC, TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Ceres L Banner"), TR_BUILDING_CERES_TEMPLE_QUOTE);
+    draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES_DESC, TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Ceres L Banner"), TR_BUILDING_CERES_TEMPLE_QUOTE, GOD_CERES);
 }
 
 void window_building_draw_grand_temple_neptune(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Nept L Banner"), TR_BUILDING_NEPTUNE_TEMPLE_QUOTE);
+    draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Nept L Banner"), TR_BUILDING_NEPTUNE_TEMPLE_QUOTE, GOD_NEPTUNE);
 }
 
 void window_building_draw_grand_temple_mercury(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC, TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Merc L Banner"), TR_BUILDING_MERCURY_TEMPLE_QUOTE);
+    draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC, TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Merc L Banner"), TR_BUILDING_MERCURY_TEMPLE_QUOTE, GOD_MERCURY);
 }
 
 void window_building_draw_grand_temple_mars(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS_DESC, TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Mars L Banner"), TR_BUILDING_MARS_TEMPLE_QUOTE);
+    draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS_DESC, TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Mars L Banner"), TR_BUILDING_MARS_TEMPLE_QUOTE, GOD_MARS);
 }
 
 void window_building_draw_grand_temple_venus(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Venus L Banner"), TR_BUILDING_VENUS_TEMPLE_QUOTE);
+    draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Venus L Banner"), TR_BUILDING_VENUS_TEMPLE_QUOTE, GOD_VENUS);
 }
 
 void window_building_draw_pantheon(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/oracle.wav", TR_BUILDING_PANTHEON_DESC, TR_BUILDING_PANTHEON_DESC_MODULE_1, TR_BUILDING_PANTHEON_BONUS_DESC, TR_BUILDING_PANTHEON_MODULE_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Panth L Banner"), TR_BUILDING_PANTHEON_QUOTE);
+    draw_grand_temple(c, "wavs/oracle.wav", TR_BUILDING_PANTHEON_DESC, TR_BUILDING_PANTHEON_DESC_MODULE_1, TR_BUILDING_PANTHEON_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Panth L Banner"), TR_BUILDING_PANTHEON_QUOTE, GOD_PANTHEON);
 }
 
 
@@ -460,16 +485,18 @@ void window_building_draw_engineer_guild(building_info_context* c)
     window_building_draw_employment(c, 138);
 }
 
-static int add_module(int accepted) {
-    if (!accepted) {
+static int add_module(int selection) {
+    if (!selection) {
         return 0;
     }
+    sound_speech_play_file("wavs/oracle.wav");
     building* b = building_get(data.building_id);
-    building_monument_add_module(b);
+    building_monument_add_module(b, selection);
     return 1;
 }
 
-static void add_module_prompt(int param1, int param2)
+static void add_module_prompt(void)
 {
-    window_popup_dialog_show_confirmation_from_tr(TR_ADD_MODULE, add_module);
+    option_menu_item options[2] = { temple_module_options[god_id * 2], temple_module_options[god_id * 2 + 1] };
+    window_show_option_popup(TR_SELECT_EPITHET_PROMPT_HEADER, TR_SELECT_EPITHET_PROMPT_TEXT, options, add_module);
 }

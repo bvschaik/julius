@@ -9,7 +9,18 @@
     <image id="Venus L Banner" src="Venus_Banner" />
     <image id="Nept L Banner" src="Neptune_Banner" />
     <image id="Panth L Banner" src="Pantheon_Banner" />
-
-
-
+<!-- Note: Banner images for Module Selection UI -->
+    <image id="Ceres M Icon" src="Ceres_Temple_Complex_Module_Banner" />
+    <image id="Ceres M2 Icon" src="Ceres_Temple_Complex_Module2_Banner" />
+    <image id="Mars M Icon" src="Mars_Temple_Complex_Module_Banner" />
+    <image id="Mars M2 Icon" src="Mars_Temple_Complex_Module2_Banner" />
+    <image id="Merc M Icon" src="Mercury_Temple_Complex_Module_Banner" />
+    <image id="Merc M2 Icon" src="Mercury_Temple_Complex_Module2_Banner" />
+    <image id="Nept M Icon" src="Neptune_Temple_Complex_Module_Banner" />
+    <image id="Nept M2 Icon" src="Neptune_Temple_Complex_Module2_Banner" />
+    <image id="Panth M Icon" src="Pantheon_Temple_Complex_Module_Banner" />
+    <image id="Panth M2 Icon" src="Pantheon_Temple_Complex_Module2_Banner" />
+    <image id="Venus M Icon" src="Venus_Temple_Complex_Module_Banner" />
+    <image id="Venus M2 Icon" src="Venus_Temple_Complex_Module2_Banner" />
+	
 </mod>		

@@ -21,9 +21,6 @@ static struct {
 } data = { 0, 0};
 
 
-
-
-
 int building_monument_deliver_resource(building* b, int resource) {
 	if (b->id <= 0) {
 		return 0;
@@ -63,7 +60,7 @@ int building_monument_access_point(building* b, map_point* dst)
 
 }
 
-int building_monument_add_module(building* b) {
+int building_monument_add_module(building* b, int module_type) {
 	if (!building_monument_is_monument(b)) {
 		return 0;
 	}
@@ -73,27 +70,52 @@ int building_monument_add_module(building* b) {
 	if (b->data.monument.upgrades) {
 		return 0;
 	}
-	switch (b->type) {
-	case BUILDING_GRAND_TEMPLE_CERES:
-		map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Module"), TERRAIN_BUILDING);
-		break;
-	case BUILDING_GRAND_TEMPLE_NEPTUNE:
-		map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Module2"), TERRAIN_BUILDING);
-		break;
-	case BUILDING_GRAND_TEMPLE_MERCURY:
-		map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Module"), TERRAIN_BUILDING);
-		break;
-	case BUILDING_GRAND_TEMPLE_MARS:
-		map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Module"), TERRAIN_BUILDING);
-		break;
-	case BUILDING_GRAND_TEMPLE_VENUS:
-		map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Module"), TERRAIN_BUILDING);
-		break;
-	case BUILDING_PANTHEON:
-		map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Module"), TERRAIN_BUILDING);
-		break;
+	if (b->data.monument.upgrades == 1) {
+		switch (b->type) {
+			case BUILDING_GRAND_TEMPLE_CERES:
+				map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Module"), TERRAIN_BUILDING);
+				break;
+			case BUILDING_GRAND_TEMPLE_NEPTUNE:
+				map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Module"), TERRAIN_BUILDING);
+				break;
+			case BUILDING_GRAND_TEMPLE_MERCURY:
+				map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Module"), TERRAIN_BUILDING);
+				break;
+			case BUILDING_GRAND_TEMPLE_MARS:
+				map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Module"), TERRAIN_BUILDING);
+				break;
+			case BUILDING_GRAND_TEMPLE_VENUS:
+				map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Module"), TERRAIN_BUILDING);
+				break;
+			case BUILDING_PANTHEON:
+				map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Module"), TERRAIN_BUILDING);
+				break;
+		}
 	}
-	b->data.monument.upgrades = 1;
+	else if (b->data.monument.upgrades == 2) {
+		switch (b->type) {
+		case BUILDING_GRAND_TEMPLE_CERES:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Module2"), TERRAIN_BUILDING);
+			break;
+		case BUILDING_GRAND_TEMPLE_NEPTUNE:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Module2"), TERRAIN_BUILDING);
+			break;
+		case BUILDING_GRAND_TEMPLE_MERCURY:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Module2"), TERRAIN_BUILDING);
+			break;
+		case BUILDING_GRAND_TEMPLE_MARS:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Module2"), TERRAIN_BUILDING);
+			break;
+		case BUILDING_GRAND_TEMPLE_VENUS:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Module2"), TERRAIN_BUILDING);
+			break;
+		case BUILDING_PANTHEON:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Module2"), TERRAIN_BUILDING);
+			break;
+		}
+	}
+	
+	b->data.monument.upgrades = module_type;
 	return 1;
 }
 

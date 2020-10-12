@@ -5,6 +5,9 @@
 
 #include "map/grid.h"
 #include "map/road_access.h"
+#include "translation/translation.h"
+#include "window/option_popup.h"
+
 
 
 #define MAX_MONUMENTS 10
@@ -20,7 +23,7 @@ typedef struct {
 } monument_delivery;
 
 int building_monument_access_point(building* b, map_point* dst);
-int building_monument_add_module(building* b);
+int building_monument_add_module(building* b, int module_type);
 int building_monument_deliver_resource(building* b, int resource);
 int building_monument_get_monument(int x, int y, int resource, int road_network_id, int distance_from_entry, map_point* dst);
 int building_monument_has_unfinished_monuments(void);
