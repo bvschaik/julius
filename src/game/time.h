@@ -61,6 +61,8 @@ int game_time_advance_month(void);
  */
 void game_time_advance_year(void);
 
+int game_time_total_months(void);
+
 /**
  * Saves the game time
  * @param buf Buffer

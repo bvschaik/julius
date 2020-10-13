@@ -483,15 +483,19 @@ static void consume_resource(building *b, int inventory, int amount)
 static void consume_resources(building *b)
 {
     const model_house *model = model_get_house(b->subtype.house_level);
-    // pottery and furniture reduced by 20%
+    // mercury module 1 - pottery and furniture reduced by 20%
     if (!(game_time_month() % 6) && b->data.house.temple_mercury && building_monument_module_type(BUILDING_GRAND_TEMPLE_MERCURY) == 1) {
         consume_resource(b, INVENTORY_OIL, model->oil);
         consume_resource(b, INVENTORY_WINE, model->wine);
     } 
-    // oil and wine reduced by 20%
+    // mercury module 2 - oil and wine reduced by 20%
     else if (!(game_time_month() % 6) && b->data.house.temple_mercury && building_monument_module_type(BUILDING_GRAND_TEMPLE_MERCURY) == 2) {
         consume_resource(b, INVENTORY_POTTERY, model->pottery);
         consume_resource(b, INVENTORY_FURNITURE, model->furniture);
+    }
+    // mars module 2 - all goods reduced by 10%
+    else if (!(game_time_total_months() % 10) && b->data.house.temple_mars && building_monument_module_type(BUILDING_GRAND_TEMPLE_MARS) == 2) {
+
     }
     else {
         consume_resource(b, INVENTORY_POTTERY, model->pottery);

@@ -338,7 +338,7 @@ void city_resource_consume_food(void)
     calculate_available_food();
     city_data.resource.food_types_eaten = 0;
     city_data.unused.unknown_00c0 = 0;
-    int ceres_module = building_monument_upgraded(BUILDING_GRAND_TEMPLE_CERES);
+    int ceres_module = (building_monument_module_type(BUILDING_GRAND_TEMPLE_CERES) == 1);
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -346,7 +346,7 @@ void city_resource_consume_food(void)
             int num_types = model_get_house(b->subtype.house_level)->food_types;
             int amount_per_type;
             if (ceres_module && b->data.house.temple_ceres) {
-                amount_per_type = calc_adjust_with_percentage(b->house_population, 45);
+                amount_per_type = calc_adjust_with_percentage(b->house_population, 40);
             }
             else {
                 amount_per_type = calc_adjust_with_percentage(b->house_population, 50);

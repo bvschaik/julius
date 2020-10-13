@@ -387,9 +387,6 @@ void figure_movement_follow_ticks(figure *f, int num_ticks)
     if (f->x == f->source_x && f->y == f->source_y) {
         f->is_ghost = 1;
     }
-
-
-
     while (num_ticks > 0) {
         num_ticks--;
         f->progress_on_tile++;

@@ -156,7 +156,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Placeholder for Mars bonus description" },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "City gardens, statues, and temples glow with increased beauty, increasing their desirability." },
     {TR_BUILDING_PANTHEON_BONUS_DESC, "Placeholder for Pantheon bonus description." },
-    {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, "Priests reduce citizen food consumption by 20%." },
+    {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, "Priests reduce food consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, "Placeholder for Neptune module description" },
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, "Priests reduce pottery and furniture consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, "Placeholder for Mars module description" },

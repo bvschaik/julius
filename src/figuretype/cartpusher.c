@@ -181,7 +181,15 @@ static int cartpusher_speed() {
     return 1;
 }
 
-static int cartpusher_percentage_speed() {
+static int cartpusher_percentage_speed(figure* f) {
+    // Ceres grand temple base bonus
+    building* src_building = building_get(f->building_id);
+    int src_building_type = src_building->type;
+    if (src_building_type >= BUILDING_WHEAT_FARM && src_building_type <= BUILDING_PIG_FARM) {
+        if (building_monument_working(BUILDING_GRAND_TEMPLE_CERES)) {
+            return 50;
+        }
+    }
     return 0;
 }
 
@@ -199,7 +207,7 @@ void figure_cartpusher_action(figure *f)
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
     int speed_factor = cartpusher_speed();
-    int percentage_speed = cartpusher_percentage_speed();
+    int percentage_speed = cartpusher_percentage_speed(f);
     int road_network_id = map_road_network_get(f->grid_offset);
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     building *b = building_get(f->building_id);
@@ -466,7 +474,7 @@ void figure_warehouseman_action(figure *f)
     f->cart_image_id = 0;
     int road_network_id = map_road_network_get(f->grid_offset);
     int speed_factor = cartpusher_speed();
-    int percentage_speed = cartpusher_percentage_speed();
+    int percentage_speed = cartpusher_percentage_speed(f);
 
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
