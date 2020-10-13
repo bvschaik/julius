@@ -28,6 +28,7 @@
 
 #define IMAGE_PRELOAD_MAX_SIZE 65535
 
+// Do not change the seed. Doing so breaks savegame compatibility with mod images
 #define MOD_HASH_SEED 0x12345678
 
 static const char *MODS_FOLDER = "mods";
@@ -104,6 +105,7 @@ static struct {
     int total_groups;
     int total_images;
     int loaded;
+    int roadblock_image;
 } data;
 
 static void get_full_image_path(char *full_path, const char *file_name)
@@ -671,6 +673,23 @@ static void setup_mods_folder_string(void)
     strncpy(data.xml.image_base_path, data.xml.file_name, FILE_NAME_MAX);
 }
 
+static int get_image_position_from_id(int image_id)
+{
+    unsigned int image_group = image_id & 0xffffff00;
+    int image_index = image_id & 0xff;
+    for (int i = 0; i < data.total_groups; ++i) {
+        image_groups *group = &data.groups[i];
+        if (group->id == image_group) {
+            for (int j = 0; j < group->images; ++j) {
+                if (data.images[group->first_image_id + j].index == image_index) {
+                    return group->first_image_id + j;
+                }
+            }
+        }
+    }
+    return image_id != data.roadblock_image ? data.roadblock_image : 0;
+}
+
 void mods_init(void)
 {
     if (data.loaded) {
@@ -686,6 +705,10 @@ void mods_init(void)
     }
 
     data.loaded = 1;
+
+    // By default, if the requested image is not found, the roadblock image will be shown.
+    // This ensures compatibility with previous release versions of Augustus, which only had roadblocks
+    data.roadblock_image = get_image_position_from_id(mods_get_group_id("Keriew", "Roadblocks"));
 }
 
 int mods_get_group_id(const char *mod_author, const char *mod_name)
@@ -718,23 +741,6 @@ int mods_get_image_id(int mod_group_id, const char *image_name)
     for (int i = 0; i < max_images; ++i) {
         if (strcmp(data.images[image_id + i].id, image_name) == 0) {
             return mod_group_id + data.images[image_id + i].index;
-        }
-    }
-    return 0;
-}
-
-static int get_image_position_from_id(int image_id)
-{
-    unsigned int image_group = image_id & 0xffffff00;
-    int image_index = image_id & 0xff;
-    for (int i = 0; i < data.total_groups; ++i) {
-        image_groups *group = &data.groups[i];
-        if (group->id == image_group) {
-            for (int j = 0; j < group->images; ++j) {
-                if (data.images[group->first_image_id + j].index == image_index) {
-                    return group->first_image_id + j;
-                }
-            }
         }
     }
     return 0;
