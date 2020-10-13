@@ -191,7 +191,11 @@ void window_building_draw_fort(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(89, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     int text_id = formation_get(c->formation_id)->cursed_by_mars ? 1 : 2;
-    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 89, text_id);
+    window_building_draw_description_at(c, 16 * c->height_blocks - 208, 89, text_id);
+    
+    building* b = building_get(c->building_id);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
+    window_building_draw_levy(b->monthly_levy, c->x_offset, c->y_offset + 150);
 }
 
 void window_building_draw_legion_info(building_info_context *c)

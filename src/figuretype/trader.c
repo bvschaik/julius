@@ -27,8 +27,15 @@
 #include "scenario/map.h"
 #include "scenario/property.h"
 
-
-
+// Mercury Grand Temple base bonus to trader speed
+int trader_bonus_speed(void) {
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_MERCURY)) {
+        return 25;
+    }
+    else {
+        return 0;
+    }
+}
 
 int figure_create_trade_caravan(int x, int y, int city_id)
 {
@@ -345,6 +352,8 @@ static int trader_image_id()
 
 void figure_trade_caravan_action(figure *f)
 {
+    int move_speed = trader_bonus_speed();
+    
     f->is_ghost = 0;
     f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
     figure_image_increase_offset(f, 12);
@@ -376,7 +385,7 @@ void figure_trade_caravan_action(figure *f)
             f->image_offset = 0;
             break;
         case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
-            figure_movement_move_ticks(f, 1);
+            figure_movement_move_ticks_with_percentage(f, 1, move_speed);
             switch (f->direction) {
                 case DIR_FIGURE_AT_DESTINATION:
                     f->action_state = FIGURE_ACTION_102_TRADE_CARAVAN_TRADING;
@@ -429,7 +438,7 @@ void figure_trade_caravan_action(figure *f)
             f->image_offset = 0;
             break;
         case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
-            figure_movement_move_ticks(f, 1);
+            figure_movement_move_ticks_with_percentage(f, 1, move_speed);
             switch (f->direction) {
                 case DIR_FIGURE_AT_DESTINATION:
                     f->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
@@ -452,6 +461,8 @@ void figure_trade_caravan_action(figure *f)
 
 void figure_trade_caravan_donkey_action(figure *f)
 {
+    int move_speed = trader_bonus_speed();
+    
     f->is_ghost = 0;
     f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
     figure_image_increase_offset(f, 12);
@@ -468,7 +479,7 @@ void figure_trade_caravan_donkey_action(figure *f)
         } else if (leader->type != FIGURE_TRADE_CARAVAN && leader->type != FIGURE_TRADE_CARAVAN_DONKEY) {
             f->state = FIGURE_STATE_DEAD;
         } else {
-            figure_movement_follow_ticks(f, 1);
+            figure_movement_follow_ticks_with_percentage(f, 1, move_speed);
         }
     }
 
@@ -483,6 +494,8 @@ void figure_trade_caravan_donkey_action(figure *f)
 
 void figure_native_trader_action(figure *f)
 {
+    int move_speed = trader_bonus_speed();
+
     f->is_ghost = 0;
     f->terrain_usage = TERRAIN_USAGE_ANY;
     figure_image_increase_offset(f, 12);
@@ -495,7 +508,7 @@ void figure_native_trader_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE:
-            figure_movement_move_ticks(f, 1);
+            figure_movement_move_ticks_with_percentage(f, 1, move_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_163_NATIVE_TRADER_AT_WAREHOUSE;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
@@ -509,7 +522,7 @@ void figure_native_trader_action(figure *f)
             }
             break;
         case FIGURE_ACTION_161_NATIVE_TRADER_RETURNING:
-            figure_movement_move_ticks(f, 1);
+            figure_movement_move_ticks_with_percentage(f, 1, move_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
@@ -772,7 +785,7 @@ void figure_trade_ship_action(figure *f)
 
 int figure_trade_land_trade_units()
 {
-    if (building_monument_upgraded(BUILDING_GRAND_TEMPLE_MERCURY)) {
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_MERCURY)) {
         return 12;
     }
     return 8;
@@ -780,7 +793,7 @@ int figure_trade_land_trade_units()
 
 int figure_trade_sea_trade_units()
 {
-    if (building_monument_upgraded(BUILDING_GRAND_TEMPLE_MERCURY)) {
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_MERCURY)) {
         return 16;
     }
     return 12;

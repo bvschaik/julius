@@ -585,3 +585,12 @@ int building_monument_upgraded(int type) {
 	}
 	return monument_id;
 }
+
+int building_monument_module_type(int type) {
+	int monument_id = building_monument_working(type);
+	building* b = building_get(monument_id);
+	if (!monument_id) {
+		return 0;
+	}
+	return b->data.monument.upgrades;
+}

@@ -66,6 +66,8 @@ void window_building_set_possible_position(int * x_offset, int * y_offset, int w
 
 int window_building_get_vertical_offset(building_info_context *c, int new_window_height);
 
+void window_building_draw_levy(int amount, int x_offset, int y_offset);
+
 void window_building_draw_employment(building_info_context *c, int y_offset);
 
 void window_building_draw_employment_without_house_cover(building_info_context *c, int y_offset);

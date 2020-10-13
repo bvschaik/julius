@@ -39,6 +39,7 @@ int building_monument_remove_delivery(int figure_id);
 int building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no);
 int building_monument_has_monument(int type);
 int building_monument_upgraded(int type);
+int building_monument_module_type(int type);
 int building_monument_finish_monuments(void);
 int building_monument_phase(int phase);
 

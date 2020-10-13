@@ -152,18 +152,18 @@ static translation_string all_strings[] = {
     {TR_BUILDING_PANTHEON_DESC, "Pantheon" },
     {TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, "Cartpushers from farms move 50% faster." },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Placeholder for Neptune bonus description" },
-    {TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, "Placeholder for Mercury bonus description" },
+    {TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, "Land and sea traders have an additional 50% capacity. Land traders move 25% faster." },
     {TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Placeholder for Mars bonus description" },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "City gardens, statues, and temples glow with increased beauty, increasing their desirability." },
     {TR_BUILDING_PANTHEON_BONUS_DESC, "Placeholder for Pantheon bonus description." },
-    {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, "Priests reduce citizen food consumption by 20%" },
+    {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, "Priests reduce citizen food consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, "Placeholder for Neptune module description" },
-    {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, "Placeholder for Mercury module description" },
+    {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, "Priests reduce pottery and furniture consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, "Placeholder for Mars module description" },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, "Priests of Venus bestow happiness on houses they pass, increasing city sentiment." },
-    {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC, "Priests collect and distribute one food type from city granaries" },
+    {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC, "Priests collect and distribute one food type from city granaries." },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC, "Placeholder for Neptune 2 module description" },
-    {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, "Placeholder for Mercury 2 module description" },
+    {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, "Priests reduce oil and wine consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, "Placeholder for Mars 2 module description" },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, "Placeholder for Venus 2 module description" },
     {TR_BUILDING_PANTHEON_MODULE_1_DESC, "Placeholder for Pantheon module description" },
@@ -261,6 +261,7 @@ static translation_string all_strings[] = {
     {TR_CONFIRM_DELETE_MONUMENT, "Demolishing this monument"},
     {TR_SELECT_EPITHET_PROMPT_HEADER, "Select epithet to bestow"},
     {TR_SELECT_EPITHET_PROMPT_TEXT, "Bestowing an epithet will permanently dedicate your temple to one aspect of its deity, imbuing priests with divine power." },
+    {TR_BUILDING_INFO_MONTHLY_LEVY, "/month"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
