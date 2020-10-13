@@ -11,8 +11,8 @@
 typedef struct {
     int id;
 
-    short image_id;
-    short cart_image_id;
+    unsigned int image_id;
+    unsigned int cart_image_id;
     unsigned char image_offset;
     unsigned char is_enemy_image;
 

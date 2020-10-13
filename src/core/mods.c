@@ -300,10 +300,11 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
     current_layer->height = 0;
     const image *original_image = 0;
     if (strcmp(group_id, "this") == 0) {
-        int image = data.groups[data.total_groups].first_image_id;
-        for (int i = 0; i < data.groups[data.total_groups].images; ++i) {
+        int image = data.groups[data.total_groups - 1].first_image_id;
+        for (int i = 0; i < data.groups[data.total_groups - 1].images; ++i) {
             if (strcmp(data.images[image].id, image_id) == 0) {
-                current_layer->original_image_id = image;
+                current_layer->original_image_id = data.groups[data.total_groups - 1].id + data.images[image].index;
+                original_image = &data.images[image].img;
                 break;
             }
             image++;
@@ -315,8 +316,8 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
         int group = string_to_int(string_from_ascii(group_id));
         int id = image_id ? string_to_int(string_from_ascii(image_id)) : 0;
         current_layer->original_image_id = image_group(group) + id;
+        original_image = image_get(current_layer->original_image_id);
     }
-    original_image = image_get(current_layer->original_image_id);
     if (!original_image) {
         return 0;
     }
@@ -364,11 +365,12 @@ static uint32_t get_group_hash(const char *author, const char *name)
 
 static void xml_start_mod_element(const char **attributes)
 {
+    data.total_groups++;
     if (count_xml_attributes(attributes) != 4) {
         data.xml.error = 1;
         return;
     }
-    image_groups *group = &data.groups[data.total_groups];
+    image_groups *group = &data.groups[data.total_groups - 1];
     group->first_image_id = data.total_images;
     group->images = 0;
     for (int i = 0; i < 4; i += 2) {
@@ -435,8 +437,6 @@ static void xml_start_image_element(const char **attributes)
         add_layer_from_image_path(img, path, 0, 0);
     } else if (group) {
         add_layer_from_image_id(img, group, id, 0, 0);
-    } else {
-        log_info("Invalid layer for image", img->id, 0);
     }
 }
 
@@ -525,7 +525,6 @@ static void xml_start_animation_element(const char **attributes)
 
 static void xml_end_mod_element(void)
 {
-    data.total_groups++;
     data.xml.finished = 1;
 }
 
@@ -546,7 +545,7 @@ static void xml_end_image_element(void)
         load_modded_image(data.xml.current_image);
     }
     data.total_images++;
-    data.groups[data.total_groups].images++;
+    data.groups[data.total_groups - 1].images++;
     data.xml.image_index++;
 }
 
@@ -615,6 +614,7 @@ static void clear_xml_info(void)
     data.xml.error = 0;
     data.xml.depth = 0;
     data.xml.finished = 0;
+    data.xml.image_index = 0;
 }
 
 static void process_mod_file(const char *xml_file_name)
@@ -645,6 +645,7 @@ static void process_mod_file(const char *xml_file_name)
     } while (!done);
 
     if (data.xml.error || !data.xml.finished) {
+        data.total_groups--;
         for (int i = 1; i <= data.groups[data.total_groups].images; ++i) {
             modded_image *img = &data.images[data.total_images - i];
             for (int i = 0; i < img->num_layers; ++i) {

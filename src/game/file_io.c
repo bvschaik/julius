@@ -205,7 +205,7 @@ static void init_scenario_data(void)
         return;
     }
     scenario_state *state = &scenario_data.state;
-    state->graphic_ids = create_scenario_piece(52488); // TODO ADD SCENARIO FILE FORMAT
+    state->graphic_ids = create_scenario_piece(52488);
     state->edge = create_scenario_piece(26244);
     state->terrain = create_scenario_piece(52488);
     state->bitfields = create_scenario_piece(26244);
