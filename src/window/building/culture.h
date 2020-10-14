@@ -65,7 +65,7 @@ void window_building_draw_work_camp(building_info_context* c);
 
 void window_building_draw_engineer_guild(building_info_context* c);
 
-void window_building_draw_mess_hall(building_info_context* c);
+void window_building_draw_mess_hall(building_info_context* c, int mess_hall_fulfillment);
 
 int window_building_handle_mouse_grand_temple(const mouse* m, building_info_context* c);
 

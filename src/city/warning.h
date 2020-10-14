@@ -56,7 +56,9 @@ typedef enum {
     WARNING_HOUSE_TOO_FAR_FROM_ROAD = 62,
     WARNING_CITY_BOXED_IN = 63,
     WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH = 64,
-    WARNING_DATA_LIMIT_REACHED = 65
+    WARNING_DATA_LIMIT_REACHED = 65,
+    WARNING_NO_MESS_HALL = 66,
+    WARNING_MAX_GRAND_TEMPLES = 67
 } warning_type;
 
 void city_warning_show(warning_type type);

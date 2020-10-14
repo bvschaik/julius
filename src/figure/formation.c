@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "building/monument.h"
+#include "city/buildings.h"
 #include "city/military.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -371,10 +372,6 @@ void formation_update_monthly_morale_at_rest(void)
             continue;
         }
         if (m->is_legion) {
-            if (!building_count_active(BUILDING_MESS_HALL)) {
-                formation_change_all_legions_morale(-10);
-            }
-
             if (m->is_at_fort) {
                 m->months_from_home = 0;
                 m->months_very_low_morale = 0;
@@ -389,6 +386,12 @@ void formation_update_monthly_morale_at_rest(void)
                     }
                     formation_change_morale(m, -5);
                 }
+            }
+
+            // hungry soldiers morale penalty
+            if (city_buildings_mess_hall_fulfillment()) {
+                int morale_penalty = city_buildings_mess_hall_fulfillment() / 10;
+                formation_change_morale(m, morale_penalty * -1);
             }
         } else {
             formation_change_morale(m, 0);

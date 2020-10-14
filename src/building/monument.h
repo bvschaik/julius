@@ -33,6 +33,7 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
 int building_monument_has_unfinished_monuments(void);
 void building_monument_initialize(building* b);
 int building_monument_is_monument(building* b);
+int building_monument_is_grand_temple(building_type type);
 int building_monument_needs_resource(building* b, int resource);
 int building_monument_needs_resources(building* b);
 int building_monument_progress(building* b);

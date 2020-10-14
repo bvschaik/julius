@@ -216,6 +216,14 @@ void building_count_update(void)
     limit_hippodrome();
 }
 
+int building_count_grand_temples(void) {
+    return (data.buildings[BUILDING_GRAND_TEMPLE_CERES].total +
+            data.buildings[BUILDING_GRAND_TEMPLE_NEPTUNE].total + 
+            data.buildings[BUILDING_GRAND_TEMPLE_MERCURY].total + 
+            data.buildings[BUILDING_GRAND_TEMPLE_MARS].total + 
+            data.buildings[BUILDING_GRAND_TEMPLE_VENUS].total);
+}
+
 int building_count_active(building_type type)
 {
     return data.buildings[type].active;

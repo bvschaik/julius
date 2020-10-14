@@ -126,6 +126,64 @@ static void parse_message(buffer *buf)
     buffer_read_raw(buf, &data.message_data, MAX_MESSAGE_DATA);
 }
 
+void load_custom_messages(void) {
+    int i = 320;
+    for (i; i < MAX_MESSAGE_ENTRIES; i++) {
+        if (strlen(&data.message_entries[i].content.text) == 0) {
+            break;
+        }
+    }
+
+    // soldiers starving
+    lang_message* m = &data.message_entries[i];
+    m->type = 2;
+    m->message_type = 0;
+    m->x = 0;
+    m->y = 0;
+    m->width_blocks = 30;
+    m->height_blocks = 20;
+    m->title.x = 0;
+    m->title.y = 0;
+    m->urgent = 1;
+
+    m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_MESS_HALL_NEEDS_FOOD);
+    m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_MESS_HALL_NEEDS_FOOD);
+
+    i += 1;
+
+    // soldiers starving, no mess hall
+    m = &data.message_entries[i];
+    m->type = 2;
+    m->message_type = 0;
+    m->x = 0;
+    m->y = 0;
+    m->width_blocks = 30;
+    m->height_blocks = 20;
+    m->title.x = 0;
+    m->title.y = 0;
+    m->urgent = 1;
+
+    m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_MESS_HALL_NEEDS_FOOD);
+    m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_MESS_HALL_MISSING);
+
+    i += 1;
+
+    // monument completed
+    m = &data.message_entries[i];
+    m->type = 2;
+    m->message_type = 0;
+    m->x = 0;
+    m->y = 0;
+    m->width_blocks = 30;
+    m->height_blocks = 20;
+    m->title.x = 0;
+    m->title.y = 0;
+    m->urgent = 0;
+
+    m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_GRAND_TEMPLE_COMPLETE);
+    m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE);
+}
+
 static int load_message(const char *filename, int localizable, uint8_t *data_buffer)
 {
     buffer buf;

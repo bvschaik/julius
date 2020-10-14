@@ -45,6 +45,6 @@ void city_buildings_set_main_native_meeting_center(int x, int y);
 int city_buildings_is_mission_post_operational(void);
 void city_buildings_set_mission_post_operational(void);
 
-int city_buildings_unknown_value(void);
+int city_buildings_mess_hall_fulfillment(void);
 
 #endif // CITY_BUILDINGS_H

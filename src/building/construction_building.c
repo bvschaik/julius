@@ -722,9 +722,18 @@ int building_construction_place_building(building_type type, int x, int y)
             city_warning_show(WARNING_MAX_LEGIONS_REACHED);
             return 0;
         }
+        if (!building_count_total(BUILDING_MESS_HALL)) {
+            city_warning_show(WARNING_NO_MESS_HALL);
+            return 0;
+        }
     }
     if (building_monument_has_monument(type)) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
+        return 0;
+    }
+
+    if (building_monument_is_grand_temple(type) && building_count_grand_temples() >= 2) {
+        city_warning_show(WARNING_MAX_GRAND_TEMPLES);
         return 0;
     }
     if (type == BUILDING_HIPPODROME) {

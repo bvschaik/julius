@@ -68,12 +68,7 @@ void building_industry_update_production(void)
             if (b->data.industry.blessing_days_left && building_is_farm(b->type)) {
                 b->data.industry.progress += b->num_workers;
             }
-            if (building_monument_working(BUILDING_GRAND_TEMPLE_CERES) && building_is_farm(b->type)) {
-                b->data.industry.progress += b->num_workers / 2;
-            }
-            if (building_monument_working(BUILDING_GRAND_TEMPLE_MERCURY) && building_is_raw_resource_producer(b->type)) {
-                b->data.industry.progress += b->num_workers / 2;
-            }
+
             int max = max_progress(b);
             if (b->data.industry.progress > max) {
                 b->data.industry.progress = max;

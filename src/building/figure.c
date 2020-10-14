@@ -1165,6 +1165,12 @@ static void spawn_figure_barracks(building *b)
         } else {
             return;
         }
+
+        // recruitment penalty for no food
+        if (city_buildings_mess_hall_fulfillment() > 20) {
+            spawn_delay += city_buildings_mess_hall_fulfillment() - 20;
+        }
+
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;

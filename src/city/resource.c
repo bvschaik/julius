@@ -1,10 +1,12 @@
 #include "resource.h"
 
 #include "building/building.h"
+#include "building/count.h"
 #include "building/industry.h"
 #include "building/model.h"
 #include "building/monument.h"
 #include "city/data_private.h"
+#include "city/message.h"
 #include "core/calc.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -13,7 +15,7 @@
 #include "scenario/building.h"
 #include "scenario/property.h"
 
-#define FOOD_PER_SOLDIER_MONTHLY 10;
+#define FOOD_PER_SOLDIER_MONTHLY 5;
 
 static struct {
     resource_list resource_list;
@@ -344,7 +346,7 @@ void city_resource_consume_food(void)
     int ceres_module = (building_monument_module_type(BUILDING_GRAND_TEMPLE_CERES) == 1);
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
+        building* b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
             int num_types = model_get_house(b->subtype.house_level)->food_types;
             int amount_per_type;
@@ -363,13 +365,15 @@ void city_resource_consume_food(void)
                 city_data.resource.food_types_available = 1;
                 b->data.house.inventory[INVENTORY_WHEAT] = amount_per_type;
                 b->data.house.num_foods = 1;
-            } else if (num_types > 0) {
+            }
+            else if (num_types > 0) {
                 for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b->data.house.num_foods < num_types; t++) {
                     if (b->data.house.inventory[t] >= amount_per_type) {
                         b->data.house.inventory[t] -= amount_per_type;
                         b->data.house.num_foods++;
                         total_consumed += amount_per_type;
-                    } else if (b->data.house.inventory[t]) {
+                    }
+                    else if (b->data.house.inventory[t]) {
                         // has food but not enough
                         b->data.house.inventory[t] = 0;
                         b->data.house.num_foods++;
@@ -394,16 +398,29 @@ void city_resource_consume_food(void)
                     food_allocated += b->data.market.inventory[i];
                     b->data.market.inventory[i] = 0;
                 }
-            }          
-            
+            }
+
+            // mess_hall_monthly_fulfillment stores the percentage missing from total requirement. 0 is total fulfillment.
             if (food_allocated < food_required) {
-                int morale_penalty = calc_percentage(food_allocated, food_required);
-                formation_change_all_legions_morale((morale_penalty / 10) * -1);
+                city_data.building.mess_hall_monthly_fulfillment = 100 - calc_percentage(food_allocated, food_required);
+            }
+            else {
+                city_data.building.mess_hall_monthly_fulfillment = 0;
             }
 
             total_consumed += food_allocated;
         }
+        
     }
+
+    if (city_data.military.total_soldiers > 0 && !building_count_active(BUILDING_MESS_HALL)) {
+        city_data.building.mess_hall_monthly_fulfillment = 100;
+        city_message_post(1, MESSAGE_SOLDIERS_STARVING_NO_MESS_HALL, 0, 0);
+    }
+    else if (city_data.military.total_soldiers > 0 && city_data.building.mess_hall_monthly_fulfillment > 80) {
+        city_message_post(1, MESSAGE_SOLDIERS_STARVING, 0, 0);
+    }
+
     city_data.resource.food_consumed_last_month = total_consumed;
     city_data.resource.food_produced_last_month = city_data.resource.food_produced_this_month;
     city_data.resource.food_produced_this_month = 0;

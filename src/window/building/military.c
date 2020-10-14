@@ -13,6 +13,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "sound/speech.h"
+#include "translation/translation.h"
 #include "window/city.h"
 
 static void button_return_to_fort(int param1, int param2);
@@ -128,7 +129,11 @@ void window_building_draw_barracks(building_info_context *c)
         if (b->loads_stored > 0) {
             offset = 4;
         }
-        if (c->worker_percentage >= 100) {
+        if (city_buildings_mess_hall_fulfillment() > 50) {
+            text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING_2), c->x_offset + 46, c->y_offset + 86, 16 * c->width_blocks - 46, FONT_NORMAL_BLACK, 0);
+        } else if (city_buildings_mess_hall_fulfillment() > 20) {
+            text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING), c->x_offset + 46, c->y_offset + 86, 16 * c->width_blocks - 46, FONT_NORMAL_BLACK, 0);
+        } else if (c->worker_percentage >= 100) {
             window_building_draw_description_at(c, 70, 136, 5 + offset);
         } else if (c->worker_percentage >= 66) {
             window_building_draw_description_at(c, 70, 136, 6 + offset);
@@ -231,33 +236,54 @@ void window_building_draw_legion_info(building_info_context *c)
     text_draw_number(m->num_figures, '@', " ", c->x_offset + 294, c->y_offset + 60, FONT_NORMAL_BLACK);
     // health
     lang_text_draw(138, 24, c->x_offset + 100, c->y_offset + 80, FONT_NORMAL_BLACK);
-    int health = calc_percentage(m->total_damage, m->max_total_damage);
-    if (health <= 0) {
-        text_id = 26;
-    } else if (health <= 20) {
-        text_id = 27;
-    } else if (health <= 40) {
-        text_id = 28;
-    } else if (health <= 55) {
-        text_id = 29;
-    } else if (health <= 70) {
-        text_id = 30;
-    } else if (health <= 90) {
-        text_id = 31;
-    } else {
-        text_id = 32;
+    if (city_buildings_mess_hall_fulfillment() > 50) {
+        text_draw(translation_for(TR_BUILDING_LEGION_STARVING), c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_BLACK, 0);
     }
-    lang_text_draw(138, text_id, c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_BLACK);
+    else {
+        int health = calc_percentage(m->total_damage, m->max_total_damage);
+        if (health <= 0) {
+            text_id = 26;
+        }
+        else if (health <= 20) {
+            text_id = 27;
+        }
+        else if (health <= 40) {
+            text_id = 28;
+        }
+        else if (health <= 55) {
+            text_id = 29;
+        }
+        else if (health <= 70) {
+            text_id = 30;
+        }
+        else if (health <= 90) {
+            text_id = 31;
+        }
+        else {
+            text_id = 32;
+        }
+        lang_text_draw(138, text_id, c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_BLACK);
+    }
     // military training
     lang_text_draw(138, 25, c->x_offset + 100, c->y_offset + 100, FONT_NORMAL_BLACK);
     lang_text_draw(18, m->has_military_training, c->x_offset + 300, c->y_offset + 100, FONT_NORMAL_BLACK);
     // morale
+    int width;
     if (m->cursed_by_mars) {
-        lang_text_draw(138, 59, c->x_offset + 100, c->y_offset + 120, FONT_NORMAL_BLACK);
+        width = lang_text_draw(138, 59, c->x_offset + 100, c->y_offset + 120, FONT_NORMAL_BLACK);
     } else {
-        lang_text_draw(138, 36, c->x_offset + 100, c->y_offset + 120, FONT_NORMAL_BLACK);
-        lang_text_draw(138, 37 + m->morale / 5, c->x_offset + 300, c->y_offset + 120, FONT_NORMAL_BLACK);
+        width = lang_text_draw(138, 36, c->x_offset + 100, c->y_offset + 120, FONT_NORMAL_BLACK);
+        width = lang_text_draw(138, 37 + m->morale / 5, c->x_offset + 300, c->y_offset + 120, FONT_NORMAL_BLACK);
     }
+    // food warnings
+    if (city_buildings_mess_hall_fulfillment() > 50) {
+        text_draw("*", c->x_offset + 300 +width, c->y_offset + 120, FONT_NORMAL_BLACK, 0);
+        text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_2), c->x_offset + 20, c->y_offset + 300, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
+    }
+    else if (city_buildings_mess_hall_fulfillment() > 20) {
+        text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_1), c->x_offset + 20, c->y_offset + 300, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
+    }
+    
     if (m->num_figures) {
         // layout
         static const int OFFSETS_LEGIONARY[2][5] = {

@@ -5,6 +5,7 @@
 #include "building/house_evolution.h"
 #include "building/model.h"
 #include "building/warehouse.h"
+#include "city/data_private.h"
 #include "city/map.h"
 #include "city/resource.h"
 #include "city/view.h"
@@ -473,7 +474,7 @@ static void draw_background(void)
                 window_building_draw_market_orders(&context);
             }
             else {
-                window_building_draw_mess_hall(&context);
+                window_building_draw_mess_hall(&context, city_data.building.mess_hall_monthly_fulfillment);
             }
         } else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
@@ -534,7 +535,7 @@ static void draw_background(void)
         } else if (btype == BUILDING_ENGINEER_GUILD) {
             window_building_draw_engineer_guild(&context);
         } else if (btype == BUILDING_MESS_HALL) {
-            window_building_draw_mess_hall(&context);
+            window_building_draw_mess_hall(&context, city_data.building.mess_hall_monthly_fulfillment);
         } else if (btype == BUILDING_GRAND_TEMPLE_CERES) {
             window_building_draw_grand_temple_ceres(&context);
 		} else if (btype == BUILDING_GRAND_TEMPLE_NEPTUNE) {

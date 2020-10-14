@@ -84,7 +84,7 @@ building *building_create(building_type type, int x, int y)
 
     b->state = BUILDING_STATE_CREATED;
     b->faction_id = 1;
-    b->unknown_value = city_buildings_unknown_value();
+    b->unknown_value = 0;
     b->type = type;
     b->size = props->size;
     b->created_sequence = extra.created_sequence++;

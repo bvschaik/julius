@@ -36,6 +36,8 @@ int building_count_total(building_type type);
  */
 int building_count_industry_active(resource_type resource);
 
+int building_count_grand_temples(void);
+
 /**
  * Returns the building count for the resource type
  * @param resource Resource type

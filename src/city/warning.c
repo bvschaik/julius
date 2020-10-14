@@ -6,6 +6,7 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/window.h"
+#include "translation/translation.h"
 
 #define MAX_WARNINGS 5
 #define MAX_TEXT 100
@@ -43,7 +44,14 @@ void city_warning_show(warning_type type)
     const uint8_t *text;
     if (type == WARNING_ORIENTATION) {
         text = lang_get_string(17, city_view_orientation());
-    } else {
+    }
+    else if (type == WARNING_NO_MESS_HALL) {
+        text = translation_for(TR_WARNING_NO_MESS_HALL);
+    }    
+    else if (type == WARNING_MAX_GRAND_TEMPLES) {
+        text = translation_for(TR_WARNING_MAX_GRAND_TEMPLES);
+    }
+    else {
         text = lang_get_string(19, type - 2);
     }
     string_copy(text, w->text, MAX_TEXT);

@@ -818,17 +818,20 @@ static void warehouse_orders(int index, int param2)
     window_invalidate();
 }
 
-void window_building_draw_mess_hall(building_info_context* c)
+void window_building_draw_mess_hall(building_info_context* c, int mess_hall_fulfillment)
 {
     building* b = building_get(c->building_id);
+    int mess_hall_fulfillment_display = 100 - mess_hall_fulfillment;
 
     window_building_play_sound(c, "wavs/warehouse2.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
    
     text_draw_centered(translation_for(TR_BUILDING_MESS_HALL), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     16 * (c->width_blocks - 4),
-        text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_DESC), c->x_offset + 32, c->y_offset + 116, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     window_building_draw_stocks(c, b, 0, 1);
+    int width = text_draw(translation_for(TR_BUILDING_MESS_HALL_FULFILLMENT), c->x_offset + 32, c->y_offset + 106, FONT_NORMAL_BLACK, 0);
+    text_draw_percentage(mess_hall_fulfillment_display, c->x_offset + 32 + width, c->y_offset + 106, FONT_NORMAL_BLACK);
+    text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_DESC), c->x_offset + 32, c->y_offset + 136, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 228, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 238);
     window_building_draw_market_foreground(c);

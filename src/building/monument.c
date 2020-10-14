@@ -1,5 +1,6 @@
 #include "monument.h"
 
+#include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/mods.h" 
@@ -429,6 +430,20 @@ int building_monument_is_monument(building* b)
 	return 0;
 }
 
+int building_monument_is_grand_temple(building_type type)
+{
+	switch (type) {
+	case BUILDING_GRAND_TEMPLE_CERES:
+	case BUILDING_GRAND_TEMPLE_NEPTUNE:
+	case BUILDING_GRAND_TEMPLE_MERCURY:
+	case BUILDING_GRAND_TEMPLE_MARS:
+	case BUILDING_GRAND_TEMPLE_VENUS:
+		return 1;
+		break;
+	}
+	return 0;
+}
+
 int building_monument_needs_resource(building* b, int resource) {
 	if (b->subtype.monument_phase == MONUMENT_FINISHED) {
 		return 0;
@@ -475,9 +490,12 @@ int building_monument_progress(building* b)
 		return 0;
 	}
 
-
 	b->subtype.monument_phase++;
 	building_monument_initialize(b);
+
+	if (b->subtype.monument_phase == MONUMENT_FINISHED && building_monument_is_grand_temple(b->type)) {
+		city_message_post(1, MESSAGE_GRAND_TEMPLE_COMPLETE, 0, 0);
+	}
 	return 1;
 }
 
@@ -594,3 +612,4 @@ int building_monument_module_type(int type) {
 	}
 	return b->data.monument.upgrades;
 }
+
