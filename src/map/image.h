@@ -3,7 +3,7 @@
 
 #include "core/buffer.h"
 
-int map_image_at(int grid_offset);
+unsigned int map_image_at(int grid_offset);
 
 void map_image_set(int grid_offset, int image_id);
 
@@ -16,7 +16,11 @@ void map_image_restore_at(int grid_offset);
 void map_image_clear(void);
 void map_image_init_edges(void);
 
+void map_image_save_state_legacy(buffer *buf);
+
 void map_image_save_state(buffer *buf);
+
+void map_image_load_state_legacy(buffer *buf);
 
 void map_image_load_state(buffer *buf);
 

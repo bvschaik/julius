@@ -196,6 +196,11 @@ void map_grid_clear_u16(uint16_t *grid)
     memset(grid, 0, GRID_SIZE * GRID_SIZE * sizeof(uint16_t));
 }
 
+void map_grid_clear_u32(uint32_t *grid)
+{
+    memset(grid, 0, GRID_SIZE * GRID_SIZE * sizeof(uint32_t));
+}
+
 void map_grid_clear_i16(int16_t *grid)
 {
     memset(grid, 0, GRID_SIZE * GRID_SIZE * sizeof(int16_t));
@@ -230,6 +235,11 @@ void map_grid_copy_u16(const uint16_t *src, uint16_t *dst)
     memcpy(dst, src, GRID_SIZE * GRID_SIZE * sizeof(uint16_t));
 }
 
+void map_grid_copy_u32(const uint32_t *src, uint32_t *dst)
+{
+    memcpy(dst, src, GRID_SIZE * GRID_SIZE * sizeof(uint32_t));
+}
+
 void map_grid_save_state_u8(const uint8_t *grid, buffer *buf)
 {
     buffer_write_raw(buf, grid, GRID_SIZE * GRID_SIZE);
@@ -247,6 +257,20 @@ void map_grid_save_state_u16(const uint16_t *grid, buffer *buf)
     }
 }
 
+void map_grid_save_state_u32_to_u16(const uint32_t *grid, buffer *buf)
+{
+    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
+        buffer_write_u16(buf, (uint16_t) grid[i]);
+    }
+}
+
+void map_grid_save_state_u32(const uint32_t *grid, buffer *buf)
+{
+    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
+        buffer_write_u32(buf, grid[i]);
+    }
+}
+
 void map_grid_load_state_u8(uint8_t *grid, buffer *buf)
 {
     buffer_read_raw(buf, grid, GRID_SIZE * GRID_SIZE);
@@ -261,5 +285,19 @@ void map_grid_load_state_u16(uint16_t *grid, buffer *buf)
 {
     for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
         grid[i] = buffer_read_u16(buf);
+    }
+}
+
+void map_grid_load_state_u16_to_u32(uint32_t *grid, buffer *buf)
+{
+    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
+        grid[i] = buffer_read_u16(buf);
+    }
+}
+
+void map_grid_load_state_u32(uint32_t *grid, buffer *buf)
+{
+    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
+        grid[i] = buffer_read_u32(buf);
     }
 }

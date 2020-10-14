@@ -599,10 +599,8 @@ const image *image_get(int id)
 {
     if (id >= 0 && id < MAIN_ENTRIES) {
         return &data.main[id];
-    } else if (id >= MAIN_ENTRIES && id < MAIN_ENTRIES + MAX_MODDED_IMAGES) {
-        return mods_get_image(id);
     } else {
-        return NULL;
+        return mods_get_image(id);
     }
 }
 
@@ -631,10 +629,7 @@ const image *image_get_enemy(int id)
 const color_t *image_data(int id)
 {
     if (id < 0 || id >= MAIN_ENTRIES) {
-        if (id < MAIN_ENTRIES + MAX_MODDED_IMAGES) {
-            return mods_get_image_data(id);
-        }
-        return NULL;
+        return mods_get_image_data(id);
     }
     if (!data.main[id].draw.is_external) {
         return &data.main_data[data.main[id].draw.offset];

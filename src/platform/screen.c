@@ -65,7 +65,7 @@ static void set_scale_for_screen(int pixel_width, int pixel_height)
 }
 #endif
 
-int platform_screen_get_scale()
+int platform_screen_get_scale(void)
 {
     return scale_percentage;
 }

@@ -11,8 +11,8 @@
 typedef struct {
     int id;
 
-    short image_id;
-    short cart_image_id;
+    unsigned int image_id;
+    unsigned int cart_image_id;
     unsigned char image_offset;
     unsigned char is_enemy_image;
 
@@ -140,7 +140,7 @@ int figure_is_herd(const figure *f);
 
 void figure_init_scenario(void);
 
-void figure_kill_all();
+void figure_kill_all(void);
 
 void figure_save_state(buffer *list, buffer *seq);
 
