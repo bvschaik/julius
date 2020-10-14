@@ -194,6 +194,9 @@ void city_resource_calculate_warehouse_stocks(void)
             continue;
         }
         building *warehouse = building_main(b);
+        if (warehouse->state != BUILDING_STATE_IN_USE || warehouse->type != BUILDING_WAREHOUSE) {
+            continue;
+        }
         if (warehouse->has_road_access) {
             b->has_road_access = warehouse->has_road_access;
             if (b->subtype.warehouse_resource_id) {

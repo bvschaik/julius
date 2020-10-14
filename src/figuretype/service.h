@@ -3,6 +3,8 @@
 
 #include "figure/figure.h"
 
+void figure_destination_priest_action(figure* f);
+
 void figure_priest_action(figure *f);
 
 void figure_school_child_action(figure *f);

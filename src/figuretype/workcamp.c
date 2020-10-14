@@ -26,7 +26,7 @@ static int create_slave_workers(int leader_id, figure* f)
     slave->destination_building_id = f->destination_building_id;
 	slave->destination_x = f->destination_x;
 	slave->destination_y = f->destination_y;
-	slave->action_state = FIGURE_ACTION_207_WORK_CAMP_SLAVE_FOLLOWING;
+	slave->action_state = FIGURE_ACTION_209_WORK_CAMP_SLAVE_FOLLOWING;
 	building_monument_add_delivery(slave->destination_building_id,f->id,f->collecting_item_id,1);
     return slave->id;
 }
@@ -164,7 +164,7 @@ void figure_workcamp_slave_action(figure* f) {
 	case FIGURE_ACTION_149_CORPSE:
 		figure_combat_handle_corpse(f);
 		break;
-	case FIGURE_ACTION_207_WORK_CAMP_SLAVE_FOLLOWING:
+	case FIGURE_ACTION_209_WORK_CAMP_SLAVE_FOLLOWING:
 		if (f->leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE) {
 			f->state = FIGURE_STATE_DEAD;
 		}
@@ -172,25 +172,25 @@ void figure_workcamp_slave_action(figure* f) {
 			if (leader->state == FIGURE_STATE_ALIVE) {
 				if (leader->type == FIGURE_WORK_CAMP_WORKER || leader->type == FIGURE_WORK_CAMP_SLAVE) {
 					figure_movement_follow_ticks(f, 1);
-					if (leader->action_state == FIGURE_ACTION_208_WORK_CAMP_SLAVE_GOING_TO_MONUMENT) {
-						f->action_state = FIGURE_ACTION_208_WORK_CAMP_SLAVE_GOING_TO_MONUMENT;
+					if (leader->action_state == FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT) {
+						f->action_state = FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT;
 					}
 				}
 				else {
 					f->state = FIGURE_STATE_DEAD;
 				}
 			} else { // leader arrived at the monument, continue on your own
-				f->action_state = FIGURE_ACTION_208_WORK_CAMP_SLAVE_GOING_TO_MONUMENT;
+				f->action_state = FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT;
 			}
 		}
 		if (leader->is_ghost) {
 			f->is_ghost = 1;
 		}
 		break;
-	case FIGURE_ACTION_208_WORK_CAMP_SLAVE_GOING_TO_MONUMENT:
+	case FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT:
 		figure_movement_move_ticks(f, 1);
 		if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
-			f->action_state = FIGURE_ACTION_207_WORK_CAMP_SLAVE_DELIVERING_RESOURCES;
+			f->action_state = FIGURE_ACTION_211_WORK_CAMP_SLAVE_DELIVERING_RESOURCES;
 			building* monument = building_get(f->destination_building_id);
 			if (!building_monument_access_point(monument, &dst)) {
 				f->state = FIGURE_STATE_DEAD;
@@ -201,7 +201,7 @@ void figure_workcamp_slave_action(figure* f) {
 			figure_route_remove(f);
 		}
 		break;
-	case FIGURE_ACTION_207_WORK_CAMP_SLAVE_DELIVERING_RESOURCES:
+	case FIGURE_ACTION_211_WORK_CAMP_SLAVE_DELIVERING_RESOURCES:
 		f->terrain_usage = TERRAIN_USAGE_ANY;
 		f->use_cross_country = 1;
 		if (figure_movement_move_ticks_cross_country(f, 1)) {

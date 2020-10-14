@@ -13,6 +13,9 @@
 #define MAX_PROGRESS_WORKSHOP 400
 #define INFINITE 10000
 
+#define MERCURY_BLESSING_LOADS 3
+
+
 int building_is_farm(building_type type)
 {
     return type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM;
@@ -136,6 +139,19 @@ void building_bless_farms(void)
             b->data.industry.curse_days_left = 0;
             b->data.industry.blessing_days_left = 16;
             update_farm_image(b);
+        }
+    }
+}
+
+void building_bless_industry(void)
+{
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building* b = building_get(i);
+        if (b->state == BUILDING_STATE_IN_USE && building_is_workshop(b->type) && b->loads_stored) {
+            if (b->loads_stored < MERCURY_BLESSING_LOADS) {
+                b->loads_stored = MERCURY_BLESSING_LOADS;
+            }
+            b->data.industry.progress = MAX_PROGRESS_WORKSHOP;
         }
     }
 }
