@@ -62,9 +62,52 @@ static void culture_action(figure *f, int group)
     figure_image_update(f, image_group(group));
 }
 
+void figure_destination_priest_action(figure* f)
+{
+    building* b = building_get(f->building_id);
+    building* destination = building_get(f->destination_building_id);
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != f->id || destination->state != BUILDING_STATE_IN_USE) {
+        f->state = FIGURE_STATE_DEAD;
+    }
+
+    switch (f->action_state) {
+    case FIGURE_ACTION_150_ATTACK:
+        figure_combat_handle_attack(f);
+        break;
+    case FIGURE_ACTION_149_CORPSE:
+        figure_combat_handle_corpse(f);
+        break;
+    case FIGURE_ACTION_212_DESTINATION_PRIEST_CREATED:
+        f->destination_x = destination->road_access_x;
+        f->destination_y = destination->road_access_y;
+        f->action_state = FIGURE_ACTION_213_PRIEST_GOING_TO_PANTHEON;
+        break;
+    case FIGURE_ACTION_213_PRIEST_GOING_TO_PANTHEON:
+        figure_movement_move_ticks(f, 1);
+        if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+            f->state = FIGURE_STATE_DEAD;
+        }
+        else if (f->direction == DIR_FIGURE_REROUTE) {
+            figure_route_remove(f);
+        }
+        else if (f->direction == DIR_FIGURE_LOST) {
+            f->state = FIGURE_STATE_DEAD;
+        }
+        break;
+    }
+    figure_image_increase_offset(f, 12);
+    figure_image_update(f, image_group(GROUP_FIGURE_PRIEST));
+}
+
+
 void figure_priest_action(figure *f)
 {
-    culture_action(f, GROUP_FIGURE_PRIEST);
+    if (f->destination_building_id) {
+        figure_destination_priest_action(f);
+    } else {
+        culture_action(f, GROUP_FIGURE_PRIEST);
+    }
 }
 
 void figure_school_child_action(figure *f)

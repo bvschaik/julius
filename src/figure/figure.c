@@ -78,6 +78,11 @@ void figure_delete(figure *f)
                 }
             }
             break;
+        case FIGURE_PRIEST:
+            if (f->building_id && f->destination_building_id) {
+                b->figure_id2 = 0;
+            }
+            break;
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
             city_emperor_mark_soldier_killed();
             break;

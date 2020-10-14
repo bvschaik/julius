@@ -871,9 +871,6 @@ static void spawn_figure_hospital(building *b)
 static void spawn_figure_temple(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_PRIEST)) {
-        return;
-    }
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
@@ -895,9 +892,17 @@ static void spawn_figure_temple(building *b)
             return;
         }
         b->figure_spawn_delay++;
-        if (b->figure_spawn_delay > spawn_delay) {
+        if (b->figure_spawn_delay > spawn_delay && !has_figure_of_type(b, FIGURE_PRIEST)) {
             b->figure_spawn_delay = 0;
             create_roaming_figure(b, road.x, road.y, FIGURE_PRIEST);
+        }
+        if (!b->figure_id2 && building_monument_module_type(BUILDING_PANTHEON) == 1) {
+            figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
+            int pantheon_id = building_monument_working(BUILDING_PANTHEON);
+            b->figure_id2 = f->id;
+            f->destination_building_id = pantheon_id;
+            f->building_id = b->id;
+            f->action_state = FIGURE_ACTION_212_DESTINATION_PRIEST_CREATED;
         }
     }
 }

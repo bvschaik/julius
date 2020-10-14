@@ -166,7 +166,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, "Priests reduce oil and wine consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, "Placeholder for Mars 2 module description" },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, "Placeholder for Venus 2 module description" },
-    {TR_BUILDING_PANTHEON_MODULE_1_DESC, "Placeholder for Pantheon module description" },
+    {TR_BUILDING_PANTHEON_MODULE_1_DESC, "All the temples in the city send priests to Pantheon, spreading the faith and blessings of their gods." },
     {TR_BUILDING_PANTHEON_MODULE_2_DESC, "Placeholder for Pantheon module 2 description" },
     {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, "Temple of Ceres Promitor" },
     {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, "Temple of Ceres Reparator" },
