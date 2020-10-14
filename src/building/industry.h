@@ -16,6 +16,8 @@ void building_industry_start_new_production(building *b);
 
 void building_bless_farms(void);
 void building_curse_farms(int big_curse);
+void building_bless_industry(void);
+
 
 void building_workshop_add_raw_material(building *b);
 

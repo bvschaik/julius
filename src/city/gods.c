@@ -63,7 +63,7 @@ static void perform_blessing(god_type god)
             break;
         case GOD_MERCURY:
             city_message_post(1, MESSAGE_BLESSING_FROM_MERCURY, 0, 0);
-            building_granary_bless();
+            building_bless_industry();
             break;
         case GOD_MARS:
             city_message_post(1, MESSAGE_BLESSING_FROM_MARS, 0, 0);
