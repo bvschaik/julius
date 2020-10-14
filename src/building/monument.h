@@ -22,6 +22,10 @@ typedef struct {
 	int cartloads;
 } monument_delivery;
 
+//typedef enum {
+//	CERES_MODULE_1_REDUCE_FOOD,
+//} module_type;
+
 int building_monument_access_point(building* b, map_point* dst);
 int building_monument_add_module(building* b, int module_type);
 int building_monument_deliver_resource(building* b, int resource);

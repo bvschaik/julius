@@ -603,6 +603,20 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_ENGINEER_GUILD:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
             break;
+        case BUILDING_MESS_HALL:
+            switch (scenario_property_climate())
+            {
+            case CLIMATE_NORTHERN:
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall"), "Mess ON North"));
+                break;
+            case CLIMATE_DESERT:
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall"), "Mess ON South"));
+                break;
+            default:
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall"), "Mess ON Central"));
+                break;
+            }
+            break;
     }
     map_routing_update_land();
     map_routing_update_walls();
@@ -733,6 +747,10 @@ int building_construction_place_building(building_type type, int x, int y)
         return 0;
     }
     if (type == BUILDING_BARRACKS && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
+        city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
+        return 0;
+    }
+    if (type == BUILDING_MESS_HALL && building_count_total(BUILDING_MESS_HALL)) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }

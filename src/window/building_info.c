@@ -467,6 +467,14 @@ static void draw_background(void)
             } else {
                 window_building_draw_market(&context);
             }
+        }
+        else if (btype == BUILDING_MESS_HALL) {
+            if (context.storage_show_special_orders) {
+                window_building_draw_market_orders(&context);
+            }
+            else {
+                window_building_draw_mess_hall(&context);
+            }
         } else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
                 window_building_draw_granary_orders(&context);
@@ -525,6 +533,8 @@ static void draw_background(void)
             window_building_draw_work_camp(&context);
         } else if (btype == BUILDING_ENGINEER_GUILD) {
             window_building_draw_engineer_guild(&context);
+        } else if (btype == BUILDING_MESS_HALL) {
+            window_building_draw_mess_hall(&context);
         } else if (btype == BUILDING_GRAND_TEMPLE_CERES) {
             window_building_draw_grand_temple_ceres(&context);
 		} else if (btype == BUILDING_GRAND_TEMPLE_NEPTUNE) {
@@ -625,8 +635,16 @@ static void draw_foreground(void)
             }
         } else if (btype == BUILDING_MARKET) {
             if (context.storage_show_special_orders) {
-                window_building_draw_market_orders_foreground(&context);
+                window_building_draw_market_orders_foreground(&context, 0);
             } else {
+                window_building_draw_market_foreground(&context);
+            }
+        }
+        else if (btype == BUILDING_MESS_HALL) {
+            if (context.storage_show_special_orders) {
+                window_building_draw_market_orders_foreground(&context, 1);
+            }
+            else {
                 window_building_draw_market_foreground(&context);
             }
         } else if (btype == BUILDING_ROADBLOCK) {
@@ -679,7 +697,7 @@ static int handle_specific_building_info_mouse(const mouse *m)
         return window_building_handle_mouse_figure_list(m, &context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.building_id)->type;
-        if (btype == BUILDING_MARKET) {
+        if (btype == BUILDING_MARKET || btype == BUILDING_MESS_HALL) {
             if (context.storage_show_special_orders) {
                 window_building_handle_mouse_market_orders(m, &context);
             } else {

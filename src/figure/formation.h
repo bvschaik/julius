@@ -159,6 +159,8 @@ void formation_change_morale(formation *m, int amount);
 int formation_has_low_morale(formation *m);
 void formation_update_morale_after_death(formation *m);
 
+void formation_change_all_legions_morale(int amount);
+
 void formation_update_monthly_morale_deployed(void);
 void formation_update_monthly_morale_at_rest(void);
 void formation_decrease_monthly_counters(formation *m);

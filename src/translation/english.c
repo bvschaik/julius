@@ -176,8 +176,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_2, "Temple of Mercurius Abundantia" },
     {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, "Temple of Mars Ultor" },
     {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_2, "Temple of Mars Quirinus" },
-    {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, "Temple of Venus Genetrix" },
-    {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_2, "Temple of Venus Verticordia" },
+    {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, "Temple of Venus Verticordia" },
+    {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_2, "Temple of Venus Genetrix" },
     {TR_BUILDING_PANTHEON_DESC_MODULE_1, "Pantheon of Roma Aeterna" },
     {TR_BUILDING_PANTHEON_DESC_MODULE_2, "Pantheon of the Ara Maxima" },
     {TR_BUILDING_GRAND_TEMPLE_MENU, "Grand temple" },
@@ -261,7 +261,10 @@ static translation_string all_strings[] = {
     {TR_CONFIRM_DELETE_MONUMENT, "Demolishing this monument"},
     {TR_SELECT_EPITHET_PROMPT_HEADER, "Select epithet to bestow"},
     {TR_SELECT_EPITHET_PROMPT_TEXT, "Bestowing an epithet will permanently dedicate your temple to one aspect of its deity, imbuing priests with divine power." },
-    {TR_BUILDING_INFO_MONTHLY_LEVY, "/month"}
+    {TR_BUILDING_INFO_MONTHLY_LEVY, "/month"},
+    {TR_BUILDING_MESS_HALL, "Mess hall"},
+    {TR_BUILDING_MESS_HALL_DESC, "The mess hall collects food from city granaries to feed soldiers stationed at city forts. A poorly supplied mess hall will slow recruitment and damage morale."},
+    {TR_MARKET_SPECIAL_ORDERS_HEADER, "Goods to collect"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

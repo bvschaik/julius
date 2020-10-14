@@ -111,6 +111,7 @@ void building_count_update(void)
             case BUILDING_MARKET:
             // military
             case BUILDING_MILITARY_ACADEMY:
+            case BUILDING_MESS_HALL:
             // religion
             case BUILDING_SMALL_TEMPLE_CERES:
             case BUILDING_SMALL_TEMPLE_NEPTUNE:

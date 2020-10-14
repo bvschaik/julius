@@ -7,10 +7,13 @@
 #include "city/data_private.h"
 #include "core/calc.h"
 #include "empire/city.h"
+#include "figure/formation.h"
 #include "game/tutorial.h"
 #include "map/road_access.h"
 #include "scenario/building.h"
 #include "scenario/property.h"
+
+#define FOOD_PER_SOLDIER_MONTHLY 10;
 
 static struct {
     resource_list resource_list;
@@ -301,7 +304,7 @@ void city_resource_calculate_food_stocks_and_supply_wheat(void)
     if (scenario_property_rome_supplies_wheat()) {
         for (int i = 1; i < MAX_BUILDINGS; i++) {
             building *b = building_get(i);
-            if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MARKET) {
+            if (b->state == BUILDING_STATE_IN_USE && (b->type == BUILDING_MARKET || b->type == BUILDING_MESS_HALL)) {
                 b->data.market.inventory[INVENTORY_WHEAT] = 200;
             }
         }
@@ -377,6 +380,28 @@ void city_resource_consume_food(void)
                     }
                 }
             }
+        }
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MESS_HALL) {
+            int food_required = city_data.military.total_soldiers * FOOD_PER_SOLDIER_MONTHLY;
+            int food_allocated = 0;
+            for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
+                if (b->data.market.inventory[i] >= (food_required - food_allocated)) {
+                    b->data.market.inventory[i] -= (food_required - food_allocated);
+                    food_allocated += food_required;
+                    break;
+                }
+                else {
+                    food_allocated += b->data.market.inventory[i];
+                    b->data.market.inventory[i] = 0;
+                }
+            }          
+            
+            if (food_allocated < food_required) {
+                int morale_penalty = calc_percentage(food_allocated, food_required);
+                formation_change_all_legions_morale((morale_penalty / 10) * -1);
+            }
+
+            total_consumed += food_allocated;
         }
     }
     city_data.resource.food_consumed_last_month = total_consumed;

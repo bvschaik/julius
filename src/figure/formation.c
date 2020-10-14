@@ -1,5 +1,6 @@
 #include "formation.h"
 
+#include "building/count.h"
 #include "building/monument.h"
 #include "city/military.h"
 #include "core/calc.h"
@@ -290,9 +291,9 @@ void formation_change_morale(formation *m, int amount)
                 break;
         }
     }
-    if (m->is_legion && building_monument_working(BUILDING_GRAND_TEMPLE_MARS)) {
-        max_morale += 10;
-    }
+    //if (m->is_legion && building_monument_working(BUILDING_GRAND_TEMPLE_MARS)) {
+    //    max_morale += 10;
+    //}
     m->morale = calc_bound(m->morale + amount, 0, max_morale);
 }
 
@@ -370,6 +371,10 @@ void formation_update_monthly_morale_at_rest(void)
             continue;
         }
         if (m->is_legion) {
+            if (!building_count_active(BUILDING_MESS_HALL)) {
+                formation_change_all_legions_morale(-10);
+            }
+
             if (m->is_at_fort) {
                 m->months_from_home = 0;
                 m->months_very_low_morale = 0;
@@ -388,6 +393,18 @@ void formation_update_monthly_morale_at_rest(void)
         } else {
             formation_change_morale(m, 0);
         }
+    }
+}
+
+void formation_change_all_legions_morale(int amount)
+{
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation* m = &formations[i];
+        if (!m->is_legion) {
+            continue;
+        }
+
+        formation_change_morale(m, amount);
     }
 }
 

@@ -599,6 +599,38 @@ static void set_market_graphic(building *b)
     }
 }
 
+static void spawn_market_buyer(building* b, map_point road) {
+    if (b->figure_id2) {
+        figure* f = figure_get(b->figure_id2);
+        if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_MARKET_BUYER && f->type != FIGURE_LABOR_SEEKER)) {
+            b->figure_id2 = 0;
+        }
+    }
+    else {
+        map_has_road_access(b->x, b->y, b->size, &road);
+        int dst_building_id = building_market_get_storage_destination(b);
+        if (dst_building_id > 0) {
+            figure* f = figure_create(FIGURE_MARKET_BUYER, road.x, road.y, DIR_0_TOP);
+            f->action_state = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
+            f->building_id = b->id;
+            b->figure_id2 = f->id;
+            f->destination_building_id = dst_building_id;
+            f->collecting_item_id = b->data.market.fetch_inventory_id;
+            building* b_dst = building_get(dst_building_id);
+            if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) ||
+                map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
+                f->destination_x = road.x;
+                f->destination_y = road.y;
+            }
+            else {
+                f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
+                f->destination_x = f->x;
+                f->destination_y = f->y;
+            }
+        }
+    }
+}
+
 static void spawn_figure_market(building *b)
 {
     set_market_graphic(b);
@@ -631,35 +663,10 @@ static void spawn_figure_market(building *b)
             create_roaming_figure(b, road.x, road.y, FIGURE_MARKET_TRADER);
         }
         // market buyer or labor seeker
-        if (b->figure_id2) {
-            figure *f = figure_get(b->figure_id2);
-            if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_MARKET_BUYER && f->type != FIGURE_LABOR_SEEKER)) {
-                b->figure_id2 = 0;
-            }
-        } else {
-            map_has_road_access(b->x, b->y, b->size, &road);
-            int dst_building_id = building_market_get_storage_destination(b);
-            if (dst_building_id > 0) {
-                figure *f = figure_create(FIGURE_MARKET_BUYER, road.x, road.y, DIR_0_TOP);
-                f->action_state = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
-                f->building_id = b->id;
-                b->figure_id2 = f->id;
-                f->destination_building_id = dst_building_id;
-                f->collecting_item_id = b->data.market.fetch_inventory_id;
-                building *b_dst = building_get(dst_building_id);
-                if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) ||
-                    map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
-                    f->destination_x = road.x;
-                    f->destination_y = road.y;
-                } else {
-                    f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-                    f->destination_x = f->x;
-                    f->destination_y = f->y;
-                }
-            }
-        }
+        spawn_market_buyer(b, road);
     }
 }
+
 
 static void set_bathhouse_graphic(building *b)
 {
@@ -1221,6 +1228,18 @@ static void spawn_figure_engineer_guild(building* b) {
     }
 }
 
+static void spawn_figure_mess_hall(building* b) {
+    check_labor_problem(b);
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 100);
+        if (has_figure_of_type(b, FIGURE_MARKET_BUYER)) {
+            return;
+        }
+        spawn_market_buyer(b, road);
+    }
+}
+
 static void update_native_crop_progress(building *b)
 {
     b->data.industry.progress++;
@@ -1354,6 +1373,9 @@ void building_figure_generate(void)
                     break;
                 case BUILDING_ENGINEER_GUILD:
                     spawn_figure_engineer_guild(b);
+                    break;
+                case BUILDING_MESS_HALL:
+                    spawn_figure_mess_hall(b);
                     break;
                 case BUILDING_GRAND_TEMPLE_CERES:
                 case BUILDING_GRAND_TEMPLE_NEPTUNE:
