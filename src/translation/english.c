@@ -277,7 +277,10 @@ static translation_string all_strings[] = {
     {TR_WARNING_NO_MESS_HALL, "You must first build a Mess hall to feed your soldiers." },
     {TR_WARNING_MAX_GRAND_TEMPLES, "Only two Grand temples can be built." },
     {TR_CITY_MESSAGE_TITLE_GRAND_TEMPLE_COMPLETE, "Grand temple completed"},
-    {TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE, "Priests and worshippers flock to the new grand temple for the rites of dedication. Your people stand in awe of the majesty of your works, and your chosen deity showers you with favor."}
+    {TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE, "Priests and worshippers flock to the new grand temple for the rites of dedication. Your people stand in awe of the majesty of your works, and your chosen deity showers you with favor."},
+    {TR_CITY_MESSAGE_TITLE_MERCURY_BLESSING, "A blessing from Mercury" },
+    {TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING, "Delighted by your devotion, Mercury has blessed your industry, uncovering raw materials for your craftsmen." },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -62,7 +62,7 @@ static void perform_blessing(god_type god)
             city_data.religion.neptune_double_trade_active = NEPTUNE_BLESSING_MONTHS;
             break;
         case GOD_MERCURY:
-            city_message_post(1, MESSAGE_BLESSING_FROM_MERCURY, 0, 0);
+            city_message_post(1, MESSAGE_BLESSING_FROM_MERCURY_ALTERNATE, 0, 0);
             building_bless_industry();
             break;
         case GOD_MARS:
