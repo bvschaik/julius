@@ -43,6 +43,13 @@ void city_gods_reset_neptune_blessing(void)
     city_data.religion.neptune_double_trade_active = 0;
 }
 
+void city_gods_update_neptune_blessing(void)
+{   
+    if (city_data.religion.neptune_double_trade_active > 0) {
+        city_data.religion.neptune_double_trade_active--;
+    }
+}
+
 static void perform_blessing(god_type god)
 {
     switch (god) {
@@ -52,7 +59,7 @@ static void perform_blessing(god_type god)
             break;
         case GOD_NEPTUNE:
             city_message_post(1, MESSAGE_BLESSING_FROM_NEPTUNE, 0, 0);
-            city_data.religion.neptune_double_trade_active = 1;
+            city_data.religion.neptune_double_trade_active = NEPTUNE_BLESSING_MONTHS;
             break;
         case GOD_MERCURY:
             city_message_post(1, MESSAGE_BLESSING_FROM_MERCURY, 0, 0);
