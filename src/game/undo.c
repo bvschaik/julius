@@ -111,7 +111,7 @@ int game_undo_start_build(building_type type)
     data.building_cost = 0;
     data.type = type;
     clear_buildings();
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNDO) {
             data.available = 0;

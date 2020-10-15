@@ -226,7 +226,7 @@ void building_granaries_calculate_stocks(void)
     non_getting_granaries.total_storage_fruit = 0;
     non_getting_granaries.total_storage_meat = 0;
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
@@ -274,7 +274,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
     }
     int min_dist = INFINITE;
     int min_building_id = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
@@ -331,7 +331,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
     }
     int min_dist = INFINITE;
     int min_building_id = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
@@ -431,7 +431,7 @@ void building_granary_bless(void)
 {
     int min_stored = INFINITE;
     building *min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
             continue;
@@ -465,7 +465,7 @@ void building_granary_warehouse_curse(int big)
 {
     int max_stored = 0;
     building *max_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;

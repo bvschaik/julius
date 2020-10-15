@@ -202,7 +202,7 @@ void city_culture_calculate(void)
     city_data.culture.population_with_venus_access = 0; //venus
 
     int num_houses = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
             num_houses++;

@@ -272,7 +272,7 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
     }
     int min_distance = 10000;
     building *min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
             continue;

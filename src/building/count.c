@@ -55,7 +55,7 @@ void building_count_update(void)
     city_buildings_reset_dock_wharf_counters();
     city_health_reset_hospital_workers();
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->house_size) {
             continue;

@@ -180,7 +180,7 @@ void city_finance_estimate_taxes(void)
 {
     city_data.taxes.monthly.collected_plebs = 0;
     city_data.taxes.monthly.collected_patricians = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_tax_coverage) {
             int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
@@ -220,7 +220,7 @@ static void collect_monthly_taxes(void)
     for (int i = 0; i < MAX_HOUSE_LEVELS; i++) {
         city_data.population.at_level[i] = 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
             continue;
@@ -309,7 +309,7 @@ static void pay_monthly_salary(void)
 
 static void pay_monthly_building_levies(void) {
     int levies = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building* b = building_get(i);
         for (int i = 0; i < BUILDINGS_WITH_LEVIES; ++i) {
             if (b->type == building_levies[i].type) {
@@ -332,7 +332,7 @@ static void collect_monthly_tourism(void) {
         int num_buildings = calc_bound(building_count_active(tourism_modifiers[i].type), 0, city_data.population.population / tourism_modifiers[i].coverage);
         tourism_modifiers[i].total = num_buildings * tourism_modifiers[i].amount * (TOURISM_RATING_MODIFIER * city_finance_tourism_rating());
 
-        for (int i = 1; i < MAX_BUILDINGS; i++) {
+        for (int i = 1; i < building_count(); i++) {
             building* b = building_get(i);
             for (int i = 0; i < BUILDINGS_WITH_TOURISM; ++i) {
                 if (b->type == tourism_modifiers[i].type && b->state == BUILDING_STATE_IN_USE && b->num_workers) {
@@ -369,7 +369,7 @@ static void reset_taxes(void)
     city_data.taxes.yearly.uncollected_patricians = 0;
 
     // reset tax income in building list
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
             b->tax_income_or_storage = 0;

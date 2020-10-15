@@ -191,7 +191,7 @@ static void calculate_workers_needed_per_category(void)
         city_data.labor.categories[cat].workers_allocated = 0;
         city_data.labor.categories[cat].workers_needed = 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
@@ -313,7 +313,7 @@ static void check_employment(void)
 static void set_building_worker_weight(void)
 {
     int water_per_10k_per_building = calc_percentage(100, city_data.labor.categories[LABOR_CATEGORY_WATER].buildings);
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
@@ -349,8 +349,8 @@ static void allocate_workers_to_water(void)
     }
     int building_id = start_building_id;
     start_building_id = 0;
-    for (int guard = 1; guard < MAX_BUILDINGS; guard++, building_id++) {
-        if (building_id >= MAX_BUILDINGS) {
+    for (int guard = 1; guard < building_count(); guard++, building_id++) {
+        if (building_id >= building_count()) {
             building_id = 1;
         }
         building *b = building_get(building_id);
@@ -389,7 +389,7 @@ static void allocate_workers_to_non_water_buildings(void)
             city_data.labor.categories[i].workers_allocated < city_data.labor.categories[i].workers_needed
             ? 1 : 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
@@ -431,7 +431,7 @@ static void allocate_workers_to_non_water_buildings(void)
             }
         }
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;

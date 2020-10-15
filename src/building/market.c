@@ -116,7 +116,7 @@ int building_market_get_storage_destination(building *market)
     } else {
         permission = BUILDING_STORAGE_PERMISSION_MARKET;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
 
         if (b->state != BUILDING_STATE_IN_USE) {

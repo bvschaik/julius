@@ -208,7 +208,7 @@ int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
 int map_water_get_wharf_for_new_fishing_boat(figure *boat, map_point *tile)
 {
     building *wharf = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WHARF) {
             int wharf_boat_id = b->data.industry.fishing_boat_id;

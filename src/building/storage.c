@@ -28,7 +28,7 @@ void building_storage_reset_building_ids(void)
         data.storages[i].building_id = 0;
     }
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNUSED) {
             continue;

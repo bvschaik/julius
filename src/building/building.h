@@ -4,8 +4,6 @@
 #include "building/type.h"
 #include "core/buffer.h"
 
-#define MAX_BUILDINGS 10000
-
 typedef struct {
     int id;
 
@@ -158,6 +156,8 @@ typedef struct {
 
 building *building_get(int id);
 
+int building_count(void);
+
 int building_find(building_type type);
 
 building *building_main(building *b);
@@ -210,6 +210,6 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
                          buffer *sequence, buffer *corrupt_houses);
 
 void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *sequence, buffer *corrupt_houses);
+                         buffer *sequence, buffer *corrupt_houses, int includes_building_size);
 
 #endif // BUILDING_BUILDING_H

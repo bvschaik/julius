@@ -140,7 +140,7 @@ int formation_rioter_get_target_building(int *x_tile, int *y_tile)
 {
     int best_type_index = 100;
     building *best_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
@@ -178,7 +178,7 @@ static void set_enemy_target_building(formation *m)
     int best_type_index = 100;
     building *best_building = 0;
     int min_distance = 10000;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || map_soldier_strength_get(b->grid_offset)) {
             continue;
@@ -200,7 +200,7 @@ static void set_enemy_target_building(formation *m)
     }
     if (!best_building) {
         // no target buildings left: take rioter attack priority
-        for (int i = 1; i < MAX_BUILDINGS; i++) {
+        for (int i = 1; i < building_count(); i++) {
             building *b = building_get(i);
             if (b->state != BUILDING_STATE_IN_USE || map_soldier_strength_get(b->grid_offset)) {
                 continue;
@@ -236,7 +236,7 @@ static void set_native_target_building(formation *m)
     city_buildings_main_native_meeting_center(&meeting_x, &meeting_y);
     building *min_building = 0;
     int min_distance = 10000;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;

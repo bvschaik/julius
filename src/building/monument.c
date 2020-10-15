@@ -808,7 +808,7 @@ void building_monument_recalculate_monuments() {
 	data.monuments_number = 0;
 	data.unfinished_monuments = 0;
 
-	for (int i = 0; i < MAX_BUILDINGS; i++) {
+	for (int i = 0; i < building_count(); i++) {
 		building* b = building_get(i);
 		if (building_monument_is_monument(b)) {
 			data.monuments_number++;
