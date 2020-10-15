@@ -168,6 +168,8 @@ void building_update_desirability(void);
 
 int building_is_house(building_type type);
 
+int building_is_statue_garden_temple(building_type type);
+
 int building_is_fort(building_type type);
 
 int building_get_highest_id(void);

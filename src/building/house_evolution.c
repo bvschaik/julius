@@ -13,11 +13,16 @@
 #include "map/routing_terrain.h"
 #include "map/tiles.h"
 
+#define DEVOLVE_DELAY 2
+#define DEVOLVE_DELAY_WITH_VENUS 10
+
 typedef enum {
     EVOLVE = 1,
     NONE = 0,
     DEVOLVE = -1
 } evolve_status;
+
+static int active_devolve_delay;
 
 static int check_evolve_desirability(building *house)
 {
@@ -178,7 +183,7 @@ static int check_requirements(building *house, house_demands *demands)
 
 static int has_devolve_delay(building *house, evolve_status status)
 {
-    if (status == DEVOLVE && house->data.house.devolve_delay < 2) {
+    if (status == DEVOLVE && house->data.house.devolve_delay < active_devolve_delay) {
         house->data.house.devolve_delay++;
         return 1;
     } else {
@@ -518,6 +523,13 @@ void building_house_process_evolve_and_consume_goods(void)
     city_houses_reset_demands();
     house_demands *demands = city_houses_demands();
     int has_expanded = 0;
+
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
+        active_devolve_delay = DEVOLVE_DELAY_WITH_VENUS;
+    } else {
+        active_devolve_delay = DEVOLVE_DELAY;
+    }
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && building_is_house(b->type)) {

@@ -1,6 +1,7 @@
 #include "house_service.h"
 
 #include "building/building.h"
+#include "building/monument.h"
 #include "city/culture.h"
 
 static void decay(unsigned char *value)
@@ -94,6 +95,11 @@ void house_service_calculate_culture_aggregates(void)
         }
         if (b->data.house.hippodrome) {
             b->data.house.entertainment += 30;
+        }
+
+        // Venus Module 2 Entertainment Bonus
+        if (building_monument_module_type(BUILDING_GRAND_TEMPLE_VENUS) == 2 && b->data.house.temple_venus) {
+            b->data.house.entertainment += 10;
         }
 
         // education

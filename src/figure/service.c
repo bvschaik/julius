@@ -272,9 +272,11 @@ static void distribute_market_resources(building *b, building *market)
         market->data.market.pottery_demand = 10;
         distribute_good(b, market, 8 * model->pottery, INVENTORY_POTTERY);
     }
-    int goods_no = 4;
-    if (config_get(CONFIG_GP_CH_MORE_STOCKPILE)) {
-        goods_no = 8;
+    int goods_no = 8;
+
+    //Venus base stockpile bonus
+    if (b->data.house.temple_venus && building_monument_module_type(BUILDING_GRAND_TEMPLE_VENUS) == 2) {
+        goods_no = 12;
     }
     
     if (model->furniture) {
@@ -399,9 +401,6 @@ int figure_service_provide_coverage(figure *f)
                 case BUILDING_LARGE_TEMPLE_VENUS:
                 case BUILDING_GRAND_TEMPLE_VENUS:
                     houses_serviced = provide_culture(x, y, religion_coverage_venus);
-                    if (building_monument_upgraded(BUILDING_GRAND_TEMPLE_VENUS)) {
-                        houses_serviced = provide_culture(x, y, lift_mood);
-                    }
                     break;
                 default:
                     break;

@@ -392,7 +392,6 @@ void city_resource_consume_food(void)
         }
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MESS_HALL) {
             int food_required = city_military_total_soldiers_in_city() * FOOD_PER_SOLDIER_MONTHLY;
-            int food_allocated = 0;
             int num_foods = 0;
             int total_food_in_mess_hall = 0;
             double proportionate_amount = 0;
@@ -410,7 +409,6 @@ void city_resource_consume_food(void)
                     if (proportionate_amount > 0) {
                         amount_for_type = calc_bound(ceil(proportionate_amount), 0, b->data.market.inventory[i]);
                         b->data.market.inventory[i] -= amount_for_type;
-                        food_allocated += amount_for_type;
                         ++num_foods;
                     }
                 }

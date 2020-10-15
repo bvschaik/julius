@@ -1,6 +1,7 @@
 #include "building.h"
 
 #include "building/building_state.h"
+#include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/storage.h"
@@ -307,6 +308,17 @@ void building_update_desirability(void)
 int building_is_house(building_type type)
 {
     return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
+}
+
+// For Venus GT base bonus
+int building_is_statue_garden_temple(building_type type)
+{
+    return ((type >= BUILDING_SMALL_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) ||
+        (type >= BUILDING_GRAND_TEMPLE_CERES && type <= BUILDING_GRAND_TEMPLE_VENUS) ||
+        (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE) ||
+        (type >= BUILDING_SMALL_POND && type <= BUILDING_PANTHEON) ||
+        (type == BUILDING_GARDENS)
+     );
 }
 
 int building_is_fort(building_type type)

@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "core/calc.h"
 #include "map/data.h"
 #include "map/grid.h"
@@ -68,16 +69,38 @@ static void add_to_terrain(int x, int y, int size, int desirability, int step, i
 static void update_buildings(void)
 {
     int max_id = building_get_highest_id();
+    int value;
+    int step;
+    int step_size;
+    int range;
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE) {
+
             const model_building *model = model_get_building(b->type);
+            value = model->desirability_value;
+            step = model->desirability_step;
+            step_size = model->desirability_step_size;
+            range = model->desirability_range;
+
+            //Venus Module 2 House Desirability Bonus
+            if (building_is_house(b->type) && b->data.house.temple_venus && building_monument_module_type(BUILDING_GRAND_TEMPLE_VENUS) == 2) {
+                value += 2;
+            }
+
+            //Venus GT Base Bonus
+            if (building_is_statue_garden_temple(b->type) && building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
+                value += 1;
+                step += 1;
+                range += 1;
+            }
+
             add_to_terrain(
                 b->x, b->y, b->size,
-                model->desirability_value,
-                model->desirability_step,
-                model->desirability_step_size,
-                model->desirability_range);
+                value,
+                step,
+                step_size,
+                range);
         }
     }
 }
