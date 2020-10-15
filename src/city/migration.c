@@ -46,9 +46,6 @@ static void update_status(void)
             city_data.migration.emigration_duration--;
         } else {
             int migration_size = 12;
-            if (building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
-                migration_size = 24;
-            }
             city_data.migration.immigration_amount_per_batch =
                 calc_adjust_with_percentage(migration_size, city_data.migration.percentage);
             city_data.migration.immigration_duration = 2;
