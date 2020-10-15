@@ -136,8 +136,8 @@ void load_custom_messages(void) {
 
     // soldiers starving
     lang_message* m = &data.message_entries[i];
-    m->type = 2;
-    m->message_type = 0;
+    m->type = TYPE_MESSAGE;
+    m->message_type = MESSAGE_TYPE_GENERAL;
     m->x = 0;
     m->y = 0;
     m->width_blocks = 30;
@@ -154,8 +154,8 @@ void load_custom_messages(void) {
 
     // soldiers starving, no mess hall
     m = &data.message_entries[i];
-    m->type = 2;
-    m->message_type = 0;
+    m->type = TYPE_MESSAGE;
+    m->message_type = MESSAGE_TYPE_GENERAL;
     m->x = 0;
     m->y = 0;
     m->width_blocks = 30;
@@ -171,8 +171,8 @@ void load_custom_messages(void) {
 
     // monument completed
     m = &data.message_entries[i];
-    m->type = 2;
-    m->message_type = 0;
+    m->type = TYPE_MESSAGE;
+    m->message_type = MESSAGE_TYPE_GENERAL;
     m->x = 0;
     m->y = 0;
     m->width_blocks = 30;
@@ -183,6 +183,24 @@ void load_custom_messages(void) {
 
     m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_GRAND_TEMPLE_COMPLETE);
     m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE);
+
+    i += 1;
+
+    // replacement Mercury blessing
+    m = &data.message_entries[i];
+    m->type = TYPE_MESSAGE;
+    m->message_type = MESSAGE_TYPE_GENERAL;
+    m->x = 0;
+    m->y = 0;
+    m->width_blocks = 30;
+    m->height_blocks = 20;
+    m->title.x = 0;
+    m->title.y = 0;
+    m->urgent = 0;
+
+    m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_MERCURY_BLESSING);
+    m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING);
+
 }
 
 static int load_message(const char *filename, int localizable, uint8_t *data_buffer)

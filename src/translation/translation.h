@@ -283,6 +283,8 @@ typedef enum {
 	TR_WARNING_MAX_GRAND_TEMPLES,
 	TR_CITY_MESSAGE_TITLE_GRAND_TEMPLE_COMPLETE,
 	TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE,
+	TR_CITY_MESSAGE_TITLE_MERCURY_BLESSING,
+    TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING,
 	TRANSLATION_MAX_KEY
 } translation_key;
 
@@ -293,7 +295,7 @@ typedef struct {
 
 void translation_load(language_type language);
 
-const uint8_t* translation_for(translation_key key);
+uint8_t* translation_for(translation_key key);
 
 void translation_english(const translation_string** strings, int* num_strings);
 void translation_french(const translation_string** strings, int* num_strings);

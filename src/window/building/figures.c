@@ -23,7 +23,7 @@
 static void select_figure(int index, int param2);
 
 static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
-    8, 13, 13, 9, 4, 13, 8, 16, 7, 4,
+    8, 4, 4, 9, 51, 13, 8, 16, 7, 4,
     18, 42, 26, 41, 8, 1, 33, 10, 11, 25,
     8, 25, 15, 15, 15, 60, 12, 14, 5, 52,
     52, 2, 3, 6, 6, 13, 8, 8, 17, 12,
@@ -99,7 +99,7 @@ static void draw_trader(building_info_context *c, figure *f)
     lang_text_draw(21, city->name_id, c->x_offset + 40 + width, c->y_offset + 110, FONT_SMALL_BLACK);
 
     width = lang_text_draw(129, 1, c->x_offset + 40, c->y_offset + 132, FONT_SMALL_BLACK);
-    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? figure_trade_sea_trade_units : figure_trade_land_trade_units(), c->x_offset + 40 + width, c->y_offset + 132, FONT_SMALL_BLACK);
+    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? figure_trade_sea_trade_units() : figure_trade_land_trade_units(), c->x_offset + 40 + width, c->y_offset + 132, FONT_SMALL_BLACK);
 
     int trader_id = f->trader_id;
     if (f->type == FIGURE_TRADE_SHIP) {

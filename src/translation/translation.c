@@ -84,7 +84,7 @@ void translation_load(language_type language)
     set_strings(default_strings, num_default_strings, 1);
 }
 
-const uint8_t *translation_for(translation_key key)
+uint8_t *translation_for(translation_key key)
 {
     return data.strings[key];
 }
