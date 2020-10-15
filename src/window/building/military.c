@@ -153,24 +153,27 @@ void window_building_draw_legion_info(building_info_context *c)
     lang_text_draw_centered(138, m->legion_id, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
     // standard icon at the top
-    int image_id = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
-    int icon_height = image_get(image_id)->height;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16);
+    int icon_image_id = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
+    const image *icon_image = image_get(icon_image_id);
+    int icon_height = icon_image->height;
+    image_draw(icon_image_id, c->x_offset + 16 + (40 - icon_image->width) / 2, c->y_offset + 16);
     // standard flag
-    image_id = image_group(GROUP_FIGURE_FORT_FLAGS);
+    int flag_image_id = image_group(GROUP_FIGURE_FORT_FLAGS);
     if (m->figure_type == FIGURE_FORT_JAVELIN) {
-        image_id += 9;
+        flag_image_id += 9;
     } else if (m->figure_type == FIGURE_FORT_MOUNTED) {
-        image_id += 18;
+        flag_image_id += 18;
     }
     if (m->is_halted) {
-        image_id += 8;
+        flag_image_id += 8;
     }
-    int flag_height = image_get(image_id)->height;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height);
+    const image *flag_image = image_get(flag_image_id);
+    int flag_height = flag_image->height;
+    image_draw(flag_image_id, c->x_offset + 16 + (40 - flag_image->width) / 2, c->y_offset + 16 + icon_height);
     // standard pole and morale ball
-    image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height + flag_height);
+    int pole_image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
+    image_draw(pole_image_id,
+        c->x_offset + 16 + (40 - image_get(pole_image_id)->width) / 2, c->y_offset + 16 + icon_height + flag_height);
 
     // number of soldiers
     lang_text_draw(138, 23, c->x_offset + 100, c->y_offset + 60, FONT_NORMAL_BLACK);
@@ -350,7 +353,8 @@ void window_building_draw_legion_info_foreground(building_info_context *c)
             break;
     }
     lang_text_draw(138, title_id, c->x_offset + 24, c->y_offset + 236, FONT_NORMAL_WHITE);
-    lang_text_draw_multiline(138, text_id, c->x_offset + 24, c->y_offset + 252, 16 * (c->width_blocks - 4), FONT_NORMAL_GREEN);
+    lang_text_draw_multiline(138, text_id, c->x_offset + 24, c->y_offset + 252,
+        16 * (c->width_blocks - 4), FONT_NORMAL_GREEN);
 
     if (!m->is_at_fort) {
         button_border_draw(c->x_offset + 16 * (c->width_blocks - 18) / 2,

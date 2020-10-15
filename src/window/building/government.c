@@ -17,7 +17,8 @@ void window_building_draw_forum(building_info_context *c)
 
     building *b = building_get(c->building_id);
     int width = lang_text_draw(106, 2, c->x_offset + 44, c->y_offset + 43, FONT_NORMAL_BLACK);
-    lang_text_draw_amount(8, 0, b->tax_income_or_storage, c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK);
+    lang_text_draw_amount(8, 0, b->tax_income_or_storage,
+        c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK);
 
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
@@ -50,7 +51,8 @@ void window_building_draw_senate(building_info_context *c)
 
     building *b = building_get(c->building_id);
     int width = lang_text_draw(105, 2, c->x_offset + 44, c->y_offset + 43, FONT_NORMAL_BLACK);
-    lang_text_draw_amount(8, 0, b->tax_income_or_storage, c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK);
+    lang_text_draw_amount(8, 0, b->tax_income_or_storage,
+        c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK);
 
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);

@@ -81,7 +81,8 @@ void window_building_draw_pig_farm(building_info_context *c)
     draw_farm(c, 90, "wavs/meat_farm.wav", 117, RESOURCE_MEAT);
 }
 
-static void draw_raw_material(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource)
+static void draw_raw_material(
+    building_info_context *c, int help_id, const char *sound_file, int group_id, int resource)
 {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
@@ -139,7 +140,8 @@ void window_building_draw_clay_pit(building_info_context *c)
     draw_raw_material(c, 92, "wavs/clay.wav", 121, RESOURCE_CLAY);
 }
 
-static void draw_workshop(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource, int input_resource)
+static void draw_workshop(
+    building_info_context *c, int help_id, const char *sound_file, int group_id, int resource, int input_resource)
 {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
@@ -228,9 +230,11 @@ void window_building_draw_shipyard(building_info_context *c)
         width += text_draw_percentage(pct_done, c->x_offset + 32 + width, c->y_offset + 56, FONT_NORMAL_BLACK);
         lang_text_draw(100, 3, c->x_offset + 32 + width, c->y_offset + 56, FONT_NORMAL_BLACK);
         if (city_buildings_shipyard_boats_requested()) {
-            lang_text_draw_multiline(100, 5, c->x_offset + 32, c->y_offset + 80, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK);
+            lang_text_draw_multiline(100, 5, c->x_offset + 32, c->y_offset + 80,
+                16 * (c->width_blocks - 6), FONT_NORMAL_BLACK);
         } else {
-            lang_text_draw_multiline(100, 4, c->x_offset + 32, c->y_offset + 80, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK);
+            lang_text_draw_multiline(100, 4, c->x_offset + 32, c->y_offset + 80,
+                16 * (c->width_blocks - 6), FONT_NORMAL_BLACK);
         }
     }
 

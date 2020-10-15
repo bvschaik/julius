@@ -82,7 +82,8 @@ static void draw_trader(building_info_context *c, figure *f)
     lang_text_draw(21, city->name_id, c->x_offset + 40 + width, c->y_offset + 110, FONT_SMALL_BLACK);
 
     width = lang_text_draw(129, 1, c->x_offset + 40, c->y_offset + 132, FONT_SMALL_BLACK);
-    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 12 : 8, c->x_offset + 40 + width, c->y_offset + 132, FONT_SMALL_BLACK);
+    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 12 : 8,
+        c->x_offset + 40 + width, c->y_offset + 132, FONT_SMALL_BLACK);
 
     int trader_id = f->trader_id;
     if (f->type == FIGURE_TRADE_SHIP) {
@@ -386,7 +387,8 @@ void window_building_prepare_figure_list(building_info_context *c)
 int window_building_handle_mouse_figure_list(const mouse *m, building_info_context *c)
 {
     data.context_for_callback = c;
-    int handled = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, figure_buttons, c->figure.count, &data.focus_button_id);
+    int handled = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset,
+        figure_buttons, c->figure.count, &data.focus_button_id);
     data.context_for_callback = 0;
     return handled;
 }
