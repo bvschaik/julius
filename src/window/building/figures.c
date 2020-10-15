@@ -18,7 +18,10 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
+#include "translation/translation.h"
 #include "widget/city.h"
+
+#define NEW_FIGURES_ID 73
 
 static void select_figure(int index, int param2);
 
@@ -31,6 +34,10 @@ static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
     8, 8, 34, 39, 33, 43, 27, 48, 63, 8,
     8, 8, 8, 8, 53, 8, 38, 62, 54, 55,
     56, 8, 8
+};
+// Starting with FIGURE_WORK_CAMP_WORKER = 73,
+static const int NEW_FIGURE_TYPES[] = {
+    TR_FIGURE_TYPE_WORK_CAMP_WORKER,TR_FIGURE_TYPE_WORK_CAMP_SLAVE,TR_FIGURE_TYPE_WORK_CAMP_ENGINEER,
 };
 
 static generic_button figure_buttons[] = {
@@ -328,7 +335,12 @@ static void draw_normal_figure(building_info_context *c, figure *f)
     image_draw(image_id, c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
-    lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK);
+    if (f->type >= NEW_FIGURES_ID) {
+        int relative_id = f->type - NEW_FIGURES_ID;
+        text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK,0);
+    } else {
+        lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK);
+    }
 
     if (c->figure.phrase_id >= 0) {
         lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
