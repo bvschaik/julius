@@ -292,10 +292,14 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TITLE_GRAND_TEMPLE_COMPLETE, "Grand temple completed"},
     {TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE, "Priests and worshippers flock to the new grand temple for the rites of dedication. Your people stand in awe of the majesty of your works, and your chosen deity showers you with favor."},
     {TR_CITY_MESSAGE_TITLE_MERCURY_BLESSING, "A blessing from Mercury" },
-    {TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING, "Delighted by your devotion, Mercury has blessed your industry, uncovering raw materials for your craftsmen." },
-    {TR_FIGURE_TYPE_WORK_CAMP_WORKER, "Slave master" },
-    {TR_FIGURE_TYPE_WORK_CAMP_SLAVE, "Slave" },
-    {TR_FIGURE_TYPE_WORK_CAMP_ENGINEER, "Engineer" },
+    {TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING, "Delighted by your devotion, Mercury has blessed your industry, uncovering raw materials for your craftsmen."},
+    {TR_FIGURE_TYPE_WORK_CAMP_WORKER, "Slave master"},
+    {TR_FIGURE_TYPE_WORK_CAMP_SLAVE, "Slave"},
+    {TR_FIGURE_TYPE_WORK_CAMP_ENGINEER, "Engineer"},
+    {TR_FIGURE_TYPE_MESS_HALL_BUYER, "Quartermaster"},
+    {TR_FIGURE_TYPE_MESS_HALL_COLLECTOR, "Mess hall worker"},
+        
+
 
 
 };

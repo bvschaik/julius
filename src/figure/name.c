@@ -110,6 +110,7 @@ int figure_name_get(figure_type type, enemy_type enemy)
     case FIGURE_DELIVERY_BOY:
     case FIGURE_BARBER:
     case FIGURE_WORKER:
+    case FIGURE_MESS_HALL_COLLECTOR:
     default:
         return get_next_name(&data.citizen_male, 1, 64);
 
@@ -133,6 +134,7 @@ int figure_name_get(figure_type type, enemy_type enemy)
 
     case FIGURE_FORT_LEGIONARY:
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
+    case FIGURE_MESS_HALL_BUYER:
         return get_next_name(&data.legionary, 297, 32);
 
     case FIGURE_INDIGENOUS_NATIVE:

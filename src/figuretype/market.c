@@ -5,6 +5,7 @@
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "core/image.h"
+#include "core/mods.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
@@ -14,9 +15,9 @@
 #define MAX_FOOD_STOCKED_MARKET 800
 #define MAX_FOOD_STOCKED_MESS_HALL 1200
 
-static int create_delivery_boy(int leader_id, figure *f)
+static int create_delivery_boy(int leader_id, figure *f, int type)
 {
-    figure *boy = figure_create(FIGURE_DELIVERY_BOY, f->x, f->y, 0);
+    figure *boy = figure_create(type, f->x, f->y, 0);
     boy->leading_figure_id = leader_id;
     boy->collecting_item_id = f->collecting_item_id;
     boy->building_id = f->building_id;
@@ -71,9 +72,13 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     }
     building_granary_remove_resource(granary, resource, 100 * num_loads);
     // create delivery boys
+    int type = FIGURE_DELIVERY_BOY;
+    if (f->type == FIGURE_MESS_HALL_BUYER) {
+        type = FIGURE_MESS_HALL_COLLECTOR;
+    }
     int previous_boy = f->id;
     for (int i = 0; i < num_loads; i++) {
-        previous_boy = create_delivery_boy(previous_boy, f);
+        previous_boy = create_delivery_boy(previous_boy, f, type);
     }
     return 1;
 }
@@ -102,9 +107,9 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     building_warehouse_remove_resource(warehouse, resource, num_loads);
 
     // create delivery boys
-    int boy1 = create_delivery_boy(f->id, f);
+    int boy1 = create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
     if (num_loads > 1) {
-        create_delivery_boy(boy1, f);
+        create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
     }
     return 1;
 }
@@ -158,7 +163,11 @@ void figure_market_buyer_action(figure *f)
             }
             break;
     }
-    figure_image_update(f, image_group(GROUP_FIGURE_MARKET_LADY));
+    if (f->type == FIGURE_MESS_HALL_BUYER) {
+        figure_image_update(f, image_group(GROUP_FIGURE_TOWER_SENTRY));
+    } else {
+        figure_image_update(f, image_group(GROUP_FIGURE_MARKET_LADY));
+    }
 }
 
 void figure_delivery_boy_action(figure *f)
@@ -173,7 +182,7 @@ void figure_delivery_boy_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     } else {
         if (leader->state == FIGURE_STATE_ALIVE) {
-            if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY) {
+            if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY || leader->type == FIGURE_MESS_HALL_BUYER || leader->type == FIGURE_MESS_HALL_COLLECTOR) {
                 figure_movement_follow_ticks(f, 1);
             } else {
                 f->state = FIGURE_STATE_DEAD;
@@ -187,11 +196,24 @@ void figure_delivery_boy_action(figure *f)
         f->is_ghost = 1;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_DELIVERY_BOY) + 96 +
-            figure_image_corpse_offset(f);
+
+    if (f->type == FIGURE_MESS_HALL_COLLECTOR) {
+        if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+            f->image_id = mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall death 01") +
+                figure_image_corpse_offset(f);
+        }
+        else {
+            f->image_id = mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall NE 01") + dir * 12 +
+                f->image_offset;
+        }
     } else {
-        f->image_id = image_group(GROUP_FIGURE_DELIVERY_BOY) +
-            dir + 8 * f->image_offset;
+        if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+            f->image_id = image_group(GROUP_FIGURE_DELIVERY_BOY) + 96 +
+                figure_image_corpse_offset(f);
+        }
+        else {
+            f->image_id = image_group(GROUP_FIGURE_DELIVERY_BOY) +
+                dir + 8 * f->image_offset;
+        }
     }
 }
