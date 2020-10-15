@@ -146,7 +146,8 @@ static void set_deadline_years(int value)
 
 static void button_deadline_years(int param1, int param2)
 {
-    window_numeric_input_show(screen_dialog_offset_x() + 220, screen_dialog_offset_y() + 100, 3, 999, set_deadline_years);
+    window_numeric_input_show(screen_dialog_offset_x() + 220, screen_dialog_offset_y() + 100,
+        3, 999, set_deadline_years);
 }
 
 static void set_favor(int value)

@@ -142,8 +142,10 @@ static void draw_empire_object(const empire_object *obj)
             image_id = image_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
         }
     } else if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
-        draw_shadowed_number(obj->invasion_path_id, data.x_draw_offset + x - 9, data.y_draw_offset + y - 9, COLOR_WHITE);
-        draw_shadowed_number(obj->invasion_years, data.x_draw_offset + x + 15, data.y_draw_offset + y - 9, COLOR_FONT_RED);
+        draw_shadowed_number(obj->invasion_path_id,
+            data.x_draw_offset + x - 9, data.y_draw_offset + y - 9, COLOR_WHITE);
+        draw_shadowed_number(obj->invasion_years,
+            data.x_draw_offset + x + 15, data.y_draw_offset + y - 9, COLOR_FONT_RED);
     } else if (obj->type == EMPIRE_OBJECT_ROMAN_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
         draw_shadowed_number(obj->distant_battle_travel_months,
             data.x_draw_offset + x + 7, data.y_draw_offset + y - 9,
@@ -254,7 +256,8 @@ static void draw_panel_buttons(const empire_city *city)
     if (city) {
         draw_city_info(city);
     } else {
-        lang_text_draw_centered(150, scenario_empire_id(), data.x_min, data.y_max - 85, data.x_max - data.x_min, FONT_NORMAL_GREEN);
+        lang_text_draw_centered(150, scenario_empire_id(),
+            data.x_min, data.y_max - 85, data.x_max - data.x_min, FONT_NORMAL_GREEN);
     }
     lang_text_draw(151, scenario_empire_id(), data.x_min + 220, data.y_max - 45, FONT_NORMAL_GREEN);
 
@@ -319,7 +322,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
     data.focus_button_id = 0;
     if (!arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2, 0)) {
-        if (!generic_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, generic_button_ok, 1, &data.focus_button_id)) {
+        if (!generic_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100,
+            generic_button_ok, 1, &data.focus_button_id)) {
             determine_selected_object(m);
             int selected_object = empire_selected_object();
             if (selected_object) {
