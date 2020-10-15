@@ -21,19 +21,21 @@
 #include "translation/translation.h"
 #include "widget/city.h"
 
+#define CAMEL_PORTRAIT 59
 #define NEW_FIGURES_ID 73
+
 
 static void select_figure(int index, int param2);
 
 static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
-    8, 4, 4, 9, 51, 13, 8, 16, 7, 4, // 1-10
-    18, 42, 26, 41, 8, 1, 33, 10, 11, 25, //11-20
-    8, 25, 15, 15, 15, 60, 12, 14, 5, 52, //21-30
-    52, 2, 3, 6, 6, 13, 8, 8, 17, 12, //31-40
-    58, 21, 50, 8, 8, 8, 28, 30, 23, 8, //41-50
-    8, 8, 34, 39, 33, 43, 27, 48, 63, 8, //51-60
-    8, 8, 8, 8, 53, 8, 38, 62, 54, 55, //61-70
-    56, 8, 8, 58, 0, 7, 50, 0, 0, 0 //71-80
+    8, 4, 4, 9, 51, 13, 8, 16, 7, 4, // 0-9
+    18, 42, 26, 41, 8, 1, 33, 10, 11, 25, //10-19
+    8, 25, 15, 15, 15, 60, 12, 14, 5, 52, //20-29
+    52, 2, 3, 6, 6, 13, 8, 8, 17, 12, //30-39
+    58, 21, 50, 8, 8, 8, 28, 30, 23, 8, //40-49
+    8, 8, 34, 39, 33, 43, 27, 48, 63, 8, //50-59
+    8, 8, 8, 8, 53, 8, 38, 62, 54, 55, //60-69
+    56, 8, 8, 58, 0, 7, 50, 0, 0, 0 //70-79
 };
 // Starting with FIGURE_WORK_CAMP_WORKER = 73,
 static const int NEW_FIGURE_TYPES[] = {
@@ -66,6 +68,11 @@ static int big_people_image(figure_type type)
     case FIGURE_MESS_HALL_COLLECTOR:
         return mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall Portrait");
         break;
+    case FIGURE_TRADE_CARAVAN_DONKEY:
+    case FIGURE_TRADE_CARAVAN:
+        if (scenario_property_climate() == CLIMATE_DESERT) {
+            return image_group(GROUP_BIG_PEOPLE) + CAMEL_PORTRAIT - 1;
+        }
     default:
         break;
     }
