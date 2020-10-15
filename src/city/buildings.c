@@ -210,7 +210,7 @@ void city_buildings_set_mission_post_operational(void)
     city_data.building.mission_post_operational = 1;
 }
 
-int city_buildings_mess_hall_fulfillment(void)
+int city_buildings_unknown_value(void)
 {
-    return city_data.building.mess_hall_monthly_fulfillment;
+    return city_data.building.unknown_value;
 }

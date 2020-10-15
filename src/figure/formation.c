@@ -2,7 +2,7 @@
 
 #include "building/count.h"
 #include "building/monument.h"
-#include "city/buildings.h"
+#include "city/data_private.h"
 #include "city/military.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -269,11 +269,11 @@ void formation_change_morale(formation *m, int amount)
 {
     int max_morale;
     if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-        max_morale = m->has_military_training ? 100 : 80;
+        max_morale = m->has_military_training ? 90 : 80;
     } else if (m->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
         max_morale = 100;
     } else if (m->figure_type == FIGURE_FORT_JAVELIN || m->figure_type == FIGURE_FORT_MOUNTED) {
-        max_morale = m->has_military_training ? 80 : 60;
+        max_morale = m->has_military_training ? 70 : 60;
     } else {
         switch (m->enemy_type) {
             case ENEMY_0_BARBARIAN:
@@ -292,10 +292,8 @@ void formation_change_morale(formation *m, int amount)
                 break;
         }
     }
-    //if (m->is_legion && building_monument_working(BUILDING_GRAND_TEMPLE_MARS)) {
-    //    max_morale += 10;
-    //}
-    m->morale = calc_bound(m->morale + amount, 0, max_morale);
+
+    m->morale = calc_bound(m->morale + amount, 0, max_morale + m->mess_hall_bonus_max_morale);
 }
 
 void formation_update_morale_after_death(formation *m)
@@ -350,7 +348,7 @@ void formation_update_monthly_morale_deployed(void)
                 } else if (f->morale <= 20) {
                     f->months_low_morale++;
                 }
-            }
+            }            
         } else { // enemy
             if (f->morale <= 20 && !f->months_low_morale && !f->months_very_low_morale) {
                 change_all_morale(10, -10);
@@ -361,6 +359,36 @@ void formation_update_monthly_morale_deployed(void)
                 f->months_low_morale++;
             }
         }
+    }
+}
+
+void formation_legion_mess_hall_morale(void) {
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation* f = &formations[i];
+        int morale_penalty = 0;
+        int max_morale_bonus = 0;
+        if (f->in_use != 1 || !f->is_legion) {
+            continue;
+        }
+
+        // food types bonus
+        f->mess_hall_bonus_max_morale = 0;
+        max_morale_bonus += calc_bound(((city_data.mess_hall.food_types - 1) * 5), 0, 10);        
+
+        // well-fed bonus
+        if (city_data.mess_hall.food_stress_cumulative < 3) {
+            max_morale_bonus += 5;
+            morale_penalty = -2;
+        }   
+
+        // hungry soldiers morale penalty
+        if (city_data.mess_hall.food_stress_cumulative > 20) {
+            morale_penalty = city_data.mess_hall.food_stress_cumulative / 10;            
+        }
+
+        // apply
+        f->mess_hall_bonus_max_morale = max_morale_bonus;
+        formation_change_morale(f, morale_penalty * -1);
     }
 }
 
@@ -387,12 +415,7 @@ void formation_update_monthly_morale_at_rest(void)
                     formation_change_morale(m, -5);
                 }
             }
-
-            // hungry soldiers morale penalty
-            if (city_buildings_mess_hall_fulfillment()) {
-                int morale_penalty = city_buildings_mess_hall_fulfillment() / 10;
-                formation_change_morale(m, morale_penalty * -1);
-            }
+            formation_legion_mess_hall_morale();
         } else {
             formation_change_morale(m, 0);
         }
@@ -663,7 +686,7 @@ void formations_save_state(buffer *buf, buffer *totals)
         buffer_write_i16(buf, f->destination_building_id);
         buffer_write_i16(buf, f->standard_figure_id);
         buffer_write_u8(buf, f->is_legion);
-        buffer_skip(buf, 1);
+        buffer_write_u8(buf, f->mess_hall_bonus_max_morale);
         buffer_write_i16(buf, f->attack_type);
         buffer_write_i16(buf, f->legion_recruit_type);
         buffer_write_i16(buf, f->has_military_training);
@@ -736,7 +759,7 @@ void formations_load_state(buffer *buf, buffer *totals)
         f->destination_building_id = buffer_read_i16(buf);
         f->standard_figure_id = buffer_read_i16(buf);
         f->is_legion = buffer_read_u8(buf);
-        buffer_skip(buf, 1);
+        f->mess_hall_bonus_max_morale = buffer_read_u8(buf);
         f->attack_type = buffer_read_i16(buf);
         f->legion_recruit_type = buffer_read_i16(buf);
         f->has_military_training = buffer_read_i16(buf);

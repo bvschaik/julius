@@ -156,6 +156,7 @@ static int get_height_id(void)
             case BUILDING_SENATE:
             case BUILDING_SENATE_UPGRADED:
             case BUILDING_FOUNTAIN:
+
                 return 2;
 
             case BUILDING_BARRACKS:
@@ -172,6 +173,9 @@ static int get_height_id(void)
             case BUILDING_GRAND_TEMPLE_VENUS:
             case BUILDING_PANTHEON:
                 return 6;
+
+            case BUILDING_MESS_HALL:
+                return 7;
 
             default:
                 return 0;
@@ -403,6 +407,7 @@ static void init(int grid_offset)
         case 4: context.height_blocks = 14; break;
         case 5: context.height_blocks = 23; break;
         case 6: context.height_blocks = 38; break;
+        case 7: context.height_blocks = 26; break;
         default: context.height_blocks = 22; break;
     }
     // dialog placement
@@ -474,7 +479,7 @@ static void draw_background(void)
                 window_building_draw_market_orders(&context);
             }
             else {
-                window_building_draw_mess_hall(&context, city_data.building.mess_hall_monthly_fulfillment);
+                window_building_draw_mess_hall(&context);
             }
         } else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
@@ -535,7 +540,7 @@ static void draw_background(void)
         } else if (btype == BUILDING_ENGINEER_GUILD) {
             window_building_draw_engineer_guild(&context);
         } else if (btype == BUILDING_MESS_HALL) {
-            window_building_draw_mess_hall(&context, city_data.building.mess_hall_monthly_fulfillment);
+            window_building_draw_mess_hall(&context);
         } else if (btype == BUILDING_GRAND_TEMPLE_CERES) {
             window_building_draw_grand_temple_ceres(&context);
 		} else if (btype == BUILDING_GRAND_TEMPLE_NEPTUNE) {

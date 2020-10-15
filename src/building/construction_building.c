@@ -10,7 +10,6 @@
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/storage.h"
-#include "city/buildings.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/config.h"
@@ -604,6 +603,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
             break;
         case BUILDING_MESS_HALL:
+            b->data.market.is_mess_hall = 1;
             switch (scenario_property_climate())
             {
             case CLIMATE_NORTHERN:

@@ -8,6 +8,7 @@
 #include "building/monument.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
+#include "city/data_private.h"
 #include "city/entertainment.h"
 #include "city/message.h"
 #include "city/population.h"
@@ -1172,8 +1173,8 @@ static void spawn_figure_barracks(building *b)
         }
 
         // recruitment penalty for no food
-        if (city_buildings_mess_hall_fulfillment() > 20) {
-            spawn_delay += city_buildings_mess_hall_fulfillment() - 20;
+        if (city_data.mess_hall.food_stress_cumulative > 20) {
+            spawn_delay += city_data.mess_hall.food_stress_cumulative - 20;
         }
 
         b->figure_spawn_delay++;

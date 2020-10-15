@@ -2,6 +2,7 @@
 #include "building/barracks.h"
 #include "building/building.h"
 #include "building/count.h"
+#include "city/data_private.h"
 #include "city/view.h"
 #include "core/calc.h"
 #include "core/log.h"
@@ -129,9 +130,9 @@ void window_building_draw_barracks(building_info_context *c)
         if (b->loads_stored > 0) {
             offset = 4;
         }
-        if (city_buildings_mess_hall_fulfillment() > 50) {
+        if (city_data.mess_hall.food_stress_cumulative > 50) {
             text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING_2), c->x_offset + 46, c->y_offset + 86, 16 * c->width_blocks - 46, FONT_NORMAL_BLACK, 0);
-        } else if (city_buildings_mess_hall_fulfillment() > 20) {
+        } else if (city_data.mess_hall.food_stress_cumulative > 20) {
             text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING), c->x_offset + 46, c->y_offset + 86, 16 * c->width_blocks - 46, FONT_NORMAL_BLACK, 0);
         } else if (c->worker_percentage >= 100) {
             window_building_draw_description_at(c, 70, 136, 5 + offset);
@@ -236,7 +237,7 @@ void window_building_draw_legion_info(building_info_context *c)
     text_draw_number(m->num_figures, '@', " ", c->x_offset + 294, c->y_offset + 60, FONT_NORMAL_BLACK);
     // health
     lang_text_draw(138, 24, c->x_offset + 100, c->y_offset + 80, FONT_NORMAL_BLACK);
-    if (city_buildings_mess_hall_fulfillment() > 50) {
+    if (city_data.mess_hall.food_stress_cumulative > 50) {
         text_draw(translation_for(TR_BUILDING_LEGION_STARVING), c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_BLACK, 0);
     }
     else {
@@ -276,11 +277,11 @@ void window_building_draw_legion_info(building_info_context *c)
         width = lang_text_draw(138, 37 + m->morale / 5, c->x_offset + 300, c->y_offset + 120, FONT_NORMAL_BLACK);
     }
     // food warnings
-    if (city_buildings_mess_hall_fulfillment() > 50) {
+    if (city_data.mess_hall.food_stress_cumulative > 50) {
         text_draw("*", c->x_offset + 300 +width, c->y_offset + 120, FONT_NORMAL_BLACK, 0);
         text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_2), c->x_offset + 20, c->y_offset + 300, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
     }
-    else if (city_buildings_mess_hall_fulfillment() > 20) {
+    else if (city_data.mess_hall.food_stress_cumulative > 20) {
         text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_1), c->x_offset + 20, c->y_offset + 300, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
     }
     

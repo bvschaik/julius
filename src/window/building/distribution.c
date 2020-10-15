@@ -5,6 +5,7 @@
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
+#include "city/data_private.h"
 #include "city/resource.h"
 #include "figure/figure.h"
 #include "game/resource.h"
@@ -818,10 +819,12 @@ static void warehouse_orders(int index, int param2)
     window_invalidate();
 }
 
-void window_building_draw_mess_hall(building_info_context* c, int mess_hall_fulfillment)
+void window_building_draw_mess_hall(building_info_context* c)
 {
     building* b = building_get(c->building_id);
-    int mess_hall_fulfillment_display = 100 - mess_hall_fulfillment;
+    int mess_hall_fulfillment_display = 100 - city_data.mess_hall.food_percentage_missing_this_month;
+    int food_stress = city_data.mess_hall.food_stress_cumulative;
+    int hunger_text;
 
     window_building_play_sound(c, "wavs/warehouse2.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -829,10 +832,44 @@ void window_building_draw_mess_hall(building_info_context* c, int mess_hall_fulf
     text_draw_centered(translation_for(TR_BUILDING_MESS_HALL), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     16 * (c->width_blocks - 4),
     window_building_draw_stocks(c, b, 0, 1);
-    int width = text_draw(translation_for(TR_BUILDING_MESS_HALL_FULFILLMENT), c->x_offset + 32, c->y_offset + 106, FONT_NORMAL_BLACK, 0);
-    text_draw_percentage(mess_hall_fulfillment_display, c->x_offset + 32 + width, c->y_offset + 106, FONT_NORMAL_BLACK);
-    text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_DESC), c->x_offset + 32, c->y_offset + 136, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 228, c->width_blocks - 2, 4);
-    window_building_draw_employment(c, 238);
+    if (city_data.military.total_soldiers > 0) {
+        int width = text_draw(translation_for(TR_BUILDING_MESS_HALL_FULFILLMENT), c->x_offset + 32, c->y_offset + 106, FONT_NORMAL_BLACK, 0);
+        text_draw_percentage(mess_hall_fulfillment_display, c->x_offset + 32 + width, c->y_offset + 106, FONT_NORMAL_BLACK);
+        width = text_draw(translation_for(TR_BUILDING_MESS_HALL_TROOP_HUNGER), c->x_offset + 32, c->y_offset + 126, FONT_NORMAL_BLACK, 0);
+        if (food_stress == 100) {
+            hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_6;
+        }
+        else if (food_stress < 3) {
+            hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_1;
+        }
+        else if (food_stress > 80) {
+            hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_5;
+        }
+        else if (food_stress > 60) {
+            hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_4;
+        }
+        else if (food_stress > 40) {
+            hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_3;
+        }
+        else {
+            hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_2;
+        }
+
+        text_draw(translation_for(hunger_text), c->x_offset + 32 + width, c->y_offset + 126, FONT_NORMAL_BLACK, 0);
+
+        if (city_data.mess_hall.food_types == 2) {
+            text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_1), c->x_offset + 32, c->y_offset + 150, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        }
+        else if (city_data.mess_hall.food_types >= 3) {
+            text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_2), c->x_offset + 32, c->y_offset + 150, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        }
+    }
+    else {
+        text_draw_centered(translation_for(TR_BUILDING_MESS_HALL_NO_SOLDIERS), c->x_offset, c->y_offset + 150, 16 * (c->width_blocks), FONT_NORMAL_BLACK, 0);
+    }
+    text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_DESC), c->x_offset + 32, c->y_offset + 216, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 298, c->width_blocks - 2, 4);
+    window_building_draw_employment(c, 298);
     window_building_draw_market_foreground(c);
 }

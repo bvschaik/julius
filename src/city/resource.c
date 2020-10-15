@@ -346,6 +346,7 @@ void city_resource_consume_food(void)
     calculate_available_food();
     city_data.resource.food_types_eaten = 0;
     city_data.unused.unknown_00c0 = 0;
+
     int ceres_module = (building_monument_module_type(BUILDING_GRAND_TEMPLE_CERES) == 1);
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -389,39 +390,57 @@ void city_resource_consume_food(void)
             }
         }
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MESS_HALL) {
+                     
             int food_required = city_data.military.total_soldiers * FOOD_PER_SOLDIER_MONTHLY;
             int food_allocated = 0;
+            int num_foods = 0;
+            int total_food_in_mess_hall = 0;
+            int proportionate_amount = 0;
+
             for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
-                if (b->data.market.inventory[i] >= (food_required - food_allocated)) {
-                    b->data.market.inventory[i] -= (food_required - food_allocated);
-                    food_allocated += food_required;
-                    break;
+                total_food_in_mess_hall += b->data.market.inventory[i];
+            }
+
+            if (total_food_in_mess_hall) {
+                for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
+                    proportionate_amount = (food_required * b->data.market.inventory[i]) / total_food_in_mess_hall;
+                    if (proportionate_amount > 0) {
+                        b->data.market.inventory[i] -= proportionate_amount;
+                        food_allocated += proportionate_amount;
+                        ++num_foods;
+                    }
+                }
+
+                if (food_allocated < food_required) {
+                    city_data.mess_hall.food_percentage_missing_this_month = 100 - calc_percentage(food_allocated, food_required);
                 }
                 else {
-                    food_allocated += b->data.market.inventory[i];
-                    b->data.market.inventory[i] = 0;
+                    city_data.mess_hall.food_percentage_missing_this_month = 0;
                 }
-            }
 
-            // mess_hall_monthly_fulfillment stores the percentage missing from total requirement. 0 is total fulfillment.
-            if (food_allocated < food_required) {
-                city_data.building.mess_hall_monthly_fulfillment = 100 - calc_percentage(food_allocated, food_required);
+                total_consumed += food_allocated;
+                city_data.mess_hall.food_types = num_foods;
             }
-            else {
-                city_data.building.mess_hall_monthly_fulfillment = 0;
-            }
-
-            total_consumed += food_allocated;
         }
         
-    }
+    }    
 
     if (city_data.military.total_soldiers > 0 && !building_count_active(BUILDING_MESS_HALL)) {
-        city_data.building.mess_hall_monthly_fulfillment = 100;
-        city_message_post(1, MESSAGE_SOLDIERS_STARVING_NO_MESS_HALL, 0, 0);
+        city_data.mess_hall.food_percentage_missing_this_month = 100;
+        city_message_post(1, MESSAGE_SOLDIERS_STARVING_NO_MESS_HALL, 0, 0);        
     }
-    else if (city_data.military.total_soldiers > 0 && city_data.building.mess_hall_monthly_fulfillment > 80) {
+    else if (city_data.military.total_soldiers > 0 && city_data.mess_hall.food_stress_cumulative > 50 && !city_data.mess_hall.mess_hall_warning_shown) {
         city_message_post(1, MESSAGE_SOLDIERS_STARVING, 0, 0);
+        city_data.mess_hall.mess_hall_warning_shown = 1;
+    }
+
+    city_data.mess_hall.food_stress_cumulative = ((city_data.mess_hall.food_percentage_missing_this_month + city_data.mess_hall.food_stress_cumulative) / 2);
+    if (city_data.mess_hall.food_stress_cumulative < 20) {
+        city_data.mess_hall.mess_hall_warning_shown = 0;
+    }
+
+    if (city_data.mess_hall.food_stress_cumulative > 100) {
+        city_data.mess_hall.food_stress_cumulative = 100;
     }
 
     city_data.resource.food_consumed_last_month = total_consumed;

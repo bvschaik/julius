@@ -81,6 +81,7 @@ typedef struct {
             short oil_demand;
             short wine_demand;
             unsigned char fetch_inventory_id;
+            unsigned char is_mess_hall;
         } market;
         struct {
             short resource_stored[16];
@@ -133,6 +134,7 @@ typedef struct {
             short resources_needed[16];
             int upgrades;
         } monument;
+
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;

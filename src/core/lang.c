@@ -148,6 +148,7 @@ void load_custom_messages(void) {
 
     m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_MESS_HALL_NEEDS_FOOD);
     m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_MESS_HALL_NEEDS_FOOD);
+    m->video.text = "smk//god_mars.smk";
 
     i += 1;
 

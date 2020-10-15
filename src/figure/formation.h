@@ -104,6 +104,7 @@ typedef struct {
     int has_military_training; /**< Flag to indicate this legion has had military training */
     int legion_recruit_type; /**< Recruit type: none if this legion is fully occupied */
     int is_at_fort; /**< Flag to indicate this legion is resting at the fort */
+    int mess_hall_bonus_max_morale; /**< Mess hall bonus */
 
     /* Enemy-related */
     int enemy_type;

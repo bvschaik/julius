@@ -49,7 +49,7 @@ extern struct city_data_t {
         int16_t working_dock_ids[10];
         int32_t mission_post_operational;
         map_point main_native_meeting;
-        int8_t mess_hall_monthly_fulfillment;
+        int8_t unknown_value;
     } building;
     struct {
         int16_t animals;
@@ -380,6 +380,12 @@ extern struct city_data_t {
         int32_t tutorial_disease_message_shown;
         int32_t tutorial_senate_built;
     } mission;
+    struct {
+        int32_t food_types;
+        int32_t food_stress_cumulative;
+        int32_t mess_hall_warning_shown;
+        int32_t food_percentage_missing_this_month;
+    } mess_hall;
     struct {
         int8_t other_player[18068];
         int8_t unknown_00a0;

@@ -11,7 +11,8 @@
 #include "figure/route.h"
 #include "game/resource.h"
 
-#define MAX_FOOD_STOCKED 800
+#define MAX_FOOD_STOCKED_MARKET 800
+#define MAX_FOOD_STOCKED_MESS_HALL 1200
 
 static int create_delivery_boy(int leader_id, figure *f)
 {
@@ -34,10 +35,16 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     }
     building *granary = building_get(granary_id);
     int market_units = building_get(market_id)->data.market.inventory[f->collecting_item_id];
-    int max_units = MAX_FOOD_STOCKED - market_units;
+    int max_units = 0;
     int granary_units = granary->data.granary.resource_stored[resource];
     int num_loads;
-    if (granary_units >= MAX_FOOD_STOCKED) {
+    if (building_get(market_id)->data.market.is_mess_hall) {
+        max_units = MAX_FOOD_STOCKED_MESS_HALL - market_units;
+    }
+    else {
+        max_units = MAX_FOOD_STOCKED_MARKET - market_units;
+    }
+    if (granary_units >= 800) {
         num_loads = 8;
     } else if (granary_units >= 700) {
         num_loads = 7;

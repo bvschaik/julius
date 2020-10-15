@@ -1,5 +1,6 @@
 #include "military.h"
 
+#include "city/data_private.h"
 #include "city/figures.h"
 #include "city/military.h"
 #include "city/view.h"
@@ -13,9 +14,10 @@
 #include "graphics/window.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"
+#include "translation/translation.h"
 #include "window/city.h"
 
-#define ADVISOR_HEIGHT 26
+#define ADVISOR_HEIGHT 27
 
 static void button_go_to_legion(int legion_id, int param2);
 static void button_return_to_fort(int legion_id, int param2);
@@ -90,6 +92,19 @@ static int draw_background(void)
     }
     int bullet_x = 60;
     int text_x = 80;
+    int food_text;
+    int food_stress = city_data.mess_hall.food_stress_cumulative;
+
+    if (food_stress > 60) {
+        food_text = TR_ADVISOR_LEGION_FOOD_CRITICAL;
+    }
+    else if (food_stress > 40) {
+        food_text = TR_ADVISOR_LEGION_FOOD_NEEDED;
+    }
+    else {
+        food_text = TR_ADVISOR_LEGION_FOOD_SATISFIED;
+    }
+
     if (num_legions <= 0) {
         image_draw(image_group(GROUP_BULLET), bullet_x, 359);
         lang_text_draw(51, enemy_text_id, text_x, 358, FONT_NORMAL_BLACK);
@@ -108,6 +123,10 @@ static int draw_background(void)
 
         image_draw(image_group(GROUP_BULLET), bullet_x, 389);
         lang_text_draw(51, distant_battle_text_id, text_x, 388, FONT_NORMAL_BLACK);
+
+
+        image_draw(image_group(GROUP_BULLET), bullet_x, 409);        
+        text_draw(translation_for(food_text), text_x, 409, FONT_NORMAL_BLACK, 0);
     }
 
     inner_panel_draw(16, 70, 36, 17);
