@@ -5,6 +5,7 @@
 #include "city/data_private.h"
 #include "city/message.h"
 #include "city/ratings.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -36,6 +37,11 @@ int city_military_total_soldiers(void)
     return city_data.military.total_soldiers;
 }
 
+int city_military_total_soldiers_in_city(void)
+{
+    return city_data.military.soldiers_in_city;
+}
+
 int city_military_empire_service_legions(void)
 {
     return city_data.military.empire_service_legions;
@@ -50,6 +56,7 @@ void city_military_update_totals(void)
 {
     city_data.military.empire_service_legions = 0;
     city_data.military.total_soldiers = 0;
+    city_data.military.soldiers_in_city = 0;
     city_data.military.total_legions = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         const formation *m = formation_get(i);
@@ -58,6 +65,9 @@ void city_military_update_totals(void)
             city_data.military.total_soldiers += m->num_figures;
             if (m->empire_service && m->num_figures > 0) {
                 city_data.military.empire_service_legions++;
+            }
+            else {
+                city_data.military.soldiers_in_city += m->num_figures;
             }
         }
     }
@@ -130,6 +140,37 @@ int city_military_distant_battle_enemy_months_traveled(void)
 int city_military_distant_battle_roman_months_traveled(void)
 {
     return city_data.distant_battle.roman_months_traveled;
+}
+
+int city_mess_hall_food_stress(void)
+{
+    return city_data.mess_hall.food_stress_cumulative;
+}
+
+int city_mess_hall_food_types(void)
+{
+    return city_data.mess_hall.food_types;
+}
+
+int city_mess_hall_total_food(void)
+{
+    return city_data.mess_hall.total_food;
+}
+
+int city_mess_hall_food_missing_month(void)
+{
+    return city_data.mess_hall.food_percentage_missing_this_month;
+}
+
+int city_mess_hall_months_food_stored(void)
+{
+    int food_needed = city_data.military.soldiers_in_city * FOOD_PER_SOLDIER_MONTHLY;
+    if (food_needed) {
+        return city_mess_hall_total_food() / food_needed;
+    }
+    else {
+        return 0;
+    }
 }
 
 int city_military_has_distant_battle(void)

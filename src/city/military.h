@@ -7,6 +7,7 @@ int city_military_has_legionary_legions(void);
 
 int city_military_total_legions(void);
 int city_military_total_soldiers(void);
+int city_military_total_soldiers_in_city(void);
 int city_military_empire_service_legions(void);
 void city_military_clear_empire_service_legions(void);
 
@@ -29,6 +30,12 @@ int city_military_distant_battle_roman_army_is_traveling_back(void);
 
 int city_military_distant_battle_enemy_months_traveled(void);
 int city_military_distant_battle_roman_months_traveled(void);
+
+int city_mess_hall_food_stress(void);
+int city_mess_hall_food_types(void);
+int city_mess_hall_total_food(void);
+int city_mess_hall_food_missing_month(void);
+int city_mess_hall_months_food_stored(void);
 
 void city_military_init_distant_battle(int enemy_strength);
 int city_military_has_distant_battle(void);

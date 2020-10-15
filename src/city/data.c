@@ -400,12 +400,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.sentiment.message_delay);
     buffer_write_i32(main, city_data.sentiment.low_mood_cause);
     buffer_write_i32(main, city_data.figure.security_breach_duration);
-
-    buffer_write_i32(main, city_data.mess_hall.food_types);
-    buffer_write_i32(main, city_data.mess_hall.food_stress_cumulative);
-    buffer_write_i32(main, city_data.mess_hall.mess_hall_warning_shown);
-    buffer_write_i32(main, city_data.mess_hall.food_percentage_missing_this_month);
-
+    for (int i = 0; i < 4; i++) {
+        buffer_write_i32(main, city_data.unused.unknown_446c[i]);
+    }
     buffer_write_i32(main, city_data.emperor.selected_gift_size);
     buffer_write_i32(main, city_data.emperor.months_since_gift);
     buffer_write_i32(main, city_data.emperor.gift_overdose_penalty);
@@ -451,7 +448,14 @@ static void save_main_data(buffer *main)
     buffer_write_i16(main, city_data.building.distribution_center_grid_offset);
     buffer_write_i32(main, city_data.building.distribution_center_building_id);
     buffer_write_i32(main, city_data.building.distribution_center_placed);
-    for (int i = 0; i < 11; i++) {
+    buffer_write_i32(main, city_data.mess_hall.food_types);
+    buffer_write_i32(main, city_data.mess_hall.food_stress_cumulative);
+    buffer_write_i32(main, city_data.mess_hall.mess_hall_warning_shown);
+    buffer_write_i32(main, city_data.mess_hall.food_percentage_missing_this_month);
+    buffer_write_i32(main, city_data.mess_hall.total_food);
+    buffer_write_i32(main, city_data.mess_hall.missing_mess_hall_warning_shown);
+    buffer_write_i32(main, city_data.military.soldiers_in_city);
+    for (int i = 0; i < 4; i++) {
         buffer_write_i32(main, city_data.unused.unused_4524[i]);
     }
     buffer_write_i32(main, city_data.building.shipyard_boats_requested);
@@ -881,10 +885,9 @@ static void load_main_data(buffer *main)
     city_data.sentiment.message_delay = buffer_read_i32(main);
     city_data.sentiment.low_mood_cause = buffer_read_i32(main);
     city_data.figure.security_breach_duration = buffer_read_i32(main);
-    city_data.mess_hall.food_types = buffer_read_i32(main);
-    city_data.mess_hall.food_stress_cumulative = buffer_read_i32(main);
-    city_data.mess_hall.mess_hall_warning_shown = buffer_read_i32(main);
-    city_data.mess_hall.food_percentage_missing_this_month = buffer_read_i32(main);
+    for (int i = 0; i < 4; i++) {
+        city_data.unused.unknown_446c[i] = buffer_read_i32(main);
+    }
     city_data.emperor.selected_gift_size = buffer_read_i32(main);
     city_data.emperor.months_since_gift = buffer_read_i32(main);
     city_data.emperor.gift_overdose_penalty = buffer_read_i32(main);
@@ -930,7 +933,14 @@ static void load_main_data(buffer *main)
     city_data.building.distribution_center_grid_offset = buffer_read_i16(main);
     city_data.building.distribution_center_building_id = buffer_read_i32(main);
     city_data.building.distribution_center_placed = buffer_read_i32(main);
-    for (int i = 0; i < 11; i++) {
+    city_data.mess_hall.food_types = buffer_read_i32(main);
+    city_data.mess_hall.food_stress_cumulative = buffer_read_i32(main);
+    city_data.mess_hall.mess_hall_warning_shown = buffer_read_i32(main);
+    city_data.mess_hall.food_percentage_missing_this_month = buffer_read_i32(main);
+    city_data.mess_hall.total_food = buffer_read_i32(main);
+    city_data.mess_hall.missing_mess_hall_warning_shown = buffer_read_i32(main);
+    city_data.military.soldiers_in_city = buffer_read_i32(main);
+    for (int i = 0; i < 4; i++) {
         city_data.unused.unused_4524[i] = buffer_read_i32(main);
     }
     city_data.building.shipyard_boats_requested = buffer_read_i32(main);

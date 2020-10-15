@@ -7,6 +7,7 @@
 #include "building/monument.h"
 #include "city/data_private.h"
 #include "city/message.h"
+#include "city/military.h"
 #include "core/calc.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -15,7 +16,7 @@
 #include "scenario/building.h"
 #include "scenario/property.h"
 
-#define FOOD_PER_SOLDIER_MONTHLY 5;
+#include <math.h>
 
 static struct {
     resource_list resource_list;
@@ -390,46 +391,53 @@ void city_resource_consume_food(void)
             }
         }
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MESS_HALL) {
-                     
-            int food_required = city_data.military.total_soldiers * FOOD_PER_SOLDIER_MONTHLY;
+            int food_required = city_military_total_soldiers_in_city() * FOOD_PER_SOLDIER_MONTHLY;
             int food_allocated = 0;
             int num_foods = 0;
             int total_food_in_mess_hall = 0;
-            int proportionate_amount = 0;
+            double proportionate_amount = 0;
+            int amount_for_type = 0;
 
             for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
                 total_food_in_mess_hall += b->data.market.inventory[i];
             }
 
+            city_data.mess_hall.total_food = total_food_in_mess_hall;
+
             if (total_food_in_mess_hall) {
                 for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
-                    proportionate_amount = (food_required * b->data.market.inventory[i]) / total_food_in_mess_hall;
+                    proportionate_amount = ((double)food_required * (double)b->data.market.inventory[i]) / (double)total_food_in_mess_hall;
                     if (proportionate_amount > 0) {
-                        b->data.market.inventory[i] -= proportionate_amount;
-                        food_allocated += proportionate_amount;
+                        amount_for_type = calc_bound(ceil(proportionate_amount), 0, b->data.market.inventory[i]);
+                        b->data.market.inventory[i] -= amount_for_type;
+                        food_allocated += amount_for_type;
                         ++num_foods;
                     }
                 }
 
-                if (food_allocated < food_required) {
-                    city_data.mess_hall.food_percentage_missing_this_month = 100 - calc_percentage(food_allocated, food_required);
+                if (food_required > total_food_in_mess_hall) {
+                    city_data.mess_hall.food_percentage_missing_this_month = 100 - calc_percentage(total_food_in_mess_hall, food_required);
+                    total_consumed += total_food_in_mess_hall;
+                    city_data.mess_hall.total_food = 0;
                 }
                 else {
                     city_data.mess_hall.food_percentage_missing_this_month = 0;
+                    total_consumed += food_required;
+                    city_data.mess_hall.total_food -= food_required;
                 }
-
-                total_consumed += food_allocated;
+                                
                 city_data.mess_hall.food_types = num_foods;
             }
         }
         
     }    
 
-    if (city_data.military.total_soldiers > 0 && !building_count_active(BUILDING_MESS_HALL)) {
+    if (city_military_total_soldiers_in_city() > 0 && !building_count_active(BUILDING_MESS_HALL) && !city_data.mess_hall.missing_mess_hall_warning_shown) {
         city_data.mess_hall.food_percentage_missing_this_month = 100;
-        city_message_post(1, MESSAGE_SOLDIERS_STARVING_NO_MESS_HALL, 0, 0);        
+        city_message_post(1, MESSAGE_SOLDIERS_STARVING_NO_MESS_HALL, 0, 0);     
+        city_data.mess_hall.missing_mess_hall_warning_shown = 1;
     }
-    else if (city_data.military.total_soldiers > 0 && city_data.mess_hall.food_stress_cumulative > 50 && !city_data.mess_hall.mess_hall_warning_shown) {
+    else if (city_military_total_soldiers_in_city() > 0 && city_data.mess_hall.food_stress_cumulative > 50 && !city_data.mess_hall.mess_hall_warning_shown) {
         city_message_post(1, MESSAGE_SOLDIERS_STARVING, 0, 0);
         city_data.mess_hall.mess_hall_warning_shown = 1;
     }

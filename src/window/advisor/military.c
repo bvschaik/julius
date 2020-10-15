@@ -95,14 +95,14 @@ static int draw_background(void)
     int food_text;
     int food_stress = city_data.mess_hall.food_stress_cumulative;
 
-    if (food_stress > 60) {
+    if (food_stress > 50 && !city_mess_hall_months_food_stored()) {
         food_text = TR_ADVISOR_LEGION_FOOD_CRITICAL;
     }
-    else if (food_stress > 40) {
+    else if (food_stress > 20 && !city_mess_hall_months_food_stored()) {
         food_text = TR_ADVISOR_LEGION_FOOD_NEEDED;
     }
     else {
-        food_text = TR_ADVISOR_LEGION_FOOD_SATISFIED;
+        food_text = TR_ADVISOR_LEGION_MONTHS_FOOD_STORED;
     }
 
     if (num_legions <= 0) {
@@ -114,7 +114,7 @@ static int draw_background(void)
     } else {
         // has forts
         image_draw(image_group(GROUP_BULLET), bullet_x, 349);
-        int width = lang_text_draw_amount(8, 46, city_military_total_soldiers(), text_x, 348, FONT_NORMAL_BLACK);
+        int width = lang_text_draw_amount(8, 46, city_military_total_soldiers(), text_x - 5, 348, FONT_NORMAL_BLACK);
         width += lang_text_draw(51, 7, text_x + width, 348, FONT_NORMAL_BLACK);
         lang_text_draw_amount(8, 48, city_military_total_legions(), text_x + width, 348, FONT_NORMAL_BLACK);
 
@@ -124,9 +124,11 @@ static int draw_background(void)
         image_draw(image_group(GROUP_BULLET), bullet_x, 389);
         lang_text_draw(51, distant_battle_text_id, text_x, 388, FONT_NORMAL_BLACK);
 
-
         image_draw(image_group(GROUP_BULLET), bullet_x, 409);        
-        text_draw(translation_for(food_text), text_x, 409, FONT_NORMAL_BLACK, 0);
+        width = text_draw(translation_for(food_text), text_x, 409, FONT_NORMAL_BLACK, 0);
+        if (food_text == TR_ADVISOR_LEGION_MONTHS_FOOD_STORED) {
+            text_draw_number(city_mess_hall_months_food_stored(), '@', " ", text_x + width, 409, FONT_NORMAL_BLACK);
+        }
     }
 
     inner_panel_draw(16, 70, 36, 17);

@@ -91,6 +91,7 @@ extern struct city_data_t {
         uint8_t empire_service_legions;
         int32_t legionary_legions;
         int32_t native_attack_duration;
+        int32_t soldiers_in_city; // soldiers not on campaign, needing food from mess hall
     } military;
     struct {
         uint8_t city;
@@ -384,7 +385,9 @@ extern struct city_data_t {
         int32_t food_types;
         int32_t food_stress_cumulative;
         int32_t mess_hall_warning_shown;
+        int32_t missing_mess_hall_warning_shown;
         int32_t food_percentage_missing_this_month;
+        int32_t total_food;
     } mess_hall;
     struct {
         int8_t other_player[18068];
