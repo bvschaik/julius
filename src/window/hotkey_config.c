@@ -33,7 +33,7 @@ static scrollbar_type scrollbar = {580, 72, 352, on_scroll};
 
 typedef struct {
     int action;
-    translation_key name_translation;
+    int name_translation;
     int name_text_group;
     int name_text_id;
 } hotkey_widget;
