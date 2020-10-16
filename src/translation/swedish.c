@@ -34,6 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Visa introduktionsfilmer"},
     {TR_CONFIG_SIDEBAR_INFO, "Extra information i kontrollpanelen"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Mjuk scrollning"},
+    {TR_CONFIG_DISABLE_MAP_DRAG, "Desativar rolagem do mapa com botão direito do mouse"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Öka visuel återkoppling vid rensning av land"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Tillåt att bygga varje tempel i följd"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Visa räckvidd vid bygge av reservoarer, fontäner och brunnar"},
