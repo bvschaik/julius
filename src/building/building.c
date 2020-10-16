@@ -321,6 +321,31 @@ int building_is_statue_garden_temple(building_type type)
      );
 }
 
+int building_is_ceres_temple(building_type type)
+{
+    return (type == BUILDING_SMALL_TEMPLE_CERES || type == BUILDING_LARGE_TEMPLE_CERES);
+}
+
+int building_is_neptune_temple(building_type type)
+{
+    return (type == BUILDING_SMALL_TEMPLE_NEPTUNE || type == BUILDING_LARGE_TEMPLE_NEPTUNE);
+}
+
+int building_is_mercury_temple(building_type type)
+{
+    return (type == BUILDING_SMALL_TEMPLE_MERCURY || type == BUILDING_LARGE_TEMPLE_MERCURY);
+}
+
+int building_is_mars_temple(building_type type)
+{
+    return (type == BUILDING_SMALL_TEMPLE_MARS || type == BUILDING_LARGE_TEMPLE_MARS);
+}
+
+int building_is_venus_temple(building_type type)
+{
+    return (type == BUILDING_SMALL_TEMPLE_VENUS || type == BUILDING_LARGE_TEMPLE_VENUS);
+}
+
 int building_is_fort(building_type type)
 {
     return type == BUILDING_FORT_LEGIONARIES ||

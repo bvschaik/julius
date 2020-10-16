@@ -241,6 +241,22 @@ int lang_load(int is_editor)
 
 const uint8_t *lang_get_string(int group, int index)
 {
+    if (group == 92 && !index) {
+        return translation_for(TR_BUILDING_SMALL_TEMPLE_CERES_NAME);
+    }    
+    if (group == 93 && !index) {
+        return translation_for(TR_BUILDING_SMALL_TEMPLE_NEPTUNE_NAME);
+    }    
+    if (group == 94 && !index) {
+        return translation_for(TR_BUILDING_SMALL_TEMPLE_MERCURY_NAME);
+    }    
+    if (group == 95 && !index) {
+        return translation_for(TR_BUILDING_SMALL_TEMPLE_MARS_NAME);
+    }
+    if (group == 96 && !index) {
+        return translation_for(TR_BUILDING_SMALL_TEMPLE_VENUS_NAME);
+    }
+    
     // Add new strings
     if (group == 28) {
         switch (index) {

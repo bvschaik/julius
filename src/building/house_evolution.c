@@ -489,17 +489,17 @@ static void consume_resources(building *b)
 {
     const model_house *model = model_get_house(b->subtype.house_level);
     // mercury module 1 - pottery and furniture reduced by 20%
-    if (!(game_time_month() % 6) && b->data.house.temple_mercury && building_monument_module_type(BUILDING_GRAND_TEMPLE_MERCURY) == 1) {
+    if (!(game_time_month() % 6) && b->data.house.temple_mercury && building_monument_gt_module_is_active(MERCURY_MODULE_1_POTTERY_FURN)) {
         consume_resource(b, INVENTORY_OIL, model->oil);
         consume_resource(b, INVENTORY_WINE, model->wine);
     } 
     // mercury module 2 - oil and wine reduced by 20%
-    else if (!(game_time_month() % 6) && b->data.house.temple_mercury && building_monument_module_type(BUILDING_GRAND_TEMPLE_MERCURY) == 2) {
+    else if (!(game_time_month() % 6) && b->data.house.temple_mercury && building_monument_gt_module_is_active(MERCURY_MODULE_2_OIL_WINE)) {
         consume_resource(b, INVENTORY_POTTERY, model->pottery);
         consume_resource(b, INVENTORY_FURNITURE, model->furniture);
     }
     // mars module 2 - all goods reduced by 10%
-    else if (!(game_time_total_months() % 10) && b->data.house.temple_mars && building_monument_module_type(BUILDING_GRAND_TEMPLE_MARS) == 2) {
+    else if (!(game_time_total_months() % 10) && b->data.house.temple_mars && building_monument_gt_module_is_active(MARS_MODULE_2_ALL_GOODS)) {
 
     }
     else {

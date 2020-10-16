@@ -31,6 +31,8 @@ int empire_can_import_resource_potentially(int resource);
 
 int empire_can_export_resource(int resource);
 
+int can_produce_resource(int resource);
+
 int empire_can_produce_resource(int resource);
 
 int empire_can_produce_resource_potentially(int resource);

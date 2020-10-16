@@ -17,6 +17,7 @@
 #include "sound/speech.h"
 #include "translation/translation.h"
 #include "window/city.h"
+#include "window/building/culture.h"
 
 static void button_return_to_fort(int param1, int param2);
 static void button_layout(int index, int param2);
@@ -159,6 +160,11 @@ void window_building_draw_barracks_foreground(building_info_context* c)
 
 }
 
+void window_building_draw_grand_temple_mars_foreground(building_info_context* c)
+{
+    draw_priority_buttons(c->x_offset + 285, c->y_offset + 55, 2);
+}
+
 int window_building_handle_mouse_barracks(const mouse* m, building_info_context* c)
 {
     if (generic_buttons_handle_mouse(m, c->x_offset + 46, c->y_offset + 224, priority_buttons, 2, &data.focus_priority_button_id))
@@ -166,9 +172,22 @@ int window_building_handle_mouse_barracks(const mouse* m, building_info_context*
         window_invalidate();
         return 1;
     } 
+
     return 0;
 }
 
+
+int window_building_handle_mouse_grand_temple_mars(const mouse* m, building_info_context* c)
+{
+    if (generic_buttons_handle_mouse(m, c->x_offset + 285, c->y_offset + 55, priority_buttons, 2, &data.focus_priority_button_id))
+    {
+        window_invalidate();
+        return 1;
+    }
+
+    window_building_handle_mouse_grand_temple(m, c);
+    return 0;
+}
 
 void window_building_draw_military_academy(building_info_context *c)
 {
@@ -239,7 +258,7 @@ void window_building_draw_legion_info(building_info_context *c)
     // health
     lang_text_draw(138, 24, c->x_offset + 100, c->y_offset + 80, FONT_NORMAL_BLACK);
     if (city_data.mess_hall.food_stress_cumulative > 50) {
-        text_draw(translation_for(TR_BUILDING_LEGION_STARVING), c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_BLACK, 0);
+        text_draw(translation_for(TR_BUILDING_LEGION_STARVING), c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
     }
     else {
         int health = calc_percentage(m->total_damage, m->max_total_damage);

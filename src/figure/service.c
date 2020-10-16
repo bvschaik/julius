@@ -275,7 +275,7 @@ static void distribute_market_resources(building *b, building *market)
     int goods_no = 8;
 
     //Venus base stockpile bonus
-    if (b->data.house.temple_venus && building_monument_module_type(BUILDING_GRAND_TEMPLE_VENUS) == 2) {
+    if (b->data.house.temple_venus && building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT)) {
         goods_no = 12;
     }
     
@@ -381,6 +381,7 @@ int figure_service_provide_coverage(figure *f)
                 case BUILDING_LARGE_TEMPLE_CERES:
                 case BUILDING_GRAND_TEMPLE_CERES:
                     houses_serviced = provide_culture(x, y, religion_coverage_ceres);
+                    houses_serviced = provide_market_goods(f->building_id, x, y);
                     break;
                 case BUILDING_SMALL_TEMPLE_NEPTUNE:
                 case BUILDING_LARGE_TEMPLE_NEPTUNE:
@@ -401,6 +402,7 @@ int figure_service_provide_coverage(figure *f)
                 case BUILDING_LARGE_TEMPLE_VENUS:
                 case BUILDING_GRAND_TEMPLE_VENUS:
                     houses_serviced = provide_culture(x, y, religion_coverage_venus);
+                    houses_serviced = provide_market_goods(f->building_id, x, y);
                     break;
                 default:
                     break;

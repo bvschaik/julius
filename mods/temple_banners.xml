@@ -22,5 +22,8 @@
     <image id="Panth M2 Icon" src="Pantheon_Temple_Complex_Module2_Banner" />
     <image id="Venus M Icon" src="Venus_Temple_Complex_Module_Banner" />
     <image id="Venus M2 Icon" src="Venus_Temple_Complex_Module2_Banner" />
+
+    <image id="Venus M2 Icon" src="Venus_Temple_Complex_Module2_Banner" />
+    <image id="Main Menu" src="Main_Menu" />
 	
 </mod>		

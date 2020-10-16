@@ -1,10 +1,12 @@
 #include "music.h"
 
-#include "core/dir.h"
+#include "core/dir.h"paint
 #include "city/figures.h"
 #include "city/population.h"
 #include "game/settings.h"
 #include "sound/device.h"
+
+#include <string.h>
 
 enum {
     TRACK_NONE = 0,
@@ -68,10 +70,19 @@ static void play_track(int track)
     data.current_track = track;
 }
 
+static void play_mp3_file(const char* track)
+{
+    sound_device_stop_music();
+    int volume = setting_sound(SOUND_MUSIC)->volume;
+    sound_device_play_music(dir_get_file(track, NOT_LOCALIZED), volume);
+    data.current_track = track;
+}
+
 void sound_music_play_intro(void)
 {
     if (setting_sound(SOUND_MUSIC)->enabled) {
-        play_track(TRACK_INTRO);
+        // play_track(TRACK_INTRO);
+        play_mp3_file("mods/Holst_The_Planets_Jupiter.mp3");
     }
 }
 

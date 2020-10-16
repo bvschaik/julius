@@ -88,6 +88,7 @@ typedef enum {
     FIGURE_WORK_CAMP_ENGINEER = 75,
     FIGURE_MESS_HALL_BUYER = 76,
     FIGURE_MESS_HALL_COLLECTOR = 77,
+    FIGURE_PRIEST_BUYER = 78
 
 } figure_type;
 

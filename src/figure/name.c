@@ -115,6 +115,7 @@ int figure_name_get(figure_type type, enemy_type enemy)
         return get_next_name(&data.citizen_male, 1, 64);
 
     case FIGURE_PRIEST:
+    case FIGURE_PRIEST_BUYER:
     case FIGURE_TEACHER:
     case FIGURE_MISSIONARY:
     case FIGURE_LIBRARIAN:

@@ -151,20 +151,20 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, "Grand temple of Venus" },
     {TR_BUILDING_PANTHEON_DESC, "Pantheon" },
     {TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, "Cartpushers from farms move 50% faster." },
-    {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Placeholder for Neptune bonus description" },
+    {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Fountain and reservoirs require fewer workers and gain increased range. Trade ships move 25% faster." },
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, "Land and sea traders have an additional 50% capacity. Land traders move 25% faster." },
-    {TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Placeholder for Mars bonus description" },
+    {TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Grand temple trains soldiers. Four extra forts may be built." },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "City gardens, statues, and temples glow with increased beauty, increasing their desirability. Houses stock more goods and devolve more slowly." },
     {TR_BUILDING_PANTHEON_BONUS_DESC, "Placeholder for Pantheon bonus description." },
     {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, "Priests reduce food consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, "Placeholder for Neptune module description" },
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, "Priests reduce pottery and furniture consumption by 20%." },
-    {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, "Placeholder for Mars module description" },
+    {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, "Temples produce a large amount of food for the mess hall." },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, "Temples produce and distribute wine." },
     {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC, "Priests collect and distribute one food type from city granaries." },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC, "Placeholder for Neptune 2 module description" },
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, "Priests reduce oil and wine consumption by 20%." },
-    {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, "Placeholder for Mars 2 module description" },
+    {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, "Priests reduce consumption of all goods by 10%." },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, "Priests provide entertainment and beautify houses." },
     {TR_BUILDING_PANTHEON_MODULE_1_DESC, "All the temples in the city send priests to Pantheon, spreading the faith and blessings of their gods." },
     {TR_BUILDING_PANTHEON_MODULE_2_DESC, "Placeholder for Pantheon module 2 description" },
@@ -300,10 +300,13 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_WORK_CAMP_ENGINEER, "Engineer"},
     {TR_FIGURE_TYPE_MESS_HALL_BUYER, "Quartermaster"},
     {TR_FIGURE_TYPE_MESS_HALL_COLLECTOR, "Mess hall worker"},
-        
-
-
-
+    {TR_BUILDING_CERES_TEMPLE_MODULE_DESC, "The grand temple organizes priests of Ceres to aid in distributing food to your hungry citizens."},
+    {TR_BUILDING_VENUS_TEMPLE_MODULE_DESC, "The grand temple allows priests of Venus to supply sacred wine to your citizens." },
+    {TR_BUILDING_SMALL_TEMPLE_CERES_NAME, "Temple of Ceres"},
+    {TR_BUILDING_SMALL_TEMPLE_NEPTUNE_NAME, "Temple of Neptune"},
+    {TR_BUILDING_SMALL_TEMPLE_MERCURY_NAME, "Temple of Mercury"},
+    {TR_BUILDING_SMALL_TEMPLE_MARS_NAME, "Temple of Mars"},
+    {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Temple of Venus"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -372,7 +372,7 @@ static void draw_figure_info(building_info_context *c, int figure_id)
         draw_animal(c, f);
     } else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKER) {
         draw_cartpusher(c, f);
-    } else if (type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER) {
+    } else if (type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER || type == FIGURE_PRIEST_BUYER) {
         draw_market_buyer(c, f);
     } else {
         draw_normal_figure(c, f);

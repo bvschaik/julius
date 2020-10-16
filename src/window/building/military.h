@@ -10,6 +10,7 @@ void window_building_draw_tower(building_info_context *c);
 
 void window_building_draw_barracks(building_info_context *c);
 void window_building_draw_barracks_foreground(building_info_context* c);
+void window_building_draw_grand_temple_mars_foreground(building_info_context* c);
 int window_building_handle_mouse_barracks(const mouse* m, building_info_context* c);
 
 void window_building_draw_military_academy(building_info_context *c);

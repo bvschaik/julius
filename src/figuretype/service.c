@@ -83,6 +83,11 @@ void figure_destination_priest_action(figure* f)
         f->destination_y = destination->road_access_y;
         f->action_state = FIGURE_ACTION_213_PRIEST_GOING_TO_PANTHEON;
         break;
+    case FIGURE_ACTION_214_DESTINATION_MARS_PRIEST_CREATED:
+        f->destination_x = destination->road_access_x;
+        f->destination_y = destination->road_access_y;
+        f->action_state = FIGURE_ACTION_215_PRIEST_GOING_TO_MESS_HALL;
+        break;
     case FIGURE_ACTION_213_PRIEST_GOING_TO_PANTHEON:
         figure_movement_move_ticks(f, 1);
         if (f->direction == DIR_FIGURE_AT_DESTINATION) {
@@ -95,7 +100,22 @@ void figure_destination_priest_action(figure* f)
             f->state = FIGURE_STATE_DEAD;
         }
         break;
+    case FIGURE_ACTION_215_PRIEST_GOING_TO_MESS_HALL:
+        figure_movement_move_ticks(f, 1);
+        if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+            // Mars Module 1 Bonus
+            building_get(f->destination_building_id)->data.market.inventory[3] += (b->houses_covered / 20);
+            f->state = FIGURE_STATE_DEAD;
+        }
+        else if (f->direction == DIR_FIGURE_REROUTE) {
+            figure_route_remove(f);
+        }
+        else if (f->direction == DIR_FIGURE_LOST) {
+            f->state = FIGURE_STATE_DEAD;
+        }
+        break;
     }
+
     figure_image_increase_offset(f, 12);
     figure_image_update(f, image_group(GROUP_FIGURE_PRIEST));
 }

@@ -98,7 +98,7 @@ void house_service_calculate_culture_aggregates(void)
         }
 
         // Venus Module 2 Entertainment Bonus
-        if (building_monument_module_type(BUILDING_GRAND_TEMPLE_VENUS) == 2 && b->data.house.temple_venus) {
+        if (building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT) && b->data.house.temple_venus) {
             b->data.house.entertainment += 10;
         }
 

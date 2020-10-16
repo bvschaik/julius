@@ -613,3 +613,10 @@ int building_monument_module_type(int type) {
 	return b->data.monument.upgrades;
 }
 
+int building_monument_gt_module_is_active(int module) {
+	int module_num = module % MODULES_PER_TEMPLE + 1;
+	int temple_type = module / MODULES_PER_TEMPLE + BUILDING_GRAND_TEMPLE_CERES;
+	
+	return building_monument_module_type(temple_type) == module_num;
+}
+

@@ -22,9 +22,22 @@ typedef struct {
 	int cartloads;
 } monument_delivery;
 
-//typedef enum {
-//	CERES_MODULE_1_REDUCE_FOOD,
-//} module_type;
+#define MODULES_PER_TEMPLE 2
+
+typedef enum {
+	CERES_MODULE_1_REDUCE_FOOD,
+	CERES_MODULE_2_DISTRIBUTE_FOOD,
+	NEPTUNE_MODULE_1_HIPPODROME_ACCESS,
+	NEPTUNE_MODULE_2_CAPACITY_AND_WATER,
+	MERCURY_MODULE_1_POTTERY_FURN,
+	MERCURY_MODULE_2_OIL_WINE,
+	MARS_MODULE_1_MESS_HALL,
+	MARS_MODULE_2_ALL_GOODS,
+	VENUS_MODULE_1_DISTRIBUTE_WINE,
+	VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT,
+	PANTHEON_MODULE_1_DESTINATION_PRIESTS,
+	PANTHEON_MODULE_2_HOUSING_EVOLUTION
+} module_type;
 
 int building_monument_access_point(building* b, map_point* dst);
 int building_monument_add_module(building* b, int module_type);
@@ -45,6 +58,7 @@ int building_monument_add_delivery(int monument_id, int figure_id, int resource_
 int building_monument_has_monument(int type);
 int building_monument_upgraded(int type);
 int building_monument_module_type(int type);
+int building_monument_gt_module_is_active(int module);
 int building_monument_finish_monuments(void);
 int building_monument_phase(int phase);
 

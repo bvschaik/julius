@@ -238,6 +238,31 @@ void city_resource_determine_available(void)
     }
 }
 
+int city_resource_ceres_temple_food(void)
+{
+    // locally produced
+    for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
+        if (i == RESOURCE_OLIVES || i == RESOURCE_VINES) {
+            continue;
+        }
+        if (can_produce_resource(i)) {
+            return ;
+        }
+    }
+
+    // imported, if no food is locally produced
+    for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
+        if (i == RESOURCE_OLIVES || i == RESOURCE_VINES) {
+            continue;
+        }
+        if (empire_can_import_resource_potentially(i)) {
+            return i;
+        }
+    }
+
+    return 0;
+}
+
 static void calculate_available_food(void)
 {
     for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
@@ -348,7 +373,7 @@ void city_resource_consume_food(void)
     city_data.resource.food_types_eaten = 0;
     city_data.unused.unknown_00c0 = 0;
 
-    int ceres_module = (building_monument_module_type(BUILDING_GRAND_TEMPLE_CERES) == 1);
+    int ceres_module = (building_monument_gt_module_is_active(CERES_MODULE_1_REDUCE_FOOD));
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);

@@ -4,6 +4,7 @@
 #include "building/building.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "building/warehouse.h"
 #include "city/data_private.h"
 #include "city/map.h"
@@ -169,13 +170,16 @@ static int get_height_id(void)
             case BUILDING_GRAND_TEMPLE_CERES:
             case BUILDING_GRAND_TEMPLE_NEPTUNE:
             case BUILDING_GRAND_TEMPLE_MERCURY:
-            case BUILDING_GRAND_TEMPLE_MARS:
+            
             case BUILDING_GRAND_TEMPLE_VENUS:
             case BUILDING_PANTHEON:
                 return 6;
 
             case BUILDING_MESS_HALL:
                 return 7;
+
+            case BUILDING_GRAND_TEMPLE_MARS:
+                return 8;
 
             default:
                 return 0;
@@ -408,6 +412,7 @@ static void init(int grid_offset)
         case 5: context.height_blocks = 23; break;
         case 6: context.height_blocks = 38; break;
         case 7: context.height_blocks = 26; break;
+        case 8: context.height_blocks = 40; break;
         default: context.height_blocks = 22; break;
     }
     // dialog placement
@@ -524,7 +529,12 @@ static void draw_background(void)
         } else if (btype == BUILDING_LIBRARY) {
             window_building_draw_library(&context);
         } else if (btype == BUILDING_SMALL_TEMPLE_CERES || btype == BUILDING_LARGE_TEMPLE_CERES) {
-            window_building_draw_temple_ceres(&context);
+            if (context.storage_show_special_orders) {
+                window_building_draw_market_orders(&context);
+            }
+            else {
+                window_building_draw_temple_ceres(&context);
+            }
         } else if (btype == BUILDING_SMALL_TEMPLE_NEPTUNE || btype == BUILDING_LARGE_TEMPLE_NEPTUNE) {
             window_building_draw_temple_neptune(&context);
         } else if (btype == BUILDING_SMALL_TEMPLE_MERCURY || btype == BUILDING_LARGE_TEMPLE_MERCURY) {
@@ -532,7 +542,12 @@ static void draw_background(void)
         } else if (btype == BUILDING_SMALL_TEMPLE_MARS || btype == BUILDING_LARGE_TEMPLE_MARS) {
             window_building_draw_temple_mars(&context);
         } else if (btype == BUILDING_SMALL_TEMPLE_VENUS || btype == BUILDING_LARGE_TEMPLE_VENUS) {
-            window_building_draw_temple_venus(&context);
+            if (context.storage_show_special_orders) {
+                window_building_draw_market_orders(&context);
+            }
+            else {
+                window_building_draw_temple_venus(&context);
+            }
         } else if (btype == BUILDING_ORACLE) {
             window_building_draw_oracle(&context);
         } else if (btype == BUILDING_WORKCAMP) {
@@ -641,14 +656,28 @@ static void draw_foreground(void)
             }
         } else if (btype == BUILDING_MARKET) {
             if (context.storage_show_special_orders) {
-                window_building_draw_market_orders_foreground(&context, 0);
+                window_building_draw_market_orders_foreground(&context, 0, 0, 0);
             } else {
                 window_building_draw_market_foreground(&context);
             }
-        }
-        else if (btype == BUILDING_MESS_HALL) {
+        } else if (btype == BUILDING_MESS_HALL) {
             if (context.storage_show_special_orders) {
-                window_building_draw_market_orders_foreground(&context, 1);
+                window_building_draw_market_orders_foreground(&context, 1, 0, 0);
+            }
+            else {
+                window_building_draw_market_foreground(&context);
+            }
+        } else if (building_is_venus_temple(btype) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
+            if (context.storage_show_special_orders) {
+                window_building_draw_market_orders_foreground(&context, 0, 1, RESOURCE_WINE);
+            }
+            else {
+                window_building_draw_market_foreground(&context);
+            }
+        }
+        else if (building_is_ceres_temple(btype) && building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD)) {
+            if (context.storage_show_special_orders) {
+                window_building_draw_market_orders_foreground(&context, 0, 1, city_resource_ceres_temple_food());
             }
             else {
                 window_building_draw_market_foreground(&context);
@@ -665,8 +694,12 @@ static void draw_foreground(void)
             } else {
                 window_building_draw_dock_foreground(&context);
             }
-        } else if (btype == BUILDING_BARRACKS) {
-		window_building_draw_barracks_foreground(&context);
+        }
+        else if (btype == BUILDING_BARRACKS) {
+            window_building_draw_barracks_foreground(&context);
+        } else if (btype == BUILDING_GRAND_TEMPLE_MARS) {
+            window_building_draw_grand_temple_mars_foreground(&context);
+            window_building_draw_grand_temple_foreground(&context);
         } else if ((btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) || btype == BUILDING_PANTHEON) {
             window_building_draw_grand_temple_foreground(&context);
         }
@@ -709,7 +742,14 @@ static int handle_specific_building_info_mouse(const mouse *m)
             } else {
                 window_building_handle_mouse_market(m, &context);
             }
-	} else if (btype == BUILDING_ROADBLOCK) {
+	} else if (building_is_ceres_temple(btype) || building_is_venus_temple(btype)) {
+        if (context.storage_show_special_orders) {
+            window_building_handle_mouse_market_orders(m, &context);
+        }
+        else {
+            window_building_handle_mouse_market(m, &context);
+        }
+    } else if (btype == BUILDING_ROADBLOCK) {
             if (context.storage_show_special_orders) {
                 return window_building_handle_mouse_roadblock_orders(m, &context);
             } else {
@@ -723,6 +763,9 @@ static int handle_specific_building_info_mouse(const mouse *m)
             }
 	} else if (btype == BUILDING_BARRACKS) {
             return window_building_handle_mouse_barracks(m, &context);
+    }
+    else if (btype == BUILDING_GRAND_TEMPLE_MARS) {
+            window_building_handle_mouse_grand_temple_mars(m, &context);
 	} else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
                 return window_building_handle_mouse_granary_orders(m, &context);

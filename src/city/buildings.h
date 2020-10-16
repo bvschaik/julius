@@ -13,6 +13,8 @@ void city_buildings_remove_barracks(building *barracks);
 int city_buildings_get_barracks(void);
 void city_buildings_set_barracks(int building_id);
 
+int city_buildings_get_mess_hall(void);
+
 int city_buildings_has_distribution_center(void);
 void city_buildings_add_distribution_center(building *center);
 void city_buildings_remove_distribution_center(building *center);

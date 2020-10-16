@@ -245,8 +245,9 @@ int formation_get_num_legions(void)
 
 int formation_get_max_legions(void)
 {
-   if (config_get(CONFIG_GP_CH_EXTRA_FORTS)) {
-	  return MAX_LEGIONS+4;
+    // Mars base bonus
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_MARS)) {
+	  return MAX_LEGIONS + 4;
    } else {
 	  return MAX_LEGIONS; 
    }

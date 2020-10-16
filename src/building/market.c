@@ -144,6 +144,8 @@ int building_market_get_storage_destination(building *market)
     }
 
     int can_go = 0;
+    int min_stock = 50;
+
     for (int i = 0; i < INVENTORY_MAX; i++) {
         if (resources[i].num_buildings) {
             can_go = 1;
@@ -153,6 +155,42 @@ int building_market_get_storage_destination(building *market)
     if (!can_go) {
         return 0;
     }
+
+    if (building_is_ceres_temple(market->type)) {
+        int inventory;
+        int ceres_food = city_resource_ceres_temple_food();
+        switch (ceres_food) {
+            case RESOURCE_WHEAT: inventory = INVENTORY_WHEAT; break;
+            case RESOURCE_VEGETABLES: inventory = INVENTORY_VEGETABLES; break;
+            case RESOURCE_FRUIT: inventory = INVENTORY_FRUIT; break;
+            case RESOURCE_MEAT: inventory = INVENTORY_MEAT; break;
+            case RESOURCE_WINE: inventory = INVENTORY_WINE; break;
+
+            default: return 0;
+        }
+        if (!market->data.market.inventory[inventory] &&
+            resources[inventory].num_buildings &&
+            market->data.market.inventory[inventory] < 600 &&
+            is_good_accepted(inventory, market))
+        {
+            market->data.market.fetch_inventory_id = inventory;
+            return resources[inventory].building_id;
+        }
+        return 0;
+    }
+
+    if (building_is_venus_temple(market->type)) {
+        if (!market->data.market.inventory[INVENTORY_WINE] && 
+            resources[INVENTORY_WINE].num_buildings && 
+            market->data.market.inventory[INVENTORY_WINE] < min_stock && 
+            is_good_accepted(INVENTORY_WINE, market)) 
+        {
+            market->data.market.fetch_inventory_id = INVENTORY_WINE;
+            return resources[INVENTORY_WINE].building_id;
+        }
+        return 0;
+    }
+
     // prefer food if we don't have it
     if (!market->data.market.inventory[INVENTORY_WHEAT] && resources[INVENTORY_WHEAT].num_buildings && is_good_accepted(INVENTORY_WHEAT, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_WHEAT;
@@ -182,7 +220,7 @@ int building_market_get_storage_destination(building *market)
         return resources[INVENTORY_WINE].building_id;
     }
     // then prefer smallest stock below 50
-    int min_stock = 50;
+    
     int fetch_inventory = -1;
     if (resources[INVENTORY_WHEAT].num_buildings &&
         market->data.market.inventory[INVENTORY_WHEAT] < min_stock
@@ -240,17 +278,17 @@ int building_market_get_storage_destination(building *market)
             fetch_inventory = INVENTORY_WHEAT;
         }
         if (resources[INVENTORY_VEGETABLES].num_buildings &&
-            market->data.market.inventory[INVENTORY_VEGETABLES] < 400
+            market->data.market.inventory[INVENTORY_VEGETABLES] < 600
 	    && is_good_accepted(INVENTORY_VEGETABLES, market)) {
             fetch_inventory = INVENTORY_VEGETABLES;
         }
         if (resources[INVENTORY_FRUIT].num_buildings &&
-            market->data.market.inventory[INVENTORY_FRUIT] < 400
+            market->data.market.inventory[INVENTORY_FRUIT] < 600
 	    && is_good_accepted(INVENTORY_FRUIT, market)) {
             fetch_inventory = INVENTORY_FRUIT;
         }
         if (resources[INVENTORY_MEAT].num_buildings &&
-            market->data.market.inventory[INVENTORY_MEAT] < 400
+            market->data.market.inventory[INVENTORY_MEAT] < 600
 	    && is_good_accepted(INVENTORY_MEAT, market)) {
             fetch_inventory = INVENTORY_MEAT;
         }

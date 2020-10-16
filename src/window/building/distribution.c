@@ -323,20 +323,34 @@ void window_building_draw_market_orders(building_info_context* c)
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 }
 
-void window_building_draw_market_orders_foreground(building_info_context* c, int food_only)
+void window_building_draw_market_orders_foreground(building_info_context* c, int food_only, int single_resource, int single_resource_id)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
-    int resource_count = INVENTORY_MAX;
+    int resource_max = INVENTORY_MAX;
+    int resource_min = INVENTORY_WHEAT;
 
     if (food_only) {
-        resource_count = 4;
+        resource_max = 4;
+    }
+
+    if (single_resource) {
+        switch (single_resource_id) {
+        case RESOURCE_WHEAT: single_resource_id = INVENTORY_WHEAT; break;
+        case RESOURCE_VEGETABLES: single_resource_id = INVENTORY_VEGETABLES; break;
+        case RESOURCE_FRUIT: single_resource_id = INVENTORY_FRUIT; break;
+        case RESOURCE_MEAT: single_resource_id = INVENTORY_MEAT; break;
+        case RESOURCE_WINE: single_resource_id = INVENTORY_WINE; break;
+        default: return 0;
+        }
+        resource_min = single_resource_id;
+        resource_max = single_resource_id + 1;
     }
 
     resource_type resources[] = { RESOURCE_WHEAT,RESOURCE_VEGETABLES,RESOURCE_FRUIT,RESOURCE_MEAT,RESOURCE_WINE,RESOURCE_OIL,RESOURCE_FURNITURE,RESOURCE_POTTERY };
 
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
 
-    for (int i = INVENTORY_WHEAT; i < resource_count; i++) {
+    for (int i = resource_min; i < resource_max; i++) {
         resource_type resource = resources[i];
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
             resource_image_offset(resource, RESOURCE_IMAGE_ICON);
@@ -750,7 +764,7 @@ static void toggle_resource_state(int index, int param2)
 {
     building *b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK || b->type == BUILDING_MESS_HALL) {
+    if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK || b->type == BUILDING_MESS_HALL || building_is_ceres_temple(b->type) || building_is_venus_temple(b->type)) {
         toggle_good_accepted(index-1, b);
     }
     else {
@@ -858,7 +872,7 @@ void window_building_draw_mess_hall(building_info_context* c)
         text_draw(translation_for(hunger_text), c->x_offset + 32 + width, c->y_offset + 126, FONT_NORMAL_BLACK, 0);
 
         width = text_draw(translation_for(TR_BUILDING_MESS_HALL_MONTHS_FOOD_STORED), c->x_offset + 32, c->y_offset + 150, FONT_NORMAL_BLACK, 0);
-        text_draw_number(city_mess_hall_months_food_stored(), "", "@", c->x_offset + 32 + width, c->y_offset + 150, FONT_NORMAL_BLACK);
+        text_draw_number(city_mess_hall_months_food_stored(), '@', " ", c->x_offset + 32 + width, c->y_offset + 150, FONT_NORMAL_BLACK);
 
         if (city_mess_hall_food_types() == 2) {
             text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_1), c->x_offset + 32, c->y_offset + 175, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);

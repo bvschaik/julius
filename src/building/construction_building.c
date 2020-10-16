@@ -606,6 +606,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_MESS_HALL:
             b->data.market.is_mess_hall = 1;
             city_data.mess_hall.missing_mess_hall_warning_shown = 0;
+            city_data.building.mess_hall_building_id = b->id;
             switch (scenario_property_climate())
             {
             case CLIMATE_NORTHERN:

@@ -123,7 +123,7 @@ static void check_market(int type)
 static void check_barracks(int type)
 {
     if (!has_warning) {
-        if (building_is_fort(type) && building_count_active(BUILDING_BARRACKS) <= 0) {
+        if (building_is_fort(type) && building_count_active(BUILDING_BARRACKS) <= 0 && building_count_active(BUILDING_GRAND_TEMPLE_MARS) <= 0) {
             show(WARNING_BUILD_BARRACKS);
         }
     }

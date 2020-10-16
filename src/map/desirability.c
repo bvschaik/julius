@@ -84,7 +84,7 @@ static void update_buildings(void)
             range = model->desirability_range;
 
             //Venus Module 2 House Desirability Bonus
-            if (building_is_house(b->type) && b->data.house.temple_venus && building_monument_module_type(BUILDING_GRAND_TEMPLE_VENUS) == 2) {
+            if (building_is_house(b->type) && b->data.house.temple_venus && building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT)) {
                 value += 2;
             }
 

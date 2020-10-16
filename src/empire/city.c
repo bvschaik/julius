@@ -74,7 +74,7 @@ int empire_can_export_resource(int resource)
     return 0;
 }
 
-static int can_produce_resource(int resource)
+int can_produce_resource(int resource)
 {
     for (int i = 0; i < MAX_CITIES; i++) {
         if (cities[i].in_use &&

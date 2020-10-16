@@ -524,6 +524,7 @@ void figure_warehouseman_action(figure *f)
                         building_granary_add_resource(b, f->resource_id, 0);
                         break;
                     case BUILDING_BARRACKS:
+                    case BUILDING_GRAND_TEMPLE_MARS:
                         building_barracks_add_weapon(b);
                         break;
                     case BUILDING_WAREHOUSE:
