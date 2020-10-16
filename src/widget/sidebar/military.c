@@ -222,8 +222,10 @@ static void draw_military_info(int x_offset, int y_offset)
     int formation_image = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
 
     // Legion name
-    image_draw(formation_image, x_offset + (SIDEBAR_EXPANDED_WIDTH - 12 - image_get(formation_image)->width) / 2, y_offset + 8);
-    lang_text_draw_centered(138, m->legion_id, x_offset, y_offset + 34, SIDEBAR_EXPANDED_WIDTH - 12, FONT_NORMAL_WHITE);
+    image_draw(formation_image,
+        x_offset + (SIDEBAR_EXPANDED_WIDTH - 12 - image_get(formation_image)->width) / 2, y_offset + 8);
+    lang_text_draw_centered(138, m->legion_id, x_offset, y_offset + 34,
+        SIDEBAR_EXPANDED_WIDTH - 12, FONT_NORMAL_WHITE);
 
     // Number of soldiers
     int width = text_draw_number(m->num_figures, '@', " ", x_offset, y_offset + 54, FONT_NORMAL_WHITE);
@@ -242,19 +244,22 @@ static void draw_military_info(int x_offset, int y_offset)
             group_id = 138;
             text_id = 11;
         }
-        lang_text_draw_multiline(group_id, text_id, x_offset, y_offset + 66, SIDEBAR_EXPANDED_WIDTH - 12, FONT_NORMAL_WHITE);
+        lang_text_draw_multiline(group_id, text_id, x_offset, y_offset + 66,
+            SIDEBAR_EXPANDED_WIDTH - 12, FONT_NORMAL_WHITE);
         clear_legion_info(legion);
         return;
     }
 
     // Morale
     lang_text_draw(138, 36, x_offset, y_offset + 74, FONT_NORMAL_WHITE);
-    lang_text_draw(138, 37 + m->morale / 5, x_offset + 4, y_offset + 94, m->morale < 13 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
+    lang_text_draw(138, 37 + m->morale / 5, x_offset + 4, y_offset + 94,
+        m->morale < 13 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
 
     // Health
     int health = calc_percentage(m->total_damage, m->max_total_damage);
     lang_text_draw(138, 24, x_offset, y_offset + 114, FONT_NORMAL_WHITE);
-    lang_text_draw(138, get_health_text_id(health), x_offset + 4, y_offset + 134, health < 55 ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+    lang_text_draw(138, get_health_text_id(health), x_offset + 4, y_offset + 134,
+        health < 55 ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
 
     // Formation layout
     draw_layout_buttons(x_offset, y_offset + 156, 1, m);
@@ -283,8 +288,10 @@ static void draw_military_info(int x_offset, int y_offset)
 
 static void draw_military_panel_background(int x_offset)
 {
-    graphics_draw_vertical_line(x_offset, Y_OFFSET_PANEL_START, Y_OFFSET_PANEL_START + MILITARY_PANEL_BLOCKS * 16, COLOR_WHITE);
-    graphics_draw_vertical_line(x_offset + SIDEBAR_EXPANDED_WIDTH - 1, Y_OFFSET_PANEL_START, Y_OFFSET_PANEL_START + MILITARY_PANEL_BLOCKS * 16, COLOR_SIDEBAR);
+    graphics_draw_vertical_line(x_offset, Y_OFFSET_PANEL_START,
+        Y_OFFSET_PANEL_START + MILITARY_PANEL_BLOCKS * 16, COLOR_WHITE);
+    graphics_draw_vertical_line(x_offset + SIDEBAR_EXPANDED_WIDTH - 1,
+        Y_OFFSET_PANEL_START, Y_OFFSET_PANEL_START + MILITARY_PANEL_BLOCKS * 16, COLOR_SIDEBAR);
     inner_panel_draw(x_offset + 1, Y_OFFSET_PANEL_START + 10, SIDEBAR_EXPANDED_WIDTH / 16, MILITARY_PANEL_BLOCKS);
     inner_panel_draw(x_offset + 1, Y_OFFSET_PANEL_START, SIDEBAR_EXPANDED_WIDTH / 16, 1);
 
