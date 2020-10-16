@@ -311,7 +311,7 @@ static void draw_market_buyer(building_info_context *c, figure *f)
 
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     int width = 0;
-    if (f-> type == FIGURE_MESS_HALL_BUYER) {
+    if (f->type == FIGURE_MESS_HALL_BUYER || f->type == FIGURE_PRIEST_BUYER) {
         int relative_id = f->type - NEW_FIGURES_ID;
         width = text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
     } else {
