@@ -34,6 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Intro-Videos abspielen"},
     {TR_CONFIG_SIDEBAR_INFO, "Aktiviere zusätzliche Informationen im rechtsseitigen Bedienfeld"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Aktiviere sanftes Scrollen"},
+    {TR_CONFIG_DISABLE_MAP_DRAG, "Verschieben der Karte mit der rechten Maustaste deaktivieren"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Beim Planieren der Landfläche das visuelle Feedback verbessern"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Erlaube alle Tempel nacheinander zu bauen"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Zeige Reichweite beim Bauen von Reservoirs und Brunnen"},
@@ -52,7 +53,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "Spezialkarten"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "Lesezeichen für Stadtkarten"},
     {TR_HOTKEY_HEADER_EDITOR, "Editor"},
-    {TR_HOTKEY_HEADER_BUILD, "Bau-Tastenkombinationen"}, // TODO: Google Translate
+    {TR_HOTKEY_HEADER_BUILD, "Bauen"},
     {TR_HOTKEY_ARROW_UP, "Hoch"},
     {TR_HOTKEY_ARROW_DOWN, "Runter"},
     {TR_HOTKEY_ARROW_LEFT, "Links"},
@@ -64,7 +65,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Fenstergröße: 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Screenshot speichern"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Stadtweiten Screenshot sp."},
-    {TR_HOTKEY_BUILD_CLONE, "Gebäude unter Cursor klonen"}, // TODO: Google Translate
+    {TR_HOTKEY_BUILD_CLONE, "Gebäude unter Mauszeiger vervielfältigen"},
     {TR_HOTKEY_LOAD_FILE, "Datei laden"},
     {TR_HOTKEY_SAVE_FILE, "Datei speichern"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Spielgeschwindigkeit erhöhen"},
