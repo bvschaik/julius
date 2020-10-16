@@ -258,7 +258,7 @@ const uint8_t *lang_get_string(int group, int index)
     }
     
     // Add new strings
-    if (group == 28) {
+    if (group == 28 || group == 41) {
         switch (index) {
         case BUILDING_ROADBLOCK:
             return translation_for(TR_BUILDING_ROADBLOCK);
