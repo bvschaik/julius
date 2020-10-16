@@ -35,6 +35,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "시작 영상 재생"},
     {TR_CONFIG_SIDEBAR_INFO, "게임 제어판에 추가 정보 표시"},
     {TR_CONFIG_SMOOTH_SCROLLING, "부드러운 화면이동 가능"},
+    {TR_CONFIG_DISABLE_MAP_DRAG, "오른 클릭 드래그 화면이동 끄기"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "지형 평탄화 시 시각적 표현 향상"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "각각의 신전을 연속으로 설치 가능"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "저수조, 분수와 우물 설치 시 범위 표시"},
@@ -53,7 +54,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "맵보기"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "도시 맵 즉시 이동"},
     {TR_HOTKEY_HEADER_EDITOR, "편집기"},
-    {TR_HOTKEY_HEADER_BUILD, "건설 단축키"}, // TODO: Google Translate
+    {TR_HOTKEY_HEADER_BUILD, "건설 단축키"},
     {TR_HOTKEY_ARROW_UP, "위"},
     {TR_HOTKEY_ARROW_DOWN, "아래"},
     {TR_HOTKEY_ARROW_LEFT, "왼쪽"},
@@ -65,7 +66,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "창 크기 1024x768로 변경"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "스크린샷 저장"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "도시 전체 스크린샷 저장"},
-    {TR_HOTKEY_BUILD_CLONE, "커서 아래에 건물 복제"}, // TODO: Google Translate
+    {TR_HOTKEY_BUILD_CLONE, "커서 아래에 있는 건물 복제"},
     {TR_HOTKEY_LOAD_FILE, "파일 불러오기"},
     {TR_HOTKEY_SAVE_FILE, "파일 저장하기"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "게임 속도 증가"},
