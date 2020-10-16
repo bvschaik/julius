@@ -116,7 +116,8 @@ static void draw_background(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     time_millis current_time = time_get_millis();
-    if (m->right.went_up || (m->is_touch && m->left.double_click) || current_time - data.start_time > DISPLAY_TIME_MILLIS) {
+    if (m->right.went_up || (m->is_touch && m->left.double_click)
+        || current_time - data.start_time > DISPLAY_TIME_MILLIS) {
         data.callback();
     }
 }

@@ -48,12 +48,14 @@ static void draw_sliding_foreground(void)
     graphics_reset_clip_rectangle();
 }
 
-void sidebar_slide(slide_direction direction, back_sidebar_draw_function back_sidebar_callback, front_sidebar_draw_function front_sidebar_callback, slide_finished_function finished_callback)
+void sidebar_slide(slide_direction direction, back_sidebar_draw_function back_sidebar_callback,
+    front_sidebar_draw_function front_sidebar_callback, slide_finished_function finished_callback)
 {
     data.direction = direction;
     data.position = 0;
     speed_clear(&data.slide_speed);
-    speed_set_target(&data.slide_speed, SLIDE_SPEED, direction == SLIDE_DIRECTION_OUT ? SLIDE_ACCELERATION_MILLIS : SPEED_CHANGE_IMMEDIATE, 1);
+    speed_set_target(&data.slide_speed, SLIDE_SPEED,
+        direction == SLIDE_DIRECTION_OUT ? SLIDE_ACCELERATION_MILLIS : SPEED_CHANGE_IMMEDIATE, 1);
     data.back_sidebar_draw = back_sidebar_callback;
     data.front_sidebar_draw = front_sidebar_callback;
     data.finished_callback = finished_callback;

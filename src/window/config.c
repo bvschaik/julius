@@ -187,13 +187,14 @@ static void init(void)
     data.language_options[0] = data.language_options_data[0];
     data.num_language_options = 1;
     const dir_listing *subdirs = dir_find_all_subdirectories();
+    const char *original_value = data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value;
     for (int i = 0; i < subdirs->num_files; i++) {
         if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i])) {
             int opt_id = data.num_language_options;
             strncpy(data.language_options_utf8[opt_id], subdirs->files[i], CONFIG_STRING_VALUE_MAX - 1);
             encoding_from_utf8(subdirs->files[i], data.language_options_data[opt_id], CONFIG_STRING_VALUE_MAX);
             data.language_options[opt_id] = data.language_options_data[opt_id];
-            if (strcmp(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value, subdirs->files[i]) == 0) {
+            if (strcmp(original_value, subdirs->files[i]) == 0) {
                 data.selected_language_option = opt_id;
             }
             data.num_language_options++;
@@ -229,7 +230,8 @@ static void draw_background(void)
     }
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
-        text_draw_centered(translation_for(bottom_button_texts[i]), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
+        text_draw_centered(translation_for(bottom_button_texts[i]),
+            bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
     }
 
     graphics_reset_dialog();
@@ -245,12 +247,14 @@ static void draw_foreground(void)
         if (w->type == TYPE_CHECKBOX) {
             checkbox_draw(20, y, data.focus_button == i + 1);
         } else if (w->type == TYPE_LANGUAGE) {
-            button_border_draw(language_button.x, y + language_button.y, language_button.width, language_button.height, data.language_focus_button == 1);
+            button_border_draw(language_button.x, y + language_button.y,
+                language_button.width, language_button.height, data.language_focus_button == 1);
         }
     }
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
-        button_border_draw(bottom_buttons[i].x, bottom_buttons[i].y, bottom_buttons[i].width, bottom_buttons[i].height, data.bottom_focus_button == i + 1);
+        button_border_draw(bottom_buttons[i].x, bottom_buttons[i].y,
+            bottom_buttons[i].width, bottom_buttons[i].height, data.bottom_focus_button == i + 1);
     }
 
     inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / 16 - 3);
@@ -283,7 +287,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
         }
     }
 
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0,
+        bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
 
     if (!handled && (m->right.went_up || h->escape_pressed)) {
         window_main_menu_show(0);
@@ -329,7 +334,8 @@ static void button_reset_defaults(int param1, int param2)
         data.config_values[i].new_value = config_get_default_value(i);
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
-        strncpy(data.config_string_values[i].new_value, config_get_default_string_value(i), CONFIG_STRING_VALUE_MAX - 1);
+        strncpy(data.config_string_values[i].new_value,
+            config_get_default_string_value(i), CONFIG_STRING_VALUE_MAX - 1);
     }
     set_language(0);
     window_invalidate();
@@ -341,7 +347,9 @@ static void cancel_values(void)
         data.config_values[i].new_value = data.config_values[i].original_value;
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        memcpy(data.config_string_values[i].new_value, data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1); // memcpy required to fix warning on Switch build
+        // memcpy required to fix warning on Switch build
+        memcpy(data.config_string_values[i].new_value,
+            data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1);
     }
 }
 
@@ -408,7 +416,8 @@ static int config_change_basic(config_key key)
 static int config_change_string_basic(config_string_key key)
 {
     config_set_string(key, data.config_string_values[key].new_value);
-    strncpy(data.config_string_values[key].original_value, data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
+    strncpy(data.config_string_values[key].original_value,
+        data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
     return 1;
 }
 
@@ -422,6 +431,7 @@ static int config_change_string_language(config_string_key key)
         game_reload_language();
         return 0;
     }
-    strncpy(data.config_string_values[key].original_value, data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
+    strncpy(data.config_string_values[key].original_value,
+        data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
     return 1;
 }

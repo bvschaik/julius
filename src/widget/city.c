@@ -488,7 +488,8 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
         window_city_show();
     } else {
         update_city_view_coords(m->x, m->y, tile);
-        if ((!m->is_touch && m->left.went_down) || (m->is_touch && m->left.went_up && touch_was_click(touch_get_earliest()))) {
+        if ((!m->is_touch && m->left.went_down)
+            || (m->is_touch && m->left.went_up && touch_was_click(touch_get_earliest()))) {
             military_map_click(legion_formation_id, tile);
         }
     }

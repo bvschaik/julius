@@ -30,16 +30,16 @@
 
 static const int ADJACENT_OFFSETS[2][4][7] = {
     {
-        { OFFSET(-1, 0), OFFSET(-1, -1),  OFFSET(-1, -2), OFFSET(0, -2), OFFSET(1, -2) },
-        { OFFSET(0, -1), OFFSET(1, -1),  OFFSET(2, -1), OFFSET(2, 0), OFFSET(2, 1) },
-        { OFFSET(1, 0), OFFSET(1, 1),  OFFSET(1, 2), OFFSET(0, 2), OFFSET(-1, 2)},
-        { OFFSET(0, 1), OFFSET(-1, 1),  OFFSET(-2, 1), OFFSET(-2, 0), OFFSET(-2, -1) }
+        {OFFSET(-1, 0), OFFSET(-1, -1),  OFFSET(-1, -2), OFFSET(0, -2), OFFSET(1, -2)},
+        {OFFSET(0, -1), OFFSET(1, -1),  OFFSET(2, -1), OFFSET(2, 0), OFFSET(2, 1)},
+        {OFFSET(1, 0), OFFSET(1, 1),  OFFSET(1, 2), OFFSET(0, 2), OFFSET(-1, 2)},
+        {OFFSET(0, 1), OFFSET(-1, 1),  OFFSET(-2, 1), OFFSET(-2, 0), OFFSET(-2, -1)}
     },
     {
-        { OFFSET(-1, 0), OFFSET(-1, -1),  OFFSET(-1, -2), OFFSET(-1, -3), OFFSET(0, -3),  OFFSET(1, -3), OFFSET(2, -3) },
-        { OFFSET(0, -1), OFFSET(1, -1),  OFFSET(2, -1), OFFSET(3, -1), OFFSET(3, 0),  OFFSET(3, 1), OFFSET(3, 2) },
-        { OFFSET(1, 0), OFFSET(1, 1),  OFFSET(1, 2), OFFSET(1, 3), OFFSET(0, 3),  OFFSET(-1, 3), OFFSET(-2, 3) },
-        { OFFSET(0, 1), OFFSET(-1, 1),  OFFSET(-2, 1), OFFSET(-3, 1), OFFSET(-3, 0),  OFFSET(-3, -1), OFFSET(-3, -2) }
+        {OFFSET(-1, 0), OFFSET(-1, -1),  OFFSET(-1, -2), OFFSET(-1, -3), OFFSET(0, -3),  OFFSET(1, -3), OFFSET(2, -3)},
+        {OFFSET(0, -1), OFFSET(1, -1),  OFFSET(2, -1), OFFSET(3, -1), OFFSET(3, 0),  OFFSET(3, 1), OFFSET(3, 2)},
+        {OFFSET(1, 0), OFFSET(1, 1),  OFFSET(1, 2), OFFSET(1, 3), OFFSET(0, 3),  OFFSET(-1, 3), OFFSET(-2, 3)},
+        {OFFSET(0, 1), OFFSET(-1, 1),  OFFSET(-2, 1), OFFSET(-3, 1), OFFSET(-3, 0),  OFFSET(-3, -1), OFFSET(-3, -2)}
     }
 };
 
@@ -204,7 +204,8 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
     if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0) {
         image_draw_masked(image_group(GROUP_BUILDING_COLOSSEUM_SHOW), x + 70, y - 90, color_mask);
     }
-    if (b->type == BUILDING_HIPPODROME && building_main(b)->num_workers > 0 && city_entertainment_hippodrome_has_race()) {
+    if (b->type == BUILDING_HIPPODROME && building_main(b)->num_workers > 0
+        && city_entertainment_hippodrome_has_race()) {
         draw_hippodrome_spectators(b, x, y, color_mask);
     }
 }
@@ -412,7 +413,8 @@ static void draw_animation(int x, int y, int grid_offset)
                 case FIGURE_FORT_JAVELIN: offset = 2; break;
             }
             if (offset) {
-                image_draw_masked(image_group(GROUP_BUILDING_FORT) + offset, x + 81, y + 5, draw_building_as_deleted(fort) ? COLOR_MASK_RED : 0);
+                image_draw_masked(image_group(GROUP_BUILDING_FORT) + offset, x + 81, y + 5,
+                    draw_building_as_deleted(fort) ? COLOR_MASK_RED : 0);
             }
         }
     } else if (building_get(map_building_at(grid_offset))->type == BUILDING_GATEHOUSE) {

@@ -283,7 +283,8 @@ void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height
         }
         graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1, COLOR_MINIMAP_DARK);
         graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
-        graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles, COLOR_MINIMAP_LIGHT);
+        graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset,
+            y_offset + height_tiles, COLOR_MINIMAP_LIGHT);
     }
 }
 

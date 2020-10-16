@@ -123,7 +123,8 @@ static int draw_background(void)
     if (pct_amphitheater == 0) {
         lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 84, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     } else if (pct_amphitheater < 100) {
-        lang_text_draw_centered(57, 11 + pct_amphitheater / 10, COVERAGE_OFFSET, 84, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
+        lang_text_draw_centered(57, 11 + pct_amphitheater / 10,
+            COVERAGE_OFFSET, 84, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     } else {
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 84, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }

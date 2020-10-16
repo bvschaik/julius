@@ -18,7 +18,9 @@ static int show_building_theater(const building *b)
 
 static int show_building_amphitheater(const building *b)
 {
-    return b->type == BUILDING_ACTOR_COLONY || b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_AMPHITHEATER;
+    return b->type == BUILDING_ACTOR_COLONY
+        || b->type == BUILDING_GLADIATOR_SCHOOL
+        || b->type == BUILDING_AMPHITHEATER;
 }
 
 static int show_building_colosseum(const building *b)

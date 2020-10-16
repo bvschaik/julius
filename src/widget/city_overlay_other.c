@@ -415,7 +415,8 @@ static int get_desirability_image_offset(int desirability)
 static void draw_footprint_desirability(int x, int y, int grid_offset)
 {
     color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
-    if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+    if (map_terrain_is(grid_offset, terrain_on_desirability_overlay())
+        && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset)) {
             image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
@@ -429,7 +430,8 @@ static void draw_footprint_desirability(int x, int y, int grid_offset)
             color_mask = COLOR_MASK_RED;
         }
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+        image_draw_isometric_footprint_from_draw_tile(
+            image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
     } else {
         image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
     }
@@ -438,7 +440,8 @@ static void draw_footprint_desirability(int x, int y, int grid_offset)
 static void draw_top_desirability(int x, int y, int grid_offset)
 {
     color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
-    if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+    if (map_terrain_is(grid_offset, terrain_on_desirability_overlay())
+        && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset)) {
             image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);

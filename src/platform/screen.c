@@ -118,7 +118,8 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         SDL_SetWindowGrab(SDL.window, SDL_TRUE);
     }
 #endif
-    SDL_SetWindowMinimumSize(SDL.window, scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
+    SDL_SetWindowMinimumSize(SDL.window,
+        scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
     return platform_screen_resize(width, height);
 }
 
@@ -253,7 +254,8 @@ void platform_screen_set_window_size(int logical_width, int logical_height)
 void platform_screen_center_window(void)
 {
     int display = SDL_GetWindowDisplayIndex(SDL.window);
-    SDL_SetWindowPosition(SDL.window, SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
+    SDL_SetWindowPosition(SDL.window,
+        SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
     window_pos.centered = 1;
 }
 

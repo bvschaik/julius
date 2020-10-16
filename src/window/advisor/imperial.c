@@ -104,12 +104,14 @@ static int draw_background(void)
     inner_panel_draw(32, 90, 36, 14);
 
     int num_requests = 0;
-    if (city_military_months_until_distant_battle() > 0 && !city_military_distant_battle_roman_army_is_traveling_forth()) {
+    if (city_military_months_until_distant_battle() > 0
+        && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
-        lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102, FONT_NORMAL_WHITE);
+        lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id,
+            80 + width, 102, FONT_NORMAL_WHITE);
         int strength_text_id;
         int enemy_strength = city_military_distant_battle_enemy_strength();
         if (enemy_strength < 46) {
@@ -134,7 +136,8 @@ static int draw_background(void)
 static int get_request_status(int index)
 {
     int num_requests = 0;
-    if (city_military_months_until_distant_battle() > 0 && !city_military_distant_battle_roman_army_is_traveling_forth()) {
+    if (city_military_months_until_distant_battle() > 0
+        && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         num_requests = 1;
         if (index == 0) {
             if (city_military_total_legions() <= 0) {
