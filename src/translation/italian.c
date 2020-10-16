@@ -40,6 +40,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Mostra la copertura di cisterne, fontane e pozzi"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Mostra le dimensioni della costruzione durante il trascinamento"},
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "Evidenzia la legione al passaggio del cursore"},
+    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Abilita barra laterale militare"}, // TODO: Google translate
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corregge il bug dell'immigrazione al livello molto difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corregge il bug dei centenari"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Elimina le complicazioni al cambio di Imperatore"},

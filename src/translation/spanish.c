@@ -39,6 +39,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Mostrar área cubierta por depósitos, fuentes y pozos al construir"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Mostrar medidas de construcción al arrastrar"},
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "Resaltar legión al pasar el cursor"}, // TODO: Google Translate
+    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Habilitar barra lateral militar"}, // TODO: Google translate
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corregir bug impidiendo immigración en Muy Difícil"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corregir bug creando fantasmas con 100 años"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corregir cambio de Emperador y supervivencia en misiones del editor"},
