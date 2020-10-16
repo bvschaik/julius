@@ -306,7 +306,9 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SMALL_TEMPLE_NEPTUNE_NAME, "Temple of Neptune"},
     {TR_BUILDING_SMALL_TEMPLE_MERCURY_NAME, "Temple of Mercury"},
     {TR_BUILDING_SMALL_TEMPLE_MARS_NAME, "Temple of Mars"},
-    {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Temple of Venus"}
+    {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Temple of Venus"},
+    {TR_FIGURE_TYPE_PRIEST_BUYER, "Priest" },
+        
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

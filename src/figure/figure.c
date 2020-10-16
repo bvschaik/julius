@@ -64,6 +64,7 @@ void figure_delete(figure *f)
     switch (f->type) {
         case FIGURE_LABOR_SEEKER:
         case FIGURE_MARKET_BUYER:
+        case FIGURE_PRIEST_BUYER:
             if (f->building_id) {
                 b->figure_id2 = 0;
             }
