@@ -25,6 +25,11 @@ case "$BUILD_TARGET" in
 	cd build && make && \
 	zip -r augustus.zip augustus mods
 	;;
+"windows")
+	cp -r res/mods ./build
+	cd build && make && \
+	zip -r augustus.zip augustus mods
+	;;
 *)
 	cd build && make 
 	;;
