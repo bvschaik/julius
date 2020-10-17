@@ -76,8 +76,6 @@ artifacts:
     name: julius
   - path: julius-$(DEPLOY_VERSION)-windows.zip
     name: julius-dist
-<<<<<<< HEAD:appveyor.yml
-=======
 
 before_deploy:
   - echo Deploying to %DEPLOY_VERSION%
@@ -123,4 +121,3 @@ deploy:
   on:
     branch: /feature\/.*/
     CMAKE_BUILD_TYPE: Release
->>>>>>> 2088c4915186da35a4e8a6c8308566be733b98c6:.appveyor.yml
