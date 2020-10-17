@@ -50,35 +50,6 @@ cat > "bintray.json" <<EOF
 }
 EOF
 
-if [ "$DEPLOY" = "windows" ]
-then
-cat > "bintray.json" <<EOF
-{
-  "package": {
-    "subject": "keriew",
-    "repo": "$REPO",
-    "name": "windows",
-    "licenses": ["AGPL-V3"],
-    "vcs_url": "https://github.com/Keriew/julius.git"
-  },
-
-  "version": {
-    "name": "$VERSION",
-    "released": "$(date +'%Y-%m-%d')",
-    "desc": "Automated windows build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
-  },
-
-  "files": [
-    {
-      "includePattern": "${build_dir}/augustus.zip",
-      "uploadPattern": "augustus-$VERSION-windows-x86_64.zip"
-      "listInDownloads": true
-    }
-  ],
-
-  "publish": true
-}
-EOF
 # Linux portable binary: https://appimage.org/
 elif [ "$DEPLOY" = "appimage" ]
 then

@@ -82,42 +82,42 @@ before_deploy:
 
 deploy:
 - provider: BinTray
-  username: bvschaik
+  username: keriew
   api_key:
-    secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
-  subject: bvschaik
-  repo: julius-dev
+    secure: 3BVriC09bvFIpGdq6Mdz5aN6SQUnkxVFOJV5Gj4J1zJU1ySIKkiV883EhAQ2Nau/
+  subject: keriew
+  repo: Augustus-unstable
   package: windows
   version: $(DEPLOY_VERSION)
-  artifact: julius-dist
+  artifact: augustus-dist
   publish: true
   on:
     branch: master
     APPVEYOR_REPO_TAG: false
     CMAKE_BUILD_TYPE: Release
 - provider: BinTray
-  username: bvschaik
+  username: keriew
   api_key:
-    secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
-  subject: bvschaik
-  repo: julius
+    secure: 3BVriC09bvFIpGdq6Mdz5aN6SQUnkxVFOJV5Gj4J1zJU1ySIKkiV883EhAQ2Nau/
+  subject: keriew
+  repo: Augustus
   package: windows
   version: $(DEPLOY_VERSION)
-  artifact: julius-dist
+  artifact: augustus-dist
   publish: true
   on:
     APPVEYOR_REPO_TAG: true
     CMAKE_BUILD_TYPE: Release
 - provider: BinTray
-  username: bvschaik
+  username: keriew
   api_key:
-    secure: TJB/HaTTDyJCEht7jqfPiHvxR4kpQ9qeWpudvoXlSr/2IZUJ9HjOtagh8LeSWMth
-  subject: bvschaik
-  repo: julius-branches
+    secure: 3BVriC09bvFIpGdq6Mdz5aN6SQUnkxVFOJV5Gj4J1zJU1ySIKkiV883EhAQ2Nau/
+  subject: keriew
+  repo: augustus-rc
   package: windows
   version: $(DEPLOY_VERSION)
-  artifact: julius-dist
+  artifact: augustus-dist
   publish: true
   on:
-    branch: /feature\/.*/
+    branch: release
     CMAKE_BUILD_TYPE: Release

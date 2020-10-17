@@ -21,9 +21,6 @@ jobs:
   - os: osx
     compiler: clang
     env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 BUILD_TARGET=mac DEPLOY=mac
-  - os: windows
-    compiler: gcc
-    env: SDL_LIB=SDL2-2.0.12 SDL_MIXER_LIB=SDL2_mixer-2.0.4 DEPLOY=windows
 cache:
   directories:
   - "$SDL_LIB"
