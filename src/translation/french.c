@@ -53,7 +53,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "Cartes de visualisation"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "Points d'intérêt de la cité"},
     {TR_HOTKEY_HEADER_EDITOR, "Editeur"},
-    {TR_HOTKEY_HEADER_BUILD, "Raccourcis de construction"},
+    {TR_HOTKEY_HEADER_BUILD, "Contrôles de construction"},
     {TR_HOTKEY_ARROW_UP, "Haut"},
     {TR_HOTKEY_ARROW_DOWN, "Bas"},
     {TR_HOTKEY_ARROW_LEFT, "Gauche"},
