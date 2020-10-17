@@ -209,6 +209,7 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
         }
     }
 
+    map_routing_update_land();
     return items_placed;
 }
 
