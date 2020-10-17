@@ -40,6 +40,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "建造時顯示貯水池水泉及水井覆蓋範圍"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "顯示拖動建設大小"},
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "滑鼠懸停時高亮軍團"},
+    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "顯示軍隊資訊側欄"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "修復非常困難不來人BUG"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "修復人口百歲仍占房BUG"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "自定遊戲修正：皇帝更位支持度重置至50；生存時間結束才勝利"},
