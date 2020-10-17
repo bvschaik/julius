@@ -40,7 +40,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Visa räckvidd vid bygge av reservoarer, fontäner och brunnar"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Visa dragbar byggnadsstorlek"},
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "Markera legion vid mushovring"},
-    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Aktivera militär sidofält"}, // TODO: Google translate
+    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Visa militär sidopanel"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Fixa invandringsproblem vid väldigt svårt svårighetsgrad"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Fixa 100-års spöken"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Fixa härskarändring and överlevnadstid i användaruppdrag"},
