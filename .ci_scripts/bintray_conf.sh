@@ -9,6 +9,9 @@ then
 elif [[ "$TRAVIS_BRANCH" == "master" ]]
 then
   REPO=Augustus-unstable
+elif [[ "$TRAVIS_BRANCH" == "release" ]]
+then
+  REPO=Augustus-rc
 elif [[ "$TRAVIS_BRANCH" =~ ^feature/ ]]
 then
   REPO=Augustus-branches
@@ -46,6 +49,7 @@ cat > "bintray.json" <<EOF
   "publish": true
 }
 EOF
+
 # Linux portable binary: https://appimage.org/
 elif [ "$DEPLOY" = "appimage" ]
 then
@@ -69,6 +73,7 @@ cat > "bintray.json" <<EOF
     {
       "includePattern": "${build_dir}/augustus.AppImage",
       "uploadPattern": "augustus-$VERSION-linux.AppImage"
+      "listInDownloads": true
     }
   ],
 
