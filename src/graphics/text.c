@@ -233,7 +233,6 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
 void text_draw_centered_with_linebreaks(const uint8_t* str, int x, int y, int box_width, font_t font, color_t color) {
     char** result = NULL;
     int count = 0;
-    int i;
     char* split;
     
     uint8_t oldstr[512];
@@ -246,7 +245,6 @@ void text_draw_centered_with_linebreaks(const uint8_t* str, int x, int y, int bo
         count++;
         split = strtok(NULL, "\n");
     }
-    int j = 0;
 }
 
 void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color)

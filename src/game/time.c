@@ -73,7 +73,7 @@ void game_time_advance_year(void)
 }
 
 int game_time_total_months(void) {
-    return floor(data.total_days / 16);
+    return (int)floor(data.total_days / 16);
 }
 
 void game_time_save_state(buffer *buf)

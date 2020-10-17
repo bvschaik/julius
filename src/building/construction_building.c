@@ -10,6 +10,7 @@
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/storage.h"
+#include "city/buildings.h"
 #include "city/data_private.h"
 #include "city/view.h"
 #include "city/warning.h"

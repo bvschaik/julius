@@ -128,7 +128,7 @@ static void parse_message(buffer *buf)
 
 void load_custom_messages(void) {
     int i = 320;
-    for (i; i < MAX_MESSAGE_ENTRIES; i++) {
+    for (; i < MAX_MESSAGE_ENTRIES; i++) {
         if (strlen(&data.message_entries[i].content.text) == 0) {
             break;
         }

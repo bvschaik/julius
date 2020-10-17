@@ -1,6 +1,6 @@
 #include "music.h"
 
-#include "core/dir.h"paint
+#include "core/dir.h"
 #include "city/figures.h"
 #include "city/population.h"
 #include "game/settings.h"
