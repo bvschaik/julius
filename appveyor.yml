@@ -50,7 +50,7 @@ build_script:
 
 after_build:
   
-  - if [%COMPILER%] == [msvc] cp debug/julius.exe .
+  - if [%COMPILER%] == [msvc] cp debug/augustus.exe .
   - if [%COMPILER%] == [msvc] cp C:\sdl-msvc\SDL2-%SDL2_VERSION%\lib\x86\SDL2.dll .
   - if [%COMPILER%] == [msvc] cp C:\sdl-msvc\SDL2_mixer-%SDL2_MIXER_VERSION%\lib\x86\SDL2_mixer.dll .
   - if [%COMPILER%] == [msvc] cp C:\sdl-msvc\SDL2_mixer-%SDL2_MIXER_VERSION%\lib\x86\libmpg123-0.dll .
@@ -61,9 +61,9 @@ after_build:
   - if [%COMPILER%] == [mingw-w64] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\x86_64-w64-mingw32\bin\SDL2_mixer.dll .
   - if [%COMPILER%] == [mingw-w64] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\x86_64-w64-mingw32\bin\libmpg123-0.dll .
   - dir
-  - set /P DEPLOY_VERSION=<C:\projects\julius\res\version.txt
+  - set /P DEPLOY_VERSION=<C:\projects\augustus\res\version.txt
   - if [%APPVEYOR_REPO_BRANCH:~0,8%] == [feature/] set DEPLOY_VERSION=%APPVEYOR_REPO_BRANCH:feature/=%-%DEPLOY_VERSION%
-  - 7z a C:\projects\julius\julius-%DEPLOY_VERSION%-windows.zip julius.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
+  - 7z a C:\projects\augustus\augustus-%DEPLOY_VERSION%-windows.zip augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
 
 cache:
   - SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
@@ -72,10 +72,10 @@ cache:
   - SDL2_mixer-devel-%SDL2_MIXER_VERSION%-VC.zip
 
 artifacts:
-  - path: build\julius.exe
-    name: julius
-  - path: julius-$(DEPLOY_VERSION)-windows.zip
-    name: julius-dist
+  - path: build\augustus.exe
+    name: augustus
+  - path: augustus-$(DEPLOY_VERSION)-windows.zip
+    name: augustus-dist
 
 before_deploy:
   - echo Deploying to %DEPLOY_VERSION%
