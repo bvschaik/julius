@@ -34,6 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Jouer la vidéo d'introduction"},
     {TR_CONFIG_SIDEBAR_INFO, "Informations supplémentaires dans le panneau latéral"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Activer le défilement doux"},
+    {TR_CONFIG_DISABLE_MAP_DRAG, "Désactiver le clic droit pour déplacer la vue de la cité"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Améliore le retour visuel durant le dégagement du terrain"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permet de construire tous les temples successivement"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Voir la zone d'effet en plaçant des réservoirs, des fontaines et des puits"},
@@ -52,7 +53,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "Cartes de visualisation"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "Points d'intérêt de la cité"},
     {TR_HOTKEY_HEADER_EDITOR, "Editeur"},
-    {TR_HOTKEY_HEADER_BUILD, "Contrôles de construction"}, // TODO: Google Translate
+    {TR_HOTKEY_HEADER_BUILD, "Raccourcis de construction"},
     {TR_HOTKEY_ARROW_UP, "Haut"},
     {TR_HOTKEY_ARROW_DOWN, "Bas"},
     {TR_HOTKEY_ARROW_LEFT, "Gauche"},
@@ -64,7 +65,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Redimensionner en 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Capturer l'écran de jeu"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Capturer la cité entière"},
-    {TR_HOTKEY_BUILD_CLONE, "Cloner le bâtiment sous le curseur"}, // TODO: Google Translate
+    {TR_HOTKEY_BUILD_CLONE, "Cloner le bâtiment sous le curseur"},
     {TR_HOTKEY_LOAD_FILE, "Charger une partie"},
     {TR_HOTKEY_SAVE_FILE, "Sauvegarder une partie"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Augmenter la vitesse du jeu"},
