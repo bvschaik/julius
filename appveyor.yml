@@ -87,7 +87,7 @@ deploy:
     secure: 3BVriC09bvFIpGdq6Mdz5aN6SQUnkxVFOJV5Gj4J1zJU1ySIKkiV883EhAQ2Nau/
   subject: keriew
   repo: Augustus-unstable
-  package: windows
+  package: windows-unstable
   version: $(DEPLOY_VERSION)
   artifact: augustus-dist
   publish: true
