@@ -30,6 +30,8 @@
 #include "map/water.h"
 #include "scenario/property.h"
 
+#define TEMPLE_LEVY_MONTHLY 4;
+
 static void add_fort(int type, building *fort)
 {
     fort->prev_part_building_id = 0;
@@ -427,36 +429,47 @@ static void add_to_map(int type, building *b, int size,
             break;
         // religion
         case BUILDING_SMALL_TEMPLE_CERES:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_CERES));
             break;
         case BUILDING_SMALL_TEMPLE_NEPTUNE:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_NEPTUNE));
             break;
         case BUILDING_SMALL_TEMPLE_MERCURY:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_MERCURY));
             break;
         case BUILDING_SMALL_TEMPLE_MARS:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_MARS));
             break;
         case BUILDING_SMALL_TEMPLE_VENUS:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_VENUS));
             break;
         case BUILDING_LARGE_TEMPLE_CERES:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_CERES) + 1);
             break;
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1);
             break;
         case BUILDING_LARGE_TEMPLE_MERCURY:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1);
             break;
         case BUILDING_LARGE_TEMPLE_MARS:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_MARS) + 1);
             break;
         case BUILDING_LARGE_TEMPLE_VENUS:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_VENUS) + 1);
             break;
         case BUILDING_ORACLE:
+            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_ORACLE));
             break;
         case BUILDING_ROADBLOCK:

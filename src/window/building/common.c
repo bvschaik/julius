@@ -91,7 +91,7 @@ static void draw_employment_details(building_info_context *c, building *b, int y
         c->x_offset + 40, y_offset + 6);
 
     if (b->monthly_levy) {
-        window_building_draw_levy(b->monthly_levy, c->x_offset, y_offset);
+        window_building_draw_levy(building_get_levy(b), c->x_offset, y_offset);
     }
 
     if (text_id) {
