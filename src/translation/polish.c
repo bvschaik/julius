@@ -34,6 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Odgrywaj film wprowadzający"},
     {TR_CONFIG_SIDEBAR_INFO, "Dodatkowe informacje w panelu sterowania"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Płynne przewijanie"},
+    {TR_CONFIG_DISABLE_MAP_DRAG, "Wyłącz przeciąganie mapy prawym przyciskiem"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Pokaż wybrany obszar przy oczyszczaniu terenu"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Pozwól na budowę kolejno każdej ze świątyń"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Pokaż zasięg przy budowie rezerwuarów, fontann i studni"},
@@ -52,7 +53,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "Widoki"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "Miejskie miejsca skoku"},
     {TR_HOTKEY_HEADER_EDITOR, "Edytor"},
-    {TR_HOTKEY_HEADER_BUILD, "Skróty klawiszowe konstrukcji"}, // TODO: Google Translate
+    {TR_HOTKEY_HEADER_BUILD, "Skróty klawiszowe budynków"},
     {TR_HOTKEY_ARROW_UP, "Góra"},
     {TR_HOTKEY_ARROW_DOWN, "Dół"},
     {TR_HOTKEY_ARROW_LEFT, "Lewo"},
@@ -64,7 +65,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Zmień rozmiar okna do 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Zapisz zrzut ekranu"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Zapisz zrzut ekranu miasta"},
-    {TR_HOTKEY_BUILD_CLONE, "Klonuj budynek pod kursorem"}, // TODO: Google Translate
+    {TR_HOTKEY_BUILD_CLONE, "Sklonuj budynek pod kursorem"},
     {TR_HOTKEY_LOAD_FILE, "Wczytaj plik"},
     {TR_HOTKEY_SAVE_FILE, "Zapisz plik"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Zwiększ prędkość gry"},
