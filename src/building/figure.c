@@ -365,6 +365,20 @@ static void spawn_figure_lion_house(building *b)
     }
 }
 
+static void spawn_figure_chariot(building* b, map_point road, int use_figure_2)
+{
+    figure* f = figure_create(FIGURE_CHARIOTEER, road.x, road.y, DIR_0_TOP);
+    f->action_state = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
+    f->building_id = b->id;
+    if (!use_figure_2) {
+        b->figure_id = f->id;
+    }
+    else {
+        b->figure_id2 = f->id;
+    }
+    
+}
+
 static void spawn_figure_chariot_maker(building *b)
 {
     check_labor_problem(b);
@@ -388,14 +402,13 @@ static void spawn_figure_chariot_maker(building *b)
         }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
+            spawn_figure_chariot(b, road, 0);
             b->figure_spawn_delay = 0;
-            figure *f = figure_create(FIGURE_CHARIOTEER, road.x, road.y, DIR_0_TOP);
-            f->action_state = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
-            f->building_id = b->id;
-            b->figure_id = f->id;
         }
     }
 }
+
+
 
 static void spawn_figure_amphitheater(building *b)
 {
@@ -955,9 +968,19 @@ static void spawn_figure_temple(building *b)
             return;
         }
         b->figure_spawn_delay++;
-        if (b->figure_spawn_delay > spawn_delay && !has_figure_of_type(b, FIGURE_PRIEST)) {
+        if (b->figure_spawn_delay > spawn_delay) {            
+            if (!has_figure_of_type(b, FIGURE_PRIEST)) {
+                create_roaming_figure(b, road.x, road.y, FIGURE_PRIEST);
+            }
+            // Neptune Module 1 Bonus
+            if (building_is_neptune_temple(b->type) && building_monument_gt_module_is_active(NEPTUNE_MODULE_1_HIPPODROME_ACCESS)) {
+                b->loads_stored += 1;
+                if (b->loads_stored > 1) {
+                    spawn_figure_chariot(b, road, 1);
+                    b->loads_stored = 0;
+                }                
+            }
             b->figure_spawn_delay = 0;
-            create_roaming_figure(b, road.x, road.y, FIGURE_PRIEST);
         }
 
         // Mars Module 1 Bonus
@@ -979,6 +1002,8 @@ static void spawn_figure_temple(building *b)
         if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
             spawn_market_buyer(b, road);
         }
+
+
 
         if (!b->figure_id2 && building_monument_gt_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
             figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
