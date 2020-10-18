@@ -74,7 +74,7 @@ void map_water_supply_update_houses(void)
     int total_wells = building_list_small_size();
     const int *wells = building_list_small_items();
     for (int i = 0; i < total_wells; i++) {
-        mark_well_access(wells[i], WELL_RADIUS);
+        mark_well_access(wells[i], map_water_supply_well_radius());
     }
 }
 
