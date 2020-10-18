@@ -37,6 +37,16 @@ int trader_bonus_speed(void) {
     }
 }
 
+// Neptune Grand Temple base bonus to trader speed
+int sea_trader_bonus_speed(void) {
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
+        return 25;
+    }
+    else {
+        return 0;
+    }
+}
+
 int figure_create_trade_caravan(int x, int y, int city_id)
 {
     figure *caravan = figure_create(FIGURE_TRADE_CARAVAN, x, y, DIR_0_TOP);
@@ -650,6 +660,7 @@ static int trade_ship_done_trading(figure *f)
 
 void figure_trade_ship_action(figure *f)
 {
+    int move_speed = sea_trader_bonus_speed();
     f->is_ghost = 0;
     f->is_boat = 1;
     figure_image_increase_offset(f, 12);
@@ -686,7 +697,7 @@ void figure_trade_ship_action(figure *f)
             f->image_offset = 0;
             break;
         case FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK:
-            figure_movement_move_ticks(f, 1);
+            figure_movement_move_ticks_with_percentage(f, 1, move_speed);
             f->height_adjusted_ticks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_112_TRADE_SHIP_MOORED;
@@ -736,7 +747,7 @@ void figure_trade_ship_action(figure *f)
             city_message_reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
             break;
         case FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE:
-            figure_movement_move_ticks(f, 1);
+            figure_movement_move_ticks_with_percentage(f, 1, move_speed);
             f->height_adjusted_ticks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_114_TRADE_SHIP_ANCHORED;
@@ -767,7 +778,7 @@ void figure_trade_ship_action(figure *f)
             f->image_offset = 0;
             break;
         case FIGURE_ACTION_115_TRADE_SHIP_LEAVING:
-            figure_movement_move_ticks(f, 1);
+            figure_movement_move_ticks_with_percentage(f, 1, move_speed);
             f->height_adjusted_ticks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;

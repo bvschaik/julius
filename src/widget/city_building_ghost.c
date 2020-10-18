@@ -102,7 +102,7 @@ static const int RESERVOIR_GRID_OFFSETS[4] = {OFFSET(-1,-1), OFFSET(1,-1), OFFSE
 static const int HIPPODROME_X_VIEW_OFFSETS[4] = {150, 150, -150, -150};
 static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
 
-#define RESERVOIR_RANGE_MAX_TILES 520
+#define RESERVOIR_RANGE_MAX_TILES 700
 
 static struct {
     int total;
@@ -199,7 +199,7 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
         }
     } else if (type == BUILDING_WELL) {
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-            city_view_foreach_tile_in_range(grid_offset, 1, 2, draw_fountain_range);
+            city_view_foreach_tile_in_range(grid_offset, 1, map_water_supply_well_radius(), draw_fountain_range);
         }
         draw_building(image_id, x, y);
     } else if (type != BUILDING_CLEAR_LAND) {
@@ -431,8 +431,8 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             }
             if (!draw_later) {
                 if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-                    city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
-                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
+                    city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, map_water_supply_reservoir_radius(), draw_first_reservoir_range);
+                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, map_water_supply_reservoir_radius(), draw_second_reservoir_range);
                 }
                 draw_single_reservoir(x_start, y_start, has_water);
             }
@@ -450,9 +450,9 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     } else {
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!building_construction_in_progress() || draw_later)) {
             if (draw_later) {
-                city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
+                city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, map_water_supply_reservoir_radius(), draw_first_reservoir_range);
             }
-            city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
+            city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, map_water_supply_reservoir_radius(), draw_second_reservoir_range);
         }
         draw_single_reservoir(x, y, has_water);
         if (draw_later) {

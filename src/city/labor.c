@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "core/config.h"
 #include "city/data_private.h"
 #include "city/message.h"
@@ -194,7 +195,15 @@ static void calculate_workers_needed_per_category(void)
         if (!should_have_workers(b, category, 1)) {
             continue;
         }
-        city_data.labor.categories[category].workers_needed += model_get_building(b->type)->laborers;
+
+        if (category == LABOR_CATEGORY_WATER && building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
+            //Neptune Gt base bonus
+            city_data.labor.categories[category].workers_needed += (model_get_building(b->type)->laborers) / 2;
+        }
+        else {
+            city_data.labor.categories[category].workers_needed += model_get_building(b->type)->laborers;
+        }
+        
         city_data.labor.categories[category].total_houses_covered += b->houses_covered;
         city_data.labor.categories[category].buildings++;
     }

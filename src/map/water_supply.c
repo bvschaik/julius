@@ -21,6 +21,9 @@
 #define OFFSET(x,y) (x + GRID_SIZE * y)
 
 #define MAX_QUEUE 1000
+#define RESERVOIR_RADIUS 10
+#define WELL_RADIUS 2
+#define FOUNTAIN_RADIUS 4
 #define POND_CLIMATE_IMAGE_OFFSET 10 
 #define POND_WATERED_IMAGE_OFFSET 1
 #define POND_LARGE_IMAGE_OFFSET 20
@@ -71,7 +74,7 @@ void map_water_supply_update_houses(void)
     int total_wells = building_list_small_size();
     const int *wells = building_list_small_items();
     for (int i = 0; i < total_wells; i++) {
-        mark_well_access(wells[i], 2);
+        mark_well_access(wells[i], WELL_RADIUS);
     }
 }
 
@@ -188,7 +191,7 @@ void map_water_supply_update_reservoir_fountain(void)
     for (int i = 0; i < total_reservoirs; i++) {
         building *b = building_get(reservoirs[i]);
         if (b->has_water_access) {
-            map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_RESERVOIR_RANGE);
+            map_terrain_add_with_radius(b->x, b->y, 3, map_water_supply_reservoir_radius(), TERRAIN_RESERVOIR_RANGE);
         }
     }
     // fountains
@@ -271,12 +274,28 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius)
 }
 
 int map_water_supply_fountain_radius() {
-    int radius = scenario_property_climate() == CLIMATE_DESERT ? 3 : 4;
+    int radius = scenario_property_climate() == CLIMATE_DESERT ? FOUNTAIN_RADIUS - 1 : FOUNTAIN_RADIUS;
 	if (building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
         radius++;
 	}
-    if (building_monument_upgraded(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
+
+    return radius;
+}
+
+int map_water_supply_reservoir_radius() {
+    int radius = RESERVOIR_RADIUS;
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
+        radius += 2;
+    }
+
+    return radius;
+}
+
+int map_water_supply_well_radius() {
+    int radius = WELL_RADIUS;
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
         radius++;
     }
+
     return radius;
 }
