@@ -246,7 +246,7 @@ int city_resource_ceres_temple_food(void)
             continue;
         }
         if (can_produce_resource(i)) {
-            return ;
+            return i;
         }
     }
 

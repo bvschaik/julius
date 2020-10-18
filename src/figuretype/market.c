@@ -83,6 +83,39 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     return 1;
 }
 
+// Venus Grand Temple wine
+static int take_resource_from_generic_building(figure* f, int building_id)
+{
+    int resource;
+    switch (f->collecting_item_id) {
+    case INVENTORY_POTTERY: resource = RESOURCE_POTTERY; break;
+    case INVENTORY_FURNITURE: resource = RESOURCE_FURNITURE; break;
+    case INVENTORY_OIL: resource = RESOURCE_OIL; break;
+    case INVENTORY_WINE: resource = RESOURCE_WINE; break;
+    default: return 0;
+    }
+    building* b = building_get(building_id);
+    int num_loads;
+    int stored = b->loads_stored;
+    if (stored < 2) {
+        num_loads = stored;
+    }
+    else {
+        num_loads = 2;
+    }
+    if (num_loads <= 0) {
+        return 0;
+    }
+    b->loads_stored -= num_loads;
+
+    // create delivery boys
+    int boy1 = create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
+    if (num_loads > 1) {
+        create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
+    }
+    return 1;
+}
+
 static int take_resource_from_warehouse(figure *f, int warehouse_id)
 {
     int resource;
@@ -117,38 +150,7 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     return 1;
 }
 
-// Venus Grand Temple wine
-static int take_resource_from_generic_building(figure* f, int building_id)
-{
-    int resource;
-    switch (f->collecting_item_id) {
-    case INVENTORY_POTTERY: resource = RESOURCE_POTTERY; break;
-    case INVENTORY_FURNITURE: resource = RESOURCE_FURNITURE; break;
-    case INVENTORY_OIL: resource = RESOURCE_OIL; break;
-    case INVENTORY_WINE: resource = RESOURCE_WINE; break;
-    default: return 0;
-    }
-    building* b = building_get(building_id);
-    int num_loads;
-    int stored = b->loads_stored;
-    if (stored < 2) {
-        num_loads = stored;
-    }
-    else {
-        num_loads = 2;
-    }
-    if (num_loads <= 0) {
-        return 0;
-    }
-    b->loads_stored -= num_loads;
 
-    // create delivery boys
-    int boy1 = create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
-    if (num_loads > 1) {
-        create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
-    }
-    return 1;
-}
 
 void figure_market_buyer_action(figure *f)
 {
