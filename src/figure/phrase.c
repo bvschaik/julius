@@ -233,7 +233,7 @@ static const char FIGURE_SOUNDS[32][20][SOUND_FILENAME_MAX] = {
     { // 30
         "missionary_starv1.wav", "missionary_nojob1.wav", "missionary_needjob1.wav", "missionary_nofun1.wav",
         "missionary_relig1.wav", "missionary_great1.wav", "missionary_great2.wav", "missionary_exact1.wav",
-        "missionary_exact2.wav", "missionary_exact3.wav", "missionary_exact4.wav", "missionary_exact5.wav",
+        "missionary_exact2.wav", "missionary_exact3.wav", "mission_exact4.wav", "missionary_exact5.wav",
         "missionary_exact6.wav", "missionary_exact7.wav", "missionary_exact8.wav", "missionary_exact9.wav",
         "missionary_exact0.wav", "missionary_free1.wav", "missionary_free2.wav", "missionary_free3.wav"
     },
@@ -407,6 +407,15 @@ static int citizen_phrase(figure *f)
     return 7 + f->phrase_sequence_exact;
 }
 
+static int missionary_phrase(figure* f)
+{
+    if (++f->phrase_sequence_exact >= 4) {
+        f->phrase_sequence_exact = 0;
+    }
+    return 7 + f->phrase_sequence_exact;
+}
+
+
 static int house_seeker_phrase(figure *f)
 {
     if (++f->phrase_sequence_exact >= 3) {
@@ -542,8 +551,9 @@ static int phrase_based_on_figure_state(figure *f)
         case FIGURE_DELIVERY_BOY:
         case FIGURE_WORK_CAMP_SLAVE:
         case FIGURE_MESS_HALL_COLLECTOR:
-        case FIGURE_MISSIONARY:
             return citizen_phrase(f);
+        case FIGURE_MISSIONARY:
+            return missionary_phrase(f);
         case FIGURE_HOMELESS:
         case FIGURE_IMMIGRANT:
             return house_seeker_phrase(f);

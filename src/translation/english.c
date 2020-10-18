@@ -265,7 +265,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MESS_HALL, "Mess hall"},
     {TR_BUILDING_MESS_HALL_DESC, "The mess hall collects food from city granaries to feed soldiers stationed at city forts. A poorly supplied mess hall will slow recruitment and damage morale."},
     {TR_BUILDING_MESS_HALL_FULFILLMENT, "Last month the mess hall was supplied:"},
-    { TR_BUILDING_MESS_HALL_TROOP_HUNGER, "Soldiers are: " },
+    {TR_BUILDING_MESS_HALL_TROOP_HUNGER, "Soldiers are: " },
     {TR_BUILDING_MESS_HALL_TROOP_HUNGER_1, "Well-fed" },
     {TR_BUILDING_MESS_HALL_TROOP_HUNGER_2, "Fed"},
     {TR_BUILDING_MESS_HALL_TROOP_HUNGER_3, "Hungry"},
@@ -308,6 +308,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SMALL_TEMPLE_MARS_NAME, "Temple of Mars"},
     {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Temple of Venus"},
     {TR_FIGURE_TYPE_PRIEST_BUYER, "Priest" },
+    {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"I'll do what I can to calm these barbarians down. I'm sure they'll stop attacking the city when I've had a word with them.\"" },
         
 };
 

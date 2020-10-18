@@ -256,8 +256,18 @@ const uint8_t *lang_get_string(int group, int index)
     if (group == 96 && !index) {
         return translation_for(TR_BUILDING_SMALL_TEMPLE_VENUS_NAME);
     }
+
+    if (group == 130) {
+        switch (index) {
+        case 641:
+            return translation_for(TR_PHRASE_FIGURE_MISSIONARY_EXACT_4);
+        default:
+            break;
+        }
+    }
+
     
-    // Add new strings
+    // Building strings
     if (group == 28 || group == 41) {
         switch (index) {
         case BUILDING_ROADBLOCK:
