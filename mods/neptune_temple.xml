@@ -103,13 +103,13 @@
     </image>
 <!-- Note: Neptune Complex Module Animation (Chariot Walkers) -->
     <image id="Neptune Complex Module" width="418" height="231">
-		<layer group="this" image="Neptune Complex Off" />
+		<layer group="this" image="Neptune Complex On" />
         <animation speed="6" frames="3" x="98" y="27" reversible="true" />
     </image>
     <image src="Neptune_Temple_Complex_Module2_01" />
     <image src="Neptune_Temple_Complex_Module2_02" />
     <image src="Neptune_Temple_Complex_Module2_03" />	
-<!-- Note: Neptune Complex Module2 Animation (Water into Wine)(USE THIS ONE!!) -->
+<!-- Note: Neptune Complex Module2 Animation ON (Fountain ON)(USE THIS ONE!!) -->
     <image id="Neptune Complex Module2" width="418" height="231">
 		<layer group="this" image="Neptune Complex On" />
         <animation speed="5" frames="18" x="98" y="27" reversible="false" />
@@ -132,4 +132,11 @@
     <image group="this" image="Neptune Module F16"/>	
     <image group="this" image="Neptune Module F17"/>	
     <image group="this" image="Neptune Module F18"/>	
+<!-- Note: Neptune Complex Module2 Animation OFF (Fountain OFF) -->
+    <image id="Neptune Complex Off" width="418" height="231">
+        <layer src="Neptune_Temple_Complex_Base_Layer" />
+		<layer group="this" image="Neptune LTemple Off" x="150" y="2" />
+        <layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84" />	
+        <layer src="Neptune_Temple_Complex_Module_OFF" x="98" y="27" />			
+    </image>		
 </mod>	
