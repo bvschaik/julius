@@ -409,7 +409,7 @@ static int citizen_phrase(figure *f)
 
 static int house_seeker_phrase(figure *f)
 {
-    if (++f->phrase_sequence_exact >= 2) {
+    if (++f->phrase_sequence_exact >= 3) {
         f->phrase_sequence_exact = 0;
     }
     return 7 + f->phrase_sequence_exact;
