@@ -174,6 +174,7 @@ void city_victory_update_months_to_govern(void)
 
 void city_victory_continue_governing(int months)
 {
+    city_data.mission.victory_message_shown = 0;
     city_data.mission.has_won = 1;
     city_data.mission.continue_months_left += months;
     city_data.mission.continue_months_chosen = months;
