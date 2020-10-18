@@ -750,6 +750,71 @@ static void draw_footprint_size5(int image_id, int x, int y, color_t color_mask)
     draw_footprint_tile(tile_data(data, index++), x, y + 120, color_mask);
 }
 
+static void draw_footprint_size7(int image_id, int x, int y, color_t color_mask)
+{
+    const color_t* data = image_data(image_id);
+
+    int index = 0;
+    draw_footprint_tile(tile_data(data, index++), x, y, color_mask);
+
+    draw_footprint_tile(tile_data(data, index++), x - 30, y + 15, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 30, y + 15, color_mask);
+
+    draw_footprint_tile(tile_data(data, index++), x - 60, y + 30, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x, y + 30, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 60, y + 30, color_mask);
+
+    draw_footprint_tile(tile_data(data, index++), x - 90, y + 45, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 30, y + 45, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 30, y + 45, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 90, y + 45, color_mask);
+
+    draw_footprint_tile(tile_data(data, index++), x - 120, y + 60, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 60, y + 60, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x, y + 60, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 60, y + 60, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 120, y + 60, color_mask);
+
+    draw_footprint_tile(tile_data(data, index++), x - 90, y + 75, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 30, y + 75, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 30, y + 75, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 90, y + 75, color_mask);
+
+    draw_footprint_tile(tile_data(data, index++), x - 60, y + 90, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x, y + 90, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 60, y + 90, color_mask);
+
+    draw_footprint_tile(tile_data(data, index++), x - 30, y + 105, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 30, y + 105, color_mask);
+
+    draw_footprint_tile(tile_data(data, index++), x, y + 120, color_mask);
+
+    draw_footprint_tile(tile_data(data, index++), x-150, y + 75, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x+150, y + 75, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x-120, y + 90, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x+120, y + 90, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x-90, y + 105, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x+90, y + 105, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x-60, y + 120, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x+60, y + 120, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x-30, y + 135, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x+30, y + 135, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x-180, y + 150, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x+180, y + 90, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 150, y + 90, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 150, y + 105, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 120, y + 105, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 120, y + 120, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 90, y + 120, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 90, y + 135, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 60, y + 135, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 60, y + 150, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 30, y + 165, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 30, y + 165, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x, y + 180, color_mask);
+
+}
+
 void image_draw(int image_id, int x, int y)
 {
     const image *img = image_get(image_id);
@@ -928,6 +993,9 @@ void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_ma
         case 298:
             draw_footprint_size5(image_id, x, y, color_mask);
             break;
+        case 418:
+            draw_footprint_size7(image_id, x, y, color_mask);
+            break;
     }
 }
 
@@ -956,6 +1024,10 @@ void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, c
         case 298:
             draw_footprint_size5(image_id, x + 120, y - 60, color_mask);
             break;
+        case 418:
+            draw_footprint_size7(image_id, x + 150, y - 75, color_mask);
+            break;
+
     }
 }
 

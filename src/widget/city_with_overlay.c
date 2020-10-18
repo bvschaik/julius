@@ -254,6 +254,41 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
         for (int i = 0; i < 25; i++) {
             image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], color_mask);
         }
+    } else if (b->size == 7) {
+        const int image_tile_offset[] = { 0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 1, 3, 3, 3, 2, 1, 3, 3, 3, 3, 2, 1, 3, 3, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
+        const int x_tile_offset[] = {
+            180,
+            150, 210,
+            120, 180, 240,
+            90, 150, 210, 270,
+            60, 120, 180, 240, 300,
+            30, 90, 150, 210, 270, 330,
+            0, 60, 120, 180, 240, 300, 360,
+            30, 90, 150, 210, 270, 330,
+            60, 120, 180, 240, 300,
+            90, 150, 210, 270,
+            120, 180, 240,
+            150, 210,
+            180,
+        };
+        const int y_tile_offset[] = {
+            -90,
+            -75,-75,
+            -60,-60,-60,
+            -45, -45,-45,-45,
+            -30, -30, -30,-30,-30,
+            -15, -15, -15, -15,-15,-15,
+            0, 0, 0, 0, 0, 0, 0,
+            15, 15, 15, 15, 15, 15,
+            30, 30, 30, 30, 30,
+            45, 45, 45, 45,
+            60, 60, 60,
+            75, 75,
+            90,
+        };
+        for (int i = 0; i < 49; i++) {
+            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], color_mask);
+        }
     }
 }
 
