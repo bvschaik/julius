@@ -139,7 +139,6 @@ typedef struct {
 
 static struct {
     legion_info active_legion;
-    int total_selected_legions;
     int top_buttons_focus_id;
     int inner_buttons_focus_id;
     int bottom_buttons_focus_id;
@@ -467,6 +466,7 @@ static void slide_in_finished(void)
 
 static void slide_out_finished(void)
 {
+    data.active_legion.formation_id = 0;
     update_minimap();
     window_city_show();
 }
@@ -490,7 +490,6 @@ int widget_sidebar_military_enter(int formation_id)
 
 int widget_sidebar_military_exit(void)
 {
-    data.active_legion.formation_id = 0;
     if (!window_is(WINDOW_CITY_MILITARY)) {
         update_minimap();
         return 0;
