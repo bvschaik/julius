@@ -340,7 +340,7 @@ void window_building_draw_market_orders_foreground(building_info_context* c, int
         case RESOURCE_FRUIT: single_resource_id = INVENTORY_FRUIT; break;
         case RESOURCE_MEAT: single_resource_id = INVENTORY_MEAT; break;
         case RESOURCE_WINE: single_resource_id = INVENTORY_WINE; break;
-        default: return 0;
+        default: return;
         }
         resource_min = single_resource_id;
         resource_max = single_resource_id + 1;
