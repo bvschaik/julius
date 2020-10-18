@@ -166,6 +166,8 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
                 case 3: image_draw(image_id + 2, x_view, y_view - 2); break;
                 case 4: image_draw(image_id + 3, x_view, y_view - 3); break;
                 case 5: image_draw(image_id + 4, x_view, y_view - 4); break;
+                case 7: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "7x7 Map Icon"), x_view, y_view - 6);
+
             }
         }
     } else {
