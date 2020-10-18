@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE mod>
+
+<mod author="Areldir" name="UI_Elements">
+
+    <image id="Main Menu" src="Main_Menu" />
+    <image id="7x7 Map Icon" src="7x7_Minimap_Icon" />
+
+</mod>		

@@ -61,7 +61,7 @@ static void draw_background(void)
     graphics_clear_screens();
     graphics_in_dialog();
     //image_draw(image_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
-    image_draw(mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Main Menu"), 0, 0);
+    image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Main Menu"), 0, 0);
     graphics_reset_dialog();
     if (window_is(WINDOW_MAIN_MENU)) {
         draw_version_string();
