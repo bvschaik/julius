@@ -133,6 +133,7 @@ typedef struct {
         struct {
             short resources_needed[16];
             int upgrades;
+            int progress;
         } monument;
 
     } data;

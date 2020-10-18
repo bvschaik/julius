@@ -70,8 +70,8 @@ static void write_type_data(buffer *buf, const building *b)
             buffer_write_i16(buf, b->data.monument.resources_needed[i]);
         }
         buffer_write_i32(buf, b->data.monument.upgrades);
+        buffer_write_i16(buf, b->data.monument.progress);
         buffer_write_i32(buf, 0);
-        buffer_write_i16(buf, 0);
     } else if (b->type == BUILDING_DOCK) {
         buffer_write_i16(buf, b->data.dock.queued_docker_id);
         for (int i = 0; i < 25; i++) {
@@ -241,7 +241,8 @@ static void read_type_data(buffer *buf, building *b)
             b->data.monument.resources_needed[i] = buffer_read_i16(buf);
         }
         b->data.monument.upgrades = buffer_read_i32(buf);
-        buffer_skip(buf, 6);
+        b->data.monument.progress = buffer_read_i16(buf);
+        buffer_skip(buf, 4);
     } else if (b->type == BUILDING_DOCK) {
         b->data.dock.queued_docker_id = buffer_read_i16(buf);
         buffer_skip(buf, 25);

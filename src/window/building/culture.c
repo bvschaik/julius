@@ -404,6 +404,19 @@ static void window_building_draw_monument_resources_needed(building_info_context
     }
 }
 
+void draw_grand_temple_venus_wine(building_info_context* c) {
+    int y = 50;
+    data.building_id = c->building_id;
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, c->x_offset + 24, c->y_offset + y - 5);
+    building* b = building_get(c->building_id);
+    if (b->loads_stored < 1) {
+        lang_text_draw_amount(8, 10, 0, c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
+    }
+    else {
+        lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
+    }
+}
+
 void draw_grand_temple_mars_military(building_info_context* c)
 {
     int y = 60;
@@ -450,6 +463,8 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
         }
         if (b->type == BUILDING_GRAND_TEMPLE_MARS) {
             draw_grand_temple_mars_military(c);
+        } else if (b->type == BUILDING_GRAND_TEMPLE_VENUS && (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE))) {
+            draw_grand_temple_venus_wine(c);
         }
         inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height + extra_y, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 96 + height + extra_y);

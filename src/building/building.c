@@ -163,6 +163,9 @@ building *building_create(building_type type, int x, int y)
             b->output_resource_id = RESOURCE_POTTERY;
             b->subtype.workshop_type = WORKSHOP_CLAY_TO_POTTERY;
             break;
+        case BUILDING_GRAND_TEMPLE_VENUS:
+            b->output_resource_id = RESOURCE_WINE;
+            break;
         default:
             b->output_resource_id = RESOURCE_NONE;
             break;

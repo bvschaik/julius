@@ -465,8 +465,23 @@ int building_monument_phase(int phase) {
 	return 1;
 }
 
+int building_monument_get_venus_gt(void) {
+	for (int i = 0; i < MAX_MONUMENTS; i++) {
+		int monument_id = monuments[i];
+		building* b = building_get(monument_id);
+		if (!b->type == BUILDING_GRAND_TEMPLE_VENUS) {
+			continue;
+		}
+		else {
+			return monument_id;
+		}
+	}
+	return 0;
+}
+
 int building_monument_finish_monuments() {
 	return building_monument_phase(6);
+
 }
 
 int building_monument_needs_resources(building* b) {

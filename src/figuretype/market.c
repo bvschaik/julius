@@ -94,6 +94,9 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
         default: return 0;
     }
     building *warehouse = building_get(warehouse_id);
+    if (warehouse->type != BUILDING_WAREHOUSE) {
+        return take_resource_from_generic_building(f, warehouse_id);
+    }
     int num_loads;
     int stored = building_warehouse_get_amount(warehouse, resource);
     if (stored < 2) {
@@ -105,6 +108,39 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
         return 0;
     }
     building_warehouse_remove_resource(warehouse, resource, num_loads);
+
+    // create delivery boys
+    int boy1 = create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
+    if (num_loads > 1) {
+        create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
+    }
+    return 1;
+}
+
+// Venus Grand Temple wine
+static int take_resource_from_generic_building(figure* f, int building_id)
+{
+    int resource;
+    switch (f->collecting_item_id) {
+    case INVENTORY_POTTERY: resource = RESOURCE_POTTERY; break;
+    case INVENTORY_FURNITURE: resource = RESOURCE_FURNITURE; break;
+    case INVENTORY_OIL: resource = RESOURCE_OIL; break;
+    case INVENTORY_WINE: resource = RESOURCE_WINE; break;
+    default: return 0;
+    }
+    building* b = building_get(building_id);
+    int num_loads;
+    int stored = b->loads_stored;
+    if (stored < 2) {
+        num_loads = stored;
+    }
+    else {
+        num_loads = 2;
+    }
+    if (num_loads <= 0) {
+        return 0;
+    }
+    b->loads_stored -= num_loads;
 
     // create delivery boys
     int boy1 = create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
@@ -135,6 +171,7 @@ void figure_market_buyer_action(figure *f)
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                
                 if (f->collecting_item_id > 3) {
                     if (!take_resource_from_warehouse(f, f->destination_building_id)) {
                         f->state = FIGURE_STATE_DEAD;

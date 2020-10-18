@@ -615,7 +615,7 @@ static void spawn_market_buyer(building* b, map_point road) {
             if (b->type == BUILDING_MESS_HALL) {
                 type = FIGURE_MESS_HALL_BUYER;
             }
-            if (b->type == BUILDING_SMALL_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_CERES) {
+            if (b->type == BUILDING_SMALL_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_SMALL_TEMPLE_VENUS || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
                 type = FIGURE_PRIEST_BUYER;
             }
             figure* f = figure_create(type, road.x, road.y, DIR_0_TOP);
@@ -972,6 +972,11 @@ static void spawn_figure_temple(building *b)
 
         // Ceres Module 2 Bonus
         if (building_is_ceres_temple(b->type) && building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD)) {
+            spawn_market_buyer(b, road);
+        }
+
+        // Venus Module 1 Bonus
+        if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
             spawn_market_buyer(b, road);
         }
 

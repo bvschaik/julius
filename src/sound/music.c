@@ -81,8 +81,7 @@ static void play_mp3_file(const char* track)
 void sound_music_play_intro(void)
 {
     if (setting_sound(SOUND_MUSIC)->enabled) {
-        // play_track(TRACK_INTRO);
-        play_mp3_file("mods/Holst_The_Planets_Jupiter.mp3");
+        play_track(TRACK_INTRO);
     }
 }
 

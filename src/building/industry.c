@@ -11,6 +11,7 @@
 
 #define MAX_PROGRESS_RAW 200
 #define MAX_PROGRESS_WORKSHOP 400
+#define MAX_STORAGE 16
 #define INFINITE 10000
 
 #define MERCURY_BLESSING_LOADS 3
@@ -43,10 +44,24 @@ static void update_farm_image(const building *b)
         b->data.industry.progress);
 }
 
+static void building_other_update_production(building* b) {
+    // For monuments or other non-industry subtypes that generate goods
+    if (building_monument_is_monument(b)) {
+        b->data.monument.progress += b->num_workers;
+        if (b->data.monument.progress > MAX_PROGRESS_WORKSHOP) {
+            if (b->loads_stored < MAX_STORAGE) {
+                b->loads_stored += 1;
+            }
+            b->data.monument.progress = 0;
+        }
+    }
+}
+
 void building_industry_update_production(void)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
+       
         if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id) {
             continue;
         }
@@ -54,9 +69,16 @@ void building_industry_update_production(void)
         if (b->houses_covered <= 0 || b->num_workers <= 0) {
             continue;
         }
+
+        if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) && b->type == BUILDING_GRAND_TEMPLE_VENUS) {
+            building_other_update_production(b);
+            continue;
+        }
+
         if (b->subtype.workshop_type && !b->loads_stored) {
             continue;
         }
+
         if (b->data.industry.curse_days_left) {
             b->data.industry.curse_days_left--;
         } else {

@@ -133,9 +133,9 @@ void window_building_draw_barracks(building_info_context *c)
             offset = 4;
         }
         if (city_data.mess_hall.food_stress_cumulative > 50) {
-            text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING_2), c->x_offset + 46, c->y_offset + 86, 16 * c->width_blocks - 46, FONT_NORMAL_BLACK, 0);
+            text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING_2), c->x_offset + 26, c->y_offset + 86, 16 * c->width_blocks - 26, FONT_NORMAL_BLACK, 0);
         } else if (city_data.mess_hall.food_stress_cumulative > 20) {
-            text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING), c->x_offset + 46, c->y_offset + 86, 16 * c->width_blocks - 46, FONT_NORMAL_BLACK, 0);
+            text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING), c->x_offset + 26, c->y_offset + 86, 16 * c->width_blocks - 26, FONT_NORMAL_BLACK, 0);
         } else if (c->worker_percentage >= 100) {
             window_building_draw_description_at(c, 70, 136, 5 + offset);
         } else if (c->worker_percentage >= 66) {
