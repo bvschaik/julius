@@ -1,6 +1,7 @@
 #include "trade.h"
 
 #include "building/count.h"
+#include "building/monument.h"
 #include "city/constants.h"
 #include "core/config.h"
 #include "city/data_private.h"
@@ -12,6 +13,9 @@ void city_trade_update(void)
     city_data.trade.num_land_routes = 0;
     // Wine types
     city_data.resource.wine_types_available = building_count_industry_total(RESOURCE_WINE) > 0 ? 1 : 0;
+    if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
+        city_data.resource.wine_types_available += 1;
+    }
     if (city_data.resource.trade_status[RESOURCE_WINE] == TRADE_STATUS_IMPORT || config_get(CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE)) {
         city_data.resource.wine_types_available += empire_city_count_wine_sources();
     }
