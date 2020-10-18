@@ -1,6 +1,7 @@
 #include "finance.h"
 
 #include "building/building.h"
+#include "building/count.h"
 #include "building/model.h"
 #include "city/data_private.h"
 #include "core/calc.h"
@@ -276,7 +277,7 @@ static void pay_monthly_building_levies(void) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->monthly_levy) {
-            levies += b->monthly_levy;
+            levies += building_get_levy(b);
         }
     }
     

@@ -191,6 +191,8 @@ int building_mothball_toggle(building* b);
 
 int building_mothball_set(building* b, int value);
 
+int building_get_levy(building* b);
+
 void building_totals_add_corrupted_house(int unfixable);
 
 void building_clear_all(void);
