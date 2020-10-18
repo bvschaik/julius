@@ -49,8 +49,6 @@ cat > "bintray.json" <<EOF
   "publish": true
 }
 EOF
-
-# Linux portable binary: https://appimage.org/
 elif [ "$DEPLOY" = "appimage" ]
 then
 cat > "bintray.json" <<EOF
@@ -62,21 +60,17 @@ cat > "bintray.json" <<EOF
     "licenses": ["AGPL-V3"],
     "vcs_url": "https://github.com/Keriew/augustus.git"
   },
-
   "version": {
     "name": "$VERSION",
     "released": "$(date +'%Y-%m-%d')",
     "desc": "Automated Linux AppImage build for Travis-CI job: $TRAVIS_JOB_WEB_URL"
   },
-
   "files": [
     {
       "includePattern": "${build_dir}/augustus.AppImage",
       "uploadPattern": "augustus-$VERSION-linux.AppImage"
-      "listInDownloads": true
     }
   ],
-
   "publish": true
 }
 EOF
