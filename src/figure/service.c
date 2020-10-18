@@ -404,6 +404,13 @@ int figure_service_provide_coverage(figure *f)
                     houses_serviced = provide_culture(x, y, religion_coverage_venus);
                     houses_serviced = provide_market_goods(f->building_id, x, y);
                     break;
+                case BUILDING_PANTHEON:
+                    houses_serviced = provide_culture(x, y, religion_coverage_ceres);
+                    houses_serviced = provide_culture(x, y, religion_coverage_neptune);
+                    houses_serviced = provide_culture(x, y, religion_coverage_mercury);
+                    houses_serviced = provide_culture(x, y, religion_coverage_mars);
+                    houses_serviced = provide_culture(x, y, religion_coverage_venus);
+                    break;
                 default:
                     break;
             }

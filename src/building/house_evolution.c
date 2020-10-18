@@ -14,7 +14,7 @@
 #include "map/tiles.h"
 
 #define DEVOLVE_DELAY 2
-#define DEVOLVE_DELAY_WITH_VENUS 10
+#define DEVOLVE_DELAY_WITH_VENUS 20
 
 typedef enum {
     EVOLVE = 1,
