@@ -823,9 +823,9 @@ static void get_tooltip(tooltip_context *c)
     }
     else if (focus_generic_button_id) {
         if (building_get(context.building_id)->state == BUILDING_STATE_IN_USE) {
-            translation = translation_for(TR_TOOLTIP_BUTTON_MOTHBALL_ON);
+            translation = TR_TOOLTIP_BUTTON_MOTHBALL_ON;
         } else {
-            translation = translation_for(TR_TOOLTIP_BUTTON_MOTHBALL_OFF);
+            translation = TR_TOOLTIP_BUTTON_MOTHBALL_OFF;
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         text_id = window_building_get_legion_info_tooltip_text(&context);
