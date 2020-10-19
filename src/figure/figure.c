@@ -90,6 +90,13 @@ void figure_delete(figure *f)
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
             city_emperor_mark_soldier_killed();
             break;
+        case FIGURE_CHARIOTEER:
+            if (building_is_neptune_temple(b->type)) {
+                b->figure_id2 = 0;
+            } else {
+                b->figure_id = 0;
+            }
+            break;
         case FIGURE_EXPLOSION:
         case FIGURE_FORT_STANDARD:
         case FIGURE_ARROW:
