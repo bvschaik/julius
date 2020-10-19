@@ -260,7 +260,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_FINANCE_LEVIES, "Building levies"},
     {TR_CONFIRM_DELETE_MONUMENT, "Demolishing this monument"},
     {TR_SELECT_EPITHET_PROMPT_HEADER, "Select epithet to bestow"},
-    {TR_SELECT_EPITHET_PROMPT_TEXT, "Bestowing an epithet will permanently dedicate your temple to one aspect of its deity, imbuing priests with divine power." },
+    {TR_SELECT_EPITHET_PROMPT_TEXT, "Bestowing an epithet will permanently dedicate your temple to one aspect of its deity, imbuing priests with divine power. This will cost 1000 Dn." },
     {TR_BUILDING_INFO_MONTHLY_LEVY, "/month"},
     {TR_BUILDING_MESS_HALL, "Mess hall"},
     {TR_BUILDING_MESS_HALL_DESC, "The mess hall collects food from city granaries to feed soldiers stationed at city forts. A poorly supplied mess hall will slow recruitment and damage morale."},

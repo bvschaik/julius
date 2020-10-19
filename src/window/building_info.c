@@ -699,7 +699,6 @@ static void draw_foreground(void)
         else if (btype == BUILDING_BARRACKS) {
             window_building_draw_barracks_foreground(&context);
         } else if (btype == BUILDING_GRAND_TEMPLE_MARS) {
-            window_building_draw_grand_temple_mars_foreground(&context);
             window_building_draw_grand_temple_foreground(&context);
         } else if ((btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) || btype == BUILDING_PANTHEON) {
             window_building_draw_grand_temple_foreground(&context);

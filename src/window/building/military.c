@@ -160,9 +160,9 @@ void window_building_draw_barracks_foreground(building_info_context* c)
 
 }
 
-void window_building_draw_grand_temple_mars_foreground(building_info_context* c)
+void window_building_draw_priority_buttons(int x, int y)
 {
-    draw_priority_buttons(c->x_offset + 285, c->y_offset + 55, 2);
+    draw_priority_buttons(x, y, 2);
 }
 
 int window_building_handle_mouse_barracks(const mouse* m, building_info_context* c)

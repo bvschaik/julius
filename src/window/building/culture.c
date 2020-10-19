@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/monument.h"
 #include "city/constants.h"
+#include "city/finance.h"
 #include "city/resource.h"
 #include "core/mods.h"
 #include "graphics/generic_button.h"
@@ -13,8 +14,10 @@
 #include "sound/speech.h"
 #include "translation/translation.h"
 #include "window/option_popup.h"
+#include "window/building/military.h"
 
 #define GOD_PANTHEON 5
+#define MODULE_COST 1000
 
 static void add_module_prompt(void);
 
@@ -433,6 +436,8 @@ void draw_grand_temple_mars_military(building_info_context* c)
     lang_text_draw(50, 21, c->x_offset + 236, c->y_offset + y, FONT_NORMAL_BLACK); // "Priority"
     lang_text_draw(91, 0, c->x_offset + 326, c->y_offset + y, FONT_NORMAL_BLACK); // "Tower"
     lang_text_draw(89, 0, c->x_offset + 326, c->y_offset + y + 20, FONT_NORMAL_BLACK); // "Fort"
+
+    window_building_draw_priority_buttons(c->x_offset + 285, c->y_offset + 55);
 }
 
 static void draw_grand_temple(building_info_context* c, const char* sound_file, int name, int bonus_desc,int banner_id, int quote, int temple_god_id, int extra_y)
@@ -480,10 +485,6 @@ void window_building_draw_grand_temple_foreground(building_info_context* c)
         button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
             16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
         text_draw_centered(translation_for(TR_BUILDING_GRAND_TEMPLE_ADD_MODULE), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
-            16 * (c->width_blocks - 10), FONT_NORMAL_BLACK, 0);
-    }
-    else if (b->subtype.monument_phase == MONUMENT_FINISHED) {
-        text_draw_centered(translation_for(TR_BUILDING_TEMPLE_MODULE_CONSTRUCTED), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
             16 * (c->width_blocks - 10), FONT_NORMAL_BLACK, 0);
     }
 }
@@ -561,6 +562,7 @@ static int add_module(int selection) {
     }
     sound_speech_play_file("wavs/oracle.wav");
     building* b = building_get(data.building_id);
+    city_finance_process_construction(MODULE_COST);
     building_monument_add_module(b, selection);
     return 1;
 }
