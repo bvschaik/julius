@@ -139,10 +139,8 @@ void figure_immigrant_action(figure *f)
             f->is_ghost = 1;
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 f->state = FIGURE_STATE_DEAD;
-                int max_people = model_get_house(b->subtype.house_level)->max_people;
-                if (b->house_is_merged) {
-                    max_people *= 4;
-                }
+                int max_people = house_population_get_capacity(b);
+
                 int room = max_people - b->house_population;
                 if (room < 0) {
                     room = 0;

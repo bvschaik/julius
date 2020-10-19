@@ -1,3 +1,5 @@
+#include "building/building.h"
+
 #ifndef BUILDING_HOUSE_POPULATION_H
 #define BUILDING_HOUSE_POPULATION_H
 
@@ -43,5 +45,7 @@ int house_population_create_immigrants(int num_people);
  * @return Number of people actually emigrated
  */
 int house_population_create_emigrants(int num_people);
+
+int house_population_get_capacity(building *house);
 
 #endif // BUILDING_HOUSE_POPULATION_H

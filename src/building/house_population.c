@@ -1,8 +1,9 @@
 #include "house_population.h"
 
-#include "building/building.h"
+
 #include "building/list.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "city/labor.h"
 #include "city/message.h"
 #include "city/migration.h"
@@ -66,6 +67,21 @@ static void fill_building_list_with_houses(void)
     }
 }
 
+int house_population_get_capacity(building *house) {
+    int max_pop = model_get_house(house->subtype.house_level)->max_people;
+
+    // Neptune module 2 bonus
+    if (building_monument_gt_module_is_active(NEPTUNE_MODULE_2_CAPACITY_AND_WATER) && house->data.house.temple_neptune) {
+        // add one so bonus affects large casa and up
+        max_pop += (max_pop + 1) / 20;
+    }
+
+    if (house->house_is_merged) {
+        max_pop *= 4;
+    }
+    return max_pop;
+}
+
 void house_population_update_room(void)
 {
     city_population_clear_capacity();
@@ -77,10 +93,7 @@ void house_population_update_room(void)
         building *b = building_get(houses[i]);
         b->house_population_room = 0;
         if (b->distance_from_entry > 0) {
-            int max_pop = model_get_house(b->subtype.house_level)->max_people;
-            if (b->house_is_merged) {
-                max_pop *= 4;
-            }
+            int max_pop = house_population_get_capacity(b);
             city_population_add_capacity(b->house_population, max_pop);
             b->house_population_room = max_pop - b->house_population;
             if (b->house_population > b->house_highest_population) {

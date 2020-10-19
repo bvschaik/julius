@@ -62,6 +62,7 @@ int building_monument_gt_module_is_active(int module);
 int building_monument_finish_monuments(void);
 int building_monument_phase(int phase);
 int building_monument_get_venus_gt(void);
+int building_monument_get_neptune_gt(void);
 
 
 
