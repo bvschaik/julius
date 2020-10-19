@@ -90,38 +90,51 @@ void city_festival_schedule(void)
     }
 }
 
-static void throw_party(void)
+void festival_sentiment_and_deity(int size, int god_id)
 {
     if (city_data.festival.first_festival_effect_months <= 0) {
         city_data.festival.first_festival_effect_months = 12;
-        switch (city_data.festival.planned.size) {
-            case FESTIVAL_SMALL: city_sentiment_change_happiness(7); break;
-            case FESTIVAL_LARGE: city_sentiment_change_happiness(9); break;
-            case FESTIVAL_GRAND: city_sentiment_change_happiness(12); break;
+        switch (size) {
+        case FESTIVAL_SMALL: city_sentiment_change_happiness(7); break;
+        case FESTIVAL_LARGE: city_sentiment_change_happiness(9); break;
+        case FESTIVAL_GRAND: city_sentiment_change_happiness(12); break;
         }
-    } else if (city_data.festival.second_festival_effect_months <= 0) {
+    }
+    else if (city_data.festival.second_festival_effect_months <= 0) {
         city_data.festival.second_festival_effect_months = 12;
-        switch (city_data.festival.planned.size) {
-            case FESTIVAL_SMALL: city_sentiment_change_happiness(2); break;
-            case FESTIVAL_LARGE: city_sentiment_change_happiness(3); break;
-            case FESTIVAL_GRAND: city_sentiment_change_happiness(5); break;
+        switch (size) {
+        case FESTIVAL_SMALL: city_sentiment_change_happiness(2); break;
+        case FESTIVAL_LARGE: city_sentiment_change_happiness(3); break;
+        case FESTIVAL_GRAND: city_sentiment_change_happiness(5); break;
         }
     }
     city_data.festival.months_since_festival = 1;
-    city_data.religion.gods[city_data.festival.planned.god].months_since_festival = 0;
+    city_data.religion.gods[god_id].months_since_festival = 0;
+
+    if (config_get(CONFIG_GP_CH_GRANDFESTIVAL) && size == FESTIVAL_GRAND) {
+        city_data.religion.gods[god_id].blessing_done = 0;
+    }
+
+}
+
+void festival_auto_festival(void) {
+    festival_sentiment_and_deity(1, 1);
+    city_message_post(1, MESSAGE_AUTO_FESTIVAL, 0, 0);
+}
+
+static void throw_party(void)
+{
+    festival_sentiment_and_deity(city_data.festival.planned.size, city_data.festival.planned.god);
     switch (city_data.festival.planned.size) {
-        case FESTIVAL_SMALL: city_message_post(1, MESSAGE_SMALL_FESTIVAL, 0, 0); break;
-        case FESTIVAL_LARGE: city_message_post(1, MESSAGE_LARGE_FESTIVAL, 0, 0); break;
-        case FESTIVAL_GRAND: 
-            city_message_post(1, MESSAGE_GRAND_FESTIVAL, 0, 0); 
-	        if (config_get(CONFIG_GP_CH_GRANDFESTIVAL)) {
-                city_data.religion.gods[city_data.festival.planned.god].blessing_done = 0;
-	        }
-            break;
+    case FESTIVAL_SMALL: city_message_post(1, MESSAGE_SMALL_FESTIVAL, 0, 0); break;
+    case FESTIVAL_LARGE: city_message_post(1, MESSAGE_LARGE_FESTIVAL, 0, 0); break;
+    case FESTIVAL_GRAND: city_message_post(1, MESSAGE_GRAND_FESTIVAL, 0, 0); break;
     }
     city_data.festival.planned.size = FESTIVAL_NONE;
     city_data.festival.planned.months_to_go = 0;
 }
+
+
 
 void city_festival_update(void)
 {

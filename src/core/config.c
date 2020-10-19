@@ -32,7 +32,6 @@ static const char *ini_keys[] = {
     "gameplay_change_school_walkers",
     "gameplay_change_retire_at_60",
     "gameplay_change_fixed_workers",
-    "gameplay_enable_extra_forts",
     "gameplay_wolves_block",
     "gameplay_dynamic_granaries",
     "gameplay_houses_stockpile_more",
@@ -48,8 +47,7 @@ static const char *ini_keys[] = {
     "gameplay_change_random_mine_or_pit_collapses_take_money",
     "gameplay_change_multiple_barracks",
     "gameplay_change_warehouses_dont_accept",
-    "gameplay_change_houses_dont_expand_into_gardens",
-
+    "gameplay_change_houses_dont_expand_into_gardens"
 };
 
 static const char *ini_string_keys[] = {

@@ -310,6 +310,8 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_PRIEST_BUYER, "Priest" },
     // Transcription of mission_exact4.wav
     {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"I'll do what I can to calm these barbarians down. I'm sure they'll stop attacking the city when I've had a word with them.\"" }, 
+    {TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "Pantheon festival"},
+    {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL, "The faithful flock to the pantheon for the annual festival."}
         
 };
 

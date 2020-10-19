@@ -41,7 +41,7 @@
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = { 11,14,12 };
+static int options_per_page[CONFIG_PAGES] = { 11,13,12 };
 
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
@@ -75,11 +75,11 @@ static generic_button checkbox_buttons[] = {
     { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SCHOOL_WALKERS, TR_CONFIG_SCHOOL_WALKERS },
     { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RETIRE_AT_60, TR_CONFIG_RETIRE_AT_60 },
     { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIXED_WORKERS, TR_CONFIG_FIXED_WORKERS },
-    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK, TR_CONFIG_WOLVES_BLOCK },
-    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DYNAMIC_GRANARIES, TR_CONFIG_DYNAMIC_GRANARIES },
-    { 20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE, TR_CONFIG_MORE_STOCKPILE },
-    { 20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION, TR_CONFIG_NO_BUYER_DISTRIBUTION },
-    { 20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS },
+    { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK, TR_CONFIG_WOLVES_BLOCK },
+    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DYNAMIC_GRANARIES, TR_CONFIG_DYNAMIC_GRANARIES },
+    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE, TR_CONFIG_MORE_STOCKPILE },
+    { 20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION, TR_CONFIG_NO_BUYER_DISTRIBUTION },
+    { 20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS },
     { 20,  72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS, TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS },
     { 20,  96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD, TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD },
     { 20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANARIES_GET_DOUBLE, TR_CONFIG_GRANARIES_GET_DOUBLE },
