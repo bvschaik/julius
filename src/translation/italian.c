@@ -34,6 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Riproduce il video introduttivo"},
     {TR_CONFIG_SIDEBAR_INFO, "Informazioni extra nel pannello di controllo"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Abilita lo scorrimento continuo"},
+    {TR_CONFIG_DISABLE_MAP_DRAG, "Disabilita lo spostamento della mappa col tasto destro"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Migliora l'aspetto liberando il terreno"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Consente la costruzione di tutti i templi in successione"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Mostra la copertura di cisterne, fontane e pozzi"},
@@ -64,7 +65,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Finestra a 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Salva l'immagine"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Salva l'immagine dell'intera città"},
-    {TR_HOTKEY_BUILD_CLONE, "Clona edificio sotto il cursore"}, // TODO: Google Translate
+    {TR_HOTKEY_BUILD_CLONE, "Clona l'edificio sotto il cursore"},
     {TR_HOTKEY_LOAD_FILE, "Carica file"},
     {TR_HOTKEY_SAVE_FILE, "Salva file"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Aumenta la velocità"},
