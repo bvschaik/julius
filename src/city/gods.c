@@ -208,6 +208,7 @@ static void update_god_moods(void)
             if (god->months_since_festival <= FESTIVAL_BLESSING_LENGTH) {
                 chance_for_happy_bolt += (FESTIVAL_BLESSING_LENGTH - god->months_since_festival) / FESTIVAL_BLESSING_FACTOR + FLAT_CHANCE_FOR_BLESSING;
             }
+            random_generate_next();
             int roll = random_short_alt() % 100;
             if (roll < chance_for_happy_bolt) {
                 god->happy_bolts++;
