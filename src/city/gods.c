@@ -21,6 +21,12 @@
 
 #define TIE 10
 
+#define FLAT_CHANCE_FOR_BLESSING 1
+#define HAPPINESS_BLESSING_FACTOR 20
+#define FESTIVAL_BLESSING_FACTOR 6
+#define FESTIVAL_BLESSING_LENGTH 24
+#define BLESSING_BOLTS_NEEDED_FOR_BLESSING 5
+
 void city_gods_reset(void)
 {
     for (int i = 0; i < MAX_GODS; i++) {
@@ -30,7 +36,7 @@ void city_gods_reset(void)
         god->wrath_bolts = 0;
         god->blessing_done = 0;
         god->small_curse_done = 0;
-        god->unused1 = 0;
+        god->happy_bolts = 0;
         god->unused2 = 0;
         god->unused3 = 0;
         god->months_since_festival = 0;
@@ -185,6 +191,7 @@ static void update_god_moods(void)
         if (god->happiness >= 50) {
             god->wrath_bolts = 0;
         } else if (god->happiness < 40) {
+            god->happy_bolts = 0;
             if (god->happiness >= 20) {
                 god->wrath_bolts += 1;
             } else if (god->happiness >= 10) {
@@ -195,6 +202,16 @@ static void update_god_moods(void)
         }
         if (god->wrath_bolts > 50) {
             god->wrath_bolts = 50;
+        }
+        if (god->happiness >= 50) {
+            int chance_for_happy_bolt = (god->happiness - 50) / HAPPINESS_BLESSING_FACTOR + FLAT_CHANCE_FOR_BLESSING;
+            if (god->months_since_festival <= FESTIVAL_BLESSING_LENGTH) {
+                chance_for_happy_bolt += (FESTIVAL_BLESSING_LENGTH - god->months_since_festival) / FESTIVAL_BLESSING_FACTOR + FLAT_CHANCE_FOR_BLESSING;
+            }
+            int roll = random_short() % 100;
+            if (roll < chance_for_happy_bolt) {
+                god->happy_bolts++;
+            }
         }
     }
     if (game_time_day() != 0) {
@@ -213,10 +230,13 @@ static void update_god_moods(void)
     if (!setting_gods_enabled()) {
         return;
     }
+
+
     if (god_id < MAX_GODS) {
         god_status *god = &city_data.religion.gods[god_id];
-        if (god->happiness >= 100 && !god->blessing_done) {
+        if (god->happiness >= 50 && god->happy_bolts >= 5) {
             god->blessing_done = 1;
+            god->happy_bolts = 0;
             perform_blessing(god_id);
         } else if (god->wrath_bolts >= 20 && !god->small_curse_done && god->months_since_festival > 3) {
             god->small_curse_done = 1;

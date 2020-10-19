@@ -17,7 +17,7 @@ typedef struct {
     int8_t blessing_done;
     int8_t small_curse_done;
     int32_t months_since_festival;
-    int8_t unused1;
+    int8_t happy_bolts;
     int8_t unused2;
     int8_t unused3;
 } god_status;

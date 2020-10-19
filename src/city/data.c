@@ -302,7 +302,7 @@ static void save_main_data(buffer *main)
         buffer_write_i8(main, city_data.religion.gods[i].small_curse_done);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        buffer_write_i8(main, city_data.religion.gods[i].unused1);
+        buffer_write_i8(main, city_data.religion.gods[i].happy_bolts);
     }
     for (int i = 0; i < MAX_GODS; i++) {
         buffer_write_i8(main, city_data.religion.gods[i].unused2);
@@ -788,7 +788,7 @@ static void load_main_data(buffer *main)
         city_data.religion.gods[i].small_curse_done = buffer_read_i8(main);
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        city_data.religion.gods[i].unused1 = buffer_read_i8(main);
+        city_data.religion.gods[i].happy_bolts = buffer_read_i8(main);
     }
     for (int i = 0; i < MAX_GODS; i++) {
         city_data.religion.gods[i].unused2 = buffer_read_i8(main);
