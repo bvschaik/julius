@@ -10,6 +10,7 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "sound/speech.h"
 #include "translation/translation.h"
@@ -153,6 +154,7 @@ static void draw_temple_info(building_info_context* c, int image_offset) {
         text_draw_multiline(translation_for(TR_BUILDING_VENUS_TEMPLE_MODULE_DESC), c->x_offset + 112, c->y_offset + 90, 16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
             c->x_offset + 16, c->y_offset + 16 * c->height_blocks - 208);
+
         return;
     }
 
@@ -418,6 +420,7 @@ void draw_grand_temple_venus_wine(building_info_context* c) {
     else {
         lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
     }
+
 }
 
 void draw_grand_temple_mars_military(building_info_context* c)
@@ -473,8 +476,10 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
         }
         inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height + extra_y, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 96 + height + extra_y);
-        image_draw(banner_id, c->x_offset + 32, c->y_offset + 166 + height + extra_y);
-        text_draw_centered_with_linebreaks(translation_for(quote), c->x_offset, c->y_offset + 386 + height + extra_y, 16 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        if (screen_height() > 600) {
+            image_draw(banner_id, c->x_offset + 32, c->y_offset + 166 + height + extra_y);
+            text_draw_centered_with_linebreaks(translation_for(quote), c->x_offset, c->y_offset + 386 + height + extra_y, 16 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        }
     }
 }
 

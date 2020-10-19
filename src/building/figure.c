@@ -973,7 +973,7 @@ static void spawn_figure_temple(building *b)
                 create_roaming_figure(b, road.x, road.y, FIGURE_PRIEST);
             }
             // Neptune Module 1 Bonus
-            if (building_is_neptune_temple(b->type) && building_monument_gt_module_is_active(NEPTUNE_MODULE_1_HIPPODROME_ACCESS)) {
+            if (building_is_neptune_temple(b->type) && building_monument_gt_module_is_active(NEPTUNE_MODULE_1_HIPPODROME_ACCESS) && !b->figure_id2) {
                 b->loads_stored += 1;
                 if (b->loads_stored > 1) {
                     spawn_figure_chariot(b, road, 1);
@@ -994,20 +994,20 @@ static void spawn_figure_temple(building *b)
         }
 
         // Ceres Module 2 Bonus
-        if (building_is_ceres_temple(b->type) && building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD)) {
+        if (building_is_ceres_temple(b->type) && building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD) && !b->figure_id2) {
             spawn_market_buyer(b, road);
         }
 
         // Venus Module 1 Bonus
-        if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
+        if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) && !b->figure_id2) {
             spawn_market_buyer(b, road);
         }
 
         // Pantheon Module 1 Bonus
-        if (!b->figure_id2 && building_monument_pantheon_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
+        if (!b->figure_id4 && building_monument_pantheon_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
             figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
             int pantheon_id = building_monument_working(BUILDING_PANTHEON);
-            b->figure_id2 = f->id;
+            b->figure_id4 = f->id;
             f->destination_building_id = pantheon_id;
             f->building_id = b->id;
             f->action_state = FIGURE_ACTION_212_DESTINATION_PRIEST_CREATED;

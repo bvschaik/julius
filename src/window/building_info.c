@@ -416,6 +416,9 @@ static void init(int grid_offset)
         case 8: context.height_blocks = 40; break;
         default: context.height_blocks = 22; break;
     }
+    if (screen_height() <= 600) {
+        context.height_blocks = calc_bound(context.height_blocks, 0, 23);
+    }
     // dialog placement
     int s_width = screen_width();
     int s_height = screen_height();
@@ -698,8 +701,6 @@ static void draw_foreground(void)
         }
         else if (btype == BUILDING_BARRACKS) {
             window_building_draw_barracks_foreground(&context);
-        } else if (btype == BUILDING_GRAND_TEMPLE_MARS) {
-            window_building_draw_grand_temple_foreground(&context);
         } else if ((btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) || btype == BUILDING_PANTHEON) {
             window_building_draw_grand_temple_foreground(&context);
         }

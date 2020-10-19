@@ -80,8 +80,11 @@ void figure_delete(figure *f)
             }
             break;
         case FIGURE_PRIEST:
-            if (f->building_id && f->destination_building_id) {
+            if (f->building_id && f->destination_building_id && f->id == b->figure_id2) {
                 b->figure_id2 = 0;
+            }
+            if (f->building_id && f->destination_building_id && f->id == b->figure_id4) {
+                b->figure_id4 = 0;
             }
             break;
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
