@@ -643,3 +643,6 @@ int building_monument_gt_module_is_active(int module) {
 	return building_monument_module_type(temple_type) == module_num;
 }
 
+int building_monument_pantheon_module_is_active(int module) {
+	return building_monument_module_type(BUILDING_PANTHEON) == (module - (PANTHEON_MODULE_1_DESTINATION_PRIESTS - 1));
+}

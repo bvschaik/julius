@@ -45,11 +45,14 @@ static int check_evolve_desirability(building *house)
     return status;
 }
 
-static int has_required_goods_and_services(building *house, int for_upgrade, house_demands *demands)
+static int has_required_goods_and_services(building *house, int for_upgrade, int with_bonus, house_demands *demands)
 {
     int level = house->subtype.house_level;
     if (for_upgrade) {
         ++level;
+    }
+    if (with_bonus) {
+        --level;
     }
     const model_house *model = model_get_house(level);
     // water
@@ -170,13 +173,18 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
     return 1;
 }
 
-static int check_requirements(building *house, house_demands *demands)
+static int check_requirements(building* house, house_demands* demands)
 {
+    int bonus = 0;
+    if (building_monument_pantheon_module_is_active(PANTHEON_MODULE_2_HOUSING_EVOLUTION) && house->data.house.num_gods == 5) {
+        bonus++;
+    }
     int status = check_evolve_desirability(house);
-    if (!has_required_goods_and_services(house, 0, demands)) {
+    if (!has_required_goods_and_services(house, 0, bonus, demands)) {
         status = DEVOLVE;
-    } else if (status == EVOLVE) {
-        status = has_required_goods_and_services(house, 1, demands);
+    }
+    else if (status == EVOLVE) {
+        status = has_required_goods_and_services(house, 1, bonus, demands);
     }
     return status;
 }
@@ -465,7 +473,7 @@ static int evolve_large_palace(building *house, house_demands *demands)
 static int evolve_luxury_palace(building *house, house_demands *demands)
 {
     int status = check_evolve_desirability(house);
-    if (!has_required_goods_and_services(house, 0, demands)) {
+    if (!has_required_goods_and_services(house, 0, 0, demands)) {
         status = DEVOLVE;
     }
     if (!has_devolve_delay(house, status) && status == DEVOLVE) {
@@ -548,6 +556,10 @@ void building_house_process_evolve_and_consume_goods(void)
 void building_house_determine_evolve_text(building *house, int worst_desirability_building)
 {
     int level = house->subtype.house_level;
+    if (building_monument_pantheon_module_is_active(PANTHEON_MODULE_2_HOUSING_EVOLUTION) && house->data.house.num_gods == 5) {
+        level--;
+    }
+
 
     // this house will devolve soon because...
 

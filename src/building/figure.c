@@ -1005,7 +1005,7 @@ static void spawn_figure_temple(building *b)
 
 
 
-        if (!b->figure_id2 && building_monument_gt_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
+        if (!b->figure_id2 && building_monument_pantheon_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
             figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
             int pantheon_id = building_monument_working(BUILDING_PANTHEON);
             b->figure_id2 = f->id;
