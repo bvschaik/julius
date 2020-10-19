@@ -126,6 +126,22 @@ static void parse_message(buffer *buf)
     buffer_read_raw(buf, &data.message_data, MAX_MESSAGE_DATA);
 }
 
+static void set_message_parameters(lang_message* m, int title, int text, int urgent) {
+    m->type = TYPE_MESSAGE;
+    m->message_type = MESSAGE_TYPE_GENERAL;
+    m->x = 0;
+    m->y = 0;
+    m->width_blocks = 30;
+    m->height_blocks = 20;
+    m->title.x = 0;
+    m->title.y = 0;
+    m->urgent = urgent;
+
+    m->title.text = translation_for(title);
+    m->content.text = translation_for(text);
+}
+
+
 void load_custom_messages(void) {
     int i = 320;
     for (; i < MAX_MESSAGE_ENTRIES; i++) {
@@ -136,90 +152,51 @@ void load_custom_messages(void) {
 
     // soldiers starving
     lang_message* m = &data.message_entries[i];
-    m->type = TYPE_MESSAGE;
-    m->message_type = MESSAGE_TYPE_GENERAL;
-    m->x = 0;
-    m->y = 0;
-    m->width_blocks = 30;
-    m->height_blocks = 20;
-    m->title.x = 0;
-    m->title.y = 0;
-    m->urgent = 1;
-
-    m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_MESS_HALL_NEEDS_FOOD);
-    m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_MESS_HALL_NEEDS_FOOD);
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_MESS_HALL_NEEDS_FOOD, TR_CITY_MESSAGE_TEXT_MESS_HALL_NEEDS_FOOD, 1);
     m->video.text = "smk//god_mars.smk";
 
     i += 1;
 
     // soldiers starving, no mess hall
     m = &data.message_entries[i];
-    m->type = TYPE_MESSAGE;
-    m->message_type = MESSAGE_TYPE_GENERAL;
-    m->x = 0;
-    m->y = 0;
-    m->width_blocks = 30;
-    m->height_blocks = 20;
-    m->title.x = 0;
-    m->title.y = 0;
-    m->urgent = 1;
-
-    m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_MESS_HALL_NEEDS_FOOD);
-    m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_MESS_HALL_MISSING);
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_MESS_HALL_NEEDS_FOOD, TR_CITY_MESSAGE_TEXT_MESS_HALL_MISSING, 1);
 
     i += 1;
 
     // monument completed
     m = &data.message_entries[i];
-    m->type = TYPE_MESSAGE;
-    m->message_type = MESSAGE_TYPE_GENERAL;
-    m->x = 0;
-    m->y = 0;
-    m->width_blocks = 30;
-    m->height_blocks = 20;
-    m->title.x = 0;
-    m->title.y = 0;
-    m->urgent = 0;
-
-    m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_GRAND_TEMPLE_COMPLETE);
-    m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE);
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_GRAND_TEMPLE_COMPLETE, TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE, 0);
 
     i += 1;
 
     // replacement Mercury blessing
     m = &data.message_entries[i];
-    m->type = TYPE_MESSAGE;
-    m->message_type = MESSAGE_TYPE_GENERAL;
-    m->x = 0;
-    m->y = 0;
-    m->width_blocks = 30;
-    m->height_blocks = 20;
-    m->title.x = 0;
-    m->title.y = 0;
-    m->urgent = 0;
-
-    m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_MERCURY_BLESSING);
-    m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING);
-    
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_MERCURY_BLESSING, TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING, 0);
 
     i += 1;
 
-    // auto festival
+    // auto festivals
     m = &data.message_entries[i];
-    m->type = TYPE_MESSAGE;
-    m->message_type = MESSAGE_TYPE_GENERAL;
-    m->x = 0;
-    m->y = 0;
-    m->width_blocks = 30;
-    m->height_blocks = 20;
-    m->title.x = 0;
-    m->title.y = 0;
-    m->urgent = 0;
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_CERES, 0);
+    i += 1;
 
-    m->title.text = translation_for(TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL);
-    m->content.text = translation_for(TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE);
-    m->video.text = "smk//festival1_feast.smk";
+    m = &data.message_entries[i];
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_NEPTUNE, 0);
+    i += 1;
+
+    m = &data.message_entries[i];
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_MERCURY, 0);
+    i += 1;
+
+    m = &data.message_entries[i];
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_MARS, 0);
+    i += 1;
+
+    m = &data.message_entries[i];
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_VENUS, 0);
+
 }
+
 
 static int load_message(const char *filename, int localizable, uint8_t *data_buffer)
 {

@@ -1,6 +1,11 @@
 #ifndef CITY_FESTIVAL_H
 #define CITY_FESTIVAL_H
 
+typedef struct {
+	int god_id;
+	int month;
+} auto_festival;
+
 int city_festival_is_planned(void);
 int city_festival_months_since_last(void);
 

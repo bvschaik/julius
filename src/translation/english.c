@@ -310,8 +310,12 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_PRIEST_BUYER, "Priest" },
     // Transcription of mission_exact4.wav
     {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"I'll do what I can to calm these barbarians down. I'm sure they'll stop attacking the city when I've had a word with them.\"" }, 
-    {TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "Pantheon festival"},
-    {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL, "The faithful flock to the pantheon for the annual festival."},
+    {TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "An annual festival"},
+    {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_CERES, "The faithful flock to temples for the celebration of Cerealia, in honor of Ceres. Farmers offer sacrifices for rich harvests in the coming years."},
+    {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_NEPTUNE, "Today is the festival of Neptunalia, in honor of Neptune. The faithful build huts of branch and foilage and make merry under the blazing heat of the midsummer sun."},
+    {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_MERCURY, "Traders and merchants turn out in droves to celebrate Mercuralia. Sacred water is sprinkled on ships and warehouses in hopes of divine protection from the god Mercury."},
+    {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_MARS, "Citizens gather outside the city for the celebration of Equerria, to seek the favor of Mars. The air is filled with the thunder of hooves and the creaking of chariots as the faithful race in honor of their god."},
+    {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_VENUS, "The faithful gather for the celebration of Veneralia, a day sacred to Venus. Your citizens beseech her for good fortune in matters of the heart."},
     {TR_TOOLTIP_BUTTON_DELETE_READ_MESSAGES, "Delete read messages"}
 
         

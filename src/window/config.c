@@ -24,7 +24,7 @@
 #include "translation/translation.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 37
+#define NUM_CHECKBOXES 36
 #define CONFIG_PAGES 3
 #define MAX_LANGUAGE_DIRS 20
 

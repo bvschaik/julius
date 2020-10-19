@@ -62,6 +62,7 @@ int game_time_advance_month(void);
 void game_time_advance_year(void);
 
 int game_time_total_months(void);
+int game_time_total_years(void);
 
 /**
  * Saves the game time

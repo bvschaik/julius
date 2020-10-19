@@ -1,12 +1,22 @@
 #include "festival.h"
 
 #include "building/warehouse.h"
+#include "building/monument.h"
 #include "city/constants.h"
 #include "city/data_private.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/sentiment.h"
 #include "core/config.h"
+#include "game/time.h"
+
+auto_festival autofestivals[5] = {
+    {0, 3}, //ceres, april
+    {1, 6}, //neptune, july
+    {2, 4}, //mercury, may
+    {3, 2}, //mars, march
+    {4, 3}, //venus, april
+};
 
 int city_festival_is_planned(void)
 {
@@ -110,16 +120,11 @@ void festival_sentiment_and_deity(int size, int god_id)
     }
     city_data.festival.months_since_festival = 1;
     city_data.religion.gods[god_id].months_since_festival = 0;
-
-    if (config_get(CONFIG_GP_CH_GRANDFESTIVAL) && size == FESTIVAL_GRAND) {
-        city_data.religion.gods[god_id].blessing_done = 0;
-    }
-
 }
 
-void festival_auto_festival(void) {
-    festival_sentiment_and_deity(1, 1);
-    city_message_post(1, MESSAGE_AUTO_FESTIVAL, 0, 0);
+static void throw_auto_festival(int god_id) {
+    festival_sentiment_and_deity(1, god_id);
+    city_message_post(0, MESSAGE_AUTO_FESTIVAL_CERES + god_id, 0, 0);
 }
 
 static void throw_party(void)
@@ -134,8 +139,6 @@ static void throw_party(void)
     city_data.festival.planned.months_to_go = 0;
 }
 
-
-
 void city_festival_update(void)
 {
     city_data.festival.months_since_festival++;
@@ -149,6 +152,14 @@ void city_festival_update(void)
         city_data.festival.planned.months_to_go--;
         if (city_data.festival.planned.months_to_go <= 0) {
             throw_party();
+        }
+    }
+
+    if (building_monument_working(BUILDING_PANTHEON)) {
+        for (int god = 0; god <= 4; ++god) {
+            if (game_time_total_years() % 5 == god && game_time_month() == autofestivals[god].month) {
+                throw_auto_festival(god);
+            }
         }
     }
 }
