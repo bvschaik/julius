@@ -31,6 +31,7 @@
 #include "map/road_access.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
+#include "translation/translation.h"
 #include "window/advisors.h"
 #include "window/city.h"
 #include "window/message_dialog.h"
@@ -815,31 +816,32 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void get_tooltip(tooltip_context *c)
 {
-    int text_id = 0, group_id = 0;
+    int text_id = 0, group_id = 0, translation = 0;
+    int btype = building_get(context.building_id)->type;
     if (focus_image_button_id) {
         text_id = focus_image_button_id;
     }
     else if (focus_generic_button_id) {
         if (building_get(context.building_id)->state == BUILDING_STATE_IN_USE) {
-            text_id = 8;
-            group_id = 54;
+            translation = translation_for(TR_TOOLTIP_BUTTON_MOTHBALL_ON);
         } else {
-            text_id = 10;
-            group_id = 54;
+            translation = translation_for(TR_TOOLTIP_BUTTON_MOTHBALL_OFF);
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         text_id = window_building_get_legion_info_tooltip_text(&context);
     } else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
-        int btype = building_get(context.building_id)->type;
         if (btype == BUILDING_GRANARY) {
-            window_building_get_tooltip_granary_orders(&group_id, &text_id);
+            window_building_get_tooltip_granary_orders(&group_id, &text_id, &translation);
         } else if (btype == BUILDING_WAREHOUSE) {
-            window_building_get_tooltip_warehouse_orders(&group_id, &text_id);
+            window_building_get_tooltip_warehouse_orders(&group_id, &text_id, &translation);
         }
+    } else if (btype == BUILDING_GRANARY || btype == BUILDING_WAREHOUSE) {
+        window_building_get_tooltip_distribution_permissions(&translation);
     }
-    if (text_id || group_id) {
+    if (text_id || group_id || translation) {
         c->type = TOOLTIP_BUTTON;
         c->text_id = text_id;
+        c->translation_key = translation;
         if (group_id) {
             c->text_group = group_id;
         }

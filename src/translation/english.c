@@ -312,7 +312,14 @@ static translation_string all_strings[] = {
     {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"I'll do what I can to calm these barbarians down. I'm sure they'll stop attacking the city when I've had a word with them.\"" }, 
     {TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "Pantheon festival"},
     {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL, "The faithful flock to the pantheon for the annual festival."},
-    {TR_TOOLTIP_BUTTON_DELETE_READ_MESSAGES, "Delete read messages"}
+    {TR_TOOLTIP_BUTTON_DELETE_READ_MESSAGES, "Delete read messages"},
+    {TR_TOOLTIP_BUTTON_MOTHBALL_ON, "Mothball this building"},
+    {TR_TOOLTIP_BUTTON_MOTHBALL_OFF, "Stop mothballing this building"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES, "Allow market ladies to buy from here"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_CARAVAN, "Allow caravans to trade here"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS, "Allow trade ships to trade here"},
+
+
 
         
 };
