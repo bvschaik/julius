@@ -208,9 +208,12 @@ static void update_god_moods(void)
             if (god->months_since_festival <= FESTIVAL_BLESSING_LENGTH) {
                 chance_for_happy_bolt += (FESTIVAL_BLESSING_LENGTH - god->months_since_festival) / FESTIVAL_BLESSING_FACTOR + FLAT_CHANCE_FOR_BLESSING;
             }
-            int roll = random_short() % 100;
+            int roll = random_short_alt() % 100;
             if (roll < chance_for_happy_bolt) {
                 god->happy_bolts++;
+            }
+            if (god->happy_bolts > 5) {
+                god->happy_bolts = 5;
             }
         }
     }
@@ -394,6 +397,11 @@ int city_god_happiness(int god_id)
 int city_god_wrath_bolts(int god_id)
 {
     return city_data.religion.gods[god_id].wrath_bolts;
+}
+
+int city_god_happy_bolts(int god_id)
+{
+    return city_data.religion.gods[god_id].happy_bolts;
 }
 
 int city_god_months_since_festival(int god_id)

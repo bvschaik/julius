@@ -44,6 +44,12 @@ int8_t random_byte_alt(void);
 int16_t random_short(void);
 
 /**
+ * Gets the current alternative random 15-bit short
+ * @return Alternative Random 15-bits short
+ */
+int16_t random_short_alt(void);
+
+/**
  * Gets a random integer from the pool at the specified index
  * @param index Index to use
  * @return Random integer from the pool

@@ -69,6 +69,12 @@ int16_t random_short(void)
     return data.random1_15bit;
 }
 
+int16_t random_short_alt(void)
+{
+    return data.random2_15bit;
+}
+
+
 int32_t random_from_pool(int index)
 {
     return data.pool[(data.pool_index + index) % MAX_RANDOM];

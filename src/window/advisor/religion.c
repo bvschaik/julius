@@ -3,6 +3,7 @@
 #include "building/count.h"
 #include "city/gods.h"
 #include "city/houses.h"
+#include "core/mods.h"
 #include "game/settings.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -46,6 +47,11 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
     int bolts = city_god_wrath_bolts(god);
     for (int i = 0; i < bolts / 10; i++) {
         image_draw(image_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
+    }
+    int happy_bolts = city_god_happy_bolts(god);
+    for (int i = 0; i < happy_bolts; i++) {
+        // Placeholder graphic
+        image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "7x7 Map Icon"), 10 * i + width + 460, y_offset - 4);
     }
 }
 
