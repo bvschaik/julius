@@ -1,6 +1,7 @@
 #include "migrant.h"
 
 #include "building/house.h"
+#include "building/house_population.h"
 #include "building/model.h"
 #include "city/map.h"
 #include "city/population.h"
