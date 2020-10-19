@@ -561,12 +561,13 @@ int window_building_handle_mouse_granary_orders(const mouse *m, building_info_co
     return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, granary_order_buttons, 2, &data.orders_focus_button_id);
 }
 
-void window_building_get_tooltip_granary_orders(int *group_id, int *text_id)
+void window_building_get_tooltip_granary_orders(int *group_id, int *text_id, int *translation)
 {
     if (data.orders_focus_button_id == 2) {
         *group_id = 143;
         *text_id = 1;
     }
+
 }
 
 void window_building_draw_warehouse(building_info_context *c)
@@ -747,7 +748,25 @@ int window_building_handle_mouse_warehouse_orders(const mouse *m, building_info_
         warehouse_order_buttons, 3, &data.orders_focus_button_id);
 }
 
-void window_building_get_tooltip_warehouse_orders(int *group_id, int *text_id)
+void window_building_get_tooltip_distribution_permissions(int* translation)
+{
+    switch (data.permission_focus_button_id) {
+    case 1:
+        *translation = TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES;
+        break;
+    case 2:
+        *translation = TR_TOOLTIP_BUTTON_ACCEPT_TRADE_CARAVAN;
+        break;
+    case 3:
+        *translation = TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS;
+        break;
+    default:
+        break;
+    }
+
+}
+
+void window_building_get_tooltip_warehouse_orders(int *group_id, int *text_id, int *translation)
 {
     if (data.orders_focus_button_id == 3) {
         *group_id = 15;

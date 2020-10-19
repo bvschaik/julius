@@ -316,9 +316,12 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_MERCURY, "Traders and merchants turn out in droves to celebrate Mercuralia. Sacred water is sprinkled on ships and warehouses in hopes of divine protection from the god Mercury."},
     {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_MARS, "Citizens gather outside the city for the celebration of Equerria, to seek the favor of Mars. The air is filled with the thunder of hooves and the creaking of chariots as the faithful race in honor of their god."},
     {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_VENUS, "The faithful gather for the celebration of Veneralia, a day sacred to Venus. Your citizens beseech her for good fortune in matters of the heart."},
-    {TR_TOOLTIP_BUTTON_DELETE_READ_MESSAGES, "Delete read messages"}
-
-        
+    {TR_TOOLTIP_BUTTON_DELETE_READ_MESSAGES, "Delete read messages"},
+    {TR_TOOLTIP_BUTTON_MOTHBALL_ON, "Mothball this building"},
+    {TR_TOOLTIP_BUTTON_MOTHBALL_OFF, "Stop mothballing this building"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES, "Allow market ladies to buy from here"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_CARAVAN, "Allow caravans to trade here"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS, "Allow trade ships to trade here"}        
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
