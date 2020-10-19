@@ -14,6 +14,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "translation/translation.h"
 #include "window/city.h"
 #include "window/message_dialog.h"
 
@@ -254,6 +255,8 @@ static void get_tooltip(tooltip_context *c)
         c->text_id = 1;
     } else if (data.focus_button_id == 12) {
         c->text_id = 2;
+    } else if (data.focus_button_id == 14) {
+        c->translation_key = TR_TOOLTIP_BUTTON_DELETE_READ_MESSAGES;
     } else {
         return;
     }

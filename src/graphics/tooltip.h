@@ -25,6 +25,7 @@ typedef struct {
     int num_extra_values;
     int extra_value_text_groups[TOOLTIP_MAX_EXTRA_VALUES];
     int extra_value_text_ids[TOOLTIP_MAX_EXTRA_VALUES];
+    int translation_key;
 } tooltip_context;
 
 void tooltip_invalidate(void);
