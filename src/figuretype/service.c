@@ -134,12 +134,8 @@ void figure_school_child_action(figure *f)
 {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
-    if (config_get(CONFIG_GP_CH_SCHOOL_WALKERS)) {
-        f->max_roam_length = 192;
-    }
-    else {
-        f->max_roam_length = 96;
-    }
+    f->max_roam_length = 192;
+
     building *b = building_get(f->building_id);
     if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_SCHOOL) {
         f->state = FIGURE_STATE_DEAD;

@@ -32,8 +32,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_LANGUAGE_LABEL, "Language:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(default)"},
     {TR_CONFIG_PAGE_LABEL, "Page"},
-    {TR_CONFIG_HEADER_UI_CHANGES, "User interface changes"},
-    {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Gameplay changes"},
+    {TR_CONFIG_HEADER_UI_CHANGES, "User Interface"},
+    {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Difficulty"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Play intro videos"},
     {TR_CONFIG_SIDEBAR_INFO, "Extra information in the control panel"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Enable smooth scrolling"},
@@ -69,7 +69,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_ALL_HOUSES_MERGE, "All houses merge"},
     {TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, "Open trade route count as providing different wine type"},
     {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Randomly collapsing clay pits and iron mines take some money instead"},
-    {TR_CONFIG_MULTIPLE_BARRACKS, "Allow building multiple barracks." },
+    {TR_CONFIG_MULTIPLE_BARRACKS, "Allow building multiple barracks" },
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warehouses don't accept anything when built"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Houses don't expand into gardens"},
     {TR_HOTKEY_TITLE, "Augustus hotkey configuration"},
@@ -295,8 +295,8 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE, "Priests and worshippers flock to the new grand temple for the rites of dedication. Your people stand in awe of the majesty of your works, and your chosen deity showers you with favor."},
     {TR_CITY_MESSAGE_TITLE_MERCURY_BLESSING, "A blessing from Mercury" },
     {TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING, "Delighted by your devotion, Mercury has blessed your industry, uncovering raw materials for your craftsmen."},
-    {TR_FIGURE_TYPE_WORK_CAMP_WORKER, "Slave master"},
-    {TR_FIGURE_TYPE_WORK_CAMP_SLAVE, "Slave"},
+    {TR_FIGURE_TYPE_WORK_CAMP_WORKER, "Foreman"},
+    {TR_FIGURE_TYPE_WORK_CAMP_SLAVE, "Hauler"},
     {TR_FIGURE_TYPE_WORK_CAMP_ENGINEER, "Engineer"},
     {TR_FIGURE_TYPE_MESS_HALL_BUYER, "Quartermaster"},
     {TR_FIGURE_TYPE_MESS_HALL_COLLECTOR, "Mess hall worker"},
@@ -321,7 +321,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_MOTHBALL_OFF, "Enable this building"},
     {TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES, "Allow market ladies to buy from here"},
     {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_CARAVAN, "Allow caravans to trade here"},
-    {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS, "Allow trade ships to trade here"}        
+    {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS, "Allow trade ships to trade here"},
+    {TR_CONFIG_HEADER_CITY_MANAGEMENT_CHANGES, "City Management"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

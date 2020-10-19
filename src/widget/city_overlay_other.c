@@ -276,9 +276,6 @@ const city_overlay *city_overlay_for_tax_income(void)
 
 static int has_deleted_building(int grid_offset)
 {
-    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
-        return 0;
-    }
     building *b = building_get(map_building_at(grid_offset));
     b = building_main(b);
     return b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset));

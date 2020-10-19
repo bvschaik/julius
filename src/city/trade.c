@@ -16,9 +16,9 @@ void city_trade_update(void)
     if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
         city_data.resource.wine_types_available += 1;
     }
-    if (city_data.resource.trade_status[RESOURCE_WINE] == TRADE_STATUS_IMPORT || config_get(CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE)) {
-        city_data.resource.wine_types_available += empire_city_count_wine_sources();
-    }
+
+    city_data.resource.wine_types_available += empire_city_count_wine_sources();
+    
     // Update trade problems
     if (city_data.trade.land_trade_problem_duration > 0) {
         city_data.trade.land_trade_problem_duration--;

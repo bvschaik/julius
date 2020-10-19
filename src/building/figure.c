@@ -1003,8 +1003,7 @@ static void spawn_figure_temple(building *b)
             spawn_market_buyer(b, road);
         }
 
-
-
+        // Pantheon Module 1 Bonus
         if (!b->figure_id2 && building_monument_pantheon_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
             figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
             int pantheon_id = building_monument_working(BUILDING_PANTHEON);

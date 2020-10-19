@@ -29,17 +29,10 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
     int image_base = image_group(GROUP_RATINGS_COLUMN);
     int y = y_offset - image_get(image_base)->height;
     int value_to_draw = value;
-    if (config_get(CONFIG_UI_COMPLETE_RATING_COLUMNS)) {
-        if (has_reached && value < 25) {
-            value_to_draw = 25;
-        }
+    if (has_reached && value < 25) {
+        value_to_draw = 25;
     }
-    else {
-        // Default behaviour: not completing too small columns
-        if (value < 30) {
-            has_reached = 0;
-        }
-    }
+
     image_draw(image_base, x_offset, y);
     for (int i = 0; i < 2 * value_to_draw; i++) {
         image_draw(image_base + 1, x_offset + 11, --y);

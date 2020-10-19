@@ -55,7 +55,7 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
     int x_min, x_max, y_min, y_max;
     map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
 
-    int visual_feedback_on_delete = config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE);
+    int visual_feedback_on_delete = 1;
 
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
@@ -170,9 +170,7 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
         map_routing_update_walls();
         map_routing_update_water();
         building_monument_recalculate_monuments();
-        if (config_get(CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS)) {
-            building_update_state();
-        }
+        building_update_state();        
         window_invalidate();
     }
     return items_placed;

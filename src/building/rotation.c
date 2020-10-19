@@ -19,13 +19,11 @@ static void rotate(void){
 
 void building_rotation_update_road_orientation(void)
 {
-    if (!config_get(CONFIG_UI_ROTATE_MANUALLY)) {
-        if (time_get_millis() - road_last_update > 1500) {
-            road_last_update = time_get_millis();
-            road_orientation = road_orientation == 1 ? 2 : 1;
-            rotate();
-        }
-    }
+    if (time_get_millis() - road_last_update > 1500) {
+        road_last_update = time_get_millis();
+        road_orientation = road_orientation == 1 ? 2 : 1;
+        rotate();
+    }    
 }
 
 int building_rotation_get_road_orientation(void)
@@ -44,10 +42,8 @@ int building_rotation_get_rotation(void){
 }
 
 void building_rotation_rotate_by_hotkey(void){
-    if(config_get(CONFIG_UI_ROTATE_MANUALLY)){
-        rotate();
-        road_orientation = road_orientation == 1 ? 2 : 1;
-    }
+    rotate();
+    road_orientation = road_orientation == 1 ? 2 : 1;    
 }
 
 void building_rotation_reset_rotation(void){

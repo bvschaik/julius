@@ -374,15 +374,9 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, roadblock_permiss
 		}
 		else if (b->type == BUILDING_GRANARY) {
 			if (map_routing_citizen_is_road(grid_offset)) {
-				if (config_get(CONFIG_GP_CH_DYNAMIC_GRANARIES)) {
-					if (map_property_multi_tile_xy(grid_offset) == EDGE_X1Y1 || map_has_adjacent_road_tiles(grid_offset) || map_has_adjacent_granary_road(grid_offset)) {
-						is_road = 1;
-					}
-				}
-				else {
+				if (map_property_multi_tile_xy(grid_offset) == EDGE_X1Y1 || map_has_adjacent_road_tiles(grid_offset) || map_has_adjacent_granary_road(grid_offset)) {
 					is_road = 1;
 				}
-
 			}
 		}
 		else if (b->type == BUILDING_TRIUMPHAL_ARCH) {
