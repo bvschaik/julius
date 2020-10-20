@@ -27,8 +27,13 @@
 
 #define LAYOUTS_PER_LEGION 5
 
+#define MILITARY_PANEL_HEIGHT 474
 #define Y_OFFSET_PANEL_START 176
+#define Y_OFFSET_LAYOUT_BUTTONS 156
+#define Y_OFFSET_BOTTOM_BUTTONS 257
 #define MILITARY_PANEL_BLOCKS 18
+#define CONTENT_PADDING 10
+#define CONTENT_WIDTH (SIDEBAR_EXPANDED_WIDTH - 2 * CONTENT_PADDING)
 
 static const int IMAGE_OFFSETS_TO_FORMATION[7] = {
     FORMATION_COLUMN,
@@ -96,35 +101,35 @@ static image_button buttons_title_close[] = {
 };
 
 static arrow_button buttons_cycle_legion[] = {
-    {1, 0, 19, 24, button_cycle_legion, 0, 0},
-    {125, 0, 21, 24, button_cycle_legion, 1, 0},
+    {10, 10, 19, 24, button_cycle_legion, 0, 0},
+    {126, 10, 21, 24, button_cycle_legion, 1, 0},
 };
 
 static generic_button buttons_formation_layout[LAYOUTS_PER_LEGION - 2][LAYOUTS_PER_LEGION] = {
     {
-        {2, 0, 46, 46, button_select_formation_layout, button_none, 0, 0},
-        {52, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
-        {102, 0, 46, 46, button_select_formation_layout, button_none, 2, 0}
+        {8, 0, 46, 46, button_select_formation_layout, button_none, 0, 0},
+        {58, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
+        {108, 0, 46, 46, button_select_formation_layout, button_none, 2, 0}
     },
     {
-        {27, 50, 46, 46, button_select_formation_layout, button_none, 0, 0},
-        {27, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
-        {77, 0, 46, 46, button_select_formation_layout, button_none, 2, 0},
-        {77, 50, 46, 46, button_select_formation_layout, button_none, 3, 0}
+        {33, 50, 46, 46, button_select_formation_layout, button_none, 0, 0},
+        {33, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
+        {83, 0, 46, 46, button_select_formation_layout, button_none, 2, 0},
+        {83, 50, 46, 46, button_select_formation_layout, button_none, 3, 0}
     },
     {
-        {27, 0, 46, 46, button_select_formation_layout, button_none, 0, 0},
-        {77, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
-        {2, 50, 46, 46, button_select_formation_layout, button_none, 2, 0},
-        {52, 50, 46, 46, button_select_formation_layout, button_none, 3, 0},
-        {102, 50, 46, 46, button_select_formation_layout, button_none, 4, 0}
+        {33, 0, 46, 46, button_select_formation_layout, button_none, 0, 0},
+        {83, 0, 46, 46, button_select_formation_layout, button_none, 1, 0},
+        {8, 50, 46, 46, button_select_formation_layout, button_none, 2, 0},
+        {58, 50, 46, 46, button_select_formation_layout, button_none, 3, 0},
+        {108, 50, 46, 46, button_select_formation_layout, button_none, 4, 0}
     }
 };
 
 static generic_button buttons_bottom[] = {
-    {10, 0, 30, 30, button_go_to_legion, button_none, 0, 0},
-    {60, 0, 30, 30, button_return_to_fort, button_none, 0, 0},
-    {110, 0, 30, 30, button_empire_service, button_none, 0, 0},
+    {16, 0, 30, 30, button_go_to_legion, button_none, 0, 0},
+    {66, 0, 30, 30, button_return_to_fort, button_none, 0, 0},
+    {116, 0, 30, 30, button_empire_service, button_none, 0, 0},
 };
 
 typedef struct {
@@ -214,21 +219,32 @@ static void clear_legion_info(legion_info *legion)
     legion->empire_service = 0;
 }
 
-static void draw_military_info(int x_offset, int y_offset)
+static void update_legion_info(legion_info *legion, const formation *m)
+{
+    legion->health = calc_percentage(m->total_damage, m->max_total_damage);
+    legion->layout = m->layout;
+    legion->morale = m->morale;
+    legion->soldiers = m->num_figures;
+    legion->is_at_fort = m->is_at_fort;
+    legion->empire_service = m->empire_service;
+}
+
+static void draw_military_info_text(int x_offset, int y_offset)
 {
     legion_info *legion = &data.active_legion;
     const formation *m = formation_get(legion->formation_id);
+    update_legion_info(legion, m);
+
     int formation_image = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
 
     // Legion name
     image_draw(formation_image,
-        x_offset + (SIDEBAR_EXPANDED_WIDTH - 12 - image_get(formation_image)->width) / 2, y_offset + 8);
-    lang_text_draw_centered(138, m->legion_id, x_offset, y_offset + 34,
-        SIDEBAR_EXPANDED_WIDTH - 12, FONT_NORMAL_WHITE);
+        x_offset + (CONTENT_WIDTH - image_get(formation_image)->width) / 2, y_offset + 12);
+    lang_text_draw_centered(138, m->legion_id, x_offset, y_offset + 40, CONTENT_WIDTH, FONT_NORMAL_WHITE);
 
     // Number of soldiers
-    int width = text_draw_number(m->num_figures, '@', " ", x_offset, y_offset + 54, FONT_NORMAL_WHITE);
-    lang_text_draw(138, 46 - m->figure_type, x_offset + width, y_offset + 54, FONT_NORMAL_WHITE);
+    int width = text_draw_number(m->num_figures, '@', " ", x_offset, y_offset + 60, FONT_NORMAL_WHITE);
+    lang_text_draw(138, 46 - m->figure_type, x_offset + width, y_offset + 60, FONT_NORMAL_WHITE);
 
     // No soldiers
     if (!m->num_figures) {
@@ -243,46 +259,50 @@ static void draw_military_info(int x_offset, int y_offset)
             group_id = 138;
             text_id = 11;
         }
-        lang_text_draw_multiline(group_id, text_id, x_offset, y_offset + 66,
-            SIDEBAR_EXPANDED_WIDTH - 12, FONT_NORMAL_WHITE);
+        lang_text_draw_multiline(group_id, text_id, x_offset, y_offset + 80, CONTENT_WIDTH, FONT_NORMAL_WHITE);
         clear_legion_info(legion);
         return;
     }
 
     // Morale
-    lang_text_draw(138, 36, x_offset, y_offset + 74, FONT_NORMAL_WHITE);
-    lang_text_draw(138, 37 + m->morale / 5, x_offset + 4, y_offset + 94,
+    lang_text_draw(138, 36, x_offset, y_offset + 80, FONT_NORMAL_WHITE);
+    lang_text_draw(138, 37 + m->morale / 5, x_offset + 4, y_offset + 98,
         m->morale < 13 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
 
     // Health
-    int health = calc_percentage(m->total_damage, m->max_total_damage);
-    lang_text_draw(138, 24, x_offset, y_offset + 114, FONT_NORMAL_WHITE);
-    lang_text_draw(138, get_health_text_id(health), x_offset + 4, y_offset + 134,
-        health < 55 ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+    lang_text_draw(138, 24, x_offset, y_offset + 120, FONT_NORMAL_WHITE);
+    lang_text_draw(138, get_health_text_id(legion->health), x_offset + 4, y_offset + 138,
+        legion->health < 55 ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+}
 
+static void draw_military_info_buttons(int x_offset, int y_offset)
+{
+    if (!data.active_legion.soldiers) {
+        return;
+    }
+    const formation *m = formation_get(data.active_legion.formation_id);
     // Formation layout
-    draw_layout_buttons(x_offset, y_offset + 156, 1, m);
+    draw_layout_buttons(x_offset, y_offset + Y_OFFSET_LAYOUT_BUTTONS, 1, m);
 
     int formation_options_image = image_group(GROUP_FORT_ICONS);
 
     // Go to legion button
-    button_border_draw(x_offset + 10, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 1);
-    image_draw(formation_options_image, x_offset + 13, y_offset + 260);
+    const generic_button *btn = buttons_bottom;
+    button_border_draw(x_offset + btn->x, y_offset + Y_OFFSET_BOTTOM_BUTTONS,
+        30, 30, data.bottom_buttons_focus_id == 1);
+    image_draw(formation_options_image, x_offset + btn->x + 3, y_offset + 260);
 
     // Return to fort button
-    button_border_draw(x_offset + 60, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 2);
-    image_draw(formation_options_image + 1 + m->is_at_fort, x_offset + 63, y_offset + 260);
+    ++btn;
+    button_border_draw(x_offset + btn->x, y_offset + Y_OFFSET_BOTTOM_BUTTONS,
+        30, 30, data.bottom_buttons_focus_id == 2);
+    image_draw(formation_options_image + 1 + m->is_at_fort, x_offset + btn->x + 3, y_offset + 260);
 
     // Empire service button
-    button_border_draw(x_offset + 110, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 3);
-    image_draw(formation_options_image + 4 - m->empire_service, x_offset + 113, y_offset + 260);
-
-    legion->health = health;
-    legion->layout = m->layout;
-    legion->morale = m->morale;
-    legion->soldiers = m->num_figures;
-    legion->is_at_fort = m->is_at_fort;
-    legion->empire_service = m->empire_service;
+    ++btn;
+    button_border_draw(x_offset + btn->x, y_offset + Y_OFFSET_BOTTOM_BUTTONS,
+        30, 30, data.bottom_buttons_focus_id == 3);
+    image_draw(formation_options_image + 4 - m->empire_service, x_offset + btn->x + 3, y_offset + 260);
 }
 
 static void draw_military_panel_background(int x_offset)
@@ -294,7 +314,8 @@ static void draw_military_panel_background(int x_offset)
     inner_panel_draw(x_offset + 1, Y_OFFSET_PANEL_START + 10, SIDEBAR_EXPANDED_WIDTH / 16, MILITARY_PANEL_BLOCKS);
     inner_panel_draw(x_offset + 1, Y_OFFSET_PANEL_START, SIDEBAR_EXPANDED_WIDTH / 16, 1);
 
-    draw_military_info(x_offset + 6, Y_OFFSET_PANEL_START);
+    draw_military_info_text(x_offset + CONTENT_PADDING, Y_OFFSET_PANEL_START);
+    draw_military_info_buttons(x_offset, Y_OFFSET_PANEL_START);
 }
 
 static void update_minimap(void)
@@ -309,13 +330,12 @@ static void draw_background(int x_offset)
     lang_text_draw_centered(61, 5, x_offset, 32, 117, FONT_NORMAL_GREEN);
     widget_minimap_draw(x_offset + 8, 59, 73, 111, 1);
     draw_military_panel_background(x_offset);
-    int panel_height = 474; // Y_OFFSET_PANEL_START + MILITARY_PANEL_BLOCKS * 16;
-    int extra_height = sidebar_extra_draw_background(x_offset, panel_height,
-        SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height() - panel_height + TOP_MENU_HEIGHT,
+    int extra_height = sidebar_extra_draw_background(x_offset, MILITARY_PANEL_HEIGHT,
+        SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height() - MILITARY_PANEL_HEIGHT + TOP_MENU_HEIGHT,
         0, SIDEBAR_EXTRA_DISPLAY_ALL);
     sidebar_extra_draw_foreground();
 
-    sidebar_common_draw_relief(x_offset, panel_height + extra_height, GROUP_SIDE_PANEL, 0);
+    sidebar_common_draw_relief(x_offset, MILITARY_PANEL_HEIGHT + extra_height, GROUP_SIDE_PANEL, 0);
 }
 
 void widget_sidebar_military_draw_background(void)
@@ -340,18 +360,19 @@ static void draw_military_panel_foreground(void)
     if (has_legion_changed(&data.active_legion, m)) {
         draw_military_panel_background(x_offset);
     }
+    int y_offset = Y_OFFSET_PANEL_START;
     int num_legions = formation_get_num_legions();
     if (num_legions > 1) {
-        arrow_buttons_draw(x_offset + 6, 181, buttons_cycle_legion, 2);
+        arrow_buttons_draw(x_offset, y_offset, buttons_cycle_legion, 2);
     }
     if (!m->num_figures) {
         return;
     }
-    int y_offset = Y_OFFSET_PANEL_START;
-    draw_layout_buttons(x_offset + 6, y_offset + 156, 0, m);
-    button_border_draw(x_offset + 16, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 1);
-    button_border_draw(x_offset + 66, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 2);
-    button_border_draw(x_offset + 116, y_offset + 257, 30, 30, data.bottom_buttons_focus_id == 3);
+    draw_layout_buttons(x_offset, y_offset + Y_OFFSET_LAYOUT_BUTTONS, 0, m);
+    for (int i = 0; i < 3; i++) {
+        button_border_draw(x_offset + buttons_bottom[i].x, y_offset + Y_OFFSET_BOTTOM_BUTTONS,
+            30, 30, data.bottom_buttons_focus_id == i + 1);
+    }
 }
 
 void widget_sidebar_military_draw_foreground(void)
@@ -372,17 +393,17 @@ int widget_sidebar_military_handle_input(const mouse *m)
     }
     int num_legions = formation_get_num_legions();
     if (num_legions > 1 &&
-        arrow_buttons_handle_mouse(m, x_offset + 6, Y_OFFSET_PANEL_START + 6, buttons_cycle_legion, 2, 0)) {
+        arrow_buttons_handle_mouse(m, x_offset, Y_OFFSET_PANEL_START, buttons_cycle_legion, 2, 0)) {
         return 1;
     }
     const formation *selected_legion = formation_get(data.active_legion.formation_id);
-    if (selected_legion->num_figures > 0) {
+    if (data.active_legion.soldiers > 0) {
         generic_button *layout_buttons = buttons_formation_layout[available_layouts_for_legion(selected_legion) - 3];
-        if (generic_buttons_handle_mouse(m, x_offset + 6, Y_OFFSET_PANEL_START + 156,
+        if (generic_buttons_handle_mouse(m, x_offset, Y_OFFSET_PANEL_START + Y_OFFSET_LAYOUT_BUTTONS,
             layout_buttons, 5, &data.inner_buttons_focus_id)) {
             return 1;
         }
-        if (generic_buttons_handle_mouse(m, x_offset + 6, Y_OFFSET_PANEL_START + 257,
+        if (generic_buttons_handle_mouse(m, x_offset, Y_OFFSET_PANEL_START + Y_OFFSET_BOTTOM_BUTTONS,
             buttons_bottom, 3, &data.bottom_buttons_focus_id)) {
             return 1;
         }
