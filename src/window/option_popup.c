@@ -12,8 +12,8 @@
 #include "input/input.h"
 #include "translation/translation.h"
 
-static void button_select_option_1(void);
-static void button_select_option_2(void);
+static void button_select_option_1(int param1, int param2);
+static void button_select_option_2(int param1, int param2);
 
 static image_button buttons[] = {
     {20, 120, 150, 130, 0, 0, 0, button_select_option_1, button_none, 0, 0, 1},
@@ -109,13 +109,13 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_select_option_1(void)
+static void button_select_option_1(int param1, int param2)
 {
     data.close_func(1);
     window_go_back();
 }
 
-static void button_select_option_2(void)
+static void button_select_option_2(int param1, int param2)
 {
     data.close_func(2);
     window_go_back();

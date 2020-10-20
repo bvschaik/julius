@@ -112,8 +112,9 @@ static void get_full_image_path(char *full_path, const char *file_name)
 {
     strncpy(full_path, data.xml.image_base_path, data.xml.image_base_path_position);
     size_t file_name_size = strlen(file_name);
-    strncpy(full_path + data.xml.image_base_path_position, file_name, file_name_size);
-    strncpy(full_path + data.xml.image_base_path_position + file_name_size, ".png", 5);
+    strncpy(full_path + data.xml.image_base_path_position, file_name, FILE_NAME_MAX - data.xml.image_base_path_position);
+    strncpy(full_path + data.xml.image_base_path_position + file_name_size, ".png",
+        FILE_NAME_MAX - data.xml.image_base_path_position - file_name_size);
 }
 
 static void load_dummy_layer(layer *l)
@@ -171,7 +172,6 @@ static void unload_layer(layer *l)
 {
     free(l->modded_image_path);
     l->modded_image_path = 0;
-    const image *layer_image = image_get(l->original_image_id);
     if (!l->is_modded_image_reference) {
         free(l->data);
     }
@@ -273,7 +273,6 @@ static void set_modded_image_base_path(const char *author, const char *name)
 static int add_layer_from_image_path(modded_image *img, const char *path, int offset_x, int offset_y)
 {
     layer *current_layer = &img->layers[img->num_layers];
-    size_t path_size = strlen(path);
     current_layer->modded_image_path = malloc(FILE_NAME_MAX * sizeof(char));
     get_full_image_path(current_layer->modded_image_path, path);
     if (!png_get_image_size(current_layer->modded_image_path, &current_layer->width, &current_layer->height)) {

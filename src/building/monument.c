@@ -412,7 +412,7 @@ void building_monument_initialize(building* b)
 	}
 }
 
-int building_monument_is_monument(building* b) 
+int building_monument_is_monument(const building* b) 
 {
 	switch (b->type) {
 		case BUILDING_GRAND_TEMPLE_CERES:

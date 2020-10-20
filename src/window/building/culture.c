@@ -20,7 +20,7 @@
 #define GOD_PANTHEON 5
 #define MODULE_COST 1000
 
-static void add_module_prompt(void);
+static void add_module_prompt(int param1, int param2);
 
 static int god_id;
 
@@ -605,7 +605,7 @@ static int add_module(int selection) {
     return 1;
 }
 
-static void add_module_prompt(void)
+static void add_module_prompt(int param1, int param2)
 {
     option_menu_item options[2] = { temple_module_options[god_id * 2], temple_module_options[god_id * 2 + 1] };
     window_show_option_popup(TR_SELECT_EPITHET_PROMPT_HEADER, TR_SELECT_EPITHET_PROMPT_TEXT, options, add_module);
