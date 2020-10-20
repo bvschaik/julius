@@ -1359,6 +1359,15 @@ static void spawn_figure_mess_hall(building* b) {
     }
 }
 
+
+static void spawn_figure_lighthouse(building* b) {
+    check_labor_problem(b);
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 100);
+    }
+}
+
 static void update_native_crop_progress(building *b)
 {
     b->data.industry.progress++;
@@ -1508,6 +1517,11 @@ void building_figure_generate(void)
                 case BUILDING_PANTHEON:
                     if (b->subtype.monument_phase == MONUMENT_FINISHED) {
                         spawn_figure_temple(b);
+                    }
+                    break;
+                case BUILDING_LIGHTHOUSE:
+                    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+                        spawn_figure_lighthouse(b);
                     }
                     break;
             }

@@ -599,7 +599,12 @@ static void add_to_map(int type, building *b, int size,
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
-
+        case BUILDING_LIGHTHOUSE:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 01"));
+            b->subtype.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            building_monument_initialize(b);
+            break;
         case BUILDING_WORKCAMP:
             switch (scenario_property_climate())
             {

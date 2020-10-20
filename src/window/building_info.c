@@ -171,7 +171,7 @@ static int get_height_id(void)
             case BUILDING_GRAND_TEMPLE_CERES:
             case BUILDING_GRAND_TEMPLE_NEPTUNE:
             case BUILDING_GRAND_TEMPLE_MERCURY:
-            
+            case BUILDING_LIGHTHOUSE:
             case BUILDING_GRAND_TEMPLE_VENUS:
             case BUILDING_PANTHEON:
                 return 6;
@@ -572,6 +572,8 @@ static void draw_background(void)
             window_building_draw_grand_temple_venus(&context);
         } else if (btype == BUILDING_PANTHEON) {
             window_building_draw_pantheon(&context);
+        } else if (btype == BUILDING_LIGHTHOUSE) {
+            window_building_draw_lighthouse(&context);
         } else if (btype == BUILDING_GOVERNORS_HOUSE || btype == BUILDING_GOVERNORS_VILLA || btype == BUILDING_GOVERNORS_PALACE) {
             window_building_draw_governor_home(&context);
         } else if (btype == BUILDING_FORUM || btype == BUILDING_FORUM_UPGRADED) {

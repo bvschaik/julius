@@ -163,6 +163,7 @@ const model_building MODEL_GRAND_TEMPLE_MERCURY = { 2500,20,2,-4,5,30 };
 const model_building MODEL_GRAND_TEMPLE_MARS = { 2500,20,2,-4,5,30 };
 const model_building MODEL_GRAND_TEMPLE_VENUS = { 2500,20,2,-4,5,30 };
 const model_building MODEL_PANTHEON = { 3500,20,2,-4,5,30 };
+const model_building MODEL_LIGHTHOUSE = { 2000,6,1,-1,4,30 };
 const model_building MODEL_MESS_HALL = { 100,-8,1,2,4,10 };
 
 const model_building *model_get_building(building_type type)
@@ -197,6 +198,9 @@ const model_building *model_get_building(building_type type)
         break;
     case BUILDING_MESS_HALL:
         return &MODEL_MESS_HALL;
+        break;
+    case BUILDING_LIGHTHOUSE:
+        return &MODEL_LIGHTHOUSE;
         break;
 
 

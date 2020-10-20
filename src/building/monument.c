@@ -39,26 +39,38 @@ int building_monument_deliver_resource(building* b, int resource) {
 
 int building_monument_access_point(building* b, map_point* dst)
 {
-	int dx = b->x-b->road_access_x;
-	int dy = b->y-b->road_access_y;
-	if (dx == -3 && dy == -7)
+	int dx = b->x - b->road_access_x;
+	int dy = b->y - b->road_access_y;
+	if (building_monument_is_grand_temple(b->type) || b->type == BUILDING_PANTHEON)
 	{
-		dst->x = b->x+3;
-		dst->y = b->y+6;
-	} else if (dx == 1 && dy == -3) {
-		dst->x = b->x + 3;
-		dst->y = b->y + 6;
-	} else if (dx == -3 && dy == 1) {
-		dst->x = b->x + 3;
-		dst->y = b->y;
-	} else if (dx == -7 && dy == -3) {
-		dst->x = b->x + 6;
-		dst->y = b->y + 3;
-	} else {
-		return 0;
+		if (dx == -3 && dy == -7)
+		{
+			dst->x = b->x + 3;
+			dst->y = b->y + 6;
+		}
+		else if (dx == 1 && dy == -3) {
+			dst->x = b->x + 3;
+			dst->y = b->y + 6;
+		}
+		else if (dx == -3 && dy == 1) {
+			dst->x = b->x + 3;
+			dst->y = b->y;
+		}
+		else if (dx == -7 && dy == -3) {
+			dst->x = b->x + 6;
+			dst->y = b->y + 3;
+		}
+		else {
+			return 0;
+		}
+		return 1;
 	}
-	return 1;
-
+	if (b->type == BUILDING_LIGHTHOUSE) {
+		dst->x = b->road_access_x;
+		dst->y = b->road_access_y;
+		return 1;
+	}
+	return 0;
 }
 
 int building_monument_add_module(building* b, int module_type) {
@@ -405,6 +417,39 @@ void building_monument_initialize(building* b)
 			break;
 		}
 		break;
+	case BUILDING_LIGHTHOUSE:
+		switch (b->subtype.monument_phase) {
+		case MONUMENT_FINISHED:
+			break;
+		case MONUMENT_START:
+			resources_needed[RESOURCE_MARBLE] = 16;
+			resources_needed[RESOURCE_NONE] = 1;
+			break;
+		case 2:
+			resources_needed[RESOURCE_MARBLE] = 12;
+			resources_needed[RESOURCE_TIMBER] = 24;
+			resources_needed[RESOURCE_NONE] = 1;
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 02"), TERRAIN_BUILDING);
+			break;
+		case 3:
+			resources_needed[RESOURCE_MARBLE] = 12;
+			resources_needed[RESOURCE_TIMBER] = 24;
+			resources_needed[RESOURCE_NONE] = 1;
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 03"), TERRAIN_BUILDING);
+			break;
+		case 4:
+			resources_needed[RESOURCE_MARBLE] = 8;
+			resources_needed[RESOURCE_TIMBER] = 20;
+			resources_needed[RESOURCE_CLAY] = 60;
+			resources_needed[RESOURCE_NONE] = 5;
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 04"), TERRAIN_BUILDING);
+			break;
+		case 5:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse ON"), TERRAIN_BUILDING);
+			b->subtype.monument_phase = MONUMENT_FINISHED;
+			break;
+		}
+		break;
 
 	}
 	if (b->subtype.monument_phase == MONUMENT_FINISHED) {
@@ -424,6 +469,7 @@ int building_monument_is_monument(building* b)
 		case BUILDING_GRAND_TEMPLE_MARS:
 		case BUILDING_GRAND_TEMPLE_VENUS:
 		case BUILDING_PANTHEON:
+		case BUILDING_LIGHTHOUSE:
 			return 1;
 		break;
 	}

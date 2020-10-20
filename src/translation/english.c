@@ -322,7 +322,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES, "Allow market ladies to buy from here"},
     {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_CARAVAN, "Allow caravans to trade here"},
     {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS, "Allow trade ships to trade here"},
-    {TR_CONFIG_HEADER_CITY_MANAGEMENT_CHANGES, "City Management"}
+    {TR_CONFIG_HEADER_CITY_MANAGEMENT_CHANGES, "City Management"},
+    {TR_BUILDING_LIGHTHOUSE, "Lighthouse"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

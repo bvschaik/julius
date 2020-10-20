@@ -538,6 +538,19 @@ void window_building_draw_pantheon(building_info_context* c)
     draw_grand_temple(c, "wavs/oracle.wav", TR_BUILDING_PANTHEON_DESC, TR_BUILDING_PANTHEON_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Panth L Banner"), TR_BUILDING_PANTHEON_QUOTE, GOD_PANTHEON, 0);
 }
 
+void window_building_draw_lighthouse(building_info_context* c) {
+    building* b = building_get(c->building_id);
+    //window_building_play_sound(c, sound_file);
+    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    }
+    else {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    }
+    text_draw_centered(translation_for(TR_BUILDING_LIGHTHOUSE), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    window_building_draw_monument_resources_needed(c);
+}
+
 
 void window_building_draw_work_camp(building_info_context* c)
 {
