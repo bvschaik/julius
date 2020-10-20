@@ -533,8 +533,33 @@ int building_monument_get_neptune_gt(void) {
 	return 0;
 }
 
+static int building_monument_monument_phases(int building_type) {
+	switch (building_type) {
+	case BUILDING_PANTHEON:
+	case BUILDING_GRAND_TEMPLE_CERES:
+	case BUILDING_GRAND_TEMPLE_MERCURY:
+	case BUILDING_GRAND_TEMPLE_NEPTUNE:
+	case BUILDING_GRAND_TEMPLE_MARS:
+	case BUILDING_GRAND_TEMPLE_VENUS:
+		return 6;
+	case BUILDING_LIGHTHOUSE:
+		return 5;
+	default:
+		break;
+	}
+}
+
 int building_monument_finish_monuments() {
-	return building_monument_phase(6);
+	for (int i = 0; i < MAX_MONUMENTS; i++) {
+		int monument_id = monuments[i];
+		building* b = building_get(monument_id);
+		if (!building_monument_is_monument(b)) {
+			continue;
+		}
+		b->subtype.monument_phase = building_monument_monument_phases(b->type);
+		building_monument_initialize(b);
+	}
+	return 1;
 
 }
 
