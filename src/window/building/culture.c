@@ -34,18 +34,18 @@ static struct {
 } data = { 0, 0 };
 
 option_menu_item temple_module_options[12] = {
-   {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Ceres M Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Ceres M2 Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Nept M2 Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Nept M Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Merc M Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Merc M2 Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Mars M Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Mars M2 Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Venus M Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Venus M2 Icon"},
-   {TR_BUILDING_PANTHEON_DESC_MODULE_1, TR_BUILDING_PANTHEON_MODULE_1_DESC, 0, "Areldir", "Grand_Temple_Banners", "Panth M Icon"},
-   {TR_BUILDING_PANTHEON_DESC_MODULE_2, TR_BUILDING_PANTHEON_MODULE_2_DESC, 0, "Areldir", "Grand_Temple_Banners", "Panth M2 Icon"}
+   {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Ceres M Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Ceres M2 Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Nept M2 Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Nept M Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Merc M Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Merc M2 Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Mars M Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Mars M2 Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Venus M Icon"},
+   {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Venus M2 Icon"},
+   {TR_BUILDING_PANTHEON_DESC_MODULE_1, TR_BUILDING_PANTHEON_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Panth M Icon"},
+   {TR_BUILDING_PANTHEON_DESC_MODULE_2, TR_BUILDING_PANTHEON_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Panth M2 Icon"}
 };
 
 static void draw_culture_info(building_info_context *c, int help_id, const char *sound_file, int group_id)
@@ -513,32 +513,32 @@ int window_building_handle_mouse_grand_temple(const mouse* m, building_info_cont
 
 void window_building_draw_grand_temple_ceres(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES_DESC, TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Ceres L Banner"), TR_BUILDING_CERES_TEMPLE_QUOTE, GOD_CERES, 0);
+    draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES_DESC, TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Ceres L Banner"), TR_BUILDING_CERES_TEMPLE_QUOTE, GOD_CERES, 0);
 }
 
 void window_building_draw_grand_temple_neptune(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Nept L Banner"), TR_BUILDING_NEPTUNE_TEMPLE_QUOTE, GOD_NEPTUNE, 0);
+    draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Nept L Banner"), TR_BUILDING_NEPTUNE_TEMPLE_QUOTE, GOD_NEPTUNE, 0);
 }
 
 void window_building_draw_grand_temple_mercury(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC, TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Merc L Banner"), TR_BUILDING_MERCURY_TEMPLE_QUOTE, GOD_MERCURY, 0);
+    draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC, TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Merc L Banner"), TR_BUILDING_MERCURY_TEMPLE_QUOTE, GOD_MERCURY, 0);
 }
 
 void window_building_draw_grand_temple_mars(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS_DESC, TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Mars L Banner"), TR_BUILDING_MARS_TEMPLE_QUOTE, GOD_MARS, 50);
+    draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS_DESC, TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Mars L Banner"), TR_BUILDING_MARS_TEMPLE_QUOTE, GOD_MARS, 50);
 }
 
 void window_building_draw_grand_temple_venus(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Venus L Banner"), TR_BUILDING_VENUS_TEMPLE_QUOTE, GOD_VENUS, 20);
+    draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Venus L Banner"), TR_BUILDING_VENUS_TEMPLE_QUOTE, GOD_VENUS, 20);
 }
 
 void window_building_draw_pantheon(building_info_context* c)
 {
-    draw_grand_temple(c, "wavs/oracle.wav", TR_BUILDING_PANTHEON_DESC, TR_BUILDING_PANTHEON_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "Grand_Temple_Banners"), "Panth L Banner"), TR_BUILDING_PANTHEON_QUOTE, GOD_PANTHEON, 0);
+    draw_grand_temple(c, "wavs/oracle.wav", TR_BUILDING_PANTHEON_DESC, TR_BUILDING_PANTHEON_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Panth L Banner"), TR_BUILDING_PANTHEON_QUOTE, GOD_PANTHEON, 0);
 }
 
 void window_building_draw_lighthouse(building_info_context* c) {
