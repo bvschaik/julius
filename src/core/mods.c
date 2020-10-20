@@ -93,6 +93,7 @@ typedef struct {
     int num_layers;
     image img;
     color_t *data;
+    int is_clone;
     int index;
 } modded_image;
 
@@ -231,14 +232,16 @@ static int load_modded_image(modded_image *img)
     }
 
     // Special cases for images which are simple aliases to another mod image
-   if (img->num_layers == 1) {
+    if (img->num_layers == 1) {
         layer *l = &img->layers[0];
         if (l->is_modded_image_reference &&
             img->img.width == l->width && img->img.height == l->height &&
-            l->x_offset == 0 && l->y_offset == 0) {
+            l->x_offset == 0 && l->y_offset == 0 &&
+            l->invert == INVERT_NONE && l->rotate == ROTATE_NONE) {
             img->data = l->data;
             unload_layer(l);
             img->loaded = 1;
+            img->is_clone = 1;
             return 1;
         }
     }
@@ -707,7 +710,7 @@ static void process_mod_file(const char *xml_file_name)
             for (int i = 0; i < img->num_layers; ++i) {
                 unload_layer(&img->layers[i]);
             }
-            if (img->loaded) {
+            if (img->loaded && !img->is_clone) {
                 free(img->data);
             }
             memset(img, 0, sizeof(modded_image));
