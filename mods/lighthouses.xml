@@ -14,7 +14,7 @@
 <!-- Note: Lighthouse ON Variant -->
     <image id="Lighthouse ON" >
 		<layer group="this" image="Lighthouse OFF" />
-        <animation speed="5" frames="5" x="74" y="30" reversible="false" />
+        <animation speed="5" frames="5" x="74" y="1" reversible="false" />
     </image>
     <image src="Lighthouse_ON_01" />
     <image src="Lighthouse_ON_02" />

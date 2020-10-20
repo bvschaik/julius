@@ -545,6 +545,7 @@ static int building_monument_monument_phases(int building_type) {
 	case BUILDING_LIGHTHOUSE:
 		return 5;
 	default:
+		return 0;
 		break;
 	}
 }
