@@ -36,7 +36,7 @@ static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][X
 static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG_MAX_LENGTH] = {
     { { "author", "name" } }, // mod
     { { "id", "src", "width", "height", "group", "image", "index" } }, // image
-    { { "src", "group", "image", "x", "y" }, // layer
+    { { "src", "group", "image", "x", "y", "invert", "rotate" }, // layer
     { "frames", "speed", "reversible", "x", "y" } } // animation
 };
 static color_t DUMMY_IMAGE_DATA = COLOR_BLACK;
@@ -58,6 +58,20 @@ static void (*xml_end_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH
     { xml_end_mod_element }, { xml_end_image_element }, { xml_end_layer_element, xml_end_animation_element }
 };
 
+typedef enum {
+    INVERT_NONE = 0,
+    INVERT_HORIZONTAL = 1,
+    INVERT_VERTICAL = 2,
+    INVERT_BOTH = 3
+} invert_type;
+
+typedef enum {
+    ROTATE_NONE = 0,
+    ROTATE_90_DEGREES = 1,
+    ROTATE_180_DEGREES = 2,
+    ROTATE_270_DEGREES = 3
+} rotate_type;
+
 typedef struct {
     char *modded_image_path;
     int original_image_id;
@@ -65,6 +79,8 @@ typedef struct {
     int y_offset;
     int width;
     int height;
+    invert_type invert;
+    rotate_type rotate;
     int is_modded_image_reference;
     color_t *data;
 } layer;
@@ -125,6 +141,18 @@ static void load_dummy_layer(layer *l)
 
 static void load_layer(layer *l)
 {
+    const image *layer_image = image_get(l->original_image_id);
+    if (layer_image->draw.type == IMAGE_TYPE_MOD) {
+        // Ugly const removal. The only other way would be to memcpy the image data.
+        // That's a waste of ram, and we're not going to change l->data anyway
+        l->data = (color_t *) image_data(l->original_image_id);
+        l->is_modded_image_reference = 1;
+        if (!l->data) {
+            log_error("Problem loading layer from image id", 0, l->original_image_id);
+            load_dummy_layer(l);
+        }
+        return;
+    }
     int size = l->width * l->height * sizeof(color_t);
     l->data = malloc(size);
     if (!l->data) {
@@ -137,18 +165,6 @@ static void load_layer(layer *l)
         if (!png_read(l->modded_image_path, (uint8_t *) l->data)) {
             free(l->data);
             log_error("Problem loading layer from file", l->modded_image_path, 0);
-            load_dummy_layer(l);
-        }
-        return;
-    }
-    const image *layer_image = image_get(l->original_image_id);
-    if (layer_image->draw.type == IMAGE_TYPE_MOD) {
-        // Ugly const removal. The only other way would be to memcpy the image data.
-        // That's a waste of ram, and we're not going to change l->data anyway
-        l->data = (color_t *) image_data(l->original_image_id);
-        l->is_modded_image_reference = 1;
-        if (!l->data) {
-            log_error("Problem loading layer from image id", 0, l->original_image_id);
             load_dummy_layer(l);
         }
         return;
@@ -182,6 +198,22 @@ static color_t layer_get_color_for_image_position(layer *l, int x, int y)
 {
     x -= l->x_offset;
     y -= l->y_offset;
+
+    if (l->rotate == ROTATE_90_DEGREES || l->rotate == ROTATE_270_DEGREES) {
+        int temp = x;
+        x = y;
+        y = temp;
+    }
+    if (l->rotate == ROTATE_90_DEGREES || l->rotate == ROTATE_180_DEGREES) {
+        x = l->width - x;
+        y = l->height - y;
+    }
+    if (l->invert & INVERT_HORIZONTAL) {
+        x = l->width - x;
+    }
+    if (l->invert & INVERT_VERTICAL) {
+        y = l->height - y;
+    }
     if (x < 0 || x >= l->width || y < 0 || y >= l->height) {
         return ALPHA_TRANSPARENT;
     }
@@ -270,7 +302,7 @@ static void set_modded_image_base_path(const char *author, const char *name)
     data.xml.image_base_path_position = position;
 }
 
-static int add_layer_from_image_path(modded_image *img, const char *path, int offset_x, int offset_y)
+static layer *add_layer_from_image_path(modded_image *img, const char *path, int offset_x, int offset_y)
 {
     layer *current_layer = &img->layers[img->num_layers];
     size_t path_size = strlen(path);
@@ -290,10 +322,10 @@ static int add_layer_from_image_path(modded_image *img, const char *path, int of
     current_layer->x_offset = offset_x;
     current_layer->y_offset = offset_y;
     img->num_layers++;
-    return 1;
+    return current_layer;
 }
 
-static int add_layer_from_image_id(modded_image *img, const char *group_id, const char *image_id, int offset_x, int offset_y)
+static layer *add_layer_from_image_id(modded_image *img, const char *group_id, const char *image_id, int offset_x, int offset_y)
 {
     layer *current_layer = &img->layers[img->num_layers];
     current_layer->width = 0;
@@ -332,7 +364,7 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
     current_layer->x_offset = offset_x;
     current_layer->y_offset = offset_y;
     img->num_layers++;
-    return 1;
+    return current_layer;
 }
 
 static int count_xml_attributes(const char **attributes)
@@ -455,10 +487,12 @@ static void xml_start_layer_element(const char **attributes)
         return;
     }
     int total_attributes = count_xml_attributes(attributes);
-    if (total_attributes < 2 || total_attributes > 8 || total_attributes % 2) {
+    if (total_attributes < 2 || total_attributes > 12 || total_attributes % 2) {
         data.xml.error = 1;
         return;
     }
+    invert_type invert = INVERT_NONE;
+    rotate_type rotate = ROTATE_NONE;
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][0]) == 0) {
             path = attributes[i + 1];
@@ -475,14 +509,37 @@ static void xml_start_layer_element(const char **attributes)
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][4]) == 0) {
             offset_y = string_to_int(string_from_ascii(attributes[i + 1]));
         }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][5]) == 0) {
+            if (strcmp(attributes[i + 1], "horizontal") == 0) {
+                invert = INVERT_HORIZONTAL;
+            } else if (strcmp(attributes[i + 1], "vertical") == 0) {
+                invert = INVERT_VERTICAL;
+            } else if (strcmp(attributes[i + 1], "both") == 0) {
+                invert = INVERT_BOTH;
+            }
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][6]) == 0) {
+            if (strcmp(attributes[i + 1], "90") == 0) {
+                rotate = ROTATE_90_DEGREES;
+            } else if (strcmp(attributes[i + 1], "180") == 0) {
+                rotate = ROTATE_180_DEGREES;
+            } else if (strcmp(attributes[i + 1], "270") == 0) {
+                rotate = ROTATE_270_DEGREES;
+            }
+        }
     }
+    layer *current_layer = 0;
     if (path) {
-        add_layer_from_image_path(img, path, offset_x, offset_y);
+        current_layer = add_layer_from_image_path(img, path, offset_x, offset_y);
     } else if (group) {
-        add_layer_from_image_id(img, group, id, offset_x, offset_y);
-    } else {
-        log_info("Invalid layer for image", img->id, img->num_layers);
+        current_layer = add_layer_from_image_id(img, group, id, offset_x, offset_y);
     }
+    if (!current_layer) {
+        log_info("Invalid layer for image", img->id, img->num_layers);
+        return;
+    }
+    current_layer->invert = invert;
+    current_layer->rotate = rotate;
 }
 
 static void xml_start_animation_element(const char **attributes)
