@@ -59,7 +59,12 @@ void figure_military_standard_action(figure *f)
     f->cross_country_y = 15 * f->y + 7;
     map_figure_add(f);
 
-    f->image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
+    int pole_offset = 20 - m->morale / 5;
+    if (pole_offset < 0) {
+        pole_offset = 0;
+    }
+    f->image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + pole_offset;
+
     if (m->figure_type == FIGURE_FORT_LEGIONARY) {
         if (m->is_halted) {
             f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 8;
