@@ -16,6 +16,30 @@
 static int monuments[MAX_MONUMENTS] = { 0 };
 static monument_delivery monument_deliveries[MAX_MONUMENT_DELIVERIES] = { 0 };
 
+static int grand_temple_resources[6][RESOURCE_MAX] = {
+	{1,0,0,0,0,0,0,0,0,0,0,0,24,0,0,0,},
+	{1,0,0,0,0,0,0,0,0,0,8,0,24,0,0,0,},
+	{1,0,0,0,0,0,0,0,0,0,8,0,16,0,0,0,},
+	{1,0,0,0,0,0,0,0,0,0,20,36,12,0,0,0,},
+	{4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
+};
+static int pantheon_resources[6][RESOURCE_MAX] = {
+	{1,0,0,0,0,0,0,0,0,0,0,0,48,0,0,0,},
+	{1,0,0,0,0,0,0,0,0,0,16,0,48,0,0,0,},
+	{1,0,0,0,0,0,0,0,0,0,16,0,32,0,0,0,},
+	{1,0,0,0,0,0,0,0,0,0,40,72,24,0,0,0,},
+	{4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
+};
+static int lighthouse_resources[5][RESOURCE_MAX] = {
+	{1,0,0,0,0,0,0,0,0,0,0,0,16,0,0,0,},
+	{1,0,0,0,0,0,0,0,0,0,24,0,12,0,0,0,},
+	{1,0,0,0,0,0,0,0,0,0,24,0,12,0,0,0,},
+	{4,0,0,0,0,0,0,0,0,0,20,60,8,0,0,0,},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+};
+
 static struct {
 	int monuments_number;
 	int unfinished_monuments;
@@ -187,40 +211,44 @@ int building_monument_has_unfinished_monuments() {
 	return data.unfinished_monuments;
 }
 
+int building_monument_resources_needed_for_monument_type(int building_type, int resource, int phase) {
+	switch (building_type)
+	{
+	case BUILDING_GRAND_TEMPLE_CERES:
+	case BUILDING_GRAND_TEMPLE_MERCURY:
+	case BUILDING_GRAND_TEMPLE_NEPTUNE:
+	case BUILDING_GRAND_TEMPLE_MARS:
+	case BUILDING_GRAND_TEMPLE_VENUS:
+		return grand_temple_resources[phase - 1][resource];
+	case BUILDING_PANTHEON:
+		return pantheon_resources[phase - 1][resource];
+	case BUILDING_LIGHTHOUSE:
+		return lighthouse_resources[phase - 1][resource];
+	default:
+		return 0;
+		break;
+	}
+}
+
 void building_monument_initialize(building* b)
 {
-
-	short resources_needed[RESOURCE_MAX] = { 0 };
 	switch (b->type) {
 	case BUILDING_GRAND_TEMPLE_CERES:
 		switch (b->subtype.monument_phase) {
 		case MONUMENT_FINISHED:
 			break;
 		case MONUMENT_START:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_NONE] = 1;
 			break;
 		case 2:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_TIMBER] = 8;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 02"), TERRAIN_BUILDING);
 			break;
 		case 3:
-			resources_needed[RESOURCE_MARBLE] = 16;
-			resources_needed[RESOURCE_TIMBER] = 8;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 03"), TERRAIN_BUILDING);
 			break;
 		case 4:
-			resources_needed[RESOURCE_MARBLE] = 12;
-			resources_needed[RESOURCE_TIMBER] = 20;
-			resources_needed[RESOURCE_CLAY] = 36;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 05"), TERRAIN_BUILDING);
 			break;
 		case 6:
@@ -235,30 +263,17 @@ void building_monument_initialize(building* b)
 		case MONUMENT_FINISHED:
 			break;
 		case MONUMENT_START:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_NONE] = 1;
 			break;
 		case 2:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_TIMBER] = 8;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 02"), TERRAIN_BUILDING);
 			break;
 		case 3:
-			resources_needed[RESOURCE_MARBLE] = 16;
-			resources_needed[RESOURCE_TIMBER] = 8;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 03"), TERRAIN_BUILDING);
 			break;
 		case 4:
-			resources_needed[RESOURCE_MARBLE] = 12;
-			resources_needed[RESOURCE_TIMBER] = 20;
-			resources_needed[RESOURCE_CLAY] = 36;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 05"), TERRAIN_BUILDING);
 			break;
 		case 6:
@@ -274,30 +289,17 @@ void building_monument_initialize(building* b)
 		case MONUMENT_FINISHED:
 			break;
 		case MONUMENT_START:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_NONE] = 1;
 			break;
 		case 2:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_TIMBER] = 8;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 02"), TERRAIN_BUILDING);
 			break;
 		case 3:
-			resources_needed[RESOURCE_MARBLE] = 16;
-			resources_needed[RESOURCE_TIMBER] = 8;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 03"), TERRAIN_BUILDING);
 			break;
 		case 4:
-			resources_needed[RESOURCE_MARBLE] = 12;
-			resources_needed[RESOURCE_TIMBER] = 20;
-			resources_needed[RESOURCE_CLAY] = 36;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 05"), TERRAIN_BUILDING);
 			break;
 		case 6:
@@ -311,30 +313,17 @@ void building_monument_initialize(building* b)
 		case MONUMENT_FINISHED:
 			break;
 		case MONUMENT_START:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_NONE] = 1;
 			break;
 		case 2:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_TIMBER] = 8;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 02"), TERRAIN_BUILDING);
 			break;
 		case 3:
-			resources_needed[RESOURCE_MARBLE] = 16;
-			resources_needed[RESOURCE_TIMBER] = 8;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 03"), TERRAIN_BUILDING);
 			break;
 		case 4:
-			resources_needed[RESOURCE_MARBLE] = 12;
-			resources_needed[RESOURCE_TIMBER] = 20;
-			resources_needed[RESOURCE_CLAY] = 36;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 05"), TERRAIN_BUILDING);
 			break;
 		case 6:
@@ -348,30 +337,17 @@ void building_monument_initialize(building* b)
 		case MONUMENT_FINISHED:
 			break;
 		case MONUMENT_START:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_NONE] = 1;
 			break;
 		case 2:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_TIMBER] = 8;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 02"), TERRAIN_BUILDING);
 			break;
 		case 3:
-			resources_needed[RESOURCE_MARBLE] = 16;
-			resources_needed[RESOURCE_TIMBER] = 8;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 03"), TERRAIN_BUILDING);
 			break;
 		case 4:
-			resources_needed[RESOURCE_MARBLE] = 12;
-			resources_needed[RESOURCE_TIMBER] = 20;
-			resources_needed[RESOURCE_CLAY] = 36;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 05"), TERRAIN_BUILDING);
 			break;
 		case 6:
@@ -385,30 +361,17 @@ void building_monument_initialize(building* b)
 		case MONUMENT_FINISHED:
 			break;
 		case MONUMENT_START:
-			resources_needed[RESOURCE_MARBLE] = 48;
-			resources_needed[RESOURCE_NONE] = 1;
 			break;
 		case 2:
-			resources_needed[RESOURCE_MARBLE] = 48;
-			resources_needed[RESOURCE_TIMBER] = 16;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 02"), TERRAIN_BUILDING);
 			break;
 		case 3:
-			resources_needed[RESOURCE_MARBLE] = 32;
-			resources_needed[RESOURCE_TIMBER] = 16;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 03"), TERRAIN_BUILDING);			
 			break;
 		case 4:
-			resources_needed[RESOURCE_MARBLE] = 24;
-			resources_needed[RESOURCE_TIMBER] = 40;
-			resources_needed[RESOURCE_CLAY] = 72;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 04"), TERRAIN_BUILDING);			
 			break;
 		case 5:
-			resources_needed[RESOURCE_NONE] = 4;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 05"), TERRAIN_BUILDING);			
 			break;
 		case 6:
@@ -422,26 +385,14 @@ void building_monument_initialize(building* b)
 		case MONUMENT_FINISHED:
 			break;
 		case MONUMENT_START:
-			resources_needed[RESOURCE_MARBLE] = 16;
-			resources_needed[RESOURCE_NONE] = 1;
 			break;
 		case 2:
-			resources_needed[RESOURCE_MARBLE] = 12;
-			resources_needed[RESOURCE_TIMBER] = 24;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 02"), TERRAIN_BUILDING);
 			break;
 		case 3:
-			resources_needed[RESOURCE_MARBLE] = 12;
-			resources_needed[RESOURCE_TIMBER] = 24;
-			resources_needed[RESOURCE_NONE] = 1;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 03"), TERRAIN_BUILDING);
 			break;
 		case 4:
-			resources_needed[RESOURCE_MARBLE] = 8;
-			resources_needed[RESOURCE_TIMBER] = 20;
-			resources_needed[RESOURCE_CLAY] = 60;
-			resources_needed[RESOURCE_NONE] = 5;
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
@@ -454,9 +405,10 @@ void building_monument_initialize(building* b)
 	}
 	if (b->subtype.monument_phase == MONUMENT_FINISHED) {
 		b->monthly_levy = 100;
-	}
-	for (int resource = 0; resource < RESOURCE_MAX; resource++) {
-		b->data.monument.resources_needed[resource] = resources_needed[resource];
+	} else {
+		for (int resource = 0; resource < RESOURCE_MAX; resource++) {
+			b->data.monument.resources_needed[resource] = building_monument_resources_needed_for_monument_type(b->type,resource,b->subtype.monument_phase);
+		}
 	}
 }
 
@@ -533,7 +485,7 @@ int building_monument_get_neptune_gt(void) {
 	return 0;
 }
 
-static int building_monument_monument_phases(int building_type) {
+int building_monument_monument_phases(int building_type) {
 	switch (building_type) {
 	case BUILDING_PANTHEON:
 	case BUILDING_GRAND_TEMPLE_CERES:

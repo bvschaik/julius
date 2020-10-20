@@ -27,9 +27,14 @@ void city_trade_update(void)
     }
     if (city_data.trade.sea_trade_problem_duration > 0) {
         city_data.trade.sea_trade_problem_duration--;
-    } else {
+        if (building_monument_working(BUILDING_LIGHTHOUSE)) {
+            city_data.trade.sea_trade_problem_duration--;
+        }
+    } 
+    if (city_data.trade.sea_trade_problem_duration <= 0) {
         city_data.trade.sea_trade_problem_duration = 0;
     }
+
     empire_city_generate_trader();
 }
 

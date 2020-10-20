@@ -390,26 +390,39 @@ void window_building_draw_chariot_maker(building_info_context *c)
     draw_entertainment_school(c, "wavs/char_pit.wav", 78);
 }
 
-static void window_building_draw_monument_resources_needed(building_info_context* c)
-{
+static void window_building_draw_monument_resources_needed(building_info_context* c) {
     building* b = building_get(c->building_id);
-    if (b->subtype.monument_phase != MONUMENT_FINISHED)
-    {
-        int width = text_draw(translation_for(TR_CONSTRUCTION_PHASE), c->x_offset + 22, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
-        width += text_draw_number(b->subtype.monument_phase, '@', "/5", c->x_offset + 22 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
-        text_draw(translation_for(TR_BUILDING_GRAND_TEMPLE_PHASE_1 + b->subtype.monument_phase - 1), c->x_offset + 32 + width, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
-        text_draw(translation_for(TR_REQUIRED_RESOURCES), c->x_offset + 22, c->y_offset + 70, FONT_NORMAL_BLACK, 0);
-        for (int r = RESOURCE_TIMBER; r <= RESOURCE_MARBLE; r++) {
-            int image_id = image_group(GROUP_RESOURCE_ICONS);
-            image_draw(image_id + r, c->x_offset + 22, c->y_offset - 105 + r * 20);
-            text_draw_number(b->data.monument.resources_needed[r], '@', " ", c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
-            text_draw_number(b->data.monument.resources_needed[r], '@', " ", c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
-
-        }
-        int height = text_draw_multiline(translation_for(TR_BUILDING_GRAND_TEMPLE_PHASE_1_TEXT + b->subtype.monument_phase - 1), c->x_offset + 22, c->y_offset + 170, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
-        text_draw_multiline(translation_for(TR_BUILDING_GRAND_TEMPLE_CONSTRUCTION_DESC), c->x_offset + 22, c->y_offset + 180 + height, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+    for (int r = RESOURCE_TIMBER; r <= RESOURCE_MARBLE; r++) {
+        int image_id = image_group(GROUP_RESOURCE_ICONS);
+        image_draw(image_id + r, c->x_offset + 22, c->y_offset - 105 + r * 20);
+        int width = text_draw_number(b->data.monument.resources_needed[r], '@', "/", c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
+        text_draw_number(building_monument_resources_needed_for_monument_type(b->type,r,b->subtype.monument_phase), '@', " ", c->x_offset + 44 + width, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
 
     }
+}
+
+static void window_building_draw_monument_construction_process(building_info_context* c, int tr_phase_name, int tr_phase_name_text, int tr_construction_desc) {
+    building* b = building_get(c->building_id);
+    if (b->subtype.monument_phase != MONUMENT_FINISHED) {
+        int width = text_draw(translation_for(TR_CONSTRUCTION_PHASE), c->x_offset + 22, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
+        width += text_draw_number(b->subtype.monument_phase, '@', "/", c->x_offset + 22 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
+        width += text_draw_number(building_monument_monument_phases(b->type) - 1, '@', "", c->x_offset + 10 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
+        text_draw(translation_for(tr_phase_name + b->subtype.monument_phase - 1), c->x_offset + 32 + width, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
+        text_draw(translation_for(TR_REQUIRED_RESOURCES), c->x_offset + 22, c->y_offset + 70, FONT_NORMAL_BLACK, 0);
+        window_building_draw_monument_resources_needed(c);
+        int height = text_draw_multiline(translation_for(tr_phase_name_text + b->subtype.monument_phase - 1), c->x_offset + 22, c->y_offset + 170, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(translation_for(tr_construction_desc), c->x_offset + 22, c->y_offset + 180 + height, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+
+    }
+
+}
+
+static void window_building_draw_monument_temple_construction_process(building_info_context* c) {
+    window_building_draw_monument_construction_process(c, TR_BUILDING_GRAND_TEMPLE_PHASE_1, TR_BUILDING_GRAND_TEMPLE_PHASE_1_TEXT, TR_BUILDING_GRAND_TEMPLE_CONSTRUCTION_DESC);
+}
+
+static void window_building_draw_monument_lighthouse_construction_process(building_info_context* c) {
+    window_building_draw_monument_construction_process(c, TR_BUILDING_LIGHTHOUSE_PHASE_1, TR_BUILDING_LIGHTHOUSE_PHASE_1_TEXT, TR_BUILDING_LIGHTHOUSE_CONSTRUCTION_DESC);
 }
 
 void draw_grand_temple_venus_wine(building_info_context* c) {
@@ -456,6 +469,7 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
     } 
     else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        window_building_draw_monument_resources_needed(c);
     }
     if (b->data.monument.upgrades) {
         int module_name = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].header;
@@ -465,7 +479,6 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
         text_draw_centered(translation_for(name), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     }
     
-    window_building_draw_monument_resources_needed(c);
     if (b->subtype.monument_phase == MONUMENT_FINISHED) {
         int height = text_draw_multiline(translation_for(bonus_desc), c->x_offset + 22, c->y_offset + 56 + extra_y, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         if (b->data.monument.upgrades) {
@@ -546,12 +559,16 @@ void window_building_draw_lighthouse(building_info_context* c) {
     //window_building_play_sound(c, sound_file);
     if (b->subtype.monument_phase == MONUMENT_FINISHED) {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    }
-    else {
+        int height = text_draw_multiline(translation_for(TR_BUILDING_LIGHTHOUSE_BONUS_DESC), c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Lighthouse Banner"), c->x_offset + 32, c->y_offset + 166 + height);
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height, c->width_blocks - 2, 4);
+        window_building_draw_employment(c, 96 + height);
+
+    } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        window_building_draw_monument_lighthouse_construction_process(c);
     }
     text_draw_centered(translation_for(TR_BUILDING_LIGHTHOUSE), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_monument_resources_needed(c);
 }
 
 

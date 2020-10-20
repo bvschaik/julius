@@ -52,21 +52,19 @@ int building_monument_needs_resources(building* b);
 int building_monument_progress(building* b);
 void building_monument_recalculate_monuments(void);
 int building_monument_working(int type);
+int building_monument_resources_needed_for_monument_type(int building_type, int resource, int phase);
 int building_monument_resource_in_delivery(int monument_id, int resource_id);
 int building_monument_remove_delivery(int figure_id);
 int building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no);
 int building_monument_has_monument(int type);
 int building_monument_upgraded(int type);
 int building_monument_module_type(int type);
+int building_monument_monument_phases(int building_type);
 int building_monument_gt_module_is_active(int module);
 int building_monument_pantheon_module_is_active(int module);
 int building_monument_finish_monuments(void);
 int building_monument_phase(int phase);
 int building_monument_get_venus_gt(void);
 int building_monument_get_neptune_gt(void);
-
-
-
-
 
 #endif // BUILDING_MONUMENT_H 

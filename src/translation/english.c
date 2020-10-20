@@ -323,7 +323,17 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_CARAVAN, "Allow caravans to trade here"},
     {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS, "Allow trade ships to trade here"},
     {TR_CONFIG_HEADER_CITY_MANAGEMENT_CHANGES, "City Management"},
-    {TR_BUILDING_LIGHTHOUSE, "Lighthouse"}
+    {TR_BUILDING_LIGHTHOUSE, "Lighthouse"},
+    {TR_BUILDING_LIGHTHOUSE_PHASE_1, "PHASE 1 PH" },
+    {TR_BUILDING_LIGHTHOUSE_PHASE_2, "PHASE 2 PH" },
+    {TR_BUILDING_LIGHTHOUSE_PHASE_3, "PHASE 3 PH" },
+    {TR_BUILDING_LIGHTHOUSE_PHASE_4, "PHASE 4 PH" },
+    {TR_BUILDING_LIGHTHOUSE_PHASE_1_TEXT, "Lighthouse 1 TEXT PH" },
+    {TR_BUILDING_LIGHTHOUSE_PHASE_2_TEXT, "Lighthouse 2 TEXT PH" },
+    {TR_BUILDING_LIGHTHOUSE_PHASE_3_TEXT, "Lighthouse 3 TEXT PH" },
+    {TR_BUILDING_LIGHTHOUSE_PHASE_4_TEXT, "Lighthouse 4 TEXT PH" },
+    {TR_BUILDING_LIGHTHOUSE_CONSTRUCTION_DESC, "Constructing the lighthouse requires material stored in a warehouse, laborers from a work camp, and engineers from an engineer's guild." },
+    {TR_BUILDING_LIGHTHOUSE_BONUS_DESC, "Lighthouse increases confidence of the ships, making fishing ships willing to go faster and traders more willing to visit the city in a bad weather." },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
