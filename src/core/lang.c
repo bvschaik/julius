@@ -142,12 +142,14 @@ static void set_message_parameters(lang_message* m, int title, int text, int urg
 }
 
 
-void load_custom_messages(void) {
+void load_custom_messages(void)
+{
     int i = 320;
-    for (; i < MAX_MESSAGE_ENTRIES; i++) {
-        if (strlen(&data.message_entries[i].content.text) == 0) {
+    while (i < MAX_MESSAGE_ENTRIES) {
+        if (string_length(data.message_entries[i].content.text) == 0) {
             break;
         }
+        i++;
     }
 
     // soldiers starving

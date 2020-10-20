@@ -176,7 +176,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static const char *get_chosen_filename(void)
+static char *get_chosen_filename(void)
 {
     // Check if we should work with the selected file
     uint8_t selected_name[FILE_NAME_MAX];
@@ -201,7 +201,7 @@ static void button_ok_cancel(int is_ok, int param2)
         return;
     }
 
-    const char *filename = get_chosen_filename();
+    char *filename = get_chosen_filename();
 
     if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(filename, NOT_LOCALIZED)) {
         data.message_not_exist_start_time = time_get_millis();

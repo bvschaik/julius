@@ -6,8 +6,6 @@
 #include "game/settings.h"
 #include "sound/device.h"
 
-#include <string.h>
-
 enum {
     TRACK_NONE = 0,
     TRACK_CITY_1 = 1,
@@ -67,14 +65,6 @@ static void play_track(int track)
     if (!mp3_track || !sound_device_play_music(mp3_track, volume)) {
         sound_device_play_music(dir_get_file(tracks[track], NOT_LOCALIZED), volume);
     }
-    data.current_track = track;
-}
-
-static void play_mp3_file(const char* track)
-{
-    sound_device_stop_music();
-    int volume = setting_sound(SOUND_MUSIC)->volume;
-    sound_device_play_music(dir_get_file(track, NOT_LOCALIZED), volume);
     data.current_track = track;
 }
 
