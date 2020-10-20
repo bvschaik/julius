@@ -94,20 +94,23 @@ static void draw_employment_details(building_info_context *c, building *b, int y
         window_building_draw_levy(building_get_levy(b), c->x_offset, y_offset);
     }
 
-    if (text_id) {
-        int width = lang_text_draw_amount(8, 12, b->num_workers,
-            c->x_offset + 60, y_offset + 10, FONT_SMALL_BLACK);
-        width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
-            c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
-        lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
-        lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_SMALL_BLACK);
-    } else {
-        int width = lang_text_draw_amount(8, 12, b->num_workers,
-            c->x_offset + 60, y_offset + 16, FONT_SMALL_BLACK);
-        width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
-            c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
-        lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
-    }
+	int laborers_needed = model_get_building(b->type)->laborers;
+	if (laborers_needed) {
+		if (text_id) {
+			int width = lang_text_draw_amount(8, 12, b->num_workers,
+				c->x_offset + 60, y_offset + 10, FONT_SMALL_BLACK);
+			width += text_draw_number(laborers_needed, '(', "",
+				c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
+			lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
+			lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_SMALL_BLACK);
+		} else {
+			int width = lang_text_draw_amount(8, 12, b->num_workers,
+				c->x_offset + 60, y_offset + 16, FONT_SMALL_BLACK);
+			width += text_draw_number(laborers_needed, '(', "",
+				c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
+			lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
+		}
+	}
 }
 
 void window_building_draw_employment(building_info_context *c, int y_offset)
