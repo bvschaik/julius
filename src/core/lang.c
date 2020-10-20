@@ -146,7 +146,7 @@ void load_custom_messages(void)
 {
     int i = 320;
     while (i < MAX_MESSAGE_ENTRIES) {
-        if (string_length(data.message_entries[i].content.text) == 0) {
+        if (!data.message_entries[i].content.text) {
             break;
         }
         i++;
