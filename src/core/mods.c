@@ -24,7 +24,6 @@
 #define XML_MAX_IMAGE_INDEXES 256
 
 #define MAX_LAYERS 5
-#define MAX_GROUPS 100
 
 #define IMAGE_PRELOAD_MAX_SIZE 65535
 
@@ -118,7 +117,7 @@ static struct {
         int finished;
         modded_image *current_image;
     } xml;
-    image_groups groups[MAX_GROUPS];
+    image_groups *groups;
     int total_groups;
     int total_images;
     int loaded;
@@ -139,6 +138,7 @@ static void load_dummy_layer(layer *l)
     l->data = &DUMMY_IMAGE_DATA;
     l->width = 1;
     l->height = 1;
+    l->is_modded_image_reference = 1;
 }
 
 static void load_layer(layer *l)
@@ -231,17 +231,17 @@ static int load_modded_image(modded_image *img)
         load_layer(&img->layers[i]);
     }
 
-    // Special cases for images which are simple aliases to another mod image
+    // Special cases for images which are a single layer
     if (img->num_layers == 1) {
         layer *l = &img->layers[0];
-        if (l->is_modded_image_reference &&
-            img->img.width == l->width && img->img.height == l->height &&
+        if (img->img.width == l->width && img->img.height == l->height &&
             l->x_offset == 0 && l->y_offset == 0 &&
             l->invert == INVERT_NONE && l->rotate == ROTATE_NONE) {
             img->data = l->data;
+            img->is_clone = l->is_modded_image_reference;
+            l->is_modded_image_reference = 1;
             unload_layer(l);
             img->loaded = 1;
-            img->is_clone = 1;
             return 1;
         }
     }
@@ -786,6 +786,11 @@ void mods_init(void)
     setup_mods_folder_string();
 
     const dir_listing *xml_files = dir_find_files_with_extension(MODS_FOLDER, "xml");
+    data.groups = malloc(sizeof(image_groups) * xml_files->num_files);
+
+    if (!data.groups) {
+        log_error("Not enough memory to initialize mods. The game will probably crash.", 0, 0);
+    }
 
     for (int i = 0; i < xml_files->num_files; ++i) {
         process_mod_file(xml_files->files[i]);
