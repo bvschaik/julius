@@ -428,7 +428,7 @@ void city_resource_consume_food(void)
 
             city_data.mess_hall.total_food = total_food_in_mess_hall;
 
-            if (total_food_in_mess_hall) {
+            if (food_required) {
                 for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
                     proportionate_amount = ((double)food_required * (double)b->data.market.inventory[i]) / (double)total_food_in_mess_hall;
                     if (proportionate_amount > 0) {

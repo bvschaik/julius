@@ -417,7 +417,7 @@ static void init(int grid_offset)
         default: context.height_blocks = 22; break;
     }
     if (screen_height() <= 600) {
-        context.height_blocks = calc_bound(context.height_blocks, 0, 23);
+        context.height_blocks = calc_bound(context.height_blocks, 0, 26);
     }
     // dialog placement
     int s_width = screen_width();

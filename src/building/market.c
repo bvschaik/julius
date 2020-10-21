@@ -87,6 +87,10 @@ int building_venus_temple_get_wine_destination(building* temple, building* grand
     return 0;  
 }
 
+static int food_threshhold(building *b) {
+    return b->data.market.is_mess_hall ? 1200 : 600;
+}
+
 int building_market_get_storage_destination(building *market)
 {
     struct resource_data resources[INVENTORY_MAX];
@@ -183,7 +187,7 @@ int building_market_get_storage_destination(building *market)
             default: return 0;
         }
         if (resources[inventory].num_buildings &&
-            market->data.market.inventory[inventory] < 600 &&
+            market->data.market.inventory[inventory] < food_threshhold(market) &&
             is_good_accepted(inventory, market))
         {
             market->data.market.fetch_inventory_id = inventory;
@@ -275,22 +279,22 @@ int building_market_get_storage_destination(building *market)
     if (fetch_inventory == -1) {
         // all items well stocked: pick food below threshold
         if (resources[INVENTORY_WHEAT].num_buildings &&
-            market->data.market.inventory[INVENTORY_WHEAT] < 600
+            market->data.market.inventory[INVENTORY_WHEAT] < food_threshhold(market)
 	    && is_good_accepted(INVENTORY_WHEAT, market)) {
             fetch_inventory = INVENTORY_WHEAT;
         }
         if (resources[INVENTORY_VEGETABLES].num_buildings &&
-            market->data.market.inventory[INVENTORY_VEGETABLES] < 600
+            market->data.market.inventory[INVENTORY_VEGETABLES] < food_threshhold(market)
 	    && is_good_accepted(INVENTORY_VEGETABLES, market)) {
             fetch_inventory = INVENTORY_VEGETABLES;
         }
         if (resources[INVENTORY_FRUIT].num_buildings &&
-            market->data.market.inventory[INVENTORY_FRUIT] < 600
+            market->data.market.inventory[INVENTORY_FRUIT] < food_threshhold(market)
 	    && is_good_accepted(INVENTORY_FRUIT, market)) {
             fetch_inventory = INVENTORY_FRUIT;
         }
         if (resources[INVENTORY_MEAT].num_buildings &&
-            market->data.market.inventory[INVENTORY_MEAT] < 600
+            market->data.market.inventory[INVENTORY_MEAT] < food_threshhold(market)
 	    && is_good_accepted(INVENTORY_MEAT, market)) {
             fetch_inventory = INVENTORY_MEAT;
         }
