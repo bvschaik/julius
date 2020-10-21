@@ -24,7 +24,6 @@
 #define XML_MAX_IMAGE_INDEXES 256
 
 #define MAX_LAYERS 5
-#define MAX_GROUPS 100
 
 #define IMAGE_PRELOAD_MAX_SIZE 65535
 
@@ -118,7 +117,7 @@ static struct {
         int finished;
         modded_image *current_image;
     } xml;
-    image_groups groups[MAX_GROUPS];
+    image_groups *groups;
     int total_groups;
     int total_images;
     int loaded;
@@ -786,6 +785,11 @@ void mods_init(void)
     setup_mods_folder_string();
 
     const dir_listing *xml_files = dir_find_files_with_extension(MODS_FOLDER, "xml");
+    data.groups = malloc(sizeof(image_groups) * xml_files->num_files);
+
+    if (!data.groups) {
+        log_error("Not enough memory to initialize mods. The game will probably crash.", 0, 0);
+    }
 
     for (int i = 0; i < xml_files->num_files; ++i) {
         process_mod_file(xml_files->files[i]);
