@@ -105,7 +105,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.migration.emigrated_today);
     buffer_write_i32(main, city_data.migration.refused_immigrants_today);
     buffer_write_i32(main, city_data.migration.percentage);
-    buffer_write_i32(main, city_data.unused.unused_27d0);
+    buffer_write_i32(main, city_data.culture.population_with_venus_access);
     buffer_write_i32(main, city_data.migration.immigration_duration);
     buffer_write_i32(main, city_data.migration.emigration_duration);
     buffer_write_i32(main, city_data.migration.newcomers);
@@ -591,7 +591,7 @@ static void load_main_data(buffer *main)
     city_data.migration.emigrated_today = buffer_read_i32(main);
     city_data.migration.refused_immigrants_today = buffer_read_i32(main);
     city_data.migration.percentage = buffer_read_i32(main);
-    city_data.unused.unused_27d0 = buffer_read_i32(main);
+    city_data.culture.population_with_venus_access = buffer_read_i32(main);
     city_data.migration.immigration_duration = buffer_read_i32(main);
     city_data.migration.emigration_duration = buffer_read_i32(main);
     city_data.migration.newcomers = buffer_read_i32(main);

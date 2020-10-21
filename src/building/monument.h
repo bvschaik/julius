@@ -23,6 +23,7 @@ typedef struct {
 } monument_delivery;
 
 #define MODULES_PER_TEMPLE 2
+#define MARS_OFFERING_FREQUENCY 16
 
 typedef enum {
 	CERES_MODULE_1_REDUCE_FOOD,

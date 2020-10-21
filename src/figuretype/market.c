@@ -12,16 +12,23 @@
 #include "figure/route.h"
 #include "game/resource.h"
 
-#define MAX_FOOD_STOCKED_MARKET 800
-#define MAX_FOOD_STOCKED_MESS_HALL 1200
+
 
 static int create_delivery_boy(int leader_id, figure *f, int type)
 {
     figure *boy = figure_create(type, f->x, f->y, 0);
     boy->leading_figure_id = leader_id;
     boy->collecting_item_id = f->collecting_item_id;
-    boy->building_id = f->building_id;
+    if (f->action_state == FIGURE_ACTION_214_DESTINATION_MARS_PRIEST_CREATED) { // deliver to destination instead of origin
+        boy->building_id = f->destination_building_id;
+    } else {
+        boy->building_id = f->building_id;
+    }
     return boy->id;
+}
+
+int figure_market_create_delivery_boy(int leader_id, figure* f, int type) {
+    return create_delivery_boy(leader_id, f, type);
 }
 
 static int take_food_from_granary(figure *f, int market_id, int granary_id)
@@ -86,14 +93,6 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
 // Venus Grand Temple wine
 static int take_resource_from_generic_building(figure* f, int building_id)
 {
-    int resource;
-    switch (f->collecting_item_id) {
-    case INVENTORY_POTTERY: resource = RESOURCE_POTTERY; break;
-    case INVENTORY_FURNITURE: resource = RESOURCE_FURNITURE; break;
-    case INVENTORY_OIL: resource = RESOURCE_OIL; break;
-    case INVENTORY_WINE: resource = RESOURCE_WINE; break;
-    default: return 0;
-    }
     building* b = building_get(building_id);
     int num_loads;
     int stored = b->loads_stored;
@@ -223,7 +222,7 @@ void figure_delivery_boy_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     } else {
         if (leader->state == FIGURE_STATE_ALIVE) {
-            if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY || leader->type == FIGURE_MESS_HALL_BUYER || leader->type == FIGURE_MESS_HALL_COLLECTOR || leader->type == FIGURE_PRIEST_BUYER ) {
+            if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY || leader->type == FIGURE_MESS_HALL_BUYER || leader->type == FIGURE_MESS_HALL_COLLECTOR || leader->type == FIGURE_PRIEST_BUYER || leader->type == FIGURE_PRIEST) {
                 figure_movement_follow_ticks(f, 1);
             } else {
                 f->state = FIGURE_STATE_DEAD;

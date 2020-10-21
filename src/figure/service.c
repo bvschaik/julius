@@ -238,6 +238,23 @@ static void distribute_good(building *b, building *market, int stock_wanted, int
     }
 }
 
+static void collect_offerings_from_house(building* b, building* market) {
+    // offerings are generated, not removed from house stores    
+    if (b->days_since_offering >= MARS_OFFERING_FREQUENCY) {
+        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+            if (b->data.house.inventory[i]) {
+                if (b->house_size == 1 && b->house_is_merged) {
+                    market->data.market.inventory[i] += 2;
+                }
+                else {
+                    market->data.market.inventory[i] += b->house_size;
+                }
+            }
+        }
+        b->days_since_offering = 0;
+    }
+}
+
 static void distribute_market_resources(building *b, building *market)
 {
     int level = b->subtype.house_level;
@@ -315,6 +332,28 @@ static int provide_market_goods(int market_building_id, int x, int y)
     return serviced;
 }
 
+static int collect_offerings(int market_building_id, int x, int y)
+{
+    int serviced = 0;
+    building* market = building_get(market_building_id);
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            int building_id = map_building_at(grid_offset);
+            if (building_id) {
+                building* b = building_get(building_id);
+                if (b->house_size && b->house_population > 0) {
+                    collect_offerings_from_house(b, market);
+                    serviced++;
+                }
+            }
+        }
+    }
+    return serviced;
+}
+
 static building *get_entertainment_building(const figure *f)
 {
     if (f->action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
@@ -378,10 +417,12 @@ int figure_service_provide_coverage(figure *f)
         case FIGURE_PRIEST:
             switch (building_get(f->building_id)->type) {
                 case BUILDING_SMALL_TEMPLE_CERES:
-                case BUILDING_LARGE_TEMPLE_CERES:
+                case BUILDING_LARGE_TEMPLE_CERES:                
+                    houses_serviced = provide_culture(x, y, religion_coverage_ceres);
+                    provide_market_goods(f->building_id, x, y);
+                    break;
                 case BUILDING_GRAND_TEMPLE_CERES:
                     houses_serviced = provide_culture(x, y, religion_coverage_ceres);
-                    houses_serviced = provide_market_goods(f->building_id, x, y);
                     break;
                 case BUILDING_SMALL_TEMPLE_NEPTUNE:
                 case BUILDING_LARGE_TEMPLE_NEPTUNE:
@@ -394,22 +435,29 @@ int figure_service_provide_coverage(figure *f)
                     houses_serviced = provide_culture(x, y, religion_coverage_mercury);
                     break;
                 case BUILDING_SMALL_TEMPLE_MARS:
-                case BUILDING_LARGE_TEMPLE_MARS:
+                case BUILDING_LARGE_TEMPLE_MARS:                    
+                    if (building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
+                        collect_offerings(f->building_id, x, y);
+                    }
+                    houses_serviced = provide_culture(x, y, religion_coverage_mars);
+                    break;
                 case BUILDING_GRAND_TEMPLE_MARS:
                     houses_serviced = provide_culture(x, y, religion_coverage_mars);
                     break;
                 case BUILDING_SMALL_TEMPLE_VENUS:
                 case BUILDING_LARGE_TEMPLE_VENUS:
-                case BUILDING_GRAND_TEMPLE_VENUS:
                     houses_serviced = provide_culture(x, y, religion_coverage_venus);
-                    houses_serviced = provide_market_goods(f->building_id, x, y);
+                    provide_market_goods(f->building_id, x, y);
+                    break;
+                case BUILDING_GRAND_TEMPLE_VENUS:
+                    houses_serviced = provide_culture(x, y, religion_coverage_venus);                    
                     break;
                 case BUILDING_PANTHEON:
                     houses_serviced = provide_culture(x, y, religion_coverage_ceres);
-                    houses_serviced = provide_culture(x, y, religion_coverage_neptune);
-                    houses_serviced = provide_culture(x, y, religion_coverage_mercury);
-                    houses_serviced = provide_culture(x, y, religion_coverage_mars);
-                    houses_serviced = provide_culture(x, y, religion_coverage_venus);
+                    provide_culture(x, y, religion_coverage_neptune);
+                    provide_culture(x, y, religion_coverage_mercury);
+                    provide_culture(x, y, religion_coverage_mars);
+                    provide_culture(x, y, religion_coverage_venus);
                     break;
                 default:
                     break;

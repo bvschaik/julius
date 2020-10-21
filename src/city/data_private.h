@@ -266,6 +266,7 @@ extern struct city_data_t {
         int32_t average_education;
         int32_t average_health;
         int32_t religion_coverage;
+        int32_t population_with_venus_access;
     } culture;
     struct {
         god_status gods[5];

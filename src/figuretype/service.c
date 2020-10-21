@@ -8,6 +8,7 @@
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
+#include "figuretype/market.h"
 #include "map/building.h"
 #include "map/road_access.h"
 
@@ -82,12 +83,60 @@ void figure_destination_priest_action(figure* f)
         f->destination_x = destination->road_access_x;
         f->destination_y = destination->road_access_y;
         f->action_state = FIGURE_ACTION_213_PRIEST_GOING_TO_PANTHEON;
+
         break;
     case FIGURE_ACTION_214_DESTINATION_MARS_PRIEST_CREATED:
         f->destination_x = destination->road_access_x;
         f->destination_y = destination->road_access_y;
+        int market_units = b->data.market.inventory[f->collecting_item_id];
+        int num_loads;
+        int max_units = MAX_FOOD_STOCKED_MESS_HALL - market_units;
+
+        if (market_units >= 800) {
+            num_loads = 8;
+        }
+        else if (market_units >= 700) {
+            num_loads = 7;
+        }
+        else if (market_units >= 600) {
+            num_loads = 6;
+        }
+        else if (market_units >= 500) {
+            num_loads = 5;
+        }
+        else if (market_units >= 400) {
+            num_loads = 4;
+        }
+        else if (market_units >= 300) {
+            num_loads = 3;
+        }
+        else if (market_units >= 200) {
+            num_loads = 2;
+        }
+        else if (market_units >= 100) {
+            num_loads = 1;
+        }
+        else {
+            num_loads = 0;
+        }
+        if (num_loads > max_units / 100) {
+            num_loads = max_units / 100;
+        }
+        if (num_loads <= 0) {
+            return 0;
+        }
+
+        b->data.market.inventory[f->collecting_item_id]-= (100 * num_loads);
+
+        // create delivery boys
+        int previous_boy = f->id;
+        for (int i = 0; i < num_loads; i++) {
+            previous_boy = figure_market_create_delivery_boy(previous_boy, f, FIGURE_DELIVERY_BOY);
+        }
+
         f->action_state = FIGURE_ACTION_215_PRIEST_GOING_TO_MESS_HALL;
         break;
+
     case FIGURE_ACTION_213_PRIEST_GOING_TO_PANTHEON:
         figure_movement_move_ticks(f, 1);
         if (f->direction == DIR_FIGURE_AT_DESTINATION) {
@@ -103,8 +152,6 @@ void figure_destination_priest_action(figure* f)
     case FIGURE_ACTION_215_PRIEST_GOING_TO_MESS_HALL:
         figure_movement_move_ticks(f, 1);
         if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-            // Mars Module 1 Bonus
-            building_get(f->destination_building_id)->data.market.inventory[3] += (b->houses_covered / 20);
             f->state = FIGURE_STATE_DEAD;
         }
         else if (f->direction == DIR_FIGURE_REROUTE) {

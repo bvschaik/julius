@@ -158,6 +158,30 @@ static void draw_temple_info(building_info_context* c, int image_offset) {
         return;
     }
 
+    if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
+        building* b = building_get(c->building_id);
+
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WHEAT, c->x_offset + 112, c->y_offset + 60);
+        text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ", c->x_offset + 144, c->y_offset + 66, FONT_NORMAL_BLACK);
+
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_VEGETABLES, c->x_offset + 202, c->y_offset + 60);
+        text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ", c->x_offset + 234, c->y_offset + 66, FONT_NORMAL_BLACK);
+
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_FRUIT, c->x_offset + 292, c->y_offset + 60);
+        text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",c->x_offset + 324, c->y_offset + 66, FONT_NORMAL_BLACK);
+
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT + resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
+            c->x_offset + 372, c->y_offset + 60);
+        text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ", c->x_offset + 404, c->y_offset + 66, FONT_NORMAL_BLACK);
+
+        text_draw_multiline(translation_for(TR_BUILDING_MARS_TEMPLE_MODULE_DESC), c->x_offset + 112, c->y_offset + 90, 
+            16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
+        image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
+            c->x_offset + 16, c->y_offset + 16 * c->height_blocks - 208);
+
+        return;
+    }
+
     image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
         c->x_offset + 180, c->y_offset + 16 * c->height_blocks - 208);
 

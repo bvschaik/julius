@@ -150,7 +150,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_i16(buf, b->immigrant_figure_id);
     buffer_write_i16(buf, b->figure_id4);
     buffer_write_u8(buf, b->figure_spawn_delay);
-    buffer_write_u8(buf, 0);
+    buffer_write_u8(buf, b->days_since_offering);
     buffer_write_u8(buf, b->figure_roam_direction);
     buffer_write_u8(buf, b->has_water_access);
     buffer_write_u8(buf, 0);
@@ -306,7 +306,7 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->immigrant_figure_id = buffer_read_i16(buf);
     b->figure_id4 = buffer_read_i16(buf);
     b->figure_spawn_delay = buffer_read_u8(buf);
-    buffer_skip(buf, 1);
+    b->days_since_offering = buffer_read_u8(buf);
     b->figure_roam_direction = buffer_read_u8(buf);
     b->has_water_access = buffer_read_u8(buf);
     buffer_skip(buf, 1);

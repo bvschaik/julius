@@ -47,6 +47,7 @@ typedef struct {
     short immigrant_figure_id;
     short figure_id4; // tower ballista or burning ruin prefect
     unsigned char figure_spawn_delay;
+    unsigned char days_since_offering;
     unsigned char figure_roam_direction;
     unsigned char has_water_access;
     short prev_part_building_id;

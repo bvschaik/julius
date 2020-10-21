@@ -301,3 +301,16 @@ int building_market_get_storage_destination(building *market)
     market->data.market.fetch_inventory_id = fetch_inventory;
     return resources[fetch_inventory].building_id;
 }
+
+int building_mars_temple_food_to_deliver(building *b) {
+    int most_stocked_food_id = -1;
+    int next;
+    for (int i = 0; i < INVENTORY_MAX_FOOD; i++) {
+        next = b->data.market.inventory[i];
+        if (next > most_stocked_food_id && next >= 100) {
+            most_stocked_food_id = i;
+        }
+    }
+
+    return most_stocked_food_id;
+}

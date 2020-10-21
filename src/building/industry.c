@@ -1,6 +1,7 @@
 #include "industry.h"
 
 #include "building/monument.h"
+#include "city/data_private.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/image.h"
@@ -47,7 +48,7 @@ static void update_farm_image(const building *b)
 static void building_other_update_production(building* b) {
     // For monuments or other non-industry subtypes that generate goods
     if (building_monument_is_monument(b)) {
-        b->data.monument.progress += b->num_workers;
+        b->data.monument.progress += (10 + (city_data.culture.population_with_venus_access / 200));
         if (b->data.monument.progress > MAX_PROGRESS_WORKSHOP) {
             if (b->loads_stored < MAX_STORAGE) {
                 b->loads_stored += 1;

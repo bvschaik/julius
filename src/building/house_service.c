@@ -38,6 +38,9 @@ void house_service_decay_culture(void)
         decay(&b->data.house.temple_mercury);
         decay(&b->data.house.temple_mars);
         decay(&b->data.house.temple_venus);
+        if (b->days_since_offering < 125) {
+            ++b->days_since_offering;
+        }
     }
 }
 
