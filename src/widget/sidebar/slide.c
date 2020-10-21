@@ -25,9 +25,10 @@ static void draw_sliding_foreground(void)
 {
     window_request_refresh();
     data.position += speed_get_delta(&data.slide_speed);
+    int is_finished = 0;
     if (data.position >= SIDEBAR_EXPANDED_WIDTH) {
         data.position = SIDEBAR_EXPANDED_WIDTH;
-        data.finished_callback();
+        is_finished = 1;
     }
 
     int x_offset = sidebar_common_get_x_offset_expanded();
@@ -46,6 +47,10 @@ static void draw_sliding_foreground(void)
     data.front_sidebar_draw(x_offset);
 
     graphics_reset_clip_rectangle();
+
+    if (is_finished) {
+        data.finished_callback();
+    }
 }
 
 void sidebar_slide(slide_direction direction, back_sidebar_draw_function back_sidebar_callback,
