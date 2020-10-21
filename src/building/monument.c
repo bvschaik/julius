@@ -421,6 +421,7 @@ int building_monument_is_monument(const building* b)
 		case BUILDING_GRAND_TEMPLE_MARS:
 		case BUILDING_GRAND_TEMPLE_VENUS:
 		case BUILDING_PANTHEON:
+		case BUILDING_MENU_GRAND_TEMPLES:
 		case BUILDING_LIGHTHOUSE:
 			return 1;
 		break;

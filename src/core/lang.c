@@ -263,6 +263,9 @@ const uint8_t *lang_get_string(int group, int index)
         }
     }
 
+    if (group == 67 && index == 48) {
+        return translation_for(TR_EDITOR_ALLOWED_BUILDINGS_MONUMENTS);
+    }
     
     // Building strings
     if (group == 28 || group == 41) {

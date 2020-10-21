@@ -80,7 +80,7 @@ static void draw_foreground(void)
 
     lang_text_draw(44, 47, 26, 42, FONT_LARGE_BLACK);
     lang_text_draw_centered(13, 3, 16, 424, 608, FONT_NORMAL_BLACK);
-    for (int i = 1; i <= 47; i++) {
+    for (int i = 1; i <= 48; i++) {
         int x, y;
         if (i <= 16) {
             x = 25;
@@ -105,7 +105,7 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 47, &focus_button_id)) {
+    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 48, &focus_button_id)) {
         return;
     }
     if (input_go_back_requested(m, h)) {

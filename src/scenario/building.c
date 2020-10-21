@@ -1,5 +1,6 @@
 #include "building.h"
 
+#include "building/monument.h"
 #include "building/type.h"
 #include "scenario/data.h"
 
@@ -26,6 +27,8 @@ int scenario_building_allowed(int building_type)
             return scenario.allowed_buildings[ALLOWED_BUILDING_SMALL_TEMPLES];
         case BUILDING_MENU_LARGE_TEMPLES:
             return scenario.allowed_buildings[ALLOWED_BUILDING_LARGE_TEMPLES];
+        case BUILDING_MENU_GRAND_TEMPLES:
+            return scenario.allowed_buildings[ALLOWED_BUILDING_LARGE_TEMPLES] && scenario.allowed_buildings[ALLOWED_BUILDING_MONUMENTS];
         case BUILDING_ORACLE:
             return scenario.allowed_buildings[ALLOWED_BUILDING_ORACLE];
         case BUILDING_SCHOOL:
@@ -75,6 +78,8 @@ int scenario_building_allowed(int building_type)
         case BUILDING_SHIPYARD:
         case BUILDING_WHARF:
             return scenario.allowed_buildings[ALLOWED_BUILDING_WHARF];
+        case BUILDING_LIGHTHOUSE:
+            return scenario.allowed_buildings[ALLOWED_BUILDING_WHARF] && scenario.allowed_buildings[ALLOWED_BUILDING_MONUMENTS];
         case BUILDING_DOCK:
             return scenario.allowed_buildings[ALLOWED_BUILDING_DOCK];
         case BUILDING_WALL:
@@ -86,13 +91,12 @@ int scenario_building_allowed(int building_type)
         case BUILDING_PREFECTURE:
             return scenario.allowed_buildings[ALLOWED_BUILDING_PREFECTURE];
         case BUILDING_FORT:
+        case BUILDING_MESS_HALL:
             return scenario.allowed_buildings[ALLOWED_BUILDING_FORT];
         case BUILDING_MILITARY_ACADEMY:
             return scenario.allowed_buildings[ALLOWED_BUILDING_MILITARY_ACADEMY];
         case BUILDING_BARRACKS:
             return scenario.allowed_buildings[ALLOWED_BUILDING_BARRACKS];
-        case BUILDING_DISTRIBUTION_CENTER_UNUSED:
-            return scenario.allowed_buildings[ALLOWED_BUILDING_DISTRIBUTION_CENTER];
         case BUILDING_MENU_FARMS:
             return scenario.allowed_buildings[ALLOWED_BUILDING_FARMS];
         case BUILDING_MENU_RAW_MATERIALS:
