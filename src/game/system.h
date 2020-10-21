@@ -38,6 +38,12 @@ int system_is_fullscreen_only(void);
 void system_set_fullscreen(int fullscreen);
 
 /**
+ * (Re-)Initialize cursors with the specified scale percentage
+ * @param scale_percentage Scaling percentage to use
+ */
+void system_init_cursors(int scale_percentage);
+
+/**
  * Set cursor to the specified cursor in @link input/cursor.h @endlink
  * @param cursor_id Cursor to set
  */

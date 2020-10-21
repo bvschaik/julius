@@ -11,7 +11,6 @@
 #include "input/mouse.h"
 #include "input/touch.h"
 #include "platform/arguments.h"
-#include "platform/cursor.h"
 #include "platform/file_manager.h"
 #include "platform/keyboard_input.h"
 #include "platform/platform.h"
@@ -508,7 +507,7 @@ static void setup(const julius_args *args)
         exit(-2);
     }
     // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
-    platform_init_cursors(args->cursor_scale_percentage);
+    system_init_cursors(args->cursor_scale_percentage);
 
     time_set_millis(SDL_GetTicks());
 
