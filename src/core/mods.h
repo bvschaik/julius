@@ -3,8 +3,6 @@
 
 #include "core/image.h"
 
-#define MAX_MODDED_IMAGES 1000
-
 void mods_init(void);
 
 int mods_get_group_id(const char *mod_author, const char *mod_name);

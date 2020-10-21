@@ -36,7 +36,7 @@ static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][X
 static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG_MAX_LENGTH] = {
     { { "author", "name" } }, // mod
     { { "id", "src", "width", "height", "group", "image", "index" } }, // image
-    { { "src", "group", "image", "x", "y" }, // layer
+    { { "src", "group", "image", "x", "y", "invert", "rotate" }, // layer
     { "frames", "speed", "reversible", "x", "y" } } // animation
 };
 static color_t DUMMY_IMAGE_DATA = COLOR_BLACK;
@@ -58,6 +58,20 @@ static void (*xml_end_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH
     { xml_end_mod_element }, { xml_end_image_element }, { xml_end_layer_element, xml_end_animation_element }
 };
 
+typedef enum {
+    INVERT_NONE = 0,
+    INVERT_HORIZONTAL = 1,
+    INVERT_VERTICAL = 2,
+    INVERT_BOTH = 3
+} invert_type;
+
+typedef enum {
+    ROTATE_NONE = 0,
+    ROTATE_90_DEGREES = 1,
+    ROTATE_180_DEGREES = 2,
+    ROTATE_270_DEGREES = 3
+} rotate_type;
+
 typedef struct {
     char *modded_image_path;
     int original_image_id;
@@ -65,11 +79,13 @@ typedef struct {
     int y_offset;
     int width;
     int height;
+    invert_type invert;
+    rotate_type rotate;
     int is_modded_image_reference;
     color_t *data;
 } layer;
 
-typedef struct {
+typedef struct modded_image {
     int active;
     int loaded;
     char id[XML_STRING_MAX_LENGTH];
@@ -77,7 +93,9 @@ typedef struct {
     int num_layers;
     image img;
     color_t *data;
+    int is_clone;
     int index;
+    struct modded_image *next;
 } modded_image;
 
 typedef struct {
@@ -85,7 +103,7 @@ typedef struct {
     char name[XML_STRING_MAX_LENGTH];
     int id;
     int images;
-    int first_image_id;
+    modded_image *first_image;
 } image_groups;
 
 static struct {
@@ -101,19 +119,19 @@ static struct {
         modded_image *current_image;
     } xml;
     image_groups groups[MAX_GROUPS];
-    modded_image images[MAX_MODDED_IMAGES];
     int total_groups;
     int total_images;
     int loaded;
-    int roadblock_image;
+    modded_image *roadblock_image;
 } data;
 
 static void get_full_image_path(char *full_path, const char *file_name)
 {
     strncpy(full_path, data.xml.image_base_path, data.xml.image_base_path_position);
     size_t file_name_size = strlen(file_name);
-    strncpy(full_path + data.xml.image_base_path_position, file_name, file_name_size);
-    strncpy(full_path + data.xml.image_base_path_position + file_name_size, ".png", 5);
+    strncpy(full_path + data.xml.image_base_path_position, file_name, FILE_NAME_MAX - data.xml.image_base_path_position);
+    strncpy(full_path + data.xml.image_base_path_position + file_name_size, ".png",
+        FILE_NAME_MAX - data.xml.image_base_path_position - file_name_size);
 }
 
 static void load_dummy_layer(layer *l)
@@ -125,6 +143,18 @@ static void load_dummy_layer(layer *l)
 
 static void load_layer(layer *l)
 {
+    const image *layer_image = image_get(l->original_image_id);
+    if (layer_image->draw.type == IMAGE_TYPE_MOD) {
+        // Ugly const removal. The only other way would be to memcpy the image data.
+        // That's a waste of ram, and we're not going to change l->data anyway
+        l->data = (color_t *) image_data(l->original_image_id);
+        l->is_modded_image_reference = 1;
+        if (!l->data) {
+            log_error("Problem loading layer from image id", 0, l->original_image_id);
+            load_dummy_layer(l);
+        }
+        return;
+    }
     int size = l->width * l->height * sizeof(color_t);
     l->data = malloc(size);
     if (!l->data) {
@@ -137,18 +167,6 @@ static void load_layer(layer *l)
         if (!png_read(l->modded_image_path, (uint8_t *) l->data)) {
             free(l->data);
             log_error("Problem loading layer from file", l->modded_image_path, 0);
-            load_dummy_layer(l);
-        }
-        return;
-    }
-    const image *layer_image = image_get(l->original_image_id);
-    if (layer_image->draw.type == IMAGE_TYPE_MOD) {
-        // Ugly const removal. The only other way would be to memcpy the image data.
-        // That's a waste of ram, and we're not going to change l->data anyway
-        l->data = (color_t *) image_data(l->original_image_id);
-        l->is_modded_image_reference = 1;
-        if (!l->data) {
-            log_error("Problem loading layer from image id", 0, l->original_image_id);
             load_dummy_layer(l);
         }
         return;
@@ -171,7 +189,6 @@ static void unload_layer(layer *l)
 {
     free(l->modded_image_path);
     l->modded_image_path = 0;
-    const image *layer_image = image_get(l->original_image_id);
     if (!l->is_modded_image_reference) {
         free(l->data);
     }
@@ -182,6 +199,22 @@ static color_t layer_get_color_for_image_position(layer *l, int x, int y)
 {
     x -= l->x_offset;
     y -= l->y_offset;
+
+    if (l->rotate == ROTATE_90_DEGREES || l->rotate == ROTATE_270_DEGREES) {
+        int temp = x;
+        x = y;
+        y = temp;
+    }
+    if (l->rotate == ROTATE_90_DEGREES || l->rotate == ROTATE_180_DEGREES) {
+        x = l->width - x;
+        y = l->height - y;
+    }
+    if (l->invert & INVERT_HORIZONTAL) {
+        x = l->width - x;
+    }
+    if (l->invert & INVERT_VERTICAL) {
+        y = l->height - y;
+    }
     if (x < 0 || x >= l->width || y < 0 || y >= l->height) {
         return ALPHA_TRANSPARENT;
     }
@@ -199,14 +232,16 @@ static int load_modded_image(modded_image *img)
     }
 
     // Special cases for images which are simple aliases to another mod image
-   if (img->num_layers == 1) {
+    if (img->num_layers == 1) {
         layer *l = &img->layers[0];
         if (l->is_modded_image_reference &&
             img->img.width == l->width && img->img.height == l->height &&
-            l->x_offset == 0 && l->y_offset == 0) {
+            l->x_offset == 0 && l->y_offset == 0 &&
+            l->invert == INVERT_NONE && l->rotate == ROTATE_NONE) {
             img->data = l->data;
             unload_layer(l);
             img->loaded = 1;
+            img->is_clone = 1;
             return 1;
         }
     }
@@ -270,10 +305,9 @@ static void set_modded_image_base_path(const char *author, const char *name)
     data.xml.image_base_path_position = position;
 }
 
-static int add_layer_from_image_path(modded_image *img, const char *path, int offset_x, int offset_y)
+static layer *add_layer_from_image_path(modded_image *img, const char *path, int offset_x, int offset_y)
 {
     layer *current_layer = &img->layers[img->num_layers];
-    size_t path_size = strlen(path);
     current_layer->modded_image_path = malloc(FILE_NAME_MAX * sizeof(char));
     get_full_image_path(current_layer->modded_image_path, path);
     if (!png_get_image_size(current_layer->modded_image_path, &current_layer->width, &current_layer->height)) {
@@ -290,24 +324,24 @@ static int add_layer_from_image_path(modded_image *img, const char *path, int of
     current_layer->x_offset = offset_x;
     current_layer->y_offset = offset_y;
     img->num_layers++;
-    return 1;
+    return current_layer;
 }
 
-static int add_layer_from_image_id(modded_image *img, const char *group_id, const char *image_id, int offset_x, int offset_y)
+static layer *add_layer_from_image_id(modded_image *img, const char *group_id, const char *image_id, int offset_x, int offset_y)
 {
     layer *current_layer = &img->layers[img->num_layers];
     current_layer->width = 0;
     current_layer->height = 0;
     const image *original_image = 0;
     if (strcmp(group_id, "this") == 0) {
-        int image = data.groups[data.total_groups - 1].first_image_id;
-        for (int i = 0; i < data.groups[data.total_groups - 1].images; ++i) {
-            if (strcmp(data.images[image].id, image_id) == 0) {
-                current_layer->original_image_id = data.groups[data.total_groups - 1].id + data.images[image].index;
-                original_image = &data.images[image].img;
+        const modded_image *image = data.groups[data.total_groups - 1].first_image;
+        while (image) {
+            if (strcmp(image->id, image_id) == 0) {
+                current_layer->original_image_id = data.groups[data.total_groups - 1].id + image->index;
+                original_image = &image->img;
                 break;
             }
-            image++;
+            image = image->next;
         }
         if (!current_layer->original_image_id) {
             return 0;
@@ -332,7 +366,7 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
     current_layer->x_offset = offset_x;
     current_layer->y_offset = offset_y;
     img->num_layers++;
-    return 1;
+    return current_layer;
 }
 
 static int count_xml_attributes(const char **attributes)
@@ -371,7 +405,7 @@ static void xml_start_mod_element(const char **attributes)
         return;
     }
     image_groups *group = &data.groups[data.total_groups - 1];
-    group->first_image_id = data.total_images;
+    group->first_image = 0;
     group->images = 0;
     for (int i = 0; i < 4; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[0][0][0]) == 0) {
@@ -386,6 +420,7 @@ static void xml_start_mod_element(const char **attributes)
         return;
     }
     data.xml.image_index = 0;
+    data.xml.current_image = 0;
     group->id = get_group_hash(group->author, group->name);
     set_modded_image_base_path(group->author, group->name);
 }
@@ -396,16 +431,22 @@ static void xml_start_image_element(const char **attributes)
         log_info("Image index number in the xml file exceeds the maximum. Further images for this xml will not be loaded:", data.xml.file_name, 0);
         return;
     }
-    data.xml.current_image = &data.images[data.total_images];
-    modded_image *img = data.xml.current_image;
-    const char *path = 0;
-    const char *group = 0;
-    const char *id = 0;
+    modded_image *img = malloc(sizeof(modded_image));
     int total_attributes = count_xml_attributes(attributes);
-    if (total_attributes < 2 || total_attributes > 12 || total_attributes % 2) {
+    if (!img || total_attributes < 2 || total_attributes > 12 || total_attributes % 2) {
         data.xml.error = 1;
         return;
     }
+    memset(img, 0, sizeof(modded_image));
+    if (!data.xml.current_image) {
+        data.groups[data.total_groups - 1].first_image = img;
+    } else {
+        data.xml.current_image->next = img;
+    }
+    data.xml.current_image = img;
+    const char *path = 0;
+    const char *group = 0;
+    const char *id = 0;
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][0]) == 0) {
             strncpy(img->id, attributes[i + 1], XML_STRING_MAX_LENGTH - 1);
@@ -455,10 +496,12 @@ static void xml_start_layer_element(const char **attributes)
         return;
     }
     int total_attributes = count_xml_attributes(attributes);
-    if (total_attributes < 2 || total_attributes > 8 || total_attributes % 2) {
+    if (total_attributes < 2 || total_attributes > 12 || total_attributes % 2) {
         data.xml.error = 1;
         return;
     }
+    invert_type invert = INVERT_NONE;
+    rotate_type rotate = ROTATE_NONE;
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][0]) == 0) {
             path = attributes[i + 1];
@@ -475,14 +518,37 @@ static void xml_start_layer_element(const char **attributes)
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][4]) == 0) {
             offset_y = string_to_int(string_from_ascii(attributes[i + 1]));
         }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][5]) == 0) {
+            if (strcmp(attributes[i + 1], "horizontal") == 0) {
+                invert = INVERT_HORIZONTAL;
+            } else if (strcmp(attributes[i + 1], "vertical") == 0) {
+                invert = INVERT_VERTICAL;
+            } else if (strcmp(attributes[i + 1], "both") == 0) {
+                invert = INVERT_BOTH;
+            }
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][6]) == 0) {
+            if (strcmp(attributes[i + 1], "90") == 0) {
+                rotate = ROTATE_90_DEGREES;
+            } else if (strcmp(attributes[i + 1], "180") == 0) {
+                rotate = ROTATE_180_DEGREES;
+            } else if (strcmp(attributes[i + 1], "270") == 0) {
+                rotate = ROTATE_270_DEGREES;
+            }
+        }
     }
+    layer *current_layer = 0;
     if (path) {
-        add_layer_from_image_path(img, path, offset_x, offset_y);
+        current_layer = add_layer_from_image_path(img, path, offset_x, offset_y);
     } else if (group) {
-        add_layer_from_image_id(img, group, id, offset_x, offset_y);
-    } else {
-        log_info("Invalid layer for image", img->id, img->num_layers);
+        current_layer = add_layer_from_image_id(img, group, id, offset_x, offset_y);
     }
+    if (!current_layer) {
+        log_info("Invalid layer for image", img->id, img->num_layers);
+        return;
+    }
+    current_layer->invert = invert;
+    current_layer->rotate = rotate;
 }
 
 static void xml_start_animation_element(const char **attributes)
@@ -537,6 +603,22 @@ static void xml_end_image_element(void)
     img->draw.data_length = img->width * img->height * sizeof(color_t);
     img->draw.uncompressed_length = img->draw.data_length;
     if (!data.xml.current_image->num_layers || !img->draw.data_length) {
+        modded_image *prev = 0;
+        modded_image *latest_image = data.groups[data.total_groups - 1].first_image;
+        while (latest_image) {
+            if (latest_image == data.xml.current_image) {
+                break;
+            }
+            prev = latest_image;
+            latest_image = latest_image->next;
+        }
+        if (prev) {
+            prev->next = 0;
+        } else {
+            data.groups[data.total_groups - 1].first_image = 0;
+        }
+        free(data.xml.current_image);
+
         return;
     }
     img->draw.type = IMAGE_TYPE_MOD;
@@ -646,15 +728,17 @@ static void process_mod_file(const char *xml_file_name)
 
     if (data.xml.error || !data.xml.finished) {
         data.total_groups--;
-        for (int i = 1; i <= data.groups[data.total_groups].images; ++i) {
-            modded_image *img = &data.images[data.total_images - i];
+        modded_image *img = data.groups[data.total_groups].first_image;
+        while (img) {
             for (int i = 0; i < img->num_layers; ++i) {
                 unload_layer(&img->layers[i]);
             }
-            if (img->loaded) {
+            if (img->loaded && !img->is_clone) {
                 free(img->data);
             }
-            memset(img, 0, sizeof(modded_image));
+            modded_image *next = img->next;
+            free(img);
+            img = next;
         }
         data.total_images -= data.groups[data.total_groups].images;
     }
@@ -674,21 +758,23 @@ static void setup_mods_folder_string(void)
     strncpy(data.xml.image_base_path, data.xml.file_name, FILE_NAME_MAX);
 }
 
-static int get_image_position_from_id(int image_id)
+static modded_image *get_modded_image_from_id(int image_id)
 {
     unsigned int image_group = image_id & 0xffffff00;
     int image_index = image_id & 0xff;
     for (int i = 0; i < data.total_groups; ++i) {
         image_groups *group = &data.groups[i];
         if (group->id == image_group) {
-            for (int j = 0; j < group->images; ++j) {
-                if (data.images[group->first_image_id + j].index == image_index) {
-                    return group->first_image_id + j;
+            modded_image *img = group->first_image;
+            while (img) {
+                if (img->index == image_index) {
+                    return img;
                 }
+                img = img->next;
             }
         }
     }
-    return image_id != data.roadblock_image ? data.roadblock_image : 0;
+    return data.roadblock_image;
 }
 
 void mods_init(void)
@@ -709,7 +795,7 @@ void mods_init(void)
 
     // By default, if the requested image is not found, the roadblock image will be shown.
     // This ensures compatibility with previous release versions of Augustus, which only had roadblocks
-    data.roadblock_image = get_image_position_from_id(mods_get_group_id("Keriew", "Roadblocks"));
+    data.roadblock_image = get_modded_image_from_id(mods_get_group_id("Keriew", "Roadblocks"));
 }
 
 int mods_get_group_id(const char *mod_author, const char *mod_name)
@@ -729,28 +815,27 @@ int mods_get_image_id(int mod_group_id, const char *image_name)
     if (!image_name || !*image_name) {
         return 0;
     }
-    int max_images = 0;
-    int image_id = 0;
+    modded_image *img = 0;
     for (int i = 0; i < data.total_groups; ++i) {
         image_groups *group = &data.groups[i];
         if (group->id == mod_group_id) {
-            max_images = group->images;
-            image_id = group->first_image_id;
+            img = group->first_image;
             break;
         }
     }
-    for (int i = 0; i < max_images; ++i) {
-        if (strcmp(data.images[image_id + i].id, image_name) == 0) {
-            return mod_group_id + data.images[image_id + i].index;
+    while (img) {
+        if (strcmp(img->id, image_name) == 0) {
+            return mod_group_id + img->index;
         }
+        img = img->next;
     }
     return 0;
 }
 
 const image *mods_get_image(int image_id)
 {
-    modded_image *img = &data.images[get_image_position_from_id(image_id)];
-    if (!img->active) {
+    modded_image *img = get_modded_image_from_id(image_id);
+    if (!img || !img->active) {
         return image_get(0);
     }
     return &img->img;
@@ -758,8 +843,8 @@ const image *mods_get_image(int image_id)
 
 const color_t *mods_get_image_data(int image_id)
 {
-    modded_image *img = &data.images[get_image_position_from_id(image_id)];
-    if (!img->active) {
+    modded_image *img = get_modded_image_from_id(image_id);
+    if (!img || !img->active) {
         return image_data(0);
     }
     if (!img->loaded) {

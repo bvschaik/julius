@@ -432,7 +432,7 @@ void city_resource_consume_food(void)
                 for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
                     proportionate_amount = ((double)food_required * (double)b->data.market.inventory[i]) / (double)total_food_in_mess_hall;
                     if (proportionate_amount > 0) {
-                        amount_for_type = calc_bound(ceil(proportionate_amount), 0, b->data.market.inventory[i]);
+                        amount_for_type = calc_bound((int) ceil(proportionate_amount), 0, b->data.market.inventory[i]);
                         b->data.market.inventory[i] -= amount_for_type;
                         ++num_foods;
                     }
