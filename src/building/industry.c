@@ -53,7 +53,7 @@ static void building_other_update_production(building* b) {
             if (b->loads_stored < MAX_STORAGE) {
                 b->loads_stored += 1;
             }
-            b->data.monument.progress = 0;
+            b->data.monument.progress = b->data.monument.progress - MAX_PROGRESS_WORKSHOP;
         }
     }
 }
