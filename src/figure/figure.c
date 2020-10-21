@@ -66,8 +66,14 @@ void figure_delete(figure *f)
         case FIGURE_MARKET_BUYER:
         case FIGURE_PRIEST_BUYER:
         case FIGURE_MESS_HALL_BUYER:
-            if (f->building_id) {
+            if (f->building_id && f->id == b->figure_id2) {
                 b->figure_id2 = 0;
+            }
+            else if (f->building_id && f->id == b->figure_id) {
+                b->figure_id = 0;
+            }
+            else if (f->building_id && f->id == b->figure_id4) {
+                b->figure_id4 = 0;
             }
             break;
         case FIGURE_BALLISTA:
@@ -110,6 +116,7 @@ void figure_delete(figure *f)
         case FIGURE_ZEBRA:
         case FIGURE_DELIVERY_BOY:
         case FIGURE_PATRICIAN:
+        case FIGURE_MESS_HALL_COLLECTOR:
             // nothing to do here
             break;
         default:
