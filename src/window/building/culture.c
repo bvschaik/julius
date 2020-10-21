@@ -493,7 +493,7 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
     } 
     else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-        window_building_draw_monument_resources_needed(c);
+        window_building_draw_monument_temple_construction_process(c);
     }
     if (b->data.monument.upgrades) {
         int module_name = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].header;
