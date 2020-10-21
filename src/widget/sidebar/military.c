@@ -271,15 +271,16 @@ static void draw_military_info_text(int x_offset, int y_offset)
         return;
     }
 
+    int ellipsized_width = CONTENT_WIDTH + CONTENT_PADDING / 2;
     // Morale
-    lang_text_draw(138, 36, x_offset, y_offset + 80, FONT_NORMAL_WHITE);
-    lang_text_draw(138, 37 + m->morale / 5, x_offset + 4, y_offset + 98,
-        m->morale < 13 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
+    lang_text_draw_ellipsized(138, 36, x_offset, y_offset + 80, ellipsized_width, FONT_NORMAL_WHITE);
+    lang_text_draw_ellipsized(138, 37 + m->morale / 5, x_offset + 4, y_offset + 98,
+        ellipsized_width, m->morale < 13 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
 
     // Health
-    lang_text_draw(138, 24, x_offset, y_offset + 120, FONT_NORMAL_WHITE);
-    lang_text_draw(138, get_health_text_id(legion->health), x_offset + 4, y_offset + 138,
-        legion->health < 55 ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+    lang_text_draw_ellipsized(138, 24, x_offset, y_offset + 120, ellipsized_width, FONT_NORMAL_WHITE);
+    lang_text_draw_ellipsized(138, get_health_text_id(legion->health), x_offset + 4, y_offset + 138,
+        ellipsized_width, legion->health < 55 ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
 }
 
 static void draw_military_info_buttons(int x_offset, int y_offset)
