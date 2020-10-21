@@ -162,7 +162,7 @@ unsigned int text_get_max_length_for_width(
     }
 }
 
-void text_ellipsize(uint8_t *str, font_t font, int requested_width)
+int text_ellipsize(uint8_t *str, font_t font, int requested_width)
 {
     uint8_t *orig_str = str;
     const font_definition *def = font_definition_for(font);
@@ -191,7 +191,9 @@ void text_ellipsize(uint8_t *str, font_t font, int requested_width)
     }
     if (10000 - maxlen < string_length(orig_str)) {
         string_copy(ellipsis.string, orig_str + length_with_ellipsis, ELLIPSIS_LENGTH);
+        return 1;
     }
+    return 0;
 }
 
 static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
@@ -238,6 +240,15 @@ void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t 
         offset = 0;
     }
     text_draw(str, offset + x, y, font, color);
+}
+
+int text_draw_ellipsized(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color)
+{
+    static uint8_t buffer[1000];
+    string_copy(str, buffer, 1000);
+    int has_ellipsized = text_ellipsize(buffer, font, box_width);
+    text_draw(buffer, x, y, font, color);
+    return has_ellipsized;
 }
 
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)

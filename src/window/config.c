@@ -26,6 +26,7 @@
 #define CHECKBOX_CHECK_SIZE 20
 #define CHECKBOX_HEIGHT 20
 #define CHECKBOX_WIDTH 560
+#define CHECKBOX_TEXT_WIDTH CHECKBOX_WIDTH - CHECKBOX_CHECK_SIZE - 15
 
 #define NUM_VISIBLE_ITEMS 15
 
@@ -56,6 +57,7 @@ typedef struct {
     int type;
     translation_key description;
     int checkbox_parameter;
+    int needs_tooltip;
 } config_widget;
 
 static config_widget widgets[] = {
@@ -133,12 +135,12 @@ static void init_config_values(void)
     data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].change_action = config_change_string_language;
 }
 
-static void checkbox_draw_text(int x, int y, int value_key, translation_key description)
+static int checkbox_draw_text(int x, int y, int value_key, translation_key description)
 {
     if (data.config_values[value_key].new_value) {
         text_draw(string_from_ascii("x"), x + 6, y + 3, FONT_NORMAL_BLACK, 0);
     }
-    text_draw(translation_for(description), x + 30, y + 5, FONT_NORMAL_BLACK, 0);
+    return text_draw_ellipsized(translation_for(description), x + 30, y + 5, CHECKBOX_TEXT_WIDTH, FONT_NORMAL_BLACK, 0);
 }
 
 static void checkbox_draw(int x, int y, int has_focus)
@@ -222,7 +224,7 @@ static void draw_background(void)
         if (w->type == TYPE_HEADER) {
             text_draw(translation_for(w->description), 20, y, FONT_NORMAL_BLACK, 0);
         } else if (w->type == TYPE_CHECKBOX) {
-            checkbox_draw_text(20, y, w->checkbox_parameter, w->description);
+            w->needs_tooltip = checkbox_draw_text(20, y, w->checkbox_parameter, w->description);
         } else if (w->type == TYPE_LANGUAGE) {
             text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, y + 6, FONT_NORMAL_BLACK, 0);
             text_draw_centered(data.language_options[data.selected_language_option],
@@ -395,13 +397,27 @@ static void button_close(int save, int param2)
     }
 }
 
+static void handle_tooltip(tooltip_context *c)
+{
+    if (data.focus_button) {
+        config_widget *w = &widgets[data.focus_button + scrollbar.scroll_position - 1];
+        if (w->needs_tooltip) {
+            c->type = TOOLTIP_CONFIG_CHECKBOX;
+            c->text = translation_for(w->description);
+        }
+    } else {
+        c->type = TOOLTIP_NONE;
+    }
+}
+
 void window_config_show(void)
 {
     window_type window = {
         WINDOW_CONFIG,
         draw_background,
         draw_foreground,
-        handle_input
+        handle_input,
+        handle_tooltip
     };
     init();
     window_show(&window);
