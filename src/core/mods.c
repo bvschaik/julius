@@ -138,6 +138,7 @@ static void load_dummy_layer(layer *l)
     l->data = &DUMMY_IMAGE_DATA;
     l->width = 1;
     l->height = 1;
+    l->is_modded_image_reference = 1;
 }
 
 static void load_layer(layer *l)
@@ -230,17 +231,17 @@ static int load_modded_image(modded_image *img)
         load_layer(&img->layers[i]);
     }
 
-    // Special cases for images which are simple aliases to another mod image
+    // Special cases for images which are a single layer
     if (img->num_layers == 1) {
         layer *l = &img->layers[0];
-        if (l->is_modded_image_reference &&
-            img->img.width == l->width && img->img.height == l->height &&
+        if (img->img.width == l->width && img->img.height == l->height &&
             l->x_offset == 0 && l->y_offset == 0 &&
             l->invert == INVERT_NONE && l->rotate == ROTATE_NONE) {
             img->data = l->data;
+            img->is_clone = l->is_modded_image_reference;
+            l->is_modded_image_reference = 1;
             unload_layer(l);
             img->loaded = 1;
-            img->is_clone = 1;
             return 1;
         }
     }
