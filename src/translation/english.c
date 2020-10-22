@@ -335,7 +335,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LIGHTHOUSE_PHASE_4_TEXT, "Engineers are performing final touches to the lighthouse. Soon it will shine for miles, guiding ships home." },
     {TR_BUILDING_LIGHTHOUSE_CONSTRUCTION_DESC, "Constructing the lighthouse requires material stored in a warehouse, laborers from a work camp, and engineers from an engineer's guild." },
     {TR_BUILDING_LIGHTHOUSE_BONUS_DESC, "Fishing ships move 10% faster. Sea storms last half as long." },
-    {TR_EDITOR_ALLOWED_BUILDINGS_MONUMENTS, "Monuments"}
+    {TR_EDITOR_ALLOWED_BUILDINGS_MONUMENTS, "Monuments"},
+    {TR_CITY_MESSAGE_TEXT_LIGHTHOUSE_COMPLETE, "The completed lighthouse, a mighty tower of stone, looms over the horizon. May its beacon guide ships home until the end of time." },
+    {TR_CITY_MESSAGE_TEXT_PANTHEON_COMPLETE, "The Pantheon is completed. It stands unrivaled as a monument to the awesome power of the gods and people of Rome." },
+    {TR_CITY_MESSAGE_TEXT_MONUMENT_COMPLETE, "Monument completed" }
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

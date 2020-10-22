@@ -541,8 +541,16 @@ int building_monument_progress(building* b)
 	b->subtype.monument_phase++;
 	building_monument_initialize(b);
 
-	if (b->subtype.monument_phase == MONUMENT_FINISHED && building_monument_is_grand_temple(b->type)) {
-		city_message_post(1, MESSAGE_GRAND_TEMPLE_COMPLETE, 0, 0);
+	if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+		if (building_monument_is_grand_temple(b->type)) {
+			city_message_post(1, MESSAGE_GRAND_TEMPLE_COMPLETE, 0, 0);
+		}
+		else if (b->type == BUILDING_PANTHEON) {
+			city_message_post(1, MESSAGE_PANTHEON_COMPLETE, 0, 0);
+		}
+		else if (b->type == BUILDING_LIGHTHOUSE) {
+			city_message_post(1, MESSAGE_LIGHTHOUSE_COMPLETE, 0, 0);
+		}
 	}
 	return 1;
 }
