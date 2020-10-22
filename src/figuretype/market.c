@@ -10,6 +10,7 @@
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
+#include "figuretype/wall.h"
 #include "game/resource.h"
 
 
@@ -202,7 +203,7 @@ void figure_market_buyer_action(figure *f)
             break;
     }
     if (f->type == FIGURE_MESS_HALL_BUYER) {
-        figure_image_update(f, image_group(GROUP_FIGURE_TOWER_SENTRY));
+        figure_tower_sentry_set_image(f);
     } else if (f->type == FIGURE_PRIEST_BUYER) {
         figure_image_update(f, image_group(GROUP_FIGURE_PRIEST));    
     } else {

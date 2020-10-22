@@ -1,6 +1,7 @@
 #include "minimap.h"
 
 #include "building/building.h"
+#include "building/monument.h"
 #include "city/view.h"
 #include "core/mods.h"
 #include "figure/figure.h"
@@ -161,14 +162,22 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
             } else {
                 image_id = image_group(GROUP_MINIMAP_BUILDING);
             }
-            switch (map_property_multi_tile_size(grid_offset)) {
+            if (building_monument_is_monument(b))
+            {
+                switch (map_property_multi_tile_size(grid_offset)) {
+                case 3: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "3 Mon MapIcon"), x_view, y_view - 6);
+                case 5: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "5 Mon MapIcon"), x_view, y_view - 6);
+                case 7: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "7 Mon MapIcon"), x_view, y_view - 6);
+                }
+            } else {
+                switch (map_property_multi_tile_size(grid_offset)) {
                 case 1: image_draw(image_id, x_view, y_view); break;
                 case 2: image_draw(image_id + 1, x_view, y_view - 1); break;
                 case 3: image_draw(image_id + 2, x_view, y_view - 2); break;
                 case 4: image_draw(image_id + 3, x_view, y_view - 3); break;
                 case 5: image_draw(image_id + 4, x_view, y_view - 4); break;
                 case 7: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "7x7 Map Icon"), x_view, y_view - 6);
-
+                }
             }
         }
     } else {
