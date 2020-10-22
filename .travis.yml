@@ -66,10 +66,10 @@ cache:
   - $SDL_MIXER_LIB
 
 before_install:
-  - if [ "$BUILD_TARGET" == "android" ] && [ "$encrypted_070dfb7b48d5_key" ]
+  - if [ "$BUILD_TARGET" == "android" ] && [ "$encrypted_070dfb7b48d5_key" ];
     then
-      openssl aes-256-cbc -K $encrypted_070dfb7b48d5_key -iv $encrypted_070dfb7b48d5_iv -in android/julius.keystore.enc -out android/julius.keystore -d
-    fi
+      openssl aes-256-cbc -K $encrypted_070dfb7b48d5_key -iv $encrypted_070dfb7b48d5_iv -in android/julius.keystore.enc -out android/julius.keystore -d;
+    fi;
 
 install:
   - ./.ci_scripts/setup_environment.sh
