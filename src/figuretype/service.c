@@ -123,7 +123,7 @@ void figure_destination_priest_action(figure* f)
             num_loads = max_units / 100;
         }
         if (num_loads <= 0) {
-            return 0;
+            return;
         }
 
         b->data.market.inventory[f->collecting_item_id]-= (100 * num_loads);
