@@ -435,8 +435,9 @@ static void window_building_draw_monument_construction_process(building_info_con
         text_draw(translation_for(TR_REQUIRED_RESOURCES), c->x_offset + 22, c->y_offset + 70, FONT_NORMAL_BLACK, 0);
         window_building_draw_monument_resources_needed(c);
         int height = text_draw_multiline(translation_for(tr_phase_name_text + b->subtype.monument_phase - 1), c->x_offset + 22, c->y_offset + 170, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
-        text_draw_multiline(translation_for(tr_construction_desc), c->x_offset + 22, c->y_offset + 180 + height, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
-
+        height += text_draw_multiline(translation_for(tr_construction_desc), c->x_offset + 22, c->y_offset + 180 + height, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        int phase_offset = b->subtype.monument_phase % 2;
+        image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Const. Banner 01")+phase_offset, c->x_offset + 32, c->y_offset + 196 + height);
     }
 
 }
