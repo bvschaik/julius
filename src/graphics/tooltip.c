@@ -290,23 +290,6 @@ static void draw_senate_tooltip(tooltip_context *c)
     }
 }
 
-static void draw_config_checkbox_tooltip(tooltip_context *c)
-{
-    if (!c->text) {
-        return;
-    }
-    int x = screen_dialog_offset_x() + 50;
-    int y = c->mouse_y - ((c->mouse_y - screen_dialog_offset_y() - 60) % 24);
-    int width = text_get_width(c->text, FONT_NORMAL_PLAIN) + 10;
-    int height = 20;
-
-    save_window_under_tooltip_to_buffer(x, y, width, height);
-
-    graphics_draw_rect(x, y, width, height, COLOR_BLACK);
-    graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-    text_draw(c->text, x + 5, y + 5, FONT_NORMAL_PLAIN, 0);
-}
-
 static void draw_tooltip(tooltip_context *c)
 {
     if (c->type == TOOLTIP_BUTTON) {
@@ -315,8 +298,6 @@ static void draw_tooltip(tooltip_context *c)
         draw_overlay_tooltip(c);
     } else if (c->type == TOOLTIP_SENATE) {
         draw_senate_tooltip(c);
-    } else if (c->type == TOOLTIP_CONFIG_CHECKBOX) {
-        draw_config_checkbox_tooltip(c);
     }
 }
 
@@ -331,7 +312,7 @@ void tooltip_handle(const mouse *m, void (*func)(tooltip_context *))
         reset_timer();
         return;
     }
-    tooltip_context context = {m->x, m->y, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    tooltip_context context = {m->x, m->y, 0, 0, 0, 0, 0, 0, 0, 0};
     context.text_group = DEFAULT_TEXT_GROUP;
     if (setting_tooltips() && func) {
         func(&context);
