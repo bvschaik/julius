@@ -312,7 +312,7 @@ void tooltip_handle(const mouse *m, void (*func)(tooltip_context *))
         reset_timer();
         return;
     }
-    tooltip_context context = {m->x, m->y, 0, 0, 0, 0, 0, 0, 0, 0};
+    tooltip_context context = {m->x, m->y};
     context.text_group = DEFAULT_TEXT_GROUP;
     if (setting_tooltips() && func) {
         func(&context);
