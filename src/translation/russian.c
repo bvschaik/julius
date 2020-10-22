@@ -34,6 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Воспроизводить вступительные видео"},
     {TR_CONFIG_SIDEBAR_INFO, "Дополнительная информация на контрольной панели"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Включить плавный скроллинг"},
+    {TR_CONFIG_DISABLE_MAP_DRAG, "Отключить правой кнопкой мыши, чтобы перетащить карту"}, // TODO: Google Translate
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Улучшить граф. эффект при очистке территории"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Постройка храмов в циклической последовательности"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Зона покрытия при постройке резервуаров, колодцев и фонтанов"},

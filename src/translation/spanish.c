@@ -34,12 +34,13 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Reproducir vídeos al inicio"},
     {TR_CONFIG_SIDEBAR_INFO, "Mostrar información adicional en el panel de control"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Activar desplazamiento suave del mapa"},
+    {TR_CONFIG_DISABLE_MAP_DRAG, "Desactivar el clic derecho para arrastrar el mapa"}, // TODO: Google Translate
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Mejorar el feedback visual al limpiar terreno"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permitir construcción secuencial de templos"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Mostrar área cubierta por depósitos, fuentes y pozos al construir"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Mostrar medidas de construcción al arrastrar"},
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "Resaltar legión al pasar el cursor"}, // TODO: Google Translate
-    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Habilitar barra lateral militar"}, // TODO: Google translate
+    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Habilitar barra lateral militar"}, // TODO: Google Translate
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corregir bug impidiendo immigración en Muy Difícil"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corregir bug creando fantasmas con 100 años"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corregir cambio de Emperador y supervivencia en misiones del editor"},
