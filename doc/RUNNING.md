@@ -16,7 +16,7 @@ Please check [MP3 support](https://github.com/bvschaik/julius/wiki/MP3-Support) 
 Julius supports Windows XP and higher.
 
 1. Install Caesar 3 using the provided installer (GOG/Steam/CD-ROM).
-2. Download the [latest release](https://github.com/bvschaik/julius/releases) of Julius or compile from source.
+2. Download the [latest release](https://github.com/bvschaik/julius/releases/latest) of Julius or compile from source.
 3. Copy julius.exe, SDL2.dll and SDL2_mixer.dll to the folder where you installed Caesar 3
 4. Run julius.exe
 
@@ -33,7 +33,7 @@ OpenBSD and FreeBSD provide Julius as [package](http://ports.su/games/julius).
 On Linux you can use the provided [AppImage](https://appimage.org/):
 
 1. Obtain the game data files of Caesar 3 by checking one of the two next sections.
-2. Download the [latest AppImage release](https://github.com/bvschaik/julius/releases) of Julius.
+2. Download the [latest AppImage release](https://github.com/bvschaik/julius/releases/latest) of Julius.
 3. Make the downloaded AppImage executable by going into the file properties or running
    `chmod +x julius-*.AppImage` in the same folder as the AppImage.
 4. You can then run it just like any Linux executable.
