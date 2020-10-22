@@ -75,7 +75,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
 
     platform_screen_destroy();
 
-    SDL_Log("Creating screen %d x %d, %s, %s", width, height,
+    SDL_Log("Creating screen %d x %d, %s, driver: %s", width, height,
         fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
     if (fullscreen) {
@@ -94,13 +94,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         SDL_GetWindowSize(SDL.window, &width, &height);
     }
 
-    SDL_Log("Creating renderer, available drivers:");
-    SDL_RendererInfo info;
-    int num_drivers = SDL_GetNumRenderDrivers();
-    for (int i = 0; i < num_drivers; i++) {
-        SDL_GetRenderDriverInfo(i, &info);
-        SDL_Log("- %s", info.name);
-    }
+    SDL_Log("Creating renderer");
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!SDL.renderer) {
         SDL_Log("Unable to create renderer, trying software renderer: %s", SDL_GetError());
@@ -110,8 +104,6 @@ int platform_screen_create(const char *title, int display_scale_percentage)
             return 0;
         }
     }
-    SDL_GetRendererInfo(SDL.renderer, &info);
-    SDL_Log("Created renderer: %s (%d)", info.name, info.flags);
 
 #if !defined(__APPLE__)
     if (fullscreen && SDL_GetNumVideoDisplays() > 1) {
