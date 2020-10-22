@@ -190,4 +190,52 @@
 		<layer src="Obelisk_Top" x="57" y="63" />
     </image>	
 	
+<!-- Note: Rotated assets for the garden paths, including vanilla (if needed) -->
+    <image id="path pine r" width="58" height="71">
+		<layer group="59" image="3" x="0" y="39" invert="horizontal" />
+		<layer src="Pine_Tree_Path_Rotated" />
+    </image>
+
+    <image id="path fir r" width="58" height="72">
+		<layer group="59" image="3" x="0" y="40" invert="horizontal" />
+		<layer src="Fir_Tree_Path_Rotated" />
+    </image>
+	
+    <image id="path oak r" width="58" height="60">
+		<layer group="59" image="3" x="0" y="28" invert="horizontal" />
+		<layer src="Oak_Tree_Path_Rotated" />
+    </image>	
+	
+    <image id="path elm r" width="58" height="60">
+		<layer group="59" image="3" x="0" y="28" invert="horizontal" />
+		<layer src="Elm_Tree_Path_Rotated" />
+    </image>
+
+    <image id="path fig r" width="58" height="53">
+		<layer group="59" image="3" x="0" y="21" invert="horizontal" />
+		<layer src="Fig_Tree_Path_Rotated" />
+    </image>
+
+    <image id="path plum r" width="58" height="53">
+		<layer group="59" image="3" x="0" y="21" invert="horizontal" />
+		<layer src="Plum_Tree_Path_Rotated" />
+    </image>
+
+    <image id="path palm r" width="58" height="65">
+		<layer group="59" image="3" x="0" y="33" invert="horizontal" />
+		<layer src="Palm_Tree_Path_Rotated" />
+    </image>
+
+    <image id="path date r" width="58" height="60">
+		<layer group="59" image="3" x="0" y="28" invert="horizontal" />
+		<layer src="Date_Tree_Path_Rotated" />
+    </image>
+
+    <image id="garden path r" width="58" height="32">
+		<layer group="59" image="3" x="0" y="0" invert="horizontal" />
+		<layer src="Garden_Path_Rotated" />
+    </image>
+
+
+	
 </mod>
