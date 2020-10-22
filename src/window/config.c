@@ -26,6 +26,7 @@
 #define CHECKBOX_CHECK_SIZE 20
 #define CHECKBOX_HEIGHT 20
 #define CHECKBOX_WIDTH 560
+#define CHECKBOX_TEXT_WIDTH CHECKBOX_WIDTH - CHECKBOX_CHECK_SIZE - 15
 
 #define NUM_VISIBLE_ITEMS 15
 
@@ -138,7 +139,7 @@ static void checkbox_draw_text(int x, int y, int value_key, translation_key desc
     if (data.config_values[value_key].new_value) {
         text_draw(string_from_ascii("x"), x + 6, y + 3, FONT_NORMAL_BLACK, 0);
     }
-    text_draw(translation_for(description), x + 30, y + 5, FONT_NORMAL_BLACK, 0);
+    text_draw_ellipsized(translation_for(description), x + 30, y + 5, CHECKBOX_TEXT_WIDTH, FONT_NORMAL_BLACK, 0);
 }
 
 static void checkbox_draw(int x, int y, int has_focus)

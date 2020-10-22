@@ -513,7 +513,7 @@ int game_file_io_read_scenario(const char *filename)
         return 0;
     }
     for (int i = 0; i < scenario_data.num_pieces; i++) {
-        int read_size = fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
+        size_t read_size = fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
         if (read_size != scenario_data.pieces[i].buf.size) {
             log_error("Unable to load scenario", filename, 0);
             file_close(fp);

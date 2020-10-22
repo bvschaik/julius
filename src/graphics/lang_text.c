@@ -38,11 +38,8 @@ void lang_text_draw_centered_colored(
 
 void lang_text_draw_ellipsized(int group, int number, int x_offset, int y_offset, int box_width, font_t font)
 {
-    uint8_t buffer[1000];
-    const uint8_t *text = lang_get_string(group, number);
-    string_copy(text, buffer, 1000);
-    text_ellipsize(buffer, font, box_width);
-    text_draw(buffer, x_offset, y_offset, font, 0);
+    const uint8_t *str = lang_get_string(group, number);
+    text_draw_ellipsized(str, x_offset, y_offset, box_width, font, 0);
 }
 
 int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, font_t font)
