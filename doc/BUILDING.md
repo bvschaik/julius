@@ -33,10 +33,10 @@ See [Running Julius](RUNNING.md) for instructions on how to configure Julius for
 
 --------------------------------------------------
 
-For detailed building instructions, please check out the respective page:
+For detailed building instructions, please check out the respective page on the wiki:
 
-- [Building for Windows](building_windows.md)
-- [Building for Linux](building_linux.md)
-- [Building for Mac](building_macos.md)
-- [Building for Playstation Vita](building_vita.md)
-- [Building for Nintendo Switch](building_switch.md)
+- [Building for Windows](https://github.com/bvschaik/julius/wiki/Building-for-Windows.md)
+- [Building for Linux](https://github.com/bvschaik/julius/wiki/Building-for-Linux.md)
+- [Building for Mac](https://github.com/bvschaik/julius/wiki/Building-for-MacOS.md)
+- [Building for Playstation Vita](https://github.com/bvschaik/julius/wiki/Building-for-Vita.md)
+- [Building for Nintendo Switch](https://github.com/bvschaik/julius/wiki/Building-for-Switch.md)

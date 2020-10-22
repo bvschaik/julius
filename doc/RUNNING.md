@@ -4,7 +4,7 @@ Julius requires the original Caesar 3 files to run. This can be an old CD-ROM ve
 from either [GOG](https://www.gog.com/game/caesar_3) or
 [Steam](https://store.steampowered.com/app/517790/Caesar_3/).
 
-Note that there are [command line options](#command-line-options) which are available to all platforms.
+Note that there are [command line options](https://github.com/bvschaik/julius/wiki/Command-line-options) which are available to all platforms.
 
 If you have the high-quality MP3 music files that were once available for download from the Sierra Website,
 the game supports playing them.
@@ -13,11 +13,11 @@ Please check [MP3 support](https://github.com/bvschaik/julius/wiki/MP3-Support) 
 
 ## Windows
 
-Julius supports Windows XP and higher.
+Julius supports Windows Vista and higher. Windows XP has limited support.
 
 1. Install Caesar 3 using the provided installer (GOG/Steam/CD-ROM).
 2. Download the [latest release](https://github.com/bvschaik/julius/releases/latest) of Julius or compile from source.
-3. Copy julius.exe, SDL2.dll and SDL2_mixer.dll to the folder where you installed Caesar 3
+3. Copy julius.exe, SDL2.dll, SDL2_mixer.dll and libmpg123.dll to the folder where you installed Caesar 3
 4. Run julius.exe
 
 **Note:** If you install Caesar 3 using Steam and plan to use Steam to launch the game,
