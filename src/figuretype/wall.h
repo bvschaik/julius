@@ -5,6 +5,8 @@
 
 void figure_ballista_action(figure *f);
 
+void figure_tower_sentry_set_image(figure* f);
+
 void figure_tower_sentry_action(figure *f);
 
 void figure_tower_sentry_reroute(void);

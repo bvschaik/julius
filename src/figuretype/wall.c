@@ -166,6 +166,31 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
     return 0;
 }
 
+void figure_tower_sentry_set_image(figure* f) {
+    int dir = figure_image_direction(f);
+    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
+            136 + figure_image_corpse_offset(f);
+    }
+    else if (f->action_state == FIGURE_ACTION_172_TOWER_SENTRY_FIRING) {
+        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
+            dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
+    }
+    else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        int image_id = image_group(GROUP_FIGURE_TOWER_SENTRY);
+        if (f->attack_image_offset < 16) {
+            f->image_id = image_id + 96 + dir;
+        }
+        else {
+            f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 16) / 2);
+        }
+    }
+    else {
+        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
+            dir + 8 * f->image_offset;
+    }
+}
+
 void figure_tower_sentry_action(figure *f)
 {
     building *b = building_get(f->building_id);
@@ -268,26 +293,7 @@ void figure_tower_sentry_action(figure *f)
         f->in_building_wait_ticks--;
         f->height_adjusted_ticks = 0;
     }
-    int dir = figure_image_direction(f);
-    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
-            136 + figure_image_corpse_offset(f);
-    } else if (f->action_state == FIGURE_ACTION_172_TOWER_SENTRY_FIRING) {
-        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
-            dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
-    } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
-        int image_id = image_group(GROUP_FIGURE_TOWER_SENTRY);
-        if (f->attack_image_offset < 16) {
-            f->image_id = image_id + 96 + dir;
-        }
-        else {
-            f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 16) / 2);
-        }
-    }
-    else {
-        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
-            dir + 8 * f->image_offset;
-    }
+    figure_tower_sentry_set_image(f);
 }
 
 void figure_tower_sentry_reroute(void)
