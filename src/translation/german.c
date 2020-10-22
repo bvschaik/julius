@@ -43,7 +43,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Aktiviere rechtsseitiges Bedienfeld für Legionen"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Behebe Immigrationsfehler auf 'Sehr schwierig'"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Behebe '100 Jahre alte Geister'"},
-    {TR_CONFIG_FIX_EDITOR_EVENTS, "Behebe Wechsel- und Überlebenszeit des Imperators in eigenen Missionen"},
+    {TR_CONFIG_FIX_EDITOR_EVENTS, "Korrigiere Gunst bei Imperatorwechsel und Missionszeit (Editor)"},
     {TR_HOTKEY_TITLE, "Julius Tastenkombinationen einstellen"},
     {TR_HOTKEY_LABEL, "Tastenkombination"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},
