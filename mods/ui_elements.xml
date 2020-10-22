@@ -31,8 +31,14 @@
     <image id="Panth M2 Icon" src="Pantheon_Temple_Complex_Module2_Banner" />
     <image id="Venus M Icon" src="Venus_Temple_Complex_Module_Banner" />
     <image id="Venus M2 Icon" src="Venus_Temple_Complex_Module2_Banner" />
-	
 
-	
+<!-- Note: Banner images for Construction Sites -->
+    <image id="Const. Banner 01" src="Construction_Banner_01" />
+    <image id="Const. Banner 02" src="Construction_Banner_02" />	
+
+<!-- Note: Minimap icons for Monuments 3x3, 5x5 and 7x7 respectively  -->
+    <image id="3 Mon MapIcon" src="3x3_Monument_Icon" />
+    <image id="5 Mon MapIcon" src="5x5_Monument_Icon" />
+    <image id="7 Mon MapIcon" src="7x7_Monument_Icon" />	
 
 </mod>		
