@@ -3,10 +3,11 @@
 
 #define MAX_GODS 5
 #define NEPTUNE_BLESSING_MONTHS 6
+#define VENUS_BLESSING_MONTHS 35
 
 void city_gods_reset(void);
 void city_gods_reset_neptune_blessing(void);
-void city_gods_update_neptune_blessing(void);
+void city_gods_update_blessings(void);
 
 void city_gods_calculate_moods(int update_moods);
 

@@ -96,7 +96,7 @@ static void advance_month(void)
 
     city_population_record_monthly();
     city_festival_update();
-    city_gods_update_neptune_blessing();
+    city_gods_update_blessings();
     tutorial_on_month_tick();
     if (setting_monthly_autosave()) {
         game_file_write_saved_game("autosave.svx");

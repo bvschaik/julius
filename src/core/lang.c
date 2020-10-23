@@ -197,11 +197,19 @@ void load_custom_messages(void)
     i += 1;
 
     m = &data.message_entries[i];
-    set_message_parameters(m, TR_CITY_MESSAGE_TEXT_MONUMENT_COMPLETE, TR_CITY_MESSAGE_TEXT_PANTHEON_COMPLETE, 0);
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_MONUMENT_COMPLETE, TR_CITY_MESSAGE_TEXT_PANTHEON_COMPLETE, 0);
     i += 1;
 
     m = &data.message_entries[i];
-    set_message_parameters(m, TR_CITY_MESSAGE_TEXT_MONUMENT_COMPLETE, TR_CITY_MESSAGE_TEXT_LIGHTHOUSE_COMPLETE, 0);
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_MONUMENT_COMPLETE, TR_CITY_MESSAGE_TEXT_LIGHTHOUSE_COMPLETE, 0);
+    i += 1;
+
+    m = &data.message_entries[i];
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_NEPTUNE_BLESSING, TR_CITY_MESSAGE_TEXT_NEPTUNE_BLESSING, 0);
+    i += 1;
+
+    m = &data.message_entries[i];
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_VENUS_BLESSING, TR_CITY_MESSAGE_TEXT_VENUS_BLESSING, 0);
 }
 
 

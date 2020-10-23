@@ -429,9 +429,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.resource.granaries.understaffed);
     buffer_write_i32(main, city_data.resource.granaries.not_operating);
     buffer_write_i32(main, city_data.resource.granaries.not_operating_with_food);
-    for (int i = 0; i < 2; i++) {
-        buffer_write_i32(main, city_data.unused.unused_44e0[i]);
-    }
+    buffer_write_i32(main, city_data.unused.unused_44e0[0]);
+    buffer_write_i32(main, city_data.religion.venus_blessing_months_left);
     buffer_write_i32(main, city_data.religion.venus_curse_active);
     buffer_write_i32(main, city_data.unused.unused_44ec);
     buffer_write_i32(main, city_data.religion.neptune_double_trade_active);
@@ -915,9 +914,8 @@ static void load_main_data(buffer *main)
     city_data.resource.granaries.understaffed = buffer_read_i32(main);
     city_data.resource.granaries.not_operating = buffer_read_i32(main);
     city_data.resource.granaries.not_operating_with_food = buffer_read_i32(main);
-    for (int i = 0; i < 2; i++) {
-        city_data.unused.unused_44e0[i] = buffer_read_i32(main);
-    }
+    city_data.unused.unused_44e0[0] = buffer_read_i32(main);
+    city_data.religion.venus_blessing_months_left = buffer_read_i32(main);
     city_data.religion.venus_curse_active = buffer_read_i32(main);
     city_data.unused.unused_44ec = buffer_read_i32(main);
     city_data.religion.neptune_double_trade_active = buffer_read_i32(main);

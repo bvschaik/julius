@@ -129,10 +129,14 @@ const labor_category_data *city_labor_category(int category)
 
 void city_labor_calculate_workers(int num_plebs, int num_patricians)
 {
+    int venus_blessing_modifier = 0;
     city_data.population.percentage_plebs = calc_percentage(num_plebs, num_plebs + num_patricians);
 
     if (config_get(CONFIG_GP_CH_FIXED_WORKERS)) {    
-        city_data.population.working_age = calc_adjust_with_percentage(num_plebs, 38);
+        if (city_data.religion.venus_blessing_months_left > 0) {
+            venus_blessing_modifier = ((city_data.religion.venus_blessing_months_left / 12) + 1);
+        }
+        city_data.population.working_age = calc_adjust_with_percentage(num_plebs, 38 + venus_blessing_modifier);
         city_data.labor.workers_available = city_data.population.working_age;
     } else {
         city_data.population.working_age = calc_adjust_with_percentage(city_population_people_of_working_age(), 60);

@@ -273,6 +273,7 @@ extern struct city_data_t {
         int32_t least_happy_god;
         int32_t angry_message_delay;
         int32_t venus_curse_active;
+        int32_t venus_blessing_months_left;
         int32_t neptune_double_trade_active;
         int32_t neptune_sank_ships;
         int32_t mars_spirit_power;

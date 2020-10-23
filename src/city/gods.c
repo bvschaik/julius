@@ -7,6 +7,7 @@
 #include "city/data_private.h"
 #include "city/health.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "city/sentiment.h"
 #include "city/trade.h"
 #include "core/calc.h"
@@ -49,10 +50,14 @@ void city_gods_reset_neptune_blessing(void)
     city_data.religion.neptune_double_trade_active = 0;
 }
 
-void city_gods_update_neptune_blessing(void)
+void city_gods_update_blessings(void)
 {   
     if (city_data.religion.neptune_double_trade_active > 0) {
         city_data.religion.neptune_double_trade_active--;
+    }
+
+    if (city_data.religion.venus_blessing_months_left > 0) {
+        city_data.religion.venus_blessing_months_left--;
     }
 }
 
@@ -64,7 +69,7 @@ static void perform_blessing(god_type god)
             building_bless_farms();
             break;
         case GOD_NEPTUNE:
-            city_message_post(1, MESSAGE_BLESSING_FROM_NEPTUNE, 0, 0);
+            city_message_post(1, MESSAGE_BLESSING_FROM_NEPTUNE_ALTERNATE, 0, 0);
             city_data.religion.neptune_double_trade_active = NEPTUNE_BLESSING_MONTHS;
             break;
         case GOD_MERCURY:
@@ -76,8 +81,10 @@ static void perform_blessing(god_type god)
             city_data.religion.mars_spirit_power = 10;
             break;
         case GOD_VENUS:
-            city_message_post(1, MESSAGE_BLESSING_FROM_VENUS, 0, 0);
+            city_message_post(1, MESSAGE_BLESSING_FROM_VENUS_ALTERNATE, 0, 0);
             city_sentiment_change_happiness(25);
+            city_population_venus_blessing();
+            city_data.religion.venus_blessing_months_left = VENUS_BLESSING_MONTHS;
             break;
     }
 }
