@@ -38,6 +38,19 @@ static int scale_pixels_to_logical(int pixel_value)
     return pixel_value * 100 / scale_percentage;
 }
 
+static void set_scale_percentage(int new_scale)
+{
+    if (new_scale < 50) {
+        new_scale = 50;
+    } else if (new_scale > 500) {
+        new_scale = 500;
+    }
+    scale_percentage = new_scale;
+
+    // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
+}
+
 #ifdef __ANDROID__
 static void set_scale_for_screen(int pixel_width, int pixel_height)
 {
@@ -58,7 +71,7 @@ static void set_scale_for_screen(int pixel_width, int pixel_height)
 
 int platform_screen_create(const char *title, int display_scale_percentage)
 {
-    scale_percentage = display_scale_percentage;
+    set_scale_percentage(display_scale_percentage);
 
     int width, height;
     int fullscreen = system_is_fullscreen_only() ? 1 : setting_fullscreen();
@@ -152,8 +165,6 @@ int platform_screen_resize(int pixel_width, int pixel_height)
         SDL.texture = 0;
     }
 
-    // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
     SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
 
     setting_set_display(setting_fullscreen(), logical_width, logical_height);
@@ -169,6 +180,14 @@ int platform_screen_resize(int pixel_width, int pixel_height)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture: %s", SDL_GetError());
         return 0;
     }
+}
+
+void system_scale_display(int display_scale_percentage)
+{
+    int width, height;
+    SDL_GetWindowSize(SDL.window, &width, &height);
+    set_scale_percentage(display_scale_percentage);
+    platform_screen_resize(width, height);
 }
 
 void platform_screen_move(int x, int y)
