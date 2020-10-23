@@ -1122,3 +1122,29 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
         draw_compressed_and(img, data, x, y, height, color_mask);
     }
 }
+
+void image_draw_scaled_up(int image_id, int x_offset, int y_offset, unsigned int scale_factor)
+{
+    const image *img = image_get(image_id);
+    const color_t *data = image_data(image_id);
+
+    if (!data || img->draw.type == IMAGE_TYPE_ISOMETRIC || img->draw.is_fully_compressed || !scale_factor) {
+        return;
+    }
+
+    int width = img->width * scale_factor;
+    int height = img->height * scale_factor;
+
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, width, height);
+    if (!clip->is_visible) {
+        return;
+    }
+    for (int y = clip->clipped_pixels_top; y < height - clip->clipped_pixels_bottom; y++) {
+        color_t *dst = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
+        int x_max = width - clip->clipped_pixels_right;
+        int image_y_offset = (y / scale_factor) * img->width;
+        for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
+            *dst = data[image_y_offset + x / scale_factor];
+        }
+    }
+}
