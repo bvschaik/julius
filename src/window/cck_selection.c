@@ -85,7 +85,7 @@ static void draw_scenario_list(void)
         }
         strcpy(file, data.scenarios->files[i + scrollbar.scroll_position]);
         encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
-        file_remove_extension(displayable_file);
+        file_remove_extension((char *)displayable_file);
         text_ellipsize(displayable_file, font, 240);
         text_draw(displayable_file, 24, 220 + 16 * i, font, 0);
     }
@@ -221,7 +221,7 @@ static void button_select_item(int index, int param2)
     strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item]);
     game_file_load_scenario_data(data.selected_scenario_filename);
     encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
-    file_remove_extension(data.selected_scenario_display);
+    file_remove_extension((char *)data.selected_scenario_display);
     window_invalidate();
 }
 

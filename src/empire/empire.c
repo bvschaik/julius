@@ -149,7 +149,7 @@ int empire_can_export_resource_to_city(int city_id, int resource)
     }
 }
 
-static int get_max_stock_for_population(void)
+/**static int get_max_stock_for_population(void)
 {
     int population = city_population();
     if (population < 2000) {
@@ -161,7 +161,7 @@ static int get_max_stock_for_population(void)
     } else {
         return 40;
     }
-}
+}**/
 
 int empire_can_import_resource_from_city(int city_id, int resource)
 {
@@ -178,8 +178,10 @@ int empire_can_import_resource_from_city(int city_id, int resource)
 
     int in_stock = city_resource_count(resource);
     int max_in_stock = 0;
-    int finished_good = RESOURCE_NONE;
-    /*switch (resource) {
+    /* NOTE: don't forget to uncomment function get_max_stock_for_population
+    
+    int finished_good = RESOURCE_NONE; 
+    switch (resource) {
         // food and finished materials
         case RESOURCE_WHEAT:
         case RESOURCE_VEGETABLES:

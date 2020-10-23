@@ -63,8 +63,8 @@ static void draw_background(void)
         image_draw(data.option_1.image_id, text_x, 200);
         text_x += 160;
         text_width = 270;
-    } else if (data.option_1.mod_author) {
-        image_draw(mods_get_image_id(mods_get_group_id(data.option_1.mod_author, data.option_1.mod_name), data.option_1.mod_image_id), text_x, 200);
+    } else if (*data.option_1.mod_author) {
+        image_draw(mods_get_image_id(mods_get_group_id((char *) data.option_1.mod_author, (char *) data.option_1.mod_name), (char *)data.option_1.mod_image_id), text_x, 200);
         text_x += 160;
         text_width = 270;
     }
@@ -79,8 +79,8 @@ static void draw_background(void)
         image_draw(data.option_2.image_id, text_x, 340);
         text_x += 160;
         text_width = 270;
-    } else if (data.option_2.mod_author) {
-        image_draw(mods_get_image_id(mods_get_group_id(data.option_2.mod_author, data.option_2.mod_name), data.option_2.mod_image_id), text_x, 340);
+    } else if (*data.option_2.mod_author) {
+        image_draw(mods_get_image_id(mods_get_group_id((char *) data.option_2.mod_author, (char *) data.option_2.mod_name), (char *) data.option_2.mod_image_id), text_x, 340);
         text_x += 160;
         text_width = 270;
     }
@@ -124,7 +124,6 @@ static void button_select_option_2(int param1, int param2)
 void window_show_option_popup(int title, int prompt, option_menu_item *options,
     void (*close_func)(int selection))
 {
-    int i = 1;
     if (init(title, prompt, options[0], options[1], close_func)) {
         window_type window = {
             WINDOW_POPUP_DIALOG,

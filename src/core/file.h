@@ -60,7 +60,7 @@ void file_append_extension(char *filename, const char *extension);
  * Removes the extension from the file
  * @param[in,out] filename Filename to change
  */
-void file_remove_extension(uint8_t *filename);
+void file_remove_extension(char *filename);
 
 /**
  * Check if file exists

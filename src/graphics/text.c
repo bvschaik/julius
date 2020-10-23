@@ -230,18 +230,18 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
     return width;
 }
 
-void text_draw_centered_with_linebreaks(const uint8_t* str, int x, int y, int box_width, font_t font, color_t color) {
-    char** result = NULL;
+void text_draw_centered_with_linebreaks(const uint8_t* str, int x, int y, int box_width, font_t font, color_t color)
+{
     int count = 0;
     char* split;
     
-    uint8_t oldstr[512];
-    strcpy(oldstr, str);
+    char oldstr[512];
+    strcpy(oldstr, (char *)str);
 
     split = strtok(oldstr, "\n");
     while (split != NULL)
     {        
-        text_draw_centered(split, x, y + (20 * count), box_width, font, color);
+        text_draw_centered((uint8_t *)split, x, y + (20 * count), box_width, font, color);
         count++;
         split = strtok(NULL, "\n");
     }
@@ -351,7 +351,7 @@ int text_draw_percentage(int value, int x_offset, int y_offset, font_t font)
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 
-int text_draw_label_and_number(const char* label, int value, const char *postfix, int x_offset, int y_offset, font_t font, color_t color)
+int text_draw_label_and_number(const uint8_t *label, int value, const char *postfix, int x_offset, int y_offset, font_t font, color_t color)
 {
     uint8_t str[2 * NUMBER_BUFFER_LENGTH];
     uint8_t* pos = label ? string_copy(label, str, NUMBER_BUFFER_LENGTH) : str;
@@ -359,7 +359,7 @@ int text_draw_label_and_number(const char* label, int value, const char *postfix
     return text_draw(str, x_offset, y_offset, font, color);
 }
 
-void text_draw_label_and_number_centered(const char* label, int value, const char *postfix, int x_offset, int y_offset, int box_width, font_t font, color_t color)
+void text_draw_label_and_number_centered(const uint8_t *label, int value, const char *postfix, int x_offset, int y_offset, int box_width, font_t font, color_t color)
 {
     uint8_t str[2 * NUMBER_BUFFER_LENGTH];
     uint8_t* pos = label ? string_copy(label, str, NUMBER_BUFFER_LENGTH) : str;

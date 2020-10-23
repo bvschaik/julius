@@ -30,7 +30,6 @@ static void draw_housing_table()
 {
     int *housing_type_counts;
     int *houses_demanding_goods;
-    int width;
     int y_offset = 68;
     int rows = 0;
     translation_key goods_demand_strings[4] = {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE, TR_ADVISOR_RESIDENCES_DEMANDING_OIL, TR_ADVISOR_RESIDENCES_DEMANDING_WINE};
@@ -41,7 +40,7 @@ static void draw_housing_table()
 
     for (int i = 0; i <= 11; i++) {
         if (housing_type_counts[i]) {
-            width = lang_text_draw(29, i, 70, y_offset + (20*rows), FONT_NORMAL_GREEN);
+            lang_text_draw(29, i, 70, y_offset + (20*rows), FONT_NORMAL_GREEN);
             text_draw_number(housing_type_counts[i], '@', " ", 215, y_offset + (20*rows), FONT_NORMAL_WHITE);
             rows += 1;
         }
@@ -51,7 +50,7 @@ static void draw_housing_table()
 
     for (int i = 12; i <= 19; i++) {
         if (housing_type_counts[i]) {
-            width = lang_text_draw(29, i, 270, y_offset + (20*rows), FONT_NORMAL_GREEN);
+            lang_text_draw(29, i, 270, y_offset + (20*rows), FONT_NORMAL_GREEN);
             text_draw_number(housing_type_counts[i], '@', " ", 450, y_offset + (20*rows), FONT_NORMAL_WHITE);
             rows += 1;
         }
@@ -71,7 +70,6 @@ static void draw_housing_table()
         text_draw(translation_for(goods_demand_strings[i]), 90, y_offset+263+ (23*i), FONT_NORMAL_BLACK, 0);
         text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23*i), FONT_NORMAL_BLACK);
     }
-
 }
 
 static int draw_background(void)

@@ -432,15 +432,15 @@ int building_monument_is_monument(const building* b)
 int building_monument_is_grand_temple(building_type type)
 {
 	switch (type) {
-	case BUILDING_GRAND_TEMPLE_CERES:
-	case BUILDING_GRAND_TEMPLE_NEPTUNE:
-	case BUILDING_GRAND_TEMPLE_MERCURY:
-	case BUILDING_GRAND_TEMPLE_MARS:
-	case BUILDING_GRAND_TEMPLE_VENUS:
-		return 1;
-		break;
+		case BUILDING_GRAND_TEMPLE_CERES:
+		case BUILDING_GRAND_TEMPLE_NEPTUNE:
+		case BUILDING_GRAND_TEMPLE_MERCURY:
+		case BUILDING_GRAND_TEMPLE_MARS:
+		case BUILDING_GRAND_TEMPLE_VENUS:
+			return 1;
+		default:
+			return 0;
 	}
-	return 0;
 }
 
 int building_monument_needs_resource(building* b, int resource) {

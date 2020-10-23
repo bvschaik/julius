@@ -863,7 +863,6 @@ void window_building_draw_mess_hall(building_info_context* c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
    
     text_draw_centered(translation_for(TR_BUILDING_MESS_HALL), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    16 * (c->width_blocks - 4),
     window_building_draw_stocks(c, b, 0, 1);
     if (city_military_total_soldiers_in_city() > 0) {
         int width = text_draw(translation_for(TR_BUILDING_MESS_HALL_FULFILLMENT), c->x_offset + 32, c->y_offset + 106, FONT_NORMAL_BLACK, 0);

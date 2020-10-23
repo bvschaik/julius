@@ -362,7 +362,7 @@ int game_file_start_scenario(const char *scenario_file)
 {
     uint8_t scenario_name[FILE_NAME_MAX];
     encoding_from_utf8(scenario_file, scenario_name, FILE_NAME_MAX);
-    file_remove_extension(scenario_name);
+    file_remove_extension((char *)scenario_name);
     return start_scenario(scenario_name, scenario_file);
 }
 
