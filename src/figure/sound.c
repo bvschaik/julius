@@ -43,6 +43,7 @@ void figure_play_die_sound(const figure *f)
         case FIGURE_GLADIATOR:
         case FIGURE_INDIGENOUS_NATIVE:
         case FIGURE_TOWER_SENTRY:
+        case FIGURE_MESS_HALL_BUYER:
         case FIGURE_ENEMY43_SPEAR:
         case FIGURE_ENEMY44_SWORD:
         case FIGURE_ENEMY45_SWORD:
