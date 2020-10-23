@@ -79,7 +79,7 @@ int scenario_building_allowed(int building_type)
         case BUILDING_WHARF:
             return scenario.allowed_buildings[ALLOWED_BUILDING_WHARF];
         case BUILDING_LIGHTHOUSE:
-            return scenario.allowed_buildings[ALLOWED_BUILDING_WHARF] && scenario.allowed_buildings[ALLOWED_BUILDING_MONUMENTS];
+            return (scenario.allowed_buildings[ALLOWED_BUILDING_WHARF] || scenario.allowed_buildings[ALLOWED_BUILDING_DOCK]) && scenario.allowed_buildings[ALLOWED_BUILDING_MONUMENTS];
         case BUILDING_DOCK:
             return scenario.allowed_buildings[ALLOWED_BUILDING_DOCK];
         case BUILDING_WALL:

@@ -96,7 +96,19 @@ void city_festival_schedule(void)
     city_finance_process_sundry(cost);
 
     if (city_data.festival.selected.size == FESTIVAL_GRAND) {
-        building_warehouses_remove_resource(RESOURCE_WINE, city_data.festival.grand_wine);
+        int wine_needed = city_data.festival.grand_wine;
+        if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
+            building* venus_gt = building_get(building_monument_get_venus_gt());
+            if (wine_needed <= venus_gt->loads_stored) {
+                venus_gt->loads_stored -= wine_needed;
+                wine_needed = 0;
+            }
+            else {
+                wine_needed -= venus_gt->loads_stored;
+                venus_gt->loads_stored = 0;
+            }
+        }
+        building_warehouses_remove_resource(RESOURCE_WINE, wine_needed);
     }
 }
 
@@ -166,12 +178,18 @@ void city_festival_update(void)
 
 void city_festival_calculate_costs(void)
 {
+    int wine_available = city_data.resource.stored_in_warehouses[RESOURCE_WINE];
+    if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
+        building* venus_gt = building_get(building_monument_get_venus_gt());
+        wine_available += venus_gt->loads_stored;
+    }
+
     city_data.festival.small_cost = city_data.population.population / 20 + 10;
     city_data.festival.large_cost = city_data.population.population / 10 + 20;
     city_data.festival.grand_cost = city_data.population.population / 5 + 40;
     city_data.festival.grand_wine = city_data.population.population / 500 + 1;
     city_data.festival.not_enough_wine = 0;
-    if (city_data.resource.stored_in_warehouses[RESOURCE_WINE] < city_data.festival.grand_wine) {
+    if (wine_available < city_data.festival.grand_wine) {
         city_data.festival.not_enough_wine = 1;
         if (city_data.festival.selected.size == FESTIVAL_GRAND) {
             city_data.festival.selected.size = FESTIVAL_LARGE;
