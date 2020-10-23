@@ -552,7 +552,7 @@ static void draw_bathhouse(const map_tile *tile, int x, int y)
         draw_building(image_id, x, y);
         if (has_water) {
             const image *img = image_get(image_id);
-            image_draw_masked(image_id - 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
+            image_draw_masked(image_id - 1, x + img->sprite_offset_x - 7, y + img->sprite_offset_y + 6, COLOR_MASK_GREEN);
         }
     }
 }
