@@ -51,7 +51,6 @@ static void button_close(int save, int param2);
 static void button_page(int param1, int param2);
 static int config_change_basic(config_key key);
 static int config_change_zoom(config_key key);
-static int config_change_string_basic(config_string_key key);
 static int config_change_string_language(config_string_key key);
 
 
@@ -136,7 +135,6 @@ static void init(void)
     data.page = 0;
     data.starting_option = 0;
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
-        config_key key = checkbox_buttons[i].parameter1;
         data.config_values[i].original_value = config_get(i);
         data.config_values[i].new_value = config_get(i);
         data.config_values[i].change_action = config_change_basic;
@@ -370,13 +368,6 @@ static int config_change_basic(config_key key)
 {
     config_set(key, data.config_values[key].new_value);
     data.config_values[key].original_value = data.config_values[key].new_value;
-    return 1;
-}
-
-static int config_change_string_basic(config_string_key key)
-{
-    config_set_string(key, data.config_string_values[key].new_value);
-    strncpy(data.config_string_values[key].original_value, data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
     return 1;
 }
 

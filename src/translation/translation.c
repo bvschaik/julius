@@ -76,6 +76,8 @@ void translation_load(language_type language)
         case LANGUAGE_TRADITIONAL_CHINESE:
             translation_traditional_chinese(&strings, &num_strings);
             break;
+        default:
+            log_error("Invalid translation selected", 0, 0);
     }
 
     memset(data.strings, 0, sizeof(data.strings));

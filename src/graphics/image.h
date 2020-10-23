@@ -21,4 +21,6 @@ void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, c
 void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask);
 void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t color_mask);
 
+void image_draw_scaled_up(int image_id, int x_offset, int y_offset, unsigned int scale_factor);
+
 #endif // GRAPHICS_IMAGE_H

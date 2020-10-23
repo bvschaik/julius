@@ -316,8 +316,8 @@ static void draw_tile_tooltip(tooltip_context * c){
 
         graphics_draw_rect(x, y, width, height, COLOR_BLACK);
         graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-        text_draw_label_and_number("x: ", x_tile, " ", x + 2, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-        text_draw_label_and_number("y: ", y_tile, " ", x + 2 , y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+        text_draw_label_and_number(string_from_ascii("x: "), x_tile, " ", x + 2, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+        text_draw_label_and_number(string_from_ascii("y: "), y_tile, " ", x + 2 , y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     }
 }
 

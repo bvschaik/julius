@@ -137,9 +137,6 @@ int building_granary_remove_resource(building *granary, int resource, int amount
 
 int building_granary_remove_for_getting_deliveryman(building *src, building *dst, int *resource)
 {
-    const building_storage *s_src = building_storage_get(src->storage_id);
-    const building_storage *s_dst = building_storage_get(dst->storage_id);
-
     int max_amount = 0;
     int max_resource = 0;
     if (building_granary_is_getting(RESOURCE_WHEAT,dst) && !building_granary_is_gettable(RESOURCE_WHEAT,src)) {
@@ -237,7 +234,6 @@ void building_granaries_calculate_stocks(void)
         if (!b->has_road_access || b->distance_from_entry <= 0) {
             continue;
         }
-        const building_storage *s = building_storage_get(b->storage_id);
         int total_non_getting = 0;
         if (!building_granary_is_gettable(RESOURCE_WHEAT,b)) {
             total_non_getting += b->data.granary.resource_stored[RESOURCE_WHEAT];
@@ -393,7 +389,6 @@ int building_granary_for_getting(building *src, map_point *dst)
                 continue;
             }
         }	    	
-        const building_storage *s = building_storage_get(b->storage_id);
         int amount_gettable = 0;
         if ((building_granary_is_getting(RESOURCE_WHEAT,src)) &&
             !building_granary_is_gettable(RESOURCE_WHEAT,b)) {

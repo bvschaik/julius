@@ -603,7 +603,6 @@ void window_building_draw_work_camp(building_info_context* c)
 	outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 	inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     text_draw_centered(translation_for(TR_BUILDING_WORK_CAMP), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    16 * (c->width_blocks - 4),
     text_draw_multiline(translation_for(TR_BUILDING_WORK_CAMP_DESC), c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     window_building_draw_employment(c, 138);
 }
@@ -614,20 +613,19 @@ void window_building_draw_engineer_guild(building_info_context* c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     text_draw_centered(translation_for(TR_BUILDING_ENGINEER_GUILD), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    16 * (c->width_blocks - 4),
-        text_draw_multiline(translation_for(TR_BUILDING_ENGINEER_GUILD_DESC), c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+    text_draw_multiline(translation_for(TR_BUILDING_ENGINEER_GUILD_DESC), c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     window_building_draw_employment(c, 138);
 }
 
-static int add_module(int selection) {
+static void add_module(int selection)
+{
     if (!selection) {
-        return 0;
+        return;
     }
     sound_speech_play_file("wavs/oracle.wav");
     building* b = building_get(data.building_id);
     city_finance_process_construction(MODULE_COST);
     building_monument_add_module(b, selection);
-    return 1;
 }
 
 static void add_module_prompt(int param1, int param2)

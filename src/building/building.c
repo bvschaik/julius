@@ -404,8 +404,8 @@ int building_get_levy(building* b)
 {
     //Pantheon base bonus
     if (building_monument_working(BUILDING_PANTHEON) && 
-        (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) ||
-        (b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS)) {
+        ((b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) ||
+        (b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS))) {
         return (b->monthly_levy / 4) * 3;
     }
     else {

@@ -497,7 +497,6 @@ void figure_trade_caravan_donkey_action(figure *f)
         f->is_ghost = 1;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    int base_image_id = 0;
     
     f->image_id = trader_image_id() + dir + 8 * f->image_offset;
 }

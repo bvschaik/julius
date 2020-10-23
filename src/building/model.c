@@ -169,41 +169,30 @@ const model_building MODEL_MESS_HALL = { 100,-8,1,2,4,10 };
 const model_building *model_get_building(building_type type)
 {
     switch (type) {
-    case BUILDING_ROADBLOCK:
-        return &MODEL_ROADBLOCK;
-        break;
-    case BUILDING_WORKCAMP:
-        return &MODEL_WORK_CAMP;
-        break;
-    case BUILDING_ENGINEER_GUILD:
-        return &MODEL_ENGINEER_GUILD;
-        break;
-    case BUILDING_GRAND_TEMPLE_CERES:
-        return &MODEL_GRAND_TEMPLE_CERES;
-        break;
-    case BUILDING_GRAND_TEMPLE_NEPTUNE:
-        return &MODEL_GRAND_TEMPLE_NEPTUNE;
-        break;
-    case BUILDING_GRAND_TEMPLE_MERCURY:
-        return &MODEL_GRAND_TEMPLE_MERCURY;
-        break;
-    case BUILDING_GRAND_TEMPLE_MARS:
-        return &MODEL_GRAND_TEMPLE_MARS;
-        break;
-    case BUILDING_GRAND_TEMPLE_VENUS:
-        return &MODEL_GRAND_TEMPLE_VENUS;
-        break;
-    case BUILDING_PANTHEON:
-        return &MODEL_PANTHEON;
-        break;
-    case BUILDING_MESS_HALL:
-        return &MODEL_MESS_HALL;
-        break;
-    case BUILDING_LIGHTHOUSE:
-        return &MODEL_LIGHTHOUSE;
-        break;
-
-
+        case BUILDING_ROADBLOCK:
+            return &MODEL_ROADBLOCK;
+        case BUILDING_WORKCAMP:
+            return &MODEL_WORK_CAMP;
+        case BUILDING_ENGINEER_GUILD:
+            return &MODEL_ENGINEER_GUILD;
+        case BUILDING_GRAND_TEMPLE_CERES:
+            return &MODEL_GRAND_TEMPLE_CERES;
+        case BUILDING_GRAND_TEMPLE_NEPTUNE:
+            return &MODEL_GRAND_TEMPLE_NEPTUNE;
+        case BUILDING_GRAND_TEMPLE_MERCURY:
+            return &MODEL_GRAND_TEMPLE_MERCURY;
+        case BUILDING_GRAND_TEMPLE_MARS:
+            return &MODEL_GRAND_TEMPLE_MARS;
+        case BUILDING_GRAND_TEMPLE_VENUS:
+            return &MODEL_GRAND_TEMPLE_VENUS;
+        case BUILDING_PANTHEON:
+            return &MODEL_PANTHEON;
+        case BUILDING_MESS_HALL:
+            return &MODEL_MESS_HALL;
+        case BUILDING_LIGHTHOUSE:
+            return &MODEL_LIGHTHOUSE;
+        default:
+            break;
     }
 
     if (type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) {

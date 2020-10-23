@@ -7,6 +7,7 @@
 #include "city/view.h"
 #include "core/calc.h"
 #include "core/log.h"
+#include "core/string.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -298,7 +299,7 @@ void window_building_draw_legion_info(building_info_context *c)
     }
     // food warnings
     if (city_data.mess_hall.food_stress_cumulative > 50) {
-        text_draw("*", c->x_offset + 300 +width, c->y_offset + 120, FONT_NORMAL_BLACK, 0);
+        text_draw(string_from_ascii("*"), c->x_offset + 300 +width, c->y_offset + 120, FONT_NORMAL_BLACK, 0);
         text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_2), c->x_offset + 20, c->y_offset + 300, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
     }
     else if (city_data.mess_hall.food_stress_cumulative > 20) {

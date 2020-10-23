@@ -128,7 +128,6 @@ void window_building_draw_roadblock(building_info_context *c)
     window_building_play_sound(c, "wavs/prefecture.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(28, 115, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    building *b = building_get(c->building_id);
     window_building_draw_description_from_tr_string(c, TR_BUILDING_ROADBLOCK_DESC);
 }
 
@@ -174,8 +173,6 @@ void window_building_draw_roadblock_orders_foreground(building_info_context* c)
         else {
             lang_text_draw(99, 8, c->x_offset + 230, y_offset + 55 + 32 * i, FONT_NORMAL_RED);
         }
-
-        building* b = building_get(c->building_id);
     }
 }
 

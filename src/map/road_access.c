@@ -425,14 +425,19 @@ int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int *road_tiles)
 
 int map_has_adjacent_road_tiles(int grid_offset)
 {
-    int adjacent_roads = terrain_is_road_like(grid_offset + map_grid_delta(0, -1))
-    + terrain_is_road_like(grid_offset + map_grid_delta(1, 0))
-    + terrain_is_road_like(grid_offset + map_grid_delta(0, 1))
-    + terrain_is_road_like(grid_offset + map_grid_delta(-1, 0));
+    int tiles[4];
+    tiles[0] = grid_offset + map_grid_delta(0, -1);
+    tiles[1] = grid_offset + map_grid_delta(1, 0);
+    tiles[2] = grid_offset + map_grid_delta(0, 1);
+    tiles[3] = grid_offset + map_grid_delta(-1, 0);
+    int adjacent_roads = 0;
+    for (int i = 0; i < 4; i++) {
+        building* b = building_get(map_building_at(tiles[i]));
+        if (b->type != BUILDING_ROADBLOCK) {
+            adjacent_roads += terrain_is_road_like(tiles[i]);
+        }
+    }
     return adjacent_roads;
-
-
-
 }
 
 int map_has_adjacent_granary_road(int grid_offset)	

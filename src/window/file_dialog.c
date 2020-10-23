@@ -88,7 +88,7 @@ static void init(file_type type, file_dialog_type dialog_type)
     if (strlen(data.file_data->last_loaded_file) == 0) {
         string_copy(lang_get_string(9, type == FILE_TYPE_SCENARIO ? 7 : 6), data.typed_name, FILE_NAME_MAX);
         if (type == FILE_TYPE_SAVED_GAME) {
-            file_append_extension(data.typed_name, saved_game_data_expanded.extension);
+            file_append_extension((char *)data.typed_name, saved_game_data_expanded.extension);
         }
         encoding_to_utf8(data.typed_name, data.file_data->last_loaded_file, FILE_NAME_MAX, 0);
     } else {

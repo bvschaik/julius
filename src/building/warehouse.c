@@ -64,8 +64,7 @@ int building_warehouse_add_resource(building *b, int resource)
     if (b->id <= 0) {
         return 0;
     }
-    building *main = building_main(b);    
-    if (building_warehouse_is_not_accepting(resource,main)) {
+    if (building_warehouse_is_not_accepting(resource, building_main(b))) {
         return 0;
     }
     // check building itself
@@ -395,7 +394,6 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
         }
         int loads_stored = 0;
         building *space = b;
-        const building_storage *s = building_storage_get(b->storage_id);
         for (int t = 0; t < 8; t++) {
             space = building_next(space);
             if (space->id > 0 && space->loads_stored > 0) {
@@ -449,7 +447,6 @@ int building_warehouse_with_resource(int src_building_id, int x, int y, int reso
         }
         int loads_stored = 0;
         building* space = b;
-        const building_storage* s = building_storage_get(b->storage_id);
         for (int t = 0; t < 8; t++) {
             space = building_next(space);
             if (space->id > 0 && space->loads_stored > 0) {
@@ -612,7 +609,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     }
     
     // deliver weapons to barracks
-    if (building_count_active(BUILDING_BARRACKS) || building_count_active(BUILDING_GRAND_TEMPLE_MARS) &&
+    if ((building_count_active(BUILDING_BARRACKS) || building_count_active(BUILDING_GRAND_TEMPLE_MARS)) &&
         !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
         building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x,warehouse->y,RESOURCE_WEAPONS,warehouse->road_network_id,warehouse->distance_from_entry,0));
         if (barracks->loads_stored < MAX_WEAPONS_BARRACKS &&
