@@ -1,6 +1,7 @@
 #include "SDL.h"
 
 #include "core/backtrace.h"
+#include "core/config.h"
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/lang.h"
@@ -500,14 +501,22 @@ static void setup(const julius_args *args)
         SDL_Log("Forcing windowed mode with size %d x %d", w, h);
     }
 
+    // handle arguments
+    if (args->display_scale_percentage) {
+        config_set(CONFIG_SCREEN_DISPLAY_SCALE, args->display_scale_percentage);
+    }
+    if (args->cursor_scale_percentage) {
+        config_set(CONFIG_SCREEN_CURSOR_SCALE, args->cursor_scale_percentage);
+    }
+
     char title[100];
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
-    if (!platform_screen_create(title, args->display_scale_percentage)) {
+    if (!platform_screen_create(title, config_get(CONFIG_SCREEN_DISPLAY_SCALE))) {
         SDL_Log("Exiting: SDL create window failed");
         exit(-2);
     }
     // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
-    system_init_cursors(args->cursor_scale_percentage);
+    system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
 
     time_set_millis(SDL_GetTicks());
 
