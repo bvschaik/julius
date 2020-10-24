@@ -342,7 +342,9 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TITLE_NEPTUNE_BLESSING, "A blessing from Neptune"},
     {TR_CITY_MESSAGE_TEXT_NEPTUNE_BLESSING, "Rewarding your city's devotion, Neptune grants smooth passage to traders for six months, during which your exports will fetch double price."},
     {TR_CITY_MESSAGE_TITLE_VENUS_BLESSING, "A blessing from Venus" },
-    {TR_CITY_MESSAGE_TEXT_VENUS_BLESSING, "Delighted by the joyful reverence shown to her, Venus grants youthfulness, health, and happiness to your people, increasing the size of your working population." }
+    {TR_CITY_MESSAGE_TEXT_VENUS_BLESSING, "Delighted by the joyful reverence shown to her, Venus grants youthfulness, health, and happiness to your people, increasing the size of your working population." },
+    {TR_OVERLAY_ROADS, "Roads" },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

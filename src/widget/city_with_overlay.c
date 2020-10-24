@@ -96,6 +96,8 @@ static const city_overlay *get_city_overlay(void)
             return city_overlay_for_water();
         case OVERLAY_DESIRABILITY:
             return city_overlay_for_desirability();
+        case OVERLAY_ROADS:
+            return city_overlay_for_roads();
         default:
             return 0;
     }

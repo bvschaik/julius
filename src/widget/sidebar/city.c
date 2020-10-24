@@ -17,6 +17,7 @@
 #include "graphics/window.h"
 #include "map/orientation.h"
 #include "scenario/property.h"
+#include "translation/translation.h"
 #include "widget/city.h"
 #include "widget/minimap.h"
 #include "widget/sidebar/common.h"
@@ -104,7 +105,12 @@ static struct {
 static void draw_overlay_text(int x_offset)
 {
     if (game_state_overlay()) {
-        lang_text_draw_centered(14, game_state_overlay(), x_offset, 32, 117, FONT_NORMAL_GREEN);
+        int translation = get_overlay_translation(game_state_overlay());
+        if (translation) {
+            text_draw_centered(translation_for(translation), x_offset, 32, 117, FONT_NORMAL_GREEN, 0);
+        } else {
+            lang_text_draw_centered(14, game_state_overlay(), x_offset, 32, 117, FONT_NORMAL_GREEN);
+        }
     } else {
         lang_text_draw_centered(6, 4, x_offset, 32, 117, FONT_NORMAL_GREEN);
     }
