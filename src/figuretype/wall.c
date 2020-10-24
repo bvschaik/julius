@@ -197,7 +197,9 @@ void figure_tower_sentry_action(figure *f)
     f->terrain_usage = TERRAIN_USAGE_WALLS;
     f->use_cross_country = 0;
     f->is_ghost = 1;
-    f->height_adjusted_ticks = 10;
+    if (f->action_state != FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER) {
+        f->height_adjusted_ticks = 10;
+    }
     f->max_roam_length = 800;
     if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
         f->state = FIGURE_STATE_DEAD;
@@ -269,7 +271,6 @@ void figure_tower_sentry_action(figure *f)
             }	    
 	    
             f->is_ghost = 0;
-            f->height_adjusted_ticks = 0;
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 map_figure_delete(f);
