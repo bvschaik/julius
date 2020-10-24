@@ -31,17 +31,14 @@ Enhancements for Julius include:
 - A lot of small in-game [quality of life improvements](https://github.com/bvschaik/julius/wiki/Improvements-from-Caesar-3)
 - Support for the [high-quality MP3 files](https://github.com/bvschaik/julius/wiki/MP3-Support) once provided on the Sierra website
 
-While Julius does not implement any gameplay changes, a fork of Julius named [Augustus](https://github.com/Keriew/julius) is implementing many long-wanted gameplay changes, such as roadblocks.
+While Julius does not implement any gameplay changes, a fork of Julius named [Augustus](https://github.com/Keriew/augustus) is implementing many long-wanted gameplay changes, such as roadblocks.
 Beware: Augustus does not support the original Caesar 3 save files, while Julius does. So use Julius for a more vanilla experience with some visual improvements, or Augustus for a different gameplay experience.
 
-![](https://github.com/bvschaik/julius/blob/master/res/sce_sys/livearea/contents/bg.png?raw=true)
+![](res/sce_sys/livearea/contents/bg.png)
 
 ## Running the game
 
-First, download the game for your platform from the list above.
-
-Alternatively, you can build Julius yourself. Check [Building Julius](doc/BUILDING.md)
-for details.
+First, download the game for your platform from the list above. Alternatively, you can [build Julius](doc/BUILDING.md) yourself.
 
 Then you can either copy the game to the Caesar 3 folder, or run the game from an independent
 folder, in which case the game will ask you to point to the Caesar 3 folder.
