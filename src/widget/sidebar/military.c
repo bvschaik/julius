@@ -320,11 +320,6 @@ static void draw_military_panel_background(int x_offset)
     draw_military_info_buttons(x_offset, Y_OFFSET_PANEL_START);
 }
 
-static void update_minimap(void)
-{
-    widget_minimap_invalidate();
-}
-
 static void draw_background(int x_offset)
 {
     image_draw(image_group(GROUP_SIDE_PANEL) + 1, x_offset, 24);
@@ -482,7 +477,7 @@ static void set_formation_id(int formation_id)
 {
     data.active_legion.formation_id = formation_id;
     clear_legion_info(&data.active_legion);
-    update_minimap();
+    widget_minimap_invalidate();
 }
 
 static void slide_in_finished(void)
@@ -490,14 +485,14 @@ static void slide_in_finished(void)
     if (data.city_view_was_collapsed) {
         city_view_toggle_sidebar();
     }
-    update_minimap();
+    widget_minimap_invalidate();
     window_city_return();
 }
 
 static void slide_out_finished(void)
 {
     data.active_legion.formation_id = 0;
-    update_minimap();
+    widget_minimap_invalidate();
     window_city_show();
 }
 
@@ -523,7 +518,7 @@ int widget_sidebar_military_exit(void)
 {
     clear_focus_buttons();
     if (!window_is(WINDOW_CITY_MILITARY)) {
-        update_minimap();
+        widget_minimap_invalidate();
         return 0;
     }
     if (data.city_view_was_collapsed) {

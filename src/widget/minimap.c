@@ -6,7 +6,6 @@
 #include "figure/formation.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "input/scroll.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -23,6 +22,12 @@ enum {
     FIGURE_COLOR_SELECTED_SOLDIER = 2,
     FIGURE_COLOR_ENEMY = 3,
     FIGURE_COLOR_WOLF = 4
+};
+
+enum {
+    REFRESH_NOT_NEEDED = 0,
+    REFRESH_FULL = 1,
+    REFRESH_CAMERA_MOVED = 2
 };
 
 static const color_t ENEMY_COLOR_BY_CLIMATE[] = {
@@ -48,6 +53,8 @@ static struct {
         int grid_offset;
     } mouse;
     int refresh_requested;
+    int camera_x;
+    int camera_y;
 } data;
 
 void widget_minimap_invalidate(void)
@@ -74,23 +81,22 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.absolute_x = (VIEW_X_MAX - width_tiles) / 2;
     data.absolute_y = (VIEW_Y_MAX - height_tiles) / 2;
 
-    int camera_x, camera_y;
-    city_view_get_camera(&camera_x, &camera_y);
+    city_view_get_camera(&data.camera_x, &data.camera_y);
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
     if ((map_grid_width() - width_tiles) / 2 > 0) {
-        if (camera_x < data.absolute_x) {
-            data.absolute_x = camera_x;
-        } else if (camera_x > width_tiles + data.absolute_x - view_width_tiles) {
-            data.absolute_x = view_width_tiles + camera_x - width_tiles;
+        if (data.camera_x < data.absolute_x) {
+            data.absolute_x = data.camera_x;
+        } else if (data.camera_x > width_tiles + data.absolute_x - view_width_tiles) {
+            data.absolute_x = view_width_tiles + data.camera_x - width_tiles;
         }
     }
     if ((2 * map_grid_height() - height_tiles) / 2 > 0) {
-        if (camera_y < data.absolute_y) {
-            data.absolute_y = camera_y;
-        } else if (camera_y > height_tiles + data.absolute_y - view_height_tiles) {
-            data.absolute_y = view_height_tiles + camera_y - height_tiles;
+        if (data.camera_y < data.absolute_y) {
+            data.absolute_y = data.camera_y;
+        } else if (data.camera_y > height_tiles + data.absolute_y - view_height_tiles) {
+            data.absolute_y = view_height_tiles + data.camera_y - height_tiles;
         }
     }
     // ensure even height
@@ -254,21 +260,19 @@ static void draw_uncached(int x_offset, int y_offset, int width_tiles, int heigh
     draw_minimap();
 }
 
-void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling)
+static void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles)
 {
     if (width_tiles * 2 != data.width || height_tiles != data.height || x_offset != data.x_offset) {
         draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
         return;
     }
 
-    if (is_scrolling) {
-        int old_absolute_x = data.absolute_x;
-        int old_absolute_y = data.absolute_y;
-        set_bounds(x_offset, y_offset, width_tiles, height_tiles);
-        if (data.absolute_x != old_absolute_x || data.absolute_y != old_absolute_y) {
-            draw_minimap();
-            return;
-        }
+    int old_absolute_x = data.absolute_x;
+    int old_absolute_y = data.absolute_y;
+    set_bounds(x_offset, y_offset, width_tiles, height_tiles);
+    if (data.absolute_x != old_absolute_x || data.absolute_y != old_absolute_y) {
+        draw_minimap();
+        return;
     }
 
     graphics_set_clip_rectangle(x_offset, y_offset, 2 * width_tiles, height_tiles);
@@ -277,14 +281,28 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
     graphics_reset_clip_rectangle();
 }
 
+static int should_refresh(int force)
+{
+    if (data.refresh_requested || force) {
+        data.refresh_requested = 0;
+        return REFRESH_FULL;
+    }
+    int new_x, new_y;
+    city_view_get_camera(&new_x, &new_y);
+    if (data.camera_x != new_x || data.camera_y != new_y) {
+        return REFRESH_CAMERA_MOVED;
+    }
+    return REFRESH_NOT_NEEDED;
+}
+
 void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force)
 {
-    if (data.refresh_requested || scroll_in_progress() || force) {
-        if (data.refresh_requested) {
+    int refresh_type = should_refresh(force);
+    if (refresh_type != REFRESH_NOT_NEEDED) {
+        if (refresh_type == REFRESH_FULL) {
             draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
-            data.refresh_requested = 0;
         } else {
-            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
+            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles);
         }
         graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1, COLOR_MINIMAP_DARK);
         graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
@@ -324,7 +342,6 @@ int widget_minimap_handle_mouse(const mouse *m)
         int grid_offset = get_mouse_grid_offset(m);
         if (grid_offset > 0) {
             city_view_go_to_grid_offset(grid_offset);
-            widget_minimap_invalidate();
             return 1;
         }
     }
