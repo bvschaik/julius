@@ -254,6 +254,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
+			b->monthly_levy = 100;
 			break;
 		}
 		break;
@@ -279,6 +280,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
+			b->monthly_levy = 100;
 			break;
 
 		}
@@ -305,6 +307,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
+			b->monthly_levy = 100;
 			break;
 		}
 		break;
@@ -329,6 +332,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
+			b->monthly_levy = 100;
 			break;
 		}
 		break;
@@ -353,6 +357,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
+			b->monthly_levy = 100;
 			break;
 		}
 		break;
@@ -377,6 +382,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
+			b->monthly_levy = 100;
 			break;
 		}
 		break;
@@ -398,14 +404,13 @@ void building_monument_initialize(building* b)
 		case 5:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse ON"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
+			b->monthly_levy = 30;
 			break;
 		}
 		break;
 
 	}
-	if (b->subtype.monument_phase == MONUMENT_FINISHED) {
-		b->monthly_levy = 100;
-	} else {
+	if (b->subtype.monument_phase != MONUMENT_FINISHED) {
 		for (int resource = 0; resource < RESOURCE_MAX; resource++) {
 			b->data.monument.resources_needed[resource] = building_monument_resources_needed_for_monument_type(b->type,resource,b->subtype.monument_phase);
 		}
