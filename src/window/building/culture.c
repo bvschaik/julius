@@ -417,10 +417,12 @@ void window_building_draw_chariot_maker(building_info_context *c)
 static void window_building_draw_monument_resources_needed(building_info_context* c) {
     building* b = building_get(c->building_id);
     for (int r = RESOURCE_TIMBER; r <= RESOURCE_MARBLE; r++) {
+        int total_resources_needed = building_monument_resources_needed_for_monument_type(b->type, r, b->subtype.monument_phase);
+        int resources_delivered = total_resources_needed - b->data.monument.resources_needed[r];
         int image_id = image_group(GROUP_RESOURCE_ICONS);
         image_draw(image_id + r, c->x_offset + 22, c->y_offset - 105 + r * 20);
-        int width = text_draw_number(b->data.monument.resources_needed[r], '@', "/", c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
-        text_draw_number(building_monument_resources_needed_for_monument_type(b->type,r,b->subtype.monument_phase), '@', " ", c->x_offset + 44 + width, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
+        int width = text_draw_number(resources_delivered, '@', "/", c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
+        text_draw_number(total_resources_needed, '@', " ", c->x_offset + 44 + width, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
 
     }
 }
