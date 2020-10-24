@@ -4,7 +4,7 @@ Julius requires the original Caesar 3 files to run. This can be an old CD-ROM ve
 from either [GOG](https://www.gog.com/game/caesar_3) or
 [Steam](https://store.steampowered.com/app/517790/Caesar_3/).
 
-Note that there are [command line options](https://github.com/bvschaik/julius/wiki/Command-line-options) which are available to all platforms.
+There are [command line options](https://github.com/bvschaik/julius/wiki/Command-line-options) which are available to all platforms.
 
 If you have the high-quality MP3 music files that were once available for download from the Sierra Website,
 the game supports playing them.
@@ -161,7 +161,3 @@ Switch will not erroneously recognize them as a single finger. Otherwise the poi
 Physical USB mice and keyboards are supported. All keyboards seem to work. Not all mice work.
 A mouse compatibility list is available
 [here](https://docs.google.com/spreadsheets/d/1Drbo5-QuSX901MwtOytSMuqRGxeIkq2HELM806I9dj0/edit#gid=0)
-
-## Command line options
-
-A description of command-line options is available [on the wiki](https://github.com/bvschaik/julius/wiki/Command-line-options)
