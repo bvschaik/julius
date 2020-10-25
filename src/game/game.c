@@ -108,8 +108,8 @@ int game_init(void)
     load_custom_messages();
     sound_system_init();
     game_state_init();
-    window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
-
+    int missing_mods = !mods_get_group_id("Keriew", "Roadblocks"); // If can't find roadblocks mod, mods not installed properly
+    window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : (missing_mods ? MESSAGE_MISSING_MODS : MESSAGE_NONE)));
     return 1;
 }
 

@@ -344,6 +344,11 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TITLE_VENUS_BLESSING, "A blessing from Venus" },
     {TR_CITY_MESSAGE_TEXT_VENUS_BLESSING, "Delighted by the joyful reverence shown to her, Venus grants youthfulness, health, and happiness to your people, increasing the size of your working population." },
     {TR_OVERLAY_ROADS, "Roads" },
+    {TR_NO_MODS_TITLE, "Mods folder can't be found" },
+    {TR_NO_MODS_MESSAGE,
+        "Your Caesar 3 installation does not have properly installed mods folder. "
+        "New assets may not properly be displayed\n"
+        "Check the instructions: PLACEHOLDER" },
 
 };
 
