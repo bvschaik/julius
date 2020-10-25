@@ -292,7 +292,7 @@ static void distribute_market_resources(building *b, building *market)
     int goods_no = 8;
 
     //Venus base stockpile bonus
-    if (b->data.house.temple_venus && building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT)) {
+    if (b->data.house.temple_venus && building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
         goods_no = 12;
     }
     
