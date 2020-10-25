@@ -209,11 +209,7 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
 
 static int get_building_image_id(int map_x, int map_y, building_type type, const building_properties *props)
 {   int image_id;
-    if (props->image_group >= 10000) {
-        image_id = props->image_group + props->image_offset;
-	} else {
-        image_id = image_group(props->image_group) + props->image_offset;
-    }
+    image_id = image_group(props->image_group) + props->image_offset; 
 
     if (type == BUILDING_GATEHOUSE) {
         int orientation = map_orientation_for_gatehouse(map_x, map_y);
@@ -300,11 +296,11 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
     return 0;
 }
 
-static void draw_default(const map_tile *tile, int x_view, int y_view, building_type type)
+static void draw_default(const map_tile* tile, int x_view, int y_view, building_type type)
 {
 
 
-    const building_properties *props = building_properties_for_type(type);
+    const building_properties* props = building_properties_for_type(type);
     int building_size = type == BUILDING_WAREHOUSE ? 3 : props->size;
     int image_id = 0;
 
@@ -327,13 +323,20 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
         }
         if (forbidden_terrain || map_has_figure_at(tile_offset)) {
             blocked_tiles[i] = blocked = 1;
-        } else {
+        }
+        else {
             blocked_tiles[i] = 0;
         }
     }
-    if (blocked || type > BUILDING_ROADBLOCK) {
-        // modded asset image ids cannot currently be looked up from static building properties
+    if (blocked) {
         draw_partially_blocked(x_view, y_view, fully_blocked, num_tiles, blocked_tiles);
+    }
+    else if (type >= BUILDING_ROADBLOCK) {
+        // hack for offsets, not perfect
+        int y_offset = (building_size - 1) * 15;
+        int x_offset = (building_size - 1) * 29;
+        image_id = props->image_group;
+        draw_regular_building(type, image_id, x_view- x_offset, y_view+ y_offset, grid_offset);
     } else {
         image_id = get_building_image_id(tile->x, tile->y, type, props);
         draw_regular_building(type, image_id, x_view, y_view, grid_offset);        

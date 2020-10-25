@@ -3,6 +3,60 @@
 #include "type.h"
 #include "core/mods.h"
 
+#define MOD_BUILDINGS 37
+
+mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
+    {BUILDING_ROADBLOCK, { 1, 1, 0, 0 },  "Areldir", "Roadblocks", 0},
+    {BUILDING_WORKCAMP, { 3, 0, 0, 0 },  "Areldir", "Workcamps", "Workcamp Central"},
+    {BUILDING_GRAND_TEMPLE_CERES, { 7, 1, 0, 0 },  "Areldir", "Ceres_Temple", "Ceres Complex Const 01"},
+    {BUILDING_GRAND_TEMPLE_NEPTUNE, { 7, 1, 0, 0 },  "Areldir", "Neptune_Temple", "Neptune Complex Const 01"},
+    {BUILDING_GRAND_TEMPLE_MERCURY, { 7, 1, 0, 0 },  "Areldir", "Mercury_Temple", "Mercury Complex Const 01"},
+    {BUILDING_GRAND_TEMPLE_MARS, { 7, 1, 0, 0 },  "Areldir", "Mars_Temple", "Mars Complex Const 01"},
+    {BUILDING_GRAND_TEMPLE_VENUS, { 7, 1, 0, 0 },  "Areldir", "Venus_Temple", "Venus Complex Const 01"},
+    {BUILDING_SMALL_POND, { 2, 1, 0, 0 },  "Areldir", "Aesthetics", "s pond south off"},
+    {BUILDING_LARGE_POND, { 3, 1, 0, 0 },  "Areldir", "Aesthetics", "l pond south off"},
+    {BUILDING_PINE_TREE, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "ornamental pine"},
+    {BUILDING_FIR_TREE, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "ornamental fir"},
+    {BUILDING_OAK_TREE, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "ornamental oak"},
+    {BUILDING_ELM_TREE, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "ornamental elm"},
+    {BUILDING_FIG_TREE, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "ornamental fig"},
+    {BUILDING_PLUM_TREE, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "ornamental plum"},
+    {BUILDING_PALM_TREE, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "ornamental palm"},
+    {BUILDING_DATE_TREE, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "ornamental date"},
+    {BUILDING_PINE_PATH,{ 1, 1, 0, 0 },  "Areldir", "Aesthetics", "path orn pine"},
+    {BUILDING_FIR_PATH, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "path orn fir"},
+    {BUILDING_OAK_PATH, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "path orn oak"},
+    {BUILDING_ELM_PATH, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "path orn elm"},
+    {BUILDING_FIG_PATH, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "path orn fig"},
+    {BUILDING_PLUM_PATH, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "path orn plum"},
+    {BUILDING_PALM_PATH, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "path orn palm"},
+    {BUILDING_DATE_PATH, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "path orn date"},
+    {BUILDING_PAVILION_BLUE, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "pavilion blue"},
+    {BUILDING_PAVILION_RED, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "pavilion red"},
+    {BUILDING_PAVILION_ORANGE, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "pavilion orange"},
+    {BUILDING_PAVILION_YELLOW, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "pavilion yellow"},
+    {BUILDING_PAVILION_GREEN, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "pavilion green"},
+    {BUILDING_SMALL_STATUE_ALT, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "sml statue 2"},
+    {BUILDING_SMALL_STATUE_ALT_B, { 1, 1, 0, 0 },  "Areldir", "Aesthetics", "sml statue 3"},
+    {BUILDING_OBELISK, { 2, 1, 0, 0 }, "Areldir", "Aesthetics", "obelisk"},
+    {BUILDING_PANTHEON, { 7, 1, 0, 0 }, "Areldir", "Pantheon", "Pantheon Const 01"},
+    {BUILDING_ENGINEER_GUILD, { 2, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"},
+    {BUILDING_MESS_HALL, { 3, 0, 0, 0 }, "Areldir", "Roadblocks", "Mess OFF Central"},
+    {BUILDING_LIGHTHOUSE, { 3, 1, 0, 0 }, "Areldir", "Lighthouses", "Lighthouse Const 01"}
+};
+
+void init_mod_building_properties() {
+    for (int i = 0; i < MOD_BUILDINGS; ++i) {
+        int group = mods_get_group_id(mod_building_properties[i].mod_author, mod_building_properties[i].mod_name);
+        if (mod_building_properties[i].mod_image_id) {
+            mod_building_properties[i].properties.image_group = mods_get_image_id(group, mod_building_properties[i].mod_image_id);
+        }
+        else {
+            mod_building_properties[i].properties.image_group = group;
+        }
+    }
+}
+
 static building_properties properties[170] = {
 // SZ FIRE GRP OFF
     {0, 0,   0, 0},
@@ -159,59 +213,15 @@ static building_properties properties[170] = {
     {0, 0,   0, 0},
 };
 
-// these are for modded assets and the group/image offset values are not static and should not be used
-building_properties SMALL_CUSTOM_DECOR_PROPERTIES = { 1, 1, 0, 0 };
-building_properties MEDIUM_CUSTOM_DECOR_PROPERTIES = { 2, 1, 0, 0 };
-building_properties LARGE_CUSTOM_DECOR_PROPERTIES = {3, 1, 0, 0 };
-building_properties GRAND_TEMPLE_PROPERTIES = { 7, 1, 0, 0 };
-building_properties WORKCAMP_PROPERTIES = { 3, 0, 0, 0 };
-building_properties ENGINEER_GUILD_PROPERTIES = { 2, 0, 0, 0 };
-building_properties MESS_HALL_PROPERTIES = { 3, 0, 0, 0 };
-building_properties LIGHTHOUSE_PROPERTIES = { 3, 0, 0, 0 };
-
 const building_properties *building_properties_for_type(building_type type)
 {
-    // Roadblock properties, as plaza
-    if (type == BUILDING_ROADBLOCK){
-        return &properties[38];
+    if (type >= BUILDING_ROADBLOCK) {
+        for (int i = 0; i < MOD_BUILDINGS; ++i) {
+            if (mod_building_properties[i].type == type) {
+                return &mod_building_properties[i].properties;
+            }
+        }
     }
-
-    if (type == BUILDING_WORKCAMP) {
-        return &WORKCAMP_PROPERTIES;
-    }
-
-    if (type == BUILDING_ENGINEER_GUILD) {
-        return &ENGINEER_GUILD_PROPERTIES;
-    }
-
-    if (type == BUILDING_MESS_HALL) {
-        return &MESS_HALL_PROPERTIES;
-    }
-
-    if (type >= BUILDING_GRAND_TEMPLE_CERES && type <= BUILDING_GRAND_TEMPLE_VENUS) {
-        return &GRAND_TEMPLE_PROPERTIES;
-    }
-
-    if (type == BUILDING_PANTHEON) {
-        return &GRAND_TEMPLE_PROPERTIES;
-    }
-
-    if (type == BUILDING_LIGHTHOUSE) {
-        return &LIGHTHOUSE_PROPERTIES;
-    }
-
-    if (type == BUILDING_SMALL_POND || type == BUILDING_OBELISK){
-        return &MEDIUM_CUSTOM_DECOR_PROPERTIES;
-    }
-
-    if (type == BUILDING_LARGE_POND){
-        return &LARGE_CUSTOM_DECOR_PROPERTIES;
-    }
-
-    if (type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) {
-        return &SMALL_CUSTOM_DECOR_PROPERTIES;
-    }
-
 
     return &properties[type];
 }
