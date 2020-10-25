@@ -36,6 +36,8 @@
 #include "map/tiles.h"
 #include "map/water.h"
 
+#define PATH_ROTATE_OFFSET 56
+
 struct reservoir_info {
     int cost;
     int place_reservoir_at_start;
@@ -515,8 +517,14 @@ void building_construction_update(int x, int y, int grid_offset)
         int items_placed = place_garden(data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
     }
-    else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_PATH) {
+    else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_TREE) {
         int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
+        if (items_placed >= 0) current_cost *= items_placed;
+    }
+    else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
+        int rotation = building_rotation_get_rotation();
+        int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id); 
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
@@ -717,9 +725,13 @@ void building_construction_place(void)
         map_tiles_update_all_aqueducts(0);
         map_routing_update_land();
     }
-    else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_PATH) {
-        // this is a poor but functional mapping of btype to image id, replace when properties are refactored
+    else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_TREE) {
         int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id);
+    }
+    else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
+        int rotation = building_rotation_get_rotation();
+        int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id);
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);
