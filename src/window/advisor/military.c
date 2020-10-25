@@ -153,7 +153,11 @@ static int draw_background(void)
                 lang_text_draw(138, 35, 84 + width, 100 + 44 * i, FONT_NORMAL_GREEN);
                 break;
         }
-        lang_text_draw_centered(138, 37 + m->morale / 5, 224, 91 + 44 * i, 150, FONT_NORMAL_GREEN);
+        int morale_offset = m->morale / 5;
+        if (morale_offset > 20) {
+            morale_offset = 20;
+        }
+        lang_text_draw_centered(138, 37 + morale_offset, 224, 91 + 44 * i, 150, FONT_NORMAL_GREEN);
 
         int image_id = image_group(GROUP_FORT_ICONS);
         button_border_draw(384, 83 + 44 * i, 30, 30, 0);
