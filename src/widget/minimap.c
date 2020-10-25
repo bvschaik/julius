@@ -165,8 +165,8 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
             if (building_monument_is_monument(b))
             {
                 switch (map_property_multi_tile_size(grid_offset)) {
-                case 3: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "3 Mon MapIcon"), x_view, y_view - 6);
-                case 5: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "5 Mon MapIcon"), x_view, y_view - 6);
+                case 3: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "3 Mon MapIcon"), x_view, y_view - 2);
+                case 5: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "5 Mon MapIcon"), x_view, y_view - 4);
                 case 7: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "7 Mon MapIcon"), x_view, y_view - 6);
                 }
             } else {
