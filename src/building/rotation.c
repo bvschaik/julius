@@ -19,11 +19,7 @@ static void rotate(void){
 
 void building_rotation_update_road_orientation(void)
 {
-    if (time_get_millis() - road_last_update > 1500) {
-        road_last_update = time_get_millis();
-        road_orientation = road_orientation == 1 ? 2 : 1;
-        rotate();
-    }    
+
 }
 
 int building_rotation_get_road_orientation(void)
