@@ -259,6 +259,12 @@ static int set_submenu_for_type(building_type type)
         case BUILDING_MENU_PATHS:
             data.selected_submenu = BUILD_MENU_PATHS;
             break;
+        case BUILDING_MENU_GOV_RES:
+            data.selected_submenu = BUILD_MENU_GOV_RES;
+            break;
+        case BUILDING_MENU_STATUES:
+            data.selected_submenu = BUILD_MENU_STATUES;
+            break;
         default:
             return 0;
     }

@@ -165,6 +165,7 @@ const model_building MODEL_GRAND_TEMPLE_VENUS = { 2500,20,2,-4,5,30 };
 const model_building MODEL_PANTHEON = { 3500,20,2,-4,5,30 };
 const model_building MODEL_LIGHTHOUSE = { 2000,6,1,-1,4,30 };
 const model_building MODEL_MESS_HALL = { 100,-8,1,2,4,10 };
+const model_building MODEL_NULL = { 0,0,0,0,0 };
 
 const model_building *model_get_building(building_type type)
 {
@@ -207,7 +208,12 @@ const model_building *model_get_building(building_type type)
         return &buildings[43];
     }
 
-    return &buildings[type];
+    if (type > 129) {
+        return &MODEL_NULL;
+    }
+    else {
+        return &buildings[type];
+    }
 }
 
 const model_house *model_get_house(house_level level)

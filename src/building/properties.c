@@ -200,7 +200,6 @@ const building_properties *building_properties_for_type(building_type type)
         return &LIGHTHOUSE_PROPERTIES;
     }
 
-
     if (type == BUILDING_SMALL_POND || type == BUILDING_OBELISK){
         return &MEDIUM_CUSTOM_DECOR_PROPERTIES;
     }
