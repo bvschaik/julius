@@ -122,7 +122,7 @@ int building_monument_add_module(building* b, int module_type) {
 				map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Module"), TERRAIN_BUILDING);
 				break;
 			case BUILDING_GRAND_TEMPLE_MARS:
-				map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Module2"), TERRAIN_BUILDING);
+				map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Module"), TERRAIN_BUILDING);
 				break;
 			case BUILDING_GRAND_TEMPLE_VENUS:
 				map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Module"), TERRAIN_BUILDING);
@@ -144,7 +144,7 @@ int building_monument_add_module(building* b, int module_type) {
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Module2"), TERRAIN_BUILDING);
 			break;
 		case BUILDING_GRAND_TEMPLE_MARS:
-			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Module"), TERRAIN_BUILDING);
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Module2"), TERRAIN_BUILDING);
 			break;
 		case BUILDING_GRAND_TEMPLE_VENUS:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Module2"), TERRAIN_BUILDING);
