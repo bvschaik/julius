@@ -250,7 +250,11 @@ void window_building_draw_legion_info(building_info_context *c)
     int flag_height = image_get(image_id)->height;
     image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height);
     // standard pole and morale ball
-    image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
+    int morale_offset = m->morale / 5;
+    if (morale_offset > 20) {
+        morale_offset = 20;
+    }
+    image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - morale_offset;
     image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height + flag_height);
 
     // number of soldiers
@@ -295,7 +299,7 @@ void window_building_draw_legion_info(building_info_context *c)
         width = lang_text_draw(138, 59, c->x_offset + 100, c->y_offset + 120, FONT_NORMAL_BLACK);
     } else {
         width = lang_text_draw(138, 36, c->x_offset + 100, c->y_offset + 120, FONT_NORMAL_BLACK);
-        width = lang_text_draw(138, 37 + m->morale / 5, c->x_offset + 300, c->y_offset + 120, FONT_NORMAL_BLACK);
+        width = lang_text_draw(138, 37 + morale_offset, c->x_offset + 300, c->y_offset + 120, FONT_NORMAL_BLACK);
     }
     // food warnings
     if (city_data.mess_hall.food_stress_cumulative > 50) {

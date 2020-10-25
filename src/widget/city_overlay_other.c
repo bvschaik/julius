@@ -50,6 +50,11 @@ static int show_building_desirability(const building *b)
     return 0;
 }
 
+static int show_building_roads(const building* b)
+{
+    return b->type == BUILDING_ROADBLOCK;
+}
+
 static int show_figure_religion(const figure *f)
 {
     return f->type == FIGURE_PRIEST;
@@ -224,6 +229,11 @@ static int get_tooltip_desirability(tooltip_context *c, int grid_offset)
     } else {
         return 93;
     }
+}
+
+static int get_tooltip_roads(tooltip_context* c, int grid_offset)
+{
+    return 0;
 }
 
 const city_overlay *city_overlay_for_religion(void)
@@ -469,6 +479,22 @@ const city_overlay *city_overlay_for_desirability(void)
         0,
         draw_footprint_desirability,
         draw_top_desirability
+    };
+    return &overlay;
+}
+
+const city_overlay* city_overlay_for_roads(void)
+{
+    static city_overlay overlay = {
+        OVERLAY_ROADS,
+        COLUMN_TYPE_ACCESS,
+        show_building_roads,
+        show_figure_none,
+        get_column_height_none,
+        get_tooltip_roads,
+        0,
+        0,
+        0
     };
     return &overlay;
 }

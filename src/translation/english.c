@@ -179,7 +179,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, "Temple of Venus Verticordia" },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_2, "Temple of Venus Genetrix" },
     {TR_BUILDING_PANTHEON_DESC_MODULE_1, "Pantheum Ara Maxima" },
-    { TR_BUILDING_PANTHEON_DESC_MODULE_2, "Pantheum Roma Aeterna" },
+    {TR_BUILDING_PANTHEON_DESC_MODULE_2, "Pantheum Roma Aeterna" },
     {TR_BUILDING_GRAND_TEMPLE_MENU, "Grand temple" },
     {TR_BUILDING_WORK_CAMP, "Work camp" },
     {TR_BUILDING_WORK_CAMP_DESC, "Laborers gather here to transport materials to construction sites." },
@@ -204,7 +204,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_BIRTHS_LAST_YEAR, "Births last year:"},
     {TR_ADVISOR_DEATHS_LAST_YEAR, "Deaths last year:"},
     {TR_ADVISOR_TOTAL_POPULATION, "residents total"},
-    {TR_REQUIRED_RESOURCES, "Resources required for current phase:"},
+    {TR_REQUIRED_RESOURCES, "Resources delivered for current phase:"},
     {TR_BUILDING_GRAND_TEMPLE_CONSTRUCTION_DESC, "Constructing grand temples requires material stored in a warehouse, laborers from a work camp, and engineers from an engineers' guild."},
     {TR_CONSTRUCTION_PHASE, "Construction phase:"},
     {TR_ADD_MODULE, "Rededicate temple?"},
@@ -345,6 +345,12 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_VENUS_BLESSING, "Delighted by the joyful reverence shown to her, Venus grants youthfulness, health, and happiness to your people, increasing the size of your working population." },
     {TR_BUILDING_MENU_STATUES, "Statues" }, 
     {TR_BUILDING_MENU_GOV_RES, "Mansions" }
+    {TR_OVERLAY_ROADS, "Roads" },
+    {TR_NO_MODS_TITLE, "Mods folder can't be found" },
+    {TR_NO_MODS_MESSAGE,
+        "Your Caesar 3 installation does not have properly installed mods folder. "
+        "New assets may not properly be displayed\n"
+        "Check the instructions: PLACEHOLDER" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -7,12 +7,16 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "translation//translation.h"
 #include "window/city.h"
 
 static void button_menu_item(int index, int param2);
 static void button_submenu_item(int index, int param2);
+
+#define OVERLAY_BUTTONS 9
 
 static generic_button menu_buttons[] = {
     {0, 0, 160, 24, button_menu_item, button_none, 0, 0},
@@ -25,6 +29,7 @@ static generic_button menu_buttons[] = {
     {0, 168, 160, 24, button_menu_item, button_none, 7, 0},
     {0, 192, 160, 24, button_menu_item, button_none, 8, 0},
     {0, 216, 160, 24, button_menu_item, button_none, 9, 0},
+    {0, 216, 160, 24, button_menu_item, button_none, 10, 0},
 };
 static generic_button submenu_buttons[] = {
     {0, 0, 160, 24, button_submenu_item, button_none, 0, 0},
@@ -39,10 +44,11 @@ static generic_button submenu_buttons[] = {
     {0, 216, 160, 24, button_submenu_item, button_none, 9, 0},
 };
 
-static const int MENU_ID_TO_OVERLAY[8] = {OVERLAY_NONE, OVERLAY_WATER, 1, 3, 5, 6, 7, OVERLAY_RELIGION};
-static const int MENU_ID_TO_SUBMENU_ID[8] = {0, 0, 1, 2, 3, 4, 5, 0};
+static const int MENU_ID_TO_OVERLAY[OVERLAY_BUTTONS] = {OVERLAY_NONE, OVERLAY_WATER, 1, 3, 5, 6, 7, OVERLAY_RELIGION, OVERLAY_ROADS};
+static const int MENU_ID_TO_SUBMENU_ID[OVERLAY_BUTTONS] = {0, 0, 1, 2, 3, 4, 5, 0, 0};
+static const int ADDITIONAL_OVERLAY_TR[] = { TR_OVERLAY_ROADS };
 
-static const int SUBMENU_ID_TO_OVERLAY[6][8] = {
+static const int SUBMENU_ID_TO_OVERLAY[6][OVERLAY_BUTTONS] = {
     {0},
     {OVERLAY_FIRE, OVERLAY_DAMAGE, OVERLAY_CRIME, OVERLAY_NATIVE, OVERLAY_PROBLEMS, 0},
     {OVERLAY_ENTERTAINMENT, OVERLAY_THEATER, OVERLAY_AMPHITHEATER, OVERLAY_COLOSSEUM, OVERLAY_HIPPODROME, 0},
@@ -85,9 +91,15 @@ static void draw_foreground(void)
 {
     window_city_draw();
     int x_offset = get_sidebar_x_offset();
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < OVERLAY_BUTTONS; i++) {
         label_draw(x_offset - 170, 74 + 24 * i, 10, data.menu_focus_button_id == i + 1 ? 1 : 2);
-        lang_text_draw_centered(14, MENU_ID_TO_OVERLAY[i], x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
+        int overlay = MENU_ID_TO_OVERLAY[i];
+        int translation = get_overlay_translation(overlay);
+        if (translation) {
+            text_draw_centered(translation_for(translation), x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN,0);
+        } else {
+            lang_text_draw_centered(14, MENU_ID_TO_OVERLAY[i], x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
+        }
     }
     if (data.selected_submenu > 0) {
         image_draw(image_group(GROUP_BULLET), x_offset - 185, 80 + 24 * data.selected_menu);
@@ -102,7 +114,7 @@ static void draw_foreground(void)
 static int count_submenu_items(int submenu_id)
 {
     int total = 0;
-    for (int i = 0; i < 8 && SUBMENU_ID_TO_OVERLAY[submenu_id][i] > 0; i++) {
+    for (int i = 0; i < OVERLAY_BUTTONS && SUBMENU_ID_TO_OVERLAY[submenu_id][i] > 0; i++) {
         total++;
     }
     return total;
@@ -142,7 +154,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     int x_offset = get_sidebar_x_offset();
     int handled = 0;
-    handled |= generic_buttons_handle_mouse(m, x_offset - 170, 72, menu_buttons, 8, &data.menu_focus_button_id);
+    handled |= generic_buttons_handle_mouse(m, x_offset - 170, 72, menu_buttons, OVERLAY_BUTTONS, &data.menu_focus_button_id);
 
     if (!data.keep_submenu_open) {
         handle_submenu_focus();
@@ -196,4 +208,12 @@ void window_overlay_menu_show(void)
     };
     init();
     window_show(&window);
+}
+
+int get_overlay_translation(int overlay) {
+    if (overlay >= OVERLAY_ROADS) {
+        return ADDITIONAL_OVERLAY_TR[overlay - OVERLAY_ROADS];
+    } else {
+        return 0;
+    }
 }
