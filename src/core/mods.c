@@ -800,7 +800,7 @@ void mods_init(void)
 
     // By default, if the requested image is not found, the roadblock image will be shown.
     // This ensures compatibility with previous release versions of Augustus, which only had roadblocks
-    data.roadblock_image = get_modded_image_from_id(mods_get_group_id("Keriew", "Roadblocks"));
+    data.roadblock_image = get_modded_image_from_id(mods_get_group_id("Areldir", "Roadblocks"));
 }
 
 int mods_get_group_id(const char *mod_author, const char *mod_name)

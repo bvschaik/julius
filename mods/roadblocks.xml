@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE mod>
-<mod author="Keriew" name="Roadblocks">
-    <image src="C3RedPlazaB" />
+<mod author="Areldir" name="Roadblocks">
+    <image src="Roadblock_New" />
+	
 </mod>
