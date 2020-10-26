@@ -351,6 +351,7 @@ static translation_string all_strings[] = {
         "Your Caesar 3 installation does not have properly installed mods folder. "
         "New assets may not properly be displayed\n"
         "Check the instructions: PLACEHOLDER" },
+    {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Lighthouse has to be built close to water" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -51,6 +51,9 @@ void city_warning_show(warning_type type)
     else if (type == WARNING_MAX_GRAND_TEMPLES) {
         text = translation_for(TR_WARNING_MAX_GRAND_TEMPLES);
     }
+    else if (type == WARNING_WATER_NEEDED_FOR_LIGHTHOUSE) {
+        text = translation_for(TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE);
+    }
     else {
         text = lang_get_string(19, type - 2);
     }
