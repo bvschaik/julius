@@ -171,7 +171,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_u8(buf, b->fire_proof);
     buffer_write_u8(buf, b->house_figure_generation_delay);
     buffer_write_u8(buf, b->house_tax_coverage);
-    buffer_write_u8(buf, 0);
+    buffer_write_u8(buf, b->house_pantheon_access);
     buffer_write_i16(buf, b->formation_id);
     write_type_data(buf, b);
     buffer_write_i32(buf, b->tax_income_or_storage);
@@ -327,7 +327,7 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->fire_proof = buffer_read_u8(buf);
     b->house_figure_generation_delay = buffer_read_u8(buf);
     b->house_tax_coverage = buffer_read_u8(buf);
-    buffer_skip(buf, 1);
+    b->house_pantheon_access = buffer_read_u8(buf);
     b->formation_id = buffer_read_i16(buf);
     read_type_data(buf, b);
     b->tax_income_or_storage = buffer_read_i32(buf);

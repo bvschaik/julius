@@ -65,6 +65,7 @@ typedef struct {
     unsigned char fire_proof; // cannot catch fire or collapse
     unsigned char house_figure_generation_delay;
     unsigned char house_tax_coverage;
+    unsigned char house_pantheon_access;
     short formation_id;
     unsigned char monthly_levy;
     union {

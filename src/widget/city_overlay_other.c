@@ -5,6 +5,7 @@
 #include "city/finance.h"
 #include "core/calc.h"
 #include "core/config.h"
+#include "translation/translation.h"
 #include "game/resource.h"
 #include "game/state.h"
 #include "graphics/image.h"
@@ -57,7 +58,7 @@ static int show_building_roads(const building* b)
 
 static int show_figure_religion(const figure *f)
 {
-    return f->type == FIGURE_PRIEST;
+    return f->type == FIGURE_PRIEST || f->type == FIGURE_PRIEST_BUYER;
 }
 
 static int show_figure_food_stocks(const figure *f)
@@ -132,6 +133,11 @@ static void add_god(tooltip_context *c, int god_id)
 
 static int get_tooltip_religion(tooltip_context *c, const building *b)
 {
+    if (b->house_pantheon_access) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS;
+        return 0;
+    }
+    
     if (b->data.house.num_gods < 5) {
         if (b->data.house.temple_ceres) {
             add_god(c, GOD_CERES);

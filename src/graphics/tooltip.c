@@ -173,7 +173,13 @@ static void draw_button_tooltip(tooltip_context *c)
 
 static void draw_overlay_tooltip(tooltip_context *c)
 {
-    const uint8_t *text = lang_get_string(c->text_group, c->text_id);
+    const uint8_t* text;
+    if (c->translation_key) {
+        text = translation_for(c->translation_key);
+    }
+    else {
+        text = lang_get_string(c->text_group, c->text_id);
+    }
     if (c->has_numeric_prefix) {
         int offset = string_from_int(overlay_string, c->numeric_prefix, 0);
         string_copy(text, &overlay_string[offset], OVERLAY_TEXT_MAX - offset);

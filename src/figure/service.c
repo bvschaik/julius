@@ -113,6 +113,10 @@ static void religion_coverage_venus(building *b)
     b->data.house.temple_venus = MAX_COVERAGE;
 }
 
+static void religion_coverage_pantheon(building* b) {
+    b->house_pantheon_access = MAX_COVERAGE;
+}
+
 static void school_coverage(building *b)
 {
     b->data.house.school = MAX_COVERAGE;
@@ -460,6 +464,7 @@ int figure_service_provide_coverage(figure *f)
                     provide_culture(x, y, religion_coverage_mercury);
                     provide_culture(x, y, religion_coverage_mars);
                     provide_culture(x, y, religion_coverage_venus);
+                    provide_culture(x, y, religion_coverage_pantheon);
                     break;
                 default:
                     break;
