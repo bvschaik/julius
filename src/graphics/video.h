@@ -43,4 +43,9 @@ void video_shutdown(void);
  */
 void video_draw(int x_offset, int y_offset);
 
+/**
+ * Draws a frame of the current video at fullscreen
+ */
+void video_draw_fullscreen(void);
+
 #endif // GRAPHICS_VIDEO_H

@@ -30,7 +30,7 @@ static void draw_background(void)
 
 static void draw_foreground(void)
 {
-    video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
+    video_draw_fullscreen();
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)

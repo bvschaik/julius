@@ -8,19 +8,15 @@
 
 #define NUM_INTRO_VIDEOS 3
 
-static struct {
-    int width;
-    int height;
-    int current_video;
-} data;
+static int current_video;
 
 static const char *intro_videos[NUM_INTRO_VIDEOS] = { "smk/logo.smk", "smk/intro.smk", "smk/credits.smk" };
 
 static int start_next_video(void)
 {
-    while (data.current_video < NUM_INTRO_VIDEOS) {
-        if (video_start(intro_videos[data.current_video++])) {
-            video_size(&data.width, &data.height);
+    graphics_clear_screen();
+    while (current_video < NUM_INTRO_VIDEOS) {
+        if (video_start(intro_videos[current_video++])) {
             video_init();
             return 1;
         }
@@ -30,7 +26,7 @@ static int start_next_video(void)
 
 static int init(void)
 {
-    data.current_video = 0;
+    current_video = 0;
     return start_next_video();
 }
 
@@ -41,7 +37,7 @@ static void draw_background(void)
 
 static void draw_foreground(void)
 {
-    video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
+    video_draw_fullscreen();
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
