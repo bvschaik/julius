@@ -285,15 +285,17 @@ static void distribute_market_resources(building *b, building *market)
             }
         }
     }
-    if (model->pottery) {
-        market->data.market.pottery_demand = 10;
-        distribute_good(b, market, 8 * model->pottery, INVENTORY_POTTERY);
-    }
+
     int goods_no = 8;
 
     //Venus base stockpile bonus
-    if (b->data.house.temple_venus && building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
         goods_no = 12;
+    }
+
+    if (model->pottery) {
+        market->data.market.pottery_demand = 10;
+        distribute_good(b, market, goods_no * model->pottery, INVENTORY_POTTERY);
     }
     
     if (model->furniture) {
