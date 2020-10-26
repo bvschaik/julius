@@ -8,6 +8,7 @@ typedef struct {
     int fire_proof;
     int image_group;
     int image_offset;
+    int rotation_offset;
 } building_properties;
 
 typedef struct {
