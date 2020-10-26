@@ -29,6 +29,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_TITLE, "Julius configuration options"},
     {TR_CONFIG_LANGUAGE_LABEL, "Language:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(default)"},
+    {TR_CONFIG_DISPLAY_SCALE, "Display scale:"},
+    {TR_CONFIG_CURSOR_SCALE, "Cursor scale:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "User interface changes"},
     {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Gameplay changes"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Play intro videos"},
