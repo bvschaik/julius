@@ -73,8 +73,8 @@ int building_monument_access_point(building* b, map_point* dst)
 			dst->y = b->y + 6;
 		}
 		else if (dx == 1 && dy == -3) {
-			dst->x = b->x + 3;
-			dst->y = b->y + 6;
+			dst->x = b->x;
+			dst->y = b->y + 3;
 		}
 		else if (dx == -3 && dy == 1) {
 			dst->x = b->x + 3;
@@ -90,8 +90,21 @@ int building_monument_access_point(building* b, map_point* dst)
 		return 1;
 	}
 	if (b->type == BUILDING_LIGHTHOUSE) {
-		dst->x = b->road_access_x;
-		dst->y = b->road_access_y;
+		if (dx == -1 && dy == -3) {
+			dst->x = b->x + 1;
+			dst->y = b->y + 2;
+		} else if (dx == 1 && dy == -1) {
+			dst->x = b->x;
+			dst->y = b->y + 1;
+		} else if (dx == -3 && dy == -1) {
+			dst->x = b->x + 2;
+			dst->y = b->y + 1;
+		} else if (dx == -1 && dy == 1) {
+			dst->x = b->x + 1;
+			dst->y = b->y;
+		} else {
+			return 0;
+		}
 		return 1;
 	}
 	return 0;
