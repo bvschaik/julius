@@ -47,21 +47,15 @@ static void draw_version_string(void)
 
     int text_width = text_get_width(version_string, FONT_SMALL_PLAIN);
 
-    if (text_y <= 500 && (screen_width() - 640) / 2 < text_width + 18) {
-        graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
-        graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
-        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
-    } else {
-        text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
-    }
+    graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
+    graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
+    text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
 }
 
 static void draw_background(void)
 {
-    graphics_clear_screens();
+    image_draw_fullscreen_background(image_group(GROUP_MAIN_MENU_BACKGROUND));
     graphics_in_dialog();
-    //image_draw(image_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
-    image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Main Menu"), 0, 0);
     graphics_reset_dialog();
     if (window_is(WINDOW_MAIN_MENU)) {
         draw_version_string();

@@ -960,12 +960,19 @@ void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color)
 
 void image_draw_fullscreen_background(int image_id)
 {
+    graphics_clear_screens();
     int s_width = screen_width();
     int s_height = screen_height();
-    if (s_width > 1024 || s_height > 768) {
-        graphics_clear_screens();
+    const image *img = image_get(image_id);
+    double scale_w = screen_width() / (double) img->width;
+    double scale_h = screen_height() / (double) img->height;
+    double scale = scale_w > scale_h ? scale_w : scale_h;
+
+    if (scale <= 1.0f) {
+        image_draw(image_id, (s_width - img->width) / 2, (s_height - img->height) / 2);
+    } else {
+        image_draw_scaled_up(image_id, (s_width - img->width * scale) / 2, (s_height - img->height * scale) / 2, scale);
     }
-    image_draw(image_id, (s_width - 1024) / 2, (s_height - 768) / 2);
 }
 
 void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask)
@@ -1123,7 +1130,7 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
     }
 }
 
-void image_draw_scaled_up(int image_id, int x_offset, int y_offset, unsigned int scale_factor)
+void image_draw_scaled_up(int image_id, int x_offset, int y_offset, double scale_factor)
 {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
@@ -1142,9 +1149,9 @@ void image_draw_scaled_up(int image_id, int x_offset, int y_offset, unsigned int
     for (int y = clip->clipped_pixels_top; y < height - clip->clipped_pixels_bottom; y++) {
         color_t *dst = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
         int x_max = width - clip->clipped_pixels_right;
-        int image_y_offset = (y / scale_factor) * img->width;
+        int image_y_offset = (int) (y / scale_factor) * img->width;
         for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-            *dst = data[image_y_offset + x / scale_factor];
+            *dst = data[(int) (image_y_offset + x / scale_factor)];
         }
     }
 }

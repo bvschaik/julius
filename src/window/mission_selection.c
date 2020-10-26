@@ -1,11 +1,13 @@
 #include "mission_selection.h"
 
 #include "core/image_group.h"
+#include "core/mods.h"
 #include "game/mission.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
+#include "graphics/screen.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "sound/speech.h"
@@ -46,11 +48,26 @@ static struct {
     int focus_button;
 } data;
 
+static void draw_background_images(void)
+{
+    int s_width = screen_width();
+    int s_height = screen_height();
+
+    if (s_width > 1024 || s_height > 768) {
+        image_draw_fullscreen_background(image_group(GROUP_EMPIRE_MAP));
+        image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "mission select bg"),
+            (s_width - 1024) / 2, (s_height - 768) / 2);
+    } else {
+        image_draw(image_group(GROUP_SELECT_MISSION_BACKGROUND), (s_width - 1024) / 2, (s_height - 768) / 2);
+    }
+
+}
+
 static void draw_background(void)
 {
     int rank = scenario_campaign_rank();
 
-    image_draw_fullscreen_background(image_group(GROUP_SELECT_MISSION_BACKGROUND));
+    draw_background_images();
     graphics_in_dialog();
     image_draw(image_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK);

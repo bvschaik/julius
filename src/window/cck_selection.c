@@ -4,6 +4,7 @@
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/image_group.h"
+#include "core/mods.h"
 #include "game/file.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -174,8 +175,9 @@ static void draw_scenario_info(void)
 
 static void draw_background(void)
 {
-    image_draw_fullscreen_background(image_group(GROUP_CCK_BACKGROUND));
+    image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 25);
     graphics_in_dialog();
+    image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "cck menu bg"), 0, 0);
     inner_panel_draw(280, 242, 2, 12);
     draw_scenario_list();
     draw_scenario_info();

@@ -168,9 +168,7 @@ static void init(void)
 
 static void draw_background(void)
 {
-    graphics_clear_screens();
-
-    image_draw_fullscreen_background(image_group(GROUP_CONFIG));
+    image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 5);
 
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
