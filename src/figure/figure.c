@@ -49,6 +49,7 @@ figure *figure_create(figure_type type, int x, int y, direction_type dir)
     f->cross_country_y = 15 * y;
     f->progress_on_tile = 15;
     f->progress_to_next_tick = 0;
+    random_generate_next();
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
     map_figure_add(f);
