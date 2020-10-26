@@ -6,6 +6,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "game/game.h"
+#include "game/system.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -15,11 +16,11 @@
 #include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "window/hotkey_config.h"
 #include "window/main_menu.h"
+#include "window/numeric_input.h"
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
-
-#include "window/hotkey_config.h"
 
 #include <string.h>
 
@@ -40,9 +41,15 @@ static void on_scroll(void);
 
 static void toggle_switch(int id);
 static void button_language_select(int param1, int param2);
+static void button_display_scale_select(int param1, int param2);
+static void button_cursor_scale_select(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
+
+static const uint8_t *display_text_language(void);
+static const uint8_t *display_text_display_scale(void);
+static const uint8_t *display_text_cursor_scale(void);
 
 static scrollbar_type scrollbar = {580, ITEM_Y_OFFSET, ITEM_HEIGHT * NUM_VISIBLE_ITEMS, on_scroll, 4};
 
@@ -50,17 +57,27 @@ enum {
     TYPE_NONE,
     TYPE_HEADER,
     TYPE_CHECKBOX,
-    TYPE_LANGUAGE
+    TYPE_SELECT
+};
+
+enum {
+    SELECT_LANGUAGE,
+    SELECT_DISPLAY,
+    SELECT_CURSOR
 };
 
 typedef struct {
     int type;
     translation_key description;
     int checkbox_parameter;
+    int select_type;
+    const uint8_t* (*get_display_text)(void);
 } config_widget;
 
 static config_widget widgets[] = {
-    { TYPE_LANGUAGE, TR_CONFIG_LANGUAGE_LABEL },
+    { TYPE_SELECT, TR_CONFIG_LANGUAGE_LABEL, 0,  SELECT_LANGUAGE, display_text_language},
+    { TYPE_SELECT, TR_CONFIG_DISPLAY_SCALE, 0, SELECT_DISPLAY, display_text_display_scale},
+    { TYPE_SELECT, TR_CONFIG_CURSOR_SCALE, 0, SELECT_CURSOR, display_text_cursor_scale},
     { TYPE_NONE },
     { TYPE_HEADER, TR_CONFIG_HEADER_UI_CHANGES },
     { TYPE_CHECKBOX, TR_CONFIG_SHOW_INTRO_VIDEO, CONFIG_UI_SHOW_INTRO_VIDEO},
@@ -79,8 +96,10 @@ static config_widget widgets[] = {
     { TYPE_CHECKBOX, TR_CONFIG_FIX_100_YEAR_GHOSTS, CONFIG_GP_FIX_100_YEAR_GHOSTS }
 };
 
-static generic_button language_button = {
-    120, 0, 200, 24, button_language_select, button_none
+static generic_button select_buttons[] = {
+    { 150, 0, 200, 24, button_language_select, button_none },
+    { 150, 0, 200, 24, button_display_scale_select, button_none },
+    { 150, 0, 200, 24, button_cursor_scale_select, button_none },
 };
 
 static generic_button bottom_buttons[NUM_BOTTOM_BUTTONS] = {
@@ -99,7 +118,6 @@ static translation_key bottom_button_texts[] = {
 
 static struct {
     int focus_button;
-    int language_focus_button;
     int bottom_focus_button;
     struct {
         int original_value;
@@ -119,8 +137,35 @@ static struct {
 } data;
 
 static int config_change_basic(config_key key);
+static int config_change_display_scale(config_key key);
+static int config_change_cursor_scale(config_key key);
 static int config_change_string_basic(config_string_key key);
 static int config_change_string_language(config_string_key key);
+
+static uint8_t *percentage_string(uint8_t *string, int percentage)
+{
+    int offset = string_from_int(string, percentage, 0);
+    string[offset] = '%';
+    string[offset + 1] = 0;
+    return string;
+}
+
+static const uint8_t *display_text_language(void)
+{
+    return data.language_options[data.selected_language_option];
+}
+
+static const uint8_t *display_text_display_scale(void)
+{
+    static uint8_t value[10];
+    return percentage_string(value, data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].new_value);
+}
+
+static const uint8_t *display_text_cursor_scale(void)
+{
+    static uint8_t value[10];
+    return percentage_string(value, data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value);
+}
 
 static void init_config_values(void)
 {
@@ -130,6 +175,8 @@ static void init_config_values(void)
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
         data.config_string_values[i].change_action = config_change_string_basic;
     }
+    data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].change_action = config_change_display_scale;
+    data.config_values[CONFIG_SCREEN_CURSOR_SCALE].change_action = config_change_cursor_scale;
     data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].change_action = config_change_string_language;
 }
 
@@ -223,10 +270,10 @@ static void draw_background(void)
             text_draw(translation_for(w->description), 20, y, FONT_NORMAL_BLACK, 0);
         } else if (w->type == TYPE_CHECKBOX) {
             checkbox_draw_text(20, y, w->checkbox_parameter, w->description);
-        } else if (w->type == TYPE_LANGUAGE) {
-            text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, y + 6, FONT_NORMAL_BLACK, 0);
-            text_draw_centered(data.language_options[data.selected_language_option],
-                language_button.x, y + language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
+        } else if (w->type == TYPE_SELECT) {
+            text_draw(translation_for(w->description), 20, y + 6, FONT_NORMAL_BLACK, 0);
+            const generic_button *btn = &select_buttons[w->select_type];
+            text_draw_centered(w->get_display_text(), btn->x, y + btn->y + 6, btn->width, FONT_NORMAL_BLACK, 0);
         }
     }
 
@@ -247,9 +294,10 @@ static void draw_foreground(void)
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_CHECKBOX) {
             checkbox_draw(20, y, data.focus_button == i + 1);
-        } else if (w->type == TYPE_LANGUAGE) {
-            button_border_draw(language_button.x, y + language_button.y,
-                language_button.width, language_button.height, data.language_focus_button == 1);
+        } else if (w->type == TYPE_SELECT) {
+            const generic_button *btn = &select_buttons[w->select_type];
+            button_border_draw(btn->x, y + btn->y,
+                btn->width, btn->height, data.focus_button == i + 1);
         }
     }
 
@@ -283,8 +331,13 @@ static void handle_input(const mouse *m, const hotkeys *h)
             if (focus) {
                 data.focus_button = i + 1;
             }
-        } else if (w->type == TYPE_LANGUAGE) {
-            handled |= generic_buttons_handle_mouse(m_dialog, 0, y, &language_button, 1, &data.language_focus_button);
+        } else if (w->type == TYPE_SELECT) {
+            generic_button *btn = &select_buttons[w->select_type];
+            int focus = 0;
+            handled |= generic_buttons_handle_mouse(m_dialog, 0, y, btn, 1, &focus);
+            if (focus) {
+                data.focus_button = i + 1;
+            }
         }
     }
 
@@ -317,10 +370,58 @@ static void set_language(int index)
 
 static void button_language_select(int param1, int param2)
 {
+    const generic_button *btn = &select_buttons[SELECT_LANGUAGE];
     window_select_list_show_text(
-        screen_dialog_offset_x() + language_button.x + language_button.width - 10,
+        screen_dialog_offset_x() + btn->x + btn->width - 10,
         screen_dialog_offset_y() + 45,
         data.language_options, data.num_language_options, set_language
+    );
+}
+
+static void set_display_scale(int value)
+{
+    if (value < 50 || value > 500) {
+        return;
+    }
+    data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].new_value = value;
+}
+
+static void button_display_scale_select(int param1, int param2)
+{
+    const generic_button *btn = &select_buttons[SELECT_DISPLAY];
+    window_numeric_input_show(
+        screen_dialog_offset_x() + btn->x + btn->width - 10,
+        screen_dialog_offset_y() + 45,
+        3, 500, set_display_scale
+    );
+}
+
+static void set_cursor_scale(int value)
+{
+    switch (value) {
+        case 0:
+            data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value = 100;
+            break;
+        case 1:
+            data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value = 150;
+            break;
+        case 2:
+            data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value = 200;
+            break;
+    }
+}
+
+static void button_cursor_scale_select(int param1, int param2)
+{
+    const generic_button *btn = &select_buttons[SELECT_CURSOR];
+    static const uint8_t *cursor_options[3];
+    cursor_options[0] = string_from_ascii("100%");
+    cursor_options[1] = string_from_ascii("150%");
+    cursor_options[2] = string_from_ascii("200%");
+    window_select_list_show_text(
+        screen_dialog_offset_x() + btn->x + btn->width - 10,
+        screen_dialog_offset_y() + 45,
+        cursor_options, 3, set_cursor_scale
     );
 }
 
@@ -411,6 +512,20 @@ static int config_change_basic(config_key key)
 {
     config_set(key, data.config_values[key].new_value);
     data.config_values[key].original_value = data.config_values[key].new_value;
+    return 1;
+}
+
+static int config_change_display_scale(config_key key)
+{
+    config_change_basic(key);
+    system_scale_display(data.config_values[key].new_value);
+    return 1;
+}
+
+static int config_change_cursor_scale(config_key key)
+{
+    config_change_basic(key);
+    system_init_cursors(data.config_values[key].new_value);
     return 1;
 }
 
