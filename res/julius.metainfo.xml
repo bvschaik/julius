@@ -18,7 +18,7 @@
 	<launchable type="desktop-id">com.github.bvschaik.julius.desktop</launchable>
 	<screenshots>
 		<screenshot type="default">
-			<image type="source">https://raw.githubusercontent.com/bvschaik/julius/master/res/sce_sys/livearea/contents/bg.png</image>
+			<image type="source">https://raw.githubusercontent.com/wiki/bvschaik/julius/images/julius-screenshot.png</image>
 		</screenshot>
 	</screenshots>
 	<releases>
