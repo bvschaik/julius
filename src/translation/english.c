@@ -256,7 +256,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_OBELISK, "Obelisk" },
     {TR_BUILDING_POND_DESC, "Ponds fill from city reservoirs and provide water for plants and animals and a cool, relaxing oasis for people. All citizens would love to live near a pond." },
     {TR_BUILDING_WINDOW_POND, "Pond"},
-    {TR_BUILDING_OBELISK_DESC, "A prestigious monument inspired by the works of the ancient kings of the Nile."},
+    {TR_BUILDING_OBELISK_DESC, "A prestigious monument, the work of an ancient king of the Nile. The Egyptians weren't using it."},
     {TR_ADVISOR_FINANCE_LEVIES, "Building levies"},
     {TR_CONFIRM_DELETE_MONUMENT, "Demolishing this monument"},
     {TR_SELECT_EPITHET_PROMPT_HEADER, "Select epithet to bestow"},
