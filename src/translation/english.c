@@ -277,8 +277,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MESS_HALL_MONTHS_FOOD_STORED, "Months of food stored:" },
     {TR_BUILDING_BARRACKS_FOOD_WARNING, "Food shortages at your mess hall are slowing soldier recruitment."},
     {TR_BUILDING_BARRACKS_FOOD_WARNING_2, "Critical food shortages at your mess hall are crippling soldier recruitment." },
-    {TR_BUILDING_LEGION_FOOD_WARNING_1, "*Minor food shortage."},
-    {TR_BUILDING_LEGION_FOOD_WARNING_2, "*Critical food shortage."},
+    {TR_BUILDING_LEGION_FOOD_WARNING_1, "Recent food shortage decreased morale"},
+    {TR_BUILDING_LEGION_FOOD_WARNING_2, "Recent food shortage greatly decreased morale"},
     {TR_BUILDING_LEGION_STARVING, "Food shortage" },
     {TR_ADVISOR_LEGION_FOOD_SATISFIED, "Your soldiers have all the food they require."},
     {TR_ADVISOR_LEGION_FOOD_NEEDED, "Your soldiers need more food." },
@@ -352,7 +352,8 @@ static translation_string all_strings[] = {
         "Check the instructions: PLACEHOLDER" },
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Lighthouse must be placed near water"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "This house has access to all five gods from the Pantheon"},
-    {TR_BUILDING_LEGION_FOOD_BONUS, "*Plentiful food is boosting morale" }
+    {TR_BUILDING_LEGION_FOOD_BONUS, "Plentiful food is boosting morale" },
+    {TR_BUILDING_LEGION_FOOD_STATUS, "Food status"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

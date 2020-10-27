@@ -84,8 +84,8 @@ static int get_height_id(void)
             return 5;
         }
     }
-    else if (context.type == BUILDING_INFO_LEGION){
-        return 5;
+    else if (context.type == BUILDING_INFO_LEGION) {
+        return 7;
     }
     else if (context.type == BUILDING_INFO_BUILDING) {
         const building* b = building_get(context.building_id);
