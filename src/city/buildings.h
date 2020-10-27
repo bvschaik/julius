@@ -3,6 +3,13 @@
 
 #include "building/building.h"
 
+#define TEMPLE_LEVY_MONTHLY 4;
+#define FORT_LEVY_MONTHLY 10;
+#define TOWER_LEVY_MONTHLY 2;
+#define GRAND_TEMPLE_LEVY_MONTHLY 48;
+#define LIGHTHOUSE_LEVY_MONTHLY 20;
+
+
 int city_buildings_has_senate(void);
 void city_buildings_add_senate(building *senate);
 void city_buildings_remove_senate(building *senate);

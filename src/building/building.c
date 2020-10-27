@@ -9,6 +9,7 @@
 #include "city/population.h"
 #include "city/warning.h"
 #include "figure/formation_legion.h"
+#include "game/difficulty.h"
 #include "game/resource.h"
 #include "game/undo.h"
 #include "map/building_tiles.h"
@@ -409,7 +410,7 @@ int building_get_levy(building* b)
         return (b->monthly_levy / 4) * 3;
     }
     else {
-        return b->monthly_levy;
+        return difficulty_adjust_levies(b->monthly_levy);
     }
 }
 

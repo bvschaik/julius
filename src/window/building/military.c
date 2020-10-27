@@ -223,7 +223,9 @@ void window_building_draw_fort(building_info_context *c)
     
     building* b = building_get(c->building_id);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
-    window_building_draw_levy(b->monthly_levy, c->x_offset, c->y_offset + 150);
+    if (building_get_levy(b)) {
+        window_building_draw_levy(building_get_levy(b), c->x_offset, c->y_offset + 150);
+    }
 }
 
 void window_building_draw_legion_info(building_info_context *c)

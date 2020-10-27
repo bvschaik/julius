@@ -1,5 +1,6 @@
 #include "monument.h"
 
+#include "city/buildings.h"
 #include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"
@@ -267,7 +268,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
-			b->monthly_levy = 100;
+			b->monthly_levy = GRAND_TEMPLE_LEVY_MONTHLY;
 			break;
 		}
 		break;
@@ -293,7 +294,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
-			b->monthly_levy = 100;
+			b->monthly_levy = GRAND_TEMPLE_LEVY_MONTHLY;
 			break;
 
 		}
@@ -320,7 +321,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
-			b->monthly_levy = 100;
+			b->monthly_levy = GRAND_TEMPLE_LEVY_MONTHLY;
 			break;
 		}
 		break;
@@ -345,7 +346,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
-			b->monthly_levy = 100;
+			b->monthly_levy = GRAND_TEMPLE_LEVY_MONTHLY;
 			break;
 		}
 		break;
@@ -370,7 +371,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
-			b->monthly_levy = 100;
+			b->monthly_levy = GRAND_TEMPLE_LEVY_MONTHLY;
 			break;
 		}
 		break;
@@ -395,7 +396,7 @@ void building_monument_initialize(building* b)
 		case 6:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon On"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
-			b->monthly_levy = 100;
+			b->monthly_levy = GRAND_TEMPLE_LEVY_MONTHLY;
 			break;
 		}
 		break;
@@ -417,7 +418,7 @@ void building_monument_initialize(building* b)
 		case 5:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse ON"), TERRAIN_BUILDING);
 			b->subtype.monument_phase = MONUMENT_FINISHED;
-			b->monthly_levy = 30;
+			b->monthly_levy = LIGHTHOUSE_LEVY_MONTHLY;
 			break;
 		}
 		break;

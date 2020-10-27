@@ -11,4 +11,6 @@ int difficulty_adjust_enemies(int enemies);
 
 int difficulty_adjust_wolf_attack(int attack);
 
+int difficulty_adjust_levies(int amount);
+
 #endif // GAME_DIFFICULTY_H

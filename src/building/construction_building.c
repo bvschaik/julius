@@ -30,8 +30,6 @@
 #include "map/water.h"
 #include "scenario/property.h"
 
-#define TEMPLE_LEVY_MONTHLY 4;
-
 static void add_fort(int type, building *fort)
 {
     fort->prev_part_building_id = 0;
@@ -44,7 +42,7 @@ static void add_fort(int type, building *fort)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
     }
 
-    fort->monthly_levy = 20;    
+    fort->monthly_levy = FORT_LEVY_MONTHLY;
 
     // create parade ground
     const int offsets_x[] = {3, -1, -4, 0};
@@ -503,7 +501,7 @@ static void add_to_map(int type, building *b, int size,
             break;
         // defense
         case BUILDING_TOWER:
-            b->monthly_levy = 2;
+            b->monthly_levy = TOWER_LEVY_MONTHLY;
             map_terrain_remove_with_radius(b->x, b->y, 2, 0, TERRAIN_WALL);
             map_building_tiles_add(b->id, b->x, b->y, size, image_group(GROUP_BUILDING_TOWER),
                 TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
