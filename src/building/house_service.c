@@ -72,6 +72,7 @@ void house_service_decay_houses_covered(void)
 void house_service_calculate_culture_aggregates(void)
 {
     int base_entertainment = city_culture_coverage_average_entertainment() / 5;
+    int venus_module2 = building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT);
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
@@ -102,7 +103,7 @@ void house_service_calculate_culture_aggregates(void)
         }
 
         // Venus Module 2 Entertainment Bonus
-        if (building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT) && b->data.house.temple_venus) {
+        if (venus_module2 && b->data.house.temple_venus) {
             b->data.house.entertainment += 10;
         }
 
