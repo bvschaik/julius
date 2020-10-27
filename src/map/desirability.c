@@ -90,6 +90,13 @@ static void update_buildings(void)
                 value += 2;
             }
 
+            if (building_monument_is_monument(b) && b->subtype.monument_phase != MONUMENT_FINISHED) {
+                value = 0;
+                step = 0;
+                step_size = 0;
+                range = 0;
+            }
+
             //Venus GT Base Bonus
             if (building_is_statue_garden_temple(b->type) && venus_gt) {
                 value += 1;
