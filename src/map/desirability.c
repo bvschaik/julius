@@ -73,6 +73,8 @@ static void update_buildings(void)
     int step;
     int step_size;
     int range;
+    int venus_module2 = building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT);
+    int venus_gt = building_monument_working(BUILDING_GRAND_TEMPLE_VENUS);
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE) {
@@ -84,12 +86,12 @@ static void update_buildings(void)
             range = model->desirability_range;
 
             //Venus Module 2 House Desirability Bonus
-            if (building_is_house(b->type) && b->data.house.temple_venus && building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT)) {
+            if (building_is_house(b->type) && b->data.house.temple_venus && venus_module2) {
                 value += 2;
             }
 
             //Venus GT Base Bonus
-            if (building_is_statue_garden_temple(b->type) && building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
+            if (building_is_statue_garden_temple(b->type) && venus_gt) {
                 value += 1;
                 step += 1;
                 range += 1;

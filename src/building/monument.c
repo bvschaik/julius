@@ -179,7 +179,7 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
 	}
 	int min_dist = INFINITE;
 	building* min_building = 0;
-	for (int i = 0; i < MAX_MONUMENTS; i++) {
+	for (int i = 0; i < data.monuments_number; i++) {
 		if (!monuments[i]) {
 			continue;
 		}
@@ -470,7 +470,7 @@ int building_monument_needs_resource(building* b, int resource) {
 
 
 int building_monument_phase(int phase) {
-	for (int i = 0; i < MAX_MONUMENTS; i++) {
+	for (int i = 0; i < data.monuments_number; i++) {
 		int monument_id = monuments[i];
 		building* b = building_get(monument_id);
 		if (!building_monument_is_monument(b)) {
@@ -483,7 +483,7 @@ int building_monument_phase(int phase) {
 }
 
 int building_monument_get_venus_gt(void) {
-	for (int i = 0; i < MAX_MONUMENTS; i++) {
+	for (int i = 0; i < data.monuments_number; i++) {
 		int monument_id = monuments[i];
 		building* b = building_get(monument_id);
 		if (b->type == BUILDING_GRAND_TEMPLE_VENUS) {
@@ -494,7 +494,7 @@ int building_monument_get_venus_gt(void) {
 }
 
 int building_monument_get_neptune_gt(void) {
-	for (int i = 0; i < MAX_MONUMENTS; i++) {
+	for (int i = 0; i < data.monuments_number; i++) {
 		int monument_id = monuments[i];
 		building* b = building_get(monument_id);
 		if (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE) {
@@ -522,7 +522,7 @@ int building_monument_monument_phases(int building_type) {
 }
 
 int building_monument_finish_monuments() {
-	for (int i = 0; i < MAX_MONUMENTS; i++) {
+	for (int i = 0; i < data.monuments_number; i++) {
 		int monument_id = monuments[i];
 		building* b = building_get(monument_id);
 		if (!building_monument_is_monument(b)) {
@@ -638,7 +638,7 @@ int building_monument_resource_in_delivery(int monument_id, int resource_id) {
 
 int building_monument_has_monument(int type) {
 
-	for (int i = 0; i < MAX_MONUMENTS; i++) {
+	for (int i = 0; i < data.monuments_number; i++) {
 		int monument_id = monuments[i];
 		building* b = building_get(monument_id);
 		if (b->type != type) {
