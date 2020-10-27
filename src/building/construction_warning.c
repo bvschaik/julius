@@ -54,6 +54,7 @@ static void check_road_access(int type, int x, int y, int size)
         case BUILDING_PAVILION_ORANGE:
         case BUILDING_PAVILION_YELLOW:
         case BUILDING_PAVILION_GREEN:
+        case BUILDING_OBELISK:
         case BUILDING_GATEHOUSE:
         case BUILDING_ROADBLOCK:
         case BUILDING_TRIUMPHAL_ARCH:
@@ -61,7 +62,7 @@ static void check_road_access(int type, int x, int y, int size)
         case BUILDING_FORT:
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_JAVELIN:
-        case BUILDING_FORT_MOUNTED:
+        case BUILDING_FORT_MOUNTED:        
             return;
     }
 

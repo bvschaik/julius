@@ -12,6 +12,7 @@
 #include "core/config.h"
 #include "core/config.h"
 #include "core/log.h"
+#include "core/mods.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
@@ -32,6 +33,8 @@
 #include "widget/city_bridge.h"
 
 #define MAX_TILES 49
+#define MOD_IMAGE_X_OFFSET 15
+#define MOD_IMAGE_Y_OFFSET 29
 
 static const int X_VIEW_OFFSETS[MAX_TILES] = {
     0,
@@ -333,8 +336,8 @@ static void draw_default(const map_tile* tile, int x_view, int y_view, building_
     }
     else if (type >= BUILDING_ROADBLOCK) {
         // hack for offsets, not perfect
-        int y_offset = (building_size - 1) * 15;
-        int x_offset = (building_size - 1) * 29;
+        int y_offset = (building_size - 1) * MOD_IMAGE_X_OFFSET;
+        int x_offset = (building_size - 1) * MOD_IMAGE_Y_OFFSET;
         int rotation_offset = building_rotation_get_rotation() % 2 * props->rotation_offset;
         image_id = props->image_group+rotation_offset;
         draw_regular_building(type, image_id, x_view- x_offset, y_view+ y_offset, grid_offset);
@@ -558,6 +561,50 @@ static void draw_bathhouse(const map_tile *tile, int x, int y)
             const image *img = image_get(image_id);
             image_draw_masked(image_id - 1, x + img->sprite_offset_x - 7, y + img->sprite_offset_y + 6, COLOR_MASK_GREEN);
         }
+    }
+}
+
+static void draw_pond(const map_tile* tile, int x, int y, int type)
+{
+    int grid_offset = tile->grid_offset;
+    int num_tiles = (type == BUILDING_LARGE_POND) ? 9 : 4;
+    int size = (type == BUILDING_LARGE_POND) ? 3 : 2;
+    int blocked_tiles[9];
+    int blocked = is_blocked_for_building(grid_offset, num_tiles, blocked_tiles);
+    int fully_blocked = 0;
+    int y_offset = (size - 1) * MOD_IMAGE_X_OFFSET;
+    int x_offset = (size - 1) * MOD_IMAGE_Y_OFFSET;
+    if (city_finance_out_of_money()) {
+        fully_blocked = 1;
+        blocked = 1;
+    }
+
+    if (blocked) {
+        draw_partially_blocked(x, y, fully_blocked, num_tiles, blocked_tiles);
+    }
+    else {
+        int has_water = 0;
+        int orientation_index = city_view_orientation() / 2;
+        int offset = 0;
+
+        for (int i = 0; i < num_tiles; i++) {
+            int tile_offset = grid_offset + TILE_GRID_OFFSETS[orientation_index][i];
+            if (map_terrain_is(tile_offset, TERRAIN_RESERVOIR_RANGE)) {
+                has_water = 1;
+            }
+        }
+        
+        if (scenario_property_climate() == CLIMATE_DESERT) {
+            offset += POND_CLIMATE_IMAGE_OFFSET;
+        }
+        if (has_water) {
+            offset += POND_WATERED_IMAGE_OFFSET;
+        }
+        if (type == BUILDING_LARGE_POND) {
+            offset += POND_LARGE_IMAGE_OFFSET;
+        }
+
+        draw_regular_building(type, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset, x - x_offset, y + y_offset, grid_offset);
     }
 }
 
@@ -837,6 +884,10 @@ void city_building_ghost_draw(const map_tile *tile)
             break;
         case BUILDING_BATHHOUSE:
             draw_bathhouse(tile, x, y);
+            break;
+        case BUILDING_SMALL_POND:
+        case BUILDING_LARGE_POND:
+            draw_pond(tile, x, y, type);
             break;
         case BUILDING_LOW_BRIDGE:
         case BUILDING_SHIP_BRIDGE:
