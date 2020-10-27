@@ -183,7 +183,7 @@ void figure_workcamp_slave_action(figure* f) {
 				f->action_state = FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT;
 			}
 		}
-		if (leader->is_ghost) {
+		if (leader->is_ghost && !leader->height_adjusted_ticks) {
 			f->is_ghost = 1;
 		}
 		break;
@@ -204,6 +204,7 @@ void figure_workcamp_slave_action(figure* f) {
 	case FIGURE_ACTION_211_WORK_CAMP_SLAVE_DELIVERING_RESOURCES:
 		f->terrain_usage = TERRAIN_USAGE_ANY;
 		f->use_cross_country = 1;
+		f->dont_draw_elevated = 1;
 		if (figure_movement_move_ticks_cross_country(f, 1)) {
 			building* monument = building_get(f->destination_building_id);
 			building_monument_deliver_resource(monument, f->collecting_item_id);
@@ -290,6 +291,7 @@ void figure_workcamp_engineer_action(figure* f) {
 		figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
 		f->terrain_usage = TERRAIN_USAGE_ANY;
 		f->use_cross_country = 1;
+		f->dont_draw_elevated = 1;
 		if (figure_movement_move_ticks_cross_country(f, 1)) {
 			if (f->wait_ticks >= 384) {
 				f->state = FIGURE_STATE_DEAD;

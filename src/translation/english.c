@@ -256,7 +256,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_OBELISK, "Obelisk" },
     {TR_BUILDING_POND_DESC, "Ponds fill from city reservoirs and provide water for plants and animals and a cool, relaxing oasis for people. All citizens would love to live near a pond." },
     {TR_BUILDING_WINDOW_POND, "Pond"},
-    {TR_BUILDING_OBELISK_DESC, "A prestigious monument inspired by the works of the ancient kings of the Nile."},
+    {TR_BUILDING_OBELISK_DESC, "A prestigious monument, the work of an ancient king of the Nile. The Egyptians weren't using it."},
     {TR_ADVISOR_FINANCE_LEVIES, "Building levies"},
     {TR_CONFIRM_DELETE_MONUMENT, "Demolishing this monument"},
     {TR_SELECT_EPITHET_PROMPT_HEADER, "Select epithet to bestow"},
@@ -277,8 +277,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MESS_HALL_MONTHS_FOOD_STORED, "Months of food stored:" },
     {TR_BUILDING_BARRACKS_FOOD_WARNING, "Food shortages at your mess hall are slowing soldier recruitment."},
     {TR_BUILDING_BARRACKS_FOOD_WARNING_2, "Critical food shortages at your mess hall are crippling soldier recruitment." },
-    {TR_BUILDING_LEGION_FOOD_WARNING_1, "*Minor food shortage."},
-    {TR_BUILDING_LEGION_FOOD_WARNING_2, "*Critical food shortage."},
+    {TR_BUILDING_LEGION_FOOD_WARNING_1, "Recent food shortage decreased morale"},
+    {TR_BUILDING_LEGION_FOOD_WARNING_2, "Recent food shortage greatly decreased morale"},
     {TR_BUILDING_LEGION_STARVING, "Food shortage" },
     {TR_ADVISOR_LEGION_FOOD_SATISFIED, "Your soldiers have all the food they require."},
     {TR_ADVISOR_LEGION_FOOD_NEEDED, "Your soldiers need more food." },
@@ -352,7 +352,8 @@ static translation_string all_strings[] = {
         "Check the instructions: PLACEHOLDER" },
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Lighthouse must be placed near water"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "This house has access to all five gods from the Pantheon"},
-    {TR_BUILDING_LEGION_FOOD_BONUS, "*Plentiful food is boosting morale" }
+    {TR_BUILDING_LEGION_FOOD_BONUS, "Plentiful food is boosting morale" },
+    {TR_BUILDING_LEGION_FOOD_STATUS, "Food status"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

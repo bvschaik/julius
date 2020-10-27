@@ -104,7 +104,7 @@ typedef struct {
     unsigned char phrase_sequence_city;
     unsigned char trader_id;
     unsigned char wait_ticks_next_target;
-    unsigned char __unused_6f;
+    unsigned char dont_draw_elevated;
     short target_figure_id;
     short targeted_by_figure_id;
     unsigned short created_sequence;

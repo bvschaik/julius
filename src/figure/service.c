@@ -500,7 +500,8 @@ int figure_service_provide_coverage(figure *f)
         case FIGURE_CHARIOTEER:
             houses_serviced = provide_culture(x, y, hippodrome_coverage);
             break;
-        case FIGURE_ENGINEER: {
+        case FIGURE_ENGINEER: 
+        case FIGURE_WORK_CAMP_ENGINEER: {
             int max_damage = 0;
             houses_serviced = provide_service(x, y, &max_damage, engineer_coverage);
             if (max_damage > f->min_max_seen) {

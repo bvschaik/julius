@@ -70,7 +70,7 @@ static int show_figure_fire(const figure *f)
 
 static int show_figure_damage(const figure *f)
 {
-    return f->type == FIGURE_ENGINEER;
+    return f->type == FIGURE_ENGINEER || f->type == FIGURE_WORK_CAMP_ENGINEER;
 }
 
 static int show_figure_crime(const figure *f)

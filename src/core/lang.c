@@ -4,6 +4,7 @@
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
+#include "core/log.h"
 #include "core/string.h"
 #include "translation/translation.h"
 
@@ -144,12 +145,17 @@ static void set_message_parameters(lang_message* m, int title, int text, int urg
 
 void load_custom_messages(void)
 {
-    int i = 320;
+    int i = 321;
     while (i < MAX_MESSAGE_ENTRIES) {
         if (!data.message_entries[i].content.text) {
             break;
         }
         i++;
+    }
+
+    if (i >= MAX_MESSAGE_ENTRIES) {
+        log_error("Message entry max exceeded", "", 0);
+        return;
     }
 
     // soldiers starving
