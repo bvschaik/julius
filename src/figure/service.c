@@ -242,20 +242,23 @@ static void distribute_good(building *b, building *market, int stock_wanted, int
     }
 }
 
-static void collect_offerings_from_house(building* b, building* market) {
+static void collect_offerings_from_house(building* house, building* temple) {
     // offerings are generated, not removed from house stores    
-    if (b->days_since_offering >= MARS_OFFERING_FREQUENCY) {
+    if (house->days_since_offering >= MARS_OFFERING_FREQUENCY) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            if (b->data.house.inventory[i]) {
-                if (b->house_size == 1 && b->house_is_merged) {
-                    market->data.market.inventory[i] += 2;
+            if (house->data.house.inventory[i]) {
+                if (house->house_size == 1 && house->house_is_merged) {
+                    temple->data.market.inventory[i] += 2;
                 }
                 else {
-                    market->data.market.inventory[i] += b->house_size;
+                    temple->data.market.inventory[i] += house->house_size;
                 }
             }
+            if (temple->data.market.inventory[i] > 400) {
+                temple->data.market.inventory[i] = 400;
+            }
         }
-        b->days_since_offering = 0;
+        house->days_since_offering = 0;
     }
 }
 
