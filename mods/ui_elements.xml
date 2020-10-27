@@ -5,7 +5,7 @@
 
     <image id="Main Menu" src="Main_Menu_Alt" />
     <image id="7x7 Map Icon" src="7x7_Minimap_Icon" />
-    <image id="Happy God Icon" src="Religion_God_Happy" />
+    <image id="Happy God Icon" src="Religion_God_Happy" />	
 
 <!-- Note: Banner image for Lighthouse -->
     <image id="Lighthouse Banner" src="Lighthouse_Banner" />
@@ -17,7 +17,7 @@
     <image id="Venus L Banner" src="Venus_Banner" />
     <image id="Nept L Banner" src="Neptune_Banner" />
     <image id="Panth L Banner" src="Pantheon_Banner" />
-
+	
 <!-- Note: Banner images for Module Selection UI -->
     <image id="Ceres M Icon" src="Ceres_Temple_Complex_Module_Banner" />
     <image id="Ceres M2 Icon" src="Ceres_Temple_Complex_Module2_Banner" />
@@ -34,25 +34,25 @@
 
 <!-- Note: Banner images for Construction Sites -->
     <image id="Const. Banner 01" src="Construction_Banner_01" />
-    <image id="Const. Banner 02" src="Construction_Banner_02" />
+    <image id="Const. Banner 02" src="Construction_Banner_02" />	
 
 <!-- Note: Minimap icons for Monuments 3x3, 5x5 and 7x7 respectively  -->
     <image id="3 Mon MapIcon" src="3x3_Monument_Icon" />
     <image id="5 Mon MapIcon" src="5x5_Monument_Icon" />
-    <image id="7 Mon MapIcon" src="7x7_Monument_Icon" />
+    <image id="7 Mon MapIcon" src="7x7_Monument_Icon" />	
 
 <!-- Note: Banner with Augustus Logo for Main Menu  -->
-    <image id="Main Menu Banner" src="Augustus_Main_Menu_Banner" />
+    <image id="Main Menu Banner" src="Augustus_Main_Menu_Banner" />	
 
 <!-- Note: CCK Selection Window  -->
     <image id="cck menu bg" width="640" height="480">
         <layer group="246" image="0" x="-192" y="-144" />
-    </image>
+    </image>	
 
 <!-- Note: Border for Campaign Map Selection Screen  -->
 	<image id="mission select bg" width="1024" height="768">
-		<layer group="244" image="0" x="0" y="0" />
-		<layer src="Map_Selection_Screen_Overlay" x="0" y="0" />
+		<layer group="244" image="0" x="0" y="0" />	
+		<layer src="Map_Selection_Screen_Overlay" x="0" y="0" />	
     </image>
-
-</mod>
+	
+</mod>		
