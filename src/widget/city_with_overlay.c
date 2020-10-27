@@ -538,7 +538,7 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
     int figure_id = map_figure_at(grid_offset);
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
-        if (((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks) && overlay->show_figure(f)) {
+        if (((f->use_cross_country && !f->is_ghost && !f->dont_draw_elevated) || f->height_adjusted_ticks) && overlay->show_figure(f)) {
             city_draw_figure(f, x, y, 0);
         }
         figure_id = f->next_figure_id_on_same_tile;

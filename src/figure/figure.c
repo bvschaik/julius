@@ -49,6 +49,7 @@ figure *figure_create(figure_type type, int x, int y, direction_type dir)
     f->cross_country_y = 15 * y;
     f->progress_on_tile = 15;
     f->progress_to_next_tick = 0;
+    f->dont_draw_elevated = 0;
     random_generate_next();
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
@@ -264,7 +265,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_u8(buf, f->phrase_sequence_city);
     buffer_write_u8(buf, f->trader_id);
     buffer_write_u8(buf, f->wait_ticks_next_target);
-    buffer_write_u8(buf, f->__unused_6f);
+    buffer_write_u8(buf, f->dont_draw_elevated);
     buffer_write_i16(buf, f->target_figure_id);
     buffer_write_i16(buf, f->targeted_by_figure_id);
     buffer_write_u16(buf, f->created_sequence);
@@ -364,7 +365,7 @@ static void figure_load(buffer *buf, figure *f)
     f->phrase_sequence_city = buffer_read_u8(buf);
     f->trader_id = buffer_read_u8(buf);
     f->wait_ticks_next_target = buffer_read_u8(buf);
-    f->__unused_6f = buffer_read_u8(buf);
+    f->dont_draw_elevated = buffer_read_u8(buf);
     f->target_figure_id = buffer_read_i16(buf);
     f->targeted_by_figure_id = buffer_read_i16(buf);
     f->created_sequence = buffer_read_u16(buf);
