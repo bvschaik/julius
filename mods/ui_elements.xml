@@ -44,15 +44,10 @@
 <!-- Note: Banner with Augustus Logo for Main Menu  -->
     <image id="Main Menu Banner" src="Augustus_Main_Menu_Banner" />
 
-<!-- Note: CCK Selection Window  -->
-    <image id="cck menu bg" width="640" height="480">
-        <layer group="246" image="0" x="-192" y="-144" />
-    </image>
-
 <!-- Note: Border for Campaign Map Selection Screen  -->
-	<image id="mission select bg" width="1024" height="768">
-		<layer group="244" image="0" x="0" y="0" />
-		<layer src="Map_Selection_Screen_Overlay" x="0" y="0" />
-    </image>
+	<image id="Mission Selection Border" src="Map_Selection_Overlay_Border_Left" />
+    <image src="Map_Selection_Overlay_Border_Top" />
+    <image src="Map_Selection_Overlay_Border_Bottom" />
+    <image src="Map_Selection_Overlay_Border_Right" />
 
 </mod>
