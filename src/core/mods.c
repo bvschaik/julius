@@ -210,10 +210,10 @@ static color_t layer_get_color_for_image_position(layer *l, int x, int y)
         y = l->height - y;
     }
     if (l->invert & INVERT_HORIZONTAL) {
-        x = l->width - x;
+        x = l->width - x - 1;
     }
     if (l->invert & INVERT_VERTICAL) {
-        y = l->height - y;
+        y = l->height - y - 1;
     }
     if (x < 0 || x >= l->width || y < 0 || y >= l->height) {
         return ALPHA_TRANSPARENT;

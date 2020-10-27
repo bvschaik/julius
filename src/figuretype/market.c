@@ -233,7 +233,7 @@ void figure_delivery_boy_action(figure *f)
             f->state = FIGURE_STATE_DEAD;
         }
     }
-    if (leader->is_ghost) {
+    if (leader->is_ghost && !leader->height_adjusted_ticks) {
         f->is_ghost = 1;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);

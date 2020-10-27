@@ -183,7 +183,7 @@ void figure_workcamp_slave_action(figure* f) {
 				f->action_state = FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT;
 			}
 		}
-		if (leader->is_ghost) {
+		if (leader->is_ghost && !leader->height_adjusted_ticks) {
 			f->is_ghost = 1;
 		}
 		break;

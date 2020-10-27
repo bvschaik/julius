@@ -12,6 +12,7 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -26,6 +27,11 @@
 #include <string.h>
 
 #define MAX_SCENARIOS 15
+
+#define WINDOW_WIDTH 640
+#define WINDOW_HEIGHT 480
+#define BACKGROUND_WIDTH 1024
+#define BACKGROUND_HEIGHT 768
 
 static void button_select_item(int index, int param2);
 static void button_start_scenario(int param1, int param2);
@@ -176,8 +182,12 @@ static void draw_scenario_info(void)
 static void draw_background(void)
 {
     image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 25);
+    graphics_set_clip_rectangle((screen_width() - WINDOW_WIDTH) / 2, (screen_height() - WINDOW_HEIGHT) / 2,
+        WINDOW_WIDTH, WINDOW_HEIGHT);
     graphics_in_dialog();
-    image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "cck menu bg"), 0, 0);
+    image_draw(image_group(GROUP_CCK_BACKGROUND), (WINDOW_WIDTH - BACKGROUND_WIDTH) / 2,
+        (WINDOW_HEIGHT - BACKGROUND_HEIGHT) / 2);
+    graphics_reset_clip_rectangle();
     inner_panel_draw(280, 242, 2, 12);
     draw_scenario_list();
     draw_scenario_info();
