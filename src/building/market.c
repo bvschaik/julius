@@ -306,12 +306,13 @@ int building_market_get_storage_destination(building *market)
     return resources[fetch_inventory].building_id;
 }
 
-int building_mars_temple_food_to_deliver(building *b) {
+int building_mars_temple_food_to_deliver(building *temple, int mess_hall_id) {
     int most_stocked_food_id = -1;
     int next;
+    building* mess_hall = building_get(mess_hall_id);
     for (int i = 0; i < INVENTORY_MAX_FOOD; i++) {
-        next = b->data.market.inventory[i];
-        if (next > most_stocked_food_id && next >= 100) {
+        next = temple->data.market.inventory[i];
+        if (next > most_stocked_food_id && next >= 100 && mess_hall->data.market.inventory[i] <= 1600) {
             most_stocked_food_id = i;
         }
     }

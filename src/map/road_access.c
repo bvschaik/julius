@@ -321,6 +321,35 @@ static void check_road_to_largest_network_grand_temple(int x, int y, int* min_in
 }
 
 
+static void check_min_dist_lighthouse(int base_offset, int x_offset, int* min_dist, int* min_grid_offset, int* min_x_offset)
+{
+    for (const int* tile_delta = map_grid_adjacent_offsets(3); *tile_delta; tile_delta++) {
+        int grid_offset = base_offset + *tile_delta;
+        int dist = map_routing_distance(grid_offset);
+        if (dist > 0 && dist < *min_dist) {
+            *min_dist = dist;
+            *min_grid_offset = grid_offset;
+            *min_x_offset = x_offset;
+        }
+    }
+}
+
+static void check_road_to_largest_network_lighthouse(int x, int y, int* min_index, int* min_grid_offset)
+{
+    int base_offset = map_grid_offset(x, y);
+    for (const int* tile_delta = map_grid_adjacent_offsets(1); *tile_delta; tile_delta++) {
+        int grid_offset = base_offset + *tile_delta;
+        if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
+            int index = city_map_road_network_index(map_road_network_get(grid_offset));
+            if (index < *min_index) {
+                *min_index = index;
+                *min_grid_offset = grid_offset;
+            }
+        }
+    }
+}
+
+
 
 int map_road_to_largest_network_grand_temple(int x, int y, int* x_road, int* y_road)
 {
@@ -344,6 +373,36 @@ int map_road_to_largest_network_grand_temple(int x, int y, int* x_road, int* y_r
     check_min_dist_grand_temple(map_grid_offset(x, y+3), 3, &min_dist, &min_grid_offset, &min_x_offset);
     check_min_dist_grand_temple(map_grid_offset(x+6, y+3), 6, &min_dist, &min_grid_offset, &min_x_offset);
     check_min_dist_grand_temple(map_grid_offset(x+3, y+6), 6, &min_dist, &min_grid_offset, &min_x_offset);
+
+    if (min_grid_offset >= 0) {
+        *x_road = map_grid_offset_to_x(min_grid_offset) + min_x_offset;
+        *y_road = map_grid_offset_to_y(min_grid_offset);
+        return min_grid_offset + min_x_offset;
+    }
+    return -1;
+}
+
+int map_road_to_largest_network_lighthouse(int x, int y, int* x_road, int* y_road) {
+    int min_index = 12;
+    int min_grid_offset = -1;
+    check_road_to_largest_network_lighthouse(x + 1, y    , &min_index, &min_grid_offset);
+    check_road_to_largest_network_lighthouse(x    , y + 1, &min_index, &min_grid_offset);
+    check_road_to_largest_network_lighthouse(x + 2, y + 1, &min_index, &min_grid_offset);
+    check_road_to_largest_network_lighthouse(x + 1, y + 2, &min_index, &min_grid_offset);
+
+    if (min_index < 12) {
+        *x_road = map_grid_offset_to_x(min_grid_offset);
+        *y_road = map_grid_offset_to_y(min_grid_offset);
+        return min_grid_offset;
+    }
+
+    int min_dist = 100000;
+    min_grid_offset = -1;
+    int min_x_offset = -1;
+    check_min_dist_lighthouse(map_grid_offset(x + 1, y + 1), 1, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_lighthouse(map_grid_offset(x + 1, y    ), 2, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_lighthouse(map_grid_offset(x + 2, y + 1), 2, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_lighthouse(map_grid_offset(x + 2, y + 2), 2, &min_dist, &min_grid_offset, &min_x_offset);
 
     if (min_grid_offset >= 0) {
         *x_road = map_grid_offset_to_x(min_grid_offset) + min_x_offset;

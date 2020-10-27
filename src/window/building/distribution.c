@@ -868,10 +868,7 @@ void window_building_draw_mess_hall(building_info_context* c)
         int width = text_draw(translation_for(TR_BUILDING_MESS_HALL_FULFILLMENT), c->x_offset + 32, c->y_offset + 106, FONT_NORMAL_BLACK, 0);
         text_draw_percentage(mess_hall_fulfillment_display, c->x_offset + 32 + width, c->y_offset + 106, FONT_NORMAL_BLACK);
         width = text_draw(translation_for(TR_BUILDING_MESS_HALL_TROOP_HUNGER), c->x_offset + 32, c->y_offset + 126, FONT_NORMAL_BLACK, 0);
-        if (food_stress == 100) {
-            hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_6;
-        }
-        else if (food_stress < 3) {
+        if (food_stress < 3) {
             hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_1;
         }
         else if (food_stress > 80) {

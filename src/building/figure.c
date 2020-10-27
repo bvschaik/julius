@@ -1017,14 +1017,15 @@ static void spawn_figure_temple(building *b)
         // Mars Module 1 Bonus
 
         if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
+            int mess_hall_id = city_buildings_get_mess_hall();
             figure* f = figure_get(b->figure_id2);
             if (f->state != FIGURE_STATE_ALIVE) {
                 b->figure_id2 = 0;
             }
-            int food_to_deliver = building_mars_temple_food_to_deliver(b);
+            int food_to_deliver = building_mars_temple_food_to_deliver(b, mess_hall_id);
             if (food_to_deliver >= 0) {
                 figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
-                int mess_hall_id = city_buildings_get_mess_hall();
+                
                 f->collecting_item_id = food_to_deliver;
                 b->figure_id2 = f->id;
                 f->destination_building_id = mess_hall_id;

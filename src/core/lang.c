@@ -156,8 +156,6 @@ void load_custom_messages(void)
     lang_message* m = &data.message_entries[i];
     set_message_parameters(m, TR_CITY_MESSAGE_TITLE_MESS_HALL_NEEDS_FOOD, TR_CITY_MESSAGE_TEXT_MESS_HALL_NEEDS_FOOD, 1);
     m->video.text = (uint8_t *) "smk//god_mars.smk";
-
-
     i += 1;
 
     // soldiers starving, no mess hall

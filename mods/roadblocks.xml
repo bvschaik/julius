@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <!DOCTYPE mod>
 <mod author="Areldir" name="Roadblocks">
-    <image src="Roadblock_New" />
-	
+    <image id="roadblock" src="Roadblock_New" />	
 </mod>

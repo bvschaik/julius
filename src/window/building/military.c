@@ -262,7 +262,7 @@ void window_building_draw_legion_info(building_info_context *c)
     text_draw_number(m->num_figures, '@', " ", c->x_offset + 294, c->y_offset + 60, FONT_NORMAL_BLACK);
     // health
     lang_text_draw(138, 24, c->x_offset + 100, c->y_offset + 80, FONT_NORMAL_BLACK);
-    if (city_data.mess_hall.food_stress_cumulative > 50) {
+    if (m->mess_hall_max_morale_modifier < -20) {
         text_draw(translation_for(TR_BUILDING_LEGION_STARVING), c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
     }
     else {
@@ -302,12 +302,17 @@ void window_building_draw_legion_info(building_info_context *c)
         width = lang_text_draw(138, 37 + morale_offset, c->x_offset + 300, c->y_offset + 120, FONT_NORMAL_BLACK);
     }
     // food warnings
-    if (city_data.mess_hall.food_stress_cumulative > 50) {
+    if (m->mess_hall_max_morale_modifier < -20) {
         text_draw(string_from_ascii("*"), c->x_offset + 300 +width, c->y_offset + 120, FONT_NORMAL_BLACK, 0);
         text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_2), c->x_offset + 20, c->y_offset + 300, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
     }
-    else if (city_data.mess_hall.food_stress_cumulative > 20) {
+    else if (m->mess_hall_max_morale_modifier < -5) {
+        text_draw(string_from_ascii("*"), c->x_offset + 300 + width, c->y_offset + 120, FONT_NORMAL_BLACK, 0);
         text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_1), c->x_offset + 20, c->y_offset + 300, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
+    }
+    else if (m->mess_hall_max_morale_modifier > 0) {
+        text_draw(string_from_ascii("*"), c->x_offset + 300 + width, c->y_offset + 120, FONT_NORMAL_BLACK, 0);
+        text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_BONUS), c->x_offset + 20, c->y_offset + 300, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
     }
     
     if (m->num_figures) {

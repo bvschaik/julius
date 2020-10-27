@@ -167,7 +167,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, "Priests reduce consumption of all goods by 10%." },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, "Priests provide entertainment and beautify houses." },
     {TR_BUILDING_PANTHEON_MODULE_1_DESC, "All the temples in the city send priests to Pantheon, spreading the faith and blessings of their gods." },
-    {TR_BUILDING_PANTHEON_MODULE_2_DESC, "Houses with access to all five gods can evolve one additional step." },
+    {TR_BUILDING_PANTHEON_MODULE_2_DESC, "Houses with access to the Pantheon can evolve one additional step." },
     {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, "Temple of Ceres Promitor" },
     {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, "Temple of Ceres Reparator" },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, "Temple of Neptunus Equester" },
@@ -270,8 +270,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MESS_HALL_TROOP_HUNGER_2, "Fed"},
     {TR_BUILDING_MESS_HALL_TROOP_HUNGER_3, "Hungry"},
     {TR_BUILDING_MESS_HALL_TROOP_HUNGER_4, "Very hungry"},
-    {TR_BUILDING_MESS_HALL_TROOP_HUNGER_5, "Malnourished"},
-    {TR_BUILDING_MESS_HALL_TROOP_HUNGER_6, "Starving"},
+    {TR_BUILDING_MESS_HALL_TROOP_HUNGER_5, "Starving"},
     {TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_1, "The varied diet of your soldiers greatly increases morale."},
     {TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_2, "The diverse, nutritious diet enjoyed by your soldiers greatly increases morale."},
     {TR_BUILDING_MESS_HALL_NO_SOLDIERS, "You have no soldiers to feed." },
@@ -310,7 +309,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Temple of Venus"},
     {TR_FIGURE_TYPE_PRIEST_BUYER, "Priest" },
     // Transcription of mission_exact4.wav
-    {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"I'll do what I can to calm these barbarians down. I'm sure they'll stop attacking the city when I've had a word with them.\"" }, 
+    {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"I'll do what I can to calm these barbarians down. I'm sure they'll stop attacking the city when I've had a word with them.\"" },
     {TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "An annual festival"},
     {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_CERES, "The faithful flock to temples for the celebration of Cerealia, in honor of Ceres. Farmers offer sacrifices for rich harvests in the coming years."},
     {TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_NEPTUNE, "Today is the festival of Neptunalia, in honor of Neptune. The faithful build huts of branch and foilage and make merry under the blazing heat of the midsummer sun."},
@@ -343,14 +342,17 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_NEPTUNE_BLESSING, "Rewarding your city's devotion, Neptune grants smooth passage to traders for six months, during which your exports will fetch double price."},
     {TR_CITY_MESSAGE_TITLE_VENUS_BLESSING, "A blessing from Venus" },
     {TR_CITY_MESSAGE_TEXT_VENUS_BLESSING, "Delighted by the joyful reverence shown to her, Venus grants youthfulness, health, and happiness to your people, increasing the size of your working population." },
-    {TR_BUILDING_MENU_STATUES, "Statues" }, 
-    {TR_BUILDING_MENU_GOV_RES, "Mansions" },
+    {TR_BUILDING_MENU_STATUES, "Statues" },
+    {TR_BUILDING_MENU_GOV_RES, "Governor's mansions" },
     {TR_OVERLAY_ROADS, "Roads" },
     {TR_NO_MODS_TITLE, "Mods folder can't be found" },
     {TR_NO_MODS_MESSAGE,
         "Your Caesar 3 installation does not have properly installed mods folder. "
         "New assets may not properly be displayed\n"
         "Check the instructions: PLACEHOLDER" },
+    {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Lighthouse must be placed near water"},
+    {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "This house has access to all five gods from the Pantheon"},
+    {TR_BUILDING_LEGION_FOOD_BONUS, "*Plentiful food is boosting morale" }
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

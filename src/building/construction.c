@@ -64,6 +64,7 @@ static struct {
         int tree;
         int water;
         int wall;
+        int distant_water;
     } required_terrain;
     int draw_as_constructing;
     int start_offset_x_view;
@@ -326,6 +327,7 @@ void building_construction_set_type(building_type type)
         data.required_terrain.tree = 0;
         data.required_terrain.rock = 0;
         data.required_terrain.meadow = 0;
+        data.required_terrain.distant_water = 0;
         data.start.grid_offset = 0;
 
         switch (type) {
@@ -356,6 +358,8 @@ void building_construction_set_type(building_type type)
             case BUILDING_MENU_LARGE_TEMPLES:
                 data.sub_type = BUILDING_LARGE_TEMPLE_CERES;
                 break;
+            case BUILDING_LIGHTHOUSE:
+                data.required_terrain.distant_water = 1;
             default:
                 break;
         }
@@ -576,7 +580,7 @@ void building_construction_update(int x, int y, int grid_offset)
             data.draw_as_constructing = 1;
         }
     } else if (data.required_terrain.meadow || data.required_terrain.rock || data.required_terrain.tree ||
-            data.required_terrain.water || data.required_terrain.wall) {
+            data.required_terrain.water || data.required_terrain.wall || data.required_terrain.distant_water) {
         // never mark as constructing
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
@@ -790,6 +794,11 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
     } else if (data.required_terrain.wall) {
         if (!map_terrain_all_tiles_in_radius_are(x, y, 2, 0, TERRAIN_WALL)) {
             set_warning(warning_id, WARNING_WALL_NEEDED);
+            return 0;
+        }
+    } else if (data.required_terrain.distant_water) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 3, 9, TERRAIN_WATER)) {
+            set_warning(warning_id, WARNING_WATER_NEEDED_FOR_LIGHTHOUSE);
             return 0;
         }
     }

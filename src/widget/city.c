@@ -575,7 +575,7 @@ void widget_city_get_tooltip(tooltip_context *c)
     if (overlay != OVERLAY_NONE) {
         c->text_group = 66;
         c->text_id = city_with_overlay_get_tooltip_text(c, grid_offset);
-        if (c->text_id) {
+        if (c->text_id || c->translation_key) {
             c->type = TOOLTIP_OVERLAY;
             c->high_priority = 1;
         }

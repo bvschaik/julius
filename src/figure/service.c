@@ -113,6 +113,10 @@ static void religion_coverage_venus(building *b)
     b->data.house.temple_venus = MAX_COVERAGE;
 }
 
+static void religion_coverage_pantheon(building* b) {
+    b->house_pantheon_access = MAX_COVERAGE;
+}
+
 static void school_coverage(building *b)
 {
     b->data.house.school = MAX_COVERAGE;
@@ -238,20 +242,23 @@ static void distribute_good(building *b, building *market, int stock_wanted, int
     }
 }
 
-static void collect_offerings_from_house(building* b, building* market) {
+static void collect_offerings_from_house(building* house, building* temple) {
     // offerings are generated, not removed from house stores    
-    if (b->days_since_offering >= MARS_OFFERING_FREQUENCY) {
+    if (house->days_since_offering >= MARS_OFFERING_FREQUENCY) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            if (b->data.house.inventory[i]) {
-                if (b->house_size == 1 && b->house_is_merged) {
-                    market->data.market.inventory[i] += 2;
+            if (house->data.house.inventory[i]) {
+                if (house->house_size == 1 && house->house_is_merged) {
+                    temple->data.market.inventory[i] += 2;
                 }
                 else {
-                    market->data.market.inventory[i] += b->house_size;
+                    temple->data.market.inventory[i] += house->house_size;
                 }
             }
+            if (temple->data.market.inventory[i] > 400) {
+                temple->data.market.inventory[i] = 400;
+            }
         }
-        b->days_since_offering = 0;
+        house->days_since_offering = 0;
     }
 }
 
@@ -285,15 +292,17 @@ static void distribute_market_resources(building *b, building *market)
             }
         }
     }
-    if (model->pottery) {
-        market->data.market.pottery_demand = 10;
-        distribute_good(b, market, 8 * model->pottery, INVENTORY_POTTERY);
-    }
+
     int goods_no = 8;
 
     //Venus base stockpile bonus
-    if (b->data.house.temple_venus && building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT)) {
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
         goods_no = 12;
+    }
+
+    if (model->pottery) {
+        market->data.market.pottery_demand = 10;
+        distribute_good(b, market, goods_no * model->pottery, INVENTORY_POTTERY);
     }
     
     if (model->furniture) {
@@ -458,6 +467,7 @@ int figure_service_provide_coverage(figure *f)
                     provide_culture(x, y, religion_coverage_mercury);
                     provide_culture(x, y, religion_coverage_mars);
                     provide_culture(x, y, religion_coverage_venus);
+                    provide_culture(x, y, religion_coverage_pantheon);
                     break;
                 default:
                     break;

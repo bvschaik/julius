@@ -24,9 +24,10 @@ typedef enum {
 
 static int active_devolve_delay;
 
-static int check_evolve_desirability(building *house)
+static int check_evolve_desirability(building *house, int bonus)
 {
     int level = house->subtype.house_level;
+    level -= bonus;
     const model_house *model = model_get_house(level);
     int evolve_des = model->evolve_desirability;
     if (level >= HOUSE_LUXURY_PALACE) {
@@ -176,10 +177,10 @@ static int has_required_goods_and_services(building *house, int for_upgrade, int
 static int check_requirements(building* house, house_demands* demands)
 {
     int bonus = 0;
-    if (building_monument_pantheon_module_is_active(PANTHEON_MODULE_2_HOUSING_EVOLUTION) && house->data.house.num_gods == 5) {
+    if (building_monument_pantheon_module_is_active(PANTHEON_MODULE_2_HOUSING_EVOLUTION) && house->house_pantheon_access) {
         bonus++;
     }
-    int status = check_evolve_desirability(house);
+    int status = check_evolve_desirability(house, bonus);
     if (!has_required_goods_and_services(house, 0, bonus, demands)) {
         status = DEVOLVE;
     }
@@ -472,7 +473,8 @@ static int evolve_large_palace(building *house, house_demands *demands)
 
 static int evolve_luxury_palace(building *house, house_demands *demands)
 {
-    int status = check_evolve_desirability(house);
+    int bonus = (int)(building_monument_pantheon_module_is_active(PANTHEON_MODULE_2_HOUSING_EVOLUTION) && house->house_pantheon_access);
+    int status = check_evolve_desirability(house, bonus);
     if (!has_required_goods_and_services(house, 0, 0, demands)) {
         status = DEVOLVE;
     }
@@ -556,10 +558,9 @@ void building_house_process_evolve_and_consume_goods(void)
 void building_house_determine_evolve_text(building *house, int worst_desirability_building)
 {
     int level = house->subtype.house_level;
-    if (building_monument_pantheon_module_is_active(PANTHEON_MODULE_2_HOUSING_EVOLUTION) && house->data.house.num_gods == 5) {
+    if (building_monument_pantheon_module_is_active(PANTHEON_MODULE_2_HOUSING_EVOLUTION) && house->house_pantheon_access) {
         level--;
     }
-
 
     // this house will devolve soon because...
 
