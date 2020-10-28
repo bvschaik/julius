@@ -145,14 +145,14 @@ int platform_screen_resize(int pixel_width, int pixel_height)
         SDL.texture = 0;
     }
 
+    // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
+    SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
+
     setting_set_display(setting_fullscreen(), logical_width, logical_height);
     SDL.texture = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         logical_width, logical_height);
-
-    // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
-    SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
 
     if (SDL.texture) {
         SDL_Log("Texture created: %d x %d", logical_width, logical_height);
