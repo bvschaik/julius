@@ -1,6 +1,6 @@
 #include "monument.h"
 
-#include "city/buildings.h"
+#include "city/finance.h"
 #include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"

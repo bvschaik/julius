@@ -403,15 +403,16 @@ int building_mothball_set(building* b, int mothball)
 
 int building_get_levy(building* b)
 {
+    int levy = b->monthly_levy;
     //Pantheon base bonus
     if (building_monument_working(BUILDING_PANTHEON) && 
         ((b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) ||
         (b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) || b->type == BUILDING_ORACLE)) {
-        return (b->monthly_levy / 4) * 3;
+        levy = (levy / 4) * 3;
     }
-    else {
-        return difficulty_adjust_levies(b->monthly_levy);
-    }
+        
+    return difficulty_adjust_levies(levy);
+    
 }
 
 

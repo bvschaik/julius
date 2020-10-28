@@ -42,8 +42,6 @@ static void add_fort(int type, building *fort)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
     }
 
-    fort->monthly_levy = FORT_LEVY_MONTHLY;
-
     // create parade ground
     const int offsets_x[] = {3, -1, -4, 0};
     const int offsets_y[] = {-1, -4, 0, 3};
@@ -427,47 +425,36 @@ static void add_to_map(int type, building *b, int size,
             break;
         // religion
         case BUILDING_SMALL_TEMPLE_CERES:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_CERES));
             break;
         case BUILDING_SMALL_TEMPLE_NEPTUNE:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_NEPTUNE));
             break;
         case BUILDING_SMALL_TEMPLE_MERCURY:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_MERCURY));
             break;
         case BUILDING_SMALL_TEMPLE_MARS:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_MARS));
             break;
         case BUILDING_SMALL_TEMPLE_VENUS:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_VENUS));
             break;
         case BUILDING_LARGE_TEMPLE_CERES:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_CERES) + 1);
             break;
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1);
             break;
         case BUILDING_LARGE_TEMPLE_MERCURY:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1);
             break;
         case BUILDING_LARGE_TEMPLE_MARS:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_MARS) + 1);
             break;
         case BUILDING_LARGE_TEMPLE_VENUS:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_VENUS) + 1);
             break;
         case BUILDING_ORACLE:
-            b->monthly_levy = TEMPLE_LEVY_MONTHLY;
             add_building(b, image_group(GROUP_BUILDING_ORACLE));
             break;
         case BUILDING_ROADBLOCK:
@@ -501,7 +488,6 @@ static void add_to_map(int type, building *b, int size,
             break;
         // defense
         case BUILDING_TOWER:
-            b->monthly_levy = TOWER_LEVY_MONTHLY;
             map_terrain_remove_with_radius(b->x, b->y, 2, 0, TERRAIN_WALL);
             map_building_tiles_add(b->id, b->x, b->y, size, image_group(GROUP_BUILDING_TOWER),
                 TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
