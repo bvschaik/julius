@@ -26,15 +26,18 @@
 
 static void button_click(int type, int param2);
 
-static int focus_button_id;
+static struct {
+    int focus_button_id;
+    int logo_image_id;
+} data;
 
 static generic_button buttons[] = {
-    {192, 100, 256, 25, button_click, button_none, 1, 0},
-    {192, 140, 256, 25, button_click, button_none, 2, 0},
-    {192, 180, 256, 25, button_click, button_none, 3, 0},
-    {192, 220, 256, 25, button_click, button_none, 4, 0},
-    {192, 260, 256, 25, button_click, button_none, 5, 0},
-    {192, 300, 256, 25, button_click, button_none, 6, 0},
+    {192, 130, 256, 25, button_click, button_none, 1, 0},
+    {192, 170, 256, 25, button_click, button_none, 2, 0},
+    {192, 210, 256, 25, button_click, button_none, 3, 0},
+    {192, 250, 256, 25, button_click, button_none, 4, 0},
+    {192, 290, 256, 25, button_click, button_none, 5, 0},
+    {192, 330, 256, 25, button_click, button_none, 6, 0},
 };
 
 static void draw_version_string(void)
@@ -56,6 +59,10 @@ static void draw_background(void)
 {
     image_draw_fullscreen_background(image_group(GROUP_MAIN_MENU_BACKGROUND));
     graphics_in_dialog();
+    if (!data.logo_image_id) {
+        data.logo_image_id = mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Main Menu Banner");
+    }
+    image_draw(data.logo_image_id, 110, -50);
     graphics_reset_dialog();
     if (window_is(WINDOW_MAIN_MENU)) {
         draw_version_string();
@@ -67,15 +74,15 @@ static void draw_foreground(void)
     graphics_in_dialog();
 
     for (int i = 0; i < MAX_BUTTONS; i++) {
-        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
+        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
     }
 
-    lang_text_draw_centered(30, 1, 192, 106, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(30, 5, 192, 306, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(30, 1, 192, 136, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(30, 2, 192, 176, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(30, 3, 192, 216, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(9, 8, 192, 256, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(2, 0, 192, 296, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(30, 5, 192, 336, 256, FONT_NORMAL_GREEN);
 
     graphics_reset_dialog();
 }
@@ -83,7 +90,7 @@ static void draw_foreground(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id)) {
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &data.focus_button_id)) {
         return;
     }
     if (h->escape_pressed) {

@@ -42,12 +42,12 @@
     <image id="7 Mon MapIcon" src="7x7_Monument_Icon" />
 
 <!-- Note: Banner with Augustus Logo for Main Menu  -->
-    <image id="Main Menu Banner" src="Augustus_Main_Menu_Banner" />
+    <image id="Main Menu Banner" src="Augustus_Main_Menu_Banner_Sml" />
 
 <!-- Note: Border for Campaign Map Selection Screen  -->
 	<image id="Mission Selection Border" src="Map_Selection_Overlay_Border_Left" />
     <image src="Map_Selection_Overlay_Border_Top" />
-    <image src="Map_Selection_Overlay_Border_Bottom" />
     <image src="Map_Selection_Overlay_Border_Right" />
+    <image src="Map_Selection_Overlay_Border_Bottom" />
 
 </mod>

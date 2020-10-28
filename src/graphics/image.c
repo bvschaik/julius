@@ -971,7 +971,7 @@ void image_draw_fullscreen_background(int image_id)
     if (scale <= 1.0f) {
         image_draw(image_id, (s_width - img->width) / 2, (s_height - img->height) / 2);
     } else {
-        image_draw_scaled_up(image_id, (s_width - img->width * scale) / 2, (s_height - img->height * scale) / 2, scale);
+        image_draw_scaled(image_id, (s_width - img->width * scale) / 2, (s_height - img->height * scale) / 2, scale);
     }
 }
 
@@ -1130,7 +1130,7 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
     }
 }
 
-void image_draw_scaled_up(int image_id, int x_offset, int y_offset, double scale_factor)
+void image_draw_scaled(int image_id, int x_offset, int y_offset, double scale_factor)
 {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
@@ -1150,8 +1150,23 @@ void image_draw_scaled_up(int image_id, int x_offset, int y_offset, double scale
         color_t *dst = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
         int x_max = width - clip->clipped_pixels_right;
         int image_y_offset = (int) (y / scale_factor) * img->width;
-        for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-            *dst = data[(int) (image_y_offset + x / scale_factor)];
+        if (img->draw.type == IMAGE_TYPE_MOD) {
+            for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
+                color_t pixel = data[(int) (image_y_offset + x / scale_factor)];
+                color_t alpha = pixel & COLOR_CHANNEL_ALPHA;
+                if (alpha == ALPHA_OPAQUE) {
+                    *dst = pixel;
+                } else if (alpha != ALPHA_TRANSPARENT) {
+                    *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(pixel, *dst, alpha >> COLOR_BITSHIFT_ALPHA);
+                }
+            }
+        } else {
+            for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
+                color_t pixel = data[(int) (image_y_offset + x / scale_factor)];
+                if (pixel != COLOR_SG2_TRANSPARENT) {
+                    *dst = pixel;
+                }
+            }
         }
     }
 }

@@ -65,9 +65,9 @@ static void draw_background_images(void)
         int image_border = mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Mission Selection Border");
         image_draw(image_border, image_offset_x, image_offset_y);
         image_draw(image_border + 1, image_offset_x + BORDER_IMAGE_DEPTH, image_offset_y);
-        image_draw(image_border + 2, image_offset_x + BORDER_IMAGE_DEPTH,
+        image_draw(image_border + 2, image_offset_x + BACKGROUND_WIDTH - BORDER_IMAGE_DEPTH, image_offset_y);
+        image_draw(image_border + 3, image_offset_x + BORDER_IMAGE_DEPTH,
             image_offset_y + BACKGROUND_HEIGHT - BORDER_IMAGE_DEPTH - 1);
-        image_draw(image_border + 3, image_offset_x + BACKGROUND_WIDTH - BORDER_IMAGE_DEPTH, image_offset_y);
     } else {
         image_draw(image_group(GROUP_SELECT_MISSION_BACKGROUND), image_offset_x, image_offset_y);
     }
