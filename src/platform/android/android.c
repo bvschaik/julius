@@ -123,7 +123,7 @@ const char *android_show_c3_path_dialog(void)
 void android_toast_message(const char *message)
 {
     java_function_handler handler;
-    if (get_java_static_method_handler(CLASS_JULIUS_ACTIVITY, "toastMessage", "(Ljava/lang/String;)V", &handler)) {
+    if (get_java_method_handler(CLASS_JULIUS_ACTIVITY, "toastMessage", "(Ljava/lang/String;)V", &handler)) {
         jstring jmessage = (*handler.env)->NewStringUTF(handler.env, message);
         (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method, jmessage);
         (*handler.env)->DeleteLocalRef(handler.env, jmessage);
