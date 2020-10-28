@@ -124,4 +124,5 @@ repositories {
 
 dependencies {
     implementation project(':SDL2')
+    implementation 'androidx.appcompat:appcompat:1.2.0'
 }

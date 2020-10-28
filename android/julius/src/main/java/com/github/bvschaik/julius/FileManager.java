@@ -14,8 +14,8 @@ public class FileManager {
     private static Uri baseUri = Uri.EMPTY;
     private static HashMap<Uri, HashMap<String, FileInfo>> directoryStructureCache = new HashMap<>();
 
-    private static int FILE_TYPE_DIR = 1;
-    private static int FILE_TYPE_FILE = 2;
+    private static final int FILE_TYPE_DIR = 1;
+    private static final int FILE_TYPE_FILE = 2;
 
     public static String getC3Path() {
         return baseUri.toString();

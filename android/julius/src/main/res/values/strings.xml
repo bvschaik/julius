@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Julius</string>
+    <string name="directory_selector_instructions">"Julius requires the original Caesar 3 files to run. Please follow these steps:\n\n1. Copy your entire Caesar 3  folder from your computer to your Android device using Android File Transfer or a similar utility.\n\n2. Select that directory using the button below. This is also the directory where any saved games will be stored."</string>
+    <string name="directory_selector_button">Select directory</string>
 </resources>

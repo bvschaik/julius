@@ -391,8 +391,6 @@ static const char *ask_for_data_dir(int again)
         if (!result) {
             return NULL;
         }
-    } else {
-        android_toast_message("Please select the location of the Caesar 3 files.");
     }
     return android_show_c3_path_dialog();
 #else
