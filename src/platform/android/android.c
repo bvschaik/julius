@@ -100,7 +100,7 @@ static const char *get_c3_path(void)
     (*handler.env)->DeleteLocalRef(handler.env, result);
     destroy_java_function_handler(&handler);
 
-    return path;
+    return *path ? path : NULL;
 }
 
 const char *android_show_c3_path_dialog(int again)
