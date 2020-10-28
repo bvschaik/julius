@@ -24,9 +24,8 @@ public class JuliusMainActivity extends SDLActivity {
         };
     }
 
-    public void showDirectorySelection() {
-        Intent intent = new Intent(this, DirectorySelectionActivity.class);
-        startActivityForResult(intent, GET_FOLDER_RESULT);
+    public void showDirectorySelection(boolean again) {
+        startActivityForResult(DirectorySelectionActivity.newIntent(this, again), GET_FOLDER_RESULT);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

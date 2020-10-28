@@ -103,11 +103,12 @@ static const char *get_c3_path(void)
     return path;
 }
 
-const char *android_show_c3_path_dialog(void)
+const char *android_show_c3_path_dialog(int again)
 {
     java_function_handler handler;
-    if (get_java_method_handler(CLASS_JULIUS_ACTIVITY, "showDirectorySelection", "()V", &handler)) {
-        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method);
+    if (get_java_method_handler(CLASS_JULIUS_ACTIVITY, "showDirectorySelection", "(Z)V", &handler)) {
+        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method,
+            again ? JNI_TRUE : JNI_FALSE);
     }
     destroy_java_function_handler(&handler);
 

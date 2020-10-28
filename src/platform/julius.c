@@ -392,7 +392,7 @@ static const char *ask_for_data_dir(int again)
             return NULL;
         }
     }
-    return android_show_c3_path_dialog();
+    return android_show_c3_path_dialog(again);
 #else
     if (again) {
         int result = tinyfd_messageBox("Wrong folder selected",

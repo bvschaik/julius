@@ -1,5 +1,6 @@
 package com.github.bvschaik.julius;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,9 +10,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class DirectorySelectionActivity extends AppCompatActivity {
+    private static final String ARG_SKIP_INSTRUCTIONS = "arg_skip_instructions";
     private static final int RC_GET_EXTERNAL_DIR = 501;
     private static final int RW_FLAGS_PERMISSION = Intent.FLAG_GRANT_READ_URI_PERMISSION
             | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+
+    public static Intent newIntent(Context context, boolean skipInstructions) {
+        Intent intent = new Intent(context, DirectorySelectionActivity.class);
+        intent.putExtra(ARG_SKIP_INSTRUCTIONS, skipInstructions);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +33,10 @@ public class DirectorySelectionActivity extends AppCompatActivity {
                 openDirectorySelector();
             }
         });
+
+        if (savedInstanceState == null && getIntent().getBooleanExtra(ARG_SKIP_INSTRUCTIONS, false)) {
+            openDirectorySelector();
+        }
     }
 
     private void openDirectorySelector() {
