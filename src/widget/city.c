@@ -299,11 +299,12 @@ static void handle_touch_zoom(const touch *first, const touch *last)
 static void handle_last_touch(void)
 {
     const touch *last = touch_get_latest();
-    if (last->in_use && touch_was_click(last)) {
-        building_construction_cancel();
+    if (!last->in_use) {
         return;
     }
-    if (touch_not_click(last)) {
+    if (touch_was_click(last)) {
+        building_construction_cancel();
+    } else if (touch_not_click(last)) {
         handle_touch_zoom(touch_get_earliest(), last);
     }
 }

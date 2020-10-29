@@ -1,5 +1,6 @@
 #include "scroll.h"
 
+#include "city/view.h"
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/direction.h"
@@ -495,6 +496,9 @@ int scroll_get_delta(const mouse* m, pixel_offset* delta, scroll_type type)
         data.speed.decaying = speed_is_changing(&data.speed.x) || speed_is_changing(&data.speed.y);
         data.is_scrolling = data.speed.decaying;
     }
+    int scale = city_view_get_scale();
+    delta->x = calc_adjust_with_percentage(delta->x, scale);
+    delta->y = calc_adjust_with_percentage(delta->y, scale);
     return delta->x != 0 || delta->y != 0;
 }
 
