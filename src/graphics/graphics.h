@@ -36,6 +36,7 @@ void graphics_init_canvas(int width, int height);
 const void *graphics_canvas(canvas_type type);
 void graphics_set_active_canvas(canvas_type type);
 void graphics_set_custom_canvas(color_t *pixels, int width, int height);
+void graphics_restore_original_canvas(void);
 canvas_type graphics_get_canvas_type(void);
 
 void graphics_in_dialog(void);

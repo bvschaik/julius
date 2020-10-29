@@ -182,7 +182,7 @@ static void load_layer(layer *l)
     } else {
         image_draw(l->original_image_id, 0, 0);
     }
-    graphics_set_active_canvas(type);
+    graphics_restore_original_canvas();;
 }
 
 static void unload_layer(layer *l)
