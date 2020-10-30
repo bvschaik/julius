@@ -31,3 +31,5 @@ local.properties
 *.log
 /android/build/
 /android/*/build/
+/android/julius.keystore
+/android/play-publisher.json

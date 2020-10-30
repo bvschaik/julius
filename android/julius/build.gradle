@@ -119,7 +119,7 @@ android {
 }
 
 play {
-    serviceAccountCredentials.set(file("../julius-play-publisher.json"))
+    serviceAccountCredentials.set(file("../play-publisher.json"))
 }
 
 repositories {

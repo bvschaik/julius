@@ -28,10 +28,18 @@ case "$BUILD_TARGET" in
 	cd android
 	if [ -f julius.keystore ]
 	then
-		TERM=dumb ./gradlew assembleRelease
-		cp julius/build/outputs/apk/release/julius-release.apk ../build/julius.apk
+		COMMAND=assembleRelease
+		if [ "$TRAVIS_BRANCH" == "master" ]
+		then
+			COMMAND=publishRelease
+		fi
 	else
-		TERM=dumb ./gradlew assembleDebug
+		COMMAND=assembleDebug
+	fi
+	TERM=dumb ./gradlew $COMMAND
+	if [ -f julius/build/outputs/apk/release/julius-release.apk ]
+	then
+		cp julius/build/outputs/apk/release/julius-release.apk ../build/julius.apk
 	fi
 	;;
 *)
