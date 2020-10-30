@@ -2,6 +2,7 @@
 #define WINDOW_POPUP_DIALOG_H
 
 typedef enum {
+    POPUP_DIALOG_CUSTOM = -2,
     POPUP_DIALOG_NONE = -1,
     POPUP_DIALOG_QUIT = 0,
     POPUP_DIALOG_OPEN_TRADE = 2,

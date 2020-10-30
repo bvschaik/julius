@@ -1,9 +1,10 @@
 #include "popup_dialog.h"
-
 #include "core/image_group.h"
+
 #include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
+#include "graphics/text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -72,6 +73,7 @@ static void draw_background(void)
         else {
             lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK);            
         }
+
         lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK);
     }
     graphics_reset_dialog();
@@ -120,7 +122,7 @@ static void confirm(void)
 }
 
 void window_popup_dialog_show(popup_dialog_type type,
-        void (*close_func)(int accepted), int has_ok_cancel_buttons)
+    void (*close_func)(int accepted), int has_ok_cancel_buttons)
 {
     if (init(type, 0, 0, close_func, has_ok_cancel_buttons)) {
         window_type window = {
@@ -134,7 +136,7 @@ void window_popup_dialog_show(popup_dialog_type type,
 }
 
 void window_popup_dialog_show_confirmation(int text_group, int text_id,
-        void (*close_func)(int accepted))
+    void (*close_func)(int accepted))
 {
     if (init(POPUP_DIALOG_NONE, text_group, text_id, close_func, 1)) {
         window_type window = {
@@ -146,6 +148,7 @@ void window_popup_dialog_show_confirmation(int text_group, int text_id,
         window_show(&window);
     }
 }
+
 
 void window_popup_dialog_show_confirmation_from_tr(int translation_key,
     void (*close_func)(int accepted))
@@ -162,4 +165,5 @@ void window_popup_dialog_show_confirmation_from_tr(int translation_key,
         window_show(&window);
     }
 }
+
 
