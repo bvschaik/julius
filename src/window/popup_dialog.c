@@ -47,6 +47,7 @@ static int init(popup_dialog_type type, int custom_text_group, int custom_text_i
     data.custom_text_group = custom_text_group;
     data.custom_text_id = custom_text_id;
     data.ok_clicked = 0;
+    data.from_tr = 0;
     data.close_func = close_func;
     data.has_buttons = has_ok_cancel_buttons;
     return 1;
