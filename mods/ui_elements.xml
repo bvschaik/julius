@@ -32,6 +32,16 @@
     <image id="Venus M Icon" src="Venus_Temple_Complex_Module_Banner" />
     <image id="Venus M2 Icon" src="Venus_Temple_Complex_Module2_Banner" />
 
+<!-- Note: Banner Border images for Module Selection UI Hover and UnHover variants -->
+    <image src="Module_Selection_Border_Top_UnHover" id="Monument Mod Selection Borders" />
+    <image src="Module_Selection_Border_Top_Hover" />
+    <image src="Module_Selection_Border_Right_UnHover" />
+    <image src="Module_Selection_Border_Right_Hover" />
+    <image src="Module_Selection_Border_Bottom_UnHover" />
+    <image src="Module_Selection_Border_Bottom_Hover" />
+    <image src="Module_Selection_Border_Left_UnHover" />
+    <image src="Module_Selection_Border_Left_Hover" />
+
 <!-- Note: Banner images for Construction Sites -->
     <image id="Const. Banner 01" src="Construction_Banner_01" />
     <image id="Const. Banner 02" src="Construction_Banner_02" />

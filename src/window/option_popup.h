@@ -12,8 +12,8 @@ typedef struct {
     uint8_t mod_image_id[24];
 } option_menu_item;
 
-void window_show_option_popup(int title, int subtitle, option_menu_item *options,
-    void (*close_func)(int selection));
+void window_option_popup_show(int title, int subtitle, option_menu_item *options,
+    void (*close_func)(int selection), int show_cancel_button);
 
 
 

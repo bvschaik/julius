@@ -10,7 +10,6 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
-#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "sound/speech.h"
 #include "translation/translation.h"
@@ -438,10 +437,11 @@ static void window_building_draw_monument_construction_process(building_info_con
         window_building_draw_monument_resources_needed(c);
         int height = text_draw_multiline(translation_for(tr_phase_name_text + b->subtype.monument_phase - 1), c->x_offset + 22, c->y_offset + 170, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
         height += text_draw_multiline(translation_for(tr_construction_desc), c->x_offset + 22, c->y_offset + 180 + height, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
-        int phase_offset = b->subtype.monument_phase % 2;
-        image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Const. Banner 01")+phase_offset, c->x_offset + 32, c->y_offset + 196 + height);
+        if (c->height_blocks > 26) {
+            int phase_offset = b->subtype.monument_phase % 2;
+            image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Const. Banner 01") + phase_offset, c->x_offset + 32, c->y_offset + 196 + height);
+        }
     }
-
 }
 
 static void window_building_draw_monument_temple_construction_process(building_info_context* c) {
@@ -519,7 +519,7 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
         }
         inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height + extra_y, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 96 + height + extra_y);
-        if (screen_height() > 600) {
+        if (c->height_blocks > 26) {
             image_draw(banner_id, c->x_offset + 32, c->y_offset + 166 + height + extra_y);
             text_draw_centered_with_linebreaks(translation_for(quote), c->x_offset, c->y_offset + 386 + height + extra_y, 16 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         }
@@ -633,5 +633,5 @@ static void add_module(int selection)
 static void add_module_prompt(int param1, int param2)
 {
     option_menu_item options[2] = { temple_module_options[god_id * 2], temple_module_options[god_id * 2 + 1] };
-    window_show_option_popup(TR_SELECT_EPITHET_PROMPT_HEADER, TR_SELECT_EPITHET_PROMPT_TEXT, options, add_module);
+    window_option_popup_show(TR_SELECT_EPITHET_PROMPT_HEADER, TR_SELECT_EPITHET_PROMPT_TEXT, options, add_module, 1);
 }
