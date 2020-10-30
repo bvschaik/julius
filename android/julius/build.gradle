@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.github.triplet.play'
 
 task getVersion {
     def cmakeFile = rootProject.file("../CMakeLists.txt").text
@@ -115,6 +116,10 @@ android {
             path "../../CMakeLists.txt"
         }
     }
+}
+
+play {
+    serviceAccountCredentials.set(file("../julius-play-publisher.json"))
 }
 
 repositories {
