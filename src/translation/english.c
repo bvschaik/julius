@@ -353,7 +353,10 @@ static translation_string all_strings[] = {
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Lighthouse must be placed near water"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "This house has access to all five gods from the Pantheon"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Plentiful food is boosting morale" },
-    {TR_BUILDING_LEGION_FOOD_STATUS, "Food status"}
+    {TR_BUILDING_LEGION_FOOD_STATUS, "Food status"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER, "Allow quartermaster to get food here"}
+
+        
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

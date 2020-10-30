@@ -136,7 +136,6 @@ static int get_height_id(void)
             case BUILDING_FORT:
             case BUILDING_MILITARY_ACADEMY:
             case BUILDING_MARKET:
-            case BUILDING_GRANARY:
             case BUILDING_SHIPYARD:
             case BUILDING_DOCK:
             case BUILDING_WHARF:
@@ -161,7 +160,7 @@ static int get_height_id(void)
             case BUILDING_SENATE:
             case BUILDING_SENATE_UPGRADED:
             case BUILDING_FOUNTAIN:
-
+            case BUILDING_GRANARY:
                 return 2;
 
             case BUILDING_BARRACKS:
@@ -840,8 +839,10 @@ static void get_tooltip(tooltip_context *c)
         } else if (btype == BUILDING_WAREHOUSE) {
             window_building_get_tooltip_warehouse_orders(&group_id, &text_id, &translation);
         }
-    } else if (btype == BUILDING_GRANARY || btype == BUILDING_WAREHOUSE) {
-        window_building_get_tooltip_distribution_permissions(&translation);
+    } else if (btype == BUILDING_GRANARY) {
+        window_building_granary_get_tooltip_distribution_permissions(&translation);
+    } else if (btype == BUILDING_WAREHOUSE) {
+        window_building_warehouse_get_tooltip_distribution_permissions(&translation);
     }
     if (text_id || group_id || translation) {
         c->type = TOOLTIP_BUTTON;

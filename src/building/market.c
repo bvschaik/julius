@@ -99,6 +99,12 @@ int building_market_get_storage_destination(building *market)
         resources[i].num_buildings = 0;
         resources[i].distance = 40;
     }
+    int permission; 
+    if (market->type == BUILDING_MESS_HALL) {
+        permission = BUILDING_STORAGE_PERMISSION_QUARTERMASTER;
+    } else {
+        permission = BUILDING_STORAGE_PERMISSION_MARKET;
+    }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
@@ -115,7 +121,7 @@ int building_market_get_storage_destination(building *market)
             b->road_network_id != market->road_network_id) {
             continue;
         }
-        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_MARKET,b)) {
+        if (!building_storage_get_permission(permission,b)) {
             continue;
         }
         int distance = calc_maximum_distance(market->x, market->y, b->x, b->y);

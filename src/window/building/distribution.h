@@ -40,7 +40,8 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c);
 int window_building_handle_mouse_warehouse(const mouse *m, building_info_context *c);
 int window_building_handle_mouse_warehouse_orders(const mouse *m, building_info_context *c);
 
-void window_building_get_tooltip_distribution_permissions(int* translation);
+void window_building_granary_get_tooltip_distribution_permissions(int* translation);
+void window_building_warehouse_get_tooltip_distribution_permissions(int* translation);
 void window_building_get_tooltip_warehouse_orders(int *group_id, int *text_id, int *translation);
 
 #endif // WINDOW_BUILDING_DISTRIBUTION_H

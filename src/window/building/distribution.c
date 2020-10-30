@@ -74,6 +74,12 @@ static generic_button warehouse_distribution_permissions_buttons[] = {
 
 };
 
+static generic_button granary_distribution_permissions_buttons[] = {
+     {0, 0, 20, 22, storage_toggle_permissions, button_none, 1, 0},
+     {96, 0, 20, 22, storage_toggle_permissions, button_none, 4, 0},
+};
+
+
 static generic_button granary_order_buttons[] = {
     {0, 0, 304, 20, granary_orders, button_none, 0, 0},
     {314, 0, 20, 20, granary_orders, button_none, 1, 0},
@@ -96,7 +102,8 @@ static struct {
     int permission_focus_button_id;
     int building_id;
     int partial_resource_focus_button_id;
-} data = {0, 0, 0, 0, 0, 0};
+    int tooltip_id;
+} data = {0, 0, 0, 0, 0, 0, 0};
 
 uint8_t warehouse_full_button_text[] = "32";
 uint8_t warehouse_3quarters_button_text[] = "24";
@@ -128,6 +135,22 @@ static void draw_permissions_buttons(int x, int y, int buttons)
         x += offsets[i];
      }
 }
+
+static void draw_granary_permissions_buttons(int x, int y, int buttons)
+{
+    uint8_t permission_button_text[] = { 'x', 0 };
+    int offsets[] = { 96, 132, 96 };
+    for (int i = 0; i < buttons; i++)
+    {
+        int permission = granary_distribution_permissions_buttons[i].parameter1 - 1;
+        button_border_draw(x, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
+        if (building_storage_get_permission(permission, building_get(data.building_id))) {
+            text_draw_centered(permission_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+        }
+        x += offsets[i];
+    }
+}
+
 
 void window_building_draw_dock(building_info_context *c)
 {
@@ -440,8 +463,8 @@ void window_building_draw_granary(building_info_context *c)
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
-    image_draw(image_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 28, c->y_offset + 19 * c->height_blocks - 93);
-
+    image_draw(image_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 28, c->y_offset + 19 * c->height_blocks - 133);
+    image_draw(image_group(GROUP_FIGURE_TOWER_SENTRY) + 4, c->x_offset + 128, c->y_offset + 19 * c->height_blocks - 133);
 }
 
 void window_building_draw_granary_foreground(building_info_context *c)
@@ -450,15 +473,15 @@ void window_building_draw_granary_foreground(building_info_context *c)
         16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
     lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
         16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-    draw_permissions_buttons(c->x_offset + 58, c->y_offset + 19 * c->height_blocks - 82, 1);
+    draw_granary_permissions_buttons(c->x_offset + 58, c->y_offset + 19 * c->height_blocks - 122, 2);
 
 }
 
 int window_building_handle_mouse_granary(const mouse *m, building_info_context *c)
 {
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->x_offset + 58, c->y_offset + 19 * c->height_blocks - 82,
-        warehouse_distribution_permissions_buttons, 1, &data.permission_focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, c->x_offset + 58, c->y_offset + 19 * c->height_blocks - 122,
+        granary_distribution_permissions_buttons, 2, &data.permission_focus_button_id)) {
     }
     return generic_buttons_handle_mouse(
         m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
@@ -748,7 +771,7 @@ int window_building_handle_mouse_warehouse_orders(const mouse *m, building_info_
         warehouse_order_buttons, 3, &data.orders_focus_button_id);
 }
 
-void window_building_get_tooltip_distribution_permissions(int* translation)
+void window_building_warehouse_get_tooltip_distribution_permissions(int* translation)
 {
     switch (data.permission_focus_button_id) {
     case 1:
@@ -765,6 +788,21 @@ void window_building_get_tooltip_distribution_permissions(int* translation)
     }
 
 }
+
+void window_building_granary_get_tooltip_distribution_permissions(int* translation)
+{
+    switch (data.permission_focus_button_id) {
+    case 1:
+        *translation = TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES;
+        break;
+    case 2:
+        *translation = TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER;
+    default:
+        break;
+    }
+
+}
+
 
 void window_building_get_tooltip_warehouse_orders(int *group_id, int *text_id, int *translation)
 {
