@@ -91,8 +91,11 @@ static int draw_background(void)
 
     // oracles
     lang_text_draw(59, 8, 40, 166, FONT_NORMAL_WHITE);
+    if (building_count_active(BUILDING_PANTHEON)) {
+        text_draw_number_centered(building_count_active(BUILDING_PANTHEON), 290, 166, 50, FONT_NORMAL_GREEN);
+    }
     text_draw_number_centered(building_count_total(BUILDING_ORACLE), 230, 166, 50, FONT_NORMAL_WHITE);
-
+    
     city_gods_calculate_least_happy();
 
     lang_text_draw_multiline(59, 21 + get_religion_advice(), 60, 196, 512, FONT_NORMAL_BLACK);

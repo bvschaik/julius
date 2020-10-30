@@ -18,6 +18,7 @@
 #include "core/image.h"
 #include "core/mods.h"
 #include "core/random.h"
+#include "empire/city.h"
 #include "figure/formation_legion.h"
 #include "game/undo.h"
 #include "map/building_tiles.h"
@@ -733,6 +734,16 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
     }
+
+    if (building_monument_type_is_monument(type)) {
+        if (!empire_has_access_to_resource(RESOURCE_CLAY) ||
+            !empire_has_access_to_resource(RESOURCE_TIMBER) ||
+            !empire_has_access_to_resource(RESOURCE_MARBLE)) {
+            city_warning_show(WARNING_RESOURCES_NOT_AVAILABLE);
+            return 0;
+        }        
+    }
+
     if (building_monument_has_monument(type)) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;

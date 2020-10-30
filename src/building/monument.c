@@ -448,6 +448,23 @@ int building_monument_is_monument(const building* b)
 	return 0;
 }
 
+int building_monument_type_is_monument(building_type type)
+{
+	switch (type) {
+	case BUILDING_GRAND_TEMPLE_CERES:
+	case BUILDING_GRAND_TEMPLE_NEPTUNE:
+	case BUILDING_GRAND_TEMPLE_MERCURY:
+	case BUILDING_GRAND_TEMPLE_MARS:
+	case BUILDING_GRAND_TEMPLE_VENUS:
+	case BUILDING_PANTHEON:
+	case BUILDING_MENU_GRAND_TEMPLES:
+	case BUILDING_LIGHTHOUSE:
+		return 1;
+		break;
+	}
+	return 0;
+}
+
 int building_monument_is_grand_temple(building_type type)
 {
 	switch (type) {

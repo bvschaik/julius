@@ -61,6 +61,18 @@ int empire_can_import_resource_potentially(int resource)
     return 0;
 }
 
+int empire_has_access_to_resource(int resource)
+{
+    for (int i = 0; i < MAX_CITIES; i++) {
+        if (cities[i].in_use &&
+            (cities[i].type == EMPIRE_CITY_OURS || cities[i].type == EMPIRE_CITY_TRADE) &&
+            cities[i].sells_resource[resource] == 1) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int empire_can_export_resource(int resource)
 {
     for (int i = 0; i < MAX_CITIES; i++) {

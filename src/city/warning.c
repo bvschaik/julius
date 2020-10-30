@@ -54,6 +54,9 @@ void city_warning_show(warning_type type)
     else if (type == WARNING_WATER_NEEDED_FOR_LIGHTHOUSE) {
         text = translation_for(TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE);
     }
+    else if (type == WARNING_RESOURCES_NOT_AVAILABLE) {
+        text = translation_for(TR_WARNING_RESOURCES_NOT_AVAILABLE);
+    }
     else {
         text = lang_get_string(19, type - 2);
     }

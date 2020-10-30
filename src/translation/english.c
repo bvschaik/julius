@@ -354,7 +354,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "This house has access to all five gods from the Pantheon"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Plentiful food is boosting morale" },
     {TR_BUILDING_LEGION_FOOD_STATUS, "Food status"},
-    {TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER, "Allow quartermaster to get food here"}
+    {TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER, "Allow quartermaster to get food here"},
+    { TR_WARNING_RESOURCES_NOT_AVAILABLE, "You cannot obtain the needed materials"}
 
         
 };
