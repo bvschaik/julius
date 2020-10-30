@@ -36,7 +36,8 @@ static const char *ini_keys[] = {
     "gameplay_change_random_mine_or_pit_collapses_take_money",
     "gameplay_change_multiple_barracks",
     "gameplay_change_warehouses_dont_accept",
-    "gameplay_change_houses_dont_expand_into_gardens"
+    "gameplay_change_houses_dont_expand_into_gardens",
+    "gameplay_change_monuments_boost_culture_rating"
 };
 
 static const char *ini_string_keys[] = {
