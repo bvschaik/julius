@@ -493,7 +493,7 @@ void figure_trade_caravan_donkey_action(figure *f)
         }
     }
 
-    if (leader->is_ghost) {
+    if (leader->is_ghost && !leader->height_adjusted_ticks) {
         f->is_ghost = 1;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
