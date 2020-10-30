@@ -419,6 +419,13 @@ static int missionary_phrase(figure* f)
     return 7 + f->phrase_sequence_exact;
 }
 
+static int homeless_phrase(figure* f)
+{
+    if (++f->phrase_sequence_exact >= 2) {
+        f->phrase_sequence_exact = 0;
+    }
+    return 7 + f->phrase_sequence_exact;
+}
 
 static int house_seeker_phrase(figure *f)
 {
@@ -557,6 +564,7 @@ static int phrase_based_on_figure_state(figure *f)
         case FIGURE_MISSIONARY:
             return missionary_phrase(f);
         case FIGURE_HOMELESS:
+            return homeless_phrase(f);
         case FIGURE_IMMIGRANT:
             return house_seeker_phrase(f);
         case FIGURE_EMIGRANT:
