@@ -284,6 +284,17 @@ int empire_object_city_sells_resource(int object_id, int resource)
     return 0;
 }
 
+void empire_object_city_force_sell_resource(int object_id, int resource)
+{
+    full_empire_object* object = &objects[object_id];
+    for (int i = 0;i < 10;++i) {
+        if (object->city_sells_resource[i] == 0) {
+            object->city_sells_resource[i] = resource;
+        }
+    }
+    
+}
+
 static int is_trade_city(int index)
 {
     if (objects[index].obj.type != EMPIRE_OBJECT_CITY) {

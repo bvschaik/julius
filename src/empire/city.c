@@ -220,6 +220,18 @@ void empire_city_expand_empire(void)
     }
 }
 
+// Override hardcoded empire data to allow new trade
+void empire_city_force_sell(int route, int resource)
+{
+    for (int i = 0; i < MAX_CITIES; i++) {
+        if (cities[i].route_id == route) {
+            cities[i].sells_resource[resource] = 1;
+            empire_object_city_force_sell_resource(cities[i].empire_object_id, resource);
+            break;
+        }        
+    }
+}
+
 static int generate_trader(int city_id, empire_city *city)
 {
     int max_traders = 0;

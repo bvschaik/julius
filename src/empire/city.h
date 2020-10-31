@@ -53,6 +53,8 @@ int empire_city_get_vulnerable_roman(void);
 
 void empire_city_expand_empire(void);
 
+void empire_city_force_sell(int route, int resource);
+
 void empire_city_set_vulnerable(int city_id);
 
 void empire_city_set_foreign(int city_id);
