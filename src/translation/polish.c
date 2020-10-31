@@ -34,7 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Odgrywaj film wprowadzający"},
     {TR_CONFIG_SIDEBAR_INFO, "Dodatkowe informacje w panelu sterowania"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Płynne przewijanie"},
-    {TR_CONFIG_DISABLE_MAP_DRAG, "Wyłącz przeciąganie mapy prawym przyciskiem"},
+    {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Wyłącz przeciąganie mapy prawym przyciskiem"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Pokaż wybrany obszar przy oczyszczaniu terenu"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Pozwól na budowę kolejno każdej ze świątyń"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Pokaż zasięg przy budowie rezerwuarów, fontann i studni"},

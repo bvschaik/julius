@@ -34,7 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "播放啓動動畫"},
     {TR_CONFIG_SIDEBAR_INFO, "控制台更多資訊"},
     {TR_CONFIG_SMOOTH_SCROLLING, "平滑視角滾動"},
-    {TR_CONFIG_DISABLE_MAP_DRAG, "禁用右鍵拖動地圖"},
+    {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "禁用右鍵拖動地圖"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "優化清理土地視覺回饋"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "允許連續建造每種神廟"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "建造時顯示貯水池水泉及水井覆蓋範圍"},

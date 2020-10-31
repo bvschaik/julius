@@ -34,7 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Reproducir vídeos al inicio"},
     {TR_CONFIG_SIDEBAR_INFO, "Mostrar información adicional en el panel de control"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Activar desplazamiento suave del mapa"},
-    {TR_CONFIG_DISABLE_MAP_DRAG, "Desactivar click derecho para desplazar el mapa"},
+    {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Desactivar click derecho para desplazar el mapa"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Mejorar el feedback visual al limpiar terreno"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permitir construcción secuencial de templos"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Mostrar área cubierta por depósitos, fuentes y pozos al construir"},

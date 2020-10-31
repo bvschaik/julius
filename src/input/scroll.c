@@ -241,7 +241,7 @@ void scroll_restore_margins(void)
 
 void scroll_drag_start(int is_touch)
 {
-    if (data.drag.active || config_get(CONFIG_UI_DISABLE_MAP_DRAG)) {
+    if (data.drag.active || (!is_touch && config_get(CONFIG_UI_DISABLE_RIGHT_CLICK_MAP_DRAG))) {
         return;
     }
     data.drag.active = 1;

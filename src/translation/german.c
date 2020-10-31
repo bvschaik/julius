@@ -34,7 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Intro-Videos abspielen"},
     {TR_CONFIG_SIDEBAR_INFO, "Aktiviere zusätzliche Informationen im rechtsseitigen Bedienfeld"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Aktiviere sanftes Scrollen"},
-    {TR_CONFIG_DISABLE_MAP_DRAG, "Verschieben der Karte mit der rechten Maustaste deaktivieren"},
+    {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Verschieben der Karte mit der rechten Maustaste deaktivieren"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Beim Planieren der Landfläche das visuelle Feedback verbessern"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Erlaube alle Tempel nacheinander zu bauen"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Zeige Reichweite beim Bauen von Reservoirs und Brunnen"},

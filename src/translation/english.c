@@ -34,7 +34,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Play intro videos"},
     {TR_CONFIG_SIDEBAR_INFO, "Extra information in the control panel"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Enable smooth scrolling"},
-    {TR_CONFIG_DISABLE_MAP_DRAG, "Disable right click to drag the map"},
+    {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Disable right click to drag the map"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Improve visual feedback when clearing land"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Allow building each temple in succession"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Show range when building reservoirs, fountains and wells"},
