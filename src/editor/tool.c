@@ -198,7 +198,7 @@ static void add_terrain(const void *tile_data, int dx, int dy)
             }
             break;
         case TOOL_WATER:
-            if (!map_elevation_at(grid_offset) && !(terrain & TERRAIN_WATER)) {
+            if (!(terrain & TERRAIN_WATER)) {
                 terrain &= TERRAIN_PAINT_MASK;
                 terrain |= TERRAIN_WATER;
             }
@@ -369,13 +369,14 @@ static void place_building(const map_tile *tile)
 static void update_terrain_after_elevation_changes(void)
 {
     map_elevation_remove_cliffs();
-
     map_image_context_reset_water();
     map_image_context_reset_elevation();
     map_tiles_update_all_elevation();
     map_tiles_update_all_rocks();
     map_tiles_update_all_empty_land();
     map_tiles_update_all_meadow();
+    map_tiles_update_all_water();
+
 
     scenario_editor_updated_terrain();
 }
