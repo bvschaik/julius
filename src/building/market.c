@@ -180,6 +180,7 @@ int building_market_get_storage_destination(building *market)
         return 0;
     }
 
+    // Ceres module 2
     if (building_is_ceres_temple(market->type)) {
         int inventory;
         int ceres_food = city_resource_ceres_temple_food();

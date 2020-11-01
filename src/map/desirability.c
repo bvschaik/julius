@@ -70,6 +70,7 @@ static void update_buildings(void)
 {
     int max_id = building_get_highest_id();
     int value;
+    int value_bonus;
     int step;
     int step_size;
     int range;
@@ -87,7 +88,13 @@ static void update_buildings(void)
 
             //Venus Module 2 House Desirability Bonus
             if (building_is_house(b->type) && b->data.house.temple_venus && venus_module2) {
-                value += 2;
+                if (b->subtype.house_level >= HOUSE_SMALL_VILLA) {
+                    value += 4;
+                    range += 1;
+                }
+                else {
+                    value += 2;
+                }                              
             }
 
             if (building_monument_is_monument(b) && b->subtype.monument_phase != MONUMENT_FINISHED) {
@@ -99,7 +106,8 @@ static void update_buildings(void)
 
             //Venus GT Base Bonus
             if (building_is_statue_garden_temple(b->type) && venus_gt) {
-                value += 1;
+                value_bonus = ((value / 4) > 1) ? (value / 4) : 1;
+                value += value_bonus;
                 step += 1;
                 range += 1;
             }
