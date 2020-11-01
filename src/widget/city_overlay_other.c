@@ -227,7 +227,14 @@ static int get_tooltip_water(tooltip_context *c, int grid_offset)
 
 static int get_tooltip_desirability(tooltip_context *c, int grid_offset)
 {
-    int desirability = map_desirability_get(grid_offset);
+    int desirability;
+    if (map_terrain_is(grid_offset,TERRAIN_BUILDING)) {
+        int building_id = map_building_at(grid_offset);
+        building* b = building_get(building_id);
+        desirability = b->desirability;
+    } else {
+        desirability = map_desirability_get(grid_offset);
+    }
     if (desirability < 0) {
         return 91;
     } else if (desirability == 0) {
@@ -441,10 +448,15 @@ static void draw_footprint_desirability(int x, int y, int grid_offset)
         // display empty land/grass
         int image_id = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
-    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
+    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         if (has_deleted_building(grid_offset)) {
             color_mask = COLOR_MASK_RED;
         }
+        int building_id = map_building_at(grid_offset);
+        building* b = building_get(building_id);
+        int offset = get_desirability_image_offset(b->desirability);
+        image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+    } else if (map_desirability_get(grid_offset)) {
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
         image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
     } else {
@@ -462,10 +474,15 @@ static void draw_top_desirability(int x, int y, int grid_offset)
         }
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // grass, no top needed
-    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
+    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         if (has_deleted_building(grid_offset)) {
             color_mask = COLOR_MASK_RED;
         }
+        int building_id = map_building_at(grid_offset);
+        building* b = building_get(building_id);
+        int offset = get_desirability_image_offset(b->desirability);
+        image_draw_isometric_top_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+    } else if (map_desirability_get(grid_offset)) {
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
         image_draw_isometric_top_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
     } else {
