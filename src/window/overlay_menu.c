@@ -16,7 +16,7 @@
 static void button_menu_item(int index, int param2);
 static void button_submenu_item(int index, int param2);
 
-#define OVERLAY_BUTTONS 9
+#define OVERLAY_BUTTONS 10
 
 static generic_button menu_buttons[] = {
     {0, 0, 160, 24, button_menu_item, button_none, 0, 0},
@@ -44,9 +44,9 @@ static generic_button submenu_buttons[] = {
     {0, 216, 160, 24, button_submenu_item, button_none, 9, 0},
 };
 
-static const int MENU_ID_TO_OVERLAY[OVERLAY_BUTTONS] = {OVERLAY_NONE, OVERLAY_WATER, 1, 3, 5, 6, 7, OVERLAY_RELIGION, OVERLAY_ROADS};
+static const int MENU_ID_TO_OVERLAY[OVERLAY_BUTTONS] = {OVERLAY_NONE, OVERLAY_WATER, 1, 3, 5, 6, 7, OVERLAY_RELIGION, OVERLAY_ROADS, OVERLAY_LEVY};
 static const int MENU_ID_TO_SUBMENU_ID[OVERLAY_BUTTONS] = {0, 0, 1, 2, 3, 4, 5, 0, 0};
-static const int ADDITIONAL_OVERLAY_TR[] = { TR_OVERLAY_ROADS };
+static const int ADDITIONAL_OVERLAY_TR[] = { TR_OVERLAY_ROADS, TR_OVERLAY_LEVY };
 
 static const int SUBMENU_ID_TO_OVERLAY[6][OVERLAY_BUTTONS] = {
     {0},

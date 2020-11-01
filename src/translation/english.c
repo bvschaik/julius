@@ -358,7 +358,11 @@ static translation_string all_strings[] = {
     {TR_WARNING_RESOURCES_NOT_AVAILABLE, "You cannot obtain the needed materials"},
     {TR_CONFIG_GP_CH_MONUMENTS_BOOST_CULTURE_RATING, "Completed grand temples grant +8 culture rating"},
     {TR_BUTTON_BACK_TO_MAIN_MENU, "Back to main menu" },
-    {TR_LABEL_PAUSE_MENU, "Pause" }
+    {TR_LABEL_PAUSE_MENU, "Pause" },
+    {TR_OVERLAY_LEVY, "Levies" },
+    {TR_TOOLTIP_OVERLAY_LEVY, " denarii are paid here monthly in levies." },
+
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

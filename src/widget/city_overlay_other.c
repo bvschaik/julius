@@ -56,6 +56,12 @@ static int show_building_roads(const building* b)
     return b->type == BUILDING_ROADBLOCK;
 }
 
+static int show_building_none(const building* b)
+{
+    return 0;
+}
+
+
 static int show_figure_religion(const figure *f)
 {
     return f->type == FIGURE_PRIEST || f->type == FIGURE_PRIEST_BUYER;
@@ -105,6 +111,13 @@ static int get_column_height_food_stocks(const building *b)
         }
     }
     return NO_COLUMN;
+}
+
+static int get_column_height_levy(const building* b)
+{
+    int height = calc_percentage(building_get_levy(b), PANTHEON_LEVY_MONTHLY)/10;
+    height = calc_bound(height,1,10);
+    return b->monthly_levy ? height : NO_COLUMN;
 }
 
 static int get_column_height_tax_income(const building *b)
@@ -246,6 +259,17 @@ static int get_tooltip_desirability(tooltip_context *c, int grid_offset)
 
 static int get_tooltip_roads(tooltip_context* c, int grid_offset)
 {
+    return 0;
+}
+
+static int get_tooltip_levy(tooltip_context* c, const building* b)
+{
+    if (b->monthly_levy > 0) {
+        c->has_numeric_prefix = 1;
+        c->numeric_prefix = building_get_levy(b);
+        c->translation_key = TR_TOOLTIP_OVERLAY_LEVY;
+        return 1;
+    }
     return 0;
 }
 
@@ -521,3 +545,20 @@ const city_overlay* city_overlay_for_roads(void)
     };
     return &overlay;
 }
+
+const city_overlay* city_overlay_for_levy(void)
+{
+    static city_overlay overlay = {
+        OVERLAY_LEVY,
+        COLUMN_TYPE_ACCESS,
+        show_building_none,
+        show_figure_none,
+        get_column_height_levy,
+        0,
+        get_tooltip_levy,
+        0,
+        0
+    };
+    return &overlay;
+}
+
