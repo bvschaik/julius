@@ -256,56 +256,56 @@ void window_building_draw_stocks(building_info_context* c, building* b, int draw
     int image_id = image_group(GROUP_RESOURCE_ICONS);
     font_t font;
 
-    if (always_show_food || b->data.market.inventory[INVENTORY_WHEAT] || b->data.market.inventory[INVENTORY_VEGETABLES] ||
-        b->data.market.inventory[INVENTORY_FRUIT] || b->data.market.inventory[INVENTORY_MEAT]) {
-        // food stocks
-        font = is_good_accepted(INVENTORY_WHEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + 64);
-        text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
-            c->x_offset + 64, c->y_offset + 70, font);
+if (always_show_food || b->data.market.inventory[INVENTORY_WHEAT] || b->data.market.inventory[INVENTORY_VEGETABLES] ||
+    b->data.market.inventory[INVENTORY_FRUIT] || b->data.market.inventory[INVENTORY_MEAT]) {
+    // food stocks
+    font = is_good_accepted(INVENTORY_WHEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+    image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + 64);
+    text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
+        c->x_offset + 64, c->y_offset + 70, font);
 
-        font = is_good_accepted(INVENTORY_VEGETABLES, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + 64);
-        text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
-            c->x_offset + 174, c->y_offset + 70, font);
+    font = is_good_accepted(INVENTORY_VEGETABLES, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+    image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + 64);
+    text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
+        c->x_offset + 174, c->y_offset + 70, font);
 
-        font = is_good_accepted(INVENTORY_FRUIT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + 64);
-        text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
-            c->x_offset + 284, c->y_offset + 70, font);
+    font = is_good_accepted(INVENTORY_FRUIT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+    image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + 64);
+    text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
+        c->x_offset + 284, c->y_offset + 70, font);
 
-        font = is_good_accepted(INVENTORY_MEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_MEAT +
-            resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
-            c->x_offset + 362, c->y_offset + 64);
-        text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
-            c->x_offset + 394, c->y_offset + 70, font);
-    }
-    else {
-        window_building_draw_description_at(c, 48, 97, 4);
-    }
-    // good stocks
-    if (draw_goods) {
-        font = is_good_accepted(INVENTORY_POTTERY, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + 104);
-        text_draw_number(b->data.market.inventory[INVENTORY_POTTERY], '@', " ",
-            c->x_offset + 64, c->y_offset + 110, font);
+    font = is_good_accepted(INVENTORY_MEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+    image_draw(image_id + RESOURCE_MEAT +
+        resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
+        c->x_offset + 362, c->y_offset + 64);
+    text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
+        c->x_offset + 394, c->y_offset + 70, font);
+}
+else {
+    window_building_draw_description_at(c, 48, 97, 4);
+}
+// good stocks
+if (draw_goods) {
+    font = is_good_accepted(INVENTORY_POTTERY, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+    image_draw(image_id + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + 104);
+    text_draw_number(b->data.market.inventory[INVENTORY_POTTERY], '@', " ",
+        c->x_offset + 64, c->y_offset + 110, font);
 
-        font = is_good_accepted(INVENTORY_FURNITURE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + 104);
-        text_draw_number(b->data.market.inventory[INVENTORY_FURNITURE], '@', " ",
-            c->x_offset + 174, c->y_offset + 110, font);
+    font = is_good_accepted(INVENTORY_FURNITURE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+    image_draw(image_id + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + 104);
+    text_draw_number(b->data.market.inventory[INVENTORY_FURNITURE], '@', " ",
+        c->x_offset + 174, c->y_offset + 110, font);
 
-        font = is_good_accepted(INVENTORY_OIL, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_OIL, c->x_offset + 252, c->y_offset + 104);
-        text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
-            c->x_offset + 284, c->y_offset + 110, font);
+    font = is_good_accepted(INVENTORY_OIL, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+    image_draw(image_id + RESOURCE_OIL, c->x_offset + 252, c->y_offset + 104);
+    text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
+        c->x_offset + 284, c->y_offset + 110, font);
 
-        font = is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_WINE, c->x_offset + 362, c->y_offset + 104);
-        text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
-            c->x_offset + 394, c->y_offset + 110, font);
-    }
+    font = is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+    image_draw(image_id + RESOURCE_WINE, c->x_offset + 362, c->y_offset + 104);
+    text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
+        c->x_offset + 394, c->y_offset + 110, font);
+}
 }
 
 void window_building_draw_market(building_info_context* c)
@@ -346,35 +346,40 @@ void window_building_draw_market_orders(building_info_context* c)
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 }
 
-void window_building_draw_market_orders_foreground(building_info_context* c, int food_only, int single_resource, int single_resource_id)
+void window_building_draw_market_orders_foreground(building_info_context* c, int food_only, int limit_resource, int resource_id_1, int resource_id_2)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
     int resource_max = INVENTORY_MAX;
     int resource_min = INVENTORY_WHEAT;
+    resource_type resources[8] = { RESOURCE_WHEAT,RESOURCE_VEGETABLES,RESOURCE_FRUIT,RESOURCE_MEAT, RESOURCE_POTTERY, RESOURCE_FURNITURE, RESOURCE_OIL, RESOURCE_WINE };
 
     if (food_only) {
         resource_max = 4;
-    }
-
-    if (single_resource) {
-        switch (single_resource_id) {
-        case RESOURCE_WHEAT: single_resource_id = INVENTORY_WHEAT; break;
-        case RESOURCE_VEGETABLES: single_resource_id = INVENTORY_VEGETABLES; break;
-        case RESOURCE_FRUIT: single_resource_id = INVENTORY_FRUIT; break;
-        case RESOURCE_MEAT: single_resource_id = INVENTORY_MEAT; break;
-        case RESOURCE_WINE: single_resource_id = INVENTORY_WINE; break;
-        default: return;
+        for (int i = 4; i < 8; ++i) {
+            resources[i] = 0;
+        }        
+    } else if (limit_resource) {
+        int i = 1;
+        if (!resource_id_2) {
+            resources[0] = resource_id_1;
         }
-        resource_min = single_resource_id;
-        resource_max = single_resource_id + 1;
+        else {
+            resources[0] = resource_id_1;
+            resources[1] = resource_id_2;
+            i++;
+        }
+        for (i; i < 8; ++i) {
+            resources[i] = 0;
+        }
     }
-
-    resource_type resources[] = { RESOURCE_WHEAT,RESOURCE_VEGETABLES,RESOURCE_FRUIT,RESOURCE_MEAT,RESOURCE_WINE,RESOURCE_OIL,RESOURCE_FURNITURE,RESOURCE_POTTERY };
 
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
 
     for (int i = resource_min; i < resource_max; i++) {
         resource_type resource = resources[i];
+        if (!resource) {
+            continue;
+        }
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
             resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);

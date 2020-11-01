@@ -200,6 +200,14 @@ int building_market_get_storage_destination(building *market)
             market->data.market.fetch_inventory_id = inventory;
             return resources[inventory].building_id;
         }
+
+        if (resources[INVENTORY_OIL].num_buildings &&
+            market->data.market.inventory[INVENTORY_OIL] < min_stock
+            && is_good_accepted(INVENTORY_OIL, market)) 
+        {
+            market->data.market.fetch_inventory_id = INVENTORY_OIL;
+            return resources[INVENTORY_OIL].building_id;
+        }
         return 0;
     }
 

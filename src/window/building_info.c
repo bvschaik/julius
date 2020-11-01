@@ -664,20 +664,20 @@ static void draw_foreground(void)
             }
         } else if (btype == BUILDING_MARKET) {
             if (context.storage_show_special_orders) {
-                window_building_draw_market_orders_foreground(&context, 0, 0, 0);
+                window_building_draw_market_orders_foreground(&context, 0, 0, 0, 0);
             } else {
                 window_building_draw_market_foreground(&context);
             }
         } else if (btype == BUILDING_MESS_HALL) {
             if (context.storage_show_special_orders) {
-                window_building_draw_market_orders_foreground(&context, 1, 0, 0);
+                window_building_draw_market_orders_foreground(&context, 1, 0, 0, 0);
             }
             else {
                 window_building_draw_market_foreground(&context);
             }
         } else if (building_is_venus_temple(btype) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
             if (context.storage_show_special_orders) {
-                window_building_draw_market_orders_foreground(&context, 0, 1, RESOURCE_WINE);
+                window_building_draw_market_orders_foreground(&context, 0, 1, RESOURCE_WINE, 0);
             }
             else {
                 window_building_draw_market_foreground(&context);
@@ -685,7 +685,7 @@ static void draw_foreground(void)
         }
         else if (building_is_ceres_temple(btype) && building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD)) {
             if (context.storage_show_special_orders) {
-                window_building_draw_market_orders_foreground(&context, 0, 1, city_resource_ceres_temple_food());
+                window_building_draw_market_orders_foreground(&context, 0, 1, city_resource_ceres_temple_food(), RESOURCE_OIL);
             }
             else {
                 window_building_draw_market_foreground(&context);

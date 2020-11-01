@@ -138,7 +138,10 @@ static void draw_temple_info(building_info_context* c, int image_offset) {
         int food = city_resource_ceres_temple_food();
         image_draw(image_group(GROUP_RESOURCE_ICONS) + food, c->x_offset + 112, c->y_offset + 60);
         text_draw_number(b->data.market.inventory[food - 1], '@', " ",
-            c->x_offset + 132, c->y_offset + 60, FONT_NORMAL_BLACK);       
+            c->x_offset + 132, c->y_offset + 60, FONT_NORMAL_BLACK);     
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_OIL, c->x_offset + 202, c->y_offset + 60);
+        text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
+            c->x_offset + 222, c->y_offset + 60, FONT_NORMAL_BLACK);
         text_draw_multiline(translation_for(TR_BUILDING_CERES_TEMPLE_MODULE_DESC), c->x_offset + 112, c->y_offset + 90, 16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
             c->x_offset + 16, c->y_offset + 16 * c->height_blocks - 208);
