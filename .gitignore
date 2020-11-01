@@ -33,3 +33,4 @@ local.properties
 /android/*/build/
 /android/julius.keystore
 /android/play-publisher.json
+/android/julius/src/main/play

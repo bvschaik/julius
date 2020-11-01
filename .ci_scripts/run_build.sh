@@ -26,15 +26,17 @@ case "$BUILD_TARGET" in
 	;;
 "android")
 	cd android
-	if [ -f julius.keystore ]
+	if [ ! -f julius.keystore ]
 	then
-		COMMAND=assembleRelease
-		if [ "$TRAVIS_BRANCH" == "master" ]
-		then
-			COMMAND=publishRelease
-		fi
-	else
 		COMMAND=assembleDebug
+	elif [ "$TRAVIS_BRANCH" == "master" ]
+	then
+		# Use last commit message for release notes
+		mkdir -p julius/src/main/play/release-notes/en-US
+		git log -1 --pretty=%B > julius/src/main/play/release-notes/en-US/internal.txt
+		COMMAND=publishRelease
+	else
+		COMMAND=assembleRelease
 	fi
 	TERM=dumb ./gradlew $COMMAND
 	if [ -f julius/build/outputs/apk/release/julius-release.apk ]
