@@ -198,7 +198,7 @@ static void add_terrain(const void *tile_data, int dx, int dy)
             }
             break;
         case TOOL_WATER:
-            if (!(terrain & TERRAIN_WATER)) {
+            if (!(terrain & TERRAIN_WATER) && !(terrain & TERRAIN_ELEVATION_ROCK)) {
                 terrain &= TERRAIN_PAINT_MASK;
                 terrain |= TERRAIN_WATER;
             }
