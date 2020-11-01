@@ -339,7 +339,7 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_PANTHEON_COMPLETE, "The Pantheon is completed. It stands unrivaled as a monument to the awesome power of the gods and people of Rome." },
     {TR_CITY_MESSAGE_TITLE_MONUMENT_COMPLETE, "Monument completed" },
     {TR_CITY_MESSAGE_TITLE_NEPTUNE_BLESSING, "A blessing from Neptune"},
-    {TR_CITY_MESSAGE_TEXT_NEPTUNE_BLESSING, "Rewarding your city's devotion, Neptune grants smooth passage to traders for six months, during which your exports will fetch double price."},
+    {TR_CITY_MESSAGE_TEXT_NEPTUNE_BLESSING, "Rewarding your city's devotion, Neptune grants smooth passage to traders for twelve months, during which your exports will fetch half extra price."},
     {TR_CITY_MESSAGE_TITLE_VENUS_BLESSING, "A blessing from Venus" },
     {TR_CITY_MESSAGE_TEXT_VENUS_BLESSING, "Delighted by the joyful reverence shown to her, Venus grants youthfulness, health, and happiness to your people, increasing the size of your working population." },
     {TR_BUILDING_MENU_STATUES, "Statues" },

@@ -2,7 +2,7 @@
 #define CITY_GODS_H
 
 #define MAX_GODS 5
-#define NEPTUNE_BLESSING_MONTHS 6
+#define NEPTUNE_BLESSING_MONTHS 12
 #define VENUS_BLESSING_MONTHS 35
 
 void city_gods_reset(void);
