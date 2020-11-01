@@ -204,7 +204,7 @@ void map_water_supply_update_reservoir_fountain(void)
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_FOUNTAIN) {
             continue;
         }
-        int des = map_desirability_get(b->grid_offset);
+        int des = b->desirability;
         int image_id;
         if (des > 60) {
             image_id = image_group(GROUP_BUILDING_FOUNTAIN_4);

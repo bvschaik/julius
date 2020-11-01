@@ -604,7 +604,7 @@ static void set_market_graphic(building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return;
     }
-    if (map_desirability_get(b->grid_offset) <= 30) {
+    if (b->desirability <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
     } else {
@@ -731,7 +731,7 @@ static void set_bathhouse_graphic(building *b)
         b->has_water_access = 0;
     }
     if (b->has_water_access && b->num_workers) {
-        if (map_desirability_get(b->grid_offset) <= 30) {
+        if (b->desirability <= 30) {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
         } else {
@@ -739,7 +739,7 @@ static void set_bathhouse_graphic(building *b)
                 image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
         }
     } else {
-        if (map_desirability_get(b->grid_offset) <= 30) {
+        if (b->desirability <= 30) {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
         } else {
@@ -1061,7 +1061,7 @@ static void set_senate_graphic(building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return;
     }
-    if (map_desirability_get(b->grid_offset) <= 30) {
+    if (b->desirability <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
     } else {
