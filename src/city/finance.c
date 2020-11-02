@@ -56,8 +56,8 @@ void city_finance_process_export(int price)
     city_data.finance.treasury += price;
     city_data.finance.this_year.income.exports += price;
     if (city_data.religion.neptune_double_trade_active) {
-        city_data.finance.treasury += price;
-        city_data.finance.this_year.income.exports += price;
+        city_data.finance.treasury += price/2;
+        city_data.finance.this_year.income.exports += price/2;
     }
 }
 

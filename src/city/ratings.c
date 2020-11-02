@@ -131,7 +131,7 @@ static void update_culture_explanation(void)
     int min_percentage = 100;
     int reason = 1;
     if (city_data.ratings.culture >= 100) {
-        return reason;
+        return;
     }
     if (city_data.culture.religion_coverage < min_percentage) {
         min_percentage = city_data.culture.religion_coverage;

@@ -28,6 +28,7 @@ enum {
     OVERLAY_NATIVE = 28,
     OVERLAY_PROBLEMS = 29,
     OVERLAY_ROADS = 30,
+    OVERLAY_LEVY = 31,
 };
 
 void game_state_init(void);

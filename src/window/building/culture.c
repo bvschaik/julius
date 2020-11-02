@@ -128,7 +128,7 @@ static void draw_temple(building_info_context *c, const char *sound_file, int gr
 
 static void draw_temple_info(building_info_context* c, int image_offset) {
     if (!c->has_road_access) {
-        window_building_draw_description_at(c, 16 * c->height_blocks - 128, 69, 25);
+        window_building_draw_description_at(c, 16 * c->height_blocks - 164, 69, 25);
         return;
     }
     
