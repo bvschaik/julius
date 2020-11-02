@@ -467,11 +467,13 @@ static void add_to_map(int type, building *b, int size,
         // ships
         case BUILDING_SHIPYARD:
             b->data.industry.orientation = waterside_orientation_abs;
-            map_water_add_building(b->id, b->x, b->y, 2, image_group(GROUP_BUILDING_SHIPYARD) + waterside_orientation_rel);
+            map_water_add_building(b->id, b->x, b->y, 2,
+                image_group(GROUP_BUILDING_SHIPYARD) + waterside_orientation_rel);
             break;
         case BUILDING_WHARF:
             b->data.industry.orientation = waterside_orientation_abs;
-            map_water_add_building(b->id, b->x, b->y, 2, image_group(GROUP_BUILDING_WHARF) + waterside_orientation_rel);
+            map_water_add_building(b->id, b->x, b->y, 2,
+                image_group(GROUP_BUILDING_WHARF) + waterside_orientation_rel);
             break;
         case BUILDING_DOCK:
             city_buildings_add_dock();

@@ -245,10 +245,12 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     } else {
         info->place_reservoir_at_end = PLACE_RESERVOIR_BLOCKED;
     }
-    if (info->place_reservoir_at_start == PLACE_RESERVOIR_BLOCKED || info->place_reservoir_at_end == PLACE_RESERVOIR_BLOCKED) {
+    if (info->place_reservoir_at_start == PLACE_RESERVOIR_BLOCKED
+        || info->place_reservoir_at_end == PLACE_RESERVOIR_BLOCKED) {
         return 0;
     }
-    if (info->place_reservoir_at_start == PLACE_RESERVOIR_YES && info->place_reservoir_at_end == PLACE_RESERVOIR_YES && distance < 3) {
+    if (info->place_reservoir_at_start == PLACE_RESERVOIR_YES
+        && info->place_reservoir_at_end == PLACE_RESERVOIR_YES && distance < 3) {
         return 0;
     }
     if (!distance) {
@@ -421,14 +423,17 @@ void building_construction_start(int x, int y, int grid_offset)
         int can_start = 1;
         switch (data.type) {
             case BUILDING_ROAD:
-                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, data.start.x, data.start.y);
+                can_start = map_routing_calculate_distances_for_building(
+                    ROUTED_BUILDING_ROAD, data.start.x, data.start.y);
                 break;
             case BUILDING_AQUEDUCT:
             case BUILDING_DRAGGABLE_RESERVOIR:
-                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, data.start.x, data.start.y);
+                can_start = map_routing_calculate_distances_for_building(
+                    ROUTED_BUILDING_AQUEDUCT, data.start.x, data.start.y);
                 break;
             case BUILDING_WALL:
-                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, data.start.x, data.start.y);
+                can_start = map_routing_calculate_distances_for_building(
+                    ROUTED_BUILDING_WALL, data.start.x, data.start.y);
                 break;
             default:
                 break;
@@ -635,7 +640,8 @@ void building_construction_place(void)
         city_warning_show(WARNING_OUT_OF_MONEY);
         return;
     }
-    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && city_resource_count(RESOURCE_MARBLE) < 2) {
+    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS
+        && city_resource_count(RESOURCE_MARBLE) < 2) {
         map_property_clear_constructing_and_deleted();
         city_warning_show(WARNING_MARBLE_NEEDED_LARGE_TEMPLE);
         return;
@@ -713,15 +719,18 @@ void building_construction_place(void)
         if (info.place_reservoir_at_start == PLACE_RESERVOIR_YES) {
             building *reservoir = building_create(BUILDING_RESERVOIR, x_start - 1, y_start - 1);
             game_undo_add_building(reservoir);
-            map_building_tiles_add(reservoir->id, x_start-1, y_start-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
+            map_building_tiles_add(reservoir->id, x_start-1, y_start-1, 3,
+                image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
             map_aqueduct_set(map_grid_offset(x_start-1, y_start-1), 0);
         }
         if (info.place_reservoir_at_end == PLACE_RESERVOIR_YES) {
             building *reservoir = building_create(BUILDING_RESERVOIR, x_end - 1, y_end - 1);
             game_undo_add_building(reservoir);
-            map_building_tiles_add(reservoir->id, x_end-1, y_end-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
+            map_building_tiles_add(reservoir->id, x_end-1, y_end-1, 3,
+                image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
             map_aqueduct_set(map_grid_offset(x_end-1, y_end-1), 0);
-            if (!map_terrain_exists_tile_in_area_with_type(x_start - 2, y_start - 2, 5, TERRAIN_WATER) && info.place_reservoir_at_start == PLACE_RESERVOIR_NO) {
+            if (!map_terrain_exists_tile_in_area_with_type(x_start - 2, y_start - 2, 5, TERRAIN_WATER)
+                && info.place_reservoir_at_start == PLACE_RESERVOIR_NO) {
                 building_construction_warning_check_reservoir(BUILDING_RESERVOIR);
             }
         }

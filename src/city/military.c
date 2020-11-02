@@ -202,7 +202,8 @@ static void update_time_traveled(void)
     int roman_travel_months = scenario_distant_battle_roman_travel_months();
     int enemy_travel_months = scenario_distant_battle_enemy_travel_months();
     if (city_data.distant_battle.months_until_battle < enemy_travel_months) {
-        city_data.distant_battle.enemy_months_traveled = enemy_travel_months - city_data.distant_battle.months_until_battle + 1;
+        city_data.distant_battle.enemy_months_traveled =
+            enemy_travel_months - city_data.distant_battle.months_until_battle + 1;
     } else {
         city_data.distant_battle.enemy_months_traveled = 1;
     }
@@ -216,7 +217,8 @@ static void update_time_traveled(void)
         if (city_data.distant_battle.roman_months_to_travel_forth <= 1) {
             city_data.distant_battle.roman_months_to_travel_forth = 1;
         }
-        city_data.distant_battle.roman_months_traveled = roman_travel_months - city_data.distant_battle.roman_months_to_travel_forth + 1;
+        city_data.distant_battle.roman_months_traveled =
+            roman_travel_months - city_data.distant_battle.roman_months_to_travel_forth + 1;
         if (city_data.distant_battle.roman_months_traveled < 1) {
             city_data.distant_battle.roman_months_traveled = 1;
         }

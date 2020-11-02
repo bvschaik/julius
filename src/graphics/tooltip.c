@@ -21,13 +21,13 @@
 
 #include <stdlib.h>
 
-#define OVERLAY_TEXT_MAX 1000
+#define COMPOSED_TOOLTIP_TEXT_MAX 1000
 
 static const int DEFAULT_TEXT_GROUP = 68;
 static const time_millis TOOLTIP_DELAY_MILLIS = 150;
 
 static time_millis last_update = 0;
-static uint8_t overlay_string[OVERLAY_TEXT_MAX];
+static uint8_t composed_tooltip_text[COMPOSED_TOOLTIP_TEXT_MAX];
 static struct {
     int is_active;
     int x;
@@ -98,7 +98,7 @@ static void save_window_under_tooltip_to_buffer(int x, int y, int width, int hei
     graphics_save_to_buffer(x, y, width, height, button_tooltip_info.buffer);
 }
 
-static void draw_button_tooltip(tooltip_context *c)
+static const uint8_t *get_tooltip_text(const tooltip_context *c)
 {
     const uint8_t* text;
     if (c->translation_key) {
@@ -107,7 +107,39 @@ static void draw_button_tooltip(tooltip_context *c)
     else {
         text = lang_get_string(c->text_group, c->text_id);
     }
+    if (c->has_numeric_prefix) {
+        int offset = string_from_int(composed_tooltip_text, c->numeric_prefix, 0);
+        string_copy(text, &composed_tooltip_text[offset], COMPOSED_TOOLTIP_TEXT_MAX - offset);
+        text = composed_tooltip_text;
+    } else if (c->num_extra_texts > 0) {
+        string_copy(text, composed_tooltip_text, COMPOSED_TOOLTIP_TEXT_MAX);
+        int offset = string_length(composed_tooltip_text);
+        int is_comma_separated = c->extra_text_type == TOOLTIP_EXTRA_TEXT_COMMA_SEPARATED;
+        if (is_comma_separated) {
+            composed_tooltip_text[offset++] = ':';
+            composed_tooltip_text[offset++] = '\n';
+        } else {
+            composed_tooltip_text[offset++] = ' ';
+        }
+        for (int i = 0; i < c->num_extra_texts; i++) {
+            if (i) {
+                if (is_comma_separated) {
+                    composed_tooltip_text[offset++] = ',';
+                }
+                composed_tooltip_text[offset++] = ' ';
+            }
+            const uint8_t *extra_value = lang_get_string(c->extra_text_groups[i], c->extra_text_ids[i]);
+            string_copy(extra_value, &composed_tooltip_text[offset], COMPOSED_TOOLTIP_TEXT_MAX - offset);
+            offset += string_length(extra_value);
+        }
+        text = composed_tooltip_text;
+    }
+    return text;
+}
 
+static void draw_button_tooltip(tooltip_context *c)
+{
+    const uint8_t *text = get_tooltip_text(c);
     int width = 200;
     int lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
     if (lines > 2) {
@@ -173,34 +205,7 @@ static void draw_button_tooltip(tooltip_context *c)
 
 static void draw_overlay_tooltip(tooltip_context *c)
 {
-    const uint8_t* text;
-    if (c->translation_key) {
-        text = translation_for(c->translation_key);
-    }
-    else {
-        text = lang_get_string(c->text_group, c->text_id);
-    }
-    if (c->has_numeric_prefix) {
-        int offset = string_from_int(overlay_string, c->numeric_prefix, 0);
-        string_copy(text, &overlay_string[offset], OVERLAY_TEXT_MAX - offset);
-        text = overlay_string;
-    } else if (c->num_extra_values > 0) {
-        string_copy(text, overlay_string, OVERLAY_TEXT_MAX);
-        int offset = string_length(overlay_string);
-        overlay_string[offset++] = ':';
-        overlay_string[offset++] = '\n';
-        for (int i = 0; i < c->num_extra_values; i++) {
-            if (i) {
-                overlay_string[offset++] = ',';
-                overlay_string[offset++] = ' ';
-            }
-            const uint8_t *extra_value = lang_get_string(c->extra_value_text_groups[i], c->extra_value_text_ids[i]);
-            string_copy(extra_value, &overlay_string[offset], OVERLAY_TEXT_MAX - offset);
-            offset += string_length(extra_value);
-        }
-        text = overlay_string;
-    }
-
+    const uint8_t *text = get_tooltip_text(c);
     int width = 200;
     int lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
     if (lines > 2) {
@@ -352,7 +357,7 @@ void tooltip_handle(const mouse *m, void (*func)(tooltip_context *))
         reset_timer();
         return;
     }
-    tooltip_context context = {m->x, m->y, 0, 0, 0, 0, 0, 0};
+    tooltip_context context = {m->x, m->y};
     context.text_group = DEFAULT_TEXT_GROUP;
     if (setting_tooltips() && func) {
         func(&context);

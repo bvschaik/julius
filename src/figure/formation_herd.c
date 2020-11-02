@@ -216,7 +216,8 @@ static void update_herd_formation(formation *m)
             move_animals(m, attacking_animals);
         } else {
             int x_tile, y_tile;
-            if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance, m->herd_direction, &x_tile, &y_tile)) {
+            if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home,
+                    roam_distance, m->herd_direction, &x_tile, &y_tile)) {
                 m->herd_direction = 0;
                 if (formation_enemy_move_formation_to(m, x_tile, y_tile, &x_tile, &y_tile)) {
                     formation_set_destination(m, x_tile, y_tile);

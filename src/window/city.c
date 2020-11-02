@@ -9,6 +9,7 @@
 #include "city/warning.h"
 #include "core/config.h"
 #include "figure/formation.h"
+#include "figure/formation_legion.h"
 #include "game/orientation.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -17,6 +18,7 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "map/bookmark.h"
@@ -27,6 +29,7 @@
 #include "widget/city_with_overlay.h"
 #include "widget/top_menu.h"
 #include "widget/sidebar/city.h"
+#include "widget/sidebar/military.h"
 #include "window/advisors.h"
 #include "window/file_dialog.h"
 
@@ -45,6 +48,16 @@ static void draw_background(void)
 {
     clear_city_view(1);
     widget_sidebar_city_draw_background();
+    widget_top_menu_draw(1);
+}
+
+static void draw_background_military(void)
+{
+    if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR)) {
+        widget_sidebar_military_draw_background();
+    } else {
+        widget_sidebar_city_draw_background();
+    }
     widget_top_menu_draw(1);
 }
 
@@ -124,7 +137,11 @@ static void draw_foreground_military(void)
 {
     widget_top_menu_draw(0);
     window_city_draw();
-    widget_sidebar_city_draw_foreground_military();
+    if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR)) {
+        widget_sidebar_military_draw_foreground();
+    } else {
+        widget_sidebar_city_draw_foreground();
+    }
     draw_paused_and_time_left();
 }
 
@@ -150,7 +167,7 @@ static void show_overlay(int overlay)
 static void cycle_legion(void)
 {
     static int current_legion_id = 1;
-    if (window_is(WINDOW_CITY)) {
+    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         int legion_id = current_legion_id;
         current_legion_id = 0;
         for (int i = 1; i < MAX_FORMATIONS; i++) {
@@ -169,7 +186,11 @@ static void cycle_legion(void)
         if (current_legion_id > 0) {
             const formation *m = formation_get(current_legion_id);
             city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
-            window_invalidate();
+            if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && window_is(WINDOW_CITY_MILITARY)) {
+                window_city_military_show(current_legion_id);
+            } else {
+                window_invalidate();
+            }
         }
     }
 }
@@ -259,14 +280,24 @@ static void handle_input(const mouse *m, const hotkeys *h)
 static void handle_input_military(const mouse *m, const hotkeys *h)
 {
     handle_hotkeys(h);
-    widget_city_handle_input_military(m, h, selected_legion_formation_id);
+    if (widget_top_menu_handle_input(m, h)) {
+        return;
+    }
+    if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && widget_sidebar_military_handle_input(m)) {
+        return;
+    }
+    widget_city_handle_input_military(m, h, formation_get_selected());
 }
 
 static void get_tooltip(tooltip_context *c)
 {
     int text_id = widget_top_menu_get_tooltip_text(c);
     if (!text_id) {
-        text_id = widget_sidebar_city_get_tooltip_text();
+        if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && formation_get_selected()) {
+            text_id = widget_sidebar_military_get_tooltip_text(c);
+        } else {
+            text_id = widget_sidebar_city_get_tooltip_text();
+        }
     }
     if (text_id) {
         c->type = TOOLTIP_BUTTON;
@@ -276,15 +307,35 @@ static void get_tooltip(tooltip_context *c)
     widget_city_get_tooltip(c);
 }
 
+int window_city_military_is_cursor_in_menu(void)
+{
+    if (!config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) || !window_is(WINDOW_CITY_MILITARY)) {
+        return 0;
+    }
+    const mouse *m = mouse_get();
+    int x, y, width, height;
+    city_view_get_scaled_viewport(&x, &y, &width, &height);
+    return m->x < x || m->x >= width || m->y < y || m->y >= height;
+}
+
 void window_city_draw_all(void)
 {
-    draw_background();
-    draw_foreground();
+    if (formation_get_selected() && config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR)) {
+        draw_background_military();
+        draw_foreground_military();
+    } else {
+        draw_background();
+        draw_foreground();
+    }
 }
 
 void window_city_draw_panels(void)
 {
-    draw_background();
+    if (formation_get_selected() && config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR)) {
+        draw_background_military();
+    } else {
+        draw_background();
+    }
 }
 
 void window_city_draw(void)
@@ -294,6 +345,12 @@ void window_city_draw(void)
 
 void window_city_show(void)
 {
+    if (formation_get_selected()) {
+        formation_set_selected(0);
+        if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && widget_sidebar_military_exit()) {
+            return;
+        }
+    }
     window_type window = {
         WINDOW_CITY,
         draw_background,
@@ -306,13 +363,26 @@ void window_city_show(void)
 
 void window_city_military_show(int legion_formation_id)
 {
-    selected_legion_formation_id = legion_formation_id;
+    formation_set_selected(legion_formation_id);
+    if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && widget_sidebar_military_enter(legion_formation_id)) {
+        return;
+    }
     window_type window = {
         WINDOW_CITY_MILITARY,
-        draw_background,
+        draw_background_military,
         draw_foreground_military,
         handle_input_military,
         get_tooltip
     };
     window_show(&window);
+}
+
+void window_city_return(void)
+{
+    int formation_id = formation_get_selected();
+    if (formation_id) {
+        window_city_military_show(formation_id);
+    } else {
+        window_city_show();
+    }
 }

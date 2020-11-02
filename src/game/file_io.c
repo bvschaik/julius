@@ -617,7 +617,8 @@ int game_file_io_read_scenario(const char *filename)
         return 0;
     }
     for (int i = 0; i < scenario_data.num_pieces; i++) {
-        if (fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp) != scenario_data.pieces[i].buf.size) {
+        size_t read_size = fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
+        if (read_size != scenario_data.pieces[i].buf.size) {
             log_error("Unable to load scenario", filename, 0);
             file_close(fp);
             return 0;
@@ -678,7 +679,8 @@ static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
             return 0;
         }
     } else {
-        if (fread(compress_buffer, 1, input_size, fp) != input_size || !zip_decompress(compress_buffer, input_size, buffer, &bytes_to_read)) {
+        if (fread(compress_buffer, 1, input_size, fp) != input_size
+            || !zip_decompress(compress_buffer, input_size, buffer, &bytes_to_read)) {
             return 0;
         }
     }

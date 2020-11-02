@@ -19,7 +19,8 @@ void figure_movement_follow_ticks_with_percentage(figure* f, int num_ticks, int 
 
 void figure_movement_advance_attack(figure *f);
 
-void figure_movement_set_cross_country_direction(figure *f, int x_src, int y_src, int x_dst, int y_dst, int is_missile);
+void figure_movement_set_cross_country_direction(
+    figure *f, int x_src, int y_src, int x_dst, int y_dst, int is_missile);
 
 void figure_movement_set_cross_country_destination(figure *f, int x_dst, int y_dst);
 

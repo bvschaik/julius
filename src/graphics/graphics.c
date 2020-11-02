@@ -261,7 +261,8 @@ void graphics_save_to_buffer(int x, int y, int width, int height, color_t *buffe
     int min_dy = current_clip->clipped_pixels_top;
     int max_dy = height - current_clip->clipped_pixels_bottom;
     for (int dy = min_dy; dy < max_dy; dy++) {
-        memcpy(&buffer[dy * width], graphics_get_pixel(min_x, y + dy), sizeof(color_t) * current_clip->visible_pixels_x);
+        memcpy(&buffer[dy * width], graphics_get_pixel(min_x, y + dy),
+            sizeof(color_t) * current_clip->visible_pixels_x);
     }
 }
 
@@ -275,7 +276,8 @@ void graphics_draw_from_buffer(int x, int y, int width, int height, const color_
     int min_dy = current_clip->clipped_pixels_top;
     int max_dy = height - current_clip->clipped_pixels_bottom;
     for (int dy = min_dy; dy < max_dy; dy++) {
-        memcpy(graphics_get_pixel(min_x, y + dy), &buffer[dy * width], sizeof(color_t) * current_clip->visible_pixels_x);
+        memcpy(graphics_get_pixel(min_x, y + dy), &buffer[dy * width],
+            sizeof(color_t) * current_clip->visible_pixels_x);
     }
 }
 

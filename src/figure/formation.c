@@ -23,6 +23,7 @@ static struct {
     int id_last_in_use;
     int id_last_legion;
     int num_legions;
+    int selected_formation;
 } data;
 
 void formations_clear(void)
@@ -34,6 +35,7 @@ void formations_clear(void)
     data.id_last_in_use = 0;
     data.id_last_legion = 0;
     data.num_legions = 0;
+    data.selected_formation = 0;
 }
 
 void formation_clear(int formation_id)
@@ -141,6 +143,16 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
 formation *formation_get(int formation_id)
 {
     return &formations[formation_id];
+}
+
+int formation_get_selected(void)
+{
+    return data.selected_formation;
+}
+
+void formation_set_selected(int formation_id)
+{
+    data.selected_formation = formation_id;
 }
 
 void formation_toggle_empire_service(int formation_id)
@@ -729,6 +741,7 @@ void formations_load_state(buffer *buf, buffer *totals)
     data.id_last_in_use = buffer_read_i32(totals);
     data.id_last_legion = buffer_read_i32(totals);
     data.num_legions = buffer_read_i32(totals);
+    data.selected_formation = 0;
     for (int i = 0; i < MAX_FORMATIONS; i++) {
         formation *f = &formations[i];
         f->id = i;

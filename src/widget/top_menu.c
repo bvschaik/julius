@@ -259,7 +259,8 @@ void widget_top_menu_draw(int force)
         width = lang_text_draw_colored(6, 1, 470, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
         text_draw_number_colored(city_population(), '@', " ", 466 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
 
-        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 655, 5, 110, FONT_NORMAL_PLAIN, COLOR_FONT_YELLOW);
+        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(),
+            655, 5, 110, FONT_NORMAL_PLAIN, COLOR_FONT_YELLOW);
     } else {
         data.offset_funds = 493;
         data.offset_population = 637;
@@ -271,7 +272,8 @@ void widget_top_menu_draw(int force)
         width = lang_text_draw_colored(6, 1, 645, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
         text_draw_number_colored(city_population(), '@', " ", 651 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
 
-        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 850, 5, 110, FONT_NORMAL_PLAIN, COLOR_FONT_YELLOW);
+        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(),
+            850, 5, 110, FONT_NORMAL_PLAIN, COLOR_FONT_YELLOW);
     }
     drawn.treasury = treasury;
     drawn.population = city_population();
@@ -405,21 +407,21 @@ static void menu_file_load_game(int param)
 {
     clear_state();
     building_construction_clear_type();
-    window_city_show();
+    window_go_back();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
 }
 
 static void menu_file_save_game(int param)
 {
     clear_state();
-    window_city_show();
+    window_go_back();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
 }
 
 static void menu_file_delete_game(int param)
 {
     clear_state();
-    window_city_show();
+    window_go_back();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_DELETE);
 }
 
@@ -428,7 +430,7 @@ static void menu_file_confirm_exit(int accepted)
     if (accepted) {
         system_exit();
     } else {
-        window_city_show();
+        window_city_return();
     }
 }
 
@@ -441,25 +443,25 @@ static void menu_file_exit_game(int param)
 static void menu_options_display(int param)
 {
     clear_state();
-    window_display_options_show(window_city_show);
+    window_display_options_show(window_city_return);
 }
 
 static void menu_options_sound(int param)
 {
     clear_state();
-    window_sound_options_show(window_city_show);
+    window_sound_options_show(window_city_return);
 }
 
 static void menu_options_speed(int param)
 {
     clear_state();
-    window_speed_options_show(window_city_show);
+    window_speed_options_show(window_city_return);
 }
 
 static void menu_options_difficulty(int param)
 {
     clear_state();
-    window_difficulty_options_show(window_city_show);
+    window_difficulty_options_show(window_city_return);
 }
 
 static void menu_options_autosave(int param)

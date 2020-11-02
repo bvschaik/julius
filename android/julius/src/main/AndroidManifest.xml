@@ -10,27 +10,30 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/julius"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-        android:hardwareAccelerated="true">
-
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         <activity
             android:name=".JuliusMainActivity"
-            android:label="@string/app_name"
             android:alwaysRetainTaskState="true"
+            android:configChanges="orientation|uiMode|density|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:label="@string/app_name"
             android:launchMode="singleInstance"
-            android:resizeableActivity="true"
-            android:configChanges="orientation|uiMode|density|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation">
+            android:resizeableActivity="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".DirectorySelectionActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
 
         <!-- Support for Samsung DeX -->
-        <meta-data android:name="com.samsung.android.keepalive.density" android:value="true" />
-
+        <meta-data
+            android:name="com.samsung.android.keepalive.density"
+            android:value="true" />
     </application>
 
 </manifest>

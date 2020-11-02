@@ -239,27 +239,29 @@ void window_building_draw_legion_info(building_info_context *c)
     lang_text_draw_centered(138, m->legion_id, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
     // standard icon at the top
-    int image_id = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
-    int icon_height = image_get(image_id)->height;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16);
+    int icon_image_id = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
+    const image *icon_image = image_get(icon_image_id);
+    int icon_height = icon_image->height;
+    image_draw(icon_image_id, c->x_offset + 16 + (40 - icon_image->width) / 2, c->y_offset + 16);
     // standard flag
-    image_id = image_group(GROUP_FIGURE_FORT_FLAGS);
+    int flag_image_id = image_group(GROUP_FIGURE_FORT_FLAGS);
     if (m->figure_type == FIGURE_FORT_JAVELIN) {
-        image_id += 9;
+        flag_image_id += 9;
     } else if (m->figure_type == FIGURE_FORT_MOUNTED) {
-        image_id += 18;
+        flag_image_id += 18;
     }
     if (m->is_halted) {
-        image_id += 8;
+        flag_image_id += 8;
     }
-    int flag_height = image_get(image_id)->height;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height);
+    const image *flag_image = image_get(flag_image_id);
+    int flag_height = flag_image->height;
+    image_draw(flag_image_id, c->x_offset + 16 + (40 - flag_image->width) / 2, c->y_offset + 16 + icon_height);
     // standard pole and morale ball
     int morale_offset = m->morale / 5;
     if (morale_offset > 20) {
         morale_offset = 20;
     }
-    image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - morale_offset;
+    int image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - morale_offset;
     image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height + flag_height);
 
     // number of soldiers

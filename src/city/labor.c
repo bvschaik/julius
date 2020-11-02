@@ -253,7 +253,8 @@ static void allocate_workers_to_categories(void)
             for (int p = 0; p < 9; p++) {
                 int cat = DEFAULT_PRIORITY[p].category;
                 if (!city_data.labor.categories[cat].priority) {
-                    int needed = city_data.labor.categories[cat].workers_needed - city_data.labor.categories[cat].workers_allocated;
+                    int needed = city_data.labor.categories[cat].workers_needed
+                        - city_data.labor.categories[cat].workers_allocated;
                     if (needed > 0) {
                         int to_allocate = DEFAULT_PRIORITY[p].workers;
                         if (to_allocate > available) {
@@ -423,7 +424,8 @@ static void allocate_workers_to_non_water_buildings(void)
                 category_workers_needed[i] = 0;
                 category_workers_allocated[i] = 0;
             } else {
-                category_workers_needed[i] = city_data.labor.categories[i].workers_allocated - category_workers_allocated[i];
+                category_workers_needed[i] =
+                    city_data.labor.categories[i].workers_allocated - category_workers_allocated[i];
             }
         }
     }

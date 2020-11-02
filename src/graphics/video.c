@@ -191,7 +191,8 @@ void video_draw(int x_offset, int y_offset)
     const uint32_t *pal = smacker_get_frame_palette(data.s);
     if (frame && pal) {
         for (int y = clip->clipped_pixels_top; y < clip->visible_pixels_y; y++) {
-            color_t *pixel = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y + y_offset + clip->clipped_pixels_top);
+            color_t *pixel = graphics_get_pixel(
+                x_offset + clip->clipped_pixels_left, y + y_offset + clip->clipped_pixels_top);
             int video_y = data.video.y_scale == SMACKER_Y_SCALE_NONE ? y : y / 2;
             const unsigned char *line = frame + (video_y * data.video.width);
             for (int x = clip->clipped_pixels_left; x < clip->visible_pixels_x; x++) {

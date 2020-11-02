@@ -29,7 +29,8 @@ typedef struct {
     int entertainment; /**< Entertainment points required */
     int water; /**< Water required: 1 = well, 2 = fountain */
     int religion; /**< Number of gods required */
-    int education; /**< Education required: 1 = school or library, 2 = school and library, 3 = school, library and academy */
+    int education; /**< Education required:
+        1 = school or library, 2 = school and library, 3 = school, library and academy */
     int food; /**< Food required (boolean) */
     int barber; /**< Barber required (boolean) */
     int bathhouse; /**< Bathhouse required (boolean) */

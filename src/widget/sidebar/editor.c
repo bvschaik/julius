@@ -145,7 +145,8 @@ void widget_sidebar_editor_draw_background(void)
 void widget_sidebar_editor_draw_foreground(void)
 {
     draw_buttons();
-    widget_minimap_draw(sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+    widget_minimap_draw(sidebar_common_get_x_offset_expanded() + 8,
+        MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
 }
 
 int widget_sidebar_editor_handle_mouse(const mouse *m)

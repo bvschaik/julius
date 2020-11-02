@@ -13,6 +13,11 @@ typedef enum {
     TOOLTIP_TILES = 4
 } tooltip_type;
 
+typedef enum {
+    TOOLTIP_EXTRA_TEXT_COMMA_SEPARATED = 0,
+    TOOLTIP_EXTRA_TEXT_JOINED_BY_SPACE = 1
+} tooltip_extra_text_type;
+
 typedef struct {
     const int mouse_x;
     const int mouse_y;
@@ -26,6 +31,10 @@ typedef struct {
     int extra_value_text_groups[TOOLTIP_MAX_EXTRA_VALUES];
     int extra_value_text_ids[TOOLTIP_MAX_EXTRA_VALUES];
     int translation_key;
+    int num_extra_texts;
+    tooltip_extra_text_type extra_text_type;
+    int extra_text_groups[TOOLTIP_MAX_EXTRA_VALUES];
+    int extra_text_ids[TOOLTIP_MAX_EXTRA_VALUES];
 } tooltip_context;
 
 void tooltip_invalidate(void);

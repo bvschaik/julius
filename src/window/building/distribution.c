@@ -460,7 +460,8 @@ void window_building_draw_granary(building_info_context *c)
         lang_text_draw(23, RESOURCE_FRUIT, c->x_offset + 274 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
 
         // meat/fish
-        image_draw(image_id + RESOURCE_MEAT + resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 240, c->y_offset + 92);
+        image_draw(image_id + RESOURCE_MEAT + resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
+            c->x_offset + 240, c->y_offset + 92);
         width = text_draw_number(b->data.granary.resource_stored[RESOURCE_MEAT], '@', " ",
             c->x_offset + 274, c->y_offset + 99, FONT_NORMAL_BLACK);
         lang_text_draw(23, RESOURCE_MEAT, c->x_offset + 274 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
@@ -509,13 +510,17 @@ void window_building_draw_granary_orders_foreground(building_info_context *c)
     int y_offset = window_building_get_vertical_offset(c, 28);
 
     // empty button
-    button_border_draw(c->x_offset + 80, y_offset + 404, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
+    button_border_draw(c->x_offset + 80, y_offset + 404, 16 * (c->width_blocks - 10), 20,
+        data.orders_focus_button_id == 1 ? 1 : 0);
     const building_storage *storage = building_storage_get(building_get(c->building_id)->storage_id);
     if (storage->empty_all) {
-        lang_text_draw_centered(98, 8, c->x_offset + 80, y_offset + 408, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-        lang_text_draw_centered(98, 9, c->x_offset, y_offset + 384, 16 * c->width_blocks, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(98, 8, c->x_offset + 80, y_offset + 408,
+            16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+        lang_text_draw_centered(98, 9, c->x_offset, y_offset + 384,
+            16 * c->width_blocks, FONT_NORMAL_BLACK);
     } else {
-        lang_text_draw_centered(98, 7, c->x_offset + 80, y_offset + 408, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+        lang_text_draw_centered(98, 7, c->x_offset + 80, y_offset + 408,
+            16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
     }
 
     // accept none button
@@ -693,19 +698,24 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
     int y_offset = window_building_get_vertical_offset(c, 28);
 
     // emptying button
-    button_border_draw(c->x_offset + 80, y_offset + 404, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
+    button_border_draw(c->x_offset + 80, y_offset + 404, 16 * (c->width_blocks - 10),
+        20, data.orders_focus_button_id == 1 ? 1 : 0);
     const building_storage *storage = building_storage_get(building_get(c->building_id)->storage_id);
     if (storage->empty_all) {
-        lang_text_draw_centered(99, 5, c->x_offset + 80, y_offset + 408, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+        lang_text_draw_centered(99, 5, c->x_offset + 80, y_offset + 408,
+            16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
         lang_text_draw_centered(99, 6, c->x_offset, y_offset + 426, 16 * c->width_blocks, FONT_SMALL_PLAIN);
     } else {
-        lang_text_draw_centered(99, 4, c->x_offset + 80, y_offset + 408, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+        lang_text_draw_centered(99, 4, c->x_offset + 80, y_offset + 408,
+            16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
     }
 
     // trade center
-    button_border_draw(c->x_offset + 80, y_offset + 382, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 2 ? 1 : 0);
+    button_border_draw(c->x_offset + 80, y_offset + 382, 16 * (c->width_blocks - 10),
+        20, data.orders_focus_button_id == 2 ? 1 : 0);
     int is_trade_center = c->building_id == city_buildings_get_trade_center();
-    lang_text_draw_centered(99, is_trade_center ? 11 : 12, c->x_offset + 80, y_offset + 386, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+    lang_text_draw_centered(99, is_trade_center ? 11 : 12, c->x_offset + 80, y_offset + 386,
+        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 
     // accept none button
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 3);
@@ -713,7 +723,8 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
     const resource_list *list = city_resource_get_available();
     for (int i = 0; i < list->size; i++) {
         int resource = list->items[i];
-        int image_id = image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+        int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
+            resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
         image_draw(image_id, c->x_offset + 420, y_offset + 46 + 22 * i);
         lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);

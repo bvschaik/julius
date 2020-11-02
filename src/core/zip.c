@@ -218,7 +218,8 @@ static void pk_implode_determine_copy(struct pk_comp_buffer *buf, int input_inde
     }
     uint8_t *input_ptr_copy = input_ptr;
     while (1) {
-        if (start_match[max_matched_bytes - 1] == input_ptr_copy[max_matched_bytes - 1] && *start_match == *input_ptr_copy) {
+        if (start_match[max_matched_bytes - 1] == input_ptr_copy[max_matched_bytes - 1]
+            && *start_match == *input_ptr_copy) {
             uint8_t *start_match_plus_one = start_match + 1;
             uint8_t *input_ptr_copy_plus_one = input_ptr_copy + 1;
             uint16_t matched_bytes = 2;
@@ -298,7 +299,8 @@ static void pk_implode_determine_copy(struct pk_comp_buffer *buf, int input_inde
                     copy->length = max_matched_bytes;
                     return;
                 }
-                if (better_match_ptr[max_matched_bytes - 2] == input_ptr[max_matched_bytes - 2] && *better_match_ptr == *input_ptr) {
+                if (better_match_ptr[max_matched_bytes - 2] == input_ptr[max_matched_bytes - 2]
+                    && *better_match_ptr == *input_ptr) {
                     matched_bytes = 2;
                     match_ptr = better_match_ptr + 2;
                     break;
@@ -340,7 +342,8 @@ static void pk_implode_determine_copy(struct pk_comp_buffer *buf, int input_inde
     // never reached
 }
 
-static int pk_implode_next_copy_is_better(struct pk_comp_buffer *buf, int offset, const struct pk_copy_length_offset *current_copy)
+static int pk_implode_next_copy_is_better(
+    struct pk_comp_buffer *buf, int offset, const struct pk_copy_length_offset *current_copy)
 {
     struct pk_copy_length_offset next_copy;
     pk_implode_determine_copy(buf, offset + 1, &next_copy);
@@ -665,8 +668,10 @@ static int pk_explode(pk_input_func *input_func, pk_output_func *output_func,
     }
 
     // Decode data for copying bytes
-    pk_explode_construct_jump_table(16, pk_copy_length_base_bits, pk_copy_length_base_code, buf->copy_length_jump_table);
-    pk_explode_construct_jump_table(64, pk_copy_offset_bits, pk_copy_offset_code, buf->copy_offset_jump_table);
+    pk_explode_construct_jump_table(16,
+        pk_copy_length_base_bits, pk_copy_length_base_code, buf->copy_length_jump_table);
+    pk_explode_construct_jump_table(64,
+        pk_copy_offset_bits, pk_copy_offset_code, buf->copy_offset_jump_table);
 
     int result = pk_explode_data(buf);
     if (result != PK_EOF) {

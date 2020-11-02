@@ -466,7 +466,8 @@ static int is_reservoir_construction_entrance(int grid_offset)
     return 0;
 }
 
-static void set_terrain_reservoir(int grid_offset, int direction, int multi_tile_mask, int tiles[MAX_TILES], int include_construction)
+static void set_terrain_reservoir(
+    int grid_offset, int direction, int multi_tile_mask, int tiles[MAX_TILES], int include_construction)
 {
     int offset = grid_offset + map_grid_direction_delta(direction);
     if (map_terrain_is(offset, TERRAIN_BUILDING)) {

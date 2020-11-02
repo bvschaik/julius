@@ -232,7 +232,8 @@ static int trader_get_sell_resource(int warehouse_id, int city_id)
             space = warehouse;
             for (int i = 0; i < 8; i++) {
                 space = building_next(space);
-                if (space->id > 0 && space->loads_stored < 4 && space->subtype.warehouse_resource_id == resource_to_import) {
+                if (space->id > 0 && space->loads_stored < 4
+                    && space->subtype.warehouse_resource_id == resource_to_import) {
                     building_warehouse_space_add_import(space, resource_to_import);
                     return resource_to_import;
                 }

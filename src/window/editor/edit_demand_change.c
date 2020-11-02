@@ -154,7 +154,8 @@ static void set_route_id(int index)
 
 static void button_route(int param1, int param2)
 {
-    window_select_list_show_text(screen_dialog_offset_x() + 200, screen_dialog_offset_y() + 50, data.route_names, data.num_routes, set_route_id);
+    window_select_list_show_text(screen_dialog_offset_x() + 200, screen_dialog_offset_y() + 50,
+        data.route_names, data.num_routes, set_route_id);
 }
 
 static void button_toggle_rise(int param1, int param2)

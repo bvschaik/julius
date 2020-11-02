@@ -32,7 +32,8 @@ int platform_file_manager_set_base_path(const char *path);
  * @param callback The function to call when a matched file is found
  * @return LIST_ERROR if error, LIST_MATCH if there was a match in the callback, LIST_NO_MATCH if no match was set
  */
-int platform_file_manager_list_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *));
+int platform_file_manager_list_directory_contents(
+    const char *dir, int type, const char *extension, int (*callback)(const char *));
 
 /**
  * Indicates whether the file name casing should be checked

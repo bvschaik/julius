@@ -189,7 +189,8 @@ void city_finance_estimate_taxes(void)
         city_data.finance.tax_percentage);
     int estimated_rest_of_year = (12 - game_time_month()) * (monthly_patricians + monthly_plebs);
 
-    city_data.finance.this_year.income.taxes = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
+    city_data.finance.this_year.income.taxes =
+        city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
     city_data.finance.estimated_tax_income = city_data.finance.this_year.income.taxes + estimated_rest_of_year;
 }
 
@@ -323,7 +324,8 @@ void city_finance_handle_month_change(void)
 
 static void reset_taxes(void)
 {
-    city_data.finance.last_year.income.taxes = city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
+    city_data.finance.last_year.income.taxes =
+        city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
     city_data.taxes.yearly.collected_plebs = 0;
     city_data.taxes.yearly.collected_patricians = 0;
     city_data.taxes.yearly.uncollected_plebs = 0;

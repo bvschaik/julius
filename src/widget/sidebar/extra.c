@@ -164,7 +164,8 @@ static int update_extra_info(int is_background)
     return changed;
 }
 
-static int draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective *obj, int cut_off_at_parenthesis)
+static int draw_extra_info_objective(
+    int x_offset, int y_offset, int text_group, int text_id, objective *obj, int cut_off_at_parenthesis)
 {
     if (cut_off_at_parenthesis) {
         // Exception for Chinese: the string for "population" includes the hotkey " (6)"
@@ -191,19 +192,19 @@ static void draw_extra_info_panel(void)
 {
     int panel_blocks = data.height / 16;
     graphics_draw_vertical_line(data.x_offset, data.y_offset, data.y_offset + data.height, COLOR_WHITE);
-    graphics_draw_vertical_line(data.x_offset + data.width - 1, data.y_offset, data.y_offset + data.height, COLOR_SIDEBAR);
+    graphics_draw_vertical_line(data.x_offset + data.width - 1, data.y_offset,
+        data.y_offset + data.height, COLOR_SIDEBAR);
     inner_panel_draw(data.x_offset + 1, data.y_offset, data.width / 16, panel_blocks);
 
-    int y_current_line = data.y_offset;
+    int y_current_line = data.y_offset + EXTRA_INFO_VERTICAL_PADDING;
 
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
-        y_current_line += EXTRA_INFO_VERTICAL_PADDING * 2;
+        y_current_line += EXTRA_INFO_VERTICAL_PADDING;
 
-        lang_text_draw(45, 2, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+        lang_text_draw(45, 2, data.x_offset + 10, y_current_line, FONT_NORMAL_WHITE);
         y_current_line += EXTRA_INFO_LINE_SPACE + EXTRA_INFO_VERTICAL_PADDING;
 
-        text_draw_percentage(data.game_speed, data.x_offset + 60, y_current_line, FONT_NORMAL_GREEN);
-        arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
+        text_draw_percentage(data.game_speed, data.x_offset + 60, y_current_line - 2, FONT_NORMAL_GREEN);
 
         y_current_line += EXTRA_INFO_VERTICAL_PADDING * 3;
     }
@@ -211,11 +212,13 @@ static void draw_extra_info_panel(void)
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
         y_current_line += EXTRA_INFO_VERTICAL_PADDING;
 
-        lang_text_draw(68, 148, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+        lang_text_draw(68, 148, data.x_offset + 10, y_current_line, FONT_NORMAL_WHITE);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
-        int text_width = text_draw_percentage(data.unemployment_percentage, data.x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
-        text_draw_number(data.unemployment_amount, '(', ")", data.x_offset + 11 + text_width, y_current_line, FONT_NORMAL_GREEN);
+        int text_width = text_draw_percentage(data.unemployment_percentage,
+            data.x_offset + 10, y_current_line, FONT_NORMAL_GREEN);
+        text_draw_number(data.unemployment_amount, '(', ")",
+            data.x_offset + 10 + text_width, y_current_line, FONT_NORMAL_GREEN);
 
         y_current_line += EXTRA_INFO_VERTICAL_PADDING * 3;
     }
@@ -231,7 +234,8 @@ static void draw_extra_info_panel(void)
     }
 }
 
-int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int available_height, int is_collapsed, sidebar_extra_display info_to_display)
+int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int available_height,
+    int is_collapsed, sidebar_extra_display info_to_display)
 {
     data.is_collapsed = is_collapsed;
     data.x_offset = x_offset;
@@ -252,7 +256,8 @@ static void draw_extra_info_buttons(void)
     if (update_extra_info(0)) {
         // Updates displayed speed % after clicking the arrows
         draw_extra_info_panel();
-    } else if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
+    }
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
         arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
     }
 }

@@ -103,7 +103,8 @@ static void set_mapping(key_type key, key_modifier_type modifiers, hotkey_action
     mapping->action = action;
 }
 
-static void set_layout_mapping(const char *name, key_type default_key, key_modifier_type modifiers, hotkey_action action)
+static void set_layout_mapping(
+    const char *name, key_type default_key, key_modifier_type modifiers, hotkey_action action)
 {
     key_type key = system_keyboard_key_for_symbol(name);
     if (key == KEY_NONE) {

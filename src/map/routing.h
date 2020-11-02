@@ -24,7 +24,8 @@ int map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, in
 int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y);
 int map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y);
 
-int map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles);
+int map_routing_noncitizen_can_travel_over_land(
+    int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles);
 int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y);
 
 void map_routing_block(int x, int y, int size);

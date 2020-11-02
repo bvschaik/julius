@@ -138,10 +138,10 @@ static int get_column_height_none(const building *b)
 
 static void add_god(tooltip_context *c, int god_id)
 {
-    int index = c->num_extra_values;
-    c->extra_value_text_groups[index] = 59;
-    c->extra_value_text_ids[index] = 11 + god_id;
-    c->num_extra_values++;
+    int index = c->num_extra_texts;
+    c->extra_text_groups[index] = 59;
+    c->extra_text_ids[index] = 11 + god_id;
+    c->num_extra_texts++;
 }
 
 static int get_tooltip_religion(tooltip_context *c, const building *b)
@@ -463,7 +463,8 @@ static int get_desirability_image_offset(int desirability)
 static void draw_footprint_desirability(int x, int y, int grid_offset)
 {
     color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
-    if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+    if (map_terrain_is(grid_offset, terrain_on_desirability_overlay())
+        && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset)) {
             image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
@@ -482,7 +483,8 @@ static void draw_footprint_desirability(int x, int y, int grid_offset)
         image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
     } else if (map_desirability_get(grid_offset)) {
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
+        image_draw_isometric_footprint_from_draw_tile(
+            image_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y, color_mask);
     } else {
         image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
     }
@@ -491,7 +493,8 @@ static void draw_footprint_desirability(int x, int y, int grid_offset)
 static void draw_top_desirability(int x, int y, int grid_offset)
 {
     color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
-    if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+    if (map_terrain_is(grid_offset, terrain_on_desirability_overlay())
+        && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset)) {
             image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);

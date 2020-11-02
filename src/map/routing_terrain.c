@@ -123,7 +123,7 @@ void map_routing_update_land_citizen(void)
             } else if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
                 if (!map_building_at(grid_offset)) {
                     // shouldn't happen
-                    terrain_land_noncitizen.items[grid_offset] = CITIZEN_4_CLEAR_TERRAIN; // BUG: should be citizen grid?
+                    terrain_land_noncitizen.items[grid_offset] = CITIZEN_4_CLEAR_TERRAIN; // BUG: should be citizen?
                     map_terrain_remove(grid_offset, TERRAIN_BUILDING);
                     map_image_set(grid_offset, (map_random_get(grid_offset) & 7) + image_group(GROUP_TERRAIN_GRASS_1));
                     map_property_mark_draw_tile(grid_offset);

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+	<id>com.github.bvschaik.julius</id>
+	<metadata_license>CC0-1.0</metadata_license>
+	<project_license>AGPL-3.0</project_license>
+	<name>Julius</name>
+	<summary>Julius is an open source re-implementation of Caesar III</summary>
+	<description>
+		<p>Julius is an open source re-implementation of Caesar III.</p>
+		<p>Julius is a fully working open-source version of Caesar 3, with the same logic as the original, but with some UI enhancements, that is able to be played on multiple platforms. The same logic means that the saved games are 100% compatible, and any gameplay bugs present in the original Caesar 3 game will also be present in Julius.</p>
+		<ul>UI enhancements include:
+			<li>Support for widescreen resolutions</li>
+			<li>Windowed mode support for 32-bit desktops</li>
+			<li>Several small in-game quality of life improvements</li>
+		</ul>
+		<p>Julius requires the original assets (graphics, sounds, etc) from Caesar 3 to run. It optionally supports the high-quality MP3 files once provided on the Sierra website.</p>
+	</description>
+	<launchable type="desktop-id">com.github.bvschaik.julius.desktop</launchable>
+	<screenshots>
+		<screenshot type="default">
+			<image type="source">https://raw.githubusercontent.com/wiki/bvschaik/julius/images/julius-screenshot.png</image>
+		</screenshot>
+	</screenshots>
+	<releases>
+		<release version="1.5.1" date="2020-10-28"/>
+		<release version="1.5.0" date="2020-10-27"/>
+		<release version="1.4.1" date="2020-06-01"/>
+		<release version="1.4.0" date="2020-05-10"/>
+		<release version="1.3.1" date="2020-02-24"/>
+		<release version="1.3.0" date="2020-02-14"/>
+	</releases>
+	<url type="homepage">https://github.com/bvschaik/julius</url>
+	<developer_name>Bianca van Schaik</developer_name>
+	<content_rating type="oars-1.1">
+		<content_attribute id="violence-fantasy">moderate</content_attribute>
+	</content_rating>
+</component>

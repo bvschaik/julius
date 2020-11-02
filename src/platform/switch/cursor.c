@@ -20,7 +20,8 @@ extern struct {
 
 static SDL_Texture *init_cursor(const cursor *c)
 {
-    SDL_Texture *tex = SDL_CreateTexture(SDL.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, CURSOR_SIZE, CURSOR_SIZE);
+    SDL_Texture *tex = SDL_CreateTexture(SDL.renderer, SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_STATIC, CURSOR_SIZE, CURSOR_SIZE);
 
     uint32_t pixels[CURSOR_SIZE * CURSOR_SIZE] = { 0 };
 

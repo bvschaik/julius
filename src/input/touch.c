@@ -26,7 +26,8 @@ static struct {
 
 static int start_delayed(const touch *t)
 {
-    return (t->has_started && !t->has_moved && !t->has_ended && ((time_get_millis() - t->start_time) < (time_millis) (CLICK_TIME / 2)));
+    return t->has_started && !t->has_moved && !t->has_ended
+        && ((time_get_millis() - t->start_time) < (time_millis) (CLICK_TIME / 2));
 }
 
 const touch *touch_get_earliest(void)
@@ -170,7 +171,8 @@ void touch_move(int index, touch_coords current_coords, time_millis current_time
     touch *t = &data.finger[index];
     t->last_change_time = current_time;
     t->current_point = current_coords;
-    if ((abs(current_coords.x - t->start_point.x) > NOT_MOVING_RANGE) || (abs(current_coords.y - t->start_point.y) > NOT_MOVING_RANGE)) {
+    if ((abs(current_coords.x - t->start_point.x) > NOT_MOVING_RANGE)
+        || (abs(current_coords.y - t->start_point.y) > NOT_MOVING_RANGE)) {
         t->has_moved = 1;
     }
 }

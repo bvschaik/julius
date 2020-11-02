@@ -20,6 +20,8 @@ static const char *ini_keys[] = {
     "ui_show_construction_size",
     "ui_zoom",
     "ui_highlight_legions",
+    "ui_show_military_sidebar",
+    "ui_disable_map_drag",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",
     "gameplay_change_retire_at_60",
@@ -97,7 +99,8 @@ static void set_defaults(void)
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         values[i] = default_values[i];
     }
-    strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR], default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR], CONFIG_STRING_VALUE_MAX);
+    strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR],
+        default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR], CONFIG_STRING_VALUE_MAX);
 }
 
 void config_load(void)

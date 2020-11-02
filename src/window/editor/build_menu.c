@@ -88,7 +88,8 @@ static void draw_menu_buttons(void)
     int x_offset = get_sidebar_x_offset();
     for (int i = 0; i < data.num_items; i++) {
         label_draw(x_offset - 170, data.y_offset + 110 + 24 * i, 10, data.focus_button_id == i + 1 ? 1 : 2);
-        lang_text_draw_centered(48, MENU_TYPES[data.selected_submenu][i], x_offset - 170, data.y_offset + 113 + 24 * i, 160, FONT_NORMAL_GREEN);
+        lang_text_draw_centered(48, MENU_TYPES[data.selected_submenu][i], x_offset - 170,
+            data.y_offset + 113 + 24 * i, 160, FONT_NORMAL_GREEN);
     }
 }
 

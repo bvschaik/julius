@@ -15,7 +15,8 @@
  * @param adjust_width_on_no_scroll Whether to expand the text area into the scrollbar area
  * @return Width of the text in blocks
  */
-int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks, int height_blocks, int adjust_width_on_no_scroll);
+int rich_text_init(
+    const uint8_t *text, int x_text, int y_text, int width_blocks, int height_blocks, int adjust_width_on_no_scroll);
 
 /**
  * Sets fonts to use

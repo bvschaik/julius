@@ -165,7 +165,8 @@ int building_construction_place_aqueduct(int x_start, int y_start, int x_end, in
     return 1;
 }
 
-int building_construction_place_aqueduct_for_reservoir(int measure_only, int x_start, int y_start, int x_end, int y_end, int *items)
+int building_construction_place_aqueduct_for_reservoir(
+    int measure_only, int x_start, int y_start, int x_end, int y_end, int *items)
 {
     routed_building_type type = measure_only ? ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC : ROUTED_BUILDING_AQUEDUCT;
     return place_routed_building(x_start, y_start, x_end, y_end, type, items);

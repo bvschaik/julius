@@ -254,7 +254,8 @@ void game_undo_perform(void)
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
                 building *b = building_get(data.buildings[i].id);
-                if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
+                if (b->type == BUILDING_ORACLE
+                    || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
                     building_warehouses_add_resource(RESOURCE_MARBLE, 2);
                 }
                 b->state = BUILDING_STATE_UNDO;

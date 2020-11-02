@@ -102,7 +102,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
 
     platform_screen_destroy();
 
-    SDL_Log("Creating screen %d x %d, %s, %s", width, height,
+    SDL_Log("Creating screen %d x %d, %s, driver: %s", width, height,
         fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
     if (fullscreen) {
@@ -122,13 +122,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         SDL_GetWindowSize(SDL.window, &width, &height);
     }
 
-    SDL_Log("Creating renderer, available drivers:");
-    SDL_RendererInfo info;
-    int num_drivers = SDL_GetNumRenderDrivers();
-    for (int i = 0; i < num_drivers; i++) {
-        SDL_GetRenderDriverInfo(i, &info);
-        SDL_Log("- %s", info.name);
-    }
+    SDL_Log("Creating renderer");
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!SDL.renderer) {
         SDL_Log("Unable to create renderer, trying software renderer: %s", SDL_GetError());
@@ -138,8 +132,6 @@ int platform_screen_create(const char *title, int display_scale_percentage)
             return 0;
         }
     }
-    SDL_GetRendererInfo(SDL.renderer, &info);
-    SDL_Log("Created renderer: %s (%d)", info.name, info.flags);
 
 #if !defined(__APPLE__)
     if (fullscreen && SDL_GetNumVideoDisplays() > 1) {
@@ -224,16 +216,16 @@ int platform_screen_resize(int pixel_width, int pixel_height, int save)
         setting_set_display(setting_fullscreen(), logical_width, logical_height);
     }
 
-  
+
     // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
     SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
-    
+
     if (create_textures(logical_width, logical_height)) {
-        SDL_Log("Texture created: %d x %d", logical_width, logical_height);
         screen_set_resolution(logical_width, logical_height);
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
 }
@@ -320,7 +312,8 @@ void platform_screen_set_window_size(int logical_width, int logical_height)
 void platform_screen_center_window(void)
 {
     int display = SDL_GetWindowDisplayIndex(SDL.window);
-    SDL_SetWindowPosition(SDL.window, SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
+    SDL_SetWindowPosition(SDL.window,
+        SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
     window_pos.centered = 1;
 }
 

@@ -303,7 +303,8 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
 
         if (b->data.granary.resource_stored[RESOURCE_NONE] >= ONE_LOAD) {
             // there is room
-            int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
+            int dist = calc_distance_with_penalty(
+                b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = i;
@@ -348,7 +349,8 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
         }
         if (b->data.granary.resource_stored[RESOURCE_NONE] > ONE_LOAD) {
             // there is room
-            int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
+            int dist = calc_distance_with_penalty(
+                b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = i;

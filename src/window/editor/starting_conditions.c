@@ -81,17 +81,20 @@ static void draw_foreground(void)
     lang_text_draw(44, 91, 32, 325, FONT_NORMAL_BLACK);
     button_border_draw(262, 316, 200, 30, focus_button_id == 7);
     int width = text_draw_number(scenario_editor_milestone_year(25), '+', " ", 297, 327, FONT_NORMAL_BLACK);
-    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(25), 307 + width, 327, FONT_SMALL_PLAIN);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(25),
+        307 + width, 327, FONT_SMALL_PLAIN);
 
     lang_text_draw(44, 92, 32, 365, FONT_NORMAL_BLACK);
     button_border_draw(262, 356, 200, 30, focus_button_id == 8);
     width = text_draw_number(scenario_editor_milestone_year(50), '+', " ", 297, 367, FONT_NORMAL_BLACK);
-    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(50), 307 + width, 367, FONT_SMALL_PLAIN);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(50),
+        307 + width, 367, FONT_SMALL_PLAIN);
 
     lang_text_draw(44, 93, 32, 405, FONT_NORMAL_BLACK);
     button_border_draw(262, 396, 200, 30, focus_button_id == 9);
     width = text_draw_number(scenario_editor_milestone_year(75), '+', " ", 297, 407, FONT_NORMAL_BLACK);
-    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(75), 307 + width, 407, FONT_SMALL_PLAIN);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(75),
+        307 + width, 407, FONT_SMALL_PLAIN);
 
     graphics_reset_dialog();
 }

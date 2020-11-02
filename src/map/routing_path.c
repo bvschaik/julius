@@ -96,7 +96,8 @@ int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst
     return num_tiles;
 }
 
-int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, int dst_y, int num_directions, int range, int *out_x, int *out_y)
+int map_routing_get_closest_tile_within_range(
+    int src_x, int src_y, int dst_x, int dst_y, int num_directions, int range, int *out_x, int *out_y)
 {
     int dst_grid_offset = map_grid_offset(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);

@@ -146,8 +146,10 @@ void figure_sheep_action(figure *f)
             if (f->wait_ticks > 400) {
                 f->wait_ticks = f->id & 0x1f;
                 f->action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-                f->destination_x = m->destination_x + formation_layout_position_x(FORMATION_HERD, f->index_in_formation);
-                f->destination_y = m->destination_y + formation_layout_position_y(FORMATION_HERD, f->index_in_formation);
+                f->destination_x = m->destination_x
+                    + formation_layout_position_x(FORMATION_HERD, f->index_in_formation);
+                f->destination_y = m->destination_y
+                    + formation_layout_position_y(FORMATION_HERD, f->index_in_formation);
                 f->roam_length = 0;
             }
             break;
@@ -199,8 +201,10 @@ void figure_wolf_action(figure *f)
             if (f->wait_ticks > 400) {
                 f->wait_ticks = f->id & 0x1f;
                 f->action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-                f->destination_x = m->destination_x + formation_layout_position_x(FORMATION_HERD, f->index_in_formation);
-                f->destination_y = m->destination_y + formation_layout_position_y(FORMATION_HERD, f->index_in_formation);
+                f->destination_x = m->destination_x
+                    + formation_layout_position_x(FORMATION_HERD, f->index_in_formation);
+                f->destination_y = m->destination_y
+                    + formation_layout_position_y(FORMATION_HERD, f->index_in_formation);
                 f->roam_length = 0;
             }
             break;
@@ -274,8 +278,10 @@ void figure_zebra_action(figure *f)
             if (f->wait_ticks > 200) {
                 f->wait_ticks = f->id & 0x1f;
                 f->action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-                f->destination_x = m->destination_x + formation_layout_position_x(FORMATION_HERD, f->index_in_formation);
-                f->destination_y = m->destination_y + formation_layout_position_y(FORMATION_HERD, f->index_in_formation);
+                f->destination_x = m->destination_x
+                    + formation_layout_position_x(FORMATION_HERD, f->index_in_formation);
+                f->destination_y = m->destination_y
+                    + formation_layout_position_y(FORMATION_HERD, f->index_in_formation);
                 f->roam_length = 0;
             }
             break;

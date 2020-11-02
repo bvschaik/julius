@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.github.triplet.play'
 
 task getVersion {
     def cmakeFile = rootProject.file("../CMakeLists.txt").text
@@ -64,14 +65,14 @@ task getVersion {
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
     ndkVersion "21.3.6528147"
 
     defaultConfig {
         applicationId "com.github.bvschaik.julius"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
 
         versionName getVersion.versionName
         versionCode getVersion.versionCode
@@ -82,7 +83,7 @@ android {
             }
         }
         ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
         sourceSets {
             main.res.srcDirs += '../../res/android'
@@ -117,6 +118,10 @@ android {
     }
 }
 
+play {
+    serviceAccountCredentials.set(file("../play-publisher.json"))
+}
+
 repositories {
     google()
     jcenter()
@@ -124,4 +129,5 @@ repositories {
 
 dependencies {
     implementation project(':SDL2')
+    implementation 'androidx.appcompat:appcompat:1.2.0'
 }

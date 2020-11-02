@@ -34,11 +34,13 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Reproducir vídeos al inicio"},
     {TR_CONFIG_SIDEBAR_INFO, "Mostrar información adicional en el panel de control"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Activar desplazamiento suave del mapa"},
+    {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Desactivar click derecho para desplazar el mapa"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Mejorar el feedback visual al limpiar terreno"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permitir construcción secuencial de templos"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Mostrar área cubierta por depósitos, fuentes y pozos al construir"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Mostrar medidas de construcción al arrastrar"},
-    {TR_CONFIG_HIGHLIGHT_LEGIONS, "Resaltar legión al pasar el cursor"}, // TODO: Google Translate
+    {TR_CONFIG_HIGHLIGHT_LEGIONS, "Resaltar legión bajo el cursor"},
+    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Activar barra lateral militar"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corregir bug impidiendo immigración en Muy Difícil"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corregir bug creando fantasmas con 100 años"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corregir cambio de Emperador y supervivencia en misiones del editor"},
@@ -52,7 +54,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_HEADER_OVERLAYS, "Capas"},
     {TR_HOTKEY_HEADER_BOOKMARKS, "Atajos de mapa"},
     {TR_HOTKEY_HEADER_EDITOR, "Editor"},
-    {TR_HOTKEY_HEADER_BUILD, "Atajos de construcción"}, // TODO: Google Translate
+    {TR_HOTKEY_HEADER_BUILD, "Atajos para la construcción"},
     {TR_HOTKEY_ARROW_UP, "Arriba"},
     {TR_HOTKEY_ARROW_DOWN, "Abajo"},
     {TR_HOTKEY_ARROW_LEFT, "Izquierda"},
@@ -64,7 +66,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Redimensionar a 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Capturar pantalla"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Capturar ciudad completa"},
-    {TR_HOTKEY_BUILD_CLONE, "Clonar edificio bajo el cursor"}, // TODO: Google Translate
+    {TR_HOTKEY_BUILD_CLONE, "Clonar edificio bajo el cursor"},
     {TR_HOTKEY_LOAD_FILE, "Cargar partida"},
     {TR_HOTKEY_SAVE_FILE, "Guardar partida"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Subir velocidad de juego"},

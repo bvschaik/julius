@@ -452,7 +452,8 @@ void scenario_settings_init(void)
 void scenario_settings_init_mission(void)
 {
     scenario.settings.starting_favor = difficulty_starting_favor();
-    scenario.settings.starting_personal_savings = setting_personal_savings_for_mission(scenario.settings.campaign_rank);
+    scenario.settings.starting_personal_savings =
+        setting_personal_savings_for_mission(scenario.settings.campaign_rank);
 }
 
 void scenario_fix_patch_trade(int mission_id) {
@@ -487,7 +488,8 @@ void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, b
     buffer_write_raw(scenario_name, scenario.scenario_name, MAX_SCENARIO_NAME);
 }
 
-void scenario_settings_load_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
+void scenario_settings_load_state(
+    buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
 {
     scenario.settings.campaign_mission = buffer_read_i32(part1);
 

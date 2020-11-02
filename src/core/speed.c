@@ -91,7 +91,8 @@ int speed_get_delta(speed_type *speed)
         speed->adjusted_current_speed = speed->desired_speed;
     } else {
         if (elapsed == 0) {
-            delta = adjust_speed_for_elapsed_time(speed->current_speed, speed->adjust_for_time, speed->last_speed_check);
+            delta = adjust_speed_for_elapsed_time(
+                speed->current_speed, speed->adjust_for_time, speed->last_speed_check);
         } else {
             double full_delta = speed->speed_difference * (speed->total_time / FRAME_TIME);
             double exponent = exp(-((int) elapsed) / (double) speed->total_time);

@@ -339,7 +339,8 @@ static void draw_compressed(const image *img, const color_t *data, int x_offset,
     }
 }
 
-static void draw_compressed_set(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
+static void draw_compressed_set(
+    const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->is_visible) {
@@ -384,7 +385,8 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
     }
 }
 
-static void draw_compressed_and(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
+static void draw_compressed_and(
+    const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->is_visible) {
@@ -433,7 +435,8 @@ static void draw_compressed_and(const image *img, const color_t *data, int x_off
     }
 }
 
-static void draw_compressed_blend(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
+static void draw_compressed_blend(
+    const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->is_visible) {
@@ -478,7 +481,8 @@ static void draw_compressed_blend(const image *img, const color_t *data, int x_o
     }
 }
 
-static void draw_compressed_blend_alpha(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
+static void draw_compressed_blend_alpha(
+    const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->is_visible) {

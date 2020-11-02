@@ -365,7 +365,8 @@ void city_gods_calculate_moods(int update_moods)
         min_happiness = 0;
     }
     for (int i = 0; i < MAX_GODS; i++) {
-        city_data.religion.gods[i].target_happiness = calc_bound(city_data.religion.gods[i].target_happiness, min_happiness, 100);
+        city_data.religion.gods[i].target_happiness =
+            calc_bound(city_data.religion.gods[i].target_happiness, min_happiness, 100);
     }
     if (update_moods) {
         update_god_moods();

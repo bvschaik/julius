@@ -504,6 +504,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/common.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/extra.c
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/military.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/slide.c
 )
 set(WINDOW_FILES
@@ -570,6 +571,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/message_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/message_list.c
+    ${PROJECT_SOURCE_DIR}/src/window/military_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_end.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_selection.c
@@ -821,10 +823,10 @@ if (VITA_BUILD)
     vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
         VERSION ${VITA_VERSION}
         NAME ${SHORT_NAME}
-        FILE res/sce_sys/icon0.png sce_sys/icon0.png
-        FILE res/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
-        FILE res/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
-        FILE res/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
+        FILE res/vita/icon0.png sce_sys/icon0.png
+        FILE res/vita/bg.png sce_sys/livearea/contents/bg.png
+        FILE res/vita/startup.png sce_sys/livearea/contents/startup.png
+        FILE res/vita/template.xml sce_sys/livearea/contents/template.xml
     )
 elseif(SWITCH_BUILD)
     target_link_libraries (${SHORT_NAME}
@@ -873,7 +875,7 @@ elseif(SWITCH_BUILD)
     add_custom_command(TARGET ${SHORT_NAME}
         POST_BUILD
         COMMAND ${DEVKITPRO}/tools/bin/nacptool --create "${SHORT_NAME}" "rsn8887" ${SWITCH_VERSION} ${SHORT_NAME}.nacp
-        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switchdata/icon0.jpg --nacp=${SHORT_NAME}.nacp
+        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switch/icon0.jpg --nacp=${SHORT_NAME}.nacp
     )
 else()
     if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))

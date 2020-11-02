@@ -449,7 +449,8 @@ static void callback_travel_noncitizen_land(int next_offset, int dist)
     }
 }
 
-int map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles)
+int map_routing_noncitizen_can_travel_over_land(
+    int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles)
 {
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);

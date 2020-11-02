@@ -82,7 +82,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Изменить размер на 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Скриншот видимого"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Скриншот всего города"},
-    {TR_HOTKEY_BUILD_CLONE, "Клонировать здание под курсором"}, // TODO: Google Translate
+    {TR_HOTKEY_BUILD_CLONE, "Клонировать строения под курсором"},
     {TR_HOTKEY_LOAD_FILE, "Загрузить"},
     {TR_HOTKEY_SAVE_FILE, "Сохранить"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Увеличить скорость игры"},

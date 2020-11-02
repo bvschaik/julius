@@ -248,7 +248,7 @@ void scroll_restore_margins(void)
 
 void scroll_drag_start(int is_touch)
 {
-    if (data.drag.active) {
+    if (data.drag.active || (!is_touch && config_get(CONFIG_UI_DISABLE_RIGHT_CLICK_MAP_DRAG))) {
         return;
     }
     data.drag.active = 1;
@@ -285,7 +285,8 @@ static int set_scroll_speed_from_drag(void)
         }
         // Store tiny movements until we decide that it's enough to move into scroll mode
         if (!data.drag.has_started) {
-            data.drag.has_started = abs(data.drag.delta.x) > SCROLL_DRAG_MIN_DELTA || abs(data.drag.delta.y) > SCROLL_DRAG_MIN_DELTA;
+            data.drag.has_started = abs(data.drag.delta.x) > SCROLL_DRAG_MIN_DELTA
+                || abs(data.drag.delta.y) > SCROLL_DRAG_MIN_DELTA;
         }
     }
     if (data.drag.has_started) {
@@ -424,7 +425,8 @@ static int get_alignment_delta(speed_direction direction, int camera_max_offset,
         calc_direction = (camera_offset >= camera_max_offset / 3) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
         break;
     }
-    return (calc_direction == SPEED_DIRECTION_POSITIVE) ? (camera_max_offset - camera_offset) : (camera_offset * -direction);
+    return (calc_direction == SPEED_DIRECTION_POSITIVE) ?
+        (camera_max_offset - camera_offset) : (camera_offset * -direction);
 }
 
 static int set_scroll_speed_from_input(const mouse* m, scroll_type type)
@@ -458,7 +460,8 @@ static int set_scroll_speed_from_input(const mouse* m, scroll_type type)
             align_y = get_alignment_delta(dir_y, TILE_Y_PIXELS, camera_offset.y);
         }
         speed_set_target(&data.speed.x, (step + align_x) * dir_x * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
-        speed_set_target(&data.speed.y, ((step / y_fraction) + align_y) * dir_y * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
+        speed_set_target(&data.speed.y, ((step / y_fraction) + align_y) * dir_y * do_scroll,
+            SPEED_CHANGE_IMMEDIATE, 0);
         return 1;
     }
 

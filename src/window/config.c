@@ -24,7 +24,7 @@
 #include "translation/translation.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 25
+#define NUM_CHECKBOXES 26
 #define CONFIG_PAGES 3
 #define MAX_LANGUAGE_DIRS 20
 
@@ -35,13 +35,17 @@
 #define CHECKBOX_CHECK_SIZE 20
 #define CHECKBOX_HEIGHT 20
 #define CHECKBOX_WIDTH 560
+#define CHECKBOX_TEXT_WIDTH CHECKBOX_WIDTH - CHECKBOX_CHECK_SIZE - 15
 
 #define NUM_VISIBLE_ITEMS 15
 
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = { 8,7,10 };
+static int options_per_page[CONFIG_PAGES] = { 9,7,10 };
+#define NUM_BOTTOM_BUTTONS 4
+#define MAX_LANGUAGE_DIRS 20
+
 
 static void toggle_switch(int id, int param2);
 static void button_language_select(int param1, int param2);
@@ -63,6 +67,7 @@ static generic_button checkbox_buttons[] = {
     { 20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE },
     { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM, TR_CONFIG_ENABLE_ZOOM },
     { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS  },
+    { 20, 266, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_MILITARY_SIDEBAR, TR_CONFIG_SHOW_MILITARY_SIDEBAR  },
 
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS, TR_CONFIG_JEALOUS_GODS },
     { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GLOBAL_LABOUR, TR_CONFIG_GLOBAL_LABOUR },
@@ -152,13 +157,14 @@ static void init(void)
     data.language_options[0] = data.language_options_data[0];
     data.num_language_options = 1;
     const dir_listing* subdirs = dir_find_all_subdirectories();
+    const char *original_value = data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value;
     for (int i = 0; i < subdirs->num_files; i++) {
         if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i])) {
             int opt_id = data.num_language_options;
             strncpy(data.language_options_utf8[opt_id], subdirs->files[i], CONFIG_STRING_VALUE_MAX - 1);
             encoding_from_utf8(subdirs->files[i], data.language_options_data[opt_id], CONFIG_STRING_VALUE_MAX);
             data.language_options[opt_id] = data.language_options_data[opt_id];
-            if (strcmp(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value, subdirs->files[i]) == 0) {
+            if (strcmp(original_value, subdirs->files[i]) == 0) {
                 data.selected_language_option = opt_id;
             }
             data.num_language_options++;
@@ -273,7 +279,8 @@ static void button_reset_defaults(int param1, int param2)
         data.config_values[i].new_value = config_get_default_value(i);
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
-        strncpy(data.config_string_values[i].new_value, config_get_default_string_value(i), CONFIG_STRING_VALUE_MAX - 1);
+        strncpy(data.config_string_values[i].new_value,
+            config_get_default_string_value(i), CONFIG_STRING_VALUE_MAX - 1);
     }
     set_language(0);
     window_invalidate();
@@ -285,7 +292,9 @@ static void cancel_values(void)
         data.config_values[i].new_value = data.config_values[i].original_value;
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        memcpy(data.config_string_values[i].new_value, data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1); // memcpy required to fix warning on Switch build
+        // memcpy required to fix warning on Switch build
+        memcpy(data.config_string_values[i].new_value,
+            data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1);
     }
 }
 
@@ -387,6 +396,7 @@ static int config_change_string_language(config_string_key key)
         game_reload_language();
         return 0;
     }
-    strncpy(data.config_string_values[key].original_value, data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
+    strncpy(data.config_string_values[key].original_value,
+        data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
     return 1;
 }

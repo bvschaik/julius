@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 case "$BUILD_TARGET" in
 "vita")
 	docker exec vitasdk /bin/bash -c "cd build && make"
@@ -26,8 +28,24 @@ case "$BUILD_TARGET" in
 	zip -r augustus.zip augustus mods
 	;;
 "android")
-	cd android && TERM=dumb ./gradlew assembleRelease && \
-	cd .. && cp android/julius/build/outputs/apk/release/julius-release.apk build/julius.apk
+	cd android
+	if [ ! -f julius.keystore ]
+	then
+		COMMAND=assembleDebug
+	elif [ "$TRAVIS_BRANCH" == "master" ]
+	then
+		# Use last commit message for release notes
+		mkdir -p julius/src/main/play/release-notes/en-US
+		git log -1 --pretty=%B > julius/src/main/play/release-notes/en-US/internal.txt
+		COMMAND=publishRelease
+	else
+		COMMAND=assembleRelease
+	fi
+	TERM=dumb ./gradlew $COMMAND
+	if [ -f julius/build/outputs/apk/release/julius-release.apk ]
+	then
+		cp julius/build/outputs/apk/release/julius-release.apk ../build/julius.apk
+	fi
 	;;
 *)
 	cd build && make 

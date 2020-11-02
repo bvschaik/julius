@@ -21,7 +21,7 @@ typedef struct {
 static int has_directory;
 static char path[GAME_PATH_MAX];
 
-static int startup_java_function_handler(const char *class_name, java_function_handler *handler)
+static int init_java_function_handler(const char *class_name, java_function_handler *handler)
 {
     handler->env = SDL_AndroidGetJNIEnv();
     if (handler->env == NULL) {
@@ -41,9 +41,10 @@ static int startup_java_function_handler(const char *class_name, java_function_h
     return 1;
 }
 
-static int request_java_static_function_handler(const char *class_name, const char *method_name, const char *method_signature, java_function_handler *handler)
+static int get_java_static_method_handler(
+    const char *class_name, const char *method_name, const char *method_signature, java_function_handler *handler)
 {
-    if (!startup_java_function_handler(class_name, handler)) {
+    if (!init_java_function_handler(class_name, handler)) {
         return 0;
     }
     handler->method = (*handler->env)->GetStaticMethodID(handler->env, handler->class, method_name, method_signature);
@@ -54,9 +55,10 @@ static int request_java_static_function_handler(const char *class_name, const ch
     return 1;
 }
 
-static int request_java_class_function_handler(const char *class_name, const char *method_name, const char *method_signature, java_function_handler *handler)
+static int get_java_method_handler(
+    const char *class_name, const char *method_name, const char *method_signature, java_function_handler *handler)
 {
-    if (!startup_java_function_handler(class_name, handler)) {
+    if (!init_java_function_handler(class_name, handler)) {
         return 0;
     }
     handler->method = (*handler->env)->GetMethodID(handler->env, handler->class, method_name, method_signature);
@@ -86,7 +88,7 @@ static void destroy_java_function_handler(java_function_handler *handler)
 static const char *get_c3_path(void)
 {
     java_function_handler handler;
-    if (!request_java_static_function_handler(CLASS_FILE_MANAGER, "getC3Path", "()Ljava/lang/String;", &handler)) {
+    if (!get_java_static_method_handler(CLASS_FILE_MANAGER, "getC3Path", "()Ljava/lang/String;", &handler)) {
         destroy_java_function_handler(&handler);
         return NULL;
     }
@@ -98,14 +100,15 @@ static const char *get_c3_path(void)
     (*handler.env)->DeleteLocalRef(handler.env, result);
     destroy_java_function_handler(&handler);
 
-    return path;
+    return *path ? path : NULL;
 }
 
-const char *android_show_c3_path_dialog(void)
+const char *android_show_c3_path_dialog(int again)
 {
     java_function_handler handler;
-    if (request_java_class_function_handler(CLASS_JULIUS_ACTIVITY, "showDirectorySelection", "()V", &handler)) {
-        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method);
+    if (get_java_method_handler(CLASS_JULIUS_ACTIVITY, "showDirectorySelection", "(Z)V", &handler)) {
+        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method,
+            again ? JNI_TRUE : JNI_FALSE);
     }
     destroy_java_function_handler(&handler);
 
@@ -121,7 +124,7 @@ const char *android_show_c3_path_dialog(void)
 void android_toast_message(const char *message)
 {
     java_function_handler handler;
-    if (request_java_class_function_handler(CLASS_JULIUS_ACTIVITY, "toastMessage", "(Ljava/lang/String;)V", &handler)) {
+    if (get_java_method_handler(CLASS_JULIUS_ACTIVITY, "toastMessage", "(Ljava/lang/String;)V", &handler)) {
         jstring jmessage = (*handler.env)->NewStringUTF(handler.env, message);
         (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method, jmessage);
         (*handler.env)->DeleteLocalRef(handler.env, jmessage);
@@ -133,7 +136,7 @@ float android_get_screen_scale(void)
 {
     java_function_handler handler;
     float result = 1.0f;
-    if (request_java_class_function_handler(CLASS_JULIUS_ACTIVITY, "getScreenScale", "()F", &handler)) {
+    if (get_java_method_handler(CLASS_JULIUS_ACTIVITY, "getScreenScale", "()F", &handler)) {
         result = (float) (*handler.env)->CallFloatMethod(handler.env, handler.activity, handler.method);
     }
     destroy_java_function_handler(&handler);
@@ -144,13 +147,15 @@ int android_get_file_descriptor(const char *filename, const char *mode)
 {
     int result = 0;
     java_function_handler handler;
-    if (!request_java_static_function_handler(CLASS_FILE_MANAGER, "openFileDescriptor", "(Lcom/github/bvschaik/julius/JuliusMainActivity;Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
+    if (!get_java_static_method_handler(CLASS_FILE_MANAGER, "openFileDescriptor",
+        "(Lcom/github/bvschaik/julius/JuliusMainActivity;Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
         destroy_java_function_handler(&handler);
         return 0;
     }
     jstring jfilename = (*handler.env)->NewStringUTF(handler.env, filename);
     jstring jmode = (*handler.env)->NewStringUTF(handler.env, mode);
-    result = (int) (*handler.env)->CallStaticIntMethod(handler.env, handler.class, handler.method, handler.activity, jfilename, jmode);
+    result = (int) (*handler.env)->CallStaticIntMethod(
+        handler.env, handler.class, handler.method, handler.activity, jfilename, jmode);
     (*handler.env)->DeleteLocalRef(handler.env, jfilename);
     (*handler.env)->DeleteLocalRef(handler.env, jmode);
     destroy_java_function_handler(&handler);
@@ -162,7 +167,7 @@ int android_set_base_path(const char *path)
 {
     int result = 0;
     java_function_handler handler;
-    if (!request_java_static_function_handler(CLASS_FILE_MANAGER, "setBaseUri", "(Ljava/lang/String;)I", &handler)) {
+    if (!get_java_static_method_handler(CLASS_FILE_MANAGER, "setBaseUri", "(Ljava/lang/String;)I", &handler)) {
         destroy_java_function_handler(&handler);
         return 0;
     }
@@ -177,13 +182,16 @@ int android_set_base_path(const char *path)
 int android_get_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *))
 {
     java_function_handler handler;
-    if (!request_java_static_function_handler(CLASS_FILE_MANAGER, "getDirectoryFileList", "(Lcom/github/bvschaik/julius/JuliusMainActivity;Ljava/lang/String;ILjava/lang/String;)[Ljava/lang/String;", &handler)) {
+    if (!get_java_static_method_handler(CLASS_FILE_MANAGER, "getDirectoryFileList",
+        "(Lcom/github/bvschaik/julius/JuliusMainActivity;Ljava/lang/String;ILjava/lang/String;)[Ljava/lang/String;",
+        &handler)) {
         destroy_java_function_handler(&handler);
         return LIST_ERROR;
     }
     jstring jdir = (*handler.env)->NewStringUTF(handler.env, dir);
     jstring jextension = (*handler.env)->NewStringUTF(handler.env, extension);
-    jobjectArray result = (jobjectArray) (*handler.env)->CallStaticObjectMethod(handler.env, handler.class, handler.method, handler.activity, jdir, type, jextension);
+    jobjectArray result = (jobjectArray) (*handler.env)->CallStaticObjectMethod(
+        handler.env, handler.class, handler.method, handler.activity, jdir, type, jextension);
     (*handler.env)->DeleteLocalRef(handler.env, jdir);
     (*handler.env)->DeleteLocalRef(handler.env, jextension);
     int match = LIST_NO_MATCH;
@@ -207,12 +215,14 @@ int android_remove_file(const char *filename)
 {
     int result = 0;
     java_function_handler handler;
-    if (!request_java_static_function_handler(CLASS_FILE_MANAGER, "deleteFile", "(Lcom/github/bvschaik/julius/JuliusMainActivity;Ljava/lang/String;)Z", &handler)) {
+    if (!get_java_static_method_handler(CLASS_FILE_MANAGER, "deleteFile",
+        "(Lcom/github/bvschaik/julius/JuliusMainActivity;Ljava/lang/String;)Z", &handler)) {
         destroy_java_function_handler(&handler);
         return 0;
     }
     jstring jfilename = (*handler.env)->NewStringUTF(handler.env, filename);
-    result = (int) (*handler.env)->CallStaticBooleanMethod(handler.env, handler.class, handler.method, handler.activity, jfilename);
+    result = (int) (*handler.env)->CallStaticBooleanMethod(
+        handler.env, handler.class, handler.method, handler.activity, jfilename);
     (*handler.env)->DeleteLocalRef(handler.env, jfilename);
     destroy_java_function_handler(&handler);
 

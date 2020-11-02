@@ -169,9 +169,12 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             if (trade_now > trade_max) {
                 trade_max = trade_now;
             }
-            int text_width = text_draw_number(trade_now, '@', "", x_offset + 104 * index + 150, y_offset + 40, FONT_NORMAL_GREEN);
-            text_width += lang_text_draw(47, 11, x_offset + 104 * index + 148 + text_width, y_offset + 40, FONT_NORMAL_GREEN);
-            text_draw_number(trade_max, '@', "", x_offset + 104 * index + 138 + text_width, y_offset + 40, FONT_NORMAL_GREEN);
+            int text_width = text_draw_number(trade_now, '@', "",
+                x_offset + 104 * index + 150, y_offset + 40, FONT_NORMAL_GREEN);
+            text_width += lang_text_draw(47, 11,
+                x_offset + 104 * index + 148 + text_width, y_offset + 40, FONT_NORMAL_GREEN);
+            text_draw_number(trade_max, '@', "",
+                x_offset + 104 * index + 138 + text_width, y_offset + 40, FONT_NORMAL_GREEN);
             index++;
         }
         // city buys
@@ -341,7 +344,8 @@ static void draw_empire_object(const empire_object *obj)
             city->type == EMPIRE_CITY_FUTURE_ROMAN) {
             image_id = image_group(GROUP_EMPIRE_FOREIGN_CITY);
         } else if (city->type == EMPIRE_CITY_TRADE) {
-            // Fix cases where empire map still gives a blue flag for new trade cities (e.g. Massilia in campaign Lugdunum)
+            // Fix cases where empire map still gives a blue flag for new trade cities
+            // (e.g. Massilia in campaign Lugdunum)
             image_id = image_group(GROUP_EMPIRE_CITY_TRADE);
         }
     }
@@ -382,7 +386,8 @@ static void draw_invasion_warning(int x, int y, int image_id)
 
 static void draw_map(void)
 {
-    graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16, data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
+    graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16,
+        data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
 
     empire_set_viewport(data.x_max - data.x_min - 32, data.y_max - data.y_min - 136);
 
@@ -417,7 +422,8 @@ static void draw_panel_buttons(const empire_city *city)
     image_buttons_draw(data.x_max - 44, data.y_max - 100, image_button_advisor, 1);
     if (city) {
         if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
-            button_border_draw((data.x_min + data.x_max - 500) / 2 + 30, data.y_max - 49, 440, 26, data.selected_button);
+            button_border_draw((data.x_min + data.x_max - 500) / 2 + 30, data.y_max - 49, 440,
+                26, data.selected_button);
         }
     }
 }

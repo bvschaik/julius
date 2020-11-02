@@ -123,7 +123,8 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
         width = SIDEBAR_COLLAPSED_WIDTH;
     }
     int available_height = sidebar_common_get_height() - SIDEBAR_MAIN_SECTION_HEIGHT;
-    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_FILLER_Y_OFFSET, width, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
+    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_FILLER_Y_OFFSET,
+        width, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
     sidebar_extra_draw_foreground();
     int relief_y_offset = SIDEBAR_FILLER_Y_OFFSET + extra_height;
     sidebar_common_draw_relief(x_offset, relief_y_offset, GROUP_SIDE_PANEL, is_collapsed);
@@ -217,11 +218,6 @@ void widget_sidebar_city_draw_foreground(void)
     sidebar_extra_draw_foreground();
 }
 
-void widget_sidebar_city_draw_foreground_military(void)
-{
-    widget_minimap_draw(sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
-}
-
 int widget_sidebar_city_handle_mouse(const mouse *m)
 {
     if (widget_city_has_input()) {
@@ -266,9 +262,11 @@ int widget_sidebar_city_handle_mouse(const mouse *m)
 int widget_sidebar_city_handle_mouse_build_menu(const mouse *m)
 {
     if (city_view_is_sidebar_collapsed()) {
-        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_collapsed(), 24, buttons_build_collapsed, 12, 0);
+        return image_buttons_handle_mouse(m,
+            sidebar_common_get_x_offset_collapsed(), 24, buttons_build_collapsed, 12, 0);
     } else {
-        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
+        return image_buttons_handle_mouse(m,
+            sidebar_common_get_x_offset_expanded(), 24, buttons_build_expanded, 15, 0);
     }
 }
 
@@ -281,7 +279,6 @@ static void slide_finished(void)
 {
     city_view_toggle_sidebar();
     window_city_show();
-    window_draw(1);
 }
 
 static void button_overlay(int param1, int param2)
@@ -292,7 +289,8 @@ static void button_overlay(int param1, int param2)
 static void button_collapse_expand(int param1, int param2)
 {
     city_view_start_sidebar_toggle();
-    sidebar_slide(!city_view_is_sidebar_collapsed(), draw_collapsed_background, draw_expanded_background, slide_finished);
+    sidebar_slide(!city_view_is_sidebar_collapsed(),
+        draw_collapsed_background, draw_expanded_background, slide_finished);
 }
 
 static void button_build(int submenu, int param2)

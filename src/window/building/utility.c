@@ -184,8 +184,10 @@ void window_building_draw_burning_ruin(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(111, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
-    lang_text_draw(41, c->rubble_building_type, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 173, FONT_NORMAL_BLACK);
-    lang_text_draw_multiline(111, 1, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 143, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+    lang_text_draw(41, c->rubble_building_type,
+        c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 173, FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(111, 1, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 143,
+        16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
 
 void window_building_draw_rubble(building_info_context *c)
@@ -195,8 +197,10 @@ void window_building_draw_rubble(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(140, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
-    lang_text_draw(41, c->rubble_building_type, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 173, FONT_NORMAL_BLACK);
-    lang_text_draw_multiline(140, 1, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 143, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+    lang_text_draw(41, c->rubble_building_type,
+        c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 173, FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(140, 1, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 143,
+        16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
 
 void window_building_draw_reservoir(building_info_context *c)

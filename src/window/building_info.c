@@ -247,7 +247,8 @@ static void init(int grid_offset)
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
     context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE);
-    context.aqueduct_has_water = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT) < 15;
+    context.aqueduct_has_water = map_aqueduct_at(grid_offset)
+        && map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT) < 15;
 
     city_resource_determine_available();
     context.type = BUILDING_INFO_TERRAIN;
@@ -428,7 +429,8 @@ static void init(int grid_offset)
     if (s_width >= 1024 && s_height >= 768) {
         context.x_offset = mouse_get()->x;
         context.y_offset = mouse_get()->y;
-        window_building_set_possible_position(&context.x_offset, &context.y_offset, context.width_blocks, context.height_blocks);
+        window_building_set_possible_position(&context.x_offset, &context.y_offset,
+            context.width_blocks, context.height_blocks);
     } else if (s_height >= 600 && mouse_get()->y <= (s_height - 24) / 2 + 24) {
         context.y_offset = s_height - 16 * context.height_blocks - MARGIN_POSITION;
     } else {
@@ -716,10 +718,12 @@ static void draw_foreground(void)
         int y_offset = window_building_get_vertical_offset(&context, 28);
         image_buttons_draw(context.x_offset, y_offset + 400, image_buttons_help_close, 2);
     } else {
-        image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_help_close, 2);
+        image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
+            image_buttons_help_close, 2);
     }
     if (context.can_go_to_advisor) {
-        image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_advisor, 1);
+        image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
+            image_buttons_advisor, 1);
     }
     if (!context.storage_show_special_orders) {
         int workers_needed = model_get_building(building_get(context.building_id)->type)->laborers;
@@ -796,7 +800,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
     // general buttons
     if (context.storage_show_special_orders) {
         int y_offset = window_building_get_vertical_offset(&context, 28);
-        handled |= image_buttons_handle_mouse(m, context.x_offset, y_offset + 400, image_buttons_help_close, 2, &focus_image_button_id);
+        handled |= image_buttons_handle_mouse(m, context.x_offset, y_offset + 400,
+            image_buttons_help_close, 2, &focus_image_button_id);
     } else {
         handled |= image_buttons_handle_mouse(
                       m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,

@@ -104,9 +104,10 @@ static void draw_foreground(void)
     if (data.selected_submenu > 0) {
         image_draw(image_group(GROUP_BULLET), x_offset - 185, 80 + 24 * data.selected_menu);
         for (int i = 0; i < data.num_submenu_items; i++) {
-            label_draw(x_offset - 348, 74 + 24 * (i + data.selected_menu), 10, data.submenu_focus_button_id == i + 1 ? 1 : 2);
+            label_draw(x_offset - 348, 74 + 24 * (i + data.selected_menu),
+                10, data.submenu_focus_button_id == i + 1 ? 1 : 2);
             lang_text_draw_centered(14, SUBMENU_ID_TO_OVERLAY[data.selected_submenu][i],
-                                    x_offset - 348, 77 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_GREEN);
+                x_offset - 348, 77 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_GREEN);
         }
     }
 }
