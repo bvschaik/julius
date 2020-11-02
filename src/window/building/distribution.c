@@ -351,7 +351,7 @@ void window_building_draw_market_orders_foreground(building_info_context* c, int
     int y_offset = window_building_get_vertical_offset(c, 28);
     int resource_max = INVENTORY_MAX;
     int resource_min = INVENTORY_WHEAT;
-    resource_type resources[8] = { RESOURCE_WHEAT,RESOURCE_VEGETABLES,RESOURCE_FRUIT,RESOURCE_MEAT, RESOURCE_POTTERY, RESOURCE_FURNITURE, RESOURCE_OIL, RESOURCE_WINE };
+    resource_type resources[8] = { RESOURCE_WHEAT,RESOURCE_VEGETABLES,RESOURCE_FRUIT,RESOURCE_MEAT,RESOURCE_WINE,RESOURCE_OIL,RESOURCE_FURNITURE,RESOURCE_POTTERY };
 
     if (food_only) {
         resource_max = 4;
