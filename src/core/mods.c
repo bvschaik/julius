@@ -18,12 +18,10 @@
 #define XML_BUFFER_SIZE 1024
 #define XML_MAX_DEPTH 3
 #define XML_MAX_ELEMENTS_PER_DEPTH 2
-#define XML_MAX_ATTRIBUTES 7
+#define XML_MAX_ATTRIBUTES 8
 #define XML_TAG_MAX_LENGTH 12
 #define XML_STRING_MAX_LENGTH 32
 #define XML_MAX_IMAGE_INDEXES 256
-
-#define MAX_LAYERS 5
 
 #define IMAGE_PRELOAD_MAX_SIZE 65535
 
@@ -35,7 +33,7 @@ static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][X
 static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG_MAX_LENGTH] = {
     { { "author", "name" } }, // mod
     { { "id", "src", "width", "height", "group", "image", "index" } }, // image
-    { { "src", "group", "image", "x", "y", "invert", "rotate" }, // layer
+    { { "src", "group", "image", "x", "y", "invert", "rotate", "part" }, // layer
     { "frames", "speed", "reversible", "x", "y" } } // animation
 };
 static color_t DUMMY_IMAGE_DATA = COLOR_BLACK;
@@ -71,7 +69,14 @@ typedef enum {
     ROTATE_270_DEGREES = 3
 } rotate_type;
 
-typedef struct {
+typedef enum {
+    PART_NONE = 0,
+    PART_FOOTPRINT = 1,
+    PART_TOP = 2,
+    PART_BOTH = 3
+} isometric_part;
+
+typedef struct layer {
     char *modded_image_path;
     int original_image_id;
     int x_offset;
@@ -80,16 +85,18 @@ typedef struct {
     int height;
     invert_type invert;
     rotate_type rotate;
+    isometric_part part;
     int is_modded_image_reference;
     color_t *data;
+    struct layer *prev;
 } layer;
 
 typedef struct modded_image {
     int active;
     int loaded;
     char id[XML_STRING_MAX_LENGTH];
-    layer layers[MAX_LAYERS];
-    int num_layers;
+    layer first_layer;
+    layer *last_layer;
     image img;
     color_t *data;
     int is_clone;
@@ -177,25 +184,51 @@ static void load_layer(layer *l)
         int tiles = (l->width + 2) / 60;
         int y_offset = l->height - 30 * tiles;
         y_offset += 15 * tiles - 15;
-        image_draw_isometric_footprint_from_draw_tile(l->original_image_id, 0, y_offset, 0);
-        image_draw_isometric_top_from_draw_tile(l->original_image_id, 0, y_offset, 0);
+        if (l->part & PART_FOOTPRINT) {
+            image_draw_isometric_footprint_from_draw_tile(l->original_image_id, 0, y_offset, 0);
+        }
+        if (l->part & PART_TOP) {
+            image_draw_isometric_top_from_draw_tile(l->original_image_id, 0, y_offset, 0);
+        }
     } else {
         image_draw(l->original_image_id, 0, 0);
     }
-    graphics_restore_original_canvas();;
+    graphics_restore_original_canvas();
+}
+
+static void load_image_layers(modded_image *img)
+{
+    for(layer *l = img->last_layer; l; l = l->prev) {
+        load_layer(l);
+    }
 }
 
 static void unload_layer(layer *l)
 {
     free(l->modded_image_path);
-    l->modded_image_path = 0;
     if (!l->is_modded_image_reference) {
         free(l->data);
     }
-    l->data = 0;
+    if (l->prev) {
+        free(l);
+    } else {
+        l->data = 0;
+        l->modded_image_path = 0;
+    }
 }
 
-static color_t layer_get_color_for_image_position(layer *l, int x, int y)
+static void unload_image_layers(modded_image *img)
+{
+    layer *l = img->last_layer;
+    while(l) {
+        layer *current = l;
+        l = l->prev;
+        unload_layer(current);
+    };
+    img->last_layer = &img->first_layer;
+}
+
+static color_t layer_get_color_for_image_position(const layer *l, int x, int y)
 {
     x -= l->x_offset;
     y -= l->y_offset;
@@ -227,13 +260,11 @@ static int load_modded_image(modded_image *img)
         return 1;
     }
 
-    for (int i = 0; i < img->num_layers; ++i) {
-        load_layer(&img->layers[i]);
-    }
+    load_image_layers(img);
 
     // Special cases for images which are a single layer
-    if (img->num_layers == 1) {
-        layer *l = &img->layers[0];
+    if (&img->first_layer == img->last_layer) {
+        layer *l = img->last_layer;
         if (img->img.width == l->width && img->img.height == l->height &&
             l->x_offset == 0 && l->y_offset == 0 &&
             l->invert == INVERT_NONE && l->rotate == ROTATE_NONE) {
@@ -249,9 +280,7 @@ static int load_modded_image(modded_image *img)
     img->data = malloc(img->img.draw.data_length);
     if (!img->data) {
         log_error("Not enough memory to load image", img->id, 0);
-        for (int i = 0; i < img->num_layers; ++i) {
-            unload_layer(&img->layers[i]);
-        }
+        unload_image_layers(img);
         img->active = 0;
         return 0;
     }
@@ -259,12 +288,12 @@ static int load_modded_image(modded_image *img)
     for (int y = 0; y < img->img.height; ++y) {
         color_t *pixel = &img->data[y * img->img.width];
         for (int x = 0; x < img->img.width; ++x) {
-            for (int l = img->num_layers - 1; l >= 0; --l) {
+            for (const layer *l = img->last_layer; l; l = l->prev) {
                 color_t image_pixel_alpha = *pixel & COLOR_CHANNEL_ALPHA;
                 if (image_pixel_alpha == ALPHA_OPAQUE) {
                     break;
                 }
-                color_t layer_pixel = layer_get_color_for_image_position(&img->layers[l], x, y);
+                color_t layer_pixel = layer_get_color_for_image_position(l, x, y);
                 color_t layer_pixel_alpha = layer_pixel & COLOR_CHANNEL_ALPHA;
                 if (layer_pixel_alpha == ALPHA_TRANSPARENT) {
                     continue;
@@ -284,9 +313,7 @@ static int load_modded_image(modded_image *img)
             ++pixel;
         }
     }
-    for (int i = 0; i < img->num_layers; ++i) {
-        unload_layer(&img->layers[i]);
-    }
+    unload_image_layers(img);
     img->loaded = 1;
     return 1;
 }
@@ -305,9 +332,27 @@ static void set_modded_image_base_path(const char *author, const char *name)
     data.xml.image_base_path_position = position;
 }
 
+static layer *create_layer_for_image(modded_image *img)
+{
+    if (!img->last_layer->width || !img->last_layer->height) {
+        return img->last_layer;
+    }
+    layer *l = malloc(sizeof(layer));
+    if (!l) {
+        log_error("Out of memory to create layer", 0, 0);
+        return 0;
+    }
+    memset(l, 0, sizeof(layer));
+    l->prev = img->last_layer;
+    return l;
+}
+
 static layer *add_layer_from_image_path(modded_image *img, const char *path, int offset_x, int offset_y)
 {
-    layer *current_layer = &img->layers[img->num_layers];
+    layer *current_layer = create_layer_for_image(img);
+    if (!current_layer) {
+        return 0;
+    }
     current_layer->modded_image_path = malloc(FILE_NAME_MAX * sizeof(char));
     get_full_image_path(current_layer->modded_image_path, path);
     if (!png_get_image_size(current_layer->modded_image_path, &current_layer->width, &current_layer->height)) {
@@ -323,13 +368,15 @@ static layer *add_layer_from_image_path(modded_image *img, const char *path, int
     }
     current_layer->x_offset = offset_x;
     current_layer->y_offset = offset_y;
-    img->num_layers++;
     return current_layer;
 }
 
 static layer *add_layer_from_image_id(modded_image *img, const char *group_id, const char *image_id, int offset_x, int offset_y)
 {
-    layer *current_layer = &img->layers[img->num_layers];
+    layer *current_layer = create_layer_for_image(img);
+    if (!current_layer) {
+        return 0;
+    }
     current_layer->width = 0;
     current_layer->height = 0;
     const image *original_image = 0;
@@ -344,6 +391,8 @@ static layer *add_layer_from_image_id(modded_image *img, const char *group_id, c
             image = image->next;
         }
         if (!current_layer->original_image_id) {
+            log_error("Unable to find image on current group with id", image_id, 0);
+            unload_layer(current_layer);
             return 0;
         }
     } else {
@@ -353,6 +402,8 @@ static layer *add_layer_from_image_id(modded_image *img, const char *group_id, c
         original_image = image_get(current_layer->original_image_id);
     }
     if (!original_image) {
+        log_error("Unable to find image for group id", group_id, 0);
+        unload_layer(current_layer);
         return 0;
     }
     if (!img->img.width) {
@@ -365,7 +416,6 @@ static layer *add_layer_from_image_id(modded_image *img, const char *group_id, c
     current_layer->height = original_image->height;
     current_layer->x_offset = offset_x;
     current_layer->y_offset = offset_y;
-    img->num_layers++;
     return current_layer;
 }
 
@@ -473,6 +523,7 @@ static void xml_start_image_element(const char **attributes)
             }
         }
     }
+    img->last_layer = &img->first_layer;
     img->index = data.xml.image_index;
     if (path) {
         add_layer_from_image_path(img, path, 0, 0);
@@ -492,16 +543,14 @@ static void xml_start_layer_element(const char **attributes)
     int offset_x = 0;
     int offset_y = 0;
     modded_image *img = data.xml.current_image;
-    if (img->num_layers == MAX_LAYERS) {
-        return;
-    }
     int total_attributes = count_xml_attributes(attributes);
-    if (total_attributes < 2 || total_attributes > 12 || total_attributes % 2) {
+    if (total_attributes < 2 || total_attributes > 14 || total_attributes % 2) {
         data.xml.error = 1;
         return;
     }
     invert_type invert = INVERT_NONE;
     rotate_type rotate = ROTATE_NONE;
+    isometric_part part = PART_BOTH;
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][0]) == 0) {
             path = attributes[i + 1];
@@ -536,6 +585,13 @@ static void xml_start_layer_element(const char **attributes)
                 rotate = ROTATE_270_DEGREES;
             }
         }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][7]) == 0) {
+            if (strcmp(attributes[i + 1], "footprint") == 0) {
+                part = PART_FOOTPRINT;
+            } else if (strcmp(attributes[i + 1], "top") == 0) {
+                part = PART_TOP;
+            }
+        }
     }
     layer *current_layer = 0;
     if (path) {
@@ -544,11 +600,13 @@ static void xml_start_layer_element(const char **attributes)
         current_layer = add_layer_from_image_id(img, group, id, offset_x, offset_y);
     }
     if (!current_layer) {
-        log_info("Invalid layer for image", img->id, img->num_layers);
+        log_info("Invalid layer for image", img->id, 0);
         return;
     }
     current_layer->invert = invert;
     current_layer->rotate = rotate;
+    current_layer->part = part;
+    img->last_layer = current_layer;
 }
 
 static void xml_start_animation_element(const char **attributes)
@@ -602,7 +660,7 @@ static void xml_end_image_element(void)
     image *img = &data.xml.current_image->img;
     img->draw.data_length = img->width * img->height * sizeof(color_t);
     img->draw.uncompressed_length = img->draw.data_length;
-    if (!data.xml.current_image->num_layers || !img->draw.data_length) {
+    if (!img->draw.data_length) {
         modded_image *prev = 0;
         modded_image *latest_image = data.groups[data.total_groups - 1].first_image;
         while (latest_image) {
@@ -730,9 +788,7 @@ static void process_mod_file(const char *xml_file_name)
         data.total_groups--;
         modded_image *img = data.groups[data.total_groups].first_image;
         while (img) {
-            for (int i = 0; i < img->num_layers; ++i) {
-                unload_layer(&img->layers[i]);
-            }
+            unload_image_layers(img);
             if (img->loaded && !img->is_clone) {
                 free(img->data);
             }
