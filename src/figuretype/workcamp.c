@@ -8,7 +8,6 @@
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/image.h"
-#include "core/mods.h"
 #include "core/random.h"
 #include "figure/combat.h"
 #include "figure/image.h"
@@ -16,6 +15,7 @@
 #include "figure/route.h"
 #include "map/figure.h"
 #include "map/grid.h"
+#include "mods/mods.h"
 
 static int create_slave_workers(int leader_id, figure* f)
 {

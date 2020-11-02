@@ -4,7 +4,7 @@
 #include "core/file.h"
 #include "core/io.h"
 #include "core/log.h"
-#include "core/mods.h"
+#include "mods/mods.h"
 
 #include <stdlib.h>
 #include <string.h>

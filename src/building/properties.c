@@ -1,7 +1,8 @@
 #include "properties.h"
+
 #include "core/image_group.h" 
+#include "mods/mods.h"
 #include "type.h"
-#include "core/mods.h"
 
 #define MOD_BUILDINGS 37
 

@@ -4,7 +4,6 @@
 #include "building/monument.h"
 #include "building/list.h"
 #include "core/image.h"
-#include "core/mods.h"
 #include "map/aqueduct.h"
 #include "map/building_tiles.h"
 #include "map/data.h"
@@ -14,6 +13,7 @@
 #include "map/image.h"
 #include "map/property.h"
 #include "map/terrain.h"
+#include "mods/mods.h"
 #include "scenario/property.h"
 
 #include <string.h>

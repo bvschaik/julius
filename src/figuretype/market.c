@@ -5,15 +5,13 @@
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "core/image.h"
-#include "core/mods.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "figuretype/wall.h"
 #include "game/resource.h"
-
-
+#include "mods/mods.h"
 
 static int create_delivery_boy(int leader_id, figure *f, int type)
 {

@@ -1,7 +1,6 @@
 #include "option_popup.h"
 
 #include "core/image_group.h"
-#include "core/mods.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -10,6 +9,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "mods/mods.h"
 #include "translation/translation.h"
 
 static void button_select_option(int option, int param2);

@@ -3,7 +3,6 @@
 #include "building/building.h"
 #include "building/monument.h"
 #include "city/view.h"
-#include "core/mods.h"
 #include "figure/figure.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -14,6 +13,7 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
+#include "mods/mods.h"
 #include "scenario/property.h"
 
 #include <stdlib.h>

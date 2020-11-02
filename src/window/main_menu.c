@@ -1,6 +1,5 @@
 #include "main_menu.h"
 
-#include "core/mods.h"
 #include "core/string.h"
 #include "editor/editor.h"
 #include "game/game.h"
@@ -14,6 +13,7 @@
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
+#include "mods/mods.h"
 #include "sound/music.h"
 #include "window/cck_selection.h"
 #include "window/config.h"

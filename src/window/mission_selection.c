@@ -1,7 +1,6 @@
 #include "mission_selection.h"
 
 #include "core/image_group.h"
-#include "core/mods.h"
 #include "game/mission.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -9,6 +8,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
+#include "mods/mods.h"
 #include "scenario/property.h"
 #include "sound/speech.h"
 #include "window/mission_briefing.h"

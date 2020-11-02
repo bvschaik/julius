@@ -1,5 +1,5 @@
-#ifndef CORE_MODS_H
-#define CORE_MODS_H
+#ifndef MODS_H
+#define MODS_H
 
 #include "core/image.h"
 
@@ -13,4 +13,4 @@ const image *mods_get_image(int image_id);
 
 const color_t *mods_get_image_data(int image_id);
 
-#endif // CORE_MODS_H
+#endif // MODS_H

@@ -18,7 +18,6 @@
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/image.h"
-#include "core/mods.h"
 #include "figure/formation.h"
 #include "game/undo.h"
 #include "graphics/window.h"
@@ -35,6 +34,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
+#include "mods/mods.h"
 
 #define PATH_ROTATE_OFFSET 56
 

@@ -245,7 +245,6 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/io.c
     ${PROJECT_SOURCE_DIR}/src/core/lang.c
     ${PROJECT_SOURCE_DIR}/src/core/locale.c
-    ${PROJECT_SOURCE_DIR}/src/core/mods.c
     ${PROJECT_SOURCE_DIR}/src/core/png_read.c
     ${PROJECT_SOURCE_DIR}/src/core/random.c
     ${PROJECT_SOURCE_DIR}/src/core/smacker.c
@@ -426,6 +425,13 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/tiles.c
     ${PROJECT_SOURCE_DIR}/src/map/water.c
     ${PROJECT_SOURCE_DIR}/src/map/water_supply.c
+)
+set(MODS_FILES
+    ${PROJECT_SOURCE_DIR}/src/mods/group.c
+    ${PROJECT_SOURCE_DIR}/src/mods/image.c
+    ${PROJECT_SOURCE_DIR}/src/mods/layer.c
+    ${PROJECT_SOURCE_DIR}/src/mods/mods.c
+    ${PROJECT_SOURCE_DIR}/src/mods/xml.c
 )
 set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/building.c
@@ -620,6 +626,7 @@ set(SOURCE_FILES
     ${GAME_FILES}
     ${INPUT_FILES}
     ${MAP_FILES}
+    ${MODS_FILES}
     ${SCENARIO_FILES}
     ${GRAPHICS_FILES}
     ${SOUND_FILES}

@@ -16,7 +16,6 @@
 #include "city/warning.h"
 #include "core/config.h"
 #include "core/image.h"
-#include "core/mods.h"
 #include "core/random.h"
 #include "empire/city.h"
 #include "figure/formation_legion.h"
@@ -29,6 +28,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
+#include "mods/mods.h"
 #include "scenario/property.h"
 
 static void add_fort(int type, building *fort)

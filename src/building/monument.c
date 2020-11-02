@@ -4,13 +4,11 @@
 #include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"
-#include "core/mods.h" 
 #include "map/building_tiles.h"
 #include "map/grid.h"
 #include "map/road_access.h"
 #include "map/terrain.h"
-
-
+#include "mods/mods.h"
 
 #define INFINITE 10000
 

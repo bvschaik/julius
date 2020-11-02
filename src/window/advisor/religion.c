@@ -3,12 +3,12 @@
 #include "building/count.h"
 #include "city/gods.h"
 #include "city/houses.h"
-#include "core/mods.h"
 #include "game/settings.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "mods/mods.h"
 
 static int get_religion_advice(void)
 {

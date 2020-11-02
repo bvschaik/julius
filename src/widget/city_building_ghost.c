@@ -12,7 +12,6 @@
 #include "core/config.h"
 #include "core/config.h"
 #include "core/log.h"
-#include "core/mods.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
@@ -29,6 +28,7 @@
 #include "map/tiles.h"
 #include "map/water.h"
 #include "map/water_supply.h"
+#include "mods/mods.h"
 #include "scenario/property.h"
 #include "widget/city_bridge.h"
 
