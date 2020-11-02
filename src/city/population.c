@@ -313,7 +313,6 @@ static void yearly_advance_ages_and_calculate_deaths(void)
 void city_population_venus_blessing(void)
 {
     int years_to_grant = 3;
-    int retirement_age = (CONFIG_GP_CH_RETIRE_AT_60) ? 60 : 50;
     int total_before = 0;
     int total_after = 0;
     for (int age = 0; age < 95; age++) {

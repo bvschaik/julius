@@ -208,15 +208,6 @@ static void prefect_coverage(building *b, int *min_happiness_seen)
     }
 }
 
-static void lift_mood(building* b)
-{
-    if (b->type == BUILDING_HIPPODROME) {
-        b = building_main(b);
-    }
-    b->sentiment.house_happiness = 100;
-}
-
-
 static void tax_collector_coverage(building *b, int *max_tax_multiplier)
 {
     if (b->house_size && b->house_population > 0) {

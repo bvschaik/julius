@@ -8,7 +8,6 @@
 
 static int rotation = 0;
 static int road_orientation = 1;
-static time_millis road_last_update = 0;
 
 static void rotate(void){
     rotation+=1;

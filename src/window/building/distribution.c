@@ -362,13 +362,12 @@ void window_building_draw_market_orders_foreground(building_info_context* c, int
         int i = 1;
         if (!resource_id_2) {
             resources[0] = resource_id_1;
-        }
-        else {
+        } else {
             resources[0] = resource_id_1;
             resources[1] = resource_id_2;
             i++;
         }
-        for (i; i < 8; ++i) {
+        for (; i < 8; ++i) {
             resources[i] = 0;
         }
     }

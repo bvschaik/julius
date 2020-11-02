@@ -971,7 +971,7 @@ void image_draw_fullscreen_background(int image_id)
     if (scale <= 1.0f) {
         image_draw(image_id, (s_width - img->width) / 2, (s_height - img->height) / 2);
     } else {
-        image_draw_scaled(image_id, (s_width - img->width * scale) / 2, (s_height - img->height * scale) / 2, scale);
+        image_draw_scaled(image_id, (int) ((s_width - img->width * scale) / 2), (int) ((s_height - img->height * scale) / 2), scale);
     }
 }
 
@@ -1139,8 +1139,8 @@ void image_draw_scaled(int image_id, int x_offset, int y_offset, double scale_fa
         return;
     }
 
-    int width = img->width * scale_factor;
-    int height = img->height * scale_factor;
+    int width = (int) (img->width * scale_factor);
+    int height = (int) (img->height * scale_factor);
 
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, width, height);
     if (!clip->is_visible) {
