@@ -9,12 +9,13 @@ static const struct {
     int starting_favor;
     int sentiment;
     int levies;
+    int food_per_soldier;
 } data[] = {
-    {300, 40, 70, 80, 0}, // very easy
-    {200, 60, 60, 70, 0}, // easy
-    {150, 80, 50, 60, 50}, // normal
-    {100, 100, 50, 50, 100}, // hard
-    {75, 120, 40, 40, 100} // very hard
+    {300, 40, 70, 80, 0, -3}, // very easy
+    {200, 60, 60, 70, 0, -3}, // easy
+    {150, 80, 50, 60, 50, -2}, // normal
+    {100, 100, 50, 50, 100, 0}, // hard
+    {75, 120, 40, 40, 100, 1} // very hard
 };
 
 int difficulty_starting_favor(void)
@@ -40,6 +41,11 @@ int difficulty_adjust_enemies(int enemies)
 int difficulty_adjust_levies(int amount)
 {
     return calc_adjust_with_percentage(amount, data[setting_difficulty()].levies);
+}
+
+int difficulty_adjust_soldier_food_consumption(int amount)
+{
+    return amount + data[setting_difficulty()].food_per_soldier;
 }
 
 int difficulty_adjust_wolf_attack(int attack)

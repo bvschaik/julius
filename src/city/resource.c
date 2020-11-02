@@ -11,6 +11,7 @@
 #include "core/calc.h"
 #include "empire/city.h"
 #include "figure/formation.h"
+#include "game/difficulty.h"
 #include "game/tutorial.h"
 #include "map/road_access.h"
 #include "scenario/building.h"
@@ -416,7 +417,7 @@ void city_resource_consume_food(void)
             }
         }
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MESS_HALL) {
-            int food_required = city_military_total_soldiers_in_city() * FOOD_PER_SOLDIER_MONTHLY;
+            int food_required = city_military_total_soldiers_in_city() * difficulty_adjust_soldier_food_consumption(FOOD_PER_SOLDIER_MONTHLY);
             int num_foods = 0;
             int total_food_in_mess_hall = 0;
             double proportionate_amount = 0;

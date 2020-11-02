@@ -1,7 +1,7 @@
 #ifndef CITY_RESOURCE_H
 #define CITY_RESOURCE_H
 
-#define FOOD_PER_SOLDIER_MONTHLY 4;
+#define FOOD_PER_SOLDIER_MONTHLY 4
 
 #include "city/constants.h"
 #include "game/resource.h"
