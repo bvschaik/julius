@@ -75,6 +75,13 @@ int platform_screen_create(const char *title, int display_scale_percentage)
 
     platform_screen_destroy();
 
+#ifdef __ANDROID__
+    // Fix for wrong colors on some android devices
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+#endif
+
     SDL_Log("Creating screen %d x %d, %s, driver: %s", width, height,
         fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
