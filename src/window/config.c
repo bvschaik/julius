@@ -1,5 +1,6 @@
 #include "config.h"
 
+#include "core/calc.h"
 #include "core/config.h"
 #include "core/dir.h"
 #include "core/image_group.h"
@@ -41,8 +42,6 @@ static void on_scroll(void);
 
 static void toggle_switch(int id);
 static void button_language_select(int param1, int param2);
-static void button_display_scale_select(int param1, int param2);
-static void button_cursor_scale_select(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
@@ -57,7 +56,8 @@ enum {
     TYPE_NONE,
     TYPE_HEADER,
     TYPE_CHECKBOX,
-    TYPE_SELECT
+    TYPE_SELECT,
+    TYPE_NUMERICAL_RANGE
 };
 
 enum {
@@ -66,18 +66,32 @@ enum {
     SELECT_CURSOR
 };
 
+enum {
+    RANGE_DISPLAY_SCALE,
+    RANGE_CURSOR_SCALE
+};
+
+typedef struct {
+    int width_blocks;
+    int min;
+    int max;
+    int step;
+    int *value;
+} numerical_range_widget;
+
 typedef struct {
     int type;
     translation_key description;
     int checkbox_parameter;
-    int select_type;
+    int subtype;
     const uint8_t* (*get_display_text)(void);
 } config_widget;
 
 static config_widget widgets[] = {
     { TYPE_SELECT, TR_CONFIG_LANGUAGE_LABEL, 0,  SELECT_LANGUAGE, display_text_language},
-    { TYPE_SELECT, TR_CONFIG_DISPLAY_SCALE, 0, SELECT_DISPLAY, display_text_display_scale},
-    { TYPE_SELECT, TR_CONFIG_CURSOR_SCALE, 0, SELECT_CURSOR, display_text_cursor_scale},
+    { TYPE_NONE },
+    { TYPE_NUMERICAL_RANGE, TR_CONFIG_DISPLAY_SCALE, 0, RANGE_DISPLAY_SCALE, display_text_display_scale},
+    { TYPE_NUMERICAL_RANGE, TR_CONFIG_CURSOR_SCALE, 0, RANGE_CURSOR_SCALE, display_text_cursor_scale},
     { TYPE_NONE },
     { TYPE_HEADER, TR_CONFIG_HEADER_UI_CHANGES },
     { TYPE_CHECKBOX, TR_CONFIG_SHOW_INTRO_VIDEO, CONFIG_UI_SHOW_INTRO_VIDEO},
@@ -98,8 +112,11 @@ static config_widget widgets[] = {
 
 static generic_button select_buttons[] = {
     { 150, 0, 200, 24, button_language_select, button_none },
-    { 150, 0, 200, 24, button_display_scale_select, button_none },
-    { 150, 0, 200, 24, button_cursor_scale_select, button_none },
+};
+
+static numerical_range_widget scale_ranges[] = {
+    { 23, 50, 500, 25, 0 },
+    { 23, 100, 200, 50, 0 }
 };
 
 static generic_button bottom_buttons[NUM_BOTTOM_BUTTONS] = {
@@ -178,6 +195,9 @@ static void init_config_values(void)
     data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].change_action = config_change_display_scale;
     data.config_values[CONFIG_SCREEN_CURSOR_SCALE].change_action = config_change_cursor_scale;
     data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].change_action = config_change_string_language;
+
+    scale_ranges[RANGE_DISPLAY_SCALE].value = &data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].new_value;
+    scale_ranges[RANGE_CURSOR_SCALE].value = &data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value;
 }
 
 static void checkbox_draw_text(int x, int y, int value_key, translation_key description)
@@ -191,6 +211,17 @@ static void checkbox_draw_text(int x, int y, int value_key, translation_key desc
 static void checkbox_draw(int x, int y, int has_focus)
 {
     button_border_draw(x, y, CHECKBOX_CHECK_SIZE, CHECKBOX_CHECK_SIZE, has_focus);
+}
+
+static void numerical_range_draw(const numerical_range_widget *w, int x, int y, const char *value_text)
+{
+    text_draw(value_text, x, y + 6, FONT_NORMAL_BLACK, 0);
+    inner_panel_draw(x + 50, y + 4, w->width_blocks, 1);
+
+    int width = w->width_blocks * 16 - 24;
+    int scroll_percentage = calc_percentage(*w->value - w->min, w->max - w->min);
+    int scroll_position = calc_adjust_with_percentage(width, scroll_percentage);
+    image_draw(image_group(GROUP_PANEL_BUTTON) + 37, x + 52 + scroll_position, y + 2);
 }
 
 static int is_checkbox(const mouse *m, int x, int y)
@@ -214,6 +245,32 @@ static int checkbox_handle_mouse(const mouse *m, int x, int y, int value_key, in
     } else {
         return 0;
     }
+}
+
+static int is_numerical_range(const mouse *m, int x, int y, int width)
+{
+    if (x + 50 <= m->x && x + width + 50 >= m->x &&
+        y <= m->y && y + 16 > m->y) {
+        return 1;
+    }
+    return 0;
+}
+
+static int numerical_range_handle_mouse(const mouse *m, int x, int y, numerical_range_widget *w)
+{
+    int width = w->width_blocks * 16;
+    if (!is_numerical_range(m, x, y, width) || !m->left.is_down) {
+        return 0;
+    }
+    int width_position = m->x - x - 50;
+    double width_step = width * w->step / (double) (w->max - w->min);
+    int steps = (int) ((width_position / width_step) + 0.5);
+    int value = w->min + steps * w->step;
+    if (value != *w->value) {
+        *w->value = value;
+        window_request_refresh();
+    }
+    return 1;
 }
 
 static void init(void)
@@ -272,8 +329,11 @@ static void draw_background(void)
             checkbox_draw_text(20, y, w->checkbox_parameter, w->description);
         } else if (w->type == TYPE_SELECT) {
             text_draw(translation_for(w->description), 20, y + 6, FONT_NORMAL_BLACK, 0);
-            const generic_button *btn = &select_buttons[w->select_type];
+            const generic_button *btn = &select_buttons[w->subtype];
             text_draw_centered(w->get_display_text(), btn->x, y + btn->y + 6, btn->width, FONT_NORMAL_BLACK, 0);
+        } else if (w->type == TYPE_NUMERICAL_RANGE) {
+            text_draw(translation_for(w->description), 20, y + 6, FONT_NORMAL_BLACK, 0);
+            numerical_range_draw(&scale_ranges[w->subtype], 150, y, w->get_display_text());
         }
     }
 
@@ -295,7 +355,7 @@ static void draw_foreground(void)
         if (w->type == TYPE_CHECKBOX) {
             checkbox_draw(20, y, data.focus_button == i + 1);
         } else if (w->type == TYPE_SELECT) {
-            const generic_button *btn = &select_buttons[w->select_type];
+            const generic_button *btn = &select_buttons[w->subtype];
             button_border_draw(btn->x, y + btn->y,
                 btn->width, btn->height, data.focus_button == i + 1);
         }
@@ -332,12 +392,15 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 data.focus_button = i + 1;
             }
         } else if (w->type == TYPE_SELECT) {
-            generic_button *btn = &select_buttons[w->select_type];
+            generic_button *btn = &select_buttons[w->subtype];
             int focus = 0;
             handled |= generic_buttons_handle_mouse(m_dialog, 0, y, btn, 1, &focus);
             if (focus) {
                 data.focus_button = i + 1;
             }
+        } else if (w->type == TYPE_NUMERICAL_RANGE) {
+            numerical_range_widget *range = &scale_ranges[w->subtype];
+            handled |= numerical_range_handle_mouse(m_dialog, 150, y, range);
         }
     }
 
@@ -375,53 +438,6 @@ static void button_language_select(int param1, int param2)
         screen_dialog_offset_x() + btn->x + btn->width - 10,
         screen_dialog_offset_y() + 45,
         data.language_options, data.num_language_options, set_language
-    );
-}
-
-static void set_display_scale(int value)
-{
-    if (value < 50 || value > 500) {
-        return;
-    }
-    data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].new_value = value;
-}
-
-static void button_display_scale_select(int param1, int param2)
-{
-    const generic_button *btn = &select_buttons[SELECT_DISPLAY];
-    window_numeric_input_show(
-        screen_dialog_offset_x() + btn->x + btn->width - 10,
-        screen_dialog_offset_y() + 45,
-        3, 500, set_display_scale
-    );
-}
-
-static void set_cursor_scale(int value)
-{
-    switch (value) {
-        case 0:
-            data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value = 100;
-            break;
-        case 1:
-            data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value = 150;
-            break;
-        case 2:
-            data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value = 200;
-            break;
-    }
-}
-
-static void button_cursor_scale_select(int param1, int param2)
-{
-    const generic_button *btn = &select_buttons[SELECT_CURSOR];
-    static const uint8_t *cursor_options[3];
-    cursor_options[0] = string_from_ascii("100%");
-    cursor_options[1] = string_from_ascii("150%");
-    cursor_options[2] = string_from_ascii("200%");
-    window_select_list_show_text(
-        screen_dialog_offset_x() + btn->x + btn->width - 10,
-        screen_dialog_offset_y() + 45,
-        cursor_options, 3, set_cursor_scale
     );
 }
 
@@ -517,8 +533,8 @@ static int config_change_basic(config_key key)
 
 static int config_change_display_scale(config_key key)
 {
+    data.config_values[key].new_value = system_scale_display(data.config_values[key].new_value);
     config_change_basic(key);
-    system_scale_display(data.config_values[key].new_value);
     return 1;
 }
 

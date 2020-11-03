@@ -102,7 +102,8 @@ int system_is_fullscreen_only(void)
     return 1;
 }
 
-void system_scale_display(int display_scale_percentage)
+int system_scale_display(int display_scale_percentage)
 {
     // Scaling not supported
+    return 100;
 }

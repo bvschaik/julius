@@ -38,7 +38,7 @@ static int scale_pixels_to_logical(int pixel_value)
     return pixel_value * 100 / scale_percentage;
 }
 
-static void set_scale_percentage(int new_scale)
+static void set_scale_percentage(int new_scale, int pixel_width, int pixel_height)
 {
     if (new_scale < 50) {
         new_scale = 50;
@@ -47,6 +47,21 @@ static void set_scale_percentage(int new_scale)
     }
     scale_percentage = new_scale;
 
+    if (!pixel_width || !pixel_height) {
+        return;
+    }
+
+    // Assure width is at least 640 and height is at least 480
+    float width_reference = scale_pixels_to_logical(pixel_width) / (float) MINIMUM.WIDTH;
+    float height_reference = scale_pixels_to_logical(pixel_height) / (float) MINIMUM.HEIGHT;
+    float minimum_reference = SDL_min(width_reference, height_reference);
+    if (minimum_reference < 1.0f) {
+        scale_percentage *= minimum_reference;
+        SDL_Log("Maximum scale of %i applied", scale_percentage);
+    }
+
+    SDL_SetWindowMinimumSize(SDL.window, scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
+
     // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
 }
@@ -54,24 +69,14 @@ static void set_scale_percentage(int new_scale)
 #ifdef __ANDROID__
 static void set_scale_for_screen(int pixel_width, int pixel_height)
 {
-    float scale = android_get_screen_scale();
-    scale = SDL_min(scale, 5.0f);
-    scale = SDL_max(0.5f, scale);
-    scale_percentage = scale * 100;
-    // Assure width is at least 640 and height is at least 480
-    float width_reference = scale_pixels_to_logical(pixel_width) / (float) MINIMUM.WIDTH;
-    float height_reference = scale_pixels_to_logical(pixel_height) / (float) MINIMUM.HEIGHT;
-    float minimum_reference = SDL_min(width_reference, height_reference);
-    if (minimum_reference < 1.0f) {
-        scale_percentage *= minimum_reference;
-    }
+    set_scale_percentage(android_get_screen_scale() * 100, pixel_width, pixel_height);
     SDL_Log("Auto-setting scale to %i", scale_percentage);
 }
 #endif
 
 int platform_screen_create(const char *title, int display_scale_percentage)
 {
-    set_scale_percentage(display_scale_percentage);
+    set_scale_percentage(display_scale_percentage, 0, 0);
 
     int width, height;
     int fullscreen = system_is_fullscreen_only() ? 1 : setting_fullscreen();
@@ -130,8 +135,8 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         SDL_SetWindowGrab(SDL.window, SDL_TRUE);
     }
 #endif
-    SDL_SetWindowMinimumSize(SDL.window,
-        scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
+
+    set_scale_percentage(display_scale_percentage, width, height);
     return platform_screen_resize(width, height);
 }
 
@@ -182,12 +187,13 @@ int platform_screen_resize(int pixel_width, int pixel_height)
     }
 }
 
-void system_scale_display(int display_scale_percentage)
+int system_scale_display(int display_scale_percentage)
 {
     int width, height;
     SDL_GetWindowSize(SDL.window, &width, &height);
-    set_scale_percentage(display_scale_percentage);
+    set_scale_percentage(display_scale_percentage, width, height);
     platform_screen_resize(width, height);
+    return scale_percentage;
 }
 
 void platform_screen_move(int x, int y)
