@@ -24,7 +24,7 @@
 #include "translation/translation.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 26
+#define NUM_CHECKBOXES 27
 #define CONFIG_PAGES 3
 #define MAX_LANGUAGE_DIRS 20
 
@@ -42,7 +42,7 @@
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = { 9,7,10 };
+static int options_per_page[CONFIG_PAGES] = { 10,7,10 };
 #define NUM_BOTTOM_BUTTONS 4
 #define MAX_LANGUAGE_DIRS 20
 
@@ -68,6 +68,8 @@ static generic_button checkbox_buttons[] = {
     { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM, TR_CONFIG_ENABLE_ZOOM },
     { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS  },
     { 20, 266, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_MILITARY_SIDEBAR, TR_CONFIG_SHOW_MILITARY_SIDEBAR  },
+    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_DISABLE_RIGHT_CLICK_MAP_DRAG, TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG  },
+
 
     { 20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS, TR_CONFIG_JEALOUS_GODS },
     { 20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GLOBAL_LABOUR, TR_CONFIG_GLOBAL_LABOUR },

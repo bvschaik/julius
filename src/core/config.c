@@ -28,7 +28,6 @@ static const char *ini_keys[] = {
     "gameplay_change_fixed_workers",
     "gameplay_wolves_block",
     "gameplay_buyers_dont_distribute",
-    "gameplay_change_immediate_delete",
     "gameplay_change_getting_granaries_go_offroad",
     "gameplay_change_granaries_get_double",
     "gameplay_change_tower_sentries_go_offroad",
@@ -39,7 +38,7 @@ static const char *ini_keys[] = {
     "gameplay_change_multiple_barracks",
     "gameplay_change_warehouses_dont_accept",
     "gameplay_change_houses_dont_expand_into_gardens",
-    "gameplay_change_monuments_boost_culture_rating"
+    "gameplay_change_monuments_boost_culture_rating",
 };
 
 static const char *ini_string_keys[] = {
