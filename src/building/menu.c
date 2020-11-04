@@ -320,6 +320,18 @@ building_type building_menu_type(int submenu, int item)
     return MENU_BUILDING_TYPE[submenu][item];
 }
 
+int building_menu_is_enabled(building_type type)
+{
+    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
+        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
+            if (MENU_BUILDING_TYPE[sub][item] == type) {
+                return menu_enabled[sub][item];
+            }
+        }
+    }
+    return 0;
+}
+
 int building_menu_has_changed(void)
 {
     if (changed) {
