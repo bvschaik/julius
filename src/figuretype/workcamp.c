@@ -237,7 +237,7 @@ void figure_workcamp_slave_action(figure* f) {
 
 	int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
 	if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-		f->image_id = mods_get_image_id(mods_get_group_id("Areldir", "Slave_Walker"), "slave death 01") +
+		f->image_id = mods_get_image_id(mods_get_group_id("Areldir", "Slave_Walker"), "Slave death 01") +
 			figure_image_corpse_offset(f);
 	}
 	else {
