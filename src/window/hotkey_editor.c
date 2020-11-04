@@ -47,6 +47,8 @@ static void init(hotkey_action action, int index,
 
 static void draw_background(void)
 {
+    window_draw_underlying_window();
+
     graphics_in_dialog();
     outer_panel_draw(128, 128, 24, 9);
 
