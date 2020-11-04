@@ -133,15 +133,32 @@ void figure_workcamp_worker_action(figure* f)
         }
         break;
     case FIGURE_ACTION_205_WORK_CAMP_WORKER_GOING_TO_MONUMENT:
-        figure_movement_move_ticks(f, 1);
-        if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
-            f->state = FIGURE_STATE_DEAD;
-        }
-        else if (f->direction == DIR_FIGURE_REROUTE) {
-            figure_route_remove(f);
-        }
-        break;
-    }
+		figure_movement_move_ticks(f, 1);
+		if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
+			f->action_state = FIGURE_ACTION_216_WORK_CAMP_WORKER_ENTERING_MONUMENT;
+			building* monument = building_get(f->destination_building_id);
+			if (!building_monument_access_point(monument, &dst)) {
+				f->state = FIGURE_STATE_DEAD;
+			}
+			figure_movement_set_cross_country_destination(f, dst.x, dst.y);
+		} else if (f->direction == DIR_FIGURE_REROUTE) {
+			figure_route_remove(f);
+		}
+		break;
+	case FIGURE_ACTION_216_WORK_CAMP_WORKER_ENTERING_MONUMENT:
+		f->terrain_usage = TERRAIN_USAGE_ANY;
+		f->use_cross_country = 1;
+		f->dont_draw_elevated = 1;
+		if (figure_movement_move_ticks_cross_country(f, 1)) {
+			f->state = FIGURE_STATE_DEAD;
+		} else {
+			if (f->direction == DIR_FIGURE_REROUTE) {
+				figure_route_remove(f);
+			}
+		}
+	}
+  
+
     figure_image_update(f, image_group(GROUP_FIGURE_PATRICIAN));
 	if (f->state == FIGURE_STATE_DEAD) {
 		building_monument_remove_delivery(f->id);
@@ -172,7 +189,7 @@ void figure_workcamp_slave_action(figure* f) {
 			if (leader->state == FIGURE_STATE_ALIVE) {
 				if (leader->type == FIGURE_WORK_CAMP_WORKER || leader->type == FIGURE_WORK_CAMP_SLAVE) {
 					figure_movement_follow_ticks(f, 1);
-					if (leader->action_state == FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT) {
+					if (leader->action_state == FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT || leader->action_state == FIGURE_ACTION_216_WORK_CAMP_WORKER_ENTERING_MONUMENT) {
 						f->action_state = FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT;
 					}
 				}
