@@ -19,7 +19,7 @@
 #include "window/editor/empire.h"
 #include "window/editor/map.h"
 
-static void menu_file_new_map(int param);
+void menu_file_new_map(int param);
 static void menu_file_load_map(int param);
 static void menu_file_save_map(int param);
 static void menu_file_exit_editor(int param);
@@ -182,9 +182,15 @@ static void map_size_selected(int size)
     }
 }
 
-static void menu_file_new_map(int param)
+void menu_file_new_map(int centered)
 {
-    window_select_list_show(50, 50, 33, 7, map_size_selected);
+    int x = 50;
+    int y = 50;
+    if (centered) {
+        x += 325;
+        y += 200;
+    }
+    window_select_list_show(x, y, 33, 7, map_size_selected);
 }
 
 static void menu_file_load_map(int param)

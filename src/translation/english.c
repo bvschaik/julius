@@ -351,8 +351,8 @@ static translation_string all_strings[] = {
     {TR_NO_MODS_TITLE, "Mods folder can't be found" },
     {TR_NO_MODS_MESSAGE,
         "Your Caesar 3 installation does not have properly installed mods folder. "
-        "New assets may not properly be displayed\n"
-        "Check the instructions: PLACEHOLDER" },
+        "New assets will not properly be displayed.\n"
+        "Please ensure a '/mods' directory exists in the top level of your Caesar 3 install directory. " },
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Lighthouse must be placed near water"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "This house has access to all five gods from the Pantheon"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Plentiful food is boosting morale" },
@@ -363,9 +363,8 @@ static translation_string all_strings[] = {
     {TR_BUTTON_BACK_TO_MAIN_MENU, "Back to main menu" },
     {TR_LABEL_PAUSE_MENU, "Pause" },
     {TR_OVERLAY_LEVY, "Levies" },
-    {TR_TOOLTIP_OVERLAY_LEVY, " denarii are paid here monthly in levies." },
-
-
+    {TR_TOOLTIP_OVERLAY_LEVY, " denarii paid monthly in levies." }, 
+    {TR_MAP_EDITOR_OPTIONS, "Scenario settings" }
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

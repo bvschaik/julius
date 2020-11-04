@@ -17,7 +17,9 @@
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "widget/city_figure.h"
+#include "widget/map_editor_pause_menu.h"
 #include "widget/map_editor_tool.h"
+
 
 static struct {
     map_tile current_tile;
@@ -358,7 +360,7 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
         if (editor_tool_is_active()) {
             editor_tool_deactivate();
         } else {
-            hotkey_handle_escape();
+            window_map_editor_pause_menu_show();
         }
         return;
     }

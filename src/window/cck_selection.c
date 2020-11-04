@@ -35,10 +35,14 @@
 
 static void button_select_item(int index, int param2);
 static void button_start_scenario(int param1, int param2);
+static void button_back(int param1, int param2);
 static void on_scroll(void);
 
 static image_button start_button =
     {600, 440, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start_scenario, button_none, 1, 0, 1};
+
+static image_button back_button =
+    {330, 440, 27, 27, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_back, button_none, 1, 0, 1 };
 
 static generic_button file_buttons[] = {
     {18, 220, 252, 16, button_select_item, button_none, 0, 0},
@@ -209,6 +213,7 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
     image_buttons_draw(0, 0, &start_button, 1);
+    image_buttons_draw(0, 0, &back_button, 1);
     scrollbar_draw(&scrollbar);
     draw_scenario_list();
     graphics_reset_dialog();
@@ -223,6 +228,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0)) {
         return;
     }
+    if (image_buttons_handle_mouse(m_dialog, 0, 0, &back_button, 1, 0)) {
+        return;
+    }
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, MAX_SCENARIOS, &data.focus_button_id)) {
         return;
     }
@@ -233,6 +241,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (input_go_back_requested(m, h)) {
         window_go_back();
     }
+}
+
+static void button_back(int param1, int param2) {
+    window_go_back();
 }
 
 static void button_select_item(int index, int param2)
