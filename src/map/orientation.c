@@ -19,6 +19,8 @@
 #include "mods/mods.h"
 
 #include <math.h>
+#include <stdlib.h>
+
 
 static void determine_leftmost_tile(void)
 {
