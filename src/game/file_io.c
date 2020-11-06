@@ -476,7 +476,6 @@ static void savegame_load_from_state(savegame_state *state)
     map_random_load_state(state->random_grid);
     map_desirability_load_state(state->desirability_grid);
     map_elevation_load_state(state->elevation_grid);
-
     figure_load_state(state->figures, state->figure_sequence);
     figure_route_load_state(state->route_figures, state->route_paths);
     formations_load_state(state->formations, state->formation_totals);
@@ -505,7 +504,6 @@ static void savegame_load_from_state(savegame_state *state)
                               state->building_count_support);
 
     scenario_emperor_change_load_state(state->emperor_change_time, state->emperor_change_state);
-
     empire_load_state(state->empire);
     empire_city_load_state(state->empire_cities);
     trade_prices_load_state(state->trade_prices);
@@ -538,7 +536,6 @@ static void savegame_load_from_state(savegame_state *state)
     if (state) {
         buffer_skip(state->end_marker, 8);
     }
-
     if (savegame_version <= SAVE_GAME_WITHOUT_DELIVERIES_ADDED) {
         building_monument_initialize_deliveries();
     } else {
@@ -628,6 +625,14 @@ static void savegame_save_to_state(savegame_state *state)
 
     building_monument_delivery_save_state(state->deliveries);
 
+}
+
+static int game_file_get_version(const char* filename) {
+    FILE* fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+    fseek(fp, 4, 0);
+    fread(&savegame_version, 1, 4, fp);
+    file_close(fp);
+    return savegame_version;
 }
 
 int game_file_io_read_scenario(const char *filename)
@@ -759,6 +764,7 @@ static void savegame_write_to_file(FILE *fp)
 }
 int game_file_io_read_saved_game(const char *filename, int offset)
 {
+    game_file_get_version(filename);
     if (file_has_extension(filename,"svx")) {
         init_savegame_data_expanded();
         log_info("Loading saved game new format.", filename, 0);
