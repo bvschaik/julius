@@ -38,6 +38,8 @@
 #define NUM_BOTTOM_BUTTONS 4
 #define MAX_LANGUAGE_DIRS 20
 
+#define NUMERICAL_RANGE_X 20
+
 static void on_scroll(void);
 
 static void toggle_switch(int id);
@@ -57,6 +59,7 @@ enum {
     TYPE_HEADER,
     TYPE_CHECKBOX,
     TYPE_SELECT,
+    TYPE_NUMERICAL_DESC,
     TYPE_NUMERICAL_RANGE
 };
 
@@ -89,9 +92,10 @@ typedef struct {
 
 static config_widget widgets[] = {
     { TYPE_SELECT, TR_CONFIG_LANGUAGE_LABEL, 0,  SELECT_LANGUAGE, display_text_language},
-    { TYPE_NONE },
-    { TYPE_NUMERICAL_RANGE, TR_CONFIG_DISPLAY_SCALE, 0, RANGE_DISPLAY_SCALE, display_text_display_scale},
-    { TYPE_NUMERICAL_RANGE, TR_CONFIG_CURSOR_SCALE, 0, RANGE_CURSOR_SCALE, display_text_cursor_scale},
+    { TYPE_NUMERICAL_DESC, TR_CONFIG_DISPLAY_SCALE},
+    { TYPE_NUMERICAL_RANGE, 0, 0, RANGE_DISPLAY_SCALE, display_text_display_scale},
+    { TYPE_NUMERICAL_DESC, TR_CONFIG_CURSOR_SCALE},
+    { TYPE_NUMERICAL_RANGE, 0, 0, RANGE_CURSOR_SCALE, display_text_cursor_scale},
     { TYPE_NONE },
     { TYPE_HEADER, TR_CONFIG_HEADER_UI_CHANGES },
     { TYPE_CHECKBOX, TR_CONFIG_SHOW_INTRO_VIDEO, CONFIG_UI_SHOW_INTRO_VIDEO},
@@ -115,8 +119,8 @@ static generic_button select_buttons[] = {
 };
 
 static numerical_range_widget scale_ranges[] = {
-    { 23, 50, 500, 25, 0 },
-    { 23, 100, 200, 50, 0 }
+    { 30, 50, 500, 25, 0 },
+    { 30, 100, 200, 50, 0 }
 };
 
 static generic_button bottom_buttons[NUM_BOTTOM_BUTTONS] = {
@@ -213,7 +217,7 @@ static void checkbox_draw(int x, int y, int has_focus)
     button_border_draw(x, y, CHECKBOX_CHECK_SIZE, CHECKBOX_CHECK_SIZE, has_focus);
 }
 
-static void numerical_range_draw(const numerical_range_widget *w, int x, int y, const char *value_text)
+static void numerical_range_draw(const numerical_range_widget *w, int x, int y, const uint8_t *value_text)
 {
     text_draw(value_text, x, y + 6, FONT_NORMAL_BLACK, 0);
     inner_panel_draw(x + 50, y + 4, w->width_blocks, 1);
@@ -332,8 +336,9 @@ static void draw_background(void)
             const generic_button *btn = &select_buttons[w->subtype];
             text_draw_centered(w->get_display_text(), btn->x, y + btn->y + 6, btn->width, FONT_NORMAL_BLACK, 0);
         } else if (w->type == TYPE_NUMERICAL_RANGE) {
-            text_draw(translation_for(w->description), 20, y + 6, FONT_NORMAL_BLACK, 0);
-            numerical_range_draw(&scale_ranges[w->subtype], 150, y, w->get_display_text());
+            numerical_range_draw(&scale_ranges[w->subtype], NUMERICAL_RANGE_X, y, w->get_display_text());
+        } else if (w->type == TYPE_NUMERICAL_DESC) {
+            text_draw(translation_for(w->description), 20, y + 10, FONT_NORMAL_BLACK, 0);
         }
     }
 
@@ -400,7 +405,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
             }
         } else if (w->type == TYPE_NUMERICAL_RANGE) {
             numerical_range_widget *range = &scale_ranges[w->subtype];
-            handled |= numerical_range_handle_mouse(m_dialog, 150, y, range);
+            handled |= numerical_range_handle_mouse(m_dialog, NUMERICAL_RANGE_X, y, range);
         }
     }
 
