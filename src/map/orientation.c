@@ -16,6 +16,9 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
+#include "mods/mods.h"
+
+#include <math.h>
 
 static void determine_leftmost_tile(void)
 {
@@ -343,6 +346,10 @@ void map_orientation_update_buildings(void)
                 }
                 map_water_add_building(i, b->x, b->y, 3, image_id);
                 break;
+        }
+        if (b->type >= BUILDING_PINE_PATH && b->type <= BUILDING_DATE_PATH) {
+            image_id = mods_get_group_id("Areldir", "Aesthetics") + (b->type - BUILDING_PINE_TREE) + (abs((b->subtype.orientation - (map_orientation / 2) % 2)) * PATH_ROTATE_OFFSET);
+            map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         }
     }
 }

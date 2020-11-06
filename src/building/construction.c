@@ -36,8 +36,6 @@
 #include "map/water.h"
 #include "mods/mods.h"
 
-#define PATH_ROTATE_OFFSET 56
-
 struct reservoir_info {
     int cost;
     int place_reservoir_at_start;
@@ -193,7 +191,7 @@ static int plot_draggable_building(int x_start, int y_start, int x_end, int y_en
     return items_placed;
 }
 
-static int place_draggable_building(int x_start, int y_start, int x_end, int y_end, int building_type, int image_id)
+static int place_draggable_building(int x_start, int y_start, int x_end, int y_end, int building_type, int image_id, int rotation)
 {
     int x_min, y_min, x_max, y_max;
     map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
@@ -206,6 +204,7 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
             if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                 items_placed++;
                 building* b = building_create(building_type, x, y);
+                b->subtype.orientation = rotation;
                 game_undo_add_building(b);
                 map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
             }
@@ -740,12 +739,12 @@ void building_construction_place(void)
     }
     else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_TREE) {
         int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
-        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id);
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, 0);
     }
     else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
         int rotation = building_rotation_get_rotation();
         int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
-        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id);
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);
     } else if (!building_construction_place_building(type, x_end, y_end)) {

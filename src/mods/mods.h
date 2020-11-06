@@ -3,6 +3,8 @@
 
 #include "core/image.h"
 
+#define PATH_ROTATE_OFFSET 56
+
 void mods_init(void);
 
 int mods_get_group_id(const char *mod_author, const char *mod_name);
