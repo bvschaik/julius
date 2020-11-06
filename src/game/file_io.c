@@ -3,6 +3,7 @@
 #include "building/barracks.h"
 #include "building/count.h"
 #include "building/list.h"
+#include "building/monument.h"
 #include "building/storage.h"
 #include "city/culture.h"
 #include "city/data.h"
@@ -51,8 +52,10 @@
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x77;
+static const int SAVE_GAME_CURRENT_VERSION = 0x78;
 static const int SAVE_GAME_SMALLER_IMAGE_ID_VERSION = 0x76;
+static const int SAVE_GAME_WITHOUT_DELIVERIES_ADDED = 0x77;
+
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -166,6 +169,7 @@ typedef struct {
     buffer *tutorial_part3;
     buffer *city_entry_exit_grid_offset;
     buffer *end_marker;
+    buffer *deliveries;
 } savegame_state;
 
 static struct {
@@ -409,6 +413,9 @@ static void init_savegame_data_expanded(void)
     state->tutorial_part3 = create_savegame_piece(4, 0);
     state->city_entry_exit_grid_offset = create_savegame_piece(8, 0);
     state->end_marker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness
+    if (savegame_version > SAVE_GAME_WITHOUT_DELIVERIES_ADDED) {
+        state->deliveries = create_savegame_piece(3200, 0);
+    }
 }
 
 static void scenario_load_from_state(scenario_state *file)
@@ -446,6 +453,9 @@ static void scenario_save_to_state(scenario_state *file)
 static void savegame_load_from_state(savegame_state *state)
 {
     savegame_version = buffer_read_i32(state->file_version);
+    if (savegame_version > SAVE_GAME_CURRENT_VERSION) {
+        log_info("Newer save game version than supported. The game may crash. Please update your Augustus. Version:",0,savegame_version);
+    }
 
     scenario_settings_load_state(state->scenario_campaign_mission,
                                  state->scenario_settings,
@@ -525,6 +535,15 @@ static void savegame_load_from_state(savegame_state *state)
     map_bookmark_load_state(state->bookmarks);
 
     buffer_skip(state->end_marker, 284);
+    if (state) {
+        buffer_skip(state->end_marker, 8);
+    }
+
+    if (savegame_version <= SAVE_GAME_WITHOUT_DELIVERIES_ADDED) {
+        building_monument_initialize_deliveries();
+    } else {
+        building_monument_delivery_load_state(state->deliveries);
+    }
 }
 
 static void savegame_save_to_state(savegame_state *state)
@@ -606,6 +625,9 @@ static void savegame_save_to_state(savegame_state *state)
     map_bookmark_save_state(state->bookmarks);
 
     buffer_skip(state->end_marker, 284);
+
+    building_monument_delivery_save_state(state->deliveries);
+
 }
 
 int game_file_io_read_scenario(const char *filename)
@@ -767,10 +789,10 @@ int game_file_io_read_saved_game(const char *filename, int offset)
 
 int game_file_io_write_saved_game(const char *filename)
 {
+    savegame_version = SAVE_GAME_CURRENT_VERSION;
     init_savegame_data_expanded();
 
     log_info("Saving game", filename, 0);
-    savegame_version = SAVE_GAME_CURRENT_VERSION;
     savegame_save_to_state(&savegame_data.state);
 
     FILE *fp = file_open(filename, "wb");

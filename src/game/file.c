@@ -108,6 +108,7 @@ static void clear_scenario_data(void)
     enemy_armies_clear();
     figure_name_init();
     formations_clear();
+    building_monument_initialize_deliveries();
     figure_route_clear_all();
 
     game_time_init(2098);

@@ -68,5 +68,8 @@ int building_monument_finish_monuments(void);
 int building_monument_phase(int phase);
 int building_monument_get_venus_gt(void);
 int building_monument_get_neptune_gt(void);
+void building_monument_initialize_deliveries();
+void building_monument_delivery_save_state(buffer* list);
+void building_monument_delivery_load_state(buffer* list);
 
 #endif // BUILDING_MONUMENT_H 
