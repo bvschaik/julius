@@ -56,7 +56,7 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
     float height_reference = scale_pixels_to_logical(pixel_height) / (float) MINIMUM.HEIGHT;
     float minimum_reference = SDL_min(width_reference, height_reference);
     if (minimum_reference < 1.0f) {
-        scale_percentage *= minimum_reference;
+        scale_percentage = (int) (scale_percentage * minimum_reference);
         SDL_Log("Maximum scale of %i applied", scale_percentage);
     }
 

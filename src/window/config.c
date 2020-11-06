@@ -155,6 +155,7 @@ static struct {
     char language_options_utf8[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
     int num_language_options;
     int selected_language_option;
+    int active_numerical_range;
 } data;
 
 static int config_change_basic(config_key key);
@@ -260,20 +261,32 @@ static int is_numerical_range(const mouse *m, int x, int y, int width)
     return 0;
 }
 
-static int numerical_range_handle_mouse(const mouse *m, int x, int y, numerical_range_widget *w)
+static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numerical_range_id)
 {
+    numerical_range_widget *w = &scale_ranges[numerical_range_id - 1];
+
     int width = w->width_blocks * 16;
-    if (!is_numerical_range(m, x, y, width) || !m->left.is_down) {
+    if (data.active_numerical_range) {
+        if (data.active_numerical_range != numerical_range_id) {
+            return 0;
+        }
+        if (!m->left.is_down) {
+            data.active_numerical_range = 0;
+            return 0;
+        }
+    } else if (!m->left.is_down || !is_numerical_range(m, x, y, width)) {
         return 0;
     }
     int width_position = m->x - x - 50;
     double width_step = width * w->step / (double) (w->max - w->min);
     int steps = (int) ((width_position / width_step) + 0.5);
     int value = w->min + steps * w->step;
+    value = calc_bound(value, w->min, w->max);
     if (value != *w->value) {
         *w->value = value;
         window_request_refresh();
     }
+    data.active_numerical_range = numerical_range_id;
     return 1;
 }
 
@@ -380,10 +393,13 @@ static void draw_foreground(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
+    if (data.active_numerical_range) {
+        numerical_range_handle_mouse(m_dialog, NUMERICAL_RANGE_X, 0, data.active_numerical_range);
+        return;
+    }
     if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
         return;
     }
-
     int handled = 0;
     data.focus_button = 0;
     
@@ -404,8 +420,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 data.focus_button = i + 1;
             }
         } else if (w->type == TYPE_NUMERICAL_RANGE) {
-            numerical_range_widget *range = &scale_ranges[w->subtype];
-            handled |= numerical_range_handle_mouse(m_dialog, NUMERICAL_RANGE_X, y, range);
+            handled |= numerical_range_handle_mouse(m_dialog, NUMERICAL_RANGE_X, y, w->subtype + 1);
         }
     }
 
