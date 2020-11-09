@@ -100,12 +100,7 @@ Touch modes can be toggled with the select button. There are three modes:
     * Three finger drag = drag'n'drop (right mouse button is held down)
 2. Direct mode
     * Pointer jumps to finger, nothing else
-3. Julius mode
-    * Pointer jumps to finger
-    * Single short tap = left mouse click
-    * Single short tap while holding a second finger down = right mouse click
-    * Dual finger drag = scroll
-    * Dragging is context sensitive
+3. [Julius mode](https://github.com/bvschaik/julius/wiki/Touch-Support)
 
 For multi-touch gestures, the fingers have to be far enough apart from each other, so that the
 Vita will not erroneously recognize them as a single finger. Otherwise the pointer will jump around.
@@ -148,12 +143,7 @@ Touch modes can be toggled with the minus button. There are three modes:
     * Three finger drag = drag'n'drop (right mouse button is held down)
 2. Direct mode
     * Pointer jumps to finger, nothing else
-3. Julius mode
-    * Pointer jumps to finger
-    * Single short tap = left mouse click
-    * Single short tap while holding a second finger down = right mouse click
-    * Dual finger drag = scroll
-    * Dragging is context sensitive
+3. [Julius mode](https://github.com/bvschaik/julius/wiki/Touch-Support)
 
 For multi-touch gestures, the fingers have to be far enough apart from each other, so that the
 Switch will not erroneously recognize them as a single finger. Otherwise the pointer will jump around.
@@ -161,3 +151,23 @@ Switch will not erroneously recognize them as a single finger. Otherwise the poi
 Physical USB mice and keyboards are supported. All keyboards seem to work. Not all mice work.
 A mouse compatibility list is available
 [here](https://docs.google.com/spreadsheets/d/1Drbo5-QuSX901MwtOytSMuqRGxeIkq2HELM806I9dj0/edit#gid=0)
+
+## Android
+
+Like on other platforms, you must first make sure you obtain the original Cesar III files to your
+Android device. You may do so by installing Caesar III on your computer then copying the files to
+Android, or, if you have purchased Caesar III from GOG, you can use [Inno Setup Extractor](https://play.google.com/store/apps/details?id=uk.co.armedpineapple.innoextract&hl=pt_PT&gl=US).
+
+If you do use Inno Setup Extractor, the game files will be in the `app` folder inside your desired
+extraction folder. You can freely delete the `tmp` folder.
+
+The first time you run Julius, the game will notify you that you need to point it to the game folder
+location. If you used Inno Setup Extractor, that would be the `app` folder, otherwise point the game to
+wherever you downloaded the files to. After setting up the folder for the first time, you will not be
+asked to do so again.
+
+Julius has full touch support. For detailed touch usage, please check the
+[Touch Support](https://github.com/bvschaik/julius/wiki/Touch-Support) page.
+
+Julius for Android has limited mouse support. Right mouse button clicks are notoriously flaky.
+However, if you have a recent Samsung smartphone, Julius is fully compatibly with Samsung DeX.
