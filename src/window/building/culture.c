@@ -524,7 +524,7 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
         window_building_draw_employment(c, 96 + height + extra_y);
         if (c->height_blocks > 26) {
             image_draw(banner_id, c->x_offset + 32, c->y_offset + 166 + height + extra_y);
-            text_draw_centered_with_linebreaks(translation_for(quote), c->x_offset, c->y_offset + 386 + height + extra_y, 16 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+            text_draw_centered_with_linebreaks(translation_for(quote), c->x_offset, c->y_offset + 386 + height + extra_y, 16 * c->width_blocks - 16, FONT_NORMAL_BLACK, 0);
         }
     }
 }
