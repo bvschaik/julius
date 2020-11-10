@@ -152,6 +152,7 @@ static int get_height_id(void)
             case BUILDING_POTTERY_WORKSHOP:
             case BUILDING_WORKCAMP:
             case BUILDING_ENGINEER_GUILD:
+            case BUILDING_OBELISK:
                 return 1;
 
             case BUILDING_THEATER:
