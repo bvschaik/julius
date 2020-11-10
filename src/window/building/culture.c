@@ -533,9 +533,9 @@ void window_building_draw_grand_temple_foreground(building_info_context* c)
 {
     building* b = building_get(c->building_id);
     if (b->subtype.monument_phase == MONUMENT_FINISHED && !b->data.monument.upgrades) {
-        button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+        button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 37,
             16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-        text_draw_centered(translation_for(TR_BUILDING_GRAND_TEMPLE_ADD_MODULE), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
+        text_draw_centered(translation_for(TR_BUILDING_GRAND_TEMPLE_ADD_MODULE), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 33,
             16 * (c->width_blocks - 10), FONT_NORMAL_BLACK, 0);
     }
 }

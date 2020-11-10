@@ -168,7 +168,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC, "Priests expand housing capacity by 5%. Grand temple provides water like a filled reservoir." },
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, "Priests reduce oil and wine consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, "Priests reduce consumption of all goods by 10%." },
-    {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, "Priests provide entertainment and beautify houses." },
+    {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, "Priests provide entertainment and beautify houses themselves, increasing the attractiveness of the neighborhood without additional decoration." },
     {TR_BUILDING_PANTHEON_MODULE_1_DESC, "All the temples in the city send priests to Pantheon, spreading the faith and blessings of their gods." },
     {TR_BUILDING_PANTHEON_MODULE_2_DESC, "Houses with access to the Pantheon can evolve one additional step." },
     {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, "Temple of Ceres Promitor" },

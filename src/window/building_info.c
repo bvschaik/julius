@@ -169,19 +169,19 @@ static int get_height_id(void)
 
             case BUILDING_WELL:
                 return 4;
-
-            case BUILDING_GRAND_TEMPLE_CERES:
-            case BUILDING_GRAND_TEMPLE_NEPTUNE:
-            case BUILDING_GRAND_TEMPLE_MERCURY:
-            case BUILDING_LIGHTHOUSE:
-            case BUILDING_GRAND_TEMPLE_VENUS:
-            case BUILDING_PANTHEON:
+            
+            case BUILDING_LIGHTHOUSE:            
                 return 6;
 
             case BUILDING_MESS_HALL:
                 return 7;
 
+            case BUILDING_GRAND_TEMPLE_CERES:
+            case BUILDING_GRAND_TEMPLE_NEPTUNE:
+            case BUILDING_GRAND_TEMPLE_MERCURY:
             case BUILDING_GRAND_TEMPLE_MARS:
+            case BUILDING_GRAND_TEMPLE_VENUS:
+            case BUILDING_PANTHEON:
                 return 8;
 
             default:
@@ -408,6 +408,7 @@ static void init(int grid_offset)
     }
     // dialog size
     context.width_blocks = 29;
+
     switch (get_height_id()) {
         case 1: context.height_blocks = 16; break;
         case 2: context.height_blocks = 18; break;
@@ -416,7 +417,7 @@ static void init(int grid_offset)
         case 5: context.height_blocks = 23; break;
         case 6: context.height_blocks = 38; break;
         case 7: context.height_blocks = 26; break;
-        case 8: context.height_blocks = 40; break;
+        case 8: context.height_blocks = 40; context.width_blocks = 30; break;
         default: context.height_blocks = 22; break;
     }
     if (screen_height() <= 600) {
