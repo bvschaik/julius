@@ -359,7 +359,7 @@ static translation_string all_strings[] = {
     { TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER, "Zezwól kwartermistrzowi na zbieranie stąd żywności" },
     { TR_WARNING_RESOURCES_NOT_AVAILABLE, "Nie możesz pozyskać niezbędnych materiałów" },
     { TR_CONFIG_GP_CH_MONUMENTS_BOOST_CULTURE_RATING, "Ukońcczone wielkie świątynie dają +8 do kultury" },
-    { TR_BUTTON_BACK_TO_MAIN_MENU, "Wróc na główne menu" },
+    { TR_BUTTON_BACK_TO_MAIN_MENU, "Wróć na główne menu" },
     { TR_LABEL_PAUSE_MENU, "Pauza" },
     { TR_OVERLAY_LEVY, "Żołd" },
     { TR_TOOLTIP_OVERLAY_LEVY, " denarów płaconych miesięcznie jako żołd." },
