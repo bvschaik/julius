@@ -305,7 +305,7 @@ static translation_string all_strings[] = {
     { TR_BUILDING_LIGHTHOUSE_CONSTRUCTION_DESC, "A construção do farol requer materiais estocados em um armazém, trabalhadores de um campo de trabalho, e engenheiros de uma guilda de engenharia." },
     { TR_BUILDING_LIGHTHOUSE_BONUS_DESC, "Navios pesqueiros se movem 10% mais rápido. Tempestades marítimas duram metade do tempo." },
     { TR_EDITOR_ALLOWED_BUILDINGS_MONUMENTS, "Monumentos" },
-    { TR_CITY_MESSAGE_TEXT_LIGHTHOUSE_COMPLETE, "A imponente torre de pedra do farol, já completo, assuma sobre o horizonte. Que a sua chama guie os navios de volta para casa até o fim dos tempos." },
+    { TR_CITY_MESSAGE_TEXT_LIGHTHOUSE_COMPLETE, "A imponente torre de pedra do farol, já completa, assuma sobre o horizonte. Que a sua chama guie os navios de volta para casa até o fim dos tempos." },
     { TR_CITY_MESSAGE_TEXT_PANTHEON_COMPLETE, "O Panteão está pronto. Sua monumentalidade é testemunho ímpar do incrível poder dos deuses e do povo de Roma!" },
     { TR_CITY_MESSAGE_TITLE_MONUMENT_COMPLETE, "Monumento completo" },
     { TR_CITY_MESSAGE_TITLE_NEPTUNE_BLESSING, "Uma bênção de Netuno" },
