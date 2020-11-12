@@ -12,7 +12,7 @@ case "$BUILD_TARGET" in
 "mac")
 	cp -r mods ./build	
 	cp -r res/maps ./build	
-	cp -r res/manual.pdf ./build	
+	cp -r res/augustus_manual.pdf ./build	
 	cd build && make && make install && \
 	echo "Creating disk image" && \
 	hdiutil create -volname Augustus -srcfolder augustus.app -ov -format UDZO augustus.dmg
@@ -21,7 +21,7 @@ case "$BUILD_TARGET" in
 "appimage")
 	cp -r mods ./build		
 	cp -r res/maps ./build	
-	cp -r res/manual.pdf ./build	
+	cp -r res/augustus_manual.pdf ./build	
 	cd build && make && \
 	make DESTDIR=AppDir install && \
 	cd .. && \
@@ -31,7 +31,7 @@ case "$BUILD_TARGET" in
 "linux")
 	cp -r mods ./build
 	cp -r res/maps ./build	
-	cp -r res/manual.pdf ./build	
+	cp -r res/augustus_manual.pdf ./build	
 	cd build && make && \
 	zip -r augustus.zip augustus mods maps augustus_manual.pdf
 	;;
