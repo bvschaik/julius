@@ -93,7 +93,7 @@ deploy:
   package: windows-unstable
   version: $(DEPLOY_VERSION)
   artifact: augustus-dist
-  publish: true
+  publish: false
   on:
     branch: master
     APPVEYOR_REPO_TAG: false
@@ -120,7 +120,7 @@ deploy:
   package: windows
   version: $(DEPLOY_VERSION)
   artifact: augustus-dist
-  publish: true
+  publish: false
   on:
     branch: release
     CMAKE_BUILD_TYPE: Release
