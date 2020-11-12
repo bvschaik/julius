@@ -10,22 +10,30 @@ case "$BUILD_TARGET" in
 	docker exec switchdev /bin/bash -c "cd build && make"
 	;;
 "mac")
-	cp -r res/mods ./build	
+	cp -r mods ./build	
+	cp -r res/maps ./build	
+	cp -r res/manual.pdf ./build	
 	cd build && make && make install && \
 	echo "Creating disk image" && \
 	hdiutil create -volname Augustus -srcfolder augustus.app -ov -format UDZO augustus.dmg
+	zip -r augustus.zip augustus.dmg mods maps augustus_manual.pdf
 	;;
 "appimage")
-	cp -r res/mods ./build		
+	cp -r mods ./build		
+	cp -r res/maps ./build	
+	cp -r res/manual.pdf ./build	
 	cd build && make && \
 	make DESTDIR=AppDir install && \
 	cd .. && \
 	./.ci_scripts/package_appimage.sh
+	zip -r augustus.zip augustus.AppImage mods maps augustus_manual.pdf
 	;;
 "linux")
-	cp -r res/mods ./build
+	cp -r mods ./build
+	cp -r res/maps ./build	
+	cp -r res/manual.pdf ./build	
 	cd build && make && \
-	zip -r augustus.zip augustus mods
+	zip -r augustus.zip augustus mods maps augustus_manual.pdf
 	;;
 "android")
 	cd android
