@@ -30,6 +30,8 @@ static struct {
         int channels;
         int rate;
     } audio;
+
+    int restart_music;
 } data;
 
 static void close_smk(void)
@@ -85,7 +87,9 @@ static int load_smk(const char *filename)
 static void end_video(void)
 {
     sound_device_use_default_music_player();
-    sound_music_update(1);
+    if (data.restart_music) {
+        sound_music_update(1);
+    }
 }
 
 int video_start(const char *filename)
@@ -109,9 +113,10 @@ void video_size(int *width, int *height)
     *height = data.video.y_scale == SMACKER_Y_SCALE_NONE ? data.video.height : 2 * data.video.height;
 }
 
-void video_init(void)
+void video_init(int restart_music)
 {
     data.video.start_render_millis = time_get_millis();
+    data.restart_music = restart_music;
 
     if (data.audio.has_audio) {
         int audio_len = smacker_get_frame_audio_size(data.s, 0);

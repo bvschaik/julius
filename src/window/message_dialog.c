@@ -128,7 +128,7 @@ static void init(int text_id, void (*background_callback)(void))
         data.show_video = 0;
     }
     if (data.show_video) {
-        video_init();
+        video_init(1);
     }
 }
 

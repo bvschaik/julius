@@ -17,7 +17,7 @@ static int init(const char *filename, int width, int height, void (*callback)(vo
         data.width = width;
         data.height = height;
         data.callback = callback;
-        video_init();
+        video_init(0);
         return 1;
     }
     return 0;
