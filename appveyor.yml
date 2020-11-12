@@ -84,20 +84,20 @@ before_deploy:
   - echo Deploying to %DEPLOY_VERSION%
 
 deploy:
-- provider: BinTray
-  username: keriew
-  api_key:
-    secure: 3BVriC09bvFIpGdq6Mdz5aN6SQUnkxVFOJV5Gj4J1zJU1ySIKkiV883EhAQ2Nau/
-  subject: keriew
-  repo: Augustus-unstable
-  package: windows-unstable
-  version: $(DEPLOY_VERSION)
-  artifact: augustus-dist
-  publish: false
-  on:
-    branch: master
-    APPVEYOR_REPO_TAG: false
-    CMAKE_BUILD_TYPE: Release
+#- provider: BinTray
+#  username: keriew
+#  api_key:
+#    secure: 3BVriC09bvFIpGdq6Mdz5aN6SQUnkxVFOJV5Gj4J1zJU1ySIKkiV883EhAQ2Nau/
+#  subject: keriew
+#  repo: Augustus-unstable
+#  package: windows-unstable
+#  version: $(DEPLOY_VERSION)
+#  artifact: augustus-dist
+#  publish: false
+#  on:
+#    branch: master
+#    APPVEYOR_REPO_TAG: false
+#    CMAKE_BUILD_TYPE: Release
 - provider: BinTray
   username: keriew
   api_key:
@@ -111,16 +111,16 @@ deploy:
   on:
     APPVEYOR_REPO_TAG: true
     CMAKE_BUILD_TYPE: Release
-- provider: BinTray
-  username: keriew
-  api_key:
-    secure: 3BVriC09bvFIpGdq6Mdz5aN6SQUnkxVFOJV5Gj4J1zJU1ySIKkiV883EhAQ2Nau/
-  subject: keriew
-  repo: Augustus-dev
-  package: windows
-  version: $(DEPLOY_VERSION)
-  artifact: augustus-dist
-  publish: false
-  on:
-    branch: release
-    CMAKE_BUILD_TYPE: Release
+#- provider: BinTray
+#  username: keriew
+#  api_key:
+#    secure: 3BVriC09bvFIpGdq6Mdz5aN6SQUnkxVFOJV5Gj4J1zJU1ySIKkiV883EhAQ2Nau/
+#  subject: keriew
+#  repo: Augustus-dev
+#  package: windows
+#  version: $(DEPLOY_VERSION)
+#  artifact: augustus-dist
+#  publish: false
+#  on:
+#    branch: release
+#    CMAKE_BUILD_TYPE: Release
