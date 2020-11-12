@@ -60,10 +60,13 @@ after_build:
   - if [%COMPILER%] == [mingw-w64] cp C:\SDL2-%SDL2_VERSION%\x86_64-w64-mingw32\bin\SDL2.dll .
   - if [%COMPILER%] == [mingw-w64] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\x86_64-w64-mingw32\bin\SDL2_mixer.dll .
   - if [%COMPILER%] == [mingw-w64] cp C:\SDL2_mixer-%SDL2_MIXER_VERSION%\x86_64-w64-mingw32\bin\libmpg123-0.dll .
+  - cp C:\projects\augustus\mods
+  - cp C:\projects\augustus\res\maps
+  - cp C:\projects\augustus\res\augustus_manual.pdf
   - dir
   - set /P DEPLOY_VERSION=<C:\projects\augustus\res\version.txt
   - if [%APPVEYOR_REPO_BRANCH:~0,8%] == [feature/] set DEPLOY_VERSION=%APPVEYOR_REPO_BRANCH:feature/=%-%DEPLOY_VERSION%
-  - 7z a C:\projects\augustus\augustus-%DEPLOY_VERSION%-windows.zip augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
+  - 7z a C:\projects\augustus\augustus-%DEPLOY_VERSION%-windows.zip augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll mods maps augustus_manual.pdf
 
 cache:
   - SDL2-devel-%SDL2_VERSION%-mingw.tar.gz
