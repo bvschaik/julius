@@ -7,6 +7,7 @@
 #include "input/hotkey.h"
 #include "input/mouse.h"
 #include "input/scroll.h"
+#include "widget/input_box.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -82,6 +83,8 @@ static struct {
     } mouse;
     mapped_input map_scroll[NUM_DIRECTIONS];
     mapped_input joystick_hotkey[JOYSTICK_MAX_HOTKEYS];
+    mapped_input virtual_keyboard;
+    mapped_input touch_mode;
 } data;
 
 static hotkey_action JOYSTICK_MAPPING_TO_HOTKEY_ACTION[JOYSTICK_MAX_HOTKEYS] = {
@@ -667,6 +670,26 @@ static int translate_hotkeys(void)
     return handled;
 }
 
+int translate_system_functions(void)
+{
+    if (get_joystick_input_for_action(MAPPING_ACTION_SHOW_VIRTUAL_KEYBOARD, &data.virtual_keyboard)) {
+        if (data.virtual_keyboard.state == INPUT_STATE_WENT_DOWN) {
+            input_box *box = input_box_get_active();
+            if (box) {
+                system_keyboard_show(box->text, box->max_length);
+            }
+        }
+        return 1;
+    }
+    if (get_joystick_input_for_action(MAPPING_ACTION_CYCLE_TOUCH_TYPE, &data.touch_mode)) {
+        if (data.touch_mode.state == INPUT_STATE_WENT_DOWN) {
+            touch_cycle_mode();
+        }
+        return 1;
+    }
+    return 0;
+}
+
 int joystick_to_mouse_and_keyboard(void)
 {
     if (data.connected_joysticks == 0) {
@@ -678,9 +701,13 @@ int joystick_to_mouse_and_keyboard(void)
         handled |= translate_window_scrolling();
         handled |= translate_map_scrolling();
         handled |= translate_hotkeys();
+        handled |= translate_system_functions();
     }
     for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
         joystick_reset_all_trackball_states(&data.joystick[i]);
+    }
+    if (handled) {
+        mouse_remove_touch();
     }
     return handled;
 }

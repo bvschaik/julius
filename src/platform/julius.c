@@ -29,12 +29,10 @@
 
 #ifdef __SWITCH__
 #include "platform/switch/switch.h"
-#include "platform/switch/switch_input.h"
 #endif
 
 #ifdef __vita__
 #include "platform/vita/vita.h"
-#include "platform/vita/vita_input.h"
 #endif
 
 #include "platform/android/android.h"
@@ -351,13 +349,7 @@ static void main_loop(void)
         platform_per_frame_callback();
 #endif
         /* Process event queue */
-#ifdef __vita__
-        while (vita_poll_event(&event)) {
-#elif defined(__SWITCH__)
-        while (switch_poll_event(&event)) {
-#else
         while (SDL_PollEvent(&event)) {
-#endif
             handle_event(&event, &active, &quit);
         }
         if (!quit) {

@@ -56,6 +56,11 @@ void mouse_set_from_touch(const touch *first, const touch *last)
     data.right.went_up = last->has_ended;
 }
 
+void mouse_remove_touch(void)
+{
+    data.is_touch = 0;
+}
+
 void mouse_set_position(int x, int y)
 {
     if (x != data.x || y != data.y) {

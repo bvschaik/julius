@@ -4,6 +4,7 @@
 #include "core/encoding.h"
 #include "core/string.h"
 
+#include <string.h>
 #include <psp2/apputil.h>
 #include <psp2/display.h>
 #include <psp2/kernel/processmgr.h>
@@ -34,6 +35,7 @@ static int init_ime_dialog(const uint8_t *initial_text, int max_text_length, int
     if (ime_dialog_running) {
         return -1;
     }
+    max_text_length = calc_bound(max_text_length, 0, SCE_IME_DIALOG_MAX_TEXT_LENGTH);
     encoding_to_utf8(initial_text, ime_text_utf8, SCE_IME_DIALOG_MAX_TEXT_LENGTH, 0);
 
     // Set title (first time only)
