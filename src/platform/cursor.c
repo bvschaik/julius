@@ -49,11 +49,17 @@ static cursor_scale get_cursor_scale(int scale_percentage)
     }
 }
 
-void platform_init_cursors(int scale_percentage)
+void system_init_cursors(int scale_percentage)
 {
     cursor_scale cur_scale = get_cursor_scale(scale_percentage);
     for (int i = 0; i < CURSOR_MAX; i++) {
         const cursor *c = input_cursor_data(i, cur_scale);
+        if (cursor_surfaces[i]) {
+            SDL_FreeSurface(cursor_surfaces[i]);
+        }
+        if (cursors[i]) {
+            SDL_FreeCursor(cursors[i]);
+        }
         cursor_surfaces[i] = generate_cursor_surface(c->data, c->width, c->height);
         cursors[i] = SDL_CreateColorCursor(cursor_surfaces[i], c->hotspot_x, c->hotspot_y);
     }

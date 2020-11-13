@@ -38,6 +38,25 @@ int system_is_fullscreen_only(void);
 void system_set_fullscreen(int fullscreen);
 
 /**
+ * Set display scale to the given percentage
+ * @param scale_percentage Scale percentage to set, 100% is normal
+ * @return The actual scale percentage that was set, which may be different to respect minimum resolution
+ */
+int system_scale_display(int scale_percentage);
+
+/**
+ * Gets maximum display scale for the current display
+ * @return Maximum scale percentage
+ */
+int system_get_max_display_scale(void);
+
+/**
+ * (Re-)Initialize cursors with the specified scale percentage
+ * @param scale_percentage Scaling percentage to use
+ */
+void system_init_cursors(int scale_percentage);
+
+/**
  * Set cursor to the specified cursor in @link input/cursor.h @endlink
  * @param cursor_id Cursor to set
  */

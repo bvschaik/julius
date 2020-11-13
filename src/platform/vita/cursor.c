@@ -2,13 +2,13 @@
 #include "graphics/color.h"
 #include "game/system.h"
 #include "input/cursor.h"
-#include "platform/cursor.h"
 #include "platform/vita/vita.h"
 
 #include "SDL.h"
 
 #define CURSOR_SIZE 32
 
+static int cursors_initialized = 0;
 static vita_cursor cursors[CURSOR_MAX];
 vita_cursor *current_cursor;
 
@@ -37,8 +37,12 @@ static vita2d_texture *init_cursor(const cursor *c)
     return tex;
 }
 
-void platform_init_cursors(int scale_percentage)
+void system_init_cursors(int scale_percentage)
 {
+    // Do not support cursor scaling on Vita
+    if (cursors_initialized) {
+        return;
+    }
     for (int i = 0; i < CURSOR_MAX; i++) {
         const cursor *c = input_cursor_data(i, CURSOR_SCALE_1);
         cursors[i].texture = init_cursor(c);
@@ -46,6 +50,7 @@ void platform_init_cursors(int scale_percentage)
         cursors[i].hotspot_y = c->hotspot_y;
     }
     system_set_cursor(CURSOR_ARROW);
+    cursors_initialized = 1;
 }
 
 void system_set_cursor(int cursor_id)

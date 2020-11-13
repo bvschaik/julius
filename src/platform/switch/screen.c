@@ -174,3 +174,14 @@ int system_is_fullscreen_only(void)
 {
     return 1;
 }
+
+int system_scale_display(int display_scale_percentage)
+{
+    // Scaling not supported
+    return 100;
+}
+
+int system_get_max_display_scale(void)
+{
+    return 100;
+}
