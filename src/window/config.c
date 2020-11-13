@@ -68,9 +68,7 @@ enum {
 };
 
 enum {
-    SELECT_LANGUAGE,
-    SELECT_DISPLAY,
-    SELECT_CURSOR
+    SELECT_LANGUAGE
 };
 
 enum {
@@ -89,17 +87,16 @@ typedef struct {
 typedef struct {
     int type;
     translation_key description;
-    int checkbox_parameter;
-    int subtype;
+    int parameter;
     const uint8_t* (*get_display_text)(void);
 } config_widget;
 
 static config_widget widgets[] = {
-    { TYPE_SELECT, TR_CONFIG_LANGUAGE_LABEL, 0,  SELECT_LANGUAGE, display_text_language},
+    { TYPE_SELECT, TR_CONFIG_LANGUAGE_LABEL, SELECT_LANGUAGE, display_text_language},
     { TYPE_NUMERICAL_DESC, TR_CONFIG_DISPLAY_SCALE},
-    { TYPE_NUMERICAL_RANGE, 0, 0, RANGE_DISPLAY_SCALE, display_text_display_scale},
+    { TYPE_NUMERICAL_RANGE, 0, RANGE_DISPLAY_SCALE, display_text_display_scale},
     { TYPE_NUMERICAL_DESC, TR_CONFIG_CURSOR_SCALE},
-    { TYPE_NUMERICAL_RANGE, 0, 0, RANGE_CURSOR_SCALE, display_text_cursor_scale},
+    { TYPE_NUMERICAL_RANGE, 0, RANGE_CURSOR_SCALE, display_text_cursor_scale},
     { TYPE_NONE },
     { TYPE_HEADER, TR_CONFIG_HEADER_UI_CHANGES },
     { TYPE_CHECKBOX, TR_CONFIG_SHOW_INTRO_VIDEO, CONFIG_UI_SHOW_INTRO_VIDEO},
@@ -361,13 +358,13 @@ static void draw_background(void)
         if (w->type == TYPE_HEADER) {
             text_draw(translation_for(w->description), 20, y, FONT_NORMAL_BLACK, 0);
         } else if (w->type == TYPE_CHECKBOX) {
-            checkbox_draw_text(20, y, w->checkbox_parameter, w->description);
+            checkbox_draw_text(20, y, w->parameter, w->description);
         } else if (w->type == TYPE_SELECT) {
             text_draw(translation_for(w->description), 20, y + 6, FONT_NORMAL_BLACK, 0);
-            const generic_button *btn = &select_buttons[w->subtype];
+            const generic_button *btn = &select_buttons[w->parameter];
             text_draw_centered(w->get_display_text(), btn->x, y + btn->y + 6, btn->width, FONT_NORMAL_BLACK, 0);
         } else if (w->type == TYPE_NUMERICAL_RANGE) {
-            numerical_range_draw(&scale_ranges[w->subtype], NUMERICAL_RANGE_X, y, w->get_display_text());
+            numerical_range_draw(&scale_ranges[w->parameter], NUMERICAL_RANGE_X, y, w->get_display_text());
         } else if (w->type == TYPE_NUMERICAL_DESC) {
             text_draw(translation_for(w->description), 20, y + 10, FONT_NORMAL_BLACK, 0);
         }
@@ -391,7 +388,7 @@ static void draw_foreground(void)
         if (w->type == TYPE_CHECKBOX) {
             checkbox_draw(20, y, data.focus_button == i + 1);
         } else if (w->type == TYPE_SELECT) {
-            const generic_button *btn = &select_buttons[w->subtype];
+            const generic_button *btn = &select_buttons[w->parameter];
             button_border_draw(btn->x, y + btn->y,
                 btn->width, btn->height, data.focus_button == i + 1);
         }
@@ -426,19 +423,19 @@ static void handle_input(const mouse *m, const hotkeys *h)
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_CHECKBOX) {
             int focus = 0;
-            handled |= checkbox_handle_mouse(m_dialog, 20, y, w->checkbox_parameter, &focus);
+            handled |= checkbox_handle_mouse(m_dialog, 20, y, w->parameter, &focus);
             if (focus) {
                 data.focus_button = i + 1;
             }
         } else if (w->type == TYPE_SELECT) {
-            generic_button *btn = &select_buttons[w->subtype];
+            generic_button *btn = &select_buttons[w->parameter];
             int focus = 0;
             handled |= generic_buttons_handle_mouse(m_dialog, 0, y, btn, 1, &focus);
             if (focus) {
                 data.focus_button = i + 1;
             }
         } else if (w->type == TYPE_NUMERICAL_RANGE) {
-            handled |= numerical_range_handle_mouse(m_dialog, NUMERICAL_RANGE_X, y, w->subtype + 1);
+            handled |= numerical_range_handle_mouse(m_dialog, NUMERICAL_RANGE_X, y, w->parameter + 1);
         }
     }
 
