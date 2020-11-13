@@ -21,11 +21,19 @@ static const color_t mouse_colors[] = {
 
 static SDL_Surface *generate_cursor_surface(const char *data, int width, int height)
 {
+    // make sure the cursor is a power of two
+    int size = 32;
+    while (size <= width || size <= height) {
+        size *= 2;
+    }
     SDL_Surface *cursor_surface =
-        SDL_CreateRGBSurface(0, width, height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+        SDL_CreateRGBSurface(0, size, size, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
     color_t *pixels = cursor_surface->pixels;
-    for (int i = 0; i < width * height; ++i) {
-        pixels[i] = mouse_colors[data[i] - 32];
+    SDL_memset(pixels, 0, 4 * size * size);
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            pixels[y * size + x] = mouse_colors[data[y * width + x] - 32];
+        }
     }
     return cursor_surface;
 }
