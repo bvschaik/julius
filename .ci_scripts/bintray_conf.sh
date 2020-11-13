@@ -97,8 +97,8 @@ cat > "bintray.json" <<EOF
 
   "files": [
     {
-      "includePattern": "${build_dir}/augustus.dmg",
-      "uploadPattern": "augustus-$VERSION-mac.dmg",
+      "includePattern": "${build_dir}/augustus.zip",
+      "uploadPattern": "augustus-$VERSION-mac.zip",
       "listInDownloads": true
     }
   ],
