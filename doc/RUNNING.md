@@ -26,7 +26,7 @@ Doing so will make the mouse cursor disappear when using right-click to scroll.
    
 Instead, open `SierraLauncher.ini` and replace `Game1Exe=c3.exe` with the `Game1Exe=julius.exe`.
 
-## Linux/BSD
+## Linux/BSD/Mac
 
 OpenBSD and FreeBSD provide Julius as [package](http://ports.su/games/julius).
 
@@ -46,13 +46,13 @@ If you bought the GOG edition, you can download the offline installer exe, and u
 [InnoExtract](http://constexpr.org/innoextract/) to extract the game files:
 
 1. Build Julius or install using your package manager
-2. [Install](http://constexpr.org/innoextract/install) `innoextract` for your distribution
+2. [Install](http://constexpr.org/innoextract/install) `innoextract` for your distribution (`brew install innoextract` for mac)
 3. Download the Caesar 3 offline installer exe from GOG
 4. Run the following command to extract the game files to a new `app` directory:
 
         $ innoextract -m setup_caesar3_2.0.0.9.exe
 
-5. Move the `julius` executable to the extracted `app` directory and run from there, OR run Julius
+5. Move the `augustus` executable, `mods` and `maps` directories to the extracted `app` directory and run from there, OR run Julius
    with the path to the game files as parameter:
 
         $ julius path-to-app-directory
