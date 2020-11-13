@@ -149,8 +149,8 @@ static generic_button hotkey_buttons[] = {
 };
 
 static generic_button bottom_buttons[] = {
-    { 240, 430, 160, 30, button_reset_defaults, button_none },
-    { 410, 430, 100, 30, button_close, button_none, 0 },
+    { 230, 430, 180, 30, button_reset_defaults, button_none },
+    { 415, 430, 100, 30, button_close, button_none, 0 },
     { 520, 430, 100, 30, button_close, button_none, 1 },
 };
 
