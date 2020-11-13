@@ -344,7 +344,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
             continue;
         }
         const building_storage *s = building_storage_get(b->storage_id);
-        if (building_granary_is_getting(resource,b) || s->empty_all) {
+        if (!building_granary_is_getting(resource,b) || s->empty_all) {
             continue;
         }
         if (b->data.granary.resource_stored[RESOURCE_NONE] > ONE_LOAD) {
