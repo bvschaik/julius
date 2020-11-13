@@ -127,7 +127,7 @@ void widget_top_menu_editor_draw(void)
     for (int i = 0; i * block_width < s_width; i++) {
         image_draw(image_base + i % 8, i * block_width, 0);
     }
-    menu_bar_draw(menu, 5);
+    menu_bar_draw(menu, 5, s_width);
 }
 
 static int handle_input_submenu(const mouse *m, const hotkeys *h)

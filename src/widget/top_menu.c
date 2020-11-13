@@ -173,10 +173,9 @@ static void draw_background(void)
 
 static void draw_foreground(void)
 {
-    if (!data.open_sub_menu) {
-        return;
+    if (data.open_sub_menu) {
+        menu_draw(&menu[data.open_sub_menu - 1], data.focus_sub_menu_id);
     }
-    menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -226,15 +225,16 @@ void widget_top_menu_draw(int force)
         return;
     }
 
+    int s_width = screen_width();
+
     refresh_background();
-    menu_bar_draw(menu, 4);
+    menu_bar_draw(menu, 4, s_width < 1024 ? 338 : 493);
 
     color_t treasure_color = COLOR_WHITE;
     int treasury = city_finance_treasury();
     if (treasury < 0) {
         treasure_color = COLOR_FONT_RED;
     }
-    int s_width = screen_width();
     if (s_width < 800) {
         data.offset_funds = 338;
         data.offset_population = 453;
