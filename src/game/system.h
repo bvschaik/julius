@@ -38,11 +38,17 @@ int system_is_fullscreen_only(void);
 void system_set_fullscreen(int fullscreen);
 
 /**
- * Set window scale to the given percentage
+ * Set display scale to the given percentage
  * @param scale_percentage Scale percentage to set, 100% is normal
  * @return The actual scale percentage that was set, which may be different to respect minimum resolution
  */
 int system_scale_display(int scale_percentage);
+
+/**
+ * Gets maximum display scale for the current display
+ * @return Maximum scale percentage
+ */
+int system_get_max_display_scale(void);
 
 /**
  * (Re-)Initialize cursors with the specified scale percentage

@@ -38,14 +38,16 @@ static int scale_pixels_to_logical(int pixel_value)
     return pixel_value * 100 / scale_percentage;
 }
 
+static int get_max_scale_percentage(int pixel_width, int pixel_height)
+{
+    int width_scale_pct = pixel_width * 100 / MINIMUM.WIDTH;
+    int height_scale_pct = pixel_height * 100 / MINIMUM.HEIGHT;
+    return SDL_min(width_scale_pct, height_scale_pct);
+}
+
 static void set_scale_percentage(int new_scale, int pixel_width, int pixel_height)
 {
-    if (new_scale < 50) {
-        new_scale = 50;
-    } else if (new_scale > 500) {
-        new_scale = 500;
-    }
-    scale_percentage = new_scale;
+    scale_percentage = calc_bound(new_scale, 50, 500);
 
     if (!pixel_width || !pixel_height) {
         return;
@@ -194,6 +196,13 @@ int system_scale_display(int display_scale_percentage)
     set_scale_percentage(display_scale_percentage, width, height);
     platform_screen_resize(width, height);
     return scale_percentage;
+}
+
+int system_get_max_display_scale(void)
+{
+    int width, height;
+    SDL_GetWindowSize(SDL.window, &width, &height);
+    return get_max_scale_percentage(width, height);
 }
 
 void platform_screen_move(int x, int y)

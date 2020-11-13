@@ -180,3 +180,8 @@ int system_scale_display(int display_scale_percentage)
     // Scaling not supported
     return 100;
 }
+
+int system_get_max_display_scale(void)
+{
+    return 100;
+}

@@ -119,7 +119,7 @@ static generic_button select_buttons[] = {
 };
 
 static numerical_range_widget scale_ranges[] = {
-    { 30, 50, 500, 25, 0 },
+    { 30, 50, 500, 5, 0 },
     { 30, 100, 200, 50, 0 }
 };
 
@@ -326,8 +326,19 @@ static void init(void)
     scrollbar_init(&scrollbar, 0, sizeof(widgets) / sizeof(config_widget) - NUM_VISIBLE_ITEMS);
 }
 
+static void update_scale(void)
+{
+    int max_scale = system_get_max_display_scale();
+    scale_ranges[RANGE_DISPLAY_SCALE].max = max_scale;
+    if (*scale_ranges[RANGE_DISPLAY_SCALE].value > max_scale) {
+        *scale_ranges[RANGE_DISPLAY_SCALE].value = max_scale;
+    }
+}
+
 static void draw_background(void)
 {
+    update_scale();
+
     graphics_clear_screen();
 
     image_draw_fullscreen_background(image_group(GROUP_CONFIG));
