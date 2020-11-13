@@ -630,7 +630,7 @@ static void savegame_save_to_state(savegame_state *state)
 static int game_file_get_version(const char* filename) {
     FILE* fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
     fseek(fp, 4, 0);
-    fread(&savegame_version, 1, 4, fp);
+    savegame_version = read_int32(fp);
     file_close(fp);
     return savegame_version;
 }
