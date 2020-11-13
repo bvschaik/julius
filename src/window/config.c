@@ -40,6 +40,10 @@
 
 #define NUMERICAL_RANGE_X 20
 
+#define NUMERICAL_SLIDER_X 50
+#define NUMERICAL_SLIDER_PADDING 2
+#define NUMERICAL_DOT_SIZE 20
+
 static void on_scroll(void);
 
 static void toggle_switch(int id);
@@ -221,12 +225,12 @@ static void checkbox_draw(int x, int y, int has_focus)
 static void numerical_range_draw(const numerical_range_widget *w, int x, int y, const uint8_t *value_text)
 {
     text_draw(value_text, x, y + 6, FONT_NORMAL_BLACK, 0);
-    inner_panel_draw(x + 50, y + 4, w->width_blocks, 1);
+    inner_panel_draw(x + NUMERICAL_SLIDER_X, y + 4, w->width_blocks, 1);
 
-    int width = w->width_blocks * 16 - 24;
-    int scroll_percentage = calc_percentage(*w->value - w->min, w->max - w->min);
-    int scroll_position = calc_adjust_with_percentage(width, scroll_percentage);
-    image_draw(image_group(GROUP_PANEL_BUTTON) + 37, x + 52 + scroll_position, y + 2);
+    int width = w->width_blocks * 16 - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
+    int scroll_position = (*w->value - w->min) * width / (w->max - w->min);
+    image_draw(image_group(GROUP_PANEL_BUTTON) + 37,
+        x + NUMERICAL_SLIDER_X + NUMERICAL_SLIDER_PADDING + scroll_position, y + 2);
 }
 
 static int is_checkbox(const mouse *m, int x, int y)
@@ -254,7 +258,7 @@ static int checkbox_handle_mouse(const mouse *m, int x, int y, int value_key, in
 
 static int is_numerical_range(const mouse *m, int x, int y, int width)
 {
-    if (x + 50 <= m->x && x + width + 50 >= m->x &&
+    if (x + NUMERICAL_SLIDER_X <= m->x && x + width + NUMERICAL_SLIDER_X >= m->x &&
         y <= m->y && y + 16 > m->y) {
         return 1;
     }
@@ -265,7 +269,6 @@ static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numeri
 {
     numerical_range_widget *w = &scale_ranges[numerical_range_id - 1];
 
-    int width = w->width_blocks * 16;
     if (data.active_numerical_range) {
         if (data.active_numerical_range != numerical_range_id) {
             return 0;
@@ -274,16 +277,20 @@ static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numeri
             data.active_numerical_range = 0;
             return 0;
         }
-    } else if (!m->left.is_down || !is_numerical_range(m, x, y, width)) {
+    } else if (!m->left.is_down || !is_numerical_range(m, x, y, w->width_blocks * 16)) {
         return 0;
     }
-    int width_position = m->x - x - 50;
-    double width_step = width * w->step / (double) (w->max - w->min);
-    int steps = (int) ((width_position / width_step) + 0.5);
-    int value = w->min + steps * w->step;
-    value = calc_bound(value, w->min, w->max);
-    if (value != *w->value) {
-        *w->value = value;
+    int slider_width = w->width_blocks * 16 - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
+    int pixels_per_pct = slider_width / (w->max - w->min);
+    int dot_position = m->x - x - NUMERICAL_SLIDER_X - NUMERICAL_DOT_SIZE / 2 + pixels_per_pct / 2;
+
+    int exact_value = calc_bound(w->min + dot_position * (w->max - w->min) / slider_width, w->min, w->max);
+    int left_step_value = (exact_value / w->step) * w->step;
+    int right_step_value = calc_bound(left_step_value + w->step, w->min, w->max);
+    int closest_step_value = (exact_value - left_step_value) < (right_step_value - exact_value) ?
+        left_step_value : right_step_value;
+    if (closest_step_value != *w->value) {
+        *w->value = closest_step_value;
         window_request_refresh();
     }
     data.active_numerical_range = numerical_range_id;
