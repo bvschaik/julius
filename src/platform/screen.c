@@ -53,12 +53,9 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
         return;
     }
 
-    // Assure width is at least 640 and height is at least 480
-    float width_reference = scale_pixels_to_logical(pixel_width) / (float) MINIMUM.WIDTH;
-    float height_reference = scale_pixels_to_logical(pixel_height) / (float) MINIMUM.HEIGHT;
-    float minimum_reference = SDL_min(width_reference, height_reference);
-    if (minimum_reference < 1.0f) {
-        scale_percentage = (int) (scale_percentage * minimum_reference);
+    int max_scale_pct = get_max_scale_percentage(pixel_width, pixel_height);
+    if (max_scale_pct < scale_percentage) {
+        scale_percentage = max_scale_pct;
         SDL_Log("Maximum scale of %i applied", scale_percentage);
     }
 
