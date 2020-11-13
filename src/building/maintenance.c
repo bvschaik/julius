@@ -209,9 +209,7 @@ void building_maintenance_check_fire_collapse(void)
             } else if (climate == CLIMATE_DESERT) {
                 fire_increase += 3;
             }
-            if (building_is_house(b->type) && b->data.house.temple_neptune && building_monument_upgraded(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
-                fire_increase /= 2;
-            }
+
             b->fire_risk += fire_increase;
         }
         if (b->fire_risk > 100) {
