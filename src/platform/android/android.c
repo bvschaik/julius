@@ -132,11 +132,11 @@ void android_toast_message(const char *message)
     destroy_java_function_handler(&handler);
 }
 
-float android_get_screen_scale(void)
+float android_get_screen_density(void)
 {
     java_function_handler handler;
     float result = 1.0f;
-    if (get_java_method_handler(CLASS_JULIUS_ACTIVITY, "getScreenScale", "()F", &handler)) {
+    if (get_java_method_handler(CLASS_JULIUS_ACTIVITY, "getScreenDensity", "()F", &handler)) {
         result = (float) (*handler.env)->CallFloatMethod(handler.env, handler.activity, handler.method);
     }
     destroy_java_function_handler(&handler);

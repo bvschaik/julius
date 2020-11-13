@@ -49,7 +49,7 @@ public class JuliusMainActivity extends SDLActivity {
         });
     }
 
-    public float getScreenScale() {
+    public float getScreenDensity() {
         return getResources().getDisplayMetrics().density;
     }
 

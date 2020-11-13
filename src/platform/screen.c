@@ -68,7 +68,7 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
 #ifdef __ANDROID__
 static void set_scale_for_screen(int pixel_width, int pixel_height)
 {
-    set_scale_percentage(android_get_screen_scale() * 100, pixel_width, pixel_height);
+    set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
     SDL_Log("Auto-setting scale to %i", scale_percentage);
 }
 #endif
