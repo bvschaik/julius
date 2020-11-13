@@ -28,9 +28,6 @@ void scenario_emperor_change_process(void)
     if (data.state == 0) {
         if (game_time_year() == data.game_year && game_time_month() == data.month) {
             data.state = 1; // done
-            if (config_get(CONFIG_GP_FIX_EDITOR_EVENTS)) {
-                city_ratings_reset_favor_emperor_change();
-            }
             city_message_post(1, MESSAGE_EMPEROR_CHANGE, 0, 0);
         }
     }

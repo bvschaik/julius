@@ -43,7 +43,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Отображать боковую панель армии"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Исправить баг иммиграции в режиме \"Очень сложный\""},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Исправить баг 100-летних жителей"},
-    {TR_CONFIG_FIX_EDITOR_EVENTS, "Исправить баг Императора и времени выживания в режиме конструктора"},
     {TR_HOTKEY_TITLE, "Горячие клавиши Julius"},
     {TR_HOTKEY_LABEL, "Горячие клавиши"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Альтернативные"},

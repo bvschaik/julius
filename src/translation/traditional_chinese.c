@@ -43,7 +43,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "顯示軍隊資訊側欄"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "修復非常困難不來人BUG"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "修復人口百歲仍占房BUG"},
-    {TR_CONFIG_FIX_EDITOR_EVENTS, "自定遊戲修正：皇帝更位支持度重置至50；生存時間結束才勝利"},
     {TR_HOTKEY_TITLE, "Julius 熱鍵綁定"},
     {TR_HOTKEY_LABEL, "熱鍵"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "可替代鍵"},

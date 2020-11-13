@@ -73,43 +73,17 @@ static int determine_victory_state(void)
     if (!has_criteria) {
         state = VICTORY_STATE_NONE;
     }
-    if (config_get(CONFIG_GP_FIX_EDITOR_EVENTS)) {
-        // More sensible options for surival time:
-        // require the user to play to the end, even if other win criteria have been set and are met.
-        // At the end, let the user lose if the other win criteria are not met
-        if (game_time_year() >= scenario_criteria_max_year()) {
-            if (scenario_criteria_time_limit_enabled()) {
-                // Lose game automatically when you go over the time limit
-                state = VICTORY_STATE_LOST;
-            } else if (scenario_criteria_survival_enabled()) {
-                if (!has_criteria) {
-                    state = VICTORY_STATE_WON;
-                } else if (state != VICTORY_STATE_WON) {
-                    // Lose game if you do not meet the criteria at the end of the road
-                    state = VICTORY_STATE_LOST;
-                }
-            }
-        } else if (scenario_criteria_survival_enabled()) {
-            // Do not win the game when other criteria are met when survival time is enabled
-            state = VICTORY_STATE_NONE;
-        }
+    // Bug: the survival time only works if no other criteria have been set
+    if (!has_criteria) {
         if (scenario_criteria_time_limit_enabled() || scenario_criteria_survival_enabled()) {
             has_criteria = 1;
         }
-    } else {
-        // Original buggy code for survival time and time limit:
-        // the survival time only works if no other criteria have been set
-        if (!has_criteria) {
-            if (scenario_criteria_time_limit_enabled() || scenario_criteria_survival_enabled()) {
-                has_criteria = 1;
-            }
-        }
-        if (game_time_year() >= scenario_criteria_max_year()) {
-            if (scenario_criteria_time_limit_enabled()) {
-                state = VICTORY_STATE_LOST;
-            } else if (scenario_criteria_survival_enabled()) {
-                state = VICTORY_STATE_WON;
-            }
+    }
+    if (game_time_year() >= scenario_criteria_max_year()) {
+        if (scenario_criteria_time_limit_enabled()) {
+            state = VICTORY_STATE_LOST;
+        } else if (scenario_criteria_survival_enabled()) {
+            state = VICTORY_STATE_WON;
         }
     }
 

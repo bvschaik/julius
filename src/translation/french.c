@@ -43,7 +43,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Activer la gestion militaire dans le panneau latéral"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corrige le bug d'immigration en mode très difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corrige le bug des fantômes de 100 ans"},
-    {TR_CONFIG_FIX_EDITOR_EVENTS, "Corrige \"Nouvel Empereur\" et la survie des missions de l'éditeur"},
     {TR_HOTKEY_TITLE, "Configuration du clavier"},
     {TR_HOTKEY_LABEL, "Touche"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},

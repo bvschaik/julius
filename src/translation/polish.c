@@ -43,7 +43,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Włącz boczny panel wojskowy"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Napraw błąd z imigrację na najwyższym poziomie trudności"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Napraw 100-letnie duchy"},
-    {TR_CONFIG_FIX_EDITOR_EVENTS, "Napraw zmianę imperatora i czas przetrwania w konstruktorze miast"},
     {TR_HOTKEY_TITLE, "Julius - konfiguracja skrótów klawiszowych"},
     {TR_HOTKEY_LABEL, "Skrót klawiszowy"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternatywny"},

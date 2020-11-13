@@ -43,7 +43,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Activar barra lateral militar"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corregir bug impidiendo immigración en Muy Difícil"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corregir bug creando fantasmas con 100 años"},
-    {TR_CONFIG_FIX_EDITOR_EVENTS, "Corregir cambio de Emperador y supervivencia en misiones del editor"},
     {TR_HOTKEY_TITLE, "Configuración de atajos de teclado de Julius"},
     {TR_HOTKEY_LABEL, "Tecla"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternativa"},

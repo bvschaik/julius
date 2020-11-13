@@ -14,7 +14,6 @@ static const char *INI_FILENAME = "julius.ini";
 static const char *ini_keys[] = {
     "gameplay_fix_immigration",
     "gameplay_fix_100y_ghosts",
-    "gameplay_fix_editor_events",
     "ui_sidebar_info",
     "ui_show_intro_video",
     "ui_smooth_scrolling",

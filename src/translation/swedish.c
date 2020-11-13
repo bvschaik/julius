@@ -43,7 +43,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Visa militär sidopanel"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Fixa invandringsproblem vid väldigt svårt svårighetsgrad"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Fixa 100-års spöken"},
-    {TR_CONFIG_FIX_EDITOR_EVENTS, "Fixa härskarändring and överlevnadstid i användaruppdrag"},
     {TR_HOTKEY_TITLE, "Julius kortkommandon"},
     {TR_HOTKEY_LABEL, "Kortkommando"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternativ"},

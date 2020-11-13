@@ -43,7 +43,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Abilita il pannello militare"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corregge il bug dell'immigrazione al livello molto difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corregge il bug dei centenari"},
-    {TR_CONFIG_FIX_EDITOR_EVENTS, "Elimina le complicazioni al cambio di Imperatore"},
     {TR_HOTKEY_TITLE, "Configurazione delle scorciatoie da tastiera"},
     {TR_HOTKEY_LABEL, "Tasto"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternativa"},
