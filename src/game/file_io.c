@@ -627,14 +627,6 @@ static void savegame_save_to_state(savegame_state *state)
 
 }
 
-static int game_file_get_version(const char* filename) {
-    FILE* fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
-    fseek(fp, 4, 0);
-    savegame_version = read_int32(fp);
-    file_close(fp);
-    return savegame_version;
-}
-
 int game_file_io_read_scenario(const char *filename)
 {
     log_info("Loading scenario", filename, 0);
@@ -762,6 +754,15 @@ static void savegame_write_to_file(FILE *fp)
         }
     }
 }
+
+static int game_file_get_version(const char* filename) {
+    FILE* fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+    fseek(fp, 4, 0);
+    savegame_version = read_int32(fp);
+    file_close(fp);
+    return savegame_version;
+}
+
 int game_file_io_read_saved_game(const char *filename, int offset)
 {
     game_file_get_version(filename);
