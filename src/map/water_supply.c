@@ -231,6 +231,9 @@ void map_water_supply_update_reservoir_fountain(void)
         if (b->type != BUILDING_SMALL_POND && b->type != BUILDING_LARGE_POND) {
             continue;
         }
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
 
         if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
             b->has_water_access = 1;
