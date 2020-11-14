@@ -632,7 +632,7 @@ void window_building_draw_tavern(building_info_context* c)
 {
     building* b = building_get(c->building_id);
 
-    window_building_play_sound(c, "wavs/market_4.wav");
+    window_building_play_sound(c, "wavs/market3.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     
     text_draw_centered(translation_for(TR_BUILDING_TAVERN), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
