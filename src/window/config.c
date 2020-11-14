@@ -89,34 +89,34 @@ typedef struct {
 
 typedef struct {
     int type;
+    int subtype;
     translation_key description;
-    int parameter;
     const uint8_t* (*get_display_text)(void);
     int enabled;
 } config_widget;
 
 static config_widget all_widgets[MAX_WIDGETS] = {
-    {TYPE_SELECT, TR_CONFIG_LANGUAGE_LABEL, SELECT_LANGUAGE, display_text_language},
-    {TYPE_NUMERICAL_DESC, TR_CONFIG_DISPLAY_SCALE, RANGE_DISPLAY_SCALE},
-    {TYPE_NUMERICAL_RANGE, 0, RANGE_DISPLAY_SCALE, display_text_display_scale},
-    {TYPE_NUMERICAL_DESC, TR_CONFIG_CURSOR_SCALE, RANGE_CURSOR_SCALE},
-    {TYPE_NUMERICAL_RANGE, 0, RANGE_CURSOR_SCALE, display_text_cursor_scale},
+    {TYPE_SELECT, SELECT_LANGUAGE, TR_CONFIG_LANGUAGE_LABEL, display_text_language},
+    {TYPE_NUMERICAL_DESC, RANGE_DISPLAY_SCALE, TR_CONFIG_DISPLAY_SCALE},
+    {TYPE_NUMERICAL_RANGE, RANGE_DISPLAY_SCALE, 0, display_text_display_scale},
+    {TYPE_NUMERICAL_DESC, RANGE_CURSOR_SCALE, TR_CONFIG_CURSOR_SCALE},
+    {TYPE_NUMERICAL_RANGE, RANGE_CURSOR_SCALE, 0, display_text_cursor_scale},
     {TYPE_SPACE},
-    {TYPE_HEADER, TR_CONFIG_HEADER_UI_CHANGES},
-    {TYPE_CHECKBOX, TR_CONFIG_SHOW_INTRO_VIDEO, CONFIG_UI_SHOW_INTRO_VIDEO},
-    {TYPE_CHECKBOX, TR_CONFIG_SIDEBAR_INFO, CONFIG_UI_SIDEBAR_INFO},
-    {TYPE_CHECKBOX, TR_CONFIG_SMOOTH_SCROLLING, CONFIG_UI_SMOOTH_SCROLLING},
-    {TYPE_CHECKBOX, TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, CONFIG_UI_DISABLE_RIGHT_CLICK_MAP_DRAG},
-    {TYPE_CHECKBOX, TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE},
-    {TYPE_CHECKBOX, TR_CONFIG_ALLOW_CYCLING_TEMPLES, CONFIG_UI_ALLOW_CYCLING_TEMPLES},
-    {TYPE_CHECKBOX, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE},
-    {TYPE_CHECKBOX, TR_CONFIG_SHOW_CONSTRUCTION_SIZE, CONFIG_UI_SHOW_CONSTRUCTION_SIZE},
-    {TYPE_CHECKBOX, TR_CONFIG_HIGHLIGHT_LEGIONS, CONFIG_UI_HIGHLIGHT_LEGIONS},
-    {TYPE_CHECKBOX, TR_CONFIG_SHOW_MILITARY_SIDEBAR, CONFIG_UI_SHOW_MILITARY_SIDEBAR},
+    {TYPE_HEADER, 0, TR_CONFIG_HEADER_UI_CHANGES},
+    {TYPE_CHECKBOX, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO},
+    {TYPE_CHECKBOX, CONFIG_UI_SIDEBAR_INFO, TR_CONFIG_SIDEBAR_INFO},
+    {TYPE_CHECKBOX, CONFIG_UI_SMOOTH_SCROLLING, TR_CONFIG_SMOOTH_SCROLLING},
+    {TYPE_CHECKBOX, CONFIG_UI_DISABLE_RIGHT_CLICK_MAP_DRAG, TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG},
+    {TYPE_CHECKBOX, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE, TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE},
+    {TYPE_CHECKBOX, CONFIG_UI_ALLOW_CYCLING_TEMPLES, TR_CONFIG_ALLOW_CYCLING_TEMPLES},
+    {TYPE_CHECKBOX, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE},
+    {TYPE_CHECKBOX, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE},
+    {TYPE_CHECKBOX, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS},
+    {TYPE_CHECKBOX, CONFIG_UI_SHOW_MILITARY_SIDEBAR, TR_CONFIG_SHOW_MILITARY_SIDEBAR},
     {TYPE_SPACE},
-    {TYPE_HEADER, TR_CONFIG_HEADER_GAMEPLAY_CHANGES},
-    {TYPE_CHECKBOX, TR_CONFIG_FIX_IMMIGRATION_BUG, CONFIG_GP_FIX_IMMIGRATION_BUG},
-    {TYPE_CHECKBOX, TR_CONFIG_FIX_100_YEAR_GHOSTS, CONFIG_GP_FIX_100_YEAR_GHOSTS}
+    {TYPE_HEADER, 0, TR_CONFIG_HEADER_GAMEPLAY_CHANGES},
+    {TYPE_CHECKBOX, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG},
+    {TYPE_CHECKBOX, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS}
 };
 
 static generic_button select_buttons[] = {
@@ -312,7 +312,7 @@ static void enable_all_widgets(void)
 static void disable_widget(int type, int subtype)
 {
     for (int i = 0; i < MAX_WIDGETS; i++) {
-        if (all_widgets[i].type == type && all_widgets[i].parameter == subtype) {
+        if (all_widgets[i].type == type && all_widgets[i].subtype == subtype) {
             all_widgets[i].enabled = 0;
         }
     }
@@ -401,13 +401,13 @@ static void draw_background(void)
         if (w->type == TYPE_HEADER) {
             text_draw(translation_for(w->description), 20, y, FONT_NORMAL_BLACK, 0);
         } else if (w->type == TYPE_CHECKBOX) {
-            checkbox_draw_text(20, y, w->parameter, w->description);
+            checkbox_draw_text(20, y, w->subtype, w->description);
         } else if (w->type == TYPE_SELECT) {
             text_draw(translation_for(w->description), 20, y + 6, FONT_NORMAL_BLACK, 0);
-            const generic_button *btn = &select_buttons[w->parameter];
+            const generic_button *btn = &select_buttons[w->subtype];
             text_draw_centered(w->get_display_text(), btn->x, y + btn->y + 6, btn->width, FONT_NORMAL_BLACK, 0);
         } else if (w->type == TYPE_NUMERICAL_RANGE) {
-            numerical_range_draw(&scale_ranges[w->parameter], NUMERICAL_RANGE_X, y, w->get_display_text());
+            numerical_range_draw(&scale_ranges[w->subtype], NUMERICAL_RANGE_X, y, w->get_display_text());
         } else if (w->type == TYPE_NUMERICAL_DESC) {
             text_draw(translation_for(w->description), 20, y + 10, FONT_NORMAL_BLACK, 0);
         }
@@ -431,7 +431,7 @@ static void draw_foreground(void)
         if (w->type == TYPE_CHECKBOX) {
             checkbox_draw(20, y, data.focus_button == i + 1);
         } else if (w->type == TYPE_SELECT) {
-            const generic_button *btn = &select_buttons[w->parameter];
+            const generic_button *btn = &select_buttons[w->subtype];
             button_border_draw(btn->x, y + btn->y,
                 btn->width, btn->height, data.focus_button == i + 1);
         }
@@ -466,19 +466,19 @@ static void handle_input(const mouse *m, const hotkeys *h)
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_CHECKBOX) {
             int focus = 0;
-            handled |= checkbox_handle_mouse(m_dialog, 20, y, w->parameter, &focus);
+            handled |= checkbox_handle_mouse(m_dialog, 20, y, w->subtype, &focus);
             if (focus) {
                 data.focus_button = i + 1;
             }
         } else if (w->type == TYPE_SELECT) {
-            generic_button *btn = &select_buttons[w->parameter];
+            generic_button *btn = &select_buttons[w->subtype];
             int focus = 0;
             handled |= generic_buttons_handle_mouse(m_dialog, 0, y, btn, 1, &focus);
             if (focus) {
                 data.focus_button = i + 1;
             }
         } else if (w->type == TYPE_NUMERICAL_RANGE) {
-            handled |= numerical_range_handle_mouse(m_dialog, NUMERICAL_RANGE_X, y, w->parameter + 1);
+            handled |= numerical_range_handle_mouse(m_dialog, NUMERICAL_RANGE_X, y, w->subtype + 1);
         }
     }
 
