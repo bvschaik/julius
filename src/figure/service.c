@@ -83,11 +83,11 @@ static void hippodrome_coverage(building *b)
     b->data.house.hippodrome = MAX_COVERAGE;
 }
 
-static void tavern_coverage(building* b) {
-    if (b->data.market.inventory[INVENTORY_WINE]) {
-        b->data.house.amphitheater_actor = MAX_COVERAGE;
-        if (b->data.market.inventory[INVENTORY_MEAT]) {
-            b->data.house.amphitheater_gladiator = MAX_COVERAGE;
+static void tavern_coverage(building* b, int products) {
+    if (products) {
+        b->house_tavern_wine_access = MAX_COVERAGE;
+        if (products > 1) {
+            b->house_tavern_meat_access = MAX_COVERAGE;
         }
     }
 }
@@ -335,6 +335,39 @@ static int provide_market_goods(int market_building_id, int x, int y)
                     distribute_market_resources(b, market);
                     serviced++;
                 }
+
+            }
+        }
+    }
+    return serviced;
+}
+
+static int provide_venus_wine_to_taverns(int market_building_id, int x, int y)
+{
+    int serviced = 0;
+    building* market = building_get(market_building_id);
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            int building_id = map_building_at(grid_offset);
+            if (building_id) {
+                building* b = building_get(building_id);
+                if (b->type == BUILDING_TAVERN) {
+                    int amount_wanted = 200 - b->data.market.inventory[INVENTORY_WINE];
+                    if (market->data.market.inventory[INVENTORY_WINE] > 0 && amount_wanted > 0) {
+                        if (amount_wanted <= market->data.market.inventory[INVENTORY_WINE]) {
+                            b->data.market.inventory[INVENTORY_WINE] += amount_wanted;
+                            market->data.market.inventory[INVENTORY_WINE] -= amount_wanted;
+                        }
+                        else {
+                            b->data.market.inventory[INVENTORY_WINE] += market->data.market.inventory[INVENTORY_WINE];
+                            market->data.market.inventory[INVENTORY_WINE] = 0;
+                        }
+                    }
+                    serviced++;
+                }
             }
         }
     }
@@ -457,6 +490,9 @@ int figure_service_provide_coverage(figure *f)
                 case BUILDING_LARGE_TEMPLE_VENUS:
                     houses_serviced = provide_culture(x, y, religion_coverage_venus);
                     provide_market_goods(f->building_id, x, y);
+                    if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
+                        provide_venus_wine_to_taverns(f->building_id, x, y);
+                    }
                     break;
                 case BUILDING_GRAND_TEMPLE_VENUS:
                     houses_serviced = provide_culture(x, y, religion_coverage_venus);                    
@@ -501,7 +537,8 @@ int figure_service_provide_coverage(figure *f)
             houses_serviced = provide_culture(x, y, hippodrome_coverage);
             break;
         case FIGURE_BARKEEP:
-            houses_serviced = provide_culture(x, y, tavern_coverage);
+            b = building_get(f->building_id);
+            houses_serviced = provide_entertainment(x, y, b->data.market.inventory[INVENTORY_WINE] ? b->data.market.inventory[INVENTORY_MEAT] ? 2 : 1 : 0, tavern_coverage);
             break;
         case FIGURE_ENGINEER: 
         case FIGURE_WORK_CAMP_ENGINEER: {

@@ -163,7 +163,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, "Temples produce charioteers for the hippodrome." },
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, "Priests reduce pottery and furniture consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, "Temples generate food, in an amount based on the number of houses they cover, and deliver it to the supply post." },
-    {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, "The Grand temple produces wine in a quantity scaled to city population with Venus temple access. Temples collect and distribute it to houses." },
+    {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, "The Grand temple produces wine in a quantity scaled to city population with Venus temple access. Temples collect and distribute it to houses and taverns." },
     {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC, "Priests collect and distribute both oil and one food type from city storage." },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC, "Priests expand housing capacity by 5%. Grand temple provides water like a filled reservoir." },
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, "Priests reduce oil and wine consumption by 20%." },
@@ -370,10 +370,16 @@ static translation_string all_strings[] = {
     {TR_BUILDING_TAVERN_DESC_1, "This tavern has no workers, and cannot open for business." },
     {TR_BUILDING_TAVERN_DESC_2, "This tavern has no wine, and cannot open for business."},
     {TR_BUILDING_TAVERN_DESC_3, "The tavern provides entertainment as long as the wine keeps flowing. A supply of meat would increase its appeal." },
-    {TR_BUILDING_TAVERN_DESC_4, "Plentiful wine and roasted meat draws a lively crowd to this tavern."},
+    {TR_BUILDING_TAVERN_DESC_4, "Plentiful wine and the smell of roasted meat draw a lively crowd to this tavern for gambling, music, and merriment."},
     {TR_FIGURE_TYPE_BARKEEP, "Barkeep" },
-    {TR_FIGURE_TYPE_BARKEEP_BUYER, "Barkeep" },
-
+    {TR_FIGURE_TYPE_BARKEEP_BUYER, "Tavern buyer" },
+    {TR_OVERLAY_TAVERN, "Tavern" },
+    {TR_TOOLTIP_OVERLAY_TAVERN_1, "This house has no access to a tavern, or its tavern has run dry of wine."},
+    {TR_TOOLTIP_OVERLAY_TAVERN_2, "No barkeep has passed for a while. This house will soon lose access to its tavern."},
+    {TR_TOOLTIP_OVERLAY_TAVERN_3, "This house was passed by a barkeep from a tavern with wine." },
+    {TR_TOOLTIP_OVERLAY_TAVERN_4, "This house was passed by a barkeep from a tavern with wine and meat." },
+    {TR_TOOLTIP_OVERLAY_TAVERN_5, "This house was recently passed by a barkeep from a tavern with wine." },
+    {TR_TOOLTIP_OVERLAY_TAVERN_6, "This house was recently passed by a barkeep from a tavern with wine and meat. Let merriment commence!" }
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

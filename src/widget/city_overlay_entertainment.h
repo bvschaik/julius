@@ -13,4 +13,6 @@ const city_overlay *city_overlay_for_colosseum(void);
 
 const city_overlay *city_overlay_for_hippodrome(void);
 
+const city_overlay* city_overlay_for_tavern(void);
+
 #endif // WIGET_CITY_OVERLAY_ENTERTAINMENT_H

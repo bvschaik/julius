@@ -986,14 +986,16 @@ static void spawn_figure_tavern(building* b)
         if (b->houses_covered <= 50) {
             generate_labor_seeker(b, road.x, road.y);
         }
-        int spawn_delay = default_spawn_delay(b);
+        int spawn_delay = default_spawn_delay(b) * 2;
         if (!spawn_delay) {
             return;
         }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
-            if (!has_figure_of_type(b, FIGURE_BARKEEP)) {
+            if (!has_figure_of_type(b, FIGURE_BARKEEP) && b->data.market.inventory[INVENTORY_WINE] > 21) {
+                b->data.market.inventory[INVENTORY_WINE] -= 20;
+                b->data.market.inventory[INVENTORY_MEAT] -= calc_bound(40, 40, b->data.market.inventory[INVENTORY_MEAT]);
                 create_roaming_figure(b, road.x, road.y, FIGURE_BARKEEP);
             }
         }        

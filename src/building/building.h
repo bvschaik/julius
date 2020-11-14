@@ -66,6 +66,8 @@ typedef struct {
     unsigned char house_figure_generation_delay;
     unsigned char house_tax_coverage;
     unsigned char house_pantheon_access;
+    unsigned char house_tavern_wine_access;
+    unsigned char house_tavern_meat_access;
     short formation_id;
     unsigned char monthly_levy;
     union {
@@ -180,6 +182,8 @@ int building_is_mercury_temple(building_type type);
 int building_is_mars_temple(building_type type);
 
 int building_is_venus_temple(building_type type);
+
+int building_has_market_inventory(building_type type);
 
 int building_is_statue_garden_temple(building_type type);
 

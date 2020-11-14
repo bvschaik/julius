@@ -606,7 +606,7 @@ void window_building_draw_work_camp(building_info_context* c)
 {
 	window_building_play_sound(c, "wavs/tower4.wav");
     if (!c->has_road_access) {
-        window_building_draw_description(c, 69, 25, 96);
+        window_building_draw_description_at(c, 96, 69, 25);
     }
 	outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 	inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
@@ -619,7 +619,7 @@ void window_building_draw_engineer_guild(building_info_context* c)
 {
     window_building_play_sound(c, "wavs/eng_post.wav");
     if (!c->has_road_access) {
-        window_building_draw_description(c, 69, 25, 96);
+        window_building_draw_description_at(c, 96, 69, 25);
     }
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);

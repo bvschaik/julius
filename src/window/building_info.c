@@ -763,20 +763,13 @@ static int handle_specific_building_info_mouse(const mouse *m)
         return window_building_handle_mouse_figure_list(m, &context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.building_id)->type;
-        if (btype == BUILDING_MARKET || btype == BUILDING_MESS_HALL || btype == BUILDING_TAVERN) {
+        if (building_has_market_inventory(btype)) {
             if (context.storage_show_special_orders) {
                 window_building_handle_mouse_market_orders(m, &context);
             } else {
                 window_building_handle_mouse_market(m, &context);
             }
-	} else if (building_is_ceres_temple(btype) || building_is_venus_temple(btype)) {
-        if (context.storage_show_special_orders) {
-            window_building_handle_mouse_market_orders(m, &context);
-        }
-        else {
-            window_building_handle_mouse_market(m, &context);
-        }
-    } else if (btype == BUILDING_ROADBLOCK) {
+	} else if (btype == BUILDING_ROADBLOCK) {
             if (context.storage_show_special_orders) {
                 return window_building_handle_mouse_roadblock_orders(m, &context);
             } else {
