@@ -25,6 +25,8 @@
 
 #include <string.h>
 
+#define MAX_WIDGETS 25
+
 #define CHECKBOX_CHECK_SIZE 20
 #define CHECKBOX_HEIGHT 20
 #define CHECKBOX_WIDTH 560
@@ -60,6 +62,7 @@ static scrollbar_type scrollbar = {580, ITEM_Y_OFFSET, ITEM_HEIGHT * NUM_VISIBLE
 
 enum {
     TYPE_NONE,
+    TYPE_SPACE,
     TYPE_HEADER,
     TYPE_CHECKBOX,
     TYPE_SELECT,
@@ -89,15 +92,16 @@ typedef struct {
     translation_key description;
     int parameter;
     const uint8_t* (*get_display_text)(void);
+    int enabled;
 } config_widget;
 
-static config_widget widgets[] = {
+static config_widget all_widgets[MAX_WIDGETS] = {
     {TYPE_SELECT, TR_CONFIG_LANGUAGE_LABEL, SELECT_LANGUAGE, display_text_language},
-    {TYPE_NUMERICAL_DESC, TR_CONFIG_DISPLAY_SCALE},
+    {TYPE_NUMERICAL_DESC, TR_CONFIG_DISPLAY_SCALE, RANGE_DISPLAY_SCALE},
     {TYPE_NUMERICAL_RANGE, 0, RANGE_DISPLAY_SCALE, display_text_display_scale},
-    {TYPE_NUMERICAL_DESC, TR_CONFIG_CURSOR_SCALE},
+    {TYPE_NUMERICAL_DESC, TR_CONFIG_CURSOR_SCALE, RANGE_CURSOR_SCALE},
     {TYPE_NUMERICAL_RANGE, 0, RANGE_CURSOR_SCALE, display_text_cursor_scale},
-    {TYPE_NONE},
+    {TYPE_SPACE},
     {TYPE_HEADER, TR_CONFIG_HEADER_UI_CHANGES},
     {TYPE_CHECKBOX, TR_CONFIG_SHOW_INTRO_VIDEO, CONFIG_UI_SHOW_INTRO_VIDEO},
     {TYPE_CHECKBOX, TR_CONFIG_SIDEBAR_INFO, CONFIG_UI_SIDEBAR_INFO},
@@ -109,7 +113,7 @@ static config_widget widgets[] = {
     {TYPE_CHECKBOX, TR_CONFIG_SHOW_CONSTRUCTION_SIZE, CONFIG_UI_SHOW_CONSTRUCTION_SIZE},
     {TYPE_CHECKBOX, TR_CONFIG_HIGHLIGHT_LEGIONS, CONFIG_UI_HIGHLIGHT_LEGIONS},
     {TYPE_CHECKBOX, TR_CONFIG_SHOW_MILITARY_SIDEBAR, CONFIG_UI_SHOW_MILITARY_SIDEBAR},
-    {TYPE_NONE},
+    {TYPE_SPACE},
     {TYPE_HEADER, TR_CONFIG_HEADER_GAMEPLAY_CHANGES},
     {TYPE_CHECKBOX, TR_CONFIG_FIX_IMMIGRATION_BUG, CONFIG_GP_FIX_IMMIGRATION_BUG},
     {TYPE_CHECKBOX, TR_CONFIG_FIX_100_YEAR_GHOSTS, CONFIG_GP_FIX_100_YEAR_GHOSTS}
@@ -139,6 +143,8 @@ static translation_key bottom_button_texts[] = {
 };
 
 static struct {
+    config_widget *widgets[MAX_WIDGETS];
+    int num_widgets;
     int focus_button;
     int bottom_focus_button;
     struct {
@@ -294,6 +300,34 @@ static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numeri
     return 1;
 }
 
+static void enable_all_widgets(void)
+{
+    for (int i = 0; i < MAX_WIDGETS; i++) {
+        if (all_widgets[i].type) {
+            all_widgets[i].enabled = 1;
+        }
+    }
+}
+
+static void disable_widget(int type, int subtype)
+{
+    for (int i = 0; i < MAX_WIDGETS; i++) {
+        if (all_widgets[i].type == type && all_widgets[i].parameter == subtype) {
+            all_widgets[i].enabled = 0;
+        }
+    }
+}
+
+static void install_widgets(void)
+{
+    data.num_widgets = 0;
+    for (int i = 0; i < MAX_WIDGETS; i++) {
+        if (all_widgets[i].enabled) {
+            data.widgets[data.num_widgets++] = &all_widgets[i];
+        }
+    }
+}
+
 static void init(void)
 {
     if (!data.config_values[0].change_action) {
@@ -327,7 +361,16 @@ static void init(void)
         }
     }
 
-    scrollbar_init(&scrollbar, 0, sizeof(widgets) / sizeof(config_widget) - NUM_VISIBLE_ITEMS);
+    enable_all_widgets();
+    if (system_is_fullscreen_only()) {
+        disable_widget(TYPE_NUMERICAL_DESC, RANGE_DISPLAY_SCALE);
+        disable_widget(TYPE_NUMERICAL_RANGE, RANGE_DISPLAY_SCALE);
+        disable_widget(TYPE_NUMERICAL_DESC, RANGE_CURSOR_SCALE);
+        disable_widget(TYPE_NUMERICAL_RANGE, RANGE_CURSOR_SCALE);
+    }
+    install_widgets();
+
+    scrollbar_init(&scrollbar, 0, data.num_widgets - NUM_VISIBLE_ITEMS);
 }
 
 static void update_scale(void)
@@ -353,7 +396,7 @@ static void draw_background(void)
     text_draw_centered(translation_for(TR_CONFIG_TITLE), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
     for (int i = 0; i < NUM_VISIBLE_ITEMS; i++) {
-        config_widget *w = &widgets[i + scrollbar.scroll_position];
+        config_widget *w = data.widgets[i + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_HEADER) {
             text_draw(translation_for(w->description), 20, y, FONT_NORMAL_BLACK, 0);
@@ -383,7 +426,7 @@ static void draw_foreground(void)
     graphics_in_dialog();
 
     for (int i = 0; i < NUM_VISIBLE_ITEMS; i++) {
-        config_widget *w = &widgets[i + scrollbar.scroll_position];
+        config_widget *w = data.widgets[i + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_CHECKBOX) {
             checkbox_draw(20, y, data.focus_button == i + 1);
@@ -419,7 +462,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     data.focus_button = 0;
     
     for (int i = 0; i < NUM_VISIBLE_ITEMS; i++) {
-        config_widget *w = &widgets[i + scrollbar.scroll_position];
+        config_widget *w = data.widgets[i + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_CHECKBOX) {
             int focus = 0;
