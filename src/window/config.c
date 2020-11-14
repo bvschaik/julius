@@ -377,8 +377,10 @@ static void draw_foreground(void)
             bottom_buttons[i].width, bottom_buttons[i].height, data.bottom_focus_button == i + 1);
     }
 
-    inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / 16 - 3);
-    scrollbar_draw(&scrollbar);
+    if (data.num_widgets > NUM_VISIBLE_ITEMS) {
+        inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / 16 - 3);
+        scrollbar_draw(&scrollbar);
+    }
 
     graphics_reset_dialog();
 }
