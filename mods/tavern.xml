@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE mod>
+
+<mod author="Areldir" name="Tavern">
+<!-- Note: Tavern Variants -->
+    <image id="Tavern OFF" src="Tavern_OFF" />
+
+
+<!-- Note: Tavern ON Animations -->
+
+    <image id="Tavern ON" >
+		<layer group="this" image="Tavern OFF" />
+        <animation speed="6" frames="3" reversible="true" />
+    </image>
+    <image src="Tavern_ON_01" />
+    <image src="Tavern_ON_02" />
+    <image src="Tavern_ON_03" />
+
+
+
+</mod>		
