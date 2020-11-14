@@ -27,21 +27,20 @@
 
 #define MAX_WIDGETS 25
 
+#define NUM_VISIBLE_ITEMS 15
+
+#define NUM_BOTTOM_BUTTONS 4
+#define MAX_LANGUAGE_DIRS 20
+
+#define ITEM_Y_OFFSET 60
+#define ITEM_HEIGHT 24
+
 #define CHECKBOX_CHECK_SIZE 20
 #define CHECKBOX_HEIGHT 20
 #define CHECKBOX_WIDTH 560
 #define CHECKBOX_TEXT_WIDTH CHECKBOX_WIDTH - CHECKBOX_CHECK_SIZE - 15
 
-#define NUM_VISIBLE_ITEMS 15
-
-#define ITEM_Y_OFFSET 60
-#define ITEM_HEIGHT 24
-
-#define NUM_BOTTOM_BUTTONS 4
-#define MAX_LANGUAGE_DIRS 20
-
 #define NUMERICAL_RANGE_X 20
-
 #define NUMERICAL_SLIDER_X 50
 #define NUMERICAL_SLIDER_PADDING 2
 #define NUMERICAL_DOT_SIZE 20
@@ -171,31 +170,6 @@ static int config_change_cursor_scale(config_key key);
 static int config_change_string_basic(config_string_key key);
 static int config_change_string_language(config_string_key key);
 
-static uint8_t *percentage_string(uint8_t *string, int percentage)
-{
-    int offset = string_from_int(string, percentage, 0);
-    string[offset] = '%';
-    string[offset + 1] = 0;
-    return string;
-}
-
-static const uint8_t *display_text_language(void)
-{
-    return data.language_options[data.selected_language_option];
-}
-
-static const uint8_t *display_text_display_scale(void)
-{
-    static uint8_t value[10];
-    return percentage_string(value, data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].new_value);
-}
-
-static const uint8_t *display_text_cursor_scale(void)
-{
-    static uint8_t value[10];
-    return percentage_string(value, data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value);
-}
-
 static void init_config_values(void)
 {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
@@ -210,94 +184,6 @@ static void init_config_values(void)
 
     scale_ranges[RANGE_DISPLAY_SCALE].value = &data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].new_value;
     scale_ranges[RANGE_CURSOR_SCALE].value = &data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value;
-}
-
-static void checkbox_draw_text(int x, int y, int value_key, translation_key description)
-{
-    if (data.config_values[value_key].new_value) {
-        text_draw(string_from_ascii("x"), x + 6, y + 3, FONT_NORMAL_BLACK, 0);
-    }
-    text_draw_ellipsized(translation_for(description), x + 30, y + 5, CHECKBOX_TEXT_WIDTH, FONT_NORMAL_BLACK, 0);
-}
-
-static void checkbox_draw(int x, int y, int has_focus)
-{
-    button_border_draw(x, y, CHECKBOX_CHECK_SIZE, CHECKBOX_CHECK_SIZE, has_focus);
-}
-
-static void numerical_range_draw(const numerical_range_widget *w, int x, int y, const uint8_t *value_text)
-{
-    text_draw(value_text, x, y + 6, FONT_NORMAL_BLACK, 0);
-    inner_panel_draw(x + NUMERICAL_SLIDER_X, y + 4, w->width_blocks, 1);
-
-    int width = w->width_blocks * 16 - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
-    int scroll_position = (*w->value - w->min) * width / (w->max - w->min);
-    image_draw(image_group(GROUP_PANEL_BUTTON) + 37,
-        x + NUMERICAL_SLIDER_X + NUMERICAL_SLIDER_PADDING + scroll_position, y + 2);
-}
-
-static int is_checkbox(const mouse *m, int x, int y)
-{
-    if (x <= m->x && x + CHECKBOX_WIDTH > m->x &&
-        y <= m->y && y + CHECKBOX_HEIGHT > m->y) {
-        return 1;
-    }
-    return 0;
-}
-
-static int checkbox_handle_mouse(const mouse *m, int x, int y, int value_key, int *focus)
-{
-    if (!is_checkbox(m, x, y)) {
-        return 0;
-    }
-    *focus = 1;
-    if (m->left.went_up) {
-        toggle_switch(value_key);
-        return 1;
-    } else {
-        return 0;
-    }
-}
-
-static int is_numerical_range(const mouse *m, int x, int y, int width)
-{
-    if (x + NUMERICAL_SLIDER_X <= m->x && x + width + NUMERICAL_SLIDER_X >= m->x &&
-        y <= m->y && y + 16 > m->y) {
-        return 1;
-    }
-    return 0;
-}
-
-static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numerical_range_id)
-{
-    numerical_range_widget *w = &scale_ranges[numerical_range_id - 1];
-
-    if (data.active_numerical_range) {
-        if (data.active_numerical_range != numerical_range_id) {
-            return 0;
-        }
-        if (!m->left.is_down) {
-            data.active_numerical_range = 0;
-            return 0;
-        }
-    } else if (!m->left.is_down || !is_numerical_range(m, x, y, w->width_blocks * 16)) {
-        return 0;
-    }
-    int slider_width = w->width_blocks * 16 - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
-    int pixels_per_pct = slider_width / (w->max - w->min);
-    int dot_position = m->x - x - NUMERICAL_SLIDER_X - NUMERICAL_DOT_SIZE / 2 + pixels_per_pct / 2;
-
-    int exact_value = calc_bound(w->min + dot_position * (w->max - w->min) / slider_width, w->min, w->max);
-    int left_step_value = (exact_value / w->step) * w->step;
-    int right_step_value = calc_bound(left_step_value + w->step, w->min, w->max);
-    int closest_step_value = (exact_value - left_step_value) < (right_step_value - exact_value) ?
-        left_step_value : right_step_value;
-    if (closest_step_value != *w->value) {
-        *w->value = closest_step_value;
-        window_request_refresh();
-    }
-    data.active_numerical_range = numerical_range_id;
-    return 1;
 }
 
 static void enable_all_widgets(void)
@@ -373,6 +259,55 @@ static void init(void)
     scrollbar_init(&scrollbar, 0, data.num_widgets - NUM_VISIBLE_ITEMS);
 }
 
+static void checkbox_draw_text(int x, int y, int value_key, translation_key description)
+{
+    if (data.config_values[value_key].new_value) {
+        text_draw(string_from_ascii("x"), x + 6, y + 3, FONT_NORMAL_BLACK, 0);
+    }
+    text_draw_ellipsized(translation_for(description), x + 30, y + 5, CHECKBOX_TEXT_WIDTH, FONT_NORMAL_BLACK, 0);
+}
+
+static void checkbox_draw(int x, int y, int has_focus)
+{
+    button_border_draw(x, y, CHECKBOX_CHECK_SIZE, CHECKBOX_CHECK_SIZE, has_focus);
+}
+
+static void numerical_range_draw(const numerical_range_widget *w, int x, int y, const uint8_t *value_text)
+{
+    text_draw(value_text, x, y + 6, FONT_NORMAL_BLACK, 0);
+    inner_panel_draw(x + NUMERICAL_SLIDER_X, y + 4, w->width_blocks, 1);
+
+    int width = w->width_blocks * 16 - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
+    int scroll_position = (*w->value - w->min) * width / (w->max - w->min);
+    image_draw(image_group(GROUP_PANEL_BUTTON) + 37,
+        x + NUMERICAL_SLIDER_X + NUMERICAL_SLIDER_PADDING + scroll_position, y + 2);
+}
+
+static uint8_t *percentage_string(uint8_t *string, int percentage)
+{
+    int offset = string_from_int(string, percentage, 0);
+    string[offset] = '%';
+    string[offset + 1] = 0;
+    return string;
+}
+
+static const uint8_t *display_text_language(void)
+{
+    return data.language_options[data.selected_language_option];
+}
+
+static const uint8_t *display_text_display_scale(void)
+{
+    static uint8_t value[10];
+    return percentage_string(value, data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].new_value);
+}
+
+static const uint8_t *display_text_cursor_scale(void)
+{
+    static uint8_t value[10];
+    return percentage_string(value, data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value);
+}
+
 static void update_scale(void)
 {
     int max_scale = system_get_max_display_scale();
@@ -395,7 +330,7 @@ static void draw_background(void)
 
     text_draw_centered(translation_for(TR_CONFIG_TITLE), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
-    for (int i = 0; i < NUM_VISIBLE_ITEMS; i++) {
+    for (int i = 0; i < NUM_VISIBLE_ITEMS && i < data.num_widgets; i++) {
         config_widget *w = data.widgets[i + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_HEADER) {
@@ -425,7 +360,7 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    for (int i = 0; i < NUM_VISIBLE_ITEMS; i++) {
+    for (int i = 0; i < NUM_VISIBLE_ITEMS && i < data.num_widgets; i++) {
         config_widget *w = data.widgets[i + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_CHECKBOX) {
@@ -448,6 +383,70 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
+static int is_checkbox(const mouse *m, int x, int y)
+{
+    if (x <= m->x && x + CHECKBOX_WIDTH > m->x &&
+        y <= m->y && y + CHECKBOX_HEIGHT > m->y) {
+        return 1;
+    }
+    return 0;
+}
+
+static int checkbox_handle_mouse(const mouse *m, int x, int y, int value_key, int *focus)
+{
+    if (!is_checkbox(m, x, y)) {
+        return 0;
+    }
+    *focus = 1;
+    if (m->left.went_up) {
+        toggle_switch(value_key);
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+static int is_numerical_range(const mouse *m, int x, int y, int width)
+{
+    if (x + NUMERICAL_SLIDER_X <= m->x && x + width + NUMERICAL_SLIDER_X >= m->x &&
+        y <= m->y && y + 16 > m->y) {
+        return 1;
+    }
+    return 0;
+}
+
+static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numerical_range_id)
+{
+    numerical_range_widget *w = &scale_ranges[numerical_range_id - 1];
+
+    if (data.active_numerical_range) {
+        if (data.active_numerical_range != numerical_range_id) {
+            return 0;
+        }
+        if (!m->left.is_down) {
+            data.active_numerical_range = 0;
+            return 0;
+        }
+    } else if (!m->left.is_down || !is_numerical_range(m, x, y, w->width_blocks * 16)) {
+        return 0;
+    }
+    int slider_width = w->width_blocks * 16 - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
+    int pixels_per_pct = slider_width / (w->max - w->min);
+    int dot_position = m->x - x - NUMERICAL_SLIDER_X - NUMERICAL_DOT_SIZE / 2 + pixels_per_pct / 2;
+
+    int exact_value = calc_bound(w->min + dot_position * (w->max - w->min) / slider_width, w->min, w->max);
+    int left_step_value = (exact_value / w->step) * w->step;
+    int right_step_value = calc_bound(left_step_value + w->step, w->min, w->max);
+    int closest_step_value = (exact_value - left_step_value) < (right_step_value - exact_value) ?
+        left_step_value : right_step_value;
+    if (closest_step_value != *w->value) {
+        *w->value = closest_step_value;
+        window_request_refresh();
+    }
+    data.active_numerical_range = numerical_range_id;
+    return 1;
+}
+
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
@@ -461,7 +460,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     int handled = 0;
     data.focus_button = 0;
     
-    for (int i = 0; i < NUM_VISIBLE_ITEMS; i++) {
+    for (int i = 0; i < NUM_VISIBLE_ITEMS && i < data.num_widgets; i++) {
         config_widget *w = data.widgets[i + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_CHECKBOX) {
@@ -559,49 +558,6 @@ static int config_string_changed(config_string_key key)
     return strcmp(data.config_string_values[key].original_value, data.config_string_values[key].new_value) != 0;
 }
 
-static int apply_changed_configs(void)
-{
-    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
-        if (config_changed(i)) {
-            if (!data.config_values[i].change_action(i)) {
-                return 0;
-            }
-        }
-    }
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
-        if (config_string_changed(i)) {
-            if (!data.config_string_values[i].change_action(i)) {
-                return 0;
-            }
-        }
-    }
-    return 1;
-}
-
-static void button_close(int save, int param2)
-{
-    if (!save) {
-        cancel_values();
-        window_main_menu_show(0);
-        return;
-    }
-    if (apply_changed_configs()) {
-        window_main_menu_show(0);
-    }
-}
-
-void window_config_show(void)
-{
-    window_type window = {
-        WINDOW_CONFIG,
-        draw_background,
-        draw_foreground,
-        handle_input
-    };
-    init();
-    window_show(&window);
-}
-
 static int config_change_basic(config_key key)
 {
     config_set(key, data.config_values[key].new_value);
@@ -644,4 +600,47 @@ static int config_change_string_language(config_string_key key)
     strncpy(data.config_string_values[key].original_value,
         data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
     return 1;
+}
+
+static int apply_changed_configs(void)
+{
+    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
+        if (config_changed(i)) {
+            if (!data.config_values[i].change_action(i)) {
+                return 0;
+            }
+        }
+    }
+    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
+        if (config_string_changed(i)) {
+            if (!data.config_string_values[i].change_action(i)) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+static void button_close(int save, int param2)
+{
+    if (!save) {
+        cancel_values();
+        window_main_menu_show(0);
+        return;
+    }
+    if (apply_changed_configs()) {
+        window_main_menu_show(0);
+    }
+}
+
+void window_config_show(void)
+{
+    window_type window = {
+        WINDOW_CONFIG,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
+    init();
+    window_show(&window);
 }
