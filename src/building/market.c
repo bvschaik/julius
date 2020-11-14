@@ -114,6 +114,10 @@ int building_market_get_storage_destination(building *market)
             building *gt = building_get(building_monument_get_venus_gt());
             return building_venus_temple_get_wine_destination(market, gt);
         }
+
+        if (b->type == BUILDING_TAVERN) {
+            market->data.market.wine_demand = 1;
+        }
         if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE) {
             continue;
         }
@@ -211,6 +215,22 @@ int building_market_get_storage_destination(building *market)
         return 0;
     }
 
+    // Tavern
+    if (market->type == BUILDING_TAVERN) {
+        int tavern_resources[2] = { INVENTORY_WINE, INVENTORY_MEAT };
+        int resource;
+        for (int i = 0; i < 2; ++i) {
+            resource = tavern_resources[i];
+            if (resources[resource].num_buildings &&
+                market->data.market.inventory[resource] < min_stock
+                && is_good_accepted(resource, market))
+            {
+                market->data.market.fetch_inventory_id = resource;
+                return resources[resource].building_id;
+            }
+        }
+        return 0;
+    }
 
     // prefer food if we don't have it
     if (!market->data.market.inventory[INVENTORY_WHEAT] && resources[INVENTORY_WHEAT].num_buildings && is_good_accepted(INVENTORY_WHEAT, market)) {

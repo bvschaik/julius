@@ -373,6 +373,10 @@ const uint8_t *lang_get_string(int group, int index)
             return translation_for(TR_BUILDING_MENU_GOV_RES);
         case BUILDING_MENU_STATUES:
             return translation_for(TR_BUILDING_MENU_STATUES);
+        case BUILDING_TAVERN:
+            return translation_for(TR_BUILDING_TAVERN);
+        case BUILDING_GRAND_GARDEN:
+            return translation_for(TR_BUILDING_GRAND_GARDEN);
         default:
             break;
         }

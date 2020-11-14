@@ -83,6 +83,15 @@ static void hippodrome_coverage(building *b)
     b->data.house.hippodrome = MAX_COVERAGE;
 }
 
+static void tavern_coverage(building* b) {
+    if (b->data.market.inventory[INVENTORY_WINE]) {
+        b->data.house.amphitheater_actor = MAX_COVERAGE;
+        if (b->data.market.inventory[INVENTORY_MEAT]) {
+            b->data.house.amphitheater_gladiator = MAX_COVERAGE;
+        }
+    }
+}
+
 static void bathhouse_coverage(building *b)
 {
     b->data.house.bathhouse = MAX_COVERAGE;
@@ -490,6 +499,9 @@ int figure_service_provide_coverage(figure *f)
             break;
         case FIGURE_CHARIOTEER:
             houses_serviced = provide_culture(x, y, hippodrome_coverage);
+            break;
+        case FIGURE_BARKEEP:
+            houses_serviced = provide_culture(x, y, tavern_coverage);
             break;
         case FIGURE_ENGINEER: 
         case FIGURE_WORK_CAMP_ENGINEER: {

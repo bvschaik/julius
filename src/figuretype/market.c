@@ -204,6 +204,8 @@ void figure_market_buyer_action(figure *f)
         figure_tower_sentry_set_image(f);
     } else if (f->type == FIGURE_PRIEST_BUYER) {
         figure_image_update(f, image_group(GROUP_FIGURE_PRIEST));    
+    } else if (f->type == FIGURE_BARKEEP_BUYER) {
+        figure_image_update(f, image_group(GROUP_FIGURE_BATHHOUSE_WORKER));
     } else {
         figure_image_update(f, image_group(GROUP_FIGURE_MARKET_LADY));
     }
@@ -221,7 +223,7 @@ void figure_delivery_boy_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     } else {
         if (leader->state == FIGURE_STATE_ALIVE) {
-            if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY || leader->type == FIGURE_MESS_HALL_BUYER || leader->type == FIGURE_MESS_HALL_COLLECTOR || leader->type == FIGURE_PRIEST_BUYER || leader->type == FIGURE_PRIEST) {
+            if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY || leader->type == FIGURE_MESS_HALL_BUYER || leader->type == FIGURE_MESS_HALL_COLLECTOR || leader->type == FIGURE_PRIEST_BUYER || leader->type == FIGURE_PRIEST || leader->type == FIGURE_BARKEEP_BUYER) {
                 figure_movement_follow_ticks(f, 1);
             } else {
                 f->state = FIGURE_STATE_DEAD;

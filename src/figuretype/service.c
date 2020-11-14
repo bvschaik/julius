@@ -227,6 +227,11 @@ void figure_bathhouse_worker_action(figure *f)
     culture_action(f, GROUP_FIGURE_BATHHOUSE_WORKER);
 }
 
+void figure_tavern_action(figure* f)
+{
+    culture_action(f, GROUP_FIGURE_BATHHOUSE_WORKER);
+}
+
 void figure_doctor_action(figure *f)
 {
     culture_action(f, GROUP_FIGURE_DOCTOR_SURGEON);

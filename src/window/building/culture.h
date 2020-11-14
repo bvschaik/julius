@@ -65,6 +65,10 @@ void window_building_draw_work_camp(building_info_context* c);
 
 void window_building_draw_engineer_guild(building_info_context* c);
 
+void window_building_draw_tavern(building_info_context* c);
+
+void window_building_draw_grand_garden(building_info_context* c);
+
 void window_building_draw_lighthouse(building_info_context* c);
 
 int window_building_handle_mouse_grand_temple(const mouse* m, building_info_context* c);

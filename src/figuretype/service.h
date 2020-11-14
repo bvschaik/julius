@@ -17,6 +17,8 @@ void figure_barber_action(figure *f);
 
 void figure_bathhouse_worker_action(figure *f);
 
+void figure_tavern_action(figure* f);
+
 void figure_doctor_action(figure *f);
 
 void figure_missionary_action(figure *f);

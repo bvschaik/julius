@@ -8,7 +8,7 @@ static int show_building_entertainment(const building *b)
         b->type == BUILDING_ACTOR_COLONY || b->type == BUILDING_THEATER ||
         b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_AMPHITHEATER ||
         b->type == BUILDING_LION_HOUSE || b->type == BUILDING_COLOSSEUM ||
-        b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME;
+        b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME || b->type == BUILDING_TAVERN;
 }
 
 static int show_building_theater(const building *b)
@@ -46,7 +46,7 @@ static building *get_entertainment_building(const figure *f)
 static int show_figure_entertainment(const figure *f)
 {
     return f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR ||
-        f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
+        f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER || f->type == FIGURE_BARKEEP_BUYER || f->type == FIGURE_BARKEEP;
 }
 
 static int show_figure_theater(const figure *f)

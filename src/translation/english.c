@@ -364,7 +364,16 @@ static translation_string all_strings[] = {
     {TR_LABEL_PAUSE_MENU, "Pause" },
     {TR_OVERLAY_LEVY, "Levies" },
     {TR_TOOLTIP_OVERLAY_LEVY, " denarii paid monthly in levies." }, 
-    {TR_MAP_EDITOR_OPTIONS, "Scenario settings" }
+    {TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
+    {TR_BUILDING_TAVERN, "Tavern"},
+    {TR_BUILDING_GRAND_GARDEN, "Grand garden"},
+    {TR_BUILDING_TAVERN_DESC_1, "This tavern has no workers, and cannot open for business." },
+    {TR_BUILDING_TAVERN_DESC_2, "This tavern has no wine, and cannot open for business."},
+    {TR_BUILDING_TAVERN_DESC_3, "The tavern provides entertainment as long as the wine keeps flowing. A supply of meat would increase its appeal." },
+    {TR_BUILDING_TAVERN_DESC_4, "Plentiful wine and roasted meat draws a lively crowd to this tavern."},
+    {TR_FIGURE_TYPE_BARKEEP, "Barkeep" },
+    {TR_FIGURE_TYPE_BARKEEP_BUYER, "Barkeep" },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

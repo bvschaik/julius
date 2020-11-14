@@ -4,7 +4,7 @@
 #include "mods/mods.h"
 #include "type.h"
 
-#define MOD_BUILDINGS 37
+#define MOD_BUILDINGS 39
 
 mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_ROADBLOCK, { 1, 1, 0, 0, 0 },  "Areldir", "Roadblocks", 0},
@@ -43,7 +43,9 @@ mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_PANTHEON, { 7, 1, 0, 0, 0 }, "Areldir", "Pantheon", "Pantheon Const 01"},
     {BUILDING_ENGINEER_GUILD, { 2, 1, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"},
     {BUILDING_MESS_HALL, { 3, 0, 0, 0, 0 }, "Areldir", "Mess_Hall", "Mess OFF Central"},
-    {BUILDING_LIGHTHOUSE, { 3, 1, 0, 0, 0 }, "Areldir", "Lighthouses", "Lighthouse Const 01"}
+    {BUILDING_LIGHTHOUSE, { 3, 1, 0, 0, 0 }, "Areldir", "Lighthouses", "Lighthouse Const 01"},
+    {BUILDING_TAVERN, { 2, 0, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"},
+    {BUILDING_GRAND_GARDEN, { 2, 1, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"}
 };
 
 void init_mod_building_properties() {
