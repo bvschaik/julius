@@ -165,7 +165,7 @@ const model_building MODEL_GRAND_TEMPLE_VENUS = { 2500,20,2,-4,5,50 };
 const model_building MODEL_PANTHEON = { 3500,20,2,-4,5,50 };
 const model_building MODEL_LIGHTHOUSE = { 2000,6,1,-1,4,30 };
 const model_building MODEL_MESS_HALL = { 100,-8,1,2,4,10 };
-const model_building MODEL_TAVERN = { 25,-3,1,2,4,8 };
+const model_building MODEL_TAVERN = { 25,-2,1,1,6,8 };
 const model_building MODEL_GRAND_GARDEN = { 400,0,0,0,0,0 };
 const model_building MODEL_NULL = { 0,0,0,0,0 };
 

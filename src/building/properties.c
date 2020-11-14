@@ -44,7 +44,7 @@ mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_ENGINEER_GUILD, { 2, 1, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"},
     {BUILDING_MESS_HALL, { 3, 0, 0, 0, 0 }, "Areldir", "Mess_Hall", "Mess OFF Central"},
     {BUILDING_LIGHTHOUSE, { 3, 1, 0, 0, 0 }, "Areldir", "Lighthouses", "Lighthouse Const 01"},
-    {BUILDING_TAVERN, { 2, 0, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"},
+    {BUILDING_TAVERN, { 2, 0, 0, 0, 0 }, "Areldir", "Tavern", "Tavern OFF"},
     {BUILDING_GRAND_GARDEN, { 2, 1, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"}
 };
 

@@ -59,6 +59,9 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if ((b->type == BUILDING_ENGINEER_GUILD || b->type == BUILDING_MESS_HALL)  && b->num_workers <= 0) {
         return 0;
     }
+    if (b->type == BUILDING_TAVERN && (b->num_workers <= 0 || !b->data.market.inventory[4])) { //wine
+        return 0;
+    }
 
 
     const image *img = image_get(image_id);
