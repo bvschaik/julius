@@ -9,16 +9,13 @@ then
 elif [[ "$TRAVIS_BRANCH" == "master" ]]
 then
   REPO=Augustus-unstable
-  exit
 elif [[ "$TRAVIS_BRANCH" == "release" ]]
 then
   REPO=Augustus-rc
-  exit
 elif [[ "$TRAVIS_BRANCH" =~ ^feature/ ]]
 then
   REPO=Augustus-branches
   VERSION=${TRAVIS_BRANCH##feature/}-$VERSION
-  exit
 else
   echo "Unknown branch type $TRAVIS_BRANCH - skipping deploy to Bintray"
   exit
