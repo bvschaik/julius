@@ -2,6 +2,7 @@
 
 #include "building/clone.h"
 #include "building/construction.h"
+#include "building/menu.h"
 #include "building/rotation.h"
 #include "city/message.h"
 #include "city/victory.h"
@@ -253,7 +254,7 @@ static void handle_hotkeys(const hotkeys *h)
         building_rotation_rotate_by_hotkey();
     }
     if (h->building) {
-        if (scenario_building_allowed(h->building)) {
+        if (scenario_building_allowed(h->building) && building_menu_is_enabled(h->building)) {
             building_construction_cancel();
             building_construction_set_type(h->building);
         }

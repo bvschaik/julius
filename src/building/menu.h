@@ -41,6 +41,8 @@ int building_menu_next_index(int submenu, int current_index);
 
 building_type building_menu_type(int submenu, int item);
 
+int building_menu_is_enabled(building_type type);
+
 /**
  * Checks whether the building menu has changed.
  * Also marks the change as 'seen'.
