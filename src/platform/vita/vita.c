@@ -16,14 +16,6 @@ int _newlib_heap_size_user = 300 * 1024 * 1024;
 
 void platform_init_callback(void)
 {
-    if (!vita2d_init()) {
-        SDL_Log("Exiting: vita2d init failed");
-        exit(-1);
-    }
-
-    // Black
-    vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
-
     touch_set_mode(TOUCH_MODE_TOUCHPAD);
 }
 

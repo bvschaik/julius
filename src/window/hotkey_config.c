@@ -171,7 +171,7 @@ static void init(void)
     scrollbar_init(&scrollbar, 0, sizeof(hotkey_widgets) / sizeof(hotkey_widget) - NUM_VISIBLE_OPTIONS);
 
     for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
-        hotkey_mapping empty = {KEY_NONE, KEY_MOD_NONE, i};
+        hotkey_mapping empty = {KEY_TYPE_NONE, KEY_MOD_NONE, i};
 
         const hotkey_mapping *mapping = hotkey_for_action(i, 0);
         data.mappings[i][0] = mapping ? *mapping : empty;
@@ -322,7 +322,7 @@ static void button_close(int save, int param2)
     hotkey_config_clear();
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
         for (int index = 0; index < 2; index++) {
-            if (data.mappings[action][index].key != KEY_NONE) {
+            if (data.mappings[action][index].key != KEY_TYPE_NONE) {
                 hotkey_config_add_mapping(&data.mappings[action][index]);
             }
         }

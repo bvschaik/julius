@@ -1,12 +1,16 @@
 #include "game/system.h"
 #include "graphics/color.h"
 #include "input/cursor.h"
+#include "platform/screen.h"
 
 #include "SDL.h"
 
-static SDL_Cursor *cursors[CURSOR_MAX];
-static SDL_Surface *cursor_surfaces[CURSOR_MAX];
-static int current_cursor_id = CURSOR_ARROW;
+static struct {
+    SDL_Cursor *cursors[CURSOR_MAX];
+    SDL_Surface *surfaces[CURSOR_MAX];
+    cursor_shape current_shape;
+    cursor_scale current_scale;
+} data;
 
 static const color_t mouse_colors[] = {
     ALPHA_TRANSPARENT,
@@ -29,7 +33,7 @@ static SDL_Surface *generate_cursor_surface(const char *data, int width, int hei
     SDL_Surface *cursor_surface =
         SDL_CreateRGBSurface(0, size, size, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
     color_t *pixels = cursor_surface->pixels;
-    SDL_memset(pixels, 0, 4 * size * size);
+    SDL_memset(pixels, 0, sizeof(color_t) * size * size);
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             pixels[y * size + x] = mouse_colors[data[y * width + x] - 32];
@@ -51,23 +55,49 @@ static cursor_scale get_cursor_scale(int scale_percentage)
 
 void system_init_cursors(int scale_percentage)
 {
-    cursor_scale cur_scale = get_cursor_scale(scale_percentage);
+    data.current_scale = get_cursor_scale(scale_percentage);
     for (int i = 0; i < CURSOR_MAX; i++) {
-        const cursor *c = input_cursor_data(i, cur_scale);
-        if (cursor_surfaces[i]) {
-            SDL_FreeSurface(cursor_surfaces[i]);
+        const cursor *c = input_cursor_data(i, data.current_scale);
+        if (data.surfaces[i]) {
+            SDL_FreeSurface(data.surfaces[i]);
         }
-        if (cursors[i]) {
-            SDL_FreeCursor(cursors[i]);
+        if (data.cursors[i]) {
+            SDL_FreeCursor(data.cursors[i]);
         }
-        cursor_surfaces[i] = generate_cursor_surface(c->data, c->width, c->height);
-        cursors[i] = SDL_CreateColorCursor(cursor_surfaces[i], c->hotspot_x, c->hotspot_y);
+        data.surfaces[i] = generate_cursor_surface(c->data, c->width, c->height);
+        if (!system_use_software_cursor()) {
+            data.cursors[i] = SDL_CreateColorCursor(data.surfaces[i], c->hotspot_x, c->hotspot_y);
+        } else {
+            SDL_ShowCursor(SDL_DISABLE);
+            platform_screen_generate_mouse_cursor_texture(i, data.current_scale, data.surfaces[i]->pixels);
+        }
     }
-    system_set_cursor(current_cursor_id);
+    system_set_cursor(data.current_shape);
 }
 
 void system_set_cursor(int cursor_id)
 {
-    current_cursor_id = cursor_id;
-    SDL_SetCursor(cursors[cursor_id]);
+    data.current_shape = cursor_id;
+    if (!system_use_software_cursor()) {
+        SDL_SetCursor(data.cursors[cursor_id]);
+    }
+}
+
+int system_use_software_cursor(void)
+{
+#if defined(__SWITCH__) || defined(__vita__)
+    return 1;
+#else
+    return 0;
+#endif
+}
+
+cursor_shape system_get_current_cursor_shape(void)
+{
+    return data.current_shape;
+}
+
+cursor_scale system_get_current_cursor_scale(void)
+{
+    return data.current_scale;
 }

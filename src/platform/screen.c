@@ -5,14 +5,21 @@
 #include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
+#include "input/cursor.h"
 #include "platform/android/android.h"
+#include "platform/vita/vita.h"
 
 #include "SDL.h"
 
 static struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
+#ifdef __vita__
+    vita2d_texture *texture;
+#else
     SDL_Texture *texture;
+#endif
+    SDL_Texture *cursors[CURSOR_MAX];
 } SDL;
 
 static struct {
@@ -27,6 +34,7 @@ static struct {
 } MINIMUM = { 640, 480 };
 
 static int scale_percentage = 100;
+static color_t *framebuffer;
 
 static int scale_logical_to_pixels(int logical_value)
 {
@@ -47,7 +55,11 @@ static int get_max_scale_percentage(int pixel_width, int pixel_height)
 
 static void set_scale_percentage(int new_scale, int pixel_width, int pixel_height)
 {
+#ifdef __vita__
+    scale_percentage = 100;
+#else
     scale_percentage = calc_bound(new_scale, 50, 500);
+#endif
 
     if (!pixel_width || !pixel_height) {
         return;
@@ -139,11 +151,21 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     return platform_screen_resize(width, height);
 }
 
+static void destroy_screen_texture(void)
+{
+#ifdef __vita__
+    vita2d_wait_rendering_done();
+    vita2d_free_texture(SDL.texture);
+#else
+    SDL_DestroyTexture(SDL.texture);
+#endif
+    SDL.texture = 0;
+}
+
 void platform_screen_destroy(void)
 {
     if (SDL.texture) {
-        SDL_DestroyTexture(SDL.texture);
-        SDL.texture = 0;
+        destroy_screen_texture();
     }
     if (SDL.renderer) {
         SDL_DestroyRenderer(SDL.renderer);
@@ -165,16 +187,23 @@ int platform_screen_resize(int pixel_width, int pixel_height)
     int logical_height = scale_pixels_to_logical(pixel_height);
 
     if (SDL.texture) {
-        SDL_DestroyTexture(SDL.texture);
-        SDL.texture = 0;
+        if (logical_width == screen_width() && logical_height == screen_height()) {
+            return 1;
+        }
+        destroy_screen_texture();
     }
 
     SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
 
     setting_set_display(setting_fullscreen(), logical_width, logical_height);
+#ifdef __vita__
+    SDL.texture = vita2d_create_empty_texture_format(
+        logical_width, logical_height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB);
+#else
     SDL.texture = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         logical_width, logical_height);
+#endif
 
     if (SDL.texture) {
         SDL_Log("Texture created: %d x %d", logical_width, logical_height);
@@ -289,6 +318,34 @@ void platform_screen_center_window(void)
     window_pos.centered = 1;
 }
 
+static int get_texture_size_for_cursor(const cursor *c)
+{
+    int size = 32;
+    while (size <= c->width || size <= c->height) {
+        size *= 2;
+    }
+    return size;
+}
+
+static void draw_software_mouse_cursor(void)
+{
+    const mouse *mouse = mouse_get();
+    if (!mouse->is_touch) {
+        cursor_shape current_cursor_shape = system_get_current_cursor_shape();
+        const cursor *c = input_cursor_data(current_cursor_shape, system_get_current_cursor_scale());
+        if (c) {
+            int size = get_texture_size_for_cursor(c);
+            size = calc_adjust_with_percentage(size, calc_percentage(100, scale_percentage));
+            SDL_Rect dst;
+            dst.x = mouse->x - c->hotspot_x;
+            dst.y = mouse->y - c->hotspot_y;
+            dst.w = size;
+            dst.h = size;
+            SDL_RenderCopy(SDL.renderer, SDL.cursors[current_cursor_shape], NULL, &dst);
+        }
+    }
+}
+
 #ifdef _WIN32
 void platform_screen_recreate_texture(void)
 {
@@ -309,23 +366,58 @@ void platform_screen_recreate_texture(void)
 void platform_screen_render(void)
 {
     SDL_RenderClear(SDL.renderer);
+#ifdef __vita__
+    vita2d_draw_texture(SDL.texture, 0, 0);
+#else
     SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
     SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
+#endif
+    if (system_use_software_cursor()) {
+        draw_software_mouse_cursor();
+    }
     SDL_RenderPresent(SDL.renderer);
+}
+
+void platform_screen_generate_mouse_cursor_texture(int cursor_id, int scale, const color_t *cursor_colors)
+{
+    if (SDL.cursors[cursor_id]) {
+        SDL_DestroyTexture(SDL.cursors[cursor_id]);
+        SDL.cursors[cursor_id] = 0;
+    }
+    int size = get_texture_size_for_cursor(input_cursor_data(cursor_id, scale));
+    SDL.cursors[cursor_id] = SDL_CreateTexture(SDL.renderer,
+        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC,
+        size, size);
+    if (!SDL.cursors[cursor_id]) {
+        return;
+    }
+    SDL_UpdateTexture(SDL.cursors[cursor_id], NULL, cursor_colors, size * sizeof(color_t));
+    SDL_SetTextureBlendMode(SDL.cursors[cursor_id], SDL_BLENDMODE_BLEND);
 }
 
 void system_set_mouse_position(int *x, int *y)
 {
-    *x = calc_bound(*x, 0, scale_logical_to_pixels(screen_width()) - 1);
-    *y = calc_bound(*y, 0, scale_logical_to_pixels(screen_height()) - 1);
-    SDL_WarpMouseInWindow(SDL.window, *x, *y);
+    *x = calc_bound(*x, 0, screen_width() - 1);
+    *y = calc_bound(*y, 0, screen_height() - 1);
+    SDL_WarpMouseInWindow(SDL.window, scale_logical_to_pixels(*x), scale_logical_to_pixels(*y));
 }
 
 int system_is_fullscreen_only(void)
 {
-#ifdef __ANDROID__
+#if defined(__ANDROID__) || defined(__SWITCH__) || defined(__vita__)
     return 1;
 #else
     return 0;
 #endif
+}
+
+color_t *system_create_framebuffer(int width, int height)
+{
+#ifdef __vita__
+    framebuffer = vita2d_texture_get_datap(SDL.texture);
+#else
+    free(framebuffer);
+    framebuffer = (color_t *)malloc((size_t)width * height * sizeof(color_t));
+#endif
+    return framebuffer;
 }
