@@ -35,7 +35,7 @@ case "$BUILD_TARGET" in
 	then
 		zip -r augustus.zip augustus.AppImage mods maps augustus_manual.pdf
 	else
-		zip -r augustus.zip augustus.AppImage	
+		zip zip -r augustus.zip . -i augustus.AppImage	
 	fi
 	;;
 "linux")
