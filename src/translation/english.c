@@ -379,7 +379,7 @@ static translation_string all_strings[] = {
     { TR_TOOLTIP_OVERLAY_TAVERN_3, "This house was passed by a barkeep from a tavern with wine." },
     { TR_TOOLTIP_OVERLAY_TAVERN_4, "This house was passed by a barkeep from a tavern with wine and meat." },
     { TR_TOOLTIP_OVERLAY_TAVERN_5, "This house was recently passed by a barkeep from a tavern with wine." },
-    { TR_TOOLTIP_OVERLAY_TAVERN_6, "This house was recently passed by a barkeep from a tavern with wine and meat. Let merriment commence!" }
+    { TR_TOOLTIP_OVERLAY_TAVERN_6, "This house was recently passed by a barkeep from a tavern with wine and meat. Let merriment commence!" },
     { TR_BUILDING_WINDOW_HOUSE_SENTIMENT_1, "Residents loathe your very name."},
     {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_2, "Residents are very angry with you." },
     {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_3, "Residents are angry with you." },
