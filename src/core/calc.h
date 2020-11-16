@@ -77,6 +77,7 @@ int calc_missile_direction(int x_from, int y_from, int x_to, int y_to);
  * @return Value bounded to be between min and max
  */
 int32_t calc_bound(int32_t value, int32_t min, int32_t max);
+double calc_bound_double(double value, double min, double max);
 
 int calc_absolute_decrement(int value, int step);
 

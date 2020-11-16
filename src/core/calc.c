@@ -227,6 +227,19 @@ int32_t calc_bound(int32_t value, int32_t min, int32_t max)
     }
 }
 
+double calc_bound_double(double value, double min, double max)
+{
+    if (value < min) {
+        return min;
+    }
+    else if (value > max) {
+        return max;
+    }
+    else {
+        return value;
+    }
+}
+
 int calc_absolute_decrement(int value, int step)
 {
     if (value == 0) {

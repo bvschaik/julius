@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
+#include "city/constants.h"
 #include "city/finance.h"
 #include "core/calc.h"
 #include "game/resource.h"
@@ -10,6 +11,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "map/road_access.h"
+#include "translation/translation.h"
 #include "window/building/figures.h"
 
 static void draw_vacant_lot(building_info_context *c)
@@ -61,23 +63,33 @@ static void draw_tax_info(building_info_context *c, int y_offset)
 static void draw_happiness_info(building_info_context *c, int y_offset)
 {
     int happiness = building_get(c->building_id)->sentiment.house_happiness;
-    int text_id;
-    if (happiness >= 50) {
-        text_id = 26;
-    } else if (happiness >= 40) {
-        text_id = 27;
-    } else if (happiness >= 30) {
-        text_id = 28;
-    } else if (happiness >= 20) {
-        text_id = 29;
-    } else if (happiness >= 10) {
-        text_id = 30;
-    } else if (happiness >= 1) {
-        text_id = 31;
-    } else {
-        text_id = 32;
+    int width = text_draw(translation_for(calc_bound(happiness / 10, 0, 9) + TR_BUILDING_WINDOW_HOUSE_SENTIMENT_1), c->x_offset + 36, y_offset, FONT_SMALL_BLACK, 0);
+    // todo: for testing purposes. remove later
+    text_draw_number(happiness, '(', ")", c->x_offset + 36 + width, y_offset, FONT_SMALL_BLACK);
+    int message = building_get(c->building_id)->house_sentiment_message;
+       
+    switch (message) {
+        case (LOW_MOOD_CAUSE_NO_JOBS):
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_UNEMPLOYMENT), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+            break;
+        case (LOW_MOOD_CAUSE_HIGH_TAXES):
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_HIGH_TAXES), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+            break;
+        case (LOW_MOOD_CAUSE_LOW_WAGES):
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_LOW_WAGES), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+            break;
+        case (LOW_MOOD_CAUSE_SQUALOR):
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_SQUALOR), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+            break;
+        case (SUGGEST_MORE_ENT):
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_SUGGEST_ENTERTAINMENT), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+            break;
+        case (SUGGEST_MORE_FOOD):
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_SUGGEST_FOOD), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+            break;
+        default:
+            break;
     }
-    lang_text_draw(127, text_id, c->x_offset + 36, y_offset, FONT_SMALL_BLACK);
 }
 
 void window_building_draw_house(building_info_context *c)
@@ -92,58 +104,61 @@ void window_building_draw_house(building_info_context *c)
     int level = b->type - 10;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(29, level, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 148, c->width_blocks - 2, 10);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 148, c->width_blocks - 2, 11);
 
     draw_population_info(c, c->y_offset + 154);
     draw_tax_info(c, c->y_offset + 194);
     draw_happiness_info(c, c->y_offset + 214);
+    int y_content = 259;
+    int y_amount = 263;
 
     int resource_image = image_group(GROUP_RESOURCE_ICONS);
     // food inventory
     if (model_get_house(b->subtype.house_level)->food_types) {
         // wheat
-        image_draw(resource_image + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + 234);
+        image_draw(resource_image + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + y_content);
         text_draw_number(b->data.house.inventory[INVENTORY_WHEAT], '@', " ",
-            c->x_offset + 64, c->y_offset + 238, FONT_SMALL_BLACK);
+            c->x_offset + 64, c->y_offset + y_amount, FONT_SMALL_BLACK);
         // vegetables
-        image_draw(resource_image + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + 234);
+        image_draw(resource_image + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + y_content);
         text_draw_number(b->data.house.inventory[INVENTORY_VEGETABLES], '@', " ",
-            c->x_offset + 174, c->y_offset + 238, FONT_SMALL_BLACK);
+            c->x_offset + 174, c->y_offset + y_amount, FONT_SMALL_BLACK);
         // fruit
-        image_draw(resource_image + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + 234);
+        image_draw(resource_image + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + y_content);
         text_draw_number(b->data.house.inventory[INVENTORY_FRUIT], '@', " ",
-            c->x_offset + 284, c->y_offset + 238, FONT_SMALL_BLACK);
+            c->x_offset + 284, c->y_offset + y_amount, FONT_SMALL_BLACK);
         // meat/fish
         image_draw(resource_image + RESOURCE_MEAT + resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
-            c->x_offset + 362, c->y_offset + 234);
+            c->x_offset + 362, c->y_offset + y_content);
         text_draw_number(b->data.house.inventory[INVENTORY_MEAT], '@', " ",
-            c->x_offset + 394, c->y_offset + 238, FONT_SMALL_BLACK);
+            c->x_offset + 394, c->y_offset + y_amount, FONT_SMALL_BLACK);
     } else {
         // no food necessary
-        lang_text_draw_multiline(127, 33, c->x_offset + 36, c->y_offset + 234,
+        lang_text_draw_multiline(127, 33, c->x_offset + 36, c->y_offset + y_content,
             16 * (c->width_blocks - 6), FONT_SMALL_BLACK);
     }
     // goods inventory
+    y_content += 35;
+    y_amount += 35;
     // pottery
-    image_draw(resource_image + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + 274);
+    image_draw(resource_image + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + y_content);
     text_draw_number(b->data.house.inventory[INVENTORY_POTTERY], '@', " ",
-        c->x_offset + 64, c->y_offset + 278, FONT_SMALL_BLACK);
+        c->x_offset + 64, c->y_offset + y_amount, FONT_SMALL_BLACK);
     // furniture
-    image_draw(resource_image + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + 274);
+    image_draw(resource_image + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + y_content);
     text_draw_number(b->data.house.inventory[INVENTORY_FURNITURE], '@', " ",
-        c->x_offset + 174, c->y_offset + 278, FONT_SMALL_BLACK);
+        c->x_offset + 174, c->y_offset + y_amount, FONT_SMALL_BLACK);
     // oil
-    image_draw(resource_image + RESOURCE_OIL, c->x_offset + 252, c->y_offset + 274);
+    image_draw(resource_image + RESOURCE_OIL, c->x_offset + 252, c->y_offset + y_content);
     text_draw_number(b->data.house.inventory[INVENTORY_OIL], '@', " ",
-        c->x_offset + 284, c->y_offset + 278, FONT_SMALL_BLACK);
+        c->x_offset + 284, c->y_offset + y_amount, FONT_SMALL_BLACK);
     // wine
-    image_draw(resource_image + RESOURCE_WINE, c->x_offset + 362, c->y_offset + 274);
+    image_draw(resource_image + RESOURCE_WINE, c->x_offset + 362, c->y_offset + y_content);
     text_draw_number(b->data.house.inventory[INVENTORY_WINE], '@', " ",
-        c->x_offset + 394, c->y_offset + 278, FONT_SMALL_BLACK);
+        c->x_offset + 394, c->y_offset + y_amount, FONT_SMALL_BLACK);
 
     if (b->data.house.evolve_text_id == 62) {
         int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + 60, FONT_NORMAL_BLACK);
-        // todo: support TR strings here
         width += lang_text_draw_colored(41, building_get(c->worst_desirability_building_id)->type,
             c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
         text_draw((uint8_t*)")", c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_BLACK, 0);

@@ -364,7 +364,25 @@ static translation_string all_strings[] = {
     {TR_LABEL_PAUSE_MENU, "Pause" },
     {TR_OVERLAY_LEVY, "Levies" },
     {TR_TOOLTIP_OVERLAY_LEVY, " denarii paid monthly in levies." }, 
-    {TR_MAP_EDITOR_OPTIONS, "Scenario settings" }
+    {TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
+    { TR_BUILDING_WINDOW_HOUSE_SENTIMENT_1, "Residents loathe your very name."},
+    {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_2, "Residents are very angry with you." },
+    {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_3, "Residents are angry with you." },
+    {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_4, "Residents are very upset with you." },
+    {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_5, "Residents are upset with you." },
+    {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_6, "Residents are annoyed with you." },
+    {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_7, "Residents are indifferent to you." },
+    {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_8, "Residents are pleased with you." },
+    {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_9, "Residents are very pleased with you." },
+    {TR_BUILDING_WINDOW_HOUSE_SENTIMENT_10, "Residents idolize you as a god." },
+    {TR_BUILDING_WINDOW_HOUSE_UPSET_HIGH_TAXES, "Residents are upset about high taxation."},
+    {TR_BUILDING_WINDOW_HOUSE_UPSET_LOW_WAGES, "Residents are upset about low wages." },
+    {TR_BUILDING_WINDOW_HOUSE_UPSET_UNEMPLOYMENT, "Residents are upset about the lack of jobs." },
+    {TR_BUILDING_WINDOW_HOUSE_UPSET_SQUALOR, "Residents are despondent about their poor housing." },
+    {TR_BUILDING_WINDOW_HOUSE_SUGGEST_ENTERTAINMENT, "Residents would appreciate more entertainment." },
+    {TR_BUILDING_WINDOW_HOUSE_SUGGEST_FOOD, "Residents would appreciate a more varied diet." },
+    {TR_BUILDING_WINDOW_HOUSE_RECENT_GAMES, "Residents were throughly entertained by a recent spectacle." },
+    {TR_BUILDING_WINDOW_HOUSE_RECENT_FESTIVAL, "Residents were throughly entertained by a recent festival." }
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
