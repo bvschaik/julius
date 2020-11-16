@@ -53,6 +53,7 @@ typedef struct {
     short prev_part_building_id;
     short next_part_building_id;
     short loads_stored;
+    short house_sentiment_message;
     unsigned char has_well_access;
     short num_workers;
     unsigned char labor_category;

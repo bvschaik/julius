@@ -416,7 +416,7 @@ static void init(int grid_offset)
         case 2: context.height_blocks = 18; break;
         case 3: context.height_blocks = 19; break;
         case 4: context.height_blocks = 14; break;
-        case 5: context.height_blocks = 23; break;
+        case 5: context.height_blocks = 24; break;
         case 6: context.height_blocks = 38; break;
         case 7: context.height_blocks = 26; break;
         case 8: context.height_blocks = 40; context.width_blocks = 30; break;

@@ -159,7 +159,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_i16(buf, b->prev_part_building_id);
     buffer_write_i16(buf, b->next_part_building_id);
     buffer_write_i16(buf, b->loads_stored);
-    buffer_write_u8(buf, 0);
+    buffer_write_u8(buf, b->house_sentiment_message);
     buffer_write_u8(buf, b->has_well_access);
     buffer_write_i16(buf, b->num_workers);
     buffer_write_u8(buf, b->labor_category);
@@ -315,7 +315,7 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->prev_part_building_id = buffer_read_i16(buf);
     b->next_part_building_id = buffer_read_i16(buf);
     b->loads_stored = buffer_read_i16(buf);
-    buffer_skip(buf, 1);
+    b->house_sentiment_message = buffer_read_u8(buf);
     b->has_well_access = buffer_read_u8(buf);
     b->num_workers = buffer_read_i16(buf);
     b->labor_category = buffer_read_u8(buf);

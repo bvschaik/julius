@@ -25,6 +25,9 @@ typedef enum {
     LOW_MOOD_CAUSE_HIGH_TAXES = 3,
     LOW_MOOD_CAUSE_LOW_WAGES = 4,
     LOW_MOOD_CAUSE_MANY_TENTS = 5,
+    LOW_MOOD_CAUSE_SQUALOR = 6,
+    SUGGEST_MORE_ENT = 7,
+    SUGGEST_MORE_FOOD = 8,
 } low_mood_cause;
 
 typedef enum {
