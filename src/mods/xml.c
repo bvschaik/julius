@@ -112,9 +112,13 @@ static void xml_start_image_element(const char **attributes)
         log_info("Image index number in the xml file exceeds the maximum. Further images for this xml will not be loaded:", data.file_name, 0);
         return;
     }
-    modded_image *img = malloc(sizeof(modded_image));
     int total_attributes = count_xml_attributes(attributes);
-    if (!img || total_attributes < 2 || total_attributes > 12 || total_attributes % 2) {
+    if (total_attributes < 2 || total_attributes > 12 || total_attributes % 2) {
+        data.error = 1;
+        return;
+    }
+    modded_image *img = malloc(sizeof(modded_image));
+    if (!img) {
         data.error = 1;
         return;
     }

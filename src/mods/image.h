@@ -25,6 +25,7 @@ int modded_image_add_layer(modded_image *img,
     int offset_x, int offset_y,
     layer_invert_type invert, layer_rotate_type rotate, layer_isometric_part part);
 void modded_image_unload_layers(modded_image *img);
+void modded_image_unload(modded_image *img);
 
 modded_image *modded_image_get_from_id(int image_id);
 
