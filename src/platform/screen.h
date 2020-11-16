@@ -12,6 +12,10 @@ void platform_screen_set_windowed(void);
 void platform_screen_set_window_size(int logical_width, int logical_height);
 void platform_screen_center_window(void);
 
+#ifdef _WIN32
+void platform_screen_recreate_texture(void);
+#endif
+
 void platform_screen_render(void);
 
 #endif // PLATFORM_SCREEN_H

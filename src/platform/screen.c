@@ -289,6 +289,23 @@ void platform_screen_center_window(void)
     window_pos.centered = 1;
 }
 
+#ifdef _WIN32
+void platform_screen_recreate_texture(void)
+{
+    // On Windows, if ctrl + alt + del is pressed during fullscreen, the rendering context may be lost for a few frames
+    // after restoring the window, preventing the texture from being recreated. This forces an attempt to recreate the
+    // texture every frame to bypass that issue.
+    if (!SDL.texture && SDL.renderer && setting_fullscreen()) {
+        SDL_DisplayMode mode;
+        SDL_GetWindowDisplayMode(SDL.window, &mode);
+        system_resize(scale_pixels_to_logical(mode.w), scale_pixels_to_logical(mode.h));
+        SDL.texture = SDL_CreateTexture(SDL.renderer,
+            SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
+            screen_width(), screen_height());
+    }
+}
+#endif
+
 void platform_screen_render(void)
 {
     SDL_RenderClear(SDL.renderer);
