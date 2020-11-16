@@ -84,6 +84,12 @@ void house_service_calculate_culture_aggregates(void)
         if (b->data.house.theater) {
             b->data.house.entertainment += 10;
         }
+        if (b->house_tavern_wine_access) {
+            b->data.house.entertainment += 10;
+            if (b->house_tavern_meat_access) {
+                b->data.house.entertainment += 5;
+            }
+        }
         if (b->data.house.amphitheater_actor) {
             if (b->data.house.amphitheater_gladiator) {
                 b->data.house.entertainment += 15;

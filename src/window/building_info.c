@@ -153,6 +153,7 @@ static int get_height_id(void)
             case BUILDING_WORKCAMP:
             case BUILDING_ENGINEER_GUILD:
             case BUILDING_OBELISK:
+            case BUILDING_TAVERN:
                 return 1;
 
             case BUILDING_THEATER:
@@ -566,6 +567,13 @@ static void draw_background(void)
             window_building_draw_engineer_guild(&context);
         } else if (btype == BUILDING_MESS_HALL) {
             window_building_draw_mess_hall(&context);
+        } else if (btype == BUILDING_TAVERN) {
+            if (context.storage_show_special_orders) {
+                window_building_draw_market_orders(&context);
+            }
+            else {
+                window_building_draw_tavern(&context);
+            }
         } else if (btype == BUILDING_GRAND_TEMPLE_CERES) {
             window_building_draw_grand_temple_ceres(&context);
 		} else if (btype == BUILDING_GRAND_TEMPLE_NEPTUNE) {
@@ -672,6 +680,14 @@ static void draw_foreground(void)
             } else {
                 window_building_draw_market_foreground(&context);
             }
+        }
+        else if (btype == BUILDING_TAVERN) {
+            if (context.storage_show_special_orders) {
+                window_building_draw_market_orders_foreground(&context, 0, 1, RESOURCE_WINE, RESOURCE_MEAT);
+            }
+            else {
+                window_building_draw_market_foreground(&context);
+            }
         } else if (btype == BUILDING_MESS_HALL) {
             if (context.storage_show_special_orders) {
                 window_building_draw_market_orders_foreground(&context, 1, 0, 0, 0);
@@ -747,20 +763,13 @@ static int handle_specific_building_info_mouse(const mouse *m)
         return window_building_handle_mouse_figure_list(m, &context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.building_id)->type;
-        if (btype == BUILDING_MARKET || btype == BUILDING_MESS_HALL) {
+        if (building_has_market_inventory(btype)) {
             if (context.storage_show_special_orders) {
                 window_building_handle_mouse_market_orders(m, &context);
             } else {
                 window_building_handle_mouse_market(m, &context);
             }
-	} else if (building_is_ceres_temple(btype) || building_is_venus_temple(btype)) {
-        if (context.storage_show_special_orders) {
-            window_building_handle_mouse_market_orders(m, &context);
-        }
-        else {
-            window_building_handle_mouse_market(m, &context);
-        }
-    } else if (btype == BUILDING_ROADBLOCK) {
+	} else if (btype == BUILDING_ROADBLOCK) {
             if (context.storage_show_special_orders) {
                 return window_building_handle_mouse_roadblock_orders(m, &context);
             } else {

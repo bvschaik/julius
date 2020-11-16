@@ -35,11 +35,12 @@ static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
     58, 21, 50, 8, 8, 8, 28, 30, 23, 8, //40-49
     8, 8, 34, 39, 33, 43, 27, 48, 63, 8, //50-59
     8, 8, 8, 8, 53, 8, 38, 62, 54, 55, //60-69
-    56, 8, 8, 58, 0, 7, 50, 0, 14, 0 //70-79
+    56, 8, 8, 58, 0, 7, 50, 0, 14, 3, //70-79
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0 //80-89
 };
 // Starting with FIGURE_WORK_CAMP_WORKER = 73,
 static const int NEW_FIGURE_TYPES[] = {
-    TR_FIGURE_TYPE_WORK_CAMP_WORKER,TR_FIGURE_TYPE_WORK_CAMP_SLAVE,TR_FIGURE_TYPE_WORK_CAMP_ENGINEER,TR_FIGURE_TYPE_MESS_HALL_BUYER,TR_FIGURE_TYPE_MESS_HALL_COLLECTOR, TR_FIGURE_TYPE_PRIEST_BUYER
+    TR_FIGURE_TYPE_WORK_CAMP_WORKER,TR_FIGURE_TYPE_WORK_CAMP_SLAVE,TR_FIGURE_TYPE_WORK_CAMP_ENGINEER,TR_FIGURE_TYPE_MESS_HALL_BUYER,TR_FIGURE_TYPE_MESS_HALL_COLLECTOR, TR_FIGURE_TYPE_PRIEST_BUYER, TR_FIGURE_TYPE_BARKEEP, TR_FIGURE_TYPE_BARKEEP_BUYER
 };
 
 static generic_button figure_buttons[] = {
@@ -311,7 +312,7 @@ static void draw_market_buyer(building_info_context *c, figure *f)
 
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     int width = 0;
-    if (f->type == FIGURE_MESS_HALL_BUYER || f->type == FIGURE_PRIEST_BUYER) {
+    if (f->type == FIGURE_MESS_HALL_BUYER || f->type == FIGURE_PRIEST_BUYER || f->type == FIGURE_BARKEEP_BUYER) {
         int relative_id = f->type - NEW_FIGURES_ID;
         width = text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
     } else {
@@ -372,7 +373,7 @@ static void draw_figure_info(building_info_context *c, int figure_id)
         draw_animal(c, f);
     } else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKER) {
         draw_cartpusher(c, f);
-    } else if (type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER || type == FIGURE_PRIEST_BUYER) {
+    } else if (type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER || type == FIGURE_PRIEST_BUYER || type == FIGURE_BARKEEP_BUYER) {
         draw_market_buyer(c, f);
     } else {
         draw_normal_figure(c, f);

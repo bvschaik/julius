@@ -165,6 +165,8 @@ const model_building MODEL_GRAND_TEMPLE_VENUS = { 2500,20,2,-4,5,50 };
 const model_building MODEL_PANTHEON = { 3500,20,2,-4,5,50 };
 const model_building MODEL_LIGHTHOUSE = { 2000,6,1,-1,4,30 };
 const model_building MODEL_MESS_HALL = { 100,-8,1,2,4,10 };
+const model_building MODEL_TAVERN = { 25,-2,1,1,6,8 };
+const model_building MODEL_GRAND_GARDEN = { 400,0,0,0,0,0 };
 const model_building MODEL_NULL = { 0,0,0,0,0 };
 
 const model_building *model_get_building(building_type type)
@@ -192,6 +194,10 @@ const model_building *model_get_building(building_type type)
             return &MODEL_MESS_HALL;
         case BUILDING_LIGHTHOUSE:
             return &MODEL_LIGHTHOUSE;
+        case BUILDING_TAVERN:
+            return &MODEL_TAVERN;
+        case BUILDING_GRAND_GARDEN:
+            return &MODEL_GRAND_GARDEN;
         default:
             break;
     }

@@ -836,7 +836,7 @@ static void toggle_resource_state(int index, int param2)
 {
     building *b = building_get(data.building_id);
     int resource;
-    if (b->type == BUILDING_MARKET || b->type == BUILDING_DOCK || b->type == BUILDING_MESS_HALL || building_is_ceres_temple(b->type) || building_is_venus_temple(b->type)) {
+    if (building_has_market_inventory(b->type)) {
         toggle_good_accepted(index-1, b);
     }
     else {

@@ -64,6 +64,17 @@ static void update_good_resource(struct resource_data *data, resource_type resou
     }
 }
 
+static void update_good_resource_generic(struct resource_data* data, resource_type resource, building* b, int distance)
+{
+    if (!city_resource_is_stockpiled(resource) && b->data.market.inventory[resource] > 100) {
+        data->num_buildings++;
+        if (distance < data->distance) {
+            data->distance = distance;
+            data->building_id = b->id;
+        }
+    }
+}
+
 int is_good_accepted(inventory_type resource, building *market) {
     int goods_bit = 1 << resource;
     return !(market->subtype.market_goods & goods_bit);
@@ -107,6 +118,7 @@ int building_market_get_storage_destination(building *market)
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
+
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
@@ -114,6 +126,7 @@ int building_market_get_storage_destination(building *market)
             building *gt = building_get(building_monument_get_venus_gt());
             return building_venus_temple_get_wine_destination(market, gt);
         }
+
         if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE) {
             continue;
         }
@@ -146,6 +159,10 @@ int building_market_get_storage_destination(building *market)
     }
 
     // update demands
+    if (market->type == BUILDING_TAVERN) {
+        market->data.market.wine_demand = 1;
+    }
+
     if (market->data.market.pottery_demand) {
         market->data.market.pottery_demand--;
     } else {
@@ -211,6 +228,26 @@ int building_market_get_storage_destination(building *market)
         return 0;
     }
 
+    // Tavern
+    if (market->type == BUILDING_TAVERN) {
+        if (resources[INVENTORY_WINE].num_buildings &&
+            market->data.market.inventory[INVENTORY_WINE] < min_stock
+            && is_good_accepted(INVENTORY_WINE, market))
+        {
+            market->data.market.fetch_inventory_id = INVENTORY_WINE;
+            return resources[INVENTORY_WINE].building_id;
+        }
+
+        if (market->data.market.inventory[INVENTORY_WINE] >= min_stock && 
+            resources[INVENTORY_MEAT].num_buildings &&
+            market->data.market.inventory[INVENTORY_MEAT] < food_threshhold(market) &&
+            is_good_accepted(INVENTORY_MEAT, market))
+        {
+            market->data.market.fetch_inventory_id = INVENTORY_MEAT;
+            return resources[INVENTORY_MEAT].building_id;
+        }
+        return 0;
+    }
 
     // prefer food if we don't have it
     if (!market->data.market.inventory[INVENTORY_WHEAT] && resources[INVENTORY_WHEAT].num_buildings && is_good_accepted(INVENTORY_WHEAT, market)) {

@@ -614,7 +614,7 @@ static void set_market_graphic(building *b)
 }
 
 int figure_is_market_buyer(int type) {
-    return type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER || type == FIGURE_PRIEST_BUYER;
+    return type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER || type == FIGURE_PRIEST_BUYER || type == FIGURE_BARKEEP_BUYER;
 }
 
 static void spawn_market_buyer(building* b, map_point road, int figure_id_to_use) {
@@ -651,6 +651,9 @@ static void spawn_market_buyer(building* b, map_point road, int figure_id_to_use
             }
             if (b->type == BUILDING_SMALL_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_SMALL_TEMPLE_VENUS || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
                 type = FIGURE_PRIEST_BUYER;
+            }
+            if (b->type == BUILDING_TAVERN) {
+                type = FIGURE_BARKEEP_BUYER;
             }
             figure* f = figure_create(type, road.x, road.y, DIR_0_TOP);
             f->action_state = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
@@ -972,6 +975,31 @@ static void spawn_figure_grand_temple_mars(building* b) {
             }
 
         }
+    }
+}
+
+static void spawn_figure_tavern(building* b)
+{
+    check_labor_problem(b);
+    map_point road;    
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {        
+        if (b->houses_covered <= 50) {
+            generate_labor_seeker(b, road.x, road.y);
+        }
+        int spawn_delay = default_spawn_delay(b) * 2;
+        if (!spawn_delay) {
+            return;
+        }
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            if (!has_figure_of_type(b, FIGURE_BARKEEP) && b->data.market.inventory[INVENTORY_WINE] > 21) {
+                b->data.market.inventory[INVENTORY_WINE] -= 20;
+                b->data.market.inventory[INVENTORY_MEAT] -= calc_bound(40, 40, b->data.market.inventory[INVENTORY_MEAT]);
+                create_roaming_figure(b, road.x, road.y, FIGURE_BARKEEP);
+            }
+        }        
+        spawn_market_buyer(b, road, 2);
     }
 }
 
@@ -1573,6 +1601,9 @@ void building_figure_generate(void)
                     if (b->subtype.monument_phase == MONUMENT_FINISHED) {
                         spawn_figure_lighthouse(b);
                     }
+                    break;
+                case BUILDING_TAVERN:
+                    spawn_figure_tavern(b);
                     break;
             }
         }

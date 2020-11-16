@@ -626,6 +626,12 @@ static void add_to_map(int type, building *b, int size,
                 break;
             }
             break;
+        case BUILDING_TAVERN:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Tavern"), "Tavern ON"));
+            break;
+        case BUILDING_GRAND_GARDEN:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            break;
     }
     map_routing_update_land();
     map_routing_update_walls();

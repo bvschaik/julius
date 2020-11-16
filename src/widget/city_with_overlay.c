@@ -70,6 +70,8 @@ static const city_overlay *get_city_overlay(void)
             return city_overlay_for_colosseum();
         case OVERLAY_HIPPODROME:
             return city_overlay_for_hippodrome();
+        case OVERLAY_TAVERN:
+            return city_overlay_for_tavern();
         case OVERLAY_EDUCATION:
             return city_overlay_for_education();
         case OVERLAY_SCHOOL:

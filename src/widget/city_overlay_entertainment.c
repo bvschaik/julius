@@ -1,6 +1,7 @@
 #include "city_overlay_entertainment.h"
 
 #include "game/state.h"
+#include "translation/translation.h"
 
 static int show_building_entertainment(const building *b)
 {
@@ -8,7 +9,7 @@ static int show_building_entertainment(const building *b)
         b->type == BUILDING_ACTOR_COLONY || b->type == BUILDING_THEATER ||
         b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_AMPHITHEATER ||
         b->type == BUILDING_LION_HOUSE || b->type == BUILDING_COLOSSEUM ||
-        b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME;
+        b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME || b->type == BUILDING_TAVERN;
 }
 
 static int show_building_theater(const building *b)
@@ -33,6 +34,11 @@ static int show_building_hippodrome(const building *b)
     return b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME;
 }
 
+static int show_building_tavern(const building* b)
+{
+    return b->type == BUILDING_TAVERN;
+}
+
 static building *get_entertainment_building(const figure *f)
 {
     if (f->action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
@@ -46,7 +52,7 @@ static building *get_entertainment_building(const figure *f)
 static int show_figure_entertainment(const figure *f)
 {
     return f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR ||
-        f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
+        f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER || f->type == FIGURE_BARKEEP_BUYER || f->type == FIGURE_BARKEEP;
 }
 
 static int show_figure_theater(const figure *f)
@@ -80,6 +86,11 @@ static int show_figure_hippodrome(const figure *f)
     return f->type == FIGURE_CHARIOTEER;
 }
 
+static int show_figure_tavern(const figure* f)
+{
+    return f->type == FIGURE_BARKEEP || f->type == FIGURE_BARKEEP_BUYER;
+}
+
 static int get_column_height_entertainment(const building *b)
 {
     return b->house_size && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
@@ -103,6 +114,14 @@ static int get_column_height_colosseum(const building *b)
 static int get_column_height_hippodrome(const building *b)
 {
     return b->house_size && b->data.house.hippodrome ? b->data.house.hippodrome / 10 : NO_COLUMN;
+}
+
+static int get_column_height_tavern(const building* b)
+{
+    if (!b->house_size || !b->house_tavern_wine_access) {
+        return NO_COLUMN;
+    }
+    return (((b->house_tavern_wine_access / 10) * 2) + (b->house_tavern_meat_access / 10)) / 3;
 }
 
 static int get_tooltip_entertainment(tooltip_context *c, const building *b)
@@ -184,6 +203,34 @@ static int get_tooltip_hippodrome(tooltip_context *c, const building *b)
     }
 }
 
+static int get_tooltip_tavern(tooltip_context* c, const building* b)
+{
+    if (b->house_tavern_wine_access <= 0) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_1;
+    }
+    else if (b->house_tavern_wine_access <= 20) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_2;
+    }
+    else if (b->data.house.hippodrome <= 80) {
+        if (!b->house_tavern_meat_access) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_3;
+        }
+        else {
+            c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_4;
+        }
+    }
+    else {
+        if (!b->house_tavern_meat_access) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_5;
+        }
+        else {
+            c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_6;
+        }
+    }
+
+    return 0;
+}
+
 const city_overlay *city_overlay_for_entertainment(void)
 {
     static city_overlay overlay = {
@@ -258,6 +305,22 @@ const city_overlay *city_overlay_for_hippodrome(void)
         get_column_height_hippodrome,
         0,
         get_tooltip_hippodrome,
+        0,
+        0
+    };
+    return &overlay;
+}
+
+const city_overlay* city_overlay_for_tavern(void)
+{
+    static city_overlay overlay = {
+        OVERLAY_TAVERN,
+        COLUMN_TYPE_ACCESS,
+        show_building_tavern,
+        show_figure_tavern,
+        get_column_height_tavern,
+        0,
+        get_tooltip_tavern,
         0,
         0
     };
