@@ -18,6 +18,7 @@ static void unload_png(void)
     png_destroy_read_struct(&data.png_ptr, &data.info_ptr, 0);
     if (data.fp) {
         fclose(data.fp);
+        data.fp = 0;
     }
 }
 
@@ -89,7 +90,6 @@ int png_read(const char *path, uint8_t *pixels)
     png_set_filler(data.png_ptr, 0xFF, PNG_FILLER_AFTER);
     png_set_expand(data.png_ptr);
     png_set_strip_16(data.png_ptr);
-   // png_set_swap_alpha(data.png_ptr);
     png_set_bgr(data.png_ptr);
 
     png_set_interlace_handling(data.png_ptr);
