@@ -72,11 +72,8 @@ void group_unload_current(void)
     modded_image *img = group->first_image;
     memset(group, 0, sizeof(image_groups));
     while (img) {
-        if (img->loaded && !img->is_clone) {
-            modded_image_unload_layers(img);
-            free(img->data);
-        }
         modded_image *next = img->next;
+        modded_image_unload(img);
         free(img);
         img = next;
     }

@@ -152,3 +152,13 @@ modded_image *modded_image_get_from_id(int image_id)
     }
     return 0;
 }
+
+void modded_image_unload(modded_image *img)
+{
+    if (!img->loaded) {
+        modded_image_unload_layers(img);
+    }
+    if (!img->is_clone) {
+        free(img->data);
+    }
+}
