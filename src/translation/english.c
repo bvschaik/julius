@@ -344,7 +344,7 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TITLE_NEPTUNE_BLESSING, "A blessing from Neptune"},
     {TR_CITY_MESSAGE_TEXT_NEPTUNE_BLESSING, "Rewarding your city's devotion, Neptune grants smooth passage to traders for twelve months, during which your exports will fetch half extra price."},
     {TR_CITY_MESSAGE_TITLE_VENUS_BLESSING, "A blessing from Venus" },
-    {TR_CITY_MESSAGE_TEXT_VENUS_BLESSING, "Delighted by the joyful reverence shown to her, Venus grants youthfulness, health, and happiness to your people, increasing the size of your working population." },
+    {TR_CITY_MESSAGE_TEXT_VENUS_BLESSING, "Delighted by the joyful reverence shown to her, Venus grants youthfulness, health, and happiness to your people, increasing the size of your working population. The mood in your city surges with joy." },
     {TR_BUILDING_MENU_STATUES, "Statues" },
     {TR_BUILDING_MENU_GOV_RES, "Governor's mansions" },
     {TR_OVERLAY_ROADS, "Roads" },
@@ -396,8 +396,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_WINDOW_HOUSE_UPSET_SQUALOR, "Residents are despondent about their poor housing." },
     {TR_BUILDING_WINDOW_HOUSE_SUGGEST_ENTERTAINMENT, "Residents would appreciate more entertainment." },
     {TR_BUILDING_WINDOW_HOUSE_SUGGEST_FOOD, "Residents would appreciate a more varied diet." },
-    {TR_BUILDING_WINDOW_HOUSE_RECENT_GAMES, "Residents were throughly entertained by a recent spectacle." },
-    {TR_BUILDING_WINDOW_HOUSE_RECENT_FESTIVAL, "Residents were throughly entertained by a recent festival." }
+    {TR_BUILDING_WINDOW_HOUSE_RECENT_EVENT_POSITIVE, "Residents spirits are lifted by a recent event." },
+    {TR_BUILDING_WINDOW_HOUSE_RECENT_EVENT_NEGATIVE, "Residents are dispirited by a recent event." }
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

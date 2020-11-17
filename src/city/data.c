@@ -339,9 +339,10 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 10; i++) {
         buffer_write_i16(main, city_data.building.working_dock_ids[i]);
     }
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 2; i++) {
         buffer_write_i16(main, city_data.unused.unknown_439c[i]);
     }
+    buffer_write_i16(main, city_data.sentiment.blessing_festival_sentiment_boost);
     buffer_write_i16(main, city_data.figure.animals);
     buffer_write_i16(main, city_data.trade.num_sea_routes);
     buffer_write_i16(main, city_data.trade.num_land_routes);
@@ -824,9 +825,10 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 10; i++) {
         city_data.building.working_dock_ids[i] = buffer_read_i16(main);
     }
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 2; i++) {
         city_data.unused.unknown_439c[i] = buffer_read_i16(main);
     }
+    city_data.sentiment.blessing_festival_sentiment_boost = buffer_read_i16(main);
     city_data.figure.animals = buffer_read_i16(main);
     city_data.trade.num_sea_routes = buffer_read_i16(main);
     city_data.trade.num_land_routes = buffer_read_i16(main);

@@ -82,7 +82,7 @@ static void perform_blessing(god_type god)
             break;
         case GOD_VENUS:
             city_message_post(1, MESSAGE_BLESSING_FROM_VENUS_ALTERNATE, 0, 0);
-            city_sentiment_change_happiness(25);
+            city_data.sentiment.blessing_festival_sentiment_boost += 18;
             city_population_venus_blessing();
             city_data.religion.venus_blessing_months_left = VENUS_BLESSING_MONTHS;
             break;
@@ -114,8 +114,7 @@ static void perform_small_curse(god_type god)
             break;
         case GOD_VENUS:
             city_message_post(1, MESSAGE_VENUS_IS_UPSET, 0, 0);
-            city_sentiment_set_max_happiness(50);
-            city_sentiment_change_happiness(-5);
+            city_data.sentiment.blessing_festival_sentiment_boost -= 15;
             city_health_change(-10);
             city_sentiment_update();
             break;

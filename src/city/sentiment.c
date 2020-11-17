@@ -20,7 +20,7 @@
 #define UNEMPLOYMENT_THRESHHOLD 5
 #define UNEMPLOYMENT_MODIFIER 3
 #define TAX_MODIFIER_POSITIVE_CURVE 0.6
-#define TAX_MODIFIER_NEGATIVE_CURVE 0.4
+#define TAX_MODIFIER_NEGATIVE_CURVE 1.8
 #define WAGE_NEGATIVE_MODIFIER 3
 #define WAGE_POSITIVE_MODIFIER 2
 #define BASE_TAX_RATE 6
@@ -28,12 +28,6 @@
 #define SENTIMENT_PER_ENTERTAINMENT 1
 #define SENTIMENT_PER_EXTRA_FOOD 12
 
-
-static const int SENTIMENT_PER_TAX_RATE[26] = {
-    3, 2, 2, 2, 1, 1, 1, 0, 0, -1,
-    -2, -2, -3, -3, -3, -5, -5, -5, -5, -6,
-    -6, -6, -6, -6, -6, -6
-};
 
 int city_sentiment(void)
 {
@@ -92,6 +86,16 @@ int city_sentiment_protesters(void)
 int city_sentiment_criminals(void)
 {
     return city_data.sentiment.criminals;
+}
+
+int city_sentiment_blessing_festival_sentiment_boost(void)
+{
+    return city_data.sentiment.blessing_festival_sentiment_boost;
+}
+
+void decrement_blessing_festival_boost(void) {
+    double boost = city_data.sentiment.blessing_festival_sentiment_boost;
+    city_data.sentiment.blessing_festival_sentiment_boost = (int)floor(boost * 0.84);
 }
 
 static int get_sentiment_penalty_for_tent_dwellers(void)
@@ -181,145 +185,6 @@ static int get_sentiment_contribution_employment(void)
     }
 }
 
-void city_sentiment_update_old(void)
-{
-    city_population_check_consistency();
-
-    int sentiment_contribution_taxes = SENTIMENT_PER_TAX_RATE[city_data.finance.tax_percentage];
-    int sentiment_contribution_wages = get_sentiment_contribution_wages();
-    int sentiment_contribution_employment = get_sentiment_contribution_employment();
-    int sentiment_penalty_tents = get_sentiment_penalty_for_tent_dwellers();
-
-    int houses_calculated = 0;
-    int houses_needing_food = 0;
-    int total_sentiment_contribution_food = 0;
-    int total_sentiment_penalty_tents = 0;
-    int default_sentiment = difficulty_sentiment();
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
-            continue;
-        }
-        if (!b->house_population) {
-            b->sentiment.house_happiness = 10 + default_sentiment;
-            continue;
-        }
-        if (city_data.population.population < 300) {
-            // small town has no complaints
-            sentiment_contribution_employment = 0;
-            sentiment_contribution_taxes = 0;
-            sentiment_contribution_wages = 0;
-
-            b->sentiment.house_happiness = default_sentiment;
-            if (city_data.population.population < 200) {
-                b->sentiment.house_happiness += 10;
-            } else if (default_sentiment < 50) {
-                // Fix very hard immigration bug: give a boost for Very Hard difficulty so that
-                // immigration is not halted simply because you are between pop 200 and 300
-                b->sentiment.house_happiness += 50 - default_sentiment;
-            }
-            continue;
-        }
-        // population >= 300
-        houses_calculated++;
-        int sentiment_contribution_food = 0;
-        int sentiment_contribution_tents = 0;
-        if (!model_get_house(b->subtype.house_level)->food_types) {
-            // tents
-            b->house_days_without_food = 0;
-            sentiment_contribution_tents = sentiment_penalty_tents;
-            total_sentiment_penalty_tents += sentiment_penalty_tents;
-        } else {
-            // shack+
-            houses_needing_food++;
-            if (b->data.house.num_foods >= 2) {
-                sentiment_contribution_food = 2;
-                total_sentiment_contribution_food += 2;
-                b->house_days_without_food = 0;
-            } else if (b->data.house.num_foods >= 1) {
-                sentiment_contribution_food = 1;
-                total_sentiment_contribution_food += 1;
-                b->house_days_without_food = 0;
-            } else {
-                // needs food but has no food
-                if (b->house_days_without_food < 3) {
-                    b->house_days_without_food++;
-                }
-                sentiment_contribution_food = -b->house_days_without_food;
-                total_sentiment_contribution_food -= b->house_days_without_food;
-            }
-        }
-        b->sentiment.house_happiness += sentiment_contribution_taxes;
-        b->sentiment.house_happiness += sentiment_contribution_wages;
-        b->sentiment.house_happiness += sentiment_contribution_employment;
-        b->sentiment.house_happiness += sentiment_contribution_food;
-        b->sentiment.house_happiness += sentiment_contribution_tents;
-        b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness, 0, 100);
-    }
-
-    int sentiment_contribution_food = 0;
-    int sentiment_contribution_tents = 0;
-    if (houses_needing_food) {
-        sentiment_contribution_food = total_sentiment_contribution_food / houses_needing_food;
-    }
-    if (houses_calculated) {
-        sentiment_contribution_tents = total_sentiment_penalty_tents / houses_calculated;
-    }
-
-    int total_sentiment = 0;
-    int total_houses = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
-            total_houses++;
-            total_sentiment += b->sentiment.house_happiness;
-        }
-    }
-    if (total_houses) {
-        city_data.sentiment.value = total_sentiment / total_houses;
-    } else {
-        city_data.sentiment.value = 60;
-    }
-    if (city_data.sentiment.message_delay) {
-        city_data.sentiment.message_delay--;
-    }
-    if (city_data.sentiment.value < 48 && city_data.sentiment.value < city_data.sentiment.previous_value) {
-        if (city_data.sentiment.message_delay <= 0) {
-            city_data.sentiment.message_delay = 3;
-            if (city_data.sentiment.value < 35) {
-                city_message_post(0, MESSAGE_PEOPLE_ANGRY, 0, 0);
-            } else if (city_data.sentiment.value < 40) {
-                city_message_post(0, MESSAGE_PEOPLE_UNHAPPY, 0, 0);
-            } else {
-                city_message_post(0, MESSAGE_PEOPLE_DISGRUNTLED, 0, 0);
-            }
-        }
-    }
-
-    int worst_sentiment = 0;
-    city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NONE;
-    if (sentiment_contribution_food < worst_sentiment) {
-        worst_sentiment = sentiment_contribution_food;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NO_FOOD;
-    }
-    if (sentiment_contribution_employment < worst_sentiment) {
-        worst_sentiment = sentiment_contribution_employment;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NO_JOBS;
-    }
-    if (sentiment_contribution_taxes < worst_sentiment) {
-        worst_sentiment = sentiment_contribution_taxes;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_HIGH_TAXES;
-    }
-    if (sentiment_contribution_wages < worst_sentiment) {
-        worst_sentiment = sentiment_contribution_wages;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_LOW_WAGES;
-    }
-    if (sentiment_contribution_tents < worst_sentiment) {
-        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_MANY_TENTS;
-    }
-    city_data.sentiment.previous_value = city_data.sentiment.value;
-}
-
 static int calc_economy_modifier_wage(void) {
     int wage_differential = (city_data.labor.wages - city_data.labor.wages_rome);
     return (wage_differential > 0 ? wage_differential * WAGE_POSITIVE_MODIFIER : wage_differential * WAGE_NEGATIVE_MODIFIER);
@@ -337,11 +202,11 @@ static int calc_economy_modifier_tax(void) {
     double tax_differential = (double)city_data.finance.tax_percentage - BASE_TAX_RATE;
     double result = 0.0;
     if (tax_differential > 0.0) {
-        result = (pow(tax_differential, 2.0) / (4.0 * TAX_MODIFIER_NEGATIVE_CURVE)) * -1;
+        result = (pow(tax_differential, 2.0) * (TAX_MODIFIER_NEGATIVE_CURVE)) * -1;
         return (int)floor(result);
     }
     else if (tax_differential < 0.0) {
-        result = (pow(tax_differential, 2.0) / (4.0 * TAX_MODIFIER_POSITIVE_CURVE));
+        result = (pow(tax_differential, 2.0) * (TAX_MODIFIER_POSITIVE_CURVE));
         return (int)floor(result);
     }
 }
@@ -409,6 +274,7 @@ void city_sentiment_update(void)
     int sentiment_contribution_wages = calc_economy_modifier_wage();
     int sentiment_contribution_employment = calc_economy_modifier_unemployment();
     int average_housing_level = calc_average_housing_level();
+    int blessing_festival_sentiment_boost = city_data.sentiment.blessing_festival_sentiment_boost;
     int average_squalor_penalty = 0;
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -453,6 +319,9 @@ void city_sentiment_update(void)
 
         sentiment += ent_bonus;
         sentiment += food_bonus;
+
+        sentiment += blessing_festival_sentiment_boost;
+        
 
         b->sentiment.house_happiness = calc_bound((sentiment + b->sentiment.house_happiness) / 2, 0, 100); // sentiment changes to an average of current sentiment and new calculated value
         houses_calculated++;
@@ -549,3 +418,4 @@ void city_sentiment_update(void)
     }
     city_data.sentiment.previous_value = city_data.sentiment.value;
 }
+

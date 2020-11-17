@@ -90,6 +90,13 @@ static void draw_happiness_info(building_info_context *c, int y_offset)
         default:
             break;
     }
+
+    if (city_sentiment_blessing_festival_sentiment_boost() > 3) {
+        text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_RECENT_EVENT_POSITIVE), c->x_offset + 36, y_offset + 40, FONT_SMALL_BLACK, 0);
+    }
+    else if (city_sentiment_blessing_festival_sentiment_boost() < -3) {
+        text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_RECENT_EVENT_NEGATIVE), c->x_offset + 36, y_offset + 40, FONT_SMALL_BLACK, 0);
+    }
 }
 
 void window_building_draw_house(building_info_context *c)
@@ -104,13 +111,13 @@ void window_building_draw_house(building_info_context *c)
     int level = b->type - 10;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(29, level, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 148, c->width_blocks - 2, 11);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 148, c->width_blocks - 2, 13);
 
     draw_population_info(c, c->y_offset + 154);
     draw_tax_info(c, c->y_offset + 194);
     draw_happiness_info(c, c->y_offset + 214);
-    int y_content = 259;
-    int y_amount = 263;
+    int y_content = 279;
+    int y_amount = 283;
 
     int resource_image = image_group(GROUP_RESOURCE_ICONS);
     // food inventory

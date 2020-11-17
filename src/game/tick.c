@@ -82,6 +82,7 @@ static void advance_month(void)
     city_victory_update_months_to_govern();
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();
+    decrement_blessing_festival_boost();
 
     map_tiles_update_all_roads();
     map_tiles_update_all_water();

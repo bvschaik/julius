@@ -92,6 +92,9 @@ static int get_height_id(void)
         if (building_is_house(b->type) && b->house_population <= 0) {
             return 5;
         }
+        if (building_is_house(b->type) && b->house_population > 0) {
+            return 7;
+        }
 
         if (b->type >= BUILDING_SMALL_POND && b->type <= BUILDING_SMALL_STATUE_ALT_B) {
             return 1;

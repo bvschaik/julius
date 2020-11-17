@@ -16,6 +16,8 @@ void city_sentiment_add_criminal(void);
 
 int city_sentiment_protesters(void);
 int city_sentiment_criminals(void);
+int city_sentiment_blessing_festival_sentiment_boost(void);
+void decrement_blessing_festival_boost(void);
 
 void city_sentiment_update(void);
 
