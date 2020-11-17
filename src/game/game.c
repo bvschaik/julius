@@ -24,6 +24,7 @@
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
+#include "sound/speech.h"
 #include "sound/system.h"
 #include "translation/translation.h"
 #include "window/editor/map.h"
@@ -182,6 +183,10 @@ void game_run(void)
 void game_draw(void)
 {
     window_draw(0);
+    if (game_state_is_paused()) {
+        sound_city_set_volume(0);
+        sound_speech_set_volume(0);
+    }
     sound_city_play();
 }
 

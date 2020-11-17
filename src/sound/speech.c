@@ -2,6 +2,7 @@
 
 #include "core/dir.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "sound/channel.h"
 #include "sound/device.h"
 
@@ -13,6 +14,9 @@ void sound_speech_set_volume(int percentage)
 void sound_speech_play_file(const char *filename)
 {
     if (!setting_sound(SOUND_SPEECH)->enabled) {
+        return;
+    }
+    if (game_state_is_paused()) {
         return;
     }
     sound_device_stop_channel(SOUND_CHANNEL_SPEECH);

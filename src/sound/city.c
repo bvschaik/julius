@@ -3,6 +3,7 @@
 #include "city/figures.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "sound/channel.h"
 #include "sound/device.h"
 
@@ -263,6 +264,9 @@ static void play_channel(int channel, int direction)
 
 void sound_city_play(void)
 {
+    if (game_state_is_paused()) {
+        return;
+    }
     time_millis now = time_get_millis();
     for (int i = 1; i < MAX_CHANNELS; i++) {
         channels[i].should_play = 0;
