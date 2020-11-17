@@ -1,11 +1,14 @@
 #include "core/png_read.h"
 
 #include "core/log.h"
+#include "graphics/color.h"
 
 #include "png.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#define BYTES_PER_PIXEL 4
 
 static struct {
     png_structp png_ptr;
@@ -76,7 +79,7 @@ int png_get_image_size(const char *path, int *width, int *height)
     return 1;
 }
 
-int png_read(const char *path, uint8_t *pixels)
+int png_read(const char *path, color_t *pixels)
 {
     if (!load_png(path)) {
         return 0;
@@ -90,21 +93,33 @@ int png_read(const char *path, uint8_t *pixels)
     png_set_filler(data.png_ptr, 0xFF, PNG_FILLER_AFTER);
     png_set_expand(data.png_ptr);
     png_set_strip_16(data.png_ptr);
-    png_set_bgr(data.png_ptr);
-
-    png_set_interlace_handling(data.png_ptr);
+    if (png_set_interlace_handling(data.png_ptr) != 1) {
+        log_info("The image has interlacing and therefore will not open correctly", 0, 0);
+    }
     png_read_update_info(data.png_ptr, data.info_ptr);
 
     int width = png_get_image_width(data.png_ptr, data.info_ptr);
     int height = png_get_image_height(data.png_ptr, data.info_ptr);
-    png_bytep *row_pointers = malloc(sizeof(png_bytep) * height);
-    for (int y = 0; y < height; ++y) {
-        row_pointers[y] = pixels + y * width * sizeof(color_t);
+    png_bytep row = malloc(sizeof(png_byte) * width * BYTES_PER_PIXEL);
+    if (!row) {
+        log_error("Unable to load png file. Out of memory", 0, 0);
+        unload_png();
+        return 0;
     }
-
-    png_read_image(data.png_ptr, row_pointers);
-    free(row_pointers);
-
+    color_t *dst = pixels;
+    for (int y = 0; y < height; ++y) {
+        png_read_row(data.png_ptr, row, 0);
+        png_bytep src = row;
+        for (int x = 0; x < width; ++x) {
+            *dst  = ((color_t) *(src + 0)) << COLOR_BITSHIFT_RED;
+            *dst |= ((color_t) *(src + 1)) << COLOR_BITSHIFT_GREEN;
+            *dst |= ((color_t) *(src + 2)) << COLOR_BITSHIFT_BLUE;
+            *dst |= ((color_t) *(src + 3)) << COLOR_BITSHIFT_ALPHA;
+            dst++;
+            src += BYTES_PER_PIXEL;
+        }
+    }
+    free(row);
     unload_png();
     return 1;
 }

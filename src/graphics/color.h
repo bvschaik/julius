@@ -50,13 +50,16 @@ typedef uint32_t color_t;
 #define ALPHA_TRANSPARENT 0x00000000
 
 #define COLOR_BITSHIFT_ALPHA 24
+#define COLOR_BITSHIFT_RED 16
+#define COLOR_BITSHIFT_GREEN 8
+#define COLOR_BITSHIFT_BLUE 0
 
 #define COLOR_CHANNEL_ALPHA 0xff000000
 #define COLOR_CHANNEL_RED 0x00ff0000
 #define COLOR_CHANNEL_GREEN 0x0000ff00
 #define COLOR_CHANNEL_BLUE 0x000000ff
 
-#define COLOR_COMPONENT(c, shift) ((c >> shift) & 0xff)
+#define COLOR_COMPONENT(c, shift) (((c) >> (shift)) & 0xff)
 
 #define COLOR_MIX_ALPHA(alpha_src, alpha_dst) ((alpha_src) + (((alpha_dst) * (0xff - (alpha_src))) >> 8))
 #define COLOR_BLEND_CHANNEL_TO_OPAQUE(src, dst, alpha, channel) \
