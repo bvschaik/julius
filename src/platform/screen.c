@@ -298,7 +298,7 @@ void platform_screen_recreate_texture(void)
     if (!SDL.texture && SDL.renderer && setting_fullscreen()) {
         SDL_DisplayMode mode;
         SDL_GetWindowDisplayMode(SDL.window, &mode);
-        system_resize(scale_pixels_to_logical(mode.w), scale_pixels_to_logical(mode.h));
+        screen_set_resolution(scale_pixels_to_logical(mode.w), scale_pixels_to_logical(mode.h));
         SDL.texture = SDL_CreateTexture(SDL.renderer,
             SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
             screen_width(), screen_height());
