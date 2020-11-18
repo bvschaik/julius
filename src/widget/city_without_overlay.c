@@ -293,13 +293,13 @@ static void draw_figures(int x, int y, int grid_offset)
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-        if (!f->is_ghost) {
-            if (!draw_context.selected_figure_id) {
-                int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
-                city_draw_figure(f, x, y, highlight);
-            } else if (figure_id == draw_context.selected_figure_id) {
+        if (figure_id == draw_context.selected_figure_id) {
+            if (!f->is_ghost || f->height_adjusted_ticks) {
                 city_draw_selected_figure(f, x, y, draw_context.selected_figure_coord);
             }
+        } else if (!f->is_ghost) {
+            int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
+            city_draw_figure(f, x, y, highlight);
         }
         figure_id = f->next_figure_id_on_same_tile;
     }
