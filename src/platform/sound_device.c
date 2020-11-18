@@ -203,6 +203,9 @@ int sound_device_play_music(const char *filename, int volume_pct)
 {
     if (data.initialized) {
         sound_device_stop_music();
+        if (!filename) {
+            return 0;
+        }
 #ifdef __vita__
         load_music_for_vita(filename);
         if (!vita_music_data.buffer) {
