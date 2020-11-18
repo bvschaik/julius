@@ -20,6 +20,7 @@
 #define fs_dir_close _wclosedir
 #define fs_dir_read _wreaddir
 #define dir_entry_name(d) wchar_to_utf8(d->d_name)
+#define dir_to_utf8(d) wchar_to_utf8(d)
 typedef const wchar_t * dir_name;
 
 static const char *wchar_to_utf8(const wchar_t *str)
@@ -51,6 +52,7 @@ static wchar_t *utf8_to_wchar(const char *str)
 #define fs_dir_close closedir
 #define fs_dir_read readdir
 #define dir_entry_name(d) ((d)->d_name)
+#define dir_to_utf8(d) (d)
 typedef const char * dir_name;
 #endif
 
@@ -83,10 +85,143 @@ typedef const char * dir_name;
 #include <unistd.h>
 #endif
 
+#ifdef __vita__
+typedef struct file_info {
+    char name[FILE_NAME_MAX];
+    const char *extension;
+    int type;
+    struct file_info *next;
+} file_info;
+
+typedef struct dir_info {
+    char name[FILE_NAME_MAX];
+    file_info *first_file;
+    struct dir_info *next;
+} dir_info;
+
+static dir_info *base_dir_info;
+
+static const dir_info *get_or_create_dir_info(dir_name dir)
+{
+    dir_info *info = base_dir_info;
+    const char *dir_utf8 = dir_to_utf8(dir);
+    while (info) {
+        if (strcmp(info->name, dir_utf8) == 0) {
+            return info;
+        }
+        if (!info->next) {
+            break;
+        }
+        info = info->next;
+    }
+    fs_dir_type *d = fs_dir_open(dir);
+    if (!d) {
+        return 0;
+    }
+    if (!info) {
+        info = malloc(sizeof(dir_info));
+        base_dir_info = info;
+    } else {
+        info->next = malloc(sizeof(dir_info));
+        info = info->next;
+    }
+    strncpy(info->name, dir_utf8, FILE_NAME_MAX - 1);
+    info->name[FILE_NAME_MAX - 1] = 0;
+    info->first_file = 0;
+    info->next = 0;
+    fs_dir_entry *entry;
+    file_info *file_item = 0;
+
+    struct stat file_stat;
+    while ((entry = fs_dir_read(d))) {
+        const char *name = dir_entry_name(entry);
+        int type = TYPE_ANY;
+        if (stat(name, &file_stat) != -1) {
+            int m = file_stat.st_mode;
+            if (S_ISCHR(m) || S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m) ||
+                (S_ISDIR(m) && name[0] == '.')) {
+                // Skip current (.), parent (..) and hidden directories (.*)
+                continue;
+            }
+            type = S_ISDIR(m) ? TYPE_DIR : TYPE_FILE;
+        }
+        if (!file_item) {
+            file_item = malloc(sizeof(file_info));
+            info->first_file = file_item;
+        } else {
+            file_item->next = malloc(sizeof(file_info));
+            file_item = file_item->next;
+        }
+        strncpy(file_item->name, name, FILE_NAME_MAX - 1);
+        file_item->name[FILE_NAME_MAX - 1] = 0;
+        file_item->type = type;
+        char c;
+        const char *filename = file_item->name;
+        do {
+            c = *filename;
+            filename++;
+        } while (c != '.' && c);
+        file_item->extension = filename;
+        file_item->next = 0;
+    }
+    fs_dir_close(d);
+    return info;
+}
+
+static void add_file_info_to_cache(const char *filename, const char *mode)
+{
+    // Julius only creates files to the base dir
+    if (base_dir_info && strchr(mode, 'w') && !file_exists(filename, NOT_LOCALIZED)) {
+        file_info *f = malloc(sizeof(file_info));
+        strncpy(f->name, filename, FILE_NAME_MAX - 1);
+        f->name[FILE_NAME_MAX - 1] = 0;
+        f->type = TYPE_FILE;
+        char c;
+        const char *name = f->name;
+        do {
+            c = *name;
+            name++;
+        } while (c != '.' && c);
+        f->extension = name;
+        f->next = base_dir_info->first_file;
+        base_dir_info->first_file = f;
+    }
+}
+
+static void delete_file_info_from_cache(const char *filename)
+{
+    // Julius only deletes files from the base dir
+    if (!base_dir_info) {
+        return;
+    }
+    file_info *prev = 0;
+    for (file_info *f = base_dir_info->first_file; f; f = f->next) {
+        if (strcmp(filename, f->name) == 0) {
+            if (prev) {
+                prev->next = f->next;
+            } else {
+                base_dir_info->first_file = f->next;
+            }
+            free(f);
+            return;
+        }
+        prev = f;
+    }
+}
+
+static int file_info_has_extension(const file_info *f, const char *extension)
+{
+    if (!(f->type & TYPE_FILE) || !extension || !*extension) {
+        return 1;
+    }
+    return string_compare_case_insensitive(f->extension, extension) == 0;
+}
+#else
 static int is_file(int mode)
 {
     return S_ISREG(mode) || S_ISLNK(mode);
 }
+#endif
 
 int platform_file_manager_list_directory_contents(
     const char *dir, int type, const char *extension, int (*callback)(const char *))
@@ -103,7 +238,25 @@ int platform_file_manager_list_directory_contents(
         current_dir = set_dir_name(dir);
     }
 #ifdef __ANDROID__
-    return android_get_directory_contents(current_dir, type, extension, callback);
+    int match = android_get_directory_contents(current_dir, type, extension, callback);
+#elif defined(__vita__)
+    const dir_info *d = get_or_create_dir_info(current_dir);
+    if (!d) {
+        return LIST_ERROR;
+    }
+    int match = LIST_NO_MATCH;
+    for(file_info *f = d->first_file; f; f = f->next) {
+        if (!(type & f->type)) {
+            continue;
+        }
+        if (!file_info_has_extension(f, extension)) {
+            continue;
+        }
+        match = callback(f->name);
+        if (match == LIST_MATCH) {
+            break;
+        }
+    }
 #else
     fs_dir_type *d = fs_dir_open(current_dir);
     if (!d) {
@@ -137,11 +290,11 @@ int platform_file_manager_list_directory_contents(
         }
     }
     fs_dir_close(d);
+#endif
     if (dir && *dir && strcmp(dir, ".") != 0) {
         free_dir_name(current_dir);
     }
     return match;
-#endif
 }
 
 int platform_file_manager_should_case_correct_file(void)
@@ -170,6 +323,7 @@ int platform_file_manager_set_base_path(const char *path)
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
+    add_file_info_to_cache(filename, mode);
     char *resolved_path = vita_prepend_path(filename);
     FILE *fp = fopen(resolved_path, mode);
     free(resolved_path);
@@ -178,6 +332,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 
 int platform_file_manager_remove_file(const char *filename)
 {
+    delete_file_info_from_cache(filename);
     char *resolved_path = vita_prepend_path(filename);
     int result = remove(resolved_path);
     free(resolved_path);
