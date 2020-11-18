@@ -142,6 +142,14 @@ void system_set_fullscreen(int fullscreen)
     post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
 }
 
+#ifdef _WIN32
+#define PLATFORM_ENABLE_PER_FRAME_CALLBACK
+static void platform_per_frame_callback(void)
+{
+    platform_screen_recreate_texture();
+}
+#endif
+
 #ifdef DRAW_FPS
 static struct {
     int frame_count;
