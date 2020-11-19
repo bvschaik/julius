@@ -6,9 +6,9 @@
 #include "core/file.h"
 #include "core/log.h"
 #include "game/system.h"
-#include "graphics/screen.h"
 #include "graphics/graphics.h"
 #include "graphics/menu.h"
+#include "graphics/screen.h"
 #include "graphics/window.h"
 #include "map/grid.h"
 #include "widget/city_without_overlay.h"
@@ -149,10 +149,10 @@ static int image_write_rows(const color_t *canvas, int canvas_width)
         uint8_t *pixel = image.pixels;
         for (int x = 0; x < image.width; x++) {
             color_t input = canvas[y * canvas_width + x];
-            *(pixel + 0) = (uint8_t) ((input & 0xff0000) >> 16);
-            *(pixel + 1) = (uint8_t) ((input & 0x00ff00) >> 8);
-            *(pixel + 2) = (uint8_t) ((input & 0x0000ff) >> 0);
-            pixel += 3;
+            *(pixel + 0) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_RED);
+            *(pixel + 1) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_GREEN);
+            *(pixel + 2) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_BLUE);
+            pixel += IMAGE_BYTES_PER_PIXEL;
         }
         png_write_row(image.png_ptr, image.pixels);
     }

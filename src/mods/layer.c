@@ -46,7 +46,7 @@ void layer_load(layer *l)
     }
     memset(l->data, 0, size);
     if (l->modded_image_path) {
-        if (!png_read(l->modded_image_path, (uint8_t *) l->data)) {
+        if (!png_read(l->modded_image_path, l->data)) {
             free(l->data);
             log_error("Problem loading layer from file", l->modded_image_path, 0);
             load_dummy_layer(l);
