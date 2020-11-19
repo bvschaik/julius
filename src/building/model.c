@@ -167,6 +167,7 @@ const model_building MODEL_LIGHTHOUSE = { 2000,6,1,-1,4,30 };
 const model_building MODEL_MESS_HALL = { 100,-8,1,2,4,10 };
 const model_building MODEL_TAVERN = { 25,-2,1,1,6,8 };
 const model_building MODEL_GRAND_GARDEN = { 400,0,0,0,0,0 };
+const model_building MODEL_ARENA = { 500,-3,1,1,3,25 };
 const model_building MODEL_NULL = { 0,0,0,0,0 };
 
 const model_building *model_get_building(building_type type)
@@ -198,19 +199,21 @@ const model_building *model_get_building(building_type type)
             return &MODEL_TAVERN;
         case BUILDING_GRAND_GARDEN:
             return &MODEL_GRAND_GARDEN;
+        case BUILDING_ARENA:
+            return &MODEL_ARENA;
         default:
             break;
     }
 
-    if (type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) {
+    if ((type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT || type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_GARDEN_WALL) {
         return &buildings[41];
     }
 
-    if(type == BUILDING_SMALL_POND || type==BUILDING_OBELISK) {
+    if(type == BUILDING_SMALL_POND || type==BUILDING_OBELISK || type == BUILDING_LEGION_STATUE || type == BUILDING_DOLPHIN_FOUNTAIN) {
         return &buildings[42];
     }
 
-    if(type == BUILDING_LARGE_POND) {
+    if(type == BUILDING_LARGE_POND || type== BUILDING_HORSE_STATUE) {
         return &buildings[43];
     }
 

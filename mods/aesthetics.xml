@@ -236,6 +236,31 @@
 		<layer src="Garden_Path_Rotated" />
     </image>
 
+<!-- Note: Assets for 'Legionary Statue' with rotation variant -->
+    <image id="legio statue" src="Legionary_Statue" />
+
+    <image id="legio statue R" src="Legionary_Statue_Rotated" />	
+	
+<!-- Note: Assets for 'Small Statue 2' and 'Small Statue 3' rotation variants respectively -->
+    <image id="sml statue 2 R" src="Small_Statue_01_Rotated" />
+
+    <image id="sml statue 3 R" src="Small_Statue_02_Rotated" />		
+	
+<!-- Note: Assets for 'Small Blue Column', 'Small Green Column', 'Small Orange Column', 'Small Red Column' and 'Small Yellow Column' respectively, with rotation variants -->
+    <image id="sml col B" src="Small_Column_Blue" />
+    <image id="sml col B R" src="Small_Column_Blue_Rotated" />	
+
+    <image id="sml col G" src="Small_Column_Green" />
+    <image id="sml col G R" src="Small_Column_Green_Rotated" />	
+
+    <image id="sml col O" src="Small_Column_Orange" />
+    <image id="sml col O R" src="Small_Column_Orange_Rotated" />	
+
+    <image id="sml col R" src="Small_Column_Red" />
+    <image id="sml col R R" src="Small_Column_Red_Rotated" />	
+
+    <image id="sml col Y" src="Small_Column_Yellow" />
+    <image id="sml col Y R" src="Small_Column_Yellow_Rotated" />	
 
 	
 </mod>

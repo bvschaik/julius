@@ -75,7 +75,7 @@ void city_entertainment_calculate_shows(void)
                     city_data.entertainment.amphitheater_no_shows_weighted += 2;
                 }
                 break;
-            case BUILDING_COLOSSEUM:
+            case BUILDING_COLOSSEUM || BUILDING_ARENA:
                 if (b->data.entertainment.days1) {
                     city_data.entertainment.colosseum_shows++;
                 } else {

@@ -29,7 +29,6 @@ typedef struct {
         short market_goods;
         short roadblock_exceptions;
         short barracks_priority;
-        short monument_phase;
     } subtype;
     unsigned char road_network_id;
     unsigned short created_sequence;
@@ -139,6 +138,7 @@ typedef struct {
             short resources_needed[16];
             int upgrades;
             int progress;
+            short monument_phase;
         } monument;
 
     } data;

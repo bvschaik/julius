@@ -523,7 +523,7 @@ int figure_service_provide_coverage(figure *f)
             if (b->type == BUILDING_AMPHITHEATER) {
                 houses_serviced = provide_entertainment(x, y,
                     b->data.entertainment.days2 ? 2 : 1, amphitheater_coverage);
-            } else if (b->type == BUILDING_COLOSSEUM) {
+            } else if (b->type == BUILDING_COLOSSEUM || b->type == BUILDING_ARENA) {
                 houses_serviced = provide_entertainment(x, y,
                     b->data.entertainment.days1 ? 2 : 1, colosseum_coverage);
             }

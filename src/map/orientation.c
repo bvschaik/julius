@@ -287,6 +287,15 @@ void map_orientation_update_buildings(void)
             {
                 // get which part of the hippodrome is getting checked
 
+                int phase = b->data.monument.monument_phase;
+                if (phase == -1) {
+                    phase = 5;
+                }
+                int phase_offset = 6;
+                
+                int image1 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NESW 01") + ((phase - 1) * phase_offset);
+                int image2 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NWSE 01") + ((phase - 1) * phase_offset);
+
                 int building_part;
                 if(b->prev_part_building_id == 0){
                     building_part = 0; // part 1, no previous building
@@ -297,28 +306,28 @@ void map_orientation_update_buildings(void)
                 }
                 map_orientation = building_rotation_get_building_orientation(b->subtype.orientation);
                 if (map_orientation == DIR_0_TOP) {
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
+                    image_id = image2;
                     switch (building_part) {
                         case 0: image_id += 0; break; // part 1
                         case 1: image_id += 2; break; // part 2
                         case 2: image_id += 4; break; // part 3, same for switch cases below
                     }
                 } else if (map_orientation == DIR_4_BOTTOM) {
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
+                    image_id = image2;
                     switch (building_part) {
                         case 0: image_id += 4; break;
                         case 1: image_id += 2; break;
                         case 2: image_id += 0; break;
                     }
                 } else if (map_orientation == DIR_6_LEFT) {
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
+                    image_id = image1;
                     switch (building_part) {
                         case 0: image_id += 0; break;
                         case 1: image_id += 2; break;
                         case 2: image_id += 4; break;
                     }
                 } else { // DIR_2_RIGHT
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
+                    image_id = image1;
                     switch (building_part) {
                         case 0: image_id += 4; break;
                         case 1: image_id += 2; break;
@@ -352,6 +361,14 @@ void map_orientation_update_buildings(void)
         if (b->type >= BUILDING_PINE_PATH && b->type <= BUILDING_DATE_PATH) {
             image_id = mods_get_group_id("Areldir", "Aesthetics") + (b->type - BUILDING_PINE_TREE) + (abs((b->subtype.orientation - (map_orientation / 2) % 2)) * PATH_ROTATE_OFFSET);
             map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+        }
+        if (b->type == BUILDING_LEGION_STATUE) {
+            image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "legio statue") + (abs((b->subtype.orientation - (map_orientation / 2) % 2)));
+            map_building_tiles_add(i, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
+        }
+        if (b->type == BUILDING_DECORATIVE_COLUMN) {
+            image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml col B") + (abs((b->subtype.orientation - (map_orientation / 2) % 2)));
+            map_building_tiles_add(i, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
         }
     }
 }

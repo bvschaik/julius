@@ -53,10 +53,10 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_GRANARY && b->num_workers < model_get_building(b->type)->laborers) {
         return 0;
     }
-    if (building_monument_is_monument(b) && (b->num_workers <= 0 || b->subtype.monument_phase != MONUMENT_FINISHED)) {
+    if (building_monument_is_monument(b) && (b->num_workers <= 0 || b->data.monument.monument_phase != MONUMENT_FINISHED)) {
         return 0;
     }
-    if ((b->type == BUILDING_ENGINEER_GUILD || b->type == BUILDING_MESS_HALL)  && b->num_workers <= 0) {
+    if ((b->type == BUILDING_ENGINEER_GUILD || b->type == BUILDING_MESS_HALL || b->type == BUILDING_ARENA)  && b->num_workers <= 0) {
         return 0;
     }
     if (b->type == BUILDING_TAVERN && (b->num_workers <= 0 || !b->data.market.inventory[4])) { //wine

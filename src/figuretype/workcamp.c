@@ -293,7 +293,7 @@ void figure_workcamp_engineer_action(figure* f) {
 		if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
 			f->action_state = FIGURE_ACTION_208_WORK_CAMP_ENGINEER_WORKING_ON_MONUMENT;
 			monument = building_get(f->destination_building_id);
-            if (!building_monument_access_point(monument, &dst) || b->subtype.monument_phase == MONUMENT_FINISHED) {
+            if (!building_monument_access_point(monument, &dst) || b->data.monument.monument_phase == MONUMENT_FINISHED) {
                 f->state = FIGURE_STATE_DEAD;
             }
 			figure_movement_set_cross_country_destination(f, dst.x, dst.y);

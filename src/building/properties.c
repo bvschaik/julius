@@ -4,7 +4,7 @@
 #include "mods/mods.h"
 #include "type.h"
 
-#define MOD_BUILDINGS 39
+#define MOD_BUILDINGS 47
 
 mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_ROADBLOCK, { 1, 1, 0, 0, 0 },  "Areldir", "Roadblocks", 0},
@@ -45,7 +45,15 @@ mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_MESS_HALL, { 3, 0, 0, 0, 0 }, "Areldir", "Mess_Hall", "Mess OFF Central"},
     {BUILDING_LIGHTHOUSE, { 3, 1, 0, 0, 0 }, "Areldir", "Lighthouses", "Lighthouse Const 01"},
     {BUILDING_TAVERN, { 2, 0, 0, 0, 0 }, "Areldir", "Tavern", "Tavern OFF"},
-    {BUILDING_GRAND_GARDEN, { 2, 1, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"}
+    {BUILDING_GRAND_GARDEN, { 2, 1, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"},
+    {BUILDING_ARENA, { 3, 0, 0, 0, 0 }, "Areldir", "Arena", "Arena OFF" },
+    {BUILDING_HORSE_STATUE, { 3, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
+    {BUILDING_DOLPHIN_FOUNTAIN, { 2, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
+    {BUILDING_HEDGE_DARK, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
+    {BUILDING_HEDGE_LIGHT, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
+    {BUILDING_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
+    {BUILDING_LEGION_STATUE, { 2, 1, 0, 0, 1 }, "Areldir", "Aesthetics", "legio statue"},
+    {BUILDING_DECORATIVE_COLUMN, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "sml col B"}
 };
 
 void init_mod_building_properties() {

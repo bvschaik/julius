@@ -30,7 +30,19 @@ static building_levy_for_type building_levies[] = {
     {BUILDING_GRAND_TEMPLE_MERCURY, GRAND_TEMPLE_LEVY_MONTHLY},
     {BUILDING_GRAND_TEMPLE_MARS, GRAND_TEMPLE_LEVY_MONTHLY},
     {BUILDING_GRAND_TEMPLE_VENUS, GRAND_TEMPLE_LEVY_MONTHLY},
-    {BUILDING_PANTHEON, PANTHEON_LEVY_MONTHLY}
+    {BUILDING_PANTHEON, PANTHEON_LEVY_MONTHLY},
+    {BUILDING_COLOSSEUM, COLOSSEUM_LEVY_MONTHLY},
+    {BUILDING_HIPPODROME, HIPPODROME_LEVY_MONTHLY}
+};
+
+static building_levy_for_type tourism_modifiers[] = {
+    {BUILDING_TAVERN, 3},
+    {BUILDING_THEATER, 1},
+    {BUILDING_AMPHITHEATER, 1},
+    {BUILDING_MARKET, 1},
+    {BUILDING_ARENA, 3},
+    {BUILDING_COLOSSEUM, 12},
+    {BUILDING_HIPPODROME, 12}
 };
 
 int city_finance_treasury(void)
@@ -451,6 +463,30 @@ void city_finance_handle_year_change(void)
     reset_taxes();
     copy_amounts_to_last_year();
     pay_tribute();
+}
+
+void city_finance_calculate_tourism_rating(void)
+{
+    if (city_data.population.population < 5000) {
+        return 0;
+    }
+
+    //10 points for each non monument ent coverage
+
+    //10 for sentiment
+
+    //10 for average house des
+
+    //10 for each col/hip
+
+    //15 for each GT
+
+    //10 for pros
+
+    //10 for favor
+
+    //10 for peace
+
 }
 
 const finance_overview *city_finance_overview_last_year(void)

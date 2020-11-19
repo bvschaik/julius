@@ -160,8 +160,6 @@ static int get_height_id(void)
                 return 1;
 
             case BUILDING_THEATER:
-            case BUILDING_HIPPODROME:
-            case BUILDING_COLOSSEUM:
             case BUILDING_SENATE:
             case BUILDING_SENATE_UPGRADED:
             case BUILDING_FOUNTAIN:
@@ -187,6 +185,8 @@ static int get_height_id(void)
             case BUILDING_GRAND_TEMPLE_MARS:
             case BUILDING_GRAND_TEMPLE_VENUS:
             case BUILDING_PANTHEON:
+            case BUILDING_HIPPODROME:
+            case BUILDING_COLOSSEUM:
                 return 8;
 
             default:
@@ -518,7 +518,7 @@ static void draw_background(void)
             window_building_draw_theater(&context);
         } else if (btype == BUILDING_HIPPODROME) {
             window_building_draw_hippodrome(&context);
-        } else if (btype == BUILDING_COLOSSEUM) {
+        } else if (btype == BUILDING_ARENA || btype == BUILDING_COLOSSEUM) {
             window_building_draw_colosseum(&context);
         } else if (btype == BUILDING_GLADIATOR_SCHOOL) {
             window_building_draw_gladiator_school(&context);

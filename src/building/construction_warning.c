@@ -159,7 +159,7 @@ static void check_actor_access(int type)
 
 static void check_gladiator_access(int type)
 {
-    if (!has_warning && type == BUILDING_AMPHITHEATER) {
+    if (!has_warning && type == BUILDING_AMPHITHEATER || type == BUILDING_COLOSSEUM || type == BUILDING_ARENA) {
         if (building_count_active(BUILDING_GLADIATOR_SCHOOL) <= 0) {
             show(WARNING_BUILD_GLADIATOR_SCHOOL);
         }
@@ -168,7 +168,7 @@ static void check_gladiator_access(int type)
 
 static void check_lion_access(int type)
 {
-    if (!has_warning && type == BUILDING_COLOSSEUM) {
+    if (!has_warning && type == BUILDING_COLOSSEUM || type == BUILDING_ARENA) {
         if (building_count_active(BUILDING_LION_HOUSE) <= 0) {
             show(WARNING_BUILD_LION_HOUSE);
         }

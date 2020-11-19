@@ -13,7 +13,7 @@
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
 
-static int determine_destination(int x, int y, building_type type1, building_type type2)
+static int determine_destination(int x, int y, building_type type1, building_type type2, building_type type3)
 {
     int road_network = map_road_network_get(map_grid_offset(x,y));
 
@@ -24,7 +24,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
-        if (b->type != type1 && b->type != type2) {
+        if (b->type != type1 && b->type != type2 && b->type != type3) {
             continue;
         }
         if (b->distance_from_entry && b->road_network_id == road_network) {
@@ -191,16 +191,16 @@ void figure_entertainer_action(figure *f)
                 int dst_building_id = 0;
                 switch (f->type) {
                     case FIGURE_ACTOR:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_THEATER, BUILDING_AMPHITHEATER);
+                        dst_building_id = determine_destination(f->x, f->y, BUILDING_THEATER, BUILDING_AMPHITHEATER, 0);
                         break;
                     case FIGURE_GLADIATOR:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM);
+                        dst_building_id = determine_destination(f->x, f->y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM, BUILDING_ARENA);
                         break;
                     case FIGURE_LION_TAMER:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_COLOSSEUM, 0);
+                        dst_building_id = determine_destination(f->x, f->y, BUILDING_COLOSSEUM, BUILDING_ARENA, 0);
                         break;
                     case FIGURE_CHARIOTEER:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_HIPPODROME, 0);
+                        dst_building_id = determine_destination(f->x, f->y, BUILDING_HIPPODROME, 0, 0);
                         break;
                 }
                 if (dst_building_id) {

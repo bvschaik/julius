@@ -303,73 +303,6 @@ void window_building_draw_amphitheater(building_info_context *c)
     }
 }
 
-void window_building_draw_colosseum(building_info_context *c)
-{
-    c->help_id = 73;
-    window_building_play_sound(c, "wavs/colloseum.wav");
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    building *b = building_get(c->building_id);
-    if (!c->has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (b->num_workers <= 0) {
-        window_building_draw_description(c, 74, 6);
-    } else if (!b->data.entertainment.num_shows) {
-        window_building_draw_description(c, 74, 2);
-    } else if (b->data.entertainment.num_shows == 2) {
-        window_building_draw_description(c, 74, 3);
-    } else if (b->data.entertainment.days1) {
-        window_building_draw_description(c, 74, 5);
-    } else if (b->data.entertainment.days2) {
-        window_building_draw_description(c, 74, 4);
-    }
-
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
-    window_building_draw_employment(c, 138);
-    if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(74, 8, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-            c->x_offset + width + 32, c->y_offset + 182, FONT_SMALL_BLACK);
-    } else {
-        lang_text_draw(74, 7, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
-    }
-    if (b->data.entertainment.days2 > 0) {
-        int width = lang_text_draw(74, 10, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2,
-            c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
-    } else {
-        lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
-    }
-}
-
-void window_building_draw_hippodrome(building_info_context *c)
-{
-    c->help_id = 74;
-    window_building_play_sound(c, "wavs/hippodrome.wav");
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(73, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    building *b = building_get(c->building_id);
-    if (!c->has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (b->num_workers <= 0) {
-        window_building_draw_description(c, 73, 4);
-    } else if (!b->data.entertainment.num_shows) {
-        window_building_draw_description(c, 73, 2);
-    } else if (b->data.entertainment.days1) {
-        window_building_draw_description(c, 73, 3);
-    }
-
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
-    window_building_draw_employment(c, 138);
-    if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(73, 6, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-            c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
-    } else {
-        lang_text_draw(73, 5, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
-    }
-}
-
 static void draw_entertainment_school(building_info_context *c, const char *sound_file, int group_id)
 {
     c->help_id = 75;
@@ -419,7 +352,7 @@ void window_building_draw_chariot_maker(building_info_context *c)
 static void window_building_draw_monument_resources_needed(building_info_context* c) {
     building* b = building_get(c->building_id);
     for (int r = RESOURCE_TIMBER; r <= RESOURCE_MARBLE; r++) {
-        int total_resources_needed = building_monument_resources_needed_for_monument_type(b->type, r, b->subtype.monument_phase);
+        int total_resources_needed = building_monument_resources_needed_for_monument_type(b->type, r, b->data.monument.monument_phase);
         int resources_delivered = total_resources_needed - b->data.monument.resources_needed[r];
         int image_id = image_group(GROUP_RESOURCE_ICONS);
         image_draw(image_id + r, c->x_offset + 22, c->y_offset - 105 + r * 20);
@@ -431,17 +364,17 @@ static void window_building_draw_monument_resources_needed(building_info_context
 
 static void window_building_draw_monument_construction_process(building_info_context* c, int tr_phase_name, int tr_phase_name_text, int tr_construction_desc) {
     building* b = building_get(c->building_id);
-    if (b->subtype.monument_phase != MONUMENT_FINISHED) {
+    if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
         int width = text_draw(translation_for(TR_CONSTRUCTION_PHASE), c->x_offset + 22, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
-        width += text_draw_number(b->subtype.monument_phase, '@', "/", c->x_offset + 22 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
+        width += text_draw_number(b->data.monument.monument_phase, '@', "/", c->x_offset + 22 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
         width += text_draw_number(building_monument_monument_phases(b->type) - 1, '@', "", c->x_offset + 10 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
-        text_draw(translation_for(tr_phase_name + b->subtype.monument_phase - 1), c->x_offset + 32 + width, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
+        text_draw(translation_for(tr_phase_name + b->data.monument.monument_phase - 1), c->x_offset + 32 + width, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
         text_draw(translation_for(TR_REQUIRED_RESOURCES), c->x_offset + 22, c->y_offset + 70, FONT_NORMAL_BLACK, 0);
         window_building_draw_monument_resources_needed(c);
-        int height = text_draw_multiline(translation_for(tr_phase_name_text + b->subtype.monument_phase - 1), c->x_offset + 22, c->y_offset + 170, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        int height = text_draw_multiline(translation_for(tr_phase_name_text + b->data.monument.monument_phase - 1), c->x_offset + 22, c->y_offset + 170, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
         height += text_draw_multiline(translation_for(tr_construction_desc), c->x_offset + 22, c->y_offset + 180 + height, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
         if (c->height_blocks > 26) {
-            int phase_offset = b->subtype.monument_phase % 2;
+            int phase_offset = b->data.monument.monument_phase % 2;
             image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Const. Banner 01") + phase_offset, c->x_offset + 32, c->y_offset + 196 + height);
         }
     }
@@ -453,6 +386,14 @@ static void window_building_draw_monument_temple_construction_process(building_i
 
 static void window_building_draw_monument_lighthouse_construction_process(building_info_context* c) {
     window_building_draw_monument_construction_process(c, TR_BUILDING_LIGHTHOUSE_PHASE_1, TR_BUILDING_LIGHTHOUSE_PHASE_1_TEXT, TR_BUILDING_LIGHTHOUSE_CONSTRUCTION_DESC);
+}
+
+static void window_building_draw_monument_colosseum_construction_process(building_info_context* c) {
+    window_building_draw_monument_construction_process(c, TR_BUILDING_COLOSSEUM_PHASE_1, TR_BUILDING_COLOSSEUM_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
+}
+
+static void window_building_draw_monument_hippodrome_construction_process(building_info_context* c) {
+    window_building_draw_monument_construction_process(c, TR_BUILDING_HIPPODROME_PHASE_1, TR_BUILDING_HIPPODROME_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
 }
 
 void draw_grand_temple_venus_wine(building_info_context* c) {
@@ -494,7 +435,7 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
     building* b = building_get(c->building_id);
     window_building_play_sound(c, sound_file);
     god_id = temple_god_id;
-    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+    if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     } 
     else {
@@ -509,7 +450,7 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
         text_draw_centered(translation_for(name), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     }
     
-    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+    if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
         int height = text_draw_multiline(translation_for(bonus_desc), c->x_offset + 22, c->y_offset + 56 + extra_y, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         if (b->data.monument.upgrades) {
             int module_desc = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].desc;
@@ -532,7 +473,7 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
 void window_building_draw_grand_temple_foreground(building_info_context* c)
 {
     building* b = building_get(c->building_id);
-    if (b->subtype.monument_phase == MONUMENT_FINISHED && !b->data.monument.upgrades) {
+    if (b->data.monument.monument_phase == MONUMENT_FINISHED && !b->data.monument.upgrades) {
         button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 37,
             16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
         text_draw_centered(translation_for(TR_BUILDING_GRAND_TEMPLE_ADD_MODULE), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 33,
@@ -544,7 +485,7 @@ int window_building_handle_mouse_grand_temple(const mouse* m, building_info_cont
 {
     building* b = building_get(c->building_id);
 	data.building_id = c->building_id;
-    if (b->subtype.monument_phase != MONUMENT_FINISHED || b->data.monument.upgrades) {
+    if (b->data.monument.monument_phase != MONUMENT_FINISHED || b->data.monument.upgrades) {
         return 0;
     }
 	if (generic_buttons_handle_mouse(m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
@@ -583,24 +524,6 @@ void window_building_draw_pantheon(building_info_context* c)
 {
     draw_grand_temple(c, "wavs/oracle.wav", TR_BUILDING_PANTHEON_DESC, TR_BUILDING_PANTHEON_BONUS_DESC, mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Panth L Banner"), TR_BUILDING_PANTHEON_QUOTE, GOD_PANTHEON, 0);
 }
-
-void window_building_draw_lighthouse(building_info_context* c) {
-    building* b = building_get(c->building_id);
-    //window_building_play_sound(c, sound_file);
-    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
-        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-        int height = text_draw_multiline(translation_for(TR_BUILDING_LIGHTHOUSE_BONUS_DESC), c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
-        image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Lighthouse Banner"), c->x_offset + 32, c->y_offset + 166 + height);
-        inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height, c->width_blocks - 2, 4);
-        window_building_draw_employment(c, 96 + height);
-
-    } else {
-        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-        window_building_draw_monument_lighthouse_construction_process(c);
-    }
-    text_draw_centered(translation_for(TR_BUILDING_LIGHTHOUSE), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-}
-
 
 void window_building_draw_work_camp(building_info_context* c)
 {
@@ -663,6 +586,123 @@ void window_building_draw_tavern(building_info_context* c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 156, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 158);
     return;
+}
+
+
+void window_building_draw_colosseum(building_info_context* c)
+{
+    c->help_id = 73;
+    building* b = building_get(c->building_id);
+    
+    if (b->type == BUILDING_ARENA || b->data.monument.monument_phase == MONUMENT_FINISHED) {
+        window_building_play_sound(c, "wavs/colloseum.wav");
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+
+        if (b->type == BUILDING_ARENA) {
+            text_draw_centered(translation_for(TR_BUILDING_ARENA), c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        }
+        else {
+            lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+        }
+
+        if (!c->has_road_access) {
+            window_building_draw_description(c, 69, 25);
+        }
+        else if (b->num_workers <= 0) {
+            window_building_draw_description(c, 74, 6);
+        }
+        else if (!b->data.entertainment.num_shows) {
+            window_building_draw_description(c, 74, 2);
+        }
+        else if (b->data.entertainment.num_shows == 2) {
+            window_building_draw_description(c, 74, 3);
+        }
+        else if (b->data.entertainment.days1) {
+            window_building_draw_description(c, 74, 5);
+        }
+        else if (b->data.entertainment.days2) {
+            window_building_draw_description(c, 74, 4);
+        }
+
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
+        window_building_draw_employment(c, 138);
+        if (b->data.entertainment.days1 > 0) {
+            int width = lang_text_draw(74, 8, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+            lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
+                c->x_offset + width + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        }
+        else {
+            lang_text_draw(74, 7, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        }
+        if (b->data.entertainment.days2 > 0) {
+            int width = lang_text_draw(74, 10, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2,
+                c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        }
+        else {
+            lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        }
+    }
+    else {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+        window_building_draw_monument_colosseum_construction_process(c);
+    }
+}
+
+void window_building_draw_lighthouse(building_info_context* c) {
+    building* b = building_get(c->building_id);
+    if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        int height = text_draw_multiline(translation_for(TR_BUILDING_LIGHTHOUSE_BONUS_DESC), c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Lighthouse Banner"), c->x_offset + 32, c->y_offset + 166 + height);
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height, c->width_blocks - 2, 4);
+        window_building_draw_employment(c, 96 + height);
+
+    }
+    else {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        window_building_draw_monument_lighthouse_construction_process(c);
+    }
+    text_draw_centered(translation_for(TR_BUILDING_LIGHTHOUSE), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+}
+
+void window_building_draw_hippodrome(building_info_context* c)
+{
+    c->help_id = 74;
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(73, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    building* b = building_get(c->building_id);
+    if (b->data.monument.monument_phase == MONUMENT_FINISHED) {        
+        window_building_play_sound(c, "wavs/hippodrome.wav");
+
+        if (!c->has_road_access) {
+            window_building_draw_description(c, 69, 25);
+        }
+        else if (b->num_workers <= 0) {
+            window_building_draw_description(c, 73, 4);
+        }
+        else if (!b->data.entertainment.num_shows) {
+            window_building_draw_description(c, 73, 2);
+        }
+        else if (b->data.entertainment.days1) {
+            window_building_draw_description(c, 73, 3);
+        }
+
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
+        window_building_draw_employment(c, 138);
+        if (b->data.entertainment.days1 > 0) {
+            int width = lang_text_draw(73, 6, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
+                c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        }
+        else {
+            lang_text_draw(73, 5, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        }
+    }
+    else {
+        window_building_draw_monument_hippodrome_construction_process(c);
+    }
 }
 
 void window_building_draw_grand_garden(building_info_context* c)

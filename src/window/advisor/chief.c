@@ -28,6 +28,7 @@ static void draw_title(int y, int text_id)
 {
     image_draw(image_group(GROUP_BULLET), 32, y + 1);
     lang_text_draw(61, text_id, 52, y, FONT_NORMAL_WHITE);
+
 }
 
 static int draw_background(void)

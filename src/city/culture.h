@@ -4,8 +4,13 @@
 #include "city/constants.h"
 #include "core/buffer.h"
 
+#define THEATER_COVERAGE 750
+#define AMPHITHEATER_COVERAGE 1200
+#define TAVERN_COVERAGE 1200
+
 void city_culture_update_coverage(void);
 
+int city_culture_coverage_tavern(void);
 int city_culture_coverage_theater(void);
 int city_culture_coverage_amphitheater(void);
 int city_culture_coverage_colosseum(void);

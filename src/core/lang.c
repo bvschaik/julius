@@ -377,6 +377,22 @@ const uint8_t *lang_get_string(int group, int index)
             return translation_for(TR_BUILDING_TAVERN);
         case BUILDING_GRAND_GARDEN:
             return translation_for(TR_BUILDING_GRAND_GARDEN);
+        case BUILDING_ARENA:
+            return translation_for(TR_BUILDING_ARENA);
+        case BUILDING_HORSE_STATUE:
+            return translation_for(TR_BUILDING_HORSE_STATUE);
+        case BUILDING_DOLPHIN_FOUNTAIN:
+            return translation_for(TR_BUILDING_DOLPHIN_FOUNTAIN);
+        case BUILDING_HEDGE_DARK:
+            return translation_for(TR_BUILDING_HEDGE_DARK);
+        case BUILDING_HEDGE_LIGHT:
+            return translation_for(TR_BUILDING_HEDGE_LIGHT);
+        case BUILDING_GARDEN_WALL:
+            return translation_for(TR_BUILDING_GARDEN_WALL);
+        case BUILDING_LEGION_STATUE:
+            return translation_for(TR_BUILDING_LEGION_STATUE);
+        case BUILDING_DECORATIVE_COLUMN:
+            return translation_for(TR_BUILDING_DECORATIVE_COLUMN);
         default:
             break;
         }

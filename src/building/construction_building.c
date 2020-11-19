@@ -58,10 +58,12 @@ static void add_fort(int type, building *fort)
     ground->formation_id = fort->formation_id;
 }
 
+
 static void add_hippodrome(building *b)
 {
-    int image1 = image_group(GROUP_BUILDING_HIPPODROME_1);
-    int image2 = image_group(GROUP_BUILDING_HIPPODROME_2);
+    int image1 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NESW 01");
+    int image2 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NWSE 01");
+    
     city_buildings_add_hippodrome();
 
     building_rotation_force_two_orientations();
@@ -128,6 +130,9 @@ static void add_hippodrome(building *b)
             image_id = image1 + 4;
             break;
     }
+    part1->data.monument.monument_phase = MONUMENT_START;
+    part2->data.monument.monument_phase = MONUMENT_START;
+    part3->data.monument.monument_phase = MONUMENT_START;
     map_building_tiles_add(part3->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
 }
 
@@ -246,7 +251,10 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_THEATER));
             break;
         case BUILDING_COLOSSEUM:
-            add_building(b, image_group(GROUP_BUILDING_COLOSSEUM));
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 01"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            building_monument_initialize(b);
             break;
         case BUILDING_GLADIATOR_SCHOOL:
             add_building(b, image_group(GROUP_BUILDING_GLADIATOR_SCHOOL));
@@ -528,7 +536,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_WAREHOUSE:
             add_warehouse(b);
             break;
-        case BUILDING_HIPPODROME:
+        case BUILDING_HIPPODROME:            
             add_hippodrome(b);
             break;
         case BUILDING_FORT_LEGIONARIES:
@@ -552,43 +560,43 @@ static void add_to_map(int type, building *b, int size,
             break;
         case BUILDING_GRAND_TEMPLE_CERES:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 01"));
-            b->subtype.monument_phase = MONUMENT_START;
+            b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_GRAND_TEMPLE_NEPTUNE:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 01"));
-            b->subtype.monument_phase = MONUMENT_START;
+            b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_GRAND_TEMPLE_MERCURY:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 01"));
-            b->subtype.monument_phase = MONUMENT_START;
+            b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_GRAND_TEMPLE_MARS:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 01"));
-            b->subtype.monument_phase = MONUMENT_START;
+            b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_GRAND_TEMPLE_VENUS:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 01"));
-            b->subtype.monument_phase = MONUMENT_START;
+            b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_PANTHEON:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 01"));
-            b->subtype.monument_phase = MONUMENT_START;
+            b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_LIGHTHOUSE:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 01"));
-            b->subtype.monument_phase = MONUMENT_START;
+            b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
@@ -631,6 +639,29 @@ static void add_to_map(int type, building *b, int size,
             break;
         case BUILDING_GRAND_GARDEN:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            break;
+        case BUILDING_ARENA:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Arena"), "Arena ON"));
+            break;
+        case BUILDING_HORSE_STATUE:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            break;
+        case BUILDING_DOLPHIN_FOUNTAIN:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            break;
+        case BUILDING_HEDGE_DARK:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            break;
+        case BUILDING_HEDGE_LIGHT:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            break;
+        case BUILDING_GARDEN_WALL:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            break;
+        case BUILDING_LEGION_STATUE:
+            orientation = building_rotation_get_rotation();
+            b->subtype.orientation = orientation;
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "legio statue") + orientation % 2);
             break;
     }
     map_routing_update_land();

@@ -68,6 +68,7 @@ void building_count_update(void)
             case BUILDING_AMPHITHEATER:
             case BUILDING_COLOSSEUM:
             case BUILDING_HIPPODROME:
+            case BUILDING_ARENA:
                 is_entertainment_venue = 1;
                 increase_count(type, b->num_workers > 0);
                 break;
@@ -109,6 +110,7 @@ void building_count_update(void)
             case BUILDING_CHARIOT_MAKER:
             // distribution
             case BUILDING_MARKET:
+            case BUILDING_TAVERN:
             // military
             case BUILDING_MILITARY_ACADEMY:
             case BUILDING_MESS_HALL:

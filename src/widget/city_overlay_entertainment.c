@@ -9,7 +9,8 @@ static int show_building_entertainment(const building *b)
         b->type == BUILDING_ACTOR_COLONY || b->type == BUILDING_THEATER ||
         b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_AMPHITHEATER ||
         b->type == BUILDING_LION_HOUSE || b->type == BUILDING_COLOSSEUM ||
-        b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME || b->type == BUILDING_TAVERN;
+        b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM || 
+        b->type == BUILDING_TAVERN;
 }
 
 static int show_building_theater(const building *b)
@@ -26,7 +27,7 @@ static int show_building_amphitheater(const building *b)
 
 static int show_building_colosseum(const building *b)
 {
-    return b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_LION_HOUSE || b->type == BUILDING_COLOSSEUM;
+    return b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_LION_HOUSE || b->type == BUILDING_COLOSSEUM || b->type == BUILDING_ARENA;
 }
 
 static int show_building_hippodrome(const building *b)
@@ -74,7 +75,7 @@ static int show_figure_amphitheater(const figure *f)
 static int show_figure_colosseum(const figure *f)
 {
     if (f->type == FIGURE_GLADIATOR) {
-        return get_entertainment_building(f)->type == BUILDING_COLOSSEUM;
+        return get_entertainment_building(f)->type == BUILDING_COLOSSEUM || get_entertainment_building(f)->type == BUILDING_ARENA;
     } else if (f->type == FIGURE_LION_TAMER) {
         return 1;
     }

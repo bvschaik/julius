@@ -466,6 +466,10 @@ int building_construction_is_updatable(void)
         case BUILDING_PLUM_PATH:
         case BUILDING_PALM_PATH:
         case BUILDING_DATE_PATH:
+        case BUILDING_HEDGE_DARK:
+        case BUILDING_HEDGE_LIGHT:
+        case BUILDING_GARDEN_WALL:
+        case BUILDING_DECORATIVE_COLUMN:
         case BUILDING_WALL:
         case BUILDING_PLAZA:
         case BUILDING_GARDENS:
@@ -533,7 +537,12 @@ void building_construction_update(int x, int y, int grid_offset)
     else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
         int rotation = building_rotation_get_rotation();
         int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
-        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id); 
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
+        if (items_placed >= 0) current_cost *= items_placed;
+    } else if (type == BUILDING_DECORATIVE_COLUMN) {
+        int rotation = building_rotation_get_rotation();
+        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
         int length = map_bridge_building_length();
@@ -744,6 +753,11 @@ void building_construction_place(void)
     else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
         int rotation = building_rotation_get_rotation();
         int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
+    }
+    else if (type == BUILDING_DECORATIVE_COLUMN) {
+        int rotation = building_rotation_get_rotation();
+        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);

@@ -9,6 +9,8 @@
 #include "city/population.h"
 #include "core/calc.h"
 
+
+
 static struct {
     int theater;
     int amphitheater;
@@ -20,7 +22,13 @@ static struct {
     int library;
     int religion[5];
     int oracle;
+    int tavern;
 } coverage;
+
+int city_culture_coverage_tavern(void)
+{
+    return coverage.tavern;
+}
 
 int city_culture_coverage_theater(void)
 {
@@ -44,7 +52,7 @@ int city_culture_coverage_hippodrome(void)
 
 int city_culture_coverage_average_entertainment(void)
 {
-    return (coverage.hippodrome + coverage.colosseum + coverage.amphitheater + coverage.theater) / 4;
+    return (coverage.hippodrome + coverage.colosseum + coverage.amphitheater + coverage.theater + coverage.tavern) / 5;
 }
 
 int city_culture_coverage_religion(god_type god)
@@ -97,9 +105,9 @@ void city_culture_update_coverage(void)
     int population = city_data.population.population;
 
     // entertainment
-    coverage.theater = top(calc_percentage(500 * building_count_active(BUILDING_THEATER), population));
-    coverage.amphitheater = top(calc_percentage(800 * building_count_active(BUILDING_AMPHITHEATER), population));
-    coverage.colosseum = top(calc_percentage(1500 * building_count_active(BUILDING_COLOSSEUM), population));
+    coverage.tavern = top(calc_percentage(TAVERN_COVERAGE * building_count_active(BUILDING_TAVERN), population));
+    coverage.theater = top(calc_percentage(THEATER_COVERAGE * building_count_active(BUILDING_THEATER), population));
+    coverage.amphitheater = top(calc_percentage(AMPHITHEATER_COVERAGE * building_count_active(BUILDING_AMPHITHEATER), population));
     if (building_count_active(BUILDING_HIPPODROME) <= 0) {
         coverage.hippodrome = 0;
     } else {

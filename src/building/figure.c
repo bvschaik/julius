@@ -1518,6 +1518,7 @@ void building_figure_generate(void)
                     spawn_figure_hippodrome(b);
                     break;
                 case BUILDING_COLOSSEUM:
+                case BUILDING_ARENA:
                     spawn_figure_colosseum(b);
                     break;
                 case BUILDING_MARKET:
@@ -1584,7 +1585,7 @@ void building_figure_generate(void)
                     spawn_figure_mess_hall(b);
                     break;
                 case BUILDING_GRAND_TEMPLE_MARS:
-                    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+                    if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
                         spawn_figure_grand_temple_mars(b);
                     }
                     break;
@@ -1593,12 +1594,12 @@ void building_figure_generate(void)
                 case BUILDING_GRAND_TEMPLE_MERCURY:
                 case BUILDING_GRAND_TEMPLE_VENUS:
                 case BUILDING_PANTHEON:
-                    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+                    if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
                         spawn_figure_temple(b);
                     }
                     break;
                 case BUILDING_LIGHTHOUSE:
-                    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+                    if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
                         spawn_figure_lighthouse(b);
                     }
                     break;

@@ -95,6 +95,7 @@ static roadblock_permission get_permission_for_figure_type(figure* f)
     case FIGURE_CHARIOTEER:
     case FIGURE_ACTOR:
     case FIGURE_LION_TAMER:
+    case FIGURE_BARKEEP:
         return PERMISSION_ENTERTAINER;
         break;
     case FIGURE_SURGEON:

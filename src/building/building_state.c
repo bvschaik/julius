@@ -72,7 +72,8 @@ static void write_type_data(buffer *buf, const building *b)
         }
         buffer_write_i32(buf, b->data.monument.upgrades);
         buffer_write_i16(buf, b->data.monument.progress);
-        buffer_write_i32(buf, 0);
+        buffer_write_i16(buf, b->data.monument.monument_phase);
+        buffer_write_i16(buf, 0);
     } else if (b->type == BUILDING_DOCK) {
         buffer_write_i16(buf, b->data.dock.queued_docker_id);
         for (int i = 0; i < 25; i++) {
@@ -243,7 +244,8 @@ static void read_type_data(buffer *buf, building *b)
         }
         b->data.monument.upgrades = buffer_read_i32(buf);
         b->data.monument.progress = buffer_read_i16(buf);
-        buffer_skip(buf, 4);
+        b->data.monument.monument_phase = buffer_read_i16(buf);
+        buffer_skip(buf, 2);
     } else if (b->type == BUILDING_DOCK) {
         b->data.dock.queued_docker_id = buffer_read_i16(buf);
         buffer_skip(buf, 25);
@@ -340,4 +342,13 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->storage_id = buffer_read_u8(buf);
     b->sentiment.house_happiness = buffer_read_i8(buf); // which union field we use does not matter
     b->show_on_problem_overlay = buffer_read_u8(buf);
+
+    // backwards compatibility fixes for culture update
+    if (building_monument_is_monument(b) && b->subtype.house_level && b->type != BUILDING_HIPPODROME) {
+        b->data.monument.monument_phase = b->subtype.house_level;
+    }
+
+    if (b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM && !b->data.monument.monument_phase) {
+        b->data.monument.monument_phase = -1;
+    }
 }
