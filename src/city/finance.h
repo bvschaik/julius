@@ -91,6 +91,8 @@ typedef struct {
 
 int city_finance_tourism_rating(void);
 
+void city_finance_calculate_tourism_rating(void);
+
 const finance_overview *city_finance_overview_last_year(void);
 
 const finance_overview *city_finance_overview_this_year(void);
