@@ -4,6 +4,7 @@
 #include "building/model.h"
 #include "city/constants.h"
 #include "city/finance.h"
+#include "city/sentiment.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/image.h"
