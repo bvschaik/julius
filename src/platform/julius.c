@@ -9,6 +9,7 @@
 #include "game/game.h"
 #include "game/settings.h"
 #include "game/system.h"
+#include "graphics/screen.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 #include "platform/arguments.h"
@@ -525,6 +526,10 @@ static void setup(const julius_args *args)
     }
     // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
     system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
+
+    if (system_is_fullscreen_only()) {
+        system_move_mouse_cursor(screen_width() / 2, screen_height() / 2);
+    }
 
     time_set_millis(SDL_GetTicks());
 
