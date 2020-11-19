@@ -288,7 +288,7 @@ static int handle_input_submenu(const mouse *m, const hotkeys *h)
     }
     int menu_id = menu_bar_handle_mouse(m, menu, 4, &data.focus_menu_id);
     if (menu_id && menu_id != data.open_sub_menu) {
-        window_city_draw();
+        window_request_refresh();
         data.open_sub_menu = menu_id;
     }
     if (!menu_handle_mouse(m, &menu[data.open_sub_menu - 1], &data.focus_sub_menu_id)) {
