@@ -101,6 +101,7 @@ static int has_adjacent_deletion(int grid_offset)
 
 static void draw_footprint(int x, int y, int grid_offset)
 {
+    sound_city_progress_ambient();
     building_construction_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         // Outside map: draw black tile

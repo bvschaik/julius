@@ -18,6 +18,8 @@ void sound_city_mark_building_view(building *b, int direction);
 
 void sound_city_decay_views(void);
 
+void sound_city_progress_ambient(void);
+
 void sound_city_play(void);
 
 void sound_city_save_state(buffer *buf);

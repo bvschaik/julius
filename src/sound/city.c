@@ -1,6 +1,7 @@
 #include "city.h"
 
 #include "city/figures.h"
+#include "core/random.h"
 #include "core/time.h"
 #include "game/settings.h"
 #include "sound/channel.h"
@@ -93,6 +94,8 @@ typedef struct {
 } city_channel;
 
 static city_channel channels[MAX_CHANNELS];
+static int ambient_channels[] = { 61 };
+static int ambient_channels_number = 1;
 
 static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //0-9
@@ -234,6 +237,16 @@ void sound_city_decay_views(void)
     }
 }
 
+void sound_city_progress_ambient(void) 
+{
+    for (int i = 0; i < ambient_channels_number; i++)
+    {
+        channels[ambient_channels[i]].available = 1;
+        ++channels[ambient_channels[i]].total_views;
+        ++channels[ambient_channels[i]].direction_views[SOUND_DIRECTION_CENTER];
+    }
+}
+
 static void play_channel(int channel, int direction)
 {
     channel += CITY_CHANNEL_OFFSET;
@@ -299,6 +312,7 @@ void sound_city_play(void)
         }
     }
     if (!max_sound_id) {
+       // progress_ambient();
         return;
     }
 
