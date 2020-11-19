@@ -1515,9 +1515,15 @@ void building_figure_generate(void)
                     spawn_figure_theater(b);
                     break;
                 case BUILDING_HIPPODROME:
-                    spawn_figure_hippodrome(b);
+                    if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
+                        spawn_figure_hippodrome(b);
+                    }
                     break;
                 case BUILDING_COLOSSEUM:
+                    if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
+                        spawn_figure_colosseum(b);
+                    }
+                    break;
                 case BUILDING_ARENA:
                     spawn_figure_colosseum(b);
                     break;

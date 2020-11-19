@@ -3,7 +3,9 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "city/data_private.h"
+#include "city/culture.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
 #include "game/time.h"
@@ -36,13 +38,13 @@ static building_levy_for_type building_levies[] = {
 };
 
 static building_levy_for_type tourism_modifiers[] = {
-    {BUILDING_TAVERN, 3},
+    {BUILDING_TAVERN, 2},
     {BUILDING_THEATER, 1},
     {BUILDING_AMPHITHEATER, 1},
-    {BUILDING_MARKET, 1},
-    {BUILDING_ARENA, 3},
-    {BUILDING_COLOSSEUM, 12},
-    {BUILDING_HIPPODROME, 12}
+    //{BUILDING_MARKET, 1},
+    {BUILDING_ARENA, 2},
+    //{BUILDING_COLOSSEUM, 12},
+    //{BUILDING_HIPPODROME, 12}
 };
 
 int city_finance_treasury(void)
@@ -325,9 +327,29 @@ static void pay_monthly_building_levies(void) {
     city_data.finance.this_year.expenses.levies += levies;
 }
 
+static void collect_monthly_tourism(void) {
+    int levies = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building* b = building_get(i);
+        for (int i = 0; i < BUILDINGS_WITH_TOURISM; ++i) {
+            if (b->type == tourism_modifiers[i].type) {
+                b->monthly_levy = (int)(-1 * tourism_modifiers[i].amount * (TOURISM_RATING_MODIFIER * city_finance_tourism_rating()));
+            }
+        }
+
+        if (b->state == BUILDING_STATE_IN_USE && b->num_workers && building_get_tourism(b)) {
+            levies += b->monthly_levy;
+        }
+    }
+
+    city_data.finance.treasury -= levies;
+    city_data.finance.this_year.income.taxes += levies;
+}
+
 void city_finance_handle_month_change(void)
 {
     collect_monthly_taxes();
+    collect_monthly_tourism();
     pay_monthly_wages();
     pay_monthly_interest();
     pay_monthly_salary();
@@ -467,26 +489,56 @@ void city_finance_handle_year_change(void)
 
 void city_finance_calculate_tourism_rating(void)
 {
-    if (city_data.population.population < 5000) {
-        return 0;
+    
+    if (city_data.population.population < 2000) {
+        city_data.finance.tourism_rating = 0;
     }
 
+    int rating = 0;
+
     //10 points for each non monument ent coverage
+    rating += city_culture_coverage_tavern() / 10;
+    rating += city_culture_coverage_theater() / 10;
+    rating += city_culture_coverage_amphitheater() / 10;
+
+    if (!building_monument_working(BUILDING_COLOSSEUM)) {
+        rating += city_culture_coverage_arena() / 10;
+    }    
 
     //10 for sentiment
+    rating += city_data.sentiment.value / 10;
 
     //10 for average house des
+    rating += city_data.culture.average_desirability / 10;
 
     //10 for each col/hip
+    rating += !!building_monument_working(BUILDING_COLOSSEUM) * 10;
+    rating += !!building_monument_working(BUILDING_HIPPODROME) * 10;
 
     //15 for each GT
+    rating += building_count_grand_temples() * 15;
 
     //10 for pros
+    rating += city_data.ratings.prosperity / 10;
 
     //10 for favor
+    rating += city_data.ratings.favor / 10;
 
-    //10 for peace
+    //10 for pop
+    if (city_data.population.population > 7000) {
+        rating += 10;
+    }
 
+    // small town penalty
+    if (city_data.population.population < 5000) {
+        rating /= 2;
+    }
+
+    city_data.finance.tourism_rating = rating;
+}
+
+int city_finance_tourism_rating(void) {
+    return city_data.finance.tourism_rating;
 }
 
 const finance_overview *city_finance_overview_last_year(void)

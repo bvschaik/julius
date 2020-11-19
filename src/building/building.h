@@ -69,7 +69,7 @@ typedef struct {
     unsigned char house_tavern_wine_access;
     unsigned char house_tavern_meat_access;
     short formation_id;
-    unsigned char monthly_levy;
+    signed char monthly_levy;
     union {
         struct {
             short queued_docker_id;
@@ -197,6 +197,8 @@ void building_update_highest_id(void);
 int building_mothball_toggle(building* b);
 
 int building_mothball_set(building* b, int value);
+
+int building_get_tourism(const building* b);
 
 int building_get_levy(const building* b);
 

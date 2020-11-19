@@ -7,12 +7,14 @@
 #define THEATER_COVERAGE 750
 #define AMPHITHEATER_COVERAGE 1200
 #define TAVERN_COVERAGE 1200
+#define ARENA_COVERAGE 2500
 
 void city_culture_update_coverage(void);
 
 int city_culture_coverage_tavern(void);
 int city_culture_coverage_theater(void);
 int city_culture_coverage_amphitheater(void);
+int city_culture_coverage_arena(void);
 int city_culture_coverage_colosseum(void);
 int city_culture_coverage_hippodrome(void);
 int city_culture_coverage_average_entertainment(void);

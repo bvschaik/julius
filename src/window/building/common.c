@@ -12,6 +12,9 @@
 #include "translation/translation.h"
 #include "sound/speech.h"
 
+#include <stdlib.h>
+#include <math.h>
+
 void window_building_set_possible_position(int *x_offset, int *y_offset, int width_blocks, int height_blocks)
 {
     int dialog_width = 16 * width_blocks;
@@ -80,8 +83,13 @@ static int draw_employment_info(building_info_context *c, building *b, int y_off
 
 void window_building_draw_levy(int amount, int x_offset, int y_offset) {
     image_draw(image_group(GROUP_RESOURCE_ICONS) + 16, x_offset + 300, y_offset + 5);
-    int width = text_draw_money(amount, x_offset + 320, y_offset + 10, FONT_SMALL_BLACK);
-    text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY), x_offset + 320 + width, y_offset + 10, FONT_SMALL_BLACK, 0);
+    int width = text_draw_money(abs(amount), x_offset + 320, y_offset + 10, FONT_SMALL_BLACK);
+    if (amount > 0) {
+        text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY), x_offset + 320 + width, y_offset + 10, FONT_SMALL_BLACK, 0);
+    }
+    else {
+        text_draw(translation_for(TR_BUILDING_INFO_TOURISM), x_offset + 320 + width, y_offset + 10, FONT_SMALL_BLACK, 0);
+    }
 }
 
 static void draw_employment_details(building_info_context *c, building *b, int y_offset, int text_id)
@@ -92,6 +100,10 @@ static void draw_employment_details(building_info_context *c, building *b, int y
 
     if (building_get_levy(b)) {
         window_building_draw_levy(building_get_levy(b), c->x_offset, y_offset);
+    }
+
+    if (building_get_tourism(b)) {
+        window_building_draw_levy(building_get_tourism(b), c->x_offset, y_offset);
     }
 
 	int laborers_needed = model_get_building(b->type)->laborers;

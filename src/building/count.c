@@ -43,8 +43,8 @@ static void limit_hippodrome(void)
     if (data.buildings[BUILDING_HIPPODROME].total > 1) {
         data.buildings[BUILDING_HIPPODROME].total = 1;
     }
-    if (data.buildings[BUILDING_HIPPODROME].active > 1) {
-        data.buildings[BUILDING_HIPPODROME].active = 1;
+    if (data.buildings[BUILDING_COLOSSEUM].active > 1) {
+        data.buildings[BUILDING_COLOSSEUM].active = 1;
     }
 }
 
@@ -225,6 +225,10 @@ int building_count_grand_temples(void) {
             data.buildings[BUILDING_GRAND_TEMPLE_MERCURY].total + 
             data.buildings[BUILDING_GRAND_TEMPLE_MARS].total + 
             data.buildings[BUILDING_GRAND_TEMPLE_VENUS].total);
+}
+
+int building_count_colosseum(void) {
+    return data.buildings[BUILDING_COLOSSEUM].total;
 }
 
 int building_count_active(building_type type)

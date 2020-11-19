@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/count.h"
+#include "building/monument.h"
 #include "city/constants.h"
 #include "city/data_private.h"
 #include "city/entertainment.h"
@@ -23,6 +24,7 @@ static struct {
     int religion[5];
     int oracle;
     int tavern;
+    int arena;
 } coverage;
 
 int city_culture_coverage_tavern(void)
@@ -38,6 +40,11 @@ int city_culture_coverage_theater(void)
 int city_culture_coverage_amphitheater(void)
 {
     return coverage.amphitheater;
+}
+
+int city_culture_coverage_arena(void)
+{
+    return coverage.arena;
 }
 
 int city_culture_coverage_colosseum(void)
@@ -108,10 +115,19 @@ void city_culture_update_coverage(void)
     coverage.tavern = top(calc_percentage(TAVERN_COVERAGE * building_count_active(BUILDING_TAVERN), population));
     coverage.theater = top(calc_percentage(THEATER_COVERAGE * building_count_active(BUILDING_THEATER), population));
     coverage.amphitheater = top(calc_percentage(AMPHITHEATER_COVERAGE * building_count_active(BUILDING_AMPHITHEATER), population));
-    if (building_count_active(BUILDING_HIPPODROME) <= 0) {
+    coverage.arena = top(calc_percentage(ARENA_COVERAGE * building_count_active(BUILDING_ARENA), population));
+    
+    if (building_monument_working(BUILDING_HIPPODROME) <= 0) {
         coverage.hippodrome = 0;
-    } else {
+    }
+    else {
         coverage.hippodrome = 100;
+    }
+
+    if (building_monument_working(BUILDING_COLOSSEUM) <= 0) {
+        coverage.colosseum = 0;
+    } else {
+        coverage.colosseum = 100;
     }
 
     // religion
@@ -182,6 +198,7 @@ void city_culture_calculate(void)
     city_data.culture.average_religion = 0;
     city_data.culture.average_education = 0;
     city_data.culture.average_health = 0;
+    city_data.culture.average_desirability = 0;
     city_data.culture.population_with_venus_access = 0; //venus
 
     int num_houses = 0;
@@ -193,6 +210,7 @@ void city_culture_calculate(void)
             city_data.culture.average_religion += b->data.house.num_gods;
             city_data.culture.average_education += b->data.house.education;
             city_data.culture.average_health += b->data.house.health;
+            city_data.culture.average_desirability += b->desirability;
             if (b->data.house.temple_venus) {
                 city_data.culture.population_with_venus_access += b->house_population;
             }
@@ -203,6 +221,7 @@ void city_culture_calculate(void)
         city_data.culture.average_religion /= num_houses;
         city_data.culture.average_education /= num_houses;
         city_data.culture.average_health /= num_houses;
+        city_data.culture.average_desirability /= num_houses;
     }
 
     city_entertainment_calculate_shows();

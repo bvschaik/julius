@@ -3,6 +3,7 @@
 #include "building/count.h"
 #include "city/culture.h"
 #include "city/entertainment.h"
+#include "city/finance.h"
 #include "city/gods.h"
 #include "city/houses.h"
 
@@ -29,7 +30,7 @@ option_menu_item games_options[4] = {
 static void button_hold_games(int param1, int param2);
 
 static generic_button hold_games_button[] = {
-    {102, 360, 300, 20, button_hold_games, button_none, 0, 0},
+    {102, 380, 300, 20, button_hold_games, button_none, 0, 0},
 };
 
 static int focus_button_id;
@@ -50,16 +51,16 @@ static int get_entertainment_advice(void)
 
 static void draw_games_info(void)
 {
-    inner_panel_draw(48, 292, 34, 6);
+    inner_panel_draw(48, 312, 34, 6);
     //image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 460, 295);
-    text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_HEADER), 52, 264, FONT_LARGE_BLACK, 0);
-    text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC), 56, 300, 400, FONT_NORMAL_WHITE, 0);
+    text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_HEADER), 52, 284, FONT_LARGE_BLACK, 0);
+    text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC), 56, 320, 400, FONT_NORMAL_WHITE, 0);
 
     if (0) {
-        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_PREPARING), 102, 365, 300, FONT_NORMAL_WHITE, 0);
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_PREPARING), 102, 385, 300, FONT_NORMAL_WHITE, 0);
     }
     else {
-        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_BUTTON), 102, 365, 300, FONT_NORMAL_WHITE, 0);
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_BUTTON), 102, 385, 300, FONT_NORMAL_WHITE, 0);
     }
 }
 
@@ -79,12 +80,11 @@ static int draw_background(void)
     lang_text_draw(58, 3, PEOPLE_OFFSET + 10, 46, FONT_SMALL_PLAIN);
     lang_text_draw_centered(58, 4, COVERAGE_OFFSET, 46, COVERAGE_WIDTH, FONT_SMALL_PLAIN);
 
-    inner_panel_draw(32, 60, 36, 7);
+    inner_panel_draw(32, 60, 36, 8);
 
 
     // taverns
-    //TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE
-    text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE), 70, 64, FONT_NORMAL_WHITE, 0);
+    text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE), 67, 64, FONT_NORMAL_WHITE, 0);
     text_draw_number(building_count_total(BUILDING_TAVERN), '@', "", 40, 64, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_TAVERN), 150, 64, 100, FONT_NORMAL_WHITE);
     int width = text_draw_number(TAVERN_COVERAGE * building_count_active(BUILDING_TAVERN), '_', " ",
@@ -136,30 +136,59 @@ static int draw_background(void)
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 104, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }
 
-    // colosseums
-    lang_text_draw_amount(8, 38, building_count_total(BUILDING_COLOSSEUM), 40, 124, FONT_NORMAL_WHITE);
-    text_draw_number_centered(building_count_active(BUILDING_COLOSSEUM), 150, 124, 100, FONT_NORMAL_WHITE);
+    //arenas 
+    text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_ARENA_COVERAGE), 67, 124, FONT_NORMAL_WHITE, 0);
+    text_draw_number(building_count_total(BUILDING_ARENA), '@', "", 40, 124, FONT_NORMAL_WHITE);
+    text_draw_number_centered(building_count_active(BUILDING_ARENA), 150, 124, 100, FONT_NORMAL_WHITE);
+    width = text_draw_number(ARENA_COVERAGE * building_count_active(BUILDING_ARENA), '_', " ", PEOPLE_OFFSET, 124, FONT_NORMAL_WHITE);
+    lang_text_draw(58, 5, PEOPLE_OFFSET + width, 124, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_colosseum_shows(), 230, 124, 100, FONT_NORMAL_WHITE);
-    lang_text_draw_centered(58, 6, PEOPLE_OFFSET + 10, 124, 100, FONT_NORMAL_WHITE);
-    if (city_culture_coverage_colosseum() == 0) {
+    int pct = city_culture_coverage_arena();
+    if (pct == 0) {
         lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
+    }
+    else if (pct < 100) {
+        lang_text_draw_centered(57, 11 + pct_tavern / 10, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
+        lang_text_draw_centered(57, 17, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }
     else {
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }
 
-    // hippodromes
-    lang_text_draw_amount(8, 40, building_count_total(BUILDING_HIPPODROME), 40, 143, FONT_NORMAL_WHITE);
-    text_draw_number_centered(building_count_active(BUILDING_HIPPODROME), 150, 143, 100, FONT_NORMAL_WHITE);
-    text_draw_number_centered(city_entertainment_hippodrome_shows(), 230, 143, 100, FONT_NORMAL_WHITE);
+    // colosseums
+    lang_text_draw_amount(8, 38, building_count_total(BUILDING_COLOSSEUM), 40, 143, FONT_NORMAL_WHITE);
+    text_draw_number_centered(building_count_active(BUILDING_COLOSSEUM), 150, 143, 100, FONT_NORMAL_WHITE);
+    text_draw_number_centered(city_entertainment_colosseum_shows(), 230, 143, 100, FONT_NORMAL_WHITE);
     lang_text_draw_centered(58, 6, PEOPLE_OFFSET + 10, 143, 100, FONT_NORMAL_WHITE);
-    if (city_culture_coverage_hippodrome() == 0) {
+    if (city_culture_coverage_colosseum() == 0) {
         lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 143, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
-    } else {
+    }
+    else {
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 143, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }
 
-    lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 178, 512, FONT_NORMAL_BLACK);
+    // hippodromes
+    lang_text_draw_amount(8, 40, building_count_total(BUILDING_HIPPODROME), 40, 163, FONT_NORMAL_WHITE);
+    text_draw_number_centered(building_count_active(BUILDING_HIPPODROME), 150, 163, 100, FONT_NORMAL_WHITE);
+    text_draw_number_centered(city_entertainment_hippodrome_shows(), 230, 163, 100, FONT_NORMAL_WHITE);
+    lang_text_draw_centered(58, 6, PEOPLE_OFFSET + 10, 163, 100, FONT_NORMAL_WHITE);
+    if (city_culture_coverage_hippodrome() == 0) {
+        lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 163, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
+    } else {
+        lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 163, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
+    }
+
+    //todo: temporary home for tourism info
+    //lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 198, 512, FONT_NORMAL_BLACK);
+
+    text_draw_multiline(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT), 40, 198, 600, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT_2), 40, 238, FONT_NORMAL_BLACK, 0);
+    if (city_finance_tourism_rating() >= 100) {
+        text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_10), 240, 238, FONT_NORMAL_BLACK, 0);
+    }
+    else {
+        text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_1 + city_finance_tourism_rating() / 10), 240, 238, FONT_NORMAL_BLACK, 0);
+    }
 
     draw_games_info();
 
@@ -168,8 +197,8 @@ static int draw_background(void)
 
 static void draw_foreground(void)
 {
-    if (1) {
-        button_border_draw(102, 360, 300, 20, focus_button_id == 1);
+    if (1) { // games not on cooldown
+        button_border_draw(102, 380, 300, 20, focus_button_id == 1);
     }
 }
 

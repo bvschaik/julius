@@ -125,6 +125,7 @@ extern struct city_data_t {
         int32_t tribute_not_paid_total_years;
         int32_t wage_rate_paid_this_year;
         int32_t wage_rate_paid_last_year;
+        int32_t tourism_rating;
     } finance;
     struct {
         int32_t taxed_plebs;
@@ -268,6 +269,7 @@ extern struct city_data_t {
         int32_t average_health;
         int32_t religion_coverage;
         int32_t population_with_venus_access;
+        int32_t average_desirability;
     } culture;
     struct {
         god_status gods[5];

@@ -13,6 +13,10 @@
 #define HIPPODROME_LEVY_MONTHLY 72
 
 #define BUILDINGS_WITH_LEVIES 22
+#define BUILDINGS_WITH_TOURISM 7
+
+#define TOURISM_RATING_MODIFIER 0.1
+#define POPULATION_MODIFIER 1
 
 typedef struct {
     int type;
@@ -84,6 +88,8 @@ typedef struct {
     int net_in_out;
     int balance;
 } finance_overview;
+
+int city_finance_tourism_rating(void);
 
 const finance_overview *city_finance_overview_last_year(void);
 

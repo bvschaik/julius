@@ -792,6 +792,12 @@ int building_construction_place_building(building_type type, int x, int y)
         city_warning_show(WARNING_MAX_GRAND_TEMPLES);
         return 0;
     }
+    if (type == BUILDING_COLOSSEUM) {
+        if (building_count_colosseum()) {
+            city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
+            return 0;
+        }
+    }
     if (type == BUILDING_HIPPODROME) {
         if (city_buildings_has_hippodrome()) {
             city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);

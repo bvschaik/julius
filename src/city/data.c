@@ -109,7 +109,10 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.migration.immigration_duration);
     buffer_write_i32(main, city_data.migration.emigration_duration);
     buffer_write_i32(main, city_data.migration.newcomers);
-    for (int i = 0; i < 4; i++) {
+    buffer_write_i32(main, city_data.culture.average_desirability);
+    buffer_write_i32(main, city_data.finance.tourism_rating);
+
+    for (int i = 0; i < 2; i++) {
         buffer_write_i32(main, city_data.unused.unknown_27e0[i]);
     }
     buffer_write_i16(main, city_data.unused.unknown_27f0);
@@ -595,7 +598,9 @@ static void load_main_data(buffer *main)
     city_data.migration.immigration_duration = buffer_read_i32(main);
     city_data.migration.emigration_duration = buffer_read_i32(main);
     city_data.migration.newcomers = buffer_read_i32(main);
-    for (int i = 0; i < 4; i++) {
+    city_data.culture.average_desirability = buffer_read_i32(main);
+    city_data.finance.tourism_rating = buffer_read_i32(main);
+    for (int i = 0; i < 2; i++) {
         city_data.unused.unknown_27e0[i] = buffer_read_i32(main);
     }
     city_data.unused.unknown_27f0 = buffer_read_i16(main);
