@@ -11,6 +11,8 @@ void scenario_settings_init_mission(void);
 
 void scenario_fix_patch_trade(int mission_id);
 
+void scenario_unlock_all_buildings(void);
+
 void scenario_save_state(buffer *buf);
 
 void scenario_load_state(buffer *buf);

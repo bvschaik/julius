@@ -470,6 +470,12 @@ void scenario_fix_patch_trade(int mission_id) {
     }
 }
 
+void scenario_unlock_all_buildings(void) {
+    for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++) {
+        scenario.allowed_buildings[i] = 1;
+    }
+}
+
 
 void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
 {

@@ -5,6 +5,7 @@
 #include "city/map.h"
 #include "city/message.h"
 #include "city/trade.h"
+#include "city/resource.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
@@ -359,6 +360,19 @@ void empire_city_set_vulnerable(int city_id)
 void empire_city_set_foreign(int city_id)
 {
     cities[city_id].type = EMPIRE_CITY_DISTANT_FOREIGN;
+}
+
+int empire_unlock_all_resources(void)
+{
+	for (int i = 0; i < MAX_CITIES; i++) {
+        if (cities[i].in_use && (cities[i].type == EMPIRE_CITY_OURS)) {
+            for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+                cities[i].sells_resource[resource] = 1;
+            }
+            return 1;
+        }
+	}
+	return 0;
 }
 
 void empire_city_save_state(buffer *buf)
