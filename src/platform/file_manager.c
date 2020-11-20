@@ -131,19 +131,12 @@ static const dir_info *get_or_create_dir_info(dir_name dir)
     info->next = 0;
     fs_dir_entry *entry;
     file_info *file_item = 0;
-
-    struct stat file_stat;
+    int dir_name_offset = 0;
     while ((entry = fs_dir_read(d))) {
         const char *name = dir_entry_name(entry);
-        int type = TYPE_ANY;
-        if (stat(name, &file_stat) != -1) {
-            int m = file_stat.st_mode;
-            if (S_ISCHR(m) || S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m) ||
-                (S_ISDIR(m) && name[0] == '.')) {
-                // Skip current (.), parent (..) and hidden directories (.*)
-                continue;
-            }
-            type = S_ISDIR(m) ? TYPE_DIR : TYPE_FILE;
+        if (name[0] == '.') {
+            // Skip hidden files
+            continue;
         }
         if (!file_item) {
             file_item = malloc(sizeof(file_info));
@@ -152,17 +145,40 @@ static const dir_info *get_or_create_dir_info(dir_name dir)
             file_item->next = malloc(sizeof(file_info));
             file_item = file_item->next;
         }
+        file_item->next = 0;
+
+        // Copy name
         strncpy(file_item->name, name, FILE_NAME_MAX - 1);
         file_item->name[FILE_NAME_MAX - 1] = 0;
-        file_item->type = type;
+
+        // Copy extension
         char c;
-        const char *filename = file_item->name;
+        const char *extension = file_item->name;
         do {
-            c = *filename;
-            filename++;
+            c = *extension;
+            extension++;
         } while (c != '.' && c);
-        file_item->extension = filename;
-        file_item->next = 0;
+        file_item->extension = extension;
+
+        // Check type
+        int type = TYPE_FILE;
+        // Stat does not work for Vita, so we check if a file is a directory by trying to open it as a dir
+        // For performance reasons, we only check for a directory if the name has no extension
+        // This is effectively a hack, and definitely not full-proof, but the performance gains are well worth it
+        if (!c) {
+            static char full_name[FILE_NAME_MAX];
+            if (!dir_name_offset) {
+                strncpy(full_name, info->name, FILE_NAME_MAX);
+                dir_name_offset = strlen(info->name);
+            }
+            strncpy(full_name + dir_name_offset, name, FILE_NAME_MAX - 1 - dir_name_offset);
+            fs_dir_type *file_d = fs_dir_open(full_name);
+            if (file_d) {
+                type = TYPE_DIR;
+                fs_dir_close(file_d);
+            }
+        }
+        file_item->type = type;
     }
     fs_dir_close(d);
     return info;
