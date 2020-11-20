@@ -109,7 +109,7 @@ static void draw_footprint(int x, int y, int grid_offset)
         color_t color_mask = 0;
         if (building_id) {
             building *b = building_get(building_id);
-            if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && draw_building_as_deleted(b)) {
+            if (draw_building_as_deleted(b)) {
                 color_mask = COLOR_MASK_RED;
             }
             int view_x, view_y, view_width, view_height;
