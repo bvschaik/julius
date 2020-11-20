@@ -653,10 +653,10 @@ int building_monument_progress(building* b)
 			city_message_post(1, MESSAGE_LIGHTHOUSE_COMPLETE, 0, 0);
 		}
 		else if (b->type == BUILDING_COLOSSEUM) {
-			city_message_post(1, MESSAGE_LIGHTHOUSE_COMPLETE, 0, 0);
+			city_message_post(1, MESSAGE_COLOSSEUM_COMPLETE, 0, 0);
 		}
 		else if (b->type == BUILDING_HIPPODROME) {
-			city_message_post(1, MESSAGE_LIGHTHOUSE_COMPLETE, 0, 0);
+			city_message_post(1, MESSAGE_HIPPODROME_COMPLETE, 0, 0);
 		}
 	}
 	return 1;

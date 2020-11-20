@@ -27,6 +27,9 @@ static int determine_destination(int x, int y, building_type type1, building_typ
         if (b->type != type1 && b->type != type2 && b->type != type3) {
             continue;
         }
+        if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && b->data.monument.monument_phase != -1) {
+            continue;
+        }
         if (b->distance_from_entry && b->road_network_id == road_network) {
             if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) {
                 continue;

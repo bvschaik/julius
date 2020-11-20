@@ -348,7 +348,7 @@ void building_state_load_from_buffer(buffer *buf, building *b)
         b->data.monument.monument_phase = b->subtype.house_level;
     }
 
-    if (b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM && !b->data.monument.monument_phase) {
+    if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && !b->data.monument.monument_phase) {
         b->data.monument.monument_phase = -1;
     }
 }

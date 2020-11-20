@@ -443,7 +443,14 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_TOURISM_DESCRIPTION_TEXT, "Renown brings tourists to your city, to spend money and spread your fame." },
     {TR_ADVISOR_TOURISM_DESCRIPTION_TEXT_2, "Your cities renown is: " },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_ARENA_COVERAGE, "Arenas"},
-    {TR_BUILDING_INFO_TOURISM, "(tourism)" }
+    {TR_BUILDING_INFO_TOURISM, "(tourism)" },
+    {TR_CITY_MESSAGE_TEXT_COLOSSEUM_COMPLETE, "The colosseum is complete! Let the games commence!" },
+    {TR_CITY_MESSAGE_TEXT_HIPPODROME_COMPLETE, "The hippodrome is completed. Your citizens eagerly await your command for the races to begin!" },
+    { TR_CITY_MESSAGE_TITLE_COLOSSEUM_WORKING, "Inaugural games"},
+    {TR_CITY_MESSAGE_TITLE_HIPPODROME_WORKING, "Races begin"},
+    {TR_CITY_MESSAGE_TEXT_COLOSSEUM_WORKING, "The inaugural games for your Colosseum have begun. At your command, this monument will be consecrated with the blood of the valiant!"},
+    {TR_CITY_MESSAGE_TEXT_HIPPODROME_WORKING, "Your city empties as teeming throngs flock to the hippodrome for the inaugural chariot races. A deafening cheer fills the air as the gates swing open!"}
+
 
 };
 
