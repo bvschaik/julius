@@ -94,9 +94,9 @@ android {
             def isCI = System.getenv("CI") == "true"
             if (isCI) {
                 storeFile file("../julius.keystore")
-                storePassword System.getenv("android_keystore_password")
+                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
                 keyAlias "julius"
-                keyPassword System.getenv("android_keystore_key_password")
+                keyPassword System.getenv("ANDROID_KEYSTORE_KEY_PASSWORD")
             }
         }
     }

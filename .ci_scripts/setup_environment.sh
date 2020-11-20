@@ -12,14 +12,11 @@ case "$BUILD_TARGET" in
 	docker exec switchdev /bin/bash -c "apt-get update && apt-get install -y --no-install-recommends cmake"
 	;;
 "android")
-	# Install Android SDK packages
-	mkdir -p $HOME/.android
-	touch $HOME/.android/repositories.cfg
-
-	for PACKAGE in 'ndk-bundle' 'cmake;3.10.2.4988404'
-	do
-	  echo "Installing $PACKAGE..."
-	  yes | sdkmanager $PACKAGE > /dev/null
-	done
+	# Decrypt the key files
+	if [ "$FILE_ENCRYPTION_KEY" ]
+	then
+        openssl aes-256-cbc -K $FILE_ENCRYPTION_KEY -iv $FILE_ENCRYPTION_IV -in android/julius.keystore.enc -out android/julius.keystore -d;
+        openssl aes-256-cbc -K $FILE_ENCRYPTION_KEY -iv $FILE_ENCRYPTION_IV -in android/play-publisher.json.enc -out android/play-publisher.json -d;
+	fi
 	;;
 esac
