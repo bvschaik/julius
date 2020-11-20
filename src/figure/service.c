@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "building/monument.h"
+#include "city/buildings.h"
 #include "core/config.h"
 #include "figuretype/crime.h"
 #include "game/resource.h"
@@ -436,7 +437,7 @@ int figure_service_provide_coverage(figure *f)
                     break;
                 case BUILDING_SMALL_TEMPLE_MARS:
                 case BUILDING_LARGE_TEMPLE_MARS:                    
-                    if (building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
+                    if (building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL) && city_buildings_get_mess_hall()) {
                         collect_offerings(f->building_id, x, y);
                     }
                     houses_serviced = provide_culture(x, y, religion_coverage_mars);

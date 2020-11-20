@@ -364,7 +364,9 @@ static translation_string all_strings[] = {
     {TR_LABEL_PAUSE_MENU, "Pause" },
     {TR_OVERLAY_LEVY, "Levies" },
     {TR_TOOLTIP_OVERLAY_LEVY, " denarii paid monthly in levies." }, 
-    {TR_MAP_EDITOR_OPTIONS, "Scenario settings" }
+    {TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
+    {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "This temple will collect food for your supply post, once it is constructed." },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

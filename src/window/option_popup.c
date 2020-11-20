@@ -75,26 +75,30 @@ static void draw_background(void)
     text_draw_centered(translation_for(data.title), 80, 60, 480, FONT_LARGE_BLACK, 0);
     text_draw_multiline(translation_for(data.prompt), text_x, 100, text_width, FONT_NORMAL_BLACK, 0);
 
-    if (data.option_1.image_id) {
-        image_draw(data.option_1.image_id, text_x, 170);
-        text_x += 160;
-        text_width = 270;
+    if (data.option_1.show) {
+        if (data.option_1.image_id) {
+            image_draw(data.option_1.image_id, text_x, 170);
+            text_x += 160;
+            text_width = 270;
+        }
+
+        text_draw_multiline(translation_for(data.option_1.header), text_x, 175, text_width, FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(translation_for(data.option_1.desc), text_x, 195, text_width, FONT_NORMAL_BLACK, 0);
+
+        text_width = 420;
+        text_x = 100;
     }
 
-    text_draw_multiline(translation_for(data.option_1.header), text_x, 175, text_width, FONT_NORMAL_BLACK, 0);
-    text_draw_multiline(translation_for(data.option_1.desc), text_x, 195, text_width, FONT_NORMAL_BLACK, 0);    
-    
-    text_width = 420;
-    text_x = 100;
+    if (data.option_2.show) {
+        if (data.option_2.image_id) {
+            image_draw(data.option_2.image_id, text_x, 310);
+            text_x += 160;
+            text_width = 270;
+        }
 
-    if (data.option_2.image_id) {
-        image_draw(data.option_2.image_id, text_x, 310);
-        text_x += 160;
-        text_width = 270;
+        text_draw_multiline(translation_for(data.option_2.header), text_x, 315, text_width, FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(translation_for(data.option_2.desc), text_x, 335, text_width, FONT_NORMAL_BLACK, 0);
     }
-
-    text_draw_multiline(translation_for(data.option_2.header), text_x, 315, text_width, FONT_NORMAL_BLACK, 0);
-    text_draw_multiline(translation_for(data.option_2.desc), text_x, 335, text_width, FONT_NORMAL_BLACK, 0);
 
     if (data.show_cancel_button) {
         lang_text_draw_centered(13, 4, 200, 452, 240, FONT_NORMAL_BLACK);
@@ -114,10 +118,10 @@ static void draw_option_image_border(int x, int y, int focused)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    if (data.option_1.image_id) {
+    if (data.option_1.image_id && data.option_1.show) {
         draw_option_image_border(100, 170, data.focus_button_id == 1);
     }
-    if (data.option_2.image_id) {
+    if (data.option_2.image_id && data.option_2.show) {
         draw_option_image_border(100, 310, data.focus_button_id == 2);
     }
     if (data.show_cancel_button) {
@@ -128,19 +132,28 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 80, 40, buttons, data.show_cancel_button ? 3 : 2, &data.focus_button_id)) {
-        return;
-    }
     if (input_go_back_requested(m, h)) {
         data.close_func(0);
         window_go_back();
     }
+
+    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 80, 40, buttons, data.show_cancel_button ? 3 : 2, &data.focus_button_id)) {
+        return;
+    }
+
 }
 
 static void button_select_option(int option, int param2)
 {
-    data.close_func(option);
-    window_go_back();
+    if ((data.option_1.show && option == 1) || (data.option_2.show && option == 2)) {
+        data.close_func(option);
+        window_go_back();
+    }
+    else if (!option) {
+        data.close_func(option);
+        window_go_back();
+    }
+    
 }
 
 void window_option_popup_show(int title, int prompt, option_menu_item *options,
