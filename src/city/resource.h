@@ -51,6 +51,8 @@ void city_resource_add_to_warehouse(resource_type resource, int amount);
 void city_resource_remove_from_warehouse(resource_type resource, int amount);
 void city_resource_calculate_warehouse_stocks(void);
 
+int city_resource_get_stored(resource_type resource);
+
 void city_resource_determine_available(void);
 int city_resource_ceres_temple_food(void);
 

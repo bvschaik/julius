@@ -4,6 +4,7 @@
 #include "building/monument.h"
 #include "city/constants.h"
 #include "city/data_private.h"
+#include "city/emperor.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/sentiment.h"
@@ -195,4 +196,9 @@ void city_festival_calculate_costs(void)
             city_data.festival.selected.size = FESTIVAL_LARGE;
         }
     }
+}
+
+void city_festival_games_schedule(int game_id) {
+    //city_emperor_decrement_personal_savings();
+    //building_warehouses_remove_resource();
 }

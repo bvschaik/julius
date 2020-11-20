@@ -8,6 +8,10 @@
 #define AMPHITHEATER_COVERAGE 1200
 #define TAVERN_COVERAGE 1200
 #define ARENA_COVERAGE 2500
+#define SCHOOL_COVERAGE 200
+#define LIBRARY_COVERAGE 1500
+#define ACADEMY_COVERAGE 150
+#define HOSPITAL_COVERAGE 1500
 
 void city_culture_update_coverage(void);
 

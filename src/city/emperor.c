@@ -346,3 +346,8 @@ void city_emperor_force_attack(int size){
         city_data.emperor.invasion.soldiers_killed = 0;
     }
 }
+
+void city_emperor_decrement_personal_savings(int amount)
+{
+    city_data.emperor.personal_savings -= calc_bound(amount, 0, city_data.emperor.personal_savings);
+}

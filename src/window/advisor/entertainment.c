@@ -7,7 +7,6 @@
 #include "city/gods.h"
 #include "city/houses.h"
 #include "core/calc.h"
-
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -15,12 +14,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "translation/translation.h"
-#include "window/option_popup.h"
-
-option_menu_item games_options[4] = {
-   {0, 0, 0, 0, 0, 0},
-   {0, 0, 0, 0, 0, 0},
-};
+#include "window/hold_games.h"
 
 #define ADVISOR_HEIGHT 27
 
@@ -183,11 +177,11 @@ static int draw_background(void)
     //lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 198, 512, FONT_NORMAL_BLACK);
 
     text_draw_multiline(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT), 40, 198, 600, FONT_NORMAL_BLACK, 0);
-    text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT_2), 40, 238, FONT_NORMAL_BLACK, 0);
 
-    text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_1 + calc_bound(city_finance_tourism_rating() / 15, 0, 8)), 240, 238, FONT_NORMAL_BLACK, 0);
-    text_draw_money(city_finance_tourism_income_last_month(), 340, 238, FONT_NORMAL_BLACK);
-    text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY), 400, 238, FONT_NORMAL_BLACK, 0);
+    width = text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT_2), 40, 238, FONT_NORMAL_BLACK, 0);
+    width += text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_1 + calc_bound(city_finance_tourism_rating() / 15, 0, 8)), 40 + width, 238, FONT_NORMAL_BLACK, 0);
+    width +=text_draw_money(city_finance_tourism_income_last_month(), 40 + width, 238, FONT_NORMAL_BLACK);
+    text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY), 40 + width, 238, FONT_NORMAL_BLACK, 0);
 
     draw_games_info();
 
@@ -213,7 +207,7 @@ static void hold_games()
 
 static void button_hold_games(int param1, int param2)
 {
-    window_option_popup_show(TR_SELECT_GAMES_HEADER, TR_SELECT_GAMES_TEXT, games_options, hold_games, 1);
+    window_hold_games_show();
 }
 
 const advisor_window_type *window_advisor_entertainment(void)

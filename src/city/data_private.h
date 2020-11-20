@@ -317,6 +317,9 @@ extern struct city_data_t {
         int32_t second_festival_effect_months;
     } festival;
     struct {
+        int32_t selected_games_id;
+    } games;
+    struct {
         int16_t space_in_warehouses[RESOURCE_MAX];
         int16_t stored_in_warehouses[RESOURCE_MAX];
         int32_t space_in_workshops[6];

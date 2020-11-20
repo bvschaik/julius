@@ -209,6 +209,7 @@ static int calc_economy_modifier_tax(void) {
         result = (pow(tax_differential, 2.0) * (TAX_MODIFIER_POSITIVE_CURVE));
         return (int)floor(result);
     }
+    return 0;
 }
 
 static int calc_average_housing_level(void) {
