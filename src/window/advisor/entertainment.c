@@ -6,6 +6,7 @@
 #include "city/finance.h"
 #include "city/gods.h"
 #include "city/houses.h"
+#include "core/calc.h"
 
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -183,12 +184,10 @@ static int draw_background(void)
 
     text_draw_multiline(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT), 40, 198, 600, FONT_NORMAL_BLACK, 0);
     text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT_2), 40, 238, FONT_NORMAL_BLACK, 0);
-    if (city_finance_tourism_rating() >= 100) {
-        text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_10), 240, 238, FONT_NORMAL_BLACK, 0);
-    }
-    else {
-        text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_1 + city_finance_tourism_rating() / 10), 240, 238, FONT_NORMAL_BLACK, 0);
-    }
+
+    text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_1 + calc_bound(city_finance_tourism_rating() / 15, 0, 8)), 240, 238, FONT_NORMAL_BLACK, 0);
+    text_draw_money(city_finance_tourism_income_last_month(), 340, 238, FONT_NORMAL_BLACK);
+    text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY), 400, 238, FONT_NORMAL_BLACK, 0);
 
     draw_games_info();
 

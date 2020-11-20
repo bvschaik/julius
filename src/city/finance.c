@@ -37,14 +37,11 @@ static building_levy_for_type building_levies[] = {
     {BUILDING_HIPPODROME, HIPPODROME_LEVY_MONTHLY}
 };
 
-static building_levy_for_type tourism_modifiers[] = {
-    {BUILDING_TAVERN, 2},
-    {BUILDING_THEATER, 1},
-    {BUILDING_AMPHITHEATER, 1},
-    //{BUILDING_MARKET, 1},
-    {BUILDING_ARENA, 2},
-    //{BUILDING_COLOSSEUM, 12},
-    //{BUILDING_HIPPODROME, 12}
+static tourism_for_type tourism_modifiers[] = {
+    {BUILDING_TAVERN, 2, TAVERN_COVERAGE, 0},
+    {BUILDING_THEATER, 1, THEATER_COVERAGE, 0},
+    {BUILDING_AMPHITHEATER, 1, AMPHITHEATER_COVERAGE, 0},
+    {BUILDING_ARENA, 2, ARENA_COVERAGE, 0}
 };
 
 int city_finance_treasury(void)
@@ -329,20 +326,25 @@ static void pay_monthly_building_levies(void) {
 
 static void collect_monthly_tourism(void) {
     int levies = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        for (int i = 0; i < BUILDINGS_WITH_TOURISM; ++i) {
-            if (b->type == tourism_modifiers[i].type) {
-                b->monthly_levy = (int)(-1 * tourism_modifiers[i].amount * (TOURISM_RATING_MODIFIER * city_finance_tourism_rating()));
-            }
-        }
 
-        if (b->state == BUILDING_STATE_IN_USE && b->num_workers && building_get_tourism(b)) {
-            levies += b->monthly_levy;
+    for (int i = 0; i < BUILDINGS_WITH_TOURISM; ++i) {
+        int num_buildings = calc_bound(building_count_active(tourism_modifiers[i].type), 0, city_data.population.population / tourism_modifiers[i].coverage);
+        tourism_modifiers[i].total = num_buildings * tourism_modifiers[i].amount * (TOURISM_RATING_MODIFIER * city_finance_tourism_rating());
+
+        for (int i = 1; i < MAX_BUILDINGS; i++) {
+            building* b = building_get(i);
+            for (int i = 0; i < BUILDINGS_WITH_TOURISM; ++i) {
+                if (b->type == tourism_modifiers[i].type && b->state == BUILDING_STATE_IN_USE && b->num_workers) {
+                    int levy = tourism_modifiers[i].total / building_count_active(tourism_modifiers[i].type);
+                    b->monthly_levy = levy * -1;
+                    levies += levy;
+                }
+            }
         }
     }
 
-    city_data.finance.treasury -= levies;
+    city_data.finance.tourism_last_month = levies;
+    city_data.finance.treasury += levies;
     city_data.finance.this_year.income.taxes += levies;
 }
 
@@ -518,11 +520,6 @@ void city_finance_calculate_tourism_rating(void)
     //15 for each GT
     rating += building_count_grand_temples() * 15;
 
-    //10 for pop
-    if (city_data.population.population > 7000) {
-        rating += 10;
-    }
-
     // small town penalty
     if (city_data.population.population < 5000) {
         rating /= 2;
@@ -533,6 +530,10 @@ void city_finance_calculate_tourism_rating(void)
 
 int city_finance_tourism_rating(void) {
     return city_data.finance.tourism_rating;
+}
+
+int city_finance_tourism_income_last_month(void) {
+    return city_data.finance.tourism_last_month;
 }
 
 const finance_overview *city_finance_overview_last_year(void)

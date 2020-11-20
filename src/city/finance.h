@@ -13,15 +13,21 @@
 #define HIPPODROME_LEVY_MONTHLY 72
 
 #define BUILDINGS_WITH_LEVIES 22
-#define BUILDINGS_WITH_TOURISM 7
+#define BUILDINGS_WITH_TOURISM 4
 
-#define TOURISM_RATING_MODIFIER 0.1
-#define POPULATION_MODIFIER 1
+#define TOURISM_RATING_MODIFIER 0.05
 
 typedef struct {
     int type;
     int amount;
 } building_levy_for_type;
+
+typedef struct {
+    int type;
+    int amount;
+    int coverage;
+    int total;
+} tourism_for_type;
 
 int city_finance_treasury(void);
 
@@ -90,6 +96,8 @@ typedef struct {
 } finance_overview;
 
 int city_finance_tourism_rating(void);
+
+int city_finance_tourism_income_last_month(void);
 
 void city_finance_calculate_tourism_rating(void);
 
