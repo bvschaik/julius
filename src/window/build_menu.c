@@ -21,7 +21,6 @@
 #define MENU_ITEM_HEIGHT 24
 #define MENU_ITEM_WIDTH 176
 #define MENU_CLICK_MARGIN 20
-#define SUBMENU_NONE -1
 
 static void button_menu_index(int param1, int param2);
 static void button_menu_item(int item);
@@ -291,7 +290,7 @@ static void button_menu_item(int item)
 
 void window_build_menu_show(int submenu)
 {
-    if (submenu == data.selected_submenu) {
+    if (submenu == SUBMENU_NONE || submenu == data.selected_submenu) {
         data.selected_submenu = SUBMENU_NONE;
         window_city_show();
         return;

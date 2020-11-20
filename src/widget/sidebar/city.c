@@ -293,22 +293,26 @@ static void button_build(int submenu, int param2)
 
 static void button_undo(int param1, int param2)
 {
+    window_build_menu_show(SUBMENU_NONE);
     game_undo_perform();
     window_invalidate();
 }
 
 static void button_messages(int param1, int param2)
 {
+    window_build_menu_show(SUBMENU_NONE);
     window_message_list_show();
 }
 
 static void button_help(int param1, int param2)
 {
+    window_build_menu_show(SUBMENU_NONE);
     window_message_dialog_show(param2, window_city_draw_all);
 }
 
 static void button_go_to_problem(int param1, int param2)
 {
+    window_build_menu_show(SUBMENU_NONE);
     int grid_offset = city_message_next_problem_area_grid_offset();
     if (grid_offset) {
         city_view_go_to_grid_offset(grid_offset);
