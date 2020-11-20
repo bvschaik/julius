@@ -1,0 +1,70 @@
+name: Build Julius
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - name: Linux AppImage
+            os: ubuntu-16.04
+            BUILD_TARGET: appimage
+            DEPLOY: appimage
+          - name: Linux x64
+            os: ubuntu-18.04
+            SDL_LIB: SDL2-2.0.12
+            SDL_MIXER_LIB: SDL2_mixer-2.0.4
+            BUILD_TARGET: linux
+            DEPLOY: linux
+          - name: macOS
+            os: macos-latest
+            SDL_LIB: SDL2-2.0.12
+            SDL_MIXER_LIB: SDL2_mixer-2.0.4
+            BUILD_TARGET: mac
+            DEPLOY: mac
+          - name: Nintendo Switch
+            os: ubuntu-18.04
+            BUILD_TARGET: switch
+            DEPLOY: switch
+          - name: PS Vita
+            os: ubuntu-18.04
+            BUILD_TARGET: vita
+            DEPLOY: vita
+          - name: Android
+            os: ubuntu-18.04
+            SDL_LIB: SDL2-2.0.12
+            SDL_MIXER_LIB: SDL2_mixer-2.0.4
+            BUILD_TARGET: android
+            DEPLOY: android
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    env:
+      SDL_LIB: ${{ matrix.SDL_LIB }}
+      SDL_MIXER_LIB: ${{ matrix.SDL_MIXER_LIB }}
+      BUILD_TARGET: ${{ matrix.BUILD_TARGET }}
+      DEPLOY: ${{ matrix.DEPLOY }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEYSTORE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
+      FILE_ENCRYPTION_IV: ${{ secrets.FILE_ENCRYPTION_IV }}
+      FILE_ENCRYPTION_KEY: ${{ secrets.FILE_ENCRYPTION_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Set up environment
+        run: |
+          ./.ci_scripts/setup_environment.sh
+          ./.ci_scripts/install_sdl.sh
+      - name: Build and test
+        run: |
+          ./.ci_scripts/run_cmake.sh
+          ./.ci_scripts/run_build.sh
+      - name: Upload to Bintray
+        env:
+          BINTRAY_USER_TOKEN: ${{ secrets.BINTRAY_USER_TOKEN }}
+        run: |
+          ./.ci_scripts/bintray_upload.sh
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.name }}
+          path: deploy/
