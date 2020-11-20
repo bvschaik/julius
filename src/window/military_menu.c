@@ -11,6 +11,11 @@
 #include "widget/sidebar/military.h"
 #include "window/city.h"
 
+#define MENU_X_OFFSET 170
+#define MENU_Y_OFFSET 72
+#define MENU_ITEM_HEIGHT 24
+#define MENU_CLICK_MARGIN 20
+
 static struct {
     int active_buttons;
     int focus_button_id;
@@ -53,13 +58,28 @@ static void draw_foreground(void)
     data.active_buttons = num_legions;
 }
 
+static int click_outside_menu(const mouse *m, int x_offset)
+{
+    return m->left.went_down &&
+          (m->x < x_offset - MENU_X_OFFSET - MENU_CLICK_MARGIN ||
+           m->x > x_offset + MENU_CLICK_MARGIN ||
+           m->y < MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
+           m->y > MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * data.active_buttons);
+}
+
+
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (generic_buttons_handle_mouse(m, get_sidebar_x_offset() - 170, 72,
+    int x_offset = get_sidebar_x_offset();
+    if (generic_buttons_handle_mouse(m, x_offset - MENU_X_OFFSET, MENU_Y_OFFSET,
         menu_buttons, data.active_buttons, &data.focus_button_id)) {
         return;
     }
     if (input_go_back_requested(m, h)) {
+        window_go_back();
+        return;
+    }
+    if (click_outside_menu(m, x_offset)) {
         window_go_back();
     }
 }
