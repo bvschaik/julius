@@ -65,6 +65,8 @@ void empire_city_generate_trader(void);
 
 void empire_city_remove_trader(int city_id, int figure_id);
 
+int empire_unlock_all_resources(void);
+
 void empire_city_save_state(buffer *buf);
 
 void empire_city_load_state(buffer *buf);
