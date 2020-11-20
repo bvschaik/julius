@@ -505,11 +505,11 @@ void city_finance_calculate_tourism_rating(void)
         rating += city_culture_coverage_arena() / 10;
     }    
 
-    //10 for sentiment
-    rating += city_data.sentiment.value / 10;
+    //20 for sentiment
+    rating += city_data.sentiment.value / 5;
 
-    //10 for average house des
-    rating += city_data.culture.average_desirability / 10;
+    //20 for average house des
+    rating += city_data.culture.average_desirability / 5;
 
     //10 for each col/hip
     rating += !!building_monument_working(BUILDING_COLOSSEUM) * 10;
@@ -517,12 +517,6 @@ void city_finance_calculate_tourism_rating(void)
 
     //15 for each GT
     rating += building_count_grand_temples() * 15;
-
-    //10 for pros
-    rating += city_data.ratings.prosperity / 10;
-
-    //10 for favor
-    rating += city_data.ratings.favor / 10;
 
     //10 for pop
     if (city_data.population.population > 7000) {

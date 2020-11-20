@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE mod>
+
+<mod author="Areldir" name="Large_Temples_Oracle">
+<!-- Note: Large Temple and Oracle Construction 0% Phases -->
+    <image id="Ceres LTemp Cons 0" src="Ceres_L_Temple_Construction_0%" />
+    <image id="Mars LTemp Cons 0" src="Mars_L_Temple_Construction_0%" />	
+    <image id="Merc LTemp Cons 0" src="Mercury_L_Temple_Construction_0%" />	
+    <image id="Nept LTemp Cons 0" src="Neptune_L_Temple_Construction_0%" />
+    <image id="Venus LTemp Cons 0" src="Venus_L_Temple_Construction_0%" />	
+    <image id="Oracle Cons" src="Oracle_Construction_0%" />	
+
+</mod>		

@@ -53,6 +53,10 @@ static int hippodrome_resources[5][RESOURCE_MAX] = {
 	{4,0,0,0,0,0,0,0,0,0,32,46,32,0,0,0,},
 	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 };
+static int oracle_lt_resources[1][RESOURCE_MAX] = {
+	{1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,}
+};
+
 
 static struct {
 	int monuments_number;

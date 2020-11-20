@@ -285,16 +285,19 @@ void map_orientation_update_buildings(void)
                 break;
             case BUILDING_HIPPODROME:
             {
-                // get which part of the hippodrome is getting checked
-
                 int phase = b->data.monument.monument_phase;
-                if (phase == -1) {
-                    phase = 5;
-                }
                 int phase_offset = 6;
-                
-                int image1 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NESW 01") + ((phase - 1) * phase_offset);
-                int image2 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NWSE 01") + ((phase - 1) * phase_offset);
+                int image1 = 0;
+                int image2 = 0;
+
+                if (phase == -1) {
+                    image1 = image_group(GROUP_BUILDING_HIPPODROME_1);
+                    image2 = image_group(GROUP_BUILDING_HIPPODROME_2);
+                }
+                else {
+                    image1 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NESW 01") + ((phase - 1) * phase_offset);
+                    image2 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NWSE 01") + ((phase - 1) * phase_offset);
+                }
 
                 int building_part;
                 if(b->prev_part_building_id == 0){
