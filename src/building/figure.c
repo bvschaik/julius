@@ -1018,7 +1018,8 @@ static void spawn_figure_temple(building *b)
 
         if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
             int mess_hall_id = city_buildings_get_mess_hall();
-            if (mess_hall_id && building_get(mess_hall_id)->type == BUILDING_MESS_HALL) {
+            building* mess_hall = building_get(mess_hall_id);
+            if (mess_hall_id && mess_hall->type == BUILDING_MESS_HALL) {
                 figure* f = figure_get(b->figure_id2);
                 if (f->state != FIGURE_STATE_ALIVE) {
                     b->figure_id2 = 0;
@@ -1042,7 +1043,7 @@ static void spawn_figure_temple(building *b)
         }
 
         // Venus Module 1 Bonus
-        if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) && !b->figure_id2) {
+        if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) && !b->figure_id2) {            
             spawn_market_buyer(b, road, 2);
         }
 
