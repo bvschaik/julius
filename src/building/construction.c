@@ -263,6 +263,12 @@ static int place_reservoir_and_aqueducts(
     return 1;
 }
 
+void building_construction_set_cost(int cost)
+{
+    data.in_progress = cost != 0;
+    data.cost = cost;
+}
+
 void building_construction_set_type(building_type type)
 {
     data.type = type;
@@ -418,9 +424,7 @@ void building_construction_cancel(void)
 {
     map_property_clear_constructing_and_deleted();
     if (data.in_progress && building_construction_is_updatable()) {
-        if (building_construction_is_updatable()) {
-            game_undo_restore_map(1);
-        }
+        game_undo_restore_map(1);
         data.in_progress = 0;
     } else {
         building_construction_set_type(BUILDING_NONE);
