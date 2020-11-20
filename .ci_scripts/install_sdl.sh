@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-travis_retry() {
+run_with_retry() {
   local result=0
   local count=1
   while [ $count -le 3 ]
@@ -55,7 +55,7 @@ function install_sdl_lib {
   if [ ! "$(ls -A $SDL_LIB_FULL)" ]
   then
     get_sdl_lib_url "tar.gz"
-    travis_retry curl -L $SDL_LIB_URL | tar xz
+    run_with_retry curl -L $SDL_LIB_URL | tar xz
     cd $SDL_LIB_FULL
     mkdir build
     cd build
@@ -79,7 +79,7 @@ function install_sdl_macos {
   then
     mkdir -p $SDL_LIB_FULL
     get_sdl_lib_url "dmg"
-    travis_retry curl -o $SDL_LIB_FULL/image.dmg $SDL_LIB_URL
+    run_with_retry curl -o $SDL_LIB_FULL/image.dmg $SDL_LIB_URL
   fi
   local VOLUME=$(hdiutil attach $SDL_LIB_FULL/image.dmg | grep -o '/Volumes/.*')
   mkdir -p ~/Library/Frameworks
@@ -90,10 +90,10 @@ function install_sdl_macos {
 
 function download_sdl_android {
   get_sdl_lib_info $1
-  if [ ! "$(ls -A $SDL_LIB_FULL)" ]
+  if [ ! -d "$(ls -A $SDL_LIB_FULL)" ]
   then
     get_sdl_lib_url "tar.gz"
-    travis_retry curl -L $SDL_LIB_URL | tar xz
+    run_with_retry curl -L $SDL_LIB_URL | tar xz
   fi
   ln -s "$(pwd)/$SDL_LIB_FULL" "$(pwd)/ext/SDL2/"
 }
