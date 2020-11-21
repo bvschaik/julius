@@ -444,13 +444,13 @@ void building_monument_initialize(building* b)
 		case MONUMENT_START:
 			break;
 		case 2:
-			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 02"), TERRAIN_BUILDING);
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 02"), TERRAIN_BUILDING);
 			break;
 		case 3:
-			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 03"), TERRAIN_BUILDING);
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 03"), TERRAIN_BUILDING);
 			break;
 		case 4:
-			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 04"), TERRAIN_BUILDING);
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
 			map_building_tiles_add(b->id, b->x, b->y, b->size, image_group(GROUP_BUILDING_COLOSSEUM), TERRAIN_BUILDING);
@@ -748,6 +748,18 @@ int building_monument_has_monument(int type) {
 		return monument_id;
 	}
 	return 0;
+}
+
+int building_monument_count_grand_temples() {
+	int count = 0;
+	for (int i = 0; i < data.monuments_number; i++) {
+		int monument_id = monuments[i];
+		building* b = building_get(monument_id);
+		if (building_monument_is_grand_temple(b->type)) {
+			count++;
+		}
+	}
+	return count;
 }
 
 int building_monument_working(int type) {

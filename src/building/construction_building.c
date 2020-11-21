@@ -251,7 +251,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_THEATER));
             break;
         case BUILDING_COLOSSEUM:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 01"));
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 01"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
@@ -782,7 +782,7 @@ int building_construction_place_building(building_type type, int x, int y)
         return 0;
     }
 
-    if (building_monument_is_grand_temple(type) && building_count_grand_temples() >= 2) {
+    if (building_monument_is_grand_temple(type) && building_monument_count_grand_temples() >= 2) {
         city_warning_show(WARNING_MAX_GRAND_TEMPLES);
         return 0;
     }
