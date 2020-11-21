@@ -66,7 +66,7 @@ if (!$env:BINTRAY_USER_TOKEN) {
 # Only upload 32-bit build to bintray
 if ($suffix -eq "windows") {
     echo "Uploading $deploy_file to $repo/windows/$version"
-    curl -u "$env:BINTRAY_USER_TOKEN" -T "deploy/$deploy_file" https://api.bintray.com/content/bvschaik/$repo/windows/$version/$deploy_file?publish=1
+    curl -u "$env:BINTRAY_USER_TOKEN" -T "deploy/$deploy_file" "https://api.bintray.com/content/bvschaik/$repo/windows/$version/${deploy_file}?publish=1"
     if (!$?) {
         throw "Unable to upload to Bintray"
     }
