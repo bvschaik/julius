@@ -677,6 +677,18 @@ int building_monument_has_monument(int type) {
 	return 0;
 }
 
+int building_monument_count_grand_temples() {
+	int count = 0;
+	for (int i = 0; i < data.monuments_number; i++) {
+		int monument_id = monuments[i];
+		building* b = building_get(monument_id);
+		if (building_monument_is_grand_temple(b->type)) {
+			count++;
+		}
+	}
+	return count;
+}
+
 int building_monument_working(int type) {
 	int monument_id = building_monument_has_monument(type);
 	building* b = building_get(monument_id);

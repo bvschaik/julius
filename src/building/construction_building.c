@@ -751,7 +751,7 @@ int building_construction_place_building(building_type type, int x, int y)
         return 0;
     }
 
-    if (building_monument_is_grand_temple(type) && building_count_grand_temples() >= 2) {
+    if (building_monument_is_grand_temple(type) && building_monument_count_grand_temples() >= 2) {
         city_warning_show(WARNING_MAX_GRAND_TEMPLES);
         return 0;
     }
