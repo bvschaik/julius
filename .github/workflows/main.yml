@@ -4,6 +4,7 @@ on: [push, pull_request]
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - name: Linux AppImage
@@ -70,3 +71,36 @@ jobs:
         with:
           name: ${{ matrix.name }}
           path: deploy/
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows 32-bit
+            COMPILER: mingw-32
+          - name: Windows 64-bit
+            COMPILER: mingw-64
+          - name: Windows MSVC
+            COMPILER: msvc
+    name: ${{ matrix.name }}
+    runs-on: windows-latest
+    env:
+      SDL_VERSION: 2.0.12
+      SDL_MIXER_VERSION: 2.0.4
+      COMPILER: ${{ matrix.COMPILER }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Set up environment
+        run: ./.ci_scripts/install_sdl.ps1
+      - name: Build and test
+        run: ./.ci_scripts/run_build.ps1
+      - name: Upload to Bintray
+        env:
+          BINTRAY_USER_TOKEN: ${{ secrets.BINTRAY_USER_TOKEN }}
+        run: ./.ci_scripts/bintray_upload.ps1
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.name }}
+          path: deploy\
