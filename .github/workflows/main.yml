@@ -43,18 +43,20 @@ jobs:
       SDL_MIXER_LIB: ${{ matrix.SDL_MIXER_LIB }}
       BUILD_TARGET: ${{ matrix.BUILD_TARGET }}
       DEPLOY: ${{ matrix.DEPLOY }}
-      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-      ANDROID_KEYSTORE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
-      FILE_ENCRYPTION_IV: ${{ secrets.FILE_ENCRYPTION_IV }}
-      FILE_ENCRYPTION_KEY: ${{ secrets.FILE_ENCRYPTION_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Set up environment
+        env:
+          FILE_ENCRYPTION_IV: ${{ secrets.FILE_ENCRYPTION_IV }}
+          FILE_ENCRYPTION_KEY: ${{ secrets.FILE_ENCRYPTION_KEY }}
         run: |
           ./.ci_scripts/setup_environment.sh
           ./.ci_scripts/install_sdl.sh
       - name: Build and test
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEYSTORE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
         run: |
           ./.ci_scripts/run_cmake.sh
           ./.ci_scripts/run_build.sh
