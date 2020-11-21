@@ -20,6 +20,7 @@
 #define MODULE_COST 1000
 
 static void add_module_prompt(int param1, int param2);
+static void draw_temple(building_info_context* c, const char* sound_file, int group_id);
 
 static int god_id;
 
@@ -116,19 +117,9 @@ void window_building_draw_library(building_info_context *c)
     draw_culture_info(c, 70, "wavs/library.wav", 87);
 }
 
-static void draw_temple(building_info_context *c, const char *sound_file, int group_id)
-{
-    c->help_id = 67;
-    window_building_play_sound(c, sound_file);
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
-    window_building_draw_employment(c, 152);
-}
-
 static void draw_temple_info(building_info_context* c, int image_offset) {
     if (!c->has_road_access) {
-        window_building_draw_description_at(c, 16 * c->height_blocks - 164, 69, 25);
+        window_building_draw_description_at(c, 55, 69, 25);
         return;
     }
     
@@ -144,7 +135,7 @@ static void draw_temple_info(building_info_context* c, int image_offset) {
             c->x_offset + 222, c->y_offset + 60, FONT_NORMAL_BLACK);
         text_draw_multiline(translation_for(TR_BUILDING_CERES_TEMPLE_MODULE_DESC), c->x_offset + 112, c->y_offset + 90, 16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
-            c->x_offset + 16, c->y_offset + 16 * c->height_blocks - 208);
+            c->x_offset + 16, c->y_offset + 45);
         return;
     }
 
@@ -155,7 +146,7 @@ static void draw_temple_info(building_info_context* c, int image_offset) {
             c->x_offset + 132, c->y_offset + 60, FONT_NORMAL_BLACK);
         text_draw_multiline(translation_for(TR_BUILDING_VENUS_TEMPLE_MODULE_DESC), c->x_offset + 112, c->y_offset + 90, 16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
-            c->x_offset + 16, c->y_offset + 16 * c->height_blocks - 208);
+            c->x_offset + 16, c->y_offset + 45);
 
         return;
     }
@@ -179,57 +170,67 @@ static void draw_temple_info(building_info_context* c, int image_offset) {
         text_draw_multiline(translation_for(TR_BUILDING_MARS_TEMPLE_MODULE_DESC), c->x_offset + 112, c->y_offset + 90, 
             16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
-            c->x_offset + 16, c->y_offset + 16 * c->height_blocks - 208);
+            c->x_offset + 16, c->y_offset + 45);
 
         return;
     }
 
     image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
-        c->x_offset + 180, c->y_offset + 16 * c->height_blocks - 208);
+        c->x_offset + 180, c->y_offset + 45);
 
 }
 
 void window_building_draw_temple_ceres(building_info_context *c)
 {
+    building* b = building_get(c->building_id);
+
     draw_temple(c, "wavs/temple_farm.wav", 92);
-    draw_temple_info(c, 21);
+    if (b->data.monument.monument_phase <= 0) {
+        draw_temple_info(c, 21);
+    }
 }
 
 void window_building_draw_temple_neptune(building_info_context *c)
 {
+    building* b = building_get(c->building_id);
+
     draw_temple(c, "wavs/temple_ship.wav", 93);
-    draw_temple_info(c, 22);
+    if (b->data.monument.monument_phase <= 0) {
+        draw_temple_info(c, 22);
+    }
 }
 
 void window_building_draw_temple_mercury(building_info_context *c)
 {
+    building* b = building_get(c->building_id);
+
     draw_temple(c, "wavs/temple_comm.wav", 94);
-    draw_temple_info(c, 23);
+    if (b->data.monument.monument_phase <= 0) {
+        draw_temple_info(c, 23);
+    }
 }
 
 void window_building_draw_temple_mars(building_info_context *c)
 {
+    building* b = building_get(c->building_id);
+
     draw_temple(c, "wavs/temple_war.wav", 95);
-    draw_temple_info(c, 24);
+    if (b->data.monument.monument_phase <= 0) {
+        draw_temple_info(c, 24);
+    }
 }
 
 void window_building_draw_temple_venus(building_info_context *c)
 {
+    building* b = building_get(c->building_id);
+
     draw_temple(c, "wavs/temple_love.wav", 96);
-    draw_temple_info(c, 25);
+    if (b->data.monument.monument_phase <= 0) {
+        draw_temple_info(c, 25);
+    }    
 }
 
-void window_building_draw_oracle(building_info_context *c)
-{
-    c->help_id = 67;
-    window_building_play_sound(c, "wavs/oracle.wav");
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(110, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 208, 110, 1);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
-    window_building_draw_employment(c, 152);
 
-}
 
 void window_building_draw_theater(building_info_context *c)
 {
@@ -380,6 +381,10 @@ static void window_building_draw_monument_construction_process(building_info_con
     }
 }
 
+static void window_building_draw_monument_small_temple_construction_process(building_info_context* c) {
+    window_building_draw_monument_construction_process(c, TR_BUILDING_SMALL_TEMPLE_PHASE_1, TR_BUILDING_SMALL_TEMPLE_PHASE_1_TEXT, TR_BUILDING_SMALL_TEMPLE_CONSTRUCTION_DESC);
+}
+
 static void window_building_draw_monument_temple_construction_process(building_info_context* c) {
     window_building_draw_monument_construction_process(c, TR_BUILDING_GRAND_TEMPLE_PHASE_1, TR_BUILDING_GRAND_TEMPLE_PHASE_1_TEXT, TR_BUILDING_GRAND_TEMPLE_CONSTRUCTION_DESC);
 }
@@ -428,6 +433,43 @@ void draw_grand_temple_mars_military(building_info_context* c)
     lang_text_draw(89, 0, c->x_offset + 326, c->y_offset + y + 20, FONT_NORMAL_BLACK); // "Fort"
 
     window_building_draw_priority_buttons(c->x_offset + 285, c->y_offset + 55);
+}
+
+static void draw_temple(building_info_context* c, const char* sound_file, int group_id)
+{
+    c->help_id = 67;
+    building* b = building_get(c->building_id);
+    if (b->data.monument.monument_phase <= 0) {
+        window_building_play_sound(c, sound_file);
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
+        window_building_draw_employment(c, 152);
+    }
+    else {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
+        window_building_draw_monument_small_temple_construction_process(c);
+    }
+}
+
+void window_building_draw_oracle(building_info_context* c)
+{
+    c->help_id = 67;
+    building* b = building_get(c->building_id);
+    if (b->data.monument.monument_phase <= 0) {
+        window_building_play_sound(c, "wavs/oracle.wav");
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        lang_text_draw_centered(110, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
+        window_building_draw_description_at(c, 16 * c->height_blocks - 248, 110, 1);
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
+        window_building_draw_employment(c, 152);
+    }
+    else {        
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        lang_text_draw_centered(110, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
+        window_building_draw_monument_small_temple_construction_process(c);
+    }
 }
 
 static void draw_grand_temple(building_info_context* c, const char* sound_file, int name, int bonus_desc,int banner_id, int quote, int temple_god_id, int extra_y)

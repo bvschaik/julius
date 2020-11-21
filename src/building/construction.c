@@ -654,17 +654,7 @@ void building_construction_place(void)
         city_warning_show(WARNING_OUT_OF_MONEY);
         return;
     }
-    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS
-        && city_resource_count(RESOURCE_MARBLE) < 2) {
-        map_property_clear_constructing_and_deleted();
-        city_warning_show(WARNING_MARBLE_NEEDED_LARGE_TEMPLE);
-        return;
-    }
-    if (type == BUILDING_ORACLE && city_resource_count(RESOURCE_MARBLE) < 2) {
-        map_property_clear_constructing_and_deleted();
-        city_warning_show(WARNING_MARBLE_NEEDED_ORACLE);
-        return;
-    }
+
     if (type != BUILDING_CLEAR_LAND && has_nearby_enemy(x_start, y_start, x_end, y_end)) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
             game_undo_restore_map(0);

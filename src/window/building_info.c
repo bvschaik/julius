@@ -106,12 +106,7 @@ static int get_height_id(void)
             case BUILDING_SMALL_TEMPLE_MERCURY:
             case BUILDING_SMALL_TEMPLE_MARS:
             case BUILDING_SMALL_TEMPLE_VENUS:
-            case BUILDING_LARGE_TEMPLE_CERES:
-            case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            case BUILDING_LARGE_TEMPLE_MERCURY:
-            case BUILDING_LARGE_TEMPLE_MARS:
-            case BUILDING_LARGE_TEMPLE_VENUS:
-            case BUILDING_ORACLE:
+
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:
             case BUILDING_LARGE_STATUE:
@@ -168,6 +163,12 @@ static int get_height_id(void)
 
             case BUILDING_BARRACKS:
             case BUILDING_AMPHITHEATER:
+            case BUILDING_LARGE_TEMPLE_CERES:
+            case BUILDING_LARGE_TEMPLE_NEPTUNE:
+            case BUILDING_LARGE_TEMPLE_MERCURY:
+            case BUILDING_LARGE_TEMPLE_MARS:
+            case BUILDING_LARGE_TEMPLE_VENUS:
+            case BUILDING_ORACLE:
                 return 3;
 
             case BUILDING_WELL:

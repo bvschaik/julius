@@ -53,8 +53,9 @@ static int hippodrome_resources[5][RESOURCE_MAX] = {
 	{4,0,0,0,0,0,0,0,0,0,32,46,32,0,0,0,},
 	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 };
-static int oracle_lt_resources[1][RESOURCE_MAX] = {
-	{1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,}
+static int oracle_lt_resources[2][RESOURCE_MAX] = {
+	{1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
 };
 
 
@@ -83,8 +84,40 @@ int building_monument_access_point(building* b, map_point* dst)
 {
 	int dx = b->x - b->road_access_x;
 	int dy = b->y - b->road_access_y;
-	if (building_monument_is_grand_temple(b->type) || b->type == BUILDING_PANTHEON)
-	{
+	switch (b->type) {
+	case BUILDING_LARGE_TEMPLE_CERES:
+	case BUILDING_LARGE_TEMPLE_NEPTUNE:
+	case BUILDING_LARGE_TEMPLE_MERCURY:
+	case BUILDING_LARGE_TEMPLE_MARS:
+	case BUILDING_LARGE_TEMPLE_VENUS:
+	case BUILDING_LIGHTHOUSE:
+		if (dx == -1 && dy == -3) {
+			dst->x = b->x + 1;
+			dst->y = b->y + 2;
+		}
+		else if (dx == 1 && dy == -1) {
+			dst->x = b->x;
+			dst->y = b->y + 1;
+		}
+		else if (dx == -3 && dy == -1) {
+			dst->x = b->x + 2;
+			dst->y = b->y + 1;
+		}
+		else if (dx == -1 && dy == 1) {
+			dst->x = b->x + 1;
+			dst->y = b->y;
+		}
+		else {
+			dst->x = b->x;
+			dst->y = b->y;
+		}
+		return 1;
+	case BUILDING_GRAND_TEMPLE_CERES:
+	case BUILDING_GRAND_TEMPLE_NEPTUNE:
+	case BUILDING_GRAND_TEMPLE_MERCURY:
+	case BUILDING_GRAND_TEMPLE_MARS:
+	case BUILDING_GRAND_TEMPLE_VENUS:
+	case BUILDING_PANTHEON:
 		if (dx == -3 && dy == -7)
 		{
 			dst->x = b->x + 3;
@@ -106,26 +139,28 @@ int building_monument_access_point(building* b, map_point* dst)
 			return 0;
 		}
 		return 1;
-	}
-	if (b->type == BUILDING_LIGHTHOUSE) {
-		if (dx == -1 && dy == -3) {
+	case BUILDING_ORACLE:
+		if (dx == -1 && dy == -1) {
 			dst->x = b->x + 1;
-			dst->y = b->y + 2;
-		} else if (dx == 1 && dy == -1) {
+			dst->y = b->y + 1;
+		}
+		else if (dx == 1 && dy == -1) {
 			dst->x = b->x;
 			dst->y = b->y + 1;
-		} else if (dx == -3 && dy == -1) {
-			dst->x = b->x + 2;
+		}
+		else if (dx == -1 && dy == -1) {
+			dst->x = b->x + 1;
 			dst->y = b->y + 1;
-		} else if (dx == -1 && dy == 1) {
+		}
+		else if (dx == -1 && dy == 1) {
 			dst->x = b->x + 1;
 			dst->y = b->y;
-		} else {
+		}
+		else {
 			return 0;
 		}
 		return 1;
 	}
-	return 0;
 }
 
 int building_monument_add_module(building* b, int module_type) {
@@ -245,6 +280,13 @@ int building_monument_has_unfinished_monuments() {
 int building_monument_resources_needed_for_monument_type(int building_type, int resource, int phase) {
 	switch (building_type)
 	{
+	case BUILDING_LARGE_TEMPLE_CERES:
+	case BUILDING_LARGE_TEMPLE_MERCURY:
+	case BUILDING_LARGE_TEMPLE_NEPTUNE:
+	case BUILDING_LARGE_TEMPLE_MARS:
+	case BUILDING_LARGE_TEMPLE_VENUS:
+	case BUILDING_ORACLE:
+		return oracle_lt_resources[phase - 1][resource];
 	case BUILDING_GRAND_TEMPLE_CERES:
 	case BUILDING_GRAND_TEMPLE_MERCURY:
 	case BUILDING_GRAND_TEMPLE_NEPTUNE:
@@ -268,6 +310,34 @@ int building_monument_resources_needed_for_monument_type(int building_type, int 
 void building_monument_initialize(building* b)
 {
 	switch (b->type) {
+	case BUILDING_ORACLE:
+		switch (b->data.monument.monument_phase) {
+		case MONUMENT_FINISHED:
+			break;
+		case MONUMENT_START:
+			break;
+		case 2:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, image_group(GROUP_BUILDING_ORACLE), TERRAIN_BUILDING);
+			b->data.monument.monument_phase = MONUMENT_FINISHED;
+			break;
+		}
+		break;
+	case BUILDING_LARGE_TEMPLE_CERES:
+	case BUILDING_LARGE_TEMPLE_NEPTUNE:
+	case BUILDING_LARGE_TEMPLE_MERCURY:
+	case BUILDING_LARGE_TEMPLE_MARS:
+	case BUILDING_LARGE_TEMPLE_VENUS:
+		switch (b->data.monument.monument_phase) {
+		case MONUMENT_FINISHED:
+			break;
+		case MONUMENT_START:
+			break;
+		case 2:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, image_group(b->type + 6) + 1, TERRAIN_BUILDING);
+			b->data.monument.monument_phase = MONUMENT_FINISHED;
+			break;
+		}
+		break;
 	case BUILDING_GRAND_TEMPLE_CERES:
 		switch (b->data.monument.monument_phase) {
 		case MONUMENT_FINISHED:
@@ -493,6 +563,12 @@ void building_monument_initialize(building* b)
 int building_monument_is_monument(const building* b) 
 {
 	switch (b->type) {
+		case BUILDING_ORACLE:
+		case BUILDING_LARGE_TEMPLE_CERES:
+		case BUILDING_LARGE_TEMPLE_NEPTUNE:
+		case BUILDING_LARGE_TEMPLE_MERCURY:
+		case BUILDING_LARGE_TEMPLE_MARS:
+		case BUILDING_LARGE_TEMPLE_VENUS:
 		case BUILDING_GRAND_TEMPLE_CERES:
 		case BUILDING_GRAND_TEMPLE_NEPTUNE:
 		case BUILDING_GRAND_TEMPLE_MERCURY:
@@ -512,6 +588,12 @@ int building_monument_is_monument(const building* b)
 int building_monument_type_is_monument(building_type type)
 {
 	switch (type) {
+		case BUILDING_ORACLE:
+		case BUILDING_LARGE_TEMPLE_CERES:
+		case BUILDING_LARGE_TEMPLE_NEPTUNE:
+		case BUILDING_LARGE_TEMPLE_MERCURY:
+		case BUILDING_LARGE_TEMPLE_MARS:
+		case BUILDING_LARGE_TEMPLE_VENUS:
 		case BUILDING_GRAND_TEMPLE_CERES:
 		case BUILDING_GRAND_TEMPLE_NEPTUNE:
 		case BUILDING_GRAND_TEMPLE_MERCURY:
@@ -598,6 +680,13 @@ int building_monument_monument_phases(int building_type) {
 	case BUILDING_COLOSSEUM:
 	case BUILDING_HIPPODROME:
 		return 5;
+	case BUILDING_ORACLE:
+	case BUILDING_LARGE_TEMPLE_CERES:
+	case BUILDING_LARGE_TEMPLE_NEPTUNE:
+	case BUILDING_LARGE_TEMPLE_MERCURY:
+	case BUILDING_LARGE_TEMPLE_MARS:
+	case BUILDING_LARGE_TEMPLE_VENUS:
+		return 2;
 	default:
 		return 0;
 		break;

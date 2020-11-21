@@ -443,22 +443,40 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_VENUS));
             break;
         case BUILDING_LARGE_TEMPLE_CERES:
-            add_building(b, image_group(GROUP_BUILDING_TEMPLE_CERES) + 1);
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Ceres LTemp Cons 0"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            add_building(b, image_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1);
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Nept LTemp Cons 0"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_MERCURY:
-            add_building(b, image_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1);
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Merc LTemp Cons 0"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_MARS:
-            add_building(b, image_group(GROUP_BUILDING_TEMPLE_MARS) + 1);
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mars LTemp Cons 0"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_VENUS:
-            add_building(b, image_group(GROUP_BUILDING_TEMPLE_VENUS) + 1);
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Venus LTemp Cons 0"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            building_monument_initialize(b);
             break;
         case BUILDING_ORACLE:
-            add_building(b, image_group(GROUP_BUILDING_ORACLE));
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Oracle Cons"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 2);
+            building_monument_initialize(b);            
             break;
         case BUILDING_ROADBLOCK:
             add_building(b, mods_get_group_id("Areldir", "Roadblocks"));

@@ -461,7 +461,11 @@ static translation_string all_strings[] = {
     { TR_WINDOW_GAMES_PERSONAL_FUNDS, "(personal funds)" },
     { TR_WINDOW_GAMES_NOT_ENOUGH_FUNDS, "Not enough personal funds." },
     { TR_WINDOW_GAMES_NOT_ENOUGH_RESOURCES, "Not enough resources stored." },
-    { TR_WINDOW_GAMES_NO_VENUE, "Venue is not built, or has no workers."}
+    { TR_WINDOW_GAMES_NO_VENUE, "Venue is not built, or has no workers."},
+    { TR_BUILDING_SMALL_TEMPLE_PHASE_1, "(Construction)" },
+    { TR_BUILDING_SMALL_TEMPLE_PHASE_1_TEXT, "Masons and engineers are carefully constructing this structure from gleaming marble." },
+    { TR_BUILDING_SMALL_TEMPLE_CONSTRUCTION_DESC, "Constructing this temple will require material stored in a warehouse, laborers from a work camp, and engineers from an engineers' guild." },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
