@@ -1,3 +1,4 @@
+#include "core/log.h"
 #include "platform/prefs.h"
 
 #include "platform/platform.h"
