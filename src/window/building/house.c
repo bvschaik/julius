@@ -33,7 +33,12 @@ static void draw_vacant_lot(building_info_context *c)
 static void draw_population_info(building_info_context *c, int y_offset)
 {
     building *b = building_get(c->building_id);
-    image_draw(image_group(GROUP_CONTEXT_ICONS) + 13, c->x_offset + 34, y_offset + 4);
+    int icon = 13;
+    if (b->subtype.house_level <= HOUSE_GRAND_INSULA) {
+        icon++;
+    }
+
+    image_draw(image_group(GROUP_CONTEXT_ICONS) + icon, c->x_offset + 34, y_offset + 4);
     int width = text_draw_number(b->house_population, '@', " ", c->x_offset + 50, y_offset + 14, FONT_SMALL_BLACK);
     width += lang_text_draw(127, 20, c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
 
