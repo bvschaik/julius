@@ -1,6 +1,7 @@
 #include "orientation.h"
 
 #include "building/rotation.h"
+#include "building/properties.h"
 #include "city/view.h"
 #include "core/direction.h"
 #include "core/image.h"
@@ -363,6 +364,12 @@ void map_orientation_update_buildings(void)
         }
         if (b->type >= BUILDING_PINE_PATH && b->type <= BUILDING_DATE_PATH) {
             image_id = mods_get_group_id("Areldir", "Aesthetics") + (b->type - BUILDING_PINE_TREE) + (abs((b->subtype.orientation - (map_orientation / 2) % 2)) * PATH_ROTATE_OFFSET);
+            map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+        }
+        if (b->type >= BUILDING_SMALL_STATUE_ALT && b->type <= BUILDING_SMALL_STATUE_ALT_B) {
+            int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
+            image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (b->type - BUILDING_SMALL_STATUE_ALT)
+                + (abs((b->subtype.orientation - (map_orientation / 2) % 2)) * rotation_offset);
             map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         }
         if (b->type == BUILDING_LEGION_STATUE) {
