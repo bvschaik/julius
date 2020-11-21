@@ -10,7 +10,7 @@ $version = Get-Content -TotalCount 1 res\version.txt
 $repo = ""
 if ("$env:GITHUB_REF" -match "^refs/tags/v") {
     $repo = "julius"
-} elseif ("$env:GITHUB_REF" -eq "refs/head/master") {
+} elseif ("$env:GITHUB_REF" -eq "refs/heads/master") {
     $repo = "julius-dev"
 } elseif ("$env:GITHUB_REF" -match "^refs/heads/feature/(.*)") {
     $repo = "julius-branches"
