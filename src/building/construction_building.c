@@ -795,7 +795,7 @@ int building_construction_place_building(building_type type, int x, int y)
         }        
     }
 
-    if (building_monument_has_monument(type)) {
+    if (building_monument_has_monument(type) && !building_monument_type_is_mini_monument(type)) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }

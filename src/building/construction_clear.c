@@ -232,7 +232,12 @@ int building_construction_clear_land(int measure_only, int x_start, int y_start,
                     ask_confirm_fort = 1;
                 }
                 if (building_monument_is_monument(b)) {
-                    ask_confirm_monument = 1;
+                    if (building_monument_type_is_mini_monument(b->type)) {
+                        confirm.monument_confirmed = 1;
+                    }
+                    else {
+                        ask_confirm_monument = 1;
+                    }                    
                 }
             }
             if (map_is_bridge(grid_offset)) {

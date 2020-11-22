@@ -48,6 +48,7 @@ int building_monument_has_unfinished_monuments(void);
 void building_monument_initialize(building* b);
 int building_monument_is_monument(const building *b);
 int building_monument_type_is_monument(building_type type);
+int building_monument_type_is_mini_monument(building_type type);
 int building_monument_is_grand_temple(building_type type);
 int building_monument_needs_resource(building* b, int resource);
 int building_monument_needs_resources(building* b);

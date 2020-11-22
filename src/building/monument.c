@@ -610,6 +610,21 @@ int building_monument_type_is_monument(building_type type)
 	}
 }
 
+int building_monument_type_is_mini_monument(building_type type)
+{
+	switch (type) {
+	case BUILDING_ORACLE:
+	case BUILDING_LARGE_TEMPLE_CERES:
+	case BUILDING_LARGE_TEMPLE_NEPTUNE:
+	case BUILDING_LARGE_TEMPLE_MERCURY:
+	case BUILDING_LARGE_TEMPLE_MARS:
+	case BUILDING_LARGE_TEMPLE_VENUS:
+		return 1;
+	default:
+		return 0;
+	}
+}
+
 int building_monument_is_grand_temple(building_type type)
 {
 	switch (type) {
