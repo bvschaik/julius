@@ -16,12 +16,12 @@ function get_sdl_lib_url {
 }
 
 function install_sdl_lib {
-  MODULE=$1
-  VERSION=$2
-  FILENAME=deps/$MODULE-$VERSION.tar.gz
-  BUILDDIR=deps/build/$MODULE-$VERSION
-  LIBDIR=deps/$MODULE-$VERSION
-  ROOT=$PWD
+  local MODULE=$1
+  local VERSION=$2
+  local FILENAME=deps/$MODULE-$VERSION.tar.gz
+  local BUILDDIR=deps/build/$MODULE-$VERSION
+  local LIBDIR=deps/$MODULE-$VERSION
+  local ROOT=$PWD
   if [ ! -f "$FILENAME" ] || [ ! -d "$LIBDIR" ]
   then
     if [ ! -f "$FILENAME" ]
@@ -45,9 +45,9 @@ function install_sdl_lib {
 }
 
 function install_sdl_macos {
-  MODULE=$1
-  VERSION=$2
-  FILENAME=deps/$MODULE-$VERSION.dmg
+  local MODULE=$1
+  local VERSION=$2
+  local FILENAME=deps/$MODULE-$VERSION.dmg
   if [ ! -f "$FILENAME" ]
   then
     get_sdl_lib_url $MODULE $VERSION "dmg"
@@ -61,10 +61,10 @@ function install_sdl_macos {
 }
 
 function install_sdl_android {
-  MODULE=$1
-  VERSION=$2
-  DIRNAME=deps/$MODULE-$VERSION
-  FILENAME=$DIRNAME.tar.gz
+  local MODULE=$1
+  local VERSION=$2
+  local DIRNAME=deps/$MODULE-$VERSION
+  local FILENAME=$DIRNAME.tar.gz
   if [ ! -f "$FILENAME" ]
   then
     get_sdl_lib_url $MODULE $VERSION "tar.gz"
