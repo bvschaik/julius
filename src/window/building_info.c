@@ -616,7 +616,13 @@ static void draw_background(void)
             window_building_draw_fountain(&context);
         } else if (btype == BUILDING_WELL) {
             window_building_draw_well(&context);
-        } else if (btype == BUILDING_SMALL_STATUE || btype == BUILDING_MEDIUM_STATUE || btype == BUILDING_LARGE_STATUE || btype == BUILDING_SMALL_STATUE_ALT || btype == BUILDING_SMALL_STATUE_ALT_B) {
+        } else if (btype == BUILDING_SMALL_STATUE || 
+            btype == BUILDING_MEDIUM_STATUE || 
+            btype == BUILDING_LARGE_STATUE || 
+            btype == BUILDING_SMALL_STATUE_ALT || 
+            btype == BUILDING_SMALL_STATUE_ALT_B || 
+            btype == BUILDING_LEGION_STATUE || 
+            btype == BUILDING_HORSE_STATUE) {
             window_building_draw_statue(&context);
         } else if (btype == BUILDING_SMALL_POND || btype == BUILDING_LARGE_POND) {
             window_building_draw_pond(&context);

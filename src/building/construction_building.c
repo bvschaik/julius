@@ -657,7 +657,10 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Arena"), "Arena ON"));
             break;
         case BUILDING_HORSE_STATUE:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            orientation = building_rotation_get_rotation();
+            b->subtype.orientation = orientation;
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "Eque Statue") + orientation % 2);
+            break;
             break;
         case BUILDING_DOLPHIN_FOUNTAIN:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));

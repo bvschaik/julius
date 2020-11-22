@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE mod>
+
+<mod author="Lizzaran" name="Aesthetics_L">
+<!-- Note: Rotation variants for Vanilla Small Statue -->
+	<image id="Circus NWSE 31" width="58" height="53">
+		<layer group="61" image="0" part="footprint" x="0" y="-1" />
+	    <layer src="Small_Statue_Rotated" />		
+	</image>
+
+</mod>		

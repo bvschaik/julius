@@ -47,7 +47,7 @@ mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_TAVERN, { 2, 0, 0, 0, 0 }, "Areldir", "Tavern", "Tavern OFF"},
     {BUILDING_GRAND_GARDEN, { 2, 1, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"},
     {BUILDING_ARENA, { 3, 0, 0, 0, 0 }, "Areldir", "Arena", "Arena OFF" },
-    {BUILDING_HORSE_STATUE, { 3, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
+    {BUILDING_HORSE_STATUE, { 3, 1, 0, 0, 1 }, "Areldir", "Aesthetics", "Eque Statue"},
     {BUILDING_DOLPHIN_FOUNTAIN, { 2, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
     {BUILDING_HEDGE_DARK, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
     {BUILDING_HEDGE_LIGHT, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},

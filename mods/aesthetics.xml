@@ -263,4 +263,47 @@
     <image id="sml col Y R" src="Small_Column_Yellow_Rotated" />	
 
 	
+<!-- Note: Assets for 'Sunlit Hedge' including all directions and intersection variants -->
+    <image id="L Hedge 01" src="Light_Green_Hedge" />
+    <image id="L Hedge 02" src="Light_Green_Hedge_R" />
+    <image id="L Hedge 03" src="Light_Green_Hedge_Corner_01" />
+    <image id="L Hedge 04" src="Light_Green_Hedge_Corner_02" />
+    <image id="L Hedge 05" src="Light_Green_Hedge_Corner_03" />
+    <image id="L Hedge 06" src="Light_Green_Hedge_Corner_04" />
+    <image id="L Hedge 07" src="Light_Green_Hedge_Intersection_01" />
+    <image id="L Hedge 08" src="Light_Green_Hedge_Intersection_02" />
+    <image id="L Hedge 09" src="Light_Green_Hedge_Intersection_03" />
+    <image id="L Hedge 10" src="Light_Green_Hedge_Intersection_04" />
+    <image id="L Hedge 11" src="Light_Green_Hedge_Intersections_4w" />
+	
+<!-- Note: Assets for 'Verdant Hedge' including all directions and intersection variants -->
+    <image id="D Hedge 01" src="Dark_Green_Hedge" />
+    <image id="D Hedge 02" src="Dark_Green_Hedge_R" />
+    <image id="D Hedge 03" src="Dark_Green_Hedge_Corner_01" />
+    <image id="D Hedge 04" src="Dark_Green_Hedge_Corner_02" />
+    <image id="D Hedge 05" src="Dark_Green_Hedge_Corner_03" />
+    <image id="D Hedge 06" src="Dark_Green_Hedge_Corner_04" />
+    <image id="D Hedge 07" src="Dark_Green_Hedge_Intersection_01" />
+    <image id="D Hedge 08" src="Dark_Green_Hedge_Intersection_02" />
+    <image id="D Hedge 09" src="Dark_Green_Hedge_Intersection_03" />
+    <image id="D Hedge 10" src="Dark_Green_Hedge_Intersection_04" />
+    <image id="D Hedge 11" src="Dark_Green_Hedge_Intersections_4w" />
+		
+<!-- Note: Assets for 'Garden path' all directions and intersection variants -->
+    <image id="Garden Path 01" src="Path_Corner_01" />
+    <image id="Garden Path 02" src="Path_Corner_02" />
+    <image id="Garden Path 03" src="Path_Corner_03" />
+    <image id="Garden Path 04" src="Path_Corner_04" />
+    <image id="Garden Path 05" src="Path_Intersection_01" />
+    <image id="Garden Path 06" src="Path_Intersection_02" />
+    <image id="Garden Path 07" src="Path_Intersection_03" />
+    <image id="Garden Path 08" src="Path_Intersection_04" />
+    <image id="Garden Path 09" src="Path_Intersection_4w" />
+			
+<!-- Note: Assets for 'Equestrian Statue' with rotation variant -->	
+    <image id="Eque Statue" src="Equestrian_Statue" />
+    <image id="Eque Statue R" src="Equestrian_Statue_R" />	
+	
+
+	
 </mod>
