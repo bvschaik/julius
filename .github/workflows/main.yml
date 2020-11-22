@@ -13,14 +13,14 @@ jobs:
             DEPLOY: appimage
           - name: Linux x64
             os: ubuntu-18.04
-            SDL_LIB: SDL2-2.0.12
-            SDL_MIXER_LIB: SDL2_mixer-2.0.4
+            SDL_VERSION: 2.0.12
+            SDL_MIXER_VERSION: 2.0.4
             BUILD_TARGET: linux
             DEPLOY: linux
           - name: macOS
             os: macos-latest
-            SDL_LIB: SDL2-2.0.12
-            SDL_MIXER_LIB: SDL2_mixer-2.0.4
+            SDL_VERSION: 2.0.12
+            SDL_MIXER_VERSION: 2.0.4
             BUILD_TARGET: mac
             DEPLOY: mac
           - name: Nintendo Switch
@@ -33,15 +33,15 @@ jobs:
             DEPLOY: vita
           - name: Android
             os: ubuntu-18.04
-            SDL_LIB: SDL2-2.0.12
-            SDL_MIXER_LIB: SDL2_mixer-2.0.4
+            SDL_VERSION: 2.0.12
+            SDL_MIXER_VERSION: 2.0.4
             BUILD_TARGET: android
             DEPLOY: android
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     env:
-      SDL_LIB: ${{ matrix.SDL_LIB }}
-      SDL_MIXER_LIB: ${{ matrix.SDL_MIXER_LIB }}
+      SDL_VERSION: ${{ matrix.SDL_VERSION }}
+      SDL_MIXER_VERSION: ${{ matrix.SDL_MIXER_VERSION }}
       BUILD_TARGET: ${{ matrix.BUILD_TARGET }}
       DEPLOY: ${{ matrix.DEPLOY }}
     steps:
