@@ -77,10 +77,13 @@ jobs:
       matrix:
         include:
           - name: Windows 32-bit
+            cache-key: mingw
             COMPILER: mingw-32
           - name: Windows 64-bit
+            cache-key: mingw
             COMPILER: mingw-64
           - name: Windows MSVC
+            cache-key: msvc
             COMPILER: msvc
     name: ${{ matrix.name }}
     runs-on: windows-latest
@@ -91,6 +94,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: deps
+          key: windows-${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
       - name: Set up environment
         run: ./.ci_scripts/install_sdl.ps1
       - name: Build and test
