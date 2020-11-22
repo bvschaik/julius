@@ -65,9 +65,6 @@ void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord)
 
 void widget_city_draw_construction_cost_and_size(void)
 {
-    if (!building_construction_in_progress()) {
-        return;
-    }
     if (scroll_in_progress()) {
         return;
     }
