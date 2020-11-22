@@ -6,7 +6,6 @@ mkdir -Force deps
 if ("${env:COMPILER}" -eq "msvc") {
     if ((Test-Path deps/SDL.zip) -and (Test-Path deps/SDL_mixer.zip)) {
         echo "Using cached SDL libraries"
-        dir deps
     } else {
         echo "Downloading SDL"
         curl "https://libsdl.org/release/SDL2-devel-${env:SDL_VERSION}-VC.zip" -o deps/SDL.zip
@@ -22,7 +21,6 @@ if ("${env:COMPILER}" -eq "msvc") {
 } else {
     if ((Test-Path deps/SDL.tar.gz) -and (Test-Path deps/SDL_mixer.tar.gz)) {
         echo "Using cached SDL libraries"
-        dir deps
     } else {
         echo "Downloading SDL"
         curl "https://libsdl.org/release/SDL2-devel-${env:SDL_VERSION}-mingw.tar.gz" -o deps/SDL.tar.gz
