@@ -139,6 +139,28 @@ int building_monument_access_point(building* b, map_point* dst)
 			return 0;
 		}
 		return 1;
+	case BUILDING_COLOSSEUM:
+		if (dx == -2 && dy == -5)
+		{
+			dst->x = b->x + 2;
+			dst->y = b->y + 4;
+		}
+		else if (dx == 1 && dy == -2) {
+			dst->x = b->x;
+			dst->y = b->y + 2;
+		}
+		else if (dx == -2 && dy == 1) {
+			dst->x = b->x + 2;
+			dst->y = b->y;
+		}
+		else if (dx == -5 && dy == -2) {
+			dst->x = b->x + 4;
+			dst->y = b->y + 2;
+		}
+		else {
+			return 0;
+		}
+		return 1;
 	case BUILDING_ORACLE:
 		if (dx == -1 && dy == -1) {
 			dst->x = b->x + 1;
@@ -159,6 +181,10 @@ int building_monument_access_point(building* b, map_point* dst)
 		else {
 			return 0;
 		}
+		return 1;
+	case BUILDING_HIPPODROME:
+		dst->x = b->x;
+		dst->y = b->y;		
 		return 1;
 	}
 }
@@ -744,6 +770,14 @@ int building_monument_progress(building* b)
 	}
 
 	b->data.monument.monument_phase++;
+	if (b->next_part_building_id) {
+		building* b2 = building_get(b->next_part_building_id);
+		b2->data.monument.monument_phase++;
+
+		building* b3 = building_get(b2->next_part_building_id);
+		b3->data.monument.monument_phase++;
+	}
+
 	building_monument_initialize(b);
 
 	if (b->data.monument.monument_phase == MONUMENT_FINISHED) {

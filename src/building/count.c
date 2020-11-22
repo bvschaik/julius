@@ -1,6 +1,7 @@
 #include "count.h"
 
 #include "building/building.h"
+#include "building/monument.h"
 #include "city/buildings.h"
 #include "city/health.h"
 #include "figure/figure.h"
@@ -202,7 +203,7 @@ void building_count_update(void)
                 b->immigrant_figure_id = 0;
             }
         }
-        if (is_entertainment_venue) {
+        if (is_entertainment_venue && (!building_monument_is_monument(b) || b->data.monument.monument_phase == MONUMENT_FINISHED)) {
             // update number of shows
             int shows = 0;
             if (b->data.entertainment.days1 > 0) {

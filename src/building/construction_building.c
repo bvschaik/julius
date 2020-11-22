@@ -550,6 +550,7 @@ static void add_to_map(int type, building *b, int size,
             break;
         case BUILDING_HIPPODROME:            
             add_hippodrome(b);
+            building_monument_initialize(b);
             break;
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_JAVELIN:

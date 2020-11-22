@@ -336,6 +336,7 @@ static void spawn_figure_gladiator_school(building *b)
 static void spawn_figure_lion_house(building *b)
 {
     check_labor_problem(b);
+    check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
