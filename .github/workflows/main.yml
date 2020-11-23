@@ -18,6 +18,12 @@ jobs:
             SDL_MIXER_VERSION: 2.0.4
             BUILD_TARGET: linux
             DEPLOY: linux
+          - name: Linux x64 (old SDL versions)
+            os: ubuntu-16.04
+            cache-key: linux-x64-old-sdl
+            SDL_VERSION: 2.0.0
+            SDL_MIXER_VERSION: 2.0.0
+            BUILD_TARGET: linux-old
           - name: macOS
             os: macos-latest
             cache-key: macos

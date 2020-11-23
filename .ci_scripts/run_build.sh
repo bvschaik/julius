@@ -27,6 +27,9 @@ case "$BUILD_TARGET" in
 	cd build && make && make test
 	zip julius.zip julius
 	;;
+"linux-old")
+	cd build && make
+	;;
 "android")
 	cd android
 	if [ ! -f julius.keystore ]
