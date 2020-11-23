@@ -18,6 +18,7 @@ struct terrain_image_context {
     unsigned char current_item_offset;
 };
 
+
 // 0 = no match
 // 1 = match
 // 2 = don't care

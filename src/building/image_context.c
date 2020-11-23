@@ -20,6 +20,9 @@ struct building_image_context {
 };
 
 
+static char connecting_grid[GRID_SIZE * GRID_SIZE] = {0};
+static int connecting_grid_building = 0;
+
 // 0 = no match
 // 1 = match
 // 2 = don't care
@@ -55,6 +58,23 @@ static struct {
     {building_images_hedges, 16}
 };
 
+void building_image_context_clear_connection_grid() 
+{
+    for (int i = 0; i < GRID_SIZE*GRID_SIZE; i++)
+    {
+        connecting_grid[i] = 0;
+    }
+}
+
+void building_image_context_set_connecting_type(int building_type)
+{
+    connecting_grid_building = building_type;
+}
+
+void building_image_context_mark_connection_grid(int map_grid)
+{
+    connecting_grid[map_grid] = 1;
+}
 
 static void clear_current_offset(struct building_image_context* items, int num_items)
 {
@@ -101,11 +121,11 @@ const building_image* building_image_context_get_hedges(int grid_offset, int inc
     int tiles[MAX_TILES] = { 0,0,0,0,0,0,0,0 };
     for (int i = 0; i < MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
-        if (!map_terrain_is(offset, TERRAIN_BUILDING)) {
+        if (!map_terrain_is(offset, TERRAIN_BUILDING) && !connecting_grid[offset]) {
             continue;
         }
         building* b = building_get(map_building_at(offset));
-        if (b->type == BUILDING_HEDGE_DARK || b->type == BUILDING_HEDGE_LIGHT) {
+        if (b->type == BUILDING_HEDGE_DARK || b->type == BUILDING_HEDGE_LIGHT || connecting_grid[offset]) {
                 tiles[i] = 1;
         }
     }
@@ -126,25 +146,31 @@ void building_image_context_init(void)
 
 void building_image_context_set_hedge_image(int grid_offset)
 {
-    if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+    if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) && !connecting_grid[grid_offset]) {
         return;
     }
     building* b = building_get(map_building_at(grid_offset));
-    if (b->type != BUILDING_HEDGE_DARK && b->type != BUILDING_HEDGE_LIGHT) {
+    if (b->type != BUILDING_HEDGE_DARK && b->type != BUILDING_HEDGE_LIGHT && !connecting_grid[grid_offset]) {
         return;
-
     }
     const building_image* img = building_image_context_get_hedges(grid_offset, 1);
     int offset = img->group_offset;
     int image_group;
-    if (b->type == BUILDING_HEDGE_DARK) {
+    if (b->type == BUILDING_HEDGE_DARK || (connecting_grid_building == BUILDING_HEDGE_DARK && connecting_grid[grid_offset])) {
         image_group = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "D Hedge 01");
     } else {
         image_group = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "L Hedge 01");
     }
+    if (connecting_grid[grid_offset]) {
+        map_image_set(grid_offset, image_group + offset);
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_mark_draw_tile(grid_offset);
+    }
+    else {
+        map_building_tiles_add(b->id, b->x, b->y, b->size, image_group + offset, TERRAIN_BUILDING);
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_mark_draw_tile(grid_offset);
+    }
 
-    map_building_tiles_add(b->id, b->x, b->y, b->size, image_group+offset, TERRAIN_BUILDING);
-    map_property_set_multi_tile_size(grid_offset, 1);
-    map_property_mark_draw_tile(grid_offset);
 }
 
