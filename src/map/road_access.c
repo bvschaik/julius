@@ -382,6 +382,37 @@ int map_road_to_largest_network_grand_temple(int x, int y, int* x_road, int* y_r
     return -1;
 }
 
+int map_road_to_largest_network_colosseum(int x, int y, int* x_road, int* y_road)
+{
+    int min_index = 12;
+    int min_grid_offset = -1;
+    check_road_to_largest_network_grand_temple(x + 2, y + 4, &min_index, &min_grid_offset);
+    check_road_to_largest_network_grand_temple(x + 4, y + 2, &min_index, &min_grid_offset);
+    check_road_to_largest_network_grand_temple(x + 2, y, &min_index, &min_grid_offset);
+    check_road_to_largest_network_grand_temple(x, y + 2, &min_index, &min_grid_offset);
+
+    if (min_index < 12) {
+        *x_road = map_grid_offset_to_x(min_grid_offset);
+        *y_road = map_grid_offset_to_y(min_grid_offset);
+        return min_grid_offset;
+    }
+
+    int min_dist = 100000;
+    min_grid_offset = -1;
+    int min_x_offset = -1;
+    check_min_dist_grand_temple(map_grid_offset(x + 2, y), 2, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_grand_temple(map_grid_offset(x, y + 2), 2, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_grand_temple(map_grid_offset(x + 4, y + 2), 4, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_grand_temple(map_grid_offset(x + 2, y + 4), 4, &min_dist, &min_grid_offset, &min_x_offset);
+
+    if (min_grid_offset >= 0) {
+        *x_road = map_grid_offset_to_x(min_grid_offset) + min_x_offset;
+        *y_road = map_grid_offset_to_y(min_grid_offset);
+        return min_grid_offset + min_x_offset;
+    }
+    return -1;
+}
+
 int map_road_to_largest_network_lighthouse(int x, int y, int* x_road, int* y_road) {
     int min_index = 12;
     int min_grid_offset = -1;

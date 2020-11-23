@@ -430,6 +430,12 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(1, 2)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(2, 1)) ? 1 : 0;
             }
+            if (b->type == BUILDING_COLOSSEUM) {
+                tiles[i] = (offset == b->grid_offset + map_grid_delta(0, 2)) ? 1 : 0;
+                tiles[i] |= (offset == b->grid_offset + map_grid_delta(2, 0)) ? 1 : 0;
+                tiles[i] |= (offset == b->grid_offset + map_grid_delta(2, 4)) ? 1 : 0;
+                tiles[i] |= (offset == b->grid_offset + map_grid_delta(4, 2)) ? 1 : 0;
+            }
         }
     }
 }
