@@ -20,10 +20,12 @@ jobs:
             DEPLOY: linux
           - name: Linux x64 (old SDL versions)
             os: ubuntu-16.04
-            cache-key: linux-x64-old-sdl
+            cache-key: linux-x64
             SDL_VERSION: 2.0.0
             SDL_MIXER_VERSION: 2.0.0
-            BUILD_TARGET: linux-old
+            BUILD_TARGET: linux
+            DEPLOY: linux
+            SKIP_BINTRAY: true
           - name: macOS
             os: macos-latest
             cache-key: macos
@@ -53,6 +55,7 @@ jobs:
       SDL_MIXER_VERSION: ${{ matrix.SDL_MIXER_VERSION }}
       BUILD_TARGET: ${{ matrix.BUILD_TARGET }}
       DEPLOY: ${{ matrix.DEPLOY }}
+      SKIP_BINTRAY: ${{ matrix.SKIP_BINTRAY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1

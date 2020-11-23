@@ -27,9 +27,6 @@ case "$BUILD_TARGET" in
 	cd build && make && make test
 	zip julius.zip julius
 	;;
-"linux-old")
-	cd build && make
-	;;
 "android")
 	cd android
 	if [ ! -f julius.keystore ]
@@ -49,6 +46,9 @@ case "$BUILD_TARGET" in
 	if [ -f julius/build/outputs/apk/release/julius-release.apk ]
 	then
 		cp julius/build/outputs/apk/release/julius-release.apk ../build/julius.apk
+	elif [ -f julius/build/outputs/apk/debug/julius-debug.apk ]
+	then
+		cp julius/build/outputs/apk/debug/julius-debug.apk ../build/julius-debug.apk
 	fi
 	;;
 *)

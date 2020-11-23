@@ -61,6 +61,11 @@ case "$DEPLOY" in
   then
     DEPLOY_FILE=julius-$VERSION-android.apk
     cp "${build_dir}/julius.apk" "deploy/$DEPLOY_FILE"
+  elif [ -f "${build_dir}/julius-debug.apk" ]
+  then
+    DEPLOY_FILE=julius-debug-$VERSION-android.apk
+    cp "${build_dir}/julius-debug.apk" "deploy/$DEPLOY_FILE"
+    export SKIP_BINTRAY=true
   fi
   ;;
 *)
@@ -68,6 +73,12 @@ case "$DEPLOY" in
   exit
   ;;
 esac
+
+if [ ! -z "$SKIP_BINTRAY" ]
+then
+  echo "Build is configured to skip Bintray deploy - skipping deploy to Bintray"
+  exit
+fi
 
 if [ -z "$REPO" ] || [ -z "$DEPLOY_FILE" ]
 then
