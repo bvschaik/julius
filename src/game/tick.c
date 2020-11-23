@@ -85,6 +85,7 @@ static void advance_month(void)
     decrement_blessing_festival_boost();
     city_finance_calculate_tourism_rating();
 
+    map_tiles_update_all_hedges();
     map_tiles_update_all_roads();
     map_tiles_update_all_water();
     map_routing_update_land_citizen();

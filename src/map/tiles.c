@@ -1,5 +1,6 @@
 #include "tiles.h"
 
+#include "building/image_context.h"
 #include "city/map.h"
 #include "city/view.h"
 #include "core/direction.h"
@@ -28,6 +29,7 @@
             TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 
 static int aqueduct_include_construction = 0;
+
 
 static int is_clear(int x, int y, int size, int disallowed_terrain, int check_image)
 {
@@ -1013,6 +1015,16 @@ void map_tiles_update_region_rubble(int x_min, int y_min, int x_max, int y_max)
 {
     foreach_region_tile(x_min, y_min, x_max, y_max, set_rubble_image);
 }
+
+static void update_hedge_tile(int x, int y, int grid_offset)
+{
+        building_image_context_set_hedge_image(grid_offset);
+}
+void map_tiles_update_all_hedges()
+{
+    foreach_map_tile(update_hedge_tile);
+}
+
 
 static void clear_access_ramp_image(int x, int y, int grid_offset)
 {

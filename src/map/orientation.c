@@ -65,6 +65,8 @@ void map_orientation_change(int counter_clockwise)
     map_tiles_update_all_plazas();
     map_tiles_update_all_walls();
     map_tiles_update_all_aqueducts(0);
+    map_tiles_update_all_hedges();
+
 
     map_orientation_update_buildings();
     map_bridge_update_after_rotate(counter_clockwise);

@@ -188,6 +188,7 @@ static int plot_draggable_building(int x_start, int y_start, int x_end, int y_en
         }
     }
 
+
     return items_placed;
 }
 
@@ -210,6 +211,7 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
             }
         }
     }
+
 
     map_routing_update_land();
     return items_placed;
@@ -545,6 +547,11 @@ void building_construction_update(int x, int y, int grid_offset)
         int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"),"sml statue 2") + (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) current_cost *= items_placed;
+    } else if (type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT) {
+        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "L Hedge 01") + (BUILDING_HEDGE_LIGHT - type)*11;
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
+        if (items_placed >= 0) current_cost *= items_placed;
+        map_tiles_update_all_hedges();
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
         int rotation = building_rotation_get_rotation();
         int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
@@ -658,7 +665,7 @@ void building_construction_place(void)
     if (type != BUILDING_CLEAR_LAND && has_nearby_enemy(x_start, y_start, x_end, y_end)) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
             game_undo_restore_map(0);
-        } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS) {
+        } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT) {
             game_undo_restore_map(1);
         } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
             map_bridge_reset_building_length();
@@ -756,8 +763,11 @@ void building_construction_place(void)
         int rotation_offset = building_properties_for_type(type)->rotation_offset;
         int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
-    }
-    else if (type == BUILDING_DECORATIVE_COLUMN) {
+    } else if (type >= BUILDING_HEDGE_DARK && type <= BUILDING_HEDGE_LIGHT) {
+        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "D Hedge 01") + (type - BUILDING_HEDGE_DARK) * 12;
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, 0);
+        map_tiles_update_all_hedges();
+    } else if (type == BUILDING_DECORATIVE_COLUMN) {
         int rotation = building_rotation_get_rotation();
         int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
