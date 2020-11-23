@@ -18,13 +18,22 @@ Julius supports Windows Vista and higher. Windows XP has limited support.
 1. Install Caesar 3 using the provided installer (GOG/Steam/CD-ROM).
 2. Download the [latest release](https://github.com/bvschaik/julius/releases/latest) of Julius or compile from source.
 3. Copy julius.exe, SDL2.dll, SDL2_mixer.dll and libmpg123.dll to the folder where you installed Caesar 3
-4. Run julius.exe
+4. Run Julius
 
 **Note:** If you install Caesar 3 using Steam and plan to use Steam to launch the game,
 ***do not*** rename `julius.exe` to `c3.exe`.
 Doing so will make the mouse cursor disappear when using right-click to scroll.
    
 Instead, open `SierraLauncher.ini` and replace `Game1Exe=c3.exe` with the `Game1Exe=julius.exe`.
+
+### Windows XP
+
+Julius still works on Windows XP, but the most recent version of SDL does not. To get it to work:
+
+1. Follow the general instructions for Windows
+2. Download [SDL 2.0.9](http://libsdl.org/release/SDL2-2.0.9-win32-x86.zip)
+3. Extract `SDL2.dll` from that zip file to the same folder where you installed Julius, overwriting the existing file
+4. Run Julius
 
 ## Linux/BSD
 
@@ -69,6 +78,43 @@ Another option is to get the game files by installing Caesar 3 using [WINE](http
 3. Run Julius with the path where the game is installed:
 
         $ julius path-to-c3-directory
+
+## MacOS
+
+Follow these instructions for either the GOG or CD-ROM version of the game.
+
+### GOG: using InnoExtract
+
+1. Install InnoExtract through [Homebrew](https://brew.sh/):
+   ```
+   $ brew install innoextract
+   ```
+2. Download the Caesar 3 offline installer exe from GOG
+3. Extract the setup file to a new `app` folder:
+   ```
+   $ innoextract -m setup_caesar3_2.0.0.9.exe
+   ```
+4. Start Julius, and point the game to the `app` folder that was just extracted
+
+### CD-ROM: using UnShield
+
+1. Install Unshield through [Homebrew](https://brew.sh/):
+   ```
+   $ brew install unshield
+   ```
+2. Open a Terminal in the directory where you want the Caesar 3 files
+3. Insert your CD-ROM and run the following command to extract the installer (replace `{CD}` with the name of your C3 cd-rom):
+   ```
+   $ unshield -g Exe x /Volumes/{CD}/data1.cab
+   ```
+4. Copy sound and video files over to the Exe directory:
+   ```
+   $ cp -r /Volumes/{CD}/555 Exe
+   $ cp -r /Volumes/{CD}/SMK Exe
+   $ cp -r /Volumes/{CD}/wavs Exe
+   $ cp -r /Volumes/{CD}/Soundfx/* Exe/wavs
+   ```
+5. Start Julius, and point the game to the `Exe` folder that was just extracted
 
 ## Vita
 
@@ -154,7 +200,7 @@ A mouse compatibility list is available
 
 ## Android
 
-Like on other platforms, you must first make sure you obtain the original Cesar III files to your
+Like on other platforms, you must first make sure you obtain the original Caesar III files to your
 Android device. You may do so by installing Caesar III on your computer then copying the files to
 Android, or, if you have purchased Caesar III from GOG, you can use [Inno Setup Extractor](https://play.google.com/store/apps/details?id=uk.co.armedpineapple.innoextract&hl=pt_PT&gl=US).
 
