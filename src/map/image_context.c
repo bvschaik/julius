@@ -424,7 +424,7 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(6, 3)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(3, 6)) ? 1 : 0;
             }
-            if (b->type == BUILDING_LIGHTHOUSE) {
+            if (b->type == BUILDING_LIGHTHOUSE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
                 tiles[i] = (offset == b->grid_offset + map_grid_delta(0, 1)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(1, 0)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(1, 2)) ? 1 : 0;
