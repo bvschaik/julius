@@ -3,6 +3,7 @@
 #include "building/construction.h"
 #include "building/count.h"
 #include "building/industry.h"
+#include "building/model.h"
 #include "building/properties.h"
 #include "city/buildings.h"
 #include "city/finance.h"
@@ -573,6 +574,7 @@ static void draw_bridge(const map_tile *tile, int x, int y, building_type type)
         if (length > 1) {
             draw_flat_tile(x + x_delta * (length - 1), y + y_delta * (length - 1), COLOR_MASK_RED);
         }
+        building_construction_set_cost(0);
     } else {
         if (dir == DIR_0_TOP || dir == DIR_6_LEFT) {
             for (int i = length - 1; i >= 0; i--) {
@@ -585,6 +587,7 @@ static void draw_bridge(const map_tile *tile, int x, int y, building_type type)
                 city_draw_bridge_tile(x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
             }
         }
+        building_construction_set_cost(model_get_building(type)->cost * length);
     }
 }
 
