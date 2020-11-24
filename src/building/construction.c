@@ -277,6 +277,7 @@ void building_construction_set_type(building_type type)
     data.start.y = 0;
     data.end.x = 0;
     data.end.y = 0;
+    data.cost = 0;
 
     if (type != BUILDING_NONE) {
         data.required_terrain.wall = 0;
