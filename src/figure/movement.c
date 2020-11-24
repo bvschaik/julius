@@ -4,6 +4,7 @@
 #include "building/destruction.h"
 #include "building/roadblock.h"
 #include "core/calc.h"
+#include "core/config.h"
 #include "figure/combat.h"
 #include "figure/route.h"
 #include "figure/service.h"
@@ -294,6 +295,9 @@ void figure_movement_init_roaming(figure *f)
     f->roam_choose_destination = 0;
     f->roam_ticks_until_next_turn = -1;
     f->roam_turn_direction = 2;
+    if (config_get(CONFIG_GP_CH_ROAMERS_DONT_SKIP_CORNERS)) {
+        f->disallow_diagonal = 1;
+    }
     int roam_dir = b->figure_roam_direction;
     b->figure_roam_direction += 2;
     if (b->figure_roam_direction > 6) {

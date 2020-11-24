@@ -49,7 +49,7 @@ typedef struct {
         unsigned char soldier;
         signed char enemy;
     } formation_position_y;
-    short __unused_24;
+    short disallow_diagonal;
     short wait_ticks;
     unsigned char action_state;
     unsigned char progress_on_tile;

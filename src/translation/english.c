@@ -75,6 +75,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_MULTIPLE_BARRACKS, "Allow building multiple barracks" },
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warehouses don't accept anything when built"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Houses don't expand into gardens"},
+    {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Roaming walkers don't skip corners"},
     {TR_HOTKEY_TITLE, "Augustus hotkey configuration"},
     {TR_HOTKEY_LABEL, "Hotkey"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},

@@ -49,6 +49,10 @@ void figure_route_add(figure *f)
     f->routing_path_id = 0;
     f->routing_path_current_tile = 0;
     f->routing_path_length = 0;
+    int direction_limit = 8;
+    if (f->disallow_diagonal) {
+        direction_limit = 4;
+    }
     int path_id = get_first_available();
     if (!path_id) {
         return;
@@ -111,11 +115,11 @@ void figure_route_add(figure *f)
                     f->destination_x, f->destination_y, 4);
                 if (path_length <= 0) {
                     path_length = map_routing_get_path(data.direction_paths[path_id], f->x, f->y,
-                        f->destination_x, f->destination_y, 8);
+                        f->destination_x, f->destination_y, direction_limit);
                 }
             } else {
                 path_length = map_routing_get_path(data.direction_paths[path_id], f->x, f->y,
-                    f->destination_x, f->destination_y, 8);
+                    f->destination_x, f->destination_y, direction_limit);
             }
         } else { // cannot travel
             path_length = 0;

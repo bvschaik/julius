@@ -50,6 +50,7 @@ figure *figure_create(figure_type type, int x, int y, direction_type dir)
     f->progress_on_tile = 15;
     f->progress_to_next_tick = 0;
     f->dont_draw_elevated = 0;
+    f->disallow_diagonal = 0;
     random_generate_next();
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
@@ -211,7 +212,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_u8(buf, f->source_y);
     buffer_write_u8(buf, f->formation_position_x.soldier);
     buffer_write_u8(buf, f->formation_position_y.soldier);
-    buffer_write_i16(buf, f->__unused_24);
+    buffer_write_i16(buf, f->disallow_diagonal);
     buffer_write_i16(buf, f->wait_ticks);
     buffer_write_u8(buf, f->action_state);
     buffer_write_u8(buf, f->progress_on_tile);
@@ -311,7 +312,7 @@ static void figure_load(buffer *buf, figure *f)
     f->source_y = buffer_read_u8(buf);
     f->formation_position_x.soldier = buffer_read_u8(buf);
     f->formation_position_y.soldier = buffer_read_u8(buf);
-    f->__unused_24 = buffer_read_i16(buf);
+    f->disallow_diagonal = buffer_read_i16(buf);
     f->wait_ticks = buffer_read_i16(buf);
     f->action_state = buffer_read_u8(buf);
     f->progress_on_tile = buffer_read_u8(buf);

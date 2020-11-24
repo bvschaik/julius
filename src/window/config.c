@@ -24,7 +24,7 @@
 #include "translation/translation.h"
 #include <string.h>
 
-#define NUM_CHECKBOXES 27
+#define NUM_CHECKBOXES 28
 #define CONFIG_PAGES 3
 #define MAX_LANGUAGE_DIRS 20
 
@@ -42,7 +42,7 @@
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
-static int options_per_page[CONFIG_PAGES] = { 10,7,10 };
+static int options_per_page[CONFIG_PAGES] = { 10,7,11 };
 #define NUM_BOTTOM_BUTTONS 4
 #define MAX_LANGUAGE_DIRS 20
 
@@ -88,7 +88,8 @@ static generic_button checkbox_buttons[] = {
     { 20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ALL_HOUSES_MERGE, TR_CONFIG_ALL_HOUSES_MERGE },
     { 20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY, TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY },    
     { 20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT, TR_CONFIG_NOT_ACCEPTING_WAREHOUSES },
-    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS, TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS }
+    { 20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS, TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS },
+    { 20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ROAMERS_DONT_SKIP_CORNERS, 	TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, }
 };
 
 static generic_button language_button = {
