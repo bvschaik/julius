@@ -61,11 +61,6 @@ case "$DEPLOY" in
   then
     DEPLOY_FILE=julius-$VERSION-android.apk
     cp "${build_dir}/julius.apk" "deploy/$DEPLOY_FILE"
-  elif [ -f "${build_dir}/julius-debug.apk" ]
-  then
-    DEPLOY_FILE=julius-debug-$VERSION-android.apk
-    cp "${build_dir}/julius-debug.apk" "deploy/$DEPLOY_FILE"
-    export SKIP_BINTRAY=true
   fi
   ;;
 *)
