@@ -69,6 +69,12 @@ case "$DEPLOY" in
   ;;
 esac
 
+if [ ! -z "$SKIP_BINTRAY" ]
+then
+  echo "Build is configured to skip Bintray deploy - skipping deploy to Bintray"
+  exit
+fi
+
 if [ -z "$REPO" ] || [ -z "$DEPLOY_FILE" ]
 then
   echo "No repo or deploy file found - skipping deploy to Bintray"
