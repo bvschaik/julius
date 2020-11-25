@@ -1,6 +1,7 @@
 #ifndef GAME_SYSTEM_H
 #define GAME_SYSTEM_H
 
+#include "graphics/color.h"
 #include "input/keys.h"
 
 /**
@@ -65,7 +66,7 @@ void system_set_cursor(int cursor_id);
 /**
  * Get the key corresponding to the symbol in the current layout
  * @param name Name of the key
- * @return Corresponding key, or KEY_NONE if the key does not exist on the layout
+ * @return Corresponding key, or KEY_TYPE_NONE if the key does not exist on the layout
  */
 key_type system_keyboard_key_for_symbol(const char *name);
 
@@ -134,6 +135,12 @@ void system_move_mouse_cursor(int delta_x, int delta_y);
  * changed to fit in the window
  */
 void system_set_mouse_position(int *x, int *y);
+
+/**
+ * Creates a new framebuffer
+ * @return The framebuffer
+ */
+color_t *system_create_framebuffer(int width, int height);
 
 /**
  * Exit the game

@@ -212,7 +212,6 @@ static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
     }
 }
 
-#ifndef __SWITCH__
 static void handle_window_event(SDL_WindowEvent *event, int *window_active)
 {
     switch (event->event) {
@@ -244,16 +243,13 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
             break;
     }
 }
-#endif
 
 static void handle_event(SDL_Event *event, int *active, int *quit)
 {
     switch (event->type) {
-#ifndef __SWITCH__
         case SDL_WINDOWEVENT:
             handle_window_event(&event->window, active);
             break;
-#endif
         case SDL_KEYDOWN:
             platform_handle_key_down(&event->key);
             break;
@@ -494,14 +490,14 @@ static void setup(const julius_args *args)
         exit(-1);
     }
 
-#ifdef PLATFORM_ENABLE_INIT_CALLBACK
-    platform_init_callback();
-#endif
-
     if (!pre_init(args->data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
         exit(1);
     }
+
+#ifdef PLATFORM_ENABLE_INIT_CALLBACK
+    platform_init_callback();
+#endif
 
     if (args->force_windowed && setting_fullscreen()) {
         int w, h;

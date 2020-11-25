@@ -1,18 +1,16 @@
 #include "graphics.h"
 
+#include "game/system.h"
 #include "graphics/screen.h"
 
 #include <stdlib.h>
 #include <string.h>
-#ifdef __vita__
-#include <vita2d.h>
-#endif
 
 static struct {
     color_t *pixels;
     int width;
     int height;
-} canvas = {NULL, 0, 0};
+} canvas;
 
 static struct {
     int x_start;
@@ -24,22 +22,13 @@ static struct {
 static struct {
     int x;
     int y;
-} translation = {0, 0};
+} translation;
 
 static clip_info clip;
 
-#ifdef __vita__
-extern vita2d_texture *tex_buffer;
-#endif
-
 void graphics_init_canvas(int width, int height)
 {
-#ifdef __vita__
-    canvas.pixels = vita2d_texture_get_datap(tex_buffer);
-#else
-    free(canvas.pixels);
-    canvas.pixels = (color_t *) malloc((size_t) width * height * sizeof(color_t));
-#endif
+    canvas.pixels = system_create_framebuffer(width, height);
     memset(canvas.pixels, 0, (size_t) width * height * sizeof(color_t));
     canvas.width = width;
     canvas.height = height;

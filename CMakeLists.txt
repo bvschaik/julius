@@ -183,8 +183,8 @@ set(PLATFORM_FILES
 if (VITA_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
+        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
+        ${PROJECT_SOURCE_DIR}/src/platform/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
@@ -192,15 +192,15 @@ if (VITA_BUILD)
 elseif (SWITCH_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/screen.c
+        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
+        ${PROJECT_SOURCE_DIR}/src/platform/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.c
     )
 else()
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
         ${PROJECT_SOURCE_DIR}/src/platform/screen.c
+        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
     )
 endif()
 

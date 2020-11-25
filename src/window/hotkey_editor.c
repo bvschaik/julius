@@ -40,7 +40,7 @@ static void init(hotkey_action action, int index,
     data.action = action;
     data.index = index;
     data.callback = callback;
-    data.key = KEY_NONE;
+    data.key = KEY_TYPE_NONE;
     data.modifiers = KEY_MOD_NONE;
     data.focus_button = 0;
 }
@@ -100,12 +100,12 @@ static void button_close(int ok, int param2)
 
 void window_hotkey_editor_key_pressed(key_type key, key_modifier_type modifiers)
 {
-    if (key == KEY_ENTER && modifiers == KEY_MOD_NONE) {
+    if (key == KEY_TYPE_ENTER && modifiers == KEY_MOD_NONE) {
         button_close(1, 0);
-    } else if (key == KEY_ESCAPE && modifiers == KEY_MOD_NONE) {
+    } else if (key == KEY_TYPE_ESCAPE && modifiers == KEY_MOD_NONE) {
         button_close(0, 0);
     } else {
-        if (key != KEY_NONE) {
+        if (key != KEY_TYPE_NONE) {
             data.key = key;
         }
         data.modifiers = modifiers;
@@ -115,7 +115,7 @@ void window_hotkey_editor_key_pressed(key_type key, key_modifier_type modifiers)
 void window_hotkey_editor_key_released(key_type key, key_modifier_type modifiers)
 {
     // update modifiers as long as we don't have a proper keypress
-    if (data.key == KEY_NONE && key == KEY_NONE) {
+    if (data.key == KEY_TYPE_NONE && key == KEY_TYPE_NONE) {
         data.modifiers = modifiers;
     }
 }

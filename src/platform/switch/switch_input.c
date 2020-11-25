@@ -4,9 +4,12 @@
 #include <switch.h>
 
 #include "core/calc.h"
+#include "core/config.h"
 #include "core/encoding.h"
+#include "game/system.h"
 #include "input/mouse.h"
 #include "input/touch.h"
+#include "platform/screen.h"
 
 #define NO_MAPPING -1
 #define MAX_VKBD_TEXT_SIZE 600
@@ -43,6 +46,12 @@ enum
 static int can_change_touch_mode = 1;
 
 static SDL_Joystick *joy = NULL;
+
+static AppletOperationMode display_mode = -1;
+
+#define HANDHELD_SCREEN_SCALE 200
+#define DOCKED_SCREEN_SCALE 150
+#define CURSOR_SCALE 200
 
 static struct {
     char utf8_text[MAX_VKBD_TEXT_SIZE];
@@ -105,13 +114,29 @@ static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event,
 static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 static void switch_create_key_event_for_direction(int direction, int key_pressed);
 
+static void change_display_size(void)
+{
+    AppletOperationMode mode = appletGetOperationMode();
+    if (mode != display_mode) {
+        SDL_Log("Changing display mode to %s", mode == AppletOperationMode_Handheld ? "handheld" : "docked");
+        display_mode = mode;
+        if (display_mode == AppletOperationMode_Handheld) {
+            system_scale_display(HANDHELD_SCREEN_SCALE);
+        } else {
+            system_scale_display(DOCKED_SCREEN_SCALE);
+        }
+    }
+}
+
 void platform_init_callback(void)
 {
+    config_set(CONFIG_SCREEN_CURSOR_SCALE, CURSOR_SCALE);
     touch_set_mode(TOUCH_MODE_TOUCHPAD);
 }
 
 void platform_per_frame_callback(void)
 {
+    change_display_size();
     if (vkbd.requested) {
         switch_start_text_input();
         vkbd.requested = 0;

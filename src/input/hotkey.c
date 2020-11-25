@@ -346,13 +346,13 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
 
     // Fixed keys: Escape and Enter
     data.definitions[0].action = &data.hotkey_state.enter_pressed;
-    data.definitions[0].key = KEY_ENTER;
+    data.definitions[0].key = KEY_TYPE_ENTER;
     data.definitions[0].modifiers = 0;
     data.definitions[0].repeatable = 0;
     data.definitions[0].value = 1;
 
     data.definitions[1].action = &data.hotkey_state.escape_pressed;
-    data.definitions[1].key = KEY_ESCAPE;
+    data.definitions[1].key = KEY_TYPE_ESCAPE;
     data.definitions[1].modifiers = 0;
     data.definitions[1].repeatable = 0;
     data.definitions[1].value = 1;
@@ -387,7 +387,7 @@ void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
         window_hotkey_editor_key_pressed(key, modifiers);
         return;
     }
-    if (key == KEY_NONE) {
+    if (key == KEY_TYPE_NONE) {
         return;
     }
     for (int i = 0; i < data.num_arrows; i++) {
@@ -410,7 +410,7 @@ void hotkey_key_released(key_type key, key_modifier_type modifiers)
         window_hotkey_editor_key_released(key, modifiers);
         return;
     }
-    if (key == KEY_NONE) {
+    if (key == KEY_TYPE_NONE) {
         return;
     }
     for (int i = 0; i < data.num_arrows; i++) {
