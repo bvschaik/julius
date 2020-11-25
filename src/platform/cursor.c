@@ -1,7 +1,11 @@
+#include "cursor.h"
+
 #include "game/system.h"
 #include "graphics/color.h"
 #include "input/cursor.h"
 #include "platform/screen.h"
+#include "platform/switch/switch.h"
+#include "platform/vita/vita.h"
 
 #include "SDL.h"
 
@@ -25,11 +29,7 @@ static const color_t mouse_colors[] = {
 
 static SDL_Surface *generate_cursor_surface(const char *data, int width, int height)
 {
-    // make sure the cursor is a power of two
-    int size = 32;
-    while (size <= width || size <= height) {
-        size *= 2;
-    }
+    int size = platform_cursor_get_texture_size(width, height);
     SDL_Surface *cursor_surface =
         SDL_CreateRGBSurface(0, size, size, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
     color_t *pixels = cursor_surface->pixels;
@@ -65,12 +65,12 @@ void system_init_cursors(int scale_percentage)
             SDL_FreeCursor(data.cursors[i]);
         }
         data.surfaces[i] = generate_cursor_surface(c->data, c->width, c->height);
-        if (!system_use_software_cursor()) {
-            data.cursors[i] = SDL_CreateColorCursor(data.surfaces[i], c->hotspot_x, c->hotspot_y);
-        } else {
-            SDL_ShowCursor(SDL_DISABLE);
-            platform_screen_generate_mouse_cursor_texture(i, data.current_scale, data.surfaces[i]->pixels);
-        }
+#ifndef PLATFORM_USE_SOFTWARE_CURSOR
+        data.cursors[i] = SDL_CreateColorCursor(data.surfaces[i], c->hotspot_x, c->hotspot_y);
+#else
+        SDL_ShowCursor(SDL_DISABLE);
+        platform_screen_generate_mouse_cursor_texture(i, data.current_scale, data.surfaces[i]->pixels);
+#endif
     }
     system_set_cursor(data.current_shape);
 }
@@ -78,26 +78,26 @@ void system_init_cursors(int scale_percentage)
 void system_set_cursor(int cursor_id)
 {
     data.current_shape = cursor_id;
-    if (!system_use_software_cursor()) {
-        SDL_SetCursor(data.cursors[cursor_id]);
-    }
-}
-
-int system_use_software_cursor(void)
-{
-#if defined(__SWITCH__) || defined(__vita__)
-    return 1;
-#else
-    return 0;
+#ifndef PLATFORM_USE_SOFTWARE_CURSOR
+    SDL_SetCursor(data.cursors[cursor_id]);
 #endif
 }
 
-cursor_shape system_get_current_cursor_shape(void)
+cursor_shape platform_cursor_get_current_shape(void)
 {
     return data.current_shape;
 }
 
-cursor_scale system_get_current_cursor_scale(void)
+cursor_scale platform_cursor_get_current_scale(void)
 {
     return data.current_scale;
+}
+
+int platform_cursor_get_texture_size(int width, int height)
+{
+    int size = 32;
+    while (size <= width || size <= height) {
+        size *= 2;
+    }
+    return size;
 }

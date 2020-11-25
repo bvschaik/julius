@@ -20,5 +20,7 @@ void platform_per_frame_callback(void);
 void platform_show_virtual_keyboard(const uint8_t *text, int max_length);
 void platform_hide_virtual_keyboard(void);
 
+#define PLATFORM_USE_SOFTWARE_CURSOR
+
 #endif // __SWITCH__
 #endif // PLATFORM_SWITCH_H

@@ -7,6 +7,8 @@
 #include "graphics/screen.h"
 #include "input/cursor.h"
 #include "platform/android/android.h"
+#include "platform/cursor.h"
+#include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
 
 #include "SDL.h"
@@ -15,6 +17,10 @@ static struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
 #ifdef __vita__
+    // For Vita, we directly use a texture for two reasons:
+    // 1. Using an SDL texture is very slow because SDL_UpdateTexture uses a very expenssive memcpy() on Vita,
+    //    making the game only run at about 10fps
+    // 2. The default texture format created using SDL_CreateTexture on Vita is incompatible with color_t
     vita2d_texture *texture;
 #else
     SDL_Texture *texture;
@@ -318,23 +324,15 @@ void platform_screen_center_window(void)
     window_pos.centered = 1;
 }
 
-static int get_texture_size_for_cursor(const cursor *c)
-{
-    int size = 32;
-    while (size <= c->width || size <= c->height) {
-        size *= 2;
-    }
-    return size;
-}
-
+#ifdef PLATFORM_USE_SOFTWARE_CURSOR
 static void draw_software_mouse_cursor(void)
 {
     const mouse *mouse = mouse_get();
     if (!mouse->is_touch) {
-        cursor_shape current_cursor_shape = system_get_current_cursor_shape();
-        const cursor *c = input_cursor_data(current_cursor_shape, system_get_current_cursor_scale());
+        cursor_shape current_cursor_shape = platform_cursor_get_current_shape();
+        const cursor *c = input_cursor_data(current_cursor_shape, platform_cursor_get_current_scale());
         if (c) {
-            int size = get_texture_size_for_cursor(c);
+            int size = platform_cursor_get_texture_size(c->width, c->height);
             size = calc_adjust_with_percentage(size, calc_percentage(100, scale_percentage));
             SDL_Rect dst;
             dst.x = mouse->x - c->hotspot_x;
@@ -345,6 +343,7 @@ static void draw_software_mouse_cursor(void)
         }
     }
 }
+#endif
 
 #ifdef _WIN32
 void platform_screen_recreate_texture(void)
@@ -372,9 +371,9 @@ void platform_screen_render(void)
     SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
     SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
 #endif
-    if (system_use_software_cursor()) {
-        draw_software_mouse_cursor();
-    }
+#ifdef PLATFORM_USE_SOFTWARE_CURSOR
+    draw_software_mouse_cursor();
+#endif
     SDL_RenderPresent(SDL.renderer);
 }
 
@@ -384,7 +383,8 @@ void platform_screen_generate_mouse_cursor_texture(int cursor_id, int scale, con
         SDL_DestroyTexture(SDL.cursors[cursor_id]);
         SDL.cursors[cursor_id] = 0;
     }
-    int size = get_texture_size_for_cursor(input_cursor_data(cursor_id, scale));
+    const cursor *c = input_cursor_data(cursor_id, scale);
+    int size = platform_cursor_get_texture_size(c->width, c->height);
     SDL.cursors[cursor_id] = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC,
         size, size);

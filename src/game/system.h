@@ -2,7 +2,6 @@
 #define GAME_SYSTEM_H
 
 #include "graphics/color.h"
-#include "input/cursor.h"
 #include "input/keys.h"
 
 /**
@@ -126,24 +125,6 @@ void system_mouse_get_relative_state(int *x, int *y);
  * @param delta_y The amount to move on the Y axis
  */
 void system_move_mouse_cursor(int delta_x, int delta_y);
-
-/**
- * Tells whether to use the software or hardware mouse cursor
- * @return True when the software cursor should be used, false otherwise
- */
-int system_use_software_cursor(void);
-
-/**
- * Gets the current cursor shape
- * @return The cursor shape
- */
-cursor_shape system_get_current_cursor_shape(void);
-
-/**
- * Gets the current cursor scale
- * @return The cursor scale
- */
-cursor_scale system_get_current_cursor_scale(void);
 
 /**
  * Sets the mouse position
