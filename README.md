@@ -11,7 +11,8 @@ Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh) or
 | Mac | [![Download](https://api.bintray.com/packages/bvschaik/julius/mac/images/download.svg)](https://bintray.com/bvschaik/julius/mac/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/mac/images/download.svg)](https://bintray.com/bvschaik/julius-dev/mac/_latestVersion#files) |
 | PS Vita | [![Download](https://api.bintray.com/packages/bvschaik/julius/vita/images/download.svg)](https://bintray.com/bvschaik/julius/vita/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/vita/images/download.svg)](https://bintray.com/bvschaik/julius-dev/vita/_latestVersion#files) |
 | Nintendo Switch | [![Download](https://api.bintray.com/packages/bvschaik/julius/switch/images/download.svg)](https://bintray.com/bvschaik/julius/switch/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/switch/images/download.svg)](https://bintray.com/bvschaik/julius-dev/switch/_latestVersion#files) |
-| Android | [![Download](https://api.bintray.com/packages/bvschaik/julius/android/images/download.svg)](https://bintray.com/bvschaik/julius/android/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/android/images/download.svg)](https://bintray.com/bvschaik/julius-dev/android/_latestVersion#files) |
+| Android APK | [![Download](https://api.bintray.com/packages/bvschaik/julius/android/images/download.svg)](https://bintray.com/bvschaik/julius/android/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/android/images/download.svg)](https://bintray.com/bvschaik/julius-dev/android/_latestVersion#files) |
+| Android on Google Play | Next release! | [Sign up for testing](https://play.google.com/apps/testing/com.github.bvschaik.julius) |
 
 ## Julius: an open source re-implementation of Caesar III
 
