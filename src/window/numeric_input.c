@@ -153,7 +153,7 @@ void window_numeric_input_show(int x, int y, int max_digits, int max_value, void
 {
     window_type window = {
         WINDOW_NUMERIC_INPUT,
-        0,
+        window_draw_underlying_window,
         draw_foreground,
         handle_input,
     };

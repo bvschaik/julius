@@ -95,12 +95,20 @@ static void stop(int paused)
 static void draw_background(void)
 {
     window_editor_map_draw_all();
+
+    graphics_in_dialog();
+
+    outer_panel_draw(0, 28, 30, 28);
+
+    button_border_draw(18, 278, 184, 144, 0);
+    image_draw(image_group(GROUP_EDITOR_SCENARIO_IMAGE) + scenario_image_id(), 20, 280);
+
+    graphics_reset_dialog();
 }
 
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    outer_panel_draw(0, 28, 30, 28);
 
     input_box_draw(&scenario_description_input);
 
@@ -156,9 +164,6 @@ static void draw_foreground(void)
 
     button_border_draw(212, 436, 250, 30, data.focus_button_id == 10);
     lang_text_draw_centered(44, 94, 212, 445, 250, FONT_NORMAL_BLACK);
-
-    button_border_draw(18, 278, 184, 144, 0);
-    image_draw(image_group(GROUP_EDITOR_SCENARIO_IMAGE) + scenario_image_id(), 20, 280);
 
     arrow_buttons_draw(0, 0, image_arrows, 2);
 
