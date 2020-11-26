@@ -790,8 +790,9 @@ void building_construction_place(void)
         int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
     } else if (type >= BUILDING_HEDGE_DARK && type <= BUILDING_HEDGE_LIGHT) {
+        int rotation = building_rotation_get_rotation();
         int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "D Hedge 01") + (type - BUILDING_HEDGE_DARK) * 12;
-        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, 0);
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
         map_tiles_update_all_hedges();
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
         int rotation = building_rotation_get_rotation();

@@ -1,6 +1,7 @@
 #include "image_context.h"
 
 #include "building/building.h"
+#include "building/rotation.h"
 #include "city/view.h"
 #include "mods/mods.h"
 #include "map/building.h"
@@ -16,6 +17,7 @@ struct building_image_context {
     const unsigned char tiles[MAX_TILES];
     const unsigned char offset_for_orientation[4];
     const unsigned char max_item_offset;
+    const char rotation;
     unsigned char current_item_offset;
 };
 
@@ -27,23 +29,27 @@ static int connecting_grid_building = 0;
 // 1 = match
 // 2 = don't care
 
-static struct building_image_context building_images_hedges[16] = {
-    {{1, 2, 1, 2, 0, 2, 0, 2}, {4, 5, 2, 3}, 1},
-    {{0, 2, 1, 2, 1, 2, 0, 2}, {3, 4, 5, 2}, 1},
-    {{0, 2, 0, 2, 1, 2, 1, 2}, {2, 3, 4, 5}, 1},
-    {{1, 2, 0, 2, 0, 2, 1, 2}, {5, 2, 3, 4}, 1},
-    {{1, 2, 0, 2, 1, 2, 0, 2}, {1, 0, 1, 0}, 1},
-    {{0, 2, 1, 2, 0, 2, 1, 2}, {0, 1, 0, 1}, 1},
-    {{1, 2, 0, 2, 0, 2, 0, 2}, {1, 0, 1, 0}, 1},
-    {{0, 2, 1, 2, 0, 2, 0, 2}, {0, 1, 0, 1}, 1},
-    {{0, 2, 0, 2, 1, 2, 0, 2}, {1, 0, 1, 0}, 1},
-    {{0, 2, 0, 2, 0, 2, 1, 2}, {0, 1, 0, 1}, 1},
-    {{1, 2, 1, 2, 1, 2, 0, 2}, {9, 7, 6, 8}, 1},
-    {{0, 2, 1, 2, 1, 2, 1, 2}, {8, 9, 7, 6}, 1},
-    {{1, 2, 0, 2, 1, 2, 1, 2}, {6, 8, 9, 7}, 1},
-    {{1, 2, 1, 2, 0, 2, 1, 2}, {7, 6, 8, 9}, 1},
-    {{1, 2, 1, 2, 1, 2, 1, 2}, {10, 10, 10, 10}, 1},
-    {{2, 2, 2, 2, 2, 2, 2, 2}, {1, 0, 1, 0}, 1},
+// For rotation 
+// -1 any, otherwise shown value
+
+static struct building_image_context building_images_hedges[17] = {
+    {{1, 2, 1, 2, 0, 2, 0, 2}, {4, 5, 2, 3}, 1, -1},
+    {{0, 2, 1, 2, 1, 2, 0, 2}, {3, 4, 5, 2}, 1, -1},
+    {{0, 2, 0, 2, 1, 2, 1, 2}, {2, 3, 4, 5}, 1, -1},
+    {{1, 2, 0, 2, 0, 2, 1, 2}, {5, 2, 3, 4}, 1, -1},
+    {{1, 2, 0, 2, 1, 2, 0, 2}, {1, 0, 1, 0}, 1, -1},
+    {{0, 2, 1, 2, 0, 2, 1, 2}, {0, 1, 0, 1}, 1, -1},
+    {{1, 2, 0, 2, 0, 2, 0, 2}, {1, 0, 1, 0}, 1, -1},
+    {{0, 2, 1, 2, 0, 2, 0, 2}, {0, 1, 0, 1}, 1, -1},
+    {{0, 2, 0, 2, 1, 2, 0, 2}, {1, 0, 1, 0}, 1, -1},
+    {{0, 2, 0, 2, 0, 2, 1, 2}, {0, 1, 0, 1}, 1, -1},
+    {{1, 2, 1, 2, 1, 2, 0, 2}, {9, 7, 6, 8}, 1, -1},
+    {{0, 2, 1, 2, 1, 2, 1, 2}, {8, 9, 7, 6}, 1, -1},
+    {{1, 2, 0, 2, 1, 2, 1, 2}, {6, 8, 9, 7}, 1, -1},
+    {{1, 2, 1, 2, 0, 2, 1, 2}, {7, 6, 8, 9}, 1, -1},
+    {{1, 2, 1, 2, 1, 2, 1, 2}, {10, 10, 10, 10}, -1},
+    {{2, 2, 2, 2, 2, 2, 2, 2}, {1, 0, 1, 0}, 1, 0},
+    {{2, 2, 2, 2, 2, 2, 2, 2}, {0, 1, 0, 1}, 1, -1},
 };
 
 enum {
@@ -55,7 +61,7 @@ static struct {
     struct building_image_context* context;
     int size;
 } context_pointers[] = {
-    {building_images_hedges, 16}
+    {building_images_hedges, 17}
 };
 
 void building_image_context_clear_connection_grid() 
@@ -83,17 +89,20 @@ static void clear_current_offset(struct building_image_context* items, int num_i
     }
 }
 
-static int context_matches_tiles(const struct building_image_context* context, const int tiles[MAX_TILES])
+static int context_matches_tiles(const struct building_image_context* context, const int tiles[MAX_TILES], int rotation)
 {
     for (int i = 0; i < MAX_TILES; i++) {
         if (context->tiles[i] != 2 && tiles[i] != context->tiles[i]) {
             return 0;
         }
     }
+    if ((context->rotation != rotation) && (context->rotation != -1)) {
+        return 0;
+    }
     return 1;
 }
 
-static const building_image* get_image(int group, int tiles[MAX_TILES])
+static const building_image* get_image(int group, int tiles[MAX_TILES], int rotation)
 {
     static building_image result;
 
@@ -101,7 +110,7 @@ static const building_image* get_image(int group, int tiles[MAX_TILES])
     struct building_image_context* context = context_pointers[group].context;
     int size = context_pointers[group].size;
     for (int i = 0; i < size; i++) {
-        if (context_matches_tiles(&context[i], tiles)) {
+        if (context_matches_tiles(&context[i], tiles, rotation)) {
             context[i].current_item_offset++;
             if (context[i].current_item_offset >= context[i].max_item_offset) {
                 context[i].current_item_offset = 0;
@@ -129,7 +138,14 @@ const building_image* building_image_context_get_hedges(int grid_offset, int inc
                 tiles[i] = 1;
         }
     }
-    return get_image(CONTEXT_HEDGES, tiles);
+    int building_id = map_building_at(grid_offset);
+    int rotation;
+    if (building_id) {
+        rotation = building_get(building_id)->subtype.orientation;
+    } else {
+        rotation = building_rotation_get_rotation() % 2;
+    }
+    return get_image(CONTEXT_HEDGES, tiles, rotation);
 }
 
 
