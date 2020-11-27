@@ -75,7 +75,19 @@ int building_monument_deliver_resource(building* b, int resource) {
 	if (b->data.monument.resources_needed[resource] <= 0) {
 		return 0;
 	}
+
+	while (b->prev_part_building_id) {
+		b = building_get(b->prev_part_building_id);
+	}
+
 	b->data.monument.resources_needed[resource]--;
+
+	while (b->next_part_building_id) {
+		b = building_get(b->next_part_building_id);
+		b->data.monument.resources_needed[resource]--;
+
+	}
+	
 	return 1;
 
 }
@@ -251,11 +263,15 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
 		if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
 			continue;
 		}
+
 		if (!resource) {
 			if (building_monument_needs_resources(b)) {
 				continue;
 			}
 		} 
+		if ((b->next_part_building_id || b->prev_part_building_id) && (b->data.monument.resources_needed[resource] - building_monument_resource_in_delivery_multipart(b, resource)) <= 0) {
+			continue;
+		}
 		if ((b->data.monument.resources_needed[resource] - building_monument_resource_in_delivery(b->id,resource)) <= 0) {
 			continue;
 		}
@@ -734,6 +750,7 @@ int building_monument_needs_resources(building* b) {
 	if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
 		return 0;
 	}
+
 	for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
 		if(b->data.monument.resources_needed[resource]) {
 			return 1;
@@ -751,16 +768,18 @@ int building_monument_progress(building* b)
 		return 0;
 	}
 
-	b->data.monument.monument_phase++;
-	if (b->next_part_building_id) {
-		building* b2 = building_get(b->next_part_building_id);
-		b2->data.monument.monument_phase++;
-
-		building* b3 = building_get(b2->next_part_building_id);
-		b3->data.monument.monument_phase++;
+	while (b->prev_part_building_id) {
+		b = building_get(b->prev_part_building_id);
 	}
 
+	b->data.monument.monument_phase++;
 	building_monument_initialize(b);
+
+	while (b->next_part_building_id) {
+		b = building_get(b->next_part_building_id);
+		b->data.monument.monument_phase++;
+		building_monument_initialize(b);
+	}
 
 	if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
 		if (building_monument_is_grand_temple(b->type)) {
@@ -853,6 +872,31 @@ int building_monument_resource_in_delivery(int monument_id, int resource_id) {
 	}
 	return resources;
 }
+
+int building_monument_resource_in_delivery_multipart(building* b, int resource_id) {
+	int resources = 0;
+	
+	while (b->prev_part_building_id) {
+		b = building_get(b->prev_part_building_id);
+	}
+
+	while (b->id) {
+		for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
+			if (monument_deliveries[i].destination_id == b->id && monument_deliveries[i].resource == resource_id)
+			{
+				resources += monument_deliveries[i].cartloads;
+			}
+		}
+		b = building_get(b->next_part_building_id);
+
+	}
+
+	return resources;
+}
+
+
+
+
 
 int building_monument_has_monument(int type) {
 
