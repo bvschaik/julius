@@ -4,6 +4,7 @@
 #include "city/finance.h"
 #include "city/population.h"
 #include "city/resource.h"
+#include "core/calc.h"
 
 #include "game/time.h"
 #include "game/resource.h"
@@ -30,7 +31,6 @@ static int focus_button_id;
 
 static int draw_background(void)
 {
-    int val;
     int width;
     int height;
     
