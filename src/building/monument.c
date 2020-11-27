@@ -108,8 +108,7 @@ int building_monument_access_point(building* b, map_point* dst)
 			dst->y = b->y;
 		}
 		else {
-			dst->x = b->x;
-			dst->y = b->y;
+			return 0;
 		}
 		return 1;
 	case BUILDING_GRAND_TEMPLE_CERES:
@@ -162,25 +161,8 @@ int building_monument_access_point(building* b, map_point* dst)
 		}
 		return 1;
 	case BUILDING_ORACLE:
-		if (dx == -1 && dy == -1) {
-			dst->x = b->x + 1;
-			dst->y = b->y + 1;
-		}
-		else if (dx == 1 && dy == -1) {
-			dst->x = b->x;
-			dst->y = b->y + 1;
-		}
-		else if (dx == -1 && dy == -1) {
-			dst->x = b->x + 1;
-			dst->y = b->y + 1;
-		}
-		else if (dx == -1 && dy == 1) {
-			dst->x = b->x + 1;
-			dst->y = b->y;
-		}
-		else {
-			return 0;
-		}
+		dst->x = b->x;
+		dst->y = b->y;	
 		return 1;
 	case BUILDING_HIPPODROME:
 		dst->x = b->x;
