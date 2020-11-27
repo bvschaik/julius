@@ -466,7 +466,17 @@ static translation_string all_strings[] = {
     { TR_BUILDING_SMALL_TEMPLE_PHASE_1, "(Construction)" },
     { TR_BUILDING_SMALL_TEMPLE_PHASE_1_TEXT, "Masons and engineers are carefully constructing this structure from gleaming marble." },
     { TR_BUILDING_SMALL_TEMPLE_CONSTRUCTION_DESC, "Constructing this temple will require material stored in a warehouse, laborers from a work camp, and engineers from an engineers' guild." },
-
+    {TR_ADVISOR_HEADER_TOURISM, "Entertainment - Tourism"},
+    { TR_ADVISOR_BACK_BUTTON_TOURISM, "Back" },
+    { TR_ADVISOR_ENTERTAINMENT_BUTTON_TOURISM, "Tourism" },
+    { TR_ADVISOR_TOURISM_DESC, "Renown is based on population, sentiment, desirability, entertainment venue coverage, and monuments. Holding Games will greatly increase renown while they are in effect." },
+    { TR_ADVISOR_TOURISM_DESC_TOO_SMALL, "Your city is too small to have gained renown." },
+    { TR_ADVISOR_TOURISM_DESC_LOW_POP, "Your city's renown is held back by modest population." },
+    { TR_ADVISOR_TOURISM_DESC_LOW_COVERAGE, "Your city's renown could be improved with more working entertainment venues." },
+    { TR_ADVISOR_TOURISM_DESC_LOW_SENTIMENT, "Your city's renown could be improved with better city sentiment." },
+    { TR_ADVISOR_TOURISM_DESC_LOW_DESIRABILTY, "Your city's renown could be improved with more desirable neighborhoods." },
+    { TR_ADVISOR_TOURISM_DESC_MONUMENTS_PRESENT, "Travellers come from across the world to marvel at their splendor of your monumental works." },
+    { TR_ADVISOR_TOURISM_DESC_GAMES_ACTIVE, "The Games you sponsored are drawing hordes of travellers to your city." }
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

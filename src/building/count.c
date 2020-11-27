@@ -228,6 +228,15 @@ int building_count_grand_temples(void) {
             data.buildings[BUILDING_GRAND_TEMPLE_VENUS].total);
 }
 
+int building_count_grand_temples_active(void) {
+    return (data.buildings[BUILDING_GRAND_TEMPLE_CERES].active +
+        data.buildings[BUILDING_GRAND_TEMPLE_NEPTUNE].active +
+        data.buildings[BUILDING_GRAND_TEMPLE_MERCURY].active +
+        data.buildings[BUILDING_GRAND_TEMPLE_MARS].active +
+        data.buildings[BUILDING_GRAND_TEMPLE_VENUS].active +
+        data.buildings[BUILDING_PANTHEON].active);
+}
+
 int building_count_colosseum(void) {
     return data.buildings[BUILDING_COLOSSEUM].total;
 }

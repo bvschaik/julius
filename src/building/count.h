@@ -40,6 +40,8 @@ int building_count_colosseum(void);
 
 int building_count_grand_temples(void);
 
+int building_count_grand_temples_active(void);
+
 /**
  * Returns the building count for the resource type
  * @param resource Resource type

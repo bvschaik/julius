@@ -17,18 +17,26 @@
 #include "window/hold_games.h"
 
 #define ADVISOR_HEIGHT 27
+#define TOURISM_ADVISOR_ID 22
 
 #define PEOPLE_OFFSET 330
 #define COVERAGE_OFFSET 470
 #define COVERAGE_WIDTH 130
 
+static int focus_button_id;
 static void button_hold_games(int param1, int param2);
+static void button_tourism(int param1, int param2);
 
 static generic_button hold_games_button[] = {
     {102, 380, 300, 20, button_hold_games, button_none, 0, 0},
+    {545, 240, 60, 51, button_tourism, button_none, 0, 0}
 };
 
-static int focus_button_id;
+
+static void button_tourism(int param1, int param2)
+{
+    window_advisors_show_advisor(TOURISM_ADVISOR_ID);    
+}
 
 static int get_entertainment_advice(void)
 {
@@ -173,17 +181,13 @@ static int draw_background(void)
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 163, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }
 
-    //todo: temporary home for tourism info
-    //lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 198, 512, FONT_NORMAL_BLACK);
-
-    text_draw_multiline(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT), 40, 198, 600, FONT_NORMAL_BLACK, 0);
-
-    width = text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT_2), 40, 238, FONT_NORMAL_BLACK, 0);
-    width += text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_1 + calc_bound(city_finance_tourism_rating() / 15, 0, 8)), 40 + width, 238, FONT_NORMAL_BLACK, 0);
-    width +=text_draw_money(city_finance_tourism_income_last_month(), 40 + width, 238, FONT_NORMAL_BLACK);
-    text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY), 40 + width, 238, FONT_NORMAL_BLACK, 0);
+    lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 198, 512, FONT_NORMAL_BLACK);
 
     draw_games_info();
+
+    
+    text_draw_centered(translation_for(TR_ADVISOR_ENTERTAINMENT_BUTTON_TOURISM), 525, 295, 100, FONT_NORMAL_BLACK, 0);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 10, 555, 245);
 
     return ADVISOR_HEIGHT;
 }
@@ -193,11 +197,13 @@ static void draw_foreground(void)
     if (1) { // games not on cooldown
         button_border_draw(102, 380, 300, 20, focus_button_id == 1);
     }
+    button_border_draw(545, 240, 60, 51, focus_button_id == 2);
+
 }
 
 static int handle_mouse(const mouse* m)
 {
-    return generic_buttons_handle_mouse(m, 0, 0, hold_games_button, 1, &focus_button_id);
+    return generic_buttons_handle_mouse(m, 0, 0, hold_games_button, 2, &focus_button_id);
 }
 
 static void hold_games()

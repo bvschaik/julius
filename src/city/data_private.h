@@ -127,6 +127,7 @@ extern struct city_data_t {
         int32_t wage_rate_paid_last_year;
         int32_t tourism_rating;
         int32_t tourism_last_month;
+        int32_t tourism_lowest_factor;
     } finance;
     struct {
         int32_t taxed_plebs;
