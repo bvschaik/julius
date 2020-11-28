@@ -69,7 +69,7 @@ static void handler(int sig)
     exit(1);
 }
 
-#if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__)
+#if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__) || defined(__ANDROID__)
 /* Log to separate file on windows, since we don't have a console there */
 static FILE *log_file = 0;
 
