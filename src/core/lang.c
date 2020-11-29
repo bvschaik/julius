@@ -232,6 +232,13 @@ void load_custom_messages(void)
     m = &data.message_entries[i];
     set_message_parameters(m, TR_CITY_MESSAGE_TITLE_HIPPODROME_WORKING, TR_CITY_MESSAGE_TEXT_HIPPODROME_WORKING, 1);
     m->video.text = (uint8_t*)"smk//Festival2_chariot.smk";
+    i += 1;
+
+    for (int j=0; j <= 12; ++j) {
+        m = &data.message_entries[i];
+        set_message_parameters(m, TR_CITY_MESSAGE_TITLE_GREAT_GAMES, TR_CITY_MESSAGE_TEXT_NAVAL_GAMES_PLANNING + j, 1);
+        i += 1;
+    }
 }
 
 

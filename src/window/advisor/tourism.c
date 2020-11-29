@@ -17,6 +17,7 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "translation/translation.h"
+#include "window/advisor/ratings.h"
 
 
 #define ADVISOR_HEIGHT 27
@@ -41,6 +42,8 @@ static int draw_background(void)
     inner_panel_draw(24, 60, 32, 20);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 8, 555, 265);
+
+    draw_rating_column(545, 274, city_finance_tourism_rating(), city_finance_tourism_rating() >= 100);
 
     text_draw(translation_for(TR_ADVISOR_HEADER_TOURISM), 60, 12, FONT_LARGE_BLACK, 0);
     text_draw_centered(translation_for(TR_ADVISOR_BACK_BUTTON_TOURISM), 545, 315, 61, FONT_NORMAL_BLACK, 0);

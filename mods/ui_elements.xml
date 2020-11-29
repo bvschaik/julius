@@ -60,4 +60,12 @@
     <image src="Map_Selection_Overlay_Border_Right" />
     <image src="Map_Selection_Overlay_Border_Bottom" />
 
+<!-- Note: Image next to 'Hold Games' button in Entertainment Advisor -->
+    <image id="HoldGames Banner" width="126" height="88">
+		<layer group="159" image="48" x="-11" y="-9" />
+        <layer src="HoldGames_Banner_Border" x="0" y="0" />
+    </image>
+
+
+
 </mod>

@@ -3,6 +3,7 @@
 #include "building/count.h"
 #include "city/culture.h"
 #include "city/entertainment.h"
+#include "city/festival.h"
 #include "city/finance.h"
 #include "city/gods.h"
 #include "city/houses.h"
@@ -13,6 +14,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "mods/mods.h"
 #include "translation/translation.h"
 #include "window/hold_games.h"
 
@@ -54,15 +56,30 @@ static int get_entertainment_advice(void)
 
 static void draw_games_info(void)
 {
-    inner_panel_draw(48, 312, 34, 6);
-    //image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 460, 295);
-    text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_HEADER), 52, 284, FONT_LARGE_BLACK, 0);
-    text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC), 56, 320, 400, FONT_NORMAL_WHITE, 0);
+    games_type* game = get_game_from_id(city_festival_selected_game_id());
+    int cooldown = city_festival_games_cooldown();
 
-    if (0) {
-        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_PREPARING), 102, 385, 300, FONT_NORMAL_WHITE, 0);
+    inner_panel_draw(48, 312, 34, 6);
+    text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_HEADER), 52, 284, FONT_LARGE_BLACK, 0);
+
+    image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "HoldGames Banner"), 460, 315);
+
+    if (cooldown) {
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN_TEXT), 56, 340, 400, FONT_NORMAL_WHITE, 0);
+        int width = text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN), 102, 375, FONT_NORMAL_WHITE, 0);
+        text_draw_number(cooldown, '@', "", 102 + width, 375, FONT_NORMAL_WHITE);
+
+    }
+    else if (city_festival_games_planning_time()) {
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_PREPARING), 56, 340, 400, FONT_NORMAL_WHITE, 0);
+        int width = text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_NG + ((game->id -1) * 2)), 102, 375, FONT_NORMAL_WHITE, 0);
+        text_draw_number(city_festival_games_planning_time(), '@', "", 102 + width, 375, FONT_NORMAL_WHITE);
+    }
+    else if (city_festival_games_active()) {
+        text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG + ((game->id - 1) * 2)), 56, 320, 400, FONT_NORMAL_WHITE, 0);
     }
     else {
+        text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC), 56, 320, 400, FONT_NORMAL_WHITE, 0);
         text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_BUTTON), 102, 385, 300, FONT_NORMAL_WHITE, 0);
     }
 }
@@ -184,7 +201,6 @@ static int draw_background(void)
     lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 198, 512, FONT_NORMAL_BLACK);
 
     draw_games_info();
-
     
     text_draw_centered(translation_for(TR_ADVISOR_ENTERTAINMENT_BUTTON_TOURISM), 525, 295, 100, FONT_NORMAL_BLACK, 0);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 10, 555, 245);
@@ -194,7 +210,7 @@ static int draw_background(void)
 
 static void draw_foreground(void)
 {
-    if (1) { // games not on cooldown
+    if (!city_festival_games_cooldown() && !city_festival_games_planning_time() && !city_festival_games_active()) {
         button_border_draw(102, 380, 300, 20, focus_button_id == 1);
     }
     button_border_draw(545, 240, 60, 51, focus_button_id == 2);
@@ -204,11 +220,6 @@ static void draw_foreground(void)
 static int handle_mouse(const mouse* m)
 {
     return generic_buttons_handle_mouse(m, 0, 0, hold_games_button, 2, &focus_button_id);
-}
-
-static void hold_games()
-{
-
 }
 
 static void button_hold_games(int param1, int param2)

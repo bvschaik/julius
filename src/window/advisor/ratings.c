@@ -24,7 +24,7 @@ static generic_button rating_buttons[] = {
 
 static int focus_button_id;
 
-static void draw_rating_column(int x_offset, int y_offset, int value, int has_reached)
+void draw_rating_column(int x_offset, int y_offset, int value, int has_reached)
 {
     int image_base = image_group(GROUP_RATINGS_COLUMN);
     int y = y_offset - image_get(image_base)->height;

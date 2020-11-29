@@ -547,7 +547,7 @@ void building_monument_initialize(building* b)
 			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 04"), TERRAIN_BUILDING);
 			break;
 		case 5:
-			map_building_tiles_add(b->id, b->x, b->y, b->size, image_group(GROUP_BUILDING_COLOSSEUM), TERRAIN_BUILDING);
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"), TERRAIN_BUILDING);
 			b->data.monument.monument_phase = MONUMENT_FINISHED;
 			break;
 		}

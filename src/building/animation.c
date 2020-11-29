@@ -3,10 +3,13 @@
 #include "building/industry.h"
 #include "building/model.h"
 #include "building/monument.h"
+#include "city/festival.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "game/animation.h"
+#include "map/image.h"
 #include "map/sprite.h"
+#include "mods/mods.h"
 
 int building_animation_offset(building *b, int image_id, int grid_offset)
 {
@@ -62,7 +65,37 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_TAVERN && (b->num_workers <= 0 || !b->data.market.inventory[4])) { //wine
         return 0;
     }
+    if (b->type == BUILDING_COLOSSEUM ) {
+        switch (city_festival_games_active()) {
+        case 1:
+            map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+            break;
+        case 2:
+            map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+            break;
+        case 3:
+            map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+            break;
+        default:
+            map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"));
+            if (b->num_workers <= 0) {
+                return 0;
+            }
+        }
+    }   
 
+    //if (b->type == BUILDING_HIPPODROME) {
+    //    switch (city_festival_games_active()) {
+    //    case 4:
+    //        map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+    //        break;
+    //    default:
+    //        map_image_set(grid_offset, image_group(GROUP_BUILDING_HIPPODROME_1));
+    //        if (b->num_workers <= 0) {
+    //            return 0;
+    //        }
+    //    }
+    //}
 
     const image *img = image_get(image_id);
     if (!game_animation_should_advance(img->animation_speed_id)) {

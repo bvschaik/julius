@@ -28,8 +28,6 @@ static void button_close(int param1, int param2);
 static void button_hold_games(int param1, int param2);
 
 static image_button image_buttons_bottom[] = {
-    {58, 350, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-    {558, 350, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1},
     {500, 350, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close, button_none, 0, 0, 1}
 };
 
@@ -38,63 +36,50 @@ static image_button action_button[] = {
 };
 
 static generic_button buttons_gods_size[] = {
-    {70, 96, 80, 90, button_game, button_none, 0, 0},
-    {170, 96, 80, 90, button_game, button_none, 1, 0},
-    {270, 96, 80, 90, button_game, button_none, 2, 0},
-    {370, 96, 80, 90, button_game, button_none, 3, 0},
+    {70, 96, 80, 90, button_game, button_none, 1, 0},
+    {170, 96, 80, 90, button_game, button_none, 2, 0},
+    {270, 96, 80, 90, button_game, button_none, 3, 0},
+    {370, 96, 80, 90, button_game, button_none, 4, 0},
 };
-
-typedef struct {
-    int header_key;
-    int description_key;
-    int cost;
-    int delay_months;
-    int building_id_required;
-    int resource_cost[RESOURCE_MAX];
-} games_type;
-
-games_type ALL_GAMES[MAX_GAMES] = {
-    {TR_WINDOW_GAMES_OPTION_1, TR_WINDOW_GAMES_OPTION_1_DESC, 100, 1, 33, {0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,}},
-    {TR_WINDOW_GAMES_OPTION_2, TR_WINDOW_GAMES_OPTION_2_DESC, 0, 1, 33, {0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,}},
-    {TR_WINDOW_GAMES_OPTION_3, TR_WINDOW_GAMES_OPTION_3_DESC, 0, 1, 33, {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
-    {TR_WINDOW_GAMES_OPTION_4, TR_WINDOW_GAMES_OPTION_4_DESC, 100, 1, 32, {0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,}}
-};
-
 
 static int focus_button_id;
 static int focus_image_button_id;
 
 static void draw_background(void)
 {
-    int selected_game = city_data.games.selected_games_id;
-    window_advisors_draw_dialog_background();
+    int selected_game_id = city_data.games.selected_games_id;
+    if (!selected_game_id) {
+        city_data.games.selected_games_id = 1;
+        selected_game_id = 1;
+    }
+    games_type* game = get_game_from_id(selected_game_id);
 
+    window_advisors_draw_dialog_background();
     graphics_in_dialog();
 
     outer_panel_draw(48, 48, 34, 22);
-    text_draw_centered(translation_for(ALL_GAMES[selected_game].header_key), 48, 60, 544, FONT_LARGE_BLACK, 0);
-    for (int game = 0; game < MAX_GAMES; game++) {
-        if (game == selected_game) {
-            button_border_draw(100 * game + 66, 92, 90, 100, 1);
-            image_draw(image_group(GROUP_PANEL_WINDOWS) + game + 21, 100 * game + 70, 96);
+    text_draw_centered(translation_for(game->header_key), 48, 60, 544, FONT_LARGE_BLACK, 0);
+    for (int i = 0; i < MAX_GAMES; i++) {
+        if (i == game->id - 1) {
+            button_border_draw(100 * i + 66, 92, 90, 100, 1);
+            image_draw(image_group(GROUP_PANEL_WINDOWS) + i + 21, 100 * i + 70, 96);
         }
         else {
-            image_draw(image_group(GROUP_PANEL_WINDOWS) + game + 16, 100 * game + 70, 96);
+            image_draw(image_group(GROUP_PANEL_WINDOWS) + i + 16, 100 * i + 70, 96);
         }
     }
-    text_draw_multiline(translation_for(ALL_GAMES[selected_game].description_key), 70, 222, 500, FONT_NORMAL_BLACK, 0);
-    
+    text_draw_multiline(translation_for(game->description_key), 70, 222, 500, FONT_NORMAL_BLACK, 0);    
 
     int width = text_draw(translation_for(TR_WINDOW_GAMES_COST), 120, 300, FONT_NORMAL_BLACK, 0);
-    width += text_draw_money(ALL_GAMES[selected_game].cost, 120 + width, 300, FONT_NORMAL_BLACK);
+    width += text_draw_money(game->cost, 120 + width, 300, FONT_NORMAL_BLACK);
     text_draw(translation_for(TR_WINDOW_GAMES_PERSONAL_FUNDS), 120 + width, 300, FONT_NORMAL_BLACK, 0);
 
     width = 0;
     int has_resources = 1;
     for (int i = 0; i < RESOURCE_MAX; ++i) {        
-        if (ALL_GAMES[selected_game].resource_cost[i]) {
-            width += text_draw_number(ALL_GAMES[selected_game].resource_cost[i], '@', "", 120 + width, 320, FONT_NORMAL_BLACK);
-            if (city_resource_get_stored(i) < ALL_GAMES[selected_game].resource_cost[i]) {
+        if (game->resource_cost[i]) {
+            width += text_draw_number(game->resource_cost[i], '@', "", 120 + width, 320, FONT_NORMAL_BLACK);
+            if (city_resource_get_stored(i) < game->resource_cost[i]) {
                 has_resources = 0;
             }
             image_draw(image_group(GROUP_RESOURCE_ICONS) + i, 120 + width, 316);    
@@ -102,16 +87,15 @@ static void draw_background(void)
         }
     }
 
-    if (!building_count_active(ALL_GAMES[selected_game].building_id_required)) {
+    if (!building_count_active(game->building_id_required)) {
         text_draw(translation_for(TR_WINDOW_GAMES_NO_VENUE), 130, 352, FONT_NORMAL_BLACK, 0);
-    } else if (city_emperor_personal_savings() < ALL_GAMES[selected_game].cost) {
+    } else if (city_emperor_personal_savings() < game->cost) {
         text_draw(translation_for(TR_WINDOW_GAMES_NOT_ENOUGH_FUNDS), 130, 352, FONT_NORMAL_BLACK, 0);
     }
     else if (!has_resources){
         text_draw(translation_for(TR_WINDOW_GAMES_NOT_ENOUGH_RESOURCES), 130, 352, FONT_NORMAL_BLACK, 0);
     }
     else {
-        text_draw(translation_for(ALL_GAMES[selected_game].header_key), 130, 352, FONT_NORMAL_BLACK, 0);
         image_buttons_draw(0, 0, action_button, 1);
     }
          
@@ -121,7 +105,7 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    image_buttons_draw(0, 0, image_buttons_bottom, 3);
+    image_buttons_draw(0, 0, image_buttons_bottom, 1);
     graphics_reset_dialog();
 }
 
@@ -129,8 +113,9 @@ static void handle_input(const mouse* m, const hotkeys* h)
 {
     const mouse* m_dialog = mouse_in_dialog(m);
     int handled = 0;
-    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 4, &focus_image_button_id);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_gods_size, 8, &focus_button_id);
+    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 1, &focus_image_button_id);
+    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, action_button, 1, &focus_image_button_id);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_gods_size, 4, &focus_button_id);
     if (focus_image_button_id) {
         focus_button_id = 0;
     }
@@ -166,7 +151,7 @@ static void button_close(int param1, int param2)
 
 static void button_hold_games(int param1, int param2)
 {
-    city_festival_games_schedule(1);
+    city_festival_games_schedule(city_data.games.selected_games_id);
     window_advisors_show();
 }
 

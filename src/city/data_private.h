@@ -319,6 +319,14 @@ extern struct city_data_t {
     } festival;
     struct {
         int32_t selected_games_id;
+        int32_t months_to_go;
+        int32_t remaining_duration;
+        int32_t months_since_last;
+        int32_t games_is_active;
+        int32_t games_1_bonus_months;
+        int32_t games_2_bonus_months;
+        int32_t games_3_bonus_months;
+        int32_t games_4_bonus_months;
     } games;
     struct {
         int16_t space_in_warehouses[RESOURCE_MAX];

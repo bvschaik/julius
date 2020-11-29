@@ -6,9 +6,9 @@
     <image id="Arena OFF" src="Arena_Off" />
 
 <!-- Note: Arena ON Variant Animation -->
-    <image id="Arena ON" >
+    <image id="Arena ON" width="178" height="152">
 		<layer group="this" image="Arena OFF" />
-        <animation speed="7" frames="8" reversible="false" />
+        <animation speed="7" frames="6" x="44" y="29" reversible="false" />
     </image>
     <image src="Arena_On_01" />
     <image src="Arena_On_02" />
@@ -16,7 +16,6 @@
     <image src="Arena_On_04" />
     <image src="Arena_On_05" />
     <image src="Arena_On_06" />
-    <image src="Arena_On_07" />
-    <image src="Arena_On_08" />
+
 
 </mod>		

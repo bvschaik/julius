@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/monument.h"
 #include "city/constants.h"
+#include "city/festival.h"
 #include "city/finance.h"
 #include "city/resource.h"
 #include "graphics/generic_button.h"
@@ -640,38 +641,12 @@ void window_building_draw_colosseum(building_info_context* c)
 {
     c->help_id = 73;
     building* b = building_get(c->building_id);
+    int active_games = city_festival_games_active();
     
     if (b->type == BUILDING_ARENA || b->data.monument.monument_phase == MONUMENT_FINISHED) {
         window_building_play_sound(c, "wavs/colloseum.wav");
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-
-        if (b->type == BUILDING_ARENA) {
-            text_draw_centered(translation_for(TR_BUILDING_ARENA), c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-        }
-        else {
-            lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-        }
-
-        if (!c->has_road_access) {
-            window_building_draw_description(c, 69, 25);
-        }
-        else if (b->num_workers <= 0) {
-            window_building_draw_description(c, 74, 6);
-        }
-        else if (!b->data.entertainment.num_shows) {
-            window_building_draw_description(c, 74, 2);
-        }
-        else if (b->data.entertainment.num_shows == 2) {
-            window_building_draw_description(c, 74, 3);
-        }
-        else if (b->data.entertainment.days1) {
-            window_building_draw_description(c, 74, 5);
-        }
-        else if (b->data.entertainment.days2) {
-            window_building_draw_description(c, 74, 4);
-        }
-
-        inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 7);
         window_building_draw_employment(c, 138);
         if (b->data.entertainment.days1 > 0) {
             int width = lang_text_draw(74, 8, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
@@ -688,6 +663,44 @@ void window_building_draw_colosseum(building_info_context* c)
         }
         else {
             lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        }
+
+        if (b->type == BUILDING_ARENA) {
+            text_draw_centered(translation_for(TR_BUILDING_ARENA), c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        }
+        else {
+            lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+        }
+
+        // todo: better link of venue to game
+        if (active_games && active_games <= 3 && b->type == BUILDING_COLOSSEUM) {
+            window_building_draw_description_from_tr_string(c, TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG + ((active_games-1) * 2));
+            int width = text_draw(translation_for(TR_WINDOW_BUILDING_GAMES_REMAINING_DURATION), c->x_offset + 32, c->y_offset + 222, FONT_SMALL_BLACK, 0);
+            lang_text_draw_amount(8, 44, 2 * city_festival_games_remaining_duration(),
+                c->x_offset + width + 32, c->y_offset + 222, FONT_SMALL_BLACK);
+            
+        }
+        else {
+            if (!c->has_road_access) {
+                window_building_draw_description(c, 69, 25);
+            }
+            else if (b->num_workers <= 0) {
+                window_building_draw_description(c, 74, 6);
+            }
+            else if (!b->data.entertainment.num_shows) {
+                window_building_draw_description(c, 74, 2);
+            }
+            else if (b->data.entertainment.num_shows == 2) {
+                window_building_draw_description(c, 74, 3);
+            }
+            else if (b->data.entertainment.days1) {
+                window_building_draw_description(c, 74, 5);
+            }
+            else if (b->data.entertainment.days2) {
+                window_building_draw_description(c, 74, 4);
+            }
+
+
         }
     }
     else {

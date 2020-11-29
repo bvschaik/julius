@@ -495,6 +495,7 @@ void city_finance_calculate_tourism_rating(void)
     
     if (city_data.population.population < TOURISM_POP_MINIMUM) {
         city_data.finance.tourism_rating = 0;
+        return;
     }
 
     int rating = 0;
