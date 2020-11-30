@@ -8,7 +8,7 @@
 <!-- Note: Arena ON Variant Animation -->
     <image id="Arena ON" width="178" height="152">
 		<layer group="this" image="Arena OFF" />
-        <animation speed="7" frames="6" x="44" y="29" reversible="false" />
+        <animation speed="12" frames="6" x="44" y="29" reversible="false" />
     </image>
     <image src="Arena_On_01" />
     <image src="Arena_On_02" />

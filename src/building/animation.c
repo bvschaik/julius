@@ -86,7 +86,13 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
 
     //if (b->type == BUILDING_HIPPODROME) {
     //    switch (city_festival_games_active()) {
-    //    case 4:
+    //    case 1:
+    //        map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+    //        break;
+    //    case 2:
+    //        map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+    //        break;
+    //    case 3:
     //        map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
     //        break;
     //    default:

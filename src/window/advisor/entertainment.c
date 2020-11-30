@@ -76,10 +76,10 @@ static void draw_games_info(void)
         text_draw_number(city_festival_games_planning_time(), '@', "", 102 + width, 375, FONT_NORMAL_WHITE);
     }
     else if (city_festival_games_active()) {
-        text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG + ((game->id - 1) * 2)), 56, 320, 400, FONT_NORMAL_WHITE, 0);
+        text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG + ((game->id - 1) * 2)), 60, 325, 400, FONT_NORMAL_WHITE, 0);
     }
     else {
-        text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC), 56, 320, 400, FONT_NORMAL_WHITE, 0);
+        text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC), 60, 325, 400, FONT_NORMAL_WHITE, 0);
         text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_BUTTON), 102, 385, 300, FONT_NORMAL_WHITE, 0);
     }
 }

@@ -492,7 +492,7 @@ static translation_string all_strings[] = {
     { TR_CITY_MESSAGE_TITLE_GREAT_GAMES, "The great games"},
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN, "Months until new Games can be held: " },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_NG, "Months until the Naval Games:" },
-    { TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG, "The Naval Games are underway. The splash of water, creaking of wooden timbers, and battle cries of the gladiators fill the air." },
+    { TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG, "The Naval Games are underway. The splash of water, creaking of wooden timbers, and battle cries of gladiators add to the roar of the crowd." },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_AG, "Months until the Animal Games:" },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_AG, "The Animal Games are underway. Shoulder to shoulder, the mob screams itself hoarse as the wild beasts stalk their human prey." },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_KG, "Months until the Kalends Games:" },
