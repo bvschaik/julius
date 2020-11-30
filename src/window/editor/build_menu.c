@@ -11,6 +11,12 @@
 #include "widget/sidebar/editor.h"
 #include "window/editor/map.h"
 
+#define MENU_X_OFFSET 170
+#define MENU_Y_OFFSET 110
+#define MENU_ITEM_HEIGHT 24
+#define MENU_ITEM_WIDTH 160
+#define MENU_CLICK_MARGIN 20
+
 static void button_menu_item(int index, int param2);
 
 static generic_button build_menu_buttons[] = {
@@ -53,7 +59,7 @@ static struct {
     int y_offset;
 
     int focus_button_id;
-} data;
+} data = { MENU_NONE };
 
 static int count_items(int submenu)
 {
@@ -87,9 +93,11 @@ static void draw_menu_buttons(void)
 {
     int x_offset = get_sidebar_x_offset();
     for (int i = 0; i < data.num_items; i++) {
-        label_draw(x_offset - 170, data.y_offset + 110 + 24 * i, 10, data.focus_button_id == i + 1 ? 1 : 2);
-        lang_text_draw_centered(48, MENU_TYPES[data.selected_submenu][i], x_offset - 170,
-            data.y_offset + 113 + 24 * i, 160, FONT_NORMAL_GREEN);
+        label_draw(x_offset - MENU_X_OFFSET, data.y_offset + MENU_Y_OFFSET + MENU_ITEM_HEIGHT * i, 10,
+            data.focus_button_id == i + 1 ? 1 : 2);
+        lang_text_draw_centered(48, MENU_TYPES[data.selected_submenu][i], x_offset - MENU_X_OFFSET,
+            data.y_offset + MENU_Y_OFFSET + 3 + MENU_ITEM_HEIGHT * i,
+            MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
     }
 }
 
@@ -99,10 +107,19 @@ static void draw_foreground(void)
     draw_menu_buttons();
 }
 
+static int click_outside_menu(const mouse *m, int x_offset)
+{
+    return m->left.went_up &&
+        (m->x < x_offset - MENU_X_OFFSET - MENU_CLICK_MARGIN ||
+            m->x > x_offset + MENU_CLICK_MARGIN ||
+            m->y < data.y_offset + MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
+            m->y > data.y_offset + MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * data.num_items);
+}
+
 static int handle_build_submenu(const mouse *m)
 {
     return generic_buttons_handle_mouse(
-        m, get_sidebar_x_offset() - 170, data.y_offset + 110,
+        m, get_sidebar_x_offset() - MENU_X_OFFSET, data.y_offset + MENU_Y_OFFSET,
                build_menu_buttons, data.num_items, &data.focus_button_id);
 }
 
@@ -112,7 +129,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
         widget_sidebar_editor_handle_mouse_build_menu(m)) {
         return;
     }
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h) || click_outside_menu(m, get_sidebar_x_offset())) {
+        data.selected_submenu = MENU_NONE;
         window_editor_map_show();
     }
 }
@@ -162,12 +180,16 @@ static void button_menu_item(int index, int param2)
             }
             break;
     }
-
+    data.selected_submenu = MENU_NONE;
     window_editor_map_show();
 }
 
 void window_editor_build_menu_show(int submenu)
 {
+    if (submenu == MENU_NONE || submenu == data.selected_submenu) {
+        window_editor_build_menu_hide();
+        return;
+    }
     init(submenu);
     window_type window = {
         WINDOW_EDITOR_BUILD_MENU,
@@ -176,4 +198,10 @@ void window_editor_build_menu_show(int submenu)
         handle_input
     };
     window_show(&window);
+}
+
+void window_editor_build_menu_hide(void)
+{
+    data.selected_submenu = MENU_NONE;
+    window_editor_map_show();
 }
