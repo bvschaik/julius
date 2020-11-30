@@ -1464,11 +1464,13 @@ void building_figure_generate(void)
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
+            b->show_on_problem_overlay = 1;
             continue;
         }
         if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)) {
             continue;
         }
+        
         b->show_on_problem_overlay = 0;
         // range of building types
         if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE) {
@@ -1477,7 +1479,7 @@ void building_figure_generate(void)
             spawn_figure_industry(b);
         } else if (b->type >= BUILDING_SENATE && b->type <= BUILDING_FORUM_UPGRADED) {
             spawn_figure_senate_forum(b);
-        } else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) {
+        } else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS && b->data.monument.monument_phase <= 0) {
             spawn_figure_temple(b);
         } else {
             // single building type

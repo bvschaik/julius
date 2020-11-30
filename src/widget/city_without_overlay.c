@@ -212,10 +212,10 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
     if (b->type == BUILDING_THEATER && b->num_workers > 0) {
         image_draw_masked(image_group(GROUP_BUILDING_THEATER_SHOW), x + 34, y - 22, color_mask);
     }
-    if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0) {
+    if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0 && b->data.monument.monument_phase <= 0) {
         image_draw_masked(mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum ON"), x, y - 123, color_mask);
     }
-    if (b->type == BUILDING_COLOSSEUM && b->num_workers <= 0) {
+    if (b->type == BUILDING_COLOSSEUM && b->num_workers <= 0 && b->data.monument.monument_phase <= 0) {
         image_draw_masked(mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"), x, y - 123, color_mask);
     }
     if (b->type == BUILDING_HIPPODROME && building_main(b)->num_workers > 0
