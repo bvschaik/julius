@@ -10,4 +10,9 @@
     <image id="Venus LTemp Cons 0" src="Venus_L_Temple_Construction_0%" />	
     <image id="Oracle Cons" src="Oracle_Construction_0%" />	
 
+
+<!-- Note: Lararium asset -->
+    <image id="Lararium 01" src="Lararium" />
+
+
 </mod>		

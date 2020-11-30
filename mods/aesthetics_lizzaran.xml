@@ -8,4 +8,17 @@
 	    <layer src="Small_Statue_Rotated" />		
 	</image>
 
+<!-- Note: Assets for 'Garden colonnade' all directions and intersection variants -->
+    <image id="G Colonnade 01" src="Colonnade" />
+    <image id="G Colonnade 02" src="Colonnade_R" />
+    <image id="G Colonnade 03" src="Colonnade_Corner_01" />
+    <image id="G Colonnade 04" src="Colonnade_Corner_02" />
+    <image id="G Colonnade 05" src="Colonnade_Corner_03" />
+    <image id="G Colonnade 06" src="Colonnade_Corner_04" />
+    <image id="G Colonnade 07" src="Colonnade_Intersection_01" />
+    <image id="G Colonnade 08" src="Colonnade_Intersection_02" />
+    <image id="G Colonnade 09" src="Colonnade_Intersection_03" />
+    <image id="G Colonnade 10" src="Colonnade_Intersection_04" />
+    <image id="G Colonnade 11" src="Colonnade_Intersection_4w" />
+
 </mod>		

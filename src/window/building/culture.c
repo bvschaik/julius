@@ -710,6 +710,56 @@ void window_building_draw_colosseum(building_info_context* c)
     }
 }
 
+
+void window_building_draw_arena(building_info_context* c)
+{
+    c->help_id = 73;
+    building* b = building_get(c->building_id);
+
+    window_building_play_sound(c, "wavs/colloseum.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 7);
+    window_building_draw_employment(c, 138);
+    text_draw_centered(translation_for(TR_BUILDING_ARENA), c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    if (b->data.entertainment.days1 > 0) {
+        int width = lang_text_draw(74, 8, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
+            c->x_offset + width + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+    }
+    else {
+        lang_text_draw(74, 7, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+    }
+
+    if (b->data.entertainment.days2 > 0) {
+        int width = lang_text_draw(74, 10, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2,
+            c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+    }
+    else {
+        lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+    }
+
+    if (!c->has_road_access) {
+        window_building_draw_description(c, 69, 25);
+    }
+    else if (b->num_workers <= 0) {
+        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_CLOSED);
+    }
+    else if (!b->data.entertainment.num_shows) {
+        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NO_SHOWS);
+    }
+    else if (b->data.entertainment.num_shows == 2) {
+        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_BOTH_SHOWS);
+    }
+    else if (b->data.entertainment.days1) {
+        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NEEDS_LIONS);
+    }
+    else if (b->data.entertainment.days2) {
+        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS);
+    }       
+}
+
+
 void window_building_draw_lighthouse(building_info_context* c) {
     building* b = building_get(c->building_id);
     if (b->data.monument.monument_phase == MONUMENT_FINISHED) {

@@ -66,6 +66,18 @@
         <layer src="HoldGames_Banner_Border" x="0" y="0" />
     </image>
 
-
+<!-- Note: Tourism Pillar Banner Parts (REFERENCE ASSETS: DO NOT USE) -->
+    <image id="T Pillar BG R" width="10" height="235">
+		<layer group="195" image="0" x="510" y="0" />
+    </image>		
+    <image id="T Pillar BG L" width="9" height="235">
+		<layer group="195" image="0" x="0" y="0" />
+    </image>		
+<!-- Note: Banner to go behind Tourism Pillar in Entertainment Advisor (USE THIS ONE) -->
+    <image id="Tourism Pillar BG" width="91" height="235">
+		<layer group="195" image="0" x="-64" y="0" />
+		<layer group="this" image="T Pillar BG R" x="81" y="0" />
+		<layer group="this" image="T Pillar BG L" x="0" y="0" />
+    </image>
 
 </mod>

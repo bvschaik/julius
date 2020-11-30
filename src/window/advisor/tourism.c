@@ -5,7 +5,6 @@
 #include "city/population.h"
 #include "city/resource.h"
 #include "core/calc.h"
-
 #include "game/time.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
@@ -15,6 +14,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "mods/mods.h"
 #include "scenario/property.h"
 #include "translation/translation.h"
 #include "window/advisor/ratings.h"
@@ -25,7 +25,7 @@
 static void go_back(int param1, int param2);
 
 static generic_button back_button[] = {
-    {545, 260, 60, 51, go_back, button_none, 0, 1}
+    {545, 315, 60, 51, go_back, button_none, 0, 1}
 };
 
 static int focus_button_id;
@@ -41,12 +41,14 @@ static int draw_background(void)
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     inner_panel_draw(24, 60, 32, 20);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 8, 555, 265);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 8, 555, 320);
 
-    draw_rating_column(545, 274, city_finance_tourism_rating(), city_finance_tourism_rating() >= 100);
+    
+    image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Tourism Pillar BG"), 535, 60);
+    draw_rating_column(555, 284, calc_bound(city_finance_tourism_rating(), 0, 100), city_finance_tourism_rating() >= 100);
 
     text_draw(translation_for(TR_ADVISOR_HEADER_TOURISM), 60, 12, FONT_LARGE_BLACK, 0);
-    text_draw_centered(translation_for(TR_ADVISOR_BACK_BUTTON_TOURISM), 545, 315, 61, FONT_NORMAL_BLACK, 0);
+    text_draw_centered(translation_for(TR_ADVISOR_BACK_BUTTON_TOURISM), 545, 375, 61, FONT_NORMAL_BLACK, 0);
 
     height = text_draw_multiline(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT), 40, 70, 480, FONT_NORMAL_WHITE, 0);
     width = text_draw(translation_for(TR_ADVISOR_TOURISM_DESCRIPTION_TEXT_2), 40, 80+height, FONT_NORMAL_WHITE, 0);
@@ -86,9 +88,9 @@ static int draw_background(void)
 static void draw_foreground(void)
 {
     if (focus_button_id == 0) {
-        button_border_draw(545, 260, 60, 51, 0);
+        button_border_draw(545, 315, 60, 51, 0);
     } else if (focus_button_id == 1) {
-        button_border_draw(545, 260, 60, 51, 1);
+        button_border_draw(545, 315, 60, 51, 1);
     }
 }
 

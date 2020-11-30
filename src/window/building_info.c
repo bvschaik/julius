@@ -521,8 +521,10 @@ static void draw_background(void)
             window_building_draw_theater(&context);
         } else if (btype == BUILDING_HIPPODROME) {
             window_building_draw_hippodrome(&context);
-        } else if (btype == BUILDING_ARENA || btype == BUILDING_COLOSSEUM) {
+        } else if (btype == BUILDING_COLOSSEUM) {
             window_building_draw_colosseum(&context);
+        } else if (btype == BUILDING_ARENA ) {
+            window_building_draw_arena(&context);
         } else if (btype == BUILDING_GLADIATOR_SCHOOL) {
             window_building_draw_gladiator_school(&context);
         } else if (btype == BUILDING_LION_HOUSE) {

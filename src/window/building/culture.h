@@ -35,6 +35,8 @@ void window_building_draw_theater(building_info_context *c);
 
 void window_building_draw_amphitheater(building_info_context *c);
 
+void window_building_draw_arena(building_info_context* c);
+
 void window_building_draw_colosseum(building_info_context *c);
 
 void window_building_draw_hippodrome(building_info_context *c);

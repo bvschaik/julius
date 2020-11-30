@@ -492,7 +492,7 @@ static translation_string all_strings[] = {
     { TR_CITY_MESSAGE_TITLE_GREAT_GAMES, "The Great Games"},
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN, "Months until new Games can be held: " },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_NG, "Months until the Naval Games:" },
-    { TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG, "The Naval Games are underway. The splash of water, creaking of wooden timbers, and battle cries of gladiators add to the roar of the crowd." },
+    { TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG, "The Naval Games are underway. The splash of water, creaking of timbers, and battle cries of gladiators add to the roar of the crowd." },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_AG, "Months until the Animal Games:" },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_AG, "The Animal Games are underway. Shoulder to shoulder, the mob screams itself hoarse as the wild beasts stalk their human prey." },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_KG, "Months until the Kalends Games:" },
@@ -502,8 +502,11 @@ static translation_string all_strings[] = {
     { TR_WINDOW_BUILDING_GAMES_REMAINING_DURATION, "Great Games will continue for another" }, // ...XX Days, 
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN_TEXT, "Great Games were held recently." },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_UNDERWAY, "The Great Games are underway! Your city throngs with travellers and revelry." },
-
-
+    { TR_WINDOW_BUILDING_ARENA_CLOSED, "The arena is closed. Birds make nests in the empty seats." },
+    { TR_WINDOW_BUILDING_ARENA_NO_SHOWS, "This arena hosts neither lions nor gladiators, and provides little entertainment." },
+    { TR_WINDOW_BUILDING_ARENA_BOTH_SHOWS, "This arena hosts gladiators and animal hunts, to the delight of the locals." },
+    { TR_WINDOW_BUILDING_ARENA_NEEDS_LIONS, "Regular gladiator shows keep the mob entertained, but lions would elevate the spectacle." },
+    { TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS, "Hungry beasts prowl the arena in search of prey, but a lack of trained gladiators makes for brief shows." }
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
