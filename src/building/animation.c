@@ -65,7 +65,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_TAVERN && (b->num_workers <= 0 || !b->data.market.inventory[4])) { //wine
         return 0;
     }
-    if (b->type == BUILDING_COLOSSEUM ) {
+    if (b->type == BUILDING_COLOSSEUM) {
         switch (city_festival_games_active()) {
         case 1:
             map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
@@ -79,7 +79,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
         default:
             map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"));
             if (b->num_workers <= 0) {
-                return 0;
+                map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"));
             }
         }
     }   

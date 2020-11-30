@@ -215,6 +215,9 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
     if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0) {
         image_draw_masked(mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum ON"), x, y - 123, color_mask);
     }
+    if (b->type == BUILDING_COLOSSEUM && b->num_workers <= 0) {
+        image_draw_masked(mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"), x, y - 123, color_mask);
+    }
     if (b->type == BUILDING_HIPPODROME && building_main(b)->num_workers > 0
         && city_entertainment_hippodrome_has_race()) {
         draw_hippodrome_spectators(b, x, y, color_mask);
