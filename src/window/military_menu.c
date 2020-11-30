@@ -60,7 +60,7 @@ static void draw_foreground(void)
 
 static int click_outside_menu(const mouse *m, int x_offset)
 {
-    return m->left.went_down &&
+    return m->left.went_up &&
           (m->x < x_offset - MENU_X_OFFSET - MENU_CLICK_MARGIN ||
            m->x > x_offset + MENU_CLICK_MARGIN ||
            m->y < MENU_Y_OFFSET - MENU_CLICK_MARGIN ||

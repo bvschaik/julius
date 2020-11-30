@@ -187,8 +187,7 @@ static void button_menu_item(int index, int param2)
 void window_editor_build_menu_show(int submenu)
 {
     if (submenu == MENU_NONE || submenu == data.selected_submenu) {
-        data.selected_submenu = MENU_NONE;
-        window_editor_map_show();
+        window_editor_build_menu_hide();
         return;
     }
     init(submenu);
@@ -199,4 +198,10 @@ void window_editor_build_menu_show(int submenu)
         handle_input
     };
     window_show(&window);
+}
+
+void window_editor_build_menu_hide(void)
+{
+    data.selected_submenu = MENU_NONE;
+    window_editor_map_show();
 }

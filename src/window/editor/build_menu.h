@@ -15,4 +15,6 @@ enum {
 
 void window_editor_build_menu_show(int submenu);
 
+void window_editor_build_menu_hide(void);
+
 #endif // WINDOW_EDITOR_BUILD_MENU_H

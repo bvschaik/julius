@@ -147,7 +147,7 @@ static void handle_submenu_focus(void)
 
 static int click_outside_menu(const mouse *m, int x_offset)
 {
-    return m->left.went_down &&
+    return m->left.went_up &&
           (m->x < x_offset - MENU_CLICK_MARGIN - (data.selected_submenu ? SUBMENU_X_OFFSET : MENU_X_OFFSET) ||
            m->x > x_offset + MENU_CLICK_MARGIN ||
            m->y < MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
