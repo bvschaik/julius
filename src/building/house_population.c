@@ -23,10 +23,7 @@ int house_population_add_to_city(int num_people)
         if (b->state == BUILDING_STATE_IN_USE && b->house_size
             && b->distance_from_entry > 0 && b->house_population > 0) {
             city_population_set_last_used_house_add(building_id);
-            int max_people = model_get_house(b->subtype.house_level)->max_people;
-            if (b->house_is_merged) {
-                max_people *= 4;
-            }
+            int max_people = house_population_get_capacity(b);
             if (b->house_population < max_people) {
                 ++added;
                 ++b->house_population;

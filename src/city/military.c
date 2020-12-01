@@ -66,7 +66,8 @@ void city_military_update_totals(void)
             if (m->empire_service && m->num_figures > 0) {
                 city_data.military.empire_service_legions++;
             }
-            else {
+
+            if (!m->in_distant_battle) {
                 city_data.military.soldiers_in_city += m->num_figures;
             }
         }

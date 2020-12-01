@@ -4,6 +4,7 @@
 #include "city/figures.h"
 #include "city/military.h"
 #include "city/view.h"
+#include "core/calc.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -18,6 +19,8 @@
 #include "window/city.h"
 
 #define ADVISOR_HEIGHT 27
+
+#define MAX_BUTTONS 18
 
 static void button_go_to_legion(int legion_id, int param2);
 static void button_return_to_fort(int legion_id, int param2);
@@ -197,7 +200,11 @@ static int handle_mouse(const mouse *m)
     if (scrollbar_handle_mouse(&scrollbar, m)) {
         return 1;
     }
-    return generic_buttons_handle_mouse(m, 0, 0, fort_buttons, 3 * num_legions, &focus_button_id);
+    int buttons = 3 * num_legions;
+    if (buttons > MAX_BUTTONS) {
+        buttons = MAX_BUTTONS;
+    }
+    return generic_buttons_handle_mouse(m, 0, 0, fort_buttons, buttons, &focus_button_id);
 }
 
 static void button_go_to_legion(int legion_id, int param2)

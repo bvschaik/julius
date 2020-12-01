@@ -1047,19 +1047,22 @@ static void spawn_figure_temple(building *b)
 
         if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
             int mess_hall_id = city_buildings_get_mess_hall();
-            figure* f = figure_get(b->figure_id2);
-            if (f->state != FIGURE_STATE_ALIVE) {
-                b->figure_id2 = 0;
-            }
-            int food_to_deliver = building_mars_temple_food_to_deliver(b, mess_hall_id);
-            if (food_to_deliver >= 0) {
-                figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
-                
-                f->collecting_item_id = food_to_deliver;
-                b->figure_id2 = f->id;
-                f->destination_building_id = mess_hall_id;
-                f->building_id = b->id;
-                f->action_state = FIGURE_ACTION_214_DESTINATION_MARS_PRIEST_CREATED;
+            building* mess_hall = building_get(mess_hall_id);
+            if (mess_hall_id && mess_hall->type == BUILDING_MESS_HALL) {
+                figure* f = figure_get(b->figure_id2);
+                if (f->state != FIGURE_STATE_ALIVE) {
+                    b->figure_id2 = 0;
+                }
+                int food_to_deliver = building_mars_temple_food_to_deliver(b, mess_hall_id);
+                if (food_to_deliver >= 0) {
+                    figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
+
+                    f->collecting_item_id = food_to_deliver;
+                    b->figure_id2 = f->id;
+                    f->destination_building_id = mess_hall_id;
+                    f->building_id = b->id;
+                    f->action_state = FIGURE_ACTION_214_DESTINATION_MARS_PRIEST_CREATED;
+                }
             }
         }
 
@@ -1069,7 +1072,7 @@ static void spawn_figure_temple(building *b)
         }
 
         // Venus Module 1 Bonus
-        if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) && !b->figure_id2) {
+        if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) && !b->figure_id2) {            
             spawn_market_buyer(b, road, 2);
         }
 

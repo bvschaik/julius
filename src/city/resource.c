@@ -378,10 +378,11 @@ void city_resource_consume_food(void)
 {
     calculate_available_food();
     city_data.resource.food_types_eaten = 0;
-    city_data.unused.unknown_00c0 = 0;
+    city_data.building.mess_hall_building_id = 0;
 
     int ceres_module = (building_monument_gt_module_is_active(CERES_MODULE_1_REDUCE_FOOD));
     int total_consumed = 0;
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
@@ -428,6 +429,8 @@ void city_resource_consume_food(void)
             int total_food_in_mess_hall = 0;
             double proportionate_amount = 0;
             int amount_for_type = 0;
+
+            city_data.building.mess_hall_building_id = b->id;
 
             for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
                 total_food_in_mess_hall += b->data.market.inventory[i];

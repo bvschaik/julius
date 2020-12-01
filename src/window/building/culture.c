@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/monument.h"
+#include "city/buildings.h"
 #include "city/constants.h"
 #include "city/festival.h"
 #include "city/finance.h"
@@ -12,6 +13,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "mods/mods.h"
+#include "scenario/building.h"
 #include "sound/speech.h"
 #include "translation/translation.h"
 #include "window/option_popup.h"
@@ -35,18 +37,18 @@ static struct {
 } data = { 0, 0 };
 
 option_menu_item temple_module_options[12] = {
-   {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Ceres M Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Ceres M2 Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Nept M2 Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Nept M Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Merc M Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Merc M2 Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Mars M2 Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Mars M Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Venus M Icon"},
-   {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Venus M2 Icon"},
-   {TR_BUILDING_PANTHEON_DESC_MODULE_1, TR_BUILDING_PANTHEON_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Panth M Icon"},
-   {TR_BUILDING_PANTHEON_DESC_MODULE_2, TR_BUILDING_PANTHEON_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Panth M2 Icon"}
+   {0, TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Ceres M Icon", 0},
+   {0, TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Ceres M2 Icon", 0},
+   {0, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Nept M2 Icon", BUILDING_HIPPODROME},
+   {0, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Nept M Icon", 0},
+   {0, TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Merc M Icon", 0},
+   {0, TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Merc M2 Icon", 0},
+   {0, TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Mars M2 Icon", BUILDING_FORT},
+   {0, TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Mars M Icon", 0},
+   {0, TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Venus M Icon", 0},
+   {0, TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Venus M2 Icon", 0},
+   {0, TR_BUILDING_PANTHEON_DESC_MODULE_1, TR_BUILDING_PANTHEON_MODULE_1_DESC, 0, "Areldir", "UI_Elements", "Panth M Icon", 0},
+   {0, TR_BUILDING_PANTHEON_DESC_MODULE_2, TR_BUILDING_PANTHEON_MODULE_2_DESC, 0, "Areldir", "UI_Elements", "Panth M2 Icon", 0}
 };
 
 static void draw_culture_info(building_info_context *c, int help_id, const char *sound_file, int group_id)
@@ -168,8 +170,15 @@ static void draw_temple_info(building_info_context* c, int image_offset) {
             c->x_offset + 372, c->y_offset + 60);
         text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ", c->x_offset + 404, c->y_offset + 66, FONT_NORMAL_BLACK);
 
-        text_draw_multiline(translation_for(TR_BUILDING_MARS_TEMPLE_MODULE_DESC), c->x_offset + 112, c->y_offset + 90, 
-            16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
+        if (city_buildings_get_mess_hall()) {
+            text_draw_multiline(translation_for(TR_BUILDING_MARS_TEMPLE_MODULE_DESC), c->x_offset + 112, c->y_offset + 90,
+                16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
+        }
+        else {
+            text_draw_multiline(translation_for(TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS), c->x_offset + 112, c->y_offset + 90,
+                16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
+        }
+
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
             c->x_offset + 16, c->y_offset + 45);
 
@@ -837,5 +846,13 @@ static void add_module(int selection)
 static void add_module_prompt(int param1, int param2)
 {
     option_menu_item options[2] = { temple_module_options[god_id * 2], temple_module_options[god_id * 2 + 1] };
+    if (scenario_building_allowed(temple_module_options[god_id * 2].required_allowed_building_id)) {
+        options[0].show = 1;
+    }
+
+    if (scenario_building_allowed(temple_module_options[god_id * 2 + 1].required_allowed_building_id)) {
+        options[1].show = 1;
+    }
+
     window_option_popup_show(TR_SELECT_EPITHET_PROMPT_HEADER, TR_SELECT_EPITHET_PROMPT_TEXT, options, add_module, 1);
 }

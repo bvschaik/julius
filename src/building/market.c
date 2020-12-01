@@ -122,7 +122,8 @@ int building_market_get_storage_destination(building *market)
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
-        if (b->type == BUILDING_GRAND_TEMPLE_VENUS && building_is_venus_temple(market->type)) {
+
+        if (b->type == BUILDING_GRAND_TEMPLE_VENUS && building_is_venus_temple(market->type) && b->road_network_id == market->road_network_id) {
             building *gt = building_get(building_monument_get_venus_gt());
             return building_venus_temple_get_wine_destination(market, gt);
         }
@@ -134,6 +135,11 @@ int building_market_get_storage_destination(building *market)
             b->road_network_id != market->road_network_id) {
             continue;
         }
+
+        if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE) {
+            continue;
+        }
+
         if (!building_storage_get_permission(permission,b)) {
             continue;
         }

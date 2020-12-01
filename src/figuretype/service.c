@@ -150,6 +150,7 @@ void figure_destination_priest_action(figure* f)
         }
         break;
     case FIGURE_ACTION_215_PRIEST_GOING_TO_MESS_HALL:
+        f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
         figure_movement_move_ticks(f, 1);
         if (f->direction == DIR_FIGURE_AT_DESTINATION) {
             f->state = FIGURE_STATE_DEAD;

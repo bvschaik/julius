@@ -1,6 +1,7 @@
 #include "cheats.h"
 
 #include "building/construction.h"
+#include "building/menu.h"
 #include "building/monument.h"
 #include "building/type.h"
 #include "city/gods.h"
@@ -8,6 +9,7 @@
 #include "city/victory.h"
 #include "city/warning.h"
 #include "core/string.h"
+#include "empire/city.h"
 #include "figure/figure.h"
 #include "game/tick.h"
 #include "graphics/color.h"
@@ -15,11 +17,12 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/invasion.h"
+#include "scenario/scenario.h"
 #include "window/building_info.h"
 #include "window/city.h"
 #include "window/console.h"
 
-#define NUMBER_OF_COMMANDS 8
+#define NUMBER_OF_COMMANDS 9
 
 static void game_cheat_add_money(uint8_t *);
 static void game_cheat_start_invasion(uint8_t *);
@@ -29,7 +32,7 @@ static void game_cheat_show_tooltip(uint8_t *);
 static void game_cheat_kill_all(uint8_t*);
 static void game_cheat_finish_monuments(uint8_t*);
 static void game_cheat_monument_phase(uint8_t*);
-
+static void game_cheat_unlock_all_buildings(uint8_t*);
 
 static void (* const execute_command[])(uint8_t * args) = {
     game_cheat_add_money,
@@ -40,6 +43,7 @@ static void (* const execute_command[])(uint8_t * args) = {
     game_cheat_kill_all,
     game_cheat_finish_monuments,
     game_cheat_monument_phase,
+    game_cheat_unlock_all_buildings,
 };
 
 static const char *commands[] = {
@@ -50,7 +54,8 @@ static const char *commands[] = {
     "showtooltip",
     "killall",
     "finishmonuments",
-    "monumentphase"
+    "monumentphase",
+    "whathaveromansdoneforus",
 };
 
 static struct {
@@ -185,6 +190,16 @@ static void game_cheat_monument_phase(uint8_t* args) {
     building_monument_phase(phase);
     city_warning_show_console((uint8_t*)"Monuments updated");
 }
+
+static void game_cheat_unlock_all_buildings(uint8_t* args) {
+    building_menu_enable_all();
+    empire_unlock_all_resources();
+    scenario_unlock_all_buildings();
+    city_warning_show_console((uint8_t*)"All buildings unlocked");
+}
+
+
+
 
 void game_cheat_parse_command(uint8_t * command){
     uint8_t command_to_call[MAX_COMMAND_SIZE];

@@ -506,7 +506,10 @@ static translation_string all_strings[] = {
     { TR_WINDOW_BUILDING_ARENA_NO_SHOWS, "This arena hosts neither lions nor gladiators, and provides little entertainment." },
     { TR_WINDOW_BUILDING_ARENA_BOTH_SHOWS, "This arena hosts gladiators and animal hunts, to the delight of the locals." },
     { TR_WINDOW_BUILDING_ARENA_NEEDS_LIONS, "Regular gladiator shows keep the mob entertained, but lions would elevate the spectacle." },
-    { TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS, "Hungry beasts prowl the arena in search of prey, but a lack of trained gladiators makes for brief shows." }
+    { TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS, "Hungry beasts prowl the arena in search of prey, but a lack of trained gladiators makes for brief shows." },
+    {TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
+    {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "This temple will collect food for your supply post, once it is constructed." },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -57,9 +57,9 @@
 
 static void advance_year(void)
 {
-    scenario_empire_process_expansion();
     game_undo_disable();
     game_time_advance_year();
+    scenario_empire_process_expansion();
     city_population_request_yearly_update();
     city_finance_handle_year_change();
     empire_city_reset_yearly_trade_amounts();

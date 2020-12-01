@@ -195,7 +195,7 @@ void map_water_supply_update_reservoir_fountain(void)
     // Neptune GT module 2 bonus
     if (building_monument_gt_module_is_active(NEPTUNE_MODULE_2_CAPACITY_AND_WATER)) {
         building* b = building_get(building_monument_get_neptune_gt());
-        map_terrain_add_with_radius(b->x, b->y, 3, map_water_supply_reservoir_radius(), TERRAIN_RESERVOIR_RANGE);        
+        map_terrain_add_with_radius(b->x, b->y, 7, map_water_supply_reservoir_radius(), TERRAIN_RESERVOIR_RANGE);        
     }
 
     // fountains
