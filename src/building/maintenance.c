@@ -306,7 +306,7 @@ void building_maintenance_check_rome_access(void) {
 			b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network_grand_temple(b->x, b->y, &x_road, &y_road);
-			if (road_grid_offset >= 0) {
+            if (road_grid_offset >= 0) {
 				b->road_network_id = map_road_network_get(road_grid_offset);
 				b->distance_from_entry = map_routing_distance(road_grid_offset);
 				b->road_access_x = x_road;
