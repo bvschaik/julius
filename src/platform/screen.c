@@ -1,6 +1,7 @@
 #include "platform/screen.h"
 
 #include "core/calc.h"
+#include "core/config.h"
 #include "game/settings.h"
 #include "game/system.h"
 #include "graphics/graphics.h"
@@ -87,6 +88,10 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
 static void set_scale_for_screen(int pixel_width, int pixel_height)
 {
     set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
+    config_set(CONFIG_SCREEN_CURSOR_SCALE, scale_percentage);
+    if (SDL.texture) {
+        system_init_cursors(scale_percentage);
+    }
     SDL_Log("Auto-setting scale to %i", scale_percentage);
 }
 #endif

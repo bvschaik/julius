@@ -21,7 +21,8 @@ android {
             }
         }
         sourceSets {
-            main.java.srcDirs += '../../ext/SDL2/SDL2-2.0.12/android-project/app/src/main/java'
+            main.java.srcDirs += '../../ext/SDL2'
+            main.java.excludes += '**/android-project-ant/**'
         }
     }
     buildTypes {
