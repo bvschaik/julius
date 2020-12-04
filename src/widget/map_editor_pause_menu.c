@@ -1,6 +1,7 @@
 #include "map_editor_pause_menu.h"
 
 #include "game/file.h"
+#include "game/game.h"
 #include "game/undo.h"
 #include "game/state.h"
 #include "graphics/generic_button.h"
@@ -11,9 +12,11 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "translation/translation.h"
 #include "widget/top_menu_editor.h"
 #include "window/editor/attributes.h"
+#include "window/editor/map.h"
 #include "window/file_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/city.h"
@@ -21,6 +24,15 @@
 #include "window/mission_briefing.h"
 
 #define MAX_BUTTONS 6
+
+static void menu_file_confirm_exit(int accepted)
+{
+    if (accepted) {
+        game_exit_editor();
+    } else {
+        window_editor_map_show();
+    }
+}
 
 static void button_click(int type, int param2);
 
@@ -90,9 +102,11 @@ static void replay_map_confirmed(int confirmed)
 static void main_menu_confirmed(int confirmed)
 {
     if (confirmed) {
-        game_undo_disable();
-        game_state_reset_overlay();
-        window_main_menu_show(1);
+        if (scenario_is_saved()) {
+            game_exit_editor();
+        } else {
+            window_popup_dialog_show(POPUP_DIALOG_EDITOR_QUIT_WITHOUT_SAVING, menu_file_confirm_exit, 1);
+        }
     }
 }
 
