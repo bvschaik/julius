@@ -114,6 +114,12 @@ typedef struct {
     short attacker_id1;
     short attacker_id2;
     short opponent_id;
+    union {
+        unsigned short tourist_money_spent;
+        unsigned short ticks_since_last_visited_id[8];
+        unsigned short visited_building_type_ids[8];
+        unsigned char tourist_rank;
+    } tourist;
 } figure;
 
 figure *figure_get(int id);

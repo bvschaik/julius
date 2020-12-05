@@ -73,6 +73,8 @@ void house_service_calculate_culture_aggregates(void)
 {
     int base_entertainment = 0;
     int venus_module2 = building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT);
+    int arena_total = 0;
+    int colosseum_total = 0;
     int completed_colosseum = building_monument_working(BUILDING_COLOSSEUM);
     int completed_hippodrome = building_monument_working(BUILDING_HIPPODROME);
 
@@ -100,13 +102,32 @@ void house_service_calculate_culture_aggregates(void)
                 b->data.house.entertainment += 10;
             }
         }
-        if (b->data.house.colosseum_gladiator) {
-            if (b->data.house.colosseum_lion) {
-                b->data.house.entertainment += 25;
-            } else {
-                b->data.house.entertainment += 15;
+
+        if (b->house_arena_gladiator) {
+            if (b->house_arena_lion) {
+               arena_total = 20;
+            }
+            else {
+                arena_total = 10;
             }
         }
+
+        if (b->data.house.colosseum_gladiator) {
+            if (b->data.house.colosseum_lion) {
+                colosseum_total = 25;
+            }
+            else {
+                colosseum_total = 15;
+            }
+        }
+
+        if (arena_total > colosseum_total) {
+            b->data.house.entertainment += arena_total;
+        }
+        else {
+            b->data.house.entertainment += colosseum_total;
+        }
+
         if (b->data.house.hippodrome) {
             b->data.house.entertainment += 30;
         }

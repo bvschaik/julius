@@ -9,8 +9,8 @@ static int show_building_entertainment(const building *b)
         b->type == BUILDING_ACTOR_COLONY || b->type == BUILDING_THEATER ||
         b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_AMPHITHEATER ||
         b->type == BUILDING_LION_HOUSE || b->type == BUILDING_COLOSSEUM ||
-        b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM || 
-        b->type == BUILDING_TAVERN;
+        b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME ||
+        b->type == BUILDING_TAVERN || b->type == BUILDING_ARENA;
 }
 
 static int show_building_theater(const building *b)
@@ -109,7 +109,8 @@ static int get_column_height_amphitheater(const building *b)
 
 static int get_column_height_colosseum(const building *b)
 {
-    return b->house_size && b->data.house.colosseum_gladiator ? b->data.house.colosseum_gladiator / 10 : NO_COLUMN;
+    int coverage = (b->data.house.colosseum_gladiator > b->house_arena_gladiator) ? b->data.house.colosseum_gladiator : b->house_arena_gladiator;
+    return b->house_size && coverage ? coverage / 10 : NO_COLUMN;
 }
 
 static int get_column_height_hippodrome(const building *b)
@@ -180,15 +181,22 @@ static int get_tooltip_amphitheater(tooltip_context *c, const building *b)
 
 static int get_tooltip_colosseum(tooltip_context *c, const building *b)
 {
-    if (b->data.house.colosseum_gladiator <= 0) {
-        return 83;
-    } else if (b->data.house.colosseum_gladiator >= 80) {
-        return 84;
-    } else if (b->data.house.colosseum_gladiator >= 20) {
-        return 85;
-    } else {
-        return 86;
+    if (b->data.house.colosseum_gladiator && b->data.house.colosseum_lion) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_ARENA_COL_5;
     }
+    else if (b->data.house.colosseum_gladiator) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_ARENA_COL_4;
+    }
+    else if (b->house_arena_gladiator && b->house_arena_lion) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_ARENA_COL_3;
+    }
+    else if (b->house_arena_gladiator) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_ARENA_COL_2;
+    }
+    else {
+        c->translation_key = TR_TOOLTIP_OVERLAY_ARENA_COL_1;
+    }
+    return 0;
 }
 
 static int get_tooltip_hippodrome(tooltip_context *c, const building *b)

@@ -68,6 +68,8 @@ typedef struct {
     unsigned char house_pantheon_access;
     unsigned char house_tavern_wine_access;
     unsigned char house_tavern_meat_access;
+    unsigned char house_arena_gladiator;
+    unsigned char house_arena_lion;
     short formation_id;
     signed char monthly_levy;
     union {
