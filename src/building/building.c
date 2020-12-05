@@ -522,17 +522,33 @@ void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
 {
     int building_size = BUILDING_SAVEGAME_STATE_ORIGINAL_SIZE;
     int buf_size = buf->size;
+    int buildings_to_load = buf_size / building_size;
+
     if (includes_building_size) {
         building_size = buffer_read_i32(buf);
         buf_size -= 4;
     }
 
-    create_building_array(buf_size / building_size);
+    create_building_array(buildings_to_load);
+
+    // Reduce number of used buildings on old Augustus savefiles that were hardcoded to load 10000. Improves performance
+    int highest_id_in_use = 0;
+    int reduce_building_array_size = !includes_building_size && buildings_to_load == 10000;
 
     for (int i = 0; i < data.building_array_size; i++) {
         building_state_load_from_buffer(buf, &data.all_buildings[i]);
         data.all_buildings[i].id = i;
+        if (reduce_building_array_size && data.all_buildings[i].state != BUILDING_STATE_UNUSED) {
+            highest_id_in_use = i;
+        }
     }
+    if (reduce_building_array_size) {
+        data.building_array_size = BUILDING_ARRAY_SIZE_STEP;
+        while (highest_id_in_use > data.building_array_size) {
+            data.building_array_size += BUILDING_ARRAY_SIZE_STEP;
+        }
+    }
+
     extra.highest_id_in_use = buffer_read_i32(highest_id);
     extra.highest_id_ever = buffer_read_i32(highest_id_ever);
     buffer_skip(highest_id_ever, 4);
