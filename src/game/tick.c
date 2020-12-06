@@ -157,6 +157,7 @@ static void advance_tick(void)
         case 38: building_update_desirability(); break;
         case 39: building_house_process_evolve_and_consume_goods(); break;
         case 40: building_update_state(); break;
+        case 42: city_finance_spawn_tourist(); break;
         case 43: building_maintenance_update_burning_ruins(); break;
         case 44: building_maintenance_check_fire_collapse(); break;
         case 45: figure_generate_criminals(); break;

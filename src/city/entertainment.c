@@ -133,3 +133,5 @@ int city_entertainment_show_message_hippodrome(void)
         return 0;
     }
 }
+
+

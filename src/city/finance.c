@@ -9,6 +9,7 @@
 #include "core/calc.h"
 #include "game/difficulty.h"
 #include "game/time.h"
+#include "figuretype/entertainer.h"
 
 #define MAX_HOUSE_LEVELS 20
 
@@ -42,13 +43,27 @@ static tourism_for_type tourism_modifiers[] = {
     {BUILDING_TAVERN, 2, TAVERN_COVERAGE, 0},
     {BUILDING_THEATER, 1, THEATER_COVERAGE, 0},
     {BUILDING_AMPHITHEATER, 1, AMPHITHEATER_COVERAGE, 0},
-    {BUILDING_ARENA, 2, ARENA_COVERAGE, 0}
+    {BUILDING_ARENA, 2, ARENA_COVERAGE, 0},
+    {BUILDING_COLOSSEUM, 4, 0, 0},
+    {BUILDING_HIPPODROME, 5, 0, 0},
+    {BUILDING_GRAND_TEMPLE_CERES, 3, 0, 0},
+    {BUILDING_GRAND_TEMPLE_NEPTUNE, 3, 0, 0},
+    {BUILDING_GRAND_TEMPLE_MERCURY, 3, 0, 0},
+    {BUILDING_GRAND_TEMPLE_MARS, 3, 0, 0},
+    {BUILDING_GRAND_TEMPLE_VENUS, 3, 0, 0},
+    {BUILDING_PANTHEON, 3, 0, 0}
 };
 
 int city_finance_treasury(void)
 {
     return city_data.finance.treasury;
 }
+
+int city_finance_treasury_add(int amount)
+{
+    city_data.finance.treasury += amount;
+}
+
 
 int city_finance_out_of_money(void)
 {
@@ -325,34 +340,31 @@ static void pay_monthly_building_levies(void) {
     city_data.finance.this_year.expenses.levies += levies;
 }
 
-static void collect_monthly_tourism(void) {
-    int levies = 0;
-
-    for (int i = 0; i < BUILDINGS_WITH_TOURISM; ++i) {
-        int num_buildings = calc_bound(building_count_active(tourism_modifiers[i].type), 0, city_data.population.population / tourism_modifiers[i].coverage);
-        tourism_modifiers[i].total = num_buildings * tourism_modifiers[i].amount * (TOURISM_RATING_MODIFIER * city_finance_tourism_rating());
-
-        for (int i = 1; i < MAX_BUILDINGS; i++) {
-            building* b = building_get(i);
-            for (int i = 0; i < BUILDINGS_WITH_TOURISM; ++i) {
-                if (b->type == tourism_modifiers[i].type && b->state == BUILDING_STATE_IN_USE && b->num_workers) {
-                    int levy = tourism_modifiers[i].total / building_count_active(tourism_modifiers[i].type);
-                    b->monthly_levy = levy * -1;
-                    levies += levy;
+static void activate_monthly_tourism(void) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building* b = building_get(i);
+        for (int i = 0; i < BUILDINGS_WITH_TOURISM; ++i) {
+            if (b->type == tourism_modifiers[i].type && b->state == BUILDING_STATE_IN_USE && b->num_workers) {
+                b->is_tourism_venue = 1;
+                tourism_modifiers[i].count++;
+                // disable redundant venues for tourism
+                if ((tourism_modifiers[i].count * tourism_modifiers[i].coverage) > city_data.population.population) {
+                    b->tourism_disabled = 1;
+                    b->tourism_income = 0;
+                }
+                else {
+                    b->tourism_disabled = 0;
+                    b->tourism_income = tourism_modifiers[i].income_modifier;
                 }
             }
         }
     }
-
-    city_data.finance.tourism_last_month = levies;
-    city_data.finance.treasury += levies;
-    city_data.finance.this_year.income.taxes += levies;
 }
 
 void city_finance_handle_month_change(void)
 {
     collect_monthly_taxes();
-    collect_monthly_tourism();
+    activate_monthly_tourism();
     pay_monthly_wages();
     pay_monthly_interest();
     pay_monthly_salary();
@@ -572,4 +584,9 @@ const finance_overview *city_finance_overview_last_year(void)
 const finance_overview *city_finance_overview_this_year(void)
 {
     return &city_data.finance.this_year;
+}
+
+int city_finance_spawn_tourist(void)
+{
+    figure_spawn_tourist();
 }

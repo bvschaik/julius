@@ -41,6 +41,7 @@ int city_festival_select_size(int size);
 
 int city_festival_selected_game_id(void);
 int city_festival_games_active(void);
+int city_festival_games_active_venue_type(void);
 int city_festival_games_bonus_active(int game_id);
 int city_festival_games_remaining_duration(void);
 int city_festival_games_planning_time(void);

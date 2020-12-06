@@ -13,7 +13,7 @@
 #define HIPPODROME_LEVY_MONTHLY 72
 
 #define BUILDINGS_WITH_LEVIES 22
-#define BUILDINGS_WITH_TOURISM 4
+#define BUILDINGS_WITH_TOURISM 12
 
 #define TOURISM_RATING_MODIFIER 0.05
 #define TOURISM_POP_MINIMUM 2000
@@ -26,12 +26,14 @@ typedef struct {
 
 typedef struct {
     int type;
-    int amount;
+    int income_modifier;
     int coverage;
-    int total;
+    int count;
 } tourism_for_type;
 
 int city_finance_treasury(void);
+
+int city_finance_treasury_add(int amount);
 
 int city_finance_out_of_money(void);
 
@@ -109,4 +111,5 @@ const finance_overview *city_finance_overview_last_year(void);
 
 const finance_overview *city_finance_overview_this_year(void);
 
+int city_finance_spawn_tourist(void);
 #endif // CITY_FINANCE_H

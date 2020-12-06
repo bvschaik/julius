@@ -156,6 +156,9 @@ typedef struct {
         signed char native_anger;
     } sentiment;
     unsigned char show_on_problem_overlay;
+    unsigned char is_tourism_venue;
+    unsigned char tourism_disabled;
+    unsigned char tourism_income;
 } building;
 
 building *building_get(int id);

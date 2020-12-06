@@ -4,6 +4,7 @@
 #include "building/model.h"
 #include "building/monument.h"
 #include "city/buildings.h"
+#include "city/finance.h"
 #include "core/config.h"
 #include "figuretype/crime.h"
 #include "game/resource.h"
@@ -11,6 +12,7 @@
 #include "map/grid.h"
 
 #define MAX_COVERAGE 96
+#define TOURISM_COOLDOWN 96
 
 static int provide_culture(int x, int y, void (*callback)(building *))
 {
@@ -183,8 +185,59 @@ static int provide_missionary_coverage(int x, int y)
     return 1;
 }
 
-static int provide_service(int x, int y, int *data, void (*callback)(building *, int *))
+static int tourist_visit(int x, int y, figure* f, void (*callback)(building*, figure*)) {
+    int serviced = 0;
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            int building_id = map_building_at(grid_offset);
+            if (building_id) {
+                building* b = building_get(building_id);
+                callback(b, f);
+            }
+        }
+    }
+    return serviced;
+}
+
+static void tourist_spend(building* b, figure *f)
 {
+    int can_pay = 0;
+    if (!b->is_tourism_venue || b->tourism_disabled) {
+        return 0;
+    }
+
+    if (b->type == BUILDING_HIPPODROME) {
+        b = building_main(b);
+    }
+    for (int i = 0; i <= 12; ++i) {
+        if (f->tourist.visited_building_type_ids[i]) {
+            if (f->tourist.visited_building_type_ids[i] == b->type) {
+                if (f->tourist.ticks_since_last_visited_id[i] >= TOURISM_COOLDOWN) {
+                    can_pay = 1;
+                    f->tourist.ticks_since_last_visited_id[i] = 0;
+                }
+                break;
+            }
+        }
+        else {
+            f->tourist.visited_building_type_ids[i] = b->type;
+            can_pay = 1;
+            break;
+        }
+    }
+
+    if (can_pay) {
+        int amount = b->tourism_income;
+        f->tourist.tourist_money_spent += amount;
+        city_finance_treasury_add(amount);
+        //todo: report in finance window
+    }
+}
+
+static int provide_service(int x, int y, int *data, void (*callback)(building *, int *)) {
     int serviced = 0;
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
@@ -581,6 +634,9 @@ int figure_service_provide_coverage(figure *f)
             if (figure_rioter_collapse_building(f) == 1) {
                 return 1;
             }
+            break;
+        case FIGURE_TOURIST:
+            tourist_visit(x, y, f, tourist_spend);
             break;
     }
     if (f->building_id) {

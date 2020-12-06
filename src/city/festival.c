@@ -96,6 +96,14 @@ int city_festival_games_active(void)
     return 0;
 }
 
+int city_festival_games_active_venue_type(void)
+{
+    if (city_data.games.games_is_active) {
+        return (city_data.games.selected_games_id <= 3) ? BUILDING_COLOSSEUM : BUILDING_HIPPODROME;
+    }
+    return 0;
+}
+
 int city_festival_games_bonus_active(int game_id) {
     switch (game_id) {
     case 1:
