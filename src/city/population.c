@@ -362,7 +362,7 @@ static void yearly_recalculate_population(void)
 int calculate_total_housing_buildings(void)
 {
     int total = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNUSED ||
             b->state == BUILDING_STATE_UNDO ||
@@ -386,7 +386,7 @@ int * calculate_number_of_each_housing_type(void) {
         housing_type_counts[i] = 0;
     }
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNUSED ||
             b->state == BUILDING_STATE_UNDO ||
@@ -439,7 +439,7 @@ static int calculate_people_per_house_type(void)
     city_data.population.people_in_tents = 0;
     city_data.population.people_in_large_insula_and_above = 0;
     int total = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNUSED ||
             b->state == BUILDING_STATE_UNDO ||

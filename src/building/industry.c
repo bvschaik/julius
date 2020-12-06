@@ -60,7 +60,7 @@ static void building_other_update_production(building* b) {
 
 void building_industry_update_production(void)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
        
         if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id) {
@@ -111,7 +111,7 @@ void building_industry_update_wheat_production(void)
     if (scenario_property_climate() == CLIMATE_NORTHERN) {
         return;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id) {
             continue;
@@ -155,7 +155,7 @@ void building_industry_start_new_production(building *b)
 
 void building_bless_farms(void)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->output_resource_id && building_is_farm(b->type)) {
             b->data.industry.progress = MAX_PROGRESS_RAW;
@@ -168,7 +168,7 @@ void building_bless_farms(void)
 
 void building_bless_industry(void)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && building_is_workshop(b->type) && b->loads_stored) {
             if (b->loads_stored < MERCURY_BLESSING_LOADS) {
@@ -181,7 +181,7 @@ void building_bless_industry(void)
 
 void building_curse_farms(int big_curse)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->output_resource_id && building_is_farm(b->type)) {
             b->data.industry.progress = 0;
@@ -211,7 +211,7 @@ int building_get_workshop_for_raw_material_with_room(
     }
     int min_dist = INFINITE;
     building *min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
             continue;
@@ -249,7 +249,7 @@ int building_get_workshop_for_raw_material(
     }
     int min_dist = INFINITE;
     building *min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
             continue;

@@ -50,7 +50,7 @@ void city_entertainment_calculate_shows(void)
     city_data.entertainment.hippodrome_no_shows_weighted = 0;
     city_data.entertainment.venue_needing_shows = 0;
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;

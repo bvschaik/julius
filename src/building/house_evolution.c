@@ -540,7 +540,7 @@ void building_house_process_evolve_and_consume_goods(void)
         active_devolve_delay = DEVOLVE_DELAY;
     }
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && building_is_house(b->type)) {
             building_house_check_for_corruption(b);
