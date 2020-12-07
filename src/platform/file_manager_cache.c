@@ -1,6 +1,6 @@
 #include "file_manager_cache.h"
 
-#if defined(__vita__) || defined(__SWITCH__)
+#ifdef USE_FILE_CACHE
 
 #include "core/string.h"
 #include "platform/file_manager.h"
@@ -22,14 +22,16 @@ static int stat_status;
 const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
 {
     dir_info *info = base_dir_info;
-    while (info) {
-        if (strcmp(info->name, dir) == 0) {
-            return info;
+    if (info) {
+        while (1) {
+            if (strcmp(info->name, dir) == 0) {
+                return info;
+            }
+            if (!info->next) {
+                break;
+            }
+            info = info->next;
         }
-        if (!info->next) {
-            break;
-        }
-        info = info->next;
     }
     DIR *d = opendir(dir);
     if (!d) {
@@ -93,7 +95,7 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
             // When stat does not work, we check if a file is a directory by trying to open it as a dir
             // For performance reasons, we only check for a directory if the name has no extension
             // This is effectively a hack, and definitely not full-proof, but the performance gains are well worth it
-            if (!c) {
+            if (!*file_item->extension) {
                 static char full_name[FILE_NAME_MAX];
                 if (!dir_name_offset) {
                     strncpy(full_name, info->name, FILE_NAME_MAX);
@@ -115,7 +117,7 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
 
 void platform_file_manager_cache_add_file_info(const char *filename)
 {
-    // Julius only creates files to the base dir
+    // Julius only creates files in the base dir
     if (!base_dir_info) {
         return;
     }

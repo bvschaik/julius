@@ -84,7 +84,7 @@ typedef const char * dir_name;
 #include <unistd.h>
 #endif
 
-#if !defined(__vita__) && !defined(__SWITCH__)
+#ifndef USE_FILE_CACHE
 static int is_file(int mode)
 {
     return S_ISREG(mode) || S_ISLNK(mode);
@@ -107,13 +107,13 @@ int platform_file_manager_list_directory_contents(
     }
 #ifdef __ANDROID__
     int match = android_get_directory_contents(current_dir, type, extension, callback);
-#elif defined(__vita__) || defined(__SWITCH__)
+#elif defined(USE_FILE_CACHE)
     const dir_info *d = platform_file_manager_cache_get_dir_info(current_dir);
     if (!d) {
         return LIST_ERROR;
     }
     int match = LIST_NO_MATCH;
-    for(file_info *f = d->first_file; f; f = f->next) {
+    for (file_info *f = d->first_file; f; f = f->next) {
         if (!(type & f->type)) {
             continue;
         }
@@ -251,7 +251,7 @@ int platform_file_manager_remove_file(const char *filename)
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
-#ifdef __SWITCH__
+#ifdef USE_FILE_CACHE
     if (strchr(mode, 'w') && !file_exists(filename, NOT_LOCALIZED)) {
         platform_file_manager_cache_add_file_info(filename);
     }
@@ -261,7 +261,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 
 int platform_file_manager_remove_file(const char *filename)
 {
-#ifdef __SWITCH__
+#ifdef USE_FILE_CACHE
     platform_file_manager_cache_delete_file_info(filename);
 #endif
     return remove(filename) == 0;

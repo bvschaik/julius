@@ -2,6 +2,7 @@
 #define FILE_MANAGER_CACHE_H
 
 #if defined(__vita__) || defined(__SWITCH__)
+#define USE_FILE_CACHE
 
 #include "core/file.h"
 
