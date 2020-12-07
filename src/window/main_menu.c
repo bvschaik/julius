@@ -119,7 +119,7 @@ static void button_click(int type, int param2)
     } else if (type == 4) {
         if (!editor_is_present() || !game_init_editor()) {
             window_plain_message_dialog_show(
-                TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
+                TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE, 1);
         } else {
             sound_music_play_editor();
         }

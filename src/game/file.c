@@ -380,8 +380,9 @@ int game_file_load_scenario_data(const char *scenario_file)
 
 int game_file_load_saved_game(const char *filename)
 {
-    if (!game_file_io_read_saved_game(filename, 0)) {
-        return 0;
+    int result = game_file_io_read_saved_game(filename, 0);
+    if (result != 1) {
+        return result;
     }
     check_backward_compatibility();
     initialize_saved_game();

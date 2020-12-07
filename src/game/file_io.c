@@ -379,13 +379,8 @@ static void scenario_save_to_state(scenario_state *file)
     buffer_skip(file->end_marker, 4);
 }
 
-static void savegame_load_from_state(savegame_state *state)
+static void savegame_load_from_state(savegame_state *state, int version)
 {
-    int version = buffer_read_i32(state->file_version);
-    if (version > SAVE_GAME_CURRENT_VERSION) {
-        log_info("Newer save game version than supported. The game may crash. Please update your Augustus. Version:", 0, version);
-    }
-
     scenario_settings_load_state(state->scenario_campaign_mission,
                                  state->scenario_settings,
                                  state->scenario_is_custom,
@@ -721,6 +716,10 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     int result = 0;
     int version = get_savegame_version(fp);
     if (version) {
+        if (version > SAVE_GAME_CURRENT_VERSION) {
+            log_error("Newer save game version than supported. Please update your Augustus. Version:", 0, version);
+            return -1;
+        }
         log_info("Savegame version", 0, version);
         init_savegame_data(version);
         result = savegame_read_from_file(fp);
@@ -730,7 +729,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
         log_error("Unable to load game, unable to read savefile.", 0, 0);
         return 0;
     }
-    savegame_load_from_state(&savegame_data.state);
+    savegame_load_from_state(&savegame_data.state, version);
     return 1;
 }
 

@@ -509,6 +509,8 @@ static translation_string all_strings[] = {
     { TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS, "Hungry beasts prowl the arena in search of prey, but a lack of trained gladiators makes for brief shows." },
     {TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
     {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "This temple will collect food for your supply post, once it is constructed." },
+    { TR_SAVEGAME_LARGER_VERSION_TITLE, "Incompatible savegame version" },
+    { TR_SAVEGAME_LARGER_VERSION_MESSAGE, "The savegame you're trying to load is for a more recent version of Augustus.\nPlease update Augustus to the most recent version." },
 
 };
 
