@@ -185,6 +185,11 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_u8(buf, b->storage_id);
     buffer_write_i8(buf, b->sentiment.house_happiness); // which union field we use does not matter
     buffer_write_u8(buf, b->show_on_problem_overlay);
+
+    // New building state code should always be added at the end to preserve savegame retrocompatibility
+    // Also, don't forget to update BUILDING_STATE_CURRENT_BUFFER_SIZE and if possible, add a new macro like
+    // BUILDING_STATE_NEW_FEATURE_BUFFER_SIZE with the full building state buffer size including all added features
+    // up until that point in Augustus' development
 }
 
 static void read_type_data(buffer *buf, building *b)
@@ -279,8 +284,9 @@ static void read_type_data(buffer *buf, building *b)
     }
 }
 
-void building_state_load_from_buffer(buffer *buf, building *b)
+void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_size)
 {
+    int index = buf->index;
     b->state = buffer_read_u8(buf);
     b->faction_id = buffer_read_u8(buf);
     b->unknown_value = buffer_read_u8(buf);
@@ -350,5 +356,28 @@ void building_state_load_from_buffer(buffer *buf, building *b)
 
     if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && !b->data.monument.monument_phase) {
         b->data.monument.monument_phase = -1;
+    }
+
+    // To keep backward savegame compatibility, only fill more recent building struct elements
+    // if building_buf_size is the correct size when those elements are included
+    // For example, if you add an int (4 bytes) to the building state struct, in order to check
+    // if the samegame version has that new int, you should add the folloging code:
+    // if (building_buf_size >= BULDING_STATE_ORIGINAL_BUFFER_SIZE + 4) {
+    //    b->new_var = buffer_read_i32(buf);
+    // }
+    // Or even better:
+    // if (building_buf_size >= BULDING_STATE_NEW_FEATURE_BUFFER_SIZE) {
+    //    b->new_var = buffer_read_i32(buf);
+    // }
+    // Building state variables are automatically set to 0, so if the savegame version doesn't include
+    // that information, you can be assured that the game will read it as 0
+    
+    // <Add new building state loading code here>
+
+    // The following code should only be executed if the savegame includes building information that is not 
+    // supported on this specific version of Augustus. The extra bytes in the buffer must be skipped in order
+    // to prevent reading bogus data for the next building
+    if (building_buf_size > BUILDING_STATE_CURRENT_BUFFER_SIZE) {
+        buffer_skip(buf, building_buf_size - BUILDING_STATE_CURRENT_BUFFER_SIZE);
     }
 }
