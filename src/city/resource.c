@@ -459,7 +459,7 @@ void city_resource_consume_food(void)
         
     }    
 
-    if (city_military_total_soldiers_in_city() > 0 && !building_count_active(BUILDING_MESS_HALL) && !city_data.mess_hall.missing_mess_hall_warning_shown) {
+    if (city_military_total_soldiers_in_city() > 0 && !city_data.building.mess_hall_building_id && !city_data.mess_hall.missing_mess_hall_warning_shown) {
         city_data.mess_hall.food_percentage_missing_this_month = 100;
         city_message_post(1, MESSAGE_SOLDIERS_STARVING_NO_MESS_HALL, 0, 0);     
         city_data.mess_hall.missing_mess_hall_warning_shown = 1;
