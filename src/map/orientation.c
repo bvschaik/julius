@@ -295,22 +295,22 @@ void map_orientation_update_buildings(void)
                 } else {
                     building_part = 1; // part 2
                 }
-                map_orientation = building_rotation_get_building_orientation(b->subtype.orientation);
-                if (map_orientation == DIR_0_TOP) {
+                int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
+                if (orientation == DIR_0_TOP) {
                     image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
                     switch (building_part) {
                         case 0: image_id += 0; break; // part 1
                         case 1: image_id += 2; break; // part 2
                         case 2: image_id += 4; break; // part 3, same for switch cases below
                     }
-                } else if (map_orientation == DIR_4_BOTTOM) {
+                } else if (orientation == DIR_4_BOTTOM) {
                     image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
                     switch (building_part) {
                         case 0: image_id += 4; break;
                         case 1: image_id += 2; break;
                         case 2: image_id += 0; break;
                     }
-                } else if (map_orientation == DIR_6_LEFT) {
+                } else if (orientation == DIR_6_LEFT) {
                     image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
                     switch (building_part) {
                         case 0: image_id += 0; break;
