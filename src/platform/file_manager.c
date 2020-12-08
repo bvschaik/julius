@@ -4,6 +4,7 @@
 #include "core/log.h"
 #include "core/string.h"
 #include "platform/android/android.h"
+#include "platform/file_manager_cache.h"
 #include "platform/vita/vita.h"
 
 #include <dirent.h>
@@ -83,10 +84,12 @@ typedef const char * dir_name;
 #include <unistd.h>
 #endif
 
+#ifndef USE_FILE_CACHE
 static int is_file(int mode)
 {
     return S_ISREG(mode) || S_ISLNK(mode);
 }
+#endif
 
 int platform_file_manager_list_directory_contents(
     const char *dir, int type, const char *extension, int (*callback)(const char *))
@@ -103,7 +106,25 @@ int platform_file_manager_list_directory_contents(
         current_dir = set_dir_name(dir);
     }
 #ifdef __ANDROID__
-    return android_get_directory_contents(current_dir, type, extension, callback);
+    int match = android_get_directory_contents(current_dir, type, extension, callback);
+#elif defined(USE_FILE_CACHE)
+    const dir_info *d = platform_file_manager_cache_get_dir_info(current_dir);
+    if (!d) {
+        return LIST_ERROR;
+    }
+    int match = LIST_NO_MATCH;
+    for (file_info *f = d->first_file; f; f = f->next) {
+        if (!(type & f->type)) {
+            continue;
+        }
+        if (!platform_file_manager_cache_file_has_extension(f, extension)) {
+            continue;
+        }
+        match = callback(f->name);
+        if (match == LIST_MATCH) {
+            break;
+        }
+    }
 #else
     fs_dir_type *d = fs_dir_open(current_dir);
     if (!d) {
@@ -137,11 +158,11 @@ int platform_file_manager_list_directory_contents(
         }
     }
     fs_dir_close(d);
+#endif
     if (dir && *dir && strcmp(dir, ".") != 0) {
         free_dir_name(current_dir);
     }
     return match;
-#endif
 }
 
 int platform_file_manager_should_case_correct_file(void)
@@ -166,10 +187,12 @@ int platform_file_manager_set_base_path(const char *path)
 #endif
 }
 
-#if defined(__vita__)
-
+#ifdef __vita__
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
+    if (strchr(mode, 'w') && !file_exists(filename, NOT_LOCALIZED)) {
+        platform_file_manager_cache_add_file_info(filename);
+    }
     char *resolved_path = vita_prepend_path(filename);
     FILE *fp = fopen(resolved_path, mode);
     free(resolved_path);
@@ -178,6 +201,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 
 int platform_file_manager_remove_file(const char *filename)
 {
+    platform_file_manager_cache_delete_file_info(filename);
     char *resolved_path = vita_prepend_path(filename);
     int result = remove(resolved_path);
     free(resolved_path);
@@ -227,11 +251,19 @@ int platform_file_manager_remove_file(const char *filename)
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
+#ifdef USE_FILE_CACHE
+    if (strchr(mode, 'w') && !file_exists(filename, NOT_LOCALIZED)) {
+        platform_file_manager_cache_add_file_info(filename);
+    }
+#endif
     return fopen(filename, mode);
 }
 
 int platform_file_manager_remove_file(const char *filename)
 {
+#ifdef USE_FILE_CACHE
+    platform_file_manager_cache_delete_file_info(filename);
+#endif
     return remove(filename) == 0;
 }
 
