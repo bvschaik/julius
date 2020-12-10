@@ -55,13 +55,16 @@ static int expand_arrays(void)
     if (!new_ids) {
         return 0;
     }
+    data.figure_ids = new_ids;
+
     uint8_t *new_paths = realloc(data.direction_paths, (data.array_size + ARRAY_SIZE_STEP) * sizeof(uint8_t) * MAX_PATH_LENGTH);
     if (!new_paths) {
         return 0;
     }
+    data.direction_paths = new_paths;
 
     memset(data.figure_ids + data.array_size, 0, ARRAY_SIZE_STEP * sizeof(int));
-    memset(data.direction_paths + data.array_size * MAX_PATH_LENGTH, 0, ARRAY_SIZE_STEP * sizeof(uint8_t) * MAX_PATH_LENGTH);
+    memset(&data.direction_paths[data.array_size], 0, ARRAY_SIZE_STEP * sizeof(uint8_t) * MAX_PATH_LENGTH);
     int size = data.array_size;
     data.array_size += ARRAY_SIZE_STEP;
 
