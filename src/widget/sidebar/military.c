@@ -543,14 +543,13 @@ static void button_cycle_legion(int cycle_forward, int param2)
 {
     legion_info *legion = &data.active_legion;
     int step = cycle_forward ? 1 : -1;
-    const formation *m;
     for (int i = legion->formation_id + step; i != legion->formation_id; i += step) {
         if (i == 0) {
-            i = MAX_FORMATIONS;
-        } else if (i > MAX_FORMATIONS) {
+            i = formation_count();
+        } else if (i > formation_count()) {
             i = 1;
         }
-        m = formation_get(i);
+        const formation *m = formation_get(i);
         if (m->in_use && !m->is_herd && m->is_legion) {
             legion->formation_id = i;
             break;

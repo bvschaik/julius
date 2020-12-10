@@ -236,7 +236,7 @@ void formation_herd_update(void)
     if (city_figures_animals() <= 0) {
         return;
     }
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
+    for (int i = 1; i < formation_count(); i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_herd && !m->is_legion && m->num_figures > 0) {
             update_herd_formation(m);

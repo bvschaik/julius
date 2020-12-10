@@ -171,7 +171,7 @@ static void cycle_legion(void)
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         int legion_id = current_legion_id;
         current_legion_id = 0;
-        for (int i = 1; i < MAX_FORMATIONS; i++) {
+        for (int i = 1; i < formation_count(); i++) {
             legion_id++;
             if (legion_id > MAX_LEGIONS) {
                 legion_id = 1;

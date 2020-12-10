@@ -3,28 +3,53 @@
 #include "city/resource.h"
 #include "building/building.h"
 
+#include <stdlib.h>
 #include <string.h>
 
-#define MAX_STORAGES 1000
+#define STORAGE_ARRAY_SIZE_STEP 200
 
-struct data_storage {
+#define STORAGE_ORIGINAL_BUFFER_SIZE 32
+#define STORAGE_CURRENT_BUFFER_SIZE 26
+
+typedef struct {
     int in_use;
     int building_id;
     building_storage storage;
-};
+} data_storage;
 
 static struct {
-    struct data_storage storages[MAX_STORAGES];
+    data_storage *storages;
+    int array_size;
 } data;
+
+static void create_storage_array(int size)
+{
+    free(data.storages);
+    data.array_size = size;
+    data.storages = malloc(size * sizeof(data_storage));
+    memset(data.storages, 0, size * sizeof(data_storage));
+}
+
+static int expand_storage_array(void)
+{
+    data_storage *storage = realloc(data.storages, (data.array_size + STORAGE_ARRAY_SIZE_STEP) * sizeof(data_storage));
+    if (!storage) {
+        return 0;
+    }
+    data.storages = storage;
+    memset(&data.storages[data.array_size], 0, sizeof(data_storage) * STORAGE_ARRAY_SIZE_STEP);
+    data.array_size += STORAGE_ARRAY_SIZE_STEP;
+    return data.array_size - STORAGE_ARRAY_SIZE_STEP;
+}
 
 void building_storage_clear_all(void)
 {
-    memset(data.storages, 0, MAX_STORAGES * sizeof(struct data_storage));
+    create_storage_array(STORAGE_ARRAY_SIZE_STEP);
 }
 
 void building_storage_reset_building_ids(void)
 {
-    for (int i = 1; i < MAX_STORAGES; i++) {
+    for (int i = 1; i < data.array_size; i++) {
         data.storages[i].building_id = 0;
     }
 
@@ -48,20 +73,23 @@ void building_storage_reset_building_ids(void)
 
 int building_storage_create(void)
 {
-    for (int i = 1; i < MAX_STORAGES; i++) {
+    for (int i = 1; i < data.array_size; i++) {
         if (!data.storages[i].in_use) {
-            memset(&data.storages[i], 0, sizeof(struct data_storage));
+            memset(&data.storages[i], 0, sizeof(data_storage));
             data.storages[i].in_use = 1;
             return i;
         }
     }
-    return 0;
+    int id = expand_storage_array();
+    if (id) {
+        data.storages[id].in_use = 1;
+    }
+    return id;
 }
 
 int building_storage_restore(int storage_id) 
 {
-    if (data.storages[storage_id].in_use)
-    {
+    if (data.storages[storage_id].in_use) {
         return 0;
     }
     data.storages[storage_id].in_use = 1;
@@ -98,11 +126,8 @@ void building_storage_cycle_resource_state(int storage_id, resource_type resourc
 
 void building_storage_set_permission(building_storage_permission_states p, building* b)
 {
-    const building_storage *s = building_storage_get(b->storage_id);
     int permission_bit = 1 << p;
-    int perms = s->permissions;
-    perms ^= permission_bit;
-    data.storages[b->storage_id].storage.permissions = perms;
+    data.storages[b->storage_id].storage.permissions ^= permission_bit;
 }
 
 int building_storage_get_permission(building_storage_permission_states p, building* b)
@@ -144,7 +169,12 @@ void building_storage_accept_none(int storage_id)
 
 void building_storage_save_state(buffer *buf)
 {
-    for (int i = 0; i < MAX_STORAGES; i++) {
+    int buf_size = 4 + data.array_size * STORAGE_CURRENT_BUFFER_SIZE;
+    uint8_t *buf_data = malloc(buf_size);
+    buffer_init(buf, buf_data, buf_size);
+    buffer_write_i32(buf, STORAGE_CURRENT_BUFFER_SIZE);
+
+    for (int i = 0; i < data.array_size; i++) {
         buffer_write_i32(buf, data.storages[i].storage.permissions); // Originally unused
         buffer_write_i32(buf, data.storages[i].building_id);
         buffer_write_u8(buf, (uint8_t) data.storages[i].in_use);
@@ -152,15 +182,28 @@ void building_storage_save_state(buffer *buf)
         for (int r = 0; r < RESOURCE_MAX; r++) {
             buffer_write_u8(buf, data.storages[i].storage.resource_state[r]);
         }
-        for (int r = 0; r < 6; r++) {
-            buffer_write_u8(buf, 0); // unused resource states
-        }
     }
 }
 
-void building_storage_load_state(buffer *buf)
+void building_storage_load_state(buffer *buf, int includes_storage_size)
 {
-    for (int i = 0; i < MAX_STORAGES; i++) {
+    int storage_buf_size = STORAGE_ORIGINAL_BUFFER_SIZE;
+    int buf_size = buf->size;
+
+    if (includes_storage_size) {
+        storage_buf_size = buffer_read_i32(buf);
+        buf_size -= 4;
+    }
+
+    int storages_to_load = buf_size / storage_buf_size;
+
+    create_storage_array(storages_to_load);
+
+    // Reduce number of used storages on old Augustus savefiles that were hardcoded to load 1000. Improves performance
+    int highest_id_in_use = 0;
+    int reduce_storage_array_size = !includes_storage_size && storages_to_load == 1000;
+
+    for (int i = 0; i < data.array_size; i++) {
         data.storages[i].storage.permissions = buffer_read_i32(buf); // Originally unused
         data.storages[i].building_id = buffer_read_i32(buf);
         data.storages[i].in_use = buffer_read_u8(buf);
@@ -168,6 +211,20 @@ void building_storage_load_state(buffer *buf)
         for (int r = 0; r < RESOURCE_MAX; r++) {
             data.storages[i].storage.resource_state[r] = buffer_read_u8(buf);
         }
-        buffer_skip(buf, 6); // unused resource states
+        if (!includes_storage_size) {
+            buffer_skip(buf, 6); // unused resource states
+        } else if (storage_buf_size > STORAGE_CURRENT_BUFFER_SIZE) {
+            buffer_skip(buf, storage_buf_size - STORAGE_CURRENT_BUFFER_SIZE);
+        }
+        if (reduce_storage_array_size && data.storages[i].in_use) {
+            highest_id_in_use = i;
+        }
+    }
+
+    if (reduce_storage_array_size) {
+        data.array_size = STORAGE_ARRAY_SIZE_STEP;
+        while (highest_id_in_use > data.array_size) {
+            data.array_size += STORAGE_ARRAY_SIZE_STEP;
+        }
     }
 }

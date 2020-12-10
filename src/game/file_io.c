@@ -59,7 +59,7 @@ static const int SAVE_GAME_CURRENT_VERSION = 0x79;
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
 static const int SAVE_GAME_WITHOUT_DELIVERIES_ADDED = 0x77;
-static const int SAVE_GAME_LAST_STATIC_BUILDINGS_VERSION = 0x78;
+static const int SAVE_GAME_LAST_STATIC_VERSION = 0x78;
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -208,6 +208,15 @@ static buffer *create_savegame_piece(int size, int compressed)
     return &piece->buf;
 }
 
+static void clear_savegame_pieces(void)
+{
+    for (int i = 0; i < savegame_data.num_pieces; i++) {
+        buffer_reset(&savegame_data.pieces[i].buf);
+        free(savegame_data.pieces[i].buf.data);
+    }
+    savegame_data.num_pieces = 0;
+}
+
 static void init_scenario_data(void)
 {
     if (scenario_data.num_pieces > 0) {
@@ -231,18 +240,18 @@ static void init_scenario_data(void)
 
 static void init_savegame_data(int version)
 {
-    if (savegame_data.num_pieces > 0) {
-        for (int i = 0; i < savegame_data.num_pieces; i++) {
-            buffer_reset(&savegame_data.pieces[i].buf);
-            free(savegame_data.pieces[i].buf.data);
-        }
-        //return;
-        savegame_data.num_pieces = 0;
-    }
+    clear_savegame_pieces();
+
     int multiplier = 1;
+    int burning_totals_size = 8;
     if (version > SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION) {
         multiplier = 5;
     }
+    if (version > SAVE_GAME_LAST_STATIC_VERSION) {
+        multiplier = PIECE_SIZE_DYNAMIC;
+        burning_totals_size = 4;
+    } 
+
     int image_grid_size = 52488 * (version > SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION ? 2 : 1);
     int figures_size = 128000 * multiplier;
     int route_figures_size = 1200 * multiplier;
@@ -254,9 +263,6 @@ static void init_savegame_data(int version)
     int building_list_large_size = 4000 * multiplier;
     int building_storages_size = 6400 * multiplier;
 
-    if (version > SAVE_GAME_LAST_STATIC_BUILDINGS_VERSION) {
-        buildings_size = PIECE_SIZE_DYNAMIC;
-    }
 
     savegame_state *state = &savegame_data.state;
     state->scenario_campaign_mission = create_savegame_piece(4, 0);
@@ -308,7 +314,7 @@ static void init_savegame_data(int version)
     state->population_messages = create_savegame_piece(10, 0);
     state->message_counts = create_savegame_piece(80, 0);
     state->message_delays = create_savegame_piece(80, 0);
-    state->building_list_burning_totals = create_savegame_piece(8, 0);
+    state->building_list_burning_totals = create_savegame_piece(burning_totals_size, 0);
     state->figure_sequence = create_savegame_piece(4, 0);
     state->scenario_settings = create_savegame_piece(12, 0);
     state->invasion_warnings = create_savegame_piece(3232, 1);
@@ -400,9 +406,9 @@ static void savegame_load_from_state(savegame_state *state, int version)
     map_random_load_state(state->random_grid);
     map_desirability_load_state(state->desirability_grid);
     map_elevation_load_state(state->elevation_grid);
-    figure_load_state(state->figures, state->figure_sequence);
+    figure_load_state(state->figures, state->figure_sequence, version > SAVE_GAME_LAST_STATIC_VERSION);
     figure_route_load_state(state->route_figures, state->route_paths);
-    formations_load_state(state->formations, state->formation_totals);
+    formations_load_state(state->formations, state->formation_totals, version > SAVE_GAME_LAST_STATIC_VERSION);
 
     city_data_load_state(state->city_data,
                          state->city_faction,
@@ -416,7 +422,7 @@ static void savegame_load_from_state(savegame_state *state, int version)
                         state->building_extra_highest_id_ever,
                         state->building_extra_sequence,
                         state->building_extra_corrupt_houses,
-                        version > SAVE_GAME_LAST_STATIC_BUILDINGS_VERSION);
+                        version > SAVE_GAME_LAST_STATIC_VERSION);
     building_barracks_load_state(state->building_barracks_tower_sentry);
     city_view_load_state(state->city_view_orientation, state->city_view_camera);
     game_time_load_state(state->game_time);
@@ -445,11 +451,12 @@ static void savegame_load_from_state(savegame_state *state, int version)
     traders_load_state(state->figure_traders);
 
     building_list_load_state(state->building_list_small, state->building_list_large,
-                             state->building_list_burning, state->building_list_burning_totals);
+                             state->building_list_burning, state->building_list_burning_totals,
+                             version > SAVE_GAME_LAST_STATIC_VERSION);
 
     tutorial_load_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
-    building_storage_load_state(state->building_storages);
+    building_storage_load_state(state->building_storages, version > SAVE_GAME_LAST_STATIC_VERSION);
     scenario_gladiator_revolt_load_state(state->gladiator_revolt);
     trade_routes_load_state(state->trade_route_limit, state->trade_route_traded);
     map_routing_load_state(state->routing_counters);
@@ -655,6 +662,9 @@ static int savegame_read_from_file(FILE *fp)
         int result = 0;
         if (piece->dynamic) {
             int size = read_int32(fp);
+            if (!size) {
+                continue;
+            }
             uint8_t *data = malloc(size);
             memset(data, 0, size);
             buffer_init(&piece->buf, data, size);
@@ -680,6 +690,9 @@ static void savegame_write_to_file(FILE *fp)
         file_piece *piece = &savegame_data.pieces[i];
         if (piece->dynamic) {
             write_int32(fp, piece->buf.size);
+            if (!piece->buf.size) {
+                continue;
+            }
         }
         if (piece->compressed) {
             write_compressed_chunk(fp, piece->buf.data, piece->buf.size);

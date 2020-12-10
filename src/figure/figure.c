@@ -10,26 +10,67 @@
 #include "map/figure.h"
 #include "map/grid.h"
 
+#include <stdlib.h>
 #include <string.h>
+
+#define FIGURE_ARRAY_SIZE_STEP 1000
+
+#define FIGURE_ORIGINAL_BUFFER_SIZE 128
+#define FIGURE_CURRENT_BUFFER_SIZE 128
 
 static struct {
     int created_sequence;
-    figure figures[MAX_FIGURES];
-} data = {0};
+    figure *figures;
+    int figure_array_size;
+} data;
 
 figure *figure_get(int id)
 {
     return &data.figures[id];
 }
 
+int figure_count(void)
+{
+    return data.figure_array_size;
+}
+
+static void create_figure_array(int size)
+{
+    free(data.figures);
+    data.figure_array_size = size;
+    data.figures = malloc(size * sizeof(figure));
+    for (int i = 0; i < size; i++) {
+        memset(&data.figures[i], 0, sizeof(figure));
+        data.figures[i].id = i;
+    }
+}
+
+static int expand_figure_array(void)
+{
+    figure *f = realloc(data.figures, (data.figure_array_size + FIGURE_ARRAY_SIZE_STEP) * sizeof(figure));
+    if (!f) {
+        return 0;
+    }
+    data.figures = f;
+    data.figure_array_size += FIGURE_ARRAY_SIZE_STEP;
+    for (int i = data.figure_array_size - FIGURE_ARRAY_SIZE_STEP; i < data.figure_array_size; i++) {
+        memset(&data.figures[i], 0, sizeof(figure));
+        data.figures[i].id = i;
+    }
+    return 1;
+}
+
 figure *figure_create(figure_type type, int x, int y, direction_type dir)
 {
     int id = 0;
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < data.figure_array_size; i++) {
         if (!data.figures[i].state) {
             id = i;
             break;
         }
+    }
+    if (!id && expand_figure_array()) {
+        id = data.figure_array_size - FIGURE_ARRAY_SIZE_STEP;
     }
     if (!id) {
         return &data.figures[0];
@@ -165,16 +206,13 @@ int figure_is_herd(const figure *f)
 
 void figure_init_scenario(void)
 {
-    for (int i = 0; i < MAX_FIGURES; i++) {
-        memset(&data.figures[i], 0, sizeof(figure));
-        data.figures[i].id = i;
-    }
+    create_figure_array(FIGURE_ARRAY_SIZE_STEP);
     data.created_sequence = 0;
 }
 
 void figure_kill_all(void)
 {
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < data.figure_array_size; i++) {
         data.figures[i].state = FIGURE_STATE_DEAD;
     }
 }
@@ -279,7 +317,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_i16(buf, f->opponent_id);
 }
 
-static void figure_load(buffer *buf, figure *f)
+static void figure_load(buffer *buf, figure *f, int figure_buf_size)
 {
     f->alternative_location_index = buffer_read_u8(buf);
     f->image_offset = buffer_read_u8(buf);
@@ -377,23 +415,60 @@ static void figure_load(buffer *buf, figure *f)
     f->attacker_id1 = buffer_read_i16(buf);
     f->attacker_id2 = buffer_read_i16(buf);
     f->opponent_id = buffer_read_i16(buf);
+
+    // The following code should only be executed if the savegame includes figure information that is not 
+    // supported on this specific version of Augustus. The extra bytes in the buffer must be skipped in order
+    // to prevent reading bogus data for the next figure
+    if (figure_buf_size > FIGURE_CURRENT_BUFFER_SIZE) {
+        buffer_skip(buf, figure_buf_size - FIGURE_CURRENT_BUFFER_SIZE);
+    }
 }
 
 void figure_save_state(buffer *list, buffer *seq)
 {
     buffer_write_i32(seq, data.created_sequence);
 
-    for (int i = 0; i < MAX_FIGURES; i++) {
+    int buf_size = 4 + data.figure_array_size * FIGURE_CURRENT_BUFFER_SIZE;
+    uint8_t *buf_data = malloc(buf_size);
+    buffer_init(list, buf_data, buf_size);
+    buffer_write_i32(list, FIGURE_CURRENT_BUFFER_SIZE);
+
+    for (int i = 0; i < data.figure_array_size; i++) {
         figure_save(list, &data.figures[i]);
     }
 }
 
-void figure_load_state(buffer *list, buffer *seq)
+void figure_load_state(buffer *list, buffer *seq, int includes_figure_size)
 {
     data.created_sequence = buffer_read_i32(seq);
 
-    for (int i = 0; i < MAX_FIGURES; i++) {
-        figure_load(list, &data.figures[i]);
+    int figure_buf_size = FIGURE_ORIGINAL_BUFFER_SIZE;
+    int buf_size = list->size;
+
+    if (includes_figure_size) {
+        figure_buf_size = buffer_read_i32(list);
+        buf_size -= 4;
+    }
+
+    int figures_to_load = buf_size / figure_buf_size;
+
+    create_figure_array(figures_to_load);
+
+    // Reduce number of used figures on old Augustus savefiles that were hardcoded to load 5000. Improves performance
+    int highest_id_in_use = 0;
+    int reduce_figure_array_size = !includes_figure_size && figures_to_load == 5000;
+
+    for (int i = 0; i < data.figure_array_size; i++) {
+        figure_load(list, &data.figures[i], figure_buf_size);
         data.figures[i].id = i;
+        if (reduce_figure_array_size && data.figures[i].state) {
+            highest_id_in_use = i;
+        }
+    }
+    if (reduce_figure_array_size) {
+        data.figure_array_size = FIGURE_ARRAY_SIZE_STEP;
+        while (highest_id_in_use > data.figure_array_size) {
+            data.figure_array_size += FIGURE_ARRAY_SIZE_STEP;
+        }
     }
 }
