@@ -89,6 +89,8 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
 
 static void setup_logging(void)
 {
+    // On some platforms (vita, android), not removing the file will not empty it when reopening for writing
+    file_remove("julius-log.txt");
     log_file = file_open("julius-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
