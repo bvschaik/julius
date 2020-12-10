@@ -167,6 +167,7 @@ set(ZLIB_FILES
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/arguments.c
+    ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager_cache.c
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
@@ -175,6 +176,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/mouse.c
     ${PROJECT_SOURCE_DIR}/src/platform/platform.c
     ${PROJECT_SOURCE_DIR}/src/platform/prefs.c
+    ${PROJECT_SOURCE_DIR}/src/platform/screen.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
     ${PROJECT_SOURCE_DIR}/src/platform/touch.c
     ${PROJECT_SOURCE_DIR}/src/platform/version.c
@@ -184,8 +186,6 @@ set(PLATFORM_FILES
 if (VITA_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
@@ -193,19 +193,9 @@ if (VITA_BUILD)
 elseif (SWITCH_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.c
     )
-else()
-    set(PLATFORM_FILES
-        ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/screen.c
-        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
-    )
-endif()
-
-if (ANDROID_BUILD)
+elseif (ANDROID_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/android/android.c
