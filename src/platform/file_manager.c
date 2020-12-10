@@ -66,11 +66,11 @@ typedef const char * dir_name;
 #ifdef __vita__
 #define CURRENT_DIR VITA_PATH_PREFIX
 #define set_dir_name(n) vita_prepend_path(n)
-#define free_dir_name(n) free((void*)n)
+#define free_dir_name(n)
 #elif defined(_WIN32)
 #define CURRENT_DIR L"."
 #define set_dir_name(n) utf8_to_wchar(n)
-#define free_dir_name(n) free((void*)n)
+#define free_dir_name(n)
 #else
 #define CURRENT_DIR "."
 #define set_dir_name(n) (n)
@@ -193,19 +193,13 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
     if (strchr(mode, 'w') && !file_exists(filename, NOT_LOCALIZED)) {
         platform_file_manager_cache_add_file_info(filename);
     }
-    char *resolved_path = vita_prepend_path(filename);
-    FILE *fp = fopen(resolved_path, mode);
-    free(resolved_path);
-    return fp;
+    return fopen(vita_prepend_path(filename), mode);
 }
 
 int platform_file_manager_remove_file(const char *filename)
 {
     platform_file_manager_cache_delete_file_info(filename);
-    char *resolved_path = vita_prepend_path(filename);
-    int result = remove(resolved_path);
-    free(resolved_path);
-    return result == 0;
+    return remove(vita_prepend_path(filename)) == 0;
 }
 
 #elif defined(_WIN32)

@@ -23,7 +23,7 @@ void platform_hide_virtual_keyboard(void);
 
 int chdir(const char *path);
 
-char *vita_prepend_path(const char *path);
+const char *vita_prepend_path(const char *path);
 
 #endif // __vita__
 #endif // PLATFORM_VITA_H
