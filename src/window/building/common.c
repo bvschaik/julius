@@ -87,8 +87,17 @@ void window_building_draw_levy(int amount, int x_offset, int y_offset) {
     if (amount > 0) {
         text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY), x_offset + 320 + width, y_offset + 10, FONT_SMALL_BLACK, 0);
     }
-    else {
-        text_draw(translation_for(TR_BUILDING_INFO_TOURISM), x_offset + 320 + width, y_offset + 10, FONT_SMALL_BLACK, 0);
+}
+
+void window_building_draw_tourism(building_info_context* c, int x_offset, int y_offset) {
+    building* b = building_get(c->building_id);
+    if (b->tourism_income_this_year > 0) {
+        //image_draw(image_group(GROUP_RESOURCE_ICONS) + 16, x_offset + 0, y_offset + 5);
+        int width = text_draw_money(abs(b->tourism_income_this_year), x_offset + 0, y_offset + 10, FONT_SMALL_BLACK);
+        text_draw(translation_for(TR_WINDOW_BUILDING_TOURISM_ANNUAL), x_offset + 0 + width, y_offset + 10, FONT_SMALL_BLACK, 0);
+    }
+    else if (b->tourism_disabled) {
+        text_draw(translation_for(TR_WINDOW_BUILDING_TOURISM_DISABLED), x_offset + 0, y_offset + 10, FONT_SMALL_BLACK, 0);
     }
 }
 
@@ -103,7 +112,7 @@ static void draw_employment_details(building_info_context *c, building *b, int y
     }
 
     if (building_get_tourism(b)) {
-        window_building_draw_levy(building_get_tourism(b), c->x_offset, y_offset);
+        window_building_draw_tourism(c, c->x_offset, y_offset + 100);
     }
 
 	int laborers_needed = model_get_building(b->type)->laborers;

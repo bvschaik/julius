@@ -507,14 +507,19 @@ static translation_string all_strings[] = {
     { TR_WINDOW_BUILDING_ARENA_BOTH_SHOWS, "This arena hosts gladiators and animal hunts, to the delight of the locals." },
     { TR_WINDOW_BUILDING_ARENA_NEEDS_LIONS, "Regular gladiator shows keep the mob entertained, but lions would elevate the spectacle." },
     { TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS, "Hungry beasts prowl the arena in search of prey, but a lack of trained gladiators makes for brief shows." },
-    {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "This temple will collect food for your supply post, once it is constructed." },
     { TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "This temple will collect food for your supply post, once it is constructed." },
     { TR_OVERLAY_ARENA_COL, "Arena" },
     { TR_TOOLTIP_OVERLAY_ARENA_COL_1, "This house has no access to an arena or the Colosseum." },
     { TR_TOOLTIP_OVERLAY_ARENA_COL_2, "This house has access to an arena with one show." },
     { TR_TOOLTIP_OVERLAY_ARENA_COL_3, "This house has access to an arena with two shows." },
     { TR_TOOLTIP_OVERLAY_ARENA_COL_4, "This house has access to the Colosseum, with one show." },
-    { TR_TOOLTIP_OVERLAY_ARENA_COL_5, "This house has access to the Colosseum, with two shows." }
+    { TR_TOOLTIP_OVERLAY_ARENA_COL_5, "This house has access to the Colosseum, with two shows." },
+    { TR_WINDOW_BUILDING_TOURISM_DISABLED, "Too many buildings of this type-- travellers avoid this place." },
+    { TR_WINDOW_BUILDING_TOURISM_ANNUAL, "Tourism income this year:" },
+    { TR_WINDOW_ADVISOR_FINANCE_INTEREST_TRIBUTE, "Tribute/interest"},
+    { TR_WINDOW_ADVISOR_TOURISM, "Tourism"},
+    { TR_WINDOW_FIGURE_TOURIST, "This traveller has spent: "},
+    { TR_FIGURE_TYPE_TOURIST,  "Tourist"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

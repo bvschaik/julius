@@ -232,8 +232,8 @@ static void tourist_spend(building* b, figure *f)
     if (can_pay) {
         int amount = b->tourism_income;
         f->tourist.tourist_money_spent += amount;
-        city_finance_treasury_add(amount);
-        //todo: report in finance window
+        b->tourism_income_this_year += amount;
+        city_finance_treasury_add_tourism(amount);
     }
 }
 

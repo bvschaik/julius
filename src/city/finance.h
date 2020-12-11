@@ -35,6 +35,8 @@ int city_finance_treasury(void);
 
 int city_finance_treasury_add(int amount);
 
+int city_finance_treasury_add_tourism(int amount);
+
 int city_finance_out_of_money(void);
 
 int city_finance_tax_percentage(void);

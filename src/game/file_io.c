@@ -181,6 +181,8 @@ static struct {
     savegame_state state;
 } savegame_data = {0};
 
+static int active_save_version;
+
 static void init_file_piece(file_piece *piece, int size, int compressed)
 {
     piece->compressed = compressed;
@@ -231,6 +233,7 @@ static void init_scenario_data(void)
 
 static void init_savegame_data(int version)
 {
+    active_save_version = version;
     if (savegame_data.num_pieces > 0) {
         for (int i = 0; i < savegame_data.num_pieces; i++) {
             buffer_reset(&savegame_data.pieces[i].buf);
@@ -759,4 +762,8 @@ int game_file_io_delete_saved_game(const char *filename)
         log_error("Unable to delete game", 0, 0);
     }
     return result;
+}
+
+int file_io_load_expanded_building_data() {
+    return active_save_version > SAVE_GAME_LAST_STATIC_BUILDINGS_VERSION;
 }

@@ -6,7 +6,9 @@
 #include "building/monument.h"
 #include "city/data_private.h"
 #include "city/culture.h"
+#include "city/festival.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "game/difficulty.h"
 #include "game/time.h"
 #include "figuretype/entertainer.h"
@@ -62,6 +64,12 @@ int city_finance_treasury(void)
 int city_finance_treasury_add(int amount)
 {
     city_data.finance.treasury += amount;
+}
+
+int city_finance_treasury_add_tourism(int amount)
+{
+    city_finance_treasury_add(amount);
+    city_data.finance.tourism_this_year += amount;
 }
 
 
@@ -346,6 +354,9 @@ static void activate_monthly_tourism(void) {
         for (int i = 0; i < BUILDINGS_WITH_TOURISM; ++i) {
             if (b->type == tourism_modifiers[i].type && b->state == BUILDING_STATE_IN_USE && b->num_workers) {
                 b->is_tourism_venue = 1;
+                if (game_time_month() == 0) {
+                    b->tourism_income_this_year = 0;
+                }
                 tourism_modifiers[i].count++;
                 // disable redundant venues for tourism
                 if ((tourism_modifiers[i].count * tourism_modifiers[i].coverage) > city_data.population.population) {
@@ -431,6 +442,10 @@ static void copy_amounts_to_last_year(void)
     // donations
     last_year->income.donated = this_year->income.donated;
     this_year->income.donated = 0;
+
+    //tourism 
+    city_data.finance.tourism_last_year = city_data.finance.tourism_this_year;
+    city_data.finance.tourism_this_year = 0;
 }
 
 static void pay_tribute(void)
@@ -588,5 +603,17 @@ const finance_overview *city_finance_overview_this_year(void)
 
 int city_finance_spawn_tourist(void)
 {
-    figure_spawn_tourist();
+    
+    if (!city_finance_tourism_rating()) {
+        return 0;
+    }
+    int tick_increase = random_byte() % city_finance_tourism_rating();
+    if (city_festival_games_active()) {
+        tick_increase *= 3;
+    }
+    city_data.finance.tourist_spawn_delay += tick_increase;
+    if (city_data.finance.tourist_spawn_delay > 500) {
+        figure_spawn_tourist();
+        city_data.finance.tourist_spawn_delay = 0;
+    }
 }

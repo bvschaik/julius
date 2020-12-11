@@ -36,11 +36,11 @@ static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
     8, 8, 34, 39, 33, 43, 27, 48, 63, 8, //50-59
     8, 8, 8, 8, 53, 8, 38, 62, 54, 55, //60-69
     56, 8, 8, 58, 0, 7, 50, 0, 14, 3, //70-79
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0 //80-89
+    3, 58, 0, 0, 0, 0, 0, 0, 0, 0 //80-89
 };
 // Starting with FIGURE_WORK_CAMP_WORKER = 73,
 static const int NEW_FIGURE_TYPES[] = {
-    TR_FIGURE_TYPE_WORK_CAMP_WORKER,TR_FIGURE_TYPE_WORK_CAMP_SLAVE,TR_FIGURE_TYPE_WORK_CAMP_ENGINEER,TR_FIGURE_TYPE_MESS_HALL_BUYER,TR_FIGURE_TYPE_MESS_HALL_COLLECTOR, TR_FIGURE_TYPE_PRIEST_BUYER, TR_FIGURE_TYPE_BARKEEP, TR_FIGURE_TYPE_BARKEEP_BUYER
+    TR_FIGURE_TYPE_WORK_CAMP_WORKER,TR_FIGURE_TYPE_WORK_CAMP_SLAVE,TR_FIGURE_TYPE_WORK_CAMP_ENGINEER,TR_FIGURE_TYPE_MESS_HALL_BUYER,TR_FIGURE_TYPE_MESS_HALL_COLLECTOR, TR_FIGURE_TYPE_PRIEST_BUYER, TR_FIGURE_TYPE_BARKEEP, TR_FIGURE_TYPE_BARKEEP_BUYER, TR_FIGURE_TYPE_TOURIST
 };
 
 static generic_button figure_buttons[] = {
@@ -356,6 +356,15 @@ static void draw_normal_figure(building_info_context *c, figure *f)
     if (c->figure.phrase_id >= 0) {
         lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
             c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_SMALL_BLACK);
+    }
+
+    if (c->figure.phrase_id >= 0) {
+        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
+            c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_SMALL_BLACK);
+    }
+    if (f->tourist.tourist_money_spent) {
+        int width = text_draw(translation_for(TR_WINDOW_FIGURE_TOURIST), c->x_offset + 92, c->y_offset + 180, FONT_SMALL_BLACK, 0);
+        text_draw_money(f->tourist.tourist_money_spent, c->x_offset + 92 + width, c->y_offset + 180, FONT_SMALL_BLACK, 0);
     }
 }
 

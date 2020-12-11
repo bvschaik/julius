@@ -6,6 +6,7 @@
 #include "building/rotation.h"
 #include "building/storage.h"
 #include "city/buildings.h"
+#include "city/finance.h"
 #include "city/population.h"
 #include "city/warning.h"
 #include "figure/formation_legion.h"
@@ -229,6 +230,10 @@ building *building_create(building_type type, int x, int y)
     b->figure_roam_direction = b->house_figure_generation_delay & 6;
     b->fire_proof = props->fire_proof;
     b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
+
+    // init expanded data
+    memset(&(b->house_arena_gladiator), 0, sizeof(building) - 128);
+
     return b;
 }
 
@@ -467,11 +472,7 @@ int building_get_levy(const building* b)
 
 int building_get_tourism(const building* b)
 {
-    int levy = b->monthly_levy;
-    if (levy >= 0) {
-        return 0;
-    }
-    return levy;
+    return b->is_tourism_venue && city_finance_tourism_rating() > 0;
 }
 
 
@@ -501,10 +502,12 @@ void building_clear_all(void)
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
                          buffer *sequence, buffer *corrupt_houses)
 {
-    int buf_size = 4 + data.building_array_size * BUILDING_SAVEGAME_STATE_ORIGINAL_SIZE;
+    int building_size = sizeof(building);
+    int buf_size = 4 + data.building_array_size * building_size;
     uint8_t *buf_data = malloc(buf_size);
     buffer_init(buf, buf_data, buf_size);
-    buffer_write_i32(buf, BUILDING_SAVEGAME_STATE_ORIGINAL_SIZE);
+    buffer_write_i32(buf, building_size);
+
     for (int i = 0; i < data.building_array_size; i++) {
         building_state_save_to_buffer(buf, &data.all_buildings[i]);
     }
@@ -522,12 +525,13 @@ void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
 {
     int building_size = BUILDING_SAVEGAME_STATE_ORIGINAL_SIZE;
     int buf_size = buf->size;
-    int buildings_to_load = buf_size / building_size;
-
+    
     if (includes_building_size) {
         building_size = buffer_read_i32(buf);
         buf_size -= 4;
-    }
+    }      
+    
+    int buildings_to_load = buf_size / building_size;
 
     create_building_array(buildings_to_load);
 

@@ -112,10 +112,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.culture.average_desirability);
     buffer_write_i32(main, city_data.finance.tourism_rating);
     buffer_write_i32(main, city_data.finance.tourism_last_month);
-    for (int i = 0; i < 1; i++) {
-        buffer_write_i32(main, city_data.unused.unknown_27e0[i]);
-    }
-    buffer_write_i16(main, city_data.unused.unknown_27f0);
+    buffer_write_i32(main, city_data.finance.tourism_last_year);
+    buffer_write_i16(main, city_data.finance.tourism_this_year);
     buffer_write_i16(main, city_data.resource.last_used_warehouse);
     for (int i = 0; i < 18; i++) {
         buffer_write_i16(main, city_data.unused.unknown_27f4[i]);
@@ -601,11 +599,8 @@ static void load_main_data(buffer *main)
     city_data.culture.average_desirability = buffer_read_i32(main);
     city_data.finance.tourism_rating = buffer_read_i32(main);
     city_data.finance.tourism_last_month = buffer_read_i32(main);
- 
-    for (int i = 0; i < 1; i++) {
-        city_data.unused.unknown_27e0[i] = buffer_read_i32(main);
-    }
-    city_data.unused.unknown_27f0 = buffer_read_i16(main);
+    city_data.finance.tourism_last_year = buffer_read_i32(main);
+    city_data.finance.tourism_this_year = buffer_read_i16(main);
     city_data.resource.last_used_warehouse = buffer_read_i16(main);
     for (int i = 0; i < 18; i++) {
         city_data.unused.unknown_27f4[i] = buffer_read_i16(main);

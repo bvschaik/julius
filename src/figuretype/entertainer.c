@@ -17,9 +17,14 @@
 
 void figure_spawn_tourist(void) {
     const map_tile* entry = city_map_entry_point();
-    figure* tourist = figure_create(FIGURE_TOURIST, entry->x, entry->y, DIR_0_TOP);
-    tourist->action_state = FIGURE_ACTION_217_TOURIST_CREATED;
-    //tourist->wait_ticks = 10;    
+    const map_tile* exit = city_map_exit_point();
+    if (random_byte() % 2) {
+        figure* tourist = figure_create(FIGURE_TOURIST, entry->x, entry->y, DIR_0_TOP);
+        tourist->action_state = FIGURE_ACTION_217_TOURIST_CREATED;
+    } else {
+        figure* tourist = figure_create(FIGURE_TOURIST, exit->x, exit->y, DIR_0_TOP);
+        tourist->action_state = FIGURE_ACTION_217_TOURIST_CREATED;
+    }    
 }
 
 static int determine_tourist_destination(int x, int y)
@@ -65,7 +70,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
 
     building_list_small_clear();
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
