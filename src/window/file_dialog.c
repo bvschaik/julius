@@ -23,6 +23,7 @@
 #include "widget/input_box.h"
 #include "window/city.h"
 #include "window/editor/map.h"
+#include "window/plain_message_dialog.h"
 
 #include <string.h>
 
@@ -210,11 +211,15 @@ static void button_ok_cancel(int is_ok, int param2)
     }
     if (data.dialog_type == FILE_DIALOG_LOAD) {
         if (data.type == FILE_TYPE_SAVED_GAME) {
-            if (game_file_load_saved_game(filename)) {
+            int result = game_file_load_saved_game(filename);
+            if (result == 1) {
                 input_box_stop(&file_name_input);
                 window_city_show();
-            } else {
+            } else if (result == 0) {
                 data.message_not_exist_start_time = time_get_millis();
+                return;
+            } else if (result == -1) {
+                window_plain_message_dialog_show(TR_SAVEGAME_LARGER_VERSION_TITLE, TR_SAVEGAME_LARGER_VERSION_MESSAGE, 1);
                 return;
             }
         } else if (data.type == FILE_TYPE_SCENARIO) {

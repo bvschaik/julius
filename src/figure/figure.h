@@ -6,8 +6,6 @@
 #include "figure/action.h"
 #include "figure/type.h"
 
-#define MAX_FIGURES 5000
-
 typedef struct {
     int id;
 
@@ -124,6 +122,8 @@ typedef struct {
 
 figure *figure_get(int id);
 
+int figure_count(void);
+
 /**
  * Creates a figure
  * @param type Figure type
@@ -150,6 +150,6 @@ void figure_kill_all(void);
 
 void figure_save_state(buffer *list, buffer *seq);
 
-void figure_load_state(buffer *list, buffer *seq);
+void figure_load_state(buffer *list, buffer *seq, int includes_figure_size);
 
 #endif // FIGURE_FIGURE_H

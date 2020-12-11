@@ -15,9 +15,17 @@
 #include "map/grid.h"
 #include "sound/effect.h"
 
+#include <stdlib.h>
 #include <string.h>
 
-static formation formations[MAX_FORMATIONS];
+#define FORMATION_ARRAY_SIZE_STEP 50
+#define ORIGINAL_BUFFER_SIZE_PER_FORMATION 128
+#define CURRENT_BUFFER_SIZE_PER_FORMATION 128
+
+static struct {
+    formation *data;
+    int size;
+} formations;
 
 static struct {
     int id_last_in_use;
@@ -26,12 +34,36 @@ static struct {
     int selected_formation;
 } data;
 
+static void create_formation_array(int size)
+{
+    free(formations.data);
+    formations.size = size;
+    formations.data = malloc(size * sizeof(formation));
+    for (int i = 0; i < formations.size; i++) {
+        memset(&formations.data[i], 0, sizeof(formation));
+        formations.data[i].id = i;
+    }
+}
+
+static int expand_formation_array(void)
+{
+    formation *f = realloc(formations.data, (formations.size + FORMATION_ARRAY_SIZE_STEP) * sizeof(formation));
+    if (!f) {
+        return 0;
+    }
+    formations.data = f;
+    int original_size = formations.size;
+    formations.size += FORMATION_ARRAY_SIZE_STEP;
+    for (int i = original_size; i < formations.size; i++) {
+        memset(&formations.data[i], 0, sizeof(formation));
+        formations.data[i].id = i;
+    }
+    return original_size;
+}
+
 void formations_clear(void)
 {
-    for (int i = 0; i < MAX_FORMATIONS; i++) {
-        memset(&formations[i], 0, sizeof(formation));
-        formations[i].id = i;
-    }
+    create_formation_array(FORMATION_ARRAY_SIZE_STEP);
     data.id_last_in_use = 0;
     data.id_last_legion = 0;
     data.num_legions = 0;
@@ -40,27 +72,27 @@ void formations_clear(void)
 
 void formation_clear(int formation_id)
 {
-    memset(&formations[formation_id], 0, sizeof(formation));
-    formations[formation_id].id = formation_id;
+    memset(&formations.data[formation_id], 0, sizeof(formation));
+    formations.data[formation_id].id = formation_id;
 }
 
 static int get_free_formation(int start_index)
 {
-    for (int i = start_index; i < MAX_FORMATIONS; i++) {
-        if (!formations[i].in_use) {
+    for (int i = start_index; i < formations.size; i++) {
+        if (!formations.data[i].in_use) {
             return i;
         }
     }
-    return 0;
+    return expand_formation_array();
 }
 
 formation *formation_create_legion(int building_id, int x, int y, figure_type type)
 {
     int formation_id = get_free_formation(1);
     if (!formation_id) {
-        return &formations[0];
+        return &formations.data[0];
     }
-    formation *m = &formations[formation_id];
+    formation *m = &formations.data[formation_id];
     m->faction_id = 1;
     m->in_use = 1;
     m->is_legion = 1;
@@ -90,7 +122,7 @@ static int formation_create(int figure_type, int layout, int orientation, int x,
     if (!formation_id) {
         return 0;
     }
-    formation *f = &formations[formation_id];
+    formation *f = &formations.data[formation_id];
     f->faction_id = 0;
     f->x = x;
     f->y = y;
@@ -117,7 +149,7 @@ int formation_create_herd(int figure_type, int x, int y, int num_animals)
     if (!formation_id) {
         return 0;
     }
-    formation *f = &formations[formation_id];
+    formation *f = &formations.data[formation_id];
     f->is_herd = 1;
     f->wait_ticks = 24;
     f->max_figures = num_animals;
@@ -131,7 +163,7 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
     if (!formation_id) {
         return 0;
     }
-    formation *f = &formations[formation_id];
+    formation *f = &formations.data[formation_id];
     f->attack_type = attack_type;
     f->orientation = orientation;
     f->enemy_type = enemy_type;
@@ -142,7 +174,12 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
 
 formation *formation_get(int formation_id)
 {
-    return &formations[formation_id];
+    return &formations.data[formation_id];
+}
+
+int formation_count(void)
+{
+    return formations.size;
 }
 
 int formation_get_selected(void)
@@ -157,7 +194,7 @@ void formation_set_selected(int formation_id)
 
 void formation_toggle_empire_service(int formation_id)
 {
-    formations[formation_id].empire_service = formations[formation_id].empire_service ? 0 : 1;
+    formations.data[formation_id].empire_service = formations.data[formation_id].empire_service ? 0 : 1;
 }
 
 void formation_record_missile_fired(formation *m)
@@ -178,8 +215,8 @@ void formation_record_fight(formation *m)
 
 int formation_grid_offset_for_invasion(int invasion_sequence)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *m = &formations[i];
+    for (int i = 1; i < formations.size; i++) {
+        formation *m = &formations.data[i];
         if (m->in_use == 1 && !m->is_legion && !m->is_herd && m->invasion_sequence == invasion_sequence) {
             if (m->x_home > 0 || m->y_home > 0) {
                 return map_grid_offset(m->x_home, m->y_home);
@@ -193,18 +230,18 @@ int formation_grid_offset_for_invasion(int invasion_sequence)
 
 void formation_caesar_pause(void)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use == 1 && formations[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
-            formations[i].wait_ticks = 20;
+    for (int i = 1; i < formations.size; i++) {
+        if (formations.data[i].in_use == 1 && formations.data[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
+            formations.data[i].wait_ticks = 20;
         }
     }
 }
 
 void formation_caesar_retreat(void)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use == 1 && formations[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
-            formations[i].months_low_morale = 1;
+    for (int i = 1; i < formations.size; i++) {
+        if (formations.data[i].in_use == 1 && formations.data[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
+            formations.data[i].months_low_morale = 1;
         }
     }
 }
@@ -224,7 +261,7 @@ void formation_calculate_legion_totals(void)
     data.id_last_legion = 0;
     data.num_legions = 0;
     city_military_clear_legionary_legions();
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
+    for (int i = 1; i < formations.size; i++) {
         formation *m = formation_get(i);
         if (m->in_use) {
             if (m->is_legion) {
@@ -247,8 +284,8 @@ void formation_calculate_legion_totals(void)
 int formation_get_num_legions(void)
 {
     int total = 0;
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use && formations[i].is_legion) {
+    for (int i = 1; i < formations.size; i++) {
+        if (formations.data[i].in_use && formations.data[i].is_legion) {
             total++;
         }
     }
@@ -268,8 +305,8 @@ int formation_get_max_legions(void)
 int formation_for_legion(int legion_index)
 {
     int index = 1;
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use && formations[i].is_legion) {
+    for (int i = 1; i < formations.size; i++) {
+        if (formations.data[i].in_use && formations.data[i].is_legion) {
             if (index++ == legion_index) {
                 return i;
             }
@@ -332,8 +369,8 @@ void formation_update_morale_after_death(formation *m)
 
 static void change_all_morale(int legion, int enemy)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *m = &formations[i];
+    for (int i = 1; i < formations.size; i++) {
+        formation *m = formation_get(i);
         if (m->in_use && !m->is_herd) {
             if (m->is_legion) {
                 formation_change_morale(m, legion);
@@ -346,8 +383,8 @@ static void change_all_morale(int legion, int enemy)
 
 void formation_update_monthly_morale_deployed(void)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *f = &formations[i];
+    for (int i = 1; i < formations.size; i++) {
+        formation *f = &formations.data[i];
         if (f->in_use != 1 || f->is_herd) {
             continue;
         }
@@ -376,8 +413,8 @@ void formation_update_monthly_morale_deployed(void)
 }
 
 void formation_legion_mess_hall_morale(void) {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* f = &formations[i];
+    for (int i = 1; i < formations.size; i++) {
+        formation *f = formation_get(i);
         int max_morale = 0;
         if (f->in_use != 1 || !f->is_legion) {
             continue;
@@ -403,8 +440,8 @@ void formation_legion_mess_hall_morale(void) {
 
 void formation_update_monthly_morale_at_rest(void)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *m = &formations[i];
+    for (int i = 1; i < formations.size; i++) {
+        formation *m = formation_get(i);
         if (m->in_use != 1 || m->is_herd) {
             continue;
         }
@@ -433,8 +470,8 @@ void formation_update_monthly_morale_at_rest(void)
 
 void formation_change_all_legions_morale(int amount)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = &formations[i];
+    for (int i = 1; i < formations.size; i++) {
+        formation *m = formation_get(i);
         if (!m->is_legion) {
             continue;
         }
@@ -489,8 +526,8 @@ void formation_set_home(formation *m, int x, int y)
 
 static void clear_figures(void)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *f = &formations[i];
+    for (int i = 1; i < formations.size; i++) {
+        formation *f = formation_get(i);
         for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
             f->figures[fig] = 0;
         }
@@ -503,7 +540,7 @@ static void clear_figures(void)
 
 static int add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage)
 {
-    formation *f = &formations[formation_id];
+    formation *f = formation_get(formation_id);
     f->num_figures++;
     f->total_damage += damage;
     f->max_total_damage += max_damage;
@@ -521,14 +558,14 @@ static int add_figure(int formation_id, int figure_id, int deployed, int damage,
 
 void formation_move_herds_away(int x, int y)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *f = &formations[i];
+    for (int i = 1; i < formations.size; i++) {
+        formation *f = formation_get(i);
         if (f->in_use != 1 || f->is_legion || !f->is_herd || f->num_figures <= 0) {
             continue;
         }
         if (calc_maximum_distance(x, y, f->x_home, f->y_home) <= 6) {
-            formations[i].wait_ticks = 50;
-            formations[i].herd_direction = calc_general_direction(x, y, f->x_home, f->y_home);
+            f->wait_ticks = 50;
+            f->herd_direction = calc_general_direction(x, y, f->x_home, f->y_home);
         }
     }
 }
@@ -536,7 +573,7 @@ void formation_move_herds_away(int x, int y)
 void formation_calculate_figures(void)
 {
     clear_figures();
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
         if (f->state != FIGURE_STATE_ALIVE) {
             continue;
@@ -555,7 +592,7 @@ void formation_calculate_figures(void)
     }
 
     enemy_army_totals_clear();
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
+    for (int i = 1; i < formations.size; i++) {
         formation *m = formation_get(i);
         if (m->in_use && !m->is_herd) {
             if (m->is_legion) {
@@ -595,7 +632,7 @@ void formation_calculate_figures(void)
 
 static void update_direction(int formation_id, int first_figure_direction)
 {
-    formation *f = &formations[formation_id];
+    formation *f = formation_get(formation_id);
     if (f->unknown_fired) {
         f->unknown_fired--;
     } else if (f->missile_fired) {
@@ -635,8 +672,8 @@ static void update_direction(int formation_id, int first_figure_direction)
 
 static void update_directions(void)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *m = &formations[i];
+    for (int i = 1; i < formations.size; i++) {
+        formation *m = formation_get(i);
         if (m->in_use && !m->is_herd) {
             update_direction(m->id, figure_get(m->figures[0])->direction);
         }
@@ -645,9 +682,9 @@ static void update_directions(void)
 
 static void set_legion_max_figures(void)
 {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use && formations[i].is_legion) {
-            formations[i].max_figures = 16;
+    for (int i = 1; i < formations.size; i++) {
+        if (formations.data[i].in_use && formations.data[i].is_legion) {
+            formations.data[i].max_figures = MAX_FORMATION_FIGURES;
         }
     }
 }
@@ -669,8 +706,13 @@ void formation_update_all(int second_time)
 
 void formations_save_state(buffer *buf, buffer *totals)
 {
-    for (int i = 0; i < MAX_FORMATIONS; i++) {
-        formation *f = &formations[i];
+    int buf_size = 4 + formations.size * CURRENT_BUFFER_SIZE_PER_FORMATION;
+    uint8_t *buf_data = malloc(buf_size);
+    buffer_init(buf, buf_data, buf_size);
+    buffer_write_i32(buf, CURRENT_BUFFER_SIZE_PER_FORMATION);
+
+    for (int i = 0; i < formations.size; i++) {
+        formation *f = formation_get(i);
         buffer_write_u8(buf, f->in_use);
         buffer_write_u8(buf, f->faction_id);
         buffer_write_u8(buf, f->legion_id);
@@ -736,14 +778,30 @@ void formations_save_state(buffer *buf, buffer *totals)
     buffer_write_i32(totals, data.num_legions);
 }
 
-void formations_load_state(buffer *buf, buffer *totals)
+void formations_load_state(buffer *buf, buffer *totals, int includes_buffer_size)
 {
     data.id_last_in_use = buffer_read_i32(totals);
     data.id_last_legion = buffer_read_i32(totals);
     data.num_legions = buffer_read_i32(totals);
     data.selected_formation = 0;
-    for (int i = 0; i < MAX_FORMATIONS; i++) {
-        formation *f = &formations[i];
+
+    int formation_buf_size = ORIGINAL_BUFFER_SIZE_PER_FORMATION;
+    int buf_size = buf->size;
+
+    if (includes_buffer_size) {
+        formation_buf_size = buffer_read_i32(buf);
+        buf_size -= 4;
+    }
+
+    int formations_to_load = buf_size / formation_buf_size;
+
+    create_formation_array(formations_to_load);
+
+    // Reduce number of used formations. Improves performance
+    int highest_id_in_use = 0;
+
+    for (int i = 0; i < formations.size; i++) {
+        formation *f = formation_get(i);
         f->id = i;
         f->in_use = buffer_read_u8(buf);
         f->faction_id = buffer_read_u8(buf);
@@ -804,5 +862,19 @@ void formations_load_state(buffer *buf, buffer *totals)
         f->herd_direction = buffer_read_u8(buf);
         buffer_skip(buf, 17);
         f->invasion_sequence = buffer_read_i16(buf);
+
+        if (formation_buf_size > CURRENT_BUFFER_SIZE_PER_FORMATION) {
+            buffer_skip(buf, formation_buf_size - CURRENT_BUFFER_SIZE_PER_FORMATION);
+        }
+
+        if (f->in_use) {
+            highest_id_in_use = i;
+        }
+    }
+
+    // Reduce number of available formations to improve performance
+    formations.size = FORMATION_ARRAY_SIZE_STEP;
+    while (highest_id_in_use > formations.size) {
+        formations.size += FORMATION_ARRAY_SIZE_STEP;
     }
 }

@@ -519,7 +519,12 @@ static translation_string all_strings[] = {
     { TR_WINDOW_ADVISOR_FINANCE_INTEREST_TRIBUTE, "Tribute/interest"},
     { TR_WINDOW_ADVISOR_TOURISM, "Tourism"},
     { TR_WINDOW_FIGURE_TOURIST, "This traveller has spent: "},
-    { TR_FIGURE_TYPE_TOURIST,  "Tourist"}
+    { TR_FIGURE_TYPE_TOURIST,  "Tourist"},
+    {TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
+    { TR_SAVEGAME_LARGER_VERSION_TITLE, "Incompatible savegame version" },
+    { TR_SAVEGAME_LARGER_VERSION_MESSAGE, "The savegame you're trying to load is for a more recent version of Augustus.\nPlease update Augustus to the most recent version." },
+
+>>>>>>> 4ca136e45043b99c7a3874251b83aa1bf34d39ae
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

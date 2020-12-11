@@ -27,7 +27,6 @@
 #include <stdlib.h>
 
 #define BUILDING_ARRAY_SIZE_STEP 2000
-#define BUILDING_SAVEGAME_STATE_ORIGINAL_SIZE 128
 
 static struct {
     building *all_buildings;
@@ -84,6 +83,10 @@ static void create_building_array(int size)
     free(data.all_buildings);
     data.building_array_size = size;
     data.all_buildings = malloc(size * sizeof(building));
+    for (int i = 0; i < size; i++) {
+        memset(&data.all_buildings[i], 0, sizeof(building));
+        data.all_buildings[i].id = i;
+    }
 }
 
 static int expand_building_array(void)
@@ -488,10 +491,6 @@ void building_clear_all(void)
 {
     create_building_array(BUILDING_ARRAY_SIZE_STEP);
 
-    for (int i = 0; i < data.building_array_size; i++) {
-        memset(&data.all_buildings[i], 0, sizeof(building));
-        data.all_buildings[i].id = i;
-    }
     extra.highest_id_in_use = 0;
     extra.highest_id_ever = 0;
     extra.created_sequence = 0;
@@ -502,12 +501,10 @@ void building_clear_all(void)
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
                          buffer *sequence, buffer *corrupt_houses)
 {
-    int building_size = sizeof(building);
-    int buf_size = 4 + data.building_array_size * building_size;
+    int buf_size = 4 + data.building_array_size * BUILDING_STATE_CURRENT_BUFFER_SIZE;
     uint8_t *buf_data = malloc(buf_size);
     buffer_init(buf, buf_data, buf_size);
-    buffer_write_i32(buf, building_size);
-
+    buffer_write_i32(buf, BUILDING_STATE_CURRENT_BUFFER_SIZE);
     for (int i = 0; i < data.building_array_size; i++) {
         building_state_save_to_buffer(buf, &data.all_buildings[i]);
     }
@@ -523,15 +520,15 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
 void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
                          buffer *sequence, buffer *corrupt_houses, int includes_building_size)
 {
-    int building_size = BUILDING_SAVEGAME_STATE_ORIGINAL_SIZE;
+    int building_buf_size = BUILDING_STATE_ORIGINAL_BUFFER_SIZE;
     int buf_size = buf->size;
-    
+
     if (includes_building_size) {
-        building_size = buffer_read_i32(buf);
+        building_buf_size = buffer_read_i32(buf);
         buf_size -= 4;
     }      
     
-    int buildings_to_load = buf_size / building_size;
+    int buildings_to_load = buf_size / building_buf_size;
 
     create_building_array(buildings_to_load);
 
@@ -540,7 +537,7 @@ void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     int reduce_building_array_size = !includes_building_size && buildings_to_load == 10000;
 
     for (int i = 0; i < data.building_array_size; i++) {
-        building_state_load_from_buffer(buf, &data.all_buildings[i]);
+        building_state_load_from_buffer(buf, &data.all_buildings[i], building_buf_size);
         data.all_buildings[i].id = i;
         if (reduce_building_array_size && data.all_buildings[i].state != BUILDING_STATE_UNUSED) {
             highest_id_in_use = i;

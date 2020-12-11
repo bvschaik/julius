@@ -75,7 +75,7 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
     int recruit_type = LEGION_RECRUIT_NONE;
     int min_formation_id = 0;
     int min_distance = INFINITE;
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
+    for (int i = 1; i < formation_count(); i++) {
         formation *m = formation_get(i);
         if (!m->in_use || !m->is_legion) {
             continue;
