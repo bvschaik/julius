@@ -26,6 +26,8 @@ Doing so will make the mouse cursor disappear when using right-click to scroll.
    
 Instead, open `SierraLauncher.ini` and replace `Game1Exe=c3.exe` with the `Game1Exe=julius.exe`.
 
+Alternatively, you can check the `Disable right click to drag the map` option do disable right-click scrolling.
+
 ### Windows XP
 
 Julius still works on Windows XP, but the most recent version of SDL does not. To get it to work:
@@ -142,8 +144,6 @@ Touch modes can be toggled with the select button. There are three modes:
     * Single finger drag = move the mouse pointer (indirectly like on a touchpad)
     * Single short tap = left mouse click
     * Single short tap while holding a second finger down = right mouse click
-    * Dual finger drag = drag'n'drop (left mouse button is held down)
-    * Three finger drag = drag'n'drop (right mouse button is held down)
 2. Direct mode
     * Pointer jumps to finger, nothing else
 3. [Julius mode](https://github.com/bvschaik/julius/wiki/Touch-Support)
@@ -185,8 +185,6 @@ Touch modes can be toggled with the minus button. There are three modes:
     * Single finger drag = move the mouse pointer (indirectly like on a touchpad)
     * Single short tap = left mouse click
     * Single short tap while holding a second finger down = right mouse click
-    * Dual finger drag = drag'n'drop (left mouse button is held down)
-    * Three finger drag = drag'n'drop (right mouse button is held down)
 2. Direct mode
     * Pointer jumps to finger, nothing else
 3. [Julius mode](https://github.com/bvschaik/julius/wiki/Touch-Support)
