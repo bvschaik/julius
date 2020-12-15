@@ -27,16 +27,16 @@ static const color_t mouse_colors[] = {
     ALPHA_OPAQUE | COLOR_WHITE
 };
 
-static SDL_Surface *generate_cursor_surface(const char *data, int width, int height)
+static SDL_Surface *generate_cursor_surface(const cursor *c)
 {
-    int size = platform_cursor_get_texture_size(width, height);
+    int size = platform_cursor_get_texture_size(c->width, c->height);
     SDL_Surface *cursor_surface =
         SDL_CreateRGBSurface(0, size, size, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
     color_t *pixels = cursor_surface->pixels;
     SDL_memset(pixels, 0, sizeof(color_t) * size * size);
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            pixels[y * size + x] = mouse_colors[data[y * width + x] - 32];
+    for (int y = 0; y < c->height; y++) {
+        for (int x = 0; x < c->width; x++) {
+            pixels[y * size + x] = mouse_colors[c->data[y * c->width + x] - 32];
         }
     }
     return cursor_surface;
@@ -64,7 +64,7 @@ void system_init_cursors(int scale_percentage)
         if (data.cursors[i]) {
             SDL_FreeCursor(data.cursors[i]);
         }
-        data.surfaces[i] = generate_cursor_surface(c->data, c->width, c->height);
+        data.surfaces[i] = generate_cursor_surface(c);
 #ifndef PLATFORM_USE_SOFTWARE_CURSOR
         data.cursors[i] = SDL_CreateColorCursor(data.surfaces[i], c->hotspot_x, c->hotspot_y);
 #else
