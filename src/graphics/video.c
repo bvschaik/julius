@@ -221,8 +221,8 @@ void video_draw_fullscreen(void)
         double scale_w = s_width / (double) data.video.width;
         double scale_h = s_height / (double) data.video.height * (data.video.y_scale == SMACKER_Y_SCALE_NONE ? 1 : 2);
         double scale = scale_w < scale_h ? scale_w : scale_h;
-        int video_width = scale * data.video.width;
-        int video_height = scale * data.video.height;
+        int video_width = (int) (scale * data.video.width);
+        int video_height = (int) (scale * data.video.height);
         int x_offset = (s_width - video_width) / 2;
         int y_offset = (s_height - video_height) / 2;
         const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, video_width, video_height);
