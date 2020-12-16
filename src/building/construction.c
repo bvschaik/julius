@@ -7,6 +7,7 @@
 #include "building/construction_warning.h"
 #include "building/count.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/warehouse.h"
@@ -559,9 +560,10 @@ void building_construction_update(int x, int y, int grid_offset)
     } else if (type == BUILDING_WAREHOUSE) {
         mark_construction(x, y, 3, TERRAIN_ALL, 0);
     } else if (building_is_fort(type)) {
-        if (formation_get_num_legions_cached() < 6) {
+        if (formation_get_num_legions_cached() < formation_get_max_legions()) {
             if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) &&
-                map_building_tiles_are_clear(x + FORT_X_OFFSET[building_rotation_get_rotation()][city_view_orientation()/2], y + FORT_Y_OFFSET[building_rotation_get_rotation()][city_view_orientation()/2], 4, TERRAIN_ALL)) {
+                map_building_tiles_are_clear(x + FORT_X_OFFSET[building_rotation_get_rotation()][city_view_orientation()/2], y + FORT_Y_OFFSET[building_rotation_get_rotation()][city_view_orientation()/2], 4, TERRAIN_ALL) &&
+                city_buildings_has_mess_hall()) {
                 mark_construction(x, y, 3, TERRAIN_ALL, 0);
             }
         }
@@ -572,7 +574,8 @@ void building_construction_update(int x, int y, int grid_offset)
         building_rotation_get_offset_with_rotation(10, building_rotation_get_rotation(), &x_offset_2, &y_offset_2);
         if (map_building_tiles_are_clear(x, y, 5, TERRAIN_ALL) &&
             map_building_tiles_are_clear(x + x_offset_1, y + y_offset_1, 5, TERRAIN_ALL) &&
-            map_building_tiles_are_clear(x + x_offset_2, y + y_offset_2, 5, TERRAIN_ALL)) {
+            map_building_tiles_are_clear(x + x_offset_2, y + y_offset_2, 5, TERRAIN_ALL) &&
+            !city_buildings_has_hippodrome()) {
                 mark_construction(x, y, 5, TERRAIN_ALL, 0);
         }
     } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
@@ -589,7 +592,10 @@ void building_construction_update(int x, int y, int grid_offset)
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
             !(type == BUILDING_BARRACKS && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) &&
-            !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center())) {
+            !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center()) &&
+            !(type == BUILDING_MESS_HALL && city_buildings_has_mess_hall()) &&
+            !building_monument_has_monument(type) &&
+            !(building_monument_is_grand_temple(type) && building_monument_count_grand_temples() >= 2)) {
             int size = building_properties_for_type(type)->size;
             mark_construction(x, y, size, TERRAIN_ALL, 0);
         }
