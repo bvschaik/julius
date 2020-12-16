@@ -776,7 +776,7 @@ int building_construction_place_building(building_type type, int x, int y)
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }
-    if (type == BUILDING_MESS_HALL && building_count_total(BUILDING_MESS_HALL)) {
+    if (type == BUILDING_MESS_HALL && city_buildings_has_mess_hall()) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }
