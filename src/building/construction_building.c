@@ -11,7 +11,6 @@
 #include "building/rotation.h"
 #include "building/storage.h"
 #include "city/buildings.h"
-#include "city/data_private.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/config.h"
@@ -611,8 +610,7 @@ static void add_to_map(int type, building *b, int size,
             break;
         case BUILDING_MESS_HALL:
             b->data.market.is_mess_hall = 1;
-            city_data.mess_hall.missing_mess_hall_warning_shown = 0;
-            city_data.building.mess_hall_building_id = b->id;
+            city_buildings_add_mess_hall(b);
             switch (scenario_property_climate())
             {
             case CLIMATE_NORTHERN:
