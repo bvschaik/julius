@@ -729,7 +729,7 @@ int building_construction_place_building(building_type type, int x, int y)
             city_warning_show(WARNING_MAX_LEGIONS_REACHED);
             return 0;
         }
-        if (!building_count_total(BUILDING_MESS_HALL)) {
+        if (!city_buildings_has_mess_hall()) {
             city_warning_show(WARNING_NO_MESS_HALL);
             return 0;
         }
