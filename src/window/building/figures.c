@@ -364,7 +364,7 @@ static void draw_normal_figure(building_info_context *c, figure *f)
     }
     if (f->tourist.tourist_money_spent) {
         int width = text_draw(translation_for(TR_WINDOW_FIGURE_TOURIST), c->x_offset + 92, c->y_offset + 180, FONT_SMALL_BLACK, 0);
-        text_draw_money(f->tourist.tourist_money_spent, c->x_offset + 92 + width, c->y_offset + 180, FONT_SMALL_BLACK, 0);
+        text_draw_money(f->tourist.tourist_money_spent, c->x_offset + 92 + width, c->y_offset + 180, FONT_SMALL_BLACK);
     }
 }
 
