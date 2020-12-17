@@ -776,5 +776,5 @@ int game_file_io_delete_saved_game(const char *filename)
 }
 
 int file_io_load_expanded_building_data() {
-    //return active_save_version > SAVE_GAME_LAST_STATIC_BUILDINGS_VERSION;
+    return active_save_version > SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION;
 }
