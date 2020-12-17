@@ -502,7 +502,8 @@ void building_construction_update(int x, int y, int grid_offset)
     } else if (type == BUILDING_HIPPODROME) {
         if (map_building_tiles_are_clear(x, y, 5, TERRAIN_ALL) &&
             map_building_tiles_are_clear(x + 5, y, 5, TERRAIN_ALL) &&
-            map_building_tiles_are_clear(x + 10, y, 5, TERRAIN_ALL)) {
+            map_building_tiles_are_clear(x + 10, y, 5, TERRAIN_ALL) &&
+            !city_buildings_has_hippodrome()) {
             mark_construction(x, y, 5, TERRAIN_ALL, 0);
         }
     } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
