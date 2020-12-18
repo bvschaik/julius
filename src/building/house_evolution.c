@@ -7,6 +7,7 @@
 #include "core/calc.h"
 #include "game/resource.h"
 #include "game/time.h"
+#include "game/undo.h"
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/routing_terrain.h"
@@ -319,6 +320,7 @@ static int evolve_medium_insula(building *house, house_demands *demands)
     if (!has_devolve_delay(house, status)) {
         if (status == EVOLVE) {
             if (building_house_can_expand(house, 4)) {
+                game_undo_disable();
                 house->house_is_merged = 0;
                 building_house_expand_to_large_insula(house);
                 map_tiles_update_all_gardens();
@@ -338,6 +340,7 @@ static int evolve_large_insula(building *house, house_demands *demands)
         if (status == EVOLVE) {
             building_house_change_to(house, BUILDING_HOUSE_GRAND_INSULA);
         } else if (status == DEVOLVE) {
+            game_undo_disable();
             building_house_devolve_from_large_insula(house);
         }
     }
@@ -376,6 +379,7 @@ static int evolve_medium_villa(building *house, house_demands *demands)
     if (!has_devolve_delay(house, status)) {
         if (status == EVOLVE) {
             if (building_house_can_expand(house, 9)) {
+                game_undo_disable();
                 building_house_expand_to_large_villa(house);
                 map_tiles_update_all_gardens();
                 return 1;
@@ -394,6 +398,7 @@ static int evolve_large_villa(building *house, house_demands *demands)
         if (status == EVOLVE) {
             building_house_change_to(house, BUILDING_HOUSE_GRAND_VILLA);
         } else if (status == DEVOLVE) {
+            game_undo_disable();
             building_house_devolve_from_large_villa(house);
         }
     }
@@ -432,6 +437,7 @@ static int evolve_medium_palace(building *house, house_demands *demands)
     if (!has_devolve_delay(house, status)) {
         if (status == EVOLVE) {
             if (building_house_can_expand(house, 16)) {
+                game_undo_disable();
                 building_house_expand_to_large_palace(house);
                 map_tiles_update_all_gardens();
                 return 1;
@@ -450,6 +456,7 @@ static int evolve_large_palace(building *house, house_demands *demands)
         if (status == EVOLVE) {
             building_house_change_to(house, BUILDING_HOUSE_LUXURY_PALACE);
         } else if (status == DEVOLVE) {
+            game_undo_disable();
             building_house_devolve_from_large_palace(house);
         }
     }
