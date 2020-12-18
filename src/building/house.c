@@ -1,7 +1,9 @@
 #include "house.h"
 
+#include "city/population.h"
 #include "core/config.h"
 #include "core/image.h"
+#include "figure/figure.h"
 #include "game/resource.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
@@ -543,5 +545,17 @@ void building_house_check_for_corruption(building *house)
         }
         building_totals_add_corrupted_house(1);
         house->state = BUILDING_STATE_RUBBLE;
+    }
+}
+
+void building_house_restore_population_after_undo(building *house)
+{
+    if (house->figure_id) {
+        figure *homeless = figure_get(house->figure_id);
+        if (homeless->building_id == house->id) {
+            house->house_population = homeless->migrant_num_people;
+            city_population_add_homeless(homeless->migrant_num_people);
+            figure_delete(homeless);
+        }
     }
 }

@@ -237,7 +237,7 @@ void house_population_evict_overcrowded(void)
         building *b = building_get(items[i]);
         if (b->house_population_room < 0) {
             int num_people_to_evict = -b->house_population_room;
-            figure_create_homeless(b->x, b->y, num_people_to_evict);
+            figure_create_homeless(b, num_people_to_evict);
             if (num_people_to_evict < b->house_population) {
                 b->house_population -= num_people_to_evict;
             } else {

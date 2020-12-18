@@ -174,7 +174,7 @@ void figure_delete(figure *f)
         empire_city_remove_trader(f->empire_city_id, f->id);
     }
     if (f->immigrant_building_id) {
-        b->immigrant_figure_id = 0;
+        building_get(f->immigrant_building_id)->immigrant_figure_id = 0;
     }
     figure_route_remove(f);
     map_figure_delete(f);
