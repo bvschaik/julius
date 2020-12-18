@@ -2,6 +2,7 @@
 
 #include "core/image.h"
 #include "game/resource.h"
+#include "game/undo.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
 #include "map/grid.h"
@@ -161,6 +162,7 @@ void building_house_merge(building *house)
         }
     }
     if (num_house_tiles == 4) {
+        game_undo_disable();
         merge_data.x = house->x + EXPAND_DIRECTION_DELTA[0].x;
         merge_data.y = house->y + EXPAND_DIRECTION_DELTA[0].y;
         merge(house);
