@@ -139,4 +139,3 @@ void scenario_random_event_process(void)
             break;
     }
 }
-

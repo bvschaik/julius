@@ -398,4 +398,3 @@ void empire_city_load_state(buffer *buf)
         buffer_skip(buf, 10);
     }
 }
-
