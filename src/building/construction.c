@@ -497,6 +497,7 @@ void building_construction_update(int x, int y, int grid_offset)
             if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) &&
                 map_building_tiles_are_clear(x + x_offset, y + y_offset, 4, TERRAIN_ALL)) {
                 mark_construction(x, y, 3, TERRAIN_ALL, 0);
+                mark_construction(x + x_offset, y + y_offset, 4, TERRAIN_ALL, 0);
             }
         }
     } else if (type == BUILDING_HIPPODROME) {
@@ -505,6 +506,8 @@ void building_construction_update(int x, int y, int grid_offset)
             map_building_tiles_are_clear(x + 10, y, 5, TERRAIN_ALL) &&
             !city_buildings_has_hippodrome()) {
             mark_construction(x, y, 5, TERRAIN_ALL, 0);
+            mark_construction(x + 5, y, 5, TERRAIN_ALL, 0);
+            mark_construction(x + 10, y, 5, TERRAIN_ALL, 0);
         }
     } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
         if (!map_water_determine_orientation_size2(x, y, 1, 0, 0)) {
