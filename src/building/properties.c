@@ -4,7 +4,7 @@
 #include "mods/mods.h"
 #include "type.h"
 
-#define MOD_BUILDINGS 48
+#define MOD_BUILDINGS 49
 
 mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_ROADBLOCK, { 1, 1, 0, 0, 0 },  "Areldir", "Roadblocks", 0},
@@ -54,7 +54,8 @@ mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
     {BUILDING_LEGION_STATUE, { 2, 1, 0, 0, 1 }, "Areldir", "Aesthetics", "legio statue"},
     {BUILDING_DECORATIVE_COLUMN, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "sml col B"},
-    {BUILDING_COLONNADE, { 1, 1, 0, 0, 0 }, "Lizzaran", "Aesthetics_L", "G Colonnade 01"}
+    {BUILDING_COLONNADE, { 1, 1, 0, 0, 0 }, "Lizzaran", "Aesthetics_L", "G Colonnade 01"},
+    {BUILDING_LARARIUM, {1,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Lararium 01"}
 };
 
 void init_mod_building_properties() {

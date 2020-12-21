@@ -524,6 +524,8 @@ static translation_string all_strings[] = {
     { TR_SAVEGAME_LARGER_VERSION_TITLE, "Incompatible savegame version" },
     { TR_SAVEGAME_LARGER_VERSION_MESSAGE, "The savegame you're trying to load is for a more recent version of Augustus.\nPlease update Augustus to the most recent version." },
     { TR_BUILDING_COLONNADE, "Colonnade" },
+    { TR_BUILDING_LARARIUM, "Lararium" },
+    { TR_WINDOW_BUILDING_LARARIUM_DESC, "A small shrine to the gods and ancestors of the Roman people. Small sacrifices and prayers may be made here."}
 
 
 };

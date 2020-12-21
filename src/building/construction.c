@@ -697,7 +697,7 @@ void building_construction_place(void)
     if (type != BUILDING_CLEAR_LAND && has_nearby_enemy(x_start, y_start, x_end, y_end)) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
             game_undo_restore_map(0);
-        } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT || BUILDING_COLONNADE) {
+        } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT || type == BUILDING_COLONNADE) {
             game_undo_restore_map(1);
         } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
             map_bridge_reset_building_length();

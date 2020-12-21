@@ -179,8 +179,9 @@ typedef enum {
     BUILDING_LEGION_STATUE= 166,
     BUILDING_DECORATIVE_COLUMN = 167,
     BUILDING_COLONNADE = 168,
+    BUILDING_LARARIUM = 169,
     // helper constants
-    BUILDING_TYPE_MAX = 168
+    BUILDING_TYPE_MAX = 170
 } building_type;
 
 /**

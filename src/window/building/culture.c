@@ -487,6 +487,16 @@ void window_building_draw_oracle(building_info_context* c)
     }
 }
 
+void window_building_draw_lararium(building_info_context* c)
+{
+    c->help_id = 67;
+    building* b = building_get(c->building_id);
+    window_building_play_sound(c, "wavs/oracle.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    text_draw_centered(translation_for(TR_BUILDING_LARARIUM), c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_LARARIUM_DESC);
+}
+
 static void draw_grand_temple(building_info_context* c, const char* sound_file, int name, int bonus_desc,int banner_id, int quote, int temple_god_id, int extra_y)
 {
     building* b = building_get(c->building_id);

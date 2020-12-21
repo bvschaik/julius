@@ -19,7 +19,7 @@
 static int show_building_religion(const building *b)
 {
     return
-        b->type == BUILDING_ORACLE || b->type == BUILDING_SMALL_TEMPLE_CERES ||
+        b->type == BUILDING_ORACLE || b->type == BUILDING_LARARIUM || b->type == BUILDING_SMALL_TEMPLE_CERES ||
         b->type == BUILDING_SMALL_TEMPLE_NEPTUNE || b->type == BUILDING_SMALL_TEMPLE_MERCURY ||
         b->type == BUILDING_SMALL_TEMPLE_MARS || b->type == BUILDING_SMALL_TEMPLE_VENUS ||
         b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_NEPTUNE ||

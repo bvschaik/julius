@@ -169,6 +169,7 @@ const model_building MODEL_TAVERN = { 25,-2,1,1,6,8 };
 const model_building MODEL_GRAND_GARDEN = { 400,0,0,0,0,0 };
 const model_building MODEL_ARENA = { 500,-3,1,1,3,25 };
 const model_building MODEL_NULL = { 0,0,0,0,0 };
+const model_building MODEL_LARARIUM = { 150, 4, 1, 1, 3, 0 };
 
 const model_building *model_get_building(building_type type)
 {
@@ -201,11 +202,13 @@ const model_building *model_get_building(building_type type)
             return &MODEL_GRAND_GARDEN;
         case BUILDING_ARENA:
             return &MODEL_ARENA;
+        case BUILDING_LARARIUM:
+            return &MODEL_LARARIUM;
         default:
             break;
     }
 
-    if ((type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT || type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_GARDEN_WALL || type == BUILDING_COLONNADE) {
+    if ((type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT || type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_GARDEN_WALL || type == BUILDING_COLONNADE ) {
         return &buildings[41];
     }
 
