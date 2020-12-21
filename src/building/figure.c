@@ -1407,7 +1407,7 @@ static void spawn_figure_mess_hall(building* b) {
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        spawn_labor_seeker(b, road.x, road.y, 10);
+        spawn_labor_seeker(b, road.x, road.y, 100);
         spawn_market_buyer(b, road, 1);
         if (b->figure_id) {
             b->figure_spawn_delay++;
