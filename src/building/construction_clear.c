@@ -103,8 +103,9 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                     }
                 }
                 if (b->house_size && b->house_population && !measure_only) {
-                    figure_create_homeless(b->x, b->y, b->house_population);
+                    figure *homeless = figure_create_homeless(b, b->house_population);
                     b->house_population = 0;
+                    b->figure_id = homeless->id;
                 }
                 if (b->state != BUILDING_STATE_DELETED_BY_PLAYER) {
                     items_placed++;
