@@ -260,13 +260,41 @@ static int house_image_group(int level)
     return image_group(HOUSE_IMAGE[level].group) + HOUSE_IMAGE[level].offset;
 }
 
-static void create_house_tile(building_type type, int x, int y, int image_id, int population, const int *inventory)
+static void copy_house_data(building *house, const building *main_house)
+{
+    house->data.house.academy = main_house->data.house.academy;
+    house->data.house.amphitheater_actor = main_house->data.house.amphitheater_actor;
+    house->data.house.amphitheater_gladiator = main_house->data.house.amphitheater_gladiator;
+    house->data.house.barber = main_house->data.house.barber;
+    house->data.house.bathhouse = main_house->data.house.bathhouse;
+    house->data.house.clinic = main_house->data.house.clinic;
+    house->data.house.colosseum_gladiator = main_house->data.house.colosseum_gladiator;
+    house->data.house.colosseum_lion = main_house->data.house.colosseum_lion;
+    house->data.house.education = main_house->data.house.education;
+    house->data.house.entertainment = main_house->data.house.entertainment;
+    house->data.house.health = main_house->data.house.health;
+    house->data.house.hippodrome = main_house->data.house.hippodrome;
+    house->data.house.hospital = main_house->data.house.hospital;
+    house->data.house.library = main_house->data.house.library;
+    house->data.house.num_foods = main_house->data.house.num_foods;
+    house->data.house.num_gods = main_house->data.house.num_gods;
+    house->data.house.school = main_house->data.house.school;
+    house->data.house.temple_ceres = main_house->data.house.temple_ceres;
+    house->data.house.temple_mars = main_house->data.house.temple_mars;
+    house->data.house.temple_mercury = main_house->data.house.temple_mercury;
+    house->data.house.temple_neptune = main_house->data.house.temple_neptune;
+    house->data.house.temple_venus = main_house->data.house.temple_venus;
+    house->data.house.theater = main_house->data.house.theater;
+}
+
+static void create_splitted_house_tile(const building *main_house, building_type type, int x, int y, int image_id, int population, const int *inventory)
 {
     building *house = building_create(type, x, y);
     house->house_population = population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         house->data.house.inventory[i] = inventory[i];
     }
+    copy_house_data(house, main_house);
     house->distance_from_entry = 0;
     map_building_tiles_add(house->id, house->x, house->y, 1,
                            image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
@@ -302,9 +330,9 @@ static void split_size2(building *house, building_type new_type)
                            image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
-    create_house_tile(house->type, house->x + 1, house->y, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(house->type, house->x, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(house->type, house->x + 1, house->y + 1, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 1, house->y, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x, house->y + 1, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 1, house->y + 1, image_id, population_per_tile, inventory_per_tile);
 }
 
 static void split_size3(building *house)
@@ -337,12 +365,12 @@ static void split_size3(building *house)
                            image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
-    create_house_tile(house->type, house->x, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(house->type, house->x + 1, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(house->type, house->x + 2, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(house->type, house->x, house->y + 2, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(house->type, house->x + 1, house->y + 2, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(house->type, house->x + 2, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x, house->y + 1, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 1, house->y + 1, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 2, house->y + 1, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 1, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 2, house->y + 2, image_id, population_per_tile, inventory_per_tile);
 }
 
 static void split(building *house, int num_tiles)
@@ -466,15 +494,15 @@ void building_house_devolve_from_large_villa(building *house)
 
     // the other tiles (new buildings)
     image_id = house_image_group(HOUSE_MEDIUM_INSULA);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 2, house->y, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 2, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x, house->y + 2, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 1, house->y + 2, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 2, house->y + 2, image_id, population_per_tile, inventory_per_tile);
 }
 
@@ -508,19 +536,19 @@ void building_house_devolve_from_large_palace(building *house)
 
     // the other tiles (new buildings)
     image_id = house_image_group(HOUSE_MEDIUM_INSULA);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 3, house->y, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 3, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 3, house->y + 2, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x, house->y + 3, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 1, house->y + 3, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 2, house->y + 3, image_id, population_per_tile, inventory_per_tile);
-    create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA,
+    create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 3, house->y + 3, image_id, population_per_tile, inventory_per_tile);
 }
 
